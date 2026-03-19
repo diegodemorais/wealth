@@ -25,11 +25,12 @@
 
 | Indicador | Valor | Data | Fonte |
 |-----------|-------|------|-------|
-| Selic | 15,00% | 2026-03 | COPOM |
-| IPCA+ 2045 | ~7,14% | 2026-03-05 | Tesouro Direto |
-| Renda+ 2065 | IPCA + 6,87% (~7,0%+) | 2026-03 | Tesouro Direto |
+| Selic | **14,75%** | 2026-03-18 | COPOM (corte de 0,25pp) |
+| IPCA+ 2040 | ~7,13-7,31% | 2026-03-19 | Tesouro Direto |
+| Renda+ 2065 | IPCA + **7,02%** | 2026-03-19 | Tesouro Direto |
 | IPCA 12m | 3,81% | fev/2026 | IBGE |
-| BRL/USD | ~5,20 | 2026-03-17 | BCB |
+| BRL/USD | **R$ 5,24** | 2026-03-19 | BCB |
+| BTC/USD | ~$70.841 | 2026-03-19 | CoinMarketCap |
 
 > Atualizar mensalmente via WebSearch. Proximo IPCA: 10/abr/2026.
 
