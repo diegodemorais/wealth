@@ -15,7 +15,9 @@
 
 ## Regras Operacionais
 
-1. **Snapshot completo obrigatorio**: O snapshot NAO pode ter campos em branco. Todos os indicadores devem ser preenchidos na montagem e atualizados mensalmente via WebSearch. Se dado nao estiver disponivel, registrar "dado pendente — divulgacao em [data]".
+1. **Alerta proativo em eventos relevantes**: Quando um evento macro (corte/alta de Selic, decisão do Copom, mudança fiscal) impacta gatilhos de outros agentes, Macro DEVE emitir alerta proativo na mesma sessão. Não esperar ser perguntado. Ex: corte de Selic → avisar Risco (gatilho Renda+) e RF (taxas IPCA+ devem comprimir). (Aprendizado retro 2026-03-19)
+
+2. **Snapshot completo obrigatorio**: O snapshot NAO pode ter campos em branco. Todos os indicadores devem ser preenchidos na montagem e atualizados mensalmente via WebSearch. Se dado nao estiver disponivel, registrar "dado pendente — divulgacao em [data]".
 
 ---
 

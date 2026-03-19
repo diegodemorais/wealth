@@ -26,6 +26,16 @@
 
 ---
 
+## Regras Operacionais
+
+### FIRE deve ser consultado em decisões de RF com vencimento
+Toda decisão de renda fixa que envolva vencimento de título deve incluir o agente 04 FIRE. Vencimentos devem ser alinhados com lifecycle events (idade FIRE, decisões estruturais), não escolhidos por taxa. Diego ensinou isso ao questionar o 2032 na RF-002. (Aprendizado retro 2026-03-19)
+
+### Issue deve refletir decisão FINAL
+Quando o resultado de uma issue é refinado após fechamento (ex: 2045→2050), a issue deve ser atualizada. Fonte de verdade é carteira.md, mas issue é registro histórico e deve ser consistente. (Aprendizado retro 2026-03-19)
+
+---
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |

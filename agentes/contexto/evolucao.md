@@ -11,13 +11,13 @@
 | Bloco | 34 (Ano 1) | 40 (Ano 7) | 50 (Ano 17) | 60 (Ano 27) | 70 (Ano 37) |
 |-------|-----------|-----------|-------------|-------------|-------------|
 | Selic | 0% | 0% | 5% | 5% | 5% |
-| IPCA+* | 0% | 0% | 0% | 0% | 0% |
+| IPCA+ estrutural | 10% | 10% | 10% | 10% | 10% |
 | SWRD | 35% | 35% | 33% | 33% | 33% |
 | AVGS | 25% | 25% | 25% | 25% | 25% |
 | AVEM | 20% | 20% | 19% | 19% | 19% |
 | JPGL | 20% | 20% | 19% | 19% | 19% |
 
-*Decisao aos 48. Se taxa >= 6,5% -> 10% ladder
+> IPCA+ estrutural 10% aprovado em 2026-03-18 (taxa 7%+, top decile historico). Ladder: IPCA+ 2035 (40%) + 2040 (35%) + 2050 (25%). Sem cupom semestral.
 
 ---
 

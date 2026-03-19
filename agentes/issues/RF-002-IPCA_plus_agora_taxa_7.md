@@ -363,7 +363,8 @@ Se a intencao e **tatica** (vender na compressao), o cenario base favorece: Seli
 
 > **Revisao 2 (2026-03-18)**: Ladder repensado apos questionamento de Diego sobre risco de reinvestimento.
 
-### Recomendacao: **SIM, alocar 10% em IPCA+ -- mas com ladder revisado (2035/2040/2045)**
+### Recomendacao: **SIM, alocar 10% em IPCA+ -- mas com ladder revisado (2035/2040/2050)**
+> **Revisao 3 (pos-aprovacao)**: 2045 substituido por 2050. IPCA+ 2045 e NTN-B com cupom semestral (IR a cada pagamento, composicao menor). IPCA+ 2050 e NTN-B principal (sem cupom, IR so no vencimento). Decisao final registrada em carteira.md.
 
 **O que mudou na Revisao 2**:
 
@@ -375,9 +376,9 @@ Diego questionou corretamente: "Vence antes da aposentadoria, pago imposto, rein
 
 **Racional mantido (com ladder corrigido)**:
 
-1. **A tese sobrevive para vencimentos longos**: IPCA+ 2035/2040/2045 vencem equity em +7% a +20% de patrimonio real, mesmo com IR sobre nominal, em TODOS os cenarios de reinvestimento
+1. **A tese sobrevive para vencimentos longos**: IPCA+ 2035/2040/2050 vencem equity em +7% a +20% de patrimonio real, mesmo com IR sobre nominal, em TODOS os cenarios de reinvestimento
 
-2. **Risco de reinvestimento eliminado**: 2040 e 2045 vencem na desacumulacao (zero reinvestimento). 2035 tem apenas 2 anos de reinvestimento, insuficiente para destruir a vantagem
+2. **Risco de reinvestimento eliminado**: 2040 e 2050 vencem na desacumulacao (zero reinvestimento). 2035 tem apenas 2 anos de reinvestimento, insuficiente para destruir a vantagem
 
 3. **2035 tem timing estrategico**: vence aos 48, coincide com a decisao estrutural de RF. O cash chega quando Diego precisa decidir
 
@@ -393,7 +394,7 @@ Diego questionou corretamente: "Vence antes da aposentadoria, pago imposto, rein
 |---|---|---|---|---|---|
 | IPCA+ 2035 | 7,40% | ~5,71% | 40% | R$139k | Vence aos 48 = decisao estrutural |
 | IPCA+ 2040 | 7,13% | ~5,49% | 35% | R$122k | Carrega 14a, vence em FIRE |
-| IPCA+ 2045 | 7,14% | ~5,25% est. | 25% | R$87k | 19a de carrego, maior delta |
+| IPCA+ 2050 | 6,86% | ~5,25% est. | 25% | R$87k | 24a de carrego, sem cupom semestral (NTN-B principal) |
 
 **Total: R$348k (~10% do patrimonio)**
 
@@ -419,20 +420,20 @@ Diego questionou corretamente: "Vence antes da aposentadoria, pago imposto, rein
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | 10% em IPCA+ ladder (**2035/2040/2045**), R$348k total, DCA em 2-3 tranches |
+| **Alocacao** | 10% em IPCA+ ladder (**2035/2040/2050**), R$348k total, DCA em 2-3 tranches |
 | **Estrategia** | Alocacao tatica (nao estrutural). Carregar ate vencimento. Decisao dos 48 inalterada |
-| **Conhecimento (R2)** | IPCA+ 2032 eliminado por risco de reinvestimento (delta vs equity = -0,6% a +7,1% dependendo de taxa futura). Vencimentos longos (2035/2040/2045) mantidos: delta de +7% a +20% vs equity, robusto em todos os cenarios. A contradicao "janela fechando = reinvestimento ruim" so afeta vencimentos curtos |
+| **Conhecimento (R3)** | IPCA+ 2032 eliminado (reinvestimento). 2045 substituido por 2050 (cupom semestral penaliza composicao). Ladder final: 2035/2040/2050 — todos NTN-B principal sem cupom. Delta de +7% a +20% vs equity |
 | **Memoria** | Pendente aprovacao de Diego |
 
 ---
 
 ## Proximos Passos
 
-- [ ] Diego: aprovar ou rejeitar recomendacao (Revisao 2: ladder 2035/2040/2045)
-- [ ] Se aprovado: refinar IPCA+ 2045 vs 2050 (cupom semestral vs principal, impacto tributario)
-- [ ] Se aprovado: definir fonte de recursos (caixa, aportes, resgate IPCA+ 2040 existente)
-- [ ] Se aprovado: executar DCA em 2-3 tranches (marco-abril 2026)
-- [ ] Se aprovado: atualizar carteira.md com nova alocacao
-- [ ] Se aprovado: registrar decisao em memoria 03-renda-fixa.md
+- [x] Diego: aprovar ou rejeitar recomendacao — **APROVADO** (2026-03-18)
+- [x] Refinar IPCA+ 2045 vs 2050 — **2050 escolhido** (NTN-B principal, sem cupom semestral)
+- [ ] Definir fonte de recursos (caixa, aportes, resgate IPCA+ 2040 existente)
+- [ ] Executar DCA em 2-3 tranches (marco-abril 2026)
+- [x] Atualizar carteira.md com nova alocacao — **feito**
+- [x] Registrar decisao em memoria 03-renda-fixa.md — **feito**
 - [ ] Monitorar taxas IPCA+ semanalmente durante execucao
 - [ ] Reavaliacao: se taxas subirem para 8%+, abrir nova issue para compra adicional

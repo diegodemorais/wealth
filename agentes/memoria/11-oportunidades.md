@@ -15,6 +15,8 @@ Scan e obrigatorio quando qualquer condicao abaixo for verdadeira:
 | 6 | Novo veiculo UCITS relevante | TER menor, tracking melhor, novo fator |
 | 7 | Spread equity expected return vs IPCA+ comprimido | Equity ER - IPCA+ real yield <= 1pp |
 
+**Overlap analysis obrigatório**: Antes de recomendar qualquer ETF novo, medir overlap com ETFs existentes na carteira. Primeira pergunta: "qual o overlap com o que já temos?" antes de "qual o retorno?". AVGC tinha 90% overlap com SWRD — closet indexing. (Aprendizado retro 2026-03-19)
+
 **Regra trimestral**: verificar todas as 7 condicoes. Se ativa, scan completo + report ao Head. Se nenhuma, registrar "radar limpo".
 
 **Regra de urgencia**: condicoes 1, 2 ou 3 detectadas fora do ciclo -> scan em ate 48h.

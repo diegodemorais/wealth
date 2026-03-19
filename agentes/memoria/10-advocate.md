@@ -8,6 +8,16 @@
 | 2026-03-18 | HODL11 como exposicao a risco Brasil | **Incorreto** | HODL11 e wrapper B3 de Bitcoin (HODL/Hashdex). Ativo subjacente e cripto global, nao risco fiscal BR. Risco Brasil e so operacional (custodia B3). Exposicao real a risco Brasil: Renda+ + Reserva IPCA+ = ~6-7,5% |
 | 2026-03-18 | Estrategia geral (carteira alvo + glidepath + taticas) | **Validada** | Revisao completa com Factor, FIRE, Risco. Sem mudancas necessarias. Pontos de atencao: drawdown comportamental, custo de vida futuro (FR-001) |
 
+## Checklist de Stress-Test
+
+### Lógica reversa para trades táticos
+Quando a tese de um trade tático é "janela fechando" (ex: taxas vão cair), testar: "se a janela fechar, o que acontece COM a posição?". A contradição fatal do IPCA+ 2032 (retro 2026-03-19) mostrou que o cenário que motiva a compra pode destruir o reinvestimento. Diego identificou isso antes do Advocate — não pode se repetir.
+
+### Assimetria de payoff em renda fixa privada
+Testar sempre: nos cenários em que o produto rende mais, o risco de crédito também sobe? Se sim, payoff assimétrico contra o investidor (caso CDB 120% CDI — retro 2026-03-19).
+
+---
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |

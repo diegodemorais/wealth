@@ -28,6 +28,12 @@
 
 ## Regras de Coordenacao
 
+### Tracking de execução pós-aprovação
+Quando uma decisão com DCA ou execução em tranches é aprovada, o Head DEVE cobrar a primeira tranche na sessão seguinte. Decisão sem execução é só papel. (Aprendizado retro 2026-03-19)
+
+### evolucao.md sincronizada com carteira.md
+Sempre que carteira.md for atualizada, evolucao.md deve ser atualizada na mesma sessão. (Aprendizado retro 2026-03-19)
+
 ### Advocate obrigatorio em decisoes estruturais
 O agente 10 Devil's Advocate deve ser acionado ANTES de confirmar qualquer decisao estrutural. Criterios:
 

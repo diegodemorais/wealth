@@ -38,6 +38,13 @@
 |------|-------|---------------------|
 | 2026-03 | FR-001 v3 | Retornos corrigidos por Factor + Tax: acum 5,09% (tax drag 0%), desacum 3,77%-4,20% (tax drag 26,6%). Pat ~R$10,3M aos 50. R$250k: ~87-97% success. R$350k: ~70-92% (viavel com guardrails, upgrade vs v2). Limite seguro: R$360k/ano (SWR 3,5%). |
 
+## Regras Operacionais
+
+### Consultado em toda decisão de RF com vencimento
+FIRE deve participar de qualquer decisão de renda fixa que envolva vencimento de título. Vencimentos devem ser alinhados com lifecycle events (FIRE date, bond tent, decisões estruturais). Diego ensinou isso ao questionar o IPCA+ 2032. (Aprendizado retro 2026-03-19)
+
+---
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |
