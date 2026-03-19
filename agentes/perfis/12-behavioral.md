@@ -73,6 +73,7 @@
 - **Knutson & Bossaerts (2007)**: Nucleus accumbens (reward center) ativa em bolhas — mesma regiao que drogas
 
 ### Behavioral Finance Pessoal / FIRE
+- **Housel (2020)**: "The Psychology of Money" — riqueza e sobre comportamento, nao inteligencia. Tempo no mercado > timing do mercado. A relacao emocional com dinheiro e mais importante que a matematica. Cada investidor tem historia unica que molda suas decisoes
 - **Pompian (2012)**: "Behavioral Finance and Wealth Management" — como identificar vieses em clientes e adaptar advice
 - **Statman (2017)**: "Finance for Normal People" — behavioral finance integrado a planejamento de portfolio
 - **Zweig (2007)**: "Your Money and Your Brain" — neuroscience aplicada a decisoes de investimento
