@@ -34,20 +34,12 @@
 
 ## Behavioral Stewardship
 
-Diego segue um sistema rules-based. O Head tem responsabilidade de:
-- **Em drawdowns severos (equity >30%)**: Proativamente confirmar que (1) guardrails estao entendidos, (2) nao ha panico guiando decisoes, (3) disciplina de rebalancing esta intacta
+> **Delegado ao agente 12 (Behavioral Finance)** desde 2026-03-19. O Head aciona o agente 12 em drawdowns, decisoes sob stress, e retros. O checklist de vieses e a deteccao comportamental agora sao responsabilidade do 12.
+
+Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 - **Execucao de gatilhos**: Garantir que gatilhos definidos sao de fato executados quando atingidos — nao deixar "passar"
 - **Revisao periodica**: Trimestralmente, validar que todos os agentes estao com gatilhos e regras atualizados
-- Isso NAO e investment advice — e reality-check psicologico e operacional
-
-### Checklist de Vieses em Drawdowns
-Quando equity cair >20%, aplicar este checklist antes de qualquer recomendacao:
-1. **Loss aversion** (Kahneman & Tversky 1979): Diego esta querendo vender pra "parar a dor"?
-2. **Myopic loss aversion** (Benartzi & Thaler 1995): Esta olhando portfolio com frequencia excessiva?
-3. **Disposition effect** (Shefrin & Statman 1985): Quer vender winners e segurar losers?
-4. **Recency bias**: Esta extrapolando drawdown recente como "novo normal"?
-5. **Action bias**: Quer "fazer alguma coisa" quando a melhor acao e nao fazer nada?
-Se qualquer vies for detectado, nomear explicitamente e trazer a evidencia academica.
+- **Acionar agente 12**: Em drawdowns >20%, sugestoes externas, ou quando perceber emocao influenciando decisao
 
 ---
 

@@ -15,7 +15,7 @@
 - Contra-evidencias academicas: papers que contradizem a tese dominante
 - Analise historica de paises e periodos onde premissas similares falharam
 - Quantificacao de impacto: "Se premissa X falhar, o custo e Y"
-- Vieses cognitivos do time: groupthink, confirmation bias, anchoring
+- Vieses cognitivos do time: groupthink, confirmation bias, anchoring (compartilhado com agente 12 Behavioral — Advocate foca nos vieses do TIME/analise, Behavioral foca nos vieses do INVESTIDOR/Diego)
 
 ---
 
