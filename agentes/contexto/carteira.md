@@ -61,7 +61,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 | Bloco / ETF | 34 | 40 | 50 | 60 | 70 |
 |-------------|-----|-----|-----|-----|-----|
 | Tesouro Selic | 0% | 0% | 5% | 5% | 5% |
-| IPCA+ Estrutural | 10% | 10% | 10% | 10% | 10% |
+| IPCA+ Estrutural | 7% | 7% | 7% | 7% | 7% |
 | Equity total | 90% | 90% | 85% | 85% | 85% |
 | SWRD | 35% | 35% | 33% | 33% | 33% |
 | AVGS (US + INT) | 25% | 25% | 25% | 25% | 25% |
@@ -70,7 +70,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
 | Renda+ 2065 tatico | <=5% | <=5% | <=5% | <=3% | 0% |
 
-> IPCA+ estrutural 10% aprovado em 2026-03-18 (taxa 7%+, top decile historico). Ladder: IPCA+ 2035 (40%) + 2040 (35%) + 2050 (25%). Sem cupom semestral. Serve como rendimento E buffer (bond tent na transicao FIRE).
+> IPCA+ estrutural 7% aprovado (revisado de 10% em 2026-03-19). 100% no IPCA+ 2040 (taxa ~7,31% real, NTN-B Principal sem cupom). Vence 3 anos pos-FIRE = buffer perfeito. Compra direta no Tesouro (ETF descartado). IPCA+ 2035 nao existe sem cupom semestral — ladder original corrigido.
 
 ---
 
@@ -81,7 +81,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 3. **Renda+ 2065**: compra DCA ate 5% se taxa >= 6,5%. Venda tudo se taxa <= 6,0% (ganho esperado +39,5% liq). Se taxa 9%+: manter pelo carrego
 4. **IPCA+ 2040 (existente)**: resgatar apos completar 2 anos (15% IR) e investir estrategicamente
 5. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
-6. **IPCA+ estrutural 10% (NOVO)**: executar DCA em 2-3 tranches (mar-abr 2026). Ladder: IPCA+ 2035 R$139k / 2040 R$122k / 2050 R$87k
+6. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro
 
 ---
 

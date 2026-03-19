@@ -9,7 +9,8 @@
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
 | 2026-03-18 | Criacao do Head (00) como gestor de portfolio e planejamento | Separar coordenacao geral + planejamento pessoal (Head) de decisoes de investimento (CIO) | Diego |
-| 2026-03-18 | IPCA+ estrutural 10% antecipado | Taxa 7%+ top decile historico. Ladder 2035/2040/2050 sem cupom. Gatilho dos 48 removido | CIO, RF, FIRE, Advocate |
+| 2026-03-18 | ~~IPCA+ estrutural 10% antecipado~~ | ~~Ladder 2035/2040/2050~~ | — |
+| 2026-03-19 | IPCA+ estrutural **7%**, 100% no IPCA+ 2040 | Revisado: 2035 nao existe sem cupom. 10%→7%. Ladder→concentrado. Taxa ~7,31% real. Vence 3a pos-FIRE = buffer | CIO, RF, FIRE, Advocate |
 | 2026-03-18 | JPGL confirmado como multifator | AVGC closet indexing, JPGL complementa com momentum + low vol | CIO, Factor |
 
 ---
