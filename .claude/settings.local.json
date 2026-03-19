@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs ls:*)",
+      "Bash(find /Users/diegodemorais/.claude -name \"*.md\" -type f -exec grep -l \"Agent tool\\\\|invoke.*agent\\\\|SendMessage\" {})",
+      "WebSearch",
+      "Bash(mv head-investimentos.md head.md)",
+      "Bash(mv factor-investing.md factor.md)",
+      "Bash(mv renda-fixa-brasil.md rf.md)",
+      "Bash(mv aposentadoria-fire.md fire.md)",
+      "Bash(mv tributacao-investimentos.md tax.md)",
+      "WebFetch(domain:braziljournal.com)",
+      "WebFetch(domain:taxas-tesouro.com)",
+      "WebFetch(domain:maisretorno.com)",
+      "WebFetch(domain:atendimento.b3.com.br)",
+      "WebFetch(domain:statusinvest.com.br)",
+      "WebFetch(domain:clubedospoupadores.com)",
+      "WebFetch(domain:investidor10.com.br)",
+      "WebFetch(domain:www.investing.com)",
+      "WebFetch(domain:www.tesourodireto.com.br)",
+      "WebFetch(domain:am.jpmorgan.com)",
+      "WebFetch(domain:www.aqr.com)",
+      "WebFetch(domain:borainvestir.b3.com.br)",
+      "WebFetch(domain:theideafarm.com)",
+      "WebFetch(domain:www.ipopif.org)",
+      "Bash(python3:*)",
+      "Bash(grep -r '01 Head' /Users/diegodemorais/claude/code/investimentos --include=*.md)",
+      "Bash(curl -s \"https://query1.finance.yahoo.com/v8/finance/chart/SWRD.L?range=1d&interval=1d\")",
+      "WebFetch(domain:finance.yahoo.com)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
