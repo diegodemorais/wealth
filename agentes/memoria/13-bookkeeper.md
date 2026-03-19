@@ -15,13 +15,39 @@
 
 ## Ultima Reconciliacao
 
-| Campo | Valor | Data |
-|-------|-------|------|
-| Patrimonio total | R$ 3.482.633 | 2026-03-18 |
-| Cambio referencia | R$ 5,24 | 2026-03-18 |
-| Fonte | Snapshot carteira.md | — |
+| Campo | Valor | Data | Fonte |
+|-------|-------|------|-------|
+| Patrimonio total | R$ 3.436.176 | 2026-03-19 | Google Sheets |
+| Equity total | R$ 3.121.430 (USD $595.517) | 2026-03-19 | Google Sheets |
+| Cambio referencia | R$ 5,24 (liq R$ 5,25) | 2026-03-19 | Google Sheets |
 
-> **Alerta**: patrimonio pode ter caido com risk-off global (2026-03-19). Proxima reconciliacao necessaria quando Diego fornecer dados atualizados.
+### Posicoes detalhadas (USD, 2026-03-19)
+
+| Bucket | ETF | USD | % Equity | Lucro |
+|--------|-----|-----|----------|-------|
+| SWRD (35%) | LON:SWRD | $245.056 | 41,2% | +40,8% |
+| AVEM (20%) | LON:EIMI | $94.469 | 15,9% | +52,1% |
+| | AVES | $55.917 | 9,4% | +32,7% |
+| | DGS | $11.255 | 1,9% | +19,3% |
+| AVGS (25%) | USSC | $29.726 | 5,0% | +62,0% |
+| | AVUV | $58.489 | 9,8% | +30,6% |
+| | AVDV | $92.666 | 15,6% | +68,6% |
+| | AVGS | $5.812 | 1,0% | -0,1% |
+| JPGL (20%) | LON:IWVL | $2.128 | 0,4% | +66,8% |
+| | LON:JPGL | $0 | 0,0% | +24,8% |
+| **Total** | | **$595.517** | **100%** | — |
+
+### Blocos nao-equity
+
+| Bloco | Valor BRL | % Total |
+|-------|-----------|---------|
+| FIRE fixo (IPCA+ 2040) | R$ 13.260 | 0,4% |
+| Reserva (IPCA+ 2029) | R$ 87.847 | 2,6% |
+| Risco Juros (Renda+ 2065) | R$ 107.756 | 3,1% |
+| Risco Crypto (HODL11 + spot) | R$ 105.896 | 3,1% |
+
+### Ativos com saldo zero (nao-posicao)
+WRDUSW-USD, F50A.DE, AVEM UCITS, LON:EMVL, ZPRX.DE, LON:IWQU, LON:IWMO
 
 ---
 
