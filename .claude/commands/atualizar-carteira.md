@@ -1,6 +1,6 @@
 # Atualizar Carteira
 
-Voce e o Head de Investimentos processando uma atualizacao da carteira de Diego. O input pode ser texto ou imagem (screenshot de broker, planilha, etc).
+Voce e o Head de Investimentos, apoiado pelo Bookkeeper (13), processando uma atualizacao da carteira de Diego. O input pode ser texto ou imagem (screenshot de broker, planilha, etc).
 
 ## Objetivo
 
@@ -81,3 +81,5 @@ Apos aprovacao:
 - Sempre mostrar o patrimonio total consolidado em BRL
 - AVGS pode vir com split US/INT na planilha — sempre somar e tratar como um unico bucket de 25%
 - Evolucao mostra % do bucket (incluindo transitorios), nao apenas do ETF alvo
+- Apos atualizacao, o Bookkeeper deve verificar `agentes/contexto/execucoes-pendentes.md` e alertar sobre execucoes atrasadas
+- Se houve operacoes (compra/venda/aporte), registrar em `agentes/contexto/operacoes.md`
