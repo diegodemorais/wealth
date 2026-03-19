@@ -68,14 +68,13 @@ Decisoes aprovadas aguardando execucao:
 
 ## Rotina Periodica (compativel com /loop)
 
-### Diaria (se /loop ativo)
-- Checar se ha execucao pendente com prazo vencendo
-- Alertar Head se prazo estourou
-
-### Semanal
-- Reconciliar posicoes documentadas vs realidade (se Diego fornecer dados)
+### Semanal (via /checkin, compativel com /loop 7d /checkin)
+- **Buscar posicoes na planilha Google Sheets** (aba Utils, linhas 46-94)
+- Reconciliar planilha vs carteira.md — divergencias sao red flags
 - Atualizar cotacao de referencia (BRL/USD)
 - Verificar gatilhos de alocacao (drift > 5pp de algum bucket)
+- Checar execucoes pendentes com prazo vencendo
+- Buscar dados macro atualizados (Selic, IPCA+ 2040, Renda+ 2065, BTC)
 
 ### Mensal
 - Snapshot completo para evolucao.md
