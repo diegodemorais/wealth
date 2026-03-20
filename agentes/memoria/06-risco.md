@@ -37,6 +37,31 @@
 
 ---
 
+## Stress Test Soberano BR (RK-001, 2026-03-20)
+
+### Drawdown Map
+
+| Cenario | Bloco Soberano | Carteira Total |
+|---------|---------------|----------------|
+| 1 — Fiscal BR (2015 style) | -18,2% do bloco (-R$83k) | -6,8% a -11,3% |
+| 2 — Risk-off global (2022 style) | -11,8% do bloco (-R$54k) | -25,4% |
+| 3 — Worst case (ambos) | -23,4% do bloco (-R$107k) | -24,5% (BRL) |
+
+### Conclusoes Chave
+- Risco dominante da carteira e equity (89%), NAO bloco soberano (13%)
+- IPCA+ 2040 hold-to-maturity: risco de credito (baixo). Renda+ 2065: risco de mercado (alto). Naturezas diferentes
+- Sizing IPCA+ 7% adequado. NAO reduzir
+- FIRE sobrevive ao worst case com folga (horizonte 11 anos + aportes R$25k/mes)
+- Se bloco soberano > 15%: review obrigatorio de sizing
+
+### Withdrawal Rules (proposta — pendente confirmacao Diego)
+1. NUNCA liquidar Renda+ e IPCA+ no mesmo trimestre
+2. Prioridade de liquidacao: Reserva 2029 > IPCA+ 2040 > Renda+ 2065
+3. Renda+ taxa 9%+: NUNCA vender (manter pelo carrego)
+4. Necessidade de liquidez: equity global primeiro
+
+---
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |
@@ -46,3 +71,4 @@
 | 2026-03-18 | RF-001: duration corrigida e sizing | Duration 43,6 (nao 36,5). Compra DCA ate 5% se taxa >= 6,5%. Drawdown worst case (8%): -38,6% |
 | 2026-03 | Condicoes de saida total cripto | Regulacao confiscatoria OU falha de protocolo |
 | 2026-03 | Teto do bloco de risco | 10% do patrimonio |
+| 2026-03-20 | RK-001: Stress test soberano BR | 3 cenarios modelados. Bloco soberano 13% aceitavel. IPCA+ 7% sizing adequado. Withdrawal rules propostas |
