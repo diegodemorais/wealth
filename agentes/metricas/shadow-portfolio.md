@@ -42,11 +42,17 @@ Representa a alternativa "simples e passiva" — exposicao global diversificada 
 | VWRA 1Y return (USD, mar 2025-mar 2026) | ~24.6% |
 | VWRA TER | 0.22% |
 
-### Retorno Esperado (longo prazo, real, pre-tax)
-- Equity (VWRA): ~5.0% real (global equity premium historico, Dimson et al.)
-- RF (IPCA+ 2040): 7.16% real (taxa de compra, hold to maturity)
-- Blend 93/7: ~5.15% real
-- Liquido de impostos (15%): ~4.38% real
+### Retorno Esperado (longo prazo, real em BRL, pre-tax)
+
+Premissa de depreciacao real BRL aprovada 2026-03-20: 0.5%/ano (base), 1.5% (favoravel), 0% (stress).
+
+| Cenario | Equity USD real | Dep. real BRL | Equity BRL real | Blend 93/7 real | Liq. impostos (15%) |
+|---------|----------------|---------------|-----------------|-----------------|---------------------|
+| Base | ~4.8% | +0.5% | ~5.3% | ~5.43% | ~4.62% |
+| Favoravel | ~4.8% | +1.5% | ~6.3% | ~6.24% | ~5.30% |
+| Stress | ~4.8% | 0% | ~4.8% | ~4.97% | ~4.22% |
+
+- RF (IPCA+ 2040): 7.16% real bruto, ~6.09% liquido (invariante ao cambio — denominado em BRL)
 
 ### Tracking
 

@@ -102,6 +102,20 @@ IPCA+ 2040 vence em 2040 (Diego tera 53 anos). Pos-vencimento, capital realocado
 
 ---
 
+## Premissas de Projecao (aprovadas 2026-03-20)
+
+| Premissa | Base | Favoravel | Stress |
+|----------|------|-----------|--------|
+| Depreciacao real BRL | 0.5%/ano | 1.5%/ano | 0%/ano |
+| Equity real em BRL | 5.34%/ano | ~6.3%/ano | ~4.8%/ano |
+| IPCA+ liquido (hold to maturity) | 5.5-6.0%/ano | — | — |
+| IPCA medio estimado | 4-5%/ano | — | — |
+
+- **Toda projecao futura (FIRE, patrimonio, withdrawal rate) roda os 3 cenarios.**
+- Equity BRL real = equity real USD (~4.8%) + depreciacao real BRL do cenario.
+
+---
+
 ## Regras Universais
 
 - Rebalancear SEMPRE via aportes, nunca por venda de ativo com lucro. Por venda, apenas se nao tiver lucro ou se fugir da estrategia da carteira.
