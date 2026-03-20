@@ -25,7 +25,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|-------------|------------|
-| RK-001-Stress_test_quantitativo_carteira | Stress test quantitativo da carteira (cenarios historicos + correlacao) | 06 Risco | Alta |
+| RK-001-Stress_test_risco_soberano_BR | Stress test risco soberano Brasil (bloco ~13%) | 06 Risco | Alta |
+| FIRE-002-Plano_B_perda_renda | Plano B para perda de renda antes dos 50 | 04 FIRE | Alta |
+| HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | Alta |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
