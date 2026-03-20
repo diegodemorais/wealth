@@ -18,7 +18,7 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ estrutural | ~~Idade 48~~ **Antecipado** | 7% aprovado, 100% IPCA+ 2040 (taxa ~7,31%). Revisado 2026-03-19: 2035 nao existe sem cupom, 10%→7%, ladder→concentrado. DCA mar-abr 2026 | **Aprovado** |
+| IPCA+ estrutural | ~~Idade 48~~ **Antecipado** | Ate 20% da carteira, 100% IPCA+ 2040. Piso: IPCA+ >= 6,4% (breakeven puro). **Prioridade: IPCA+ primeiro, JPGL depois** | **Executar** |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA em 3 tranches ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado, +39,5% liq. esperado) | Monitorando mensalmente |
 | HODL11 piso | Alocacao < 1,5% | Comprar ate 3% | Monitorando trimestralmente |

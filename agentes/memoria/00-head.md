@@ -10,7 +10,8 @@
 |------|---------|----------|---------------------|
 | 2026-03-18 | Criacao do Head (00) como gestor de portfolio e planejamento | Separar coordenacao geral + planejamento pessoal (Head) de decisoes de investimento (CIO) | Diego |
 | 2026-03-18 | ~~IPCA+ estrutural 10% antecipado~~ | ~~Ladder 2035/2040/2050~~ | — |
-| 2026-03-19 | IPCA+ estrutural **7%**, 100% no IPCA+ 2040 | Revisado: 2035 nao existe sem cupom. 10%→7%. Ladder→concentrado. Taxa ~7,31% real. Vence 3a pos-FIRE = buffer | CIO, RF, FIRE, Advocate |
+| 2026-03-19 | ~~IPCA+ estrutural 7%, 100% no IPCA+ 2040~~ | ~~Superado: teto subiu para 20%~~ | — |
+| 2026-03-20 | IPCA+ estrutural ate **20%**, IPCA+ 2040. Piso 6,4% | Breakeven puro vs equity 5,34% BRL real. DCA ate 20% enquanto taxa >= 6,4%. **Prioridade: IPCA+ > JPGL** | RF |
 | 2026-03-18 | JPGL confirmado como multifator | AVGC closet indexing, JPGL complementa com momentum + low vol | CIO, Factor |
 
 ---
