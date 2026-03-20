@@ -109,3 +109,4 @@ IPCA+ 2040 vence em 2040 (Diego tera 53 anos). Pos-vencimento, capital realocado
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
 - **Piso universal para RF longa: IPCA+ 6.0%.** Abaixo disso, RF longa brasileira nao justifica amarrar capital. Coerente com gatilho de venda do Renda+ 2065 (<=6.0%)
+- **Sem alavancagem.** Carry trade / margin na IB descartado — risco incompativel com fase de acumulacao FIRE (decisao mar/2026, apos desmonte de R$533k em set/2025)
