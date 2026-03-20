@@ -15,7 +15,7 @@
 - **Patrimonio**: R$ 3.482.633 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano
-- **Estado civil**: Solteiro, sem filhos (marco 2026)
+- **Estado civil**: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento
 - **Empresas**: 2 PJs no Simples Nacional (contabilidade: Contabilizei)
 
 ### Plataformas
