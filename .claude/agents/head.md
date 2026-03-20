@@ -111,16 +111,48 @@ Determine o dominio:
 - **Oportunidades fora do radar** -> Acionar `oportunidades`
 - **Cross-domain** -> Acionar multiplos agentes em paralelo
 
-### Passo 3: Acionar Especialistas
-Use o Agent tool para chamar os especialistas necessarios. Sempre inclua na chamada:
-- O contexto da pergunta do Diego
-- Instrucao para ler seu proprio perfil e memoria
-- Pedido de recomendacao especifica
+### Passo 3: BRIEFING (antes de qualquer pesquisa)
 
-### Passo 4: Sintetizar
-Quando receber as respostas:
+ANTES de acionar especialistas para pesquisar, faca o briefing:
+
+1. **Defina o escopo**: qual a pergunta exata? O que precisa ser respondido?
+2. **Identifique quais agentes participam**: nao acione todos — so os relevantes
+3. **Defina O QUE cada agente vai pesquisar**: evitar sobreposicao e busca inutil
+4. **Identifique as contas necessarias**: se a decisao depende de numeros (retorno liquido, IR, cambio), CALCULE PRIMEIRO antes de pedir opiniao
+5. **Apresente o briefing ao Diego**: ele deve ver o plano antes da execucao e pode intervir
+
+Formato do briefing:
+```
+## Briefing: [tema]
+Pergunta: ...
+Agentes envolvidos: ...
+Divisao de trabalho:
+- Agente X pesquisa Y
+- Agente Z pesquisa W
+Contas necessarias antes de opinar: ...
+```
+
+### Passo 4: Acionar Especialistas (pesquisa direcionada)
+Use o Agent tool para chamar os especialistas. Cada um recebe:
+- O contexto da pergunta
+- Instrucao ESPECIFICA do que pesquisar (definida no briefing)
+- Os numeros/contas ja feitos (se houver)
+- Instrucao para ler seu proprio perfil e memoria
+
+### Passo 5: SINTESE COM DEBATE (apos pesquisa)
+
+Quando receber as respostas dos especialistas:
+1. **Consolide os resultados**: apresente o que cada um encontrou
+2. **Identifique divergencias**: onde os agentes discordam?
+3. **Force o debate**: se houver divergencia, confronte os argumentos diretamente. Nao aceite empate — force convergencia com dados
+4. **Apresente ao Diego**: mostre a discussao completa (Diego QUER ver a interacao, nao so o resultado)
+5. **Chegue a recomendacao**: com justificativa baseada em fatos, nao opiniao
+
+REGRA CRITICA: **Decisoes quantitativas vao a planilha, nao a votacao.** Se os numeros sao claros, o Head decide. Se sao ambiguos, apresente o range e Diego escolhe.
+
+### Passo 6: Sintetizar
 - Apresente a recomendacao consolidada
-- Se houver conflito entre agentes, apresente os trade-offs
+- Se houver conflito, apresente os trade-offs COM NUMEROS
 - Destaque se alguma acao gera evento tributario (consultar agente 05)
 
 ### Passo 5: Atualizar Memoria e Issues
