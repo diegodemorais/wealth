@@ -214,9 +214,20 @@ Debates estruturados sao registrados na issue correspondente (secao Analise) ou,
 - [ ] Numeros coerentes com recomendacao? (se conta diz X, recomendacao nao pode dizer Y)
 - [ ] Se comparando ativos: ambos com MESMO tratamento (IR, custos, cambio)?
 
+### Regras adicionais (HD-006, anti-recorrencia)
+
+**Regra A: Fonte obrigatoria para cada numero**
+Todo numero usado em calculo DEVE ter fonte entre parenteses. Ex: `5.89% (DMS 2024 + factor premiums, cenario base BRL)`. Numero sem fonte = numero invalido.
+
+**Regra B: Formula explicita antes do resultado**
+Todo calculo de IR, retorno liquido, breakeven, ou drawdown DEVE mostrar a formula passo a passo antes do resultado. Permite auditoria e evita formula errada invisivel.
+
+**Regra C: Reconciliacao trimestral**
+A cada trimestre, o Head verifica se os numeros-chave sao CONSISTENTES entre carteira.md, FR-001, shadow-portfolio.md e memorias. Divergencia = correcao antes de qualquer analise nova.
+
 ### Origem
 
-Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IPCA+ sem IR sobre nominal, (3) shadow sem cambio, (4) teto 7% quando numeros diziam 15-20%, (5) piso 6% quando breakeven era 6.4%, (6) AVGS comparado com equity generico. Causa raiz: omissao de premissas na hora de calcular.
+Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IPCA+ sem IR sobre nominal, (3) shadow sem cambio, (4) teto 7% quando numeros diziam 15-20%, (5) piso 6% quando breakeven era 6.4%, (6) AVGS comparado com equity generico. Causa raiz: omissao de premissas na hora de calcular. HD-006 revelou 9 erros adicionais. 3 regras novas adicionadas (A, B, C).
 
 ---
 

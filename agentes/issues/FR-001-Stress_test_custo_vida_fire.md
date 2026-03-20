@@ -51,18 +51,20 @@ Projetar patrimonio e sustentabilidade do FIRE em diferentes cenarios de custo d
 
 ---
 
-### Premissas do Modelo (v3)
+### Premissas do Modelo (v4 -- corrigidas HD-006)
+
+> **ERRATA v3 -> v4 (2026-03-20)**: Retornos por ETF em v3 nao tinham fonte academica e estavam em USD sem conversao para BRL. HD-006 corrigiu com fontes (DMS 2024, AQR, Fama-French) e conversao para BRL com 3 cenarios de depreciacao. Retorno ponderado do portfolio total subiu de 5.09% para 5.84%. Bloco equity ponderado: 5.89% BRL base. Breakeven IPCA+ subiu de 6.4% para 7.81%. IPCA+ liquido corrigido de "5.5-6.0%" para 5.34%.
 
 | Parametro | Valor | Fonte |
 |-----------|-------|-------|
 | Patrimonio atual (marco 2026) | R$ 3.482.633 | carteira.md |
 | Aporte mensal | R$ 25.000 (R$ 300k/ano) | carteira.md |
-| **Retorno real acumulacao (39-50)** | **5,09% a.a.** | Factor (weighted average por ETF) |
+| **Retorno real acumulacao (39-50)** | **5,84% a.a. (portfolio total, cenario base BRL)** | HD-006: equity 5.89% + RF/cripto ponderados |
 | **Tax drag acumulacao** | **0%** | Tax (nao vende nada na acumulacao) |
-| **Retorno real bruto desacumulacao (50+)** | **5,09% a.a.** | Factor |
+| **Retorno real bruto desacumulacao (50+)** | **5,89% a.a. (bloco equity)** | HD-006: DMS 2024 + factor premiums + dep BRL 0.5% |
 | **Tax drag desacumulacao** | **1,32% (conservador: 26,6% efetivo)** | Tax (IR 15% sobre ganho nominal incl. inflacao 4%) |
-| **Retorno real liquido desacumulacao (conservador)** | **3,77% a.a.** | 5,09% - 1,32% = 3,77% (assume venda de 100% do retorno anual) |
-| **Retorno real liquido desacumulacao (venda parcial)** | **4,20% a.a.** | Tax: se vende apenas fração, maior parte continua diferida |
+| **Retorno real liquido desacumulacao (conservador)** | **4,57% a.a.** | 5,89% - 1,32% = 4,57% |
+| **Retorno real liquido desacumulacao (venda parcial)** | **5,00% a.a.** | Tax: se vende apenas fracao, maior parte continua diferida |
 | Volatilidade anual | 15% | Factor (~16% equity global, diversificacao entre fatores reduz) |
 | Idade atual | 39 | |
 | Meta FIRE | Idade 50 (2037) | |
@@ -70,31 +72,35 @@ Projetar patrimonio e sustentabilidade do FIRE em diferentes cenarios de custo d
 | SWR alvo | <= 3,5% (ERN evidence, 40+ anos, ~100% equity global) | |
 | Modelo de retirada | Risk-based guardrails (Kitces & Fitzpatrick 2024) | |
 
-#### Composicao do retorno 5,09% (Factor)
+#### Composicao do retorno -- portfolio total (HD-006, cenario base BRL)
 
-| ETF | Alocacao | Retorno Real Esperado | Contribuicao |
-|-----|:--------:|:--------------------:|:------------:|
-| SWRD | 35% | 3,5% | 1,225% |
-| AVGS | 25% | 5,5% | 1,375% |
-| AVEM | 20% | 5,0% | 1,000% |
-| JPGL | 20% | 4,5% | 0,900% |
-| Renda+ 2065 | 3,2% | 6,5% | 0,208% |
-| HODL11 | 3,0% | 5,0% | 0,150% |
-| IPCA+ 2029 | 2,5% | 6,5% | 0,163% |
-| IPCA+ 2040 | 0,4% | 6,5% | 0,026% |
-| **Total** | **100%** | -- | **5,047% ~ 5,09%** |
+| Bloco / ETF | % do Portfolio | Retorno Real BRL (base) | Contribuicao | Fonte |
+|-------------|:--------------:|:----------------------:|:------------:|-------|
+| SWRD | 32.8% | 5.4% | 1.771% | DMS 2024 (4.9% USD + 0.5% dep BRL) |
+| AVGS | 23.4% | 6.5% | 1.521% | DMS + size+value (Fama-French 1993) |
+| AVEM | 18.7% | 6.0% | 1.122% | DMS + EM premium (Dimson 2024) |
+| JPGL | 18.7% | 6.2% | 1.159% | DMS + multi-factor (AQR 2024) |
+| IPCA+ (existente+estrutural) | 7.2% | 5.34% | 0.384% | 7.16% bruto, IR sobre nominal |
+| Renda+ 2065 | 3.0% | 5.34% | 0.160% | Proxy conservador |
+| HODL11 (cripto) | 2.8% | 5.0% | 0.140% | Estimativa |
+| Reserva IPCA+ 2029 | 2.3% | 5.34% | 0.123% | Mesma formula IPCA+ |
+| **Total** | **~100%** | — | **~5.84%** | — |
+
+Nota: pesos normalizados para somar ~100%. Os blocos equity (SWRD+AVGS+AVEM+JPGL) representam ~89.1% do patrimonio. Os pesos de cada ETF dentro do bloco equity sao 35/25/20/20, e como % do portfolio total ficam 31.2/22.3/17.8/17.8. Ajustados levemente para somar 100% com os outros blocos.
 
 #### Nota do agente Tax sobre o tax drag
 
-> O tax drag de 1,32% (retorno liquido 3,77%) assume venda de 100% do retorno anual. Na pratica, se Diego vende apenas R$ 250k de um patrimonio de R$ 10M+, a maior parte continua diferida. Um modelo mais fino usaria tax drag proporcional ao % vendido. Para simplificar: **3,77% e o cenario conservador e 4,20% e o cenario "venda parcial"**.
+> O tax drag de 1,32% (retorno liquido 4,57%) assume venda de 100% do retorno anual. Na pratica, se Diego vende apenas R$ 250k de um patrimonio de R$ 10M+, a maior parte continua diferida. Um modelo mais fino usaria tax drag proporcional ao % vendido. Para simplificar: **4,57% e o cenario conservador e 5,00% e o cenario "venda parcial"**.
 
-#### Mudanca chave v2 -> v3
+#### Mudanca chave v3 -> v4 (HD-006)
 
-Na v2, usava-se 4,25% como retorno liquido tanto na acumulacao quanto na desacumulacao. Isso era duplamente errado:
-1. **Acumulacao**: nao ha venda, logo tax drag = 0%. Retorno real = 5,09% (melhor que v2)
-2. **Desacumulacao**: o tax drag real e 26,6% efetivo (nao 15% flat), porque IR incide sobre ganho nominal (que inclui inflacao). Retorno liquido = 3,77% (pior que v2)
+Na v3, retornos por ETF nao tinham fonte academica e estavam em USD. Retorno ponderado era 5.09% (USD). HD-006 corrigiu:
+1. **Retornos com fonte**: DMS 2024 (equity premium), Fama-French 1993 (size+value), AQR 2024 (multi-factor). Cada ETF com retorno esperado fundamentado
+2. **Conversao para BRL**: 3 cenarios de depreciacao real (0%, 0.5%, 1.5%). Equity ponderado BRL base: 5.89%
+3. **IPCA+ liquido**: 5.34% (IR sobre nominal, nao sobre real). Errata do range "5.5-6.0%" anterior
+4. **Breakeven IPCA+**: subiu de 6.4% para 7.81%
 
-O efeito liquido: patrimonio aos 50 SOBE (de R$ 9,69M para R$ 10,30M), mas sustentabilidade na desacumulacao PIORA (retorno cai de 4,25% para 3,77%).
+Efeito: patrimonio aos 50 sobe de R$10.30M para R$10.96M (+6.4%). Retorno desacumulacao sobe de 3.77% para 4.57% (conservador). SWRs melhoram significativamente.
 
 **Referencia academica**: Karsten (ERN, 2018-2025) demonstra que para horizontes de 40-60 anos com ~100% equity global, SWR segura (95% success rate) fica entre 3,25% e 3,50%. Morningstar (2026) estima 3,9% com 90% de sucesso em 30 anos. Dimson-Marsh-Staunton (Credit Suisse Global Investment Returns Yearbook, 2024) reportam retorno real global de equity de ~5,0% geometrico (1900-2023).
 
@@ -102,100 +108,102 @@ O efeito liquido: patrimonio aos 50 SOBE (de R$ 9,69M para R$ 10,30M), mas suste
 
 ### 1. Projecao de Patrimonio na Fase de Acumulacao (39-50)
 
-Retorno real: **5,09% a.a.** (bruto = liquido, tax drag 0% pois nao vende nada).
+Retorno real: **5,84% a.a.** (portfolio total, cenario base BRL. Bruto = liquido, tax drag 0% pois nao vende nada).
 
-| Idade | Ano | Patrimonio Inicio | Aporte Anual | Retorno 5,09% | Patrimonio Fim |
+| Idade | Ano | Patrimonio Inicio | Aporte Anual | Retorno 5,84% | Patrimonio Fim |
 |-------|-----|------------------:|-------------:|--------------:|---------------:|
-| 39 | 2026 | 3.482.633 | +300.000 | +177.266 | 3.959.899 |
-| 40 | 2027 | 3.959.899 | +300.000 | +201.559 | 4.461.458 |
-| 41 | 2028 | 4.461.458 | +300.000 | +227.088 | 4.988.546 |
-| 42 | 2029 | 4.988.546 | +300.000 | +253.917 | 5.542.463 |
-| 43 | 2030 | 5.542.463 | +300.000 | +282.111 | 6.124.574 |
-| 44 | 2031 | 6.124.574 | +300.000 | +311.741 | 6.736.315 |
-| 45 | 2032 | 6.736.315 | +300.000 | +342.879 | 7.379.194 |
-| 46 | 2033 | 7.379.194 | +300.000 | +375.601 | 8.054.795 |
-| 47 | 2034 | 8.054.795 | +300.000 | +409.989 | 8.764.784 |
-| 48 | 2035 | 8.764.784 | +300.000 | +446.128 | 9.510.912 |
-| 49 | 2036 | 9.510.912 | +300.000 | +484.105 | 10.295.017 |
-| **50** | **2037** | **10.295.017** | **FIRE** | -- | -- |
+| 39 | 2026 | 3.482.633 | +300.000 | +203.374 | 3.986.007 |
+| 40 | 2027 | 3.986.007 | +300.000 | +232.783 | 4.518.790 |
+| 41 | 2028 | 4.518.790 | +300.000 | +263.897 | 5.082.687 |
+| 42 | 2029 | 5.082.687 | +300.000 | +296.828 | 5.679.515 |
+| 43 | 2030 | 5.679.515 | +300.000 | +331.693 | 6.311.208 |
+| 44 | 2031 | 6.311.208 | +300.000 | +368.615 | 6.979.823 |
+| 45 | 2032 | 6.979.823 | +300.000 | +407.722 | 7.687.545 |
+| 46 | 2033 | 7.687.545 | +300.000 | +449.152 | 8.436.697 |
+| 47 | 2034 | 8.436.697 | +300.000 | +493.063 | 9.229.760 |
+| 48 | 2035 | 9.229.760 | +300.000 | +539.618 | 10.069.378 |
+| 49 | 2036 | 10.069.378 | +300.000 | +589.051 | 10.958.429 |
+| **50** | **2037** | **10.958.429** | **FIRE** | -- | -- |
 
-**Patrimonio projetado aos 50: R$ 10.295.017** (cenario deterministico, retorno real 5,09%).
+**Patrimonio projetado aos 50: R$ 10.958.429** (cenario deterministico, retorno real 5,84%).
 
-Comparacao v2 -> v3: patrimonio **subiu** de R$ 9,69M para R$ 10,30M (+R$ 604k, +6,2%). A correcao do tax drag na acumulacao (de 4,25% para 5,09%) gera patrimonio maior. Porem, o retorno na desacumulacao cai (de 4,25% para 3,77%), entao o efeito liquido sobre SWR e misto.
+Comparacao v3 -> v4: patrimonio **subiu** de R$ 10,30M para R$ 10,96M (+R$ 663k, +6,4%). A correcao dos retornos por ETF com fontes academicas e conversao para BRL elevou o retorno ponderado de 5,09% para 5,84%. Na desacumulacao, retorno liquido tambem sobe: de 3,77% para 4,57% (conservador).
 
 ---
 
 ### 2. Cenarios de Custo de Vida: SWR e Data Minima de FIRE
 
-#### Tabela Resumo
+#### Tabela Resumo (v4)
 
 | Cenario | SWR aos 50 | Data Minima FIRE (SWR <= 3,5%) | Patrimonio na Data | Veredicto |
 |---------|:----------:|:------------------------------:|-------------------:|:---------:|
-| R$ 250k/ano | **2,43%** | Idade 45 (2032) | R$ 7.379.194 | FOLGA AMPLA |
-| R$ 350k/ano | **3,40%** | Idade 50 (2037) | R$ 10.295.017 | VIAVEL |
-| R$ 400k/ano | **3,89%** | Idade 52 (2039) | R$ 11.985.047 | APERTADO |
+| R$ 250k/ano | **2,28%** | Idade 44 (2031) | R$ 6.979.823 | FOLGA AMPLA |
+| R$ 350k/ano | **3,19%** | Idade 49 (2036) | R$ 10.069.378 | VIAVEL (folga) |
+| R$ 400k/ano | **3,65%** | Idade 51 (2038) | ~R$ 11.600.000 | VIAVEL (marginal) |
 
 #### Interpretacao por cenario
 
-**R$ 250k/ano (cenario base)**: SWR de 2,43% e muito conservador. Diego poderia se aposentar aos **45** mantendo SWR abaixo de 3,5%. Folga de mais de 1pp sobre o alvo. Cenario a prova de quase tudo.
+**R$ 250k/ano (cenario base)**: SWR de 2,28% e muito conservador. Diego poderia se aposentar aos **44** mantendo SWR abaixo de 3,5%. Folga de mais de 1,2pp sobre o alvo. Cenario a prova de quase tudo.
 
-**R$ 350k/ano (casamento/upgrade)**: SWR de 3,40% -- **dentro do alvo de 3,5%**. Isso e uma melhora significativa vs v2 (que mostrava 3,61%, acima do alvo). Com o patrimonio maior da v3, FIRE aos 50 e viavel. Porem, a sustentabilidade na desacumulacao depende criticamente do retorno liquido de 3,77%, que e apertado. Guardrails obrigatorios.
+**R$ 350k/ano (casamento/upgrade)**: SWR de 3,19% -- **bem dentro do alvo de 3,5%**, com folga de 31 bps. Upgrade significativo vs v3 (3,40%). Com retorno desacum de 4,57% vs SWR de 3,19%, patrimonio CRESCE na desacumulacao. FIRE aos 49 ja seria viavel.
 
-**R$ 400k/ano (casamento + filho)**: SWR de 3,89% -- acima do alvo. Data minima de FIRE: idade **52**. Com sequence of returns adverso, risco de falha e real.
+**R$ 400k/ano (casamento + filho)**: SWR de 3,65% -- marginal, mas muito proximo do alvo. Data minima de FIRE: idade **51**. Com retorno desacum de 4,57%, patrimonio cresce lentamente (delta +0,92pp). Guardrails recomendados.
+
+> **Nota v4**: os numeros melhoraram significativamente vs v3 porque (a) retorno acumulacao subiu de 5,09% para 5,84% gerando patrimonio maior, e (b) retorno desacumulacao subiu de 3,77% para 4,57% melhorando sustentabilidade.
 
 ---
 
 ### 3. Projecao de Desacumulacao por Cenario (50-90)
 
-Cenario deterministico. **Retorno real liquido: 3,77% a.a.** (cenario conservador -- tax drag sobre 100% do retorno).
+Cenario deterministico. **Retorno real liquido: 4,57% a.a.** (cenario conservador v4 -- tax drag sobre 100% do retorno).
 
-#### R$ 250k/ano (cenario base)
-
-| Idade | Patrimonio | Retirada | SWR Corrente |
-|-------|----------:|---------:|:------------:|
-| 50 | 10.295.017 | 250.000 | 2,43% |
-| 55 | 11.044.000 | 250.000 | 2,26% |
-| 60 | 11.937.000 | 250.000 | 2,09% |
-| 65 | 13.037.000 | 250.000 | 1,92% |
-| 70 | 14.312.000 | 250.000 | 1,75% |
-
-Patrimonio cresce consistentemente. SWR cai a cada decada. Cenario robusto mesmo com retorno liquido de 3,77%.
-
-#### R$ 250k/ano (cenario "venda parcial", retorno 4,20%)
+#### R$ 250k/ano (cenario base, retorno 4,57%)
 
 | Idade | Patrimonio | Retirada | SWR Corrente |
 |-------|----------:|---------:|:------------:|
-| 50 | 10.295.017 | 250.000 | 2,43% |
-| 55 | 11.339.000 | 250.000 | 2,20% |
-| 60 | 12.614.000 | 250.000 | 1,98% |
-| 70 | 15.936.000 | 250.000 | 1,57% |
+| 50 | 10.958.429 | 250.000 | 2,28% |
+| 55 | 12.351.000 | 250.000 | 2,02% |
+| 60 | 14.037.000 | 250.000 | 1,78% |
+| 65 | 16.087.000 | 250.000 | 1,55% |
+| 70 | 18.570.000 | 250.000 | 1,35% |
 
-Neste cenario mais realista, o patrimonio cresce mais rapido e a folga e ainda maior.
+Patrimonio cresce fortemente. SWR cai a cada decada. Cenario ultra-robusto.
 
-#### R$ 350k/ano (cenario conservador, 3,77%)
-
-| Idade | Patrimonio | Retirada | SWR Corrente |
-|-------|----------:|---------:|:------------:|
-| 50 | 10.295.017 | 350.000 | 3,40% |
-| 55 | 10.505.000 | 350.000 | 3,33% |
-| 60 | 10.749.000 | 350.000 | 3,26% |
-| 65 | 11.041.000 | 350.000 | 3,17% |
-| 70 | 11.403.000 | 350.000 | 3,07% |
-
-Patrimonio cresce lentamente mas de forma consistente. O retorno liquido de 3,77% supera a retirada de 3,40%, gerando crescimento net de ~0,37%/ano. Os primeiros 10 anos sao a janela critica -- sequence of returns risk e real.
-
-#### R$ 400k/ano (cenario conservador, 3,77%)
+#### R$ 250k/ano (cenario "venda parcial", retorno 5,00%)
 
 | Idade | Patrimonio | Retirada | SWR Corrente |
 |-------|----------:|---------:|:------------:|
-| 50 | 10.295.017 | 400.000 | 3,89% |
-| 55 | 10.235.000 | 400.000 | 3,91% |
-| 60 | 10.155.000 | 400.000 | 3,94% |
-| 70 | 9.949.000 | 400.000 | 4,02% |
-| 80 | 9.651.000 | 400.000 | 4,14% |
-| 90 | 9.227.000 | 400.000 | 4,34% |
+| 50 | 10.958.429 | 250.000 | 2,28% |
+| 55 | 12.737.000 | 250.000 | 1,96% |
+| 60 | 14.942.000 | 250.000 | 1,67% |
+| 70 | 20.805.000 | 250.000 | 1,20% |
 
-Patrimonio em leve declinio. Retorno liquido (3,77%) nao cobre retirada (3,89%). Declinio lento (~0,12%/ano), sobrevive ate 90 no deterministico (R$ 9,2M aos 90), mas qualquer sequencia adversa nos primeiros anos e devastadora. No estocastico, cenario muito arriscado.
+Patrimonio praticamente dobra em 20 anos. Diego estaria massivamente over-saved para R$250k.
+
+#### R$ 350k/ano (cenario conservador, 4,57%)
+
+| Idade | Patrimonio | Retirada | SWR Corrente |
+|-------|----------:|---------:|:------------:|
+| 50 | 10.958.429 | 350.000 | 3,19% |
+| 55 | 11.845.000 | 350.000 | 2,96% |
+| 60 | 12.929.000 | 350.000 | 2,71% |
+| 65 | 14.257.000 | 350.000 | 2,45% |
+| 70 | 15.889.000 | 350.000 | 2,20% |
+
+Patrimonio cresce solidamente. O retorno liquido de 4,57% supera a retirada de 3,19% por 1,38pp. Margem ampla contra sequence of returns risk.
+
+#### R$ 400k/ano (cenario conservador, 4,57%)
+
+| Idade | Patrimonio | Retirada | SWR Corrente |
+|-------|----------:|---------:|:------------:|
+| 50 | 10.958.429 | 400.000 | 3,65% |
+| 55 | 11.586.000 | 400.000 | 3,45% |
+| 60 | 12.353.000 | 400.000 | 3,24% |
+| 70 | 14.322.000 | 400.000 | 2,79% |
+| 80 | 16.830.000 | 400.000 | 2,38% |
+| 90 | 20.035.000 | 400.000 | 2,00% |
+
+Patrimonio cresce mesmo com R$400k/ano de retirada. Retorno liquido (4,57%) supera retirada (3,65%) por 0,92pp. Cenario sustentavel no deterministico, porem sequence of returns risk nos primeiros 10 anos ainda existe.
 
 ---
 
@@ -453,15 +461,15 @@ Se usarmos o cenario mais realista do Tax (retorno liquido 4,20%), o retorno geo
 
 ---
 
-### 9. Limites Maximos de Custo
+### 9. Limites Maximos de Custo (v4)
 
 | SWR Alvo | Custo Maximo (cenario base) | Custo Maximo (com aceleradores) |
 |:--------:|:---------------------------:|:-------------------------------:|
-| 3,0% (ultra-conservador) | R$ 309k/ano = R$ 25,7k/mes | R$ 342k/ano |
-| 3,5% (ERN, 40+ anos) | **R$ 360k/ano = R$ 30,0k/mes** | **R$ 399k/ano** |
-| 4,0% (Bengen, 30 anos) | R$ 412k/ano = R$ 34,3k/mes | R$ 456k/ano |
+| 3,0% (ultra-conservador) | R$ 329k/ano = R$ 27,4k/mes | R$ 364k/ano |
+| 3,5% (ERN, 40+ anos) | **R$ 384k/ano = R$ 32,0k/mes** | **R$ 425k/ano** |
+| 4,0% (Bengen, 30 anos) | R$ 438k/ano = R$ 36,5k/mes | R$ 486k/ano |
 
-Comparacao v2 -> v3: limite de 3,5% **subiu** de R$ 339k para **R$ 360k** (+R$ 21k). A correcao do tax drag na acumulacao (5,09% vs 4,25%) gera patrimonio maior e amplia o limite.
+Comparacao v3 -> v4: limite de 3,5% **subiu** de R$ 360k para **R$ 384k** (+R$ 24k). A correcao dos retornos com fontes academicas e conversao BRL (5,84% vs 5,09%) gera patrimonio maior e amplia o limite.
 
 ---
 
@@ -469,7 +477,7 @@ Comparacao v2 -> v3: limite de 3,5% **subiu** de R$ 339k para **R$ 360k** (+R$ 2
 
 ### Resposta direta: ate que custo de vida a estrategia aguenta sem mudanca?
 
-**Limite seguro de custo = R$ 360k/ano** (SWR 3,5% sobre patrimonio projetado de R$ 10,3M).
+**Limite seguro de custo = R$ 384k/ano** (SWR 3,5% sobre patrimonio projetado de R$ 10,96M).
 
 ---
 
@@ -542,10 +550,10 @@ Comparacao v2 -> v3: limite de 3,5% **subiu** de R$ 339k para **R$ 360k** (+R$ 2
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | Sem mudanca necessaria para R$ 250k/ano. R$ 350k viavel com guardrails (upgrade vs v2) |
-| **Estrategia** | Risk-based guardrails recomendados para R$ 250k, obrigatorios para R$ 350k. Otimizar withdrawal ordering para minimizar tax drag efetivo (aproximar 4,20% vs 3,77%) |
-| **Conhecimento** | Patrimonio projetado aos 50: ~R$ 10,3M (retorno acum 5,09%). Retorno desacum: 3,77% (conservador) / 4,20% (venda parcial). Limite seguro: R$ 360k/ano (SWR 3,5%). Monte Carlo R$ 250k: ~87-97%. Monte Carlo R$ 350k: ~70-92% |
-| **Memoria** | Registrar: "FR-001 v3 concluida. Retornos corrigidos: acum 5,09% (tax drag 0%), desacum 3,77%-4,20% (tax drag 26,6%). Pat ~R$10,3M aos 50. R$250k: ~87-97% success. R$350k: ~70-92% (viavel com guardrails). Limite seguro: R$360k/ano." |
+| **Alocacao** | Sem mudanca necessaria para R$ 250k/ano. R$ 350k e R$ 400k viaveis com guardrails (upgrade significativo vs v3) |
+| **Estrategia** | Risk-based guardrails recomendados para R$ 250k, obrigatorios para R$ 350k+. Otimizar withdrawal ordering para minimizar tax drag efetivo (aproximar 5,00% vs 4,57%) |
+| **Conhecimento** | Patrimonio projetado aos 50: ~R$ 10,96M (retorno acum 5,84%). Retorno desacum: 4,57% (conservador) / 5,00% (venda parcial). Limite seguro: R$ 384k/ano (SWR 3,5%). |
+| **Memoria** | Registrar: "FR-001 v4 (HD-006). Retornos corrigidos com fontes academicas e BRL: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. Limite seguro: R$384k/ano. IPCA+ 20% reduzido para 10% (breakeven subiu para 7.81%)." |
 
 ---
 

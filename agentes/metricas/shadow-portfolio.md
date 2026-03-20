@@ -46,13 +46,15 @@ Representa a alternativa "simples e passiva" — exposicao global diversificada 
 
 Premissa de depreciacao real BRL aprovada 2026-03-20: 0.5%/ano (base), 1.5% (favoravel), 0% (stress).
 
-| Cenario | Equity USD real | Dep. real BRL | Equity BRL real | Blend 93/7 real | Liq. impostos (15%) |
-|---------|----------------|---------------|-----------------|-----------------|---------------------|
-| Base | ~4.8% | +0.5% | ~5.3% | ~5.43% | ~4.62% |
-| Favoravel | ~4.8% | +1.5% | ~6.3% | ~6.24% | ~5.30% |
-| Stress | ~4.8% | 0% | ~4.8% | ~4.97% | ~4.22% |
+| Cenario | Equity USD real | Dep. real BRL | Equity BRL real | Blend 93/7 BRL real | Nota |
+|---------|----------------|---------------|-----------------|---------------------|------|
+| Base | ~4.9% | +0.5% | ~5.4% | ~5.40% | VWRA ~= mercado neutro (DMS 2024) |
+| Favoravel | ~4.9% | +1.5% | ~6.4% | ~6.33% | |
+| Stress | ~4.9% | 0% | ~4.9% | ~4.93% | |
 
-- RF (IPCA+ 2040): 7.16% real bruto, ~6.09% liquido (invariante ao cambio — denominado em BRL)
+- RF (IPCA+ 2040): 7.16% real bruto, ~5.34% real liquido (IR 15% sobre nominal, IPCA 4.0%, custodia 0.20%). Invariante ao cambio — denominado em BRL
+- Nota: Shadow A usa retornos pre-tax na acumulacao (tax drag = 0%, mesma premissa da carteira real). Na desacumulacao, aplicar IR 15% sobre ganho nominal
+- VWRA retorno USD ~4.9% alinhado com DMS 2024 (equity premium global ~5% nominal - inflacao). Factor premium = 0 por definicao (e o benchmark passivo)
 
 ### Tracking
 
@@ -77,8 +79,9 @@ O "piso de oportunidade". Se a carteira toda de Diego — com factor tilts, crip
 | Instrumento | 100% Tesouro IPCA+ 2040 |
 | Taxa de compra | 7.16% real bruto (media historica recente) |
 | Custodia | B3, 0.20% a.a. |
-| Imposto | 15% sobre rendimento (tabela regressiva, >720 dias) |
-| Taxa liquida | ~6.09% real (7.16% - 0.20% custodia - ~15% IR sobre rendimento) |
+| Imposto | 15% sobre ganho **nominal** (tabela regressiva, >720 dias) |
+| IPCA estimado | 4.0% a.a. (premissa Focus) |
+| Taxa liquida | ~5.34% real (calculo abaixo) |
 | Rebalance | Nenhum |
 | Gestao | Zero |
 | TER efetivo | 0.20% (custodia B3) |
@@ -91,29 +94,40 @@ O "piso de oportunidade". Se a carteira toda de Diego — com factor tilts, crip
 | Alocacao | 100% IPCA+ 2040 |
 | Aporte mensal | R$ 25,000 |
 | Taxa real bruta | 7.16% a.a. |
-| Taxa real liquida | ~6.09% a.a. |
+| Taxa real liquida | ~5.34% a.a. (calculo correto abaixo) |
+
+### Calculo da Taxa Real Liquida
+
+IR incide sobre ganho **nominal**, nao real. Premissa IPCA: 4.0%.
+
+1. Taxa real liq custodia: 7.16% - 0.20% = **6.96%**
+2. Retorno nominal bruto: (1.0696)(1.04) - 1 = **11.24%**
+3. Retorno nominal liquido (IR 15%): 11.24% x 0.85 = **9.55%**
+4. Retorno real liquido: (1.0955) / (1.04) - 1 = **5.34%**
+
+Nota: o calculo anterior (7.16% x 0.85 = 6.09%) aplicava IR sobre o retorno real, superestimando a taxa liquida em ~75 bps.
 
 ### Projecao Deterministica (hold to maturity 2040)
 
-Calculo: patrimonio + aportes, composto a 6.09% real liquido, ate 2040 (14 anos).
+Calculo: patrimonio + aportes mensais, compostos a 5.34% real liquido a.a.
 
 | Ano | Patrimonio Inicio | Aportes Ano | Rendimento Liq | Patrimonio Fim |
 |-----|------------------|-------------|----------------|---------------|
-| 2026 (9 meses) | R$ 3,479,239 | R$ 225,000 | R$ 169,244 | R$ 3,873,483 |
-| 2027 | R$ 3,873,483 | R$ 300,000 | R$ 245,392 | R$ 4,418,875 |
-| 2028 | R$ 4,418,875 | R$ 300,000 | R$ 278,618 | R$ 4,997,493 |
-| 2029 | R$ 4,997,493 | R$ 300,000 | R$ 313,788 | R$ 5,611,281 |
-| 2030 | R$ 5,611,281 | R$ 300,000 | R$ 351,064 | R$ 6,262,345 |
-| 2031 | R$ 6,262,345 | R$ 300,000 | R$ 390,614 | R$ 6,952,959 |
-| 2032 | R$ 6,952,959 | R$ 300,000 | R$ 432,614 | R$ 7,685,573 |
-| 2033 | R$ 7,685,573 | R$ 300,000 | R$ 477,149 | R$ 8,462,722 |
-| 2034 | R$ 8,462,722 | R$ 300,000 | R$ 524,412 | R$ 9,287,134 |
-| 2035 | R$ 9,287,134 | R$ 300,000 | R$ 574,505 | R$ 10,161,639 |
-| 2036 | R$ 10,161,639 | R$ 300,000 | R$ 627,539 | R$ 11,089,178 |
-| **2037 (FIRE 50)** | **R$ 11,089,178** | **R$ 75,000** | **R$ 340,032** | **R$ 11,504,210** |
+| 2026 (9 meses) | R$ 3,479,239 | R$ 225,000 | R$ 142,359 | R$ 3,846,598 |
+| 2027 | R$ 3,846,598 | R$ 300,000 | R$ 212,645 | R$ 4,359,243 |
+| 2028 | R$ 4,359,243 | R$ 300,000 | R$ 240,016 | R$ 4,899,259 |
+| 2029 | R$ 4,899,259 | R$ 300,000 | R$ 268,847 | R$ 5,468,106 |
+| 2030 | R$ 5,468,106 | R$ 300,000 | R$ 299,219 | R$ 6,067,325 |
+| 2031 | R$ 6,067,325 | R$ 300,000 | R$ 331,211 | R$ 6,698,537 |
+| 2032 | R$ 6,698,537 | R$ 300,000 | R$ 364,912 | R$ 7,363,449 |
+| 2033 | R$ 7,363,449 | R$ 300,000 | R$ 400,412 | R$ 8,063,861 |
+| 2034 | R$ 8,063,861 | R$ 300,000 | R$ 437,808 | R$ 8,801,669 |
+| 2035 | R$ 8,801,669 | R$ 300,000 | R$ 477,200 | R$ 9,578,870 |
+| 2036 | R$ 9,578,870 | R$ 300,000 | R$ 518,696 | R$ 10,397,565 |
+| **2037 (FIRE 50)** | **R$ 10,397,565** | **R$ 75,000** | **R$ 136,415** | **R$ 10,608,980** |
 
-**Patrimonio projetado aos 50 (Shadow B)**: ~R$ 11.5M em termos reais.
-**SWR 2.17%** (R$250k / R$11.5M) — extremamente seguro.
+**Patrimonio projetado aos 50 (Shadow B)**: ~R$ 10.6M em termos reais.
+**SWR 2.36%** (R$250k / R$10.6M) — extremamente seguro.
 
 Nota: Este e o cenario sem risco de mercado (risco soberano apenas). Qualquer carteira com equity precisa justificar a volatilidade adicional oferecendo retorno superior no longo prazo.
 
@@ -130,7 +144,7 @@ Nota: Este e o cenario sem risco de mercado (risco soberano apenas). Qualquer ca
 ### Trimestral
 1. Registrar patrimonio real de Diego na data
 2. **Shadow A**: aplicar retorno do VWRA (em BRL) no periodo sobre a parcela equity, + rendimento IPCA+ sobre a parcela RF, + aportes do periodo
-3. **Shadow B**: aplicar 6.09% real a.a. (pro-rata trimestral: ~1.49%) sobre patrimonio + aportes
+3. **Shadow B**: aplicar 5.34% real a.a. (pro-rata trimestral: ~1.31%) sobre patrimonio + aportes
 4. Calcular delta (Real - Shadow) / Shadow
 5. Se delta negativo por 3 trimestres consecutivos em qualquer shadow, acionar revisao de complexidade
 

@@ -36,7 +36,8 @@
 
 | Data | Issue | Resultado Principal |
 |------|-------|---------------------|
-| 2026-03 | FR-001 v3 | Retornos corrigidos por Factor + Tax: acum 5,09% (tax drag 0%), desacum 3,77%-4,20% (tax drag 26,6%). Pat ~R$10,3M aos 50. R$250k: ~87-97% success. R$350k: ~70-92% (viavel com guardrails, upgrade vs v2). Limite seguro: R$360k/ano (SWR 3,5%). |
+| 2026-03 | ~~FR-001 v3~~ | ~~Superado por v4 (HD-006)~~ |
+| 2026-03-20 | FR-001 v4 (HD-006) | Retornos corrigidos com fontes academicas (DMS 2024) + BRL 3 cenarios: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. SWR R$250k: 2,28%. SWR R$350k: 3,19%. Limite seguro: R$384k/ano. IPCA+ reduzido de 20% para 10% (breakeven 7.81%). |
 
 ## Regras Operacionais
 
@@ -52,4 +53,5 @@ FIRE deve participar de qualquer decisão de renda fixa que envolva vencimento d
 | 2026-03 | Modelo de guardrails | Risk-based (Kitces & Fitzpatrick 2024), nao G-K |
 | 2026-03 | Glidepath: rising ou declining? | Rising equity 82-90% aos 50, subindo para 90-95% |
 | 2026-03 | Custo de vida meta | R$250k/ano confirmado |
-| 2026-03 | FR-001 v3 stress test | Retornos corrigidos: acum 5,09% / desacum 3,77%-4,20%. Pat sobe para R$10,3M. R$350k volta para dentro do alvo (SWR 3,40%). Limite seguro R$360k/ano. Cenario venda parcial (4,20%) melhora success rates significativamente. |
+| 2026-03 | ~~FR-001 v3 stress test~~ | ~~Superado por v4~~ |
+| 2026-03-20 | FR-001 v4 (HD-006) | Retornos com fontes academicas + BRL: acum 5,84% / desacum 4,57%-5,00%. Pat R$10,96M. Limite R$384k/ano. IPCA+ 10% (nao 20%). |

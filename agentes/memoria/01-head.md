@@ -18,7 +18,7 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ estrutural | ~~Idade 48~~ **Antecipado** | Ate 20% da carteira, 100% IPCA+ 2040. Piso: IPCA+ >= 6,4% (breakeven puro). **Prioridade: IPCA+ primeiro, JPGL depois** | **Executar** |
+| IPCA+ estrutural | ~~Idade 48~~ **Antecipado** | Ate **10%** da carteira, 100% IPCA+ 2040. Piso: IPCA+ >= **7,81%** (breakeven puro vs equity 5.89% BRL). **DCA PAUSADO** (taxa 7.16% < breakeven). Aportes para JPGL | **Pausado** |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA em 3 tranches ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado, +39,5% liq. esperado) | Monitorando mensalmente |
 | HODL11 piso | Alocacao < 1,5% | Comprar ate 3% | Monitorando trimestralmente |

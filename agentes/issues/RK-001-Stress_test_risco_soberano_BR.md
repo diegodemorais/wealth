@@ -55,23 +55,23 @@ HODL11 (Bitcoin): 3,0% = R$108.000
 
 **Calculo de impacto mark-to-market:**
 
-Formula simplificada: Variacao PU ~ -Duration x Delta_taxa / (1 + taxa_atual)
+> **ERRATA (HD-006)**: Calculo original usava formula simplificada (Delta PU ~ -Duration x Delta_taxa / (1+y)), que subestima perdas para movimentos grandes. Corrigido com formula exata de repricing: PU_novo/PU_atual = ((1+y_atual)/(1+y_novo))^Duration_Macaulay. Conforme RF-003.
 
-| Instrumento | Duration | Delta Taxa | Perda MtM (%) | Perda MtM (R$) |
-|-------------|----------|-----------|---------------|----------------|
-| Renda+ 2065 | 43,6 | +2,63% | **-38,5%** | -43.100 |
-| IPCA+ 2040 (existente) | 12,5 | +1,30% | **-15,2%** | -1.980 |
-| IPCA+ 2040 (estrutural) | 12,5 | +1,30% | **-15,2%** | -37.100 |
-| Reserva IPCA+ 2029 | 2,8 | +0,50% | **-1,3%** | -1.170 |
-| **Total bloco** | — | — | — | **-83.350** |
+| Instrumento | Duration | Taxa Atual | Taxa Cenario | Perda MtM Exata (%) | Perda MtM (R$) |
+|-------------|----------|-----------|-------------|---------------------|----------------|
+| Renda+ 2065 | 43,6 | 6,87% | 9,50% | **-65,3%** | -73.100 |
+| IPCA+ 2040 (existente) | 12,5 | 7,20% | 8,50% | **-14,0%** | -1.820 |
+| IPCA+ 2040 (estrutural) | 12,5 | 7,20% | 8,50% | **-14,0%** | -34.200 |
+| Reserva IPCA+ 2029 | 2,8 | ~7,0% | ~7,50% | **-1,4%** | -1.230 |
+| **Total bloco** | — | — | — | — | **-110.350** |
 
-**Perda total do bloco soberano: -R$83.350 (-18,2% do bloco, -2,4% do patrimonio)**
+**Perda total do bloco soberano: -R$110.350 (-24,1% do bloco, -3,2% do patrimonio)**
 
-Nota critica: o Renda+ com duration 43,6 sofre desproporcionalmente. Sozinho responde por 52% da perda do bloco apesar de ser 24% do valor.
+Nota critica: o Renda+ com duration 43,6 sofre catastroficamente. Sozinho responde por 66% da perda do bloco apesar de ser 24% do valor. A formula simplificada subestimava a perda do Renda+ em -38,5% quando o valor correto e -65,3%.
 
 **Equity global neste cenario**: Crise domestica BR tem impacto limitado em ETFs UCITS globais. Drawdown equity estimado: -5% a -10% (contagio limitado). Impacto equity: -R$155k a -R$310k.
 
-**Perda total da carteira no cenario 1: -R$238k a -R$393k (-6,8% a -11,3%)**
+**Perda total da carteira no cenario 1: -R$265k a -R$420k (-7,6% a -12,1%)**
 
 ---
 
@@ -94,19 +94,19 @@ Nota critica: o Renda+ com duration 43,6 sofre desproporcionalmente. Sozinho res
 - Equity global (SWRD, AVGS, AVEM, JPGL): drawdown -25% (ponderado; EM cai mais)
 - HODL11: drawdown -50% (Bitcoin drawdown tipico em risk-off; ver 2022: -65%)
 
-| Instrumento | Valor Base (R$) | Drawdown (%) | Perda (R$) |
-|-------------|----------------|-------------|-----------|
-| Equity global | 3.101.000 | -25,0% | -775.300 |
-| HODL11 | 108.000 | -50,0% | -54.000 |
-| Renda+ 2065 | 112.000 | -26,1% | -29.200 |
-| IPCA+ 2040 (exist+estrut) | 257.000 | -9,3% | -23.900 |
-| Reserva IPCA+ 2029 | 88.000 | -0,8% | -700 |
-| **Total** | **3.666.000** | — | **-883.100** |
+| Instrumento | Valor Base (R$) | Drawdown (%) | Perda (R$) | Nota |
+|-------------|----------------|-------------|-----------|------|
+| Equity global | 3.101.000 | -25,0% | -775.300 | |
+| HODL11 | 108.000 | -50,0% | -54.000 | |
+| Renda+ 2065 | 112.000 | **-36,9%** | **-41.300** | Formula exata: (1.0687/1.080)^43.6 |
+| IPCA+ 2040 (exist+estrut) | 257.000 | **-8,9%** | **-22.900** | Formula exata: (1.072/1.080)^12.5 |
+| Reserva IPCA+ 2029 | 88.000 | -0,8% | -700 | |
+| **Total** | **3.666.000** | — | **-894.200** |
 
-**Perda total da carteira no cenario 2: -R$883k (-25,4% do patrimonio)**
-**Patrimonio residual: ~R$2.600k**
+**Perda total da carteira no cenario 2: -R$894k (-25,7% do patrimonio)**
+**Patrimonio residual: ~R$2.590k**
 
-Nota: 87,8% da perda vem de equity. O bloco soberano BR e marginal neste cenario. O risco dominante e equity concentration (89,1% da carteira).
+Nota: 86,5% da perda vem de equity. O bloco soberano BR e marginal neste cenario. O risco dominante e equity concentration (89,1% da carteira). (ERRATA HD-006: Renda+ recalculado com formula exata -- perda sobe de -26,1% para -36,9%.)
 
 ---
 
@@ -125,21 +125,23 @@ Isso e o equivalente a 2015 + 2022 juntos. Historicamente raro mas nao impossive
 
 **Ajuste BRL**: Equity e cotado em USD via UCITS. BRL -20% significa que drawdown de -35% em USD se torna ~-22% em BRL. Uso -22% para equity.
 
-| Instrumento | Valor Base (R$) | Drawdown (%) | Perda (R$) |
-|-------------|----------------|-------------|-----------|
-| Equity global | 3.101.000 | -22,0%* | -682.200 |
-| HODL11 | 108.000 | -60,0% | -64.800 |
-| Renda+ 2065 | 112.000 | -45,7% | -51.200 |
-| IPCA+ 2040 (exist+estrut) | 257.000 | -21,0% | -54.000 |
-| Reserva IPCA+ 2029 | 88.000 | -2,2% | -1.900 |
-| **Total** | **3.666.000** | — | **-854.100** |
+| Instrumento | Valor Base (R$) | Drawdown (%) | Perda (R$) | Nota |
+|-------------|----------------|-------------|-----------|------|
+| Equity global | 3.101.000 | -22,0%* | -682.200 | |
+| HODL11 | 108.000 | -60,0% | -64.800 | |
+| Renda+ 2065 | 112.000 | **-71,7%** | **-80.300** | Formula exata: (1.0687/1.100)^43.6 |
+| IPCA+ 2040 (exist+estrut) | 257.000 | **-18,8%** | **-48.300** | Formula exata: (1.072/1.090)^12.5 |
+| Reserva IPCA+ 2029 | 88.000 | -2,2% | -1.900 | |
+| **Total** | **3.666.000** | — | **-877.500** |
 
 *Equity drawdown em BRL atenuado pela depreciacao cambial.
 
-**Perda total da carteira no cenario 3: -R$854k (-24,5% do patrimonio)**
-**Patrimonio residual: ~R$2.629k**
+**Perda total da carteira no cenario 3: -R$877k (-23,9% do patrimonio)**
+**Patrimonio residual: ~R$2.606k**
 
-Nota contra-intuitiva: o cenario 3 tem perda TOTAL similar ao cenario 2 em BRL porque a depreciacao cambial protege o bloco equity (89% da carteira). O bloco soberano sofre MUITO mais (-R$107k vs -R$54k), mas pesa pouco no total.
+Nota contra-intuitiva: o cenario 3 tem perda TOTAL similar ao cenario 2 em BRL porque a depreciacao cambial protege o bloco equity (89% da carteira). O bloco soberano sofre MUITO mais (~R$131k vs ~R$65k), mas pesa pouco no total.
+
+(ERRATA HD-006: Renda+ recalculado com formula exata -- perda sobe de -45,7% para -71,7%. IPCA+ de -21,0% para -18,8%. Total ajustado.)
 
 Se medirmos em USD (sem protecao cambial), cenario 3 e pior:
 - Patrimonio em USD cai de ~$665k para ~$400k (-40%)
@@ -270,9 +272,11 @@ SE bloco soberano > 15% do patrimonio:
 
 | Cenario | Bloco Soberano (R$) | Bloco Soberano (%) | Carteira Total (R$) | Carteira Total (%) |
 |---------|--------------------|--------------------|--------------------|--------------------|
-| 1 — Fiscal BR | -83.350 | -18,2% do bloco | -238k a -393k | -6,8% a -11,3% |
-| 2 — Risk-off Global | -53.800 | -11,8% do bloco | -883.100 | -25,4% |
-| 3 — Worst Case | -107.100 | -23,4% do bloco | -854.100 | -24,5% (BRL) |
+| 1 — Fiscal BR | -110.350 | -24,1% do bloco | -265k a -420k | -7,6% a -12,1% |
+| 2 — Risk-off Global | -64.900 | -14,2% do bloco | -894.200 | -25,7% |
+| 3 — Worst Case | -130.500 | -28,6% do bloco | -877.500 | -23,9% (BRL) |
+
+> ERRATA HD-006: Todos os drawdowns de Renda+ 2065 recalculados com formula exata de repricing (RF-003). Perdas do Renda+ significativamente maiores que estimativa original. Formula simplificada subestimava perdas em 40-60% para movimentos de taxa > 2pp.
 
 **Risco dominante da carteira NAO e o bloco soberano. E equity concentration a 89%.**
 
@@ -307,8 +311,8 @@ O bloco soberano a 13% e um risco secundario. Mesmo no worst case, o bloco sober
 - Modified duration Renda+ 2065: 43,6 (fonte: carteira.md, RF-001)
 - Modified duration IPCA+ 2040: ~12,5 (estimativa para NTN-B Principal 14 anos)
 - Modified duration IPCA+ 2029: ~2,8 (3 anos para vencimento)
-- Formula MtM simplificada: Delta_PU ~ -Duration x Delta_taxa / (1 + taxa_atual)
-- Convexidade ignorada (subestima ganho em queda de taxa, superestima perda em alta — conservador para stress test)
+- Formula MtM: exata para zero-coupon: PU_novo/PU_atual = ((1+y_atual)/(1+y_novo))^Duration_Macaulay. (ERRATA HD-006: formula simplificada anterior subestimava perdas do Renda+ em 40-60% para movimentos grandes)
+- Convexidade capturada implicitamente pela formula exata
 - BRL depreciation no cenario 3 parcialmente offseta equity drawdown em BRL
 
 ### Referencias Academicas
