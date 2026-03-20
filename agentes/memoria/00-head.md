@@ -45,3 +45,4 @@ Toda retrospectiva DEVE incluir:
 | 2026-03-18 | IPCA+ agora (RF-002) | 10% ladder 2035/2040/2050. Aprovado |
 | 2026-03-18 | AVGC vs JPGL (FI-003) | JPGL mantido. Aprovado |
 | 2026-03-18 | Reavaliacao independente carteira | Carteira 90% otima. 4 issues abertas |
+| 2026-03-20 | Scorecard HD-002 criado com baseline T0 | 4 arquivos em agentes/metricas/. Shadows: VWRA+IPCA e 100% IPCA. P(FIRE) pendente FR-003 |

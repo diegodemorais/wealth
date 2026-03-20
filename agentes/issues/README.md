@@ -26,14 +26,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|-------------|------------|
 | FIRE-002-Plano_B_perda_renda | Plano B para perda de renda antes dos 50 | 04 FIRE | Alta |
-| HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | Alta |
+| ~~HD-002~~ | ~~Movido para Done~~ | — | — |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | FR-003-Monte_Carlo_computacional | Monte Carlo computacional: 10k trajetorias com parametros reais | 04 FIRE | Alta |
 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
 | FR-005-FIRE_bands_custo_vida | FIRE bands: modelar custo de vida R$300-400k | 04 FIRE | Media |
 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Media |
-| TX-002-Tax_loss_harvesting_transitorios | Tax-loss harvesting nos 7 ETFs transitorios (free alpha) | 05 Tributacao | Media |
+| ~~TX-002~~ | ~~Movido para Doing~~ | — | — |
 | XX-002-Correlacao_stock_bond_BR | Regime de correlacao stock-bond no Brasil (inflacao alta vs baixa) | 08 Macro | Media |
 | FI-005-Crowdedness_factor_strategies | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
 | FI-006-Intangibles_value_factor_AVGS | Intangibles e o value factor -- AVGS captura o value "certo"? | 02 Factor | Media |
@@ -47,13 +47,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| — | — | — | — | — |
+| TX-002-Tax_loss_harvesting_transitorios | Tax-loss harvesting nos 7 ETFs transitorios (free alpha) | 05 Tributacao | Alta | Briefing apresentado. Aguardando dados de P&L por lote |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | 2026-03-20 | Scorecard + 2 shadows + findings log + previsoes. Baseline T0 preenchido. P(FIRE) pendente FR-003 |
 | RF-003-Duration_risk_Renda2065_inflacao | Duration risk Renda+ 2065 em regime de inflacao | 03 RF | 2026-03-20 | Target 3% (nao 5%). DCA parado. Gatilhos mantidos. IPCA+ 2040 e tese diferente (estrutural) |
 | RK-001-Stress_test_risco_soberano_BR | Stress test risco soberano Brasil (bloco ~13%) | 06 Risco | 2026-03-20 | IPCA+ 7% adequado. Risco real e equity 89%. Liquidacao: Reserva -> equity -> RF por ultimo |
 | FR-004-Bond_tent_pre_FIRE | Bond tent pre-FIRE: design e glidepath | 04 FIRE | 2026-03-20 | NAO implementar tent agressivo. Manter 88% equity no FIRE. IPCA+ 2040 e o tent natural |
