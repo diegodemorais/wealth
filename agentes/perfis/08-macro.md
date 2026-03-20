@@ -70,6 +70,18 @@
 | 07 Cambio | Parceiro proximo | Selic alta = BRL forte. Ciclo de cortes impacta cambio |
 | 09 Patrimonial | Distante | Macro nao impacta estrutura societaria diretamente |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Macro | O que dizem do Macro |
+|--------|---------------|---------------------|
+| 02 Factor | EM a 40% desconto e dado macro que suporta AVEM | — |
+| 03 RF | Parceiro proximo — alimenta com dados de IPCA+ e Selic | Snapshot mais completo e util ate agora |
+| 06 Risco | Parceiro — taxa Renda+ depende do ciclo de juros | — |
+| 07 Cambio | Parceiro proximo — Selic/BRL interagem | — |
+| 11 Oportunidades | Bem integrado — dados de valuations compartilhados | — |
+
+**Auto-diagnostico**: Snapshot mais completo ate agora (valuations globais, factor premiums, probabilidades). Mas Focus IPCA saltou 19bps (3.91% -> 4.10%) e nao emiti alerta proativo como manda regra da retro anterior. Score retro: 7/10.
+
 ---
 
 ## Principios Inviolaveis

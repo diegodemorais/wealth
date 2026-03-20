@@ -114,6 +114,17 @@ Decisoes aprovadas aguardando execucao:
 | 08 Macro | Troca dados | Macro fornece cotacoes; Bookkeeper registra |
 | 12 Behavioral | Observado | Behavioral monitora se Bookkeeper reporta numeros que disparam vieses |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Bookkeeper | O que dizem do Bookkeeper |
+|--------|--------------------|-----------------------|
+| 00 Head | Salvou o dia — refutou critica infundada com dados | Fonte de verdade subutilizada |
+| 12 Behavioral | Deve ser consultado ANTES de qualquer diagnostico comportamental | Refutou critica de "gap de execucao" com 56 meses de historico |
+| 01 CIO | Fornece dados para decisoes de alocacao | Fonte de verdade insubstituivel |
+| Todos | — | Time precisa consultar Bookkeeper ANTES de afirmacoes sobre historico de Diego |
+
+**Auto-diagnostico**: Fiz exatamente o que devia quando chamado. Refutacao com dados foi o momento mais importante da retro. Problema: nao fui consultado proativamente — so quando Diego forcou. Score retro: 8/10.
+
 ---
 
 ## Performance Attribution Trimestral

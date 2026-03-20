@@ -72,6 +72,18 @@
 | 08 Macro | Parceiro proximo | Depende do contexto macro para avaliar taxas de IPCA+ e timing |
 | 09 Patrimonial | Distante | Renda fixa nao entra em planejamento societario |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do RF | O que dizem do RF |
+|--------|------------|-------------------|
+| 04 FIRE | Boa coordenacao — bond tent e co-gerenciado | Parceiro critico, lifecycle alignment |
+| 06 Risco | Fronteira clara Renda+ (instrumento vs trade tatico) bem respeitada | Boa coordenacao em duration |
+| 08 Macro | Parceiro proximo — depende de dados de IPCA+ e Selic | Alimenta bem com cenarios |
+| 10 Advocate | Participou do flip-flop sem travar posicao. Deveria ter feito analise liquida na 1a rodada | Issue RF-003 exemplar (melhor qualidade tecnica do periodo) |
+| 05 Tributacao | IPCA+ tem IR sobre nominal — sempre confirma impacto | Premissas tributarias consistentes |
+
+**Auto-diagnostico**: RF-003 foi a melhor issue do periodo. Mas participou do flip-flop IPCA+ sem exigir analise liquida desde o inicio. Titulo 2035 inexistente (corrigido retro anterior). Score retro: 8/10.
+
 ---
 
 ## Principios Inviolaveis

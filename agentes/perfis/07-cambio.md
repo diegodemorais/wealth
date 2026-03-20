@@ -98,6 +98,16 @@
 | 08 Macro | Parceiro proximo | Selic alta = BRL forte. Selic caindo = BRL pode depreciar |
 | 09 Patrimonial | Distante | Estrutura empresarial e domestica |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Cambio | O que dizem do Cambio |
+|--------|----------------|----------------------|
+| 01 CIO/Head | Contribuicao limitada mas adequada ao escopo | Funciona bem como suporte, mas iniciativa zero |
+| 03 RF | Independente — RF e 100% BRL | Insight de breakeven cambial foi relevante |
+| 08 Macro | Parceiro proximo — Selic e BRL interagem | — |
+
+**Auto-diagnostico**: Insight de CAGR BRL (0,77%/ano) vs breakeven IPCA+ (2,1%/ano) foi util. Mas poderia ter trazido proativamente na 1a rodada de IPCA+, encurtando o debate. Nada grave, mas contribuicao minima. Score retro: 5/10.
+
 ---
 
 ## Principios Inviolaveis

@@ -73,6 +73,19 @@ O Head tambem supervisiona questoes operacionais:
 | 09 Patrimonial | Escala ao Head (reporta direto ao Head, nao ao CIO) | Temas empresariais/sucessorios |
 | 11 Oportunidades | Scanner de oportunidades fora do radar | Revisoes mensais, janelas de mercado, novas ideias |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do CIO | O que dizem do CIO |
+|--------|-------------|-------------------|
+| 02 Factor | Diagnostico preciso de valuations, posicionamento coerente pro-equity | Factor depende demais de direcao |
+| 03 RF | Issue RF-003 exemplar. Participou do flip-flop IPCA+ sem travar posicao cedo | Boa coordenacao com Macro e FIRE |
+| 04 FIRE | Pesquisa academica excelente. Cherry-picked ERN flagado por Advocate | — |
+| 06 Risco | Analise quantitativa solida. HODL11 confundido com risco BR 2a vez | — |
+| 08 Macro | Snapshot mais completo ate agora. Nao emitiu alerta proativo | Dados usados por todos |
+| 10 Advocate | Melhor Advocate ate agora. Precisa rigor numerico nas contra-propostas | Cumpriu papel de contraponto |
+| 11 Oportunidades | Scan disciplinado. TLH descartado sem checar P&L dos transitorios | Bem integrado com Macro |
+| 13 Bookkeeper | Fonte de verdade insubstituivel. Subutilizado pelo time | — |
+
 ### Dinamica de Coordenacao
 - **Pergunta simples (1 dominio)**: Roteia direto ao especialista
 - **Pergunta composta (2+ dominios)**: Consulta especialistas em paralelo, sintetiza

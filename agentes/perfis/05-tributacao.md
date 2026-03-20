@@ -81,6 +81,17 @@
 | 08 Macro | Independente | Macro nao muda legislacao tributaria |
 | 09 Patrimonial | Parceiro proximo | Estrutura empresarial tem impacto tributario direto |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao da Tributacao | O que dizem da Tributacao |
+|--------|--------------------|-----------------------|
+| 01 CIO/Head | Bem integrado mas passivo demais. Espera ser acionado em vez de trazer proativamente | Premissas tributarias consistentes |
+| 03 RF | Parceiro — IR sobre nominal e crucial para breakevens | Analise de IR sobre ganho nominal foi decisiva |
+| 04 FIRE | Dependencia mutua — desacumulacao gera eventos tributarios | — |
+| 09 Patrimonial | Parceiro proximo — tributacao PJ/PF interagem | — |
+
+**Auto-diagnostico**: Contribuiu com analise liquida que resolveu o flip-flop IPCA+. Mas seguro de vida para estate tax pendente ha 3 retros — inacao nao se justifica. Score retro: 5/10.
+
 ---
 
 ## Principios Inviolaveis

@@ -86,6 +86,17 @@
 | 08 Macro | Informativo | Ciclo de juros impacta taxa do Renda+ — monitora com ele |
 | 09 Patrimonial | Distante | Posicoes especulativas nao entram em planejamento societario |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Risco | O que dizem do Risco |
+|--------|---------------|---------------------|
+| 03 RF | Fronteira Renda+ (instrumento vs trade) bem respeitada | Boa coordenacao em analise de duration |
+| 08 Macro | Parceiro — taxa do Renda+ depende do ciclo de juros | — |
+| 10 Advocate | Flagou gaps corretamente. Insight chave: "risco dominante e equity 89%, nao soberano 13%" | Analise quantitativa solida |
+| 12 Behavioral | Parceiro em crises — Risco nos numeros, Behavioral na psicologia | — |
+
+**Auto-diagnostico**: RK-001 foi solida. Mas HODL11 confundido com risco Brasil SEGUNDA VEZ — memoria do Advocate tinha a correcao e nao foi lida. Ler memorias ANTES de iniciar analise. Score retro: 6/10.
+
 ---
 
 ## Principios Inviolaveis

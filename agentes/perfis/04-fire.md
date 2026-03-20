@@ -94,6 +94,17 @@ Responsavel pelo **fluxo operacional de caixa** na aposentadoria:
 - SEMPRE consultar FX quando envolver conversao USD->BRL
 - Manter consciencia de cost basis por ativo para otimizar sequencia
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do FIRE | O que dizem do FIRE |
+|--------|--------------|---------------------|
+| 03 RF | Parceiro critico — bond tent e co-gerenciado. IPCA+ 2040 como tent natural | Boa coordenacao em lifecycle |
+| 10 Advocate | Cumpriu contraponto. Flagou cherry-picking de ERN corretamente | Pesquisa academica excelente. Oscilou entre agressivo e conservador |
+| 12 Behavioral | Adicionou perspectiva valida sobre hot-cold empathy gap | Parceiro crucial na transicao 48-55 |
+| 06 Risco | Tensao saudavel — posicoes especulativas adicionam volatilidade na desacumulacao | — |
+
+**Auto-diagnostico**: FR-004 solida. Mas cherry-picked ERN (citou Parts 19/43 a favor de equity alto, ignorou buffer de 5 anos). Deveria ter apresentado AMBOS os lados. Score retro: 7/10.
+
 ---
 
 ## Principios Inviolaveis

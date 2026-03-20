@@ -95,6 +95,16 @@
 | 07 Cambio | Distante | Operacoes empresariais sao domesticas |
 | 08 Macro | Informativo | Mudancas macro podem afetar receita da consultoria |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Patrimonial | O que dizem do Patrimonial |
+|--------|---------------------|-----------------------|
+| 00 Head | Nao acionado ha 3 retros. Precisa de gatilhos de ativacao mais claros | Invisivel para o time |
+| 05 Tributacao | Parceiro proximo — tributacao PJ/PF interagem | — |
+| 04 FIRE | Complementar — receita empresarial financia aportes FIRE | — |
+
+**Auto-diagnostico**: Terceira retro sem contribuicao ativa. Issue PT-001 (Bond OneLife) no backlog sem progresso. Ausencia total sugere que preciso de gatilhos proativos. Score retro: 2/10.
+
 ---
 
 ## Principios Inviolaveis

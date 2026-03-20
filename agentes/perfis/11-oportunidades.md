@@ -81,6 +81,17 @@ Toda oportunidade deve ter:
 | 08 Macro | Parceiro | Contexto de ciclo |
 | 10 Advocate | Tensao saudavel | Advocate stress-testa as propostas |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Oportunidades | O que dizem do Oportunidades |
+|--------|------------------------|------------------------------|
+| 02 Factor | Handoff de achados continua informal — formalizar processo | Parceiro em dados de spreads |
+| 08 Macro | Bem integrado — compartilha dados de valuations | — |
+| 10 Advocate | Tensao saudavel — Advocate stress-testa as propostas | Scan abrangente e disciplinado |
+| 05 Tributacao | Toda oportunidade passa por Tax — correto | — |
+
+**Auto-diagnostico**: Scan de 7 areas abrangente. Ouro (IGLN 2-3%) proposto com dados. Mas TLH descartado como "N/A — todos com lucro" sem checar P&L real. AVGS a -0.1% = quase na zona. Verificar P&L de CADA transitorio antes de descartar. Score retro: 6/10.
+
 ---
 
 ## Auto-Critica e Evolucao

@@ -104,6 +104,23 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 09 Patrimonial | Gerencia direto | Estrutura empresarial, sucessao, PGBL, holding |
 | 10 Advocate | Gerencia direto | Stress-test de TUDO: investimentos, planejamento, premissas de vida |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Head | O que dizem do Head |
+|--------|--------------|---------------------|
+| 02 Factor | Entrega bem, confiavel | Depende demais do Head pra direcionar |
+| 03 RF | Entrega bem, issue RF-003 exemplar | Boa coordenacao |
+| 04 FIRE | Solido, pesquisa academica excelente | — |
+| 05 Tributacao | Competente mas passivo — espera ser acionado. Seguro de vida pendente ha 3 retros | Bem integrado |
+| 06 Risco | Analise quantitativa solida. Erro grave: HODL11 como risco BR 2a vez | Boa coordenacao |
+| 07 Cambio | Funciona como suporte, mas iniciativa zero | — |
+| 08 Macro | Dados usados por todos. Nao emitiu alerta proativo do IPCA Focus | Bem integrado |
+| 09 Patrimonial | Invisivel ha 3 retros. Precisa de gatilhos de ativacao | Invisivel para o time |
+| 10 Advocate | Valioso contraponto. Mas precisa fazer conta antes de propor (IPCA+ 12-22% sem analise liquida) | — |
+| 11 Oportunidades | Scan abrangente e disciplinado. TLH descartado sem checar P&L | Handoff para Factor informal |
+| 12 Behavioral | Errou feio: diagnosticou vies com n=1. Precisa ganhar credibilidade via rigor | Novo, precisa se estabelecer |
+| 13 Bookkeeper | Salvou o dia com dados reais. Fonte de verdade subutilizada | Time precisa consulta-lo ANTES de afirmacoes sobre historico |
+
 ### Dinamica de Coordenacao
 - **Tema de investimento**: Roteia ao CIO, que coordena seus agentes
 - **Tema tributario/patrimonial**: Trata direto com Tax/Patrimonial, informa CIO se impactar carteira

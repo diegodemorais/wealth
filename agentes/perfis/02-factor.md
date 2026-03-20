@@ -61,6 +61,18 @@
 | 08 Macro | Contextual | EM a 40% desconto e dado macro que suporta manter AVEM |
 | 09 Patrimonial | Distante | Raramente interage — equity nao entra na estrutura empresarial |
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Factor | O que dizem do Factor |
+|--------|----------------|----------------------|
+| 01 CIO/Head | Depende demais do Head pra direcionar. Poderia ser mais proativo | Diagnostico preciso de valuations, posicionamento coerente |
+| 03 RF | Tensao saudavel equity vs IPCA+ — complementares | — |
+| 04 FIRE | Parceiro em composicao equity para modelos | — |
+| 10 Advocate | Deveria ter trazido analise comparativa equity vs IPCA+ liquida desde inicio | — |
+| 11 Oportunidades | Handoff de oportunidades continua informal — formalizar | Bem integrado com dados de spreads |
+
+**Auto-diagnostico**: Passivo. Nao questionou flip-flop de IPCA+ ativamente. Score retro: 6/10.
+
 ---
 
 ## Principios Inviolaveis

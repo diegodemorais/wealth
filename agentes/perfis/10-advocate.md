@@ -89,6 +89,19 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 - **Issues de mudanca de carteira**: SEMPRE quantificar delta vs benchmarks
 - **Nao acionar**: em consultas informativas ou monitoramento de gatilho
 
+### Cross-Feedback (Retro 2026-03-20)
+
+| Agente | Visao do Advocate | O que dizem do Advocate |
+|--------|------------------|------------------------|
+| 00 Head | Melhor Advocate ate agora. Mas IPCA+ 12-22% sem conta nao e advocacy seria | Valioso contraponto |
+| 03 RF | Flagou cherry-picking de ERN corretamente | — |
+| 04 FIRE | Cumpriu papel de contraponto | Flagou gaps corretamente |
+| 06 Risco | HODL11 estava na PROPRIA memoria como corrigido — nao impediu erro no RK-001 | — |
+| 11 Oportunidades | Tensao saudavel — stress-testa propostas | — |
+| 12 Behavioral | Complementar — Advocate em premissas, Behavioral em processo | — |
+
+**Auto-diagnostico**: Revalidacao de 10 premissas com vereditos claros. Mas: (1) Sugeri IPCA+ 12-22% sem analise liquida. (2) HODL11 na minha propria memoria e nao impedi o erro. (3) 26 premissas registradas = volume sem priorizacao. Priorizar top 5, nao top 26. Score retro: 7/10.
+
 ---
 
 ## Auto-Critica e Evolucao
