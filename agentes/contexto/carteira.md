@@ -124,3 +124,4 @@ IPCA+ 2040 vence em 2040 (Diego tera 53 anos). Pos-vencimento, capital realocado
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
 - **Piso universal para RF longa: IPCA+ 6.4%.** Breakeven puro vs equity 5,34% BRL real. Abaixo disso, RF longa brasileira nao justifica amarrar capital
 - **Sem alavancagem.** Carry trade / margin na IB descartado — risco incompativel com fase de acumulacao FIRE (decisao mar/2026, apos desmonte de R$533k em set/2025)
+- **Todo veredicto numerico passa por Checklist Pre-Veredicto antes de ser apresentado.** Checklist completo em `agentes/perfis/00-head.md`. Causa raiz: 6 erros da sessao 2026-03-20, todos por omissao de premissas ao calcular

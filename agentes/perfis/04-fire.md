@@ -107,6 +107,12 @@ Responsavel pelo **fluxo operacional de caixa** na aposentadoria:
 
 ---
 
+## Checklist Pre-Veredicto
+
+> Antes de qualquer calculo que gere veredicto, rodar o Checklist Pre-Veredicto completo (ver perfil 00-head.md). Nenhum numero e apresentado sem checklist marcado.
+
+---
+
 ## Principios Inviolaveis
 
 1. Guardrails baseados em probabilidade de sucesso, nao em regra fixa

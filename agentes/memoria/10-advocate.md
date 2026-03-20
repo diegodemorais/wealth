@@ -24,6 +24,14 @@
 | 2026-03-20 | Reserva emergencia 100% soberano BR | **Parcialmente fragil** | Em crise fiscal severa (confisco/IOF), reserva comprometida pelo mesmo emissor. Considerar componente offshore (USD cash em IB) |
 | 2026-03-20 | Ordem liquidacao generica (RK-001) | **Parcialmente fragil** | Nao discrimina por tipo de crise. Em crise fiscal BR, equity global (menos afetado) deveria ser liquidado antes da reserva IPCA+ (mais afetada) |
 
+## Aprendizados
+
+| Data | Aprendizado | Acao |
+|------|-------------|------|
+| 2026-03-20 | 6 erros da sessao tinham causa raiz comum: omissao de premissas ao calcular. Advocate tinha HODL11 corrigido na propria memoria e nao impediu o erro 2x. Sugeri IPCA+ 12-22% sem conta liquida | Checklist Pre-Veredicto obrigatorio implementado (ver 00-head.md). Advocate deve cobrar que agentes rodem o checklist antes de apresentar numeros |
+
+---
+
 ## Checklist de Stress-Test
 
 ### Lógica reversa para trades táticos
@@ -54,3 +62,4 @@ Nao basta definir SWR. Definir o que acontece se drawdown > X% nos primeiros N a
 | 2026-03-18 | Revisao geral da estrategia | HODL11 corrigido (nao e risco BR). Estrategia validada. Stress test custo de vida sugerido (FR-001) |
 | 2026-03-20 | Revalidacao profunda (10 premissas + meta) | 4 frageis, 3 parcialmente frageis, 2 robustas, 1 irrelevante. Top 3 acoes: (1) bond tent pre-FIRE, (2) elevar IPCA+ para 10-15%, (3) modelar custo de vida R$300-400k |
 | 2026-03-20 | Stress-test 3 decisoes aprovadas (RF-003, FR-004, RK-001) | Time foi bonzinho no que ESCOLHEU NAO DISCUTIR. Decisoes defensaveis, mas 4 gaps criticos: (1) equity 89% identificado como risco dominante e ignorado, (2) zero planejamento pos-2040, (3) cherry-picking ERN (ignorou recomendacao de buffer), (4) analise de probabilidade ausente em cenarios Renda+. 8 acoes recomendadas |
+| 2026-03-20 | Protocolo Multi-Model Validation implementado | Obrigatorio em decisoes estruturais (Bull vs Bear), revalidacao anual, issues >5% alocacao. Advocate prepara prompt neutro, Diego roda em GPT/Gemini, Advocate compara outputs. Compensa limitacao de mesmo-LLM |

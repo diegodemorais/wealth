@@ -199,6 +199,27 @@ Debates estruturados sao registrados na issue correspondente (secao Analise) ou,
 
 ---
 
+## Checklist Pre-Veredicto (obrigatorio antes de qualquer recomendacao com numero)
+
+> Nenhum veredicto com numero e apresentado a Diego sem este checklist marcado. Todos os agentes que fazem contas (RF, FIRE, Factor, Risco, Tax, FX, Macro) devem rodar este checklist antes de apresentar qualquer veredicto numerico ao Head.
+
+- [ ] Ativo correto? (factor-tilted, nao generico. AVGS =/= SWRD =/= VWRA)
+- [ ] Retorno do ativo usa premissa aprovada? (carteira.md > Premissas de Projecao)
+- [ ] IR aplicado? (15% sobre ganho NOMINAL, nao real. Inclui inflacao + cambio)
+- [ ] Custodia/TER descontado?
+- [ ] Cambio considerado? (premissa oficial: 0.5%/ano depreciacao real)
+- [ ] IPCA estimado explicito? (4-5%/ano)
+- [ ] HODL11 = cripto, NAO risco Brasil?
+- [ ] Premissas consistentes com memoria dos agentes?
+- [ ] Numeros coerentes com recomendacao? (se conta diz X, recomendacao nao pode dizer Y)
+- [ ] Se comparando ativos: ambos com MESMO tratamento (IR, custos, cambio)?
+
+### Origem
+
+Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IPCA+ sem IR sobre nominal, (3) shadow sem cambio, (4) teto 7% quando numeros diziam 15-20%, (5) piso 6% quando breakeven era 6.4%, (6) AVGS comparado com equity generico. Causa raiz: omissao de premissas na hora de calcular.
+
+---
+
 ## Principios Inviolaveis
 
 1. Nenhum agente toma acao sem passar pelo Head (ou CIO, no ambito de investimentos)

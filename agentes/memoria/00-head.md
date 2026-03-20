@@ -26,6 +26,14 @@
 
 ---
 
+## Aprendizados
+
+| Data | Aprendizado | Acao |
+|------|-------------|------|
+| 2026-03-20 | 6 erros da sessao tinham causa raiz comum: omissao de premissas na hora de calcular (HODL11 como risco BR, IPCA+ sem IR sobre nominal, shadow sem cambio, teto 7% quando numeros diziam 15-20%, piso 6% quando breakeven era 6.4%, AVGS comparado com equity generico) | Checklist Pre-Veredicto obrigatorio implementado no Head e em todos os agentes que fazem contas (RF, FIRE, Factor, Risco, Tax, FX, Macro). Regra universal adicionada a carteira.md |
+
+---
+
 ## Processo de Retro
 
 ### Regra: Auto-diagnostico e cross-feedback obrigatorios

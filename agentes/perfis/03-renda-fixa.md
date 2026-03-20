@@ -86,6 +86,12 @@
 
 ---
 
+## Checklist Pre-Veredicto
+
+> Antes de qualquer calculo que gere veredicto, rodar o Checklist Pre-Veredicto completo (ver perfil 00-head.md). Nenhum numero e apresentado sem checklist marcado.
+
+---
+
 ## Principios Inviolaveis
 
 1. IPCA+ estrutural (protecao de sequence of returns): comprar apenas aos 48-49 se taxa >= 6,5%

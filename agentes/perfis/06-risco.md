@@ -99,6 +99,12 @@
 
 ---
 
+## Checklist Pre-Veredicto
+
+> Antes de qualquer calculo que gere veredicto, rodar o Checklist Pre-Veredicto completo (ver perfil 00-head.md). Nenhum numero e apresentado sem checklist marcado.
+
+---
+
 ## Principios Inviolaveis
 
 1. TETO ABSOLUTO do bloco de risco: 10% do patrimonio. Nunca ultrapassar sem aprovacao
