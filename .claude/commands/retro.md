@@ -42,6 +42,23 @@ Apos a retrospectiva individual, identifique:
 4. **Oportunidades perdidas**: o Scanner de Oportunidades identificou algo? Foi ignorado?
 5. **Behavioral**: algum vies comportamental influenciou decisoes?
 
+### Passo 3.5: Prompt Adversarial (OBRIGATORIO)
+
+> Este passo existe porque o time tem tendencia documentada a concordar demais.
+
+Rodar com Advocate e Behavioral ANTES de apresentar ao Diego:
+
+**Perguntas obrigatorias:**
+1. "O que esta errado que ninguem esta falando?"
+2. "Qual premissa o time trata como verdade mas nunca testou com rigor?"
+3. "Se Diego estivesse errado sobre algo esta semana, sobre o que seria?"
+4. "O time concordou rapido demais em algum ponto? Por que?"
+5. "Algum agente deixou de falar algo incomodo para manter harmonia?"
+
+Cada agente DEVE responder pelo menos uma pergunta. Respostas genericas ("nada a reportar") NAO sao aceitas — se nao encontrou nada, explicar o que investigou e por que nao encontrou.
+
+Resultados deste passo vao na secao "Prompt Adversarial" da retro, ANTES dos aprendizados.
+
 ### Passo 4: Aprendizados
 
 Extraia **aprendizados acionaveis** — coisas que mudam comportamento futuro:
@@ -82,6 +99,10 @@ Ser especifico: incluir numeros, datas, conclusoes. Este registro serve como his
 
 ## Temas Transversais
 {padroes, gaps, premissas}
+
+## Prompt Adversarial
+{Respostas do Advocate e Behavioral as 5 perguntas obrigatorias do Passo 3.5.
+Cada agente deve responder pelo menos uma. Sem respostas genericas.}
 
 ## Aprendizados
 {tabela de aprendizados com acoes}
