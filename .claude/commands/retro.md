@@ -59,6 +59,42 @@ Cada agente DEVE responder pelo menos uma pergunta. Respostas genericas ("nada a
 
 Resultados deste passo vao na secao "Prompt Adversarial" da retro, ANTES dos aprendizados.
 
+### Passo 3.7: Metricas de Efetividade por Agente (OBRIGATORIO)
+
+> Medir contribuicao real de cada agente no periodo. Agente que nao contribui nao deveria existir.
+
+Para CADA agente ativo, calcular:
+
+| Metrica | Definicao |
+|---------|-----------|
+| **Contribuicoes no periodo** | Quantas vezes o agente contribuiu (analise, alerta, recomendacao, dados) |
+| **Contribuicoes que geraram acao** | Quantas contribuicoes resultaram em acao concreta (decisao, mudanca, execucao) |
+| **Contribuicoes que Diego corrigiu** | Quantas vezes Diego corrigiu ou rejeitou a contribuicao do agente |
+| **Score** | (acoes geradas - correcoes) / total contribuicoes. Range: -1 a 1 |
+
+#### Template de Metricas
+
+```markdown
+## Metricas de Efetividade
+
+| Agente | Contribuicoes | -> Acao | Diego Corrigiu | Score |
+|--------|--------------|---------|----------------|-------|
+| 01 CIO | X | Y | Z | (Y-Z)/X |
+| 02 Factor | X | Y | Z | (Y-Z)/X |
+| ... | ... | ... | ... | ... |
+```
+
+#### Regras
+
+1. **Score = 0 em 2 retros seguidas**: Questionar existencia do agente. "O que [agente] faz que justifica existir? Deveria ser absorvido por outro?"
+2. **Score negativo**: Agente esta gerando mais ruido que valor. Requer revisao do perfil ou absorcao
+3. **"Nao acionado" NAO e desculpa**: Se o agente nao foi acionado, perguntar: deveria ter sido? Ha proatividade no perfil que nao esta sendo exercida?
+4. **Proatividade conta**: Alertas proativos que previnem erros contam como contribuicao que gerou acao (acao = evitar erro)
+
+Resultados vao na secao "Metricas de Efetividade" da retro, entre o Prompt Adversarial e os Aprendizados.
+
+---
+
 ### Passo 4: Aprendizados
 
 Extraia **aprendizados acionaveis** — coisas que mudam comportamento futuro:

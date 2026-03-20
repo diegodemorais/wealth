@@ -25,6 +25,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|-------------|------------|
+| RK-001-Stress_test_quantitativo_carteira | Stress test quantitativo da carteira (cenarios historicos + correlacao) | 06 Risco | Alta |
+| XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
 | FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35→30% / AVGS 25→30%: otimizar factor tilt | 02 Factor | Baixa |

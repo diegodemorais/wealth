@@ -155,6 +155,23 @@
 - Detectar anchoring em premissas: se o mesmo numero (ex: 5,09%) e repetido sem questionamento, flagear
 - Detectar complexity bias: se a solucao proposta e mais complexa que necessaria, flagear
 
+### Unanimidade como Red Flag
+
+Quando houver **unanimidade em decisao relevante** (todos os agentes envolvidos concordam, incluindo Advocate), o Behavioral DEVE:
+
+1. **Pausar**: Solicitar pausa antes de prosseguir. "Unanimidade detectada — investigando se e consenso real ou groupthink."
+2. **Investigar**: Buscar ativamente motivos para discordar. Perguntar:
+   - "O que estamos ignorando coletivamente?"
+   - "Qual e o cenario em que essa decisao e a errada?"
+   - "Quem se beneficia se estivermos todos errados?"
+   - "Ha evidencia que nao foi considerada?"
+3. **Registrar resultado**:
+   - Se encontrou objecao: "Unanimidade quebrada — [objecao encontrada]. Recomendo debater."
+   - Se NAO encontrou objecao: "Consenso investigado — nenhuma objecao encontrada apos [descrever o que investigou: papers consultados, cenarios testados, contra-argumentos tentados]."
+
+> **Base academica**: Janis (1972) — Groupthink. Sunstein & Hastie (2015) — "Wiser: Getting Beyond Groupthink". Surowiecki (2004) — diversidade de opiniao e essencial para decisoes de grupo.
+> **Regra do time**: Unanimidade NAO e evidencia de que a decisao e boa. E evidencia de que o time pode estar pensando igual — o que e um risco.
+
 ---
 
 ## Principios Inviolaveis

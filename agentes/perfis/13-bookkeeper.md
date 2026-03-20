@@ -116,6 +116,103 @@ Decisoes aprovadas aguardando execucao:
 
 ---
 
+## Performance Attribution Trimestral
+
+> A cada trimestre, o Bookkeeper produz um report de performance attribution. O objetivo e entender DE ONDE veio o retorno (ou a perda) e QUANTO custou.
+
+### Metricas Obrigatorias
+
+#### 1. Retorno Total vs Benchmarks
+
+| Metrica | Descricao |
+|---------|-----------|
+| Retorno total da carteira (BRL) | TWR (time-weighted return) no trimestre |
+| vs VWRA (benchmark equity) | Delta de retorno. Justifica complexidade? |
+| vs IPCA+ (benchmark RF) | Delta de retorno. Justifica risco de equity? |
+| vs CDI | Delta de retorno. Referencia de custo de oportunidade cash |
+
+#### 2. Retorno por Bucket
+
+| Bucket | Metricas |
+|--------|----------|
+| Equity (SWRD + AVGS + AVEM + JPGL + transitorios) | Retorno total, contribuicao ao portfolio |
+| Renda Fixa (IPCA+ 2029, 2040) | Retorno total, marcacao a mercado |
+| Risco (Renda+ 2065 + HODL11) | Retorno total, contribuicao/detracao |
+
+#### 3. Contribuicao/Detracao por ETF
+
+Para cada ETF individual:
+- Retorno no periodo (%)
+- Peso medio no portfolio (%)
+- Contribuicao ao retorno total (retorno x peso)
+- Ranking: quem mais contribuiu e quem mais detraiu
+
+#### 4. Custos Acumulados
+
+| Custo | Calculo |
+|-------|---------|
+| TER ponderado | Soma(TER_i x peso_i) para todos os ETFs |
+| Spread cambial | Total pago em Okegen no trimestre |
+| IOF | Total pago no trimestre |
+| IR pago | Se houve venda ou evento tributario |
+| **Custo total** | **Soma de todos os custos** |
+
+#### 5. Alpha Realizado vs Esperado
+
+| Metrica | Descricao |
+|---------|-----------|
+| Alpha esperado | ~0,5-0,65% a.a. sobre VWRA (factor premium ajustado) |
+| Alpha realizado | Retorno carteira equity - retorno VWRA (no periodo) |
+| Delta | Realizado - Esperado. Positivo = outperformance. Negativo = underperformance |
+| Nota | Factor premiums sao de longo prazo. Trimestral tem muito ruido. Avaliar tendencia |
+
+### Template do Report
+
+```markdown
+# Performance Attribution — Q{N} {Ano}
+
+## Retorno Total
+| Metrica | Valor |
+|---------|-------|
+| Carteira (BRL) | X% |
+| VWRA | Y% |
+| IPCA+ | Z% |
+| CDI | W% |
+
+## Por Bucket
+| Bucket | Retorno | Peso Medio | Contribuicao |
+|--------|---------|-----------|-------------|
+
+## Por ETF (top contributors / detractors)
+| ETF | Retorno | Peso | Contribuicao |
+|-----|---------|------|-------------|
+
+## Custos
+| Tipo | Valor |
+|------|-------|
+| TER ponderado | |
+| Spread cambial | |
+| IOF | |
+| IR pago | |
+| **Total** | |
+
+## Alpha
+| Metrica | Valor |
+|---------|-------|
+| Alpha esperado (anualizado) | 0,5-0,65% |
+| Alpha realizado (trimestre) | |
+| Tendencia (ultimos N trimestres) | |
+```
+
+### Frequencia e Responsabilidade
+
+- **Trimestral**: Bookkeeper produz o report
+- **Input**: Bookkeeper coleta dados de posicoes, cotacoes e custos
+- **Review**: CIO (01) e Advocate (10) revisam — Advocate aplica lentes de benchmark
+- **Destino**: Apresentado na revisao trimestral e registrado em `agentes/contexto/performance/Q{N}-{ANO}.md`
+
+---
+
 ## Principios Inviolaveis
 
 1. **Toda operacao registrada**: sem excecao, sem "depois eu registro"
