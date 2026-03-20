@@ -29,9 +29,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | FIRE-002-Plano_B_perda_renda | Plano B para perda de renda antes dos 50 | 04 FIRE | Alta |
 | HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | Alta |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
+| FR-003-Monte_Carlo_computacional | Monte Carlo computacional: 10k trajetorias com parametros reais | 04 FIRE | Alta |
+| FR-004-Bond_tent_pre_FIRE | Bond tent 48-53: design e glidepath de transicao | 04 FIRE | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
+| FR-005-FIRE_bands_custo_vida | FIRE bands: modelar custo de vida R$300-400k | 04 FIRE | Media |
+| RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Media |
 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
-| FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35→30% / AVGS 25→30%: otimizar factor tilt | 02 Factor | Baixa |
+| FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35->30% / AVGS 25->30%: otimizar factor tilt | 02 Factor | Baixa |
 
 ### Doing
 > Issues em andamento
