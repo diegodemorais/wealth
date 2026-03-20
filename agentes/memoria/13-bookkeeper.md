@@ -63,11 +63,98 @@ WRDUSW-USD, F50A.DE, AVEM UCITS, LON:EMVL, ZPRX.DE, LON:IWQU, LON:IWMO
 
 ---
 
+## Historico de Aportes (fonte: Google Sheets, aba Historico)
+
+> Carregado em 2026-03-20. Dados de jul/2021 a mar/2026.
+
+### Resumo
+
+| Metrica | Valor |
+|---------|-------|
+| Periodo | jul/2021 — mar/2026 (56 meses) |
+| Meses com aporte | 41 (73%) |
+| Meses sem aporte | 14 (25%) |
+| Saques | 1 (set/25, R$533k — provavelmente reestruturacao) |
+| Maior sequencia sem aporte | 4 meses |
+| Total aportado bruto | R$2.393.042 |
+| Total investido liquido | R$2.361.307 |
+| Media mensal (meses com aporte) | R$58.367 |
+| Mediana dos aportes | R$30.000 |
+| Capital inicial (jul/21) | R$501.112 |
+| Patrimonio atual (mar/26) | R$3.497.702 |
+| Ganho sobre investido | +48,1% (R$1.136.395) |
+
+### Aportes mensais detalhados
+
+| Mes | Aporte (R$) |
+|-----|-------------|
+| jul/21 | — (inicio) |
+| ago/21 | 0 |
+| set/21 | 14.000 |
+| out/21 | 13.500 |
+| nov/21 | 30.000 |
+| dez/21 | 25.000 |
+| jan/22 | 101.500 |
+| fev/22 | 0 |
+| mar/22 | 0 |
+| abr/22 | 90.000 |
+| mai/22 | 150.000 |
+| jun/22 | 0 |
+| jul/22 | 20.000 |
+| ago/22 | 20.000 |
+| set/22 | 0 |
+| out/22 | 0 |
+| nov/22 | 0 |
+| dez/22 | 0 |
+| jan/23 | 26.000 |
+| fev/23 | 0 |
+| mar/23 | 0 |
+| abr/23 | 128.590 |
+| mai/23 | 77.000 |
+| jun/23 | 41.000 |
+| jul/23 | 26.000 |
+| ago/23 | 11.500 |
+| set/23 | 25.000 |
+| out/23 | 15.000 |
+| nov/23 | 30.000 |
+| dez/23 | 15.000 |
+| jan/24 | 23.000 |
+| fev/24 | 70.000 |
+| mar/24 | 27.000 |
+| abr/24 | 82.000 |
+| mai/24 | 34.000 |
+| jun/24 | 20.000 |
+| jul/24 | 57.000 |
+| ago/24 | 41.000 |
+| set/24 | 22.000 |
+| out/24 | 15.000 |
+| nov/24 | 0 |
+| dez/24 | 0 |
+| jan/25 | 35.164 |
+| fev/25 | 18.039 |
+| mar/25 | 145.019 |
+| abr/25 | 603.556 |
+| mai/25 | 35.296 |
+| jun/25 | 0 |
+| jul/25 | 50.766 |
+| ago/25 | 0 |
+| set/25 | -532.848 (saque) |
+| out/25 | 21.998 |
+| nov/25 | 44.976 |
+| dez/25 | 39.028 |
+| jan/26 | 77.576 |
+| fev/26 | 15.049 |
+| mar/26 | 56.485 |
+
+### Conclusao
+Diego e executor consistente acima da meta. Critica de "gap de execucao" feita em 2026-03-20 foi refutada pelos dados. Erro do time: opinar sem consultar historico.
+
+---
+
 ## Historico de Operacoes
 
 ### 2026-03
-> Nenhuma operacao registrada ainda. Bookkeeper criado em 2026-03-19.
-> Operacoes anteriores nao foram rastreadas individualmente.
+- 05/03 e 11/03: Aporte de R$56.485 (registrado na planilha como mudanca no investido total)
 
 ---
 

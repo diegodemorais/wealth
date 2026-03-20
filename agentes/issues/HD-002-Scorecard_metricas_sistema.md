@@ -1,8 +1,12 @@
 # HD-002: Scorecard de Métricas do Sistema de Agentes
 
-## Status: Aberta
-## Data: 2026-03-20
-## Responsáveis: 10 Advocate (lead), 01 Head, Bookkeeper
+## Metadados
+| Campo | Valor |
+|-------|-------|
+| **Dono** | 10 Advocate (lead), 01 Head, Bookkeeper |
+| **Status** | Aberta |
+| **Prioridade** | Media |
+| **Data** | 2026-03-20 |
 
 ## Contexto
 Diego considerou importantíssimo. O sistema precisa provar que agrega valor. Hoje não existe métrica. Proposta inicial do Advocate é um bom ponto de partida mas ainda imatura.

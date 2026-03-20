@@ -1,8 +1,12 @@
 # FIRE-002: Plano B para Perda de Renda Antes dos 50
 
-## Status: Aberta
-## Data: 2026-03-20
-## Responsáveis: 04 FIRE (lead), 01 Head
+## Metadados
+| Campo | Valor |
+|-------|-------|
+| **Dono** | 04 FIRE (lead), 01 Head |
+| **Status** | Aberta |
+| **Prioridade** | Alta |
+| **Data** | 2026-03-20 |
 
 ## Contexto
 A premissa "renda se mantém até os 50" sustenta todo o modelo FIRE. Se Diego perde renda aos 45, o gap de 5 anos a R$250k/ano = R$1.25M. Ninguém fez scenario planning para isso.

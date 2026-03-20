@@ -1,8 +1,12 @@
 # RK-001: Stress Test Risco Soberano Brasil
 
-## Status: Aberta
-## Data: 2026-03-20
-## Responsáveis: 06 Risco (lead), 10 Advocate, 04 FIRE
+## Metadados
+| Campo | Valor |
+|-------|-------|
+| **Dono** | 06 Risco (lead), 10 Advocate, 04 FIRE |
+| **Status** | Aberta |
+| **Prioridade** | Alta |
+| **Data** | 2026-03-20 |
 
 ## Contexto
 Bloco Brasil na carteira representa ~13.1% (Renda+ 2065 3.2% + Reserva IPCA+ 2029 2.5% + IPCA+ 2040 existente 0.4% + IPCA+ 2040 estrutural futuro 7%).

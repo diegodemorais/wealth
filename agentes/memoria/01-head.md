@@ -31,6 +31,9 @@
 ### Tracking de execução pós-aprovação
 Quando uma decisão com DCA ou execução em tranches é aprovada, o Head DEVE cobrar a primeira tranche na sessão seguinte. Decisão sem execução é só papel. (Aprendizado retro 2026-03-19)
 
+### Criticas sobre Diego exigem evidencia quantitativa
+Nenhum agente pode emitir critica sobre comportamento ou disciplina de Diego sem dados da planilha ou outra fonte verificavel. "Nao vi acontecer" ≠ "nao aconteceu". Sem dados = sem critica. Bookkeeper e a fonte de verdade. (Aprendizado 2026-03-20: 7 agentes criticaram "gap de execucao" sem consultar historico real. Track record: 73% dos meses com aporte, R$2,39M em 56 meses.)
+
 ### evolucao.md sincronizada com carteira.md
 Sempre que carteira.md for atualizada, evolucao.md deve ser atualizada na mesma sessão. (Aprendizado retro 2026-03-19)
 

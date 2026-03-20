@@ -13,8 +13,12 @@
 | 2026-03-19 | Risk-off global (Oriente Medio, BTC -40%, bolsas caindo). Diego manteve disciplina, discutiu IPCA+ racionalmente | **Nenhum vies detectado** | Positivo: sem action bias nem panic selling |
 
 ### Perfil Emergente
-Diego demonstra disciplina rules-based consistente. Vieses mais provaveis em cenarios futuros:
-- **Status quo bias na execucao**: decisao aprovada (IPCA+ DCA) nao foi executada por 1+ dia. Monitorar se padrao se repete
+Diego demonstra disciplina rules-based consistente. Track record real: 41 aportes em 56 meses (73%), R$2,39M aportados, media R$58k/mes.
+
+**CORRECAO 2026-03-20**: "Status quo bias na execucao" foi diagnostico errado. Baseado em amostra n=1 (1 dia de delay no IPCA+ DCA). Dados reais da planilha mostram executor consistente acima da meta por 56 meses. Aporte de marco/2026 ja executado (R$56k). Erro de processo: opinar sobre padrao comportamental sem dados quantitativos.
+
+Vieses a monitorar (baseados em evidencia real):
+- ~~**Status quo bias na execucao**~~: REFUTADO pelos dados (73% dos meses com aporte)
 - **Herding de assessores**: assessor amigo traz sugestoes frequentes. Diego filtra bem ate agora, mas pressao social pode aumentar
 - **Action bias em drawdowns prolongados**: nao testado ainda (maior drawdown no periodo foi curto). Vulnerabilidade latente
 
