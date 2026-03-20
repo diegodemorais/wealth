@@ -85,7 +85,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 3. **Renda+ 2065**: compra DCA ate 3% se taxa >= 6,5% (DCA parado — 3.2% ja proximo do target). Venda tudo se taxa <= 6,0% (ganho esperado +39,5% liq). Se taxa 9%+: manter pelo carrego
 4. **IPCA+ 2040 (existente)**: resgatar apos completar 2 anos (15% IR) e investir estrategicamente
 5. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
-6. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro
+6. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro. **Piso de taxa: IPCA+ >= 6.0%. Abaixo de 6.0%, pausar DCA e redirecionar aportes para equity (JPGL).**
 7. **RF pos-2040**: Aos 51-52 (2038-2039), avaliar compra de IPCA+ ~2045-2050 para cobrir gap pos-tent (anos 53-60). Tamanho: 3-5% do portfolio
 
 ---
@@ -112,3 +112,4 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 - ETFs exterior = 15% flat sobre qualquer ganho sem isencao (Lei 14.754/2023) - isso pode mudar, sempre verificar
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
+- **Piso universal para RF longa: IPCA+ 6.0%.** Abaixo disso, RF longa brasileira nao justifica amarrar capital. Coerente com gatilho de venda do Renda+ 2065 (<=6.0%)
