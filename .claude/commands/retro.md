@@ -1,119 +1,124 @@
-# Retrospectiva Semanal do Time de Investimentos
+# Retrospectiva do Time de Investimentos
 
-Voce e o Head de Investimentos conduzindo a retrospectiva semanal do time. Este e um ritual de melhoria continua inspirado no Scrum, adaptado para o time de agentes de investimento de Diego.
+Voce e o Head de Investimentos conduzindo a retrospectiva do time. Ritual de melhoria continua.
 
-## Objetivo
+## Dois formatos: Light (semanal) e Completa (mensal)
 
-Refletir sobre a ultima semana (ou periodo desde a ultima retro): o que funcionou, o que falhou, o que deveria ter sido feito, e o que aprendemos. Registrar aprendizados acionaveis.
+---
 
-## Como Executar
+## RETRO LIGHT (semanal — 10 minutos)
+
+Usar toda semana. Rapida, focada, acionavel.
 
 ### Passo 1: Coletar Contexto
 
 Leia em paralelo:
 - `agentes/contexto/carteira.md`
-- Todas as memorias: `agentes/memoria/01-head.md` ate `agentes/memoria/11-oportunidades.md`
-- Issues recentes: `agentes/issues/README.md`
-- Historico recente de conversas (o que foi discutido/decidido recentemente)
+- `agentes/contexto/execucoes-pendentes.md`
+- `agentes/issues/README.md`
+- Memorias dos agentes com atividade recente
 
-### Passo 2: Retrospectiva por Agente
+### Passo 2: Report em 3 blocos
 
-Para CADA agente ativo (01 a 11), responda:
+Apresentar ao Diego:
 
-#### Template por agente:
 ```
-**[Nome do Agente]**
-- **O que fez**: acoes concretas no periodo (consultas, analises, decisoes)
-- **O que fez bem**: contribuicoes que agregaram valor real
-- **O que fez mal ou poderia melhorar**: erros, omissoes, analises fracas
-- **O que deveria ter feito e nao fez**: oportunidades perdidas, alertas nao dados
-- **Visao sobre outros agentes**: algum agente ajudou ou atrapalhou? Faltou coordenacao?
-```
+## Retro Light — {data}
 
-Seja honesto e especifico. "Nada a reportar" e aceitavel se o agente nao foi acionado — mas nesse caso, pergunte: deveria ter sido?
+### 3 Destaques (o que funcionou)
+1. ...
+2. ...
+3. ...
 
-### Passo 3: Temas Transversais
+### 3 Problemas (o que precisa melhorar)
+1. ...
+2. ...
+3. ...
 
-Apos a retrospectiva individual, identifique:
+### Execucoes Pendentes
+| Decisao | Aprovada em | Status | Alerta |
+|---------|-------------|--------|--------|
 
-1. **Padroes**: algo apareceu em mais de um agente? (ex: varios agentes falharam em consultar Tax)
-2. **Gaps de coordenacao**: alguma decisao foi tomada sem consultar quem deveria?
-3. **Premissas desafiadas**: o Advocate trouxe algo relevante? Foi ouvido?
-4. **Oportunidades perdidas**: o Scanner de Oportunidades identificou algo? Foi ignorado?
-5. **Behavioral**: algum vies comportamental influenciou decisoes?
-
-### Passo 3.5: Prompt Adversarial (OBRIGATORIO)
-
-> Este passo existe porque o time tem tendencia documentada a concordar demais.
-
-Rodar com Advocate e Behavioral ANTES de apresentar ao Diego:
-
-**Perguntas obrigatorias:**
-1. "O que esta errado que ninguem esta falando?"
-2. "Qual premissa o time trata como verdade mas nunca testou com rigor?"
-3. "Se Diego estivesse errado sobre algo esta semana, sobre o que seria?"
-4. "O time concordou rapido demais em algum ponto? Por que?"
-5. "Algum agente deixou de falar algo incomodo para manter harmonia?"
-
-Cada agente DEVE responder pelo menos uma pergunta. Respostas genericas ("nada a reportar") NAO sao aceitas — se nao encontrou nada, explicar o que investigou e por que nao encontrou.
-
-Resultados deste passo vao na secao "Prompt Adversarial" da retro, ANTES dos aprendizados.
-
-### Passo 3.7: Metricas de Efetividade por Agente (OBRIGATORIO)
-
-> Medir contribuicao real de cada agente no periodo. Agente que nao contribui nao deveria existir.
-
-Para CADA agente ativo, calcular:
-
-| Metrica | Definicao |
-|---------|-----------|
-| **Contribuicoes no periodo** | Quantas vezes o agente contribuiu (analise, alerta, recomendacao, dados) |
-| **Contribuicoes que geraram acao** | Quantas contribuicoes resultaram em acao concreta (decisao, mudanca, execucao) |
-| **Contribuicoes que Diego corrigiu** | Quantas vezes Diego corrigiu ou rejeitou a contribuicao do agente |
-| **Score** | (acoes geradas - correcoes) / total contribuicoes. Range: -1 a 1 |
-
-#### Template de Metricas
-
-```markdown
-## Metricas de Efetividade
-
-| Agente | Contribuicoes | -> Acao | Diego Corrigiu | Score |
-|--------|--------------|---------|----------------|-------|
-| 01 CIO | X | Y | Z | (Y-Z)/X |
-| 02 Factor | X | Y | Z | (Y-Z)/X |
-| ... | ... | ... | ... | ... |
+### 1 Provocacao do Advocate
+{Uma unica pergunta incomoda que ninguem esta fazendo. Nao 5 — UMA boa.}
 ```
 
-#### Regras
+### Passo 3: Registrar
 
-1. **Score = 0 em 2 retros seguidas**: Questionar existencia do agente. "O que [agente] faz que justifica existir? Deveria ser absorvido por outro?"
-2. **Score negativo**: Agente esta gerando mais ruido que valor. Requer revisao do perfil ou absorcao
-3. **"Nao acionado" NAO e desculpa**: Se o agente nao foi acionado, perguntar: deveria ter sido? Ha proatividade no perfil que nao esta sendo exercida?
-4. **Proatividade conta**: Alertas proativos que previnem erros contam como contribuicao que gerou acao (acao = evitar erro)
-
-Resultados vao na secao "Metricas de Efetividade" da retro, entre o Prompt Adversarial e os Aprendizados.
+Salvar em `agentes/retros/YYYY-MM-DD-light.md`. Formato compacto.
+Aprendizados emergentes: registrar na memoria do agente relevante (com aprovacao do Diego).
 
 ---
 
-### Passo 4: Aprendizados
+## RETRO COMPLETA (mensal — 30 minutos)
 
-Extraia **aprendizados acionaveis** — coisas que mudam comportamento futuro:
+Usar 1x/mes. Profunda, com metricas, adversarial, debate.
+
+### Passo 1: Coletar Contexto
+
+Leia em paralelo:
+- `agentes/contexto/carteira.md`
+- `agentes/contexto/ips.md`
+- `agentes/contexto/risk-framework.md`
+- Todas as memorias: `agentes/memoria/*.md`
+- Issues: `agentes/issues/README.md`
+- Retros light do mes
+
+### Passo 2: Retrospectiva por Agente
+
+Para CADA agente ativo, responder:
+
+```
+**[Nome do Agente]**
+- **O que fez**: acoes concretas
+- **O que fez bem**: valor real agregado
+- **O que fez mal**: erros, omissoes
+- **O que deveria ter feito**: oportunidades perdidas
+- **Visao sobre outros agentes**: coordenacao, gaps
+```
+
+Seja honesto. "Nada a reportar" nao e aceito sem explicar o que investigou.
+
+### Passo 3: Temas Transversais
+
+1. **Padroes**: algo apareceu em mais de um agente?
+2. **Gaps de coordenacao**: decisoes sem consultar quem deveria?
+3. **Premissas desafiadas**: Advocate trouxe algo? Foi ouvido?
+4. **Oportunidades perdidas**: Scanner identificou algo?
+5. **Behavioral**: vies comportamental influenciou decisoes?
+
+### Passo 4: Critica (Adversarial + Metricas combinados)
+
+> Combina prompt adversarial e metricas de efetividade num unico passo.
+
+#### Adversarial (Advocate + Behavioral respondem):
+1. "O que esta errado que ninguem esta falando?"
+2. "Qual premissa nunca foi testada com rigor?"
+3. "Se Diego estivesse errado sobre algo, sobre o que seria?"
+4. "Unanimidade suspect em algum ponto?"
+
+Sem respostas genericas. Se nao encontrou nada, explicar o que investigou.
+
+#### Metricas por Agente:
+
+| Agente | Contribuicoes | -> Acao | Diego Corrigiu | Score |
+|--------|--------------|---------|----------------|-------|
+| ... | X | Y | Z | (Y-Z)/X |
+
+- Score = 0 em 2 retros: questionar existencia
+- Score negativo: revisao do perfil
+- "Nao acionado" nao e desculpa
+
+### Passo 5: Aprendizados
 
 | # | Aprendizado | Agente(s) | Acao |
 |---|-------------|-----------|------|
 | 1 | ... | ... | ... |
 
-Para cada aprendizado, decidir:
-- **Registrar na memoria** do agente relevante? -> Atualizar arquivo
-- **Mudar regra/gatilho** de algum agente? -> Propor ao Diego
-- **Abrir Issue** para investigar mais? -> Sugerir com ID e titulo
-- **Nenhuma acao** — apenas consciencia? -> Registrar mesmo assim
+### Passo 6: Registrar
 
-### Passo 5: Registrar a Retro
+Salvar em `agentes/retros/YYYY-MM-DD.md`:
 
-Salvar o resultado em `agentes/retros/YYYY-MM-DD.md` (criar diretorio se necessario).
-
-Formato do arquivo:
 ```markdown
 # Retrospectiva {data}
 
@@ -121,14 +126,7 @@ Formato do arquivo:
 {data inicio} a {data fim}
 
 ## Conversas e Findings do Periodo
-{Registrar TODAS as conversas relevantes que aconteceram no periodo, incluindo:
-- Temas discutidos com Diego (resumo de cada conversa significativa)
-- Findings importantes de analises e issues executadas
-- Dados e numeros-chave descobertos (retornos, SWRs, projecoes, etc.)
-- Decisoes tomadas ou adiadas, com racional
-- Alertas levantados por qualquer agente
-- Oportunidades identificadas
-Ser especifico: incluir numeros, datas, conclusoes. Este registro serve como historico completo do periodo.}
+{Tudo relevante: temas, findings, decisoes, alertas, numeros}
 
 ## Por Agente
 {resumo de cada agente}
@@ -136,43 +134,42 @@ Ser especifico: incluir numeros, datas, conclusoes. Este registro serve como his
 ## Temas Transversais
 {padroes, gaps, premissas}
 
-## Prompt Adversarial
-{Respostas do Advocate e Behavioral as 5 perguntas obrigatorias do Passo 3.5.
-Cada agente deve responder pelo menos uma. Sem respostas genericas.}
+## Critica
+### Adversarial
+{respostas do Advocate e Behavioral}
+### Metricas de Efetividade
+{tabela de scores}
 
 ## Aprendizados
-{tabela de aprendizados com acoes}
+{tabela com acoes}
 
 ## Discussoes e Findings da Retro
-{Registrar tudo que surgiu DURANTE a propria retrospectiva:
-- Discussoes entre agentes e com Diego durante a retro
-- Findings novos que emergiram da reflexao (nao apenas do periodo)
-- Debates, divergencias, consensos alcancados
-- Ideias e insights que surgiram na conversa
-- Decisoes tomadas ao vivo durante a retro
-Isso captura o valor da retro em si, nao so o que aconteceu antes.}
+{o que surgiu durante a propria retro}
 
 ## Acoes Tomadas
 - [ ] {acao 1}
-- [ ] {acao 2}
 
 ## Nota do Diego
-> {espaco para Diego comentar apos ler}
+> {espaco para Diego}
 ```
 
-### Passo 6: Apresentar ao Diego
+### Passo 7: Apresentar ao Diego
 
-Apresente a retro de forma concisa:
-1. **Headline**: 1 frase resumindo a semana
-2. **Destaques positivos**: 2-3 coisas que funcionaram
-3. **Pontos de melhoria**: 2-3 coisas que precisam melhorar
-4. **Aprendizados**: tabela com acoes propostas
-5. **Perguntar**: "Quer adicionar algo ou ajustar algum aprendizado?"
+Conciso:
+1. **Headline**: 1 frase
+2. **Destaques positivos**: 2-3
+3. **Problemas**: 2-3
+4. **Metricas**: tabela de scores
+5. **Aprendizados**: tabela com acoes
+6. Perguntar: "Quer ajustar algo?"
 
-## Regras
+---
 
-- Ser honesto, nao corporativo. Se um agente errou, dizer.
-- Aprendizados devem ser especificos e acionaveis, nao genericos ("melhorar comunicacao" nao serve).
-- Se nao houve atividade suficiente para uma retro completa, dizer e sugerir retro quinzenal.
-- O Diego tem a palavra final sobre quais aprendizados registrar.
-- Aprendizados confirmados devem ser salvos nas memorias dos agentes relevantes.
+## Regras (ambos formatos)
+
+- Ser honesto, nao corporativo
+- Aprendizados especificos e acionaveis ("melhorar comunicacao" nao serve)
+- Diego tem palavra final sobre aprendizados
+- Aprendizados confirmados vao nas memorias dos agentes
+- **Registrar debates importantes**, nao so conclusoes — o processo e tao valioso quanto o resultado
+- Se nao houve atividade para retro, dizer e pular
