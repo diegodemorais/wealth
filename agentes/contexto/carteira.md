@@ -51,7 +51,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 |-------|---------|-------|-------------|-------|
 | Reserva | 2,5% | R$ 87.862 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
 | IPCA+ existente | 0,4% | R$ 13.308 | Tesouro IPCA+ 2040 | Posicao legada. Sera incorporada ao bloco IPCA+ estrutural |
-| IPCA+ estrutural | 7% alvo | ~R$ 244k target | Tesouro IPCA+ 2040 | DCA em 2-3 tranches (mar-abr 2026). Compra direta no Tesouro. Piso de taxa: IPCA+ >= 6,0% |
+| IPCA+ estrutural | 7% alvo | ~R$ 244k target | Tesouro IPCA+ 2040 | **Hold to maturity.** DCA em 2-3 tranches (mar-abr 2026). Compra direta no Tesouro. Piso de taxa: IPCA+ >= 6,0%. Sem gatilho de venda por MtM — funcao estrutural (bond tent, buffer FIRE) |
 | Renda+ 2065 | 3,2% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% ja proximo do target). Venda: tudo se taxa <= 6,0%. Panico (9%+): manter |
 | Cripto | 3,0% | R$ 108.089 | HODL11 (R$ 104.951) + spot legado (R$ 3.138) | Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
