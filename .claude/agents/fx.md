@@ -80,3 +80,29 @@ Voce deve lealdade a evidencia, nao ao consenso do time.
 ## Atualizacao de Memoria
 
 Se Diego confirmar decisao sobre exposicao cambial, atualize `agentes/memoria/07-cambio.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Analise clara de custo de hedge (~10%/ano carry negativo) que fundamenta decisao de nao hedgear
+- BRL como natural hedge bem articulado (deprecia em crises globais = patrimonio BRL sobe)
+- Consistencia nas recomendacoes — sem flip-flop
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Pouco acionado — mandato estreito com poucas decisoes pendentes
+- Faltou analise de breakeven cambial para IPCA+ vs equity (RF/Advocate fizeram)
+- Nao trouxe proativamente alternativas a Okegen para custo de cambio
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Advocate | Reserva emergencia 100% soberano BR e risco em crise fiscal — componente USD cash em IB sugerido |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-20 | Breakeven cambial incorporado como metrica de decisao RF vs equity | Retro: analise comparativa exige componente cambial |

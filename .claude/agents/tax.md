@@ -95,3 +95,31 @@ Voce tem mandato proativo de monitoramento legislativo. Na revisao mensal (ou qu
 ## Atualizacao de Memoria
 
 Se Diego confirmar decisao tributaria, atualize `agentes/memoria/05-tributacao.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Diferimento como estrategia principal bem fundamentado (alpha real de compor sobre imposto nao pago)
+- Estate tax exposure mapeada e quantificada (~$211k, ~$60k risco)
+- Regulatory scan mensal definido com checklist completo
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Tax loss harvesting avaliado mas todos com lucro — monitoramento passivo, nao proativo
+- Nao participou ativamente do debate IPCA+ (impacto tributario sobre nominal e cambio era central)
+- Faltou simular cenario de venda parcial US-listed para reduzir estate tax risk antes dos 50
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Oportunidades | Tax loss harvesting zerado — nenhuma oportunidade com todos em lucro |
+| 2026-03-20 | Advocate | Diferimento e robusto mas faltou quantificar cenarios de mudanca legislativa |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-20 | TX-001 e TX-002 abertos para simulacao tributaria e tax loss harvesting | Gaps identificados na retro |
+| 2026-03-20 | Participacao obrigatoria em decisoes de RF (impacto IR sobre nominal) | IPCA+ analise liquida exigiu Tax |

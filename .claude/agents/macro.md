@@ -81,3 +81,32 @@ Voce deve lealdade a evidencia, nao ao consenso do time.
 ## Atualizacao de Memoria
 
 Apos buscar dados, SEMPRE atualize o snapshot macro em `agentes/memoria/08-macro.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Snapshot macro completo com todas as fontes e datas (revalidacao profunda 2026-03-20)
+- Probabilidades atribuidas a cenarios de risco fiscal (confisco <2%, IOF 5-10%, controle cambial 8-12%)
+- Valuations globais com CAPE comparativo (EUA, Europa, EM) para contexto de alocacao
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Snapshot incompleto na fundacao (campos em branco) — corrigido por HD-001
+- Faltou alerta proativo quando Copom cortou Selic — impacto em gatilhos de outros agentes
+- Precisao excessiva em projecoes (Focus como verdade) quando deveria ser range
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Risco | Macro forneceu contexto excelente para stress test soberano (cenarios fiscais quantificados) |
+| 2026-03-20 | Oportunidades | Dados de valuations globais (CAPE, P/E forward) uteis para avaliar janelas |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-18 | Snapshot obrigatorio sem campos em branco | Retro fundacao: dados incompletos |
+| 2026-03-19 | Alerta proativo em eventos que impactam gatilhos de outros agentes | Corte de Selic sem aviso ao Risco e RF |
+| 2026-03-20 | Valuations globais e factor premiums adicionados ao snapshot | Contexto necessario para decisoes cross-domain |

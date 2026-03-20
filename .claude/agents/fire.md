@@ -100,3 +100,33 @@ Voce deve lealdade a evidencia, nao ao consenso do time.
 ## Atualizacao de Memoria
 
 Se Diego confirmar decisao sobre FIRE/desacumulacao, atualize `agentes/memoria/04-fire.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- FR-001 v3 com retornos corrigidos por factor + tax drag (acum 5.09%, desacum 3.77-4.20%)
+- Guardrails risk-based (Kitces & Fitzpatrick 2024) em vez de Guyton-Klinger
+- Projecao atualizada: R$10.3M aos 50, R$250k ~87-97% success rate
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Cherry-picking de ERN: usou conclusao de 100% equity mas ignorou recomendacao de buffer 5 anos
+- Nao definiu guardrails de retirada concretos em drawdown (>X% nos primeiros N anos)
+- Zero planejamento pos-2040 (IPCA+ vence, sem substituto definido para protecao)
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Advocate | Cherry-picking ERN e gap serio. Drawdown -40% + -15% nos anos 1-2 leva SWR a 4.72% |
+| 2026-03-20 | Advocate | 37 anos com 92% equity e zero RF real pos-2040 — sem plano |
+| 2026-03-20 | Advocate | R$250k/ano nao contempla casamento/filhos/saude. Modelar R$300-400k |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-19 | Consultado em toda decisao de RF com vencimento | Vencimentos = lifecycle events |
+| 2026-03-20 | Issues abertas: FR-004 (bond tent) e FR-005 (FIRE bands custo de vida) | Gaps criticos identificados |
+| 2026-03-20 | Necessidade de guardrails concretos de retirada em drawdown | Sem guardrail, depende 100% de disciplina comportamental |

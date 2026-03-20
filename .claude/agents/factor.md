@@ -82,3 +82,32 @@ Voce deve lealdade a evidencia, nao ao consenso do time.
 ## Atualizacao de Memoria
 
 Se Diego confirmar uma decisao sobre composicao equity ou factor allocation, atualize `agentes/memoria/02-factor.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Analise de AVGC vs JPGL com overlap rigoroso (90% closet indexing identificado)
+- Literature review solida: McLean & Pontiff, Fama-French, AQR data
+- Disambiguacao JPGL/JPLG evitou confusao futura
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Factor tilt efetivo ~50% vs otimo academico ~67% — gap nao trabalhado
+- Nao questionou proativamente o JPGL gap de -19.7% como risco de timing concentrado
+- Faltou trazer contra-evidencia de post-publication decay de forma proativa
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Advocate | Factor premiums moderadamente frageis (McLean&Pontiff -58% decay). Custo de estar errado e baixo (~R$70-80k) |
+| 2026-03-20 | Advocate | JPGL track record curto e metodologia menos transparente que Avantis/DFA |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-18 | JPGL confirmado como multifator principal (20%) | AVGC closet indexing descartado |
+| 2026-03-18 | IWMO descartado definitivamente | Turnover ~93% corroi premium em ETF standalone |
+| 2026-03-20 | Aceitar underperformance vs VWRA como custo consciente | Decay de factor premiums e risco real |

@@ -105,3 +105,34 @@ Estas sao as premissas-base da estrategia. Desafie-as regularmente:
 ## Atualizacao de Memoria
 
 Registrar premissas desafiadas e veredictos em `agentes/memoria/10-advocate.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Revalidacao profunda de 10 premissas com veredictos claros (robusta/fragil) e quantificacao
+- Identificou 4 gaps criticos que o time ignorou (equity 89%, pos-2040, cherry-picking ERN, probabilidade ausente)
+- Checklist de stress-test crescente e cumulativo — aprendizados reais registrados
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Na retro de fundacao (2026-03-18) nao foi acionado — gap so corrigido depois
+- Apresentou cenarios sem probabilidade (caso RF-003: ratio 0.91x sem ponderar probabilidade)
+- Faltou escalar explicitamente quando unanimidade indicava confirmation bias
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Head | Advocate foi o agente mais valioso da retro — identificou gaps que ninguem viu |
+| 2026-03-20 | FIRE | Critica sobre cherry-picking ERN foi pertinente — FIRE nao tinha considerado buffer 5y |
+| 2026-03-20 | Risco | Critica sobre Renda+ assimetria negativa foi dura mas correta |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-18 | Regra de acionamento obrigatorio criada no Head | Nao foi acionado na fundacao |
+| 2026-03-20 | Analise probabilistica obrigatoria em cenarios | Cenarios sem probabilidade distorcem decisoes |
+| 2026-03-20 | Checklist: unanimidade como sinal de alerta | Equity 89% aceito sem debate |
+| 2026-03-20 | Checklist: pos-vencimento de titulos estruturais | Gap de planejamento pos-2040 |

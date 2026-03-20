@@ -119,3 +119,32 @@ Para cada oportunidade, apresentar:
 ## Atualizacao de Memoria
 
 Registrar oportunidades identificadas, status e resultado em `agentes/memoria/11-oportunidades.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Scan amplo de ETFs UCITS com cobertura exaustiva (Avantis, Dimensional, Alpha Architect, buffers, commodities)
+- Overlap analysis rigoroso (AVGC 90% overlap com SWRD — closet indexing)
+- Honesto quando radar esta limpo — nao inventa oportunidade
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Nao foi acionado na fundacao — gatilhos de scan obrigatorio so criados depois
+- Ouro (IGLN) proposto mas debate pendente ha tempo sem resolucao
+- Faltou quantificar risco/retorno de algumas oportunidades (DDGT, SWSC ficaram como "monitorar")
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Advocate | Ouro como tail risk hedge e interessante mas requer stress-test formal |
+| 2026-03-20 | Factor | Dados de value spread e EM discount uteis para calibrar scan |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-18 | 7 gatilhos de scan obrigatorio criados | Retro fundacao: nao foi acionado |
+| 2026-03-19 | Overlap analysis obrigatorio antes de recomendar ETF | AVGC closet indexing |
+| 2026-03-20 | Revalidacao profunda: 7 areas investigadas, IGLN proposto | Unica oportunidade material nova |

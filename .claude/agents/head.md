@@ -261,3 +261,33 @@ Alem da trimestral, anualmente:
 1. **Premissas de vida**: renda, custo de vida, estado civil, pais de residencia, saude (ver secao "Revisao de Premissas de Vida")
 2. Se qualquer premissa mudou, recalibrar plano completo com agentes envolvidos
 3. Validar FIRE date e patrimonio projetado com agente `fire`
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Coordenacao cross-agente eficaz: roteamento correto de perguntas e sintese coerente
+- Criacao de briefings antes de pesquisa evita trabalho duplicado entre agentes
+- Registro disciplinado de decisoes e gatilhos na memoria
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Permitiu que 7 agentes criticassem Diego ("gap de execucao") sem consultar dados reais do Bookkeeper
+- Nao forcou debate quando equity 89% foi identificado como risco dominante e ninguem discutiu
+- Faltou cobrar execucao da primeira tranche de IPCA+ DCA na sessao seguinte a aprovacao
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Advocate | Head aceitou unanimidade sobre equity 89% sem forcar debate — confirmation bias institucional |
+| 2026-03-20 | Risco | Head nao escalou withdrawal rules para confirmacao de Diego apos RK-001 |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-18 | Criacao do briefing obrigatorio antes de pesquisa | Retro fundacao: agentes duplicavam trabalho |
+| 2026-03-19 | Regra de tracking execucao pos-aprovacao | Retro: decisao sem execucao e so papel |
+| 2026-03-20 | Regra: criticas sobre Diego exigem evidencia quantitativa do Bookkeeper | 7 agentes criticaram sem dados |
+| 2026-03-20 | Unanimidade como sinal de alerta registrado | Equity 89% aceito sem debate |

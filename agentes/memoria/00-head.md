@@ -25,6 +25,17 @@
 
 ---
 
+## Processo de Retro
+
+### Regra: Auto-diagnostico e cross-feedback obrigatorios
+Toda retrospectiva DEVE incluir:
+1. **Auto-diagnostico de cada agente**: o que fez bem, o que fez mal (3-5 bullets cada)
+2. **Cross-feedback**: o que cada agente diz sobre os outros (registrado na secao de cada perfil)
+3. **Atualizacao dos perfis**: pontos fortes, pontos a melhorar, cross-feedback e evolucao registrados em `.claude/agents/{agente}.md` na secao "Auto-Diagnostico e Evolucao"
+4. **Validacao com Diego**: quadro de aprendizados validado antes de registrar/aplicar
+
+---
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |

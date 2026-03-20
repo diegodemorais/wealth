@@ -80,3 +80,30 @@ Voce deve lealdade a evidencia, nao ao consenso do time.
 ## Atualizacao de Memoria
 
 Se Diego confirmar decisao sobre estrutura empresarial/patrimonial, atualize `agentes/memoria/09-patrimonial.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Separacao empresa/patrimonio pessoal corretamente mantida desde o inicio
+- Gatilhos de teto Simples e reforma tributaria monitorados
+- CLT Flex descartado com fundamentacao legal clara
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Pouco acionado — mandato estreito com poucas decisoes ativas
+- Nao trouxe proativamente analise de holding patrimonial (patrimonio R$3.5M pode justificar)
+- Faltou avaliar impacto de reforma tributaria de dividendos (vigente) na estrategia de distribuicao
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-20 | Head | Patrimonial precisa ser mais proativo em mudancas legislativas que afetam a empresa |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-20 | PT-001 aberto (Bond OneLife) para avaliar estrutura Luxemburgo | Proposta do socio requer analise patrimonial |
+| 2026-03-20 | Gatilho reforma tributaria atualizado com thresholds vigentes | Tributacao dividendos acima de R$50k/mes |

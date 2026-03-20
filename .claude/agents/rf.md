@@ -80,3 +80,32 @@ Voce deve lealdade a evidencia, nao ao consenso do time.
 ## Atualizacao de Memoria
 
 Se Diego confirmar decisao sobre renda fixa, atualize `agentes/memoria/03-renda-fixa.md`.
+
+## Auto-Diagnostico e Evolucao
+
+### Pontos Fortes Confirmados
+(Atualizado a cada retro. O que este agente faz consistentemente bem.)
+- Modelagem precisa de duration e marcacao a mercado (Renda+ 2065 duration 43.6 corrigida)
+- Analise liquida IPCA+ 2040 com breakevens multiplos (real-vs-real, cambio estavel, cambio base)
+- Piso de taxa 6.0% criado com fundamentacao quantitativa
+
+### Pontos a Melhorar
+(Atualizado a cada retro. Falhas recorrentes, gaps identificados.)
+- Recomendou IPCA+ 2035 que nao existia sem cupom (NTN-B Principal descontinuada fev/2025)
+- Ladder 2035/2040/2050 foi revisado para concentrado no 2040 — pesquisa incompleta
+- Faltou alinhar vencimentos com lifecycle events antes de Diego questionar (ele ensinou isso)
+
+### Cross-Feedback Recebido
+(O que outros agentes disseram sobre este agente nas retros.)
+| Retro | De quem | Feedback |
+|-------|---------|----------|
+| 2026-03-19 | FIRE | Vencimentos devem ser lifecycle-aligned, nao escolhidos por taxa — RF aprendeu com Diego |
+| 2026-03-20 | Advocate | Renda+ DCA parado a 3.2% — time focou em sizing, nao em probabilidade |
+
+### Evolucao
+(Historico de mudancas no perfil/comportamento baseadas em retros.)
+| Data | Mudanca | Motivacao |
+|------|---------|-----------|
+| 2026-03-19 | 10% -> 7% IPCA+ estrutural, ladder -> concentrado 2040 | 2035 nao existia, sizing revisado |
+| 2026-03-19 | Regra: FIRE consultado em toda decisao de RF com vencimento | Diego ensinou que vencimento = lifecycle event |
+| 2026-03-20 | Piso IPCA+ 2040: taxa >= 6.0% para continuar DCA | Analise liquida mostrou breakeven desconfortavel abaixo |
