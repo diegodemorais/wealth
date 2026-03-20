@@ -1,44 +1,39 @@
-# FR-004-Bond_tent_pre_FIRE: Bond tent 48-53 design e glidepath de transicao
+# FR-004: Bond tent pre-FIRE (glidepath temporario 47-55)
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | FR-004-Bond_tent_pre_FIRE |
-| **Dono** | 04 FIRE |
+| **Dono** | 04 FIRE (lead) |
 | **Status** | Backlog |
 | **Prioridade** | Alta |
-| **Participantes** | 10 Advocate, 03 Renda Fixa, 01 CIO, 05 Tributacao |
-| **Dependencias** | FR-003 (Monte Carlo informa sizing) |
+| **Participantes** | 01 Head, 10 Advocate, 12 Behavioral, 03 Renda Fixa |
+| **Dependencias** | FR-003 (Monte Carlo informa o sizing) |
 | **Criado em** | 2026-03-20 |
-| **Origem** | Revalidacao profunda (Advocate 2026-03-20): 85% equity na aposentadoria e fragil sem bond tent |
+| **Origem** | Revalidacao profunda — convergencia FIRE + Advocate + Behavioral |
 | **Concluido em** | — |
 
 ---
 
 ## Motivo / Gatilho
 
-> Advocate identificou que 90% equity ate 50 com transicao direta para 85% equity na aposentadoria e vulneravel a sequence-of-returns risk. Kitces (2012) e Pfau (2013) demonstram que um rising equity glidepath com bond tent nos anos ao redor da aposentadoria melhora success rates em 5-15%. A carteira atual nao tem mecanismo de transicao.
+> Tabela de alocacao por idade mostra 85% equity CONSTANTE de 40 a 70 anos. Ignora sequence-of-returns risk nos 5 anos antes e depois de FIRE (Kitces 2014, Pfau 2013). Behavioral confirmou overconfidence + hot-cold empathy gap sobre disciplina em drawdown pos-FIRE.
 
 ---
 
 ## Descricao
 
-> Desenhar o bond tent para a transicao pre/pos-FIRE (48-53). Definir: (1) quanto de equity converter para renda fixa antes dos 50, (2) qual instrumento usar, (3) como subir equity de volta apos os primeiros anos de desacumulacao, (4) impacto tributario das conversoes.
+> Modelar bond tent temporario: subir RF de 7-12% para 15-18% entre idades 47-55, depois voltar. V-shape classico de Kitces/Pfau. Quantificar beneficio em termos de reducao de probabilidade de ruina.
 
 ---
 
 ## Escopo
 
-- [ ] Revisar literatura: Kitces (2012), Pfau (2013), Estrada (2017) sobre bond tent e rising equity glidepath
-- [ ] Definir alocacao-alvo no pico do tent (idade 50): quanto de RF?
-- [ ] Definir glidepath de entrada (48-50): quanto converter por ano
-- [ ] Definir glidepath de saida (50-53): quanto reconverter por ano
-- [ ] Escolher instrumento: Tesouro Selic? IPCA+ curto? Combinacao?
-- [ ] Avaliar impacto tributario: vender equity para comprar RF gera IR 15% — alternativas?
-- [ ] Integrar com IPCA+ estrutural 7% ja aprovado (parte do tent?)
-- [ ] Rodar cenarios no Monte Carlo (FR-003) com e sem tent
-- [ ] Debate estruturado: Proponente (FIRE) vs Oponente (Advocate)
+- [ ] Modelar cenario sem bond tent (85% equity constante) vs com bond tent (65-70% equity entre 47-55)
+- [ ] Definir de onde sai o capital para RF extra (parar aportes em equity 2-3 anos antes? Vender parcial?)
+- [ ] Calcular impacto no patrimonio projetado aos 50 vs reducao de sequence risk
+- [ ] Definir mecanica de execucao: qual instrumento RF? IPCA+? Selic? Duration?
+- [ ] Atualizar tabela de alocacao por idade se aprovado
 
 ---
 
@@ -62,7 +57,6 @@
 | **Estrategia** | — |
 | **Conhecimento** | — |
 | **Memoria** | — |
-| **Nenhum** | — |
 
 ---
 
