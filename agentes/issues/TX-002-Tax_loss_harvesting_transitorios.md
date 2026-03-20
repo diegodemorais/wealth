@@ -1,4 +1,4 @@
-# TX-001: Tax-Loss Harvesting nos Ativos Transitorios
+# TX-002: Tax-Loss Harvesting nos Ativos Transitorios
 
 ## Status: Aberta
 ## Data: 2026-03-20
