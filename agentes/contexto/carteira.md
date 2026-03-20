@@ -1,6 +1,6 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-03-18
+> Atualizado em: 2026-03-20
 > Este arquivo e a fonte de verdade para todos os agentes.
 > Cambio de referencia: R$ 5,24
 
@@ -36,12 +36,12 @@
 | AVEM | 20% | 24,2% (R$ 857.179) | EIMI $96.1k + AVES $56.1k + DGS $11.3k | Overweight via transitorios. Aportar so em AVEM UCITS |
 | JPGL | 20% | 0,3% (R$ 11.383) | IWVL $2.2k + JPGL $0 | **Maior gap (-19,7%). FOCO dos aportes** |
 
-É uma carteira próxima de 50/50 em Neutro/Fator, considerando as composições de cada ETF
+Carteira proxima de 50/50 em Neutro/Fator, considerando as composicoes de cada ETF.
 
 ### Ativos Transitorios (nao comprar mais — diluir via aportes)
 EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 
-> Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ETFs alvo. Vender na fase de usufruto.
+Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ETFs alvo. Vender na fase de usufruto.
 
 ---
 
@@ -50,9 +50,10 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 | Bloco | % Atual | Valor | Instrumento | Regra |
 |-------|---------|-------|-------------|-------|
 | Reserva | 2,5% | R$ 87.862 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
-| IPCA+ 2040 | 0,4% | R$ 13.308 | Tesouro IPCA+ 2040 | Aguardando 2 anos pra resgate a 15% IR. Resgatar e investir estrategicamente |
-| Risco Juros | 3,2% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3.2% ja proximo do target). Venda: tudo se taxa <= 6,0%. Panico (9%+): manter |
-| Risco Crypto | 3,0% | R$ 108.089 | HODL11 (R$ 104.951) + spot legado (R$ 3.138) | Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
+| IPCA+ existente | 0,4% | R$ 13.308 | Tesouro IPCA+ 2040 | Posicao legada. Sera incorporada ao bloco IPCA+ estrutural |
+| IPCA+ estrutural | 7% alvo | ~R$ 244k target | Tesouro IPCA+ 2040 | DCA em 2-3 tranches (mar-abr 2026). Compra direta no Tesouro. Piso de taxa: IPCA+ >= 6,0% |
+| Renda+ 2065 | 3,2% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% ja proximo do target). Venda: tudo se taxa <= 6,0%. Panico (9%+): manter |
+| Cripto | 3,0% | R$ 108.089 | HODL11 (R$ 104.951) + spot legado (R$ 3.138) | Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
 ---
 
@@ -63,30 +64,25 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 | Tesouro Selic | 0% | 0% | 5% | 5% | 5% |
 | IPCA+ Estrutural | 7% | 7% | 7% | 0% | 0% |
 | Equity total | 90% | 90% | 88% | 92% | 92% |
-| SWRD | 35% | 35% | 34% | 36% | 36% |
-| AVGS (US + INT) | 25% | 25% | 25% | 25% | 25% |
-| AVEM | 20% | 20% | 19% | 20% | 20% |
-| JPGL | 20% | 20% | 10% | 11% | 11% |
+| — SWRD | 31,5% | 31,5% | 30,8% | 32,2% | 32,2% |
+| — AVGS | 22,5% | 22,5% | 22,0% | 23,0% | 23,0% |
+| — AVEM | 18,0% | 18,0% | 17,6% | 18,4% | 18,4% |
+| — JPGL | 18,0% | 18,0% | 17,6% | 18,4% | 18,4% |
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
 | Renda+ 2065 tatico | <=3% | <=3% | <=3% | 0% | 0% |
 
-> **Nota**: IPCA+ 2040 vence em 2040 (Diego tera 53 anos). Pos-vencimento, o capital e realocado para equity, elevando equity total para ~92%. Equity aos 50 = 88% (nao 85%) — decisao FR-004 (Cederburg 2023, ERN). Renda+ 2065 target reduzido de 5% para 3% — decisao RF-003.
-
-> IPCA+ estrutural 7% aprovado (revisado de 10% em 2026-03-19). 100% no IPCA+ 2040 (taxa ~7,31% real, NTN-B Principal sem cupom). Vence 3 anos pos-FIRE = buffer perfeito. Compra direta no Tesouro (ETF descartado). IPCA+ 2035 nao existe sem cupom semestral — ladder original corrigido.
-> Tabela atualizada em 2026-03-20: equity 88% aos 50 (FR-004), Renda+ <=3% (RF-003), IPCA+ 0% pos-vencimento (2040).
-> IPCA+ estrutural 7% revalidado em debate de 2026-03-20 com analise liquida completa (IR, custos, cambio). Conta liquida: IPCA+ entrega 6.0% real liquido; equity 3.9-5.9% dependendo do cambio. Breakeven cambial: 2.1%/ano depreciacao real. CAGR historico BRL: 0.77%/ano (abaixo do breakeven). Consenso 5x2 (7% vs 10%). Debate registrado na retro.
+IPCA+ 2040 vence em 2040 (Diego tera 53 anos). Pos-vencimento, capital realocado para equity, elevando equity total para ~92%.
 
 ---
 
 ## Decisoes Pendentes
 
 1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar
-2. **AVUV, DGS, AVDV, USSC, EIMI, AVES, IWVL**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
-3. **Renda+ 2065**: compra DCA ate 3% se taxa >= 6,5% (DCA parado — 3.2% ja proximo do target). Venda tudo se taxa <= 6,0% (ganho esperado +39,5% liq). Se taxa 9%+: manter pelo carrego
-4. **IPCA+ 2040 (existente)**: resgatar apos completar 2 anos (15% IR) e investir estrategicamente
-5. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
-6. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro. **Piso de taxa: IPCA+ >= 6.0%. Abaixo de 6.0%, pausar DCA e redirecionar aportes para equity (JPGL).**
-7. **RF pos-2040**: Aos 51-52 (2038-2039), avaliar compra de IPCA+ ~2045-2050 para cobrir gap pos-tent (anos 53-60). Tamanho: 3-5% do portfolio
+2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
+3. **Renda+ 2065**: compra DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% ja proximo do target). Venda tudo se taxa <= 6,0%. Se taxa 9%+: manter pelo carrego
+4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
+5. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro. Piso de taxa: IPCA+ >= 6,0%. Abaixo de 6,0%, pausar DCA e redirecionar aportes para equity (JPGL)
+6. **RF pos-2040**: Aos 51-52 (2038-2039), avaliar compra de IPCA+ ~2045-2050 para cobrir gap pos-tent (anos 53-60). Tamanho: 3-5% do portfolio
 
 ---
 
@@ -108,7 +104,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 
 ## Regras Universais
 
-- Rebalancear SEMPRE via aportes, nunca por venda de ativo com lucro. Por venda, apenas se não tiver lucro ou se fugir da estratégia da carteira.
+- Rebalancear SEMPRE via aportes, nunca por venda de ativo com lucro. Por venda, apenas se nao tiver lucro ou se fugir da estrategia da carteira.
 - ETFs exterior = 15% flat sobre qualquer ganho sem isencao (Lei 14.754/2023) - isso pode mudar, sempre verificar
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
