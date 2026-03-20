@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Dono** | 04 FIRE (lead) |
-| **Status** | Concluido (pendente aprovacao Diego) |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 01 Head, 10 Advocate, 12 Behavioral, 03 Renda Fixa |
 | **Dependencias** | FR-003 (Monte Carlo informa o sizing) |
@@ -300,7 +300,7 @@ O tent tem formato V assimetrico:
 ### Quando comecar a implementar?
 
 **Nao agora. Aos 45 (2032).** Diego tem 39 anos. O tent pre-FIRE comeca 5 anos antes do FIRE (idade 45). Ate la:
-- Manter estrategia de acumulacao atual (90% equity)
+- Manter estrategia de acumulacao atual (~88-90% equity)
 - IPCA+ 2040 a 7% ja esta correto como posicao estrutural
 - Fechar gap de JPGL (prioridade atual)
 - **Gatilho**: aos 44-45, reavaliar taxa de IPCA+ disponivel e comecar a redirecionar aportes
@@ -311,26 +311,42 @@ O tent tem formato V assimetrico:
 
 ---
 
+## Decisao Final (aprovada por Diego em 2026-03-20)
+
+**NAO implementar bond tent agressivo (75% equity no pico).** Razoes:
+- Cederburg et al. (2023): 100% equity diversificado globalmente domina lifecycle funds para horizontes longos
+- ERN SWR Series: equity alto favorece horizontes de 40+ anos
+- IPCA+ 2040 a 7.31% real ja funciona como "tent natural" -- rende mais que equity esperado, vence 3 anos pos-FIRE (2040 = FIRE+3), desfaz-se naturalmente
+
+**Decisao de alocacao aos 50 (FIRE):**
+- **Equity total: 88%** (nao 85% anterior, nem 75% do tent proposto)
+- **IPCA+ Estrutural: 7%** (hold-to-maturity, o "tent natural")
+- **Tesouro Selic: 5%** (buffer de liquidez)
+- **Renda+ 2065 tatico: <=3%**
+- **HODL11: 3%**
+
+O IPCA+ 2040 estrutural cumpre a funcao do bond tent sem sacrificar equity: rentabilidade real superior, descorrelacao funcional, e desfaz no vencimento.
+
+---
+
 ## Resultado
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | Bond tent V-shape: equity 90% -> 75% (FIRE) -> 92% (60+). IPCA+ 2040 como espinha dorsal (7% -> 12% -> 0% no vencimento). Selic 5% a partir dos 45. |
-| **Estrategia** | Tent moderado (equity minimo 75%), mais raso que classico Kitces/Pfau (60%), calibrado para horizonte longo (40+ anos) e IPCA+ de alto carrego. Construcao via redirecionamento de aportes, nunca venda de equity. |
-| **Conhecimento** | Kitces & Pfau (2014): rising glidepath reduce probability + magnitude of failure. ERN SWR Part 19/43: 60% equity minimo, subindo para 100%. Estrada (2015): 100% equity e 60/40 fixo ambos eficazes internacionalmente. Cederburg (2023): 100% equity domina para horizontes longos. |
-| **Memoria** | Pendente aprovacao Diego. Se aprovado: atualizar tabela em carteira.md e gatilho em memoria/04-fire.md |
+| **Alocacao** | NAO implementar bond tent agressivo. Manter ~88% equity no FIRE. IPCA+ 2040 (7%) e o "tent natural" -- rende 7.31% real, vence 2040 (FIRE+3). Selic 5% como buffer. |
+| **Estrategia** | Equity alto (88%) no FIRE, suportado por Cederburg (2023) e ERN. IPCA+ 2040 substitui bond tent classico com retorno real superior. Pos-FIRE: equity sobe naturalmente conforme IPCA+ 2040 vence. |
+| **Conhecimento** | Cederburg (2023): 100% equity domina para horizontes longos. ERN SWR Part 19/43: equity alto favorece FIRE longo. Kitces & Pfau (2014): bond tent moderado tem merito, mas custo de oportunidade e alto para horizonte 40+ anos quando RF rende 7.31% real. |
+| **Memoria** | Aprovado por Diego. Tabela em carteira.md atualizada. |
 
 ---
 
 ## Proximos Passos
 
-- [ ] **Diego**: aprovar ou ajustar o glidepath proposto (especialmente equity minimo de 75% no pico)
-- [ ] Se aprovado: atualizar tabela de alocacao por idade em `carteira.md`
-- [ ] Se aprovado: registrar em `memoria/04-fire.md` como decisao confirmada
-- [ ] Aos 44-45: reavaliar taxas IPCA+ disponiveis e iniciar implementacao
-- [ ] FR-003 (Monte Carlo): quando executada, validar que o tent nao degrada success rates
-- [ ] Coordenar com 03 Renda Fixa: sizing e timing de compras IPCA+ 2040 adicionais
-- [ ] Coordenar com 05 Tributacao: confirmar que redirecionamento de aportes nao gera evento tributario
+- [x] **Diego**: aprovar glidepath (decidiu NAO implementar tent agressivo, manter 88% equity)
+- [x] Atualizar tabela de alocacao por idade em `carteira.md`
+- [ ] Aos 44-45: reavaliar se tent pre-FIRE merece reconsideracao com base em taxas disponiveis e patrimonio acumulado
+- [ ] FR-003 (Monte Carlo): quando executada, validar success rates com 88% equity no FIRE
+- [ ] Pos-FIRE: equity sobe naturalmente conforme IPCA+ 2040 vence em 2040 (Diego tera 53)
 
 ---
 

@@ -1,6 +1,6 @@
 # RF-003: Duration Risk de Renda+ 2065 em Regime de Inflacao
 
-## Status: Concluida
+## Status: Done
 ## Data: 2026-03-20
 ## Responsaveis: 03 RF (lead), 08 Macro, 10 Advocate
 ## Prioridade: Alta
@@ -236,15 +236,21 @@ Esta e a recomendacao central desta issue.
 
 ---
 
-## 6. Resumo das Decisoes (pendente aprovacao de Diego)
+## 6. Decisao Final (aprovada por Diego em 2026-03-20)
 
-| Item | Antes | Proposta | Racional |
-|------|-------|----------|----------|
-| Teto de alocacao | 5% | **3.5%** | Duration risk desproporcional; correlacao positiva em stress |
-| DCA adicional | Ativo (comprar ate 5%) | **Parar** | 3.2% ja esta proximo do novo teto; custo de oportunidade alto |
+| Item | Antes | Decisao | Racional |
+|------|-------|---------|----------|
+| Teto de alocacao | 5% | **3%** | Duration risk desproporcional; correlacao positiva em stress. 3.2% ja proximo do target |
+| DCA adicional | Ativo (comprar ate 5%) | **Parado** | 3.2% ja proximo do target de 3%. Custo de oportunidade alto (JPGL) |
 | Gatilho de venda | Taxa <= 6.0% | **Manter 6.0%** | Adequado; +48.5% liquido |
 | Gatilho de compra | Taxa >= 6.5% | **Manter 6.5%, mas suspender acima de 9%** | Em panico fiscal, nao adicionar risco |
 | Regra de panico | Manter se 9%+ | **Manter + nao comprar mais** | Carrego e bom, mas nao aumentar exposicao |
+
+### Nota: IPCA+ 2040 vs Renda+ 2065
+
+Sao teses **completamente diferentes**:
+- **IPCA+ 2040**: posicao ESTRUTURAL (carry to maturity). Rentabilidade real de 7.31%, descorrelacao funcional, buffer de sequencia. Hold ate 2040
+- **Renda+ 2065**: posicao TATICA de marcacao a mercado. Duration 43.6, gatilhos de compra/venda. Trade, nao investimento estrutural
 
 ---
 

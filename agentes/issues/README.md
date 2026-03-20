@@ -25,14 +25,11 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|-------------|------------|
-| RK-001-Stress_test_risco_soberano_BR | Stress test risco soberano Brasil (bloco ~13%) | 06 Risco | Alta |
 | FIRE-002-Plano_B_perda_renda | Plano B para perda de renda antes dos 50 | 04 FIRE | Alta |
 | HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | Alta |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | FR-003-Monte_Carlo_computacional | Monte Carlo computacional: 10k trajetorias com parametros reais | 04 FIRE | Alta |
-| FR-004-Bond_tent_pre_FIRE | Bond tent 48-53: design e glidepath de transicao | 04 FIRE | Alta |
 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
-| RF-003-Duration_risk_Renda2065_inflacao | Duration risk de Renda+ 2065 em regime de inflacao (David & Veronesi 2013) | 03 RF | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
 | FR-005-FIRE_bands_custo_vida | FIRE bands: modelar custo de vida R$300-400k | 04 FIRE | Media |
 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Media |
@@ -57,6 +54,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| RF-003-Duration_risk_Renda2065_inflacao | Duration risk Renda+ 2065 em regime de inflacao | 03 RF | 2026-03-20 | Target 3% (nao 5%). DCA parado. Gatilhos mantidos. IPCA+ 2040 e tese diferente (estrutural) |
+| RK-001-Stress_test_risco_soberano_BR | Stress test risco soberano Brasil (bloco ~13%) | 06 Risco | 2026-03-20 | IPCA+ 7% adequado. Risco real e equity 89%. Liquidacao: Reserva -> equity -> RF por ultimo |
+| FR-004-Bond_tent_pre_FIRE | Bond tent pre-FIRE: design e glidepath | 04 FIRE | 2026-03-20 | NAO implementar tent agressivo. Manter 88% equity no FIRE. IPCA+ 2040 e o tent natural |
 | HD-003-Scan_Chicago_Booth | Scan Material Chicago Booth | 01 Head | 2026-03-20 | Scan completo em `agentes/contexto/chicago_booth_scan.md`. 60+ papers, 18 frameworks, 8 issues candidatos |
 | FI-003-AVGC_vs_JPGL_multifator | AVGC vs JPGL: melhor multifator UCITS? | 02 Factor | 2026-03-18 | JPGL confirmado — complementa com momentum + low vol. AVGC closet indexing |
 | RF-002-IPCA_plus_agora_taxa_7 | Alocar 10% IPCA+ agora (taxa 7%+) | 03 Renda Fixa | 2026-03-18 | Aprovado. Ladder 2035/2040/2050 sem cupom. Gatilho IPCA+ aos 48 removido |

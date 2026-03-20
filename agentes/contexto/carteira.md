@@ -51,7 +51,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 |-------|---------|-------|-------------|-------|
 | Reserva | 2,5% | R$ 87.862 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
 | IPCA+ 2040 | 0,4% | R$ 13.308 | Tesouro IPCA+ 2040 | Aguardando 2 anos pra resgate a 15% IR. Resgatar e investir estrategicamente |
-| Risco Juros | 3,2% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0%. Panico (9%+): manter |
+| Risco Juros | 3,2% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3.2% ja proximo do target). Venda: tudo se taxa <= 6,0%. Panico (9%+): manter |
 | Risco Crypto | 3,0% | R$ 108.089 | HODL11 (R$ 104.951) + spot legado (R$ 3.138) | Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
 ---
@@ -61,16 +61,19 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 | Bloco / ETF | 34 | 40 | 50 | 60 | 70 |
 |-------------|-----|-----|-----|-----|-----|
 | Tesouro Selic | 0% | 0% | 5% | 5% | 5% |
-| IPCA+ Estrutural | 7% | 7% | 7% | 7% | 7% |
-| Equity total | 90% | 90% | 85% | 85% | 85% |
-| SWRD | 35% | 35% | 33% | 33% | 33% |
+| IPCA+ Estrutural | 7% | 7% | 7% | 0% | 0% |
+| Equity total | 90% | 90% | 88% | 92% | 92% |
+| SWRD | 35% | 35% | 34% | 36% | 36% |
 | AVGS (US + INT) | 25% | 25% | 25% | 25% | 25% |
-| AVEM | 20% | 20% | 19% | 19% | 19% |
-| JPGL | 20% | 20% | 19% | 19% | 19% |
+| AVEM | 20% | 20% | 19% | 20% | 20% |
+| JPGL | 20% | 20% | 10% | 11% | 11% |
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
-| Renda+ 2065 tatico | <=5% | <=5% | <=5% | <=3% | 0% |
+| Renda+ 2065 tatico | <=3% | <=3% | <=3% | 0% | 0% |
+
+> **Nota**: IPCA+ 2040 vence em 2040 (Diego tera 53 anos). Pos-vencimento, o capital e realocado para equity, elevando equity total para ~92%. Equity aos 50 = 88% (nao 85%) — decisao FR-004 (Cederburg 2023, ERN). Renda+ 2065 target reduzido de 5% para 3% — decisao RF-003.
 
 > IPCA+ estrutural 7% aprovado (revisado de 10% em 2026-03-19). 100% no IPCA+ 2040 (taxa ~7,31% real, NTN-B Principal sem cupom). Vence 3 anos pos-FIRE = buffer perfeito. Compra direta no Tesouro (ETF descartado). IPCA+ 2035 nao existe sem cupom semestral — ladder original corrigido.
+> Tabela atualizada em 2026-03-20: equity 88% aos 50 (FR-004), Renda+ <=3% (RF-003), IPCA+ 0% pos-vencimento (2040).
 
 ---
 
@@ -78,7 +81,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 
 1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar
 2. **AVUV, DGS, AVDV, USSC, EIMI, AVES, IWVL**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
-3. **Renda+ 2065**: compra DCA ate 5% se taxa >= 6,5%. Venda tudo se taxa <= 6,0% (ganho esperado +39,5% liq). Se taxa 9%+: manter pelo carrego
+3. **Renda+ 2065**: compra DCA ate 3% se taxa >= 6,5% (DCA parado — 3.2% ja proximo do target). Venda tudo se taxa <= 6,0% (ganho esperado +39,5% liq). Se taxa 9%+: manter pelo carrego
 4. **IPCA+ 2040 (existente)**: resgatar apos completar 2 anos (15% IR) e investir estrategicamente
 5. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
 6. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro

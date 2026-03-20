@@ -224,17 +224,20 @@ O Renda+ e 3,2% da carteira com gatilho de compra ativo (DCA ate 5% se taxa >= 6
 
 **Atencao**: se Renda+ for a 5% E IPCA+ estrutural for executado a 7%, o bloco soberano total sobe para ~14,5%. Ainda aceitavel, mas na fronteira do conforto. Recomendo monitorar.
 
-### Regras para Withdrawal Operations
+### Regras para Liquidacao em Emergencia (aprovado por Diego em 2026-03-20)
 
-**Regra proposta — nunca liquidar ambos no mesmo trimestre:**
+**Ordem simplificada de liquidacao:**
 
-1. **Renda+ 2065 e IPCA+ 2040 NAO devem ser liquidados no mesmo trimestre** — liquidacao simultanea em stress concentra realizacao de perda e elimina opcionalidade
-2. **Prioridade de liquidacao em stress**:
-   - Primeiro: Reserva IPCA+ 2029 (duration curta, menor impacto MtM)
-   - Segundo: IPCA+ 2040 (se necessario antes de 2040, mas apenas apos Reserva)
-   - Ultimo: Renda+ 2065 (nunca vender em panico; se taxa 9%+, manter pelo carrego IPCA+6,87%)
-3. **Em cenario de necessidade de liquidez**: usar equity global primeiro (ETFs UCITS tem liquidez diaria e spread baixo)
-4. **Trigger de review**: se bloco soberano total > 15% do patrimonio, revisao obrigatoria de sizing
+1. **Reserva IPCA+ 2029** (duration curta, menor impacto MtM)
+2. **Equity global** (ETFs UCITS -- liquidez diaria, spread baixo)
+3. **Renda+ 2065 / IPCA+ 2040** (por ultimo)
+
+**Regras especificas:**
+- **IPCA+ 2040**: hold-to-maturity. NAO vende antes do vencimento (2040)
+- **Renda+ 2065**: so vende no gatilho (taxa <= 6.0%) ou mantem em panico (taxa 9%+). Nunca vende forcado em crise
+- **Trigger de review**: se bloco soberano total > 15% do patrimonio, revisao obrigatoria de sizing
+
+> Regra anterior "nunca vender os dois no mesmo trimestre" foi REMOVIDA -- na pratica, IPCA+ nao e vendido (hold-to-maturity) e Renda+ tem gatilhos proprios. A regra era redundante.
 
 ### Playbook para Diego no Drawdown
 
@@ -245,17 +248,16 @@ SE taxa Renda+ >= 9% (panico):
   -> Revisar em 6 meses
 
 SE taxa Renda+ entre 6,5% e 9%:
-  -> DCA ate 5% (gatilho de compra ativo)
-  -> Nunca comprar mais de 1% do patrimonio por tranche
+  -> DCA parado (target 3% ja atingido). Nao comprar mais
+  -> Se target mudar no futuro: nunca mais de 1% do patrimonio por tranche
 
 SE taxa Renda+ <= 6,0%:
   -> Vender posicao inteira (gatilho de venda)
 
 SE precisar de liquidez durante crise:
-  -> 1. Equity global (ETFs UCITS)
-  -> 2. Reserva IPCA+ 2029
-  -> 3. IPCA+ 2040 (ultimo recurso antes de 2040)
-  -> 4. Renda+ 2065 (NUNCA em panico)
+  -> 1. Reserva IPCA+ 2029
+  -> 2. Equity global (ETFs UCITS)
+  -> 3. Renda+ 2065 / IPCA+ 2040 (por ultimo -- Renda+ so no gatilho, IPCA+ nao vende)
 
 SE bloco soberano > 15% do patrimonio:
   -> Review obrigatorio de sizing
@@ -275,6 +277,16 @@ SE bloco soberano > 15% do patrimonio:
 **Risco dominante da carteira NAO e o bloco soberano. E equity concentration a 89%.**
 
 O bloco soberano a 13% e um risco secundario. Mesmo no worst case, o bloco soberano contribui ~R$107k de perda contra ~R$747k de equity+crypto. Diego deve ter clareza que o stress test do bloco soberano revela um risco gerenciavel, enquanto o risco de equity e ~7x maior em magnitude absoluta.
+
+---
+
+## Decisao Final (aprovada por Diego em 2026-03-20)
+
+- **IPCA+ estrutural 7%**: adequado. Risco real da carteira e equity 89%, nao soberano 13%
+- **IPCA+ 2040**: hold-to-maturity. NAO vende antes do vencimento
+- **Renda+ 2065**: so vende no gatilho (<=6.0%) ou mantem em panico (9%+)
+- **Ordem de liquidacao em emergencia**: Reserva 2029 primeiro -> equity global -> Renda+/IPCA+ por ultimo
+- **Regra "nunca vender os dois no mesmo trimestre"**: REMOVIDA (redundante -- IPCA+ nao e vendido e Renda+ tem gatilhos proprios)
 
 ---
 
