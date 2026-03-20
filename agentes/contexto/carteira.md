@@ -74,6 +74,7 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 
 > IPCA+ estrutural 7% aprovado (revisado de 10% em 2026-03-19). 100% no IPCA+ 2040 (taxa ~7,31% real, NTN-B Principal sem cupom). Vence 3 anos pos-FIRE = buffer perfeito. Compra direta no Tesouro (ETF descartado). IPCA+ 2035 nao existe sem cupom semestral — ladder original corrigido.
 > Tabela atualizada em 2026-03-20: equity 88% aos 50 (FR-004), Renda+ <=3% (RF-003), IPCA+ 0% pos-vencimento (2040).
+> IPCA+ estrutural 7% revalidado em debate de 2026-03-20 com analise liquida completa (IR, custos, cambio). Conta liquida: IPCA+ entrega 6.0% real liquido; equity 3.9-5.9% dependendo do cambio. Breakeven cambial: 2.1%/ano depreciacao real. CAGR historico BRL: 0.77%/ano (abaixo do breakeven). Consenso 5x2 (7% vs 10%). Debate registrado na retro.
 
 ---
 
@@ -85,6 +86,23 @@ EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
 4. **IPCA+ 2040 (existente)**: resgatar apos completar 2 anos (15% IR) e investir estrategicamente
 5. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
 6. **IPCA+ estrutural 7%**: executar DCA em 2-3 tranches (mar-abr 2026). 100% no IPCA+ 2040 (~R$244k). Compra direta no Tesouro
+7. **RF pos-2040**: Aos 51-52 (2038-2039), avaliar compra de IPCA+ ~2045-2050 para cobrir gap pos-tent (anos 53-60). Tamanho: 3-5% do portfolio
+
+---
+
+## Guardrails de Retirada (aprovados 2026-03-20)
+
+| Drawdown | Acao | Retirada |
+|----------|------|----------|
+| 0-15% | Nada | R$250k |
+| 15-25% | Corte 10% | R$225k |
+| 25-35% | Corte 20% | R$200k |
+| >35% | Piso | R$180k |
+| 3+ anos abaixo de -25% | Piso + avaliar renda part-time | R$180k |
+
+- **Upside**: se portfolio sobe 25%+ acima do pico real, aumentar retirada em 10% (permanente). Teto R$350k.
+- **Piso essencial**: R$180k (moradia + saude + alimentacao).
+- **Revisao anual em janeiro.**
 
 ---
 
