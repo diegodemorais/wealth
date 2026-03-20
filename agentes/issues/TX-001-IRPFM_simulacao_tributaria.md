@@ -6,7 +6,7 @@
 |-------|-------|
 | **Dono** | 05 Tributacao (lead) |
 | **Status** | Backlog |
-| **Prioridade** | Alta |
+| **Prioridade** | Baixa |
 | **Participantes** | 09 Patrimonial, 01 Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-20 |
@@ -17,7 +17,9 @@
 
 ## Motivo / Gatilho
 
-> PL 1.087/2025 (IRPFM) aprovado pelo Senado: renda >R$600k/ano paga aliquota minima progressiva 0-10%. Dividendos >R$50k/mes retidos 10% na fonte desde jan/2026 (inclusive Simples Nacional). Diego pode estar sendo impactado sem saber. IOF tambem subiu (0.38% -> 1.10%).
+> PL 1.087/2025 (IRPFM) aprovado pelo Senado: renda >R$600k/ano paga aliquota minima progressiva 0-10%. Dividendos >R$50k/mes retidos 10% na fonte desde jan/2026 (inclusive Simples Nacional). IOF tambem subiu (0.38% -> 1.10%).
+>
+> **Update 2026-03-20**: Diego ja esta ciente e gerencia ativamente (controla dividendos <R$50k/CNPJ/mes). Questao de empresas de terceiros no CPF dele e tratada separadamente fora do escopo deste time. Issue rebaixada para Baixa — manter como referencia, sem acao imediata.
 
 ---
 
