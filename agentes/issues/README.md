@@ -31,11 +31,19 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | FR-003-Monte_Carlo_computacional | Monte Carlo computacional: 10k trajetorias com parametros reais | 04 FIRE | Alta |
 | FR-004-Bond_tent_pre_FIRE | Bond tent 48-53: design e glidepath de transicao | 04 FIRE | Alta |
+| FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
+| RF-003-Duration_risk_Renda2065_inflacao | Duration risk de Renda+ 2065 em regime de inflacao (David & Veronesi 2013) | 03 RF | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
 | FR-005-FIRE_bands_custo_vida | FIRE bands: modelar custo de vida R$300-400k | 04 FIRE | Media |
 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Media |
+| TX-001-Tax_loss_harvesting_transitorios | Tax-loss harvesting nos 7 ETFs transitorios (free alpha) | 05 Tributacao | Media |
+| XX-002-Correlacao_stock_bond_BR | Regime de correlacao stock-bond no Brasil (inflacao alta vs baixa) | 08 Macro | Media |
+| FI-005-Crowdedness_factor_strategies | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
+| FI-006-Intangibles_value_factor_AVGS | Intangibles e o value factor -- AVGS captura o value "certo"? | 02 Factor | Media |
 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
 | FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35->30% / AVGS 25->30%: otimizar factor tilt | 02 Factor | Baixa |
+| HD-004-Behavioral_checklist_Chicago_Booth | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| HD-005-Carry_framework_carteira | Carry framework aplicado a toda a carteira (Koijen et al. 2018) | 02 Factor | Baixa |
 
 ### Doing
 > Issues em andamento
