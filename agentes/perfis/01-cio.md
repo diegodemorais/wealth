@@ -72,6 +72,8 @@ O Head tambem supervisiona questoes operacionais:
 | 08 Macro | Pede contexto macro ANTES de decisoes condicionais | Revisao IPCA+ aos 48, monitoramento Renda+ |
 | 09 Patrimonial | Escala ao Head (reporta direto ao Head, nao ao CIO) | Temas empresariais/sucessorios |
 | 11 Oportunidades | Scanner de oportunidades fora do radar | Revisoes mensais, janelas de mercado, novas ideias |
+| 14 Quant | Reporta ao Head, mas audita numeros do CIO | CIO nao apresenta veredicto numerico sem validacao do Quant |
+| 15 Fact-Checker | Reporta ao Head, mas verifica claims do CIO | CIO nao cita paper como justificativa sem Fact-Checker validar em debates |
 
 ### Cross-Feedback (Retro 2026-03-20)
 

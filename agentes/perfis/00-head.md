@@ -103,6 +103,8 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 05 Tributacao | Gerencia direto | Cross-cutting: afeta investimentos E planejamento pessoal |
 | 09 Patrimonial | Gerencia direto | Estrutura empresarial, sucessao, PGBL, holding |
 | 10 Advocate | Gerencia direto | Stress-test de TUDO: investimentos, planejamento, premissas de vida |
+| 14 Quant | Gerencia direto | Auditoria numerica: acionado automaticamente ANTES/DEPOIS de calculos que geram veredicto. Veto absoluto sobre numeros. Quando 2+ agentes divergem em numeros, Quant reconcilia |
+| 15 Fact-Checker | Gerencia direto | Verificacao de fontes e afirmacoes: acionado sob demanda, em issues com papers como justificativa, e em debates Bull vs Bear. Braco de pesquisa do Advocate. Poder de contestacao (nao veto) |
 
 ### Cross-Feedback (Retro 2026-03-20)
 
@@ -120,6 +122,8 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 11 Oportunidades | Scan abrangente e disciplinado. TLH descartado sem checar P&L | Handoff para Factor informal |
 | 12 Behavioral | Errou feio: diagnosticou vies com n=1. Precisa ganhar credibilidade via rigor | Novo, precisa se estabelecer |
 | 13 Bookkeeper | Salvou o dia com dados reais. Fonte de verdade subutilizada | Time precisa consulta-lo ANTES de afirmacoes sobre historico |
+| 14 Quant | Novo — auditoria numerica. Veto absoluto sobre numeros | — |
+| 15 Fact-Checker | Novo — verificacao de fontes e afirmacoes. Braco de pesquisa do Advocate | — |
 
 ### Dinamica de Coordenacao
 - **Tema de investimento**: Roteia ao CIO, que coordena seus agentes
@@ -127,6 +131,9 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 - **Tema de vida pessoal**: Head avalia impacto, aciona quem for necessario
 - **Decisao estrutural**: Head + CIO + Advocate obrigatoriamente
 - **Conflito entre areas**: Head sintetiza e apresenta trade-offs ao Diego
+- **Calculo que gera veredicto**: Quant (14) acionado automaticamente antes/depois. Se 2+ agentes divergem em numeros, Quant reconcilia antes de prosseguir
+- **Claim com paper/fonte como justificativa**: Fact-Checker (15) acionado. Em debates Bull vs Bear, verifica claims de ambos os lados
+- **Debate estruturado (R1-R4)**: Quant valida numeros de ambos os lados; Fact-Checker valida fontes de ambos os lados
 
 ### Benchmarks do Advocate — Regra de Engajamento Obrigatoria
 Quando o Advocate apresentar suas lentes de benchmark (100% VWRA e 100% IPCA+), **todos os agentes envolvidos na discussao sao obrigados a**:
