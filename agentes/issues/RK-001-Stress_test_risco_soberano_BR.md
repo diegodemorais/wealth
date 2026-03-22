@@ -322,5 +322,58 @@ O bloco soberano a 13% e um risco secundario. Mesmo no worst case, o bloco sober
 
 ---
 
+## ERRATA v2 (2026-03-22) — Revisao pos-HD-006
+
+### O que mudou
+
+A v1 analisou bloco soberano de ~13%. Com HD-006, o bloco subiu para ~21%:
+
+| Componente | v1 (13%) | v2 (21%) |
+|------------|----------|----------|
+| IPCA+ longo | 7% (TD 2040) | 15% (TD 2040 80% + TD 2050 20%) |
+| Renda+ 2065 | 3.2% | 3.2% |
+| Reserva IPCA+ 2029 | 2.5% | 2.5% |
+| IPCA+ legado | 0.4% | 0.4% |
+| **Total** | **~13.1%** | **~21.1%** |
+
+### Decisao (tomada no HD-006, confirmada por Diego)
+
+- Diego aceita ~21% de exposicao soberana BR
+- Limitador e risco-pais (renda, gasto, INSS, empresa, futura esposa ja sao Brasil)
+- 15% e o teto confortavel para IPCA+ longo
+- Renda+ 2065 tatico em 3.2% com gatilho de venda (taxa <= 6.0%)
+- TD 2040/2050 e hold to maturity SEMPRE (sem gatilho de venda por MtM)
+- Em stress soberano extremo: Reserva -> equity -> RF por ultimo (ordem de liquidacao mantida)
+
+### Drawdowns corrigidos (HD-006)
+
+Os drawdowns da v1 para Renda+ 2065 foram corrigidos com formula exata:
+- Cenario fiscal: -65.3% (v1 subestimava)
+- Worst case: -71.7% (v1 subestimava)
+- IPCA+ 2040: drawdowns da v1 estao corretos (duration ~12, menor sensibilidade)
+
+### Impacto do bloco maior (21% vs 13%)
+
+| Cenario | Impacto bloco v1 (13%) | Impacto bloco v2 (21%) | Delta |
+|---------|----------------------|----------------------|-------|
+| Fiscal BR | -3.2% do patrimonio | -6 a -7% do patrimonio | +3-4pp |
+| Risk-off global | -1.9% do patrimonio | -2.5 a -3% do patrimonio | marginal |
+| Worst case | -3.8% do patrimonio | -5.5 a -6% do patrimonio | +2-3pp |
+
+O risco soberano sobe mas continua secundario vs equity (que domina a perda em todos os cenarios). Compensacao parcial: retorno all-in do IPCA+ (6.0%+) superior ao equity (4.5%).
+
+---
+
+## Resultado (v2 — 2026-03-22, FINAL)
+
+| Tipo | Detalhe |
+|------|---------|
+| **Bloco soberano** | ~21% aceito. Risco concentrado mas compensado pelo retorno all-in superior do IPCA+ a taxas >= 6.0%. |
+| **Decisao** | Tomada no HD-006 com racional documentado. 15% IPCA+ longo = teto confortavel. |
+| **Regras** | Hold-to-maturity TD 2040/2050. Renda+ gatilho venda <= 6.0%. Ordem liquidacao mantida. |
+| **Drawdowns** | Renda+ corrigidos com formula exata (-65% fiscal, -71% worst case). Equity continua sendo o risco dominante (~7x maior em magnitude). |
+
+---
+
 ## Origem
 Retro 2026-03-19, aprendizado #5 (revisado em debate 2026-03-20)

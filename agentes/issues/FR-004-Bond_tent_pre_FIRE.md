@@ -329,7 +329,7 @@ O IPCA+ 2040 estrutural cumpre a funcao do bond tent sem sacrificar equity: rent
 
 ---
 
-## Resultado
+## Resultado (v1 — 2026-03-20)
 
 | Tipo | Detalhe |
 |------|---------|
@@ -337,6 +337,54 @@ O IPCA+ 2040 estrutural cumpre a funcao do bond tent sem sacrificar equity: rent
 | **Estrategia** | Equity alto (88%) no FIRE, suportado por Cederburg (2023) e ERN. IPCA+ 2040 substitui bond tent classico com retorno real superior. Pos-FIRE: equity sobe naturalmente conforme IPCA+ 2040 vence. |
 | **Conhecimento** | Cederburg (2023): 100% equity domina para horizontes longos. ERN SWR Part 19/43: equity alto favorece FIRE longo. Kitces & Pfau (2014): bond tent moderado tem merito, mas custo de oportunidade e alto para horizonte 40+ anos quando RF rende 7.31% real. |
 | **Memoria** | Aprovado por Diego. Tabela em carteira.md atualizada. |
+
+---
+
+## ERRATA v2 (2026-03-22) — Revisao pos-HD-006
+
+A conclusao v1 ("NAO implementar tent agressivo, manter 88% equity") permanece valida na DIRECAO. HD-006 recalibrou os numeros:
+
+### O que mudou com HD-006
+
+- **IPCA+ longo subiu de 7% para 15%** (TD 2040 80% + TD 2050 20%)
+- **Equity caiu de 88% para 79% aos 50**
+- **IPCA+ curto 3% (aos 50)** substitui Selic como SoRR buffer (2-3 anos de despesas)
+- **Selic removido** da alocacao estrategica
+
+### O tent agora e MAIOR que o proposto na v1
+
+| Aspecto | v1 (2026-03-20) | v2 pos-HD-006 |
+|---------|-----------------|---------------|
+| IPCA+ longo | 7% (TD 2040 apenas) | 15% (TD 2040 80% + TD 2050 20%) |
+| IPCA+ curto (aos 50) | 0% (Selic 5%) | 3% |
+| Equity no FIRE | 88% | 79% |
+| Tent total | ~12% (7% IPCA+ + 5% Selic) | ~18% (15% IPCA+ longo + 3% IPCA+ curto) |
+
+### Por que o tent maior se justifica
+
+A v1 rejeitou tent agressivo porque o custo de oportunidade era alto (equity 5.09% vs RF ~3%). Com HD-006:
+- **Breakeven all-in IPCA+ = ~5.5%**, superior ao equity all-in (~4.5%)
+- O tent nao custa retorno — GANHA retorno (IPCA+ 6.0%+ real vs equity 4.5%)
+- FR-003 Monte Carlo confirmou: bond tent adiciona apenas +0.1pp de success rate — o valor esta no retorno garantido, nao na reducao de volatilidade
+
+### Mecanica do tent natural
+
+- **TD 2040** vence em 2040 (Diego tem 53 anos) — cobre os primeiros 3 anos de FIRE
+- **TD 2050** vence em 2050 (Diego tem 63 anos) — cobre o gap pos-tent
+- **IPCA+ curto 3%** (aos 50) = SoRR buffer de 2-3 anos de despesas
+- **Glidepath**: equity 79% ate 50, rising para 82-90% pos-vencimento dos IPCA+
+- Tent se desfaz naturalmente com vencimentos — nao requer gestao ativa
+
+---
+
+## Resultado (v2 — 2026-03-22, FINAL)
+
+| Tipo | Detalhe |
+|------|---------|
+| **Alocacao** | Bond tent = 15% IPCA+ longo (TD 2040 80% + TD 2050 20%) + 3% IPCA+ curto (aos 50). Equity 79% no FIRE. Tent natural, nao requer gestao ativa. |
+| **Evolucao v1->v2** | Tent maior que o original (15% vs 7%), mas justificado pelo retorno all-in superior do IPCA+ (6.0%+ vs equity 4.5%). Direcao mantida: tent natural via hold-to-maturity, nao tent agressivo ativo. |
+| **Evidencia** | FR-003 Monte Carlo: bond tent adiciona apenas +0.1pp de success rate. Valor esta no retorno garantido do IPCA+, nao na reducao de volatilidade. Cederburg (2023) e ERN continuam suportando equity alto pos-tent. |
+| **Glidepath** | Equity 79% (FIRE) -> rising para 82-90% conforme IPCA+ vencem (2040, 2050). |
 
 ---
 

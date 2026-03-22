@@ -25,12 +25,23 @@
 
 ---
 
+## Framework: Tax-Loss Harvesting em Transitorios (TX-002, 2026-03-22)
+
+- **Status atual**: Nao aplicavel — todos os 7 transitorios (EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL) com lucro substancial
+- **Sem wash sale rule no Brasil** (Lei 14.754/2023 nao preve restricao de recompra)
+- **Gatilho de reativacao**: drawdown severo que coloque algum transitorio em prejuizo
+- **Execucao em drawdown**: vender transitorio US-listed em prejuizo, realizar perda fiscal, recomprar exposicao via UCITS
+- **Duplo beneficio**: prejuizo fiscal (compensa ganhos futuros) + migracao US-listed -> UCITS (reduz estate tax risk)
+
+---
+
 ## Gatilhos Ativos
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
 | Venda US-listed | Desacumulacao aos 50 | Vender e migrar para UCITS | Aguardando (2037) |
 | Seguro de vida | Analise de custo | Cobrir risco residual estate tax | Pendente avaliacao |
+| TLH transitorios | Drawdown coloca transitorio em prejuizo | Vender US-listed + recomprar UCITS (duplo beneficio) | Aguardando drawdown |
 
 ---
 
