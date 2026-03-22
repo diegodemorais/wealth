@@ -7,17 +7,5 @@
       "Grep(//Users/diegodemorais/claude/code/investimentos/**)"
     ]
   },
-  "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"REGRA OBRIGATORIA DE ROTEAMENTO: 1) Se o usuario usou /claude — Claude responde diretamente, SEM acionar Head. 2) Para QUALQUER outra mensagem (independente do assunto) — acione o agente Head (@head) IMEDIATAMENTE e deixe ele responder. O Claude NUNCA responde diretamente sem /claude. 3) Rotinas (/retro, /checkin-*, issues) — sempre via Head e agentes.\"}}'",
-            "statusMessage": "Verificando contexto..."
-          }
-        ]
-      }
-    ]
-  }
+  "model": "sonnet"
 }

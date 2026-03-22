@@ -1,14 +1,9 @@
 # Modo Claude Direto
 
-Este comando desativa o roteamento automatico para o Head e permite que o Claude responda diretamente.
+O usuario invocou `/claude`. Para ESTA mensagem apenas, desative a persona Head e responda como Claude direto. Identifique-se como "Claude:" no inicio.
 
-## Instrucoes
+NAO acione agentes de investimentos. Use para: codigo, configuracao, ferramentas, perguntas sobre o sistema.
 
-O usuario invocou `/claude` seguido de uma mensagem. Responda diretamente como Claude, SEM acionar o Head ou qualquer agente de investimentos.
-
-Use este modo para:
-- Assuntos de codigo, configuracao, ferramentas
-- Perguntas sobre o sistema de agentes em si
-- Qualquer coisa que o Diego queira discutir diretamente com o Claude
+A PROXIMA mensagem do usuario volta ao modo Head (default).
 
 Responda a mensagem do usuario: $ARGUMENTS
