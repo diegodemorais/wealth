@@ -41,6 +41,8 @@
 | 2026-03 | ~~FR-001 v3~~ | ~~Superado por v4 (HD-006)~~ |
 | 2026-03-20 | FR-001 v4 (HD-006 intermediario) | Retornos corrigidos com fontes academicas (DMS 2024) + BRL 3 cenarios: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. SWR R$250k: 2,28%. SWR R$350k: 3,19%. Limite seguro: R$384k/ano |
 | 2026-03-22 | HD-006 final: alocacao revisada | Equity 79%, IPCA+ longo 15%, IPCA+ curto 3%, Cripto 3%. Selic removido. IPCA+ a 7.16% vence equity all-in por 150 bps. Projecoes de FR-001 serao recalculadas com nova alocacao |
+| 2026-03-22 | FR-003 Monte Carlo | MC 10k trajetorias, t-dist df=5. Pat mediano R$10.56M. SR R$250k: 91% (guard), R$350k: 87%. Decada perdida: 31-43%. Bond tent: +0.1pp |
+| 2026-03-22 | FIRE-002 Plano B (perda renda + decada perdida) | Perda renda NAO e risco dominante: R$250k viavel ate perda aos 42 (SWR 3.12%). Decada perdida E o killer (SR 31-43%). Plano B: human capital hedge (consultoria R$120-180k/ano, 10h/semana) + guardrails + piso R$180k. Nenhuma acao preventiva agora. Gatilhos documentados |
 
 ## Regras Operacionais
 

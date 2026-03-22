@@ -25,8 +25,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FIRE-002-Plano_B_perda_renda | Plano B para perda de renda antes dos 50 (escopo expandido: perda de renda + decada perdida) | 04 FIRE | **Critica** |
-| 2 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
+| 1 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | 3 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
 | 4 | HD-002-v2-Scorecard_shadows_atualizados | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
 | 5 | FI-005-Crowdedness_factor_strategies | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
@@ -46,6 +45,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FIRE-002-Plano_B_perda_renda | Plano B: perda de renda + decada perdida (escopo expandido) | 04 FIRE | 2026-03-22 | Perda renda nao e risco dominante (R$250k viavel ate perda aos 42, SWR 3.12%). Decada perdida e o killer (SR 31-43%). Plano B: human capital hedge (consultoria R$120-180k/ano) + guardrails + piso R$180k. Nenhuma acao preventiva necessaria agora |
 | TX-002-Tax_loss_harvesting_transitorios | Tax-loss harvesting nos 7 ETFs transitorios | 05 Tributacao | 2026-03-22 | Nao aplicavel — todos transitorios com lucro. Framework TLH registrado. Sem wash sale rule no Brasil. Gatilho: reativar em drawdown (TLH + migracao UCITS = duplo beneficio) |
 | FR-004-Bond_tent_pre_FIRE (v2) | Bond tent pre-FIRE: design e glidepath | 04 FIRE | 2026-03-22 | Bond tent = 15% IPCA+ longo (HD-006) + 3% IPCA+ curto (aos 50). Tent natural, nao requer gestao ativa. Equity 79% no FIRE, rising pos-vencimento. FR-003: bond tent +0.1pp SR — valor esta no retorno garantido |
 | RK-001-Stress_test_risco_soberano_BR (v2) | Stress test risco soberano Brasil (bloco ~21%) | 06 Risco | 2026-03-22 | Bloco soberano ~21% aceito. Risco compensado pelo retorno all-in superior IPCA+ >= 6.0%. Drawdowns Renda+ corrigidos (formula exata). Regra de liquidacao mantida. Equity continua risco dominante (~7x maior) |
