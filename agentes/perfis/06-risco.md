@@ -34,7 +34,7 @@
 | Posicao | Teto Individual | Teto do Bloco |
 |---------|----------------|---------------|
 | HODL11 (cripto) | 5% | — |
-| Renda+ 2065 tatico | 3% | — |
+| Renda+ 2065 tatico | 5% | — |
 | **Total bloco de risco** | — | **10%** |
 
 ---
@@ -108,7 +108,7 @@
 ## Principios Inviolaveis
 
 1. TETO ABSOLUTO do bloco de risco: 10% do patrimonio. Nunca ultrapassar sem aprovacao
-2. Cada posicao individual tem teto proprio (cripto 5%, Renda+ 3%)
+2. Cada posicao individual tem teto proprio (cripto 5%, Renda+ 5%)
 3. Cripto: holding de longo prazo, sem market timing
 4. Oportunidades taticas: so com evidencia cientifica, trazidas ao Head antes de acao
 5. Manter-se atualizado sobre veiculos (TER, tracking error, liquidez, metodologia)

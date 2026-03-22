@@ -199,7 +199,7 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 | — AVEM (EM) | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
 | — JPGL (multifator) | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
-| Renda+ 2065 (tatico) | <=3% | <=3% | <=3% | 0% | 0% |
+| Renda+ 2065 (tatico) | <=5% | <=5% | <=5% | 0% | 0% |
 
 ### Factor Tilt
 
@@ -223,7 +223,7 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 | Posicao | Alvo | Piso | Teto | Instrumento | Gatilho |
 |---------|------|------|------|-------------|---------|
 | Cripto | 3% | 1,5% | 5% | HODL11 (B3) | Comprar <1,5%, rebalancear >5% (trimestral) |
-| Renda+ tatico | <=3% | — | 3% | Renda+ 2065 | Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% proximo target). Venda: tudo se taxa <= 6,0% |
+| Renda+ tatico | <=5% | — | 5% | Renda+ 2065 | Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% |
 
 ### Regras Taticas
 
@@ -304,4 +304,4 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 | Data | Mudanca | Motivo |
 |------|---------|--------|
 | 2026-03-20 | Criacao do IPS | Consolidacao de premissas dispersas em documento formal |
-| 2026-03-22 | Reconciliacao HD-006 final | IPCA+ 15%, equity 79%, sem Selic, IPCA+ curto 3% aos 50, retorno 5.89%, Renda+ <=3%. HD-008 |
+| 2026-03-22 | Reconciliacao HD-006 final | IPCA+ 15%, equity 79%, sem Selic, IPCA+ curto 3% aos 50, retorno 5.89%, Renda+ <=5%. HD-008 |

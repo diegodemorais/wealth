@@ -135,8 +135,8 @@ Principios:
 | 39 (atual) | 89% | 7% | 0% | 3% | <=5% | 7-12% |
 | 40 | 90% | 7% | 0% | 3% | <=5% | 7-12% |
 | 43 | 90% | 7% | 0% | 3% | <=5% | 7-12% |
-| 45 | 87% | 8% | 2% | 3% | <=3% | 10-13% |
-| 47 | 82% | 10% | 5% | 3% | <=3% | 15-18% |
+| 45 | 87% | 8% | 2% | 3% | <=5% | 10-13% |
+| 47 | 82% | 10% | 5% | 3% | <=5% | 15-18% |
 | 48 | 79% | 11% | 5% | 3% | <=2% | 16-18% |
 | **50 (FIRE)** | **75%** | **12%** | **5%** | **3%** | **<=2%** | **17-19%** |
 | 52 | 80% | 8% | 5% | 3% | <=2% | 13-15% |
@@ -240,7 +240,7 @@ O ganho e assimetrico e nao-linear:
 | AVEM | 20% | 20% | 19% | 18% | 17% | **16%** | 18% | 19% | 19% | 20% | 20% | 20% |
 | JPGL | 10% | 10% | 10% | 9% | 9% | **9%** | 9% | 9% | 10% | 11% | 11% | 11% |
 | **HODL11** | 3% | 3% | 3% | 3% | 3% | **3%** | 3% | 3% | 3% | 3% | 3% | 3% |
-| **Renda+ 2065** | <=5% | <=5% | <=3% | <=3% | <=2% | **<=2%** | <=2% | <=2% | 0% | 0% | 0% | 0% |
+| **Renda+ 2065** | <=5% | <=5% | <=5% | <=5% | <=2% | **<=2%** | <=2% | <=2% | 0% | 0% | 0% | 0% |
 
 **Notas sobre a tabela:**
 1. IPCA+ 2040 sobe de 7% para 12% (tent pre-FIRE) e cai para 0% apos vencimento em 2040 (idade 53)
@@ -322,7 +322,7 @@ O tent tem formato V assimetrico:
 - **Equity total: 88%** (nao 85% anterior, nem 75% do tent proposto)
 - **IPCA+ Estrutural: 7%** (hold-to-maturity, o "tent natural")
 - **Tesouro Selic: 5%** (buffer de liquidez)
-- **Renda+ 2065 tatico: <=3%**
+- **Renda+ 2065 tatico: <=5%**
 - **HODL11: 3%**
 
 O IPCA+ 2040 estrutural cumpre a funcao do bond tent sem sacrificar equity: rentabilidade real superior, descorrelacao funcional, e desfaz no vencimento.

@@ -30,7 +30,7 @@
 | # | Finding | Tipo | Diego Achou Primeiro? | Agente | Impacto |
 |---|---------|------|----------------------|--------|---------|
 | F-004 | HODL11 nao e risco Brasil — e BTC spot via ETF na B3, risco e cripto/BTC, nao soberano. Sistema classificou errado 2x antes de corrigir | Falso Positivo (do sistema) | **Sim** | Diego / 06 Risco | Sistema errou a classificacao de risco. HODL11 tem risco de custodia B3, mas o ativo subjacente e BTC global, nao divida soberana BR |
-| F-005 | Renda+ 2065 target deveria ser 3% (nao 5%) dado duration 43.6 e risco de taxa | Otimizador | Nao | 03 RF / 10 Advocate | Reduziu exposicao a duration risk. DCA parado corretamente com 3.2% ja proximo do target |
+| F-005 | Renda+ 2065 target reduzido de 5% para 3% (RF-003), depois revertido para 5% por decisao Diego (2026-03-22) | Otimizador -> Revertido | Nao | 03 RF / 10 Advocate | Diego avaliou e decidiu manter teto original de 5%. DCA reativado |
 | F-006 | Bond tent agressivo pre-FIRE (30% RF) destruiria valor — IPCA+ 2040 7% ja e o tent natural | Preventivo | Nao | 04 FIRE / 10 Advocate | Evitou implementacao de tent que reduziria retorno sem necessidade. Manter 88% equity no FIRE |
 
 ### Sessao 2026-03-20 (Issues + Scorecard)

@@ -15,7 +15,7 @@
 | Equity global | 79% | 70% | 85% | Rebalancear via aportes |
 | IPCA+ longo | 15% | 10% | 20% | Ajustar proximo aporte |
 | IPCA+ curto (a partir dos 50) | 0% (3% aos 50) | 0% | 5% | SoRR buffer |
-| Renda+ tatico | 3,2% | 0% | 3% | Gatilho de compra/venda. DCA parado — proximo do target |
+| Renda+ tatico | 3,2% | 0% | 5% | Gatilho de compra/venda. DCA ate 5% se taxa >= 6,5% |
 | Cripto (HODL11) | 3% | 1,5% | 5% | Comprar <1,5%, rebalancear >5% |
 | Reserva emergencia | 2,5% | 2% | 5% | Manter 3-6 meses custo de vida |
 | **Bloco de risco total** | **~6%** | **0%** | **10%** | **Teto absoluto — nunca ultrapassar** |
@@ -205,4 +205,4 @@
 | Data | Mudanca | Motivo |
 |------|---------|--------|
 | 2026-03-20 | Criacao do risk framework | Implementacao de risk management quantitativo formal |
-| 2026-03-22 | Reconciliacao HD-006 final | Equity 79%, IPCA+ longo 15%, Renda+ <=3%, sem Selic. HD-008 |
+| 2026-03-22 | Reconciliacao HD-006 final | Equity 79%, IPCA+ longo 15%, Renda+ <=5%, sem Selic. HD-008 |

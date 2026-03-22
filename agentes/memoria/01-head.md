@@ -12,6 +12,7 @@
 | 2026-03 | JPGL subiu de 15% para 20% | Maior gap, foco dos aportes | 02 Factor |
 | 2026-03 | AVEM->JPGL adiado | EM a 40% desconto historico, timing ruim | 02 Factor, 08 Macro |
 | 2026-03-22 | IPCA+ longo **15%**, piso **6.0%**, DCA ATIVO | Breakeven all-in ~5.5%. A 7.16%, IPCA+ vence equity por 150 bps. TD 2040 (80%) + TD 2050 (20%). Selic removido, substituido por IPCA+ curto 3% aos 50 | Factor, RF, FIRE, Advocate |
+| 2026-03-22 | Renda+ 2065 teto ajustado de **3% para 5%** | Diego reverteu RF-003. Teto original de 5% restaurado. DCA reativado (3,2% atual, espaco ate 5%). Bloco de risco maximo possivel: 10% (Renda+ 5% + HODL11 5%) | Head |
 
 ---
 
@@ -21,7 +22,7 @@
 |---------|----------|------|--------|
 | IPCA+ longo | ~~Idade 48~~ **Antecipado** | Ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). Piso operacional: IPCA+ >= **6,0%** (breakeven all-in ~5,5%). **DCA ATIVO** (taxa 7,16% > piso 6,0%). 5,0-6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM (exceto risco soberano extremo) | **Ativo** |
 | IPCA+ curto | Perto dos 50 | 3% em TD curto ~2 anos (SoRR buffer). Substitui Selic do plano original | Aguardando |
-| Renda+ 2065 compra | Taxa >= 6,5% | DCA ate 3% do patrimonio (DCA parado — 3,2% proximo do target) | **Parado** |
+| Renda+ 2065 compra | Taxa >= 6,5% | DCA ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado, +39,5% liq. esperado) | Monitorando mensalmente |
 | HODL11 piso | Alocacao < 1,5% | Comprar ate 3% | Monitorando trimestralmente |
 | HODL11 teto | Alocacao > 5% | Rebalancear para 3% | Monitorando trimestralmente |
