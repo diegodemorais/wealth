@@ -12,7 +12,8 @@
 | 2026-03-18 | ~~IPCA+ estrutural 10% antecipado~~ | ~~Ladder 2035/2040/2050~~ | — |
 | 2026-03-19 | ~~IPCA+ estrutural 7%, 100% no IPCA+ 2040~~ | ~~Superado: teto subiu para 20%~~ | — |
 | 2026-03-20 | ~~IPCA+ estrutural ate 20%~~ | ~~Superado: breakeven subiu para 7.81% com equity corrigido~~ | — |
-| 2026-03-20 | IPCA+ estrutural ate **10%**, IPCA+ 2040. Piso **7,81%** | Breakeven puro vs equity 5,89% BRL real (HD-006). DCA PAUSADO (taxa atual 7.16% < breakeven). Aportes para JPGL | Factor, RF, FIRE, Advocate |
+| 2026-03-20 | ~~IPCA+ estrutural ate 10%, piso 7,81%~~ | ~~Superado pela decisao de 2026-03-22~~ | — |
+| 2026-03-22 | IPCA+ longo **15%**, piso **6.0%**, DCA ATIVO | Breakeven all-in ~5.5%. A 7.16%, IPCA+ vence equity por 150 bps e R$41/R$100 em 14 anos. TD 2040 (80%) + TD 2050 (20%). Selic removido -> IPCA+ curto 3% aos 50 | Factor, RF, FIRE, Advocate |
 | 2026-03-18 | JPGL confirmado como multifator | AVGC closet indexing, JPGL complementa com momentum + low vol | CIO, Factor |
 
 ---
@@ -33,6 +34,7 @@
 |------|-------------|------|
 | 2026-03-20 | 6 erros da sessao tinham causa raiz comum: omissao de premissas na hora de calcular (HODL11 como risco BR, IPCA+ sem IR sobre nominal, shadow sem cambio, teto 7% quando numeros diziam 15-20%, piso 6% quando breakeven era 6.4%, AVGS comparado com equity generico) | Checklist Pre-Veredicto obrigatorio implementado no Head e em todos os agentes que fazem contas (RF, FIRE, Factor, Risco, Tax, FX, Macro). Regra universal adicionada a carteira.md |
 | 2026-03-20 | HD-006 revelou 9 erros adicionais, todos derivados da mesma causa raiz: calcular com premissas sem fonte e sem formula correta. Diego apontou o padrao DUAS vezes. | Medidas anti-recorrencia abaixo. Retornos corrigidos com fontes academicas. Breakeven IPCA+ recalculado. IPCA+ reduzido de 20% para 10%. RK-001 recalculado com formula exata |
+| 2026-03-22 | HD-006 final: **4 erros em sequencia** (IR sobre real, breakeven 6.4%, retornos sem fonte, breakeven 7.81%), todos corrigidos por Diego. Causa raiz profunda: time calculava iterativamente, corrigindo um erro por vez, em vez de fazer a conta COMPLETA de uma vez. Custos all-in de equity (WHT, IOF, FX, ganho fantasma) foram omitidos em TODAS as comparacoes | 5 regras anti-recorrencia registradas no Checklist Pre-Veredicto. Regra D (comparacao all-in) e Regra E (reflexao registrada) adicionadas |
 
 ---
 
@@ -62,6 +64,12 @@ Todo calculo de IR, retorno liquido, breakeven, ou drawdown DEVE mostrar a formu
 **Regra 3: Reconciliacao trimestral**
 A cada trimestre, o Head verifica se os numeros-chave (retorno equity, IPCA+ liq, breakeven, patrimonio projetado) sao CONSISTENTES entre carteira.md, FR-001, shadow-portfolio.md e memorias. Se divergirem, corrigir antes de qualquer analise nova.
 
+**Regra 4: Comparacao all-in obrigatoria** (adicionada 2026-03-22)
+SEMPRE incluir WHT, IOF 1.1%, FX spread, IR sobre ganho fantasma cambial ao comparar equity vs RF. Nunca comparar equity pre-tax vs RF post-tax. Causa: breakeven 7.81% estava errado porque custos de equity foram omitidos. Correto: ~5.5%.
+
+**Regra 5: Reflexao registrada** (adicionada 2026-03-22)
+4 erros em sequencia (IR sobre real, breakeven 6.4%, retornos sem fonte, breakeven 7.81%). Diego corrigiu todos. Time precisa fazer a conta COMPLETA antes de apresentar, nao iterativamente. Se o time errar o mesmo tipo de calculo 2x seguidas, PARAR e refazer do zero com todas as variaveis.
+
 ---
 
 ## Processo de Retro
@@ -85,4 +93,5 @@ Toda retrospectiva DEVE incluir:
 | 2026-03-18 | AVGC vs JPGL (FI-003) | JPGL mantido. Aprovado |
 | 2026-03-18 | Reavaliacao independente carteira | Carteira 90% otima. 4 issues abertas |
 | 2026-03-20 | Scorecard HD-002 criado com baseline T0 | 4 arquivos em agentes/metricas/. Shadows: VWRA+IPCA e 100% IPCA. P(FIRE) pendente FR-003 |
-| 2026-03-20 | HD-006 concluido: audit e reconciliacao de premissas | 9 erros corrigidos. IPCA+ 20%->10%, breakeven 6.4%->7.81%, equity BRL 5.89% base. Pat aos 50: R$10.96M. 3 regras anti-recorrencia |
+| 2026-03-20 | HD-006 intermediario | 9 erros corrigidos. IPCA+ 20%->10%, breakeven 6.4%->7.81%, equity BRL 5.89% base. 3 regras anti-recorrencia |
+| 2026-03-22 | HD-006 decisao FINAL aprovada | Breakeven all-in ~5.5%, piso 6.0%. IPCA+ longo 15% (DCA ativo). Selic removido -> IPCA+ curto 3% aos 50. Equity 79%. 5 regras anti-recorrencia |

@@ -225,9 +225,15 @@ Todo calculo de IR, retorno liquido, breakeven, ou drawdown DEVE mostrar a formu
 **Regra C: Reconciliacao trimestral**
 A cada trimestre, o Head verifica se os numeros-chave sao CONSISTENTES entre carteira.md, FR-001, shadow-portfolio.md e memorias. Divergencia = correcao antes de qualquer analise nova.
 
+**Regra D: Comparacao all-in obrigatoria** (adicionada 2026-03-22)
+SEMPRE incluir WHT, IOF 1.1%, FX spread, IR sobre ganho fantasma cambial ao comparar equity vs RF. Nunca comparar equity pre-tax vs RF post-tax. Breakeven correto so sai com all-in em ambos os lados.
+
+**Regra E: Reflexao — conta COMPLETA antes de apresentar** (adicionada 2026-03-22)
+4 erros em sequencia (IR sobre real, breakeven 6.4%, retornos sem fonte, breakeven 7.81%), todos corrigidos por Diego. Time precisa fazer a conta COMPLETA de uma vez, nao iterativamente. Se o mesmo tipo de calculo errar 2x seguidas, PARAR e refazer do zero com todas as variaveis.
+
 ### Origem
 
-Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IPCA+ sem IR sobre nominal, (3) shadow sem cambio, (4) teto 7% quando numeros diziam 15-20%, (5) piso 6% quando breakeven era 6.4%, (6) AVGS comparado com equity generico. Causa raiz: omissao de premissas na hora de calcular. HD-006 revelou 9 erros adicionais. 3 regras novas adicionadas (A, B, C).
+Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IPCA+ sem IR sobre nominal, (3) shadow sem cambio, (4) teto 7% quando numeros diziam 15-20%, (5) piso 6% quando breakeven era 6.4%, (6) AVGS comparado com equity generico. Causa raiz: omissao de premissas na hora de calcular. HD-006 revelou 9 erros adicionais e 4 erros sequenciais no breakeven. 5 regras anti-recorrencia (A-E).
 
 ---
 

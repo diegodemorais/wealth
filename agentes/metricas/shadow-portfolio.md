@@ -156,6 +156,18 @@ Nota: Este e o cenario sem risco de mercado (risco soberano apenas). Qualquer ca
 
 ---
 
+## Nota sobre Comparacao All-In (HD-006, 2026-03-22)
+
+Os retornos dos shadows devem ser interpretados com custos all-in para comparacao justa:
+
+- **Shadow A (VWRA)**: retorno pre-tax de ~5.4% BRL NAO inclui custos de entrada/saida (IOF 1.1% + Okegen 0.25% = 1.35% cada ponta), WHT sobre dividendos (~0.22%), nem IR 15% sobre ganho nominal (inclui ganho fantasma cambial). Retorno all-in liquido e significativamente menor
+- **Shadow B (IPCA+)**: retorno liquido de 5.34% ja inclui custodia e IR sobre nominal. Sem custo de cambio. Comparacao justa com Shadow A requer que A tambem esteja all-in
+- **Comparacao R$100 por 14 anos (HD-006)**: IPCA+ 2040 all-in R$225.8 (6.0%/ano) vs JPGL all-in R$184.6 (4.5%/ano). IPCA+ vence por R$41 e 150 bps
+
+Shadow B com 5.34% real liquido esta correto (IR sobre nominal, IPCA 4%, custodia 0.20%).
+
+---
+
 ## Limitacoes
 
 1. **Sem dados historicos retroativos**: Nao reconstruimos o shadow desde o inicio dos aportes de Diego. T0 e o baseline — comparacao forward-looking apenas

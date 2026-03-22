@@ -11,6 +11,7 @@
 | 2026-03 | Carteira definitiva aprovada | Tabela simplificada por idade | Todos |
 | 2026-03 | JPGL subiu de 15% para 20% | Maior gap, foco dos aportes | 02 Factor |
 | 2026-03 | AVEM->JPGL adiado | EM a 40% desconto historico, timing ruim | 02 Factor, 08 Macro |
+| 2026-03-22 | IPCA+ longo **15%**, piso **6.0%**, DCA ATIVO | Breakeven all-in ~5.5%. A 7.16%, IPCA+ vence equity por 150 bps. TD 2040 (80%) + TD 2050 (20%). Selic removido, substituido por IPCA+ curto 3% aos 50 | Factor, RF, FIRE, Advocate |
 
 ---
 
@@ -18,7 +19,8 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ estrutural | ~~Idade 48~~ **Antecipado** | Ate **10%** da carteira, 100% IPCA+ 2040. Piso: IPCA+ >= **7,81%** (breakeven puro vs equity 5.89% BRL). **DCA PAUSADO** (taxa 7.16% < breakeven). Aportes para JPGL | **Pausado** |
+| IPCA+ longo | ~~Idade 48~~ **Antecipado** | Ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). Piso operacional: IPCA+ >= **6,0%** (breakeven all-in ~5,5%). **DCA ATIVO** (taxa 7,16% > piso 6,0%). 5,0-6,0%: pausar, aportes para JPGL. < 5,0%: vender (MtM positivo) | **Ativo** |
+| IPCA+ curto | Perto dos 50 | 3% em TD curto ~2 anos (SoRR buffer). Substitui Selic do plano original | Aguardando |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA em 3 tranches ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado, +39,5% liq. esperado) | Monitorando mensalmente |
 | HODL11 piso | Alocacao < 1,5% | Comprar ate 3% | Monitorando trimestralmente |
@@ -63,3 +65,4 @@ NAO e estrutural: aporte regular, consulta informativa, monitoramento de gatilho
 | 2026-03 | Guardrails de desacumulacao | Risk-based (Kitces & Fitzpatrick 2024), nao G-K |
 | 2026-03 | Hedge de equity | Nao — custo proibitivo, BRL hedge natural |
 | 2026-03-18 | Retro de fundacao | 6 aprendizados, issue HD-001 criada |
+| 2026-03-22 | HD-006 decisao FINAL | IPCA+ longo 15%, piso 6.0%, DCA ativo. Breakeven all-in ~5.5%. Selic removido -> IPCA+ curto 3% aos 50. 5 regras anti-recorrencia |

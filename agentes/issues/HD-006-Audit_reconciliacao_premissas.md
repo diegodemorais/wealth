@@ -86,12 +86,61 @@ Audit do Head confirmou: **SIM, o padrao se repetiu sistematicamente.** Premissa
 
 ## Resultado
 
+### Decisao intermediaria (2026-03-20)
+
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | IPCA+ alvo reduzido de 20% para **10%**. Breakeven subiu de 6.4% para **7.81%**. DCA PAUSADO (taxa atual 7.16% < breakeven 7.81%). Aportes redirecionados para JPGL |
-| **Estrategia** | Equity BRL ponderado corrigido: 5.89% base / 6.89% favoravel / 5.39% stress. IPCA+ liquido: 5.34%. Equity vence IPCA+ por 55 bps no base. Patrimonio aos 50: ~R$10.96M (vs R$10.30M anterior) |
+| **Alocacao** | IPCA+ alvo reduzido de 20% para 10%. Breakeven subiu de 6.4% para 7.81%. DCA PAUSADO (taxa atual 7.16% < breakeven 7.81%). Aportes redirecionados para JPGL |
+| **Estrategia** | Equity BRL ponderado corrigido: 5.89% base / 6.89% favoravel / 5.39% stress. IPCA+ liquido: 5.34%. Equity vence IPCA+ por 55 bps no base |
 | **Conhecimento** | (1) IR incide sobre nominal, nao real — drag de ~182 bps no IPCA+. (2) Factor premiums implicitos na carteira: ~1.1% AVGS, ~0.6% AVEM, ~0.8% JPGL. (3) Formula exata de repricing obrigatoria para duration > 20 (simplificada subestima 40-60%). (4) Breakeven de IPCA+ sobe com equity — nao e constante |
-| **Memoria** | Registrado em 00-head.md, 01-head.md, 04-fire.md. Correcoes aplicadas: carteira.md, shadow-portfolio.md, FR-001, RK-001 |
+
+### Decisao FINAL (2026-03-22, aprovada por Diego)
+
+O audit continuou apos a decisao intermediaria. Diego identificou que o breakeven de 7.81% e o anterior de 6.4% estavam ambos errados: (1) IR calculado sobre retorno real em vez de nominal, (2) custos de equity (WHT, IOF 1.1%, FX spread, ganho fantasma cambial) nao considerados. Com calculo all-in correto:
+
+| Parametro | Valor |
+|-----------|-------|
+| **Alocacao alvo** | Equity 79%, IPCA+ longo 15%, IPCA+ curto 3%, Cripto 3% |
+| **IPCA+ longo** | TD 2040 (80%) + TD 2050 (20%). DCA ATIVO (taxa 7.16% > piso 6.0%) |
+| **IPCA+ curto** | 3% aos 50 (SoRR buffer, ~2 anos duration). Substitui Selic |
+| **Breakeven all-in** | ~5.5% (com WHT, IOF, FX spread, IR sobre ganho cambial) |
+| **Piso operacional** | 6.0% (margem 50 bps) |
+| **Gatilhos** | >= 6.0%: DCA ativo. 5.0-6.0%: pausar, aportes para JPGL. < 5.0%: vender (MtM positivo) |
+| **Comparacao R$100/14a** | IPCA+ R$225.8 (6.0%/ano) vs JPGL R$184.6 (4.5%/ano). IPCA+ vence por R$41 e 150 bps |
+
+### Tabela de breakeven AVGS (Diego, 2026-03-20)
+
+| Factor premium do AVGS | Equity real BRL | Delta em 14 anos | Compensa? |
+|------------------------|-----------------|-------------------|-----------|
+| 0% | 5.34% | +R$9.140 | Sim |
+| 0.5% | 5.84% | +R$5.300 | Sim |
+| **1.04%** | **6.38%** | **R$0** | **Breakeven** |
+| 1.5% | 6.84% | -R$4.464 | Nao |
+
+Interpretacao: esta tabela motivou o audit. Quando custos all-in de equity sao incluidos, IPCA+ a 7.16% vence equity em todos os cenarios razoaveis de factor premium.
+
+### Racional da alocacao 15%
+
+Diego tem concentracao pesada em Brasil (renda, gasto, INSS, empresa, futura esposa). O limitador de IPCA+ eh risco-pais, nao retorno. 15% captura a janela de 7%+ sem over-concentrar.
+
+### 4 erros sequenciais e causa raiz
+
+1. IR sobre real (nao nominal) — breakeven 6.4%
+2. Retornos ETF sem fonte academica
+3. Breakeven 7.81% (equity pre-tax vs RF post-tax)
+4. Custos all-in de equity omitidos
+
+Causa raiz: time calculava iterativamente, corrigindo um erro por vez, em vez de fazer a conta COMPLETA de uma vez. Diego corrigiu os 4 erros.
+
+### Regras anti-recorrencia
+
+1. **Fonte obrigatoria**: todo numero precisa de citacao
+2. **Formula explicita**: passo a passo visivel antes do resultado
+3. **Reconciliacao trimestral**: checar numeros-chave entre documentos
+4. **Comparacao all-in**: SEMPRE incluir WHT, IOF, FX spread, ganho fantasma cambial ao comparar equity vs RF
+5. **Reflexao registrada**: 4 erros em sequencia corrigidos por Diego. Time precisa fazer a conta COMPLETA antes de apresentar
+
+| **Memoria** | Registrado em 00-head.md, 01-head.md, 03-renda-fixa.md, 04-fire.md. Correcoes aplicadas: carteira.md, shadow-portfolio.md |
 
 ### Erros corrigidos nesta execucao
 

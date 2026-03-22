@@ -11,6 +11,8 @@
 | 2026-03 | Guardrails baseados em risco, nao Guyton-Klinger | Cortes de 3-32% vs 28-54% | 01 Head |
 | 2026-03 | Rising equity glidepath: 82-90% aos 50, subindo para 90-95% | Cederburg + Pfau | 02 Factor |
 | 2026-03 | Custo de vida meta: R$250k/ano | Base para calculos de SWR | — |
+| 2026-03-22 | Selic substituido por IPCA+ curto 3% aos 50 | SoRR buffer com ~2 anos duration, melhor protecao inflacionaria que Selic. MtM baixo | 03 RF |
+| 2026-03-22 | Glidepath revisado: IPCA+ longo 15% + curto 3% | Equity 79% na acumulacao. IPCA+ longo e o bond tent natural (TD 2040 vence aos 53). IPCA+ curto comprado perto dos 50 como buffer de sequencia | 03 RF, 10 Advocate |
 
 ---
 
@@ -37,7 +39,8 @@
 | Data | Issue | Resultado Principal |
 |------|-------|---------------------|
 | 2026-03 | ~~FR-001 v3~~ | ~~Superado por v4 (HD-006)~~ |
-| 2026-03-20 | FR-001 v4 (HD-006) | Retornos corrigidos com fontes academicas (DMS 2024) + BRL 3 cenarios: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. SWR R$250k: 2,28%. SWR R$350k: 3,19%. Limite seguro: R$384k/ano. IPCA+ reduzido de 20% para 10% (breakeven 7.81%). |
+| 2026-03-20 | FR-001 v4 (HD-006 intermediario) | Retornos corrigidos com fontes academicas (DMS 2024) + BRL 3 cenarios: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. SWR R$250k: 2,28%. SWR R$350k: 3,19%. Limite seguro: R$384k/ano |
+| 2026-03-22 | HD-006 final: alocacao revisada | Equity 79%, IPCA+ longo 15%, IPCA+ curto 3%, Cripto 3%. Selic removido. IPCA+ a 7.16% vence equity all-in por 150 bps. Projecoes de FR-001 serao recalculadas com nova alocacao |
 
 ## Regras Operacionais
 

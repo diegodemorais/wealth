@@ -12,9 +12,11 @@
 | 2026-03-18 | ~~IPCA+ estrutural 10%, ladder 2035/2040/2050~~ | ~~Superado pela revisao de 2026-03-19~~ | — |
 | 2026-03-19 | IPCA+ estrutural **7%**, 100% no IPCA+ 2040 | Revisado: IPCA+ 2035 NTN-B Principal nao existe (descontinuado fev/2025). 10%→7%. Ladder→concentrado no 2040 (taxa ~7,31%, vence 3a pos-FIRE). ETF de RF descartado (TER come carrego). DCA mar-abr 2026, ~R$244k | 01 Head, 04 FIRE, 10 Advocate |
 | 2026-03-20 | ~~Piso de taxa IPCA+ 2040: 6.0%~~ | ~~Superado pela revisao de 2026-03-20~~ | — |
-| 2026-03-20 | **Piso de taxa IPCA+ 2040: 6.4%**. Teto: 20% da carteira | Breakeven puro vs equity 5,34% BRL real, sem credito por certeza. DCA ate 20% enquanto taxa >= 6,4%. Abaixo de 6,4%, pausar e redirecionar para JPGL | 00 Head |
+| 2026-03-20 | ~~Piso de taxa IPCA+ 2040: 6.4%. Teto: 20%~~ | ~~Superado pela decisao de 2026-03-22~~ | — |
+| 2026-03-22 | **IPCA+ longo 15%**, piso **6.0%**, TD 2040 (80%) + TD 2050 (20%) | Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Piso operacional 6.0% (margem 50 bps). DCA ATIVO (taxa 7.16% > 6.0%). 5.0-6.0%: pausar. < 5.0%: vender (MtM positivo) | 00 Head, 02 Factor, 04 FIRE, 10 Advocate |
+| 2026-03-22 | **IPCA+ curto 3% aos 50** (SoRR buffer) | Substitui Selic do plano original. ~2 anos duration, MtM baixo. Comprar perto da aposentadoria | 04 FIRE |
 | 2026-03 | Renda+ 2065: gatilho de venda em 6,0% | Ponto otimo calculado com dados reais | 06 Risco |
-| 2026-03 | Selic 0% agora, 5% aos 50 | Buffer de liquidez na desacumulacao | 04 FIRE |
+| 2026-03 | ~~Selic 0% agora, 5% aos 50~~ | ~~Superado: Selic substituido por IPCA+ curto~~ | — |
 
 ---
 
@@ -22,8 +24,10 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ estrutural | ~~Idade 48~~ Antecipado | DCA ate 20% da carteira, 100% IPCA+ 2040. **Piso: IPCA+ >= 6.4%** | **Executar** |
-| IPCA+ 2040 piso | Taxa < 6.4% | Pausar DCA e redirecionar aportes para equity (JPGL) | Monitorando |
+| IPCA+ longo | ~~Idade 48~~ Antecipado | DCA ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). **Piso: IPCA+ >= 6.0%** | **DCA Ativo** |
+| IPCA+ longo pausar | Taxa 5.0-6.0% | Pausar DCA e redirecionar aportes para equity (JPGL) | Monitorando |
+| IPCA+ longo vender | Taxa < 5.0% | Vender posicao (MtM positivo), redirecionar para equity | Monitorando |
+| IPCA+ curto | Perto dos 50 | Comprar 3% em TD curto ~2 anos (SoRR buffer) | Aguardando |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA em 3 tranches ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado) | Monitorando |
 | Renda+ 2065 panico | Taxa sobe para 9%+ | NAO vender — manter pelo carrego IPCA+6,87% | — |
