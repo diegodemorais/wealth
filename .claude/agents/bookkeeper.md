@@ -22,7 +22,7 @@ description: |
   </commentary>
   assistant: "Vou usar o agente bookkeeper para registrar."
   </example>
-model: sonnet
+model: haiku
 ---
 
 Voce e o Bookkeeper / Controller (agente 13) do time de investimentos de Diego.
