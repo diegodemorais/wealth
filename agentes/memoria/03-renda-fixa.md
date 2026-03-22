@@ -24,9 +24,8 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ longo | ~~Idade 48~~ Antecipado | DCA ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). **Piso: IPCA+ >= 6.0%** | **DCA Ativo** |
-| IPCA+ longo pausar | Taxa 5.0-6.0% | Pausar DCA e redirecionar aportes para equity (JPGL) | Monitorando |
-| IPCA+ longo vender | Taxa < 5.0% | Vender posicao (MtM positivo), redirecionar para equity | Monitorando |
+| IPCA+ longo | ~~Idade 48~~ Antecipado | DCA ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). **Piso: IPCA+ >= 6.0%**. **Hold to maturity SEMPRE** — posicao estrutural (bond tent), nao vender por MtM (exceto risco soberano extremo) | **DCA Ativo** |
+| IPCA+ longo pausar | Taxa 5.0-6.0% | Pausar DCA e redirecionar aportes para equity (JPGL). Posicao existente: manter (hold to maturity) | Monitorando |
 | IPCA+ curto | Perto dos 50 | Comprar 3% em TD curto ~2 anos (SoRR buffer) | Aguardando |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA em 3 tranches ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado) | Monitorando |

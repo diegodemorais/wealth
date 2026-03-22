@@ -19,7 +19,7 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ longo | ~~Idade 48~~ **Antecipado** | Ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). Piso operacional: IPCA+ >= **6,0%** (breakeven all-in ~5,5%). **DCA ATIVO** (taxa 7,16% > piso 6,0%). 5,0-6,0%: pausar, aportes para JPGL. < 5,0%: vender (MtM positivo) | **Ativo** |
+| IPCA+ longo | ~~Idade 48~~ **Antecipado** | Ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). Piso operacional: IPCA+ >= **6,0%** (breakeven all-in ~5,5%). **DCA ATIVO** (taxa 7,16% > piso 6,0%). 5,0-6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM (exceto risco soberano extremo) | **Ativo** |
 | IPCA+ curto | Perto dos 50 | 3% em TD curto ~2 anos (SoRR buffer). Substitui Selic do plano original | Aguardando |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA em 3 tranches ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado, +39,5% liq. esperado) | Monitorando mensalmente |

@@ -28,7 +28,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | FIRE-002-Plano_B_perda_renda | Plano B para perda de renda antes dos 50 | 04 FIRE | Alta |
 | ~~HD-002~~ | ~~Movido para Done~~ | — | — |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
-| FR-003-Monte_Carlo_computacional | Monte Carlo computacional: 10k trajetorias com parametros reais | 04 FIRE | Alta |
+| ~~FR-003~~ | ~~Movido para Done~~ | — | — |
 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
 | FI-002-Reduzir_AVEM_20_para_15 | Reduzir AVEM de 20% para 15%: destino dos 5pp | 02 Factor | Media |
 | FR-005-FIRE_bands_custo_vida | FIRE bands: modelar custo de vida R$300-400k | 04 FIRE | Media |
@@ -55,6 +55,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
 | HD-006-Audit_reconciliacao_premissas | Audit e reconciliacao de premissas (retornos, breakeven, IR) | 00 Head | 2026-03-22 | 9+4 erros corrigidos. Decisao final: IPCA+ longo 15%, piso 6.0%, equity 79%, cripto 3%. Breakeven all-in ~5.5%. Selic removido -> IPCA+ curto 3% aos 50. 5 regras anti-recorrencia |
+| FR-003-Monte_Carlo_computacional | Monte Carlo 10k trajetorias com premissas HD-006 | 04 FIRE | 2026-03-22 | Pat mediano R$10.56M. SR R$250k: 91% (guard), R$350k: 87%. FR-001 errava 3-6pp sem guard. Decada perdida: 31-43%. Bond tent: +0.1pp |
 | HD-002-Scorecard_metricas_sistema | Scorecard de metricas do sistema de agentes | 10 Advocate | 2026-03-20 | Scorecard + 2 shadows + findings log + previsoes. Baseline T0 preenchido. P(FIRE) pendente FR-003 |
 | RF-003-Duration_risk_Renda2065_inflacao | Duration risk Renda+ 2065 em regime de inflacao | 03 RF | 2026-03-20 | Target 3% (nao 5%). DCA parado. Gatilhos mantidos. IPCA+ 2040 e tese diferente (estrutural) |
 | RK-001-Stress_test_risco_soberano_BR | Stress test risco soberano Brasil (bloco ~13%) | 06 Risco | 2026-03-20 | IPCA+ 7% adequado. Risco real e equity 89%. Liquidacao: Reserva -> equity -> RF por ultimo |

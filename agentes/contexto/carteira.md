@@ -51,7 +51,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 |-------|---------|------|-------|-------------|-------|
 | Reserva | 2,5% | — | R$ 87.862 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
 | IPCA+ existente | 0,4% | — | R$ 13.308 | Tesouro IPCA+ 2040 | Posicao legada. Sera incorporada ao bloco IPCA+ longo |
-| IPCA+ longo | ~0,4% | **15%** | ~R$ 523k target | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para JPGL. < 5,0%: vender posicao (MtM positivo), redirecionar para equity |
+| IPCA+ longo | ~0,4% | **15%** | ~R$ 523k target | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para JPGL. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |
 | Renda+ 2065 | 3,2% | <=3% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% ja proximo do target). Venda: tudo se taxa <= 6,0%. Panico (9%+): manter |
 | Cripto | 3,0% | **3%** | R$ 108.089 | HODL11 (R$ 104.951) + spot legado (R$ 3.138) | Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
@@ -82,7 +82,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
 3. **Renda+ 2065**: compra DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% ja proximo do target). Venda tudo se taxa <= 6,0%. Se taxa 9%+: manter pelo carrego
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
-5. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para 5,0-6,0%: pausar DCA, aportes para JPGL. Se taxa < 5,0%: vender posicao (MtM positivo), redirecionar para equity
+5. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para 5,0-6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo)
 6. **IPCA+ curto 3%**: comprar perto dos 50 (SoRR buffer, ~2 anos duration). Substitui Selic no plano original
 7. **RF pos-2040**: Aos 51-52 (2038-2039), avaliar compra de IPCA+ ~2045-2050 para cobrir gap pos-tent (anos 53-60). Tamanho: 3-5% do portfolio
 
@@ -191,6 +191,6 @@ Calculo: 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = 5.89% (base)
 - ETFs exterior = 15% flat sobre qualquer ganho sem isencao (Lei 14.754/2023) - isso pode mudar, sempre verificar
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
-- **Piso operacional para RF longa: IPCA+ 6.0%.** Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Margem de 50 bps. Abaixo de 6.0%, pausar DCA. Abaixo de 5.0%, vender posicao (MtM positivo). (Corrigido HD-006 final: pisos anteriores de 6.4% e 7.81% estavam ambos errados — nao incluiam custos all-in de equity)
+- **Piso operacional para RF longa: IPCA+ 6.0%.** Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Margem de 50 bps. Abaixo de 6.0%, pausar DCA de IPCA+ longo e redirecionar para JPGL. **IPCA+ longo (TD 2040/2050) = hold to maturity SEMPRE** — nao vender por MtM (posicao estrutural, bond tent). Gatilho de venda MtM aplica-se APENAS ao Renda+ 2065 (tatico). (Corrigido HD-006 final: pisos anteriores de 6.4% e 7.81% estavam ambos errados — nao incluiam custos all-in de equity)
 - **Sem alavancagem.** Carry trade / margin na IB descartado — risco incompativel com fase de acumulacao FIRE (decisao mar/2026, apos desmonte de R$533k em set/2025)
 - **Todo veredicto numerico passa por Checklist Pre-Veredicto antes de ser apresentado.** Checklist completo em `agentes/perfis/00-head.md`. Causa raiz: 6+9 erros das sessoes 2026-03-20, todos por omissao de premissas ao calcular. Regras adicionais HD-006: (A) fonte obrigatoria para cada numero, (B) formula explicita antes do resultado, (C) reconciliacao trimestral entre documentos, (D) comparacao all-in obrigatoria (WHT, IOF, FX spread, ganho fantasma cambial), (E) reflexao registrada — 4 erros em sequencia corrigidos por Diego
