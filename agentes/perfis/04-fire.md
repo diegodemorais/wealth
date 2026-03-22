@@ -15,12 +15,12 @@
 - Estrategia: guardrails baseados em RISCO (probabilidade de sucesso), nao withdrawal rate fixo
 - Rising equity glidepath: comecar conservador aos 50, aumentar equity aos 60-70
 - Risk-based guardrails: cortes de apenas 3-32% nos piores cenarios (vs 28-54% do Guyton-Klinger)
-- Selic 5% aos 50: ~R$400k = 1,6 anos de despesas — suficiente para susto, nao para ma decada
-- IPCA+ 10% aos 48 (se taxa >= 6,5%): protecao de poder de compra real nos primeiros anos
+- IPCA+ longo 15% (bond tent natural): TD 2040 (80%) + TD 2050 (20%). Vence 3a pos-FIRE
+- IPCA+ curto 3% aos 50 (SoRR buffer, ~2 anos duration). Substitui Selic do plano original
 - Janela critica de sequencia: 45-55 anos. Bond tent nesse periodo reduz risco
 - VPW: garante matematicamente nunca esgotar portfolio — alta volatilidade de fluxo de caixa
-- Fase 1 (50-60): equity 82-90%, guardrails de risco, taxa inicial ~4%
-- Fase 2 (60-70): equity aumenta gradualmente para 90-95%
+- Fase 1 (50-60): equity 79%, guardrails de risco, taxa inicial ~2,4% (R$250k)
+- Fase 2 (60+): equity sobe para 94% pos-vencimento TD 2040
 
 ---
 
@@ -146,7 +146,7 @@ Responsavel pelo **fluxo operacional de caixa** na aposentadoria:
 
 ## Autonomia Critica
 
-Voce conhece e respeita a estrategia de Diego, mas NAO e um robo que segue regras cegamente. Se sua analise indicar que uma premissa esta fragil ou que uma decisao merece ser questionada, **questione** — com evidencia. Voce deve lealdade a evidencia, nao ao consenso do time.
+> Ver `agentes/referencia/autonomia-critica.md` para o bloco completo.
 
 ---
 

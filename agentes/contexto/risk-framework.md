@@ -12,9 +12,10 @@
 
 | Classe | Alvo | Minimo | Maximo | Acao se Violado |
 |--------|------|--------|--------|-----------------|
-| Equity global | 90% | 82% | 95% | Rebalancear via aportes |
-| IPCA+ estrutural | 7% | 5% | 10% | Ajustar proximo aporte |
-| Renda+ tatico | 3,2% | 0% | 5% | Gatilho de compra/venda |
+| Equity global | 79% | 70% | 85% | Rebalancear via aportes |
+| IPCA+ longo | 15% | 10% | 20% | Ajustar proximo aporte |
+| IPCA+ curto (a partir dos 50) | 0% (3% aos 50) | 0% | 5% | SoRR buffer |
+| Renda+ tatico | 3,2% | 0% | 3% | Gatilho de compra/venda. DCA parado — proximo do target |
 | Cripto (HODL11) | 3% | 1,5% | 5% | Comprar <1,5%, rebalancear >5% |
 | Reserva emergencia | 2,5% | 2% | 5% | Manter 3-6 meses custo de vida |
 | **Bloco de risco total** | **~6%** | **0%** | **10%** | **Teto absoluto — nunca ultrapassar** |
@@ -23,11 +24,11 @@
 
 | Moeda | Exposicao Atual | Observacao |
 |-------|----------------|------------|
-| USD (via ETFs UCITS) | ~89% | Equity global precificado em USD/multi-moeda |
-| BRL | ~9% | IPCA+, Renda+, HODL11, reserva |
+| USD (via ETFs UCITS) | ~79% | Equity global precificado em USD/multi-moeda |
+| BRL | ~19% | IPCA+ longo 15%, Renda+ 3%, HODL11 3%, reserva 2,5% |
 | GBP (custodia LSE) | ~0% | Apenas moeda de listagem, exposicao real e USD/multi |
 
-> **Risco cambial**: ~89% do patrimonio exposto a BRL/USD. Nao ha hedge formal — BRL funciona como hedge natural parcial (receita em BRL, despesas em BRL). Monitorado pelo agente 07.
+> **Risco cambial**: ~79% do patrimonio exposto a BRL/USD. Nao ha hedge formal — BRL funciona como hedge natural parcial (receita em BRL, despesas em BRL). Monitorado pelo agente 07.
 
 ### Por Geografia (equity)
 
@@ -138,7 +139,7 @@
 
 | Contraparte | Exposicao | Risco | Mitigacao |
 |-------------|-----------|-------|-----------|
-| **Interactive Brokers** | ~89% (ETFs UCITS) | Falencia do broker, congelamento de conta | Ativos segregados (SIPC + Lloyd's ate $30M). Monitorar saude financeira |
+| **Interactive Brokers** | ~79% (ETFs UCITS) | Falencia do broker, congelamento de conta | Ativos segregados (SIPC + Lloyd's ate $30M). Monitorar saude financeira |
 | **B3 / CBLC** | ~6% (HODL11, Tesouro via custodia) | Risco sistemico BR, falha operacional | Custodia centralizada na CBLC. Risco baixo |
 | **Tesouro Nacional** | ~6% (IPCA+, Renda+) | Risco soberano BR | Risco de credito minimo (governo federal). Risco de marcacao: alto em Renda+ |
 | **Nubank/XP** | Custodia BR | Falencia do broker | Ativos custodiados na CBLC (segregados) |
@@ -146,7 +147,7 @@
 
 ### Concentracao de Custodia
 
-- ~89% em um unico broker (IBKR) = **concentracao relevante**
+- ~79% em um unico broker (IBKR) = **concentracao relevante**
 - Mitigacao: SIPC + seguro adicional. IBKR e o maior broker eletrônico do mundo. Monitorar
 - Considerar: segundo broker UCITS como contingencia? (Issue futuro se patrimonio crescer muito)
 
@@ -204,3 +205,4 @@
 | Data | Mudanca | Motivo |
 |------|---------|--------|
 | 2026-03-20 | Criacao do risk framework | Implementacao de risk management quantitativo formal |
+| 2026-03-22 | Reconciliacao HD-006 final | Equity 79%, IPCA+ longo 15%, Renda+ <=3%, sem Selic. HD-008 |

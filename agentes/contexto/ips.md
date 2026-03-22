@@ -3,7 +3,7 @@
 > Documento formal seguindo guidelines do CFA Institute.
 > Consolidado a partir de carteira.md, evolucao.md, memorias dos agentes e issues concluidas.
 > Revisao: anual obrigatoria ou quando premissa de vida mudar.
-> Atualizado em: 2026-03-20
+> Atualizado em: 2026-03-22 (reconciliado com HD-006 final via HD-008)
 
 ---
 
@@ -25,10 +25,10 @@
 
 ### Fase de Acumulacao (39-50, ~11 anos restantes)
 
-- **Retorno real esperado (bruto)**: ~5,09% a.a. (equity com factor tilt, ajustado por McLean & Pontiff 2016 post-publication decay)
+- **Retorno real esperado (bruto, BRL, cenario base)**: ~5,89% a.a. (equity com factor tilt, depreciacao BRL 0.5%/ano. DMS 2025, AQR 2026, FF93, M&P16)
 - **Tax drag na acumulacao**: ~0% (diferimento total — sem vendas ate desacumulacao)
-- **Retorno real liquido na acumulacao**: ~5,09% a.a.
-- **Patrimonio projetado aos 50**: ~R$ 10,3M (FR-001 v3, com aportes de R$25k/mes)
+- **Retorno real liquido na acumulacao**: ~5,89% a.a. (pre-tax, diferimento)
+- **Patrimonio projetado aos 50**: ~R$ 10,56M (FR-003 Monte Carlo mediano, com aportes de R$25k/mes)
 
 ### Fase de Desacumulacao (50+)
 
@@ -61,9 +61,9 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 
 ### Disposicao de Risco (subjetiva)
 
-- **Equity allocation**: 89-90% do patrimonio em equity global — consistente com perfil agressivo
+- **Equity allocation**: 79% do patrimonio em equity global (alvo HD-006 final) — consistente com perfil agressivo
 - **Demonstrado**: Nao vendeu durante volatilidade. Sistema rules-based como disciplina
-- **Max drawdown tolerado**: Nao definido formalmente, mas 90% equity implica aceitar drawdowns de 40-50% em crises severas
+- **Max drawdown tolerado**: Nao definido formalmente, mas 79% equity implica aceitar drawdowns de 35-45% em crises severas
 - **Volatilidade target**: Nao usa volatilidade como metrica de risco. Risco = retorno permanente abaixo do potencial (CIO)
 - **Disposicao**: ALTA — foco em retorno real de longo prazo, nao em volatilidade
 
@@ -80,7 +80,7 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 | Fase | Periodo | Horizonte | Estrategia |
 |------|---------|-----------|------------|
 | Acumulacao | 39-50 (2026-2037) | 11 anos | Maximizar patrimonio via aportes regulares + compounding |
-| Transicao | 48-52 | 4 anos | Bond tent, glidepath rising equity 82-90% -> 90-95% |
+| Transicao | 48-52 | 4 anos | Bond tent natural (IPCA+ 15% longo + 3% curto). Rising equity pos-vencimento TD 2040 |
 | Desacumulacao | 50+ (2037+) | 40+ anos | Withdrawal disciplinado com guardrails risk-based (Kitces & Fitzpatrick 2024) |
 
 ### Longevity Risk
@@ -165,8 +165,8 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 ### FIRE-Specific
 
 - Meta aposentadoria aos 50 (2037) — horizonte de acumulacao curto (11 anos)
-- 100% equity durante acumulacao (Cederburg et al. 2023)
-- Rising equity glidepath na transicao (Pfau): 82-90% aos 50, subindo para 90-95%
+- 79% equity + 15% IPCA+ longo + 3% cripto durante acumulacao (HD-006 final)
+- Bond tent natural: IPCA+ longo 15% (TD 2040/2050) + IPCA+ curto 3% (comprar perto dos 50). Rising equity pos-vencimento TD 2040
 - Guardrails risk-based (Kitces & Fitzpatrick 2024) na desacumulacao
 
 ### Pessoal
@@ -191,26 +191,27 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 
 | Bloco / ETF | 39 (atual) | 40 | 50 | 60 | 70 |
 |-------------|-----------|-----|-----|-----|-----|
-| Tesouro Selic | 0% | 0% | 5% | 5% | 5% |
-| IPCA+ Estrutural | 7% | 7% | 7% | 7% | 7% |
-| Equity total | 90% | 90% | 85% | 85% | 85% |
-| — SWRD (market cap) | 35% | 35% | 33% | 33% | 33% |
-| — AVGS (SCV US + INT) | 25% | 25% | 25% | 25% | 25% |
-| — AVEM (EM) | 20% | 20% | 19% | 19% | 19% |
-| — JPGL (multifator) | 20% | 20% | 19% | 19% | 19% |
+| IPCA+ longo | 15% | 15% | 15% | 0% | 0% |
+| IPCA+ curto | 0% | 0% | 3% | 3% | 3% |
+| Equity total | 79% | 79% | 79% | 94% | 94% |
+| — SWRD (market cap) | 27,7% | 27,7% | 27,7% | 32,9% | 32,9% |
+| — AVGS (SCV US + INT) | 19,8% | 19,8% | 19,8% | 23,5% | 23,5% |
+| — AVEM (EM) | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
+| — JPGL (multifator) | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
-| Renda+ 2065 (tatico) | <=5% | <=5% | <=5% | <=3% | 0% |
+| Renda+ 2065 (tatico) | <=3% | <=3% | <=3% | 0% | 0% |
 
 ### Factor Tilt
 
 - ~50% neutro / ~50% fator (conservador vs otimo de ~67% — Baker et al. 2016 Harvard)
 - Fatores: value, size, profitability (AVGS, AVEM) + momentum, low vol (JPGL)
 - Post-publication decay ajustado: -35% sobre premiums publicados (McLean & Pontiff 2016)
+- Retorno ponderado equity BRL: 5.89% base, 6.89% favoravel, 5.39% stress (HD-006 final)
 
 ### Prioridade de Aportes (marco 2026)
 
 1. **JPGL**: Maior gap (-19,7%). FOCO absoluto dos aportes regulares
-2. **IPCA+ 2040**: DCA em 2-3 tranches (mar-abr 2026) ate atingir 7% (~R$244k)
+2. **IPCA+ longo**: DCA em TD 2040 (80%) + TD 2050 (20%) ate atingir 15% (~R$523k). Piso operacional: taxa >= 6,0%
 3. **AVGS/AVEM**: Apenas se JPGL fechar gap significativamente
 
 ---
@@ -222,7 +223,7 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 | Posicao | Alvo | Piso | Teto | Instrumento | Gatilho |
 |---------|------|------|------|-------------|---------|
 | Cripto | 3% | 1,5% | 5% | HODL11 (B3) | Comprar <1,5%, rebalancear >5% (trimestral) |
-| Renda+ tatico | <=5% | — | 5% | Renda+ 2065 | Compra: DCA se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% |
+| Renda+ tatico | <=3% | — | 3% | Renda+ 2065 | Compra: DCA ate 3% se taxa >= 6,5% (DCA parado — 3,2% proximo target). Venda: tudo se taxa <= 6,0% |
 
 ### Regras Taticas
 
@@ -303,3 +304,4 @@ A carteira deve entregar ~0,5-0,65% a.a. de alpha sobre VWRA para justificar a c
 | Data | Mudanca | Motivo |
 |------|---------|--------|
 | 2026-03-20 | Criacao do IPS | Consolidacao de premissas dispersas em documento formal |
+| 2026-03-22 | Reconciliacao HD-006 final | IPCA+ 15%, equity 79%, sem Selic, IPCA+ curto 3% aos 50, retorno 5.89%, Renda+ <=3%. HD-008 |
