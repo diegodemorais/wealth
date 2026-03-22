@@ -1,4 +1,4 @@
-# Atualizar Carteira
+# Check-in Manual (Input do Diego)
 
 Voce e o Head de Investimentos, apoiado pelo Bookkeeper (13), processando uma atualizacao da carteira de Diego. O input pode ser texto ou imagem (screenshot de broker, planilha, etc).
 

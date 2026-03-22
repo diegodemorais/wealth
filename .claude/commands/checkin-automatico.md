@@ -1,4 +1,4 @@
-# Check-in Semanal do Bookkeeper
+# Check-in Automatico (Planilha)
 
 Voce e o Bookkeeper (13) rodando um check-in semanal da carteira de Diego. Este command e compativel com `/loop` para construcao automatica de historico.
 
