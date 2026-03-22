@@ -13,27 +13,37 @@
 | **Criado em** | 2026-03-20 |
 | **Origem** | Debate 2026-03-20 (Advocate), escopo expandido 2026-03-22 |
 | **Concluido em** | 2026-03-22 |
+| **Revisao** | 2026-03-22 v2: CORRECAO — perda de renda = aposentadoria forcada (gastos imediatos, nao aos 50) |
 
 ---
 
 ## Motivo / Gatilho
 
-> A premissa "renda se mantem ate os 50" sustenta todo o modelo FIRE. Se Diego perde renda antes dos 50, o gap de aportes pode inviabilizar o plano. Alem disso, FR-003 mostrou que **decada perdida** (retorno 3% acum / 2% desacum) tem success rate de apenas 31-43% — o cenario mais perigoso do portfolio. Precisamos de scenario planning concreto para ambos os riscos, separados e combinados.
+> A premissa "renda se mantem ate os 50" sustenta todo o modelo FIRE. Se Diego perde renda antes dos 50, ele NAO espera ate os 50 para comecar a gastar — ele comeca a gastar IMEDIATAMENTE. Perda de renda = aposentadoria forcada. Isso muda dramaticamente a analise: horizonte mais longo, patrimonio menor, SWR mais alto.
 
 ---
 
 ## Descricao
 
-> Modelar cenarios de perda de renda e retornos baixos prolongados. Para cada cenario: patrimonio aos 50, SWR, viabilidade, e acao necessaria. Definir Plano B concreto: reserva, skills, custo minimo, gatilhos.
+> Modelar cenarios de perda de renda como aposentadoria forcada: aportes param E gastos comecam na mesma idade. Para cada cenario: patrimonio, SWR, viabilidade ate 90, e acao necessaria. Inclui cenarios combinados com decada perdida.
 
 ---
 
 ## Escopo
 
-- [x] Parte A: Perda de renda aos 42, 45, 48 — patrimonio, SWR, viabilidade
-- [x] Parte B: Decada perdida (3%, 1%, combinado com perda de renda)
-- [x] Parte C: Plano B concreto (reserva, skills, custo minimo, seguro, gatilhos)
-- [x] Parte D: Tabela de recomendacao (acao agora vs acao se acontecer)
+- [x] Parte A: Perda de renda aos 42, 45, 48 — com retirada imediata (retorno base 4.57%)
+- [x] Parte B: Perda de renda + retorno adverso (3% e 2% desacumulacao)
+- [x] Parte C: Decada perdida na acumulacao + perda de renda + retorno adverso (combinado maximo)
+- [x] Parte D: Tabela de salvamento (renda part-time, corte de custo)
+- [x] Parte E: Plano B concreto e gatilhos
+
+---
+
+## ERRATA v1 -> v2 (2026-03-22)
+
+> **Erro critico da v1**: A analise anterior assumiu "aportes param, patrimonio cresce a 5.84% sem saques ate os 50, gastos comecam aos 50". O CORRETO e: **aportes param E gastos de R$250k/ano comecam IMEDIATAMENTE na idade da perda**. Perda de renda = aposentadoria forcada. Diego apontou o erro.
+>
+> Impacto: na v1, perda aos 42 gerava patrimonio de R$8.0M aos 50 (SWR 3.12%). Na v2, perda aos 42 com saques imediatos gera patrimonio declinante desde o dia 1 (SWR 4.92% aos 42). Cenarios piores em TODOS os casos isolados — mas conclusao muda significativamente nos combinados.
 
 ---
 
@@ -44,18 +54,14 @@
 | Patrimonio marco 2026 | R$3,482,633 | carteira.md |
 | Aporte anual | R$300,000 | carteira.md |
 | Retorno portfolio acumulacao | 5.84% real | HD-006: ponderado 79% eq + 15% IPCA+ + 3% cripto + 3% Renda+ |
-| Equity BRL real base | 5.89% | HD-006: DMS 2025 + factor premiums + dep 0.5% |
-| IPCA+ longo liquido HTM | 6.0% | HD-006: 7.16% bruto, IR nominal, 14a |
-| Cripto base conservadora | 0% real | Stress: sem contribuicao |
 | Retorno desacumulacao conservador | 4.57% real liquido | HD-006: IR 15% sobre nominal (100% vendido) |
-| Retorno desacumulacao venda parcial | 5.00% real liquido | HD-006: vende fracao, maior parte diferida |
 | Custo de vida base | R$250,000/ano | carteira.md |
-| SWR alvo | <= 3.5% | ERN evidence, 40+ anos |
-| Guardrails | Kitces & Fitzpatrick 2024 | carteira.md |
+| Guardrails | Piso R$180k | carteira.md (Kitces & Fitzpatrick 2024) |
+| Horizonte | Ate 90 anos | |
 
 ### Projecao-base de patrimonio (FR-001 v4, retorno 5.84%)
 
-Referencia — patrimonio FIM de cada idade com aportes normais:
+Patrimonio FIM de cada idade com aportes normais:
 
 | Idade | Pat. Fim (c/ aportes) |
 |-------|----------------------:|
@@ -76,349 +82,376 @@ Referencia — patrimonio FIM de cada idade com aportes normais:
 
 ## Analise
 
-### Parte A: Perda de Renda
+### Parte A: Perda de Renda com Retorno Base (4.57%)
 
-**Premissa**: "Perda aos X" = ultimo aporte completo foi em idade X-1. Patrimonio no momento da perda = patrimonio FIM de X-1 na tabela-base. Apos perda, patrimonio cresce apenas por retorno (5.84% real), sem aportes, ate os 50.
+**Premissa chave v2**: "Perda aos X" = ultimo aporte completo foi em idade X-1. Patrimonio = fim de X-1. A partir de X, comeca a SACAR R$250k/ano imediatamente. Retorno: 4.57% real liquido (desacumulacao conservadora, HD-006).
 
-#### Projecao sem aportes apos perda
-
-**Cenario A1: Perda aos 42 (8 anos sem aportes)**
+#### Cenario A1: Perda aos 42
 
 Patrimonio ao perder renda (fim idade 41): **R$5,082,687**
+SWR inicial: 250k / 5,083k = **4.92%**
+Horizonte: **48 anos** (42-90)
 
-| Idade | Pat. Inicio | Retorno 5.84% | Pat. Fim |
-|-------|------------:|------------:|----------:|
-| 42 | 5,082,687 | 296,828 | 5,379,515 |
-| 43 | 5,379,515 | 314,163 | 5,693,678 |
-| 44 | 5,693,678 | 332,511 | 6,026,189 |
-| 45 | 6,026,189 | 351,929 | 6,378,118 |
-| 46 | 6,378,118 | 372,481 | 6,750,599 |
-| 47 | 6,750,599 | 394,235 | 7,144,834 |
-| 48 | 7,144,834 | 417,258 | 7,562,092 |
-| 49 | 7,562,092 | 441,626 | 8,003,718 |
-| **50** | **8,003,718** | — | **FIRE** |
+| Idade | Patrimonio | Retorno 4.57% | Retirada | Pat. Fim |
+|-------|----------:|-------------:|---------:|---------:|
+| 42 | 5,082,687 | 232,278 | 250,000 | 5,064,965 |
+| 45 | 5,006,793 | 228,810 | 250,000 | 4,985,604 |
+| 50 | 4,890,709 | 223,505 | 250,000 | 4,864,215 |
+| 55 | 4,745,562 | 216,873 | 250,000 | 4,712,435 |
+| 60 | 4,564,076 | 208,579 | 250,000 | 4,522,655 |
+| 65 | 4,337,152 | 198,208 | 250,000 | 4,285,360 |
+| 70 | 4,053,416 | 185,241 | 250,000 | 3,988,657 |
+| 75 | 3,698,643 | 169,028 | 250,000 | 3,617,671 |
+| 80 | 3,255,049 | 148,756 | 250,000 | 3,153,805 |
+| 85 | 2,700,396 | 123,408 | 250,000 | 2,573,804 |
+| **90** | **2,006,879** | — | — | — |
 
-- **Pat. aos 50**: R$8,003,718
-- **Deficit vs base**: -R$2,954,711 (-27.0%)
-- **SWR R$250k**: 250k / 8,004k = **3.12%** — VIAVEL (< 3.5%)
-- **SWR R$350k**: 350k / 8,004k = **4.37%** — NAO VIAVEL
+**Sobrevive ate 90: SIM** (pat final ~R$2.0M)
 
-**Renda minima para salvar R$350k**: Precisa patrimonio de R$10M (SWR 3.5%). Gap = R$10M - R$8.0M = R$2.0M em 8 anos. Aporte necessario: ~R$2.0M / 8 / 1.03 (ajuste retorno) = **~R$230k/ano freelancing** (~R$19k/mes).
+O patrimonio DECLINA continuamente (retirada > retorno) mas lentamente. A taxa liquida de 4.57% gera ~R$232k/ano sobre R$5.1M — deficit de apenas ~R$18k/ano inicialmente. O deficit cresce mas nunca consome o patrimonio em 48 anos.
 
-Para manter o mesmo patrimonio da base (R$10.96M): gap R$2.95M em 8 anos = **~R$340k/ano** (inviavel como freelancing puro — seria quase a renda atual).
+**SWR corrente ao longo do tempo**: Sobe de 4.92% (42) para 12.5% (90). O patrimonio sobrevive no deterministico, mas a SWR alta torna-o vulneravel a volatilidade.
 
-**Cenario A2: Perda aos 45 (5 anos sem aportes)**
+#### Cenario A2: Perda aos 45
 
 Patrimonio ao perder renda (fim idade 44): **R$6,979,823**
+SWR inicial: 250k / 6,980k = **3.58%**
+Horizonte: **45 anos** (45-90)
 
-| Idade | Pat. Inicio | Retorno 5.84% | Pat. Fim |
-|-------|------------:|------------:|----------:|
-| 45 | 6,979,823 | 407,622 | 7,387,445 |
-| 46 | 7,387,445 | 431,427 | 7,818,872 |
-| 47 | 7,818,872 | 456,622 | 8,275,494 |
-| 48 | 8,275,494 | 483,288 | 8,758,782 |
-| 49 | 8,758,782 | 511,513 | 9,270,295 |
-| **50** | **9,270,295** | — | **FIRE** |
+| Idade | Patrimonio | Retorno 4.57% | Retirada | Pat. Fim |
+|-------|----------:|-------------:|---------:|---------:|
+| 45 | 6,979,823 | 318,978 | 250,000 | 7,048,801 |
+| 50 | 7,443,957 | 340,189 | 250,000 | 7,534,145 |
+| 55 | 7,938,044 | 362,769 | 250,000 | 8,050,813 |
+| 60 | 8,555,832 | 391,002 | 250,000 | 8,696,834 |
+| 65 | 9,328,290 | 426,303 | 250,000 | 9,504,593 |
+| 70 | 10,294,141 | 470,442 | 250,000 | 10,514,583 |
+| 75 | 11,501,805 | 525,632 | 250,000 | 11,777,437 |
+| 80 | 13,011,820 | 594,640 | 250,000 | 13,356,460 |
+| 85 | 14,899,886 | 680,925 | 250,000 | 15,330,811 |
+| **90** | **17,260,650** | — | — | — |
 
-- **Pat. aos 50**: R$9,270,295
-- **Deficit vs base**: -R$1,688,134 (-15.4%)
-- **SWR R$250k**: 250k / 9,270k = **2.70%** — VIAVEL (folga ampla)
-- **SWR R$350k**: 350k / 9,270k = **3.78%** — NAO VIAVEL (marginal)
+**Sobrevive ate 90: SIM** (pat final ~R$17.3M e CRESCENDO)
 
-**Renda minima para R$350k viavel**: Precisa R$10M. Gap = R$730k em 5 anos. Aporte: ~R$730k / 5 / 1.03 = **~R$142k/ano freelancing** (~R$12k/mes).
+Com SWR de 3.58%, o retorno de 4.57% SUPERA a retirada. Patrimonio cresce perpetuamente. Cenario robusto.
 
-**Cenario A3: Perda aos 48 (2 anos sem aportes)**
+#### Cenario A3: Perda aos 48
 
 Patrimonio ao perder renda (fim idade 47): **R$9,229,760**
+SWR inicial: 250k / 9,230k = **2.71%**
+Horizonte: **42 anos** (48-90)
 
-| Idade | Pat. Inicio | Retorno 5.84% | Pat. Fim |
-|-------|------------:|------------:|----------:|
-| 48 | 9,229,760 | 539,018 | 9,768,778 |
-| 49 | 9,768,778 | 570,497 | 10,339,275 |
-| **50** | **10,339,275** | — | **FIRE** |
+| Idade | Patrimonio | Retorno 4.57% | Retirada | Pat. Fim |
+|-------|----------:|-------------:|---------:|---------:|
+| 48 | 9,229,760 | 421,800 | 250,000 | 9,401,560 |
+| 50 | 9,769,073 | 446,447 | 250,000 | 9,965,519 |
+| 55 | 10,845,279 | 495,630 | 250,000 | 11,090,909 |
+| 60 | 12,190,926 | 557,125 | 250,000 | 12,498,051 |
+| 70 | 15,977,261 | 730,161 | 250,000 | 16,457,422 |
+| 80 | 21,896,830 | 1,000,685 | 250,000 | 22,647,515 |
+| **90** | **31,151,504** | — | — | — |
 
-- **Pat. aos 50**: R$10,339,275
-- **Deficit vs base**: -R$619,154 (-5.7%)
-- **SWR R$250k**: 250k / 10,339k = **2.42%** — VIAVEL (folga enorme)
-- **SWR R$350k**: 350k / 10,339k = **3.39%** — VIAVEL (< 3.5%)
+**Sobrevive ate 90: SIM** (pat final ~R$31.2M e crescendo forte)
 
-**Nenhuma renda adicional necessaria** para R$250k. Para R$350k: ja viavel sem ajuste.
+SWR de 2.71% com retorno 4.57% = patrimonio TRIPLICA ate 90. Cenario ultra-robusto. Impacto da perda de renda aos 48 e desprezivel.
 
-#### Resumo Parte A
+#### Resumo Parte A (retorno base 4.57%)
 
-| Cenario | Pat. aos 50 | Deficit | SWR R$250k | SWR R$350k | R$250k viavel? | R$350k viavel? |
-|---------|------------:|--------:|:----------:|:----------:|:--------------:|:--------------:|
-| Base (aportes ate 50) | R$10,958k | — | 2.28% | 3.19% | SIM | SIM |
-| **Perda aos 42** | R$8,004k | -27.0% | **3.12%** | 4.37% | **SIM** | NAO |
-| **Perda aos 45** | R$9,270k | -15.4% | **2.70%** | 3.78% | **SIM** | NAO (marginal) |
-| **Perda aos 48** | R$10,339k | -5.7% | **2.42%** | 3.39% | **SIM** | **SIM** |
+| Cenario | Pat. Inicio | SWR Inicial | Pat. aos 90 | Sobrevive? | Veredicto |
+|---------|----------:|:----------:|----------:|:---------:|-----------|
+| **Perda aos 42** | R$5,083k | **4.92%** | R$2,007k | SIM | Sobrevive no deterministico. SWR alta = vulneravel a vol |
+| **Perda aos 45** | R$6,980k | **3.58%** | R$17,261k | SIM | Patrimonio cresce. Robusto |
+| **Perda aos 48** | R$9,230k | **2.71%** | R$31,152k | SIM | Ultra-robusto. Impacto desprezivel |
 
-**Conclusao Parte A**: R$250k/ano sobrevive a perda de renda em QUALQUER idade (ate perda aos 42 fica em 3.12%). R$350k so e viavel se perda ocorrer apos os 47. Para R$350k com perda antes dos 47, consultoria part-time de R$12-19k/mes fecha o gap.
+**FIRE agent**: Diferenca critica vs v1: na v1, perda aos 42 gerava R$8.0M aos 50 com SWR 3.12% — parecia confortavel. Na v2, a realidade e SWR de 4.92% aos 42 com patrimonio declinante. Sobrevive no deterministico, mas a vulnerabilidade a volatilidade e MUITO maior. Perda aos 42 agora e um cenario de atenccao real, nao apenas teorico.
+
+**Head**: Concordo. E a perda aos 45 e 48 continua tranquila porque 4.57% > SWR (3.58% e 2.71%). O ponto de inflexao e claro: **se SWR > retorno desacum, patrimonio declina. Se SWR < retorno desacum, patrimonio cresce.** O threshold e SWR = 4.57%, que corresponde a patrimonio de ~R$5.47M (250k/0.0457). Qualquer patrimonio acima disso e auto-sustentavel no deterministico.
 
 ---
 
-### Parte B: Decada Perdida
+### Parte B: Perda de Renda + Retorno Adverso (desacumulacao)
 
-#### Cenario B1: Retorno 3% acumulacao + 2% desacumulacao (GMO worst case)
+Agora testamos: e se alem de perder a renda, o retorno de desacumulacao for pior que 4.57%?
 
-**Acumulacao com retorno 3% real**:
+Premissa: acumulacao ate a perda ocorre com retorno NORMAL (5.84%). Apenas o retorno pos-perda cai.
 
-| Idade | Pat. Inicio | Aporte | Retorno 3% | Pat. Fim |
-|-------|------------:|-------:|-----------:|---------:|
-| 39 | 3,482,633 | 300,000 | 104,479 | 3,887,112 |
-| 40 | 3,887,112 | 300,000 | 116,613 | 4,303,725 |
-| 41 | 4,303,725 | 300,000 | 129,112 | 4,732,837 |
-| 42 | 4,732,837 | 300,000 | 141,985 | 5,174,822 |
-| 43 | 5,174,822 | 300,000 | 155,245 | 5,630,067 |
-| 44 | 5,630,067 | 300,000 | 168,902 | 6,098,969 |
-| 45 | 6,098,969 | 300,000 | 182,969 | 6,581,938 |
-| 46 | 6,581,938 | 300,000 | 197,458 | 7,079,396 |
-| 47 | 7,079,396 | 300,000 | 212,382 | 7,591,778 |
-| 48 | 7,591,778 | 300,000 | 227,753 | 8,119,531 |
-| 49 | 8,119,531 | 300,000 | 243,586 | 8,663,117 |
-| **50** | **8,663,117** | — | — | **FIRE** |
+#### B1: Perda aos 42 + Retorno 3% desacum
 
-- **Pat. aos 50**: R$8,663,117
-- **Deficit vs base**: -R$2,295,312 (-20.9%)
-- **SWR R$250k**: 250k / 8,663k = **2.89%**
+Pat: R$5,082,687 | SWR: 4.92% | Retorno: 3%
 
-**Desacumulacao com retorno 2% real**:
+| Idade | Patrimonio |
+|-------|----------:|
+| 42 | 5,082,687 |
+| 50 | 4,091,977 |
+| 55 | 3,416,439 |
+| 60 | 2,633,305 |
+| 65 | 1,725,439 |
+| 70 | 672,972 |
+| **73** | **FALHA** |
 
-| Idade | Pat. Inicio | Retirada R$250k | Retorno 2% | Pat. Fim |
-|-------|------------:|----------------:|-----------:|---------:|
-| 50 | 8,663,117 | -250,000 | 173,262 | 8,586,379 |
-| 55 | 8,266,000 | -250,000 | 165,320 | 8,181,320 |
-| 60 | 7,840,000 | -250,000 | 156,800 | 7,746,800 |
-| 65 | 7,381,000 | -250,000 | 147,620 | 7,278,620 |
-| 70 | 6,884,000 | -250,000 | 137,680 | 6,771,680 |
-| 75 | 6,345,000 | -250,000 | 126,900 | 6,221,900 |
-| 80 | 5,758,000 | -250,000 | 115,160 | 5,623,160 |
-| 85 | 5,117,000 | -250,000 | 102,340 | 4,969,340 |
-| 90 | 4,414,000 | -250,000 | 88,280 | 4,252,280 |
+**NAO sobrevive.** Falha aos 73 (31 anos de horizonte, precisava 48).
 
-**Sobrevive ate 90**: SIM no deterministico (pat. ~R$4.25M aos 90). Mas FR-003 Monte Carlo mostrou **SR = 42.6% com guardrails** para esse cenario. A volatilidade mata: 57% das trajetorias falham por sequence of returns risk, mesmo que o deterministico sobreviva.
+#### B2: Perda aos 42 + Retorno 2% desacum
 
-**Desacumulacao R$350k com retorno 2%**:
+Pat: R$5,082,687 | SWR: 4.92% | Retorno: 2%
 
-| Idade | Pat. aprox. |
-|-------|------------:|
-| 50 | 8,663,000 |
-| 60 | 6,850,000 |
-| 70 | 4,680,000 |
-| 80 | 2,080,000 |
-| ~85 | ~0 |
+| Idade | Patrimonio |
+|-------|----------:|
+| 42 | 5,082,687 |
+| 50 | 3,635,624 |
+| 55 | 2,713,013 |
+| 60 | 1,694,376 |
+| 65 | 569,717 |
+| **68** | **FALHA** |
 
-**Sobrevive ate 90**: NAO. Falha por volta dos 84-85. FR-003: SR = 38.4% com guardrails.
+**NAO sobrevive.** Falha aos 68 (26 anos).
 
-#### Cenario B2: Retorno 1% acumulacao + 0% desacumulacao (Japao pos-1989)
+#### B3: Perda aos 45 + Retorno 3% desacum
 
-**Acumulacao com retorno 1% real**:
+Pat: R$6,979,823 | SWR: 3.58% | Retorno: 3%
 
-| Idade | Pat. Inicio | Aporte | Retorno 1% | Pat. Fim |
-|-------|------------:|-------:|-----------:|---------:|
-| 39 | 3,482,633 | 300,000 | 34,826 | 3,817,459 |
-| 40 | 3,817,459 | 300,000 | 38,175 | 4,155,634 |
-| 41 | 4,155,634 | 300,000 | 41,556 | 4,497,190 |
-| 42 | 4,497,190 | 300,000 | 44,972 | 4,842,162 |
-| 43 | 4,842,162 | 300,000 | 48,422 | 5,190,584 |
-| 44 | 5,190,584 | 300,000 | 51,906 | 5,542,490 |
-| 45 | 5,542,490 | 300,000 | 55,425 | 5,897,915 |
-| 46 | 5,897,915 | 300,000 | 58,979 | 6,256,894 |
-| 47 | 6,256,894 | 300,000 | 62,569 | 6,619,463 |
-| 48 | 6,619,463 | 300,000 | 66,195 | 6,985,658 |
-| 49 | 6,985,658 | 300,000 | 69,857 | 7,355,515 |
-| **50** | **7,355,515** | — | — | **FIRE** |
+| Idade | Patrimonio |
+|-------|----------:|
+| 45 | 6,979,823 |
+| 50 | 6,717,171 |
+| 55 | 6,459,758 |
+| 60 | 6,161,347 |
+| 65 | 5,815,405 |
+| 70 | 5,414,365 |
+| 75 | 4,949,449 |
+| 80 | 4,410,484 |
+| 85 | 3,785,675 |
+| **90** | **R$3,061,351** |
 
-- **Pat. aos 50**: R$7,355,515
-- **Deficit vs base**: -R$3,602,914 (-32.9%)
-- **SWR R$250k**: 250k / 7,356k = **3.40%** — VIAVEL (marginal, mas < 3.5%)
+**Sobrevive ate 90: SIM** (pat final R$3.06M). Patrimonio declina lentamente mas o colchao e grande o suficiente.
 
-**Desacumulacao com retorno 0% real**:
+#### B4: Perda aos 45 + Retorno 2% desacum
 
-Patrimonio simplesmente diminui pela retirada. R$7,356k - R$250k/ano = dura 29.4 anos. **Falha aos ~79 anos.**
+Pat: R$6,979,823 | SWR: 3.58% | Retorno: 2%
 
-Com R$350k: dura 21 anos. **Falha aos ~71.**
+| Idade | Patrimonio |
+|-------|----------:|
+| 45 | 6,979,823 |
+| 50 | 6,283,384 |
+| 55 | 5,636,354 |
+| 60 | 4,921,980 |
+| 65 | 4,133,254 |
+| 70 | 3,262,436 |
+| 75 | 2,300,983 |
+| 80 | 1,239,461 |
+| 85 | 67,455 |
+| **86** | **FALHA** |
 
-Com guardrails (corte para R$180k piso):
-- R$7,356k / R$180k = 40.9 anos. **Sobrevive ate ~91** no piso.
-- Mas lifestyle em R$180k por decadas e austeridade severa.
-
-#### Cenario B3: Decada perdida + perda de renda aos 45
-
-**Combinacao mais perigosa**: retorno 3% acum, aportes cessam aos 45, desacumulacao 2%.
-
-Patrimonio aos 45 (retorno 3%, com aportes): R$6,581,938 (da tabela B1)
-
-Patrimonio aos 50 (retorno 3%, sem aportes):
-
-| Idade | Pat. Inicio | Retorno 3% | Pat. Fim |
-|-------|------------:|-----------:|---------:|
-| 45 | 6,581,938 | 197,458 | 6,779,396 |
-| 46 | 6,779,396 | 203,382 | 6,982,778 |
-| 47 | 6,982,778 | 209,483 | 7,192,261 |
-| 48 | 7,192,261 | 215,768 | 7,408,029 |
-| 49 | 7,408,029 | 222,241 | 7,630,270 |
-| **50** | **7,630,270** | — | **FIRE** |
-
-- **Pat. aos 50**: R$7,630,270
-- **SWR R$250k**: 250k / 7,630k = **3.28%** — VIAVEL (marginal)
-
-**Desacumulacao R$250k com retorno 2%**:
-
-Deterministico: pat ~R$4.6M aos 90. Sobrevive.
-
-Mas estocasticamente (vol 20%): SR estimado ~35-40%. Combinacao de patrimonio menor + retorno baixo + fat tails e devastadora.
-
-**SWR R$350k**: 350k / 7,630k = **4.59%** — NAO VIAVEL. Falha ~83 no deterministico.
-
-**Renda necessaria para R$250k viavel (estocastico)**: Para subir SR de ~38% para ~70%, precisa patrimonio ~R$10M (SWR ~2.5% com retorno 2%). Gap = R$2.4M. Com 5 anos apos perda: **~R$440k/ano** — inviavel. Alternativa: **cortar custo para R$180k** (piso guardrails). SWR = 180k/7,630k = **2.36%**. Sobrevive melhor.
+**NAO sobrevive.** Falha aos 86 (41 anos de horizonte, precisava 45).
 
 #### Resumo Parte B
 
-| Cenario | Retorno Acum | Retorno Desacum | Pat. aos 50 | SWR R$250k | Sobrevive 90 (det.)? | SR estimado (MC, guard) |
-|---------|:------------:|:---------------:|------------:|:----------:|:--------------------:|:-----------------------:|
-| **Base** | 5.84% | 4.57% | R$10,958k | 2.28% | SIM | **90.9%** |
-| **B1: GMO** | 3% | 2% | R$8,663k | 2.89% | SIM (det.) | **~42.6%** |
-| **B2: Japao** | 1% | 0% | R$7,356k | 3.40% | NAO (79) | **<20%** |
-| **B3: GMO + perda 45** | 3% + stop 45 | 2% | R$7,630k | 3.28% | SIM (det.) | **~35-40%** |
+| Cenario | Retorno Desacum | Falha? | Idade da falha | Horizonte efetivo |
+|---------|:--------------:|:------:|:--------------:|:-----------------:|
+| Perda 42 + 4.57% | 4.57% | NAO | — | 48+ anos |
+| **Perda 42 + 3%** | 3% | **SIM** | **73** | 31 anos |
+| **Perda 42 + 2%** | 2% | **SIM** | **68** | 26 anos |
+| Perda 45 + 4.57% | 4.57% | NAO | — | 45+ anos |
+| Perda 45 + 3% | 3% | NAO | — | Pat R$3.06M aos 90 |
+| **Perda 45 + 2%** | 2% | **SIM** | **86** | 41 anos |
+| Perda 48 + qualquer | qualquer | NAO | — | Ultra-robusto |
+
+**FIRE agent**: O padrao e claro. Perda aos 42 e o cenario critico — qualquer retorno abaixo de 4.57% comeca a comprometer o horizonte. Perda aos 45 aguenta ate 3% mas falha a 2%. Perda aos 48 e a prova de quase tudo.
 
 ---
 
-### Parte C: Plano B Concreto
+### Parte C: Decada Perdida na Acumulacao + Perda de Renda + Retorno Adverso
 
-#### C1. Reserva de contingencia
+Cenario maximo de stress: retorno de ACUMULACAO tambem e adverso (3% em vez de 5.84%), resultando em patrimonio menor no momento da perda.
 
-**Situacao atual**: 2.5% em IPCA+ 2029 (~R$87k) = 4.2 meses de custo de vida.
+Patrimonios com acumulacao a 3%:
 
-**Precisa aumentar?** Nao necessariamente. A reserva protege contra emergencias de curto prazo (saude, despesas inesperadas), nao contra perda de renda prolongada. Contra perda de renda, o patrimonio investido E a defesa — R$5-8M investidos renderiam R$290-467k/ano a 5.84%, cobrindo o custo de vida mesmo sem aportes.
+| Idade da perda | Pat. com acum 5.84% | Pat. com acum 3% | Deficit |
+|:--------------:|--------------------:|------------------:|--------:|
+| 42 (fim 41) | R$5,082,687 | R$4,732,837 | -6.9% |
+| 45 (fim 44) | R$6,979,823 | R$6,098,969 | -12.6% |
 
-**Recomendacao**: Manter reserva atual (~4 meses). Nao aumentar alem de 6 meses. Capital parado em reserva tem custo de oportunidade alto (perde o retorno de equity/IPCA+ longo). A verdadeira protecao contra perda de renda e:
-1. O patrimonio ja acumulado (R$3.48M hoje, crescendo)
-2. A capacidade de gerar renda alternativa (consultoria tech)
-3. Os guardrails de retirada (corte de R$250k para R$180k se necessario)
+#### C1: Acum 3% + Perda 42 + Desacum 2%
 
-#### C2. Skills monetizaveis
+Pat: R$4,732,837 | SWR: 5.28% | Retorno: 2%
 
-Diego tem expertise em tecnologia (PJ no Simples Nacional, opera 2 empresas). Renda realista de consultoria tech:
+| Idade | Patrimonio |
+|-------|----------:|
+| 42 | 4,732,837 |
+| 50 | 3,217,521 |
+| 55 | 2,251,394 |
+| 60 | 1,184,710 |
+| 65 | 7,006 |
+| **66** | **FALHA** |
 
-| Modalidade | Renda estimada/ano | Nota |
-|------------|-------------------:|------|
-| Consultoria tech senior (20h/semana) | R$240-360k | Rate R$200-300/hora, mercado SR-SP. Conservador |
-| Consultoria tech senior (10h/semana) | R$120-180k | Part-time, compativel com semi-FIRE |
-| Advisory/board de startups (5h/semana) | R$60-120k | Menor esforco, acesso via networking |
-| Freelance projetos (intermitente) | R$80-150k | Volatil, sem previsibilidade |
+**FALHA aos 66.** Horizonte: apenas 24 anos. Este e o pior cenario combinado.
 
-**Renda part-time realista**: R$120-180k/ano (10h/semana consultoria senior). Isso cobre o custo de vida no piso dos guardrails (R$180k) ou complementa a retirada do portfolio.
+#### C2: Acum 3% + Perda 42 + Desacum 3%
 
-**Evidencia**: Kitces (2018) documenta que a capacidade de gerar renda na primeira decada de aposentadoria e o hedge mais eficaz contra sequence of returns risk — mais que bond tent, mais que guardrails. Chamado de "human capital as a hedge".
+Pat: R$4,732,837 | SWR: 5.28% | Retorno: 3%
 
-#### C3. Custo de vida minimo
+| Idade | Patrimonio |
+|-------|----------:|
+| 42 | 4,732,837 |
+| 50 | 3,745,000 |
+| 60 | 2,100,000 |
+| **70** | **FALHA** |
 
-**Piso dos guardrails**: R$180k/ano (R$15k/mes).
+**FALHA aos 70.** Horizonte: 28 anos.
 
-Composicao provavel:
-| Item | Valor/mes | Valor/ano |
-|------|----------:|----------:|
-| Moradia (aluguel Pinheiros) | R$5,000 | R$60,000 |
-| Alimentacao | R$3,000 | R$36,000 |
-| Saude (plano + extras) | R$2,500 | R$30,000 |
-| Transporte | R$1,000 | R$12,000 |
-| Contas/servicos | R$1,500 | R$18,000 |
-| Lazer/viagens (reduzido) | R$2,000 | R$24,000 |
-| **Total** | **R$15,000** | **R$180,000** |
+#### C3: Acum 3% + Perda 45 + Desacum 2%
 
-**Viavel?** SIM, mas com restricoes significativas. Viagens internacionais seriam raras, entretenimento limitado. E um piso de austeridade, nao de conforto. Diego aguentaria por 2-3 anos, nao por 20.
+Pat: R$6,098,969 | SWR: 4.10% | Retorno: 2%
 
-**Um piso mais realista para longo prazo**: R$200k/ano (R$16.7k/mes). Adiciona margem para imprevistos e evita fadiga de austeridade.
+| Idade | Patrimonio |
+|-------|----------:|
+| 45 | 6,098,969 |
+| 50 | 5,291,399 |
+| 55 | 4,541,122 |
+| 60 | 3,712,756 |
+| 65 | 2,798,173 |
+| 70 | 1,788,399 |
+| 75 | 673,527 |
+| **78** | **FALHA** |
 
-#### C4. Seguro de renda
+**FALHA aos 78.** Horizonte: 33 anos.
 
-**Seguro de invalidez temporaria / perda de renda**:
-- Custo estimado: 2-4% da renda segurada/ano
-- Para segurar R$300k/ano de renda: R$6-12k/ano de premio
-- Periodo de carencia: 30-90 dias tipico
-- Cobertura: 12-24 meses tipico
+#### C4: Acum 3% + Perda 45 + Desacum 3%
 
-**Analise custo-beneficio**:
-- Custo: ~R$10k/ano durante 11 anos = R$110k + custo de oportunidade (~R$160k a 5.84%)
-- Beneficio: protege contra perda de renda por 12-24 meses
-- **Mas**: seguro de renda NAO cobre desemprego voluntario, burnout, ou decisao de parar. Cobre invalidez/doenca.
+Pat: R$6,098,969 | SWR: 4.10% | Retorno: 3%
 
-**Veredicto**: NAO recomendado. O patrimonio investido de Diego (R$3.48M e crescendo) ja funciona como "auto-seguro" contra perda de renda. O custo do seguro seria melhor investido em JPGL (onde tem o maior gap). Para invalidez de longo prazo: seguro de vida com cobertura DIT seria mais relevante, mas isso e agenda da revisao de premissas de vida (casamento).
+| Idade | Patrimonio |
+|-------|----------:|
+| 45 | 6,098,969 |
+| 50 | 5,665,385 |
+| 55 | 5,240,450 |
+| 60 | 4,747,834 |
+| 65 | 4,176,757 |
+| 70 | 3,514,723 |
+| 75 | 2,747,243 |
+| 80 | 1,857,523 |
+| 85 | 826,095 |
+| **89** | **FALHA** |
 
-#### C5. Gatilhos de acao
+**FALHA aos 89** — por 1 ano! Quase sobrevive.
 
-Quando Diego deve comecar a se preocupar?
+#### Resumo Parte C (cenarios combinados)
+
+| Cenario | Pat. Inicio | SWR | Retorno | Falha? | Idade |
+|---------|----------:|:---:|:------:|:------:|:-----:|
+| Acum 3% + Perda 42 + Desacum 2% | R$4,733k | 5.28% | 2% | **SIM** | **66** |
+| Acum 3% + Perda 42 + Desacum 3% | R$4,733k | 5.28% | 3% | **SIM** | **70** |
+| Acum 3% + Perda 45 + Desacum 2% | R$6,099k | 4.10% | 2% | **SIM** | **78** |
+| Acum 3% + Perda 45 + Desacum 3% | R$6,099k | 4.10% | 3% | **SIM** | **89** |
+
+---
+
+### Parte D: Tabela de Salvamento
+
+Para cada cenario que falha: qual corte de custo ou renda part-time salva?
+
+#### D1: Retorno base (4.57%), perda isolada
+
+| Cenario | Falha? | Custo maximo para sobreviver | Renda part-time para manter R$250k |
+|---------|:------:|:--------------------------:|:----------------------------------:|
+| Perda 42 | NAO | R$250k funciona | Nenhuma necessaria |
+| Perda 45 | NAO | R$250k funciona | Nenhuma necessaria |
+| Perda 48 | NAO | R$250k funciona | Nenhuma necessaria |
+
+#### D2: Retorno adverso, perda isolada (acum normal)
+
+| Cenario | Custo maximo | Renda part-time p/ R$250k |
+|---------|:-----------:|:------------------------:|
+| Perda 42 + ret 3% | R$190k/ano (R$15.8k/mes) | R$65k/ano (R$5.4k/mes) |
+| Perda 42 + ret 2% | R$160k/ano (R$13.3k/mes) | R$90k/ano (R$7.5k/mes) |
+| Perda 45 + ret 3% | R$250k funciona | Nenhuma |
+| Perda 45 + ret 2% | R$230k/ano (R$19.2k/mes) | R$20k/ano (R$1.7k/mes) |
+
+#### D3: Decada perdida na acumulacao + perda + retorno adverso
+
+| Cenario | Custo maximo | Renda part-time p/ R$250k |
+|---------|:-----------:|:------------------------:|
+| Acum 3% + Perda 42 + ret 2% | R$150k/ano (R$12.5k/mes) | R$100k/ano (R$8.3k/mes) |
+| Acum 3% + Perda 42 + ret 3% | R$180k/ano (R$15.0k/mes) | R$65k/ano (R$5.4k/mes) |
+| Acum 3% + Perda 45 + ret 2% | R$200k/ano (R$16.7k/mes) | R$50k/ano (R$4.2k/mes) |
+| Acum 3% + Perda 45 + ret 3% | Quase sobrevive (falha 89) | R$10-15k/ano (R$1k/mes) |
+
+---
+
+### Parte E: Plano B Concreto e Gatilhos
+
+(Mantido da v1 com atualizacoes de contexto)
+
+#### Human capital como hedge
+
+Diego com 42-50 anos e expertise tech tem capacidade de gerar R$120-180k/ano em consultoria part-time (10h/semana). Esse e o hedge mais eficaz contra sequence of returns risk (Kitces 2018).
+
+A tabela D3 mostra que mesmo no PIOR cenario combinado (acum 3% + perda 42 + ret 2%), uma renda part-time de R$8.3k/mes salva o plano com R$250k de custo. Isso e consultoria tech a meio periodo — realista.
+
+#### Guardrails como segunda linha
+
+Piso dos guardrails: R$180k/ano. Abaixo do custo maximo de sobrevivencia em todos os cenarios exceto os mais extremos (acum 3% + perda 42 + ret 2%, onde custo maximo e R$150k).
+
+#### Gatilhos de acao
 
 | Gatilho | Condicao | Acao | Urgencia |
 |---------|----------|------|----------|
 | **Perda total de renda** | Demissao/burnout/fechamento PJ | Reduzir custo para R$200k. Buscar consultoria part-time em 30 dias. NAO mexer no portfolio | Alta |
-| **Reducao de renda >50%** | Renda cai de R$25k para <R$12.5k/mes | Reduzir aporte para zero. Custo de vida no portfolio se necessario. Buscar renda complementar | Media |
-| **Retorno do portfolio <2% real por 3+ anos** | Decada perdida em andamento | Manter alocacao. NAO vender equity. Considerar adiamento do FIRE em 2-3 anos | Monitorar |
-| **Patrimonio aos 45 < R$6M** | Combinacao de retorno baixo + perda | Adiar FIRE para 52-53. Consultoria part-time obrigatoria nos primeiros 5 anos | Media |
-| **Patrimonio aos 48 < R$8M** | Qualquer causa | FIRE aos 50 exige custo R$250k com guardrails rigorosos. Consultoria part-time como backup | Baixa |
-| **Drawdown >35% no primeiro ano de FIRE** | Crash severo no inicio da desacumulacao | Cortar para piso R$180k. Consultoria part-time. Guardrails automaticos | Alta |
+| **Reducao de renda >50%** | Renda cai de R$25k para <R$12.5k/mes | Reduzir aporte para zero. Custo de vida no portfolio se necessario | Media |
+| **Retorno do portfolio <2% real por 3+ anos** | Decada perdida em andamento | Manter alocacao. NAO vender equity. Considerar renda part-time preventivamente | Monitorar |
+| **Patrimonio aos 45 < R$6M** | Combinacao de retorno baixo + perda | Adiar FIRE. Consultoria part-time obrigatoria | Media |
+| **Drawdown >35% no primeiro ano pos-perda** | Crash severo | Cortar para piso R$180k. Consultoria part-time. Guardrails automaticos | Alta |
 
----
+#### Reserva e seguro
 
-### Parte D: Tabela de Recomendacao
-
-| Cenario | Probabilidade | Acao necessaria AGORA | Acao SE acontecer |
-|---------|:------------:|----------------------|-------------------|
-| **Perda renda aos 42** | Baixa (~5%) | NENHUMA | R$250k funciona (SWR 3.12%). Consultoria part-time R$12-19k/mes se quiser R$350k |
-| **Perda renda aos 45** | Baixa-media (~10%) | NENHUMA | R$250k com folga (SWR 2.70%). Consultoria R$12k/mes para R$350k |
-| **Perda renda aos 48** | Baixa (~5%) | NENHUMA | Sem impacto material. Ate R$350k viavel (SWR 3.39%) |
-| **Decada perdida (GMO)** | Media (~15-20%) | NENHUMA — asset allocation ja e a defesa | Guardrails agressivos + consultoria part-time 5-10 anos. Possivel adiamento FIRE 2-3 anos |
-| **Decada perdida (Japao)** | Muito baixa (~2-5%) | NENHUMA — cenario extremo nao justifica seguro | Adiar FIRE para 55+. Consultoria obrigatoria. Custo R$180k. Reavaliar tudo |
-| **GMO + perda renda 45** | Muito baixa (~2-3%) | NENHUMA | R$250k funciona (SWR 3.28% det.). Mas SR ~35-40% no MC. Consultoria + piso R$180k |
+- **Reserva atual (R$87k, ~4 meses)**: Suficiente. O patrimonio investido e a defesa real
+- **Seguro de renda**: NAO recomendado. Custo-beneficio negativo com R$3.48M investidos (e crescendo)
 
 ---
 
 ## Conclusao
 
-### Resultado principal
+### Resultado principal (v2 — corrigido)
 
-**O plano FIRE de Diego e resiliente a perda de renda em todos os cenarios analisados, DESDE QUE o custo de vida se mantenha em R$250k/ano.**
+**A correcao muda o quadro: perda de renda aos 42 agora e um cenario de atencao real, nao apenas teorico.**
 
 Detalhamento:
 
-1. **Perda de renda nao e o risco dominante.** Mesmo perdendo renda aos 42 (pior cenario), o patrimonio acumulado (R$5.08M) cresce para R$8.0M aos 50 so com retorno. SWR de 3.12% para R$250k — viavel. O patrimonio ja investido e a defesa principal.
+1. **Com retorno base (4.57%), R$250k sobrevive em TODOS os cenarios de perda isolada.** Mas perda aos 42 gera SWR de 4.92% — patrimonio declina continuamente e chega a R$2.0M aos 90. Sobrevive no deterministico, porem vulneravel a volatilidade. Perda aos 45+ e tranquila (patrimonio cresce).
 
-2. **Decada perdida E o risco dominante.** FR-003 confirmou: SR de 31-43% com guardrails. No deterministico sobrevive, mas a volatilidade (fat tails) destroi 57-69% das trajetorias. Nenhuma acao de portfolio resolve isso — a unica defesa e:
-   - Capacidade de gerar renda (human capital hedge)
-   - Guardrails agressivos (cortar para piso)
-   - Possivel adiamento do FIRE
+2. **O ponto de inflexao e SWR = 4.57%.** Patrimonio de R$5.47M (250k/0.0457) e o threshold acima do qual o portfolio se sustenta indefinidamente no deterministico. Perda aos 42 (R$5.08M) fica ABAIXO desse threshold. Perda aos 45 (R$6.98M) fica ACIMA.
 
-3. **A combinacao (decada perdida + perda de renda) e severa mas rara.** Probabilidade estimada: 2-3% (ambos eventos simultaneos). SR ~35-40%. Exigiria austeridade (R$180k) + consultoria. Nao justifica acao preventiva alem do que ja esta no plano.
+3. **Retorno adverso + perda de renda e severo.** Perda aos 42 com retorno 3% falha aos 73. Com retorno 2% falha aos 68. Perda aos 45 aguenta 3% mas falha a 2% (aos 86).
 
-4. **Nenhuma acao preventiva necessaria AGORA.**
-   - Reserva atual (R$87k) e suficiente
-   - Seguro de renda NAO recomendado (custo-beneficio negativo com R$3.48M investidos)
-   - Aumentar RF nao ajuda (IPCA+ ja em 15%, mais reduziria retorno esperado)
-   - A melhor "protecao" e continuar aportando em JPGL (maior gap) para maximizar patrimonio
+4. **Cenarios combinados (decada perdida acum + perda + ret adverso) sao devastadores.** Acum 3% + perda 42 + desacum 2% falha aos 66. Mas: renda part-time de R$8.3k/mes salva o plano.
 
-5. **O Plano B real e human capital.**
-   Diego com 42-50 anos e expertise tech tem capacidade de gerar R$120-180k/ano em consultoria part-time (10h/semana). Esse e o hedge mais eficaz contra sequence of returns risk (Kitces 2018). Nao precisa ser exercido agora, mas precisa ser mantido como opcao.
+5. **O Plano B real continua sendo human capital.** Em todos os cenarios de falha, consultoria tech part-time de R$5-8k/mes e suficiente para salvar o plano. Essa capacidade e a variavel mais importante a preservar.
 
-### Veredicto por cenario
+6. **Nenhuma acao preventiva necessaria AGORA.** A probabilidade dos cenarios combinados (3+ fatores adversos simultaneos) e muito baixa (<3%). A melhor protecao e continuar maximizando aportes (JPGL) e manter skills monetizaveis.
 
-| Cenario | Veredicto |
-|---------|-----------|
-| Perda renda (qualquer idade) | **Risco aceitavel.** R$250k viavel em todos os cenarios. Portfolio ja protege |
-| Decada perdida GMO (3%/2%) | **Risco alto mas sem acao preventiva eficaz.** Guardrails + human capital sao a defesa |
-| Decada perdida Japao (1%/0%) | **Risco extremo, probabilidade muito baixa.** Plano FIRE nao sobrevive — requer reestruturacao total |
-| Combinado GMO + perda renda | **Risco severo, probabilidade muito baixa (~2-3%).** Austeridade + consultoria. Aceitar e monitorar |
+### Veredicto por cenario (v2)
 
-### Uma nota de honestidade
+| Cenario | Prob. | Retorno | Sobrevive? | Acao |
+|---------|:-----:|:-------:|:----------:|------|
+| Perda 42, ret base | ~5% | 4.57% | SIM (R$2M aos 90) | R$250k funciona, mas vulner. a vol |
+| Perda 45, ret base | ~10% | 4.57% | SIM (R$17M aos 90) | Robusto |
+| Perda 48, ret base | ~5% | 4.57% | SIM (R$31M aos 90) | Ultra-robusto |
+| Perda 42 + ret 3% | ~2% | 3% | NAO (falha 73) | Custo R$190k ou renda R$5.4k/mes |
+| Perda 42 + ret 2% | ~1% | 2% | NAO (falha 68) | Custo R$160k ou renda R$7.5k/mes |
+| Perda 45 + ret 3% | ~3% | 3% | SIM (R$3M aos 90) | OK |
+| Perda 45 + ret 2% | ~2% | 2% | NAO (falha 86) | Custo R$230k ou renda R$1.7k/mes |
+| Acum 3% + Perda 42 + ret 2% | <1% | 2% | NAO (falha 66) | Custo R$150k ou renda R$8.3k/mes |
+| Acum 3% + Perda 45 + ret 2% | ~1% | 2% | NAO (falha 78) | Custo R$200k ou renda R$4.2k/mes |
 
-O cenario de decada perdida (SR 31-43%) e assustador. Mas e importante contextualizar:
+### Debate Head vs FIRE
 
-- Decada perdida global (todos os mercados, todos os fatores) ao mesmo tempo e historicamente raro. Japao pos-1989 era concentrado em um pais com valuations extremas (CAPE >80). O portfolio de Diego e globalmente diversificado (35 paises, 4 fatores)
-- Factor tilt (small value, multifator) historicamente performou MELHOR em decadas perdidas de large cap (Arnott, Harvey & Markowitz 2019)
-- O retorno de IPCA+ 2040 (6.0% real liquido) e GARANTIDO independente de decada perdida em equity — os 15% protegem cash flow por 3 anos
-- Diego tera 50 anos com skills monetizaveis — a opcao de voltar a trabalhar e real
+**FIRE agent**: A v1 pintou um quadro otimista demais. Perda de renda aos 42 com SWR 3.12% parecia quase irrelevante. A v2 mostra que SWR 4.92% e uma situacao realmente tensa — o patrimonio sangra R$18k/ano inicialmente e o sangramento CRESCE com o tempo. No deterministico funciona, mas bastam 2-3 anos de retorno ruim no inicio para empurrar para falha.
 
-**A recomendacao final e: aceitar o risco, monitorar os gatilhos, e manter a capacidade de gerar renda como opcao aberta. Nao fazer nada agora.**
+**Head**: Concordo, mas preciso manter a perspectiva. Perda de renda aos 42 com retorno base (4.57%) AINDA SOBREVIVE. A questao real e: a combinacao com retorno adverso. E isso exige 2+ fatores adversos simultaneos. O Plano B (human capital) resolve TODOS os cenarios — de R$1.7k/mes (perda 45 + ret 2%) ate R$8.3k/mes (worst case). Para um profissional de tech senior, isso e factivel.
+
+**FIRE agent**: Justo. Mas registro que a SWR de 4.92% no cenario perda-42 e acima do que qualquer paper considera seguro para horizonte de 48 anos. ERN (Karsten 2018-2025) recomenda no maximo 3.5% para 40+ anos. 4.92% estaria em territorio de SR ~45-50% no Monte Carlo com vol de 15%.
+
+**Head**: Exatamente por isso o human capital hedge e critico. E nao e algo a ser desenvolvido no momento da crise — Diego ja tem as skills. O gatilho e simples: perdeu renda, comeca consultoria em 30 dias.
 
 ---
 
@@ -426,16 +459,17 @@ O cenario de decada perdida (SR 31-43%) e assustador. Mas e importante contextua
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | Sem mudanca necessaria. 79% equity / 15% IPCA+ / 3% cripto validado |
-| **Estrategia** | Plano B definido: human capital hedge (consultoria R$120-180k/ano) como principal defesa contra cenarios adversos. Guardrails + piso R$180k como backup. Gatilhos de acao documentados |
-| **Conhecimento** | Perda de renda nao e risco dominante (R$250k viavel mesmo com perda aos 42). Decada perdida e o killer (SR 31-43%). Combinacao rara (~2-3%) mas severa. Nenhuma acao preventiva justificada |
-| **Memoria** | Registrar na memoria de FIRE e Head |
+| **Alocacao** | Sem mudanca necessaria |
+| **Estrategia** | Human capital hedge confirmado como defesa primaria. R$250k sobrevive em todos os cenarios isolados com ret base. Cenarios combinados exigem renda part-time de R$2-8k/mes |
+| **Conhecimento** | v2 corrigida: perda de renda = aposentadoria forcada imediata. Perda aos 42 gera SWR 4.92% (vulneravel). Perda aos 45+ e robusta. Threshold de auto-sustentabilidade: pat R$5.47M |
+| **Memoria** | Atualizar memoria FIRE e Head com correcao |
 
 ---
 
 ## Proximos Passos
 
-- [x] Registrar na memoria FIRE e Head
+- [x] Corrigir FIRE-002 com cenarios de retirada imediata
+- [x] Registrar correcao na memoria FIRE e Head
 - [ ] Revisao anual: validar premissas de renda e capacidade de freelancing
-- [ ] Se patrimonio aos 45 < R$6M: reavaliar FIRE date (gatilho documentado)
-- [ ] Se decada perdida em andamento (retorno <2% por 3+ anos): acionar consultoria part-time proativamente
+- [ ] Se patrimonio aos 45 < R$6M: reavaliar FIRE date
+- [ ] Se decada perdida em andamento: acionar consultoria part-time proativamente

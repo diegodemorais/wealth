@@ -95,4 +95,5 @@ Toda retrospectiva DEVE incluir:
 | 2026-03-20 | Scorecard HD-002 criado com baseline T0 | 4 arquivos em agentes/metricas/. Shadows: VWRA+IPCA e 100% IPCA. P(FIRE) pendente FR-003 |
 | 2026-03-20 | HD-006 intermediario | 9 erros corrigidos. IPCA+ 20%->10%, breakeven 6.4%->7.81%, equity BRL 5.89% base. 3 regras anti-recorrencia |
 | 2026-03-22 | HD-006 decisao FINAL aprovada | Breakeven all-in ~5.5%, piso 6.0%. IPCA+ longo 15% (DCA ativo). Selic removido -> IPCA+ curto 3% aos 50. Equity 79%. 5 regras anti-recorrencia |
-| 2026-03-22 | FIRE-002 Done: Plano B perda renda + decada perdida | Perda renda nao e risco dominante (R$250k viavel ate perda aos 42). Decada perdida e o killer (SR 31-43%). Plano B: human capital + guardrails + piso R$180k. Nenhuma acao preventiva necessaria agora | FIRE, Advocate |
+| 2026-03-22 | ~~FIRE-002 v1 Done~~ | ~~Superado por v2: erro na modelagem — gastos so aos 50 em vez de imediatos~~ | FIRE, Advocate |
+| 2026-03-22 | FIRE-002 v2 Done: Plano B perda renda CORRIGIDO | Perda renda = aposentadoria forcada (gastos imediatos). Perda 42: SWR 4.92%, sobrevive deterministico (R$2M aos 90) mas vulner. a vol. Perda 45+: robusto (pat cresce). Threshold auto-sustentavel: R$5.47M. Cenarios combinados falham — human capital R$5-8k/mes salva. Nenhuma acao preventiva agora | FIRE |
