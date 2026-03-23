@@ -17,9 +17,10 @@
 
 | Campo | Valor | Data | Fonte |
 |-------|-------|------|-------|
-| Patrimonio total | R$ 3.436.176 | 2026-03-19 | Google Sheets |
-| Equity total | R$ 3.121.430 (USD $595.517) | 2026-03-19 | Google Sheets |
-| Cambio referencia | R$ 5,24 (liq R$ 5,25) | 2026-03-19 | Google Sheets |
+| Patrimonio total | R$ 3.492.284,00 | 2026-03-23 | Google Sheets (aba Evolucao) |
+| Equity total | USD $595.450,47 | 2026-03-23 | Google Sheets (aba Utils) |
+| Cambio referencia | R$ 5,24 | 2026-03-23 | Google Sheets |
+| Performance Q1 2026 | +1,73% em BRL | 2026-03-23 | Cálculo real com patrimônio 31/Dec + aportes |
 
 ### Posicoes detalhadas (USD, 2026-03-19)
 
@@ -163,3 +164,5 @@ Diego e executor consistente acima da meta. Critica de "gap de execucao" feita e
 | Data | Tema | Resultado |
 |------|------|-----------|
 | 2026-03-19 | Fundacao do agente | Criado. 1 execucao pendente (IPCA+ 2040 DCA). Skill /atualizar-carteira migrado para responsabilidade do Bookkeeper |
+| 2026-03-23 | Issue XX-001: Performance Attribution Q1 2026 (primeiro report) | Report completo: `/agentes/contexto/performance/Q1-2026.md`. Framework definido para Q2+. ALERTA: IPCA+ DCA nao executado (0/3 tranches, 4 dias atrasado). Apreciacao BRL -6.15% neutralizou ganho em USD +3.9% → retorno carteira estimado -2.5% em BRL no Q1 |
+| 2026-03-23 | Bookkeeper: Refazer Performance Q1 com números reais da planilha | Números reais extraidos: Patrimonio 31/Dec R$ 3.286.414,64 → 23/Mar R$ 3.492.284. Aportes Q1 R$ 149.110. Retorno real: +1,73% em BRL (ganho de mercado ~5.7% USD compensou impacto cambial de -6.15%). Arquivo atualizado: `agentes/contexto/performance/Q1-2026.md` |
