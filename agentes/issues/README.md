@@ -25,7 +25,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | HD-007-Mapa_completo_gatilhos | Mapa completo de gatilhos: inventario, gaps, monitoramento | 00 Head | Alta |
+| 1 | ~~HD-007-Mapa_completo_gatilhos~~ | ~~Movido para Doing~~ | — | — |
 | 2 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
 | 3 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
 | 4 | HD-002-v2-Scorecard_shadows_atualizados | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
@@ -40,7 +40,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| — | — | — | — | — |
+| HD-007-Mapa_completo_gatilhos | Mapa completo de gatilhos: inventario, gaps, monitoramento | 00 Head | Alta | Em andamento |
 
 ### Done
 > Issues concluidas
