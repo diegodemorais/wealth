@@ -25,7 +25,7 @@ Comparacao da carteira real contra dois contrafactuais. Ver detalhes em `shadow-
 | Data | Patrimonio Real | Shadow A (VWRA+IPCA) | Shadow B (100% IPCA) | Delta A | Delta B |
 |------|----------------|----------------------|---------------------|---------|---------|
 | 2026-03-20 (T0) | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | 0.00% | 0.00% |
-| 2026-03-23 (Q1) | R$ 3.492.284 | R$ 3.394.454 | R$ 3.512.116 | **+2.81%** | **−0.57%** |
+| 2026-03-23 (Q1) | R$ 3.492.284 | R$ 3.387.800 | R$ 3.512.116 | **+3.15pp** | **−0.57pp** |
 
 - **Frequencia**: **Mensal** (atualizado via /checkin-automatico no primeiro check-in do mês)
 - **Meta**: Delta A > 0 (bater VWRA passivo), Delta B > 0 (bater RF pura)

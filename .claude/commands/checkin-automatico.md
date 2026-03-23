@@ -106,7 +106,7 @@ Calcular patrimônio dos shadows para o mês encerrado. Ver metodologia completa
 1. Buscar VWRA.L retorno do mês via Yahoo Finance (performance mensal ou YTD delta)
 2. Buscar IPCA do mês via IBGE / investidor10.com.br
 3. Calcular:
-   - **Shadow A** = patrimônio anterior × (93% × retorno_VWRA_BRL + 7% × retorno_IPCA+_mensal) + aportes do mês
+   - **Shadow A** = patrimônio anterior × (1 + retorno_VWRA_BRL_mensal) + aportes do mês
    - **Shadow B** = patrimônio anterior × (1 + 5.34%/12) + aportes do mês
 4. Adicionar linha em `agentes/metricas/shadow-portfolio.md` (tabelas Tracking de cada shadow)
 5. Adicionar linha em `agentes/metricas/scorecard.md` (seção 1.2 Delta vs Shadows)

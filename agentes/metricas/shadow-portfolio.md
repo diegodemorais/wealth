@@ -1,176 +1,115 @@
 # Shadow Portfolios — Contrafactuais
 
-> Atualizado em: 2026-03-20
-> Baseline (T0): 2026-03-20
+> Atualizado em: 2026-03-23
+> Baseline (T0): 2026-03-20 | Tracking mensal iniciado: Abr/2026
 
 ---
 
 ## Objetivo
 
-Dois portfolios contrafactuais que respondem a pergunta: "A complexidade da carteira de Diego gera valor?"
+Quatro portfolios comparáveis respondem: "A complexidade da carteira de Diego gera valor?"
 
-Se a carteira real nao bater ambos os shadows ao longo do tempo, a complexidade (factor tilts, multiplos ETFs, gatilhos, cripto) esta destruindo valor em vez de criar.
+| Portfolio | Definição | Papel |
+|-----------|-----------|-------|
+| **Atual** | Carteira real de Diego (com transitorios, drift atual) | Resultado realizado |
+| **Target** | Carteira no alvo: 79% equity (pesos alvo SWRD/AVGS/AVEM/JPGL) + 15% IPCA+ + 3% cripto + ≤5% Renda+ | O que deveríamos ter |
+| **Shadow A** | 100% VWRA (Vanguard FTSE All-World UCITS, TER 0.22%) | Benchmark passivo puro — equity global sem tilts |
+| **Shadow B** | 100% IPCA+ 2040 (~7.16% real bruto, HTM) | Benchmark RF — retorno garantido sem risco de mercado |
 
----
-
-## Shadow A: VWRA + IPCA+ 7%
-
-### Premissa
-Cada aporte que Diego faz, dividido **93% VWRA** (Vanguard FTSE All-World UCITS, TER 0.22%) + **7% IPCA+ 2040** (taxa de compra ~7.16% real), na mesma data e cambio.
-
-### Racional
-Representa a alternativa "simples e passiva" — exposicao global diversificada sem factor tilts, sem cripto, sem gestao tatica, com um minimo de RF estrutural.
-
-### Parametros
-
-| Parametro | Valor |
-|-----------|-------|
-| Equity | 93% VWRA (TER 0.22%) |
-| RF | 7% IPCA+ 2040 (custodia B3 0.20%, taxa ~7.16% real bruto) |
-| Rebalance | Anual, via aportes |
-| Cambio | Mesmo que Diego usa (Okegen, spread 0.25%) |
-| Impostos | Mesma regra: 15% flat sobre ganhos de equity, 15% regressivo RF |
-| TER total | 0.219% |
-
-### Baseline (T0 = 2026-03-20)
-
-| Metrica | Valor |
-|---------|-------|
-| Patrimonio inicial | R$ 3,479,239 |
-| Alocacao | 93% equity (R$ 3,235,692) + 7% RF (R$ 243,547) |
-| Aporte mensal | R$ 25,000 (R$ 23,250 VWRA + R$ 1,750 IPCA+) |
-| VWRA 1Y return (USD, mar 2025-mar 2026) | ~24.6% |
-| VWRA TER | 0.22% |
-
-### Retorno Esperado (longo prazo, real em BRL, pre-tax)
-
-Premissa de depreciacao real BRL aprovada 2026-03-20: 0.5%/ano (base), 1.5% (favoravel), 0% (stress).
-
-| Cenario | Equity USD real | Dep. real BRL | Equity BRL real | Blend 93/7 BRL real | Nota |
-|---------|----------------|---------------|-----------------|---------------------|------|
-| Base | ~4.9% | +0.5% | ~5.4% | ~5.40% | VWRA ~= mercado neutro (DMS 2024) |
-| Favoravel | ~4.9% | +1.5% | ~6.4% | ~6.33% | |
-| Stress | ~4.9% | 0% | ~4.9% | ~4.93% | |
-
-- RF (IPCA+ 2040): 7.16% real bruto, ~5.34% real liquido (IR 15% sobre nominal, IPCA 4.0%, custodia 0.20%). Invariante ao cambio — denominado em BRL
-- Nota: Shadow A usa retornos pre-tax na acumulacao (tax drag = 0%, mesma premissa da carteira real). Na desacumulacao, aplicar IR 15% sobre ganho nominal
-- VWRA retorno USD ~4.9% alinhado com DMS 2024 (equity premium global ~5% nominal - inflacao). Factor premium = 0 por definicao (e o benchmark passivo)
-
-### Tracking
-
-| Data | Patrimonio Shadow A | Retorno Periodo | Patrimonio Real | Delta |
-|------|--------------------|-----------------|-----------------| ------|
-| 2026-03-20 (T0) | R$ 3,479,239 | — | R$ 3,479,239 | 0.00% |
+Todos recebem os mesmos aportes de Diego, na mesma data e câmbio. Comparação forward-looking a partir de T0 = 2026-03-20.
 
 ---
 
-## Shadow B: 100% IPCA+ 2040
+## Definições
 
-### Premissa
-Tudo em **IPCA+ 2040** a ~7.16% real bruto. Zero equity, zero cripto, zero complexidade.
+### Atual (Carteira Real de Diego)
+- Fonte: planilha Google Sheets (aba Evolucao) + reconciliação mensal do Bookkeeper
+- Inclui transitorios (EIMI, AVES, AVUV, AVDV, USSC, IWVL) e drift atual vs alvos
+- Retorno calculado pelo método Dietz: (Pat_fim − Pat_ini − Aportes) / Pat_ini
 
-### Racional
-O "piso de oportunidade". Se a carteira toda de Diego — com factor tilts, cripto, 11 instrumentos, 8 gatilhos — nao bate renda fixa pura, entao a complexidade esta destruindo valor. Este e o benchmark mais exigente: retorno real garantido pelo governo (risco soberano).
+### Target (Carteira no Alvo)
+- 35% SWRD + 25% AVGS + 20% AVEM + 20% JPGL = 79% equity
+- 15% IPCA+ 2040 (80% TD2040 + 20% TD2050)
+- 3% HODL11 (cripto)
+- ≤5% Renda+ 2065 (tático)
+- **Nota**: requer retornos mensais por ETF. A calcular via preços Yahoo Finance/justETF.
+- TER estimado: 0.227% a.a.
 
-### Parametros
+### Shadow A — 100% VWRA
+- Instrumento: VWRA.L (LSE), TER 0.22%
+- Câmbio: mesmo spread Okegen (0.25% ida+volta) + IOF 1.1% por remessa
+- Retorno mensal: VWRA.L GBp return + variação câmbio BRL/GBP do mês
+- Representa: "E se tivesse comprado só VWRA, sem factor tilts nem RF?"
 
-| Parametro | Valor |
-|-----------|-------|
-| Instrumento | 100% Tesouro IPCA+ 2040 |
-| Taxa de compra | 7.16% real bruto (media historica recente) |
-| Custodia | B3, 0.20% a.a. |
-| Imposto | 15% sobre ganho **nominal** (tabela regressiva, >720 dias) |
-| IPCA estimado | 4.0% a.a. (premissa Focus) |
-| Taxa liquida | ~5.34% real (calculo abaixo) |
-| Rebalance | Nenhum |
-| Gestao | Zero |
-| TER efetivo | 0.20% (custodia B3) |
-
-### Baseline (T0 = 2026-03-20)
-
-| Metrica | Valor |
-|---------|-------|
-| Patrimonio inicial | R$ 3,479,239 |
-| Alocacao | 100% IPCA+ 2040 |
-| Aporte mensal | R$ 25,000 |
-| Taxa real bruta | 7.16% a.a. |
-| Taxa real liquida | ~5.34% a.a. (calculo correto abaixo) |
-
-### Calculo da Taxa Real Liquida
-
-IR incide sobre ganho **nominal**, nao real. Premissa IPCA: 4.0%.
-
-1. Taxa real liq custodia: 7.16% - 0.20% = **6.96%**
-2. Retorno nominal bruto: (1.0696)(1.04) - 1 = **11.24%**
-3. Retorno nominal liquido (IR 15%): 11.24% x 0.85 = **9.55%**
-4. Retorno real liquido: (1.0955) / (1.04) - 1 = **5.34%**
-
-Nota: o calculo anterior (7.16% x 0.85 = 6.09%) aplicava IR sobre o retorno real, superestimando a taxa liquida em ~75 bps.
-
-### Projecao Deterministica (hold to maturity 2040)
-
-Calculo: patrimonio + aportes mensais, compostos a 5.34% real liquido a.a.
-
-| Ano | Patrimonio Inicio | Aportes Ano | Rendimento Liq | Patrimonio Fim |
-|-----|------------------|-------------|----------------|---------------|
-| 2026 (9 meses) | R$ 3,479,239 | R$ 225,000 | R$ 142,359 | R$ 3,846,598 |
-| 2027 | R$ 3,846,598 | R$ 300,000 | R$ 212,645 | R$ 4,359,243 |
-| 2028 | R$ 4,359,243 | R$ 300,000 | R$ 240,016 | R$ 4,899,259 |
-| 2029 | R$ 4,899,259 | R$ 300,000 | R$ 268,847 | R$ 5,468,106 |
-| 2030 | R$ 5,468,106 | R$ 300,000 | R$ 299,219 | R$ 6,067,325 |
-| 2031 | R$ 6,067,325 | R$ 300,000 | R$ 331,211 | R$ 6,698,537 |
-| 2032 | R$ 6,698,537 | R$ 300,000 | R$ 364,912 | R$ 7,363,449 |
-| 2033 | R$ 7,363,449 | R$ 300,000 | R$ 400,412 | R$ 8,063,861 |
-| 2034 | R$ 8,063,861 | R$ 300,000 | R$ 437,808 | R$ 8,801,669 |
-| 2035 | R$ 8,801,669 | R$ 300,000 | R$ 477,200 | R$ 9,578,870 |
-| 2036 | R$ 9,578,870 | R$ 300,000 | R$ 518,696 | R$ 10,397,565 |
-| **2037 (FIRE 50)** | **R$ 10,397,565** | **R$ 75,000** | **R$ 136,415** | **R$ 10,608,980** |
-
-**Patrimonio projetado aos 50 (Shadow B)**: ~R$ 10.6M em termos reais.
-**SWR 2.36%** (R$250k / R$10.6M) — extremamente seguro.
-
-Nota: Este e o cenario sem risco de mercado (risco soberano apenas). Qualquer carteira com equity precisa justificar a volatilidade adicional oferecendo retorno superior no longo prazo.
-
-### Tracking
-
-| Data | Patrimonio Shadow B | Retorno Periodo | Patrimonio Real | Delta |
-|------|--------------------|-----------------|-----------------| ------|
-| 2026-03-20 (T0) | R$ 3,479,239 | — | R$ 3,479,239 | 0.00% |
+### Shadow B — 100% IPCA+ 2040
+- Instrumento: Tesouro IPCA+ 2040, taxa ~7.16% real bruto, custódia B3 0.20%
+- Taxa real líquida: 5.34%/ano (~0.43%/mês) — IR 15% sobre nominal, IPCA 4.0%
+- Retorno mensal: IPCA do mês + parcela do real (~7.16%/12 mensal bruto)
+- Sem custo de câmbio (denominado em BRL)
+- Representa: "E se tivesse colocado tudo em IPCA+, sem equity?"
 
 ---
 
-## Metodologia de Atualizacao
+## Tabela de Performance Mensal
 
-### Mensal (via /checkin-automatico — primeiro check-in do mês)
-1. Registrar patrimônio real de Diego via planilha Google Sheets (aba Evolucao)
-2. **Shadow A**: aplicar retorno VWRA.L em BRL (retorno GBp + variação câmbio BRL/GBP) sobre parcela equity + IPCA acumulado do mês sobre parcela RF + aportes do período
-3. **Shadow B**: aplicar 5.34% real a.a. pro-rata mensal (~0.43%/mês) sobre patrimônio + aportes
-4. Calcular delta: (Real − Shadow A) e (Real − Shadow B)
-5. Se delta negativo por 3 meses consecutivos em qualquer shadow: acionar revisão de complexidade
+> Retorno do período (não acumulado). Método Dietz para Atual e Shadow A.
+> n/d = dado não disponível (sem snapshot de fim de mês anterior ao sistema)
 
-### Fonte de dados
-- Patrimônio real: planilha Google Sheets (aba Evolucao)
-- VWRA.L: Yahoo Finance — retorno YTD ou histórico mensal
-- IPCA mensal: IBGE / investidor10.com.br / BCB Focus
-- Câmbio: `agentes/memoria/13-bookkeeper.md` ou planilha Google Sheets
+| Período | Atual | Target | Shadow A (VWRA) | Shadow B (IPCA+) | Delta A | Delta B |
+|---------|-------|--------|-----------------|-----------------|---------|---------|
+| T0 (2026-03-20) | — | — | — | — | 0.00% | 0.00% |
+| Q1 2026 (Jan–Mar, aprox.) | **+1.73%** | n/d | **−1.42%** | **+2.30%** | **+3.15pp** | **−0.57pp** |
+| Abr/2026 | — | — | — | — | — | — |
+| Mai/2026 | — | — | — | — | — | — |
 
----
+> Q1 2026: Jan e Fev sem snapshot de fim de mês individual — dados agregados.
+> Shadow A Q1: VWRA.L +4.45% GBp mas −1.42% BRL (câmbio BRL apreciou 6.15%).
+> Shadow B Q1: IPCA 1.41% + real trimestral ~1.79% ≈ +2.30% total.
+> Shadow A Q1 patrimônio estimado: R$ 3.387.800 | Shadow B: R$ 3.512.116
 
-## Nota sobre Comparacao All-In (HD-006, 2026-03-22)
+## Tabela de Patrimônio Acumulado (YTD desde T0)
 
-Os retornos dos shadows devem ser interpretados com custos all-in para comparacao justa:
-
-- **Shadow A (VWRA)**: retorno pre-tax de ~5.4% BRL NAO inclui custos de entrada/saida (IOF 1.1% + Okegen 0.25% = 1.35% cada ponta), WHT sobre dividendos (~0.22%), nem IR 15% sobre ganho nominal (inclui ganho fantasma cambial). Retorno all-in liquido e significativamente menor
-- **Shadow B (IPCA+)**: retorno liquido de 5.34% ja inclui custodia e IR sobre nominal. Sem custo de cambio. Comparacao justa com Shadow A requer que A tambem esteja all-in
-- **Comparacao R$100 por 14 anos (HD-006)**: IPCA+ 2040 all-in R$225.8 (6.0%/ano) vs JPGL all-in R$184.6 (4.5%/ano). IPCA+ vence por R$41 e 150 bps
-
-Shadow B com 5.34% real liquido esta correto (IR sobre nominal, IPCA 4%, custodia 0.20%).
+| Período | Atual | Shadow A (VWRA) | Shadow B (IPCA+) | Delta A (R$) | Delta B (R$) |
+|---------|-------|-----------------|-----------------|-------------|-------------|
+| T0 2026-03-20 | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | R$ 0 | R$ 0 |
+| Q1 23/Mar | R$ 3.492.284 | R$ 3.387.800 | R$ 3.512.116 | **+R$ 104.484** | **−R$ 19.832** |
 
 ---
 
-## Limitacoes
+## Metodologia de Atualização Mensal
 
-1. **Sem dados historicos retroativos**: Nao reconstruimos o shadow desde o inicio dos aportes de Diego. T0 e o baseline — comparacao forward-looking apenas
-2. **Cambio**: Shadow A usa o mesmo cambio de Diego, mas VWRA seria comprado em momentos diferentes (DCA mensal vs aportes irregulares de Diego)
-3. **Impostos**: Simplificado como 15% flat. Na pratica, timing de realizacao afeta o valor real
-4. **Shadow B assume hold to maturity**: Se Diego precisasse liquidar IPCA+ antes de 2040, MtM introduziria volatilidade
+> Via `/checkin-automatico` — bloco mensal M1 (primeiro check-in do mês)
+
+1. **Patrimônio real**: planilha Google Sheets (aba Evolucao), snapshot de fim de mês
+2. **Shadow A**: patrimônio anterior × (1 + retorno_VWRA_BRL_mensal) + aportes do mês
+   - Retorno VWRA BRL = retorno VWRA.L em GBp + variação câmbio BRL/GBP no mês
+   - Fonte: Yahoo Finance `https://finance.yahoo.com/quote/VWRA.L/history/`
+3. **Shadow B**: patrimônio anterior × (1 + IPCA_mensal + 7.16%/12) + aportes do mês
+   - Fonte IPCA: IBGE / investidor10.com.br / BCB Focus
+4. **Target**: a calcular quando pipeline de preços por ETF estiver disponível
+5. Adicionar linha na tabela acima e no scorecard.md
+
+### Gatilho de alerta
+- Delta A < 0 por 3 meses consecutivos → revisão de complexidade obrigatória
+- Delta B < 0 por 3 meses consecutivos → questionar alocação equity vs IPCA+
+
+---
+
+## Nota All-In (HD-006, 2026-03-22)
+
+Comparação justa requer mesmos custos em todos:
+- **Atual / Target**: WHT 0.22%, IOF 1.1%+Okegen 0.25% por remessa, IR 15% sobre ganho nominal BRL
+- **Shadow A**: mesmos custos de câmbio (IOF+Okegen) e IR que Diego
+- **Shadow B**: custódia B3 0.20%, IR 15% sobre ganho nominal — sem câmbio
+
+Shadow B com 5.34% real líquido é comparável all-in. Shadow A pré-tax ~5.4% BRL não inclui IR (comparar com cuidado em horizontes curtos).
+
+---
+
+## Limitações
+
+1. **Sem histórico retroativo**: T0 = 2026-03-20. Comparação é forward-looking
+2. **Jan/Fev 2026 sem snapshot individual**: Q1 é agregado; dados mensais a partir de Abr
+3. **Target ainda não calculado**: requer preços mensais por ETF (SWRD, AVGS, AVEM, JPGL)
+4. **Impostos simplificados**: 15% flat. Na desacumulação, timing real afeta o valor
+5. **Shadow B HTM**: se Diego liquidar IPCA+ antes de 2040, MtM introduz volatilidade não capturada
