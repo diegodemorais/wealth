@@ -93,6 +93,48 @@ Cambio: R$ X
 - Registrar operacoes novas em `agentes/contexto/operacoes.md` se detectadas
 - NAO tomar acoes — apenas reportar. Decisoes sao do Head e dos agentes especializados
 
+---
+
+## Passo Adicional — Check-in Mensal (executar no primeiro check-in de cada mês)
+
+> Detectar se é o primeiro check-in do mês: comparar data de hoje com a data da última reconciliação em `agentes/memoria/13-bookkeeper.md`. Se mês diferente → executar este bloco.
+
+### M1: Atualizar Shadow Portfolios
+
+Calcular patrimônio dos shadows para o mês encerrado. Ver metodologia completa em `agentes/metricas/shadow-portfolio.md`.
+
+1. Buscar VWRA.L retorno do mês via Yahoo Finance (performance mensal ou YTD delta)
+2. Buscar IPCA do mês via IBGE / investidor10.com.br
+3. Calcular:
+   - **Shadow A** = patrimônio anterior × (93% × retorno_VWRA_BRL + 7% × retorno_IPCA+_mensal) + aportes do mês
+   - **Shadow B** = patrimônio anterior × (1 + 5.34%/12) + aportes do mês
+4. Adicionar linha em `agentes/metricas/shadow-portfolio.md` (tabelas Tracking de cada shadow)
+5. Adicionar linha em `agentes/metricas/scorecard.md` (seção 1.2 Delta vs Shadows)
+
+### M2: Atualizar Scorecard Operacional
+
+1. Atualizar seção 2.1 (Finding Rate) se houve sessões no mês
+2. Atualizar seção 2.2 (Taxa de Erro) se houve correções por Diego
+3. Atualizar seção 2.3 (Gap de Execução) com status das execuções pendentes
+4. Atualizar seção 3 (Previsões) com status de cada previsão ativa
+
+### M3: Report Mensal Adicional
+
+Adicionar ao report semanal padrão:
+
+```
+### Performance Mensal (vs Shadows)
+| Carteira | Patrimônio | Retorno Mês | Delta A | Delta B |
+|----------|-----------|------------|---------|---------|
+| Real (Diego) | R$ X | X% | — | — |
+| Shadow A (VWRA+IPCA) | R$ X | X% | X% | — |
+| Shadow B (100% IPCA+) | R$ X | X% | — | X% |
+
+Acumulado desde T0 (2026-03-20):
+- Delta A acumulado: X%
+- Delta B acumulado: X%
+```
+
 ## Regras
 
 - Ser conciso — o check-in deve caber em uma tela

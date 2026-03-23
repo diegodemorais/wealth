@@ -141,18 +141,18 @@ Nota: Este e o cenario sem risco de mercado (risco soberano apenas). Qualquer ca
 
 ## Metodologia de Atualizacao
 
-### Trimestral
-1. Registrar patrimonio real de Diego na data
-2. **Shadow A**: aplicar retorno do VWRA (em BRL) no periodo sobre a parcela equity, + rendimento IPCA+ sobre a parcela RF, + aportes do periodo
-3. **Shadow B**: aplicar 5.34% real a.a. (pro-rata trimestral: ~1.31%) sobre patrimonio + aportes
-4. Calcular delta (Real - Shadow) / Shadow
-5. Se delta negativo por 3 trimestres consecutivos em qualquer shadow, acionar revisao de complexidade
+### Mensal (via /checkin-automatico — primeiro check-in do mês)
+1. Registrar patrimônio real de Diego via planilha Google Sheets (aba Evolucao)
+2. **Shadow A**: aplicar retorno VWRA.L em BRL (retorno GBp + variação câmbio BRL/GBP) sobre parcela equity + IPCA acumulado do mês sobre parcela RF + aportes do período
+3. **Shadow B**: aplicar 5.34% real a.a. pro-rata mensal (~0.43%/mês) sobre patrimônio + aportes
+4. Calcular delta: (Real − Shadow A) e (Real − Shadow B)
+5. Se delta negativo por 3 meses consecutivos em qualquer shadow: acionar revisão de complexidade
 
 ### Fonte de dados
-- Patrimonio real: `dados/historico_carteira.csv`
-- VWRA: Yahoo Finance (VWRA.L) ou justETF
-- IPCA+ taxa: Tesouro Direto
-- Cambio: `dados/historico_carteira.csv` (coluna usdbrl)
+- Patrimônio real: planilha Google Sheets (aba Evolucao)
+- VWRA.L: Yahoo Finance — retorno YTD ou histórico mensal
+- IPCA mensal: IBGE / investidor10.com.br / BCB Focus
+- Câmbio: `agentes/memoria/13-bookkeeper.md` ou planilha Google Sheets
 
 ---
 
