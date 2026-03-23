@@ -129,27 +129,6 @@ Retorno real esperado em USD: DMS 2025 (5.2%) e AQR 2026 (4.9%) para equity glob
 | FX saida | 1.35% | IOF 1.1% + Okegen 0.25% |
 | IR | 15% sobre ganho nominal BRL | Inclui "ganho fantasma" cambial |
 
-#### TER e Tracking Difference por ETF
-> Fonte: trackingdifferences.com (UCITS), Avantis/SPDR factsheets. Atualizado: 2026-03-23.
-> TD negativo = ETF supera o indice (securities lending > TER). TD positivo = ETF fica atras do indice.
-
-| ETF | ISIN | Tipo | TER | TD 2025 | TD 2024 | TD medio historico | Obs |
-|-----|------|------|-----|---------|---------|--------------------|-----|
-| SWRD | IE00BFY0GT14 | UCITS alvo | 0.12% | -0.1% | -0.2% | -0.13% (desde 2020) | Securities lending compensa TER |
-| JPGL | IE00BJRCLL96 | UCITS alvo | 0.19% | n/d | n/d | +0.12%/ano* | TER estavem desde lancamento; all-in caiu 0.841%→0.45% com crescimento AUM |
-| AVGS | IE0003R87OG3 | UCITS alvo | 0.39% | n/d | n/d | n/d | Lancado set/2024; sem historico TD |
-| AVEM | IE000K975W13 | UCITS alvo | 0.35% | n/d | n/d | n/d | Lancado dez/2024; sem historico TD |
-| EIMI | IE00BKM4GZ66 | UCITS transitorio | 0.18% | -0.2% | -0.1% | +0.02% (desde 2015) | |
-| IWVL | IE00BP3QZB59 | UCITS transitorio | 0.30% | -0.2% | -0.2% | -0.06% (desde 2015) | |
-| USSC | IE00BSPLC413 | UCITS transitorio | 0.30% | n/d | n/d | +0.17% (desde 2016) | SPDR MSCI USA Small Cap Value |
-| AVUV | — | US-listed transitorio | 0.25% | n/a | n/a | n/a | Ativo gerido, sem indice publico |
-| AVES | — | US-listed transitorio | 0.36% | n/a | n/a | n/a | Ativo gerido |
-| AVDV | — | US-listed transitorio | 0.36% | n/a | n/a | n/a | Ativo gerido |
-| DGS | — | US-listed transitorio | 0.58% | n/a | n/a | n/a | Ativo gerido |
-| HODL11 | — | B3 | 0.20% | n/a | n/a | n/a | Fee waiver encerrado ago/2025 (era 0%) |
-
-*JPGL TD: regressao NAV vs net index 2008-2022 (UCITS factor ETFs.xlsx). Trackingdifferences.com nao tem serie historica para indice proprietario JPMorgan.
-
 #### IPCA+ (hold to maturity)
 | Parametro | Valor |
 |-----------|-------|
