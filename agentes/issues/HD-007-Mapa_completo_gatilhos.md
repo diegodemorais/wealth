@@ -6,12 +6,13 @@
 |-------|-------|
 | **ID** | HD-007 |
 | **Dono** | 00 Head |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | Alta |
-| **Participantes** | 06 Risco, 04 FIRE, 08 Macro, 10 Advocate, 07 Cambio, 05 Tax, 03 RF |
+| **Participantes** | 06 Risco, 04 FIRE, 08 Macro, 10 Advocate, 07 Cambio, 05 Tax, 03 RF, 12 Behavioral |
 | **Dependencias** | HD-006 (premissas), FIRE-002 (cenarios de perda renda), FR-003 (Monte Carlo) |
 | **Criado em** | 2026-03-22 |
 | **Iniciado em** | 2026-03-23 |
+| **Concluido em** | 2026-03-23 |
 | **Origem** | Diego apontou que os gatilhos atuais surgiram organicamente de issues individuais, sem um scan sistematico de todos os cenarios que deveriam acionar acao |
 
 ---
@@ -213,11 +214,18 @@ Razoes: (1) HD-006 foi explicito: IPCA+ e posicao estrutural; (2) venda por MtM 
 
 ---
 
+## Conclusao
+
+60+ gatilhos espalhados reduzidos a 16 ativos organizados em 3 niveis (Alarme, Mensal/Trimestral, Anual). Tabela master criada em `agentes/contexto/gatilhos.md`. HTM absoluto confirmado para IPCA+ estrutural. DARF movido para checklist de execucao. Estate tax movido para nota anual. Principio central: menos gatilhos bem definidos > muitos gatilhos ignorados.
+
+---
+
 ## Resultado
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | Pendente aprovacao |
-| **Estrategia** | Pendente aprovacao |
-| **Conhecimento** | Pendente aprovacao |
-| **Memoria** | Pendente aprovacao |
+| **Alocacao** | Nenhuma mudanca de alocacao |
+| **Estrategia** | Sistema de gatilhos consolidado: 16 ativos em 3 niveis. Arquivo de referencia: `agentes/contexto/gatilhos.md` |
+| **Conhecimento** | Alert fatigue validado com evidencia (Behavioral). Threshold ~12-15 gatilhos para nao perder eficacia. |
+| **Memoria** | Registrar localizacao do arquivo de gatilhos |
+| **Nenhum** | — |
