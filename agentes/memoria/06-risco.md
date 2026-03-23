@@ -48,11 +48,14 @@
 | 3 — Worst case (ambos) | -23,4% do bloco (-R$107k) | -24,5% (BRL) |
 
 ### Conclusoes Chave
-- Risco dominante da carteira e equity (89%), NAO bloco soberano (13%)
+- Risco dominante da carteira e equity (~79%), NAO bloco soberano
 - IPCA+ 2040 hold-to-maturity: risco de credito (baixo). Renda+ 2065: risco de mercado (alto). Naturezas diferentes
-- Sizing IPCA+ 7% adequado. NAO reduzir
 - FIRE sobrevive ao worst case com folga (horizonte 11 anos + aportes R$25k/mes)
-- Se bloco soberano > 15%: review obrigatorio de sizing
+- **Bloco soberano atual: ~21%** (IPCA+ longo 15% + Renda+ ~3% + Reserva ~2.5%). Threshold de review ja atingido.
+- Se bloco soberano > 15%: review obrigatorio de sizing — **ALERTA ATIVO**
+
+### Alerta de Concentracao Soberana (aprendizado retro 2026-03-22)
+Com IPCA+ longo aprovado em 15%, bloco soberano subiu de ~13% para ~21% — ultrapassando o proprio threshold de review definido pelo Risco. A regra existia, nao foi aplicada na decisao que a ativou. Regra agora: sempre que uma decisao de aporte/alocacao elevar o bloco soberano acima de 15%, emitir alerta explicito ao Head antes de aprovar.
 
 ### Withdrawal Rules (proposta — pendente confirmacao Diego)
 1. NUNCA liquidar Renda+ e IPCA+ no mesmo trimestre

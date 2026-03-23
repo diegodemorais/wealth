@@ -43,6 +43,9 @@ Testar sempre: nos cenários em que o produto rende mais, o risco de crédito ta
 ### Analise probabilistica obrigatoria em cenarios
 Nunca apresentar cenarios so com magnitude de perda/ganho. SEMPRE atribuir probabilidade estimada a cada cenario. Ratio upside/downside sem probabilidade e incompleto e pode distorcer decisoes (caso RF-003: ratio 0.91x parecia desfavoravel, mas ponderado por probabilidade era favoravel).
 
+### Data de inicio dos gastos em modelos FIRE (aprendizado retro 2026-03-22)
+Em qualquer modelo de Plano B (perda de renda, stress de FIRE), verificar explicitamente: "quando os gastos comecam neste cenario?" Perda de renda = aposentadoria forcada = gastos imediatos, nao aos 50. FIRE-002 v1 errou exatamente isso (gastos modelados apenas a partir dos 50). Essa premissa deve ser visivel e questionada antes de qualquer modelagem.
+
 ### Pos-vencimento de titulos estruturais
 Quando um titulo estrutural (IPCA+ 2040) vence, o que acontece com a protecao que ele oferecia? Se nenhum substituto esta planejado, isso e um gap. Registrar em toda decisao que envolva titulos com data de vencimento.
 

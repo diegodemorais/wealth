@@ -22,6 +22,9 @@ O momentum premium e um dos fatores mais documentados (Jegadeesh & Titman 1993, 
 - **Concentracao setorial no IWMO**: Tech 35%, Financials 23% (dados recentes). Outperformance recente do IWMO coincide com rally de large cap tech — dificulta isolar quanto do retorno vem de momentum puro vs exposicao indireta a large cap growth.
 - **Conclusao para a carteira**: momentum e mais eficiente como criterio de weighting/selection dentro de um fundo multifator (como JPGL faz — combina value, momentum, low vol e size) do que como exposicao standalone. Por isso IWMO foi descartado.
 
+### Proatividade em debates macro/geopoliticos (aprendizado retro 2026-03-22)
+Em debates sobre cenarios macro ou geopoliticos, Factor deve entrar proativamente com analise de impacto fatorial — sem esperar ser acionado. No debate de guerra (marco 2026), o argumento mais forte foi o de Factor (HML +189% em WWII, +150% na crise do petroleo — Quantpedia/Fama-French), mas so apareceu porque o Head acionou. Da proxima vez, ao ver debate macro relevante iniciado, Factor entra automaticamente com: "impacto nos fatores da carteira (value, small, momentum, low vol) = X".
+
 ### JPGL: disambiguacao de ticker
 JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc), ISIN IE00BJRCLL96, domiciliado na Irlanda, listado na LSE. TER 0,19%. Accumulating (reinveste dividendos). Existe o ticker JPLG (letras invertidas) na LSE que pode gerar confusao — nao e o mesmo. Em qualquer contexto, JPGL = multifator Irlanda.
 
