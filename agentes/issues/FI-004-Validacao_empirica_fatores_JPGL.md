@@ -47,15 +47,24 @@ Alpha vs net index: **+0.116%/ano** (securities lending compensa parte do TER).
 
 | Fonte | TER | Total all-in estimado |
 |-------|-----|-----------------------|
-| UCITS spreadsheet (dados 2020-2023) | ~0.45% | 0.841%/ano |
+| UCITS spreadsheet (dados 2020-2023) | **0.19%** (estável desde lançamento) | 0.841%/ano |
 | **Atual (confirmado 2026)** | **0.19%** | **~0.45%/ano** |
 
-JPMorgan cortou o TER de ~0.45% para **0.19%** em algum momento após 2023. Isso muda fundamentalmente o cost-benefit:
+**Correção (2026-03-23, via RR forum tópico 8613):** O TER do JPGL **não foi cortado** — era 0.19-0.20% desde o lançamento (confirmado em posts de maio e outubro 2021). O que a planilha UCITS spreadsheet rastreava como "custo total" (0.841%/ano) incluía TER + transaction costs + dividend drag. O que melhorou foi a **queda nos transaction costs** à medida que o AUM cresceu de ~$37M (2021) para €205M+ (2026) — custos de transação por unidade caíram substancialmente com o volume.
+
+| Componente | 2020-2021 (AUM ~$37M) | 2026 (AUM ~€205M) |
+|------------|----------------------|-------------------|
+| TER | ~0.20% | **0.19%** |
+| Transaction costs | ~0.58% (alto, AUM pequeno) | ~0.14% (estimativa JPM 2021) |
+| Dividend drag | ~0.34-0.38% | ~0.34-0.38% |
+| **All-in estimado** | **~0.841%** | **~0.45%** |
+
+Fontes: marcofbento cost sheet (UCITS spreadsheet); RR forum post #215 (Aleks, out/2021): "TER 0.19% + transaction costs 0.14% + dividend drag 0.34-0.38% = total 0.67-0.71%".
 
 | Cenário | Diferença de custo vs SWRD | Premium esperado (30% haircut) | Net benefit |
 |---------|---------------------------|-------------------------------|-------------|
-| Planilha (antigo) | +0.41%/ano | +1.93%/ano | **+1.52%/ano** |
-| **Atual** | **~+0.02-0.05%/ano** | **+1.93%/ano** | **~+1.88-1.91%/ano** |
+| Planilha (all-in antigo, AUM pequeno) | +0.41%/ano | +1.93%/ano | **+1.52%/ano** |
+| **Atual (all-in com AUM maior)** | **~+0.02-0.05%/ano** | **+1.93%/ano** | **~+1.88-1.91%/ano** |
 
 Break-even haircut atual: **>95%** — os fatores precisariam perder quase todo o valor histórico para JPGL não compensar vs SWRD.
 
@@ -121,7 +130,7 @@ Risco operacional real: AUM baixo (€245M). Não impede aportes, mas requer mon
 |------|---------|
 | **Alocação** | Manter JPGL como foco dos aportes, target 20% |
 | **Estratégia** | Nenhuma mudança na estratégia |
-| **Conhecimento** | TER atual de JPGL = 0.19% (corte significativo pós-2023). Total all-in ~0.45% vs planilha que mostrava 0.841%. Cost-benefit muito mais favorável do que estávamos calculando. |
+| **Conhecimento** | TER de JPGL = 0.19% estável desde o lançamento. O que melhorou: transaction costs caíram de ~0.58% para ~0.14% com crescimento do AUM. Total all-in: ~0.841% (2020-21, AUM ~$37M) → ~0.45% (2026, AUM ~€205M). Cost-benefit muito mais favorável do que a planilha sugeria. |
 | **Monitoramento** | Adicionar gatilhos de AUM (alertar <€150M, parar aportes <€100M) |
 | **Memória** | Atualizar custo de JPGL no framework da carteira |
 
