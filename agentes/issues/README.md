@@ -49,6 +49,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| XX-004-Bogleheads_forum_scan | Intelligence Gathering — Bogleheads forum scan | 00 Head | 2026-03-23 | 7 topicos lidos. Carteira 100% alinhada com consensus. JPGL confirmado melhor multi-factor UCITS. SWRD validado. SWR non-US = 3.5% (dado novo). Ponto acionavel: cash IBKR < $60k (estate tax sobre cash). RSS feed disponivel: feed.php?f=22 |
 | HD-007-Mapa_completo_gatilhos | Mapa completo de gatilhos: inventario, gaps, monitoramento | 00 Head | 2026-03-23 | 60+ gatilhos reduzidos a 16 ativos em 3 niveis (Alarme/Mensal/Anual). HTM absoluto confirmado IPCA+ estrutural. Arquivo: agentes/contexto/gatilhos.md |
 | HD-009-Audit_gastos_pessoais | Auditoria de gastos pessoais e consistencia com FIRE | 00 Head | 2026-03-23 | Gastos VERDE: R$215k/ano anualizado, dentro do range FIRE. R$250k baseline confirmado com margem ~25-30% (primeira validacao bottom-up). Spending smile e saude com inflator proprio identificados como gaps no modelo. Dois issues backlog criados: FR-006 e TX-003 |
 | XX-003-RR_Forum_Intelligence_scan | Intelligence Gathering — RR Forum scan de topicos relevantes | 00 Head | 2026-03-22 | 10 topicos lidos. Carteira confirmada alinhada com consensus do forum. Avantis UCITS lancados jun/2024 — Diego ja tem os produtos certos. JPGL usa momentum como negative screen (superior a XDEM/IWMO). Issue criado: RK-003 (managed futures). Nenhuma acao imediata. |
