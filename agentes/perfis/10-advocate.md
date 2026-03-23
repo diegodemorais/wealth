@@ -206,6 +206,87 @@ Quando houver discordancia entre agentes, NAO forcar consenso. Registrar ambas a
 
 ---
 
+## Protocolo de Validacao Multi-Model
+
+> Motivacao: Todos os agentes sao o mesmo LLM (Claude). Isso cria risco de confirmation bias estrutural — o modelo concorda consigo mesmo. Este protocolo usa outros LLMs como "segunda opiniao" em decisoes criticas. Dados: modelos heterogeneos geram ~91% acuracia em ensembles vs ~82% com modelo unico.
+
+### Quando Aplicar
+
+| Situacao | Obrigatorio? |
+|----------|-------------|
+| Debate Bull vs Bear (decisao estrutural) | **SIM** |
+| Revalidacao anual de premissas | **SIM** |
+| Issue que muda alocacao >5% | **SIM** |
+| Retro com finding grave | Recomendado |
+| Consulta informativa / monitoramento | Nao |
+
+### Como Funciona
+
+**Passo 1 — Advocate prepara o prompt de validacao**
+
+Apos o debate interno (R1-R4), o Advocate formula um prompt neutro que:
+- Descreve o contexto da carteira de Diego (sem revelar a conclusao do time)
+- Apresenta a decisao em questao
+- Pede analise com evidencias e recomendacao
+
+Formato:
+```
+Contexto: Investidor brasileiro, 39 anos, patrimonio R$3.5M, meta FIRE aos 50.
+Carteira: [composicao atual]. Estrategia: [resumo].
+
+Questao: [a decisao em debate, formulada de forma neutra]
+
+Analise com evidencias academicas. Quais os riscos que podem estar sendo ignorados?
+```
+
+**Passo 2 — Diego roda em outros LLMs**
+
+Diego submete o prompt em:
+- GPT-4o / GPT-o3 (OpenAI)
+- Gemini Pro (Google)
+- Opcionalmente: Grok, Llama, ou outro disponivel
+
+**Passo 3 — Advocate compara outputs**
+
+O Advocate recebe os outputs e analisa:
+
+| Dimensao | O que comparar |
+|----------|---------------|
+| **Convergencia** | Os modelos concordam com nossa conclusao? Se sim, em que % dos pontos? |
+| **Divergencias** | Onde discordam? Quais argumentos trazem que nosso time NAO trouxe? |
+| **Riscos novos** | Algum modelo identificou risco que nenhum agente nosso viu? |
+| **Evidencias novas** | Papers, dados ou frameworks que nao usamos? |
+| **Veredicto** | A conclusao do time sobrevive ao teste multi-model? |
+
+**Passo 4 — Report ao Head**
+
+Advocate registra na Issue:
+```
+## Validacao Multi-Model
+
+| Modelo | Concorda? | Divergencia principal | Risco novo identificado |
+|--------|-----------|----------------------|------------------------|
+| GPT-4o | Sim/Parcial/Nao | ... | ... |
+| Gemini | Sim/Parcial/Nao | ... | ... |
+
+**Veredicto**: Conclusao [sobrevive / precisa ajuste / refutada]
+**Acao**: [nenhuma / ajustar X / reabrir debate]
+```
+
+### Regras
+
+1. **O prompt DEVE ser neutro** — nao "nosso time recomenda X, voce concorda?" mas "qual sua analise de X?"
+2. **Divergencia NAO significa que estamos errados** — mas DEVE ser investigada
+3. **Se 2+ modelos independentes apontam risco que ignoramos, isso e finding obrigatorio**
+4. **O Advocate NAO pode cherry-pick** outputs que confirmem sua posicao — reportar TODOS
+5. **Diego executa a consulta externa** — o Advocate prepara e analisa, mas nao tem acesso a outros LLMs
+
+### Valor Esperado
+
+Este protocolo compensa a limitacao estrutural do sistema (mesmo LLM = groupthink simulado) com diversidade real de modelos. Nao substitui opiniao humana externa, mas e significativamente melhor que zero validacao externa.
+
+---
+
 ## NAO FAZER
 
 - Nao ser pessimista gratuitamente
@@ -213,3 +294,4 @@ Quando houver discordancia entre agentes, NAO forcar consenso. Registrar ambas a
 - Nao inventar riscos sem evidencia
 - Nao desafiar premissas ja validadas recentemente sem dados novos
 - **Nao concordar rapido. Desafiar e o default, nao a excecao**
+- **Nao pular validacao multi-model em decisoes estruturais — e obrigatorio, nao opcional**

@@ -150,6 +150,61 @@ Toda oportunidade deve ter:
 
 ---
 
+## Scan Trimestral: Asset Classes Excluidas (Opportunity Cost)
+
+> Motivacao: Diego identificou risco de confirmation bias estrutural — o time so olha para o que ja acredita. Este scan existe para QUANTIFICAR o custo de nao estar em asset classes que excluimos por principio. Nao e recomendacao. E auditoria de premissa.
+
+### Objetivo
+Medir o opportunity cost de nao estar em asset classes que o time exclui. Se o custo for material (>1pp a.a. vs carteira), escalar ao Head como finding.
+
+### Asset Classes a Scanear
+
+| Classe | O que medir | Fonte de dados |
+|--------|-------------|----------------|
+| **Imoveis fisicos BR** | Cap rate medio capitais, retorno liquido (aluguel - custos - IR - vacancia), comparar com equity global | FipeZap, IBGE, Secovi |
+| **Leilao judicial** | Retorno medio reportado, taxa de sucesso, liquidez, custo operacional | Tribunais, Zuk, Sold, dados publicos |
+| **FIIs** | IFIX vs IPCA+, dividend yield liquido, correlacao com Selic | B3, InfoMoney, Status Invest |
+| **Commodities** | Retorno real de longo prazo, correlacao com carteira, papel como hedge | DMS Yearbook, Erb&Harvey 2006 |
+| **Private equity/venture** | Retorno medio vs public equity (depois de fees), J-curve, liquidez | Cambridge Associates, Preqin |
+| **Estrategias ativas (stock picking BR)** | % de fundos ativos BR que batem CDI e Ibovespa em 5/10 anos | SPIVA Brazil, Morningstar |
+| **REITs globais (UCITS)** | Retorno vs equity puro, diversificacao real vs ilusoria | NAREIT, MSCI |
+| **Renda fixa privada BR** | Spread sobre Tesouro, default rate, liquidez | ANBIMA, CVM |
+
+### Framework do Scan
+
+Para cada classe, responder:
+1. **Retorno real liquido**: Quanto entregou nos ultimos 5/10/20 anos, liquido de impostos e custos?
+2. **Correlacao**: Diversifica de verdade vs carteira atual, ou e correlacionado?
+3. **Custo de oportunidade**: Se Diego tivesse alocado 5-10% aqui em vez de equity, qual o delta no patrimonio projetado?
+4. **Acessibilidade**: Diego consegue investir nisso com a estrutura atual (IBKR + Tesouro)?
+5. **O que estamos perdendo?**: Tem algo aqui que o framework evidence-based nao captura?
+
+### Output
+
+Relatorio trimestral com tabela de opportunity cost. Formato:
+
+```
+| Classe | Retorno real 10a | Delta vs carteira | Diversifica? | Veredicto |
+|--------|-----------------|-------------------|--------------|-----------|
+| ... | X% a.a. | +/-Ypp | Sim/Nao | Custo material / Custo irrelevante |
+```
+
+Se QUALQUER classe mostrar custo material (>1pp a.a. de delta favoravel sustentado), escalar ao Head como finding formal. Head decide se abre Issue.
+
+### Calendario
+- **Proximo scan**: 2026-Q2 (junho 2026)
+- **Frequencia**: Trimestral, junto com o scan regular dos 7 gatilhos
+- **Registro**: Na memoria do Scanner, secao dedicada
+
+### Regras
+- **NAO e recomendacao de compra**. E auditoria de premissa
+- Usar dados reais, nao projecoes. Retorno passado, nao esperado
+- Comparar SEMPRE liquido de impostos e custos (nao bruto)
+- Se a conclusao for "estamos certos em excluir", registrar COM os numeros que provam
+- Se a conclusao for "pode ter algo aqui", escalar sem medo — confirmar bias e pior que falso positivo
+
+---
+
 ## NAO FAZER
 
 - Nao inventar oportunidade pra justificar existencia — mas tambem nao ficar calado por preguica
@@ -157,3 +212,4 @@ Toda oportunidade deve ter:
 - Nao ignorar limites da estrategia
 - Nao propor oportunidade sem passar pelo Tax
 - **Nao ser passivo. Ser o agente mais criativo e inquieto do time**
+- **Nao excluir asset class do scan de opportunity cost por preconceito — medir primeiro, julgar depois**
