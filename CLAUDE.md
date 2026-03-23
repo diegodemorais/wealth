@@ -43,6 +43,28 @@ Referencia completa: `agentes/referencia/issues-guide.md`. Board: `agentes/issue
 - **Oportunidades** -> `oportunidades` | **Cross-domain** -> multiplos em paralelo
 - **Atualizacao de dados/numeros** -> `bookkeeper` (Head NAO atualiza dados diretamente)
 
+## Agent Teams — Como Chamar Especialistas
+
+Toda chamada de especialista usa Agent Teams (visivel no tmux como panes separados).
+
+### Fluxo por sessao
+
+1. **Na primeira chamada de especialista**: `TeamCreate` com `team_name: "carteira"`
+2. **Cada especialista**: `Agent tool` com `subagent_type: <tipo>`, `team_name: "carteira"`, `name: <nome>`
+3. **Follow-up ou coordenacao**: `SendMessage` para teammate ja ativo (nao spawnar de novo)
+4. **Encerramento**: `SendMessage` shutdown para todos os teammates ativos, depois `TeamDelete`
+
+### Nomes dos teammates (fixos na sessao)
+
+`factor` | `rf` | `fire` | `tax` | `risco` | `fx` | `macro` | `patrimonial` | `advocate` | `oportunidades` | `quant` | `behavioral` | `bookkeeper` | `fact-checker`
+
+### Regras
+
+- **Criar o team uma unica vez por sessao** — reutilizar se ja existe
+- **Reutilizar teammate ativo** via SendMessage antes de spawnar novamente
+- **Paralelo**: spawnar multiplos teammates simultaneamente quando possivel
+- **Shutdown gracioso** antes de encerrar (shutdown_request -> aguardar resposta -> TeamDelete)
+
 ## Briefing (APENAS Full-Path)
 
 Antes de pesquisar: definir escopo, agentes, divisao de trabalho, contas necessarias.
