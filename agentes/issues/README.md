@@ -27,16 +27,18 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | ~~HD-007-Mapa_completo_gatilhos~~ | ~~Movido para Doing~~ | — | — |
 | 2 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral (primeiro report) | 13 Bookkeeper | Alta |
-| 3 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL (factor loadings, smart beta mirage) | 02 Factor | Alta |
+| 3 | ~~FI-004-Validacao_empirica_fatores_JPGL~~ | ~~Movido para Doing~~ | — | — |
 | 4 | HD-002-v2-Scorecard_shadows_atualizados | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
 | 5 | FI-005-Crowdedness_factor_strategies | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
 | 6 | HD-004-Behavioral_checklist_Chicago_Booth | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
 | 7 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
 | 8 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
 | 9 | RK-003-Managed_futures_diversificador | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 10 | FR-006-Spending_smile_saude_inflator | FR-003 atualizado: spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 10 | FR-003-v2-Monte_Carlo_equity_equivalent | Monte Carlo revisado: equity equivalent do tilt fatorial e impacto no bond tent | 04 FIRE | Media |
+| 11 | FR-006-Spending_smile_saude_inflator | FR-003 atualizado: spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
 | 11 | TX-003-Custos_desacumulacao_pos_FIRE | Custos de desacumulacao pos-FIRE: IR ganho BRL, IOF, etc. vs saving PJ taxes | 05 Tributacao | Baixa |
-| 12 | HD-010-Psicologia_cognitiva_evolucao_sistema | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, registro de raciocinio, dado vs interpretacao | 00 Head | Baixa |
+| 12 | MA-001-Correlacao_stock_bond_regime_inflacionario | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
+| 13 | HD-010-Psicologia_cognitiva_evolucao_sistema | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, registro de raciocinio, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -49,6 +51,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL | 02 Factor | 2026-03-23 | JPGL validado. 5 fatores significativos ao vivo. TER cortado para 0.19% (total ~0.45%). Cost-benefit vs SWRD: +1.88%/ano net (30% haircut). Momentum crash risk nao aplicavel (long-only). Risco real: AUM €245M — gatilhos de monitoramento adicionados. |
 | XX-004-Bogleheads_forum_scan | Intelligence Gathering — Bogleheads forum scan | 00 Head | 2026-03-23 | 7 topicos lidos. Carteira 100% alinhada com consensus. JPGL confirmado melhor multi-factor UCITS. SWRD validado. SWR non-US = 3.5% (dado novo). Ponto acionavel: cash IBKR < $60k (estate tax sobre cash). RSS feed disponivel: feed.php?f=22 |
 | HD-007-Mapa_completo_gatilhos | Mapa completo de gatilhos: inventario, gaps, monitoramento | 00 Head | 2026-03-23 | 60+ gatilhos reduzidos a 16 ativos em 3 niveis (Alarme/Mensal/Anual). HTM absoluto confirmado IPCA+ estrutural. Arquivo: agentes/contexto/gatilhos.md |
 | HD-009-Audit_gastos_pessoais | Auditoria de gastos pessoais e consistencia com FIRE | 00 Head | 2026-03-23 | Gastos VERDE: R$215k/ano anualizado, dentro do range FIRE. R$250k baseline confirmado com margem ~25-30% (primeira validacao bottom-up). Spending smile e saude com inflator proprio identificados como gaps no modelo. Dois issues backlog criados: FR-006 e TX-003 |
