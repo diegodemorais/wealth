@@ -4,8 +4,33 @@
       "Skill(update-config)",
       "Read(//Users/diegodemorais/claude/code/investimentos/**)",
       "Glob(//Users/diegodemorais/claude/code/investimentos/**)",
-      "Grep(//Users/diegodemorais/claude/code/investimentos/**)"
+      "Grep(//Users/diegodemorais/claude/code/investimentos/**)",
+      "mcp__discourse__discourse_read_topic",
+      "mcp__discourse__discourse_read_post",
+      "mcp__discourse__discourse_search",
+      "mcp__discourse__discourse_filter_topics",
+      "mcp__discourse__discourse_get_chat_messages",
+      "mcp__discourse__discourse_get_draft",
+      "mcp__discourse__discourse_get_query",
+      "mcp__discourse__discourse_get_user",
+      "mcp__discourse__discourse_list_user_posts",
+      "mcp__discourse__discourse_list_users",
+      "mcp__discourse__discourse_run_query"
     ]
   },
-  "model": "sonnet"
+  "model": "sonnet",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; if [ -f \"$f\" ] && [ -s \"$f\" ]; then lines=$(wc -l < \"$f\"); echo \"{\\\"systemMessage\\\": \\\"⚠️  SOBRESCRITA TOTAL: $f ($lines linhas existentes serao substituidas. Verifique se e intencional.)\\\"}\"; fi; } 2>/dev/null || true",
+            "statusMessage": "Verificando sobrescrita..."
+          }
+        ]
+      }
+    ]
+  }
 }
