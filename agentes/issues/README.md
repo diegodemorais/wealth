@@ -34,6 +34,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 7 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
 | 8 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
 | 9 | RK-003-Managed_futures_diversificador | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
+| 10 | FR-006-Spending_smile_saude_inflator | FR-003 atualizado: spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 11 | TX-003-Custos_desacumulacao_pos_FIRE | Custos de desacumulacao pos-FIRE: IR ganho BRL, IOF, etc. vs saving PJ taxes | 05 Tributacao | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -47,6 +49,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-009-Audit_gastos_pessoais | Auditoria de gastos pessoais e consistencia com FIRE | 00 Head | 2026-03-23 | Gastos VERDE: R$215k/ano anualizado, dentro do range FIRE. R$250k baseline confirmado com margem ~25-30% (primeira validacao bottom-up). Spending smile e saude com inflator proprio identificados como gaps no modelo. Dois issues backlog criados: FR-006 e TX-003 |
 | XX-003-RR_Forum_Intelligence_scan | Intelligence Gathering — RR Forum scan de topicos relevantes | 00 Head | 2026-03-22 | 10 topicos lidos. Carteira confirmada alinhada com consensus do forum. Avantis UCITS lancados jun/2024 — Diego ja tem os produtos certos. JPGL usa momentum como negative screen (superior a XDEM/IWMO). Issue criado: RK-003 (managed futures). Nenhuma acao imediata. |
 | HD-008-Reconciliacao_arquivos_deduplicacao | Reconciliacao de arquivos e deduplicacao agent defs | 00 Head | 2026-03-22 | 10+ conflitos corrigidos (ips, evolucao, risk-framework, execucoes, memorias, perfis). 13 agent defs enxugados para bootstrap-only. 2 blocos extraidos para referencia (autonomia-critica, debate-estruturado) |
 | FIRE-002-Plano_B_perda_renda | Plano B: perda de renda + decada perdida (escopo expandido) | 04 FIRE | 2026-03-22 | Perda renda nao e risco dominante (R$250k viavel ate perda aos 42, SWR 3.12%). Decada perdida e o killer (SR 31-43%). Plano B: human capital hedge (consultoria R$120-180k/ano) + guardrails + piso R$180k. Nenhuma acao preventiva necessaria agora |
