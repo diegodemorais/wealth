@@ -78,7 +78,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ## Decisoes Pendentes
 
-1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar
+1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar. **Alerta backtest 2026-03-23**: AVGS 25% e o maior risco de cauda nao capturado — Max DD -39% no backtest e piso, nao teto; em 2008-style pode chegar a -60%+. AVEM ja revertendo (YTD 2026: +14.83% vs MSCI World +2.99%).
 2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
 3. **Renda+ 2065**: compra DCA ate 5% se taxa >= 6,5%. Venda tudo se taxa <= 6,0%. Se taxa 9%+: manter pelo carrego
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
