@@ -9,10 +9,6 @@
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
 | 2026-03-18 | Criacao do Head (00) como gestor de portfolio e planejamento | Separar coordenacao geral + planejamento pessoal (Head) de decisoes de investimento (CIO) | Diego |
-| 2026-03-18 | ~~IPCA+ estrutural 10% antecipado~~ | ~~Ladder 2035/2040/2050~~ | — |
-| 2026-03-19 | ~~IPCA+ estrutural 7%, 100% no IPCA+ 2040~~ | ~~Superado: teto subiu para 20%~~ | — |
-| 2026-03-20 | ~~IPCA+ estrutural ate 20%~~ | ~~Superado: breakeven subiu para 7.81% com equity corrigido~~ | — |
-| 2026-03-20 | ~~IPCA+ estrutural ate 10%, piso 7,81%~~ | ~~Superado pela decisao de 2026-03-22~~ | — |
 | 2026-03-22 | IPCA+ longo **15%**, piso **6.0%**, DCA ATIVO | Breakeven all-in ~5.5%. A 7.16%, IPCA+ vence equity por 150 bps e R$41/R$100 em 14 anos. TD 2040 (80%) + TD 2050 (20%). Selic removido -> IPCA+ curto 3% aos 50 | Factor, RF, FIRE, Advocate |
 | 2026-03-18 | JPGL confirmado como multifator | AVGC closet indexing, JPGL complementa com momentum + low vol | CIO, Factor |
 
@@ -95,5 +91,16 @@ Toda retrospectiva DEVE incluir:
 | 2026-03-20 | Scorecard HD-002 criado com baseline T0 | 4 arquivos em agentes/metricas/. Shadows: VWRA+IPCA e 100% IPCA. P(FIRE) pendente FR-003 |
 | 2026-03-20 | HD-006 intermediario | 9 erros corrigidos. IPCA+ 20%->10%, breakeven 6.4%->7.81%, equity BRL 5.89% base. 3 regras anti-recorrencia |
 | 2026-03-22 | HD-006 decisao FINAL aprovada | Breakeven all-in ~5.5%, piso 6.0%. IPCA+ longo 15% (DCA ativo). Selic removido -> IPCA+ curto 3% aos 50. Equity 79%. 5 regras anti-recorrencia |
-| 2026-03-22 | ~~FIRE-002 v1 Done~~ | ~~Superado por v2: erro na modelagem — gastos so aos 50 em vez de imediatos~~ | FIRE, Advocate |
 | 2026-03-22 | FIRE-002 v2 Done: Plano B perda renda CORRIGIDO | Perda renda = aposentadoria forcada (gastos imediatos). Perda 42: SWR 4.92%, sobrevive deterministico (R$2M aos 90) mas vulner. a vol. Perda 45+: robusto (pat cresce). Threshold auto-sustentavel: R$5.47M. Cenarios combinados falham — human capital R$5-8k/mes salva. Nenhuma acao preventiva agora | FIRE |
+
+---
+
+## Historico Superado
+
+| Data | Decisao | Por que superada |
+|------|---------|-----------------|
+| 2026-03-18 | IPCA+ estrutural 10% antecipado, ladder 2035/2040/2050 | NTN-B 2035 descontinuado. Superado pela revisão de 2026-03-19 |
+| 2026-03-19 | IPCA+ estrutural 7%, 100% no IPCA+ 2040 | Superado: teto cresceu para 20% então para 15% definitivo |
+| 2026-03-20 | IPCA+ estrutural até 20% | Superado: breakeven recalculado para 7.81% → equity superior |
+| 2026-03-20 | IPCA+ estrutural até 10%, piso 7.81% | Superado: HD-006 final calculou breakeven all-in correto ~5.5% |
+| 2026-03-22 | FIRE-002 v1 | Erro de modelagem: gastos modelados apenas a partir dos 50. Corrigido em v2. |
