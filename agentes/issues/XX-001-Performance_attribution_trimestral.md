@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | XX-001-Performance_attribution_trimestral |
 | **Dono** | 13 Bookkeeper |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 01 CIO, 10 Advocate, 02 Factor |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-20 |
 | **Origem** | Pesquisa multi-agent wealth management |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-23 |
 
 ---
 
