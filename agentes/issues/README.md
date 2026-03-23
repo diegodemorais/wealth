@@ -36,6 +36,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 9 | RK-003-Managed_futures_diversificador | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
 | 10 | FR-006-Spending_smile_saude_inflator | FR-003 atualizado: spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
 | 11 | TX-003-Custos_desacumulacao_pos_FIRE | Custos de desacumulacao pos-FIRE: IR ganho BRL, IOF, etc. vs saving PJ taxes | 05 Tributacao | Baixa |
+| 12 | HD-010-Psicologia_cognitiva_evolucao_sistema | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, registro de raciocinio, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
