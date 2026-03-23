@@ -17,13 +17,15 @@
 
 ---
 
-## REVISAO MENSAL / TRIMESTRAL (7)
+## REVISAO MENSAL / TRIMESTRAL (9)
 
 | Dominio | Gatilho | Condicao | Acao | Freq |
 |---------|---------|----------|------|------|
 | IPCA+ Longo | DCA por bandas | >=6,0% + RF longa <15%: DCA ativo (TD 2040 80% + TD 2050 20%) · 5,0-6,0%: pausar, redirecionar JPGL · alvo 15% atingido: parar DCA, manter HTM | Executar conforme banda | Mensal |
 | Renda+ 2065 | Regime completo | >=6,5% + posicao <5%: comprar · 6,0-6,5%: hold · <=6,0%: vender tudo · >=9,0%: manter carrego · equity drawdown >30%: priorizar equity primeiro · aos 50 anos (2037): zerar | Executar conforme regime | Mensal |
 | Equity | JPGL catch-up | JPGL < 20% do target equity | Todo aporte livre vai para JPGL prioritariamente | Mensal |
+| JPGL AUM | Alerta delisting | AUM JPGL < €150M | Alertar — risco de encerramento do fundo aumenta, avaliar com Factor | Mensal |
+| JPGL AUM | Parar aportes | AUM JPGL < €100M | Parar aportes em JPGL imediatamente. Avaliar saida com Factor e Advocate | Mensal |
 | Soberano | CDS alerta | CDS Brasil 5y > 500 bps | Revisao exposicao soberana BR com Advocate | Mensal |
 | HODL11 | Banda cripto | < 1,5% patrimonio: comprar ate 3% · > 5% patrimonio: rebalancear para 3% | Manter target 3% via aportes ou venda | Trimestral |
 | Desacumulacao | Guardrails | Drawdown 0-15%: R$250k/ano · 15-25%: R$225k · 25-35%: R$200k · >35%: R$180k (piso) · Upside +25% acima pico: +10% permanente (teto R$350k) · Restauracao: volta ao pico + 2 trimestres | Ajustar retirada conforme tier | Trimestral (pos-FIRE) |

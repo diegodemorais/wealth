@@ -142,4 +142,4 @@ Risco operacional real: AUM baixo (€245M). Não impede aportes, mas requer mon
 ## Próximos Passos
 
 - [x] Atualizar custo de JPGL no framework (0.841% → ~0.45% all-in, TER 0.19%)
-- [ ] Adicionar gatilho de AUM ao arquivo de gatilhos (agentes/contexto/gatilhos.md)
+- [x] Adicionar gatilho de AUM ao arquivo de gatilhos (agentes/contexto/gatilhos.md)
