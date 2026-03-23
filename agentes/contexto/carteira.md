@@ -162,9 +162,9 @@ Pesos do bloco equity: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20%.
 
 | Cenario | Retorno Ponderado Equity BRL |
 |---------|------------------------------|
-| Base (dep. 0.5%) | **5.89%** |
-| Favoravel (dep. 1.5%) | **6.89%** |
-| Stress (dep. 0%) | **5.39%** |
+| Base (dep. 0.5%) | **5.96%** |
+| Favoravel (dep. 1.5%) | **6.96%** |
+| Stress (dep. 0%) | **5.46%** |
 
 Calculo: 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = 5.89% (base)
 
