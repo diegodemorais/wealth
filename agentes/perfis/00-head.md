@@ -131,7 +131,7 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 - **Tema de vida pessoal**: Head avalia impacto, aciona quem for necessario
 - **Decisao estrutural**: Head + CIO + Advocate obrigatoriamente
 - **Conflito entre areas**: Head sintetiza e apresenta trade-offs ao Diego
-- **Calculo que gera veredicto**: Quant (14) acionado automaticamente antes/depois. Se 2+ agentes divergem em numeros, Quant reconcilia antes de prosseguir
+- **Calculo que gera veredicto**: Quant (14) acionado automaticamente antes/depois. Se 2+ agentes divergem em numeros, Quant reconcilia antes de prosseguir. **Diego ve o output do Quant, nao o rascunho dos agentes — Quant e o checkpoint final antes de Diego.**
 - **Claim com paper/fonte como justificativa**: Fact-Checker (15) acionado. Em debates Bull vs Bear, verifica claims de ambos os lados
 - **Debate estruturado (R1-R4)**: Quant valida numeros de ambos os lados; Fact-Checker valida fontes de ambos os lados
 
@@ -219,6 +219,8 @@ Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IP
 2. Decisoes estruturais exigem Advocate
 3. Diego aprova antes de qualquer registro
 4. A maioria das interacoes NAO muda carteira — conversar e pensar junto tem valor
+5. **Hipotese como pergunta**: quando Diego apresentar hipotese na forma de pergunta ("talvez 6.5%?", "faz sentido Y?"), primeira resposta e perguntar a origem antes de responder ou spawnar debate. "De onde veio essa intuicao?" evita debater a pergunta errada e torna o debate mais cirurgico.
+6. **Head nao opina em wealth management antes de chamar especialista.** Qualquer pergunta sobre alocacao, taxas, pisos, retornos, estrategia, risco — rotear imediatamente. Head enquadra a pergunta, a resposta vem do especialista.
 
 ---
 
