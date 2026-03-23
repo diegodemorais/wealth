@@ -48,13 +48,45 @@ Uma tabela master com:
 ### O que foi feito
 - Todos os 5 agentes especialistas completaram o scan (risco, macro, rf, fire, tax)
 - Head compilou rascunho da tabela master
-- Advocate acionado para stress-test (estava rodando quando Diego saiu)
+- Advocate entregou stress-test completo (ver secao abaixo)
 
 ### Pendente ao retomar
-1. **Receber resposta do Advocate** (estava em execucao)
-2. **Diego resolver o conflito HTM** (ver abaixo)
-3. **Diego aprovar tabela master** (rascunho completo abaixo)
-4. Escrever tabela final em arquivo separado + commit
+1. **Diego resolver o conflito HTM** (Advocate recomenda HTM absoluto — eliminar venda por MtM)
+2. **Diego aprovar tabela master** com ajustes do Advocate (rascunho + criticas abaixo)
+3. Escrever tabela final em arquivo separado + commit
+
+---
+
+## Stress-Test do Advocate (2026-03-23)
+
+### Exageros — eliminar ou simplificar
+1. **"Acelerar DCA se taxa >= 8,0%"**: sem capital extra definido. Eliminar ou especificar fonte (ex: redirecionar 100% aporte pra RF temporariamente)
+2. **CDS Brasil 300 bps**: sensivel demais, vai disparar como ruido. Eliminar alerta amarelo. Manter 500 bps SÓ se vinculado a acao concreta
+3. **"Focus IPCA > 4,5%"**: IPCA fica acima disso com frequencia, sem acao clara. Elevar para 6%+ ou eliminar
+4. **"Correlacao cripto-equity > 0.7"**: com 3% de cripto, impacto desprezivel. Eliminar — o teto de 5% ja contem o risco
+
+### Frouxos — precisam de fix antes de aprovar
+1. **"Dominancia fiscal"**: sem metrica operacional. Fix: "Juros nominais da divida > 35% da receita liquida federal por 2 trimestres"
+2. **"Pat < 80% mediano FR-003"**: tabela precisa ser auto-contida. Fix: incluir valores absolutos por idade
+3. **"BRL > 6,5 → avaliar pausa aportes"**: sem prazo, sem condicao de retorno. Fix: definir pausa maxima (ex: 2 meses) ou eliminar
+4. **"TLH transitorios UCITS"**: conceito, nao gatilho. Fix: "Se transitorio UCITS cair >15% do preco medio → avaliar venda com TLH"
+5. **"Coast FIRE"**: sem criterio de taxa. Remover da tabela master ate ter criterio definido
+
+### Gaps esquecidos pelo time
+1. **Concentracao de custodia IBKR**: ~75% patrimonio numa corretora, proximo do teto SIPC US$500k. Gatilho sugerido: "Exposicao IBKR > US$500k → avaliar segunda corretora UCITS"
+2. **Career disruption pre-FIRE**: "Bear market pre-FIRE" existe mas "perda de capacidade de trabalho" nao. NPV dos aportes futuros (~R$3.3M) > patrimonio atual
+3. **Risco regulatorio UCITS**: mudanca no tratado IE-US de WHT pode subir retencao de 15% para 30%. Verificar na revisao anual de janeiro
+4. **Pos-catchup JPGL**: quando JPGL atingir 18% → retomar aportes proporcionais entre os 4 ETFs. Hoje sem gatilho
+5. **Transitorios**: sem gatilho de revisao. Sugestao: "Se transitorios > 30% do bloco equity apos 5 anos → avaliar venda seletiva com Tax"
+
+### Top 3 riscos sistemicos nao cobertos
+1. **Concentracao de custodia** (prob MEDIA, impacto ALTO)
+2. **Human capital risk / career disruption** (prob MEDIA-ALTA, impacto CATASTROFICO)
+3. **Regime change tributario combinado** — reforma fiscal pode afetar IOF + IR ETFs + Simples + exit tax simultaneamente. Gatilho sugerido: "Se reforma tributaria impacta >2 dominios → Issue urgente cross-domain (Tax + Patrimonial + Head)"
+
+### Conflito HTM (posicao do Advocate)
+**HTM prevalece. Eliminar gatilho de venda por MtM no IPCA+ Longo.**
+Razoes: (1) HD-006 foi explicito: IPCA+ e posicao estrutural; (2) venda por MtM e comportamentalmente perigosa; (3) o gatilho de taxa <= 5% e do Renda+ 2065 (tatico), nao do IPCA+ estrutural. Excecao legitima: risco soberano extremo (CDS > 800 bps) — se isso, reavaliar com Advocate.
 
 ---
 
