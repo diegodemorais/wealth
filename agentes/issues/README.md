@@ -34,7 +34,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 7 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
 | 8 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
 | 9 | RK-003-Managed_futures_diversificador | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 10 | FR-003-v2-Monte_Carlo_equity_equivalent | Monte Carlo revisado: equity equivalent do tilt fatorial e impacto no bond tent | 04 FIRE | Media |
+| ~~10~~ | ~~FR-003-v2-Monte_Carlo_equity_equivalent~~ | ~~Movido para Done~~ | — | — |
 | 11 | FR-006-Spending_smile_saude_inflator | FR-003 atualizado: spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
 | 11 | TX-003-Custos_desacumulacao_pos_FIRE | Custos de desacumulacao pos-FIRE: IR ganho BRL, IOF, etc. vs saving PJ taxes | 05 Tributacao | Baixa |
 | 12 | MA-001-Correlacao_stock_bond_regime_inflacionario | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
@@ -51,6 +51,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-003-v2-Monte_Carlo_equity_equivalent | Equity equivalent do tilt fatorial | 04 FIRE | 2026-03-24 | Portfólio Sortino-eficiente. EE 74.2% (haircut). Vol 16.8%. Nenhuma mudança de alocação. SWRD = seguro anti-modelo. |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral — primeiro report | 13 Bookkeeper | 2026-03-23 | Framework Q1 pronto. BRL +6.15% neutralizou USD +3.9%. Q2 terá dados completos. |
 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL | 02 Factor | 2026-03-23 | JPGL validado. 5 fatores significativos ao vivo. TER cortado para 0.19% (total ~0.45%). Cost-benefit vs SWRD: +1.88%/ano net (30% haircut). Momentum crash risk nao aplicavel (long-only). Risco real: AUM €245M — gatilhos de monitoramento adicionados. |
 | XX-004-Bogleheads_forum_scan | Intelligence Gathering — Bogleheads forum scan | 00 Head | 2026-03-23 | 7 topicos lidos. Carteira 100% alinhada com consensus. JPGL confirmado melhor multi-factor UCITS. SWRD validado. SWR non-US = 3.5% (dado novo). Ponto acionavel: cash IBKR < $60k (estate tax sobre cash). RSS feed disponivel: feed.php?f=22 |
