@@ -80,7 +80,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar. **Alerta backtest 2026-03-23**: AVGS 25% e o maior risco de cauda nao capturado — Max DD -39% no backtest e piso, nao teto; em 2008-style pode chegar a -60%+. AVEM ja revertendo (YTD 2026: +14.83% vs MSCI World +2.99%).
 2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
-3. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para 5,0-6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo). **Prioridade RF: IPCA+ antes do Renda+ (gap 14,2pp vs 1,8pp)**
+3. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para <6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo). **Prioridade RF: IPCA+ antes do Renda+ (gap 14,2pp vs 1,8pp)**
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
 5. **Renda+ 2065**: compra DCA ate 5% se taxa >= 6,5%. Venda tudo se taxa <= 6,0% — mas aguardar 720 dias se holding < 2 anos (carry domina reducao de IR). Se taxa 9%+: manter pelo carrego. Ver cenarios validados: agentes/contexto/renda-plus-2065-cenarios.md
 6. **IPCA+ curto 3%**: comprar perto dos 50 (SoRR buffer, ~2 anos duration). Substitui Selic no plano original
