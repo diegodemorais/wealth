@@ -43,7 +43,7 @@ Todos recebem os mesmos aportes de Diego, na mesma data e câmbio. Comparação 
 
 ### Shadow B — 100% IPCA+ 2040
 - Instrumento: Tesouro IPCA+ 2040, taxa ~7.16% real bruto, custódia B3 0.20%
-- Taxa real líquida: 5.34%/ano (~0.43%/mês) — IR 15% sobre nominal, IPCA 4.0%
+- Taxa real bruta: 7.16%/ano | Retorno mensal bruto: `(1 + IPCA_mensal) × (1 + 7.16%/12) - 1`
 - Retorno mensal: IPCA do mês + parcela do real (~7.16%/12 mensal bruto)
 - Sem custo de câmbio (denominado em BRL)
 - Representa: "E se tivesse colocado tudo em IPCA+, sem equity?"
@@ -55,24 +55,25 @@ Todos recebem os mesmos aportes de Diego, na mesma data e câmbio. Comparação 
 > Retorno do período (não acumulado). Método Dietz para Atual e Shadow A.
 > n/d = dado não disponível (sem snapshot de fim de mês anterior ao sistema)
 
-| Período | Atual | Target | Shadow A (VWRA) | Shadow B (IPCA+) | Delta A | Delta B |
-|---------|-------|--------|-----------------|-----------------|---------|---------|
-| T0 (2026-03-20) | — | — | — | — | 0.00% | 0.00% |
-| Q1 2026 (Jan–Mar, aprox.) | **+1.73%** | n/d | **−1.42%** | **+2.30%** | **+3.15pp** | **−0.57pp** |
-| Abr/2026 | — | — | — | — | — | — |
-| Mai/2026 | — | — | — | — | — | — |
+| Período | Atual | Target* | Shadow A (VWRA) | Shadow B (IPCA+) | Delta Target | Delta A | Delta B |
+|---------|-------|---------|-----------------|-----------------|-------------|---------|---------|
+| T0 (2026-03-20) | — | — | — | — | 0.00% | 0.00% | 0.00% |
+| Q1 2026 (Jan–Mar, aprox.) | **+1.73%** | **≈ −1.11%*** | **−1.42%** | **+2.30%** | **+2.84pp*** | **+3.15pp** | **−0.57pp** |
+| Abr/2026 | — | — | — | — | — | — | — |
+| Mai/2026 | — | — | — | — | — | — | — |
 
 > Q1 2026: Jan e Fev sem snapshot de fim de mês individual — dados agregados.
-> Shadow A Q1: VWRA.L +4.45% GBp mas −1.42% BRL (câmbio BRL apreciou 6.15%).
-> Shadow B Q1: IPCA 1.41% + real trimestral ~1.79% ≈ +2.30% total.
-> Shadow A Q1 patrimônio estimado: R$ 3.387.800 | Shadow B: R$ 3.512.116
+> Target Q1*: estimativa Bookkeeper (preços LSE stooq/busca). Principais drivers: HODL11 −25.5% BRL (−77 bps), câmbio BRL/GBP apreciou −5.4% (pesou equity).
+> Shadow A Q1: VWRA.L +4.45% GBp mas −1.42% BRL (câmbio BRL apreciou 5.6% vs GBP).
+> Shadow B Q1: IPCA 1.41% + real trimestral ~0.89% ≈ +2.30% total.
+> *Estimativa — validar mensalmente com preços reais via checkin-automatico M1.
 
 ## Tabela de Patrimônio Acumulado (YTD desde T0)
 
-| Período | Atual | Shadow A (VWRA) | Shadow B (IPCA+) | Delta A (R$) | Delta B (R$) |
-|---------|-------|-----------------|-----------------|-------------|-------------|
-| T0 2026-03-20 | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | R$ 0 | R$ 0 |
-| Q1 23/Mar | R$ 3.492.284 | R$ 3.387.800 | R$ 3.512.116 | **+R$ 104.484** | **−R$ 19.832** |
+| Período | Atual | Target* | Shadow A (VWRA) | Shadow B (IPCA+) | Delta Target (R$) | Delta A (R$) | Delta B (R$) |
+|---------|-------|---------|-----------------|-----------------|-----------------|-------------|-------------|
+| T0 2026-03-20 | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | R$ 0 | R$ 0 | R$ 0 |
+| Q1 23/Mar | R$ 3.492.284 | R$ ~3.399.000* | R$ 3.387.800 | R$ 3.512.116 | **+R$ ~93k*** | **+R$ 104.484** | **−R$ 19.832** |
 
 ---
 
@@ -86,7 +87,11 @@ Todos recebem os mesmos aportes de Diego, na mesma data e câmbio. Comparação 
    - Fonte: Yahoo Finance `https://finance.yahoo.com/quote/VWRA.L/history/`
 3. **Shadow B**: patrimônio anterior × (1 + IPCA_mensal + 7.16%/12) + aportes do mês
    - Fonte IPCA: IBGE / investidor10.com.br / BCB Focus
-4. **Target**: a calcular quando pipeline de preços por ETF estiver disponível
+4. **Target**: retorno ponderado dos 4 ETFs alvo em BRL + IPCA+ + HODL11
+   - Pesos portfolio total: SWRD 27.65% + AVGS 19.75% + AVEM 15.8% + JPGL 15.8% + IPCA+ 15% + HODL11 3%
+   - Retorno ETF BRL = retorno GBp × (GBP/BRL_fim / GBP/BRL_ini)
+   - Fonte preços: stooq.com (SWRD.uk, AVGS.uk, AVEM.uk, JPGL.uk) ou Yahoo Finance
+   - BTC retorno BRL = (BTC_USD_fim × USD_BRL_fim) / (BTC_USD_ini × USD_BRL_ini) - 1
 5. Adicionar linha na tabela acima e no scorecard.md
 
 ### Gatilho de alerta
@@ -110,6 +115,6 @@ Shadow B com 5.34% real líquido é comparável all-in. Shadow A pré-tax ~5.4% 
 
 1. **Sem histórico retroativo**: T0 = 2026-03-20. Comparação é forward-looking
 2. **Jan/Fev 2026 sem snapshot individual**: Q1 é agregado; dados mensais a partir de Abr
-3. **Target ainda não calculado**: requer preços mensais por ETF (SWRD, AVGS, AVEM, JPGL)
+3. **Target estimado**: Q1 usa preços stooq (aproximação). A partir de Abr/2026, atualizar mensalmente via M1 do checkin-automatico
 4. **Impostos simplificados**: 15% flat. Na desacumulação, timing real afeta o valor
 5. **Shadow B HTM**: se Diego liquidar IPCA+ antes de 2040, MtM introduz volatilidade não capturada

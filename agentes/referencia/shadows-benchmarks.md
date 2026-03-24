@@ -88,15 +88,38 @@ As seguintes premissas têm confiança menor e devem ser refinadas na revisão a
 
 ---
 
+## Comparativo Histórico Real
+
+> Período: **Jul/2021 → Mar/2026 (4,7 anos)** | TWRR real da Carteira Viva (Histórico IBKR) | Shadows via yfinance (VT/USDBRL) | HTM líquido corrigido pelo Quant 2026-03-23
+> Nota: Carteira Viva começa Jul/2021 (data de início do portfólio). Jan/Fev 2026 sem snapshot individual — Q1 agregado.
+
+| Portfólio | Bruto | Líq IR | CAGR bruto | CAGR líq |
+|-----------|-------|--------|-----------|----------|
+| **Carteira Viva** (TWRR real) | 50,0% | ~42,5% | 9,0% | ~7,8% |
+| **Target** (pesos alvo) | 44,0% | 32,9% | 8,0% | 6,2% |
+| **VWRA/VT** (BRL, S1) | 44,2% | 33,0% | 8,1% | 6,2% |
+| **HTM 7%** (taxa atual) | 77,8% | **66,1%*** | 13,0% | **11,5%*** |
+| **HTM 6%** (taxa média) | 70,1% | **59,6%*** | 11,9% | **10,5%*** |
+| **HTM 5%** (taxa conserv.) | 62,8% | 52,1% | 10,9% | 9,3% |
+
+> *Corrigido pelo Quant (2026-03-23): valores anteriores 64,7% e 58,3% estavam com custódia dupla-contada. HTM líq = bruto × 0,85 correto.
+
+**Destaques do período:**
+- HTM domina equity: IPCA realizou 5,7%/ano (vs 4% esperado) + BRL flat (+0,07%/ano vs +0,5% esperado = ~2pp drag em equity)
+- Carteira Viva +6pp vs VWRA: factor tilts (AVUV +56%, AVDV +71%) compensaram EM fraco (VWO +20% vs ACWI +45%)
+- TWRR: 6 dias com CF negativo (anomalia origem vs destino, não corrigido ainda). Impacto estimado: < 0,5pp.
+
+---
+
 ## Tracking Anual
 
-A cada março, comparar:
+> Período de referência sempre informado. Tracking forward-looking a partir de T0 = Mar/2026.
 
-| Métrica | Mar 2026 | Mar 2027 | Mar 2028 |
-|---------|----------|----------|----------|
-| Ret real líquido Diego (realizado) | baseline | — | — |
-| Ret real S1 VWRA (realizado) | baseline | — | — |
-| Ret real S2 IPCA+ (marcação HTM) | baseline | — | — |
+| Métrica | Mar 2026 (T0) | Mar 2027 | Mar 2028 |
+|---------|--------------|----------|----------|
+| Ret real líquido Diego (realizado) | baseline (7,8% CAGR histórico) | — | — |
+| Ret real S1 VWRA (realizado) | baseline (6,2% CAGR histórico) | — | — |
+| Ret real S2 IPCA+ (marcação HTM) | baseline (11,5% CAGR histórico) | — | — |
 | Taxa IPCA+ no momento | 7,16% | — | — |
 | FV real carteira | R$3,48M | — | — |
 
@@ -107,3 +130,4 @@ A cada março, comparar:
 | Data | Evento | Mudança |
 |------|--------|---------|
 | 2026-03-22 | Criação | Quadro inicial com auditoria Quant. Base líquida all-in. 4 shadows + cenários S2/S4/cripto. |
+| 2026-03-23 | Histórico real adicionado | TWRR real Jul/2021→Mar/2026. HTM líquido corrigido (Quant: 66,1% e 59,6%). Tracking anual com período explícito. |

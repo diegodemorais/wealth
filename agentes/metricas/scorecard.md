@@ -22,10 +22,10 @@
 
 Comparacao da carteira real contra dois contrafactuais. Ver detalhes em `shadow-portfolio.md`.
 
-| Data | Patrimonio Real | Shadow A (VWRA+IPCA) | Shadow B (100% IPCA) | Delta A | Delta B |
-|------|----------------|----------------------|---------------------|---------|---------|
-| 2026-03-20 (T0) | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | 0.00% | 0.00% |
-| 2026-03-23 (Q1) | R$ 3.492.284 | R$ 3.387.800 | R$ 3.512.116 | **+3.15pp** | **−0.57pp** |
+| Data | Patrimonio Real | Target | Shadow A (100% VWRA) | Shadow B (100% IPCA+) | Delta Target | Delta A | Delta B |
+|------|----------------|--------|----------------------|----------------------|-------------|---------|---------|
+| 2026-03-20 (T0) | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | R$ 3.479.239 | 0.00% | 0.00% | 0.00% |
+| 2026-03-23 (Q1) | R$ 3.492.284 | R$ ~3.399k* | R$ 3.387.800 | R$ 3.512.116 | **+2.84pp*** | **+3.15pp** | **−0.57pp** |
 
 - **Frequencia**: **Mensal** (atualizado via /checkin-automatico no primeiro check-in do mês)
 - **Meta**: Delta A > 0 (bater VWRA passivo), Delta B > 0 (bater RF pura)
@@ -57,7 +57,7 @@ TER incremental da carteira vs shadow portfolios.
 | Tesouro Direto | ~13% (do portfolio) | 0.20% (custodia B3) | 0.026% |
 | **Portfolio total** | **100%** | — | **0.227%** |
 
-**Shadow A TER**: 93% x 0.22% (VWRA) + 7% x 0.20% (custodia B3) = **0.219%**
+**Shadow A TER**: 100% x 0.22% (VWRA) = **0.220%**
 **Shadow B TER**: 100% x 0.20% (custodia B3) = **0.200%**
 
 **Veredicto T0**: Custo incremental em TER e minimo (+2.9 bps vs Shadow A). O custo real de complexidade esta em tempo de gestao e risco operacional (execucao de gatilhos), nao em fees.

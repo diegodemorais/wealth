@@ -107,7 +107,7 @@ Calcular patrimônio dos shadows para o mês encerrado. Ver metodologia completa
 2. Buscar IPCA do mês via IBGE / investidor10.com.br
 3. Calcular:
    - **Shadow A** = patrimônio anterior × (1 + retorno_VWRA_BRL_mensal) + aportes do mês
-   - **Shadow B** = patrimônio anterior × (1 + 5.34%/12) + aportes do mês
+   - **Shadow B** = patrimônio anterior × [(1 + IPCA_mensal) × (1 + 7.16%/12) - 1] + aportes do mês
 4. Adicionar linha em `agentes/metricas/shadow-portfolio.md` (tabelas Tracking de cada shadow)
 5. Adicionar linha em `agentes/metricas/scorecard.md` (seção 1.2 Delta vs Shadows)
 
