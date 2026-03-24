@@ -21,7 +21,7 @@
 
 | Dominio | Gatilho | Condicao | Acao | Freq |
 |---------|---------|----------|------|------|
-| IPCA+ Longo | DCA por bandas | >=6,0% + RF longa <15%: DCA ativo (TD 2040 80% + TD 2050 20%) · <6,0%: pausar, redirecionar JPGL · <5,0%: avaliar venda parcial/total com Advocate + RF (calcular break-even liquido: MtM capturado − IR vs custo de oportunidade 14 anos) · alvo 15% atingido: parar DCA, manter HTM | Executar conforme banda | Mensal |
+| IPCA+ Longo | DCA por bandas | >=6,0% + RF longa <15%: DCA ativo (TD 2040 80% + TD 2050 20%) · <6,0%: pausar, redirecionar JPGL · <5,0% por 3 meses consecutivos: revisao de premissas (nao de posicao) — (1) por que caiu? (2) patrimonio >120% trajetoria FIRE? (3) se ambos confirmados: Issue formal Bull vs Bear antes de qualquer acao · alvo 15% atingido: parar DCA, manter HTM · venda: NENHUMA — exceto CDS >800bps (soberano) | Executar conforme banda | Mensal |
 | Renda+ 2065 | Regime completo | >=6,5% + posicao <5%: comprar · 6,0-6,5%: hold · <=6,0% + holding >=720 dias: vender tudo · <=6,0% + holding <720 dias: aguardar (carry domina reducao de IR) · >=9,0%: manter carrego · equity drawdown >30%: priorizar equity primeiro · aos 50 anos (2037): zerar | Executar conforme regime | Mensal |
 | Equity | JPGL catch-up | JPGL < 20% do target equity | Todo aporte livre vai para JPGL prioritariamente | Mensal |
 | JPGL AUM | Alerta delisting | AUM JPGL < €150M | Alertar — risco de encerramento do fundo aumenta, avaliar com Factor | Mensal |

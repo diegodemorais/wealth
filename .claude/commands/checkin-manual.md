@@ -26,6 +26,7 @@ Comparar dados novos com o arquivo atual e produzir:
 3. **Alertas de gatilhos**: verificar se algum gatilho ativo foi atingido ou esta proximo:
    - HODL11 piso (1,5%) ou teto (5%)
    - Renda+ 2065 taxa proximo de 6,0% (venda) ou compra ativo
+   - **CDS Brasil 5y**: registrar valor atual. Alerta em 500bps, alarme em 800bps
    - Qualquer outro gatilho registrado nas memorias
 4. **Inconsistencias**: algo no input nao bate com a estrategia? (ex: ativo que nao deveria estar la, alocacao muito fora do alvo)
 5. **Evolucao**: preparar nova linha para o snapshot em evolucao.md (% do bucket + valor em R$)

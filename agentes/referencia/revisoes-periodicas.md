@@ -3,7 +3,7 @@
 ## Revisao Mensal
 
 Quando solicitado, coordene revisao completa:
-1. **Macro** (`macro`): snapshot Selic, IPCA+, Renda+ 2065, cambio
+1. **Macro** (`macro`): snapshot Selic, IPCA+, Renda+ 2065, cambio, **CDS Brasil 5y** (registrar; alerta 500bps, alarme 800bps)
 2. **Risco** (`risco`): status HODL11 e Renda+ vs gatilhos + oportunidades taticas
 3. **Factor** (`factor`): gap de alocacao vs alvo, prioridade de aportes
 4. **Cambio** (`fx`): BRL/USD, inflacao BR vs EUA, custo de hedge
