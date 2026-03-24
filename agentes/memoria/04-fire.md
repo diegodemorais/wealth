@@ -38,11 +38,9 @@
 
 | Data | Issue | Resultado Principal |
 |------|-------|---------------------|
-| 2026-03 | ~~FR-001 v3~~ | ~~Superado por v4 (HD-006)~~ |
 | 2026-03-20 | FR-001 v4 (HD-006 intermediario) | Retornos corrigidos com fontes academicas (DMS 2024) + BRL 3 cenarios: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. SWR R$250k: 2,28%. SWR R$350k: 3,19%. Limite seguro: R$384k/ano |
 | 2026-03-22 | HD-006 final: alocacao revisada | Equity 79%, IPCA+ longo 15%, IPCA+ curto 3%, Cripto 3%. Selic removido. IPCA+ a 7.16% vence equity all-in por 150 bps. Projecoes de FR-001 serao recalculadas com nova alocacao |
 | 2026-03-22 | FR-003 Monte Carlo | MC 10k trajetorias, t-dist df=5. Pat mediano R$10.56M. SR R$250k: 91% (guard), R$350k: 87%. Decada perdida: 31-43%. Bond tent: +0.1pp |
-| 2026-03-22 | ~~FIRE-002 v1 Plano B~~ | ~~Superado por v2: erro na modelagem (gastos so aos 50 em vez de imediatos)~~ |
 | 2026-03-22 | FIRE-002 v2 Plano B (corrigido) | Perda renda = aposentadoria forcada (gastos imediatos). Perda 42: SWR 4.92%, sobrevive no deterministico (R$2M aos 90) mas vulneravel a vol. Perda 45+: robusto. Threshold auto-sustentavel: pat R$5.47M. Cenarios combinados (perda + ret adverso) falham — human capital hedge de R$5-8k/mes salva todos. Nenhuma acao preventiva agora |
 
 ## Regras Operacionais
@@ -59,5 +57,4 @@ FIRE deve participar de qualquer decisão de renda fixa que envolva vencimento d
 | 2026-03 | Modelo de guardrails | Risk-based (Kitces & Fitzpatrick 2024), nao G-K |
 | 2026-03 | Glidepath: rising ou declining? | Rising equity 82-90% aos 50, subindo para 90-95% |
 | 2026-03 | Custo de vida meta | R$250k/ano confirmado |
-| 2026-03 | ~~FR-001 v3 stress test~~ | ~~Superado por v4~~ |
 | 2026-03-20 | FR-001 v4 (HD-006) | Retornos com fontes academicas + BRL: acum 5,84% / desacum 4,57%-5,00%. Pat R$10,96M. Limite R$384k/ano. IPCA+ 10% (nao 20%). |
