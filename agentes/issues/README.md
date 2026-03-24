@@ -25,20 +25,16 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | ~~HD-007-Mapa_completo_gatilhos~~ | ~~Movido para Doing~~ | — | — |
-| ~~2~~ | ~~XX-001-Performance_attribution_trimestral~~ | ~~Movido para Done~~ | — | — |
-| 3 | ~~FI-004-Validacao_empirica_fatores_JPGL~~ | ~~Movido para Doing~~ | — | — |
-| 4 | HD-002-v2-Scorecard_shadows_atualizados | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
-| 5 | FI-005-Crowdedness_factor_strategies | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
-| 6 | HD-004-Behavioral_checklist_Chicago_Booth | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 7 | RK-002-Ouro_tail_risk_hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
-| 8 | PT-001-Bond_OneLife_estrutura_luxemburgo | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
-| 9 | RK-003-Managed_futures_diversificador | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| ~~10~~ | ~~FR-003-v2-Monte_Carlo_equity_equivalent~~ | ~~Movido para Done~~ | — | — |
-| 11 | FR-006-Spending_smile_saude_inflator | FR-003 atualizado: spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
-| 11 | TX-003-Custos_desacumulacao_pos_FIRE | Custos de desacumulacao pos-FIRE: IR ganho BRL, IOF, etc. vs saving PJ taxes | 05 Tributacao | Baixa |
-| 12 | MA-001-Correlacao_stock_bond_regime_inflacionario | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
-| 13 | HD-010-Psicologia_cognitiva_evolucao_sistema | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, registro de raciocinio, dado vs interpretacao | 00 Head | Baixa |
+| 1 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
+| 2 | FI-crowdedness | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
+| 3 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
+| 4 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| 5 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
+| 6 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
+| 7 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
+| 8 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 9 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 10 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -51,13 +47,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
-| FR-003-v2-Monte_Carlo_equity_equivalent | Equity equivalent do tilt fatorial | 04 FIRE | 2026-03-24 | Portfólio Sortino-eficiente. EE 74.2% (haircut). Vol 16.8%. Nenhuma mudança de alocação. SWRD = seguro anti-modelo. |
+| FR-equity-equivalent | Equity equivalent do tilt fatorial | 04 FIRE | 2026-03-24 | Portfólio Sortino-eficiente. EE 74.2% (haircut). Vol 16.8%. Nenhuma mudança de alocação. SWRD = seguro anti-modelo. |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral — primeiro report | 13 Bookkeeper | 2026-03-23 | Framework Q1 pronto. BRL +6.15% neutralizou USD +3.9%. Q2 terá dados completos. |
 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL | 02 Factor | 2026-03-23 | JPGL validado. 5 fatores significativos ao vivo. TER cortado para 0.19% (total ~0.45%). Cost-benefit vs SWRD: +1.88%/ano net (30% haircut). Momentum crash risk nao aplicavel (long-only). Risco real: AUM €245M — gatilhos de monitoramento adicionados. |
 | XX-004-Bogleheads_forum_scan | Intelligence Gathering — Bogleheads forum scan | 00 Head | 2026-03-23 | 7 topicos lidos. Carteira 100% alinhada com consensus. JPGL confirmado melhor multi-factor UCITS. SWRD validado. SWR non-US = 3.5% (dado novo). Ponto acionavel: cash IBKR < $60k (estate tax sobre cash). RSS feed disponivel: feed.php?f=22 |
 | HD-007-Mapa_completo_gatilhos | Mapa completo de gatilhos: inventario, gaps, monitoramento | 00 Head | 2026-03-23 | 60+ gatilhos reduzidos a 16 ativos em 3 niveis (Alarme/Mensal/Anual). HTM absoluto confirmado IPCA+ estrutural. Arquivo: agentes/contexto/gatilhos.md |
-| HD-009-Audit_gastos_pessoais | Auditoria de gastos pessoais e consistencia com FIRE | 00 Head | 2026-03-23 | Gastos VERDE: R$215k/ano anualizado, dentro do range FIRE. R$250k baseline confirmado com margem ~25-30% (primeira validacao bottom-up). Spending smile e saude com inflator proprio identificados como gaps no modelo. Dois issues backlog criados: FR-006 e TX-003 |
-| XX-003-RR_Forum_Intelligence_scan | Intelligence Gathering — RR Forum scan de topicos relevantes | 00 Head | 2026-03-22 | 10 topicos lidos. Carteira confirmada alinhada com consensus do forum. Avantis UCITS lancados jun/2024 — Diego ja tem os produtos certos. JPGL usa momentum como negative screen (superior a XDEM/IWMO). Issue criado: RK-003 (managed futures). Nenhuma acao imediata. |
+| HD-009-Audit_gastos_pessoais | Auditoria de gastos pessoais e consistencia com FIRE | 00 Head | 2026-03-23 | Gastos VERDE: R$215k/ano anualizado, dentro do range FIRE. R$250k baseline confirmado com margem ~25-30% (primeira validacao bottom-up). Spending smile e saude com inflator proprio identificados como gaps no modelo. Dois issues backlog criados: FR-spending-smile e TX-desacumulacao |
+| XX-003-RR_Forum_Intelligence_scan | Intelligence Gathering — RR Forum scan de topicos relevantes | 00 Head | 2026-03-22 | 10 topicos lidos. Carteira confirmada alinhada com consensus do forum. Avantis UCITS lancados jun/2024 — Diego ja tem os produtos certos. JPGL usa momentum como negative screen (superior a XDEM/IWMO). Issue criado: RK-managed-futures. Nenhuma acao imediata. |
 | HD-008-Reconciliacao_arquivos_deduplicacao | Reconciliacao de arquivos e deduplicacao agent defs | 00 Head | 2026-03-22 | 10+ conflitos corrigidos (ips, evolucao, risk-framework, execucoes, memorias, perfis). 13 agent defs enxugados para bootstrap-only. 2 blocos extraidos para referencia (autonomia-critica, debate-estruturado) |
 | FIRE-002-Plano_B_perda_renda | Plano B: perda de renda + decada perdida (escopo expandido) | 04 FIRE | 2026-03-22 | Perda renda nao e risco dominante (R$250k viavel ate perda aos 42, SWR 3.12%). Decada perdida e o killer (SR 31-43%). Plano B: human capital hedge (consultoria R$120-180k/ano) + guardrails + piso R$180k. Nenhuma acao preventiva necessaria agora |
 | TX-002-Tax_loss_harvesting_transitorios | Tax-loss harvesting nos 7 ETFs transitorios | 05 Tributacao | 2026-03-22 | Nao aplicavel — todos transitorios com lucro. Framework TLH registrado. Sem wash sale rule no Brasil. Gatilho: reativar em drawdown (TLH + migracao UCITS = duplo beneficio) |
@@ -92,22 +88,23 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 ## Convencao de IDs
 
-Formato: `{SIGLA}-{NUM}-{Slug_descritivo}`
-- Slug: snake_case, curto, descritivo. Ex: `RF-001-Renda_plus_rentabilidade_cenarios_queda`
+Formato: `{SIGLA}-{slug-descritivo}`
+- Slug: kebab-case, 1-3 palavras, legivel sem contexto. Ex: `RF-ipca-dca`, `FR-spending-smile`
 - Arquivo: `agentes/issues/{ID}.md`
+- Issues arquivadas (Done pre-2026-03-24): mantêm formato antigo `{SIGLA}-{NUM}-{Slug}` como registro historico
 
 | Sigla | Agente | Exemplo |
 |-------|--------|---------|
-| HD | 01 Head de Investimentos | HD-001 |
-| FI | 02 Factor Investing | FI-001 |
-| RF | 03 Renda Fixa Brasil | RF-001 |
-| FR | 04 FIRE / Aposentadoria | FR-001 |
-| TX | 05 Tributacao | TX-001 |
-| RK | 06 Ativos de Risco | RK-001 |
-| FX | 07 Cambio Internacional | FX-001 |
-| MA | 08 Macro Brasil | MA-001 |
-| PT | 09 Patrimonial | PT-001 |
-| XX | Cross-domain (multiplos) | XX-001 |
+| HD | 00 Head de Investimentos | HD-scorecard |
+| FI | 02 Factor Investing | FI-crowdedness |
+| RF | 03 Renda Fixa Brasil | RF-ipca-dca |
+| FR | 04 FIRE / Aposentadoria | FR-spending-smile |
+| TX | 05 Tributacao | TX-desacumulacao |
+| RK | 06 Ativos de Risco | RK-gold-hedge |
+| FX | 07 Cambio Internacional | FX-hedge-custo |
+| MA | 08 Macro Brasil | MA-bond-correlation |
+| PT | 09 Patrimonial | PT-onelife |
+| XX | Cross-domain (multiplos) | XX-retro-q1 |
 
 Sigla = agente RESPONSAVEL principal (mesmo que outros participem).
 

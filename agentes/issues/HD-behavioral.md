@@ -1,4 +1,4 @@
-# HD-004: Behavioral Checklist Enriquecido com Evidencias do Curso
+# HD-behavioral: Behavioral Checklist Enriquecido com Evidencias do Curso
 
 ## Status: Aberta
 ## Data: 2026-03-20

@@ -1,10 +1,10 @@
-# HD-010-Psicologia_cognitiva_evolucao_sistema: Psicologia cognitiva aplicada — evolucao do sistema de agentes
+# HD-psicologia: Psicologia cognitiva aplicada — evolucao do sistema de agentes
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | HD-010-Psicologia_cognitiva_evolucao_sistema |
+| **ID** | HD-psicologia |
 | **Dono** | 00 Head |
 | **Status** | Backlog |
 | **Prioridade** | Baixa |

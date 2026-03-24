@@ -1,10 +1,10 @@
-# RK-003-Managed_futures_diversificador: Managed Futures como diversificador: debate estruturado
+# RK-managed-futures: Managed Futures como diversificador: debate estruturado
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | RK-003-Managed_futures_diversificador |
+| **ID** | RK-managed-futures |
 | **Dono** | 06 Risco |
 | **Status** | Backlog |
 | **Prioridade** | Baixa |
@@ -46,7 +46,7 @@ Debate estruturado sobre a adicao de managed futures a carteira do Diego como di
 - [ ] Calcular correlacao historica managed futures vs SWRD em cenarios de stress
 - [ ] Avaliar se 3-5% de managed futures melhora Sharpe/drawdown da carteira atual
 - [ ] Debate estruturado: Factor + FIRE vs Advocate
-- [ ] Comparar vs ouro (RK-002) como alternativa de tail risk hedge
+- [ ] Comparar vs ouro (RK-gold-hedge) como alternativa de tail risk hedge
 
 ---
 
@@ -75,4 +75,4 @@ Debate estruturado sobre a adicao de managed futures a carteira do Diego como di
 
 ## Proximos Passos
 
-- [ ] Acionar apos RK-002 (ouro) para comparar as duas alternativas de tail risk juntas
+- [ ] Acionar apos RK-gold-hedge (ouro) para comparar as duas alternativas de tail risk juntas

@@ -1,10 +1,10 @@
-# HD-002-v2-Scorecard_shadows_atualizados: Scorecard + shadow portfolios atualizados com premissas HD-006 final
+# HD-scorecard: Scorecard + shadow portfolios atualizados com premissas HD-006 final
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | HD-002-v2-Scorecard_shadows_atualizados |
+| **ID** | HD-scorecard |
 | **Dono** | 10 Advocate |
 | **Status** | Backlog |
 | **Prioridade** | Media |

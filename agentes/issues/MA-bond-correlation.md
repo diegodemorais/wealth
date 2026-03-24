@@ -1,10 +1,10 @@
-# MA-001-Correlacao_stock_bond_regime_inflacionario: Correlação stock-bond em regime inflacionário — IPCA+ como hedge
+# MA-bond-correlation: Correlação stock-bond em regime inflacionário — IPCA+ como hedge
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | MA-001-Correlacao_stock_bond_regime_inflacionario |
+| **ID** | MA-bond-correlation |
 | **Dono** | 08 Macro |
 | **Status** | Backlog |
 | **Prioridade** | Media |
@@ -116,5 +116,5 @@ Ref: `agentes/contexto/renda-plus-2065-cenarios.md`, `analysis/renda_plus_2065_a
 
 ## Próximos Passos
 
-- [ ] Se confirmado que IPCA+ não hedgeia em regime inflacionário: atualizar framework do bond tent no FR-003-v2 com essa premissa
+- [ ] Se confirmado que IPCA+ não hedgeia em regime inflacionário: atualizar framework do bond tent no FR-equity-equivalent com essa premissa
 - [ ] Se regime atual BR for "inflacionário positivo": revisar tamanho do trade tático em Renda+ 2065

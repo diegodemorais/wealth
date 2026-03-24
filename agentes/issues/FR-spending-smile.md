@@ -1,15 +1,15 @@
-# FR-006-Spending_smile_saude_inflator: FR-003 atualizado com spending smile e saude com inflator proprio
+# FR-spending-smile: FR-003 atualizado com spending smile e saude com inflator proprio
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | FR-006-Spending_smile_saude_inflator |
+| **ID** | FR-spending-smile |
 | **Dono** | 04 FIRE |
 | **Status** | Backlog |
 | **Prioridade** | Baixa |
 | **Participantes** | 00 Head, 10 Advocate, 11 Quant |
-| **Dependencias** | TX-003 (custos de desacumulacao — impacta baseline) |
+| **Dependencias** | TX-desacumulacao (custos de desacumulacao — impacta baseline) |
 | **Criado em** | 2026-03-23 |
 | **Origem** | HD-009 (Auditoria de gastos) |
 | **Concluido em** | — |
@@ -71,5 +71,5 @@
 
 ## Proximos Passos
 
-- [ ] Aguardar TX-003 para ter saving liquido real de PJ taxes (impacta baseline)
+- [ ] Aguardar TX-desacumulacao para ter saving liquido real de PJ taxes (impacta baseline)
 - [ ] Executar quando prioridade subir

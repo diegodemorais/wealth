@@ -1,10 +1,10 @@
-# TX-003-Custos_desacumulacao_pos_FIRE: Custos tributarios de desacumulacao pos-FIRE
+# TX-desacumulacao: Custos tributarios de desacumulacao pos-FIRE
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | TX-003-Custos_desacumulacao_pos_FIRE |
+| **ID** | TX-desacumulacao |
 | **Dono** | 05 Tributacao |
 | **Status** | Backlog |
 | **Prioridade** | Baixa |
@@ -68,4 +68,4 @@
 ## Proximos Passos
 
 - [ ] Executar quando prioridade subir
-- [ ] Resultado alimenta FR-006 (baseline de gastos pos-FIRE)
+- [ ] Resultado alimenta FR-spending-smile (baseline de gastos pos-FIRE)

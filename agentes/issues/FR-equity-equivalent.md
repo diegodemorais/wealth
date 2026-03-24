@@ -1,10 +1,10 @@
-# FR-003-v2-Monte_Carlo_equity_equivalent: Monte Carlo revisado — equity equivalent do tilt fatorial
+# FR-equity-equivalent: Monte Carlo revisado — equity equivalent do tilt fatorial
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | FR-003-v2-Monte_Carlo_equity_equivalent |
+| **ID** | FR-equity-equivalent |
 | **Dono** | 04 FIRE |
 | **Status** | Done |
 | **Prioridade** | Media |

@@ -1,10 +1,10 @@
-# RK-002-Ouro_tail_risk_hedge: Ouro (IGLN) 2-3% como tail risk hedge
+# RK-gold-hedge: Ouro (IGLN) 2-3% como tail risk hedge
 
 ## Metadados
 
 | Campo | Valor |
 |-------|-------|
-| **ID** | RK-002-Ouro_tail_risk_hedge |
+| **ID** | RK-gold-hedge |
 | **Dono** | 06 Risco |
 | **Status** | Backlog |
 | **Prioridade** | Media |

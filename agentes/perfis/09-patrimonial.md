@@ -103,7 +103,7 @@
 | 05 Tributacao | Parceiro proximo — tributacao PJ/PF interagem | — |
 | 04 FIRE | Complementar — receita empresarial financia aportes FIRE | — |
 
-**Auto-diagnostico**: Terceira retro sem contribuicao ativa. Issue PT-001 (Bond OneLife) no backlog sem progresso. Ausencia total sugere que preciso de gatilhos proativos. Score retro: 2/10.
+**Auto-diagnostico**: Terceira retro sem contribuicao ativa. Issue PT-onelife (Bond OneLife) no backlog sem progresso. Ausencia total sugere que preciso de gatilhos proativos. Score retro: 2/10.
 
 ---
 
