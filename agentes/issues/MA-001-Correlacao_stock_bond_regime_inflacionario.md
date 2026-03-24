@@ -87,6 +87,19 @@ Para os títulos que Diego mantém **até o vencimento** (IPCA+ 2040/2050 como H
 - 2021-2022 Brasil: inflação pós-COVID, Selic de 2% para 13.75% → correlação provavelmente positiva
 - 2023-2025 Brasil: Selic 10.5-12.25%, IPCA controlado → regime em transição
 
+### Confirmação HTM/carry (2026-03-24)
+
+A análise de Renda+ 2065 (sessão 2026-03-24) demonstrou matematicamente que a componente carry do IPCA+ é **completamente independente da taxa futura de mercado**:
+
+- R_carry = (1 + r₀_real) × (1 + IPCA)^N − 1 — travado em r₀ no momento da compra
+- R_mtm = R_total − R_carry — é a componente de preço, sujeita a r₁ (taxa futura)
+
+Para títulos HTM (IPCA+ 2040/2050), a componente MtM é **irrelevante** — o holder recebe o carry travado independentemente do que aconteça com a taxa de mercado. Isso confirma que, para a carteira de Diego, o IPCA+ 2040/2050 tem valor pelo **carry garantido (r₀=7.16% real)**, não por correlação com equity.
+
+Essa distinção também justifica o veto do Advocate ao trigger de "venda se taxa cair a 3-4%": a taxa de mercado cair não reduz o carry travado — só cria MtM positivo, que o HTM ignora de qualquer forma.
+
+Ref: `agentes/contexto/renda-plus-2065-cenarios.md`, `analysis/renda_plus_2065_audit.py`
+
 ---
 
 ## Conclusão
