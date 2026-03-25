@@ -26,15 +26,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
-| 2 | FI-crowdedness | Crowdedness de factor strategies e risco para AVGS/JPGL | 02 Factor | Media |
-| 3 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
-| 4 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 5 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
-| 6 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 7 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
-| 8 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
-| 9 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
-| 10 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 2 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
+| 3 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| 4 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
+| 5 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
+| 6 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
+| 7 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 8 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 9 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -47,6 +46,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FI-crowdedness | Crowdedness de factor strategies e risco AVGS/JPGL | 02 Factor | 2026-03-24 | Tese sustentada. Momentum na zona de atenção sistêmica. Haircut SmB/HmL recalibrar 35-40%. Quant crisis 2.0 modelar no HD-scorecard. |
 | FR-equity-equivalent | Equity equivalent do tilt fatorial | 04 FIRE | 2026-03-24 | Portfólio Sortino-eficiente. EE 74.2% (haircut). Vol 16.8%. Nenhuma mudança de alocação. SWRD = seguro anti-modelo. |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral — primeiro report | 13 Bookkeeper | 2026-03-23 | Framework Q1 pronto. BRL +6.15% neutralizou USD +3.9%. Q2 terá dados completos. |
 | FI-004-Validacao_empirica_fatores_JPGL | Validacao empirica dos fatores de JPGL | 02 Factor | 2026-03-23 | JPGL validado. 5 fatores significativos ao vivo. TER cortado para 0.19% (total ~0.45%). Cost-benefit vs SWRD: +1.88%/ano net (30% haircut). Momentum crash risk nao aplicavel (long-only). Risco real: AUM €245M — gatilhos de monitoramento adicionados. |

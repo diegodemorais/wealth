@@ -49,6 +49,8 @@ Atualizar os 4 arquivos de métricas em `agentes/metricas/` com as premissas HD-
 - [ ] Auditar Shadow A: 93% VWRA (TER 0.22%) + 7% IPCA+ 2040 — projeção a 2037
 - [ ] Auditar Shadow B: 100% IPCA+ 2040 a 7.16% real líquido — SWR resultante
 - [ ] Quant: validar recalculos
+- [ ] **Recalibrar haircut SmB/HmL: 30% → 35-40%** (FI-crowdedness 2026-03-24: McLean & Pontiff 32% decay médio; 30% está no limite do decay esperado). Recalcular equity equivalent e alpha esperado sobre VWRA com haircut revisado
+- [ ] **Modelar Quant Crisis 2.0** como cenário de stress explícito: AVGS -25 a -35% em semanas (epicentro 2007), bloco equity total -16 a -22.5%. Adicionar ao stress test da carteira
 
 ---
 
