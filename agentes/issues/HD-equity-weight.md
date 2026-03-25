@@ -65,7 +65,7 @@ Lifecycle finance (Cocco, Gomes & Maenhout 2005; Viceira 2001) é explícita: co
 
 | Paper | Status |
 |-------|--------|
-| Pfau & Kitces (2014) — JFP Jan/2014 | ✅ Confirmado. +6-8pp não verificado diretamente. **Benefício não replica em dados históricos** — apenas em MC |
+| Pfau & Kitces (2014) — JFP Jan/2014 | ✅ Confirmado. Benefício verificado: **+2-4pp** (não +6-8pp). **Não replica em dados históricos** — apenas em MC |
 | Cocco et al (2005) — RFS | ✅ Confirmado. Correto para capital humano *correlacionado*; no modelo base efeito é oposto |
 | Cederburg (2023) — SSRN 4590406 | ⚠️ Autores: Anarkulova, Cederburg & O'Doherty (3 autores). Sem Wang/Yaron. **Não é NBER — é SSRN** |
 | Anarkulova et al (2022) — JFE | ✅ Paper existe. "40% do tempo" não verificado neste paper específico |

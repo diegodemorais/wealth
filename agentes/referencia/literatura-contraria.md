@@ -120,7 +120,8 @@
 
 - **Pfau & Kitces (2014)** — "Reducing Retirement Risk with a Rising Equity Glidepath", *Journal of Financial Planning*
   - Glidepath em forma de "V" (reduzir equity antes do FIRE date, aumentar gradualmente depois) domina equity constante alto em P(sucesso) para FIRE com data marcada.
-  - Mecanismo: os 3-5 anos antes e depois da data de FIRE são o ponto de máxima exposição ao sequence risk. Reduzir equity nessa janela e reconstruir depois captura a proteção sem custo de longo prazo.
+  - Mecanismo: os 3-5 anos antes e depois da data de FIRE são o ponto de máxima exposição ao sequence risk (conceito de posts posteriores de Kitces — não resultado quantitativo do paper de 2014). Reduzir equity nessa janela e reconstruir depois captura a proteção sem custo de longo prazo.
+  - Benefício verificado pelo Fact-Checker: **+2-4pp de P(sucesso)** vs equity constante (não +6-8pp). Resultado de simulação MC — não replica em dados históricos reais.
   - **Relevância para Diego**: diretamente contra "79% equity constante dos 39 aos 50". Acionado pela issue FR-glide-path.
 
 ---
