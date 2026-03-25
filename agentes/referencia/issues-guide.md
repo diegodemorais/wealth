@@ -93,7 +93,46 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 | Tipo de issue | Agentes obrigatórios |
 |---------------|---------------------|
-| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), Zero-Base (16), Cético (17), agente de domínio, Quant |
-| Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Cético (17), Fact-Checker |
+| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), Rotina Zero-Base (prompt framing from scratch), Cético (17), agente de domínio, Quant, Fact-Checker |
+| Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Cético (17), Quant, Fact-Checker |
 | Tática (DCA, timing, execução) | Agente de domínio, Quant |
 | Cross-domain | Head coordena, múltiplos especialistas |
+
+---
+
+## Checklist Obrigatório — Antes de Lançar Qualquer Agente
+
+> **REGRA**: Antes de lançar o primeiro agente em qualquer issue, o Head DEVE executar este checklist. Sem exceção.
+
+```
+[ ] 1. Classificar o tipo de issue: Meta-estratégica / Stress-test / Tática / Cross-domain
+[ ] 2. Abrir a tabela acima e listar os agentes obrigatórios para esse tipo
+[ ] 3. Verificar os Participantes no cabeçalho do arquivo da issue — add quem estiver faltando
+[ ] 4. Confirmar: Quant está no plano? (todo veredicto numérico passa por ele)
+[ ] 5. Confirmar: Fact-Checker está no plano? (toda issue com paper como justificativa)
+[ ] 6. Confirmar: Cético está no plano? (toda meta-estratégica ou debate de premissa)
+[ ] 7. Só então lançar TODOS em paralelo — nunca lançar 2 e esperar Diego cobrar o resto
+```
+
+**Nota Zero-Base**: não é um agente separado — é o prompt "framing from scratch" da seção "Validação Multi-Model" acima. Para meta-estratégicas, incluir esse ângulo no briefing do agente de domínio ou lançar como general-purpose com o prompt padrão.
+
+Issues meta-estratégicas identificadas (consultar sempre): `HD-simplicity`, `HD-equity-weight`, `HD-brazil-concentration`
+
+---
+
+## Checklist de Contexto Completo — Análise de Alocação
+
+> Erros recorrentes identificados em HD-equity-weight (2026-03-25). Todo debate de alocação deve verificar:
+
+```
+[ ] 1. BALANÇO PATRIMONIAL TOTAL: incluir renda, imóvel, INSS, gastos — não só o portfolio
+        → Diego: renda PJ + imóvel + INSS + gastos = quase 100% Brasil. Equity UCITS = única saída soberana.
+[ ] 2. RESTRIÇÃO DE MIGRAÇÃO: pode rebalancear por venda? Se não, qual é a alavanca real?
+        → Diego: todos ETFs no lucro. Única alavanca = direcionamento de aportes.
+[ ] 3. LITERATURA BALANCEADA: apresentar tanto pro quanto contra, não só o lado que desafia
+        → Erro: Cético listou só contra-equity. Time ignorou Cederburg, Siegel, DMS pro-equity.
+[ ] 4. TEMPORALIDADE DE OPORTUNIDADES: janela de taxa é permanente ou temporária?
+        → IPCA+ 7.16% = janela excepcional. 15% alvo dimensionado para a janela, não indefinidamente.
+[ ] 5. CRITÉRIO CORRETO: otimizar para P(meta), não para retorno esperado máximo
+        → São funções diferentes. Delta de P(FIRE) entre alocações foi ~2pp com guardrails.
+```

@@ -104,7 +104,7 @@
 
 ### Contra: Depende fortemente do horizonte e da necessidade de liquidez
 
-- **Cederburg, O'Doherty, Wang & Yaron (2023)** — "Beyond the Status Quo: A Critical Assessment of Lifecycle Investment Advice", *NBER*
+- **Anarkulova, Cederburg & O'Doherty (2023)** — "Beyond the Status Quo: A Critical Assessment of Lifecycle Investment Advice", *SSRN 4590406* (**corrigido em HD-equity-weight 2026-03-25**: não é NBER; autores são 3 — sem Wang nem Yaron)
   - 100% equity é ótimo para horizontes de 30+ anos com *renda contínua*. Para quem tem data marcada (FIRE aos 50) e patrimônio-alvo, a alocação ótima é diferente.
 
 - **Cocco, Gomes & Maenhout (2005)** — "Consumption and Portfolio Choice over the Life Cycle", *Review of Financial Studies*

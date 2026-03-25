@@ -166,14 +166,14 @@ Pesos do bloco equity: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20%.
 | Favoravel (dep. 1.5%) | **6.96%** |
 | Stress (dep. 0%) | **5.46%** |
 
-Calculo: 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = 5.89% (base)
+Calculo: 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = **5.96%** (base). (Nota: valor anterior 5.89% estava incorreto — corrigido em HD-equity-weight 2026-03-25)
 
 ### Premissas Gerais
 
 | Premissa | Base | Favoravel | Stress |
 |----------|------|-----------|--------|
 | Depreciacao real BRL | 0.5%/ano | 1.5%/ano | 0%/ano |
-| Equity real ponderado em BRL (pre-tax) | **5.89%/ano** | **6.89%/ano** | **5.39%/ano** |
+| Equity real ponderado em BRL (pre-tax) | **5.96%/ano** | **6.96%/ano** | **5.46%/ano** |
 | IPCA+ 2040 liquido HTM 14 anos | **~6.0%/ano** | — | — |
 | IPCA medio estimado | 4%/ano | — | — |
 | Breakeven IPCA+ bruto all-in vs equity | **~5.5%** | — | — |

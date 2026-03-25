@@ -125,6 +125,20 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 14 Quant | Novo — auditoria numerica. Veto absoluto sobre numeros | — |
 | 15 Fact-Checker | Novo — verificacao de fontes e afirmacoes. Braco de pesquisa do Advocate | — |
 
+### Checklist de Composição do Time — OBRIGATÓRIO antes de lançar qualquer agente
+
+Aplica-se a issues E conversas. Sempre que 2+ agentes forem lançados, responder primeiro:
+
+- Há cálculo que gera veredicto? → **Quant obrigatório**
+- Há paper/fonte acadêmica sendo citada? → **Fact-Checker obrigatório**
+- É debate de premissa ou estratégia? → **Cético obrigatório**
+- É issue meta-estratégica? → **Advocate + Rotina Zero-Base (framing from scratch) + Cético + Quant + Fact-Checker**
+- Tem múltiplos domínios? → todos os especialistas afetados
+
+Para issues formais: consultar também tabela em `agentes/referencia/issues-guide.md`.
+
+**Regra:** Lançar TODOS em paralelo na mesma mensagem. Nunca lançar 2 e depender de Diego cobrar quem faltou.
+
 ### Dinamica de Coordenacao
 - **Tema de investimento**: Roteia ao CIO, que coordena seus agentes
 - **Tema tributario/patrimonial**: Trata direto com Tax/Patrimonial, informa CIO se impactar carteira
