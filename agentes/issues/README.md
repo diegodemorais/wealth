@@ -25,15 +25,18 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
-| 2 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
-| 3 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 4 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
-| 5 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 6 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
-| 7 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
-| 8 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
-| 9 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 1 | HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof na complexidade) | 10 Advocate | **Alta** |
+| 2 | HD-equity-weight | 79% equity é certo para horizonte fixo de 11 anos? | 04 FIRE | **Alta** |
+| 3 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
+| 4 | HD-brazil-concentration | Exposição real ao Brasil: capital humano + soberano | 07 FX | Media |
+| 5 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
+| 6 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| 7 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
+| 8 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
+| 9 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 09 Patrimonial | Baixa |
+| 10 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 11 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 12 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
