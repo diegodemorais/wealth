@@ -18,7 +18,6 @@ Diego demonstra disciplina rules-based consistente. Track record real: 41 aporte
 **CORRECAO 2026-03-20**: "Status quo bias na execucao" foi diagnostico errado. Baseado em amostra n=1 (1 dia de delay no IPCA+ DCA). Dados reais da planilha mostram executor consistente acima da meta por 56 meses. Aporte de marco/2026 ja executado (R$56k). Erro de processo: opinar sobre padrao comportamental sem dados quantitativos.
 
 Vieses a monitorar (baseados em evidencia real):
-- ~~**Status quo bias na execucao**~~: REFUTADO pelos dados (73% dos meses com aporte)
 - **Herding de assessores**: assessor amigo traz sugestoes frequentes. Diego filtra bem ate agora, mas pressao social pode aumentar
 - **Action bias em drawdowns prolongados**: nao testado ainda (maior drawdown no periodo foi curto). Vulnerabilidade latente
 
