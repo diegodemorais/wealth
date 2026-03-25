@@ -118,6 +118,27 @@
 - **Pfau (2013)** — "A Broader Framework for Determining an Efficient Frontier for Retirement Income"
   - Com data de FIRE marcada, um drawdown de -40% nos 3-5 anos anteriores destrói o plano mesmo que os retornos de longo prazo sejam positivos. Glidepath reduz esse risco sem custo material em P(FIRE).
 
+- **Pfau & Kitces (2014)** — "Reducing Retirement Risk with a Rising Equity Glidepath", *Journal of Financial Planning*
+  - Glidepath em forma de "V" (reduzir equity antes do FIRE date, aumentar gradualmente depois) domina equity constante alto em P(sucesso) para FIRE com data marcada.
+  - Mecanismo: os 3-5 anos antes e depois da data de FIRE são o ponto de máxima exposição ao sequence risk. Reduzir equity nessa janela e reconstruir depois captura a proteção sem custo de longo prazo.
+  - **Relevância para Diego**: diretamente contra "79% equity constante dos 39 aos 50". Acionado pela issue FR-glide-path.
+
+---
+
+## Tese: Bond tent (bonds longos) descorrelaciona de equity em crises
+
+### Contra: Correlacao inverte em regimes inflacionarios
+
+- **Anarkulova, Cederburg & O'Doherty (2022)** — "Stocks for the Long Run? Evidence from a Broad Sample of Developed Markets", *Journal of Financial Economics*
+  - Em 38 países desenvolvidos por 120 anos, a correlação bonds-equity é positiva em ~40% do tempo.
+  - Mais importante: a correlação inverte para positiva especificamente em regimes de alta inflação — exatamente quando o bond tent deveria proteger.
+  - Mecanismo: em bear markets deflacionários (recessão), bonds sobem e equity cai → correlação negativa → tent funciona. Em bear markets inflacionários (estagflação), bonds E equity caem → correlação positiva → tent falha.
+  - **Ressalva para Diego**: NTN-B é indexada ao IPCA, o que mitiga parcialmente esse problema. A crítica se aplica integralmente a bonds nominais. A literatura não tem tratamento extenso de indexed bonds em economias emergentes.
+  - **Relevância para Diego**: Brasil tem viés inflacionário estrutural. O cenário em que o tent mais falha (estagflação) é o cenário mais provável de estresse fiscal brasileiro. Acionado pela issue MA-bond-correlation.
+
+- **Ilmanen (2022)** — *Investing Amid Low Expected Returns*, Wiley/AQR
+  - Bonds longos em ambiente inflacionário têm retorno real negativo. Bond tent é proteção contra deflação/recessão, não contra inflação.
+
 ---
 
 ## Tese: IPCA+ brasileiro é ativo seguro para hold-to-maturity
