@@ -45,6 +45,20 @@
 
 ---
 
+## Decisoes Patrimoniais (absorvido de 09)
+
+| Data | Decisao | Racional |
+|------|---------|----------|
+| 2026-03 | Manter separacao empresa/patrimonio pessoal | Correto juridicamente, protege ETFs |
+| 2026-03 | CLT Flex proibido | Ilegal sob direito trabalhista brasileiro |
+| 2026-03 | Dividendos distribuidos (enquanto isentos) | Superior a acumular na empresa |
+
+### Estrutura Empresarial Atual
+- 2 PJs no Simples Nacional. Escritorio contabil: Contabilizei
+- Teto Simples: Receita > R$4,8M/ano -> Avaliar Lucro Presumido
+- Reforma tributaria (tributacao dividendos acima de R$50k/mes): monitorar
+- Holding familiar: avaliar quando patrimonio >= R$5M
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |

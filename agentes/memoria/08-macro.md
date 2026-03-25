@@ -114,6 +114,15 @@
 
 ---
 
+## Decisoes Cambio (absorvido de 07)
+
+| Data | Decisao | Racional |
+|------|---------|----------|
+| 2026-03 | Sem hedge de equity | Custo proibitivo (~10%/ano carry) + BRL hedge natural |
+| 2026-03 | Sem bonds internacionais | Yield negativo pos-hedging |
+| 2026-03 | UCITS como veiculo padrao | Sem estate tax, sem risco IRS |
+| 2026-03-20 | Premissa depreciacao real BRL: 0,5%/ano (base), 1,5% (favoravel), 0% (stress) | Forward-looking: 1,5-2,0%/ano, mas base conservadora adotada |
+
 ## Gatilhos Ativos
 
 | Gatilho | Condicao | Acao | Status |

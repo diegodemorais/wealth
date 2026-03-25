@@ -38,9 +38,11 @@ Referencia completa: `agentes/referencia/issues-guide.md`. Board: `agentes/issue
 ## Roteamento de Especialistas
 
 - **Factor/ETFs** -> `factor` | **Renda Fixa** -> `rf` | **FIRE** -> `fire`
-- **Tributacao** -> `tax` | **Cripto/Risco** -> `risco` | **Cambio** -> `fx`
-- **Macro** -> `macro` | **Patrimonio** -> `patrimonial` | **Stress-test** -> `advocate`
-- **Oportunidades** -> `oportunidades` | **Cross-domain** -> multiplos em paralelo
+- **Tributacao/Patrimonio** -> `tax` | **Cripto/Risco/Oportunidades** -> `risco` | **Cambio** -> `macro`
+- **Macro** -> `macro` | **Stress-test** -> `advocate`
+- **CIO** -> apenas Full-Path (multiplos agentes, trade-offs, decisoes estruturais)
+- **Behavioral** -> apenas stress (drawdown >20%, mudanca sem gatilho, sugestao externa, euforia)
+- **Cross-domain** -> multiplos em paralelo
 - **Atualizacao de dados/numeros** -> `bookkeeper` (Head NAO atualiza dados diretamente)
 
 ## Agent Teams — Como Chamar Especialistas
@@ -56,7 +58,7 @@ Toda chamada de especialista usa Agent Teams (visivel no tmux como panes separad
 
 ### Nomes dos teammates (fixos na sessao)
 
-`factor` | `rf` | `fire` | `tax` | `risco` | `fx` | `macro` | `patrimonial` | `advocate` | `oportunidades` | `quant` | `behavioral` | `bookkeeper` | `fact-checker`
+`factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker`
 
 ### Regras
 
