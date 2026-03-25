@@ -26,7 +26,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | **Alta** |
-| 2 | FR-glide-path | Glide path pre-FIRE: definir regra formal de reducao de equity | 04 FIRE | **Alta** |
 | 3 | HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof na complexidade) | 10 Advocate | **Alta** |
 | 4 | HD-equity-weight | 79% equity é certo para horizonte fixo de 11 anos? | 04 FIRE | **Alta** |
 | 5 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
@@ -45,12 +44,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| — | — | — | — | — |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-glide-path | Glide path pre-FIRE: definir regra formal de reducao de equity | 04 FIRE | 2026-03-25 | Sem glide path formal. SoRR coberto por 15% IPCA+ longo + 3% IPCA+ curto. INSS aos 65 como floor. |
 | FI-crowdedness | Crowdedness de factor strategies e risco AVGS/JPGL | 02 Factor | 2026-03-24 | Tese sustentada. Momentum na zona de atenção sistêmica. Haircut SmB/HmL recalibrar 35-40%. Quant crisis 2.0 modelar no HD-scorecard. |
 | FR-equity-equivalent | Equity equivalent do tilt fatorial | 04 FIRE | 2026-03-24 | Portfólio Sortino-eficiente. EE 74.2% (haircut). Vol 16.8%. Nenhuma mudança de alocação. SWRD = seguro anti-modelo. |
 | XX-001-Performance_attribution_trimestral | Performance attribution trimestral — primeiro report | 13 Bookkeeper | 2026-03-23 | Framework Q1 pronto. BRL +6.15% neutralizou USD +3.9%. Q2 terá dados completos. |

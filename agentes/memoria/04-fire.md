@@ -13,6 +13,7 @@
 | 2026-03 | Custo de vida meta: R$250k/ano | Base para calculos de SWR | — |
 | 2026-03-22 | Selic substituido por IPCA+ curto 3% aos 50 | SoRR buffer com ~2 anos duration, melhor protecao inflacionaria que Selic. MtM baixo | 03 RF |
 | 2026-03-22 | Glidepath revisado: IPCA+ longo 15% + curto 3% | Equity 79% na acumulacao. IPCA+ longo e o bond tent natural (TD 2040 vence aos 53). IPCA+ curto comprado perto dos 50 como buffer de sequencia | 03 RF, 10 Advocate |
+| 2026-03-25 | FR-glide-path: sem glide path formal aprovado | Protecao SoRR via estrutura existente: 15% IPCA+ longo (HTM, trade de retorno condicional >= 6.0%, buffer anos 50-53) + 3% IPCA+ curto (buffer SoRR anos 1-2 pos-FIRE). INSS disponivel aos ~65 como floor parcial — periodo critico 50-65 coberto pelo IPCA+. Cederburg (2023) inaplicavel ao periodo 50-65 (sem INSS). Pfau (2013) e Cocco et al (2005) mais aderentes para essa janela. Gatilho de revisao: se taxa IPCA+ fechar abaixo de 6.0% antes de atingir 15%, abrir debate sobre alternativa de protecao SoRR | 04 FIRE, 10 Advocate, 08 Macro, 17 Cetico |
 
 ---
 

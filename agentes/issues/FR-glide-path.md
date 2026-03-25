@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | FR-glide-path |
 | **Dono** | 04 FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 01 CIO, 10 Advocate, 08 Macro, 17 Cetico |
 | **Dependencias** | HD-equity-weight (relacionado — equity % no FIRE) |
@@ -67,23 +67,32 @@ Nenhuma das duas foi formalizada como regra com triggers definidos.
 
 ## Conclusao
 
-> A preencher ao finalizar.
+**Sem glide path formal. Proteção de SoRR via estrutura existente.**
+
+A questão central foi resolvida em duas camadas:
+
+1. **Proteção adequada com plano atual**: 15% IPCA+ longo (HTM, trade de retorno + buffer anos 50-53) + 3% IPCA+ curto (buffer anos 1-2 de FIRE). Juntos cobrem o período de máxima vulnerabilidade a SoRR (50-65, antes do INSS).
+
+2. **INSS como floor a partir dos 65**: Diego terá INSS na data correta para homem brasileiro (~65), não no FIRE. Isso significa que o período crítico sem income floor é 50-65 (15 anos) — exatamente coberto pela estrutura IPCA+. A partir dos 65, o modelo de Cederburg se aplica melhor.
+
+3. **Sobre a tese "menos RF"**: Diego está certo que RF só vale condicional à taxa. A 7.16%, IPCA+ vence equity all-in — é trade de retorno, não ideologia de bond tent. Se taxa cair abaixo de 6%, parar DCA e mover aportes para JPGL. Cederburg (2023) não se aplica diretamente ao período 50-65 (sem INSS) — Pfau (2013) e Cocco et al (2005) são mais aderentes para esse janela específica.
+
+**Gatilho de revisão**: se a janela de taxa IPCA+ >= 6.0% fechar antes de atingir 15% do portfolio, abrir debate sobre alternativa de proteção SoRR para os anos 50-65.
 
 ---
 
 ## Resultado
 
-> A preencher ao finalizar.
-
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | — |
-| **Estrategia** | — |
-| **Conhecimento** | — |
-| **Memoria** | — |
+| **Alocacao** | Sem mudança. 79% equity, 15% IPCA+ longo (alvo), 3% IPCA+ curto (aos 50) confirmados |
+| **Estrategia** | Sem glide path calendárico. DCA em IPCA+ condicional à taxa (>= 6.0%) já é a regra |
+| **Conhecimento** | Cederburg (2023) inaplicável ao período 50-65 (sem INSS). INSS entra aos ~65 como floor parcial. IPCA+ longo = trade de retorno, não hedge estrutural. IPCA+ curto = buffer SoRR puro |
+| **Memoria** | Registrar em 04-fire.md: glide path descartado, proteção via IPCA+ existente, INSS aos 65 |
 
 ---
 
 ## Proximos Passos
 
-> A definir durante a issue.
+- [x] Conclusão registrada
+- [ ] Monitorar construção do tent IPCA+ longo: se taxa fechar antes de 15%, acionar debate de revisão
