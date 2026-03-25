@@ -41,7 +41,7 @@ Referencia completa: `agentes/referencia/issues-guide.md`. Board: `agentes/issue
 - **Tributacao/Patrimonio** -> `tax` | **Cripto/Risco/Oportunidades** -> `risco` | **Cambio** -> `macro`
 - **Macro** -> `macro` | **Stress-test** -> `advocate`
 - **CIO** -> apenas Full-Path (multiplos agentes, trade-offs, decisoes estruturais)
-- **Behavioral** -> apenas stress (drawdown >20%, mudanca sem gatilho, sugestao externa, euforia)
+- **Behavioral** -> retros sempre + gatilhos (drawdown >20%, mudanca sem gatilho, sugestao externa, euforia, hesitacao em executar)
 - **Cross-domain** -> multiplos em paralelo
 - **Atualizacao de dados/numeros** -> `bookkeeper` (Head NAO atualiza dados diretamente)
 
