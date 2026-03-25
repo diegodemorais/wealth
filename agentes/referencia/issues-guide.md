@@ -93,7 +93,7 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 | Tipo de issue | Agentes obrigatórios |
 |---------------|---------------------|
-| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), Zero-Base (16), agente de domínio, Quant |
-| Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Fact-Checker |
+| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), Zero-Base (16), Cético (17), agente de domínio, Quant |
+| Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Cético (17), Fact-Checker |
 | Tática (DCA, timing, execução) | Agente de domínio, Quant |
 | Cross-domain | Head coordena, múltiplos especialistas |
