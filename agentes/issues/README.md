@@ -26,7 +26,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | **Alta** |
-| 3 | HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof na complexidade) | 10 Advocate | **Alta** |
 | 4 | HD-equity-weight | 79% equity é certo para horizonte fixo de 11 anos? | 04 FIRE | **Alta** |
 | 5 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
 | 6 | HD-brazil-concentration | Exposição real ao Brasil: capital humano + soberano | 08 Macro | Media |
@@ -51,6 +50,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof) | 10 Advocate | 2026-03-25 | Carteira atual mantida. Alpha ~0.16% real. Haircut correto: 58% (McLean & Pontiff). Precommitment AVGS validado. |
 | HD-equity-weight | 79% equity certo para horizonte fixo de 11 anos? | 04 FIRE | 2026-03-25 | Confirmado. Equity internacional = única diversificação soberana. Balanço total já é quase 100% Brasil. |
 | FR-glide-path | Glide path pre-FIRE: definir regra formal de reducao de equity | 04 FIRE | 2026-03-25 | Sem glide path formal. SoRR coberto por 15% IPCA+ longo + 3% IPCA+ curto. INSS aos 65 como floor. |
 | FI-crowdedness | Crowdedness de factor strategies e risco AVGS/JPGL | 02 Factor | 2026-03-24 | Tese sustentada. Momentum na zona de atenção sistêmica. Haircut SmB/HmL recalibrar 35-40%. Quant crisis 2.0 modelar no HD-scorecard. |
