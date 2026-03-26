@@ -27,13 +27,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
 | 2 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
+| 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
 | 4 | FR-spending-smile | Spending smile + saude com inflator proprio | 04 FIRE | Baixa |
-| 5 | — | — | — | — |
-| 6 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 7 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
-| 8 | MA-equity-br | Equity Brasil: faz sentido dado balanco 62.9%? | 08 Macro | Baixa |
-| 9 | MA-equity-br | Equity Brasil (IBOV/ETF): faz sentido dado balanco soberano 62.9%? | 08 Macro | Baixa |
+| 5 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -47,6 +43,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| MA-equity-br | Equity Brasil: faz sentido dado balanço soberano? | 08 Macro | 2026-03-26 | 0% equity BR. Double concentration confirmada. Renda+ 2065 é o trade. |
 | TX-inss-beneficio | Estimativa correta do benefício INSS aos 65 anos | 05 Wealth | 2026-03-26 | R$14-28k/ano real 2026 (central R$18-20k). PV ~R$80k. Art.15 vs Art.26 requer especialista. |
 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Wealth | 2026-03-26 | Saving liquido ~R$12k/ano. INSS R$46-55k (nao R$97k). Gap 50-53 critico. Lombard NPV +R$1,7M. |
 | RK-managed-futures | Managed Futures como diversificador | 06 Risco | 2026-03-26 | Zero MF. JPGL primeiro. Monitorar return stacking UCITS. |
