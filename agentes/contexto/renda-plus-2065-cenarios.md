@@ -43,14 +43,14 @@ Onde:
 
 ## Regimes de Alocação (Gatilhos)
 
-| Condição | Ação |
-|----------|------|
-| Taxa ≥ 6,5% + posição < 5% | **Comprar** (DCA) |
-| 6,0% ≤ taxa < 6,5% | **Manter** |
-| Taxa < 6,0% + posição > 0 + ≥ 720 dias | **Vender tudo** |
-| Taxa < 6,0% + posição > 0 + < 720 dias | **Aguardar** X dias |
-| Taxa ≥ 9,0% | **Manter** (carrego compensa MtM) |
-| Aos 50 anos (2037) | **Zerar** posição |
+| Taxa | Posição | Holding | Ação |
+|------|---------|---------|------|
+| taxa > 9% | qualquer | qualquer | **Manter** (carrego compensa MtM) |
+| taxa ≥ 6,5% | < 5% | qualquer | **Comprar** (DCA) |
+| 6% < taxa < 6,5% | qualquer | qualquer | **Manter** |
+| taxa ≤ 6% | > 0% | ≥ 720 dias | **Vender tudo** |
+| taxa ≤ 6% | > 0% | < 720 dias | **Aguardar** (720 − dias) dias |
+| aos 50 anos (2037) | qualquer | qualquer | **Zerar** |
 
 ---
 
@@ -244,10 +244,10 @@ Comparação: vender **agora** vs aguardar até **N=2,0 anos** (ambos com r₁=6
 ## Fórmula Google Sheets
 
 ```
-=if(V29>=9%;"Manter (carrego)";if(AND(V29>=6,5%;U29<5%);"Comprar";if(AND(V29<6%;T29>0;TODAY()-'Renda Fixa'!G7>=720);"Vender";if(AND(V29<=6%;T29>0;TODAY()-'Renda Fixa'!G7<720);"Aguardar "&(720-(TODAY()-'Renda Fixa'!G7))&" dias";"Manter"))))
+=if(V29>=9%;"Manter (carrego)";if(AND(V29>=6,5%;U29<5%);"Comprar";if(AND(V29<=6%;T29>0;TODAY()-'Renda Fixa'!G7>=720);"Vender";if(AND(V29<=6%;T29>0;TODAY()-'Renda Fixa'!G7<720);"Aguardar "&(720-(TODAY()-'Renda Fixa'!G7))&" dias";"Manter"))))
 ```
 
-Correções aplicadas (2026-03-26): `>0,065` → `>=6,5%` (inclui exatamente 6.5%); `<0,06` na condição Aguardar → `<=6%` (captura exatamente 6.0%).
+Correções aplicadas (2026-03-26): `>0,065` → `>=6,5%`; condições de venda/aguardar: `<6%` → `<=6%` (taxa exatamente 6.0% agora aciona corretamente).
 
 Células: V29=taxa Renda+, U29=participação atual, T29=indicador de posição, `'Renda Fixa'!G7`=data de compra
 
