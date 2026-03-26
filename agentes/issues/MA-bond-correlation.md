@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | MA-bond-correlation |
 | **Dono** | 08 Macro |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Media |
-| **Participantes** | 03 RF, 04 FIRE, 10 Advocate |
+| **Participantes** | 08 Macro, 03 RF, 10 Advocate |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-23 |
 | **Origem** | Revisão Chicago Booth scan — gap identificado em David & Veronesi (2013) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-26 |
 
 ---
 
@@ -104,13 +104,28 @@ Ref: `agentes/contexto/renda-plus-2065-cenarios.md`, `analysis/renda_plus_2065_a
 
 ## Conclusão
 
-> Preencher ao executar.
+**Premissa da issue inaplicável ao portfolio de Diego.**
+
+David & Veronesi (2013) descreve correlação stock-bond dentro do mesmo mercado (US stocks vs US bonds). Diego tem equity internacional (USD) e bonds BR (BRL) — mercados e moedas distintos. A correlação clássica não se aplica.
+
+O que foi confirmado:
+- **IPCA+ HTM:** carry garantido real (~7.16%), completamente independente da correlação com equity. MtM irrelevante para holder. Funciona como floor de renda real na aposentadoria, não como hedge de equity.
+- **Renda+ 2065 (MtM):** único instrumento com risco de correlação positiva com equity internacional — mas apenas em cenário de recessão global (não em crise BR pura). Gerenciado pelo gatilho de saída em 6.0%.
+- **Bond tent de Diego:** o racional correto é carry garantido + buffer SoRR (3% curto aos 50), não correlação negativa stock-bond. Já estava correto na substância — só o enquadramento precisava ser explicitado.
+- **Cenário mais perigoso para o portfolio não é inflação BR persistente** (equity USD desconectado + BRL devalorizando protege). É recessão global com BRL estável.
+
+Nenhuma mudança de alocação.
 
 ---
 
 ## Resultado
 
-> Preencher ao executar.
+| Tipo | Detalhe |
+|------|---------|
+| **Alocação** | Nenhuma mudança. |
+| **Estratégia** | Nenhuma mudança. Gatilho Renda+ mantido em 6.0%. |
+| **Conhecimento** | David & Veronesi inaplicável ao portfolio (equity internacional ≠ equity BR). IPCA+ HTM = carry garantido, não hedge. Risco real = recessão global, não inflação BR. |
+| **Memória** | — |
 
 ---
 

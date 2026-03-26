@@ -26,15 +26,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
-| 2 | HD-brazil-concentration | Exposição real ao Brasil: capital humano + soberano | 08 Macro | Media |
-| 3 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
-| 4 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 5 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
-| 6 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 7 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
-| 8 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
-| 9 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
-| 10 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 2 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| 3 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
+| 4 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
+| 5 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
+| 6 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 7 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 8 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 9 | MA-equity-br | Equity Brasil (IBOV/ETF): faz sentido dado balanco soberano 62.9%? | 08 Macro | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -48,6 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| MA-bond-correlation | Correlacao stock-bond inflacionario: IPCA+ como hedge? | 08 Macro | 2026-03-26 | Premissa inaplicavel. IPCA+ HTM = carry, nao hedge. Risco real = recessao global. |
 | HD-brazil-concentration | Exposicao real ao Brasil: capital humano + soberano | 07 FX | 2026-03-26 | Concentracao 62.9% estrutural. Portfolio financeiro correto (6.1% BR). Risco e liquidez, nao alocacao. |
 | HD-scorecard | Scorecard + shadow portfolios com premissas HD-006 | 10 Advocate | 2026-03-26 | P(FIRE)=91% preenchido. Shadow C adicionado. 10 novos findings. Alpha 0.16%/ano (haircut 58%). |
 | HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof) | 10 Advocate | 2026-03-25 | Carteira atual mantida. Alpha ~0.16% real. Haircut correto: 58% (McLean & Pontiff). Precommitment AVGS validado. |
