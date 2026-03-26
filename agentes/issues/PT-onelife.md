@@ -308,7 +308,7 @@ O custo de 1% e o premio por essa opcionalidade, nao uma fee de investimento.
 
 ## Proximos Passos
 
-- [ ] Diego: confirmar equity value real da participacao
+- [x] Diego: confirmar equity value real da participacao — **R$800k confirmado (2026-03-26, estimativa conservadora)**. Equivalente a ~USD 150k ao cambio atual. Na tabela de sensibilidade: entre USD 200k ("marginal, so vale se nao resgatar") e USD 100k. Veredicto preliminar: bond so se justifica se Diego nao pretende resgatar (Lombard lending) ou se houver exit da holding.
 - [ ] Parecer juridico proprio (tributarista tier-1 representando Diego): evento de conversao, opacidade para Diego como co-participante, Lombard lending no BR
 - [ ] Negociar fee (target 0,5-0,7% pos-exit)
 - [ ] Formalizar governanca (6 clausulas + CFO role)

@@ -27,7 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
 | 2 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 3 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
+| 3 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Media |
 | 4 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
 | 5 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
 | 6 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
@@ -40,7 +40,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| — | — | — | — | — |
+| RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Media | Em execucao |
 
 ### Done
 > Issues concluidas

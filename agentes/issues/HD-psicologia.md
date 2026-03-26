@@ -72,6 +72,17 @@ Reduz o risco de Diego aceitar uma conclusao por confiar na fonte dos dados.
 
 ---
 
+## Exemplos concretos das ultimas sessoes (2026-03-26)
+
+As sessoes de 2026-03-22 a 2026-03-26 geraram exemplos perfeitos para cada ideia:
+
+| Ideia | Exemplo concreto |
+|-------|-----------------|
+| Calibracao de confianca | Advocate deu Renda+ MtM -75%, Quant corrigiu para -82%. Nenhum indicou incerteza. Se tivessem, Diego saberia que o numero era estimativa. |
+| Pre-mortem | HD-simplicity usou "burden of proof invertido" — imaginou que a carteira atual falhou e perguntou "como aconteceu?". Funcionou muito bem, identificou que alpha e 0.16%, nao 0.5%. |
+| Dado vs interpretacao | Fact-Checker separou dado IOF (errado — era sobre entrada de capital estrangeiro, nao remessas PF) da interpretacao de risco (valida — controle de capital existe historicamente). Evitou uma decisao baseada em dado incorreto. |
+| Registro de raciocinio | HD-brazil-concentration: o raciocinio do Advocate ("riqueza total sobe 7% em BRL em crise") foi o argumento central. Mas nao esta registrado formalmente — so a conclusao. Em 5 anos, Diego nao saberia por que concluiu isso. |
+
 ## Escopo (quando executado)
 
 - [ ] Avaliar quais das 4 ideias tem melhor custo-beneficio para implementar

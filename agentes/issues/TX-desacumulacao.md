@@ -35,8 +35,12 @@
 - [ ] IOF sobre operacoes de cambio na desacumulacao (Okegen e similares)
 - [ ] Custos operacionais recorrentes: custódia, spread FX, contabilidade/declaração
 - [ ] INSS como contribuinte individual: obrigatorio? Minimo?
-- [ ] Calcular custo total anual de desacumulacao assumindo retirada de R$250k/ano de portfolio atual
+- [ ] Calcular custo total anual de desacumulacao em **dois periodos distintos:**
+  - **50-65 anos:** desacumulacao plena (~R$250k/ano do portfolio)
+  - **65-80 anos:** INSS R$97k/ano reduz necessidade para ~R$153k/ano do portfolio
 - [ ] Saving liquido = R$49k (PJ taxes) - custos de desacumulacao = R$?
+- [ ] **Cenario alternativo (PT-onelife):** se Diego adotar bond OneLife + Lombard lending, IR de desacumulacao = zero. Modelar cenario com e sem Lombard.
+- [ ] **Empresa R$800k como fonte adicional:** liquidacao gradual da participacao empresarial pode ser fonte de caixa nos primeiros anos pos-FIRE
 - [ ] Quant: validar calculos
 
 ---

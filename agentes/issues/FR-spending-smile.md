@@ -9,7 +9,7 @@
 | **Status** | Backlog |
 | **Prioridade** | Baixa |
 | **Participantes** | 00 Head, 10 Advocate, 11 Quant |
-| **Dependencias** | TX-desacumulacao (custos de desacumulacao — impacta baseline) |
+| **Dependencias** | TX-desacumulacao (custos de desacumulacao — impacta baseline); PT-onelife condicional (se Lombard = sem IR = TX muda) |
 | **Criado em** | 2026-03-23 |
 | **Origem** | HD-009 (Auditoria de gastos) |
 | **Concluido em** | — |
@@ -19,6 +19,8 @@
 ## Motivo / Gatilho
 
 > HD-009 identificou que o FR-003 usa R$250k flat como baseline de gastos na aposentadoria. Evidencias empiricas (Blanchett 2014) e dados reais de Diego mostram que gastos seguem um "spending smile" — nao sao flat. Saude e o unico componente com inflacao propria crescente (+5-8%/ano real no Brasil) que precisa de modelagem separada.
+>
+> **Novo dado disponivel (2026-03-26):** gastos reais auditados = **R$215k/ano** (HD-009). O spending smile comeca de R$215k, nao de estimativa. Go-Go R$270-290k esta entre P(FIRE) 91% (R$250k) e 87% (R$350k) — espaco mais preciso para modelar. Baseline Monte Carlo atual usa R$250k flat (FR-003 com premissas HD-006).
 
 ---
 

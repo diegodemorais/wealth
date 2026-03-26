@@ -7,7 +7,7 @@
 | **ID** | XX-casamento |
 | **Dono** | 00 Head |
 | **Status** | Backlog |
-| **Prioridade** | Media |
+| **Prioridade** | Baixa |
 | **Participantes** | 04 FIRE, 05 Tax, 01 CIO, 12 Behavioral |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-24 |
@@ -40,15 +40,15 @@ Casamento muda materialmente os parametros do modelo FIRE:
 
 **Urgente (fazer antes do casamento):**
 - [ ] Testamento: contratar advogado de familia. Quem herda o que?
-- [ ] Pacto antenupcial: qual regime de bens? Separacao total protege patrimonio pre-casamento
+- [ ] Pacto antenupcial: qual regime de bens? Separacao total protege patrimonio pre-casamento. **Nota (2026-03-26):** escopo agora inclui participacao empresarial R$800k (confirmado) + imóvel equity R$450k + terreno R$150k — patrimonio total R$8.813M, muito maior do que o visivel no portfolio financeiro
 - [ ] Seguro de vida: cobrir estate tax US-listed (~US$60k risco herdeiros) + proteger parceira se Diego falecer
 
 **Modelo FIRE:**
 - [ ] Coletar inputs do Diego: custo de vida esperado pos-casamento, renda da parceira, planos de filhos
-- [ ] Recalcular P(FIRE) com cenario casamento: R$280k/ano + R$20k aportes vs R$250k + R$25k
+- [ ] Recalcular P(FIRE) com cenario casamento: R$280k/ano + R$20k aportes vs R$250k + R$25k. **Baseline: 91% @ R$250k (FR-003 com premissas HD-006)**
 - [ ] Recalcular P(FIRE) com cenario filhos: custo R$350k+, aporte zero por 2-3 anos
 - [ ] Definir FIRE date condicional: "se parceira trabalha -> 50; se nao trabalha -> 52; se filhos -> revisao"
-- [ ] Avaliar se patrimonio de R$3.5M e suficiente para FIRE em cenarios de familia
+- [ ] Avaliar se patrimonio e suficiente: **portfolio financeiro R$3.479M + empresa R$800k = R$4.279M** (excluindo imóvel/terreno/capital humano)
 
 **Patrimonial:**
 - [ ] Avaliar regime de bens otimo (separacao total vs comunhao parcial)

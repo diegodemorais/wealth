@@ -24,6 +24,8 @@ Scan do Rational Reminder Forum (XX-003) identificou managed futures (KMLM, DBMF
 
 **Contexto UCITS**: opcoes para investidores brasileiros sao limitadas — nao ha KMLM/DBMF UCITS liquidos. Implementacao direta e difícil com perfil do Diego.
 
+**Novo contexto (HD-brazil-concentration, 2026-03-26):** o cenario mais perigoso para o portfolio de Diego e **recessao global com BRL estaval (2022-style)**. Nesse cenario: equity cai em USD, cambio nao protege, IPCA+ HTM nao compensa. Em 2022, managed futures foi o melhor ativo da industria (KMLM: +25%, SG CTA Index: +25%). Esse e o caso de uso principal para esta issue — nao apenas diversificacao geral.
+
 ---
 
 ## Descricao

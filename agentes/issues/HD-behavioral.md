@@ -20,5 +20,13 @@ O curso Chicago Booth apresentou multiplas evidencias de vieses comportamentais 
 - Koijen: PM Slides 1 (behavioral biases, leverage aversion)
 - Frazzini & Pedersen (2014): betting against beta, leverage constraints
 
+## Novo contexto (2026-03-26)
+Debates LLM entre agentes tem limitacao estrutural (mesmo modelo, sem divergencia real de premissas). Exemplos concretos das ultimas sessoes:
+- Advocate deu -75% de drawdown Renda+, Quant corrigiu para -82% (nenhum indicou incerteza)
+- Macro usou IOF 6% como argumento — Fact-Checker identificou que era sobre entrada de capital estrangeiro, nao remessas de PF
+- HD-simplicity: debate "Bull vs Bear" teve argumentos espelhados sem novidade real
+
+O checklist comportamental deve incluir o **vies sistemico do proprio sistema de agentes** — nao apenas vieses de Diego. Recomendacao: adicionar item "verificar se debate gerou argumento genuinamente novo ou apenas eco da premissa do Head."
+
 ## Origem
 Scan Chicago Booth (HD-003) + Debate 2026-03-20 (proposta de agente behavioral)
