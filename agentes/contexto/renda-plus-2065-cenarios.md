@@ -244,8 +244,10 @@ Comparação: vender **agora** vs aguardar até **N=2,0 anos** (ambos com r₁=6
 ## Fórmula Google Sheets
 
 ```
-=if(V29>=0,09;"Manter (carrego)";if(AND(V29>0,065;U29<0,05);"Comprar";if(AND(V29<0,06;T29>0;TODAY()-'Renda Fixa'!G7>=720);"Vender";if(AND(V29<0,06;T29>0;TODAY()-'Renda Fixa'!G7<720);"Aguardar "&(720-(TODAY()-'Renda Fixa'!G7))&" dias";"Manter"))))
+=if(V29>=9%;"Manter (carrego)";if(AND(V29>=6,5%;U29<5%);"Comprar";if(AND(V29<6%;T29>0;TODAY()-'Renda Fixa'!G7>=720);"Vender";if(AND(V29<=6%;T29>0;TODAY()-'Renda Fixa'!G7<720);"Aguardar "&(720-(TODAY()-'Renda Fixa'!G7))&" dias";"Manter"))))
 ```
+
+Correções aplicadas (2026-03-26): `>0,065` → `>=6,5%` (inclui exatamente 6.5%); `<0,06` na condição Aguardar → `<=6%` (captura exatamente 6.0%).
 
 Células: V29=taxa Renda+, U29=participação atual, T29=indicador de posição, `'Renda Fixa'!G7`=data de compra
 

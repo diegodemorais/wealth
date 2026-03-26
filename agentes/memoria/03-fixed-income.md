@@ -10,7 +10,7 @@
 |------|---------|----------|---------------------|
 | 2026-03-22 | **IPCA+ longo 15%**, piso **6.0%**, TD 2040 (80%) + TD 2050 (20%) | Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Piso operacional 6.0% (margem 50 bps). DCA ATIVO (taxa 7.16% > 6.0%). 5.0-6.0%: pausar. < 5.0%: vender (MtM positivo) | 00 Head, 02 Factor, 04 FIRE, 10 Advocate |
 | 2026-03-22 | **IPCA+ curto 3% aos 50** (SoRR buffer) | Substitui Selic do plano original. ~2 anos duration, MtM baixo. Comprar perto da aposentadoria | 04 FIRE |
-| 2026-03-24 | **Renda+ 2065: teto 5%, DCA ativo >= 6.5%** | EV 42.1% em N=3 (~12.6%/a) supera equity BRL por 1.4-2.1pp/a. P(ganho)=86%. Bear case (C7+C8=14%) impacta 0.6-2.7pp — aceitável. **Fonte de verdade: `agentes/contexto/renda-plus-2065-cenarios.md`** (8 cenários, validado RF+Quant). Dentro do bucket RF: IPCA+ longo tem prioridade sobre Renda+ (gap maior). JPGL é equity — buckets RF e equity são alimentados em paralelo nos aportes. | 03 RF, 14 Quant |
+| 2026-03-24 | **Renda+ 2065: teto 5%, DCA ativo >= 6.5%** | EV 42.1% em N=3 (~12.6%/a) supera equity BRL por 1.4-2.1pp/a. P(ganho)=86%. Bear case (C7+C8=14%) impacta 0.6-2.7pp — aceitável. **Fonte de verdade: `agentes/contexto/renda-plus-2065-cenarios.md`** (8 cenários, validado RF+Quant). Ordem de prioridade de aportes: **IPCA+ longo → Renda+ 2065 → Equity (JPGL)**. IPCA+ estrutural primeiro (maior gap e janela de 7%+), depois Renda+ tático (DCA enquanto taxa >= 6.5%, janela aberta), depois JPGL. | 03 RF, 14 Quant |
 | 2026-03 | Renda+ 2065: gatilho de venda em 6,0% | Ponto otimo calculado com dados reais | 06 Tactical |
 
 ---
