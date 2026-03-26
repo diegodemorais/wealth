@@ -158,11 +158,10 @@ O INSS de Diego é **R$14-28k/ano real 2026** (central: ~R$18-20k). Estruturalme
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | — |
-| **Estrategia** | — |
-| **Conhecimento** | — |
-| **Memoria** | Atualizar: project_patrimonio_total.md, project_gastos_baseline.md, memoria/05-wealth.md |
-| **Nenhum** | — |
+| **Alocacao** | Nenhuma |
+| **Estrategia** | INSS tratado como bônus de longevidade, não pilar do plano FIRE |
+| **Conhecimento** | Benefício real 2026: R$14-28k/ano (central R$18-20k). EC 103/2019 exige correção INPC. SM 2003-2016 dilui média estruturalmente. Art. 15 (fator previdenciário) pode ser superior — requer especialista. |
+| **Memoria** | project_patrimonio_total.md atualizado (PV R$80k, intervalo R$14-28k). perfis/05-wealth.md: especialidade previdenciária adicionada com referências. |
 
 ---
 

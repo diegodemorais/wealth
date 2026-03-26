@@ -47,7 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
-| TX-inss-beneficio | Estimativa correta do benefício INSS aos 65 anos | 05 Wealth | 2026-03-26 | ~R$18-20k/ano real 2026. PV ~R$80k. Erro anterior: nominal=real. |
+| TX-inss-beneficio | Estimativa correta do benefício INSS aos 65 anos | 05 Wealth | 2026-03-26 | R$14-28k/ano real 2026 (central R$18-20k). PV ~R$80k. Art.15 vs Art.26 requer especialista. |
 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Wealth | 2026-03-26 | Saving liquido ~R$12k/ano. INSS R$46-55k (nao R$97k). Gap 50-53 critico. Lombard NPV +R$1,7M. |
 | RK-managed-futures | Managed Futures como diversificador | 06 Risco | 2026-03-26 | Zero MF. JPGL primeiro. Monitorar return stacking UCITS. |
 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge | 06 Risco | 2026-03-26 | Zero ouro. Capital para JPGL. Managed futures superior. |
