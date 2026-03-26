@@ -43,6 +43,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| RF-renda-teto | Teto ótimo Renda+ 2065: 3% ou 5%? | 03 RF | 2026-03-26 | 5% confirmado. Racional em renda-plus-2065-cenarios.md. |
 | MA-equity-br | Equity Brasil: faz sentido dado balanço soberano? | 08 Macro | 2026-03-26 | 0% equity BR. Double concentration confirmada. Renda+ 2065 é o trade. |
 | TX-inss-beneficio | Estimativa correta do benefício INSS aos 65 anos | 05 Wealth | 2026-03-26 | R$14-28k/ano real 2026 (central R$18-20k). PV ~R$80k. Art.15 vs Art.26 requer especialista. |
 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Wealth | 2026-03-26 | Saving liquido ~R$12k/ano. INSS R$46-55k (nao R$97k). Gap 50-53 critico. Lombard NPV +R$1,7M. |

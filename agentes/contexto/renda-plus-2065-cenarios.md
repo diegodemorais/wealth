@@ -2,6 +2,8 @@
 
 > Criado: 2026-03-24 | Validado por: RF + Quant (dois auditores independentes)
 > Posição atual: 3,2% do portfolio (R$ 111.992) | Alvo tático: ≤5%
+>
+> **⚠️ FONTE DE VERDADE para o teto de 5%** — consultar este arquivo antes de questionar o sizing do Renda+ 2065. A decisão 5% (HD-006, 2026-03-22) foi justificada por esta simulação. RF-renda-teto (2026-03-26) reconfirmou: EV 42.1% (N=3) supera equity BRL por 1.4-2.1pp/a.
 
 ---
 
