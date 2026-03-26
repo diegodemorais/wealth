@@ -68,6 +68,51 @@
 
 ---
 
+## Planejamento Previdenciário (INSS)
+
+### Fórmula EC 103/2019 — Aposentadoria por Idade (homem, 65 anos)
+
+- **Salário de Benefício (SB)**: média aritmética simples de **todas** as competências, em valores nominais históricos sem correção monetária. Sem descartar nenhuma (extinção do fator dos 80% melhores).
+- **Alíquota**: 60% + 2% × (anos de contribuição − 20). Ex: 33 anos → 86%.
+- **Benefício bruto**: min(SB × alíquota, teto INSS na data de concessão).
+- **IR previdenciário**: tabela progressiva IRPF + isenção extra R$1.903,98/mês para 65+.
+- **Carência mínima**: 180 meses. Diego tem 400+ meses — nenhum risco.
+- **Lei 10.666/2003, art. 3**: preserva direito à aposentadoria por idade mesmo após perda de qualidade de segurado, desde que carência cumprida. Permite parar de contribuir no FIRE/50 e receber aos 65.
+
+### Impacto do Histórico de Contribuições (Diego)
+
+A EC 103/2019 penaliza severamente quem contribuiu sobre salário mínimo nos primeiros anos:
+
+- **2003-2016 (161 meses)**: SM nominal médio ~R$480/mês → arrastam a média para baixo
+- **2017-2037 (242 meses)**: teto INSS → elevam a média
+- **Efeito**: SB ≈ R$5.280/mês (nominal) → benefício líquido ~R$52k/ano (nominal 2052) → **~R$18-20k/ano em termos reais 2026** (deflacionado 4%/ano × 26 anos, fator 2,77)
+
+> **Atenção**: sempre deflacionar o benefício nominal para termos reais antes de registrar no balanço patrimonial. Confundir nominal com real gera erro de ~2,5× (como ocorreu na estimativa anterior de R$46-55k).
+
+### Referências — Legislação Previdenciária
+- **Emenda Constitucional 103/2019**: Reforma da Previdência — nova fórmula do benefício, idades mínimas, alíquotas progressivas. [planalto.gov.br]
+- **Lei 8.213/1991 (LBPS)**: Lei de Benefícios da Previdência Social — carência, tipos de benefício, qualidade de segurado.
+- **Lei 10.666/2003, art. 3**: Preservação do direito à aposentadoria por idade após perda de qualidade de segurado (fundamental para trabalhadores FIRE).
+- **IN PRES/INSS 128/2022**: Manual de procedimentos para cálculo de benefícios.
+- **Decreto 3.048/1999 (Regulamento da Previdência)**: Regras para contribuinte individual, filiação, manutenção da qualidade de segurado.
+- **CNIS — Cadastro Nacional de Informações Sociais**: Fonte oficial de todo o histórico de contribuições. Acessar via Meu INSS (meu.inss.gov.br) para conferir competências exatas.
+
+### Referências — Especialistas e Conteúdo Técnico
+- **Adriane Bramante (IBDP)**: Presidente do Instituto Brasileiro de Direito Previdenciário. Maior referência em cálculo de benefícios pós-EC 103/2019.
+- **João Badari**: Advogado previdenciário, colunista técnico sobre reforma e cálculo de benefícios.
+- **Previdência Total (YouTube/blog)**: Conteúdo técnico sobre EC 103/2019, planejamento previdenciário para autônomos e PJ.
+- **IBDP (ibdp.org.br)**: Instituto Brasileiro de Direito Previdenciário — jurisprudência e análises técnicas.
+
+### Gatilhos Previdenciários
+| Gatilho | Condição | Ação |
+|---------|----------|------|
+| Revisão CNIS | Ao menos 1×/ano | Verificar se todas as competências estão registradas via Meu INSS |
+| Consulta especialista | Antes do FIRE/50 | Validar benefício exato com advogado previdenciário (acesso ao CNIS completo) |
+| Mudança legislativa | Se houver nova reforma | Recalcular benefício com nova fórmula |
+| Otimização contribuição | Proativamente | Avaliar se vale aumentar base de contribuição nos 11 anos restantes |
+
+---
+
 ## Planejamento Patrimonial & Empresarial (escopo absorvido de 09)
 
 ### Estrutura Atual de Diego
