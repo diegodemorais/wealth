@@ -138,7 +138,19 @@ PV(39) = R$19.000 × 15,37 × 0,281 = R$82.000
 
 ## Conclusao
 
-> Preencher ao finalizar.
+### Metodologia correta (revisão Wealth — 2026-03-26)
+
+**Erro identificado no cálculo anterior**: EC 103/2019 Art. 26 exige "atualizados monetariamente" e Lei 8.213/1991 Art. 29-B mantém correção por INPC mês a mês. O cálculo inicial usou valores nominais brutos — metodologicamente incorreto.
+
+**Por que o resultado ficou próximo**: os 161 meses de SM corrigidos por INPC (~3,5-4×) ainda são muito inferiores aos ~242 meses de teto corrigido (~1,3-1,9×). A média continua dominada pelo teto, e o SB corrigido (~R$4.800/mês) ficou próximo do SB nominal (~R$5.281/mês) por coincidência.
+
+**Intervalo de confiança com metodologia correta: R$14-28k/ano real 2026.**
+
+**Ponto crítico descoberto**: Diego tem direito à **regra de transição Art. 15 EC 103/2019** (filiado antes de 13/11/2019), que usa o fator previdenciário. Para 65 anos + 33 anos de contribuição, o FP tende a ser > 1 — potencialmente gerando benefício superior ao Art. 26. Especialista deve calcular ambas as regras.
+
+### Conclusão final
+
+O INSS de Diego é **R$14-28k/ano real 2026** (central: ~R$18-20k). Estruturalmente baixo porque 13 anos de salário mínimo diluem a média de forma permanente (design da EC 103/2019). É um bônus de longevidade, não pilar do plano. O plano FIRE funciona sem ele.
 
 ---
 
@@ -156,6 +168,6 @@ PV(39) = R$19.000 × 15,37 × 0,281 = R$82.000
 
 ## Proximos Passos
 
-- [ ] Validar resultado com especialista previdenciário (acesso ao CNIS completo via Gov.br ou advogado)
-- [ ] Atualizar FR-003 (Monte Carlo) se o benefício divergir significativamente de R$50k
-- [ ] Checar se vale antecipar contribuições ou aumentar base para otimizar benefício nos 11 anos restantes
+- [ ] **Especialista previdenciário** (tier-1): calcular com CNIS completo + tabela INPC oficial + comparativo Art. 26 vs Art. 15 (fator previdenciário). O Art. 15 pode ser mais vantajoso para Diego.
+- [ ] Acessar CNIS via Meu INSS (meu.inss.gov.br) para confirmar todas as competências registradas
+- [ ] Avaliar se vale aumentar base de contribuição nos 11 anos restantes (custo de oportunidade vs equity provavelmente alto)
