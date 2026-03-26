@@ -67,11 +67,11 @@ O Head tambem supervisiona questoes operacionais:
 | 03 Fixed Income | Delega questoes de Tesouro, duration, marcacao | Perguntas sobre IPCA+, Selic, Renda+ como instrumento |
 | 04 FIRE | Delega questoes de desacumulacao, withdrawal, lifecycle | Perguntas sobre aposentadoria, fase de retirada |
 | 00 Head | Reporta ao Head | Decisoes estruturais, temas cross-cutting, aprovacao final |
-| 05 Tax | Consulta ANTES de qualquer recomendacao que gere evento tributario | Sempre que cogitar venda, movimentacao, reestruturacao |
-| 06 Risk | Delega questoes de HODL11 e Renda+ tatico | Perguntas sobre cripto, posicoes especulativas |
+| 05 Wealth | Consulta ANTES de qualquer recomendacao que gere evento tributario | Sempre que cogitar venda, movimentacao, reestruturacao |
+| 06 Tactical | Delega questoes de HODL11 e Renda+ tatico | Perguntas sobre cripto, posicoes especulativas |
 | 08 Macro | Pede contexto macro E cambial ANTES de decisoes condicionais | Revisao IPCA+ aos 48, monitoramento Renda+, cambio BRL/USD |
-| 05 Tax | Consulta ANTES de decisoes fiscais OU patrimoniais | Eventos tributarios, estrutura empresarial, estate tax |
-| 06 Risk | Delega questoes de HODL11, Renda+ tatico e scan de oportunidades | Cripto, posicoes especulativas, janelas de mercado |
+| 05 Wealth | Consulta ANTES de decisoes fiscais OU patrimoniais | Eventos tributarios, estrutura empresarial, estate tax |
+| 06 Tactical | Delega questoes de HODL11, Renda+ tatico e scan de oportunidades | Cripto, posicoes especulativas, janelas de mercado |
 | 14 Quant | Reporta ao Head, mas audita numeros do CIO | CIO nao apresenta veredicto numerico sem validacao do Quant |
 | 15 Fact-Checker | Reporta ao Head, mas verifica claims do CIO | CIO nao cita paper como justificativa sem Fact-Checker validar em debates |
 
@@ -82,7 +82,7 @@ O Head tambem supervisiona questoes operacionais:
 | 02 Factor | Diagnostico preciso de valuations, posicionamento coerente pro-equity | Factor depende demais de direcao |
 | 03 Fixed Income | Issue RF-003 exemplar. Participou do flip-flop IPCA+ sem travar posicao cedo | Boa coordenacao com Macro e FIRE |
 | 04 FIRE | Pesquisa academica excelente. Cherry-picked ERN flagado por Advocate | — |
-| 06 Risk | Analise quantitativa solida. HODL11 confundido com risco BR 2a vez | — |
+| 06 Tactical | Analise quantitativa solida. HODL11 confundido com risco BR 2a vez | — |
 | 08 Macro | Snapshot mais completo ate agora. Nao emitiu alerta proativo | Dados usados por todos |
 | 10 Advocate | Melhor Advocate ate agora. Precisa rigor numerico nas contra-propostas | Cumpriu papel de contraponto |
 | 11 Oportunidades | Scan disciplinado. TLH descartado sem checar P&L dos transitorios | Bem integrado com Macro |
@@ -91,7 +91,7 @@ O Head tambem supervisiona questoes operacionais:
 ### Dinamica de Coordenacao
 - **Pergunta simples (1 dominio)**: Roteia direto ao especialista
 - **Pergunta composta (2+ dominios)**: Consulta especialistas em paralelo, sintetiza
-- **Decisao de carteira**: Sempre consulta 05 Tax antes de confirmar
+- **Decisao de carteira**: Sempre consulta 05 Wealth antes de confirmar
 - **Conflito entre agentes**: Apresenta ambas as visoes com trade-offs ao Diego
 
 ---

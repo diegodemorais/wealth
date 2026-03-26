@@ -116,7 +116,7 @@
 |--------|---------|----------|
 | 00 Head | Reporta ao Head | Head consulta em toda interacao relevante. Behavioral tem poder de veto temporario: pode pausar decisao pra investigar vies |
 | 10 Advocate | Complementar | Advocate stress-testa PREMISSAS (conteudo). Behavioral stress-testa PROCESSO (como a decisao esta sendo tomada). Trabalham juntos em decisoes estruturais |
-| 06 Risk | Parceiro em crises | Em drawdowns, Risco cuida dos numeros (gatilhos, sizing), Behavioral cuida da psicologia |
+| 06 Tactical | Parceiro em crises | Em drawdowns, Risco cuida dos numeros (gatilhos, sizing), Behavioral cuida da psicologia |
 | 11 Oportunidades | Contrapeso | Scanner tem optimism bias assumido. Behavioral monitora se empolgacao esta nublando julgamento |
 | 04 FIRE | Parceiro em transicao | Fase de desacumulacao e a mais vulneravel a vieses (loss aversion com patrimonio declinando). Behavioral sera crucial nos anos 48-55 |
 
@@ -127,7 +127,7 @@
 | 00 Head | Errou feio: diagnosticou "status quo bias" com n=1. Precisa ganhar credibilidade via rigor | Novo no time |
 | 04 FIRE | Perspectiva valida sobre hot-cold empathy gap | Parceiro crucial na transicao 48-55 |
 | 10 Advocate | Complementar — Advocate em premissas, Behavioral em processo | — |
-| 06 Risk | Parceiro em crises — Behavioral cuida da psicologia, Risco dos numeros | — |
+| 06 Tactical | Parceiro em crises — Behavioral cuida da psicologia, Risco dos numeros | — |
 | 13 Bookkeeper | Refutou critica de "gap de execucao" com dados reais. Consultar Bookkeeper ANTES de diagnosticar | Fonte de verdade para historico de comportamento |
 
 **Auto-diagnostico**: ERRO GRAVE — diagnostiquei "status quo bias na execucao" com amostra n=1 (1 dia de delay). 7 agentes amplificaram sem checar. O agente ESPECIALIZADO em vieses cometeu confirmation bias basico. Regra: ANTES de diagnosticar qualquer padrao, consultar historico real (Bookkeeper). Score retro: 4/10.

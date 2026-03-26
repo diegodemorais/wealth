@@ -109,8 +109,8 @@ Formato: `{SIGLA}-{slug-descritivo}`
 | FI | 02 Factor Investing | FI-crowdedness |
 | RF | 03 Fixed Income | RF-ipca-dca |
 | FR | 04 FIRE / Aposentadoria | FR-spending-smile |
-| TX | 05 Tax | TX-desacumulacao |
-| RK | 06 Risk | RK-gold-hedge |
+| TX | 05 Wealth | TX-desacumulacao |
+| RK | 06 Tactical | RK-gold-hedge |
 | FX | 07 FX [removido] | FX-hedge-custo |
 | MA | 08 Macro | MA-bond-correlation |
 | PT | 09 Patrimonial [removido] | PT-onelife |

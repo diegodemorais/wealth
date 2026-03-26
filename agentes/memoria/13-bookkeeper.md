@@ -57,9 +57,9 @@ WRDUSW-USD, F50A.DE, AVEM UCITS, LON:EMVL, ZPRX.DE, LON:IWQU, LON:IWMO
 | Item | Valor | Fonte |
 |------|-------|-------|
 | Spread cambio (Okegen) | 0,25% ida e volta | carteira.md |
-| IOF | 1,1% (verificar periodicamente) | memoria 05-tax |
-| Custo total one-time cambio | ~1,35% (~0,12%/ano diluido) | memoria 05-tax |
-| IR ETFs exterior | 15% flat (Lei 14.754/2023) | memoria 05-tax |
+| IOF | 1,1% (verificar periodicamente) | memoria 05-wealth |
+| Custo total one-time cambio | ~1,35% (~0,12%/ano diluido) | memoria 05-wealth |
+| IR ETFs exterior | 15% flat (Lei 14.754/2023) | memoria 05-wealth |
 | IR Tesouro (>2 anos) | 15% sobre ganho nominal | tabela regressiva |
 
 ---

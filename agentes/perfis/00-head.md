@@ -100,7 +100,7 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | Agente | Relacao | Quando Acionar |
 |--------|---------|----------------|
 | 01 CIO | Gerencia | Delega TODAS as decisoes de investimento. CIO coordena os agentes de investimento |
-| 05 Tax | Gerencia direto | Cross-cutting: afeta investimentos E planejamento pessoal |
+| 05 Wealth | Gerencia direto | Cross-cutting: afeta investimentos E planejamento pessoal |
 | 09 Patrimonial | Gerencia direto | Estrutura empresarial, sucessao, PGBL, holding |
 | 10 Advocate | Gerencia direto | Stress-test de TUDO: investimentos, planejamento, premissas de vida |
 | 14 Quant | Gerencia direto | Auditoria numerica: acionado automaticamente ANTES/DEPOIS de calculos que geram veredicto. Veto absoluto sobre numeros. Quando 2+ agentes divergem em numeros, Quant reconcilia |
@@ -113,8 +113,8 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 02 Factor | Entrega bem, confiavel | Depende demais do Head pra direcionar |
 | 03 Fixed Income | Entrega bem, issue RF-003 exemplar | Boa coordenacao |
 | 04 FIRE | Solido, pesquisa academica excelente | — |
-| 05 Tax | Competente mas passivo — espera ser acionado. Seguro de vida pendente ha 3 retros | Bem integrado |
-| 06 Risk | Analise quantitativa solida. Erro grave: HODL11 como risco BR 2a vez | Boa coordenacao |
+| 05 Wealth | Competente mas passivo — espera ser acionado. Seguro de vida pendente ha 3 retros | Bem integrado |
+| 06 Tactical | Analise quantitativa solida. Erro grave: HODL11 como risco BR 2a vez | Boa coordenacao |
 | 07 Cambio | Funciona como suporte, mas iniciativa zero | — |
 | 08 Macro | Dados usados por todos. Nao emitiu alerta proativo do IPCA Focus | Bem integrado |
 | 09 Patrimonial | Invisivel ha 3 retros. Precisa de gatilhos de ativacao | Invisivel para o time |

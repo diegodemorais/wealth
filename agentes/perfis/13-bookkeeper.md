@@ -109,7 +109,7 @@ Decisoes aprovadas aguardando execucao:
 | 01 CIO | Fornece dados | CIO pede snapshot pra decisoes de alocacao |
 | 02 Factor | Fornece dados | Factor pede posicao de cada ETF, gap JPGL |
 | 03 Fixed Income | Fornece dados | RF pede posicao em IPCA+, taxas de compra |
-| 06 Risk | Fornece dados | Risco pede marcacao de Renda+ e HODL11 |
+| 06 Tactical | Fornece dados | Risco pede marcacao de Renda+ e HODL11 |
 | 07 Cambio | Fornece dados | Cambio pede historico de taxas de cambio usadas |
 | 08 Macro | Troca dados | Macro fornece cotacoes; Bookkeeper registra |
 | 12 Behavioral | Observado | Behavioral monitora se Bookkeeper reporta numeros que disparam vieses |

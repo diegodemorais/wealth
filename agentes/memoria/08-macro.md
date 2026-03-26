@@ -128,7 +128,7 @@
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
 | IPCA+ aos 48 | Taxa >= 6,5% na epoca | Sinalizar para Head e Renda Fixa | Aguardando (2035) |
-| Renda+ mensal | Taxa do Renda+ 2065 | Reportar ao agente 06 Risk | Monitorando |
+| Renda+ mensal | Taxa do Renda+ 2065 | Reportar ao agente 06 Tactical | Monitorando |
 
 ---
 

@@ -15,7 +15,7 @@
 - Ciclo de juros brasileiro: Selic atual 15% (inicio de cortes marco 2026)
 - IPCA+ 2045: taxa atual ~7,0-7,5%. Historico 21 anos: media 6,06%, min 3,17%, max 9,10%
 - Decisao IPCA+ aos 48: monitorar se taxa estara >= 6,5% — probabilidade historica de ~70%
-- Renda+ 2065: monitora taxa mensalmente e reporta ao agente 06 Risk (dono das decisoes taticas). Referencia atual: cenario B (7-8%). NAO decide compra/venda — apenas fornece dados
+- Renda+ 2065: monitora taxa mensalmente e reporta ao agente 06 Tactical (dono das decisoes taticas). Referencia atual: cenario B (7-8%). NAO decide compra/venda — apenas fornece dados
 - Risco fiscal brasileiro: funding stress, trajetoria de divida, impacto no premio de risco
 - Correlacao Selic/IPCA+: quando Selic cai, IPCA+ tende a cair junto (com lag)
 - Spread IPCA+ vs outros paises: Brasil oferece 8% real — excepcional vs EUA 2% (TIPS)
@@ -77,9 +77,9 @@
 | 02 Factor | Contextual | EM a 40% desconto e dado macro. Value premium depende de ciclo |
 | 03 Fixed Income | Parceiro proximo | Alimenta com dados de IPCA+ e Selic para avaliar instrumentos |
 | 04 FIRE | Informativo | Ciclo de juros impacta retornos reais na desacumulacao |
-| 05 Tax | Independente | Macro nao muda legislacao tributaria |
-| 06 Risk | Parceiro | Taxa do Renda+ 2065 depende diretamente do ciclo de juros |
-| 05 Tax | Parceiro | IOF e spread cambial sao custos tributarios que ele monitora |
+| 05 Wealth | Independente | Macro nao muda legislacao tributaria |
+| 06 Tactical | Parceiro | Taxa do Renda+ 2065 depende diretamente do ciclo de juros |
+| 05 Wealth | Parceiro | IOF e spread cambial sao custos tributarios que ele monitora |
 | 09 Patrimonial | Distante | Macro nao impacta estrutura societaria diretamente |
 
 ### Cross-Feedback (Retro 2026-03-20)
@@ -88,9 +88,9 @@
 |--------|---------------|---------------------|
 | 02 Factor | EM a 40% desconto e dado macro que suporta AVEM | — |
 | 03 Fixed Income | Parceiro proximo — alimenta com dados de IPCA+ e Selic | Snapshot mais completo e util ate agora |
-| 06 Risk | Parceiro — taxa Renda+ depende do ciclo de juros | — |
+| 06 Tactical | Parceiro — taxa Renda+ depende do ciclo de juros | — |
 | 07 Cambio | Parceiro proximo — Selic/BRL interagem | — |
-| 06 Risk | Parceiro proximo — valuations globais alimentam scan de oportunidades | — |
+| 06 Tactical | Parceiro proximo — valuations globais alimentam scan de oportunidades | — |
 
 **Auto-diagnostico**: Snapshot mais completo ate agora (valuations globais, factor premiums, probabilidades). Mas Focus IPCA saltou 19bps (3.91% -> 4.10%) e nao emiti alerta proativo como manda regra da retro anterior. Score retro: 7/10.
 
