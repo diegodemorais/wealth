@@ -27,12 +27,12 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
 | 2 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 3 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 4 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
-| 5 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
-| 6 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
-| 7 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 8 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
+| 4 | FR-spending-smile | Spending smile + saude com inflator proprio | 04 FIRE | Baixa |
+| 5 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 6 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| 7 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 8 | MA-equity-br | Equity Brasil: faz sentido dado balanco 62.9%? | 08 Macro | Baixa |
 | 9 | MA-equity-br | Equity Brasil (IBOV/ETF): faz sentido dado balanco soberano 62.9%? | 08 Macro | Baixa |
 
 ### Doing
@@ -47,6 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| RK-managed-futures | Managed Futures como diversificador | 06 Risco | 2026-03-26 | Zero MF. JPGL primeiro. Monitorar return stacking UCITS. |
 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge | 06 Risco | 2026-03-26 | Zero ouro. Capital para JPGL. Managed futures superior. |
 | MA-bond-correlation | Correlacao stock-bond inflacionario: IPCA+ como hedge? | 08 Macro | 2026-03-26 | Premissa inaplicavel. IPCA+ HTM = carry, nao hedge. Risco real = recessao global. |
 | HD-brazil-concentration | Exposicao real ao Brasil: capital humano + soberano | 07 FX | 2026-03-26 | Concentracao 62.9% estrutural. Portfolio financeiro correto (6.1% BR). Risco e liquidez, nao alocacao. |
