@@ -39,7 +39,7 @@ Quantificar os custos tributarios recorrentes de desacumulacao do portfolio de D
 
 ### Bloco 1 — Custos por instrumento
 
-- [x] **ETFs UCITS (Lei 14.754):** 15% flat sobre ganho nominal em BRL. Fato gerador: resgate/venda. DARF: 31/01 do ano seguinte (regime anual de apuracao). Sem isencao R$35k. Sem come-cotas. Prejuizo compensa lucro futuro na mesma categoria (offshores). Metodo FIFO — **PENDENTE** confirmacao in RFB (lei silente; IN SRFB 1.585/2015 + orientacoes recentes apontam FIFO, mas nao explicitado para UCITS)
+- [x] **ETFs UCITS (Lei 14.754):** 15% flat sobre ganho nominal em BRL. Fato gerador: resgate/venda. DARF: 31/01 do ano seguinte (regime anual de apuracao). Sem isencao R$35k. Sem come-cotas. Prejuizo compensa lucro futuro na mesma categoria (offshores). **Metodo: Custo Medio Ponderado** (nao FIFO) — lei silente para Art. 3, mas toda a legislacao analogica usa custo medio (Lei 14.754 Arts. 7 e 17, IN RFB 2.180/2024). Nenhum precedente FIFO em ativos financeiros BR. IR uniforme ao longo da desacumulacao — DCA por 11 anos nao penaliza nos primeiros saques. Confirmar com tributarista antes da primeira venda relevante.
 - [x] **Ganho fantasma cambial:** com BRL depreciando 0,5%/ano, ~11% do IR pago sobre ETFs UCITS e sobre ganho inexistente em poder de compra real. Para saque de ~R$280k/ano: IR total estimado ~R$29k/ano → ~R$3.2k/ano e ganho fantasma. Custo real (vs custo percebido): modesto, mas acumula ao longo de 15 anos (50-65).
 - [x] **IPCA+ Tesouro Direto (HTM):** tabela regressiva — 15% para holding acima de 720 dias. HTM (2040/2050): IR retido na fonte no vencimento. Diferimento integral ate 2040: capital que ficaria preso no imposto cresce livremente por anos. VP do diferimento estimado: ~R$28.5k para o alvo de R$523k (equivale a +69 bps/ano vs pagar IR no caminho). **Regra: nunca vender IPCA+ HTM antes do vencimento.**
 - [x] **ETFs de RF (IMAB11, B5P211, IRFM11):** IR 15% flat sobre ganho de capital na venda (nao tabela regressiva). Sem come-cotas. Sem isencao R$35k. Vantagem vs TD direto: liquidez diaria — vende parcialmente sem liquidar posicao inteira. Util para TLH em drawdown + ajuste fino de cashflow na desacumulacao. Papel complementar, nao substituto do TD.
@@ -157,7 +157,7 @@ Executado em 2026-03-26 com 7 agentes: Tax, RF, FX, FIRE, Advocate, Fact-Checker
 | **Estrategia** | Sequencia de desacumulacao definida. HTM absoluto confirmado para IPCA+. Sequencia: transitorios → Renda+ (tatico) → IPCA+ vencimento → UCITS FIFO. |
 | **Conhecimento** | Saving liquido ~R$12k/ano (nao R$49k bruto). INSS R$97k overstated: real ~R$46-55k/ano se parar no FIRE. Lombard NPV +R$1,7M. IOF = 1,35% ida e volta. HODL11 sem isencao R$35k. FIFO a confirmar para UCITS. |
 | **Memoria** | project_patrimonio_total.md: INSS PV atualizado R$283k → R$134k (beneficio R$46k, conservador). Requer validacao previdenciaria. |
-| **Pendente** | FIFO UCITS: pesquisa em andamento (fact-checker). Validacao INSS: especialista previdenciario. Atualizar FR-003 com INSS R$50k. Gap 50-53: decisao sobre ampliar IPCA+ curto. |
+| **Pendente** | Custo medio ponderado UCITS: confirmado (nao FIFO) — validar com tributarista antes primeira venda. Validacao INSS: especialista previdenciario. Atualizar FR-003 com INSS R$50k. Gap 50-53: decisao sobre ampliar IPCA+ curto. |
 
 ---
 
