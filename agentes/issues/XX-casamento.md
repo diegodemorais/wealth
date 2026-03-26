@@ -7,7 +7,7 @@
 | **ID** | XX-casamento |
 | **Dono** | 00 Head |
 | **Status** | Backlog |
-| **Prioridade** | Alta |
+| **Prioridade** | Media |
 | **Participantes** | 04 FIRE, 05 Tax, 01 CIO, 12 Behavioral |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-24 |

@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | HD-scorecard |
 | **Dono** | 10 Advocate |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Media |
 | **Participantes** | 00 Head, 13 Bookkeeper, 11 Quant |
 | **Dependencias** | HD-006 (concluído), FR-003 (concluído) |
 | **Criado em** | 2026-03-23 |
 | **Origem** | Pós-HD-006 — premissas finais mudaram vs baseline T0 do HD-002 original |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-26 |
 
 ---
 
@@ -56,13 +56,23 @@ Atualizar os 4 arquivos de métricas em `agentes/metricas/` com as premissas HD-
 
 ## Análise
 
-> A preencher quando executado.
+Todos os 4 arquivos de métricas atualizados com as premissas HD-006 final e issues subsequentes (2026-03-22 a 2026-03-26).
+
+**scorecard.md**: P(FIRE) preenchido (91%/87%). 9 erros registrados. Alpha liquido recalibrado (0.16%/ano, haircut 58%). Cenario Quant Crisis 2.0 adicionado. Dashboard atualizado. Regra anti-recorrencia HD-006 formalizada.
+
+**shadow-portfolio.md**: Shadow C adicionado — 79% VWRA + 15% IPCA+ + 3% HODL11 + 3% Renda+. Responde especificamente se o factor tilt gera valor vs alocacao equivalente com VWRA puro. Tracking comeca Abr/2026.
+
+**findings-log.md**: 10 novos findings (F-008 a F-017). Finding rate consolidado: 1.3/sessao. Falsos positivos caindo (29% → 12%). Diego achou primeiro caindo (43% → 18%). Sistema madurando.
+
+**previsoes.md**: Tracking atualizado. PRV-001: taxa atual 7.16% (ainda >6.5%, DCA conforme). Metodologia e prazos confirmados.
 
 ---
 
 ## Conclusão
 
-> A preencher.
+Scorecard alinhado com premissas atuais do sistema. P(FIRE) = 91% agora reflete FR-003 (nao mais "pendente"). Shadow C cria o benchmark certo para avaliar o factor tilt especificamente. Erros historicos documentados para auditoria futura.
+
+**Um ponto de atenção identificado**: Delta B (vs IPCA+) ficou negativo em Q1 2026 (-0.57pp). Normal dado que BRL apreciou e equity sofreu. Gatilho so dispara com 3 trimestres consecutivos negativos — sem acao por agora.
 
 ---
 
@@ -70,14 +80,19 @@ Atualizar os 4 arquivos de métricas em `agentes/metricas/` com as premissas HD-
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocação** | — |
-| **Estratégia** | — |
-| **Conhecimento** | — |
-| **Memória** | — |
+| **Alocação** | Sem mudança |
+| **Estratégia** | Sem mudança |
+| **Conhecimento** | P(FIRE)=91%, alpha=0.16%/ano (haircut 58%), Delta B Q1=-0.57pp (monitorar). Shadow C = benchmark do tilt fatorial |
+| **Memória** | Atualizar com haircut canonico 58% e P(FIRE) 91% |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Executar quando prioridade subir
-- [ ] Resultado alimenta revisão trimestral do scorecard (Jun 2026)
+- [x] scorecard.md atualizado
+- [x] shadow-portfolio.md — Shadow C adicionado
+- [x] findings-log.md — F-008 a F-017 adicionados
+- [x] previsoes.md — tracking atualizado
+- [ ] Quant Crisis 2.0: modelagem formal do cenario (pendente — nao e urgente)
+- [ ] Delta C: primeiro dado disponivel no checkin-automatico M1 de Abr/2026
+- [ ] Revisao trimestral do scorecard: Jun 2026

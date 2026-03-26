@@ -25,18 +25,16 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | **Alta** |
-| 4 | HD-equity-weight | 79% equity é certo para horizonte fixo de 11 anos? | 04 FIRE | **Alta** |
-| 5 | HD-scorecard | Scorecard + shadow portfolios atualizados com premissas HD-006 final | 10 Advocate | Media |
-| 6 | HD-brazil-concentration | Exposição real ao Brasil: capital humano + soberano | 08 Macro | Media |
-| 7 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
-| 8 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 9 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
-| 10 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
-| 11 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
-| 12 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
-| 13 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
-| 14 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Media |
+| 2 | HD-brazil-concentration | Exposição real ao Brasil: capital humano + soberano | 08 Macro | Media |
+| 3 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
+| 4 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
+| 5 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge: debate estruturado | 06 Risco | Baixa |
+| 6 | RK-managed-futures | Managed Futures como diversificador: debate estruturado | 06 Risco | Baixa |
+| 7 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
+| 8 | FR-spending-smile | Spending smile + saude com inflator proprio (+5-8%/ano real) | 04 FIRE | Baixa |
+| 9 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 10 | HD-psicologia | Psicologia cognitiva aplicada: calibracao de confianca, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -50,6 +48,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-scorecard | Scorecard + shadow portfolios com premissas HD-006 | 10 Advocate | 2026-03-26 | P(FIRE)=91% preenchido. Shadow C adicionado. 10 novos findings. Alpha 0.16%/ano (haircut 58%). |
 | HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof) | 10 Advocate | 2026-03-25 | Carteira atual mantida. Alpha ~0.16% real. Haircut correto: 58% (McLean & Pontiff). Precommitment AVGS validado. |
 | HD-equity-weight | 79% equity certo para horizonte fixo de 11 anos? | 04 FIRE | 2026-03-25 | Confirmado. Equity internacional = única diversificação soberana. Balanço total já é quase 100% Brasil. |
 | FR-glide-path | Glide path pre-FIRE: definir regra formal de reducao de equity | 04 FIRE | 2026-03-25 | Sem glide path formal. SoRR coberto por 15% IPCA+ longo + 3% IPCA+ curto. INSS aos 65 como floor. |
