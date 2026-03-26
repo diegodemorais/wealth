@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 2 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
 | 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Tax | Baixa |
 | 4 | FR-spending-smile | Spending smile + saude com inflator proprio | 04 FIRE | Baixa |
-| 5 | TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tributacao | Baixa |
+| 5 | — | — | — | — |
 | 6 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
 | 7 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 | 8 | MA-equity-br | Equity Brasil: faz sentido dado balanco 62.9%? | 08 Macro | Baixa |
@@ -47,6 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| TX-desacumulacao | Custos tributarios de desacumulacao pos-FIRE | 05 Tax | 2026-03-26 | Saving liquido ~R$12k/ano. INSS R$46-55k (nao R$97k). Gap 50-53 critico. Lombard NPV +R$1,7M. |
 | RK-managed-futures | Managed Futures como diversificador | 06 Risco | 2026-03-26 | Zero MF. JPGL primeiro. Monitorar return stacking UCITS. |
 | RK-gold-hedge | Ouro (IGLN) 2-3% como tail risk hedge | 06 Risco | 2026-03-26 | Zero ouro. Capital para JPGL. Managed futures superior. |
 | MA-bond-correlation | Correlacao stock-bond inflacionario: IPCA+ como hedge? | 08 Macro | 2026-03-26 | Premissa inaplicavel. IPCA+ HTM = carry, nao hedge. Risco real = recessao global. |

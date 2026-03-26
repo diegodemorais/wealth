@@ -9,7 +9,7 @@
 ## Investidor
 
 - **Nome**: Diego Morais
-- **Idade**: 39 anos (nascimento ~1987)
+- **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
 - **Meta**: Aposentadoria aos 50 (FIRE)
 - **Patrimonio**: R$ 3.482.633 (excl. operacao estruturada COE/emprestimo)
@@ -17,6 +17,7 @@
 - **Custo de vida**: R$ 250k/ano
 - **Estado civil**: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento
 - **Empresas**: 2 PJs no Simples Nacional (contabilidade: Contabilizei)
+- **INSS (extrato 26/03/2026)**: NIT 119.60772.92-3. CI desde 08/2003. Contribuindo no teto desde 01/2017. Tempo total acumulado: ~22 anos 6 meses (08/2003–02/2026, continuo c/ AD contado). Benefício estimado na aposentadoria por idade (65 anos): R$46–55k/ano real 2026 — ver project_patrimonio_total.md. Hipoteca: R$453.416,72 (SAC, parcela 61 paga em 15/03/2026, termina 15/02/2051).
 
 ### Plataformas
 - **ETFs internacionais (UCITS LSE)**: Interactive Brokers
@@ -125,8 +126,8 @@ Retorno real esperado em USD: DMS 2025 (5.2%) e AQR 2026 (4.9%) para equity glob
 | TER | 0.12-0.39% | Variavel por ETF |
 | Tracking diff | ~0.10% | |
 | WHT dividendos | ~0.22% | 15% sobre ~1.5% yield (peso US) |
-| FX entrada | 1.35% | IOF 1.1% + Okegen 0.25% |
-| FX saida | 1.35% | IOF 1.1% + Okegen 0.25% |
+| FX saida (envio BRL p/ comprar ETF) | 1.35% | IOF 1.1% + Okegen 0.25% |
+| FX retorno (repatriar USD na desacumul.) | 1.35% | IOF 1.1% + Okegen 0.25% |
 | IR | 15% sobre ganho nominal BRL | Inclui "ganho fantasma" cambial |
 
 #### IPCA+ (hold to maturity)
