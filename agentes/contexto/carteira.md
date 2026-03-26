@@ -17,7 +17,8 @@
 - **Custo de vida**: R$ 250k/ano
 - **Estado civil**: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento
 - **Empresas**: 2 PJs no Simples Nacional (contabilidade: Contabilizei)
-- **INSS (extrato 26/03/2026)**: NIT 119.60772.92-3. CI desde 08/2003. Contribuindo no teto desde 01/2017. Tempo total acumulado: ~22 anos 6 meses (08/2003–02/2026, continuo c/ AD contado). Benefício estimado na aposentadoria por idade (65 anos): R$46–55k/ano real 2026 — ver project_patrimonio_total.md. Hipoteca: R$453.416,72 (SAC, parcela 61 paga em 15/03/2026, termina 15/02/2051).
+- **INSS (extrato 26/03/2026)**: NIT 119.60772.92-3. CI desde 08/2003. Teto desde 01/2017. Tempo total: ~22a6m. Benefício estimado (65 anos, parar no FIRE/50): ~R$46-55k/ano real 2026 — requer validação previdenciária.
+- **Imóveis**: Apartamento Pinheiros (Rua Eugênio de Medeiros 3458): valor ~R$820k, hipoteca SAC R$453.417, termina 15/02/2051, equity ~R$367k. Terreno Nova Odessa: R$150k.
 
 ### Plataformas
 - **ETFs internacionais (UCITS LSE)**: Interactive Brokers
