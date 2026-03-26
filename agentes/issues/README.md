@@ -25,7 +25,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Media |
+| 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
 | 2 | HD-brazil-concentration | Exposição real ao Brasil: capital humano + soberano | 08 Macro | Media |
 | 3 | MA-bond-correlation | Correlação stock-bond em regime inflacionário: IPCA+ como hedge (ou não) | 08 Macro | Media |
 | 4 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
@@ -48,6 +48,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-brazil-concentration | Exposicao real ao Brasil: capital humano + soberano | 07 FX | 2026-03-26 | Concentracao 62.9% estrutural. Portfolio financeiro correto (6.1% BR). Risco e liquidez, nao alocacao. |
 | HD-scorecard | Scorecard + shadow portfolios com premissas HD-006 | 10 Advocate | 2026-03-26 | P(FIRE)=91% preenchido. Shadow C adicionado. 10 novos findings. Alpha 0.16%/ano (haircut 58%). |
 | HD-simplicity | VWRA + IPCA+ é suficiente? (burden of proof) | 10 Advocate | 2026-03-25 | Carteira atual mantida. Alpha ~0.16% real. Haircut correto: 58% (McLean & Pontiff). Precommitment AVGS validado. |
 | HD-equity-weight | 79% equity certo para horizonte fixo de 11 anos? | 04 FIRE | 2026-03-25 | Confirmado. Equity internacional = única diversificação soberana. Balanço total já é quase 100% Brasil. |
