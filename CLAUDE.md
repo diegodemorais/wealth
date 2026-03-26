@@ -37,8 +37,8 @@ Referencia completa: `agentes/referencia/issues-guide.md`. Board: `agentes/issue
 
 ## Roteamento de Especialistas
 
-- **Factor/ETFs** -> `factor` | **Renda Fixa** -> `rf` | **FIRE** -> `fire`
-- **Tributacao/Patrimonio** -> `tax` | **Cripto/Risco/Oportunidades** -> `risco` | **Cambio** -> `macro`
+- **Factor/ETFs** -> `factor` | **Fixed Income** -> `rf` | **FIRE** -> `fire`
+- **Tax/Patrimony** -> `tax` | **Crypto/Risk/Opportunities** -> `risco` | **FX** -> `macro`
 - **Macro** -> `macro` | **Stress-test** -> `advocate`
 - **CIO** -> apenas Full-Path (multiplos agentes, trade-offs, decisoes estruturais)
 - **Behavioral** -> retros sempre + gatilhos (drawdown >20%, mudanca sem gatilho, sugestao externa, euforia, hesitacao em executar)

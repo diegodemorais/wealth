@@ -95,9 +95,9 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 | Agente | Visao do Advocate | O que dizem do Advocate |
 |--------|------------------|------------------------|
 | 00 Head | Melhor Advocate ate agora. Mas IPCA+ 12-22% sem conta nao e advocacy seria | Valioso contraponto |
-| 03 RF | Flagou cherry-picking de ERN corretamente | — |
+| 03 Fixed Income | Flagou cherry-picking de ERN corretamente | — |
 | 04 FIRE | Cumpriu papel de contraponto | Flagou gaps corretamente |
-| 06 Risco | HODL11 estava na PROPRIA memoria como corrigido — nao impediu erro no RK-001 | — |
+| 06 Risk | HODL11 estava na PROPRIA memoria como corrigido — nao impediu erro no RK-001 | — |
 | 11 Oportunidades | Tensao saudavel — stress-testa propostas | — |
 | 12 Behavioral | Complementar — Advocate em premissas, Behavioral em processo | — |
 

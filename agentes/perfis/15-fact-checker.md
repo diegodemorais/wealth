@@ -129,7 +129,7 @@
 | 10 Advocate | Braco de pesquisa | Advocate define O QUE stress-testar; Fact-Checker verifica se as evidencias sao reais |
 | 14 Quant | Complementar | Quant audita formulas e numeros; Fact-Checker audita fontes e afirmacoes. Juntos cobrem calculo + evidencia |
 | 02 Factor | Verifica claims | Factor cita papers de factor premiums; Fact-Checker valida se sao reais e atuais |
-| 03 RF | Verifica claims | RF cita dados de IPCA+, taxas, papers; Fact-Checker valida |
+| 03 Fixed Income | Verifica claims | RF cita dados de IPCA+, taxas, papers; Fact-Checker valida |
 | 04 FIRE | Verifica claims | FIRE cita SWR, monte carlo, lifecycle; Fact-Checker valida metodologia |
 | 11 Oportunidades | Verifica claims | Scanner traz oportunidades com dados; Fact-Checker valida se os dados estao certos |
 | 12 Behavioral | Verifica claims | Behavioral cita papers de vieses; Fact-Checker valida se o paper diz o que ele afirma |

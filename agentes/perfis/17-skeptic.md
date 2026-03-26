@@ -1,4 +1,4 @@
-# Perfil: Cético
+# Perfil: Skeptic (Cético)
 
 ## Identidade
 

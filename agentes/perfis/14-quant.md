@@ -149,10 +149,10 @@
 | 00 Head | Reporta ao Head | Head aciona antes/depois de calculos. Quant tem veto sobre numeros |
 | 01 CIO | Audita numeros do CIO | CIO nao apresenta veredicto numerico sem validacao do Quant |
 | 02 Factor | Audita retornos esperados | Valida premissas de retorno equity, post-publication decay |
-| 03 RF | Audita retornos liquidos IPCA+ | Valida IR sobre nominal, breakeven equity vs RF |
+| 03 Fixed Income | Audita retornos liquidos IPCA+ | Valida IR sobre nominal, breakeven equity vs RF |
 | 04 FIRE | Audita projecoes | Valida monte carlo, SWR, patrimonio projetado |
-| 05 Tributacao | Audita calculos tributarios | Valida IR, ganho fantasma cambial, DARF |
-| 06 Risco | Audita sizing e gatilhos | Valida formulas de duration, volatilidade, sizing |
+| 05 Tax | Audita calculos tributarios | Valida IR, ganho fantasma cambial, DARF |
+| 06 Risk | Audita sizing e gatilhos | Valida formulas de duration, volatilidade, sizing |
 | 07 Cambio | Audita premissas cambiais | Valida depreciacao real, spread, custo all-in |
 | 10 Advocate | Complementar | Advocate questiona premissas estrategicas; Quant questiona a aritmetica |
 | 13 Bookkeeper | Parceiro de dados | Bookkeeper fornece numeros reais; Quant valida que calculos usam esses numeros |

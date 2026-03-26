@@ -301,7 +301,7 @@ O custo de 1% e o premio por essa opcionalidade, nao uma fee de investimento.
 | **Alocacao** | Pendente — depende de parecer juridico e equity value real |
 | **Estrategia** | Bond OneLife identificado como instrumento de planejamento de vida, nao apenas de investimento |
 | **Conhecimento** | Estrutura opaca (Pinheiro Neto + RFB). Fee nao incide sobre PE iliquido. Lombard lending elimina IR. Tripartite Lux + UBS mitiga risco seguradora |
-| **Memoria** | Registrar em 00-head, 05-tributacao, 09-patrimonial apos aprovacao |
+| **Memoria** | Registrar em 00-head, 05-tax, 09-patrimonial apos aprovacao |
 | **Nenhum** | — |
 
 ---

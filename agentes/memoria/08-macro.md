@@ -9,7 +9,7 @@
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
 | 2026-03 | Macro nao muda estrategia | Contexto apenas para decisoes ja planejadas | 01 Head |
-| 2026-03 | Monitorar NTN-B 2040 e Renda+ 2065 mensalmente | Referencia para cenario IPCA+ e gatilho tatico | 03 Renda Fixa, 06 Risco |
+| 2026-03 | Monitorar NTN-B 2040 e Renda+ 2065 mensalmente | Referencia para cenario IPCA+ e gatilho tatico | 03 Fixed Income, 06 Risk |
 | 2026-03-20 | Depreciacao real BRL forward-looking (1.5-2.0%/ano) e cenario FAVORAVEL, nao base | Diferencial juro real, fiscal deteriorante, produtividade menor -> sustenta depreciacao. Mas incerteza alta. Base conservadora adotada: 0.5%/ano | 07 Cambio |
 
 ---
@@ -128,7 +128,7 @@
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
 | IPCA+ aos 48 | Taxa >= 6,5% na epoca | Sinalizar para Head e Renda Fixa | Aguardando (2035) |
-| Renda+ mensal | Taxa do Renda+ 2065 | Reportar ao agente 06 Risco | Monitorando |
+| Renda+ mensal | Taxa do Renda+ 2065 | Reportar ao agente 06 Risk | Monitorando |
 
 ---
 

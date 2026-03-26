@@ -107,13 +107,13 @@ Formato: `{SIGLA}-{slug-descritivo}`
 |-------|--------|---------|
 | HD | 00 Head de Investimentos | HD-scorecard |
 | FI | 02 Factor Investing | FI-crowdedness |
-| RF | 03 Renda Fixa Brasil | RF-ipca-dca |
+| RF | 03 Fixed Income | RF-ipca-dca |
 | FR | 04 FIRE / Aposentadoria | FR-spending-smile |
-| TX | 05 Tributacao | TX-desacumulacao |
-| RK | 06 Ativos de Risco | RK-gold-hedge |
-| FX | 07 Cambio Internacional | FX-hedge-custo |
-| MA | 08 Macro Brasil | MA-bond-correlation |
-| PT | 09 Patrimonial | PT-onelife |
+| TX | 05 Tax | TX-desacumulacao |
+| RK | 06 Risk | RK-gold-hedge |
+| FX | 07 FX [removido] | FX-hedge-custo |
+| MA | 08 Macro | MA-bond-correlation |
+| PT | 09 Patrimonial [removido] | PT-onelife |
 | XX | Cross-domain (multiplos) | XX-retro-q1 |
 
 Sigla = agente RESPONSAVEL principal (mesmo que outros participem).

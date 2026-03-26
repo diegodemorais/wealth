@@ -9,7 +9,7 @@
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
 | 2026-03 | HODL11 alvo 3%, piso 1,5%, teto 5% | Sizing disciplinado de posicao especulativa | 01 Head |
-| 2026-03 | Renda+ 2065 gatilho de venda: 6,0% | Rentabilidade nos cenarios precisa ser calculada (RF-001) | 03 Renda Fixa |
+| 2026-03 | Renda+ 2065 gatilho de venda: 6,0% | Rentabilidade nos cenarios precisa ser calculada (RF-001) | 03 Fixed Income |
 | 2026-03 | Saida total cripto apenas se tese quebrar | Regulacao confiscatoria OU falha de protocolo | 01 Head |
 | 2026-03 | Teto absoluto do bloco de risco: 10% do patrimonio | Disciplina — pode ser revisto se fizer sentido | 01 Head |
 | 2026-03 | Mandato de observacao tatica mensal | Buscar oportunidades com evidencia cientifica, trazer ao Head | 01 Head |

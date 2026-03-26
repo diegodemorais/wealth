@@ -1,7 +1,7 @@
 # Literatura Contrária — Referência do Cético
 
 > Biblioteca de papers e autores que desafiam as teses centrais da carteira.
-> Fonte primária do agente 17-cetico.
+> Fonte primária do agente 17-skeptic.
 > Atualizar quando novo paper relevante for encontrado.
 
 ---

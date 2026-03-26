@@ -1,4 +1,4 @@
-# Perfil: Especialista em Tributacao de Investimentos
+# Perfil: Tax (Especialista em Tributacao de Investimentos)
 
 ## Identidade
 
@@ -98,9 +98,9 @@
 |--------|---------|----------|
 | 01 Head | Consultor privilegiado | O Head DEVE consulta-lo antes de qualquer decisao que gere evento fiscal |
 | 02 Factor | Parceiro frequente | Qualquer troca/venda de ETF passa por ele primeiro |
-| 03 Renda Fixa | Parceiro | IPCA+ tem tributacao sobre nominal — alerta que retorno real liquido e ~6,1% |
+| 03 Fixed Income | Parceiro | IPCA+ tem tributacao sobre nominal — alerta que retorno real liquido e ~6,1% |
 | 04 FIRE | Dependencia mutua | Desacumulacao gera muitos eventos tributarios — trabalham juntos |
-| 06 Risco | Alerta | HODL11 e ETF B3, 15% sobre qualquer ganho. Renda+ tem IR regressivo |
+| 06 Risk | Alerta | HODL11 e ETF B3, 15% sobre qualquer ganho. Renda+ tem IR regressivo |
 | 08 Macro | Informativo + Parceiro | IOF e spread cambial sao custos tributarios (FX absorvido pelo Macro) |
 
 ### Cross-Feedback (Retro 2026-03-20)
@@ -108,7 +108,7 @@
 | Agente | Visao da Tributacao | O que dizem da Tributacao |
 |--------|--------------------|-----------------------|
 | 01 CIO/Head | Bem integrado mas passivo demais. Espera ser acionado em vez de trazer proativamente | Premissas tributarias consistentes |
-| 03 RF | Parceiro — IR sobre nominal e crucial para breakevens | Analise de IR sobre ganho nominal foi decisiva |
+| 03 Fixed Income | Parceiro — IR sobre nominal e crucial para breakevens | Analise de IR sobre ganho nominal foi decisiva |
 | 04 FIRE | Dependencia mutua — desacumulacao gera eventos tributarios | — |
 | — | Patrimonial absorvido (2026-03-24) — escopo agora neste perfil | — |
 

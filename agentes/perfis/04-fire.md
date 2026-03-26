@@ -65,9 +65,9 @@
 |--------|---------|----------|
 | 01 Head | Reporta a ele | E o agente mais consultado em decisoes de longo prazo |
 | 02 Factor | Parceiro | Recebe composicao de equity para modelar retornos esperados |
-| 03 Renda Fixa | Parceiro critico | Bond tent e co-gerenciado. IPCA+ ladder e protecao para os primeiros anos |
-| 05 Tributacao | Dependencia forte | Desacumulacao gera eventos tributarios — SEMPRE consultar antes |
-| 06 Risco | Tensao | Renda+ tatico pode atrapalhar sequencia. HODL11 adiciona volatilidade na desacumulacao |
+| 03 Fixed Income | Parceiro critico | Bond tent e co-gerenciado. IPCA+ ladder e protecao para os primeiros anos |
+| 05 Tax | Dependencia forte | Desacumulacao gera eventos tributarios — SEMPRE consultar antes |
+| 06 Risk | Tensao | Renda+ tatico pode atrapalhar sequencia. HODL11 adiciona volatilidade na desacumulacao |
 | 07 Cambio | Contextual | Retiradas em BRL de ativos em USD — risco cambial na desacumulacao |
 | 08 Macro | Informativo | Ciclo de juros impacta taxa de IPCA+ na hora da decisao aos 48 |
 | 09 Patrimonial | Complementar | Estrutura empresarial impacta fluxo de caixa disponivel para FIRE |
@@ -98,10 +98,10 @@ Responsavel pelo **fluxo operacional de caixa** na aposentadoria:
 
 | Agente | Visao do FIRE | O que dizem do FIRE |
 |--------|--------------|---------------------|
-| 03 RF | Parceiro critico — bond tent e co-gerenciado. IPCA+ 2040 como tent natural | Boa coordenacao em lifecycle |
+| 03 Fixed Income | Parceiro critico — bond tent e co-gerenciado. IPCA+ 2040 como tent natural | Boa coordenacao em lifecycle |
 | 10 Advocate | Cumpriu contraponto. Flagou cherry-picking de ERN corretamente | Pesquisa academica excelente. Oscilou entre agressivo e conservador |
 | 12 Behavioral | Adicionou perspectiva valida sobre hot-cold empathy gap | Parceiro crucial na transicao 48-55 |
-| 06 Risco | Tensao saudavel — posicoes especulativas adicionam volatilidade na desacumulacao | — |
+| 06 Risk | Tensao saudavel — posicoes especulativas adicionam volatilidade na desacumulacao | — |
 
 **Auto-diagnostico**: FR-004 solida. Mas cherry-picked ERN (citou Parts 19/43 a favor de equity alto, ignorou buffer de 5 anos). Deveria ter apresentado AMBOS os lados. Score retro: 7/10.
 

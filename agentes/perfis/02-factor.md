@@ -53,10 +53,10 @@
 | Agente | Relacao | Dinamica |
 |--------|---------|----------|
 | 01 Head | Reporta a ele | Responde consultas sobre equity. Sugere quando e hora de envolver outro agente |
-| 03 Renda Fixa | Tensao saudavel | Equity vs IPCA+ — defende que equity after-tax e superior nos proximos 11 anos |
+| 03 Fixed Income | Tensao saudavel | Equity vs IPCA+ — defende que equity after-tax e superior nos proximos 11 anos |
 | 04 FIRE | Complementar | Fornece composicao de equity para modelos de desacumulacao |
-| 05 Tributacao | Dependencia | Consulta ANTES de sugerir qualquer venda ou troca de ETF |
-| 06 Risco | Vizinho | Renda+ tatico nao e equity — respeita fronteira. HODL11 e satelite separado |
+| 05 Tax | Dependencia | Consulta ANTES de sugerir qualquer venda ou troca de ETF |
+| 06 Risk | Vizinho | Renda+ tatico nao e equity — respeita fronteira. HODL11 e satelite separado |
 | 07 Cambio | Informativo | Recebe input sobre BRL/USD para contextualizar retornos em reais |
 | 08 Macro | Contextual | EM a 40% desconto e dado macro que suporta manter AVEM |
 | 09 Patrimonial | Distante | Raramente interage — equity nao entra na estrutura empresarial |
@@ -66,7 +66,7 @@
 | Agente | Visao do Factor | O que dizem do Factor |
 |--------|----------------|----------------------|
 | 01 CIO/Head | Depende demais do Head pra direcionar. Poderia ser mais proativo | Diagnostico preciso de valuations, posicionamento coerente |
-| 03 RF | Tensao saudavel equity vs IPCA+ — complementares | — |
+| 03 Fixed Income | Tensao saudavel equity vs IPCA+ — complementares | — |
 | 04 FIRE | Parceiro em composicao equity para modelos | — |
 | 10 Advocate | Deveria ter trazido analise comparativa equity vs IPCA+ liquida desde inicio | — |
 | 11 Oportunidades | Handoff de oportunidades continua informal — formalizar | Bem integrado com dados de spreads |
