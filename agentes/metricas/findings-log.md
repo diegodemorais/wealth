@@ -63,6 +63,14 @@
 | F-019 | Bond tent natural do TD 2040 = 5% do ganho de P(FIRE), nao driver principal. 95% do ganho de FIRE 53 vs FIRE 50 (+8pp) vem do patrimônio maior (+R$2.8M) — nao do timing do vencimento. Narrativa "alinhar 2040" era ancoragem. | Preventivo | Nao | 04 FIRE + 10 Advocate / FR-fire2040 | Gatilho FIRE formalmente patrimônio-based (R$13.4M real, SWR <= 2.4%), nao data-based. 2040 = safe harbor, nao meta. FIRE 50 continua meta primária. |
 | F-020 | VCMH real estrutural ~8-9%/ano; modelo usa 7%. Isso pode subestimar P(FIRE) em ~1.5-2pp nos primeiros anos. Dado mais recente (IESS Jun/2023): 11.7% real (inclui pico pos-COVID). | Preventivo | Nao | 04 FIRE / FR-fire2040 | Modelo conservador para saude mas pode estar otimista no curto prazo. Gatilho de monitoramento VCMH adicionado (IESS > 9% real por 2 anos → recalibrar). |
 
+### Issue 2026-03-27 (XX-casamento)
+
+| # | Finding | Tipo | Diego Achou Primeiro? | Agente/Issue | Impacto |
+|---|---------|------|----------------------|-------------|---------|
+| F-021 | Premissa saude R$18k/pp hoje nunca validada — Diego gasta R$6-10k/ano real. VCMH 7% e dado agregado IESS, nao curva individual. P(FIRE casal) sensivel em 15pp a essa premissa (7% vs 5%). | Preventivo | **Sim** (questionou ao vivo) | Diego / XX-casamento | Intervalo real P(C5 base) = 53-68%, nao numero unico. Revisitar com dado real de saude pos-casamento. |
+| F-022 | Gap estrutural casal vs solo = ~R$150k/ano de spending (R$467k vs R$318k). 80% das pessoas erram achando que o problema sao os aportes menores — na verdade 80% do gap e spending maior (saude 2a pessoa + viagens + filho). | Otimizador | Nao | 04 FIRE / XX-casamento | Foco correto para melhorar P: comprimir spending, nao aumentar aportes. Saude incompressivel cresce indefinidamente. |
+| F-023 | P(base) 80% para o casal e estruturalmente fora de alcance com premissas conservadoras. Requer VCMH 5% + FIRE 58+ + lifestyle R$210k+ — combinacao exigente. Target realista do casal = 65-75% base, nao 80%. | Preventivo | Nao | 04 FIRE / XX-casamento | Recalibra expectativas. Comparar P casal com P solo e a pergunta errada — contextos estruturalmente diferentes. |
+
 ### Issues 2026-03-24 (FI-crowdedness, FR-equity-equivalent)
 
 | # | Finding | Tipo | Diego Achou Primeiro? | Agente/Issue | Impacto |
@@ -90,7 +98,8 @@
 | 2026-03-22/23 | 3 issues | 3 | 1 | 2 | 0 | 0 | 1.0 |
 | 2026-03-24/25 | 4 issues | 4 | 3 | 1 | 0 | 0 | 1.0 |
 | 2026-03-27 | 2 issues | 3 | 3 | 0 | 0 | 0 | 1.5 |
-| **Total** | **15** | **20** | **12 (60%)** | **6 (30%)** | **2 (10%)** | **3 (15%)** | **~1.3** |
+| 2026-03-27 | XX-casamento | 3 | 2 | 1 | 0 | 1 | 1.0 |
+| **Total** | **16** | **23** | **14 (61%)** | **7 (30%)** | **2 (9%)** | **4 (17%)** | **~1.3** |
 
 ### Analise
 
