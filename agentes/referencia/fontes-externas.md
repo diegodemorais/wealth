@@ -40,6 +40,7 @@
 | Ferramenta | URL | Uso | Ressalva |
 |-----------|-----|-----|---------|
 | **Portfolio Charts** | portfoliocharts.com | SWR multi-país, visualização retornos históricos | Dados Shiller, 10+ países |
+| **Portfolio Visualizer** | portfoliovisualizer.com | Factor Regression (Fama-French 5 fatores) e Monte Carlo FIRE com guardrails; backtest asset class desde 1972 | Só tickers US-listed — SWRD/AVGS/AVEM/JPGL indisponíveis. Usar proxies: ACWI→SWRD, AVUV+AVDV→AVGS, AVEM→AVEM, INTF→JPGL. IPCA+ é irreplicável. Free tier: 10 anos com tickers (asset class: grátis desde 1972). Subscription $360/ano para tickers completos |
 | **Curvo** | curvo.eu | Backtest carteiras UCITS europeias | Dados Morningstar, metodologia transparente |
 | **Avantis Insights** | avantisinvestors.com/avantis-insights | Papers Fama assinados; dados dos ETFs que Diego detém | Usar papers originais, não interpretações comerciais |
 
