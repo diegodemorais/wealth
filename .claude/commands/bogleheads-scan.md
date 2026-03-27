@@ -24,6 +24,20 @@ Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, acumulacao ativa
 
 ## Como Executar
 
+## Threads Fixos a Monitorar
+
+Para cada thread abaixo, buscar posts novos desde o ultimo scan (ver Historico de Scans):
+
+| ID | Título | Relevância | Foco |
+|----|--------|------------|------|
+| 443539 | The best accumulating global equity ETF in 2024 | Alta | SWRD/SPPW/VWCE/SPYI/WEBN — tracking difference, TER, custo all-in MCW |
+| 409214 | International (Non-US) versus US Equities (The "Arguments") | Alta | Debate US vs ex-US, valuations, expected returns — thread ativo 215+ paginas |
+| 427201 | New insights on safe and perpetual withdrawal rates | Alta | SWR — updates e debates sobre withdrawal strategies |
+
+Acesso: `WebSearch site:bogleheads.org/forum viewtopic.php?t={ID}` ou RSS.
+
+---
+
 ### Passo 1: Buscar topicos recentes
 
 Faça WebFetch nas URLs RSS acima (comecar pelo f=22 Non-US Investing).
@@ -101,3 +115,4 @@ Formato de saida:
 | Data | Issues Identificados | Resultado |
 |------|---------------------|-----------|
 | 2026-03-23 | XX-004 | Carteira alinhada. SWR non-US = 3.5%. SWRD melhor all-in que IWDA (~10 bps/ano). JPGL confirmado. RSS feed identificado. Cash IBKR < $60k (ja mapeado em US-listed). |
+| 2026-03-26 | — | Morningstar SWR 2026 = 3.9% (base case) — Diego usa 3.12-3.4%, muito mais conservador. International outperformando US (tariffs + USD fraco). Thread 443539 identificado como hub MCW Bogleheads. |

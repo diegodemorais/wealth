@@ -23,8 +23,9 @@ Para cada thread abaixo, leia os posts novos desde o ultimo scan (ver Historico 
 | ID | Título | Relevância | Foco |
 |----|--------|------------|------|
 | 31781 | UCITS MCW implementations – simple and low-cost solutions | Alta | SWRD, IWDA, VWCE, WEBN, SPYY — tracking difference all-in, spread, custo real |
+| 32396 | Avantis UCITS (EU) Discussion Thread | Alta | AVGS, AVEM, AVWC, AVWS, AVEU, AVPE, AVUS — hub principal Avantis UCITS (1926 posts, ativo) |
 | 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, JPGL — comparação fatorial UCITS, novos produtos |
-| 17774 | Avantis ETF Discussion | Alta | AVGS, AVEM, DFA — novidades Avantis UCITS, lançamentos, performance |
+| 17774 | Avantis ETF Discussion | Baixa | Thread antigo (fechado Mar 2022) — substituído pelo 32396 para UCITS |
 | 15439 | Investing in Managed Futures | Media | RK-003 — managed futures como diversificador (issue backlog) |
 | 13776 | Bitcoin / Crypto FUD | Media | HODL11, cripto — tese e gatilhos |
 | 2927 | How much Emerging Market? | Media | Alocação EM — debate size/conviction |
@@ -134,6 +135,7 @@ Leia o suficiente para avaliar se é relevante. Se sim, inclua no relatório.
 | Data | Threads Cobertas | Posts Lidos Até | Resultado Principal |
 |------|-----------------|-----------------|---------------------|
 | 2026-03-23 | 31781 | post 150 | SWRD +26bps vs net benchmark (3y). SPYY e FWRA melhores all-world. WEBN tracking ruim nos primeiros meses. Swap S&P 500 outperforma físico em ~25bps. |
+| 2026-03-26 | 31781, 31258, 32396 (novo), 15439, 13776, 2927, 13125 | 31781: post 811 | Vanguard All-Cap UCITS lançando. BlackRock ACSW/ESWP (swaps) Mar 2026. Thread 32396 adicionado — hub Avantis UCITS. FLXE pode ter EM factor loading > AVEM. Avantis lançou AVEU/AVPE/AVUS Fev 2026. Zero MF (sem UCITS). BTC ~$70k -26%/mês. |
 
 ---
 
