@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | HD-psicologia |
 | **Dono** | 00 Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Baixa |
 | **Participantes** | 12 Behavioral, 10 Advocate |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-23 |
 | **Origem** | Conversa — Diego explorando formas de evoluir o sistema |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-26 |
 
 ---
 
@@ -95,13 +95,27 @@ As sessoes de 2026-03-22 a 2026-03-26 geraram exemplos perfeitos para cada ideia
 
 ## Analise
 
-> A preencher quando executado.
+Debate com Behavioral (12), Fact-Checker e Advocate (10) revelou tres temas transversais:
+
+1. **Gap critico: feedback loop** — nenhuma das 4 ideias originais fechava o ciclo. Sem scoring retroativo, calibracao e decorativa (Tetlock 2015). Identificado independentemente pelos 3 agentes.
+
+2. **Ideia 2 precisa de complemento**: pre-mortem ja existia no Advocate — risco de duplicacao. Klein (1998) recomenda pre-parade como complemento obrigatorio. Reference class forecasting (Flyvbjerg 2006) como etapa 0 e mais poderoso que qualquer tecnica narrativa.
+
+3. **Novos vieses identificados pelo Behavioral**: affect heuristic (Slovic 2002), attribute substitution (Kahneman 2003), hot-cold empathy gap (Loewenstein 2005) — nao cobertos pelas 4 ideias originais. Cobertos indiretamente pelo scoring retroativo (se calibracao sistematicamente alta em bull markets = overconfidence situacional).
+
+Ajustes incorporados vs proposta original:
+- Ideia 1: transformada de label por veredicto → scoring retroativo na retro (Advocate: "cortar ou scoring real")
+- Ideia 2: estendida com pre-parade + reference class + cenarios especificos (nao genericos)
+- Ideia 3: adicionado campo "Falsificacao" — operacionaliza Popper (Mauboussin 2012)
+- Ideia 4: adicionado criterio explicito (dado = verificavel agora; interpretacao = requer inferencia)
+- Adicao B (julgamentos independentes): evidencia Kahneman/Sibony/Sunstein 2021 suporta fortemente
+- Adicao C (commitment device): ja existia parcialmente em retro-dinamica.md — estendido para premissas frageis
 
 ---
 
 ## Conclusao
 
-> A preencher.
+7 implementacoes concluidas em 4 arquivos. Debate com agentes revelou ajustes significativos vs proposta original — especialmente o feedback loop como gap critico e o pre-parade como complemento obrigatorio ao pre-mortem.
 
 ---
 
@@ -110,8 +124,8 @@ As sessoes de 2026-03-22 a 2026-03-26 geraram exemplos perfeitos para cada ideia
 | Tipo | Detalhe |
 |------|---------|
 | **Alocacao** | — |
-| **Estrategia** | — |
-| **Conhecimento** | — |
+| **Estrategia** | 7 mudancas de processo: template issues, pre-mortem+pre-parade+reference class, scoring retroativo na retro, commitment device premissas frageis, julgamentos independentes, separacao dado/interpretacao |
+| **Conhecimento** | Feedback loop e o gap critico de sistemas de decisao sem aprendizado. Pre-parade corrige negativity bias do pre-mortem. Reference class > narrativa especifica. |
 | **Memoria** | — |
 | **Nenhum** | — |
 
@@ -119,4 +133,6 @@ As sessoes de 2026-03-22 a 2026-03-26 geraram exemplos perfeitos para cada ideia
 
 ## Proximos Passos
 
-- [ ] Executar quando prioridade subir — nao urgente, alto potencial de longo prazo
+- [ ] Aplicar campo Raciocinio + Falsificacao na proxima issue de Alta prioridade
+- [ ] Primeiro scoring retroativo na proxima retro trimestral
+- [ ] Verificar em 2 retros se julgamentos independentes geram divergencias reais vs ancoragem anterior

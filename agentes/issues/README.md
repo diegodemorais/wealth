@@ -26,9 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
-| 2 | 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
-| 4 | — | — | — | — |
-| 5 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
+| 2 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -42,6 +40,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | 2026-03-26 | 7 implementacoes: pre-mortem+pre-parade, falsificacao, dado/interpretacao, scoring retro, julgamentos independentes. |
 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | 2026-03-26 | 9 itens adicionados ao Advocate. Item #9 (echo chamber LLM) e o unico genuinamente novo. |
 | RF-renda-teto | Teto ótimo Renda+ 2065: 3% ou 5%? | 03 RF | 2026-03-26 | 5% confirmado. Racional em renda-plus-2065-cenarios.md. |
 | MA-equity-br | Equity Brasil: faz sentido dado balanço soberano? | 08 Macro | 2026-03-26 | 0% equity BR. Double concentration confirmada. Renda+ 2065 é o trade. |

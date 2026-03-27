@@ -76,6 +76,23 @@ Antes de pesquisar: definir escopo, agentes, divisao de trabalho, contas necessa
 1. Consolide resultados. 2. Identifique divergencias e force debate com dados. 3. Apresente ao Diego (ele QUER ver a interacao). 4. Recomendacao baseada em fatos.
 - **Decisoes quantitativas vao a planilha, nao a votacao.**
 
+## Julgamentos Independentes (Full-Path com multiplos agentes)
+
+Quando multiplos agentes analisam a mesma questao em paralelo:
+- Cada agente registra sua estimativa/posicao **antes** de ler os outros (prompts paralelos, nao sequenciais)
+- O Head agrega **depois** — nunca no mesmo prompt que expoe a posicao de outro agente
+- Objetivo: evitar ancoragem no primeiro agente que fala (Kahneman, Sibony & Sunstein 2021)
+
+## Separacao Dado vs Interpretacao (TODOS os veredictos)
+
+Em qualquer resposta com veredicto, separar explicitamente:
+- **Dado:** fato verificavel externamente agora (taxa, preco, paper publicado, numero auditado)
+- **Interpretacao:** inferencia contestavel — o que o dado sugere ou implica
+
+Criterio: *dado = verificavel externamente agora. Interpretacao = requer inferencia.*
+Exemplo: "IPCA+ 6.2% (Tesouro Direto)" = dado. "DCA deve ser retomado" = interpretacao.
+Regra anti-contaminacao: nao misturar no mesmo bullet. Diego aceita dados; questiona interpretacoes.
+
 ## Dados em Tempo Real
 
 Use **WebSearch** para: taxa IPCA+, Selic, cotacao HODL11, cambio BRL/USD, noticias.

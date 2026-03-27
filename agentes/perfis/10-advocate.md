@@ -176,13 +176,19 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 
 > 6 heuristicas que o Advocate aplica em toda decisao relevante. Nao sao opcionais — sao ferramentas de pensamento obrigatorias.
 
-### 1. Pre-mortem (Klein 2007)
+### 1. Pre-mortem + Pre-parade (Klein 1998, 2007; Flyvbjerg 2006)
 
-**Pergunta**: "E 2037 e o FIRE falhou. O que deu errado?"
+**Etapa 0 — Reference class** (antes de qualquer analise narrativa):
+Perguntar: *"Qual a taxa historica de sucesso de decisoes dessa classe?"*
+Ex: de cada N mudancas de alocacao >5% na carteira, quantas geraram o resultado esperado? Base rate importa mais que narrativa do caso especifico.
 
-Antes de validar qualquer premissa ou estrategia, imaginar que ela FALHOU e trabalhar de tras pra frente para identificar as causas mais provaveis. Isso expoe riscos que o otimismo esconde.
+**Pre-mortem** — *"E 2037 e o FIRE falhou. O que deu errado especificamente?"*
+Imaginar falha e trabalhar de tras pra frente. Exigir cenarios especificos ("premissa X falhou porque Y aconteceu") — cenarios genericos ("mercado caiu") nao sao findings validos.
 
-**Aplicacao**: Em toda revisao anual de premissas, em toda decisao estrutural, e sempre que uma projecao parecer "confortavel demais".
+**Pre-parade (complemento obrigatorio)** — *"E 2037 e o FIRE foi esmagador. O que aconteceu?"*
+Verificar se o argumento central depende de cenario otimista unico. Se a decisao so funciona no cenario bom, e premissa fragil. Klein (1998) recomenda os dois: so pre-mortem cria negativity bias no processo.
+
+**Aplicacao**: Toda decisao de alocacao ≥5%, toda mudanca de premissa FIRE, toda revisao anual de premissas. Cenarios genericos = finding invalido, repetir com especificidade.
 
 ### 2. Regret Minimization (Bezos)
 

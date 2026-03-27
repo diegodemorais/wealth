@@ -39,6 +39,25 @@
 
 ---
 
+## Raciocinio
+
+> Obrigatorio para issues de prioridade **Alta**. Opcional para Media/Baixa.
+> Preencher ANTES da analise — captura o pensamento no momento da decisao, nao depois.
+
+**Alternativas rejeitadas:** *(por que nao X, por que nao Y)*
+> ...
+
+**Argumento central:** *(a premissa que justifica a decisao — em 1-2 frases)*
+> ...
+
+**Incerteza reconhecida:** *(o que poderia estar errado)*
+> ...
+
+**Falsificacao:** *(qual evidencia especifica me faria reverter essa decisao?)*
+> ...
+
+---
+
 ## Analise
 
 > Espaco para o trabalho em si: dados, calculos, comparacoes, evidencias.

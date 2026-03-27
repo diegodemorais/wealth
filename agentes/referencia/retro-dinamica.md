@@ -23,6 +23,23 @@ Head atualiza secao "Auto-Diagnostico e Evolucao" no perfil de cada agente:
 - Cross-Feedback Recebido (com resposta do criticado)
 - Evolucao (mudancas concretas com data)
 
+## Etapa 5: Scoring Retroativo de Calibracao
+
+Para cada decisao de Alta consequencia dos ultimos 3 meses:
+1. Qual foi a premissa central? Qual incerteza foi reconhecida no momento?
+2. O que aconteceu? A premissa se provou correta?
+3. O argumento de falsificacao registrado na issue — se confirmou ou refutou?
+
+Pergunta-padrao: *"O que previmos como certo — estavamos certos? O que previmos como incerto — era realmente incerto?"*
+
+Formato de registro:
+```
+| Decisao | Premissa central | Certeza declarada | Resultado | Calibracao |
+|---------|-----------------|-------------------|-----------|-----------|
+| ...     | ...             | Alta/Media/Baixa  | Correto/Errado | OK/Subestimada/Superestimada |
+```
+
 ## Regra de escalacao
 - Falha que aparece em 2+ retros → acao obrigatoria (mudanca de perfil/regra/checklist)
 - Falha que aparece em 3+ retros → revisao do agente (perfil precisa ser reescrito)
+- **Premissa fragil identificada em 2+ retros consecutivas sem acao → abrir issue obrigatoria** (nao opcional — mesmo que a decisao original nao tenha gerado perda ainda)
