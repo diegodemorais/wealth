@@ -20,7 +20,7 @@
 
 `carteira.md` ja registra: "Estado civil: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento."
 
-A re-analise de 2026-03-24 identificou que este gatilho ainda nao foi endercado formalmente. Tax (urgente: testamento + pacto antenupcial), FIRE (impacto P(FIRE): estimado queda de 91% para 70-75% se custo de vida aumentar + aportes reduzirem), Behavioral (presente bias explicando o delay).
+A re-analise de 2026-03-24 identificou que este gatilho ainda nao foi endercado formalmente. Tax (planejamento sucessorio), FIRE (impacto P(FIRE): estimado queda de 91% para 70-75% se custo de vida aumentar + aportes reduzirem), Behavioral (presente bias explicando o delay).
 
 ---
 
@@ -31,7 +31,7 @@ Casamento muda materialmente os parametros do modelo FIRE:
 1. **Custo de vida**: de R$250k para potencialmente R$280-320k (estilo de vida compartilhado nao e necessariamente mais barato)
 2. **Aportes**: se parceira nao tem renda ou se Diego assume mais custos, aportes mensais de R$25k podem reduzir
 3. **FIRE date**: pode mudar (parceira mais nova? filhos?)
-4. **Sucessao**: sem testamento, parceira nao tem protecao. Sem pacto antenupcial, regime de bens impacta o patrimonio
+4. **Sucessao**: planejamento de heranca e estrutura de bens — proteger ambos
 5. **Estrutura empresarial**: 2 PJs — separacao de patrimonio e mais critica pos-casamento
 
 ---
@@ -39,8 +39,7 @@ Casamento muda materialmente os parametros do modelo FIRE:
 ## Escopo
 
 **Urgente (fazer antes do casamento):**
-- [ ] Testamento: contratar advogado de familia. Quem herda o que?
-- [ ] Pacto antenupcial: qual regime de bens? Separacao total protege patrimonio pre-casamento. **Nota (2026-03-26):** escopo agora inclui participacao empresarial R$800k (confirmado) + imóvel equity R$450k + terreno R$150k — patrimonio total R$8.813M, muito maior do que o visivel no portfolio financeiro
+- [ ] Planejamento sucessorio: testamento, regime de bens, protecao mutua. **Nota (2026-03-26):** patrimonio total R$8.813M (financeiro + empresa R$800k + imovel R$450k + terreno R$150k) — muito maior do que o visivel no portfolio financeiro
 - [ ] Seguro de vida: cobrir estate tax US-listed (~US$60k risco herdeiros) + proteger parceira se Diego falecer
 
 **Modelo FIRE:**
@@ -190,7 +189,7 @@ Issue encerrada em 2026-03-27 como primeira passagem com premissas de estimativa
 3. Saude e o driver incompressivel — cresce a 7% real e supera o lifestyle aos ~70 anos
 4. 80% P(base) para o casal requer combinacao de VCMH 5% + FIRE 58+ + lifestyle abaixo de R$230k
 5. Premissas de baixa confianca dominam o resultado — revisitar quando vida mais definida
-6. Itens urgentes independentes de calculos: testamento + pacto antenupcial
+6. Itens urgentes independentes de calculos: planejamento sucessorio + seguro de vida
 
 **Quando reabrir:** quando casa escolhida, lifestyle real testado, Katia com renda estabilizada pos-bebe, e data de casamento definida.
 
@@ -203,12 +202,12 @@ Issue encerrada em 2026-03-27 como primeira passagem com premissas de estimativa
 | **FIRE** | P(FIRE 55 casal) = 65.4% base / 81.4% favoravel / 28.3% stress. Meta 80% base estruturalmente difícil. |
 | **Estrategia** | Premissas de baixa confianca. Revisitar pos-casamento com dados reais de lifestyle e saude. |
 | **Conhecimento** | Saude 2 pessoas e driver dominante pos-FIRE 70+. Spending casal (R$467k) vs solo (R$318k) = gap estrutural de R$149k. |
-| **Acao urgente** | Testamento + pacto antenupcial — independente de qualquer calculo. |
+| **Acao urgente** | Planejamento sucessorio + seguro de vida — independente de calculos. |
 
 ---
 
 ## Proximos Passos
 
-- [ ] **Urgente (pre-casamento):** contratar advogado de familia — testamento + pacto antenupcial
+- [ ] **Urgente (pre-casamento):** planejamento sucessorio (testamento, regime de bens) + seguro de vida
 - [ ] **Reabrir issue quando:** casa escolhida + lifestyle real do casal testado (6-12 meses juntos) + data de casamento definida
 - [ ] **Na reabertura:** revalidar premissas de saude com dado real (plano Katia como dependente, custo total), lifestyle real vivido, aportes reais
