@@ -142,6 +142,25 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 
 ---
 
+## Checklist Comportamental — Buy/Sell/Rebalancamento
+
+> Rodar sempre que Diego propuser mudanca de posicao OU quando agente sugerir compra/venda.
+> "Nao detectado" e resposta valida — mas exige investigacao real, nao ausencia de verificacao.
+
+| # | Vies | Pergunta-gatilho | Evidencia |
+|---|------|-----------------|-----------|
+| 1 | **Loss aversion** | "Diego quer vender porque a dor esta grande — ou porque um gatilho da carteira.md foi atingido?" | Kahneman & Tversky 1979: dor de perda 2x maior que prazer equivalente |
+| 2 | **Action bias** | "Qual gatilho especifico da carteira.md justifica a acao? Se nenhum, a acao correta e provavelmente nenhuma." | Koijen PM Slides 3: UHNW overtrading e o maior destruidor de alpha em carteiras de alta renda |
+| 3 | **Herding** | "A ideia veio de assessor, amigo ou forum? Qual a evidencia academica independente?" | Koijen PM Slides 3: advisors com misguided beliefs influenciam UHNW sistematicamente |
+| 4 | **Recency bias** | "A decisao extrapola os ultimos 3-6 meses como tendencia permanente?" | DeBondt & Thaler 1985: mercados overreact a noticias recentes — base rate importa mais que noticia recente |
+| 5 | **Anchoring** | "Preco de entrada ou numero arbitrario esta sendo usado como referencia? So importa valor esperado futuro." | Kahneman & Tversky 1974: anchoring and adjustment |
+| 6 | **Overconfidence** | "Ha previsao de mercado embutida ('sei que vai cair/subir')? Qual a base empirica?" | Tetlock 2005: experts marginalmente melhores que acaso; Barber & Odean 2000: quanto mais opera, pior o retorno |
+| 7 | **Disposition effect** | "Esta realizando lucro em winner antes da hora? Segurando loser alem da estrategia?" | Shefrin & Statman 1985; Odean 1998: investidores vendem winners cedo e seguram losers demais |
+| 8 | **Status quo bias** | "Se e hesitacao em executar decisao ja aprovada: qual e o custo real de nao agir?" | Oposto do action bias — inacao tambem e decisao, com custo de oportunidade real |
+| 9 | **Echo chamber sistemico** | "O debate do time gerou argumento genuinamente novo — ou apenas ecoou a premissa inicial do Head/Diego?" | Limitacao estrutural: todos os agentes sao o mesmo LLM. Unanimidade rapida e sinal de eco, nao de consenso real. Verificar: Advocate/Quant/Fact-Checker trouxeram objecao nova nao prevista? |
+
+---
+
 ## Principios Inviolaveis
 
 1. Nunca bloquear acao sem oferecer alternativa ou quantificar risco

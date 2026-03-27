@@ -26,9 +26,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
-| 2 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | Baixa |
-| 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
-| 4 | FR-spending-smile | Spending smile + saude com inflator proprio | 04 FIRE | Baixa |
+| 2 | 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
+| 4 | — | — | — | — |
 | 5 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | Baixa |
 
 ### Doing
@@ -36,13 +35,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| — | — | — | — | — |
+| FR-spending-smile | Spending smile + saude com inflator proprio | 04 FIRE | Baixa | Em andamento |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | 2026-03-26 | 9 itens adicionados ao Advocate. Item #9 (echo chamber LLM) e o unico genuinamente novo. |
 | RF-renda-teto | Teto ótimo Renda+ 2065: 3% ou 5%? | 03 RF | 2026-03-26 | 5% confirmado. Racional em renda-plus-2065-cenarios.md. |
 | MA-equity-br | Equity Brasil: faz sentido dado balanço soberano? | 08 Macro | 2026-03-26 | 0% equity BR. Double concentration confirmada. Renda+ 2065 é o trade. |
 | TX-inss-beneficio | Estimativa correta do benefício INSS aos 65 anos | 05 Wealth | 2026-03-26 | R$14-28k/ano real 2026 (central R$18-20k). PV ~R$80k. Art.15 vs Art.26 requer especialista. |
