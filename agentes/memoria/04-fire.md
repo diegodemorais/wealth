@@ -50,6 +50,31 @@
 | 2026-03-27 | FR-fire2040 bond tent | FIRE 53 bond tent 12%: P=86.9% base / 93.7% favoravel / 81.0% stress. Bond tent = +0.4pp base / +1.8pp bear (5% do ganho total — 95% vem do patrimonio maior). Patrimonio mediano FIRE 53: R$13.4M. Script: monte_carlo_fire2040_bondtent.py |
 | 2026-03-22 | FIRE-002 v2 Plano B (corrigido) | Perda renda = aposentadoria forcada (gastos imediatos). Perda 42: SWR 4.92%, sobrevive no deterministico (R$2M aos 90) mas vulneravel a vol. Perda 45+: robusto. Threshold auto-sustentavel: pat R$5.47M. Cenarios combinados (perda + ret adverso) falham — human capital hedge de R$5-8k/mes salva todos. Nenhuma acao preventiva agora |
 
+## Conhecimento Validado — Spending Smile Brasil (2026-03-27)
+
+**Pergunta:** O spending smile de Blanchett (2014) se aplica ao Brasil?
+
+**Evidencia internacional:** Confirmado em EUA, UK, Australia, Italia (RIIG NZ 2024). NAO confirmado em Espanha e Japao. Padrao nao e universal.
+
+**Brasil especifico:** Nenhum estudo longitudinal brasileiro equivalente ao Blanchett. POF/IBGE e cross-section. Sem dado para confirmar ou refutar diretamente.
+
+**Componentes do modelo atual:**
+
+| Componente | Status | Fonte |
+|-----------|--------|-------|
+| Inflator 7% real inicial | Confirmado — consistente com VCMH/IESS historico (7-9% real) | IESS serie historica |
+| Decay para floor 3% real | Possivelmente otimista — frequencia de uso sobe com idade apos 60 | Interpretacao |
+| Perna esquerda (declinio discricionaries) | Plausivel — mecanismo universal (mobilidade, viagem) | Inferencia de replicacoes |
+| Longa permanencia (ILPI/home care) | **Gap nao modelado** — coberto parcialmente pelo lifestyle_ex_saude No-Go | Custos SP 2026: R$72-216k/ano |
+
+**Risco especifico Diego (solteiro, sem filhos):** Probabilidade de dependencia acima da media brasileira (taxa BR ~0.4%). Home care 24h = R$144-216k/ano. Modelo aguenta realocando lifestyle_ex_saude (~R$247k No-Go disponivel).
+
+**O que NAO muda:** modelo atual valido como primeira aproximacao. Nenhuma acao imediata.
+
+**Sensitivity test futuro (retro anual):** testar floor 4% vs 3% real no decay. Impacto estimado: -0.5 a -1pp P(FIRE).
+
+---
+
 ## Regras Operacionais
 
 ### Consultado em toda decisão de RF com vencimento
