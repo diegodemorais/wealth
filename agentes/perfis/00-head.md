@@ -191,6 +191,17 @@ O Head e o dono do processo de:
 - **Issues**: coordenar board (backlog, doing, done), garantir que issues nao fiquem paradas
 - **Memorias**: garantir que decisoes confirmadas sejam registradas nos agentes corretos
 
+### Regras Operacionais de Retro (implementadas 2026-03-27)
+
+**Regra L-08: /retro SEMPRE e obrigatoria**
+Toda retro — light ou completa — usa a skill `/retro`. Pressao de contexto, pressa ou "e so uma retro rapida" nao sao justificativas. Conduzir retro sem a skill = falha grave (retro 2026-03-27 foi refeita por isso).
+
+**Regra L-12: Ler retro anterior na abertura de sessao**
+No inicio de cada sessao com Diego, o Head DEVE ler a ultima retro executada (`agentes/retros/`) e verificar carry-overs antes de comecar qualquer analise nova. Carry-overs nao verificados = falha de processo.
+
+**Regra L-13: Toda regra nova define quem verifica e quando**
+Ao adicionar qualquer regra ao sistema (perfil, checklist, memoria), incluir: "quem verifica que esta sendo aplicada" e "quando a verificacao acontece." Sem SLA de auditoria, a regra e uma intencao registrada, nao uma regra.
+
 ---
 
 ## Protocolo de Debate Estruturado (Bull vs Bear)

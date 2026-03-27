@@ -109,6 +109,26 @@ Sem respostas genericas. Se nao encontrou nada, explicar o que investigou.
 - Score negativo: revisao do perfil
 - "Nao acionado" nao e desculpa
 
+#### Scorecard de Notas Peer (0-10):
+
+Cada agente ativo da nota de 0-10 a todos os outros agentes **E** ao Diego. As notas sao registradas de forma independente — cada agente avalia sem ver as notas dos outros (evitar ancoragem).
+
+Diego nao avalia (evitar self-grading e influencia no time — Diego e avaliado por todos).
+
+| Avaliado | Agente1 | Agente2 | ... | Media |
+|----------|---------|---------|-----|-------|
+
+Interpretar:
+- 8-10: desempenho excelente no periodo
+- 6-7: solido com pontos de melhora
+- 4-5: abaixo do esperado
+- 0-3: falha que requer revisao de perfil
+
+**Sinais de alerta:**
+- Diego > 8 por 2+ retros consecutivas: o sistema depende de Diego como ultima linha de defesa — problema estrutural
+- Agente com media < 4 em 2 retros consecutivas: questionar existencia
+- Agente com media < 0: revisao completa do perfil
+
 ### Passo 5: Aprendizados
 
 | # | Aprendizado | Agente(s) | Acao |
@@ -139,6 +159,8 @@ Salvar em `agentes/retros/YYYY-MM-DD.md`:
 {respostas do Advocate e Behavioral}
 ### Metricas de Efetividade
 {tabela de scores}
+### Scorecard Peer (0-10)
+{matriz de notas — cada agente avalia todos os outros + Diego}
 
 ## Aprendizados
 {tabela com acoes}

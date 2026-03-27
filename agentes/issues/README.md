@@ -25,7 +25,10 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| — | — | — | — | — |
+| 1 | FR-literature-bilateral | Regra de literatura bilateral para citacoes academicas | FIRE | Alta |
+| 2 | TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | Alta |
+| 3 | FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | Alta |
+| 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
 
 ### Doing
 > Issues em andamento
