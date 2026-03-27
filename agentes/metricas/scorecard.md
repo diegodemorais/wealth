@@ -11,13 +11,17 @@
 
 | Data | P(FIRE) | Metodo | Premissas | Status |
 |------|---------|--------|-----------|--------|
-| 2026-03-22 | **91%** (SR @ R$250k), **87%** (SR @ R$350k) | Monte Carlo 10k trajetorias (FR-003) | Patrimonio R$3.48M, aporte R$25k/mes, custo R$250k/ano, horizonte 11 anos, guardrails aprovados, premissas HD-006 | Atualizado |
+| 2026-03-22 | **91%** (flat R$250k), **87%** (flat R$350k) | Monte Carlo 10k trajetorias (FR-003) | Patrimonio R$3.48M, aporte R$25k/mes, custo R$250k/ano flat, horizonte 11 anos, guardrails aprovados, premissas HD-006 | Superado por FR-spending-smile |
+| 2026-03-27 | **80.8%** base / **89.9%** favoravel / **74.3%** stress — FIRE 50 | MC spending smile (FR-spending-smile) | Spending smile: Go-Go R$280k / Slow-Go R$225k / No-Go R$285k + saude R$37.9k × inflator 7% cap/decay. t-dist df=5 | **Atual (FIRE 50)** |
+| 2026-03-27 | **86.9%** base / **93.7%** favoravel / **81.0%** stress — FIRE 53 | MC two-pool bond tent (FR-fire2040) | Same spending smile + FIRE 53 (saude R$46.4k). Bond tent 12% (TD 2040). Patrimônio mediano R$13.4M | **Atual (FIRE 53 safe harbor)** |
 
-- **Patrimonio mediano projetado aos 50**: R$10.56M
+- **Patrimonio mediano projetado**: R$10.56M aos 50 (FIRE 50) / R$13.4M aos 53 (safe harbor)
+- **Gatilho de transicao FIRE**: patrimônio real >= R$13.4M (R$2026) **E** SWR <= 2.4%
 - **Frequencia**: Anual (ou quando premissa de vida mudar)
-- **Meta**: >= 90%
+- **Meta**: >= 90% (FIRE 50 abaixo; FIRE 53 favoravel acima)
 - **Dono**: 04 FIRE
-- **Alerta decada perdida**: P(FIRE) cai para 31-43% em cenario de decada perdida. Risco real da carteira e sequence of returns, nao perda de renda (viavel ate perda aos 42, SWR 3.12%).
+- **Alerta decada perdida**: P(FIRE) cai para 31-43% em cenario de decada perdida. Risco real = sequence of returns, nao perda de renda.
+- **Bear -30% ano 1**: P cai 15.6pp (FIRE 50) → 65.2%. Risco dominante do modelo.
 
 **Alpha esperado do tilt fatorial (atualizado HD-simplicity 2026-03-25):**
 
@@ -182,9 +186,11 @@ Decisoes ativas que tem resultado esperado e prazo. Ver detalhes em `previsoes.m
 
 | Metrica | Valor atual | Meta | Status |
 |---------|------------|------|--------|
-| P(FIRE) @ R$250k | **91%** (FR-003, 2026-03-22) | >= 90% | **OK** |
-| P(FIRE) @ R$350k | **87%** (FR-003, 2026-03-22) | >= 80% | **OK** |
-| Patrimonio mediano projetado | **R$10.56M** | R$7-8M | **Folga** |
+| P(FIRE) base — FIRE 50 | **80.8%** (FR-spending-smile, 2026-03-27) | >= 90% | **Atencao** |
+| P(FIRE) base — FIRE 53 (safe harbor) | **86.9%** (FR-fire2040, 2026-03-27) | >= 90% | **Atencao** |
+| P(FIRE) favoravel — FIRE 53 | **93.7%** (FR-fire2040, 2026-03-27) | >= 90% | **OK** |
+| Patrimonio mediano projetado (FIRE 50) | **R$10.56M** | R$7-8M | **Folga** |
+| Patrimonio gatilho FIRE (real R$2026) | **R$13.4M** (SWR <= 2.4%) | — | Referencia |
 | Alpha esperado pos-haircut | **~0.16%/ano** | > 0% | **Marginal/OK** |
 | Delta vs Shadow A (Q1 2026) | +3.15pp | > 0% rolling 3 anos | **OK** |
 | Delta vs Shadow B (Q1 2026) | -0.57pp | > 0% rolling 3 anos | **Normal** (regime inflacionario — esperado) |

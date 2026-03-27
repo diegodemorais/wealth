@@ -55,6 +55,14 @@
 | F-012 | JPGL TER efetivo: 0.19% (nao 0.39% assumido para AVGS). Cost-benefit JPGL vs SWRD: +1.88%/ano net com haircut 30%. AUM risco: EUR 245M — gatilho de monitoramento adicionado | Otimizador | Nao | 02 Factor / FI-004 | TER portfolio recalculado. Risco de liquidez monitorado. JPGL confirmado como melhor multi-factor UCITS. |
 | F-013 | Cash IBKR < $60k exposto a estate tax americano (40% sobre excedente de $60k). Risco identificado e nao modelado na carteira | Preventivo | Nao | 00 Head / XX-004 | Acao: manter cash IBKR < $60k ou converter para ETFs UCITS rapidamente. |
 
+### Issues 2026-03-27 (FR-spending-smile, FR-fire2040)
+
+| # | Finding | Tipo | Diego Achou Primeiro? | Agente/Issue | Impacto |
+|---|---------|------|----------------------|-------------|---------|
+| F-018 | P(FIRE 50) real = 80.8% (nao 91%). Modelo FR-003 usava R$250k flat; spending smile real aumenta saude no No-Go, reduzindo P em ~10pp. Bear -30% ano 1 = risco dominante (-15.6pp). | Preventivo | Nao | 04 FIRE / FR-spending-smile | P(FIRE) recalibrado. 91% era otimista por ignorar padroes reais de gasto. Meta 90% agora fora de alcance para FIRE 50; acessivel apenas em cenario favoravel de FIRE 53 (93.7%). |
+| F-019 | Bond tent natural do TD 2040 = 5% do ganho de P(FIRE), nao driver principal. 95% do ganho de FIRE 53 vs FIRE 50 (+8pp) vem do patrimônio maior (+R$2.8M) — nao do timing do vencimento. Narrativa "alinhar 2040" era ancoragem. | Preventivo | Nao | 04 FIRE + 10 Advocate / FR-fire2040 | Gatilho FIRE formalmente patrimônio-based (R$13.4M real, SWR <= 2.4%), nao data-based. 2040 = safe harbor, nao meta. FIRE 50 continua meta primária. |
+| F-020 | VCMH real estrutural ~8-9%/ano; modelo usa 7%. Isso pode subestimar P(FIRE) em ~1.5-2pp nos primeiros anos. Dado mais recente (IESS Jun/2023): 11.7% real (inclui pico pos-COVID). | Preventivo | Nao | 04 FIRE / FR-fire2040 | Modelo conservador para saude mas pode estar otimista no curto prazo. Gatilho de monitoramento VCMH adicionado (IESS > 9% real por 2 anos → recalibrar). |
+
 ### Issues 2026-03-24 (FI-crowdedness, FR-equity-equivalent)
 
 | # | Finding | Tipo | Diego Achou Primeiro? | Agente/Issue | Impacto |
@@ -81,7 +89,8 @@
 | 2026-03-22 | 3 issues | 3 | 2 | 1 | 0 | 0 | 1.0 |
 | 2026-03-22/23 | 3 issues | 3 | 1 | 2 | 0 | 0 | 1.0 |
 | 2026-03-24/25 | 4 issues | 4 | 3 | 1 | 0 | 0 | 1.0 |
-| **Total** | **13** | **17** | **9 (53%)** | **6 (35%)** | **2 (12%)** | **3 (18%)** | **~1.3** |
+| 2026-03-27 | 2 issues | 3 | 3 | 0 | 0 | 0 | 1.5 |
+| **Total** | **15** | **20** | **12 (60%)** | **6 (30%)** | **2 (10%)** | **3 (15%)** | **~1.3** |
 
 ### Analise
 
