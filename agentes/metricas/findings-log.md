@@ -71,6 +71,15 @@
 | F-022 | Gap estrutural casal vs solo = ~R$150k/ano de spending (R$467k vs R$318k). 80% das pessoas erram achando que o problema sao os aportes menores — na verdade 80% do gap e spending maior (saude 2a pessoa + viagens + filho). | Otimizador | Nao | 04 FIRE / XX-casamento | Foco correto para melhorar P: comprimir spending, nao aumentar aportes. Saude incompressivel cresce indefinidamente. |
 | F-023 | P(base) 80% para o casal e estruturalmente fora de alcance com premissas conservadoras. Requer VCMH 5% + FIRE 58+ + lifestyle R$210k+ — combinacao exigente. Target realista do casal = 65-75% base, nao 80%. | Preventivo | Nao | 04 FIRE / XX-casamento | Recalibra expectativas. Comparar P casal com P solo e a pergunta errada — contextos estruturalmente diferentes. |
 
+### Issue 2026-03-27 (PT-onelife)
+
+| # | Finding | Tipo | Diego Achou Primeiro? | Agente/Issue | Impacto |
+|---|---------|------|----------------------|-------------|---------|
+| F-024 | "Opacidade" do bond nao existe na lei. Lei 14.754/2023 nao usa os termos. CFO role + Art. 16 IN 2.180/2024 = bond provavelmente vira "entidade controlada" = tributacao anual 15% (nao diferimento). Pilar principal da proposta colapsa. | Preventivo | **Sim** (Diego questionou "parece bom demais") | Advocate + Tax + Juridico-br / PT-onelife | Evitou entrar em estrutura cuja vantagem principal (diferimento) pode nao existir para o perfil especifico de Diego como CFO/alocador |
+| F-025 | IDF compartilhado entre nao-conjuges inviavel sob CAA Circular 26/1 (fev/2026). "Entrar no bond do socio" pode ser regulatoriamente impossivel da forma proposta. Alternativa correta: contrato proprio com IDF separado. | Preventivo | Nao | Juridico-intl / PT-onelife | Identificou que a proposta como descrita pode nao ser executavel. Muda completamente a analise. |
+| F-026 | Isenção total na morte (Art. 6 XIII) = altamente improvavel para bond unit-linked. Componente seguritario do bond OneLife ≈ 1% do NAV. RFB aplica analogia VGBL: so componente seguro e isento. Isenção real ≈ R$8k em bond de R$800k, nao R$800k. | Preventivo | Nao | Juridico-br + Fact-Checker / PT-onelife | Pilar "heranca isenta" colapsa. Revisao do calculo de beneficio esperado. |
+| F-027 | 5 erros factuais confirmados no material do pitch: (1) Art. 22 errado → Art. 6 XIII correto; (2) tripartite composicao errada; (3) Lombard USD 2-3% errado → 9.75% UBS; (4) OneLife nao e Utmost → e Grupo APICIL; (5) opacidade nao e dispositivo legal. Parecer e do advogado do socio, nao de Diego. | Preventivo | Nao | Fact-Checker + Juridico-intl / PT-onelife | Calibra postura: analise baseada em pitch de parte interessada tem erros materiais. Requer verificacao independente antes de qualquer decisao. |
+
 ### Issues 2026-03-24 (FI-crowdedness, FR-equity-equivalent)
 
 | # | Finding | Tipo | Diego Achou Primeiro? | Agente/Issue | Impacto |
@@ -99,14 +108,16 @@
 | 2026-03-24/25 | 4 issues | 4 | 3 | 1 | 0 | 0 | 1.0 |
 | 2026-03-27 | 2 issues | 3 | 3 | 0 | 0 | 0 | 1.5 |
 | 2026-03-27 | XX-casamento | 3 | 2 | 1 | 0 | 1 | 1.0 |
-| **Total** | **16** | **23** | **14 (61%)** | **7 (30%)** | **2 (9%)** | **4 (17%)** | **~1.3** |
+| 2026-03-27 | PT-onelife | 4 | 4 | 0 | 0 | 1 | 1.0 |
+| **Total** | **17** | **27** | **18 (67%)** | **7 (26%)** | **2 (7%)** | **5 (19%)** | **~1.3** |
 
 ### Analise
 
-- **Finding rate 1.3/sessao**: Abaixo da meta de 1.5. Esperado — taxa de fundacao (3.0/sessao) era artificial. Fase de maturidade operacional tende a 1.0-1.5. Nao alarmar.
-- **Falsos positivos 12%**: Dentro da meta de 20%. Bom — os dois erros de classificacao da fundacao nao se repetiram.
-- **Diego achou primeiro 18%**: Ainda acima de 0%, mas todos os 3 casos foram na fase de fundacao (2026-03-18/19). Desde 2026-03-22, Diego nao identificou nenhum erro antes do sistema — melhoria clara.
-- **Preventivos vs Otimizadores**: 53% vs 35%. Mais preventivos do que otimizadores, o que e positivo para o objetivo do sistema.
+- **Finding rate 1.3/sessao**: Dentro da meta de 1.0-1.5. Fase de maturidade operacional estabilizando.
+- **Falsos positivos 7%**: Abaixo da meta de 15%. Melhoria consistente desde a fundacao (29% → 12% → 7%).
+- **Diego achou primeiro 19%**: Leve alta por PT-onelife (Diego questionou "parece bom demais"). Contexto: Diego identificou o sinal, o sistema identificou os mecanismos — colaborativo, nao falha.
+- **Preventivos 67%**: Acima da meta de 50%. PT-onelife foi 4/4 preventivos — estrutura de 9 agentes maximizou captura.
+- **Atualizado em**: 2026-03-27 (PT-onelife)
 
 ---
 

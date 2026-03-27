@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | PT-onelife |
 | **Dono** | 09 Patrimonial |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Baixa |
-| **Participantes** | 00 Head, 01 CIO, 05 Tributacao, 04 FIRE, 10 Advocate |
+| **Participantes** | 00 Head, 04 FIRE, 05 Tax, 06 Risco, 09 Patrimonial, 10 Advocate, 12 Behavioral, Fact-Checker, Juridico-br (temp), Juridico-intl (temp) |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-19 |
 | **Origem** | Conversa — socio de Diego opera estrutura de Luxemburgo via OneLife |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-27 |
 
 ---
 
@@ -94,8 +94,8 @@ Diego → shares do Bond → participacao indireta na Holding
 - [x] Avaliar governanca e riscos (controle, key person, OneLife, regulatorio)
 - [x] Identificar mitigantes de risco
 - [x] Avaliar opcionalidade estrategica (desacoplamento M&A, Lombard lending)
-- [ ] **Simular com equity value modesto (USD 200k)**
-- [ ] Proximos passos (parecer juridico, clausulas, negociacao de fee)
+- [x] Simular com equity value modesto (USD 200k)
+- [x] Full-team stress-test: 9 agentes (2026-03-27)
 
 ---
 
@@ -271,26 +271,117 @@ Com bond + Lombard lending, o framework FIRE muda fundamentalmente:
 
 ---
 
+## Full-Team Stress-Test (2026-03-27)
+
+> Executado em 2026-03-27. 9 agentes consultados. Gatilho: Diego — "parece bom demais pra ser verdade."
+
+### Veredicto: 9-0 contra entrar na estrutura como proposta
+
+A frase de Diego foi confirmada pelo time. Os 4 pilares da proposta têm fragilidades jurídicas e fiscais significativas. A análise original da issue (seções 1-6) foi gerada com base no pitch do sócio — sem verificação independente. O stress-test identificou múltiplos erros factuais e riscos não divulgados.
+
+### Erros Factuais Confirmados (Fact-Checker + Juridico-br + Juridico-intl)
+
+| Claim original | Correto |
+|---|---|
+| Art. 22 Lei 7.713/89 garante isenção na morte | **Art. 6, XIII Lei 7.713/88**. Isenção existe mas é contestável para bond unit-linked |
+| Tripartite = CAA + CSSF + auditor | CAA + **Seguradora** + **Banco Custódia** (UBS). CSSF supervisiona o banco, não é vértice |
+| Lombard a 2-3% a.a. | UBS Base Loan Rate USD = **9.75%** (dez/2025). Spread positivo quebra em USD |
+| "Opacidade" garantida por lei | Jargão sem base legal. Lei 14.754/2023 não usa os termos "opaco" ou "transparente" |
+| Isenção total na morte | Contestável — bond unit-linked tem componente securitário de ~1%. RFB provavelmente isenta apenas esse componente (analogia VGBL) |
+| Key person risk "eliminado" | Incompleto — co-souscription entre não-cônjuges cria dependência jurídica do sócio |
+| OneLife pertence à Utmost Group | **OneLife pertence ao Grupo APICIL** desde 2019. Utmost = Lombard International (entidade diferente) |
+
+### Os 4 Pilares — Status Pós Stress-Test
+
+| Pilar | Status | Detalhe |
+|---|---|---|
+| "Opacidade" e diferimento | ❌ Frágil | Jargão sem base legal. CFO role + Art. 16 IN 2.180/2024 → bond = entidade controlada → tributação anual 15% em 31/12 (não diferimento) |
+| Conversão sem IR | ❌ Improvável | Alienação tributável. IR 15-22.5% sobre ganho. Custo histórico no IRPF desconhecido |
+| Lombard sem IR por décadas | ❌ Território minado | Zero precedente CARF. Lei 15.270/2025 cria alvo. RFB tem DDL (Lei 14.596/2023) como instrumento de requalificação. Sem step-up in basis na morte |
+| Isenção total na morte | ❌ Altamente improvável | Componente seguritário do bond ≈ 1% do NAV. RFB aplica analogia VGBL: só componente seguro é isento |
+
+### Achado Estrutural Crítico (Juridico-intl — CAA Circular 26/1, fev/2026)
+
+A proposta "Diego entra no bond do sócio" pode ser **juridicamente inviável** sob a regulação luxemburguesa atual:
+
+> *"Le Fonds Dédié ne peut pas servir de support au contrat d'un autre Souscripteur"*
+
+Exceção permitida pela CAA: somente quando múltiplos souscripteurs são *"unis par le mariage ou des liens familiaux étroits"* (casados ou laços familiares estreitos). Diego e o sócio são parceiros de negócios — sem vínculo matrimonial/familiar.
+
+**As 4 estruturas possíveis e seus riscos:**
+
+| Estrutura | Super-privilège | Resgate autônomo | Proteção vs Lombard do sócio | Status |
+|---|---|---|---|---|
+| Diego = co-souscripteur do contrato do sócio | ✅ | ❌ Requer acordo conjunto | ❌ Ambos afetados | Provavelmente inviável (CAA 26/1) |
+| Diego = contrato próprio + IDF separado | ✅ | ✅ | ✅ | **Viável — estrutura correta** |
+| Diego = beneficiário do contrato do sócio | ⚠️ Derivado | ❌ Zero | ❌ Zero | Não é o que foi proposto |
+| Diego = investidor informal | ❌ | ❌ | ❌ | Pior caso possível |
+
+### Risco de Cross-collateralization (Juridico-intl)
+
+Se o sócio tiver o bond pledgeado (nantissement) para Lombard loan próprio, e Diego estiver como co-souscripteur no mesmo contrato, o banco credor tem **direito exclusivo** ao valor de resgate do bond inteiro — incluindo a parcela de Diego. Execução sem aviso prévio (Lei luxemburguesa de Financial Collateral, 2005).
+
+**Diego precisa saber: o bond atual do sócio já está pledgeado para Lombard?**
+
+### Achado Fiscal Crítico (Tax + Juridico-br + Advocate)
+
+**Cadeia fiscal completa: 5 premissas em série, qualquer uma quebrando destrói o benefício**
+
+| Premissa | Probabilidade estimada | Base |
+|---|---|---|
+| "Opacidade" válida para Diego como co-participante | ~60-70% | IN 2.180/2024 Art. 16 — indefinido |
+| Diego não classificado como "controlador" (CFO role) | ~50-60% | "Influenciar a estratégia" = zona cinzenta |
+| Substância das SPVs aceita pela RFB | ~80% | Renda operacional real mitiga |
+| Parecer Pinheiro Neto válido para Diego (não só o sócio) | ~70% | Parecer dado para o sócio |
+| Lombard lending não requalificado pela RFB | ~60% | Sem precedente; Lei 15.270/2025 agrava |
+
+**Cadeia completa: ~60%^5 ≈ 8-17% de certeza.** O diferimento — que é 80% do argumento financeiro — depende de todas as 5 premissas serem verdadeiras simultaneamente.
+
+### Agravante: CRS Ativo Desde 2018
+
+Luxemburgo e Brasil trocam informações automaticamente via Common Reporting Standard desde 2018. A RFB **já recebe dados sobre o bond**. Não há sigilo. Em caso de autuação, o histórico completo estará disponível.
+
+### Resumo por Agente
+
+| Agente | Achado Principal | Severidade |
+|---|---|---|
+| Advocate | IN 2.180/2024 + CFO role = diferimento pode colapsar | 🔴 |
+| Tax | 5 premissas em cadeia; fee > deferral benefit; evento de conversão gera IR | 🔴 |
+| Juridico-br | Lombard = zero precedente + Lei 15.270/2025; isenção morte = ~1% real; conversão = alienação tributável | 🔴 |
+| Juridico-intl | IDF compartilhado inviável (CAA 26/1); cross-collateral Lombard; estrutura correta = contrato próprio | 🔴 |
+| Fact-Checker | 5 erros factuais confirmados no pitch | 🟠 |
+| Risco | 3 riscos sem mitigação; FWU = capital congelado por anos (stress test real em curso) | 🟠 |
+| Patrimonial | Holding própria superior; cláusulas no foro luxemburguês impraticáveis para Diego | 🟠 |
+| FIRE | Fee drag 11 anos ≈ R$350k; lock-in pré-FIRE; Lombard pior que guardrails | 🟡 |
+| Behavioral | 5 biases ativos: autoridade, herding, reciprocidade, complexidade-como-qualidade, negligência de omissão | 🟡 |
+
+---
+
 ## Conclusao
 
-### Com equity value alto (USD 5M+):
-Estrutura e **claramente superior** em todos os cenarios exceto resgate total lump sum. Driver principal: diferimento do ganho de capital na venda da holding + opcionalidade.
+> Issue encerrada em 2026-03-27 após full-team stress-test com 9 agentes.
 
-### Com equity value modesto (USD 200k):
-Estrutura e **marginal**. Bond perde ~USD 90k no resgate total, empata no gradual, e ganha ~USD 130k se nunca resgatar. A decisao depende menos da matematica e mais da **opcionalidade estrategica**:
-- Se existe expectativa de exit da holding → bond vale pelo desacoplamento
-- Se Diego pretende usar Lombard lending na aposentadoria → bond vale pela eliminacao do IR
-- Se nenhum dos dois → complexidade nao se justifica para USD 200k
+### Análise original (pré stress-test)
 
-### Valor real da estrutura:
-O bond nao e um instrumento de investimento — e um **instrumento de planejamento de vida** que:
-1. Desacopla M&A da vida pessoal de Diego
-2. Cria opcionalidade fiscal (quando, onde, como pagar IR — ou nao pagar)
-3. Protege patrimonio (segregado, fora de inventario)
-4. Otimiza sucessao (isento no evento de seguro)
-5. Elimina SWR e sequence risk via Lombard lending
+A análise inicial (seções 1-5) foi gerada com base no pitch do sócio e identificou benefícios reais: desacoplamento M&A, opcionalidade fiscal, proteção patrimonial. Com equity value de USD 200k (próximo ao real de Diego ~USD 150k), o bond empata no resgate gradual e ganha USD 130k se Diego nunca resgatar.
 
-O custo de 1% e o premio por essa opcionalidade, nao uma fee de investimento.
+### Conclusao pós stress-test (2026-03-27)
+
+**A estrutura tem mérito conceitual para investidores europeus sem exposição ao CRS. Para Diego — residente fiscal brasileiro com papel ativo de CFO, equity modesto (~USD 150k), e sob Lei 14.754/2023 + IN 2.180/2024 + Lei 15.270/2025 + CRS ativo — a proposta como apresentada não sustenta os benefícios prometidos.**
+
+Os 3 pilares que fizeram a análise original ser positiva colapsam sob lei brasileira atual:
+- "Opacidade" → interpretação de advogado do sócio, não disposição legal. CFO role provavelmente torna o bond uma entidade controlada (tributação anual, não diferimento)
+- Lombard sem IR → zero precedente CARF + instrumentos de requalificação disponíveis + Lei 15.270/2025 cria perfil de alvo
+- Isenção total na morte → provavelmente ~1% do NAV (componente seguro), não 100%
+
+**Não é que a estrutura seja ilegal. É que todos os 4 pilares dependem de interpretações não testadas — e Diego seria o primeiro a testar, com a RFB já recebendo os dados via CRS.**
+
+### Alternativa válida
+
+Se Diego tiver interesse genuíno na plataforma OneLife, a estrutura correta é **contrato próprio com IDF separado** (não "entrar no bond do sócio"):
+- Proteção plena: super-privilège (Art. 118), resgate autônomo, sem dependência do sócio
+- Mínimo para IDF Tipo A: EUR 125k (Diego tem ~EUR 140k — no limite)
+- Exige parecer fiscal próprio confirmando opacidade para este perfil específico
 
 ---
 
@@ -298,20 +389,28 @@ O custo de 1% e o premio por essa opcionalidade, nao uma fee de investimento.
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocacao** | Pendente — depende de parecer juridico e equity value real |
-| **Estrategia** | Bond OneLife identificado como instrumento de planejamento de vida, nao apenas de investimento |
-| **Conhecimento** | Estrutura opaca (Pinheiro Neto + RFB). Fee nao incide sobre PE iliquido. Lombard lending elimina IR. Tripartite Lux + UBS mitiga risco seguradora |
-| **Memoria** | Registrar em 00-head, 05-wealth, 09-patrimonial apos aprovacao |
-| **Nenhum** | — |
+| **Alocacao** | Não entrar na estrutura como proposta. Antes de qualquer decisão: parecer fiscal próprio (R$20-40k, tier-1, advogado de Diego) |
+| **Estrategia** | Bond como instrumento de planejamento de vida tem mérito conceitual — mas 4 pilares fiscais são frágeis sob lei brasileira atual. Estrutura correta = contrato próprio + IDF separado |
+| **Conhecimento** | "Opacidade" = jargão, não lei. CFO role + IN 2.180/2024 = risco de tributação anual. Lombard = zero precedente CARF. Isenção morte = ~1% real. CRS ativo desde 2018. IDF compartilhado entre não-cônjuges inviável (CAA 26/1) |
+| **Preventivo** | 5 erros factuais confirmados no pitch. Parecer do sócio não cobre Diego |
 
 ---
 
 ## Proximos Passos
 
-- [x] Diego: confirmar equity value real da participacao — **R$800k confirmado (2026-03-26, estimativa conservadora)**. Equivalente a ~USD 150k ao cambio atual. Na tabela de sensibilidade: entre USD 200k ("marginal, so vale se nao resgatar") e USD 100k. Veredicto preliminar: bond so se justifica se Diego nao pretende resgatar (Lombard lending) ou se houver exit da holding.
-- [ ] Parecer juridico proprio (tributarista tier-1 representando Diego): evento de conversao, opacidade para Diego como co-participante, Lombard lending no BR
-- [ ] Negociar fee (target 0,5-0,7% pos-exit)
-- [ ] Formalizar governanca (6 clausulas + CFO role)
-- [ ] Simulacao detalhada de Lombard lending (LTV, taxas atuais, cenarios de stress/margin call)
-- [ ] Avaliar impacto nas PJs de Diego (saida definitiva futura vs manutencao)
-- [ ] Revisitar apos definicao de equity value e parecer juridico
+### Antes de qualquer decisão (obrigatório):
+
+- [ ] **Perguntar ao sócio qual das 4 estruturas está sendo proposta** — Diego seria co-souscripteur, teria contrato próprio com IDF separado, seria beneficiário, ou investidor informal? Resposta vaga = red flag.
+- [ ] **Perguntar ao sócio se o bond atual está pledgeado (nantissement)** — para Lombard loan do sócio. Se sim: qual LTV e banco credor?
+- [ ] **Contratar parecer fiscal próprio** (R$20-40k, tributarista tier-1, independente do advogado do sócio). Questões: (1) CFO role = entidade controlada ou aplicação financeira? (2) conversão gera IR imediato? (3) Lombard lending sistemático é sustentável no Brasil? (4) Art. 6 XIII se aplica a bond unit-linked?
+
+### Se o parecer for favorável — estrutura recomendada:
+
+- [ ] Contrato próprio com IDF separado (não compartilhar o bond do sócio)
+- [ ] Verificar mínimo EUR 125k para IDF Tipo A — Diego tem ~EUR 140k (no limite)
+- [ ] Formalizar mandato de investimento, direito de resgate unilateral, beneficiário, surrender charges schedule
+- [ ] Confirmar custódia UBS independente e aprovada pela CAA
+
+### Quando reabrir:
+
+Após resposta do sócio às perguntas acima + parecer fiscal próprio.
