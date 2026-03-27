@@ -11,7 +11,7 @@
 - **Nome**: Diego Morais
 - **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
-- **Meta**: Aposentadoria aos 50 (FIRE)
+- **Meta FIRE**: Aposentar quando **patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4%** → P(FIRE) ~87%. Revisão anual a partir de 2034 (48 anos). Safe harbor: 2040 (53 anos) — não esperar além disso. FIRE 50 é o target primário; 2040 é a rede de segurança.
 - **Patrimonio**: R$ 3.482.633 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano
@@ -90,7 +90,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ---
 
-## Guardrails de Retirada (aprovados 2026-03-20)
+## Guardrails de Retirada (aprovados 2026-03-20, fonte atualizado 2026-03-27)
 
 | Drawdown | Acao | Retirada |
 |----------|------|----------|
@@ -103,6 +103,10 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 - **Upside**: se portfolio sobe 25%+ acima do pico real, aumentar retirada em 10% (permanente). Teto R$350k.
 - **Piso essencial**: R$180k (moradia + saude + alimentacao).
 - **Revisao anual em janeiro.**
+
+### Guardrail de Fonte (FR-fire2040, 2026-03-27)
+
+**Nos anos 1–5 do FIRE (53–58 se FIRE 2040, ou 50–55 se FIRE 2037):** saques vêm do bond pool (TD 2040 vencido → caixa/Selic) **antes** do equity. Equity só é tocado quando o bond pool estiver esgotado. Regra mecânica — sem ela, o bond tent não tem efeito comportamental.
 
 ---
 

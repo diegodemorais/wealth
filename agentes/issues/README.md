@@ -25,9 +25,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FR-fire2040 | FIRE 2040: bond tent natural TD 2040, buffer pos-vencimento, guardrails revisados | 04 FIRE | Média |
-| 2 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
-| 3 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
+| 1 | XX-casamento | Casamento iminente: recalibrar P(FIRE), testamento, pacto antenupcial | 00 Head | Baixa |
+| 2 | PT-onelife | Bond OneLife: converter participacao na holding (longo prazo) | 05 Wealth | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -40,6 +39,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-fire2040 | FIRE 2040: bond tent, guardrail de fonte, gatilho R$13.4M/SWR 2.4% | 04 FIRE | 2026-03-27 | Bond tent = 5% do ganho. Driver = patrimônio. Safe harbor 2040, meta FIRE 50. |
 | FR-spending-smile | Spending smile + saude com inflator proprio + age sweep 50–60 | 04 FIRE | 2026-03-27 | P(sucesso) 80.8% base. FIRE 55 = 90.5%. Bear -30% ano 1 = risco dominante. |
 | HD-psicologia | Psicologia cognitiva: calibracao, pre-mortem, dado vs interpretacao | 00 Head | 2026-03-26 | 7 implementacoes: pre-mortem+pre-parade, falsificacao, dado/interpretacao, scoring retro, julgamentos independentes. |
 | HD-behavioral | Behavioral checklist enriquecido com evidencias do curso | 10 Advocate | 2026-03-26 | 9 itens adicionados ao Advocate. Item #9 (echo chamber LLM) e o unico genuinamente novo. |

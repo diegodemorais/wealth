@@ -28,7 +28,10 @@
 | JPGL AUM | Parar aportes | AUM JPGL < €100M | Parar aportes em JPGL imediatamente. Avaliar saida com Factor e Advocate | Mensal |
 | Soberano | CDS alerta | CDS Brasil 5y > 500 bps | Revisao exposicao soberana BR com Advocate | Mensal |
 | HODL11 | Banda cripto | < 1,5% patrimonio: comprar ate 3% · > 5% patrimonio: rebalancear para 3% | Manter target 3% via aportes ou venda | Trimestral |
-| Desacumulacao | Guardrails | Drawdown 0-15%: R$250k/ano · 15-25%: R$225k · 25-35%: R$200k · >35%: R$180k (piso) · Upside +25% acima pico: +10% permanente (teto R$350k) · Restauracao: volta ao pico + 2 trimestres | Ajustar retirada conforme tier | Trimestral (pos-FIRE) |
+| Desacumulacao | Guardrails — montante | Drawdown 0-15%: R$250k/ano · 15-25%: R$225k · 25-35%: R$200k · >35%: R$180k (piso) · Upside +25% acima pico: +10% permanente (teto R$350k) · Restauracao: volta ao pico + 2 trimestres | Ajustar retirada conforme tier | Trimestral (pos-FIRE) |
+| Desacumulacao | Guardrails — fonte | **Anos 1–5 do FIRE:** sacar do bond pool (TD 2040 vencido / caixa) antes do equity. Equity intocado ate bond pool esgotado. Violacao = ativar Behavioral | Verificar origem do saque | Trimestral (pos-FIRE) |
+| Saude | VCMH anual | VCMH real IESS > 9% por 2 anos consecutivos → recalibrar spending smile (saude base + inflator cap/decay) na proxima retro anual. Fonte: iess.org.br > Publicacoes > VCMH. Ref: VCMH Jun/2023 = 15.1% nominal / ~11.7% real (pico pos-COVID) | Verificar dado IESS | Anual |
+| Bond tent | Tamanho TD 2040 | TD 2040 como % do portfolio < 6% em jan/2037 (3 anos antes do FIRE 2040): bond tent < 2 anos de cobertura — irrelevante. Avaliar alternativa (IPCA+ curto maior ou IMAB5). Meta: >= 10% do portfolio em 2040 | Verificar % portfolio | Anual |
 | Tax | CBE | Saldo IBKR > US$100k (ja excede desde 2025) | Declarar CBE na RFB | Trimestral |
 
 ---
@@ -37,7 +40,8 @@
 
 | Dominio | Gatilho | Condicao | Acao |
 |---------|---------|----------|------|
-| FIRE | Trajetoria progressiva | Pat <80% mediano FR-003 na idade: revisar aporte/custo/FIRE date · Aos 48 (2035) pat <R$7,4M: modelar adiamento · Pat >=R$7,35M: modelar FIRE possivel · Pat >=R$10,56M antes dos 50: avaliar FIRE imediato | Recalcular conforme marco |
+| FIRE | Gatilho de transicao | **Patrimônio real (R$2026) ≥ R$13.4M E SWR ≤ 2.4%** → iniciar processo de transicao para FIRE. Revisao a partir de jan/2034 (48 anos). Safe harbor: nao trabalhar alem de 2040 (53 anos). Referencia: P(FIRE)~87% ajustado VCMH. Script: monte_carlo_fire2040_bondtent.py | Anual (a partir de 2034) |
+| FIRE | Trajetoria intermediaria | Pat real < R$8.5M aos 47 (2034): cenario adverso — modelar adiamento. Pat real >= R$11M aos 47: cenario favoravel — FIRE 50 possivel (P~80%). Pat real >= R$13.4M a qualquer idade: avaliar FIRE imediato | Anual |
 | FIRE | Custo de vida | Custo anual > R$287k | Recalcular SWR, patrimonio-alvo e FIRE date |
 | Patrimonial | Holding | Pat >= R$5M | Avaliar holding familiar: ITCMD, sucessao, protecao patrimonial |
 | Mercado | Equity drawdown global | MSCI World -20% em 6 meses | Aumentar ritmo de aportes equity |

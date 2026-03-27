@@ -30,8 +30,11 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| Transicao FIRE | Idade 50 | Iniciar fase de desacumulacao | Aguardando (2037) |
-| Bond tent | Idade 45-55 | Janela critica de sequencia de retornos | Aguardando (2032-2042) |
+| Transicao FIRE | **Patrimônio real >= R$13.4M (R$2026) E SWR <= 2.4%** | Iniciar fase de desacumulacao | Revisao anual a partir de jan/2034 |
+| Safe harbor FIRE | 2040 (53 anos) | Nao trabalhar alem disso independente de P(FIRE) | Aguardando |
+| Bond tent | Anos 1-5 pos-FIRE | Sacar do bond pool (TD 2040 / caixa) antes do equity — guardrail de fonte mecanico | Ativar no FIRE |
+| VCMH | Media 3 anos IESS > 9% real | Recalibrar spending smile (saude base + inflator) na retro anual | Monitorar anualmente |
+| TD 2040 tamanho | < 6% do portfolio em jan/2037 | Avaliar alternativa de buffer SoRR | Monitorar anualmente a partir de 2032 |
 
 ---
 
@@ -42,6 +45,9 @@
 | 2026-03-20 | FR-001 v4 (HD-006 intermediario) | Retornos corrigidos com fontes academicas (DMS 2024) + BRL 3 cenarios: acum 5,84% (tax drag 0%), desacum 4,57%-5,00%. Pat ~R$10,96M aos 50. SWR R$250k: 2,28%. SWR R$350k: 3,19%. Limite seguro: R$384k/ano |
 | 2026-03-22 | HD-006 final: alocacao revisada | Equity 79%, IPCA+ longo 15%, IPCA+ curto 3%, Cripto 3%. Selic removido. IPCA+ a 7.16% vence equity all-in por 150 bps. Projecoes de FR-001 serao recalculadas com nova alocacao |
 | 2026-03-22 | FR-003 Monte Carlo | MC 10k trajetorias, t-dist df=5. Pat mediano R$10.56M. SR R$250k: 91% (guard), R$350k: 87%. Decada perdida: 31-43%. Bond tent: +0.1pp |
+| 2026-03-27 | FR-spending-smile | Spending smile cap/decay + saude corrigida (R$18k x 1.07^11 = R$37.887 no FIRE). P(FIRE 50) = 80.8% base / 89.9% favoravel / 74.3% stress. Bear -30% ano 1 = risco dominante (-15.6pp). INSS = impacto irrelevante (0.2pp). Script: monte_carlo_spending_smile_v3_corrigido.py |
+| 2026-03-27 | FR-fire2040 age sweep | FIRE 50-60: P=78.8% a 95.5%. Valor marginal: +2.4pp/ano (anos 1-5), +1.0pp/ano (6-10). FIRE 55 = primeiro limiar 90%. Guardrails valem +12.5pp no FIRE 50. Script: monte_carlo_fire_age_sweep.py |
+| 2026-03-27 | FR-fire2040 bond tent | FIRE 53 bond tent 12%: P=86.9% base / 93.7% favoravel / 81.0% stress. Bond tent = +0.4pp base / +1.8pp bear (5% do ganho total — 95% vem do patrimonio maior). Patrimonio mediano FIRE 53: R$13.4M. Script: monte_carlo_fire2040_bondtent.py |
 | 2026-03-22 | FIRE-002 v2 Plano B (corrigido) | Perda renda = aposentadoria forcada (gastos imediatos). Perda 42: SWR 4.92%, sobrevive no deterministico (R$2M aos 90) mas vulneravel a vol. Perda 45+: robusto. Threshold auto-sustentavel: pat R$5.47M. Cenarios combinados (perda + ret adverso) falham — human capital hedge de R$5-8k/mes salva todos. Nenhuma acao preventiva agora |
 
 ## Regras Operacionais
