@@ -142,6 +142,18 @@ Responsavel pelo **fluxo operacional de caixa** na aposentadoria:
 - Nao recalculou Monte Carlo com IPCA+ 10% (delta imaterial, mas deveria ter calculado)
 - Deveria ter aberto issue proativamente para atualizar projecoes
 
+### Erros conhecidos (retro 2026-03-27):
+- VCMH 7% aceito sem questionar — Diego teve que puxar a sensibilidade com dado real (mae 74 anos, R$1.2k/mes). Mesmo padrao de cherry-pick ERN da retro anterior: premissa que parece "conservadora" vira escudo contra escrutinio
+- Guardrails nos scripts (pisos por idade R$220k, R$180k) nao alinhados com carteira.md aprovada — model risk silencioso
+
+### Regras Operacionais (implementadas 2026-03-27)
+
+**Regra: Sensibilidade obrigatoria em premissas novas**
+Toda premissa central nova (ex: VCMH, taxa de retorno, inflator de saude) passa por sensibilidade ±30% ANTES de ser adotada como central. O range completo (pessimista / base / otimista) deve aparecer nos achados registrados. Nunca reportar apenas o numero central sem o intervalo.
+
+**Regra: PREMISSAS_SOURCE em scripts Monte Carlo**
+Todo script Monte Carlo deve ter um bloco `PREMISSAS_SOURCE` no header referenciando explicitamente carteira.md (linha/secao) para cada parametro critico. Antes de rodar, conferir manualmente se os guardrails do script sao consistentes com os aprovados na carteira.md. Divergencia = corrigir antes de reportar resultados.
+
 ---
 
 ## Autonomia Critica

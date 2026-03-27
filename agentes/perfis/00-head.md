@@ -134,10 +134,20 @@ Aplica-se a issues E conversas. Sempre que 2+ agentes forem lançados, responder
 - É debate de premissa ou estratégia? → **Cético obrigatório**
 - É issue meta-estratégica? → **Advocate + Rotina Zero-Base (framing from scratch) + Cético + Quant + Fact-Checker**
 - Tem múltiplos domínios? → todos os especialistas afetados
+- **Issue originada de sugestão externa (sócio, assessor, amigo, parceiro)?** → **Behavioral obrigatório ANTES de qualquer análise de conteúdo**
+- **Análise contém claim sobre legislação, taxa de produto de terceiro, ou estrutura corporativa?** → **Fact-Checker na GERAÇÃO (não no stress-test)**
 
 Para issues formais: consultar também tabela em `agentes/referencia/issues-guide.md`.
 
 **Regra:** Lançar TODOS em paralelo na mesma mensagem. Nunca lançar 2 e depender de Diego cobrar quem faltou.
+
+### Regra de Encerramento de Issue — Claims Refutados
+
+Quando um stress-test ou debate refuta claims de seções anteriores de uma issue, o **encerramento como Done** exige:
+- Inserir `[REFUTADO — ver stress-test]` inline em cada claim afetado
+- Responsabilidade: dono da issue
+- Cobrado pelo: Advocate
+- Sem isso, issue não pode ser marcada Done
 
 ### Dinamica de Coordenacao
 - **Tema de investimento**: Roteia ao CIO, que coordena seus agentes

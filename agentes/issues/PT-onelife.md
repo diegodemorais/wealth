@@ -44,15 +44,15 @@ Socio (PF, holder do bond)
 ### Mecanica
 - Seguradora: **OneLife** (Luxemburgo)
 - Custodia: **UBS** (segregada do balanco da OneLife — fonds dedie)
-- Regulatorio: **tripartite de Luxemburgo** (CAA supervisiona seguradora, CSSF supervisiona custodia, auditor externo valida segregacao)
+- Regulatorio: **tripartite de Luxemburgo** (CAA supervisiona seguradora, CSSF supervisiona custodia, auditor externo valida segregacao) `[REFUTADO — ver stress-test: correto e CAA + Seguradora + Banco Custodia (UBS). CSSF supervisiona o banco, nao e vertice do triangulo]`
 - SPVs: cada fonte pagadora internacional tem empresa propria em territorio de beneficio tributario. Todas com **renda operacional real**
 - Fluxo: renda → SPV → distribuicao ao bond (dividendos ou mutuos) → bond coordena portfolio
 - Diferimento: total dentro do bond. Tributacao apenas no resgate pelo holder
 
 ### Status fiscal no Brasil
 - **Parecer: Pinheiro Neto** (tier-1)
-- **Instrucao RFB**: bond deve ser declarado no IR, mas e considerado **opaco** (nao transparente para CFC rules)
-- Opacidade = Receita nao "olha atraves" do bond. Tributacao so no resgate/distribuicao
+- **Instrucao RFB**: bond deve ser declarado no IR, mas e considerado **opaco** (nao transparente para CFC rules) `[REFUTADO — ver stress-test: "opacidade" e jargao, nao dispositivo legal. Lei 14.754/2023 nao usa os termos. CFO role + Art. 16 IN 2.180/2024 pode fazer bond = entidade controlada = tributacao anual]`
+- Opacidade = Receita nao "olha atraves" do bond. Tributacao so no resgate/distribuicao `[CONDICIONAL — ver stress-test]`
 
 ### Custos
 - Fee all-in: **1% a.a. do patrimonio** (seguradora + SPVs + gestao + compliance)
@@ -218,7 +218,7 @@ Renda: 100k/ano sem IR, investido a 4%:
 |-------|:------:|-----------|
 | Controle investimentos | **Eliminado** | Diego e CFO/portfolio allocator |
 | OneLife/seguradora | **Eliminado** | Tripartite Luxemburgo + custodia UBS segregada |
-| Key person (socio) | **Eliminado** | Bond redeemable isento IR no falecimento (art. 22 Lei 7.713/89) |
+| Key person (socio) | **Eliminado** | Bond redeemable isento IR no falecimento (art. 22 Lei 7.713/89) `[REFUTADO — art. correto: Art. 6 XIII Lei 7.713/88; isencao provavelmente so sobre componente seguritario ~1% do NAV, nao total — ver stress-test]` |
 | Governanca | **Baixo** | 6 clausulas contratuais necessarias (ver abaixo) |
 | Regulatorio BR (opacidade) | **Medio** | Parecer Pinheiro Neto + instrucao RFB. Pode mudar prospectivamente |
 | Evento de conversao (entrada) | **A definir** | Precisa parecer: gera ganho de capital? |
@@ -241,7 +241,7 @@ Renda: 100k/ano sem IR, investido a 4%:
 **Lombard lending (emprestimo contra o bond):**
 - Credor: OneLife ou UBS
 - Garantia: o bond
-- Taxa: risco soberano Lux/Suica (~2-3% a.a.)
+- Taxa: risco soberano Lux/Suica (~2-3% a.a.) `[REFUTADO — UBS Base Loan Rate USD = 9.75% (dez/2025). Spread positivo quebra em USD — ver stress-test]`
 - LTV tipico: 50-70% do NAV do bond
 - Bond rende ~5%, emprestimo custa ~2-3% → **spread positivo de 2-3%**
 - Emprestimo nao e renda → **nao e tributavel no Brasil**

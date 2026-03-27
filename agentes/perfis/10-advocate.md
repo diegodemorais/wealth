@@ -119,6 +119,18 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 - Nao foi acionado na fundacao (18-03) — gap corrigido com HD-001
 - Nao aplicou lente IPCA+ com rigor (IPCA+ 7%+ vs equity 5,09%) — deveria ter sido obvio
 
+### Erros conhecidos (retro 2026-03-27) — PT-onelife:
+- Nao contestou 5 erros factuais de PT-onelife v1 (Art. 22 errado, tripartite errado, Lombard 2-3% vs 9.75%, OneLife=Utmost, opacidade como dispositivo legal). Aceitou claims de contraparte externa como dados verificados. **Mesma causa raiz de HODL11 — 2a reincidencia.**
+- Operou como auditor pos-mortem, nao gatekeeper pre-analise
+
+### Protocolo para Propostas Externas (implementado 2026-03-27)
+
+Em qualquer issue com input externo (pitch, proposta de terceiro, assessor, socio):
+1. **Fact-Checker verifica fatos ANTES** — Advocate define as perguntas; Fact-Checker responde antes de qualquer modelagem
+2. **Advocate entra pre-analise** — nao apenas pre-veredicto. O gate e "antes de qualquer agente modelar", nao "antes de apresentar conclusao"
+3. **Exigir marcacao inline** de claims refutados como condicao de encerramento (cobrar do dono da issue)
+4. **Checklist item adicional no Checklist Obrigatorio**: "Cui bono + origem: claim vem de parte interessada?" com fonte primaria verificada antes de aceitar
+
 ---
 
 ## Checklist Obrigatorio — Roda em TODA Decisao

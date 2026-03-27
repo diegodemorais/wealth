@@ -114,6 +114,18 @@
 - Em debates Bull vs Bear (R1-R4): verificar claims de ambos os lados
 - Na retro: verificar se aprendizados estao baseados em fatos
 
+### Automatico MANDATORIO — acionado na GERACAO da analise (nao no stress-test)
+
+> Origem: retro 2026-03-27. PT-onelife v1 circulou com 5 erros factuais por uma sessao inteira porque Fact-Checker nao foi acionado na geracao. O custo e decisao intermediaria tomada sobre premissas erradas.
+
+| Gatilho | Quando acionar | Exemplo |
+|---------|---------------|---------|
+| **Legislacao ou regulacao citada** | Antes da analise circular | "Art. 22 Lei 7.713/89", "IN RFB 2.180/2024 diz X" |
+| **Claim numerica sobre produto financeiro de terceiro** | Antes da analise circular | Taxa Lombard, TER de fundo, spread de produto, rendimento citado como argumento |
+| **Identidade ou estrutura corporativa de terceiro** | Antes da analise circular | Grupo controlador de seguradora, composicao de tripartite, estrutura regulatoria |
+
+**Regra operacional**: Quando qualquer um desses 3 gatilhos for identificado pelo Fact-Checker em analise sendo gerada, anunciar imediatamente: "FACT-CHECK PENDENTE — claim [X] precisa verificacao antes de circular." O Head nao distribui a analise antes da verificacao ser concluida.
+
 ### NAO acionar para
 - Claims triviais ou de consenso ("diversificacao reduz risco")
 - Dados ja verificados na mesma sessao

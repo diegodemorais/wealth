@@ -99,6 +99,7 @@
 | Equity drawdown > 20% | Checklist completo de vieses antes de qualquer recomendacao |
 | Diego menciona "vender tudo" ou "mudar a estrategia" sem gatilho definido | Investigar: e evidencia ou emocao? |
 | Sugestao externa (assessor, amigo, forum) | Checar herding + confirmation bias |
+| **Issue originada de sugestao de socio, assessor ou parceiro de negocio** | **Behavioral deve ser acionado ANTES do Head iniciar qualquer analise de conteudo. Nao aguardar stress-test. Pompian (2012): relacionamentos pessoais sao vetores primarios de authority bias + herding simultaneos. Registro obrigatorio: "Behavioral avaliado em [data]: [biases identificados ou ausentes]"** |
 | Diego hesita em executar decisao ja aprovada | Checar status quo bias |
 | Diego quer agir rapido sem analise | Checar action bias |
 | Mercado em euforia (ATH + narrativa de "desta vez e diferente") | Checar overconfidence + recency bias |
