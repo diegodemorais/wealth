@@ -1,8 +1,8 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-03-22
+> Atualizado em: 2026-03-30
 > Este arquivo e a fonte de verdade para todos os agentes.
-> Cambio de referencia: R$ 5,24
+> Cambio de referencia: R$ 5,25
 
 ---
 
@@ -12,7 +12,7 @@
 - **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
 - **Meta FIRE**: Aposentar quando **patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4%** → P(FIRE) ~87%. Revisão anual a partir de 2034 (48 anos). Safe harbor: 2040 (53 anos) — não esperar além disso. FIRE 50 é o target primário; 2040 é a rede de segurança.
-- **Patrimonio**: R$ 3.482.633 (excl. operacao estruturada COE/emprestimo)
+- **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano
 - **Estado civil**: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento
@@ -33,10 +33,10 @@
 
 | ETF | Alocacao Alvo | Atual | Composicao Real (USD) | Status |
 |-----|--------------|-------|----------------------|--------|
-| SWRD | 35% | 36,8% (R$ 1.304.850) | SWRD $248.8k | Overweight, sem aportes |
-| AVGS (US + INT) | 25% | 27,9% (R$ 987.969) | AVUV $58.5k + AVDV $94.1k + USSC $30.0k + AVGS $5.9k | Overweight via transitorios. Aportar so em AVGS UCITS |
-| AVEM | 20% | 24,2% (R$ 857.179) | EIMI $96.1k + AVES $56.1k + DGS $11.3k | Overweight via transitorios. Aportar so em AVEM UCITS |
-| JPGL | 20% | 0,3% (R$ 11.383) | IWVL $2.2k + JPGL $0 | **Maior gap (-19,7%). FOCO dos aportes** |
+| SWRD | 35% | ~37,6% (~R$ 1.267k) | SWRD ~$241k | Overweight, sem aportes |
+| AVGS (US + INT) | 25% | ~28,5% (~R$ 961k) | AVUV + AVDV + USSC + AVGS ~$183k | Overweight via transitorios. Aportar so em AVGS UCITS |
+| AVEM | 20% | ~24,4% (~R$ 824k) | EIMI + AVES + DGS ~$157k | Overweight via transitorios. Aportar so em AVEM UCITS |
+| JPGL | 20% | ~0,4% (~R$ 12k) | IWVL + JPGL ~$2.1k | **Maior gap (-19,6pp). FOCO dos aportes** |
 
 Carteira proxima de 50/50 em Neutro/Fator, considerando as composicoes de cada ETF.
 
@@ -55,8 +55,8 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 | IPCA+ existente | 0,4% | — | R$ 13.308 | Tesouro IPCA+ 2040 | Posicao legada. Sera incorporada ao bloco IPCA+ longo |
 | IPCA+ longo | ~0,4% | **15%** | ~R$ 523k target | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para JPGL. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |
-| Renda+ 2065 | 3,2% | <=5% | R$ 111.992 | Renda+ 2065 | Duration 43,6. Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
-| Cripto | 3,0% | **3%** | R$ 108.089 | HODL11 (R$ 104.951) + spot legado (R$ 3.138) | Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
+| Renda+ 2065 | 3,0% | <=5% | ~R$ 99.673 | Renda+ 2065 | Duration 43,6. MtM -11% em mar/2026 (taxa subiu). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
+| Cripto | 3,1% | **3%** | ~R$ 103.400 | HODL11 + spot legado | BTC $67.822 (30/Mar). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
 ---
 

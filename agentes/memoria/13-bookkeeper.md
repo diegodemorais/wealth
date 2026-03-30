@@ -17,35 +17,40 @@
 
 | Campo | Valor | Data | Fonte |
 |-------|-------|------|-------|
-| Patrimonio total | R$ 3.492.284,00 | 2026-03-23 | Google Sheets (aba Evolucao) |
-| Equity total | USD $595.450,47 | 2026-03-23 | Google Sheets (aba Utils) |
-| Cambio referencia | R$ 5,24 | 2026-03-23 | Google Sheets |
-| Performance Q1 2026 | +1,73% em BRL | 2026-03-23 | Cálculo real com patrimônio 31/Dec + aportes |
+| Patrimonio total | ~R$ 3.372.673 | 2026-03-30 | Calc: equity BRL + nao-equity estimados |
+| Equity total | USD $585.371 | 2026-03-30 | Google Sheets (aba Utils, soma posicoes) |
+| Cambio referencia | R$ 5,25 | 2026-03-30 | WebSearch USD/BRL |
+| Performance desde 23/Mar | -3,4% (R$ -119.611) | 2026-03-30 | Queda equity USD + depreciacao BRL |
 
-### Posicoes detalhadas (USD, 2026-03-19)
+### Posicoes detalhadas (USD, 2026-03-30)
 
-| Bucket | ETF | USD | % Equity | Lucro |
-|--------|-----|-----|----------|-------|
-| SWRD (35%) | LON:SWRD | $245.056 | 41,2% | +40,8% |
-| AVEM (20%) | LON:EIMI | $94.469 | 15,9% | +52,1% |
-| | AVES | $55.917 | 9,4% | +32,7% |
-| | DGS | $11.255 | 1,9% | +19,3% |
-| AVGS (25%) | USSC | $29.726 | 5,0% | +62,0% |
-| | AVUV | $58.489 | 9,8% | +30,6% |
-| | AVDV | $92.666 | 15,6% | +68,6% |
-| | AVGS | $5.812 | 1,0% | -0,1% |
-| JPGL (20%) | LON:IWVL | $2.128 | 0,4% | +66,8% |
-| | LON:JPGL | $0 | 0,0% | +24,8% |
-| **Total** | | **$595.517** | **100%** | — |
+> Breakdown por ETF nao extraido individualmente neste check-in. Total equity $585,371 = -1,7% vs $595,517 de 23/Mar.
+
+| Bucket | ETF | USD | % Equity | Nota |
+|--------|-----|-----|----------|------|
+| SWRD (35%) | LON:SWRD | ~$241.000 | ~41,2% | proporcional vs 23/Mar |
+| AVEM (20%) | LON:EIMI + AVES + DGS | ~$157.000 | ~26,8% | proporcional |
+| AVGS (25%) | USSC + AVUV + AVDV + AVGS | ~$183.000 | ~31,3% | proporcional |
+| JPGL (20%) | LON:IWVL + LON:JPGL | ~$2.100 | ~0,4% | gap -19,6pp |
+| **Total** | | **$585.371** | **100%** | verificar planilha no proximo check-in |
 
 ### Blocos nao-equity
 
-| Bloco | Valor BRL | % Total |
-|-------|-----------|---------|
-| FIRE fixo (IPCA+ 2040) | R$ 13.260 | 0,4% |
-| Reserva (IPCA+ 2029) | R$ 87.847 | 2,6% |
-| Risco Juros (Renda+ 2065) | R$ 107.756 | 3,1% |
-| Risco Crypto (HODL11 + spot) | R$ 105.896 | 3,1% |
+| Bloco | Valor BRL | % Total | Nota |
+|-------|-----------|---------|------|
+| FIRE fixo (IPCA+ 2040) | ~R$ 13.308 | 0,4% | posicao pequena, sem variacao significativa |
+| Reserva (IPCA+ 2029) | ~R$ 87.862 | 2,6% | posicao estavel |
+| Risco Juros (Renda+ 2065) | ~R$ 99.673 | 3,0% | MtM -11% em marco — taxa subiu |
+| Risco Crypto (HODL11 + spot) | ~R$ 103.400 | 3,1% | BTC $67.822 em 30/Mar |
+
+### Reconciliacao anterior (23/Mar 2026)
+
+| Campo | Valor |
+|-------|-------|
+| Patrimonio total | R$ 3.492.284,00 |
+| Equity total | USD $595.450,47 |
+| Cambio | R$ 5,24 |
+| Performance Q1 2026 | +1,73% em BRL |
 
 ### Ativos com saldo zero (nao-posicao)
 WRDUSW-USD, F50A.DE, AVEM UCITS, LON:EMVL, ZPRX.DE, LON:IWQU, LON:IWMO
@@ -156,6 +161,7 @@ Diego e executor consistente acima da meta. Critica de "gap de execucao" feita e
 
 ### 2026-03
 - 05/03 e 11/03: Aporte de R$56.485 (registrado na planilha como mudanca no investido total)
+- 30/03: Check-in semanal. Equity -1,7% vs 23/Mar. Total patrimônio estimado ~R$3,372k (queda -3,4%). Sem operacoes novas detectadas.
 
 ---
 
@@ -166,3 +172,4 @@ Diego e executor consistente acima da meta. Critica de "gap de execucao" feita e
 | 2026-03-19 | Fundacao do agente | Criado. 1 execucao pendente (IPCA+ 2040 DCA). Skill /atualizar-carteira migrado para responsabilidade do Bookkeeper |
 | 2026-03-23 | Issue XX-001: Performance Attribution Q1 2026 (primeiro report) | Report completo: `/agentes/contexto/performance/Q1-2026.md`. Framework definido para Q2+. ALERTA: IPCA+ DCA nao executado (0/3 tranches, 4 dias atrasado). Apreciacao BRL -6.15% neutralizou ganho em USD +3.9% → retorno carteira estimado -2.5% em BRL no Q1 |
 | 2026-03-23 | Bookkeeper: Refazer Performance Q1 com números reais da planilha | Números reais extraidos: Patrimonio 31/Dec R$ 3.286.414,64 → 23/Mar R$ 3.492.284. Aportes Q1 R$ 149.110. Retorno real: +1,73% em BRL (ganho de mercado ~5.7% USD compensou impacto cambial de -6.15%). Arquivo atualizado: `agentes/contexto/performance/Q1-2026.md` |
+| 2026-03-30 | Check-in semanal | Equity $585,371 USD (-1,7% vs 23/Mar). Total ~R$3,372k (-3,4%). Câmbio R$5,25. Renda+ 2065 ~R$99,673 (MtM -11% em março, taxa subiu). HODL11 ~R$103,400 (BTC $67,822). IPCA+ DCA: 0/? tranches — leve atraso. Sem gatilhos atingidos. Sem operacoes novas. Não é M1 (mesmo mês que 23/Mar). |
