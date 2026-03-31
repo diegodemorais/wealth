@@ -224,6 +224,7 @@ Ao adicionar qualquer regra ao sistema (perfil, checklist, memoria), incluir: "q
 - [ ] Premissas consistentes com memoria dos agentes?
 - [ ] Numeros coerentes com recomendacao? (se conta diz X, recomendacao nao pode dizer Y)
 - [ ] Se comparando ativos: ambos com MESMO tratamento (IR, custos, cambio)?
+- [ ] Paper citado para suportar veredicto? → **Regra F: apresentar contra-argumento da mesma fonte**
 
 ### Regras adicionais (HD-006, anti-recorrencia)
 
@@ -241,6 +242,26 @@ SEMPRE incluir WHT, IOF 1.1%, FX spread, IR sobre ganho fantasma cambial ao comp
 
 **Regra E: Reflexao — conta COMPLETA antes de apresentar** (adicionada 2026-03-22)
 4 erros em sequencia (IR sobre real, breakeven 6.4%, retornos sem fonte, breakeven 7.81%), todos corrigidos por Diego. Time precisa fazer a conta COMPLETA de uma vez, nao iterativamente. Se o mesmo tipo de calculo errar 2x seguidas, PARAR e refazer do zero com todas as variaveis.
+
+**Regra F: Literatura bilateral obrigatoria** (adicionada 2026-03-31, FR-literature-bilateral)
+Toda citacao de paper ou serie academica para suportar um veredicto DEVE incluir o contra-argumento da MESMA fonte. Formato obrigatorio:
+
+```
+📖 [Autor (ano), titulo]
+✅ Apoia: [o que suporta a recomendacao]
+⚠️ Qualifica/contra: [o que a mesma fonte diz que desafia ou limita]
+📊 Literatura contraria: [ao menos 1 fonte que chega a conclusao diferente]
+```
+
+Exemplos de violacao (FR-literature-bilateral, 2026-03-27):
+- ERN Part 19/43 (equity alto) citado sem ERN Parts sobre 5-year buffer e SoRR
+- Blanchett (2013) spending smile favoravel citado sem componente de saude no No-Go (que reverte o smile)
+- VCMH 7%: premissa "conservadora" aceita sem sensibilidade ±30%
+
+Quem verifica: Advocate em toda retro (item fixo de checklist). Fact-Checker quando acionado em debates com paper como justificativa.
+Quando verifica: em todo debate estruturado e em retros. Reincidencia = escalacao de perfil do agente.
+
+Esta regra nao proibe citar uma parte especifica de um paper — proibe ignorar o que a mesma fonte diz em contrario.
 
 ### Origem
 

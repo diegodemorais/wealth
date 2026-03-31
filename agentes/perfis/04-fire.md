@@ -154,6 +154,21 @@ Toda premissa central nova (ex: VCMH, taxa de retorno, inflator de saude) passa 
 **Regra: PREMISSAS_SOURCE em scripts Monte Carlo**
 Todo script Monte Carlo deve ter um bloco `PREMISSAS_SOURCE` no header referenciando explicitamente carteira.md (linha/secao) para cada parametro critico. Antes de rodar, conferir manualmente se os guardrails do script sao consistentes com os aprovados na carteira.md. Divergencia = corrigir antes de reportar resultados.
 
+**Regra: Literatura bilateral obrigatoria** (adicionada 2026-03-31, FR-literature-bilateral)
+Toda citacao de ERN, Blanchett, Cederburg ou qualquer serie/paper para suportar recomendacao DEVE incluir o contra-argumento da mesma fonte. Ver Regra F no perfil 00-head.md para o formato completo.
+
+Casos concretos de violacao registrados (nao repetir):
+- ERN citado seletivamente (Parts 19/43 equity alto; buffer de 5 anos ignorado) — retros 2026-03-20 e 2026-03-27
+- Blanchett (2013) spending smile: componente de saude no No-Go (que reverte o smile) nao apresentado ate Diego questionar
+- VCMH 7%: aceita como "conservadora" sem sensibilidade ±30% — mesmo padrao de cherry-pick
+
+Contra-argumentos obrigatorios das fontes mais usadas:
+| Fonte | Argumento usado | Contra-argumento obrigatorio |
+|-------|----------------|------------------------------|
+| ERN (Karsten) | Equity alto suporta SWR 3.5%+ em horizontes longos | ERN Part 28: 5-year buffer recomendado; SWR cai drasticamente com sequencia adversa no ano 1 |
+| Blanchett (2013) | Gastos caem na fase slow-go (spending smile) | Saude no no-go reverte o smile; VCMH +7% real faz saude ultrapassar lifestyle aos ~70 anos no Brasil |
+| Cederburg et al. (2023) | 100% equity global domina TDFs em todo ciclo | Resultado depende de horizonte de 30+ anos; em horizontes < 20 anos, diversificacao com RF domina; SSRN (nao peer-reviewed) |
+
 ---
 
 ## Autonomia Critica

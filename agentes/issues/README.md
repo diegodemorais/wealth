@@ -25,7 +25,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FR-literature-bilateral | Regra de literatura bilateral para citacoes academicas | FIRE | Alta |
+| — | — | — | — | — |
 | 5 | HD-python-stack-v2 | Capacidades analíticas avançadas: otimizador de aporte, backtest fatorial, TLH monitor, tornado chart P(FIRE) | Head | Media |
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
@@ -44,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-literature-bilateral | Regra de literatura bilateral para citações acadêmicas | FIRE | 2026-03-31 | Regra F implementada. Formato bilateral obrigatório. ERN/Blanchett/Cederburg mapeados. |
 | TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | 2026-03-31 | $222k US-listed. Estate tax ~$65k/R$340k. Diluição via UCITS em curso. Seguro pendente. |
 | FI-rolling-loadings | Rolling factor loadings — drift monitor JPGL/AVGS | Factor | 2026-03-31 | Script --rolling implementado. Alerta beta cíclico. Gatilho recalibrado para 2×estático. |
 | FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | 2026-03-31 | Bug tornado corrigido. Scripts pesquisa deletados. Canonical script limpo. |
