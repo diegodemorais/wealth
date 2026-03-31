@@ -87,14 +87,19 @@ GASTO_PISO = 180_000
 
 # ─── CÁLCULOS ─────────────────────────────────────────────────────────────────
 
-def gasto_spending_smile(ano_pos_fire: int, ipca_acumulado: float) -> float:
-    """Gasto base ajustado pelo spending smile + saúde, em R$ reais (base 2026)."""
+def gasto_spending_smile(ano_pos_fire: int, ipca_acumulado: float,
+                          escala_custo_vida: float = 1.0) -> float:
+    """Gasto base ajustado pelo spending smile + saúde, em R$ reais (base 2026).
+
+    escala_custo_vida: fator de escala relativo à base R$250k (ex: 1.1 = +10%).
+    Usado pelo tornado para medir sensibilidade ao custo de vida.
+    """
     for fase, cfg in SPENDING_SMILE.items():
         if cfg["inicio"] <= ano_pos_fire < cfg["fim"]:
-            gasto_base = cfg["gasto"]
+            gasto_base = cfg["gasto"] * escala_custo_vida
             break
     else:
-        gasto_base = SPENDING_SMILE["no_go"]["gasto"]
+        gasto_base = SPENDING_SMILE["no_go"]["gasto"] * escala_custo_vida
 
     # Saúde com inflator próprio e decay no No-Go
     anos_saude = ano_pos_fire
@@ -116,10 +121,13 @@ def aplicar_guardrail(gasto_base: float, drawdown: float) -> float:
 
 
 def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: float,
-                        volatilidade: float, df: int, rng: np.random.Generator) -> tuple:
+                        volatilidade: float, df: int, rng: np.random.Generator,
+                        escala_custo_vida: float = 1.0) -> tuple:
     """
     Simula uma trajetória de desacumulação.
     Retorna (sobreviveu: bool, patrimônio_final: float, patrimônio_pico: float)
+
+    escala_custo_vida: fator de escala do custo de vida (1.0 = base R$250k).
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
@@ -134,7 +142,7 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         pat_pico = max(pat_pico, pat)
 
         # Gasto do ano (spending smile + guardrail)
-        gasto_base = gasto_spending_smile(ano, 0)  # em R$ reais 2026
+        gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)  # em R$ reais 2026
         drawdown = max(0, 1 - pat / pat_pico)
         gasto = aplicar_guardrail(gasto_base, drawdown)
 
@@ -182,6 +190,7 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
     pct_gatilho = float(atingiu_gatilho.mean())
 
     # Fase 2: Desacumulação para TODAS as trajetórias
+    escala_cv = premissas.get("custo_vida_base", 250_000) / 250_000
     sucessos = 0
     pats_finais = []
 
@@ -189,7 +198,8 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
         pat_ini = float(pat_fire_trajetorias[i])
         sobreviveu, pat_final, _ = simular_trajetoria(
             pat_ini, premissas["anos_simulacao"], r_equity,
-            premissas["volatilidade_equity"], premissas["t_dist_df"], rng
+            premissas["volatilidade_equity"], premissas["t_dist_df"], rng,
+            escala_custo_vida=escala_cv
         )
         if sobreviveu:
             sucessos += 1
@@ -246,9 +256,8 @@ def rodar_tornado(premissas: dict, variacao: float = 0.10, n_sim: int = 5_000) -
         "retorno_equity_base": "Retorno equity (+/-10%)",
         "aporte_mensal":       "Aporte mensal (+/-10%)",
         "custo_vida_base":     "Custo de vida (+/-10%)",
-        "ipca_anual":          "IPCA estimado (+/-10%)",
         "volatilidade_equity": "Volatilidade equity (+/-10%)",
-        "dep_brl_base":        "Depreciação BRL (+/-10%)",
+        # ipca_anual e dep_brl_base omitidos: já embutidos nos retornos reais BRL
     }
 
     resultados = []

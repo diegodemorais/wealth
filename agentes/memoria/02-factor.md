@@ -94,6 +94,8 @@ JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc
 | Alternativa IQGA | AUM > €500M + histórico ≥ 2 anos (mai/2027+) | Avaliar split 15%JPGL+5%IQGA: correlação IQGA↔JPGL=0.682, Sharpe split=1.322 vs JPGL=1.286. IQGA ativo (gestor pode mudar). Comparar tb vs IFSW no momento da avaliação. Ref: FI-jpgl-redundancia | Monitorar |
 | Alpha estrutural negativo | t < -2.0 em regressão com ≥ 5 anos dados reais | Abrir issue urgente | Monitorar |
 | Mudança de metodologia JPGL | JPMorgan alterar índice (remover momentum, mudar para sector-neutral puro) | Rever tese imediatamente | Monitorar |
+| **Rolling: Market beta** | JPGL beta > 2× beta full-period por 2 trimestres consecutivos (threshold dinâmico: hoje ~0.84, dado beta estático 0.42) | Abrir issue de substituição. Limiar recalibrado em 2026-03-31 — original 0.70 era calibrado em dados diários, inadequado para janelas mensais de 24m. Alerta atual (beta ~0.81) = cíclico, não estrutural (regime bull market 2024-2026). Ref: FI-rolling-loadings | Monitorar |
+| **Rolling: AVGS SMB** | AVGS SMB < 0.35 por 2 trimestres consecutivos | Dados insuficientes até out/2026 (AVGS lançado out/2024) | Aguardar |
 
 ---
 

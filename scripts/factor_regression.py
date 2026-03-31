@@ -1,8 +1,14 @@
 """
 Fama-French Global 5-Factor + Momentum regression for JPGL.L, AVGS.L, SWRD.L
 Downloads ETF prices via yfinance and FF factors from Ken French's data library.
+
+Uso:
+    python3 factor_regression.py                  # regressão estática (janela completa)
+    python3 factor_regression.py --rolling         # rolling 24m + alertas de drift
+    python3 factor_regression.py --rolling-only    # só rolling, pula estática
 """
 
+import argparse
 import io
 import zipfile
 import urllib.request
@@ -13,6 +19,11 @@ import yfinance as yf
 import statsmodels.api as sm
 
 warnings.filterwarnings("ignore")
+
+parser = argparse.ArgumentParser(description="Factor regression para ETFs da carteira")
+parser.add_argument("--rolling",      action="store_true", help="Adiciona análise de rolling loadings (24m, passo trimestral)")
+parser.add_argument("--rolling-only", action="store_true", help="Só rolling, pula regressão estática")
+args = parser.parse_args()
 
 # ── 1. Download Fama-French Developed 5 Factors ──────────────────────────────
 
@@ -149,6 +160,9 @@ for ticker in etfs:
 
 # ── 5. Run Regressions ──────────────────────────────────────────────────────
 
+if args.rolling_only:
+    print("(--rolling-only: pulando regressão estática)\n")
+
 factor_cols = ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "MOM"]
 # Check which factor cols actually exist
 available_factors = [f for f in factor_cols if f in merged.columns]
@@ -157,6 +171,8 @@ print()
 
 results = {}
 for ticker, name in etfs.items():
+    if args.rolling_only:
+        break
     excess_col = f"{ticker}_excess"
     if excess_col not in merged.columns:
         print(f"Skipping {ticker} — no data")
@@ -189,80 +205,239 @@ for ticker, name in etfs.items():
 
 # ── 6. Side-by-Side Comparison ───────────────────────────────────────────────
 
-print(f"\n{'='*70}")
-print(f" SIDE-BY-SIDE COMPARISON")
-print(f"{'='*70}")
-print()
+if not args.rolling_only and results:
+    print(f"\n{'='*70}")
+    print(f" SIDE-BY-SIDE COMPARISON")
+    print(f"{'='*70}")
+    print()
 
-# Header
-header = f"{'Metric':<25}"
-for ticker in etfs:
-    if ticker in results:
-        header += f" {ticker:>12}"
-print(header)
-print("-" * (25 + 13 * len(results)))
-
-# Alpha annualized
-row = f"{'Alpha (ann. %)' :<25}"
-for ticker in etfs:
-    if ticker in results:
-        val = results[ticker].params['const'] * 12 * 100
-        row += f" {val:>11.2f}%"
-print(row)
-
-# Alpha t-stat
-row = f"{'Alpha t-stat' :<25}"
-for ticker in etfs:
-    if ticker in results:
-        val = results[ticker].tvalues['const']
-        row += f" {val:>12.3f}"
-print(row)
-
-# R²
-row = f"{'R²' :<25}"
-for ticker in etfs:
-    if ticker in results:
-        val = results[ticker].rsquared
-        row += f" {val:>12.4f}"
-print(row)
-
-# Factor betas
-for f in available_factors:
-    row = f"{f + ' beta':<25}"
+    header = f"{'Metric':<25}"
     for ticker in etfs:
         if ticker in results:
-            val = results[ticker].params[f]
-            pval = results[ticker].pvalues[f]
-            sig = "***" if pval < 0.01 else "**" if pval < 0.05 else "*" if pval < 0.10 else ""
-            row += f" {val:>8.4f}{sig:>4}"
-        else:
-            row += f" {'N/A':>12}"
+            header += f" {ticker:>12}"
+    print(header)
+    print("-" * (25 + 13 * len(results)))
+
+    row = f"{'Alpha (ann. %)' :<25}"
+    for ticker in etfs:
+        if ticker in results:
+            val = results[ticker].params['const'] * 12 * 100
+            row += f" {val:>11.2f}%"
     print(row)
 
-# Factor t-stats
-print()
-print("Factor t-statistics:")
-for f in available_factors:
-    row = f"  {f + ' t-stat':<23}"
+    row = f"{'Alpha t-stat' :<25}"
     for ticker in etfs:
         if ticker in results:
-            val = results[ticker].tvalues[f]
+            val = results[ticker].tvalues['const']
             row += f" {val:>12.3f}"
     print(row)
 
-# N observations
-print()
-row = f"{'N months' :<25}"
-for ticker in etfs:
-    if ticker in results:
-        val = results[ticker].nobs
-        row += f" {val:>12.0f}"
-print(row)
+    row = f"{'R²' :<25}"
+    for ticker in etfs:
+        if ticker in results:
+            val = results[ticker].rsquared
+            row += f" {val:>12.4f}"
+    print(row)
 
-print(f"\n{'='*70}")
-print(" Notes:")
-print(" - Factors: Fama-French Developed Markets 5 Factors + Momentum")
-print(" - ETF returns in native currency (GBP-denominated LSE listings)")
-print(" - Robust standard errors (HC1)")
-print(f" - Sample: {merged.index.min().strftime('%Y-%m')} to {merged.index.max().strftime('%Y-%m')}")
-print(f"{'='*70}")
+    for f in available_factors:
+        row = f"{f + ' beta':<25}"
+        for ticker in etfs:
+            if ticker in results:
+                val = results[ticker].params[f]
+                pval = results[ticker].pvalues[f]
+                sig = "***" if pval < 0.01 else "**" if pval < 0.05 else "*" if pval < 0.10 else ""
+                row += f" {val:>8.4f}{sig:>4}"
+            else:
+                row += f" {'N/A':>12}"
+        print(row)
+
+    print()
+    print("Factor t-statistics:")
+    for f in available_factors:
+        row = f"  {f + ' t-stat':<23}"
+        for ticker in etfs:
+            if ticker in results:
+                val = results[ticker].tvalues[f]
+                row += f" {val:>12.3f}"
+        print(row)
+
+    print()
+    row = f"{'N months' :<25}"
+    for ticker in etfs:
+        if ticker in results:
+            val = results[ticker].nobs
+            row += f" {val:>12.0f}"
+    print(row)
+
+    print(f"\n{'='*70}")
+    print(" Notes:")
+    print(" - Factors: Fama-French Developed Markets 5 Factors + Momentum")
+    print(" - ETF returns in native currency (GBP-denominated LSE listings)")
+    print(" - Robust standard errors (HC1)")
+    print(f" - Sample: {merged.index.min().strftime('%Y-%m')} to {merged.index.max().strftime('%Y-%m')}")
+    print(f"{'='*70}")
+
+
+# ── 7. Rolling Factor Loadings ────────────────────────────────────────────────
+
+if args.rolling or args.rolling_only:
+
+    WINDOW = 24    # meses
+    STEP   = 3     # passo trimestral
+
+    # Gatilhos de alerta (FI-rolling-loadings)
+    ALERTS = {
+        "JPGL.L": {
+            "Market": {"threshold": 0.70, "direction": "above",
+                       "label": "⚠️  JPGL Market beta > 0.70 — low-vol overlay se perdendo"},
+        },
+        "AVGS.L": {
+            "SMB":    {"threshold": 0.35, "direction": "below",
+                       "label": "⚠️  AVGS SMB < 0.35 — small-cap tilt se diluindo"},
+        },
+    }
+
+    ROLLING_TICKERS = ["JPGL.L", "AVGS.L"]
+
+    print(f"\n{'='*70}")
+    print(f" ROLLING FACTOR LOADINGS — janela {WINDOW}m, passo {STEP}m (trimestral)")
+    print(f" Gatilhos: JPGL Market>0.70 | AVGS SMB<0.35 | loading muda sinal")
+    print(f"{'='*70}")
+
+    rolling_data = {}
+
+    for ticker in ROLLING_TICKERS:
+        excess_col = f"{ticker}_excess"
+        if excess_col not in merged.columns:
+            print(f"  {ticker}: sem dados, pulando.")
+            continue
+
+        windows = []
+        idx = list(merged.index)
+        n = len(idx)
+
+        i = WINDOW - 1
+        while i < n:
+            window_df = merged.iloc[i - WINDOW + 1 : i + 1]
+            y = window_df[excess_col].dropna()
+            X = window_df.loc[y.index, available_factors].dropna()
+            y = y.loc[X.index]
+            if len(y) < 18:
+                i += STEP
+                continue
+            X_const = sm.add_constant(X)
+            model = sm.OLS(y, X_const).fit()
+            row_data = {
+                "end":    idx[i],
+                "n":      int(model.nobs),
+                "alpha":  model.params["const"] * 12 * 100,
+                "Market": model.params.get("Mkt-RF", np.nan),
+                "SMB":    model.params.get("SMB",   np.nan),
+                "HML":    model.params.get("HML",   np.nan),
+                "RMW":    model.params.get("RMW",   np.nan),
+                "MOM":    model.params.get("MOM",   np.nan),
+            }
+            windows.append(row_data)
+            i += STEP
+
+        if not windows:
+            print(f"  {ticker}: janelas insuficientes.")
+            continue
+
+        df_roll = pd.DataFrame(windows).set_index("end")
+        rolling_data[ticker] = df_roll
+
+        print(f"\n── {ticker} — últimas 8 janelas (trimestral) ──────────────────")
+        print(f"  {'Data':<10}  {'Market':>7}  {'SMB':>7}  {'HML':>7}  {'RMW':>7}  {'MOM':>7}  {'Alpha%':>7}  N")
+        print(f"  {'-'*72}")
+        display_rows = df_roll.tail(8)
+        for date, r in display_rows.iterrows():
+            print(f"  {date.strftime('%Y-%m'):<10}  {r['Market']:>7.3f}  {r['SMB']:>7.3f}  "
+                  f"{r['HML']:>7.3f}  {r['RMW']:>7.3f}  {r['MOM']:>7.3f}  "
+                  f"{r['alpha']:>6.1f}%  {r['n']}")
+
+    # ── Verificação de alertas ─────────────────────────────────────────────────
+
+    print(f"\n{'='*70}")
+    print(f" ALERTAS DE DRIFT (2 trimestres consecutivos)")
+    print(f"{'='*70}")
+
+    alerts_found = []
+
+    for ticker, df_roll in rolling_data.items():
+        # 1. Gatilhos de threshold por fator
+        if ticker in ALERTS:
+            for factor, cfg in ALERTS[ticker].items():
+                if factor not in df_roll.columns:
+                    continue
+                series = df_roll[factor].dropna()
+                if len(series) < 2:
+                    continue
+                thresh = cfg["threshold"]
+                direction = cfg["direction"]
+                if direction == "above":
+                    breaches = series > thresh
+                else:
+                    breaches = series < thresh
+                # 2 consecutivos
+                consec = breaches & breaches.shift(1).fillna(False)
+                if consec.any():
+                    last_breach = consec[consec].index[-1]
+                    val = series.loc[last_breach]
+                    alerts_found.append(f"  🔴 {cfg['label']}")
+                    alerts_found.append(f"     Último breach: {last_breach.strftime('%Y-%m')}  valor={val:.3f}")
+                elif breaches.iloc[-1]:
+                    val = series.iloc[-1]
+                    alerts_found.append(f"  🟡 {cfg['label'].replace('⚠️  ', '')} — 1 trimestre (monitorar)")
+                    alerts_found.append(f"     Último valor: {series.index[-1].strftime('%Y-%m')}  valor={val:.3f}")
+
+        # 2. Mudança de sinal em qualquer fator (2 trimestres)
+        for factor in ["Market", "SMB", "HML", "RMW", "MOM"]:
+            if factor not in df_roll.columns:
+                continue
+            series = df_roll[factor].dropna()
+            if len(series) < 2:
+                continue
+            signs = np.sign(series)
+            sign_change = signs != signs.shift(1)
+            consec_change = sign_change & sign_change.shift(1).fillna(False)
+            if consec_change.any():
+                last = consec_change[consec_change].index[-1]
+                val_now = series.loc[last]
+                val_prev = series.iloc[list(series.index).index(last) - 1]
+                alerts_found.append(
+                    f"  🟡 {ticker} {factor} mudou sinal por 2 trimestres "
+                    f"({val_prev:+.3f} → {val_now:+.3f}, até {last.strftime('%Y-%m')})"
+                )
+
+    if alerts_found:
+        for line in alerts_found:
+            print(line)
+    else:
+        print("  ✅ Nenhum alerta ativo — loadings estáveis.")
+
+    # ── Resumo de tendência ────────────────────────────────────────────────────
+
+    print(f"\n{'='*70}")
+    print(f" TENDÊNCIA — primeiro vs último trimestre disponível")
+    print(f"{'='*70}")
+    for ticker, df_roll in rolling_data.items():
+        if len(df_roll) < 2:
+            continue
+        first = df_roll.iloc[0]
+        last  = df_roll.iloc[-1]
+        print(f"\n  {ticker}  ({df_roll.index[0].strftime('%Y-%m')} → {df_roll.index[-1].strftime('%Y-%m')})")
+        print(f"  {'Fator':<8}  {'Primeiro':>9}  {'Último':>9}  {'Delta':>9}  Tendência")
+        print(f"  {'-'*52}")
+        for factor in ["Market", "SMB", "HML", "RMW", "MOM"]:
+            if factor not in df_roll.columns:
+                continue
+            v_first = first[factor]
+            v_last  = last[factor]
+            delta   = v_last - v_first
+            trend   = "↑" if delta > 0.05 else ("↓" if delta < -0.05 else "→")
+            print(f"  {factor:<8}  {v_first:>9.3f}  {v_last:>9.3f}  {delta:>+9.3f}  {trend}")
+
+    print(f"\n  Janela: {WINDOW} meses | Passo: {STEP} meses | "
+          f"Sample: {merged.index.min().strftime('%Y-%m')} → {merged.index.max().strftime('%Y-%m')}")
+    print(f"{'='*70}")

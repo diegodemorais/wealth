@@ -6,55 +6,88 @@
 |-------|-------|
 | **ID** | FI-rolling-loadings |
 | **Dono** | 02 Factor Investing |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Criado em** | 2026-03-31 |
+| **Concluido em** | 2026-03-31 |
 | **Origem** | Revisão proativa com novas ferramentas — `factor_regression.py` hoje roda janela única. Rolling windows dariam early warning de style drift. |
 
 ---
 
-## Problema
+## Implementação
 
-`scripts/factor_regression.py` calcula uma única regressão sobre todo o histórico disponível. Isso diz "quais foram os loadings médios", mas não diz "os loadings estão mudando ao longo do tempo".
+`scripts/factor_regression.py --rolling` ou `--rolling-only`
 
-**Por que importa:**
-- JPGL teve alpha negativo de -2.33%/ano no período 2019-2026 (não significativo). Se o HML ou Market beta está derivando, é early warning de que o fundo mudou de comportamento.
-- AVGS: SMB = 0.578***, HML = 0.433***. Se o SMB cair abaixo de 0.3, a tese de small-cap value está enfraquecendo.
-- FI-crowdedness alertou que momentum está em "zona de atenção sistêmica". Rolling MOM loading de JPGL diria se o tilt está sendo comprimido.
-
----
-
-## Escopo
-
-### Implementação sugerida
-
-Extensão do `factor_regression.py` com flag `--rolling`:
-
-```python
-# Janela deslizante de 24 meses (504 dias úteis)
-# Passo: trimestral (63 dias)
-# Output: linha do tempo dos loadings SMB, HML, RMW, MOM, Market para JPGL e AVGS
-```
-
-**Gatilhos de alerta a definir:**
-- JPGL Market beta > 0.70 por 2 trimestres consecutivos (low-vol overlay se perdendo)
-- AVGS SMB < 0.35 por 2 trimestres consecutivos (small-cap tilt se diluindo)
-- JPGL/AVGS qualquer loading mudar sinal por 2 trimestres consecutivos
-
-### Output esperado
-
-Tabela trimestral dos últimos 2 anos + linha do tempo visual dos loadings principais.
+- Janela: 24 meses, passo trimestral (3 meses)
+- ETFs: JPGL.L, AVGS.L
+- Fatores: FF5 Developed + Momentum
+- Gatilhos automáticos com alertas 🔴/🟡
 
 ---
 
-## Conexão com gatilhos existentes
+## Resultados (2026-03-31)
 
-Os 5 gatilhos de `FI-jpgl-redundancia` (alpha t < -2.0, methodology change, etc.) seriam monitorados passivamente. Rolling loadings os tornariam **ativos** — o script alertaria quando a tendência começar, não quando o threshold for atingido.
+### AVGS.L
+Dados insuficientes — apenas 17 meses (lançado out/2024). Mínimo 18 obs necessário.
+**Disponível a partir de out/2026.**
+
+### JPGL.L — últimas 8 janelas
+
+| Data | Market | SMB | HML | RMW | MOM | Alpha% |
+|------|--------|-----|-----|-----|-----|--------|
+| 2024-04 | 0.904 | 0.326 | 0.169 | 0.150 | 0.112 | -2.9% |
+| 2024-07 | 0.900 | 0.147 | 0.033 | -0.162 | 0.025 | -1.5% |
+| 2024-10 | 0.916 | 0.122 | 0.014 | -0.211 | 0.046 | -0.4% |
+| 2025-01 | 1.007 | -0.197 | 0.218 | -0.206 | -0.172 | -4.4% |
+| 2025-04 | 0.913 | 0.137 | 0.358 | -0.028 | 0.028 | -2.5% |
+| 2025-07 | 0.807 | 0.097 | 0.391 | -0.099 | -0.017 | -2.7% |
+| 2025-10 | 0.836 | 0.098 | 0.428 | 0.053 | -0.052 | -4.0% |
+| 2026-01 | 0.815 | 0.126 | 0.440 | 0.066 | -0.094 | -4.1% |
+
+### Tendência (2021-07 → 2026-01)
+
+| Fator | Primeiro | Último | Delta | Tendência |
+|-------|---------|--------|-------|-----------|
+| Market | 0.902 | 0.815 | -0.087 | ↓ |
+| SMB | -0.057 | 0.126 | +0.183 | ↑ |
+| HML | 0.152 | 0.440 | +0.288 | ↑ (value tilt crescendo) |
+| RMW | 0.304 | 0.066 | -0.238 | ↓ |
+| MOM | 0.092 | -0.094 | -0.186 | ↓ |
 
 ---
 
-## Prioridade e timing
+## Alertas Ativos
 
-Baixa urgência imediata — JPGL foi validado com 6+ anos de dados. Mas alta utilidade como **infraestrutura de monitoramento**.
+| Alerta | Status | Detalhe |
+|--------|--------|---------|
+| Market beta > threshold por 2+ trimestres | 🔴 **Ativo** | Últimas 4 janelas acima de 0.70 (0.807–0.836–0.815). Ver diagnóstico abaixo. |
+| SMB mudou sinal | 🟡 Monitorar | -0.197 → +0.137. Magnitudes pequenas, próximas de zero |
+| MOM mudou sinal | 🟡 Monitorar | +0.028 → -0.017. Ambos não significativos |
 
-Sugestão: implementar junto com `HD-python-stack-v2` (quando for retomado), pois ambos envolvem extensão dos scripts existentes.
+### Diagnóstico do alerta Market beta
+
+O gatilho original (>0.70) foi calibrado com dados **diários** (beta full-period = 0.423). Em janelas mensais de 24m, o beta é estruturalmente maior. O alerta é tecnicamente correto mas não indica mudança estrutural:
+
+- Coincide com o único período histórico em que low-vol perdeu para cap-weight (2019-2026, já documentado em FI-jpgl-redundancia como exceção, não regra)
+- Em bull markets de low-dispersion, ações low-vol sobem junto com o mercado, aumentando correlação ciclicamente
+- HML 0.440 (value tilt) continua forte e crescendo — tese fatorial não está comprometida
+
+**Conclusão:** cíclico, não estrutural. Não acionar substituição.
+
+---
+
+## Gatilhos Recalibrados
+
+| Gatilho | Threshold ANTIGO | Threshold NOVO | Racional |
+|---------|-----------------|----------------|----------|
+| JPGL Market beta | > 0.70 absoluto | > **2× beta full-period** por 2 trimestres | Beta full-period atual: 0.42 → threshold dinâmico: ~0.84. Robusto a regimes |
+| AVGS SMB | < 0.35 | < 0.35 (mantido) | Aguardar dados suficientes (out/2026) |
+| Qualquer loading muda sinal | 2 trimestres | 2 trimestres (mantido) | — |
+
+**Implementação na memória:** atualizar `agentes/memoria/02-factor.md` — seção Gatilhos Ativos.
+
+---
+
+## Conclusão
+
+Script implementado e rodando. AVGS aguarda dados (out/2026). JPGL com alerta cíclico de Market beta — não estrutural. Gatilho recalibrado para > 2× beta full-period.

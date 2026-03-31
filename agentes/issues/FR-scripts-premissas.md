@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | FR-scripts-premissas |
 | **Dono** | 04 FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 00 Head, 14 Quant |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-27 |
 | **Origem** | Retro 2026-03-27 — L-11 (model risk silencioso em scripts MC) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-31 |
 
 ---
 
@@ -59,23 +59,32 @@ Scripts nao tem um bloco `PREMISSAS_SOURCE` que referencie explicitamente cartei
 
 ---
 
-## Analise
+## Analise (2026-03-31)
 
-> A ser preenchido durante execucao.
+**Canonical script (`scripts/fire_montecarlo.py`) — LIMPO:**
+- Guardrails corretos: R$180k piso flat (aprovado carteira.md)
+- PREMISSAS dict com fonte documentada no header (carteira.md + HD-006)
+- P(FIRE) 80% consistente com FR-spending-smile
+- Bug corrigido: `custo_vida_base` agora propagado para spending smile via `escala_custo_vida`
 
-Scripts identificados como nao-commitados (git status 2026-03-27):
-- dados/monte_carlo_fire_age_sweep.py
-- dados/monte_carlo_smile_gaps.py
-- dados/monte_carlo_spending_smile.py
-- dados/monte_carlo_spending_smile_v2.py
-- dados/monte_carlo_spending_smile_v3.py
-- dados/monte_carlo_spending_smile_v3_corrigido.py
+**Tornado bug corrigido:**
+- `custo_vida_base` estava desconectado da simulação — variação não chegava ao spending smile
+- `ipca_anual` e `dep_brl_base` removidos do tornado (embutidos nos retornos reais)
+- Resultado correto: custo de vida = ±4.9% impacto (3ª mais sensível, após retorno equity e volatilidade)
+
+**Scripts de pesquisa (`dados/`):**
+- Tinham pisos por fase não aprovados: Go-Go R$220k, Slow-Go R$180k, No-Go R$150k+saúde
+- Nunca foram commitados (git status: `??`) — não afetavam o P(FIRE) canonical
+- Deletados em 2026-03-31: monte_carlo_fr003, fire_age_sweep, smile_gaps, spending_smile (v1/v2/v3/v3c), fire2040_bondtent, casal_katia
+
+**Scorecard — já correto:**
+- 91% marcado "Superado por FR-spending-smile" — nenhuma atualização necessária
 
 ---
 
 ## Conclusao
 
-> A ser preenchido ao finalizar.
+Scripts de pesquisa deletados. Canonical script limpo e com bug tornado corrigido.
 
 ---
 
