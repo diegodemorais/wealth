@@ -14,14 +14,21 @@
 
 ---
 
-## Exposicao Estate Tax
+## Exposicao Estate Tax (quantidades reais, 2026-03-31)
 
-| Ativo | Valor Aprox (USD) | Lucro | Risco |
-|-------|-------------------|-------|-------|
-| AVUV | ~$70k | Alto | Estate tax 40% acima de $60k |
-| AVDV | ~$70k | Alto | Estate tax 40% acima de $60k |
-| AVES | ~$71k | 35% | Estate tax 40% acima de $60k |
-| **Total** | **~$211k** | — | **~$60k risco para herdeiros** |
+| Ativo | Qtde | Preço mar/26 | Valor USD | P&L nrlzd |
+|-------|------|-------------|-----------|-----------|
+| AVDV | 947.5983 | $99.86 | $94.622 | +66% |
+| AVES | 926.5462 | $59.83 | $55.433 | +32% |
+| AVUV | 548.8792 | $110.46 | $60.626 | +36% |
+| DGS | 188.2107 | $60.19 | $11.330 | +20% |
+| Cash USD IBKR | — | — | $28 | — |
+| **Total US-situs** | | | **$222.039** | |
+| Isenção NRA | | | −$60.000 | |
+| Base tributável | | | $162.039 | |
+| **Estate tax (40%)** | | | **~$64.800 (≈ R$340k)** | |
+
+Estrategia: diluir via aportes UCITS (não vender — IR 15%). Vender em drawdown (TLH) ou no usufruto (FIRE 50+). Pendente: avaliar seguro de vida ~$65k para herdeiros durante transição.
 
 ---
 

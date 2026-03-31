@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | TX-estate-tax |
 | **Dono** | 05 Tax |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 00 Head, 07 FX |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-27 |
 | **Origem** | Retro 2026-03-27 — L-10 (6 retros sem resolucao = issue obrigatoria) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-31 |
 
 ---
 
@@ -56,15 +56,57 @@ Calcular e registrar formalmente:
 
 ---
 
-## Analise
+## Analise (2026-03-31)
 
-> A ser preenchido durante execucao.
+### Inventário US-listed (quantidades reais — screenshot IBKR 2026-03-31)
+
+| Ativo | Qtde | Preço (mar/26) | Valor USD | US-listed? |
+|-------|------|----------------|-----------|------------|
+| AVDV | 947.5983 | $99.86 | $94.622 | ✅ Sim (NYSE) |
+| AVES | 926.5462 | $59.83 | $55.433 | ✅ Sim (NYSE) |
+| AVUV | 548.8792 | $110.46 | $60.626 | ✅ Sim (NYSE) |
+| DGS | 188.2107 | $60.19 | $11.330 | ✅ Sim (NYSE) |
+| Cash USD IBKR | — | — | $28 | ⚠️ Ambíguo |
+| SWRD | 5.290 | £45.55 | — | ❌ UCITS/Irlanda |
+| EIMI | 2.020 | £45.31 | — | ❌ UCITS/Irlanda |
+| USSC | 373 | £80.80 | — | ❌ UCITS/Irlanda |
+| AVGS | 233 | £25.40 | — | ❌ UCITS/Irlanda |
+| IWVL | 34 | £61.29 | — | ❌ UCITS/Irlanda |
+
+**Total US-situs: $222.039**
+
+Nota: O extrato IBKR de arquivo era de abr/2022 (quantidades ~4× menores). Quantidades atuais confirmadas via screenshot IBKR 31/mar/2026.
+
+### Cálculo estate tax
+
+| Item | Valor |
+|------|-------|
+| Exposição US-listed | $222.039 |
+| Isenção NRA (IRC §2010) | − $60.000 |
+| Base tributável | $162.039 |
+| Alíquota marginal | × 40% |
+| **Estate tax para herdeiros** | **~$64.800 (≈ R$340k)** |
+
+### Mitigação
+
+**Estratégia aprovada (já em execução):**
+- Não comprar mais AVUV, AVDV, AVES, DGS ✅
+- Aportar apenas em UCITS (AVGS, AVEM, JPGL) — diluição natural dos transatórios
+- Vender US-listed apenas em drawdown (TLH + migração UCITS = duplo benefício fiscal) ou no usufruto (FIRE 50+)
+- Em ~5-7 anos os US-listed caem abaixo de $60k naturalmente (se preços não explodirem)
+
+**Ação pendente:**
+- Seguro de vida: avaliar cobertura de ~$65k para herdeiros durante período de transição
+
+**Cash IBKR ($28):** negligível. IRC §2105(b) isenta depósitos bancários, mas IBKR é broker-dealer — tecnicamente ambíguo. Manter baixo (< $5k).
+
+**Risco legislativo:** proposta de reduzir threshold $60k → $0 para NRAs em discussão no Congresso. Baixa probabilidade atual mas aceleraria venda dos transatórios se avançar.
 
 ---
 
 ## Conclusao
 
-> A ser preenchido ao finalizar.
+Risco quantificado: ~$65k / R$340k para herdeiros. Estratégia de diluição via aportes UCITS correta e em execução. Tax memory atualizada com quantidades e valores reais. Ação pendente: avaliação de seguro de vida.
 
 ---
 

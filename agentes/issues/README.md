@@ -27,7 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | FR-literature-bilateral | Regra de literatura bilateral para citacoes academicas | FIRE | Alta |
 | 5 | HD-python-stack-v2 | Capacidades analíticas avançadas: otimizador de aporte, backtest fatorial, TLH monitor, tornado chart P(FIRE) | Head | Media |
-| 2 | TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | Alta |
+| — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
 | — | — | — | — | — |
 | 7 | HD-correlacoes-regime | Correlações regime-dependent: stress vs calm (VIX) | Head | Média |
@@ -44,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | 2026-03-31 | $222k US-listed. Estate tax ~$65k/R$340k. Diluição via UCITS em curso. Seguro pendente. |
 | FI-rolling-loadings | Rolling factor loadings — drift monitor JPGL/AVGS | Factor | 2026-03-31 | Script --rolling implementado. Alerta beta cíclico. Gatilho recalibrado para 2×estático. |
 | FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | 2026-03-31 | Bug tornado corrigido. Scripts pesquisa deletados. Canonical script limpo. |
 | FI-jpgl-redundancia | JPGL 20% — manter, reduzir ou remover? | 02 Factor | 2026-03-31 | **MANTER 20%**. 7-0. Factor regression: 4 loadings, alpha não significativo. Sector-neutral drag não se aplica (inverse-vol). 22 anos: +3pp/ano vs MSCI World. Período 2019-2026 = única exceção histórica. 5 gatilhos de monitoramento registrados. |
