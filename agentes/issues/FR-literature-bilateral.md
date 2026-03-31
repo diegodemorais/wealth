@@ -107,5 +107,5 @@ Regra bilateral implementada nos perfis Head e FIRE. Casos históricos documenta
 ## Proximos Passos
 
 - [ ] Revisar citacoes de ERN no historico de issues (FR-003, FR-fire2040)
-- [ ] Revisar citacao de Cederburg em HD-equity-weight
-- [ ] Propor regra ao Diego para aprovacao antes de incorporar nos perfis
+- [x] Revisar citacao de Cederburg em HD-equity-weight — qualificacao SSRN/horizonte adicionada, conclusao intacta
+- [x] Propor regra ao Diego para aprovacao antes de incorporar nos perfis — aprovada ao fechar a issue
