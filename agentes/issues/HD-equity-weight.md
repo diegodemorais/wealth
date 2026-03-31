@@ -95,7 +95,7 @@ O time (Advocate, Zero-Base, Cético) convergiu inicialmente para 65-72% equity 
 Aumentar IPCA+ de 15% para 24-30% aumenta concentração soberana num balanço que já é quase 100% Brasil. Equity internacional é a *única* diversificação geográfica de Diego.
 
 **2. Literatura pro-equity igualmente sólida:**
-- Cederburg (2023), Siegel, DMS (2025): equity domina para longo prazo
+- Cederburg (2023) *(SSRN, não peer-reviewed; resultado depende de horizonte 30+ anos — em <20 anos RF domina)*, Siegel, DMS (2025): equity domina para longo prazo
 - O principal argumento contra (Pfau & Kitces 2014) **não replica em dados históricos** — apenas em simulação MC (Fact-Checker confirmou)
 - A literatura não tem consenso claro para o horizonte de 11 anos
 
