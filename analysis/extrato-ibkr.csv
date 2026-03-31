@@ -1,0 +1,611 @@
+﻿Statement,Header,Field Name,Field Value
+Statement,Data,BrokerName,Interactive Brokers LLC
+Statement,Data,BrokerAddress,"Two Pickwick Plaza, Greenwich, CT 06830"
+Statement,Data,Title,Activity Statement
+Statement,Data,Period,"April 7, 2021 - April 6, 2022"
+Statement,Data,WhenGenerated,"2026-03-23, 20:02:18 EDT"
+Account Information,Header,Field Name,Field Value
+Account Information,Data,Name,Diego de Morais
+Account Information,Data,Account Alias,dm
+Account Information,Data,Account,U5947683
+Account Information,Data,Account Type,Individual
+Account Information,Data,Customer Type,Individual
+Account Information,Data,Account Capabilities,Margin
+Account Information,Data,Base Currency,USD
+Net Asset Value,Header,Asset Class,Prior Total,Current Long,Current Short,Current Total,Change
+Net Asset Value,Data,Cash ,0,27.098312919,0,27.098312919,27.098312919
+Net Asset Value,Data,Stock,0,106391.384384,0,106391.384384,106391.384384
+Net Asset Value,Data,Total,0,106418.482696919,0,106418.482696919,106418.482696919
+Net Asset Value,Header,Time Weighted Rate of Return
+Net Asset Value,Data,-2.463135724%
+Change in NAV,Header,Field Name,Field Value
+Change in NAV,Data,Starting Value,0
+Change in NAV,Data,Mark-to-Market,-908.697513
+Change in NAV,Data,Deposits & Withdrawals,107299.6
+Change in NAV,Data,Dividends,158.9
+Change in NAV,Data,Withholding Tax,-47.68
+Change in NAV,Data,Interest,10.26
+Change in NAV,Data,Commissions,-93.899633782
+Change in NAV,Data,Ending Value,106418.482696919
+Mark-to-Market Performance Summary,Header,Asset Category,Symbol,Prior Quantity,Current Quantity,Prior Price,Current Price,Mark-to-Market P/L Position,Mark-to-Market P/L Transaction,Mark-to-Market P/L Commissions,Mark-to-Market P/L Other,Mark-to-Market P/L Total,Code
+Mark-to-Market Performance Summary,Data,Stocks,AVDV,0,273.0592,--,61.6500,-772.263111,28.035808,-2.59454619,25.85,-720.97184919,
+Mark-to-Market Performance Summary,Data,Stocks,AVES,0,175.278,--,49.4600,-56.747522,17.105196,-1.5762846,11.55,-29.6686106,
+Mark-to-Market Performance Summary,Data,Stocks,AVUV,0,101.5352,--,77.2000,-284.271064,-13.30106075,-0.66882154,26.3,-271.94094629,
+Mark-to-Market Performance Summary,Data,Stocks,COIN,0,0,--,--,-35.6648,-111.232,-2.00376247,0,-148.90056247,
+Mark-to-Market Performance Summary,Data,Stocks,DGS,0,93,--,53.6600,62.87,6.39,-1.17497175,47.52,115.60502825,
+Mark-to-Market Performance Summary,Data,Stocks,EIMI,0,414,--,33.0800,-1045.76,51.93,-12.23037943,0,-1006.06037943,
+Mark-to-Market Performance Summary,Data,Stocks,IWMO,0,51,--,61.5900,-96.74,-0.7,-10,0,-107.44,
+Mark-to-Market Performance Summary,Data,Stocks,IWVL,0,34,--,36.5000,-31.54,6.86,-10,0,-34.68,
+Mark-to-Market Performance Summary,Data,Stocks,JPGL,0,410,--,33.9275,946.08,-16.4,-6.4903,0,923.1897,
+Mark-to-Market Performance Summary,Data,Stocks,SWRD,0,855,--,30.3650,641.905,-18.65,-22.10977492,0,601.14522508,
+Mark-to-Market Performance Summary,Data,Stocks,USSC,0,103,--,55.1300,174.855,-14.025,-6.91767088,0,153.91232912,
+Mark-to-Market Performance Summary,Data,Stocks,ZPRX,0,91,--,44.6900,93.635286,-11.648724,-9.308093752,0,72.678468248,
+Mark-to-Market Performance Summary,Data,Total,,,,,,-403.641211,-75.63578075,-85.074605532,111.22,-453.131597282,
+Mark-to-Market Performance Summary,Data,Forex,EUR,0,0,--,1.0896,-434.274029,0,0,0,-434.274029,
+Mark-to-Market Performance Summary,Data,Forex,USD,0,27.098312919,1.0000,1.0000,0,4.853351,-10,0,-5.146649,
+Mark-to-Market Performance Summary,Data,Total,,,,,,-434.274029,4.853351,-10,0,-439.420678,
+Mark-to-Market Performance Summary,Data,Total (All Assets),,,,,,-837.91524,-70.78242975,-95.074605532,111.22,-892.552275282,
+Mark-to-Market Performance Summary,Data,Broker Interest Paid and Received,,,,,,,,,,10.26,
+Total P/L for Statement Period,,,,,,,,,,,,-882.292275282,
+Realized & Unrealized Performance Summary,Header,Asset Category,Symbol,Cost Adj.,Realized S/T Profit,Realized S/T Loss,Realized L/T Profit,Realized L/T Loss,Realized Total,Unrealized S/T Profit,Unrealized S/T Loss,Unrealized L/T Profit,Unrealized L/T Loss,Unrealized Total,Total,Code
+Realized & Unrealized Performance Summary,Data,Stocks,AVDV,0,0,0,0,0,0,0,-746.821848,0,0,-746.821848,-746.821848,
+Realized & Unrealized Performance Summary,Data,Stocks,AVES,0,0,0,0,0,0,41.184256,-82.402866,0,0,-41.21861,-41.21861,
+Realized & Unrealized Performance Summary,Data,Stocks,AVUV,0,0,0,0,0,0,0,-298.240947,0,0,-298.240947,-298.240947,
+Realized & Unrealized Performance Summary,Data,Stocks,COIN,0,0,-148.90056247,0,0,-148.90056247,0,0,0,0,0,-148.90056247,
+Realized & Unrealized Performance Summary,Data,Stocks,DGS,0,0,0,0,0,0,69.26,0,0,0,69.26,69.26,
+Realized & Unrealized Performance Summary,Data,Stocks,EIMI,0,0,0,0,0,0,29.669989,-1035.730369,0,0,-1006.06038,-1006.06038,
+Realized & Unrealized Performance Summary,Data,Stocks,IWMO,0,0,0,0,0,0,0,-107.44,0,0,-107.44,-107.44,
+Realized & Unrealized Performance Summary,Data,Stocks,IWVL,0,0,0,0,0,0,0,-34.68,0,0,-34.68,-34.68,
+Realized & Unrealized Performance Summary,Data,Stocks,JPGL,0,0,0,0,0,0,923.1897,0,0,0,923.1897,923.1897,
+Realized & Unrealized Performance Summary,Data,Stocks,SWRD,0,0,0,0,0,0,680.526499,-79.381274,0,0,601.145225,601.145225,
+Realized & Unrealized Performance Summary,Data,Stocks,USSC,0,0,0,0,0,0,153.912329,0,0,0,153.912329,153.912329,
+Realized & Unrealized Performance Summary,Data,Stocks,ZPRX,0,0,0,0,0,0,59.143488,-6.341127686,0,0,52.802360314,52.802360314,
+Realized & Unrealized Performance Summary,Data,Total,,0,0,-148.90056247,0,0,-148.90056247,1956.886261,-2391.038431686,0,0,-434.152170686,-583.052733156,
+Realized & Unrealized Performance Summary,Data,Forex,EUR,0,16.551919,-8.792109,0,0,7.75981,0,0,0,0,0,7.75981,
+Realized & Unrealized Performance Summary,Data,Total,,0,16.551919,-8.792109,0,0,7.75981,0,0,0,0,0,7.75981,
+Realized & Unrealized Performance Summary,Data,Total (All Assets),,0,16.551919,-157.69267147,0,0,-141.14075247,1956.886261,-2391.038431686,0,0,-434.152170686,-575.292923156,
+Cash Report,Header,Currency Summary,Currency,Total,Securities,Futures,
+Cash Report,Data,Starting Cash,Base Currency Summary,0,0,0,
+Cash Report,Data,Commissions,Base Currency Summary,-93.899633782,-93.899633782,0,
+Cash Report,Data,Deposits,Base Currency Summary,107299.6,107299.6,0,
+Cash Report,Data,Dividends,Base Currency Summary,97.73,97.73,0,
+Cash Report,Data,Broker Interest Paid and Received,Base Currency Summary,10.26,10.26,0,
+Cash Report,Data,Trades (Sales),Base Currency Summary,5589.28015671,5589.28015671,0,
+Cash Report,Data,Trades (Purchase),Base Currency Summary,-112902.268668978,-112902.268668978,0,
+Cash Report,Data,Payment In Lieu of Dividends,Base Currency Summary,61.17,61.17,0,
+Cash Report,Data,Withholding Tax,Base Currency Summary,-47.68,-47.68,0,
+Cash Report,Data,Cash FX Translation Gain/Loss,Base Currency Summary,12.906459,12.906459,0,
+Cash Report,Data,Ending Cash,Base Currency Summary,27.098312919,27.098312919,0,
+Cash Report,Data,Ending Settled Cash,Base Currency Summary,27.098312919,27.098312919,0,
+Cash Report,Data,Starting Cash,EUR,0,0,0,
+Cash Report,Data,Commissions,EUR,-7.779684,-7.779684,0,
+Cash Report,Data,Trades (Sales),EUR,4064,4064,0,
+Cash Report,Data,Trades (Purchase),EUR,-4056.220316,-4056.220316,0,
+Cash Report,Data,Ending Cash,EUR,0,0,0,
+Cash Report,Data,Ending Settled Cash,EUR,0,0,0,
+Cash Report,Data,Starting Cash,USD,0,0,0,
+Cash Report,Data,Commissions,USD,-84.59154003,-84.59154003,0,
+Cash Report,Data,Deposits,USD,107299.6,107299.6,0,
+Cash Report,Data,Dividends,USD,97.73,97.73,0,
+Cash Report,Data,Broker Interest Paid and Received,USD,10.26,10.26,0,
+Cash Report,Data,Trades (Sales),USD,741.67175671,741.67175671,0,
+Cash Report,Data,Trades (Purchase),USD,-108051.06190375,-108051.06190375,0,
+Cash Report,Data,Payment In Lieu of Dividends,USD,61.17,61.17,0,
+Cash Report,Data,Withholding Tax,USD,-47.68,-47.68,0,
+Cash Report,Data,Ending Cash,USD,27.098312919,27.098312919,0,
+Cash Report,Data,Ending Settled Cash,USD,27.098312919,27.098312919,0,
+Open Positions,Header,DataDiscriminator,Asset Category,Currency,Symbol,Quantity,Mult,Cost Price,Cost Basis,Close Price,Value,Unrealized P/L,Code
+Open Positions,Data,Summary,Stocks,EUR,ZPRX,91,1,44.157469055,4018.329684,44.69,4066.79,48.460316,
+Open Positions,Total,,Stocks,EUR,,,,,4018.329684,,4066.79,48.460316,
+Open Positions,Total,,Stocks,USD,,,,,4378.372023686,,4431.174384,52.802360314,
+Open Positions,Data,Summary,Stocks,USD,AVDV,273.0592,1,64.385019249,17580.921848,61.65,16834.1,-746.821848,
+Open Positions,Data,Summary,Stocks,USD,AVES,175.278,1,49.695162028,8710.46861,49.46,8669.25,-41.21861,
+Open Positions,Data,Summary,Stocks,USD,AVUV,101.5352,1,80.137341001,8136.760946,77.2,7838.52,-298.240947,
+Open Positions,Data,Summary,Stocks,USD,DGS,93,1,52.915268817,4921.12,53.66,4990.38,69.26,
+Open Positions,Data,Summary,Stocks,USD,EIMI,414,1,35.510097536,14701.18038,33.08,13695.12,-1006.06038,
+Open Positions,Data,Summary,Stocks,USD,IWMO,51,1,63.696666667,3248.53,61.59,3141.09,-107.44,
+Open Positions,Data,Summary,Stocks,USD,IWVL,34,1,37.52,1275.68,36.5,1241,-34.68,
+Open Positions,Data,Summary,Stocks,USD,JPGL,410,1,31.67583,12987.0903,33.9275,13910.28,923.1897,
+Open Positions,Data,Summary,Stocks,USD,SWRD,855,1,29.661912018,25360.934775,30.365,25962.08,601.145225,
+Open Positions,Data,Summary,Stocks,USD,USSC,103,1,53.635705544,5524.477671,55.13,5678.39,153.912329,
+Open Positions,Total,,Stocks,USD,,,,,102447.16453,,101960.21,-486.954531,
+Open Positions,Total,,Stocks,USD,,,,,106825.536553686,,106391.384384,-434.152170686,
+Net Stock Position Summary,Header,Asset Category,Currency,Symbol,Description,Shares at IB,Shares Borrowed,Shares Lent,Net Shares
+Net Stock Position Summary,Data,Stocks,EUR,ZPRX,SPDR EUROPE S/C VALUE,91,0,0,91
+Net Stock Position Summary,Data,Stocks,USD,AVDV,AVANTIS INTL S/C VALUE ETF,273.0592,0,0,273.0592
+Net Stock Position Summary,Data,Stocks,USD,AVES,AVANTIS EMERGING MARKETS VAL,175.278,0,0,175.278
+Net Stock Position Summary,Data,Stocks,USD,AVUV,AVANTIS US SMALL CAP VALUE,101.5352,0,0,101.5352
+Net Stock Position Summary,Data,Stocks,USD,DGS,WISDOMTREE EM SMALL CAP,93,0,0,93
+Net Stock Position Summary,Data,Stocks,USD,EIMI,ISHARES CORE EM IMI ACC,414,0,0,414
+Net Stock Position Summary,Data,Stocks,USD,IWMO,ISHR EDGE MSCI WRLD MOMENTUM,51,0,0,51
+Net Stock Position Summary,Data,Stocks,USD,IWVL,ISHARES EDGE MSCI WRLD VALUE,34,0,0,34
+Net Stock Position Summary,Data,Stocks,USD,JPGL,JPM GL EQ MULTIFAC UCITS ETF,410,0,0,410
+Net Stock Position Summary,Data,Stocks,USD,SWRD,SPDR MSCI WORLD ACC,855,0,0,855
+Net Stock Position Summary,Data,Stocks,USD,USSC,SPDR USA S/C VALUE,103,0,0,103
+Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,C. Price,Proceeds,Comm/Fee,Basis,Realized P/L,MTM P/L,Code
+Trades,Data,Order,Stocks,EUR,ZPRX,"2021-04-23, 03:05:01",47,43.45,43.44,-2042.15,-4,2046.15,0,-0.47,O
+Trades,Data,Order,Stocks,EUR,ZPRX,"2021-07-14, 03:05:03",8,44.9,44.83,-359.2,-1.883592,361.083592,0,-0.56,O
+Trades,Data,Order,Stocks,EUR,ZPRX,"2021-07-15, 03:05:03",36,44.7,44.455,-1609.2,-1.896092,1611.096092,0,-8.82,O
+Trades,SubTotal,,Stocks,EUR,ZPRX,,91,,,-4010.55,-7.779684,4018.329684,0,-9.85,
+Trades,Total,,Stocks,EUR,,,,,,-4010.55,-7.779684,4018.329684,0,-9.85, 
+Trades,Total,,Stocks,USD,,,,,,-4796.36831,-9.308093752,4805.676403752,0,-11.648724, 
+Trades,Data,Order,Stocks,USD,AVDV,"2021-09-08, 09:57:49",40,67.09,66.7,-2683.6,-0.39425725,2683.99425725,0,-15.6,O
+Trades,Data,Order,Stocks,USD,AVDV,"2022-01-11, 15:28:28",50.4291,65.24,65.28,-3289.994484,-0.51034307,3290.50482707,0,2.0172,FPA;O;P
+Trades,Data,Order,Stocks,USD,AVDV,"2022-01-18, 13:24:06",39.362,64.58,64.76,-2541.99796,-0.47512965,2542.47308965,0,7.0852,FPA;O;P
+Trades,Data,Order,Stocks,USD,AVDV,"2022-01-21, 13:31:50",14,63.3,63.03,-886.2,-0.32505725,886.52505725,0,-3.78,O
+Trades,Data,Order,Stocks,USD,AVDV,"2022-01-21, 13:58:29",0.2681,63.39,63.03,-16.994859,-0.170127122,17.164986122,0,-0.0965,FP;O
+Trades,Data,Order,Stocks,USD,AVDV,"2022-03-25, 10:00:42",129,63.252248062,63.55,-8159.54,-0.719631853,8160.259631853,0,38.41,O;P
+Trades,SubTotal,,Stocks,USD,AVDV,,273.0592,,,-17578.327303,-2.594546195,17580.921849195,0,28.0359,
+Trades,Data,Order,Stocks,USD,AVES,"2021-11-09, 10:04:46",26,50.15,50.1867,-1303.9,-0.28265725,1304.18265725,0,0.9542,O
+Trades,Data,Order,Stocks,USD,AVES,"2021-11-16, 15:34:01",26.2534,50.66,50.56,-1329.997244,-0.43350793,1330.43075193,0,-2.6253,FPA;O;P
+Trades,Data,Order,Stocks,USD,AVES,"2021-12-23, 09:59:57",45.3548,50.16,50.36,-2274.996768,-0.49432821,2275.49109621,0,9.071,FPA;O;P
+Trades,Data,Order,Stocks,USD,AVES,"2022-03-25, 10:04:05",77.6698,48.925043118,49.05,-3799.998314,-0.36579121,3800.36410521,0,9.7054,FPA;O;P
+Trades,SubTotal,,Stocks,USD,AVES,,175.278,,,-8708.892326,-1.5762846,8710.4686106,0,17.1053,
+Trades,Data,Order,Stocks,USD,AVUV,"2021-10-15, 12:57:13",30,79.37,78.64,-2381.1,-0.44625725,2381.54625725,0,-21.9,O
+Trades,Data,Order,Stocks,USD,AVUV,"2022-01-18, 13:25:56",71.5352,80.449794294,80.57,-5754.99212475,-0.22256429,5755.21468904,0,8.5989,FPA;O;P;RPA
+Trades,SubTotal,,Stocks,USD,AVUV,,101.5352,,,-8136.09212475,-0.66882154,8136.76094629,0,-13.3011,
+Trades,Data,Order,Stocks,USD,COIN,"2021-04-14, 13:25:52",2.18,382.463119266,328.28,-833.7696,-1,834.7696,0,-118.1192,FPA;O;P
+Trades,Data,Order,Stocks,USD,COIN,"2021-04-21, 10:26:34",-2.18,315.079266055,311.92,686.8728,-1.003762471,-834.7696,-148.900562,6.8872,C;FPA;P
+Trades,SubTotal,,Stocks,USD,COIN,,0,,,-146.8968,-2.003762471,0,-148.900562,-111.232,
+Trades,Data,Order,Stocks,USD,DGS,"2021-11-09, 10:16:24",26,52.84,52.84,-1373.84,-0.37885725,1374.21885725,0,0,O
+Trades,Data,Order,Stocks,USD,DGS,"2021-11-16, 14:54:23",27,53.04,53.01,-1432.08,-0.31785725,1432.39785725,0,-0.81,O
+Trades,Data,Order,Stocks,USD,DGS,"2021-12-23, 09:54:21",40,52.88,53.06,-2115.2,-0.47825725,2115.67825725,0,7.2,O
+Trades,SubTotal,,Stocks,USD,DGS,,93,,,-4921.12,-1.17497175,4922.29497175,0,6.39,
+Trades,Data,Order,Stocks,USD,EIMI,"2021-04-16, 11:11:50",138,37.65,37.64,-5195.7,-5,5200.7,0,-1.38,O
+Trades,Data,Order,Stocks,USD,EIMI,"2022-01-19, 03:00:04",157,35.58,35.94,-5586.06,-3.1244027,5589.1844027,0,56.52,O
+Trades,Data,Order,Stocks,USD,EIMI,"2022-01-19, 03:07:26",1,35.61,35.94,-35.61,-1.915965628,37.525965628,0,0.33,O
+Trades,Data,Order,Stocks,USD,EIMI,"2022-03-25, 09:57:06",118,32.81,32.78,-3871.58,-2.1900111,3873.7700111,0,-3.54,O
+Trades,SubTotal,,Stocks,USD,EIMI,,414,,,-14688.95,-12.230379428,14701.180379428,0,51.93,
+Trades,Data,Order,Stocks,USD,IWMO,"2021-04-16, 11:19:19",40,63.74,63.64,-2549.6,-5,2554.6,0,-4,O
+Trades,Data,Order,Stocks,USD,IWMO,"2021-04-21, 10:52:33",11,62.63,62.93,-688.93,-5,693.93,0,3.3,O
+Trades,SubTotal,,Stocks,USD,IWMO,,51,,,-3238.53,-10,3248.53,0,-0.7,
+Trades,Data,Order,Stocks,USD,IWVL,"2021-05-07, 04:15:53",28,37.15,37.41,-1040.2,-5,1045.2,0,7.28,O
+Trades,Data,Order,Stocks,USD,IWVL,"2021-05-28, 04:24:54",6,37.58,37.51,-225.48,-5,230.48,0,-0.42,O
+Trades,SubTotal,,Stocks,USD,IWVL,,34,,,-1265.68,-10,1275.68,0,6.86,
+Trades,Data,Order,Stocks,USD,JPGL,"2021-04-16, 11:16:33",410,31.66,31.62,-12980.6,-6.4903,12987.0903,0,-16.4,O
+Trades,SubTotal,,Stocks,USD,JPGL,,410,,,-12980.6,-6.4903,12987.0903,0,-16.4,
+Trades,Data,Order,Stocks,USD,SWRD,"2021-04-08, 07:40:00",61,28.78,28.8,-1755.58,-5,1760.58,0,1.22,O
+Trades,Data,Order,Stocks,USD,SWRD,"2021-04-16, 11:24:36",610,29.385,29.37,-17924.85,-8.962425,17933.812425,0,-9.15,O
+Trades,Data,Order,Stocks,USD,SWRD,"2021-07-09, 03:00:07",1,30.23,30.49,-30.23,-5,35.23,0,0.26,O
+Trades,Data,Order,Stocks,USD,SWRD,"2022-03-25, 09:44:10",183,30.755,30.695,-5628.165,-3.147349925,5631.312349925,0,-10.98,O
+Trades,SubTotal,,Stocks,USD,SWRD,,855,,,-25338.825,-22.109774925,25360.934774925,0,-18.65,
+Trades,Data,Order,Stocks,USD,USSC,"2021-04-16, 11:13:59",96,53.68,53.57,-5153.28,-5,5158.28,0,-10.56,O
+Trades,Data,Order,Stocks,USD,USSC,"2021-07-19, 03:05:26",7,52.04,51.545,-364.28,-1.917670884,366.197670884,0,-3.465,O
+Trades,SubTotal,,Stocks,USD,USSC,,103,,,-5517.56,-6.917670884,5524.477670884,0,-14.025,
+Trades,Total,,Stocks,USD,,,,,,-102521.47355375,-75.766511793,102448.339503072,-148.900562,-63.9869, 
+Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,,Proceeds,Comm in USD,,,MTM in USD,Code
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-04-22, 13:07:09","2,081",1.20085,,-2498.96885,-2,,,1.56075,
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-05-06, 14:00:13",-34,1.20555,,40.9887,-2,,,-0.0323,
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-05-10, 20:27:45",-0.85,1.21285,,1.0309225,0,,,-0.001658,
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-07-13, 20:02:38",360,1.1775,,-423.9,-2,,,2.196,
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-07-14, 14:07:52","1,623",1.1829,,-1919.8467,-2,,,1.1361,
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-09-08, 09:47:31",-10,1.18105,,11.8105,-2,,,-0.0055,
+Trades,Data,Order,Forex,USD,EUR.USD,"2021-09-10, 20:25:43",-0.820316,1.18105,,0.968834212,0,,,-0.000041,
+Trades,SubTotal,,Forex,USD,EUR.USD,,4018.329684,,,-4787.916593288,-10,,,4.853351,
+Trades,Total,,Forex,USD,,,,,,-4787.916593288,-10,,,4.853351, 
+Deposits & Withdrawals,Header,Currency,Settle Date,Description,Amount
+Deposits & Withdrawals,Data,USD,2021-04-07,Electronic Fund Transfer,1763.85
+Deposits & Withdrawals,Data,USD,2021-04-13,Electronic Fund Transfer,878.53
+Deposits & Withdrawals,Data,USD,2021-04-16,Electronic Fund Transfer,43823.58
+Deposits & Withdrawals,Data,USD,2021-04-22,Electronic Fund Transfer,2509.03
+Deposits & Withdrawals,Data,USD,2021-05-06,Electronic Fund Transfer,996.55
+Deposits & Withdrawals,Data,USD,2021-05-28,Electronic Fund Transfer,206.25
+Deposits & Withdrawals,Data,USD,2021-06-14,Electronic Fund Transfer,27.77
+Deposits & Withdrawals,Data,USD,2021-07-13,Electronic Fund Transfer,473.3
+Deposits & Withdrawals,Data,USD,2021-07-14,Electronic Fund Transfer,1903.2
+Deposits & Withdrawals,Data,USD,2021-07-16,Electronic Fund Transfer,359.26
+Deposits & Withdrawals,Data,USD,2021-09-08,Electronic Fund Transfer,2656
+Deposits & Withdrawals,Data,USD,2021-10-15,Electronic Fund Transfer,2440.3
+Deposits & Withdrawals,Data,USD,2021-11-09,Electronic Fund Transfer,2654.01
+Deposits & Withdrawals,Data,USD,2021-11-16,Electronic Fund Transfer,2730.42
+Deposits & Withdrawals,Data,USD,2021-12-23,Electronic Fund Transfer,4340.09
+Deposits & Withdrawals,Data,USD,2022-01-11,Electronic Fund Transfer,3251.3
+Deposits & Withdrawals,Data,USD,2022-01-18,Electronic Fund Transfer,13921.06
+Deposits & Withdrawals,Data,USD,2022-01-21,Electronic Fund Transfer,907.63
+Deposits & Withdrawals,Data,USD,2022-03-25,Electronic Fund Transfer,21457.47
+Deposits & Withdrawals,Data,Total,,,107299.6
+Fees,Header,Subtitle,Currency,Date,Description,Amount
+Fees,Data,Other Fees,USD,2021-05-05,D******87:Global Snapshot PNP for Apr 2021,-0.03
+Fees,Data,Other Fees,USD,2021-05-05,D******87:Global Snapshot PNP for Apr 2021,0.03
+Fees,Data,Other Fees,USD,2021-05-05,D******87:US Consolidated Snapshot for Apr 2021,-0.02
+Fees,Data,Other Fees,USD,2021-05-05,D******87:US Consolidated Snapshot for Apr 2021,0.02
+Fees,Data,Total,,,,0
+Fees,Notes,"Market data is provided by Global Financial Information Services (GmbH). Your local broker collects amounts owed for fees and tax for such data on behalf of Global Financial Information Services (GmbH). Note, you are responsible for any applicable taxes relating to the provision of these services."
+Dividends,Header,Currency,Date,Description,Amount
+Dividends,Data,USD,2021-12-21,AVDV(US0250728021) Cash Dividend USD 0.9233 per Share (Ordinary Dividend),29.55
+Dividends,Data,USD,2021-12-21,AVDV(US0250728021) Payment in Lieu of Dividend (Ordinary Dividend),7.39
+Dividends,Data,USD,2021-12-21,AVES(US0250723725) Cash Dividend USD 0.3158 per Share (Ordinary Dividend),2.29
+Dividends,Data,USD,2021-12-21,AVES(US0250723725) Payment in Lieu of Dividend (Ordinary Dividend),14.21
+Dividends,Data,USD,2021-12-21,AVUV(US0250728773) Cash Dividend USD 0.4834 per Share (Ordinary Dividend),14.5
+Dividends,Data,USD,2021-12-30,DGS(US97717W2816) Cash Dividend USD 0.59005 per Share (Ordinary Dividend),24.19
+Dividends,Data,USD,2021-12-30,DGS(US97717W2816) Payment in Lieu of Dividend (Ordinary Dividend),30.68
+Dividends,Data,USD,2022-03-25,AVUV(US0250728773) Cash Dividend USD 0.2272 per Share (Ordinary Dividend),20.34
+Dividends,Data,USD,2022-03-25,AVUV(US0250728773) Payment in Lieu of Dividend (Ordinary Dividend),2.73
+Dividends,Data,USD,2022-03-30,DGS(US97717W2816) Cash Dividend USD 0.14 per Share (Ordinary Dividend),6.86
+Dividends,Data,USD,2022-03-30,DGS(US97717W2816) Payment in Lieu of Dividend (Ordinary Dividend),6.16
+Dividends,Data,Total,,,158.9
+Withholding Tax,Header,Currency,Date,Description,Amount,Code
+Withholding Tax,Data,USD,2021-12-21,AVDV(US0250728021) Cash Dividend USD 0.9233 per Share - US Tax,-8.87,
+Withholding Tax,Data,USD,2021-12-21,AVDV(US0250728021) Payment in Lieu of Dividend - US Tax,-2.22,
+Withholding Tax,Data,USD,2021-12-21,AVES(US0250723725) Cash Dividend USD 0.3158 per Share - US Tax,-0.69,
+Withholding Tax,Data,USD,2021-12-21,AVES(US0250723725) Payment in Lieu of Dividend - US Tax,-4.26,
+Withholding Tax,Data,USD,2021-12-21,AVUV(US0250728773) Cash Dividend USD 0.4834 per Share - US Tax,-4.35,
+Withholding Tax,Data,USD,2021-12-30,DGS(US97717W2816) Cash Dividend USD 0.59005 per Share - US Tax,-7.26,
+Withholding Tax,Data,USD,2021-12-30,DGS(US97717W2816) Payment in Lieu of Dividend - US Tax,-9.2,
+Withholding Tax,Data,USD,2022-03-25,AVUV(US0250728773) Cash Dividend USD 0.2272 per Share - US Tax,-6.1,
+Withholding Tax,Data,USD,2022-03-25,AVUV(US0250728773) Payment in Lieu of Dividend - US Tax,-0.82,
+Withholding Tax,Data,USD,2022-03-30,DGS(US97717W2816) Cash Dividend USD 0.14 per Share - US Tax,-2.06,
+Withholding Tax,Data,USD,2022-03-30,DGS(US97717W2816) Payment in Lieu of Dividend - US Tax,-1.85,
+Withholding Tax,Data,Total,,,-47.68,
+Interest,Header,Currency,Date,Description,Amount
+Interest,Data,USD,2021-12-03,USD IBKR Managed Securities (SYEP) Interest for Nov-2021,0.56
+Interest,Data,USD,2022-01-05,USD IBKR Managed Securities (SYEP) Interest for Dec-2021,2.4
+Interest,Data,USD,2022-02-03,USD IBKR Managed Securities (SYEP) Interest for Jan-2022,1.78
+Interest,Data,USD,2022-03-03,USD IBKR Managed Securities (SYEP) Interest for Feb-2022,4.47
+Interest,Data,USD,2022-04-05,USD IBKR Managed Securities (SYEP) Interest for Mar-2022,1.05
+Interest,Data,Total,,,10.26
+Interest Accruals,Header,Currency,Field Name,Field Value
+Interest Accruals,Data,Base Currency Summary,Starting Accrual Balance,0
+Interest Accruals,Data,Base Currency Summary,Interest Accrued,10.26
+Interest Accruals,Data,Base Currency Summary,Accrual Reversal,-10.26
+Interest Accruals,Data,Base Currency Summary,Ending Accrual Balance,0
+Commission Adjustments,Header,Currency,Date,Description,Amount,Code
+Commission Adjustments,Data,USD,2021-12-09,"Refund (DGS, 26, 2021-11-09)",0.37885725,
+Commission Adjustments,Data,USD,2021-12-16,"Refund (DGS, 27, 2021-11-16)",0.31785725,
+Commission Adjustments,Data,USD,2022-01-24,"Refund (DGS, 40, 2021-12-23)",0.47825725,
+Commission Adjustments,Data,Total,,,1.17497175,
+Change in Dividend Accruals,Header,Asset Category,Currency,Symbol,Date,Ex Date,Pay Date,Quantity,Tax,Fee,Gross Rate,Gross Amount,Net Amount,Code
+Change in Dividend Accruals,Data,Starting Dividend Accruals in USD,,,,,,,,,,,0,
+Change in Dividend Accruals,Data,Stocks,USD,AVDV,2021-12-15,2021-12-16,2021-12-21,40,11.09,0,0.9233,36.94,25.85,Po
+Change in Dividend Accruals,Data,Stocks,USD,AVDV,2021-12-21,2021-12-16,2021-12-21,40,-11.09,0,0.9233,-36.94,-25.85,Re
+Change in Dividend Accruals,Data,Stocks,USD,AVES,2021-12-15,2021-12-16,2021-12-21,52.2534,4.95,0,0.3158,16.5,11.55,Po
+Change in Dividend Accruals,Data,Stocks,USD,AVES,2021-12-21,2021-12-16,2021-12-21,52.2534,-4.95,0,0.3158,-16.5,-11.55,Re
+Change in Dividend Accruals,Data,Stocks,USD,AVUV,2021-12-15,2021-12-16,2021-12-21,30,4.35,0,0.4834,14.5,10.15,Po
+Change in Dividend Accruals,Data,Stocks,USD,AVUV,2021-12-21,2021-12-16,2021-12-21,30,-4.35,0,0.4834,-14.5,-10.15,Re
+Change in Dividend Accruals,Data,Stocks,USD,AVUV,2022-03-21,2022-03-22,2022-03-25,101.5352,6.93,0,0.2272,23.07,16.14,Po
+Change in Dividend Accruals,Data,Stocks,USD,AVUV,2022-03-25,2022-03-22,2022-03-25,101.5352,-6.92,0,0.2272,-23.07,-16.15,Re
+Change in Dividend Accruals,Data,Stocks,USD,DGS,2021-12-24,2021-12-27,2021-12-30,93,16.46,0,0.59005,54.87,38.41,Po
+Change in Dividend Accruals,Data,Stocks,USD,DGS,2021-12-30,2021-12-27,2021-12-30,93,-16.46,0,0.59005,-54.87,-38.41,Re
+Change in Dividend Accruals,Data,Stocks,USD,DGS,2022-03-24,2022-03-25,2022-03-30,93,3.9,0,0.14,13.02,9.12,Po
+Change in Dividend Accruals,Data,Stocks,USD,DGS,2022-03-30,2022-03-25,2022-03-30,93,-3.91,0,0.14,-13.02,-9.11,Re
+Change in Dividend Accruals,Data,Total,,,,,,,0,0,,0,0,
+Change in Dividend Accruals,Data,Ending Dividend Accruals in USD,,,,,,,,,,,0,
+Stock Yield Enhancement Program Securities Lent Activity,Header,Asset Category,Currency,Symbol,Date,Description, ,Transaction ID,Quantity,Collateral Amount
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-11-19,New Loan Allocation, ,SLB.64628168,-28,1904
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-11-22,Loan Return Allocation, ,SLB.64628168,28,-1904
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-11-22,New Loan Allocation, ,SLB.64628168,-18,1206
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-11-23,Loan Return Allocation, ,SLB.64628168,18,-1206
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-03,New Loan Allocation, ,SLB.64931189,-9,576
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-06,Loan Return Allocation, ,SLB.64931189,9,-576
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-06,New Loan Allocation, ,SLB.64985693,-18,1152
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-07,Loan Return Allocation, ,SLB.64985693,18,-1152
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-07,New Loan Allocation, ,SLB.65020376,-17,1105
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-08,Loan Return Allocation, ,SLB.65020376,17,-1105
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-08,New Loan Allocation, ,SLB.65020376,-2,132
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-09,Loan Return Allocation, ,SLB.65020376,2,-132
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-09,New Loan Allocation, ,SLB.65087445,-10,660
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-10,Loan Return Allocation, ,SLB.65087445,10,-660
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-15,New Loan Allocation, ,SLB.65227699,-2,128
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-16,Loan Return Allocation, ,SLB.65227699,2,-128
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-16,New Loan Allocation, ,SLB.65263312,-37,2405
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-17,Loan Return Allocation, ,SLB.65263312,37,-2405
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-17,New Loan Allocation, ,SLB.65300462,-8,512
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2021-12-20,Loan Return Allocation, ,SLB.65300462,8,-512
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2022-01-10,New Loan Allocation, ,SLB.65845249,-39,2613
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVDV,2022-01-11,Loan Return Allocation, ,SLB.65845249,39,-2613
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-11-26,New Loan Allocation, ,SLB.64782896,-35,1820
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-11-29,Loan Return Allocation, ,SLB.64782896,35,-1820
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-11-29,New Loan Allocation, ,SLB.64814716,-50,2500
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-11-30,Loan Return Allocation, ,SLB.64814716,50,-2500
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-11-30,New Loan Allocation, ,SLB.64848513,-39,1950
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-01,Loan Return Allocation, ,SLB.64848513,39,-1950
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-01,New Loan Allocation, ,SLB.64882242,-47,2350
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-02,Loan Return Allocation, ,SLB.64882242,47,-2350
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-02,New Loan Allocation, ,SLB.64882242,-34,1734
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-03,Loan Return Allocation, ,SLB.64882242,34,-1734
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-10,New Loan Allocation, ,SLB.65107953,-2,104
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-13,Loan Return Allocation, ,SLB.65107953,2,-104
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-13,New Loan Allocation, ,SLB.65154161,-43,2236
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-14,Loan Return Allocation, ,SLB.65154161,43,-2236
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-14,New Loan Allocation, ,SLB.65154161,-52,2704
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-15,Loan Return Allocation, ,SLB.65154161,52,-2704
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-15,New Loan Allocation, ,SLB.65154161,-51,2601
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-16,Loan Return Allocation, ,SLB.65154161,51,-2601
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-16,New Loan Allocation, ,SLB.65263510,-42,2184
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-17,Loan Return Allocation, ,SLB.65263510,42,-2184
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-17,New Loan Allocation, ,SLB.65263510,-45,2295
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-20,Loan Return Allocation, ,SLB.65263510,45,-2295
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-20,New Loan Allocation, ,SLB.65314832,-6,306
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-21,Loan Return Allocation, ,SLB.65314832,6,-306
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-27,New Loan Allocation, ,SLB.65488214,-1,52
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-28,Loan Return Allocation, ,SLB.65488214,1,-52
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-29,New Loan Allocation, ,SLB.65556065,-71,3692
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-30,Loan Return Allocation, ,SLB.65556065,71,-3692
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-30,New Loan Allocation, ,SLB.65600905,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-31,Loan Return Allocation, ,SLB.65600905,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2021-12-31,New Loan Allocation, ,SLB.65600905,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-03,Loan Return Allocation, ,SLB.65600905,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-03,New Loan Allocation, ,SLB.65600905,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-04,Loan Return Allocation, ,SLB.65600905,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-04,New Loan Allocation, ,SLB.65600905,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-05,Loan Return Allocation, ,SLB.65600905,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-07,New Loan Allocation, ,SLB.65797814,-17,884
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-10,Loan Return Allocation, ,SLB.65797814,17,-884
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-10,New Loan Allocation, ,SLB.65797814,-17,884
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-11,Loan Return Allocation, ,SLB.65797814,17,-884
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-11,New Loan Allocation, ,SLB.65882202,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-12,Loan Return Allocation, ,SLB.65882202,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-12,New Loan Allocation, ,SLB.65918414,-97,5141
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-13,Loan Return Allocation, ,SLB.65918414,97,-5141
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-13,New Loan Allocation, ,SLB.65953686,-21,1134
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-14,Loan Return Allocation, ,SLB.65953686,21,-1134
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-14,New Loan Allocation, ,SLB.65991680,-21,1113
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-17,Loan Return Allocation, ,SLB.65991680,21,-1113
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-17,New Loan Allocation, ,SLB.65991680,-21,1113
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-01-18,Loan Return Allocation, ,SLB.65991680,21,-1113
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-02,New Loan Allocation, ,SLB.66451153,-4,208
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-03,Loan Return Allocation, ,SLB.66451153,4,-208
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-04,New Loan Allocation, ,SLB.66528100,-63,3276
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-07,Loan Return Allocation, ,SLB.66528100,63,-3276
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-07,New Loan Allocation, ,SLB.66565707,-96,4992
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-08,Loan Return Allocation, ,SLB.66565707,96,-4992
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-08,New Loan Allocation, ,SLB.66604107,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-09,Loan Return Allocation, ,SLB.66604107,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-09,New Loan Allocation, ,SLB.66642437,-61,3233
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-10,Loan Return Allocation, ,SLB.66642437,61,-3233
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-17,New Loan Allocation, ,SLB.66860066,-69,3657
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-18,Loan Return Allocation, ,SLB.66860066,69,-3657
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-18,New Loan Allocation, ,SLB.66912801,-85,4505
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-21,Loan Return Allocation, ,SLB.66912801,85,-4505
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-21,New Loan Allocation, ,SLB.66912801,-86,4558
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-22,Loan Return Allocation, ,SLB.66912801,86,-4558
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-22,New Loan Allocation, ,SLB.66977845,-97,5141
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-23,Loan Return Allocation, ,SLB.66977845,97,-5141
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-23,New Loan Allocation, ,SLB.67017638,-97,5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVES,2022-02-24,Loan Return Allocation, ,SLB.67017638,97,-5044
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-01-03,New Loan Allocation, ,SLB.65663741,-25,2050
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-01-04,Loan Return Allocation, ,SLB.65663741,25,-2050
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-01-31,New Loan Allocation, ,SLB.66375924,-26,2028
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-02-01,Loan Return Allocation, ,SLB.66375924,26,-2028
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-02-09,New Loan Allocation, ,SLB.66638245,-3,243
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-02-10,Loan Return Allocation, ,SLB.66638245,3,-243
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-03-18,New Loan Allocation, ,SLB.67713504,-10,830
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-03-21,Loan Return Allocation, ,SLB.67713504,10,-830
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-03-23,New Loan Allocation, ,SLB.67839550,-12,1008
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,AVUV,2022-03-24,Loan Return Allocation, ,SLB.67839550,12,-1008
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-17,New Loan Allocation, ,SLB.65290623,-6,324
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-20,Loan Return Allocation, ,SLB.65290623,6,-324
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-20,New Loan Allocation, ,SLB.65337350,-9,477
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-21,Loan Return Allocation, ,SLB.65337350,9,-477
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-22,New Loan Allocation, ,SLB.65389745,-52,2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-23,Loan Return Allocation, ,SLB.65389745,52,-2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-23,New Loan Allocation, ,SLB.65389745,-52,2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-24,Loan Return Allocation, ,SLB.65389745,52,-2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-24,New Loan Allocation, ,SLB.65389745,-52,2860
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-27,Loan Return Allocation, ,SLB.65389745,52,-2860
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-27,New Loan Allocation, ,SLB.65500189,-46,2530
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-28,Loan Return Allocation, ,SLB.65500189,46,-2530
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-28,New Loan Allocation, ,SLB.65534241,-52,2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2021-12-29,Loan Return Allocation, ,SLB.65534241,52,-2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-01-10,New Loan Allocation, ,SLB.65829831,-52,2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-01-11,Loan Return Allocation, ,SLB.65829831,52,-2808
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-08,New Loan Allocation, ,SLB.67362044,-7,364
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-09,Loan Return Allocation, ,SLB.67362044,7,-364
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-10,New Loan Allocation, ,SLB.67468133,-44,2332
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-11,Loan Return Allocation, ,SLB.67468133,44,-2332
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-22,New Loan Allocation, ,SLB.67807114,-8,432
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-23,Loan Return Allocation, ,SLB.67807114,8,-432
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-23,New Loan Allocation, ,SLB.67839472,-92,4968
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-24,Loan Return Allocation, ,SLB.67839472,92,-4968
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-24,New Loan Allocation, ,SLB.67839472,-80,4320
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-25,Loan Return Allocation, ,SLB.67839472,80,-4320
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-28,New Loan Allocation, ,SLB.67957464,-44,2420
+Stock Yield Enhancement Program Securities Lent Activity,Data,Stocks,USD,DGS,2022-03-29,Loan Return Allocation, ,SLB.67957464,44,-2420
+Stock Yield Enhancement Program Securities Lent Activity,Data,Total,,,,,,,,0
+Stock Yield Enhancement Program Securities Lent Activity,Notes,"Important Notice re: SIPC Protection for Loans of Fully Paid and Excess Margin Securities:  Please be aware that if you execute loans of your fully paid or excess margin securities, the  provisions of the Securities Investor Protection Act of 1970 may not protect you with respect to the securities loan transaction.  Therefore, the collateral value credited to your account by Interactive Brokers (see above) may constitute the only source of satisfaction in the event that Interactive Brokers cannot return the securities."
+Stock Yield Enhancement Program Securities Lent Interest Details,Header,Currency,Value Date,Symbol,Start Date,Quantity,Collateral Amount,Market-based Rate (%),Interest Rate on Customer Collateral (%),Interest Paid to Customer,Code
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-19,AVDV,2021-11-19,-28,1904,4.51,2.26,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-20,AVDV,2021-11-19,-28,1904,4.51,2.26,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-21,AVDV,2021-11-19,-28,1904,4.51,2.26,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-22,AVDV,2021-11-22,-18,1206,4.51,2.26,0.08,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-26,AVES,2021-11-26,-35,1820,0.84,0.42,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-27,AVES,2021-11-26,-35,1820,0.84,0.42,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-28,AVES,2021-11-26,-35,1820,0.84,0.42,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-29,AVES,2021-11-29,-50,2500,0.9,0.45,0.03,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-11-30,AVES,2021-11-30,-39,1950,0.91,0.46,0.03,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-01,AVES,2021-12-01,-47,2350,0.93,0.47,0.03,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-02,AVES,2021-12-02,-34,1734,0.91,0.46,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-03,AVDV,2021-12-03,-9,576,4.08,2.04,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-04,AVDV,2021-12-03,-9,576,4.08,2.04,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-05,AVDV,2021-12-03,-9,576,4.08,2.04,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-06,AVDV,2021-12-06,-18,1152,4.53,2.27,0.07,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-07,AVDV,2021-12-07,-17,1105,4.56,2.28,0.07,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-08,AVDV,2021-12-08,-2,132,4.35,2.18,0.01,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-09,AVDV,2021-12-09,-10,660,4.98,2.49,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-13,AVES,2021-12-13,-43,2236,1.69,0.85,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-14,AVES,2021-12-14,-52,2704,1.69,0.85,0.07,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-15,AVDV,2021-12-15,-2,128,5.18,2.59,0.01,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-15,AVES,2021-12-15,-51,2601,1.69,0.85,0.06,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-16,AVDV,2021-12-16,-37,2405,5.29,2.65,0.18,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-16,AVES,2021-12-16,-42,2184,1.72,0.86,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-17,AVDV,2021-12-17,-8,512,5.18,2.59,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-17,AVES,2021-12-17,-45,2295,1.69,0.85,0.06,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-17,DGS,2021-12-17,-6,324,3.01,1.51,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-18,AVDV,2021-12-17,-8,512,5.18,2.59,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-18,AVES,2021-12-17,-45,2295,1.69,0.85,0.06,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-18,DGS,2021-12-17,-6,324,3.01,1.51,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-19,AVDV,2021-12-17,-8,512,5.18,2.59,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-19,AVES,2021-12-17,-45,2295,1.69,0.85,0.06,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-19,DGS,2021-12-17,-6,324,3.01,1.51,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-20,AVES,2021-12-20,-6,306,1.6,0.8,0.01,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-20,DGS,2021-12-20,-9,477,3.01,1.51,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-22,DGS,2021-12-22,-52,2808,2.99,1.5,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-23,DGS,2021-12-23,-52,2808,2.99,1.5,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-24,DGS,2021-12-24,-52,2860,2.95,1.48,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-25,DGS,2021-12-24,-52,2860,2.95,1.48,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-26,DGS,2021-12-24,-52,2860,2.95,1.48,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-27,AVES,2021-12-27,-1,52,1.6,0.8,0,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-27,DGS,2021-12-27,-46,2530,3.06,1.53,0.11,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-28,DGS,2021-12-28,-52,2808,3.06,1.53,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-29,AVES,2021-12-29,-71,3692,2,1,0.11,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-30,AVES,2021-12-30,-97,5044,2.03,1.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2021-12-31,AVES,2021-12-31,-97,5044,2.03,1.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-01,AVES,2021-12-31,-97,5044,2.03,1.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-02,AVES,2021-12-31,-97,5044,2.03,1.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-03,AVES,2022-01-03,-97,5044,2.03,1.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-03,AVUV,2022-01-03,-25,2050,0.86,0.43,0.03,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-04,AVES,2022-01-04,-97,5044,2.03,1.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-07,AVES,2022-01-07,-17,884,2.8,1.4,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-08,AVES,2022-01-07,-17,884,2.8,1.4,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-09,AVES,2022-01-07,-17,884,2.8,1.4,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-10,AVDV,2022-01-10,-39,2613,5.3,2.65,0.19,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-10,AVES,2022-01-10,-17,884,2.81,1.41,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-10,DGS,2022-01-10,-52,2808,2.9,1.45,0.12,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-11,AVES,2022-01-11,-97,5044,3.01,1.51,0.21,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-12,AVES,2022-01-12,-97,5141,3.05,1.53,0.22,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-13,AVES,2022-01-13,-21,1134,3.04,1.52,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-14,AVES,2022-01-14,-21,1113,3.04,1.52,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-15,AVES,2022-01-14,-21,1113,3.04,1.52,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-16,AVES,2022-01-14,-21,1113,3.04,1.52,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-17,AVES,2022-01-17,-21,1113,3.04,1.52,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-01-31,AVUV,2022-01-31,-26,2028,1.45,0.73,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-02,AVES,2022-02-02,-4,208,4.36,2.18,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-04,AVES,2022-02-04,-63,3276,4.76,2.38,0.22,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-05,AVES,2022-02-04,-63,3276,4.76,2.38,0.22,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-06,AVES,2022-02-04,-63,3276,4.76,2.38,0.22,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-07,AVES,2022-02-07,-96,4992,4.81,2.41,0.34,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-08,AVES,2022-02-08,-97,5044,4.83,2.42,0.34,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-09,AVES,2022-02-09,-61,3233,4.91,2.46,0.22,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-09,AVUV,2022-02-09,-3,243,1.4,0.7,0.01,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-17,AVES,2022-02-17,-69,3657,6.53,3.27,0.33,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-18,AVES,2022-02-18,-85,4505,6.45,3.23,0.41,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-19,AVES,2022-02-18,-85,4505,6.45,3.23,0.41,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-20,AVES,2022-02-18,-85,4505,6.45,3.23,0.41,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-21,AVES,2022-02-21,-86,4558,6.45,3.23,0.41,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-22,AVES,2022-02-22,-97,5141,6.43,3.22,0.46,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-02-23,AVES,2022-02-23,-97,5044,6.42,3.21,0.45,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-08,DGS,2022-03-08,-7,364,3.3,1.65,0.02,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-10,DGS,2022-03-10,-44,2332,3.29,1.65,0.11,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-18,AVUV,2022-03-18,-10,830,2.9,1.45,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-19,AVUV,2022-03-18,-10,830,2.9,1.45,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-20,AVUV,2022-03-18,-10,830,2.9,1.45,0.04,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-22,DGS,2022-03-22,-8,432,4.54,2.27,0.03,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-23,AVUV,2022-03-23,-12,1008,3.44,1.72,0.05,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-23,DGS,2022-03-23,-92,4968,4.52,2.26,0.31,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-24,DGS,2022-03-24,-80,4320,4.51,2.26,0.27,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,USD,2022-03-28,DGS,2022-03-28,-44,2420,4.04,2.02,0.14,Po
+Stock Yield Enhancement Program Securities Lent Interest Details,Data,Total,,,,,,,,10.26,
+Financial Instrument Information,Header,Asset Category,Symbol,Description,Conid,Security ID,Underlying,Listing Exch,Multiplier,Type,Code
+Financial Instrument Information,Data,Stocks,AVDV,AVANTIS INTL S/C VALUE ETF,385087093,US0250728021,,ARCA,1,ETF,
+Financial Instrument Information,Data,Stocks,AVES,AVANTIS EMERGING MARKETS VAL,517641683,US0250723725,,ARCA,1,ETF,
+Financial Instrument Information,Data,Stocks,AVUV,AVANTIS US SMALL CAP VALUE,385087149,US0250728773,,ARCA,1,ETF,
+Financial Instrument Information,Data,Stocks,COIN,COINBASE GLOBAL INC -CLASS A,481691285,US19260Q1076,,NASDAQ,1,COMMON,
+Financial Instrument Information,Data,Stocks,DGS,WISDOMTREE EM SMALL CAP,47012106,US97717W2816,,ARCA,1,ETF,
+Financial Instrument Information,Data,Stocks,EIMI,ISHARES CORE EM IMI ACC,153454131,IE00BKM4GZ66,,LSEETF,1,ETF,
+Financial Instrument Information,Data,Stocks,IWMO,ISHR EDGE MSCI WRLD MOMENTUM,169449222,IE00BP3QZ825,,LSEETF,1,ETF,
+Financial Instrument Information,Data,Stocks,IWVL,ISHARES EDGE MSCI WRLD VALUE,169449245,IE00BP3QZB59,,LSEETF,1,ETF,
+Financial Instrument Information,Data,Stocks,JPGL,JPM GL EQ MULTIFAC UCITS ETF,374674794,IE00BJRCLL96,,LSEETF,1,ETF,
+Financial Instrument Information,Data,Stocks,SWRD,SPDR MSCI WORLD ACC,355718463,IE00BFY0GT14,,LSEETF,1,ETF,
+Financial Instrument Information,Data,Stocks,USSC,SPDR USA S/C VALUE,184281747,IE00BSPLC413,,LSEETF,1,ETF,
+Financial Instrument Information,Data,Stocks,ZPRX,SPDR EUROPE S/C VALUE,184168292,IE00BSPLC298,,IBIS2,1,ETF,
+Codes,Header,Code,Meaning,Code (Cont.),Meaning (Cont.)
+Codes,Data,A,Assignment
+Codes,Data,ADR,ADR Fee Accrual
+Codes,Data,AEx,Automatic exercise for dividend-related recommendation.
+Codes,Data,AFx,AutoFX conversion resulting from trading
+Codes,Data,Adj,Adjustment
+Codes,Data,Al,Allocation
+Codes,Data,Aw,Away Trade
+Codes,Data,B,Automatic Buy-in
+Codes,Data,Bo,Direct Borrow
+Codes,Data,C,Closing Trade
+Codes,Data,CD,Cash Delivery
+Codes,Data,CP,Complex Position
+Codes,Data,Ca,Cancelled
+Codes,Data,Co,Corrected Trade
+Codes,Data,Cx,Part or all of this transaction was a Crossing executed as dual agent by IB for two IB customers
+Codes,Data,DT,Discounted Trade
+Codes,Data,De,Delivery or Conversion Action
+Codes,Data,ETF,ETF Creation/Redemption
+Codes,Data,Ep,Resulted from an Expired Position
+Codes,Data,Ex,Exercise
+Codes,Data,FP,The fractional portion of this trade was executed against IB or an affiliate.
+Codes,Data,FPA,The fractional portion of this trade was executed against IB or an affiliate. IB acted as agent for the whole share portion of this trade.
+Codes,Data,G,Trade in Guaranteed Account Segment
+Codes,Data,GEA,Exercise or Assignment resulting from offsetting positions
+Codes,Data,HC,Highest Cost tax basis election
+Codes,Data,HFI,Investment Transferred to Hedge Fund
+Codes,Data,HFR,Redemption from Hedge Fund
+Codes,Data,I,Internal Transfer
+Codes,Data,IA,The transaction was executed against IB or an affiliate
+Codes,Data,IM,A portion of the order was executed against IB or an affiliate; IB acted as agent on a portion.
+Codes,Data,INV,Investment Transfer from Investor
+Codes,Data,IPO,This transaction was executed as part of an IPO in which IB was a member of the selling group and is classified as a Principal trade.
+Codes,Data,L,Ordered by IB (Margin Violation)
+Codes,Data,LD,Adjusted by Loss Disallowed from Wash Sale
+Codes,Data,LF,Liquidation of fractional position by IB
+Codes,Data,LI,"Last In, First Out (LIFO) tax basis election"
+Codes,Data,LT,Long Term P/L
+Codes,Data,Lo,Direct Loan
+Codes,Data,M,Entered manually by IB
+Codes,Data,MEx,Manual exercise for dividend-related recommendation.
+Codes,Data,ML,Maximize Losses tax basis election
+Codes,Data,MLG,Maximize Long Term Gain tax basis election
+Codes,Data,MLL,Maximize Long Term Loss tax basis election
+Codes,Data,MSG,Maximize Short Term Gain tax basis election
+Codes,Data,MSL,Maximize Short Term Loss tax basis election
+Codes,Data,O,Opening Trade
+Codes,Data,Off,Yes and No contracts offset to $1.00 cash settlement
+Codes,Data,P,Partial Execution
+Codes,Data,PE,Perpetual Investment
+Codes,Data,PI,Price Improvement
+Codes,Data,PTA,Post Trade Allocation
+Codes,Data,Po,Interest or Dividend Accrual Posting
+Codes,Data,Pr,Part or all of this transaction was executed by the Exchange as a Crossing by IB against an IB affiliate and is therefore classified as a Principal and not an agency trade
+Codes,Data,R,Dividend Reinvestment
+Codes,Data,RED,Redemption to Investor
+Codes,Data,RI,Recurring Investment
+Codes,Data,RP,"IB acted as agent for the fractional share portion of this trade, which was executed by an IB affiliate as riskless principal."
+Codes,Data,RPA,IB acted as agent for both the fractional share portion and the whole share portion of this trade; the fractional share portion was executed by an IB Affiliate as riskless principal.
+Codes,Data,Rb,Rebill
+Codes,Data,Re,Interest or Dividend Accrual Reversal
+Codes,Data,Ri,Reimbursement
+Codes,Data,S0,Contract settled to zero value
+Codes,Data,S1,Contract settled to $1.00
+Codes,Data,SF,Trade is subject to IBKR Lite Surcharge Fee if volume of such trades exceeds 10% of the total monthly Lite trade volume
+Codes,Data,SI,This order was solicited by Interactive Brokers
+Codes,Data,SL,Specific Lot tax basis election
+Codes,Data,SO,This order was marked as solicited by your Introducing Broker
+Codes,Data,SS,Customer designated this trade for shortened settlement and so is subject to execution at prices above the prevailing market
+Codes,Data,ST,Short Term P/L
+Codes,Data,T,Transfer
+Codes,Data,Un,Unvested shares from stock grant
+Codes,Data,XCH,Mutual Fund Exchange Transaction
+Notes/Legal Notes,Header,Type,Note
+Notes/Legal Notes,Data,Notes,"Stock exchange transactions generally settle on the trade date plus one business day (T+1). Options, futures and US open-end mutual fund transactions also settle on trade date plus one business day. Some exchanges and other transaction types may have longer or shorter settlement periods. Ending settled cash reflects the cash that has actually settled."
+Notes/Legal Notes,Data,Notes,Initial and maintenance margin requirements are available within the Account Window of the Trader Workstation.
+Notes/Legal Notes,Data,Notes,"Interactive Brokers LLC receives compensation from fund companies in connection with the purchase and holding of fund shares by customers of Interactive Brokers LLC. Such compensation includes, but is not limited to, Rule 12b-1 fees that are paid out of the funds assets. The source and amount of any remuneration received by Interactive Brokers LLC in connection with a transaction will be furnished upon written request of the customer.  IB may share a portion of the compensation received from fund companies with your independent advisor or introducing broker."
+Notes/Legal Notes,Data,Notes,"Quantities preceded by a ""-"" sign indicate sell transactions. Other transactions are purchases. "
+Notes/Legal Notes,Data,Notes,"IB acts as agent in executing the fractional share portion of your order. In certain circumstances, IB routes the fractional portion of your order to an affiliate, which may execute the fractional portion of the order as principal. In such circumstances, this is indicated by the codes associated with the trade. If an IB affiliate acts as principal in executing any fractional share portion of your order, the order will be executed at the price displayed for the opposite side of the NBBO from your order (the offer if you are buying and the bid if you are selling) at the time of execution. If an IB affiliate is acting as riskless principal in connection with filling the fractional share portion of your order, the affiliate will execute the fractional share portion of your order at the price it receives for the execution of the whole share."
+Notes/Legal Notes,Data,Notes,"In case of partial executions, commissions are charged on the total quantity executed on the original order. The commission is displayed on the first partial execution only."
+Notes/Legal Notes,Data,Notes,Trade execution times are displayed in Eastern Time.
+Notes/Legal Notes,Data,Notes,Applicable regulatory fees for your transactions are available on the IB website at www.interactivebrokers.com/en/accounts/fees/exchangeAndRegulatoryFees.php.
+Notes/Legal Notes,Data,Notes,"Borrow Fee Rate represents the cost to borrow stock expressed in percent per annum. It is applied to the collateral value on the stock borrow contract and is separate from any interest earned on credit cash balances. Similarly, Loan Fee Rate represents the benefit to lend stock. A positive rate indicates a cost to the borrower/benefit to the lender and a negative rate indicates a benefit to the borrower/cost to the lender. In general, the fee rates for hard-to-borrow stocks are higher than for normal availability stocks."
+Notes/Legal Notes,Data,Notes,Interest Rate on Customer Collateral represents the interest paid on the collateral posted to the customer's account and received from lending stock.  A positive rate indicates a benefit to the lender.
+Notes/Legal Notes,Data,Notes,"The closing prices on this Activity Statement are indicative and may come from third-party sources. Interactive Brokers does not warrant the accuracy of the prices provided by third-party sources. Due to time zone differences, certain non-US mutual funds may deliver closing prices after the Activity Statement has been produced and the closing prices for such funds will reflect the previous day's price."
+Notes/Legal Notes,Data,Notes,All Market Data and Research services are provided through Global Financial Information Services (GmbH).
+Notes/Legal Notes,Data,Notes,"Market data is provided by Global Financial Information Services (GmbH). Your local broker collects amounts owed for fees and tax for such data on behalf of Global Financial Information Services (GmbH). Note, you are responsible for any applicable taxes relating to the provision of these services."
+Notes/Legal Notes,Data,Notes,RUS denotes Ruble balances that have been restricted by Russian authorities.
+Notes/Legal Notes,Data,Mutual Fund Notes,"All purchase and sales of mutual funds are calculated against the published NAV (Net Asset Value) of the underlying fund and is displayed on this confirmation as the ""C. Price"" (Closing Price). Due to any fees charged by a fund and/or any share rounding, the net price you pay may vary from the published NAV and is shown on this confirmation as the ""T. Price"" (Trade Price)."
+Notes/Legal Notes,Data,Fixed Income Notes,"Call features for bonds or preferred stocks may affect the yield. For zero coupon, compound interest and multiplier securities, there are no periodic payments and securities may be callable below maturity value without notice to holder unless registered. For asset-backed securities, the actual yield may vary depending on the speed at which the underlying note is pre-paid. For additional information regarding bond yield, please contact the IB Help Desk at: ibkr.com/help. If this debt security is unrated by a nationally recognized statistical rating organization, it may pose a high risk of default. You should consult an independent advisor to determine whether unrated bonds are appropriate for your portfolio in light of your goals and your financial circumstances. Fees charged by bond trading centers are included in the cost of bond transactions."
+Notes/Legal Notes,Data,Legal Notes,"Please promptly report any inaccuracy or discrepancy in this statement, or in your account. Contact the IB Customer Service Department in writing using the form available on the IB website. You may also contact IB by phone, but if you report an error by phone, you should re-confirm such oral communication in writing in order to protect your rights, including rights under the Securities Investor Protection Act (SIPA).Interactive Brokers:Interactive Brokers LLC, www.interactivebrokers.com, 877-442-2757 (U.S.)Interactive Brokers (UK) (Ltd), www.interactivebrokers.co.uk, 00800-42-276537 (Intl)Interactive Brokers Canada Inc., www.interactivebrokers.ca, 877-745-4222 (Can.)"
+Notes/Legal Notes,Data,Legal Notes,"Unless otherwise noted, Interactive Brokers acted as agent in the execution of the above transactions. For those exchanges where IB is not a direct clearing member or custodian, IB may use one of the following clearing agents or sub-custodians: Interactive Brokers Australia Pty Limited; Interactive Brokers Canada Inc.; Interactive Brokers Hong Kong Limited; Interactive Brokers Ireland, Limited; Interactive Brokers Securities Japan, Inc.; Interactive Brokers (U.K.) Limited; IBKR Financial Services AG; ABN Amro Clearing Singapore Pte. Ltd.; Allfunds Bank, S.A.U.; Banco B3 S.A.; BBVA Bancomer, S.A.; BNP Securities Services, Milan Branch; BMO Bank N.A.; Citibank Europe plc; Skandinaviska Enskilda Banken AB (including select branches)."
+Notes/Legal Notes,Data,Legal Notes,"IB acts as agent or riskless principal in foreign currency exchange transactions and as riskless principal in spot precious metals transactions.  Such transactions are executed against an IB affiliate or a third party, which acts as principal in such transactions and may have a long or short position and may have profited or lost in connection with the transaction.  Foreign currency exchange and spot precious metals transactions executed by Customer through IB are not regulated or overseen by the SEC or the CFTC."
+Notes/Legal Notes,Data,Legal Notes,"IB accepts liquidity rebates or other order flow payments from Alternative Trading Systems, market makers and exchanges for certain orders in stocks. IB receives payment for some option orders pursuant to exchange-mandated marketing fee programs or other arrangements. The source and nature of any compensation received by IB in connection with any transaction is available upon written request of the customer. For further information, check the IB website and the Order Routing and Payment for Order Flow Disclosure provided when you opened your account and annually or visit ibkr.com/help.  "
+Notes/Legal Notes,Data,Legal Notes,"For security futures trades, if not already indicated on this statement, information about the time of any transaction, the identity of the counterparty to the transaction, and whether IB is acting as agent or principal, as agent for the counterparty, as agent for both parties to the contract, or as principal, and if acting as principal, whether the transaction was a block transaction or an exchange for physicals transaction, will be available upon written request of the customer."
+Notes/Legal Notes,Data,Legal Notes,Customer is requested to promptly advise Interactive Brokers of any material change in Customers investment objectives.
+Notes/Legal Notes,Data,Legal Notes,"A financial statement of Interactive Brokers LLC is available for your personal inspection at www.interactivebrokers.com or at its offices, or a copy of it will be mailed upon your written request."
+Notes/Legal Notes,Data,Legal Notes,"For trades executed on the ASX market, the ASX 24 market and the Cboe Australia market, this confirmation is issued subject to: (i) the Applicable Laws, the directions, decisions and requirements of the relevant market operator, the operating rules of the relevant market, the clearing rules and where relevant, the relevant settlement rules, (ii) the customs and usages of the relevant financial market, and (iii) the correction of errors and omissions. Trades in Cash Market Products (as that term is defined in the relevant ASIC market integrity rules) on ASX market and Cboe Australia are cleared by BNP Paribas, ARBN 149 440 291, AFSL 402467, who is a participant of ASX Clear Pty Ltd and ASX Settlement Pty Ltd. Trades in Derivative Products on ASX and all products on ASX 24 are cleared by Interactive Brokers Australia (“IBA”) as a participant of ASX Clear Pty Ltd and ASX Clear (Futures) Pty Ltd. If your transaction was a crossing transaction, IBA may have either acted on behalf of (i) both the buyer and seller of this transaction, or (ii) on behalf of the buyer or seller on one side of the transaction and acted as Principal on the other side. Under the Corporations Act 2001, where IBA enters into an exchange traded derivative on a customer's behalf, IBA is regarded as having issued the derivative to the customer."
+Notes/Legal Notes,Data,Legal Notes,"For All Options Trades Executed on the Stock Exchange of Hong Kong (""SEHK""): (a) Options can involve a high degree of risk and may not be suitable for every investor. Investors should ensure they understand those risks before participating in the options market. (b) All options contracts executed on the SEHK were executed by Interactive Brokers Hong Kong Limited on behalf of Interactive Brokers LLC. (c) In the event of a default committed by Interactive Brokers LLC resulting in the client suffering any pecuniary loss, the client shall have a right to claim under the Investor Compensation Fund established under the Hong Kong Securities and Futures Ordinance, subject to the terms of the Investor Compensation Fund from time to time. (d) All Exchange Traded Options Business made for or on behalf of a client shall be subject to the relevant provisions of the constitution, Rules of The Stock Exchange of Hong Kong Limited (""SEHK Rules""), regulations, the Articles, customs and usages of SEHK, the Options Trading Rules, the Clearing Rules of SEOCH, the CCASS Rules and the laws of Hong Kong, which shall be binding on both Interactive Brokers LLC and the client."
+Notes/Legal Notes,Data,Legal Notes,"Interactive Brokers LLC is a SIPC member. Deposits held away from Interactive Brokers LLC may not qualify under SIPC protection. Also, futures and options on futures are not covered by SIPC."
+Notes/Legal Notes,Data,,Interactive Brokers LLC is a SIPC Member

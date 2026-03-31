@@ -28,14 +28,16 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 1 | FR-literature-bilateral | Regra de literatura bilateral para citacoes academicas | FIRE | Alta |
 | 5 | HD-python-stack-v2 | Capacidades analíticas avançadas: otimizador de aporte, backtest fatorial, TLH monitor, tornado chart P(FIRE) | Head | Media |
 | 2 | TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | Alta |
-| 3 | FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | Alta |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
+| 6 | FI-rolling-loadings | Rolling factor loadings — drift monitor trimestral JPGL/AVGS | Factor | Média |
+| 7 | HD-correlacoes-regime | Correlações regime-dependent: stress vs calm (VIX) | Head | Média |
 
 ### Doing
 > Issues em andamento
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | **URGENTE** | Movida do backlog — P(FIRE) 91% (scorecard) vs 80% (script atual) precisam reconciliação |
 
 ### Done
 > Issues concluidas

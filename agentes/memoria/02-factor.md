@@ -57,6 +57,28 @@ Em debates sobre cenarios macro ou geopoliticos, Factor deve entrar proativament
 - Vanguard novos UCITS: passivos por size/style, sem multi-factor
 - IFSW: válido mas sem momentum positivo como JPGL
 
+### IFSW vs JPGL: loadings comparados (jan/2020–mar/2026, 1515 obs)
+
+Regressão FF5+MOM nos ETFs reais LSE. IFSW = iShares MSCI World Multifactor (alternativa mais próxima de JPGL).
+
+| Fator | JPGL | IFSW | WSML | AVGS | SWRD |
+|-------|------|------|------|------|------|
+| Market (beta) | 0.423*** | 0.494*** | 0.504*** | 0.931*** | 0.925*** |
+| Size | 0.042 n.s. | 0.045 n.s. | 0.301*** | 0.605*** | -0.041*** |
+| Value | 0.286*** | 0.252*** | 0.310*** | 0.395*** | 0.044*** |
+| Profitability | -0.044 n.s. | -0.031 n.s. | -0.203*** | 0.064*** | 0.008 n.s. |
+| Investment | -0.058 n.s. | **-0.182***  | -0.197*** | 0.013 n.s. | 0.038*** |
+| Momentum | -0.027 n.s. | **+0.033*** | -0.021 n.s. | -0.012 n.s. | -0.014*** |
+| Alpha/ano | +3.8% n.s. | +3.6% n.s. | +3.8% n.s. | +3.1% n.s. | -0.1% n.s. |
+| R² | 0.377 | 0.379 | 0.438 | 0.939 | 0.968 |
+
+**Conclusões:**
+- JPGL e IFSW são **essencialmente o mesmo fundo** em termos de loadings. Diferenças: IFSW tem Investment mais negativo (-0.182***) e Momentum marginalmente positivo (+0.033*). JPGL tem Market beta menor (0.423 vs 0.494) — mais defensivo.
+- WSML (small cap puro): Size e Value fortes, mas Profitability e Investment **negativos*** — "small junk" sem filtro de qualidade. Errado para captura de prêmio fatorial.
+- AVGS: Size dominante (0.605***) + Value forte (0.395***) + Profitability positivo. Conforme esperado — small-cap value com qualidade.
+- **Momentum JPGL = -0.027 (não significativo)**. Provavelmente artefato dos fatores FF americanos sendo aplicados a ETF global com inverse-vol. Não indica ausência de momentum no design — indica limitação metodológica do proxy.
+- **Haircut fatorial correto: 58%** (McLean & Pontiff 2016) — NÃO 35-40%. Registrado em `feedback_haircut_fatorial.md`. FI-crowdedness usou 35-40% por erro — desconsiderar.
+
 ### JPGL: disambiguacao de ticker
 JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc), ISIN IE00BJRCLL96, domiciliado na Irlanda, listado na LSE. TER 0,19%. Accumulating (reinveste dividendos). Existe o ticker JPLG (letras invertidas) na LSE que pode gerar confusao — nao e o mesmo. Em qualquer contexto, JPGL = multifator Irlanda.
 

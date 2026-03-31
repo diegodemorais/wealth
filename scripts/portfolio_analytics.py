@@ -67,11 +67,12 @@ def get_precos_proxy_avgs(periodo: str = "5y") -> pd.DataFrame:
     Usa equivalentes americanos para evitar mismatch de calendário LSE/NYSE:
       AVUV ≈ AVGS (US small cap value)  |  AVDV ≈ AVGS (intl small cap value)
       IDEV ≈ SWRD (developed ex-US)     |  AVEM ≈ AVEM (emerging markets, Avantis)
-      AVLV ≈ JPGL (global multi-factor) |  VT   ≈ VWRA (benchmark)
+      JPUS60%+JPIN40% ≈ JPGL (multi-factor) | VT ≈ VWRA (benchmark)
     Todos negociam na NYSE/Nasdaq — calendário consistente.
     """
-    # AVLV = Avantis All Equity Markets (lançado 2022) — proxy para JPGL se curto, usa IMTM
-    proxies_us = ["AVUV", "AVDV", "IDEV", "AVEM", "AVLV", "VT"]
+    # JPGL proxy correto: JPUS 60% + JPIN 40% (JPMorgan US + Japan Intl Factor ETFs)
+    # Validado em FI-jpgl-redundancia (2026-03-31). AVLV era proxy errado (value/size apenas).
+    proxies_us = ["AVUV", "AVDV", "IDEV", "AVEM", "JPUS", "JPIN", "VT"]
     print(f"  Baixando proxies US ({periodo}): {', '.join(proxies_us)}")
     precos = yf.download(proxies_us, period=periodo, auto_adjust=True, progress=False)["Close"]
     return precos.dropna()
@@ -162,30 +163,29 @@ def analise_fronteira(precos: pd.DataFrame):
         avdv = precos_proxy_raw["AVDV"] / precos_proxy_raw["AVDV"].iloc[0]
         avgs_proxy = (PROXY_AVGS["AVUV"] * avuv + PROXY_AVGS["AVDV"] * avdv) * 100
 
-        # AVLV como proxy JPGL (Avantis All Equity Markets, lançado 2022)
-        # Fallback: IMTM (iShares MSCI Intl Momentum) se AVLV muito curto
-        jpgl_col = "AVLV"
-        if precos_proxy_raw["AVLV"].dropna().shape[0] < 400:
-            print(f"  ℹ️  AVLV curto ({precos_proxy_raw['AVLV'].dropna().shape[0]} dias). Usando IDEV como proxy JPGL.")
-            jpgl_col = "IDEV"
+        # JPGL proxy correto: JPUS 60% + JPIN 40%
+        # Validado em FI-jpgl-redundancia (2026-03-31). AVLV (value/size) era proxy errado.
+        jpus = precos_proxy_raw["JPUS"] / precos_proxy_raw["JPUS"].iloc[0]
+        jpin = precos_proxy_raw["JPIN"] / precos_proxy_raw["JPIN"].iloc[0]
+        jpgl_proxy = (0.60 * jpus + 0.40 * jpin) * 100
 
         precos_proxy = pd.DataFrame({
             "IDEV":       precos_proxy_raw["IDEV"],    # ≈ SWRD (developed)
             "AVGS_proxy": avgs_proxy,
             "AVEM":       precos_proxy_raw["AVEM"],    # ≈ AVEM
-            jpgl_col:     precos_proxy_raw[jpgl_col],  # ≈ JPGL
+            "JPGL_proxy": jpgl_proxy,                  # ≈ JPGL (60% JPUS + 40% JPIN)
         }).dropna()
 
         pesos_proxy = {
             "IDEV":       PESOS_ALVO["SWRD.L"],
             "AVGS_proxy": PESOS_ALVO["AVGS.L"],
             "AVEM":       PESOS_ALVO["AVEM.L"],
-            jpgl_col:     PESOS_ALVO["JPGL.L"],
+            "JPGL_proxy": PESOS_ALVO["JPGL.L"],
         }
 
         n_proxy = len(precos_proxy)
         print()
-        print(f"  Proxy map: SWRD→IDEV | AVGS→{PROXY_AVGS['AVUV']*100:.0f}%AVUV+{PROXY_AVGS['AVDV']*100:.0f}%AVDV | AVEM→AVEM | JPGL→{jpgl_col}")
+        print(f"  Proxy map: SWRD→IDEV | AVGS→{PROXY_AVGS['AVUV']*100:.0f}%AVUV+{PROXY_AVGS['AVDV']*100:.0f}%AVDV | AVEM→AVEM | JPGL→60%JPUS+40%JPIN")
         _rodar_fronteira(precos_proxy, pesos_proxy,
                          f"PASS 2 — Proxies US ({n_proxy} dias, ~{n_proxy/252:.1f} anos, calendário NYSE)")
         print(f"\n  Limitações: proxies US não têm hedge cambial, diferem em TER e domicílio fiscal.")
