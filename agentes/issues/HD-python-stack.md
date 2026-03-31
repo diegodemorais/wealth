@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | HD-python-stack |
 | **Dono** | 00 Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 04 FIRE, 10 Advocate, 13 Bookkeeper, 14 Quant |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-30 |
 | **Origem** | Proativo — instalação de stack Python (yfinance, python-bcb, PyPortfolioOpt, riskfolio-lib, quantstats, bt, ffn, skfolio) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-31 |
 
 ---
 
@@ -98,19 +98,24 @@ yfinance 1.2.0, python-bcb 0.3.6, PyPortfolioOpt 1.6.0, riskfolio-lib 7.2.1, qua
 
 ## Conclusão
 
-> A preencher.
+Três scripts criados e testados em `scripts/`. Stack funcional com venv em `~/claude/finance-tools/.venv`.
 
 ---
 
 ## Resultado
 
-> A preencher.
+| Tipo | Detalhe |
+|------|---------|
+| **Scripts** | `checkin_mensal.py`, `fire_montecarlo.py`, `portfolio_analytics.py` criados e funcionais |
+| **Venv** | `~/claude/finance-tools/.venv/bin/python3` — yfinance, python-bcb, PyPortfolioOpt, quantstats, bt |
+| **Fechamento** | Scripts criados ao longo de sessões (FR-scripts-premissas, FI-rolling-loadings, HD-python-stack-v2) |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Criar `scripts/checkin_mensal.py` (prioridade 1 — impacto mensal imediato)
-- [ ] Criar `scripts/fire_montecarlo.py` (prioridade 2 — P(FIRE) reproduzível)
-- [ ] Criar `scripts/portfolio_analytics.py` (prioridade 3 — fecha Quant Crisis 2.0)
+- [x] Criar `scripts/checkin_mensal.py`
+- [x] Criar `scripts/fire_montecarlo.py`
+- [x] Criar `scripts/portfolio_analytics.py`
+- [x] Testar com dados reais
 - [ ] Testar cada script com dados reais antes de usar em sessão

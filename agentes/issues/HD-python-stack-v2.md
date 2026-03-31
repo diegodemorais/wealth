@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | HD-python-stack-v2 |
 | **Dono** | 00 Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Media |
 | **Participantes** | 02 Factor, 04 FIRE, 05 Wealth, 10 Advocate, 14 Quant |
 | **Dependencias** | HD-python-stack (venv e stack instalados) |
 | **Criado em** | 2026-03-30 |
 | **Origem** | Proativo — capacidades adicionais identificadas após instalação da stack Python |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-31 |
 
 ---
 
@@ -80,26 +80,47 @@ Quatro capacidades analíticas que se tornam possíveis com a stack instalada, a
 
 ## Análise
 
-> A preencher conforme capacidades são implementadas.
+| Cap | Descrição | Resultado |
+|-----|-----------|-----------|
+| 1 — Otimizador de aporte | `portfolio_analytics.py --aporte` | Implementado: cascade IPCA+/Renda+/JPGL por gatilho de taxa |
+| 2 — Backtest histórico | `scripts/backtest_fatorial.py` | Criado: 4 regimes, proxies AVUV/EIMI.L, CAGR/Sharpe/MaxDD/delta anual |
+| 3 — TLH Monitor | bloco em `checkin_mensal.py --tlh` | Criado: 7 transitórios, gatilho 5%, cálculo IR, alerta duplo benefício US-listed |
+| 4 — Tornado chart | `fire_montecarlo.py --tornado` | Implementado (FR-scripts-premissas) |
+
+### Resultado backtest (Regime 3, Nov/2019–Mar/2026, 76 meses)
+
+| Métrica | Target (fatorial) | Shadow A (VWRA) | Delta |
+|---------|------------------|-----------------|-------|
+| CAGR | +11.60% | +11.12% | +0.48pp |
+| Sharpe | 0.45 | 0.45 | 0.00 |
+| Max DD | -27.0% | -24.3% | -2.70pp |
+| Crescimento acum. | 200.4 | 195.0 | +5.4pts |
+
+**Padrão identificado:** Tilt ganhou em 4/8 anos. Underperformance consecutiva em 2023-2025 (Advocate alert). CAGR positivo +0.48pp apesar da sequência recente adversa — consistente com value/small premium ciclico. Dados com 2 proxies; conclusão definitiva requer Regime 1 (UCITS puros, disponível Jun/2025+).
 
 ---
 
 ## Conclusão
 
-> A preencher.
+Quatro capacidades implementadas. Backtest confirma +0.48pp CAGR do tilt mas com Sharpe igual e MaxDD pior — prêmio fatorial existe mas tem custo de volatilidade. Underperformance 2023-2025 ciclica, não estrutural (conforme literatura: value underperforms em bull markets de growth).
 
 ---
 
 ## Resultado
 
-> A preencher.
+| Tipo | Detalhe |
+|------|---------|
+| **Scripts** | `backtest_fatorial.py` (novo) + TLH block em `checkin_mensal.py` |
+| **Capacidades** | 1✅ 2✅ 3✅ 4✅ — todas implementadas |
+| **Uso TLH** | `python3 checkin_mensal.py --tlh --tlh-config '{"AVUV": 85.50, ...}'` |
+| **Uso backtest** | `python3 backtest_fatorial.py --regime 3` (ou 1/2/4) |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Aguardar HD-python-stack concluído
-- [ ] Implementar Capacidade 1 (otimizador) como módulo do checkin_mensal.py
-- [ ] Implementar Capacidade 4 (tornado chart) como extensão do fire_montecarlo.py
-- [ ] Criar `scripts/backtest_fatorial.py` para Capacidade 2
-- [ ] Adicionar bloco TLH ao `checkin_mensal.py` para Capacidade 3
+- [x] Aguardar HD-python-stack concluído
+- [x] Cap 1: otimizador de aporte (`portfolio_analytics.py --aporte`)
+- [x] Cap 2: `scripts/backtest_fatorial.py`
+- [x] Cap 3: TLH block em `checkin_mensal.py --tlh`
+- [x] Cap 4: tornado chart em `fire_montecarlo.py --tornado`

@@ -58,6 +58,27 @@ PESOS_SHADOW_C = {
 IPCA_PLUS_TAXA_ANUAL = 0.0716
 IPCA_PLUS_CUSTODIA = 0.0020
 
+# ─── TRANSITÓRIOS (TLH MONITOR) ───────────────────────────────────────────────
+# Ativos transitorios: nao comprar mais, diluir via aportes, vender na desacumulacao.
+# TLH = Tax-Loss Harvesting: se entrar em prejuizo, vender para realizar perda fiscal
+# (deduz de ganhos futuros) e recomprar exposicao via ETF UCITS alvo.
+# Fonte precos medios: Interactive Brokers (input manual ou tlh_precos_medios.json)
+
+TLH_TRANSITORIOS = {
+    # US-listed (NYSE/NASDAQ) — estate tax risk adicional
+    "AVUV":  {"nome": "Avantis US SC Value",          "ucits_substituto": "AVGS.L", "cotacao": "USD"},
+    "AVDV":  {"nome": "Avantis Int'l SC Value",        "ucits_substituto": "AVGS.L", "cotacao": "USD"},
+    "AVES":  {"nome": "Avantis EM Value",              "ucits_substituto": "AVEM.L", "cotacao": "USD"},
+    "DGS":   {"nome": "WisdomTree EM SmallCap Div",    "ucits_substituto": "AVEM.L", "cotacao": "USD"},
+    # UCITS LSE — sem estate tax, mas transitórios (migrar para alvo quando oportuno)
+    "EIMI.L": {"nome": "iShares Core MSCI EM IMI",    "ucits_substituto": "AVEM.L", "cotacao": "USD"},
+    "USSC.L": {"nome": "SPDR MSCI World SC",          "ucits_substituto": "AVGS.L", "cotacao": "GBp"},
+    "IWVL.L": {"nome": "iShares MSCI Wld Value Fac",  "ucits_substituto": "JPGL.L", "cotacao": "GBp"},
+}
+
+TLH_GATILHO_PERDA = 0.05   # alertar se perda >= 5%
+TLH_IR_ALIQUOTA   = 0.15   # IR sobre ganho de capital (Lei 14.754/2023)
+
 
 # ─── FUNÇÕES DE DADOS ─────────────────────────────────────────────────────────
 
@@ -177,6 +198,91 @@ def patrimonio_shadow(pat_anterior: float, retorno: float, aportes: float) -> fl
     return pat_anterior * (1 + retorno) + aportes
 
 
+# ─── TLH MONITOR ─────────────────────────────────────────────────────────────
+
+def get_precos_atuais_transitorios() -> dict:
+    """Busca preço atual de cada transitório via yfinance."""
+    precos = {}
+    for ticker in TLH_TRANSITORIOS:
+        try:
+            data = yf.download(ticker, period="5d", auto_adjust=True, progress=False)
+            if not data.empty:
+                close = data["Close"] if not isinstance(data.columns, pd.MultiIndex) else data["Close"].squeeze()
+                preco = float(close.dropna().iloc[-1])
+                # GBp → USD (LSE em pence)
+                if TLH_TRANSITORIOS[ticker]["cotacao"] == "GBp":
+                    preco = preco / 100  # pence → libras
+                precos[ticker] = preco
+        except Exception as e:
+            print(f"  ⚠️  {ticker}: {e}")
+    return precos
+
+
+def verificar_tlh(precos_medios: dict, usd_brl: float) -> list:
+    """
+    Compara preços atuais vs preços médios de compra.
+    precos_medios: dict {ticker: preco_medio_usd}
+    Retorna lista de alertas.
+    """
+    precos_atuais = get_precos_atuais_transitorios()
+    alertas = []
+    linhas = []
+
+    for ticker, config in TLH_TRANSITORIOS.items():
+        preco_atual = precos_atuais.get(ticker)
+        preco_medio = precos_medios.get(ticker)
+
+        if preco_atual is None:
+            linhas.append((ticker, config["nome"], "—", "—", "—", "⚪ sem dados"))
+            continue
+
+        if preco_medio is None:
+            linhas.append((ticker, config["nome"], f"${preco_atual:.2f}", "não informado", "—", "⬜ sem custo médio"))
+            continue
+
+        pnl_pct = preco_atual / preco_medio - 1
+        pnl_usd = preco_atual - preco_medio  # por cota
+
+        if pnl_pct <= -TLH_GATILHO_PERDA:
+            status = f"🔴 TLH! {pnl_pct:+.1%}"
+            alertas.append({
+                "ticker": ticker,
+                "substituto": config["ucits_substituto"],
+                "pnl_pct": pnl_pct,
+                "preco_atual": preco_atual,
+                "preco_medio": preco_medio,
+            })
+        elif pnl_pct < 0:
+            status = f"🟡 perda {pnl_pct:+.1%} (abaixo do gatilho 5%)"
+        elif pnl_pct < 0.10:
+            status = f"✅ lucro {pnl_pct:+.1%}"
+        else:
+            status = f"✅ lucro {pnl_pct:+.1%} — isenção apenas na desacumulação"
+
+        linhas.append((ticker, config["nome"], f"${preco_atual:.2f}", f"${preco_medio:.2f}", f"{pnl_pct:+.1%}", status))
+
+    # Imprimir tabela
+    print(f"\n💸 TLH MONITOR — Transitórios")
+    print(f"  {'Ticker':<8} {'Nome':<30} {'Atual':>8} {'Médio':>8} {'P&L':>7}  Status")
+    print(f"  {'─'*72}")
+    for linha in linhas:
+        print(f"  {linha[0]:<8} {linha[1]:<30} {linha[2]:>8} {linha[3]:>8} {linha[4]:>7}  {linha[5]}")
+
+    # Alertas detalhados
+    if alertas:
+        print(f"\n  🔴 OPORTUNIDADES TLH ATIVAS:")
+        for a in alertas:
+            print(f"\n    {a['ticker']} → {a['substituto']}")
+            print(f"    Perda: {a['pnl_pct']:+.1%}  |  Atual: ${a['preco_atual']:.2f}  |  Médio: ${a['preco_medio']:.2f}")
+            print(f"    Ação: vender {a['ticker']}, comprar {a['substituto']} (mantém exposição fatorial)")
+            if a['ticker'] in ("AVUV", "AVDV", "AVES", "DGS"):
+                print(f"    Duplo benefício: realiza perda fiscal + migra US-listed → UCITS (reduz estate tax)")
+    else:
+        print(f"\n  ✅ Nenhuma oportunidade TLH ativa (todos acima de -{TLH_GATILHO_PERDA:.0%})")
+
+    return alertas
+
+
 # ─── VERIFICAÇÃO DE GATILHOS ──────────────────────────────────────────────────
 
 def verificar_gatilhos(hodl11_pct: float, pat_atual: float):
@@ -256,6 +362,9 @@ def main():
     parser.add_argument("--renda-plus-ret", type=float, default=None, help="Retorno MtM do Renda+ 2065 no mês (decimal, ex: -0.02)")
     parser.add_argument("--hodl11-pct",     type=float, default=None, help="% atual do HODL11 na carteira (decimal, ex: 0.031)")
     parser.add_argument("--mes",            type=str,   default=None, help="Mês de referência YYYY-MM (default: mês anterior)")
+    parser.add_argument("--tlh",            action="store_true",       help="Rodar TLH monitor dos transitórios")
+    parser.add_argument("--tlh-config",     type=str,   default=None,
+                        help="JSON com preços médios {ticker: preco_usd}. Ex: '{\"AVUV\": 85.50, \"AVDV\": 72.30}'")
     args = parser.parse_args()
 
     # Período
@@ -336,6 +445,17 @@ def main():
         hodl11_valor_aprox = pat_atual * 0.031  # estimativa; idealmente vem do Bookkeeper
         hodl11_pct = hodl11_valor_aprox / pat_atual
     alertas = verificar_gatilhos(hodl11_pct or 0.031, pat_atual)
+
+    # TLH Monitor (opcional)
+    if args.tlh:
+        precos_medios = {}
+        if args.tlh_config:
+            import json
+            try:
+                precos_medios = json.loads(args.tlh_config)
+            except json.JSONDecodeError:
+                print("⚠️  --tlh-config inválido. Esperado JSON: '{\"AVUV\": 85.50, ...}'")
+        verificar_tlh(precos_medios, usd_brl_fim)
 
     # Output
     formatar_output(
