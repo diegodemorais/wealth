@@ -200,6 +200,60 @@ def patrimonio_shadow(pat_anterior: float, retorno: float, aportes: float) -> fl
 
 # ─── TLH MONITOR ─────────────────────────────────────────────────────────────
 
+def get_ptax_venda(data_str: str) -> float:
+    """
+    Busca PTAX venda USD/BRL do BCB para uma data específica.
+    Tenta até 5 dias úteis anteriores se a data cair em feriado/fim de semana.
+    """
+    from bcb import currency as bcb_currency
+    from datetime import timedelta
+    target = pd.Timestamp(data_str)
+    for delta in range(6):
+        d = target - pd.Timedelta(days=delta)
+        try:
+            df = bcb_currency.get(["USD"], start=d.strftime("%Y-%m-%d"),
+                                   end=d.strftime("%Y-%m-%d"))
+            if df is not None and not df.empty:
+                val = float(df["USD"].dropna().iloc[-1])
+                if val > 0:
+                    return val
+        except Exception:
+            pass
+    raise ValueError(f"PTAX não encontrada para {data_str} (nem nos 5 dias anteriores)")
+
+
+def custo_base_brl_ponderado(lotes: list) -> tuple[float, float, float]:
+    """
+    Calcula custo base médio ponderado em BRL a partir de lista de lotes.
+
+    lotes: [{"qtd": float, "preco_usd": float, "data": "YYYY-MM-DD"}, ...]
+
+    Retorna (custo_base_brl_por_cota, preco_medio_usd, ptax_medio_ponderado)
+    Lei 14.754/2023: custo = preco_usd_compra × PTAX_venda_BCB_data_compra
+    """
+    total_qtd = 0.0
+    total_custo_brl = 0.0
+    total_custo_usd = 0.0
+
+    for lote in lotes:
+        qtd       = float(lote["qtd"])
+        preco_usd = float(lote["preco_usd"])
+        data      = lote["data"]
+        ptax      = get_ptax_venda(data)
+        custo_brl = preco_usd * ptax
+        total_qtd        += qtd
+        total_custo_brl  += qtd * custo_brl
+        total_custo_usd  += qtd * preco_usd
+
+    if total_qtd == 0:
+        raise ValueError("Lotes com quantidade zero")
+
+    custo_medio_brl  = total_custo_brl / total_qtd
+    preco_medio_usd  = total_custo_usd / total_qtd
+    ptax_medio_pond  = custo_medio_brl / preco_medio_usd
+    return custo_medio_brl, preco_medio_usd, ptax_medio_pond
+
+
 def get_precos_atuais_transitorios() -> dict:
     """Busca preço atual de cada transitório via yfinance."""
     precos = {}
@@ -209,39 +263,40 @@ def get_precos_atuais_transitorios() -> dict:
             if not data.empty:
                 close = data["Close"] if not isinstance(data.columns, pd.MultiIndex) else data["Close"].squeeze()
                 preco = float(close.dropna().iloc[-1])
-                # GBp → USD (LSE em pence)
+                # GBp → USD: pence → libras → USD (usa PTAX de hoje como GBP/USD proxy)
+                # Para LSE em GBp: dividir por 100 dá GBP; GBP/USD ≈ 1.27 (aproximação)
                 if TLH_TRANSITORIOS[ticker]["cotacao"] == "GBp":
-                    preco = preco / 100  # pence → libras
+                    gbp_usd = yf.download("GBPUSD=X", period="5d", progress=False)["Close"].dropna().iloc[-1]
+                    preco = (preco / 100) * float(gbp_usd)
                 precos[ticker] = preco
         except Exception as e:
             print(f"  ⚠️  {ticker}: {e}")
     return precos
 
 
-def verificar_tlh(config_ativos: dict, usd_brl_atual: float) -> list:
+def verificar_tlh(lotes_por_ticker: dict, usd_brl_atual: float) -> list:
     """
-    Compara custo base em BRL vs valor atual em BRL — base correta para IR brasileiro.
+    Calcula custo base BRL com PTAX real do BCB e compara vs valor atual em BRL.
 
-    Lei 14.754/2023: ganho de capital calculado em BRL.
-    Um ativo pode cair em USD mas ainda ter ganho em BRL se o dólar subiu desde a compra.
-    TLH só gera perda fiscal se o valor em BRL estiver abaixo do custo base em BRL.
+    Lei 14.754/2023: fato gerador = venda (não remessa). Ganho calculado em BRL.
+    PTAX venda BCB da data de cada compra. Câmbio atual irrelevante para custo base.
 
-    config_ativos: dict por ticker com:
-        - "preco_medio_usd": float    — preço médio de compra em USD (da IBKR)
-        - "cambio_compra":   float    — USD/BRL médio na época de compra
-
-    Exemplo: {"AVUV": {"preco_medio_usd": 85.50, "cambio_compra": 5.20}}
+    lotes_por_ticker: dict por ticker com lista de lotes de compra:
+        {
+          "AVUV": [
+            {"qtd": 100, "preco_usd": 70.50, "data": "2021-10-15"},
+            {"qtd": 50,  "preco_usd": 85.20, "data": "2022-03-10"}
+          ],
+          ...
+        }
     """
     precos_atuais_usd = get_precos_atuais_transitorios()
     alertas = []
-    linhas = []
+    linhas  = []
 
     for ticker, meta in TLH_TRANSITORIOS.items():
         preco_atual_usd = precos_atuais_usd.get(ticker)
-        cfg = config_ativos.get(ticker, {})
-
-        preco_medio_usd = cfg.get("preco_medio_usd")
-        cambio_compra   = cfg.get("cambio_compra")
+        lotes = lotes_por_ticker.get(ticker)
 
         if preco_atual_usd is None:
             linhas.append((ticker, meta["nome"], "—", "—", "—", "—", "⚪ sem dados yfinance"))
@@ -249,18 +304,24 @@ def verificar_tlh(config_ativos: dict, usd_brl_atual: float) -> list:
 
         valor_atual_brl = preco_atual_usd * usd_brl_atual
 
-        if preco_medio_usd is None or cambio_compra is None:
+        if not lotes:
             linhas.append((
                 ticker, meta["nome"],
                 f"${preco_atual_usd:.2f}", f"R${valor_atual_brl:.2f}",
-                "—", "—", "⬜ custo base não informado"
+                "—", "—", "⬜ lotes não informados"
             ))
             continue
 
-        custo_base_brl  = preco_medio_usd * cambio_compra
-        pnl_brl_pct     = valor_atual_brl / custo_base_brl - 1
-        pnl_usd_pct     = preco_atual_usd / preco_medio_usd - 1
-        efeito_cambial  = (usd_brl_atual / cambio_compra - 1)  # contribuição do câmbio
+        try:
+            custo_base_brl, preco_medio_usd, ptax_medio = custo_base_brl_ponderado(lotes)
+        except Exception as e:
+            linhas.append((ticker, meta["nome"], f"${preco_atual_usd:.2f}", f"R${valor_atual_brl:.2f}",
+                           "—", "—", f"⚠️  erro PTAX: {e}"))
+            continue
+
+        pnl_brl_pct    = valor_atual_brl / custo_base_brl - 1
+        pnl_usd_pct    = preco_atual_usd / preco_medio_usd - 1
+        efeito_cambial = (usd_brl_atual / ptax_medio - 1)
 
         if pnl_brl_pct <= -TLH_GATILHO_PERDA:
             status = f"🔴 TLH! BRL {pnl_brl_pct:+.1%}"
@@ -274,9 +335,10 @@ def verificar_tlh(config_ativos: dict, usd_brl_atual: float) -> list:
                 "custo_base_brl": custo_base_brl,
                 "preco_atual_usd": preco_atual_usd,
                 "preco_medio_usd": preco_medio_usd,
+                "ptax_medio": ptax_medio,
             })
         elif pnl_brl_pct < 0:
-            status = f"🟡 perda BRL {pnl_brl_pct:+.1%} (< gatilho 5%)"
+            status = f"🟡 BRL {pnl_brl_pct:+.1%} (< gatilho 5%)"
         elif pnl_usd_pct < 0 and pnl_brl_pct >= 0:
             status = f"⚠️  USD {pnl_usd_pct:+.1%} mas BRL {pnl_brl_pct:+.1%} — câmbio blindou"
         else:
@@ -289,7 +351,7 @@ def verificar_tlh(config_ativos: dict, usd_brl_atual: float) -> list:
         ))
 
     # Imprimir tabela
-    print(f"\n💸 TLH MONITOR — Transitórios  (USD/BRL atual: {usd_brl_atual:.4f})")
+    print(f"\n💸 TLH MONITOR — Transitórios  (PTAX atual: {usd_brl_atual:.4f})")
     print(f"  {'Ticker':<8} {'Nome':<28} {'Atual USD':>9} {'Atual BRL':>10} {'Custo BRL':>10} {'P&L BRL':>8}  Status")
     print(f"  {'─'*88}")
     for linha in linhas:
@@ -393,9 +455,9 @@ def main():
     parser.add_argument("--tlh",            action="store_true",       help="Rodar TLH monitor dos transitórios")
     parser.add_argument("--tlh-config",     type=str,   default=None,
                         help=(
-                            "JSON com custo base por ativo. "
-                            "Formato: '{\"AVUV\": {\"preco_medio_usd\": 85.50, \"cambio_compra\": 5.20}, ...}'. "
-                            "Ambos os campos obrigatórios — IR brasileiro é calculado em BRL."
+                            "JSON com lotes de compra por ticker. PTAX buscada automaticamente do BCB. "
+                            "Formato: '{\"AVUV\": [{\"qtd\": 100, \"preco_usd\": 70.50, \"data\": \"2021-10-15\"}, ...]}'. "
+                            "Pode ser path para arquivo .json ou string JSON direta."
                         ))
     args = parser.parse_args()
 
@@ -480,14 +542,20 @@ def main():
 
     # TLH Monitor (opcional)
     if args.tlh:
-        precos_medios = {}
+        import json, os
+        lotes_por_ticker = {}
         if args.tlh_config:
-            import json
             try:
-                precos_medios = json.loads(args.tlh_config)
-            except json.JSONDecodeError:
-                print("⚠️  --tlh-config inválido. Esperado JSON: '{\"AVUV\": 85.50, ...}'")
-        verificar_tlh(precos_medios, usd_brl_fim)
+                # Aceita path para arquivo .json ou string JSON direta
+                if os.path.isfile(args.tlh_config):
+                    with open(args.tlh_config) as f:
+                        lotes_por_ticker = json.load(f)
+                else:
+                    lotes_por_ticker = json.loads(args.tlh_config)
+            except (json.JSONDecodeError, OSError) as e:
+                print(f"⚠️  --tlh-config inválido: {e}")
+        print("  Buscando PTAX histórica do BCB para lotes de compra...")
+        verificar_tlh(lotes_por_ticker, usd_brl_fim)
 
     # Output
     formatar_output(
