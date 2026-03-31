@@ -212,6 +212,57 @@ B tem ENB ligeiramente maior (diversificação) mas Sharpe inferior. Diferença 
 
 ---
 
+## Análise Pós-Fechamento: IQGA vs JPGL (2026-03-31)
+
+### Mês a mês (mai/2025 → mar/2026, 10 meses)
+
+| Mês | IQGA | JPGL | SWRD | Vencedor |
+|-----|------|------|------|---------|
+| Jun/2025 | +4.4% | +2.4% | +4.4% | IQGA |
+| Jul/2025 | +1.5% | +0.3% | +2.0% | IQGA |
+| Ago/2025 | +2.9% | +3.0% | +2.0% | JPGL |
+| Set/2025 | +3.9% | +0.7% | +2.8% | IQGA |
+| Out/2025 | +2.0% | -0.1% | +2.5% | IQGA |
+| Nov/2025 | +0.8% | +3.2% | +0.2% | JPGL |
+| Dez/2025 | +2.2% | +1.1% | +1.5% | IQGA |
+| Jan/2026 | +2.1% | +3.3% | +1.7% | JPGL |
+| Fev/2026 | +1.7% | +6.0% | +0.7% | JPGL |
+| Mar/2026 | -7.4% | -5.9% | -7.7% | JPGL |
+| **Total** | **14.4%** | **14.3%** | **10.0%** | **5-5** |
+
+Placar 5-5. Nos meses extremos (fev +6% e mar -5.9%), JPGL osciou menos — low-vol funcionando.
+
+### Factor loadings comparados (FF5+MOM, 192 obs diárias — indicativo apenas)
+
+| Fator | IQGA | JPGL | Delta |
+|-------|------|------|-------|
+| **Market (beta)** | **0.735***  | **0.373*** | IQGA +0.36 |
+| Size | -0.046 n.s. | +0.107 n.s. | — |
+| Value | +0.009 n.s. | +0.038 n.s. | — |
+| Profitability | +0.039 n.s. | +0.100 n.s. | — |
+| Investment | -0.080 n.s. | +0.090 n.s. | — |
+| Momentum | +0.011 n.s. | -0.023 n.s. | — |
+| Alpha | +14.4%/ano * | +15.6%/ano * | regime |
+| R² | 0.648 | 0.278 | |
+
+**Único loading confiável: market beta.** IQGA (0.735) segue o mercado; JPGL (0.373) diverge intencionalmente via low-vol overlay. R² de JPGL = 0.278 — fatores FF americanos não capturam bem um ETF global low-vol.
+
+### Split 15% JPGL + 5% IQGA
+
+| Métrica | JPGL 20% | Split 15+5 |
+|---------|----------|------------|
+| CAGR | 16.3% | 16.5% |
+| Volatilidade | 9.6% | 9.4% |
+| Sharpe | 1.286 | 1.322 |
+| Max Drawdown | -6.3% | -6.5% |
+| TER blended | 0.19% | 0.20% |
+
+Correlação IQGA↔JPGL = **0.682** — a mais baixa de qualquer par na carteira. Benefício de diversificação real existe.
+
+**Decisão: não agora.** IQGA é ativamente gerido (gestor pode mudar estratégia), tem apenas 10 meses de histórico em regime favorável (value rotation), e o ganho de Sharpe (+0.036) é marginal. Revisar em mai/2027 com 2 anos de dados.
+
+---
+
 ## Próximos Passos
 
 Nenhum. Issue concluída. Continuar aportes regulares com JPGL como destino prioritário até equalizar o gap de 19.5pp.
