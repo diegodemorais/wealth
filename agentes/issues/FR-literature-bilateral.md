@@ -106,6 +106,6 @@ Regra bilateral implementada nos perfis Head e FIRE. Casos históricos documenta
 
 ## Proximos Passos
 
-- [ ] Revisar citacoes de ERN no historico de issues (FR-003, FR-fire2040)
+- [x] Revisar citacoes de ERN no historico de issues (FR-003, FR-fire2040) — FR-fire2040 nao cita ERN; FR-003 era script (deletado); cherry-pick encontrado em FR-004 (archive): Part 28 omitida, mas decisao ja incorporava o buffer via IPCA+ 2040. Nota Regra F adicionada ao FR-004.
 - [x] Revisar citacao de Cederburg em HD-equity-weight — qualificacao SSRN/horizonte adicionada, conclusao intacta
 - [x] Propor regra ao Diego para aprovacao antes de incorporar nos perfis — aprovada ao fechar a issue

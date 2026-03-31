@@ -335,7 +335,7 @@ O IPCA+ 2040 estrutural cumpre a funcao do bond tent sem sacrificar equity: rent
 |------|---------|
 | **Alocacao** | NAO implementar bond tent agressivo. Manter ~88% equity no FIRE. IPCA+ 2040 (7%) e o "tent natural" -- rende 7.31% real, vence 2040 (FIRE+3). Selic 5% como buffer. |
 | **Estrategia** | Equity alto (88%) no FIRE, suportado por Cederburg (2023) e ERN. IPCA+ 2040 substitui bond tent classico com retorno real superior. Pos-FIRE: equity sobe naturalmente conforme IPCA+ 2040 vence. |
-| **Conhecimento** | Cederburg (2023): 100% equity domina para horizontes longos. ERN SWR Part 19/43: equity alto favorece FIRE longo. Kitces & Pfau (2014): bond tent moderado tem merito, mas custo de oportunidade e alto para horizonte 40+ anos quando RF rende 7.31% real. |
+| **Conhecimento** | Cederburg (2023): 100% equity domina para horizontes longos. ERN SWR Part 19/43: equity alto favorece FIRE longo *(Regra F: ERN Part 28 recomenda 5-year cash buffer para SoRR — contra-argumento não citado originalmente; a decisão de usar IPCA+ 2040 como tent já incorpora esse buffer na prática)*. Kitces & Pfau (2014): bond tent moderado tem merito, mas custo de oportunidade e alto para horizonte 40+ anos quando RF rende 7.31% real. |
 | **Memoria** | Aprovado por Diego. Tabela em carteira.md atualizada. |
 
 ---
