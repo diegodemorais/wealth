@@ -26,6 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | FR-literature-bilateral | Regra de literatura bilateral para citacoes academicas | FIRE | Alta |
+| 5 | HD-python-stack-v2 | Capacidades analíticas avançadas: otimizador de aporte, backtest fatorial, TLH monitor, tornado chart P(FIRE) | Head | Media |
 | 2 | TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | Alta |
 | 3 | FR-scripts-premissas | PREMISSAS_SOURCE e alinhamento guardrails nos scripts MC | FIRE | Alta |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
@@ -41,6 +42,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FI-jpgl-redundancia | JPGL 20% — manter, reduzir ou remover? | 02 Factor | 2026-03-31 | **MANTER 20%**. 7-0. Factor regression: 4 loadings, alpha não significativo. Sector-neutral drag não se aplica (inverse-vol). 22 anos: +3pp/ano vs MSCI World. Período 2019-2026 = única exceção histórica. 5 gatilhos de monitoramento registrados. |
+| HD-python-stack | Automação de rotinas com Python stack | Head | 2026-03-30 | 3 scripts criados e testados. Otimizador de aporte reescrito com cascade correto: IPCA+ longo (>=6%) → Renda+ (>=6.5%) → 100% JPGL fracionário IB. Fronteira eficiente com proxy AVUV/AVDV (4.5 anos). |
 | PT-onelife | Bond OneLife: converter participacao na holding | 09 Patrimonial | 2026-03-27 | 9-0 contra entrar. 4 pilares fiscais frágeis. IDF compartilhado inviável (CAA 26/1). Parecer próprio obrigatório antes de qualquer decisão. |
 | XX-casamento | Casamento iminente: recalibrar FIRE e planejamento patrimonial | 00 Head | 2026-03-27 | P(FIRE 55 casal)=65% base. Bear SoRR + saude = riscos dominantes. Premissas baixa confianca. |
 | FR-fire2040 | FIRE 2040: bond tent, guardrail de fonte, gatilho R$13.4M/SWR 2.4% | 04 FIRE | 2026-03-27 | Bond tent = 5% do ganho. Driver = patrimônio. Safe harbor 2040, meta FIRE 50. |

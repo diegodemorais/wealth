@@ -50,16 +50,34 @@ Pesos equity normalizados (sem RF/Bitcoin): SWRD 35% / AVGS-proxy 25% / AVEM-pro
 
 **Interpretação:** O período 2019-2026 foi dominado por US large cap growth — condição historicamente adversa para value/SCV. O signal correto é 2022: quando o regime de juros mudou, o tilt fatorial funcionou exatamente como esperado (-15% vs -18% SWRD). A tese de longo prazo não é falsificada por underperformance em ciclos growth.
 
-### Correlações estimadas entre ETFs
+### Correlações entre ETFs — com proxies validados (atualizado 2026-03-31)
 
-| Par | Correlação | Implicação |
-|-----|-----------|-----------|
-| SWRD ↔ JPGL | ~0.90 | Alta sobreposição (ambos DM) |
-| SWRD ↔ AVGS | ~0.80 | Diverge em ciclos value vs growth |
-| SWRD ↔ AVEM | ~0.65 | Boa diversificação EM/DM |
-| JPGL ↔ AVGS | ~0.82 | Fatores parcialmente sobrepostos |
-| JPGL ↔ AVEM | ~0.60 | Boa diversificação cross-asset |
-| AVGS ↔ AVEM | ~0.55 | Maior diversificação no par |
+> Metodologia: proxies US-listed (calendário NYSE consistente), 6.5 anos (set/2019–mar/2026, 1634 dias).
+> Ver seção "Metodologia de Proxy" para detalhes. Proxies: SWRD→URTH | JPGL→JPUS60%+JPIN40% | AVGS→AVUV60%+AVDV40%.
+
+| Par | Correlação | IC 95% | Implicação |
+|-----|-----------|--------|-----------|
+| **SWRD ↔ JPGL** | **0.95** | [0.944, 0.954] | JPGL é quase SWRD com tilts — alta sobreposição com o benchmark cap-weight |
+| JPGL ↔ AVGS | **0.92** | [0.907, 0.923] | Alta — JPGL e AVGS compartilham value/size; divergem em momentum/low vol |
+| SWRD ↔ AVGS | **0.86** | [0.851, 0.876] | **AVGS é o mais diferenciado** — maior benefício de diversificação vs mercado |
+| SWRD ↔ AVEM | ~0.65 | — | Estimativa — dados insuficientes para precisão com proxy LSE |
+| JPGL ↔ AVEM | ~0.60 | — | Estimativa |
+| AVGS ↔ AVEM | ~0.55 | — | Estimativa |
+
+**Correlações por regime (SWRD↔JPGL / SWRD↔AVGS / JPGL↔AVGS):**
+
+| Regime | SW↔JP | SW↔AV | JP↔AV |
+|--------|-------|-------|-------|
+| COVID crash (jan-mar/20) | 0.989 | 0.944 | 0.952 |
+| Recuperação 2020 | 0.971 | 0.866 | 0.919 |
+| Value rotation 2021 | 0.932 | 0.745 | **0.856** ← menor JP↔AV |
+| Bear 2022 | 0.967 | 0.920 | 0.945 |
+| Bull 2023-2024 | 0.895 | 0.790 | 0.892 |
+| 2025 (atual) | 0.896 | 0.887 | 0.925 |
+
+**Achados:** (1) Em crise, tudo converge para 0.95+. (2) JPGL é mais próximo de SWRD (0.95) do que de AVGS (0.92) — é um multi-factor com tilts leves sobre cap-weight, não um fundo fatorial puro. (3) AVGS é o mais diferenciado dos três. (4) O único regime onde JPGL diverge de AVGS de forma material: value rotation 2021 (0.856) — quando momentum/low vol de JPGL agiram diferente do pure value/small de AVGS.
+
+**Erro histórico registrado:** Em 2026-03-30 calculou-se JPGL↔AVGS = 0.93 usando AVLV como proxy de JPGL. AVLV é value/size — proxy errado, resultado era "value↔value". Correlação correta com proxy adequado (JPUS+JPIN): 0.92.
 
 ---
 
@@ -102,7 +120,36 @@ Pesos equity normalizados (sem RF/Bitcoin): SWRD 35% / AVGS-proxy 25% / AVEM-pro
 
 ---
 
-## 5. Consenso RR Forum — Portfolios UCITS (pós-jun/2024)
+## 5. Metodologia de Proxy — Diretriz Obrigatória
+
+> **Regra**: toda análise de correlação, backtest ou comparação de performance que envolva ETFs LSE UCITS deve primeiro identificar o melhor proxy US-listed disponível. Proxy errado invalida o resultado.
+>
+> **Agente responsável**: Quant valida a escolha do proxy ANTES de rodar qualquer análise. Fact-Checker verifica a metodologia do proxy contra o ETF alvo quando houver dúvida sobre similaridade.
+
+### Proxies Validados (atualizado 2026-03-31)
+
+| ETF LSE | Índice / Estratégia | Melhor Proxy US | Período disponível | 2º Proxy |
+|---------|--------------------|-----------------|--------------------|----------|
+| **SWRD.L** | MSCI World (cap-weight, DM) | **URTH** (iShares MSCI World) — mesmo índice exato | desde jan/2012 (~14 anos) | VTI 60% + VEA 40% |
+| **JPGL.L** | JPMorgan Diversified Factor (value+mom+qual+lowvol, DM) | **JPUS 60% + JPIN 40%** — mesma metodologia JPMorgan, mesmo índice família | desde nov/2014 (~11.5 anos) | GLOF (inclui EM — caveat) |
+| **AVGS.L** | Avantis Global SCV + profitability (DM) | **AVUV 60% + AVDV 40%** — mesmo gestor, mesma metodologia Avantis | desde set/2019 (~6.5 anos) | — |
+| **AVEM.L** | Avantis Emerging Markets | **AVEM** (US-listed) — mesmo gestor, EM | desde set/2019 | — |
+| **VWRA.L** | FTSE All-World (DM + EM, cap-weight) | **VT** (Vanguard Total World) | desde jun/2008 | ACWI |
+
+### Regras Anti-Artefato
+
+1. **Nunca usar ETF value/size como proxy de ETF multi-fator**: AVLV, AVUV ou AVDV sozinhos **não** são proxy para JPGL. JPGL tem momentum + low vol que value/size não capturam.
+2. **Nunca misturar calendários NYSE/LSE sem tratamento**: correlação diária NYSE↔LSE sofre mismatch de feriados e horários → subestima correlação real (~0.65 para ETFs que rastreiam o mesmo índice). Usar proxies US-listed para todas as séries, ou usar retornos semanais para dados LSE.
+3. **Validar proxy antes de usar**: baixar o proxy e o ETF real para o período de overlap disponível. Correlação proxy↔real no overlap deve ser ≥0.85 (mesmo calendário). Se for <0.85, reportar e revisar escolha de proxy.
+4. **Quando o ETF real tem dados suficientes (>2 anos na LSE)**: usar dados reais do ETF para o período disponível + proxy para extensão histórica.
+
+### Caso JPGL — Por Que JPUS+JPIN
+
+JPGL rastreia o *JP Morgan Diversified Factor Global Developed (Region Aware) Equity Index* (LSEG/FTSE Russell). JPUS e JPIN rastreiam índices da mesma família JPMorgan Diversified Factor, mesmos critérios (value, momentum, quality, sector risk-weighting). São os únicos ETFs que replicam a metodologia proprietária JPMorgan. Blend 60/40 reflete o peso US/ex-US do FTSE Developed Index.
+
+GLOF (iShares) é segunda opção — inclui EM (~10%) e adiciona size como fator explícito, criando divergência em regimes de stress EM ou small cap.
+
+## 6. Consenso RR Forum — Portfolios UCITS (pós-jun/2024)
 
 > Threads: #5483, #31258, #5494. ~150 portfolios explícitos analisados.
 

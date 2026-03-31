@@ -18,6 +18,7 @@
 - Monte Carlo: parametros, distribuicoes, seeds, reproducibilidade
 - Scripts Python em `analysis/` para calculos reproduziveis
 - Deteccao de erros aritmeticos, unidades erradas, premissas implicitas
+- **Validação de proxies**: toda análise com ETFs LSE exige proxy US-listed validado antes de rodar
 
 ---
 
@@ -117,6 +118,19 @@
 - [ ] Come-cotas se aplicavel?
 - [ ] Isencao de R$35k/mes para acoes aplica?
 - [ ] DARF: prazo e forma de pagamento corretos?
+
+### Bloco G — Proxy para ETFs LSE (obrigatório antes de qualquer correlação/backtest)
+
+> Referência completa: `agentes/referencia/backtests-ucits.md` — seção "Metodologia de Proxy".
+
+- [ ] A análise usa ETFs LSE (SWRD.L, JPGL.L, AVGS.L, AVEM.L, VWRA.L)?
+- [ ] Proxy US-listed identificado para cada ETF — consultar tabela em backtests-ucits.md antes de escolher
+- [ ] Proxy validado contra ETF real no período de overlap (correlação ≥0.85 no mesmo calendário)?
+- [ ] Todos os proxies no mesmo calendário (todos NYSE ou todos LSE) — **nunca misturar NYSE com LSE em cálculo de correlação diária**?
+- [ ] Se proxy não disponível ou correlação <0.85: reportar limitação explicitamente antes do resultado
+- [ ] Anti-artefato verificado: proxy de multi-fator (JPGL) NÃO é ETF pure value/size (AVLV, AVUV sozinho)?
+
+**Proxies canônicos (atalho):** SWRD→URTH | JPGL→JPUS60%+JPIN40% | AVGS→AVUV60%+AVDV40% | AVEM→AVEM(US) | VWRA→VT
 
 ### Bloco F — Monte Carlo
 
