@@ -218,67 +218,95 @@ def get_precos_atuais_transitorios() -> dict:
     return precos
 
 
-def verificar_tlh(precos_medios: dict, usd_brl: float) -> list:
+def verificar_tlh(config_ativos: dict, usd_brl_atual: float) -> list:
     """
-    Compara preços atuais vs preços médios de compra.
-    precos_medios: dict {ticker: preco_medio_usd}
-    Retorna lista de alertas.
+    Compara custo base em BRL vs valor atual em BRL — base correta para IR brasileiro.
+
+    Lei 14.754/2023: ganho de capital calculado em BRL.
+    Um ativo pode cair em USD mas ainda ter ganho em BRL se o dólar subiu desde a compra.
+    TLH só gera perda fiscal se o valor em BRL estiver abaixo do custo base em BRL.
+
+    config_ativos: dict por ticker com:
+        - "preco_medio_usd": float    — preço médio de compra em USD (da IBKR)
+        - "cambio_compra":   float    — USD/BRL médio na época de compra
+
+    Exemplo: {"AVUV": {"preco_medio_usd": 85.50, "cambio_compra": 5.20}}
     """
-    precos_atuais = get_precos_atuais_transitorios()
+    precos_atuais_usd = get_precos_atuais_transitorios()
     alertas = []
     linhas = []
 
-    for ticker, config in TLH_TRANSITORIOS.items():
-        preco_atual = precos_atuais.get(ticker)
-        preco_medio = precos_medios.get(ticker)
+    for ticker, meta in TLH_TRANSITORIOS.items():
+        preco_atual_usd = precos_atuais_usd.get(ticker)
+        cfg = config_ativos.get(ticker, {})
 
-        if preco_atual is None:
-            linhas.append((ticker, config["nome"], "—", "—", "—", "⚪ sem dados"))
+        preco_medio_usd = cfg.get("preco_medio_usd")
+        cambio_compra   = cfg.get("cambio_compra")
+
+        if preco_atual_usd is None:
+            linhas.append((ticker, meta["nome"], "—", "—", "—", "—", "⚪ sem dados yfinance"))
             continue
 
-        if preco_medio is None:
-            linhas.append((ticker, config["nome"], f"${preco_atual:.2f}", "não informado", "—", "⬜ sem custo médio"))
+        valor_atual_brl = preco_atual_usd * usd_brl_atual
+
+        if preco_medio_usd is None or cambio_compra is None:
+            linhas.append((
+                ticker, meta["nome"],
+                f"${preco_atual_usd:.2f}", f"R${valor_atual_brl:.2f}",
+                "—", "—", "⬜ custo base não informado"
+            ))
             continue
 
-        pnl_pct = preco_atual / preco_medio - 1
-        pnl_usd = preco_atual - preco_medio  # por cota
+        custo_base_brl  = preco_medio_usd * cambio_compra
+        pnl_brl_pct     = valor_atual_brl / custo_base_brl - 1
+        pnl_usd_pct     = preco_atual_usd / preco_medio_usd - 1
+        efeito_cambial  = (usd_brl_atual / cambio_compra - 1)  # contribuição do câmbio
 
-        if pnl_pct <= -TLH_GATILHO_PERDA:
-            status = f"🔴 TLH! {pnl_pct:+.1%}"
+        if pnl_brl_pct <= -TLH_GATILHO_PERDA:
+            status = f"🔴 TLH! BRL {pnl_brl_pct:+.1%}"
             alertas.append({
                 "ticker": ticker,
-                "substituto": config["ucits_substituto"],
-                "pnl_pct": pnl_pct,
-                "preco_atual": preco_atual,
-                "preco_medio": preco_medio,
+                "substituto": meta["ucits_substituto"],
+                "pnl_brl_pct": pnl_brl_pct,
+                "pnl_usd_pct": pnl_usd_pct,
+                "efeito_cambial": efeito_cambial,
+                "valor_atual_brl": valor_atual_brl,
+                "custo_base_brl": custo_base_brl,
+                "preco_atual_usd": preco_atual_usd,
+                "preco_medio_usd": preco_medio_usd,
             })
-        elif pnl_pct < 0:
-            status = f"🟡 perda {pnl_pct:+.1%} (abaixo do gatilho 5%)"
-        elif pnl_pct < 0.10:
-            status = f"✅ lucro {pnl_pct:+.1%}"
+        elif pnl_brl_pct < 0:
+            status = f"🟡 perda BRL {pnl_brl_pct:+.1%} (< gatilho 5%)"
+        elif pnl_usd_pct < 0 and pnl_brl_pct >= 0:
+            status = f"⚠️  USD {pnl_usd_pct:+.1%} mas BRL {pnl_brl_pct:+.1%} — câmbio blindou"
         else:
-            status = f"✅ lucro {pnl_pct:+.1%} — isenção apenas na desacumulação"
+            status = f"✅ BRL {pnl_brl_pct:+.1%}  (USD {pnl_usd_pct:+.1%})"
 
-        linhas.append((ticker, config["nome"], f"${preco_atual:.2f}", f"${preco_medio:.2f}", f"{pnl_pct:+.1%}", status))
+        linhas.append((
+            ticker, meta["nome"],
+            f"${preco_atual_usd:.2f}", f"R${valor_atual_brl:.2f}",
+            f"R${custo_base_brl:.2f}", f"{pnl_brl_pct:+.1%}", status
+        ))
 
     # Imprimir tabela
-    print(f"\n💸 TLH MONITOR — Transitórios")
-    print(f"  {'Ticker':<8} {'Nome':<30} {'Atual':>8} {'Médio':>8} {'P&L':>7}  Status")
-    print(f"  {'─'*72}")
+    print(f"\n💸 TLH MONITOR — Transitórios  (USD/BRL atual: {usd_brl_atual:.4f})")
+    print(f"  {'Ticker':<8} {'Nome':<28} {'Atual USD':>9} {'Atual BRL':>10} {'Custo BRL':>10} {'P&L BRL':>8}  Status")
+    print(f"  {'─'*88}")
     for linha in linhas:
-        print(f"  {linha[0]:<8} {linha[1]:<30} {linha[2]:>8} {linha[3]:>8} {linha[4]:>7}  {linha[5]}")
+        print(f"  {linha[0]:<8} {linha[1]:<28} {linha[2]:>9} {linha[3]:>10} {linha[4]:>10} {linha[5]:>8}  {linha[6]}")
 
     # Alertas detalhados
     if alertas:
         print(f"\n  🔴 OPORTUNIDADES TLH ATIVAS:")
         for a in alertas:
             print(f"\n    {a['ticker']} → {a['substituto']}")
-            print(f"    Perda: {a['pnl_pct']:+.1%}  |  Atual: ${a['preco_atual']:.2f}  |  Médio: ${a['preco_medio']:.2f}")
+            print(f"    Perda BRL: {a['pnl_brl_pct']:+.1%}  |  Perda USD: {a['pnl_usd_pct']:+.1%}  |  Efeito câmbio: {a['efeito_cambial']:+.1%}")
+            print(f"    Custo base: R${a['custo_base_brl']:.2f}/cota  |  Valor atual: R${a['valor_atual_brl']:.2f}/cota")
             print(f"    Ação: vender {a['ticker']}, comprar {a['substituto']} (mantém exposição fatorial)")
             if a['ticker'] in ("AVUV", "AVDV", "AVES", "DGS"):
-                print(f"    Duplo benefício: realiza perda fiscal + migra US-listed → UCITS (reduz estate tax)")
+                print(f"    Duplo benefício: realiza perda BRL fiscal + migra US-listed → UCITS (reduz estate tax)")
     else:
-        print(f"\n  ✅ Nenhuma oportunidade TLH ativa (todos acima de -{TLH_GATILHO_PERDA:.0%})")
+        print(f"\n  ✅ Nenhuma oportunidade TLH ativa em BRL (todos acima de -{TLH_GATILHO_PERDA:.0%})")
 
     return alertas
 
@@ -364,7 +392,11 @@ def main():
     parser.add_argument("--mes",            type=str,   default=None, help="Mês de referência YYYY-MM (default: mês anterior)")
     parser.add_argument("--tlh",            action="store_true",       help="Rodar TLH monitor dos transitórios")
     parser.add_argument("--tlh-config",     type=str,   default=None,
-                        help="JSON com preços médios {ticker: preco_usd}. Ex: '{\"AVUV\": 85.50, \"AVDV\": 72.30}'")
+                        help=(
+                            "JSON com custo base por ativo. "
+                            "Formato: '{\"AVUV\": {\"preco_medio_usd\": 85.50, \"cambio_compra\": 5.20}, ...}'. "
+                            "Ambos os campos obrigatórios — IR brasileiro é calculado em BRL."
+                        ))
     args = parser.parse_args()
 
     # Período
