@@ -90,7 +90,8 @@ JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc
 |---------|----------|------|--------|
 | AUM closure risk | AUM JPGL < €100M | Abrir issue — avaliar substituição | Monitorar |
 | Underperformance persistente | JPGL underperforma SWRD por 2 anos consecutivos (até dez/2028) | Abrir issue de substituição | Monitorar |
-| Alternativa IQGA | AUM > €500M + histórico ≥ 2 anos (mai/2027+) | Avaliar split 15%JPGL+5%IQGA: correlação 0.682, Sharpe split=1.322 vs JPGL=1.286, mas IQGA é ativo (gestor pode mudar). Ref: FI-jpgl-redundancia | Monitorar |
+| Alternativa IFSW | Sharpe IFSW > 0.42 por 2 anos + TER cair para 0.20% | IFSW hoje inferior (Sharpe 0.35 vs JPGL 0.37, TER +11bp, corr SWRD 0.960 vs 0.928). Só vale se TER cair e Sharpe convergir. Ref: FI-jpgl-redundancia | Monitorar |
+| Alternativa IQGA | AUM > €500M + histórico ≥ 2 anos (mai/2027+) | Avaliar split 15%JPGL+5%IQGA: correlação IQGA↔JPGL=0.682, Sharpe split=1.322 vs JPGL=1.286. IQGA ativo (gestor pode mudar). Comparar tb vs IFSW no momento da avaliação. Ref: FI-jpgl-redundancia | Monitorar |
 | Alpha estrutural negativo | t < -2.0 em regressão com ≥ 5 anos dados reais | Abrir issue urgente | Monitorar |
 | Mudança de metodologia JPGL | JPMorgan alterar índice (remover momentum, mudar para sector-neutral puro) | Rever tese imediatamente | Monitorar |
 

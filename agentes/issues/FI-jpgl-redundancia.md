@@ -247,6 +247,35 @@ Placar 5-5. Nos meses extremos (fev +6% e mar -5.9%), JPGL osciou menos — low-
 
 **Único loading confiável: market beta.** IQGA (0.735) segue o mercado; JPGL (0.373) diverge intencionalmente via low-vol overlay. R² de JPGL = 0.278 — fatores FF americanos não capturam bem um ETF global low-vol.
 
+### JPGL vs IFSW — alternativa mais próxima (6.7 anos, jul/2019–mar/2026)
+
+IFSW = iShares MSCI World Multifactor, alternativa direta com loadings quase idênticos ao JPGL.
+
+| Métrica | JPGL | IFSW | Delta |
+|---------|------|------|-------|
+| CAGR | 10.1% | 10.3% | IFSW +0.2pp |
+| **Volatilidade** | **16.2%** | 17.9% | JPGL -1.7pp |
+| **Sharpe** | **0.37** | 0.35 | JPGL +0.02 |
+| Max Drawdown | -35.9% | -34.5% | ~empate |
+| TER | **0.19%** | 0.30% | JPGL -11bp/ano |
+| AUM | €213M | ~€2.5B | IFSW 12× maior |
+| Corr com SWRD | 0.928 | **0.960** | JPGL mais diversificante |
+| Meses vencidos | 37/80 | 43/80 | IFSW mais frequente |
+
+**Por ano:**
+
+| Ano | JPGL | IFSW | Vencedor | Contexto |
+|-----|------|------|---------|---------|
+| 2020 | +6.2% | +10.7% | IFSW | Bull pós-COVID |
+| **2021** | **+23.3%** | +20.4% | **JPGL** | Value rotation |
+| **2022** | **-10.2%** | -15.4% | **JPGL** | Subida de juros (+5.2pp proteção) |
+| 2023 | +13.3% | +15.3% | IFSW | Bull growth |
+| 2024 | +10.3% | +17.0% | IFSW | Bull growth |
+| 2025 | +18.2% | +25.7% | IFSW | Value rotation |
+| **2026 YTD** | **+3.0%** | -5.1% | **JPGL** | Correção março (+8.1pp proteção) |
+
+**Veredicto:** JPGL é superior a IFSW para esta carteira. Em bull market IFSW ganha (mais beta). Em stress/queda, JPGL protege 5-8pp — que é o design do low-vol overlay funcionando quando importa. Com Sharpe melhor e TER 11bp menor, não há razão para substituir. Única vantagem de IFSW: AUM 12× maior (closure risk quase zero).
+
 ### Split 15% JPGL + 5% IQGA
 
 | Métrica | JPGL 20% | Split 15+5 |
