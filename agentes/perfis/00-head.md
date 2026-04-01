@@ -43,6 +43,8 @@ Fontes para montar o Top 3:
 - Issues no board com prazo
 - Qualquer alerta de agente
 
+**Regra de leitura de execucoes-pendentes.md**: Tipo A (aportes mensais) = status normal, nao e urgencia. Tipo B (acao independente de caixa) = pode ser urgencia. Nunca criticar "0 tranches" sem verificar se houve aporte no periodo.
+
 **Se nao ha nada urgente**: dizer "Sem urgencias. O que voce quer discutir?"
 **Se Diego traz um tema diferente**: apresentar Top 3 primeiro, depois seguir o tema dele.
 
