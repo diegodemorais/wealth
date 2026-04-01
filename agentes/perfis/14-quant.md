@@ -119,18 +119,24 @@
 - [ ] Isencao de R$35k/mes para acoes aplica?
 - [ ] DARF: prazo e forma de pagamento corretos?
 
-### Bloco G — Proxy para ETFs LSE (obrigatório antes de qualquer correlação/backtest)
+### Bloco G — Metodologia e Proxy para análises históricas (obrigatório)
 
-> Referência completa: `agentes/referencia/backtests-ucits.md` — seção "Metodologia de Proxy".
+> **Ler `agentes/referencia/metodologia-analitica.md`** antes de qualquer backtest, correlação ou análise histórica.
+> Contém os 6 padrões canônicos: período, câmbio, rebalancing, benchmark, suficiência estatística e fontes.
+> Referência técnica adicional: `agentes/referencia/backtests-ucits.md`.
 
+- [ ] Período da análise declarado e dentro do mínimo para o tipo (ver metodologia-analitica.md — Padrão 1)?
+- [ ] Câmbio correto para o tipo de análise (USD ou BRL+USD) — ver Padrão 2?
+- [ ] Rebalancing declarado (anual para backtest; sem rebalancing para correlações) — ver Padrão 3?
+- [ ] Benchmark canônico usado (VWRA.L primary) — ver Padrão 4?
+- [ ] Suficiência estatística verificada (t-stat, N, bootstrap se <10 anos) — ver Padrão 5?
+- [ ] Fonte de dados declarada e na hierarquia correta — ver Padrão 6?
 - [ ] A análise usa ETFs LSE (SWRD.L, JPGL.L, AVGS.L, AVEM.L, VWRA.L)?
-- [ ] Proxy US-listed identificado para cada ETF — consultar tabela em backtests-ucits.md antes de escolher
+- [ ] Proxy usado: consultar `agentes/referencia/proxies-canonicos.md` quando disponível (HD-proxies-canonicos) — **não usar proxy ad-hoc**?
 - [ ] Proxy validado contra ETF real no período de overlap (correlação ≥0.85 no mesmo calendário)?
-- [ ] Todos os proxies no mesmo calendário (todos NYSE ou todos LSE) — **nunca misturar NYSE com LSE em cálculo de correlação diária**?
-- [ ] Se proxy não disponível ou correlação <0.85: reportar limitação explicitamente antes do resultado
-- [ ] Anti-artefato verificado: proxy de multi-fator (JPGL) NÃO é ETF pure value/size (AVLV, AVUV sozinho)?
-
-**Proxies canônicos (atalho):** SWRD→URTH | JPGL→JPUS60%+JPIN40% | AVGS→AVUV60%+AVDV40% | AVEM→AVEM(US) | VWRA→VT
+- [ ] Todos os proxies no mesmo calendário (todos NYSE ou todos LSE) — **nunca misturar NYSE com LSE**?
+- [ ] Se proxy não disponível ou correlação <0.85: flag ⚠️ explícita antes do resultado?
+- [ ] Anti-artefato verificado: proxy de multi-fator (JPGL) NÃO é ETF pure value/size sozinho?
 
 ### Bloco F — Monte Carlo
 
