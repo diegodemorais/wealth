@@ -1,0 +1,596 @@
+{
+  "total_usd": 20518.96,
+  "por_simbolo": {
+    "COIN": -148.9,
+    "IWMO": -384.83,
+    "JPGL": 12138.93,
+    "ZPRX": 1492.45,
+    "AVDV": 1648.1,
+    "USSC": 4047.75,
+    "EIMI": 2024.4,
+    "WRDUSWUSD": -359.35,
+    "F50A": 60.41
+  },
+  "detalhado": [
+    {
+      "date": "2021-04-21",
+      "symbol": "COIN",
+      "qty_sold": 0.18,
+      "cost_per_share": 381.5,
+      "sell_price": 315.9583,
+      "gain_usd": -11.8,
+      "lot_date": "2021-04-14",
+      "currency": "USD"
+    },
+    {
+      "date": "2021-04-21",
+      "symbol": "COIN",
+      "qty_sold": 1.82,
+      "cost_per_share": 381.5,
+      "sell_price": 314.4983,
+      "gain_usd": -121.94,
+      "lot_date": "2021-04-14",
+      "currency": "USD"
+    },
+    {
+      "date": "2021-04-21",
+      "symbol": "COIN",
+      "qty_sold": 0.17999999999999994,
+      "cost_per_share": 398.72,
+      "sell_price": 314.4983,
+      "gain_usd": -15.16,
+      "lot_date": "2021-04-14",
+      "currency": "USD"
+    },
+    {
+      "date": "2023-07-12",
+      "symbol": "IWMO",
+      "qty_sold": 40.0,
+      "cost_per_share": 63.865,
+      "sell_price": 56.1517,
+      "gain_usd": -308.53,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2023-07-12",
+      "symbol": "IWMO",
+      "qty_sold": 10.0,
+      "cost_per_share": 63.0845,
+      "sell_price": 56.1517,
+      "gain_usd": -69.33,
+      "lot_date": "2021-04-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2023-07-12",
+      "symbol": "IWMO",
+      "qty_sold": 1.0,
+      "cost_per_share": 63.0845,
+      "sell_price": 56.1099,
+      "gain_usd": -6.97,
+      "lot_date": "2021-04-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 53.0,
+      "cost_per_share": 31.6758,
+      "sell_price": 44.2664,
+      "gain_usd": 667.3,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "ZPRX",
+      "qty_sold": 47.0,
+      "cost_per_share": 52.6688,
+      "sell_price": 69.2103,
+      "gain_usd": 777.45,
+      "lot_date": "2021-04-23",
+      "currency": "EUR"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "ZPRX",
+      "qty_sold": 8.0,
+      "cost_per_share": 53.4223,
+      "sell_price": 69.2103,
+      "gain_usd": 126.3,
+      "lot_date": "2021-07-14",
+      "currency": "EUR"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "ZPRX",
+      "qty_sold": 36.0,
+      "cost_per_share": 52.8574,
+      "sell_price": 69.2103,
+      "gain_usd": 588.7,
+      "lot_date": "2021-07-15",
+      "currency": "EUR"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 357.0,
+      "cost_per_share": 31.6758,
+      "sell_price": 44.2782,
+      "gain_usd": 4499.04,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 40.0,
+      "cost_per_share": 40.4877,
+      "sell_price": 44.2782,
+      "gain_usd": 151.62,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 18.0,
+      "cost_per_share": 40.4444,
+      "sell_price": 44.2782,
+      "gain_usd": 69.01,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 39.0,
+      "cost_per_share": 40.45,
+      "sell_price": 44.2782,
+      "gain_usd": 149.3,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 14.0,
+      "cost_per_share": 40.4678,
+      "sell_price": 44.2782,
+      "gain_usd": 53.35,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 113.0,
+      "cost_per_share": 40.4627,
+      "sell_price": 44.2782,
+      "gain_usd": 431.14,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 43.0,
+      "cost_per_share": 40.4639,
+      "sell_price": 44.2782,
+      "gain_usd": 164.01,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 1.0,
+      "cost_per_share": 40.6671,
+      "sell_price": 44.2782,
+      "gain_usd": 3.61,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 0.2208,
+      "cost_per_share": 40.5705,
+      "sell_price": 44.2782,
+      "gain_usd": 0.82,
+      "lot_date": "2025-03-21",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 699.0,
+      "cost_per_share": 35.8496,
+      "sell_price": 44.2782,
+      "gain_usd": 5891.55,
+      "lot_date": "2025-04-09",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "JPGL",
+      "qty_sold": 6.779199999999946,
+      "cost_per_share": 35.861,
+      "sell_price": 44.2782,
+      "gain_usd": 57.06,
+      "lot_date": "2025-04-09",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "AVDV",
+      "qty_sold": 8.0,
+      "cost_per_share": 67.0999,
+      "sell_price": 87.8674,
+      "gain_usd": 166.14,
+      "lot_date": "2021-09-08",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "AVDV",
+      "qty_sold": 32.0,
+      "cost_per_share": 67.0999,
+      "sell_price": 87.9112,
+      "gain_usd": 665.96,
+      "lot_date": "2021-09-08",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "AVDV",
+      "qty_sold": 36.0,
+      "cost_per_share": 65.2446,
+      "sell_price": 87.9112,
+      "gain_usd": 816.0,
+      "lot_date": "2022-01-11",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 53.7321,
+      "sell_price": 75.2822,
+      "gain_usd": 193.95,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 53.7321,
+      "sell_price": 75.4711,
+      "gain_usd": 195.65,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 53.7321,
+      "sell_price": 75.4711,
+      "gain_usd": 195.65,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 53.7321,
+      "sell_price": 75.4711,
+      "gain_usd": 195.65,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 53.7321,
+      "sell_price": 75.4711,
+      "gain_usd": 195.65,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 51.0,
+      "cost_per_share": 53.7321,
+      "sell_price": 75.4413,
+      "gain_usd": 1107.17,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 7.0,
+      "cost_per_share": 52.314,
+      "sell_price": 75.4413,
+      "gain_usd": 161.89,
+      "lot_date": "2021-07-19",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 23.0,
+      "cost_per_share": 50.626,
+      "sell_price": 75.4413,
+      "gain_usd": 570.75,
+      "lot_date": "2022-05-24",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 50.626,
+      "sell_price": 75.4334,
+      "gain_usd": 223.27,
+      "lot_date": "2022-05-24",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 50.626,
+      "sell_price": 75.4334,
+      "gain_usd": 223.27,
+      "lot_date": "2022-05-24",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 50.626,
+      "sell_price": 75.4334,
+      "gain_usd": 223.27,
+      "lot_date": "2022-05-24",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 3.0,
+      "cost_per_share": 50.626,
+      "sell_price": 75.4334,
+      "gain_usd": 74.42,
+      "lot_date": "2022-05-24",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 0.5449,
+      "cost_per_share": 63.73,
+      "sell_price": 75.4334,
+      "gain_usd": 6.38,
+      "lot_date": "2024-04-23",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 5.4551,
+      "cost_per_share": 60.6222,
+      "sell_price": 75.4334,
+      "gain_usd": 80.8,
+      "lot_date": "2024-04-23",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 9.0,
+      "cost_per_share": 60.6222,
+      "sell_price": 75.4334,
+      "gain_usd": 133.3,
+      "lot_date": "2024-04-23",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "USSC",
+      "qty_sold": 18.0,
+      "cost_per_share": 60.6222,
+      "sell_price": 75.4378,
+      "gain_usd": 266.68,
+      "lot_date": "2024-04-23",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "EIMI",
+      "qty_sold": 2.0,
+      "cost_per_share": 37.6862,
+      "sell_price": 42.34,
+      "gain_usd": 9.31,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "EIMI",
+      "qty_sold": 136.0,
+      "cost_per_share": 37.6862,
+      "sell_price": 43.2136,
+      "gain_usd": 751.73,
+      "lot_date": "2021-04-16",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "EIMI",
+      "qty_sold": 1.0,
+      "cost_per_share": 37.526,
+      "sell_price": 43.2136,
+      "gain_usd": 5.69,
+      "lot_date": "2022-01-19",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "EIMI",
+      "qty_sold": 157.0,
+      "cost_per_share": 35.5999,
+      "sell_price": 43.2136,
+      "gain_usd": 1195.36,
+      "lot_date": "2022-01-19",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-22",
+      "symbol": "EIMI",
+      "qty_sold": 6.0,
+      "cost_per_share": 32.8286,
+      "sell_price": 43.2136,
+      "gain_usd": 62.31,
+      "lot_date": "2022-03-25",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-23",
+      "symbol": "JPGL",
+      "qty_sold": 0.22080000000005384,
+      "cost_per_share": 35.861,
+      "sell_price": 39.1982,
+      "gain_usd": 0.74,
+      "lot_date": "2025-04-09",
+      "currency": "USD"
+    },
+    {
+      "date": "2025-09-23",
+      "symbol": "JPGL",
+      "qty_sold": 0.11209999999994613,
+      "cost_per_share": 35.8481,
+      "sell_price": 39.1982,
+      "gain_usd": 0.38,
+      "lot_date": "2025-04-09",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 44.0,
+      "cost_per_share": 40.6681,
+      "sell_price": 39.8351,
+      "gain_usd": -36.65,
+      "lot_date": "2025-12-22",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 1.0,
+      "cost_per_share": 40.7706,
+      "sell_price": 39.8351,
+      "gain_usd": -0.94,
+      "lot_date": "2025-12-22",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 0.3503,
+      "cost_per_share": 40.67,
+      "sell_price": 39.8351,
+      "gain_usd": -0.29,
+      "lot_date": "2025-12-22",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 44.0,
+      "cost_per_share": 41.2386,
+      "sell_price": 39.8351,
+      "gain_usd": -61.76,
+      "lot_date": "2026-01-14",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 70.0,
+      "cost_per_share": 41.204,
+      "sell_price": 39.8351,
+      "gain_usd": -95.82,
+      "lot_date": "2026-01-14",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 0.8148,
+      "cost_per_share": 41.2206,
+      "sell_price": 39.8351,
+      "gain_usd": -1.13,
+      "lot_date": "2026-01-14",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 0.0528,
+      "cost_per_share": 73.817,
+      "sell_price": 39.8351,
+      "gain_usd": -1.79,
+      "lot_date": "2026-01-30",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 89.0,
+      "cost_per_share": 41.6226,
+      "sell_price": 39.8351,
+      "gain_usd": -159.09,
+      "lot_date": "2026-01-30",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 0.7820999999999856,
+      "cost_per_share": 41.7208,
+      "sell_price": 39.8351,
+      "gain_usd": -1.47,
+      "lot_date": "2026-01-30",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "WRDUSWUSD",
+      "qty_sold": 0.2179,
+      "cost_per_share": 41.7208,
+      "sell_price": 39.8351,
+      "gain_usd": -0.41,
+      "lot_date": "2026-01-30",
+      "currency": "USD"
+    },
+    {
+      "date": "2026-03-09",
+      "symbol": "F50A",
+      "qty_sold": 49.0,
+      "cost_per_share": 38.7828,
+      "sell_price": 40.0156,
+      "gain_usd": 60.41,
+      "lot_date": "2025-09-17",
+      "currency": "EUR"
+    }
+  ]
+}

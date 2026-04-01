@@ -1,0 +1,1166 @@
+{
+  "SWRD": {
+    "status": "alvo",
+    "lotes": [
+      {
+        "data": "2021-04-08",
+        "qty": 61.0,
+        "custo_por_share": 28.862
+      },
+      {
+        "data": "2021-04-16",
+        "qty": 610.0,
+        "custo_por_share": 29.3997
+      },
+      {
+        "data": "2021-07-09",
+        "qty": 1.0,
+        "custo_por_share": 35.23
+      },
+      {
+        "data": "2022-03-25",
+        "qty": 183.0,
+        "custo_por_share": 30.7722
+      },
+      {
+        "data": "2022-04-19",
+        "qty": 227.0,
+        "custo_por_share": 30.1768
+      },
+      {
+        "data": "2022-05-18",
+        "qty": 260.0,
+        "custo_por_share": 27.4753
+      },
+      {
+        "data": "2022-05-24",
+        "qty": 176.0,
+        "custo_por_share": 26.9751
+      },
+      {
+        "data": "2022-12-21",
+        "qty": 19.0,
+        "custo_por_share": 26.8551
+      },
+      {
+        "data": "2023-01-19",
+        "qty": 2.0,
+        "custo_por_share": 28.6017
+      },
+      {
+        "data": "2023-01-27",
+        "qty": 178.0,
+        "custo_por_share": 28.481
+      },
+      {
+        "data": "2023-04-06",
+        "qty": 94.0,
+        "custo_por_share": 28.7153
+      },
+      {
+        "data": "2023-04-11",
+        "qty": 156.0,
+        "custo_por_share": 28.8462
+      },
+      {
+        "data": "2023-05-11",
+        "qty": 165.0,
+        "custo_por_share": 29.2164
+      },
+      {
+        "data": "2023-06-12",
+        "qty": 136.0,
+        "custo_por_share": 29.9569
+      },
+      {
+        "data": "2023-08-18",
+        "qty": 76.0,
+        "custo_por_share": 29.9251
+      },
+      {
+        "data": "2023-08-18",
+        "qty": 0.6889,
+        "custo_por_share": 29.0853
+      },
+      {
+        "data": "2023-09-05",
+        "qty": 0.9306,
+        "custo_por_share": 32.762
+      },
+      {
+        "data": "2023-09-05",
+        "qty": 97.0,
+        "custo_por_share": 30.9322
+      },
+      {
+        "data": "2023-09-15",
+        "qty": 0.6441,
+        "custo_por_share": 30.9702
+      },
+      {
+        "data": "2023-09-15",
+        "qty": 65.0,
+        "custo_por_share": 30.9993
+      },
+      {
+        "data": "2023-10-03",
+        "qty": 6.0,
+        "custo_por_share": 29.8418
+      },
+      {
+        "data": "2023-10-03",
+        "qty": 0.3336,
+        "custo_por_share": 29.5252
+      },
+      {
+        "data": "2023-10-06",
+        "qty": 98.0,
+        "custo_por_share": 29.3821
+      },
+      {
+        "data": "2023-10-06",
+        "qty": 0.0939,
+        "custo_por_share": 47.4846
+      },
+      {
+        "data": "2023-11-06",
+        "qty": 134.0,
+        "custo_por_share": 30.132
+      },
+      {
+        "data": "2023-11-06",
+        "qty": 0.9825,
+        "custo_por_share": 30.1303
+      },
+      {
+        "data": "2023-11-21",
+        "qty": 65.0,
+        "custo_por_share": 31.2232
+      },
+      {
+        "data": "2023-11-21",
+        "qty": 0.0224,
+        "custo_por_share": 107.1131
+      },
+      {
+        "data": "2023-12-07",
+        "qty": 0.3633,
+        "custo_por_share": 31.4852
+      },
+      {
+        "data": "2023-12-07",
+        "qty": 96.0,
+        "custo_por_share": 31.505
+      },
+      {
+        "data": "2024-02-14",
+        "qty": 0.0965,
+        "custo_por_share": 51.6318
+      },
+      {
+        "data": "2024-02-14",
+        "qty": 1.0,
+        "custo_por_share": 34.2209
+      },
+      {
+        "data": "2024-02-14",
+        "qty": 180.0,
+        "custo_por_share": 34.024
+      },
+      {
+        "data": "2024-02-16",
+        "qty": 72.0,
+        "custo_por_share": 34.5265
+      },
+      {
+        "data": "2024-02-16",
+        "qty": 0.7826,
+        "custo_por_share": 34.5002
+      },
+      {
+        "data": "2024-03-04",
+        "qty": 0.6817,
+        "custo_por_share": 37.624
+      },
+      {
+        "data": "2024-03-04",
+        "qty": 85.0,
+        "custo_por_share": 35.1325
+      },
+      {
+        "data": "2024-03-12",
+        "qty": 34.0,
+        "custo_por_share": 35.3511
+      },
+      {
+        "data": "2024-03-12",
+        "qty": 33.0,
+        "custo_por_share": 35.2974
+      },
+      {
+        "data": "2024-03-12",
+        "qty": 0.8566,
+        "custo_por_share": 35.2952
+      },
+      {
+        "data": "2024-04-23",
+        "qty": 0.752,
+        "custo_por_share": 36.7808
+      },
+      {
+        "data": "2024-04-23",
+        "qty": 252.0,
+        "custo_por_share": 34.5324
+      },
+      {
+        "data": "2024-06-07",
+        "qty": 101.0,
+        "custo_por_share": 36.7736
+      },
+      {
+        "data": "2024-06-07",
+        "qty": 1.0,
+        "custo_por_share": 36.9813
+      },
+      {
+        "data": "2024-06-07",
+        "qty": 0.7071,
+        "custo_por_share": 36.7736
+      },
+      {
+        "data": "2024-07-15",
+        "qty": 55.0,
+        "custo_por_share": 38.3347
+      },
+      {
+        "data": "2024-07-15",
+        "qty": 0.81,
+        "custo_por_share": 37.5502
+      },
+      {
+        "data": "2024-08-06",
+        "qty": 146.0,
+        "custo_por_share": 35.5749
+      },
+      {
+        "data": "2024-08-06",
+        "qty": 0.6741,
+        "custo_por_share": 35.573
+      },
+      {
+        "data": "2024-10-03",
+        "qty": 1.0,
+        "custo_por_share": 40.7977
+      },
+      {
+        "data": "2024-10-03",
+        "qty": 0.5927,
+        "custo_por_share": 38.8852
+      },
+      {
+        "data": "2024-10-03",
+        "qty": 69.0,
+        "custo_por_share": 38.8862
+      },
+      {
+        "data": "2025-03-13",
+        "qty": 0.6881,
+        "custo_por_share": 40.9958
+      },
+      {
+        "data": "2025-03-13",
+        "qty": 124.0,
+        "custo_por_share": 38.5179
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 746.0,
+        "custo_por_share": 33.8891
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 0.9293,
+        "custo_por_share": 33.8971
+      },
+      {
+        "data": "2025-07-22",
+        "qty": 113.0,
+        "custo_por_share": 43.5644
+      },
+      {
+        "data": "2025-07-22",
+        "qty": 0.9182,
+        "custo_por_share": 43.562
+      },
+      {
+        "data": "2026-03-09",
+        "qty": 361.0,
+        "custo_por_share": 46.8617
+      },
+      {
+        "data": "2026-03-09",
+        "qty": 0.0933,
+        "custo_por_share": 46.8734
+      }
+    ],
+    "total_qty": 5291.6415,
+    "custo_total_usd": 174098.95
+  },
+  "COIN": {
+    "status": "outro",
+    "lotes": [
+      {
+        "data": "2021-04-14",
+        "qty": 0.0,
+        "custo_por_share": 398.72
+      }
+    ],
+    "total_qty": 0.0,
+    "custo_total_usd": 0.0
+  },
+  "EIMI": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2022-03-25",
+        "qty": 112.0,
+        "custo_por_share": 32.8286
+      },
+      {
+        "data": "2022-05-18",
+        "qty": 153.0,
+        "custo_por_share": 29.9869
+      },
+      {
+        "data": "2022-08-10",
+        "qty": 85.0,
+        "custo_por_share": 29.3024
+      },
+      {
+        "data": "2023-04-06",
+        "qty": 27.0,
+        "custo_por_share": 29.523
+      },
+      {
+        "data": "2023-04-06",
+        "qty": 21.0,
+        "custo_por_share": 29.5246
+      },
+      {
+        "data": "2023-04-06",
+        "qty": 58.0,
+        "custo_por_share": 29.5528
+      },
+      {
+        "data": "2023-04-13",
+        "qty": 59.0,
+        "custo_por_share": 30.0523
+      },
+      {
+        "data": "2023-05-25",
+        "qty": 30.0,
+        "custo_por_share": 29.2027
+      },
+      {
+        "data": "2023-05-25",
+        "qty": 31.0,
+        "custo_por_share": 29.2614
+      },
+      {
+        "data": "2023-12-22",
+        "qty": 17.0,
+        "custo_por_share": 30.9947
+      },
+      {
+        "data": "2023-12-22",
+        "qty": 9.0,
+        "custo_por_share": 30.9989
+      },
+      {
+        "data": "2023-12-22",
+        "qty": 6.0,
+        "custo_por_share": 31.3078
+      },
+      {
+        "data": "2024-01-10",
+        "qty": 0.3247,
+        "custo_por_share": 30.9957
+      },
+      {
+        "data": "2024-01-10",
+        "qty": 153.0,
+        "custo_por_share": 30.9974
+      },
+      {
+        "data": "2024-02-14",
+        "qty": 58.0,
+        "custo_por_share": 31.4129
+      },
+      {
+        "data": "2024-02-14",
+        "qty": 0.636,
+        "custo_por_share": 31.3802
+      },
+      {
+        "data": "2024-02-16",
+        "qty": 108.0,
+        "custo_por_share": 31.8681
+      },
+      {
+        "data": "2024-02-16",
+        "qty": 0.9481,
+        "custo_por_share": 31.8661
+      },
+      {
+        "data": "2024-04-05",
+        "qty": 38.0,
+        "custo_por_share": 32.7402
+      },
+      {
+        "data": "2024-04-05",
+        "qty": 0.0003,
+        "custo_por_share": 32.6802
+      },
+      {
+        "data": "2024-04-05",
+        "qty": 0.9464,
+        "custo_por_share": 32.6802
+      },
+      {
+        "data": "2024-04-05",
+        "qty": 36.0,
+        "custo_por_share": 32.6922
+      },
+      {
+        "data": "2024-05-07",
+        "qty": 197.0,
+        "custo_por_share": 33.4586
+      },
+      {
+        "data": "2024-05-07",
+        "qty": 0.4282,
+        "custo_por_share": 33.4569
+      },
+      {
+        "data": "2024-09-10",
+        "qty": 114.0,
+        "custo_por_share": 33.8391
+      },
+      {
+        "data": "2024-09-10",
+        "qty": 0.4293,
+        "custo_por_share": 33.8371
+      },
+      {
+        "data": "2025-01-28",
+        "qty": 50.0,
+        "custo_por_share": 33.8681
+      },
+      {
+        "data": "2025-01-28",
+        "qty": 0.2511,
+        "custo_por_share": 33.8402
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 654.0,
+        "custo_por_share": 30.8869
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 0.3293,
+        "custo_por_share": 30.8956
+      }
+    ],
+    "total_qty": 2020.2934,
+    "custo_total_usd": 63345.22
+  },
+  "USSC": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2024-04-23",
+        "qty": 44.5449,
+        "custo_por_share": 60.6222
+      },
+      {
+        "data": "2025-03-21",
+        "qty": 71.0,
+        "custo_por_share": 64.9965
+      },
+      {
+        "data": "2025-03-21",
+        "qty": 0.5815,
+        "custo_por_share": 65.1027
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 186.0,
+        "custo_por_share": 53.9872
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 1.0,
+        "custo_por_share": 54.1946
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 0.1756,
+        "custo_por_share": 53.9872
+      },
+      {
+        "data": "2025-07-22",
+        "qty": 1.0,
+        "custo_por_share": 72.8249
+      },
+      {
+        "data": "2025-07-22",
+        "qty": 0.9478,
+        "custo_por_share": 70.9102
+      },
+      {
+        "data": "2025-07-22",
+        "qty": 68.0,
+        "custo_por_share": 70.9217
+      }
+    ],
+    "total_qty": 373.2498,
+    "custo_total_usd": 22421.02
+  },
+  "JPGL": {
+    "status": "outro",
+    "lotes": [
+      {
+        "data": "2025-04-09",
+        "qty": 0.0,
+        "custo_por_share": 35.8481
+      }
+    ],
+    "total_qty": 0.0,
+    "custo_total_usd": 0.0
+  },
+  "IWVL": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2021-05-07",
+        "qty": 28.0,
+        "custo_por_share": 37.3286
+      },
+      {
+        "data": "2021-05-28",
+        "qty": 6.0,
+        "custo_por_share": 38.4133
+      }
+    ],
+    "total_qty": 34.0,
+    "custo_total_usd": 1275.68
+  },
+  "AVDV": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2022-01-11",
+        "qty": 14.0,
+        "custo_por_share": 65.2446
+      },
+      {
+        "data": "2022-01-11",
+        "qty": 0.4291,
+        "custo_por_share": 65.8931
+      },
+      {
+        "data": "2022-01-18",
+        "qty": 39.0,
+        "custo_por_share": 64.5922
+      },
+      {
+        "data": "2022-01-18",
+        "qty": 0.362,
+        "custo_por_share": 64.5802
+      },
+      {
+        "data": "2022-01-21",
+        "qty": 14.0,
+        "custo_por_share": 63.3232
+      },
+      {
+        "data": "2022-01-21",
+        "qty": 0.2681,
+        "custo_por_share": 64.0246
+      },
+      {
+        "data": "2022-03-25",
+        "qty": 100.0,
+        "custo_por_share": 63.2567
+      },
+      {
+        "data": "2022-03-25",
+        "qty": 29.0,
+        "custo_por_share": 63.2617
+      },
+      {
+        "data": "2022-04-19",
+        "qty": 105.0,
+        "custo_por_share": 62.0866
+      },
+      {
+        "data": "2022-04-19",
+        "qty": 0.3233,
+        "custo_por_share": 62.7116
+      },
+      {
+        "data": "2022-05-18",
+        "qty": 0.1832,
+        "custo_por_share": 58.7624
+      },
+      {
+        "data": "2022-05-18",
+        "qty": 63.0,
+        "custo_por_share": 58.1825
+      },
+      {
+        "data": "2022-05-24",
+        "qty": 0.2683,
+        "custo_por_share": 58.7702
+      },
+      {
+        "data": "2022-05-24",
+        "qty": 49.0,
+        "custo_por_share": 58.7855
+      },
+      {
+        "data": "2022-05-24",
+        "qty": 0.0002,
+        "custo_por_share": 108.8369
+      },
+      {
+        "data": "2022-07-26",
+        "qty": 0.2129,
+        "custo_por_share": 54.3487
+      },
+      {
+        "data": "2022-07-26",
+        "qty": 34.0,
+        "custo_por_share": 53.8155
+      },
+      {
+        "data": "2022-08-09",
+        "qty": 25.0,
+        "custo_por_share": 55.1237
+      },
+      {
+        "data": "2022-08-09",
+        "qty": 0.0226,
+        "custo_por_share": 55.6617
+      },
+      {
+        "data": "2022-09-29",
+        "qty": 0.5608,
+        "custo_por_share": 47.1802
+      },
+      {
+        "data": "2022-09-29",
+        "qty": 3.0,
+        "custo_por_share": 47.295
+      },
+      {
+        "data": "2023-04-05",
+        "qty": 0.1287,
+        "custo_por_share": 58.8331
+      },
+      {
+        "data": "2023-04-05",
+        "qty": 50.0,
+        "custo_por_share": 58.2557
+      },
+      {
+        "data": "2023-04-11",
+        "qty": 0.6629,
+        "custo_por_share": 58.8602
+      },
+      {
+        "data": "2023-04-11",
+        "qty": 54.0,
+        "custo_por_share": 58.8797
+      },
+      {
+        "data": "2023-05-10",
+        "qty": 33.0,
+        "custo_por_share": 59.4786
+      },
+      {
+        "data": "2023-05-10",
+        "qty": 14.0,
+        "custo_por_share": 59.5036
+      },
+      {
+        "data": "2023-05-11",
+        "qty": 0.0003,
+        "custo_por_share": 59.0302
+      },
+      {
+        "data": "2023-05-11",
+        "qty": 0.922,
+        "custo_por_share": 59.4001
+      },
+      {
+        "data": "2023-05-24",
+        "qty": 0.9987,
+        "custo_por_share": 57.7309
+      },
+      {
+        "data": "2023-05-24",
+        "qty": 37.0,
+        "custo_por_share": 57.3702
+      },
+      {
+        "data": "2023-06-12",
+        "qty": 0.1233,
+        "custo_por_share": 58.6802
+      },
+      {
+        "data": "2023-06-12",
+        "qty": 34.0,
+        "custo_por_share": 58.6503
+      },
+      {
+        "data": "2023-06-23",
+        "qty": 14.0,
+        "custo_por_share": 56.3436
+      },
+      {
+        "data": "2023-06-23",
+        "qty": 0.968,
+        "custo_por_share": 56.3102
+      },
+      {
+        "data": "2023-06-23",
+        "qty": 0.0002,
+        "custo_por_share": 56.3202
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 161.0,
+        "custo_por_share": 62.4037
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 0.8577,
+        "custo_por_share": 62.4937
+      },
+      {
+        "data": "2025-05-05",
+        "qty": 68.0,
+        "custo_por_share": 73.2054
+      },
+      {
+        "data": "2025-05-05",
+        "qty": 0.0002,
+        "custo_por_share": 73.2302
+      },
+      {
+        "data": "2025-05-05",
+        "qty": 0.3058,
+        "custo_por_share": 73.2002
+      }
+    ],
+    "total_qty": 947.5983,
+    "custo_total_usd": 58164.53
+  },
+  "AVUV": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2021-10-15",
+        "qty": 30.0,
+        "custo_por_share": 79.3849
+      },
+      {
+        "data": "2022-01-18",
+        "qty": 0.0001,
+        "custo_por_share": 80.4502
+      },
+      {
+        "data": "2022-01-18",
+        "qty": 0.5351,
+        "custo_por_share": 80.4227
+      },
+      {
+        "data": "2022-01-18",
+        "qty": 54.0,
+        "custo_por_share": 80.4482
+      },
+      {
+        "data": "2022-01-18",
+        "qty": 17.0,
+        "custo_por_share": 80.4688
+      },
+      {
+        "data": "2022-04-19",
+        "qty": 44.0,
+        "custo_por_share": 80.3762
+      },
+      {
+        "data": "2022-04-19",
+        "qty": 0.3,
+        "custo_por_share": 80.3702
+      },
+      {
+        "data": "2022-05-18",
+        "qty": 26.0,
+        "custo_por_share": 75.3737
+      },
+      {
+        "data": "2023-04-05",
+        "qty": 43.0,
+        "custo_por_share": 72.1683
+      },
+      {
+        "data": "2023-05-10",
+        "qty": 20.0,
+        "custo_por_share": 70.8161
+      },
+      {
+        "data": "2023-05-11",
+        "qty": 0.9363,
+        "custo_por_share": 70.7043
+      },
+      {
+        "data": "2023-05-11",
+        "qty": 0.0021,
+        "custo_por_share": 70.4902
+      },
+      {
+        "data": "2023-07-10",
+        "qty": 0.0351,
+        "custo_por_share": 78.8212
+      },
+      {
+        "data": "2023-07-10",
+        "qty": 42.0,
+        "custo_por_share": 78.0387
+      },
+      {
+        "data": "2023-07-12",
+        "qty": 10.0,
+        "custo_por_share": 80.2281
+      },
+      {
+        "data": "2023-07-12",
+        "qty": 12.0,
+        "custo_por_share": 80.2332
+      },
+      {
+        "data": "2023-07-12",
+        "qty": 15.0,
+        "custo_por_share": 80.2715
+      },
+      {
+        "data": "2023-07-24",
+        "qty": 0.3422,
+        "custo_por_share": 81.8002
+      },
+      {
+        "data": "2023-07-24",
+        "qty": 25.0,
+        "custo_por_share": 81.8126
+      },
+      {
+        "data": "2024-07-05",
+        "qty": 46.0,
+        "custo_por_share": 89.5262
+      },
+      {
+        "data": "2024-08-12",
+        "qty": 22.0,
+        "custo_por_share": 90.6095
+      },
+      {
+        "data": "2024-10-01",
+        "qty": 1.0,
+        "custo_por_share": 95.4405
+      },
+      {
+        "data": "2024-10-01",
+        "qty": 0.0002,
+        "custo_por_share": 95.1003
+      },
+      {
+        "data": "2024-10-01",
+        "qty": 0.9664,
+        "custo_por_share": 95.0803
+      },
+      {
+        "data": "2025-01-07",
+        "qty": 16.0,
+        "custo_por_share": 96.3183
+      },
+      {
+        "data": "2025-01-07",
+        "qty": 0.5323,
+        "custo_por_share": 96.3002
+      },
+      {
+        "data": "2025-03-12",
+        "qty": 55.0,
+        "custo_por_share": 86.2266
+      },
+      {
+        "data": "2025-03-12",
+        "qty": 0.6714,
+        "custo_por_share": 86.2302
+      },
+      {
+        "data": "2025-04-03",
+        "qty": 66.0,
+        "custo_por_share": 82.8956
+      },
+      {
+        "data": "2025-04-03",
+        "qty": 0.558,
+        "custo_por_share": 82.9002
+      }
+    ],
+    "total_qty": 548.8792,
+    "custo_total_usd": 44774.94
+  },
+  "DGS": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2021-11-09",
+        "qty": 26.0,
+        "custo_por_share": 52.8546
+      },
+      {
+        "data": "2021-11-16",
+        "qty": 27.0,
+        "custo_por_share": 53.0518
+      },
+      {
+        "data": "2021-12-23",
+        "qty": 40.0,
+        "custo_por_share": 52.892
+      },
+      {
+        "data": "2022-04-22",
+        "qty": 0.2997,
+        "custo_por_share": 52.0661
+      },
+      {
+        "data": "2022-04-22",
+        "qty": 41.0,
+        "custo_por_share": 51.555
+      },
+      {
+        "data": "2022-06-29",
+        "qty": 0.4415,
+        "custo_por_share": 44.9302
+      },
+      {
+        "data": "2022-06-29",
+        "qty": 12.0,
+        "custo_por_share": 44.9594
+      },
+      {
+        "data": "2022-07-26",
+        "qty": 0.4695,
+        "custo_por_share": 44.4001
+      },
+      {
+        "data": "2022-07-26",
+        "qty": 41.0,
+        "custo_por_share": 43.9637
+      }
+    ],
+    "total_qty": 188.2107,
+    "custo_total_usd": 9434.36
+  },
+  "AVES": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2021-11-09",
+        "qty": 26.0,
+        "custo_por_share": 50.1609
+      },
+      {
+        "data": "2021-11-16",
+        "qty": 0.2534,
+        "custo_por_share": 50.6602
+      },
+      {
+        "data": "2021-11-16",
+        "qty": 26.0,
+        "custo_por_share": 50.6767
+      },
+      {
+        "data": "2021-12-23",
+        "qty": 45.0,
+        "custo_por_share": 50.171
+      },
+      {
+        "data": "2021-12-23",
+        "qty": 0.3548,
+        "custo_por_share": 50.1602
+      },
+      {
+        "data": "2022-03-25",
+        "qty": 77.0,
+        "custo_por_share": 48.9297
+      },
+      {
+        "data": "2022-03-25",
+        "qty": 0.6698,
+        "custo_por_share": 48.9302
+      },
+      {
+        "data": "2022-05-18",
+        "qty": 57.0,
+        "custo_por_share": 45.0013
+      },
+      {
+        "data": "2023-04-05",
+        "qty": 92.0,
+        "custo_por_share": 42.532
+      },
+      {
+        "data": "2023-05-10",
+        "qty": 27.0,
+        "custo_por_share": 43.5032
+      },
+      {
+        "data": "2023-05-10",
+        "qty": 25.0,
+        "custo_por_share": 43.4902
+      },
+      {
+        "data": "2023-05-10",
+        "qty": 0.4256,
+        "custo_por_share": 43.5102
+      },
+      {
+        "data": "2023-06-15",
+        "qty": 50.0,
+        "custo_por_share": 45.0172
+      },
+      {
+        "data": "2023-06-15",
+        "qty": 0.0998,
+        "custo_por_share": 45.0368
+      },
+      {
+        "data": "2023-06-15",
+        "qty": 0.0001,
+        "custo_por_share": 45.0502
+      },
+      {
+        "data": "2024-06-27",
+        "qty": 18.0,
+        "custo_por_share": 48.5997
+      },
+      {
+        "data": "2024-06-27",
+        "qty": 0.5261,
+        "custo_por_share": 48.5802
+      },
+      {
+        "data": "2024-07-15",
+        "qty": 84.0,
+        "custo_por_share": 49.9444
+      },
+      {
+        "data": "2024-07-15",
+        "qty": 0.4,
+        "custo_por_share": 50.0002
+      },
+      {
+        "data": "2025-01-15",
+        "qty": 0.0006,
+        "custo_por_share": 62.1592
+      },
+      {
+        "data": "2025-01-15",
+        "qty": 89.0,
+        "custo_por_share": 45.4541
+      },
+      {
+        "data": "2025-01-15",
+        "qty": 0.9883,
+        "custo_por_share": 45.4502
+      },
+      {
+        "data": "2025-02-06",
+        "qty": 59.0,
+        "custo_por_share": 46.5046
+      },
+      {
+        "data": "2025-02-06",
+        "qty": 2.0,
+        "custo_por_share": 46.5032
+      },
+      {
+        "data": "2025-02-06",
+        "qty": 5.0,
+        "custo_por_share": 46.4832
+      },
+      {
+        "data": "2025-02-06",
+        "qty": 0.6688,
+        "custo_por_share": 46.5002
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 0.1589,
+        "custo_por_share": 42.5822
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 1.0,
+        "custo_por_share": 42.3535
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 139.0,
+        "custo_por_share": 42.0702
+      },
+      {
+        "data": "2025-04-09",
+        "qty": 100.0,
+        "custo_por_share": 42.0373
+      }
+    ],
+    "total_qty": 926.5462,
+    "custo_total_usd": 42131.16
+  },
+  "WRDUSWUSD": {
+    "status": "transit\u00f3rio",
+    "lotes": [
+      {
+        "data": "2026-01-30",
+        "qty": 0.0,
+        "custo_por_share": 41.7208
+      }
+    ],
+    "total_qty": 0.0,
+    "custo_total_usd": 0.0
+  },
+  "AVGS": {
+    "status": "alvo",
+    "lotes": [
+      {
+        "data": "2026-03-13",
+        "qty": 233.0,
+        "custo_por_share": 24.9451
+      },
+      {
+        "data": "2026-03-13",
+        "qty": 0.4292,
+        "custo_por_share": 24.9475
+      }
+    ],
+    "total_qty": 233.4292,
+    "custo_total_usd": 5822.91
+  }
+}

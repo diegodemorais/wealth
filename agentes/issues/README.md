@@ -32,13 +32,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| HD-python-stack-v2 | Capacidades analíticas avançadas | Head | Média | Aguardando extrato IBKR (tlh_lotes.json) |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-python-stack-v2 | Capacidades analíticas avançadas | Head | 2026-04-01 | 4/4 caps. tlh_lotes.json com lotes reais. ibkr_analysis.py: 5 outputs. |
 | FI-equity-redistribuicao | 20% liberados do JPGL — redistribuição equity | Factor | 2026-04-01 | **SWRD 50% / AVGS 30% / AVEM 20%. Unanimidade 7/7 (13.5x).** Design 50/50 neutro/fatorial preservado. Via aportes. |
 | FI-jpgl-zerobased | JPGL 20% — análise zero-based | Factor | 2026-04-01 | **JPGL = 0%. Não adicionar.** Rodada final: 4 agentes, framing puro. Correlação 0.95 + AVGS dominante. 20% liberados → FI-equity-redistribuicao. |
 | HD-unanimidade | Unanimidade — calibragem imperfeita, nao echo chamber puro. 3 bugs sistemicos. Agente 16 criado | Head | 2026-04-01 | B+C parcialmente confirmadas. 4 outputs: Zero-Based, bond-tent, advocate protocol, bond-corr falsif. |

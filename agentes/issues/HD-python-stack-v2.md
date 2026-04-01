@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | HD-python-stack-v2 |
 | **Dono** | 00 Head |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | Media |
 | **Participantes** | 02 Factor, 04 FIRE, 05 Wealth, 10 Advocate, 14 Quant |
 | **Dependencias** | HD-python-stack (venv e stack instalados) |
 | **Criado em** | 2026-03-30 |
 | **Origem** | Proativo — capacidades adicionais identificadas após instalação da stack Python |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-01 |
 
 ---
 
@@ -122,5 +122,5 @@ Quatro capacidades implementadas. Backtest confirma +0.48pp CAGR do tilt mas com
 - [x] Aguardar HD-python-stack concluído
 - [x] Cap 1: otimizador de aporte (`portfolio_analytics.py --aporte`)
 - [x] Cap 2: `scripts/backtest_fatorial.py`
-- [~] Cap 3: TLH block em `checkin_mensal.py --tlh` — script pronto, aguardando extrato IBKR de Diego para preencher `tlh_lotes.json` com lotes reais
+- [x] Cap 3: TLH block em `checkin_mensal.py --tlh` — `tlh_lotes.json` preenchido via extrato IBKR real (2026-04-01, `ibkr_analysis.py`). 7 transitórios com 130+ lotes reais.
 - [x] Cap 4: tornado chart em `fire_montecarlo.py --tornado`
