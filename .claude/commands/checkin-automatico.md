@@ -130,6 +130,33 @@ Padroes aplicados (conforme `agentes/referencia/metodologia-analitica.md`):
 3. Atualizar secao 2.3 (Gap de Execucao) com status das execucoes pendentes
 4. Atualizar secao 3 (Previsoes) com status de cada previsao ativa
 
+### M3: FIRE Progress Check (mensal)
+
+Verificar se patrimônio está na trajetória esperada para o FIRE:
+
+1. Patrimônio atual (da planilha)
+2. Trajetória simples: `R$3.5M × (1 + 9.5%)^(meses_desde_T0/12) + aportes_acumulados`
+   - CAGR de referência: 9.5% BRL nominal (base: 5.96% real + 4% IPCA)
+   - T0: 2026-03-20
+3. Calcular: "No ritmo atual, atingiremos gatilho R$13.4M em ~X meses"
+   - Simples: (13.4M - patrimônio_atual) / aporte_mensal_liquido_estimado → ignora crescimento, mas dá ordem de grandeza
+4. Flag se patrimônio real < 90% da trajetória esperada
+
+Incluir no report mensal:
+```
+### FIRE Progress
+Patrimônio: R$X (trajetória esperada: R$Y)
+No ritmo atual: gatilho R$13.4M em ~Z meses (meta: ≤132 meses)
+Status: [OK / Atenção / Alerta]
+```
+
+### M4: Atualizar Previsões
+
+Para cada previsão em `agentes/metricas/previsoes.md`:
+- Atualizar linha de tracking com dados do mês
+- Verificar se alguma previsão chegou ao prazo → post-mortem 2 linhas + atualizar Métricas de Calibração
+- Se nova previsão implícita emergiu de decisão recente, registrar
+
 ### M3: Report Mensal Adicional
 
 Adicionar ao report semanal padrao:

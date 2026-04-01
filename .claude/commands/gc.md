@@ -51,13 +51,19 @@ Nas memorias dos agentes (`agentes/memoria/*.md`), entradas marcadas com `~~tach
 
 ---
 
-### Operacao 4 — Verificar MEMORY.md
+### Operacao 4 — Verificar MEMORY.md e Consistencia entre Sistemas
 
+**Auto-memory index:**
 Verificar se o indice `~/.claude/projects/*/memory/MEMORY.md` esta consistente:
 1. Contar linhas — se > 180, alertar que esta proximo do limite de 200
 2. Verificar se ha entradas no indice sem arquivo correspondente (links quebrados)
 3. Verificar se ha arquivos na pasta de memoria sem entrada no indice (arquivos orphaos)
 4. Reportar inconsistencias, mas nao corrigir autonomamente (risco de perda de contexto)
+
+**Consistencia entre sistemas (trimestral):** Verificar se ha conflitos entre os dois sistemas de memoria (ver `agentes/referencia/memoria-hierarquia.md`):
+5. Existe algum conteudo em `~/.claude/memory/` que deveria estar em `agentes/memoria/` (decisao de portfolio, gatilho ativo)?
+6. Existe alguma premissa em `agentes/memoria/` que contradiz algo em `~/.claude/memory/`?
+7. Reportar conflitos — nao corrigir autonomamente sem aprovacao de Diego
 
 ---
 

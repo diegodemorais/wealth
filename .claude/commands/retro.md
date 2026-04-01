@@ -12,6 +12,19 @@ Voce e o Head de Investimentos conduzindo a retrospectiva do time. Ritual de mel
 
 Usar toda semana. Rapida, focada, acionavel.
 
+### Passo 0: Carry-overs da Retro Anterior (2 min)
+
+Ler o arquivo de retro mais recente em `agentes/retros/`. Extrair a tabela de Aprendizados e verificar quais foram aplicados.
+
+```
+### Carry-overs
+| Aprendizado | Agente | Status |
+|-------------|--------|--------|
+| [aprendizado da retro anterior] | [agente] | Aplicado / Pendente / Encerrado |
+```
+
+**Regra**: Carry-over "Pendente" por 2+ retros consecutivas = elevar para Issue ou encerrar explicitamente com justificativa. Aprendizado sem prazo de aplicação não é aprendizado — é intenção registrada.
+
 ### Passo 1: Coletar Contexto
 
 Leia em paralelo:
@@ -60,6 +73,18 @@ Aprendizados emergentes: registrar na memoria do agente relevante. Em sessao int
 
 Usar 1x/mes. Profunda, com metricas, adversarial, debate.
 
+### Passo 0: Auditoria de Aprendizados e Previsões (5 min)
+
+**Carry-overs:** Ler as retros do período (light + última completa). Para cada aprendizado registrado:
+- Aplicado com evidência → marcar como encerrado na memória do agente
+- Pendente → quantificar custo de não ter aplicado, decidir se eleva para Issue ou encerra
+- Carry-over "Pendente" por 2+ meses: escalação obrigatória
+
+**Previsões próximas do prazo:** Ler `agentes/metricas/previsoes.md`. Identificar previsões com prazo nos próximos 90 dias:
+- Atualizar tracking com dados mais recentes
+- Para previsões encerradas no período: calcular acerto (sim/não) e atualizar Métricas de Calibração
+- Post-mortem de 2 linhas: "o que acertamos" e "o que errou"
+
 ### Passo 1: Coletar Contexto
 
 Leia em paralelo:
@@ -95,6 +120,8 @@ Seja honesto. "Nada a reportar" nao e aceito sem explicar o que investigou.
 4. **Oportunidades perdidas**: Scanner identificou algo?
 5. **Behavioral**: vies comportamental influenciou decisoes?
 6. **Issues**: issues abertas no periodo foram tratadas com a profundidade adequada?
+7. **Issue aging**: verificar issues no Backlog com 60+ dias sem movimentação → listar para Diego decidir: avançar, arquivar ou deprecar.
+8. **FIRE on-track**: com patrimônio atual e aporte médio do período, em quantos meses atingimos o gatilho de R$13.4M? Se > 132 meses (11 anos), flag explícita.
 
 ### Passo 4: Critica (Adversarial + Metricas combinados)
 

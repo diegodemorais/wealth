@@ -111,8 +111,46 @@ No arquivo da issue, seção "Validação Multi-Model":
 [ ] 4. Confirmar: Quant está no plano? (todo veredicto numérico passa por ele)
 [ ] 5. Confirmar: Fact-Checker está no plano? (toda issue com paper como justificativa)
 [ ] 6. Confirmar: Cético está no plano? (toda meta-estratégica ou debate de premissa)
-[ ] 7. Só então lançar TODOS em paralelo — nunca lançar 2 e esperar Diego cobrar o resto
+[ ] 7. Issue pode resultar em mudança ≥5% de alocação? → Pre-mortem obrigatório antes do veredicto (ver abaixo)
+[ ] 8. Só então lançar TODOS em paralelo — nunca lançar 2 e esperar Diego cobrar o resto
 ```
+
+---
+
+## Pre-mortem Obrigatório — Issues com Mudança ≥5% de Alocação
+
+> Toda issue que pode resultar em mudança de alocação ≥5% do portfolio DEVE incluir um pre-mortem antes do veredicto final. Não é formalidade — é o filtro que captura o risco que ninguém está vendo.
+
+### Quando aplicar
+- Issue pode resultar em: compra/venda/realocação que altere ≥5% do portfolio total
+- Exemplos: "aumentar IPCA+ de 15% para 25%", "vender SWRD para rebalancear", "entrada em novo ativo"
+- Não aplicar: consultas informativas, monitoramento de gatilho, ajustes <5%
+
+### Formato (2 perguntas, respostas específicas)
+
+**Pre-mortem** (Klein 1998): *"É 2037 e o FIRE falhou especificamente por causa desta decisão. O que aconteceu?"*
+- Exigir cenário específico com causa e efeito. "Mercado caiu" não é resposta válida.
+- Mínimo 2 cenários de falha distintos.
+
+**Pre-parade**: *"É 2037 e esta foi a melhor decisão da carteira. O que aconteceu?"*
+- Verificar se o argumento só funciona no cenário otimista.
+
+### Quem executa
+- Advocate escreve o pre-mortem
+- Quant valida os números dos cenários
+- Registrar no arquivo da issue, seção "Pre-mortem", antes do veredicto
+
+---
+
+## Issue Aging — Gate de 60 Dias
+
+Issues com 60+ dias no Backlog sem atualização de status são consideradas "aging". Na próxima retro completa, o Head apresenta a lista de aging issues ao Diego para decisão explícita:
+
+- **Avançar**: mover para Doing com prazo definido
+- **Arquivar**: mover para Deprecated com justificativa
+- **Manter**: confirmar que ainda é relevante e documentar por quê
+
+Sem decisão explícita, a issue não pode permanecer em Backlog indefinidamente. "Ainda relevante mas sem prioridade" é uma decisão válida — mas precisa ser dita.
 
 **Nota Zero-Base**: não é um agente separado — é o prompt "framing from scratch" da seção "Validação Multi-Model" acima. Para meta-estratégicas, incluir esse ângulo no briefing do agente de domínio ou lançar como general-purpose com o prompt padrão.
 

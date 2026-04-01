@@ -250,13 +250,29 @@ Quando houver discordancia entre agentes, NAO forcar consenso. Registrar ambas a
 
 ### Quando Aplicar
 
-| Situacao | Obrigatorio? |
-|----------|-------------|
-| Debate Bull vs Bear (decisao estrutural) | **SIM** |
-| Revalidacao anual de premissas | **SIM** |
-| Issue que muda alocacao >5% | **SIM** |
-| Retro com finding grave | Recomendado |
-| Consulta informativa / monitoramento | Nao |
+| Situacao | Obrigatorio? | Variante |
+|----------|-------------|---------|
+| Debate Bull vs Bear (decisao estrutural) | **SIM** | Full (passos 1-4) |
+| Revalidacao anual de premissas | **SIM** | Full |
+| Issue que muda alocacao >5% | **SIM** | Quick Check (ver abaixo) |
+| Time convergiu unanimemente em <15 min em decisao major | **SIM** | Quick Check |
+| Retro com finding grave | Recomendado | Quick Check |
+| Consulta informativa / monitoramento | Nao | — |
+
+### Quick Check (variante simplificada — 3 min de Diego)
+
+Para issues ≥5% que não justificam o processo full, o Advocate prepara um prompt pronto para Diego colar em qualquer LLM:
+
+**O Advocate escreve o prompt** (formato compacto, pronto para paste):
+```
+[Prompt gerado pelo Advocate — Diego cola no ChatGPT/Gemini e retorna o output]
+```
+
+**Diego executa**: copiar → colar → retornar output.
+
+**O Advocate analisa o output** (1 parágrafo): concordou? divergiu em quê? algum risco novo?
+
+O Quick Check não exige múltiplos LLMs nem processo estruturado — 1 modelo + 1 pergunta + análise do Advocate. Objetivo: garantir que pelo menos 1 perspectiva externa foi consultada antes de veredicto em decisão major.
 
 ### Como Funciona
 
