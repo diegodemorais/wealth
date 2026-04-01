@@ -243,6 +243,184 @@ def stress_test_quant_crisis(precos: pd.DataFrame):
         print(f"    {nome}: Max DD = {mdd:.1%}")
 
 
+# ─── CORRELAÇÕES POR REGIME DE MERCADO ────────────────────────────────────────
+
+def correlacoes_regime():
+    """
+    Calcula matrizes de correlação por regime de VIX.
+
+    Regimes: calm (VIX < 20) | stress (VIX 20-30) | crise (VIX > 30)
+
+    Problema: o stress test usa choques fixos mas correlações convergem em crises.
+    COVID 2020: correlações equity sobem de ~0.85 (calm) para ~0.95 (crise).
+    Isso significa que a diversificação intra-equity some quando mais precisamos.
+
+    Proxies para período pré-UCITS:
+      AVGS → AVUV (Avantis US SC Value, set/2019+)  ⚠️
+      AVEM → VWO  (Vanguard EM, longo histórico)    ⚠️
+      SWRD → SWRD.L | JPGL → JPGL.L (sem proxy)
+    """
+    print("\n" + "─"*60)
+    print("  CORRELAÇÕES POR REGIME (VIX)")
+    print("─"*60)
+
+    # Download: ETFs + proxies + VIX — 6 anos para capturar COVID 2020 + 2022
+    tickers_regimes = ["SWRD.L", "AVUV", "VWO", "JPGL.L", "^VIX"]
+    print(f"\n  Baixando dados (6 anos): {', '.join(tickers_regimes)}")
+    print(f"  ⚠️  AVUV = proxy AVGS | VWO = proxy AVEM (histórico pré-UCITS)")
+
+    raw = yf.download(tickers_regimes, period="6y", auto_adjust=True, progress=False)["Close"]
+    raw = raw.dropna()
+
+    if raw.empty or len(raw) < 100:
+        print("  ❌ Dados insuficientes.")
+        return
+
+    vix   = raw["^VIX"]
+    etfs  = raw[["SWRD.L", "AVUV", "VWO", "JPGL.L"]]
+    nomes = {"SWRD.L": "SWRD", "AVUV": "AVGS(p)", "VWO": "AVEM(p)", "JPGL.L": "JPGL"}
+
+    retornos = etfs.pct_change().dropna()
+    vix_alinhado = vix.reindex(retornos.index).ffill()
+
+    # Classificar regimes
+    def regime(v):
+        if v < 20:   return "calm"
+        elif v < 30: return "stress"
+        else:        return "crise"
+
+    labels = vix_alinhado.map(regime)
+
+    # Estatísticas de cobertura
+    contagem = labels.value_counts()
+    print(f"\n  Cobertura por regime ({len(retornos)} dias úteis):")
+    for r_name, r_label in [("calm", "VIX <20"), ("stress", "VIX 20-30"), ("crise", "VIX >30")]:
+        n = contagem.get(r_name, 0)
+        pct = n / len(retornos) * 100
+        exemplo = ""
+        if r_name == "crise":
+            datas_crise = labels[labels == "crise"].index
+            if len(datas_crise):
+                exemplo = f"  (ex: {datas_crise[0].strftime('%b/%Y')})"
+        print(f"    {r_label:<14} {n:>4} dias ({pct:.0f}%){exemplo}")
+
+    # Calcular correlações por regime
+    pares = [
+        ("SWRD.L", "AVUV"),
+        ("SWRD.L", "VWO"),
+        ("SWRD.L", "JPGL.L"),
+        ("AVUV",   "VWO"),
+        ("AVUV",   "JPGL.L"),
+        ("VWO",    "JPGL.L"),
+    ]
+
+    resultados = {}
+    for r_name in ["calm", "stress", "crise"]:
+        mask = labels == r_name
+        r_sub = retornos[mask]
+        if len(r_sub) >= 20:
+            resultados[r_name] = r_sub.corr()
+        else:
+            resultados[r_name] = None
+
+    # Tabela de correlações por regime
+    print(f"\n  {'Par':<22} {'Calm':>8} {'Stress':>8} {'Crise':>8} {'Δ(crise-calm)':>14}  Convergência?")
+    print(f"  {'─'*68}")
+
+    alertas_convergencia = []
+    for t1, t2 in pares:
+        n1, n2 = nomes[t1], nomes[t2]
+        label_par = f"{n1} ↔ {n2}"
+
+        corrs = {}
+        for r_name in ["calm", "stress", "crise"]:
+            if resultados[r_name] is not None and t1 in resultados[r_name] and t2 in resultados[r_name]:
+                corrs[r_name] = resultados[r_name].loc[t1, t2]
+            else:
+                corrs[r_name] = float("nan")
+
+        delta = corrs.get("crise", float("nan")) - corrs.get("calm", float("nan"))
+
+        if abs(delta) >= 0.05:
+            conv_flag = f"⚠️  +{delta:.2f}" if delta > 0 else f"⚠️  {delta:.2f}"
+            alertas_convergencia.append((label_par, corrs, delta))
+        else:
+            conv_flag = f"✅ {delta:+.2f}"
+
+        def fmt(v):
+            return f"{v:.3f}" if not pd.isna(v) else "  —  "
+
+        print(f"  {label_par:<22} {fmt(corrs.get('calm')):>8} {fmt(corrs.get('stress')):>8} "
+              f"{fmt(corrs.get('crise')):>8} {delta:>+14.3f}  {conv_flag}")
+
+    # Impacto no stress test com correlações de crise
+    print(f"\n  {'─'*60}")
+    print(f"  IMPLICAÇÃO PARA O STRESS TEST")
+    print(f"  {'─'*60}")
+
+    # Simular impacto de choque -30% SWRD com correlações calm vs crise
+    choque_swrd = -0.30
+    peso_swrd  = 0.35
+    peso_avgs  = 0.25
+    peso_avem  = 0.20
+    peso_jpgl  = 0.20
+
+    if resultados["calm"] is not None and resultados["crise"] is not None:
+        corr_calm_avgs  = resultados["calm"].loc["SWRD.L", "AVUV"]
+        corr_calm_avem  = resultados["calm"].loc["SWRD.L", "VWO"]
+        corr_calm_jpgl  = resultados["calm"].loc["SWRD.L", "JPGL.L"]
+        corr_crise_avgs = resultados["crise"].loc["SWRD.L", "AVUV"]
+        corr_crise_avem = resultados["crise"].loc["SWRD.L", "VWO"]
+        corr_crise_jpgl = resultados["crise"].loc["SWRD.L", "JPGL.L"]
+
+        # Retorno esperado dos outros ETFs dado choque SWRD × correlação (linear, aproximação)
+        # Assume vol similar para simplicidade — captura direção do efeito
+        def impacto_portfolio(corr_avgs, corr_avem, corr_jpgl):
+            r_avgs = choque_swrd * corr_avgs
+            r_avem = choque_swrd * corr_avem
+            r_jpgl = choque_swrd * corr_jpgl
+            return (peso_swrd * choque_swrd + peso_avgs * r_avgs +
+                    peso_avem * r_avem + peso_jpgl * r_jpgl)
+
+        imp_calm  = impacto_portfolio(corr_calm_avgs,  corr_calm_avem,  corr_calm_jpgl)
+        imp_crise = impacto_portfolio(corr_crise_avgs, corr_crise_avem, corr_crise_jpgl)
+        imp_worst = choque_swrd  # todos caem igual (correlação = 1.0)
+
+        patrimonio_ref = 3_372_673
+        equity_frac = 0.79
+
+        print(f"\n  Cenário: SWRD cai {choque_swrd:.0%} em crise")
+        print(f"  {'Modelo':<30} {'Impacto equity':>14} {'Impacto portfolio':>17} {'R$ perdido':>12}")
+        print(f"  {'─'*76}")
+        for label, imp in [
+            ("Correlações calm (atual)",  imp_calm),
+            ("Correlações crise (real)",  imp_crise),
+            ("Pior caso (corr=1.0)",      imp_worst),
+        ]:
+            imp_port = imp * equity_frac
+            perda = abs(imp_port) * patrimonio_ref
+            print(f"  {label:<30} {imp:>+14.1%} {imp_port:>+17.1%} R$ {perda:>9,.0f}")
+
+        gap = abs(imp_crise - imp_calm)
+        print(f"\n  Gap calm→crise: {gap:.1%}pp de impacto adicional no bloco equity")
+        print(f"  = R$ {gap * equity_frac * patrimonio_ref:,.0f} de perda subestimada pelo modelo atual")
+
+    # Conclusão para revisão
+    print(f"\n  {'─'*60}")
+    print(f"  CONCLUSÃO PARA REVISÃO ANUAL (jan/2027)")
+    print(f"  {'─'*60}")
+    if alertas_convergencia:
+        n_pares = len(alertas_convergencia)
+        print(f"  ⚠️  {n_pares} par(es) com convergência significativa (Δ ≥ 0.05) em crise:")
+        for lbl, c, d in alertas_convergencia:
+            print(f"     {lbl}: calm {c.get('calm', float('nan')):.3f} → crise {c.get('crise', float('nan')):.3f} (Δ{d:+.3f})")
+        print(f"\n  Diversificação intra-equity diminui em crises.")
+        print(f"  O bond tent (IPCA+ 15%) é a proteção real — não a diversificação entre ETFs de equity.")
+    else:
+        print(f"  ✅ Correlações estáveis entre regimes. Diversificação preservada em crises.")
+    print()
+
+
 # ─── TEARSHEET VS VWRA ────────────────────────────────────────────────────────
 
 def tearsheet_vs_benchmark(precos: pd.DataFrame, salvar_html: bool = False):
@@ -421,9 +599,10 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
 
 def main():
     parser = argparse.ArgumentParser(description="Portfolio Analytics — Revisão Trimestral")
-    parser.add_argument("--fronteira",  action="store_true", help="Fronteira eficiente")
-    parser.add_argument("--stress",     action="store_true", help="Stress test Quant Crisis 2.0")
-    parser.add_argument("--tearsheet",  action="store_true", help="Tearsheet vs VWRA")
+    parser.add_argument("--fronteira",    action="store_true", help="Fronteira eficiente")
+    parser.add_argument("--stress",       action="store_true", help="Stress test Quant Crisis 2.0")
+    parser.add_argument("--correlacoes",  action="store_true", help="Correlações por regime VIX (calm/stress/crise)")
+    parser.add_argument("--tearsheet",    action="store_true", help="Tearsheet vs VWRA")
     parser.add_argument("--html",       action="store_true", help="Salvar tearsheet em HTML")
     parser.add_argument("--aporte",           type=float, help="Otimizar aporte (R$)")
     parser.add_argument("--taxa-ipca-longo",  type=float, help="Taxa IPCA+ longo atual (%% a.a., ex: 7.16)")
@@ -432,7 +611,7 @@ def main():
     parser.add_argument("--periodo",          type=str, default="3y", help="Período de dados (ex: 1y, 3y, 5y)")
     args = parser.parse_args()
 
-    rodar_tudo = not any([args.fronteira, args.stress, args.tearsheet, args.aporte])
+    rodar_tudo = not any([args.fronteira, args.stress, args.correlacoes, args.tearsheet, args.aporte])
 
     print(f"\n📥 Baixando dados ({args.periodo})...")
     precos = get_precos(args.periodo)
@@ -443,6 +622,9 @@ def main():
 
     if rodar_tudo or args.stress:
         stress_test_quant_crisis(precos)
+
+    if rodar_tudo or args.correlacoes:
+        correlacoes_regime()
 
     if rodar_tudo or args.tearsheet:
         tearsheet_vs_benchmark(precos, salvar_html=args.html)

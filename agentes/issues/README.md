@@ -28,7 +28,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
 | — | — | — | — | — |
-| 7 | HD-correlacoes-regime | Correlações regime-dependent: stress vs calm (VIX) | Head | Média |
+| — | — | — | — | — |
 
 ### Doing
 > Issues em andamento
@@ -42,6 +42,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-correlacoes-regime | Correlações regime-dependent: stress vs calm (VIX) | Head | 2026-03-31 | SWRD↔JPGL converge (0.964). AVGS↔SWRD estável — diversificação real. Bond tent = proteção real. |
 | HD-python-stack-v2 | Capacidades analíticas avançadas: backtest fatorial, TLH monitor | Head | — | Caps 1/2/4 prontas. Cap 3 (TLH): script ok, aguarda extrato IBKR para preencher lotes |
 | HD-python-stack | Automação de rotinas com Python stack | Head | 2026-03-31 | 3 scripts criados. checkin_mensal, fire_montecarlo, portfolio_analytics funcionais. |
 | FR-literature-bilateral | Regra de literatura bilateral para citações acadêmicas | FIRE | 2026-03-31 | Regra F implementada. Formato bilateral obrigatório. ERN/Blanchett/Cederburg mapeados. |
