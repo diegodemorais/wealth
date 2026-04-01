@@ -35,14 +35,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| — | — | — | — | — |
+| HD-python-stack-v2 | Capacidades analíticas avançadas | Head | Média | Aguardando extrato IBKR (tlh_lotes.json) |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
-| HD-python-stack-v2 | Capacidades analíticas avançadas: backtest fatorial, TLH monitor | Head | 2026-03-31 | 4 caps implementadas. Backtest: +0.48pp CAGR tilt. TLH: 7 transitórios monitorados. |
+| HD-python-stack-v2 | Capacidades analíticas avançadas: backtest fatorial, TLH monitor | Head | — | Caps 1/2/4 prontas. Cap 3 (TLH): script ok, aguarda extrato IBKR para preencher lotes |
 | HD-python-stack | Automação de rotinas com Python stack | Head | 2026-03-31 | 3 scripts criados. checkin_mensal, fire_montecarlo, portfolio_analytics funcionais. |
 | FR-literature-bilateral | Regra de literatura bilateral para citações acadêmicas | FIRE | 2026-03-31 | Regra F implementada. Formato bilateral obrigatório. ERN/Blanchett/Cederburg mapeados. |
 | TX-estate-tax | Custo real do estate tax americano para a carteira | Tax | 2026-03-31 | $222k US-listed. Estate tax ~$65k/R$340k. Diluição via UCITS em curso. Seguro pendente. |
