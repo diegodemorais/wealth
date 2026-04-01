@@ -69,6 +69,18 @@
 
 > Preenchido ao finalizar. Responde: o que decidimos?
 
+### Veredicto Ponderado
+
+| Agente | Peso | Posição | Contribuição |
+|--------|------|---------|-------------|
+| Head | 1x | — | — |
+| {Especialista domínio} | 3x | — | — |
+| {Adjacente} | 2x | — | — |
+| Advocate | 1x | — | — |
+| **Score ponderado** | | **{posição vencedora}** | **{X.X pts favor}** |
+
+*Pesos: especialista do domínio = 3x, adjacente direto = 2x, Head/Generalistas = 1x, periférico = 0.5x*
+
 ---
 
 ## Resultado

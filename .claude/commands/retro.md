@@ -148,26 +148,41 @@ Sem respostas genericas. Se nao encontrou nada, explicar o que investigou.
 - Score negativo: revisao do perfil
 - "Nao acionado" nao e desculpa
 
-#### Scorecard de Notas Peer (0-10):
+#### Scorecard de Notas Peer (0-10) — Ponderado por Relevância:
 
-Cada agente ativo da nota de 0-10 a todos os outros agentes **E** ao Diego. Processo:
-1. Registrar notas de cada agente de forma independente (nao revelar notas de outros antes de cada agente terminar)
-2. Agregar na tabela final
-3. Diego NAO avalia (evitar self-grading e influencia no time — Diego e avaliado por todos)
+Cada agente ativo **e o Head** dão nota de 0-10 a todos os outros agentes e ao Diego. Processo:
+1. Registrar notas de cada avaliador de forma independente (anti-ancoragem — não revelar notas de outros antes de cada avaliador terminar)
+2. Agregar com pesos por relevância de interação (ver tabela abaixo)
+3. Diego NÃO avalia (evitar self-grading) — Diego é avaliado por todos, inclusive o Head
 
-| Avaliado | Agente1 | Agente2 | ... | Media |
-|----------|---------|---------|-----|-------|
+**Pesos por relevância de interação com o avaliado no período:**
 
-Interpretar:
-- 8-10: desempenho excelente no periodo
-- 6-7: solido com pontos de melhora
+| Relação do avaliador com o avaliado | Peso |
+|--------------------------------------|------|
+| Interação direta: análises conjuntas, debates, outputs usados diretamente | 1.5x |
+| Interação regular: usa outputs do avaliado mas não trabalhou diretamente | 1.0x |
+| Interação indireta: pouco contato no período | 0.5x |
+| **Head avaliando qualquer agente** | **1.0x** (Head sempre tem voz) |
+
+**Tabela de scores:**
+
+| Avaliado | Avaliador (peso) | Score | Avaliador (peso) | Score | ... | Média Ponderada |
+|----------|-----------------|-------|-----------------|-------|-----|----------------|
+| Factor | Head (1.0x) | X | RF (0.5x) | Y | ... | X.X |
+| Diego | Head (1.0x) | X | Factor (1.5x) | Y | ... | X.X |
+
+*Formato compacto aceitável: listar peso ao lado do avaliador. Calcular: Σ(score × peso) / Σ(peso)*
+
+**Interpretar média ponderada:**
+- 8-10: desempenho excelente no período
+- 6-7: sólido com pontos de melhora
 - 4-5: abaixo do esperado
-- 0-3: falha que requer revisao de perfil
+- 0-3: falha que requer revisão de perfil
 
 **Sinais de alerta:**
-- Diego > 8 por 2+ retros consecutivas: sistema depende de Diego como ultima linha de defesa — problema estrutural
-- Agente com media < 4 em 2 retros consecutivas: questionar existencia
-- Agente com media < 0: revisao completa do perfil
+- Diego > 8 por 2+ retros consecutivas: sistema depende de Diego como última linha de defesa — problema estrutural
+- Agente com média ponderada < 4 em 2 retros consecutivas: questionar existência
+- Agente com média ponderada < 0: revisão completa do perfil
 
 ### Passo 5: Aprendizados
 
