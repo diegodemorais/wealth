@@ -42,12 +42,10 @@ Quant e Factor chegaram a números compatíveis via tiers:
 
 | Tier | Subcarteira | Período máximo com proxies | Binding constraint |
 |------|-------------|--------------------------|-------------------|
-| A | Full portfolio (SWRD+AVGS+AVEM+JPGL) | **2009 → 2026 = 17 anos** | IWDA.L como proxy SWRD (desde 2009) |
-| B | DM subcarteira (SWRD+AVGS) | **2001 → 2026 = 25 anos** | AVUV como proxy AVGS (desde 2001) |
+| A | Full portfolio (SWRD+AVGS+AVEM+JPGL) | **a definir** | Depende dos proxies descobertos em HD-proxies-canonicos |
+| B | DM subcarteira (SWRD+AVGS) | **a definir** | Depende dos proxies descobertos em HD-proxies-canonicos |
 
-**Target de 20 anos (2006):** definido pelo Diego como alvo. Mandato para HD-proxies-canonicos:
-- SWRD 2006-2009: gap de 3 anos (candidatos: EFA+IVV blend, MSCI World mutual fund)
-- JPGL 2006-2014: gap de 8 anos — mais crítico (candidatos: French Library factors sintéticos, IWMO+IWVL blend pré-lançamento)
+**Target de 20 anos (2006):** definido pelo Diego como alvo. Os proxies adequados para cada ETF e período serão descobertos e validados em HD-proxies-canonicos — não assumir proxies aqui.
 
 ### Literatura sobre período representativo
 
@@ -134,9 +132,9 @@ Conflito → flag explícita, nunca silenciar.
 | Tipo | Detalhe |
 |------|---------|
 | **Padrões definidos** | 6 padrões aprovados (período, câmbio, rebalancing, benchmark, suficiência, fontes) |
-| **Output crítico** | Período canônico: target 20 anos (2006), floor 17 anos (2009) |
-| **Mandato gerado** | HD-proxies-canonicos: preencher gaps SWRD 2006-2009 e JPGL 2006-2014 |
-| **Referência** | Criar `agentes/referencia/metodologia-analitica.md` (pendente) |
+| **Output crítico** | Período canônico: target 20 anos (2006). Proxies a confirmar em HD-proxies-canonicos |
+| **Mandato gerado** | HD-proxies-canonicos: encontrar proxies adequados para cada ETF até 2006 |
+| **Referência** | `agentes/referencia/metodologia-analitica.md` ✅ criado |
 | **Scripts** | Atualizar backtest_fatorial.py e portfolio_analytics.py para referenciar padrões (pendente) |
 
 ---
@@ -147,7 +145,7 @@ Conflito → flag explícita, nunca silenciar.
 - [x] Advocate: stress-testar proposta de câmbio
 - [x] Factor: validar benchmark canônico para factor regression
 - [x] Definir os 6 padrões (debate e aprovação de Diego)
-- [ ] Criar `agentes/referencia/metodologia-analitica.md` (fonte única de verdade)
+- [x] Criar `agentes/referencia/metodologia-analitica.md` (fonte única de verdade)
 - [ ] Atualizar scripts para referenciar os padrões
 - [ ] HD-proxies-canonicos: executar com mandato de 20 anos
 
