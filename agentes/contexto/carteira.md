@@ -11,7 +11,7 @@
 - **Nome**: Diego Morais
 - **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
-- **Meta FIRE**: Aposentar quando **patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4%** → P(FIRE) ~87%. Revisão anual a partir de 2034 (48 anos). Safe harbor: 2040 (53 anos) — não esperar além disso. FIRE 50 é o target primário; 2040 é a rede de segurança.
+- **Meta FIRE**: Aposentar quando **patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4%** → P(FIRE) ~**80% base / 88% favorável / 74.9% stress** (spending smile + guardrails, MC 10k, premissas HD-006; validado XX-lacunas-estrategicas 2026-04-01). *Nota: 87% era modelo sem spending smile — obsoleto.* Revisão anual a partir de 2034 (48 anos). Safe harbor: 2040 (53 anos) — não esperar além disso. FIRE 50 é o target primário; 2040 é a rede de segurança.
 - **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano
@@ -80,7 +80,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ## Decisoes Pendentes
 
-1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar. **Alerta backtest 2026-03-23**: AVGS 25% e o maior risco de cauda nao capturado — Max DD -39% no backtest e piso, nao teto; em 2008-style pode chegar a -60%+. AVEM ja revertendo (YTD 2026: +14.83% vs MSCI World +2.99%).
+1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar. AVEM ja revertendo (YTD 2026: +14.83% vs MSCI World +2.99%).
 2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
 3. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para <6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo). **Prioridade RF: IPCA+ antes do Renda+ (gap 14,2pp vs 1,8pp)**
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
@@ -198,5 +198,6 @@ Calculo: 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = **5.96%** (base). (Nota
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
 - **Piso operacional para RF longa: IPCA+ 6.0%.** Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Margem de 50 bps. Abaixo de 6.0%, pausar DCA de IPCA+ longo e redirecionar para JPGL. **IPCA+ longo (TD 2040/2050) = hold to maturity SEMPRE** — nao vender por MtM (posicao estrutural, bond tent). Gatilho de venda MtM aplica-se APENAS ao Renda+ 2065 (tatico). (Corrigido HD-006 final: pisos anteriores de 6.4% e 7.81% estavam ambos errados — nao incluiam custos all-in de equity)
+- **AVGS 25%: tail risk aceito explicitamente** (XX-lacunas-estrategicas, 2026-04-01). Em cenário 2008-style: AVGS cai ~-60% USD (~-42% BRL com FX). Portfolio total: -40 a -45% BRL. Custo marginal vs 100% SWRD: ~3-4pp de drawdown adicional. Atenuantes: câmbio, aportes R$25k/mês, horizonte 11 anos, guardrails. Factor premium +1.1%/ano compensa o risco. Revisão: se horizonte encurtar para <5 anos pré-FIRE, reduzir AVGS para 15-20% via aportes.
 - **Sem alavancagem.** Carry trade / margin na IB descartado — risco incompativel com fase de acumulacao FIRE (decisao mar/2026, apos desmonte de R$533k em set/2025)
 - **Todo veredicto numerico passa por Checklist Pre-Veredicto antes de ser apresentado.** Checklist completo em `agentes/perfis/00-head.md`. Causa raiz: 6+9 erros das sessoes 2026-03-20, todos por omissao de premissas ao calcular. Regras adicionais HD-006: (A) fonte obrigatoria para cada numero, (B) formula explicita antes do resultado, (C) reconciliacao trimestral entre documentos, (D) comparacao all-in obrigatoria (WHT, IOF, FX spread, ganho fantasma cambial), (E) reflexao registrada — 4 erros em sequencia corrigidos por Diego

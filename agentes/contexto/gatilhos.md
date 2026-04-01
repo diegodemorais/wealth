@@ -40,7 +40,7 @@
 
 | Dominio | Gatilho | Condicao | Acao |
 |---------|---------|----------|------|
-| FIRE | Gatilho de transicao | **Patrimônio real (R$2026) ≥ R$13.4M E SWR ≤ 2.4%** → iniciar processo de transicao para FIRE. Revisao a partir de jan/2034 (48 anos). Safe harbor: nao trabalhar alem de 2040 (53 anos). Referencia: P(FIRE)~87% ajustado VCMH. Script: monte_carlo_fire2040_bondtent.py | Anual (a partir de 2034) |
+| FIRE | Gatilho de transicao | **Patrimônio real (R$2026) ≥ R$13.4M E SWR ≤ 2.4%** → iniciar processo de transicao para FIRE. Revisao a partir de jan/2034 (48 anos). Safe harbor: nao trabalhar alem de 2040 (53 anos). Referencia: P(FIRE)~80% base (spending smile + guardrails, XX-lacunas-estrategicas 2026-04-01). Script: monte_carlo_fire2040_bondtent.py | Anual (a partir de 2034) |
 | FIRE | Trajetoria intermediaria | Pat real < R$8.5M aos 47 (2034): cenario adverso — modelar adiamento. Pat real >= R$11M aos 47: cenario favoravel — FIRE 50 possivel (P~80%). Pat real >= R$13.4M a qualquer idade: avaliar FIRE imediato | Anual |
 | FIRE | Custo de vida | Custo anual > R$287k | Recalcular SWR, patrimonio-alvo e FIRE date |
 | Patrimonial | Holding | Pat >= R$5M | Avaliar holding familiar: ITCMD, sucessao, protecao patrimonial |

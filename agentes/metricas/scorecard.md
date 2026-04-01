@@ -31,7 +31,9 @@
 | Retorno VWRA equivalente (35% de mkt) | ~5.4%/ano BRL real | DMS 2025 + AQR 2026 |
 | Alpha bruto do tilt | ~0.56%/ano | Delta fatorial vs mercado |
 | Haircut post-publication (McLean & Pontiff 2016) | 58% | HD-simplicity |
-| **Alpha liquido esperado** | **~0.16%/ano** | Apos haircut 58% |
+| Alpha pos-haircut | ~0.235%/ano | 0.56% × (1−0.58) = 0.235% |
+| Custos incrementais (TER delta + FX + operacional) | −0.073%/ano | HD-simplicity |
+| **Alpha liquido esperado** | **~0.16%/ano** | 0.235% − 0.073% = 0.163% |
 
 ---
 

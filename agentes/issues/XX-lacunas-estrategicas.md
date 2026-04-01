@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | XX-lacunas-estrategicas |
 | **Dono** | Head (cross-domain) |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | FIRE, Factor, Advocate, Quant |
 | **Co-sponsor** | Advocate (endossou abertura: 4 temas sem resolução formal) |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-01 |
 | **Origem** | Conversa — Diego perguntou o que está pendente em estratégia |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-01 |
 
 ---
 
@@ -62,40 +62,49 @@ Quatro questões que ficaram abertas enquanto o time focava em processo e infrae
 
 ## Análise
 
-> A preencher durante a execução.
+### Item 1 — P(FIRE 50)
+FIRE rodou `fire_montecarlo.py` (seed 42, 10k sims, spending smile + guardrails). Quant validou aritmética e reprodutibilidade. Fact-checker identificou que o 87% era de modelo sem spending smile (FR-003, obsoleto).
+
+### Item 2 — AVGS tail risk
+Factor: DFSVX (proxy) -66.7% em 2008 (PortfoliosLab). Portfolio total em BRL: -40 a -45% (FX depreciation atenua -58% USD → -42% BRL). Custo marginal AVGS vs SWRD: 3-4pp de drawdown adicional no portfolio total. Fact-checker confirmou: claim "-60%+" conservadora, não agressiva.
+
+### Item 3 — Falsificabilidade
+Advocate entregou tabela completa 5 blocos. Equity 79% quasi-irrefalsificável em 12 meses (exige 3 condições simultâneas — correto por design). HODL11 3% irrefalsificável por irrelevância (impacto ±0.1pp P(FIRE)). Diego aceitou HODL11 como "exceção tolerada".
+
+### Item 4 — HD-007
+`gatilhos.md` é a tabela master completa (16 gatilhos, Done 2026-03-23). Memória project_hd007_estado.md estava stale.
 
 ---
 
 ## Conclusão
 
-> A preencher ao finalizar.
-
 ### Veredicto Ponderado
 
 | Agente | Peso | Posição | Contribuição |
 |--------|------|---------|-------------|
-| Head | 1x | — | — |
-| FIRE | 3x | — | — |
-| Factor | 3x | — | — |
-| Advocate | 1x | — | — |
-| Quant | 2x | — | — |
-| **Score ponderado** | | **—** | **—** |
+| Head | 1x | Fechar todos os 4 itens | Coordenação |
+| FIRE | 3x | P(FIRE) 80% base — sem mudança material vs 80.8% anterior | Script + premissas validados |
+| Factor | 3x | AVGS 25%: aceitar explicitamente, não ajustar | Custo marginal 3-4pp, premium compensa |
+| Advocate | 1x | AVGS: 2 cenários de falha reais (Dead Factor, Liquidity Trap) | Pre-mortem registrado |
+| Quant | 2x | P(FIRE) aritmeticamente correto, viés conservador | Nenhum veto |
+| **Score ponderado** | | **Todos os 4 itens resolvidos** | **Diego aprovou** |
 
 ---
 
 ## Resultado
 
-> A preencher ao finalizar.
-
 | Tipo | Detalhe |
 |------|---------|
-| **Alocação** | — |
-| **Estratégia** | — |
-| **Conhecimento** | — |
-| **Memória** | — |
+| **Alocação** | AVGS 25% mantido. Tail risk documentado explicitamente em carteira.md. |
+| **Estratégia** | P(FIRE 50) atualizado: 80% base (87% era modelo sem spending smile — obsoleto). Tabela de falsificabilidade 5 blocos aprovada. |
+| **Conhecimento** | DFSVX max DD -66.7% (2008). McLean & Pontiff 58% confirmado. Alpha 0.16%: fórmula completa = 0.56% × 0.42 − 0.073% = 0.163%. HODL11 irrefalsificável por irrelevância — exceção tolerada. |
+| **Memória** | carteira.md, gatilhos.md, scorecard.md atualizados. project_hd007_estado.md stale → atualizar. |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Executar quando Diego quiser trabalhar nesta issue
+- [x] Item 1: P(FIRE) atualizado em carteira.md e gatilhos.md
+- [x] Item 2: AVGS tail risk documentado em carteira.md (Regras Universais)
+- [x] Item 3: tabela de falsificabilidade registrada (nesta issue; integrar em gatilhos.md na revisão anual)
+- [x] Item 4: HD-007 confirmado Done — memória stale corrigida

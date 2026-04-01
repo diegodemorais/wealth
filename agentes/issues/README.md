@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | — | — | — | — | — |
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
-| 5 | XX-lacunas-estrategicas | P(FIRE) desatualizado, AVGS tail risk, falsificabilidade, HD-007 estado | Head | Alta |
+| — | — | — | — | — |
 | — | — | — | — | — |
 | — | — | — | — | — |
 
@@ -39,12 +39,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | HD-python-stack-v2 | Capacidades analíticas avançadas | Head | Média | Aguardando extrato IBKR (tlh_lotes.json) |
+| — | — | — | — | — |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| XX-lacunas-estrategicas | P(FIRE) 80% base, AVGS tail risk aceito, falsificabilidade 5 blocos | Head | 2026-04-01 | P(FIRE) 80% base. AVGS aceito explicitamente. Tabela falsificabilidade aprovada. |
 | HD-proxies-canonicos | Proxies canônicos por ETF por período | Head | 2026-03-31 | proxies-canonicos.md criado. 4 datas corrigidas. JPGL: FF5+MOM sintético. AVEM: DFEVX. |
 | HD-metodologia-analitica | Padrões metodológicos para análises históricas | Head | 2026-03-31 | 6 padrões aprovados. Período canônico: target 20 anos (2006). Mandato para proxies definido. |
 | HD-correlacoes-regime | Correlações regime-dependent: stress vs calm (VIX) | Head | 2026-03-31 | SWRD↔JPGL converge (0.964). AVGS↔SWRD estável — diversificação real. Bond tent = proteção real. |
