@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | HD-metodologia-analitica |
 | **Dono** | 00 Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | 02 Factor, 14 Quant, 10 Advocate |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-31 |
 | **Origem** | Revisão proativa — análises históricas (backtest, factor regression, correlações, scorecard, shadows) sem padrão unificado de período mínimo, câmbio, rebalancing e benchmark. |
-| **Concluido em** | — |
+| **Concluido em** | 2026-03-31 |
 
 ---
 
@@ -32,118 +32,122 @@ Sem padrão: resultados de análises diferentes não são comparáveis. Um backt
 
 ---
 
-## Escopo
-
-### Padrão 1: Períodos mínimos por tipo de análise
-
-Definir e justificar o período mínimo para cada tipo. O período deve ser longo o suficiente para incluir pelo menos um ciclo completo (alta + correção + recuperação):
-
-| Tipo de análise | Período mínimo proposto | Ideal | Razão | Decisão |
-|----------------|------------------------|-------|-------|---------|
-| CAGR / Sharpe / MaxDD | 5 anos | 10 anos | Endpoint sensitivity — 5y pode pegar só bull ou só bear | ? |
-| Backtest de factor tilt | 10 anos | 20 anos | Factor premiums são cíclicos — 5y pode pegar um ciclo favorável por acidente | ? |
-| Correlações por regime | 5 anos (≥1 crise) | 15 anos (GFC + COVID + 2022) | Precisa de múltiplos episódios de crise para estabilidade estatística | ? |
-| Factor loadings (rolling) | 24m por janela | 36m | Estabilidade dos coeficientes; 24m é mínimo para FF5 | ? |
-| Factor loadings (full period) | 36 meses | 60 meses | Significância estatística dos betas | ? |
-| Shadow portfolio tracking | Desde inception | Ongoing | Tracking operacional — não tem mínimo estatístico | Desde mar/2026 ✅ |
-| Scorecard mensal | Mensal | Acumular histórico | Operacional | Mensal ✅ |
-
-**Questão central para debate:** com ETFs UCITS lançados em 2019-2024, nunca teremos 20 anos de dados reais. Como tratar esse limite estrutural? Opções:
-- a) Usar proxy para estender o período (requer HD-proxies-canonicos)
-- b) Aceitar períodos curtos com flag explícito de limitação
-- c) Usar índices (MSCI, FF data library) como ground truth de longo prazo
-
-### Padrão 2: Câmbio
-
-Hoje: backtests e correlações usam USD puro. Shadow portfolio usa BRL. Fator regression usa USD.
-
-Proposta para debate:
-- **Análises de retorno absoluto (CAGR, Sharpe):** BRL — porque o investidor é brasileiro e o IR incide em BRL
-- **Análises de correlação e fator:** USD — correlações em USD são mais limpas (removem ruído cambial comum a todos os ativos)
-- **Shadow portfolio e scorecard:** BRL — comparação operacional para o investidor
-- **Factor regression:** USD — fatores Fama-French são publicados em USD
-
-Regra de câmbio quando BRL:
-- PTAX venda BCB da data da observação (padrão já definido para TLH)
-- Não usar taxa Okegen ou estimativa
-
-### Padrão 3: Rebalancing assumption
-
-Hoje: backtest usa rebalancing mensal implícito (compra proporcional aos pesos). Portfolio analytics não rebalanceia — usa apenas retornos ponderados.
-
-Impacto: rebalancing mensal vs anual pode gerar até 0.3-0.5pp CAGR de diferença ("rebalancing bonus").
-
-Proposta para debate:
-- **Backtest de longo prazo:** anual (mais realista — custos de transação e IR)
-- **Correlações e factor regression:** sem rebalancing (retornos diários/mensais brutos)
-- **Shadow portfolio:** mensal via aportes (não venda — sem rebalancing forçado)
-
-### Padrão 4: Benchmark canônico
-
-Hoje: VWRA.L para shadow (mas VWRA existe só desde jul/2019). Factor regression usa fatores FF (sem benchmark de retorno). Backtest usa VWRA.L.
-
-Proposta:
-- **Benchmark de retorno (shadows, scorecard, backtest):** VWRA.L — ou SWRD.L como proxy quando VWRA não disponível
-- **Benchmark de fator (factor regression):** MSCI World (retorno de mercado, não um ETF)
-- **Benchmark de longo prazo (proxy para 10-20 anos):** definir após HD-proxies-canonicos
-
-### Padrão 5: Critério de suficiência estatística
-
-Quando um resultado é "confiável"? Hoje não há critério formal.
-
-Proposta:
-- **Factor loading:** reportar t-stat e p-value. Considerar significativo se p < 0.10 (dado períodos curtos)
-- **Backtest CAGR:** reportar intervalo de confiança bootstrap (95%) se período < 10 anos
-- **Correlação:** reportar N (número de observações) e flag se N < 60 (menos de 5 anos mensais)
-- **Resultado com proxy:** sempre flag explícito "⚠️ proxy" + validação de sobreposição (o proxy replicou o ETF real no período em que ambos existiram?)
-
-### Padrão 6: Data source hierarchy
-
-Quando há discrepância, qual fonte prevalece?
-
-Proposta:
-1. **yfinance** — preços de ETFs (primário, auto_adjust=True)
-2. **BCB SGS** — IPCA, SELIC, PTAX (primário para dados BR)
-3. **Kenneth French Data Library** — fatores FF5+MOM (primário para fator regression)
-4. **Tesouro Direto** — preços IPCA+ e Renda+ (manual — sem API)
-5. **IBKR statement** — posições e custos de compra (manual)
-
-Se yfinance retornar dado inconsistente: flag, não silenciar.
-
----
-
-## Raciocínio
-
-**Por que isso importa agora:** com `backtest_fatorial.py`, `portfolio_analytics.py`, `factor_regression.py` e `checkin_mensal.py` todos funcionando, começaremos a acumular resultados. Sem metodologia padronizada, os resultados de sessões diferentes não serão comparáveis — e em 6 meses não saberemos se o backtest "melhorou" porque a tese funcionou ou porque mudamos o período.
-
-**Falsificação desta issue:** se após definição dos padrões dois scripts rodando o mesmo período com os mesmos proxies divergirem em > 0.3pp CAGR, há bug metodológico — não diferença legítima.
-
----
-
 ## Análise
 
-> A preencher após debate com Quant, Factor e Advocate.
+Debate com Quant, Factor e Advocate (2026-03-31). Julgamentos independentes em paralelo; síntese pelo Head.
+
+### Período máximo histórico
+
+Quant e Factor chegaram a números compatíveis via tiers:
+
+| Tier | Subcarteira | Período máximo com proxies | Binding constraint |
+|------|-------------|--------------------------|-------------------|
+| A | Full portfolio (SWRD+AVGS+AVEM+JPGL) | **2009 → 2026 = 17 anos** | IWDA.L como proxy SWRD (desde 2009) |
+| B | DM subcarteira (SWRD+AVGS) | **2001 → 2026 = 25 anos** | AVUV como proxy AVGS (desde 2001) |
+
+**Target de 20 anos (2006):** definido pelo Diego como alvo. Mandato para HD-proxies-canonicos:
+- SWRD 2006-2009: gap de 3 anos (candidatos: EFA+IVV blend, MSCI World mutual fund)
+- JPGL 2006-2014: gap de 8 anos — mais crítico (candidatos: French Library factors sintéticos, IWMO+IWVL blend pré-lançamento)
+
+### Literatura sobre período representativo
+
+| Objetivo | Período | Razão |
+|----------|---------|-------|
+| 1 ciclo completo | 10 anos mínimo | Alta+correção+recuperação típico |
+| Factor premium detectável | 20 anos | Premiums ~3-5%/ano com volatilidade alta |
+| Endpoint sensitivity tolerável | 15+ anos | 1-2 anos ruins distorcem menos |
+| Confirmação estatística (95%) | 40-60 anos | Fama-French 2010 — inalcançável com UCITS |
+
+Conclusão: 20 anos é o alvo prático mais ambicioso e metodologicamente defensável. Proxy error passa a dominar além de 25 anos.
 
 ---
 
 ## Conclusão
 
-> A preencher.
+Seis padrões aprovados por Diego (2026-03-31):
+
+### Padrão 1 — Períodos mínimos
+
+| Tipo de análise | Mínimo | Ideal | Nota |
+|----------------|--------|-------|------|
+| CAGR / Sharpe / MaxDD | 5 anos | 10 anos | Endpoint sensitivity |
+| Backtest factor tilt | 10 anos | **20 anos** | Factor premiums são cíclicos |
+| Correlações por regime | 5 anos + ≥1 crise | 15 anos | Múltiplos episódios de crise |
+| Factor loadings rolling | **36m/janela** | 36m | 24m = ruído (Advocate + Quant) |
+| Factor loadings full period | 36m | 60m | Significância estatística |
+| Shadow / scorecard | Desde inception | Ongoing | Operacional |
+
+**Período canônico da carteira:** target 20 anos (2006), floor 17 anos (2009 com proxies conhecidos). HD-proxies-canonicos preenche os gaps.
+
+### Padrão 2 — Câmbio
+
+| Tipo de análise | Moeda | Razão |
+|----------------|-------|-------|
+| Correlações e fator | **USD** | BRL inflaciona correlações 12-18pp (fator cambial comum a todos os ativos) |
+| CAGR / Sharpe / MaxDD | **BRL** (primary) + USD (secondary) | IR incide em BRL; secondary separa alfa real de alfa cambial |
+| Factor regression | **USD** | Fatores FF são publicados em USD |
+| Shadow / scorecard | **BRL** | Tracking operacional |
+
+Quando BRL: PTAX venda BCB da data da observação (mesmo padrão do TLH monitor).
+
+### Padrão 3 — Rebalancing
+
+| Tipo | Padrão | Sensitivity obrigatória |
+|------|--------|------------------------|
+| Backtest longo prazo | **Anual** | Rodar mensal/anual e reportar Δ CAGR |
+| Correlações / factor regression | Sem rebalancing | N/A |
+| Shadow | Mensal via aportes (sem venda) | N/A |
+
+Advocate venceu Factor: mensal é irreal operacionalmente (IR + custos). Sensitivity obrigatória.
+
+### Padrão 4 — Benchmark canônico
+
+| Uso | Benchmark |
+|-----|-----------|
+| Shadows, scorecard, backtest | **VWRA.L** (primary) / SWRD.L proxy pré-Jul/2019 ⚠️ subestima retorno em anos EM |
+| Factor regression | **MSCI World via French Library** (retorno de mercado puro, não ETF) |
+| Longo prazo (>10 anos) | Definir após HD-proxies-canonicos |
+
+### Padrão 5 — Suficiência estatística
+
+| Métrica | Threshold | Linguagem |
+|---------|-----------|-----------|
+| t-stat factor loading | ≥ 2.0 = confirmado / 1.65-2.0 = fraco / < 1.65 = não existe | Reportar p-value explícito |
+| Correlação | N ≥ 1.500 obs diárias (6 anos) para IC ≤ ±0.05 | Flag se N < 60 mensais |
+| Backtest CAGR | Bootstrap 95% se período < 10 anos | — |
+| Proxy | Flag ⚠️ obrigatória + validação in-sample (sobreposição proxy vs ETF real) | — |
+
+### Padrão 6 — Data source hierarchy
+
+1. **yfinance** — preços ETF (auto_adjust=True)
+2. **BCB SGS** — IPCA, Selic, PTAX
+3. **Kenneth French Data Library** — fatores FF5+MOM
+4. **Tesouro Direto** — preços IPCA+/Renda+ (manual)
+5. **IBKR statement** — posições e custos (manual)
+
+Conflito → flag explícita, nunca silenciar.
 
 ---
 
 ## Resultado
 
-> A preencher.
+| Tipo | Detalhe |
+|------|---------|
+| **Padrões definidos** | 6 padrões aprovados (período, câmbio, rebalancing, benchmark, suficiência, fontes) |
+| **Output crítico** | Período canônico: target 20 anos (2006), floor 17 anos (2009) |
+| **Mandato gerado** | HD-proxies-canonicos: preencher gaps SWRD 2006-2009 e JPGL 2006-2014 |
+| **Referência** | Criar `agentes/referencia/metodologia-analitica.md` (pendente) |
+| **Scripts** | Atualizar backtest_fatorial.py e portfolio_analytics.py para referenciar padrões (pendente) |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Quant: validar proposta de períodos mínimos com literatura (há consenso acadêmico?)
-- [ ] Advocate: stress-testar a proposta de câmbio — BRL para retornos absolutos é sempre melhor?
-- [ ] Factor: validar benchmark canônico para factor regression (MSCI World via yfinance vs French library)
-- [ ] Definir os 6 padrões (debate e aprovação de Diego)
+- [x] Quant: validar proposta de períodos mínimos com literatura
+- [x] Advocate: stress-testar proposta de câmbio
+- [x] Factor: validar benchmark canônico para factor regression
+- [x] Definir os 6 padrões (debate e aprovação de Diego)
 - [ ] Criar `agentes/referencia/metodologia-analitica.md` (fonte única de verdade)
 - [ ] Atualizar scripts para referenciar os padrões
-- [ ] Saída principal: período máximo histórico da carteira — input obrigatório para HD-proxies-canonicos
+- [ ] HD-proxies-canonicos: executar com mandato de 20 anos
+

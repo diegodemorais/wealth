@@ -26,8 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | — | — | — | — | — |
-| 1 | HD-metodologia-analitica | Padrões metodológicos para todas as análises históricas — define período máximo | Head | Alta |
-| 2 | HD-proxies-canonicos | Proxies canônicos por ETF para o período definido na issue anterior | Head | Alta |
+| 1 | HD-proxies-canonicos | Proxies canônicos por ETF — mandato: 20 anos (2006), gaps SWRD+JPGL | Head | Alta |
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
 | — | — | — | — | — |
@@ -45,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-metodologia-analitica | Padrões metodológicos para análises históricas | Head | 2026-03-31 | 6 padrões aprovados. Período canônico: target 20 anos (2006). Mandato para proxies definido. |
 | HD-correlacoes-regime | Correlações regime-dependent: stress vs calm (VIX) | Head | 2026-03-31 | SWRD↔JPGL converge (0.964). AVGS↔SWRD estável — diversificação real. Bond tent = proteção real. |
 | HD-python-stack-v2 | Capacidades analíticas avançadas: backtest fatorial, TLH monitor | Head | — | Caps 1/2/4 prontas. Cap 3 (TLH): script ok, aguarda extrato IBKR para preencher lotes |
 | HD-python-stack | Automação de rotinas com Python stack | Head | 2026-03-31 | 3 scripts criados. checkin_mensal, fire_montecarlo, portfolio_analytics funcionais. |

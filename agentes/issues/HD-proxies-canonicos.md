@@ -9,10 +9,22 @@
 | **Status** | Backlog |
 | **Prioridade** | Alta |
 | **Participantes** | 02 Factor, 14 Quant, 15 Fact-Checker |
-| **Dependencias** | HD-metodologia-analitica (período máximo definido antes de buscar proxies) |
+| **Dependencias** | HD-metodologia-analitica ✅ (período máximo definido: target 20 anos / 2006) |
 | **Criado em** | 2026-03-31 |
 | **Origem** | Revisão proativa — 3 scripts usam proxies diferentes para os mesmos ETFs. Sem fonte única de verdade. |
 | **Concluido em** | — |
+
+---
+
+## Mandato (output de HD-metodologia-analitica)
+
+**Período canônico alvo: 20 anos (2006 → 2026).** Floor: 17 anos (2009 com proxies já conhecidos).
+
+Gaps críticos a preencher:
+- **SWRD 2006-2009:** 3 anos sem proxy UCITS (IWDA.L só existe desde out/2009). Candidatos: EFA+IVV blend, MSCI World mutual fund.
+- **JPGL 2006-2014:** 8 anos sem proxy multi-factor (JPUS+JPIN só desde 2014). Candidatos: French Library factors sintéticos (value+momentum+quality+low vol+size), IWMO+IWVL blend retroativo.
+
+AVGS (via AVUV desde set/2001) e AVEM (via EEM desde nov/2003) já cobrem 20+ anos.
 
 ---
 
