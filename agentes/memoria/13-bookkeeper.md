@@ -4,6 +4,19 @@
 
 ---
 
+## Regra: Aportes vs Operacoes Independentes
+
+**NAO tratar ausencia de aportes como execucao pendente ou falha.**
+Diego recebe salario mensal. Pode haver meses sem aporte. A carteira migra apenas via aportes (sem vender). Tranches de IPCA+, JPGL etc. demoram naturalmente — isso e execucao disciplinada, nao atraso.
+
+Distincao obrigatoria:
+- **Aportes/tranches**: aguardam proximo evento de caixa. Status NORMAL. Nao emitir alerta.
+- **Operacoes independentes de caixa**: venda programada, reinvestimento de cupom, acao no Tesouro com posicao existente — essas sim podem ser escaladas se ficarem sem execucao por 30+ dias.
+
+Esta regra foi violada 3x (2026-03-22, 2026-03-27, 2026-04-01). Ler antes de qualquer diagnostico de execucao.
+
+---
+
 ## Execucoes Pendentes
 
 | Decisao | Aprovada em | Prazo | Status | Detalhes |
