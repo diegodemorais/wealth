@@ -16,20 +16,31 @@ Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, factor-tilted, acumulac
 
 ---
 
+## Usuários de Alta Qualidade (priorizar posts destes usuários ao ler threads)
+
+- **glimz**: análises quantitativas de tracking difference, spreads, dados de NAV — muito detalhado
+- **afstand**: criador do thread UCITS MCW, perspectiva holandesa, dados de TD históricos
+- **Ben_Felix**: host do podcast, perspectiva teórica fatorial
+- **ipparkos**: perguntas relevantes, sínteses úteis
+- **django**: perspectiva prática, recomendações diretas
+
+---
+
 ## Threads Fixas a Monitorar
 
-Para cada thread abaixo, leia os posts novos desde o ultimo scan (ver Historico de Scans no final):
+Para cada thread ativa, leia os posts novos desde o **Último Post Lido** (ver coluna abaixo). Atualizar o número após cada scan.
 
-| ID | Título | Relevância | Foco |
-|----|--------|------------|------|
-| 31781 | UCITS MCW implementations – simple and low-cost solutions | Alta | SWRD, IWDA, VWCE, WEBN, SPYY — tracking difference all-in, spread, custo real |
-| 32396 | Avantis UCITS (EU) Discussion Thread | Alta | AVGS, AVEM, AVWC, AVWS, AVEU, AVPE, AVUS — hub principal Avantis UCITS (1926 posts, ativo) |
-| 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, JPGL — comparação fatorial UCITS, novos produtos |
-| 17774 | Avantis ETF Discussion | Baixa | Thread antigo (fechado Mar 2022) — substituído pelo 32396 para UCITS |
-| 15439 | Investing in Managed Futures | Media | RK-003 — managed futures como diversificador (issue backlog) |
-| 13776 | Bitcoin / Crypto FUD | Media | HODL11, cripto — tese e gatilhos |
-| 2927 | How much Emerging Market? | Media | Alocação EM — debate size/conviction |
-| 13125 | 100% Small Cap Value portfolio | Media | SCV thesis — base teórica AVGS |
+| ID | Título | Relevância | Foco | Último Post Lido |
+|----|--------|------------|------|-----------------|
+| 31781 | UCITS MCW implementations – simple and low-cost solutions | Alta | SWRD, IWDA, VWCE, WEBN, SPYY — tracking difference all-in, spread, custo real | ver Histórico abaixo |
+| 32396 | Avantis UCITS (EU) Discussion Thread | Alta | AVGS, AVEM, AVWC, AVWS, AVEU, AVPE, AVUS — hub principal Avantis UCITS | ver Histórico abaixo |
+| 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, JPGL — comparação fatorial UCITS, novos produtos | ver Histórico abaixo |
+| 15439 | Investing in Managed Futures | Media | RK-003 — managed futures como diversificador (issue backlog) | ver Histórico abaixo |
+| 13776 | Bitcoin / Crypto FUD | Media | HODL11, cripto — tese e gatilhos | ver Histórico abaixo |
+| 2927 | How much Emerging Market? | Media | Alocação EM — debate size/conviction | ver Histórico abaixo |
+| 13125 | 100% Small Cap Value portfolio | Media | SCV thesis — base teórica AVGS | ver Histórico abaixo |
+
+> Thread 17774 (Avantis ETF Discussion) foi fechada em Mar/2022 e substituída por 32396 — removida do monitoramento ativo.
 
 ---
 
@@ -47,7 +58,7 @@ discourse_search: "AVEM emerging markets UCITS"
 discourse_search: "tracking difference UCITS 2025" ou "tracking difference 2026"
 discourse_search: "small cap value premium" (novos papers/debates)
 discourse_search: "managed futures UCITS"
-discourse_search: "sequence of returns risk" (relevante pre-FIRE Diego)
+discourse_search: "sequence of returns risk"
 ```
 
 ### Critérios para incluir thread nova no scan
@@ -65,11 +76,15 @@ discourse_search: "sequence of returns risk" (relevante pre-FIRE Diego)
 
 ### Passo 1: Threads fixas
 
-Para cada thread da tabela acima:
+Para cada thread da tabela acima, determinar o número do último post lido no Histórico de Scans:
+
 ```
 discourse_read_topic: topic_id=XXXXX, start_post_number=[ultimo lido + 1], post_limit=50
 ```
+
 Se tiver mais posts, continue paginando até cobrir todos os novos.
+
+**Fallback se discourse API falhar**: Tentar novamente com `post_limit=20`. Se falhar novamente, registrar no relatório como "Indisponível — verificar na próxima sessão" e continuar com as outras threads.
 
 ### Passo 2: Buscar threads novas
 
@@ -93,8 +108,8 @@ Leia o suficiente para avaliar se é relevante. Se sim, inclua no relatório.
 
 ### Threads Fixas — Novidades
 
-| Thread | Posts Novos | Insight Principal | Impacto na Carteira |
-|--------|-------------|-------------------|---------------------|
+| Thread | Posts Novos | Último Post | Insight Principal | Impacto na Carteira |
+|--------|-------------|-------------|-------------------|---------------------|
 
 ### Threads Novas Identificadas
 
@@ -121,7 +136,7 @@ Leia o suficiente para avaliar se é relevante. Se sim, inclua no relatório.
 |------|---------------------------|---------------|
 
 ### Threads a Adicionar ao Monitoramento Fixo
-{se encontrou thread nova que merece monitoramento contínuo}
+{se encontrou thread nova que merece monitoramento contínuo — incluir ID e último post lido}
 
 ### Próximo Scan
 - Data sugerida: [mensal, ou antes se houver evento relevante]
@@ -130,22 +145,22 @@ Leia o suficiente para avaliar se é relevante. Se sim, inclua no relatório.
 
 ---
 
-## Historico de Scans
+## Passo Final: Atualizar Histórico
 
-| Data | Threads Cobertas | Posts Lidos Até | Resultado Principal |
-|------|-----------------|-----------------|---------------------|
-| 2026-03-23 | 31781 | post 150 | SWRD +26bps vs net benchmark (3y). SPYY e FWRA melhores all-world. WEBN tracking ruim nos primeiros meses. Swap S&P 500 outperforma físico em ~25bps. |
-| 2026-03-26 | 31781, 31258, 32396 (novo), 15439, 13776, 2927, 13125 | 31781: post 811 | Vanguard All-Cap UCITS lançando. BlackRock ACSW/ESWP (swaps) Mar 2026. Thread 32396 adicionado — hub Avantis UCITS. FLXE pode ter EM factor loading > AVEM. Avantis lançou AVEU/AVPE/AVUS Fev 2026. Zero MF (sem UCITS). BTC ~$70k -26%/mês. |
+Após gerar o relatório, **sempre** atualizar a tabela "Histórico de Scans" abaixo com:
+- Data do scan
+- Threads cobertas
+- Número do último post lido por thread
+- Resultado principal (1 linha)
 
 ---
 
-## Usuários de Alta Qualidade (posts com dados, vale prestar atenção)
+## Histórico de Scans
 
-- **glimz**: análises quantitativas de tracking difference, spreads, dados de NAV — muito detalhado
-- **afstand**: criador do thread UCITS MCW, perspectiva holandesa, dados de TD históricos
-- **Ben_Felix**: host do podcast, perspectiva teórica fatorial
-- **ipparkos**: perguntas relevantes, sínteses úteis
-- **django**: perspectiva prática, recomendações diretas
+| Data | Threads Cobertas | Posts Lidos Até | Resultado Principal |
+|------|-----------------|-----------------|---------------------|
+| 2026-03-23 | 31781 | 31781: post 150 | SWRD +26bps vs net benchmark (3y). SPYY e FWRA melhores all-world. WEBN tracking ruim primeiros meses. Swap S&P 500 outperforma físico ~25bps. |
+| 2026-03-26 | 31781, 31258, 32396, 15439, 13776, 2927, 13125 | 31781: post 811 | Vanguard All-Cap UCITS lançando. BlackRock ACSW/ESWP (swaps) Mar 2026. Thread 32396 adicionado. FLXE pode ter EM factor loading > AVEM. Avantis lançou AVEU/AVPE/AVUS Fev 2026. Zero MF (sem UCITS). BTC ~$70k -26%/mês. |
 
 ---
 

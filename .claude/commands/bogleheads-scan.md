@@ -2,19 +2,18 @@
 
 Voce e o Head (00) executando um scan de inteligencia no forum Bogleheads para a carteira de Diego.
 
-## Metodo de Acesso
+## Método de Acesso
 
-O forum Bogleheads usa phpBB sem API. Acesso mais eficiente via **Atom RSS feed**:
+O forum Bogleheads usa phpBB sem API. Três opções de acesso (por ordem de confiabilidade):
 
-| URL | Conteudo |
-|-----|----------|
-| `https://www.bogleheads.org/forum/feed.php?f=22&mode=topics` | Non-US Investing — topicos recentes (mais relevante) |
-| `https://www.bogleheads.org/forum/feed.php?f=10&mode=topics` | Investing Theory, News & General |
-| `https://www.bogleheads.org/forum/feed.php?f=1&mode=topics` | Personal Investments |
-| `https://www.bogleheads.org/forum/feed.php?mode=topics` | Todos os foruns — topicos recentes |
+1. **RSS Atom feed** (mais confiável para tópicos recentes):
+   - Non-US Investing: `https://www.bogleheads.org/forum/feed.php?f=22&mode=topics`
+   - Investing Theory: `https://www.bogleheads.org/forum/feed.php?f=10&mode=topics`
+   - Personal Investments: `https://www.bogleheads.org/forum/feed.php?f=1&mode=topics`
 
-Para threads especificos: WebSearch `site:bogleheads.org [keywords]`
-WebFetch direto no forum bloqueia (403/phpBB) — usar RSS ou WebSearch.
+2. **WebSearch**: `site:bogleheads.org [keywords]` — bom para threads específicas
+
+3. **WebFetch direto**: frequentemente bloqueia (403/phpBB) — usar só como fallback
 
 ## Carteira de Diego (referencia)
 
@@ -22,33 +21,41 @@ ETFs ativos: SWRD (35%), AVGS (25%), AVEM (20%), JPGL (15%), HODL11 (3%), IPCA+ 
 ETFs transitorios (nao comprar mais, liquidar em anos): AVUV, AVDV, AVES, DGS, USSC
 Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, acumulacao ativa
 
-## Como Executar
+---
 
-## Threads Fixos a Monitorar
+## Threads Fixas a Monitorar
 
-Para cada thread abaixo, buscar posts novos desde o ultimo scan (ver Historico de Scans):
+Para threads fixas, usar WebSearch `site:bogleheads.org viewtopic.php?t={ID}` para confirmar posts novos desde o último scan.
 
-| ID | Título | Relevância | Foco |
-|----|--------|------------|------|
-| 443539 | The best accumulating global equity ETF in 2024 | Alta | SWRD/SPPW/VWCE/SPYI/WEBN — tracking difference, TER, custo all-in MCW |
-| 409214 | International (Non-US) versus US Equities (The "Arguments") | Alta | Debate US vs ex-US, valuations, expected returns — thread ativo 215+ paginas |
-| 427201 | New insights on safe and perpetual withdrawal rates | Alta | SWR — updates e debates sobre withdrawal strategies |
-
-Acesso: `WebSearch site:bogleheads.org/forum viewtopic.php?t={ID}` ou RSS.
+| ID | Título | Relevância | Foco | Último Post Lido |
+|----|--------|------------|------|-----------------|
+| 443539 | The best accumulating global equity ETF | Alta | SWRD/SPPW/VWCE/SPYI/WEBN — tracking difference, TER, custo all-in MCW | ver Histórico abaixo |
+| 409214 | International (Non-US) vs US Equities | Alta | Debate US vs ex-US, valuations, expected returns — 215+ páginas ativo | ver Histórico abaixo |
+| 427201 | New insights on safe and perpetual withdrawal rates | Alta | SWR — updates e debates sobre withdrawal strategies | ver Histórico abaixo |
 
 ---
 
-### Passo 1: Buscar topicos recentes
+## Como Executar
 
-Faça WebFetch nas URLs RSS acima (comecar pelo f=22 Non-US Investing).
-Parsear o Atom XML para extrair:
-- Titulo dos topicos
-- URL de cada topico
-- Data de criacao
+### Passo 1: Threads fixas
 
-### Passo 2: Filtrar por relevancia
+Para cada thread da tabela acima, buscar posts novos desde o último scan registrado no Histórico:
 
-Priorizar topicos que mencionem:
+```
+WebSearch: site:bogleheads.org viewtopic.php?t={ID} [keywords relevantes da thread]
+```
+
+Se a thread retornar conteúdo, extrair insights principais. Se bloquear, registrar como "Indisponível" e continuar.
+
+### Passo 2: Buscar tópicos recentes via RSS
+
+Fazer WebFetch no feed RSS de Non-US Investing (f=22) primeiro, depois f=10 se relevante.
+
+Parsear o XML Atom para extrair: título, URL, data. Filtrar por relevância antes de investigar mais.
+
+### Passo 3: Filtrar por relevância
+
+Priorizar tópicos que mencionem:
 - ETFs relevantes: SWRD, IWDA, VWRA, AVGS, AVEM, JPGL, AVUV, AVDV, AVES
 - Temas: factor investing, small cap value, emerging markets, multi-factor, UCITS, accumulating
 - FIRE para non-US investors
@@ -56,36 +63,38 @@ Priorizar topicos que mencionem:
 - Tracking difference, TER, securities lending
 - Qualquer debate sobre alocacao que seja relevante para carteira factor-tilted
 
-Descartar: topicos de paises especificos sem relevancia geral, questions basicas de iniciantes, ativos que Diego nao tem e nunca tera.
+Descartar: tópicos de países específicos sem relevância geral, questões básicas de iniciantes, ativos que Diego não tem e nunca terá.
 
-### Passo 3: Deep-dive nos mais relevantes
+### Passo 4: Deep-dive nos mais relevantes
 
-Para cada topico selecionado (max 5-8):
-- WebSearch `site:bogleheads.org [titulo ou keywords do topico]` para confirmar acesso
-- Ou tentar WebFetch direto na URL do topico (algumas paginas carregam)
+Para cada tópico selecionado (max 5-8):
+- WebSearch para acessar conteúdo
 - Extrair os insights principais e consensus do forum
 
-### Passo 4: Apresentar relatorio
-
-Formato de saida:
+### Passo 5: Apresentar relatório
 
 ```
 ## Bogleheads Scan — {data}
 
-### Resumo: O que mudou vs ultimo scan
-{1-3 bullets com novidades ou confirmacoes relevantes}
+### Resumo: O que mudou vs último scan
+{1-3 bullets com novidades ou confirmações relevantes}
 
-### Topicos Relevantes
+### Threads Fixas — Novidades
 
-| # | Topico | Forum | Data | Relevancia | Insight Principal |
+| Thread | Posts Novos | Insight Principal | Impacto |
+|--------|-------------|-------------------|---------|
+
+### Tópicos Recentes Relevantes
+
+| # | Tópico | Forum | Data | Relevância | Insight Principal |
 |---|--------|-------|------|------------|-------------------|
 
-### Insights por Area
+### Insights por Área
 
 **Factor / ETFs UCITS**
-- [bullet por insight com referencia ao thread]
+- [bullet por insight com referência ao thread]
 
-**FIRE / Desacumulacao non-US**
+**FIRE / Desacumulação non-US**
 - [bullet]
 
 **Tax / WHT / Estate**
@@ -96,23 +105,31 @@ Formato de saida:
 
 ### Impacto na Carteira de Diego
 
-| Topico | Impacto | Acao |
+| Tópico | Impacto | Ação |
 |--------|---------|------|
 | ... | Confirma / Desafia / Neutro | Nenhuma / Investigar / Acionar issue |
 
-### Proximos Scans
-- Topicos a monitorar para evolucao
+### Próximos Scans
+- Threads a monitorar para evolução
 ```
 
-## Frequencia Recomendada
+### Passo Final: Atualizar Histórico
 
-- **Mensal**: junto com revisao mensal da carteira
-- **Sob demanda**: quando Diego perguntar sobre topic especifico no forum
-- **Apos grandes eventos de mercado**: para capturar reacao da comunidade
+Sempre registrar o scan no Histórico abaixo com data, issues identificadas e resultado principal.
 
-## Historico de Scans
+---
 
-| Data | Issues Identificados | Resultado |
+## Histórico de Scans
+
+| Data | Issues Identificadas | Resultado |
 |------|---------------------|-----------|
-| 2026-03-23 | XX-004 | Carteira alinhada. SWR non-US = 3.5%. SWRD melhor all-in que IWDA (~10 bps/ano). JPGL confirmado. RSS feed identificado. Cash IBKR < $60k (ja mapeado em US-listed). |
+| 2026-03-23 | XX-004 | Carteira alinhada. SWR non-US = 3.5%. SWRD melhor all-in que IWDA (~10 bps/ano). JPGL confirmado. RSS feed identificado. Cash IBKR < $60k (mapeado em US-listed). |
 | 2026-03-26 | — | Morningstar SWR 2026 = 3.9% (base case) — Diego usa 3.12-3.4%, muito mais conservador. International outperformando US (tariffs + USD fraco). Thread 443539 identificado como hub MCW Bogleheads. |
+
+---
+
+## Frequência Recomendada
+
+- **Mensal**: junto com revisão mensal da carteira
+- **Sob demanda**: quando Diego perguntar sobre tópico específico
+- **Após grandes eventos de mercado**: para capturar reação da comunidade

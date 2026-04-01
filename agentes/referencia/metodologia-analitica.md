@@ -34,11 +34,18 @@ Todo resultado com período < 10 anos leva flag explícita de limitação.
 | Tipo de análise | Moeda | Razão |
 |----------------|-------|-------|
 | Correlações e fator | **USD** | BRL inflaciona correlações 12-18pp (fator cambial comum) |
-| CAGR / Sharpe / MaxDD | **BRL** (primary) + USD (secondary) | IR incide em BRL; secondary separa alfa real de alfa cambial |
+| CAGR / Sharpe / MaxDD (backtests) | **BRL** (primary) + USD (secondary) | IR incide em BRL; secondary separa alfa real de alfa cambial |
 | Factor regression | **USD** | Fatores FF são publicados em USD |
-| Shadow / scorecard | **BRL** | Tracking operacional |
+| Shadow / scorecard / check-in | **BRL** | Tracking operacional |
 
-Quando BRL: **PTAX venda BCB** da data da observação. Nunca taxa estimada ou Okegen.
+**Taxa de câmbio por contexto:**
+
+| Contexto | Taxa | Razão |
+|----------|------|-------|
+| Backtests históricos / análise acadêmica | **PTAX venda BCB** | Série histórica consistente e pública para qualquer data |
+| Valuation operacional (check-in, shadow, scorecard) | **Dólar comercial do dia (okegen)** | Reflete taxa real de mercado para cotação de patrimônio |
+| Transações reais (compra/venda de ETFs) | **Okegen + IOF 1,1% + spread 0,25% + spread do ativo + corretagem IBKR** | Custo efetivo all-in da operação |
+| IR / ganho de capital | **PTAX venda BCB** da data da operação | Exigência legal — base de cálculo do imposto |
 
 ---
 

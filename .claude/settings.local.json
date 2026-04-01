@@ -15,7 +15,8 @@
       "mcp__discourse__discourse_get_user",
       "mcp__discourse__discourse_list_user_posts",
       "mcp__discourse__discourse_list_users",
-      "mcp__discourse__discourse_run_query"
+      "mcp__discourse__discourse_run_query",
+      "mcp__openspace__search_skills"
     ]
   },
   "model": "sonnet",

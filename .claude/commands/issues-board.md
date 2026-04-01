@@ -1,6 +1,6 @@
 # Board — Issues Carteira Diego
 
-Leia `agentes/issues/README.md`. Para cada issue em Doing E Backlog, leia tambem o arquivo individual `agentes/issues/{ID}.md` para obter data de criacao e dependencias.
+Leia `agentes/issues/README.md`. Para cada issue em Doing, Refinamento E Backlog, leia tambem o arquivo individual `agentes/issues/{ID}.md` para obter data de criacao e dependencias. Se o arquivo nao existir, mostrar "—" nos campos correspondentes.
 
 Calcule a idade de cada issue em dias (data de hoje menos Criado em). Se nao tiver data, mostre "—".
 
@@ -15,6 +15,12 @@ Apresente o board exatamente neste formato:
 | ID | Título | Dono | Dias | Status | Bloqueio | Deps |
 |----|--------|------|------|--------|----------|------|
 | {ID} | {Titulo} | {Dono} | {N} | {status curto} | {bloqueio ou —} | {IDs das deps ou —} |
+
+### 🔷 Em Refinamento
+
+| ID | Título | Dono | Dias | Pendência |
+|----|--------|------|------|-----------|
+| {ID} | {Titulo} | {Dono} | {N} | {o que falta para entrar em Doing} |
 
 ### 📋 Backlog
 
@@ -37,4 +43,5 @@ Regras:
 - Status (Doing): 3-5 palavras ativas
 - Deps: so os IDs curtos (ex: HD-006, FR-003), sem titulo. Se muitas, mostrar as 2 mais criticas
 - Resultado (Done): max 8 palavras
+- Se secao Refinamento estiver vazia, omitir a secao
 - Nao adicione texto fora das tabelas — apenas tabelas e cabecalhos de secao

@@ -48,7 +48,7 @@ PERIODO_ANALISE = "3y"   # janela padrão para análise trimestral
 # Proxies US-listed para fronteira eficiente (histórico ~5 anos vs AVGS ~1 ano)
 # AVUV = Avantis US Small Cap Value | AVDV = Avantis Intl Small Cap Value
 # AVGS ≈ blend de AVUV + AVDV (estratégia Avantis global small cap value)
-PROXY_AVGS = {"AVUV": 0.60, "AVDV": 0.40}   # pesos aproximados do blend
+PROXY_AVGS = {"AVUV": 0.58, "AVDV": 0.42}   # pesos factsheet Avantis (proxies-canonicos.md 2026-03-31)
 
 
 # ─── DADOS ────────────────────────────────────────────────────────────────────

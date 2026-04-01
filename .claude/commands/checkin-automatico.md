@@ -25,6 +25,8 @@ Extrair via WebFetch:
 - Patrimonio total e % por bucket
 - Cambio de referencia
 
+**Se a planilha nao estiver acessivel:** reportar com ultimos dados do sistema + data da ultima reconciliacao. Nao bloquear o check-in por indisponibilidade de planilha.
+
 ### Passo 2: Ler estado interno
 
 Ler em paralelo:
@@ -33,7 +35,7 @@ Ler em paralelo:
 - `agentes/contexto/operacoes.md`
 - `agentes/memoria/08-macro.md` (snapshot macro)
 - `agentes/memoria/06-risco.md` (gatilhos Renda+ e HODL11)
-- `agentes/memoria/13-bookkeeper.md` (ultima reconciliacao)
+- `agentes/memoria/13-bookkeeper.md` (ultima reconciliacao — inclui data para detectar primeiro check-in do mes)
 
 ### Passo 3: Reconciliar
 
@@ -50,6 +52,7 @@ Comparar dados da planilha com carteira.md:
    - HODL11 < 1,5% ou > 5%?
    - Renda+ 2065 taxa <= 6,0% (venda) ou >= 6,5% (compra)?
    - Drift de alocacao > 5pp em algum bucket?
+   - CDS Brasil 5y >= 500bps (alerta) ou >= 800bps (alarme)?
 3. **Dados macro**: buscar via WebSearch as taxas atuais (Selic, IPCA+ 2040, Renda+ 2065, BRL/USD, BTC)
 4. **Aporte mensal**: R$25k do mes ja foi feito?
 
@@ -65,7 +68,7 @@ Formato conciso:
 |--------|----------|---------|-------|
 
 Patrimonio total: R$ X (planilha) vs R$ Y (sistema)
-Cambio: R$ X
+Cambio: R$ X (dólar comercial do dia — okegen)
 
 ### Execucoes Pendentes
 {status de cada execucao — dias restantes do prazo}
@@ -87,48 +90,56 @@ Cambio: R$ X
 ### Passo 6: Registrar
 
 - Atualizar `agentes/memoria/13-bookkeeper.md` com nova reconciliacao
-- Se posicoes mudaram significativamente (>2%), atualizar `agentes/contexto/carteira.md` (pedir aprovacao do Diego antes)
+- Se posicoes mudaram significativamente (>2%): atualizar `agentes/contexto/carteira.md`. Em modo autonomo (`/loop`), atualizar diretamente. Em sessao interativa, pedir aprovacao do Diego primeiro.
 - Se dados macro mudaram, atualizar `agentes/memoria/08-macro.md`
-- Se gatilho foi atingido, alertar no report
+- Se gatilho foi atingido, alertar no report com nivel ALTO
 - Registrar operacoes novas em `agentes/contexto/operacoes.md` se detectadas
-- NAO tomar acoes — apenas reportar. Decisoes sao do Head e dos agentes especializados
+- NAO tomar acoes de compra/venda — apenas reportar. Decisoes sao do Head e dos agentes especializados
 
 ---
 
 ## Passo Adicional — Check-in Mensal (executar no primeiro check-in de cada mês)
 
-> Detectar se é o primeiro check-in do mês: comparar data de hoje com a data da última reconciliação em `agentes/memoria/13-bookkeeper.md`. Se mês diferente → executar este bloco.
+> Detectar se e o primeiro check-in do mes: comparar data de hoje com a data da ultima reconciliacao em `agentes/memoria/13-bookkeeper.md`. Se mes diferente → executar este bloco.
 
 ### M1: Atualizar Shadow Portfolios
 
-Calcular patrimônio dos shadows para o mês encerrado. Ver metodologia completa em `agentes/metricas/shadow-portfolio.md`.
-Padrões aplicados (conforme `agentes/referencia/metodologia-analitica.md`): câmbio BRL, rebalancing via aportes sem venda forçada, benchmark VWRA.L.
+Calcular patrimonio dos shadows para o mes encerrado. Ver metodologia completa em `agentes/metricas/shadow-portfolio.md`.
 
-1. Buscar VWRA.L retorno do mês via Yahoo Finance (performance mensal ou YTD delta)
-2. Buscar IPCA do mês via IBGE / investidor10.com.br
-3. Calcular:
-   - **Shadow A** = patrimônio anterior × (1 + retorno_VWRA_BRL_mensal) + aportes do mês
-   - **Shadow B** = patrimônio anterior × [(1 + IPCA_mensal) × (1 + 7.16%/12) - 1] + aportes do mês
-4. Adicionar linha em `agentes/metricas/shadow-portfolio.md` (tabelas Tracking de cada shadow)
-5. Adicionar linha em `agentes/metricas/scorecard.md` (seção 1.2 Delta vs Shadows)
+Padroes aplicados (conforme `agentes/referencia/metodologia-analitica.md`):
+- Cambio: **PTAX BCB venda** da data de observacao (nao taxa estimada)
+- Rebalancing: via aportes mensais, sem venda forcada
+- Benchmark: VWRA.L (primary)
+
+1. Buscar VWRA.L retorno do mes via Yahoo Finance (performance mensal ou YTD delta)
+2. Buscar PTAX BCB venda do ultimo dia do mes via `api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados?formato=json&dataInicial=DD/MM/YYYY&dataFinal=DD/MM/YYYY`
+3. Buscar IPCA do mes via IBGE / investidor10.com.br
+4. Calcular:
+   - **Shadow A** = patrimonio anterior × (1 + retorno_VWRA_USD × (1 + variacao_PTAX_mensal)) + aportes do mes em BRL
+   - **Shadow B** = patrimonio anterior × [(1 + IPCA_mensal) × (1 + 7.16%/12) - 1] + aportes do mes em BRL
+
+   Nota: retorno_VWRA_BRL = retorno_VWRA_USD × (okegen_fim / okegen_inicio). Usar dólar comercial okegen — PTAX BCB é só para cálculo de IR, não para valuation operacional.
+
+5. Adicionar linha em `agentes/metricas/shadow-portfolio.md` (tabelas Tracking de cada shadow)
+6. Adicionar linha em `agentes/metricas/scorecard.md` (secao 1.2 Delta vs Shadows)
 
 ### M2: Atualizar Scorecard Operacional
 
-1. Atualizar seção 2.1 (Finding Rate) se houve sessões no mês
-2. Atualizar seção 2.2 (Taxa de Erro) se houve correções por Diego
-3. Atualizar seção 2.3 (Gap de Execução) com status das execuções pendentes
-4. Atualizar seção 3 (Previsões) com status de cada previsão ativa
+1. Atualizar secao 2.1 (Finding Rate) se houve sessoes no mes
+2. Atualizar secao 2.2 (Taxa de Erro) se houve correcoes por Diego
+3. Atualizar secao 2.3 (Gap de Execucao) com status das execucoes pendentes
+4. Atualizar secao 3 (Previsoes) com status de cada previsao ativa
 
 ### M3: Report Mensal Adicional
 
-Adicionar ao report semanal padrão:
+Adicionar ao report semanal padrao:
 
 ```
 ### Performance Mensal (vs Shadows)
-| Carteira | Patrimônio | Retorno Mês | Delta A | Delta B |
+| Carteira | Patrimonio | Retorno Mes | Delta A | Delta B |
 |----------|-----------|------------|---------|---------|
 | Real (Diego) | R$ X | X% | — | — |
-| Shadow A (VWRA+IPCA) | R$ X | X% | X% | — |
+| Shadow A (VWRA+PTAX) | R$ X | X% | X% | — |
 | Shadow B (100% IPCA+) | R$ X | X% | — | X% |
 
 Acumulado desde T0 (2026-03-20):
@@ -140,6 +151,7 @@ Acumulado desde T0 (2026-03-20):
 
 - Ser conciso — o check-in deve caber em uma tela
 - Sempre comecar pela planilha — ela e a fonte primaria de posicoes
-- Se a planilha nao estiver acessivel, reportar com ultimos dados + data
+- Cambio para valuation operacional: dólar comercial do dia (okegen). PTAX BCB é exclusivo para cálculo de IR/ganho de capital.
 - Priorizar alertas sobre execucoes pendentes — decisao aprovada sem execucao e o maior risco operacional
 - Comparar SEMPRE planilha vs sistema — divergencias sao red flags
+- Em modo /loop: registrar automaticamente. Em sessao interativa: aguardar aprovacao do Diego para mudancas em carteira.md

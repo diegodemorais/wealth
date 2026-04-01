@@ -15,21 +15,22 @@ Atualizar `agentes/contexto/carteira.md` e `agentes/contexto/evolucao.md` com os
 - Ler os arquivos atuais para comparar:
   - `agentes/contexto/carteira.md`
   - `agentes/contexto/evolucao.md`
-- Nota: AVGS pode vir com split US/INT na planilha. Somar e tratar como um so.
+- Nota: AVGS pode vir com split US/INT na planilha (AVUV+AVDV+AVGS.L). Somar todos e tratar como bucket AVGS unico de 25%.
 
 ### Passo 2: Reconciliar
 
 Comparar dados novos com o arquivo atual e produzir:
 
-1. **Tabela de posicoes atualizada**: ativo, valor, % do patrimonio
-2. **Mudancas detectadas**: o que mudou desde a ultima atualizacao (novos aportes, valorizacao, etc)
-3. **Alertas de gatilhos**: verificar se algum gatilho ativo foi atingido ou esta proximo:
+1. **Tabela de posicoes atualizada**: ativo, valor em USD, valor em BRL, % do patrimonio
+2. **Cambio usado**: dólar comercial do dia (okegen + spread). PTAX BCB é exclusivo para IR/ganho de capital — não usar para valuation de portfolio.
+3. **Mudancas detectadas**: o que mudou desde a ultima atualizacao (novos aportes, valorizacao, etc)
+4. **Alertas de gatilhos**: verificar se algum gatilho ativo foi atingido ou esta proximo:
    - HODL11 piso (1,5%) ou teto (5%)
    - Renda+ 2065 taxa proximo de 6,0% (venda) ou compra ativo
-   - **CDS Brasil 5y**: registrar valor atual. Alerta em 500bps, alarme em 800bps
+   - CDS Brasil 5y: registrar valor atual. Alerta em 500bps, alarme em 800bps
    - Qualquer outro gatilho registrado nas memorias
-4. **Inconsistencias**: algo no input nao bate com a estrategia? (ex: ativo que nao deveria estar la, alocacao muito fora do alvo)
-5. **Evolucao**: preparar nova linha para o snapshot em evolucao.md (% do bucket + valor em R$)
+5. **Inconsistencias**: algo no input nao bate com a estrategia? (ex: ativo que nao deveria estar la, alocacao muito fora do alvo)
+6. **Evolucao**: preparar nova linha para o snapshot em evolucao.md
 
 ### Passo 3: Apresentar ao Diego
 
@@ -37,9 +38,10 @@ Mostrar:
 
 ```
 ## Carteira Atualizada
-{tabela com posicoes, valores e % do patrimonio}
+{tabela com posicoes, valores em USD e BRL, % do patrimonio}
 
 ## Patrimonio Total: R$ X
+Cambio: R$ X (dólar comercial — okegen {data})
 
 ## Mudancas vs Anterior
 - {lista de mudancas relevantes}
@@ -53,10 +55,10 @@ Mostrar:
 |-------|-------|------|-------|
 
 ## Evolucao (nova linha)
-| Data | Idade | Ano | SWRD | AVEM | AVGS | JPGL | Equity Total |
+| Data | Patrimonio R$ | SWRD% | AVGS% | AVEM% | JPGL% | Equity% | RF% | Risco% |
 
 ## Proximo Aporte
-Sugestao de onde alocar os proximos R$25k baseado no delta
+Sugestao de onde alocar os proximos R$25k baseado no delta de alocacao
 ```
 
 ### Passo 4: Aguardar Aprovacao
@@ -72,15 +74,16 @@ Apos aprovacao:
 - Adicionar nova linha no snapshot de `agentes/contexto/evolucao.md`
 - Atualizar a data de "Atualizado em" no topo do carteira.md
 - Se algum gatilho mudou de status, atualizar a memoria do agente relevante
+- Verificar `agentes/contexto/execucoes-pendentes.md` e alertar sobre execucoes atrasadas
 
 ## Regras
 
 - Manter a estrutura existente do `carteira.md` — apenas atualizar valores e percentuais
 - Nao alterar alocacoes-alvo, regras ou decisoes pendentes (isso requer uma Issue)
 - Se detectar algo que merece discussao (ex: alocacao muito distorcida), sugerir Issue ao Diego
-- Converter valores em USD para BRL usando a cotacao informada ou a mais recente do snapshot macro
+- Cambio para valuation operacional: dólar comercial do dia (okegen). PTAX BCB = só IR.
 - Sempre mostrar o patrimonio total consolidado em BRL
-- AVGS pode vir com split US/INT na planilha — sempre somar e tratar como um unico bucket de 25%
+- AVGS: tratar todos os tickers do bucket (AVUV, AVDV, AVES, AVGS.L) como um unico bucket de 25%
 - Evolucao mostra % do bucket (incluindo transitorios), nao apenas do ETF alvo
-- Apos atualizacao, o Bookkeeper deve verificar `agentes/contexto/execucoes-pendentes.md` e alertar sobre execucoes atrasadas
+- Apos atualizacao, verificar execucoes-pendentes.md e alertar sobre execucoes atrasadas
 - Se houve operacoes (compra/venda/aporte), registrar em `agentes/contexto/operacoes.md`
