@@ -30,7 +30,7 @@
 - **Hou, Xue & Zhang (2015)**: q-factor model — desafia Fama-French em algumas dimensoes
 
 ### Replicabilidade e Decay
-- **McLean & Pontiff (2016)**: Post-publication decay de factor premiums — ~35% menor apos publicacao
+- **McLean & Pontiff (2016)**: Post-publication decay de factor premiums — ~58% menor apos publicacao
 - **Harvey, Liu & Zhu (2016)**: "...and the Cross-Section of Expected Returns" — maioria dos 300+ fatores e data mining
 - **Harvey (2017)**: "Presidential Address: The Scientific Outlook in Financial Economics" — crise de replicabilidade em financas
 - **Linnainmaa & Roberts (2018)**: Muitos anomalies desaparecem em dados pre-1963

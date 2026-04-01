@@ -131,7 +131,7 @@ Antes de iniciar qualquer backtest, factor regression, análise de correlação 
 **Ler (ou instruir os agentes a lerem) `agentes/referencia/metodologia-analitica.md`.**
 
 Contém os 6 padrões canônicos aprovados: período mínimo, câmbio, rebalancing, benchmark, suficiência estatística e fontes.
-Proxies canônicos: **não usar ad-hoc** — aguardar output de HD-proxies-canonicos.
+Proxies canônicos: **não usar ad-hoc** — ver `agentes/referencia/proxies-canonicos.md`.
 
 ---
 

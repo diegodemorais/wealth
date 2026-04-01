@@ -97,8 +97,8 @@
 1. IPCA+ estrutural (protecao de sequence of returns): comprar apenas aos 48-49 se taxa >= 6,5%
 2. Se taxa < 6,5% aos 48: avaliar manter ~95% variavel (5% Selic) ou alternativa de protecao
 3. IPCA+ tatico: permitido antes dos 48 se houver janela de oportunidade excepcional
-3. Renda+ tatico e aposta de duration, nao protecao
-4. Ladder IPCA+ (se implementado): vencimentos escalonados, nao concentrados
+4. Renda+ tatico e aposta de duration, nao protecao
+5. Ladder IPCA+ (se implementado): vencimentos escalonados, nao concentrados
 
 ---
 

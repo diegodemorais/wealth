@@ -80,7 +80,7 @@
 > Antes de iniciar qualquer backtest, factor regression, correlação ou análise de período histórico:
 > **Ler `agentes/referencia/metodologia-analitica.md`** — fonte única de verdade para período, câmbio, rebalancing, benchmark, suficiência estatística e fontes de dados.
 >
-> Proxies canônicos: **não usar ad-hoc**. Aguardar output de HD-proxies-canonicos ou consultar referência quando disponível.
+> Proxies canônicos: **não usar ad-hoc** — ver `agentes/referencia/proxies-canonicos.md`.
 
 ---
 

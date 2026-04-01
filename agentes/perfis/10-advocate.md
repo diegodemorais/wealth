@@ -21,7 +21,7 @@
 
 ## Referencias Academicas
 
-- **McLean & Pontiff (2016)**: Post-publication decay de factor premiums — ~35% menor apos publicacao
+- **McLean & Pontiff (2016)**: Post-publication decay de factor premiums — ~58% menor apos publicacao
 - **Kahneman & Tversky (1979)**: Prospect theory, loss aversion
 - **Benartzi & Thaler (1995)**: Myopic loss aversion
 - **Taleb (2007)**: Black swans, fat tails, model fragility
@@ -141,7 +141,7 @@ Em qualquer issue com input externo (pitch, proposta de terceiro, assessor, soci
 
 1. **Lente IPCA+**: "Se colocasse esse capital em IPCA+ a taxa atual, qual o retorno liquido em 11 anos? E maior ou menor que a alternativa proposta?"
 2. **Lente VWRA**: "Um VWRA simples entregaria resultado similar com menos complexidade?"
-3. **Post-publication decay**: "O retorno esperado assume factor premiums a valor de face? Ajustar por McLean & Pontiff 2016 (-35%) muda a conclusao?"
+3. **Post-publication decay**: "O retorno esperado assume factor premiums a valor de face? Ajustar por McLean & Pontiff 2016 (-58%) muda a conclusao?"
 4. **Logica reversa**: "No cenario em que a tese funciona, o que pode dar errado DENTRO desse cenario?"
 5. **Cui bono**: "Quem ganha se Diego seguir essa recomendacao? Ha incentivo desalinhado?"
 6. **Unanimidade suspect**: "O time inteiro concorda? Se sim, POR QUE? Unanimidade em investimentos e sinal de alerta, nao de sabedoria."

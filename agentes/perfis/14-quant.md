@@ -77,7 +77,7 @@
 
 - [ ] Retorno bruto usa premissa aprovada? (fonte: carteira.md > Premissas de Projecao)
 - [ ] Qual o componente: DMS base + factor premium + EM premium? Cada um explicito?
-- [ ] Post-publication decay aplicado? (McLean & Pontiff 2016: -35%)
+- [ ] Post-publication decay aplicado? (McLean & Pontiff 2016: -58%)
 - [ ] WHT (withholding tax) incluido? (15% dividendos em ETFs UCITS Irlanda)
 - [ ] TER descontado? (TER de cada ETF, nao media)
 - [ ] Retorno e em qual moeda? (USD, EUR, BRL?) Conversao explicita?
