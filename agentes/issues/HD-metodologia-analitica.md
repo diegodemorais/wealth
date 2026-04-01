@@ -9,7 +9,7 @@
 | **Status** | Backlog |
 | **Prioridade** | Alta |
 | **Participantes** | 02 Factor, 14 Quant, 10 Advocate |
-| **Dependencias** | HD-proxies-canonicos (proxies definidos antes de fixar períodos) |
+| **Dependencias** | — |
 | **Criado em** | 2026-03-31 |
 | **Origem** | Revisão proativa — análises históricas (backtest, factor regression, correlações, scorecard, shadows) sem padrão unificado de período mínimo, câmbio, rebalancing e benchmark. |
 | **Concluido em** | — |
@@ -146,4 +146,4 @@ Se yfinance retornar dado inconsistente: flag, não silenciar.
 - [ ] Definir os 6 padrões (debate e aprovação de Diego)
 - [ ] Criar `agentes/referencia/metodologia-analitica.md` (fonte única de verdade)
 - [ ] Atualizar scripts para referenciar os padrões
-- [ ] Depende de: HD-proxies-canonicos (proxies definidos antes de fixar períodos e benchmarks)
+- [ ] Saída principal: período máximo histórico da carteira — input obrigatório para HD-proxies-canonicos

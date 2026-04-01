@@ -9,7 +9,7 @@
 | **Status** | Backlog |
 | **Prioridade** | Alta |
 | **Participantes** | 02 Factor, 14 Quant, 15 Fact-Checker |
-| **Dependencias** | — |
+| **Dependencias** | HD-metodologia-analitica (período máximo definido antes de buscar proxies) |
 | **Criado em** | 2026-03-31 |
 | **Origem** | Revisão proativa — 3 scripts usam proxies diferentes para os mesmos ETFs. Sem fonte única de verdade. |
 | **Concluido em** | — |

@@ -26,8 +26,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | — | — | — | — | — |
-| 1 | HD-proxies-canonicos | Proxies canônicos por ETF por período — fonte única de verdade | Head | Alta |
-| 2 | HD-metodologia-analitica | Padrões metodológicos para todas as análises históricas (backtest, regression, correlação, scorecard, shadow) | Head | Alta |
+| 1 | HD-metodologia-analitica | Padrões metodológicos para todas as análises históricas — define período máximo | Head | Alta |
+| 2 | HD-proxies-canonicos | Proxies canônicos por ETF para o período definido na issue anterior | Head | Alta |
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
 | — | — | — | — | — |
