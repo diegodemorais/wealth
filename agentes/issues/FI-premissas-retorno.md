@@ -6,8 +6,9 @@
 |-------|-------|
 | **ID** | FI-premissas-retorno |
 | **Dono** | 02 Factor |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
+| **Concluído em** | 2026-04-01 |
 | **Participantes** | Factor, Quant, Fact-Checker, Advocate |
 | **Dependências** | — |
 | **Criado em** | 2026-04-01 |
@@ -101,10 +102,14 @@ Melhor corrigir antes de decidir qualquer mudança de alocação.
 
 ## Próximos Passos
 
-- [ ] F1: Factor verifica DMS 2025 e AQR 2026 — definir premissa SWRD
-- [ ] F2: Factor + Quant reconciliam gross premium AVGS vs haircut 58% (L-21)
-- [ ] F3: Fact-Checker verifica Research Affiliates AAI para AVEM (~9.0% nominal)
-- [ ] F4: Bookkeeper atualiza memória Factor com decisões 2026-04-01
-- [ ] Quant recalcula retorno ponderado com premissas corrigidas
-- [ ] Se retorno mudar: verificar impacto em P(FIRE) e breakeven IPCA+
-- [ ] Depois de premissas fixadas: retomar decisão C vs D vs B
+- [x] F1: SWRD → mediana multi-fonte adotada: 3.7% USD (AQR Global Dev 4.2%, Vanguard 3.6%, JPM 4.4%, RA 2.5%, Schwab 3.7%)
+- [x] F2: AVGS haircut confirmado 58% (McLean & Pontiff 2016). Premium 1.3pp sobre SWRD. 5.0% USD adotado
+- [x] F3: AVEM → média 4 fontes: AQR 5.1%, JPM 5.3%, GMO 3.8%, RA 6.5% = 5.18%; adotado 5.0% conservador
+- [x] F4: Memória Factor atualizada com decisões 2026-04-01
+- [x] Quant validou: retorno ponderado B (50/30/20) = 4.85% base / 5.85% favorável / 4.35% stress
+- [ ] Verificar impacto em P(FIRE) e breakeven IPCA+ com 4.85% base (era 5.85%) — pendente fire_montecarlo.py
+- [x] Premissas fixadas. Decisão C vs D vs B: mantido B por ora (pendente P(FIRE) recalculo)
+
+## Resultado
+
+Premissas substituídas por mediana multi-fonte em 2026-04-01. Efeito: retorno base caiu 100bps (5.85% → 4.85%). Favorável mantém 5.85%. Delta vs IPCA+ 2040: IPCA+ vence por +115bps no base (era +15bps estimado). Impacto material em P(FIRE) — recalculo pendente.

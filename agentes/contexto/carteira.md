@@ -117,14 +117,13 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ### Retornos por ETF (fontes academicas)
 
-Retorno real esperado em USD: DMS 2025 (5.2%) e AQR 2026 (4.9%) para equity global, media ~4.9%. Factor premiums: Fama-French 1993, Moskowitz & Pedersen 2016, AQR "+1.0% multi-factor".
+Retorno real esperado em USD: mediana multi-fonte (AQR, Vanguard VCMM, JPMorgan LTCMA, Research Affiliates, Schwab). Factor premiums pos-haircut 58% McLean & Pontiff (2016). Aprovado 2026-04-01.
 
 | ETF | Retorno Real USD | Dep. BRL Base (0.5%) | Dep. BRL Favoravel (1.5%) | Dep. BRL Stress (0%) | Fonte |
 |-----|-----------------|---------------------|--------------------------|---------------------|-------|
-| SWRD (mercado neutro) | 4.9% | **5.4%** | **6.4%** | **4.9%** | DMS 2025 5.2% + AQR 2026 4.9%, media |
-| AVGS (small value) | 6.0% | **6.5%** | **7.5%** | **6.0%** | AQR Small 5.0% + factor +1.0-2.0% (FF93/M&P16) |
-| AVEM (EM + value tilt) | 5.5% | **6.0%** | **7.0%** | **5.5%** | AQR EM 5.1%, JPM 5.3%, GMO 3.8% |
-| JPGL (multifator) | 5.7% | **6.2%** | **7.2%** | **5.7%** | AQR "+1.0% multi-factor" sobre mercado |
+| SWRD (mercado neutro) | 3.7% | **4.2%** | **5.2%** | **3.7%** | Mediana 5 fontes: AQR Global Dev 4.2%, Vanguard 3.6%, JPM 4.4%, RA 2.5%, Schwab 3.7% |
+| AVGS (small value) | 5.0% | **5.5%** | **6.5%** | **5.0%** | Mediana multi-fonte: AQR 4.7-5.2%, Vanguard 5.6%, JPM 5.0%, GMO 3.5%, RA 5.5%, FF93+haircut 5.8% |
+| AVEM (EM + value tilt) | 5.0% | **5.5%** | **6.5%** | **5.0%** | Media 4 fontes: AQR 5.1%, JPM 5.3%, GMO 3.8%, RA 6.5% = 5.18%; arredondado conservadoramente |
 
 ### Custos All-In (comparacao justa equity vs RF)
 
@@ -154,8 +153,8 @@ Nota: IPCA+ liquido ~6.0% considera hold to maturity 14 anos. O calculo anterior
 | Instrumento | Resultado Real Liquido | Retorno Anualizado |
 |-------------|----------------------|-------------------|
 | IPCA+ 2040 | R$225.8 | 6.0%/ano |
-| JPGL | R$184.6 | 4.5%/ano |
-| **Delta** | **IPCA+ vence por R$41 e 150 bps** | |
+| Equity bloco (cenario base) | R$193.0 | 4.85%/ano |
+| **Delta** | **IPCA+ vence por R$32.8 e 115 bps** | |
 
 ### Breakeven All-In
 | Parametro | Valor |
@@ -171,16 +170,16 @@ Pesos do bloco equity: **SWRD 50% / AVGS 30% / AVEM 20%** (aprovado FI-equity-re
 
 | Cenario | Calculo | Retorno Ponderado Equity BRL |
 |---------|---------|------------------------------|
-| Base (dep. 0.5%) | 50%×5.4% + 30%×6.5% + 20%×6.0% | **5.85%** |
-| Favoravel (dep. 1.5%) | 50%×6.4% + 30%×7.5% + 20%×7.0% | **6.85%** |
-| Stress (dep. 0%) | 50%×4.9% + 30%×6.0% + 20%×5.5% | **5.35%** |
+| Base (dep. 0.5%) | 50%×4.2% + 30%×5.5% + 20%×5.5% | **4.85%** |
+| Favoravel (dep. 1.5%) | 50%×5.2% + 30%×6.5% + 20%×6.5% | **5.85%** |
+| Stress (dep. 0%) | 50%×3.7% + 30%×5.0% + 20%×5.0% | **4.35%** |
 
 ### Premissas Gerais
 
 | Premissa | Base | Favoravel | Stress |
 |----------|------|-----------|--------|
 | Depreciacao real BRL | 0.5%/ano | 1.5%/ano | 0%/ano |
-| Equity real ponderado em BRL (pre-tax) | **5.85%** | **6.85%** | **5.35%** |
+| Equity real ponderado em BRL (pre-tax) | **4.85%** | **5.85%** | **4.35%** |
 | IPCA+ 2040 liquido HTM 14 anos | **~6.0%/ano** | — | — |
 | IPCA medio estimado | 4%/ano | — | — |
 | Breakeven IPCA+ bruto all-in vs equity | **~5.5%** | — | — |

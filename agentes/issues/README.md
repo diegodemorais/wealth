@@ -25,8 +25,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FI-premissas-retorno | Reconciliar premissas base: SWRD 4.9% vs 5.05%, AVGS haircut, AVEM 5.5% sem fonte | Factor | Alta |
-| 2 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
+| 1 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
 
 ### Doing
 > Issues em andamento
@@ -39,6 +38,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FI-premissas-retorno | Reconciliar premissas SWRD/AVGS/AVEM: 3 erros fonte | Factor | 2026-04-01 | SWRD 3.7% / AVGS 5.0% / AVEM 5.0% USD. Base ponderado B: 4.85% (era 5.85%). |
 | HD-python-stack-v2 | Capacidades analíticas avançadas | Head | 2026-04-01 | 4/4 caps. tlh_lotes.json com lotes reais. ibkr_analysis.py: 5 outputs. |
 | FI-equity-redistribuicao | 20% liberados do JPGL — redistribuição equity | Factor | 2026-04-01 | **SWRD 50% / AVGS 30% / AVEM 20%. Unanimidade 7/7 (13.5x).** Design 50/50 neutro/fatorial preservado. Via aportes. |
 | FI-jpgl-zerobased | JPGL 20% — análise zero-based | Factor | 2026-04-01 | **JPGL = 0%. Não adicionar.** Rodada final: 4 agentes, framing puro. Correlação 0.95 + AVGS dominante. 20% liberados → FI-equity-redistribuicao. |

@@ -8,8 +8,9 @@
 
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
-| 2026-03 | Bloco equity fixo: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20% | Alocacao definitiva | 01 Head |
-| 2026-03 | JPGL foco dos aportes regulares (quando nao ha janela tatica) | Prioridade padrao de aporte | 01 Head |
+| 2026-04-01 | Bloco equity fixo: SWRD 50%, AVGS 30%, AVEM 20% | FI-equity-redistribuicao, unanimidade 7/7. JPGL eliminado (0% target) — FI-jpgl-zerobased | 7 agentes |
+| 2026-04-01 | Premissas multi-fonte adotadas: SWRD 3.7% USD, AVGS 5.0% USD, AVEM 5.0% USD | FI-premissas-retorno — substituiu premissas DMS+AQR single-source. Mediana 5-6 fontes independentes. Base BRL: 4.85% ponderado (cenario base) | Factor, Quant, Fact-Checker, Advocate |
+| 2026-04-01 | Novos aportes equity exclusivamente em UCITS | Estate tax US-listed confirmado. Transitórios (AVDV, AVUV, AVES, USSC, DGS, EIMI) vendidos na fase de usufruto | Head, Tax |
 
 ---
 
@@ -88,14 +89,9 @@ JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc
 
 | Gatilho | Condição | Ação | Status |
 |---------|----------|------|--------|
-| AUM closure risk | AUM JPGL < €100M | Abrir issue — avaliar substituição | Monitorar |
-| Underperformance persistente | JPGL underperforma SWRD por 2 anos consecutivos (até dez/2028) | Abrir issue de substituição | Monitorar |
-| Alternativa IFSW | Sharpe IFSW > 0.42 por 2 anos + TER cair para 0.20% | IFSW hoje inferior (Sharpe 0.35 vs JPGL 0.37, TER +11bp, corr SWRD 0.960 vs 0.928). Só vale se TER cair e Sharpe convergir. Ref: FI-jpgl-redundancia | Monitorar |
-| Alternativa IQGA | AUM > €500M + histórico ≥ 2 anos (mai/2027+) | Avaliar split 15%JPGL+5%IQGA: correlação IQGA↔JPGL=0.682, Sharpe split=1.322 vs JPGL=1.286. IQGA ativo (gestor pode mudar). Comparar tb vs IFSW no momento da avaliação. Ref: FI-jpgl-redundancia | Monitorar |
-| Alpha estrutural negativo | t < -2.0 em regressão com ≥ 5 anos dados reais | Abrir issue urgente | Monitorar |
-| Mudança de metodologia JPGL | JPMorgan alterar índice (remover momentum, mudar para sector-neutral puro) | Rever tese imediatamente | Monitorar |
-| **Rolling: Market beta** | JPGL beta > 2× beta full-period por 2 trimestres consecutivos (threshold dinâmico: hoje ~0.84, dado beta estático 0.42) | Abrir issue de substituição. Limiar recalibrado em 2026-03-31 — original 0.70 era calibrado em dados diários, inadequado para janelas mensais de 24m. Alerta atual (beta ~0.81) = cíclico, não estrutural (regime bull market 2024-2026). Ref: FI-rolling-loadings | Monitorar |
 | **Rolling: AVGS SMB** | AVGS SMB < 0.35 por 2 trimestres consecutivos | Dados insuficientes até out/2026 (AVGS lançado out/2024) | Aguardar |
+| AVGS AUM closure risk | AUM AVGS < €50M | Abrir issue — avaliar substituto (WSML/DFSV) | Monitorar |
+| Premissas desatualizadas | AQR ou Vanguard atualizam expected returns > 50bps de variação | Recalcular ponderado e verificar P(FIRE) | Monitorar anual |
 
 ---
 
@@ -103,9 +99,8 @@ JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc
 
 | Data | Tema | Resultado |
 |------|------|-----------|
-| 2026-03 | Composicao do bloco equity | SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20% |
-| 2026-03 | JPGL sizing: 15% ou 20%? | 20% — melhor multifator disponivel |
-| 2026-03 | AVGC vs JPGL vs DDGC (FI-003) | JPGL confirmado — complementa com momentum + low vol. AVGC closet indexing (overlap 90% SWRD). DDGC monitorar 2 anos |
-| 2026-03 | AVEM->JPGL migration timing | Adiado — value spread de EM favoravel |
-| 2026-03 | IWMO vs JPGL | JPGL preferido — momentum mais eficiente dentro de multifator |
-| 2026-03 | IPCA+ vs equity nos proximos 11 anos | Equity after-tax superior |
+| 2026-04-01 | Composicao bloco equity final | SWRD 50%, AVGS 30%, AVEM 20% (JPGL eliminado) |
+| 2026-04-01 | Premissas retorno base | SWRD 3.7% / AVGS 5.0% / AVEM 5.0% USD real. Ponderado base: 4.85% BRL |
+| 2026-04-01 | Redistributicao JPGL→equity | Zero-based: JPGL 0%. Slash por redundancia (corr 0.95 com SWRD) e TER extra 11bps |
+| 2026-03 | AVGC vs JPGL vs DDGC (FI-003) | JPGL confirmado historicamente — mas eliminado 2026-04-01 por redundancia |
+| 2026-03 | IPCA+ vs equity nos proximos 11 anos | Equity after-tax superior (calculado com premissas antigas — recalcular com 4.85% base) |
