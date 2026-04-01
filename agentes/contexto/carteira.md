@@ -33,12 +33,13 @@
 
 | ETF | Alocacao Alvo | Atual | Composicao Real (USD) | Status |
 |-----|--------------|-------|----------------------|--------|
-| SWRD | 35% | ~37,6% (~R$ 1.267k) | SWRD ~$241k | Overweight, sem aportes |
-| AVGS (US + INT) | 25% | ~28,5% (~R$ 961k) | AVUV + AVDV + USSC + AVGS ~$183k | Overweight via transitorios. Aportar so em AVGS UCITS |
-| AVEM | 20% | ~24,4% (~R$ 824k) | EIMI + AVES + DGS ~$157k | Overweight via transitorios. Aportar so em AVEM UCITS |
-| JPGL | 10% | ~0,4% (~R$ 12k) | IWVL + JPGL ~$2.1k | **Gap (-9,6pp). Aportar até 10% do equity. +10% equity liberados — redistribuição pendente (FI-equity-redistribuicao)** |
+| SWRD | **50%** | ~37,6% (~R$ 1.267k) | SWRD ~$241k | Underweight — **prioridade nos aportes equity** |
+| AVGS (US + INT) | **30%** | ~28,5% (~R$ 961k) | AVUV + AVDV + USSC + AVGS ~$183k | Próximo do target. Aportar só em AVGS UCITS |
+| AVEM | **20%** | ~24,4% (~R$ 824k) | EIMI + AVES + DGS ~$157k | Overweight via transitórios. Aportar só em AVEM UCITS quando subrepresentado |
+| JPGL | **0%** | ~0,4% (~R$ 12k) | IWVL + JPGL ~$2.1k | **Não adicionar. Target eliminado (FI-jpgl-zerobased, 2026-04-01). IWVL = transitório legado — diluir via aportes.** |
 
-Carteira proxima de 50/50 em Neutro/Fator, considerando as composicoes de cada ETF.
+**Nova alocação aprovada (FI-equity-redistribuicao, 2026-04-01): SWRD 50% / AVGS 30% / AVEM 20%. Unanimidade 7/7 agentes (13.5x ponderado). Via aportes — sem vendas.**
+Design 50/50 neutro/fatorial preservado.
 
 ### Ativos Transitorios (nao comprar mais — diluir via aportes)
 EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL
@@ -67,13 +68,14 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 | IPCA+ longo | 15% | 15% | 15% | 0% | 0% |
 | IPCA+ curto | 0% | 0% | 3% | 3% | 3% |
 | Equity total | 79% | 79% | 79% | 94% | 94% |
-| — SWRD | 27,7% | 27,7% | 27,7% | 32,9% | 32,9% |
-| — AVGS | 19,8% | 19,8% | 19,8% | 23,5% | 23,5% |
-| — AVEM | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
-| — JPGL | 7,9% | 7,9% | 7,9% | 9,4% | 9,4% |
-| — Pendente redistrib.* | 7,9% | 7,9% | 7,9% | 9,4% | 9,4% |
+| — SWRD | **39,5%** | **39,5%** | **39,5%** | **47,0%** | **47,0%** |
+| — AVGS | **23,7%** | **23,7%** | **23,7%** | **28,2%** | **28,2%** |
+| — AVEM | **15,8%** | **15,8%** | **15,8%** | **18,8%** | **18,8%** |
+| — JPGL | 0% | 0% | 0% | 0% | 0% |
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
 | Renda+ 2065 tatico | <=5% | <=5% | <=5% | 0% | 0% |
+
+*Equity pesos absolutos = % dentro do equity block × % equity total do portfólio (79%). Equity block: SWRD 50% / AVGS 30% / AVEM 20% (aprovado FI-equity-redistribuicao, 2026-04-01).*
 
 IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53). Pos-vencimento, capital realocado para equity. IPCA+ curto (~2 anos duration) comprado perto dos 50 como SoRR buffer — substitui Selic do plano original. Decisao HD-006 (final 2026-03-22): alvo 15% com breakeven all-in ~5.5% e piso operacional 6.0%. A 7.16%, IPCA+ vence equity em todos os cenarios de factor premium.
 
@@ -81,7 +83,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ## Decisoes Pendentes
 
-1. **AVEM -> JPGL parcial**: revisar aos 48-49 ou quando desconto EM fechar. AVEM ja revertendo (YTD 2026: +14.83% vs MSCI World +2.99%).
+1. ~~**AVEM -> JPGL parcial**~~ — JPGL eliminado (FI-jpgl-zerobased, 2026-04-01). Não há migração futura para JPGL.
 2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
 3. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para <6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo). **Prioridade RF: IPCA+ antes do Renda+ (gap 14,2pp vs 1,8pp)**
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
@@ -165,22 +167,20 @@ Nota: IPCA+ liquido ~6.0% considera hold to maturity 14 anos. O calculo anterior
 
 ### Retorno Ponderado do Portfolio (equity block, 3 cenarios)
 
-Pesos do bloco equity: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 10%. **Nota: 10% liberados do JPGL pendentes redistribuição — aguardar FI-equity-redistribuicao. Retorno ponderado será recalculado ao concluir a issue.**
+Pesos do bloco equity: **SWRD 50% / AVGS 30% / AVEM 20%** (aprovado FI-equity-redistribuicao, 2026-04-01, unanimidade 7/7).
 
-| Cenario | Retorno Ponderado Equity BRL |
-|---------|------------------------------|
-| Base (dep. 0.5%) | **5.96%** |
-| Favoravel (dep. 1.5%) | **6.96%** |
-| Stress (dep. 0%) | **5.46%** |
-
-Calculo provisório (mantido com pesos pré-redistribuição): 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = **5.96%** (base). Recalcular após FI-equity-redistribuicao.
+| Cenario | Calculo | Retorno Ponderado Equity BRL |
+|---------|---------|------------------------------|
+| Base (dep. 0.5%) | 50%×5.4% + 30%×6.5% + 20%×6.0% | **5.85%** |
+| Favoravel (dep. 1.5%) | 50%×6.4% + 30%×7.5% + 20%×7.0% | **6.85%** |
+| Stress (dep. 0%) | 50%×4.9% + 30%×6.0% + 20%×5.5% | **5.35%** |
 
 ### Premissas Gerais
 
 | Premissa | Base | Favoravel | Stress |
 |----------|------|-----------|--------|
 | Depreciacao real BRL | 0.5%/ano | 1.5%/ano | 0%/ano |
-| Equity real ponderado em BRL (pre-tax) | **5.96%/ano** | **6.96%/ano** | **5.46%/ano** |
+| Equity real ponderado em BRL (pre-tax) | **5.85%** | **6.85%** | **5.35%** |
 | IPCA+ 2040 liquido HTM 14 anos | **~6.0%/ano** | — | — |
 | IPCA medio estimado | 4%/ano | — | — |
 | Breakeven IPCA+ bruto all-in vs equity | **~5.5%** | — | — |
@@ -198,7 +198,7 @@ Calculo provisório (mantido com pesos pré-redistribuição): 0.35×5.4 + 0.25�
 - ETFs exterior = 15% flat sobre qualquer ganho sem isencao (Lei 14.754/2023) - isso pode mudar, sempre verificar
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
-- **Piso operacional para RF longa: IPCA+ 6.0%.** Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Margem de 50 bps. Abaixo de 6.0%, pausar DCA de IPCA+ longo e redirecionar para JPGL. **IPCA+ longo (TD 2040/2050) = hold to maturity SEMPRE** — nao vender por MtM (posicao estrutural, bond tent). Gatilho de venda MtM aplica-se APENAS ao Renda+ 2065 (tatico). (Corrigido HD-006 final: pisos anteriores de 6.4% e 7.81% estavam ambos errados — nao incluiam custos all-in de equity)
+- **Piso operacional para RF longa: IPCA+ 6.0%.** Breakeven all-in ~5.5% (com WHT, IOF, FX spread, ganho fantasma cambial). Margem de 50 bps. Abaixo de 6.0%, pausar DCA de IPCA+ longo e redirecionar para equity (ver FI-equity-redistribuicao para destino dos aportes). **IPCA+ longo (TD 2040/2050) = hold to maturity SEMPRE** — nao vender por MtM (posicao estrutural, bond tent). Gatilho de venda MtM aplica-se APENAS ao Renda+ 2065 (tatico). (Corrigido HD-006 final: pisos anteriores de 6.4% e 7.81% estavam ambos errados — nao incluiam custos all-in de equity)
 - **AVGS 25%: tail risk aceito explicitamente** (XX-lacunas-estrategicas, 2026-04-01). Em cenário 2008-style: AVGS cai ~-60% USD (~-42% BRL com FX). Portfolio total: -40 a -45% BRL. Custo marginal vs 100% SWRD: ~3-4pp de drawdown adicional. Atenuantes: câmbio, aportes R$25k/mês, horizonte 11 anos, guardrails. Factor premium +1.1%/ano compensa o risco. Revisão: se horizonte encurtar para <5 anos pré-FIRE, reduzir AVGS para 15-20% via aportes.
 - **Sem alavancagem.** Carry trade / margin na IB descartado — risco incompativel com fase de acumulacao FIRE (decisao mar/2026, apos desmonte de R$533k em set/2025)
 - **Todo veredicto numerico passa por Checklist Pre-Veredicto antes de ser apresentado.** Checklist completo em `agentes/perfis/00-head.md`. Causa raiz: 6+9 erros das sessoes 2026-03-20, todos por omissao de premissas ao calcular. Regras adicionais HD-006: (A) fonte obrigatoria para cada numero, (B) formula explicita antes do resultado, (C) reconciliacao trimestral entre documentos, (D) comparacao all-in obrigatoria (WHT, IOF, FX spread, ganho fantasma cambial), (E) reflexao registrada — 4 erros em sequencia corrigidos por Diego

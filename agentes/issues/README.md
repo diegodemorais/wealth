@@ -33,14 +33,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | HD-python-stack-v2 | Capacidades analíticas avançadas | Head | Média | Aguardando extrato IBKR (tlh_lotes.json) |
-| FI-equity-redistribuicao | 10% liberados do JPGL — para onde redistribuir? | Factor | Alta | Aguardando debate multi-fase (Zero-Based obrigatório) |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
-| FI-jpgl-zerobased | JPGL 20% — análise zero-based | Factor | 2026-04-01 | Target 20% → 10%. 10 agentes, 4 fases. Alpha 0.162–0.35%/ano. JPUS precedente. |
+| FI-equity-redistribuicao | 20% liberados do JPGL — redistribuição equity | Factor | 2026-04-01 | **SWRD 50% / AVGS 30% / AVEM 20%. Unanimidade 7/7 (13.5x).** Design 50/50 neutro/fatorial preservado. Via aportes. |
+| FI-jpgl-zerobased | JPGL 20% — análise zero-based | Factor | 2026-04-01 | **JPGL = 0%. Não adicionar.** Rodada final: 4 agentes, framing puro. Correlação 0.95 + AVGS dominante. 20% liberados → FI-equity-redistribuicao. |
 | HD-unanimidade | Unanimidade — calibragem imperfeita, nao echo chamber puro. 3 bugs sistemicos. Agente 16 criado | Head | 2026-04-01 | B+C parcialmente confirmadas. 4 outputs: Zero-Based, bond-tent, advocate protocol, bond-corr falsif. |
 | XX-lacunas-estrategicas | P(FIRE) 80% base, AVGS tail risk aceito, falsificabilidade 5 blocos | Head | 2026-04-01 | P(FIRE) 80% base. AVGS aceito explicitamente. Tabela falsificabilidade aprovada. |
 | HD-proxies-canonicos | Proxies canônicos por ETF por período | Head | 2026-03-31 | proxies-canonicos.md criado. 4 datas corrigidas. JPGL: FF5+MOM sintético. AVEM: DFEVX. |
