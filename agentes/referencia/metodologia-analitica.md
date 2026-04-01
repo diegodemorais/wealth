@@ -92,9 +92,8 @@ Quando há discrepância entre fontes, a hierarquia abaixo prevalece. Conflito �
 
 ## Proxies canônicos por ETF
 
-> **A definir em HD-proxies-canonicos.** Não usar proxies ad-hoc nos scripts — aguardar essa issue.
-
-Até a conclusão de HD-proxies-canonicos, todo resultado que depende de proxy leva: `⚠️ proxy não validado — sujeito a revisão`.
+> **Ver `agentes/referencia/proxies-canonicos.md`** — fonte única de verdade. Aprovado em 2026-03-31.
+> Não definir proxies ad-hoc nos scripts. Sempre consultar o arquivo canônico.
 
 ---
 
