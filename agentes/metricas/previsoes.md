@@ -110,7 +110,23 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 
 1. **Toda decisao ativa tem previsao implicita**: Se aprovamos algo, estamos prevendo um resultado. Registrar.
 2. **Prazo obrigatorio**: Previsao sem prazo nao e previsao, e wishful thinking.
-3. **Confianca obrigatoria**: Estimar probabilidade, mesmo que imprecisa. Permite calibracao futura.
+3. **Confianca ponderada — votação do time**: A confiança não é estimada por 1 agente sozinho. É uma votação ponderada dos agentes com expertise no domínio:
+   - Cada agente vota: `Alta (~80%)`, `Média (40-60%)` ou `Baixa (<40%)`
+   - Pesos: especialista do domínio 3x, adjacente 2x, Head/generalistas 1x
+   - Confiança final = média ponderada das estimativas
+   - Registrar dissent se houver divergência relevante (ex: Factor diz Alta, RF diz Baixa)
 4. **Tracking trimestral**: Atualizar dados de cada previsao a cada trimestre.
 5. **Post-mortem ao encerrar**: Quando o prazo vencer, avaliar: acertou? Se nao, por que? Registrar.
 6. **Sem revisao de confianca retroativa**: Uma vez registrada, a confianca inicial nao muda. Isso permite avaliar calibracao real.
+
+## Template de Votação de Confiança (preencher ao abrir cada PRV)
+
+```
+| Agente | Peso | Estimativa | Justificativa |
+|--------|------|-----------|---------------|
+| {especialista} | 3x | Alta/Média/Baixa | ... |
+| {adjacente} | 2x | Alta/Média/Baixa | ... |
+| Head | 1x | Alta/Média/Baixa | ... |
+| **Confiança ponderada** | | **X%** | |
+| Dissent | | {agente divergente}: {posição} | |
+```

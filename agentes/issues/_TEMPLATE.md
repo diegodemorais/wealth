@@ -9,6 +9,7 @@
 | **Status** | Refinamento / Backlog / Doing / Done |
 | **Prioridade** | Alta / Media / Baixa |
 | **Participantes** | {Outros agentes envolvidos} |
+| **Co-sponsor** | {Agente que endossou a abertura — obrigatório} |
 | **Dependencias** | {IDs de issues que precisam ser concluidos antes, ou "—"} |
 | **Criado em** | {YYYY-MM-DD} |
 | **Origem** | Conversa / Revisao Mensal / Gatilho / Proativo |

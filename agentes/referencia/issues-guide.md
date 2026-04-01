@@ -12,14 +12,18 @@ Regra: 1-3 palavras em kebab-case, sem número. O slug deve dizer o assunto sem 
 
 ## Fluxo Conversa -> Issue
 ```
-Conversa -> Head identifica tema que merece profundidade
-         -> Sugere Issue ao Diego (com ID, titulo, responsavel)
+Conversa -> Agente (ou Head) identifica tema que merece profundidade
+         -> Precisa de co-sponsor: ao menos 1 agente com peso ≥ 1x concorda que é issue
+           (evita issues por impulso ou de baixo impacto)
+         -> Head sugere ao Diego (com ID, titulo, responsavel, co-sponsor)
          -> Diego aprova -> Cria arquivo em agentes/issues/{ID}.md (usar _TEMPLATE.md)
          -> Atualiza board em agentes/issues/README.md
          -> Trabalha no Issue (pode ser agora ou depois)
-         -> Conclusao -> Preenche Resultado -> Registra na memoria se relevante
-         -> Move para Done no board
+         -> Conclusao -> Veredicto Ponderado (ver template) -> Preenche Resultado
+         -> Registra na memoria se relevante -> Move para Done no board
 ```
+
+**Regra de co-sponsor:** Se o agente proponente é o especialista do domínio (peso 3x), o co-sponsor pode ser qualquer agente com peso ≥ 1x. Se o proponente é generalista, co-sponsor deve ter peso ≥ 2x no tema. Issues sem co-sponsor ficam em Refinamento até conseguirem um.
 
 ---
 

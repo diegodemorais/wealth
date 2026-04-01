@@ -23,7 +23,14 @@ Ler o arquivo de retro mais recente em `agentes/retros/`. Extrair a tabela de Ap
 | [aprendizado da retro anterior] | [agente] | Aplicado / Pendente / Encerrado |
 ```
 
-**Regra**: Carry-over "Pendente" por 2+ retros consecutivas = elevar para Issue ou encerrar explicitamente com justificativa. Aprendizado sem prazo de aplicação não é aprendizado — é intenção registrada.
+**Regra**: Carry-over "Pendente" por 2+ retros consecutivas → votação rápida do time:
+
+| Opção | Ação |
+|-------|------|
+| **Escalar** (maioria ponderada) | Abrir Issue formal com o agente dono e prazo |
+| **Encerrar** (maioria ponderada) | Registrar "encerrado sem aplicação" + motivo. Remove da lista de carry-overs |
+
+Pesos: especialista do domínio do aprendizado 3x, Head 1x, demais 1x. Head apresenta resultado ao Diego — Diego pode vetar a decisão do time.
 
 ### Passo 1: Coletar Contexto
 
@@ -184,15 +191,33 @@ Cada agente ativo **e o Head** dão nota de 0-10 a todos os outros agentes e ao 
 - Agente com média ponderada < 4 em 2 retros consecutivas: questionar existência
 - Agente com média ponderada < 0: revisão completa do perfil
 
-### Passo 5: Aprendizados
-
-| # | Aprendizado | Agente(s) | Acao |
-|---|-------------|-----------|------|
-| 1 | ... | ... | ... |
+### Passo 5: Aprendizados — Votação Ponderada + Validação Diego
 
 Criterio: aprendizados especificos e acionaveis. "Melhorar comunicacao" nao serve — precisam de criterio mensuravel.
 
-Diego tem palavra final sobre aprendizados. Em sessao interativa: apresentar lista e aguardar validacao. Em modo autonomo: registrar com flag `[pendente validacao Diego]`.
+**Processo em 2 etapas:**
+
+**Etapa A — Voto do time (antes de Diego ver):**
+Para cada aprendizado candidato, cada agente com relevância no tema emite: `INCLUIR` ou `DESCARTAR` com justificativa em 1 linha. Head vota com peso 1x. Calcular score ponderado:
+- Especialista do domínio: 3x
+- Adjacente: 2x
+- Head / Generalistas: 1x
+- Aprendizado aprovado pelo time: score > 0 (maioria ponderada favor de INCLUIR)
+- Aprendizado descartado: score ≤ 0
+
+**Etapa B — Diego valida a lista aprovada pelo time:**
+Apresentar ao Diego apenas os aprendizados que passaram pelo voto do time, com o score e o dissent (se alguém votou contra). Diego pode:
+- Aceitar → registrar nas memórias
+- Rejeitar → descartar com justificativa
+- Modificar → time registra a versão ajustada
+
+Isso garante que Diego valida o consenso do time — não uma curadoria do Head.
+
+Em modo autonomo: registrar aprendizados aprovados com flag `[pendente validacao Diego]`.
+
+| # | Aprendizado | Agente(s) | Score Ponderado | Acao |
+|---|-------------|-----------|----------------|------|
+| 1 | ... | ... | X.Xp INCLUIR / DESCARTAR | ... |
 
 ### Passo 6: Registrar
 
