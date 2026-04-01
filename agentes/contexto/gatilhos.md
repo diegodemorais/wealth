@@ -23,7 +23,7 @@
 |---------|---------|----------|------|------|
 | IPCA+ Longo | DCA por bandas | >=6,0% + IPCA+ longo <15%: DCA ativo (TD 2040 80% + TD 2050 20%) · <6,0%: pausar, redirecionar JPGL · <5,0% por 3 meses consecutivos: revisao de premissas (nao de posicao) — (1) por que caiu? (2) patrimonio >120% trajetoria FIRE? (3) se ambos: Issue formal antes de qualquer acao · alvo 15% atingido: parar DCA, manter HTM · queda de % por crescimento equity nao exige aporte compensatorio (posicao absoluta e o que importa) · venda: NENHUMA — exceto CDS >800bps | Executar conforme banda | Mensal |
 | Renda+ 2065 | Regime completo | >=6,5% + posicao <5%: comprar · 6,0-6,5%: hold · <=6,0% + holding >=720 dias: vender tudo (**720 dias conta por lote individual**, nao da primeira compra do DCA) · <=6,0% + holding <720 dias: aguardar (carry domina reducao de IR) · >=9,0%: manter carrego (**nao cancela regra de venda**: se holding >=720 dias E taxa <=6,0%, vender mesmo assim) · equity drawdown >30%: priorizar equity primeiro · aos 50 anos (2037): zerar (vale mesmo se FIRE adiado — posicao e tatica) | Executar conforme regime | Mensal |
-| Equity | JPGL catch-up | JPGL < 20% do target equity | Todo aporte livre vai para JPGL prioritariamente | Mensal |
+| Equity | JPGL catch-up | JPGL < 10% do target equity | Todo aporte livre vai para JPGL prioritariamente | Mensal |
 | JPGL AUM | Alerta delisting | AUM JPGL < €150M | Alertar — risco de encerramento aumenta, avaliar com Factor | Mensal |
 | JPGL AUM | Parar aportes | AUM JPGL < €100M | Parar aportes em JPGL imediatamente. Avaliar saida com Factor e Advocate | Mensal |
 | Soberano | CDS alerta | CDS Brasil 5y > 500 bps | Revisao exposicao soberana BR com Advocate | Mensal |

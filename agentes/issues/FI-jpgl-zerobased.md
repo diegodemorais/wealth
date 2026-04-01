@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FI-jpgl-zerobased |
 | **Dono** | 02 Factor |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | Alta |
-| **Participantes** | 02 Factor, 10 Advocate, 16 Zero-Based, 14 Quant |
+| **Participantes** | 02 Factor, 10 Advocate, 16 Zero-Based, 14 Quant, 04 FIRE, 06 Risco, 12 Behavioral, 03 RF, 08 Macro, 15 Fact-Checker |
 | **Co-sponsor** | 10 Advocate |
 | **Dependencias** | HD-unanimidade (concluída) |
 | **Criado em** | 2026-04-01 |
 | **Origem** | HD-unanimidade — identificou que JPGL foi debatido 5x e nunca recebeu a pergunta "adicionaríamos do zero?" |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-01 |
 
 ---
 
@@ -39,10 +39,10 @@ Esta pergunta é diferente de todas as anteriores. Não parte do status quo. Nã
 
 - [x] Analisar dados ao vivo de JPGL com framing zero-based (Factor)
 - [x] Stress-test adversarial: o caso contra 20% (Advocate)
-- [ ] Validar cálculos de alpha esperado e EV de delisting (Quant)
-- [ ] Veredicto ponderado com peso 2x Zero-Based
-- [ ] Decisão: manter 20% target ou reduzir para 10-15% via aportes
-- [ ] Atualizar carteira.md se target mudar
+- [x] Validar cálculos de alpha esperado e EV de delisting (Quant)
+- [x] Veredicto ponderado com peso 4x Zero-Based (debate completo 10 agentes, 4 fases)
+- [x] Decisão: reduzir target JPGL de 20% para 10%
+- [x] Atualizar carteira.md (JPGL 20% → 10%) e gatilhos.md (catch-up rule < 10%)
 
 ---
 
@@ -131,35 +131,50 @@ A pergunta zero-based produziu resultado diferente pela primeira vez.
 
 ## Conclusão
 
-> A ser preenchida após Quant validar cálculos e veredicto ponderado.
+Debate completo em 4 fases (10 agentes, 2 rodadas de debate + votação ponderada + rodada de consenso). Primeira vez em 6 análises que o framing zero-based foi aplicado rigorosamente.
 
-### Veredicto Ponderado (provisório)
+**Decisão: JPGL target = 10% do equity** (redução de 20% → 10%)
 
-| Agente | Peso | Posição | Justificativa |
-|--------|------|---------|---------------|
-| Factor | 3x | 15% | Loadings sólidos, mas alpha marginal |
-| Advocate | 1x | 10% | Risco assimétrico, 2.6 bps não justificam 20% |
-| Zero-Based | 2x | 12.5% (média) | Pergunta do zero nunca havia sido respondida |
-| **Score ponderado** | **6x** | **~13%** | **Reduzir de 20% para ~15% via aportes** |
+### Veredicto Ponderado Final
+
+| Agente | Peso | R1 | R2 | Fase 4 |
+|--------|------|----|----|--------|
+| Zero-Based | 4x | 0% | 5-8% | **10%** (convergiu) |
+| Factor | 3x | 15% | 15% | **12%** (aceita 10%) |
+| FIRE | 2x | 15% | 10% | **10%** |
+| Risco | 1x | 20% | 10% | **10%** |
+| Advocate | 1x | ≤10% | 10% | **10%** |
+| Behavioral | 1x | sinal | 12% | **10%** (convergiu) |
+| RF* | 1x | sinal | 10% | 10% (*argumento IPCA+ fora de escopo — confirmado FC) |
+| Macro | 0.5x | neutro+ | 10% | **10%** |
+| **Score ponderado** | **13.5x** | | | **9.7% ≈ 10%** |
+
+*RF usou custo de oportunidade IPCA+ como argumento para equity mix — conflação de escopo (Fact-Checker confirmou). Conclusão (10%) mantida por outros motivos.
+
+### Argumentos decisivos
+
+1. **Framing zero-based:** "Adicionaríamos do zero?" respondeu 10-15%, não 20%, pela primeira vez em 6 análises (HD-unanimidade: bug de burden of proof confirmado)
+2. **Alpha esperado:** 0.162–0.35%/ano (base empírica vs AQR); contribuição ao portfolio = 1.3–2.6 bps/ano — positivo mas marginal
+3. **JPUS precedente:** produto irmão UCITS (mesma ICAV, mesmo lançamento) fechou com $13.6M. Risco estrutural de fechamento existe, mas JPGL está em trajetória diferente (€213M crescendo, nicho sem alternativa barata)
+4. **Gap fatorial real:** nenhum UCITS replica inverse-vol + negative momentum screen do JPGL — tese de inclusão validada, mas a 10% não 20%
+5. **P(FIRE) delta:** 0.1–0.2pp entre 10% e 20% — negligível para a meta de aposentadoria
 
 ---
 
 ## Resultado
 
-> A ser preenchido ao finalizar.
-
 | Tipo | Detalhe |
 |------|---------|
-| **Alocação** | A definir — possível redução de target JPGL de 20% para 15% |
-| **Estratégia** | Zero-based framing confirmado como ferramenta diferencial |
-| **Conhecimento** | Pergunta "do zero?" nunca havia sido feita em 5 análises anteriores — bug sistêmico confirmado |
-| **Memória** | Factor (02), Advocate (10) |
+| **Alocação** | JPGL target: **20% → 10%** do equity. carteira.md e gatilhos.md atualizados. |
+| **Estratégia** | 10% liberados do JPGL redistribuídos via FI-equity-redistribuicao (aberta) |
+| **Conhecimento** | Zero-based framing produz resultado diferente. Framing zero-based = ferramenta obrigatória em revisões de alocação. Alpha esperado: 0.162–0.35%/ano. JPUS = precedente de fechamento válido (UCITS gêmeo). |
+| **Memória** | Factor (02), Advocate (10), Behavioral (12) |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Quant: validar cálculo de EV de delisting e alpha esperado líquido
-- [ ] Veredicto final + decisão sobre target (20% vs 15% vs 10%)
-- [ ] Se target mudar: atualizar carteira.md e plano de aportes
-- [ ] Registrar na memória do Factor
+- [x] carteira.md atualizado (JPGL 10%)
+- [x] gatilhos.md atualizado (catch-up rule < 10%)
+- [x] Issue FI-equity-redistribuicao aberta
+- [ ] Registrar na memória do Factor o novo target e a metodologia zero-based

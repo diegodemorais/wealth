@@ -36,7 +36,7 @@
 | SWRD | 35% | ~37,6% (~R$ 1.267k) | SWRD ~$241k | Overweight, sem aportes |
 | AVGS (US + INT) | 25% | ~28,5% (~R$ 961k) | AVUV + AVDV + USSC + AVGS ~$183k | Overweight via transitorios. Aportar so em AVGS UCITS |
 | AVEM | 20% | ~24,4% (~R$ 824k) | EIMI + AVES + DGS ~$157k | Overweight via transitorios. Aportar so em AVEM UCITS |
-| JPGL | 20% | ~0,4% (~R$ 12k) | IWVL + JPGL ~$2.1k | **Maior gap (-19,6pp). FOCO dos aportes** |
+| JPGL | 10% | ~0,4% (~R$ 12k) | IWVL + JPGL ~$2.1k | **Gap (-9,6pp). Aportar até 10% do equity. +10% equity liberados — redistribuição pendente (FI-equity-redistribuicao)** |
 
 Carteira proxima de 50/50 em Neutro/Fator, considerando as composicoes de cada ETF.
 
@@ -70,7 +70,8 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 | — SWRD | 27,7% | 27,7% | 27,7% | 32,9% | 32,9% |
 | — AVGS | 19,8% | 19,8% | 19,8% | 23,5% | 23,5% |
 | — AVEM | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
-| — JPGL | 15,8% | 15,8% | 15,8% | 18,8% | 18,8% |
+| — JPGL | 7,9% | 7,9% | 7,9% | 9,4% | 9,4% |
+| — Pendente redistrib.* | 7,9% | 7,9% | 7,9% | 9,4% | 9,4% |
 | HODL11 (cripto) | 3% | 3% | 3% | 3% | 3% |
 | Renda+ 2065 tatico | <=5% | <=5% | <=5% | 0% | 0% |
 
@@ -164,7 +165,7 @@ Nota: IPCA+ liquido ~6.0% considera hold to maturity 14 anos. O calculo anterior
 
 ### Retorno Ponderado do Portfolio (equity block, 3 cenarios)
 
-Pesos do bloco equity: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20%.
+Pesos do bloco equity: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 10%. **Nota: 10% liberados do JPGL pendentes redistribuição — aguardar FI-equity-redistribuicao. Retorno ponderado será recalculado ao concluir a issue.**
 
 | Cenario | Retorno Ponderado Equity BRL |
 |---------|------------------------------|
@@ -172,7 +173,7 @@ Pesos do bloco equity: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20%.
 | Favoravel (dep. 1.5%) | **6.96%** |
 | Stress (dep. 0%) | **5.46%** |
 
-Calculo: 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = **5.96%** (base). (Nota: valor anterior 5.89% estava incorreto — corrigido em HD-equity-weight 2026-03-25)
+Calculo provisório (mantido com pesos pré-redistribuição): 0.35×5.4 + 0.25×6.5 + 0.20×6.0 + 0.20×6.2 = **5.96%** (base). Recalcular após FI-equity-redistribuicao.
 
 ### Premissas Gerais
 
