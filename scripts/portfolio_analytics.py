@@ -491,7 +491,7 @@ PISO_TAXA_IPCA_LONGO = 6.0    # % a.a. — abaixo disso não prioriza
 PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não prioriza
 
 # Split do bucket IPCA+ longo (80% TD2050, 20% TD2040)
-SPLIT_IPCA_LONGO = {"TD IPCA+2050": 0.80, "TD IPCA+2040": 0.20}
+SPLIT_IPCA_LONGO = {"TD IPCA+2040": 0.80, "TD IPCA+2050": 0.20}
 
 
 # ─── OTIMIZADOR DE APORTE ─────────────────────────────────────────────────────
