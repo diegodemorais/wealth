@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | — | — | — | — | — |
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
-| 5 | HD-falsificabilidade | Registrar condição de falsificabilidade em decisões de manter | Head | Media |
+| 5 | XX-lacunas-estrategicas | P(FIRE) desatualizado, AVGS tail risk, falsificabilidade, HD-007 estado | Head | Alta |
 | — | — | — | — | — |
 | — | — | — | — | — |
 
@@ -111,6 +111,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | FI-006-Intangibles_value_factor_AVGS | Intangibles e o value factor | Escopo coberto por FI-004 (validacao empirica JPGL) |
 | FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35->30% / AVGS 25->30% | Superado por HD-006 (alocacao final aprovada com targets atuais) |
 | HD-005-Carry_framework_carteira | Carry framework (Koijen 2018) | Baixa prioridade vs backlog atual, escopo parcialmente coberto por FI-004 |
+| HD-falsificabilidade | Registrar condição de falsificabilidade em decisões de manter | Absorvida por XX-lacunas-estrategicas (2026-04-01) |
 
 ---
 
