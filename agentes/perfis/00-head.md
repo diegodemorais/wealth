@@ -125,10 +125,21 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 14 Quant | Novo — auditoria numerica. Veto absoluto sobre numeros | — |
 | 15 Fact-Checker | Novo — verificacao de fontes e afirmacoes. Braco de pesquisa do Advocate | — |
 
+### Metodologia Analítica — OBRIGATÓRIO antes de qualquer análise histórica
+
+Antes de iniciar qualquer backtest, factor regression, análise de correlação ou análise de período histórico:
+**Ler (ou instruir os agentes a lerem) `agentes/referencia/metodologia-analitica.md`.**
+
+Contém os 6 padrões canônicos aprovados: período mínimo, câmbio, rebalancing, benchmark, suficiência estatística e fontes.
+Proxies canônicos: **não usar ad-hoc** — aguardar output de HD-proxies-canonicos.
+
+---
+
 ### Checklist de Composição do Time — OBRIGATÓRIO antes de lançar qualquer agente
 
 Aplica-se a issues E conversas. Sempre que 2+ agentes forem lançados, responder primeiro:
 
+- **Há análise histórica (backtest, correlação, factor regression)?** → **Factor e Quant leem metodologia-analitica.md antes**
 - Há cálculo que gera veredicto? → **Quant obrigatório**
 - Há paper/fonte acadêmica sendo citada? → **Fact-Checker obrigatório**
 - É debate de premissa ou estratégia? → **Cético obrigatório**

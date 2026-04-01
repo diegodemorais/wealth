@@ -102,6 +102,7 @@ Cambio: R$ X
 ### M1: Atualizar Shadow Portfolios
 
 Calcular patrimônio dos shadows para o mês encerrado. Ver metodologia completa em `agentes/metricas/shadow-portfolio.md`.
+Padrões aplicados (conforme `agentes/referencia/metodologia-analitica.md`): câmbio BRL, rebalancing via aportes sem venda forçada, benchmark VWRA.L.
 
 1. Buscar VWRA.L retorno do mês via Yahoo Finance (performance mensal ou YTD delta)
 2. Buscar IPCA do mês via IBGE / investidor10.com.br
