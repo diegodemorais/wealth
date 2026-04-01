@@ -25,7 +25,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
+| 1 | FI-premissas-retorno | Reconciliar premissas base: SWRD 4.9% vs 5.05%, AVGS haircut, AVEM 5.5% sem fonte | Factor | Alta |
+| 2 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
 
 ### Doing
 > Issues em andamento
