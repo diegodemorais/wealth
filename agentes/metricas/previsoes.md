@@ -23,7 +23,7 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 | **Confianca** | Alta (~80%) |
 | **Racional** | Taxa atual 7.16% (2026-03-26). Selic em 14.25%, sem sinais de corte iminente. IPCA pressionado. Taxas reais devem permanecer elevadas ate pelo menos jun 2026 |
 | **Cenario de falha** | Corte surpresa de Selic, ou sinalizacao forte de fiscal responsavel pelo governo, comprimindo taxas reais abaixo de 6.5% |
-| **Gatilho de parada** | Se taxa cair abaixo de 6.0% (piso operacional), pausar DCA e redirecionar aportes para JPGL |
+| **Gatilho de parada** | Se taxa cair abaixo de 6.0% (piso operacional), pausar DCA e redirecionar aportes para SWRD (JPGL eliminado em 2026-04-01) |
 | **Agente dono** | 03 Renda Fixa |
 | **Status** | Aberta — DCA ativo |
 
@@ -63,35 +63,13 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 
 ---
 
-### PRV-003: JPGL Gap Fecha em 27-30 Meses
-
-| Campo | Valor |
-|-------|-------|
-| **Decisao** | Aportes prioritarios em JPGL ate gap fechar (alvo 20% do bloco equity = ~15.8% do portfolio) |
-| **Previsao** | Gap atual (-19.7%) cai para < 2% em 27-30 meses |
-| **Prazo** | Jun-Set 2028 |
-| **Confianca** | Media (~60%) |
-| **Racional** | Aporte R$25k/mes, ~70-80% para JPGL apos IPCA+ DCA. Se IPCA+ DCA consume ~R$8k/mes, sobra ~R$17k/mes para JPGL. Gap atual: ~R$608k (20% de R$3.5M equity = R$700k target, atual R$11k). A R$17k/mes: ~36 meses. Com crescimento do portfolio, alvo e movel |
-| **Cenario de falha** | Aportes desviados para outras oportunidades; patrimonio cresce rapido e 20% se torna alvo movel; JPGL fecha (AUM EUR 245M — monitorar) |
-| **Agente dono** | 02 Factor |
-| **Status** | Aberta — gap 19.7% |
-
-**Tracking:**
-
-| Data | JPGL Valor | JPGL % | Gap vs 20% equity | Aporte Mes |
-|------|-----------|--------|--------------------|-----------|
-| 2026-03-20 | R$ 11.383 | 0.3% | -19.7% | — |
-| 2026-03-26 | R$ 11.383 (estimado — sem novo aporte confirmado) | ~0.3% | ~-19.7% | — |
-
-> Nota: proxima atualizacao no checkin-automatico M1 de Abr/2026.
-
 ---
 
 ## Previsoes Encerradas
 
-| ID | Previsao | Resultado | Acerto? | Data Encerramento |
-|----|----------|-----------|---------|-------------------|
-| — | — | — | — | — |
+| ID | Previsao | Resultado | Acerto? | Data Encerramento | Motivo encerramento |
+|----|----------|-----------|---------|-------------------|--------------------|
+| PRV-003 | JPGL gap fecha em 27-30 meses via aportes | Gap não fechou por aporte — JPGL eliminado (target 0%) | Acerto na decisão, não na trajetória | 2026-04-01 | Mudança de tese: FI-jpgl-zerobased elimineu o target. Gap "fechou" porque o alvo foi removido. |
 
 ---
 
@@ -99,9 +77,9 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 
 | Metrica | Valor atual | Meta |
 |---------|------------|------|
-| Total abertas | 3 | — |
-| Total encerradas | 0 | — |
-| Taxa de acerto | N/A (sem encerradas) | >= 60% |
+| Total abertas | 2 | — |
+| Total encerradas | 1 | — |
+| Taxa de acerto | N/A (PRV-003 encerrada por mudança de tese, não avaliável) | >= 60% |
 | Confianca media vs acerto real | N/A | Calibrado (80% conf = ~80% acerto) |
 
 ---
@@ -118,6 +96,26 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 4. **Tracking trimestral**: Atualizar dados de cada previsao a cada trimestre.
 5. **Post-mortem ao encerrar**: Quando o prazo vencer, avaliar: acertou? Se nao, por que? Registrar.
 6. **Sem revisao de confianca retroativa**: Uma vez registrada, a confianca inicial nao muda. Isso permite avaliar calibracao real.
+
+## Template de Nova Previsão
+
+```
+| Campo | Valor |
+|-------|-------|
+| **Decisao** | ... |
+| **Previsao** | ... |
+| **Prazo** | ... |
+| **Confianca** | ... |
+| **Racional** | ... |
+| **Cenario de falha** | ... |
+| **Condição de encerramento por mudança de tese** | [critério explícito — ex: "se o target do ativo for removido, a previsão é encerrada como mudança de tese, não como erro de previsão"] |
+| **Agente dono** | ... |
+| **Status** | ... |
+```
+
+> **Regra L-22 (2026-04-01):** Toda nova previsão DEVE definir explicitamente a condição de encerramento por mudança de tese. Sem esse campo, o encerramento retroativo fica ambíguo (acerto vs abandono). Caso: PRV-003 encerrada porque JPGL foi eliminado — o campo teria deixado o critério claro desde a abertura.
+
+---
 
 ## Template de Votação de Confiança (preencher ao abrir cada PRV)
 

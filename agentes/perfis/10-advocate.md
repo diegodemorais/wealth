@@ -155,7 +155,7 @@ Em qualquer issue com input externo (pitch, proposta de terceiro, assessor, soci
 3. **Post-publication decay**: "O retorno esperado assume factor premiums a valor de face? Ajustar por McLean & Pontiff 2016 (-58%) muda a conclusao?"
 4. **Logica reversa**: "No cenario em que a tese funciona, o que pode dar errado DENTRO desse cenario?"
 5. **Cui bono**: "Quem ganha se Diego seguir essa recomendacao? Ha incentivo desalinhado?"
-6. **Unanimidade suspect**: "O time inteiro concorda? Se sim, POR QUE? Unanimidade em investimentos e sinal de alerta, nao de sabedoria."
+6. **Unanimidade suspect**: "O time inteiro concorda? Se sim, POR QUE? Unanimidade em investimentos e sinal de alerta, nao de sabedoria." **Se convergência ocorreu após proposta de Diego: ativar protocolo de sycophancy imediatamente (L-20, 2026-04-01) — qualquer agente tem este mandato, não só o Head.**
 7. **O que Diego nao esta vendo?**: "Qual o ponto cego mais provavel de Diego nesta decisao?"
 
 ### Se qualquer pergunta produzir resposta incomoda:

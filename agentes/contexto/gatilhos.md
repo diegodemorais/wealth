@@ -23,9 +23,6 @@
 |---------|---------|----------|------|------|
 | IPCA+ Longo | DCA por bandas | >=6,0% + IPCA+ longo <15%: DCA ativo (TD 2040 80% + TD 2050 20%) · <6,0%: pausar, redirecionar JPGL · <5,0% por 3 meses consecutivos: revisao de premissas (nao de posicao) — (1) por que caiu? (2) patrimonio >120% trajetoria FIRE? (3) se ambos: Issue formal antes de qualquer acao · alvo 15% atingido: parar DCA, manter HTM · queda de % por crescimento equity nao exige aporte compensatorio (posicao absoluta e o que importa) · venda: NENHUMA — exceto CDS >800bps | Executar conforme banda | Mensal |
 | Renda+ 2065 | Regime completo | >=6,5% + posicao <5%: comprar · 6,0-6,5%: hold · <=6,0% + holding >=720 dias: vender tudo (**720 dias conta por lote individual**, nao da primeira compra do DCA) · <=6,0% + holding <720 dias: aguardar (carry domina reducao de IR) · >=9,0%: manter carrego (**nao cancela regra de venda**: se holding >=720 dias E taxa <=6,0%, vender mesmo assim) · equity drawdown >30%: priorizar equity primeiro · aos 50 anos (2037): zerar (vale mesmo se FIRE adiado — posicao e tatica) | Executar conforme regime | Mensal |
-| Equity | JPGL catch-up | JPGL < 10% do target equity | Todo aporte livre vai para JPGL prioritariamente | Mensal |
-| JPGL AUM | Alerta delisting | AUM JPGL < €150M | Alertar — risco de encerramento aumenta, avaliar com Factor | Mensal |
-| JPGL AUM | Parar aportes | AUM JPGL < €100M | Parar aportes em JPGL imediatamente. Avaliar saida com Factor e Advocate | Mensal |
 | Soberano | CDS alerta | CDS Brasil 5y > 500 bps | Revisao exposicao soberana BR com Advocate | Mensal |
 | IPCA+ / Soberano | MA-bond-correlation falsificabilidade | CDS Brasil 5y > 400 bps por 6+ meses consecutivos | Reavaliar premissa de carry IPCA+ como garantido em HTM — cenario de cauda soberana (MA-bond-correlation). Perguntas: (1) acesso a resgates pode ser restrito? (2) repactuacao forcada de divida interna? (3) inflacao acima do IPCA oficial por controle de precos? | Mensal |
 | HODL11 | Banda cripto | < 1,5% patrimonio: comprar ate 3% · > 5% patrimonio: rebalancear para 3% | Manter target 3% via aportes ou venda | Trimestral |
@@ -33,7 +30,6 @@
 | Desacumulacao | Guardrails — fonte | **Anos 1–5 do FIRE:** sacar do bond pool (TD 2040 vencido / caixa) antes do equity. Equity intocado ate bond pool esgotado. Violacao = ativar Behavioral | Verificar origem do saque | Trimestral (pos-FIRE) |
 | Equity / AVGS | AVGS underperformance | AVGS underperforma SWRD >=5% cumulativo em janela rolling de 12 meses | Revisao com Factor + Advocate: (1) factor premium comprimiu? (2) regime ciclico ou estrutural? (3) confirmar via AQR Factor Returns. Se estrutural → Issue de reducao de peso | Trimestral |
 | Equity / AVGS | AVGS AUM | AUM AVGS UCITS < $300M alerta · < $150M parar aportes | Alerta $300M: avaliar alternativas UCITS. Parar $150M: suspender aportes em AVGS imediatamente | Trimestral |
-| Equity / JPGL | JPGL tracking error | Tracking error JPGL vs SWRD > 5% anualizado por 12 meses rolling | Revisao com Factor: (1) TE vem de loadings intencionais ou drift? (2) correlacao JPGL-SWRD caiu de 0.95? Se drift nao-intencional → Issue de substituicao | Trimestral |
 
 ---
 
@@ -51,7 +47,6 @@
 | Bond tent | Tamanho TD 2040 | TD 2040 < 6% do portfolio em jan/2037: bond tent < 2 anos de cobertura — avaliar alternativa (IPCA+ curto maior ou IMAB5). Meta: >= 10% do portfolio em 2040 | Verificar % portfolio. Monitorar a partir de jan/2032 |
 | Tax | CBE obrigatorio | Saldo IBKR permanentemente > US$100k (desde 2025). Obrigacao legal continua | Declarar CBE anual na RFB (prazo: 31/mar). Confirmar saldo em 31/dez do ano-base |
 | Equity / AVGS | AVGS alpha | Alpha liquido real pos-haircut 58% (McLean & Pontiff 2016) cai para <0% — verificar via AQR Factor Returns | Revisao de peso AVGS com Factor + Quant. Se confirmado com >=3 anos de dados: reduzir AVGS de 25% para 15-20% via aportes (nao vender) |
-| Equity / JPGL | JPGL TER | TER > 0.30%/ano (atual: 0.19%) | Revisao com Factor. Comparar custo-beneficio vs IFSW (0.30%) e SWRD+AVGS combo. Se TER > 0.35%: avaliar substituicao formal |
 | Equity | Revisao transitorios | — (revisao sistematica anual) | Revisar estado dos 7 transitorios (EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL): (1) ritmo de diluicao vs target, (2) TLH opportunities (perda >=5%), (3) liquidez e regulacao. Nao e gatilho de venda — e gatilho de monitoramento |
 
 ---

@@ -154,6 +154,21 @@ Para issues formais: consultar também tabela em `agentes/referencia/issues-guid
 
 **Regra:** Lançar TODOS em paralelo na mesma mensagem. Nunca lançar 2 e depender de Diego cobrar quem faltou.
 
+### Protocolo de Sycophancy — Mandato Universal (L-20, 2026-04-01)
+
+**Qualquer agente tem mandato e obrigação de ativar o protocolo de sycophancy — não é prerrogativa exclusiva do Head.**
+
+Quando qualquer agente detectar convergência instantânea do time após proposta de Diego:
+1. **Suspender o voto** — anunciar ao Head
+2. **Head aplica Regra 6**: perguntar raciocínio de Diego antes de novo voto
+3. **Behavioral reporta** diagnóstico de processo (não conteúdo)
+
+Regra 6 (Regra 6, 2026-04-01): quando Diego propõe algo diferente do consenso do time, o Head DEVE perguntar o raciocínio antes de abrir novo voto. Sem raciocínio fornecido = voto não acontece.
+
+Caso documentado: FI-equity-redistribuicao (2026-04-01) — 7/7 agentes flipparam para B em <5 minutos após Diego sugerir, sem exigir raciocínio.
+
+---
+
 ### Regra de Encerramento de Issue — Claims Refutados
 
 Quando um stress-test ou debate refuta claims de seções anteriores de uma issue, o **encerramento como Done** exige:

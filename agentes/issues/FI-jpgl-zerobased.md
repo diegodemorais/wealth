@@ -43,6 +43,9 @@ Esta pergunta é diferente de todas as anteriores. Não parte do status quo. Nã
 - [x] Veredicto ponderado com peso 4x Zero-Based (debate completo 10 agentes, 4 fases)
 - [x] Decisão: reduzir target JPGL de 20% para 10%
 - [x] Atualizar carteira.md (JPGL 20% → 10%) e gatilhos.md (catch-up rule < 10%)
+- [x] Fase 5 — Reabertura: Diego revelou que NUNCA comprou JPGL. Framing realmente zero-based.
+- [x] Rodada Final (4 subagentes, sem contexto de carteira): ZERO JPGL — consenso 10/10
+- [x] Decisão final: JPGL = 0%. Target eliminado. 20% liberados para redistribuição (FI-equity-redistribuicao).
 
 ---
 
@@ -131,11 +134,19 @@ A pergunta zero-based produziu resultado diferente pela primeira vez.
 
 ## Conclusão
 
-Debate completo em 4 fases (10 agentes, 2 rodadas de debate + votação ponderada + rodada de consenso). Primeira vez em 6 análises que o framing zero-based foi aplicado rigorosamente.
+### Fase 1–4 (resultado intermediário)
 
-**Decisão: JPGL target = 10% do equity** (redução de 20% → 10%)
+Debate em 4 fases (10 agentes, 2 rodadas + votação ponderada + consenso). Primeira vez em 6 análises com framing zero-based rigoroso. Resultado intermediário: **JPGL = 10%**.
 
-### Veredicto Ponderado Final
+### Fase 5 — Reabertura (gatilho: Diego nunca comprou JPGL)
+
+Diego revelou que a posição real de JPGL é ~zero (IWVL ~$2.1k, transitório legado). Nunca aportou diretamente em JPGL. Sem restrições de saída. O framing anterior ainda tinha viés de status quo — mesmo dizendo "zero-based", os agentes sabiam que a carteira teoricamente tinha 20% de target em JPGL.
+
+Com framing verdadeiramente limpo (sem contexto de carteira, sem target existente, pergunta pura: "adicionaria JPGL do zero?"), 4 subagentes independentes rodaram em paralelo:
+
+**Decisão final: JPGL = 0%** (não adicionar)
+
+### Veredicto Ponderado — Fases 1–4 (intermediário, JPGL = 10%)
 
 | Agente | Peso | R1 | R2 | Fase 4 |
 |--------|------|----|----|--------|
@@ -151,6 +162,18 @@ Debate completo em 4 fases (10 agentes, 2 rodadas de debate + votação ponderad
 
 *RF usou custo de oportunidade IPCA+ como argumento para equity mix — conflação de escopo (Fact-Checker confirmou). Conclusão (10%) mantida por outros motivos.
 
+### Rodada Final (framing completo, JPGL = 0%)
+
+4 subagentes independentes, sem contexto da carteira, pergunta direta: "adicionaria JPGL do zero dado este perfil de investidor?"
+
+| Agente | Peso | Veredito | Argumento principal |
+|--------|------|----------|---------------------|
+| Zero-Based | 4x | **0%** | Correlação 0.95 = sem diversificação real. AVGS dominante. |
+| Factor | 3x | **0%** | AVGS loadings 2x+ maiores, correlação 0.86 vs 0.95. TER -7bps. |
+| FIRE | 2x | **0%** | P(FIRE) delta <1pp. AVGS +10% melhor Sharpe sem tail risk excessivo. |
+| Advocate | 1x | **0%** | Momentum loading = -0.027 (não significativo). Tese "gap fatorial" não sobrevive à aritmética. |
+| **Score final** | **10x** | **0%** | **Consenso unânime** |
+
 ### Argumentos decisivos
 
 1. **Framing zero-based:** "Adicionaríamos do zero?" respondeu 10-15%, não 20%, pela primeira vez em 6 análises (HD-unanimidade: bug de burden of proof confirmado)
@@ -165,16 +188,16 @@ Debate completo em 4 fases (10 agentes, 2 rodadas de debate + votação ponderad
 
 | Tipo | Detalhe |
 |------|---------|
-| **Alocação** | JPGL target: **20% → 10%** do equity. carteira.md e gatilhos.md atualizados. |
-| **Estratégia** | 10% liberados do JPGL redistribuídos via FI-equity-redistribuicao (aberta) |
-| **Conhecimento** | Zero-based framing produz resultado diferente. Framing zero-based = ferramenta obrigatória em revisões de alocação. Alpha esperado: 0.162–0.35%/ano. JPUS = precedente de fechamento válido (UCITS gêmeo). |
+| **Alocação** | JPGL target: **20% → 0%**. Não adicionar. carteira.md e gatilhos.md atualizados. |
+| **Estratégia** | 20% liberados do JPGL redistribuídos via FI-equity-redistribuicao |
+| **Conhecimento** | Zero-based framing (fase 1-4): 10%. Zero-based verdadeiro (Diego nunca comprou): 0%. Ancoragem ao target teórico distorceu fases 1-4. Alpha esperado 0.162–0.35%/ano, mas correlação 0.95 anula contribuição. AVGS domina em todos os critérios relevantes. |
 | **Memória** | Factor (02), Advocate (10), Behavioral (12) |
 
 ---
 
 ## Próximos Passos
 
-- [x] carteira.md atualizado (JPGL 10%)
-- [x] gatilhos.md atualizado (catch-up rule < 10%)
-- [x] Issue FI-equity-redistribuicao aberta
-- [ ] Registrar na memória do Factor o novo target e a metodologia zero-based
+- [x] carteira.md atualizado (JPGL 0%)
+- [x] gatilhos.md atualizado (regras JPGL removidas)
+- [x] Issue FI-equity-redistribuicao re-scoped para 20%
+- [x] Registrar na memória do Factor o resultado final
