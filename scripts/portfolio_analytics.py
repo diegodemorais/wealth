@@ -70,8 +70,10 @@ def get_precos_proxy_avgs(periodo: str = "5y") -> pd.DataFrame:
       JPUS60%+JPIN40% ≈ JPGL (multi-factor) | VT ≈ VWRA (benchmark)
     Todos negociam na NYSE/Nasdaq — calendário consistente.
     """
-    # JPGL proxy correto: JPUS 60% + JPIN 40% (JPMorgan US + Japan Intl Factor ETFs)
-    # Validado em FI-jpgl-redundancia (2026-03-31). AVLV era proxy errado (value/size apenas).
+    # Proxies canônicos — agentes/referencia/proxies-canonicos.md (2026-03-31)
+    # AVGS → AVUV 58% + AVDV 42% (Avantis US+Intl SC Value, pesos factsheet)
+    # AVEM → AVEM US-listed (mesma estratégia Avantis, UCITS lançado Dez/2024)
+    # JPGL → JPUS 60% + JPIN 40% (JPMorgan Diversified Factor US+Intl)
     proxies_us = ["AVUV", "AVDV", "IDEV", "AVEM", "JPUS", "JPIN", "VT"]
     print(f"  Baixando proxies US ({periodo}): {', '.join(proxies_us)}")
     precos = yf.download(proxies_us, period=periodo, auto_adjust=True, progress=False)["Close"]

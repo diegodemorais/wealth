@@ -21,7 +21,7 @@ import statsmodels.api as sm
 warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser(description="Factor regression para ETFs da carteira")
-parser.add_argument("--rolling",      action="store_true", help="Adiciona análise de rolling loadings (24m, passo trimestral)")
+parser.add_argument("--rolling",      action="store_true", help="Adiciona análise de rolling loadings (36m, passo trimestral)")
 parser.add_argument("--rolling-only", action="store_true", help="Só rolling, pula regressão estática")
 args = parser.parse_args()
 
@@ -282,7 +282,7 @@ if not args.rolling_only and results:
 
 if args.rolling or args.rolling_only:
 
-    WINDOW = 24    # meses
+    WINDOW = 36    # meses — padrão metodologia-analitica.md (24m = ruído estatístico)
     STEP   = 3     # passo trimestral
 
     # Gatilhos de alerta (FI-rolling-loadings)

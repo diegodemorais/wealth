@@ -8,15 +8,14 @@ Compara:
   - Shadow A  : 100% VWRA (market cap puro)
 
 Períodos de dados (descrescente por qualidade):
-  Regime 1 — UCITS reais (Jun/2024+)  : todos os 4 ETFs alvo disponíveis
-  Regime 2 — 1 proxy (Set/2022+)      : AVGS substituído por proxy small value
-  Regime 3 — 2 proxies (Nov/2019+)    : AVEM + AVGS com proxies
-  Regime 4 — máx histórico (Jul/2019+): adiciona proxy VWRA pre-lançamento
+  Regime 1 — UCITS reais (Dez/2024+)  : todos os 4 ETFs alvo disponíveis
+  Regime 2 — 1 proxy (Set/2024+)      : AVEM.L substituído por AVEM US-listed
+  Regime 3 — 2 proxies (Jul/2019+)    : AVEM + AVGS com proxies canônicos
+  Regime 4 — máx histórico (Fev/2019+): começa com SWRD.L real, JPGL sem dados até Jul/2019
 
-Proxies usados (flag explícito no output):
-  AVGS  → AVUV  (Avantis US SC Value, US-listed, lançado Set/2019) ⚠️
-  AVEM  → EIMI.L (iShares Core MSCI EM IMI UCITS ETF, desde 2011)  ⚠️
-  VWRA  → SWRD.L (antes de Jul/2019)                                ⚠️
+Proxies canônicos (agentes/referencia/proxies-canonicos.md):
+  AVGS  → AVUV 58% + AVDV 42%  (Avantis US+Intl SC Value, pesos factsheet)  ⚠️
+  AVEM  → AVEM (US-listed)      (mesma estratégia Avantis, UCITS lançado Dez/2024) ⚠️
 
 Uso:
     python3 backtest_fatorial.py                    # regime melhor disponível
@@ -47,50 +46,55 @@ PESOS_TARGET = {
     "JPGL.L": 0.20,
 }
 
-# Datas de lançamento (UCITS reais — primeira data com dados confiáveis)
+# Datas de inception reais (confirmadas Factor+Fact-Checker via web — 2026-03-31)
+# Fonte: agentes/referencia/proxies-canonicos.md
 LAUNCH = {
-    "SWRD.L": "2011-09-01",
-    "VWRA.L": "2019-07-01",
-    "JPGL.L": "2019-11-01",
-    "AVEM.L": "2022-09-01",
-    "AVGS.L": "2024-06-01",
+    "SWRD.L": "2019-02-28",
+    "VWRA.L": "2019-07-23",
+    "JPGL.L": "2019-07-09",
+    "AVEM.L": "2024-12-09",
+    "AVGS.L": "2024-09-25",
 }
 
 # Regimes: data início, tickers usados e flags de proxy
+# Proxies canônicos: agentes/referencia/proxies-canonicos.md
+# AVGS proxy: AVUV 58% + AVDV 42% (pesos factsheet Avantis — não otimização in-sample)
+# AVEM proxy: AVEM US-listed (mesma estratégia, UCITS lançado Dez/2024)
 REGIMES = {
     1: {
-        "inicio": "2024-06-01",
-        "label":  "Regime 1 — ETFs UCITS reais (Jun/2024+)",
+        "inicio": "2024-12-01",
+        "label":  "Regime 1 — ETFs UCITS reais (Dez/2024+)",
         "target": {"SWRD.L": 0.35, "AVGS.L": 0.25, "AVEM.L": 0.20, "JPGL.L": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": [],
     },
     2: {
-        "inicio": "2022-09-01",
-        "label":  "Regime 2 — 1 proxy AVGS→AVUV (Set/2022+)",
-        "target": {"SWRD.L": 0.35, "AVUV": 0.25, "AVEM.L": 0.20, "JPGL.L": 0.20},
+        "inicio": "2024-09-01",
+        "label":  "Regime 2 — 1 proxy AVEM→AVEM US (Set/2024+)",
+        "target": {"SWRD.L": 0.35, "AVGS.L": 0.25, "AVEM": 0.20, "JPGL.L": 0.20},
         "shadow": {"VWRA.L": 1.00},
-        "proxies": ["AVUV ⚠️ proxy de AVGS (US-listed, lançado Set/2019)"],
+        "proxies": ["AVEM (US-listed) ⚠️ proxy de AVEM.L (UCITS lançado Dez/2024 — mesma estratégia Avantis)"],
     },
     3: {
-        "inicio": "2019-11-01",
-        "label":  "Regime 3 — 2 proxies AVGS+AVEM (Nov/2019+)",
-        "target": {"SWRD.L": 0.35, "AVUV": 0.25, "EIMI.L": 0.20, "JPGL.L": 0.20},
+        "inicio": "2019-07-01",
+        "label":  "Regime 3 — 2 proxies AVGS+AVEM (Jul/2019+)",
+        "target": {"SWRD.L": 0.35, "AVUV": 0.145, "AVDV": 0.105, "AVEM": 0.20, "JPGL.L": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": [
-            "AVUV  ⚠️ proxy de AVGS (US-listed, lançado Set/2019)",
-            "EIMI.L ⚠️ proxy de AVEM (iShares MSCI EM IMI UCITS, desde 2011)",
+            "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L (global SC value — pesos factsheet Avantis)",
+            "AVEM (US-listed) ⚠️ proxy de AVEM.L (UCITS lançado Dez/2024 — mesma estratégia Avantis)",
         ],
     },
     4: {
-        "inicio": "2019-07-01",
-        "label":  "Regime 4 — máximo histórico (Jul/2019+)",
-        "target": {"SWRD.L": 0.35, "AVUV": 0.25, "EIMI.L": 0.20, "JPGL.L": 0.20},
+        "inicio": "2019-02-01",
+        "label":  "Regime 4 — máximo histórico (Fev/2019+)",
+        "target": {"SWRD.L": 0.35, "AVUV": 0.145, "AVDV": 0.105, "AVEM": 0.20, "JPGL.L": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": [
-            "AVUV  ⚠️ proxy de AVGS (US-listed, lançado Set/2019; dados incompletos Jul-Set/2019)",
-            "EIMI.L ⚠️ proxy de AVEM",
-            "JPGL.L ⚠️ dados parciais até Nov/2019",
+            "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L",
+            "AVEM (US-listed) ⚠️ proxy de AVEM.L",
+            "JPGL.L ⚠️ sem dados Fev-Jun/2019 (lançado Jul/2019) — pesos normalizados automaticamente",
+            "VWRA.L ⚠️ sem dados Fev-Jun/2019 (lançada Jul/2019) — shadow alinha a Jul/2019 efetivamente",
         ],
     },
 }
