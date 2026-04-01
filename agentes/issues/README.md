@@ -29,6 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | — | — | — | — | — |
 | — | — | — | — | — |
 | 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
+| 5 | HD-falsificabilidade | Registrar condição de falsificabilidade em decisões de manter | Head | Media |
 | — | — | — | — | — |
 | — | — | — | — | — |
 
