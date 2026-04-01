@@ -25,13 +25,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| — | — | — | — | — |
-| — | — | — | — | — |
-| — | — | — | — | — |
-| 4 | HD-unanimidade | Unanimidade em macro/risco — calibragem ou echo chamber? | Head | Media |
-| — | — | — | — | — |
-| — | — | — | — | — |
-| — | — | — | — | — |
+| 1 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
 
 ### Doing
 > Issues em andamento
@@ -39,13 +33,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | HD-python-stack-v2 | Capacidades analíticas avançadas | Head | Média | Aguardando extrato IBKR (tlh_lotes.json) |
-| — | — | — | — | — |
+| FI-jpgl-zerobased | JPGL 20% — análise zero-based (adicionaríamos hoje?) | Factor | Alta | Aguardando Quant validar EV delisting + veredicto final |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-unanimidade | Unanimidade — calibragem imperfeita, nao echo chamber puro. 3 bugs sistemicos. Agente 16 criado | Head | 2026-04-01 | B+C parcialmente confirmadas. 4 outputs: Zero-Based, bond-tent, advocate protocol, bond-corr falsif. |
 | XX-lacunas-estrategicas | P(FIRE) 80% base, AVGS tail risk aceito, falsificabilidade 5 blocos | Head | 2026-04-01 | P(FIRE) 80% base. AVGS aceito explicitamente. Tabela falsificabilidade aprovada. |
 | HD-proxies-canonicos | Proxies canônicos por ETF por período | Head | 2026-03-31 | proxies-canonicos.md criado. 4 datas corrigidas. JPGL: FF5+MOM sintético. AVEM: DFEVX. |
 | HD-metodologia-analitica | Padrões metodológicos para análises históricas | Head | 2026-03-31 | 6 padrões aprovados. Período canônico: target 20 anos (2006). Mandato para proxies definido. |

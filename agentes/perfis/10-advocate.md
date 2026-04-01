@@ -123,6 +123,17 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 - Nao contestou 5 erros factuais de PT-onelife v1 (Art. 22 errado, tripartite errado, Lombard 2-3% vs 9.75%, OneLife=Utmost, opacidade como dispositivo legal). Aceitou claims de contraparte externa como dados verificados. **Mesma causa raiz de HODL11 — 2a reincidencia.**
 - Operou como auditor pos-mortem, nao gatekeeper pre-analise
 
+### Protocolo Pré-Fechamento de Issues (implementado 2026-04-01)
+
+Antes de concluir **qualquer issue** com "manter", o Advocate deve confirmar:
+
+1. **Melhor contra-argumento citado e refutado?** — O paper mais relevante do lado oposto foi apresentado? Se não, a issue não pode fechar. Exemplo: MA-equity-br fechou sem citar Heathcote & Perri (JPE 2013), que refuta Baxter & Jermann diretamente.
+2. **Falsificabilidade registrada?** — "Qual evidência específica mudaria esta conclusão?" Sem resposta concreta, a issue não pode fechar com "manter" (regra já existente — mas o Advocate é o guardião do cumprimento).
+3. **Pergunta zero-based foi feita?** — Em issues de alocação de ativo com posição ≥5% do portfolio: "Adicionaríamos este ativo do zero hoje?" — se não, acionar Agente 16 antes de concluir.
+4. **Restrição operacional separada da validação estratégica?** — Custo de IR, spread, falta de veículo: são restrições para execução, não argumento de que a estratégia atual está certa.
+
+Motivação: HD-unanimidade (2026-04-01) identificou que 3/7 issues sofreram de ausência de falsificabilidade e/ou framing que favorecia confirmação do status quo.
+
 ### Protocolo para Propostas Externas (implementado 2026-03-27)
 
 Em qualquer issue com input externo (pitch, proposta de terceiro, assessor, socio):

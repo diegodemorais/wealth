@@ -97,7 +97,7 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 | Tipo de issue | Agentes obrigatórios |
 |---------------|---------------------|
-| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), Rotina Zero-Base (prompt framing from scratch), Cético (17), agente de domínio, Quant, Fact-Checker |
+| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), **Zero-Based (16, peso 2x)**, Cético (17), agente de domínio, Quant, Fact-Checker |
 | Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Cético (17), Quant, Fact-Checker |
 | Tática (DCA, timing, execução) | Agente de domínio, Quant |
 | Cross-domain | Head coordena, múltiplos especialistas |
@@ -156,7 +156,7 @@ Issues com 60+ dias no Backlog sem atualização de status são consideradas "ag
 
 Sem decisão explícita, a issue não pode permanecer em Backlog indefinidamente. "Ainda relevante mas sem prioridade" é uma decisão válida — mas precisa ser dita.
 
-**Nota Zero-Base**: não é um agente separado — é o prompt "framing from scratch" da seção "Validação Multi-Model" acima. Para meta-estratégicas, incluir esse ângulo no briefing do agente de domínio ou lançar como general-purpose com o prompt padrão.
+**Agente 16 Zero-Based**: agente formal com perfil próprio (`agentes/perfis/16-zerobased.md`). Peso **2x** em issues de alocação. Recebe APENAS o perfil do investidor — sem carteira atual, sem histórico de posições. Obrigatório em todas as meta-estratégicas e issues com ativo ≥5% do portfolio. Propósito: impedir que restrição operacional (custo de IR, falta de veículo) seja confundida com validação estratégica. Ver perfil para detalhes de isolamento e formato de output.
 
 Issues meta-estratégicas identificadas (consultar sempre): `HD-simplicity`, `HD-equity-weight`, `HD-brazil-concentration`
 

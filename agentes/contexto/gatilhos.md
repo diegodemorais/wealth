@@ -27,6 +27,7 @@
 | JPGL AUM | Alerta delisting | AUM JPGL < €150M | Alertar — risco de encerramento aumenta, avaliar com Factor | Mensal |
 | JPGL AUM | Parar aportes | AUM JPGL < €100M | Parar aportes em JPGL imediatamente. Avaliar saida com Factor e Advocate | Mensal |
 | Soberano | CDS alerta | CDS Brasil 5y > 500 bps | Revisao exposicao soberana BR com Advocate | Mensal |
+| IPCA+ / Soberano | MA-bond-correlation falsificabilidade | CDS Brasil 5y > 400 bps por 6+ meses consecutivos | Reavaliar premissa de carry IPCA+ como garantido em HTM — cenario de cauda soberana (MA-bond-correlation). Perguntas: (1) acesso a resgates pode ser restrito? (2) repactuacao forcada de divida interna? (3) inflacao acima do IPCA oficial por controle de precos? | Mensal |
 | HODL11 | Banda cripto | < 1,5% patrimonio: comprar ate 3% · > 5% patrimonio: rebalancear para 3% | Manter target 3% via aportes ou venda | Trimestral |
 | Desacumulacao | Guardrails — montante | Drawdown 0-15%: R$250k/ano · 15-25%: R$225k · 25-35%: R$200k · >35%: R$180k (piso) · Upside +25% acima pico: +10% permanente (teto R$350k) · Restauracao: volta ao pico + 2 trimestres | Ajustar retirada conforme tier | Trimestral (pos-FIRE) |
 | Desacumulacao | Guardrails — fonte | **Anos 1–5 do FIRE:** sacar do bond pool (TD 2040 vencido / caixa) antes do equity. Equity intocado ate bond pool esgotado. Violacao = ativar Behavioral | Verificar origem do saque | Trimestral (pos-FIRE) |
