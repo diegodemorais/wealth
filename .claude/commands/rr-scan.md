@@ -36,6 +36,7 @@ Para cada thread ativa, leia os posts novos desde o **Último Post Lido** (ver c
 | 31781 | UCITS MCW implementations – simple and low-cost solutions | Alta | SWRD, IWDA, VWCE, WEBN, SPYY — tracking difference all-in, spread, custo real | ver Histórico abaixo |
 | 32396 | Avantis UCITS (EU) Discussion Thread | Alta | AVGS, AVEM, AVWC, AVWS, AVEU, AVPE, AVUS — hub principal Avantis UCITS | ver Histórico abaixo |
 | 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, JPGL, DDGC, AVWC — comparação fatorial UCITS, novos produtos | ver Histórico abaixo |
+| 34728 | Dimensional UCITS (EU) Discussion Thread | Alta | DDGC, DDUM, DDXM — factor loadings DFA UCITS, regressões vs Avantis | ver Histórico abaixo |
 | 15439 | Investing in Managed Futures | Media | RK-003 — managed futures como diversificador (issue backlog) | ver Histórico abaixo |
 | 13776 | Bitcoin / Crypto FUD | Media | HODL11, cripto — tese e gatilhos | ver Histórico abaixo |
 | 2927 | How much Emerging Market? | Media | Alocação EM — debate size/conviction | ver Histórico abaixo |
@@ -200,6 +201,7 @@ Após gerar o relatório, **sempre** atualizar a tabela "Histórico de Scans" ab
 |------|-----------------|-----------------|---------------------|
 | 2026-03-23 | 31781 | 31781: post 150 | SWRD +26bps vs net benchmark (3y). SPYY e FWRA melhores all-world. WEBN tracking ruim primeiros meses. Swap S&P 500 outperforma físico ~25bps. |
 | 2026-03-26 | 31781, 31258, 32396, 15439, 13776, 2927, 13125 | 31781: post 811 | Vanguard All-Cap UCITS lançando. BlackRock ACSW/ESWP (swaps) Mar 2026. Thread 32396 adicionado. FLXE pode ter EM factor loading > AVEM. Avantis lançou AVEU/AVPE/AVUS Fev 2026. Zero MF (sem UCITS). BTC ~$70k -26%/mês. |
+| 2026-04-02 | 31781, 32396, 31258, 13776, 2927, 13125, 34728 (novo) | 31781: 821 / 32396: 1929 / 31258: 3729 / 13776: 4045 / 2927: 2560 / 13125: 1184 / 34728: 354 | DFA lançou DDUM+DDXM (mar/26, TER 0.15-0.20%). AVGS dominante confirmado. WEBN ~full replication. Thread 34728 adicionada. AVGS margem IBKR 15% confirmada (usar vs AVWS 100%). 15439 não lido (rate limit — prioridade próximo scan). |
 
 ---
 

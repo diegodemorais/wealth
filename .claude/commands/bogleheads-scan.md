@@ -172,6 +172,7 @@ Sempre registrar o scan no Histórico abaixo com data, issues identificadas e re
 |------|---------------------|-----------|
 | 2026-03-23 | XX-004 | Carteira alinhada. SWR non-US = 3.5%. SWRD melhor all-in que IWDA (~10 bps/ano). JPGL confirmado. RSS feed identificado. Cash IBKR < $60k (mapeado em US-listed). |
 | 2026-03-26 | — | Morningstar SWR 2026 = 3.9% (base case) — Diego usa 3.12-3.4%, muito mais conservador. International outperformando US (tariffs + USD fraco). Thread 443539 identificado como hub MCW Bogleheads. |
+| 2026-04-02 | DDGT identificado (novo candidato) | JL Collins migrou para VT — confirma tese ex-US de Diego. AVGS/AVWS +33% no último ano. DDGT (Dimensional Global Targeted Value, TER 0.44%, AUM $148M) identificado como candidato novo. Debate "Losing faith in SCV" ativo mas sem gatilho de ação. SWR perpetual 3.4% confirmado. Vanguard pipeline 9 ETFs. |
 
 ---
 

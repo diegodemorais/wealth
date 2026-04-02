@@ -13,10 +13,10 @@
 |--------|-----------|----------|---------------|-------------|--------|------------|-----------------|
 | — | Vanguard Global Small-Cap UCITS | Acc | Passivo MCW | AVGS | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
 | FLXE | Franklin LibertyQ EM Multi-Factor | Acc | Smart Beta | AVEM | 🔍 Em avaliação | Baixa | Out/2026 |
-| ACSW | iShares MSCI World Swap | Acc | Sintético (swap) | SWRD | 🆕 Lançado mar/2026 | Média | Mar/2027 |
+| IWDS | iShares MSCI World Swap | Acc | Sintético (swap) | SWRD | 🔍 Em avaliação | Média | Mar/2027 |
 | AVWC | Avantis All-World UCITS | Acc | Factor Active | AVGS+AVEM | 🔍 Dados insuficientes | Baixa | Abr/2027 |
 | — | Vanguard FTSE All-World All-Cap UCITS | Acc | Passivo MCW | SWRD+AVGS+AVEM | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
-| XDEM | iShares MSCI World Multifactor UCITS | Acc | Smart Beta | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
+| IFSW | iShares STOXX World Equity Multifactor UCITS | Acc | Smart Beta | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
 | JPGL | JPMorgan Global Equity Multi-Factor UCITS | Acc | Factor Active | — (ex-carteira) | 👁️ Reentrada condicional | Baixa | Out/2026 |
 | DDGC/DEGC | Dimensional Global Core Equity UCITS | Acc | Factor Active | AVGS+AVEM | 🆕 Lançado nov/2025 | Média | Nov/2026 |
 | AVWS | Avantis Global Small Cap Value UCITS | Acc | Factor Active | AVGS | 🆕 Verificar vs AVGS | Baixa | Jun/2026 |
@@ -102,21 +102,21 @@
 
 ---
 
-### 3. ACSW — iShares MSCI World Swap UCITS ETF
+### 3. IWDS — iShares MSCI World Swap UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
-| **Ticker** | ACSW |
-| **ISIN** | IE000Y7K9659 (verificar) |
+| **Ticker** | IWDS (Euronext Amsterdam / Xetra / Borsa Italiana) |
+| **ISIN** | IE000F9IDGB5 |
 | **Nome completo** | iShares MSCI World Swap UCITS ETF |
 | **Índice** | MSCI World (sintético — swap) |
 | **Distribuição** | Acc |
 | **Domicílio** | Irlanda |
-| **TER** | ~0.10% (verificar — não confirmado) |
-| **Data de lançamento** | Março 2026 |
-| **AUM** | — (novo) |
-| **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-03-26 (RR scan) |
+| **TER** | 0.20% (confirmado) |
+| **Data de lançamento** | Março 2024 |
+| **AUM** | USD 1.15B |
+| **Disponível IBKR** | A confirmar (não está na LSE) |
+| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan)
 | **Semelhante a** | SWRD (mesmo índice) |
 | **Tese** | ETFs sintéticos (swap) reinvestem dividendos sem WHT no nível do swap. Para MSCI World: vantagem ~8-12bps/ano vs físico (menor que os 15-25bps do S&P 500 puro — componente EUA já isento de WHT via Irlanda; ganho concentrado em ex-US ~35% do índice). Se confirmar TD < SWRD com margem ≥ 0.08%, seria troca de qualidade no bloco MCW. |
 | **Diferença crítica vs SWRD** | Counterparty risk do swap (mitigado por colateral ISDA 100% marcado a mercado diariamente — risco residual baixo mas não zero para horizonte 14 anos). SWRD físico = sem esse risco. |
@@ -205,33 +205,34 @@
 
 ---
 
-### 6. XDEM — iShares Edge MSCI World Multifactor UCITS ETF
+### 6. IFSW — iShares STOXX World Equity Multifactor UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
-| **Ticker** | XDEM |
+| **Ticker** | IFSW (LSE / Xetra) |
 | **ISIN** | IE00BZ0PKT83 |
-| **Nome completo** | iShares Edge MSCI World Multifactor UCITS ETF |
-| **Índice** | MSCI World Diversified Multiple-Factor (value, quality, momentum, low size) |
+| **Nome completo** | iShares STOXX World Equity Multifactor UCITS ETF |
+| **Índice** | STOXX Developed World Equity Factor Screened (desde jan/2025 — era MSCI World Diversified Multiple-Factor) |
 | **Distribuição** | Acc |
 | **Domicílio** | Irlanda |
-| **TER** | 0.35% |
+| **TER** | 0.50% (elevado — mas TD 0.29%/ano líquida via securities lending) |
 | **Data de lançamento** | 2015 |
-| **AUM** | ~$1.5B |
+| **AUM** | EUR 660M |
 | **Disponível IBKR** | Sim |
-| **Última atualização dos dados** | 2026-03-26 (RR scan, contexto JPGL comparação) |
+| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan — trackingdifferences.com) |
 | **Semelhante a** | JPGL (mesmo espaço multifator world UCITS) |
-| **Tese** | Smart beta multifator world: value + quality + momentum + low size via MSCI. Alternativa passiva ao JPGL no espaço multifator. TER 0.35% vs JPGL 0.19%. AUM maior ($1.5B) = mais liquidez e menor risco de fechamento. 10 anos de track record permite análise empírica real. |
-| **Diferença crítica vs JPGL** | JPGL usa momentum como negative screen (inverted momentum dentro de value/quality) — metodologia exclusiva. XDEM é multifactor tradicional (long momentum, long value, etc). Backtests históricos mostram JPGL superior mas XDEM tem mais transparência metodológica. TER de XDEM (0.35%) é maior que JPGL (0.19%). |
-| **Motivo de monitorar** | Alternativa se JPGL fechar ou deteriorar. Benchmarking — se XDEM outperforma JPGL por 24 meses + TER similar, abre debate de reentrada via XDEM. |
-| **Gatilho para considerar** | XDEM outperforma JPGL por 24 meses consecutivos em rolling return **OU** JPGL fecha/reduz AUM < €100M **OU** debate formal de reentrada multifator na carteira |
-| **Como descobrimos** | RR scans históricos (comparação no espaço UCITS multifactor world, thread 31258) |
-| **Como monitorar** | justETF para TD e performance relativa · RR thread 31258 · AQR Factor Returns para loadings |
+| **⚠️ Mudança de índice** | Em jan/2025 trocou de MSCI → STOXX. Nova metodologia inclui low vol e asset allocation factor framework. Regressão histórica captura período misto pré/pós-mudança. |
+| **Tese** | Smart beta multifator world: value + quality + momentum + low size. TER 0.50% parece alto mas TD 0.29%/ano via securities lending — custo all-in competitivo. AUM EUR 660M = liquidez adequada. 10 anos de track record. |
+| **Diferença crítica vs JPGL** | JPGL usa momentum como negative screen (metodologia exclusiva). IFSW é multifactor tradicional. TER IFSW 0.50% vs JPGL 0.19% — mas TD IFSW 0.29%/ano é competitiva. |
+| **Motivo de monitorar** | Alternativa se JPGL fechar ou deteriorar. TD melhor que TER sugere boa operação. |
+| **Gatilho para considerar** | IFSW outperforma JPGL por 24 meses consecutivos em rolling return **OU** JPGL fecha/reduz AUM < €100M **OU** debate formal de reentrada multifator na carteira |
+| **Como descobrimos** | RR scans históricos (thread 31258). Ticker corrigido de XDEM → IFSW em 2026-04-02 (XDEM = Xtrackers Momentum, produto diferente). |
+| **Como monitorar** | justETF e trackingdifferences.com para TD · RR thread 31258 · AQR Factor Returns para loadings |
 | **Frequência** | Semestral |
 | **Quem monitora** | Factor (02) |
-| **Classificação** | Smart Beta — MSCI Diversified Multiple-Factor (rules-based, índice público) |
+| **Classificação** | Smart Beta — STOXX Developed World Factor (rules-based, índice público) |
 | **Fatores** | Value · Quality · Momentum · Low Size — DM desenvolvidos |
-| **Tracking Diff.** | A verificar (justETF — 10 anos de dados disponíveis) |
+| **Tracking Diff.** | 0.29%/ano (media — securities lending compensa TER elevado) |
 | **Sharpe Ratio 3y** | A verificar (justETF — dado disponível) |
 | **Volatilidade 3y** | A verificar vs MSCI World |
 | **Beta vs MSCI World** | ~0.85-0.90 (low size + quality reduzem beta vs mercado) |
@@ -251,9 +252,9 @@
 | **Domicílio** | Irlanda |
 | **TER** | 0.19% (corte de 0.45% em 2026-03-23) |
 | **Data de lançamento** | 2017 |
-| **AUM** | €245M (2026-03-26) |
+| **AUM** | €207M (2026-04-02) — ⚠️ queda de €245M, outflows pós-corte de TER |
 | **Disponível IBKR** | Sim |
-| **Última atualização dos dados** | 2026-04-01 (FI-jpgl-zerobased — conclusão) |
+| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan — justETF) |
 | **Semelhante a** | Ex-carteira (era 20% → zerado) |
 | **Status especial** | **Eliminado da carteira em 2026-04-01 (FI-jpgl-zerobased). Não recomprar sem gatilho explícito.** |
 | **Tese original** | Multifactor UCITS com momentum negative screen (metodologia exclusiva JPMorgan). Correlação 0.95 com combinação SWRD+AVGS — sobreposição excessiva. AVGS dominou em análise zero-based. |
@@ -279,16 +280,16 @@
 | Campo | Detalhe |
 |-------|---------|
 | **Ticker** | DDGC (LSE) / DEGC (Xetra) |
-| **ISIN** | IE000BYXM682 (verificar) |
+| **ISIN** | IE000EGGFVG6 |
 | **Nome completo** | Dimensional Global Core Equity UCITS ETF |
 | **Índice** | Ativo (Dimensional — broad market com tilt deliberado para value, profitability, small) |
 | **Distribuição** | Acc |
 | **Domicílio** | Irlanda |
 | **TER** | 0.26% |
 | **Data de lançamento** | Novembro 2025 |
-| **AUM** | ~$1B+ (zero → $1B em 4 meses — captação institucional excepcional) |
+| **AUM** | USD 1.04B (fev/2026 — zero → $1B em 4 meses, captação institucional excepcional) |
 | **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-04-02 (RR scan + FI-003 análise) |
+| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan — justETF/MarketScreener) |
 | **Semelhante a** | AVGS + AVEM (all-cap global, DM + EM) |
 | **Tese** | DFA é o criador da abordagem fatorial moderna — Fama, French, Harvey estão no advisory board. Eduardo Repetto foi co-CEO da DFA antes de fundar a Avantis. DDGC é o primeiro ETF UCITS da DFA com filosofia "Global Core Equity": cobertura ampla com tilt suave em value, profitability e small. "Core" = menos concentrado que AVGS (pure small-cap value) — mais diversificado mas com menor expected alpha. $1B em 4 meses sinaliza demanda institucional real. |
 | **Diferença crítica vs AVGS+AVEM** | AVGS = pure small-cap value (HML + RMW agressivo). DDGC = "core" = tilt mais suave, cobertura mais ampla incluindo large caps. Expected alpha de DDGC < AVGS, mas tracking error também menor. Para Diego que já tem SWRD (MCW puro), DDGC ficaria num espaço intermediário entre SWRD e AVGS. |
@@ -324,7 +325,7 @@
 | **Disponível IBKR** | A confirmar |
 | **Última atualização dos dados** | 2026-04-02 (WebSearch — justETF, Morningstar) |
 | **Semelhante a** | AVGS (pode ser o mesmo fundo) |
-| **⚠️ Alerta crítico** | **AVWS pode ser o mesmo fundo que nosso AVGS, com ticker diferente em bolsa diferente (Xetra vs LSE).** Verificar ISIN do AVGS que está na carteira — se for IE0003R87OG3, são o mesmo produto. |
+| **⚠️ Alerta crítico** | **ETF candidatos scan 2026-04-02 confirmou: AVWS e AVGS têm o mesmo ISIN IE0003R87OG3 — mesmo fundo, tickers de bolsas diferentes (Xetra vs LSE). IBKR: AVGS tem margem 15%, AVWS tem margem 100% — usar AVGS. Proposto para Descartados (aguardando aprovação de Diego).** |
 | **Tese** | Se for fundo distinto de AVGS: small-cap value desenvolvidos apenas (sem EM, sem all-global). Complementaria AVGS + AVEM com foco em small-cap DM exclusivo. |
 | **Diferença crítica vs AVGS** | Se diferente: AVGS = global (DM + EM small-cap value). AVWS = DM apenas. TER 0.39% vs AVGS 0.23% — se TERs diferentes, são fundos distintos. |
 | **Motivo de monitorar** | Verificar relação com AVGS antes de qualquer análise. Se for o mesmo fundo, remover do radar. |
