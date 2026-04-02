@@ -68,14 +68,6 @@ Dado crítico para FR-currency-mismatch-fire:
 - **Períodos de apreciação**: 2003-2011 (Lula boom), breve 2016-2018 pós-impeachment
 - **Implicação para carteira**: premissa base de 0,5% depreciação real/ano é CONSERVADORA vs histórico. Favorável valida BRL como hedge natural do equity USD
 
-### Evento crítico (2026-04-02): Liberation Day
-- Trump anunciou tarifas universais: 10% flat sobre todas as importações americanas
-- Tarifas reciprocais: China +34%, EU +20%, Japão +24%
-- Vigência: 10% em 05/abr, reciprocais em 09/abr
-- BTC -20% em 24h. VIX pré-abertura ~25 — pós-anúncio: pendente confirmação
-- Impacto carteira Diego: limitado (horizonte 14 anos, diversificação ex-US). Sem gatilho acionado.
-- Implicação para RF BR: ciclo COPOM mais cauteloso → taxas longas elevadas por mais tempo. **Favorável para DCA IPCA+**
-
 ### Contexto do ciclo (2026-03-20 -- revalidacao profunda)
 - Copom iniciou ciclo de cortes com 0,25pp (cauteloso por conflito Iran)
 - Forward guidance removida -- proximos passos data-dependent
