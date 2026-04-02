@@ -35,7 +35,7 @@ Para cada thread ativa, leia os posts novos desde o **Último Post Lido** (ver c
 |----|--------|------------|------|-----------------|
 | 31781 | UCITS MCW implementations – simple and low-cost solutions | Alta | SWRD, IWDA, VWCE, WEBN, SPYY — tracking difference all-in, spread, custo real | ver Histórico abaixo |
 | 32396 | Avantis UCITS (EU) Discussion Thread | Alta | AVGS, AVEM, AVWC, AVWS, AVEU, AVPE, AVUS — hub principal Avantis UCITS | ver Histórico abaixo |
-| 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, DDGC, AVWC — comparação fatorial UCITS, novos produtos | ver Histórico abaixo |
+| 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, JPGL, DDGC, AVWC — comparação fatorial UCITS, novos produtos | ver Histórico abaixo |
 | 15439 | Investing in Managed Futures | Media | RK-003 — managed futures como diversificador (issue backlog) | ver Histórico abaixo |
 | 13776 | Bitcoin / Crypto FUD | Media | HODL11, cripto — tese e gatilhos | ver Histórico abaixo |
 | 2927 | How much Emerging Market? | Media | Alocação EM — debate size/conviction | ver Histórico abaixo |
@@ -61,6 +61,7 @@ discourse_search: "small cap value premium" (novos papers/debates)
 discourse_search: "managed futures UCITS"
 discourse_search: "sequence of returns risk"
 discourse_search: "ACSW swap" ou "iShares MSCI World swap UCITS"
+discourse_search: "JPGL" ou "JPMorgan Global Equity Multi-Factor" (reentrada condicional — monitorar dados de TD e factor loadings)
 ```
 
 ### Passo 2b: Descoberta de Novos Lançamentos UCITS via Web
