@@ -63,6 +63,37 @@ discourse_search: "sequence of returns risk"
 discourse_search: "ACSW swap" ou "iShares MSCI World swap UCITS"
 ```
 
+### Passo 2b: Descoberta de Novos Lançamentos UCITS via Web
+
+Além das threads do forum, buscar lançamentos recentes via web. Executar em paralelo com as queries de busca acima. Substituir `{mes}` e `{ano}` pelo mês e ano atuais.
+
+**Avantis Investors — página oficial UCITS (família mais relevante):**
+```
+WebFetch: https://www.avantisinvestors.com/ucitsetf/
+```
+Comparar produtos listados com candidatos já em `agentes/referencia/etf-candidatos.md`. Qualquer produto Avantis UCITS não listado = candidato automático para avaliação.
+
+**Dimensional e outras famílias:**
+```
+WebSearch: Dimensional UCITS ETF new launch {ano}
+WebSearch: iShares new UCITS ETF Ireland accumulating launched {ano}
+WebSearch: Vanguard UCITS ETF new Ireland accumulating {ano}
+WebSearch: JPMorgan UCITS ETF new launch Ireland {ano}
+```
+
+**Discovery geral:**
+```
+WebSearch: site:etfstream.com UCITS ETF launched Ireland {mes} {ano}
+WebSearch: site:trackinsight.com new UCITS ETF Ireland accumulating {ano}
+WebSearch: "new UCITS ETF" launched Ireland accumulating equity {mes} {ano}
+WebSearch: "UCITS ETF" launched {mes} {ano} factor OR "small cap" OR emerging OR multifactor
+```
+
+**Para cada produto novo identificado:**
+1. Está em `agentes/referencia/etf-candidatos.md` (tabela resumo ou Descartados)? Se sim, skip.
+2. Tem tese para a carteira? (factor tilt, cobertura que complementa SWRD/AVGS/AVEM)
+3. Se relevante → adicionar ficha básica e incluir na tabela resumo com status 🆕
+
 ### Critérios para incluir thread nova no scan
 
 - Menciona ETFs ou estratégias presentes na carteira (AVGS, AVEM, SWRD)

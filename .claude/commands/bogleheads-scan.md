@@ -54,6 +54,49 @@ Fazer WebFetch no feed RSS de Non-US Investing (f=22) primeiro, depois f=10 se r
 
 Parsear o XML Atom para extrair: título, URL, data. Filtrar por relevância antes de investigar mais.
 
+### Passo 2b: Descoberta de Novos Lançamentos UCITS
+
+Buscar novos ETFs UCITS que possam ser candidatos para monitoramento. Executar em paralelo com o Passo 2 (RSS) sempre que possível. Substituir `{mes}` e `{ano}` pelo mês e ano atuais.
+
+**justETF — lançamentos recentes:**
+```
+WebSearch: site:justetf.com UCITS Ireland accumulating equity new {mes} {ano}
+WebSearch: justETF "new ETF" OR "recently listed" Ireland accumulating equity {ano}
+```
+
+**ETF Stream — notícias da indústria:**
+```
+WebSearch: site:etfstream.com UCITS ETF launched Ireland {mes} {ano}
+WebSearch: site:etfstream.com "new fund" OR "launches" UCITS accumulating {ano}
+```
+
+**Avantis Investors — página oficial UCITS:**
+```
+WebFetch: https://www.avantisinvestors.com/ucitsetf/
+```
+Comparar produtos listados com candidatos já em `agentes/referencia/etf-candidatos.md`. Qualquer produto Avantis UCITS não listado = candidato automático para avaliação.
+
+**Dimensional, iShares, Vanguard, JPMorgan:**
+```
+WebSearch: Dimensional UCITS ETF new launch {ano}
+WebSearch: iShares new UCITS ETF Ireland accumulating launched {ano}
+WebSearch: Vanguard UCITS ETF new Ireland accumulating {ano}
+WebSearch: JPMorgan UCITS ETF new launch Ireland {ano}
+```
+
+**Busca geral:**
+```
+WebSearch: "new UCITS ETF" launched Ireland accumulating equity {mes} {ano}
+WebSearch: "UCITS ETF" launched {mes} {ano} factor OR "small cap" OR emerging OR multifactor
+```
+
+**Para cada produto novo identificado:**
+1. Está em `agentes/referencia/etf-candidatos.md` (tabela resumo ou Descartados)? Se sim, skip.
+2. Tem tese para a carteira? (factor tilt, cobertura que complementa SWRD/AVGS/AVEM, custo menor que equivalente)
+3. Se relevante → adicionar ficha básica (ticker, ISIN, TER, classificação, tese 1 linha, fonte, data) e incluir na tabela resumo com status 🆕
+
+---
+
 ### Passo 3: Filtrar por relevância
 
 Priorizar tópicos que mencionem:
