@@ -69,10 +69,11 @@ SPENDING_SMILE = {
     "no_go":   {"gasto": 285_000, "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
 }
 
-SAUDE_BASE         = 37_900   # R$/ano no FIRE (inflator próprio)
-SAUDE_INFLATOR     = 0.07     # 7%/ano cap
-SAUDE_INFLATOR_CAP = 0.07
-SAUDE_DECAY        = 0.50     # 50% após No-Go (custos caem quando mobilidade cai)
+SAUDE_BASE         = 16_000   # R$/ano no FIRE 53 — plano empresarial coletivo PJ (revisado 2026-04-02)
+SAUDE_INFLATOR     = 0.027    # 2.7%/ano real — VCMH IESS média 18 anos (revisado 2026-04-02)
+SAUDE_INFLATOR_CAP = 0.060    # 6.0% cap conservador
+SAUDE_DECAY        = 0.50     # 50% após No-Go (mobilidade cai; cuidado institucional já no no_go base)
+IDADE_FIRE_SAUDE   = 53       # idade no FIRE Day (faixa ANS 49-53 = 3.0×)
 
 # ─── GUARDRAILS (fonte: carteira.md, aprovados 2026-03-20) ────────────────────
 
@@ -88,6 +89,17 @@ GASTO_PISO = 180_000
 
 # ─── CÁLCULOS ─────────────────────────────────────────────────────────────────
 
+def ans_faixa_multiplier(ano_pos_fire: int) -> float:
+    """Multiplicador de custo de saúde relativo ao FIRE Day (idade 53, ANS faixa 49-53 = 3.0×).
+    Saltos discretos conforme RN 63/2003 da ANS.
+    """
+    idade = IDADE_FIRE_SAUDE + ano_pos_fire
+    if idade >= 64: return 6.0 / 3.0   # 2.00× do FIRE Day
+    if idade >= 59: return 5.0 / 3.0   # 1.67×
+    if idade >= 54: return 4.0 / 3.0   # 1.33×
+    return 1.0                          # 49-53 — faixa do FIRE Day
+
+
 def gasto_spending_smile(ano_pos_fire: int, ipca_acumulado: float,
                           escala_custo_vida: float = 1.0) -> float:
     """Gasto base ajustado pelo spending smile + saúde, em R$ reais (base 2026).
@@ -102,10 +114,10 @@ def gasto_spending_smile(ano_pos_fire: int, ipca_acumulado: float,
     else:
         gasto_base = SPENDING_SMILE["no_go"]["gasto"] * escala_custo_vida
 
-    # Saúde com inflator próprio e decay no No-Go
-    anos_saude = ano_pos_fire
-    saude = SAUDE_BASE * min((1 + SAUDE_INFLATOR) ** anos_saude,
-                              (1 + SAUDE_INFLATOR_CAP) ** anos_saude)
+    # Saúde: VCMH 2.7%/ano real + saltos discretos ANS por faixa etária (RN 63/2003)
+    taxa_efetiva = min(SAUDE_INFLATOR, SAUDE_INFLATOR_CAP)
+    saude_vcmh = SAUDE_BASE * (1 + taxa_efetiva) ** ano_pos_fire
+    saude = saude_vcmh * ans_faixa_multiplier(ano_pos_fire)
     if ano_pos_fire >= SPENDING_SMILE["no_go"]["inicio"]:
         saude *= SAUDE_DECAY
 

@@ -79,12 +79,36 @@
 | **59-63** | **5,0×** |
 | **64+** | **6,0× (cap máximo)** |
 
-**Salto crítico**: dos 58 para 59 anos = +116-138% no prêmio base. Diego (50 anos no FIRE) pagará ~3-4× mais que a faixa base. Aos 64+: 6× base = custo dominante.
+**Salto crítico**: dos 58 para 59 anos = +116-138% no prêmio base. Diego (53 anos no FIRE) está na faixa 3×. Cruzamentos: 54 → 4×, 59 → 5×, 64 → 6×.
 
 **VCMH (Variação de Custo Médico Hospitalar — IESS):**
 - Média 18 anos: VCMH supera IPCA em **+2,7%/ano**
 - 2024: VCMH +11,3% vs IPCA ~4,8% → diferencial +6,5pp (acima da média)
-- Implicação: inflator saúde no modelo FIRE deve ser IPCA + 2,7%/ano mínimo (base), não IPCA geral
+- IPCA Saúde IBGE: apenas +0,74%/yr real (só preço). VCMH correto: inclui frequência de uso.
+- Implicação: inflator saúde no modelo = **VCMH 2,7%/ano real** + saltos discretos ANS
+
+### Modelo de Saúde Aprovado (2026-04-02) — fire_montecarlo.py
+
+**Premissas anteriores (FR-spending-smile 2026-03-27):** R$37,9k base (R$18k × 1,07^11) + 7%/ano. INCORRETO: usava plano individual + confundia VCMH com projector.
+
+**Premissas atuais (aprovadas 2026-04-02):**
+- `SAUDE_BASE = 16.000` — Bradesco coletivo PJ, cotação real age 53 SP
+- `SAUDE_INFLATOR = 0.027` — VCMH IESS real, 18 anos
+- ANS faixa etária: multiplicadores discretos sobre base FIRE Day (faixa 3,0×)
+  - age 54: × 1,33 | age 59: × 1,67 | age 64: × 2,00
+- `SAUDE_DECAY = 0,50` após no-go (cuidado institucional já no no_go base)
+
+**Custo saúde Diego por idade (novo modelo):**
+| Idade | Saúde/ano |
+|-------|-----------|
+| 53 (FIRE) | R$16.000 |
+| 59 | R$31.300 |
+| 64 | R$42.900 |
+| 70 | R$50.300 |
+
+**Impacto no P(FIRE) solo:** base 86.9% → **87.2%**, stress 81.0% → **83.5%** (ganho maior no stress — menor carga nos anos críticos de SoRR)
+
+**Risco residual:** plano empresarial depende de CNPJ ativo. Se Diego encerrar a PJ pós-FIRE, custo sobe ~40% (plano individual). Não modelado explicitamente.
 
 **IMA-B 2024**: -2,44% (marcação a mercado adversa). IMA-B5+: -4,2%. Confirma: HTM é estratégia correta para IPCA+ — não sair por MtM.
 

@@ -7,191 +7,170 @@
 | **ID** | XX-casamento |
 | **Dono** | 00 Head |
 | **Status** | Done |
-| **Prioridade** | Baixa |
+| **Prioridade** | Alta |
 | **Participantes** | 04 FIRE, 05 Tax, 01 CIO, 12 Behavioral |
 | **Dependencias** | — |
 | **Criado em** | 2026-03-24 |
-| **Origem** | Re-analise estrategica full-path + gatilho em carteira.md |
-| **Concluido em** | 2026-03-27 |
+| **Origem** | Re-análise estratégica full-path + gatilho em carteira.md |
+| **Concluido em** | 2026-04-02 (recalibrado com modelo de saúde correto) |
 
 ---
 
 ## Motivo / Gatilho
 
-`carteira.md` ja registra: "Estado civil: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento."
-
-A re-analise de 2026-03-24 identificou que este gatilho ainda nao foi endercado formalmente. Tax (planejamento sucessorio), FIRE (impacto P(FIRE): estimado queda de 91% para 70-75% se custo de vida aumentar + aportes reduzirem), Behavioral (presente bias explicando o delay).
-
----
-
-## Descricao
-
-Casamento muda materialmente os parametros do modelo FIRE:
-
-1. **Custo de vida**: de R$250k para potencialmente R$280-320k (estilo de vida compartilhado nao e necessariamente mais barato)
-2. **Aportes**: se parceira nao tem renda ou se Diego assume mais custos, aportes mensais de R$25k podem reduzir
-3. **FIRE date**: pode mudar (parceira mais nova? filhos?)
-4. **Sucessao**: planejamento de heranca e estrutura de bens — proteger ambos
-5. **Estrutura empresarial**: 2 PJs — separacao de patrimonio e mais critica pos-casamento
+`carteira.md` registra: casamento iminente ~2026-2027, filho previsto ~2028. Gatilho ativo desde 2026-03-24. Issue foi executada em 2026-03-27 com premissas de saúde **incorretas** (SAUDE_BASE R$37,9k + 7%/ano). Recalibrada em 2026-04-02 com:
+- `SAUDE_BASE = R$16k` (plano empresarial coletivo PJ — cotação real Bradesco SP, age 53)
+- `SAUDE_INFLATOR = 2,7%/ano real` (VCMH IESS, 18 anos)
+- Katia: CLT com plano empresarial — **custo zero para o casal** enquanto ela trabalha (~12 anos pós-FIRE Diego)
+- FIRE base: 53 (2040), não 50
 
 ---
 
-## Escopo
+## Perfil do Casal
 
-**Urgente (fazer antes do casamento):**
-- [ ] Planejamento sucessorio: testamento, regime de bens, protecao mutua. **Nota (2026-03-26):** patrimonio total R$8.813M (financeiro + empresa R$800k + imovel R$450k + terreno R$150k) — muito maior do que o visivel no portfolio financeiro
-- [ ] Seguro de vida: cobrir estate tax US-listed (~US$60k risco herdeiros) + proteger parceira se Diego falecer
+### Katia
 
-**Modelo FIRE:**
-- [ ] Coletar inputs do Diego: custo de vida esperado pos-casamento, renda da parceira, planos de filhos
-- [ ] Recalcular P(FIRE) com cenario casamento: R$280k/ano + R$20k aportes vs R$250k + R$25k. **Baseline: 91% @ R$250k (FR-003 com premissas HD-006)**
-- [ ] Recalcular P(FIRE) com cenario filhos: custo R$350k+, aporte zero por 2-3 anos
-- [ ] Definir FIRE date condicional: "se parceira trabalha -> 50; se nao trabalha -> 52; se filhos -> revisao"
-- [ ] Avaliar se patrimonio e suficiente: **portfolio financeiro R$3.479M + empresa R$800k = R$4.279M** (excluindo imóvel/terreno/capital humano)
-
-**Patrimonial:**
-- [ ] Avaliar regime de bens otimo (separacao total vs comunhao parcial)
-- [ ] Estrutura empresarial: 2 PJs continuam adequadas?
-- [ ] Holdings: quando o patrimonio justificar holding familiar? (meta: >=R$5M)
-
-**Behavioral:**
-- [ ] Nomear o padrao: presente bias explica o delay em enderecar isso formalmente
-- [ ] Definir deadline: "pacto + testamento contratados ate [data]" — implementation intention
-
----
-
-## Analise
-
-> Executada em 2026-03-27. Premissas de estimativa inicial — nao validadas. Revisitar quando planos mais maduros.
-
-### Perfil Katia (inputs coletados 2026-03-27)
-
-| Campo | Valor | Confianca |
+| Campo | Valor | Confiança |
 |-------|-------|-----------|
 | Regime | CLT | Alta |
-| Salario bruto | R$18k/mes | Media |
-| Salario liquido | ~R$13.5k/mes (INSS+IR) | Media |
-| Beneficios (VA/VR/saude) | ~R$1.5-2k/mes | Media |
-| Bonus anual | 1x salario (conservador) | Baixa |
-| Reserva propria | ~R$0 | Media |
-| Plano de saude | Excelente (empresa grande) | Alta |
-| Diego como dependente | Custo adicional baixo ou zero | Media |
-| Patrimonio no FIRE 55 | ~R$800k estimado | Baixa |
-| Gastos mensais | ~R$13-15k/mes | Media |
+| Salário bruto | R$18k/mês | Média |
+| Salário líquido | ~R$13,5k/mês | Média |
+| Benefícios | ~R$1,5-2k/mês | Média |
+| Bônus anual | 1× salário | Baixa |
+| Plano de saúde | Excelente (empresa grande) | Alta |
+| Diego como dependente | Custo adicional baixo ou zero | Média |
+| Reserva própria | ~R$0 | Média |
+| Patrimônio no FIRE 55 | ~R$800k estimado | Baixa |
+| Gastos mensais | ~R$13-15k/mês | Média |
 
-### Modelo de Fases — Casal (FIRE 55)
+---
 
-**Acumulacao (16 anos):**
+## Modelo de Fases — Acumulação (14 anos até FIRE 53)
 
-| Fase | Periodo | Aporte/mes | Base |
-|------|---------|-----------|------|
+| Fase | Período | Aporte/mês | Base |
+|------|---------|------------|------|
 | SP, ambos trabalhando | Meses 1-24 | R$15k | Estimativa |
-| Licenca Katia + bebe | Meses 25-42 | R$9k | Estimativa |
-| Indaiatuba, Katia voltou | Meses 43-192 | R$16k | Estimativa |
-| One-time | Mes 30 | +R$190k | Venda apt Katia - entrada casa |
+| Licença Katia + bebê | Meses 25-42 | R$9k | Estimativa |
+| Indaiatuba, Katia voltou | Meses 43-168 | R$16k | Estimativa |
+| One-time | Mês ~30 | +R$190k | Venda apt Katia – entrada casa |
+
+**Aporte médio ponderado:** R$15.107/mês (vs R$25k solo)
 
 **Renda mensal conjunta (fase 1):**
 
 | Item | Valor |
 |------|-------|
-| Diego liquido | ~R$25k/mes |
-| Katia liquida + beneficios | ~R$15-16k/mes |
-| Total bruto | ~R$40-41k/mes |
-| Gastos casal (estimativa) | ~R$26-28k/mes |
-| **Surplus para aportes** | **~R$13-15k/mes** |
+| Diego líquido | ~R$25k/mês |
+| Katia líquida + benefícios | ~R$15-16k/mês |
+| Gastos casal (estimativa) | ~R$26-28k/mês |
+| Surplus para aportes | ~R$13-15k/mês |
 
 **Moradia:**
 - Fase 1 (SP): aluguel compartilhado ~2 anos
-- Fase 2: casa propria em Indaiatuba, ~R$1M, financiamento ~R$600k SAC
-- Apt Katia vendido: liquido ~R$590k. Entrada+reforma ~R$400k. Net one-time: +R$190k
-- Apt Diego (Pinheiros): mantido para renda. Aluguel estimado R$66k/ano ja descontado do lifestyle
-
-**Filho:** 1 filho previsto, nascimento ~2028. No FIRE 55: filho tem 14 anos.
-
-### Resultados Monte Carlo — Progressao Completa
-
-Script: `dados/monte_carlo_casal_katia.py` | 10k trajetorias, t-dist df=5, seeds 42/200
-
-**Spending casal (FIRE 55, C5 — lifestyle R$250k):**
-
-| Ano FIRE | Idade | Lifestyle | Saude 2p | Sobrecarga | Total |
-|----------|-------|-----------|----------|------------|-------|
-| 0 | 55 | R$250k | R$106k | R$100k | R$494k |
-| 10 | 65 | R$198k | R$152k | R$0 | R$323k |
-| 20 | 75 | R$172k | R$206k | R$0 | R$351k |
-| 30 | 85 | R$172k | R$234k | R$0 | R$368k |
-
-Sobrecarga: escola (R$30k) + mortgage SAC (~R$70k medio) nos primeiros anos pos-FIRE.
-**Nota:** escola por 7 anos esta superestimada — filho termina escola ~4 anos pos-FIRE 55. Correto em revisao futura.
-
-**P(sucesso) por cenario:**
-
-| ID | FIRE | Casa | Lifestyle | P(base) | P(fav) | P(stress) | vs Solo |
-|----|------|------|-----------|---------|--------|-----------|---------|
-| Solo FIRE 50 (ref) | 50 | — | R$280k | 80.8% | 89.9% | 74.3% | ref |
-| C1 | 53 | R$1M | R$290k | 47.5% | — | — | -33pp |
-| C3 | 55 | R$1.5M | R$290k | 59.9% | — | — | -21pp |
-| C4 | 55 | R$1M | R$290k | 61.7% | — | — | -19pp |
-| C5 | 55 | R$1M | R$250k | 65.4% | 81.4% | 28.3% | -15pp |
-
-**Marco C5:** favoravel (81.4%) supera solo pela primeira vez. Base (65.4%) ainda -15pp.
-
-**Decomposicao do gap casal vs solo:**
-- 80% do gap = spending maior (R$467k vs R$318k = +R$149k/ano)
-- 20% do gap = aportes menores (R$15k vs R$25k/mes)
-- Saude do segundo adulto e o driver silencioso — cresce indefinidamente
-
-### Sensibilidade — VCMH (premissa mais incerta)
-
-| VCMH | Saude 2p FIRE 55 | P(base) C5 | Delta |
-|------|-----------------|-----------|-------|
-| 7% (modelo atual, IESS agregado) | R$106k/ano | ~65% | ref |
-| 5% (premissa alternativa) | R$79k/ano | ~68% | +3pp |
-
-**VCMH e a variavel mais sensivel do modelo.** Problema: VCMH 7% e dado agregado do mercado (IESS), nao curva individual. Sem dado longitudinal brasileiro individual para validar. Intervalo real: 53-68% para C5 base.
-
-Sensitividade: R$1k/ano de lifestyle cortado = ~0.09pp de P. Permanente. Saude e incompressivel e nao linear.
-
-### Para chegar a P(base) = 80% — Casal
-
-Nenhuma combinacao testada cruzou 80% de forma robusta:
-
-| Cenario | P(base) | Requer |
-|---------|---------|--------|
-| VCMH 5% sozinho | 67% | So premissa mais otimista |
-| VCMH 5% + FIRE 57 | 71% | 2 anos a mais + premissa otimista |
-| VCMH 5% + FIRE 58 + R$230k + R$16k/mes | 77% | 3 anos a mais + lifestyle menor + aportes maiores |
-| VCMH 5% + FIRE 58 + R$210k + R$16k/mes | 78% | Combinacao exigente |
-
-**Conclusao:** 80% base para o casal e estruturalmente fora de alcance com premissas conservadoras. O target realista e 65-75%. Comparar P casal com P solo pode ser a pergunta errada — o solo gasta R$318k; o casal gasta R$440-494k. A pergunta certa e: qual custo de vida o casal quer, e qual FIRE age corresponde a P aceitavel para ambos?
-
-### Premissas com Baixa Confianca (revisitar)
-
-| Premissa | Valor atual | Por que incerta |
-|----------|------------|-----------------|
-| Saude base hoje (R$18k/pp) | Nunca validada | Diego gasta ~R$6-10k/ano total |
-| VCMH 7% real | IESS agregado | Nao e curva individual |
-| Aportes por fase | R$15k/9k/16k | Estimativa — nao testada na pratica |
-| Lifestyle casal R$250-290k | Nunca vivido | Inclui R$60k viagens, nunca validado |
-| Casa R$1M Indaiatuba | Estimativa | Mercado nao pesquisado |
-| Patrimonio Katia no FIRE | R$800k | Depende de poupanca dela ate 2042 |
-| Escola 7 anos | Superestimada | Filho termina escola em 4 anos pos-FIRE 55 |
+- Fase 2: casa própria em Indaiatuba, ~R$1M, financiamento ~R$600k SAC
+- Apt Katia vendido: líquido ~R$590k. Entrada+reforma ~R$400k. Net one-time: +R$190k
+- Apt Diego (Pinheiros): mantido para renda. Aluguel estimado R$66k/ano descontado do lifestyle
 
 ---
 
-## Conclusao
+## Modelo de Saúde — Comparativo (correção principal)
 
-Issue encerrada em 2026-03-27 como primeira passagem com premissas de estimativa inicial.
+| Idade | Saúde Novo (1p→2p) | Saúde Antigo (2p desde FIRE) | Delta |
+|-------|---------------------|------------------------------|-------|
+| 53 (FIRE Day) | R$16.000 (Diego; Katia = CLT) | R$75.800 | −R$59.800 |
+| 55 | R$22.500 | R$86.800 | −R$64.300 |
+| 59 | R$31.300 | R$113.800 | −R$82.500 |
+| 64 | R$42.900 | R$159.500 | −R$116.600 |
+| **65 (Katia retira)** | **R$88.100** | **R$170.700** | −R$82.600 |
+| 70 | R$100.700 | R$239.400 | −R$138.700 |
+| 83+ (no-go) | ~R$71.000 | ~R$288.500 | −R$217.500 |
+
+**Key insight:** Modelo antigo assumia 2 planos individuais desde o FIRE Day. Novo modelo reconhece que Katia tem plano CLT por ~12 anos → custo zero para o casal até Diego ter 65 anos. A partir daí, os dois precisam de cobertura própria — mas com VCMH 2,7% (não 7%), o crescimento é muito mais lento.
+
+---
+
+## Cenários Monte Carlo — FIRE Casal (recalibrado 2026-04-02)
+
+Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajetórias | t-dist df=5 | seed 42
+
+**P(FIRE) por cenário:**
+
+| Cenário | Aporte | FIRE | Pat Mediana | P(base) | vs Antigo |
+|---------|--------|------|------------|---------|-----------|
+| Solo FIRE 53 (referência) | R$25k | 53 | R$11,53M | 87,2% | ref |
+| C1: FIRE 53, R$250k lifestyle | R$15k | 53 | R$9,30M | 75,1% | — |
+| C2: FIRE 53, R$270k lifestyle | R$15k | 53 | R$9,30M | 73,0% | — |
+| **C3: FIRE 55, R$250k lifestyle** | R$15k | 55 | R$10,34M | **80,7%** | +15,3pp |
+| **C4: FIRE 55, R$270k lifestyle** | R$15k | 55 | R$10,34M | **78,7%** | +13,3pp |
+| C5: FIRE 55, R$290k lifestyle | R$15k | 55 | R$10,34M | 76,4% | — |
+
+**Comparativo com análise anterior (2026-03-27):**
+- C5 antigo (FIRE 55, R$250k, saúde 7%, 2p desde o início): P(base) = **65,4%**
+- C4 novo (FIRE 55, R$270k, VCMH 2,7%, Katia CLT 12 anos): P(base) = **78,7%**
+- Ganho do modelo corrigido: **+13pp**
+
+### Decomposição do ganho
+
+| Fator | Impacto estimado |
+|-------|----------------|
+| Saúde Diego: R$37,9k → R$16k | +5-6pp |
+| Katia CLT (zero custo anos 0-11) | +5-6pp |
+| VCMH 7% → 2,7% (crescimento lento) | +2-3pp |
+| **Total** | **~+13pp** |
+
+### Spending casal (C4 — FIRE 55, R$270k lifestyle)
+
+| Ano FIRE | Idade | Lifestyle | Saúde 1p→2p | Total |
+|----------|-------|-----------|-------------|-------|
+| 0 | 55 | R$291k | R$24k (Diego) | R$315k |
+| 12 | 67 | R$231k | R$109k (2p) | R$340k |
+| 17 | 72 | R$231k | R$122k (2p) | R$353k |
+| 30 | 85 | R$291k | R$71k (decay) | R$362k |
+
+*Lifestyle escalado por 270/250 vs spending_smile base*
+
+---
+
+## Análise de Sensibilidade
+
+### VCMH (premissa mais incerta)
+
+| VCMH | Saúde 2p aos 70 | P(base) C4 | Delta |
+|------|----------------|-----------|-------|
+| 2,7% (VCMH IESS — adotado) | R$101k | 78,7% | ref |
+| 5% | ~R$155k | ~74% | −4-5pp |
+| 7% (modelo antigo) | ~R$239k | ~65% | −14pp |
+
+### Premissas com baixa confiança (revisitar)
+
+| Premissa | Valor atual | Por que incerta |
+|----------|------------|-----------------|
+| Aportes por fase | R$15k/9k/16k | Estimativa — não testada na prática |
+| Lifestyle casal R$250-290k | Nunca vivido | Inclui viagens etc., nunca validado |
+| Casa R$1M Indaiatuba | Estimativa | Mercado não pesquisado |
+| Katia aposenta aos 65 | Estimativa | Pode ser antes (FIRE junto?) |
+| Patrimônio Katia no FIRE | R$800k | Depende de poupança dela até 2042 |
+| CNPJ Diego ativo pós-FIRE | Assumido | Risco: plano vai para individual (+40%) |
+
+---
+
+## Conclusão
+
+**Principal mudança vs 2026-03-27:** P(FIRE 55 casal) sobe de **65,4% → 78,7%** com modelo de saúde corrigido. A premissa de 2 planos individuais desde o FIRE Day estava errada — Katia tem plano CLT por ~12 anos.
 
 **Achados principais:**
-1. P(FIRE 55 casal) base = 65.4% com lifestyle R$250k — viavel mas nao robusto
-2. Bear market nos primeiros anos pos-FIRE e o risco dominante do casal (sobrecarga escola+mortgage critica no SoRR window)
-3. Saude e o driver incompressivel — cresce a 7% real e supera o lifestyle aos ~70 anos
-4. 80% P(base) para o casal requer combinacao de VCMH 5% + FIRE 58+ + lifestyle abaixo de R$230k
-5. Premissas de baixa confianca dominam o resultado — revisitar quando vida mais definida
-6. Itens urgentes independentes de calculos: planejamento sucessorio + seguro de vida
+1. P(FIRE 55, R$270k lifestyle) = **78,7%** — próximo do threshold 80%
+2. P(FIRE 55, R$250k lifestyle) = **80,7%** — atinge o threshold
+3. VCMH 2,7% (correto) vs 7% (antigo) = ganho de ~3pp estrutural
+4. Katia CLT = cobertura gratuita por 12 anos = maior ganho individual (~5-6pp)
+5. Bear market nos primeiros anos continua sendo o risco dominante
+6. 80% base para o casal **é alcançável** — ao contrário da conclusão anterior ("estruturalmente fora de alcance")
 
-**Quando reabrir:** quando casa escolhida, lifestyle real testado, Katia com renda estabilizada pos-bebe, e data de casamento definida.
+**Itens urgentes (independentes de cálculos):**
+- Planejamento sucessório: testamento, regime de bens (patrimônio total ~R$7,86M)
+- Seguro de vida: cobrir estate tax US-listed (~US$60k) + proteger Katia
+
+**Quando revisar:** após lifestyle real testado (6-12 meses juntos) + casa escolhida + data de casamento definida.
 
 ---
 
@@ -199,15 +178,16 @@ Issue encerrada em 2026-03-27 como primeira passagem com premissas de estimativa
 
 | Tipo | Detalhe |
 |------|---------|
-| **FIRE** | P(FIRE 55 casal) = 65.4% base / 81.4% favoravel / 28.3% stress. Meta 80% base estruturalmente difícil. |
-| **Estrategia** | Premissas de baixa confianca. Revisitar pos-casamento com dados reais de lifestyle e saude. |
-| **Conhecimento** | Saude 2 pessoas e driver dominante pos-FIRE 70+. Spending casal (R$467k) vs solo (R$318k) = gap estrutural de R$149k. |
-| **Acao urgente** | Planejamento sucessorio + seguro de vida — independente de calculos. |
+| **FIRE** | P(FIRE 55 casal) = 78,7% (R$270k) / 80,7% (R$250k) base. Modelo anterior (65,4%) estava errado — saúde 2p corrigida. |
+| **Estratégia** | Sem mudança de alocação. Revisitar quando vida real do casal testada. |
+| **Conhecimento** | Katia CLT = cobertura gratuita ~12 anos = maior fator do gap. VCMH 2,7% (não 7%) = crescimento lento. |
+| **Ação urgente** | Planejamento sucessório + seguro de vida — independente de cálculos. |
 
 ---
 
-## Proximos Passos
+## Próximos Passos
 
-- [ ] **Urgente (pre-casamento):** planejamento sucessorio (testamento, regime de bens) + seguro de vida
-- [ ] **Reabrir issue quando:** casa escolhida + lifestyle real do casal testado (6-12 meses juntos) + data de casamento definida
-- [ ] **Na reabertura:** revalidar premissas de saude com dado real (plano Katia como dependente, custo total), lifestyle real vivido, aportes reais
+- [ ] **Urgente (pré-casamento):** planejamento sucessório (testamento, regime de bens) + seguro de vida
+- [ ] **Reabrir quando:** casa escolhida + lifestyle real testado + data de casamento definida
+- [ ] **Na reabertura:** validar premissa "Katia aposenta aos 65" — se ela aposentar mais cedo, saúde 2p começa antes; rodar sensibilidade
+- [ ] **Modelar risco CNPJ:** se Diego encerrar PJ pós-FIRE, saúde sobe ~40% → testar P(FIRE) com esse cenário
