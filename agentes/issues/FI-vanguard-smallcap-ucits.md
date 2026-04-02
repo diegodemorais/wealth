@@ -6,14 +6,15 @@
 |-------|-------|
 | **ID** | FI-vanguard-smallcap-ucits |
 | **Dono** | 02 Factor |
-| **Status** | Backlog |
+| **Status** | Deprecated |
 | **Prioridade** | Baixa |
 | **Participantes** | Factor |
 | **Co-sponsor** | — |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-02 |
 | **Origem** | Bogleheads Scan 2026-04-02 — Vanguard registrou FTSE Global Small-Cap UCITS na Irlanda (fev/2026), ainda não lançado |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-02 |
+| **Motivo deprecação** | Coberto por `etf-candidatos.md` (status ⏳) + monitoramento mensal automático via `/etf-candidatos-scan`. Issue separada é redundante. |
 
 ---
 

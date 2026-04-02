@@ -28,7 +28,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~2~~ | ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~3~~ | ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
-| 1 | FI-vanguard-smallcap-ucits | Monitor lançamento Vanguard FTSE Global Small-Cap UCITS | Factor | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -120,6 +119,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | FI-001-Rebalancear_SWRD_AVGS_factor_tilt | SWRD 35->30% / AVGS 25->30% | Superado por HD-006 (alocacao final aprovada com targets atuais) |
 | HD-005-Carry_framework_carteira | Carry framework (Koijen 2018) | Baixa prioridade vs backlog atual, escopo parcialmente coberto por FI-004 |
 | HD-falsificabilidade | Registrar condição de falsificabilidade em decisões de manter | Absorvida por XX-lacunas-estrategicas (2026-04-01) |
+| FI-vanguard-smallcap-ucits | Monitor lançamento Vanguard FTSE Global Small-Cap UCITS | Coberto por etf-candidatos.md (⏳) + scan mensal automático via /etf-candidatos-scan |
 
 ---
 
