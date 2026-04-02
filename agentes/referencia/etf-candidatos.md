@@ -18,8 +18,11 @@
 | AVUS | Avantis US Equity UCITS | Acc | AVGS (EUA) | 🆕 Lançado fev/2026 | Baixa | Fev/2027 |
 | ACSW | iShares MSCI World Swap | Acc | SWRD | 🆕 Lançado mar/2026 | Média | Mar/2027 |
 | AVWC | Avantis All-World UCITS | Acc | AVGS (all-cap) | 🔍 Dados insuficientes | Média | Out/2026 |
+| — | Vanguard FTSE All-World All-Cap UCITS | Acc | SWRD+AVGS+AVEM | ⏳ Aguardando lançamento | Média | Mai/2026 |
+| XDEM | iShares Edge MSCI World Multifactor UCITS | Acc | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
+| JPGL | JPMorgan Global Equity Multi-Factor UCITS | Acc | — (ex-carteira) | 👁️ Reentrada condicional | Baixa | Out/2026 |
 
-**Status legend:** ⏳ Aguardando lançamento · 🆕 Novo, aguardando dados · 🔍 Em avaliação · ✅ Promovido · ❌ Descartado
+**Status legend:** ⏳ Aguardando lançamento · 🆕 Novo, aguardando dados · 🔍 Em avaliação · 👁️ Reentrada condicional · ✅ Promovido · ❌ Descartado
 
 **Conviction:** Alta (gatilho próximo) · Média (hipótese plausível) · Baixa (monitoramento passivo)
 
@@ -222,6 +225,90 @@
 | **Frequência** | Semestral |
 | **Quem monitora** | Factor (02) |
 | **Issue relacionada** | — |
+
+---
+
+### 8. Vanguard FTSE All-World All-Cap UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | — (não lançado) |
+| **ISIN** | — (pendente) |
+| **Nome completo** | Vanguard FTSE All-World All-Cap UCITS ETF |
+| **Índice** | FTSE Global All-Cap (large + mid + small, mercados desenvolvidos + emergentes) |
+| **Distribuição** | Acc (esperado) |
+| **Domicílio** | Irlanda (registrado fev/2026) |
+| **TER** | ~0.12-0.18% estimado |
+| **Data de lançamento** | Não lançado |
+| **AUM** | — |
+| **Disponível IBKR** | — |
+| **Última atualização dos dados** | 2026-04-02 (Bogleheads scan) |
+| **Semelhante a** | SWRD (large/mid DM) + AVEM (EM) + AVGS (small) em um único ticker |
+| **Tese** | Um ETF de mercado total global — large+mid+small, DM+EM — com TER Vanguard (~0.12-0.18%). Seria o equivalente a VWRA/VWCE mas com all-cap. Se lançar, oferece cobertura completa num único instrumento de baixo custo. |
+| **Diferença crítica vs carteira** | Puramente passivo MCW — zero tilt fatorial. Diego tem tilt deliberado (AVGS 30% + AVEM 20%). Não substitui a estratégia fatorial, mas poderia ser alternativa para a camada MCW base (substituindo SWRD) com maior cobertura de small + EM a custo único. |
+| **Motivo de monitorar** | Potencial simplificação extrema da carteira (SWRD → VANGUARD ALL-CAP). Mais relevante pós-FIRE do que durante acumulação. |
+| **Gatilho para considerar** | TER confirmado ≤ 0.15% **E** Acc **E** IBKR com plano recorrente **E** AUM > $500M após 12 meses |
+| **Como descobrimos** | Bogleheads scan 2026-04-02 (thread "Vanguard fulfill Bogle's Vision" + ETF Stream) |
+| **Como monitorar** | justETF · ETF Stream · Bogleheads thread 31781 |
+| **Frequência** | Mensal (verificar se lançou) |
+| **Quem monitora** | Factor (02) |
+| **Issue relacionada** | — |
+
+---
+
+### 9. XDEM — iShares Edge MSCI World Multifactor UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | XDEM |
+| **ISIN** | IE00BZ0PKT83 |
+| **Nome completo** | iShares Edge MSCI World Multifactor UCITS ETF |
+| **Índice** | MSCI World Diversified Multiple-Factor (value, quality, momentum, low size) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.35% |
+| **Data de lançamento** | 2015 |
+| **AUM** | ~$1.5B |
+| **Disponível IBKR** | Sim |
+| **Última atualização dos dados** | 2026-03-26 (RR scan, contexto JPGL comparação) |
+| **Semelhante a** | JPGL (mesmo espaço multifator world UCITS) |
+| **Tese** | Smart beta multifator world: value + quality + momentum + low size via MSCI. Alternativa passiva ao JPGL no espaço multifator. TER 0.35% vs JPGL 0.45%. AUM maior = mais liquidez e menor risco de fechamento. |
+| **Diferença crítica vs JPGL** | JPGL usa momentum como negative screen (inverted momentum dentro de value/quality) — metodologia exclusiva. XDEM é multifactor traditional (long momentum, long value, etc). Backtests históricos mostram JPGL superior mas XDEM tem mais transparência metodológica. |
+| **Motivo de monitorar** | Alternativa se JPGL fechar ou deteriorar. Também benchmarking — se XDEM consistentemente outperforma JPGL por 24 meses, abre debate de reentrada via XDEM. |
+| **Gatilho para considerar** | XDEM outperforma JPGL por 24 meses consecutivos em rolling return **OU** JPGL fecha/reduz AUM < €100M **OU** debate formal de reentrada multifator na carteira |
+| **Como descobrimos** | RR scans históricos (comparação no espaço UCITS multifactor world, thread 31258) |
+| **Como monitorar** | justETF para TD e performance relativa · RR thread 31258 · AQR Factor Returns para loadings |
+| **Frequência** | Semestral |
+| **Quem monitora** | Factor (02) |
+| **Issue relacionada** | — |
+
+---
+
+### 10. JPGL — JPMorgan Global Equity Multi-Factor UCITS ETF (Reentrada Condicional)
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | JPGL |
+| **ISIN** | IE00BD3QJR55 |
+| **Nome completo** | JPMorgan Global Equity Multi-Factor UCITS ETF |
+| **Índice** | Ativo (JPMorgan — value, quality, momentum negative screen, low vol) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.19% (atualizado de 0.45%, corte em 2026-03-23) |
+| **Data de lançamento** | 2017 |
+| **AUM** | €245M (2026-03-26) |
+| **Disponível IBKR** | Sim |
+| **Última atualização dos dados** | 2026-04-01 (FI-jpgl-zerobased — conclusão) |
+| **Semelhante a** | Ex-carteira (era 20% → zerado) |
+| **Status especial** | **Eliminado da carteira em 2026-04-01 (FI-jpgl-zerobased). Não recomprar sem gatilho explícito.** |
+| **Tese original** | Multifactor UCITS com momentum negative screen (metodologia exclusiva JPMorgan). Correlação 0.95 com combinação SWRD+AVGS — sobreposição excessiva. AVGS dominou em análise zero-based. |
+| **Motivo de monitorar** | TER foi cortado para 0.19% (mesmo nível que AVGS) após remoção. Se correlação cair e alpha melhorar, pode ser reconsiderado como componente tático. Também útil como benchmark para AVGS. |
+| **Gatilho para reentrada** | Correlação rolling 3 anos JPGL vs (SWRD+AVGS) cair para < 0.85 **E** alpha líquido > 0.5% por 24 meses **E** issue formal aprovada por Diego — **não reentrar silenciosamente** |
+| **Como descobrimos** | Era 15-20% da carteira. Eliminado após análise zero-based (FI-jpgl-zerobased, 2026-04-01). |
+| **Como monitorar** | justETF para performance e AUM · AQR/Ken French para factor loadings · Comparar com AVGS semestralmente |
+| **Frequência** | Semestral |
+| **Quem monitora** | Factor (02) |
+| **Issue relacionada** | FI-jpgl-zerobased (histórico), FI-jpgl-redundancia (histórico) |
 
 ---
 
