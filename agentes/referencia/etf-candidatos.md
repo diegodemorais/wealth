@@ -21,7 +21,8 @@
 | IFSW | iShares STOXX World Equity Multifactor UCITS | Acc | Smart Beta | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
 | JPGL | JPMorgan Global Equity Multi-Factor UCITS | Acc | Factor Active | — (ex-carteira) | 👁️ Reentrada condicional | Baixa | Out/2026 |
 | DDGC/DEGC | Dimensional Global Core Equity UCITS | Acc | Factor Active | AVGS+AVEM | 🆕 Lançado nov/2025 | Média | Nov/2026 |
-| DDGT | Dimensional Global Targeted Value UCITS | Acc | Factor Active | AVGS (DM SCV puro) | 🆕 Lançado nov/2025 | Baixa | Nov/2026 |
+| DDGT | Dimensional Global Targeted Value UCITS | Acc | Factor Active | AVGS (DM SCV puro) | 🆕 Lançado nov/2025 | **Alta** | Nov/2026 |
+| EMEE | iShares EM Equity Enhanced Active UCITS | Acc | Factor Active | AVEM | 🆕 Lançado jul/2024 | Baixa | Out/2026 |
 | DDUM | Dimensional US Core Equity Market UCITS | Acc | Factor Active | SWRD (US) | 🆕 Lançado mar/2026 | Muito baixa | Mar/2027 |
 | DDXM | Dimensional Global ex-US Core Equity UCITS | Acc | Factor Active | SWRD (ex-US) | 🆕 Lançado mar/2026 | Muito baixa | Mar/2027 |
 | EMVL | iShares MSCI EM Value Factor UCITS | Acc | Smart Beta | AVEM (heavy value) | 🔍 Em avaliação | Baixa | Out/2026 |
@@ -374,7 +375,7 @@
 | **Semelhante a** | AVGS (small-cap value DM puro) |
 | **Tese** | Camada pura small/mid-cap value de mercados desenvolvidos da Dimensional. Universo: MSCI World SMID Value. Filosofia DFA com tilt mais agressivo que DDGC (Core). Posicionamento na família DFA: Core Market (DDUM) < Core Equity (DDGC) < Targeted Value (DDGT) — este é o mais inclinado. Complementa DDGC já monitorado. AUM $148M em 5 meses mostra demanda. |
 | **Diferença crítica vs AVGS** | AVGS = small-cap value global (DM + EM). DDGT = small/mid-cap value DM apenas. TER 0.44% vs AVGS 0.39% — AVGS mais barato. Factor loadings DFA Targeted Value historicamente fortes, mas sem regressão UCITS ainda. |
-| **Motivo de monitorar** | DFA tem 50 anos de track record em Targeted Value (vs Avantis ~15 anos). Potencial complemento ou substituto de AVGS se loadings forem comparáveis e custo convergir. |
+| **Motivo de monitorar** | DFA tem 50 anos de track record em Targeted Value (vs Avantis ~15 anos). Potencial complemento ou substituto de AVGS se loadings forem comparáveis e custo convergir. **Conviction elevada para Alta em 2026-04-02 (debate Factor+Advocate+Oportunidades): candidato mais subestimado da lista — único competidor direto de AVGS com gestora de referência acadêmica.** |
 | **Gatilho para considerar** | Factor loadings HML + RMW DDGT ≥ AVGS por 12 meses **E** TER competitivo (≤ 0.39%) **E** AUM > $300M |
 | **Como descobrimos** | Bogleheads scan 2026-04-02 (thread "Searching Quality Low Cost Intl Small Cap Value") |
 | **Como monitorar** | justETF · RR thread 34728 (Dimensional UCITS) · Bogleheads thread 443539 |
@@ -493,6 +494,41 @@
 
 ---
 
+### 14. EMEE — iShares Emerging Markets Equity Enhanced Active UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | EMEE (LSE USD) |
+| **ISIN** | IE000OVF8Q66 |
+| **Nome completo** | iShares Emerging Markets Equity Enhanced Active UCITS ETF |
+| **Índice** | Ativo quantitativo (BlackRock — multi-factor: value, quality, momentum sobre universo MSCI EM) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.30% |
+| **Data de lançamento** | Julho 2024 |
+| **AUM** | ~USD 962M (mar/2026) |
+| **Disponível IBKR** | Sim |
+| **Última atualização dos dados** | 2026-04-02 (Oportunidades scan + iShares + justETF) |
+| **Semelhante a** | AVEM (EM com tilt) |
+| **Tese** | Active quant EM da BlackRock com multi-factor screen (value + quality + momentum). TER 0.30% vs AVEM 0.36% — mais barato. AUM ~$1B em <2 anos = demanda real. Potencial melhoria sobre AVEM se tilt fatorial for comparável. |
+| **Diferença crítica vs AVEM** | AVEM = gestão ativa Avantis (value + profitability, tilt deliberado). EMEE = quant BlackRock (value + quality + momentum, "enhanced indexing"). Historicamente, ETFs "enhanced active" da BlackRock têm tracking error baixo (~1-2% vs MSCI EM) — sinaliza tilt raso. Se confirmado, alpha esperado < AVEM. |
+| **⚠️ Questão-chave pendente** | Qual a intensidade real do tilt fatorial? Tracking error 1-2% = tilt raso (não substitui AVEM). Tracking error >3% = tilt relevante (merece avaliação). Verificar via factor regression (FF5+MOM) antes de promover. |
+| **Motivo de monitorar** | TER mais baixo que AVEM. AUM robusto. Única questão é intensidade do tilt — se profunda, complementa ou substitui AVEM. |
+| **Gatilho para considerar** | Tracking error vs MSCI EM >3% confirmado **E** factor regression mostra HML/RMW loadings comparáveis a AVEM **E** issue formal aberta |
+| **Como descobrimos** | Oportunidades scan 2026-04-02 |
+| **Como monitorar** | justETF · iShares factsheet · factor regression após 12 meses de histórico suficiente (jul/2025+) |
+| **Frequência** | Revisão out/2026 |
+| **Quem monitora** | Factor (02) |
+| **Classificação** | Factor Active (BlackRock quant) |
+| **Fatores** | Value · Quality · Momentum — EM. Intensidade do tilt: a verificar. |
+| **Tracking Diff.** | A verificar |
+| **Sharpe Ratio 3y** | Insuficiente — aguardar histórico |
+| **Volatilidade 3y** | A verificar vs MSCI EM |
+| **Beta vs MSCI EM** | ~0.95-1.0 (se tilt raso) |
+| **Issue relacionada** | — |
+
+---
+
 ## Descartados
 
 > ETFs que foram avaliados e rejeitados. Manter como registro para evitar reavaliação desnecessária.
@@ -503,7 +539,7 @@
 | AVGC | Avantis Global Equity UCITS (LSE ticker) | 2026-03-26 | Atenção: AVGC = mesmo fundo que AVWC (IE000RJECXS5). Descarte original foi precipitado ("closet indexing") — AVWC reinstaurado como candidato ativo em abr/2026 (ficha #4). Este entry refere-se ao ticker LSE do mesmo produto. |
 | AVEU | Avantis European Equity UCITS | 2026-04-02 | AVGS já cobre Europa com mesmo tilt. Sem tese regional que justifique sobrepeso |
 | AVPE | Avantis Pacific Equity UCITS | 2026-04-02 | AVGS já inclui Pacífico/Japão. Redundante sem convicção regional específica |
-| AVUS | Avantis US Equity UCITS | 2026-04-02 | SWRD+AVGS já cobrem US (sobreposição tripla). Sem gap a preencher |
+| AVUS | Avantis US Equity UCITS | 2026-04-02 | SWRD+AVGS já cobrem US com tilt. Sem gap. Confirmado descartado em 2026-04-02 (debate Oportunidades scan). |
 | OTUS | Lloyd Capital International Equity UCITS | 2026-04-02 | Emissora desconhecida (Lloyd Capital/HANetf), TER 0.85% — inviável vs alternativas |
 
 ---
