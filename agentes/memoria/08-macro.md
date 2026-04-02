@@ -25,6 +25,7 @@
 ## Snapshot Macro Atual
 
 > **Ultima atualizacao completa (revalidacao profunda): 2026-04-01** (via /macro-bcb + /fred-shiller)
+> **Atualizacao parcial: 2026-04-02** (/news — Liberation Day)
 
 ### Brasil
 
@@ -33,12 +34,12 @@
 | Selic | **14,75%** | 2026-03-18 | COPOM (corte de 0,25pp, unanime) |
 | Focus Selic terminal 2026 | **12,25%** | 2026-03-16 | BCB Focus |
 | Focus Selic 2027 | **10,50%** | 2026-03-16 | BCB Focus |
-| Focus IPCA 2026 | **4,10%** | 2026-03-16 | BCB Focus |
+| Focus IPCA 2026 | **4,31%** | 2026-04-02 | BCB Focus (3º mês consecutivo de alta) |
 | IPCA+ 2040 | **7,21%** | 2026-04-01 | Investidor10 / Tesouro Direto |
-| Renda+ 2065 | **7,08%** | 2026-04-01 | Investidor10 / Tesouro Direto |
+| Renda+ 2065 | **7,01%** | 2026-04-02 | Status Invest / Mais Retorno |
 | IPCA 12m | **3,81%** | fev/2026 | IBGE (BCB série 433) |
-| BRL/USD (PTAX) | **R$ 5,1606** | 2026-04-01 | BCB PTAX (série 1) |
-| BTC/USD | ~$83.500 | 2026-04-01 | Mercado |
+| BRL/USD (PTAX) | **R$ 5,18** | 2026-04-02 | BCB PTAX |
+| BTC/USD | ~$66.500 | 2026-04-02 | Pintu News (-20% pós-Liberation Day) |
 | Petroleo Brent | ~$75 | 2026-04-01 | Conflito Iran dissipado vs OPEC+ |
 | Divida bruta/PIB (proj. 2026) | **~94,7%** | 2026-03 | IMF Article IV |
 | Resultado primario (real, proj. 2026) | **~-0,6% PIB** | 2026-03 | Deloitte/Coface |
@@ -52,7 +53,7 @@
 | US 10y Real (TIPS) | **2,00%** | 2026-04-01 | FRED DFII10 |
 | Spread IPCA+ BR vs TIPS EUA | **~520 bps** | 2026-04-01 | Calculado: 7.21% - 2.00% |
 | CAPE S&P 500 (Shiller) | **37,91** (98º percentil) | 2026-04-01 | Shiller/Multpl |
-| VIX | **25,25** | 2026-04-01 | FRED VIXCLS |
+| VIX | **25,25 → ⚠️ pós-Liberation Day pendente** | 2026-04-02 | FRED VIXCLS — confirmar fechamento hoje |
 | MSCI World YTD | **+2,99%** | fev/2026 | MSCI |
 | MSCI EM YTD | **+14,83%** | fev/2026 | MSCI |
 
@@ -66,6 +67,14 @@ Dado crítico para FR-currency-mismatch-fire:
 - **Janelas 10 anos**: BRL deprecia em **96,7%** das janelas
 - **Períodos de apreciação**: 2003-2011 (Lula boom), breve 2016-2018 pós-impeachment
 - **Implicação para carteira**: premissa base de 0,5% depreciação real/ano é CONSERVADORA vs histórico. Favorável valida BRL como hedge natural do equity USD
+
+### Evento crítico (2026-04-02): Liberation Day
+- Trump anunciou tarifas universais: 10% flat sobre todas as importações americanas
+- Tarifas reciprocais: China +34%, EU +20%, Japão +24%
+- Vigência: 10% em 05/abr, reciprocais em 09/abr
+- BTC -20% em 24h. VIX pré-abertura ~25 — pós-anúncio: pendente confirmação
+- Impacto carteira Diego: limitado (horizonte 14 anos, diversificação ex-US). Sem gatilho acionado.
+- Implicação para RF BR: ciclo COPOM mais cauteloso → taxas longas elevadas por mais tempo. **Favorável para DCA IPCA+**
 
 ### Contexto do ciclo (2026-03-20 -- revalidacao profunda)
 - Copom iniciou ciclo de cortes com 0,25pp (cauteloso por conflito Iran)
