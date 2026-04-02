@@ -22,6 +22,7 @@
 | DDGT | Dimensional Global Targeted Value UCITS | Acc | Factor Active | AVGS (DM SCV puro) | 🆕 Lançado nov/2025 | Baixa | Nov/2026 |
 | DDUM | Dimensional US Core Equity Market UCITS | Acc | Factor Active | SWRD (US) | 🆕 Lançado mar/2026 | Muito baixa | Mar/2027 |
 | DDXM | Dimensional Global ex-US Core Equity UCITS | Acc | Factor Active | SWRD (ex-US) | 🆕 Lançado mar/2026 | Muito baixa | Mar/2027 |
+| EMVL | iShares MSCI EM Value Factor UCITS | Acc | Smart Beta | AVEM (heavy value) | 🔍 Em avaliação | Baixa | Out/2026 |
 
 **Status legend:** ⏳ Aguardando lançamento · 🆕 Novo, aguardando dados · 🔍 Em avaliação · 👁️ Reentrada condicional · ✅ Promovido · ❌ Descartado
 
@@ -447,6 +448,41 @@
 | **Sharpe Ratio 3y** | Insuficiente — aguardar |
 | **Volatilidade 3y** | Insuficiente — aguardar |
 | **Beta vs MSCI World ex-US** | ~1.0-1.05 |
+| **Issue relacionada** | — |
+
+---
+
+### 13. EMVL — iShares MSCI EM Value Factor UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | EMVL (LSE) |
+| **ISIN** | IE00BG0SKF03 |
+| **Nome completo** | iShares Edge MSCI Emerging Markets Value Factor UCITS ETF |
+| **Índice** | MSCI Emerging Markets Select Value Factor Focus Index |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.40% |
+| **Data de lançamento** | Dezembro 2018 |
+| **AUM** | ~€1.2B |
+| **Disponível IBKR** | Sim (LSE) |
+| **Última atualização dos dados** | 2026-04-02 (pesquisa direta iShares + justETF) |
+| **Semelhante a** | AVEM — mas com tilt value mais agressivo |
+| **⚠️ Nota crítica** | Não existe AVES UCITS (Avantis EM Value) em abril/2026. EMVL é a melhor alternativa UCITS disponível para heavy EM value tilt. Origem: single-factor value, sem profitability overlay da Avantis. |
+| **Tese** | Single-factor value puro em EM: seleciona ações mais baratas por P/B, P/E, EV/FCF dentro do universo MSCI EM. Tilt value mais concentrado que AVEM (que combina value + profitability em gestão ativa). AUM €1.2B = liquidez sólida. 7 anos de track record. Comunidade RR (thread 8663) cita como melhor opção UCITS "deep value" EM disponível. |
+| **Diferença crítica vs AVEM** | AVEM = gestão ativa Avantis (value + profitability). EMVL = índice passivo, single-factor value (sem profitability). AVEM tem overlay de qualidade que evita "value traps". EMVL tem tilt value mais agressivo mas maior risco de concentração em setores baratos/baixa qualidade. |
+| **Motivo de monitorar** | Único substituto UCITS disponível enquanto AVES UCITS não existe. Potencial para composição com AVEM: parte AVEM (quality+value) + parte EMVL (deep value) para tilt mais forte. |
+| **Gatilho para considerar** | Issue formal de composição EM aberta **E** factor loadings comparados vs AVEM (HML, RMW) **E** decisão de aumentar tilt EM além do AVEM atual |
+| **Como descobrimos** | Pesquisa 2026-04-02 — busca por AVES UCITS equivalente. AVES UCITS não existe; EMVL identificado como melhor alternativa. |
+| **Como monitorar** | justETF · RR thread 2927 (How much EM?) · iShares factsheet |
+| **Frequência** | Semestral |
+| **Quem monitora** | Factor (02) |
+| **Classificação** | Smart Beta — MSCI EM Value Factor (single-factor, rules-based) |
+| **Fatores** | Value (HML forte) — EM. Sem profitability overlay. |
+| **Tracking Diff.** | A verificar (justETF) |
+| **Sharpe Ratio 3y** | A verificar |
+| **Volatilidade 3y** | A verificar vs MSCI EM |
+| **Beta vs MSCI EM** | ~0.85-0.95 (value tilt pode reduzir beta em alta, ampliar em queda) |
 | **Issue relacionada** | — |
 
 ---
