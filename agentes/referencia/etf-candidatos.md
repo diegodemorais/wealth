@@ -4,6 +4,8 @@
 > Última atualização: 2026-04-02
 > Dono: Factor (02) — revisão mensal no scan RR/Bogleheads
 > Propósito: ETFs fora da carteira com potencial de inclusão futura
+>
+> **Convenção de ticker:** sempre registrar o ticker da versão USD quando disponível (ex: listagem Euronext Amsterdam em USD). Se não existir versão USD, usar ticker primário (LSE GBP ou Xetra EUR) com nota. AUM sempre em USD (~, convertido se necessário).
 
 ---
 
@@ -29,6 +31,10 @@
 **Conviction:** Alta (gatilho próximo) · Média (hipótese plausível) · Baixa (monitoramento passivo)
 
 **Classificação:** Passivo MCW (índice puro, sem tilt) · Smart Beta (regras explícitas, semi-passivo) · Factor Active (gestão ativa fatorial) · Sintético/Swap
+
+**Convenção de tickers (Dimensional):** DD\*\* = USD (LSE) · DP\*\* = GBP (LSE) · DE\*\* = EUR (Xetra). Preferir DD\*\* em todas as referências. Fichas sempre registram o ticker USD primário.
+
+**Convenção geral:** Quando um ETF tem versão USD disponível (LSE USD segment, SIX, Euronext AMS USD), registrar ticker USD. Se não houver versão USD, usar ticker primário (LSE GBP ou Xetra EUR) com nota. AUM em USD (~, convertido se necessário).
 
 ---
 
@@ -250,8 +256,8 @@
 
 | Campo | Detalhe |
 |-------|---------|
-| **Ticker** | JPGL |
-| **ISIN** | IE00BD3QJR55 |
+| **Ticker** | JPGL (USD/Xetra) · JPLG (LSE GBP) — usar JPGL |
+| **ISIN** | IE00BJRCLL96 |
 | **Nome completo** | JPMorgan Global Equity Multi-Factor UCITS ETF |
 | **Índice** | Ativo (JPMorgan — value, quality, momentum negative screen, low vol) |
 | **Distribuição** | Acc |
@@ -285,7 +291,7 @@
 
 | Campo | Detalhe |
 |-------|---------|
-| **Ticker** | DDGC (LSE) / DEGC (Xetra) |
+| **Ticker** | DDGC (LSE USD) · DPGC (LSE GBP) · DEGC (Xetra EUR) |
 | **ISIN** | IE000EGGFVG6 |
 | **Nome completo** | Dimensional Global Core Equity UCITS ETF |
 | **Índice** | Ativo (Dimensional — broad market com tilt deliberado para value, profitability, small) |
