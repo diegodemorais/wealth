@@ -13,7 +13,7 @@ Credenciais em memória: `reference_rational_reminder.md`
 ETFs ativos: SWRD (50%), AVGS (30%), AVEM (20%), HODL11 (3%), IPCA+ longo TD 2040/2050 (15%), Renda+ 2065 (tatico)
 ETFs transitorios (nao comprar mais, diluir via aportes): AVUV, AVDV, AVES, DGS, USSC, IWVL
 Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, factor-tilted, acumulacao ativa
-Nota: JPGL foi eliminado da carteira em 2026-04-01 (target 0%). Monitored em etf-candidatos.md como reentrada condicional.
+Nota: JPGL foi eliminado da carteira em 2026-04-01 (target 0%). Monitorado em `agentes/referencia/etf-candidatos.md` como reentrada condicional (status: 👁️).
 
 ---
 

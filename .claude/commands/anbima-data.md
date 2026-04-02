@@ -90,7 +90,7 @@ WebSearch: Anbima ETTJ hoje curva de juros NTN-B {mes} {ano}
 ### Caso C — Performance IMA-B vs CDI histórico
 
 ```
-WebSearch: site:anbima.com.br IMA-B retorno anual histórico 2010 2024
+WebSearch: site:anbima.com.br IMA-B retorno anual histórico 2010 2025
 ```
 
 Extrair retornos anuais do IMA-B e IMA-B5+ (duration longa). Comparar com CDI e IPCA para validar prêmio de duration.

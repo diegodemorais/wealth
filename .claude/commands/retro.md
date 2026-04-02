@@ -128,7 +128,7 @@ Seja honesto. "Nada a reportar" nao e aceito sem explicar o que investigou.
 5. **Behavioral**: vies comportamental influenciou decisoes?
 6. **Issues**: issues abertas no periodo foram tratadas com a profundidade adequada?
 7. **Issue aging**: verificar issues no Backlog com 60+ dias sem movimentação → listar para Diego decidir: avançar, arquivar ou deprecar.
-8. **FIRE on-track**: com patrimônio atual e aporte médio do período, em quantos meses atingimos o gatilho de R$13.4M? Se > 132 meses (11 anos), flag explícita.
+8. **FIRE on-track**: com patrimônio atual e aporte médio do período, em quantos meses atingimos o gatilho de R$13.4M? Se > 168 meses (14 anos a partir de T0 2026-03-20 = FIRE 2040 base), flag explícita. Nota: FIRE 2037 (50 anos) é aspiracional — se projeção < 132 meses, reportar como "FIRE 2037 em alcance".
 9. **Qualidade do debate adversarial**: issues que concluíram com "manter" tiveram debate genuíno? Advocate registrou objeção real? Multi-model foi executado em alguma? Não contar % de mudança de alocação como métrica — estratégia disciplinada pode genuinamente não mudar. Verificar o processo, não o resultado.
 
 ### Passo 4: Critica (Adversarial + Metricas combinados)

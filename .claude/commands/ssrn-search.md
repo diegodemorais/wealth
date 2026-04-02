@@ -44,7 +44,7 @@ WebSearch: "4 percent rule" critique "Journal of Financial Planning" OR SSRN
 **Para outros temas:**
 - Adaptar substituindo os termos relevantes
 - Incluir sempre: `site:ssrn.com` ou `site:nber.org` para filtrar qualidade
-- Incluir range de anos se precisar de papers recentes: `after:2020`
+- Incluir range de anos se precisar de papers recentes: `after:2022` (preferir 2022-2026 para capturar pós-publication decay mais recente)
 
 ### Passo 3: Acessar abstracts e verificar relevância
 

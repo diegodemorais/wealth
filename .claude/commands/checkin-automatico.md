@@ -115,7 +115,7 @@ Padroes aplicados (conforme `agentes/referencia/metodologia-analitica.md`):
 2. Buscar PTAX BCB venda do ultimo dia do mes via `api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados?formato=json&dataInicial=DD/MM/YYYY&dataFinal=DD/MM/YYYY`
 3. Buscar IPCA do mes via IBGE / investidor10.com.br
 4. Calcular:
-   - **Shadow A** = patrimonio anterior × (1 + retorno_VWRA_USD × (1 + variacao_PTAX_mensal)) + aportes do mes em BRL
+   - **Shadow A** = patrimonio anterior × (1 + retorno_VWRA_USD) × (okegen_fim / okegen_inicio) + aportes do mes em BRL
    - **Shadow B** = patrimonio anterior × [(1 + IPCA_mensal) × (1 + 7.16%/12) - 1] + aportes do mes em BRL
 
    Nota: retorno_VWRA_BRL = retorno_VWRA_USD × (okegen_fim / okegen_inicio). Usar dólar comercial okegen — PTAX BCB é só para cálculo de IR, não para valuation operacional.
@@ -146,7 +146,7 @@ Incluir no report mensal:
 ```
 ### FIRE Progress
 Patrimônio: R$X (trajetória esperada: R$Y)
-No ritmo atual: gatilho R$13.4M em ~Z meses (meta: ≤132 meses)
+No ritmo atual: gatilho R$13.4M em ~Z meses (meta FIRE 2040: ≤168 meses a partir de T0 2026-03-20)
 Status: [OK / Atenção / Alerta]
 ```
 

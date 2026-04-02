@@ -41,7 +41,7 @@ Papers Alta criticidade: Cederburg et al. (2023), McLean & Pontiff (2016), Fama 
 Para cada paper de criticidade Alta (e Média se >5 anos), usar WebSearch para verificar:
 
 1. **O paper foi replicado ou refutado?** Buscar: `"[título do paper]" replication site:ssrn.com OR site:nber.org`
-2. **Há meta-análise mais recente?** Buscar: `[tema do paper] meta-analysis 2023 OR 2024 OR 2025`
+2. **Há meta-análise mais recente?** Buscar: `[tema do paper] meta-analysis 2023 OR 2024 OR 2025 OR 2026`
 3. **Os dados foram atualizados?** Ex: DMS Yearbook é anual — sempre usar edição mais recente.
 4. **O contexto mudou?** (ex: haircut de factor premiums pós-crowding)
 

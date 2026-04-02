@@ -14,7 +14,7 @@ Buscar tracking difference (TD), tracking error (TE), TER e spread dos ETFs UCIT
 | AVGS | IE0003R87OG3 | SCV global (30%) — fundo ATIVO (Avantis) |
 | AVEM | IE000K975W13 | EM multi-factor (20%) — fundo ATIVO (Avantis) |
 
-ETFs transitórios (monitorar mas não priorizar): AVUV, AVDV, AVES, DGS, USSC
+ETFs transitórios (monitorar mas não priorizar): AVUV, AVDV, AVES, DGS, USSC, IWVL
 
 ## Como Executar
 

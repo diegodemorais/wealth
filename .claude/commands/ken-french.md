@@ -82,10 +82,10 @@ for janela in ['full', 'post_2000', 'post_2010', 'post_2015']:
 
 ### Passo 4: Comparar com premissas da carteira
 
-Premissas atuais (fonte: agentes/contexto/carteira.md):
-- Equity premium global (Mkt-RF): ~4.85% USD real (calibrado 2026-04-01)
-- AVGS (SCV): ~5.0% USD (haircut 58% aplicado: alpha líquido ~0.16%/ano)
-- AVEM (EM multi-factor): prêmio EM + factor loading
+Premissas atuais (fonte: agentes/contexto/carteira.md — aprovado 2026-04-01):
+- SWRD (mercado global, Mkt-RF): **3.7% real USD** (mediana 5 fontes: AQR 4.2%, Vanguard 3.6%, JPM 4.4%, RA 2.5%, Schwab 3.7%)
+- AVGS (SCV global): **5.0% real USD** (haircut 58% McLean & Pontiff aplicado: alpha líquido ~0.16%/ano)
+- AVEM (EM multi-factor): **5.0% real USD** (média 4 fontes: AQR 5.1%, JPM 5.3%, GMO 3.8%, RA 6.5%)
 
 Comparar média histórica dos fatores com essas premissas. Sinalizar divergências > 1pp.
 
@@ -121,11 +121,11 @@ Comparar média histórica dos fatores com essas premissas. Sinalizar divergênc
 
 ### Comparação com Premissas da Carteira
 
-| Componente | Premissa atual | Dados históricos (pós-2000) | Status |
-|-----------|---------------|----------------------------|--------|
-| Equity global (Mkt-RF) | 4.85% | X.X% | ✓ Alinhado / ⚠️ Diverge |
-| AVGS — SMB+HML+RMW | ~5.0% | X.X% | ✓ / ⚠️ |
-| AVEM — EM Mkt-RF | X.X% | X.X% | ✓ / ⚠️ |
+| Componente | Premissa atual (carteira.md) | Dados históricos (pós-2000) | Status |
+|-----------|------------------------------|----------------------------|--------|
+| SWRD (Mkt-RF global) | 3.7% real USD | X.X% | ✓ Alinhado / ⚠️ Diverge |
+| AVGS — SMB+HML+RMW | 5.0% real USD | X.X% | ✓ / ⚠️ |
+| AVEM — EM Mkt-RF + fatores | 5.0% real USD | X.X% | ✓ / ⚠️ |
 
 ### Insights
 

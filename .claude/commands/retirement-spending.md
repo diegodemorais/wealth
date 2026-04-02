@@ -60,9 +60,9 @@ WebSearch: IBGE POF "despesas com saúde" por idade aposentadoria
 
 **ANS — custos de saúde por faixa etária:**
 ```
-WebSearch: ANS "faixas etárias" plano saúde custo reajuste 2024 2025
-WebSearch: "variação por faixa etária" ANS plano individual 2025
-WebSearch: IPCAM IBGE "inflação de saúde" histórico 2010 2024
+WebSearch: ANS "faixas etárias" plano saúde custo reajuste 2025 2026
+WebSearch: "variação por faixa etária" ANS plano individual 2026
+WebSearch: IPCAM IBGE "inflação de saúde" histórico 2010 2025
 ```
 
 Dado crítico: ANS regulamenta reajustes máximos por faixa etária — faixa 59-63 anos paga até 2.0× a faixa base (0-18 anos). Buscar tabela vigente.
@@ -84,7 +84,7 @@ Buscar tabela por faixa etária. Extrair: total spending, healthcare %, housing 
 
 **JPMorgan e Blanchett:**
 ```
-WebSearch: "JPMorgan Guide to Retirement" 2024 OR 2025 spending smile
+WebSearch: "JPMorgan Guide to Retirement" 2025 OR 2026 spending smile
 WebSearch: Blanchett "spending smile" retirement "real spending" decline
 ```
 
@@ -160,7 +160,7 @@ Diego é investidor de alta renda em SP, aposentando aos 50. Ajustes:
 ## Regras
 
 - Sempre separar dados BR (POF/ANS) de referências internacionais — Brasil tem saúde privada cara + sistema público diferente do US/EU
-- POF 2017-2018 é a mais recente disponível — indicar defasagem; POF 2024-2025 pode estar em campo
+- POF 2017-2018 é a mais recente disponível — indicar defasagem; POF 2024-2025 está sendo executada (IBGE divulgação esperada ~2026-2027). Verificar se publicou antes de usar dados antigos.
 - IPCAM vs IPCA: o diferencial é estrutural e documentado — não é outlier de pandemia
 - Não usar média geral da população como referência para Diego — usar faixa de renda alta
 - Sempre vincular achados às issues abertas (TX-saude-fire, FR-spending-smile)
@@ -169,5 +169,5 @@ Diego é investidor de alta renda em SP, aposentando aos 50. Ajustes:
 
 - **Ao executar TX-saude-fire** (issue backlog Alta)
 - **Ao executar FR-spending-smile** (quando entrar em Doing)
-- **Quando POF nova for publicada** (próxima ~2025-2026)
+- **Quando POF nova for publicada** (próxima ~2026-2027 — POF 2024-2025 em campo)
 - **Ao revisar baseline de gastos** após grandes mudanças de vida (casamento, filho)

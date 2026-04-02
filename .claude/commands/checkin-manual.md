@@ -15,7 +15,7 @@ Atualizar `agentes/contexto/carteira.md` e `agentes/contexto/evolucao.md` com os
 - Ler os arquivos atuais para comparar:
   - `agentes/contexto/carteira.md`
   - `agentes/contexto/evolucao.md`
-- Nota: AVGS pode vir com split US/INT na planilha (AVUV+AVDV+AVGS.L). Somar todos e tratar como bucket AVGS unico (target 30%).
+- Nota: AVGS pode vir com split US/INT na planilha (AVUV+AVDV+USSC+AVGS.L). Somar todos e tratar como bucket AVGS unico (target 30%). AVES e DGS sao bucket AVEM. IWVL e EIMI sao legados separados.
 
 ### Passo 2: Reconciliar
 
@@ -83,7 +83,7 @@ Apos aprovacao:
 - Se detectar algo que merece discussao (ex: alocacao muito distorcida), sugerir Issue ao Diego
 - Cambio para valuation operacional: dólar comercial do dia (okegen). PTAX BCB = só IR.
 - Sempre mostrar o patrimonio total consolidado em BRL
-- AVGS: tratar todos os tickers do bucket (AVUV, AVDV, AVES, AVGS.L) como um unico bucket (target 30%)
+- AVGS: tratar todos os tickers do bucket (AVUV, AVDV, USSC, AVGS.L) como um unico bucket (target 30%). AVES e DGS pertencem ao bucket AVEM, nao ao AVGS.
 - Evolucao mostra % do bucket (incluindo transitorios), nao apenas do ETF alvo
 - Apos atualizacao, verificar execucoes-pendentes.md e alertar sobre execucoes atrasadas
 - Se houve operacoes (compra/venda/aporte), registrar em `agentes/contexto/operacoes.md`

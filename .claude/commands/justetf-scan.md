@@ -21,7 +21,7 @@ Descobrir novos ETFs UCITS relevantes, comparar alternativas aos ETFs atuais, e 
 | ACSW | IE000Y7K9659 | Lançado mar/2026 | TD rolling, AUM, spread |
 | AVWC | IE000QCKBCT8 | Dados insuficientes | AUM, factor loadings, IBKR |
 | DDGC/DEGC | IE000BYXM682 | Lançado nov/2025 | TD, AUM, IBKR, factor loadings |
-| AVWS | IE0003R87OG3* | Verificar ISIN | *Pode ser mesmo ISIN que AVGS |
+| AVWS | — (ISIN pendente) | Verificar se lançado | Avantis Global Small Cap Value UCITS — ISIN diferente de AVGS. Confirmar lançamento e ISIN via justetf/IBKR |
 | XDEM | IE00BZ0PKT83 | Em avaliação | TD vs AVGS semiannual |
 
 Ao executar scan, verificar se candidatos têm dados novos e atualizar `etf-candidatos.md` se necessário.
