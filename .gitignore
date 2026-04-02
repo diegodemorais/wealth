@@ -1,2 +1,5 @@
 .DS_Store
 *.lock
+scripts/__pycache__/
+analysis/*.csv
+analysis/*.json
