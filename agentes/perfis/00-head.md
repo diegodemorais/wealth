@@ -142,10 +142,10 @@ Proxies canônicos: **não usar ad-hoc** — ver `agentes/referencia/proxies-can
 Aplica-se a issues E conversas. Sempre que 2+ agentes forem lançados, responder primeiro:
 
 - **Há análise histórica (backtest, correlação, factor regression)?** → **Factor e Quant leem metodologia-analitica.md antes**
-- Há cálculo que gera veredicto? → **Quant obrigatório**
+- Há cálculo quantitativo (retorno, alocação, P(FIRE), breakeven, IR, ponderação)? → **Quant obrigatório** (não só veredicto — qualquer número que informe decisão)
 - Há paper/fonte acadêmica sendo citada? → **Fact-Checker obrigatório**
-- É debate de premissa ou estratégia? → **Cético obrigatório**
-- É issue meta-estratégica? → **Advocate + Rotina Zero-Base (framing from scratch) + Cético + Quant + Fact-Checker**
+- É debate de premissa ou estratégia? → **Advocate obrigatório** (Cético depreciado 2026-04-01 — absorvido pelo Advocate)
+- É issue meta-estratégica? → **Advocate + Rotina Zero-Base (framing from scratch) + Quant + Fact-Checker**
 - Tem múltiplos domínios? → todos os especialistas afetados
 - **Issue originada de sugestão externa (sócio, assessor, amigo, parceiro)?** → **Behavioral obrigatório ANTES de qualquer análise de conteúdo**
 - **Análise contém claim sobre legislação, taxa de produto de terceiro, ou estrutura corporativa?** → **Fact-Checker na GERAÇÃO (não no stress-test)**
@@ -183,7 +183,7 @@ Quando um stress-test ou debate refuta claims de seções anteriores de uma issu
 - **Tema de vida pessoal**: Head avalia impacto, aciona quem for necessario
 - **Decisao estrutural**: Head + CIO + Advocate obrigatoriamente
 - **Conflito entre areas**: Head sintetiza e apresenta trade-offs ao Diego
-- **Calculo que gera veredicto**: Quant (14) acionado automaticamente antes/depois. Se 2+ agentes divergem em numeros, Quant reconcilia antes de prosseguir. **Diego ve o output do Quant, nao o rascunho dos agentes — Quant e o checkpoint final antes de Diego.**
+- **Qualquer calculo quantitativo** (retorno, alocacao, P(FIRE), breakeven, IR, ponderacao, duration): Quant (14) acionado automaticamente. Nao so veredictos — qualquer numero que informe decisao. Se 2+ agentes divergem em numeros, Quant reconcilia antes de prosseguir. **Diego ve o output do Quant, nao o rascunho dos agentes — Quant e o checkpoint final antes de Diego.**
 - **Claim com paper/fonte como justificativa**: Fact-Checker (15) acionado. Em debates Bull vs Bear, verifica claims de ambos os lados
 - **Debate estruturado (R1-R4)**: Quant valida numeros de ambos os lados; Fact-Checker valida fontes de ambos os lados
 

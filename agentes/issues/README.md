@@ -25,7 +25,10 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
+| 1 | FR-fire-execution-plan | Playbook operacional do FIRE Day | FIRE | Alta |
+| 2 | FR-currency-mismatch-fire | Risco BRL/USD na desacumulação | FIRE | Alta |
+| 3 | TX-saude-fire | Custo real de saúde pós-FIRE | Wealth | Alta |
+| 4 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
 
 ### Doing
 > Issues em andamento

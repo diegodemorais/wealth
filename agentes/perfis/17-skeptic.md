@@ -1,4 +1,10 @@
-# Perfil: Skeptic (Cético)
+# Perfil: Skeptic (Cético) — ⚠️ DEPRECIADO 2026-04-01
+
+> **Absorvido pelo Advocate (10) + Fact-Checker (15).** Função de "literatura contrária" delegada ao Advocate; função de verificação de fontes ao Fact-Checker. Não acionar mais este agente.
+>
+> Motivo: redundância confirmada em discovery de composição de agentes (2026-04-01).
+
+---
 
 ## Identidade
 
