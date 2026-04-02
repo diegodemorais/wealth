@@ -16,7 +16,7 @@ Buscar noticias das ultimas 72h que impactam diretamente a carteira. Nao e newsl
 - Movimentos extremos (>3% intraday em indices, >5% em BRL/USD, >10% em BTC)
 - Mudancas em indices/ETFs relevantes (recomposicao, fusao, fechamento, reducao de TER)
 - Dados macro relevantes (IPCA, PIB, payroll, CPI)
-- Noticias especificas de ETFs da carteira (AVGS, AVEM, JPGL, SWRD): novos lotes, mudanca de provedor, eventos societarios
+- Noticias especificas de ETFs da carteira (AVGS, AVEM, SWRD): novos lotes, mudanca de provedor, eventos societarios
 
 **IGNORAR** (ruido):
 - "Mercado sobe/desce 1%"
@@ -45,13 +45,12 @@ Executar WebSearch em paralelo para cada area. Substituir `{mes}` e `{ano}` pelo
 - "Renda+ 2065 taxa"
 - "risco fiscal Brasil {mes} {ano}"
 
-**Equity Global (SWRD, AVGS, AVEM, JPGL)**:
+**Equity Global (SWRD, AVGS, AVEM)**:
 - "global stock market news this week"
 - "emerging markets equities {mes} {ano}"
 - "small cap value stocks performance"
 - "MSCI World ACWI weekly"
 - "Avantis ETF news {ano}"
-- "JP Morgan equity ETF news {ano}"
 
 **Cambio (BRL/USD)**:
 - "dolar real cotacao hoje"

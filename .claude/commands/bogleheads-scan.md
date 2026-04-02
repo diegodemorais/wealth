@@ -17,9 +17,10 @@ O forum Bogleheads usa phpBB sem API. Três opções de acesso (por ordem de con
 
 ## Carteira de Diego (referencia)
 
-ETFs ativos: SWRD (35%), AVGS (25%), AVEM (20%), JPGL (15%), HODL11 (3%), IPCA+ longo TD 2040/2050 (15%), Renda+ 2065 (tatico)
-ETFs transitorios (nao comprar mais, liquidar em anos): AVUV, AVDV, AVES, DGS, USSC
+ETFs ativos: SWRD (50%), AVGS (30%), AVEM (20%), HODL11 (3%), IPCA+ longo TD 2040/2050 (15%), Renda+ 2065 (tatico)
+ETFs transitorios (nao comprar mais, diluir via aportes): AVUV, AVDV, AVES, DGS, USSC, IWVL
 Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, acumulacao ativa
+Nota: JPGL foi eliminado da carteira em 2026-04-01 (target 0%). Nao recomprar sem gatilho explícito.
 
 ---
 
@@ -56,7 +57,8 @@ Parsear o XML Atom para extrair: título, URL, data. Filtrar por relevância ant
 ### Passo 3: Filtrar por relevância
 
 Priorizar tópicos que mencionem:
-- ETFs relevantes: SWRD, IWDA, VWRA, AVGS, AVEM, JPGL, AVUV, AVDV, AVES
+- ETFs ativos: SWRD, IWDA, VWRA, AVGS, AVEM
+- ETFs candidatos (ver `agentes/referencia/etf-candidatos.md`): ACSW, AVWC, DDGC/DEGC, AVWS, XDEM
 - Temas: factor investing, small cap value, emerging markets, multi-factor, UCITS, accumulating
 - FIRE para non-US investors
 - Tax efficiency, WHT, Ireland-domiciled ETFs, estate tax
@@ -113,9 +115,11 @@ Para cada tópico selecionado (max 5-8):
 - Threads a monitorar para evolução
 ```
 
-### Passo Final: Atualizar Histórico
+### Passo Final: Atualizar Histórico e ETF Candidatos
 
 Sempre registrar o scan no Histórico abaixo com data, issues identificadas e resultado principal.
+
+**Se scan identificou ETF novo potencialmente relevante**: verificar se já está em `agentes/referencia/etf-candidatos.md`. Se não estiver, adicionar uma ficha básica (ticker, ISIN, tese, fonte, data) e atualizar a tabela resumo. Não promover para carteira sem issue formal.
 
 ---
 

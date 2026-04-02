@@ -14,6 +14,18 @@ Descobrir novos ETFs UCITS relevantes, comparar alternativas aos ETFs atuais, e 
 | AVGS | IE0003R87OG3 | SCV global (30%) — fundo ATIVO (Avantis) |
 | AVEM | IE000K975W13 | EM multi-factor (20%) — fundo ATIVO (Avantis) |
 
+## ETF Candidatos em Monitoramento (ver fichas completas em `agentes/referencia/etf-candidatos.md`)
+
+| ETF | ISIN | Status | Dados a verificar |
+|-----|------|--------|-------------------|
+| ACSW | IE000Y7K9659 | Lançado mar/2026 | TD rolling, AUM, spread |
+| AVWC | IE000QCKBCT8 | Dados insuficientes | AUM, factor loadings, IBKR |
+| DDGC/DEGC | IE000BYXM682 | Lançado nov/2025 | TD, AUM, IBKR, factor loadings |
+| AVWS | IE0003R87OG3* | Verificar ISIN | *Pode ser mesmo ISIN que AVGS |
+| XDEM | IE00BZ0PKT83 | Em avaliação | TD vs AVGS semiannual |
+
+Ao executar scan, verificar se candidatos têm dados novos e atualizar `etf-candidatos.md` se necessário.
+
 ## Casos de Uso
 
 ### A) Perfil de ETF específico
@@ -133,6 +145,7 @@ Se o objetivo é substituir um ETF atual ou avaliar custo real, acionar `/tracki
 - AUM abaixo de €100M: não considerar (risco de fechamento)
 - Acumulação é obrigatório para carteira de Diego (sem evento tributável)
 - Frequência: sob demanda — ao avaliar novo ETF, alternativa, ou após RR Scan identificar produto novo
+- **ETF novo que passou triagem**: verificar se já está em `agentes/referencia/etf-candidatos.md`. Se não estiver, adicionar ficha básica (ticker, ISIN, tese, fonte, data). Não promover para carteira sem issue formal.
 
 ## Histórico de Scans
 

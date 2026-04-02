@@ -15,7 +15,7 @@ Atualizar `agentes/contexto/carteira.md` e `agentes/contexto/evolucao.md` com os
 - Ler os arquivos atuais para comparar:
   - `agentes/contexto/carteira.md`
   - `agentes/contexto/evolucao.md`
-- Nota: AVGS pode vir com split US/INT na planilha (AVUV+AVDV+AVGS.L). Somar todos e tratar como bucket AVGS unico de 25%.
+- Nota: AVGS pode vir com split US/INT na planilha (AVUV+AVDV+AVGS.L). Somar todos e tratar como bucket AVGS unico (target 30%).
 
 ### Passo 2: Reconciliar
 
@@ -55,7 +55,7 @@ Cambio: R$ X (dólar comercial — okegen {data})
 |-------|-------|------|-------|
 
 ## Evolucao (nova linha)
-| Data | Patrimonio R$ | SWRD% | AVGS% | AVEM% | JPGL% | Equity% | RF% | Risco% |
+| Data | Patrimonio R$ | SWRD% | AVGS% | AVEM% | Equity% | RF% | Risco% |
 
 ## Proximo Aporte
 Sugestao de onde alocar os proximos R$25k baseado no delta de alocacao
@@ -83,7 +83,7 @@ Apos aprovacao:
 - Se detectar algo que merece discussao (ex: alocacao muito distorcida), sugerir Issue ao Diego
 - Cambio para valuation operacional: dólar comercial do dia (okegen). PTAX BCB = só IR.
 - Sempre mostrar o patrimonio total consolidado em BRL
-- AVGS: tratar todos os tickers do bucket (AVUV, AVDV, AVES, AVGS.L) como um unico bucket de 25%
+- AVGS: tratar todos os tickers do bucket (AVUV, AVDV, AVES, AVGS.L) como um unico bucket (target 30%)
 - Evolucao mostra % do bucket (incluindo transitorios), nao apenas do ETF alvo
 - Apos atualizacao, verificar execucoes-pendentes.md e alertar sobre execucoes atrasadas
 - Se houve operacoes (compra/venda/aporte), registrar em `agentes/contexto/operacoes.md`

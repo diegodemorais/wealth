@@ -11,8 +11,9 @@ Credenciais em memória: `reference_rational_reminder.md`
 ## Carteira de Diego (referencia)
 
 ETFs ativos: SWRD (50%), AVGS (30%), AVEM (20%), HODL11 (3%), IPCA+ longo TD 2040/2050 (15%), Renda+ 2065 (tatico)
-ETFs transitorios (nao comprar mais, liquidar gradual): AVUV, AVDV, AVES, DGS, USSC, JPGL
+ETFs transitorios (nao comprar mais, diluir via aportes): AVUV, AVDV, AVES, DGS, USSC, IWVL
 Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, factor-tilted, acumulacao ativa
+Nota: JPGL foi eliminado da carteira em 2026-04-01 (target 0%). Monitored em etf-candidatos.md como reentrada condicional.
 
 ---
 
@@ -34,7 +35,7 @@ Para cada thread ativa, leia os posts novos desde o **Último Post Lido** (ver c
 |----|--------|------------|------|-----------------|
 | 31781 | UCITS MCW implementations – simple and low-cost solutions | Alta | SWRD, IWDA, VWCE, WEBN, SPYY — tracking difference all-in, spread, custo real | ver Histórico abaixo |
 | 32396 | Avantis UCITS (EU) Discussion Thread | Alta | AVGS, AVEM, AVWC, AVWS, AVEU, AVPE, AVUS — hub principal Avantis UCITS | ver Histórico abaixo |
-| 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, JPGL — comparação fatorial UCITS, novos produtos | ver Histórico abaixo |
+| 31258 | Search for an ideal UCITS (EU) factor portfolio (Part 2) | Alta | AVGS, AVEM, DDGC, AVWC — comparação fatorial UCITS, novos produtos | ver Histórico abaixo |
 | 15439 | Investing in Managed Futures | Media | RK-003 — managed futures como diversificador (issue backlog) | ver Histórico abaixo |
 | 13776 | Bitcoin / Crypto FUD | Media | HODL11, cripto — tese e gatilhos | ver Histórico abaixo |
 | 2927 | How much Emerging Market? | Media | Alocação EM — debate size/conviction | ver Histórico abaixo |
@@ -52,18 +53,20 @@ Após ler as threads fixas, buscar threads novas que possam ser relevantes.
 
 ```
 discourse_search: "AVGS UCITS" ou "Avantis global small cap"
-discourse_search: "JPGL factor" ou "JP Morgan multifactor"
+discourse_search: "DDGC Dimensional" ou "Dimensional UCITS"
 discourse_search: "FIRE non-US" ou "FIRE international withdrawal"
 discourse_search: "AVEM emerging markets UCITS"
-discourse_search: "tracking difference UCITS 2025" ou "tracking difference 2026"
+discourse_search: "tracking difference UCITS 2026"
 discourse_search: "small cap value premium" (novos papers/debates)
 discourse_search: "managed futures UCITS"
 discourse_search: "sequence of returns risk"
+discourse_search: "ACSW swap" ou "iShares MSCI World swap UCITS"
 ```
 
 ### Critérios para incluir thread nova no scan
 
-- Menciona ETFs ou estratégias presentes na carteira (AVGS, AVEM, JPGL, SWRD)
+- Menciona ETFs ou estratégias presentes na carteira (AVGS, AVEM, SWRD)
+- Menciona candidatos em monitoramento (ACSW, AVWC, DDGC/DEGC, AVWS, XDEM — ver `agentes/referencia/etf-candidatos.md`)
 - Debate factor premium (value, momentum, quality, size) com dados recentes
 - FIRE para investidores não-americanos
 - Novos produtos UCITS que poderiam ser relevantes
@@ -145,13 +148,17 @@ Leia o suficiente para avaliar se é relevante. Se sim, inclua no relatório.
 
 ---
 
-## Passo Final: Atualizar Histórico
+## Passo Final: Atualizar Histórico e ETF Candidatos
 
 Após gerar o relatório, **sempre** atualizar a tabela "Histórico de Scans" abaixo com:
 - Data do scan
 - Threads cobertas
 - Número do último post lido por thread
 - Resultado principal (1 linha)
+
+**Se scan identificou ETF novo potencialmente relevante**: verificar se já está em `agentes/referencia/etf-candidatos.md`. Se não estiver, adicionar ficha básica (ticker, ISIN, tese, fonte, data) e atualizar tabela resumo. Não promover para carteira sem issue formal.
+
+**Se ETF candidato existente teve novidade** (novo dado de TD, AUM, gatilho próximo): atualizar o campo "Última atualização dos dados" e os dados relevantes na ficha correspondente.
 
 ---
 
@@ -167,5 +174,5 @@ Após gerar o relatório, **sempre** atualizar a tabela "Histórico de Scans" ab
 ## Frequência Recomendada
 
 - **Mensal**: junto com revisão mensal da carteira
-- **Após lançamento de novo ETF Avantis/JPGL**: verificar reação da comunidade
+- **Após lançamento de novo ETF Avantis/Dimensional/candidato**: verificar reação da comunidade
 - **Após paper relevante de factor investing**: buscar discussão no forum

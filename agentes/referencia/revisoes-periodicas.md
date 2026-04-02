@@ -11,7 +11,7 @@
 | `fire_montecarlo.py` | Revisao anual ou mudanca de premissa | `python3 scripts/fire_montecarlo.py` |
 | `fire_montecarlo.py --tornado` | Revisao anual — sensibilidade de P(FIRE) | `python3 scripts/fire_montecarlo.py --tornado` |
 | `portfolio_analytics.py` | Revisao trimestral Factor | `python3 scripts/portfolio_analytics.py` |
-| `portfolio_analytics.py --aporte N` | A cada aporte — cascade IPCA+/Renda+/JPGL | `python3 scripts/portfolio_analytics.py --aporte 25000 --taxa-ipca-longo X.XX --taxa-renda-plus X.XX` |
+| `portfolio_analytics.py --aporte N` | A cada aporte — cascade IPCA+/Renda+ | `python3 scripts/portfolio_analytics.py --aporte 25000 --taxa-ipca-longo X.XX --taxa-renda-plus X.XX` |
 
 **Input manual necessario no checkin**: patrimonio atual (planilha Google Sheets), Renda+ MtM (`--renda-plus-ret`).
 **FIRE 53 (safe harbor)**: `python3 scripts/fire_montecarlo.py --anos 14`
@@ -38,7 +38,7 @@ Quando solicitado, coordene revisao completa:
 
 Alem da mensal, trimestralmente:
 0. **AUTOMATICO** — rodar `portfolio_analytics.py`: fronteira eficiente dos 4 ETFs, stress test Quant Crisis 2.0, tearsheet vs VWRA, otimizador de aporte.
-1. **Factor** (`factor`): JPGL ainda e o melhor veiculo multifator? Algum ETF novo relevante? — contextualizar com tearsheet
+1. **Factor** (`factor`): algum ETF candidato (ver `etf-candidatos.md`) atingiu gatilho de avaliação? Algum ETF novo relevante? — contextualizar com tearsheet
 2. **Risco** (`risco`): HODL11 ainda e o melhor veiculo cripto B3? Comparar TER, tracking error
 3. **Patrimonial** (`patrimonial`): Mudanca legislativa relevante? Teto Simples?
 4. Validar que todos os agentes tem gatilhos e regras atualizados
