@@ -12,16 +12,16 @@
 | **Dependencias** | — |
 | **Criado em** | 2026-03-24 |
 | **Origem** | Re-análise estratégica full-path + gatilho em carteira.md |
-| **Concluido em** | 2026-04-02 (recalibrado com modelo de saúde correto) |
+| **Concluido em** | 2026-04-02 (recalibrado — ambos aposentam juntos, 2p desde FIRE Day) |
 
 ---
 
 ## Motivo / Gatilho
 
 `carteira.md` registra: casamento iminente ~2026-2027, filho previsto ~2028. Gatilho ativo desde 2026-03-24. Issue foi executada em 2026-03-27 com premissas de saúde **incorretas** (SAUDE_BASE R$37,9k + 7%/ano). Recalibrada em 2026-04-02 com:
-- `SAUDE_BASE = R$16k` (plano empresarial coletivo PJ — cotação real Bradesco SP, age 53)
+- `SAUDE_BASE = R$16k/pp` (plano empresarial coletivo PJ — cotação real Bradesco SP, age 53)
 - `SAUDE_INFLATOR = 2,7%/ano real` (VCMH IESS, 18 anos)
-- Katia: CLT com plano empresarial — **custo zero para o casal** enquanto ela trabalha (~12 anos pós-FIRE Diego)
+- **Ambos aposentam juntos** (53 anos): 2 planos desde o FIRE Day = R$32k/ano na largada
 - FIRE base: 53 (2040), não 50
 
 ---
@@ -75,17 +75,18 @@
 
 ## Modelo de Saúde — Comparativo (correção principal)
 
-| Idade | Saúde Novo (1p→2p) | Saúde Antigo (2p desde FIRE) | Delta |
-|-------|---------------------|------------------------------|-------|
-| 53 (FIRE Day) | R$16.000 (Diego; Katia = CLT) | R$75.800 | −R$59.800 |
-| 55 | R$22.500 | R$86.800 | −R$64.300 |
-| 59 | R$31.300 | R$113.800 | −R$82.500 |
-| 64 | R$42.900 | R$159.500 | −R$116.600 |
-| **65 (Katia retira)** | **R$88.100** | **R$170.700** | −R$82.600 |
-| 70 | R$100.700 | R$239.400 | −R$138.700 |
-| 83+ (no-go) | ~R$71.000 | ~R$288.500 | −R$217.500 |
+Ambos aposentam juntos (53 anos). 2 planos empresariais desde o FIRE Day.
 
-**Key insight:** Modelo antigo assumia 2 planos individuais desde o FIRE Day. Novo modelo reconhece que Katia tem plano CLT por ~12 anos → custo zero para o casal até Diego ter 65 anos. A partir daí, os dois precisam de cobertura própria — mas com VCMH 2,7% (não 7%), o crescimento é muito mais lento.
+| Idade | Saúde 2p Novo | Saúde 2p Antigo | Delta |
+|-------|---------------|-----------------|-------|
+| 53 (FIRE Day) | R$32.000 | R$75.800 | −R$43.800 |
+| 54 | R$43.800 | R$86.800 | −R$43.000 |
+| 59 | R$62.600 | R$113.800 | −R$51.200 |
+| 64 | R$85.800 | R$159.500 | −R$73.700 |
+| 70 | R$100.700 | R$239.400 | −R$138.700 |
+| 83+ (no-go, decay) | ~R$71.200 | ~R$288.500 | −R$217.300 |
+
+**Key insight:** O modelo antigo usava R$37,9k/pp (plano individual composto por 11 anos a 7%). Com plano empresarial real (cotação Bradesco) e VCMH correto (2,7%), o custo 2p na largada cai de R$75,8k para R$32k — e cresce muito mais devagar.
 
 ---
 
@@ -98,36 +99,36 @@ Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajet
 | Cenário | Aporte | FIRE | Pat Mediana | P(base) | vs Antigo |
 |---------|--------|------|------------|---------|-----------|
 | Solo FIRE 53 (referência) | R$25k | 53 | R$11,53M | 87,2% | ref |
-| C1: FIRE 53, R$250k lifestyle | R$15k | 53 | R$9,30M | 75,1% | — |
-| C2: FIRE 53, R$270k lifestyle | R$15k | 53 | R$9,30M | 73,0% | — |
-| **C3: FIRE 55, R$250k lifestyle** | R$15k | 55 | R$10,34M | **80,7%** | +15,3pp |
-| **C4: FIRE 55, R$270k lifestyle** | R$15k | 55 | R$10,34M | **78,7%** | +13,3pp |
-| C5: FIRE 55, R$290k lifestyle | R$15k | 55 | R$10,34M | 76,4% | — |
+| C1: FIRE 53, R$250k lifestyle | R$15k | 53 | R$9,30M | 74,0% | — |
+| C2: FIRE 53, R$270k lifestyle | R$15k | 53 | R$9,30M | 71,7% | — |
+| **C3: FIRE 55, R$250k lifestyle** | R$15k | 55 | R$10,34M | **80,1%** | +14,7pp |
+| **C4: FIRE 55, R$270k lifestyle** | R$15k | 55 | R$10,34M | **77,1%** | +11,7pp |
+| C5: FIRE 55, R$290k lifestyle | R$15k | 55 | R$10,34M | 75,4% | — |
 
 **Comparativo com análise anterior (2026-03-27):**
-- C5 antigo (FIRE 55, R$250k, saúde 7%, 2p desde o início): P(base) = **65,4%**
-- C4 novo (FIRE 55, R$270k, VCMH 2,7%, Katia CLT 12 anos): P(base) = **78,7%**
-- Ganho do modelo corrigido: **+13pp**
+- C5 antigo (FIRE 55, R$250k, saúde 7%, 2p individual): P(base) = **65,4%**
+- C4 novo (FIRE 55, R$270k, VCMH 2,7%, 2p empresarial): P(base) = **77,1%**
+- Ganho do modelo corrigido: **+11,7pp**
 
 ### Decomposição do ganho
 
 | Fator | Impacto estimado |
 |-------|----------------|
-| Saúde Diego: R$37,9k → R$16k | +5-6pp |
-| Katia CLT (zero custo anos 0-11) | +5-6pp |
-| VCMH 7% → 2,7% (crescimento lento) | +2-3pp |
-| **Total** | **~+13pp** |
+| Saúde base: R$37,9k/pp → R$16k/pp (empresarial) | +7-8pp |
+| VCMH 7% → 2,7% (crescimento muito mais lento) | +4-5pp |
+| **Total** | **~+12pp** |
 
 ### Spending casal (C4 — FIRE 55, R$270k lifestyle)
 
-| Ano FIRE | Idade | Lifestyle | Saúde 1p→2p | Total |
-|----------|-------|-----------|-------------|-------|
-| 0 | 55 | R$291k | R$24k (Diego) | R$315k |
-| 12 | 67 | R$231k | R$109k (2p) | R$340k |
-| 17 | 72 | R$231k | R$122k (2p) | R$353k |
+| Ano FIRE | Idade | Lifestyle | Saúde 2p | Total |
+|----------|-------|-----------|----------|-------|
+| 0 | 55 | R$291k | R$48k | R$339k |
+| 6 | 61 | R$291k | R$66k | R$357k |
+| 11 | 66 | R$291k | R$86k | R$377k |
+| 17 | 72 | R$231k | R$101k | R$332k |
 | 30 | 85 | R$291k | R$71k (decay) | R$362k |
 
-*Lifestyle escalado por 270/250 vs spending_smile base*
+*Lifestyle escalado por 270/250 vs spending_smile base. Saúde 2p: VCMH 2,7%/ano + ANS faixas etárias discretas.*
 
 ---
 
@@ -156,15 +157,15 @@ Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajet
 
 ## Conclusão
 
-**Principal mudança vs 2026-03-27:** P(FIRE 55 casal) sobe de **65,4% → 78,7%** com modelo de saúde corrigido. A premissa de 2 planos individuais desde o FIRE Day estava errada — Katia tem plano CLT por ~12 anos.
+**Principal mudança vs 2026-03-27:** P(FIRE 55 casal) sobe de **65,4% → 77,1%** com modelo de saúde corrigido (mesmo com ambos aposentando juntos — pior caso de cobertura).
 
 **Achados principais:**
-1. P(FIRE 55, R$270k lifestyle) = **78,7%** — próximo do threshold 80%
-2. P(FIRE 55, R$250k lifestyle) = **80,7%** — atinge o threshold
-3. VCMH 2,7% (correto) vs 7% (antigo) = ganho de ~3pp estrutural
-4. Katia CLT = cobertura gratuita por 12 anos = maior ganho individual (~5-6pp)
-5. Bear market nos primeiros anos continua sendo o risco dominante
-6. 80% base para o casal **é alcançável** — ao contrário da conclusão anterior ("estruturalmente fora de alcance")
+1. P(FIRE 55, R$250k lifestyle) = **80,1%** — atinge o threshold com lifestyle conservador
+2. P(FIRE 55, R$270k lifestyle) = **77,1%** — próximo do threshold
+3. Saúde 2p na largada: R$32k (empresarial) vs R$75,8k (individual antigo) — −58%
+4. VCMH 2,7%/ano real (correto) vs 7% (antigo) = crescimento muito mais lento
+5. 80% base para o casal **é alcançável** com lifestyle R$250k — conclusão anterior ("estruturalmente fora de alcance") está REVOGADA
+6. Bear market nos primeiros anos continua sendo o risco dominante
 
 **Itens urgentes (independentes de cálculos):**
 - Planejamento sucessório: testamento, regime de bens (patrimônio total ~R$7,86M)
@@ -178,9 +179,9 @@ Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajet
 
 | Tipo | Detalhe |
 |------|---------|
-| **FIRE** | P(FIRE 55 casal) = 78,7% (R$270k) / 80,7% (R$250k) base. Modelo anterior (65,4%) estava errado — saúde 2p corrigida. |
+| **FIRE** | P(FIRE 55 casal) = 77,1% (R$270k) / 80,1% (R$250k) base. Modelo anterior (65,4%) estava errado — saúde individual superestimada. |
 | **Estratégia** | Sem mudança de alocação. Revisitar quando vida real do casal testada. |
-| **Conhecimento** | Katia CLT = cobertura gratuita ~12 anos = maior fator do gap. VCMH 2,7% (não 7%) = crescimento lento. |
+| **Conhecimento** | Plano empresarial real (R$16k/pp, Bradesco SP) + VCMH 2,7% = base correta. Individual superestima em 2,4×. Ambos aposentam juntos = 2p desde FIRE Day. |
 | **Ação urgente** | Planejamento sucessório + seguro de vida — independente de cálculos. |
 
 ---
