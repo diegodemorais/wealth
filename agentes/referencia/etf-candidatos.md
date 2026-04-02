@@ -14,12 +14,14 @@
 | — | Vanguard Global Small-Cap UCITS | Acc | Passivo MCW | AVGS | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
 | FLXE | Franklin LibertyQ EM Multi-Factor | Acc | Smart Beta | AVEM | 🔍 Em avaliação | Baixa | Out/2026 |
 | IWDS | iShares MSCI World Swap | Acc | Sintético (swap) | SWRD | 🔍 Em avaliação | Média | Mar/2027 |
-| AVWC | Avantis All-World UCITS | Acc | Factor Active | AVGS+AVEM | 🔍 Dados insuficientes | Baixa | Abr/2027 |
+| AVWC/AVGC | Avantis Global Equity UCITS (DM all-cap, light tilt) | Acc | Factor Active | SWRD+AVGS (DM only) | 🔍 Em avaliação | Baixa | Abr/2027 |
 | — | Vanguard FTSE All-World All-Cap UCITS | Acc | Passivo MCW | SWRD+AVGS+AVEM | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
 | IFSW | iShares STOXX World Equity Multifactor UCITS | Acc | Smart Beta | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
 | JPGL | JPMorgan Global Equity Multi-Factor UCITS | Acc | Factor Active | — (ex-carteira) | 👁️ Reentrada condicional | Baixa | Out/2026 |
 | DDGC/DEGC | Dimensional Global Core Equity UCITS | Acc | Factor Active | AVGS+AVEM | 🆕 Lançado nov/2025 | Média | Nov/2026 |
-| AVWS | Avantis Global Small Cap Value UCITS | Acc | Factor Active | AVGS | 🆕 Verificar vs AVGS | Baixa | Jun/2026 |
+| DDGT | Dimensional Global Targeted Value UCITS | Acc | Factor Active | AVGS (DM SCV puro) | 🆕 Lançado nov/2025 | Baixa | Nov/2026 |
+| DDUM | Dimensional US Core Equity Market UCITS | Acc | Factor Active | SWRD (US) | 🆕 Lançado mar/2026 | Muito baixa | Mar/2027 |
+| DDXM | Dimensional Global ex-US Core Equity UCITS | Acc | Factor Active | SWRD (ex-US) | 🆕 Lançado mar/2026 | Muito baixa | Mar/2027 |
 
 **Status legend:** ⏳ Aguardando lançamento · 🆕 Novo, aguardando dados · 🔍 Em avaliação · 👁️ Reentrada condicional · ✅ Promovido · ❌ Descartado
 
@@ -49,7 +51,7 @@
 | **Disponível IBKR** | — |
 | **Última atualização dos dados** | 2026-04-02 |
 | **Semelhante a** | AVGS |
-| **Tese** | Primeira opção passiva de small-cap global UCITS com TER potencialmente abaixo de AVGS (0.23%). Sem tilt value/profitability — não substitui AVGS, mas pode complementar reduzindo custo médio da camada small. |
+| **Tese** | Primeira opção passiva de small-cap global UCITS com TER potencialmente abaixo de AVGS (0.39%). Sem tilt value/profitability — não substitui AVGS, mas pode complementar reduzindo custo médio da camada small. |
 | **Diferença crítica vs AVGS** | AVGS tem tilt value+profitability ativo. Vanguard seria small puro, sem factor premium deliberado. Alpha esperado AVGS: +0.5-1.0% líquido. |
 | **Motivo de monitorar** | TER inferior pode justificar parte do bloco small-cap como exposição de baixo custo |
 | **Gatilho para considerar** | TER confirmado ≤ 0.15% **E** Acc **E** IBKR disponível com plano recorrente **E** factor loadings publicados (6+ meses) |
@@ -137,36 +139,39 @@
 
 ---
 
-### 4. AVWC — Avantis All-World UCITS ETF
+### 4. AVWC / AVGC — Avantis Global Equity UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
-| **Ticker** | AVWC |
-| **ISIN** | IE000QCKBCT8 (verificar) |
-| **Nome completo** | Avantis All-World UCITS ETF |
-| **Índice** | Ativo (Avantis — all-cap global, value + profitability) |
+| **Ticker** | AVWC (Xetra/Deutsche Börse) · AVGC (LSE USD) · AVCG (LSE GBP) |
+| **ISIN** | IE000RJECXS5 |
+| **Nome completo** | Avantis Global Equity UCITS ETF USD Acc |
+| **Índice** | Ativo (Avantis — all-cap desenvolvidos, value + profitability tilt moderado) |
 | **Distribuição** | Acc |
 | **Domicílio** | Irlanda |
-| **TER** | ~0.23% |
-| **Data de lançamento** | 2024 |
-| **AUM** | — |
-| **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-03-26 (RR scan thread 31258) |
-| **Semelhante a** | AVGS + AVEM em um único ETF (all-cap, global) |
-| **Tese** | ETF all-cap global com tilt value+profitability Avantis em um único ticker. Simplificaria a estrutura AVGS+AVEM para um único instrumento. Mencionado como "ligeiramente menos inclinado que DDGC mas mais líquido". |
-| **Diferença crítica vs AVGS+AVEM** | Menos granular — perde capacidade de ajustar pesos EM/DM separadamente. Para Diego com 30% AVGS + 20% AVEM, AVWC a 50% seria equivalente mas sem controle de rebalanceamento DM/EM. Em mercados como 2026 (EM +14.83%), perder o controle separado tem custo real. |
-| **Motivo de monitorar** | Potencial simplificação pós-FIRE quando controle granular importa menos. Relevante se Diego quiser reduzir tickers. |
-| **Gatilho para considerar** | Decisão de simplificação da carteira **E** Factor loadings AVWC ≥ média ponderada (AVGS×0.6 + AVEM×0.4) por 12 meses |
-| **Como descobrimos** | RR scan 2026-03-26, thread 31258 (debate AVWC vs DDGC) |
-| **Como monitorar** | justETF · RR thread 31258 · Revisão anual |
+| **TER** | 0.22% |
+| **Data de lançamento** | 25 setembro 2024 |
+| **AUM** | ~€398M (2025) |
+| **Disponível IBKR** | A confirmar (ticker LSE = AVGC) |
+| **Última atualização dos dados** | 2026-04-02 (verificação direta justETF + avantisinvestors.com) |
+| **Semelhante a** | SWRD (MCW DM) + AVGS (tilt) — mas desenvolvidos only, sem EM |
+| **⚠️ Atenção** | **NÃO inclui mercados emergentes.** Benchmark = MSCI World IMI (large + mid + small cap desenvolvidos). Para ter EM com Avantis, ainda necessário manter AVEM separado. |
+| **Tese** | ETF all-cap desenvolvidos com tilt value+profitability Avantis em um único ticker. Potencial alternativa ao bloco SWRD+AVGS para a parcela de DM: cobre large+mid+small com tilt deliberado. TER 0.22% mais baixo que AVGS (0.39%). Factor loadings esperados: HML moderado (~0.15-0.20), RMW moderado — entre SWRD (0) e AVGS (~0.35). |
+| **Diferença crítica vs AVGS** | AVGS = small-cap value puro (tilt forte, só small). AVWC = all-cap DM com tilt moderado (inclui large+mid+small). AVWC cobre mais do mercado, menos alpha esperado. |
+| **Diferença crítica vs SWRD** | SWRD = MCW puro, sem tilt. AVWC = mesmo universo DM all-cap mas com tilt deliberado. TER 0.22% vs SWRD 0.12% = diferencial de 10bps. |
+| **Cenário de uso** | Se Diego quiser consolidar SWRD+AVGS num único instrumento DM (mantendo AVEM separado). Perde controle granular mas simplifica. |
+| **Motivo de monitorar** | Alternativa de simplificação do bloco DM. Factor loadings reais ainda indisponíveis (fundo jovem, 18 meses). Aguardar 24-36 meses para regressão empírica. |
+| **Gatilho para considerar** | Factor loadings empíricos disponíveis (24+ meses) **E** HML + RMW AVWC > 60% dos loadings AVGS **E** decisão de simplificação do bloco DM |
+| **Como descobrimos** | RR scan 2026-03-26, thread 31258 (debate AVWC vs DDGC). Verificado 2026-04-02: ticker correto AVWC/AVGC, ISIN IE000RJECXS5. |
+| **Como monitorar** | justETF · RR thread 31258 · Avantis page oficial · Revisão anual |
 | **Frequência** | Anual |
 | **Quem monitora** | Factor (02) |
-| **Classificação** | Factor Active (Avantis) |
-| **Fatores** | Value (HML) · Profitability (RMW) — all-cap global (DM + EM) |
-| **Tracking Diff.** | A verificar (justETF) |
-| **Sharpe Ratio 3y** | A verificar |
-| **Volatilidade 3y** | A verificar vs MSCI ACWI |
-| **Beta vs MSCI ACWI** | ~1.0-1.05 (small-cap tilt leve eleva beta) |
+| **Classificação** | Factor Active (Avantis) — all-cap DM |
+| **Fatores** | Value (HML moderado) · Profitability (RMW moderado) · Small (suave) — DM all-cap apenas |
+| **Tracking Diff.** | A verificar (justETF — 18 meses de dados disponíveis) |
+| **Sharpe Ratio 3y** | Insuficiente — aguardar 2027 |
+| **Volatilidade 3y** | A verificar vs MSCI World IMI |
+| **Beta vs MSCI World** | ~1.0-1.05 |
 | **Issue relacionada** | — |
 
 ---
@@ -327,7 +332,7 @@
 | **Semelhante a** | AVGS (pode ser o mesmo fundo) |
 | **⚠️ Alerta crítico** | **ETF candidatos scan 2026-04-02 confirmou: AVWS e AVGS têm o mesmo ISIN IE0003R87OG3 — mesmo fundo, tickers de bolsas diferentes (Xetra vs LSE). IBKR: AVGS tem margem 15%, AVWS tem margem 100% — usar AVGS. Proposto para Descartados (aguardando aprovação de Diego).** |
 | **Tese** | Se for fundo distinto de AVGS: small-cap value desenvolvidos apenas (sem EM, sem all-global). Complementaria AVGS + AVEM com foco em small-cap DM exclusivo. |
-| **Diferença crítica vs AVGS** | Se diferente: AVGS = global (DM + EM small-cap value). AVWS = DM apenas. TER 0.39% vs AVGS 0.23% — se TERs diferentes, são fundos distintos. |
+| **Diferença crítica vs AVGS** | Se diferente: AVGS = global (DM + EM small-cap value). AVWS = DM apenas. TER 0.39% vs AVGS 0.39% — mesmo TER, confirmando que são o mesmo fundo. |
 | **Motivo de monitorar** | Verificar relação com AVGS antes de qualquer análise. Se for o mesmo fundo, remover do radar. |
 | **Gatilho para considerar** | **Primeiro: confirmar que AVWS ≠ AVGS.** Se distintos e TER AVWS < AVGS: avaliar loadings. |
 | **Como descobrimos** | FI-radar-etfs-review (2026-04-02) — Advocate identificou potencial gap |
@@ -344,16 +349,120 @@
 
 ---
 
+### 10. DDGT — Dimensional Global Targeted Value UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | DDGT (LSE USD) · DPGT (LSE GBP) · DEGT (Xetra) |
+| **ISIN** | IE000S67ID55 |
+| **Nome completo** | Dimensional Global Targeted Value UCITS ETF |
+| **Índice** | Ativo (Dimensional — small/mid-cap value desenvolvidos, tilt agressivo) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.44% |
+| **Data de lançamento** | Novembro 2025 |
+| **AUM** | USD 148M (mar/2026) |
+| **Disponível IBKR** | Sim |
+| **Última atualização dos dados** | 2026-04-02 (Bogleheads scan + justETF) |
+| **Semelhante a** | AVGS (small-cap value DM puro) |
+| **Tese** | Camada pura small/mid-cap value de mercados desenvolvidos da Dimensional. Universo: MSCI World SMID Value. Filosofia DFA com tilt mais agressivo que DDGC (Core). Posicionamento na família DFA: Core Market (DDUM) < Core Equity (DDGC) < Targeted Value (DDGT) — este é o mais inclinado. Complementa DDGC já monitorado. AUM $148M em 5 meses mostra demanda. |
+| **Diferença crítica vs AVGS** | AVGS = small-cap value global (DM + EM). DDGT = small/mid-cap value DM apenas. TER 0.44% vs AVGS 0.39% — AVGS mais barato. Factor loadings DFA Targeted Value historicamente fortes, mas sem regressão UCITS ainda. |
+| **Motivo de monitorar** | DFA tem 50 anos de track record em Targeted Value (vs Avantis ~15 anos). Potencial complemento ou substituto de AVGS se loadings forem comparáveis e custo convergir. |
+| **Gatilho para considerar** | Factor loadings HML + RMW DDGT ≥ AVGS por 12 meses **E** TER competitivo (≤ 0.39%) **E** AUM > $300M |
+| **Como descobrimos** | Bogleheads scan 2026-04-02 (thread "Searching Quality Low Cost Intl Small Cap Value") |
+| **Como monitorar** | justETF · RR thread 34728 (Dimensional UCITS) · Bogleheads thread 443539 |
+| **Frequência** | Semestral — revisar nov/2026 (12 meses) |
+| **Quem monitora** | Factor (02) |
+| **Classificação** | Factor Active (Dimensional) — "Targeted Value" |
+| **Fatores** | Value (HML forte) · Profitability (RMW) · Small/Mid (SMB) — DM desenvolvidos |
+| **Tracking Diff.** | A verificar — aguardar nov/2026 (12 meses) |
+| **Sharpe Ratio 3y** | Insuficiente — aguardar nov/2026 |
+| **Volatilidade 3y** | Insuficiente — aguardar nov/2026 |
+| **Beta vs MSCI World Small-Cap Value** | ~1.0-1.1 |
+| **Issue relacionada** | — |
+
+---
+
+### 11. DDUM — Dimensional US Core Equity Market UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | DDUM (LSE USD) · DPUM (LSE GBP) |
+| **ISIN** | IE000XKK4AV2 |
+| **Nome completo** | Dimensional US Core Equity Market UCITS ETF |
+| **Índice** | Ativo (Dimensional — broad US market, tilt suave value + profitability + small) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.15% |
+| **Data de lançamento** | 20 março 2026 |
+| **AUM** | ~USD 5M (novo) |
+| **Disponível IBKR** | Sim |
+| **Última atualização dos dados** | 2026-04-02 (RR scan + ETF World) |
+| **Semelhante a** | SWRD (componente US) com tilt DFA |
+| **Tese** | Cobertura do mercado US com tilt DFA suave (HML ~0.09, RMW ~0.05 — regressão RR thread 34728). TER 0.15% = mais barato que SWRD (0.12% TER, mas SWRD é global). Disponível no IBKR. Potencial substituto da exposição US dentro do bloco SWRD se TD confirmar vantagem. Filosofia DFA "Core Market" = menos inclinado que DDGC mas com a mesma gestora. |
+| **Diferença crítica vs SWRD** | SWRD cobre DM global (65% US + 35% ex-US). DDUM cobre só US. Usar DDUM + outro ETF ex-US aumenta complexidade mas pode ser mais barato. |
+| **Motivo de monitorar** | TER atrativo (0.15%). DFA no espaço US com UCITS é novidade. Potencial como bloco US de baixo custo com tilt residual. |
+| **Gatilho para considerar** | AUM > $500M **E** TD 12m confirmada < SWRD componente US **E** debate formal de reestruturação do bloco MCW |
+| **Como descobrimos** | RR scan 2026-04-02, thread 34728 (Dimensional UCITS) |
+| **Como monitorar** | justETF · RR thread 34728 · Revisão mar/2027 (12 meses) |
+| **Frequência** | Revisão mar/2027 |
+| **Quem monitora** | Factor (02) |
+| **Classificação** | Factor Active (Dimensional) — "Core Market" tilt mínimo |
+| **Fatores** | Value (HML suave ~0.09) · Profitability (RMW suave ~0.05) · Small (mínimo) — US |
+| **Tracking Diff.** | A verificar — aguardar mar/2027 (12 meses) |
+| **Sharpe Ratio 3y** | Insuficiente — aguardar |
+| **Volatilidade 3y** | Insuficiente — aguardar |
+| **Beta vs S&P 500** | ~1.0-1.05 |
+| **Issue relacionada** | — |
+
+---
+
+### 12. DDXM — Dimensional Global ex-US Core Equity Market UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | DDXM (LSE USD) · DPXM (LSE GBP) · DEGB (Xetra) |
+| **ISIN** | IE0002YHUWS3 |
+| **Nome completo** | Dimensional Global ex-US Core Equity Market UCITS ETF |
+| **Índice** | Ativo (Dimensional — DM ex-US + até 20% EM, tilt suave value + profitability) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.20% |
+| **Data de lançamento** | 20 março 2026 |
+| **AUM** | ~USD 5M (novo) |
+| **Disponível IBKR** | Sim |
+| **Última atualização dos dados** | 2026-04-02 (RR scan + ETF World) |
+| **Semelhante a** | SWRD componente ex-US (35%) com tilt DFA + alguma exposição EM |
+| **Tese** | Cobertura ex-US DM + até 20% EM com tilt DFA suave. TER 0.20% é competitivo. Membros do RR (thread 34728) usando como substituto de SWRD no bloco ex-US. Potencial combinação: DDUM (US, 0.15%) + DDXM (ex-US, 0.20%) como alternativa a SWRD (global, 0.12%). Custo combinado depende dos pesos, mas seria próximo de SWRD com algum tilt residual DFA. |
+| **Diferença crítica vs SWRD** | SWRD = MCW global puro. DDXM = ex-US apenas + algum EM + tilt suave. Mais complexidade operacional mas maior cobertura geográfica no bloco ex-US. |
+| **Motivo de monitorar** | TER 0.20% competitivo. Exposição EM embutida (até 20%) pode ser interessante como consolidação. DFA no espaço ex-US UCITS é novidade. |
+| **Gatilho para considerar** | AUM > $300M **E** TD 12m confirmada **E** debate formal de reestruturação do bloco MCW |
+| **Como descobrimos** | RR scan 2026-04-02, thread 34728 (Dimensional UCITS) |
+| **Como monitorar** | justETF · RR thread 34728 · Revisão mar/2027 (12 meses) |
+| **Frequência** | Revisão mar/2027 |
+| **Quem monitora** | Factor (02) |
+| **Classificação** | Factor Active (Dimensional) — "Core Market" ex-US |
+| **Fatores** | Value (HML suave) · Profitability (RMW suave) · Small (mínimo) — DM ex-US + EM (até 20%) |
+| **Tracking Diff.** | A verificar — aguardar mar/2027 (12 meses) |
+| **Sharpe Ratio 3y** | Insuficiente — aguardar |
+| **Volatilidade 3y** | Insuficiente — aguardar |
+| **Beta vs MSCI World ex-US** | ~1.0-1.05 |
+| **Issue relacionada** | — |
+
+---
+
 ## Descartados
 
 > ETFs que foram avaliados e rejeitados. Manter como registro para evitar reavaliação desnecessária.
 
 | Ticker | Nome | Data | Motivo do descarte |
 |--------|------|------|--------------------|
-| AVGC | Avantis Global Equity UCITS | 2026-03-26 | Closet indexing — factor loadings insuficientes vs AVGS. AVGS domina (RR thread 31258 + FI-003) |
+| AVWS | Avantis Global Small Cap Value UCITS (Xetra) | 2026-04-02 | = AVGS (IE0003R87OG3), mesmo fundo. Usar AVGS na LSE (margem IBKR 15% vs AVWS 100%). Sem valor como candidato separado. |
+| AVGC | Avantis Global Equity UCITS (LSE ticker) | 2026-03-26 | Atenção: AVGC = mesmo fundo que AVWC (IE000RJECXS5). Descarte original foi precipitado ("closet indexing") — AVWC reinstaurado como candidato ativo em abr/2026 (ficha #4). Este entry refere-se ao ticker LSE do mesmo produto. |
 | AVEU | Avantis European Equity UCITS | 2026-04-02 | AVGS já cobre Europa com mesmo tilt. Sem tese regional que justifique sobrepeso |
 | AVPE | Avantis Pacific Equity UCITS | 2026-04-02 | AVGS já inclui Pacífico/Japão. Redundante sem convicção regional específica |
 | AVUS | Avantis US Equity UCITS | 2026-04-02 | SWRD+AVGS já cobrem US (sobreposição tripla). Sem gap a preencher |
+| OTUS | Lloyd Capital International Equity UCITS | 2026-04-02 | Emissora desconhecida (Lloyd Capital/HANetf), TER 0.85% — inviável vs alternativas |
 
 ---
 

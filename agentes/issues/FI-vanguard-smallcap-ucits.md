@@ -19,7 +19,7 @@
 
 ## Motivo / Gatilho
 
-Vanguard registrou o **FTSE Global Small-Cap UCITS ETF** na Irlanda em fevereiro/2026. Ainda não foi lançado. TER esperado: ~0.10-0.15% (vs AVGS a 0.23%).
+Vanguard registrou o **FTSE Global Small-Cap UCITS ETF** na Irlanda em fevereiro/2026. Ainda não foi lançado. TER esperado: ~0.10-0.15% (vs AVGS a 0.39%).
 
 Se lançado, seria a primeira opção passiva (index) de small-cap global UCITS com TER potencialmente abaixo de AVGS.
 
