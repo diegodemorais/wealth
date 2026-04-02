@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | TX-saude-fire |
 | **Dono** | 05 Wealth |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | FIRE, Quant, Advocate |
 | **Co-sponsor** | Head (discovery composição/issues 2026-04-01) |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-01 |
 | **Origem** | HD-009 e FR-spending-smile identificaram saúde como gap no modelo; sem issue dedicada |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-02 |
 
 ---
 
@@ -65,22 +65,46 @@ Calibrar o componente de saúde no modelo FIRE com dados reais:
 
 ## Análise
 
-> Preencher durante execução da issue.
+Executada em 2026-04-02 como subproduto da revisão de spending e XX-casamento.
+
+**Plano de saúde PF/PJ (Bradesco coletivo SP, cotação real):**
+- Age 53: R$1.127/mês = **R$13.524/ano** (plano empresarial coletivo PJ)
+- Com margem/dental: **R$16.000/ano** (adotado no modelo)
+- Plano individual equivalente: ~R$38k/ano (+137%) — motivo para manter CNPJ ativo pós-FIRE
+
+**ANS faixas etárias (RN 63/2003):** 49-53 = 3×, 54-58 = 4×, 59-63 = 5×, 64+ = 6× base
+- Saltos discretos vs modelo anterior (inflator contínuo apenas)
+
+**IPCAM vs VCMH:**
+- IPCA Saúde (IBGE): +0,74%/ano real — só preço, subestima
+- VCMH (IESS, 18 anos): +2,7%/ano real — preço + frequência = métrica correta
+
+**Seguro de vida pós-50:** não modelado separadamente. Custos out-of-pocket implicitamente no SAUDE_DECAY do no-go phase.
 
 ---
 
 ## Conclusão
 
-> Preencher ao finalizar.
+`SAUDE_BASE = R$16k` + `SAUDE_INFLATOR = 2,7%` + `ans_faixa_multiplier()` implementados em `scripts/fire_montecarlo.py` (commit 6c027ae, 2026-04-02).
+
+**Falsificação confirmada:** IPCAM +0,74% real está dentro de ±0,5pp do IPCA. Para fins de inflação de _preços_, o inflator genérico seria adequado. Mas VCMH (2,7%) é a métrica correta para _prêmio de plano_ porque inclui frequência de uso — e essa é a variável relevante para Diego.
 
 ---
 
 ## Resultado
 
-> Preencher ao finalizar.
+| Tipo | Detalhe |
+|------|---------|
+| **Modelo** | SAUDE_BASE 37,9k → 16k; SAUDE_INFLATOR 7% → 2,7%; ANS discreto implementado |
+| **P(FIRE) solo** | base 87,2% (+0,3pp), stress 83,5% (+2,5pp) |
+| **Conhecimento** | Manter CNPJ ativo pós-FIRE poupa ~R$22k/ano (individual vs empresarial). VCMH > IPCAM para modelar prêmio. |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Executar quando entrar em Doing
+- [x] Dados reais de plano (Bradesco SP) — cotação 2026
+- [x] VCMH IESS vs IPCAM IBGE — diferencial correto
+- [x] ANS faixa etária — saltos discretos implementados
+- [x] fire_montecarlo.py atualizado e commitado
+- [ ] Seguro de vida pós-50 sem vínculo — não abordado. Baixa prioridade: Diego tem CNPJ ativo.
