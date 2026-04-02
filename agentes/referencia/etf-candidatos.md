@@ -11,16 +11,14 @@
 
 | Ticker | Nome curto | Acc/Dist | Semelhante a | Status | Conviction | Próxima Revisão |
 |--------|-----------|----------|-------------|--------|------------|-----------------|
-| — | Vanguard Global Small-Cap UCITS | Acc | AVGS | ⏳ Aguardando lançamento | Média | Mai/2026 |
-| FLXE | Franklin FTSE EM | Acc | AVEM | 🔍 Dados insuficientes | Baixa | Out/2026 |
-| AVEU | Avantis European Equity UCITS | Acc | AVGS (Europa) | 🆕 Lançado fev/2026 | Baixa | Fev/2027 |
-| AVPE | Avantis Pacific Equity UCITS | Acc | AVGS (Pacífico) | 🆕 Lançado fev/2026 | Baixa | Fev/2027 |
-| AVUS | Avantis US Equity UCITS | Acc | AVGS (EUA) | 🆕 Lançado fev/2026 | Baixa | Fev/2027 |
+| — | Vanguard Global Small-Cap UCITS | Acc | AVGS | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
 | ACSW | iShares MSCI World Swap | Acc | SWRD | 🆕 Lançado mar/2026 | Média | Mar/2027 |
-| AVWC | Avantis All-World UCITS | Acc | AVGS (all-cap) | 🔍 Dados insuficientes | Média | Out/2026 |
-| — | Vanguard FTSE All-World All-Cap UCITS | Acc | SWRD+AVGS+AVEM | ⏳ Aguardando lançamento | Média | Mai/2026 |
+| AVWC | Avantis All-World UCITS | Acc | AVGS (all-cap) | 🔍 Dados insuficientes | Baixa | Abr/2027 |
+| — | Vanguard FTSE All-World All-Cap UCITS | Acc | SWRD+AVGS+AVEM | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
 | XDEM | iShares Edge MSCI World Multifactor UCITS | Acc | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
 | JPGL | JPMorgan Global Equity Multi-Factor UCITS | Acc | — (ex-carteira) | 👁️ Reentrada condicional | Baixa | Out/2026 |
+| DDGC/DEGC | Dimensional Global Core Equity UCITS | Acc | AVGS+AVEM | 🆕 Lançado nov/2025 | Média | Nov/2026 |
+| AVWS | Avantis World Small Cap UCITS | Acc | AVGS (small-cap global) | 🆕 Verificar lançamento | Baixa | Jun/2026 |
 
 **Status legend:** ⏳ Aguardando lançamento · 🆕 Novo, aguardando dados · 🔍 Em avaliação · 👁️ Reentrada condicional · ✅ Promovido · ❌ Descartado
 
@@ -60,119 +58,7 @@
 
 ---
 
-### 2. FLXE — Franklin FTSE Emerging Markets UCITS ETF
-
-| Campo | Detalhe |
-|-------|---------|
-| **Ticker** | FLXE |
-| **ISIN** | IE00BHZRR732 |
-| **Nome completo** | Franklin FTSE Emerging Markets UCITS ETF |
-| **Índice** | FTSE Emerging Markets (passivo) |
-| **Distribuição** | Acc |
-| **Domicílio** | Irlanda |
-| **TER** | 0.19% (vs AVEM 0.23%) |
-| **Data de lançamento** | 2017 |
-| **AUM** | ~$400M |
-| **Disponível IBKR** | Sim |
-| **Última atualização dos dados** | 2026-03-26 (RR scan) |
-| **Semelhante a** | AVEM |
-| **Tese** | TER 4bps menor que AVEM. Mencionado no RR como tendo potencialmente factor loading value/quality > AVEM — hipótese não verificada. Se confirmado, seria candidato a substituir AVEM com custo menor e loadings similares. |
-| **Diferença crítica vs AVEM** | AVEM tem tilt deliberado (ativo, Avantis). FLXE é passivo FTSE — se tiver loadings equivalentes, seria por exposição ao índice, não por design. Hipótese improvável mas merece verificação. |
-| **Motivo de monitorar** | Menção no RR thread 31258 de que FLXE pode ter EM factor loading > AVEM. Requer verificação empírica. |
-| **Gatilho para considerar** | Factor loading HML de FLXE ≥ AVEM por 12 meses (dados Ken French/AQR) **E** TD rolling < AVEM |
-| **Como descobrimos** | RR scan 2026-03-26, thread 31258 |
-| **Como monitorar** | Ken French Data Library · AQR Factor Returns · justETF para TD |
-| **Frequência** | Semestral |
-| **Quem monitora** | Factor (02) |
-| **Issue relacionada** | — |
-
----
-
-### 3. AVEU — Avantis European Equity UCITS ETF
-
-| Campo | Detalhe |
-|-------|---------|
-| **Ticker** | AVEU |
-| **ISIN** | IE000MVKN867 (verificar) |
-| **Nome completo** | Avantis European Equity UCITS ETF |
-| **Índice** | Ativo (Avantis — value + profitability) |
-| **Distribuição** | Acc |
-| **Domicílio** | Irlanda |
-| **TER** | ~0.25% (estimado) |
-| **Data de lançamento** | Fevereiro 2026 |
-| **AUM** | Seed ~$250M+ (lote inicial Avantis Canada, mesmo batch) |
-| **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-04-02 (RR Ep. 401) |
-| **Semelhante a** | AVGS (componente Europa) |
-| **Tese** | Mesma metodologia Avantis value+profitability, mas apenas Europa. Permite sobrepeso regional se Diego quiser divergir do MCW global. Eduardo Repetto confirmou: metodologia idêntica à US, sem double-layer WHT. |
-| **Diferença crítica vs AVGS** | AVGS já tem Europa. AVEU seria sobreposição a menos que exista convicção em value europeu específico (spread Europa vs EUA está elevado). |
-| **Motivo de monitorar** | Nova família Avantis UCITS — confirmar factor loadings reais e TD após 12 meses |
-| **Gatilho para considerar** | 12 meses de dados + factor loadings HML/RMW ≥ AVGS **E** IBKR disponível **E** motivação explícita para tilt regional Europa |
-| **Como descobrimos** | RR Ep. 401 (Eduardo Repetto, 2026-04-02) |
-| **Como monitorar** | justETF · RR forum (thread nova Avantis UCITS se abrir) |
-| **Frequência** | Revisão única em fev/2027 (12 meses pós-lançamento) |
-| **Quem monitora** | Factor (02) |
-| **Issue relacionada** | — |
-
----
-
-### 4. AVPE — Avantis Pacific Equity UCITS ETF
-
-| Campo | Detalhe |
-|-------|---------|
-| **Ticker** | AVPE |
-| **ISIN** | A confirmar |
-| **Nome completo** | Avantis Pacific Equity UCITS ETF |
-| **Índice** | Ativo (Avantis — value + profitability) |
-| **Distribuição** | Acc |
-| **Domicílio** | Irlanda |
-| **TER** | ~0.25% (estimado) |
-| **Data de lançamento** | Fevereiro 2026 |
-| **AUM** | — |
-| **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-04-02 |
-| **Semelhante a** | AVGS (componente Japão/Pacífico) |
-| **Tese** | Japão tem value spread historicamente alto e mercado grande para value investing. Avantis com tilt value+profitability no Pacífico pode ter alpha maior que o componente Pacífico do AVGS. Baixa prioridade vs AVEU. |
-| **Diferença crítica vs AVGS** | Mesmo argumento do AVEU — AVGS já inclui Pacífico. Redundante sem convicção regional específica. |
-| **Motivo de monitorar** | Completude da família Avantis UCITS. Dados reais pós-12 meses. |
-| **Gatilho para considerar** | Mesmo critério AVEU. Prioridade: AVEU > AVPE. |
-| **Como descobrimos** | RR Ep. 401 (mesmo lote AVEU, fev/2026) |
-| **Como monitorar** | justETF · Junto com AVEU na revisão fev/2027 |
-| **Frequência** | Revisão única em fev/2027 |
-| **Quem monitora** | Factor (02) |
-| **Issue relacionada** | — |
-
----
-
-### 5. AVUS — Avantis US Equity UCITS ETF
-
-| Campo | Detalhe |
-|-------|---------|
-| **Ticker** | AVUS |
-| **ISIN** | A confirmar |
-| **Nome completo** | Avantis US Equity UCITS ETF |
-| **Índice** | Ativo (Avantis — value + profitability, mercado US) |
-| **Distribuição** | Acc |
-| **Domicílio** | Irlanda |
-| **TER** | ~0.25% (estimado) |
-| **Data de lançamento** | Fevereiro 2026 |
-| **AUM** | — |
-| **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-04-02 |
-| **Semelhante a** | Componente US do SWRD/AVGS |
-| **Tese** | Avantis value+profitability apenas em ações US. Interessante se Diego quiser sobrepeso em value US sem alterar o bloco SWRD (MCW). Menor uso provável dado que SWRD já tem 65%+ US e o tilt já existe via AVGS. |
-| **Diferença crítica** | Mais granular que AVGS. Sem propósito claro na estrutura atual (SWRD cobre US MCW + AVGS já tilt global). |
-| **Motivo de monitorar** | Parte da família Avantis UCITS expandida. Avaliar loadings reais vs AVGS para componente US. |
-| **Gatilho para considerar** | Factor loadings AVUS > componente US implícito de AVGS por 12 meses **E** motivação explícita para tilt US separado |
-| **Como descobrimos** | RR Ep. 401 (mesmo lote AVEU/AVPE, fev/2026) |
-| **Como monitorar** | justETF · Revisão conjunta com AVEU/AVPE |
-| **Frequência** | Revisão única em fev/2027 |
-| **Quem monitora** | Factor (02) |
-| **Issue relacionada** | — |
-
----
-
-### 6. ACSW — iShares MSCI World Swap UCITS ETF
+### 2. ACSW — iShares MSCI World Swap UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
@@ -200,7 +86,7 @@
 
 ---
 
-### 7. AVWC — Avantis All-World UCITS ETF
+### 3. AVWC — Avantis All-World UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
@@ -216,19 +102,19 @@
 | **Disponível IBKR** | A confirmar |
 | **Última atualização dos dados** | 2026-03-26 (RR scan thread 31258) |
 | **Semelhante a** | AVGS + AVEM em um único ETF (all-cap, global) |
-| **Tese** | ETF all-cap global com tilt value+profitability Avantis em um único ticker. Simplificaria a estrutura AVGS+AVEM para um único instrumento. Mencioado como "ligeiramente menos inclinado que DEGC mas mais líquido". |
-| **Diferença crítica vs AVGS+AVEM** | Menos granular — perde capacidade de ajustar pesos EM/DM separadamente. Para Diego com 30% AVGS + 20% AVEM (50% total fatorial), AVWC a 50% seria equivalente mas com menos controle. |
-| **Motivo de monitorar** | Potencial simplificação da camada fatorial. Relevante se Diego quiser reduzir número de tickers. |
-| **Gatilho para considerar** | Factor loadings AVWC ≥ média ponderada (AVGS×0.6 + AVEM×0.4) por 12 meses **E** TD < custo médio ponderado da combinação atual |
+| **Tese** | ETF all-cap global com tilt value+profitability Avantis em um único ticker. Simplificaria a estrutura AVGS+AVEM para um único instrumento. Mencionado como "ligeiramente menos inclinado que DEGC mas mais líquido". |
+| **Diferença crítica vs AVGS+AVEM** | Menos granular — perde capacidade de ajustar pesos EM/DM separadamente. Para Diego com 30% AVGS + 20% AVEM, AVWC a 50% seria equivalente mas sem controle de rebalanceamento DM/EM. Em mercados como 2026 (EM +14.83%), perder o controle separado tem custo real. |
+| **Motivo de monitorar** | Potencial simplificação pós-FIRE quando controle granular importa menos. Relevante se Diego quiser reduzir tickers. |
+| **Gatilho para considerar** | Decisão de simplificação da carteira **E** Factor loadings AVWC ≥ média ponderada (AVGS×0.6 + AVEM×0.4) por 12 meses |
 | **Como descobrimos** | RR scan 2026-03-26, thread 31258 (debate AVWC vs DEGC) |
-| **Como monitorar** | justETF · RR thread 31258 · AQR Factor Returns |
-| **Frequência** | Semestral |
+| **Como monitorar** | justETF · RR thread 31258 · Revisão anual |
+| **Frequência** | Anual |
 | **Quem monitora** | Factor (02) |
 | **Issue relacionada** | — |
 
 ---
 
-### 8. Vanguard FTSE All-World All-Cap UCITS ETF
+### 4. Vanguard FTSE All-World All-Cap UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
@@ -256,7 +142,7 @@
 
 ---
 
-### 9. XDEM — iShares Edge MSCI World Multifactor UCITS ETF
+### 5. XDEM — iShares Edge MSCI World Multifactor UCITS ETF
 
 | Campo | Detalhe |
 |-------|---------|
@@ -284,7 +170,7 @@
 
 ---
 
-### 10. JPGL — JPMorgan Global Equity Multi-Factor UCITS ETF (Reentrada Condicional)
+### 6. JPGL — JPMorgan Global Equity Multi-Factor UCITS ETF (Reentrada Condicional)
 
 | Campo | Detalhe |
 |-------|---------|
@@ -312,14 +198,74 @@
 
 ---
 
+### 7. DDGC / DEGC — Dimensional Global Core Equity UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | DDGC (LSE) / DEGC (Xetra) |
+| **ISIN** | IE000BYXM682 (verificar) |
+| **Nome completo** | Dimensional Global Core Equity UCITS ETF |
+| **Índice** | Ativo (Dimensional — broad market com tilt deliberado para value, profitability, small) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.26% |
+| **Data de lançamento** | Novembro 2025 |
+| **AUM** | ~$1B+ (crescimento: zero → $1B em 4 meses — velocidade de captação excepcional) |
+| **Disponível IBKR** | A confirmar |
+| **Última atualização dos dados** | 2026-04-02 (RR scan + FI-003 análise) |
+| **Semelhante a** | AVGS + AVEM (all-cap global, DM + EM) |
+| **Tese** | Dimensional Fund Advisors (DFA) é o criador da abordagem fatorial moderna — Fama, French, Harvey estão no advisory board. Eduardo Repetto foi co-CEO da DFA antes de fundar a Avantis. DDGC é o primeiro ETF UCITS da DFA com filosofia "Global Core Equity": cobertura ampla com tilt suave em value, profitability e small. "Core" = menos concentrado que AVGS (que é pure small-cap value) — mais diversificado mas com menor expected alpha. AUM de $1B em 4 meses sinaliza demanda institucional real. |
+| **Diferença crítica vs AVGS+AVEM** | AVGS = pure small-cap value (HML + RMW agressivo). DDGC = "core" = tilt mais suave, cobertura mais ampla incluindo large caps. Expected alpha de DDGC < AVGS, mas tracking error também menor. Para Diego que já tem SWRD (MCW puro), DDGC ficaria num espaço intermediário. Risco: duplicação com AVGS em estratégia similar mas com convicção menor. |
+| **Motivo de monitorar** | DFA entrando no espaço UCITS com $1B em 4 meses é evento raro. Factor loadings reais pós-12 meses podem mostrar se DDGC tem alpha complementar a AVGS ou é sobreposição com menor convicção. Também útil como benchmark da família Dimensional vs Avantis. |
+| **Gatilho para considerar** | Factor loadings HML + RMW de DDGC **distintos** de AVGS por 12 meses (i.e., não duplica) **E** TER + TD all-in < custo médio ponderado AVGS+AVEM **E** issue formal aprovada |
+| **Como descobrimos** | FI-003 análise AVGC vs JPGL (2026-03-26) — DDGC citado como "terceira opção" no espaço multifator UCITS |
+| **Como monitorar** | justETF · RR thread 31258 (debate AVWC vs DDGC vs AVGS) · AQR Factor Returns quando disponível |
+| **Frequência** | Revisão em nov/2026 (12 meses pós-lançamento) |
+| **Quem monitora** | Factor (02) |
+| **Issue relacionada** | FI-003 (histórico), FI-vanguard-smallcap-ucits (contexto) |
+
+---
+
+### 8. AVWS — Avantis Global Small Cap Value UCITS ETF
+
+| Campo | Detalhe |
+|-------|---------|
+| **Ticker** | AVWS (Xetra/LSE) |
+| **ISIN** | IE0003R87OG3 |
+| **Nome completo** | Avantis Global Small Cap Value UCITS ETF USD Acc |
+| **Índice** | Ativo (Avantis — small cap desenvolvidos, value + profitability) |
+| **Distribuição** | Acc |
+| **Domicílio** | Irlanda |
+| **TER** | 0.39% (Morningstar/justETF) — **verificar vs 0.23% do AVGS na carteira** |
+| **Data de lançamento** | Setembro 2024 |
+| **AUM** | €696M (2026-04-02) |
+| **Disponível IBKR** | A confirmar |
+| **Última atualização dos dados** | 2026-04-02 (WebSearch — justETF, Morningstar) |
+| **Semelhante a** | AVGS (pode ser o mesmo fundo) |
+| **⚠️ Alerta crítico** | **AVWS pode ser o mesmo fundo que nosso AVGS, com ticker diferente em bolsa diferente (Xetra vs LSE).** Verificar ISIN do AVGS que está na carteira — se for IE0003R87OG3, são o mesmo produto. |
+| **Tese** | Se for fundo distinto de AVGS: small-cap value desenvolvidos apenas (sem EM, sem global). Complementaria AVGS + AVEM com foco em small-cap DM exclusivo. |
+| **Diferença crítica vs AVGS** | Se diferente: AVGS = global (DM + EM small-cap value). AVWS = DM apenas. TER 0.39% vs AVGS 0.23% — se TERs diferentes, são fundos distintos. |
+| **Motivo de monitorar** | Verificar relação com AVGS antes de qualquer análise. Se for o mesmo fundo, remover do radar. Se for fundo distinto, avaliar tese. |
+| **Gatilho para considerar** | **Primeiro: confirmar que AVWS ≠ AVGS.** Se distintos: AVWS TER < AVGS TER E factor loadings DM > AVGS componente DM |
+| **Como descobrimos** | FI-radar-etfs-review (2026-04-02) — Advocate identificou gap potencial de small-cap global |
+| **Como monitorar** | justETF (verificar ISIN do AVGS da carteira) · IBKR para listar ambos |
+| **Frequência** | Verificação pontual — resolver ambiguidade antes da próxima revisão |
+| **Quem monitora** | Factor (02) + Bookkeeper (verificar ISIN do AVGS na conta IBKR) |
+| **Issue relacionada** | FI-radar-etfs-review |
+
+---
+
 ## Descartados
 
 > ETFs que foram avaliados e rejeitados. Manter como registro para evitar reavaliação desnecessária.
 
 | Ticker | Nome | Data | Motivo do descarte |
 |--------|------|------|--------------------|
-| AVGC | Avantis Global Equity UCITS | 2026-03-26 | Closet indexing confirmado — factor loadings insuficientes vs AVGS (RR thread 31258 + FI-jpgl-redundancia) |
-| JPGL | JPMorgan Global Equity Multi-Factor | 2026-04-01 | Eliminado da carteira. Correlação 0.95 com AVGS + SWRD. AVGS domina em todos os cenários (FI-jpgl-zerobased). Não readicionar. |
+| AVGC | Avantis Global Equity UCITS | 2026-03-26 | Closet indexing — factor loadings insuficientes vs AVGS. AVGS domina (RR thread 31258 + FI-003) |
+| FLXE | Franklin FTSE Emerging Markets | 2026-04-02 | ETF passivo não tem tilt deliberado. Hipótese "factor loading > AVEM" improvável por design — índice FTSE sem selection criteria fatorial |
+| AVEU | Avantis European Equity UCITS | 2026-04-02 | AVGS já cobre Europa com mesmo tilt. Sem tese regional que justifique sobrepeso — adiciona complexidade sem alpha incremental |
+| AVPE | Avantis Pacific Equity UCITS | 2026-04-02 | Mesmo motivo AVEU — AVGS já inclui Pacífico/Japão. Redundante sem convicção regional específica |
+| AVUS | Avantis US Equity UCITS | 2026-04-02 | SWRD+AVGS já cobrem US (sobreposição tripla). Nenhum gap a preencher na estrutura atual |
 
 ---
 
