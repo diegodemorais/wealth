@@ -89,7 +89,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
 5. **Renda+ 2065**: compra DCA ate 5% se taxa >= 6,5%. Venda tudo se taxa <= 6,0% — mas aguardar 720 dias se holding < 2 anos (carry domina reducao de IR). Se taxa 9%+: manter pelo carrego. Ver cenarios validados: agentes/contexto/renda-plus-2065-cenarios.md
 6. **IPCA+ curto 3%**: comprar perto dos 50 (SoRR buffer, ~2 anos duration). Substitui Selic no plano original
-7. **RF pos-2040**: Aos 51-52 (2038-2039), avaliar compra de IPCA+ ~2045-2050 para cobrir gap pos-tent (anos 53-60). Tamanho: 3-5% do portfolio
+7. **RF pos-2040 (Decisão 7 reformulada 2026-04-02)**: IPCA+ 2045 só existe com juros semestrais no TD (reinvestimento + IR antecipado não compensam). Decisão simplificada: verificar se TD 2050 já existente (20% do bloco IPCA+ longo) >= 3% do portfolio em 2040. Se sim, nenhuma ação adicional. Gap anos 8-10 (Diego 60-63) = equity puro, 3 anos, aceitável com horizonte 25+ anos. Se TD 2050 < 3%: aumentar DCA de TD 2050 (sem juros, disponível)
 
 ---
 
