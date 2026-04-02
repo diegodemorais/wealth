@@ -10,8 +10,8 @@ Credenciais em memória: `reference_rational_reminder.md`
 
 ## Carteira de Diego (referencia)
 
-ETFs ativos: SWRD (35%), AVGS (25%), AVEM (20%), JPGL (15%), HODL11 (3%), IPCA+ longo TD 2040/2050 (15%), Renda+ 2065 (tatico)
-ETFs transitorios (nao comprar mais, liquidar gradual): AVUV, AVDV, AVES, DGS, USSC
+ETFs ativos: SWRD (50%), AVGS (30%), AVEM (20%), HODL11 (3%), IPCA+ longo TD 2040/2050 (15%), Renda+ 2065 (tatico)
+ETFs transitorios (nao comprar mais, liquidar gradual): AVUV, AVDV, AVES, DGS, USSC, JPGL
 Perfil: investidor brasileiro, contas IBKR, FIRE aos 50, factor-tilted, acumulacao ativa
 
 ---
