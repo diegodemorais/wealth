@@ -11,7 +11,7 @@
 - **Nome**: Diego Morais
 - **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
-- **Meta FIRE**: Aposentar quando **patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4%** → P(FIRE) ~**80% base / 88% favorável / 74.9% stress** (spending smile + guardrails, MC 10k, premissas HD-006; validado XX-lacunas-estrategicas 2026-04-01). *Nota: 87% era modelo sem spending smile — obsoleto.* Revisão anual a partir de 2034 (48 anos). Safe harbor: 2040 (53 anos) — não esperar além disso. FIRE 50 é o target primário; 2040 é a rede de segurança.
+- **Meta FIRE**: **2040 (53 anos) — base.** Patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4% → P(FIRE 2040): **86,9% base / 93,7% favorável / 81,0% stress** (MC 10k, spending smile + guardrails + bond tent, FR-fire2040 2026-03-27). FIRE 50 (2037) = aspiracional — se patrimônio atingir R$13.4M antes. Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).**
 - **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano
@@ -109,7 +109,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 ### Guardrail de Fonte (FR-fire2040, 2026-03-27)
 
-**Nos anos 1–5 do FIRE (53–58 se FIRE 2040, ou 50–55 se FIRE 2037):** saques vêm do bond pool (TD 2040 vencido → caixa/Selic) **antes** do equity. Equity só é tocado quando o bond pool estiver esgotado. Regra mecânica — sem ela, o bond tent não tem efeito comportamental.
+**Anos 1–7 do FIRE (53–60, base FIRE 2040):** saques vêm do bond pool (TD 2040 vence em 2040 = **FIRE Day** → R$~1.9M BRL imediato; IPCA+ curto 3% comprado aos 50-51 → matura em 52-53 = também disponível na largada) **antes** do equity. Equity só tocado quando pool esgotado. Regra mecânica — sem ela, o bond tent não tem efeito comportamental. **Vantagem FIRE 2040**: TD 2040 vence exatamente no FIRE Day → pool BRL ~R$2.3M imediato, sem gap de liquidez dos primeiros anos.
 
 ---
 

@@ -26,12 +26,13 @@ PREMISSAS = {
 
     # Horizonte
     "idade_atual":         39,
-    "idade_fire_alvo":     50,
+    "idade_fire_alvo":     53,          # FIRE 2040 — base confirmada 2026-04-02 (era 50)
+    "idade_fire_aspiracional": 50,      # FIRE 2037 — aspiracional, se patrimônio atingir antes
     "idade_safe_harbor":   53,
-    "anos_simulacao":      40,          # anos de desacumulação (50→90)
+    "anos_simulacao":      37,          # anos de desacumulação (53→90)
 
     # Retornos reais anuais em BRL — cenário BASE (fonte: carteira.md premissas HD-006)
-    "retorno_equity_base": 0.0596,      # 5.96% real BRL ponderado (SWRD/AVGS/AVEM/JPGL)
+    "retorno_equity_base": 0.0485,      # 4.85% real BRL ponderado base (SWRD 50%/AVGS 30%/AVEM 20%, aprovado FI-premissas-retorno 2026-04-01)
     "retorno_ipca_plus":   0.0600,      # 6.0% real líquido HTM 14 anos
     "volatilidade_equity": 0.168,       # 16.8% — equity equivalent FR-equity-equivalent
     "t_dist_df":           5,           # fat tails (t-student df=5)

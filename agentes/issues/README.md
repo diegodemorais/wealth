@@ -26,7 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | FR-fire-execution-plan | Playbook operacional do FIRE Day | FIRE | Alta |
-| 2 | FR-currency-mismatch-fire | Risco BRL/USD na desacumulação | FIRE | Alta |
+| ~~2~~ | ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | 3 | TX-saude-fire | Custo real de saúde pós-FIRE | Wealth | Alta |
 | 4 | FR-bond-tent-transicao | Bond tent — quando e como iniciar transicao de 79% equity? | FIRE | Media |
 
@@ -41,6 +41,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-currency-mismatch-fire | Risco BRL/USD na desacumulação | FIRE | 2026-04-02 | FIRE 2040 base: TD 2040 vence no FIRE Day → gap eliminado. P(FIRE) 86.9%. |
 | FI-premissas-retorno | Reconciliar premissas SWRD/AVGS/AVEM: 3 erros fonte | Factor | 2026-04-01 | SWRD 3.7% / AVGS 5.0% / AVEM 5.0% USD. Base ponderado B: 4.85% (era 5.85%). |
 | HD-python-stack-v2 | Capacidades analíticas avançadas | Head | 2026-04-01 | 4/4 caps. tlh_lotes.json com lotes reais. ibkr_analysis.py: 5 outputs. |
 | FI-equity-redistribuicao | 20% liberados do JPGL — redistribuição equity | Factor | 2026-04-01 | **SWRD 50% / AVGS 30% / AVEM 20%. Unanimidade 7/7 (13.5x).** Design 50/50 neutro/fatorial preservado. Via aportes. |
