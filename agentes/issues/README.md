@@ -28,7 +28,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~2~~ | ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~3~~ | ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
-| — | — | — | — | — |
+| 1 | HD-adams-capitalhumano | Capital humano correlacionado — 79% equity calibrado? | Head | Alta |
+| 2 | FI-vanguard-smallcap-ucits | Monitor lançamento Vanguard FTSE Global Small-Cap UCITS | Factor | Baixa |
 
 ### Doing
 > Issues em andamento
