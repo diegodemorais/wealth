@@ -83,6 +83,41 @@ Regressão FF5+MOM nos ETFs reais LSE. IFSW = iShares MSCI World Multifactor (al
 ### JPGL: disambiguacao de ticker
 JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc), ISIN IE00BJRCLL96, domiciliado na Irlanda, listado na LSE. TER 0,19%. Accumulating (reinveste dividendos). Existe o ticker JPLG (letras invertidas) na LSE que pode gerar confusao — nao e o mesmo. Em qualquer contexto, JPGL = multifator Irlanda.
 
+### ETFs atuais: ISINs corretos e natureza dos fundos (2026-04-01)
+
+**AVGS e AVEM são fundos ATIVOS (Avantis), não ETFs indexados passivos.** Tracking difference não se aplica — a métrica relevante é excess return vs benchmark.
+
+| ETF | ISIN Correto | Tipo | TER | AUM |
+|-----|-------------|------|-----|-----|
+| SWRD | IE00BFY0GT14 | Passivo (MSCI World) | 0.12% | ~€5B+ |
+| AVGS | **IE0003R87OG3** | **Ativo** (Avantis Global Small Cap Value) | 0.39% | ~€300M |
+| AVEM | **IE000K975W13** | **Ativo** (Avantis EM) | 0.39% | ~US$155M (baixo — monitorar) |
+
+**Atenção AVEM**: AUM US$155M está abaixo do threshold de conforto €300M. Monitorar crescimento. Se AUM < €100M por 2 trimestres: abrir issue sobre substituto (FLXE ou similar).
+
+### Ken French Data — Evidências Empíricas (atualizado 2026-04-01)
+
+Dados: Dev ex-US e EM 5-factor (fev/2026). Global apenas até jun/2019 (Bloomberg license expirado).
+
+**Retornos anualizados Dev ex-US (% USD, geométrico):**
+
+| Fator | Full History | Pós-2000 | Pós-2010 | Pós-2015 |
+|-------|-------------|----------|----------|----------|
+| Mkt-RF | +4,0% | +3,2% | +5,9% | +4,2% |
+| SMB | +0,6% | +0,1% | **-1,7%** | **-2,0%** |
+| HML | +3,4% | +1,8% | +1,7% | **+4,2%** |
+| RMW | +3,2% | +2,9% | +2,7% | +2,8% |
+| CMA | +2,1% | +2,2% | +2,0% | +2,1% |
+
+**Achados críticos para calibração:**
+1. **SMB negativo post-2010** em todos os universos (Dev ex-US, EM). Small cap underperformou. Prêmio histórico não se manteve na última década.
+2. **HML recuperando**: +4,2% post-2015 em Dev ex-US — value voltou após "death of value" 2017-2020.
+3. **RMW (Profitability) mais consistente**: Sharpe 0.834 full history, pouca variação temporal. Fator mais robusto empiricamente.
+4. **Combinado SMB+HML+RMW Dev ex-US pós-2015**: +5,25%/ano — suporta a premissa AVGS de 5.0% USD (com haircut 58%).
+5. **EM**: Mkt-RF forte (+6,1% post-2015), HML +2,8%, RMW +3,8%. Suporta AVEM 5.0% USD.
+
+**Implicação para premissas da carteira**: Premissas AVGS/AVEM 5.0% USD são defensáveis pelos dados Dev ex-US pós-2015 (+5.25% combinado). SMB negativo é a principal fonte de incerteza — AVGS compensa com qualidade (RMW) e valor (HML). Status: ✓ Alinhado com haircut 58% aplicado.
+
 ---
 
 ## Gatilhos Ativos

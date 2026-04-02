@@ -19,10 +19,10 @@
 
 ## Premissas Pessoais (impactam projecoes)
 
-- **Estado civil**: Solteiro (marco 2026)
-- **Filhos**: Nenhum
+- **Estado civil**: Solteiro, namorada (casamento iminente ~2026-2027). Filho previsto ~2028.
 - **Moradia**: Sao Paulo, Pinheiros
-- **ATENCAO**: Custo de vida de R$250k/ano e estimativa atual para solteiro. Casamento, filhos ou mudanca de cidade/casa podem alterar significativamente essa estimativa e, consequentemente, o SWR, o patrimonio-alvo e a data de FIRE. Reavaliar sempre que houver mudanca de vida.
+- **BASELINE**: R$250k/ano atual (solteiro). Com filho ~2028: recalibrar para R$270-300k+ (educacao, saude, moradia maior). Impacto estimado: +1 a 2 anos no FIRE date ou aumento target patrimonial ~R$1M.
+- **ATENCAO**: Reavaliar SWR, patrimonio-alvo e FIRE date ao casar ou ter filho. Nao assumir R$250k estatico.
 
 ---
 
@@ -49,6 +49,45 @@
 | 2026-03-27 | FR-fire2040 age sweep | FIRE 50-60: P=78.8% a 95.5%. Valor marginal: +2.4pp/ano (anos 1-5), +1.0pp/ano (6-10). FIRE 55 = primeiro limiar 90%. Guardrails valem +12.5pp no FIRE 50. Script: monte_carlo_fire_age_sweep.py |
 | 2026-03-27 | FR-fire2040 bond tent | FIRE 53 bond tent 12%: P=86.9% base / 93.7% favoravel / 81.0% stress. Bond tent = +0.4pp base / +1.8pp bear (5% do ganho total — 95% vem do patrimonio maior). Patrimonio mediano FIRE 53: R$13.4M. Script: monte_carlo_fire2040_bondtent.py |
 | 2026-03-22 | FIRE-002 v2 Plano B (corrigido) | Perda renda = aposentadoria forcada (gastos imediatos). Perda 42: SWR 4.92%, sobrevive no deterministico (R$2M aos 90) mas vulneravel a vol. Perda 45+: robusto. Threshold auto-sustentavel: pat R$5.47M. Cenarios combinados (perda + ret adverso) falham — human capital hedge de R$5-8k/mes salva todos. Nenhuma acao preventiva agora |
+
+## Dados Empíricos — Spending Smile e Saúde (2026-04-01)
+
+### Spending Smile Internacional (fontes validadas)
+
+| Fonte | Formato | Queda go-go → no-go | Detalhe |
+|-------|---------|--------------------|---------|
+| **Blanchett (2014)** | Curva em U | -26% trough (age 84) | -1%/ano go-go, -2%/ano slow-go. Trough real -26% aos 84. Rebound final. |
+| **JPMorgan Guide** | Smile moderado | -27% vs pico | Despesas não-discricionárias sobem, total cai |
+| **BLS CEX (EUA)** | Quasi-U | -30% (55-74 vs 75+) | Saúde dobra como % do total aos 75+ |
+| **EBRI/Banerjee** | Queda consistente | -1,5%/ano real | HRS data, 2001-2009 |
+
+### Saúde Brasil — Dados ANS e IPCAM (2026-04-01)
+
+**ANS Faixas Etárias (RN 63/2003 — limite máximo):**
+| Faixa | Multiplicador máximo |
+|-------|---------------------|
+| 0-18 | 1,0× (base) |
+| 19-23 | 1,5× |
+| 24-28 | 1,5× |
+| 29-33 | 2,0× |
+| 34-38 | 2,0× |
+| 39-43 | 2,5× |
+| 44-48 | 3,0× |
+| 49-53 | 3,0× |
+| 54-58 | 4,0× |
+| **59-63** | **5,0×** |
+| **64+** | **6,0× (cap máximo)** |
+
+**Salto crítico**: dos 58 para 59 anos = +116-138% no prêmio base. Diego (50 anos no FIRE) pagará ~3-4× mais que a faixa base. Aos 64+: 6× base = custo dominante.
+
+**VCMH (Variação de Custo Médico Hospitalar — IESS):**
+- Média 18 anos: VCMH supera IPCA em **+2,7%/ano**
+- 2024: VCMH +11,3% vs IPCA ~4,8% → diferencial +6,5pp (acima da média)
+- Implicação: inflator saúde no modelo FIRE deve ser IPCA + 2,7%/ano mínimo (base), não IPCA geral
+
+**IMA-B 2024**: -2,44% (marcação a mercado adversa). IMA-B5+: -4,2%. Confirma: HTM é estratégia correta para IPCA+ — não sair por MtM.
+
+---
 
 ## Conhecimento Validado — Spending Smile Brasil (2026-03-27)
 

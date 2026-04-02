@@ -11,8 +11,8 @@ Buscar tracking difference (TD), tracking error (TE), TER e spread dos ETFs UCIT
 | ETF | ISIN | Papel |
 |-----|------|-------|
 | SWRD | IE00BFY0GT14 | Core equity global (50%) |
-| AVGS | IE00077FRP95 | SCV global (30%) |
-| AVEM | IE0003F1AAE9 | EM multi-factor (20%) |
+| AVGS | IE0003R87OG3 | SCV global (30%) — fundo ATIVO (Avantis) |
+| AVEM | IE000K975W13 | EM multi-factor (20%) — fundo ATIVO (Avantis) |
 
 ETFs transitórios (monitorar mas não priorizar): AVUV, AVDV, AVES, DGS, USSC
 
@@ -31,8 +31,8 @@ Exemplo para SWRD: `https://www.trackingdifferences.com/ETF/ISIN/IE00BFY0GT14`
 **Opção B — WebSearch fallback:**
 ```
 site:trackingdifferences.com "SWRD" OR "IE00BFY0GT14"
-site:trackingdifferences.com "AVGS" OR "IE00077FRP95"
-site:trackingdifferences.com "AVEM" OR "IE0003F1AAE9"
+site:trackingdifferences.com "AVGS" OR "IE0003R87OG3"
+site:trackingdifferences.com "AVEM" OR "IE000K975W13"
 ```
 
 ### Passo 2: Extrair métricas chave

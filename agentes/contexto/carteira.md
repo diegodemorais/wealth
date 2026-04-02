@@ -1,8 +1,8 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-03-30
+> Atualizado em: 2026-04-01
 > Este arquivo e a fonte de verdade para todos os agentes.
-> Cambio de referencia: R$ 5,25
+> Cambio de referencia: R$ 5,16 (PTAX BCB 2026-04-01)
 
 ---
 
@@ -15,7 +15,7 @@
 - **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano
-- **Estado civil**: Solteiro, sem filhos (marco 2026). **GATILHO**: casamento iminente — quando decidir, recalibrar: custo de vida, FIRE date, sucessao, estrutura empresarial, testamento
+- **Estado civil**: Solteiro, namorada (casamento iminente ~2026-2027). Filho previsto ~2028. **GATILHO**: ao casar/ter filho, recalibrar imediatamente: custo de vida (R$250k → R$270-300k+), FIRE date, sucessao, seguro de vida (gap critico), estrutura empresarial, testamento
 - **Empresas**: 2 PJs no Simples Nacional (contabilidade: Contabilizei)
 - **INSS (extrato 26/03/2026)**: NIT 119.60772.92-3. CI desde 08/2003. Teto desde 01/2017. Tempo total: ~22a6m. Benefício estimado (65 anos, parar no FIRE/50): ~R$46-55k/ano real 2026 — requer validação previdenciária.
 - **Imóveis**: Apartamento Pinheiros: valor ~R$820k, hipoteca SAC R$453.417, termina 15/02/2051, equity ~R$367k. Terreno Nova Odessa: R$150k.
@@ -56,7 +56,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 | IPCA+ existente | 0,4% | — | R$ 13.308 | Tesouro IPCA+ 2040 | Posicao legada. Sera incorporada ao bloco IPCA+ longo |
 | IPCA+ longo | ~0,4% | **15%** | ~R$ 523k target | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para JPGL. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |
-| Renda+ 2065 | 3,0% | <=5% | ~R$ 99.673 | Renda+ 2065 | Duration 43,6. MtM -11% em mar/2026 (taxa subiu). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
+| Renda+ 2065 | 3,0% | <=5% | ~R$ 99.673 | Renda+ 2065 | Duration 43,6. Taxa atual: 7,08% (2026-04-01). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
 | Cripto | 3,1% | **3%** | ~R$ 103.400 | HODL11 + spot legado | BTC $67.822 (30/Mar). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
 ---
@@ -77,7 +77,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 
 *Equity pesos absolutos = % dentro do equity block × % equity total do portfólio (79%). Equity block: SWRD 50% / AVGS 30% / AVEM 20% (aprovado FI-equity-redistribuicao, 2026-04-01).*
 
-IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53). Pos-vencimento, capital realocado para equity. IPCA+ curto (~2 anos duration) comprado perto dos 50 como SoRR buffer — substitui Selic do plano original. Decisao HD-006 (final 2026-03-22): alvo 15% com breakeven all-in ~5.5% e piso operacional 6.0%. A 7.16%, IPCA+ vence equity em todos os cenarios de factor premium.
+IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53). Pos-vencimento, capital realocado para equity. IPCA+ curto (~2 anos duration) comprado perto dos 50 como SoRR buffer — substitui Selic do plano original. Decisao HD-006 (final 2026-03-22): alvo 15% com breakeven all-in ~5.5% e piso operacional 6.0%. A 7.21% (2026-04-01), IPCA+ vence equity em todos os cenarios de factor premium.
 
 ---
 
@@ -85,7 +85,7 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 1. ~~**AVEM -> JPGL parcial**~~ — JPGL eliminado (FI-jpgl-zerobased, 2026-04-01). Não há migração futura para JPGL.
 2. **Ativos transitorios**: nao comprar mais — aportar nos alvos UCITS (AVGS, AVEM, JPGL), vende-los na fase de usufruto
-3. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,16% > piso 6,0%). Se taxa cair para <6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo). **Prioridade RF: IPCA+ antes do Renda+ (gap 14,2pp vs 1,8pp)**
+3. **IPCA+ longo ate 15%**: DCA em TD 2040 (80%) + TD 2050 (20%) enquanto taxa >= 6,0%. **DCA ATIVO** (taxa atual 7,21% IPCA+ 2040 > piso 6,0%). Se taxa cair para <6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM. Gatilho de venda: NENHUM (exceto risco soberano extremo). **Prioridade RF: IPCA+ antes do Renda+ (gap 14,2pp vs 1,8pp)**
 4. **Reserva**: migrar de IPCA+ 2029 para Selic no vencimento (2029)
 5. **Renda+ 2065**: compra DCA ate 5% se taxa >= 6,5%. Venda tudo se taxa <= 6,0% — mas aguardar 720 dias se holding < 2 anos (carry domina reducao de IR). Se taxa 9%+: manter pelo carrego. Ver cenarios validados: agentes/contexto/renda-plus-2065-cenarios.md
 6. **IPCA+ curto 3%**: comprar perto dos 50 (SoRR buffer, ~2 anos duration). Substitui Selic no plano original
@@ -140,12 +140,12 @@ Retorno real esperado em USD: mediana multi-fonte (AQR, Vanguard VCMM, JPMorgan 
 #### IPCA+ (hold to maturity)
 | Parametro | Valor |
 |-----------|-------|
-| Taxa bruta | 7.16% |
+| Taxa bruta | 7.21% (2026-04-01) |
 | Custodia B3 | -0.20% |
-| Taxa pos-custodia | 6.96% |
-| Nominal bruto | (1.0696)(1.04)-1 = 11.24% |
-| Nominal liquido (IR 15%) | 11.24% × 0.85 = 9.55% |
-| **Real liquido HTM 14 anos** | **(1.0955/1.04)-1 = ~6.0%** |
+| Taxa pos-custodia | 7.01% |
+| Nominal bruto | (1.0701)(1.04)-1 = 11.29% |
+| Nominal liquido (IR 15%) | 11.29% × 0.85 = 9.60% |
+| **Real liquido HTM 14 anos** | **(1.0960/1.04)-1 = ~6.0%** |
 
 Nota: IPCA+ liquido ~6.0% considera hold to maturity 14 anos. O calculo anterior de 5.34% usava IR 15% incidindo sobre TODO o nominal. O valor real liquido depende do holding period e do IPCA efetivo.
 
@@ -180,7 +180,7 @@ Pesos do bloco equity: **SWRD 50% / AVGS 30% / AVEM 20%** (aprovado FI-equity-re
 |----------|------|-----------|--------|
 | Depreciacao real BRL | 0.5%/ano | 1.5%/ano | 0%/ano |
 | Equity real ponderado em BRL (pre-tax) | **4.85%** | **5.85%** | **4.35%** |
-| IPCA+ 2040 liquido HTM 14 anos | **~6.0%/ano** | — | — |
+| IPCA+ 2040 liquido HTM 14 anos (7.21% bruto) | **~6.0%/ano** | — | — |
 | IPCA medio estimado | 4%/ano | — | — |
 | Breakeven IPCA+ bruto all-in vs equity | **~5.5%** | — | — |
 | Piso operacional IPCA+ | **6.0%** | — | — |

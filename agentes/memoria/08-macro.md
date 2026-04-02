@@ -24,7 +24,7 @@
 
 ## Snapshot Macro Atual
 
-> **Ultima atualizacao completa (revalidacao profunda): 2026-03-20**
+> **Ultima atualizacao completa (revalidacao profunda): 2026-04-01** (via /macro-bcb + /fred-shiller)
 
 ### Brasil
 
@@ -32,30 +32,40 @@
 |-----------|-------|------|-------|
 | Selic | **14,75%** | 2026-03-18 | COPOM (corte de 0,25pp, unanime) |
 | Focus Selic terminal 2026 | **12,25%** | 2026-03-16 | BCB Focus |
-| Focus Selic 2027 | **10,50%** | 2026-03-16 | BCB Focus (estavel 57 semanas) |
-| Focus IPCA 2026 | **4,10%** | 2026-03-16 | BCB Focus (salto de 19bps em 1 semana -- atencao) |
-| IPCA+ 2040 | ~**7,0-7,3%** (percentil ~80-85) | 2026-03-20 | Tesouro Direto |
-| Renda+ 2065 | IPCA + **~7,0%** (range 6,98-7,02%) | 2026-03-20 | Tesouro Direto |
-| IPCA 12m | **3,81%** | fev/2026 | IBGE |
-| BRL/USD | **R$ 5,24** | 2026-03-19 | BCB |
-| BTC/USD | ~$70.841 | 2026-03-19 | CoinMarketCap |
-| Petroleo Brent | **$95-120** (alta volatilidade) | 2026-03-20 | Conflito Iran -- disrupcao Hormuz |
+| Focus Selic 2027 | **10,50%** | 2026-03-16 | BCB Focus |
+| Focus IPCA 2026 | **4,10%** | 2026-03-16 | BCB Focus |
+| IPCA+ 2040 | **7,21%** | 2026-04-01 | Investidor10 / Tesouro Direto |
+| Renda+ 2065 | **7,08%** | 2026-04-01 | Investidor10 / Tesouro Direto |
+| IPCA 12m | **3,81%** | fev/2026 | IBGE (BCB série 433) |
+| BRL/USD (PTAX) | **R$ 5,1606** | 2026-04-01 | BCB PTAX (série 1) |
+| BTC/USD | ~$83.500 | 2026-04-01 | Mercado |
+| Petroleo Brent | ~$75 | 2026-04-01 | Conflito Iran dissipado vs OPEC+ |
 | Divida bruta/PIB (proj. 2026) | **~94,7%** | 2026-03 | IMF Article IV |
-| Resultado primario (real, proj. 2026) | **~-0,6% PIB** | 2026-03 | Deloitte/Coface (excl. exclusoes contabeis) |
+| Resultado primario (real, proj. 2026) | **~-0,6% PIB** | 2026-03 | Deloitte/Coface |
 
 ### Global
 
 | Indicador | Valor | Data | Fonte |
 |-----------|-------|------|-------|
-| Fed Funds Rate | **3,50-3,75%** | 2026-03-18 | FOMC (hold, 11-1) |
-| Dot plot Fed 2026 | **1 corte projetado** | 2026-03-18 | FOMC |
-| GDP EUA 2026 | **2,4%** | 2026-03-18 | FOMC (revisado para cima) |
-| Core PCE EUA | **2,7%** | 2026-03-18 | FOMC |
+| Fed Funds Rate | **3,64%** | 2026-04-01 | FRED FEDFUNDS |
+| US 10y Treasury | ~**4,2%** | 2026-04-01 | FRED DGS10 |
+| US 10y Real (TIPS) | **2,00%** | 2026-04-01 | FRED DFII10 |
+| Spread IPCA+ BR vs TIPS EUA | **~520 bps** | 2026-04-01 | Calculado: 7.21% - 2.00% |
+| CAPE S&P 500 (Shiller) | **37,91** (98º percentil) | 2026-04-01 | Shiller/Multpl |
+| VIX | **25,25** | 2026-04-01 | FRED VIXCLS |
 | MSCI World YTD | **+2,99%** | fev/2026 | MSCI |
 | MSCI EM YTD | **+14,83%** | fev/2026 | MSCI |
 
-> Atualizar mensalmente via WebSearch. Proximo IPCA: 10/abr/2026.
+> Atualizar mensalmente via WebSearch + /macro-bcb. Proximo IPCA: 10/abr/2026.
 > Proxima reuniao Copom: 28-29/abr/2026. Proxima FOMC: 6-7/mai/2026.
+
+### BRL/USD Histórico (FRED DEXBZUS, 1994-2026) — análise de ciclos cambiais
+
+Dado crítico para FR-currency-mismatch-fire:
+- **Janelas 5 anos**: BRL deprecia em **74,1% das janelas** (média +7,93%/ano). Aprecia em 25,9% (média -3,12%/ano)
+- **Janelas 10 anos**: BRL deprecia em **96,7%** das janelas
+- **Períodos de apreciação**: 2003-2011 (Lula boom), breve 2016-2018 pós-impeachment
+- **Implicação para carteira**: premissa base de 0,5% depreciação real/ano é CONSERVADORA vs histórico. Favorável valida BRL como hedge natural do equity USD
 
 ### Contexto do ciclo (2026-03-20 -- revalidacao profunda)
 - Copom iniciou ciclo de cortes com 0,25pp (cauteloso por conflito Iran)
@@ -71,8 +81,8 @@
 - EM outperformando DM significativamente (+14,83% vs +2,99% YTD)
 - Spread IPCA+ BR (~7%) vs TIPS EUA (~2%) = ~500bps -- excepcional, reflete risk premium
 
-### Valuations globais (2026-03-20)
-- S&P 500 CAPE: **~38** (2x media historica ~17). So esteve aqui em 1929 e 2000
+### Valuations globais (2026-04-01)
+- S&P 500 CAPE: **37,91** (98º percentil histórico, 2x media ~17). Só esteve aqui em 1929 e 2000
 - MSCI World CAPE: **27,7** (acima media ~20)
 - MSCI World P/E forward: **24,3**
 - Europa CAPE: **~16-18** (proximo/abaixo media)

@@ -11,8 +11,8 @@ Descobrir novos ETFs UCITS relevantes, comparar alternativas aos ETFs atuais, e 
 | ETF | ISIN | Papel |
 |-----|------|-------|
 | SWRD | IE00BFY0GT14 | Core equity global (50%) |
-| AVGS | IE00077FRP95 | SCV global (30%) |
-| AVEM | IE0003F1AAE9 | EM multi-factor (20%) |
+| AVGS | IE0003R87OG3 | SCV global (30%) — fundo ATIVO (Avantis) |
+| AVEM | IE000K975W13 | EM multi-factor (20%) — fundo ATIVO (Avantis) |
 
 ## Casos de Uso
 
