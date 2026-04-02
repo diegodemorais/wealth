@@ -65,7 +65,7 @@
 | Ativar em | Dominio | Gatilho | Condicao | Acao |
 |-----------|---------|---------|----------|------|
 | Jan/2031 | Equity / Bond tent | Glide path condicional | Diego com 44 anos + IPCA+ bruto >= 6.5% **e** curva de juros sinaliza manutenção acima de 6% por 5+ anos | Avaliar redução gradual de equity (79% → ~60%) via aportes direcionados para IPCA+. Se IPCA+ < 6%: manter 79% sem ação. Ref: FR-bond-tent-transicao (2026-04-02). Não incondicional — regime-dependent |
-| Jan/2035 | IPCA+ Curto | SoRR pre-FIRE | Diego com 48 anos + taxa IPCA+ curto >= 6.0% (monitorar mensalmente a partir de jan/2035) | Comprar TD com vencimento ~2 anos antes do FIRE date previsto, 3% do patrimonio |
+| Jan/2035 | IPCA+ Curto | SoRR pre-FIRE | Diego com 48 anos + **dois sinais simultâneos**: (1) taxa IPCA+ curto >= 6.5% **E** (2) gastos reais médios dos últimos 2 anos > R$270k | Comprar TD com vencimento ~2 anos antes do FIRE date previsto, 3% do patrimônio. Se apenas um sinal ativo: não comprar — TD 2040 sozinho cobre 6+ anos a R$250-270k |
 | Jan/2038 | FIRE | RF pos-tent | Diego com 51-52 anos (2038-2039) + IPCA+ longo >= 6.0% | Avaliar compra IPCA+ ~2045-2050 (3-5% portfolio) para cobrir gap pos-tent (anos 53-60) |
 | Jan/2047 | FIRE | INSS integration | Diego com 60 anos | Recalcular withdrawal rate incluindo INSS projetado aos 65. Atualizar guardrails se INSS > R$40k/ano |
 

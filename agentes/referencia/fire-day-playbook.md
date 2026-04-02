@@ -38,19 +38,22 @@ Se gatilho financeiro atingido e Diego não sair em 12 meses → Behavioral acio
 | Instrumento | Bruto | IR (15% sobre ganho) | **Líquido estimado** |
 |-------------|-------|---------------------|---------------------|
 | TD 2040 (80% bloco IPCA+) | ~R$1,906M | ~R$223k | **~R$1,683M** |
-| IPCA+ curto 3% (comprar aos 50-51) | ~R$500k | ~R$50k | **~R$450k** |
-| **Total bond pool** | **~R$2,4M** | **~R$273k** | **~R$2,1M líquido** |
+| IPCA+ curto 3% (condicional: taxa >= 6.5% **e** gastos > R$270k) | ~R$500k | ~R$50k | **~R$450k** |
+| **Total bond pool (com curto)** | **~R$2,4M** | **~R$273k** | **~R$2,1M líquido** |
+| **Total bond pool (sem curto)** | **~R$1,9M** | **~R$223k** | **~R$1,683M líquido** |
 
 *TD 2040: crédito automático na conta Tesouro Direto (Nubank). IR retido na fonte. Nenhuma ação necessária.*
 *Alíquota IR Tesouro: 15% flat para qualquer prazo acima de 720 dias (tabela regressiva, Lei 11.033/2004).*
 
 ### Cobertura do bond pool
 
-| Gasto anual | Anos cobertos (pool R$2,1M) |
-|-------------|---------------------------|
-| R$250k (base) | ~8,4 anos |
-| R$280k (Go-Go escalado) | ~7,5 anos |
-| R$320k (Go-Go + overhead FIRE) | ~6,6 anos |
+| Gasto anual | Pool base (R$1,683M) | Pool c/ curto (R$2,1M) |
+|-------------|---------------------|------------------------|
+| R$250k (base) | ~6,7 anos | ~8,4 anos |
+| R$280k (Go-Go realista) | ~6,0 anos | ~7,5 anos |
+| R$320k (Go-Go + overhead) | ~5,3 anos | ~6,6 anos |
+
+**Pool base (TD 2040 solo) é suficiente para R$250-270k.** IPCA+ curto só comprar se gastos reais > R$270k (sinal duplo — ver gatilhos.md jan/2035).
 
 **Atenção:** pool cobre gastos em BRL nominal. Se inflação pessoal de Diego for IPCA+3% (saúde), cobertura real reduz para ~6-7 anos.
 
