@@ -28,8 +28,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~2~~ | ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~3~~ | ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
-| 1 | HD-adams-capitalhumano | Capital humano correlacionado — 79% equity calibrado? | Head | Alta |
-| 2 | FI-vanguard-smallcap-ucits | Monitor lançamento Vanguard FTSE Global Small-Cap UCITS | Factor | Baixa |
+| 1 | FI-vanguard-smallcap-ucits | Monitor lançamento Vanguard FTSE Global Small-Cap UCITS | Factor | Baixa |
 
 ### Doing
 > Issues em andamento
@@ -42,6 +41,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-adams-capitalhumano | Capital humano correlacionado — 79% equity calibrado? | Head | 2026-04-02 | 79% mantido. DCA IPCA+ = hedge duplo (SoRR + Adams). Correlação 0.50, atenuada por BRL/USD. |
 | FR-bond-tent-transicao | Bond tent — quando iniciar transição 79% equity? | FIRE | 2026-04-02 | Manter 79%. Bond pool natural = Pfau/Kitces implícito. Gatilho condicional jan/2031. |
 | FR-fire-execution-plan | Playbook operacional do FIRE Day | FIRE | 2026-04-02 | Playbook criado. Bond pool ~R$2,1M líq. Gate único. Decisão 7 reformulada. Seguro vida urgente. |
 | TX-saude-fire | Custo real de saúde pós-FIRE | Wealth | 2026-04-02 | SAUDE_BASE 37,9k→16k; VCMH 2,7%; ANS discreto. P(FIRE) stress +2,5pp. |
