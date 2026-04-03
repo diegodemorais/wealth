@@ -14,11 +14,11 @@
 | Ticker | Nome curto | Acc/Dist | Classificação | Semelhante a | Status | Conviction | Próxima Revisão |
 |--------|-----------|----------|---------------|-------------|--------|------------|-----------------|
 | — | Vanguard Global Small-Cap UCITS | Acc | Passivo MCW | AVGS | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
-| FLXE | Franklin LibertyQ EM Multi-Factor | Acc | Smart Beta | AVEM | 🔍 Em avaliação | Baixa | Out/2026 |
+| FLXE | Franklin LibertyQ EM Multi-Factor | Acc | Smart Beta | AVEM | 🔍 Em avaliação | **Muito baixa** | Out/2026 |
 | IWDS | iShares MSCI World Swap | Acc | Sintético (swap) | SWRD | 🔍 Em avaliação | Média | Mar/2027 |
 | AVWC/AVGC | Avantis Global Equity UCITS (DM all-cap, light tilt) | Acc | Factor Active | SWRD+AVGS (DM only) | 🔍 Em avaliação | Baixa | Abr/2027 |
 | — | Vanguard FTSE All-World All-Cap UCITS | Acc | Passivo MCW | SWRD+AVGS+AVEM | ⏳ Aguardando lançamento | Baixa | Mai/2026 |
-| IFSW | iShares STOXX World Equity Multifactor UCITS | Acc | Smart Beta | JPGL | 🔍 Em avaliação | Baixa | Out/2026 |
+| IFSW | iShares STOXX World Equity Multifactor UCITS | Acc | Smart Beta | JPGL | 🔍 Em avaliação | **Muito baixa** | Anual |
 | JPGL | JPMorgan Global Equity Multi-Factor UCITS | Acc | Factor Active | — (ex-carteira) | 👁️ Reentrada condicional | Baixa | Out/2026 |
 | DDGC/DEGC | Dimensional Global Core Equity UCITS | Acc | Factor Active | AVGS+AVEM | 🆕 Lançado nov/2025 | Média | Nov/2026 |
 | DDGT | Dimensional Global Targeted Value UCITS | Acc | Factor Active | AVGS (DM SCV puro) | 🆕 Lançado nov/2025 | **Alta** | Nov/2026 |
@@ -96,6 +96,7 @@
 | **Tese** | Não é ETF passivo — é Smart Beta com seleção rules-based no universo EM por: quality (ROE, ROA, debt/equity), value (P/B, P/CF), momentum (12m-1m) e low volatility (vol realizada). Mencionado no RR thread 31258 como potencialmente tendo factor loadings EM superiores a AVEM. Diferença metodológica: AVEM tem tilt value+profitability (HML+RMW) ativo. FLXE tem quality+value+momentum+low vol via regras fixas. Complementar, não substituto. |
 | **Diferença crítica vs AVEM** | AVEM = gestão ativa Avantis (HML + RMW). FLXE = smart beta LibertyQ (quality + value + momentum + low vol). FLXE tem momentum (AVEM não enfatiza) mas AVEM tem convicção maior em value puro. TER similar (0.30% vs 0.23%). AUM de FLXE muito menor (€63M vs AVEM). |
 | **⚠️ Risco de liquidação** | AUM de €63M é baixo para ETF UCITS. Franklin pode encerrar se não captar escala. Monitorar AUM mensalmente. Se cair abaixo de €30M → mover para Descartados. |
+| **Conviction rebaixada (FI-etf-deep-review, 2026-04-03)** | Conviction rebaixada para Muito baixa. Risco de fechamento dominante + loadings HML/RMW não verificados empiricamente (hipótese de forum RR 31258, não regressão). Manter no radar apenas para acompanhar AUM. |
 | **Motivo de monitorar** | Smart beta com exposição fatorial multi-dimensional em EM. Potencialmente complementar ao AVEM. Baixo custo relativo. |
 | **Gatilho para considerar** | AUM > €150M (viabilidade) **E** factor loadings HML + RMW + MOM documentados (Ken French EM) por 12 meses **E** TD all-in < AVEM por período igual |
 | **Como descobrimos** | RR thread 31258 (scan 2026-03-26) — menção de factor loading FLXE > AVEM hipótese |
@@ -235,6 +236,7 @@
 | **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan — trackingdifferences.com) |
 | **Semelhante a** | JPGL (mesmo espaço multifator world UCITS) |
 | **⚠️ Mudança de índice** | Em jan/2025 trocou de MSCI → STOXX. Nova metodologia inclui low vol e asset allocation factor framework. Regressão histórica captura período misto pré/pós-mudança. |
+| **Conviction rebaixada (FI-etf-deep-review, 2026-04-03)** | Conviction rebaixada para Muito baixa. Regressão empírica (FF5+MOM jan/2020-mar/2026) mostrou R²=0.379, CMA=-0.182***, RMW n.s. — perfil fatorial ruidoso. TD 0.29% não é representativa do produto atual (histórico misto pré/pós mudança de índice). Monitoramento reduzido para anual. |
 | **Tese** | Smart beta multifator world: value + quality + momentum + low size. TER 0.50% parece alto mas TD 0.29%/ano via securities lending — custo all-in competitivo. AUM EUR 660M = liquidez adequada. 10 anos de track record. |
 | **Diferença crítica vs JPGL** | JPGL usa momentum como negative screen (metodologia exclusiva). IFSW é multifactor tradicional. TER IFSW 0.50% vs JPGL 0.19% — mas TD IFSW 0.29%/ano é competitiva. |
 | **Motivo de monitorar** | Alternativa se JPGL fechar ou deteriorar. TD melhor que TER sugere boa operação. |
@@ -266,8 +268,9 @@
 | **TER** | 0.19% (corte de 0.45% em 2026-03-23) |
 | **Data de lançamento** | 2017 |
 | **AUM** | €207M (2026-04-02) — ⚠️ queda de €245M, outflows pós-corte de TER |
+| **Custos operacionais (Annual Report dez/2024)** | Transaction costs: **0.02%** (vs 0.11% em 2023, 0.13% em 2022). WHT drag: **0.34%** (11.76% WHT rate). Securities lending: 0.02%. Total costs all-in: **0.56%** (vs 0.71% em 2022). Fonte: RR thread 31258 post 3747 (yampu), relatório anual JPM ICAV dez/2024. |
 | **Disponível IBKR** | Sim |
-| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan — justETF) |
+| **Última atualização dos dados** | 2026-04-03 (RR scan — custos operacionais atualizados via Annual Report dez/2024) |
 | **Semelhante a** | Ex-carteira (era 20% → zerado) |
 | **Status especial** | **Eliminado da carteira em 2026-04-01 (FI-jpgl-zerobased). Não recomprar sem gatilho explícito.** |
 | **Tese original** | Multifactor UCITS com momentum negative screen (metodologia exclusiva JPMorgan). Correlação 0.95 com combinação SWRD+AVGS — sobreposição excessiva. AVGS dominou em análise zero-based. |
