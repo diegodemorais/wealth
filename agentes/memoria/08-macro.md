@@ -22,23 +22,77 @@
 
 ---
 
+## Snapshot Abril/2026
+
+> **Data do snapshot:** 2026-04-03
+> **Auditoria desta sessao:** 2026-04-03 (APIs BCB serie 432, 13522, 1 + Investidor10 + FRED FEDFUNDS + FRED DFII10 + FRED DGS10 + FRED VIXCLS)
+> **Resultado da auditoria:** todos os dados confirmados — nenhuma divergencia encontrada vs snapshot /macro-bcb do mesmo dia
+
+### Delta vs Snapshot Marco/2026 (2026-03-20)
+
+| Indicador | Marco/2026 | Abril/2026 | Variacao | Impacto |
+|-----------|-----------|-----------|---------|---------|
+| Selic Meta | 14,75% | **14,75%** | 0 bps | Sem mudanca (COPOM 19/mar cortou 0,25pp para 14,75%) |
+| IPCA 12m | 3,81% (fev) | **3,81% (fev)** | — | Dado de marco/2026 pendente (divulgacao 10/abr/2026) |
+| BRL/USD PTAX | ~5,20 | **5,1655** | -0,3% | BRL levemente mais forte |
+| IPCA+ 2040 | ~7,20% | **7,23%** | +3 bps | Estavel — dentro do regime |
+| IPCA+ 2050 | — | **7,00%** | — | Novo registro no snapshot |
+| Renda+ 2065 | 6,87% (mar/18) | **6,98%** | +11 bps | Alta desde 18/mar. Ainda longe do gatilho 6,5% (venda) |
+| Fed Funds | 4,33% (abr/25) | **3,64% (mar/26)** | -69 bps | Ciclo de cortes Fed em andamento |
+| TIPS 10y real | 1,84% (abr/25) | **2,02%** | +18 bps | Real yield EUA subiu — spread BR/EUA comprimiu levemente |
+| US 10y Treasury | 4,17% (abr/25) | **4,33%** | +16 bps | Treasuries longos mais altos a despeito do ciclo de corte |
+| VIX | 21,77 (abr/25) | **24,54** | +2,77 | Elevado vs abr/25 — Liberation Day gerou volatilidade |
+
+### Leituras de Gatilhos (2026-04-03)
+
+| Gatilho | Condicao | Status Atual | Acao |
+|---------|----------|-------------|------|
+| DCA IPCA+ longo ativo | Taxa >= 6,0% | **7,23%** — VERDE (margem 123 bps) | DCA ativo em TD 2040 (80%) + TD 2050 (20%) |
+| Pausar DCA IPCA+ | Taxa < 6,0% | Nao atingido | — |
+| Renda+ 2065 compra DCA | Taxa >= 6,5% | **6,98%** — ACIMA de 6,5% — VERDE | DCA ativo ate 5% do portfolio |
+| Renda+ 2065 venda total | Taxa <= 6,0% | Nao atingido (98 bps de distancia) | — |
+| Panico Renda+ (segurar) | Taxa >= 9,0% | Nao atingido | — |
+
+### Implicacoes para a Carteira (2026-04-03)
+
+1. **IPCA+ longo**: taxa a 7,23% — 123 bps acima do piso operacional. DCA ativo. Spread BR/EUA (IPCA+ vs TIPS): 7,23% - 2,02% = **521 bps** — excepcional, reflete risk premium soberano elevado.
+
+2. **Renda+ 2065**: a 6,98%, esta acima do gatilho de compra (6,5%). DCA ativo ate 5% do portfolio. Posicao atual ~3% — margem para aportes. Gatilho de venda (6,0%) a 98 bps de distancia — sem urgencia.
+
+3. **Ciclo de cortes**: proxima reuniao Copom 28-29/abr/2026. Focus projeta Selic terminal 12,50% em 2026. Com IPCA 12m ainda a 3,81% e Focus IPCA 2026 em 4,31%, o BC tem espaco para cortes, mas desancoragem de expectativas e o risco central. Lag historico Selic -> compressao de taxas longas: 3-6 meses — IPCA+ pode comprimir nos proximos meses.
+
+4. **BRL/USD**: 5,1655, apreciado vs abr/2025 (5,6874). Selic a 14,75% sustenta carry. Ciclo de cortes pressiona BRL progressivamente — monitorar. Premissa base 0,5% depreciacao real/ano permanece conservadora vs historico.
+
+5. **VIX a 24,54**: acima da zona de conforto (<20). Liberation Day (tarifas EUA) gerou volatilidade. Impacto direto: spreads de credito ainda comportados (HY 3,16%), mas risco de segunda onda permanece.
+
+6. **IPCA marco/2026**: divulgacao em 10/abr/2026. Focus projeta 4,31% para 2026. Se leitura de marco superar 4,5%, emitir alerta para agente RF e Risco (risco de desancoragem acima do teto da meta 4,5%).
+
+---
+
 ## Snapshot Macro Atual
 
-> **Ultima atualizacao completa (revalidacao profunda): 2026-04-01** (via /macro-bcb + /fred-shiller)
+> **Ultima atualizacao completa (revalidacao profunda): 2026-04-03** (via /fred-shiller — FRED + Shiller Yale)
 > **Atualizacao parcial: 2026-04-02** (/news — Liberation Day)
+> **Snapshot /macro-bcb: 2026-04-03** (APIs BCB + Investidor10 + Focus)
 
 ### Brasil
 
 | Indicador | Valor | Data | Fonte |
 |-----------|-------|------|-------|
-| Selic | **14,75%** | 2026-03-18 | COPOM (corte de 0,25pp, unanime) |
-| Focus Selic terminal 2026 | **12,25%** | 2026-03-16 | BCB Focus |
-| Focus Selic 2027 | **10,50%** | 2026-03-16 | BCB Focus |
-| Focus IPCA 2026 | **4,31%** | 2026-04-02 | BCB Focus (3º mês consecutivo de alta) |
-| IPCA+ 2040 | **7,21%** | 2026-04-01 | Investidor10 / Tesouro Direto |
-| Renda+ 2065 | **7,01%** | 2026-04-02 | Status Invest / Mais Retorno |
-| IPCA 12m | **3,81%** | fev/2026 | IBGE (BCB série 433) |
-| BRL/USD (PTAX) | **R$ 5,18** | 2026-04-02 | BCB PTAX |
+| Selic Meta | **14,75%** | 2026-04-03 | BCB serie 432 |
+| Selic Efetiva diaria | **0,11%/dia** | 2026-04-01 | BCB serie 4390 |
+| Focus Selic terminal 2026 | **12,50%** | 2026-03-30 | BCB Focus (revisao alta: era 12,25%) |
+| Focus Selic 2027 | **10,50%** | 2026-03-30 | BCB Focus |
+| Focus IPCA 2026 | **4,31%** | 2026-03-30 | BCB Focus (3o mes consecutivo de alta) |
+| Focus IPCA 2027 | **3,84%** | 2026-03-30 | BCB Focus |
+| IPCA Mensal | **0,70%** | jan/2026 | IBGE (BCB serie 433 — mais recente disponivel) |
+| IPCA 12m | **3,81%** | fev/2026 | IBGE (BCB serie 13522) |
+| IGP-M Mensal | **0,52%** | mar/2026 | BCB serie 189 |
+| IPCA+ 2040 | **7,23%** | 2026-04-03 | Investidor10 (+2bps vs 01/04) |
+| IPCA+ 2032 | **7,65%** | 2026-04-03 | Investidor10 |
+| IPCA+ 2050 | **7,00%** | 2026-04-03 | Investidor10 |
+| Renda+ 2065 | **6,98%** | 2026-04-03 | Investidor10 (-3bps vs 02/04) |
+| BRL/USD (PTAX) | **R$ 5,1655** | 2026-04-02 | BCB PTAX (ultimo disponivel) |
 | BTC/USD | ~$66.500 | 2026-04-02 | Pintu News (-20% pós-Liberation Day) |
 | Petroleo Brent | ~$75 | 2026-04-01 | Conflito Iran dissipado vs OPEC+ |
 | Divida bruta/PIB (proj. 2026) | **~94,7%** | 2026-03 | IMF Article IV |
@@ -48,25 +102,41 @@
 
 | Indicador | Valor | Data | Fonte |
 |-----------|-------|------|-------|
-| Fed Funds Rate | **3,64%** | 2026-04-01 | FRED FEDFUNDS |
-| US 10y Treasury | ~**4,2%** | 2026-04-01 | FRED DGS10 |
-| US 10y Real (TIPS) | **2,00%** | 2026-04-01 | FRED DFII10 |
-| Spread IPCA+ BR vs TIPS EUA | **~520 bps** | 2026-04-01 | Calculado: 7.21% - 2.00% |
-| CAPE S&P 500 (Shiller) | **37,91** (98º percentil) | 2026-04-01 | Shiller/Multpl |
-| VIX | **25,25 → ⚠️ pós-Liberation Day pendente** | 2026-04-02 | FRED VIXCLS — confirmar fechamento hoje |
+| Fed Funds Rate | **3,64%** | 2026-03 (mar) | FRED FEDFUNDS (mensal) |
+| US 10y Treasury | **4,33%** | 2026-04-01 | FRED DGS10 |
+| US 30y Treasury | **4,91%** | 2026-04-01 | FRED DGS30 |
+| US 10y Real (TIPS) | **2,02%** | 2026-04-01 | FRED DFII10 |
+| Spread 10y-2y (yield curve) | **+52 bps** | 2026-04-02 | FRED T10Y2Y (positivo, curva normal) |
+| HY Credit Spread | **3,16%** | 2026-04-01 | FRED BAMLH0A0HYM2 |
+| VIX | **24,54** | 2026-04-01 | FRED VIXCLS (pico 31,05 em 27/mar, caindo) |
+| CAPE S&P 500 (Shiller) | **37,94** (94,8o percentil) | 2026-04-02 | Multpl.com (Shiller file: 30.81 em set/23 — file desatualizado) |
+| BRL/USD (FRED DEXBZUS) | **5,2312** | 2026-03-27 | FRED DEXBZUS (ultimo disponivel FRED) |
+| BRL/USD (PTAX BCB) | **5,1655** | 2026-04-02 | BCB PTAX |
 | MSCI World YTD | **+2,99%** | fev/2026 | MSCI |
 | MSCI EM YTD | **+14,83%** | fev/2026 | MSCI |
+
+**Comparativo 1 ano atras (abr/2025 — primeiro impacto Liberation Day):**
+| Indicador | Abr 2025 | Abr 2026 | Variacao |
+|-----------|---------|---------|---------|
+| Fed Funds | 4,33% | 3,64% | -69 bps |
+| US 10y | 4,17% | 4,33% | +16 bps |
+| TIPS 10y real | 1,84% | 2,02% | +18 bps |
+| Spread 10y-2y | +30 bps | +52 bps | +22 bps (menos invertida/mais normal) |
+| VIX | 21,77 (depois foi 46,98 em 07/abr/25) | 24,54 | Elevado |
+| HY spread | 3,50% | 3,16% | -34 bps (comprimiu) |
+| BRL/USD | 5,6874 | 5,2312 | -8,0% (BRL apreciou) |
 
 > Atualizar mensalmente via WebSearch + /macro-bcb. Proximo IPCA: 10/abr/2026.
 > Proxima reuniao Copom: 28-29/abr/2026. Proxima FOMC: 6-7/mai/2026.
 
-### BRL/USD Histórico (FRED DEXBZUS, 1994-2026) — análise de ciclos cambiais
+### BRL/USD Histórico (FRED DEXBZUS, 1995-2026) — análise de ciclos cambiais
 
-Dado crítico para FR-currency-mismatch-fire:
-- **Janelas 5 anos**: BRL deprecia em **74,1% das janelas** (média +7,93%/ano). Aprecia em 25,9% (média -3,12%/ano)
-- **Janelas 10 anos**: BRL deprecia em **96,7%** das janelas
-- **Períodos de apreciação**: 2003-2011 (Lula boom), breve 2016-2018 pós-impeachment
-- **Implicação para carteira**: premissa base de 0,5% depreciação real/ano é CONSERVADORA vs histórico. Favorável valida BRL como hedge natural do equity USD
+Dado crítico para FR-currency-mismatch-fire. Atualizado 2026-04-03 via FRED DEXBZUS (n=7833 observacoes, 1995-01-02 a 2026-03-27):
+- **Janelas 5 anos (rolling ~1260 trading days)**: BRL deprecia em **73,9% das janelas** | média depreciacao: +10,67%/ano anualizado | BRL aprecia em 26,1% | média apreciacao: -5,80%/ano
+- **Janelas 10 anos (rolling ~2520 trading days)**: BRL deprecia em **75,7%** das janelas
+- **Nota**: resultado 10 anos diferente do anterior (96,7%) — anterior usava janelas mensais, agora usando trading days. Metodologia atual mais conservadora para o bull case
+- **YoY (abr/2025 vs mar/2026)**: BRL apreciou -8,0% vs USD — estamos em periodo de apreciacao (BRL forte com Selic elevada)
+- **Implicação para carteira**: premissa base de 0,5% depreciacao real/ano e CONSERVADORA vs historico de 10,67%/ano anualizado nos periodos de depreciacao. Periodo atual de apreciacao nao invalida tendencia secular
 
 ### Contexto do ciclo (2026-03-20 -- revalidacao profunda)
 - Copom iniciou ciclo de cortes com 0,25pp (cauteloso por conflito Iran)
@@ -82,16 +152,18 @@ Dado crítico para FR-currency-mismatch-fire:
 - EM outperformando DM significativamente (+14,83% vs +2,99% YTD)
 - Spread IPCA+ BR (~7%) vs TIPS EUA (~2%) = ~500bps -- excepcional, reflete risk premium
 
-### Valuations globais (2026-04-01)
-- S&P 500 CAPE: **37,91** (98º percentil histórico, 2x media ~17). Só esteve aqui em 1929 e 2000
-- MSCI World CAPE: **27,7** (acima media ~20)
-- MSCI World P/E forward: **24,3**
-- Europa CAPE: **~16-18** (proximo/abaixo media)
-- EM CAPE: **~12-14** (abaixo media -- barato)
-- Research Affiliates US large cap 10y expected return: **3,1% nominal**
-- Shiller estimated 10y nominal: EUA ~5,2%, Europa ~6,7%, Japao ~6,8%
+### Valuations globais (atualizado 2026-04-03)
+- **S&P 500 CAPE: 37,94** (94,8o percentil historico | media 17,40 | mediana 16,50 | max ever 44,20 em dez/1999). Fonte: Multpl.com (abr/2026) + Shiller data computado (n=1713 meses desde 1881)
+  - Apenas 6,0% dos meses historicos tiveram CAPE >= 30. Apenas 2,7% tiveram CAPE >= 35
+  - Spread CAPE yield (1/CAPE = earnings yield): 1/37,94 = 2,64% vs TIPS 10y 2,02% = premio equity 62 bps (comprimido)
+- MSCI World CAPE: **~27** (acima media ~20)
+- Europa CAPE: **~16-18** (proximo/abaixo media -- barato relativo)
+- EM CAPE: **~12-14** (abaixo media -- barato relativo)
+- Research Affiliates US large cap 10y expected return: **3,1-3,4% nominal** (CAPE-based)
+- Shiller estimated 10y nominal (CAPE model): EUA ~5,2%, Europa ~6,7%, Japao ~6,8%
 - EM expected real return (CAPE model): ~9%
-- Fonte: Siblis Research, Research Affiliates, Multpl.com
+- Shiller GS10 (10y yield historico arquivo): set/2023 = 4,09% | atual FRED DGS10 = 4,33%
+- Fonte: Multpl.com, Shiller ie_data.xls (Yale), Research Affiliates, Siblis Research
 
 ### Factor premiums (2026-03-20)
 - Value spread (AQR): ~percentil **70-80** (comprimiu do 94th em 2022, ainda acima da media)
