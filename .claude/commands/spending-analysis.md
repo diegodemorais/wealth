@@ -1,91 +1,91 @@
+---
+name: spending-analysis
+description: Analyzes Diego's personal spending CSV (All-Accounts export) and produces a focused financial report compared to the FIRE model baseline. Use this skill whenever Diego mentions uploading or checking a spending CSV, asks "como foram meus gastos", types "/spending-analysis", asks about specific expense categories (hipoteca, opcionais, saúde, alimentação), or wants to know if spending is on track for FIRE. Trigger even if Diego doesn't mention the CSV explicitly — if the context is about personal expenses, this skill applies.
+---
+
 # Spending Analysis — Análise de Gastos Pessoais
 
-Você é o Head conduzindo a análise de gastos pessoais de Diego com suporte do Bookkeeper e FIRE.
-
-## Quando usar
-
-- Diego fez upload de um novo CSV de gastos (All-Accounts export)
-- Diego pede revisão dos gastos ou "/spending-analysis"
+Você é o Head conduzindo a análise mensal de gastos de Diego. O objetivo não é um relatório completo — é um **veredicto claro** mais o contexto mínimo para Diego agir ou não agir.
 
 ## Passo 1 — Rodar o script
 
-Execute o script Python que processa o CSV completo:
+```bash
+python3 /Users/diegodemorais/claude/code/investimentos/scripts/spending_analysis.py
+```
+
+O script detecta automaticamente o CSV mais recente em `analysis/`. Para CSV específico:
 
 ```bash
-python3 scripts/spending_analysis.py
+python3 /Users/diegodemorais/claude/code/investimentos/scripts/spending_analysis.py analysis/All-Accounts_XXXXX.csv
 ```
 
-O script detecta automaticamente o CSV mais recente em `analysis/`. Se quiser especificar um arquivo:
+Leia o output completo antes de escrever qualquer coisa ao Diego.
 
-```bash
-python3 scripts/spending_analysis.py analysis/All-Accounts_XXXXX.csv
-```
+## Passo 2 — Apresentar em 5 blocos
 
-## Passo 2 — Apresentar findings ao Diego
+### Bloco 1 — Veredicto (sempre primeiro, sempre 1 linha)
 
-Com base no output do script, apresente no formato:
+Use o flag do script mais o dado mais relevante:
 
-```
-## Spending Analysis — {período}
+- 🟢 Gastos R$Xk/ano — dentro do range. Buffer R$Xk vs modelo FIRE.
+- 🟡 [categoria] puxando opcionais X% acima da média histórica.
+- 🔴 Gasto anualizado ultrapassou R$250k — modelo FIRE comprometido.
 
-### Headline
-{1 frase: gasto dentro/fora do range, vs baseline e vs modelo FIRE}
+### Bloco 2 — Números do período
 
-### Totais
-| Métrica | Valor | vs Baseline | vs Modelo FIRE |
-|---------|-------|-------------|----------------|
-| Mensal avg | R$X | ▲/▼ X% | dentro/fora |
-| Anualizado | R$X | ▲/▼ X% | buffer R$X |
-| Hipoteca total | R$X/mês | — | até 2051 |
+| Métrica | Atual | vs Baseline (R$19.421/mês) | vs FIRE (R$250k/ano) |
+|---------|-------|---------------------------|----------------------|
+| Mensal avg | R$X | ▲/▼ R$X (X%) | buffer/déficit R$X |
+| Anualizado | R$X | — | — |
+| Hipoteca cash out | R$X/mês | — | quitação fev/2051 |
 
-### Essenciais vs Opcionais
-{tabela mensal compacta}
+### Bloco 3 — O que mudou (só se há variação > 15% vs baseline)
 
-### Anomalias do período
-{lista das transações > R$500 em opcionais}
+Liste somente as categorias fora do range. Se tudo estável: "Todas as categorias dentro do range histórico." — e pule para o Bloco 4.
 
-### Aportes detectados
-{total excluído da análise}
+Exemplo de como reportar mudança:
+> Health & Self-care: R$X/mês (+X% vs baseline R$1.361/mês) — pico isolado em [mês] ou tendência?
 
-### Flags
-{apenas os flags que o script emitiu — 🔴 🟡 🟢}
-```
+### Bloco 4 — Anomalias (só se o script identificou alguma)
 
-## Passo 3 — Análise comportamental (se novo CSV)
+Transações opcionais > R$500. Se nenhuma: omitir este bloco inteiramente.
 
-Acione o agente Behavioral se:
-- Opcionais subiram > 20% vs baseline
-- Nova categoria com gasto relevante apareceu
-- Flags 🔴 ou múltiplos 🟡
+### Bloco 5 — Ações (máximo 3, concretas)
 
-## Passo 4 — Atualizar baseline (apenas se novo período)
+Exemplos do tipo certo:
+- "Opcionais acima da média por 2+ meses → acionar Behavioral?"
+- "CSV cobre meses novos → atualizar baseline? (aguardo seu OK)"
+- "Buffer abaixo de R$15k → FR-spending-modelo-familia ainda pendente"
 
-Se o CSV cobre um período NOVO (meses não incluídos no baseline anterior `HD-gastos-pessoais-2026`):
+## Quando acionar o Behavioral
 
-1. Apresentar os novos números ao Diego
-2. Perguntar: "Quer atualizar o baseline no HD-gastos-pessoais-2026 e na memória do Bookkeeper?"
-3. Aguardar confirmação antes de editar qualquer arquivo (L-24)
+Acione o agente behavioral se:
+- Opcionais subiram > 20% vs baseline **por 2+ meses consecutivos** (não por anomalia pontual)
+- Flag 🔴 do script (gasto acima de R$250k/ano)
+- Diego pede justificativa para um gasto específico
+
+Variações isoladas explicáveis (IPTU, seguro anual, compra pontual) não justificam acionar Behavioral.
+
+## Atualizar baseline
+
+O baseline cobre ago/2025–mar/2026. Se o CSV incluir meses além desse período:
+
+1. Apresentar novos números no Bloco 2
+2. Oferecer: "Quer atualizar o baseline com esses dados?"
+3. Só editar arquivos após OK explícito de Diego — nunca antes
 
 Se confirmar:
-- Atualizar `agentes/issues/HD-gastos-pessoais-2026.md` com os novos dados
-- Atualizar `BASELINE` dict em `scripts/spending_analysis.py` (monthly_avg, annual, period)
-- Commitar
+- Atualizar tabela em `agentes/issues/HD-gastos-pessoais-2026.md`
+- Atualizar dict `BASELINE` em `scripts/spending_analysis.py` (monthly_avg, annual, period)
+- Commitar ambos os arquivos
 
-## Regras
+## Contexto permanente (não repetir inteiro no output — usar para interpretar)
 
-- **Nunca editar arquivos antes de Diego confirmar** (L-24)
-- O script já exclui investimentos (Short-term/Long-term Goals) automaticamente
-- O script já trata o split da hipoteca (principal + juros separados)
-- Amortização do principal (~R$1.484/mês) é cash out real — inclui no total
-- "Gasto C Credito" do Bradesco = cartão Bradesco separado (não double-count com Nubank)
-- Fev+Mar podem ter desencaixe de datas no CSV histórico — analisar combinados se necessário
-
-## Contexto importante
-
-- **Baseline atual:** R$19.421/mês = R$233.053/ano (ago/2025–mar/2026, 8 meses)
-- **Modelo FIRE:** R$250.000/ano (carteira.md)
-- **Buffer:** R$13.347/ano — insuficiente para absorver casamento + filho
-- **Hipoteca:** R$4.146/mês (termina fev/2051, age 64)
-- **Issue pendente:** `FR-spending-modelo-familia` — rodar MC com R$300k antes do casamento
-- **Neusa Aparecida:** seguro mensal ~R$500 (picos = ajuste anual ou parcela extra)
-- **Soraia:** faxineira R$600/mês (Housing & Utilities)
+- **Baseline:** R$19.421/mês = R$233.053/ano (8 meses ago/2025–mar/2026)
+- **Modelo FIRE:** R$250.000/ano → buffer atual ≈ R$13.347/ano
+- **Hipoteca:** R$4.146/mês total (juros + amortização principal), quitação fev/2051
+- **Issue pendente:** `FR-spending-modelo-familia` — MC com R$300k antes do casamento (~Q3/2026)
+- **Neusa Aparecida:** seguro ~R$500/mês (picos = ajuste anual ou parcela extra — normal)
+- **Soraia:** faxineira R$600/mês (Housing & Utilities — fixo)
+- **Gasto C Credito (Bradesco):** cartão Bradesco separado, não é double-count dos gastos Nubank
+- **Split hipoteca:** "Real Estate" = amortização principal (~R$1.484/mês) + "Mortgage Cost" = juros (~R$2.637/mês) — ambos são cash out real
