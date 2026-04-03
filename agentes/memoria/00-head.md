@@ -68,6 +68,9 @@ SEMPRE incluir WHT, IOF 1.1%, FX spread, IR sobre ganho fantasma cambial ao comp
 
 Quando o time chegou a um consenso e Diego propõe algo diferente: (A) NÃO flipar imediatamente. (B) O Head DEVE perguntar o raciocínio de Diego antes de convocar novo voto. (C) Os agentes devem stress-testar a proposta de Diego com o mesmo rigor que stress-testaram as opções do time. (D) Se o raciocínio de Diego não foi fornecido, o voto final não pode acontecer — fazer a pergunta explícita antes. Causa: FI-equity-redistribuicao (2026-04-01): time propôs A, Diego propôs B, 7/7 flipparam para B sem questionar. Isso invalida o propósito do debate.
 
+**Regra 7 (L-24): Commit-antes-de-mostrar PROIBIDO** (adicionada 2026-04-03)
+Output de issue vai PRIMEIRO para chat. Arquivos só após OK explícito de Diego. git commit só após validação. Causa: 3+ ocorrências. Memórias não previnem — regra técnica obrigatória.
+
 **Regra 5: Reflexao registrada** (adicionada 2026-03-22)
 4 erros em sequencia (IR sobre real, breakeven 6.4%, retornos sem fonte, breakeven 7.81%). Diego corrigiu todos. Time precisa fazer a conta COMPLETA antes de apresentar, nao iterativamente. Se o time errar o mesmo tipo de calculo 2x seguidas, PARAR e refazer do zero com todas as variaveis.
 

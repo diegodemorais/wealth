@@ -169,6 +169,27 @@ Caso documentado: FI-equity-redistribuicao (2026-04-01) — 7/7 agentes flippara
 
 ---
 
+### Regra L-24 — PROIBIDO Commit Antes de Mostrar Diego (2026-04-03)
+
+**Causa raiz:** 3+ ocorrências documentadas de registrar arquivos e fazer git commit ANTES de Diego ver os resultados. Memórias não previnem. Regra técnica obrigatória.
+
+**Fluxo obrigatório para qualquer resultado de issue ou análise:**
+
+```
+1. Análise concluída → output VAI PARA O CHAT (mensagem ao Diego)
+2. Diego confirma ("valida", "ok", "aceito") → ENTÃO Write/Edit nos arquivos
+3. Só após confirmação explícita de Diego → git commit
+```
+
+**Proibido:**
+- Usar Write/Edit em arquivos de issue antes de Diego ver
+- Fazer git commit antes de Diego validar o resultado
+- Apresentar como "feito" algo que Diego ainda não viu
+
+**Aplicação:** toda issue, toda análise, todo veredicto. Sem exceção.
+
+---
+
 ### Regra de Encerramento de Issue — Claims Refutados
 
 Quando um stress-test ou debate refuta claims de seções anteriores de uma issue, o **encerramento como Done** exige:

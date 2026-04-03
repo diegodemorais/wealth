@@ -25,9 +25,12 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
+| 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
+| 2 | HD-multimodel-validation | Multi-Model Validation — executar em issue estrutural | Head | 🟡 Média |
+| 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
-| ~~2~~ | ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
-| ~~3~~ | ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
+| ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
+| ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
 
 ### Doing
 > Issues em andamento

@@ -23,7 +23,7 @@ Registrar previsoes implicitas em cada decisao ativa da carteira. Quando o prazo
 | **Confianca** | Alta (~80%) |
 | **Racional** | Taxa atual 7.16% (2026-03-26). Selic em 14.25%, sem sinais de corte iminente. IPCA pressionado. Taxas reais devem permanecer elevadas ate pelo menos jun 2026 |
 | **Cenario de falha** | Corte surpresa de Selic, ou sinalizacao forte de fiscal responsavel pelo governo, comprimindo taxas reais abaixo de 6.5% |
-| **Gatilho de parada** | Se taxa cair abaixo de 6.0% (piso operacional), pausar DCA e redirecionar aportes para SWRD (JPGL eliminado em 2026-04-01) |
+| **Gatilho de parada** | Se taxa cair abaixo de 6.0% (piso operacional), pausar DCA e redirecionar aportes para **SWRD** (JPGL eliminado em 2026-04-01) |
 | **Agente dono** | 03 Renda Fixa |
 | **Status** | Aberta — DCA ativo |
 
