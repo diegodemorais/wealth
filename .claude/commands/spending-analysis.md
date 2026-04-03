@@ -10,13 +10,13 @@ Você é o Head conduzindo a análise mensal de gastos de Diego. O objetivo não
 ## Passo 1 — Rodar o script
 
 ```bash
-python3 /Users/diegodemorais/claude/code/investimentos/scripts/spending_analysis.py
+python3 /Users/diegodemorais/claude/code/wealth/scripts/spending_analysis.py
 ```
 
 O script detecta automaticamente o CSV mais recente em `analysis/`. Para CSV específico:
 
 ```bash
-python3 /Users/diegodemorais/claude/code/investimentos/scripts/spending_analysis.py analysis/All-Accounts_XXXXX.csv
+python3 /Users/diegodemorais/claude/code/wealth/scripts/spending_analysis.py analysis/All-Accounts_XXXXX.csv
 ```
 
 Leia o output completo antes de escrever qualquer coisa ao Diego.
