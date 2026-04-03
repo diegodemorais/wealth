@@ -539,7 +539,7 @@
 | AVGC | Avantis Global Equity UCITS (LSE ticker) | 2026-03-26 | Atenção: AVGC = mesmo fundo que AVWC (IE000RJECXS5). Descarte original foi precipitado ("closet indexing") — AVWC reinstaurado como candidato ativo em abr/2026 (ficha #4). Este entry refere-se ao ticker LSE do mesmo produto. |
 | AVEU | Avantis European Equity UCITS | 2026-04-02 | AVGS já cobre Europa com mesmo tilt. Sem tese regional que justifique sobrepeso |
 | AVPE | Avantis Pacific Equity UCITS | 2026-04-02 | AVGS já inclui Pacífico/Japão. Redundante sem convicção regional específica |
-| AVUS | Avantis US Equity UCITS | 2026-04-02 | SWRD+AVGS já cobrem US com tilt. Sem gap. Confirmado descartado em 2026-04-02 (debate Oportunidades scan). |
+| AVUS | Avantis US Equity UCITS | 2026-04-02 | AVGS já contém exposição equivalente a AVUS (US all-cap Avantis) + AVUV (US SCV). AVUS seria subconjunto redundante do que AVGS já entrega globalmente. |
 | OTUS | Lloyd Capital International Equity UCITS | 2026-04-02 | Emissora desconhecida (Lloyd Capital/HANetf), TER 0.85% — inviável vs alternativas |
 
 ---
