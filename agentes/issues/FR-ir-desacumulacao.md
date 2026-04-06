@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-ir-desacumulacao |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | FIRE (lead), Quant |
 | **Co-sponsor** | Quant |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-06 |
 | **Origem** | Finding do Quant em FI-avgs-premium-reconciliacao: IR não modelado na desacumulação |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 
@@ -65,3 +65,34 @@ Delta vs premissa atual: ~−1.3pp/ano na fase de retirada.
 **Contraponto:** O atenuante do bond pool é real e material. Diego passará os primeiros 7 anos do FIRE sem precisar vender equity. O IR de desacumulação começa a pesar só depois de 2047.
 
 **Falsificação:** Se após modelar corretamente o IR, P(FIRE) cair menos de 2pp, o gap é aceitável dado o nível de conservadorismo das demais premissas (mediana vs otimista, spending smile com healthcare, guardrails).
+
+---
+
+## Resultado
+
+### Implementação
+
+`fire_montecarlo.py` atualizado com:
+```python
+"aplicar_ir_desacumulacao": True
+"anos_bond_pool": 7        # TD 2040 cobre anos 0–6 pós-FIRE
+"aliquota_ir_equity": 0.15
+
+# Fórmula aplicada (ano >= 7 na desacumulação)
+r_nominal = (1+r_real) × (1+IPCA) - 1
+r_depois_ir = r_nominal × 0.85
+r_real_net = (1+r_depois_ir) / (1+IPCA) - 1  # ≈ 3.55% vs 4.85% → drag -1.30pp
+```
+Flag `--sem-ir` mantida para backward compatibility.
+
+### P(FIRE) — delta após modelar IR
+
+| Cenário | COM IR (correto) | SEM IR (anterior) | Delta |
+|---------|-----------------|-------------------|-------|
+| Base | **82,8%** | 87,2% | **−4,4pp** |
+| Favorável | 89,8% | 92,7% | −2,9pp |
+| Stress | **78,3%** | 83,5% | **−5,2pp** |
+
+Delta supera threshold de 3pp do escopo → Head avalia. Conclusão: 82,8% ainda acima do piso operacional. Bond pool atenua. Monitorar — sem ação imediata.
+
+**Nota:** Gap existia desde criação do script. Diego havia orientado antes. Abertura de HD-mc-audit para auditoria sistemática de outros gaps similares.

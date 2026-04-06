@@ -11,7 +11,7 @@
 - **Nome**: Diego Morais
 - **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
-- **Meta FIRE**: **2040 (53 anos) — base.** Patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4% → P(FIRE 2040): **86,9% base / 93,7% favorável / 81,0% stress** (MC 10k, spending smile + guardrails + bond tent, FR-fire2040 2026-03-27). FIRE 50 (2037) = aspiracional — se patrimônio atingir R$13.4M antes. Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).**
+- **Meta FIRE**: **2040 (53 anos) — base.** Patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4% → P(FIRE 2040): **82,8% base / 89,8% favorável / 78,3% stress** (MC 10k, spending smile + guardrails + bond tent + IR 15% sobre nominal modelado, `fire_montecarlo.py` FR-ir-desacumulacao 2026-04-06). FIRE 50 (2037) = aspiracional — se patrimônio atingir R$13.4M antes. Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).**
 - **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Custo de vida**: R$ 250k/ano

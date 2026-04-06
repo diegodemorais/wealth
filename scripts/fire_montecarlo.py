@@ -55,6 +55,11 @@ PREMISSAS = {
     # IPCA estimado (para converter nominais)
     "ipca_anual":          0.04,        # 4%/ano
 
+    # IR na desacumulação (FR-ir-desacumulacao)
+    "aplicar_ir_desacumulacao": True,   # default True — modelagem correta
+    "anos_bond_pool":           7,      # anos pós-FIRE cobertos pelo bond pool (sem IR equity)
+    "aliquota_ir_equity":       0.15,   # 15% flat sobre ganho nominal
+
     # Gatilho FIRE
     "patrimonio_gatilho":  13_400_000,  # R$2026 real
     "swr_gatilho":         0.024,       # 2.4%
@@ -133,14 +138,37 @@ def aplicar_guardrail(gasto_base: float, drawdown: float) -> float:
     return GASTO_PISO
 
 
+def retorno_equity_net_ir(retorno_real: float, ipca: float, aliquota: float) -> float:
+    """Calcula retorno real líquido de IR sobre ganho nominal.
+
+    Fórmula (FR-ir-desacumulacao):
+        r_nominal = (1 + r_real) * (1 + IPCA) - 1
+        r_depois_ir = r_nominal * (1 - aliquota)
+        r_real_net = (1 + r_depois_ir) / (1 + IPCA) - 1
+
+    Quando r_nominal <= 0 (ano de perda), não há IR — retorna retorno_real inalterado.
+    """
+    r_nominal = (1 + retorno_real) * (1 + ipca) - 1
+    if r_nominal <= 0:
+        return retorno_real  # sem ganho nominal → sem IR
+    r_depois_ir = r_nominal * (1 - aliquota)
+    return (1 + r_depois_ir) / (1 + ipca) - 1
+
+
 def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: float,
                         volatilidade: float, df: int, rng: np.random.Generator,
-                        escala_custo_vida: float = 1.0) -> tuple:
+                        escala_custo_vida: float = 1.0,
+                        aplicar_ir: bool = False, anos_bond_pool: int = 7,
+                        ipca_anual: float = 0.04, aliquota_ir: float = 0.15) -> tuple:
     """
     Simula uma trajetória de desacumulação.
     Retorna (sobreviveu: bool, patrimônio_final: float, patrimônio_pico: float)
 
     escala_custo_vida: fator de escala do custo de vida (1.0 = base R$250k).
+    aplicar_ir: se True, aplica IR 15% sobre ganho nominal nos anos em que equity é sacado.
+    anos_bond_pool: primeiros N anos pós-FIRE os saques vêm do bond pool (sem IR equity).
+    ipca_anual: IPCA estimado para conversão nominal/real.
+    aliquota_ir: alíquota IR sobre ganho nominal (15% flat).
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
@@ -149,6 +177,10 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         # Retorno anual com fat tails
         z = rng.standard_t(df) / np.sqrt(df / (df - 2))  # normalizar variância
         retorno_anual = retorno_equity + volatilidade * z
+
+        # IR na desacumulação: aplica apenas quando equity é sacado (ano >= anos_bond_pool)
+        if aplicar_ir and ano >= anos_bond_pool:
+            retorno_anual = retorno_equity_net_ir(retorno_anual, ipca_anual, aliquota_ir)
 
         # Crescimento
         pat = pat * (1 + retorno_anual)
@@ -207,12 +239,19 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
     sucessos = 0
     pats_finais = []
 
+    aplicar_ir = premissas.get("aplicar_ir_desacumulacao", False)
+    anos_bond_pool = premissas.get("anos_bond_pool", 7)
+    ipca_anual = premissas.get("ipca_anual", 0.04)
+    aliquota_ir = premissas.get("aliquota_ir_equity", 0.15)
+
     for i in range(n_sim):
         pat_ini = float(pat_fire_trajetorias[i])
         sobreviveu, pat_final, _ = simular_trajetoria(
             pat_ini, premissas["anos_simulacao"], r_equity,
             premissas["volatilidade_equity"], premissas["t_dist_df"], rng,
-            escala_custo_vida=escala_cv
+            escala_custo_vida=escala_cv,
+            aplicar_ir=aplicar_ir, anos_bond_pool=anos_bond_pool,
+            ipca_anual=ipca_anual, aliquota_ir=aliquota_ir
         )
         if sobreviveu:
             sucessos += 1
@@ -311,6 +350,10 @@ def imprimir_resultados(resultados: list, premissas: dict):
     print(f"  Horizonte FIRE:   {premissas['idade_fire_alvo']} anos (safe harbor: {premissas['idade_safe_harbor']})")
     print(f"  Desacumulação:    {premissas['anos_simulacao']} anos (até ~{premissas['idade_fire_alvo']+premissas['anos_simulacao']} anos)")
     print(f"  Gatilho formal:   R$ {premissas['patrimonio_gatilho']/1e6:.1f}M + SWR ≤ {premissas['swr_gatilho']:.1%}")
+    if premissas.get("aplicar_ir_desacumulacao", False):
+        print(f"  IR desacumulação: ATIVO — {premissas['aliquota_ir_equity']:.0%} sobre ganho nominal, bond pool {premissas['anos_bond_pool']} anos")
+    else:
+        print(f"  IR desacumulação: DESATIVADO (--sem-ir)")
     print("═"*60)
 
     print(f"\n{'Cenário':<12} {'P(FIRE)':>8} {'P(Gatilho)':>11}  {'Pat.Mediana@50':>15}  {'r_equity':>10}")
@@ -350,9 +393,12 @@ def main():
     parser.add_argument("--anos",       type=int,   help="Anos até o FIRE alvo")
     parser.add_argument("--n-sim",      type=int,   default=10_000, help="Número de simulações (default: 10k)")
     parser.add_argument("--tornado",    action="store_true", help="Gerar tornado chart de sensibilidade (5k sims)")
+    parser.add_argument("--sem-ir",    action="store_true", help="Desabilitar IR na desacumulação (backward compat)")
     args = parser.parse_args()
 
     premissas = dict(PREMISSAS)
+    if args.sem_ir:
+        premissas["aplicar_ir_desacumulacao"] = False
     if args.patrimonio: premissas["patrimonio_atual"] = args.patrimonio
     if args.aporte:     premissas["aporte_mensal"] = args.aporte
     if args.anos:

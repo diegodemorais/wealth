@@ -106,7 +106,9 @@
 | 64 | R$42.900 |
 | 70 | R$50.300 |
 
-**Impacto no P(FIRE) solo:** base 86.9% → **87.2%**, stress 81.0% → **83.5%** (ganho maior no stress — menor carga nos anos críticos de SoRR)
+**Impacto do modelo de saúde:** base 86.9% → 87.2%, stress 81.0% → 83.5%.
+
+**Impacto adicional — IR 15% na desacumulação (FR-ir-desacumulacao 2026-04-06):** base 87.2% → **82.8%** (−4.4pp), stress 83.5% → **78.3%** (−5.2pp). IR aplicado sobre ganho nominal após bond pool de 7 anos. Retorno efetivo equity desacumulação: ~3.55% real vs 4.85% pré-IR. `fire_montecarlo.py` atualizado. P(FIRE) oficial atual: **82,8% base / 89,8% favorável / 78,3% stress**.
 
 **Risco residual:** plano empresarial depende de CNPJ ativo. Se Diego encerrar a PJ pós-FIRE, custo sobe ~40% (plano individual). Não modelado explicitamente.
 
