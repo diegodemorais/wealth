@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
 | 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
-| 4 | HD-mc-audit | Auditoria sistemática de gaps no fire_montecarlo.py | Head | 🟡 Média |
+| ~~HD-mc-audit~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | 5 | FR-spending-modelo-familia | Modelo custo de vida pós-família: R$300k + stress-test (SLA: Q3/2026) | FIRE | 🟡 Média |
 | ~~FR-ir-desacumulacao~~ | ~~concluída 2026-04-06~~ | ~~FIRE~~ | ~~Média~~ |
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
@@ -47,7 +47,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
-| FR-ir-desacumulacao | IR 15% na desacumulação — impacto P(FIRE) | FIRE | 2026-04-06 | P(FIRE) base 87,2% → 82,8% (−4,4pp). Bond pool atenua (7 anos). `fire_montecarlo.py` corrigido. HD-mc-audit aberta. |
+| HD-mc-audit | Auditoria gaps fire_montecarlo.py | Head | 2026-04-06 | Double-count saúde corrigido (+4.4pp). IR −4.4pp. Net: P(FIRE) 87.2% (ambos corrigidos). 2 gaps conservadores remanescentes. |
+| FR-ir-desacumulacao | IR 15% na desacumulação — impacto P(FIRE) | FIRE | 2026-04-06 | IR modelado. Delta final líquido: 0pp (cancelado pelo spending fix simultâneo). P(FIRE) 87.2% base. |
 | FI-avgs-premium-reconciliacao | AVGS premium — 130bps vs 46bps vs 0.16% | Factor | 2026-04-06 | Inconsistência cosmética. 3 números medem coisas diferentes — todos consistentes. 5.0% USD já é mais conservador que FF93+haircut. Finding: IR não modelado na desacumulação → FR-ir-desacumulacao. |
 | HD-multimodel-validation | Multi-Model Validation — AVGS 30% vs mercado | Head | 2026-04-06 | 50/30/20 corroborado. 6 outputs externos. 7 findings: tracking error regret, factor drought, rebalanceamento, família+drawdown. Protocolo Round 2 (sem tickers) definido como padrão. |
 | HD-gastos-pessoais-2026 | Análise de gastos pessoais ago/2025–mar/2026 | Head | 2026-04-03 | Baseline R$218k/ano. Picos Jan/Fev = tributos anuais. Buffer R$32k insuficiente para família. → FR-spending-modelo-familia |

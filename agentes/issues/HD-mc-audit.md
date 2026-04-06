@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-mc-audit |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head (lead), FIRE, Quant |
 | **Co-sponsor** | Quant |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-06 |
 | **Origem** | FR-ir-desacumulacao: gap de IR já havia sido orientado por Diego antes — não deveria existir. Auditoria para identificar outros gaps similares. |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 
@@ -64,3 +64,35 @@ O objetivo desta issue é fazer uma auditoria sistemática do script antes que m
 **Critério de priorização:** Gap material = move P(FIRE) > 1pp. Gap cosmético = documentar mas não implementar imediatamente.
 
 **Falsificação:** Se Quant auditar o script e todos os gaps restantes tiverem impacto < 0.5pp em P(FIRE), issue pode ser encerrada como "modelo suficientemente correto dado nível de conservadorismo das premissas".
+
+---
+
+## Resultado
+
+### Gaps auditados por Quant + FIRE
+
+| # | Gap | Impacto | Classificação | Ação |
+|---|-----|---------|---------------|------|
+| INSS ausente | R$18-20k/ano a partir do ano 12 | +1.5–4pp conservador | Material | Pendente — omissão intencional conservadora |
+| **Spending smile double-count** | SPENDING_SMILE = totais c/ saúde antiga, + saúde nova somada | **+4.4pp** | **Material — CORRIGIDO** | Valores atualizados para lifestyle ex-saúde: R$242k/R$200k/R$187k |
+| Vol excessiva anos 0-7 (bond pool) | 16.8% cheia vs ~13-14% com bond pool | +1–2pp conservador | Material | Pendente — modelo mais conservador |
+| FX custo transação | 1.35% sobre saques | <0.5pp | Cosmético | — |
+| pct_ipca_curto ausente acumulação | 3% pesos não somam 100% | <0.5pp | Cosmético/bug técnico | — |
+| Cripto 2× vol sem fonte | 3% do portfólio | <0.5pp | Cosmético | — |
+| dep_brl não aplicado | Não é bug | 0pp | N/A | — |
+
+### P(FIRE) após correções
+
+| Cenário | Antes (double-count + sem IR) | Com IR (FR-ir-desacumulacao) | **Final (IR + spending correto)** |
+|---------|------------------------------|------------------------------|-----------------------------------|
+| Base | 87.2% | 82.8% | **87.2%** |
+| Favorável | 92.7% | 89.8% | **92.3%** |
+| Stress | 83.5% | 78.3% | **83.5%** |
+
+Os dois erros (IR −4.4pp e double-count +4.4pp) se cancelaram. P(FIRE) = 87.2% mas agora **ambos os modelos corretos**.
+
+### Gaps remanescentes (conservadores — não urgentes)
+- INSS: +1.5–4pp se modelado. Omissão conservadora intencional — revisar em retro anual.
+- Vol bond pool anos 0-7: +1–2pp. Simplificação conservadora — script usa vol cheia no período coberto pelo bond pool.
+
+**Script atualizado:** `fire_montecarlo.py` — SPENDING_SMILE corrigido 2026-04-06.

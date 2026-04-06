@@ -68,10 +68,13 @@ PREMISSAS = {
 # ─── SPENDING SMILE (fonte: FR-spending-smile 2026-03-27) ─────────────────────
 
 SPENDING_SMILE = {
-    # Fase: (gasto_base, anos_inicio, anos_fim) a partir da aposentadoria
-    "go_go":   {"gasto": 280_000, "inicio": 0,  "fim": 15},   # anos 0–14 pós-FIRE
-    "slow_go": {"gasto": 225_000, "inicio": 15, "fim": 30},   # anos 15–29
-    "no_go":   {"gasto": 285_000, "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
+    # Fase: gasto LIFESTYLE EX-SAÚDE (saúde é somada separadamente via gasto_spending_smile)
+    # Fonte: FR-spending-smile (2026-03-27) — corrigido HD-mc-audit (2026-04-06)
+    # Valores originais (R$280k/225k/285k) embutiam saúde R$37.9k (modelo antigo) — double-count
+    # Corretos: lifestyle-only conforme tabela de breakdown da issue
+    "go_go":   {"gasto": 242_000, "inicio": 0,  "fim": 15},   # anos 0–14 pós-FIRE
+    "slow_go": {"gasto": 200_000, "inicio": 15, "fim": 30},   # anos 15–29
+    "no_go":   {"gasto": 187_000, "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
 }
 
 SAUDE_BASE         = 16_000   # R$/ano no FIRE 53 — plano empresarial coletivo PJ (revisado 2026-04-02)

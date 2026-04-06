@@ -108,7 +108,11 @@
 
 **Impacto do modelo de saúde:** base 86.9% → 87.2%, stress 81.0% → 83.5%.
 
-**Impacto adicional — IR 15% na desacumulação (FR-ir-desacumulacao 2026-04-06):** base 87.2% → **82.8%** (−4.4pp), stress 83.5% → **78.3%** (−5.2pp). IR aplicado sobre ganho nominal após bond pool de 7 anos. Retorno efetivo equity desacumulação: ~3.55% real vs 4.85% pré-IR. `fire_montecarlo.py` atualizado. P(FIRE) oficial atual: **82,8% base / 89,8% favorável / 78,3% stress**.
+**Correções HD-mc-audit (2026-04-06) — dois bugs simultâneos:**
+1. IR 15% na desacumulação modelado: −4.4pp
+2. Double-count de saúde no SPENDING_SMILE corrigido: +4.4pp (SPENDING_SMILE = lifestyle ex-saúde: R$242k/R$200k/R$187k — era R$280k/R$225k/R$285k embeddando saúde antiga R$37.9k)
+
+Os dois erros se cancelaram. **P(FIRE) oficial: 87,2% base / 92,3% favorável / 83,5% stress** (ambos os erros corrigidos, `fire_montecarlo.py` 2026-04-06).
 
 **Risco residual:** plano empresarial depende de CNPJ ativo. Se Diego encerrar a PJ pós-FIRE, custo sobe ~40% (plano individual). Não modelado explicitamente.
 
