@@ -81,18 +81,15 @@ O objetivo desta issue é fazer uma auditoria sistemática do script antes que m
 | Cripto 2× vol sem fonte | 3% do portfólio | <0.5pp | Cosmético | — |
 | dep_brl não aplicado | Não é bug | 0pp | N/A | — |
 
-### P(FIRE) após correções
+### P(FIRE) — evolução das correções
 
-| Cenário | Antes (double-count + sem IR) | Com IR (FR-ir-desacumulacao) | **Final (IR + spending correto)** |
-|---------|------------------------------|------------------------------|-----------------------------------|
-| Base | 87.2% | 82.8% | **87.2%** |
-| Favorável | 92.7% | 89.8% | **92.3%** |
-| Stress | 83.5% | 78.3% | **83.5%** |
+| Etapa | Base | Fav | Stress | Delta base |
+|-------|------|-----|--------|------------|
+| Baseline (antes das correções) | 87.2% | 92.7% | 83.5% | — |
+| + IR desacumulação | 82.8% | 89.8% | 78.3% | −4.4pp |
+| + Spending smile ex-saúde | 87.2% | 92.3% | 83.5% | +4.4pp |
+| + INSS R$18k/ano@65 + vol bond pool | **90.8%** | **94.6%** | **87.4%** | **+3.6pp** |
 
-Os dois erros (IR −4.4pp e double-count +4.4pp) se cancelaram. P(FIRE) = 87.2% mas agora **ambos os modelos corretos**.
+P(FIRE) base **cruza 90%** pela primeira vez. Todos os gaps materiais corrigidos.
 
-### Gaps remanescentes (conservadores — não urgentes)
-- INSS: +1.5–4pp se modelado. Omissão conservadora intencional — revisar em retro anual.
-- Vol bond pool anos 0-7: +1–2pp. Simplificação conservadora — script usa vol cheia no período coberto pelo bond pool.
-
-**Script atualizado:** `fire_montecarlo.py` — SPENDING_SMILE corrigido 2026-04-06.
+**Script atualizado:** `fire_montecarlo.py` — todas as correções HD-mc-audit 2026-04-06.

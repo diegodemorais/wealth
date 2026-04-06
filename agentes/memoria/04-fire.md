@@ -112,7 +112,13 @@
 1. IR 15% na desacumulação modelado: −4.4pp
 2. Double-count de saúde no SPENDING_SMILE corrigido: +4.4pp (SPENDING_SMILE = lifestyle ex-saúde: R$242k/R$200k/R$187k — era R$280k/R$225k/R$285k embeddando saúde antiga R$37.9k)
 
-Os dois erros se cancelaram. **P(FIRE) oficial: 87,2% base / 92,3% favorável / 83,5% stress** (ambos os erros corrigidos, `fire_montecarlo.py` 2026-04-06).
+Os dois erros se cancelaram. Após correções adicionais (INSS + vol bond pool): **P(FIRE) oficial: 90,8% base / 94,6% favorável / 87,4% stress** (`fire_montecarlo.py` HD-mc-audit 2026-04-06).
+
+Correções HD-mc-audit completas:
+- Double-count saúde: +4.4pp
+- IR desacumulação: −4.4pp
+- INSS R$18k/ano a partir do ano 12 (age 65): +~2pp
+- Vol reduzida no bond pool 13.3% (anos 0-6): +~1.5pp
 
 **Risco residual:** plano empresarial depende de CNPJ ativo. Se Diego encerrar a PJ pós-FIRE, custo sobe ~40% (plano individual). Não modelado explicitamente.
 

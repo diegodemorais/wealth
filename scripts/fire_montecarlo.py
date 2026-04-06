@@ -60,6 +60,16 @@ PREMISSAS = {
     "anos_bond_pool":           7,      # anos pós-FIRE cobertos pelo bond pool (sem IR equity)
     "aliquota_ir_equity":       0.15,   # 15% flat sobre ganho nominal
 
+    # INSS (HD-mc-audit 2026-04-06)
+    "inss_anual":               18_000, # R$18k/ano real — estimativa central (TX-inss-beneficio: R$46-55k nominal, uso R$18k real conservador)
+    "inss_inicio_ano":          12,     # ano 12 pós-FIRE = age 65
+
+    # Volatilidade por fase (HD-mc-audit 2026-04-06)
+    # Anos 0-6 (bond pool ativo): vol reduzida pela participação real do portfólio
+    # vol_bond_pool = pct_equity × vol_equity = 0.79 × 0.168 = 13.3%
+    # Anos 7+: vol cheia (portfólio ~97% equity após bond pool consumido)
+    "vol_bond_pool":            0.133,  # 79% × 16.8% — vol portfólio durante bond pool
+
     # Gatilho FIRE
     "patrimonio_gatilho":  13_400_000,  # R$2026 real
     "swr_gatilho":         0.024,       # 2.4%
@@ -162,7 +172,9 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
                         volatilidade: float, df: int, rng: np.random.Generator,
                         escala_custo_vida: float = 1.0,
                         aplicar_ir: bool = False, anos_bond_pool: int = 7,
-                        ipca_anual: float = 0.04, aliquota_ir: float = 0.15) -> tuple:
+                        ipca_anual: float = 0.04, aliquota_ir: float = 0.15,
+                        inss_anual: float = 0.0, inss_inicio_ano: int = 12,
+                        vol_bond_pool: float = None) -> tuple:
     """
     Simula uma trajetória de desacumulação.
     Retorna (sobreviveu: bool, patrimônio_final: float, patrimônio_pico: float)
@@ -172,14 +184,20 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
     anos_bond_pool: primeiros N anos pós-FIRE os saques vêm do bond pool (sem IR equity).
     ipca_anual: IPCA estimado para conversão nominal/real.
     aliquota_ir: alíquota IR sobre ganho nominal (15% flat).
+    inss_anual: R$ reais/ano de benefício INSS (subtrai do gasto a partir de inss_inicio_ano).
+    inss_inicio_ano: ano pós-FIRE em que INSS começa (default 12 = age 65 com FIRE 53).
+    vol_bond_pool: vol reduzida para anos 0–(anos_bond_pool-1). Se None, usa vol cheia.
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
 
     for ano in range(n_anos):
+        # Volatilidade: reduzida no período do bond pool (portfólio ~79% equity + 18% bonds)
+        vol_ano = vol_bond_pool if (vol_bond_pool is not None and ano < anos_bond_pool) else volatilidade
+
         # Retorno anual com fat tails
         z = rng.standard_t(df) / np.sqrt(df / (df - 2))  # normalizar variância
-        retorno_anual = retorno_equity + volatilidade * z
+        retorno_anual = retorno_equity + vol_ano * z
 
         # IR na desacumulação: aplica apenas quando equity é sacado (ano >= anos_bond_pool)
         if aplicar_ir and ano >= anos_bond_pool:
@@ -193,6 +211,10 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
         gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)  # em R$ reais 2026
         drawdown = max(0, 1 - pat / pat_pico)
         gasto = aplicar_guardrail(gasto_base, drawdown)
+
+        # INSS: reduz saque líquido a partir do ano 12 (age 65)
+        if inss_anual > 0 and ano >= inss_inicio_ano:
+            gasto = max(0, gasto - inss_anual)
 
         pat -= gasto
 
@@ -246,6 +268,9 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
     anos_bond_pool = premissas.get("anos_bond_pool", 7)
     ipca_anual = premissas.get("ipca_anual", 0.04)
     aliquota_ir = premissas.get("aliquota_ir_equity", 0.15)
+    inss_anual = premissas.get("inss_anual", 0.0)
+    inss_inicio_ano = premissas.get("inss_inicio_ano", 12)
+    vol_bond_pool = premissas.get("vol_bond_pool", None)
 
     for i in range(n_sim):
         pat_ini = float(pat_fire_trajetorias[i])
@@ -254,7 +279,9 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
             premissas["volatilidade_equity"], premissas["t_dist_df"], rng,
             escala_custo_vida=escala_cv,
             aplicar_ir=aplicar_ir, anos_bond_pool=anos_bond_pool,
-            ipca_anual=ipca_anual, aliquota_ir=aliquota_ir
+            ipca_anual=ipca_anual, aliquota_ir=aliquota_ir,
+            inss_anual=inss_anual, inss_inicio_ano=inss_inicio_ano,
+            vol_bond_pool=vol_bond_pool
         )
         if sobreviveu:
             sucessos += 1
@@ -357,6 +384,12 @@ def imprimir_resultados(resultados: list, premissas: dict):
         print(f"  IR desacumulação: ATIVO — {premissas['aliquota_ir_equity']:.0%} sobre ganho nominal, bond pool {premissas['anos_bond_pool']} anos")
     else:
         print(f"  IR desacumulação: DESATIVADO (--sem-ir)")
+    inss = premissas.get("inss_anual", 0)
+    if inss > 0:
+        print(f"  INSS:             R$ {inss:,.0f}/ano a partir do ano {premissas.get('inss_inicio_ano', 12)} (age {premissas['idade_fire_alvo'] + premissas.get('inss_inicio_ano', 12)})")
+    vbp = premissas.get("vol_bond_pool")
+    if vbp:
+        print(f"  Vol bond pool:    {vbp:.1%} (anos 0-{premissas.get('anos_bond_pool',7)-1}) → {premissas['volatilidade_equity']:.1%} (anos {premissas.get('anos_bond_pool',7)}+)")
     print("═"*60)
 
     print(f"\n{'Cenário':<12} {'P(FIRE)':>8} {'P(Gatilho)':>11}  {'Pat.Mediana@50':>15}  {'r_equity':>10}")
