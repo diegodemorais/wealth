@@ -26,6 +26,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
+| 2 | PT-multimodel-holding | Validação externa: holding, regime de bens, proteção patrimonial (pré-casamento) | Patrimonial | 🔴 Alta |
+| 3 | FR-multimodel-desacumulacao | Validação externa: sequência ótima de saques, otimização fiscal, INSS | FIRE | 🟡 Média |
+| 4 | FI-multimodel-retornos | Validação externa: retornos esperados equity global, factor premiums, vol | Factor | 🟡 Média |
 | ~~HD-multimodel-premissas~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
