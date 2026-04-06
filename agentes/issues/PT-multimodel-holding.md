@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | PT-multimodel-holding |
 | **Dono** | Patrimonial |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🔴 Alta |
 | **Participantes** | Head (lead), Patrimonial, Tax, Advocate |
 | **Co-sponsor** | Tax |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-06 |
 | **Origem** | HD-multimodel-premissas — protocolo Round 2 estendido a planejamento patrimonial |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 

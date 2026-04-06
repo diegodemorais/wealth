@@ -26,7 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
-| 2 | PT-multimodel-holding | Validação externa: holding, regime de bens, proteção patrimonial (pré-casamento) | Patrimonial | 🔴 Alta |
+| 2 | PT-planejamento-patrimonial | Execução planejamento patrimonial pré-casamento: pacto, testamento, seguro, PJs, holding | Patrimonial | 🟢 Baixa |
 | 3 | FR-multimodel-desacumulacao | Validação externa: sequência ótima de saques, otimização fiscal, INSS | FIRE | 🟡 Média |
 | 4 | FI-multimodel-retornos | Validação externa: retornos esperados equity global, factor premiums, vol | Factor | 🟡 Média |
 | ~~HD-multimodel-premissas~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
@@ -51,6 +51,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| PT-multimodel-holding | Validação externa: holding, regime de bens, proteção patrimonial | Patrimonial | 2026-04-06 | Sep. total bens confirmado. ZERO estate tax UCITS. 6 ações: pacto, testamento, term life+D&O, contratos PJ, holding, ITCMD. → PT-planejamento-patrimonial |
 | HD-multimodel-premissas | Validação multi-modelo premissas do MC | Head | 2026-04-06 | 1 ajuste (SAUDE_BASE R$18k). 7 premissas validadas. P(FIRE) 90.4%. Belly of the snake documentado. |
 | HD-mc-audit | Auditoria gaps fire_montecarlo.py | Head | 2026-04-06 | Double-count saúde corrigido (+4.4pp). IR −4.4pp. Net: P(FIRE) 87.2% (ambos corrigidos). 2 gaps conservadores remanescentes. |
 | FR-ir-desacumulacao | IR 15% na desacumulação — impacto P(FIRE) | FIRE | 2026-04-06 | IR modelado. Delta final líquido: 0pp (cancelado pelo spending fix simultâneo). P(FIRE) 87.2% base. |
