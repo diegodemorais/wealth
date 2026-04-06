@@ -90,25 +90,27 @@ Ambos aposentam juntos (53 anos). 2 planos empresariais desde o FIRE Day.
 
 ---
 
-## Cenários Monte Carlo — FIRE Casal (recalibrado 2026-04-02)
+## Cenários Monte Carlo — FIRE Casal (recalibrado 2026-04-06)
 
-Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajetórias | t-dist df=5 | seed 42
+Script: `scripts/fire_montecarlo.py` com SAUDE_BASE=R$32k (2p) | 10k trajetórias | t-dist df=5 | seed 42
+Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 + vol bond pool 13.3%
 
 **P(FIRE) por cenário:**
 
-| Cenário | Aporte | FIRE | Pat Mediana | P(base) | vs Antigo |
-|---------|--------|------|------------|---------|-----------|
-| Solo FIRE 53 (referência) | R$25k | 53 | R$11,53M | 87,2% | ref |
-| C1: FIRE 53, R$250k lifestyle | R$15k | 53 | R$9,30M | 74,0% | — |
-| C2: FIRE 53, R$270k lifestyle | R$15k | 53 | R$9,30M | 71,7% | — |
-| **C3: FIRE 55, R$250k lifestyle** | R$15k | 55 | R$10,34M | **80,1%** | +14,7pp |
-| **C4: FIRE 55, R$270k lifestyle** | R$15k | 55 | R$10,34M | **77,1%** | +11,7pp |
-| C5: FIRE 55, R$290k lifestyle | R$15k | 55 | R$10,34M | 75,4% | — |
+| Cenário | Aporte | FIRE | Pat Mediana | P(base) | vs 2026-04-02 | vs Original |
+|---------|--------|------|------------|---------|---------------|-------------|
+| Solo FIRE 53 (ref, SAUDE_BASE R$16k) | R$25k | 53 | R$11,53M | **90,8%** | +3,6pp | ref |
+| C1: FIRE 53, R$250k lifestyle | R$15k | 53 | R$9,30M | 78,2% | +4,2pp | — |
+| C2: FIRE 53, R$270k lifestyle | R$15k | 53 | R$9,30M | 75,6% | +3,9pp | — |
+| **C3: FIRE 55, R$250k lifestyle** | R$15k | 55 | R$10,34M | **82,2%** | +2,1pp | +16,8pp |
+| **C4: FIRE 55, R$270k lifestyle** | R$15k | 55 | R$10,34M | **79,8%** | +2,7pp | +14,4pp |
+| C5: FIRE 55, R$290k lifestyle | R$15k | 55 | R$10,34M | 77,8% | +2,4pp | — |
 
-**Comparativo com análise anterior (2026-03-27):**
-- C5 antigo (FIRE 55, R$250k, saúde 7%, 2p individual): P(base) = **65,4%**
-- C4 novo (FIRE 55, R$270k, VCMH 2,7%, 2p empresarial): P(base) = **77,1%**
-- Ganho do modelo corrigido: **+11,7pp**
+**Comparativo histórico:**
+- Original (2026-03-27, saúde 7%, 2p individual): C4 = **65,4%**
+- Recalibrado (2026-04-02, VCMH 2,7%, 2p empresarial): C4 = **77,1%**
+- Modelo completo (2026-04-06, HD-mc-audit): C4 = **79,8%**
+- Ganho acumulado modelo correto: **+14,4pp**
 
 ### Decomposição do ganho
 
@@ -157,11 +159,11 @@ Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajet
 
 ## Conclusão
 
-**Principal mudança vs 2026-03-27:** P(FIRE 55 casal) sobe de **65,4% → 77,1%** com modelo de saúde corrigido (mesmo com ambos aposentando juntos — pior caso de cobertura).
+**Principal mudança vs 2026-03-27:** P(FIRE 55 casal) sobe de **65,4% → 79,8%** com modelo de saúde corrigido + HD-mc-audit.
 
-**Achados principais:**
-1. P(FIRE 55, R$250k lifestyle) = **80,1%** — atinge o threshold com lifestyle conservador
-2. P(FIRE 55, R$270k lifestyle) = **77,1%** — próximo do threshold
+**Achados principais (modelo completo 2026-04-06):**
+1. P(FIRE 55, R$250k lifestyle) = **82,2%** — acima do threshold de 80%
+2. P(FIRE 55, R$270k lifestyle) = **79,8%** — marginalmente abaixo do threshold
 3. Saúde 2p na largada: R$32k (empresarial) vs R$75,8k (individual antigo) — −58%
 4. VCMH 2,7%/ano real (correto) vs 7% (antigo) = crescimento muito mais lento
 5. 80% base para o casal **é alcançável** com lifestyle R$250k — conclusão anterior ("estruturalmente fora de alcance") está REVOGADA
@@ -179,7 +181,7 @@ Script: `scripts/fire_montecarlo.py` adaptado + saúde casal inline | 10k trajet
 
 | Tipo | Detalhe |
 |------|---------|
-| **FIRE** | P(FIRE 55 casal) = 77,1% (R$270k) / 80,1% (R$250k) base. Modelo anterior (65,4%) estava errado — saúde individual superestimada. |
+| **FIRE** | P(FIRE 55 casal) = 79,8% (R$270k) / 82,2% (R$250k) base — modelo HD-mc-audit completo. Evolução: 65,4% → 77,1% → 79,8%. |
 | **Estratégia** | Sem mudança de alocação. Revisitar quando vida real do casal testada. |
 | **Conhecimento** | Plano empresarial real (R$16k/pp, Bradesco SP) + VCMH 2,7% = base correta. Individual superestima em 2,4×. Ambos aposentam juntos = 2p desde FIRE Day. |
 | **Ação urgente** | Planejamento sucessório + seguro de vida — independente de cálculos. |
