@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-multi_llm_query.py v2 — Consulta paralela a múltiplos LLMs (free-only)
+multi_llm_query.py v2 — Consulta paralela a múltiplos LLMs
 
 Uso:
     python3 scripts/multi_llm_query.py --prompt "sua pergunta aqui"
@@ -10,11 +10,10 @@ Uso:
     python3 scripts/multi_llm_query.py --check  # testa conectividade de todos os modelos
 
 API Keys (via .env ou variáveis de ambiente):
-    GEMINI_API_KEY      — aistudio.google.com/apikey (free tier: 15 RPM)
+    GEMINI_API_KEY      — aistudio.google.com/apikey (pago)
     GROQ_API_KEY        — console.groq.com (free)
     OPENROUTER_API_KEY  — openrouter.ai/keys (free)
-    CEREBRAS_API_KEY    — cloud.cerebras.ai (free)
-    MISTRAL_API_KEY     — console.mistral.ai (free: 2 RPM)
+    SAMBANOVA_API_KEY   — cloud.sambanova.ai (free)
 """
 
 import asyncio
@@ -37,27 +36,27 @@ os.environ["LITELLM_LOG"] = "ERROR"
 
 BASE_DIR = Path(__file__).parent.parent
 
-# ── Modelos (todos free) ─────────────────────────────────────────────────────
+# ── Modelos ───────────────────────────────────────────────────────────────────
+# 7 modelos oficiais, 4 providers, máxima diversidade de training data
 # Cada entrada: id, env_key, provider (para stagger)
 
 MODELS = {
-    # Cerebras — free, 1M tok/dia, inferência ultra-rápida
-    "qwen235b":      {"id": "cerebras/qwen3-235b-a22b",                          "env_key": "CEREBRAS_API_KEY",   "provider": "cerebras"},
-    # Groq — free, rápido, rate limits moderados
-    "gpt-oss":       {"id": "groq/openai/gpt-oss-120b",                          "env_key": "GROQ_API_KEY",       "provider": "groq"},
-    "llama4":        {"id": "groq/meta-llama/llama-4-scout-17b-16e-instruct",    "env_key": "GROQ_API_KEY",       "provider": "groq"},
-    # OpenRouter — free tier (:free suffix)
-    "deepseek-r1":   {"id": "openrouter/deepseek/deepseek-r1:free",              "env_key": "OPENROUTER_API_KEY", "provider": "openrouter"},
-    "qwen36plus":    {"id": "openrouter/qwen/qwen3.6-plus:free",                 "env_key": "OPENROUTER_API_KEY", "provider": "openrouter"},
-    "minimax":       {"id": "openrouter/minimax/minimax-m2.5:free",              "env_key": "OPENROUTER_API_KEY", "provider": "openrouter"},
-    # Gemini — free tier AI Studio (15 RPM, 1.5K req/dia)
+    # Gemini — pago, âncora frontier (melhor qualidade overall)
     "gemini":        {"id": "gemini/gemini-2.5-flash",                            "env_key": "GEMINI_API_KEY",     "provider": "gemini"},
-    # Mistral — free (2 RPM, 1B tok/mês)
-    "mistral":       {"id": "mistral/mistral-large-latest",                       "env_key": "MISTRAL_API_KEY",    "provider": "mistral"},
+    # OpenRouter — free, DeepSeek R1 (melhor reasoning open-source, chain-of-thought)
+    "deepseek-r1":   {"id": "openrouter/deepseek/deepseek-r1:free",              "env_key": "OPENROUTER_API_KEY", "provider": "openrouter"},
+    # SambaNova — free, Qwen 3 235B (maior modelo free, perspectiva chinesa)
+    "qwen235b":      {"id": "sambanova/Qwen3-235B-A22B",                         "env_key": "SAMBANOVA_API_KEY",  "provider": "sambanova"},
+    # SambaNova — free, Llama 3.1 405B (maior Llama, Meta training data)
+    "llama405b":     {"id": "sambanova/Meta-Llama-3.1-405B-Instruct",            "env_key": "SAMBANOVA_API_KEY",  "provider": "sambanova"},
+    # Groq — free, GPT-OSS 120B (OpenAI lineage, ultra-rápido)
+    "gpt-oss":       {"id": "groq/openai/gpt-oss-120b",                          "env_key": "GROQ_API_KEY",       "provider": "groq"},
+    # Groq — free, Llama 4 Scout (MoE recente, arquitetura diferente)
+    "llama4":        {"id": "groq/meta-llama/llama-4-scout-17b-16e-instruct",    "env_key": "GROQ_API_KEY",       "provider": "groq"},
 }
 
-# Conjunto padrão (subset rápido — 5 modelos, 1 por provider para evitar 429)
-DEFAULT_MODELS = ["qwen235b", "gpt-oss", "deepseek-r1", "gemini", "mistral"]
+# Default: 5 modelos, 1 por provider (máxima diversidade, mínimo 429)
+DEFAULT_MODELS = ["gemini", "deepseek-r1", "qwen235b", "gpt-oss", "llama4"]
 
 SEPARADOR = "=" * 68
 STAGGER_DELAY = 0.8  # segundos entre chamadas ao mesmo provider
