@@ -13,32 +13,20 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 ## Board
 
-### Refinamento
-> Issues que precisam de mais detalhamento antes de comecar
+### Discovery
+> Temas no radar mas sem urgência para execução agora
 
 | ID | Titulo | Dono | Prioridade |
-|----|--------|-------------|------------|
-| — | — | — | — |
+|----|--------|------|------------|
+| PT-protecao-vida-familia | Proteção de vida, patrimônio e continuidade familiar | Patrimonial | 🟡 Média |
 
 ### Backlog
 > Issues prontas para execucao, aguardando vez
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
-| 2 | PT-planejamento-patrimonial | Execução planejamento patrimonial pré-casamento: pacto, testamento, seguro, PJs, holding | Patrimonial | 🟢 Baixa |
-| 3 | FR-multimodel-desacumulacao | Validação externa: sequência ótima de saques, otimização fiscal, INSS | FIRE | 🟡 Média |
-| ~~FI-multimodel-retornos~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
-| ~~HD-multimodel-premissas~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
-| ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
-| ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
-| 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
-| ~~HD-mc-audit~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
-| 5 | FR-spending-modelo-familia | Modelo custo de vida pós-família: R$300k + stress-test (SLA: Q3/2026) | FIRE | 🟡 Média |
-| ~~FR-ir-desacumulacao~~ | ~~concluída 2026-04-06~~ | ~~FIRE~~ | ~~Média~~ |
-| ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
-| ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
-| ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
+| 1 | FR-multimodel-desacumulacao | Validação externa: sequência ótima de saques, otimização fiscal, INSS | FIRE | 🟡 Média |
+| 2 | FR-spending-modelo-familia | Modelo custo de vida pós-família: R$300k + stress-test (SLA: Q3/2026) | FIRE | 🟡 Média |
 
 ### Doing
 > Issues em andamento
