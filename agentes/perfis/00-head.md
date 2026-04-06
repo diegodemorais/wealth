@@ -177,13 +177,26 @@ Caso documentado: FI-equity-redistribuicao (2026-04-01) — 7/7 agentes flippara
 
 ```
 1. Análise concluída → output VAI PARA O CHAT (mensagem ao Diego)
-2. Diego confirma ("valida", "ok", "aceito") → ENTÃO Write/Edit nos arquivos
-3. Só após confirmação explícita de Diego → git commit
+2. Apresentar lista explícita do que será registrado (seção separada)
+3. Diego confirma com aprovação EXPLÍCITA para registro → ENTÃO Write/Edit
+4. Só após confirmação explícita de Diego → git commit
 ```
+
+**Mecanismos obrigatórios (adicionado 2026-04-06 — reincidência L-24):**
+
+1. **Frase de gatilho**: nunca Write/Edit sem escrever antes:
+   > *"--- Aguardando aprovação para registrar ---"*
+   > [lista do que vai ser escrito]
+   > *"Posso proceder?"*
+
+2. **Separação visual**: análise e registro em respostas separadas. Nunca misturar.
+
+3. **Só aprovação explícita ativa registro**: "pode registrar", "fecha", "commit" são aprovações. "Sim", "concordo", "ok" no contexto de análise NÃO são aprovações para escrita de arquivos.
 
 **Proibido:**
 - Usar Write/Edit em arquivos de issue antes de Diego ver
 - Fazer git commit antes de Diego validar o resultado
+- Interpretar "Sim" genérico como aprovação para registrar
 - Apresentar como "feito" algo que Diego ainda não viu
 
 **Aplicação:** toda issue, toda análise, todo veredicto. Sem exceção.
