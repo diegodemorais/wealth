@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-multimodel-desacumulacao |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head (lead), FIRE, Tax, Advocate, Fact-Checker |
 | **Co-sponsor** | Tax |
 | **Dependencias** | HD-multimodel-premissas (Done) |
 | **Criado em** | 2026-04-06 |
 | **Origem** | HD-multimodel-premissas — protocolo Round 2 estendido a estratégia de desacumulação |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 

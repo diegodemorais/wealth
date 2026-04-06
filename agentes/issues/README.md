@@ -25,7 +25,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | FR-multimodel-desacumulacao | Validação externa: sequência ótima de saques, otimização fiscal, INSS | FIRE | 🟡 Média |
 | 2 | FR-spending-modelo-familia | Modelo custo de vida pós-família: R$300k + stress-test (SLA: Q3/2026) | FIRE | 🟡 Média |
 
 ### Doing
@@ -39,6 +38,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-multimodel-desacumulacao | Validação externa: desacumulação, IR, sequência saques | FIRE | 2026-04-06 | IR 15% flat correto. Bond→equity mantido. Isenção R$35k/mês não se aplica a ETFs UCITS. Script sem ajuste. |
 | FI-multimodel-retornos | Validação externa: retornos equity, factor premiums, asset allocation | Factor | 2026-04-06 | 3.7%/5.0% premissas validadas. 50/30/20 corroborado (CFA survey). Factor 0.16% líquido consistente. Premissas robustas. |
 | PT-multimodel-holding | Validação externa: holding, regime de bens, proteção patrimonial | Patrimonial | 2026-04-06 | Sep. total bens confirmado. ZERO estate tax UCITS. 6 ações: pacto, testamento, term life+D&O, contratos PJ, holding, ITCMD. → PT-planejamento-patrimonial |
 | HD-multimodel-premissas | Validação multi-modelo premissas do MC | Head | 2026-04-06 | 1 ajuste (SAUDE_BASE R$18k). 7 premissas validadas. P(FIRE) 90.4%. Belly of the snake documentado. |
