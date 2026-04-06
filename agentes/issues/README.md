@@ -26,6 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
+| 2 | HD-multimodel-premissas | Validação multi-modelo: VCMH, spending smile, SWR, INSS, bond pool | Head | 🟡 Média |
 | ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
 | 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
