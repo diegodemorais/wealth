@@ -26,7 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
-| 2 | HD-multimodel-validation | Multi-Model Validation — executar em issue estrutural | Head | 🟡 Média |
+| ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
 | 4 | FR-spending-modelo-familia | Modelo custo de vida pós-família: R$300k + stress-test (SLA: Q3/2026) | FIRE | 🟡 Média |
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
@@ -44,6 +44,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-multimodel-validation | Multi-Model Validation — AVGS 30% vs mercado | Head | 2026-04-06 | 50/30/20 corroborado. 6 outputs externos. 7 findings: tracking error regret, factor drought, rebalanceamento, família+drawdown. Protocolo Round 2 (sem tickers) definido como padrão. |
 | HD-gastos-pessoais-2026 | Análise de gastos pessoais ago/2025–mar/2026 | Head | 2026-04-03 | Baseline R$218k/ano. Picos Jan/Fev = tributos anuais. Buffer R$32k insuficiente para família. → FR-spending-modelo-familia |
 | FI-etf-deep-review | Análise profunda: 7 ETFs candidatos com dados suficientes | Factor | 2026-04-03 | Unanimidade: zero mudanças. SWRD/AVGS/AVEM confirmado pelo Zero-Based. IWDS único candidato futuro (mar/2027). |
 | FI-radar-etfs-review | Revisão completa do radar de ETFs candidatos | Factor | 2026-04-02 | 4 convictions baixadas. AVWS adicionado (verificar vs AVGS). ACSW +8-12bps real (não 25bps). |

@@ -57,6 +57,34 @@ Nao basta definir SWR. Definir o que acontece se drawdown > X% nos primeiros N a
 
 ---
 
+## Multi-Model Validation — Findings (2026-04-06)
+
+> Execução: HD-multimodel-validation. 2 rounds + Deep Research. Tema: AVGS 30% vs SWRD 50%.
+
+### Decisão validada: 50/30/20 corroborado
+
+6 outputs externos, 2 rounds. Mediana Round 2 (sem tickers) = exatamente 50/30/20. Decisão FI-equity-redistribuicao sobrevive.
+
+### Findings registrados
+
+| # | Finding | Fonte | Ação |
+|---|---------|-------|------|
+| F-1 | **Tracking error regret é o risco primário de falha**, não drawdown absoluto. Time mapeou tail risk (-45% BRL) mas não aceitou explicitamente o risco de underperformance relativa prolongada (ex: AVGS flat enquanto SWRD +8%/ano por 8 anos). Este é o mecanismo real de abandono de estratégias fatoriais. | R1 — ChatGPT + Perplexity | Adicionar a carteira.md como risco aceito ao lado de tail risk |
+| F-2 | **Factor drought sequence risk** ≠ market drawdown. Bond tent protege contra queda de mercado; não protege contra underperformance relativa do fator pré-FIRE. Se AVGS underperforma SWRD por 5+ anos antes de 2040, o SWR no FIRE Day será calculado sobre portfólio que rendeu menos que o mercado por uma década. | R2 — Perplexity | Novo gatilho: se AVGS underperforma SWRD >5pp acum. 24 meses → reabrir debate SCV |
+| F-3 | **Restrição "rebalancear só via aportes" degrada eficiência fatorial.** Factor strategies dependem de turnover (comprar barato, vender caro dentro do fator). Com R$25k/mês vs R$3M+, turnover natural ~10%/ano. Premium efetivo capturado provavelmente 0.7-0.9%/ano vs 1.1% teórico. | R2 — ChatGPT | Quantificar em issue futura (baixa prioridade) |
+| F-4 | **Sinergia família + drawdown não modelada como evento conjunto.** Filho ~2028, drawdown possível a qualquer momento. Se coincidem: gastos sobem R$50-70k/ano (rígidos) + portfólio deprimido. Modelo FIRE trata como independentes. | R2 — Gemini | Próximo fire_montecarlo.py incluir cenário "filho 2028 + drawdown 2029" |
+| F-5 | **Formato sem tickers (Round 2) é superior para multi-model validation.** Round 1: 3 modelos ancoraram em track record curto de AVGS → todos recomendaram menos. Round 2: dispersão honesta (25-35%), mediana = 50/30/20, 3 insights estruturais novos vs 0 no Round 1. | Comparação R1 vs R2 | Protocolo futuro: Round 2 como padrão |
+| F-6 | **Argumento phantom gain favorece IPCA+, não mais factor tilt.** Deep Research argumentou que custos maiores (IR sobre ganho nominal) exigem mais retorno → mais SCV. Lógica invertida: se hurdle está alto e IPCA+ 7.21% bruto já entrega ~6.0% real HTM vs equity base 4.85%, o argumento é para mais IPCA+, não mais SCV. Reforça DCA em curso. | Deep Research | Já na estratégia — mais uma linha de evidência |
+| F-7 | **Round 1 com tickers ancorou modelos no produto, não na tese.** Sem AVGS (produto novo, 2022), modelos avaliaram SCV como asset class e foram mais agressivos (ChatGPT: 35%). A ancoragem no produto comprime a avaliação da tese subjacente. | R1 vs R2 | — |
+
+### Protocolo futuro
+
+- **Formato padrão**: Round 2 (categorias, sem tickers)
+- **Periodicidade**: anual na revalidação de premissas + ad-hoc em issue estrutural ≥Alta
+- **Gatilho automático de revisão SCV**: AVGS underperforma SWRD >5pp acumulado em 24 meses → reabrir debate com F-1/F-2 como contexto
+
+---
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |
