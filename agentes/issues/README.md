@@ -28,7 +28,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
 | 2 | PT-planejamento-patrimonial | Execução planejamento patrimonial pré-casamento: pacto, testamento, seguro, PJs, holding | Patrimonial | 🟢 Baixa |
 | 3 | FR-multimodel-desacumulacao | Validação externa: sequência ótima de saques, otimização fiscal, INSS | FIRE | 🟡 Média |
-| 4 | FI-multimodel-retornos | Validação externa: retornos esperados equity global, factor premiums, vol | Factor | 🟡 Média |
+| ~~FI-multimodel-retornos~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
 | ~~HD-multimodel-premissas~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
@@ -51,6 +51,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FI-multimodel-retornos | Validação externa: retornos equity, factor premiums, asset allocation | Factor | 2026-04-06 | 3.7%/5.0% premissas validadas. 50/30/20 corroborado (CFA survey). Factor 0.16% líquido consistente. Premissas robustas. |
 | PT-multimodel-holding | Validação externa: holding, regime de bens, proteção patrimonial | Patrimonial | 2026-04-06 | Sep. total bens confirmado. ZERO estate tax UCITS. 6 ações: pacto, testamento, term life+D&O, contratos PJ, holding, ITCMD. → PT-planejamento-patrimonial |
 | HD-multimodel-premissas | Validação multi-modelo premissas do MC | Head | 2026-04-06 | 1 ajuste (SAUDE_BASE R$18k). 7 premissas validadas. P(FIRE) 90.4%. Belly of the snake documentado. |
 | HD-mc-audit | Auditoria gaps fire_montecarlo.py | Head | 2026-04-06 | Double-count saúde corrigido (+4.4pp). IR −4.4pp. Net: P(FIRE) 87.2% (ambos corrigidos). 2 gaps conservadores remanescentes. |

@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FI-multimodel-retornos |
 | **Dono** | Factor |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head (lead), Factor, Quant, Fact-Checker, Advocate |
 | **Co-sponsor** | Fact-Checker |
 | **Dependencias** | HD-multimodel-premissas (Done) |
 | **Criado em** | 2026-04-06 |
 | **Origem** | HD-multimodel-premissas — protocolo Round 2 estendido a retornos esperados de equity |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 
