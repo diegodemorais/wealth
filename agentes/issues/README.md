@@ -27,8 +27,10 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
 | ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
+| ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
 | 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
 | 4 | FR-spending-modelo-familia | Modelo custo de vida pós-família: R$300k + stress-test (SLA: Q3/2026) | FIRE | 🟡 Média |
+| 5 | FR-ir-desacumulacao | IR 15% na desacumulação — modelar impacto no P(FIRE) | FIRE | 🟡 Média |
 | ~~FR-fire-execution-plan~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~FR-currency-mismatch-fire~~ | ~~concluída 2026-04-02~~ | ~~FIRE~~ | ~~Alta~~ |
 | ~~TX-saude-fire~~ | ~~concluída 2026-04-02~~ | ~~Wealth~~ | ~~Alta~~ |
@@ -44,6 +46,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FI-avgs-premium-reconciliacao | AVGS premium — 130bps vs 46bps vs 0.16% | Factor | 2026-04-06 | Inconsistência cosmética. 3 números medem coisas diferentes — todos consistentes. 5.0% USD já é mais conservador que FF93+haircut. Finding: IR não modelado na desacumulação → FR-ir-desacumulacao. |
 | HD-multimodel-validation | Multi-Model Validation — AVGS 30% vs mercado | Head | 2026-04-06 | 50/30/20 corroborado. 6 outputs externos. 7 findings: tracking error regret, factor drought, rebalanceamento, família+drawdown. Protocolo Round 2 (sem tickers) definido como padrão. |
 | HD-gastos-pessoais-2026 | Análise de gastos pessoais ago/2025–mar/2026 | Head | 2026-04-03 | Baseline R$218k/ano. Picos Jan/Fev = tributos anuais. Buffer R$32k insuficiente para família. → FR-spending-modelo-familia |
 | FI-etf-deep-review | Análise profunda: 7 ETFs candidatos com dados suficientes | Factor | 2026-04-03 | Unanimidade: zero mudanças. SWRD/AVGS/AVEM confirmado pelo Zero-Based. IWDS único candidato futuro (mar/2027). |

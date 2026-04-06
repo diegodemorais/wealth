@@ -122,7 +122,7 @@ Retorno real esperado em USD: mediana multi-fonte (AQR, Vanguard VCMM, JPMorgan 
 | ETF | Retorno Real USD | Dep. BRL Base (0.5%) | Dep. BRL Favoravel (1.5%) | Dep. BRL Stress (0%) | Fonte |
 |-----|-----------------|---------------------|--------------------------|---------------------|-------|
 | SWRD (mercado neutro) | 3.7% | **4.2%** | **5.2%** | **3.7%** | Mediana 5 fontes: AQR Global Dev 4.2%, Vanguard 3.6%, JPM 4.4%, RA 2.5%, Schwab 3.7% |
-| AVGS (small value) | 5.0% | **5.5%** | **6.5%** | **5.0%** | Mediana multi-fonte: AQR 4.7-5.2%, Vanguard 5.6%, JPM 5.0%, GMO 3.5%, RA 5.5%, FF93+haircut 5.8% |
+| AVGS (small value) | 5.0% | **5.5%** | **6.5%** | **5.0%** | Mediana multi-fonte: AQR 4.7-5.2%, Vanguard 5.6%, JPM 5.0%, GMO 3.5%, RA 5.5%, FF93+haircut 5.8%. **Nota (FI-avgs-premium-reconciliacao 2026-04-06):** mediana 5.0% é mais conservadora que FF93+haircut 5.8% — haircut orgânico via projeções de mercado. Alpha líquido do tilt fatorial: ~0.16%/ano (scorecard). O spread de 130bps AVGS-SWRD inclui beta, universe mix e factor premium — não é só factor alpha. |
 | AVEM (EM + value tilt) | 5.0% | **5.5%** | **6.5%** | **5.0%** | Media 4 fontes: AQR 5.1%, JPM 5.3%, GMO 3.8%, RA 6.5% = 5.18%; arredondado conservadoramente |
 
 ### Custos All-In (comparacao justa equity vs RF)
