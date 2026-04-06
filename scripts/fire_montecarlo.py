@@ -87,7 +87,7 @@ SPENDING_SMILE = {
     "no_go":   {"gasto": 187_000, "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
 }
 
-SAUDE_BASE         = 16_000   # R$/ano no FIRE 53 — plano empresarial coletivo PJ (revisado 2026-04-02)
+SAUDE_BASE         = 18_000   # R$/ano no FIRE 53 — plano empresarial coletivo PJ (revisado 2026-04-06, HD-multimodel-premissas Bloco A)
 SAUDE_INFLATOR     = 0.027    # 2.7%/ano real — VCMH IESS média 18 anos (revisado 2026-04-02)
 SAUDE_INFLATOR_CAP = 0.060    # 6.0% cap conservador
 SAUDE_DECAY        = 0.50     # 50% após No-Go (mobilidade cai; cuidado institucional já no no_go base)

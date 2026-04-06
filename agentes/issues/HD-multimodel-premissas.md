@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-multimodel-premissas |
 | **Dono** | Head |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
-| **Participantes** | Head (lead), FIRE, Quant, Advocate |
+| **Participantes** | Head (lead), FIRE, Quant, Advocate, Fact-Checker |
 | **Co-sponsor** | Advocate |
 | **Dependencias** | HD-mc-audit (Done) |
 | **Criado em** | 2026-04-06 |
 | **Origem** | Sucesso de HD-multimodel-validation (AVGS) — aplicar protocolo às premissas do MC |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 
@@ -105,13 +105,64 @@ Modelos: GPT-4o, Gemini 1.5 Pro (ou Deep Research), Perplexity.
 ## Escopo
 
 - [x] Formular prompts Bloco A e B
-- [ ] Diego roda Bloco A nos 3 modelos e cola outputs
-- [ ] Head sintetiza Bloco A — findings e impacto nas premissas
-- [ ] Diego roda Bloco B nos 3 modelos e cola outputs
-- [ ] Head sintetiza Bloco B
-- [ ] Quant: valida qualquer ajuste numérico proposto
-- [ ] Head: lista de premissas a atualizar (se houver)
-- [ ] Aprovação de Diego antes de qualquer mudança no script
+- [x] Diego roda Bloco A nos 3 modelos e cola outputs
+- [x] Head sintetiza Bloco A — findings e impacto nas premissas
+- [x] Aprovação de Diego + implementação SAUDE_BASE R$16k→R$18k (−0.4pp, P(FIRE) 90.4%)
+- [x] Diego roda Bloco B nos 3 modelos e cola outputs
+- [x] Head sintetiza Bloco B (Fact-Checker + FIRE + Advocate)
+- [x] Sensibilidade SAUDE_DECAY e bond pool rodadas no MC
+- [x] Head: lista de premissas atualizada — 1 ajuste implementado, 7 mantidos
+
+---
+
+## Resultado Final (2026-04-06)
+
+| Tipo | Detalhe |
+|------|---------|
+| **FIRE** | P(FIRE) final: 90,4% base / 94,1% favorável / 86,8% stress (−0.4pp vs HD-mc-audit por SAUDE_BASE R$18k) |
+| **Premissas** | 1 ajuste implementado (SAUDE_BASE R$16k→R$18k). 7 premissas validadas e mantidas. |
+| **Insights** | INSS R$18k correto para Diego (modelos externos errados por desconhecer perfil). Bond pool 7 anos mantido por risco soberano concentrado. SAUDE_DECAY cosmético. |
+| **Novo finding** | "Belly of the snake" anos 7-11 pós-FIRE: bond pool esgotado + INSS não iniciado + saúde acelerada. Remédio: guardrails, não mais IPCA+. |
+
+---
+
+## Resultado Bloco A — Healthcare Brasil (2026-04-06)
+
+Inputs: Perplexity, ChatGPT, Gemini + Fact-Checker, Pesquisa-PJ, FIRE, Advocate internos.
+
+| Premissa | Veredicto | Ação |
+|----------|-----------|------|
+| SAUDE_BASE R$16k/pp | 3/3 modelos: subestimativa leve. Advocate calibrou para R$18k (não R$24-30k) | **AJUSTADO → R$18k. −0.4pp** |
+| VCMH 2.7% real | Fact-Checker confundiu nominal/real. Série 18 anos IESS é a correta. Modelos externos citaram período atípico 2021-2024 | Manter |
+| ANS faixas (RN 63/2003) | 3/3 modelos externos citaram faixas erradas (59-63 / 64+). Nossa premissa (59+ = faixa única) estava correta | Manter |
+| SAUDE_DECAY 0.50 | Custos totais sobem no No-Go (evidência real). Mas Advocate tem ponto: confunde plano vs total; No-Go R$187k já embute cuidados. Impacto: −0.2pp | Manter — documentado como limitação |
+| Risco PJ | STJ Tema 1.047 protege. CNPJ ativo afasta rescisão. ROI R$3-4k/ano → R$22k economia | Não modelar estochasticamente |
+
+**P(FIRE) pós-Bloco A:** 90,4% base / 94,1% favorável / 86,8% stress (−0.4pp vs HD-mc-audit).
+
+---
+
+## Resultado Bloco B — Spending e Desacumulação (2026-04-06)
+
+Inputs: Perplexity, ChatGPT, Gemini + Fact-Checker, FIRE, Advocate internos.
+
+| Premissa | Veredicto | Ação |
+|----------|-----------|------|
+| INSS R$18k "pessimistic" (3/3 modelos) | REFUTADA — modelos assumiram 33 anos de teto integral; Diego tem 13 anos de SM que diluem SB via EC 103/2019. TX-inss-beneficio (2026-03-26) calculou corretamente. | Manter R$18k |
+| No-Go lifestyle R$187k "otimista" (2/3 modelos) | PARCIAL — Blanchett 2014 (peer-reviewed): queda ~26% real esperada, mais pronunciada em alta renda. R$220-260k sem fonte. FIRE: impacto cosmético (< 0.5pp, 7 anos fortemente descontados). | Manter R$187k |
+| SAUDE_DECAY 0.50 (risco cuidadores) | Cosmético — sensibilidade rodada: 0.50→1.00 custa apenas −0.5pp. Manter com nota de limitação. | Manter 0.50 |
+| SWR 2.4% (3/3: "appropriate") | Robusto — e mais conservador do que modelos percebem (avaliaram com INSS 3-5x maior). | Manter |
+| Bond pool 7 anos (+0.6pp para 9 anos) | MANTIDO — extensão ignora risco soberano concentrado. Capital humano + imóveis + empresa + INSS já são 100% Brasil. Equity UCITS é o único hedge. Mais IPCA+ = mais concentração no risco dominante. | Manter 7 anos |
+
+**Novo finding: "Belly of the snake" (anos 7-11 pós-FIRE):**
+Bond pool esgotado (ano 7) + INSS não iniciado (ano 12) + saúde acelerada (ANS 5×, 59+ anos) + 100% equity. Janela de máxima vulnerabilidade. Remédio: guardrails, não mais IPCA+. Documentado para stress-test futuro.
+
+**Sensibilidades rodadas no MC:**
+
+| Parâmetro | Valores | Resultado |
+|-----------|---------|-----------|
+| SAUDE_DECAY | 0.50 / 0.70 / 0.80 / 1.00 | 90.4% / 90.4% / 89.8% / 89.9% — cosmético |
+| Bond pool | 7 / 8 / 9 / 10 anos | 90.4% / 90.7% / 91.0% / 91.0% — +0.6pp mas ignora soberano |
 
 ---
 

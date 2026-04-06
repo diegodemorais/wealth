@@ -26,7 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | TX-seguro-vida | Seguro de vida — avaliação e contratação (SLA: mai/2026) | Tax | 🔴 Alta |
-| 2 | HD-multimodel-premissas | Validação multi-modelo: VCMH, spending smile, SWR, INSS, bond pool | Head | 🟡 Média |
+| ~~HD-multimodel-premissas~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~HD-multimodel-validation~~ | ~~concluída 2026-04-06~~ | ~~Head~~ | ~~Média~~ |
 | ~~FI-avgs-premium-reconciliacao~~ | ~~concluída 2026-04-06~~ | ~~Factor~~ | ~~Média~~ |
 | 3 | FI-avgs-premium-reconciliacao | AVGS premium — reconciliar 110bps vs 46bps pós-haircut | Factor | 🟡 Média |
@@ -48,6 +48,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-multimodel-premissas | Validação multi-modelo premissas do MC | Head | 2026-04-06 | 1 ajuste (SAUDE_BASE R$18k). 7 premissas validadas. P(FIRE) 90.4%. Belly of the snake documentado. |
 | HD-mc-audit | Auditoria gaps fire_montecarlo.py | Head | 2026-04-06 | Double-count saúde corrigido (+4.4pp). IR −4.4pp. Net: P(FIRE) 87.2% (ambos corrigidos). 2 gaps conservadores remanescentes. |
 | FR-ir-desacumulacao | IR 15% na desacumulação — impacto P(FIRE) | FIRE | 2026-04-06 | IR modelado. Delta final líquido: 0pp (cancelado pelo spending fix simultâneo). P(FIRE) 87.2% base. |
 | FI-avgs-premium-reconciliacao | AVGS premium — 130bps vs 46bps vs 0.16% | Factor | 2026-04-06 | Inconsistência cosmética. 3 números medem coisas diferentes — todos consistentes. 5.0% USD já é mais conservador que FF93+haircut. Finding: IR não modelado na desacumulação → FR-ir-desacumulacao. |

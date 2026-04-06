@@ -91,28 +91,28 @@
 
 **Premissas anteriores (FR-spending-smile 2026-03-27):** R$37,9k base (R$18k × 1,07^11) + 7%/ano. INCORRETO: usava plano individual + confundia VCMH com projector.
 
-**Premissas atuais (aprovadas 2026-04-02):**
-- `SAUDE_BASE = 16.000` — Bradesco coletivo PJ, cotação real age 53 SP
+**Premissas atuais (aprovadas 2026-04-06, HD-multimodel-premissas Bloco A):**
+- `SAUDE_BASE = 18.000` — Bradesco coletivo PJ, ajuste conservador (+R$2k vs cotação direta; 3/3 modelos externos apontaram subestimativa leve)
 - `SAUDE_INFLATOR = 0.027` — VCMH IESS real, 18 anos
 - ANS faixa etária: multiplicadores discretos sobre base FIRE Day (faixa 3,0×)
   - age 54: × 1,33 | age 59: × 1,67 | age 64: × 2,00
 - `SAUDE_DECAY = 0,50` após no-go (cuidado institucional já no no_go base)
 
-**Custo saúde Diego por idade (novo modelo):**
+**Custo saúde Diego por idade (modelo atual — SAUDE_BASE R$18k):**
 | Idade | Saúde/ano |
 |-------|-----------|
-| 53 (FIRE) | R$16.000 |
-| 59 | R$31.300 |
-| 64 | R$42.900 |
-| 70 | R$50.300 |
+| 53 (FIRE) | R$18.000 |
+| 59 | R$35.200 |
+| 64 | R$48.300 |
+| 70 | R$56.600 |
 
-**Impacto do modelo de saúde:** base 86.9% → 87.2%, stress 81.0% → 83.5%.
+**Impacto do modelo de saúde (HD-multimodel-premissas Bloco A, 2026-04-06):** SAUDE_BASE R$16k→R$18k: −0.4pp. P(FIRE): 90.4%/94.1%/86.8%.
 
 **Correções HD-mc-audit (2026-04-06) — dois bugs simultâneos:**
 1. IR 15% na desacumulação modelado: −4.4pp
 2. Double-count de saúde no SPENDING_SMILE corrigido: +4.4pp (SPENDING_SMILE = lifestyle ex-saúde: R$242k/R$200k/R$187k — era R$280k/R$225k/R$285k embeddando saúde antiga R$37.9k)
 
-Os dois erros se cancelaram. Após correções adicionais (INSS + vol bond pool): **P(FIRE) oficial: 90,8% base / 94,6% favorável / 87,4% stress** (`fire_montecarlo.py` HD-mc-audit 2026-04-06).
+Os dois erros se cancelaram. Após correções adicionais (INSS + vol bond pool): P(FIRE): 90,8%/94,6%/87,4% (HD-mc-audit). Após SAUDE_BASE R$18k (Bloco A): **P(FIRE) oficial: 90,4% base / 94,1% favorável / 86,8% stress** (`fire_montecarlo.py` 2026-04-06).
 
 Correções HD-mc-audit completas:
 - Double-count saúde: +4.4pp
