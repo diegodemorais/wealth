@@ -189,6 +189,16 @@ Pesos do bloco equity: **SWRD 50% / AVGS 30% / AVEM 20%** (aprovado FI-equity-re
 - Equity BRL real = equity real USD + depreciacao real BRL do cenario.
 - **Comparacao all-in obrigatoria**: SEMPRE incluir WHT, IOF, FX spread, ganho fantasma cambial ao comparar equity vs RF. Nunca comparar equity pre-tax vs RF post-tax.
 
+### Sensibilidade Spending × P(FIRE 2040) — FR-spending-modelo-familia 2026-04-06
+
+| Cenário Spending | Custo/ano | P(FIRE) Base | P(FIRE) Favorável | P(FIRE) Stress |
+|-----------------|-----------|-------------|------------------|----------------|
+| Solteiro/FIRE Day | R$250k | **90.4%** | 94.1% | 86.8% |
+| Pós-casamento | R$270k | 88.8% | 93.7% | 85.5% |
+| Casamento + filho + escola | R$300k | 85.8% | 92.2% | **82.1%** |
+
+Notas: MC 10k simulações, seed=42. Pat mediana no FIRE Day: R$11.53M (base) / R$11.05M (stress) — idêntica nos 3 cenários de spending (acumulação não depende do custo de vida). P10 final é condicional (sobreviventes only); no pior caso (R$300k/stress), 17.9% de trajetórias falham. Quant validado 2026-04-06. **Critério de falsificação atingido: P(stress) mínimo 82.1% > 75%** — margem de segurança robusta em todos os cenários. Nenhuma mudança de alocação necessária.
+
 ---
 
 ## Regras Universais

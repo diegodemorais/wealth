@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | FR-spending-modelo-familia |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | FIRE (lead), Behavioral, Quant, Bookkeeper |
 | **Dependencias** | HD-gastos-pessoais-2026 (concluída) |
 | **Criado em** | 2026-04-03 |
 | **Origem** | HD-gastos-pessoais-2026: gap identificado — gastos têm número único, portfólio tem distribuição de cenários |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-06 |
 
 ---
 
@@ -41,14 +41,14 @@ Baseline pré-família estabelecido: R$218k/ano (8 meses ago/2025–mar/2026). P
 
 ## Escopo
 
-- [ ] FIRE: rodar Monte Carlo com spending = R$300k/ano (cenário pós-família completo)
-- [ ] FIRE: rodar com spending = R$270k/ano (cenário pós-casamento, pré-filho)
-- [ ] FIRE + Behavioral: criar distribuição de probabilidade para o spending (base/alto/stress) — equivalente ao que já existe para retornos
-  - Base: R$250k (solteiro/FIRE Day)
-  - Alto: R$270-280k (casamento)
-  - Stress: R$300-320k (casamento + filho + escola)
-- [ ] Quant: validar os cálculos de P(FIRE) nos 3 novos cenários
-- [ ] Head: atualizar carteira.md com tabela de sensibilidade spending × P(FIRE)
+- [x] FIRE: rodar Monte Carlo com spending = R$300k/ano (cenário pós-família completo)
+- [x] FIRE: rodar com spending = R$270k/ano (cenário pós-casamento, pré-filho)
+- [x] FIRE + Behavioral: distribuição de probabilidade para spending criada (tabela 3 cenários)
+  - Base: R$250k (solteiro/FIRE Day) → P(FIRE base) 90.4%
+  - Alto: R$270k (casamento) → P(FIRE base) 88.8%
+  - Stress: R$300k (casamento + filho + escola) → P(FIRE base) 85.8%
+- [x] Quant: validado. Finding: P10 final é condicional (sobreviventes); P(stress=R$300k) = 82.1% > critério 75%
+- [x] Head: carteira.md atualizado com tabela sensibilidade spending × P(FIRE)
 
 ---
 
