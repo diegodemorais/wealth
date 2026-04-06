@@ -4,14 +4,13 @@ multi_llm_query.py — Consulta paralela a múltiplos LLMs
 Uso:
     python3 scripts/multi_llm_query.py --prompt "sua pergunta aqui"
     python3 scripts/multi_llm_query.py --file prompt.txt
-    python3 scripts/multi_llm_query.py --prompt "..." --models gemini perplexity
+    python3 scripts/multi_llm_query.py --prompt "..." --models gemini llama4
     python3 scripts/multi_llm_query.py --prompt "..." --save resultados.md
 
 API Keys (via .env ou variáveis de ambiente):
-    GEMINI_API_KEY         — gemini.google.com/app → API
-    PERPLEXITY_API_KEY     — perplexity.ai/settings → API
-    GROQ_API_KEY           — console.groq.com (grátis)
-    OPENROUTER_API_KEY     — openrouter.ai/keys (grátis)
+    GEMINI_API_KEY      — aistudio.google.com/apikey (pago)
+    GROQ_API_KEY        — console.groq.com (grátis)
+    OPENROUTER_API_KEY  — openrouter.ai/keys (grátis)
 """
 
 import asyncio
@@ -35,19 +34,17 @@ os.environ["LITELLM_LOG"] = "ERROR"
 # Grátis: Groq (Llama 4 + DeepSeek R1) + OpenRouter (Qwen3 235B)
 
 MODELS = {
-    "gemini":     {"id": "gemini/gemini-2.5-pro",                          "pago": True},
-    "perplexity": {"id": "perplexity/sonar-pro",                           "pago": True},
-    "llama4":     {"id": "groq/meta-llama/llama-4-maverick-17b-128e-instruct", "pago": False},
-    "deepseek":   {"id": "groq/deepseek-r1-distill-llama-70b",             "pago": False},
-    "qwen3":      {"id": "openrouter/qwen/qwen3-235b-a22b:free",           "pago": False},
+    "gemini":  {"id": "gemini/gemini-2.5-flash",                    "pago": True},
+    "gpt-oss": {"id": "groq/openai/gpt-oss-120b",                   "pago": False},
+    "llama3":  {"id": "groq/llama-3.3-70b-versatile",               "pago": False},
+    "minimax": {"id": "openrouter/minimax/minimax-m2.5:free",                 "pago": False},
 }
 
 ENV_KEYS = {
-    "gemini":     "GEMINI_API_KEY",
-    "perplexity": "PERPLEXITY_API_KEY",
-    "llama4":     "GROQ_API_KEY",
-    "deepseek":   "GROQ_API_KEY",
-    "qwen3":      "OPENROUTER_API_KEY",
+    "gemini":  "GEMINI_API_KEY",
+    "gpt-oss": "GROQ_API_KEY",
+    "llama3":  "GROQ_API_KEY",
+    "minimax": "OPENROUTER_API_KEY",
 }
 
 SEPARADOR = "=" * 68
