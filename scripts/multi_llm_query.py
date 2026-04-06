@@ -21,55 +21,60 @@ import argparse
 import os
 import sys
 import time
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
-from collections import defaultdict
+from typing import NamedTuple
 
 import litellm
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
-# Suprimir logs verbose do litellm
 litellm.suppress_debug_info = True
 os.environ["LITELLM_LOG"] = "ERROR"
 
 BASE_DIR = Path(__file__).parent.parent
 
-# ── Modelos ───────────────────────────────────────────────────────────────────
-# 7 modelos oficiais, 4 providers, máxima diversidade de training data
-# Cada entrada: id, env_key, provider (para stagger)
+# ── Modelos: 6 oficiais, 4 providers ─────────────────────────────────────────
+# SYNC: atualizar .claude/commands/multi-llm.md ao mudar modelos
 
 MODELS = {
-    # Gemini — pago, âncora frontier (melhor qualidade overall)
-    "gemini":        {"id": "gemini/gemini-2.5-flash",                            "env_key": "GEMINI_API_KEY",     "provider": "gemini"},
-    # OpenRouter — free, DeepSeek R1 (melhor reasoning open-source, chain-of-thought)
-    "deepseek-r1":   {"id": "openrouter/deepseek/deepseek-r1:free",              "env_key": "OPENROUTER_API_KEY", "provider": "openrouter"},
-    # SambaNova — free, Qwen 3 235B (maior modelo free, perspectiva chinesa)
-    "qwen235b":      {"id": "sambanova/Qwen3-235B-A22B",                         "env_key": "SAMBANOVA_API_KEY",  "provider": "sambanova"},
-    # SambaNova — free, Llama 3.1 405B (maior Llama, Meta training data)
-    "llama405b":     {"id": "sambanova/Meta-Llama-3.1-405B-Instruct",            "env_key": "SAMBANOVA_API_KEY",  "provider": "sambanova"},
-    # Groq — free, GPT-OSS 120B (OpenAI lineage, ultra-rápido)
-    "gpt-oss":       {"id": "groq/openai/gpt-oss-120b",                          "env_key": "GROQ_API_KEY",       "provider": "groq"},
-    # Groq — free, Llama 4 Scout (MoE recente, arquitetura diferente)
-    "llama4":        {"id": "groq/meta-llama/llama-4-scout-17b-16e-instruct",    "env_key": "GROQ_API_KEY",       "provider": "groq"},
+    "gemini":      {"id": "gemini/gemini-2.5-flash",                         "env_key": "GEMINI_API_KEY",     "provider": "gemini"},
+    "deepseek-r1": {"id": "openrouter/deepseek/deepseek-r1:free",           "env_key": "OPENROUTER_API_KEY", "provider": "openrouter"},
+    "qwen235b":    {"id": "sambanova/Qwen3-235B-A22B",                      "env_key": "SAMBANOVA_API_KEY",  "provider": "sambanova"},
+    "llama405b":   {"id": "sambanova/Meta-Llama-3.1-405B-Instruct",         "env_key": "SAMBANOVA_API_KEY",  "provider": "sambanova"},
+    "gpt-oss":     {"id": "groq/openai/gpt-oss-120b",                       "env_key": "GROQ_API_KEY",       "provider": "groq"},
+    "llama4":      {"id": "groq/meta-llama/llama-4-scout-17b-16e-instruct", "env_key": "GROQ_API_KEY",       "provider": "groq"},
 }
 
-# Default: 5 modelos, 1 por provider (máxima diversidade, mínimo 429)
 DEFAULT_MODELS = ["gemini", "deepseek-r1", "qwen235b", "gpt-oss", "llama4"]
 
 SEPARADOR = "=" * 68
 STAGGER_DELAY = 0.8  # segundos entre chamadas ao mesmo provider
 
 
+class ModelResult(NamedTuple):
+    name: str
+    model_id: str
+    output: str | None
+    error: str | None
+    latency: float
+    usage: dict
+
+    @property
+    def ok(self) -> bool:
+        return self.output is not None
+
+
 async def query_model(
     name: str, cfg: dict, prompt: str, system: str | None,
     temperature: float, max_tokens: int, timeout: int,
-) -> tuple[str, str | None, str | None, float, dict]:
-    """Chama um modelo e retorna (name, output, error, latency_s, usage_dict)."""
+) -> ModelResult:
+    """Chama um modelo e retorna ModelResult."""
     env_key = cfg["env_key"]
     if env_key and not os.getenv(env_key):
-        return name, None, f"[SKIP] {env_key} nao configurada", 0.0, {}
+        return ModelResult(name, cfg["id"], None, f"[SKIP] {env_key} nao configurada", 0.0, {})
 
     messages = []
     if system:
@@ -90,20 +95,17 @@ async def query_model(
         )
         latency = time.monotonic() - t0
 
-        # Validar resposta
         if not resp.choices:
-            return name, None, "[ERRO] Resposta sem choices", latency, {}
+            return ModelResult(name, cfg["id"], None, "[ERRO] Resposta sem choices", latency, {})
 
         content = resp.choices[0].message.content
         if not content or not content.strip():
-            return name, None, "[ERRO] Resposta vazia", latency, {}
+            return ModelResult(name, cfg["id"], None, "[ERRO] Resposta vazia", latency, {})
 
-        # Detectar truncamento
         finish = resp.choices[0].finish_reason
         if finish and finish != "stop":
             content += f"\n\n[TRUNCADO — finish_reason={finish}]"
 
-        # Usage
         usage = {}
         if hasattr(resp, "usage") and resp.usage:
             usage = {
@@ -112,47 +114,40 @@ async def query_model(
                 "total_tokens": getattr(resp.usage, "total_tokens", 0),
             }
 
-        return name, content, None, latency, usage
+        return ModelResult(name, cfg["id"], content, None, latency, usage)
 
     except asyncio.TimeoutError:
-        return name, None, f"[TIMEOUT] {timeout}s", time.monotonic() - t0, {}
+        return ModelResult(name, cfg["id"], None, f"[TIMEOUT] {timeout}s", time.monotonic() - t0, {})
     except Exception as e:
-        return name, None, f"[ERRO] {type(e).__name__}: {str(e)[:200]}", time.monotonic() - t0, {}
+        return ModelResult(name, cfg["id"], None, f"[ERRO] {type(e).__name__}: {str(e)[:200]}", time.monotonic() - t0, {})
 
 
 async def run_queries_staggered(
     modelos: dict, prompt: str, system: str | None,
     temperature: float, max_tokens: int, timeout: int,
-) -> list:
+) -> list[ModelResult]:
     """Dispara queries com stagger por provider para evitar 429."""
-    # Agrupar por provider
     by_provider: dict[str, list[str]] = defaultdict(list)
     for name, cfg in modelos.items():
         by_provider[cfg["provider"]].append(name)
 
-    async def staggered_group(provider_models: list[str]):
-        results = []
+    async def staggered_group(provider_models: list[str]) -> list[ModelResult]:
+        tasks = []
         for i, name in enumerate(provider_models):
             if i > 0:
                 await asyncio.sleep(STAGGER_DELAY)
-            result = await query_model(
-                name, modelos[name], prompt, system, temperature, max_tokens, timeout,
-            )
-            results.append(result)
-        return results
+            tasks.append(asyncio.create_task(
+                query_model(name, modelos[name], prompt, system, temperature, max_tokens, timeout)
+            ))
+        return list(await asyncio.gather(*tasks))
 
-    # Dispara providers em paralelo, modelos do mesmo provider com stagger
     provider_tasks = [staggered_group(names) for names in by_provider.values()]
     grouped = await asyncio.gather(*provider_tasks)
-
-    # Flatten
-    results = []
-    for group in grouped:
-        results.extend(group)
-    return results
+    return [r for group in grouped for r in group]
 
 
-def formatar_saida(results: list, prompt: str, system: str | None, temperature: float) -> str:
+def formatar_saida(results: list[ModelResult], prompt: str, system: str | None, temperature: float) -> tuple[str, int, int]:
+    """Formata output markdown. Retorna (texto, ok_count, err_count)."""
     ts = datetime.now().strftime("%Y-%m-%d %H:%M")
     linhas = [
         f"# Multi-LLM Query — {ts}",
@@ -164,63 +159,57 @@ def formatar_saida(results: list, prompt: str, system: str | None, temperature: 
     linhas.append(f"\n**Temperature:** {temperature}")
     linhas.append("")
 
-    for name, output, error, latency, usage in results:
-        cfg = MODELS[name]
-        tok_str = ""
-        if usage:
-            tok_str = f" | {usage.get('total_tokens', '?')} tok"
+    for r in results:
+        tok_str = f" | {r.usage.get('total_tokens', '?')} tok" if r.usage else ""
         linhas.append(SEPARADOR)
-        linhas.append(f"## {name.upper()} ({cfg['id']})")
-        linhas.append(f"*{latency:.1f}s{tok_str}*")
+        linhas.append(f"## {r.name.upper()} ({r.model_id})")
+        linhas.append(f"*{r.latency:.1f}s{tok_str}*")
         linhas.append(SEPARADOR)
-        if error:
-            linhas.append(error)
-        else:
-            linhas.append(output)
+        linhas.append(r.output if r.ok else r.error)
         linhas.append("")
 
-    # Resumo de métricas
+    # Métricas (single pass)
     linhas.append(SEPARADOR)
     linhas.append("## Metricas")
     linhas.append("")
     linhas.append("| Modelo | Latencia | Tokens | Status |")
     linhas.append("|--------|----------|--------|--------|")
-    for name, output, error, latency, usage in results:
-        tok = usage.get("total_tokens", "—") if usage else "—"
-        status = "OK" if output else error[:30] if error else "?"
-        linhas.append(f"| {name} | {latency:.1f}s | {tok} | {status} |")
+    ok, err = 0, 0
+    for r in results:
+        tok = r.usage.get("total_tokens", "—") if r.usage else "—"
+        status = "OK" if r.ok else (r.error[:30] if r.error else "?")
+        linhas.append(f"| {r.name} | {r.latency:.1f}s | {tok} | {status} |")
+        if r.ok:
+            ok += 1
+        else:
+            err += 1
     linhas.append("")
-
-    ok = sum(1 for _, o, _, _, _ in results if o)
-    err = sum(1 for _, _, e, _, _ in results if e)
     linhas.append(f"**Resultado:** {ok} ok | {err} erro(s)")
 
-    return "\n".join(linhas)
+    return "\n".join(linhas), ok, err
 
 
 async def health_check(modelos: dict):
-    """Testa conectividade com todos os modelos usando prompt trivial."""
+    """Testa conectividade com todos os modelos."""
     print(f"\n{'='*50}")
     print(f"  Health Check — {len(modelos)} modelo(s)")
     print(f"{'='*50}\n")
 
-    results = await run_queries_staggered(
-        modelos, "Reply with exactly: OK", None, 0.1, 10, 15,
-    )
+    results = await run_queries_staggered(modelos, "Reply with exactly: OK", None, 0.1, 10, 15)
 
-    for name, output, error, latency, _ in results:
-        if output:
-            print(f"  [OK]   {name:15s} ({latency:.1f}s)")
+    for r in results:
+        if r.ok:
+            print(f"  [OK]   {r.name:15s} ({r.latency:.1f}s)")
         else:
-            print(f"  [FAIL] {name:15s} — {error}")
+            print(f"  [FAIL] {r.name:15s} — {r.error}")
 
-    ok = sum(1 for _, o, _, _, _ in results if o)
+    ok = sum(1 for r in results if r.ok)
     print(f"\n  {ok}/{len(results)} modelos respondendo.\n")
 
 
 async def main():
     parser = argparse.ArgumentParser(
-        description="Consulta paralela a multiplos LLMs (free-only)",
+        description="Consulta paralela a multiplos LLMs",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
@@ -248,7 +237,6 @@ async def main():
 
     args = parser.parse_args()
 
-    # Listar modelos
     if args.list:
         print("\nModelos disponiveis:\n")
         print(f"  {'Nome':15s} {'Provider':12s} {'Model ID'}")
@@ -259,7 +247,6 @@ async def main():
         print(f"\n  * = modelo default\n")
         return
 
-    # Modelos selecionados
     if args.all_models:
         modelos = dict(MODELS)
     elif args.models:
@@ -267,31 +254,24 @@ async def main():
     else:
         modelos = {k: v for k, v in MODELS.items() if k in DEFAULT_MODELS}
 
-    # Health check
     if args.check:
         await health_check(modelos)
         return
 
-    # Validar que temos prompt
     if not args.prompt and not args.file:
         parser.error("--prompt ou --file e obrigatorio (exceto com --check ou --list)")
 
-    # Prompt
-    if args.file:
-        prompt = Path(args.file).read_text(encoding="utf-8").strip()
-    else:
-        prompt = args.prompt.strip()
+    prompt = (Path(args.file).read_text(encoding="utf-8").strip()
+              if args.file else args.prompt.strip())
 
     if not prompt:
         print("[ERRO] Prompt vazio.")
         sys.exit(1)
 
-    # Context (prepend ao prompt)
     if args.context:
         ctx = Path(args.context).read_text(encoding="utf-8").strip()
         prompt = f"{ctx}\n\n---\n\n{prompt}"
 
-    # System prompt
     system = args.system
     if args.system_file:
         system = Path(args.system_file).read_text(encoding="utf-8").strip()
@@ -303,29 +283,25 @@ async def main():
     print(f"  Temperature: {args.temperature} | Max tokens: {args.max_tokens}")
     print()
 
-    # Disparo com stagger por provider
     results = await run_queries_staggered(
         modelos, prompt, system, args.temperature, args.max_tokens, args.timeout,
     )
 
-    # Exibir
-    saida = formatar_saida(results, prompt, system, args.temperature)
+    saida, ok, _ = formatar_saida(results, prompt, system, args.temperature)
     print(saida)
 
-    # Salvar
     if args.save:
-        Path(args.save).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.save).write_text(saida, encoding="utf-8")
-        print(f"\n  Salvo em: {args.save}")
-    elif not args.no_save:
-        ok = sum(1 for _, o, _, _, _ in results if o)
-        if ok > 0:
-            ts = datetime.now().strftime("%Y%m%d_%H%M")
-            analysis_dir = BASE_DIR / "analysis"
-            analysis_dir.mkdir(exist_ok=True)
-            nome = analysis_dir / f"multi_llm_{ts}.md"
-            nome.write_text(saida, encoding="utf-8")
-            print(f"\n  Auto-salvo em: {nome}")
+        save_path = Path(args.save)
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        save_path.write_text(saida, encoding="utf-8")
+        print(f"\n  Salvo em: {save_path}")
+    elif not args.no_save and ok > 0:
+        ts = datetime.now().strftime("%Y%m%d_%H%M")
+        analysis_dir = BASE_DIR / "analysis"
+        analysis_dir.mkdir(exist_ok=True)
+        nome = analysis_dir / f"multi_llm_{ts}.md"
+        nome.write_text(saida, encoding="utf-8")
+        print(f"\n  Auto-salvo em: {nome}")
 
 
 if __name__ == "__main__":
