@@ -19,6 +19,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | PT-protecao-vida-familia | Proteção de vida, patrimônio e continuidade familiar | Patrimonial | 🟡 Média |
+| HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
 
 ### Backlog
 > Issues prontas para execucao, aguardando vez
