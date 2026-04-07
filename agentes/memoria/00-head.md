@@ -10,7 +10,13 @@
 |------|---------|----------|---------------------|
 | 2026-03-18 | Criacao do Head (00) como gestor de portfolio e planejamento | Separar coordenacao geral + planejamento pessoal (Head) de decisoes de investimento (CIO) | Diego |
 | 2026-03-22 | IPCA+ longo **15%**, piso **6.0%**, DCA ATIVO | Breakeven all-in ~5.5%. A 7.16%, IPCA+ vence equity por 150 bps e R$41/R$100 em 14 anos. TD 2040 (80%) + TD 2050 (20%). Selic removido -> IPCA+ curto 3% aos 50 | Factor, RF, FIRE, Advocate |
-| 2026-03-18 | JPGL confirmado como multifator | AVGC closet indexing, JPGL complementa com momentum + low vol | CIO, Factor |
+| 2026-04-01 | **JPGL eliminado (0% target)** — FI-jpgl-zerobased | Correlação 0.95 com SWRD, TER extra 11bps, zero benefício marginal. AVGS domina. 20% liberados → redistribuição | Factor (4 agentes, framing puro) |
+| 2026-04-01 | **Bloco equity: SWRD 50% / AVGS 30% / AVEM 20%** — FI-equity-redistribuicao | Unanimidade 7/7 (13.5x ponderado). Design 50/50 neutro/fatorial preservado. Via aportes — sem vendas. | 7 agentes |
+| 2026-04-01 | **Premissas retorno aprovadas**: SWRD 3.7% / AVGS 5.0% / AVEM 5.0% USD real | Mediana 5-6 fontes independentes. Base BRL ponderado 4.85% (era 5.85% — correção −1pp). | Factor, Quant, Fact-Checker, Advocate |
+| 2026-04-06 | **P(FIRE) oficial**: 90.4% base / 94.1% favorável / 86.8% stress | MC 10k sims. IR 15% modelado. SAUDE_BASE R$18k. Spending smile ex-saúde. Bond tent. INSS R$18k@65. | Head, FIRE, Quant |
+| 2026-04-07 | **Withdrawal strategy confirmada: GUARDRAILS** — FR-withdrawal-engine | 5 estratégias + GK Hybrid testados. Guardrails = melhor P(FIRE)/vol. Vol R$41k vs GK R$189k (4.6×). Delta GK +1.1pp dentro do IC. | FIRE, Advocate (2/2) |
+| 2026-04-07 | **Rebalanceamento pós-FIRE: Opção D** — FR-rebalance-desacumulacao | Spending-based trimestral. Safety valve 10pp drift. Sem vendas tributáveis. Bond pool → caixa no FIRE Day 2040. | FIRE, Factor |
+| 2026-04-07 | **50/30/20 confirmado via Michaud Resampled Frontier** — FI-portfolio-optimization | IC 90% = [0%–100%] — indistinguível. Sem base quantitativa para desviar. Factor drought (AVGS 2% real): P(FIRE) 83.7% — sobrevivível, monitorar. | Factor, Advocate (2/2) |
 
 ---
 

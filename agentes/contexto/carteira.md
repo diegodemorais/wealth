@@ -111,6 +111,28 @@ IPCA+ longo: TD 2040 (80%) + TD 2050 (20%). TD 2040 vence em 2040 (Diego tera 53
 
 **Anos 1–7 do FIRE (53–60, base FIRE 2040):** saques vêm do bond pool (TD 2040 vence em 2040 = **FIRE Day** → R$~1.9M BRL imediato; IPCA+ curto 3% comprado aos 50-51 → matura em 52-53 = também disponível na largada) **antes** do equity. Equity só tocado quando pool esgotado. Regra mecânica — sem ela, o bond tent não tem efeito comportamental. **Vantagem FIRE 2040**: TD 2040 vence exatamente no FIRE Day → pool BRL ~R$2.3M imediato, sem gap de liquidez dos primeiros anos.
 
+### Rebalanceamento Pós-FIRE: Opção D (FR-rebalance-desacumulacao, 2026-04-07)
+
+**Mecânica:** trimestral (R$62.5k/quarter) — sacar do bloco mais overweight vs target da fase.
+
+| Fase | Equity | IPCA+ longo | IPCA+ curto | Cripto |
+|------|--------|-------------|-------------|--------|
+| Anos 1–7 (53–60) | 79% | 15% (consumindo) | 3% (consumindo) | 3% |
+| Anos 7+ (60–90) | 94% | 0% (venceu/consumido) | 0% | 3%* |
+
+*Cripto: manter via drift natural. Não rebalancear ativamente para cripto.
+
+**Target intra-equity (fixo):** SWRD 50% / AVGS 30% / AVEM 20%
+
+**Safety valve drift >10pp individual:**
+1. Spending forçado desse ativo nos próximos 2–4 quarters
+2. Se não corrige → TLH (lotes com prejuízo)
+3. Se sem prejuízo → aceitar drift temporário (IR 15% > benefício)
+
+**Regras absolutas:**
+- **Nunca vender ETF com lucro para rebalancear** — IR 15% sobre ganho nominal BRL supera qualquer benefício
+- Transição bond pool no FIRE Day: TD 2040 vence → caixa/Selic → gastar nos anos 1–7. NÃO reinvestir em equity de uma vez
+
 ---
 
 ## Premissas de Projecao (aprovadas 2026-03-22, HD-006 final)
