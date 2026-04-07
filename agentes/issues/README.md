@@ -26,7 +26,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | HD-ibkr-token-env | Configurar IBKR token no ambiente Claude Code web | Head + Diego | 🟡 Média |
+| 1 | HD-swrd-114-cotas | Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json | Bookkeeper | 🟡 Média |
 | 2 | HD-tearsheet-longrun | Tearsheet QuantStats com histórico longo (proxies) | Head | 🟡 Média |
 | 3 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
