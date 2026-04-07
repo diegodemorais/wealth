@@ -41,6 +41,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 14 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 🟡 Média |
 | 15 | TX-irpf-investidor | Library irpf-investidor para cálculo de IR | Tax | 🟡 Média |
 | 16 | HD-python-bcb | Library python-bcb para dados BCB | Head | 🟡 Média |
+| 17 | HD-cmd-relatorio-mensal | Command /relatorio-mensal — report consolidado | Head | 🟡 Média |
 | 17 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
 | 18 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
 
