@@ -208,7 +208,7 @@ def stress_test_quant_crisis(precos: pd.DataFrame):
         ("AVGS -30% (correção moderada)",    {"AVGS.L": -0.30}),
         ("AVGS -39% (Max DD histórico)",     {"AVGS.L": -0.39}),
         ("AVGS -60% (2008-style extremo)",   {"AVGS.L": -0.60}),
-        ("AVGS -60% + JPGL -40% (correlação em crise)", {"AVGS.L": -0.60, "JPGL.L": -0.40}),
+        ("AVGS -60% + AVEM -40% (quant+EM crise simultânea)", {"AVGS.L": -0.60, "AVEM.L": -0.40}),
     ]
 
     patrimonio_ref = 3_372_673  # R$ — atualizar se necessário
@@ -502,7 +502,7 @@ def tearsheet_vs_benchmark(precos: pd.DataFrame, salvar_html: bool = False):
 ALVO_IPCA_LONGO_PCT  = 0.15   # bond tent: IPCA+ longo (2040+)
 ALVO_IPCA_CURTO_PCT  = 0.03   # IPCA+ curto/médio
 ALVO_RENDA_PLUS_PCT  = 0.03   # Renda+ 2065
-ALVO_EQUITY_PCT      = 0.79   # equity (100% JPGL quando aporta)
+ALVO_EQUITY_PCT      = 0.79   # equity (SWRD/AVGS/AVEM via IBKR)
 
 PISO_TAXA_IPCA_LONGO = 6.0    # % a.a. — abaixo disso não prioriza
 PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não prioriza
@@ -520,7 +520,7 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
     Cascade de prioridade para aportes:
       1. IPCA+ longo (taxa >= 6.0% e gap > 0) → 100% do aporte
       2. Renda+ (taxa >= 6.5% e gap > 0) → 100% do aporte
-      3. Equity → 100% JPGL (IB suporta cotas fracionárias — output em R$/USD, não unidades)
+      3. Equity → 100% ao ETF mais subpeso (SWRD/AVGS/AVEM) — IB suporta cotas fracionárias
     """
     print("\n" + "─"*60)
     print(f"  OTIMIZADOR DE APORTE — R$ {aporte_brl:,.0f}")

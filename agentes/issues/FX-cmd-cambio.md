@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FX-cmd-cambio |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Baixa |
 | **Participantes** | Head (lead), Bookkeeper, Macro |
 | **Co-sponsor** | Macro |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Gap identificado no mapeamento de commands |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -48,3 +48,9 @@ Criar `/cambio` que:
 **Argumento central:** Câmbio afeta 89% do portfolio (IBKR em USD). Consulta recorrente que hoje depende de WebSearch genérico.
 
 **Prioridade Baixa:** Informação facilmente acessível de outras formas. Conveniência pura — não bloqueia nenhuma decisão. BCB API pode ter downtime.
+
+---
+
+## Conclusao
+
+Command `.claude/commands/cambio.md` criado e funcional. Usa python-bcb (PTAX via `bcb.currency.get`) com fallback para WebSearch. Exibe: câmbio atual, média 30/90/365d, impacto carteira IBKR em BRL (patrimônio USD × PTAX), contexto histórico.

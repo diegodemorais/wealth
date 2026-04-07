@@ -36,7 +36,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 4 | FI-portfolio-optimization | Validação formal de alocação via otimização — debate pendente | Factor | 🟡 Média |
 | 5 | FR-rebalance-desacumulacao | Regras de rebalanceamento pós-FIRE | FIRE | 🟡 Média |
 | 6 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
-| 7 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
@@ -49,6 +48,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FX-cmd-cambio | Command /cambio com PTAX+histórico+impacto carteira | Head | 2026-04-07 | python-bcb + fallback WebSearch. PTAX atual, média 30/90/365d, patrimônio em BRL. |
 | HD-benchmark-comparison | Benchmark comparison visual — shadow portfolios | Advocate | 2026-04-07 | --benchmarks em portfolio_analytics.py. Target +23.25% vs VWRA +17.66% vs SWRD100 +16.43% (1 ano). Alpha raw +4.67%/ano (sem signif.). |
 | FX-multicurrency | Multi-currency tracking BRL/USD | Head | 2026-04-07 | fx_utils.py criado. PTAX via python-bcb. decompose_return(). CLI: --history --decompose. |
 | HD-python-bcb | Library python-bcb para dados BCB | Head | 2026-04-07 | bcb funcional (import bcb). PTAX, Selic, IPCA 12m testados. Usado em fx_utils.py. |
