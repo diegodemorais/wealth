@@ -162,10 +162,12 @@ def withdrawal_guyton_klinger(gasto_smile, pat, pat_pico, ano, ctx):
     retorno_ano = ctx.get("retorno_ano", 0.0)
 
     # Withdrawal Rule: sem inflation adjustment se retorno < 0
+    # Em termos reais: ano positivo = gasto mantido; ano negativo = gasto flat nominal
+    # = corte real pela inflação (IPCA ~4%). Paper original: "forgo the inflation adjustment"
     if retorno_ano >= 0:
-        gasto = gasto_prev * 1.0  # inflation-adjusted (já em termos reais)
+        gasto = gasto_prev  # mantém poder de compra (inflation-adjusted)
     else:
-        gasto = gasto_prev * 0.97  # corte real de 3% em anos negativos
+        gasto = gasto_prev / (1 + 0.04)  # flat nominal = corte real de ~IPCA
 
     # Current withdrawal rate
     wr_current = gasto / pat if pat > 0 else 1.0
