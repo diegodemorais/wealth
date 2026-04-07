@@ -20,6 +20,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|
 | PT-protecao-vida-familia | Proteção de vida, patrimônio e continuidade familiar | Patrimonial | 🟡 Média |
 | TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 🟡 Média |
+| PT-planejamento-patrimonial | Planejamento patrimonial pré-casamento | Patrimonial | 🟢 Baixa |
 | HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 
@@ -36,7 +37,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 3 | ~~HD-mcp-financial-datasets~~ | ~~MCP Financial Datasets — ETF holdings~~ | Head | ✅ Done |
 | 4 | ~~FI-portfolio-optimization~~ | ~~Validação formal de alocação via otimização~~ | Factor | ✅ Done |
 | 5 | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
-| 6 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
+| 6 | ~~TX-tlh-automation~~ | ~~Tax-loss harvesting automático~~ | Tax | ✅ Done |
 
 ### Doing
 > Issues em andamento
@@ -49,6 +50,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| TX-tlh-automation | Tax-loss harvesting automático | Tax | 2026-04-07 | tlh_monitor.py criado. Scan automático, exit 1 se material (≥R$5k). Integrado no relatorio-mensal. |
 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 2026-04-07 | Não aplicável. US stocks only, zero ETF holdings, API key paga. justETF permanece. |
 | HD-mcp-bcb | MCP Server BCB — dados macro estruturados | Head | 2026-04-07 | MCP configurado. bcb_indicadores_atuais substitui 3 WebFetch. Tesouro Direto mantém WebFetch. Focus lag documentado. |
 | HD-cmd-evolution | Evolução 3 commands pós-19 issues | Head | 2026-04-07 | fire-status drought condicional. reconciliar 3 camadas ibkr_sync. relatorio-mensal refatorado + seção FX. |

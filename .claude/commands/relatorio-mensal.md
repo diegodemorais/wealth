@@ -11,12 +11,14 @@ Gera relatório mensal em markdown, salvo em `analysis/relatorios/YYYY-MM.md`.
 | Macro BR | `/macro-bcb` | Selic, IPCA 12m, PTAX, IPCA+ 2040 |
 | IBKR sync | `ibkr_sync.py --cambio <PTAX>` | Posições atuais, trades do mês |
 | FX decomposição | `fx_utils.py` | Retorno BRL vs USD, eficiência cambial |
+| TLH scan | `tlh_monitor.py` | Oportunidades de tax-loss harvesting (exit 1 = material) |
 | Decisões do mês | `agentes/memoria/00-head.md` | Issues concluídas, decisões |
 
 ```bash
 # Rodar em paralelo (exceto MC — verificar cache primeiro)
 python3 scripts/ibkr_sync.py --cambio 5.15 > /tmp/ibkr.txt 2>&1 &
 python3 scripts/fx_utils.py > /tmp/fx.txt 2>&1 &
+python3 scripts/tlh_monitor.py > /tmp/tlh.txt 2>&1; TLH_EXIT=$?  # exit 1 = oportunidade material
 # MC: verificar agentes/memoria/04-fire.md. Se resultado < 7 dias, reusar.
 # Se não: python3 scripts/fire_montecarlo.py --n-sim 3000 > /tmp/mc.txt 2>&1 &
 wait
@@ -54,7 +56,14 @@ Substituir `5.15` pelo PTAX atual (de `/macro-bcb` ou python-bcb).
 - Selic atual, IPCA 12m, PTAX, IPCA+ 2040
 - Status dos gatilhos DCA (piso 6.0% IPCA+, compra Renda+ ≥ 6.5%)
 
-### 6. Issues e Decisões
+### 6. TLH — Tax-Loss Harvesting
+**Fonte**: `tlh_monitor.py` (exit 0 = nada material, exit 1 = oportunidade ≥ R$5k)
+- Status: oportunidade material? SIM/NÃO
+- Se SIM: listar lotes e economia fiscal potencial
+- Lembrar: sem wash sale rule no Brasil — recompra imediata permitida
+- Para transitórios: duplo benefício (perda fiscal + migração UCITS)
+
+### 7. Issues e Decisões
 - Concluídas no mês (de `agentes/issues/README.md`)
 - Em andamento: status atual
 - Decisões registradas em `agentes/memoria/00-head.md`

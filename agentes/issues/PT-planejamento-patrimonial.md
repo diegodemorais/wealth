@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | PT-planejamento-patrimonial |
 | **Dono** | Patrimonial |
-| **Status** | Backlog |
+| **Status** | Discovery |
 | **Prioridade** | 🟢 Baixa |
 | **Participantes** | Head (lead), Patrimonial, Tax |
 | **Co-sponsor** | Tax |

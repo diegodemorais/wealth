@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | TX-tlh-automation |
 | **Dono** | Tax |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Baixa |
 | **Participantes** | Tax (lead), Bookkeeper, Quant, Head |
 | **Co-sponsor** | Bookkeeper |
 | **Dependencias** | HD-ibkr-import |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repositórios open-source — gap vs Wealthfolio/rotki TLH features. Já temos framework TLH (TX-002) e tlh_lotes.json, mas sem automação. |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
