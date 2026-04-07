@@ -6,8 +6,8 @@
 |-------|-------|
 | **ID** | PT-protecao-vida-familia |
 | **Dono** | Patrimonial |
-| **Status** | Discovery |
-| **Prioridade** | 🟡 Média |
+| **Status** | Done — absorvida por PT-planejamento-patrimonial |
+| **Prioridade** | 🟢 Baixa |
 | **Participantes** | Patrimonial (lead), Tax, FIRE, Head |
 | **Co-sponsor** | Tax |
 | **Dependencias** | — |

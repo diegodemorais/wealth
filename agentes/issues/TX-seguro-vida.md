@@ -6,8 +6,8 @@
 |-------|-------|
 | **ID** | TX-seguro-vida |
 | **Dono** | Tax / Wealth |
-| **Status** | Discovery |
-| **Prioridade** | Média |
+| **Status** | Done — absorvida por PT-planejamento-patrimonial |
+| **Prioridade** | 🟢 Baixa |
 | **Participantes** | Tax (lead), FIRE, Head |
 | **Co-sponsor** | FIRE |
 | **Dependencias** | — |

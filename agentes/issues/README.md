@@ -18,26 +18,24 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| PT-protecao-vida-familia | Proteção de vida, patrimônio e continuidade familiar | Patrimonial | 🟡 Média |
-| TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 🟡 Média |
 | PT-planejamento-patrimonial | Planejamento patrimonial pré-casamento | Patrimonial | 🟢 Baixa |
 | HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
-| TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 
 ### Backlog
 > Issues prontas para execucao, aguardando vez
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
-| 1 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
-| 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
+| 1 | HD-tearsheet-longrun | Tearsheet QuantStats com histórico longo (proxies) | Head | 🟡 Média |
+| 2 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
+| 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
-| 1 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |
-| 2 | ~~HD-mcp-bcb~~ | ~~MCP Server BCB — dados macro Brasil estruturados~~ | Head | ✅ Done |
-| 3 | ~~HD-mcp-financial-datasets~~ | ~~MCP Financial Datasets — ETF holdings~~ | Head | ✅ Done |
-| 4 | ~~FI-portfolio-optimization~~ | ~~Validação formal de alocação via otimização~~ | Factor | ✅ Done |
-| 5 | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
-| 6 | ~~TX-tlh-automation~~ | ~~Tax-loss harvesting automático~~ | Tax | ✅ Done |
+| 4 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |
+| 5 | ~~HD-mcp-bcb~~ | ~~MCP Server BCB — dados macro Brasil estruturados~~ | Head | ✅ Done |
+| 6 | ~~HD-mcp-financial-datasets~~ | ~~MCP Financial Datasets — ETF holdings~~ | Head | ✅ Done |
+| 7 | ~~FI-portfolio-optimization~~ | ~~Validação formal de alocação via otimização~~ | Factor | ✅ Done |
+| 8 | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
+| 9 | ~~TX-tlh-automation~~ | ~~Tax-loss harvesting automático~~ | Tax | ✅ Done |
 
 ### Doing
 > Issues em andamento

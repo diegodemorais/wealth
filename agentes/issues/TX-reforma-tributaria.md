@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | TX-reforma-tributaria |
 | **Dono** | Tax |
-| **Status** | Discovery |
+| **Status** | Backlog |
 | **Prioridade** | Baixa |
 | **Participantes** | Tax (lead), Head |
 | **Co-sponsor** | Head |
