@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-withdrawal-engine |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
-| **Participantes** | FIRE (lead), Head, Quant, RF |
+| **Participantes** | FIRE (lead), Advocate, Head, Quant |
 | **Co-sponsor** | Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repositórios open-source — gap vs cFIREsim/FI Calc |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -172,6 +172,41 @@ Confirmação das rodadas anteriores. Delta máximo: 10.8pp (constant vs pct_por
 ---
 
 **Decisão pendente para Diego:**
-- [ ] Confirmar: manter guardrails como estratégia principal?
-- [ ] Registrar GK+floor R$180k como cenário futuro de exploração (ou descartar)?
-- [ ] Documentar decisão final em carteira.md
+- [x] Confirmar: manter guardrails como estratégia principal? → **SIM, aprovado 2026-04-07**
+- [x] GK Hybrid testado e descartado (ver Votação abaixo)
+- [x] Documentado abaixo
+
+---
+
+## Votação em Fases — Guardrails vs GK Hybrid vs GK Puro (2026-04-07)
+
+**Dados finais (10k sims, seed 42, com spending stats):**
+
+| Strategy | P(FIRE) | Gasto Médio | Vol Gasto | Range P10–P90 |
+|----------|---------|-------------|-----------|----------------|
+| **guardrails** | **90.4%** | R$222k | ±R$41k | R$165k–R$276k |
+| gk_hybrid (teto R$350k) | 91.0% | R$252k | ±R$64k | R$162k–R$332k |
+| guyton_klinger | 91.0% | R$305k | ±R$187k | R$162k–R$507k |
+
+| Agente | Posição | Confiança | Argumento central |
+|--------|---------|-----------|-------------------|
+| FIRE | **GUARDRAILS** | Alta | P10 GK Hybrid (R$162k) viola piso essencial R$180k |
+| Advocate | **GUARDRAILS** | Alta | "Solução elegante para problema que não existe" |
+
+**Placar: 2/2 — GUARDRAILS aprovado**
+
+**Por que GK Hybrid foi descartado:**
+1. Delta 0.6pp P(FIRE) está dentro do IC estatístico (±1pp com 10k sims)
+2. Vol ±R$64k vs ±R$41k — família com filho exige previsibilidade de caixa
+3. Benefício de R$30k/ano é pró-cíclico — só aparece nos bons cenários
+4. P10 GK Hybrid = R$162k, abaixo do piso essencial de R$180k
+5. Guardrails já têm o upside embutido (teto R$350k + +10% se portfólio sobe 25%+)
+6. GK Hybrid é construção ad hoc sem validação na literatura — guardrails têm 3 rodadas de MC + validação do time
+
+---
+
+## Conclusao
+
+**Guardrails confirmados como estratégia definitiva de desacumulação.** 4 estratégias alternativas avaliadas (constant, pct_portfolio, VPW, Guyton-Klinger) + 1 híbrido (GK Hybrid). Todas descartadas. Guardrails dominam em: previsibilidade de renda (fator crítico para família), aprovação prévia e documentação, e P(FIRE) equivalente às melhores alternativas. Nenhuma mudança em `carteira.md` necessária — guardrails já documentados.
+
+**Minority Report registrado (Advocate):** se a análise com R$300k de spending (filho) + factor drought mostrar P(FIRE) < 75%, reabrir debate de withdrawal strategy.

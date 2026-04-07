@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FI-portfolio-optimization |
 | **Dono** | Factor |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Factor (lead), Head, FIRE, Advocate, Quant |
 | **Co-sponsor** | Advocate |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repositórios open-source — gap vs PyPortfolioOpt/Riskfolio-Lib/skfolio |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -182,7 +182,47 @@ Diferença forward: -65bps expected return, -70bps vol, Sharpe -0.027. Custo mar
 
 ---
 
-**Decisão pendente para Diego:**
-- [ ] Confirmar: 50/30/20 mantido como alocação equity?
-- [ ] Rodar fator drought no MC (AVGS 2.0% real por 10 anos) — sensibilidade?
-- [ ] Rodar resampled frontier (Michaud) — adicional ou desnecessário dado backtest já confirma 50/30/20?
+**Decisão:**
+- [x] 50/30/20 confirmado → **aprovado 2026-04-07**
+- [x] Factor drought rodado: P(FIRE) 90.4% → 83.7% (−6.7pp). Worst case permanente sobrevivível (acima do piso 75%).
+- [x] Resampled Frontier (Michaud, 1.000 bootstraps) rodado. Ver Votação abaixo.
+
+---
+
+## Votação em Fases — 50/30/20 vs alternativas (2026-04-07)
+
+**Michaud Resampled Frontier (1.000 bootstraps, scipy/numpy):**
+
+| Método | SWRD | AVGS | AVEM | Sharpe hist | Sharpe fwd |
+|--------|------|------|------|-------------|------------|
+| Max Sharpe simples | 10.3% | 89.7% | 0.0% | 0.669 | 0.255 |
+| Resampled (Michaud) | 25.9% | 51.8% | 22.3% | 0.650 | 0.273 |
+| **Target 50/30/20** | **50.0%** | **30.0%** | **20.0%** | **0.628** | **0.265** |
+
+IC 90% bootstrap: [0.0%–100.0%] para todos os ativos. Target dentro do IC dos 3 ativos: ✓
+
+**Factor Drought permanente (AVGS 2.0% real):**
+- Blended equity: 4.85% → 3.95% (−0.9pp)
+- P(FIRE) base: 90.4% → 83.7% (−6.7pp) — abaixo da meta 90%, acima do piso 75%
+
+| Agente | Posição | Confiança | Argumento central |
+|--------|---------|-----------|-------------------|
+| Factor | **MANTER 50/30/20** | Alta | IC [0%–100%] = sem evidência quantitativa para mudar |
+| Advocate | **MANTER 50/30/20** | 65% | Ajustar agora = action bias; gatilho de revisão já existe |
+
+**Placar: 2/2 — 50/30/20 aprovado**
+
+**Por que Michaud não muda a decisão:**
+- IC [0%–100%] confirma que com 3 ativos/5 anos, qualquer alocação é estatisticamente indistinguível
+- Sharpe gap Resampled vs Target = 0.007 forward — equivale a ~11bps/ano. Irrelevante.
+- 50/30/20 é uma decisão de priors qualitativos (design 50/50 neutro/fatorial, diversificação EM), não de otimização — e isso é correto dado o grau de incerteza
+
+**Minority Report registrado (Advocate):**
+- Se P(FIRE) com R$300k (filho) + factor drought cair abaixo de 75%, reabrir automaticamente
+- Gatilho de underperformance já documentado em carteira.md: se AVGS underperformar SWRD >5pp acumulado em 24 meses → reabrir debate
+
+---
+
+## Conclusao
+
+**50/30/20 (SWRD/AVGS/AVEM) confirmado como alocação equity definitiva.** Validado por 4 métodos quantitativos (PyPortfolioOpt, Riskfolio, Michaud Resampled, factor drought MC) e votação de 2 agentes. Target tem melhor Sharpe histórico (0.572) e Sortino (0.848) de todos os métodos. IC Michaud confirma indistinguibilidade estatística — qualquer alocação razoável é defensável. Decisão mantida por priors qualitativos robustos, não por ilusão de precisão quantitativa.

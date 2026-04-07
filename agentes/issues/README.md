@@ -30,11 +30,11 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 1 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
-| 1 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
+| 1 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |
 | 2 | HD-mcp-bcb | MCP Server BCB — dados macro Brasil estruturados | Head | 🔴 Alta |
 | 3 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 🟡 Média |
-| 4 | FI-portfolio-optimization | Validação formal de alocação via otimização — debate pendente | Factor | 🟡 Média |
-| ~~5~~ | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
+| 4 | ~~FI-portfolio-optimization~~ | ~~Validação formal de alocação via otimização~~ | Factor | ✅ Done |
+| 5 | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
 | 6 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
 
 ### Doing
@@ -48,6 +48,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 2026-04-07 | Guardrails confirmados 2/2. GK Hybrid testado e descartado (vol +56%, benefício pró-cíclico). 5 estratégias + híbrido avaliados. |
+| FI-portfolio-optimization | Validação formal 50/30/20 via otimização | Factor | 2026-04-07 | 50/30/20 confirmado 2/2. Michaud IC [0%–100%] = indistinguível. Factor drought −6.7pp sobrevivível (83.7% > piso 75%). |
 | FR-rebalance-desacumulacao | Regras de rebalanceamento pós-FIRE | FIRE | 2026-04-07 | Opção D: spending-based trimestral. Safety valve 10pp drift. Sem trades tributáveis. Bond pool → caixa no FIRE Day. |
 | FX-cmd-cambio | Command /cambio com PTAX+histórico+impacto carteira | Head | 2026-04-07 | python-bcb + fallback WebSearch. PTAX atual, média 30/90/365d, patrimônio em BRL. |
 | HD-benchmark-comparison | Benchmark comparison visual — shadow portfolios | Advocate | 2026-04-07 | --benchmarks em portfolio_analytics.py. Target +23.25% vs VWRA +17.66% vs SWRD100 +16.43% (1 ano). Alpha raw +4.67%/ano (sem signif.). |
