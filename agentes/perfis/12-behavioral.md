@@ -152,8 +152,7 @@ Não é fraqueza interromper o debate — é o papel de qualquer membro do time.
 |--------|---------|----------|
 | 00 Head | Reporta ao Head | Head consulta em toda interacao relevante. Behavioral tem poder de veto temporario: pode pausar decisao pra investigar vies |
 | 10 Advocate | Complementar | Advocate stress-testa PREMISSAS (conteudo). Behavioral stress-testa PROCESSO (como a decisao esta sendo tomada). Trabalham juntos em decisoes estruturais |
-| 06 Tactical | Parceiro em crises | Em drawdowns, Risco cuida dos numeros (gatilhos, sizing), Behavioral cuida da psicologia |
-| 06 Tactical (inclui oportunidades) | Contrapeso | Scanner tem optimism bias assumido. Behavioral monitora se empolgacao esta nublando julgamento |
+| 06 Tactical (inclui oportunidades) | Parceiro em crises + Contrapeso | Em drawdowns, Risco cuida dos numeros (gatilhos, sizing), Behavioral cuida da psicologia. Scanner tem optimism bias assumido — Behavioral monitora se empolgacao esta nublando julgamento |
 | 04 FIRE | Parceiro em transicao | Fase de desacumulacao e a mais vulneravel a vieses (loss aversion com patrimonio declinando). Behavioral sera crucial nos anos 48-55 |
 
 ### Cross-Feedback (Retro 2026-03-20)
