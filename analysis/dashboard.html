@@ -1,475 +1,242 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carteira Diego — Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-    <style>
-        :root {
-            --bg: #f8f9fa; --card: #ffffff; --text: #212529; --muted: #6c757d;
-            --border: #dee2e6; --primary: #1976D2; --success: #4CAF50;
-            --danger: #F44336; --warning: #FF9800; --purple: #9C27B0;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-               background: var(--bg); color: var(--text); line-height: 1.5; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 16px; }
-
-        /* Header */
-        .header { background: linear-gradient(135deg, #1a237e, #1976D2); color: white;
-                   padding: 24px 32px; border-radius: 12px; margin-bottom: 20px;
-                   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-        .header h1 { font-size: 1.5rem; font-weight: 600; }
-        .header .meta { font-size: 0.85rem; opacity: 0.85; }
-
-        /* KPI Cards */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                     gap: 16px; margin-bottom: 20px; }
-        .kpi { background: var(--card); border-radius: 10px; padding: 20px;
-                box-shadow: var(--shadow); border-left: 4px solid var(--primary); }
-        .kpi-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .kpi-value { font-size: 1.8rem; font-weight: 700; margin-top: 4px; }
-        .kpi-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
-        .kpi.fire { border-left-color: var(--success); }
-        .kpi.cagr { border-left-color: var(--warning); }
-        .kpi.delta { border-left-color: var(--purple); }
-
-        /* Sections */
-        .section { background: var(--card); border-radius: 10px; padding: 24px;
-                    box-shadow: var(--shadow); margin-bottom: 20px; }
-        .section h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;
-                       padding-bottom: 8px; border-bottom: 2px solid var(--border); }
-
-        /* Grid layouts */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-        @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
-
-        /* Charts */
-        .chart-container { position: relative; max-height: 320px; }
-
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { text-align: left; padding: 10px 8px; border-bottom: 2px solid var(--border);
-              color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
-        td { padding: 8px; border-bottom: 1px solid var(--border); }
-        .num { text-align: right; font-variant-numeric: tabular-nums; }
-        .positive { color: var(--success); font-weight: 600; }
-        .negative { color: var(--danger); font-weight: 600; }
-
-        /* Badges */
-        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem;
-                  font-weight: 600; text-transform: uppercase; }
-        .badge.alvo { background: #E3F2FD; color: #1565C0; }
-        .badge.trans { background: #FFF3E0; color: #E65100; }
-
-        /* Bucket colors */
-        .bucket-swrd { color: #1976D2; font-weight: 600; }
-        .bucket-avgs { color: #388E3C; font-weight: 600; }
-        .bucket-avem { color: #F57C00; font-weight: 600; }
-
-        /* RF cards */
-        .rf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-        .rf-card { background: var(--bg); border-radius: 8px; padding: 14px; text-align: center; }
-        .rf-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
-        .rf-value { font-size: 1.2rem; font-weight: 700; margin: 4px 0; }
-        .rf-tipo { font-size: 0.7rem; color: var(--muted); }
-
-        /* FIRE gauge */
-        .fire-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center; }
-        .fire-scenario { background: var(--bg); border-radius: 10px; padding: 20px; }
-        .fire-scenario .label { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
-        .fire-scenario .value { font-size: 2.2rem; font-weight: 800; }
-        .fire-scenario .value.green { color: var(--success); }
-        .fire-scenario .value.yellow { color: var(--warning); }
-        .fire-scenario .bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 8px; }
-        .fire-scenario .bar-fill { height: 100%; border-radius: 3px; }
-
-        /* Aporte */
-        .aporte-highlight { background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-                             border-radius: 10px; padding: 20px; text-align: center; }
-        .aporte-highlight .target { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .aporte-highlight .reason { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
-
-        /* Shadow table */
-        .shadow-table th, .shadow-table td { text-align: center; }
-        .shadow-table td:first-child { text-align: left; }
-
-        /* Footer */
-        .footer { text-align: center; padding: 16px; color: var(--muted); font-size: 0.75rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carteira Diego — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1280px;margin:0 auto;padding:16px}
+.header{background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:24px;border-radius:16px;margin-bottom:20px;border:1px solid var(--border)}
+.header h1{font-size:1.4rem;font-weight:700}
+.header .meta{color:var(--muted);font-size:0.8rem;margin-top:4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:12px;padding:16px 20px;border:1px solid var(--border)}
+.kpi-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-size:1.6rem;font-weight:700;margin-top:2px}
+.kpi-sub{font-size:.75rem;color:var(--muted);margin-top:2px}
+.section{background:var(--card);border-radius:12px;padding:20px;border:1px solid var(--border);margin-bottom:16px}
+.section h2{font-size:.9rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{text-align:left;padding:8px 6px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em}
+td{padding:7px 6px;border-bottom:1px solid rgba(71,85,105,.4)}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'SF Mono','Cascadia Code',monospace,sans-serif}
+.pos{color:var(--green)}.neg{color:var(--red)}
+.chart-box{height:260px;position:relative}
+.badge{display:inline-block;padding:1px 7px;border-radius:9999px;font-size:.65rem;font-weight:600}
+.badge-alvo{background:rgba(59,130,246,.2);color:var(--accent)}
+.badge-trans{background:rgba(234,179,8,.15);color:var(--yellow)}
+.fire-big{font-size:3.5rem;font-weight:800;text-align:center;margin:16px 0 8px}
+.fire-row{display:flex;justify-content:center;gap:24px}
+.fire-item{text-align:center}
+.fire-item .v{font-size:1.3rem;font-weight:700}
+.fire-item .l{font-size:.7rem;color:var(--muted)}
+.prio{padding:8px 12px;margin:4px 0;background:rgba(59,130,246,.1);border-radius:8px;border-left:3px solid var(--accent);font-size:.85rem}
+.prio-num{font-weight:700;color:var(--accent);margin-right:6px}
+.rf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.rf-card{background:var(--card2);border-radius:10px;padding:14px;text-align:center}
+.rf-card .val{font-size:1.2rem;font-weight:700}
+.rf-card .lbl{font-size:.75rem;color:var(--muted)}
+.rf-card .sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+footer{text-align:center;padding:24px;color:var(--muted);font-size:.75rem}
+.src{font-size:.65rem;color:var(--muted);margin-top:4px}
+</style>
 </head>
 <body>
 <div class="container">
 
-    <!-- Header -->
-    <div class="header">
-        <div>
-            <h1>Carteira Diego</h1>
-            <div class="meta">Atualizado: 2026-04-07 &bull; Câmbio: R$ 5.15</div>
-        </div>
-        <div style="text-align: right;">
-            <div style="font-size: 2rem; font-weight: 800;">R$ 2,498,248</div>
-            <div class="meta">Patrimônio Total</div>
-        </div>
-    </div>
+<div class="header">
+    <h1>Carteira Diego Morais</h1>
+    <div class="meta">07/Abr/2026 · USD/BRL 5.25 · Fontes: ibkr_lotes.json + yfinance/web + scorecard.md</div>
+</div>
 
-    <!-- KPI Cards -->
-    <div class="kpi-grid">
-        <div class="kpi">
-            <div class="kpi-label">Equity (USD)</div>
-            <div class="kpi-value">$420,005</div>
-            <div class="kpi-sub">R$ 2,163,026 (87%)</div>
-        </div>
-        <div class="kpi fire">
-            <div class="kpi-label">P(FIRE) Base</div>
-            <div class="kpi-value" style="color: var(--success);">90.4%</div>
-            <div class="kpi-sub">FIRE 53 | Fav 94.1% | Stress 86.8%</div>
-        </div>
-        <div class="kpi cagr">
-            <div class="kpi-label">CAGR Histórico</div>
-            <div class="kpi-value" style="color: var(--warning);">25.3%</div>
-            <div class="kpi-sub">Desde 2021-03-01 (5.1 anos)</div>
-        </div>
-        <div class="kpi delta">
-            <div class="kpi-label">Delta vs VWRA (Q1)</div>
-            <div class="kpi-value" style="color: var(--purple);">+3.1pp</div>
-            <div class="kpi-sub">Atual +1.73% vs Shadow A -1.42%</div>
-        </div>
+<!-- KPIs -->
+<div class="kpi-grid">
+    <div class="kpi">
+        <div class="kpi-label">Patrimônio Total</div>
+        <div class="kpi-value">R$ 3.527k</div>
+        <div class="kpi-sub">USD 608,467 (equity) · R$ 3.194k equity</div>
     </div>
-
-    <!-- Allocation + Buckets -->
-    <div class="grid-2">
-        <div class="section">
-            <h2>Alocação por Classe</h2>
-            <div class="chart-container">
-                <canvas id="donutChart"></canvas>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Delta vs Meta (Equity)</h2>
-            <div class="chart-container">
-                <canvas id="deltaChart"></canvas>
-            </div>
-            <table style="margin-top: 16px;">
-                <thead><tr><th>Bucket</th><th class="num">USD</th><th class="num">BRL</th>
-                    <th class="num">% Equity</th><th class="num">Meta</th><th class="num">Delta</th><th class="num">Ganho</th></tr></thead>
-                <tbody><tr>
-            <td><strong>SWRD</strong></td>
-            <td class="num">$173,986</td>
-            <td class="num">R$ 896,029</td>
-            <td class="num">41.4%</td>
-            <td class="num">50%</td>
-            <td class="num negative">-8.6%</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><strong>AVGS</strong></td>
-            <td class="num">$131,156</td>
-            <td class="num">R$ 675,456</td>
-            <td class="num">31.2%</td>
-            <td class="num">30%</td>
-            <td class="num positive">+1.2%</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><strong>AVEM</strong></td>
-            <td class="num">$114,862</td>
-            <td class="num">R$ 591,541</td>
-            <td class="num">27.3%</td>
-            <td class="num">20%</td>
-            <td class="num positive">+7.3%</td>
-            <td class="num positive">+0.0%</td>
-        </tr></tbody>
-            </table>
-        </div>
+    <div class="kpi">
+        <div class="kpi-label">P(FIRE) Base</div>
+        <div class="kpi-value pos">90.4%</div>
+        <div class="kpi-sub">FIRE 53 · MC 10k sims · scorecard.md</div>
     </div>
-
-    <!-- Positions Table -->
-    <div class="section">
-        <h2>Posições Detalhadas</h2>
-        <table>
-            <thead><tr><th>Status</th><th>Ticker</th><th>Bucket</th><th class="num">Qtde</th>
-                <th class="num">Preço</th><th class="num">Valor USD</th><th class="num">Valor BRL</th>
-                <th class="num">Ganho</th></tr></thead>
-            <tbody><tr>
-            <td><span class="badge trans">Transitório</span></td>
-            <td><strong>EIMI</strong></td>
-            <td class="bucket-avem">AVEM</td>
-            <td class="num">2,020.29</td>
-            <td class="num">$31.33</td>
-            <td class="num">$63,304</td>
-            <td class="num">R$ 326,016</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge trans">Transitório</span></td>
-            <td><strong>AVES</strong></td>
-            <td class="bucket-avem">AVEM</td>
-            <td class="num">926.55</td>
-            <td class="num">$45.47</td>
-            <td class="num">$42,126</td>
-            <td class="num">R$ 216,950</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge trans">Transitório</span></td>
-            <td><strong>DGS</strong></td>
-            <td class="bucket-avem">AVEM</td>
-            <td class="num">188.21</td>
-            <td class="num">$50.11</td>
-            <td class="num">$9,432</td>
-            <td class="num">R$ 48,575</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge alvo">Alvo</span></td>
-            <td><strong>AVGS</strong></td>
-            <td class="bucket-avgs">AVGS</td>
-            <td class="num">233.43</td>
-            <td class="num">$24.93</td>
-            <td class="num">$5,820</td>
-            <td class="num">R$ 29,973</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge trans">Transitório</span></td>
-            <td><strong>AVDV</strong></td>
-            <td class="bucket-avgs">AVGS</td>
-            <td class="num">947.60</td>
-            <td class="num">$61.37</td>
-            <td class="num">$58,157</td>
-            <td class="num">R$ 299,509</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge trans">Transitório</span></td>
-            <td><strong>AVUV</strong></td>
-            <td class="bucket-avgs">AVGS</td>
-            <td class="num">548.88</td>
-            <td class="num">$81.57</td>
-            <td class="num">$44,770</td>
-            <td class="num">R$ 230,563</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge trans">Transitório</span></td>
-            <td><strong>USSC</strong></td>
-            <td class="bucket-avgs">AVGS</td>
-            <td class="num">373.25</td>
-            <td class="num">$60.04</td>
-            <td class="num">$22,410</td>
-            <td class="num">R$ 115,411</td>
-            <td class="num positive">+0.0%</td>
-        </tr><tr>
-            <td><span class="badge alvo">Alvo</span></td>
-            <td><strong>SWRD</strong></td>
-            <td class="bucket-swrd">SWRD</td>
-            <td class="num">5,291.64</td>
-            <td class="num">$32.88</td>
-            <td class="num">$173,986</td>
-            <td class="num">R$ 896,029</td>
-            <td class="num positive">+0.0%</td>
-        </tr></tbody>
-        </table>
+    <div class="kpi">
+        <div class="kpi-label">CAGR</div>
+        <div class="kpi-value" style="color:var(--yellow)">25.3%</div>
+        <div class="kpi-sub">Mar/2021 → Mar/2026 · historico_carteira.csv</div>
     </div>
-
-    <!-- FIRE + Shadows -->
-    <div class="grid-2">
-        <div class="section">
-            <h2>FIRE Status</h2>
-            <div class="fire-grid">
-                <div class="fire-scenario">
-                    <div class="label">Base</div>
-                    <div class="value green">90.4%</div>
-                    <div class="bar"><div class="bar-fill" style="width: 90.4%; background: var(--success);"></div></div>
-                </div>
-                <div class="fire-scenario">
-                    <div class="label">Favorável</div>
-                    <div class="value green">94.1%</div>
-                    <div class="bar"><div class="bar-fill" style="width: 94.1%; background: var(--success);"></div></div>
-                </div>
-                <div class="fire-scenario">
-                    <div class="label">Stress</div>
-                    <div class="value yellow">86.8%</div>
-                    <div class="bar"><div class="bar-fill" style="width: 86.8%; background: var(--warning);"></div></div>
-                </div>
-            </div>
-            <div style="margin-top: 16px; font-size: 0.85rem; color: var(--muted);">
-                Pat. mediano: R$ 11,530,000 &bull;
-                Gatilho: R$ 13,400,000
-            </div>
-        </div>
-        <div class="section">
-            <h2>Shadow Portfolios (Q1 2026)</h2>
-            <table class="shadow-table">
-                <thead><tr><th>Portfolio</th><th>Retorno</th><th>Patrimônio</th></tr></thead>
-                <tbody>
-                    <tr><td><strong>Atual</strong></td><td class="positive">+1.73%</td><td>R$ 3,492,284</td></tr>
-                    <tr><td>Target</td><td class="negative">-1.11%</td><td>R$ 3,399,000</td></tr>
-                    <tr><td>Shadow A (VWRA)</td><td class="negative">-1.42%</td><td>R$ 3,387,800</td></tr>
-                    <tr><td>Shadow B (IPCA+)</td><td class="positive">+2.30%</td><td>R$ 3,512,116</td></tr>
-                </tbody>
-            </table>
-            <div style="margin-top: 12px; font-size: 0.8rem; color: var(--muted);">
-                T0: 2026-03-20 &bull; R$ 3,479,239
-            </div>
-        </div>
-    </div>
-
-    <!-- Aporte + RF -->
-    <div class="grid-2">
-        <div class="section">
-            <h2>Aporte do Mês</h2>
-            <div class="aporte-highlight">
-                <div class="target">→ SWRD</div>
-                <div class="reason">Maior underweight: -8.6% vs meta</div>
-            </div>
-            <div style="margin-top: 16px; font-size: 0.85rem;">
-                <p>Aporte mensal: <strong>R$ 25.000</strong></p>
-                <p>Equivalente: <strong>$4,854 USD</strong> @ R$ 5.15</p>
-                <p>IOF+Spread: R$ 338 (1.35%)</p>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Renda Fixa + Crypto</h2>
-            <div class="rf-grid"><div class="rf-card">
-            <div class="rf-label">IPCA+ 2029</div>
-            <div class="rf-value">R$ 89,095</div>
-            <div class="rf-tipo">Reserva</div>
-        </div><div class="rf-card">
-            <div class="rf-label">IPCA+ 2040</div>
-            <div class="rf-value">R$ 33,285</div>
-            <div class="rf-tipo">RF Longo</div>
-        </div><div class="rf-card">
-            <div class="rf-label">Renda+ 2065</div>
-            <div class="rf-value">R$ 112,466</div>
-            <div class="rf-tipo">RF Tático</div>
-        </div><div class="rf-card">
-            <div class="rf-label">HODL11</div>
-            <div class="rf-value">R$ 100,376</div>
-            <div class="rf-tipo">Crypto</div>
-        </div></div>
-            <div style="margin-top: 12px; font-size: 0.8rem; color: var(--muted);">
-                Total: R$ 335,222 (13.4% do portfolio)
-            </div>
-        </div>
-    </div>
-
-    <!-- TLH Monitor -->
-    <div class="section">
-        <h2>TLH Monitor — Transitórios</h2>
-        <table>
-            <thead><tr><th></th><th>Ticker</th><th>Bucket</th><th class="num">Qtde</th>
-                <th class="num">PM (USD)</th><th class="num">Preço</th><th class="num">Ganho</th>
-                <th class="num">Valor</th></tr></thead>
-            <tbody><tr>
-            <td>🟡</td>
-            <td><strong>EIMI</strong></td>
-            <td>AVEM</td>
-            <td class="num">2,020.29</td>
-            <td class="num">$31.33</td>
-            <td class="num">$31.33</td>
-            <td class="num positive">+0.0%</td>
-            <td class="num">$63,304</td>
-        </tr><tr>
-            <td>🟡</td>
-            <td><strong>AVES</strong></td>
-            <td>AVEM</td>
-            <td class="num">926.55</td>
-            <td class="num">$45.47</td>
-            <td class="num">$45.47</td>
-            <td class="num positive">+0.0%</td>
-            <td class="num">$42,126</td>
-        </tr><tr>
-            <td>🟡</td>
-            <td><strong>DGS</strong></td>
-            <td>AVEM</td>
-            <td class="num">188.21</td>
-            <td class="num">$50.11</td>
-            <td class="num">$50.11</td>
-            <td class="num positive">+0.0%</td>
-            <td class="num">$9,432</td>
-        </tr><tr>
-            <td>🟡</td>
-            <td><strong>AVDV</strong></td>
-            <td>AVGS</td>
-            <td class="num">947.60</td>
-            <td class="num">$61.37</td>
-            <td class="num">$61.37</td>
-            <td class="num positive">+0.0%</td>
-            <td class="num">$58,157</td>
-        </tr><tr>
-            <td>🟡</td>
-            <td><strong>AVUV</strong></td>
-            <td>AVGS</td>
-            <td class="num">548.88</td>
-            <td class="num">$81.57</td>
-            <td class="num">$81.57</td>
-            <td class="num positive">+0.0%</td>
-            <td class="num">$44,770</td>
-        </tr><tr>
-            <td>🟡</td>
-            <td><strong>USSC</strong></td>
-            <td>AVGS</td>
-            <td class="num">373.25</td>
-            <td class="num">$60.04</td>
-            <td class="num">$60.04</td>
-            <td class="num positive">+0.0%</td>
-            <td class="num">$22,410</td>
-        </tr></tbody>
-        </table>
-        <div style="margin-top: 8px; font-size: 0.75rem; color: var(--muted);">
-            🟢 Lucro ≥5% &bull; 🟡 ±5% &bull; 🔴 Perda ≥5% (oportunidade TLH)
-        </div>
-    </div>
-
-    <div class="footer">
-        Gerado por <code>scripts/dashboard.py</code> em 2026-04-07 22:31
-        &bull; Dados: IBKR + yfinance + BCB
+    <div class="kpi">
+        <div class="kpi-label">Delta vs VWRA</div>
+        <div class="kpi-value pos">+3.15pp</div>
+        <div class="kpi-sub">Q1 2026 · shadow-portfolio.md</div>
     </div>
 </div>
 
+<!-- Allocation + FIRE -->
+<div class="grid-2">
+    <div class="section">
+        <h2>Composição do Portfolio</h2>
+        <div class="chart-box"><canvas id="donutChart"></canvas></div>
+    </div>
+    <div class="section">
+        <h2>P(FIRE) — Monte Carlo</h2>
+        <div class="fire-big pos">90.4%</div>
+        <div style="text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:16px">Probabilidade FIRE aos 53</div>
+        <div class="fire-row">
+            <div class="fire-item"><div class="v pos">94.1%</div><div class="l">Favorável</div></div>
+            <div class="fire-item"><div class="v pos">90.4%</div><div class="l">Base</div></div>
+            <div class="fire-item"><div class="v" style="color:var(--yellow)">86.8%</div><div class="l">Stress</div></div>
+        </div>
+        <div style="margin-top:16px;padding:10px;background:var(--card2);border-radius:8px;font-size:.8rem;color:var(--muted);text-align:center">
+            Pat. mediano: R$ 13,4M · Gatilho: SWR ≤ 2.4% · Bear -30% → 65.2%
+        </div>
+    </div>
+</div>
+
+<!-- Delta vs Meta + Custo Base -->
+<div class="grid-2">
+    <div class="section">
+        <h2>Delta vs Meta (% portfolio total)</h2>
+        <div class="chart-box"><canvas id="deltaChart"></canvas></div>
+    </div>
+    <div class="section">
+        <h2>Custo Base por Bucket</h2>
+        <table>
+            <thead><tr><th>Bucket</th><th class="num">Valor Atual</th><th class="num">Custo USD</th><th class="num">Ganho%</th><th class="num">Atual%</th><th class="num">Meta%</th><th class="num">Delta</th></tr></thead>
+            <tbody>
+                <tr><td><strong>SWRD</strong></td><td class="num">$251,139</td><td class="num">$173,986</td><td class="num pos">+44.3%</td><td class="num">37.4%</td><td class="num">39.5%</td><td class="num neg">-2.1pp</td></tr>
+                <tr><td><strong>AVGS</strong></td><td class="num">$194,763</td><td class="num">$131,157</td><td class="num pos">+48.5%</td><td class="num">29.0%</td><td class="num">23.7%</td><td class="num pos">+5.3pp</td></tr>
+                <tr><td><strong>AVEM</strong></td><td class="num">$160,435</td><td class="num">$114,862</td><td class="num pos">+39.7%</td><td class="num">23.9%</td><td class="num">15.8%</td><td class="num pos">+8.1pp</td></tr>
+            </tbody>
+            <tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total Equity</td><td class="num">$608,467</td><td class="num">$421,271</td><td class="num pos">+44.4%</td><td class="num">90.6%</td><td class="num">79.0%</td><td class="num">—</td></tr></tfoot>
+        </table>
+        <div class="src">Qtde: ibkr_lotes.json · Preços: web (07/abr) · Custo: IBKR avg cost USD</div>
+    </div>
+</div>
+
+<!-- Positions -->
+<div class="section">
+    <h2>Posições — Equity Internacional</h2>
+    <div style="overflow-x:auto">
+    <table>
+        <thead><tr><th>Ativo</th><th>Bucket</th><th>Status</th><th class="num">Qtde</th><th class="num">PM USD</th><th class="num">Preço</th><th class="num">Valor USD</th><th class="num">Ganho%</th></tr></thead>
+        <tbody>
+            <tr><td><strong>SWRD</strong></td><td>SWRD</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num">5,291.64</td><td class="num">$32.88</td><td class="num">$47.46</td><td class="num">$251,139</td><td class="num pos">+44.3%</td></tr>
+
+            <tr><td><strong>AVGS</strong></td><td>AVGS</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num">233.43</td><td class="num">$24.93</td><td class="num">$24.22</td><td class="num">$5,654</td><td class="num neg">-2.8%</td></tr>
+            <tr><td>AVUV</td><td>AVGS</td><td><span class="badge badge-trans">Trans</span></td><td class="num">548.88</td><td class="num">$81.57</td><td class="num">$111.63</td><td class="num">$61,268</td><td class="num pos">+36.9%</td></tr>
+            <tr><td>AVDV</td><td>AVGS</td><td><span class="badge badge-trans">Trans</span></td><td class="num">947.60</td><td class="num">$61.37</td><td class="num">$101.54</td><td class="num">$96,219</td><td class="num pos">+65.5%</td></tr>
+            <tr><td>USSC</td><td>AVGS</td><td><span class="badge badge-trans">Trans</span></td><td class="num">373.25</td><td class="num">$60.04</td><td class="num">$84.72</td><td class="num">$31,622</td><td class="num pos">+41.1%</td></tr>
+
+            <tr><td>EIMI</td><td>AVEM</td><td><span class="badge badge-trans">Trans</span></td><td class="num">2,020.29</td><td class="num">$31.33</td><td class="num">$46.28</td><td class="num">$93,499</td><td class="num pos">+47.7%</td></tr>
+            <tr><td>AVES</td><td>AVEM</td><td><span class="badge badge-trans">Trans</span></td><td class="num">926.55</td><td class="num">$45.47</td><td class="num">$59.80</td><td class="num">$55,408</td><td class="num pos">+31.5%</td></tr>
+            <tr><td>DGS</td><td>AVEM</td><td><span class="badge badge-trans">Trans</span></td><td class="num">188.21</td><td class="num">$50.11</td><td class="num">$61.25</td><td class="num">$11,528</td><td class="num pos">+22.2%</td></tr>
+
+            <tr><td>IWVL</td><td>—</td><td><span class="badge badge-trans">Trans</span></td><td class="num">34.00</td><td class="num">$37.23</td><td class="num">~$62.65</td><td class="num">$2,130</td><td class="num pos">+68.3%</td></tr>
+        </tbody>
+        <tfoot>
+            <tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="5">Total Equity</td><td></td><td class="num">$608,467</td><td class="num pos">+44.4%</td></tr>
+        </tfoot>
+    </table>
+    </div>
+    <div class="src">Qtde + PM: ibkr_lotes.json (codebase) · Preços: web search (07/abr/26) · IWVL estimado</div>
+</div>
+
+<!-- Shadows + Aporte -->
+<div class="grid-2">
+    <div class="section">
+        <h2>Shadow Portfolios (Q1 2026)</h2>
+        <table>
+            <thead><tr><th>Portfolio</th><th class="num">Retorno</th><th class="num">Delta</th></tr></thead>
+            <tbody>
+                <tr><td>📊 <strong>Atual</strong> (Real)</td><td class="num pos">+1.73%</td><td class="num">—</td></tr>
+                <tr><td>🎯 Target (50/30/20)</td><td class="num neg">≈ −1.11%</td><td class="num">—</td></tr>
+                <tr><td>🅰️ Shadow A (VWRA)</td><td class="num neg">−1.42%</td><td class="num pos">+3.15pp</td></tr>
+                <tr><td>🅱️ Shadow B (IPCA+)</td><td class="num pos">+2.30%</td><td class="num neg">−0.57pp</td></tr>
+            </tbody>
+        </table>
+        <div style="margin-top:12px;padding:10px;background:var(--card2);border-radius:8px;font-size:.78rem;color:var(--muted)">
+            Alpha pós-haircut: <strong>~0.16%/ano</strong> · TER Δ VWRA: +2.7bps · Fonte: shadow-portfolio.md
+        </div>
+    </div>
+    <div class="section">
+        <h2>Prioridade de Aporte</h2>
+        <div class="prio"><span class="prio-num">1º</span> <strong>SWRD</strong> — underweight -2.1pp</div>
+        <div class="prio"><span class="prio-num">2º</span> <strong>IPCA+ Longo</strong> — gap -14.1pp (DCA ativo, taxa ~7.20%)</div>
+        <div style="margin-top:12px;padding:10px;background:var(--card2);border-radius:8px;font-size:.8rem;color:var(--muted)">
+            <strong>Cascade:</strong> IPCA+ (≥6%) → Renda+ (≥6.5%) → Equity (bucket mais subpeso)<br>
+            <strong>Aporte médio:</strong> R$ 25.000/mês · Fonte: carteira.md
+        </div>
+    </div>
+</div>
+
+<!-- TLH -->
+<div class="section">
+    <h2>TLH Monitor — Transitórios</h2>
+    <table>
+        <thead><tr><th>Ativo</th><th>Bucket</th><th class="num">Qtde</th><th class="num">PM USD</th><th class="num">Preço</th><th class="num">Ganho%</th><th>Substituto</th><th>Ação</th></tr></thead>
+        <tbody>
+            <tr><td>AVUV</td><td>AVGS</td><td class="num">548.88</td><td class="num">$81.57</td><td class="num">$111.63</td><td class="num pos">+36.9%</td><td>AVGS.L</td><td style="color:var(--muted)">Manter</td></tr>
+            <tr><td>AVDV</td><td>AVGS</td><td class="num">947.60</td><td class="num">$61.37</td><td class="num">$101.54</td><td class="num pos">+65.5%</td><td>AVGS.L</td><td style="color:var(--muted)">Manter</td></tr>
+            <tr><td>USSC</td><td>AVGS</td><td class="num">373.25</td><td class="num">$60.04</td><td class="num">$84.72</td><td class="num pos">+41.1%</td><td>AVGS.L</td><td style="color:var(--muted)">Manter</td></tr>
+            <tr><td>EIMI</td><td>AVEM</td><td class="num">2,020.29</td><td class="num">$31.33</td><td class="num">$46.28</td><td class="num pos">+47.7%</td><td>AVEM.L</td><td style="color:var(--muted)">Manter</td></tr>
+            <tr><td>AVES</td><td>AVEM</td><td class="num">926.55</td><td class="num">$45.47</td><td class="num">$59.80</td><td class="num pos">+31.5%</td><td>AVEM.L</td><td style="color:var(--muted)">Manter</td></tr>
+            <tr><td>DGS</td><td>AVEM</td><td class="num">188.21</td><td class="num">$50.11</td><td class="num">$61.25</td><td class="num pos">+22.2%</td><td>AVEM.L</td><td style="color:var(--muted)">Manter</td></tr>
+            <tr><td>IWVL</td><td>—</td><td class="num">34.00</td><td class="num">$37.23</td><td class="num">~$62.65</td><td class="num pos">+68.3%</td><td>—</td><td style="color:var(--muted)">Diluir</td></tr>
+        </tbody>
+    </table>
+    <div style="margin-top:8px;font-size:.75rem;color:var(--muted)">✅ Nenhuma oportunidade TLH — todos com lucro. Reativar scan em drawdown.</div>
+</div>
+
+<!-- RF + Crypto -->
+<div class="section">
+    <h2>Renda Fixa & Crypto</h2>
+    <div class="rf-grid">
+        <div class="rf-card"><div class="val">R$ 33.285</div><div class="lbl">IPCA+ 2040</div><div class="sub">Estrutural · HTM · Taxa ~7.20%</div></div>
+        <div class="rf-card"><div class="val">R$ 112.466</div><div class="lbl">Renda+ 2065</div><div class="sub">Tático · MtM · Taxa ~6.93%</div></div>
+        <div class="rf-card"><div class="val">R$ 89.095</div><div class="lbl">IPCA+ 2029</div><div class="sub">Reserva emergência</div></div>
+        <div class="rf-card"><div class="val" style="color:var(--yellow)">R$ 97.359</div><div class="lbl">HODL11</div><div class="sub">1,676 cotas × R$ 58.09 · 2.8% (meta 3%)</div></div>
+    </div>
+    <div class="src" style="margin-top:8px">RF: holdings.md (codebase) · HODL11: cotação web (07/abr/26)</div>
+</div>
+
+</div>
+
+<footer>
+    Dados: <code>ibkr_lotes.json</code> (qtde/custo) + Web Search (preços 07/abr) + <code>scorecard.md</code> (P(FIRE)/shadows) + <code>historico_carteira.csv</code> (CAGR)<br>
+    Gerado por <code>wealth/scripts/dashboard.py</code> · Zero dados da planilha
+</footer>
+
 <script>
-// Donut Chart — Alocação
-new Chart(document.getElementById('donutChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ["Equity", "IPCA+ Longo", "Reserva", "Renda+ 2065", "Crypto"],
-        datasets: [{ data: [2163026, 33285, 89095, 112466, 100376], backgroundColor: ["#1976D2", "#2196F3", "#4CAF50", "#FF9800", "#9C27B0"],
-                      borderWidth: 0, hoverOffset: 8 }]
+new Chart(document.getElementById('donutChart'),{
+    type:'doughnut',
+    data:{
+        labels:['SWRD (37.4%)','AVGS (29.0%)','AVEM (23.9%)','HODL11 (2.8%)','IPCA+ 2040 (0.9%)','Renda+ 2065 (3.2%)','IPCA+ 2029 (2.5%)','IWVL (0.1%)'],
+        datasets:[{data:[1318480,1022506,842284,97359,33285,112466,89095,2130],
+            backgroundColor:['#3b82f6','#8b5cf6','#06b6d4','#eab308','#22c55e','#f97316','#10b981','#6b7280'],
+            borderWidth:0,hoverOffset:8}]
     },
-    options: {
-        responsive: true, maintainAspectRatio: true,
-        cutout: '55%',
-        plugins: {
-            legend: { position: 'right', labels: { padding: 12, usePointStyle: true, font: { size: 12 } } },
-            tooltip: { callbacks: {
-                label: (ctx) => {
-                    const val = ctx.raw;
-                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                    const pct = (val / total * 100).toFixed(1);
-                    return `${ctx.label}: R$ ${val.toLocaleString('pt-BR')} (${pct}%)`;
-                }
-            } }
-        }
-    }
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+        plugins:{legend:{position:'bottom',labels:{padding:10,usePointStyle:true,color:'#94a3b8',font:{size:11}}},
+            tooltip:{callbacks:{label:(c)=>{const v=c.raw,t=c.dataset.data.reduce((a,b)=>a+b,0);return`R$ ${(v/1000).toFixed(0)}k (${(v/t*100).toFixed(1)}%)`}}}}}
 });
 
-// Delta Bar Chart
-new Chart(document.getElementById('deltaChart'), {
-    type: 'bar',
-    data: {
-        labels: ["SWRD", "AVGS", "AVEM"],
-        datasets: [{
-            data: [-8.6, 1.2, 7.3],
-            backgroundColor: ["#F44336", "#4CAF50", "#4CAF50"],
-            borderRadius: 6, barThickness: 40
-        }]
-    },
-    options: {
-        indexAxis: 'y', responsive: true, maintainAspectRatio: true,
-        plugins: { legend: { display: false },
-                   tooltip: { callbacks: { label: (ctx) => `${ctx.raw > 0 ? '+' : ''}${ctx.raw}% vs meta` } } },
-        scales: {
-            x: { grid: { color: '#eee' }, ticks: { callback: (v) => v + '%' } },
-            y: { grid: { display: false } }
-        }
-    }
+new Chart(document.getElementById('deltaChart'),{
+    type:'bar',
+    data:{labels:['SWRD','AVGS','AVEM'],
+        datasets:[{label:'Delta vs Meta',data:[-2.1,5.3,8.1],
+            backgroundColor:['#ef4444','#22c55e','#22c55e'],borderRadius:6,barThickness:36}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:(c)=>`${c.raw>0?'+':''}${c.raw}pp vs meta`}}},
+        scales:{x:{grid:{color:'rgba(71,85,105,.3)'},ticks:{color:'#94a3b8',callback:(v)=>v+'pp'}},
+            y:{grid:{display:false},ticks:{color:'#f1f5f9',font:{weight:'600'}}}}}
 });
 </script>
 </body>
