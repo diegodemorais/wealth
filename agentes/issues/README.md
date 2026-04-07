@@ -30,25 +30,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 1 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
-| 4 | HD-benchmark-comparison | Benchmark comparison visual com shadow portfolios | Advocate | 🔴 Alta |
-| 5 | HD-cmd-portfolio-snapshot | Command /portfolio-snapshot | Bookkeeper | 🔴 Alta |
-| 6 | HD-cmd-rebalance-calc | Command /rebalance-calc | Head | 🔴 Alta |
-| 7 | FI-portfolio-optimization | Validação formal de alocação via otimização | Factor | 🟡 Média |
-| 8 | HD-openbb-data | OpenBB como data platform para o time | Head | 🟡 Média |
-| 9 | FX-multicurrency | Multi-currency tracking nativo BRL/USD | Head | 🟡 Média |
-| 10 | FR-cmd-fire-status | Command /fire-status | FIRE | 🟡 Média |
-| 11 | TX-cmd-tax-calc | Command /tax-calc | Tax | 🟡 Média |
-| 12 | HD-mcp-bcb | MCP Server BCB — dados macro Brasil estruturados | Head | 🔴 Alta |
-| 13 | HD-hook-protect-sot | Hook de proteção para source of truth | Head | 🔴 Alta |
-| 14 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 🟡 Média |
-| 15 | TX-irpf-investidor | Library irpf-investidor para cálculo de IR | Tax | 🟡 Média |
-| 16 | HD-python-bcb | Library python-bcb para dados BCB | Head | 🟡 Média |
-| 17 | HD-cmd-relatorio-mensal | Command /relatorio-mensal — report consolidado | Head | 🟡 Média |
-| 18 | FR-rebalance-desacumulacao | Regras de rebalanceamento pós-FIRE | FIRE | 🟡 Média |
-| 19 | TX-declaracao-anual | Checklist DIRPF investimentos internacionais | Tax | 🟡 Média |
-| 20 | HD-cmd-reconciliar | Command /reconciliar — reconciliação posições | Bookkeeper | 🟡 Média |
-| 21 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
-| 22 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
+| 1 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
+| 2 | HD-mcp-bcb | MCP Server BCB — dados macro Brasil estruturados | Head | 🔴 Alta |
+| 3 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 🟡 Média |
+| 4 | FI-portfolio-optimization | Validação formal de alocação via otimização — debate pendente | Factor | 🟡 Média |
+| 5 | FR-rebalance-desacumulacao | Regras de rebalanceamento pós-FIRE | FIRE | 🟡 Média |
+| 6 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
+| 7 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
@@ -61,6 +49,19 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-benchmark-comparison | Benchmark comparison visual — shadow portfolios | Advocate | 2026-04-07 | --benchmarks em portfolio_analytics.py. Target +23.25% vs VWRA +17.66% vs SWRD100 +16.43% (1 ano). Alpha raw +4.67%/ano (sem signif.). |
+| FX-multicurrency | Multi-currency tracking BRL/USD | Head | 2026-04-07 | fx_utils.py criado. PTAX via python-bcb. decompose_return(). CLI: --history --decompose. |
+| HD-python-bcb | Library python-bcb para dados BCB | Head | 2026-04-07 | bcb funcional (import bcb). PTAX, Selic, IPCA 12m testados. Usado em fx_utils.py. |
+| TX-declaracao-anual | Checklist DIRPF investimentos internacionais | Tax | 2026-04-07 | /declaracao criado. Cobre: Bens/Direitos, ganhos capital (15% flat), dividendos acumulação, câmbio PTAX D+2. |
+| HD-openbb-data | OpenBB como data platform | Head | 2026-04-07 | Incompatível Python 3.14. Substituído por python-bcb + yfinance + ken-french + anbima-data. |
+| TX-irpf-investidor | Library irpf-investidor para IR | Tax | 2026-04-07 | Só B3. Não aplicável para UCITS via IBKR. /tax-calc implementado custom (Lei 14.754/2023). |
+| HD-hook-protect-sot | Hook proteção source of truth | Head | 2026-04-07 | PreToolUse hook em settings.json bloqueia Edit/Write em carteira.md, memoria/*.md, gatilhos.md. |
+| HD-cmd-portfolio-snapshot | Command /portfolio-snapshot | Bookkeeper | 2026-04-07 | Criado e funcional. Posições, pesos, drift, staleness check (>7 dias). |
+| HD-cmd-rebalance-calc | Command /rebalance-calc | Head | 2026-04-07 | Cascade HD-006. Source of truth para aportes. Câmbio operacional. |
+| HD-cmd-reconciliar | Command /reconciliar | Bookkeeper | 2026-04-07 | Compara carteira.md vs IBKR vs input manual. Tabela divergências. |
+| HD-cmd-relatorio-mensal | Command /relatorio-mensal | Head | 2026-04-07 | 7 seções. Salva analysis/relatorios/YYYY-MM.md. Reutiliza MC <7 dias. |
+| FR-cmd-fire-status | Command /fire-status | FIRE | 2026-04-07 | 3k sims paralelo (50+53). P(FIRE), distância gatilho, delta vs check-in. |
+| TX-cmd-tax-calc | Command /tax-calc | Tax | 2026-04-07 | Lei 14.754/2023. PTAX D+2. Lotes FIFO. DARF código 6015. |
 | HD-ibkr-import | Tracking automático via IBKR Flex Query | Bookkeeper | 2026-04-07 | ibkr_sync.py ao vivo. ndcdyn endpoint. Parser XML direto. Snapshot $603k/R$3.14M. Desbloqueia FX-multicurrency, reconciliar, TLH. |
 | HD-quantstats | Portfolio analytics visual com QuantStats | Head | 2026-04-07 | QuantStats integrado. Pesos 50/30/20. CVaR/Tail Ratio adicionados. HTML auto-abre em analysis/tearsheet_latest.html. |
 | FR-spending-modelo-familia | Sensibilidade spending × P(FIRE): 3 cenários R$250k/270k/300k | FIRE | 2026-04-06 | Margem robusta. Pior caso R$300k+stress = 82.1% > critério 75%. Tabela em carteira.md. |

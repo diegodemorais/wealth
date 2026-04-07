@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-benchmark-comparison |
 | **Dono** | Advocate |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | Advocate (lead), Factor, Head, Bookkeeper, Quant |
 | **Co-sponsor** | Factor |
 | **Dependencias** | HD-quantstats |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repositórios open-source — gap vs Ghostfolio/QuantStats benchmark features. Shadow portfolios existem no scorecard (HD-scorecard) mas sem visualização. |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -48,3 +48,21 @@ Criar visualização comparativa automatizada da carteira real vs shadow portfol
 **Incerteza reconhecida:** Horizonte curto (<2 anos de dados reais) gera muito ruído. Proxies históricos ajudam mas não são substituto perfeito.
 
 **Falsificação:** Se carteira real underperformar VWRA por >1pp/ano em 3 anos rolling com Sharpe inferior, gatilho de simplificação.
+
+---
+
+## Conclusao
+
+`--benchmarks` flag adicionada ao `portfolio_analytics.py`. Compara Target 50/30/20 vs Shadow A (VWRA) e Shadow B (SWRD 100%). Métricas: CAGR, Vol, Sharpe, Sortino, MaxDD, Tracking Error vs Target.
+
+**Resultado ao vivo (261 dias, abr/2025–abr/2026):**
+
+| Portfolio | Retorno | Sharpe | MaxDD |
+|-----------|---------|--------|-------|
+| Target 50/30/20 | +23.25% | 1.42 | -14.00% |
+| Shadow A — VWRA | +17.66% | 1.13 | -13.33% |
+| Shadow B — SWRD100 | +16.43% | 1.06 | -13.41% |
+
+Alpha vs VWRA: +4.67%/ano (raw, sem significância com <2 anos).
+
+**Decisão:** Usar `--benchmarks` nas revisões trimestrais. Alertar se Target underperformar VWRA por >1pp/ano em 3 anos rolling (gatilho de simplificação).

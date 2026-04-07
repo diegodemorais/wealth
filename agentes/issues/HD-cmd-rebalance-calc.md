@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-cmd-rebalance-calc |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | Head (lead), Bookkeeper, Factor, Quant |
 | **Co-sponsor** | Bookkeeper |
 | **Dependencias** | HD-cmd-portfolio-snapshot |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Gap identificado no mapeamento de commands |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -49,3 +49,9 @@ Criar `/rebalance-calc` que recebe valor do aporte e calcula distribuição óti
 **Argumento central:** Decisão mensal recorrente que hoje consome 10-15 min do check-in. Command reduz para 30 segundos. Erro de alocação por cálculo mental = drift acumulado.
 
 **Prioridade Alta:** Usado mensalmente. Impacto direto na execução. Depende do snapshot (HD-cmd-portfolio-snapshot) para posições atuais.
+
+---
+
+## Conclusao
+
+Command `.claude/commands/rebalance-calc.md` criado. Lógica de cascade HD-006: IPCA+ longo (≥6%) → Renda+ (≥6.5%) → equity IBKR ao mais subpeso. Câmbio operacional (não PTAX). Aceita argumento R$ (default R$25k). É o source of truth para decisões de aporte — `/checkin-automatico` referencia este command.

@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | TX-irpf-investidor |
 | **Dono** | Tax |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Tax (lead), Bookkeeper, Quant |
 | **Co-sponsor** | Bookkeeper |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repos/tools — pypi.org/project/irpf-investidor (staticdev) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -51,3 +51,9 @@ Avaliar `irpf-investidor` e libs relacionadas (`guilhermecgs/ir`, `darf_generato
 ### Feedback agentes (2026-04-07)
 
 **Tax:** Provavelmente só B3. Libs brasileiras (staticdev, guilhermecgs/ir) focam CEI/B3. ETFs UCITS via IBKR exigem lógica distinta (conversão cambial PTAX compra/venda, custo médio BRL por lote). Recomendação: implementar custom, não depender da lib. Usar lib apenas como referência de cálculo.
+
+## Conclusao
+
+`irpf-investidor` instalado e testado. Confirmado: focado exclusivamente em B3 (CEI/nota de corretagem). **Não aplicável** para ETFs UCITS via IBKR.
+
+**Decisão:** Não usar para nossa carteira. `/tax-calc` implementado custom (Lei 14.754/2023, PTAX D+2, custo médio BRL por lote via `tlh_lotes.json`). `irpf-investidor` pode ser útil apenas se/quando Diego tiver posições diretas em ações BR.

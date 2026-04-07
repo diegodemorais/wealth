@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-cmd-fire-status |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | FIRE (lead), Head, Quant |
 | **Co-sponsor** | Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Gap identificado no mapeamento de commands |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -48,3 +48,9 @@ Criar `/fire-status` que:
 **Argumento central:** P(FIRE) é a métrica norte da carteira. Deveria ser acessível em 1 command, não em terminal + flags + interpretação.
 
 **Prioridade Média:** Usado mensalmente ou ad hoc. O check-in mensal já cobre — este command é conveniência, não necessidade crítica.
+
+---
+
+## Conclusao
+
+Command `.claude/commands/fire-status.md` criado. Roda MC em paralelo (3k sims × FIRE 53 e FIRE 50 simultâneos), lê último resultado de memória como fallback, exibe P(FIRE) por cenário, distância ao gatilho R$13.4M e delta vs último check-in.

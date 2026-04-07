@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-openbb-data |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Head (lead), Macro, RF, Factor |
 | **Co-sponsor** | Macro |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repositórios open-source — gap vs OpenBB (65k stars) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -46,3 +46,17 @@ Avaliar OpenBB como data platform unificada. Verificar se os dados que precisamo
 **Argumento central:** Dados estruturados > WebSearch ad hoc. OpenBB é a plataforma open-source mais madura (65k stars, 220+ contributors). Se os dados BR estiverem disponíveis, elimina uma fonte de friction significativa.
 
 **Incerteza reconhecida:** Cobertura de dados do mercado brasileiro pode ser fraca (ANBIMA, Tesouro Direto). Se os dados BR forem insuficientes, o valor cai significativamente dado que 21% do portfolio é renda fixa BR.
+
+---
+
+## Conclusao
+
+OpenBB instalado mas **incompatível com Python 3.14**. Erro: `cannot import name 'OBBject_BondIndices' from openbb_core`. Versão do OpenBB requer Python ≤3.12.
+
+**Decisão:** Não adotar. Substituído por:
+- Dados macro BR → `python-bcb` (PTAX, Selic, IPCA — confirmado funcional)
+- ETF prices → `yfinance` (já em uso em todos os scripts)
+- Factor returns → Ken French Data Library (via `/ken-french`)
+- Taxas IPCA+ → WebSearch ANBIMA (via `/anbima-data`)
+
+OpenBB pode ser reavaliado quando houver suporte a Python 3.14 (roadmap OpenBB).

@@ -161,6 +161,8 @@ Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este ven
 | `scripts/factor_regression.py` | Regressão Fama-French 5-factor + momentum por ETF | `python3 scripts/factor_regression.py` |
 | `scripts/spending_analysis.py` | Analisa CSV de gastos (All-Accounts export) | `python3 scripts/spending_analysis.py [csv]` |
 | `analysis/ibkr_analysis.py` | Processa extrato IBKR, gera 5 JSONs (lotes, dividendos, etc) | `python3 analysis/ibkr_analysis.py` |
+| `scripts/ibkr_sync.py` | Sync posições IBKR via Flex Query — drift, trades, snapshot | `python3 scripts/ibkr_sync.py --cambio 5.15` |
+| `scripts/fx_utils.py` | PTAX/macro BCB, decomposição retorno BRL/USD | `python3 scripts/fx_utils.py` |
 
 ## Estrutura do Projeto
 

@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-cmd-relatorio-mensal |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Head (lead), Bookkeeper, Factor, FIRE, Advocate |
 | **Co-sponsor** | Bookkeeper |
 | **Dependencias** | HD-cmd-portfolio-snapshot |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Inspirado em client-report skill do anthropics/financial-services-plugins. Nosso check-in é interativo mas não gera documento exportável. |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -60,3 +60,9 @@ Criar `/relatorio-mensal` que gera relatório consolidado mensal em markdown, sa
 **Inspiração:** O `client-report` da Anthropic é focado em advisor→client (compliance, branding, PDF formal). O nosso é personal — mais conciso, markdown puro, foco em actionability.
 
 **Prioridade Média:** O check-in mensal já cobre a função. Este command é upgrade de formato (documento vs conversa), não funcionalidade nova.
+
+---
+
+## Conclusao
+
+Command `.claude/commands/relatorio-mensal.md` criado. Gera relatório mensal em `analysis/relatorios/YYYY-MM.md` com 7 seções: resumo executivo, performance, alocação, atividade, macro (via `/macro-bcb`), issues, próximos passos. Reutiliza MC recente (<7 dias) ou roda novo (3k sims).

@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-python-bcb |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Head (lead), Macro, RF |
 | **Co-sponsor** | Macro |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repos/tools — github.com/wilsonfreitas/python-bcb |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -44,3 +44,13 @@ Avaliar `python-bcb` como library Python para acesso a dados do BCB nos scripts 
 **Argumento central:** Scripts Python (fire_montecarlo, portfolio_analytics) precisam de dados BCB programaticamente. `python-bcb` dá acesso direto em DataFrames pandas — mais natural que MCP para uso em scripts.
 
 **Prioridade Média:** Complementar ao MCP BCB. Redundância intencional — MCP para commands interativos, python-bcb para scripts batch.
+
+---
+
+## Conclusao
+
+`python-bcb` instalado e funcional. Import correto: `from bcb import currency, sgs` (não `python_bcb`). Módulos testados: PTAX (currency.get), Selic meta (sgs 432), IPCA 12m (sgs 13522). Todos retornam DataFrames pandas prontos para uso nos scripts.
+
+**Decisão:** Usar `bcb` como fonte primária para dados BCB nos scripts Python. Implementado em `scripts/fx_utils.py`. Complementar ao MCP BCB para commands interativos.
+
+**Cobertura:** PTAX ✅ | Selic ✅ | IPCA 12m ✅ | Expectativas Focus (serie 4466) ✅ | Dados BR estruturados sem WebSearch.

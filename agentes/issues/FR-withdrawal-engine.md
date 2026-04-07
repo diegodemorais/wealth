@@ -125,3 +125,35 @@ Parametrizar o motor de withdrawal do Monte Carlo para testar diferentes estrat�
 - [ ] Quant: validar VPW (resultado ruim — bug ou feature da fórmula PMT?)
 - [ ] Behavioral: qual strategy Diego toleraria psicologicamente em drawdown?
 - [ ] Rodar 10k sims + cenários stress/favorável localmente
+
+### Rodada 3 — 10k sims (local, 2026-04-07)
+
+| Strategy | P(FIRE) | Pat.Med.Final | Pat.P10.Final |
+|----------|---------|---------------|---------------|
+| guardrails | 90.4% | R$71.8M | R$2.6M |
+| constant | 82.7% | R$74.6M | R$2.5M |
+| pct_portfolio | 91.3% | R$60.9M | R$2.5M |
+| vpw | 80.5% | R$49.3M | R$0.0M |
+| guyton_klinger | 91.0% | R$58.2M | R$2.6M |
+
+Confirmação das rodadas anteriores. Delta máximo: 10.8pp (constant vs pct_portfolio). Guardrails: 90.4%. GK: 91.0%. VPW: P10 = R$0 (esgotamento).
+
+### Debate FIRE (2026-04-07)
+
+**Veredicto FIRE: Manter guardrails.**
+
+1. **Delta 1.1pp (guardrails 90.4% vs GK 91.0%) não é estatisticamente significativo** em 10k sims (IC ~±1pp). Pode inverter com seed diferente.
+
+2. **Vol de gasto é o fator decisivo para família:**
+   - Guardrails: vol R$41k, range P10–P90 R$162k–R$280k
+   - GK: vol R$189k, range P10–P90 R$162k–R$667k
+   - +4.6× de volatilidade de renda = inaceitável para planejamento familiar
+
+3. **GK mal interpretado:** spending médio GK sobe com a idade (R$268k → R$357k) pela regra de prosperidade — artefato que parece bom mas expõe ao risco de gastos insustentáveis nos anos finais.
+
+4. **VPW ruim é feature, não bug:** PMT aumenta à medida que anos restantes diminuem — saques crescem no final da desacumulação quando o portfolio está menor. P10 = R$0 confirma.
+
+**Decisão pendente para Diego:**
+- [ ] Confirmar: manter guardrails como estratégia principal?
+- [ ] GK como referência de monitoramento (alertar quando GK sugere corte mas guardrails não)?
+- [ ] Documentar em carteira.md

@@ -51,12 +51,14 @@ PROXY_AVGS = {"AVUV": 0.58, "AVDV": 0.42}   # pesos factsheet Avantis (proxies-c
 
 # ─── DADOS ────────────────────────────────────────────────────────────────────
 
-def get_precos(periodo: str = "3y") -> pd.DataFrame:
-    """Baixa preços ajustados dos 4 ETFs + VWRA."""
+def get_precos(periodo: str = "3y", include_shadows: bool = False) -> pd.DataFrame:
+    """Baixa preços ajustados dos ETFs alvo + VWRA (+ shadow extras se solicitado)."""
     tickers = list(TICKERS_ALVO.values()) + [BENCHMARK]
-    print(f"  Baixando preços ({periodo}): {', '.join(tickers)}")
+    if include_shadows:
+        tickers = list(set(tickers + TICKERS_SHADOW_EXTRA))
+    print(f"  Baixando preços ({periodo}): {', '.join(sorted(tickers))}")
     precos = yf.download(tickers, period=periodo, auto_adjust=True, progress=False)["Close"]
-    precos = precos.dropna()
+    precos = precos.dropna(how="all")
     return precos
 
 
@@ -541,13 +543,15 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
         print(f"\n  Pisos de decisão:")
         print(f"    IPCA+ Longo >= {PISO_TAXA_IPCA_LONGO:.1f}% a.a. → prioridade máxima")
         print(f"    Renda+ 2065 >= {PISO_TAXA_RENDA_PLUS:.1f}% a.a. → segunda prioridade")
-        print(f"    Caso contrário → 100% JPGL via IB")
-        # Mostrar preço atual JPGL para referência
-        p_jpgl_usd = float(precos["JPGL.L"].iloc[-1])
-        p_jpgl_brl = p_jpgl_usd * usd_brl
+        print(f"    Caso contrário → 100% equity IBKR (SWRD/AVGS/AVEM, ao mais subpeso)")
+        # Mostrar preços atuais equity para referência
         aporte_usd = aporte_brl / usd_brl
-        print(f"\n  JPGL.L: $ {p_jpgl_usd:.2f} = R$ {p_jpgl_brl:.2f}")
-        print(f"  Aporte de R$ {aporte_brl:,.0f} = $ {aporte_usd:,.2f} = {aporte_usd/p_jpgl_usd:.4f} cotas JPGL")
+        print(f"\n  Aporte: R$ {aporte_brl:,.0f} = US$ {aporte_usd:,.2f}")
+        for ticker, nome in [("SWRD.L","SWRD"), ("AVGS.L","AVGS"), ("AVEM.L","AVEM")]:
+            if ticker in precos.columns:
+                p = float(precos[ticker].iloc[-1])
+                print(f"  {nome}: US$ {p:.2f} = R$ {p*usd_brl:.2f}  |  {aporte_usd/p:.4f} cotas")
+        print(f"\n  Use /rebalance-calc para calcular alocação exata por ETF.")
         return
 
     # ── Gap de alocação (se patrimônio fornecido) ──────────────────────────────
@@ -591,25 +595,116 @@ def otimizador_aporte(precos: pd.DataFrame, aporte_brl: float,
         print(f"\n  Plataforma: Tesouro Direto")
 
     else:
-        # ── Caso 3: JPGL via IB ───────────────────────────────────────────────
+        # ── Caso 3: Equity IBKR (SWRD/AVGS/AVEM ao mais subpeso) ────────────
         motivo = []
         if taxa_ipca_longo < PISO_TAXA_IPCA_LONGO:
             motivo.append(f"IPCA+ {taxa_ipca_longo:.2f}% < piso {PISO_TAXA_IPCA_LONGO:.1f}%")
         if taxa_renda_plus < PISO_TAXA_RENDA_PLUS:
             motivo.append(f"Renda+ {taxa_renda_plus:.2f}% < piso {PISO_TAXA_RENDA_PLUS:.1f}%")
-        print(f"  ✅ DECISÃO: 100% JPGL via IB ({'; '.join(motivo)})")
+        print(f"  ✅ DECISÃO: 100% equity IBKR ({'; '.join(motivo)})")
+        print(f"  → Alocar ao ETF mais subpeso (SWRD/AVGS/AVEM). Use /rebalance-calc para cálculo exato.")
 
-        p_jpgl_usd = float(precos["JPGL.L"].iloc[-1])
-        p_jpgl_brl = p_jpgl_usd * usd_brl
         aporte_usd = aporte_brl / usd_brl
-        cotas = aporte_usd / p_jpgl_usd
-
-        print(f"\n  {'Ativo':<10} {'Preço (USD)':>12}  {'Preço (R$)':>12}  {'Cotas':>10}  {'Valor (R$)':>12}")
-        print("  " + "-"*62)
-        print(f"  {'JPGL.L':<10} $ {p_jpgl_usd:>10.2f}  R$ {p_jpgl_brl:>9.2f}  {cotas:>9.4f}  R$ {aporte_brl:>9,.0f}")
+        print(f"\n  {'Ativo':<10} {'Alvo':>8}  {'Preço (USD)':>12}  {'Preço (R$)':>12}  {'Cotas c/ 100%':>14}")
+        print("  " + "-"*70)
+        for ticker, (nome, alvo) in zip(
+            ["SWRD.L", "AVGS.L", "AVEM.L"],
+            [("SWRD", 0.50), ("AVGS", 0.30), ("AVEM", 0.20)]
+        ):
+            if ticker in precos.columns:
+                p = float(precos[ticker].iloc[-1])
+                cotas = aporte_usd / p
+                print(f"  {nome:<10} {alvo:>7.0%}  $ {p:>10.2f}  R$ {p*usd_brl:>9.2f}  {cotas:>13.4f}")
         print(f"\n  Aporte em USD: $ {aporte_usd:,.2f}")
         print(f"  Plataforma: Interactive Brokers (cotas fracionárias)")
-        print(f"  Ordem: Market ou Limit — {cotas:.4f} cotas JPGL.L")
+        print(f"  ℹ️  Use /rebalance-calc para drift exato e alocação precisa.")
+
+
+# ─── BENCHMARKS — SHADOW PORTFOLIOS ──────────────────────────────────────────
+
+# Shadow portfolios para comparação (scorecard HD-scorecard)
+SHADOWS = {
+    "Target (50/30/20)": {"SWRD.L": 0.50, "AVGS.L": 0.30, "AVEM.L": 0.20},
+    "Shadow A — VWRA":   {"VWRA.L": 1.00},
+    "Shadow B — SWRD100": {"SWRD.L": 1.00},
+    # Shadow C: 60/40 global (SWRD 60% + IEF proxy via yfinance SPY/AGG — usamos SWRD+IGLN)
+}
+
+# Tickers adicionais para shadow portfolios
+TICKERS_SHADOW_EXTRA = ["VWRA.L", "IGLN.L"]   # VWRA e ouro como alternativa ao bond
+
+
+def benchmarks_comparison(precos: pd.DataFrame):
+    """Compara carteira Target vs shadow portfolios e VWRA.
+    Calcula: retorno cumulativo, Sharpe, Sortino, Max DD, tracking error vs Target.
+    """
+    print("\n" + "─"*60)
+    print("  BENCHMARK COMPARISON — TARGET vs SHADOWS")
+    print("─"*60)
+
+    retornos = get_retornos(precos)
+
+    # Construir série de retornos para cada portfolio
+    port_returns: dict[str, pd.Series] = {}
+    for nome, pesos in SHADOWS.items():
+        # Verificar que todos os tickers estão nos dados
+        tickers_ok = [t for t in pesos if t in retornos.columns]
+        if not tickers_ok:
+            print(f"  ⚠️  {nome}: tickers não disponíveis ({list(pesos.keys())})")
+            continue
+        # Normalizar pesos para os tickers disponíveis
+        pesos_disp = {t: pesos[t] for t in tickers_ok}
+        total = sum(pesos_disp.values())
+        r = sum((w / total) * retornos[t] for t, w in pesos_disp.items())
+        port_returns[nome] = r
+
+    if len(port_returns) < 2:
+        print("  ❌ Dados insuficientes para comparação de benchmarks.")
+        return
+
+    # Alinhar todos ao índice comum (menor janela disponível)
+    idx = port_returns[list(port_returns.keys())[0]].index
+    for r in port_returns.values():
+        idx = idx.intersection(r.index)
+    port_returns = {k: v[idx] for k, v in port_returns.items()}
+
+    n_dias = len(idx)
+    print(f"\n  Período: {idx[0].date()} → {idx[-1].date()} ({n_dias} dias úteis / ~{n_dias/252:.1f} anos)")
+    if n_dias < 500:
+        print(f"  ⚠️  Histórico curto — AVGS.L lançado jun/2024. Resultados com baixa significância.")
+
+    r_target = port_returns.get("Target (50/30/20)")
+
+    # Tabela de métricas
+    print(f"\n  {'Portfolio':<22} {'Retorno':>8} {'Vol':>8} {'Sharpe':>8} {'Sortino':>8} {'MaxDD':>8} {'TE vs Tgt':>10}")
+    print("  " + "─"*80)
+    for nome, r in port_returns.items():
+        cagr    = qs.stats.cagr(r)
+        vol     = qs.stats.volatility(r)
+        sharpe  = qs.stats.sharpe(r)
+        sortino = qs.stats.sortino(r)
+        maxdd   = qs.stats.max_drawdown(r)
+        if r_target is not None and nome != "Target (50/30/20)":
+            te = float(np.std((r - r_target).dropna()) * np.sqrt(252))
+            te_str = f"{te:>9.2%}"
+        else:
+            te_str = "   —"
+        flag = "►" if nome.startswith("Target") else " "
+        print(f"  {flag} {nome:<20} {cagr:>7.2%} {vol:>7.2%} {sharpe:>7.2f} {sortino:>7.2f} {maxdd:>7.2%} {te_str:>10}")
+
+    # Retorno cumulativo
+    print(f"\n  Retorno cumulativo no período:")
+    for nome, r in port_returns.items():
+        cum = (1 + r).prod() - 1
+        flag = "►" if nome.startswith("Target") else " "
+        print(f"    {flag} {nome:<22} {cum:>+8.2%}")
+
+    # Alpha vs VWRA
+    r_vwra = port_returns.get("Shadow A — VWRA")
+    if r_vwra is not None and r_target is not None:
+        alpha_raw = float(np.mean(r_target - r_vwra) * 252)
+        print(f"\n  Alpha vs VWRA (raw, não anualizado via regressão): {alpha_raw:>+.2%}/ano")
+        print(f"  ℹ️  Alpha raw sem significância estatística com <2 anos. Use como referência.")
 
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
@@ -620,7 +715,8 @@ def main():
     parser.add_argument("--stress",       action="store_true", help="Stress test Quant Crisis 2.0")
     parser.add_argument("--correlacoes",  action="store_true", help="Correlações por regime VIX (calm/stress/crise)")
     parser.add_argument("--tearsheet",    action="store_true", help="Tearsheet vs VWRA")
-    parser.add_argument("--html",       action="store_true", help="Salvar tearsheet em HTML")
+    parser.add_argument("--html",         action="store_true", help="Salvar tearsheet em HTML")
+    parser.add_argument("--benchmarks",   action="store_true", help="Comparação vs shadow portfolios (VWRA, SWRD100)")
     parser.add_argument("--aporte",           type=float, help="Otimizar aporte (R$)")
     parser.add_argument("--taxa-ipca-longo",  type=float, help="Taxa IPCA+ longo atual (%% a.a., ex: 7.16)")
     parser.add_argument("--taxa-renda-plus",  type=float, help="Taxa Renda+ 2065 atual (%% a.a., ex: 6.82)")
@@ -628,10 +724,12 @@ def main():
     parser.add_argument("--periodo",          type=str, default="3y", help="Período de dados (ex: 1y, 3y, 5y)")
     args = parser.parse_args()
 
-    rodar_tudo = not any([args.fronteira, args.stress, args.correlacoes, args.tearsheet, args.aporte])
+    rodar_tudo = not any([args.fronteira, args.stress, args.correlacoes, args.tearsheet,
+                          args.aporte, args.benchmarks])
 
     print(f"\n📥 Baixando dados ({args.periodo})...")
-    precos = get_precos(args.periodo)
+    include_shadows = args.benchmarks or rodar_tudo
+    precos = get_precos(args.periodo, include_shadows=include_shadows)
     print(f"   {len(precos)} dias úteis | {precos.index[0].date()} → {precos.index[-1].date()}")
 
     if rodar_tudo or args.fronteira:
@@ -645,6 +743,9 @@ def main():
 
     if rodar_tudo or args.tearsheet:
         tearsheet_vs_benchmark(precos, salvar_html=args.html)
+
+    if rodar_tudo or args.benchmarks:
+        benchmarks_comparison(precos)
 
     if args.aporte or rodar_tudo:
         aporte = args.aporte or 25_000

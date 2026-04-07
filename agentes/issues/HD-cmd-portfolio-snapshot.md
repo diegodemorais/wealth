@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-cmd-portfolio-snapshot |
 | **Dono** | Bookkeeper |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | Bookkeeper (lead), Head, Quant |
 | **Co-sponsor** | Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Gap identificado no mapeamento de commands |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -48,3 +48,9 @@ Criar `/portfolio-snapshot` que lê `carteira.md` e gera:
 **Argumento central:** Pergunta mais frequente, resposta mais lenta. Command elimina friction de toda interação que precisa de contexto de posições.
 
 **Prioridade Alta:** Usado em quase toda sessão. Baixo esforço (1 arquivo .md).
+
+---
+
+## Conclusao
+
+Command `.claude/commands/portfolio-snapshot.md` criado e funcional. Lê `carteira.md`, exibe posições com pesos atuais vs alvos, drift, patrimônio total e staleness check (alerta se dados >7 dias).

@@ -112,3 +112,33 @@ Correlações: SWRD-AVGS 0.941, SWRD-AVEM 0.826, AVGS-AVEM 0.843.
 - [ ] Rodar Black-Litterman com views = premissas Diego
 - [ ] Efficient frontier plot (matplotlib)
 - [ ] Levar resultados para debate Factor + Advocate + FIRE
+
+### Análise com dados reais — Rodada 2 (local, 2026-04-07)
+
+**Método:** Preços reais via yfinance. SWRD → IDEV (proxy, 5 anos), AVGS → AVUV×0.58 + AVDV×0.42 (proxy), AVEM → US-listed. Período: 2021-04-07 a 2026-04-07 (1.256 pregões). Ferramentas: PyPortfolioOpt + Riskfolio-Lib.
+
+**Dados históricos (5 anos, dados reais):**
+
+| Proxy | Ret Anual | Vol | Proxy para |
+|-------|-----------|-----|------------|
+| IDEV | 8.19% | 16.12% | SWRD |
+| AVUV×0.58+AVDV×0.42 | 12.22% | 19.18% | AVGS |
+| AVEM (US) | 7.01% | 17.88% | AVEM |
+
+Correlações: SWRD-AVGS 0.860 | SWRD-AVEM 0.818 | AVGS-AVEM 0.715 (AVGS mais diversificado que síntese web)
+
+**Pesos ótimos vs Target:**
+
+| Método | SWRD | AVGS | AVEM | Sharpe |
+|--------|------|------|------|--------|
+| Max Sharpe | 0% | 37.8% | 62.2% | 0.539 |
+| Min Variance | 77.7% | 0% | 22.3% | 0.503 |
+| HRP | 31.2% | 22.0% | 46.8% | 0.533 |
+| **Target 50/30/20** | **50%** | **30%** | **20%** | **0.572** |
+
+**Achado crítico: Target 50/30/20 tem o melhor Sharpe (0.572) e Sortino (0.848) no backtest real.** O otimizador é "matematicamente correto mas praticamente errado": zera SWRD porque AVGS/AVEM têm mesmo expected return com SWRD menor, mas ignora:
+1. Período 2021-2026 castigou AVEM (7.01% vs AVGS 12.22%)
+2. SWRD é anchor de liquidez e risk-reducer (vol 16.12% vs AVEM 17.88%)
+3. Bootstrap: SWRD=0% está fora do IC 90% — corner solution típico de overfitting (Michaud 1989)
+
+**Veredicto Factor:** 50/30/20 é **fortemente defensável**. O resultado numérico confirma: não há evidência quantitativa de que outro peso seria superior com dados reais. A alocação reflete convicção em factor premiums forward-looking — uma decisão de premissas, não de otimização histórica.
