@@ -2,7 +2,7 @@
 
 ## IDs de Issues
 Formato: `{SIGLA}-{slug-descritivo}` — sigla do agente responsavel principal + slug curto legível sem contexto.
-HD (Head), FI (Factor), RF (Renda Fixa), FR (FIRE), TX (Tributacao), RK (Risco), FX (Cambio), MA (Macro), PT (Patrimonial), DA (Devil's Advocate), OP (Oportunidades), XX (Cross-domain)
+HD (Head), FI (Factor), RF (Renda Fixa), FR (FIRE), TX (Tributacao), RK (Risco/Tactical), FX (Cambio), MA (Macro), PT (Patrimonial), DA (Devil's Advocate), OV (Outside View), OPS (Ops), XX (Cross-domain)
 
 Exemplos: `FR-spending-smile`, `RK-gold-hedge`, `MA-bond-correlation`
 Regra: 1-3 palavras em kebab-case, sem número. O slug deve dizer o assunto sem precisar ler o título.
@@ -97,10 +97,11 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 | Tipo de issue | Agentes obrigatórios |
 |---------------|---------------------|
-| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), **Zero-Based (16, peso 2x)**, Cético (17), agente de domínio, Quant, Fact-Checker |
-| Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Cético (17), Quant, Fact-Checker |
-| Tática (DCA, timing, execução) | Agente de domínio, Quant |
-| Cross-domain | Head coordena, múltiplos especialistas |
+| Meta-estratégica (questiona premissa fundacional) | Advocate (lead), **Zero-Based (16, peso 2x)**, **Outside View (18, peso 2x)**, agente de domínio, Quant, Fact-Checker |
+| Stress-test (questiona claim dentro da estratégia) | Advocate, agente de domínio, Quant, Fact-Checker |
+| Alocação (>5% portfolio) | **Outside View obrigatório**, Advocate, agente de domínio, Quant |
+| Tática (DCA, timing, execução) | Agente de domínio, Quant, **Ops (compliance)** |
+| Cross-domain (3+ agentes) | Head + **CIO auto-acionado**, múltiplos especialistas |
 
 ---
 
@@ -159,6 +160,35 @@ Sem decisão explícita, a issue não pode permanecer em Backlog indefinidamente
 **Agente 16 Zero-Based**: agente formal com perfil próprio (`agentes/perfis/16-zerobased.md`). Peso **2x** em issues de alocação. Recebe APENAS o perfil do investidor — sem carteira atual, sem histórico de posições. Obrigatório em todas as meta-estratégicas e issues com ativo ≥5% do portfolio. Propósito: impedir que restrição operacional (custo de IR, falta de veículo) seja confundida com validação estratégica. Ver perfil para detalhes de isolamento e formato de output.
 
 Issues meta-estratégicas identificadas (consultar sempre): `HD-simplicity`, `HD-equity-weight`, `HD-brazil-concentration`
+
+**Agente 18 Outside View**: agente formal com perfil próprio (`agentes/perfis/18-outside-view.md`). Peso **2x** em issues de alocação e FIRE. Traz base rates e reference class forecasting (Kahneman). Obrigatório em todas as decisões >5% do portfolio. Propósito: contrapeso à narrativa interna — "o que aconteceu com investidores similares?"
+
+**Agente 19 Ops**: agente formal com perfil próprio (`agentes/perfis/19-ops.md`). Peso **1x** (operacional). Cobra execução de decisões aprovadas, monitora drift, alerta prazos. Obrigatório no check-in mensal.
+
+---
+
+## Protocolos de Diversidade Intelectual (aprovados 2026-04-07)
+
+### Preregistration
+Antes de análise, cada agente declara prior numérico em 1 linha. Registrado em memória. Na retro, comparar previsão vs realidade. Cria accountability.
+
+### ACH — Analysis of Competing Hypotheses (decisões estruturais)
+Para decisões >5% do portfolio: montar **matriz de evidências** — hipóteses como colunas, evidências como linhas. Focar em **descartar** hipóteses mal-suportadas, não em votar na favorita.
+
+### Steelman (Advocate obrigatório)
+Antes de atacar, Advocate constrói o **melhor caso** da posição oposta. Elimina espantalhos.
+
+### Inversion (Advocate em issues Alta)
+"Como destruir este plano?" Listar caminhos de destruição → verificar proteção.
+
+### Decision Journal (Bookkeeper)
+Registrar reasoning pré-outcome de cada decisão. Retro semestral avalia processo, não resultado.
+
+### Shell Scenarios (retro semestral)
+2 eixos de incerteza → 4 cenários. Cada agente otimiza para UM cenário. Head sintetiza.
+
+### Temporal Diversity (check-in anual)
+Diego-25/50/65 avaliam a carteira. Head aplica como exercício de perspectiva.
 
 ---
 

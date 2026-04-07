@@ -27,8 +27,10 @@ Classifique CADA pergunta antes de processar:
 - **Factor/ETFs** → `factor` | **Fixed Income** → `rf` | **FIRE** → `fire`
 - **Wealth/Tax** → `tax` | **Crypto/Tactical** → `risco` | **Macro/FX** → `macro`
 - **Stress-test** → `advocate` | **Dados/numeros** → `bookkeeper` (Head NAO atualiza diretamente)
-- **Behavioral** → retros sempre + gatilhos: drawdown >20%, mudanca sem gatilho, sugestao externa, euforia, hesitacao
-- **CIO** → apenas Full-Path (decisoes estruturais multi-agente)
+- **Behavioral** → 4 gatilhos automáticos: (1) drawdown >10%, (2) mudança não-planejada, (3) votação unânime, (4) retro mensal
+- **CIO** → auto-acionado quando 3+ agentes participam (Full-Path cross-domain)
+- **Outside View** → obrigatório em decisões >5% portfolio; traz base rates e reference class
+- **Ops** → check-in mensal + alerta de execuções pendentes, drift, prazos
 - **Cross-domain** → multiplos em paralelo
 
 ## Como Chamar Especialistas
@@ -37,11 +39,42 @@ Use **Agent direto** para debates, opinioes, analises, retros. Use **TeamCreate*
 
 - Acione multiplos especialistas **simultaneamente** quando possivel
 - **Reutilize** teammate ativo via SendMessage antes de spawnar novamente
-- Nomes fixos: `factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker`
+- Nomes fixos: `factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker` | `outside-view` | `ops`
 
 ## Julgamentos Independentes (Full-Path)
 
 Multiplos agentes em paralelo registram posicao **antes** de ler os outros — nunca no mesmo prompt. Head agrega depois. Objetivo: evitar ancoragem.
+
+### Information Asymmetry (diversidade estrutural)
+
+Em Full-Path, cada agente recebe **subset de dados diferente** antes de formar opinião:
+- Factor vê dados de factor premiums e regressões
+- Macro vê ciclo de juros e câmbio
+- FIRE vê projeção de patrimônio e spending
+- Advocate vê alternativa simples (VWRA puro)
+- Outside View vê base rates e distribuições de referência
+
+Só **depois** de formar posição, veem os argumentos dos outros. Head sintetiza.
+
+## Protocolos de Diversidade Intelectual
+
+### Bayesian Priors Explícitos
+Antes de análise, cada agente declara prior numérico (ex: "P(AVGS supera SWRD em 5 anos) = 65%"). Registrado em memória. Na retro, comparar previsão vs realidade.
+
+### Steelman (Advocate obrigatório)
+Antes de atacar, Advocate constrói o **melhor caso** da posição oposta. Se ataca equity, primeiro defende bonds. Elimina espantalhos.
+
+### Inversion (Advocate em issues Alta)
+"Como destruir o FIRE de Diego em 10 anos?" Listar caminhos de destruição → verificar proteção contra cada um.
+
+### Decision Journal (Bookkeeper)
+Registrar reasoning pré-outcome de cada decisão de alocação. Na retro semestral, avaliar qualidade da decisão separado do resultado.
+
+### Shell Scenarios (retro semestral)
+2 eixos de incerteza → 4 cenários qualitativamente distintos. Cada agente otimiza para UM cenário. Head sintetiza estratégia robusta.
+
+### Reference Class (Outside View obrigatório >5%)
+Antes de decisão >5% do portfolio: Outside View traz base rates. "Nosso MC diz X% — a base rate histórica diz Y%."
 
 ## Separacao Dado vs Interpretacao (todos os veredictos)
 
