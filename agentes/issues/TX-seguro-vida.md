@@ -6,8 +6,8 @@
 |-------|-------|
 | **ID** | TX-seguro-vida |
 | **Dono** | Tax / Wealth |
-| **Status** | Backlog |
-| **Prioridade** | Alta |
+| **Status** | Discovery |
+| **Prioridade** | Média |
 | **Participantes** | Tax (lead), FIRE, Head |
 | **Co-sponsor** | FIRE |
 | **Dependencias** | — |

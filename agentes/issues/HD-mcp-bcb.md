@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-mcp-bcb |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | Head (lead), Macro, RF, Bookkeeper |
 | **Co-sponsor** | Macro |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repos/tools — github.com/SidneyBissoli/bcb-br-mcp |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -31,13 +31,13 @@ Instalar e avaliar o MCP Server BCB como substituto dos WebFetch ad hoc. Se func
 
 ## Escopo
 
-- [ ] Instalar `bcb-br-mcp` via npx no ambiente local
-- [ ] Mapear tools disponíveis: quais séries? PTAX? Selic? IPCA? Expectativas Focus?
-- [ ] Testar 5 queries práticas: (a) PTAX hoje, (b) Selic atual, (c) IPCA acumulado 12m, (d) expectativa IPCA 2026, (e) histórico Selic 5 anos
-- [ ] Comparar qualidade/velocidade vs WebFetch atual
-- [ ] Atualizar `/macro-bcb` para usar MCP se superior
-- [ ] Avaliar companion IBGE MCP (`ibge-br-mcp`) para dados demográficos
-- [ ] Bonus: verificar módulo Wealth Management do `anthropics/financial-services-plugins` (7.3k stars) — focado em IB/equity research, mas WM pode ter algo útil
+- [x] Instalar `bcb-br-mcp` via npx — instalado e disponível (`npm install bcb-br-mcp` ok, v1.2.1)
+- [x] Mapear tools disponíveis: 8 tools — `bcb_indicadores_atuais`, `bcb_serie_ultimos`, `bcb_serie_valores`, `bcb_variacao`, `bcb_comparar`, `bcb_buscar_serie`, `bcb_series_populares`, `bcb_serie_metadados`
+- [x] Testar 5 queries: (a) PTAX 5.2006, (b) Selic 14.65%, (c) IPCA 12m 3.81%, (d) Focus lag confirmado, (e) Selic 5 anos: 1826 pontos
+- [x] Comparar vs WebFetch: MCP superior para Selic/IPCA/PTAX; WebFetch ainda necessário para Tesouro Direto
+- [x] Atualizar `/macro-bcb`: MCP como primário para BCB series; Tesouro Direto mantém WebFetch; Focus via WebSearch
+- [ ] Avaliar `ibge-br-mcp` — baixa prioridade, não bloqueia
+- [ ] Bonus `financial-services-plugins` — baixa prioridade
 
 ---
 

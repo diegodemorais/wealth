@@ -8,20 +8,35 @@ Puxar dados atualizados diretamente das APIs oficiais: Selic, IPCA, curva de jur
 
 ## Fontes de Dados
 
-Todas as fontes abaixo são APIs públicas e gratuitas. Use WebFetch para cada uma.
+### MCP BCB (preferencial para dados BCB)
 
-### API BCB (Banco Central) — Série Temporal
+Use o MCP `bcb-br` (configurado globalmente) para dados do Banco Central. É mais confiável que WebFetch direto.
 
-URL base: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados/ultimos/{n}?formato=json`
+**Tool principal:** `bcb_indicadores_atuais` → retorna Selic, IPCA, USD/BRL e IBC-Br em uma única chamada.
 
-| Dado | Código | N |
-|------|--------|---|
-| Selic meta (% a.a.) | 432 | 1 |
-| Selic efetiva (% a.a.) | 4390 | 1 |
-| IPCA mensal (%) | 433 | 1 |
-| IPCA acumulado 12 meses (%) | 13522 | 1 |
-| IGP-M mensal (%) | 189 | 1 |
-| USD/BRL (PTAX venda) | 1 | 1 |
+**Tools adicionais disponíveis:**
+- `bcb_serie_ultimos(code, n)` — últimos N valores de qualquer série
+- `bcb_variacao(code, periodos)` — variação percentual dos últimos N períodos
+- `bcb_buscar_serie(term)` — busca série por keyword
+
+**Séries chave (se precisar de granularidade):**
+
+| Dado | Código | Tool |
+|------|--------|------|
+| Selic meta (% a.a.) | 1178 | `bcb_serie_ultimos` |
+| Selic efetiva anualizada | 432 | `bcb_serie_ultimos` |
+| IPCA mensal (%) | 433 | `bcb_serie_ultimos` |
+| IPCA acumulado 12 meses (%) | 13522 | `bcb_serie_ultimos` |
+| IGP-M mensal (%) | 189 | `bcb_serie_ultimos` |
+| USD/BRL PTAX venda | 3698 | `bcb_serie_ultimos` |
+
+**Fallback (se MCP indisponível):** WebFetch para `https://api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados/ultimos/1?formato=json`
+
+**Nota Focus/Expectativas:** Séries Focus (29033-29040) no SGS têm lag de ~3 meses. Para expectativas de mercado atuais, usar WebSearch: `"Focus relatório BCB IPCA expectativa {mes} {ano}"`.
+
+### Tesouro Direto — Taxas IPCA+ em Tempo Real (WebFetch obrigatório — não disponível no MCP)
+
+URL: `https://www.tesourodireto.com.br/json/br/com/b3/ideltd/rendavariavel/services/avaliacao/titulos.json`
 
 Exemplo: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json`
 
@@ -47,14 +62,13 @@ Usar data de hoje. Se fim de semana, usar última sexta.
 
 ### Passo 1: Buscar dados em paralelo
 
-Fazer WebFetch simultâneo para:
-1. Selic meta (432)
-2. IPCA mensal (433)
-3. IPCA 12m (13522)
-4. Títulos Tesouro Direto
-5. PTAX BRL/USD
+Executar simultaneamente:
+1. **MCP `bcb_indicadores_atuais`** → Selic + IPCA + USD/BRL em 1 call (substitui 3 WebFetch)
+2. **WebFetch** Títulos Tesouro Direto (taxas NTN-B/Renda+ — único dado crítico não coberto pelo MCP)
 
-Se alguma API falhar, usar WebSearch como fallback: `"Selic taxa hoje {mes} {ano}"` ou `"IPCA {mes} {ano} IBGE"`.
+Se MCP indisponível, fallback WebFetch individual para cada série BCB (ver tabela acima).
+Se Tesouro Direto falhar: WebSearch `"Tesouro IPCA+ taxa hoje"`.
+Para expectativas Focus atuais: WebSearch `"Focus BCB expectativa IPCA {mes} {ano}"`.
 
 ### Passo 2: Extrair dados Tesouro Direto
 

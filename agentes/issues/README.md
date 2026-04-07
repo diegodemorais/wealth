@@ -19,6 +19,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | PT-protecao-vida-familia | Proteção de vida, patrimônio e continuidade familiar | Patrimonial | 🟡 Média |
+| TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 🟡 Média |
 | HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 
@@ -31,7 +32,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
 | 1 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |
-| 2 | HD-mcp-bcb | MCP Server BCB — dados macro Brasil estruturados | Head | 🔴 Alta |
+| 2 | ~~HD-mcp-bcb~~ | ~~MCP Server BCB — dados macro Brasil estruturados~~ | Head | ✅ Done |
 | 3 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 🟡 Média |
 | 4 | ~~FI-portfolio-optimization~~ | ~~Validação formal de alocação via otimização~~ | Factor | ✅ Done |
 | 5 | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
@@ -48,6 +49,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-mcp-bcb | MCP Server BCB — dados macro estruturados | Head | 2026-04-07 | MCP configurado. bcb_indicadores_atuais substitui 3 WebFetch. Tesouro Direto mantém WebFetch. Focus lag documentado. |
 | HD-cmd-evolution | Evolução 3 commands pós-19 issues | Head | 2026-04-07 | fire-status drought condicional. reconciliar 3 camadas ibkr_sync. relatorio-mensal refatorado + seção FX. |
 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 2026-04-07 | Guardrails confirmados 2/2. GK Hybrid testado e descartado (vol +56%, benefício pró-cíclico). 5 estratégias + híbrido avaliados. |
 | FI-portfolio-optimization | Validação formal 50/30/20 via otimização | Factor | 2026-04-07 | 50/30/20 confirmado 2/2. Michaud IC [0%–100%] = indistinguível. Factor drought −6.7pp sobrevivível (83.7% > piso 75%). |
