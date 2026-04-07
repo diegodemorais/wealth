@@ -36,8 +36,13 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 9 | FX-multicurrency | Multi-currency tracking nativo BRL/USD | Head | 🟡 Média |
 | 10 | FR-cmd-fire-status | Command /fire-status | FIRE | 🟡 Média |
 | 11 | TX-cmd-tax-calc | Command /tax-calc | Tax | 🟡 Média |
-| 12 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
-| 13 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
+| 12 | HD-mcp-bcb | MCP Server BCB — dados macro Brasil estruturados | Head | 🔴 Alta |
+| 13 | HD-hook-protect-sot | Hook de proteção para source of truth | Head | 🔴 Alta |
+| 14 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 🟡 Média |
+| 15 | TX-irpf-investidor | Library irpf-investidor para cálculo de IR | Tax | 🟡 Média |
+| 16 | HD-python-bcb | Library python-bcb para dados BCB | Head | 🟡 Média |
+| 17 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
+| 18 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
