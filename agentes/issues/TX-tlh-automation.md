@@ -31,13 +31,13 @@ Automatizar o monitoramento de oportunidades de tax-loss harvesting usando dados
 
 ## Escopo — Roteiro Padrão de Integração
 
-- [ ] **1. Analisar ferramentas**: estudar como Wealthfolio e rotki implementam TLH scanning. Que lógica usam?
-- [ ] **2. Mapear features**: detecção automática de lotes com perda, cálculo de economia fiscal, identificação de substitutos, wash sale checks (não aplicável no Brasil, mas documentar)
-- [ ] **3. Avaliar o que temos**: nosso `tlh_lotes.json` + framework TX-002. O que falta para automação?
-- [ ] **4. Prova de conceito**: criar script `tlh_monitor.py` que (a) lê lotes do IBKR (depende de HD-ibkr-import), (b) calcula P&L por lote, (c) identifica lotes com perda ≥ threshold, (d) calcula economia fiscal potencial
-- [ ] **5. Integrar alertas**: gerar alerta no check-in mensal quando houver oportunidade TLH material
-- [ ] **6. Reportar ao time**: Tax e Quant avaliam. Economia fiscal justifica a complexidade?
-- [ ] **7. Sintetizar e decidir**: ativar monitoramento automático? Qual threshold de perda para alertar?
+- [x] **1. Analisar ferramentas**: Wealthfolio/rotki usam FIFO + threshold de perda + mapa de substitutos
+- [x] **2. Mapear features**: P&L por lote, economia IR 15%, substituto UCITS, sem wash sale rule no Brasil
+- [x] **3. Avaliar o que temos**: tlh_lotes.json com FIFO correto (bug comissão IBKR corrigido em ibkr_analysis.py)
+- [x] **4. Prova de conceito**: `scripts/tlh_monitor.py` criado — lê lotes, busca preços via yfinance, calcula P&L, exit 1 se material (≥ R$5k)
+- [x] **5. Integrar alertas**: integrado em `/relatorio-mensal` como seção 6
+- [x] **6. Reportar ao time**: Tax validou. Sem wash sale rule confirmado (Lei 14.754/2023)
+- [x] **7. Sintetizar e decidir**: threshold -5%, material ≥ R$5k. Estado atual: zero oportunidade (FIFO — lotes baratos já vendidos em set/25)
 
 ---
 
