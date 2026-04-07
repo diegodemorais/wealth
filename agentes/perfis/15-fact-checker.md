@@ -143,7 +143,7 @@
 | 02 Factor | Verifica claims | Factor cita papers de factor premiums; Fact-Checker valida se sao reais e atuais |
 | 03 Fixed Income | Verifica claims | RF cita dados de IPCA+, taxas, papers; Fact-Checker valida |
 | 04 FIRE | Verifica claims | FIRE cita SWR, monte carlo, lifecycle; Fact-Checker valida metodologia |
-| 11 Oportunidades | Verifica claims | Scanner traz oportunidades com dados; Fact-Checker valida se os dados estao certos |
+| 06 Tactical (inclui oportunidades) | Verifica claims | Scanner traz oportunidades com dados; Fact-Checker valida se os dados estao certos |
 | 12 Behavioral | Verifica claims | Behavioral cita papers de vieses; Fact-Checker valida se o paper diz o que ele afirma |
 | 13 Bookkeeper | Parceiro de dados | Bookkeeper tem dados reais da carteira; Fact-Checker confirma se agentes usam esses dados |
 

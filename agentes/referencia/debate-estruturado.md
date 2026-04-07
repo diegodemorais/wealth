@@ -32,6 +32,8 @@ O Head coleta a posição de cada agente participante, aplica o peso abaixo e ca
 | **Adjacente direto** | 2x | Agentes com análise própria no debate e domínio relacionado |
 | **Head** | 1x | Sempre participa — coordena e vota |
 | **Generalistas permanentes** | 1x | Advocate, Quant, Fact-Checker, Behavioral — sempre relevantes |
+| **Outside View** | 2x | Obrigatório em decisões >5% portfolio; traz base rates e reference class |
+| **Ops** | 1x | Check-in operacional, drift, prazos |
 | **Periférico** | 0.5x | Agentes mencionados mas sem análise específica na issue |
 
 **Formato do veredicto:**

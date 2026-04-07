@@ -7,7 +7,7 @@
 ## Regra: Aportes vs Operacoes Independentes
 
 **NAO tratar ausencia de aportes como execucao pendente ou falha.**
-Diego recebe salario mensal. Pode haver meses sem aporte. A carteira migra apenas via aportes (sem vender). Tranches de IPCA+, JPGL etc. demoram naturalmente — isso e execucao disciplinada, nao atraso.
+Diego recebe salario mensal. Pode haver meses sem aporte. A carteira migra apenas via aportes (sem vender). Tranches de IPCA+ etc. demoram naturalmente — isso e execucao disciplinada, nao atraso.
 
 Distincao obrigatoria:
 - **Aportes/tranches**: aguardam proximo evento de caixa. Status NORMAL. Nao emitir alerta.
@@ -22,7 +22,7 @@ Esta regra foi violada 3x (2026-03-22, 2026-03-27, 2026-04-01). Ler antes de qua
 | Decisao | Aprovada em | Prazo | Status | Detalhes |
 |---------|-------------|-------|--------|----------|
 | IPCA+ 2040 — 7% (~R$244k) | 2026-03-19 | mar-abr 2026 | **PENDENTE — 0/3 tranches** | DCA em 2-3 tranches. Compra direta Tesouro. Taxa ref: ~7,31% |
-| Aportes mensais R$25k → JPGL | Permanente | Mensal | **Ativo** | Foco dos aportes regulares. Gap atual: -19,7% |
+| ~~Aportes mensais R$25k → JPGL~~ | ~~Permanente~~ | ~~Mensal~~ | **Superseded** | JPGL eliminado. Aportes direcionados conforme drift: SWRD 50%/AVGS 30%/AVEM 20%. Prioridade atual: SWRD (underweight) |
 
 ---
 
@@ -41,10 +41,9 @@ Esta regra foi violada 3x (2026-03-22, 2026-03-27, 2026-04-01). Ler antes de qua
 
 | Bucket | ETF | USD | % Equity | Nota |
 |--------|-----|-----|----------|------|
-| SWRD (35%) | LON:SWRD | ~$241.000 | ~41,2% | proporcional vs 23/Mar |
+| SWRD (50%) | LON:SWRD | ~$241.000 | ~41,2% | proporcional vs 23/Mar |
+| AVGS (30%) | USSC + AVUV + AVDV + AVGS | ~$183.000 | ~31,3% | proporcional |
 | AVEM (20%) | LON:EIMI + AVES + DGS | ~$157.000 | ~26,8% | proporcional |
-| AVGS (25%) | USSC + AVUV + AVDV + AVGS | ~$183.000 | ~31,3% | proporcional |
-| JPGL (20%) | LON:IWVL + LON:JPGL | ~$2.100 | ~0,4% | gap -19,6pp |
 | **Total** | | **$585.371** | **100%** | verificar planilha no proximo check-in |
 
 ### Blocos nao-equity

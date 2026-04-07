@@ -173,7 +173,7 @@
 | 04 FIRE | Audita projecoes | Valida monte carlo, SWR, patrimonio projetado |
 | 05 Wealth | Audita calculos tributarios | Valida IR, ganho fantasma cambial, DARF |
 | 06 Tactical | Audita sizing e gatilhos | Valida formulas de duration, volatilidade, sizing |
-| 07 Cambio | Audita premissas cambiais | Valida depreciacao real, spread, custo all-in |
+| 08 Macro (inclui cambio) | Audita premissas cambiais | Valida depreciacao real, spread, custo all-in |
 | 10 Advocate | Complementar | Advocate questiona premissas estrategicas; Quant questiona a aritmetica |
 | 13 Bookkeeper | Parceiro de dados | Bookkeeper fornece numeros reais; Quant valida que calculos usam esses numeros |
 | 15 Fact-Checker | Complementar | Fact-Checker valida fontes e afirmacoes; Quant valida formulas e consistencia |

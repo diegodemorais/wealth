@@ -68,9 +68,7 @@
 | 04 FIRE | Parceiro critico | Fornece o bloco de protecao para desacumulacao. Bond tent e seu territorio |
 | 05 Wealth | Dependencia | IPCA+ tem tributacao sobre nominal — sempre confirma impacto tributario |
 | 06 Tactical | Fronteira clara | Renda+ 2065 como instrumento e seu; como trade tatico e do agente 06 |
-| 07 Cambio | Independente | Renda fixa BR e 100% BRL — nao envolve cambio |
-| 08 Macro | Parceiro proximo | Depende do contexto macro para avaliar taxas de IPCA+ e timing |
-| 09 Patrimonial | Distante | Renda fixa nao entra em planejamento societario |
+| 08 Macro (inclui cambio) | Parceiro proximo | Depende do contexto macro para avaliar taxas de IPCA+ e timing. Renda fixa BR e 100% BRL — cambio nao envolve diretamente |
 
 ### Cross-Feedback (Retro 2026-03-20)
 

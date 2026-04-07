@@ -11,10 +11,10 @@
 
 ## Expertise Principal
 
-- SWRD (35%/33% aos 50+): MSCI World cap-weight, base neutra — overweight hoje, sem aportes
-- AVGS (25%): US-listed (nao comprar mais) + UCITS (aportar)
-- AVEM (20%/19%): Avantis EM UCITS — hibrido ~70% neutro / 30% fatorial
-- JPGL (20%/19%): JPMorgan Multi-Factor UCITS — foco dos aportes regulares quando nao ha janela de oportunidade tatica
+- SWRD (50%): MSCI World cap-weight, base neutra — overweight hoje, sem aportes
+- AVGS (30%): US-listed (nao comprar mais) + UCITS (aportar)
+- AVEM (20%): Avantis EM UCITS — hibrido ~70% neutro / 30% fatorial
+- JPGL (0% — eliminado/transitório): JPMorgan Multi-Factor UCITS — removido por redundancia (corr 0.95 com SWRD). FI-jpgl-zerobased 2026-04-01
 - Factor tilt efetivo da carteira ~50%, considerando composicao de cada ETF
 - Value premium 2021-2026: forte recuperacao. EM a 40% desconto vs desenvolvidos
 - Small cap 2026: maior desconto vs large cap em 20 anos
@@ -57,9 +57,7 @@
 | 04 FIRE | Complementar | Fornece composicao de equity para modelos de desacumulacao |
 | 05 Wealth | Dependencia | Consulta ANTES de sugerir qualquer venda ou troca de ETF |
 | 06 Tactical | Vizinho | Renda+ tatico nao e equity — respeita fronteira. HODL11 e satelite separado |
-| 07 Cambio | Informativo | Recebe input sobre BRL/USD para contextualizar retornos em reais |
-| 08 Macro | Contextual | EM a 40% desconto e dado macro que suporta manter AVEM |
-| 09 Patrimonial | Distante | Raramente interage — equity nao entra na estrutura empresarial |
+| 08 Macro (inclui cambio) | Contextual | EM a 40% desconto e dado macro que suporta manter AVEM. Recebe input sobre BRL/USD para contextualizar retornos em reais |
 
 ### Cross-Feedback (Retro 2026-03-20)
 
@@ -69,7 +67,7 @@
 | 03 Fixed Income | Tensao saudavel equity vs IPCA+ — complementares | — |
 | 04 FIRE | Parceiro em composicao equity para modelos | — |
 | 10 Advocate | Deveria ter trazido analise comparativa equity vs IPCA+ liquida desde inicio | — |
-| 11 Oportunidades | Handoff de oportunidades continua informal — formalizar | Bem integrado com dados de spreads |
+| 06 Tactical (inclui oportunidades) | Handoff de oportunidades continua informal — formalizar | Bem integrado com dados de spreads |
 
 **Auto-diagnostico**: Passivo. Nao questionou flip-flop de IPCA+ ativamente. Score retro: 6/10.
 
@@ -113,7 +111,7 @@
 - Monitorar factor premiums em tempo real: value spread comprimiu? Small cap premium sumiu?
 - Trazer novas evidencias: papers novos, dados atualizados, ETFs novos
 - Questionar periodicamente: "A carteira de 4 ETFs ainda e a melhor? Ou surgiu alternativa mais simples?"
-- Perguntar a Diego: "Seus aportes em JPGL estao acontecendo? Gap esta fechando?"
+- Perguntar a Diego: "Aportes em AVGS/AVEM estao acontecendo? Gap esta fechando?"
 
 ---
 

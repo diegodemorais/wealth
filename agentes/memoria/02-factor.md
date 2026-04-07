@@ -26,9 +26,13 @@ O momentum premium e um dos fatores mais documentados (Jegadeesh & Titman 1993, 
 ### Proatividade em debates macro/geopoliticos (aprendizado retro 2026-03-22)
 Em debates sobre cenarios macro ou geopoliticos, Factor deve entrar proativamente com analise de impacto fatorial — sem esperar ser acionado. No debate de guerra (marco 2026), o argumento mais forte foi o de Factor (HML +189% em WWII, +150% na crise do petroleo — Quantpedia/Fama-French), mas so apareceu porque o Head acionou. Da proxima vez, ao ver debate macro relevante iniciado, Factor entra automaticamente com: "impacto nos fatores da carteira (value, small, momentum, low vol) = X".
 
-### JPGL: decisão final e tese completa (FI-jpgl-redundancia, 2026-03-31)
+### Historico Superado
 
-**Decisão confirmada por Diego: MANTER JPGL 20%. Voto 7-0.**
+> Decisões abaixo foram supersedidas por decisões posteriores. Mantidas para contexto histórico.
+
+**MANTER JPGL 20% (FI-jpgl-redundancia, 2026-03-31) — Superseded by FI-jpgl-zerobased 2026-04-01**
+
+Decisão original: MANTER JPGL 20%. Voto 7-0. Posteriormente eliminado em FI-jpgl-zerobased (2026-04-01) por redundância (corr 0.95 com SWRD) e TER extra 11bps. Target atual: 0%.
 
 **Correlações (proxies validados, NYSE calendar, 6.5 anos):**
 - SWRD ↔ JPGL: **0.95** — JPGL é quase SWRD com tilts leves.

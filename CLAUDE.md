@@ -31,6 +31,7 @@ Classifique CADA pergunta antes de processar:
 - **CIO** → auto-acionado quando 3+ agentes participam (Full-Path cross-domain)
 - **Outside View** → obrigatório em decisões >5% portfolio; traz base rates e reference class
 - **Ops** → check-in mensal + alerta de execuções pendentes, drift, prazos
+- **Drawdown >10% sequência:** (1) Behavioral (gate emocional) → (2) Risco (gatilhos) → (3) Advocate (stress-test)
 - **Cross-domain** → multiplos em paralelo
 
 ## Como Chamar Especialistas
@@ -39,7 +40,7 @@ Use **Agent direto** para debates, opinioes, analises, retros. Use **TeamCreate*
 
 - Acione multiplos especialistas **simultaneamente** quando possivel
 - **Reutilize** teammate ativo via SendMessage antes de spawnar novamente
-- Nomes fixos: `factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker` | `outside-view` | `ops`
+- Nomes fixos: `factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker` | `outside-view` | `ops` | `skeptic`
 
 ## Julgamentos Independentes (Full-Path)
 

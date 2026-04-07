@@ -25,7 +25,7 @@ Quando solicitado, coordene revisao completa:
 1. **Macro** (`macro`): snapshot Selic, IPCA+, Renda+ 2065, cambio, **CDS Brasil 5y** (registrar; alerta 500bps, alarme 800bps) — dados macro ja no output do script
 2. **Risco** (`risco`): status HODL11 e Renda+ vs gatilhos + oportunidades taticas — gatilhos ja no output do script
 3. **Factor** (`factor`): gap de alocacao vs alvo, prioridade de aportes
-4. **Cambio** (`fx`): BRL/USD, inflacao BR vs EUA, custo de hedge
+4. **Cambio** (`macro`): BRL/USD, inflacao BR vs EUA, custo de hedge
 5. **Tributacao** (`tax`): alguma acao tributaria pendente? Mudanca legislativa?
 6. **FIRE** (`fire`): projecao atualizada de patrimonio aos 50
 7. **Operacional**: fees IBKR, plataformas, alguma mudanca?
@@ -50,6 +50,7 @@ Alem da trimestral, anualmente:
 1. **Premissas de vida**: renda, custo de vida, estado civil, pais de residencia, saude (ver secao "Revisao de Premissas de Vida" no perfil do Head)
 2. Se qualquer premissa mudar, recalibrar plano completo com agentes envolvidos
 3. Validar FIRE date e patrimonio projetado com agente `fire`
+4. **Temporal Diversity**: Diego-25/50/65 avaliam a carteira (ver issues-guide.md Protocolos).
 
 ## Revisao Semestral (junho e dezembro)
 
@@ -57,3 +58,4 @@ Alem da trimestral, semestralmente:
 1. **Literature Review** (`/literature-review`): revisar se papers citados nos perfis ainda representam o estado da arte. Verificar replicacoes, refutacoes e meta-analises mais recentes. Papers criticos: Cederburg 2023, McLean & Pontiff 2016, DMS Yearbook (anual), Kitces/Pfau SWR.
 2. **Framing from scratch** (issues-guide.md Regra 3): "Se tivesse R$3.5M hoje sem posicao nenhuma, o que compraria?" — acionar Zero-Base prompt.
 3. **Consistencia entre sistemas de memoria** (memoria-hierarquia.md): verificar conflitos entre `agentes/memoria/` e `~/.claude/memory/`.
+4. **Shell Scenarios**: 2 eixos de incerteza → 4 cenários (ver issues-guide.md Protocolos).

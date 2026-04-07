@@ -104,7 +104,6 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 |--------|---------|----------------|
 | 01 CIO | Gerencia | Delega TODAS as decisoes de investimento. CIO coordena os agentes de investimento |
 | 05 Wealth | Gerencia direto | Cross-cutting: afeta investimentos E planejamento pessoal |
-| 09 Patrimonial | Gerencia direto | Estrutura empresarial, sucessao, PGBL, holding |
 | 10 Advocate | Gerencia direto | Stress-test de TUDO: investimentos, planejamento, premissas de vida |
 | 14 Quant | Gerencia direto | Auditoria numerica: acionado automaticamente ANTES/DEPOIS de calculos que geram veredicto. Veto absoluto sobre numeros. Quando 2+ agentes divergem em numeros, Quant reconcilia |
 | 15 Fact-Checker | Gerencia direto | Verificacao de fontes e afirmacoes: acionado sob demanda, em issues com papers como justificativa, e em debates Bull vs Bear. Braco de pesquisa do Advocate. Poder de contestacao (nao veto) |
@@ -116,13 +115,10 @@ Diego segue um sistema rules-based. O Head mantem responsabilidade de:
 | 02 Factor | Entrega bem, confiavel | Depende demais do Head pra direcionar |
 | 03 Fixed Income | Entrega bem, issue RF-003 exemplar | Boa coordenacao |
 | 04 FIRE | Solido, pesquisa academica excelente | — |
-| 05 Wealth | Competente mas passivo — espera ser acionado. Seguro de vida pendente ha 3 retros | Bem integrado |
-| 06 Tactical | Analise quantitativa solida. Erro grave: HODL11 como risco BR 2a vez | Boa coordenacao |
-| 07 Cambio | Funciona como suporte, mas iniciativa zero | — |
-| 08 Macro | Dados usados por todos. Nao emitiu alerta proativo do IPCA Focus | Bem integrado |
-| 09 Patrimonial | Invisivel ha 3 retros. Precisa de gatilhos de ativacao | Invisivel para o time |
+| 05 Wealth (inclui patrimonial) | Competente mas passivo — espera ser acionado. Seguro de vida pendente ha 3 retros. Patrimonial invisivel ha 3 retros, precisa de gatilhos de ativacao | Bem integrado |
+| 06 Tactical (inclui oportunidades) | Analise quantitativa solida. Erro grave: HODL11 como risco BR 2a vez. Scan abrangente e disciplinado. TLH descartado sem checar P&L | Boa coordenacao. Handoff para Factor informal |
+| 08 Macro (inclui cambio) | Dados usados por todos. Nao emitiu alerta proativo do IPCA Focus. Cambio: funcionava como suporte, mas iniciativa zero | Bem integrado |
 | 10 Advocate | Valioso contraponto. Mas precisa fazer conta antes de propor (IPCA+ 12-22% sem analise liquida) | — |
-| 11 Oportunidades | Scan abrangente e disciplinado. TLH descartado sem checar P&L | Handoff para Factor informal |
 | 12 Behavioral | Errou feio: diagnosticou vies com n=1. Precisa ganhar credibilidade via rigor | Novo, precisa se estabelecer |
 | 13 Bookkeeper | Salvou o dia com dados reais. Fonte de verdade subutilizada | Time precisa consulta-lo ANTES de afirmacoes sobre historico |
 | 14 Quant | Novo — auditoria numerica. Veto absoluto sobre numeros | — |

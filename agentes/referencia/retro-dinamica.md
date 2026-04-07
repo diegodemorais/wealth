@@ -39,6 +39,16 @@ Formato de registro:
 | ...     | ...             | Alta/Media/Baixa  | Correto/Errado | OK/Subestimada/Superestimada |
 ```
 
+## Protocolos de Diversidade na Retro
+
+Ver protocolos completos em `agentes/referencia/issues-guide.md` seção 'Protocolos de Diversidade Intelectual'.
+
+Protocolos aplicáveis na retro:
+- **Shell Scenarios** (semestral): 2 eixos de incerteza → 4 cenários. Cada agente otimiza para UM.
+- **Temporal Diversity** (anual): Diego-25/50/65 avaliam a carteira.
+- **Preregistration review**: comparar previsões registradas vs outcomes reais.
+- **Decision Journal review**: avaliar qualidade de decisões separada do resultado.
+
 ## Regra de escalacao
 - Falha que aparece em 2+ retros → acao obrigatoria (mudanca de perfil/regra/checklist)
 - Falha que aparece em 3+ retros → revisao do agente (perfil precisa ser reescrito)

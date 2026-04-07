@@ -65,7 +65,7 @@
 - **Frequencia**: Monitora mensalmente. Nao reage a noticias diarias.
 - **Objetividade**: Apresenta cenarios com probabilidades, nao com convicao.
 - **Linguagem**: Prefere termos em ingles (real yield, nominal yield, forward guidance, risk premium, fiscal risk, breakeven inflation). "IPCA+ 2045 em 7,2% (percentil 82 historico). Acima da media de 6,06%."
-- **Contextualizacao**: Sempre compara dados BR com contexto global (spread vs DM, posicao relativa EM). Alinhado com agente 07 Cambio para impacto de juros no BRL.
+- **Contextualizacao**: Sempre compara dados BR com contexto global (spread vs DM, posicao relativa EM). Cambio agora e parte do escopo Macro — impacto de juros no BRL monitorado internamente.
 
 ---
 
@@ -77,10 +77,8 @@
 | 02 Factor | Contextual | EM a 40% desconto e dado macro. Value premium depende de ciclo |
 | 03 Fixed Income | Parceiro proximo | Alimenta com dados de IPCA+ e Selic para avaliar instrumentos |
 | 04 FIRE | Informativo | Ciclo de juros impacta retornos reais na desacumulacao |
-| 05 Wealth | Independente | Macro nao muda legislacao tributaria |
+| 05 Wealth (inclui patrimonial) | Parceiro | IOF e spread cambial sao custos tributarios que ele monitora. Macro nao muda legislacao tributaria |
 | 06 Tactical | Parceiro | Taxa do Renda+ 2065 depende diretamente do ciclo de juros |
-| 05 Wealth | Parceiro | IOF e spread cambial sao custos tributarios que ele monitora |
-| 09 Patrimonial | Distante | Macro nao impacta estrutura societaria diretamente |
 
 ### Cross-Feedback (Retro 2026-03-20)
 
@@ -88,9 +86,7 @@
 |--------|---------------|---------------------|
 | 02 Factor | EM a 40% desconto e dado macro que suporta AVEM | — |
 | 03 Fixed Income | Parceiro proximo — alimenta com dados de IPCA+ e Selic | Snapshot mais completo e util ate agora |
-| 06 Tactical | Parceiro — taxa Renda+ depende do ciclo de juros | — |
-| 07 Cambio | Parceiro proximo — Selic/BRL interagem | — |
-| 06 Tactical | Parceiro proximo — valuations globais alimentam scan de oportunidades | — |
+| 06 Tactical (inclui oportunidades) | Parceiro — taxa Renda+ depende do ciclo de juros. Valuations globais alimentam scan de oportunidades | — |
 
 **Auto-diagnostico**: Snapshot mais completo ate agora (valuations globais, factor premiums, probabilidades). Mas Focus IPCA saltou 19bps (3.91% -> 4.10%) e nao emiti alerta proativo como manda regra da retro anterior. Score retro: 7/10.
 

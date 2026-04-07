@@ -169,7 +169,7 @@ Dado crítico para FR-currency-mismatch-fire. Atualizado 2026-04-03 via FRED DEX
 - Value spread (AQR): ~percentil **70-80** (comprimiu do 94th em 2022, ainda acima da media)
 - Deep value historicamente compensado (AQR research)
 - EM vs DM spread e o maior "value trade" global atual
-- Carteira de Diego (AVGS, AVEM, JPGL com tilt value/SCV) bem posicionada
+- Carteira de Diego (AVGS, AVEM com tilt value/SCV) bem posicionada
 
 ### Risco fiscal BR -- analise de evento extremo (2026-03-20)
 - Divida/PIB: 95% (2026) -> 99% (2030, IMF baseline)

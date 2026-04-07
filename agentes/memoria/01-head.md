@@ -9,8 +9,7 @@
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
 | 2026-03 | Carteira definitiva aprovada | Tabela simplificada por idade | Todos |
-| 2026-03 | JPGL subiu de 15% para 20% | Maior gap, foco dos aportes | 02 Factor |
-| 2026-03 | AVEM->JPGL adiado | EM a 40% desconto historico, timing ruim | 02 Factor, 08 Macro |
+| 2026-04-01 | JPGL eliminado (0%), alocacao redistribuida | SWRD 50%, AVGS 30%, AVEM 20%. JPGL movido para transitorios | 02 Factor |
 | 2026-03-22 | IPCA+ longo **15%**, piso **6.0%**, DCA ATIVO | Breakeven all-in ~5.5%. A 7.16%, IPCA+ vence equity por 150 bps. TD 2040 (80%) + TD 2050 (20%). Selic removido, substituido por IPCA+ curto 3% aos 50 | Factor, RF, FIRE, Advocate |
 | 2026-03-22 | Renda+ 2065 teto ajustado de **3% para 5%** | Diego reverteu RF-003. Teto original de 5% restaurado. DCA reativado (3,2% atual, espaco ate 5%). Bloco de risco maximo possivel: 10% (Renda+ 5% + HODL11 5%) | Head |
 
@@ -20,7 +19,7 @@
 
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
-| IPCA+ longo | **Antecipado** (era: Idade 48) | Ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). Piso operacional: IPCA+ >= **6,0%** (breakeven all-in ~5,5%). **DCA ATIVO** (taxa 7,16% > piso 6,0%). 5,0-6,0%: pausar DCA, aportes para JPGL. **Hold to maturity SEMPRE** — nao vender por MtM (exceto risco soberano extremo) | **Ativo** |
+| IPCA+ longo | **Antecipado** (era: Idade 48) | Ate **15%** da carteira, TD 2040 (80%) + TD 2050 (20%). Piso operacional: IPCA+ >= **6,0%** (breakeven all-in ~5,5%). **DCA ATIVO** (taxa 7,16% > piso 6,0%). 5,0-6,0%: pausar DCA, aportes para SWRD/AVGS/AVEM. **Hold to maturity SEMPRE** — nao vender por MtM (exceto risco soberano extremo) | **Ativo** |
 | IPCA+ curto | Perto dos 50 | 3% em TD curto ~2 anos (SoRR buffer). Substitui Selic do plano original | Aguardando |
 | Renda+ 2065 compra | Taxa >= 6,5% | DCA ate 5% do patrimonio | **Ativo** |
 | Renda+ 2065 venda | Taxa <= 6,0% | Vender posicao inteira (marcacao a mercado, +39,5% liq. esperado) | Monitorando mensalmente |
@@ -59,11 +58,23 @@ NAO e estrutural: aporte regular, consulta informativa, monitoramento de gatilho
 
 | Data | Tema | Resultado |
 |------|------|-----------|
-| 2026-03 | Definicao da carteira definitiva | Aprovada: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20% + Renda+ + HODL11 |
-| 2026-03 | JPGL: subir de 15% para 20%? | Aprovado — maior gap, foco dos aportes |
-| 2026-03 | AVEM->JPGL: migrar agora? | Adiado — EM a 40% desconto, timing ruim |
+| 2026-03 | Definicao da carteira definitiva | Aprovada: SWRD 50%, AVGS 30%, AVEM 20% + Renda+ + HODL11 (JPGL eliminado 2026-04-01) |
 | 2026-03 | IPCA+ estrutural: quando? | Apenas aos 48, condicional a taxa >= 6,5% |
 | 2026-03 | Guardrails de desacumulacao | Risk-based (Kitces & Fitzpatrick 2024), nao G-K |
 | 2026-03 | Hedge de equity | Nao — custo proibitivo, BRL hedge natural |
 | 2026-03-18 | Retro de fundacao | 6 aprendizados, issue HD-001 criada |
 | 2026-03-22 | HD-006 decisao FINAL | IPCA+ longo 15%, piso 6.0%, DCA ativo. Breakeven all-in ~5.5%. Selic removido -> IPCA+ curto 3% aos 50. 5 regras anti-recorrencia |
+
+---
+
+## Historico Superado
+
+> Decisoes que foram validas no momento mas foram superadas por mudancas estruturais posteriores.
+
+| Data | Decisao | Racional | Superada por |
+|------|---------|----------|--------------|
+| 2026-03 | JPGL subiu de 15% para 20% | Maior gap, foco dos aportes | JPGL eliminado 2026-04-01 (alocacao redistribuida: SWRD 50%, AVGS 30%, AVEM 20%) |
+| 2026-03 | AVEM->JPGL adiado | EM a 40% desconto historico, timing ruim | JPGL eliminado 2026-04-01 — migracão nao mais aplicavel |
+| 2026-03 | JPGL: subir de 15% para 20%? | Aprovado — maior gap, foco dos aportes | JPGL eliminado 2026-04-01 |
+| 2026-03 | AVEM->JPGL: migrar agora? | Adiado — EM a 40% desconto, timing ruim | JPGL eliminado 2026-04-01 |
+| 2026-03 | Alocacao original: SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20% | Carteira definitiva inicial | Redistribuida 2026-04-01: SWRD 50%, AVGS 30%, AVEM 20%, JPGL 0% |
