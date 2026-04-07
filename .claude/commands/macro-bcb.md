@@ -38,14 +38,6 @@ Use o MCP `bcb-br` (configurado globalmente) para dados do Banco Central. É mai
 
 URL: `https://www.tesourodireto.com.br/json/br/com/b3/ideltd/rendavariavel/services/avaliacao/titulos.json`
 
-Exemplo: `https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json`
-
-Retorna: `[{"data": "DD/MM/AAAA", "valor": "X.XX"}]`
-
-### Tesouro Direto — Taxas IPCA+ em Tempo Real
-
-URL: `https://www.tesourodireto.com.br/json/br/com/b3/ideltd/rendavariavel/services/avaliacao/titulos.json`
-
 Retorna todos os títulos do Tesouro com suas taxas. Filtrar por:
 - `Tesouro IPCA+ AAAA` (NTN-B direto)
 - `Tesouro Renda+ Aposentadoria AAAA` (Renda+)

@@ -68,7 +68,7 @@ Substituir `5.15` pelo PTAX atual (de `/macro-bcb` ou python-bcb).
 - Em andamento: status atual
 - Decisões registradas em `agentes/memoria/00-head.md`
 
-### 7. Próximos Passos
+### 8. Próximos Passos
 - Ações para o mês seguinte (com responsável e prazo)
 - Issues candidatas a abrir
 - Gatilhos próximos do threshold
