@@ -42,6 +42,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| HD-carteiraviva-audit | Auditoria Carteira Viva + roadmap website | Head | 🟡 Média | Analisando planilha |
 
 ### Done
 > Issues concluidas
