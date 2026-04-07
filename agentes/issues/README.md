@@ -25,6 +25,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
+| 1 | HD-quantstats | Portfolio analytics visual com QuantStats | Head | 🔴 Alta |
+| 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
+| 3 | HD-ibkr-import | Tracking automático de posições via IBKR Flex Query | Bookkeeper | 🔴 Alta |
+| 4 | HD-benchmark-comparison | Benchmark comparison visual com shadow portfolios | Advocate | 🔴 Alta |
+| 5 | FI-portfolio-optimization | Validação formal de alocação via otimização | Factor | 🟡 Média |
+| 6 | HD-openbb-data | OpenBB como data platform para o time | Head | 🟡 Média |
+| 7 | FX-multicurrency | Multi-currency tracking nativo BRL/USD | Head | 🟡 Média |
+| 8 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
