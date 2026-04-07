@@ -69,12 +69,24 @@ Decisoes aprovadas aguardando execucao:
 ## Rotina Periodica (compativel com /loop)
 
 ### Semanal (via /checkin, compativel com /loop 7d /checkin)
-- **Buscar posicoes na planilha Google Sheets** (aba Utils, linhas 46-94)
+- **Buscar posicoes na planilha Google Sheets** (aba Utils, linhas 46-94) — ou via `ibkr_sync.py` se disponivel
 - Reconciliar planilha vs carteira.md — divergencias sao red flags
 - Atualizar cotacao de referencia (BRL/USD)
 - Verificar gatilhos de alocacao (drift > 5pp de algum bucket)
 - Checar execucoes pendentes com prazo vencendo
 - Buscar dados macro atualizados (Selic, IPCA+ 2040, Renda+ 2065, BTC)
+
+### IBKR Sync (quando disponivel)
+
+```bash
+# Sync posicoes IBKR via Flex Query — drift, trades, snapshot
+python3 scripts/ibkr_sync.py --cambio 5.15
+
+# Decompor retorno BRL/USD (eficiente vs cambio)
+python3 scripts/fx_utils.py
+```
+
+`ibkr_sync.py` gera snapshot de posicoes, detecta trades nao registrados e calcula drift. Usar antes de check-ins e reconciliacoes.
 
 ### Mensal
 - Snapshot completo para evolucao.md
@@ -87,7 +99,6 @@ Decisoes aprovadas aguardando execucao:
 ### Trimestral
 - Performance por bucket vs benchmarks (VWRA, IPCA+)
 - Custos acumulados do trimestre
-- Evolucao do gap JPGL (esta fechando conforme planejado?)
 - Input para retro trimestral
 
 ---

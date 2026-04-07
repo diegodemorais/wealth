@@ -10,7 +10,11 @@ Câmbio para valuation operacional: **dólar comercial do dia** (ex: Google Fina
 
 ## Staleness check
 
-Se a data de última atualização em carteira.md for >7 dias atrás, alertar: "Dados desatualizados — última atualização em {data}. Rodar `/checkin-manual` para atualizar."
+Se a data de última atualização em carteira.md for >7 dias atrás, tentar primeiro:
+```bash
+python3 scripts/ibkr_sync.py --cambio <cambio_atual> 2>/dev/null
+```
+Se ibkr_sync não disponível: alertar "Dados desatualizados — última atualização em {data}. Rodar `/checkin-manual` para atualizar."
 
 ## Output
 

@@ -5,7 +5,7 @@ Mostra status FIRE: P(FIRE), distância ao gatilho, projeção, comparação com
 ## Execução
 
 1. Leia `agentes/contexto/carteira.md` para patrimônio atual
-2. Rode os dois Monte Carlo **em paralelo** via Bash:
+2. Rode os Monte Carlo **em paralelo** via Bash:
 
 ```bash
 python3 scripts/fire_montecarlo.py --n-sim 3000 > /tmp/fire53.txt 2>&1 &
@@ -18,6 +18,18 @@ cat /tmp/fire50.txt
 Se o script falhar (dependências, erro), reportar o erro e usar último P(FIRE) registrado em `agentes/memoria/04-fire.md` como fallback.
 
 3. Leia `agentes/memoria/04-fire.md` para comparação com último resultado
+
+## Flags Úteis
+
+```bash
+# Comparar withdrawal strategies (mensal ou quando P(FIRE) < 85%)
+python3 scripts/fire_montecarlo.py --compare-strategies --n-sim 5000
+
+# Cenário factor drought: AVGS permanentemente em 2.0% real
+python3 scripts/fire_montecarlo.py --retorno-equity 0.0395 --n-sim 3000
+```
+
+Factor drought (−6.7pp) é cenário de stress, não central. Reportar só se Diego pedir ou P(FIRE) base < 85%.
 
 ## Output
 

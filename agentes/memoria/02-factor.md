@@ -9,6 +9,8 @@
 | Data | Decisao | Racional | Agentes Consultados |
 |------|---------|----------|---------------------|
 | 2026-04-01 | Bloco equity fixo: SWRD 50%, AVGS 30%, AVEM 20% | FI-equity-redistribuicao, unanimidade 7/7. JPGL eliminado (0% target) — FI-jpgl-zerobased | 7 agentes |
+| 2026-04-07 | **50/30/20 confirmado via Michaud Resampled Frontier** (FI-portfolio-optimization) | 1.000 bootstrap resamples. IC 90% de todos os 3 ativos = [0%–100%] — qualquer alocação é estatisticamente indistinguível. Target 50/30/20 está dentro do IC (3/3 ativos). Max Sharpe histórico concentra em AVGS, mas forward-looking (3.7%/5.0%/5.0%) Sharpe gap é mínimo (+0.001). Evidência: sem base quantitativa para abandonar 50/30/20. Script: `scripts/resampled_frontier.py` | Factor, Advocate |
+| 2026-04-07 | **Factor drought documentado como cenário de sensibilidade** (FI-portfolio-optimization) | AVGS 2.0% real permanente (vs premissa 5.0%): blended equity 3.95% → P(FIRE) 83.7% (−6.7pp). Não é cenário central — é cenário de stress para monitoramento. Gatilho: se AVGS underperformar SWRD por 5 anos → rever premissa. Script: `fire_montecarlo.py --retorno-equity 0.0395` | Factor, FIRE |
 | 2026-04-01 | Premissas multi-fonte adotadas: SWRD 3.7% USD, AVGS 5.0% USD, AVEM 5.0% USD | FI-premissas-retorno — substituiu premissas DMS+AQR single-source. Mediana 5-6 fontes independentes. Base BRL: 4.85% ponderado (cenario base) | Factor, Quant, Fact-Checker, Advocate |
 | 2026-04-01 | Novos aportes equity exclusivamente em UCITS | Estate tax US-listed confirmado. Transitórios (AVDV, AVUV, AVES, USSC, DGS, EIMI) vendidos na fase de usufruto | Head, Tax |
 

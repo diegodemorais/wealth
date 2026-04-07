@@ -14,6 +14,8 @@
 | 2026-03-22 | Selic substituido por IPCA+ curto 3% aos 50 | SoRR buffer com ~2 anos duration, melhor protecao inflacionaria que Selic. MtM baixo | 03 Fixed Income |
 | 2026-03-22 | Glidepath revisado: IPCA+ longo 15% + curto 3% | Equity 79% na acumulacao. IPCA+ longo e o bond tent natural (TD 2040 vence aos 53). IPCA+ curto comprado perto dos 50 como buffer de sequencia | 03 RF, 10 Advocate |
 | 2026-03-25 | FR-glide-path: sem glide path formal aprovado | Protecao SoRR via estrutura existente: 15% IPCA+ longo (HTM, trade de retorno condicional >= 6.0%, buffer anos 50-53) + 3% IPCA+ curto (buffer SoRR anos 1-2 pos-FIRE). INSS disponivel aos ~65 como floor parcial — periodo critico 50-65 coberto pelo IPCA+. Cederburg (2023) inaplicavel ao periodo 50-65 (sem INSS). Pfau (2013) e Cocco et al (2005) mais aderentes para essa janela. Gatilho de revisao: se taxa IPCA+ fechar abaixo de 6.0% antes de atingir 15%, abrir debate sobre alternativa de protecao SoRR | 04 FIRE, 10 Advocate, 08 Macro, 17 Cetico |
+| 2026-04-07 | **Withdrawal strategy confirmada: GUARDRAILS** (FR-withdrawal-engine) | 4 alternativas testadas (constant, pct_portfolio, VPW, Guyton-Klinger) + GK Hybrid. Todas descartadas. Guardrails dominam em previsibilidade (vol R$41k vs GK R$189k). Delta GK vs guardrails: +1.1pp P(FIRE) — dentro do IC estatístico. GK Hybrid (teto R$350k): P10=R$162k viola piso essencial R$180k. Placar final: 2/2 GUARDRAILS. Script: `fire_montecarlo.py --compare-strategies` | FIRE, Advocate |
+| 2026-04-07 | **Rebalanceamento pós-FIRE: Opção D — Glidepath + Spending-Based** (FR-rebalance-desacumulacao) | Mecânica trimestral: sacar do ativo mais overweight vs target da fase. Safety valve: drift >10pp → spending forçado → TLH → aceitar drift. NUNCA vender ETF com lucro para rebalancear (IR 15% > benefício). Transição bond pool: TD 2040 vence → caixa/Selic → gastar anos 1-7. Target: 79% equity (anos 1-7) → 94% (anos 7+). Intra-equity fixo: SWRD 50% / AVGS 30% / AVEM 20% | FIRE, Factor |
 
 ---
 
@@ -158,6 +160,14 @@ FIRE deve participar de qualquer decisão de renda fixa que envolva vencimento d
 
 ---
 
+## Analises Concluidas — Parte 2 (2026-04-07)
+
+| Data | Issue | Resultado Principal |
+|------|-------|---------------------|
+| 2026-04-07 | FR-withdrawal-engine | Guardrails confirmados. 5 estratégias comparadas. Delta máximo 10.8pp. Guardrails = melhor equilíbrio P(FIRE) × estabilidade de renda. Minority Report: reabrir se P(FIRE) R$300k+drought < 75% |
+| 2026-04-07 | FI-portfolio-optimization | 50/30/20 confirmado. Michaud Resampled: IC [0%–100%] (indistinguível). Factor drought: −6.7pp. Sem base para mudar. Minority Report: reabrir se AVGS underperformar SWRD por 5 anos |
+| 2026-04-07 | FR-rebalance-desacumulacao | Opção D aprovada: spending-based trimestral, glidepath natural, sem trades tributáveis. Safety valve 10pp drift |
+
 ## Historico de Consultas
 
 | Data | Tema | Resultado |
@@ -166,3 +176,5 @@ FIRE deve participar de qualquer decisão de renda fixa que envolva vencimento d
 | 2026-03 | Glidepath: rising ou declining? | Rising equity 82-90% aos 50, subindo para 90-95% |
 | 2026-03 | Custo de vida meta | R$250k/ano confirmado |
 | 2026-03-20 | FR-001 v4 (HD-006) | Retornos com fontes academicas + BRL: acum 5,84% / desacum 4,57%-5,00%. Pat R$10,96M. Limite R$384k/ano. IPCA+ 10% (nao 20%). |
+| 2026-04-07 | FR-withdrawal-engine | 5 estratégias testadas (10k sims). Guardrails 90.4%, GK 91.0%, GK Hybrid 91.0%. Guardrails aprovados: vol R$41k vs GK R$189k |
+| 2026-04-07 | FR-rebalance-desacumulacao | Opção D: spending-based trimestral aprovada. Safety valve 10pp. Nunca venda com lucro para rebalancear |

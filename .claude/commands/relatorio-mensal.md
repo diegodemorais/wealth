@@ -16,6 +16,14 @@ Rodar em paralelo:
 python3 scripts/fire_montecarlo.py --n-sim 3000
 ```
 2. Dados macro: usar `/macro-bcb` (não WebSearch ad hoc) para Selic, IPCA, PTAX, IPCA+ 2040
+3. Posições IBKR (se disponível):
+```bash
+python3 scripts/ibkr_sync.py --cambio <PTAX>
+```
+4. Decomposição FX (retorno BRL vs USD, eficiência cambial):
+```bash
+python3 scripts/fx_utils.py
+```
 
 ## Seções do Relatório
 

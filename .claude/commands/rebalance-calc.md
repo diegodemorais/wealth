@@ -40,3 +40,13 @@ Incluir:
 
 - Nunca sugerir venda — rebalancear apenas via aportes
 - Se não souber preço atual, usar último registrado + "verificar antes de executar"
+
+## Nota: Rebalanceamento Pós-FIRE (FR-rebalance-desacumulacao)
+
+Este command é para a fase de **acumulação** (aportes mensais). Após FIRE (2040+), a lógica muda:
+- Mecânica: sacar do ativo mais overweight vs target da fase (trimestral, R$62.5k)
+- Target anos 1-7: equity 79%, IPCA+ 15%, IPCA+ curto 3%
+- Target anos 7+: equity 94%
+- Safety valve: drift >10pp → spending forçado
+- Nunca vender ETF com lucro para rebalancear (IR 15% > benefício)
+- Ver `agentes/issues/FR-rebalance-desacumulacao.md` para regras completas

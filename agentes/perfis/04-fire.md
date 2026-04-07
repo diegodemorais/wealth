@@ -22,6 +22,39 @@
 - Fase 1 (50-60): equity 79%, guardrails de risco, taxa inicial ~2,4% (R$250k)
 - Fase 2 (60+): equity sobe para 94% pos-vencimento TD 2040
 
+### Withdrawal Strategy Confirmada (2026-04-07)
+
+5 estratégias testadas em 10k sims (FR-withdrawal-engine): **guardrails, constant, pct_portfolio, VPW, Guyton-Klinger**. Guardrails aprovados. GK Hybrid também testado e descartado (P10=R$162k viola piso R$180k). Guardrails = melhor equilíbrio:
+- P(FIRE): 90.4% (vs GK 91.0% — delta dentro do IC ±1pp)
+- Vol de gasto: R$41k (vs GK R$189k — 4.6× mais volátil)
+- Piso P10: R$165k–R$276k (vs GK R$162k–R$507k)
+
+### Rebalanceamento Pós-FIRE: Opção D (2026-04-07)
+
+Mecânica trimestral (R$62.5k/quarter): sacar do bloco mais overweight vs target da fase.
+- Anos 1-7 (50-57): equity 79%, IPCA+ longo 15% (consumindo), IPCA+ curto 3% (consumindo)
+- Anos 7+ (57-90): equity 94%, RF 0%, cripto 3%
+- Target intra-equity fixo: SWRD 50% / AVGS 30% / AVEM 20%
+- Safety valve drift >10pp: spending forçado → TLH → aceitar drift
+- **Nunca vender ETF com lucro para rebalancear** (IR 15% > benefício do rebalanceamento)
+- Transição bond pool: TD 2040 vence → caixa/Selic → gastar anos 1-7
+
+### Ferramentas (fire_montecarlo.py — flags relevantes)
+
+```bash
+# Comparar todas as withdrawal strategies
+python3 scripts/fire_montecarlo.py --compare-strategies --n-sim 10000
+
+# Cenário factor drought (AVGS 2.0% real permanente)
+python3 scripts/fire_montecarlo.py --retorno-equity 0.0395
+
+# FIRE 50 com spending stats por faixa etária
+python3 scripts/fire_montecarlo.py --anos 11 --n-sim 10000
+
+# Estratégia específica
+python3 scripts/fire_montecarlo.py --strategy guardrails --n-sim 10000
+```
+
 ---
 
 ## Referencias Academicas e de Mercado

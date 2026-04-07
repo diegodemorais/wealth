@@ -73,6 +73,14 @@
 
 ---
 
+### Michaud Resampled Frontier (2026-04-07)
+
+1.000 bootstrap resamples confirmaram que **qualquer alocação entre os 3 ETFs é estatisticamente indistinguível** (IC 90% = [0%–100%] para todos). Target 50/30/20 está dentro do IC (3/3 ativos). Não há base quantitativa para desviar do target aprovado. Script: `scripts/resampled_frontier.py`.
+
+### Factor Drought — Sensibilidade (2026-04-07)
+
+AVGS 2.0% real permanente (vs 5.0% base) → blended equity 3.95% → P(FIRE) 83.7% (−6.7pp vs base). Gatilho de revisão: se AVGS underperformar SWRD por 5 anos consecutivos. Não é cenário central — é stress test documentado. Script: `fire_montecarlo.py --retorno-equity 0.0395`.
+
 ## Metodologia Analítica (obrigatório antes de qualquer análise histórica)
 
 > Antes de iniciar qualquer backtest, factor regression, correlação ou análise de período histórico:
