@@ -42,13 +42,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| HD-carteiraviva-audit | Auditoria Carteira Viva + roadmap website | Head | 🟡 Média | Analisando planilha |
+| — | — | — | — | — |
 
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-carteiraviva-audit | Auditoria Carteira Viva + roadmap website | Head | 2026-04-07 | 7 ações executadas, 3 falsos positivos. Pesos 50/30/20 propagados. Holdings atualizado. CAGR histórico + custo base BRL implementados. |
 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 2026-04-07 | tlh_monitor.py criado. Scan automático, exit 1 se material (≥R$5k). Integrado no relatorio-mensal. |
 | HD-mcp-financial-datasets | MCP Financial Datasets — ETF holdings | Head | 2026-04-07 | Não aplicável. US stocks only, zero ETF holdings, API key paga. justETF permanece. |
 | HD-mcp-bcb | MCP Server BCB — dados macro estruturados | Head | 2026-04-07 | MCP configurado. bcb_indicadores_atuais substitui 3 WebFetch. Tesouro Direto mantém WebFetch. Focus lag documentado. |

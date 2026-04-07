@@ -469,8 +469,8 @@ Este arquivo é a base para cálculos de TWR, CAGR e shadows. Com 2 pontos de da
 **4. Patrimônio diverge R$ 138k entre planilha e carteira.md**
 Planilha: R$ 3.511.554. carteira.md: R$ 3.372.673. A diferença inclui a apreciação de março + aporte de R$ 28k (vs R$ 25k configurado no codebase). carteira.md estava atualizado em 01/04/2026 mas já está 6 dias defasado.
 
-**5. Aporte mensal: R$ 28k na planilha vs R$ 25k no codebase**
-`checkin_mensal.py`, `fire_montecarlo.py` e `carteira.md` usam R$ 25k. A planilha usa R$ 28k neste mês. Pode ser variação mensal ou atualização de premissa não propagada.
+**~~5. Aporte mensal: R$ 28k na planilha vs R$ 25k no codebase~~ — FALSO POSITIVO**
+Confirmado por Diego: aporte médio é R$ 25k. O R$ 28k na planilha é variação pontual do mês. Codebase correto.
 
 **6. TWR acumulado desde 2021 (5,66% a.a.) existe só na planilha**
 O codebase não calcula ou armazena o retorno acumulado histórico. Com a série histórica reconstruída, seria possível comparar o desempenho real contra os shadows de forma retroativa.
@@ -478,14 +478,14 @@ O codebase não calcula ou armazena o retorno acumulado histórico. Com a série
 **7. Custo base BRL por bucket existe só na planilha — crítico para TLH**
 AVGS bucket: custo R$ 600.975, valor R$ 1.003.606 (+59.9% em BRL). Esse dado é essencial para cálculo de IR em venda futura. O `checkin_mensal.py` tem a função `custo_base_brl_ponderado()` mas sem consolidação por bucket.
 
-**8. Pesos internos de equity divergem entre planilha e codebase**
-A aba Evolução (cenário B ativo) usa SWRD 43% / AVGS 26% / AVEM 17% — não reflete a decisão aprovada de 50/30/20. A planilha precisa ser atualizada para refletir a nova estratégia.
+**~~8. Pesos internos de equity divergem entre planilha e codebase~~ — FALSO POSITIVO**
+Confirmado por Diego: os 43/26/17 na aba Evolução são pesos do portfolio total (incluindo RF). Os pesos equity 50/30/20 estão corretos mais abaixo na planilha. Sem divergência real.
 
 **9. Renda+ 2065 taxa diverge: 6,93% (planilha) vs 7,08% (carteira.md)**
 Diferença de 15 bps. O gatilho de venda (taxa ≤ 6,0%) está distante em ambos os casos, mas para cálculos de all-in e comparação com equity, a taxa usada no `checkin_mensal.py` (IPCA_PLUS_TAXA_ANUAL = 7.16%) também diverge.
 
-**10. Análise de negócio (EBITDA R$ 11.714, valor R$ 2.163.000) existe só na planilha**
-O codebase considera capital humano (R$ 3.65M em memória), mas não modela o valor do negócio como ativo de balanço separado. A planilha tem análise EBITDA com valor estimado do negócio em R$ 2.163.000 — dado potencialmente material para o balanço soberano total.
+**~~10. Análise de negócio (EBITDA R$ 11.714, valor R$ 2.163.000) existe só na planilha~~ — FALSO POSITIVO**
+Confirmado por Diego: não é valor do negócio. Auditoria interpretou dados incorretamente. Descartado.
 
 ---
 
