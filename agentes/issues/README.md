@@ -29,10 +29,15 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
 | 3 | HD-ibkr-import | Tracking automático de posições via IBKR Flex Query | Bookkeeper | 🔴 Alta |
 | 4 | HD-benchmark-comparison | Benchmark comparison visual com shadow portfolios | Advocate | 🔴 Alta |
-| 5 | FI-portfolio-optimization | Validação formal de alocação via otimização | Factor | 🟡 Média |
-| 6 | HD-openbb-data | OpenBB como data platform para o time | Head | 🟡 Média |
-| 7 | FX-multicurrency | Multi-currency tracking nativo BRL/USD | Head | 🟡 Média |
-| 8 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
+| 5 | HD-cmd-portfolio-snapshot | Command /portfolio-snapshot | Bookkeeper | 🔴 Alta |
+| 6 | HD-cmd-rebalance-calc | Command /rebalance-calc | Head | 🔴 Alta |
+| 7 | FI-portfolio-optimization | Validação formal de alocação via otimização | Factor | 🟡 Média |
+| 8 | HD-openbb-data | OpenBB como data platform para o time | Head | 🟡 Média |
+| 9 | FX-multicurrency | Multi-currency tracking nativo BRL/USD | Head | 🟡 Média |
+| 10 | FR-cmd-fire-status | Command /fire-status | FIRE | 🟡 Média |
+| 11 | TX-cmd-tax-calc | Command /tax-calc | Tax | 🟡 Média |
+| 12 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
+| 13 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
