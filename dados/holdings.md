@@ -1,44 +1,43 @@
 # Holdings — Quantidades e Valores por Ativo
 
-> Atualizado em: 2026-03-22
-> Fonte: Carteira Viva (Google Sheets) + carteira.md
-> Cambio de referencia: R$ 5,32
+> Atualizado em: 2026-04-07
+> Fonte: Carteira Viva (Google Sheets, aba Utils) + auditoria HD-carteiraviva-audit
+> Cambio de referencia: R$ 5,15
 > Atualizar sempre que houver compra/venda
 
 ---
 
 ## ETFs Internacionais (Interactive Brokers)
 
-**Total ETFs internacionais: $587,959.22 (R$ 3,127,943)**
+**Total ETFs internacionais: $603,411.91 (R$ 3,107,571)**
 
-### Bloco SWRD (alvo 35% do equity)
+### Bloco SWRD (alvo 50% do equity)
 | Ativo | Qtde | Valor USD | % Portfolio Inter | Lucro | Status |
 |-------|------|-----------|-------------------|-------|--------|
-| SWRD | 5,291.64 | $243,415.51 | 41.4% | +39.85% | Overweight. Sem aportes |
+| SWRD | 5,405.56 | $245,797 | 40.7% | +41.22% | Underweight. Aportar aqui |
 
-### Bloco AVGS (alvo 25% do equity)
+### Bloco AVGS (alvo 30% do equity)
 | Ativo | Qtde | Valor USD | % Portfolio Inter | Lucro | Status |
 |-------|------|-----------|-------------------|-------|--------|
-| AVGS | 233.43 | $5,791.38 | 1.0% | -0.49% | Alvo UCITS. Aportar aqui |
-| AVUV | 548.88 | $58,225.11 | 9.9% | +30.05% | Transitorio |
-| AVDV | 947.60 | $90,457.73 | 15.4% | +64.55% | Transitorio |
-| USSC | 373.25 | $29,606.17 | 5.0% | +61.33% | Transitorio |
-| **Subtotal** | | **$184,080.39** | **31.3%** | | Overweight via transitorios |
+| AVGS | 233.43 | $6,067 | 1.0% | +4.24% | Alvo UCITS. Aportar aqui |
+| AVUV | 548.88 | $61,705 | 10.2% | +37.82% | Transitorio |
+| AVDV | 947.60 | $96,219 | 15.9% | +75.03% | Transitorio |
+| USSC | 443.00 | $30,778 | 5.1% | +67.72% | Transitorio |
+| **Subtotal** | | **$194,769** | **32.3%** | | Overweight via transitorios |
 
 ### Bloco AVEM (alvo 20% do equity)
 | Ativo | Qtde | Valor USD | % Portfolio Inter | Lucro | Status |
 |-------|------|-----------|-------------------|-------|--------|
-| EIMI | 2,020.29 | $92,771.87 | 15.8% | +49.34% | Transitorio |
-| AVES | 926.55 | $54,527.24 | 9.3% | +29.44% | Transitorio |
-| DGS | 188.21 | $11,059.26 | 1.9% | +17.26% | Transitorio |
-| **Subtotal** | | **$158,358.37** | **26.9%** | | Overweight via transitorios |
+| EIMI | 2,020.29 | $93,499 | 15.5% | +50.51% | Transitorio |
+| AVES | 926.55 | $55,218 | 9.2% | +31.08% | Transitorio |
+| DGS | 188.21 | $11,999 | 2.0% | +27.23% | Transitorio |
+| **Subtotal** | | **$160,716** | **26.6%** | | Overweight via transitorios |
 
-### Bloco JPGL (alvo 20% do equity)
+### Bloco JPGL (alvo 0% — nao comprar mais, FI-jpgl-zerobased 2026-04-01)
 | Ativo | Qtde | Valor USD | % Portfolio Inter | Lucro | Status |
 |-------|------|-----------|-------------------|-------|--------|
-| JPGL | 0 | $0.00 | 0.0% | +24.81% | **FOCO dos aportes** |
-| IWVL | 34.00 | $2,104.94 | 0.4% | +65.01% | Transitorio |
-| **Subtotal** | | **$2,104.94** | **0.4%** | | **Maior gap: -19.6%** |
+| IWVL | 34.00 | $2,130 | 0.4% | +65.01% | Transitorio. Diluir via aportes |
+| **Subtotal** | | **$2,130** | **0.4%** | | Diluicao natural |
 
 ---
 
@@ -46,9 +45,9 @@
 
 | Ativo | Cotas | Corretora | Valor estimado | Notas |
 |-------|-------|-----------|---------------|-------|
-| Tesouro IPCA+ 2029 | 24.18 | Nubank | ~R$ 87,862 | Reserva emergencia |
-| Tesouro IPCA+ 2040 | 7.85 | XP | ~R$ 13,308 | Posicao legada, incorpora ao bloco IPCA+ longo |
-| Renda+ 2065 | 606.87 | Nubank | ~R$ 111,992 | Tatico. Gatilho venda: taxa <= 6.0% |
+| Tesouro IPCA+ 2029 | 24.18 | Nubank | ~R$ 89,095 | Reserva emergencia |
+| Tesouro IPCA+ 2040 | — | XP | ~R$ 33,285 | Bloco IPCA+ longo. DCA ativo (taxa ~7.20%) |
+| Renda+ 2065 | 606.87 | Nubank | ~R$ 112,466 | Tatico. Gatilho venda: taxa <= 6.0%. Taxa atual ~6.93% |
 
 ---
 
@@ -64,11 +63,11 @@
 
 ---
 
-## Alocacao Alvo (aprovada 2026-03-22, HD-006 final)
+## Alocacao Alvo (FI-equity-redistribuicao 2026-04-01)
 
 | Bloco | Alvo % | Notas |
 |-------|--------|-------|
-| Equity total | **79%** | SWRD 35%, AVGS 25%, AVEM 20%, JPGL 20% (dentro do equity) |
+| Equity total | **79%** | SWRD 50%, AVGS 30%, AVEM 20% (dentro do equity). JPGL = 0% (FI-jpgl-zerobased) |
 | IPCA+ longo | **15%** | TD 2040 (80%) + TD 2050 (20%). Hold to maturity SEMPRE |
 | IPCA+ curto | **3%** | Comprar perto dos 50 (SoRR buffer). Nao agora |
 | Cripto | **3%** | HODL11 + spot legado |
@@ -93,37 +92,35 @@ A planilha precisa ser atualizada com os sub-blocos corretos. Ver secao "Gaps" a
 
 ## Report Bookkeeper: Gaps Atual vs Alvo
 
-**Patrimonio total estimado**: ~R$ 3,482,633 (carteira.md ref 2026-03-22)
-**Patrimonio ETFs internacionais (Carteira Viva)**: $587,959 x R$ 5.32 = R$ 3,127,943
+**Patrimonio total estimado**: ~R$ 3,511,554 (Carteira Viva ref 2026-04-07)
+**Patrimonio ETFs internacionais**: $603,412 x R$ 5.15 = R$ 3,107,571
 
 ### Gap por Bucket (% do patrimonio total)
 
 | Bloco | Alvo | Atual | Gap | Acao |
 |-------|------|-------|-----|------|
-| SWRD | 27.7% | ~37.4% | +9.7% over | Sem aportes |
-| AVGS | 19.8% | ~28.3% | +8.5% over | Overweight via transitorios. Aportar so AVGS UCITS |
-| AVEM | 15.8% | ~24.2% | +8.4% over | Overweight via transitorios. Aportar so AVEM UCITS |
-| JPGL | 15.8% | ~0.3% | **-15.4% under** | **FOCO absoluto dos aportes** |
-| IPCA+ longo | 15.0% | ~0.4% | **-14.6% under** | **DCA ATIVO** (taxa 7.16% > piso 6.0%) |
-| Cripto | 3.0% | ~3.1% | ~0% | On target |
+| SWRD | 39.5% | ~36.1% | -3.4% under | Aportar SWRD |
+| AVGS | 23.7% | ~28.6% | +4.9% over | Overweight via transitorios. Aportar so AVGS UCITS |
+| AVEM | 15.8% | ~23.6% | +7.8% over | Overweight via transitorios |
+| IPCA+ longo | 15.0% | ~0.9% | **-14.1% under** | **DCA ATIVO** (taxa ~7.20% > piso 6.0%) |
+| Cripto | 3.0% | ~2.9% | ~0% | On target |
 | Renda+ 2065 | <=3% | ~3.2% | ~0% | Proximo do target. DCA parado |
 | Reserva | transitorio | ~2.5% | n/a | Migrar para Selic em 2029 |
 
 ### Prioridade de Aportes (por gap)
 
-1. **JPGL** — gap de -15.4%. Todos os aportes de equity devem ir aqui
-2. **IPCA+ longo** — gap de -14.6%. DCA ativo em TD 2040 (80%) + TD 2050 (20%)
+1. **SWRD** — underweight -3.4%. Aportes equity aqui ate fechar gap
+2. **IPCA+ longo** — gap de -14.1%. DCA ativo em TD 2040 (80%) + TD 2050 (20%)
 3. Tudo mais esta on target ou overweight
 
 ### Execucoes Pendentes
 
 | Decisao | Aprovada em | Status | Notas |
 |---------|-------------|--------|-------|
-| IPCA+ longo DCA ate 15% | 2026-03-22 | **Aguardando primeira tranche** | DCA ATIVO. Taxa 7.16% > piso 6.0%. Nenhuma compra feita ainda |
-| Aportes mensais -> JPGL | 2026-03 | **Em andamento** | R$ 25k/mes. Gap de -15.4% levara ~24 meses |
+| IPCA+ longo DCA ate 15% | 2026-03-22 | **Em andamento** | DCA ATIVO. Taxa ~7.20% > piso 6.0% |
+| Aportes equity -> SWRD/AVGS | 2026-04-01 | **Em andamento** | Nova estrategia 50/30/20 sem JPGL |
 
 ### Alertas
 
-1. **PRIMEIRA TRANCHE IPCA+ NAO EXECUTADA**: Decisao aprovada em 2026-03-22. Head deve cobrar execucao
-2. **Planilha Carteira Viva desatualizada nos targets**: mostra 85% equity / 15% IPCA+ longo, mas nao detalha sub-blocos (cripto 3%, IPCA+ curto 3%, Renda+ <=3%). Diego precisa atualizar
-3. **Cambio de referencia diverge**: carteira.md usa R$ 5.24, Carteira Viva usa R$ 5.32. Diferenca de 1.5%
+1. **Planilha Carteira Viva pesos defasados**: aba Evolucao cenario B usa 43/26/17 (SWRD/AVGS/AVEM). Correto: 50/30/20. Diego precisa atualizar
+2. **JPGL = 0%**: nao aportar mais. Posicao existente (IWVL R$11k) dilui naturalmente

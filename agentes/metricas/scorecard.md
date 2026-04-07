@@ -61,30 +61,29 @@ TER incremental da carteira vs shadow portfolios.
 
 | Metrica | Carteira Real | Shadow A | Shadow B | Shadow C | Delta vs A | Delta vs C |
 |---------|--------------|----------|----------|----------|------------|------------|
-| TER ponderado (equity) | 0.248% | 0.220% | 0.20% | 0.220% | +2.8 bps | +2.8 bps |
+| TER ponderado (equity) | 0.247% | 0.220% | 0.20% | 0.220% | +2.7 bps | +2.7 bps |
 | # ETFs gerenciados | 11 (4 alvo + 7 transitorios) | 1 ETF + 1 titulo | 1 titulo | 1 ETF + 1 titulo | +10 instrumentos | +10 instrumentos |
 | # regras/gatilhos ativos | 16 (consolidados HD-007) | 1 (rebalance anual) | 0 | 1 | +15 regras | +15 regras |
 | Custo cambio (Okegen) | 0.25% ida+volta | 0.25% | 0% | 0.25% | 0 bps | 0 bps |
 | Tempo de gestao estimado | ~4h/mes | ~30min/mes | ~0min/mes | ~30min/mes | +3.5h | +3.5h |
 
-**Composicao do TER ponderado da carteira real (alvos):**
+**Composicao do TER ponderado da carteira real (alvos — FI-equity-redistribuicao 2026-04-01):**
 
 | ETF | Peso Alvo (equity) | Peso Portfolio Total | TER | Contribuicao (equity) |
 |-----|-------------------|---------------------|-----|----------------------|
-| SWRD | 35% | 27.7% | 0.12% | 0.042% |
-| AVGS | 25% | 19.8% | 0.39% | 0.098% |
+| SWRD | 50% | 39.5% | 0.12% | 0.060% |
+| AVGS | 30% | 23.7% | 0.39% | 0.117% |
 | AVEM | 20% | 15.8% | 0.35% | 0.070% |
-| JPGL | 20% | 15.8% | 0.19% | 0.038% |
-| **Equity total** | **100%** | **79%** | — | **0.248%** |
+| **Equity total** | **100%** | **79%** | — | **0.247%** |
 | HODL11 | — | 3% | 0.20% | 0.006% |
 | Tesouro Direto | — | ~18% (alvo) | 0.20% (custodia B3) | 0.036% |
-| **Portfolio total** | — | **100%** | — | **~0.228%** |
+| **Portfolio total** | — | **100%** | — | **~0.237%** |
 
 **Shadow A TER**: 100% x 0.22% (VWRA) = **0.220%**
 **Shadow B TER**: 100% x 0.20% (custodia B3) = **0.200%**
 **Shadow C TER**: 79% x 0.22% (VWRA) + 15% x 0.20% (TD) + 3% x 0.20% (HODL11) = **0.207%**
 
-**Veredicto**: Custo incremental em TER e minimo (+2.8 bps vs Shadow A e C). O custo real de complexidade esta em tempo de gestao e risco operacional, nao em fees. Alpha esperado pos-haircut: ~0.16%/ano — marginalmente acima do custo de complexidade de TER.
+**Veredicto**: Custo incremental em TER e minimo (+2.7 bps vs Shadow A, +4.0 bps vs Shadow C). O custo real de complexidade esta em tempo de gestao e risco operacional, nao em fees. Alpha esperado pos-haircut: ~0.16%/ano — marginalmente acima do custo de complexidade de TER.
 
 ---
 
@@ -95,7 +94,7 @@ TER incremental da carteira vs shadow portfolios.
 | Drawdown -40% (equity) | -R$1.1M no patrimonio (79% x R$3.5M x 40%) | Equity (79%) | Modelado FR-003 |
 | Decada perdida (FIRE 50-60) | P(FIRE) cai de 91% para 31-43% | Sequence of returns | Modelado FR-003 |
 | Risco soberano BR extremo (CDS 800bps+) | Bloco soberano ~21% em stress; equity 7x mais arriscado | IPCA+ / Renda+ | RK-001 v2 |
-| **Quant Crisis 2.0** | AVGS -25% a -35% em semanas; bloco equity total -16% a -22.5% | AVGS (25% do equity, 19.8% do portfolio) | **A modelar** |
+| **Quant Crisis 2.0** | AVGS -25% a -35% em semanas; bloco equity total -16% a -22.5% | AVGS (30% do equity, 23.7% do portfolio) | **A modelar** |
 | Crise fiscal BR (IOF 10% remessas) | Equity internacional bloqueado; aportes parados | Equity UCITS | Parcialmente coberto |
 
 **Nota Quant Crisis 2.0 (FI-crowdedness 2026-03-24):** AVGS max DD historico -39% e piso, nao teto. Em 2008-style, small value pode cair -60%+. Impacto no portfolio: 25% equity × 60% = -15% do bloco equity = -11.85% do portfolio total. Modelagem formal pendente.
@@ -158,7 +157,7 @@ Erros = momentos em que Diego identificou problema antes do sistema, ou sistema 
 | Decisao | Data Aprovacao | Status atual | Gap |
 |---------|---------------|-------------|-----|
 | IPCA+ 2040 DCA (alvo 15%) | 2026-03-18/22 | Em andamento (taxa 7.16% >> piso 6.0%) | Conforme — DCA ativo |
-| JPGL aportes prioritarios | 2026-03-18 | Gap -19.7% ainda. Foco dos aportes | Conforme — aportando |
+| Aportes equity SWRD/AVGS | 2026-04-01 | SWRD underweight -3.4%. Aportar aqui | Conforme — nova estrategia 50/30/20 |
 | Renda+ 2065 DCA | Condicional (>= 6.5%) | Taxa ~7.1%. Monitorar | Conforme |
 | Reserva -> Selic no vencimento | 2026-03-18 | Aguarda 2029 | Conforme |
 | IPCA+ curto 3% | Condicional (perto dos 50) | Nao comprar agora | Conforme |
@@ -177,7 +176,7 @@ Decisoes ativas que tem resultado esperado e prazo. Ver detalhes em `previsoes.m
 |----------|-------------------|-------|-----------|--------|
 | IPCA+ 2040 DCA — taxa media >= 6.5% | Taxa media de compra >= 6.5% | Jun 2026 | Alta (~80%) | Aberta |
 | Renda+ 2065 taxa cai | Taxa <= 6.0% em 12-18 meses | Mar-Set 2027 | Baixa-Media (40-55%) | Aberta |
-| JPGL gap fecha | Gap < 2% em 27-30 meses | Jun-Set 2028 | Media (~60%) | Aberta |
+| ~~JPGL gap fecha~~ | ~~Gap < 2% em 27-30 meses~~ | ~~Jun-Set 2028~~ | — | Cancelada (JPGL = 0%, FI-jpgl-zerobased 2026-04-01) |
 
 - **Frequencia**: Trimestral
 - **Dono**: Agente responsavel por cada previsao
@@ -198,7 +197,7 @@ Decisoes ativas que tem resultado esperado e prazo. Ver detalhes em `previsoes.m
 | Alpha esperado pos-haircut | **~0.16%/ano** | > 0% | **Marginal/OK** |
 | Delta vs Shadow A (Q1 2026) | +3.15pp | > 0% rolling 3 anos | **OK** |
 | Delta vs Shadow B (Q1 2026) | -0.57pp | > 0% rolling 3 anos | **Normal** (regime inflacionario — esperado) |
-| TER incremental vs VWRA | +2.8 bps | < 10 bps | **OK** |
+| TER incremental vs VWRA | +2.7 bps | < 10 bps | **OK** |
 | Finding rate (acumulado) | ~1.3/sessao | >= 1.5 | **Atencao** |
 | Falsos positivos (periodo recente) | 0% | < 20% | **OK** |
 | Diego achou primeiro (periodo recente) | 0% | 0% | **OK** |

@@ -4,7 +4,7 @@ backtest_fatorial.py — Backtesting histórico do tilt fatorial UCITS
 Pergunta central: o factor tilt dos ETFs UCITS reais gerou alpha histórico?
 
 Compara:
-  - Target   : 35% SWRD + 25% AVGS + 20% AVEM + 20% JPGL (rebalanceado mensalmente)
+  - Target   : 50% SWRD + 30% AVGS + 20% AVEM (rebalanceado mensalmente, FI-equity-redistribuicao 2026-04-01)
   - Shadow A  : 100% VWRA (market cap puro)
 
 Períodos de dados (descrescente por qualidade):
@@ -40,10 +40,9 @@ import numpy as np
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
 
 PESOS_TARGET = {
-    "SWRD.L": 0.35,
-    "AVGS.L": 0.25,
+    "SWRD.L": 0.50,
+    "AVGS.L": 0.30,
     "AVEM.L": 0.20,
-    "JPGL.L": 0.20,
 }
 
 # Datas de inception reais (confirmadas Factor+Fact-Checker via web — 2026-03-31)
@@ -64,21 +63,21 @@ REGIMES = {
     1: {
         "inicio": "2024-12-01",
         "label":  "Regime 1 — ETFs UCITS reais (Dez/2024+)",
-        "target": {"SWRD.L": 0.35, "AVGS.L": 0.25, "AVEM.L": 0.20, "JPGL.L": 0.20},
+        "target": {"SWRD.L": 0.50, "AVGS.L": 0.30, "AVEM.L": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": [],
     },
     2: {
         "inicio": "2024-09-01",
         "label":  "Regime 2 — 1 proxy AVEM→AVEM US (Set/2024+)",
-        "target": {"SWRD.L": 0.35, "AVGS.L": 0.25, "AVEM": 0.20, "JPGL.L": 0.20},
+        "target": {"SWRD.L": 0.50, "AVGS.L": 0.30, "AVEM": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": ["AVEM (US-listed) ⚠️ proxy de AVEM.L (UCITS lançado Dez/2024 — mesma estratégia Avantis)"],
     },
     3: {
         "inicio": "2019-07-01",
         "label":  "Regime 3 — 2 proxies AVGS+AVEM (Jul/2019+)",
-        "target": {"SWRD.L": 0.35, "AVUV": 0.145, "AVDV": 0.105, "AVEM": 0.20, "JPGL.L": 0.20},
+        "target": {"SWRD.L": 0.50, "AVUV": 0.174, "AVDV": 0.126, "AVEM": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": [
             "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L (global SC value — pesos factsheet Avantis)",
@@ -86,15 +85,13 @@ REGIMES = {
         ],
     },
     4: {
-        "inicio": "2019-02-01",
-        "label":  "Regime 4 — máximo histórico (Fev/2019+)",
-        "target": {"SWRD.L": 0.35, "AVUV": 0.145, "AVDV": 0.105, "AVEM": 0.20, "JPGL.L": 0.20},
+        "inicio": "2019-07-01",
+        "label":  "Regime 4 — máximo histórico (Jul/2019+)",
+        "target": {"SWRD.L": 0.50, "AVUV": 0.174, "AVDV": 0.126, "AVEM": 0.20},
         "shadow": {"VWRA.L": 1.00},
         "proxies": [
             "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L",
             "AVEM (US-listed) ⚠️ proxy de AVEM.L",
-            "JPGL.L ⚠️ sem dados Fev-Jun/2019 (lançado Jul/2019) — pesos normalizados automaticamente",
-            "VWRA.L ⚠️ sem dados Fev-Jun/2019 (lançada Jul/2019) — shadow alinha a Jul/2019 efetivamente",
         ],
     },
 }

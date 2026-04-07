@@ -12,7 +12,7 @@ Quatro portfolios comparáveis respondem: "A complexidade da carteira de Diego g
 | Portfolio | Definição | Papel |
 |-----------|-----------|-------|
 | **Atual** | Carteira real de Diego (com transitorios, drift atual) | Resultado realizado |
-| **Target** | Carteira no alvo: 79% equity (pesos alvo SWRD/AVGS/AVEM/JPGL) + 15% IPCA+ + 3% cripto + ≤5% Renda+ | O que deveríamos ter |
+| **Target** | Carteira no alvo: 79% equity (SWRD 50%/AVGS 30%/AVEM 20%) + 15% IPCA+ + 3% cripto + ≤3% Renda+ | O que deveríamos ter |
 | **Shadow A** | 100% VWRA (Vanguard FTSE All-World UCITS, TER 0.22%) | Benchmark passivo puro — equity global sem tilts, sem RF |
 | **Shadow B** | 100% IPCA+ 2040 (~7.16% real bruto, HTM) | Benchmark RF — retorno garantido sem risco de mercado |
 | **Shadow C** | 79% VWRA + 15% IPCA+ 2040 + 3% HODL11 + 3% Renda+ | Benchmark justo — mesma estrutura de alocação, sem factor tilts |
@@ -31,12 +31,12 @@ Todos recebem os mesmos aportes de Diego, na mesma data e câmbio. Comparação 
 - Retorno calculado pelo método Dietz: (Pat_fim − Pat_ini − Aportes) / Pat_ini
 
 ### Target (Carteira no Alvo)
-- 35% SWRD + 25% AVGS + 20% AVEM + 20% JPGL = 79% equity
+- 50% SWRD + 30% AVGS + 20% AVEM = 79% equity (FI-equity-redistribuicao 2026-04-01)
 - 15% IPCA+ 2040 (80% TD2040 + 20% TD2050)
 - 3% HODL11 (cripto)
-- ≤5% Renda+ 2065 (tático)
+- ≤3% Renda+ 2065 (tático)
 - **Nota**: requer retornos mensais por ETF. A calcular via preços Yahoo Finance/justETF.
-- TER estimado: 0.228% a.a.
+- TER estimado: 0.237% a.a.
 
 ### Shadow A — 100% VWRA
 - Instrumento: VWRA.L (LSE), TER 0.22%
@@ -107,7 +107,7 @@ Todos recebem os mesmos aportes de Diego, na mesma data e câmbio. Comparação 
    - Retorno ponderado = 79% × retorno_VWRA_BRL + 15% × retorno_IPCA+_mensal + 3% × retorno_BTC_BRL + 3% × retorno_Renda+_MtM
    - BTC BRL = (BTC_USD_fim × USD_BRL_fim) / (BTC_USD_ini × USD_BRL_ini) - 1
 5. **Target**: retorno ponderado dos 4 ETFs alvo em BRL + IPCA+ + HODL11
-   - Pesos portfolio total: SWRD 27.65% + AVGS 19.75% + AVEM 15.8% + JPGL 15.8% + IPCA+ 15% + HODL11 3%
+   - Pesos portfolio total: SWRD 39.5% + AVGS 23.7% + AVEM 15.8% + IPCA+ 15% + HODL11 3%
    - Retorno ETF BRL = retorno GBp × (GBP/BRL_fim / GBP/BRL_ini)
    - Fonte preços: stooq.com (SWRD.uk, AVGS.uk, AVEM.uk, JPGL.uk) ou Yahoo Finance
 6. Adicionar linha na tabela acima e no scorecard.md

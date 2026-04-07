@@ -11,6 +11,7 @@ Venv: ~/claude/finance-tools/.venv/bin/python3
 """
 
 import argparse
+import os
 import sys
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
@@ -35,12 +36,11 @@ TICKERS = {
     "USD_BRL": "USDBRL=X",   # ETFs UCITS na LSE são cotados em USD
 }
 
-# Pesos do portfolio TARGET (equity block)
+# Pesos do portfolio TARGET (equity block: SWRD 50% / AVGS 30% / AVEM 20% — FI-equity-redistribuicao 2026-04-01)
 PESOS_TARGET = {
-    "SWRD":   0.2765,   # 27.65% do portfolio total
-    "AVGS":   0.1975,
-    "AVEM":   0.1580,
-    "JPGL":   0.1580,
+    "SWRD":   0.3950,   # 79% × 50% = 39.50% do portfolio total
+    "AVGS":   0.2370,   # 79% × 30% = 23.70%
+    "AVEM":   0.1580,   # 79% × 20% = 15.80%
     "IPCA":   0.1500,   # calculado via BCB
     "HODL11": 0.0300,
     # Renda+ 2065: input manual (MtM requer Tesouro Direto)
@@ -196,6 +196,227 @@ def metodo_dietz(pat_ini: float, pat_fim: float, aportes: float) -> float:
 def patrimonio_shadow(pat_anterior: float, retorno: float, aportes: float) -> float:
     """Patrimônio do shadow no fim do período."""
     return pat_anterior * (1 + retorno) + aportes
+
+
+def calcular_cagr_historico(csv_path: str = None) -> dict:
+    """
+    Calcula CAGR acumulado desde o primeiro até o último ponto do histórico.
+
+    Lê dados/historico_carteira.csv, ordena por data, e calcula:
+    - CAGR = (Pat_fim / Pat_ini)^(1/anos) - 1
+    - Retorno acumulado total
+    - Período em anos e meses
+
+    Retorna dict com:
+    {
+        "data_inicio": date,
+        "data_fim": date,
+        "patrimonio_inicio": float,
+        "patrimonio_fim": float,
+        "anos": float,
+        "cagr": float,
+        "retorno_acumulado": float,
+        "status": "OK" ou mensagem de erro
+    }
+
+    Se menos de 2 pontos ou dados faltando, retorna status com erro.
+    """
+    if csv_path is None:
+        # Buscar csv_path relativo ao diretório do script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        csv_path = os.path.join(script_dir, "../dados/historico_carteira.csv")
+
+    try:
+        df = pd.read_csv(csv_path)
+    except FileNotFoundError:
+        return {
+            "status": f"ERRO: arquivo não encontrado: {csv_path}"
+        }
+    except Exception as e:
+        return {
+            "status": f"ERRO ao ler CSV: {e}"
+        }
+
+    # Filtrar linhas com patrimonio_brl válido (não vazio/NaN)
+    df["data"] = pd.to_datetime(df["data"])
+    df_valido = df[df["patrimonio_brl"].notna()].copy()
+
+    if len(df_valido) < 2:
+        return {
+            "status": f"AVISO: apenas {len(df_valido)} ponto(s) com patrimônio válido. CAGR requer mín 2 pontos."
+        }
+
+    # Ordenar por data e pegar primeiro e último
+    df_valido = df_valido.sort_values("data")
+    row_ini = df_valido.iloc[0]
+    row_fim = df_valido.iloc[-1]
+
+    data_inicio = row_ini["data"].date()
+    data_fim = row_fim["data"].date()
+    pat_inicio = float(row_ini["patrimonio_brl"])
+    pat_fim = float(row_fim["patrimonio_brl"])
+
+    # Validação
+    if pat_inicio <= 0 or pat_fim <= 0:
+        return {
+            "status": "ERRO: patrimônio inicial ou final <= 0"
+        }
+
+    # Calcular período em anos (com precisão decimal para períodos < 1 ano)
+    delta = data_fim - data_inicio
+    anos = delta.days / 365.25
+
+    if anos <= 0:
+        return {
+            "status": f"ERRO: data_fim {data_fim} não é posterior a data_inicio {data_inicio}"
+        }
+
+    # CAGR
+    cagr = (pat_fim / pat_inicio) ** (1 / anos) - 1
+    retorno_acumulado = pat_fim / pat_inicio - 1
+
+    return {
+        "data_inicio": data_inicio,
+        "data_fim": data_fim,
+        "patrimonio_inicio": pat_inicio,
+        "patrimonio_fim": pat_fim,
+        "anos": anos,
+        "cagr": cagr,
+        "retorno_acumulado": retorno_acumulado,
+        "status": "OK",
+        "num_pontos": len(df_valido)
+    }
+
+
+
+# ─── CUSTO BASE BRL POR BUCKET ───────────────────────────────────────────────
+
+BUCKET_MAPEAMENTO = {
+    # SWRD bucket: apenas SWRD
+    "SWRD": ["SWRD"],
+    # AVGS bucket: AVGS + transitórios US-listed + USSC
+    "AVGS": ["AVGS", "AVUV", "AVDV", "USSC"],
+    # AVEM bucket: AVEM + EIMI + AVES + DGS
+    "AVEM": ["AVEM", "EIMI", "AVES", "DGS"],
+}
+
+
+def custo_base_brl_por_bucket(lotes_por_ticker: dict, usd_brl_atual: float) -> dict:
+    """
+    Calcula custo base BRL consolidado por bucket.
+
+    Lê ibkr_lotes.json e agrupa posições em 3 buckets:
+    - SWRD: apenas SWRD
+    - AVGS: AVGS, AVUV, AVDV, USSC
+    - AVEM: AVEM, EIMI, AVES, DGS
+
+    Para cada lote, converte custo USD para BRL usando PTAX da data de compra.
+
+    Retorna: dict com {
+        "SWRD": {"custo_brl": float, "valor_atual_brl": float, "ganho_pct": float, "qty": float},
+        "AVGS": {...},
+        "AVEM": {...}
+    }
+    """
+    resultado = {}
+
+    # Inverter mapa: ticker → bucket
+    ticker_para_bucket = {}
+    for bucket, tickers in BUCKET_MAPEAMENTO.items():
+        for ticker in tickers:
+            ticker_para_bucket[ticker] = bucket
+
+    # Agregar por bucket
+    buckets_agregado = {
+        "SWRD": {"total_qty": 0.0, "total_custo_brl": 0.0, "total_custo_usd": 0.0, "lotes_info": []},
+        "AVGS": {"total_qty": 0.0, "total_custo_brl": 0.0, "total_custo_usd": 0.0, "lotes_info": []},
+        "AVEM": {"total_qty": 0.0, "total_custo_brl": 0.0, "total_custo_usd": 0.0, "lotes_info": []},
+    }
+
+    for ticker, info in lotes_por_ticker.items():
+        if ticker not in ticker_para_bucket:
+            continue
+
+        bucket = ticker_para_bucket[ticker]
+        lotes = info.get("lotes", [])
+
+        for lote in lotes:
+            qtd = float(lote.get("qty", 0))
+            preco_usd = float(lote.get("custo_por_share", 0))
+            data = lote.get("data", "")
+
+            if qtd == 0 or preco_usd == 0:
+                continue
+
+            # Buscar PTAX da data de compra
+            try:
+                ptax = get_ptax_venda(data)
+            except Exception as e:
+                # Fallback: usar câmbio atual se PTAX histórica falhar
+                print(f"  ⚠️  {ticker} ({data}): PTAX indisponível, usando câmbio atual")
+                ptax = usd_brl_atual
+
+            custo_brl = preco_usd * ptax
+
+            buckets_agregado[bucket]["total_qty"] += qtd
+            buckets_agregado[bucket]["total_custo_brl"] += qtd * custo_brl
+            buckets_agregado[bucket]["total_custo_usd"] += qtd * preco_usd
+            buckets_agregado[bucket]["lotes_info"].append({
+                "ticker": ticker,
+                "qtd": qtd,
+                "preco_usd": preco_usd,
+                "ptax": ptax,
+                "data": data
+            })
+
+    # Consolidar para cada bucket
+    for bucket, dados in buckets_agregado.items():
+        total_qty = dados["total_qty"]
+        total_custo_brl = dados["total_custo_brl"]
+        total_custo_usd = dados["total_custo_usd"]
+
+        if total_qty == 0:
+            resultado[bucket] = {
+                "custo_brl": 0.0,
+                "valor_atual_brl": 0.0,
+                "ganho_pct": None,
+                "qty": 0.0,
+                "alertas": "Sem posições neste bucket"
+            }
+            continue
+
+        # Custo base médio ponderado
+        custo_base_brl_por_cota = total_custo_brl / total_qty
+        preco_medio_usd = total_custo_usd / total_qty
+
+        # Valor atual (usar preço atual em USD via yfinance)
+        # Usa primeiro ticker do bucket como proxy
+        primeiro_ticker = BUCKET_MAPEAMENTO[bucket][0]
+        try:
+            dados_yf = yf.download(primeiro_ticker, period="5d", auto_adjust=True, progress=False)
+            if not dados_yf.empty:
+                preco_atual_usd = float(dados_yf["Close"].dropna().iloc[-1])
+            else:
+                preco_atual_usd = preco_medio_usd  # fallback
+        except Exception:
+            preco_atual_usd = preco_medio_usd
+
+        valor_atual_brl_por_cota = preco_atual_usd * usd_brl_atual
+        valor_total_atual_brl = valor_atual_brl_por_cota * total_qty
+        custo_total_brl = custo_base_brl_por_cota * total_qty
+
+        ganho_pct = (valor_total_atual_brl / custo_total_brl - 1) if custo_total_brl > 0 else 0
+
+        resultado[bucket] = {
+            "custo_brl": custo_total_brl,
+            "valor_atual_brl": valor_total_atual_brl,
+            "ganho_pct": ganho_pct,
+            "qty": total_qty,
+            "custo_brl_por_cota": custo_base_brl_por_cota,
+            "valor_atual_brl_por_cota": valor_atual_brl_por_cota,
+        }
+
+    return resultado
 
 
 # ─── TLH MONITOR ─────────────────────────────────────────────────────────────
@@ -391,11 +612,38 @@ def verificar_gatilhos(hodl11_pct: float, pat_atual: float):
 
 # ─── OUTPUT ───────────────────────────────────────────────────────────────────
 
+def formatar_custo_base(custo_base_buckets: dict):
+    """Formata e imprime a tabela de custo base BRL por bucket."""
+    if not custo_base_buckets:
+        return
+
+    print(f"\n💸 CUSTO BASE BRL POR BUCKET")
+    print(f"  {'Bucket':<10} {'Custo (BRL)':>14} {'Valor Atual (BRL)':>18} {'Ganho %':>10} {'Qtd':>10}")
+    print(f"  {'-'*68}")
+
+    for bucket in ["SWRD", "AVGS", "AVEM"]:
+        dados = custo_base_buckets.get(bucket)
+        if not dados:
+            continue
+
+        qty = dados.get("qty", 0)
+        custo = dados.get("custo_brl", 0)
+        valor_atual = dados.get("valor_atual_brl", 0)
+        ganho_pct = dados.get("ganho_pct")
+
+        if qty == 0 or custo == 0:
+            print(f"  {bucket:<10} {'—':>14} {'—':>18} {'—':>10} {'—':>10}")
+            continue
+
+        ganho_str = f"{ganho_pct:+.2%}" if ganho_pct is not None else "—"
+        print(f"  {bucket:<10} R${custo:>12,.0f} R${valor_atual:>16,.0f} {ganho_str:>10} {qty:>10,.0f}")
+
+
 def formatar_output(periodo_label: str, pat_atual: float, pat_anterior: float,
                     aportes: float, retorno_atual: float,
                     shadow_a: dict, shadow_b: dict, shadow_c: dict, target: dict,
                     ipca_mensal: float, selic_mensal: float, alertas: list,
-                    detalhes_etfs: dict):
+                    detalhes_etfs: dict, cagr_historico: dict = None, custo_base_buckets: dict = None):
 
     delta_a = retorno_atual - shadow_a["retorno"]
     delta_b = retorno_atual - shadow_b["retorno"]
@@ -404,6 +652,19 @@ def formatar_output(periodo_label: str, pat_atual: float, pat_anterior: float,
     print("\n" + "═"*60)
     print(f"  CHECKIN MENSAL — {periodo_label}")
     print("═"*60)
+
+    # CAGR Histórico
+    if cagr_historico and cagr_historico.get("status") == "OK":
+        print(f"\n📈 RETORNO HISTÓRICO (acumulado)")
+        print(f"  Período:         {cagr_historico['data_inicio']} → {cagr_historico['data_fim']}")
+        print(f"  Tempo decorrido: {cagr_historico['anos']:.2f} anos")
+        print(f"  Patrimônio:      R$ {cagr_historico['patrimonio_inicio']:,.2f} → R$ {cagr_historico['patrimonio_fim']:,.2f}")
+        print(f"  Retorno total:   {cagr_historico['retorno_acumulado']:+.2%}")
+        print(f"  CAGR anual:      {cagr_historico['cagr']:+.2%}")
+        print(f"  Fonte:           {cagr_historico['num_pontos']} snapshots em {cagr_historico['data_inicio'].strftime('%d/%m/%Y')}...{cagr_historico['data_fim'].strftime('%d/%m/%Y')}")
+    elif cagr_historico and cagr_historico.get("status"):
+        print(f"\n📈 RETORNO HISTÓRICO")
+        print(f"  ⚠️  {cagr_historico['status']}")
 
     print(f"\n📊 MACRO")
     print(f"  IPCA mensal:     {ipca_mensal:.2%}")
@@ -427,6 +688,9 @@ def formatar_output(periodo_label: str, pat_atual: float, pat_anterior: float,
     print(f"  {'Shadow B':<12} {shadow_b['retorno']:>+8.2%}  {shadow_b['pat']:>14,.0f}  {delta_b:>+13.2%}pp")
     if delta_c is not None:
         print(f"  {'Shadow C':<12} {shadow_c['retorno']:>+8.2%}  {shadow_c['pat']:>14,.0f}  {delta_c:>+13.2%}pp")
+
+    # Custo Base por Bucket (opcional)
+    formatar_custo_base(custo_base_buckets)
 
     print(f"\n⚡ GATILHOS")
     for alerta in alertas:
@@ -458,6 +722,11 @@ def main():
                             "JSON com lotes de compra por ticker. PTAX buscada automaticamente do BCB. "
                             "Formato: '{\"AVUV\": [{\"qtd\": 100, \"preco_usd\": 70.50, \"data\": \"2021-10-15\"}, ...]}'. "
                             "Pode ser path para arquivo .json ou string JSON direta."
+                        ))
+    parser.add_argument("--custo-base",     type=str,   default=None,
+                        help=(
+                            "Path para ibkr_lotes.json (ex: analysis/backtest_output/ibkr_lotes.json) "
+                            "para calcular custo base BRL consolidado por bucket"
                         ))
     args = parser.parse_args()
 
@@ -533,6 +802,11 @@ def main():
     pat_shadow_c = patrimonio_shadow(pat_anterior, r_shadow_c, aportes)
     pat_target   = patrimonio_shadow(pat_anterior, r_target, aportes)
 
+    # CAGR Histórico
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, "../dados/historico_carteira.csv")
+    cagr_dados = calcular_cagr_historico(csv_path)
+
     # Gatilhos
     hodl11_pct = args.hodl11_pct
     if hodl11_pct is None and detalhes_etfs.get("HODL11.SA") is not None:
@@ -540,9 +814,21 @@ def main():
         hodl11_pct = hodl11_valor_aprox / pat_atual
     alertas = verificar_gatilhos(hodl11_pct or 0.031, pat_atual)
 
+    # Custo Base BRL por Bucket (opcional)
+    custo_base_buckets = None
+    if args.custo_base:
+        import json, os
+        try:
+            with open(args.custo_base) as f:
+                lotes_por_ticker = json.load(f)
+            print("  Calculando custo base BRL consolidado por bucket...")
+            custo_base_buckets = custo_base_brl_por_bucket(lotes_por_ticker, usd_brl_fim)
+        except (json.JSONDecodeError, OSError, FileNotFoundError) as e:
+            print(f"⚠️  --custo-base falhou: {e}")
+
     # TLH Monitor (opcional)
     if args.tlh:
-        import json, os
+        import json
         lotes_por_ticker = {}
         if args.tlh_config:
             try:
@@ -565,7 +851,9 @@ def main():
         {"retorno": r_shadow_c, "pat": pat_shadow_c},
         {"retorno": r_target,   "pat": pat_target},
         ipca, selic, alertas,
-        {k: v for k, v in detalhes_etfs.items() if v is not None}
+        {k: v for k, v in detalhes_etfs.items() if v is not None},
+        cagr_dados,
+        custo_base_buckets
     )
 
 
