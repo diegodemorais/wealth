@@ -142,3 +142,47 @@ Correlações: SWRD-AVGS 0.860 | SWRD-AVEM 0.818 | AVGS-AVEM 0.715 (AVGS mais di
 3. Bootstrap: SWRD=0% está fora do IC 90% — corner solution típico de overfitting (Michaud 1989)
 
 **Veredicto Factor:** 50/30/20 é **fortemente defensável**. O resultado numérico confirma: não há evidência quantitativa de que outro peso seria superior com dados reais. A alocação reflete convicção em factor premiums forward-looking — uma decisão de premissas, não de otimização histórica.
+
+### Debate completo — Factor + Advocate (2026-04-07)
+
+#### Factor: 50/30/20 defensável com dados reais
+
+Métricas completas (backtest 5 anos, yfinance):
+
+| Método | SWRD | AVGS | AVEM | Return | Vol | Sharpe | Sortino | Max DD |
+|--------|------|------|------|--------|-----|--------|---------|--------|
+| Max Sharpe | 0% | 37.8% | 62.2% | 9.20% | 17.06% | 0.539 | 0.794 | -27.47% |
+| Min Variance | 77.7% | 0% | 22.3% | 8.03% | 15.95% | 0.503 | 0.744 | -29.36% |
+| Max Sortino | 0% | 41.4% | 58.6% | 9.39% | 17.07% | 0.550 | 0.812 | -26.99% |
+| HRP | 31.2% | 22.0% | 46.8% | 8.74% | 16.39% | 0.533 | 0.786 | -27.95% |
+| **Target 50/30/20** | **50%** | **30%** | **20%** | **9.34%** | **16.34%** | **0.572** | **0.848** | **-26.75%** |
+
+Forward-looking (premissas aprovadas 3.7%/5.0%/5.0% + cov histórica):
+
+| Método | E[r] | Vol | Sharpe forward |
+|--------|------|-----|----------------|
+| Max Sharpe | 5.00% | 17.07% | 0.293 |
+| **Target 50/30/20** | **4.35%** | **16.35%** | **0.266** |
+
+Diferença forward: -65bps expected return, -70bps vol, Sharpe -0.027. Custo marginal. Bootstrap (1.000 reamostras): Max Sharpe converge 100% para SWRD=0%, AVGS~38%, AVEM~62% — corner solution clássica, sinal de overfitting.
+
+**Por que o otimizador erra:** SWRD (3.7%) inferior a AVGS/AVEM (5.0%) com correlação similar → otimizador zera SWRD. Mas: (1) 2021-2026 foi excepcional para SCV; (2) SWRD é anchor de risco e liquidez intencional; (3) 60% AVEM (US$155M AUM) é operacionalmente imprudente.
+
+#### Advocate: "defensável" mas não "fortemente defensável" — 4 gaps
+
+1. **Cherry-picking de período:** backtest 2021-2026 inclui a reversão value pós-COVID (Arnott et al. 2021). O próprio estudo mostra que com janela 20 anos (242 meses), a vantagem do tilt desaparece — AVGS-SWRD correlação sobe para 0.94. Conclusão "fortemente defensável" não sobrevive a troca de janela amostral.
+
+2. **Michaud citado mas não aplicado:** Michaud (1989) é para portfolios com muitos ativos. Com 3 ativos, 9 parâmetros, o "overfitting" é mais questionável. O time usou Michaud como desculpa sem rodar o resampled frontier que o próprio Michaud propõe como solução. Sem bootstrap de Markowitz ou shrinkage Ledoit-Wolf, o argumento é incompleto.
+
+3. **Viés de confirmação:** apenas validou 50/30/20 sem testar alternativas próximas (60/20/20, 40/35/25). A correlação baixa AVGS-AVEM=0.715 sugere que mais AVGS poderia ser superior. Não foi verificado.
+
+4. **Factor drought ausente do MC:** `fire_montecarlo.py` usa retornos esperados fixos. O cenário de AVGS entregando 2.0% real por 10 anos (McLean & Pontiff: distribuição fat tail no lado negativo) nunca foi modelado. Delta: ~R$150k acumulado no FIRE Day se drought de 10 anos.
+
+**Veredicto Advocate:** rebaixa de "fortemente defensável" para **"defensável com incerteza material"**. Não recomenda mudar alocação. Pede: (a) rodar resampled frontier (Michaud 1998) e (b) modelar cenário factor drought no MC como sensibilidade.
+
+---
+
+**Decisão pendente para Diego:**
+- [ ] Confirmar: 50/30/20 mantido como alocação equity?
+- [ ] Rodar fator drought no MC (AVGS 2.0% real por 10 anos) — sensibilidade?
+- [ ] Rodar resampled frontier (Michaud) — adicional ou desnecessário dado backtest já confirma 50/30/20?
