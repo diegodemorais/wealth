@@ -1,49 +1,27 @@
 # Portfolio Snapshot — Posições e Drift
 
-Gera snapshot rápido da carteira com posições atuais, pesos vs alvos, e drift.
-
-## Dados
+Gera snapshot da carteira: posições, pesos vs alvos, drift, patrimônio total.
 
 Leia `agentes/contexto/carteira.md` — seções "Posições Atuais" e "Alvos".
 
+## Câmbio
+
+Câmbio para valuation operacional: **dólar comercial do dia** (ex: Google Finance). PTAX BCB é exclusivo para cálculo de IR — não usar aqui. Se não conseguir câmbio do dia, usar último registrado em carteira.md e alertar.
+
+## Staleness check
+
+Se a data de última atualização em carteira.md for >7 dias atrás, alertar: "Dados desatualizados — última atualização em {data}. Rodar `/checkin-manual` para atualizar."
+
 ## Output
 
-Gere exatamente neste formato:
-
-```
-## Portfolio Snapshot — {data de hoje}
-
-### Posições
-
-| Ativo | Qtd | Preço | Valor USD | Valor BRL | Peso Atual | Alvo | Drift |
-|-------|-----|-------|-----------|-----------|------------|------|-------|
-
-### Resumo
-
-| Métrica | Valor |
-|---------|-------|
-| Patrimônio IBKR (USD) | $ X |
-| Patrimônio IBKR (BRL) | R$ X |
-| Patrimônio RF BR (BRL) | R$ X |
-| **Patrimônio Total (BRL)** | **R$ X** |
-| Câmbio usado | X |
-| Última atualização | YYYY-MM-DD |
-
-### Drift vs Alvos (equity block)
-
-| Ativo | Atual | Alvo | Drift | Ação |
-|-------|-------|------|-------|------|
-| SWRD | X% | 50% | +/-X% | Over/Under — aportar Y |
-| AVGS | X% | 30% | +/-X% | ... |
-| AVEM | X% | 20% | +/-X% | ... |
-
-### Transitory Assets (hold until usufruto)
-| Ativo | Valor | Nota |
-```
+Incluir:
+- **Posições**: cada ativo com qtd, preço, valor USD, valor BRL, peso atual, alvo, drift
+- **Resumo**: patrimônio IBKR (USD e BRL), RF BR, total BRL, câmbio usado, data
+- **Drift vs Alvos** (equity block): SWRD/AVGS/AVEM com drift e ação sugerida (over/under)
+- **Transitory Assets**: ativos legacy com valor e nota "hold until usufruto"
 
 ## Regras
 
-- Câmbio: usar PTAX do dia via WebSearch se possível, senão último registrado em carteira.md
-- Drift: highlight se >5% (ação necessária) vs <5% (ok)
-- Preços: usar últimos registrados em carteira.md (não buscar em tempo real)
-- Se dados estiverem desatualizados (>7 dias), alertar
+- Drift >5%: ação necessária (highlight)
+- Drift <5%: ok
+- Preços: últimos registrados em carteira.md (não buscar em tempo real)

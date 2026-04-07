@@ -1,48 +1,39 @@
-# Câmbio — PTAX e Impacto na Carteira
+# Câmbio — Dólar e Impacto na Carteira
 
 Mostra câmbio BRL/USD atual com contexto histórico e impacto na carteira.
 
 ## Execução
 
-1. Buscar PTAX do dia via BCB API:
+Tentar python-bcb primeiro, fallback para WebSearch:
 
 ```bash
 python3 -c "
 from bcb import currency
 import datetime
-ptax = currency.get('USD', start=datetime.date.today() - datetime.timedelta(days=5), end=datetime.date.today())
-print(ptax.tail())
-"
+end = datetime.date.today()
+start = end - datetime.timedelta(days=365)
+ptax = currency.get('USD', start=start, end=end)
+print('=== PTAX HISTORICO ===')
+print(ptax.tail(10))
+print(f'\nHoje: {ptax.iloc[-1]:.4f}')
+print(f'Media 30d: {ptax.tail(22).mean():.4f}')
+print(f'Media 90d: {ptax.tail(66).mean():.4f}')
+print(f'Media 12m: {ptax.mean():.4f}')
+" 2>&1 || echo "python-bcb falhou — usar WebSearch"
 ```
 
-Se `python-bcb` não estiver instalado, usar WebSearch: "PTAX dólar hoje BCB"
+Se script falhar: WebSearch "cotação dólar comercial hoje" e "PTAX BCB hoje".
 
-2. Buscar histórico para contexto: média 30d, 90d, 365d
-3. Ler `agentes/contexto/carteira.md` para patrimônio em USD
+Leia `agentes/contexto/carteira.md` para patrimônio em USD.
 
 ## Output
 
-```
-## Câmbio BRL/USD — {data}
+Incluir:
+- **Câmbio atual**: dólar comercial (operacional) e PTAX (referência IR)
+- **Histórico**: média 30d, 90d, 12m + variação 30d
+- **Impacto carteira**: patrimônio IBKR convertido em BRL + comparação com média 12m
+- **Contexto**: câmbio caro/barato/neutro vs histórico
 
-### PTAX
-| Métrica | Valor |
-|---------|-------|
-| PTAX compra | R$ X |
-| PTAX venda | R$ X |
-| Média 30 dias | R$ X |
-| Média 90 dias | R$ X |
-| Média 12 meses | R$ X |
-| Variação 30d | +/- X% |
+## Nota
 
-### Impacto na Carteira
-| Métrica | Valor |
-|---------|-------|
-| Patrimônio IBKR (USD) | $ X |
-| Patrimônio IBKR (BRL hoje) | R$ X |
-| Se câmbio fosse média 12m | R$ X (Δ R$ X) |
-
-### Contexto
-- Câmbio atual vs média 12m: {acima/abaixo} da média em X%
-- {Comentário breve: "Dólar caro/barato/neutro vs histórico recente"}
-```
+Câmbio operacional (conversão, aportes) = **dólar comercial**. PTAX BCB = usado apenas para cálculo de IR (Lei 14.754). Ambos são reportados aqui para referência.
