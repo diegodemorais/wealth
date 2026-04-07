@@ -50,24 +50,34 @@ TARGET_EQUITY = {
     "AVEM": 0.20,
 }
 
-# ETFs transitórios (não comprar mais, diluir via aportes)
-TRANSITORIOS = {"AVUV", "AVDV", "AVES", "EIMI", "DGS", "USSC", "IWVL", "JPGL"}
-
-# Mapa símbolo IBKR → nome canônico
-SYMBOL_MAP = {
-    "SWRD":       "SWRD",
-    "AVGS":       "AVGS",
-    "AVEM":       "AVEM",
-    "JPGL":       "JPGL",
-    "IWVL":       "IWVL",
-    "AVUV":       "AVUV",
-    "AVDV":       "AVDV",
-    "AVES":       "AVES",
-    "EIMI":       "EIMI",
-    "DGS":        "DGS",
-    "USSC":       "USSC",
-    "WRDUSWUSD":  "SWRD",
+# Buckets: agrupa transitórios no target equivalente para cálculo de drift.
+# Lógica: não vender transitórios (lucro tributável) — diluir via aportes nos ETFs alvo.
+BUCKET_MAP = {
+    # SWRD bucket
+    "SWRD":      "SWRD",
+    "WRDUSWUSD": "SWRD",
+    "F50A":      "SWRD",
+    # AVGS bucket (Desenvolvido small+value)
+    "AVGS":  "AVGS",
+    "AVUV":  "AVGS",
+    "AVDV":  "AVGS",
+    "USSC":  "AVGS",
+    "ZPRX":  "AVGS",
+    # AVEM bucket (Desenvolvido híbrido/EM)
+    "AVEM":  "AVEM",
+    "EIMI":  "AVEM",
+    "AVES":  "AVEM",
+    "DGS":   "AVEM",
+    "EMVL":  "AVEM",
+    # JPGL bucket (multi-factor, target 0% — legado, diluir)
+    "JPGL":  "JPGL",
+    "IWVL":  "JPGL",
+    "IWQU":  "JPGL",
 }
+
+# Mapa símbolo IBKR → nome canônico (para exibição)
+SYMBOL_MAP = {k: k for k in BUCKET_MAP}
+SYMBOL_MAP["WRDUSWUSD"] = "WRDUSW"
 
 DATA_DIR  = Path(__file__).parent.parent / "data"
 SNAP_PATH = DATA_DIR / "ibkr_snapshot.json"
@@ -163,23 +173,30 @@ def extract_trades(raw: bytes, days: int = 30) -> list[dict]:
 # ── Análise de posições ───────────────────────────────────────────────────────
 
 def analyze_positions(positions: list[dict], cambio: float) -> None:
-    """Imprime snapshot + drift vs target."""
+    """Imprime snapshot + drift vs target.
 
-    # Separar equity UCITS target vs transitórios vs outros
-    equity_target = {s: 0.0 for s in TARGET_EQUITY}
-    equity_trans  = {}
-    outros        = {}
+    Buckets: transitórios são agrupados no ETF target equivalente.
+    AVGS bucket = AVGS + AVUV + AVDV + USSC + ZPRX
+    AVEM bucket = AVEM + EIMI + AVES + DGS + EMVL
+    JPGL bucket = JPGL + IWVL + IWQU (target 0%, legado)
+    """
+
+    # Acumula valor por bucket
+    buckets: dict[str, float] = {}
+    bucket_detail: dict[str, list[dict]] = {}
+    outros: dict[str, float] = {}
 
     for p in positions:
-        s = p["symbol"]
-        if s in TARGET_EQUITY:
-            equity_target[s] += p["value_usd"]
-        elif s in TRANSITORIOS:
-            equity_trans[s] = equity_trans.get(s, 0) + p["value_usd"]
+        sym   = p["symbol"]
+        bkt   = BUCKET_MAP.get(sym)
+        if bkt:
+            buckets[bkt] = buckets.get(bkt, 0) + p["value_usd"]
+            bucket_detail.setdefault(bkt, []).append(p)
         else:
-            outros[s] = outros.get(s, 0) + p["value_usd"]
+            outros[sym] = outros.get(sym, 0) + p["value_usd"]
 
-    total_equity_usd = sum(equity_target.values()) + sum(equity_trans.values())
+    # Total equity = todos os buckets (incl. JPGL que é 0% target)
+    total_equity_usd = sum(buckets.values())
     total_usd        = total_equity_usd + sum(outros.values())
     total_brl        = total_usd * cambio
 
@@ -188,55 +205,47 @@ def analyze_positions(positions: list[dict], cambio: float) -> None:
     print(f"  Total USD: ${total_usd:,.0f}  |  Total BRL: R${total_brl:,.0f}  |  Câmbio: {cambio:.2f}")
     print(SEP)
 
-    # ── ETFs Alvo ──
-    print(f"\n  {'ETF':<8} {'Qtd':>8} {'Preço':>10} {'USD':>12} {'BRL':>12} {'% equity':>10} {'Target':>8} {'Drift':>8}")
-    print("  " + "─" * 80)
-    for s, target_pct in TARGET_EQUITY.items():
-        val = equity_target.get(s, 0)
+    # ── Buckets target ──
+    print(f"\n  {'Bucket':<8} {'USD (bucket)':>14} {'BRL':>13} {'% equity':>10} {'Target':>8} {'Drift':>8}")
+    print("  " + "─" * 68)
+    for bkt, target_pct in {**TARGET_EQUITY, "JPGL": 0.0}.items():
+        val = buckets.get(bkt, 0)
         pct = val / total_equity_usd if total_equity_usd else 0
         drift = pct - target_pct
-        flag = "✅" if abs(drift) <= 0.03 else ("⬆️ " if drift > 0 else "⬇️ ")
-        # busca qty e preço
-        pos_list = [p for p in positions if p["symbol"] == s]
-        qty   = sum(p["qty"] for p in pos_list)
-        price = pos_list[0]["price_usd"] if pos_list else 0
-        print(f"  {flag} {s:<6} {qty:>8.2f} {price:>10.2f} ${val:>10,.0f}  R${val*cambio:>10,.0f} {pct:>9.1%}  {target_pct:>7.1%}  {drift:>+7.1%}")
+        if bkt == "JPGL":
+            flag = "✅" if val == 0 else "⚠️ "
+        else:
+            flag = "✅" if abs(drift) <= 0.03 else ("⬆️ " if drift > 0 else "⬇️ ")
+        print(f"  {flag} {bkt:<6}  ${val:>12,.0f}  R${val*cambio:>11,.0f} {pct:>9.1%}  {target_pct:>7.1%}  {drift:>+7.1%}")
 
-    # ── Transitórios ──
-    if equity_trans:
-        print(f"\n  Transitórios (diluir via aportes):")
-        for s, val in sorted(equity_trans.items(), key=lambda x: -x[1]):
-            pct = val / total_equity_usd if total_equity_usd else 0
-            pos_list = [p for p in positions if p["symbol"] == s]
-            qty   = sum(p["qty"] for p in pos_list)
-            price = pos_list[0]["price_usd"] if pos_list else 0
-            print(f"       {s:<8} {qty:>7.2f} @ ${price:>7.2f}  ${val:>8,.0f}  R${val*cambio:>8,.0f}  ({pct:.1%} equity)")
+        # Detalhe dos ETFs dentro do bucket
+        for p in sorted(bucket_detail.get(bkt, []), key=lambda x: -x["value_usd"]):
+            sym_label = p["symbol_ibkr"] if p["symbol_ibkr"] != p["symbol"] else p["symbol"]
+            is_ucits = p["exchange"] in ("LSEETF", "LSE", "LSEAIM")
+            tag = " [UCITS]" if is_ucits else " [US]"
+            print(f"           {sym_label:<8}{tag:<8}  ${p['value_usd']:>8,.0f}  ({p['value_usd']/total_equity_usd:.1%})  P&L: {p['pnl_pct']:>+.1f}%")
 
-    # ── Outros (HODL11 via B3 não aparece aqui) ──
+    # ── Outros ──
     if outros:
-        print(f"\n  Outros ativos IBKR:")
+        print(f"\n  Outros ativos IBKR (não mapeados):")
         for s, val in sorted(outros.items(), key=lambda x: -x[1]):
-            print(f"       {s:<8}  ${val:>8,.0f}  R${val*cambio:>8,.0f}")
-
-    # ── P&L ──
-    print(f"\n  P&L não realizado (ETFs alvo + transitórios):")
-    for p in sorted(positions, key=lambda x: -abs(x["pnl_usd"])):
-        if p["symbol"] not in {**{k: k for k in TARGET_EQUITY}, **{k: k for k in TRANSITORIOS}}:
-            continue
-        flag = "✅" if p["pnl_usd"] >= 0 else "🔴"
-        print(f"  {flag}  {p['symbol']:<8}  P&L: ${p['pnl_usd']:>+8,.0f}  ({p['pnl_pct']:>+.1f}%)")
+            print(f"       {s:<10}  ${val:>8,.0f}  R${val*cambio:>8,.0f}")
 
     # ── Alertas ──
     print(f"\n  Alertas de drift (tolerância ±3pp):")
     alertas = 0
-    for s, target_pct in TARGET_EQUITY.items():
-        val = equity_target.get(s, 0)
-        pct = val / total_equity_usd if total_equity_usd else 0
+    for bkt, target_pct in TARGET_EQUITY.items():
+        val  = buckets.get(bkt, 0)
+        pct  = val / total_equity_usd if total_equity_usd else 0
         drift = pct - target_pct
         if abs(drift) > 0.03:
             alertas += 1
             dir_str = "OVERWEIGHT" if drift > 0 else "UNDERWEIGHT"
-            print(f"  ⚠️   {s}: {dir_str} {drift:+.1%} (atual {pct:.1%} vs target {target_pct:.1%})")
+            print(f"  ⚠️   {bkt}: {dir_str} {drift:+.1%} (atual {pct:.1%} vs target {target_pct:.1%})")
+    jpgl_val = buckets.get("JPGL", 0)
+    if jpgl_val > 0:
+        alertas += 1
+        print(f"  ⚠️   JPGL bucket: R${jpgl_val*cambio:,.0f} ainda presente (target 0% — diluir via aportes)")
     if not alertas:
         print(f"  ✅  Sem drifts relevantes (todos dentro de ±3pp do target).")
 
