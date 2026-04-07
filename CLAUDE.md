@@ -46,6 +46,15 @@ Use **Agent direto** para debates, opinioes, analises, retros. Use **TeamCreate*
 
 Multiplos agentes em paralelo registram posicao **antes** de ler os outros — nunca no mesmo prompt. Head agrega depois. Objetivo: evitar ancoragem.
 
+### Head Silence Rule (D1 — Tetlock)
+
+Em Full-Path, Head **NUNCA** declara posição antes dos agentes. Fluxo:
+1. Head posta a pergunta e distribui dados (Information Asymmetry)
+2. Agentes formam posições independentes
+3. Head **só então** sintetiza — sem revelar preferência prévia
+
+Violação desta regra foi a causa raiz da sycophancy em FI-equity-redistribuicao.
+
 ### Information Asymmetry (diversidade estrutural)
 
 Em Full-Path, cada agente recebe **subset de dados diferente** antes de formar opinião:
@@ -56,6 +65,14 @@ Em Full-Path, cada agente recebe **subset de dados diferente** antes de formar o
 - Outside View vê base rates e distribuições de referência
 
 Só **depois** de formar posição, veem os argumentos dos outros. Head sintetiza.
+
+### Key Assumptions Check (D2 — CIA/IC SATs)
+
+Em Full-Path, cada agente lista **top 3 premissas** com nível de confiança (Alta/Média/Baixa) **antes** de iniciar análise. Advocate usa essas premissas para Quadrant Crunching (flip sistemático: "e se premissa X estiver errada?").
+
+### Qualitative Veto Window (D7 — D.E. Shaw)
+
+Após todo output quantitativo (MC, otimização, regressão), rotear para pelo menos 1 agente qualitativo: "O modelo não captura [mudança estrutural X]?" antes da síntese final.
 
 ## Protocolos de Diversidade Intelectual
 
@@ -76,6 +93,20 @@ Registrar reasoning pré-outcome de cada decisão de alocação. Na retro semest
 
 ### Reference Class (Outside View obrigatório >5%)
 Antes de decisão >5% do portfolio: Outside View traz base rates. "Nosso MC diz X% — a base rate histórica diz Y%."
+
+## Protocolos de Segurança (NASA + Toyota)
+
+### Go/No-Go Polling (D4)
+Antes de executar mudança >5% do portfolio, Head polls cada agente relevante: **GO** ou **NO-GO**. Um único NO-GO = pausa e investigação. Não é votação — é veto de segurança.
+
+### Andon Cord (D5)
+Qualquer agente pode emitir `STOP: [razão]` sobre qualquer execução pendente. Head **deve** endereçar antes de prosseguir. Não precisa de permissão — segurança > hierarquia.
+
+### Minority Report (D6)
+Quando um agente dissente e perde a votação, registrar na issue: "Se [condição X] ocorrer em 6 meses, re-abrir issue automaticamente." Ops monitora as condições. Dissidentes ganham voz futura.
+
+### "Too Hard" Pile (D3 — Berkshire)
+Issue debatida 3+ vezes sem resolução → tagged "too-hard" e arquivada. Revisitar **apenas** com dado novo. Evita deliberation theater.
 
 ## Separacao Dado vs Interpretacao (todos os veredictos)
 
@@ -107,3 +138,11 @@ Referencia completa: `agentes/referencia/revisoes-periodicas.md`
 ## Retros
 
 Referencia completa: `agentes/referencia/retro-dinamica.md`
+
+## Flight Rules
+
+Respostas pré-comprometidas para cenários antecipados (drawdown, câmbio, vida): `agentes/referencia/flight-rules.md`
+
+## Believability Tracker
+
+Calibração de previsões por agente (Brier Score): `agentes/memoria/believability.md`

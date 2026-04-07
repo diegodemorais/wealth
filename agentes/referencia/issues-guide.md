@@ -147,6 +147,27 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 ---
 
+## "Too Hard" Pile (D3 — Berkshire)
+
+Issue debatida **3+ vezes** sem resolução (sem convergência, sem dado novo, sem progresso):
+→ Tagged "too-hard" e movida para Deprecated com justificativa.
+→ Revisitar **apenas** quando dado novo e substancial surgir.
+→ Não é fracasso — é reconhecimento de que a incerteza é irredutível com informação disponível.
+
+---
+
+## Minority Report (D6 — CERN)
+
+Quando um agente dissente e perde a votação ponderada:
+1. Registrar o dissent na seção "Conclusão" da issue com argumento completo
+2. Registrar **trigger de re-abertura**: "Se [condição X] ocorrer em [prazo], re-abrir automaticamente"
+3. **Ops monitora** as condições de re-abertura mensalmente
+4. Se a condição materializar, issue re-abre como nova issue com referência ao dissent original
+
+Dissidentes devem ter voz futura — não apenas nota de rodapé.
+
+---
+
 ## Issue Aging — Gate de 60 Dias
 
 Issues com 60+ dias no Backlog sem atualização de status são consideradas "aging". Na próxima retro completa, o Head apresenta a lista de aging issues ao Diego para decisão explícita:

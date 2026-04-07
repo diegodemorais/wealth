@@ -31,17 +31,20 @@ Quando solicitado, coordene revisao completa:
 7. **Operacional**: fees IBKR, plataformas, alguma mudanca?
 8. **Behavioral**: gatilhos estao sendo executados? Algum vies comportamental?
 9. **Devil's Advocate** (`advocate`): stress-test das premissas do mes
-10. **Oportunidades** (`oportunidades`): alguma oportunidade relevante no radar?
-11. Sintetizar em relatorio consolidado
+10. **Tactical** (`risco`): alguma oportunidade relevante no radar?
+11. **Ops** (`ops`): execuções pendentes, prazos vencidos, drift >5pp, aportes em dia? Flight rules ativados?
+12. Sintetizar em relatorio consolidado (ou usar `/relatorio-mensal`)
 
 ## Revisao Trimestral
 
 Alem da mensal, trimestralmente:
-0. **AUTOMATICO** — rodar `portfolio_analytics.py`: fronteira eficiente dos 4 ETFs, stress test Quant Crisis 2.0, tearsheet vs VWRA, otimizador de aporte.
+0. **AUTOMATICO** — rodar `portfolio_analytics.py`: fronteira eficiente dos 3 ETFs, stress test, tearsheet vs VWRA, otimizador de aporte.
 1. **Factor** (`factor`): algum ETF candidato (ver `etf-candidatos.md`) atingiu gatilho de avaliação? Algum ETF novo relevante? — contextualizar com tearsheet
 2. **Risco** (`risco`): HODL11 ainda e o melhor veiculo cripto B3? Comparar TER, tracking error
-3. **Patrimonial** (`patrimonial`): Mudanca legislativa relevante? Teto Simples?
+3. **Tax** (`tax`): Mudanca legislativa relevante? Teto Simples? Reforma tributária?
 4. Validar que todos os agentes tem gatilhos e regras atualizados
+5. **Red Team Session (D10)**: Advocate + Outside View tentam sistematicamente destruir o plano FIRE. Calendar-driven, não event-driven. Usar Inversion + Quadrant Crunching. Registrar findings no scorecard.
+6. **Flight Rules review**: verificar se `agentes/referencia/flight-rules.md` precisa de atualização com novos cenários
 
 ## Revisao Anual
 
