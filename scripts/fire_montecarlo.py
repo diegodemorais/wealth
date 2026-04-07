@@ -104,6 +104,93 @@ GUARDRAILS = [
 ]
 GASTO_PISO = 180_000
 
+# ─── WITHDRAWAL STRATEGIES (fonte: FR-withdrawal-engine 2026-04-07) ──────────
+# Cada strategy é uma função que recebe (gasto_smile, pat, pat_pico, ano, ctx)
+# e retorna o gasto efetivo do ano.
+
+STRATEGIES = ["guardrails", "constant", "pct_portfolio", "vpw", "guyton_klinger"]
+
+def withdrawal_guardrails(gasto_smile, pat, pat_pico, ano, ctx):
+    """Nossa estratégia atual: drawdown-based guardrails."""
+    drawdown = max(0, 1 - pat / pat_pico) if pat_pico > 0 else 0
+    return aplicar_guardrail(gasto_smile, drawdown)
+
+def withdrawal_constant(gasto_smile, pat, pat_pico, ano, ctx):
+    """Constant-dollar: gasto fixo real (spending smile puro, sem ajuste por mercado)."""
+    return gasto_smile
+
+def withdrawal_pct_portfolio(gasto_smile, pat, pat_pico, ano, ctx):
+    """Percent-of-portfolio: saca % fixa do patrimônio atual.
+    Taxa = custo_vida_base / patrimônio_no_fire (SWR inicial aplicada ao patrimônio corrente).
+    Piso de R$180k. Teto de R$400k (evita overshooting em bull markets).
+    """
+    taxa = ctx.get("swr_inicial", 0.035)
+    gasto = pat * taxa
+    return max(GASTO_PISO, min(gasto, 400_000))
+
+def withdrawal_vpw(gasto_smile, pat, pat_pico, ano, ctx):
+    """Variable Percentage Withdrawal (Bogleheads).
+    VPW rate sobe com a idade (menos anos restantes = taxa maior).
+    Tabela simplificada para equity-heavy portfolio (80% stocks / 20% bonds).
+    Piso de R$180k.
+    """
+    anos_restantes = ctx.get("anos_total", 37) - ano
+    if anos_restantes <= 0:
+        return pat  # último ano: sacar tudo
+
+    # VPW table (equity-heavy, ~80/20) — baseado em PMT actuarial simplificado
+    # r_real = 3.5% conservador para projeção interna do VPW
+    r = 0.035
+    if anos_restantes >= 1:
+        vpw_rate = r / (1 - (1 + r) ** (-anos_restantes))
+    else:
+        vpw_rate = 1.0
+
+    gasto = pat * vpw_rate
+    return max(GASTO_PISO, min(gasto, 500_000))
+
+def withdrawal_guyton_klinger(gasto_smile, pat, pat_pico, ano, ctx):
+    """Guyton-Klinger Decision Rules (2006).
+    Regras:
+    1. Withdrawal Rule: sem ajuste inflacionário em anos de retorno negativo
+    2. Capital Preservation: se withdrawal rate > 120% do inicial, corta 10%
+    3. Prosperity Rule: se withdrawal rate < 80% do inicial, sobe 10%
+    Piso R$180k.
+    """
+    gasto_prev = ctx.get("gasto_prev_gk", gasto_smile)
+    swr_inicial = ctx.get("swr_inicial_gk", ctx.get("swr_inicial", 0.035))
+    retorno_ano = ctx.get("retorno_ano", 0.0)
+
+    # Withdrawal Rule: sem inflation adjustment se retorno < 0
+    if retorno_ano >= 0:
+        gasto = gasto_prev * 1.0  # inflation-adjusted (já em termos reais)
+    else:
+        gasto = gasto_prev * 0.97  # corte real de 3% em anos negativos
+
+    # Current withdrawal rate
+    wr_current = gasto / pat if pat > 0 else 1.0
+
+    # Capital Preservation Rule (anos < 85 idade = primeiros 32 anos)
+    if ano < 32 and wr_current > swr_inicial * 1.20:
+        gasto *= 0.90
+
+    # Prosperity Rule (ano < 85 idade)
+    if ano < 32 and wr_current < swr_inicial * 0.80:
+        gasto *= 1.10
+
+    gasto = max(GASTO_PISO, gasto)
+    ctx["gasto_prev_gk"] = gasto
+    ctx["swr_inicial_gk"] = swr_inicial
+    return gasto
+
+STRATEGY_FNS = {
+    "guardrails": withdrawal_guardrails,
+    "constant": withdrawal_constant,
+    "pct_portfolio": withdrawal_pct_portfolio,
+    "vpw": withdrawal_vpw,
+    "guyton_klinger": withdrawal_guyton_klinger,
+}
+
 
 # ─── CÁLCULOS ─────────────────────────────────────────────────────────────────
 
@@ -174,45 +261,48 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
                         aplicar_ir: bool = False, anos_bond_pool: int = 7,
                         ipca_anual: float = 0.04, aliquota_ir: float = 0.15,
                         inss_anual: float = 0.0, inss_inicio_ano: int = 12,
-                        vol_bond_pool: float = None) -> tuple:
+                        vol_bond_pool: float = None,
+                        strategy: str = "guardrails") -> tuple:
     """
     Simula uma trajetória de desacumulação.
     Retorna (sobreviveu: bool, patrimônio_final: float, patrimônio_pico: float)
 
-    escala_custo_vida: fator de escala do custo de vida (1.0 = base R$250k).
-    aplicar_ir: se True, aplica IR 15% sobre ganho nominal nos anos em que equity é sacado.
-    anos_bond_pool: primeiros N anos pós-FIRE os saques vêm do bond pool (sem IR equity).
-    ipca_anual: IPCA estimado para conversão nominal/real.
-    aliquota_ir: alíquota IR sobre ganho nominal (15% flat).
-    inss_anual: R$ reais/ano de benefício INSS (subtrai do gasto a partir de inss_inicio_ano).
-    inss_inicio_ano: ano pós-FIRE em que INSS começa (default 12 = age 65 com FIRE 53).
-    vol_bond_pool: vol reduzida para anos 0–(anos_bond_pool-1). Se None, usa vol cheia.
+    strategy: "guardrails" (default), "constant", "pct_portfolio", "vpw", "guyton_klinger"
     """
     pat = patrimonio_inicial
     pat_pico = patrimonio_inicial
+    strategy_fn = STRATEGY_FNS[strategy]
+
+    # Contexto compartilhado para strategies que precisam de estado entre anos
+    ctx = {
+        "swr_inicial": PREMISSAS["custo_vida_base"] / patrimonio_inicial if patrimonio_inicial > 0 else 0.035,
+        "anos_total": n_anos,
+        "retorno_ano": 0.0,
+    }
 
     for ano in range(n_anos):
-        # Volatilidade: reduzida no período do bond pool (portfólio ~79% equity + 18% bonds)
+        # Volatilidade: reduzida no período do bond pool
         vol_ano = vol_bond_pool if (vol_bond_pool is not None and ano < anos_bond_pool) else volatilidade
 
         # Retorno anual com fat tails
-        z = rng.standard_t(df) / np.sqrt(df / (df - 2))  # normalizar variância
+        z = rng.standard_t(df) / np.sqrt(df / (df - 2))
         retorno_anual = retorno_equity + vol_ano * z
 
-        # IR na desacumulação: aplica apenas quando equity é sacado (ano >= anos_bond_pool)
+        # IR na desacumulação: aplica apenas quando equity é sacado
         if aplicar_ir and ano >= anos_bond_pool:
             retorno_anual = retorno_equity_net_ir(retorno_anual, ipca_anual, aliquota_ir)
+
+        ctx["retorno_ano"] = retorno_anual
 
         # Crescimento
         pat = pat * (1 + retorno_anual)
         pat_pico = max(pat_pico, pat)
 
-        # Gasto do ano (spending smile + guardrail)
-        gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)  # em R$ reais 2026
-        drawdown = max(0, 1 - pat / pat_pico)
-        gasto = aplicar_guardrail(gasto_base, drawdown)
+        # Gasto do ano: spending smile base + strategy-specific adjustment
+        gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
+        gasto = strategy_fn(gasto_base, pat, pat_pico, ano, ctx)
 
-        # INSS: reduz saque líquido a partir do ano 12 (age 65)
+        # INSS: reduz saque líquido
         if inss_anual > 0 and ano >= inss_inicio_ano:
             gasto = max(0, gasto - inss_anual)
 
@@ -225,7 +315,8 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
 
 
 def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
-                       cenario: str = "base", seed: int = 42) -> dict:
+                       cenario: str = "base", seed: int = 42,
+                       strategy: str = "guardrails") -> dict:
     """
     Roda n_sim trajetórias e retorna estatísticas.
 
@@ -281,7 +372,8 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
             aplicar_ir=aplicar_ir, anos_bond_pool=anos_bond_pool,
             ipca_anual=ipca_anual, aliquota_ir=aliquota_ir,
             inss_anual=inss_anual, inss_inicio_ano=inss_inicio_ano,
-            vol_bond_pool=vol_bond_pool
+            vol_bond_pool=vol_bond_pool,
+            strategy=strategy
         )
         if sobreviveu:
             sucessos += 1
@@ -430,6 +522,10 @@ def main():
     parser.add_argument("--n-sim",      type=int,   default=10_000, help="Número de simulações (default: 10k)")
     parser.add_argument("--tornado",    action="store_true", help="Gerar tornado chart de sensibilidade (5k sims)")
     parser.add_argument("--sem-ir",    action="store_true", help="Desabilitar IR na desacumulação (backward compat)")
+    parser.add_argument("--strategy",  type=str, default="guardrails", choices=STRATEGIES,
+                        help=f"Withdrawal strategy (default: guardrails). Opções: {STRATEGIES}")
+    parser.add_argument("--compare-strategies", action="store_true",
+                        help="Comparar TODAS as withdrawal strategies lado a lado")
     args = parser.parse_args()
 
     premissas = dict(PREMISSAS)
@@ -440,19 +536,32 @@ def main():
     if args.anos:
         premissas["idade_fire_alvo"] = premissas["idade_atual"] + args.anos
 
-    print(f"\n🎲 Rodando {args.n_sim:,} simulações...")
+    if args.compare_strategies:
+        print(f"\n  Comparando {len(STRATEGIES)} withdrawal strategies ({args.n_sim:,} sims cada)...\n")
+        print(f"  {'Strategy':<20} {'P(FIRE)':>8} {'Pat.Med.Final':>14} {'Pat.P10.Final':>14}")
+        print("  " + "-" * 60)
+        for strat in STRATEGIES:
+            r = rodar_monte_carlo(premissas, n_sim=args.n_sim, cenario="base", strategy=strat)
+            pat_med = f"R$ {r['pat_p90_final']/1e6:.1f}M" if r['pat_p90_final'] > 0 else "—"
+            pat_p10 = f"R$ {r['pat_p10_final']/1e6:.1f}M" if r['pat_p10_final'] > 0 else "—"
+            status = "+" if r["p_sucesso"] >= 0.90 else ("~" if r["p_sucesso"] >= 0.80 else "-")
+            print(f"  {status} {strat:<18} {r['p_sucesso']:>7.1%}  {pat_med:>14}  {pat_p10:>14}")
+        print()
+        return
+
+    print(f"\n  Rodando {args.n_sim:,} simulacoes (strategy: {args.strategy})...")
 
     resultados = []
     for cenario in ["base", "favoravel", "stress"]:
-        print(f"   Cenário {cenario}...", end=" ", flush=True)
-        r = rodar_monte_carlo(premissas, n_sim=args.n_sim, cenario=cenario)
+        print(f"   Cenario {cenario}...", end=" ", flush=True)
+        r = rodar_monte_carlo(premissas, n_sim=args.n_sim, cenario=cenario, strategy=args.strategy)
         resultados.append(r)
         print(f"P(FIRE) = {r['p_sucesso']:.1%}")
 
     imprimir_resultados(resultados, premissas)
 
     if args.tornado:
-        print("🌪️  Calculando tornado chart (5k sims por variável)...")
+        print("  Calculando tornado chart (5k sims por variavel)...")
         tornado = rodar_tornado(premissas, n_sim=5_000)
         imprimir_tornado(tornado, resultados[0]["p_sucesso"])
 
