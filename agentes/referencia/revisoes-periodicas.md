@@ -3,7 +3,7 @@
 ## Scripts Automatizados
 
 > Venv: `~/claude/finance-tools/.venv/bin/python3`
-> Localizacao: `~/claude/code/investimentos/scripts/`
+> Localizacao: `~/claude/code/wealth/scripts/`
 
 | Script | Quando usar | Comando |
 |--------|------------|---------|

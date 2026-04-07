@@ -146,3 +146,36 @@ Respostas pré-comprometidas para cenários antecipados (drawdown, câmbio, vida
 ## Believability Tracker
 
 Calibração de previsões por agente (Brier Score): `agentes/memoria/believability.md`
+
+## Scripts Python
+
+Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este venv)
+
+| Script | Propósito | Uso típico |
+|--------|-----------|------------|
+| `scripts/checkin_mensal.py` | Shadow A/B/C/Target, preços, scorecard | `python3 scripts/checkin_mensal.py` |
+| `scripts/portfolio_analytics.py` | Fronteira eficiente, stress test CDaR, otimizador aporte | `python3 scripts/portfolio_analytics.py --aporte 25000` |
+| `scripts/fire_montecarlo.py` | Monte Carlo P(FIRE), 10k trajetórias, bond tent, guardrails | `python3 scripts/fire_montecarlo.py --tornado` |
+| `scripts/fire_glide_path_scenarios.py` | Compara 3 cenários de equity allocation pré-FIRE | `python3 scripts/fire_glide_path_scenarios.py` |
+| `scripts/backtest_fatorial.py` | Backtest histórico do tilt fatorial UCITS | `python3 scripts/backtest_fatorial.py` |
+| `scripts/factor_regression.py` | Regressão Fama-French 5-factor + momentum por ETF | `python3 scripts/factor_regression.py` |
+| `scripts/spending_analysis.py` | Analisa CSV de gastos (All-Accounts export) | `python3 scripts/spending_analysis.py [csv]` |
+| `analysis/ibkr_analysis.py` | Processa extrato IBKR, gera 5 JSONs (lotes, dividendos, etc) | `python3 analysis/ibkr_analysis.py` |
+
+## Estrutura do Projeto
+
+```
+wealth/
+├── agentes/
+│   ├── contexto/      # carteira.md (fonte de verdade), IPS, gatilhos, operacoes
+│   ├── perfis/        # perfis dos agentes (00-head.md, 01-cio.md, 02-factor.md, ...)
+│   ├── memoria/       # memorias persistentes de cada agente
+│   ├── issues/        # board de issues (README.md + arquivos HD-*.md)
+│   ├── referencia/    # guias de processo (issues-guide, revisoes-periodicas, retro-dinamica)
+│   ├── retros/        # retros historicas
+│   └── metricas/      # shadowportfolio, scorecard, performance
+├── scripts/           # Python: analytics, FIRE, factor, spending
+├── analysis/          # arquivos de analise ad-hoc, CSVs, PDFs, outputs
+├── dados/             # historico_carteira.csv, holdings.md, tlh_lotes.json
+└── data/              # dados brutos (IBKR transactions, extrato INSS)
+```

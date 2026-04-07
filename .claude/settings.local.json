@@ -17,6 +17,11 @@
       "mcp__discourse__discourse_list_users",
       "mcp__discourse__discourse_run_query",
       "mcp__openspace__search_skills"
+    ],
+    "deny": [
+      "mcp__openspace__execute_task",
+      "mcp__openspace__fix_skill",
+      "mcp__openspace__upload_skill"
     ]
   },
   "model": "sonnet",

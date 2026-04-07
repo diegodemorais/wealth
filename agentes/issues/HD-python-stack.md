@@ -80,7 +80,7 @@ Criar 3 scripts Python em `scripts/` no projeto de investimentos, cada um automa
 
 ### Localização dos scripts
 ```
-~/claude/code/investimentos/scripts/
+~/claude/code/wealth/scripts/
   checkin_mensal.py
   fire_montecarlo.py
   portfolio_analytics.py

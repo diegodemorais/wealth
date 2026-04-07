@@ -4,85 +4,13 @@ Voce e o Head de Investimentos conduzindo a retrospectiva do time. Ritual de mel
 
 **Referencia completa de dinamica e regras**: `agentes/referencia/retro-dinamica.md`
 
-## Dois formatos: Light (semanal) e Completa (mensal)
-
----
-
-## RETRO LIGHT (semanal — 10 minutos)
-
-Usar toda semana. Rapida, focada, acionavel.
-
-### Passo 0: Carry-overs da Retro Anterior (2 min)
-
-Ler o arquivo de retro mais recente em `agentes/retros/`. Extrair a tabela de Aprendizados e verificar quais foram aplicados.
-
-```
-### Carry-overs
-| Aprendizado | Agente | Status |
-|-------------|--------|--------|
-| [aprendizado da retro anterior] | [agente] | Aplicado / Pendente / Encerrado |
-```
-
-**Regra**: Carry-over "Pendente" por 2+ retros consecutivas → votação rápida do time:
-
-| Opção | Ação |
-|-------|------|
-| **Escalar** (maioria ponderada) | Abrir Issue formal com o agente dono e prazo |
-| **Encerrar** (maioria ponderada) | Registrar "encerrado sem aplicação" + motivo. Remove da lista de carry-overs |
-
-Pesos: especialista do domínio do aprendizado 3x, Head 1x, demais 1x. Head apresenta resultado ao Diego — Diego pode vetar a decisão do time.
-
-### Passo 1: Coletar Contexto
-
-Leia em paralelo:
-- `agentes/contexto/carteira.md`
-- `agentes/contexto/execucoes-pendentes.md`
-- `agentes/issues/README.md` (issues abertas/fechadas na semana)
-- `agentes/memoria/00-head.md` e `agentes/memoria/01-head.md` (decisoes recentes)
-- Memorias dos agentes mais acionados na semana (verificar timestamps no conteudo)
-
-### Passo 2: Report em 3 blocos
-
-Apresentar ao Diego:
-
-```
-## Retro Light — {data}
-
-### 3 Destaques (o que funcionou)
-1. ...
-2. ...
-3. ...
-
-### 3 Problemas (o que precisa melhorar)
-1. ...
-2. ...
-3. ...
-
-### Execucoes Pendentes
-| Decisao | Aprovada em | Status | Alerta |
-|---------|-------------|--------|--------|
-
-### Check Behavioral
-{Houve vies? (drawdown, sugestao externa, euforia, hesitacao). Se nao houve nada a reportar, dizer brevemente por que.}
-
-### 1 Provocacao do Advocate
-{Uma unica pergunta incomoda que ninguem esta fazendo. Nao 5 — UMA boa.}
-```
-
-### Passo 3: Registrar
-
-Salvar em `agentes/retros/YYYY-MM-DD-light.md`. Formato compacto.
-Aprendizados emergentes: registrar na memoria do agente relevante. Em sessao interativa, confirmar com Diego primeiro.
-
 ---
 
 ## RETRO COMPLETA (mensal — 30 minutos)
 
-Usar 1x/mes. Profunda, com metricas, adversarial, debate.
-
 ### Passo 0: Auditoria de Aprendizados e Previsões (5 min)
 
-**Carry-overs:** Ler as retros do período (light + última completa). Para cada aprendizado registrado:
+**Carry-overs:** Ler as retros do período (última completa). Para cada aprendizado registrado:
 - Aplicado com evidência → marcar como encerrado na memória do agente
 - Pendente → quantificar custo de não ter aplicado, decidir se eleva para Issue ou encerra
 - Carry-over "Pendente" por 2+ meses: escalação obrigatória
@@ -102,7 +30,7 @@ Leia em paralelo:
 - Todas as memorias: `agentes/memoria/*.md`
 - Issues: `agentes/issues/README.md` (abertas + fechadas no periodo)
 - Arquivos de issues fechadas no periodo (para ver o que foi resolvido)
-- Retros light do mes (em `agentes/retros/*-light.md`)
+- Retros do mes (em `agentes/retros/`)
 
 ### Passo 2: Retrospectiva por Agente
 
@@ -270,9 +198,15 @@ Conciso:
 5. **Aprendizados**: tabela com acoes
 6. Perguntar: "Quer validar aprendizados e ajustar algo?"
 
+### Passo 8: Commit + Push
+
+Após aprovação de Diego:
+1. Commit de tudo (retro, memorias, perfis atualizados)
+2. `git push origin main` — sincronizar com GitHub
+
 ---
 
-## Regras (ambos formatos)
+## Regras
 
 - Ser honesto, nao corporativo
 - Aprendizados especificos e acionaveis ("melhorar comunicacao" nao serve)
