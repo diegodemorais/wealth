@@ -32,14 +32,12 @@ TICKERS_ALVO = {
     "SWRD": "SWRD.L",
     "AVGS": "AVGS.L",
     "AVEM": "AVEM.L",
-    "JPGL": "JPGL.L",
 }
 
 PESOS_ALVO = {
-    "SWRD.L": 0.35,
-    "AVGS.L": 0.25,
+    "SWRD.L": 0.50,
+    "AVGS.L": 0.30,
     "AVEM.L": 0.20,
-    "JPGL.L": 0.20,
 }
 
 BENCHMARK = "VWRA.L"
@@ -449,9 +447,17 @@ def tearsheet_vs_benchmark(precos: pd.DataFrame, salvar_html: bool = False):
     }
     # Métricas como ratio (não percentual)
     metricas_ratio = {
-        "Sharpe":  (qs.stats.sharpe(r_target),  qs.stats.sharpe(r_benchmark)),
-        "Sortino": (qs.stats.sortino(r_target),  qs.stats.sortino(r_benchmark)),
-        "Calmar":  (qs.stats.calmar(r_target),   qs.stats.calmar(r_benchmark)),
+        "Sharpe":     (qs.stats.sharpe(r_target),       qs.stats.sharpe(r_benchmark)),
+        "Sortino":    (qs.stats.sortino(r_target),       qs.stats.sortino(r_benchmark)),
+        "Calmar":     (qs.stats.calmar(r_target),        qs.stats.calmar(r_benchmark)),
+        "Tail Ratio": (qs.stats.tail_ratio(r_target),   qs.stats.tail_ratio(r_benchmark)),
+        "Skewness":   (qs.stats.skew(r_target),         qs.stats.skew(r_benchmark)),
+        "Kurtosis":   (qs.stats.kurtosis(r_target),     qs.stats.kurtosis(r_benchmark)),
+    }
+    # CVaR (95%) — "perda esperada no pior 5%"
+    metricas_cvar = {
+        "CVaR 95%": (qs.stats.cvar(r_target),  qs.stats.cvar(r_benchmark)),
+        "VaR 95%":  (qs.stats.var(r_target),   qs.stats.var(r_benchmark)),
     }
 
     n_dias = len(r_target)
@@ -463,20 +469,29 @@ def tearsheet_vs_benchmark(precos: pd.DataFrame, salvar_html: bool = False):
     print("  " + "-"*50)
     for nome, (v_target, v_bench) in metricas_pct.items():
         delta = v_target - v_bench
-        # Max DD: menos negativo é melhor
         flag = "✅" if (delta > 0 if nome != "Max Drawdown" else delta > 0) else "⚠️ "
+        print(f"  {flag} {nome:<14} {v_target:>9.2%}  {v_bench:>9.2%}  {delta:>+9.2%}")
+    for nome, (v_target, v_bench) in metricas_cvar.items():
+        delta = v_target - v_bench
+        flag = "✅" if delta > 0 else "⚠️ "  # CVaR/VaR: menos negativo (mais próximo de 0) é melhor
         print(f"  {flag} {nome:<14} {v_target:>9.2%}  {v_bench:>9.2%}  {delta:>+9.2%}")
     for nome, (v_target, v_bench) in metricas_ratio.items():
         delta = v_target - v_bench
-        flag = "✅" if delta > 0 else "⚠️ "
-        print(f"  {flag} {nome:<14} {v_target:>9.2f}  {v_bench:>9.2f}  {delta:>+9.2f}")
+        # Skew/Kurt: sem flag clara de bom/ruim (depende do sinal)
+        if nome in ("Skewness", "Kurtosis"):
+            print(f"       {nome:<14} {v_target:>9.2f}  {v_bench:>9.2f}  {delta:>+9.2f}")
+        else:
+            flag = "✅" if delta > 0 else "⚠️ "
+            print(f"  {flag} {nome:<14} {v_target:>9.2f}  {v_bench:>9.2f}  {delta:>+9.2f}")
 
     if salvar_html:
-        html_path = "/tmp/tearsheet_target_vs_vwra.html"
+        import subprocess, os
+        html_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                 "analysis", "tearsheet_latest.html")
         qs.reports.html(r_target, benchmark=r_benchmark, output=html_path,
                         title="Target vs VWRA")
-        print(f"\n  📄 Tearsheet completo salvo em: {html_path}")
-        print(f"     Abrir no browser: open {html_path}")
+        print(f"\n  📄 Tearsheet salvo em: analysis/tearsheet_latest.html")
+        subprocess.Popen(["open", html_path])
 
 
 # ─── CONFIGURAÇÃO RENDA FIXA / EQUITY ─────────────────────────────────────────
