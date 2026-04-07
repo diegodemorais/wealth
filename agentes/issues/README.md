@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 2 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 🔴 Alta |
-| 3 | HD-ibkr-import | Tracking automático de posições via IBKR Flex Query | Bookkeeper | 🔴 Alta |
+| 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
 | 4 | HD-benchmark-comparison | Benchmark comparison visual com shadow portfolios | Advocate | 🔴 Alta |
 | 5 | HD-cmd-portfolio-snapshot | Command /portfolio-snapshot | Bookkeeper | 🔴 Alta |
 | 6 | HD-cmd-rebalance-calc | Command /rebalance-calc | Head | 🔴 Alta |
@@ -61,6 +61,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-ibkr-import | Tracking automático via IBKR Flex Query | Bookkeeper | 2026-04-07 | ibkr_sync.py ao vivo. ndcdyn endpoint. Parser XML direto. Snapshot $603k/R$3.14M. Desbloqueia FX-multicurrency, reconciliar, TLH. |
 | HD-quantstats | Portfolio analytics visual com QuantStats | Head | 2026-04-07 | QuantStats integrado. Pesos 50/30/20. CVaR/Tail Ratio adicionados. HTML auto-abre em analysis/tearsheet_latest.html. |
 | FR-spending-modelo-familia | Sensibilidade spending × P(FIRE): 3 cenários R$250k/270k/300k | FIRE | 2026-04-06 | Margem robusta. Pior caso R$300k+stress = 82.1% > critério 75%. Tabela em carteira.md. |
 | FR-multimodel-desacumulacao | Validação externa: desacumulação, IR, sequência saques | FIRE | 2026-04-06 | IR 15% flat correto. Bond→equity mantido. Isenção R$35k/mês não se aplica a ETFs UCITS. Script sem ajuste. |

@@ -4,4 +4,5 @@ scripts/__pycache__/
 analysis/*.csv
 analysis/*.json
 analysis/tearsheet_latest.html
+data/ibkr_snapshot.json
 .env

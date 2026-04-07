@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-ibkr-import |
 | **Dono** | Bookkeeper |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | Bookkeeper (lead), Head, Tax, Quant |
 | **Co-sponsor** | Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Scan de repositórios open-source — gap vs Ghostfolio/ibflex. Pesquisa: IBKR tem ibflex (Python, 103 stars). Nubank/XP sem tool viável (só CSV manual via B3). |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-07 |
 
 ---
 
@@ -54,3 +54,24 @@ Automatizar import de posições, trades, dividendos e cash do IBKR usando Flex 
 - **XP**: Sem tool open-source. Developer Portal é B2B.
 - **B3 Investor Area**: CSV manual consolida todos os brokers BR. Sem API.
 - **Ghostfolio**: Usa `ibflex` para sync IBKR. Referência de implementação.
+
+## Conclusao
+
+`scripts/ibkr_sync.py` criado e funcionando ao vivo com dados reais da conta U5947683.
+
+**Implementação:**
+- `ibflex` instalado. Parser XML direto via ElementTree (ibflex não suporta campo `subCategory` do IBKR)
+- Endpoint: `ndcdyn.interactivebrokers.com` (gdcdyn bloqueado no DNS local; ndcdyn resolve)
+- Token + Query ID em `.env` (IBKR_TOKEN, IBKR_QUERY_POSITIONS=1461568)
+- `--file` como fallback para XML baixado manualmente
+
+**Snapshot 2026-04-07:** Total $603k USD / R$3.14M. SWRD -9.2pp, AVGS -29pp (transitórios AVUV+AVDV dominam), AVEM 0% IBKR. P&L todos positivos.
+
+**Uso:**
+```
+python3 scripts/ibkr_sync.py --cambio 5.20          # posições + drift
+python3 scripts/ibkr_sync.py --trades --cambio 5.20 # + trades 30d
+python3 scripts/ibkr_sync.py --save                 # salva data/ibkr_snapshot.json
+```
+
+**Desbloqueia:** FX-multicurrency, HD-cmd-reconciliar, TX-tlh-automation
