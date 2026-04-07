@@ -100,7 +100,7 @@ def build_lots(trades):
     for t in sorted(trades, key=lambda x: x["date"]):
         sym = t["symbol"]
         if t["qty"] > 0:  # Buy
-            cost = abs(t["net"]) / t["qty"]  # custo por share incluindo comissão
+            cost = t["price"]  # preço por share (sem comissão — gross/qty = price)
             open_lots[sym].append({"date": t["date"], "qty": t["qty"],
                                    "cost_per_share": cost, "currency": t["price_ccy"]})
         elif t["qty"] < 0:  # Sell
