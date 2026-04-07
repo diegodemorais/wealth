@@ -12,6 +12,7 @@ Venv: ~/claude/finance-tools/.venv/bin/python3
 """
 
 import argparse
+from dataclasses import dataclass, field
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
@@ -110,79 +111,95 @@ GASTO_PISO = 180_000
 
 STRATEGIES = ["guardrails", "constant", "pct_portfolio", "vpw", "guyton_klinger"]
 
+# Strategy constants — withdrawal caps/floors and Guyton-Klinger thresholds
+GASTO_TETO_PCT      = 400_000  # R$/ano — teto percent-of-portfolio (evita overshooting em bull markets)
+GASTO_TETO_VPW      = 500_000  # R$/ano — teto VPW
+VPW_REAL_RATE        = 0.035   # 3.5% real conservador para projeção interna VPW
+GK_PRESERVATION_MULT = 1.20    # Capital Preservation: corta se WR > 120% do inicial
+GK_PROSPERITY_MULT   = 0.80    # Prosperity Rule: sobe se WR < 80% do inicial
+GK_CUT_FACTOR        = 0.90    # fator de corte Capital Preservation
+GK_RAISE_FACTOR      = 1.10    # fator de aumento Prosperity Rule
+GK_MAX_AGE           = 85      # idade-limite para regras de ajuste (paper Guyton-Klinger 2006)
+SWR_FALLBACK         = 0.035   # SWR default quando patrimônio_inicial desconhecido
+
+
+@dataclass
+class WithdrawalCtx:
+    """State shared across years within a single withdrawal simulation."""
+    swr_inicial: float = SWR_FALLBACK
+    anos_total: int = 37
+    retorno_ano: float = 0.0
+    ipca_anual: float = 0.04
+    # Guyton-Klinger mutable state
+    gasto_prev_gk: float = 0.0
+    swr_inicial_gk: float = 0.0
+    _gk_initialized: bool = False
+
+    def init_gk(self, gasto_smile: float):
+        """Lazy-init GK state on first withdrawal year."""
+        if not self._gk_initialized:
+            self.gasto_prev_gk = gasto_smile
+            self.swr_inicial_gk = self.swr_inicial
+            self._gk_initialized = True
+
+
+def _clamp(gasto: float, teto: float = None) -> float:
+    """Aplica piso (GASTO_PISO) e teto opcional ao gasto."""
+    if teto is not None:
+        return max(GASTO_PISO, min(gasto, teto))
+    return max(GASTO_PISO, gasto)
+
+
 def withdrawal_guardrails(gasto_smile, pat, pat_pico, ano, ctx):
-    """Nossa estratégia atual: drawdown-based guardrails."""
+    """Drawdown-based guardrails (nossa estrategia atual)."""
     drawdown = max(0, 1 - pat / pat_pico) if pat_pico > 0 else 0
     return aplicar_guardrail(gasto_smile, drawdown)
 
 def withdrawal_constant(gasto_smile, pat, pat_pico, ano, ctx):
-    """Constant-dollar: gasto fixo real (spending smile puro, sem ajuste por mercado)."""
+    """Constant-dollar: spending smile puro, sem ajuste por mercado."""
     return gasto_smile
 
 def withdrawal_pct_portfolio(gasto_smile, pat, pat_pico, ano, ctx):
-    """Percent-of-portfolio: saca % fixa do patrimônio atual.
-    Taxa = custo_vida_base / patrimônio_no_fire (SWR inicial aplicada ao patrimônio corrente).
-    Piso de R$180k. Teto de R$400k (evita overshooting em bull markets).
-    """
-    taxa = ctx.get("swr_inicial", 0.035)
-    gasto = pat * taxa
-    return max(GASTO_PISO, min(gasto, 400_000))
+    """Percent-of-portfolio: SWR inicial aplicada ao patrimonio corrente."""
+    gasto = pat * ctx.swr_inicial
+    return _clamp(gasto, GASTO_TETO_PCT)
 
 def withdrawal_vpw(gasto_smile, pat, pat_pico, ano, ctx):
     """Variable Percentage Withdrawal (Bogleheads).
-    VPW rate sobe com a idade (menos anos restantes = taxa maior).
-    Tabela simplificada para equity-heavy portfolio (80% stocks / 20% bonds).
-    Piso de R$180k.
+    PMT actuarial simplificado com r_real = VPW_REAL_RATE.
     """
-    anos_restantes = ctx.get("anos_total", 37) - ano
+    anos_restantes = ctx.anos_total - ano
     if anos_restantes <= 0:
-        return pat  # último ano: sacar tudo
+        return pat
 
-    # VPW table (equity-heavy, ~80/20) — baseado em PMT actuarial simplificado
-    # r_real = 3.5% conservador para projeção interna do VPW
-    r = 0.035
-    if anos_restantes >= 1:
-        vpw_rate = r / (1 - (1 + r) ** (-anos_restantes))
-    else:
-        vpw_rate = 1.0
-
+    vpw_rate = VPW_REAL_RATE / (1 - (1 + VPW_REAL_RATE) ** (-anos_restantes))
     gasto = pat * vpw_rate
-    return max(GASTO_PISO, min(gasto, 500_000))
+    return _clamp(gasto, GASTO_TETO_VPW)
 
 def withdrawal_guyton_klinger(gasto_smile, pat, pat_pico, ano, ctx):
     """Guyton-Klinger Decision Rules (2006).
-    Regras:
-    1. Withdrawal Rule: sem ajuste inflacionário em anos de retorno negativo
-    2. Capital Preservation: se withdrawal rate > 120% do inicial, corta 10%
-    3. Prosperity Rule: se withdrawal rate < 80% do inicial, sobe 10%
-    Piso R$180k.
+    1. Withdrawal Rule: forgo inflation adjustment em anos de retorno negativo
+    2. Capital Preservation: corta se WR > 120% do inicial
+    3. Prosperity Rule: sobe se WR < 80% do inicial
     """
-    gasto_prev = ctx.get("gasto_prev_gk", gasto_smile)
-    swr_inicial = ctx.get("swr_inicial_gk", ctx.get("swr_inicial", 0.035))
-    retorno_ano = ctx.get("retorno_ano", 0.0)
+    ctx.init_gk(gasto_smile)
+    anos_gk_limit = GK_MAX_AGE - PREMISSAS["idade_fire_alvo"]
 
-    # Withdrawal Rule: sem inflation adjustment se retorno < 0
-    # Em termos reais: ano positivo = gasto mantido; ano negativo = gasto flat nominal
-    # = corte real pela inflação (IPCA ~4%). Paper original: "forgo the inflation adjustment"
-    if retorno_ano >= 0:
-        gasto = gasto_prev  # mantém poder de compra (inflation-adjusted)
+    if ctx.retorno_ano >= 0:
+        gasto = ctx.gasto_prev_gk
     else:
-        gasto = gasto_prev / (1 + 0.04)  # flat nominal = corte real de ~IPCA
+        gasto = ctx.gasto_prev_gk / (1 + ctx.ipca_anual)
 
-    # Current withdrawal rate
     wr_current = gasto / pat if pat > 0 else 1.0
 
-    # Capital Preservation Rule (anos < 85 idade = primeiros 32 anos)
-    if ano < 32 and wr_current > swr_inicial * 1.20:
-        gasto *= 0.90
+    if ano < anos_gk_limit:
+        if wr_current > ctx.swr_inicial_gk * GK_PRESERVATION_MULT:
+            gasto *= GK_CUT_FACTOR
+        elif wr_current < ctx.swr_inicial_gk * GK_PROSPERITY_MULT:
+            gasto *= GK_RAISE_FACTOR
 
-    # Prosperity Rule (ano < 85 idade)
-    if ano < 32 and wr_current < swr_inicial * 0.80:
-        gasto *= 1.10
-
-    gasto = max(GASTO_PISO, gasto)
-    ctx["gasto_prev_gk"] = gasto
-    ctx["swr_inicial_gk"] = swr_inicial
+    gasto = _clamp(gasto)
+    ctx.gasto_prev_gk = gasto
     return gasto
 
 STRATEGY_FNS = {
@@ -235,8 +252,7 @@ def aplicar_guardrail(gasto_base: float, drawdown: float) -> float:
     """Aplica guardrail de retirada com base no drawdown atual."""
     for dd_min, dd_max, corte, _ in GUARDRAILS:
         if dd_min <= drawdown < dd_max:
-            gasto_ajustado = gasto_base * (1 - corte)
-            return max(gasto_ajustado, GASTO_PISO)
+            return _clamp(gasto_base * (1 - corte))
     return GASTO_PISO
 
 
@@ -275,36 +291,30 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
     pat_pico = patrimonio_inicial
     strategy_fn = STRATEGY_FNS[strategy]
 
-    # Contexto compartilhado para strategies que precisam de estado entre anos
-    ctx = {
-        "swr_inicial": PREMISSAS["custo_vida_base"] / patrimonio_inicial if patrimonio_inicial > 0 else 0.035,
-        "anos_total": n_anos,
-        "retorno_ano": 0.0,
-    }
+    ctx = WithdrawalCtx(
+        swr_inicial=PREMISSAS["custo_vida_base"] / patrimonio_inicial if patrimonio_inicial > 0 else SWR_FALLBACK,
+        anos_total=n_anos,
+        ipca_anual=ipca_anual,
+    )
 
+    t_scale = np.sqrt(df / (df - 2))
     for ano in range(n_anos):
-        # Volatilidade: reduzida no período do bond pool
         vol_ano = vol_bond_pool if (vol_bond_pool is not None and ano < anos_bond_pool) else volatilidade
 
-        # Retorno anual com fat tails
-        z = rng.standard_t(df) / np.sqrt(df / (df - 2))
+        z = rng.standard_t(df) / t_scale
         retorno_anual = retorno_equity + vol_ano * z
 
-        # IR na desacumulação: aplica apenas quando equity é sacado
         if aplicar_ir and ano >= anos_bond_pool:
             retorno_anual = retorno_equity_net_ir(retorno_anual, ipca_anual, aliquota_ir)
 
-        ctx["retorno_ano"] = retorno_anual
+        ctx.retorno_ano = retorno_anual
 
-        # Crescimento
         pat = pat * (1 + retorno_anual)
         pat_pico = max(pat_pico, pat)
 
-        # Gasto do ano: spending smile base + strategy-specific adjustment
         gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
         gasto = strategy_fn(gasto_base, pat, pat_pico, ano, ctx)
 
-        # INSS: reduz saque líquido
         if inss_anual > 0 and ano >= inss_inicio_ano:
             gasto = max(0, gasto - inss_anual)
 
@@ -316,9 +326,20 @@ def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: f
     return True, pat, pat_pico
 
 
+def _retorno_equity_cenario(premissas: dict, cenario: str) -> float:
+    """Retorno equity ajustado por cenário."""
+    r = premissas["retorno_equity_base"]
+    if cenario == "favoravel":
+        r += premissas["adj_favoravel"]
+    elif cenario == "stress":
+        r += premissas["adj_stress"]
+    return r
+
+
 def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
                        cenario: str = "base", seed: int = 42,
-                       strategy: str = "guardrails") -> dict:
+                       strategy: str = "guardrails",
+                       pat_fire_precomputed: np.ndarray = None) -> dict:
     """
     Roda n_sim trajetórias e retorna estatísticas.
 
@@ -331,19 +352,20 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
     que o atingem) — não é filtro da simulação.
 
     cenario: "base", "favoravel", "stress"
+    pat_fire_precomputed: skip accumulation phase (for --compare-strategies)
     """
     rng = np.random.default_rng(seed)
+    r_equity = _retorno_equity_cenario(premissas, cenario)
 
-    # Retorno equity ajustado por cenário
-    r_equity = premissas["retorno_equity_base"]
-    if cenario == "favoravel":
-        r_equity += premissas["adj_favoravel"]
-    elif cenario == "stress":
-        r_equity += premissas["adj_stress"]
-
-    # Fase 1: Acumulação até o FIRE
+    # Fase 1: Acumulação até o FIRE (skip se precomputed)
     anos_acum = premissas["idade_fire_alvo"] - premissas["idade_atual"]
-    pat_fire_trajetorias = projetar_acumulacao(premissas, r_equity, cenario, n_sim, rng, anos_acum)
+    if pat_fire_precomputed is not None:
+        pat_fire_trajetorias = pat_fire_precomputed
+        # Advance RNG past accumulation draws so withdrawal phase is deterministic
+        # projetar_acumulacao draws n_sim * anos_acum t-distributed values
+        rng.standard_t(premissas["t_dist_df"], size=n_sim * anos_acum)
+    else:
+        pat_fire_trajetorias = projetar_acumulacao(premissas, r_equity, cenario, n_sim, rng, anos_acum)
 
     # % que atingem o gatilho formal (R$13.4M + SWR <= 2.4%)
     atingiu_gatilho = (
@@ -528,6 +550,8 @@ def main():
                         help=f"Withdrawal strategy (default: guardrails). Opções: {STRATEGIES}")
     parser.add_argument("--compare-strategies", action="store_true",
                         help="Comparar TODAS as withdrawal strategies lado a lado")
+    parser.add_argument("--spending", type=float, default=None,
+                        help="Override custo de vida base (R$/ano) para compare-strategies. Ex: --spending 300000")
     args = parser.parse_args()
 
     premissas = dict(PREMISSAS)
@@ -537,13 +561,23 @@ def main():
     if args.aporte:     premissas["aporte_mensal"] = args.aporte
     if args.anos:
         premissas["idade_fire_alvo"] = premissas["idade_atual"] + args.anos
+    if args.spending:
+        premissas["custo_vida_base"] = args.spending
 
     if args.compare_strategies:
         print(f"\n  Comparando {len(STRATEGIES)} withdrawal strategies ({args.n_sim:,} sims cada)...\n")
+
+        # Precompute accumulation once (strategy-independent) — saves ~80% of compute
+        r_equity = _retorno_equity_cenario(premissas, "base")
+        anos_acum = premissas["idade_fire_alvo"] - premissas["idade_atual"]
+        rng_acum = np.random.default_rng(42)
+        pat_fire = projetar_acumulacao(premissas, r_equity, "base", args.n_sim, rng_acum, anos_acum)
+
         print(f"  {'Strategy':<20} {'P(FIRE)':>8} {'Pat.Med.Final':>14} {'Pat.P10.Final':>14}")
         print("  " + "-" * 60)
         for strat in STRATEGIES:
-            r = rodar_monte_carlo(premissas, n_sim=args.n_sim, cenario="base", strategy=strat)
+            r = rodar_monte_carlo(premissas, n_sim=args.n_sim, cenario="base",
+                                  strategy=strat, pat_fire_precomputed=pat_fire)
             pat_med = f"R$ {r['pat_p90_final']/1e6:.1f}M" if r['pat_p90_final'] > 0 else "—"
             pat_p10 = f"R$ {r['pat_p10_final']/1e6:.1f}M" if r['pat_p10_final'] > 0 else "—"
             status = "+" if r["p_sucesso"] >= 0.90 else ("~" if r["p_sucesso"] >= 0.80 else "-")

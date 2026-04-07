@@ -53,6 +53,14 @@ DEFAULT_MODELS = ["gemini", "deepseek-r1", "qwen235b", "gpt-oss", "llama4"]
 SEPARADOR = "=" * 68
 STAGGER_DELAY = 0.8  # segundos entre chamadas ao mesmo provider
 
+# ── Presets de system prompt ──────────────────────────────────────────────────
+PRESETS = {
+    "finance": "You are a quantitative financial analyst. Use only peer-reviewed evidence. Cite author, year, and conclusion. Distinguish data (verifiable facts) from interpretation (contestable inference). If uncertain, state the confidence level.",
+    "fire": "You are a retirement planning expert specializing in safe withdrawal strategies and FIRE (Financial Independence, Retire Early). Use Monte Carlo evidence and historical data. Cite ERN, Bengen, Guyton-Klinger, or Kitces when relevant.",
+    "factor": "You are a factor investing specialist. Reference Fama-French, AQR, DFA, and Vanguard research. Distinguish between gross and net-of-cost factor premiums. Apply McLean & Pontiff (2016) haircuts where applicable.",
+    "stress": "You are a risk analyst. Your job is to find weaknesses, failure modes, and scenarios where the strategy fails. Be adversarial. Challenge every assumption.",
+}
+
 
 class ModelResult(NamedTuple):
     name: str
@@ -218,8 +226,9 @@ async def main():
     group.add_argument("--file", "-f", type=str, help="Arquivo com o prompt")
     group.add_argument("--check", action="store_true", help="Health check de todos os modelos")
 
-    parser.add_argument("--system", type=str, default=None, help="System prompt")
-    parser.add_argument("--system-file", type=str, default=None, help="Arquivo com system prompt")
+    sys_group = parser.add_mutually_exclusive_group()
+    sys_group.add_argument("--system", type=str, default=None, help="System prompt")
+    sys_group.add_argument("--system-file", type=str, default=None, help="Arquivo com system prompt")
     parser.add_argument("--context", "-c", type=str, default=None,
                         help="Arquivo de contexto (prepended ao prompt)")
     parser.add_argument("--models", "-m", nargs="+", choices=list(MODELS.keys()),
@@ -234,6 +243,8 @@ async def main():
     parser.add_argument("--max-tokens", type=int, default=4096,
                         help="Max tokens por resposta (default: 4096)")
     parser.add_argument("--list", action="store_true", help="Listar modelos disponiveis")
+    parser.add_argument("--preset", type=str, choices=list(PRESETS.keys()),
+                        help=f"System prompt preset (sobrescreve --system). Opcoes: {list(PRESETS.keys())}")
 
     args = parser.parse_args()
 
@@ -275,10 +286,14 @@ async def main():
     system = args.system
     if args.system_file:
         system = Path(args.system_file).read_text(encoding="utf-8").strip()
+    if args.preset:
+        system = PRESETS[args.preset]
 
     print(f"\n  Consultando {len(modelos)} modelo(s) em paralelo...")
     print(f"  {', '.join(modelos.keys())}")
-    if system:
+    if args.preset:
+        print(f"  Preset: {args.preset}")
+    elif system:
         print(f"  System prompt: {system[:80]}...")
     print(f"  Temperature: {args.temperature} | Max tokens: {args.max_tokens}")
     print()

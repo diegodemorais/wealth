@@ -7,7 +7,18 @@ O argumento `$ARGUMENTS` é o prompt ou instrução do Diego. Se vazio, pergunta
 ## Catálogo
 
 Rode `python3 scripts/multi_llm_query.py --list` para ver modelos disponíveis e defaults.
-<!-- SYNC: catálogo definido em scripts/multi_llm_query.py MODELS dict -->
+<!-- SYNC: catálogo e presets definidos em scripts/multi_llm_query.py -->
+
+### Presets de system prompt
+
+Em vez de escrever system prompt do zero, use `--preset`:
+
+| Preset | Quando usar |
+|--------|------------|
+| `finance` | Validação geral de premissas financeiras |
+| `fire` | Withdrawal strategies, SWR, spending |
+| `factor` | ETFs, factor premiums, alocação |
+| `stress` | Stress-test adversarial de qualquer tese |
 
 ## Workflow
 
@@ -33,7 +44,14 @@ python3 scripts/multi_llm_query.py \
   --temperature 0.3
 ```
 
-Flags úteis: `--all-models` (inclui llama405b), `--context file.txt`, `--max-tokens 8192`, `--no-save`. Veja `--help` para todas as opções.
+Ou com preset (mais rápido):
+```bash
+python3 scripts/multi_llm_query.py \
+  --prompt "Is 50/30/20 optimal for a 14-year accumulation phase?" \
+  --preset factor
+```
+
+Flags úteis: `--all-models` (inclui llama405b), `--preset NAME`, `--context file.txt`, `--max-tokens 8192`, `--no-save`. Veja `--help` para todas as opções.
 
 ### 3. Sintetizar
 

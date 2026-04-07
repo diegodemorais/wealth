@@ -46,3 +46,7 @@ Instalar e avaliar o MCP Server BCB como substituto dos WebFetch ad hoc. Se func
 **Argumento central:** MCP nativo > WebFetch raw. Dados estruturados com metadata, busca e variações calculadas. Elimina parsing manual de JSON do BCB.
 
 **Prioridade Alta:** `/macro-bcb` é usado em toda análise de RF e ciclo de juros. Melhoria de infraestrutura com baixo esforço (npx install).
+
+### Feedback agentes (2026-04-07)
+
+**RF:** MCP BCB não cobre taxas indicativas ANBIMA (NTN-B 2040/2050/2065). Essas são o dado mais operacional para gatilhos de IPCA+. Sugestão: verificar se há série BCB equivalente ou criar issue separada para ANBIMA MCP.

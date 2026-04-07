@@ -20,6 +20,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|
 | PT-protecao-vida-familia | Proteção de vida, patrimônio e continuidade familiar | Patrimonial | 🟡 Média |
 | HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
+| TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 
 ### Backlog
 > Issues prontas para execucao, aguardando vez
@@ -43,8 +44,11 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 15 | TX-irpf-investidor | Library irpf-investidor para cálculo de IR | Tax | 🟡 Média |
 | 16 | HD-python-bcb | Library python-bcb para dados BCB | Head | 🟡 Média |
 | 17 | HD-cmd-relatorio-mensal | Command /relatorio-mensal — report consolidado | Head | 🟡 Média |
-| 17 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
-| 18 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
+| 18 | FR-rebalance-desacumulacao | Regras de rebalanceamento pós-FIRE | FIRE | 🟡 Média |
+| 19 | TX-declaracao-anual | Checklist DIRPF investimentos internacionais | Tax | 🟡 Média |
+| 20 | HD-cmd-reconciliar | Command /reconciliar — reconciliação posições | Bookkeeper | 🟡 Média |
+| 21 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 🟢 Baixa |
+| 22 | FX-cmd-cambio | Command /cambio | Head | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
