@@ -48,6 +48,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-cmd-evolution | Evolução 3 commands pós-19 issues | Head | 2026-04-07 | fire-status drought condicional. reconciliar 3 camadas ibkr_sync. relatorio-mensal refatorado + seção FX. |
 | FR-withdrawal-engine | Motor parametrizável de withdrawal strategies | FIRE | 2026-04-07 | Guardrails confirmados 2/2. GK Hybrid testado e descartado (vol +56%, benefício pró-cíclico). 5 estratégias + híbrido avaliados. |
 | FI-portfolio-optimization | Validação formal 50/30/20 via otimização | Factor | 2026-04-07 | 50/30/20 confirmado 2/2. Michaud IC [0%–100%] = indistinguível. Factor drought −6.7pp sobrevivível (83.7% > piso 75%). |
 | FR-rebalance-desacumulacao | Regras de rebalanceamento pós-FIRE | FIRE | 2026-04-07 | Opção D: spending-based trimestral. Safety valve 10pp drift. Sem trades tributáveis. Bond pool → caixa no FIRE Day. |

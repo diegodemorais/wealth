@@ -19,28 +19,38 @@ Se o script falhar (dependências, erro), reportar o erro e usar último P(FIRE)
 
 3. Leia `agentes/memoria/04-fire.md` para comparação com último resultado
 
-## Flags Úteis
+## Cenário Drought (condicional)
+
+Rode automaticamente se P(FIRE base) < 88%:
 
 ```bash
-# Comparar withdrawal strategies (mensal ou quando P(FIRE) < 85%)
-python3 scripts/fire_montecarlo.py --compare-strategies --n-sim 5000
-
-# Cenário factor drought: AVGS permanentemente em 2.0% real
-python3 scripts/fire_montecarlo.py --retorno-equity 0.0395 --n-sim 3000
+python3 scripts/fire_montecarlo.py --n-sim 3000 --retorno-equity 0.0395 > /tmp/fire_drought.txt 2>&1
+cat /tmp/fire_drought.txt
 ```
 
-Factor drought (−6.7pp) é cenário de stress, não central. Reportar só se Diego pedir ou P(FIRE) base < 85%.
+O cenário drought (AVGS 2.0% real permanente) explica quedas de P(FIRE) de até −6.7pp vs base. Se P(FIRE) ≥ 88%, **não rodar** — evita ruído no status normal.
 
 ## Output
 
 Incluir:
-- **Tabela P(FIRE)**: cenários base/favorável/stress × FIRE 53 e FIRE 50
-- **Distância ao gatilho**: patrimônio atual vs R$13.4M, gap em R$ e em aportes
+
+**Tabela P(FIRE):**
+
+| Cenário | FIRE 53 | FIRE 50 |
+|---------|---------|---------|
+| Base | X% | X% |
+| Favorável | X% | X% |
+| Stress | X% | X% |
+| *Factor drought (se rodado)* | *X%* | *—* |
+
+- **Distância ao gatilho**: patrimônio atual vs R$13.4M, gap em R$ e em aportes (~R$25k/mês)
 - **Delta vs último check-in**: P(FIRE) anterior → atual, patrimônio anterior → atual
-- **Status**: on track (≥90%), atenção (80-90%), revisar (<80%)
+- **Status**: ver regras abaixo
 
 ## Regras
 
-- Se P(FIRE base) ≥ 90%: on track
-- Se 80-90%: atenção — verificar se transitório (drawdown recente?)
-- Se <80%: acionar FIRE agent para revisão de premissas
+- P(FIRE base) ≥ 90%: **on track** ✓
+- P(FIRE base) 85–90%: **atenção** — verificar se transitório (drawdown recente?) e rodar drought
+- P(FIRE base) 80–85%: **alerta** — rodar drought + acionar FIRE para revisão de premissas
+- P(FIRE base) < 80%: **crítico** — acionar FIRE agent imediatamente
+- Drought rodado: contextualizar se queda é estrutural (premissas) ou de mercado (patrimônio)
