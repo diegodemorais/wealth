@@ -107,6 +107,12 @@ dados/
 | **Lean Architecture** | Coplien & Bjørnvig | Lean thinking aplicado à arquitetura de software |
 | **Working Effectively with Legacy Code** | Michael Feathers | Estratégias para refatorar código sem testes — relevante para o template.html crescente |
 | **Domain-Driven Design** | Eric Evans | Ubiquitous language, bounded contexts — como `DATA.*` reflete o domínio da carteira |
+| **The Data Warehouse Toolkit** | Ralph Kimball | Modelagem dimensional, star schema, fact/dimension tables — base para estruturar `data.json` e o pipeline de dados |
+| **Fundamentals of Data Engineering** | Joe Reis & Matt Housley | Ciclo de vida do dado: ingestão, transformação, serving — aplicado ao pipeline `fontes → generate_data.py → data.json` |
+| **Storytelling with Data** | Cole Nussbaumer Knaflic | Princípios de visualização: escolha de chart type, redução de clutter, foco na mensagem — guia para cada decisão de BI |
+| **The Big Book of Dashboards** | Wexler, Shaffer & Cotgreave | Catálogo de padrões de dashboard por tipo de dado e audiência — referência para layout, hierarquia e organização de abas |
+| **Lean Analytics** | Croll & Yoskovitz | Métricas que importam vs métricas de vaidade; one metric that matters — critério para decidir o que entra no dashboard |
+| **Designing Data-Intensive Applications** | Martin Kleppmann | Confiabilidade, escalabilidade e manutenibilidade de sistemas de dados — aplicado ao pipeline e ao versionamento de estado |
 
 ---
 
