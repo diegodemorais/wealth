@@ -93,6 +93,38 @@ dados/
 
 ---
 
+## Boas Práticas de Engenharia
+
+### Lean Code
+- **YAGNI** (You Aren't Gonna Need It): não escrever código para requisitos futuros hipotéticos. Se não é necessário agora, não existe.
+- **DRY** (Don't Repeat Yourself): lógica duplicada é dívida técnica. Extrair função quando a mesma lógica aparece 3+ vezes.
+- **KISS**: a solução mais simples que funciona é a certa. Complexidade tem custo de manutenção.
+- Funções pequenas, com responsabilidade única e nome que explica o que fazem — sem comentários óbvios.
+- Deletar código morto sem hesitar. Git tem histórico.
+
+### Lean Architecture
+- **Single source of truth**: cada dado tem uma única origem. `DATA.*` para valores do dashboard, `wellness_config.json` para config de score, `carteira.md` para premissas estratégicas.
+- **Separação de camadas**: geração de dados (`generate_data.py`) é separada de apresentação (`template.html`). Lógica de negócio não vaza para o template; cálculos complexos ficam no Python.
+- **Pipeline explícito**: `fonte → generate_data.py → data.json → template.html → index.html`. Cada seta é explícita, rastreável, testável.
+- **Configuração fora do código**: valores que mudam (taxas, premissas, pesos) vivem em JSON/MD, nunca no código.
+- **Evoluir, não acumular**: quando adicionar nova funcionalidade, verificar se algo antigo pode ser removido ou simplificado.
+
+### SOLID (aplicado ao contexto JS/Python do projeto)
+- **S — Single Responsibility**: cada função JS faz uma coisa (`buildFeeAnalysis`, `buildCustoBase`, `renderIpcaProgress`). Função que faz duas coisas é candidata a refatoração.
+- **O — Open/Closed**: novos cenários (ex: nova shadow portfolio) não devem exigir reescrever lógica existente — devem ser configurados em `data.json`.
+- **L — Liskov**: funções de render aceitam dados opcionais com fallback gracioso (`DATA.x ?? defaultSafe`). Nunca explodir com `Cannot read property of undefined`.
+- **I — Interface Segregation**: `DATA.*` expõe só o que o dashboard precisa. `generate_data.py` não expõe estado interno desnecessário.
+- **D — Dependency Inversion**: o template depende de `DATA` (abstração), não de implementações específicas de cada script Python.
+
+### Design Patterns relevantes
+- **Factory**: funções `build*()` e `render*()` são factories de elementos DOM — recebem dados, retornam HTML/chart.
+- **Strategy**: chart type (tabela vs gráfico vs KPI card) é uma decisão estratégica por tipo de dado. Aplicar critério explícito: tabelas para comparação precisa, gráficos para tendência e distribuição, KPI cards para métricas terminais.
+- **Observer leve**: `DATA` é o estado central; funções de render observam e reagem — sem estado local duplicado.
+- **Template Method**: `build_dashboard.py` define o esqueleto do pipeline (ler template → injetar data → salvar). Variações entram no `generate_data.py`, nunca no builder.
+- **Null Object**: quando dado está ausente (`DATA.rf.hodl11 == null`), renderizar estado vazio explícito ("Sem dados — rodar script X") em vez de quebrar ou esconder silenciosamente.
+
+---
+
 ## Anti-Padrões (não repetir)
 
 - `const anos = 14` — usar `premissas.idade_fire_alvo - premissas.idade_atual`
