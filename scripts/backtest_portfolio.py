@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-backtest_fatorial.py — Backtesting histórico do tilt fatorial UCITS
+backtest_portfolio.py — Backtest de portfolio vs benchmark (VWRA)
 Pergunta central: o factor tilt dos ETFs UCITS reais gerou alpha histórico?
 
 Compara:
@@ -18,11 +18,11 @@ Proxies canônicos (agentes/referencia/proxies-canonicos.md):
   AVEM  → AVEM (US-listed)      (mesma estratégia Avantis, UCITS lançado Dez/2024) ⚠️
 
 Uso:
-    python3 backtest_fatorial.py                    # regime melhor disponível
-    python3 backtest_fatorial.py --regime 1         # só UCITS reais
-    python3 backtest_fatorial.py --regime 3         # desde Nov/2019
-    python3 backtest_fatorial.py --regime 4         # máximo histórico
-    python3 backtest_fatorial.py --desde 2021-01    # período customizado
+    python3 backtest_portfolio.py                    # regime melhor disponível
+    python3 backtest_portfolio.py --regime 1         # só UCITS reais
+    python3 backtest_portfolio.py --regime 3         # desde Nov/2019
+    python3 backtest_portfolio.py --regime 4         # máximo histórico
+    python3 backtest_portfolio.py --desde 2021-01    # período customizado
 
 Venv: ~/claude/finance-tools/.venv/bin/python3
 """

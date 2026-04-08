@@ -244,7 +244,7 @@ Tabela principal com todas as posições:
 
 ### 2.3 Visualizações ausentes no codebase
 
-1. **Backtest URL gerado dinamicamente** para Curvo.eu (aba Utils, linha 100): o codebase tem `backtest_fatorial.py` mas não gera URLs Curvo.eu.
+1. **Backtest URL gerado dinamicamente** para Curvo.eu (aba Utils, linha 100): o codebase tem `backtest_portfolio.py` mas não gera URLs Curvo.eu.
 2. **Formatação condicional** de delta vs meta (verde se no alvo, vermelho se fora): ausente em qualquer saída dos scripts.
 3. **Gráficos de glide path** (aba Evolução): projeção visual da alocação por ano. Nenhum script gera visualização equivalente.
 
@@ -278,14 +278,14 @@ Tabela principal com todas as posições:
 
 ### 3.2 Definições divergentes
 
-1. **Alocação target JPGL**: planilha usa 0% para JPGL (corretamente refletindo a decisão de 2026-04-01), mas `checkin_mensal.py` e `backtest_fatorial.py` ainda têm JPGL com pesos 20%/0.158. `shadow-portfolio.md` tem "Target" com JPGL 20%.
+1. **Alocação target JPGL**: planilha usa 0% para JPGL (corretamente refletindo a decisão de 2026-04-01), mas `checkin_mensal.py` e `backtest_portfolio.py` ainda têm JPGL com pesos 20%/0.158. `shadow-portfolio.md` tem "Target" com JPGL 20%.
 
 2. **Pesos equity internos**:
    - Planilha (aba Evolução, cenário B ativo): SWRD 43% / AVGS 26% / AVEM 17% (dentro do equity)
    - carteira.md: SWRD 50% / AVGS 30% / AVEM 20% (aprovado FI-equity-redistribuicao)
    - `portfolio_analytics.py`: SWRD 50% / AVGS 30% / AVEM 20% (correto, atualizado)
    - `ibkr_sync.py`: SWRD 50% / AVGS 30% / AVEM 20% (correto)
-   - `backtest_fatorial.py`: SWRD 35% / AVGS 25% / AVEM 20% / JPGL 20% (defasado)
+   - `backtest_portfolio.py`: SWRD 35% / AVGS 25% / AVEM 20% / JPGL 20% (defasado)
    - `checkin_mensal.py` PESOS_TARGET: SWRD 27.65% / AVGS 19.75% / AVEM 15.8% / JPGL 15.8% (defasado)
    - `shadow-portfolio.md`: Target tem 35% SWRD + 25% AVGS + 20% AVEM + 20% JPGL (defasado)
    - **A planilha mostra 43/26/17 que é inconsistente com a decisão aprovada 50/30/20**
@@ -307,7 +307,7 @@ Tabela principal com todas as posições:
 | `holdings.md` | 2026-03-22 | Câmbio R$ 5,32 (atual R$ 5,15), JPGL como foco de aportes, pesos equity defasados |
 | `dados/historico_carteira.csv` | 2026-03-20 | Só 2 linhas; últimos dados de 6+ dias atrás |
 | `checkin_mensal.py` PESOS_TARGET | Código | JPGL 15.8%, SWRD 27.65% — ainda reflete estratégia pré-2026-04-01 |
-| `backtest_fatorial.py` PESOS_TARGET | Código | SWRD 35%/AVGS 25%/AVEM 20%/JPGL 20% — reflete estratégia anterior |
+| `backtest_portfolio.py` PESOS_TARGET | Código | SWRD 35%/AVGS 25%/AVEM 20%/JPGL 20% — reflete estratégia anterior |
 | `shadow-portfolio.md` Target | 2026-03-26 | 35% SWRD + 25% AVGS + 20% AVEM + 20% JPGL — pré-FI-equity-redistribuicao |
 | `scorecard.md` Custo de Complexidade | 2026-03-26 | TER calculado com JPGL 19.75% / SWRD 27.7% / AVGS 19.8% |
 | `fire_montecarlo.py` PREMISSAS | Código | patrimonio_atual = 3.372.673 — desatualizado |
@@ -319,7 +319,7 @@ Tabela principal com todas as posições:
 ### 4.1 ALTA prioridade — Sincronização imediata
 
 **P1.1 — Atualizar pesos da estratégia em todos os scripts**
-Arquivos afetados: `checkin_mensal.py` (PESOS_TARGET), `backtest_fatorial.py` (PESOS_TARGET), `shadow-portfolio.md` (Target definição), `scorecard.md` (TER tabela).
+Arquivos afetados: `checkin_mensal.py` (PESOS_TARGET), `backtest_portfolio.py` (PESOS_TARGET), `shadow-portfolio.md` (Target definição), `scorecard.md` (TER tabela).
 Nova estratégia: SWRD 50% / AVGS 30% / AVEM 20% (sem JPGL).
 Pesos no portfolio total: SWRD ~39.5% / AVGS ~23.7% / AVEM ~15.8% (considerando 79% equity).
 
@@ -414,7 +414,7 @@ Fontes de dados:
 | Bollinger Bands câmbio | Aba Aporte | Médio | Média |
 | Frontier eficiente + stress test | portfolio_analytics.py | Complexo | Baixa |
 | Factor regression | factor_regression.py | Complexo | Baixa |
-| Backtest fatorial vs VWRA | backtest_fatorial.py | Complexo | Baixa |
+| Backtest fatorial vs VWRA | backtest_portfolio.py | Complexo | Baixa |
 | Spending analysis | spending_analysis.py | Simples | Baixa |
 
 ### 5.3 Complexidade estimada
@@ -458,7 +458,7 @@ Para gráficos de TWR histórico, seria necessário resgatar o histórico comple
 ### Top 10 Achados
 
 **1. Estratégia desatualizada em 4 scripts Python**
-`checkin_mensal.py`, `backtest_fatorial.py`, `shadow-portfolio.md` e `scorecard.md` ainda usam a estratégia pré-2026-04-01 (com JPGL e pesos antigos). O risco operacional é que uma rodada de `/checkin-automatico` calcule shadow Target incorreto. **URGENTE.**
+`checkin_mensal.py`, `backtest_portfolio.py`, `shadow-portfolio.md` e `scorecard.md` ainda usam a estratégia pré-2026-04-01 (com JPGL e pesos antigos). O risco operacional é que uma rodada de `/checkin-automatico` calcule shadow Target incorreto. **URGENTE.**
 
 **2. Holdings.md defasado em 16 dias com 113 cotas de SWRD faltando**
 `holdings.md` (câmbio R$ 5,32, 2026-03-22) mostra 5.291 cotas de SWRD. A planilha (07/04/26) mostra 5.405 cotas — diferença de 113 cotas (~R$ 18k). O arquivo também ainda refere JPGL como "FOCO dos aportes".
@@ -493,7 +493,7 @@ Confirmado por Diego: não é valor do negócio. Auditoria interpretou dados inc
 
 | # | Ação | Impacto | Esforço | Dono |
 |---|------|---------|---------|------|
-| A1 | Atualizar pesos equity em `checkin_mensal.py` (PESOS_TARGET) e `backtest_fatorial.py` para SWRD 50%/AVGS 30%/AVEM 20% sem JPGL | ALTO — cálculos de shadow incorretos | 30min | Bookkeeper |
+| A1 | Atualizar pesos equity em `checkin_mensal.py` (PESOS_TARGET) e `backtest_portfolio.py` para SWRD 50%/AVGS 30%/AVEM 20% sem JPGL | ALTO — cálculos de shadow incorretos | 30min | Bookkeeper |
 | A2 | Atualizar `shadow-portfolio.md` Target com nova alocação 50/30/20 | ALTO — performance comparison errada | 15min | Bookkeeper |
 | A3 | Atualizar `holdings.md` com posições atuais (planilha 07/04/26) | ALTO — reconciliação incorreta | 1h | Bookkeeper |
 | A4 | Adicionar ao `historico_carteira.csv` os pontos: 01/03/2021 e 15/12/2025 da planilha | MÉDIO — habilita CAGR histórico | 15min | Bookkeeper |

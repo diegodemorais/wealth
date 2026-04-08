@@ -22,7 +22,7 @@ Cada script define seus próprios proxies de forma ad-hoc:
 
 | Script | AVGS proxy | AVEM proxy | JPGL proxy | VWRA proxy |
 |--------|-----------|-----------|-----------|-----------|
-| `backtest_fatorial.py` | AVUV | EIMI.L | JPGL.L direto | VWRA.L direto |
+| `backtest_portfolio.py` | AVUV | EIMI.L | JPGL.L direto | VWRA.L direto |
 | `portfolio_analytics.py` | AVUV+AVDV | VWO | JPUS 60%+JPIN 40% | VWRA.L direto |
 | `factor_regression.py` | — | — | JPGL.L direto | — |
 
@@ -97,5 +97,5 @@ Proxies canônicos definidos e aprovados por Diego (2026-03-31). Arquivo de refe
 - [x] Decidir JPGL gap 2006-2014 e AVEM proxy pré-2019
 - [x] Criar `agentes/referencia/proxies-canonicos.md`
 - [ ] Atualizar `agentes/contexto/carteira.md` com datas de inception corrigidas
-- [ ] Atualizar scripts (`backtest_fatorial.py`, `portfolio_analytics.py`, `factor_regression.py`) para usar proxies canônicos
+- [ ] Atualizar scripts (`backtest_portfolio.py`, `portfolio_analytics.py`, `factor_regression.py`) para usar proxies canônicos
 - [ ] Validar proxies in-sample via script Python (correlação/TE no overlap)

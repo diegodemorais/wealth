@@ -61,7 +61,7 @@
 |---|---------------|------|---------------|--------|
 | E1 | Tabela master de ativos (valor, %, target, delta) | Calculado | `holdings.md`, `ibkr_sync.py` | ✅ |
 | E2 | Composição de cada grupo (quais ETFs) | Config | `checkin_mensal.py` BUCKET_MAPEAMENTO | ✅ |
-| E3 | Retorno anualizado por grupo | Calculado | `backtest_fatorial.py`, `factor_regression.py` | ✅ |
+| E3 | Retorno anualizado por grupo | Calculado | `backtest_portfolio.py`, `factor_regression.py` | ✅ |
 | E4 | Glide path — alocação alvo por ano (0–45) | Calculado | `fire_glide_path_scenarios.py` (3 cenários) | ⚠️ parcial (3 cenários, não 6; sem tabela granular ano-a-ano) |
 | E5 | Cenários A/B/C/D/E/F com toggle | Config | ❌ ausente (só A/B/C no script) | ❌ |
 | E6 | Links para páginas dos ETFs | Referência | ❌ dados estáticos ausentes | ❌ |

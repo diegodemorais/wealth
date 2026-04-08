@@ -83,7 +83,7 @@ Quatro capacidades analíticas que se tornam possíveis com a stack instalada, a
 | Cap | Descrição | Resultado |
 |-----|-----------|-----------|
 | 1 — Otimizador de aporte | `portfolio_analytics.py --aporte` | Implementado: cascade IPCA+/Renda+/JPGL por gatilho de taxa |
-| 2 — Backtest histórico | `scripts/backtest_fatorial.py` | Criado: 4 regimes, proxies AVUV/EIMI.L, CAGR/Sharpe/MaxDD/delta anual |
+| 2 — Backtest histórico | `scripts/backtest_portfolio.py` | Criado: 4 regimes, proxies AVUV/EIMI.L, CAGR/Sharpe/MaxDD/delta anual |
 | 3 — TLH Monitor | bloco em `checkin_mensal.py --tlh` | Criado: 7 transitórios, gatilho 5%, cálculo IR, alerta duplo benefício US-listed |
 | 4 — Tornado chart | `fire_montecarlo.py --tornado` | Implementado (FR-scripts-premissas) |
 
@@ -110,10 +110,10 @@ Quatro capacidades implementadas. Backtest confirma +0.48pp CAGR do tilt mas com
 
 | Tipo | Detalhe |
 |------|---------|
-| **Scripts** | `backtest_fatorial.py` (novo) + TLH block em `checkin_mensal.py` |
+| **Scripts** | `backtest_portfolio.py` (novo) + TLH block em `checkin_mensal.py` |
 | **Capacidades** | 1✅ 2✅ 3✅ 4✅ — todas implementadas |
 | **Uso TLH** | `python3 checkin_mensal.py --tlh --tlh-config '{"AVUV": 85.50, ...}'` |
-| **Uso backtest** | `python3 backtest_fatorial.py --regime 3` (ou 1/2/4) |
+| **Uso backtest** | `python3 backtest_portfolio.py --regime 3` (ou 1/2/4) |
 
 ---
 
@@ -121,6 +121,6 @@ Quatro capacidades implementadas. Backtest confirma +0.48pp CAGR do tilt mas com
 
 - [x] Aguardar HD-python-stack concluído
 - [x] Cap 1: otimizador de aporte (`portfolio_analytics.py --aporte`)
-- [x] Cap 2: `scripts/backtest_fatorial.py`
+- [x] Cap 2: `scripts/backtest_portfolio.py`
 - [x] Cap 3: TLH block em `checkin_mensal.py --tlh` — `tlh_lotes.json` preenchido via extrato IBKR real (2026-04-01, `ibkr_analysis.py`). 7 transitórios com 130+ lotes reais.
 - [x] Cap 4: tornado chart em `fire_montecarlo.py --tornado`

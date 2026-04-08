@@ -157,7 +157,7 @@ Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este ven
 | `scripts/portfolio_analytics.py` | Fronteira eficiente, stress test CDaR, otimizador aporte | `python3 scripts/portfolio_analytics.py --aporte 25000` |
 | `scripts/fire_montecarlo.py` | Monte Carlo P(FIRE), 10k trajetórias, bond tent, guardrails | `python3 scripts/fire_montecarlo.py --tornado` — flags: `--strategy`, `--compare-strategies`, `--retorno-equity` |
 | `scripts/fire_glide_path_scenarios.py` | Compara 3 cenários de equity allocation pré-FIRE | `python3 scripts/fire_glide_path_scenarios.py` |
-| `scripts/backtest_fatorial.py` | Backtest histórico do tilt fatorial UCITS | `python3 scripts/backtest_fatorial.py` |
+| `scripts/backtest_portfolio.py` | Backtest histórico do tilt fatorial UCITS | `python3 scripts/backtest_portfolio.py` |
 | `scripts/factor_regression.py` | Regressão Fama-French 5-factor + momentum por ETF | `python3 scripts/factor_regression.py` |
 | `scripts/spending_analysis.py` | Analisa CSV de gastos (All-Accounts export) | `python3 scripts/spending_analysis.py [csv]` |
 | `analysis/ibkr_analysis.py` | Processa extrato IBKR, gera 5 JSONs (lotes, dividendos, etc) | `python3 analysis/ibkr_analysis.py` |

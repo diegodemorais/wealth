@@ -135,7 +135,7 @@ Conflito → flag explícita, nunca silenciar.
 | **Output crítico** | Período canônico: target 20 anos (2006). Proxies a confirmar em HD-proxies-canonicos |
 | **Mandato gerado** | HD-proxies-canonicos: encontrar proxies adequados para cada ETF até 2006 |
 | **Referência** | `agentes/referencia/metodologia-analitica.md` ✅ criado |
-| **Scripts** | Atualizar backtest_fatorial.py e portfolio_analytics.py para referenciar padrões (pendente) |
+| **Scripts** | Atualizar backtest_portfolio.py e portfolio_analytics.py para referenciar padrões (pendente) |
 
 ---
 

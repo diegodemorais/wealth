@@ -46,7 +46,7 @@ Relatório completo: `analysis/carteiraviva_audit.md`
 
 | # | Ação | Status |
 |---|------|--------|
-| A1 | Pesos 50/30/20 em `checkin_mensal.py` + `backtest_fatorial.py` | ✅ Done |
+| A1 | Pesos 50/30/20 em `checkin_mensal.py` + `backtest_portfolio.py` | ✅ Done |
 | A2 | `shadow-portfolio.md` Target atualizado | ✅ Done |
 | A3 | `holdings.md` com dados planilha 07/04/26 | ✅ Done |
 | A4 | `historico_carteira.csv` +2 pontos (2021 e 2025) | ✅ Done |
