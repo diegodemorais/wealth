@@ -162,7 +162,8 @@ def baixar_dados(tickers: list, inicio: str, fim: str = None) -> pd.DataFrame:
     if fim is None:
         fim = datetime.today().strftime("%Y-%m-%d")
 
-    print(f"  Baixando preços ({inicio} → {fim})...")
+    import sys as _sys
+    print(f"  Baixando preços ({inicio} → {fim})...", file=_sys.stderr)
     raw = yf.download(tickers, start=inicio, end=fim,
                       auto_adjust=True, progress=False)
 
@@ -230,6 +231,20 @@ def sharpe(retornos: pd.Series, rf_mensal: float = 0.004) -> float:
     if excesso.std() == 0:
         return np.nan
     return (excesso.mean() / excesso.std()) * np.sqrt(12)
+
+
+def sortino(retornos: pd.Series, rf_mensal: float = 0.004) -> float:
+    """Sortino anualizado — penaliza só downside."""
+    excesso = retornos - rf_mensal
+    downside = excesso[excesso < 0]
+    if len(downside) == 0 or downside.std() == 0:
+        return np.nan
+    return (excesso.mean() / downside.std()) * np.sqrt(12)
+
+
+def vol_anual(retornos: pd.Series) -> float:
+    """Volatilidade anualizada (%)."""
+    return float(retornos.std() * np.sqrt(12) * 100)
 
 
 def max_drawdown(retornos: pd.Series) -> float:
@@ -309,13 +324,75 @@ def imprimir_alerta_advocate(tab: pd.DataFrame):
 
 # ─── MAIN ────────────────────────────────────────────────────────────────────
 
+def _build_series_json(r_target: pd.Series, r_shadow: pd.Series) -> dict:
+    """Constrói dict com datas, séries acumuladas e métricas para output JSON."""
+    cum_t = crescimento_acumulado(r_target)
+    cum_s = crescimento_acumulado(r_shadow)
+    dates = [d.strftime("%Y-%m") for d in cum_t.index]
+    return {
+        "dates":   dates,
+        "target":  [round(float(v), 2) for v in cum_t],
+        "shadowA": [round(float(v), 2) for v in cum_s],
+        "metrics": {
+            "target": {
+                "cagr":    round(cagr(r_target) * 100, 2),
+                "sharpe":  round(sharpe(r_target), 2),
+                "sortino": round(sortino(r_target), 2),
+                "maxdd":   round(max_drawdown(r_target) * 100, 2),
+                "vol":     round(vol_anual(r_target), 2),
+            },
+            "shadowA": {
+                "cagr":    round(cagr(r_shadow) * 100, 2),
+                "sharpe":  round(sharpe(r_shadow), 2),
+                "sortino": round(sortino(r_shadow), 2),
+                "maxdd":   round(max_drawdown(r_shadow) * 100, 2),
+                "vol":     round(vol_anual(r_shadow), 2),
+            },
+        },
+    }
+
+
+def _run_regime_for_json(regime_id: int) -> tuple[dict, str]:
+    """Roda um regime e retorna (series_dict, note)."""
+    import warnings
+    warnings.filterwarnings("ignore")
+    regime = REGIMES[regime_id]
+    tickers = list(set(list(regime["target"].keys()) + list(regime["shadow"].keys())))
+    prices = baixar_dados(tickers, inicio=regime["inicio"])
+    if prices.empty or len(prices) < 3:
+        return {}, ""
+    r_target = calcular_retornos_mensais(prices, regime["target"])
+    r_shadow = calcular_retornos_mensais(prices, regime["shadow"])
+    idx = r_target.dropna().index.intersection(r_shadow.dropna().index)
+    if len(idx) < 3:
+        return {}, ""
+    data = _build_series_json(r_target.loc[idx], r_shadow.loc[idx])
+    note = "; ".join(regime["proxies"]) if regime["proxies"] else ""
+    return data, note
+
+
 def main():
     parser = argparse.ArgumentParser(description="Backtest fatorial UCITS — Target vs Shadow A")
     parser.add_argument("--regime",  type=int, choices=[1, 2, 3, 4, 5, 6], default=None,
                         help="Regime de dados (1=UCITS real, 4=máx histórico ETFs, 5=21 anos proxy, 6=19 anos proxy+IntlSC). Default: melhor disponível.")
     parser.add_argument("--desde",   type=str, default=None,
                         help="Data início customizada YYYY-MM (sobrepõe --regime).")
+    parser.add_argument("--json",    action="store_true",
+                        help="Emitir JSON para dashboard (regime 4 + regime 6). Usado por generate_data.py.")
     args = parser.parse_args()
+
+    # ── Modo JSON para pipeline do dashboard ──────────────────────────────────
+    if args.json:
+        import json as _json, sys as _sys
+        print("  ▶ backtest regime 4 (2019+)...", file=_sys.stderr)
+        bt4, _ = _run_regime_for_json(4)
+        print("  ▶ backtest regime 6 (2004+)...", file=_sys.stderr)
+        bt6, note6 = _run_regime_for_json(6)
+        if note6:
+            bt6["note"] = note6
+        output = {"backtest": bt4, "backtestR5": bt6}
+        print(_json.dumps(output))
+        return
 
     # Selecionar regime
     if args.desde:

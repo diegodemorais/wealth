@@ -681,15 +681,30 @@ def main():
 
     # ── Export dashboard_state.json ──
     from datetime import date
-    fire_data = {
+    idade_fire = premissas["idade_fire_alvo"]  # 50 se --anos 11, 53 se default
+    fire_data_existing = {}
+    try:
+        from config import load_dashboard_state
+        fire_data_existing = load_dashboard_state().get("fire", {})
+    except Exception:
+        pass
+
+    fire_data = {**fire_data_existing}  # preserva campos existentes
+    fire_data.update({
         "pfire_base": round(resultados[0]["p_sucesso"] * 100, 1),
-        "pfire_fav": round(resultados[1]["p_sucesso"] * 100, 1) if len(resultados) > 1 else None,
+        "pfire_fav":  round(resultados[1]["p_sucesso"] * 100, 1) if len(resultados) > 1 else None,
         "pfire_stress": round(resultados[2]["p_sucesso"] * 100, 1) if len(resultados) > 2 else None,
         "pat_mediano_fire": round(resultados[0]["pat_mediana_fire"], 0),
         "pat_p10_fire": round(resultados[0]["pat_p10_fire"], 0),
         "pat_p90_fire": round(resultados[0]["pat_p90_fire"], 0),
         "mc_date": str(date.today()),
-    }
+    })
+    # Salvar com chave específica da idade FIRE para distinguir pfire50 e pfire53
+    prefix = f"pfire{idade_fire}"
+    fire_data[f"{prefix}_base"]   = fire_data["pfire_base"]
+    fire_data[f"{prefix}_fav"]    = fire_data["pfire_fav"]
+    fire_data[f"{prefix}_stress"] = fire_data["pfire_stress"]
+
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 
     if args.tornado:

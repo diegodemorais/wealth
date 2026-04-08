@@ -131,37 +131,63 @@ def get_pfire_tornado():
             []
         )
 
+    # Rodar @50 (--anos 11) com tornado
     print("  ▶ fire_montecarlo.py --anos 11 --tornado ...")
-    out, err = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "11", "--tornado"], cwd=ROOT)
-    if err:
-        print(f"  ⚠️ stderr: {err[:200]}")
+    out50, err50 = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "11", "--tornado"], cwd=ROOT)
+    if err50:
+        print(f"  ⚠️ stderr @50: {err50[:200]}")
 
-    # Parsear P(FIRE@50)
-    pf50 = {"base": None, "fav": None, "stress": None}
-    pf53 = {"base": None, "fav": None, "stress": None}
-    for line in out.splitlines():
-        # Cenário Base: P(FIRE@50) = 85.4%
-        m = re.search(r'P\(FIRE@50\)[^=]*=\s*([\d.]+)%', line)
-        if m:
-            if "base" in line.lower() or pf50["base"] is None:
-                pf50["base"] = float(m.group(1))
-        m = re.search(r'P\(FIRE@53\)[^=]*=\s*([\d.]+)%', line)
-        if m:
-            if "base" in line.lower() or pf53["base"] is None:
-                pf53["base"] = float(m.group(1))
-        m = re.search(r'[Ff]avorável.*?P\(FIRE@50\)[^=]*=\s*([\d.]+)%', line)
-        if m: pf50["fav"] = float(m.group(1))
-        m = re.search(r'[Ss]tress.*?P\(FIRE@50\)[^=]*=\s*([\d.]+)%', line)
-        if m: pf50["stress"] = float(m.group(1))
+    # Rodar @53 (default, sem --anos)
+    print("  ▶ fire_montecarlo.py (FIRE@53 default) ...")
+    out53, err53 = run([VENV_PY, "scripts/fire_montecarlo.py"], cwd=ROOT)
 
-    # Tornado — parsear linhas com variavel e ±
+    def parse_pfire(out, idade):
+        """Parseia P(FIRE@{idade}) do output do fire_montecarlo."""
+        pf = {"base": None, "fav": None, "stress": None}
+        tag = f"P(FIRE@{idade})"
+        for line in out.splitlines():
+            m = re.search(rf'{re.escape(tag)}[^=]*=\s*([\d.]+)%', line)
+            if m:
+                l = line.lower()
+                if "favoráv" in l or "fav" in l:
+                    pf["fav"] = float(m.group(1))
+                elif "stress" in l:
+                    pf["stress"] = float(m.group(1))
+                else:
+                    if pf["base"] is None:
+                        pf["base"] = float(m.group(1))
+        return pf
+
+    def parse_pfire_generic(out):
+        """Parseia P(FIRE) genérico (sem @idade) — cenários base/fav/stress."""
+        pf = {"base": None, "fav": None, "stress": None}
+        for line in out.splitlines():
+            m = re.search(r'P\(FIRE\)[^=]*=\s*([\d.]+)%', line)
+            if m:
+                l = line.lower()
+                if "favoráv" in l or "fav" in l:
+                    pf["fav"] = float(m.group(1))
+                elif "stress" in l:
+                    pf["stress"] = float(m.group(1))
+                elif pf["base"] is None:
+                    pf["base"] = float(m.group(1))
+        return pf
+
+    pf50 = parse_pfire(out50, 50)
+    if pf50["base"] is None:
+        pf50 = parse_pfire_generic(out50)
+
+    pf53 = parse_pfire(out53, 53)
+    if pf53["base"] is None:
+        pf53 = parse_pfire_generic(out53)
+
+    # Tornado — parsear do output @50
     tornado = []
     in_tornado = False
-    for line in out.splitlines():
+    for line in out50.splitlines():
         if "tornado" in line.lower() or "sensibilidade" in line.lower():
             in_tornado = True
         if in_tornado:
-            # ex: "  Volatilidade equity   +10%: -4.1pp  -10%: +4.0pp"
             m = re.search(r'(.+?)\s+\+10%[:\s]+([-+]?\d+\.?\d*)pp\s+-10%[:\s]+([-+]?\d+\.?\d*)pp', line)
             if m:
                 tornado.append({
@@ -171,12 +197,17 @@ def get_pfire_tornado():
                 })
 
     # Fallback do state
+    s = load_state().get("fire", {})
     if pf50["base"] is None:
-        state = load_state()
-        fire = state.get("fire", {})
-        pf50 = {"base": fire.get("pfire_base"), "fav": fire.get("pfire_fav"), "stress": fire.get("pfire_stress")}
+        pf50 = {"base": s.get("pfire50_base", s.get("pfire_base")),
+                "fav":  s.get("pfire50_fav",  s.get("pfire_fav")),
+                "stress": s.get("pfire50_stress", s.get("pfire_stress"))}
+    if pf53["base"] is None:
+        pf53 = {"base": s.get("pfire53_base"),
+                "fav":  s.get("pfire53_fav"),
+                "stress": s.get("pfire53_stress")}
 
-    print(f"  → P(FIRE@50): {pf50} | tornado: {len(tornado)} variáveis")
+    print(f"  → P(FIRE@50): {pf50} | P(FIRE@53): {pf53} | tornado: {len(tornado)} variáveis")
     return pf50, pf53, tornado
 
 
@@ -537,10 +568,14 @@ def main():
     # Shadows
     shadows = state.get("shadows", {})
 
-    # P(FIRE@53) fallback
+    # P(FIRE@53): ler chave específica pfire53_* (salva quando fire_montecarlo roda sem --anos)
     if pfire53.get("base") is None:
         s = state.get("fire", {})
-        pfire53 = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
+        if s.get("pfire53_base") is not None:
+            pfire53 = {"base": s["pfire53_base"], "fav": s.get("pfire53_fav"), "stress": s.get("pfire53_stress")}
+        else:
+            # Fallback: usar pfire_base genérico (pode ser qualquer rodada)
+            pfire53 = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
 
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
