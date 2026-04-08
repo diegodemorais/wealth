@@ -47,6 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|--------|
 | HD-dashboard-pipeline | Refatoração do pipeline e arquitetura do dashboard | Dev | 🟡 Média | Em andamento |
 | HD-dashboard-v2 | Redesign e correções — revisão completa 12 agentes | Dev | 🔴 Crítica | Backlog |
+| HD-research-planejamento | Pesquisa Boldin + referências de financial planning/WM | Head | 🔴 Crítica | Done |
 
 > HD-dashboard-ux concluída em 2026-04-08 (ver Done abaixo)
 
