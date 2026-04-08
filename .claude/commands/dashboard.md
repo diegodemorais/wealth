@@ -58,9 +58,24 @@ Patrimônio: R$ X.XXXk | Equity: $XXXk | Câmbio: R$ X.XX
 P(FIRE): XX.X% | CAGR: XX.X% | Delta A: +X.Xpp
 ```
 
+## Checklist de Qualidade (review 2026-04-08)
+
+Antes de entregar, verificar:
+
+- [ ] **CAGR ≠ TWR**: label deve dizer "Cresc. Patrimonial" (inclui aportes), não "CAGR". TWR separado (~8%)
+- [ ] **Glide path soma 100%** em cada ano. Pós-FIRE = rising equity (Pfau-Kitces), não declinante
+- [ ] **Shadow C presente** na tabela de shadows (79% VWRA + IPCA+ + crypto)
+- [ ] **IPCA+ longo no delta bar** — maior gap (-14.1pp), não pode estar invisível
+- [ ] **KPIs FIRE**: anos p/ FIRE, progresso % do gatilho, SWR implícita
+- [ ] **Timestamps por seção** — alertar dados > 7 dias
+- [ ] **Tornado disclaimer**: se estimativa manual, marcar "⚠️ Estimativa"
+- [ ] **Bollinger**: label MA5 (não MA20)
+- [ ] **Timeline**: todos os meses presentes (sem gaps jan/fev)
+
 ## Notas
 - Se WebSearch falhar para algum preço, usar último valor conhecido do HTML anterior
 - Bollinger: MA de 5 períodos (janela curta por ter poucos pontos) ± 2σ
-- Tornado: usar estimativas do scorecard (não rodar MC — leva minutos)
+- Tornado: usar estimativas do scorecard (não rodar MC — leva minutos). Marcar como estimativa.
 - Dados de RF (IPCA+, Renda+): manter valores do holdings.md até próximo checkin
 - Dark theme, responsivo mobile, Chart.js CDN
+- Retorno patrimonial NUNCA apresentar como retorno de investimento sem disclaimer
