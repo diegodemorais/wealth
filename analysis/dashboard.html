@@ -684,11 +684,11 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T09:14:04-03:00'); // BRT (UTC-3)
+const GENERATED_AT = new Date('2026-04-08T09:22:01-03:00'); // BRT (UTC-3)
 
 const DATA = {
-  "_generated": "2026-04-08T09:14:04",
-  "_generated_brt": "2026-04-08T09:14:04-03:00",
+  "_generated": "2026-04-08T09:21:58",
+  "_generated_brt": "2026-04-08T09:21:58-03:00",
   "date": "2026-04-08",
   "cambio": 5.156,
   "posicoes": {
@@ -778,7 +778,7 @@ const DATA = {
     "stress": 81.1
   },
   "premissas": {
-    "patrimonio_atual": 3137282,
+    "patrimonio_atual": 3472336,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -844,15 +844,24 @@ const DATA = {
   "spendingSensibilidade": [
     {
       "label": "R$250k",
-      "pfire": 90.4
+      "custo": 250000,
+      "base": 90.4,
+      "fav": null,
+      "stress": null
     },
     {
       "label": "R$270k",
-      "pfire": 85.0
+      "custo": 270000,
+      "base": 85.0,
+      "fav": null,
+      "stress": null
     },
     {
       "label": "R$300k",
-      "pfire": 82.1
+      "custo": 300000,
+      "base": 82.1,
+      "fav": null,
+      "stress": null
     }
   ],
   "saude_base": 18000,
@@ -1109,24 +1118,28 @@ const DATA = {
   "backtestR5": {},
   "rf": {
     "ipca2029": {
-      "valor_brl": 89095,
-      "tipo": "reserva"
+      "cotas": null,
+      "valor": 89095,
+      "taxa": null,
+      "notas": "Reserva · Nubank · migrar 2029"
     },
     "ipca2040": {
-      "valor_brl": 33285,
-      "tipo": "estrutural",
-      "taxa": 7.2
+      "cotas": null,
+      "valor": 33285,
+      "taxa": 7.2,
+      "notas": "DCA ativo · XP · HTM SEMPRE"
     },
     "renda2065": {
-      "valor_brl": 112466,
-      "tipo": "tatico",
-      "taxa": 6.0
+      "cotas": null,
+      "valor": 112466,
+      "taxa": 6.93,
+      "notas": "Tático · Nubank · Vender ≤6.0%"
     }
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 0,
-    "valor": 0
+    "preco": 59.79,
+    "valor": 100208
   },
   "glide": {
     "idades": [
@@ -1174,32 +1187,89 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 41.3,
+      "atual": 37.3,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 32.0,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 26.4,
+      "atual": 23.8,
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 0.0,
+      "atual": 3.5,
       "alvo": 15.0
     },
     "HODL11": {
-      "atual": 0.0,
+      "atual": 2.9,
       "alvo": 3.0
     }
   },
-  "tlh": [],
+  "tlh": [
+    {
+      "ticker": "AVUV",
+      "nome": "Avantis US SC Val",
+      "qty": 548.88,
+      "pm": 81.57,
+      "price": 111.63,
+      "ucits": "AVGS.L"
+    },
+    {
+      "ticker": "AVDV",
+      "nome": "Avantis Intl SC",
+      "qty": 947.6,
+      "pm": 61.37,
+      "price": 101.54,
+      "ucits": "AVGS.L"
+    },
+    {
+      "ticker": "USSC",
+      "nome": "SPDR World SC",
+      "qty": 373.25,
+      "pm": 60.04,
+      "price": 84.72,
+      "ucits": "AVGS.L"
+    },
+    {
+      "ticker": "EIMI",
+      "nome": "iShares EM IMI",
+      "qty": 2020.29,
+      "pm": 31.33,
+      "price": 46.28,
+      "ucits": "AVEM.L"
+    },
+    {
+      "ticker": "AVES",
+      "nome": "Avantis EM Value",
+      "qty": 926.55,
+      "pm": 45.47,
+      "price": 59.8,
+      "ucits": "AVEM.L"
+    },
+    {
+      "ticker": "DGS",
+      "nome": "WisdomTree EM SC",
+      "qty": 188.21,
+      "pm": 50.11,
+      "price": 61.25,
+      "ucits": "AVEM.L"
+    },
+    {
+      "ticker": "IWVL",
+      "nome": "iShares World Val",
+      "qty": 34.0,
+      "pm": 37.23,
+      "price": 62.65,
+      "ucits": "JPGL.L"
+    }
+  ],
   "attribution": {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2025582.0,
+    "crescReal": 2360636.0,
     "_estimativa": true
   },
   "shadows": {

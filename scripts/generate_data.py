@@ -33,10 +33,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
     PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS,
-    PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL,
+    PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL, RENDA_ESTIMADA,
     IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
-    TICKERS_YF,
+    TICKERS_YF, GLIDE_PATH,
 )
 
 VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
@@ -74,7 +74,11 @@ def read_holdings_taxas():
         m = re.search(r'IPCA\+?\s*2040.*?(\d+[.,]\d+)\s*%', txt)
         if m:
             taxa_ipca2040 = float(m.group(1).replace(',', '.'))
-        m = re.search(r'[Rr]enda\+?\s*2065.*?(\d+[.,]\d+)\s*%', txt)
+        # Procura "Taxa atual ~X%" — evitar capturar gatilho "taxa <= 6.0%"
+        m = re.search(r'[Rr]enda\+?\s*2065.*?[Tt]axa\s+atual\s*~?\s*(\d+[.,]\d+)\s*%', txt)
+        if not m:
+            # fallback: última taxa numérica na linha da Renda+ 2065
+            m = re.search(r'[Rr]enda\+?\s*2065[^|\n]*?~\s*(\d+[.,]\d+)\s*%', txt)
         if m:
             taxa_renda2065 = float(m.group(1).replace(',', '.'))
     except Exception as e:
@@ -325,8 +329,31 @@ def get_posicoes_precos(state):
 
 # ─── 7. RF (holdings.md + state) ─────────────────────────────────────────────
 def get_rf(state):
-    rf = state.get("rf", {})
+    rf_raw = state.get("rf", {})
     taxa_ipca, taxa_renda = read_holdings_taxas()
+
+    # Normaliza schema: state usa "valor_brl", template espera "valor"
+    rf = {}
+    notas_map = {
+        "ipca2029":  "Reserva · Nubank · migrar 2029",
+        "ipca2040":  "DCA ativo · XP · HTM SEMPRE",
+        "renda2065": "Tático · Nubank · Vender ≤6.0%",
+    }
+    for key, raw in rf_raw.items():
+        if key == "hodl11":
+            rf[key] = raw  # hodl11 tratado separadamente
+            continue
+        valor = raw.get("valor", raw.get("valor_brl", 0))
+        taxa = raw.get("taxa")
+        cotas = raw.get("cotas")
+        rf[key] = {
+            "cotas": cotas,
+            "valor": valor,
+            "taxa":  taxa,
+            "notas": raw.get("notas", notas_map.get(key, "")),
+        }
+
+    # Atualizar taxas do holdings.md (mais atualizado que o state)
     if taxa_ipca and "ipca2040" in rf:
         rf["ipca2040"]["taxa"] = taxa_ipca
     if taxa_renda and "renda2065" in rf:
@@ -390,8 +417,14 @@ def main():
 
     # RF
     rf = get_rf(state)
-    hodl11 = rf.pop("hodl11", {})
-    hodl11_brl = hodl11.get("valor", 0)
+    hodl11_raw = rf.pop("hodl11", {})
+    # state usa "preco_brl" / "valor_brl"; normalizar para "preco" / "valor"
+    hodl11_brl = hodl11_raw.get("valor", hodl11_raw.get("valor_brl", 0))
+    hodl11 = {
+        "qty":   hodl11_raw.get("qty", 0),
+        "preco": hodl11_raw.get("preco", hodl11_raw.get("preco_brl", 0)),
+        "valor": hodl11_brl,
+    }
 
     # Drift
     drift, total_brl = compute_drift(posicoes, rf, hodl11_brl, cambio)
@@ -411,7 +444,7 @@ def main():
         "inss_anual":             premissas_raw.get("inss_anual", 18_000),
         "inss_inicio_ano":        premissas_raw.get("inss_inicio_ano", 12),
         "ipca_anual":             premissas_raw.get("ipca_anual", 0.04),
-        "renda_estimada":         45_000,  # para savings rate
+        "renda_estimada":         RENDA_ESTIMADA,
     }
 
     # Guardrails — suporta lista de tuples (dd_min, dd_max, corte, desc) ou dicts
@@ -438,8 +471,20 @@ def main():
         for k, v in spending_smile.items():
             spending[k] = {"gasto": v.get("gasto"), "inicio": v.get("inicio", 0), "fim": v.get("fim", 99)}
 
-    # Spending sensibilidade (do state)
-    spending_sens = state.get("spending", {}).get("scenarios", [])
+    # Spending sensibilidade — state usa {label, pfire}; template espera {label, custo, base, fav, stress}
+    # Fallback: usar valores do dashboard anterior se state não tiver schema completo
+    _sens_raw = state.get("spending", {}).get("scenarios", [])
+    spending_sens = []
+    _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
+                  "Solteiro/FIRE Day": 250_000, "Pós-casamento": 270_000, "Casamento+filho": 300_000}
+    for s in _sens_raw:
+        label = s.get("label", "")
+        custo = s.get("custo", _custo_map.get(label, 0))
+        base  = s.get("pfire", s.get("base"))
+        spending_sens.append({
+            "label": label, "custo": custo,
+            "base": base, "fav": s.get("fav"), "stress": s.get("stress"),
+        })
 
     # Pisos cascade
     pisos = {
@@ -450,26 +495,28 @@ def main():
     # Pesos alvo
     pesos_target = {k: round(v, 4) for k, v in PESOS_TARGET.items()}
 
-    # Glide path — lido de config + carteira.md (valores fixos atuais)
-    glide = {
-        "idades":     [39, 40, 50, 60, 70],
-        "equity":     [79, 79, 79, 94, 94],
-        "ipca_longo": [15, 15, 15,  0,  0],
-        "ipca_curto": [ 0,  0,  3,  3,  3],
-        "hodl11":     [ 3,  3,  3,  3,  3],
-        "renda_plus": [ 3,  3,  0,  0,  0],
-    }
+    # Glide path — config.py GLIDE_PATH (fonte: carteira.md)
+    glide = GLIDE_PATH
 
-    # TLH — transitórios com preços atuais
+    # TLH — transitórios com preços atuais (state usa "transitorio" sem acento)
     tlh = []
     for tk, p in posicoes.items():
-        if p.get("status") == "transitório":
+        status = p.get("status", "")
+        if status in ("transitório", "transitorio"):
+            bucket = p.get("bucket", BUCKET_MAP.get(tk, tk))
+            nome_map = {
+                "EIMI": "iShares EM IMI", "AVES": "Avantis EM Value",
+                "AVUV": "Avantis US SC Val", "AVDV": "Avantis Intl SC",
+                "DGS": "WisdomTree EM SC", "USSC": "SPDR World SC",
+                "IWVL": "iShares World Val", "JPGL": "JPM Global Equity",
+            }
             tlh.append({
                 "ticker": tk,
+                "nome":   nome_map.get(tk, tk),
                 "qty":    p["qty"],
                 "pm":     p.get("avg_cost", p.get("pm", 0)),
                 "price":  p.get("price", 0),
-                "ucits":  f"{p['bucket']}.L",
+                "ucits":  f"{bucket}.L",
             })
 
     # Attribution fallback
@@ -523,7 +570,7 @@ def main():
         "backtestR5": backtest_r5,
 
         "rf":         rf,
-        "hodl11":     {"qty": hodl11.get("qty", 0), "preco": hodl11.get("preco", 0), "valor": hodl11_brl},
+        "hodl11":     hodl11,
 
         "glide":      glide,
         "drift":      drift,

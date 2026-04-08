@@ -78,9 +78,21 @@ PATRIMONIO_GATILHO = 13_400_000   # R$ 2026 real — gatilho formal FIRE
 SWR_GATILHO = 0.024               # 2.4% — safe withdrawal rate meta
 CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
 APORTE_MENSAL = 25_000            # R$/mês
+RENDA_ESTIMADA = 45_000           # R$/ano — renda estimada para savings rate dashboard
 IDADE_ATUAL = 39
 IDADE_FIRE_ALVO = 53              # FIRE 2040
-IDADE_FIRE_ASPIRACIONAL = 50     # FIRE 2037
+IDADE_FIRE_ASPIRACIONAL = 50      # FIRE 2037
+
+# ─── GLIDE PATH (fonte: carteira.md — tabela alocação por idade) ─────────────
+# Atualizar quando carteira.md mudar a tabela de glide path
+GLIDE_PATH = {
+    "idades":     [39, 40, 50, 60, 70],
+    "equity":     [79, 79, 79, 94, 94],
+    "ipca_longo": [15, 15, 15,  0,  0],
+    "ipca_curto": [ 0,  0,  3,  3,  3],
+    "hodl11":     [ 3,  3,  3,  3,  3],
+    "renda_plus": [ 3,  3,  0,  0,  0],
+}
 
 
 # ─── TRIBUTAÇÃO (fonte: carteira.md — Lei 14.754/2023) ───────────────────────
