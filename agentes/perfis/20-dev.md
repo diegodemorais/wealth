@@ -93,6 +93,23 @@ dados/
 
 ---
 
+## Referências Canônicas
+
+| Livro | Autor | Relevância |
+|-------|-------|------------|
+| **Clean Code** | Robert C. Martin | Funções pequenas, nomes expressivos, responsabilidade única — base de tudo |
+| **Clean Architecture** | Robert C. Martin | Separação de camadas, dependency rule, boundaries — aplicado ao pipeline dados→dashboard |
+| **Agile Software Development** | Robert C. Martin | SOLID em profundidade, princípios de design orientado a objetos |
+| **Design Patterns** | GoF (Gang of Four) | Catálogo canônico: Factory, Strategy, Observer, Template Method, Null Object |
+| **Refactoring** | Martin Fowler | Quando e como refatorar com segurança; catálogo de code smells |
+| **The Pragmatic Programmer** | Hunt & Thomas | DRY, YAGNI, orthogonality, tracer bullets — mentalidade do bom engenheiro |
+| **A Philosophy of Software Design** | John Ousterhout | Deep modules vs shallow modules; complexidade como inimigo central |
+| **Lean Architecture** | Coplien & Bjørnvig | Lean thinking aplicado à arquitetura de software |
+| **Working Effectively with Legacy Code** | Michael Feathers | Estratégias para refatorar código sem testes — relevante para o template.html crescente |
+| **Domain-Driven Design** | Eric Evans | Ubiquitous language, bounded contexts — como `DATA.*` reflete o domínio da carteira |
+
+---
+
 ## Boas Práticas de Engenharia
 
 ### Lean Code
