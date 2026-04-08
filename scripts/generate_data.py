@@ -44,8 +44,9 @@ STATE_PATH = ROOT / "dados" / "dashboard_state.json"
 CSV_PATH   = ROOT / "dados" / "historico_carteira.csv"
 HOLDINGS_PATH = ROOT / "dados" / "holdings.md"
 LOTES_PATH   = ROOT / "dados" / "ibkr" / "lotes.json"
-APORTES_PATH = ROOT / "dados" / "ibkr" / "aportes.json"
-OUT_PATH     = ROOT / "dashboard" / "data.json"
+APORTES_PATH    = ROOT / "dados" / "ibkr" / "aportes.json"
+WELLNESS_CONFIG = ROOT / "agentes" / "referencia" / "wellness_config.json"
+OUT_PATH        = ROOT / "dashboard" / "data.json"
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
@@ -640,6 +641,7 @@ def main():
         "attribution":attr,
         "shadows":    shadows,
         "minilog":    _build_minilog(),
+        "wellness_config": json.loads(WELLNESS_CONFIG.read_text(encoding="utf-8")) if WELLNESS_CONFIG.exists() else {},
         "eventos_vida": [
             {"evento": "Casamento", "data_est": "~2026-2027", "impacto": "+R$20-50k/ano custo de vida",
              "status": "planejado", "acoes": ["Seguro de vida (gap crítico)", "Testamento", "Estrutura patrimonial"]},

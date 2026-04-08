@@ -856,9 +856,11 @@ const yrInt = Math.floor(yearsLeft);
 const moInt = Math.round((yearsLeft - yrInt) * 12);
 
 // ═══════════════════════════════════════════════════════════════
-// WELLNESS SCORE — calculado em JS, zero hardcoded
+// WELLNESS SCORE v2.0 — pesos/thresholds de DATA.wellness_config
+// Fonte: agentes/referencia/wellness_config.json
 // ═══════════════════════════════════════════════════════════════
 function calcWellness() {
+  const cfg = DATA.wellness_config || {};
   const scores = [];
   let total = 0;
 
@@ -866,108 +868,138 @@ function calcWellness() {
     scores.push({ label, value, max, color, detail });
     total += value;
   }
+  function col(pts, good, warn) {
+    return pts >= good ? '#22c55e' : pts >= warn ? '#eab308' : '#ef4444';
+  }
 
-  // P(FIRE) base (25pts) — M9: interpolação linear entre thresholds
+  // ── P(FIRE) base (35pts) ──────────────────────────────────────
+  const pfM = (cfg.metrics || []).find(m => m.id === 'pfire') || {};
+  const pfMax = pfM.max ?? 35;
+  const pfGood = pfM.colors?.good ?? 28;
+  const pfWarn = pfM.colors?.warn ?? 10;
   const pf = DATA.pfire53.base;
-  let pfPts;
-  if (pf >= 90) pfPts = 18 + (pf - 90) / (100 - 90) * 7; // 90→25pts
-  else if (pf >= 85) pfPts = 10 + (pf - 85) / (90 - 85) * 8; // 85→18pts
-  else if (pf >= 75) pfPts = 0 + (pf - 75) / (85 - 75) * 10; // 75→10pts
-  else pfPts = 0;
-  pfPts = Math.min(25, pfPts);
-  add('P(FIRE) base', Math.round(pfPts), 25, pfPts >= 25 ? '#22c55e' : pfPts >= 18 ? '#eab308' : '#ef4444', `${pf}%`);
+  // interpolação linear por threshold step
+  const pfThr = pfM.thresholds || [{min:95,pts:35},{min:90,pts:28},{min:85,pts:22},{min:75,pts:10},{min:0,pts:0}];
+  let pfPts = 0;
+  for (let i = 0; i < pfThr.length - 1; i++) {
+    if (pf >= pfThr[i].min) {
+      const lo = pfThr[i+1], hi = pfThr[i];
+      pfPts = lo.pts + (pf - lo.min) / (hi.min - lo.min) * (hi.pts - lo.pts);
+      break;
+    }
+  }
+  pfPts = Math.min(pfMax, pfPts);
+  add('P(FIRE) base', Math.round(pfPts), pfMax, col(pfPts, pfGood, pfWarn), `${pf}%`);
 
-  // Drift máximo (15pts)
+  // ── Savings rate (15pts) ──────────────────────────────────────
+  const srM = (cfg.metrics || []).find(m => m.id === 'savings_rate') || {};
+  const srMax = srM.max ?? 15;
+  const _rendaEst = DATA.premissas.renda_estimada || 45000;
+  const sr = DATA.premissas.aporte_mensal / _rendaEst;
+  const srPct = sr * 100;
+  const srThr = srM.thresholds || [{min_pct:35,pts:15},{min_pct:25,pts:10},{min_pct:15,pts:5},{min_pct:0,pts:0}];
+  let srPts = 0;
+  for (const t of srThr) { if (srPct >= t.min_pct) { srPts = t.pts; break; } }
+  add('Savings rate', srPts, srMax, col(srPts, srM.colors?.good??15, srM.colors?.warn??5), `~${srPct.toFixed(0)}%`);
+
+  // ── Drift máximo (15pts) ──────────────────────────────────────
+  const drM = (cfg.metrics || []).find(m => m.id === 'drift') || {};
+  const drMax = drM.max ?? 15;
   const maxDrift = Math.max(...Object.values(DATA.drift).map(d => Math.abs(d.atual - d.alvo)));
-  const driftPts = maxDrift <= 5 ? 15 : maxDrift <= 10 ? 10 : maxDrift <= 15 ? 5 : 0;
-  add('Drift máximo', driftPts, 15, driftPts >= 15 ? '#22c55e' : driftPts >= 10 ? '#eab308' : '#ef4444', `${maxDrift.toFixed(1)}pp`);
+  const drThr = drM.thresholds || [{max_pp:5,pts:15},{max_pp:10,pts:10},{max_pp:15,pts:5},{max_pp:999,pts:0}];
+  let driftPts = 0;
+  for (const t of drThr) { if (maxDrift <= t.max_pp) { driftPts = t.pts; break; } }
+  add('Drift máximo', driftPts, drMax, col(driftPts, drM.colors?.good??15, drM.colors?.warn??10), `${maxDrift.toFixed(1)}pp`);
 
-  // Trajetória FIRE (15pts) — compara patrimônio atual vs esperado pelo plano para esta data
-  // Esperado = FV(patInicio, meses decorridos, r_mensal) + aportes acumulados
-  // Mede se está adiantado/atrasado, não progresso absoluto (que penaliza fases iniciais)
-  const _rMes = (DATA.premissas.retorno_equity_base ?? 0.0485) / 12;
-  const _mesesDecorridos = Math.round(anos * 12); // anos desde patInicio (do CAGR calc)
-  const _fvPat = patInicio * Math.pow(1 + _rMes, _mesesDecorridos);
-  const _fvAportes = DATA.premissas.aporte_mensal * (Math.pow(1 + _rMes, _mesesDecorridos) - 1) / _rMes;
-  const _patEsperado = _fvPat + _fvAportes;
-  const _ratio = DATA.premissas.patrimonio_atual / _patEsperado;
-  let progPts;
-  if (_ratio >= 1.10) progPts = 15;      // ≥10% acima do plano
-  else if (_ratio >= 1.0) progPts = 12;  // no plano
-  else if (_ratio >= 0.90) progPts = 8;  // ≤10% abaixo
-  else if (_ratio >= 0.75) progPts = 4;  // ≤25% abaixo
-  else progPts = 0;
-  const _traj = _ratio >= 1.05 ? `+${((_ratio-1)*100).toFixed(0)}% acima do plano` :
-                _ratio >= 0.95 ? 'no plano' : `${((_ratio-1)*100).toFixed(0)}% abaixo`;
-  add('Trajetória FIRE', progPts, 15, progPts >= 12 ? '#22c55e' : progPts >= 8 ? '#eab308' : '#ef4444', _traj);
-
-  // IPCA+ gap vs alvo (10pts) — gap grande + DCA ativo = comportamento correto
+  // ── IPCA+ gap vs alvo (10pts, DCA-aware) ─────────────────────
+  const ipM = (cfg.metrics || []).find(m => m.id === 'ipca_gap') || {};
+  const ipMax = ipM.max ?? 10;
   const ipcaGap = Math.abs(DATA.drift.IPCA.alvo - DATA.drift.IPCA.atual);
   const _taxaIpca = DATA.rf?.ipca2040?.taxa;
   const _pisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
   const _dcaAtivo = _taxaIpca != null && _taxaIpca >= _pisoIpca && ipcaGap > 0;
   let ipcaPts;
-  if (ipcaGap <= 2) ipcaPts = 10;
+  if (ipcaGap <= 2) ipcaPts = ipMax;
   else if (ipcaGap <= 5) ipcaPts = 7;
-  else if (_dcaAtivo) ipcaPts = 5; // DCA ativo com taxa >= piso: gap se fecha com tempo, comportamento correto
+  else if (_dcaAtivo) ipcaPts = 5;
   else if (ipcaGap <= 10) ipcaPts = 3;
-  else ipcaPts = 0; // gap grande E DCA inativo = problema real
-  const _ipcaLabel = (_dcaAtivo && ipcaGap > 5) ? `−${ipcaGap.toFixed(1)}pp (DCA ativo ✓)` : `−${ipcaGap.toFixed(1)}pp`;
-  add('IPCA+ gap vs alvo', ipcaPts, 10, ipcaPts >= 7 ? '#22c55e' : ipcaPts >= 3 ? '#eab308' : '#ef4444', _ipcaLabel);
+  else ipcaPts = 0;
+  const _ipcaLabel = (_dcaAtivo && ipcaGap > 5) ? `−${ipcaGap.toFixed(1)}pp (DCA ✓)` : `−${ipcaGap.toFixed(1)}pp`;
+  add('IPCA+ gap vs alvo', ipcaPts, ipMax, col(ipcaPts, ipM.colors?.good??7, ipM.colors?.warn??3), _ipcaLabel);
 
-  // Savings rate (10pts) — usar renda_estimada de DATA.premissas (consistência com painel)
-  const _rendaEst = DATA.premissas.renda_estimada || 45000;
-  const sr = DATA.premissas.aporte_mensal / _rendaEst;
-  const srPts = sr >= 0.35 ? 10 : sr >= 0.25 ? 7 : sr >= 0.15 ? 3 : 0;
-  add('Savings rate', srPts, 10, srPts >= 10 ? '#22c55e' : '#eab308', `~${(sr*100).toFixed(0)}%`);
+  // ── Fidelidade de execução (10pts) ───────────────────────────
+  const exM = (cfg.metrics || []).find(m => m.id === 'execution_fidelity') || {};
+  const exMax = exM.max ?? 10;
+  // Fonte: minilog / aportes. Conta meses recentes com aporte >= 80% do target.
+  const targetAporte = DATA.premissas.aporte_mensal;
+  const minilog = DATA.minilog || [];
+  const depositos = minilog.filter(op => op.tipo === 'Depósito' || op.tipo === 'Aporte');
+  // Agrupa por mês (YYYY-MM) e soma valores
+  const porMes = {};
+  depositos.forEach(op => {
+    const mes = (op.data || '').slice(0, 7);
+    if (!mes) return;
+    const val = parseFloat((op.valor || '0').replace(/[^0-9.]/g, '')) || 0;
+    porMes[mes] = (porMes[mes] || 0) + val;
+  });
+  const mesesRecentes = Object.keys(porMes).sort().slice(-6);
+  const mesesOk = mesesRecentes.filter(m => porMes[m] >= targetAporte * 0.8).length;
+  // Se dados insuficientes (<3 meses), neutro (7pts)
+  const exThr = exM.thresholds || [{min_months:6,pts:10},{min_months:5,pts:7},{min_months:4,pts:4},{min_months:0,pts:0}];
+  let execPts = mesesRecentes.length < 3 ? 7 : 0;
+  if (mesesRecentes.length >= 3) {
+    for (const t of exThr) { if (mesesOk >= t.min_months) { execPts = t.pts; break; } }
+  }
+  const exLabel = mesesRecentes.length < 3 ? 'dados insuf.' : `${mesesOk}/${Math.min(6, mesesRecentes.length)} meses`;
+  add('Execução aportes', execPts, exMax, col(execPts, exM.colors?.good??7, exM.colors?.warn??4), exLabel);
 
-  // TER vs benchmark (5pts) — 0.247% vs 0.220%
-  const terDelta = 0.247 - 0.220;
-  const terPts = terDelta <= 0 ? 5 : terDelta <= 0.1 ? 3 : 0;
-  add('TER vs VWRA', terPts, 5, terPts >= 5 ? '#22c55e' : '#eab308', `+${(terDelta*100).toFixed(2)}bp`);
+  // ── Fundo de emergência (5pts) ───────────────────────────────
+  const emM = (cfg.metrics || []).find(m => m.id === 'emergency_fund') || {};
+  const emMax = emM.max ?? 5;
+  const custoMensal = emM.custo_vida_mensal ?? 17917;  // R$215k/12
+  // Reserva = IPCA+ 2029 (líquido de curto prazo)
+  const reserva = DATA.rf?.ipca2029?.valor ?? 0;
+  const mesesReserva = reserva / custoMensal;
+  const emThr = emM.thresholds || [{min_months:6,pts:5},{min_months:3,pts:3},{min_months:0,pts:0}];
+  let emPts = 0;
+  for (const t of emThr) { if (mesesReserva >= t.min_months) { emPts = t.pts; break; } }
+  add('Fundo emergência', emPts, emMax, col(emPts, emM.colors?.good??5, emM.colors?.warn??3), `${mesesReserva.toFixed(1)} meses`);
 
-  // TLH opps (5pts) — nenhuma oportunidade (todos com lucro)
-  const tlhOpps = DATA.tlh.filter(t => (t.price / t.pm - 1) <= -0.05).length;
-  const tlhPts = tlhOpps === 0 ? 5 : tlhOpps <= 2 ? 3 : 0;
-  add('TLH oportunidades', tlhPts, 5, tlhPts >= 5 ? '#22c55e' : '#eab308', `${tlhOpps} opps`);
+  // ── TER vs VWRA (5pts) ────────────────────────────────────────
+  const terM = (cfg.metrics || []).find(m => m.id === 'ter') || {};
+  const terMax = terM.max ?? 5;
+  const benchTer = terM.benchmark_ter ?? 0.220;
+  const currTer  = terM.current_ter  ?? 0.247;
+  const terDelta = currTer - benchTer;
+  const terThr = terM.thresholds || [{max_delta_pp:0,pts:5},{max_delta_pp:0.1,pts:3},{max_delta_pp:999,pts:0}];
+  let terPts = 0;
+  for (const t of terThr) { if (terDelta <= t.max_delta_pp) { terPts = t.pts; break; } }
+  add('TER vs VWRA', terPts, terMax, col(terPts, terM.colors?.good??5, terM.colors?.warn??3), `+${(terDelta*100).toFixed(2)}bp`);
 
-  // Geo diversificação (5pts) — US%
-  const geoTotal = geoUS + geoDM + geoEM;
-  const usPct = (geoUS / geoTotal) * 100;
-  const geoPts = usPct <= 65 ? 5 : usPct <= 75 ? 3 : 0;
-  add('Diversificação geo', geoPts, 5, geoPts >= 5 ? '#22c55e' : '#eab308', `US ${usPct.toFixed(0)}%`);
-
-  // Staleness (5pts) — gerado hoje
-  const daysSince = Math.floor((Date.now() - GENERATED_AT) / 86400000);
-  const stalePts = daysSince <= 7 ? 5 : daysSince <= 14 ? 3 : 0;
-  add('Staleness dados', stalePts, 5, stalePts >= 5 ? '#22c55e' : '#eab308', `${daysSince}d`);
-
-  // Execuções pendentes (5pts) — M9: calcular dinamicamente via drift fora de tolerância
-  // Tolerância: ±5pp para equity buckets, ±3pp para RF
-  const driftFora = Object.entries(DATA.drift).filter(([k, d]) => {
-    if (d.atual === null) return false;
-    const tol = (k === 'IPCA' || k === 'HODL11') ? 3 : 5;
-    return Math.abs(d.atual - d.alvo) > tol;
-  }).length;
-  const execPts = driftFora === 0 ? 5 : driftFora <= 1 ? 3 : 0;
-  add('Execuções pendentes', execPts, 5, execPts >= 5 ? '#22c55e' : '#eab308', `${driftFora} bucket(s) fora`);
+  // ── Proteção capital humano (5pts) ───────────────────────────
+  const hcM = (cfg.metrics || []).find(m => m.id === 'human_capital') || {};
+  const hcMax = hcM.max ?? 5;
+  const hcStatus = hcM.status ?? 'solteiro_sem_dependentes';
+  const hcThr = hcM.thresholds || [{status:'solteiro_sem_dependentes',pts:5}];
+  const hcEntry = hcThr.find(t => t.status === hcStatus);
+  const hcPts = hcEntry ? hcEntry.pts : 0;
+  const hcLabel = hcStatus === 'solteiro_sem_dependentes' ? 'solteiro (ok)' :
+                  hcStatus.includes('com_seguro') ? 'seguro ativo' : '⚠️ sem seguro';
+  add('Proteção capital humano', hcPts, hcMax, col(hcPts, hcM.colors?.good??5, 1), hcLabel);
 
   return { total, scores };
 }
 
 function wellnessActions(scores) {
-  // Retorna top 3 ações que mais subiriam o score (maior gap pts_perdidos)
   const actions = {
-    'P(FIRE) base':          'Aumentar aporte mensal ou aguardar crescimento patrimonial',
-    'Drift máximo':          'Rebalancear bucket mais distante do alvo no próximo aporte',
-    'Progresso FIRE':        'Aumentar savings rate ou prazo — patrimônio ainda abaixo do gatilho',
-    'IPCA+ gap vs alvo':     'Continuar DCA em IPCA+ até atingir alvo de alocação',
-    'Savings rate':          'Aumentar aporte mensal relativo à renda estimada',
-    'TER vs VWRA':           'Manter disciplina — custo de complexidade está dentro da tolerância',
-    'TLH oportunidades':     'Monitorar drawdowns para aproveitar colheita fiscal',
-    'Diversificação geo':    'Aumentar AVEM/AVGS para reduzir concentração em US',
-    'Staleness dados':       'Rodar /dashboard para atualizar dados',
-    'Execuções pendentes':   'Executar aporte concentrado no bucket mais subpeso',
+    'P(FIRE) base':             'Aumentar aporte mensal ou aguardar crescimento patrimonial',
+    'Savings rate':             'Aumentar aporte mensal relativo à renda estimada',
+    'Drift máximo':             'Rebalancear bucket mais distante do alvo no próximo aporte',
+    'IPCA+ gap vs alvo':        'Continuar DCA em IPCA+ até atingir alvo de alocação',
+    'Execução aportes':         'Verificar consistência dos aportes mensais — meses com gap',
+    'Fundo emergência':         'Aumentar reserva em IPCA+ 2029 até 6 meses de custo de vida',
+    'TER vs VWRA':              'Manter disciplina — custo de complexidade dentro da tolerância',
+    'Proteção capital humano':  'Contratar seguro de vida/DI adequado ao casar',
   };
   return scores
     .map(s => ({ ...s, gap: s.max - s.value }))

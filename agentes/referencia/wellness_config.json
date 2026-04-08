@@ -1,0 +1,150 @@
+{
+  "_doc": "Fonte de verdade do Wellness Score. Lido por generate_data.py e embutido em data.json. Dashboard lê de DATA.wellness_config.",
+  "version": "2.0",
+  "updated": "2026-04-08",
+  "rationale": "Score mede disciplina operacional + saúde financeira — não duplica P(FIRE). P(FIRE) é o KPI terminal standalone. Wellness captura o que o MC não captura: comportamento, proteção, execução.",
+  "total_max": 100,
+  "metrics": [
+    {
+      "id": "pfire",
+      "label": "P(FIRE) base",
+      "max": 35,
+      "description": "Métrica terminal — incorpora patrimônio, aportes, retorno, inflação, spending via MC 10k sims. Peso dominante porque responde a única pergunta que importa.",
+      "thresholds": [
+        { "min": 95, "pts": 35 },
+        { "min": 90, "pts": 28 },
+        { "min": 85, "pts": 22 },
+        { "min": 75, "pts": 10 },
+        { "min": 0,  "pts": 0  }
+      ],
+      "colors": { "good": 28, "warn": 10 }
+    },
+    {
+      "id": "savings_rate",
+      "label": "Savings rate",
+      "max": 15,
+      "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR determina anos-para-FIRE independente de retorno. Usa renda_estimada das premissas.",
+      "thresholds": [
+        { "min_pct": 35, "pts": 15 },
+        { "min_pct": 25, "pts": 10 },
+        { "min_pct": 15, "pts": 5  },
+        { "min_pct": 0,  "pts": 0  }
+      ],
+      "colors": { "good": 15, "warn": 5 }
+    },
+    {
+      "id": "drift",
+      "label": "Drift máximo",
+      "max": 15,
+      "description": "Maior desvio absoluto entre % atual e % alvo (SWRD 50/AVGS 30/AVEM 20). Única métrica 100% actionable — Diego pode corrigir via próximo aporte.",
+      "thresholds": [
+        { "max_pp": 5,  "pts": 15 },
+        { "max_pp": 10, "pts": 10 },
+        { "max_pp": 15, "pts": 5  },
+        { "max_pp": 999,"pts": 0  }
+      ],
+      "colors": { "good": 15, "warn": 10 }
+    },
+    {
+      "id": "ipca_gap",
+      "label": "IPCA+ gap vs alvo",
+      "max": 10,
+      "description": "Gap entre % IPCA+ atual e alvo. DCA ativo (taxa >= piso) atenua penalidade — gap se fecha com o tempo, comportamento correto.",
+      "thresholds": [
+        { "max_pp": 2,  "pts": 10 },
+        { "max_pp": 5,  "pts": 7  },
+        { "max_pp": 999,"pts_if_dca": 5, "pts": 3 }
+      ],
+      "colors": { "good": 7, "warn": 3 }
+    },
+    {
+      "id": "execution_fidelity",
+      "label": "Fidelidade de execução",
+      "max": 10,
+      "description": "Dos últimos 6 meses, quantos tiveram aporte >= 80% do target mensal. Mede comportamento real, não intenção.",
+      "target_aporte_mensal": "DATA.premissas.aporte_mensal",
+      "lookback_months": 6,
+      "threshold_pct": 0.8,
+      "thresholds": [
+        { "min_months": 6, "pts": 10 },
+        { "min_months": 5, "pts": 7  },
+        { "min_months": 4, "pts": 4  },
+        { "min_months": 0, "pts": 0  }
+      ],
+      "colors": { "good": 7, "warn": 4 },
+      "_note": "Fonte: ibkr/aportes.json. Se dados insuficientes (<3 meses), usar 7pts (neutro)."
+    },
+    {
+      "id": "emergency_fund",
+      "label": "Fundo de emergência",
+      "max": 5,
+      "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
+      "custo_vida_mensal": 20833,
+      "thresholds": [
+        { "min_months": 6, "pts": 5 },
+        { "min_months": 3, "pts": 3 },
+        { "min_months": 0, "pts": 0 }
+      ],
+      "colors": { "good": 5, "warn": 3 },
+      "_note": "Reserva atual: Tesouro IPCA+ 2029 (~R$87k). Custo vida mensal: R$215k/12 = ~R$17.9k. Atualizar custo_vida_mensal ao revisar spending."
+    },
+    {
+      "id": "ter",
+      "label": "Custo total (TER)",
+      "max": 5,
+      "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
+      "benchmark_ter": 0.220,
+      "current_ter": 0.247,
+      "thresholds": [
+        { "max_delta_pp": 0,   "pts": 5 },
+        { "max_delta_pp": 0.1, "pts": 3 },
+        { "max_delta_pp": 999, "pts": 0 }
+      ],
+      "colors": { "good": 5, "warn": 3 },
+      "_note": "Atualizar current_ter se composição mudar (ex: entrada USSC, saída JPGL)."
+    },
+    {
+      "id": "human_capital",
+      "label": "Proteção capital humano",
+      "max": 5,
+      "description": "Seguro de vida/DI adequado. P(FIRE) assume Diego vivo e trabalhando até 2037. Sem seguro com casamento iminente + filho ~2028, o plano familiar depende de premissa frágil que o MC ignora.",
+      "status": "solteiro_sem_dependentes",
+      "thresholds": [
+        { "status": "solteiro_sem_dependentes", "pts": 5, "note": "Grátis enquanto solteiro sem dependentes. Muda ao casar." },
+        { "status": "casado_com_seguro",        "pts": 5 },
+        { "status": "casado_sem_seguro",        "pts": 0 },
+        { "status": "filho_com_seguro",         "pts": 5 },
+        { "status": "filho_sem_seguro",         "pts": 0 }
+      ],
+      "colors": { "good": 5, "warn": 0 },
+      "_note": "Atualizar status ao casar (2026-2027 estimado). Seguro adequado = cobertura 10x renda anual ou patrimônio suficiente para sustento família até FIRE."
+    }
+  ],
+  "removed_metrics": [
+    {
+      "id": "trajetoria_fire",
+      "label": "Trajetória FIRE",
+      "reason": "Redundante com P(FIRE). FV determinístico do mesmo input (patrimônio + aportes). Correlação ~0.9+ com P(FIRE). Removido em v2.0."
+    },
+    {
+      "id": "tlh_opps",
+      "label": "TLH oportunidades",
+      "reason": "Premiava sorte de mercado (todos com lucro = 5pts), não comportamento. Lógica invertida: oportunidade de TLH é boa (economia fiscal), não ruim. Removido em v2.0."
+    },
+    {
+      "id": "geo_div",
+      "label": "Diversificação geográfica",
+      "reason": "Tautológica com drift. Se Diego está no target (SWRD/AVGS/AVEM), geo está automaticamente no range. Double-counting com drift. Removido em v2.0."
+    },
+    {
+      "id": "staleness",
+      "label": "Dados atualizados",
+      "reason": "Meta do dashboard, não saúde financeira. Movido para badge visual. Removido em v2.0."
+    },
+    {
+      "id": "execucoes_pendentes",
+      "label": "Execuções pendentes",
+      "reason": "Subsumido por execution_fidelity + drift. Removido em v2.0."
+    }
+  ]
+}
