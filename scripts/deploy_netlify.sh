@@ -15,13 +15,15 @@ DASHBOARD_HTML="$ROOT/analysis/dashboard.html"
 DEPLOY_DIR="$(mktemp -d)"
 NETLIFY_SITE_ID="stunning-crepe-8aa19f"
 
-# Token: pode vir de env var ou do arquivo .netlify_token
-if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
+# Token: NETLIFY_TOKEN (settings.json) > NETLIFY_AUTH_TOKEN > .netlify_token file
+if [ -n "$NETLIFY_TOKEN" ]; then
+  NETLIFY_AUTH_TOKEN="$NETLIFY_TOKEN"
+elif [ -z "$NETLIFY_AUTH_TOKEN" ]; then
   TOKEN_FILE="$ROOT/.netlify_token"
   if [ -f "$TOKEN_FILE" ]; then
     NETLIFY_AUTH_TOKEN="$(cat "$TOKEN_FILE")"
   else
-    echo "❌ NETLIFY_AUTH_TOKEN não definido e .netlify_token não encontrado"
+    echo "❌ NETLIFY_TOKEN / NETLIFY_AUTH_TOKEN não definidos e .netlify_token não encontrado"
     exit 1
   fi
 fi
