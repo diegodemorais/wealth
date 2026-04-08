@@ -752,8 +752,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T13:33:58-03:00'); // BRT (UTC-3)
-const VERSION = '1.5';
+const GENERATED_AT = new Date('2026-04-08T13:36:01-03:00'); // BRT (UTC-3)
+const VERSION = '1.6';
 
 const DATA = {
   "_generated": "2026-04-08T13:33:55",
@@ -2465,7 +2465,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.5"
+  "version": "1.6"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3188,7 +3188,8 @@ function buildPosicoes() {
   Object.entries(DATA.posicoes).forEach(([ticker, p]) => {
     const valUsd = p.qty * p.price;
     const valBrl = valUsd * CAMBIO;
-    const gain = (p.price / p.pm - 1) * 100;
+    const pm = p.avg_cost ?? p.pm;
+    const gain = (p.price / pm - 1) * 100;
     totUsd += valUsd; totBrl += valBrl;
     const tr = document.createElement('tr');
     const statusBadge = p.status === 'alvo' ? '<span class="badge badge-alvo">alvo</span>' : '<span class="badge badge-trans">transit.</span>';
@@ -3197,7 +3198,7 @@ function buildPosicoes() {
       <td><strong>${ticker}</strong></td>
       <td><span style="color:${bucketColors[p.bucket] || '#94a3b8'};font-size:.7rem">${p.bucket}</span></td>
       <td>${statusBadge}</td>
-      <td class="num hide-mobile">$${p.pm.toFixed(2)}</td>
+      <td class="num hide-mobile">$${pm.toFixed(2)}</td>
       <td class="num">$${p.price.toFixed(2)}</td>
       <td class="num ${gain >= 0 ? 'pos' : 'neg'}">${gainStr}</td>
       <td class="num pv">$${(valUsd/1000).toFixed(1)}k</td>
@@ -3676,11 +3677,13 @@ if (Date.now() - GENERATED_AT > 7*86400000) {
   document.querySelector('.header').insertAdjacentHTML('beforeend',
     '<div style="background:#ef4444;color:white;padding:6px;border-radius:6px;margin-top:8px;font-size:.8rem">⚠️ Dashboard desatualizado — rodar /dashboard</div>');
 }
-// Attribution closure check
-const attrSum = DATA.attribution.aportes + DATA.attribution.retornoUsd + DATA.attribution.cambio;
-const crescReal = DATA.attribution.crescReal;
-console.assert(Math.abs(attrSum - crescReal) / crescReal < 0.05,
-  `Attribution não fecha: ${attrSum} vs ${crescReal} — gap ${((Math.abs(attrSum-crescReal)/crescReal)*100).toFixed(1)}%`);
+// Attribution closure check (só quando decomposição completa disponível)
+if (DATA.attribution.retornoUsd !== null && DATA.attribution.cambio !== null) {
+  const attrSum = DATA.attribution.aportes + DATA.attribution.retornoUsd + DATA.attribution.cambio;
+  const crescReal = DATA.attribution.crescReal;
+  console.assert(Math.abs(attrSum - crescReal) / crescReal < 0.05,
+    `Attribution não fecha: ${attrSum} vs ${crescReal} — gap ${((Math.abs(attrSum-crescReal)/crescReal)*100).toFixed(1)}%`);
+}
 
 // ═══════════════════════════════════════════════════════════════
 // LIVE FETCH PTAX
@@ -3762,6 +3765,10 @@ if (localStorage.getItem('dashboard_private') === '1') {
   updateContrib();
   updateWhatIf();
   calcAporte();
+  // Chart.js responsive: forçar resize após layout completo
+  requestAnimationFrame(() => {
+    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
+  });
 })();
 </script>
 </body>
