@@ -65,7 +65,7 @@ Seções (todas obrigatórias):
 14. **TLH monitor**
 15. **RF + crypto cards**
 
-**Runtime assertions** (incluir no JS):
+**Runtime assertions + live fetch** (incluir no JS):
 ```js
 // Staleness banner
 if (Date.now() - GENERATED_AT > 7*86400000) {
@@ -77,7 +77,35 @@ glideLabels.forEach((_,i) => {
   const sum = Object.values(glideData).reduce((s,d) => s+d[i], 0);
   console.assert(Math.abs(sum-100) < 0.5, `Glide path ano ${i}: soma ${sum}% ≠ 100%`);
 });
+
+// Live fetch: câmbio + PTAX via BCB Olinda (CORS público)
+// Preços ETFs e HODL11 NÃO têm API CORS — ficam como placeholders no DATA
+async function fetchLive() {
+  try {
+    // Câmbio PTAX do dia
+    const hoje = new Date().toISOString().slice(0,10).replace(/-/g,"'");
+    const r = await fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@d)?@d='${new Date().toISOString().slice(0,10)}'&$format=json`);
+    if (r.ok) {
+      const j = await r.json();
+      if (j.value?.length) {
+        const ptax = j.value[j.value.length-1].cotacaoVenda;
+        DATA.cambio = ptax;
+        // Atualizar KPI e header com novo câmbio
+        document.querySelector('.header .meta').textContent =
+          document.querySelector('.header .meta').textContent.replace(/USD\/BRL [\d.]+/, 'USD/BRL ' + ptax.toFixed(3));
+      }
+    }
+  } catch(e) { console.log('BCB fetch failed, using placeholder'); }
+}
+fetchLive();
 ```
+
+**Filosofia: placeholders + live fetch.**
+- `DATA` object contém TODOS os valores (preços ETFs, câmbio, HODL11, PTAX) com os últimos valores conhecidos da execução do `/dashboard`.
+- JS tenta buscar câmbio/PTAX ao vivo do BCB Olinda (API pública, CORS ok).
+- Se conseguir, atualiza os valores exibidos.
+- Se falhar (offline, CORS, etc.), usa placeholders silenciosamente.
+- Preços de ETFs (Yahoo) e HODL11 (B3) **não** têm API CORS — ficam fixos nos placeholders. Atualizar via `/dashboard`.
 
 Não commitar — Diego decide.
 
