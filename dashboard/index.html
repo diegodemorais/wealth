@@ -108,7 +108,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="header">
 <div style="display:flex;justify-content:space-between;align-items:center">
   <h1>🏦 Carteira Diego Morais</h1>
-  <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores">👁</span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600">⟳ Reload</button>
+    <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores">👁</span>
+  </div>
 </div>
 <div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
@@ -766,8 +769,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T19:28:41-03:00'); // BRT (UTC-3)
-const VERSION = '1.42';
+const GENERATED_AT = new Date('2026-04-08T19:33:34-03:00'); // BRT (UTC-3)
+const VERSION = '1.43';
 
 const DATA = {
   "_generated": "2026-04-08T17:51:52",
@@ -2755,7 +2758,7 @@ const DATA = {
   ],
   "cryptoLegado": 3000,
   "tlhGatilho": 0.05,
-  "version": "1.42"
+  "version": "1.43"
 };
 
 // ═══════════════════════════════════════════════════════════════
