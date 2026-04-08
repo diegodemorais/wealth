@@ -773,12 +773,12 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:42:06-03:00'); // BRT (UTC-3)
-const VERSION = '1.17';
+const GENERATED_AT = new Date('2026-04-08T15:50:00-03:00'); // BRT (UTC-3)
+const VERSION = '1.19';
 
 const DATA = {
-  "_generated": "2026-04-08T15:42:06",
-  "_generated_brt": "2026-04-08T15:42:06-03:00",
+  "_generated": "2026-04-08T15:50:00",
+  "_generated_brt": "2026-04-08T15:50:00-03:00",
   "date": "2026-04-08",
   "cambio": 5.1383,
   "posicoes": {
@@ -799,14 +799,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.33,
+      "price": 114.34,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 104.8,
+      "price": 104.8192,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -868,7 +868,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3549150,
+    "patrimonio_atual": 3549272,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2361,7 +2361,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.33,
+      "price": 114.34,
       "ucits": "AVGS.L"
     },
     {
@@ -2369,7 +2369,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 104.8,
+      "price": 104.8192,
       "ucits": "AVGS.L"
     },
     {
@@ -2417,7 +2417,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2437450.0,
+    "crescReal": 2437572.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2756,7 +2756,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.17"
+  "version": "1.19"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3298,7 +3298,7 @@ function buildGlidePath() {
   const g = DATA.glide;
   const _anoAtual = today.getFullYear();
   const _idadeAtual = DATA.premissas.idade_atual;
-  const labels = g.idades.map(a => [`Idade ${a}`, `(${_anoAtual + (a - _idadeAtual)})`]);
+  const labels = g.idades.map(a => [String(_anoAtual + (a - _idadeAtual)), `(${a} anos)`]);
   // Assertion: soma = 100%/ano
   g.idades.forEach((_, i) => {
     const s = g.ipca_longo[i] + g.ipca_curto[i] + g.equity[i] + g.hodl11[i] + g.renda_plus[i];
@@ -3393,15 +3393,39 @@ function buildFanChart() {
   const fire50Idx = labels.findIndex(l => +(Array.isArray(l) ? l[0] : l) >= _anoFire50);
   const fire53Idx = labels.findIndex(l => +(Array.isArray(l) ? l[0] : l) >= _anoFire53);
 
+  // Gatilho crossing: primeiro índice em que P90 / P50 >= PAT_GATILHO
+  let gIdx90 = -1, gIdx50 = -1;
+  for (let i = 0; i < p90.length; i++) {
+    if (gIdx90 < 0 && p90[i] >= PAT_GATILHO) gIdx90 = i;
+    if (gIdx50 < 0 && p50[i] >= PAT_GATILHO) gIdx50 = i;
+  }
+
+  // Arrays de pointRadius/cor: 0 em todos, destaque nos cruzamentos
+  const p90Radii = p90.map((_, i) => i === gIdx90 ? 8 : 0);
+  const p50Radii = p50.map((_, i) => i === gIdx50 ? 8 : 0);
+  const p90PointBg = p90.map((_, i) => i === gIdx90 ? '#22c55e' : 'transparent');
+  const p50PointBg = p50.map((_, i) => i === gIdx50 ? '#3b82f6' : 'transparent');
+  const p90PointBorder = p90.map((_, i) => i === gIdx90 ? '#fff' : 'transparent');
+  const p50PointBorder = p50.map((_, i) => i === gIdx50 ? '#fff' : 'transparent');
+
+  // Label para legenda com ano/idade do cruzamento
+  const _labelForIdx = idx => {
+    if (idx < 0) return '';
+    const l = labels[idx];
+    return ` — gatilho ${Array.isArray(l) ? l[0] : l}${Array.isArray(l) ? ' ' + l[1] : ''}`;
+  };
+
   charts.fan = new Chart(document.getElementById('fanChart'), {
     type: 'line',
     data: {
       labels,
       datasets: [
-        { label: 'P90', data: p90, fill: false, borderColor: 'rgba(34,197,94,.3)', borderWidth: 1, pointRadius: 0, tension: 0.3 },
-        { label: 'P50 (mediana)', data: p50, fill: false, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, tension: 0.3 },
+        { label: `P90${_labelForIdx(gIdx90)}`, data: p90, fill: false, borderColor: 'rgba(34,197,94,.3)', borderWidth: 1,
+          pointRadius: p90Radii, pointBackgroundColor: p90PointBg, pointBorderColor: p90PointBorder, pointBorderWidth: 1.5, tension: 0.3 },
+        { label: `P50 (mediana)${_labelForIdx(gIdx50)}`, data: p50, fill: false, borderColor: '#3b82f6', borderWidth: 2,
+          pointRadius: p50Radii, pointBackgroundColor: p50PointBg, pointBorderColor: p50PointBorder, pointBorderWidth: 1.5, tension: 0.3 },
         { label: 'P10', data: p10, fill: '-2', borderColor: 'rgba(239,68,68,.3)', borderWidth: 1, pointRadius: 0, tension: 0.3, backgroundColor: 'rgba(59,130,246,.08)' },
-        { label: 'Gatilho R$13.4M', data: labels.map(() => PAT_GATILHO), borderColor: 'rgba(234,179,8,.6)', borderWidth: 1, borderDash: [6,3], pointRadius: 0 },
+        { label: `Gatilho R$${(PAT_GATILHO/1e6).toFixed(1)}M`, data: labels.map(() => PAT_GATILHO), borderColor: 'rgba(234,179,8,.6)', borderWidth: 1, borderDash: [6,3], pointRadius: 0 },
       ]
     },
     options: {
@@ -3410,7 +3434,13 @@ function buildFanChart() {
         legend: { labels: { color: '#94a3b8' } },
         tooltip: {
           callbacks: {
-            label: ctx => ` ${ctx.dataset.label}: R$ ${(ctx.parsed.y/1000000).toFixed(2)}M`,
+            label: ctx => {
+              const v = ` ${ctx.dataset.label.split(' —')[0]}: R$ ${(ctx.parsed.y/1000000).toFixed(2)}M`;
+              const i = ctx.dataIndex;
+              if (ctx.datasetIndex === 0 && i === gIdx90) return v + ' ← 🎯 P90 atinge gatilho';
+              if (ctx.datasetIndex === 1 && i === gIdx50) return v + ' ← 🎯 P50 atinge gatilho';
+              return v;
+            },
             footer: () => ['⚠️ Trajetórias individuais têm maior volatilidade', 'Baseado em MC endpoints + interpolação exponencial']
           }
         },
