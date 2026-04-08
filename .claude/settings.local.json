@@ -28,6 +28,16 @@
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; case \"$f\" in */agentes/contexto/carteira.md|*/agentes/contexto/gatilhos.md) echo \"{\\\"systemMessage\\\": \\\"⚠️ EDIT EM ARQUIVO PROTEGIDO: $f — Bookkeeper deve atualizar. Head NAO edita SOT diretamente.\\\"}\";; esac; } 2>/dev/null || true",
+            "statusMessage": "Verificando arquivo protegido..."
+          }
+        ]
+      },
+      {
         "matcher": "Write",
         "hooks": [
           {
