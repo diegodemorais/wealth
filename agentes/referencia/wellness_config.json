@@ -23,12 +23,13 @@
       "id": "savings_rate",
       "label": "Savings rate",
       "max": 15,
-      "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR determina anos-para-FIRE independente de retorno. Usa renda_estimada das premissas.",
+      "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
+      "_note_thresholds": "Thresholds em % (aporte/custo_vida*100). Ex: 139% = aporte cobre 1.39× o custo de vida. ≥120% = excelente, ≥80% = ok, ≥50% = atenção.",
       "thresholds": [
-        { "min_pct": 35, "pts": 15 },
-        { "min_pct": 25, "pts": 10 },
-        { "min_pct": 15, "pts": 5  },
-        { "min_pct": 0,  "pts": 0  }
+        { "min_pct": 120, "pts": 15 },
+        { "min_pct": 80,  "pts": 10 },
+        { "min_pct": 50,  "pts": 5  },
+        { "min_pct": 0,   "pts": 0  }
       ],
       "colors": { "good": 15, "warn": 5 }
     },

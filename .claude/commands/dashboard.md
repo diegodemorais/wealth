@@ -2,6 +2,23 @@
 
 Regenera `analysis/dashboard.html` — dashboard single-file com Chart.js, dark theme, responsivo.
 
+## ⚠️ REGRA ABSOLUTA — ZERO HARDCODED
+
+**Nunca colocar valores literais no template.html ou no JS do dashboard.** Todo número, taxa, percentual, data ou label que pode mudar deve vir de:
+- `DATA.*` (lido de `data.json`, que vem de `generate_data.py`)
+- `DATA.wellness_config.*` (de `agentes/referencia/wellness_config.json`)
+- `DATA.premissas.*` (de `scripts/fire_montecarlo.py`)
+- Cálculo derivado em JS dos dados acima
+
+**Exemplos do que NÃO fazer:**
+- `const TWR_USD = 12.88` — usar `DATA.backtest.metrics.target.cagr`
+- `new Date('2040-01-01')` — derivar de `premissas.idade_fire_alvo - premissas.idade_atual`
+- `0.247%` no HTML — ler de `wellness_config.metrics[ter].current_ter`
+- `7.20% vs 6.0%` no HTML — ler de `DATA.rf.ipca2040.taxa` e `DATA.pisos.pisoTaxaIpcaLongo`
+- `sr = aporte / renda_estimada` — usar `custo_vida_base / 12` como denominador de custo de vida
+
+Ao editar o dashboard: antes de commitar, buscar literais numéricos no template.html e verificar que cada um ou (a) vem de DATA.* ou (b) é uma constante matemática (π, 12 meses, 100%, etc.).
+
 ## Pipeline (novo — usar sempre)
 
 **NUNCA editar `dashboard.html` diretamente.** O arquivo é gerado pelo pipeline:
@@ -30,9 +47,10 @@ scripts/deploy_netlify.sh   →  Netlify (produção)
 ~/claude/finance-tools/.venv/bin/python3 scripts/build_dashboard.py
 ```
 
-### Deploy:
+### Deploy (GitHub Pages):
 ```bash
-bash scripts/deploy_netlify.sh
+bash scripts/deploy_dashboard.sh              # completo
+bash scripts/deploy_dashboard.sh --skip-scripts  # rápido
 ```
 
 ### Para modificar o dashboard:

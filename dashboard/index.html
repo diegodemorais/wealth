@@ -55,7 +55,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .period-btns button{background:var(--card2);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:500;transition:all .15s}
 .period-btns button:hover{border-color:var(--accent);color:var(--text)}
 .period-btns button.active{background:var(--accent);border-color:var(--accent);color:white;font-weight:700}
-.wellness-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;margin-top:10px}
+.wellness-grid{display:flex;flex-direction:column;gap:0;margin-top:10px}
 .wellness-item{display:flex;align-items:center;gap:6px;font-size:.75rem;padding:4px 0}
 .wellness-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .actions-box{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.3);border-radius:10px;padding:16px;margin-bottom:14px}
@@ -772,14 +772,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:13:51-03:00'); // BRT (UTC-3)
-const VERSION = '1.12';
+const GENERATED_AT = new Date('2026-04-08T15:22:16-03:00'); // BRT (UTC-3)
+const VERSION = '1.13';
 
 const DATA = {
-  "_generated": "2026-04-08T15:13:51",
-  "_generated_brt": "2026-04-08T15:13:51-03:00",
+  "_generated": "2026-04-08T15:22:16",
+  "_generated_brt": "2026-04-08T15:22:16-03:00",
   "date": "2026-04-08",
-  "cambio": 5.0991,
+  "cambio": 5.1054,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -798,14 +798,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.7399,
+      "price": 114.455,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.475,
+      "price": 105.135,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -826,14 +826,14 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.995,
+      "price": 62.88,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.55,
+      "price": 62.27,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -867,7 +867,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3529759,
+    "patrimonio_atual": 3530450,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2338,7 +2338,7 @@ const DATA = {
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.0,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
@@ -2360,7 +2360,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.7399,
+      "price": 114.455,
       "ucits": "AVGS.L"
     },
     {
@@ -2368,7 +2368,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.475,
+      "price": 105.135,
       "ucits": "AVGS.L"
     },
     {
@@ -2392,7 +2392,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.995,
+      "price": 62.88,
       "ucits": "AVEM.L"
     },
     {
@@ -2400,7 +2400,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.55,
+      "price": 62.27,
       "ucits": "AVEM.L"
     },
     {
@@ -2416,7 +2416,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2418059.0,
+    "crescReal": 2418750.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2504,18 +2504,19 @@ const DATA = {
         "id": "savings_rate",
         "label": "Savings rate",
         "max": 15,
-        "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR determina anos-para-FIRE independente de retorno. Usa renda_estimada das premissas.",
+        "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
+        "_note_thresholds": "Thresholds em % (aporte/custo_vida*100). Ex: 139% = aporte cobre 1.39× o custo de vida. ≥120% = excelente, ≥80% = ok, ≥50% = atenção.",
         "thresholds": [
           {
-            "min_pct": 35,
+            "min_pct": 120,
             "pts": 15
           },
           {
-            "min_pct": 25,
+            "min_pct": 80,
             "pts": 10
           },
           {
-            "min_pct": 15,
+            "min_pct": 50,
             "pts": 5
           },
           {
@@ -2754,7 +2755,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.12"
+  "version": "1.13"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -2878,9 +2879,10 @@ function calcWellness() {
   // ── Savings rate (15pts) ──────────────────────────────────────
   const srM = (cfg.metrics || []).find(m => m.id === 'savings_rate') || {};
   const srMax = srM.max ?? 15;
-  const _rendaEst = DATA.premissas.renda_estimada || 45000;
-  const sr = DATA.premissas.aporte_mensal / _rendaEst;
-  const srPct = sr * 100;
+  // SR = aporte / custo_vida_mensal (aporte como múltiplo do custo de vida — mais significativo que aporte/renda)
+  const _custoMensalSR = DATA.premissas.custo_vida_base / 12;
+  const sr = DATA.premissas.aporte_mensal / _custoMensalSR;
+  const srPct = sr * 100; // ex: 1.39 → 139%
   const srThr = srM.thresholds || [{min_pct:35,pts:15},{min_pct:25,pts:10},{min_pct:15,pts:5},{min_pct:0,pts:0}];
   let srPts = 0;
   for (const t of srThr) { if (srPct >= t.min_pct) { srPts = t.pts; break; } }
@@ -3279,7 +3281,9 @@ function buildDeltaBar() {
 // ── S12: Glide Path ───────────────────────────────────────────
 function buildGlidePath() {
   const g = DATA.glide;
-  const labels = g.idades.map(a => 'Idade ' + a);
+  const _anoAtual = today.getFullYear();
+  const _idadeAtual = DATA.premissas.idade_atual;
+  const labels = g.idades.map(a => [`Idade ${a}`, `(${_anoAtual + (a - _idadeAtual)})`]);
   // Assertion: soma = 100%/ano
   g.idades.forEach((_, i) => {
     const s = g.ipca_longo[i] + g.ipca_curto[i] + g.equity[i] + g.hodl11[i] + g.renda_plus[i];
@@ -3356,18 +3360,23 @@ function buildFanChart() {
   const endYear = 2053;
   const labels = [], p10 = [], p50 = [], p90 = [];
   const spread50_10 = 0.15, spread90_50 = 0.20;
-  // Usar anos inteiros como labels para eixo X legível
+  // Labels com ano + idade para contexto temporal duplo
+  const _idadeBase = DATA.premissas.idade_atual;
+  const _anoBase = today.getFullYear();
   for (let yr = Math.ceil(startYear); yr <= endYear; yr++) {
     const t = yr - startYear;
     const med = pat0 * Math.pow(1 + r, t);
-    labels.push(String(yr));
+    const _idade = _idadeBase + (yr - _anoBase);
+    labels.push([String(yr), `(${_idade} anos)`]);
     p50.push(Math.round(med));
     p10.push(Math.round(med * (1 - spread50_10 * Math.sqrt(t))));
     p90.push(Math.round(med * (1 + spread90_50 * Math.sqrt(t))));
   }
   // FIRE day markers
-  const fire50Idx = labels.findIndex(l => +l >= 2037); // FIRE@50
-  const fire53Idx = labels.findIndex(l => +l >= 2040); // FIRE@53
+  const _anoFire50 = _anoBase + (DATA.premissas.idade_fire_aspiracional ?? 50) - _idadeBase;
+  const _anoFire53 = _anoBase + (DATA.premissas.idade_fire_alvo ?? 53) - _idadeBase;
+  const fire50Idx = labels.findIndex(l => +(Array.isArray(l) ? l[0] : l) >= _anoFire50);
+  const fire53Idx = labels.findIndex(l => +(Array.isArray(l) ? l[0] : l) >= _anoFire53);
 
   charts.fan = new Chart(document.getElementById('fanChart'), {
     type: 'line',
@@ -3474,7 +3483,7 @@ function buildFeeAnalysis() {
   charts.fee = new Chart(document.getElementById('feeChart'), {
     type: 'bar',
     data: {
-      labels: [`Carteira (${(_currTer*100).toFixed(3)}%)`, `VWRA (${(_benchTer*100).toFixed(3)}%)`, '60/40 (0.207%)'],
+      labels: [`Carteira (${_currTer.toFixed(3)}%)`, `VWRA (${_benchTer.toFixed(3)}%)`, '60/40 (0.207%)'],
       datasets: [{ label: 'TER acumulado 11 anos', data: [custo, custo_a, 0.00207*pat*anos].map(v => Math.round(v)), backgroundColor: ['rgba(234,179,8,.7)','rgba(34,197,94,.7)','rgba(168,85,247,.7)'] }]
     },
     options: {
@@ -3990,12 +3999,12 @@ function renderKPIs() {
   const heroProgEl = document.getElementById('heroProgresso');
   heroProgEl.textContent = fmtPct(progPct);
   heroProgEl.style.color = progPct >= 50 ? '#22c55e' : '#eab308';
-  const _rendaEstHero = DATA.premissas.renda_estimada || 62000;
-  const srHero = DATA.premissas.aporte_mensal / _rendaEstHero;
+  const _custoMensalHero = DATA.premissas.custo_vida_base / 12;
+  const srHero = DATA.premissas.aporte_mensal / _custoMensalHero;
   const heroSrEl = document.getElementById('heroSavings');
   heroSrEl.textContent = fmtPct(srHero * 100);
-  heroSrEl.style.color = srHero >= 0.35 ? '#22c55e' : srHero >= 0.20 ? '#eab308' : '#ef4444';
-  document.getElementById('heroSavingsSub').textContent = `R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / R$${(_rendaEstHero/1000).toFixed(0)}k/mês`;
+  heroSrEl.style.color = srHero >= 1.5 ? '#22c55e' : srHero >= 1.0 ? '#eab308' : '#ef4444';
+  document.getElementById('heroSavingsSub').textContent = `R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k aporte / R$${(_custoMensalHero/1000).toFixed(1)}k custo`;
 
   document.getElementById('kpiPat').textContent = `R$ ${(totalBrl/1000000).toFixed(2)}M`;
   document.getElementById('kpiPatUsd').textContent = `USD ${(totalEquityUsd/1000).toFixed(0)}k equity`;
@@ -4025,7 +4034,8 @@ function renderKPIs() {
   document.getElementById('savingsRateFill').style.width = Math.min(100, sr*100 / 50 * 100) + '%';
   // Atualizar subtitle dinamicamente (evitar divergência com Wellness)
   const srSubEl = document.getElementById('savingsRateSub');
-  if (srSubEl) srSubEl.textContent = `Aporte R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / Renda est. R$${(_rendaEst/1000).toFixed(0)}k/mês`;
+  const _custoMensal = DATA.premissas.custo_vida_base / 12;
+  if (srSubEl) srSubEl.textContent = `Aporte R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / Custo vida R$${(_custoMensal/1000).toFixed(1)}k/mês`;
 
   // TER — lê de wellness_config
   const _terCfgKPI = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
@@ -4033,9 +4043,9 @@ function renderKPIs() {
   const _bt = _terCfgKPI.benchmark_ter ?? 0.220;
   const _delta = (_ct - _bt) * 100; // em bps
   const _terEl = document.getElementById('terCarteira');
-  if (_terEl) _terEl.textContent = `${(_ct*100).toFixed(3)}%`;
-  const _tcL = document.getElementById('terCarteiraLabel'); if (_tcL) _tcL.textContent = `${(_ct*100).toFixed(3)}%`;
-  const _tvL = document.getElementById('terVwraLabel');    if (_tvL) _tvL.textContent = `${(_bt*100).toFixed(3)}%`;
+  if (_terEl) _terEl.textContent = `${_ct.toFixed(3)}%`;
+  const _tcL = document.getElementById('terCarteiraLabel'); if (_tcL) _tcL.textContent = `${_ct.toFixed(3)}%`;
+  const _tvL = document.getElementById('terVwraLabel');    if (_tvL) _tvL.textContent = `${_bt.toFixed(3)}%`;
   const _tdL = document.getElementById('terDeltaLabel');
   if (_tdL) _tdL.textContent = `Delta +${_delta.toFixed(1)}bps vs VWRA · Alpha ~0.16%/ano`;
   // Barras relativas: maior (carteira) = 100% visual, vwra = proporcional
@@ -4095,16 +4105,14 @@ function renderWellness() {
       grid.appendChild(sep);
     }
     const div = document.createElement('div');
-    div.style.cssText = 'display:grid;grid-template-columns:1.4rem 1fr auto auto;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.15)';
+    div.style.cssText = 'display:grid;grid-template-columns:1.4rem 11rem 1fr 4.5rem 3rem;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid rgba(71,85,105,.12)';
     div.innerHTML = `
-      <span style="font-size:.8rem;line-height:1">${icon}</span>
-      <div>
-        <div style="font-size:.75rem;font-weight:500">${s.label}</div>
-        <div style="height:5px;background:rgba(71,85,105,.25);border-radius:3px;margin-top:3px;overflow:hidden">
-          <div style="height:100%;width:${pct.toFixed(0)}%;background:${s.color};border-radius:3px;transition:width .4s"></div>
-        </div>
+      <span style="font-size:.82rem;line-height:1">${icon}</span>
+      <span style="font-size:.75rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.label}</span>
+      <div style="height:6px;background:rgba(71,85,105,.25);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct.toFixed(0)}%;background:${s.color};border-radius:3px;transition:width .4s"></div>
       </div>
-      <span style="font-size:.65rem;color:var(--muted);white-space:nowrap">${s.detail}</span>
+      <span style="font-size:.68rem;color:var(--muted);white-space:nowrap;text-align:right">${s.detail}</span>
       <strong style="font-size:.72rem;color:${s.color};white-space:nowrap;text-align:right">${Math.round(pts)}/${s.max}</strong>`;
     grid.appendChild(div);
   });
