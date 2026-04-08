@@ -1,8 +1,8 @@
 {
-  "_generated": "2026-04-08T15:31:10",
-  "_generated_brt": "2026-04-08T15:31:10-03:00",
+  "_generated": "2026-04-08T16:03:13",
+  "_generated_brt": "2026-04-08T16:03:13-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1078,
+  "cambio": 5.1152,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -21,14 +21,14 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.4904,
+      "price": 114.34,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.12,
+      "price": 104.67,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -49,14 +49,14 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.8346,
+      "price": 62.755,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.2233,
+      "price": 62.17,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3531719,
+    "patrimonio_atual": 3533318,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1557,7 +1557,7 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 36.7,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
@@ -1583,7 +1583,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.4904,
+      "price": 114.34,
       "ucits": "AVGS.L"
     },
     {
@@ -1591,7 +1591,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.12,
+      "price": 104.67,
       "ucits": "AVGS.L"
     },
     {
@@ -1615,7 +1615,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.8346,
+      "price": 62.755,
       "ucits": "AVEM.L"
     },
     {
@@ -1623,7 +1623,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.2233,
+      "price": 62.17,
       "ucits": "AVEM.L"
     },
     {
@@ -1639,7 +1639,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2420019.0,
+    "crescReal": 2421618.0,
     "_estimativa": true
   },
   "shadows": {

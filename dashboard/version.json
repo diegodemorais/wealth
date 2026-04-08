@@ -1,6 +1,6 @@
 {
   "major": 1,
-  "minor": 12,
+  "minor": 22,
   "label": "Pipeline data-driven + estrutura do projeto",
   "date": "2026-04-08",
   "history": [
@@ -66,6 +66,56 @@
     },
     {
       "version": "1.12",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.13",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.14",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.15",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.16",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.17",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.18",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.19",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.20",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.21",
+      "date": "2026-04-08",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.22",
       "date": "2026-04-08",
       "label": "Pipeline data-driven + estrutura do projeto"
     }
