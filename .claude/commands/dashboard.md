@@ -132,10 +132,92 @@ P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 - **Sem HTML duplicado.** O arquivo final deve ter 1 `<html>`, 1 `<script>`, 1 `<footer>`. Validar antes de salvar.
 - **DATA.date = data real da geração.** Usar `date.today()` no header e no JS. Devem ser iguais.
 
-## Backlog de melhorias (sugeridas pelo time, implementar quando oportuno)
+## Seções Adicionais (implementadas 2026-04-08)
 
-- **Performance attribution**: decompor crescimento em câmbio vs equity vs aportes (Advocate)
-- **Spending gauge**: custo de vida R$250k vs patrimônio, sensibilidade R$250k/270k/300k (FIRE)
-- **Projeção patrimônio**: fan chart P10/P50/P90 até 2040 (FIRE)
-- **Guardrails visuais**: tabela de cortes por nível de drawdown (FIRE)
-- **Mobile**: tabela posições compacta para 375px, charts com altura responsiva (Advocate)
+### S1. Performance Attribution (após timeline)
+Decompor o crescimento patrimonial em 3 componentes. Usar `fx_utils.py decompose_return()` como referência.
+
+Dados para o período Mar/2021 → Mar/2026:
+- **Aportes**: ~R$ 1.500.000 (R$25k × 60 meses)
+- **Retorno equity USD**: estimado ~8% TWR a.a. (retorno real do investimento)
+- **Câmbio**: BRL/USD variou de ~5.60 para ~5.16 (apreciação do real ~-8%)
+- **Total**: patrimônio R$1.11M → R$3.47M
+
+Computar: `pat_fim = pat_ini × (1+r_equity)^anos × (1+r_cambio) + aportes_acumulados`
+Simplificação aceita: mostrar barras empilhadas (stacked bar) com: Aportes | Retorno USD | Impacto Câmbio
+
+Chart.js stacked bar horizontal, 1 barra com 3 segmentos.
+
+### S2. Spending Gauge + Sensibilidade (junto ao P(FIRE))
+Dados do scorecard.md e carteira.md:
+
+```js
+const spending = {
+  baseline: 250000,   // R$/ano meta FIRE
+  current_swr: 250000 / DATA.totalBrl,  // computar: ~7.2%
+  target_swr: 0.024,  // meta 2.4%
+  scenarios: [
+    {label: 'R$250k', pfire: 90.4},
+    {label: 'R$270k', pfire: 85.0},
+    {label: 'R$300k', pfire: 82.1},
+  ]
+};
+```
+
+Visual: barra horizontal mostrando SWR atual (7.2%) vs meta (2.4%), cor vermelha→verde.
+Tabela 3 linhas com spending scenarios e P(FIRE) correspondente.
+
+### S3. Fan Chart Projeção (nova seção após glide path)
+Projeção de patrimônio até 2040 com P10/P50/P90. Dados do último MC (scorecard.md):
+- Patrimônio atual: R$ 3.47M
+- P50 no FIRE (2040): R$ 13.4M (mediana)
+- P10 no FIRE: ~R$ 8M (estimativa conservadora)
+- P90 no FIRE: ~R$ 20M (estimativa otimista)
+- Gatilho: R$ 13.4M
+
+Interpolar linearmente entre hoje e FIRE day (14 anos).
+
+```js
+const fanLabels = ['2026','2028','2030','2032','2034','2036','2038','2040'];
+const fanData = {
+  p10: [3470,4200,5000,5800,6500,7000,7500,8000],  // R$ mil
+  p50: [3470,4800,6300,7900,9500,11000,12200,13400],
+  p90: [3470,5500,7800,10500,13000,15500,18000,20000],
+  gatilho: [13400,13400,13400,13400,13400,13400,13400,13400],
+};
+```
+
+Chart.js line com fill between P10-P90 (area cinza), P50 linha sólida azul, gatilho linha pontilhada vermelha.
+
+### S4. Guardrails Visuais (junto ao FIRE)
+Tabela de regras de retirada pós-FIRE. Dados de `fire_montecarlo.py aplicar_guardrail()`:
+
+| Drawdown | Corte | Spending R$250k |
+|----------|-------|----------------|
+| 0–15% | 0% | R$ 250.000 |
+| 15–25% | 10% | R$ 225.000 |
+| 25–35% | 20% | R$ 200.000 |
+| >35% | 30% | R$ 175.000 |
+
+Piso: R$ 180.000 · Teto: R$ 350.000
+
+Visual: tabela com cores (verde → amarelo → laranja → vermelho).
+
+### S5. Mobile 375px
+CSS adicional obrigatório:
+
+```css
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .kpi-value { font-size: 1.2rem; }
+  table { font-size: .7rem; }
+  th, td { padding: 4px 3px; }
+  .chart-box { height: 200px; }
+  .calc-form input { width: 90px; }
+  .fire-big { font-size: 2.5rem; }
+  .fire-row { gap: 12px; }
+  .rf-grid { grid-template-columns: repeat(2, 1fr); }
+}
+```
+
+Tabela de posições: esconder colunas PM e Var Sem em mobile via `display:none` em `@media(max-width:480px)`.
