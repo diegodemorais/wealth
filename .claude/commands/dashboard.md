@@ -52,23 +52,31 @@ const GENERATED_AT = new Date('...');
 Seções (todas obrigatórias, nesta ordem):
 
 1. **Próximas Ações** (TOPO): próximo aporte sugerido via cascade (ler pisos de `portfolio_analytics.py`), gatilhos ativos (ler `agentes/contexto/gatilhos.md`), drift alerts (threshold de `gatilhos.md`). Background amarelo.
-2. **KPI cards**: patrimônio, P(FIRE) (ler `scorecard.md`), **crescimento patrimonial** (NÃO "CAGR" — inclui aportes), delta A (ler `scorecard.md`)
-3. **KPI FIRE**: anos p/ FIRE (ler `PREMISSAS["idade_fire_alvo"] - PREMISSAS["idade_atual"]` de `fire_montecarlo.py`), progresso % (`pat / PREMISSAS["patrimonio_gatilho"]`), SWR implícita (`PREMISSAS["custo_vida_base"] / pat`), TWR estimado
-4. **Timeline patrimônio** (do CSV, todos os meses sem gaps)
-5. **Performance Attribution** (stacked bar): decompor crescimento em Aportes (~R$1.5M) + Retorno USD (~R$700k) + Câmbio (~-R$160k). Ref: `fx_utils.py decompose_return()`
-6. **Donut alocação + donut geográfico** (`doughnutOpts()` helper — não repetir config 3x). Geo: EUA ~44% / Dev ex-US ~30% / EM ~26%
-7. **P(FIRE) + tornado + spending gauge**: P(FIRE) 3 cenários (ler `scorecard.md`) + tornado (⚠️ Estimativa se manual) + tabela spending scenarios (ler `scorecard.md` tabela P(FIRE) para diferentes custos de vida) + barra SWR atual vs meta (`PREMISSAS["custo_vida_base"] / pat` vs `PREMISSAS["swr_gatilho"]`)
-8. **Delta bar** (**incluir IPCA+ longo**) + progress bars (SWRD/AVGS/AVEM/IPCA+)
-9. **Glide path stacked area** (soma=100%/ano; pós-FIRE=rising equity conforme tabela de alocação por idade em `agentes/contexto/carteira.md`)
-10. **FIRE buckets donut**
-11. **Fan chart P10/P50/P90** (projeção patrimônio até FIRE. Gatilho: `PREMISSAS["patrimonio_gatilho"]`. P10/P50/P90: ler `scorecard.md` seção P(FIRE))
-12. **Guardrails visuais** (ler `fire_montecarlo.py` → `GUARDRAILS` array + `GASTO_PISO`. Cores verde→vermelho)
-13. **Tabela posições** (var semanal se disponível; colunas PM e VarSem com classe `hide-mobile`)
-14. **Calculadora de aporte** (JS interativa). **Cascade obrigatório** — ler pisos e alvos de `scripts/portfolio_analytics.py` (`PISO_TAXA_IPCA_LONGO`, `PISO_TAXA_RENDA_PLUS`, `ALVO_IPCA_LONGO_PCT`) e `scripts/checkin_mensal.py` (`PESOS_TARGET`). Lógica: (1º) IPCA+ longo se taxa ≥ piso E gap > 0 → 100% do aporte; (2º) Renda+ se taxa ≥ piso E gap > 0; (3º) Equity → bucket mais subpeso. Mostrar qual etapa do cascade está ativa e por quê. Taxas atuais vêm do WebSearch ou holdings.md.
-15. **Shadows** (**incluir Shadow C**: 79% VWRA + IPCA+ + crypto)
-16. **Bollinger Bands sobre retorno acumulado** (NÃO sobre câmbio). MA5 ± 2σ aplicado sobre retorno mensal acumulado (TWR proxy) da carteira. Fonte: `historico_carteira.csv` — computar retorno mensal = `pat[i]/pat[i-1] - 1`, acumular. Bollinger identifica meses fora da banda (oportunidade/alerta). Se dados insuficientes (<12 meses), usar retorno do equity (SWRD.L) como proxy.
-17. **TLH monitor**
-18. **RF + crypto cards**
+2. **Financial Wellness Score**: nota 0-100 agregando ~10 métricas: P(FIRE) base (peso 25%), drift máximo (15%), SWR implícita vs meta (15%), IPCA+ gap vs alvo (10%), savings rate (10%), TER vs benchmark (5%), TLH oportunidades (5%), diversificação geo (5%), staleness dados (5%), execuções pendentes (5%). Semáforo: ≥80 verde, 60-79 amarelo, <60 vermelho. Mostrar nota + breakdown das 10 métricas com cores individuais.
+3. **KPI cards**: patrimônio, P(FIRE) (ler `scorecard.md`), **crescimento patrimonial** (NÃO "CAGR" — inclui aportes), delta A (ler `scorecard.md`)
+4. **Time to FIRE**: countdown visual (X anos Y meses) com barra de progresso animada (`pat_atual / PREMISSAS["patrimonio_gatilho"]`). Mostrar: "Aporte de R$X/mês a mais acelera FIRE em Y meses" (computar: `(gatilho - pat) / (aporte_extra * 12)` simplificado). Dois sub-cards: FIRE@50 (aspiracional) e FIRE@53 (safe harbor).
+5. **KPI FIRE**: progresso % (`pat / PREMISSAS["patrimonio_gatilho"]`), SWR implícita (`PREMISSAS["custo_vida_base"] / pat`), TWR estimado, savings rate (`PREMISSAS["aporte_mensal"] * 12 / renda_estimada` — se renda não disponível, mostrar aporte anual absoluto)
+6. **Net worth stacked area** (timeline patrimônio com breakdown por classe): eixo X = meses do CSV, eixo Y = R$. Áreas empilhadas: Equity (azul) + RF (verde) + Crypto (amarelo). Se breakdown mensal não disponível no CSV, usar proporção atual e interpolar. Substitui o line chart simples.
+7. **Performance Attribution** (stacked bar): decompor crescimento em Aportes + Retorno USD + Câmbio. Ref: `fx_utils.py decompose_return()`. Computar, não hardcodar.
+8. **Donut alocação + donut geográfico** (`doughnutOpts()` helper). Geo: computar de EQUITY_WEIGHTS + MSCI World ~67% US.
+9. **Scenario Comparison** (2 colunas side-by-side): FIRE@50 vs FIRE@53. Para cada: P(FIRE), patrimônio mediano, SWR, anos restantes. Dados: ler `scorecard.md` (ambos cenários existem). Highlight visual no cenário escolhido (53).
+10. **P(FIRE) + tornado + spending gauge**: P(FIRE) 3 cenários (ler `scorecard.md`) + tornado (⚠️ Estimativa se manual) + tabela spending scenarios (ler `scorecard.md`) + barra SWR atual vs meta
+11. **Delta bar** (**incluir IPCA+ longo**) + progress bars (SWRD/AVGS/AVEM/IPCA+)
+12. **Glide path stacked area** (soma=100%/ano; pós-FIRE=rising equity conforme `carteira.md`)
+13. **FIRE buckets donut**
+14. **Fan chart P10/P50/P90** (projeção patrimônio até FIRE. Gatilho: `PREMISSAS["patrimonio_gatilho"]`. P10/P50/P90: ler `scorecard.md`)
+15. **Guardrails visuais** (ler `fire_montecarlo.py` → `GUARDRAILS` + `GASTO_PISO`. Cores verde→vermelho)
+16. **Retirement Income Breakdown** (pós-FIRE): stacked bar ou tabela mostrando fontes de renda por ano: saques equity + INSS (`PREMISSAS["inss_anual"]` a partir de `PREMISSAS["inss_inicio_ano"]`) + Renda+ 2065 (se ainda existir). Mostrar que INSS cobre ~7% do spending.
+17. **Fee Analysis**: custo TER acumulado até FIRE. Cálculo: `TER_ponderado × patrimonio_medio × anos_ate_fire`. Ler TER de `scorecard.md` seção 1.3. Mostrar em R$ e como % do patrimônio final. Comparar: TER da carteira vs TER Shadow A (VWRA) vs TER Shadow C.
+18. **Monthly Contribution Needed**: "Para atingir gatilho em N anos, precisa aportar R$X/mês". Computar: `(gatilho - pat_futuro_sem_aporte) / (N * 12)` onde `pat_futuro = pat * (1+r)^N`. Mostrar slider: se aporte = R$25k → FIRE em 14 anos. Se R$35k → FIRE em 12 anos.
+19. **What-if Scenarios** (JS interativo): 3 sliders — (a) aporte mensal R$15k-50k, (b) retorno equity 3%-7%, (c) custo vida R$200k-350k. Ao mover, recalcula e atualiza: P(FIRE) estimado, anos até FIRE, patrimônio projetado. Fórmula simplificada: `pat_fire = pat * (1+r)^N + aporte_anual * ((1+r)^N - 1) / r`. Não precisa de MC — aproximação suficiente para exploração interativa.
+20. **Sankey Diagram** (cash flow mensal): Renda → [Gastos R$X | Aporte R$Y | IR/INSS R$Z]. Se dados de renda não disponíveis, usar estimativa ou omitir seção. Lib sugerida: Chart.js não suporta Sankey nativamente — usar D3-sankey ou simplificar como stacked bar horizontal (Renda dividida em fatias).
+21. **Tabela posições** (var semanal se disponível; colunas PM e VarSem com classe `hide-mobile`)
+22. **Calculadora de aporte** (JS interativa). **Cascade obrigatório** — ler pisos e alvos de `scripts/portfolio_analytics.py` e `scripts/checkin_mensal.py`. Lógica: (1º) IPCA+ longo se taxa ≥ piso E gap > 0; (2º) Renda+ se taxa ≥ piso E gap > 0; (3º) Equity → bucket mais subpeso.
+23. **Shadows** (**incluir Shadow C**)
+24. **Bollinger Bands sobre retorno mensal** (MA5 ± 2σ de `historico_carteira.csv`)
+25. **TLH monitor**
+26. **RF + crypto cards**
 
 **Runtime assertions + live fetch** (incluir no JS):
 ```js
