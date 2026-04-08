@@ -2117,6 +2117,18 @@ if (localStorage.getItem('dashboard_private') === '1') {
   document.getElementById('privacyBtn').textContent = '👁‍🗨';
 }
 
+// ── Tab system ────────────────────────────────────────────────
+window.switchTab = function(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('[data-in-tab]').forEach(el => {
+    el.style.display = el.dataset.inTab === name ? '' : 'none';
+  });
+  requestAnimationFrame(() => {
+    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
+  });
+  try { localStorage.setItem('dash_tab', name); } catch(e) {}
+};
+
 // ═══════════════════════════════════════════════════════════════
 // INIT — render tudo
 // ═══════════════════════════════════════════════════════════════
@@ -2158,21 +2170,6 @@ if (localStorage.getItem('dashboard_private') === '1') {
   switchTab('status');
 })();
 
-// ── Tab system ────────────────────────────────────────────────
-window.switchTab = function(name) {
-  // Atualizar botões
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-  // Mostrar/esconder seções
-  document.querySelectorAll('[data-in-tab]').forEach(el => {
-    el.style.display = el.dataset.inTab === name ? '' : 'none';
-  });
-  // Resize todos os charts (canvas pode ter ficado 0x0 enquanto escondido)
-  requestAnimationFrame(() => {
-    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
-  });
-  // Persistir tab ativa
-  try { localStorage.setItem('dash_tab', name); } catch(e) {}
-};
 // Restaurar última tab
 (function() {
   try { const t = localStorage.getItem('dash_tab'); if (t) switchTab(t); } catch(e) {}

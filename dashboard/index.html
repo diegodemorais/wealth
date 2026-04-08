@@ -767,12 +767,12 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T13:51:57-03:00'); // BRT (UTC-3)
-const VERSION = '1.7';
+const GENERATED_AT = new Date('2026-04-08T13:57:55-03:00'); // BRT (UTC-3)
+const VERSION = '1.9';
 
 const DATA = {
-  "_generated": "2026-04-08T13:51:54",
-  "_generated_brt": "2026-04-08T13:51:54-03:00",
+  "_generated": "2026-04-08T13:57:55",
+  "_generated_brt": "2026-04-08T13:57:55-03:00",
   "date": "2026-04-08",
   "cambio": 5.1383,
   "posicoes": {
@@ -793,14 +793,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.59,
+      "price": 114.525,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.44,
+      "price": 105.465,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -862,7 +862,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3553947,
+    "patrimonio_atual": 3553885,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2355,7 +2355,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.59,
+      "price": 114.525,
       "ucits": "AVGS.L"
     },
     {
@@ -2363,7 +2363,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.44,
+      "price": 105.465,
       "ucits": "AVGS.L"
     },
     {
@@ -2411,7 +2411,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2442247.0,
+    "crescReal": 2442185.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2480,7 +2480,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.7"
+  "version": "1.9"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3831,6 +3831,18 @@ if (localStorage.getItem('dashboard_private') === '1') {
   document.getElementById('privacyBtn').textContent = '👁‍🗨';
 }
 
+// ── Tab system ────────────────────────────────────────────────
+window.switchTab = function(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  document.querySelectorAll('[data-in-tab]').forEach(el => {
+    el.style.display = el.dataset.inTab === name ? '' : 'none';
+  });
+  requestAnimationFrame(() => {
+    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
+  });
+  try { localStorage.setItem('dash_tab', name); } catch(e) {}
+};
+
 // ═══════════════════════════════════════════════════════════════
 // INIT — render tudo
 // ═══════════════════════════════════════════════════════════════
@@ -3872,21 +3884,6 @@ if (localStorage.getItem('dashboard_private') === '1') {
   switchTab('status');
 })();
 
-// ── Tab system ────────────────────────────────────────────────
-window.switchTab = function(name) {
-  // Atualizar botões
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-  // Mostrar/esconder seções
-  document.querySelectorAll('[data-in-tab]').forEach(el => {
-    el.style.display = el.dataset.inTab === name ? '' : 'none';
-  });
-  // Resize todos os charts (canvas pode ter ficado 0x0 enquanto escondido)
-  requestAnimationFrame(() => {
-    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
-  });
-  // Persistir tab ativa
-  try { localStorage.setItem('dash_tab', name); } catch(e) {}
-};
 // Restaurar última tab
 (function() {
   try { const t = localStorage.getItem('dash_tab'); if (t) switchTab(t); } catch(e) {}
