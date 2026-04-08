@@ -17,7 +17,12 @@ Regenera `dashboard/index.html` — dashboard single-file com Chart.js, dark the
 - `7.20% vs 6.0%` no HTML — ler de `DATA.rf.ipca2040.taxa` e `DATA.pisos.pisoTaxaIpcaLongo`
 - `sr = aporte / renda_estimada` — usar `custo_vida_base / 12` como denominador de custo de vida
 
-Ao editar o dashboard: antes de commitar, buscar literais numéricos no template.html e verificar que cada um ou (a) vem de DATA.* ou (b) é uma constante matemática (π, 12 meses, 100%, etc.).
+**VERIFICAÇÃO OBRIGATÓRIA antes de qualquer commit de template.html:**
+```bash
+# Roda após cada implementação — zero exceções
+grep -oP '\b\d+\.?\d*\b' dashboard/template.html | grep -vE '^(0|1|2|3|4|5|6|7|8|9|10|12|100|1000)$'
+```
+Para cada número encontrado: confirmar que vem de `DATA.*` ou é constante matemática/CSS (px, %, z-index, opacity, etc.). Qualquer taxa, percentual financeiro, ano, valor em R$ ou USD que apareça literal no JS = violação. Corrigir antes de commitar.
 
 ## Pipeline (novo — usar sempre)
 

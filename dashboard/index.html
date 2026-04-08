@@ -775,14 +775,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T17:17:54-03:00'); // BRT (UTC-3)
-const VERSION = '1.30';
+const GENERATED_AT = new Date('2026-04-08T17:30:03-03:00'); // BRT (UTC-3)
+const VERSION = '1.32';
 
 const DATA = {
-  "_generated": "2026-04-08T17:17:54",
-  "_generated_brt": "2026-04-08T17:17:54-03:00",
+  "_generated": "2026-04-08T17:30:03",
+  "_generated_brt": "2026-04-08T17:30:03-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1033,
+  "cambio": 5.0986,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -870,7 +870,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3532263,
+    "patrimonio_atual": 3529318,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2420,7 +2420,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2420563.0,
+    "crescReal": 2417618.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2761,7 +2761,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.30"
+  "version": "1.32"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -4233,18 +4233,18 @@ function renderKPIs() {
     const grupos = [
       { label: 'Solteiro', icon: '🧑', color: '#3b82f6',
         cards: [
-          { age: _idadeFire53, p: base53,  tag: '✅ Escolhida',    year: ano53, chosen: true },
           { age: _idadeFire50, p: base50,  tag: '🚀 Aspiracional', year: ano50, chosen: false },
+          { age: _idadeFire53, p: base53,  tag: '✅ Escolhida',    year: ano53, chosen: true },
         ]},
       { label: 'Casado',   icon: '💍', color: '#8b5cf6',
         cards: [
-          { age: _idadeFire53, p: casado53, tag: tagCasado,    year: ano53, chosen: false },
           { age: _idadeFire50, p: casado50, tag: 'Aprox.',     year: ano50, chosen: false },
+          { age: _idadeFire53, p: casado53, tag: tagCasado,    year: ano53, chosen: false },
         ]},
       { label: 'c/ Filho', icon: '👨‍👩‍👧', color: '#06b6d4',
         cards: [
-          { age: _idadeFire53, p: filho53,  tag: tagFilho,     year: ano53, chosen: false },
           { age: _idadeFire50, p: filho50,  tag: 'Aprox.',     year: ano50, chosen: false },
+          { age: _idadeFire53, p: filho53,  tag: tagFilho,     year: ano53, chosen: false },
         ]},
     ];
     grupos.forEach(g => {
