@@ -37,31 +37,32 @@ Buckets, targets e geo breakdown: **ler de `scripts/ibkr_sync.py` (BUCKET_MAP) e
 
 ```js
 // Constantes centralizadas (NÃO duplicar valores inline)
+// TODOS os valores computados dos arquivos do codebase, não hardcoded
 const DATA = {
-  date: '2026-04-08',
-  cambio: 5.25,
-  totalBrl: 3527000,
-  totalEquityUsd: 608000,
-  pfire: {base: 90.4, fav: 94.1, stress: 86.8},
+  date: '...', // date.today()
+  cambio: ..., // WebSearch
+  totalBrl: ..., // computar
+  totalEquityUsd: ..., // computar de ibkr_lotes.json + preços
+  pfire: {...}, // ler scorecard.md
   // ... todos os dados aqui
 };
-const GENERATED_AT = new Date('2026-04-08');
+const GENERATED_AT = new Date('...');
 ```
 
 Seções (todas obrigatórias, nesta ordem):
 
-1. **Próximas Ações** (TOPO): próximo aporte sugerido (bucket mais subpeso), gatilhos ativos (ex: "IPCA+ DCA ativo — taxa > piso 6.0%"), drift alerts (delta > 5pp). Background amarelo.
-2. **KPI cards**: patrimônio, P(FIRE), **crescimento patrimonial** (NÃO "CAGR" — inclui aportes), delta A
-3. **KPI FIRE**: anos p/ FIRE, progresso % (`pat / 13.4M`), SWR implícita (`250k / pat`), TWR estimado
+1. **Próximas Ações** (TOPO): próximo aporte sugerido via cascade (ler pisos de `portfolio_analytics.py`), gatilhos ativos (ler `agentes/contexto/gatilhos.md`), drift alerts (threshold de `gatilhos.md`). Background amarelo.
+2. **KPI cards**: patrimônio, P(FIRE) (ler `scorecard.md`), **crescimento patrimonial** (NÃO "CAGR" — inclui aportes), delta A (ler `scorecard.md`)
+3. **KPI FIRE**: anos p/ FIRE (ler `PREMISSAS["idade_fire_alvo"] - PREMISSAS["idade_atual"]` de `fire_montecarlo.py`), progresso % (`pat / PREMISSAS["patrimonio_gatilho"]`), SWR implícita (`PREMISSAS["custo_vida_base"] / pat`), TWR estimado
 4. **Timeline patrimônio** (do CSV, todos os meses sem gaps)
 5. **Performance Attribution** (stacked bar): decompor crescimento em Aportes (~R$1.5M) + Retorno USD (~R$700k) + Câmbio (~-R$160k). Ref: `fx_utils.py decompose_return()`
 6. **Donut alocação + donut geográfico** (`doughnutOpts()` helper — não repetir config 3x). Geo: EUA ~44% / Dev ex-US ~30% / EM ~26%
-7. **P(FIRE) + tornado + spending gauge**: P(FIRE) 3 cenários + tornado (⚠️ Estimativa se manual) + tabela spending R$250k/270k/300k com P(FIRE) + barra SWR atual vs meta
+7. **P(FIRE) + tornado + spending gauge**: P(FIRE) 3 cenários (ler `scorecard.md`) + tornado (⚠️ Estimativa se manual) + tabela spending scenarios (ler `scorecard.md` tabela P(FIRE) para diferentes custos de vida) + barra SWR atual vs meta (`PREMISSAS["custo_vida_base"] / pat` vs `PREMISSAS["swr_gatilho"]`)
 8. **Delta bar** (**incluir IPCA+ longo**) + progress bars (SWRD/AVGS/AVEM/IPCA+)
-9. **Glide path stacked area** (soma=100%/ano; pós-FIRE=rising equity até 94%@60+)
+9. **Glide path stacked area** (soma=100%/ano; pós-FIRE=rising equity conforme tabela de alocação por idade em `agentes/contexto/carteira.md`)
 10. **FIRE buckets donut**
-11. **Fan chart P10/P50/P90** (projeção patrimônio até FIRE 2040 com gatilho R$13.4M pontilhado)
-12. **Guardrails visuais** (tabela drawdown 0-15%/15-25%/25-35%/>35% → cortes 0%/10%/20%/30%, piso R$180k, teto R$350k, cores verde→vermelho)
+11. **Fan chart P10/P50/P90** (projeção patrimônio até FIRE. Gatilho: `PREMISSAS["patrimonio_gatilho"]`. P10/P50/P90: ler `scorecard.md` seção P(FIRE))
+12. **Guardrails visuais** (ler `fire_montecarlo.py` → `GUARDRAILS` array + `GASTO_PISO`. Cores verde→vermelho)
 13. **Tabela posições** (var semanal se disponível; colunas PM e VarSem com classe `hide-mobile`)
 14. **Calculadora de aporte** (JS interativa). **Cascade obrigatório** — ler pisos e alvos de `scripts/portfolio_analytics.py` (`PISO_TAXA_IPCA_LONGO`, `PISO_TAXA_RENDA_PLUS`, `ALVO_IPCA_LONGO_PCT`) e `scripts/checkin_mensal.py` (`PESOS_TARGET`). Lógica: (1º) IPCA+ longo se taxa ≥ piso E gap > 0 → 100% do aporte; (2º) Renda+ se taxa ≥ piso E gap > 0; (3º) Equity → bucket mais subpeso. Mostrar qual etapa do cascade está ativa e por quê. Taxas atuais vêm do WebSearch ou holdings.md.
 15. **Shadows** (**incluir Shadow C**: 79% VWRA + IPCA+ + crypto)
@@ -125,25 +126,51 @@ P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 
 - **O dashboard é OUTPUT gerado — nunca editar o HTML diretamente.** Correções e melhorias vão nesta skill. O HTML é sobrescrito a cada `/dashboard`.
 - **Commits: skill + HTML sempre juntos.** Se alterar a skill, regenerar e commitar ambos no mesmo commit.
-- **Crescimento patrimonial ≠ retorno de investimento.** NUNCA apresentar como "CAGR" ou "retorno" sem disclaimer "(inclui aportes ~R$300k/ano)". TWR estimado separado.
+- **Crescimento patrimonial ≠ retorno de investimento.** NUNCA apresentar como "CAGR" ou "retorno" sem disclaimer "(inclui aportes)". Valor do aporte: `PREMISSAS["aporte_mensal"] * 12`. TWR estimado separado.
 - **Dados do DATA object, não inline.** Cada valor aparece 1 vez no JS. HTML referencia via Chart.js ou `textContent`. CAGR no DATA deve ser igual ao KPI exibido.
 - **doughnutOpts() helper.** Configs de doughnut chart extraídas em função reutilizável.
 - **Bollinger = MA5 ± 2σ.** Não MA20.
-- **Glide path soma 100% em cada ano.** Pós-FIRE = rising equity até 94% aos 60+ (Pfau-Kitces + carteira.md). Assertion no JS.
-- **Shadow C obrigatório.** Benchmark justo para avaliar tilt fatorial.
-- **IPCA+ longo no delta bar.** Maior gap da carteira, não pode ser invisível.
+- **Glide path soma 100% em cada ano.** Pós-FIRE = rising equity conforme tabela em `agentes/contexto/carteira.md`. Assertion no JS.
+- **Shadow C obrigatório.** Pesos de `agentes/metricas/shadow-portfolio.md`.
+- **IPCA+ longo no delta bar.** Alvo de `checkin_mensal.py PESOS_TARGET["IPCA"]`.
 - **Staleness banner.** Se HTML > 7 dias, mostrar alerta vermelho no header.
-- **Progresso FIRE** = `patrimonio_total / 13_400_000`. Computar, não hardcodar.
+- **Progresso FIRE** = `patrimonio_total / PREMISSAS["patrimonio_gatilho"]`. Computar, não hardcodar.
 - **Sem HTML duplicado.** O arquivo final deve ter 1 `<html>`, 1 `<script>`, 1 `<footer>`. Validar antes de salvar.
 - **DATA.date = data real da geração.** Usar `date.today()` no header e no JS. Devem ser iguais.
+- **Zero valores hardcoded.** Todos os valores, regras, pisos, alvos e gatilhos devem vir de arquivos do codebase (scripts .py, agentes/*.md, dados/*.csv). A skill define ONDE buscar, não OS VALORES.
 
-## Referência de Dados por Seção
+## Referência: Onde Buscar Cada Dado
 
-| Seção | Dados | Chart type |
-|-------|-------|-----------|
-| Attribution | Aportes ~R$1.5M, Retorno USD ~R$700k, Câmbio ~-R$160k. Computar via `fx_utils.py` | Stacked bar horizontal |
-| Spending | `{R$250k: 90.4%, R$270k: ~85%, R$300k: 82.1%}`. SWR = `250k / pat` | Tabela + progress bar |
-| Fan chart | P10/P50/P90 interpolado linear até 2040. P50=R$13.4M, P10~R$8M, P90~R$20M | Line + fill between |
-| Guardrails | DD 0-15%→0%, 15-25%→-10%, 25-35%→-20%, >35%→-30%. Piso R$180k, teto R$350k | Tabela colorida |
-| Geo | EUA: SWRD×67%+AVUV+USSC+AVGS×50%. Dev: SWRD×33%+AVDV+AVGS×50%. EM: EIMI+AVES+DGS | Doughnut |
-| Mobile | `@media(max-width:480px)` KPI 2col, font .7rem, charts 200px, `hide-mobile` em PM/VarSem | CSS only |
+**Regra: a skill define ONDE buscar, não OS VALORES.**
+
+| Dado | Fonte (codebase) | Nunca hardcodar |
+|------|------------------|-----------------|
+| Posições (qtde, custo) | `analysis/backtest_output/ibkr_lotes.json` | |
+| Pesos target | `scripts/checkin_mensal.py` → `PESOS_TARGET` | |
+| Buckets (transitórios) | `scripts/ibkr_sync.py` → `BUCKET_MAP` | |
+| Pisos cascade (IPCA+, Renda+) | `scripts/portfolio_analytics.py` → `PISO_TAXA_*`, `ALVO_*_PCT` | |
+| P(FIRE) cenários | `agentes/metricas/scorecard.md` → seção 1.1 | |
+| Shadows (retornos, deltas) | `agentes/metricas/scorecard.md` → seção 1.2 | |
+| Gatilho FIRE (R$, SWR) | `scripts/fire_montecarlo.py` → `PREMISSAS["patrimonio_gatilho"]`, `PREMISSAS["swr_gatilho"]` | |
+| Custo de vida base | `scripts/fire_montecarlo.py` → `PREMISSAS["custo_vida_base"]` | |
+| Aporte mensal | `scripts/fire_montecarlo.py` → `PREMISSAS["aporte_mensal"]` | |
+| Idade atual / FIRE alvo | `scripts/fire_montecarlo.py` → `PREMISSAS["idade_atual"]`, `PREMISSAS["idade_fire_alvo"]` | |
+| Equity % | `scripts/fire_montecarlo.py` → `PREMISSAS["pct_equity"]` | |
+| Guardrails (DD/cortes) | `scripts/fire_montecarlo.py` → `GUARDRAILS`, `GASTO_PISO` | |
+| Glide path pós-FIRE | `agentes/contexto/carteira.md` → tabela alocação por idade | |
+| Drift threshold | `agentes/contexto/gatilhos.md` | |
+| RF (IPCA+, Renda+, HODL11) | `dados/holdings.md` | |
+| Timeline patrimônio | `dados/historico_carteira.csv` | |
+| Preços ETFs | WebSearch (placeholder no DATA se offline) | |
+| Câmbio | WebSearch + BCB Olinda live fetch | |
+| Geo breakdown | Computar: MSCI World ~67% US (nota: premissa, documentar) | |
+
+| Seção visual | Chart type |
+|-------------|-----------|
+| Attribution | Stacked bar horizontal (computar via `fx_utils.py`) |
+| Spending | Tabela + progress bar |
+| Fan chart | Line + fill between P10-P90 |
+| Guardrails | Tabela colorida (verde→vermelho) |
+| Geo | Doughnut |
+| Bollinger | Line MA5±2σ sobre retorno mensal |
+| Mobile | `@media(max-width:480px)` + `.hide-mobile` em PM/VarSem |
