@@ -181,7 +181,7 @@ wealth/
 ├── scripts/           # Python: analytics, FIRE, factor, spending, pipeline dashboard
 ├── dashboard/         # Dashboard — todos os artefatos commitados juntos
 │   ├── template.html  #   fonte: template com __DATA_PLACEHOLDER__
-│   ├── index.html     #   output: gerado por build_dashboard.py (serve no Netlify)
+│   ├── index.html     #   output: gerado por build_dashboard.py (serve no GitHub Pages via wealth-dash)
 │   └── data.json      #   output: snapshot JSON intermediário (auditável)
 ├── dados/             # Estado persistente (fonte de verdade dos dados)
 │   ├── dashboard_state.json  # estado acumulado pelos scripts
