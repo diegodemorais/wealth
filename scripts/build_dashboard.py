@@ -19,9 +19,48 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 TEMPLATE     = ROOT / "dashboard" / "template.html"
 DATA_FILE    = ROOT / "dashboard" / "data.json"
+SCHEMA_FILE  = ROOT / "dashboard" / "data.schema.json"
 OUTPUT       = ROOT / "dashboard" / "index.html"
 VERSION_FILE = ROOT / "dashboard" / "version.json"
 PLACEHOLDER  = "__DATA_PLACEHOLDER__"
+
+
+def _validate_data(data: dict) -> None:
+    """Valida data.json contra data.schema.json.
+
+    Usa jsonschema se disponível; caso contrário faz check manual dos campos
+    obrigatórios de primeiro nível. Nunca bloqueia o build — apenas imprime
+    warnings para não interromper o pipeline caso campos novos sejam adicionados
+    antes do schema ser atualizado.
+    """
+    if not SCHEMA_FILE.exists():
+        print(f"⚠️  Schema não encontrado em {SCHEMA_FILE} — validação ignorada")
+        return
+
+    schema = json.loads(SCHEMA_FILE.read_text(encoding="utf-8"))
+    required_fields = schema.get("required", [])
+
+    try:
+        import jsonschema  # type: ignore
+        errors = list(jsonschema.Draft7Validator(schema).iter_errors(data))
+        if errors:
+            print(f"⚠️  data.json tem {len(errors)} problema(s) de schema (build não bloqueado):")
+            for err in errors[:10]:  # máx 10 erros para não poluir o log
+                path = " → ".join(str(p) for p in err.absolute_path) or "(raiz)"
+                print(f"   • [{path}] {err.message}")
+            if len(errors) > 10:
+                print(f"   … e mais {len(errors) - 10} erro(s) omitidos")
+        else:
+            print("✅ data.json validado contra data.schema.json — OK")
+    except ImportError:
+        # Fallback manual: verifica apenas campos obrigatórios de primeiro nível
+        missing = [f for f in required_fields if f not in data]
+        if missing:
+            print(f"⚠️  data.json — campos obrigatórios ausentes: {missing}")
+            print("   (instale jsonschema para validação completa: pip install jsonschema)")
+        else:
+            print(f"✅ data.json — {len(required_fields)} campos obrigatórios presentes "
+                  f"(jsonschema não instalado — validação de tipos ignorada)")
 
 
 def bump_version(major_label: str | None = None) -> dict:
@@ -60,6 +99,9 @@ def build(data_path: Path, template_path: Path, out_path: Path,
 
     with open(data_path) as f:
         data = json.load(f)
+
+    # 1b. Validar schema
+    _validate_data(data)
 
     # 2. Ler template
     if not template_path.exists():

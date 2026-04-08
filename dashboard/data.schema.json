@@ -1,0 +1,503 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/diegodemorais/wealth/dashboard/data.schema.json",
+  "title": "Dashboard DATA",
+  "description": "Contrato de dados entre generate_data.py e template.html. Campos obrigatórios garantem que o dashboard não quebra em runtime.",
+  "type": "object",
+  "required": [
+    "date",
+    "cambio",
+    "posicoes",
+    "pesosTarget",
+    "pisos",
+    "pfire50",
+    "pfire53",
+    "premissas",
+    "guardrails",
+    "gasto_piso",
+    "spendingSmile",
+    "spendingSensibilidade",
+    "saude_base",
+    "tornado",
+    "timeline",
+    "bollinger",
+    "backtest",
+    "backtestR5",
+    "rf",
+    "hodl11",
+    "glide",
+    "drift",
+    "tlh",
+    "attribution",
+    "shadows",
+    "minilog",
+    "wellness_config",
+    "eventos_vida"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "_generated": {
+      "type": "string",
+      "description": "ISO 8601 timestamp de geração (sem fuso)"
+    },
+    "_generated_brt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp de geração em BRT (UTC-3)"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Data de referência dos dados (YYYY-MM-DD)"
+    },
+    "cambio": {
+      "type": "number",
+      "minimum": 1,
+      "description": "Taxa de câmbio BRL/USD (PTAX BCB)"
+    },
+    "posicoes": {
+      "type": "object",
+      "description": "Posições IBKR — chave = ticker (ex: SWRD, AVGS). Valores de qty e price usados para calcular totalEquityUsd.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["qty", "avg_cost", "price", "bucket", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "qty":      { "type": "number", "description": "Quantidade de cotas" },
+          "avg_cost": { "type": "number", "description": "Preço médio de custo (USD)" },
+          "price":    { "type": "number", "description": "Preço atual de mercado (USD)" },
+          "bucket":   { "type": "string", "enum": ["SWRD","AVGS","AVEM","JPGL"], "description": "Bucket estratégico" },
+          "status":   { "type": "string", "enum": ["alvo","transitorio"], "description": "Status da posição" }
+        }
+      }
+    },
+    "pesosTarget": {
+      "type": "object",
+      "description": "Pesos-alvo por bucket (frações decimais, devem somar ≈1). Usado no donut e cálculo de drift.",
+      "required": ["SWRD","AVGS","AVEM","IPCA","HODL11"],
+      "additionalProperties": false,
+      "properties": {
+        "SWRD":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "AVGS":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "AVEM":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "IPCA":   { "type": "number", "minimum": 0, "maximum": 1 },
+        "HODL11": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "pisos": {
+      "type": "object",
+      "description": "Taxas-piso para avaliar se IPCA+ está pagando o suficiente (buildRfCards e calcAporte).",
+      "required": ["pisoTaxaIpcaLongo","pisoTaxaRendaPlus"],
+      "additionalProperties": false,
+      "properties": {
+        "pisoTaxaIpcaLongo":  { "type": "number", "description": "Piso de taxa IPCA+ longo (%, ex: 6.0)" },
+        "pisoTaxaRendaPlus":  { "type": "number", "description": "Piso de taxa Renda+ (%, ex: 6.5)" }
+      }
+    },
+    "pfire50": {
+      "type": "object",
+      "description": "P(FIRE) Monte Carlo para aposentadoria aos 50 anos (3 cenários).",
+      "required": ["base","fav","stress"],
+      "additionalProperties": false,
+      "properties": {
+        "base":   { "type": "number", "minimum": 0, "maximum": 100 },
+        "fav":    { "type": "number", "minimum": 0, "maximum": 100 },
+        "stress": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "pfire53": {
+      "type": "object",
+      "description": "P(FIRE) Monte Carlo para aposentadoria aos 53 anos (3 cenários). Cenário-alvo.",
+      "required": ["base","fav","stress"],
+      "additionalProperties": false,
+      "properties": {
+        "base":   { "type": "number", "minimum": 0, "maximum": 100 },
+        "fav":    { "type": "number", "minimum": 0, "maximum": 100 },
+        "stress": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "premissas": {
+      "type": "object",
+      "description": "Premissas centrais do modelo FIRE. Fonte de verdade para todos os cálculos de projeção.",
+      "required": [
+        "patrimonio_atual",
+        "patrimonio_gatilho",
+        "aporte_mensal",
+        "custo_vida_base",
+        "idade_atual",
+        "idade_fire_alvo",
+        "idade_fire_aspiracional",
+        "retorno_equity_base",
+        "volatilidade_equity",
+        "swr_gatilho",
+        "inss_anual",
+        "inss_inicio_ano",
+        "ipca_anual",
+        "renda_estimada",
+        "ano_atual"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "patrimonio_atual":        { "type": "number", "description": "Patrimônio financeiro atual (BRL)" },
+        "patrimonio_gatilho":      { "type": "number", "description": "Patrimônio-gatilho para FIRE (BRL)" },
+        "aporte_mensal":           { "type": "number", "description": "Aporte mensal (BRL)" },
+        "custo_vida_base":         { "type": "number", "description": "Custo de vida anual base no FIRE (BRL)" },
+        "idade_atual":             { "type": "integer", "description": "Idade atual de Diego" },
+        "idade_fire_alvo":         { "type": "integer", "description": "Idade-alvo de FIRE (53)" },
+        "idade_fire_aspiracional": { "type": "integer", "description": "Idade aspiracional de FIRE (50)" },
+        "retorno_equity_base":     { "type": "number", "description": "Retorno equity real anual esperado (decimal, ex: 0.0485)" },
+        "volatilidade_equity":     { "type": "number", "description": "Volatilidade anual do equity (decimal, ex: 0.168)" },
+        "swr_gatilho":             { "type": "number", "description": "Safe Withdrawal Rate gatilho FIRE (decimal, ex: 0.024)" },
+        "inss_anual":              { "type": "number", "description": "Renda INSS anual estimada (BRL)" },
+        "inss_inicio_ano":         { "type": "integer", "description": "Ano de início do INSS (ex: 12 = 12 anos após FIRE)" },
+        "ipca_anual":              { "type": "number", "description": "Inflação IPCA anual esperada (decimal, ex: 0.04)" },
+        "renda_estimada":          { "type": "number", "description": "Renda ativa estimada anual atual (BRL)" },
+        "ano_atual":               { "type": "integer", "description": "Ano atual (para cálculos de projeção)" }
+      }
+    },
+    "guardrails": {
+      "type": "array",
+      "description": "Regras de corte de retirada por drawdown no FIRE Day. Renderizado em tabela na aba Planejamento.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["ddMin","ddMax","corte","retirada","desc"],
+        "additionalProperties": false,
+        "properties": {
+          "ddMin":    { "type": "number", "minimum": 0, "maximum": 1 },
+          "ddMax":    { "type": "number", "minimum": 0, "maximum": 1 },
+          "corte":    { "type": "number", "minimum": 0, "maximum": 1 },
+          "retirada": { "type": "number", "description": "Retirada anual (BRL)" },
+          "desc":     { "type": "string" }
+        }
+      }
+    },
+    "gasto_piso": {
+      "type": "number",
+      "description": "Gasto mínimo anual (piso de sobrevivência, BRL)"
+    },
+    "spendingSmile": {
+      "type": "object",
+      "description": "Modelo spending smile — 3 fases da aposentadoria com gastos decrescentes.",
+      "required": ["go_go","slow_go","no_go"],
+      "additionalProperties": false,
+      "properties": {
+        "go_go":   { "$ref": "#/definitions/spendingPhase" },
+        "slow_go": { "$ref": "#/definitions/spendingPhase" },
+        "no_go":   { "$ref": "#/definitions/spendingPhase" }
+      }
+    },
+    "spendingSensibilidade": {
+      "type": "array",
+      "description": "Tabela de sensibilidade P(FIRE) × custo de vida para 3 cenários de spending.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["label","custo","base","fav","stress"],
+        "additionalProperties": false,
+        "properties": {
+          "label":  { "type": "string" },
+          "custo":  { "type": "number" },
+          "base":   { "type": "number", "minimum": 0, "maximum": 100 },
+          "fav":    { "type": "number", "minimum": 0, "maximum": 100 },
+          "stress": { "type": "number", "minimum": 0, "maximum": 100 }
+        }
+      }
+    },
+    "saude_base": {
+      "type": "number",
+      "description": "Custo base de saúde anual no FIRE (BRL)"
+    },
+    "tornado": {
+      "type": "array",
+      "description": "Dados do gráfico tornado de sensibilidade. Array vazio = gráfico não renderizado.",
+      "items": {
+        "type": "object",
+        "required": ["label","delta"],
+        "additionalProperties": true,
+        "properties": {
+          "label": { "type": "string" },
+          "delta": { "type": "number" }
+        }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "description": "Série histórica do patrimônio total (mensal, BRL). Base do gráfico Timeline.",
+      "required": ["labels","values"],
+      "additionalProperties": false,
+      "properties": {
+        "labels": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+          "description": "Datas mensais (YYYY-MM)"
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Valores do patrimônio (BRL)"
+        }
+      }
+    },
+    "bollinger": {
+      "type": "object",
+      "description": "Retornos mensais para Bollinger Bands. MA5 e bandas ±2σ calculados no JS.",
+      "required": ["dates","values"],
+      "additionalProperties": false,
+      "properties": {
+        "dates":  { "type": "array", "items": { "type": "string" } },
+        "values": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "backtest": {
+      "type": "object",
+      "description": "Backtest R3 — Target vs VWRA (base 100). Período curto (ago/2019–atual). Proxies UCITS.",
+      "required": ["dates","target","shadowA","metrics"],
+      "additionalProperties": true,
+      "properties": {
+        "dates":   { "type": "array", "items": { "type": "string" } },
+        "target":  { "type": "array", "items": { "type": "number" } },
+        "shadowA": { "type": "array", "items": { "type": "number" } },
+        "metrics": { "$ref": "#/definitions/backtestMetrics" },
+        "cambioInicio": { "type": "number", "description": "Câmbio BRL/USD no início do backtest (para cálculo de TWR BRL)" }
+      }
+    },
+    "backtestR5": {
+      "type": "object",
+      "description": "Backtest R5 — série longa (jan/2005–atual). Permite períodos históricos de 21 anos.",
+      "required": ["dates","target","shadowA","metrics"],
+      "additionalProperties": true,
+      "properties": {
+        "dates":   { "type": "array", "items": { "type": "string" } },
+        "target":  { "type": "array", "items": { "type": "number" } },
+        "shadowA": { "type": "array", "items": { "type": "number" } },
+        "metrics": { "$ref": "#/definitions/backtestMetrics" },
+        "note":    { "type": "string" }
+      }
+    },
+    "rf": {
+      "type": "object",
+      "description": "Posições de Renda Fixa — títulos IPCA+ Tesouro Direto. Três sub-chaves fixas.",
+      "required": ["ipca2029","ipca2040","renda2065"],
+      "additionalProperties": false,
+      "properties": {
+        "ipca2029":  { "$ref": "#/definitions/rfTitulo" },
+        "ipca2040":  { "$ref": "#/definitions/rfTitulo" },
+        "renda2065": { "$ref": "#/definitions/rfTitulo" }
+      }
+    },
+    "hodl11": {
+      "type": "object",
+      "description": "Posição HODL11 (Bitcoin ETF Brasil). Valor em BRL.",
+      "required": ["qty","preco","valor"],
+      "additionalProperties": false,
+      "properties": {
+        "qty":   { "type": ["number","null"], "description": "Quantidade de cotas" },
+        "preco": { "type": ["number","null"], "description": "Preço por cota (BRL)" },
+        "valor": { "type": "number",          "description": "Valor total (BRL)" }
+      }
+    },
+    "glide": {
+      "type": "object",
+      "description": "Glide path — alocação por idade (5 pontos: atual, FIRE@50, FIRE@53, 60, 70+). Base do gráfico de linha na aba Alocação.",
+      "required": ["idades","equity","ipca_longo","ipca_curto","hodl11","renda_plus"],
+      "additionalProperties": false,
+      "properties": {
+        "idades":     { "type": "array", "items": { "type": "integer" } },
+        "equity":     { "type": "array", "items": { "type": "number" } },
+        "ipca_longo": { "type": "array", "items": { "type": "number" } },
+        "ipca_curto": { "type": "array", "items": { "type": "number" } },
+        "hodl11":     { "type": "array", "items": { "type": "number" } },
+        "renda_plus": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "drift": {
+      "type": "object",
+      "description": "Desvio atual vs alvo por bucket (% do patrimônio total). Alimenta progress bars e calculadora de aporte.",
+      "required": ["SWRD","AVGS","AVEM","IPCA","HODL11"],
+      "additionalProperties": false,
+      "properties": {
+        "SWRD":   { "$ref": "#/definitions/driftItem" },
+        "AVGS":   { "$ref": "#/definitions/driftItem" },
+        "AVEM":   { "$ref": "#/definitions/driftItem" },
+        "IPCA":   { "$ref": "#/definitions/driftItem" },
+        "HODL11": { "$ref": "#/definitions/driftItem" }
+      }
+    },
+    "tlh": {
+      "type": "array",
+      "description": "Posições transitorias candidatas a TLH (Tax-Loss Harvesting). Mostradas com status de perda/gatilho.",
+      "items": {
+        "type": "object",
+        "required": ["ticker","nome","qty","pm","price","ucits"],
+        "additionalProperties": false,
+        "properties": {
+          "ticker": { "type": "string" },
+          "nome":   { "type": "string" },
+          "qty":    { "type": "number" },
+          "pm":     { "type": "number", "description": "Preço médio de custo (USD)" },
+          "price":  { "type": "number", "description": "Preço atual (USD)" },
+          "ucits":  { "type": "string", "description": "Ticker UCITS equivalente" }
+        }
+      }
+    },
+    "attribution": {
+      "type": "object",
+      "description": "Decomposição do crescimento patrimonial: aportes + retorno USD + câmbio.",
+      "required": ["aportes","retornoUsd","cambio","crescReal"],
+      "additionalProperties": true,
+      "properties": {
+        "aportes":    { "type": "number",           "description": "Total de aportes (BRL)" },
+        "retornoUsd": { "type": ["number","null"], "description": "Componente de retorno USD (BRL). null quando _estimativa=true e decomposição não foi calculada." },
+        "cambio":     { "type": ["number","null"], "description": "Componente cambial (BRL). null quando _estimativa=true e decomposição não foi calculada." },
+        "crescReal":  { "type": "number",           "description": "Crescimento real total (BRL)" },
+        "_estimativa": { "type": "boolean" }
+      }
+    },
+    "shadows": {
+      "type": "object",
+      "description": "Shadow portfolios — resultados por período (ex: q1_2026). Chaves são nomes de período arbitrários.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["atual","target","shadow_a","shadow_b","delta_a","delta_b"],
+        "additionalProperties": false,
+        "properties": {
+          "atual":    { "type": "number" },
+          "target":   { "type": "number" },
+          "shadow_a": { "type": "number" },
+          "shadow_b": { "type": "number" },
+          "delta_a":  { "type": "number" },
+          "delta_b":  { "type": "number" }
+        }
+      }
+    },
+    "minilog": {
+      "type": "array",
+      "description": "Log das últimas operações (aportes, depósitos, negociações). Exibido na aba Alocação.",
+      "items": {
+        "type": "object",
+        "required": ["data","tipo","ativo","valor"],
+        "additionalProperties": false,
+        "properties": {
+          "data":  { "type": "string", "description": "Data da operação (YYYY-MM-DD)" },
+          "tipo":  { "type": "string", "description": "Tipo de operação" },
+          "ativo": { "type": "string" },
+          "valor": { "type": "string", "description": "Valor formatado (ex: $5,600)" }
+        }
+      }
+    },
+    "wellness_config": {
+      "type": "object",
+      "description": "Configuração do Financial Wellness Score — métricas, pesos, thresholds. Fonte: agentes/referencia/wellness_config.json.",
+      "required": ["metrics","total_max"],
+      "additionalProperties": true,
+      "properties": {
+        "_doc":     { "type": "string" },
+        "version":  { "type": "string" },
+        "updated":  { "type": "string" },
+        "rationale":{ "type": "string" },
+        "total_max":{ "type": "integer" },
+        "metrics":  {
+          "type": "array",
+          "description": "Lista de métricas do wellness score",
+          "items": {
+            "type": "object",
+            "required": ["id","label","max","thresholds"],
+            "additionalProperties": true,
+            "properties": {
+              "id":     { "type": "string" },
+              "label":  { "type": "string" },
+              "max":    { "type": "integer" },
+              "thresholds": { "type": "array" }
+            }
+          }
+        },
+        "removed_metrics": { "type": "array" }
+      }
+    },
+    "eventos_vida": {
+      "type": "array",
+      "description": "Eventos de vida planejados/contingentes com impacto no plano FIRE (casamento, filhos, etc.).",
+      "items": {
+        "type": "object",
+        "required": ["evento","data_est","impacto","status","acoes"],
+        "additionalProperties": false,
+        "properties": {
+          "evento":   { "type": "string" },
+          "data_est": { "type": "string" },
+          "impacto":  { "type": "string" },
+          "status":   { "type": "string", "enum": ["planejado","contingente","executado"] },
+          "acoes":    { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "cryptoLegado": {
+      "type": "number",
+      "description": "Valor estimado do crypto legado (BRL). Opcional — fallback para 3000 no JS."
+    },
+    "tlhGatilho": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Percentual de perda para acionar TLH (decimal, ex: 0.05 = 5%). Opcional — fallback 5% no JS."
+    },
+    "version": {
+      "type": "string",
+      "description": "Versão do dashboard (injetada pelo build_dashboard.py — não está no data.json original)"
+    }
+  },
+  "definitions": {
+    "spendingPhase": {
+      "type": "object",
+      "required": ["gasto","inicio","fim"],
+      "additionalProperties": false,
+      "properties": {
+        "gasto":  { "type": "number", "description": "Gasto anual nesta fase (BRL)" },
+        "inicio": { "type": "integer", "description": "Anos após FIRE Day de início da fase" },
+        "fim":    { "type": "integer", "description": "Anos após FIRE Day de fim da fase" }
+      }
+    },
+    "rfTitulo": {
+      "type": "object",
+      "required": ["valor"],
+      "additionalProperties": false,
+      "properties": {
+        "cotas": { "type": ["number","null"],  "description": "Número de cotas (null se não disponível)" },
+        "valor": { "type": "number",            "description": "Valor atual (BRL)" },
+        "taxa":  { "type": ["number","null"],   "description": "Taxa IPCA+ (%, ex: 7.5)" },
+        "notas": { "type": "string" }
+      }
+    },
+    "driftItem": {
+      "type": "object",
+      "required": ["atual","alvo"],
+      "additionalProperties": false,
+      "properties": {
+        "atual": { "type": "number", "description": "Peso atual (% do patrimônio total)" },
+        "alvo":  { "type": "number", "description": "Peso-alvo (% do patrimônio total)" }
+      }
+    },
+    "backtestMetrics": {
+      "type": "object",
+      "required": ["target","shadowA"],
+      "additionalProperties": false,
+      "properties": {
+        "target": { "$ref": "#/definitions/portfolioMetrics" },
+        "shadowA":{ "$ref": "#/definitions/portfolioMetrics" }
+      }
+    },
+    "portfolioMetrics": {
+      "type": "object",
+      "required": ["cagr","sharpe","sortino","maxdd","vol"],
+      "additionalProperties": false,
+      "properties": {
+        "cagr":    { "type": "number", "description": "CAGR (% anual)" },
+        "sharpe":  { "type": "number" },
+        "sortino": { "type": "number" },
+        "maxdd":   { "type": "number", "description": "Max drawdown (%, negativo)" },
+        "vol":     { "type": "number", "description": "Volatilidade anual (%)" }
+      }
+    }
+  }
+}

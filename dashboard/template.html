@@ -695,6 +695,73 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div><!-- /container -->
 
 <script>
+// @ts-check
+// ═══════════════════════════════════════════════════════════════
+// JSDoc typedef — shape de DATA (espelha dashboard/data.schema.json)
+// Permite autocomplete e detecção de erros em editores com suporte a JS type checking.
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * @typedef {{ qty: number, avg_cost: number, price: number, bucket: 'SWRD'|'AVGS'|'AVEM'|'JPGL', status: 'alvo'|'transitorio' }} Posicao
+ * @typedef {{ base: number, fav: number, stress: number }} PfireScenario
+ * @typedef {{ pisoTaxaIpcaLongo: number, pisoTaxaRendaPlus: number }} Pisos
+ * @typedef {{ cotas: number|null, valor: number, taxa: number|null, notas: string }} RfTitulo
+ * @typedef {{ atual: number, alvo: number }} DriftItem
+ * @typedef {{ cagr: number, sharpe: number, sortino: number, maxdd: number, vol: number }} PortfolioMetrics
+ * @typedef {{ gasto: number, inicio: number, fim: number }} SpendingPhase
+ *
+ * @typedef {{
+ *   date: string,
+ *   cambio: number,
+ *   posicoes: Record<string, Posicao>,
+ *   pesosTarget: { SWRD: number, AVGS: number, AVEM: number, IPCA: number, HODL11: number },
+ *   pisos: Pisos,
+ *   pfire50: PfireScenario,
+ *   pfire53: PfireScenario,
+ *   premissas: {
+ *     patrimonio_atual: number,
+ *     patrimonio_gatilho: number,
+ *     aporte_mensal: number,
+ *     custo_vida_base: number,
+ *     idade_atual: number,
+ *     idade_fire_alvo: number,
+ *     idade_fire_aspiracional: number,
+ *     retorno_equity_base: number,
+ *     volatilidade_equity: number,
+ *     swr_gatilho: number,
+ *     inss_anual: number,
+ *     inss_inicio_ano: number,
+ *     ipca_anual: number,
+ *     renda_estimada: number,
+ *     ano_atual: number
+ *   },
+ *   guardrails: Array<{ ddMin: number, ddMax: number, corte: number, retirada: number, desc: string }>,
+ *   gasto_piso: number,
+ *   spendingSmile: { go_go: SpendingPhase, slow_go: SpendingPhase, no_go: SpendingPhase },
+ *   spendingSensibilidade: Array<{ label: string, custo: number, base: number, fav: number, stress: number }>,
+ *   saude_base: number,
+ *   tornado: Array<{ label: string, delta: number }>,
+ *   timeline: { labels: string[], values: number[] },
+ *   bollinger: { dates: string[], values: number[] },
+ *   backtest: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, cambioInicio?: number },
+ *   backtestR5: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, note?: string },
+ *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, renda2065: RfTitulo },
+ *   hodl11: { qty: number|null, preco: number|null, valor: number },
+ *   glide: { idades: number[], equity: number[], ipca_longo: number[], ipca_curto: number[], hodl11: number[], renda_plus: number[] },
+ *   drift: { SWRD: DriftItem, AVGS: DriftItem, AVEM: DriftItem, IPCA: DriftItem, HODL11: DriftItem },
+ *   tlh: Array<{ ticker: string, nome: string, qty: number, pm: number, price: number, ucits: string }>,
+ *   attribution: { aportes: number, retornoUsd: number, cambio: number, crescReal: number, _estimativa?: boolean },
+ *   shadows: Record<string, { atual: number, target: number, shadow_a: number, shadow_b: number, delta_a: number, delta_b: number }>,
+ *   minilog: Array<{ data: string, tipo: string, ativo: string, valor: string }>,
+ *   wellness_config: { metrics: Array<{ id: string, label: string, max: number, thresholds: any[] }>, total_max: number },
+ *   eventos_vida: Array<{ evento: string, data_est: string, impacto: string, status: string, acoes: string[] }>,
+ *   cryptoLegado?: number,
+ *   tlhGatilho?: number,
+ *   version?: string
+ * }} DashboardData
+ */
+
+/** @type {DashboardData} */
 // ═══════════════════════════════════════════════════════════════
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).

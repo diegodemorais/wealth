@@ -113,6 +113,11 @@ dados/
 | **The Big Book of Dashboards** | Wexler, Shaffer & Cotgreave | Catálogo de padrões de dashboard por tipo de dado e audiência — referência para layout, hierarquia e organização de abas |
 | **Lean Analytics** | Croll & Yoskovitz | Métricas que importam vs métricas de vaidade; one metric that matters — critério para decidir o que entra no dashboard |
 | **Designing Data-Intensive Applications** | Martin Kleppmann | Confiabilidade, escalabilidade e manutenibilidade de sistemas de dados — aplicado ao pipeline e ao versionamento de estado |
+| **Information Dashboard Design** | Stephen Few | Princípios de percepção visual aplicados a dashboards: densidade de informação, escalas, cores — referência técnica para cada decisão de layout |
+| **Show Me the Numbers** | Stephen Few | Design de tabelas e gráficos para análise quantitativa: quando usar cada tipo, como evitar distorção — complementa Knaflic com rigor analítico |
+| **Now You See It** | Stephen Few | Análise visual de dados: padrões, outliers, comparações — como o olho encontra significado em dados complexos |
+| **Refactoring UI** | Adam Wathan & Steve Schoger | Princípios práticos de UI: hierarquia visual, espaçamento, cor, tipografia — aplicado ao dark theme e componentes do dashboard |
+| **Don't Make Me Think** | Steve Krug | Usabilidade web: cognitive load, scanning vs reading, affordances claras — critério para cada elemento interativo do dashboard |
 
 ---
 
