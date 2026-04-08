@@ -5,10 +5,6 @@
 scripts/__pycache__/
 analysis/__pycache__/
 
-# Arquivos brutos sensíveis em analysis/raw/
-analysis/raw/*.csv
-analysis/raw/*.pdf
-
 # Imagens geradas por scripts
 analysis/backtest_output/*.png
 
@@ -21,9 +17,3 @@ analysis/backtest_output/*.png
 scripts/node_modules/
 scripts/package-lock.json
 scripts/package.json
-
-# Snapshots IBKR (gerados ao vivo)
-dados/ibkr_snapshot.json
-
-# Cache de backtest (gerado automaticamente)
-dados/ibkr/backtest_cache.json
