@@ -717,31 +717,36 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
 <div class="section" data-in-tab="perf">
 <h2>Shadow Portfolios — Tracking</h2>
-<table>
+<div style="overflow-x:auto">
+<table style="width:100%;table-layout:fixed">
+<colgroup>
+  <col style="width:22%"><col style="width:30%"><col style="width:8%"><col style="width:28%"><col style="width:12%">
+</colgroup>
 <thead><tr>
-  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira (Q1 2026)</th><th class="num">Status</th>
+  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
 </tr></thead>
 <tbody>
 <tr>
   <td><strong>VWRA (mercado puro)</strong></td><td>100% VWRA.L</td>
   <td class="num">0.220%</td>
-  <td class="num neg">−3.15pp</td>
-  <td><span class="badge badge-alvo">Benchmark primário</span></td>
+  <td class="num neg">−3.15pp <span style="font-size:.65rem;color:var(--muted)">(Q1 2026)</span></td>
+  <td><span class="badge badge-alvo">Primário</span></td>
 </tr>
 <tr>
   <td><strong>IPCA+ longo (RF puro)</strong></td><td>100% IPCA+ 2040</td>
   <td class="num">0.200%</td>
-  <td class="num neg" title="IPCA+ (RF puro) superou a carteira em 0.57pp — IPCA+ bateu equity. Ruim para a carteira.">IPCA+ superou por +0.57pp</td>
-  <td><span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF benchmark</span></td>
+  <td class="num neg" title="IPCA+ (RF puro) superou a carteira em 0.57pp — IPCA+ bateu equity. Ruim para a carteira.">+0.57pp IPCA+ <span style="font-size:.65rem;color:var(--muted)">(Q1 2026)</span></td>
+  <td><span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF bench</span></td>
 </tr>
 <tr>
   <td><strong>VWRA + RF (60/40)</strong></td><td>79% VWRA + 15% IPCA+ + 3% HODL11</td>
   <td class="num">0.207%</td>
-  <td class="num">Tracking desde Abr/2026</td>
+  <td class="num" style="font-size:.72rem">Tracking desde Abr/2026</td>
   <td><span class="badge badge-trans">Novo</span></td>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="period-btns" id="shadowPeriodBtns" style="margin-top:12px">
   <button onclick="buildShadowChart('since2009')" class="active">Desde 2009</button>
   <button onclick="buildShadowChart('since2013')">Desde 2013</button>

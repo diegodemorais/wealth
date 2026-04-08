@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-08T13:57:55",
-  "_generated_brt": "2026-04-08T13:57:55-03:00",
+  "_generated": "2026-04-08T14:03:33",
+  "_generated_brt": "2026-04-08T14:03:33-03:00",
   "date": "2026-04-08",
   "cambio": 5.1383,
   "posicoes": {
@@ -21,14 +21,14 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.525,
+      "price": 114.56,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.465,
+      "price": 105.4669,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -49,7 +49,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.075,
+      "price": 63.15,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3553885,
+    "patrimonio_atual": 3554350,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1583,7 +1583,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.525,
+      "price": 114.56,
       "ucits": "AVGS.L"
     },
     {
@@ -1591,7 +1591,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.465,
+      "price": 105.4669,
       "ucits": "AVGS.L"
     },
     {
@@ -1615,7 +1615,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.075,
+      "price": 63.15,
       "ucits": "AVEM.L"
     },
     {
@@ -1639,7 +1639,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2442185.0,
+    "crescReal": 2442650.0,
     "_estimativa": true
   },
   "shadows": {
