@@ -206,20 +206,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <span>2021 (R$1.1M)</span><span id="fireProgressLabel">—</span><span>2040 (R$13.4M)</span>
 </div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
-<div class="fire-row">
-<div class="scenario-card chosen" style="min-width:140px;text-align:center">
-  <div style="font-size:.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">✅ Base — Escolhida</div>
-  <div style="font-size:1.5rem;font-weight:700;margin:4px 0">FIRE 53</div>
-  <div style="font-size:.85rem;color:var(--green)" id="pfire53">P = 90.4%</div>
-  <div style="font-size:.65rem;color:var(--muted)">2040 · Safe harbor</div>
-</div>
-<div class="scenario-card" style="min-width:140px;text-align:center">
-  <div style="font-size:.65rem;color:var(--purple);text-transform:uppercase;letter-spacing:.5px">🚀 Aspiracional</div>
-  <div style="font-size:1.5rem;font-weight:700;margin:4px 0">FIRE 50</div>
-  <div style="font-size:.85rem;color:var(--yellow)" id="pfire50">P = 85.4%</div>
-  <div style="font-size:.65rem;color:var(--muted)">2037 · Se R$13.4M antes</div>
-</div>
-</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="fireScenarioGrid"></div>
+<div style="font-size:.6rem;color:var(--muted);text-align:center;margin-top:6px">Casado = R$270k/ano · Filho = R$300k/ano · @50 aproximado via delta de spending</div>
 </div>
 
 <!-- S5: KPI FIRE -->
@@ -592,7 +580,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S21b2: CUSTO BASE POR BUCKET -->
 <div class="section" data-in-tab="aloc">
-<h2>Custo Base por Bucket — Equity Internacional</h2>
+<h2>Base de Custo e Alocação — Equity por Bucket</h2>
 <div style="overflow-x:auto">
 <table id="custoBaseTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -2231,8 +2219,58 @@ function renderKPIs() {
     document.getElementById('kpiCambio').textContent = `R$ ${CAMBIO.toFixed(2)}`;
     document.getElementById('kpiCambioSub').textContent = `PTAX BCB · ${DATA.date || ''}`;
   }
-  document.getElementById('pfire53').textContent = `P = ${DATA.pfire53.base}%`;
-  document.getElementById('pfire50').textContent = `P = ${DATA.pfire50.base}%`;
+  // Fire scenario grid — 6 cards (3 estados × 2 idades)
+  (function buildFireGrid() {
+    const grid = document.getElementById('fireScenarioGrid');
+    if (!grid) return;
+    const ss = DATA.spendingSensibilidade || [];
+    const base53 = DATA.pfire53.base, base50 = DATA.pfire50.base;
+    const casado53 = ss[1]?.base ?? (base53 - 5.4);
+    const filho53  = ss[2]?.base ?? (base53 - 8.3);
+    const deltaCasado = casado53 - base53;
+    const deltaFilho  = filho53  - base53;
+    const casado50 = Math.max(0, Math.round((base50 + deltaCasado) * 10) / 10);
+    const filho50  = Math.max(0, Math.round((base50 + deltaFilho)  * 10) / 10);
+    const grupos = [
+      { label: 'Solteiro', icon: '🧑', color: '#3b82f6',
+        cards: [
+          { age: 53, p: base53,  tag: '✅ Escolhida', year: 2040, chosen: true },
+          { age: 50, p: base50,  tag: '🚀 Aspiracional', year: 2037, chosen: false },
+        ]},
+      { label: 'Casado',   icon: '💍', color: '#8b5cf6',
+        cards: [
+          { age: 53, p: casado53, tag: 'R$270k/ano', year: 2040, chosen: false },
+          { age: 50, p: casado50, tag: 'Aprox.', year: 2037, chosen: false },
+        ]},
+      { label: 'c/ Filho', icon: '👨‍👩‍👧', color: '#06b6d4',
+        cards: [
+          { age: 53, p: filho53,  tag: 'R$300k/ano', year: 2040, chosen: false },
+          { age: 50, p: filho50,  tag: 'Aprox.', year: 2037, chosen: false },
+        ]},
+    ];
+    grupos.forEach(g => {
+      const col = document.createElement('div');
+      col.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+      const header = document.createElement('div');
+      header.style.cssText = `font-size:.65rem;font-weight:700;color:${g.color};text-transform:uppercase;letter-spacing:.5px;text-align:center;padding:2px 0`;
+      header.textContent = `${g.icon} ${g.label}`;
+      col.appendChild(header);
+      g.cards.forEach(c => {
+        const pColor = c.p >= 90 ? '#22c55e' : c.p >= 80 ? '#eab308' : '#ef4444';
+        const card = document.createElement('div');
+        card.className = 'scenario-card' + (c.chosen ? ' chosen' : '');
+        card.style.cssText = 'text-align:center;padding:10px 8px';
+        card.innerHTML = `
+          <div style="font-size:.6rem;color:${c.chosen ? 'var(--accent)' : 'var(--muted)'};margin-bottom:3px">${c.tag}</div>
+          <div style="font-size:1.3rem;font-weight:700">FIRE ${c.age}</div>
+          <div style="font-size:.9rem;font-weight:600;color:${pColor};margin:2px 0">P = ${c.p}%</div>
+          <div style="font-size:.6rem;color:var(--muted)">${c.year}</div>
+        `;
+        col.appendChild(card);
+      });
+      grid.appendChild(col);
+    });
+  })();
   document.getElementById('fireCountdown').textContent = `${yrInt} anos ${moInt} meses`;
   const fbPct = Math.min(100, (Math.log(totalBrl/patInicio) / Math.log(PAT_GATILHO/patInicio)) * 100);
   document.getElementById('fireProgressBar').style.width = fbPct + '%';
