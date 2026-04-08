@@ -139,12 +139,23 @@ loadDashboardState()  // fetch JSON, merge com DATA inline
 
 Não commitar — Diego decide.
 
-### 5. Output
+### 5. Deploy Netlify
+
+Após gerar o HTML, publicar automaticamente:
+
+```bash
+bash scripts/deploy_netlify.sh
+```
+
+Token em `.netlify_token` (gitignored). Site: `stunning-crepe-8aa19f`.
+
+### 6. Output
 
 ```
 Dashboard regenerado: analysis/dashboard.html
 Data: DD/MM/AAAA | Patrimônio: R$ X.XXXk | Equity: $XXXk | Câmbio: R$ X.XX
 P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
+✅ Publicado: https://stunning-crepe-8aa19f.netlify.app (senha: diego2040)
 ```
 
 ## Toggle de Privacidade
