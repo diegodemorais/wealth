@@ -632,6 +632,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section" data-in-tab="perf">
 <h2>Bollinger Bands — Retornos Mensais (MA5 ± 2σ)</h2>
 <div class="period-btns" id="bollingerPeriodBtns">
+  <button onclick="setBollingerPeriod('3m')">3m</button>
   <button onclick="setBollingerPeriod('6m')">6m</button>
   <button onclick="setBollingerPeriod('ytd')">YTD</button>
   <button onclick="setBollingerPeriod('1y')" class="active">1y</button>
@@ -640,7 +641,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button onclick="setBollingerPeriod('all')">All</button>
 </div>
 <div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div class="src">Retornos mensais limpos (apenas pares consecutivos ≤35 dias). Janela MA5. σ poblacional (÷N, Bollinger 1992). Primeiros 4 pontos omitidos (janela degenerada). Default: 1y.</div>
+<div class="src">Retornos mensais. Janela MA5. σ poblacional (÷N, Bollinger 1992). Pre-warm: 4 pontos antes da janela garantem MA válida desde o início. Default: 1y.</div>
 </div>
 
 <!-- S25: TLH MONITOR -->
@@ -1028,7 +1029,8 @@ function filterByPeriod(allLabels, allValues, period) {
   const now = new Date(DATA.date);
   let cutoff;
   if (period === 'all') return { labels: allLabels, values: allValues };
-  if (period === '6m') cutoff = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+  if (period === '3m') cutoff = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+  else if (period === '6m') cutoff = new Date(now.getFullYear(), now.getMonth() - 6, 1);
   else if (period === 'ytd') cutoff = new Date(now.getFullYear(), 0, 1);
   else if (period === '1y') cutoff = new Date(now.getFullYear() - 1, now.getMonth(), 1);
   else if (period === '3y') cutoff = new Date(now.getFullYear() - 3, now.getMonth(), 1);
@@ -1733,20 +1735,42 @@ window.calcAporte = function() {
 
 // ── S24: Bollinger ────────────────────────────────────────────
 function buildBollinger(period) {
-  const { labels: allL, values: allV } = { labels: DATA.bollinger.dates, values: DATA.bollinger.values };
-  const { labels, values } = filterByPeriod(allL, allV, period);
-  // Não plotar primeiros 4 pontos (janela < 5)
-  const MA5 = [], upper = [], lower = [], retPlot = [];
-  for (let i = 0; i < values.length; i++) {
-    if (i < 4) { MA5.push(null); upper.push(null); lower.push(null); retPlot.push(null); continue; }
-    const window = values.slice(i - 4, i + 1);
-    const ma = window.reduce((s, v) => s + v, 0) / 5;
-    const variance = window.reduce((s, v) => s + (v - ma) ** 2, 0) / 5; // sigma populacional ÷N
+  const allL = DATA.bollinger.dates;
+  const allV = DATA.bollinger.values;
+  const WSIZE = 5; // MA5 window
+
+  // Find start index of display window
+  const { labels: dispLabels } = filterByPeriod(allL, allV, period);
+  if (!dispLabels.length) { checkMinPoints('bollingerChart', 0, WSIZE); return; }
+  const dispStart = period === 'all' ? 0 : allL.indexOf(dispLabels[0]);
+
+  // Pre-warm: include up to WSIZE-1 extra points before display window
+  const warmStart = Math.max(0, dispStart - (WSIZE - 1));
+  const workL = allL.slice(warmStart);
+  const workV = allV.slice(warmStart);
+
+  // Compute MA5 over warm-up + display
+  const MA5all = [], upperAll = [], lowerAll = [], retAll = [];
+  for (let i = 0; i < workV.length; i++) {
+    if (i < WSIZE - 1) { MA5all.push(null); upperAll.push(null); lowerAll.push(null); retAll.push(null); continue; }
+    const win = workV.slice(i - (WSIZE - 1), i + 1);
+    const ma = win.reduce((s, v) => s + v, 0) / WSIZE;
+    const variance = win.reduce((s, v) => s + (v - ma) ** 2, 0) / WSIZE;
     const sigma = Math.sqrt(variance);
-    MA5.push(+ma.toFixed(3)); upper.push(+(ma + 2*sigma).toFixed(3)); lower.push(+(ma - 2*sigma).toFixed(3)); retPlot.push(+values[i].toFixed(3));
+    MA5all.push(+ma.toFixed(3)); upperAll.push(+(ma + 2*sigma).toFixed(3));
+    lowerAll.push(+(ma - 2*sigma).toFixed(3)); retAll.push(+workV[i].toFixed(3));
   }
+
+  // Slice to display window only (drop warm-up points)
+  const offset = dispStart - warmStart;
+  const labels = workL.slice(offset);
+  const MA5 = MA5all.slice(offset);
+  const upper = upperAll.slice(offset);
+  const lower = lowerAll.slice(offset);
+  const retPlot = retAll.slice(offset);
+
   if (charts.bollinger) charts.bollinger.destroy();
-  if (checkMinPoints('bollingerChart', labels.length, 4)) return;
+  if (checkMinPoints('bollingerChart', labels.length, 1)) return;
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
     type: 'line',
     data: {

@@ -632,6 +632,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section" data-in-tab="perf">
 <h2>Bollinger Bands — Retornos Mensais (MA5 ± 2σ)</h2>
 <div class="period-btns" id="bollingerPeriodBtns">
+  <button onclick="setBollingerPeriod('3m')">3m</button>
   <button onclick="setBollingerPeriod('6m')">6m</button>
   <button onclick="setBollingerPeriod('ytd')">YTD</button>
   <button onclick="setBollingerPeriod('1y')" class="active">1y</button>
@@ -640,7 +641,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button onclick="setBollingerPeriod('all')">All</button>
 </div>
 <div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div class="src">Retornos mensais limpos (apenas pares consecutivos ≤35 dias). Janela MA5. σ poblacional (÷N, Bollinger 1992). Primeiros 4 pontos omitidos (janela degenerada). Default: 1y.</div>
+<div class="src">Retornos mensais. Janela MA5. σ poblacional (÷N, Bollinger 1992). Pre-warm: 4 pontos antes da janela garantem MA válida desde o início. Default: 1y.</div>
 </div>
 
 <!-- S25: TLH MONITOR -->
@@ -772,14 +773,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:40:28-03:00'); // BRT (UTC-3)
-const VERSION = '1.16';
+const GENERATED_AT = new Date('2026-04-08T15:42:06-03:00'); // BRT (UTC-3)
+const VERSION = '1.17';
 
 const DATA = {
-  "_generated": "2026-04-08T15:40:28",
-  "_generated_brt": "2026-04-08T15:40:28-03:00",
+  "_generated": "2026-04-08T15:42:06",
+  "_generated_brt": "2026-04-08T15:42:06-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1098,
+  "cambio": 5.1383,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -798,14 +799,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.34,
+      "price": 114.33,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 104.995,
+      "price": 104.8,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -833,7 +834,7 @@ const DATA = {
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.29,
+      "price": 62.2799,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -867,7 +868,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3532305,
+    "patrimonio_atual": 3549150,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2334,7 +2335,7 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.7,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
@@ -2342,11 +2343,11 @@ const DATA = {
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.5,
+      "atual": 24.6,
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 3.5,
+      "atual": 3.4,
       "alvo": 15.0
     },
     "HODL11": {
@@ -2360,7 +2361,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.34,
+      "price": 114.33,
       "ucits": "AVGS.L"
     },
     {
@@ -2368,7 +2369,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 104.995,
+      "price": 104.8,
       "ucits": "AVGS.L"
     },
     {
@@ -2400,7 +2401,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.29,
+      "price": 62.2799,
       "ucits": "AVEM.L"
     },
     {
@@ -2416,7 +2417,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2420605.0,
+    "crescReal": 2437450.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2755,7 +2756,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.16"
+  "version": "1.17"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3012,7 +3013,8 @@ function filterByPeriod(allLabels, allValues, period) {
   const now = new Date(DATA.date);
   let cutoff;
   if (period === 'all') return { labels: allLabels, values: allValues };
-  if (period === '6m') cutoff = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+  if (period === '3m') cutoff = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+  else if (period === '6m') cutoff = new Date(now.getFullYear(), now.getMonth() - 6, 1);
   else if (period === 'ytd') cutoff = new Date(now.getFullYear(), 0, 1);
   else if (period === '1y') cutoff = new Date(now.getFullYear() - 1, now.getMonth(), 1);
   else if (period === '3y') cutoff = new Date(now.getFullYear() - 3, now.getMonth(), 1);
@@ -3717,20 +3719,42 @@ window.calcAporte = function() {
 
 // ── S24: Bollinger ────────────────────────────────────────────
 function buildBollinger(period) {
-  const { labels: allL, values: allV } = { labels: DATA.bollinger.dates, values: DATA.bollinger.values };
-  const { labels, values } = filterByPeriod(allL, allV, period);
-  // Não plotar primeiros 4 pontos (janela < 5)
-  const MA5 = [], upper = [], lower = [], retPlot = [];
-  for (let i = 0; i < values.length; i++) {
-    if (i < 4) { MA5.push(null); upper.push(null); lower.push(null); retPlot.push(null); continue; }
-    const window = values.slice(i - 4, i + 1);
-    const ma = window.reduce((s, v) => s + v, 0) / 5;
-    const variance = window.reduce((s, v) => s + (v - ma) ** 2, 0) / 5; // sigma populacional ÷N
+  const allL = DATA.bollinger.dates;
+  const allV = DATA.bollinger.values;
+  const WSIZE = 5; // MA5 window
+
+  // Find start index of display window
+  const { labels: dispLabels } = filterByPeriod(allL, allV, period);
+  if (!dispLabels.length) { checkMinPoints('bollingerChart', 0, WSIZE); return; }
+  const dispStart = period === 'all' ? 0 : allL.indexOf(dispLabels[0]);
+
+  // Pre-warm: include up to WSIZE-1 extra points before display window
+  const warmStart = Math.max(0, dispStart - (WSIZE - 1));
+  const workL = allL.slice(warmStart);
+  const workV = allV.slice(warmStart);
+
+  // Compute MA5 over warm-up + display
+  const MA5all = [], upperAll = [], lowerAll = [], retAll = [];
+  for (let i = 0; i < workV.length; i++) {
+    if (i < WSIZE - 1) { MA5all.push(null); upperAll.push(null); lowerAll.push(null); retAll.push(null); continue; }
+    const win = workV.slice(i - (WSIZE - 1), i + 1);
+    const ma = win.reduce((s, v) => s + v, 0) / WSIZE;
+    const variance = win.reduce((s, v) => s + (v - ma) ** 2, 0) / WSIZE;
     const sigma = Math.sqrt(variance);
-    MA5.push(+ma.toFixed(3)); upper.push(+(ma + 2*sigma).toFixed(3)); lower.push(+(ma - 2*sigma).toFixed(3)); retPlot.push(+values[i].toFixed(3));
+    MA5all.push(+ma.toFixed(3)); upperAll.push(+(ma + 2*sigma).toFixed(3));
+    lowerAll.push(+(ma - 2*sigma).toFixed(3)); retAll.push(+workV[i].toFixed(3));
   }
+
+  // Slice to display window only (drop warm-up points)
+  const offset = dispStart - warmStart;
+  const labels = workL.slice(offset);
+  const MA5 = MA5all.slice(offset);
+  const upper = upperAll.slice(offset);
+  const lower = lowerAll.slice(offset);
+  const retPlot = retAll.slice(offset);
+
   if (charts.bollinger) charts.bollinger.destroy();
-  if (checkMinPoints('bollingerChart', labels.length, 4)) return;
+  if (checkMinPoints('bollingerChart', labels.length, 1)) return;
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
     type: 'line',
     data: {
