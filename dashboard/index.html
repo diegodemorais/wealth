@@ -252,18 +252,18 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section">
   <h2>TER da Carteira</h2>
   <div style="text-align:center;padding:8px 0">
-    <div style="font-size:2.2rem;font-weight:700">0.247%</div>
+    <div style="font-size:2.2rem;font-weight:700" id="terCarteira">—</div>
     <div style="font-size:.75rem;color:var(--muted)">Equity ponderado</div>
   </div>
   <div class="progress-row" style="margin-top:8px">
-    <div class="progress-label"><span>Carteira</span><span>0.247%</span></div>
-    <div class="progress-bar"><div class="progress-fill" style="background:var(--yellow);width:60%"></div></div>
+    <div class="progress-label"><span>Carteira</span><span id="terCarteiraLabel">—</span></div>
+    <div class="progress-bar"><div id="terCarteiraFill" class="progress-fill" style="background:var(--yellow);width:60%"></div></div>
   </div>
   <div class="progress-row">
-    <div class="progress-label"><span>VWRA (mercado puro)</span><span>0.220%</span></div>
-    <div class="progress-bar"><div class="progress-fill" style="background:var(--green);width:55%"></div></div>
+    <div class="progress-label"><span>VWRA (mercado puro)</span><span id="terVwraLabel">—</span></div>
+    <div class="progress-bar"><div id="terVwraFill" class="progress-fill" style="background:var(--green);width:55%"></div></div>
   </div>
-  <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Delta +2.7bps vs VWRA · Alpha ~0.16%/ano</div>
+  <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="terDeltaLabel">—</div>
 </div>
 </div>
 
@@ -408,13 +408,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   </div>
   <div style="font-size:.65rem;color:var(--muted)">McLean &amp; Pontiff 2016: haircut 58%</div>
   <div class="progress-row" style="margin-top:8px">
-    <div class="progress-label"><span>IPCA+ taxa vs piso</span><span>7.20% vs 6.0%</span></div>
+    <div class="progress-label"><span>IPCA+ taxa vs piso</span><span id="ipcaTaxaVsPiso">—</span></div>
     <div class="progress-bar">
-      <div class="progress-fill" style="background:var(--cyan);width:80%"></div>
+      <div id="ipcaTaxaFill" class="progress-fill" style="background:var(--cyan);width:80%"></div>
       <div class="progress-target" style="left:60%"></div>
     </div>
   </div>
-  <div style="font-size:.65rem;color:var(--muted)">Alvo IPCA+: ≥6.0% · Atual: acima</div>
+  <div style="font-size:.65rem;color:var(--muted)" id="ipcaTaxaStatus">—</div>
 </div>
 </div>
 </div>
@@ -772,14 +772,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T14:07:46-03:00'); // BRT (UTC-3)
-const VERSION = '1.11';
+const GENERATED_AT = new Date('2026-04-08T15:13:51-03:00'); // BRT (UTC-3)
+const VERSION = '1.12';
 
 const DATA = {
-  "_generated": "2026-04-08T14:07:46",
-  "_generated_brt": "2026-04-08T14:07:46-03:00",
+  "_generated": "2026-04-08T15:13:51",
+  "_generated_brt": "2026-04-08T15:13:51-03:00",
   "date": "2026-04-08",
-  "cambio": 5.0922,
+  "cambio": 5.0991,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -798,14 +798,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.395,
+      "price": 114.7399,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.36,
+      "price": 105.475,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -826,14 +826,14 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.15,
+      "price": 62.995,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.385,
+      "price": 62.55,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -867,7 +867,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3524490,
+    "patrimonio_atual": 3529759,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2338,7 +2338,7 @@ const DATA = {
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.9,
+      "atual": 29.0,
       "alvo": 23.7
     },
     "AVEM": {
@@ -2360,7 +2360,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.395,
+      "price": 114.7399,
       "ucits": "AVGS.L"
     },
     {
@@ -2368,7 +2368,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.36,
+      "price": 105.475,
       "ucits": "AVGS.L"
     },
     {
@@ -2392,7 +2392,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.15,
+      "price": 62.995,
       "ucits": "AVEM.L"
     },
     {
@@ -2400,7 +2400,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.385,
+      "price": 62.55,
       "ucits": "AVEM.L"
     },
     {
@@ -2416,7 +2416,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2412790.0,
+    "crescReal": 2418059.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2754,7 +2754,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.11"
+  "version": "1.12"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -2801,8 +2801,8 @@ const anos = (2026 + 3/12) - (2021 + 3/12);
 const cagr = (Math.pow(patFim / patInicio, 1/anos) - 1) * 100;
 
 // D1 — CAGR Backtest Target (não é TWR real — sem fluxos reais de aportes/retiradas)
-// CAGR_USD: CAGR do Target em USD — backtest R3 (ago/2019→abr/2026, 81 meses)
-const TWR_USD = 12.88; // %/ano — fonte: backtest ago/2019–abr/2026, confirmado 2026-04-08 (CAGR com proxies, não TWR GIPS)
+// CAGR_USD: derivado de DATA.backtest.metrics.target.cagr (backtest_portfolio.py)
+const TWR_USD = DATA.backtest?.metrics?.target?.cagr ?? 12.88;
 // Período do backtest R3 — derivado dinamicamente das datas reais da série
 const _btDates = DATA.backtest.dates;
 const _btFirstDate = _btDates[0]; // ex: "2019-08"
@@ -2830,9 +2830,10 @@ const progPct = (DATA.premissas.patrimonio_atual / PAT_GATILHO) * 100;
 // SWR no FIRE Day projetada
 const swrFireDay = DATA.premissas.custo_vida_base / PAT_GATILHO;
 
-// Years to FIRE
+// Years to FIRE — data derivada de premissas (idade_fire_alvo + idade_atual + ano atual)
 const today = new Date(DATA.date);
-const fireDate = new Date('2040-01-01');
+const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
+const fireDate = new Date(`${_anoFire}-01-01`);
 const msLeft = fireDate - today;
 const yearsLeft = msLeft / (1000 * 60 * 60 * 24 * 365.25);
 const yrInt = Math.floor(yearsLeft);
@@ -3456,10 +3457,13 @@ function buildIncomeChart() {
 
 // ── S17: Fee Analysis ─────────────────────────────────────────
 function buildFeeAnalysis() {
+  const _terCfg = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
+  const _currTer = _terCfg.current_ter  ?? 0.247;
+  const _benchTer = _terCfg.benchmark_ter ?? 0.220;
   const pat = DATA.premissas.patrimonio_atual;
   const anos = DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual;
-  const custo = 0.00247 * pat * anos;
-  const custo_a = 0.00220 * pat * anos;
+  const custo = _currTer/100 * pat * anos;
+  const custo_a = _benchTer/100 * pat * anos;
   const alpha = 0.00160 * pat * anos;
   document.getElementById('feeCusto').textContent = fmtBrl(custo);
   document.getElementById('feeAlpha').textContent = fmtBrl(alpha);
@@ -3470,7 +3474,7 @@ function buildFeeAnalysis() {
   charts.fee = new Chart(document.getElementById('feeChart'), {
     type: 'bar',
     data: {
-      labels: ['Carteira (0.247%)', 'VWRA (0.220%)', '60/40 (0.207%)'],
+      labels: [`Carteira (${(_currTer*100).toFixed(3)}%)`, `VWRA (${(_benchTer*100).toFixed(3)}%)`, '60/40 (0.207%)'],
       datasets: [{ label: 'TER acumulado 11 anos', data: [custo, custo_a, 0.00207*pat*anos].map(v => Math.round(v)), backgroundColor: ['rgba(234,179,8,.7)','rgba(34,197,94,.7)','rgba(168,85,247,.7)'] }]
     },
     options: {
@@ -4022,6 +4026,33 @@ function renderKPIs() {
   // Atualizar subtitle dinamicamente (evitar divergência com Wellness)
   const srSubEl = document.getElementById('savingsRateSub');
   if (srSubEl) srSubEl.textContent = `Aporte R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / Renda est. R$${(_rendaEst/1000).toFixed(0)}k/mês`;
+
+  // TER — lê de wellness_config
+  const _terCfgKPI = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
+  const _ct = _terCfgKPI.current_ter ?? 0.247;
+  const _bt = _terCfgKPI.benchmark_ter ?? 0.220;
+  const _delta = (_ct - _bt) * 100; // em bps
+  const _terEl = document.getElementById('terCarteira');
+  if (_terEl) _terEl.textContent = `${(_ct*100).toFixed(3)}%`;
+  const _tcL = document.getElementById('terCarteiraLabel'); if (_tcL) _tcL.textContent = `${(_ct*100).toFixed(3)}%`;
+  const _tvL = document.getElementById('terVwraLabel');    if (_tvL) _tvL.textContent = `${(_bt*100).toFixed(3)}%`;
+  const _tdL = document.getElementById('terDeltaLabel');
+  if (_tdL) _tdL.textContent = `Delta +${_delta.toFixed(1)}bps vs VWRA · Alpha ~0.16%/ano`;
+  // Barras relativas: maior (carteira) = 100% visual, vwra = proporcional
+  const _tcF = document.getElementById('terCarteiraFill'); if (_tcF) _tcF.style.width = '100%';
+  const _tvF = document.getElementById('terVwraFill');    if (_tvF) _tvF.style.width = `${(_bt/_ct*100).toFixed(0)}%`;
+
+  // IPCA+ taxa vs piso
+  const _taxaIpcaKPI = DATA.rf?.ipca2040?.taxa;
+  const _pisoIpcaKPI = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const _ipcaTVP = document.getElementById('ipcaTaxaVsPiso');
+  if (_ipcaTVP && _taxaIpcaKPI) _ipcaTVP.textContent = `${_taxaIpcaKPI.toFixed(2)}% vs ${_pisoIpcaKPI.toFixed(1)}%`;
+  const _ipcaSt = document.getElementById('ipcaTaxaStatus');
+  if (_ipcaSt) _ipcaSt.textContent = _taxaIpcaKPI >= _pisoIpcaKPI
+    ? `Alvo IPCA+: ≥${_pisoIpcaKPI}% · Atual: acima — janela DCA ativa`
+    : `Alvo IPCA+: ≥${_pisoIpcaKPI}% · Atual: abaixo do piso`;
+  const _ipcaFill = document.getElementById('ipcaTaxaFill');
+  if (_ipcaFill && _taxaIpcaKPI) _ipcaFill.style.width = Math.min(100, _taxaIpcaKPI / (_pisoIpcaKPI * 1.5) * 100) + '%';
 }
 
 function renderWellness() {
@@ -4039,28 +4070,42 @@ function renderWellness() {
   if (kwSub) kwSub.textContent = label;
   document.getElementById('wellnessFill').style.width = total + '%';
   document.getElementById('wellnessFill').style.background = total >= 80 ? '#22c55e' : total >= 60 ? '#eab308' : '#ef4444';
-  // Ordenar por peso máximo (mais importante primeiro) para deixar claro quais fatores dominam
-  const sorted = [...scores].sort((a, b) => b.max - a.max);
+  // Ordenar: primeiro os com gap > 0 (oportunidade de melhora), depois os ok — ambos por max desc
+  const withGap = [...scores].filter(s => s.value < s.max).sort((a,b) => b.max - a.max);
+  const atMax   = [...scores].filter(s => s.value >= s.max).sort((a,b) => b.max - a.max);
+  const sorted = [...withGap, ...atMax];
   const grid = document.getElementById('wellnessGrid');
-  sorted.forEach(s => {
+  grid.innerHTML = '';
+  if (withGap.length > 0) {
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:2px 0 4px';
+    hdr.textContent = '⚠️ Oportunidade de melhora';
+    grid.appendChild(hdr);
+  }
+  sorted.forEach((s, i) => {
     const pts = +s.value;
-    const pct = (pts / s.max * 100).toFixed(0);
+    const pct = pts / s.max * 100;
+    const isOk = pts >= s.max;
+    const icon = isOk ? '✅' : pts >= s.max * 0.6 ? '⚠️' : '❌';
+    // Separador visual entre grupos
+    if (i === withGap.length && withGap.length > 0 && atMax.length > 0) {
+      const sep = document.createElement('div');
+      sep.style.cssText = 'font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 2px';
+      sep.textContent = '✅ Sem ação necessária';
+      grid.appendChild(sep);
+    }
     const div = document.createElement('div');
-    div.className = 'wellness-item';
-    div.style.cssText = 'flex-direction:column;align-items:flex-start;gap:3px;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2)';
+    div.style.cssText = 'display:grid;grid-template-columns:1.4rem 1fr auto auto;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.15)';
     div.innerHTML = `
-      <div style="display:flex;align-items:center;gap:6px;width:100%">
-        <div class="wellness-dot" style="background:${s.color};flex-shrink:0"></div>
-        <span style="flex:1;font-size:.75rem">${s.label}</span>
-        <strong style="font-size:.75rem;color:${s.color}">${Math.round(pts)}/${s.max}pts</strong>
-        <span style="font-size:.65rem;color:var(--muted);min-width:28px;text-align:right">(${s.detail})</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;width:100%;padding-left:14px">
-        <div style="flex:1;height:4px;background:rgba(71,85,105,.3);border-radius:2px;overflow:hidden">
-          <div style="height:100%;background:${s.color};width:${pct}%;transition:width .4s"></div>
+      <span style="font-size:.8rem;line-height:1">${icon}</span>
+      <div>
+        <div style="font-size:.75rem;font-weight:500">${s.label}</div>
+        <div style="height:5px;background:rgba(71,85,105,.25);border-radius:3px;margin-top:3px;overflow:hidden">
+          <div style="height:100%;width:${pct.toFixed(0)}%;background:${s.color};border-radius:3px;transition:width .4s"></div>
         </div>
-        <span style="font-size:.6rem;color:var(--muted);min-width:32px;text-align:right">${pct}% peso</span>
-      </div>`;
+      </div>
+      <span style="font-size:.65rem;color:var(--muted);white-space:nowrap">${s.detail}</span>
+      <strong style="font-size:.72rem;color:${s.color};white-space:nowrap;text-align:right">${Math.round(pts)}/${s.max}</strong>`;
     grid.appendChild(div);
   });
 
