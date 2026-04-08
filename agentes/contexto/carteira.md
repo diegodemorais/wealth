@@ -24,6 +24,7 @@
 - **ETFs internacionais (UCITS LSE)**: Interactive Brokers
 - **Tesouro Direto + ETFs B3 (HODL11)**: Nubank e XP
 - **Cambio**: Okegen (spread 0,25% ida e volta)
+- **Dashboard**: https://stunning-crepe-8aa19f.netlify.app (senha: diego2040) — atualizado via `/dashboard`
 
 ---
 
