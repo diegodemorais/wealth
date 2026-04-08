@@ -11,8 +11,14 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$SCRIPT_DIR/.."
-VENV_PY="$HOME/claude/finance-tools/.venv/bin/python3"
 DASHBOARD_HTML="$ROOT/dashboard/index.html"
+
+# Detectar Python: venv local > python3 do sistema
+VENV_PY="$HOME/claude/finance-tools/.venv/bin/python3"
+if [ ! -f "$VENV_PY" ]; then
+  VENV_PY="$(command -v python3)"
+  echo "  (venv não encontrado — usando $(python3 --version 2>&1))"
+fi
 
 # ── Pipeline: gerar dashboard antes de deployar ──────────────────────────────
 echo "🔄 Rodando pipeline de geração..."
