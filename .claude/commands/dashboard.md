@@ -9,8 +9,8 @@ Regenera `analysis/dashboard.html` — dashboard single-file com Chart.js, dark 
 Rodar em paralelo — os outputs alimentam as seções que dependem deles:
 
 ```bash
-# Tornado real (não estimativa manual)
-~/claude/finance-tools/.venv/bin/python3 scripts/fire_montecarlo.py --tornado
+# Tornado real — OBRIGATÓRIO rodar com --anos 11 --tornado (não só --tornado)
+~/claude/finance-tools/.venv/bin/python3 scripts/fire_montecarlo.py --anos 11 --tornado
 
 # P(FIRE@50) atualizado com modelo atual
 ~/claude/finance-tools/.venv/bin/python3 scripts/fire_montecarlo.py --anos 11
@@ -23,12 +23,12 @@ Rodar em paralelo — os outputs alimentam as seções que dependem deles:
 ```
 
 Extrair dos outputs:
-- `--tornado`: sensibilidades reais por variável (pp de P(FIRE) por ±10% de cada input)
-- `--anos 11`: P(FIRE@50) atualizado com modelo HD-multimodel-premissas
-- `backtest_portfolio.py`: séries de retorno acumulado por carteira + métricas (CAGR, Sharpe, Sortino, MaxDD, Vol)
+- `--anos 11 --tornado`: sensibilidades reais por variável (pp de P(FIRE) por ±10% de cada input). Parsear CADA linha do output — nunca reusar valores de rodada anterior.
+- `--anos 11`: P(FIRE@50) base/fav/stress. Parsear valores diretamente do output.
+- `backtest_portfolio.py`: séries de retorno acumulado por carteira + métricas (CAGR USD e BRL, Sharpe, Sortino, MaxDD, Vol). Parsear do output — não usar valores pré-calculados em memória.
 - `fx_utils.py`: decomposição Aportes + Retorno USD + Câmbio (deve somar ao crescimento real)
 
-Se algum script falhar, marcar a seção como "⚠️ Estimativa — rodar [script]" em vez de inventar valores.
+**REGRA ABSOLUTA**: Cada valor no objeto `DATA` do JS deve ter um comentário inline com a fonte exata — ex: `// fire_montecarlo.py --anos 11 linha "P(FIRE) base"`. Se não souber a fonte, o valor não entra. Se algum script falhar, marcar a seção como "⚠️ Estimativa — rodar [script]" em vez de inventar valores.
 
 ### 1. Codebase (ler em paralelo)
 
@@ -123,8 +123,9 @@ Implementar uma função `periodSelector(containerId, chartInstance, allLabels, 
 Seções (todas obrigatórias, nesta ordem):
 
 1. **Próximas Ações** (TOPO): próximo aporte via cascade (pisos de `portfolio_analytics.py`), gatilhos ativos (`gatilhos.md`), drift alerts. Background amarelo.
+   - Ordem dos gatilhos: **Equity primeiro** (threshold de patrimônio para mudar alocação equity), **IPCA+ segundo** (meta de alocação RF). Não inverter.
 
-2. **Financial Wellness Score**: nota 0-100 calculada em JS (não hardcoded) com os pesos abaixo. Semáforo: ≥80 verde, 60-79 amarelo, <60 vermelho.
+2. **Financial Wellness Score**: nota 0-100 calculada em JS (não hardcoded) com os pesos abaixo. Semáforo: ≥80 verde, 60-79 amarelo, <60 vermelho. **Posicionamento**: card secundário, menor que P(FIRE). Não deve ser o indicador de destaque — P(FIRE) é o KPI principal.
 
    | Métrica | Peso | Como calcular |
    |---------|------|---------------|
@@ -141,11 +142,13 @@ Seções (todas obrigatórias, nesta ordem):
 
    Mostrar nota total + breakdown das 10 métricas com valores e cores individuais.
 
-3. **KPI cards**: patrimônio total (R$), P(FIRE) base, crescimento patrimonial CAGR (inclui aportes — label explícito), delta A vs VWRA. P(FIRE) deve ser o card mais visualmente proeminente.
+3. **KPI cards**: patrimônio total (R$), P(FIRE) base (card mais visualmente proeminente — destaque máximo), TWR real (sem aportes), delta A vs VWRA.
+   - **TWR real**: calcular como `(CAGR_USD_backtest_R3)` do output de `backtest_portfolio.py --regime 3`, que representa retorno sem inflação de aportes. Exibir dois números: `TWR USD: X.X%/ano` e `TWR BRL: Y.Y%/ano` (TWR USD + contribuição cambial de `fx_utils.py`). Label obrigatório: "retorno real do investimento (sem aportes)".
+   - **CAGR com aportes (18.x%)**: NÃO exibir nos KPI cards principais. Mover para seção 7 (Performance Attribution) como linha secundária com label "Crescimento patrimonial acumulado (inclui capital novo)". Nunca chamar de TWR.
 
 4. **Time to FIRE**: countdown (X anos Y meses) + barra de progresso animada. Sub-cards: FIRE@53 (base, destacado) e FIRE@50 (aspiracional). Não duplicar com KPI "Anos p/ FIRE" — manter apenas aqui.
 
-5. **KPI FIRE**: progresso % (`pat/gatilho`), TWR estimado, savings rate (aporte_anual/renda_est). **Remover SWR implícita hoje** — SWR durante acumulação não é comparável com meta no FIRE Day e gera alarme falso. Substituir por: "SWR no FIRE Day projetada: X%" onde X = `custo_vida_base / patrimonio_gatilho`.
+5. **KPI FIRE**: progresso % (`pat/gatilho`, **1 casa decimal** ex: `25.2%`), savings rate (aporte_anual/renda_est). **Remover SWR implícita hoje** — SWR durante acumulação não é comparável com meta no FIRE Day e gera alarme falso. Substituir por: "SWR no FIRE Day projetada: X%" onde X = `custo_vida_base / patrimonio_gatilho`.
 
 6. **Net worth stacked area** com **period selector [1m | 3m | ytd | 1y | 3y | 5y | all]**:
    - Dados: TODAS as linhas de `historico_carteira.csv` → `timelineLabels`, `timelineValues`
@@ -272,6 +275,31 @@ async function fetchLive() {
 }
 fetchLive();
 ```
+
+### 5. Validação anti-hardcode (OBRIGATÓRIA antes de salvar)
+
+Antes de gravar o HTML final, executar este checklist. Se algum item falhar, corrigir antes de prosseguir:
+
+```
+CHECKLIST — Zero Hardcoded Values
+
+[ ] P(FIRE) base/fav/stress → veio do output de `fire_montecarlo.py --anos 11` (não de scorecard.md estático)
+[ ] Tornado (4 variáveis × 2 direções = 8 valores) → veio do output de `fire_montecarlo.py --anos 11 --tornado`
+[ ] GASTO_PISO → veio de `fire_montecarlo.py` (leitura do arquivo Python, não estimado)
+[ ] GUARDRAILS list → veio de `fire_montecarlo.py` (leitura do arquivo Python)
+[ ] Patrimônio/posições → calculado de preços yfinance × qtde de ibkr_lotes.json
+[ ] Backtest CAGR/Sharpe/MaxDD → calculado dinamicamente de séries retornadas por `backtest_portfolio.py`
+[ ] TWR USD → CAGR do Target em USD de `backtest_portfolio.py --regime 3`
+[ ] Tornado não reutiliza valores de sessão anterior (rodar script fresh)
+[ ] drift.IPCA soma TODOS os títulos IPCA+ de holdings.md (2029 + 2040 + outros)
+[ ] CAGR "com aportes" aparece SOMENTE em Attribution, nunca nos KPI cards principais
+[ ] Progresso FIRE exibe 1 casa decimal (ex: 25.2%, não 25.17%)
+[ ] Gatilhos: Equity listado antes de IPCA+ na seção Próximas Ações
+[ ] Wellness Score: card menor/abaixo de P(FIRE) no layout
+[ ] Cada valor em DATA{} tem comentário inline com fonte (arquivo + linha ou flag de script)
+```
+
+Se algum valor não puder ser obtido dos scripts (ex: script falhou), o campo deve exibir "⚠️ [fonte] indisponível — rodar /dashboard novamente" — nunca um número inventado.
 
 Não commitar — Diego decide.
 

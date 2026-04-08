@@ -20,8 +20,8 @@
 Os ETFs UCITS da carteira (SWRD, AVGS, AVEM) existem desde 2019-2024. Para estudar o prêmio fatorial em janelas longas (20-50 anos), precisamos de proxies de índices acadêmicos, não de ETFs.
 
 **Solução imediata (já implementada):**
-- `backtest_portfolio.py --regime 5` → 21 anos (Dez/2004+) usando IVV+VBR+EEM
-- `backtest_portfolio.py --regime 6` → 19 anos (Dez/2006+) usando IVV+VBR+SCZ+EEM
+- `backtest_portfolio.py --regime 5` → 19 anos (Dez/2006+) usando IVV+VBR+SCZ+EEM
+- `backtest_portfolio.py --regime 6` → 21 anos (Dez/2004+) usando IVV+VBR+EEM
 - Limitação: IVV ≠ MSCI World (sem DM ex-US); VBR = US SC Value only
 
 **Solução robusta (esta issue):** usar índices brutos da literatura acadêmica.
