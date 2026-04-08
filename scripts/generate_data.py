@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_data.py — Agrega todos os dados da carteira em analysis/dashboard_data.json.
+generate_data.py — Agrega todos os dados da carteira em dashboard/data.json.
 
 Uso:
     python3 scripts/generate_data.py [--skip-scripts] [--skip-prices]
@@ -10,7 +10,7 @@ Flags:
     --skip-prices   Não busca preços yfinance (usa dashboard_state.json)
 
 Output:
-    analysis/dashboard_data.json  (input para build_dashboard.py)
+    dashboard/data.json  (input para build_dashboard.py)
 
 Pipeline:
     1. Lê config.py  (constantes canônicas)
@@ -20,7 +20,7 @@ Pipeline:
     5. Roda fx_utils.py                              → parseia attribution
     6. Lê historico_carteira.csv                     → timeline + bollinger
     7. Lê holdings.md                                → taxas RF
-    8. Escreve analysis/dashboard_data.json
+    8. Escreve dashboard/data.json
 """
 
 import sys, json, subprocess, csv, math, argparse, re
@@ -43,8 +43,8 @@ VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
 STATE_PATH = ROOT / "dados" / "dashboard_state.json"
 CSV_PATH   = ROOT / "dados" / "historico_carteira.csv"
 HOLDINGS_PATH = ROOT / "dados" / "holdings.md"
-LOTES_PATH = ROOT / "analysis" / "backtest_output" / "ibkr_lotes.json"
-OUT_PATH   = ROOT / "analysis" / "dashboard_data.json"
+LOTES_PATH = ROOT / "dados" / "ibkr" / "lotes.json"
+OUT_PATH   = ROOT / "dashboard" / "data.json"
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
@@ -215,7 +215,7 @@ def get_pfire_tornado():
 def get_backtest():
     if args.skip_scripts:
         # Tenta ler de arquivo JSON de cache
-        cache = ROOT / "analysis" / "backtest_output" / "backtest_cache.json"
+        cache = ROOT / "dados" / "ibkr" / "backtest_cache.json"
         if cache.exists():
             return json.loads(cache.read_text())
         return {}
@@ -230,7 +230,7 @@ def get_backtest():
         if m:
             data = json.loads(m.group(1))
             # Salvar cache
-            cache = ROOT / "analysis" / "backtest_output" / "backtest_cache.json"
+            cache = ROOT / "dados" / "ibkr" / "backtest_cache.json"
             cache.parent.mkdir(exist_ok=True)
             cache.write_text(json.dumps(data, indent=2))
             return data

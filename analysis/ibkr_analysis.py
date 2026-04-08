@@ -12,9 +12,9 @@ from collections import defaultdict
 from pathlib import Path
 
 # ── Configurações ─────────────────────────────────────────────────────────────
-CSV_PATH = Path(__file__).parent / "U5947683.TRANSACTIONS.20210408.20260331.csv"
-OUTPUT_DIR = Path(__file__).parent / "backtest_output"
-OUTPUT_DIR.mkdir(exist_ok=True)
+CSV_PATH = Path(__file__).parent / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
+OUTPUT_DIR = Path(__file__).parent.parent / "dados" / "ibkr"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 CAMBIO_REF = 5.25  # referência carteira.md
 
@@ -356,7 +356,7 @@ def main():
     print("─" * 70)
 
     # tlh_lotes.json
-    tlh_path = Path(__file__).parent.parent / "data" / "tlh_lotes.json"
+    tlh_path = Path(__file__).parent.parent / "dados" / "tlh_lotes.json"
     tlh_path.parent.mkdir(exist_ok=True)
     tlh_data = generate_tlh_lotes(open_lots)
     with open(tlh_path, "w", encoding="utf-8") as f:

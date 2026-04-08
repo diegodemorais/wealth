@@ -5,7 +5,7 @@ ibkr_sync.py — Sync automático de posições IBKR via Flex Query
 Uso:
     python3 scripts/ibkr_sync.py                  # posições atuais + diff vs carteira.md
     python3 scripts/ibkr_sync.py --trades         # últimos trades (30 dias)
-    python3 scripts/ibkr_sync.py --save           # salva snapshot em data/ibkr_snapshot.json
+    python3 scripts/ibkr_sync.py --save           # salva snapshot em dados/ibkr_snapshot.json
 
 Configuração (.env):
     IBKR_TOKEN=<Flex Web Service token>
@@ -51,7 +51,7 @@ CAMBIO_REF = 5.20        # fallback; idealmente buscar do BCB
 SYMBOL_MAP = {k: k for k in BUCKET_MAP}
 SYMBOL_MAP["WRDUSWUSD"] = "WRDUSW"
 
-DATA_DIR  = Path(__file__).parent.parent / "data"
+DATA_DIR  = Path(__file__).parent.parent / "dados"
 SNAP_PATH = DATA_DIR / "ibkr_snapshot.json"
 
 SEP = "─" * 62
@@ -269,7 +269,7 @@ def save_snapshot(positions: list[dict], cambio: float) -> None:
     SNAP_PATH.parent.mkdir(exist_ok=True)
     with open(SNAP_PATH, "w") as f:
         json.dump(snapshot, f, indent=2, default=str)
-    print(f"\n  💾 Snapshot salvo em: data/ibkr_snapshot.json")
+    print(f"\n  💾 Snapshot salvo em: dados/ibkr_snapshot.json")
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -277,7 +277,7 @@ def save_snapshot(positions: list[dict], cambio: float) -> None:
 def main():
     parser_args = argparse.ArgumentParser(description="IBKR Flex Query Sync")
     parser_args.add_argument("--trades", action="store_true", help="Mostrar trades recentes (30 dias)")
-    parser_args.add_argument("--save",   action="store_true", help="Salvar snapshot em data/ibkr_snapshot.json")
+    parser_args.add_argument("--save",   action="store_true", help="Salvar snapshot em dados/ibkr_snapshot.json")
     parser_args.add_argument("--cambio", type=float, default=CAMBIO_REF, help=f"Câmbio BRL/USD (default: {CAMBIO_REF})")
     parser_args.add_argument("--file",   type=str,   default=None, help="Parsear XML local (workaround se Flex Web Service inacessível)")
     args = parser_args.parse_args()

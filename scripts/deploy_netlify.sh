@@ -12,7 +12,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$SCRIPT_DIR/.."
 VENV_PY="$HOME/claude/finance-tools/.venv/bin/python3"
-DASHBOARD_HTML="$ROOT/analysis/dashboard.html"
+DASHBOARD_HTML="$ROOT/dashboard/index.html"
 
 # ── Pipeline: gerar dashboard antes de deployar ──────────────────────────────
 echo "🔄 Rodando pipeline de geração..."
@@ -48,7 +48,7 @@ if [ ! -f "$DASHBOARD_HTML" ]; then
 fi
 
 echo "📦 Preparando deploy..."
-cp "$DASHBOARD_HTML" "$DEPLOY_DIR/index.html"
+cp "$DASHBOARD_HTML" "$DEPLOY_DIR/index.html"  # já é index.html, copia para o deploy dir
 
 echo "🚀 Deployando para Netlify (site: $NETLIFY_SITE_ID)..."
 DEPLOY_OUTPUT=$(netlify deploy \

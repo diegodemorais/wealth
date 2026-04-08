@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-build_dashboard.py — Injeta dashboard_data.json no template HTML e gera dashboard.html
+build_dashboard.py — Injeta dashboard/data.json no template e gera dashboard/index.html
 
 Uso:
     python3 scripts/build_dashboard.py
-    python3 scripts/build_dashboard.py --data analysis/dashboard_data.json
-    python3 scripts/build_dashboard.py --template analysis/dashboard_template.html
-    python3 scripts/build_dashboard.py --out analysis/dashboard.html
+    python3 scripts/build_dashboard.py --data dashboard/data.json
+    python3 scripts/build_dashboard.py --template dashboard/template.html
+    python3 scripts/build_dashboard.py --out dashboard/index.html
 """
 
 import argparse
@@ -16,9 +16,9 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-TEMPLATE = ROOT / "analysis" / "dashboard_template.html"
-DATA_FILE = ROOT / "analysis" / "dashboard_data.json"
-OUTPUT = ROOT / "analysis" / "dashboard.html"
+TEMPLATE = ROOT / "dashboard" / "template.html"
+DATA_FILE = ROOT / "dashboard" / "data.json"
+OUTPUT = ROOT / "dashboard" / "index.html"
 PLACEHOLDER = "__DATA_PLACEHOLDER__"
 
 

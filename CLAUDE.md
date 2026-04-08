@@ -177,8 +177,18 @@ wealth/
 │   ├── referencia/    # guias de processo (issues-guide, revisoes-periodicas, retro-dinamica)
 │   ├── retros/        # retros historicas
 │   └── metricas/      # shadowportfolio, scorecard, performance
-├── scripts/           # Python: analytics, FIRE, factor, spending
-├── analysis/          # arquivos de analise ad-hoc, CSVs, PDFs, outputs
-├── dados/             # historico_carteira.csv, holdings.md, tlh_lotes.json
-└── data/              # dados brutos (IBKR transactions, extrato INSS)
+├── scripts/           # Python: analytics, FIRE, factor, spending, pipeline dashboard
+├── dashboard/         # Dashboard — todos os artefatos commitados juntos
+│   ├── template.html  #   fonte: template com __DATA_PLACEHOLDER__
+│   ├── index.html     #   output: gerado por build_dashboard.py (serve no Netlify)
+│   └── data.json      #   output: snapshot JSON intermediário (auditável)
+├── dados/             # Estado persistente (fonte de verdade dos dados)
+│   ├── dashboard_state.json  # estado acumulado pelos scripts
+│   ├── historico_carteira.csv
+│   ├── holdings.md
+│   ├── tlh_lotes.json        # lotes para TLH
+│   └── ibkr/                 # outputs do IBKR analysis
+│       ├── lotes.json, dividendos.json, aportes.json, realized_pnl.json
+└── analysis/          # análises ad-hoc (scripts Python, debates, arquivos de referência)
+    └── raw/           # dados brutos (CSVs/PDFs/XLSXs — gitignored para sensíveis)
 ```
