@@ -4,5 +4,11 @@ scripts/__pycache__/
 analysis/*.csv
 analysis/*.json
 analysis/tearsheet_latest.html
+analysis/*.pdf
 data/ibkr_snapshot.json
 .env
+.netlify_token
+.netlify/
+scripts/node_modules/
+scripts/package-lock.json
+scripts/package.json

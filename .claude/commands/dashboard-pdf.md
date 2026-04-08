@@ -1,8 +1,8 @@
-# Dashboard PDF — Gerar PDFs do Dashboard e Enviar por Email
+# Dashboard PDF + Netlify — Gerar PDFs e Publicar Online
 
-Gera 2 PDFs do dashboard (valores abertos e fechados) e envia por email via Mail.app.
+Gera 2 PDFs do dashboard (valores abertos e fechados) e publica o HTML no Netlify.
 
-**Requer:** Puppeteer instalado em `scripts/node_modules/` + macOS Mail.app configurado.
+**Requer:** Puppeteer instalado em `scripts/node_modules/` + `.netlify_token` em `wealth/`.
 
 ## Como rodar
 
@@ -13,25 +13,27 @@ cd scripts && npm install puppeteer
 # Gerar os 2 PDFs
 node scripts/dashboard_pdf.mjs
 
-# Enviar por email (Mail.app)
-~/claude/finance-tools/.venv/bin/python3 scripts/send_dashboard_email.py
+# Publicar HTML no Netlify
+bash scripts/deploy_netlify.sh
 
-# Gerar E enviar em sequência
-node scripts/dashboard_pdf.mjs && ~/claude/finance-tools/.venv/bin/python3 scripts/send_dashboard_email.py
+# Gerar PDFs E publicar em sequência (fluxo completo)
+node scripts/dashboard_pdf.mjs && bash scripts/deploy_netlify.sh
 ```
 
 Output:
 - `analysis/dashboard_aberto.pdf` — todos os valores visíveis
 - `analysis/dashboard_fechado.pdf` — valores absolutos ocultos (R$, USD, cotas)
+- URL Netlify: https://stunning-crepe-8aa19f.netlify.app (senha: `diego2040`)
 
 ## Quando usar
 
-Executar sempre que rodar `/dashboard` para ter uma snapshot permanente em PDF, especialmente no check-in mensal.
+Executar sempre que rodar `/dashboard` para ter uma snapshot permanente em PDF e o HTML publicado, especialmente no check-in mensal.
 
 ## Notas
-- Mail.app precisa ter a conta Gmail configurada no macOS
 - PDFs em formato A3 landscape (cabe o dashboard completo)
 - `dashboard_fechado.pdf` útil para compartilhar sem expor patrimônio
+- Netlify: site `stunning-crepe-8aa19f`, token em `.netlify_token` (gitignored)
+- Dashboard online tem proteção por senha (sessionStorage — não é segurança forte, mas evita acesso casual)
 
 ## Script
 
