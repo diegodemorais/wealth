@@ -1,8 +1,8 @@
 {
-  "_generated": "2026-04-08T13:16:33",
-  "_generated_brt": "2026-04-08T13:16:33-03:00",
+  "_generated": "2026-04-08T13:33:55",
+  "_generated_brt": "2026-04-08T13:33:55-03:00",
   "date": "2026-04-08",
-  "cambio": 5.0992,
+  "cambio": 5.099,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -21,14 +21,14 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.5056,
+      "price": 114.55,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.4,
+      "price": 105.355,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -49,14 +49,14 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.0838,
+      "price": 62.97,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.5299,
+      "price": 62.385,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3529204,
+    "patrimonio_atual": 3528308,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1583,7 +1583,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.5056,
+      "price": 114.55,
       "ucits": "AVGS.L"
     },
     {
@@ -1591,7 +1591,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.4,
+      "price": 105.355,
       "ucits": "AVGS.L"
     },
     {
@@ -1615,7 +1615,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.0838,
+      "price": 62.97,
       "ucits": "AVEM.L"
     },
     {
@@ -1623,7 +1623,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.5299,
+      "price": 62.385,
       "ucits": "AVEM.L"
     },
     {
@@ -1639,7 +1639,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2417504.0,
+    "crescReal": 2416608.0,
     "_estimativa": true
   },
   "shadows": {
@@ -1682,6 +1682,30 @@
       "tipo": "Depósito IBKR",
       "ativo": "USD",
       "valor": "$3,750"
+    }
+  ],
+  "eventos_vida": [
+    {
+      "evento": "Casamento",
+      "data_est": "~2026-2027",
+      "impacto": "+R$20-50k/ano custo de vida",
+      "status": "planejado",
+      "acoes": [
+        "Seguro de vida (gap crítico)",
+        "Testamento",
+        "Estrutura patrimonial"
+      ]
+    },
+    {
+      "evento": "Filho",
+      "data_est": "~2028",
+      "impacto": "+R$30-50k/ano (escola, saúde, cuidado)",
+      "status": "planejado",
+      "acoes": [
+        "P(FIRE) cai ~4pp (R$300k/ano)",
+        "Recalibrar FIRE date",
+        "VGBL/PGBL para filho"
+      ]
     }
   ]
 }

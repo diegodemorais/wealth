@@ -77,6 +77,23 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .private-mode .pv{visibility:hidden}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
 .privacy-toggle:hover{opacity:1}
+/* Hero strip */
+.hero-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:900px){.hero-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.hero-strip{grid-template-columns:repeat(2,1fr)}}
+.hero-kpi{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center}
+.hero-kpi.primary{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
+.hero-kpi .hval{font-size:2rem;font-weight:800;margin:4px 0;line-height:1}
+.hero-kpi .hlbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.hero-kpi .hsub{font-size:.65rem;color:var(--muted);margin-top:4px}
+/* Fases tabela */
+.fases-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.fases-table th{padding:6px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.65rem;text-transform:uppercase;text-align:left}
+.fases-table td{padding:8px 8px;border-bottom:1px solid rgba(71,85,105,.25);vertical-align:top}
+.fases-table tr:hover td{background:rgba(71,85,105,.1)}
+/* Eventos de vida */
+.evento-row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid rgba(71,85,105,.2);align-items:flex-start}
+.evento-badge{min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;background:rgba(234,179,8,.15);color:var(--yellow);flex-shrink:0;margin-top:2px}
 </style>
 </head>
 <body>
@@ -90,6 +107,35 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
+</div>
+
+<!-- HERO STRIP -->
+<div class="hero-strip">
+  <div class="hero-kpi primary">
+    <div class="hlbl">Patrimônio Total</div>
+    <div class="hval pv" id="heroPatrimonio">—</div>
+    <div class="hsub pv" id="heroPatrimonioUsd">— equity</div>
+  </div>
+  <div class="hero-kpi primary">
+    <div class="hlbl">P(FIRE) Base · @53</div>
+    <div class="hval pos" id="heroPfire">—</div>
+    <div class="hsub" id="heroPfireSub">MC 10k sims</div>
+  </div>
+  <div class="hero-kpi">
+    <div class="hlbl">Anos até FIRE</div>
+    <div class="hval" id="heroAnos">—</div>
+    <div class="hsub">Base: 2040 · Aspir: 2037</div>
+  </div>
+  <div class="hero-kpi">
+    <div class="hlbl">Progresso FIRE</div>
+    <div class="hval" id="heroProgresso">—</div>
+    <div class="hsub">vs gatilho R$13.4M</div>
+  </div>
+  <div class="hero-kpi">
+    <div class="hlbl">Savings Rate</div>
+    <div class="hval" id="heroSavings">—</div>
+    <div class="hsub" id="heroSavingsSub">—</div>
+  </div>
 </div>
 
 <!-- S1: PRÓXIMAS AÇÕES -->
@@ -249,7 +295,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
-<div class="section">
+<div class="section" id="attrSection">
 <h2>Performance Attribution — Decomposição do Crescimento</h2>
 <div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
@@ -414,32 +460,39 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- S16: RETIREMENT INCOME -->
 <div class="section">
 <h2>Renda na Aposentadoria — Fases Temporais</h2>
-<div class="grid-3" style="margin-bottom:8px">
-<div>
-  <div class="income-phase">
-    <div style="font-size:.65rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Anos 1–7 (53–60)</div>
-    <div style="font-weight:700;margin:4px 0">Bond Pool</div>
-    <div>TD 2040 vence no FIRE Day → ~R$2.3M BRL imediato</div>
-    <div style="color:var(--muted);font-size:.7rem;margin-top:4px">Sem tocar equity · Go-Go phase R$242k/ano ex-saúde</div>
-  </div>
-</div>
-<div>
-  <div class="income-phase" style="border-color:var(--yellow)">
-    <div style="font-size:.65rem;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px">Anos 8–12 (60–65)</div>
-    <div style="font-weight:700;margin:4px 0">Equity Saques</div>
-    <div>Saques do bloco equity (79% → 94% pós-tent)</div>
-    <div style="color:var(--muted);font-size:.7rem;margin-top:4px">Sem INSS · Slow-Go R$200k/ano ex-saúde</div>
-  </div>
-</div>
-<div>
-  <div class="income-phase" style="border-color:var(--green)">
-    <div style="font-size:.65rem;color:var(--green);text-transform:uppercase;letter-spacing:.5px">Anos 12+ (65+)</div>
-    <div style="font-weight:700;margin:4px 0">Equity + INSS</div>
-    <div>Equity saques + INSS R$18k/ano (conservador)</div>
-    <div style="color:var(--muted);font-size:.7rem;margin-top:4px">No-Go R$187k/ano ex-saúde · Saúde domina</div>
-  </div>
-</div>
-</div>
+<table class="fases-table" style="margin-bottom:12px">
+<thead><tr>
+  <th>Fase</th>
+  <th>Idade</th>
+  <th>Fonte de Renda</th>
+  <th class="num">Gasto ex-saúde</th>
+  <th>Observação</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td><strong style="color:var(--accent)">🟢 Go-Go</strong></td>
+  <td>53–68 (anos 1–15)</td>
+  <td>Bond pool: TD 2040 vence no FIRE Day (~R$2.3M)</td>
+  <td class="num"><strong>R$242k/ano</strong></td>
+  <td style="font-size:.7rem;color:var(--muted)">Equity intacto · alta mobilidade · viagens</td>
+</tr>
+<tr>
+  <td><strong style="color:var(--yellow)">🟡 Slow-Go</strong></td>
+  <td>68–83 (anos 15–30)</td>
+  <td>Equity saques (79% → 94% pós-bond tent) + INSS R$18k/ano (a partir dos 65)</td>
+  <td class="num"><strong>R$200k/ano</strong></td>
+  <td style="font-size:.7rem;color:var(--muted)">Gasto declina · saúde começa a crescer</td>
+</tr>
+<tr>
+  <td><strong style="color:var(--red)">🔴 No-Go</strong></td>
+  <td>83+ (anos 30+)</td>
+  <td>Equity saques + INSS R$18k/ano</td>
+  <td class="num"><strong>R$187k/ano</strong></td>
+  <td style="font-size:.7rem;color:var(--muted)">Saúde domina · lifestyle comprimento</td>
+</tr>
+</tbody>
+</table>
+<div class="src" style="margin-bottom:8px">Spending smile: gasto lifestyle declina com idade. Saúde: R$18k/ano + 2.7%/ano real cap 6%. INSS: R$18k/ano conservador (benefício estimado R$46-55k nominal). Bond pool provê liquidez imediata no FIRE Day sem tocar equity nos primeiros anos.</div>
 <div class="chart-box-sm"><canvas id="incomeChart"></canvas></div>
 <div class="src">Spending smile: Go-Go R$242k / Slow-Go R$200k / No-Go R$187k (ex-saúde). Saúde: SAUDE_BASE R$18k/ano + 2.7%/ano real cap 6%. INSS: R$18k/ano conservador (benefício estimado R$46-55k nominal).</div>
 </div>
@@ -532,6 +585,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <span>Total USD: <strong class="pv" id="totalUsd">—</strong></span>
   <span>Total BRL: <strong class="pv" id="totalBrl">—</strong></span>
 </div>
+</div>
+
+<!-- S21c: EVENTOS DE VIDA -->
+<div class="section" style="border-color:rgba(234,179,8,.3)">
+<h2>Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
+<div id="eventosVidaBody"></div>
+<div class="src">Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente.</div>
 </div>
 
 <!-- S21b: MINI-LOG OPERAÇÕES -->
@@ -996,39 +1056,19 @@ function buildAttribution() {
   const a = DATA.attribution;
   const hasDecomp = a.retornoUsd !== null && a.cambio !== null;
 
-  document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
-  document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
-
   if (!hasDecomp) {
-    // Decomposição fx indisponível — mostrar apenas aportes e crescimento total
-    document.getElementById('attrRetorno').textContent = '—';
-    document.getElementById('attrRetorno').style.color = '#94a3b8';
-    document.getElementById('attrCambio').textContent = '—';
-    document.getElementById('attrCambio').style.color = '#94a3b8';
-    const msg = document.getElementById('attrGapMsg');
-    msg.textContent = '⚠️ Decomposição Retorno USD / Câmbio indisponível — rodar scripts/fx_utils.py completo para decompor';
-    msg.style.color = '#eab308';
-    // Gráfico simplificado: apenas aportes vs crescimento total
-    charts.attr = new Chart(document.getElementById('attrChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Patrimônio Acumulado'],
-        datasets: [
-          { label: 'Aportes identificados', data: [a.aportes], backgroundColor: '#3b82f6' },
-          { label: 'Crescimento (retorno+câmbio não decompostos)', data: [a.crescReal - a.aportes], backgroundColor: 'rgba(148,163,184,.4)' },
-        ]
-      },
-      options: {
-        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#94a3b8' } } },
-        scales: {
-          x: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
-          y: { stacked: true, ticks: { color: '#94a3b8' } }
-        }
-      }
-    });
+    // Dado parcial = ruído. Ocultar seção inteira até decomposição ficar disponível.
+    const sec = document.getElementById('attrSection');
+    if (sec) sec.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:.8rem">
+      📊 <strong>Performance Attribution indisponível</strong><br>
+      <span style="font-size:.7rem">Decomposição Retorno USD + Câmbio requer fx_utils.py completo (12+ meses de dados).<br>
+      Rodar <code>python3 scripts/fx_utils.py</code> para habilitar esta seção.</span>
+    </div>`;
     return;
   }
+
+  document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
+  document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
 
   // Decomposição completa disponível
   const attrSum = a.aportes + a.retornoUsd + a.cambio;
@@ -1455,6 +1495,27 @@ function buildPosicoes() {
   document.getElementById('totalBrl').textContent = `R$${(totBrl/1000).toFixed(0)}k`;
 }
 
+// ── S21c: Eventos de Vida ─────────────────────────────────────
+function buildEventosVida() {
+  const el = document.getElementById('eventosVidaBody');
+  if (!el) return;
+  const evs = DATA.eventos_vida || [];
+  if (!evs.length) { el.innerHTML = '<span style="color:var(--muted);font-size:.8rem">Nenhum evento registrado</span>'; return; }
+  el.innerHTML = evs.map(ev => `
+    <div class="evento-row">
+      <div class="evento-badge">📅</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+          <strong style="font-size:.85rem">${ev.evento}</strong>
+          <span style="font-size:.7rem;color:var(--yellow)">${ev.data_est}</span>
+          <span style="font-size:.65rem;padding:1px 6px;border-radius:9999px;background:rgba(234,179,8,.15);color:var(--yellow)">${ev.status}</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--accent);margin-top:3px">💸 ${ev.impacto}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:4px">${ev.acoes.map(a => `▸ ${a}`).join(' · ')}</div>
+      </div>
+    </div>`).join('');
+}
+
 // ── S21b: Mini-log ────────────────────────────────────────────
 function buildMinilog() {
   const el = document.getElementById('minilogBody');
@@ -1801,6 +1862,24 @@ function buildShadowChart(period) {
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 function renderKPIs() {
+  // Hero strip
+  document.getElementById('heroPatrimonio').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
+  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k equity`;
+  const heroPf = document.getElementById('heroPfire');
+  heroPf.textContent = `${DATA.pfire53.base}%`;
+  heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
+  document.getElementById('heroPfireSub').textContent = `@50: ${DATA.pfire50.base}% · MC 10k`;
+  document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
+  const heroProgEl = document.getElementById('heroProgresso');
+  heroProgEl.textContent = fmtPct(progPct);
+  heroProgEl.style.color = progPct >= 50 ? '#22c55e' : '#eab308';
+  const _rendaEstHero = DATA.premissas.renda_estimada || 62000;
+  const srHero = DATA.premissas.aporte_mensal / _rendaEstHero;
+  const heroSrEl = document.getElementById('heroSavings');
+  heroSrEl.textContent = fmtPct(srHero * 100);
+  heroSrEl.style.color = srHero >= 0.35 ? '#22c55e' : srHero >= 0.20 ? '#eab308' : '#ef4444';
+  document.getElementById('heroSavingsSub').textContent = `R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / R$${(_rendaEstHero/1000).toFixed(0)}k/mês`;
+
   document.getElementById('kpiPat').textContent = `R$ ${(totalBrl/1000000).toFixed(2)}M`;
   document.getElementById('kpiPatUsd').textContent = `USD ${(totalEquityUsd/1000).toFixed(0)}k equity`;
   document.getElementById('kpiTwrUsd').textContent = TWR_USD.toFixed(1) + '%';
@@ -1948,6 +2027,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
   buildGlidePath();
   buildFireBuckets();
   buildMinilog();
+  buildEventosVida();
   buildFanChart();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {

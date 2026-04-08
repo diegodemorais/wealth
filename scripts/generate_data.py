@@ -640,6 +640,12 @@ def main():
         "attribution":attr,
         "shadows":    shadows,
         "minilog":    _build_minilog(),
+        "eventos_vida": [
+            {"evento": "Casamento", "data_est": "~2026-2027", "impacto": "+R$20-50k/ano custo de vida",
+             "status": "planejado", "acoes": ["Seguro de vida (gap crítico)", "Testamento", "Estrutura patrimonial"]},
+            {"evento": "Filho", "data_est": "~2028", "impacto": "+R$30-50k/ano (escola, saúde, cuidado)",
+             "status": "planejado", "acoes": ["P(FIRE) cai ~4pp (R$300k/ano)", "Recalibrar FIRE date", "VGBL/PGBL para filho"]},
+        ],
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)
