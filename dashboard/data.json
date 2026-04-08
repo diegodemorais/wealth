@@ -1,20 +1,20 @@
 {
-  "_generated": "2026-04-08T17:51:52",
-  "_generated_brt": "2026-04-08T17:51:52-03:00",
+  "_generated": "2026-04-08T20:51:38",
+  "_generated_brt": "2026-04-08T20:51:38-03:00",
   "date": "2026-04-08",
-  "cambio": 5.0955,
+  "cambio": 5.1506,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 47.98,
+      "price": 46.445,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.6775,
+      "price": 25.995,
       "bucket": "AVGS",
       "status": "alvo"
     },
@@ -35,14 +35,14 @@
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.21,
+      "price": 82.46,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.33,
+      "price": 46.28,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -63,7 +63,7 @@
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.99,
+      "price": 63.26,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3527376,
+    "patrimonio_atual": 3483659,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -956,7 +956,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -1130,7 +1130,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -1383,7 +1383,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -1558,15 +1558,15 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 36.7,
+      "atual": 36.3,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.0,
+      "atual": 29.5,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.5,
+      "atual": 24.2,
       "alvo": 15.8
     },
     "IPCA": {
@@ -1574,7 +1574,7 @@
       "alvo": 15.0
     },
     "HODL11": {
-      "atual": 2.8,
+      "atual": 2.9,
       "alvo": 3.0
     }
   },
@@ -1600,7 +1600,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.21,
+      "price": 82.46,
       "ucits": "AVGS.L"
     },
     {
@@ -1608,7 +1608,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.33,
+      "price": 46.28,
       "ucits": "AVEM.L"
     },
     {
@@ -1632,7 +1632,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.99,
+      "price": 63.26,
       "ucits": "JPGL.L"
     }
   ],
@@ -1640,7 +1640,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2415676.0,
+    "crescReal": 2371959.0,
     "_estimativa": true
   },
   "shadows": {

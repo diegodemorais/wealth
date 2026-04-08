@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carteira Diego — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.12.0/build/chartjs-chart-sankey.min.js"></script>
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -77,6 +78,29 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .private-mode .pv{visibility:hidden}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
 .privacy-toggle:hover{opacity:1}
+/* ── F2: Spending Guardrails ── */
+.guardrail-bar{position:relative;height:28px;background:var(--card2);border-radius:6px;overflow:visible;margin:12px 0}
+.guardrail-bar-fill{position:absolute;top:0;height:100%;border-radius:6px}
+.guardrail-marker{position:absolute;top:-6px;width:3px;height:40px;border-radius:2px;z-index:2}
+.guardrail-marker-label{position:absolute;top:36px;font-size:.6rem;white-space:nowrap;transform:translateX(-50%);color:var(--muted)}
+.zone-green{background:rgba(34,197,94,.25)}
+.zone-yellow{background:rgba(234,179,8,.2)}
+.zone-red{background:rgba(239,68,68,.2)}
+/* ── F3: Earliest FIRE ── */
+.earliest-fire-card{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(168,85,247,.1));border:1px solid rgba(59,130,246,.4);border-radius:10px;padding:14px 18px;text-align:center}
+/* ── F5: Must/Like Spend ── */
+.spend-cat-bar{height:10px;border-radius:5px;margin:4px 0}
+/* ── F11: Stress Test ── */
+.stress-card{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:16px}
+.stress-card.pending{background:rgba(71,85,105,.07);border-color:rgba(71,85,105,.4)}
+/* ── F4: Scenario table ── */
+.scenario-compare-table th{padding:6px 10px;font-size:.7rem;color:var(--muted);text-transform:uppercase;border-bottom:2px solid var(--border)}
+.scenario-compare-table td{padding:8px 10px;border-bottom:1px solid rgba(71,85,105,.2);font-size:.82rem}
+.scenario-compare-table td:first-child{color:var(--muted);font-size:.75rem}
+/* ── F1/F7: Projection charts ── */
+.chart-box-xl{position:relative;height:380px;min-width:0;overflow:hidden}
+/* ── Wellness extras ── */
+.wellness-extra-row{display:grid;grid-template-columns:1.4rem 11rem 1fr 4.5rem 3rem;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid rgba(71,85,105,.12)}
 /* Hero strip */
 .hero-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:900px){.hero-strip{grid-template-columns:repeat(3,1fr)}}
@@ -158,6 +182,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button class="tab-btn" data-tab="perf"   onclick="switchTab('perf')">📈 Performance</button>
   <button class="tab-btn" data-tab="aloc"   onclick="switchTab('aloc')">🎯 Alocação</button>
   <button class="tab-btn" data-tab="plan"   onclick="switchTab('plan')">🔭 Planejamento</button>
+  <button class="tab-btn" data-tab="projecao" onclick="switchTab('projecao')">📅 Projeções</button>
 </div>
 
 <!-- S3: KPI CARDS -->
@@ -631,6 +656,89 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div id="tlhContent"></div>
 <div class="src">Gatilho TLH: perda ≥ 5%. Transitorios: EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL — não comprar mais, diluir via aportes.</div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB: PROJEÇÕES — F1, F2, F3, F4, F5, F6, F7, F8, F11
+     ═══════════════════════════════════════════════════════ -->
+
+<!-- F3: Earliest Possible FIRE Date + F2: Spending Guardrails — lado a lado -->
+<div class="grid-2" data-in-tab="projecao">
+
+<div class="section">
+  <h2>FIRE Date Mais Cedo Possível</h2>
+  <div id="earliestFireCard"><!-- gerado por buildEarliestFire() --></div>
+  <div class="src" style="margin-top:8px">Threshold: P(FIRE) ≥ 85% · Baseado em MC 10k simulações</div>
+</div>
+
+<div class="section">
+  <h2>Spending Guardrails — P(FIRE) × Custo de Vida</h2>
+  <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
+  <div class="src" id="spendingGuardrailsSrc">Fonte: spendingSensibilidade (fire_montecarlo.py) · interpolação/extrapolação linear</div>
+</div>
+
+</div>
+
+<!-- F4: Scenario Comparison Table -->
+<div class="section" data-in-tab="projecao">
+<h2>FIRE@53 vs. FIRE@50 — Comparação Detalhada</h2>
+<div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
+<div class="src">Fonte: fire_montecarlo.py MC 10k simulações · Patrimônio mediano FIRE@50: não disponível (requer MC com idade_fire=50)</div>
+</div>
+
+<!-- F5: Must / Like to Spend -->
+<div class="section" data-in-tab="projecao">
+<h2>Spending — Must vs. Like to Spend <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
+<div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
+<div class="src" id="spendingBreakdownSrc">Fonte: spending_analysis.py · All-Accounts CSV · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)</div>
+</div>
+
+<!-- F6: Life Events (enhanced) -->
+<div class="section" style="border-color:rgba(234,179,8,.3)" data-in-tab="projecao">
+<h2>Eventos de Vida Planejados — Impacto Financeiro</h2>
+<div id="lifeEventsEnhanced"><!-- gerado por buildLifeEventsEnhanced() --></div>
+<div class="src">Fonte: dados/life_events.json · Impacto em P(FIRE): calculado via delta de spending nos cenários MC</div>
+</div>
+
+<!-- F1: Lifetime Income Projection Chart -->
+<div class="section" data-in-tab="projecao">
+<h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
+<div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
+<div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
+  Pré-FIRE: renda ativa (estimativa R$45k/mês) · Pós-FIRE: saque do portfólio cobre gap despesas − INSS · INSS: R$18k/ano a partir dos 65 (inflacionado 4%/ano)
+</div>
+<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano</div>
+</div>
+
+<!-- F7: Net Worth Projection P10/P50/P90 -->
+<div class="section" data-in-tab="projecao">
+<h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
+<div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
+<div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
+  ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
+  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com saque de spending inflacionado.
+</div>
+<div class="src" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
+</div>
+
+<!-- F11: Stress Test -->
+<div class="section" data-in-tab="projecao">
+<h2>Stress Test — Bear Market −40%</h2>
+<div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
+<div class="src">Para calcular P(FIRE) pós-shock: rodar fire_montecarlo.py com patrimônio reduzido e atualizar dashboard_state.json</div>
+</div>
+
+<!-- F8: Sankey Cash Flow -->
+<div class="section" data-in-tab="projecao">
+<h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
+<div class="chart-box" style="height:280px"><canvas id="sankeyChart"></canvas></div>
+<div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
+  ⚠️ Valores estimados: renda = R$45k/mês × 12. Soma pode não fechar (renda estimada vs. gastos reais).
+  Impostos = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
+</div>
+<div class="src" id="sankeySrc">Fonte: premissas.renda_estimada · spending_summary.json · aporte_mensal</div>
+</div>
+
+<!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
 <!-- S26: RF + CRYPTO CARDS -->
 <div class="section" data-in-tab="plan">
@@ -2243,6 +2351,637 @@ function buildShadowChart(period) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// F3: EARLIEST FIRE DATE
+// ═══════════════════════════════════════════════════════════════
+function buildEarliestFire() {
+  const el = document.getElementById('earliestFireCard');
+  if (!el) return;
+  const ef = DATA.earliest_fire;
+  if (!ef) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
+  const statusColors = { aspiracional: 'var(--purple)', base: 'var(--accent)', abaixo_threshold: 'var(--red)' };
+  const statusLabels = { aspiracional: 'FIRE Aspiracional', base: 'FIRE Base', abaixo_threshold: 'Abaixo do threshold 85%' };
+  const color = statusColors[ef.status] || 'var(--accent)';
+  const label = statusLabels[ef.status] || ef.status;
+  const pfireColor = ef.pfire >= 90 ? 'var(--green)' : ef.pfire >= 85 ? 'var(--accent)' : 'var(--yellow)';
+  const yearsLeft = ef.ano - (DATA.premissas.ano_atual || new Date().getFullYear());
+  el.innerHTML = `
+    <div class="earliest-fire-card">
+      <div style="font-size:.65rem;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${label}</div>
+      <div style="font-size:2.8rem;font-weight:800;line-height:1;color:${color}">${ef.ano}</div>
+      <div style="font-size:1.1rem;font-weight:600;margin:4px 0">idade ${ef.idade}</div>
+      <div style="font-size:1.5rem;font-weight:700;color:${pfireColor};margin:6px 0">P = ${ef.pfire}%</div>
+      <div style="font-size:.75rem;color:var(--muted)">${yearsLeft} anos a partir de hoje</div>
+    </div>
+    <div style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
+        <div style="font-size:1rem;font-weight:700;color:var(--purple)">${DATA.pfire50.base}%</div>
+        <div style="font-size:.65rem;color:var(--muted)">FIRE@50 Base</div>
+      </div>
+      <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
+        <div style="font-size:1rem;font-weight:700;color:var(--accent)">${DATA.pfire53.base}%</div>
+        <div style="font-size:.65rem;color:var(--muted)">FIRE@53 Base</div>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F2: SPENDING GUARDRAILS
+// ═══════════════════════════════════════════════════════════════
+function buildSpendingGuardrails() {
+  const el = document.getElementById('spendingGuardrailsViz');
+  if (!el) return;
+  const sg = DATA.spending_guardrails;
+  if (!sg) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
+
+  const zoneColor = sg.zona === 'verde' ? 'var(--green)' : sg.zona === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+  const zoneLabel = sg.zona === 'verde' ? '🟢 No caminho certo' : sg.zona === 'amarelo' ? '🟡 Atenção' : '🔴 Alerta';
+
+  // Escala visual: de 150k (lower bound visual) a 400k (upper bound visual)
+  const minScale = 150000, maxScale = 400000;
+  const scale = v => Math.max(0, Math.min(100, (v - minScale) / (maxScale - minScale) * 100));
+
+  const upper = sg.upper_guardrail_spending;
+  const atual = sg.spending_atual;
+  const safe  = sg.safe_target_spending;
+  const lower = sg.lower_guardrail_spending;
+
+  // Posições na barra [0–100%]
+  const posUpper = scale(upper);
+  const posAtual = scale(atual);
+  const posSafe  = scale(safe);
+  const posLower = scale(lower);
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div style="font-size:2rem;font-weight:800;color:${zoneColor}">${sg.pfire_atual}%</div>
+      <div>
+        <div style="font-size:.85rem;font-weight:600;color:${zoneColor}">${zoneLabel}</div>
+        <div style="font-size:.7rem;color:var(--muted)">P(FIRE) atual · spending R$${(sg.spending_atual/1000).toFixed(0)}k/ano</div>
+      </div>
+    </div>
+    <div style="position:relative;height:36px;border-radius:8px;overflow:hidden;margin-bottom:32px">
+      <!-- zonas coloridas -->
+      <div style="position:absolute;left:0;width:${posUpper}%;height:100%;background:rgba(59,130,246,.15)"></div>
+      <div style="position:absolute;left:${posUpper}%;width:${posAtual-posUpper}%;height:100%;background:rgba(34,197,94,.2)"></div>
+      <div style="position:absolute;left:${posAtual}%;width:${posSafe-posAtual}%;height:100%;background:rgba(234,179,8,.15)"></div>
+      <div style="position:absolute;left:${posSafe}%;width:${posLower-posSafe}%;height:100%;background:rgba(249,115,22,.15)"></div>
+      <div style="position:absolute;left:${posLower}%;width:${100-posLower}%;height:100%;background:rgba(239,68,68,.2)"></div>
+      <!-- marcadores -->
+      <div style="position:absolute;left:${posUpper}%;top:0;width:2px;height:100%;background:#3b82f6;z-index:2">
+        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.55rem;color:#3b82f6;white-space:nowrap">~R$${(upper/1000).toFixed(0)}k (~95%)</div>
+      </div>
+      <div style="position:absolute;left:${posAtual}%;top:0;width:3px;height:100%;background:var(--green);z-index:3">
+        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--green);white-space:nowrap;font-weight:700">R$${(atual/1000).toFixed(0)}k (${sg.pfire_atual}%) ◀ ATUAL</div>
+      </div>
+      <div style="position:absolute;left:${posSafe}%;top:0;width:2px;height:100%;background:var(--yellow);z-index:2">
+        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--yellow);white-space:nowrap">~R$${(safe/1000).toFixed(0)}k (~80%)</div>
+      </div>
+      <div style="position:absolute;left:${posLower}%;top:0;width:2px;height:100%;background:var(--red);z-index:2">
+        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--red);white-space:nowrap">~R$${(lower/1000).toFixed(0)}k (~70%)</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px">
+      <div style="background:rgba(59,130,246,.1);border-radius:6px;padding:6px;text-align:center">
+        <div style="font-size:.7rem;font-weight:700;color:var(--accent)">~R$${(upper/1000).toFixed(0)}k</div>
+        <div style="font-size:.55rem;color:var(--muted)">Upper (~95%)</div>
+      </div>
+      <div style="background:rgba(34,197,94,.1);border-radius:6px;padding:6px;text-align:center;border:1px solid rgba(34,197,94,.3)">
+        <div style="font-size:.7rem;font-weight:700;color:var(--green)">R$${(atual/1000).toFixed(0)}k</div>
+        <div style="font-size:.55rem;color:var(--muted)">Atual (${sg.pfire_atual}%)</div>
+      </div>
+      <div style="background:rgba(234,179,8,.1);border-radius:6px;padding:6px;text-align:center">
+        <div style="font-size:.7rem;font-weight:700;color:var(--yellow)">~R$${(safe/1000).toFixed(0)}k</div>
+        <div style="font-size:.55rem;color:var(--muted)">Safe (~80%)</div>
+      </div>
+      <div style="background:rgba(239,68,68,.1);border-radius:6px;padding:6px;text-align:center">
+        <div style="font-size:.7rem;font-weight:700;color:var(--red)">~R$${(lower/1000).toFixed(0)}k</div>
+        <div style="font-size:.55rem;color:var(--muted)">Lower (~70%)</div>
+      </div>
+    </div>
+    <div style="font-size:.6rem;color:var(--muted);margin-top:8px">${sg.nota}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F4: SCENARIO COMPARISON TABLE
+// ═══════════════════════════════════════════════════════════════
+function buildScenarioComparison() {
+  const el = document.getElementById('scenarioCompareBody');
+  if (!el) return;
+  const sc = DATA.scenario_comparison;
+  if (!sc) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
+
+  const fmtPfire = v => v != null ? `<span style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
+  const fmtPat = v => v != null ? `R$${(v/1e6).toFixed(2)}M` : '<span style="color:var(--muted)">n/d</span>';
+
+  const rows = [
+    ['P(FIRE) Base',     fmtPfire(sc.fire53.base),   fmtPfire(sc.fire50.base)],
+    ['P(FIRE) Favorável', fmtPfire(sc.fire53.fav),   fmtPfire(sc.fire50.fav)],
+    ['P(FIRE) Stress',   fmtPfire(sc.fire53.stress), fmtPfire(sc.fire50.stress)],
+    ['Patrimônio Mediano', fmtPat(sc.fire53.pat_mediano), fmtPat(sc.fire50.pat_mediano)],
+    ['Patrimônio P10',   fmtPat(sc.fire53.pat_p10),  fmtPat(sc.fire50.pat_p10)],
+    ['Patrimônio P90',   fmtPat(sc.fire53.pat_p90),  fmtPat(sc.fire50.pat_p90)],
+    ['Anos de trabalho (delta)', '0 (base)', '<span style="color:var(--purple)">−3 anos</span>'],
+  ];
+
+  el.innerHTML = `<table class="scenario-compare-table" style="width:100%">
+    <thead><tr>
+      <th style="text-align:left">Métrica</th>
+      <th class="num" style="color:var(--accent)">FIRE@53 ✅</th>
+      <th class="num" style="color:var(--purple)">FIRE@50 🚀</th>
+    </tr></thead>
+    <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join('')}</tbody>
+  </table>
+  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)">${sc.nota_fire50_pat || ''}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F5: MUST / LIKE TO SPEND
+// ═══════════════════════════════════════════════════════════════
+function buildSpendingBreakdown() {
+  const el = document.getElementById('spendingBreakdownBody');
+  if (!el) return;
+  const sb = DATA.spending_breakdown;
+  if (!sb) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:.8rem">Dados não disponíveis — rodar: <code>python3 scripts/spending_analysis.py &lt;csv&gt; --json-output</code></div>';
+    return;
+  }
+
+  const total = sb.total_mensal;
+  const must  = sb.must_spend_mensal;
+  const like  = sb.like_spend_mensal;
+  const imp   = sb.imprevistos_mensal;
+  const modelo = sb.modelo_fire_anual;
+
+  const pMust = total > 0 ? must/total*100 : 0;
+  const pLike = total > 0 ? like/total*100 : 0;
+  const pImp  = total > 0 ? imp/total*100  : 0;
+
+  const anual = sb.total_anual;
+  const bufferAnual = modelo - anual;
+  const bufferColor = bufferAnual >= 0 ? 'var(--green)' : 'var(--red)';
+  const bufferIcon  = bufferAnual >= 0 ? '✅' : '⚠️';
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.6rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Must Spend</div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--red)">R$${must.toLocaleString('pt-BR')}</div>
+        <div style="font-size:.65rem;color:var(--muted)">/mês · ${pMust.toFixed(0)}% do total</div>
+        <div class="spend-cat-bar" style="background:rgba(239,68,68,.5);width:${pMust.toFixed(0)}%"></div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Inclui principal hipoteca (R$1.517/mês = equity)</div>
+      </div>
+      <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Like to Spend</div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--accent)">R$${like.toLocaleString('pt-BR')}</div>
+        <div style="font-size:.65rem;color:var(--muted)">/mês · ${pLike.toFixed(0)}% do total</div>
+        <div class="spend-cat-bar" style="background:rgba(59,130,246,.5);width:${pLike.toFixed(0)}%"></div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Discricionários cortáveis</div>
+      </div>
+      <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.6rem;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Imprevistos</div>
+        <div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">R$${imp.toLocaleString('pt-BR')}</div>
+        <div style="font-size:.65rem;color:var(--muted)">/mês · ${pImp.toFixed(0)}% do total</div>
+        <div class="spend-cat-bar" style="background:rgba(234,179,8,.5);width:${Math.max(pImp,3).toFixed(0)}%"></div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Gifts e pontuais</div>
+      </div>
+    </div>
+    <div style="background:var(--card2);border-radius:8px;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center">
+      <div>
+        <div style="font-size:1.1rem;font-weight:700">R$${total.toLocaleString('pt-BR')}/mês</div>
+        <div style="font-size:.65rem;color:var(--muted)">Total real · R$${(anual/1000).toFixed(0)}k/ano</div>
+      </div>
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;color:var(--muted)">R$${(modelo/1000).toFixed(0)}k/ano</div>
+        <div style="font-size:.65rem;color:var(--muted)">Modelo FIRE</div>
+      </div>
+      <div>
+        <div style="font-size:1.1rem;font-weight:700;color:${bufferColor}">${bufferIcon} R$${Math.abs(bufferAnual/1000).toFixed(0)}k/ano</div>
+        <div style="font-size:.65rem;color:var(--muted)">${bufferAnual >= 0 ? 'Buffer vs. modelo' : 'Acima do modelo'}</div>
+      </div>
+    </div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${sb.periodo} (${sb.meses} meses)</div>`;
+
+  const srcEl = document.getElementById('spendingBreakdownSrc');
+  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${sb.periodo} · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F6: LIFE EVENTS (enhanced)
+// ═══════════════════════════════════════════════════════════════
+function buildLifeEventsEnhanced() {
+  const el = document.getElementById('lifeEventsEnhanced');
+  if (!el) return;
+  const evs = DATA.life_events_planejados || [];
+  if (!evs.length) {
+    el.innerHTML = '<span style="color:var(--muted);font-size:.8rem">Nenhum evento planejado em dados/life_events.json</span>';
+    return;
+  }
+  const anoAtual = DATA.premissas.ano_atual || new Date().getFullYear();
+  el.innerHTML = evs.map(ev => {
+    const anosRestantes = ev.ano - anoAtual;
+    const urgente = anosRestantes <= 2;
+    const borderColor = urgente ? 'var(--yellow)' : 'var(--border)';
+    // Impacto estimado em P(FIRE): não disponível sem rodar MC — mostrar placeholder
+    return `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;padding:12px 0;border-bottom:1px solid rgba(71,85,105,.2);align-items:center">
+      <div style="background:rgba(234,179,8,.15);border:1px solid ${borderColor};border-radius:8px;padding:8px 12px;text-align:center;min-width:60px">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--yellow)">${ev.ano}</div>
+        <div style="font-size:.6rem;color:var(--muted)">idade ${ev.idade}</div>
+      </div>
+      <div>
+        <div style="font-size:.9rem;font-weight:600">${ev.label}</div>
+        <div style="font-size:.75rem;color:var(--accent);margin-top:2px">Impacto: R$${(ev.valor_brl/1000).toFixed(0)}k (gasto pontual)</div>
+        <div style="font-size:.65rem;color:var(--muted);margin-top:2px">${urgente ? '⚠️ Próximo — ' : ''}Em ${anosRestantes} anos · Tipo: ${ev.tipo}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:.65rem;color:var(--muted);margin-bottom:2px">Impacto P(FIRE)</div>
+        <div style="font-size:.75rem;color:var(--muted)" title="Requer MC dedicado para calcular impacto exato">—</div>
+        <div style="font-size:.55rem;color:var(--muted)">TODO: rodar MC</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F1: LIFETIME INCOME PROJECTION CHART
+// ═══════════════════════════════════════════════════════════════
+function buildIncomeProjection() {
+  const ip = DATA.income_projection;
+  if (!ip) return;
+  const ctx = document.getElementById('incomeProjectionChart');
+  if (!ctx) return;
+
+  const anos = ip.anos;
+  const labels = anos.map(a => String(a));
+
+  // Life events como pontos extras na série de despesas
+  const lifeEventAnos = new Set((ip.life_events || []).map(ev => ev.ano));
+
+  // Milestones: linhas verticais via annotation (não disponível sem plugin)
+  // Usar dataset extra com pontos nulos e apenas 1 ponto no milestone
+  const milestoneData = anos.map(a => {
+    const m = (ip.milestones || []).find(ms => ms.ano === a);
+    return m ? (ip.despesas[anos.indexOf(a)] * 1.1) : null; // posição acima das despesas
+  });
+
+  if (charts.incomeProjection) charts.incomeProjection.destroy();
+  charts.incomeProjection = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Renda Ativa (pré-FIRE)',
+          data: ip.renda_ativa,
+          backgroundColor: 'rgba(59,130,246,.65)',
+          stack: 'renda',
+          order: 2,
+        },
+        {
+          label: 'Saque Portfólio (pós-FIRE)',
+          data: ip.saque_portfolio,
+          backgroundColor: 'rgba(168,85,247,.6)',
+          stack: 'renda',
+          order: 2,
+        },
+        {
+          label: 'INSS (age 65+)',
+          data: ip.inss,
+          backgroundColor: 'rgba(34,197,94,.65)',
+          stack: 'renda',
+          order: 2,
+        },
+        {
+          label: 'Despesas (R$250k × 4%/ano)',
+          data: ip.despesas,
+          type: 'line',
+          borderColor: 'rgba(239,68,68,.85)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3,
+          order: 1,
+          stack: undefined,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            title: items => {
+              if (!items.length) return '';
+              const ano = labels[items[0].dataIndex];
+              const m = (ip.milestones || []).find(ms => String(ms.ano) === ano);
+              return ano + (m ? ` — ${m.label}` : '');
+            },
+            label: ctx => {
+              if (ctx.parsed.y === null || ctx.parsed.y === 0) return null;
+              return ` ${ctx.dataset.label}: R$${(ctx.parsed.y/1000).toFixed(0)}k`;
+            },
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { color: '#94a3b8', maxTicksLimit: 14, autoSkip: true, maxRotation: 0 },
+          grid: { color: 'rgba(71,85,105,.2)' }
+        },
+        y: {
+          stacked: true,
+          ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0) + 'k' },
+          grid: { color: 'rgba(71,85,105,.2)' }
+        }
+      }
+    }
+  });
+
+  // Life events markers: adicionar anotação visual abaixo do chart
+  const leDiv = document.getElementById('incomeProjectionSrc');
+  if (leDiv && ip.life_events && ip.life_events.length) {
+    const evStr = ip.life_events.map(ev => `${ev.ano}: ${ev.label} (R$${(ev.valor/1000).toFixed(0)}k)`).join(' · ');
+    leDiv.textContent = `Eventos: ${evStr} · Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F7: NET WORTH PROJECTION P10/P50/P90
+// ═══════════════════════════════════════════════════════════════
+function buildNetWorthProjection() {
+  const nw = DATA.net_worth_projection;
+  if (!nw) return;
+  const ctx = document.getElementById('netWorthProjectionChart');
+  if (!ctx) return;
+
+  const labels = nw.anos.map(a => String(a));
+  const anoFireIdx = nw.anos.indexOf(nw.ano_fire);
+  const gatilho = DATA.premissas.patrimonio_gatilho;
+
+  if (charts.netWorth) charts.netWorth.destroy();
+  charts.netWorth = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'P90 (cenário favorável)',
+          data: nw.p90,
+          borderColor: 'rgba(34,197,94,.4)',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3,
+        },
+        {
+          label: 'P50 (mediana)',
+          data: nw.p50,
+          borderColor: '#3b82f6',
+          borderWidth: 2.5,
+          pointRadius: nw.anos.map((a, i) => i === anoFireIdx ? 7 : 0),
+          pointBackgroundColor: nw.anos.map((a, i) => i === anoFireIdx ? '#3b82f6' : 'transparent'),
+          fill: '-2',
+          backgroundColor: 'rgba(59,130,246,.08)',
+          tension: 0.3,
+        },
+        {
+          label: 'P10 (cenário stress)',
+          data: nw.p10,
+          borderColor: 'rgba(239,68,68,.4)',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3,
+        },
+        {
+          label: `Gatilho FIRE R$${(gatilho/1e6).toFixed(1)}M`,
+          data: labels.map(() => gatilho),
+          borderColor: 'rgba(234,179,8,.6)',
+          borderWidth: 1.5,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          fill: false,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            title: items => {
+              if (!items.length) return '';
+              const ano = labels[items[0].dataIndex];
+              return ano + (parseInt(ano) === nw.ano_fire ? ` — FIRE Day (age ${DATA.premissas.idade_fire_alvo})` : '');
+            },
+            label: ctx => {
+              if (ctx.parsed.y === null) return null;
+              return ` ${ctx.dataset.label.split(' —')[0]}: R$${(ctx.parsed.y/1e6).toFixed(2)}M`;
+            },
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#94a3b8', maxTicksLimit: 12, autoSkip: true, maxRotation: 0 },
+          grid: { color: 'rgba(71,85,105,.2)' }
+        },
+        y: {
+          ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
+          grid: { color: 'rgba(71,85,105,.2)' }
+        }
+      }
+    }
+  });
+
+  const srcEl = document.getElementById('netWorthProjectionSrc');
+  if (srcEl) {
+    const mc = DATA.scenario_comparison?.fire53;
+    srcEl.textContent = mc
+      ? `MC endpoints: P50=R$${(mc.pat_mediano/1e6).toFixed(2)}M · P10=R$${(mc.pat_p10/1e6).toFixed(2)}M · P90=R$${(mc.pat_p90/1e6).toFixed(2)}M no FIRE Day ${nw.ano_fire}`
+      : 'Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F11: STRESS TEST
+// ═══════════════════════════════════════════════════════════════
+function buildStressTest() {
+  const el = document.getElementById('stressTestBody');
+  if (!el) return;
+  const st = DATA.stress_test;
+  if (!st) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
+
+  const patAtual = DATA.premissas.patrimonio_atual;
+  const patShock = st.pat_pos_shock;
+  const pct = st.shock_pct;
+  const hasPfire = st.pfire_pos_shock_base !== null && st.pfire_pos_shock_base !== undefined;
+
+  const deltaM = (patAtual - patShock) / 1e6;
+
+  el.innerHTML = `
+    <div class="grid-2" style="margin-bottom:0">
+      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:14px">
+        <div style="font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Cenário: Bear Market −${pct}%</div>
+        <div style="font-size:2rem;font-weight:800;color:var(--red)">−${pct}%</div>
+        <div style="margin-top:8px;font-size:.8rem">
+          <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Patrimônio atual</span><strong class="pv">R$${(patAtual/1e6).toFixed(2)}M</strong></div>
+          <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Após shock (×${(1-pct/100).toFixed(2)})</span><strong class="pv" style="color:var(--red)">R$${(patShock/1e6).toFixed(2)}M</strong></div>
+          <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Perda bruta</span><strong style="color:var(--red)">−R$${deltaM.toFixed(2)}M</strong></div>
+        </div>
+      </div>
+      <div style="background:${hasPfire ? 'rgba(34,197,94,.07)' : 'rgba(71,85,105,.07)'};border:1px solid ${hasPfire ? 'rgba(34,197,94,.3)' : 'rgba(71,85,105,.3)'};border-radius:8px;padding:14px">
+        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">P(FIRE) Pós-Shock</div>
+        ${hasPfire
+          ? `<div style="font-size:2rem;font-weight:800;color:${st.pfire_pos_shock_base>=85?'var(--green)':st.pfire_pos_shock_base>=70?'var(--yellow)':'var(--red)'}">${st.pfire_pos_shock_base}%</div>
+             <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Calculado em ${st.calc_date || '—'}</div>`
+          : `<div style="font-size:1.5rem;color:var(--muted);margin:8px 0">⏳</div>
+             <div style="font-size:.75rem;color:var(--muted)">Não calculado</div>
+             <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Rodar offline:<br><code style="font-size:.6rem;background:var(--card2);padding:2px 6px;border-radius:4px">fire_montecarlo.py --patrimonio ${patShock}</code></div>`
+        }
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:.65rem;color:var(--muted)">${st.nota}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F8: SANKEY CASH FLOW
+// ═══════════════════════════════════════════════════════════════
+function buildSankey() {
+  const sk = DATA.sankey_data;
+  if (!sk) return;
+  const ctx = document.getElementById('sankeyChart');
+  if (!ctx) return;
+
+  // Atualizar nota
+  const notaEl = document.getElementById('sankeyNota');
+  if (notaEl) notaEl.textContent = sk.nota || '';
+
+  const fmt = v => 'R$' + (v/1000).toFixed(0) + 'k';
+
+  // chartjs-chart-sankey espera array de {from, to, flow}
+  const flowData = [
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`, flow: sk.impostos },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Must Spend ${fmt(sk.must_spend)}`, flow: sk.must_spend },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Like to Spend ${fmt(sk.like_spend)}`, flow: sk.like_spend },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Investimentos ${fmt(sk.investimentos)}`, flow: sk.investimentos },
+  ];
+
+  if (charts.sankey) charts.sankey.destroy();
+  try {
+    charts.sankey = new Chart(ctx, {
+      type: 'sankey',
+      data: {
+        datasets: [{
+          label: 'Fluxo de Caixa Anual',
+          data: flowData,
+          colorFrom: (c) => {
+            const labels = {
+              [`Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`]: '#ef4444',
+              [`Must Spend ${fmt(sk.must_spend)}`]: '#f97316',
+              [`Like to Spend ${fmt(sk.like_spend)}`]: '#3b82f6',
+              [`Investimentos ${fmt(sk.investimentos)}`]: '#22c55e',
+            };
+            return labels[c.dataset.data[c.dataIndex].to] || '#94a3b8';
+          },
+          colorTo: (c) => {
+            const labels = {
+              [`Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`]: '#ef4444',
+              [`Must Spend ${fmt(sk.must_spend)}`]: '#f97316',
+              [`Like to Spend ${fmt(sk.like_spend)}`]: '#3b82f6',
+              [`Investimentos ${fmt(sk.investimentos)}`]: '#22c55e',
+            };
+            return labels[c.dataset.data[c.dataIndex].to] || '#94a3b8';
+          },
+          colorMode: 'gradient',
+          size: 'min',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.data[ctx.dataIndex].from} → ${ctx.dataset.data[ctx.dataIndex].to}: R$${(ctx.dataset.data[ctx.dataIndex].flow/1000).toFixed(0)}k`,
+            }
+          }
+        }
+      }
+    });
+  } catch(e) {
+    ctx.parentElement.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:.8rem;text-align:center;padding:20px">
+      ⚠️ Sankey indisponível (plugin não carregado)<br>
+      <span style="font-size:.7rem;margin-top:4px">Renda: R$${(sk.renda_total/1000).toFixed(0)}k → Impostos: R$${(sk.impostos/1000).toFixed(0)}k · Must: R$${(sk.must_spend/1000).toFixed(0)}k · Like: R$${(sk.like_spend/1000).toFixed(0)}k · Invest.: R$${(sk.investimentos/1000).toFixed(0)}k</span>
+    </div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F10: WELLNESS EXTRAS (3 novas métricas)
+// ═══════════════════════════════════════════════════════════════
+function buildWellnessExtras() {
+  // Adicionar as 3 métricas ao grid de wellness existente
+  const grid = document.getElementById('wellnessGrid');
+  if (!grid) return;
+  const we = DATA.wellness_extras;
+  if (!we) return;
+
+  const sep = document.createElement('div');
+  sep.style.cssText = 'font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 2px;border-top:1px solid rgba(71,85,105,.2);margin-top:4px';
+  sep.textContent = '+ Métricas Adicionais';
+  grid.appendChild(sep);
+
+  const metricasCfg = [
+    {
+      key: 'cash_flow_12m',
+      icon: we.cash_flow_12m.status === 'green' ? '✅' : we.cash_flow_12m.status === 'yellow' ? '⚠️' : '❌',
+      label: 'Cash Flow 12m',
+      color: we.cash_flow_12m.status === 'green' ? '#22c55e' : we.cash_flow_12m.status === 'yellow' ? '#eab308' : '#ef4444',
+      detail: `R$${(Math.abs(we.cash_flow_12m.value)/1000).toFixed(0)}k ${we.cash_flow_12m.value>=0?'positivo':'negativo'}`,
+      pct: we.cash_flow_12m.value >= 0 ? 100 : 0,
+    },
+    {
+      key: 'fire_anos_restantes',
+      icon: we.fire_anos_restantes.status === 'green' ? '✅' : we.fire_anos_restantes.status === 'yellow' ? '⚠️' : '❌',
+      label: `Anos até FIRE@${DATA.premissas.idade_fire_aspiracional}`,
+      color: we.fire_anos_restantes.status === 'green' ? '#22c55e' : we.fire_anos_restantes.status === 'yellow' ? '#eab308' : '#ef4444',
+      detail: `${we.fire_anos_restantes.value} anos`,
+      pct: Math.max(0, Math.min(100, (17 - we.fire_anos_restantes.value) / 17 * 100)),
+    },
+    {
+      key: 'hipoteca_pct_renda',
+      icon: we.hipoteca_pct_renda.status === 'green' ? '✅' : we.hipoteca_pct_renda.status === 'yellow' ? '⚠️' : '❌',
+      label: 'Hipoteca % Renda',
+      color: we.hipoteca_pct_renda.status === 'green' ? '#22c55e' : we.hipoteca_pct_renda.status === 'yellow' ? '#eab308' : '#ef4444',
+      detail: `${we.hipoteca_pct_renda.value}% (Boldin)`,
+      pct: Math.max(0, Math.min(100, (40 - we.hipoteca_pct_renda.value) / 40 * 100)),
+    },
+  ];
+
+  metricasCfg.forEach(m => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:grid;grid-template-columns:1.4rem 11rem 1fr 4.5rem 3rem;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid rgba(71,85,105,.12)';
+    div.innerHTML = `
+      <span style="font-size:.82rem;line-height:1">${m.icon}</span>
+      <span style="font-size:.75rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.label}</span>
+      <div style="height:6px;background:rgba(71,85,105,.25);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${m.pct.toFixed(0)}%;background:${m.color};border-radius:3px;transition:width .4s"></div>
+      </div>
+      <span style="font-size:.68rem;color:var(--muted);white-space:nowrap;text-align:right">${m.detail}</span>
+      <strong style="font-size:.72rem;color:${m.color};white-space:nowrap;text-align:right">+</strong>`;
+    grid.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 function renderKPIs() {
@@ -2847,6 +3586,16 @@ window.switchTab = function(name) {
   updateContrib();
   updateWhatIf();
   calcAporte();
+  buildEarliestFire();
+  buildSpendingGuardrails();
+  buildScenarioComparison();
+  buildSpendingBreakdown();
+  buildLifeEventsEnhanced();
+  buildIncomeProjection();
+  buildNetWorthProjection();
+  buildStressTest();
+  buildSankey();
+  buildWellnessExtras();
   // Ativar tab inicial (status) — esconde o resto, então resize
   switchTab('status');
 })();

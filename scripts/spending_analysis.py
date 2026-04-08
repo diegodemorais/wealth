@@ -6,15 +6,19 @@ e produz análise completa por mês, categoria e anomalias.
 
 Uso:
     python3 scripts/spending_analysis.py [caminho_csv]
+    python3 scripts/spending_analysis.py [caminho_csv] --json-output
     Se não informar o CSV, usa o mais recente em analysis/
 
-Output: relatório formatado no terminal
+Output:
+    Sem flag: relatório formatado no terminal
+    --json-output: salva dados/spending_summary.json (lido por build_dashboard.py)
 """
 
 import csv
 import sys
 import os
 import glob
+import json
 from collections import defaultdict
 from datetime import datetime
 
@@ -315,11 +319,58 @@ def report(data, csv_path):
     print()
 
 
+# ─── JSON Output ───────────────────────────────────────────────────────────────
+
+def export_json(data, csv_path, output_path=None):
+    """Exporta resumo de spending para JSON (lido por build_dashboard.py)."""
+    mg = data['monthly_by_group']
+    months = sorted(mg.keys())
+    n = len(months)
+
+    if n == 0:
+        print("Nenhum dado para exportar.")
+        return
+
+    avg_ess = sum(mg[m]['Essenciais']  for m in months) / n
+    avg_opt = sum(mg[m]['Opcionais']   for m in months) / n
+    avg_imp = sum(mg[m]['Imprevistos'] for m in months) / n
+    avg_tot = sum(mg[m]['TOTAL']       for m in months) / n
+
+    # Valores são negativos no CSV (saídas); armazenar como positivos
+    summary = {
+        "periodo": f"{months[0]} a {months[-1]}",
+        "meses": n,
+        "must_spend_mensal": round(abs(avg_ess)),
+        "like_spend_mensal": round(abs(avg_opt)),
+        "imprevistos_mensal": round(abs(avg_imp)),
+        "total_mensal": round(abs(avg_tot)),
+        "must_spend_anual": round(abs(avg_ess) * 12),
+        "like_spend_anual": round(abs(avg_opt) * 12),
+        "imprevistos_anual": round(abs(avg_imp) * 12),
+        "total_anual": round(abs(avg_tot) * 12),
+        "modelo_fire_anual": BASELINE['model_fire'],
+        "updated_at": datetime.now().strftime("%Y-%m-%d"),
+        "fonte": os.path.basename(csv_path),
+    }
+
+    if output_path is None:
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        output_path = os.path.join(root, 'dados', 'spending_summary.json')
+
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+    print(f"✅ spending_summary.json salvo em: {output_path}")
+    return summary
+
+
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    if len(sys.argv) > 1:
-        csv_path = sys.argv[1]
+    json_output = '--json-output' in sys.argv
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+
+    if args:
+        csv_path = args[0]
     else:
         csv_path = find_latest_csv()
 
@@ -328,7 +379,11 @@ def main():
     print(f"Transações lidas: {len(transactions)}")
 
     data = analyze(transactions)
-    report(data, csv_path)
+
+    if json_output:
+        export_json(data, csv_path)
+    else:
+        report(data, csv_path)
 
 
 if __name__ == '__main__':
