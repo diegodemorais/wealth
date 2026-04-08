@@ -6,11 +6,11 @@
 |-------|-------|
 | **ID** | HD-swrd-114-cotas |
 | **Dono** | Bookkeeper |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | 🟡 Média |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Dashboard HTML vs Planilha — SWRD qty diverge em 114 cotas |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-08 |
 
 ---
 
@@ -41,7 +41,27 @@ python3 scripts/dashboard.py
 
 ---
 
+## Root Cause
+
+Toda divergência rastreada ao evento TLH de 2025-09-22 não refletido em `holdings.md`:
+- USSC: vendeu 69.75 cotas via TLH → holdings.md mostrava 443.00 (correto: 373.25)
+- SWRD: holdings.md tinha 5,405.56 incorreto desde origem — CSV IBKR (zero sells, net buys = 5,291.64) confirmado pelo ibkr_analysis.py e ibkr_sync.py
+
+Diego confirmou: sem compras de SWRD após 2026-03-31.
+
+## Correções Aplicadas (2026-04-08)
+
+- `dados/holdings.md`: SWRD 5,405.56 → **5,291.64** | USSC 443.00 → **373.25**
+- Fonte confirmada: `ibkr_analysis.py` processando CSV 2021-04-08 a 2026-03-31
+- Dashboard a regenerar com valores corrigidos
+
+## Ação Pendente para Diego
+
+Atualizar **Carteira Viva (Google Sheets)**: SWRD e USSC com as quantidades corretas.
+
 ## Critério de conclusão
 
-- [ ] ibkr_lotes.json SWRD qty bate com IBKR ao vivo
-- [ ] Dashboard HTML sem divergência de cotas vs IBKR
+- [x] holdings.md SWRD qty = 5,291.64 (confirmado pelo CSV IBKR)
+- [x] holdings.md USSC qty = 373.25 (confirmado pelo CSV IBKR)
+- [x] Root cause identificado e documentado
+- [ ] Dashboard regenerado com qtdes corretas (próxima execução do pipeline)

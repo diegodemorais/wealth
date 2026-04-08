@@ -1,7 +1,7 @@
 # Holdings — Quantidades e Valores por Ativo
 
-> Atualizado em: 2026-04-07
-> Fonte: Carteira Viva (Google Sheets, aba Utils) + auditoria HD-carteiraviva-audit
+> Atualizado em: 2026-04-08
+> Fonte: Carteira Viva (Google Sheets, aba Utils) + auditoria HD-carteiraviva-audit + ibkr_analysis.py (CSV 2021-2026-03-31)
 > Cambio de referencia: R$ 5,15
 > Atualizar sempre que houver compra/venda
 
@@ -14,7 +14,7 @@
 ### Bloco SWRD (alvo 50% do equity)
 | Ativo | Qtde | Valor USD | % Portfolio Inter | Lucro | Status |
 |-------|------|-----------|-------------------|-------|--------|
-| SWRD | 5,405.56 | $245,797 | 40.7% | +41.22% | Underweight. Aportar aqui |
+| SWRD | 5,291.64 | $245,797 | 40.7% | +41.22% | Underweight. Aportar aqui |
 
 ### Bloco AVGS (alvo 30% do equity)
 | Ativo | Qtde | Valor USD | % Portfolio Inter | Lucro | Status |
@@ -22,7 +22,7 @@
 | AVGS | 233.43 | $6,067 | 1.0% | +4.24% | Alvo UCITS. Aportar aqui |
 | AVUV | 548.88 | $61,705 | 10.2% | +37.82% | Transitorio |
 | AVDV | 947.60 | $96,219 | 15.9% | +75.03% | Transitorio |
-| USSC | 443.00 | $30,778 | 5.1% | +67.72% | Transitorio |
+| USSC | 373.25 | $30,778 | 5.1% | +67.72% | Transitorio |
 | **Subtotal** | | **$194,769** | **32.3%** | | Overweight via transitorios |
 
 ### Bloco AVEM (alvo 20% do equity)
