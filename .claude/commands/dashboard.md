@@ -120,104 +120,179 @@ Implementar uma função `periodSelector(containerId, chartInstance, allLabels, 
 
 **Nota sobre granularidade**: dados em `historico_carteira.csv` são mensais. `1m` mostrará 1-2 pontos apenas. Isso é correto — não inventar dados diários. Se o filtro resultar em ≤ 2 pontos, mostrar tooltip "poucos dados para este período".
 
-Seções (todas obrigatórias, nesta ordem):
+## Princípios de Design
 
-1. **Próximas Ações** (TOPO): próximo aporte via cascade (pisos de `portfolio_analytics.py`), gatilhos ativos (`gatilhos.md`), drift alerts. Background amarelo.
-   - **Cascade de aportes** (ler de `otimizador_aporte` em `portfolio_analytics.py`): IPCA+ longo é prioridade 1 quando taxa >= 6.0% ("aproveitar janela"), Renda+ é prioridade 2 quando taxa >= 6.5%, equity é o default. Exibir nesta ordem — não inverter.
-   - **Nomes dos benchmarks**: Shadow A = "VWRA (mercado puro)", Shadow B = "IPCA+ longo (RF puro)", Shadow C = "VWRA + RF (60/40)".
+- **Auto-explicativo**: zero identificadores internos visíveis. Nenhum "R3", "Regime 3", "backtest_portfolio.py", "scorecard.md", "S1", etc. Cada label deve fazer sentido para alguém que não conhece o codebase.
+- **Períodos em vez de nomes**: sempre mostrar o intervalo de datas (ex: "ago/2019–abr/2026") em vez de nomes de regime.
+- **Separação temporal**: seções de curto prazo (≤1 ano, operacional) visualmente distintas de longo prazo (FIRE, estratégico). Usar badge `[OPERACIONAL]` amarelo e `[ESTRATÉGICO]` azul nos títulos das seções.
+- **Period selectors com dados mensais**: mínimo útil = 6 meses. Remover `1m` e `3m` de qualquer selector. Se período filtrado resultar em < 4 pontos, exibir mensagem "Poucos dados para este período" em vez do chart.
+- **Benchmarks**: VWRA = "VWRA (mercado puro)", Shadow B = "IPCA+ longo (RF puro)", Shadow C = "VWRA + RF (60/40)". Nunca "Shadow A/B/C" em texto visível.
 
-2. **Financial Wellness Score**: nota 0-100 calculada em JS (não hardcoded) com os pesos abaixo. Semáforo: ≥80 verde, 60-79 amarelo, <60 vermelho. **Posicionamento**: card secundário, menor que P(FIRE). Não deve ser o indicador de destaque — P(FIRE) é o KPI principal.
+## Ordem das seções
 
-   | Métrica | Peso | Como calcular |
-   |---------|------|---------------|
-   | P(FIRE) base | 25% | `pfire.base ≥ 90% → 25pts; ≥ 85% → 18pts; ≥ 75% → 10pts; < 75% → 0pts` |
-   | Drift máximo | 15% | `max_drift ≤ 5pp → 15pts; ≤ 10pp → 10pts; ≤ 15pp → 5pts; > 15pp → 0pts` |
-   | Progresso FIRE | 15% | `(pat/gatilho) × 15` (linear até 100%) |
-   | IPCA+ gap vs alvo | 10% | `gap ≤ 2pp → 10pts; ≤ 5pp → 7pts; ≤ 10pp → 3pts; > 10pp → 0pts` |
-   | Savings rate | 10% | `aporte_anual/renda_est ≥ 35% → 10pts; ≥ 25% → 7pts; ≥ 15% → 3pts` |
-   | TER vs benchmark | 5% | `TER_carteira ≤ TER_shadowA → 5pts; ≤ TER_shadowA + 0.1% → 3pts; else 0` |
-   | TLH opps | 5% | `nenhuma oportunidade → 5pts; 1-2 → 3pts; 3+ → 0pts` |
-   | Diversificação geo | 5% | `US ≤ 65% → 5pts; ≤ 75% → 3pts; > 75% → 0pts` |
-   | Staleness | 5% | `≤ 7 dias → 5pts; ≤ 14 → 3pts; > 14 → 0pts` |
-   | Execuções pendentes | 5% | `nenhuma → 5pts; 1 → 3pts; 2+ → 0pts` |
+```
+BLOCO 1 — STATUS ATUAL (onde estou)
+  1.  KPI cards principais
+  2.  Time to FIRE + ritmo atual
+  3.  Alocação atual (donuts)
+  4.  Glide path (hoje → FIRE Day)        ← adjacente à alocação atual
 
-   Mostrar nota total + breakdown das 10 métricas com valores e cores individuais.
+BLOCO 2 — AÇÕES (o que fazer agora)
+  5.  Próximas Ações + cascade com valores R$
+  6.  Calculadora de aporte
+  7.  Delta bar + drift
 
-3. **KPI cards**: patrimônio total (R$), P(FIRE) base (card mais visualmente proeminente — destaque máximo), TWR real (sem aportes), delta A vs VWRA.
-   - **TWR real**: calcular como `(CAGR_USD_backtest_R3)` do output de `backtest_portfolio.py --regime 3`, que representa retorno sem inflação de aportes. Exibir dois números: `TWR USD: X.X%/ano` e `TWR BRL: Y.Y%/ano` (TWR USD + contribuição cambial de `fx_utils.py`). Label obrigatório: "retorno real do investimento (sem aportes)".
-   - **CAGR com aportes (18.x%)**: NÃO exibir nos KPI cards principais. Mover para seção 7 (Performance Attribution) como linha secundária com label "Crescimento patrimonial acumulado (inclui capital novo)". Nunca chamar de TWR.
+BLOCO 3 — PROJEÇÃO FIRE (onde vou chegar)
+  8.  Time to FIRE cenários (FIRE@50 vs FIRE@53)
+  9.  P(FIRE) + tornado + spending
+  10. Fan chart
+  11. Guardrails
+  12. Retirement Income Breakdown
+  13. FIRE buckets donut
 
-4. **Time to FIRE**: countdown (X anos Y meses) + barra de progresso animada. Sub-cards: FIRE@53 (base, destacado) e FIRE@50 (aspiracional). Não duplicar com KPI "Anos p/ FIRE" — manter apenas aqui.
+BLOCO 4 — PERFORMANCE (como está indo)
+  14. Net worth timeline
+  15. Performance Attribution
+  16. CAGR Backtest Target (USD/BRL)
+  17. Bollinger Bands
+  18. Backtest histórico Target vs VWRA
+  19. Benchmarks (VWRA / IPCA+ / 60-40)
 
-5. **KPI FIRE**: progresso % (`pat/gatilho`, **1 casa decimal** ex: `25.2%`), savings rate (aporte_anual/renda_est). **Remover SWR implícita hoje** — SWR durante acumulação não é comparável com meta no FIRE Day e gera alarme falso. Substituir por: "SWR no FIRE Day projetada: X%" onde X = `custo_vida_base / patrimonio_gatilho`.
+BLOCO 5 — ANÁLISE & GOVERNANÇA (deep dive)
+  20. KPI FIRE (progresso, savings rate)
+  21. Tabela posições
+  22. TLH monitor + % transitórios
+  23. RF + crypto cards
+  24. Riscos estruturais monitorados
+  25. What-if cenários (3 sliders unificados)
+  26. Fee Analysis (colapsável)
+  27. Financial Wellness Score (colapsável)
+```
 
-6. **Net worth stacked area** com **period selector [1m | 3m | ytd | 1y | 3y | 5y | all]**:
-   - Dados: TODAS as linhas de `historico_carteira.csv` → `timelineLabels`, `timelineValues`
-   - Áreas: Equity (azul) + RF (verde) + Crypto (amarelo)
-   - Split histórico: usar proporção atual como proxy para pontos sem breakdown — documentar em tooltip
-   - O array JS deve espelhar o CSV linha a linha. Não reconstruir valores independentemente.
+## Especificação de cada seção
 
-7. **Performance Attribution** (stacked bar horizontal): output de `fx_utils.py decompose_return()`. Verificar que a soma fecha com o crescimento real. Se não fechar, mostrar barra "Não atribuído" + nota "⚠️ Estimativa — reconciliar com fx_utils.py". Nunca esconder discrepância.
+**1. KPI cards**
+- Patrimônio total (R$) — maior card
+- P(FIRE) base — destaque máximo, cor semáforo
+- CAGR Backtest Target (USD) — com subtexto: "[data início]–[data fim] · proxies UCITS · ≠ retorno real"
+- Delta vs VWRA — período explícito (ex: "Q1 2026")
 
-8. **Donut alocação + donut geográfico**. Geo: SWRD × 67% US + AVUV/USSC 100% US + AVDV 100% DM. Documentar premissa MSCI ~67% US no tooltip.
+**2. Time to FIRE + ritmo atual**
+- Countdown (X anos Y meses até FIRE@53)
+- Barra de progresso patrimonial (escala log, com label "(escala logarítmica)")
+- **Ritmo atual**: "Ao ritmo de R$Xk/mês + retorno histórico, chegaria em [ano]. [N meses] à frente/atrás do plano base." Calcular: projeção determinística simples `pat × (1+r)^t + aporte × ((1+r)^t-1)/r` resolvendo para t até atingir gatilho.
 
-9. **Scenario Comparison** FIRE@50 vs FIRE@53: P(FIRE@50) vem do output de `--anos 11` (não do modelo antigo FR-spending-smile). Marcar FIRE@53 como escolhido. Se `--anos 11` não rodou, mostrar "⚠️ Recalcular".
+**3. Alocação atual (donuts)**
+- Donut alocação por bucket (equity/RF/crypto)
+- Donut geográfico (equity only)
+- Nota abaixo: "Exposição total ao Brasil (incl. capital humano, imóvel, INSS, RF soberano): ~58.5% do patrimônio ampliado"
 
-10. **P(FIRE) + tornado + spending scenarios**:
-    - P(FIRE) 3 cenários (ler `scorecard.md`)
-    - Tornado: valores de `--tornado`. Se flag não rodou, mostrar placeholder "⚠️ Rodar `--tornado`" — nunca inventar barras
-    - Spending scenarios: ler tabela de sensibilidade de `carteira.md` (inclui R$270k = 88.8%, não ~85%)
-    - **Remover barra SWR atual** — substituir pela barra de progresso patrimonial (R$X / R$gatilho)
+**4. Glide path** (adjacente à seção 3)
+- Stacked bar 100% por idade/ano
+- Ler tabela de `carteira.md`
+- Soma = 100% em cada barra
 
-11. **Delta bar** (incluir IPCA+ longo) + progress bars. IPCA+ longo: `alvo_ipca_pct` de `checkin_mensal.py`.
+**5. Próximas Ações**
+- Background amarelo
+- **Cascade com valores R$**: para aporte padrão de `aporte_mensal` de PREMISSAS, mostrar quanto vai para cada destino. Ex: "IPCA+ longo (janela ativa, 7.2% > 6.0%): R$5.000 → TD 2040 (80%) + TD 2050 (20%)" ou "Equity (janela RF inativa): R$25.000 → SWRD/AVGS/AVEM ao mais subpeso"
+- Cascade ler de `otimizador_aporte` em `portfolio_analytics.py`: IPCA+ #1 (>=6.0%), Renda+ #2 (>=6.5%), equity default
+- Gatilhos ativos de `gatilhos.md`
+- Drift alerts
 
-12. **Glide path stacked area**: soma = 100%/ano. Pós-FIRE: ler tabela de alocação por idade de `carteira.md`. **Crypto**: ler valor da tabela (3% pre e pós-FIRE até ~70 anos) — não assumir 0% pós-FIRE.
+**6. Calculadora de aporte**
+- Cascade dinâmico com slider de valor
+- Ler pisos de `portfolio_analytics.py`
 
-13. **FIRE buckets donut**
+**7. Delta bar + drift**
+- Drift por bucket vs target
+- IPCA+ gap vs alvo (ler `ALVO_IPCA_PCT`)
 
-14. **Fan chart P10/P50/P90**: usar pontos de ancoragem do MC (patrimônio atual + mediana em `scorecard.md`). Interpolar com crescimento exponencial (não linear) usando `r = PREMISSAS["retorno_equity_base"]`. Para bandas P10/P90: derivar do spread histórico de P(FIRE) entre cenários. Mostrar tooltip: "Baseado em MC endpoints — trajetórias individuais têm maior volatilidade". Adicionar linha vertical em 2037 (FIRE@50 aspiracional).
+**8. Scenario Comparison FIRE@50 vs FIRE@53**
+- P(FIRE@50) do output de `--anos 11`
+- P(FIRE) não deve se repetir em outras seções — apenas aqui e nos KPI cards
 
-15. **Guardrails visuais**: ler `GUARDRAILS` list e `GASTO_PISO` de `fire_montecarlo.py`. Para cada linha: drawdown threshold, corte %, spending efetivo. O spending efetivo para a última linha deve ser `GASTO_PISO` (absoluto), não `custo_vida_base × (1 - corte%)`. Adicionar coluna "Patrimônio gatilho" = `patrimônio_atual × (1 - drawdown_threshold)`.
+**9. P(FIRE) + tornado + spending**
+- P(FIRE) 3 cenários
+- Tornado de `--anos 11 --tornado`
+- Spending scenarios de `carteira.md`
 
-16. **Retirement Income Breakdown** (pós-FIRE): mostrar por fase temporal, não plano:
-    - Anos 1-7 (53-60): bond pool (TD 2040 + IPCA+ curto) — sem tocar equity
-    - Anos 8-12 (60-65): saques equity, sem INSS
-    - Anos 12+ (65+): saques equity + INSS (`inss_anual` de PREMISSAS)
-    - Spending: usar fases do spending smile (go-go/slow-go/no-go) de `carteira.md`, não gasto plano
-    - Destacar que anos 1-7 dependem do bond pool existente
+**10. Fan chart P10/P50/P90**
+- Interpolação exponencial com r=`retorno_equity_base`
+- Tooltip: "Trajetórias interpoladas com crescimento exponencial — não são simulações MC individuais"
+- Linha vertical em 2037 (FIRE@50 aspiracional)
 
-17. **Fee Analysis**: `TER_ponderado × patrimonio_medio × anos_ate_fire`. TER de `scorecard.md`. Comparar: carteira atual vs Shadow A (VWRA) vs Shadow C.
+**11. Guardrails visuais**
+- Ler `GUARDRAILS` e `GASTO_PISO` de `fire_montecarlo.py`
+- Coluna "Patrimônio gatilho" = `patrimônio_atual × (1 - drawdown_threshold)`
 
-18. **Monthly Contribution Needed**: slider aporte → anos até FIRE. Computar dinamicamente.
+**12. Retirement Income Breakdown**
+- Por fase: anos 1-7 (bond pool), 8-12 (equity), 12+ (equity+INSS)
+- Spending smile de `carteira.md`
 
-19. **What-if Scenarios** (3 sliders): aporte, retorno equity, custo vida. Slider retorno: range 0%-10% (incluir cenários negativos/stress), label "retorno real anual". Mostrar "aproximação determinística — P(FIRE) real via MC" como nota.
+**13. FIRE buckets donut**
 
-20. **Sankey / Cash flow mensal**: se dados de renda disponíveis. Caso contrário, omitir seção (não inventar renda).
+**14. Net worth timeline**
+- Stacked area: Equity + RF + Crypto
+- **Period selector [6m | ytd | 1y | 3y | 5y | all]** (remover 1m e 3m)
+- Dados de `historico_carteira.csv` — espelhar CSV linha a linha
 
-21. **Tabela posições**: qtde, PM, preço atual, ganho %, valor USD, valor BRL. Colunas PM e VarSem com `.hide-mobile`.
+**15. Performance Attribution**
+- Output de `fx_utils.py`
+- Adicionar linha secundária: "Crescimento patrimonial acumulado (inclui aportes): X%/ano" com tooltip explicando que inclui capital novo
 
-22. **Calculadora de aporte**: cascade obrigatório lendo pisos de `portfolio_analytics.py`.
+**16. CAGR Backtest Target**
+- Card com CAGR USD e BRL
+- Subtexto: "[data_inicio]–[data_fim] · proxies UCITS · ≠ retorno real do portfolio"
+- Período calculado dinamicamente das datas do backtest, não hardcoded
+- Câmbio início = câmbio na data de início do backtest R3 (~R$3.79 em jul/2019)
 
-23. **Shadows** (incluir Shadow C): retornos, deltas, tracking. Dados de `scorecard.md`.
+**17. Bollinger Bands**
+- **Period selector [6m | ytd | 1y | 3y | 5y | all]** (remover 3m)
+- Default: `1y`
+- Sigma populacional, MA5, primeiros 4 pontos omitidos
 
-24. **Bollinger Bands com period selector [3m | ytd | 1y | 3y | 5y | all]**:
-    - Dados: retornos mensais limpos (ver seção 3 — apenas meses completos consecutivos)
-    - Janela MA: 5 períodos
-    - Sigma: desvio-padrão populacional (÷N, conforme Bollinger 1992)
-    - Não plotar os primeiros 4 pontos (janela < 5 = degenerado): começar a série visual no ponto i=4
-    - Default: `1y` (últimos 12 meses com dados)
-    - Tooltip em cada ponto: data, retorno%, MA5, upper, lower
+**18. Backtest histórico Target vs VWRA**
+- **Period selector por ciclo**: `[Tudo (21a) | Desde 2009 (pós-crise) | Desde 2013 (pós-QE) | Desde 2020 (pós-COVID) | 5a | 3a]`
+- Default: "Desde 2009" (ciclo completo moderno)
+- Tooltip de cada botão mostra o intervalo exato de datas
+- Tabela de métricas recomputa para o subperíodo
+- Benchmark labels: "Target (50/30/20)", "VWRA (mercado puro)", "VWRA + RF (60/40)"
 
-25. **TLH monitor**
+**19. Benchmarks (VWRA / IPCA+ / 60-40)**
+- Retornos, deltas, tracking de `scorecard.md`
+- Labels: "VWRA (mercado puro)", "IPCA+ longo (RF puro)", "VWRA + RF (60/40)"
 
-26. **RF + crypto cards**
+**20. KPI FIRE**
+- Progresso % (1 casa decimal)
+- Savings rate
+- SWR no FIRE Day projetada (não SWR hoje)
+- Tracking Difference estimado: ~0.10% com tooltip "TER é o custo cobrado; TD é o custo real incluindo operacional e empréstimo de ações"
 
-27. **Backtest histórico — Target vs Shadows** com **period selector [1y | 3y | 5y | 10y | 20y | all]**:
-    - Dados: output de `backtest_portfolio.py` — série temporal de retorno acumulado por carteira
-    - Carteiras: Target (50/30/20), Shadow A (VWRA), Shadow C
-    - Chart: line chart com 3 séries, eixo Y = retorno acumulado % (base 100 na data inicial do período)
-    - Default: `all` (período máximo disponível)
-    - Abaixo do chart: tabela de métricas side-by-side
+**21. Tabela posições**
+
+**22. TLH monitor**
+- Adicionar linha: "Total em ativos transitórios: R$Xk (Y% do portfolio) — diluição ao ritmo de R$25k/mês ≈ Z meses"
+
+**23. RF + crypto cards**
+
+**24. Riscos estruturais monitorados** (seção nova)
+- Compliance UCITS: "Novos aportes obrigatoriamente em UCITS (evitar US-listed — estate tax)"
+- US-listed remanescentes: valor atual + estate tax estimado
+- Risco legislativo: "Lei 14.754/2023 (tributação 15% flat sobre ganhos nominais) — mudança afetaria todas as projeções"
+- SoRR 2034: "A partir de 2034 (Diego 47 anos): monitorar sequence-of-returns risk. Considerar IPCA+ curto 3% como buffer pré-FIRE."
+
+**25. What-if cenários** (sliders unificados — ex-S18+S19)
+- Consolidar "Monthly Contribution Needed" e "What-if Scenarios" em uma única seção
+- 3 sliders: aporte, retorno equity, custo vida
+- Output: anos até FIRE + P(FIRE) aproximado
+
+**26. Fee Analysis** (colapsável por default)
+- TER × anos × patrimônio
+- Comparar carteira vs VWRA vs 60/40
+
+**27. Financial Wellness Score** (colapsável por default)
+- Nota 0-100 com breakdown
+- Não replicar P(FIRE) — já está nos KPI cards
 
     | Métrica | Target | Shadow A | Shadow C |
     |---------|--------|----------|----------|
