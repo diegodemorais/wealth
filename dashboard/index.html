@@ -8,7 +8,7 @@
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px;overflow-x:hidden}
 .container{max-width:1280px;margin:0 auto;padding:16px}
 .header{background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:20px 24px;border-radius:14px;margin-bottom:16px;border:1px solid var(--border)}
 .header h1{font-size:1.3rem;font-weight:700}.header .meta{color:var(--muted);font-size:.75rem;margin-top:4px}
@@ -24,12 +24,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
 table{width:100%;border-collapse:collapse;font-size:.78rem}
 th{text-align:left;padding:6px 5px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted);font-size:.65rem;text-transform:uppercase}
-td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3);overflow-wrap:break-word;word-break:break-word;max-width:0}
+td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3);overflow-wrap:break-word;word-break:break-word}
 .num{text-align:right;font-variant-numeric:tabular-nums;font-family:'SF Mono',monospace,sans-serif}
 .pos{color:var(--green)}.neg{color:var(--red)}
-.chart-box{position:relative;height:240px}
-.chart-box-sm{position:relative;height:180px}
-.chart-box-lg{position:relative;height:320px}
+.chart-box{position:relative;height:240px;min-width:0;overflow:hidden}
+.chart-box-sm{position:relative;height:180px;min-width:0;overflow:hidden}
+.chart-box-lg{position:relative;height:320px;min-width:0;overflow:hidden}
 .badge{display:inline-block;padding:1px 6px;border-radius:9999px;font-size:.6rem;font-weight:600}
 .badge-alvo{background:rgba(59,130,246,.2);color:var(--accent)}.badge-trans{background:rgba(234,179,8,.15);color:var(--yellow)}
 .fire-big{font-size:3rem;font-weight:800;text-align:center;margin:12px 0 6px}
@@ -758,14 +758,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button onclick="buildShadowChart('all')">Tudo (21a)</button>
 </div>
 <div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
-<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem"></div>
+<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
 <div class="src">Fonte: backtest_portfolio.py · Target=50/30/20 UCITS proxies · VWRA=100% VWRA.L</div>
 </div>
 
 <footer>
-  Dashboard regenerado em <strong>08/04/2026</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
-  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance<br>
-  <span style="color:var(--muted)">🔒 Uso exclusivo · senha: diego2040</span>
+  Dashboard regenerado em <strong id="footerDate">—</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
+  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance
 </footer>
 </div><!-- /container -->
 
@@ -774,14 +773,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:54:49-03:00'); // BRT (UTC-3)
-const VERSION = '1.20';
+const GENERATED_AT = new Date('2026-04-08T15:59:34-03:00'); // BRT (UTC-3)
+const VERSION = '1.21';
 
 const DATA = {
-  "_generated": "2026-04-08T15:54:49",
-  "_generated_brt": "2026-04-08T15:54:49-03:00",
+  "_generated": "2026-04-08T15:59:34",
+  "_generated_brt": "2026-04-08T15:59:34-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1126,
+  "cambio": 5.1149,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -800,14 +799,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.36,
+      "price": 114.21,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 104.7559,
+      "price": 104.63,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -869,7 +868,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3532150,
+    "patrimonio_atual": 3532557,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2336,7 +2335,7 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.7,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
@@ -2362,7 +2361,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.36,
+      "price": 114.21,
       "ucits": "AVGS.L"
     },
     {
@@ -2370,7 +2369,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 104.7559,
+      "price": 104.63,
       "ucits": "AVGS.L"
     },
     {
@@ -2418,7 +2417,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2420450.0,
+    "crescReal": 2420857.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2757,7 +2756,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.20"
+  "version": "1.21"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -2835,6 +2834,8 @@ const swrFireDay = DATA.premissas.custo_vida_base / PAT_GATILHO;
 
 // Years to FIRE — data derivada de premissas (idade_fire_alvo + idade_atual + ano atual)
 const today = new Date(DATA.date);
+const _footerDate = document.getElementById('footerDate');
+if (_footerDate && DATA.date) { const _d = new Date(DATA.date); _footerDate.textContent = `${String(_d.getDate()).padStart(2,'0')}/${String(_d.getMonth()+1).padStart(2,'0')}/${_d.getFullYear()}`; }
 const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
 const fireDate = new Date(`${_anoFire}-01-01`);
 const msLeft = fireDate - today;
@@ -3307,25 +3308,28 @@ function buildGlidePath() {
   });
 
   charts.glide = new Chart(document.getElementById('glideChart'), {
-    type: 'bar',
+    type: 'line',
     data: {
       labels,
       datasets: [
-        { label: 'Equity Total', data: g.equity, backgroundColor: 'rgba(59,130,246,.7)', stack: 'a' },
-        { label: 'IPCA+ Longo', data: g.ipca_longo, backgroundColor: 'rgba(34,197,94,.7)', stack: 'a' },
-        { label: 'IPCA+ Curto', data: g.ipca_curto, backgroundColor: 'rgba(6,182,212,.6)', stack: 'a' },
-        { label: 'Crypto (HODL11)', data: g.hodl11, backgroundColor: 'rgba(234,179,8,.7)', stack: 'a' },
-        { label: 'Renda+ 2065', data: g.renda_plus, backgroundColor: 'rgba(249,115,22,.6)', stack: 'a' },
+        { label: 'Equity Total',    data: g.equity,     fill: true, backgroundColor: 'rgba(59,130,246,.65)', borderColor: 'rgba(59,130,246,.9)',   borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'IPCA+ Longo',     data: g.ipca_longo, fill: true, backgroundColor: 'rgba(34,197,94,.55)',  borderColor: 'rgba(34,197,94,.9)',    borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'IPCA+ Curto',     data: g.ipca_curto, fill: true, backgroundColor: 'rgba(6,182,212,.5)',   borderColor: 'rgba(6,182,212,.9)',    borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'Crypto (HODL11)', data: g.hodl11,     fill: true, backgroundColor: 'rgba(234,179,8,.55)',  borderColor: 'rgba(234,179,8,.9)',    borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'Renda+ 2065',     data: g.renda_plus, fill: true, backgroundColor: 'rgba(249,115,22,.55)', borderColor: 'rgba(249,115,22,.9)',   borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { labels: { color: '#94a3b8' } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` }
+        }
       },
       scales: {
-        x: { stacked: true, ticks: { color: '#94a3b8' } },
+        x: { stacked: true, ticks: { color: '#94a3b8', maxRotation: 0 } },
         y: { stacked: true, min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
