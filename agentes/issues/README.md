@@ -54,6 +54,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| DEV-dashboard-review | Review técnico completo do dashboard | Dev | 2026-04-08 | 30 hardcodes críticos eliminados. 5 novas funções (renderProximasAcoes, buildRfCards, buildShadowTable, buildIncomeTable, renderIpcaProgress). cryptoLegado e tlhGatilho movidos para data.json. |
 | HD-dashboard-ux | Melhorias UX/UI + correções técnicas dashboard | Head | 2026-04-08 | 5 bugs corrigidos (wiRetornoVal, attribution null, savings rate, wellness IPCA+ pts, labels PT-BR). Guardrails ATUAL badge, wellness top-3 actions, fan chart P(FIRE) note, mini-log operações. |
 | HD-swrd-114-cotas | Investigar 114 cotas de SWRD faltantes | Bookkeeper | 2026-04-08 | Root cause: TLH 2025-09-22 não refletido. SWRD 5405→5291.64, USSC 443→373.25 em holdings.md. |
 | HD-carteiraviva-audit | Auditoria Carteira Viva + roadmap website | Head | 2026-04-07 | 7 ações executadas, 3 falsos positivos. Pesos 50/30/20 propagados. Holdings atualizado. CAGR histórico + custo base BRL implementados. |

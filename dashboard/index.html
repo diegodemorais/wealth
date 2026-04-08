@@ -129,12 +129,12 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <div class="hero-kpi">
     <div class="hlbl">Anos até FIRE</div>
     <div class="hval" id="heroAnos">—</div>
-    <div class="hsub">Base: 2040 · Aspir: 2037</div>
+    <div class="hsub" id="heroAnosSub">—</div>
   </div>
   <div class="hero-kpi">
     <div class="hlbl">Progresso FIRE</div>
     <div class="hval" id="heroProgresso">—</div>
-    <div class="hsub">vs gatilho R$13.4M</div>
+    <div class="hsub" id="heroProgressoSub">—</div>
   </div>
   <div class="hero-kpi">
     <div class="hlbl">Savings Rate</div>
@@ -144,13 +144,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 
 <!-- S1: PRÓXIMAS AÇÕES -->
-<div class="actions-box">
+<div class="actions-box" id="proximasAcoes">
 <h2>⚡ Próximas Ações</h2>
-<div class="prio"><span class="prio-num">1.</span> <strong>IPCA+ longo DCA ativo</strong> — taxa ~7.20% ≥ piso 6.0% → <em>janela ativa, prioridade máxima</em>. Gap -14.1pp vs alvo 15%. Comprar TD 2040 (80%) + TD 2050 (20%). <span style="color:var(--muted);font-size:.75em">IPCA+ tem prioridade enquanto taxa ≥ 6.0% (janela ativa)</span></div>
-<div class="prio"><span class="prio-num">2.</span> <strong>Renda+ 2065 DCA</strong> — taxa ~6.93% ≥ piso 6.5% → segunda prioridade cascade. Gap vs alvo: manter posição atual, aumentar se oportunidade.</div>
-<div class="prio"><span class="prio-num">3.</span> <strong>Equity → SWRD</strong> — underweight -3.4pp. Caso IPCA+ e Renda+ já atingidos ou taxa abaixo dos pisos: aportar SWRD (equity mais subpeso).</div>
-<div class="prio-warn">🔔 <strong>Gatilho:</strong> AVGS underperformance — verificar rolling 12m vs SWRD trimestralmente. AVGS AUM ≥ $300M monitorar.</div>
-<div class="prio-warn">📋 <strong>Casamento/Filho iminente (~2026-27)</strong> — ao decidir: recalibrar custo de vida, seguro de vida, testamento, estrutura patrimonial.</div>
+<div id="proximasAcoesBody"><!-- gerado por renderProximasAcoes() --></div>
 </div>
 
 <!-- TAB NAV -->
@@ -165,23 +161,23 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="kpi-grid" data-in-tab="status">
 <div class="kpi">
   <div class="kpi-label">Patrimônio Total</div>
-  <div class="kpi-value pv" id="kpiPat">R$ 3.47M</div>
+  <div class="kpi-value pv" id="kpiPat">—</div>
   <div class="kpi-sub"><span class="pv" id="kpiPatUsd">USD 607k equity</span></div>
 </div>
 <div class="kpi">
   <div class="kpi-label">CAGR Target (USD)</div>
-  <div class="kpi-value pos" id="kpiTwrUsd">12.9%</div>
+  <div class="kpi-value pos" id="kpiTwrUsd">—</div>
   <div class="kpi-sub" id="kpiTwrSub" title="Backtest ago/2019–abr/2026 com proxies UCITS (AVUV/AVDV→AVGS, AVEM US→AVEM.L). Não representa retorno real do portfolio.">backtest · proxies UCITS · ≠ retorno real</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">CAGR Target (BRL est.)</div>
   <div class="kpi-value pos" id="kpiTwrBrl">—</div>
-  <div class="kpi-sub" title="CAGR USD + contribuição cambial estimada desde jul/2019 (câmbio ≈ R$3.79). Estimativa indicativa.">CAGR USD + câmbio jul/2019→atual</div>
+  <div class="kpi-sub" id="kpiTwrBrlSub" title="CAGR USD + contribuição cambial estimada desde início do backtest.">CAGR USD + câmbio histórico</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">Delta vs VWRA</div>
-  <div class="kpi-value pos" id="kpiDelta">+3.15pp</div>
-  <div class="kpi-sub" id="kpiDeltaSub">Q1 2026: +3.15pp | 21 anos (R6): +0.38pp</div>
+  <div class="kpi-value pos" id="kpiDelta">—</div>
+  <div class="kpi-sub" id="kpiDeltaSub">—</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">Câmbio BRL/USD</div>
@@ -203,11 +199,11 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <div id="fireProgressBar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .5s"></div>
 </div>
 <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:4px">
-  <span>2021 (R$1.1M)</span><span id="fireProgressLabel">—</span><span>2040 (R$13.4M)</span>
+  <span id="fireProgressStart">—</span><span id="fireProgressLabel">—</span><span id="fireProgressEnd">—</span>
 </div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="fireScenarioGrid"></div>
-<div style="font-size:.6rem;color:var(--muted);text-align:center;margin-top:6px">Casado = R$270k/ano · Filho = R$300k/ano · @50 aproximado via delta de spending</div>
+<div style="font-size:.6rem;color:var(--muted);text-align:center;margin-top:6px" id="fireScenarioNote">—</div>
 </div>
 
 <!-- S5: KPI FIRE -->
@@ -216,26 +212,26 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <h2>Progresso FIRE</h2>
   <div style="text-align:center;padding:8px 0">
     <div id="fireProgPct" style="font-size:2.2rem;font-weight:700">—</div>
-    <div style="font-size:.75rem;color:var(--muted)" id="fireProgLabel">R$— / R$13.4M</div>
+    <div style="font-size:.75rem;color:var(--muted)" id="fireProgLabel">—</div>
   </div>
   <div class="progress-bar" style="margin-top:8px">
     <div id="fireProgFill" class="progress-fill" style="background:var(--accent)"></div>
   </div>
   <div style="margin-top:12px;font-size:.75rem">
-    <div style="display:flex;justify-content:space-between"><span>SWR no FIRE Day projetada:</span><span style="font-weight:600;color:var(--cyan)">1.87%</span></div>
-    <div style="font-size:.6rem;color:var(--muted);margin-top:2px">R$250k / R$13.4M · Meta ≤ 2.4%</div>
+    <div style="display:flex;justify-content:space-between"><span>SWR no FIRE Day projetada:</span><span style="font-weight:600;color:var(--cyan)" id="swrFireDayVal">—</span></div>
+    <div style="font-size:.6rem;color:var(--muted);margin-top:2px" id="swrFireDaySub">—</div>
   </div>
 </div>
 <div class="section">
   <h2>Savings Rate</h2>
   <div style="text-align:center;padding:8px 0">
-    <div style="font-size:2.2rem;font-weight:700;color:var(--green)" id="savingsRate">~40%</div>
-    <div style="font-size:.75rem;color:var(--muted)" id="savingsRateSub">Aporte R$25k / Renda estimada R$45k/mês</div>
+    <div style="font-size:2.2rem;font-weight:700;color:var(--green)" id="savingsRate">—</div>
+    <div style="font-size:.75rem;color:var(--muted)" id="savingsRateSub">—</div>
   </div>
   <div class="progress-bar" style="margin-top:8px">
     <div class="progress-fill" id="savingsRateFill" style="background:var(--green)"></div>
   </div>
-  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)">≥35% → meta FIRE · Atual acima do piso</div>
+  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)" id="savingsRateNote">≥50% excelente · ≥40% ok · ≥25% atenção</div>
 </div>
 <div class="section">
   <h2>TER da Carteira</h2>
@@ -341,28 +337,28 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações</div>
-  <div class="fire-row" style="justify-content:flex-start;gap:12px;margin-bottom:14px">
+  <div class="fire-row" style="justify-content:flex-start;gap:12px;margin-bottom:14px" id="pfireScenarioRow">
     <div class="fire-item">
-      <div class="v pos">90.4%</div>
+      <div class="v pos" id="pfire53Base">—</div>
       <div class="l">Base</div>
     </div>
     <div class="fire-item">
-      <div class="v pos">94.1%</div>
+      <div class="v pos" id="pfire53Fav">—</div>
       <div class="l">Favorável</div>
     </div>
     <div class="fire-item">
-      <div class="v" style="color:var(--yellow)">86.8%</div>
+      <div class="v" id="pfire53Stress" style="color:var(--yellow)">—</div>
       <div class="l">Stress</div>
     </div>
   </div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Progresso Patrimonial</div>
   <div class="progress-row">
-    <div class="progress-label"><span id="pfirePatLabel">R$— / R$13.4M</span><span id="pfirePatPct">—</span></div>
+    <div class="progress-label"><span id="pfirePatLabel">—</span><span id="pfirePatPct">—</span></div>
     <div class="progress-bar">
       <div id="pfirePatFill" class="progress-fill" style="background:var(--accent)"></div>
     </div>
   </div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Meta: patrimônio ≥ R$13.4M E SWR ≤ 2.4%</div>
+  <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="pfirePatMeta">—</div>
 </div>
 <div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
@@ -379,22 +375,22 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div>
 </div>
 <div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">IPCA+ Longo — Progresso vs Alvo 15%</div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px" id="ipcaProgressTitle">IPCA+ Longo — Progresso vs Alvo —</div>
   <div class="progress-row">
-    <div class="progress-label"><span>IPCA+ Longo</span><span>~0.9% atual vs 15% alvo</span></div>
+    <div class="progress-label"><span>IPCA+ Longo</span><span id="ipcaProgressLabel">—</span></div>
     <div class="progress-bar">
-      <div class="progress-fill" style="background:var(--red);width:6%"></div>
-      <div class="progress-target" style="left:15%"></div>
+      <div class="progress-fill" id="ipcaProgressFill" style="background:var(--red)"></div>
+      <div class="progress-target" id="ipcaProgressTarget" style="left:15%"></div>
     </div>
   </div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:2px">Gap: -14.1pp · DCA ativo taxa ~7.20%</div>
+  <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="ipcaProgressGap">—</div>
   <div class="progress-row" style="margin-top:12px">
-    <div class="progress-label"><span>Alpha líquido pós-haircut</span><span>~0.16%/ano</span></div>
+    <div class="progress-label"><span>Alpha líquido pós-haircut</span><span id="alphaLiquidoLabel">—</span></div>
     <div class="progress-bar">
-      <div class="progress-fill" style="background:var(--green);width:50%"></div>
+      <div class="progress-fill" id="alphaLiquidoFill" style="background:var(--green)"></div>
     </div>
   </div>
-  <div style="font-size:.65rem;color:var(--muted)">McLean &amp; Pontiff 2016: haircut 58%</div>
+  <div style="font-size:.65rem;color:var(--muted)" id="alphaLiquidoNote">McLean &amp; Pontiff 2016: haircut 58%</div>
   <div class="progress-row" style="margin-top:8px">
     <div class="progress-label"><span>IPCA+ taxa vs piso</span><span id="ipcaTaxaVsPiso">—</span></div>
     <div class="progress-bar">
@@ -434,7 +430,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.75rem;color:var(--yellow)">
   ⚠️ <strong>Trajetórias interpoladas com r=4.85%/ano — não são simulações Monte Carlo individuais.</strong> Bandas P10/P90 derivadas do spread dos cenários MC, não de distribuição empírica de trajetórias. <span id="fanPfireNote"></span>
 </div>
-<div class="src">Baseado em endpoints do Monte Carlo. Crescimento exponencial r=4.85%/ano (base). Linha vertical: 2037 (FIRE@50 aspiracional).</div>
+<div class="src" id="fanChartSrc">Baseado em endpoints do Monte Carlo. Crescimento exponencial.</div>
 </div>
 
 
@@ -450,7 +446,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="margin-top:10px;font-size:.75rem;background:rgba(34,197,94,.07);border-radius:6px;padding:8px;border-left:3px solid var(--green)">
   <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto R$350k)
 </div>
-<div class="src">Fonte: guardrails aprovados 2026-03-20 · Piso de retirada = R$180k · simulação Monte Carlo</div>
+<div class="src" id="guardrailsSrc">—</div>
 </div>
 
 <!-- S16: RETIREMENT INCOME -->
@@ -464,33 +460,11 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <th class="num">Gasto ex-saúde</th>
   <th>Observação</th>
 </tr></thead>
-<tbody>
-<tr>
-  <td><strong style="color:var(--accent)">🟢 Go-Go</strong></td>
-  <td>53–68 (anos 1–15)</td>
-  <td>Bond pool: TD 2040 vence no FIRE Day (~R$2.3M)</td>
-  <td class="num"><strong>R$242k/ano</strong></td>
-  <td style="font-size:.7rem;color:var(--muted)">Equity intacto · alta mobilidade · viagens</td>
-</tr>
-<tr>
-  <td><strong style="color:var(--yellow)">🟡 Slow-Go</strong></td>
-  <td>68–83 (anos 15–30)</td>
-  <td>Equity saques (79% → 94% pós-bond tent) + INSS R$18k/ano (a partir dos 65)</td>
-  <td class="num"><strong>R$200k/ano</strong></td>
-  <td style="font-size:.7rem;color:var(--muted)">Gasto declina · saúde começa a crescer</td>
-</tr>
-<tr>
-  <td><strong style="color:var(--red)">🔴 No-Go</strong></td>
-  <td>83+ (anos 30+)</td>
-  <td>Equity saques + INSS R$18k/ano</td>
-  <td class="num"><strong>R$187k/ano</strong></td>
-  <td style="font-size:.7rem;color:var(--muted)">Saúde domina · lifestyle comprimento</td>
-</tr>
-</tbody>
+<tbody id="incomeTableBody"><!-- gerado por buildIncomeTable() --></tbody>
 </table>
-<div class="src" style="margin-bottom:8px">Spending smile: gasto lifestyle declina com idade. Saúde: R$18k/ano + 2.7%/ano real cap 6%. INSS: R$18k/ano conservador (benefício estimado R$46-55k nominal). Bond pool provê liquidez imediata no FIRE Day sem tocar equity nos primeiros anos.</div>
+<div class="src" style="margin-bottom:8px" id="incomeSrc">—</div>
 <div class="chart-box-sm"><canvas id="incomeChart"></canvas></div>
-<div class="src">Spending smile: Go-Go R$242k / Slow-Go R$200k / No-Go R$187k (ex-saúde). Saúde: SAUDE_BASE R$18k/ano + 2.7%/ano real cap 6%. INSS: R$18k/ano conservador (benefício estimado R$46-55k nominal).</div>
+<div class="src" id="incomeChartSrc">—</div>
 </div>
 
 <!-- S17: FEE ANALYSIS -->
@@ -515,7 +489,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section" data-in-tab="aloc">
 <h2>Monthly Contribution Needed — Slider</h2>
 <div class="slider-row">
-  <label><span>Aporte Mensal</span><span id="contribVal">R$25,000</span></label>
+  <label><span>Aporte Mensal</span><span id="contribVal">—</span></label>
   <input type="range" id="contribSlider" min="5000" max="80000" step="1000" value="25000" oninput="updateContrib()">
 </div>
 <div class="what-if-result">
@@ -531,13 +505,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="grid-3" style="margin-bottom:12px">
 <div>
   <div class="slider-row">
-    <label><span>Aporte Mensal</span><span id="wiAporteVal">R$25,000</span></label>
+    <label><span>Aporte Mensal</span><span id="wiAporteVal">—</span></label>
     <input type="range" id="wiAporte" min="10000" max="60000" step="1000" value="25000" oninput="updateWhatIf()">
   </div>
 </div>
 <div>
   <div class="slider-row">
-    <label><span>Retorno Equity Real</span><span id="wiRetornoVal">4.85%</span></label>
+    <label><span>Retorno Equity Real</span><span id="wiRetornoVal">—</span></label>
     <input type="range" id="wiRetorno" min="0" max="10" step="0.25" value="4.85" oninput="updateWhatIf()">
   </div>
 </div>
@@ -609,7 +583,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section" style="border-color:rgba(139,92,246,.3)" data-in-tab="plan">
 <h2>P(FIRE) — Cenários de Família <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(impacto no custo de vida)</span></h2>
 <div id="pfireFamiliaBody"></div>
-<div class="src">Base: MC 10k simulações · custo de vida atual R$250k/ano. Dados de spending_sens (fire_montecarlo.py).</div>
+<div class="src" id="pfireFamiliaSrc">Base: MC 10k simulações. Dados de spending_sens (fire_montecarlo.py).</div>
 </div>
 
 <!-- S21b: MINI-LOG OPERAÇÕES -->
@@ -623,12 +597,12 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section" data-in-tab="aloc">
 <h2>Calculadora de Aporte — Cascade</h2>
 <div class="calc-form">
-  <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000"></div>
+  <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000" class="calc-aporte-input"></div>
   <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="5.1687" step="0.01"></div>
   <button onclick="calcAporte()">Calcular</button>
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
-<div class="src">Cascade: IPCA+ taxa ≥ 6.0% → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
+<div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
 </div>
 
 <!-- S24: BOLLINGER BANDS -->
@@ -658,38 +632,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- S26: RF + CRYPTO CARDS -->
 <div class="section" data-in-tab="plan">
 <h2>Renda Fixa + Cripto</h2>
-<div class="rf-grid">
-<div class="rf-card">
-  <div class="val pv">~R$ 89k</div>
-  <div class="lbl">IPCA+ 2029</div>
-  <div class="sub">24.18 cotas · Nubank · Reserva emergência</div>
-  <div class="sub">Migrar para Selic em 2029</div>
-</div>
-<div class="rf-card">
-  <div class="val pv">~R$ 33k</div>
-  <div class="lbl">IPCA+ 2040</div>
-  <div class="sub">XP · Taxa ~7.20% · DCA ativo</div>
-  <div class="sub">Hold to maturity SEMPRE</div>
-</div>
-<div class="rf-card">
-  <div class="val pv">~R$ 112k</div>
-  <div class="lbl">Renda+ 2065</div>
-  <div class="sub">606.87 cotas · Nubank · Taxa ~6.93%</div>
-  <div class="sub">Gatilho venda: ≤6.0% + 720 dias</div>
-</div>
-<div class="rf-card">
-  <div class="val pv" id="hodl11Val">—</div>
-  <div class="lbl">HODL11</div>
-  <div class="sub" id="hodl11Sub">1,676 cotas · B3</div>
-  <div class="sub">Alvo 3% · Piso 1.5% · Teto 5%</div>
-</div>
-<div class="rf-card">
-  <div class="val pv">~R$ 3k</div>
-  <div class="lbl">Crypto Legado</div>
-  <div class="sub">BTC + ETH + BNB + ADA</div>
-  <div class="sub">Não mexer</div>
-</div>
-</div>
+<div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO -->
@@ -729,26 +672,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <thead><tr>
   <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
 </tr></thead>
-<tbody>
-<tr>
-  <td><strong>VWRA (mercado puro)</strong></td><td>100% VWRA.L</td>
-  <td class="num">0.220%</td>
-  <td class="num neg">−3.15pp <span style="font-size:.65rem;color:var(--muted)">(Q1 2026)</span></td>
-  <td><span class="badge badge-alvo">Primário</span></td>
-</tr>
-<tr>
-  <td><strong>IPCA+ longo (RF puro)</strong></td><td>100% IPCA+ 2040</td>
-  <td class="num">0.200%</td>
-  <td class="num neg" title="IPCA+ (RF puro) superou a carteira em 0.57pp — IPCA+ bateu equity. Ruim para a carteira.">+0.57pp IPCA+ <span style="font-size:.65rem;color:var(--muted)">(Q1 2026)</span></td>
-  <td><span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF bench</span></td>
-</tr>
-<tr>
-  <td><strong>VWRA + RF (60/40)</strong></td><td>79% VWRA + 15% IPCA+ + 3% HODL11</td>
-  <td class="num">0.207%</td>
-  <td class="num" style="font-size:.72rem">Tracking desde Abr/2026</td>
-  <td><span class="badge badge-trans">Novo</span></td>
-</tr>
-</tbody>
+<tbody id="shadowTableBody"><!-- gerado por buildShadowTable() --></tbody>
 </table>
 </div>
 <div class="period-btns" id="shadowPeriodBtns" style="margin-top:12px">
@@ -775,14 +699,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T17:30:03-03:00'); // BRT (UTC-3)
-const VERSION = '1.32';
+const GENERATED_AT = new Date('2026-04-08T17:51:52-03:00'); // BRT (UTC-3)
+const VERSION = '1.38';
 
 const DATA = {
-  "_generated": "2026-04-08T17:30:03",
-  "_generated_brt": "2026-04-08T17:30:03-03:00",
+  "_generated": "2026-04-08T17:51:52",
+  "_generated_brt": "2026-04-08T17:51:52-03:00",
   "date": "2026-04-08",
-  "cambio": 5.0986,
+  "cambio": 5.0955,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -870,7 +794,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3529318,
+    "patrimonio_atual": 3527376,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1910,7 +1834,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -2174,7 +2098,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -2284,7 +2208,7 @@ const DATA = {
       "cotas": null,
       "valor": 112466,
       "taxa": 6.93,
-      "notas": "Tático · Nubank · Vender ≤6.0%"
+      "notas": "Tático · Nubank · Vender ≤6.5%"
     }
   },
   "hodl11": {
@@ -2420,7 +2344,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2417618.0,
+    "crescReal": 2415676.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2624,6 +2548,7 @@ const DATA = {
         "max": 5,
         "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
         "custo_vida_mensal": 20833,
+        "_custo_nota": "R$250k/ano FIRE base ÷ 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
         "thresholds": [
           {
             "min_months": 6,
@@ -2761,7 +2686,9 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.32"
+  "cryptoLegado": 3000,
+  "tlhGatilho": 0.05,
+  "version": "1.38"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -2776,7 +2703,9 @@ Object.values(DATA.posicoes).forEach(p => { totalEquityUsd += p.qty * p.price; }
 
 // Total BRL = equity + RF + crypto
 const rfBrl = DATA.rf.ipca2029.valor + DATA.rf.ipca2040.valor + DATA.rf.renda2065.valor;
-const cryptoBrl = DATA.hodl11.valor + 3000; // hodl11 + legado
+// cryptoBrl: hodl11 + crypto legado (valor estimado guardado em DATA.cryptoLegado se disponível)
+const cryptoLegado = DATA.cryptoLegado ?? 3000; // fallback 3k se não disponível
+const cryptoBrl = DATA.hodl11.valor + cryptoLegado;
 const totalBrl = totalEquityUsd * CAMBIO + rfBrl + cryptoBrl;
 
 // C3 — IPCA drift: somar TODOS os títulos IPCA+ (2029 reserva + 2040 DCA)
@@ -2801,11 +2730,18 @@ const geoUS = swrdUsd * 0.67 + avuvUsd + usscUsd + avgsUsd * 0.58; // AVGS ~58% 
 const geoDM = swrdUsd * 0.33 + avdvUsd + avgsUsd * 0.42 + iwvlUsd;
 const geoEM = avemUsd;
 
-// CAGR since 2021-03 (inclui aportes — usado para attribution apenas, D2)
+// CAGR da série histórica completa (inclui aportes — usado para attribution apenas, D2)
 const patInicio = DATA.timeline.values[0];
 const patFim = DATA.timeline.values[DATA.timeline.values.length - 1];
-const anos = (2026 + 3/12) - (2021 + 3/12);
-const cagr = (Math.pow(patFim / patInicio, 1/anos) - 1) * 100;
+// Calcular anos a partir das datas reais da série (não hardcoded)
+function _ymToDecimal(ym) {
+  const [y, m] = ym.split('-').map(Number);
+  return y + (m - 1) / 12;
+}
+const _tStart = DATA.timeline.labels.length ? _ymToDecimal(DATA.timeline.labels[0]) : 2021.25;
+const _tEnd   = DATA.timeline.labels.length ? _ymToDecimal(DATA.timeline.labels[DATA.timeline.labels.length-1]) : 2026.25;
+const anos = _tEnd - _tStart;
+const cagr = anos > 0 && patInicio > 0 ? (Math.pow(patFim / patInicio, 1/anos) - 1) * 100 : 0;
 
 // D1 — CAGR Backtest Target (não é TWR real — sem fluxos reais de aportes/retiradas)
 // CAGR_USD: derivado de DATA.backtest.metrics.target.cagr (backtest_portfolio.py)
@@ -2821,13 +2757,15 @@ function _fmtYearMonth(ym) {
   return months[parseInt(m,10)-1] + '/' + y;
 }
 const _btPeriodStr = _fmtYearMonth(_btFirstDate) + '–' + _fmtYearMonth(_btLastDate);
-// CAGR_BRL: CAGR_USD + contribuição cambial estimada desde início do backtest R3 (ago/2019)
-// Câmbio ago/2019 ≈ R$3.79 (USDBRL=X yfinance — início do backtest R3)
-const cambioInicio = 3.79; // estimativa USD/BRL ago/2019 — início do backtest R3
+// CAGR_BRL: CAGR_USD + contribuição cambial estimada desde início do backtest R3
+// cambioInicio vem de DATA (configurado no backtest_portfolio.py) ou fallback para estimativa
+const cambioInicio = DATA.backtest?.cambioInicio ?? 3.79; // câmbio no início do período do backtest
 const cambioFim = DATA.cambio;
-// anos para câmbio: Jul/2019 → Abr/2026 ≈ 6.75 anos
-const anosCambio = 6.75;
-const fx_contrib_anual = (Math.pow(cambioFim / cambioInicio, 1 / anosCambio) - 1) * 100;
+// anosCambio derivado das datas reais do backtest
+const anosCambio = _btDates && _btDates.length > 1
+  ? _ymToDecimal(_btDates[_btDates.length-1]) - _ymToDecimal(_btDates[0])
+  : 6.75;
+const fx_contrib_anual = anosCambio > 0 ? (Math.pow(cambioFim / cambioInicio, 1 / anosCambio) - 1) * 100 : 0;
 // CAGR_BRL = (1 + CAGR_USD/100) * (1 + fx_contrib/100) - 1, em %/ano
 const TWR_BRL = ((1 + TWR_USD/100) * (1 + fx_contrib_anual/100) - 1) * 100;
 
@@ -2839,6 +2777,9 @@ const swrFireDay = DATA.premissas.custo_vida_base / PAT_GATILHO;
 
 // Years to FIRE — data derivada de premissas (idade_fire_alvo + idade_atual + ano atual)
 const today = new Date(DATA.date);
+// Anos FIRE alvo e aspiracional (module-level, usados por múltiplas funções)
+const _anoFireAlvoGlobal = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
+const _anoFireAspir = today.getFullYear() + ((DATA.premissas.idade_fire_aspiracional ?? 50) - DATA.premissas.idade_atual);
 const _footerDate = document.getElementById('footerDate');
 if (_footerDate && DATA.date) { const _d = new Date(DATA.date); _footerDate.textContent = `${String(_d.getDate()).padStart(2,'0')}/${String(_d.getMonth()+1).padStart(2,'0')}/${_d.getFullYear()}`; }
 const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
@@ -2951,7 +2892,8 @@ function calcWellness() {
   // ── Fundo de emergência (5pts) ───────────────────────────────
   const emM = (cfg.metrics || []).find(m => m.id === 'emergency_fund') || {};
   const emMax = emM.max ?? 5;
-  const custoMensal = emM.custo_vida_mensal ?? 17917;  // R$215k/12
+  // custo_vida_mensal: config → fallback → premissas (fonte de verdade)
+  const custoMensal = emM.custo_vida_mensal ?? Math.round(DATA.premissas.custo_vida_base / 12);
   // Reserva = IPCA+ 2029 (líquido de curto prazo)
   const reserva = DATA.rf?.ipca2029?.valor ?? 0;
   const mesesReserva = reserva / custoMensal;
@@ -3279,19 +3221,26 @@ function buildTornado() {
 
 // ── S11: Delta bar ────────────────────────────────────────────
 function buildDeltaBar() {
+  // Deltas vêm de DATA.shadows se disponível; fallback para null (tracking)
+  const sh = DATA.shadows || {};
+  const deltaVwra = sh.delta_vwra ?? (DATA.backtest?.metrics ? (DATA.backtest.metrics.target?.cagr ?? null) - (DATA.backtest.metrics.shadowA?.cagr ?? null) : null);
+  const deltaIpca = sh.delta_ipca ?? null;
+  const delta6040 = sh.delta_shadow_c ?? null;
+  const deltaData = [deltaVwra, deltaIpca, delta6040];
+  const _trackingStart = DATA.date ? new Date(DATA.date).toLocaleDateString('pt-BR', {month:'short', year:'numeric'}) : 'início';
   charts.delta = new Chart(document.getElementById('deltaChart'), {
     type: 'bar',
     data: {
       labels: ['vs VWRA\n(mercado puro)', 'vs IPCA+\n(RF puro)', 'vs 60/40\n(VWRA+RF+Crypto)'],
       datasets: [{
         label: 'Delta (pp)',
-        data: [3.15, -0.57, null],
-        backgroundColor: ['rgba(34,197,94,.7)','rgba(239,68,68,.6)','rgba(94,94,94,.4)'],
+        data: deltaData,
+        backgroundColor: deltaData.map(v => v === null ? 'rgba(94,94,94,.4)' : v >= 0 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.6)'),
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y !== null ? ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y}pp` : ' Tracking desde Abr/2026' } } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y !== null ? ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}pp` : ` Tracking desde ${_trackingStart}` } } },
       scales: {
         y: { ticks: { color: '#94a3b8', callback: v => (v>0?'+':'')+v+'pp' }, grid: { color: 'rgba(71,85,105,.3)' } },
         x: { ticks: { color: '#94a3b8', font:{size:10} } }
@@ -3344,11 +3293,15 @@ function buildGlidePath() {
 // ── S13: FIRE Buckets + Equity Weights ────────────────────────
 function buildFireBuckets() {
   const eqBrl = totalEquityUsd * CAMBIO;
+  // RF split: usar valores reais de DATA.rf em vez de proporções hardcoded
+  const _ipca2040Brl  = DATA.rf?.ipca2040?.valor ?? 0;
+  const _renda2065Brl = DATA.rf?.renda2065?.valor ?? 0;
+  const _ipca2029Brl  = DATA.rf?.ipca2029?.valor ?? 0;
   charts.fireBuckets = new Chart(document.getElementById('fireBucketsDonut'), {
     type: 'doughnut',
     data: {
-      labels: ['Equity', 'IPCA+ Longo', 'Crypto', 'Renda+ 2065', 'Reserva'],
-      datasets: [{ data: [eqBrl, rfBrl * 0.55, cryptoBrl, rfBrl * 0.33, rfBrl * 0.12].map(v => Math.round(v/totalBrl*100)), backgroundColor: ['#3b82f6','#22c55e','#eab308','#f97316','#06b6d4'], borderWidth: 1, borderColor: '#1e293b' }]
+      labels: ['Equity', 'IPCA+ Longo (2040)', 'Crypto', 'Renda+ 2065', 'Reserva (2029)'],
+      datasets: [{ data: [eqBrl, _ipca2040Brl, cryptoBrl, _renda2065Brl, _ipca2029Brl].map(v => Math.round(v/totalBrl*100)), backgroundColor: ['#3b82f6','#22c55e','#eab308','#f97316','#06b6d4'], borderWidth: 1, borderColor: '#1e293b' }]
     },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font:{size:10} } } }, cutout: '55%' }
   });
@@ -3357,13 +3310,19 @@ function buildFireBuckets() {
   const swrdActual = (DATA.posicoes.SWRD.qty * DATA.posicoes.SWRD.price) / totalEquityUsd * 100;
   const avgsActual = (bucketUsd.AVGS) / totalEquityUsd * 100;
   const avemActual = (bucketUsd.AVEM) / totalEquityUsd * 100;
+  // Alvos intra-equity de DATA.pesosTarget (normalizados para somar 100% dentro do bloco equity)
+  const _eqBuckets = ['SWRD','AVGS','AVEM'];
+  const _eqTotalTarget = _eqBuckets.reduce((s, k) => s + (DATA.pesosTarget[k] || 0), 0);
+  const _swrdAlvo = _eqTotalTarget > 0 ? DATA.pesosTarget.SWRD / _eqTotalTarget * 100 : 50;
+  const _avgsAlvo = _eqTotalTarget > 0 ? DATA.pesosTarget.AVGS / _eqTotalTarget * 100 : 30;
+  const _avemAlvo = _eqTotalTarget > 0 ? DATA.pesosTarget.AVEM / _eqTotalTarget * 100 : 20;
   charts.equityW = new Chart(document.getElementById('equityWeightsChart'), {
     type: 'bar',
     data: {
       labels: ['SWRD', 'AVGS+transit.', 'AVEM+transit.'],
       datasets: [
         { label: 'Atual', data: [swrdActual, avgsActual, avemActual].map(v => +v.toFixed(1)), backgroundColor: 'rgba(59,130,246,.6)' },
-        { label: 'Alvo', data: [50, 30, 20], backgroundColor: 'rgba(255,255,255,.15)' },
+        { label: 'Alvo', data: [+_swrdAlvo.toFixed(0), +_avgsAlvo.toFixed(0), +_avemAlvo.toFixed(0)], backgroundColor: 'rgba(255,255,255,.15)' },
       ]
     },
     options: {
@@ -3381,8 +3340,9 @@ function buildFireBuckets() {
 function buildFanChart() {
   const r = DATA.premissas.retorno_equity_base;
   const pat0 = DATA.premissas.patrimonio_atual;
-  const startYear = 2026.25;
-  const endYear = 2053;
+  // startYear: ano atual + fração do mês atual; endYear: FIRE_alvo + 30 anos de retiradas
+  const startYear = today.getFullYear() + today.getMonth() / 12;
+  const endYear = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual) + 30;
   const labels = [], p10 = [], p50 = [], p90 = [];
   const spread50_10 = 0.15, spread90_50 = 0.20;
   // Labels com ano + idade para contexto temporal duplo
@@ -3565,7 +3525,12 @@ function buildFeeAnalysis() {
 
 // ── S18: Contribution Slider ──────────────────────────────────
 window.updateContrib = function() {
-  const ap = +document.getElementById('contribSlider').value;
+  // Inicializar slider com aporte de DATA se ainda não foi alterado
+  const slider = document.getElementById('contribSlider');
+  if (slider && +slider.value === 25000 && DATA.premissas?.aporte_mensal) {
+    slider.value = DATA.premissas.aporte_mensal;
+  }
+  const ap = +slider.value;
   document.getElementById('contribVal').textContent = 'R$' + ap.toLocaleString('pt-BR');
   const r = DATA.premissas.retorno_equity_base / 12;
   const pat = DATA.premissas.patrimonio_atual;
@@ -3573,15 +3538,23 @@ window.updateContrib = function() {
   let n = 0, p = pat;
   while (p < meta && n < 600) { p = p * (1 + r) + ap; n++; }
   const anos = n / 12;
-  document.getElementById('contribResult').textContent = n < 600 ? `${anos.toFixed(1)} anos (${2026 + anos | 0})` : '> 50 anos';
+  const _contribAnoFire = today.getFullYear() + (anos | 0) + (anos % 1 > 0.5 ? 1 : 0);
+  document.getElementById('contribResult').textContent = n < 600 ? `${anos.toFixed(1)} anos (${_contribAnoFire})` : '> 50 anos';
   document.getElementById('contribResult').style.color = n < 600 ? '#22c55e' : '#ef4444';
 };
 
 // ── S19: What-If ──────────────────────────────────────────────
 window.updateWhatIf = function() {
-  const ap = +document.getElementById('wiAporte').value;
-  const r = +document.getElementById('wiRetorno').value / 100;
-  const custo = +document.getElementById('wiCusto').value;
+  // Inicializar sliders com valores de DATA se ainda não alterados
+  const wiA = document.getElementById('wiAporte');
+  const wiR = document.getElementById('wiRetorno');
+  const wiC = document.getElementById('wiCusto');
+  if (wiA && +wiA.value === 25000 && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
+  if (wiR && +wiR.value === 4.85 && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
+  if (wiC && +wiC.value === 250000 && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
+  const ap = +wiA.value;
+  const r = +wiR.value / 100;
+  const custo = +wiC.value;
   document.getElementById('wiAporteVal').textContent = 'R$' + ap.toLocaleString('pt-BR');
   document.getElementById('wiRetornoVal').textContent = (r*100).toFixed(2) + '%';
   document.getElementById('wiCustoVal').textContent = 'R$' + custo.toLocaleString('pt-BR');
@@ -3591,8 +3564,9 @@ window.updateWhatIf = function() {
   for (let m = 0; m < anos * 12; m++) p = p * (1 + rm) + ap;
   document.getElementById('wiResult').textContent = `R$ ${(p/1000000).toFixed(2)}M`;
   const swr = custo / p;
-  document.getElementById('wiResultSub').textContent = `SWR projetada: ${(swr*100).toFixed(2)}% (meta ≤ 2.4%) · ${p >= PAT_GATILHO && swr <= 0.024 ? '✅ Gatilho FIRE atingido' : '⚠️ Abaixo do gatilho'}`;
-  document.getElementById('wiResultSub').style.color = (p >= PAT_GATILHO && swr <= 0.024) ? '#22c55e' : '#eab308';
+  const _swrMeta = DATA.premissas.swr_gatilho ?? 0.024;
+  document.getElementById('wiResultSub').textContent = `SWR projetada: ${(swr*100).toFixed(2)}% (meta ≤ ${(_swrMeta*100).toFixed(1)}%) · ${p >= PAT_GATILHO && swr <= _swrMeta ? '✅ Gatilho FIRE atingido' : '⚠️ Abaixo do gatilho'}`;
+  document.getElementById('wiResultSub').style.color = (p >= PAT_GATILHO && swr <= _swrMeta) ? '#22c55e' : '#eab308';
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -3719,6 +3693,10 @@ function buildPfireFamilia() {
   };
   const icons = {'Solteiro / FIRE Day': '🧑', 'Pós-casamento': '💍', 'Casamento + filho': '👨‍👩‍👧'};
   const base = ss.find(s => s.base && (s.label.includes('250') || s.label.includes('Solteiro')))?.base ?? ss[0]?.base ?? 90;
+  // Update src with actual base cost
+  const _pfSrc = document.getElementById('pfireFamiliaSrc');
+  const _baseScen = ss.find(s => s.label.includes('250') || s.label.includes('Solteiro'));
+  if (_pfSrc && _baseScen?.custo) _pfSrc.textContent = `Base: MC 10k simulações · custo de vida base R$${(_baseScen.custo/1000).toFixed(0)}k/ano. Dados de spending_sens (fire_montecarlo.py).`;
   el.innerHTML = ss.map(s => {
     const label = labelMap[s.label] || s.label;
     const icon = icons[label] || '📊';
@@ -3769,8 +3747,13 @@ function buildMinilog() {
 
 // ── S22: Calculadora Cascade ──────────────────────────────────
 window.calcAporte = function() {
-  const ap = +document.getElementById('calcAporte').value;
-  const fx = +document.getElementById('calcCambio').value;
+  // Inicializar com valor de DATA se ainda no default
+  const _apEl = document.getElementById('calcAporte');
+  if (_apEl && +_apEl.value === 25000 && DATA.premissas?.aporte_mensal) _apEl.value = DATA.premissas.aporte_mensal;
+  const _fxEl = document.getElementById('calcCambio');
+  if (_fxEl && +_fxEl.value === 5.1687 && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
+  const ap = +_apEl.value;
+  const fx = +_fxEl.value;
   const apUsd = ap / fx;
   const div = document.getElementById('calcResult');
 
@@ -3822,7 +3805,7 @@ window.calcAporte = function() {
       <div style="font-weight:600;margin-bottom:8px">Cascade — aporte R$${ap.toLocaleString('pt-BR')} (≈ $${apUsd.toFixed(0)})</div>
       ${rows}
       <div style="font-size:.65rem;color:var(--muted);margin-top:8px;border-top:1px solid rgba(71,85,105,.3);padding-top:6px">
-        Câmbio: R$${fx} · Piso IPCA+: ${pisoIpca}% · Piso Renda+: ${pisoRenda}% · Lógica: <em>portfolio_analytics.py otimizador_aporte()</em>
+        Câmbio: R$${fx} · Piso IPCA+ ≥ ${pisoIpca.toFixed(1)}% · Piso Renda+ ≥ ${pisoRenda.toFixed(1)}% · Lógica: <em>portfolio_analytics.py otimizador_aporte()</em>
       </div>
     </div>`;
 };
@@ -3947,7 +3930,7 @@ window.setBollingerPeriod = function(p) {
 // ── S25: TLH Monitor ─────────────────────────────────────────
 function buildTLH() {
   const div = document.getElementById('tlhContent');
-  const tlhGatilho = 0.05;
+  const tlhGatilho = DATA.tlhGatilho ?? 0.05; // 5% perda para acionar TLH (configurável)
   // Header da tabela
   let html = `<table style="width:100%;border-collapse:collapse;font-size:.78rem;margin-bottom:6px">
     <thead><tr style="font-size:.65rem;color:var(--muted)">
@@ -4058,10 +4041,12 @@ function buildBacktest(period) {
     const avgRet = rets.reduce((s,r) => s+r, 0) / rets.length;
     const cagr = (Math.pow(arr[n-1] / arr[0], 12 / (n - 1)) - 1) * 100; // M1: (n-1) períodos entre n pontos
     const vol = Math.sqrt(rets.reduce((s,r) => s + (r - avgRet)**2, 0) / (rets.length - 1)) * Math.sqrt(12) * 100; // M2: sigma amostral ÷(N-1)
-    const sharpe = vol > 0 ? (cagr - 4) / vol : 0; // rf = 4%
+    // RF rate: taxa IPCA+ 2029 se disponível (proxy de RF BRL); fallback 4% histórico
+    const _rfRate = DATA.rf?.ipca2029?.taxa ?? DATA.pisos?.pisoTaxaIpcaLongo ?? 4;
+    const sharpe = vol > 0 ? (cagr - _rfRate) / vol : 0;
     const negRets = rets.filter(r => r < 0);
     const downDev = negRets.length > 0 ? Math.sqrt(negRets.reduce((s,r) => s+r**2, 0) / negRets.length) * Math.sqrt(12) * 100 : 0.01;
-    const sortino = downDev > 0 ? (cagr - 4) / downDev : 0;
+    const sortino = downDev > 0 ? (cagr - _rfRate) / downDev : 0;
     let maxDD = 0, peak = arr[0];
     arr.forEach(v => { if (v > peak) peak = v; const dd = (v - peak) / peak * 100; if (dd < maxDD) maxDD = dd; });
     return { cagr, vol, sharpe, sortino, maxDD };
@@ -4189,9 +4174,16 @@ function renderKPIs() {
   heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
   document.getElementById('heroPfireSub').textContent = `@50: ${DATA.pfire50.base}% · MC 10k`;
   document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
+  // Anos sub: Base/Aspir — usar vars module-level
+  const _anoFireAlvo = _anoFireAlvoGlobal;
+  const _heroAnosSub = document.getElementById('heroAnosSub');
+  if (_heroAnosSub) _heroAnosSub.textContent = `Base: ${_anoFireAlvo} · Aspir: ${_anoFireAspir}`;
   const heroProgEl = document.getElementById('heroProgresso');
   heroProgEl.textContent = fmtPct(progPct);
   heroProgEl.style.color = progPct >= 50 ? '#22c55e' : '#eab308';
+  // Progresso sub: gatilho de DATA
+  const _heroProgressoSub = document.getElementById('heroProgressoSub');
+  if (_heroProgressoSub) _heroProgressoSub.textContent = `vs gatilho R$${(PAT_GATILHO/1e6).toFixed(1)}M`;
   const _custoMensalHero = DATA.premissas.custo_vida_base / 12;
   const _aporteHero = DATA.premissas.aporte_mensal;
   const srHero = _aporteHero / (_aporteHero + _custoMensalHero);
@@ -4274,12 +4266,37 @@ function renderKPIs() {
   const fbPct = Math.min(100, (Math.log(totalBrl/patInicio) / Math.log(PAT_GATILHO/patInicio)) * 100);
   document.getElementById('fireProgressBar').style.width = fbPct + '%';
   document.getElementById('fireProgressLabel').textContent = `Atual R$${(totalBrl/1e6).toFixed(2)}M`;
+  // Extremidades da barra: start = primeiro ponto da série, end = gatilho
+  const _fpStart = document.getElementById('fireProgressStart');
+  const _fpEnd   = document.getElementById('fireProgressEnd');
+  if (_fpStart && DATA.timeline.labels.length) {
+    const _startYm = DATA.timeline.labels[0];
+    const _startVal = DATA.timeline.values[0];
+    _fpStart.textContent = `${fmtMonthLabel(_startYm)} (R$${(_startVal/1e6).toFixed(1)}M)`;
+  }
+  if (_fpEnd) _fpEnd.textContent = `${_anoFireAlvo} (R$${(PAT_GATILHO/1e6).toFixed(1)}M)`;
   document.getElementById('fireProgPct').textContent = fmtPct(progPct);
-  document.getElementById('fireProgLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / R$13.4M`;
+  const _gatilhoStr = `R$${(PAT_GATILHO/1e6).toFixed(1)}M`;
+  document.getElementById('fireProgLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / ${_gatilhoStr}`;
   document.getElementById('fireProgFill').style.width = Math.min(100, progPct) + '%';
-  document.getElementById('pfirePatLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / R$13.4M`;
+  document.getElementById('pfirePatLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / ${_gatilhoStr}`;
   document.getElementById('pfirePatPct').textContent = fmtPct(progPct);
   document.getElementById('pfirePatFill').style.width = Math.min(100, progPct) + '%';
+  // P(FIRE@53) cenários — preencher os 3 cards
+  const _p53Base = document.getElementById('pfire53Base');
+  const _p53Fav  = document.getElementById('pfire53Fav');
+  const _p53St   = document.getElementById('pfire53Stress');
+  if (_p53Base) { _p53Base.textContent = `${DATA.pfire53.base ?? '—'}%`; _p53Base.style.color = (DATA.pfire53.base ?? 0) >= 90 ? '#22c55e' : '#eab308'; }
+  if (_p53Fav)  { _p53Fav.textContent  = `${DATA.pfire53.fav  ?? '—'}%`; _p53Fav.style.color  = (DATA.pfire53.fav  ?? 0) >= 90 ? '#22c55e' : '#eab308'; }
+  if (_p53St)   { _p53St.textContent   = `${DATA.pfire53.stress ?? '—'}%`; _p53St.style.color = (DATA.pfire53.stress ?? 0) >= 85 ? '#eab308' : '#ef4444'; }
+  // FIRE meta label
+  const _pfMeta = document.getElementById('pfirePatMeta');
+  if (_pfMeta) _pfMeta.textContent = `Meta: patrimônio ≥ ${_gatilhoStr} E SWR ≤ ${((DATA.premissas.swr_gatilho ?? 0.024)*100).toFixed(1)}%`;
+  // SWR no FIRE Day
+  const _swrEl = document.getElementById('swrFireDayVal');
+  const _swrSubEl = document.getElementById('swrFireDaySub');
+  if (_swrEl) { _swrEl.textContent = fmtPct(swrFireDay * 100, 2); }
+  if (_swrSubEl) _swrSubEl.textContent = `R$${(DATA.premissas.custo_vida_base/1000).toFixed(0)}k / ${_gatilhoStr} · Meta ≤ ${((DATA.premissas.swr_gatilho ?? 0.024)*100).toFixed(1)}%`;
   const _custoMensal = DATA.premissas.custo_vida_base / 12;
   const _aporteKPI = DATA.premissas.aporte_mensal;
   const sr = _aporteKPI / (_aporteKPI + _custoMensal);
@@ -4298,7 +4315,8 @@ function renderKPIs() {
   const _tcL = document.getElementById('terCarteiraLabel'); if (_tcL) _tcL.textContent = `${_ct.toFixed(3)}%`;
   const _tvL = document.getElementById('terVwraLabel');    if (_tvL) _tvL.textContent = `${_bt.toFixed(3)}%`;
   const _tdL = document.getElementById('terDeltaLabel');
-  if (_tdL) _tdL.textContent = `Delta +${_delta.toFixed(1)}bps vs VWRA · Alpha ~0.16%/ano`;
+  const _alphaAnual = (_terCfgKPI.alpha_anual ?? 0.00160) * 100;
+  if (_tdL) _tdL.textContent = `Delta +${_delta.toFixed(1)}bps vs VWRA · Alpha ~${_alphaAnual.toFixed(2)}%/ano`;
   // Barras relativas: maior (carteira) = 100% visual, vwra = proporcional
   const _tcF = document.getElementById('terCarteiraFill'); if (_tcF) _tcF.style.width = '100%';
   const _tvF = document.getElementById('terVwraFill');    if (_tvF) _tvF.style.width = `${(_bt/_ct*100).toFixed(0)}%`;
@@ -4314,6 +4332,259 @@ function renderKPIs() {
     : `Alvo IPCA+: ≥${_pisoIpcaKPI}% · Atual: abaixo do piso`;
   const _ipcaFill = document.getElementById('ipcaTaxaFill');
   if (_ipcaFill && _taxaIpcaKPI) _ipcaFill.style.width = Math.min(100, _taxaIpcaKPI / (_pisoIpcaKPI * 1.5) * 100) + '%';
+}
+
+// ── Próximas Ações (gerado dinamicamente) ─────────────────────
+function renderProximasAcoes() {
+  const el = document.getElementById('proximasAcoesBody');
+  if (!el) return;
+  const pisoIpca  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const pisoRenda = DATA.pisos?.pisoTaxaRendaPlus  ?? 6.5;
+  const taxaIpca  = DATA.rf?.ipca2040?.taxa;
+  const taxaRenda = DATA.rf?.renda2065?.taxa;
+  const ipcaGap   = DATA.drift?.IPCA ? (DATA.drift.IPCA.alvo - DATA.drift.IPCA.atual) : null;
+  const ipca_active  = taxaIpca  != null && taxaIpca  >= pisoIpca  && ipcaGap > 0;
+  const renda_active = taxaRenda != null && taxaRenda >= pisoRenda;
+  // Bucket equity mais subpeso
+  const eqBuckets = ['SWRD','AVGS','AVEM']
+    .map(k => ({ k, gap: (DATA.drift[k]?.alvo ?? 0) - (DATA.drift[k]?.atual ?? 0) }))
+    .sort((a,b) => b.gap - a.gap);
+  const topBucket = eqBuckets[0];
+  let html = '';
+  let n = 1;
+  if (ipca_active) {
+    html += `<div class="prio"><span class="prio-num">${n++}.</span> <strong>IPCA+ longo DCA ativo</strong> — taxa ~${taxaIpca.toFixed(2)}% ≥ piso ${pisoIpca.toFixed(1)}% → <em>janela ativa, prioridade máxima</em>. Gap −${ipcaGap.toFixed(1)}pp vs alvo ${DATA.drift.IPCA.alvo}%. Comprar TD 2040 (80%) + TD 2050 (20%). <span style="color:var(--muted);font-size:.75em">IPCA+ tem prioridade enquanto taxa ≥ ${pisoIpca.toFixed(1)}% (janela ativa)</span></div>`;
+  }
+  if (renda_active) {
+    html += `<div class="prio"><span class="prio-num">${n++}.</span> <strong>Renda+ 2065 DCA</strong> — taxa ~${taxaRenda.toFixed(2)}% ≥ piso ${pisoRenda.toFixed(1)}% → segunda prioridade cascade. Gap vs alvo: manter posição atual, aumentar se oportunidade.</div>`;
+  }
+  if (topBucket && topBucket.gap > 0) {
+    html += `<div class="prio"><span class="prio-num">${n++}.</span> <strong>Equity → ${topBucket.k}.L</strong> — underweight −${topBucket.gap.toFixed(1)}pp. Caso IPCA+ e Renda+ já atingidos ou taxa abaixo dos pisos: aportar ${topBucket.k} (equity mais subpeso).</div>`;
+  }
+  html += `<div class="prio-warn">🔔 <strong>Gatilho:</strong> AVGS underperformance — verificar rolling 12m vs SWRD trimestralmente.</div>`;
+  // Evento de vida iminente (de DATA.eventos_vida)
+  const evs = DATA.eventos_vida || [];
+  evs.forEach(ev => {
+    if (ev.status === 'planejado') {
+      html += `<div class="prio-warn">📋 <strong>${ev.evento} iminente (${ev.data_est})</strong> — ${ev.acoes.slice(0,2).join(' · ')}</div>`;
+    }
+  });
+  el.innerHTML = html || '<div style="color:var(--muted);font-size:.8rem">Sem ações prioritárias</div>';
+}
+
+// ── RF Cards (gerado dinamicamente) ───────────────────────────
+function buildRfCards() {
+  const el = document.getElementById('rfCardsGrid');
+  if (!el) return;
+  const rf = DATA.rf || {};
+  const pisoRenda = DATA.pisos?.pisoTaxaRendaPlus ?? 6.5;
+  const pisoIpca  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const cards = [
+    {
+      key: 'ipca2029',
+      label: 'IPCA+ 2029',
+      sub1: rf.ipca2029 ? `${rf.ipca2029.cotas != null ? rf.ipca2029.cotas.toFixed(2) + ' cotas · ' : ''}Nubank · Reserva emergência` : 'Nubank · Reserva emergência',
+      sub2: 'Migrar para Selic em 2029',
+      val: rf.ipca2029?.valor,
+    },
+    {
+      key: 'ipca2040',
+      label: 'IPCA+ 2040',
+      sub1: `XP · Taxa ${rf.ipca2040?.taxa != null ? '~' + rf.ipca2040.taxa.toFixed(2) + '%' : '—'} · DCA ativo`,
+      sub2: 'Hold to maturity SEMPRE',
+      val: rf.ipca2040?.valor,
+      taxaFlag: rf.ipca2040?.taxa != null && rf.ipca2040.taxa >= pisoIpca,
+    },
+    {
+      key: 'renda2065',
+      label: 'Renda+ 2065',
+      sub1: rf.renda2065 ? `${rf.renda2065.cotas != null ? rf.renda2065.cotas.toFixed(2) + ' cotas · ' : ''}Nubank · Taxa ${rf.renda2065.taxa != null ? '~' + rf.renda2065.taxa.toFixed(2) + '%' : '—'}` : '—',
+      sub2: `Gatilho venda: ≤${pisoRenda.toFixed(1)}% + 720 dias`,
+      val: rf.renda2065?.valor,
+    },
+  ];
+  let html = cards.map(c => {
+    const valStr = c.val != null ? `~R$ ${(c.val/1000).toFixed(0)}k` : '—';
+    const flagStyle = c.taxaFlag ? 'color:var(--green)' : '';
+    return `<div class="rf-card">
+      <div class="val pv" style="${flagStyle}">${valStr}</div>
+      <div class="lbl">${c.label}</div>
+      <div class="sub">${c.sub1}</div>
+      <div class="sub">${c.sub2}</div>
+    </div>`;
+  }).join('');
+  // HODL11
+  html += `<div class="rf-card">
+    <div class="val pv" id="hodl11Val">—</div>
+    <div class="lbl">HODL11</div>
+    <div class="sub" id="hodl11Sub">— cotas · B3</div>
+    <div class="sub">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Piso 1.5% · Teto 5%</div>
+  </div>`;
+  // Crypto legado
+  const _legadoVal = DATA.cryptoLegado ?? 3000;
+  html += `<div class="rf-card">
+    <div class="val pv">~R$ ${(_legadoVal/1000).toFixed(0)}k</div>
+    <div class="lbl">Crypto Legado</div>
+    <div class="sub">BTC + ETH + BNB + ADA</div>
+    <div class="sub">Não mexer</div>
+  </div>`;
+  el.innerHTML = html;
+  // Agora que HODL11 foi inserido, atualizar
+  renderHodl11();
+}
+
+// ── Shadow Table (gerado dinamicamente) ───────────────────────
+function buildShadowTable() {
+  const tbody = document.getElementById('shadowTableBody');
+  if (!tbody) return;
+  const sh = DATA.shadows || {};
+  const _terCfg = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
+  const benchTer = _terCfg.benchmark_ter ?? 0.220;
+  const shadowCTer = _terCfg.shadow_c_ter ?? 0.207;
+  const deltaVwra  = sh.delta_vwra  ?? null;
+  const deltaIpca  = sh.delta_ipca  ?? null;
+  const _trackingLabel = DATA.date ? new Date(DATA.date).toLocaleDateString('pt-BR', {month:'short', year:'numeric'}) : 'Abr/2026';
+  const rows = [
+    {
+      name: 'VWRA (mercado puro)', comp: '100% VWRA.L', ter: benchTer,
+      delta: deltaVwra, badge: '<span class="badge badge-alvo">Primário</span>',
+      deltaNote: deltaVwra !== null ? `(${DATA.date?.slice(0,7) || ''})` : `desde ${_trackingLabel}`,
+      invertColor: true, // positivo = carteira > VWRA = verde para carteira
+    },
+    {
+      name: 'IPCA+ longo (RF puro)', comp: '100% IPCA+ 2040', ter: DATA.shadows?.ipca_ter ?? 0.200,
+      delta: deltaIpca, badge: '<span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF bench</span>',
+      deltaNote: deltaIpca !== null ? `(${DATA.date?.slice(0,7) || ''})` : `desde ${_trackingLabel}`,
+      invertColor: false, // negativo = IPCA+ bateu carteira = ruim
+    },
+    {
+      name: 'VWRA + RF (60/40)',
+      comp: `${((DATA.premissas.patrimonio_atual > 0 ? 79 : 79))}% VWRA + ${((DATA.pisos?.ipca_longo_pct ?? 15))}% IPCA+ + ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% HODL11`,
+      ter: shadowCTer,
+      delta: sh.delta_shadow_c ?? null,
+      badge: '<span class="badge badge-trans">Tracking</span>',
+      deltaNote: `desde ${_trackingLabel}`,
+      invertColor: true,
+    },
+  ];
+  tbody.innerHTML = rows.map(r => {
+    let deltaCell;
+    if (r.delta !== null && r.delta !== undefined) {
+      const isGood = r.invertColor ? r.delta >= 0 : r.delta <= 0;
+      const cls = isGood ? 'pos' : 'neg';
+      deltaCell = `<td class="num ${cls}">${r.delta >= 0 ? '+' : ''}${r.delta.toFixed(2)}pp <span style="font-size:.65rem;color:var(--muted)">${r.deltaNote}</span></td>`;
+    } else {
+      deltaCell = `<td class="num" style="font-size:.72rem">Tracking desde ${_trackingLabel}</td>`;
+    }
+    return `<tr>
+      <td><strong>${r.name}</strong></td><td>${r.comp}</td>
+      <td class="num">${(r.ter * 100).toFixed(3)}%</td>
+      ${deltaCell}
+      <td>${r.badge}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Income Table (gerado dinamicamente) ───────────────────────
+function buildIncomeTable() {
+  const tbody = document.getElementById('incomeTableBody');
+  if (!tbody) return;
+  const sm = DATA.spendingSmile || {};
+  const inss = DATA.premissas.inss_anual ?? 18000;
+  const inssInicio = DATA.premissas.inss_inicio_ano ?? 65;
+  const ageAlvo = DATA.premissas.idade_fire_alvo ?? 53;
+  // Fases: Go-Go, Slow-Go, No-Go
+  const fases = [
+    {
+      label: '🟢 Go-Go', color: 'var(--accent)',
+      idadeStr: `${ageAlvo}–${ageAlvo+15} (anos 1–15)`,
+      fonte: `Bond pool: TD 2040 vence no FIRE Day`,
+      gasto: sm.go_go?.gasto,
+      obs: 'Equity intacto · alta mobilidade · viagens',
+    },
+    {
+      label: '🟡 Slow-Go', color: 'var(--yellow)',
+      idadeStr: `${ageAlvo+15}–${ageAlvo+30} (anos 15–30)`,
+      fonte: `Equity saques + INSS R$${(inss/1000).toFixed(0)}k/ano (a partir dos ${inssInicio})`,
+      gasto: sm.slow_go?.gasto,
+      obs: 'Gasto declina · saúde começa a crescer',
+    },
+    {
+      label: '🔴 No-Go', color: 'var(--red)',
+      idadeStr: `${ageAlvo+30}+ (anos 30+)`,
+      fonte: `Equity saques + INSS R$${(inss/1000).toFixed(0)}k/ano`,
+      gasto: sm.no_go?.gasto,
+      obs: 'Saúde domina · lifestyle comprimento',
+    },
+  ];
+  tbody.innerHTML = fases.map(f => `<tr>
+    <td><strong style="color:${f.color}">${f.label}</strong></td>
+    <td>${f.idadeStr}</td>
+    <td>${f.fonte}</td>
+    <td class="num"><strong>${f.gasto != null ? 'R$' + (f.gasto/1000).toFixed(0) + 'k/ano' : '—'}</strong></td>
+    <td style="font-size:.7rem;color:var(--muted)">${f.obs}</td>
+  </tr>`).join('');
+  // Atualizar src
+  const _src = document.getElementById('incomeSrc');
+  if (_src) _src.textContent = `Spending smile: gasto lifestyle declina com idade. Saúde: R$${((DATA.saude_base ?? 18000)/1000).toFixed(0)}k/ano base. INSS: R$${(inss/1000).toFixed(0)}k/ano conservador. Bond pool provê liquidez imediata no FIRE Day sem tocar equity.`;
+  const _chartSrc = document.getElementById('incomeChartSrc');
+  if (_chartSrc) {
+    const gg = sm.go_go?.gasto, sg = sm.slow_go?.gasto, ng = sm.no_go?.gasto;
+    _chartSrc.textContent = `Spending smile: Go-Go R$${gg != null ? (gg/1000).toFixed(0)+'k' : '—'} / Slow-Go R$${sg != null ? (sg/1000).toFixed(0)+'k' : '—'} / No-Go R$${ng != null ? (ng/1000).toFixed(0)+'k' : '—'} (ex-saúde). INSS: R$${(inss/1000).toFixed(0)}k/ano conservador.`;
+  }
+}
+
+// ── IPCA Progress Bar (gerado dinamicamente) ──────────────────
+function renderIpcaProgress() {
+  const ipcaAtual = DATA.drift?.IPCA?.atual ?? 0;
+  const ipcaAlvo  = DATA.drift?.IPCA?.alvo  ?? 15;
+  const ipcaGap   = ipcaAlvo - ipcaAtual;
+  const taxaIpca  = DATA.rf?.ipca2040?.taxa;
+  const pisoIpca  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const dcaAtivo  = taxaIpca != null && taxaIpca >= pisoIpca && ipcaGap > 0;
+  const _terCfg2  = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
+  const _alpha    = (_terCfg2.alpha_anual ?? 0.00160) * 100;
+  // Title
+  const _title = document.getElementById('ipcaProgressTitle');
+  if (_title) _title.textContent = `IPCA+ Longo — Progresso vs Alvo ${ipcaAlvo}%`;
+  // Label
+  const _lbl = document.getElementById('ipcaProgressLabel');
+  if (_lbl) _lbl.textContent = `~${ipcaAtual.toFixed(1)}% atual vs ${ipcaAlvo}% alvo`;
+  // Fill bar (scaled to alvo)
+  const _fill = document.getElementById('ipcaProgressFill');
+  if (_fill) {
+    _fill.style.width = Math.min(100, ipcaAtual / ipcaAlvo * 100) + '%';
+    _fill.style.background = ipcaAtual >= ipcaAlvo ? 'var(--green)' : ipcaGap > 10 ? 'var(--red)' : 'var(--yellow)';
+  }
+  // Target marker
+  const _tgt = document.getElementById('ipcaProgressTarget');
+  if (_tgt) _tgt.style.left = Math.min(99, ipcaAlvo) + '%';
+  // Gap text
+  const _gap = document.getElementById('ipcaProgressGap');
+  if (_gap) _gap.textContent = `Gap: −${ipcaGap.toFixed(1)}pp · ${dcaAtivo ? 'DCA ativo taxa ~' + taxaIpca.toFixed(2) + '%' : 'DCA pausado'}`;
+  // Alpha label
+  const _alphaLbl = document.getElementById('alphaLiquidoLabel');
+  if (_alphaLbl) _alphaLbl.textContent = `~${_alpha.toFixed(2)}%/ano`;
+  // Alpha fill (visual: 0.16% sobre escala 0-0.5%)
+  const _alphaFill = document.getElementById('alphaLiquidoFill');
+  if (_alphaFill) _alphaFill.style.width = Math.min(100, _alpha / 0.5 * 100) + '%';
+  // Guardrail src
+  const _gSrc = document.getElementById('guardrailsSrc');
+  if (_gSrc) {
+    const _pisoVal = DATA.gasto_piso ?? null;
+    _gSrc.textContent = `Fonte: guardrails · Piso de retirada${_pisoVal ? ` = R$${(_pisoVal/1000).toFixed(0)}k` : ''} · simulação Monte Carlo`;
+  }
+  // Fan chart src
+  const _fanSrc = document.getElementById('fanChartSrc');
+  const _retBase = DATA.premissas?.retorno_equity_base;
+  if (_fanSrc) _fanSrc.textContent = `Baseado em endpoints do Monte Carlo. Crescimento exponencial r=${_retBase != null ? (_retBase*100).toFixed(2) + '%' : '—'}/ano (base). Linha vertical: ${_anoFireAspir ?? '—'} (FIRE@50 aspiracional).`;
+  // Fire scenario note
+  const _scenNote = document.getElementById('fireScenarioNote');
+  const ss = DATA.spendingSensibilidade || [];
+  if (_scenNote && ss.length >= 3) {
+    const c1 = ss[1]?.custo, c2 = ss[2]?.custo;
+    _scenNote.textContent = `Casado = R$${c1 ? (c1/1000).toFixed(0)+'k' : '—'}/ano · Filho = R$${c2 ? (c2/1000).toFixed(0)+'k' : '—'}/ano · @50 aproximado via delta de spending`;
+  }
 }
 
 function renderWellness() {
@@ -4459,6 +4730,11 @@ window.switchTab = function(name) {
 (function init() {
   renderKPIs();
   renderWellness();
+  renderProximasAcoes();
+  renderIpcaProgress();
+  buildRfCards();
+  buildShadowTable();
+  buildIncomeTable();
   buildTimeline('all');
   buildAttribution();
   buildDonuts();

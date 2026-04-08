@@ -374,7 +374,7 @@ def get_rf(state):
     notas_map = {
         "ipca2029":  "Reserva · Nubank · migrar 2029",
         "ipca2040":  "DCA ativo · XP · HTM SEMPRE",
-        "renda2065": "Tático · Nubank · Vender ≤6.0%",
+        "renda2065": f"Tático · Nubank · Vender ≤{PISO_TAXA_RENDA_PLUS}%",
     }
     for key, raw in rf_raw.items():
         if key == "hodl11":
@@ -660,6 +660,10 @@ def main():
             {"evento": "Filho", "data_est": "~2028", "impacto": "+R$30-50k/ano (escola, saúde, cuidado)",
              "status": "planejado", "acoes": ["P(FIRE) cai ~4pp (R$300k/ano)", "Recalibrar FIRE date", "VGBL/PGBL para filho"]},
         ],
+
+        # Valores auxiliares para o dashboard (evitar hardcoded no template)
+        "cryptoLegado": 3_000,     # R$ — estimativa crypto legado (BTC+ETH+BNB+ADA) — atualizar manualmente
+        "tlhGatilho":   0.05,       # 5% — gatilho de perda para TLH
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)

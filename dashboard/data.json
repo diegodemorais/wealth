@@ -1,8 +1,8 @@
 {
-  "_generated": "2026-04-08T17:17:54",
-  "_generated_brt": "2026-04-08T17:17:54-03:00",
+  "_generated": "2026-04-08T17:51:52",
+  "_generated_brt": "2026-04-08T17:51:52-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1033,
+  "cambio": 5.0955,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3532263,
+    "patrimonio_atual": 3527376,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1130,7 +1130,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -1394,7 +1394,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -1504,7 +1504,7 @@
       "cotas": null,
       "valor": 112466,
       "taxa": 6.93,
-      "notas": "Tático · Nubank · Vender ≤6.0%"
+      "notas": "Tático · Nubank · Vender ≤6.5%"
     }
   },
   "hodl11": {
@@ -1640,7 +1640,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2420563.0,
+    "crescReal": 2415676.0,
     "_estimativa": true
   },
   "shadows": {
@@ -1844,6 +1844,7 @@
         "max": 5,
         "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
         "custo_vida_mensal": 20833,
+        "_custo_nota": "R$250k/ano FIRE base ÷ 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
         "thresholds": [
           {
             "min_months": 6,
@@ -1980,5 +1981,7 @@
         "VGBL/PGBL para filho"
       ]
     }
-  ]
+  ],
+  "cryptoLegado": 3000,
+  "tlhGatilho": 0.05
 }

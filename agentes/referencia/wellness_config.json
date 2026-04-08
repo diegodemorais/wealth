@@ -81,6 +81,7 @@
       "max": 5,
       "description": "Meses de cobertura em ativos líquidos (Tesouro IPCA+ curto + conta corrente). Renda PJ volátil exige 6+ meses (Vanguard 2021). Choque sem reserva = venda ETF em drawdown + IR.",
       "custo_vida_mensal": 20833,
+      "_custo_nota": "R$250k/ano FIRE base ÷ 12 = R$20.8k. Usar config.py CUSTO_VIDA_BASE como fonte. Atualizar ao revisar spending.",
       "thresholds": [
         { "min_months": 6, "pts": 5 },
         { "min_months": 3, "pts": 3 },
