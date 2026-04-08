@@ -106,7 +106,7 @@ const DATA = {
   gasto_piso: ...,      // fire_montecarlo.py GASTO_PISO
   // ...
 };
-const GENERATED_AT = new Date('...');
+const GENERATED_AT = new Date('YYYY-MM-DDTHH:MM:SS-03:00'); // BRT (UTC-3) — preencher com datetime exato da geração
 ```
 
 **Seletor de período — componente reutilizável**:

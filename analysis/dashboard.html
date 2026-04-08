@@ -89,6 +89,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores">👁</span>
 </div>
 <div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: ibkr_lotes.json + yfinance + scorecard.md + historico_carteira.csv</div>
+<div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
 </div>
 
 <!-- S1: PRÓXIMAS AÇÕES -->
@@ -671,7 +672,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08');
+const GENERATED_AT = new Date('2026-04-08T08:00:08-03:00'); // BRT (UTC-3)
 
 const DATA = {
   date: '2026-04-08',
@@ -1772,6 +1773,15 @@ async function fetchLive() {
   } catch(e) {}
 }
 fetchLive();
+
+// Render generation timestamp in header
+(function() {
+  const el = document.getElementById('headerGenerated');
+  if (!el) return;
+  const opts = { timeZone: 'America/Sao_Paulo', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' };
+  const formatted = GENERATED_AT.toLocaleString('pt-BR', opts).replace(',', '');
+  el.textContent = 'Gerado em ' + formatted + ' BRT';
+})();
 
 // ═══════════════════════════════════════════════════════════════
 // PRIVACY TOGGLE — única implementação (fim do body)
