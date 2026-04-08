@@ -3,6 +3,7 @@
 scripts/__pycache__/
 analysis/*.csv
 analysis/*.json
+analysis/**/*.json
 analysis/tearsheet_latest.html
 analysis/*.pdf
 data/ibkr_snapshot.json
