@@ -4,7 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carteira Diego — Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js">
+// Privacy toggle
+function togglePrivacy(){
+  document.body.classList.toggle('private-mode');
+  const on=document.body.classList.contains('private-mode');
+  document.getElementById('privacyBtn').textContent=on?'👁‍🗨':'👁';
+  document.getElementById('privacyBtn').title=on?'Mostrar valores':'Ocultar valores';
+  localStorage.setItem('dashboard_private',on?'1':'0');
+}
+if(localStorage.getItem('dashboard_private')==='1'){
+  document.body.classList.add('private-mode');
+  document.getElementById('privacyBtn').textContent='👁‍🗨';
+  document.getElementById('privacyBtn').title='Mostrar valores';
+}
+</script>
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -48,13 +62,17 @@ td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3)}
 .src{font-size:.6rem;color:var(--muted);margin-top:4px}
 footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}}
+
+.private-mode .pv{visibility:hidden}
+.privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
+.privacy-toggle:hover{opacity:1}
 </style>
 </head>
 <body>
 <div class="container">
 
 <div class="header">
-<h1>Carteira Diego Morais</h1>
+<div style="display:flex;justify-content:space-between;align-items:center"><h1>Carteira Diego Morais</h1><span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores">👁</span></div>
 <div class="meta">08/Abr/2026 · USD/BRL 5.156 · Fontes: ibkr_lotes.json + web + scorecard.md + historico_carteira.csv</div>
 </div>
 
@@ -78,7 +96,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- KPIs -->
 <div class="kpi-grid">
-<div class="kpi"><div class="kpi-label">Patrimônio Total</div><div class="kpi-value">R$ 3.472k</div><div class="kpi-sub">USD 608k equity · R$ 335k RF+crypto</div></div>
+<div class="kpi"><div class="kpi-label">Patrimônio Total</div><div class="kpi-value">R$ <span class="pv">3.472k</span></div><div class="kpi-sub"><span class="pv">USD 608k equity</span> · <span class="pv">R$ 335k RF+crypto</span></div></div>
 <div class="kpi"><div class="kpi-label">P(FIRE) Base</div><div class="kpi-value pos">90.4%</div><div class="kpi-sub">FIRE 53 · MC 10k sims</div></div>
 <div class="kpi"><div class="kpi-label">Cresc. Patrimonial</div><div class="kpi-value" style="color:var(--yellow)">25.8%</div><div class="kpi-sub">Mar/2021→Mar/2026 · inclui aportes</div></div>
 <div class="kpi"><div class="kpi-label">Delta vs VWRA</div><div class="kpi-value pos">+3.15pp</div><div class="kpi-sub">Q1 2026</div></div>
@@ -103,7 +121,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="font-size:.7rem;color:var(--muted)">FIRE 2040 (idade 53)</div>
 </div>
 <div style="flex:1;min-width:200px">
-<div class="progress-label"><span>R$ 3.47M</span><span>R$ 13.4M (gatilho)</span></div>
+<div class="progress-label"><span>R$ <span class="pv">3.47M</span></span><span>R$ <span class="pv">13.4M</span> (gatilho)</span></div>
 <div class="progress-bar" style="height:16px"><div class="progress-fill" style="width:25.9%;background:linear-gradient(90deg,var(--accent),var(--cyan))"></div></div>
 <div style="font-size:.7rem;color:var(--muted);margin-top:4px">25.9% do gatilho · Aspiracional: FIRE@50 em 11 anos</div>
 </div>
@@ -154,9 +172,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <table style="font-size:.75rem">
 <thead><tr><th>Custo/ano</th><th class="num">P(FIRE)</th><th class="num">SWR</th></tr></thead>
 <tbody>
-<tr style="background:rgba(34,197,94,.1)"><td><strong>R$ 250k</strong> (base)</td><td class="num pos">90.4%</td><td class="num">1.9%</td></tr>
-<tr><td>R$ 270k</td><td class="num" style="color:var(--yellow)">~85%</td><td class="num">2.0%</td></tr>
-<tr><td>R$ 300k</td><td class="num" style="color:var(--yellow)">82.1%</td><td class="num">2.2%</td></tr>
+<tr style="background:rgba(34,197,94,.1)"><td><strong>R$ <span class="pv">250k</span></strong> (base)</td><td class="num pos">90.4%</td><td class="num">1.9%</td></tr>
+<tr><td>R$ <span class="pv">270k</span></td><td class="num" style="color:var(--yellow)">~85%</td><td class="num">2.0%</td></tr>
+<tr><td>R$ <span class="pv">300k</span></td><td class="num" style="color:var(--yellow)">82.1%</td><td class="num">2.2%</td></tr>
 </tbody>
 </table>
 <div class="progress-row" style="margin-top:8px"><div class="progress-label"><span>SWR hoje: 7.2%</span><span>meta ≤2.4%</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--red)"></div><div class="progress-target" style="left:33%"></div></div></div>
@@ -207,11 +225,11 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <table>
 <thead><tr><th>Bucket</th><th class="num">Valor</th><th class="num">Custo USD</th><th class="num">Ganho</th><th class="num">Atual</th><th class="num">Meta</th><th class="num">Δ</th></tr></thead>
 <tbody>
-<tr><td><strong>SWRD</strong></td><td class="num">$251k</td><td class="num">$174k</td><td class="num pos">+44.3%</td><td class="num">37.3%</td><td class="num">39.5%</td><td class="num neg">-2.2</td></tr>
-<tr><td><strong>AVGS</strong></td><td class="num">$195k</td><td class="num">$131k</td><td class="num pos">+48.5%</td><td class="num">28.9%</td><td class="num">23.7%</td><td class="num pos">+5.2</td></tr>
-<tr><td><strong>AVEM</strong></td><td class="num">$160k</td><td class="num">$115k</td><td class="num pos">+39.7%</td><td class="num">23.8%</td><td class="num">15.8%</td><td class="num pos">+8.0</td></tr>
+<tr><td><strong>SWRD</strong></td><td class="num"><span class="pv"><span class="pv">$251k</span></span></td><td class="num"><span class="pv"><span class="pv">$174k</span></span></td><td class="num pos">+44.3%</td><td class="num">37.3%</td><td class="num">39.5%</td><td class="num neg">-2.2</td></tr>
+<tr><td><strong>AVGS</strong></td><td class="num"><span class="pv"><span class="pv">$195k</span></span></td><td class="num"><span class="pv"><span class="pv">$131k</span></span></td><td class="num pos">+48.5%</td><td class="num">28.9%</td><td class="num">23.7%</td><td class="num pos">+5.2</td></tr>
+<tr><td><strong>AVEM</strong></td><td class="num"><span class="pv"><span class="pv">$160k</span></span></td><td class="num"><span class="pv"><span class="pv">$115k</span></span></td><td class="num pos">+39.7%</td><td class="num">23.8%</td><td class="num">15.8%</td><td class="num pos">+8.0</td></tr>
 </tbody>
-<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td><td class="num">$608k</td><td class="num">$421k</td><td class="num pos">+44.4%</td><td class="num">90.3%</td><td class="num">79%</td><td></td></tr></tfoot>
+<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td><td class="num"><span class="pv"><span class="pv">$608k</span></span></td><td class="num"><span class="pv"><span class="pv">$421k</span></span></td><td class="num pos">+44.4%</td><td class="num">90.3%</td><td class="num">79%</td><td></td></tr></tfoot>
 </table>
 </div>
 </div>
@@ -240,10 +258,10 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <table>
 <thead><tr><th>Drawdown</th><th class="num">Corte</th><th class="num">Spending efetivo</th><th>Ação</th></tr></thead>
 <tbody>
-<tr style="background:rgba(34,197,94,.08)"><td>0–15%</td><td class="num">0%</td><td class="num">R$ 250.000</td><td style="color:var(--green)">Normal</td></tr>
-<tr style="background:rgba(234,179,8,.08)"><td>15–25%</td><td class="num">-10%</td><td class="num">R$ 225.000</td><td style="color:var(--yellow)">Reduzir</td></tr>
-<tr style="background:rgba(249,115,22,.08)"><td>25–35%</td><td class="num">-20%</td><td class="num">R$ 200.000</td><td style="color:#f97316">Cortar</td></tr>
-<tr style="background:rgba(239,68,68,.08)"><td>>35%</td><td class="num">-30%</td><td class="num">R$ 175.000</td><td style="color:var(--red)">Emergência</td></tr>
+<tr style="background:rgba(34,197,94,.08)"><td>0–15%</td><td class="num">0%</td><td class="num">R$ <span class="pv">250.000</span></td><td style="color:var(--green)">Normal</td></tr>
+<tr style="background:rgba(234,179,8,.08)"><td>15–25%</td><td class="num">-10%</td><td class="num">R$ <span class="pv">225.000</span></td><td style="color:var(--yellow)">Reduzir</td></tr>
+<tr style="background:rgba(249,115,22,.08)"><td>25–35%</td><td class="num">-20%</td><td class="num">R$ <span class="pv">200.000</span></td><td style="color:#f97316">Cortar</td></tr>
+<tr style="background:rgba(239,68,68,.08)"><td>>35%</td><td class="num">-30%</td><td class="num">R$ <span class="pv">175.000</span></td><td style="color:var(--red)">Emergência</td></tr>
 </tbody>
 </table>
 <div class="src">Piso R$180k · Teto R$350k · fire_montecarlo.py aplicar_guardrail()</div>
@@ -255,11 +273,11 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <table>
 <thead><tr><th>Fonte</th><th class="num">Valor/ano</th><th class="num">% do spending</th><th>Quando</th></tr></thead>
 <tbody>
-<tr><td>Saques equity (guardrails)</td><td class="num">R$ 232.000</td><td class="num">92.8%</td><td>Desde FIRE Day</td></tr>
-<tr><td>INSS</td><td class="num">R$ 18.000</td><td class="num">7.2%</td><td>A partir dos 65</td></tr>
-<tr><td>Renda+ 2065 (se mantiver)</td><td class="num">~R$ 3.000</td><td class="num">1.2%</td><td>Renda mensal a partir de 2065</td></tr>
+<tr><td>Saques equity (guardrails)</td><td class="num">R$ <span class="pv">232.000</span></td><td class="num">92.8%</td><td>Desde FIRE Day</td></tr>
+<tr><td>INSS</td><td class="num">R$ <span class="pv">18.000</span></td><td class="num">7.2%</td><td>A partir dos 65</td></tr>
+<tr><td>Renda+ 2065 (se mantiver)</td><td class="num">R$ <span class="pv">3.000</span></td><td class="num">1.2%</td><td>Renda mensal a partir de 2065</td></tr>
 </tbody>
-<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td><td class="num">~R$ 253.000</td><td class="num">101.2%</td><td></td></tr></tfoot>
+<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td><td class="num">R$ <span class="pv">253.000</span></td><td class="num">101.2%</td><td></td></tr></tfoot>
 </table>
 <div class="src">INSS: PREMISSAS["inss_anual"]. Saques: CUSTO_VIDA_BASE - INSS. Renda+: estimativa.</div>
 </div>
@@ -270,9 +288,9 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <table>
 <thead><tr><th>Portfolio</th><th class="num">TER</th><th class="num">Custo 14 anos*</th><th class="num">Custo 30 anos*</th></tr></thead>
 <tbody>
-<tr><td><strong>Carteira atual</strong></td><td class="num">0.247%</td><td class="num">~R$ 57k</td><td class="num">~R$ 180k</td></tr>
-<tr><td>Shadow A (VWRA)</td><td class="num">0.220%</td><td class="num">~R$ 51k</td><td class="num">~R$ 160k</td></tr>
-<tr><td>Shadow C (VWRA+IPCA+)</td><td class="num">0.207%</td><td class="num">~R$ 48k</td><td class="num">~R$ 150k</td></tr>
+<tr><td><strong>Carteira atual</strong></td><td class="num">0.247%</td><td class="num">R$ <span class="pv">57k</span></td><td class="num">R$ <span class="pv">180k</span></td></tr>
+<tr><td>Shadow A (VWRA)</td><td class="num">0.220%</td><td class="num">R$ <span class="pv">51k</span></td><td class="num">R$ <span class="pv">160k</span></td></tr>
+<tr><td>Shadow C (VWRA+IPCA+)</td><td class="num">0.207%</td><td class="num">R$ <span class="pv">48k</span></td><td class="num">R$ <span class="pv">150k</span></td></tr>
 </tbody>
 </table>
 <div class="src">*Estimativa: TER × patrimônio médio projetado. Custo incremental vs VWRA: ~R$6k em 14 anos (~R$430/ano). Fonte: scorecard.md seção 1.3.</div>
@@ -285,17 +303,17 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <table>
 <thead><tr><th>Ativo</th><th>Bucket</th><th></th><th class="num">Qtde</th><th class="num hide-mobile">PM</th><th class="num">Preço</th><th class="num">USD</th><th class="num hide-mobile">Var Sem</th><th class="num">Ganho</th></tr></thead>
 <tbody>
-<tr><td><strong>SWRD</strong></td><td>SWRD</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num">5,291.64</td><td class="num hide-mobile">$32.88</td><td class="num">$47.46</td><td class="num">$251k</td><td class="num pos hide-mobile">+3.5%</td><td class="num pos">+44.3%</td></tr>
-<tr><td><strong>AVGS</strong></td><td>AVGS</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num">233.43</td><td class="num hide-mobile">$24.93</td><td class="num">$24.22</td><td class="num">$5.7k</td><td class="num pos hide-mobile">+2.4%</td><td class="num neg">-2.8%</td></tr>
-<tr><td>AVUV</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num">548.88</td><td class="num hide-mobile">$81.57</td><td class="num">$111.63</td><td class="num">$61k</td><td class="num pos hide-mobile">+1.3%</td><td class="num pos">+36.9%</td></tr>
-<tr><td>AVDV</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num">947.60</td><td class="num hide-mobile">$61.37</td><td class="num">$101.54</td><td class="num">$96k</td><td class="num pos hide-mobile">+5.3%</td><td class="num pos">+65.5%</td></tr>
-<tr><td>USSC</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num">373.25</td><td class="num hide-mobile">$60.04</td><td class="num">$84.72</td><td class="num">$32k</td><td class="num hide-mobile">—</td><td class="num pos">+41.1%</td></tr>
-<tr><td>EIMI</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num">2,020.29</td><td class="num hide-mobile">$31.33</td><td class="num">$46.28</td><td class="num">$93k</td><td class="num pos hide-mobile">+4.0%</td><td class="num pos">+47.7%</td></tr>
-<tr><td>AVES</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num">926.55</td><td class="num hide-mobile">$45.47</td><td class="num">$59.80</td><td class="num">$55k</td><td class="num hide-mobile">—</td><td class="num pos">+31.5%</td></tr>
-<tr><td>DGS</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num">188.21</td><td class="num hide-mobile">$50.11</td><td class="num">$61.25</td><td class="num">$12k</td><td class="num hide-mobile">—</td><td class="num pos">+22.2%</td></tr>
-<tr><td>IWVL</td><td>—</td><td><span class="badge badge-trans">T</span></td><td class="num">34.00</td><td class="num hide-mobile">$37.23</td><td class="num">~$62.65</td><td class="num">$2.1k</td><td class="num hide-mobile">—</td><td class="num pos">+68.3%</td></tr>
+<tr><td><strong>SWRD</strong></td><td>SWRD</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num"><span class="pv">5,291.64</span></td><td class="num hide-mobile">$32.88</td><td class="num"><span class="pv">$47.46</span></td><td class="num"><span class="pv"><span class="pv">$251k</span></span></td><td class="num pos hide-mobile">+3.5%</td><td class="num pos">+44.3%</td></tr>
+<tr><td><strong>AVGS</strong></td><td>AVGS</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num"><span class="pv">233.43</span></td><td class="num hide-mobile">$24.93</td><td class="num"><span class="pv">$24.22</span></td><td class="num"><span class="pv">$5.7k</span></td><td class="num pos hide-mobile">+2.4%</td><td class="num neg">-2.8%</td></tr>
+<tr><td>AVUV</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">548.88</span></td><td class="num hide-mobile">$81.57</td><td class="num"><span class="pv">$111.63</span></td><td class="num"><span class="pv">$61k</span></td><td class="num pos hide-mobile">+1.3%</td><td class="num pos">+36.9%</td></tr>
+<tr><td>AVDV</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">947.60</span></td><td class="num hide-mobile">$61.37</td><td class="num"><span class="pv">$101.54</span></td><td class="num"><span class="pv">$96k</span></td><td class="num pos hide-mobile">+5.3%</td><td class="num pos">+65.5%</td></tr>
+<tr><td>USSC</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">373.25</span></td><td class="num hide-mobile">$60.04</td><td class="num"><span class="pv">$84.72</span></td><td class="num"><span class="pv">$32k</span></td><td class="num hide-mobile">—</td><td class="num pos">+41.1%</td></tr>
+<tr><td>EIMI</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">2,020.29</span></td><td class="num hide-mobile">$31.33</td><td class="num"><span class="pv">$46.28</span></td><td class="num"><span class="pv">$93k</span></td><td class="num pos hide-mobile">+4.0%</td><td class="num pos">+47.7%</td></tr>
+<tr><td>AVES</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">926.55</span></td><td class="num hide-mobile">$45.47</td><td class="num"><span class="pv">$59.80</span></td><td class="num"><span class="pv">$55k</span></td><td class="num hide-mobile">—</td><td class="num pos">+31.5%</td></tr>
+<tr><td>DGS</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">188.21</span></td><td class="num hide-mobile">$50.11</td><td class="num"><span class="pv">$61.25</span></td><td class="num"><span class="pv">$12k</span></td><td class="num hide-mobile">—</td><td class="num pos">+22.2%</td></tr>
+<tr><td>IWVL</td><td>—</td><td><span class="badge badge-trans">T</span></td><td class="num"><span class="pv">34.00</span></td><td class="num hide-mobile">$37.23</td><td class="num">~$62.65</td><td class="num"><span class="pv">$2.1k</span></td><td class="num hide-mobile">—</td><td class="num pos">+68.3%</td></tr>
 </tbody>
-<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="6">Total Equity</td><td class="num">$608k</td><td></td><td class="num pos">+44.4%</td></tr></tfoot>
+<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="6">Total Equity</td><td class="num"><span class="pv"><span class="pv">$608k</span></span></td><td></td><td class="num pos">+44.4%</td></tr></tfoot>
 </table>
 </div>
 <div class="src">Qtde+PM: ibkr_lotes.json · Preços: web 07/abr · Var semanal: 31/mar-04/abr · ⚠️ Dados estáticos — rodar /dashboard para atualizar</div>
@@ -359,13 +377,13 @@ Alpha pós-haircut: ~0.16%/ano · TER Δ VWRA: +2.7bps
 <table>
 <thead><tr><th>Ativo</th><th class="num">Qtde</th><th class="num">PM</th><th class="num">Preço</th><th class="num">Ganho</th><th>Subst.</th></tr></thead>
 <tbody>
-<tr><td>AVUV</td><td class="num">548.88</td><td class="num">$81.57</td><td class="num">$111.63</td><td class="num pos">+36.9%</td><td>AVGS.L</td></tr>
-<tr><td>AVDV</td><td class="num">947.60</td><td class="num">$61.37</td><td class="num">$101.54</td><td class="num pos">+65.5%</td><td>AVGS.L</td></tr>
-<tr><td>USSC</td><td class="num">373.25</td><td class="num">$60.04</td><td class="num">$84.72</td><td class="num pos">+41.1%</td><td>AVGS.L</td></tr>
-<tr><td>EIMI</td><td class="num">2,020.29</td><td class="num">$31.33</td><td class="num">$46.28</td><td class="num pos">+47.7%</td><td>AVEM.L</td></tr>
-<tr><td>AVES</td><td class="num">926.55</td><td class="num">$45.47</td><td class="num">$59.80</td><td class="num pos">+31.5%</td><td>AVEM.L</td></tr>
-<tr><td>DGS</td><td class="num">188.21</td><td class="num">$50.11</td><td class="num">$61.25</td><td class="num pos">+22.2%</td><td>AVEM.L</td></tr>
-<tr><td>IWVL</td><td class="num">34.00</td><td class="num">$37.23</td><td class="num">~$62.65</td><td class="num pos">+68.3%</td><td>—</td></tr>
+<tr><td>AVUV</td><td class="num"><span class="pv">548.88</span></td><td class="num"><span class="pv">$81.57</span></td><td class="num"><span class="pv">$111.63</span></td><td class="num pos">+36.9%</td><td>AVGS.L</td></tr>
+<tr><td>AVDV</td><td class="num"><span class="pv">947.60</span></td><td class="num"><span class="pv">$61.37</span></td><td class="num"><span class="pv">$101.54</span></td><td class="num pos">+65.5%</td><td>AVGS.L</td></tr>
+<tr><td>USSC</td><td class="num"><span class="pv">373.25</span></td><td class="num"><span class="pv">$60.04</span></td><td class="num"><span class="pv">$84.72</span></td><td class="num pos">+41.1%</td><td>AVGS.L</td></tr>
+<tr><td>EIMI</td><td class="num"><span class="pv">2,020.29</span></td><td class="num"><span class="pv">$31.33</span></td><td class="num"><span class="pv">$46.28</span></td><td class="num pos">+47.7%</td><td>AVEM.L</td></tr>
+<tr><td>AVES</td><td class="num"><span class="pv">926.55</span></td><td class="num"><span class="pv">$45.47</span></td><td class="num"><span class="pv">$59.80</span></td><td class="num pos">+31.5%</td><td>AVEM.L</td></tr>
+<tr><td>DGS</td><td class="num"><span class="pv">188.21</span></td><td class="num"><span class="pv">$50.11</span></td><td class="num"><span class="pv">$61.25</span></td><td class="num pos">+22.2%</td><td>AVEM.L</td></tr>
+<tr><td>IWVL</td><td class="num"><span class="pv">34.00</span></td><td class="num"><span class="pv">$37.23</span></td><td class="num">~$62.65</td><td class="num pos">+68.3%</td><td>—</td></tr>
 </tbody>
 </table>
 <div style="margin-top:6px;font-size:.7rem;color:var(--muted)">✅ Nenhuma oportunidade TLH. Reativar em drawdown.</div>
@@ -376,10 +394,10 @@ Alpha pós-haircut: ~0.16%/ano · TER Δ VWRA: +2.7bps
 <div class="section">
 <h2>Renda Fixa & Crypto</h2>
 <div class="rf-grid">
-<div class="rf-card"><div class="val">R$ 33.285</div><div class="lbl">IPCA+ 2040</div><div class="sub">Estrutural · HTM · ~7.20%</div></div>
-<div class="rf-card"><div class="val">R$ 112.466</div><div class="lbl">Renda+ 2065</div><div class="sub">Tático · MtM · ~6.93%</div></div>
-<div class="rf-card"><div class="val">R$ 89.095</div><div class="lbl">IPCA+ 2029</div><div class="sub">Reserva emergência</div></div>
-<div class="rf-card"><div class="val" style="color:var(--yellow)">R$ 100.208</div><div class="lbl">HODL11</div><div class="sub">1,676×R$59.79 · 2.9%</div></div>
+<div class="rf-card"><div class="val">R$ <span class="pv">33.285</span></div><div class="lbl">IPCA+ 2040</div><div class="sub">Estrutural · HTM · ~7.20%</div></div>
+<div class="rf-card"><div class="val">R$ <span class="pv">112.466</span></div><div class="lbl">Renda+ 2065</div><div class="sub">Tático · MtM · ~6.93%</div></div>
+<div class="rf-card"><div class="val">R$ <span class="pv">89.095</span></div><div class="lbl">IPCA+ 2029</div><div class="sub">Reserva emergência</div></div>
+<div class="rf-card"><div class="val" style="color:var(--yellow)">R$ <span class="pv">100.208</span></div><div class="lbl">HODL11</div><div class="sub">1,676×R$59.79 · 2.9%</div></div>
 </div>
 </div>
 
@@ -591,6 +609,20 @@ C('cashFlowChart',{type:'bar',data:{labels:['Renda mensal'],datasets:[
 {label:'Gastos',data:[21],backgroundColor:'#f97316',barThickness:30},
 {label:'IR/INSS',data:[4],backgroundColor:'#ef4444',barThickness:30}
 ]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}},tooltip:{callbacks:{label:c=>'R$'+c.raw+'k/mês'}}},scales:{x:{stacked:true,ticks:{color:'#94a3b8',callback:v=>'R$'+v+'k'}},y:{stacked:true,display:false}}}});
+
+// Privacy toggle
+function togglePrivacy(){
+  document.body.classList.toggle('private-mode');
+  const on=document.body.classList.contains('private-mode');
+  document.getElementById('privacyBtn').textContent=on?'👁‍🗨':'👁';
+  document.getElementById('privacyBtn').title=on?'Mostrar valores':'Ocultar valores';
+  localStorage.setItem('dashboard_private',on?'1':'0');
+}
+if(localStorage.getItem('dashboard_private')==='1'){
+  document.body.classList.add('private-mode');
+  document.getElementById('privacyBtn').textContent='👁‍🗨';
+  document.getElementById('privacyBtn').title='Mostrar valores';
+}
 </script>
 </body>
 </html>

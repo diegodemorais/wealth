@@ -147,6 +147,55 @@ Data: DD/MM/AAAA | Patrimônio: R$ X.XXXk | Equity: $XXXk | Câmbio: R$ X.XX
 P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 ```
 
+## Toggle de Privacidade
+
+Ícone de olho no header (direita). Dois estados:
+
+**Olho aberto 👁 (padrão):** mostra tudo — R$, USD, cotas, patrimônio.
+
+**Olho fechado 👁‍🗨:** oculta valores absolutos, mantém percentuais e estrutura.
+
+Implementação obrigatória:
+```css
+.private-mode .pv { visibility: hidden; }  /* não display:none — mantém layout */
+.privacy-toggle { cursor: pointer; font-size: 1.3rem; opacity: 0.7; }
+.privacy-toggle:hover { opacity: 1; }
+```
+
+```js
+// No header, botão toggle
+<span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn">👁</span>
+
+function togglePrivacy() {
+  document.body.classList.toggle('private-mode');
+  const on = document.body.classList.contains('private-mode');
+  document.getElementById('privacyBtn').textContent = on ? '👁‍🗨' : '👁';
+  localStorage.setItem('dashboard_private', on ? '1' : '0');
+}
+// Restaurar preferência
+if (localStorage.getItem('dashboard_private') === '1') {
+  document.body.classList.add('private-mode');
+  document.getElementById('privacyBtn').textContent = '👁‍🗨';
+}
+```
+
+**O que recebe classe `pv` (ocultar no modo privado):**
+- Patrimônio total (R$, USD) nos KPIs
+- Valores absolutos nas tabelas (R$, USD, cotas)
+- Eixo Y do timeline e fan chart (valores R$)
+- Cards RF (R$ valor)
+- Calculadora resultado (R$, cotas)
+- Wellness Score sub-métricas com valores absolutos
+
+**O que permanece visível (sempre):**
+- Percentuais: P(FIRE), ganho%, delta%, SWR%, progresso%, savings rate%
+- Charts estruturais: donut (%), delta bar (pp), glide path (%), Bollinger (%)
+- Wellness Score nota (0-100)
+- Labels e títulos das seções
+- Cenário comparison (% e anos, sem R$)
+
+**Persistir no `localStorage`** para lembrar entre sessões.
+
 ## Regras
 
 - **O dashboard é OUTPUT gerado — nunca editar o HTML diretamente.** Correções e melhorias vão nesta skill. O HTML é sobrescrito a cada `/dashboard`.
