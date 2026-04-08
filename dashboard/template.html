@@ -17,14 +17,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kpi-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 .kpi-value{font-size:1.5rem;font-weight:700;margin-top:2px}.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
 .kpi-fire{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
-.section{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px}
+.section{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
 .section h2{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 @media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
 table{width:100%;border-collapse:collapse;font-size:.78rem}
 th{text-align:left;padding:6px 5px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted);font-size:.65rem;text-transform:uppercase}
-td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3)}
+td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3);overflow-wrap:break-word;word-break:break-word;max-width:0}
 .num{text-align:right;font-variant-numeric:tabular-nums;font-family:'SF Mono',monospace,sans-serif}
 .pos{color:var(--green)}.neg{color:var(--red)}
 .chart-box{position:relative;height:240px}
@@ -720,7 +720,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="overflow-x:auto">
 <table style="width:100%;table-layout:fixed">
 <colgroup>
-  <col style="width:22%"><col style="width:30%"><col style="width:8%"><col style="width:28%"><col style="width:12%">
+  <col style="width:22%"><col style="width:32%"><col style="width:8%"><col style="width:26%"><col style="width:12%">
 </colgroup>
 <thead><tr>
   <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
@@ -1113,6 +1113,7 @@ function buildTimeline(period) {
         legend: { labels: { color: '#94a3b8', boxWidth: 12 } },
         tooltip: {
           callbacks: {
+            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
             label: ctx => ` ${ctx.dataset.label}: R$ ${(ctx.parsed.y/1000).toFixed(0)}k`,
             footer: items => {
               if (items.length) return [`Total: R$ ${(items.reduce((s,i)=>s+i.parsed.y,0)/1000).toFixed(0)}k`, '⚠️ Split = proporção atual (estimativa)'];
@@ -1763,6 +1764,7 @@ function buildBollinger(period) {
         legend: { labels: { color: '#94a3b8', font:{size:10} } },
         tooltip: {
           callbacks: {
+            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
             label: ctx => ctx.parsed.y !== null ? ` ${ctx.dataset.label}: ${ctx.parsed.y}%` : '',
           }
         }
@@ -1875,7 +1877,7 @@ function buildBacktest(period) {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { labels: { color: '#94a3b8' } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
+        tooltip: { callbacks: { title: items => items.length ? fmtMonthLabel(items[0].label) : '', label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
       },
       scales: {
         x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
@@ -2002,7 +2004,7 @@ function buildShadowChart(period) {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: { labels: { color: '#94a3b8', font:{size:10} } },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} (base 100)` } }
+        tooltip: { callbacks: { title: items => items.length ? fmtMonthLabel(items[0].label) : '', label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} (base 100)` } }
       },
       scales: {
         x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, autoSkip: true, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
