@@ -1069,6 +1069,17 @@ function setActivePeriodBtn(containerID, period) {
 // ═══════════════════════════════════════════════════════════════
 const charts = {};
 
+// Formata label YYYY-MM → mmm/YY (ex: "2021-05" → "mai/21")
+const _MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function fmtMonthLabel(raw) {
+  if (!raw || typeof raw !== 'string') return raw;
+  const [y, m] = raw.split('-');
+  return `${_MESES[(+m||1)-1]}/${y.slice(2)}`;
+}
+function fmtMonthTick(val, _idx) {
+  return fmtMonthLabel(this.getLabelForValue(val));
+}
+
 // ── S6: Timeline ──────────────────────────────────────────────
 function buildTimeline(period) {
   const { labels, values } = filterByPeriod(DATA.timeline.labels, DATA.timeline.values, period);
@@ -1110,7 +1121,7 @@ function buildTimeline(period) {
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
@@ -1757,7 +1768,7 @@ function buildBollinger(period) {
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
@@ -1867,13 +1878,7 @@ function buildBacktest(period) {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: function(val, idx) {
-          const label = this.getLabelForValue(val);
-          if (!label) return '';
-          const [y, m] = label.split('-');
-          const mNames = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-          return `${mNames[(+m||1)-1]}/${y.slice(2)}`;
-        }}, grid: { color: 'rgba(71,85,105,.2)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.2)' } }
       }
     }
@@ -2000,7 +2005,7 @@ function buildShadowChart(period) {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} (base 100)` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, autoSkip: true }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, autoSkip: true, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }

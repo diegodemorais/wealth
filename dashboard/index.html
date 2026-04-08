@@ -772,14 +772,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:31:10-03:00'); // BRT (UTC-3)
-const VERSION = '1.14';
+const GENERATED_AT = new Date('2026-04-08T15:37:14-03:00'); // BRT (UTC-3)
+const VERSION = '1.15';
 
 const DATA = {
-  "_generated": "2026-04-08T15:31:10",
-  "_generated_brt": "2026-04-08T15:31:10-03:00",
+  "_generated": "2026-04-08T15:37:14",
+  "_generated_brt": "2026-04-08T15:37:14-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1078,
+  "cambio": 5.1076,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -798,14 +798,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.4904,
+      "price": 114.3312,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.12,
+      "price": 105.0899,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -826,7 +826,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.8346,
+      "price": 62.8974,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -867,7 +867,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3531719,
+    "patrimonio_atual": 3531299,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2360,7 +2360,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.4904,
+      "price": 114.3312,
       "ucits": "AVGS.L"
     },
     {
@@ -2368,7 +2368,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.12,
+      "price": 105.0899,
       "ucits": "AVGS.L"
     },
     {
@@ -2392,7 +2392,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.8346,
+      "price": 62.8974,
       "ucits": "AVEM.L"
     },
     {
@@ -2416,7 +2416,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2420019.0,
+    "crescReal": 2419599.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2755,7 +2755,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.14"
+  "version": "1.15"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3053,6 +3053,17 @@ function setActivePeriodBtn(containerID, period) {
 // ═══════════════════════════════════════════════════════════════
 const charts = {};
 
+// Formata label YYYY-MM → mmm/YY (ex: "2021-05" → "mai/21")
+const _MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function fmtMonthLabel(raw) {
+  if (!raw || typeof raw !== 'string') return raw;
+  const [y, m] = raw.split('-');
+  return `${_MESES[(+m||1)-1]}/${y.slice(2)}`;
+}
+function fmtMonthTick(val, _idx) {
+  return fmtMonthLabel(this.getLabelForValue(val));
+}
+
 // ── S6: Timeline ──────────────────────────────────────────────
 function buildTimeline(period) {
   const { labels, values } = filterByPeriod(DATA.timeline.labels, DATA.timeline.values, period);
@@ -3094,7 +3105,7 @@ function buildTimeline(period) {
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
@@ -3741,7 +3752,7 @@ function buildBollinger(period) {
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
@@ -3851,13 +3862,7 @@ function buildBacktest(period) {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: function(val, idx) {
-          const label = this.getLabelForValue(val);
-          if (!label) return '';
-          const [y, m] = label.split('-');
-          const mNames = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-          return `${mNames[(+m||1)-1]}/${y.slice(2)}`;
-        }}, grid: { color: 'rgba(71,85,105,.2)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.2)' } }
       }
     }
@@ -3984,7 +3989,7 @@ function buildShadowChart(period) {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} (base 100)` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, autoSkip: true }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, autoSkip: true, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
