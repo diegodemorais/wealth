@@ -507,25 +507,20 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S17: FEE ANALYSIS -->
 <div class="section" data-in-tab="perf">
-<h2>Fee Analysis — Custo de Complexidade</h2>
-<div class="chart-box-sm"><canvas id="feeChart"></canvas></div>
-<div class="grid-3" style="margin-top:12px;margin-bottom:0">
-<div style="text-align:center;background:var(--card2);border-radius:8px;padding:10px">
-  <div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" id="feeCusto">—</div>
-  <div style="font-size:.65rem;color:var(--muted)">Custo TER 11 anos</div>
-  <div style="font-size:.6rem;color:var(--muted)">0.247% × R$3.5M × 11</div>
+<h2>Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
+<div style="overflow-x:auto">
+<table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
+<thead><tr style="border-bottom:1px solid var(--border)">
+  <th style="text-align:left;padding:6px 8px;color:var(--muted);font-weight:600">Portfolio</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">TER</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Custo 14a</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Alpha 14a</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Net vs VWRA</th>
+</tr></thead>
+<tbody id="feeBody"></tbody>
+</table>
 </div>
-<div style="text-align:center;background:var(--card2);border-radius:8px;padding:10px">
-  <div style="font-size:1.1rem;font-weight:700;color:var(--green)" id="feeAlpha">—</div>
-  <div style="font-size:.65rem;color:var(--muted)">Alpha esperado 11 anos</div>
-  <div style="font-size:.6rem;color:var(--muted)">0.16%/ano × R$3.5M × 11</div>
-</div>
-<div style="text-align:center;background:var(--card2);border-radius:8px;padding:10px">
-  <div style="font-size:1.1rem;font-weight:700" id="feeNet">—</div>
-  <div style="font-size:.65rem;color:var(--muted)">Delta incremental vs VWRA</div>
-  <div style="font-size:.6rem;color:var(--muted)">2.7bps TER extra · +1.41pp backtest</div>
-</div>
-</div>
+<div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
 </div>
 
 <!-- S18: CONTRIBUTION SLIDER -->
@@ -593,6 +588,26 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <span>Total USD: <strong class="pv" id="totalUsd">—</strong></span>
   <span>Total BRL: <strong class="pv" id="totalBrl">—</strong></span>
 </div>
+</div>
+
+<!-- S21b2: CUSTO BASE POR BUCKET -->
+<div class="section" data-in-tab="aloc">
+<h2>Custo Base por Bucket — Equity Internacional</h2>
+<div style="overflow-x:auto">
+<table id="custoBaseTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
+<thead><tr style="border-bottom:1px solid var(--border)">
+  <th style="text-align:left;padding:6px 8px;color:var(--muted);font-weight:600">Bucket</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Valor USD</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Custo USD</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Ganho %</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Peso equity</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Meta equity</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Δ</th>
+</tr></thead>
+<tbody id="custoBaseBody"></tbody>
+</table>
+</div>
+<div class="src">Calculado de ibkr_lotes.json · Ganho sobre custo USD (preço médio × qtde) · Peso intra-equity (SWRD+AVGS+AVEM) · Meta: 50/30/20</div>
 </div>
 
 <!-- S21c: EVENTOS DE VIDA -->
@@ -1534,31 +1549,42 @@ function buildFeeAnalysis() {
   const _terCfg = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
   const _currTer = _terCfg.current_ter  ?? 0.247;
   const _benchTer = _terCfg.benchmark_ter ?? 0.220;
+  const _shadowCTer = 0.207;
   const pat = DATA.premissas.patrimonio_atual;
-  const anos = DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual;
-  const custo = _currTer/100 * pat * anos;
-  const custo_a = _benchTer/100 * pat * anos;
-  const alpha = 0.00160 * pat * anos;
-  document.getElementById('feeCusto').textContent = fmtBrl(custo);
-  document.getElementById('feeAlpha').textContent = fmtBrl(alpha);
-  const net = alpha - (custo - custo_a);
-  document.getElementById('feeNet').textContent = `${net > 0 ? '+' : ''}${fmtBrl(net)}`;
-  document.getElementById('feeNet').style.color = net > 0 ? '#22c55e' : '#ef4444';
+  const anos = 14; // horizonte fixo FIRE 2040
+  const ALPHA_ANNUAL = 0.00160;
 
-  charts.fee = new Chart(document.getElementById('feeChart'), {
-    type: 'bar',
-    data: {
-      labels: [`Carteira (${_currTer.toFixed(3)}%)`, `VWRA (${_benchTer.toFixed(3)}%)`, '60/40 (0.207%)'],
-      datasets: [{ label: 'TER acumulado 11 anos', data: [custo, custo_a, 0.00207*pat*anos].map(v => Math.round(v)), backgroundColor: ['rgba(234,179,8,.7)','rgba(34,197,94,.7)','rgba(168,85,247,.7)'] }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` R$ ${(ctx.parsed.y/1000).toFixed(0)}k` } } },
-      scales: {
-        y: { ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8' } }
-      }
-    }
+  const portfolios = [
+    { label: 'Carteira atual', ter: _currTer, isBaseline: false },
+    { label: 'Shadow A — VWRA', ter: _benchTer, isBaseline: true },
+    { label: 'Shadow C — VWRA+IPCA+', ter: _shadowCTer, isBaseline: true },
+  ];
+
+  const tbody = document.getElementById('feeBody');
+  portfolios.forEach((p, i) => {
+    const custo = p.ter/100 * pat * anos;
+    const custoVwra = _benchTer/100 * pat * anos;
+    const alpha = p.isBaseline ? null : ALPHA_ANNUAL * pat * anos;
+    const extraCost = custo - custoVwra; // positive = costs more than VWRA
+    const net = alpha != null ? alpha - extraCost : -(custo - custoVwra);
+
+    const terColor = p.isBaseline ? '#94a3b8' : (p.ter > _benchTer ? '#eab308' : '#22c55e');
+    const netColor = net > 0 ? '#22c55e' : '#ef4444';
+    const netStr = p.isBaseline && i === 1 ? '<span style="color:var(--muted)">baseline</span>'
+                 : `<span style="color:${netColor}">${net > 0 ? '+' : ''}${fmtBrl(net)}</span>`;
+    const alphaStr = alpha != null ? `<span style="color:var(--green)">${fmtBrl(alpha)}</span>` : '<span style="color:var(--muted)">—</span>';
+
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid rgba(71,85,105,.3)';
+    if (i === 0) tr.style.fontWeight = '600';
+    tr.innerHTML = `
+      <td style="padding:7px 8px">${p.label}</td>
+      <td class="num" style="padding:7px 8px;color:${terColor}">${p.ter.toFixed(3)}%</td>
+      <td class="num" style="padding:7px 8px">${fmtBrl(custo)}</td>
+      <td class="num" style="padding:7px 8px">${alphaStr}</td>
+      <td class="num" style="padding:7px 8px">${netStr}</td>
+    `;
+    tbody.appendChild(tr);
   });
 }
 
@@ -1622,6 +1648,61 @@ function buildPosicoes() {
   });
   document.getElementById('totalUsd').textContent = `$${(totUsd/1000).toFixed(0)}k`;
   document.getElementById('totalBrl').textContent = `R$${(totBrl/1000).toFixed(0)}k`;
+}
+
+// ── S21b2: Custo Base por Bucket ──────────────────────────────
+function buildCustoBase() {
+  const tbody = document.getElementById('custoBaseBody');
+  if (!tbody) return;
+  const buckets = { SWRD: { meta: 50 }, AVGS: { meta: 30 }, AVEM: { meta: 20 } };
+  const bucketMap = { SWRD: 'SWRD', AVGS: 'AVGS', AVEM: 'AVEM',
+    AVUV: 'AVGS', AVDV: 'AVGS', USSC: 'AVGS',
+    EIMI: 'AVEM', AVES: 'AVEM', DGS: 'AVEM' };
+  const acc = {};
+  Object.keys(buckets).forEach(b => { acc[b] = { valor: 0, custo: 0 }; });
+  Object.entries(DATA.posicoes).forEach(([ticker, p]) => {
+    const b = bucketMap[ticker];
+    if (!b || !acc[b]) return;
+    acc[b].valor += p.qty * p.price;
+    acc[b].custo += p.qty * (p.avg_cost ?? p.pm ?? p.price);
+  });
+  const totalValor = Object.values(acc).reduce((s, v) => s + v.valor, 0);
+  const colors = { SWRD: '#3b82f6', AVGS: '#8b5cf6', AVEM: '#06b6d4' };
+  let totValor = 0, totCusto = 0;
+  Object.entries(buckets).forEach(([b, cfg]) => {
+    const { valor, custo } = acc[b];
+    totValor += valor; totCusto += custo;
+    const gain = custo > 0 ? (valor / custo - 1) * 100 : 0;
+    const peso = totalValor > 0 ? valor / totalValor * 100 : 0;
+    const delta = peso - cfg.meta;
+    const gainColor = gain >= 0 ? '#22c55e' : '#ef4444';
+    const deltaColor = Math.abs(delta) <= 2 ? '#22c55e' : Math.abs(delta) <= 5 ? '#eab308' : '#ef4444';
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid rgba(71,85,105,.3)';
+    tr.innerHTML = `
+      <td style="padding:7px 8px"><strong style="color:${colors[b]}">${b}</strong></td>
+      <td class="num" style="padding:7px 8px">$${(valor/1000).toFixed(0)}k</td>
+      <td class="num" style="padding:7px 8px;color:var(--muted)">$${(custo/1000).toFixed(0)}k</td>
+      <td class="num" style="padding:7px 8px;color:${gainColor}">${gain >= 0 ? '+' : ''}${gain.toFixed(1)}%</td>
+      <td class="num" style="padding:7px 8px">${peso.toFixed(1)}%</td>
+      <td class="num" style="padding:7px 8px;color:var(--muted)">${cfg.meta}%</td>
+      <td class="num" style="padding:7px 8px;color:${deltaColor}">${delta >= 0 ? '+' : ''}${delta.toFixed(1)}pp</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  // Total row
+  const totGain = totCusto > 0 ? (totValor / totCusto - 1) * 100 : 0;
+  const totTr = document.createElement('tr');
+  totTr.style.borderTop = '1px solid var(--border)';
+  totTr.style.fontWeight = '600';
+  totTr.innerHTML = `
+    <td style="padding:7px 8px">Total equity</td>
+    <td class="num" style="padding:7px 8px">$${(totValor/1000).toFixed(0)}k</td>
+    <td class="num" style="padding:7px 8px;color:var(--muted)">$${(totCusto/1000).toFixed(0)}k</td>
+    <td class="num" style="padding:7px 8px;color:${totGain >= 0 ? '#22c55e' : '#ef4444'}">${totGain >= 0 ? '+' : ''}${totGain.toFixed(1)}%</td>
+    <td class="num" style="padding:7px 8px">—</td><td class="num" style="padding:7px 8px;color:var(--muted)">—</td><td class="num" style="padding:7px 8px">—</td>
+  `;
+  tbody.appendChild(totTr);
 }
 
 // ── S21c: Eventos de Vida ─────────────────────────────────────
@@ -2364,6 +2445,7 @@ window.switchTab = function(name) {
   buildIncomeChart();
   buildFeeAnalysis();
   buildPosicoes();
+  buildCustoBase();
   buildTLH();
   renderHodl11();
   buildBollinger('1y');
