@@ -27,7 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
-| 1 | HD-gws-auth | Autenticar gws CLI para acesso Google Workspace | Head | 🟡 Média |
+| ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
 | 2 | HD-tearsheet-longrun | Tearsheet QuantStats com histórico longo (proxies) | Head | 🟡 Média |
 | 3 | HD-backtest-longrun | Pipeline backtest 50+ anos via Ken French / MSCI | Head | 🟡 Média |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |

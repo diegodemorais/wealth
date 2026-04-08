@@ -6,11 +6,12 @@
 |-------|-------|
 | **ID** | HD-gws-auth |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | Cancelada |
 | **Prioridade** | 🟡 Média |
 | **Criado em** | 2026-04-08 |
 | **Origem** | Tentativa de usar gws para validar holdings.md — sem OAuth client configurado |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-08 |
+| **Motivo cancelamento** | gws CLI requer pagamento — inviável |
 
 ---
 
