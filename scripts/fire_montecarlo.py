@@ -17,18 +17,28 @@ import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).parent))
+from config import (
+    APORTE_MENSAL, CUSTO_VIDA_BASE,
+    IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL,
+    IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
+    IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO,
+)
+
 # ─── PREMISSAS (fonte: carteira.md + HD-006 final 2026-03-22) ─────────────────
 
 PREMISSAS = {
     # Patrimônio e aportes
     "patrimonio_atual":    3_372_673,   # R$ — atualizar a cada sessão
-    "aporte_mensal":       25_000,      # R$
-    "custo_vida_base":     250_000,     # R$/ano — base FIRE
+    "aporte_mensal":       APORTE_MENSAL,
+    "custo_vida_base":     CUSTO_VIDA_BASE,
 
     # Horizonte
-    "idade_atual":         39,
-    "idade_fire_alvo":     53,          # FIRE 2040 — base confirmada 2026-04-02 (era 50)
-    "idade_fire_aspiracional": 50,      # FIRE 2037 — aspiracional, se patrimônio atingir antes
+    "idade_atual":         IDADE_ATUAL,
+    "idade_fire_alvo":     IDADE_FIRE_ALVO,
+    "idade_fire_aspiracional": IDADE_FIRE_ASPIRACIONAL,
     "idade_safe_harbor":   53,
     "anos_simulacao":      37,          # anos de desacumulação (53→90)
 
@@ -48,10 +58,10 @@ PREMISSAS = {
     "adj_stress":          -0.005,      # -0.5pp
 
     # Bond tent
-    "pct_ipca_longo":      0.15,        # 15% — TD 2040/2050
-    "pct_ipca_curto":      0.03,        # 3% — comprado perto dos 50
-    "pct_equity":          0.79,        # 79%
-    "pct_cripto":          0.03,        # 3%
+    "pct_ipca_longo":      IPCA_LONGO_PCT,
+    "pct_ipca_curto":      IPCA_CURTO_PCT,
+    "pct_equity":          EQUITY_PCT,
+    "pct_cripto":          CRIPTO_PCT,
 
     # IPCA estimado (para converter nominais)
     "ipca_anual":          0.04,        # 4%/ano
@@ -59,7 +69,7 @@ PREMISSAS = {
     # IR na desacumulação (FR-ir-desacumulacao)
     "aplicar_ir_desacumulacao": True,   # default True — modelagem correta
     "anos_bond_pool":           7,      # anos pós-FIRE cobertos pelo bond pool (sem IR equity)
-    "aliquota_ir_equity":       0.15,   # 15% flat sobre ganho nominal
+    "aliquota_ir_equity":       IR_ALIQUOTA,
 
     # INSS (HD-mc-audit 2026-04-06)
     "inss_anual":               18_000, # R$18k/ano real — estimativa central (TX-inss-beneficio: R$46-55k nominal, uso R$18k real conservador)
@@ -72,8 +82,8 @@ PREMISSAS = {
     "vol_bond_pool":            0.133,  # 79% × 16.8% — vol portfólio durante bond pool
 
     # Gatilho FIRE
-    "patrimonio_gatilho":  13_400_000,  # R$2026 real
-    "swr_gatilho":         0.024,       # 2.4%
+    "patrimonio_gatilho":  PATRIMONIO_GATILHO,
+    "swr_gatilho":         SWR_GATILHO,
 }
 
 # ─── SPENDING SMILE (fonte: FR-spending-smile 2026-03-27) ─────────────────────

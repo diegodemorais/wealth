@@ -22,6 +22,9 @@ import yfinance as yf
 import pandas as pd
 from bcb import sgs
 
+sys.path.insert(0, os.path.dirname(__file__))
+from config import PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS
+
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
 
@@ -34,24 +37,6 @@ TICKERS = {
     "HODL11": "HODL11.SA",
     "BTC":    "BTC-USD",
     "USD_BRL": "USDBRL=X",   # ETFs UCITS na LSE são cotados em USD
-}
-
-# Pesos do portfolio TARGET (equity block: SWRD 50% / AVGS 30% / AVEM 20% — FI-equity-redistribuicao 2026-04-01)
-PESOS_TARGET = {
-    "SWRD":   0.3950,   # 79% × 50% = 39.50% do portfolio total
-    "AVGS":   0.2370,   # 79% × 30% = 23.70%
-    "AVEM":   0.1580,   # 79% × 20% = 15.80%
-    "IPCA":   0.1500,   # calculado via BCB
-    "HODL11": 0.0300,
-    # Renda+ 2065: input manual (MtM requer Tesouro Direto)
-}
-
-# Pesos Shadow C
-PESOS_SHADOW_C = {
-    "VWRA":   0.79,
-    "IPCA":   0.15,
-    "BTC":    0.03,    # proxy BTC para HODL11
-    "RENDA":  0.03,    # Renda+ 2065 MtM — input manual
 }
 
 # IPCA+ taxa bruta referência (atualizar se mudar)
@@ -77,7 +62,7 @@ TLH_TRANSITORIOS = {
 }
 
 TLH_GATILHO_PERDA = 0.05   # alertar se perda >= 5%
-TLH_IR_ALIQUOTA   = 0.15   # IR sobre ganho de capital (Lei 14.754/2023)
+TLH_IR_ALIQUOTA   = IR_ALIQUOTA   # 15% — fonte: config.py
 
 
 # ─── FUNÇÕES DE DADOS ─────────────────────────────────────────────────────────
@@ -291,14 +276,8 @@ def calcular_cagr_historico(csv_path: str = None) -> dict:
 
 # ─── CUSTO BASE BRL POR BUCKET ───────────────────────────────────────────────
 
-BUCKET_MAPEAMENTO = {
-    # SWRD bucket: apenas SWRD
-    "SWRD": ["SWRD"],
-    # AVGS bucket: AVGS + transitórios US-listed + USSC
-    "AVGS": ["AVGS", "AVUV", "AVDV", "USSC"],
-    # AVEM bucket: AVEM + EIMI + AVES + DGS
-    "AVEM": ["AVEM", "EIMI", "AVES", "DGS"],
-}
+# BUCKET_MAPEAMENTO importado de config.py como BUCKET_TICKERS (bucket → lista de tickers)
+BUCKET_MAPEAMENTO = BUCKET_TICKERS
 
 
 def custo_base_brl_por_bucket(lotes_por_ticker: dict, usd_brl_atual: float) -> dict:

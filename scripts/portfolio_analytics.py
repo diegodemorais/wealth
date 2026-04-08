@@ -25,20 +25,21 @@ from pypfopt import EfficientFrontier, expected_returns, risk_models
 from pypfopt.efficient_frontier import EfficientCDaR
 import riskfolio as rp
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).parent))
+from config import (
+    EQUITY_WEIGHTS, TICKERS_YF,
+    EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, RENDA_PLUS_PCT,
+    PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS,
+)
+
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
 
-TICKERS_ALVO = {
-    "SWRD": "SWRD.L",
-    "AVGS": "AVGS.L",
-    "AVEM": "AVEM.L",
-}
+TICKERS_ALVO = {k: TICKERS_YF[k] for k in EQUITY_WEIGHTS}
 
-PESOS_ALVO = {
-    "SWRD.L": 0.50,
-    "AVGS.L": 0.30,
-    "AVEM.L": 0.20,
-}
+PESOS_ALVO = {TICKERS_YF[k]: v for k, v in EQUITY_WEIGHTS.items()}
 
 BENCHMARK = "VWRA.L"
 PERIODO_ANALISE = "3y"   # janela padrão para análise trimestral
@@ -498,14 +499,11 @@ def tearsheet_vs_benchmark(precos: pd.DataFrame, salvar_html: bool = False):
 
 # ─── CONFIGURAÇÃO RENDA FIXA / EQUITY ─────────────────────────────────────────
 
-# Alvos da carteira total (% do patrimônio total)
-ALVO_IPCA_LONGO_PCT  = 0.15   # bond tent: IPCA+ longo (2040+)
-ALVO_IPCA_CURTO_PCT  = 0.03   # IPCA+ curto/médio
-ALVO_RENDA_PLUS_PCT  = 0.03   # Renda+ 2065
-ALVO_EQUITY_PCT      = 0.79   # equity (SWRD/AVGS/AVEM via IBKR)
-
-PISO_TAXA_IPCA_LONGO = 6.0    # % a.a. — abaixo disso não prioriza
-PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não prioriza
+# Alvos da carteira total (% do patrimônio total) — fonte: config.py
+ALVO_IPCA_LONGO_PCT  = IPCA_LONGO_PCT
+ALVO_IPCA_CURTO_PCT  = IPCA_CURTO_PCT
+ALVO_RENDA_PLUS_PCT  = RENDA_PLUS_PCT
+ALVO_EQUITY_PCT      = EQUITY_PCT
 
 # Split do bucket IPCA+ longo (80% TD2050, 20% TD2040)
 SPLIT_IPCA_LONGO = {"TD IPCA+2040": 0.80, "TD IPCA+2050": 0.20}

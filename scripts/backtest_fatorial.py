@@ -36,14 +36,15 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).parent))
+from config import EQUITY_WEIGHTS, TICKERS_YF
+
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
 
-PESOS_TARGET = {
-    "SWRD.L": 0.50,
-    "AVGS.L": 0.30,
-    "AVEM.L": 0.20,
-}
+PESOS_TARGET = {TICKERS_YF[k]: v for k, v in EQUITY_WEIGHTS.items()}
 
 # Datas de inception reais (confirmadas Factor+Fact-Checker via web — 2026-03-31)
 # Fonte: agentes/referencia/proxies-canonicos.md

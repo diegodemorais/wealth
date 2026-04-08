@@ -37,43 +37,15 @@ from pathlib import Path
 from dotenv import load_dotenv
 from ibflex import client
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).parent))
+from config import EQUITY_WEIGHTS as TARGET_EQUITY, BUCKET_MAP
+
 load_dotenv(Path(__file__).parent.parent / ".env")
 
 # ── Configuração ──────────────────────────────────────────────────────────────
 
 CAMBIO_REF = 5.20        # fallback; idealmente buscar do BCB
-
-# Alocação target equity (dentro do bloco equity)
-TARGET_EQUITY = {
-    "SWRD": 0.50,
-    "AVGS": 0.30,
-    "AVEM": 0.20,
-}
-
-# Buckets: agrupa transitórios no target equivalente para cálculo de drift.
-# Lógica: não vender transitórios (lucro tributável) — diluir via aportes nos ETFs alvo.
-BUCKET_MAP = {
-    # SWRD bucket
-    "SWRD":      "SWRD",
-    "WRDUSWUSD": "SWRD",
-    "F50A":      "SWRD",
-    # AVGS bucket (Desenvolvido small+value)
-    "AVGS":  "AVGS",
-    "AVUV":  "AVGS",
-    "AVDV":  "AVGS",
-    "USSC":  "AVGS",
-    "ZPRX":  "AVGS",
-    # AVEM bucket (Desenvolvido híbrido/EM)
-    "AVEM":  "AVEM",
-    "EIMI":  "AVEM",
-    "AVES":  "AVEM",
-    "DGS":   "AVEM",
-    "EMVL":  "AVEM",
-    # JPGL bucket (multi-factor, target 0% — legado, diluir)
-    "JPGL":  "JPGL",
-    "IWVL":  "JPGL",
-    "IWQU":  "JPGL",
-}
 
 # Mapa símbolo IBKR → nome canônico (para exibição)
 SYMBOL_MAP = {k: k for k in BUCKET_MAP}

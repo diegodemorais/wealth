@@ -27,6 +27,12 @@ try:
 except ImportError:
     yf = None
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from config import (
+    EQUITY_PCT as _EQUITY_PCT,
+    EQUITY_WEIGHTS, BUCKET_TICKERS, TICKERS_YF,
+)
+
 # ─── CONFIG ──────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -36,14 +42,19 @@ LOTES_PATH = os.path.join(ROOT_DIR, "analysis", "backtest_output", "ibkr_lotes.j
 HISTORICO_PATH = os.path.join(ROOT_DIR, "dados", "historico_carteira.csv")
 OUTPUT_PATH = os.path.join(ROOT_DIR, "analysis", "dashboard.html")
 
-EQUITY_PCT = 0.79
+EQUITY_PCT = _EQUITY_PCT
 
 # Buckets: ticker → {yf_ticker, target within equity, status}
-BUCKETS = {
-    "SWRD": {"etfs": {"SWRD": "SWRD.L"}, "target_eq": 0.50, "tipo": "alvo"},
-    "AVGS": {"etfs": {"AVGS": "AVGS.L", "AVUV": "AVUV", "AVDV": "AVDV", "USSC": "USSC.L"}, "target_eq": 0.30, "tipo": "alvo+trans"},
-    "AVEM": {"etfs": {"AVEM": "AVEM.L", "EIMI": "EIMI.L", "AVES": "AVES", "DGS": "DGS"}, "target_eq": 0.20, "tipo": "alvo+trans"},
-}
+# Construído dinamicamente a partir de config.py (BUCKET_TICKERS, EQUITY_WEIGHTS, TICKERS_YF)
+# Inclui apenas tickers com Yahoo Finance ticker definido em TICKERS_YF
+BUCKETS = {}
+for _bk, _weight in EQUITY_WEIGHTS.items():
+    _etfs = {}
+    for _tk in BUCKET_TICKERS.get(_bk, [_bk]):
+        if _tk in TICKERS_YF:
+            _etfs[_tk] = TICKERS_YF[_tk]
+    _tipo = "alvo" if len(_etfs) == 1 else "alvo+trans"
+    BUCKETS[_bk] = {"etfs": _etfs, "target_eq": _weight, "tipo": _tipo}
 
 # Posições não-equity (defaults da planilha 07/04/26, atualizáveis via CLI)
 RF_DEFAULTS = {

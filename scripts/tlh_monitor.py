@@ -27,6 +27,9 @@ import sys
 from datetime import datetime, date
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+from config import IR_ALIQUOTA
+
 # ── Paths ──────────────────────────────────────────────────────────────────────
 
 ROOT = Path(__file__).parent.parent
@@ -67,8 +70,8 @@ SUBSTITUTO_UCITS = {
     "JPGL":  "AVGS.L",
 }
 
-# Alíquota IR sobre ganho de capital (Lei 14.754/2023)
-ALIQUOTA_IR = 0.15
+# Alíquota IR sobre ganho de capital (Lei 14.754/2023) — fonte: config.py
+ALIQUOTA_IR = IR_ALIQUOTA
 
 # Threshold de perda mínima para alertar (% negativo)
 DEFAULT_THRESHOLD = -0.05  # -5%
