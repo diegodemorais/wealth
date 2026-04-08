@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'analysis/dashboard\\.html'; then echo '🚫 BLOQUEADO: dashboard.html é gerado pelo script. Edite .claude/commands/dashboard.md e regenere com /dashboard.' && exit 1; fi"
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qE 'dashboard/index\\.html'; then echo '🚫 BLOQUEADO: dashboard/index.html é gerado pelo pipeline. Edite dashboard/template.html e regenere com: python3 scripts/generate_data.py && python3 scripts/build_dashboard.py' && exit 1; fi"
           }
         ]
       }
