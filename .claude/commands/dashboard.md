@@ -2,7 +2,47 @@
 
 Regenera `analysis/dashboard.html` — dashboard single-file com Chart.js, dark theme, responsivo.
 
-## Fluxo
+## Pipeline (novo — usar sempre)
+
+**NUNCA editar `dashboard.html` diretamente.** O arquivo é gerado pelo pipeline:
+
+```
+scripts/generate_data.py  →  analysis/dashboard_data.json
+                                          ↓
+scripts/build_dashboard.py  →  analysis/dashboard.html
+                                          ↓
+scripts/deploy_netlify.sh   →  Netlify (produção)
+```
+
+### Gerar dashboard (comando padrão):
+
+```bash
+# Completo (roda scripts + busca preços yfinance):
+~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py && \
+~/claude/finance-tools/.venv/bin/python3 scripts/build_dashboard.py
+
+# Rápido (sem scripts pesados, usa cache/state):
+~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py --skip-scripts && \
+~/claude/finance-tools/.venv/bin/python3 scripts/build_dashboard.py
+
+# Sem buscar preços (totalmente offline):
+~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py --skip-scripts --skip-prices && \
+~/claude/finance-tools/.venv/bin/python3 scripts/build_dashboard.py
+```
+
+### Deploy:
+```bash
+bash scripts/deploy_netlify.sh
+```
+
+### Para modificar o dashboard:
+- **Lógica/dados**: editar `scripts/generate_data.py`
+- **Layout/CSS/JS/charts**: editar `analysis/dashboard_template.html`
+- **Spec/checklist**: editar este arquivo (`dashboard.md`)
+
+---
+
+## Fluxo Manual (para referência — use o pipeline acima)
 
 ### 0. Pré-computação (rodar antes de gerar HTML)
 

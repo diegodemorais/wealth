@@ -11,7 +11,21 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$SCRIPT_DIR/.."
+VENV_PY="$HOME/claude/finance-tools/.venv/bin/python3"
 DASHBOARD_HTML="$ROOT/analysis/dashboard.html"
+
+# ── Pipeline: gerar dashboard antes de deployar ──────────────────────────────
+echo "🔄 Rodando pipeline de geração..."
+
+if [ "$1" = "--skip-scripts" ]; then
+  echo "  (modo rápido — sem fire_montecarlo/backtest/fx_utils)"
+  "$VENV_PY" "$ROOT/scripts/generate_data.py" --skip-scripts
+else
+  "$VENV_PY" "$ROOT/scripts/generate_data.py"
+fi
+
+"$VENV_PY" "$ROOT/scripts/build_dashboard.py"
+echo ""
 DEPLOY_DIR="$(mktemp -d)"
 NETLIFY_SITE_ID="stunning-crepe-8aa19f"
 
