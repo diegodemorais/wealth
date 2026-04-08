@@ -641,7 +641,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button onclick="setBollingerPeriod('all')">All</button>
 </div>
 <div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div class="src">Retornos mensais. Janela MA5. σ poblacional (÷N, Bollinger 1992). Pre-warm: 4 pontos antes da janela garantem MA válida desde o início. Default: 1y.</div>
+<div id="bollingerNote" style="display:none;font-size:.72rem;color:var(--yellow);margin-top:4px"></div>
+<div class="src">Retornos mensais. MA5 fixo · σ populacional (÷N). Upper em verde, Lower em vermelho. Pontos fora das bandas destacados. Bandas suprimidas em 3m/6m (σ instável).</div>
 </div>
 
 <!-- S25: TLH MONITOR -->
@@ -773,14 +774,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:50:00-03:00'); // BRT (UTC-3)
-const VERSION = '1.19';
+const GENERATED_AT = new Date('2026-04-08T15:54:49-03:00'); // BRT (UTC-3)
+const VERSION = '1.20';
 
 const DATA = {
-  "_generated": "2026-04-08T15:50:00",
-  "_generated_brt": "2026-04-08T15:50:00-03:00",
+  "_generated": "2026-04-08T15:54:49",
+  "_generated_brt": "2026-04-08T15:54:49-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1383,
+  "cambio": 5.1126,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -799,14 +800,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.34,
+      "price": 114.36,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 104.8192,
+      "price": 104.7559,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -827,14 +828,14 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.8974,
+      "price": 62.755,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.2799,
+      "price": 62.155,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -868,7 +869,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3549272,
+    "patrimonio_atual": 3532150,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2335,7 +2336,7 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.8,
+      "atual": 36.7,
       "alvo": 39.5
     },
     "AVGS": {
@@ -2343,11 +2344,11 @@ const DATA = {
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.6,
+      "atual": 24.5,
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 3.4,
+      "atual": 3.5,
       "alvo": 15.0
     },
     "HODL11": {
@@ -2361,7 +2362,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.34,
+      "price": 114.36,
       "ucits": "AVGS.L"
     },
     {
@@ -2369,7 +2370,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 104.8192,
+      "price": 104.7559,
       "ucits": "AVGS.L"
     },
     {
@@ -2393,7 +2394,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.8974,
+      "price": 62.755,
       "ucits": "AVEM.L"
     },
     {
@@ -2401,7 +2402,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.2799,
+      "price": 62.155,
       "ucits": "AVEM.L"
     },
     {
@@ -2417,7 +2418,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2437572.0,
+    "crescReal": 2420450.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2756,7 +2757,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.19"
+  "version": "1.20"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3783,19 +3784,48 @@ function buildBollinger(period) {
   const lower = lowerAll.slice(offset);
   const retPlot = retAll.slice(offset);
 
+  // Períodos curtos (3m/6m): σ instável — suprimir bandas, mostrar só retorno
+  const SHORT = period === '3m' || period === '6m';
+
+  // Breakout detection: retorno fora das bandas
+  const retRadius = retPlot.map((v, i) => {
+    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 2;
+    if (v > upper[i] || v < lower[i]) return 6;
+    return 2;
+  });
+  const retPointBg = retPlot.map((v, i) => {
+    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 'rgba(255,255,255,.4)';
+    if (v > upper[i]) return '#22c55e';   // acima da banda superior → verde
+    if (v < lower[i]) return '#ef4444';   // abaixo da banda inferior → vermelho
+    return 'rgba(255,255,255,.4)';
+  });
+  const retPointBorder = retPlot.map((v, i) => {
+    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 'transparent';
+    if (v > upper[i]) return '#16a34a';
+    if (v < lower[i]) return '#dc2626';
+    return 'transparent';
+  });
+
   if (charts.bollinger) charts.bollinger.destroy();
   if (checkMinPoints('bollingerChart', labels.length, 1)) return;
+
+  const datasets = [];
+  if (!SHORT) {
+    datasets.push(
+      { label: 'Upper (MA5+2σ)', data: upper, borderColor: 'rgba(34,197,94,.55)', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.3 },
+      { label: 'MA5', data: MA5, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
+      { label: 'Lower (MA5-2σ)', data: lower, borderColor: 'rgba(239,68,68,.55)', borderWidth: 1, pointRadius: 0, fill: '-2', backgroundColor: 'rgba(59,130,246,.07)', tension: 0.3 }
+    );
+  }
+  datasets.push(
+    { label: 'Retorno %', data: retPlot, borderColor: 'rgba(255,255,255,.45)', borderWidth: 1,
+      pointRadius: retRadius, pointBackgroundColor: retPointBg, pointBorderColor: retPointBorder, pointBorderWidth: 1,
+      fill: false, tension: 0.1 }
+  );
+
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
     type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Upper (MA5+2σ)', data: upper, borderColor: 'rgba(239,68,68,.5)', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.3 },
-        { label: 'MA5', data: MA5, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
-        { label: 'Lower (MA5-2σ)', data: lower, borderColor: 'rgba(34,197,94,.5)', borderWidth: 1, pointRadius: 0, fill: '-2', backgroundColor: 'rgba(59,130,246,.07)', tension: 0.3 },
-        { label: 'Retorno %', data: retPlot, borderColor: 'rgba(255,255,255,.5)', borderWidth: 1, pointRadius: 2, fill: false, tension: 0.1 },
-      ]
-    },
+    data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
@@ -3803,7 +3833,16 @@ function buildBollinger(period) {
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => ctx.parsed.y !== null ? ` ${ctx.dataset.label}: ${ctx.parsed.y}%` : '',
+            label: ctx => {
+              if (ctx.parsed.y === null) return '';
+              const v = ` ${ctx.dataset.label}: ${ctx.parsed.y}%`;
+              if (ctx.dataset.label === 'Retorno %') {
+                const i = ctx.dataIndex;
+                if (!SHORT && upper[i] !== null && retPlot[i] > upper[i]) return v + ' ↑ acima da banda';
+                if (!SHORT && lower[i] !== null && retPlot[i] < lower[i]) return v + ' ↓ abaixo da banda';
+              }
+              return v;
+            },
           }
         }
       },
@@ -3813,6 +3852,13 @@ function buildBollinger(period) {
       }
     }
   });
+
+  // Nota sobre período curto
+  const r5note = document.getElementById('bollingerNote');
+  if (r5note) {
+    r5note.textContent = SHORT ? '⚠️ Bandas suprimidas em 3m/6m — σ instável com poucos pontos (recomendação Quant)' : '';
+    r5note.style.display = SHORT ? 'block' : 'none';
+  }
 }
 window.setBollingerPeriod = function(p) {
   setActivePeriodBtn('bollingerPeriodBtns', p);
