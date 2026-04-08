@@ -1,22 +1,37 @@
-# Dashboard PDF — Gerar PDFs do Dashboard
+# Dashboard PDF — Gerar PDFs do Dashboard e Enviar por Email
 
-Gera 2 PDFs do dashboard: um com valores visíveis (olho aberto) e um com valores ocultos (olho fechado).
+Gera 2 PDFs do dashboard (valores abertos e fechados) e envia por email via Mail.app.
 
-**Requer:** Puppeteer + Chrome instalado localmente. Não funciona no ambiente web do Claude Code.
+**Requer:** Puppeteer instalado em `scripts/node_modules/` + macOS Mail.app configurado.
 
-## Como rodar (no PC do Diego)
+## Como rodar
 
 ```bash
-# Instalar dependência (1x)
+# Instalar Puppeteer (1x — já feito)
 cd scripts && npm install puppeteer
 
 # Gerar os 2 PDFs
 node scripts/dashboard_pdf.mjs
+
+# Enviar por email (Mail.app)
+~/claude/finance-tools/.venv/bin/python3 scripts/send_dashboard_email.py
+
+# Gerar E enviar em sequência
+node scripts/dashboard_pdf.mjs && ~/claude/finance-tools/.venv/bin/python3 scripts/send_dashboard_email.py
 ```
 
 Output:
 - `analysis/dashboard_aberto.pdf` — todos os valores visíveis
 - `analysis/dashboard_fechado.pdf` — valores absolutos ocultos (R$, USD, cotas)
+
+## Quando usar
+
+Executar sempre que rodar `/dashboard` para ter uma snapshot permanente em PDF, especialmente no check-in mensal.
+
+## Notas
+- Mail.app precisa ter a conta Gmail configurada no macOS
+- PDFs em formato A3 landscape (cabe o dashboard completo)
+- `dashboard_fechado.pdf` útil para compartilhar sem expor patrimônio
 
 ## Script
 
