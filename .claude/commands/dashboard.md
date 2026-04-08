@@ -262,9 +262,17 @@ BLOCO 5 — ANÁLISE & GOVERNANÇA (deep dive)
 - Retornos, deltas, tracking de `scorecard.md`
 - Labels: "VWRA (mercado puro)", "IPCA+ longo (RF puro)", "VWRA + RF (60/40)"
 
+**19. Benchmarks (VWRA / IPCA+ / 60-40)**
+- Tabela estática + **gráfico linha com period selector** [Desde 2009 | Desde 2013 | Desde 2020 | 5 anos | 3 anos | Tudo (21a)]
+- Default: "Desde 2009"
+- Gráfico: Target vs VWRA (base 100), linha sólida azul vs tracejada cinza
+- Cards de métricas abaixo: CAGR Target | CAGR VWRA | Delta pp/a (colorido: verde se positivo)
+- Labels: "VWRA (mercado puro)", "IPCA+ longo (RF puro)", "VWRA + RF (60/40)"
+- Período exibido no tooltip de cada botão (data início–fim)
+
 **20. KPI FIRE**
 - Progresso % (1 casa decimal)
-- Savings rate
+- Savings rate — renda estimada = R$45k/mês (`renda_estimada = 45000`; não hardcodar outro valor)
 - SWR no FIRE Day projetada (não SWR hoje)
 - Tracking Difference estimado: ~0.10% com tooltip "TER é o custo cobrado; TD é o custo real incluindo operacional e empréstimo de ações"
 
@@ -293,17 +301,36 @@ BLOCO 5 — ANÁLISE & GOVERNANÇA (deep dive)
 **27. Financial Wellness Score** (colapsável por default)
 - Nota 0-100 com breakdown
 - Não replicar P(FIRE) — já está nos KPI cards
+- **Pontuação por fator: inteiros** (`Math.round()`) — sem casas decimais. Ex: `18/25pts`, não `18.5/25pts`
+- **Fatores ordenados por peso decrescente** (mais importante primeiro): P(FIRE) 25pts → Drift/Progresso 15pts → IPCA+/SavingsRate 10pts → demais 5pts
+- **Cada fator exibe mini barra de progresso** mostrando X/max visualmente (cor semáforo)
+- Savings rate = `aporte_mensal / 45000` (renda_estimada = R$45k/mês)
+- Renda estimada não aparece visível — apenas o % resultante
 
-    | Métrica | Target | Shadow A | Shadow C |
-    |---------|--------|----------|----------|
-    | CAGR | % | % | % |
-    | Sharpe | | | |
-    | Sortino | | | |
-    | Max Drawdown | % | % | % |
-    | Volatilidade | % | % | % |
-    | Calmar | | | |
+**Cascade (S5 e S22) — lógica obrigatória**:
+```
+pisoIpca  = DATA.pisos.pisoTaxaIpcaLongo   (lido de portfolio_analytics.py PISO_TAXA_IPCA_LONGO)
+pisoRenda = DATA.pisos.pisoTaxaRendaPlus   (lido de portfolio_analytics.py PISO_TAXA_RENDA_PLUS)
+taxaIpca  = DATA.rf.ipca2040.taxa           (lido de holdings.md — taxa atual IPCA+ 2040)
+taxaRenda = DATA.rf.renda2065.taxa          (lido de holdings.md — taxa atual Renda+ 2065)
+ipcaGapPp = DATA.drift.IPCA.alvo - DATA.drift.IPCA.atual
 
-    Ao mudar período no selector, tanto o chart quanto a tabela de métricas atualizam (métricas do subperíodo selecionado).
+Prioridade:
+  #1 IPCA+ longo: SE taxaIpca >= pisoIpca E ipcaGapPp > 0 → 100% do aporte para IPCA+
+  #2 Renda+ 2065: ELIF taxaRenda >= pisoRenda → 100% do aporte para Renda+
+  #3 Equity:       ELSE → bucket equity mais subpeso (maior gap alvo-atual em DATA.drift)
+```
+**NUNCA** hardcodar `taxaAtual = 7.20` ou qualquer taxa. Sempre ler de `DATA.rf.*`.
+
+**Fan chart (S14) — eixo X**:
+- Usar anos inteiros como labels: `for (let yr = Math.ceil(startYear); yr <= endYear; yr++)`
+- Labels como strings `"2027"`, `"2028"` etc. — evita o bug de `yr.toFixed(1)` nunca terminar em `.0`
+- maxTicksLimit: 14, autoSkip: true, maxRotation: 0
+
+**Timeline (S14/S6) — period selectors**:
+- Minimum útil = **2 pontos** (não 4) — dados mensais com lacunas em 2026 têm apenas 4 pontos no intervalo 6m
+- Se labels.length < 6: exibir nota inline "⚠️ N pontos disponíveis — dados mensais com lacunas em 2026" (não bloquear o chart)
+- Adicionar `<div id="timelineSparseNote">` acima do canvas para esta nota
 
 **Runtime assertions + live fetch**:
 ```js
@@ -369,9 +396,16 @@ CHECKLIST — Zero Hardcoded Values
 [ ] Tornado não reutiliza valores de sessão anterior (rodar script fresh)
 [ ] drift.IPCA soma TODOS os títulos IPCA+ de holdings.md (2029 + 2040 + outros)
 [ ] CAGR "com aportes" aparece SOMENTE em Attribution, nunca nos KPI cards principais
-[ ] Progresso FIRE exibe 1 casa decimal (ex: 25.2%, não 25.17%)
-[ ] Gatilhos: Equity listado antes de IPCA+ na seção Próximas Ações
+[ ] Progresso FIRE exibe 1 casa decimal no detalhe (ex: 25.2%), pontos como inteiro (ex: 4/15pts)
+[ ] Cascade: IPCA+ #1 → Renda+ #2 → Equity #3 (nunca equity primeiro)
+[ ] Cascade usa DATA.rf.ipca2040.taxa e DATA.rf.renda2065.taxa — nenhuma taxa hardcoded
+[ ] Cascade usa DATA.pisos.pisoTaxaIpcaLongo e DATA.pisos.pisoTaxaRendaPlus (não pisoTaxaIpcaIpca)
 [ ] Wellness Score: card menor/abaixo de P(FIRE) no layout
+[ ] Wellness Score: pontos como inteiros Math.round(), fatores ordenados por peso decrescente, mini barras visíveis
+[ ] Fan chart: labels do eixo X são anos inteiros ("2027", "2028"...) — não decimais ("2027.3")
+[ ] Timeline 6m/1y: funciona com mínimo 2 pontos, nota informativa se < 6 pontos
+[ ] Shadow Portfolios: gráfico com period selector presente
+[ ] Savings rate: baseado em renda_estimada = R$45k/mês
 [ ] Cada valor em DATA{} tem comentário inline com fonte (arquivo + linha ou flag de script)
 ```
 

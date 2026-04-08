@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qE 'agentes/contexto/carteira\\.md|agentes/memoria/.*\\.md|agentes/contexto/gatilhos\\.md'; then echo '⚠️  PROTEGIDO: arquivo source-of-truth. Edição requer confirmação (Bookkeeper flow). Use AskUserQuestion para confirmar com Diego.' && exit 1; fi"
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qE 'agentes/contexto/carteira\\.md|agentes/memoria/.*\\.md|agentes/contexto/gatilhos\\.md'; then echo '⚠️  PROTEGIDO: arquivo source-of-truth. Edição requer confirmação (Bookkeeper flow). Use AskUserQuestion para confirmar com Diego.' && exit 1; fi; if echo \"$CLAUDE_TOOL_INPUT\" | grep -q 'analysis/dashboard\\.html'; then echo '🚫 BLOQUEADO: dashboard.html é gerado pelo script. Edite .claude/commands/dashboard.md e regenere com /dashboard.' && exit 1; fi"
           }
         ]
       }
