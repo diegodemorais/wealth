@@ -63,7 +63,7 @@ Seções (todas obrigatórias, nesta ordem):
 11. **Fan chart P10/P50/P90** (projeção patrimônio até FIRE 2040 com gatilho R$13.4M pontilhado)
 12. **Guardrails visuais** (tabela drawdown 0-15%/15-25%/25-35%/>35% → cortes 0%/10%/20%/30%, piso R$180k, teto R$350k, cores verde→vermelho)
 13. **Tabela posições** (var semanal se disponível; colunas PM e VarSem com classe `hide-mobile`)
-14. **Calculadora de aporte** (JS interativa). **Cascade obrigatório**: (1º) IPCA+ longo se taxa ≥ 6.0% E gap > 0 → 100% do aporte vai para TD; (2º) Renda+ se taxa ≥ 6.5% E gap > 0; (3º) Equity → bucket mais subpeso. A janela de IPCA+ está aberta (taxa ~7.20% > piso 6.0%), portanto aporte vai para IPCA+ PRIMEIRO até atingir 15%. Só depois equity. Mostrar qual etapa do cascade está ativa.
+14. **Calculadora de aporte** (JS interativa). **Cascade obrigatório** — ler pisos e alvos de `scripts/portfolio_analytics.py` (`PISO_TAXA_IPCA_LONGO`, `PISO_TAXA_RENDA_PLUS`, `ALVO_IPCA_LONGO_PCT`) e `scripts/checkin_mensal.py` (`PESOS_TARGET`). Lógica: (1º) IPCA+ longo se taxa ≥ piso E gap > 0 → 100% do aporte; (2º) Renda+ se taxa ≥ piso E gap > 0; (3º) Equity → bucket mais subpeso. Mostrar qual etapa do cascade está ativa e por quê. Taxas atuais vêm do WebSearch ou holdings.md.
 15. **Shadows** (**incluir Shadow C**: 79% VWRA + IPCA+ + crypto)
 16. **Bollinger Bands sobre retorno acumulado** (NÃO sobre câmbio). MA5 ± 2σ aplicado sobre retorno mensal acumulado (TWR proxy) da carteira. Fonte: `historico_carteira.csv` — computar retorno mensal = `pat[i]/pat[i-1] - 1`, acumular. Bollinger identifica meses fora da banda (oportunidade/alerta). Se dados insuficientes (<12 meses), usar retorno do equity (SWRD.L) como proxy.
 17. **TLH monitor**
