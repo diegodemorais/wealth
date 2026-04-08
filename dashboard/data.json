@@ -1,8 +1,8 @@
 {
-  "_generated": "2026-04-08T16:03:13",
-  "_generated_brt": "2026-04-08T16:03:13-03:00",
+  "_generated": "2026-04-08T17:17:54",
+  "_generated_brt": "2026-04-08T17:17:54-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1152,
+  "cambio": 5.1033,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -21,14 +21,14 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.34,
+      "price": 114.74,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 104.67,
+      "price": 105.42,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -49,14 +49,14 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.755,
+      "price": 63.01,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.17,
+      "price": 62.62,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3533318,
+    "patrimonio_atual": 3532263,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -103,7 +103,8 @@
     "inss_anual": 18000,
     "inss_inicio_ano": 12,
     "ipca_anual": 0.04,
-    "renda_estimada": 45000
+    "renda_estimada": 45000,
+    "ano_atual": 2026
   },
   "guardrails": [
     {
@@ -955,7 +956,7 @@
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -1129,7 +1130,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -1393,7 +1394,7 @@
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -1557,11 +1558,11 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 36.8,
+      "atual": 36.7,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.9,
+      "atual": 29.0,
       "alvo": 23.7
     },
     "AVEM": {
@@ -1583,7 +1584,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.34,
+      "price": 114.74,
       "ucits": "AVGS.L"
     },
     {
@@ -1591,7 +1592,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 104.67,
+      "price": 105.42,
       "ucits": "AVGS.L"
     },
     {
@@ -1615,7 +1616,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.755,
+      "price": 63.01,
       "ucits": "AVEM.L"
     },
     {
@@ -1623,7 +1624,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.17,
+      "price": 62.62,
       "ucits": "AVEM.L"
     },
     {
@@ -1639,7 +1640,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2421618.0,
+    "crescReal": 2420563.0,
     "_estimativa": true
   },
   "shadows": {
@@ -1870,6 +1871,8 @@
         "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
         "benchmark_ter": 0.22,
         "current_ter": 0.247,
+        "shadow_c_ter": 0.207,
+        "alpha_anual": 0.0016,
         "thresholds": [
           {
             "max_delta_pp": 0,

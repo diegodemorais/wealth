@@ -775,14 +775,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T17:10:17-03:00'); // BRT (UTC-3)
-const VERSION = '1.28';
+const GENERATED_AT = new Date('2026-04-08T17:17:54-03:00'); // BRT (UTC-3)
+const VERSION = '1.30';
 
 const DATA = {
-  "_generated": "2026-04-08T17:10:17",
-  "_generated_brt": "2026-04-08T17:10:17-03:00",
+  "_generated": "2026-04-08T17:17:54",
+  "_generated_brt": "2026-04-08T17:17:54-03:00",
   "date": "2026-04-08",
-  "cambio": 5.102,
+  "cambio": 5.1033,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -801,14 +801,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.72,
+      "price": 114.74,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.345,
+      "price": 105.42,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -829,14 +829,14 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.1,
+      "price": 63.01,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.515,
+      "price": 62.62,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -870,7 +870,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3531354,
+    "patrimonio_atual": 3532263,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -883,7 +883,8 @@ const DATA = {
     "inss_anual": 18000,
     "inss_inicio_ano": 12,
     "ipca_anual": 0.04,
-    "renda_estimada": 45000
+    "renda_estimada": 45000,
+    "ano_atual": 2026
   },
   "guardrails": [
     {
@@ -1735,7 +1736,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -1909,7 +1910,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2173,7 +2174,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -2363,7 +2364,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.72,
+      "price": 114.74,
       "ucits": "AVGS.L"
     },
     {
@@ -2371,7 +2372,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.345,
+      "price": 105.42,
       "ucits": "AVGS.L"
     },
     {
@@ -2395,7 +2396,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.1,
+      "price": 63.01,
       "ucits": "AVEM.L"
     },
     {
@@ -2403,7 +2404,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.515,
+      "price": 62.62,
       "ucits": "AVEM.L"
     },
     {
@@ -2419,7 +2420,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2419654.0,
+    "crescReal": 2420563.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2650,6 +2651,8 @@ const DATA = {
         "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
         "benchmark_ter": 0.22,
         "current_ter": 0.247,
+        "shadow_c_ter": 0.207,
+        "alpha_anual": 0.0016,
         "thresholds": [
           {
             "max_delta_pp": 0,
@@ -2758,7 +2761,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.28"
+  "version": "1.30"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3519,12 +3522,12 @@ function buildIncomeChart() {
 // ── S17: Fee Analysis ─────────────────────────────────────────
 function buildFeeAnalysis() {
   const _terCfg = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
-  const _currTer = _terCfg.current_ter  ?? 0.247;
-  const _benchTer = _terCfg.benchmark_ter ?? 0.220;
-  const _shadowCTer = 0.207;
+  const _currTer   = _terCfg.current_ter   ?? 0.247;
+  const _benchTer  = _terCfg.benchmark_ter ?? 0.220;
+  const _shadowCTer = _terCfg.shadow_c_ter ?? 0.207;
   const pat = DATA.premissas.patrimonio_atual;
-  const anos = 14; // horizonte fixo FIRE 2040
-  const ALPHA_ANNUAL = 0.00160;
+  const anos = DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual;
+  const ALPHA_ANNUAL = _terCfg.alpha_anual ?? 0.00160;
 
   const portfolios = [
     { label: 'Carteira atual', ter: _currTer, isBaseline: false },
@@ -3626,15 +3629,19 @@ function buildPosicoes() {
 function buildCustoBase() {
   const tbody = document.getElementById('custoBaseBody');
   if (!tbody) return;
-  const buckets = { SWRD: { meta: 50 }, AVGS: { meta: 30 }, AVEM: { meta: 20 } };
-  const bucketMap = { SWRD: 'SWRD', AVGS: 'AVGS', AVEM: 'AVEM',
-    AVUV: 'AVGS', AVDV: 'AVGS', USSC: 'AVGS',
-    EIMI: 'AVEM', AVES: 'AVEM', DGS: 'AVEM' };
+  // Deriva buckets equity e metas intra-equity de DATA.pesosTarget
+  const EQUITY_BUCKETS = ['SWRD', 'AVGS', 'AVEM'];
+  const totalEquityTarget = EQUITY_BUCKETS.reduce((s, k) => s + (DATA.pesosTarget[k] || 0), 0);
+  const buckets = {};
+  EQUITY_BUCKETS.forEach(k => {
+    buckets[k] = { meta: totalEquityTarget > 0 ? Math.round(DATA.pesosTarget[k] / totalEquityTarget * 100) : 0 };
+  });
   const acc = {};
-  Object.keys(buckets).forEach(b => { acc[b] = { valor: 0, custo: 0 }; });
-  Object.entries(DATA.posicoes).forEach(([ticker, p]) => {
-    const b = bucketMap[ticker];
-    if (!b || !acc[b]) return;
+  EQUITY_BUCKETS.forEach(b => { acc[b] = { valor: 0, custo: 0 }; });
+  // Usa DATA.posicoes[ticker].bucket diretamente — sem bucketMap hardcoded
+  Object.entries(DATA.posicoes).forEach(([, p]) => {
+    const b = p.bucket;
+    if (!acc[b]) return;
     acc[b].valor += p.qty * p.price;
     acc[b].custo += p.qty * (p.avg_cost ?? p.pm ?? p.price);
   });
@@ -4215,21 +4222,29 @@ function renderKPIs() {
     const deltaFilho  = filho53  - base53;
     const casado50 = Math.max(0, Math.round((base50 + deltaCasado) * 10) / 10);
     const filho50  = Math.max(0, Math.round((base50 + deltaFilho)  * 10) / 10);
+    const _anoAtual = DATA.premissas.ano_atual ?? new Date().getFullYear();
+    const _idadeAtual = DATA.premissas.idade_atual;
+    const _idadeFire53 = DATA.premissas.idade_fire_alvo;
+    const _idadeFire50 = DATA.premissas.idade_fire_aspiracional;
+    const ano53 = _anoAtual + (_idadeFire53 - _idadeAtual);
+    const ano50 = _anoAtual + (_idadeFire50 - _idadeAtual);
+    const tagCasado = ss[1] ? `R$${(ss[1].custo/1000).toFixed(0)}k/ano` : 'Casado';
+    const tagFilho  = ss[2] ? `R$${(ss[2].custo/1000).toFixed(0)}k/ano` : 'c/ Filho';
     const grupos = [
       { label: 'Solteiro', icon: '🧑', color: '#3b82f6',
         cards: [
-          { age: 53, p: base53,  tag: '✅ Escolhida', year: 2040, chosen: true },
-          { age: 50, p: base50,  tag: '🚀 Aspiracional', year: 2037, chosen: false },
+          { age: _idadeFire53, p: base53,  tag: '✅ Escolhida',    year: ano53, chosen: true },
+          { age: _idadeFire50, p: base50,  tag: '🚀 Aspiracional', year: ano50, chosen: false },
         ]},
       { label: 'Casado',   icon: '💍', color: '#8b5cf6',
         cards: [
-          { age: 53, p: casado53, tag: 'R$270k/ano', year: 2040, chosen: false },
-          { age: 50, p: casado50, tag: 'Aprox.', year: 2037, chosen: false },
+          { age: _idadeFire53, p: casado53, tag: tagCasado,    year: ano53, chosen: false },
+          { age: _idadeFire50, p: casado50, tag: 'Aprox.',     year: ano50, chosen: false },
         ]},
       { label: 'c/ Filho', icon: '👨‍👩‍👧', color: '#06b6d4',
         cards: [
-          { age: 53, p: filho53,  tag: 'R$300k/ano', year: 2040, chosen: false },
-          { age: 50, p: filho50,  tag: 'Aprox.', year: 2037, chosen: false },
+          { age: _idadeFire53, p: filho53,  tag: tagFilho,     year: ano53, chosen: false },
+          { age: _idadeFire50, p: filho50,  tag: 'Aprox.',     year: ano50, chosen: false },
         ]},
     ];
     grupos.forEach(g => {

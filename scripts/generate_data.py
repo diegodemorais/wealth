@@ -482,6 +482,7 @@ def main():
         "inss_inicio_ano":        premissas_raw.get("inss_inicio_ano", 12),
         "ipca_anual":             premissas_raw.get("ipca_anual", 0.04),
         "renda_estimada":         RENDA_ESTIMADA,
+        "ano_atual":              datetime.now().year,
     }
 
     # Guardrails — suporta lista de tuples (dd_min, dd_max, corte, desc) ou dicts

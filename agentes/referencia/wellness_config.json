@@ -96,6 +96,8 @@
       "description": "Delta TER carteira vs VWRA benchmark. 30bps/ano = ~4% patrimônio em 14 anos (Sharpe 2013, Vanguard 'Cost Matters').",
       "benchmark_ter": 0.220,
       "current_ter": 0.247,
+      "shadow_c_ter": 0.207,
+      "alpha_anual": 0.00160,
       "thresholds": [
         { "max_delta_pp": 0,   "pts": 5 },
         { "max_delta_pp": 0.1, "pts": 3 },
