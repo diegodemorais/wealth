@@ -7,6 +7,7 @@ Uso:
     python3 scripts/build_dashboard.py --data dashboard/data.json
     python3 scripts/build_dashboard.py --template dashboard/template.html
     python3 scripts/build_dashboard.py --out dashboard/index.html
+    python3 scripts/build_dashboard.py --major "Descrição do milestone"
 """
 
 import argparse
@@ -16,13 +17,41 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-TEMPLATE = ROOT / "dashboard" / "template.html"
-DATA_FILE = ROOT / "dashboard" / "data.json"
-OUTPUT = ROOT / "dashboard" / "index.html"
-PLACEHOLDER = "__DATA_PLACEHOLDER__"
+TEMPLATE     = ROOT / "dashboard" / "template.html"
+DATA_FILE    = ROOT / "dashboard" / "data.json"
+OUTPUT       = ROOT / "dashboard" / "index.html"
+VERSION_FILE = ROOT / "dashboard" / "version.json"
+PLACEHOLDER  = "__DATA_PLACEHOLDER__"
 
 
-def build(data_path: Path, template_path: Path, out_path: Path) -> None:
+def bump_version(major_label: str | None = None) -> dict:
+    """Lê version.json, incrementa minor (ou major se --major), salva e retorna."""
+    if VERSION_FILE.exists():
+        v = json.loads(VERSION_FILE.read_text())
+    else:
+        v = {"major": 1, "minor": 0, "label": "", "date": "", "history": []}
+
+    if major_label:
+        # Major bump — requer confirmação prévia do Diego
+        v["major"] += 1
+        v["minor"] = 0
+        v["label"] = major_label
+    else:
+        v["minor"] += 1
+
+    from datetime import date
+    v["date"] = str(date.today())
+
+    version_str = f"{v['major']}.{v['minor']}"
+    entry = {"version": version_str, "date": v["date"], "label": v.get("label", "")}
+    v.setdefault("history", []).append(entry)
+
+    VERSION_FILE.write_text(json.dumps(v, indent=2, ensure_ascii=False))
+    return v
+
+
+def build(data_path: Path, template_path: Path, out_path: Path,
+          major_label: str | None = None) -> None:
     # 1. Ler dados
     if not data_path.exists():
         print(f"❌ Arquivo de dados não encontrado: {data_path}", file=sys.stderr)
@@ -43,33 +72,36 @@ def build(data_path: Path, template_path: Path, out_path: Path) -> None:
         print(f"❌ Placeholder '{PLACEHOLDER}' não encontrado no template", file=sys.stderr)
         sys.exit(1)
 
-    # 3. Gerar timestamp BRT (UTC-3)
+    # 3. Versão (auto-incrementa minor)
+    ver = bump_version(major_label)
+    version_str = f"{ver['major']}.{ver['minor']}"
+
+    # 4. Gerar timestamp BRT (UTC-3)
     brt = timezone(timedelta(hours=-3))
     now_brt = datetime.now(brt)
     generated_at = now_brt.strftime("%Y-%m-%dT%H:%M:%S-03:00")
 
-    # 4. Montar bloco JavaScript DATA
-    data_js = _build_data_js(data, generated_at)
+    # 5. Montar bloco JavaScript DATA
+    data["version"] = version_str
+    data_js = _build_data_js(data, generated_at, version_str)
 
-    # 5. Substituir placeholder
+    # 6. Substituir placeholder
     html = template.replace(PLACEHOLDER, data_js, 1)
 
-    # 6. Escrever output
+    # 7. Escrever output
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
     print(f"✅ Dashboard gerado: {out_path}")
-    print(f"   Data/hora: {generated_at}")
+    print(f"   Versão: v{version_str} | Data/hora: {generated_at}")
     print(f"   Tamanho: {len(html):,} chars ({len(html.splitlines()):,} linhas)")
 
 
-def _build_data_js(data: dict, generated_at: str) -> str:
-    """Converte dashboard_data.json para o bloco JS const DATA = {...}"""
-
-    # Serializa JSON com indentação para manter legibilidade no HTML
+def _build_data_js(data: dict, generated_at: str, version: str) -> str:
+    """Converte dashboard/data.json para o bloco JS const DATA = {...}"""
     data_json = json.dumps(data, ensure_ascii=False, indent=2)
-
     lines = [
         f"const GENERATED_AT = new Date('{generated_at}'); // BRT (UTC-3)",
+        f"const VERSION = '{version}';",
         "",
         f"const DATA = {data_json};",
     ]
@@ -77,13 +109,15 @@ def _build_data_js(data: dict, generated_at: str) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build dashboard.html from template + data")
-    parser.add_argument("--data", type=Path, default=DATA_FILE)
+    parser = argparse.ArgumentParser(description="Build dashboard/index.html from template + data")
+    parser.add_argument("--data",     type=Path, default=DATA_FILE)
     parser.add_argument("--template", type=Path, default=TEMPLATE)
-    parser.add_argument("--out", type=Path, default=OUTPUT)
+    parser.add_argument("--out",      type=Path, default=OUTPUT)
+    parser.add_argument("--major",    type=str,  default=None,
+                        help="Bump major version com esta descrição de milestone")
     args = parser.parse_args()
 
-    build(args.data, args.template, args.out)
+    build(args.data, args.template, args.out, args.major)
 
 
 if __name__ == "__main__":

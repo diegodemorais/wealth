@@ -90,6 +90,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
+<div class="meta" id="headerVersion" style="font-size:0.65rem;opacity:0.35;margin-top:1px"></div>
 </div>
 
 <!-- S1: PRÓXIMAS AÇÕES -->
@@ -1785,13 +1786,18 @@ async function fetchLive() {
 }
 fetchLive();
 
-// Render generation timestamp in header
+// Render generation timestamp + version in header
 (function() {
   const el = document.getElementById('headerGenerated');
-  if (!el) return;
-  const opts = { timeZone: 'America/Sao_Paulo', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' };
-  const formatted = GENERATED_AT.toLocaleString('pt-BR', opts).replace(',', '');
-  el.textContent = 'Gerado em ' + formatted + ' BRT';
+  if (el) {
+    const opts = { timeZone: 'America/Sao_Paulo', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' };
+    const formatted = GENERATED_AT.toLocaleString('pt-BR', opts).replace(',', '');
+    el.textContent = 'Gerado em ' + formatted + ' BRT';
+  }
+  const vEl = document.getElementById('headerVersion');
+  if (vEl && typeof VERSION !== 'undefined') {
+    vEl.textContent = 'v' + VERSION;
+  }
 })();
 
 // ═══════════════════════════════════════════════════════════════
