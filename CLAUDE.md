@@ -27,6 +27,7 @@ Classifique CADA pergunta antes de processar:
 - **Factor/ETFs** → `factor` | **Fixed Income** → `rf` | **FIRE** → `fire`
 - **Wealth/Tax** → `tax` | **Crypto/Tactical** → `risco` | **Macro/FX** → `macro`
 - **Stress-test** → `advocate` | **Dados/numeros** → `bookkeeper` (Head NAO atualiza diretamente)
+- **Dashboard/pipeline/BI** → `dev` (arquitetura, chart type, zero hardcoded, review de código)
 - **Behavioral** → 4 gatilhos automáticos: (1) drawdown >10%, (2) mudança não-planejada, (3) votação unânime, (4) retro mensal
 - **CIO** → auto-acionado quando 3+ agentes participam (Full-Path cross-domain)
 - **Outside View** → obrigatório em decisões >5% portfolio; traz base rates e reference class
