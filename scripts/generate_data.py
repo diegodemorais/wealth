@@ -509,18 +509,29 @@ def main():
             spending[k] = {"gasto": v.get("gasto"), "inicio": v.get("inicio", 0), "fim": v.get("fim", 99)}
 
     # Spending sensibilidade — state usa {label, pfire}; template espera {label, custo, base, fav, stress}
-    # Fallback: usar valores do dashboard anterior se state não tiver schema completo
+    # Se fav/stress ausentes no state, inferir via delta do pfire53 base→fav/stress
     _sens_raw = state.get("spending", {}).get("scenarios", [])
     spending_sens = []
     _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
                   "Solteiro/FIRE Day": 250_000, "Pós-casamento": 270_000, "Casamento+filho": 300_000}
+    _pf53_base   = pfire53.get("base")
+    _pf53_fav    = pfire53.get("fav")
+    _pf53_stress = pfire53.get("stress")
+    _delta_fav    = (_pf53_fav   - _pf53_base) if (_pf53_fav    is not None and _pf53_base is not None) else None
+    _delta_stress = (_pf53_stress - _pf53_base) if (_pf53_stress is not None and _pf53_base is not None) else None
     for s in _sens_raw:
         label = s.get("label", "")
         custo = s.get("custo", _custo_map.get(label, 0))
         base  = s.get("pfire", s.get("base"))
+        fav    = s.get("fav")
+        stress = s.get("stress")
+        if fav is None and base is not None and _delta_fav is not None:
+            fav = round(min(99.9, max(0, base + _delta_fav)), 1)
+        if stress is None and base is not None and _delta_stress is not None:
+            stress = round(min(99.9, max(0, base + _delta_stress)), 1)
         spending_sens.append({
             "label": label, "custo": custo,
-            "base": base, "fav": s.get("fav"), "stress": s.get("stress"),
+            "base": base, "fav": fav, "stress": stress,
         })
 
     # Pisos cascade

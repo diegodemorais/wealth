@@ -772,14 +772,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T15:22:16-03:00'); // BRT (UTC-3)
-const VERSION = '1.13';
+const GENERATED_AT = new Date('2026-04-08T15:31:10-03:00'); // BRT (UTC-3)
+const VERSION = '1.14';
 
 const DATA = {
-  "_generated": "2026-04-08T15:22:16",
-  "_generated_brt": "2026-04-08T15:22:16-03:00",
+  "_generated": "2026-04-08T15:31:10",
+  "_generated_brt": "2026-04-08T15:31:10-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1054,
+  "cambio": 5.1078,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -798,14 +798,14 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.455,
+      "price": 114.4904,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.135,
+      "price": 105.12,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -826,14 +826,14 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.88,
+      "price": 62.8346,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.27,
+      "price": 62.2233,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -867,7 +867,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3530450,
+    "patrimonio_atual": 3531719,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -935,22 +935,22 @@ const DATA = {
       "label": "R$250k",
       "custo": 250000,
       "base": 90.4,
-      "fav": null,
-      "stress": null
+      "fav": 94.1,
+      "stress": 86.8
     },
     {
       "label": "R$270k",
       "custo": 270000,
       "base": 85.0,
-      "fav": null,
-      "stress": null
+      "fav": 88.7,
+      "stress": 81.4
     },
     {
       "label": "R$300k",
       "custo": 300000,
       "base": 82.1,
-      "fav": null,
-      "stress": null
+      "fav": 85.8,
+      "stress": 78.5
     }
   ],
   "saude_base": 18000,
@@ -2360,7 +2360,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.455,
+      "price": 114.4904,
       "ucits": "AVGS.L"
     },
     {
@@ -2368,7 +2368,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.135,
+      "price": 105.12,
       "ucits": "AVGS.L"
     },
     {
@@ -2392,7 +2392,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.88,
+      "price": 62.8346,
       "ucits": "AVEM.L"
     },
     {
@@ -2400,7 +2400,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.27,
+      "price": 62.2233,
       "ucits": "AVEM.L"
     },
     {
@@ -2416,7 +2416,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2418750.0,
+    "crescReal": 2420019.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2505,18 +2505,18 @@ const DATA = {
         "label": "Savings rate",
         "max": 15,
         "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
-        "_note_thresholds": "Thresholds em % (aporte/custo_vida*100). Ex: 139% = aporte cobre 1.39× o custo de vida. ≥120% = excelente, ≥80% = ok, ≥50% = atenção.",
+        "_note_thresholds": "Thresholds em % — definição padrão: aporte/(aporte+custo_vida). Ex: R$25k/(R$25k+R$20.8k) = 54.6%. ≥50% = excelente, ≥40% = ok, ≥25% = atenção.",
         "thresholds": [
           {
-            "min_pct": 120,
+            "min_pct": 50,
             "pts": 15
           },
           {
-            "min_pct": 80,
+            "min_pct": 40,
             "pts": 10
           },
           {
-            "min_pct": 50,
+            "min_pct": 25,
             "pts": 5
           },
           {
@@ -2755,7 +2755,7 @@ const DATA = {
       ]
     }
   ],
-  "version": "1.13"
+  "version": "1.14"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -2879,11 +2879,12 @@ function calcWellness() {
   // ── Savings rate (15pts) ──────────────────────────────────────
   const srM = (cfg.metrics || []).find(m => m.id === 'savings_rate') || {};
   const srMax = srM.max ?? 15;
-  // SR = aporte / custo_vida_mensal (aporte como múltiplo do custo de vida — mais significativo que aporte/renda)
+  // SR = aporte / (aporte + custo_vida_mensal) — definição padrão (0-100%)
   const _custoMensalSR = DATA.premissas.custo_vida_base / 12;
-  const sr = DATA.premissas.aporte_mensal / _custoMensalSR;
-  const srPct = sr * 100; // ex: 1.39 → 139%
-  const srThr = srM.thresholds || [{min_pct:35,pts:15},{min_pct:25,pts:10},{min_pct:15,pts:5},{min_pct:0,pts:0}];
+  const _aporteSR = DATA.premissas.aporte_mensal;
+  const sr = _aporteSR / (_aporteSR + _custoMensalSR);
+  const srPct = sr * 100; // ex: 54.6%
+  const srThr = srM.thresholds || [{min_pct:50,pts:15},{min_pct:40,pts:10},{min_pct:25,pts:5},{min_pct:0,pts:0}];
   let srPts = 0;
   for (const t of srThr) { if (srPct >= t.min_pct) { srPts = t.pts; break; } }
   add('Savings rate', srPts, srMax, col(srPts, srM.colors?.good??15, srM.colors?.warn??5), `~${srPct.toFixed(0)}%`);
@@ -3850,7 +3851,13 @@ function buildBacktest(period) {
         tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10 }, grid: { color: 'rgba(71,85,105,.2)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: function(val, idx) {
+          const label = this.getLabelForValue(val);
+          if (!label) return '';
+          const [y, m] = label.split('-');
+          const mNames = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+          return `${mNames[(+m||1)-1]}/${y.slice(2)}`;
+        }}, grid: { color: 'rgba(71,85,105,.2)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.2)' } }
       }
     }
@@ -4000,11 +4007,12 @@ function renderKPIs() {
   heroProgEl.textContent = fmtPct(progPct);
   heroProgEl.style.color = progPct >= 50 ? '#22c55e' : '#eab308';
   const _custoMensalHero = DATA.premissas.custo_vida_base / 12;
-  const srHero = DATA.premissas.aporte_mensal / _custoMensalHero;
+  const _aporteHero = DATA.premissas.aporte_mensal;
+  const srHero = _aporteHero / (_aporteHero + _custoMensalHero);
   const heroSrEl = document.getElementById('heroSavings');
   heroSrEl.textContent = fmtPct(srHero * 100);
-  heroSrEl.style.color = srHero >= 1.5 ? '#22c55e' : srHero >= 1.0 ? '#eab308' : '#ef4444';
-  document.getElementById('heroSavingsSub').textContent = `R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k aporte / R$${(_custoMensalHero/1000).toFixed(1)}k custo`;
+  heroSrEl.style.color = srHero >= 0.5 ? '#22c55e' : srHero >= 0.4 ? '#eab308' : '#ef4444';
+  document.getElementById('heroSavingsSub').textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_custoMensalHero/1000).toFixed(1)}k custo`;
 
   document.getElementById('kpiPat').textContent = `R$ ${(totalBrl/1000000).toFixed(2)}M`;
   document.getElementById('kpiPatUsd').textContent = `USD ${(totalEquityUsd/1000).toFixed(0)}k equity`;
@@ -4028,14 +4036,13 @@ function renderKPIs() {
   document.getElementById('pfirePatLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / R$13.4M`;
   document.getElementById('pfirePatPct').textContent = fmtPct(progPct);
   document.getElementById('pfirePatFill').style.width = Math.min(100, progPct) + '%';
-  const _rendaEst = DATA.premissas.renda_estimada || 62000;
-  const sr = DATA.premissas.aporte_mensal / _rendaEst;
-  document.getElementById('savingsRate').textContent = fmtPct(sr*100);
-  document.getElementById('savingsRateFill').style.width = Math.min(100, sr*100 / 50 * 100) + '%';
-  // Atualizar subtitle dinamicamente (evitar divergência com Wellness)
-  const srSubEl = document.getElementById('savingsRateSub');
   const _custoMensal = DATA.premissas.custo_vida_base / 12;
-  if (srSubEl) srSubEl.textContent = `Aporte R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / Custo vida R$${(_custoMensal/1000).toFixed(1)}k/mês`;
+  const _aporteKPI = DATA.premissas.aporte_mensal;
+  const sr = _aporteKPI / (_aporteKPI + _custoMensal);
+  document.getElementById('savingsRate').textContent = fmtPct(sr*100);
+  document.getElementById('savingsRateFill').style.width = Math.min(100, sr * 2 * 100) + '%'; // 50% = full bar
+  const srSubEl = document.getElementById('savingsRateSub');
+  if (srSubEl) srSubEl.textContent = `Aporte R$${(_aporteKPI/1000).toFixed(0)}k / Custo vida R$${(_custoMensal/1000).toFixed(1)}k/mês`;
 
   // TER — lê de wellness_config
   const _terCfgKPI = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};

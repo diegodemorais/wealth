@@ -1,6 +1,6 @@
 # Dashboard — Gerar HTML da Carteira
 
-Regenera `analysis/dashboard.html` — dashboard single-file com Chart.js, dark theme, responsivo.
+Regenera `dashboard/index.html` — dashboard single-file com Chart.js, dark theme, responsivo.
 
 ## ⚠️ REGRA ABSOLUTA — ZERO HARDCODED
 
@@ -21,14 +21,14 @@ Ao editar o dashboard: antes de commitar, buscar literais numéricos no template
 
 ## Pipeline (novo — usar sempre)
 
-**NUNCA editar `dashboard.html` diretamente.** O arquivo é gerado pelo pipeline:
+**NUNCA editar `dashboard/index.html` diretamente.** O arquivo é gerado pelo pipeline:
 
 ```
-scripts/generate_data.py  →  analysis/dashboard_data.json
-                                          ↓
-scripts/build_dashboard.py  →  analysis/dashboard.html
-                                          ↓
-scripts/deploy_netlify.sh   →  Netlify (produção)
+scripts/generate_data.py   →  dashboard/data.json
+                                         ↓
+scripts/build_dashboard.py →  dashboard/index.html
+                                         ↓
+scripts/deploy_dashboard.sh →  GitHub Pages (diegodemorais.github.io/wealth-dash/)
 ```
 
 ### Gerar dashboard (comando padrão):
@@ -55,7 +55,7 @@ bash scripts/deploy_dashboard.sh --skip-scripts  # rápido
 
 ### Para modificar o dashboard:
 - **Lógica/dados**: editar `scripts/generate_data.py`
-- **Layout/CSS/JS/charts**: editar `analysis/dashboard_template.html`
+- **Layout/CSS/JS/charts**: editar `dashboard/template.html`
 - **Spec/checklist**: editar este arquivo (`dashboard.md`)
 
 ---
@@ -111,7 +111,7 @@ Extrair dos outputs:
 | `"HODL11 cotação hoje"` + `"USD BRL câmbio hoje"` | HODL11 + câmbio |
 | `"USD BRL historical weekly 2026"` | PTAX últimas semanas |
 
-Se WebSearch falhar para algum preço, ler `analysis/dashboard.html` atual e extrair o valor anterior.
+Se WebSearch falhar para algum preço, ler `dashboard/data.json` atual e extrair o valor anterior.
 
 ### 3. Computar
 
@@ -140,7 +140,7 @@ Se WebSearch falhar para algum preço, ler `analysis/dashboard.html` atual e ext
 
 ### 4. Gerar HTML
 
-**Sobrescrever** `analysis/dashboard.html` com render completo. Estrutura obrigatória do JS:
+**Sobrescrever** `dashboard/index.html` com render completo (via build_dashboard.py). Estrutura obrigatória do JS:
 
 ```js
 // TODOS os valores lidos dos arquivos — zero hardcoded
@@ -482,7 +482,7 @@ Token em `.netlify_token`. Site: `stunning-crepe-8aa19f`.
 ### 6. Output
 
 ```
-Dashboard regenerado: analysis/dashboard.html
+Dashboard regenerado: dashboard/index.html
 Data: DD/MM/AAAA | Patrimônio: R$ X.XXXk | Equity: $XXXk | Câmbio: R$ X.XX
 P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 ✅ Publicado: https://stunning-crepe-8aa19f.netlify.app (senha: diego2040)

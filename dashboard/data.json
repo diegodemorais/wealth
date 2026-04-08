@@ -1,8 +1,8 @@
 {
-  "_generated": "2026-04-08T15:22:16",
-  "_generated_brt": "2026-04-08T15:22:16-03:00",
+  "_generated": "2026-04-08T15:31:10",
+  "_generated_brt": "2026-04-08T15:31:10-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1054,
+  "cambio": 5.1078,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -21,14 +21,14 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.455,
+      "price": 114.4904,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.135,
+      "price": 105.12,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -49,14 +49,14 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.88,
+      "price": 62.8346,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.27,
+      "price": 62.2233,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3530450,
+    "patrimonio_atual": 3531719,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -158,22 +158,22 @@
       "label": "R$250k",
       "custo": 250000,
       "base": 90.4,
-      "fav": null,
-      "stress": null
+      "fav": 94.1,
+      "stress": 86.8
     },
     {
       "label": "R$270k",
       "custo": 270000,
       "base": 85.0,
-      "fav": null,
-      "stress": null
+      "fav": 88.7,
+      "stress": 81.4
     },
     {
       "label": "R$300k",
       "custo": 300000,
       "base": 82.1,
-      "fav": null,
-      "stress": null
+      "fav": 85.8,
+      "stress": 78.5
     }
   ],
   "saude_base": 18000,
@@ -1583,7 +1583,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.455,
+      "price": 114.4904,
       "ucits": "AVGS.L"
     },
     {
@@ -1591,7 +1591,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.135,
+      "price": 105.12,
       "ucits": "AVGS.L"
     },
     {
@@ -1615,7 +1615,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.88,
+      "price": 62.8346,
       "ucits": "AVEM.L"
     },
     {
@@ -1623,7 +1623,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.27,
+      "price": 62.2233,
       "ucits": "AVEM.L"
     },
     {
@@ -1639,7 +1639,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2418750.0,
+    "crescReal": 2420019.0,
     "_estimativa": true
   },
   "shadows": {
@@ -1728,18 +1728,18 @@
         "label": "Savings rate",
         "max": 15,
         "description": "Driver #1 da acumulação (Shiller 2015, ERN SWR Part 1). SR = aporte_mensal / custo_vida_mensal — múltiplo de cobertura. Mais significativo que % da renda quando renda PJ é volátil.",
-        "_note_thresholds": "Thresholds em % (aporte/custo_vida*100). Ex: 139% = aporte cobre 1.39× o custo de vida. ≥120% = excelente, ≥80% = ok, ≥50% = atenção.",
+        "_note_thresholds": "Thresholds em % — definição padrão: aporte/(aporte+custo_vida). Ex: R$25k/(R$25k+R$20.8k) = 54.6%. ≥50% = excelente, ≥40% = ok, ≥25% = atenção.",
         "thresholds": [
           {
-            "min_pct": 120,
+            "min_pct": 50,
             "pts": 15
           },
           {
-            "min_pct": 80,
+            "min_pct": 40,
             "pts": 10
           },
           {
-            "min_pct": 50,
+            "min_pct": 25,
             "pts": 5
           },
           {
