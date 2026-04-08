@@ -25,6 +25,7 @@ from config import (
     IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
     IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO,
+    update_dashboard_state,
 )
 
 # ─── PREMISSAS (fonte: carteira.md + HD-006 final 2026-03-22) ─────────────────
@@ -677,6 +678,19 @@ def main():
         print(f"P(FIRE) = {r['p_sucesso']:.1%}")
 
     imprimir_resultados(resultados, premissas)
+
+    # ── Export dashboard_state.json ──
+    from datetime import date
+    fire_data = {
+        "pfire_base": round(resultados[0]["p_sucesso"] * 100, 1),
+        "pfire_fav": round(resultados[1]["p_sucesso"] * 100, 1) if len(resultados) > 1 else None,
+        "pfire_stress": round(resultados[2]["p_sucesso"] * 100, 1) if len(resultados) > 2 else None,
+        "pat_mediano_fire": round(resultados[0]["pat_mediana_fire"], 0),
+        "pat_p10_fire": round(resultados[0]["pat_p10_fire"], 0),
+        "pat_p90_fire": round(resultados[0]["pat_p90_fire"], 0),
+        "mc_date": str(date.today()),
+    }
+    update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 
     if args.tornado:
         print("  Calculando tornado chart (5k sims por variavel)...")

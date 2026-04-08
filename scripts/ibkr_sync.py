@@ -39,7 +39,7 @@ from ibflex import client
 
 import sys as _sys
 _sys.path.insert(0, str(Path(__file__).parent))
-from config import EQUITY_WEIGHTS as TARGET_EQUITY, BUCKET_MAP
+from config import EQUITY_WEIGHTS as TARGET_EQUITY, BUCKET_MAP, update_dashboard_state
 
 load_dotenv(Path(__file__).parent.parent / ".env")
 
@@ -220,6 +220,26 @@ def analyze_positions(positions: list[dict], cambio: float) -> None:
         print(f"  ⚠️   JPGL bucket: R${jpgl_val*cambio:,.0f} ainda presente (target 0% — diluir via aportes)")
     if not alertas:
         print(f"  ✅  Sem drifts relevantes (todos dentro de ±3pp do target).")
+
+    # ── Export dashboard_state.json ──
+    posicoes_data = {}
+    for p in positions:
+        posicoes_data[p["symbol"]] = {
+            "qty": p["qty"],
+            "avg_cost": round(p["cost_usd"] / p["qty"], 2) if p["qty"] > 0 else 0,
+            "price": p["price_usd"],
+            "value_usd": round(p["value_usd"], 0),
+            "pnl_pct": round(p["pnl_pct"], 1),
+            "bucket": BUCKET_MAP.get(p["symbol"], "outro"),
+            "status": "alvo" if p["symbol"] in TARGET_EQUITY else "transitorio",
+        }
+
+    update_dashboard_state("posicoes", posicoes_data, generator="ibkr_sync.py")
+    update_dashboard_state("patrimonio", {
+        "equity_usd": round(total_usd, 0),
+        "equity_brl": round(total_brl, 0),
+        "cambio": cambio,
+    }, generator="ibkr_sync.py")
 
 
 def print_trades(trades: list[dict]) -> None:

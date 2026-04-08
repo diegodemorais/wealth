@@ -96,3 +96,40 @@ PESOS_SHADOW_C = {
     "BTC":  CRIPTO_PCT,        # 0.03
     "RENDA": RENDA_PLUS_PCT,   # 0.03
 }
+
+
+# ─── DASHBOARD STATE (JSON compartilhado entre scripts e HTML) ───────────────
+
+import json
+import os
+from datetime import date
+
+DASHBOARD_STATE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                     "dados", "dashboard_state.json")
+
+def load_dashboard_state() -> dict:
+    """Lê o dashboard_state.json atual."""
+    try:
+        with open(DASHBOARD_STATE_PATH) as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def update_dashboard_state(section: str, data: dict, generator: str = "unknown") -> None:
+    """Atualiza uma seção do dashboard_state.json sem sobrescrever as outras.
+    
+    Uso:
+        update_dashboard_state("posicoes", {"SWRD": {...}, ...}, generator="ibkr_sync.py")
+        update_dashboard_state("fire", {"pfire_base": 90.4, ...}, generator="fire_montecarlo.py")
+    """
+    state = load_dashboard_state()
+    state[section] = data
+    state["_meta"] = {
+        "generated": str(date.today()),
+        "last_update_section": section,
+        "last_update_generator": generator,
+        "version": state.get("_meta", {}).get("version", 1),
+    }
+    with open(DASHBOARD_STATE_PATH, "w") as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)

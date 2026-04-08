@@ -406,6 +406,58 @@ const DATA = {
 };
 const GENERATED_AT = new Date('2026-04-08');
 
+// Dynamic data: try to fetch dashboard_state.json, fallback to inline DATA
+async function loadDashboardState() {
+  const paths = [
+    'dashboard_state.json',           // relative (if served locally)
+    '../dados/dashboard_state.json',  // relative to analysis/
+    'dados/dashboard_state.json',     // from repo root
+  ];
+  for (const p of paths) {
+    try {
+      const r = await fetch(p);
+      if (r.ok) {
+        const state = await r.json();
+        if (state.patrimonio) {
+          DATA.cambio = state.patrimonio.cambio || DATA.cambio;
+          DATA.totalBrl = state.patrimonio.total_brl || DATA.totalBrl;
+          DATA.totalEquityUsd = state.patrimonio.equity_usd || DATA.totalEquityUsd;
+          DATA.totalEquityBrl = state.patrimonio.equity_brl || DATA.totalEquityBrl;
+        }
+        if (state.fire) {
+          DATA.pfire = {base: state.fire.pfire_base, fav: state.fire.pfire_fav, stress: state.fire.pfire_stress};
+        }
+        if (state._meta) {
+          console.log('Dashboard state loaded from', p, '- generated:', state._meta.generated);
+          // Update header date
+          const hdr = document.querySelector('.header .meta');
+          if (hdr) hdr.textContent = hdr.textContent.replace(/\d{2}\/\w+\/\d{4}/, state._meta.generated);
+        }
+        return state;
+      }
+    } catch(e) { /* try next path */ }
+  }
+  console.log('dashboard_state.json not found, using inline DATA');
+  return null;
+}
+// BCB PTAX live fetch
+async function fetchPTAX() {
+  try {
+    const d = new Date().toISOString().slice(0,10);
+    const r = await fetch('https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@d)?@d=\''+d+'\'&$format=json');
+    if (r.ok) {
+      const j = await r.json();
+      if (j.value?.length) {
+        DATA.cambio = j.value[j.value.length-1].cotacaoVenda;
+        const hdr = document.querySelector('.header .meta');
+        if (hdr) hdr.textContent = hdr.textContent.replace(/USD\/BRL [\d.]+/, 'USD/BRL '+DATA.cambio.toFixed(3));
+      }
+    }
+  } catch(e) { /* silent */ }
+}
+loadDashboardState().then(() => fetchPTAX());
+
+
 // Timeline
 const timelineLabels = [
 '2021-03','2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12',

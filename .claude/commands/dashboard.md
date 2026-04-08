@@ -113,12 +113,29 @@ async function fetchLive() {
 fetchLive();
 ```
 
-**Filosofia: placeholders + live fetch.**
-- `DATA` object contém TODOS os valores (preços ETFs, câmbio, HODL11, PTAX) com os últimos valores conhecidos da execução do `/dashboard`.
-- JS tenta buscar câmbio/PTAX ao vivo do BCB Olinda (API pública, CORS ok).
-- Se conseguir, atualiza os valores exibidos.
-- Se falhar (offline, CORS, etc.), usa placeholders silenciosamente.
-- Preços de ETFs (Yahoo) e HODL11 (B3) **não** têm API CORS — ficam fixos nos placeholders. Atualizar via `/dashboard`.
+**Filosofia: dashboard_state.json + live fetch.**
+- Scripts Python (`ibkr_sync`, `checkin_mensal`, `fire_montecarlo`) atualizam `dados/dashboard_state.json` quando rodam (0 tokens Claude).
+- HTML faz `fetch('dashboard_state.json')` ao abrir — se encontrar, usa dados frescos.
+- Se fetch falhar (offline, CORS), usa o `DATA` inline como fallback.
+- BCB PTAX busca ao vivo via `fetchPTAX()` (API pública, CORS ok).
+- **Resultado: dashboard atualiza sem rodar `/dashboard`.** `/dashboard` só para mudanças estruturais (nova seção, novo chart).
+
+**Atualização automática via scripts Python:**
+```python
+# Em qualquer script, após computar dados:
+from config import update_dashboard_state
+update_dashboard_state("posicoes", {...}, generator="ibkr_sync.py")
+update_dashboard_state("fire", {...}, generator="fire_montecarlo.py")
+update_dashboard_state("shadows", {...}, generator="checkin_mensal.py")
+```
+- Cada script atualiza SUA seção sem sobrescrever as outras.
+- `dados/dashboard_state.json` também copiado para `analysis/dashboard_state.json` (mesmo dir do HTML).
+
+**Runtime no HTML:**
+```js
+loadDashboardState()  // fetch JSON, merge com DATA inline
+  .then(() => fetchPTAX())  // buscar câmbio ao vivo do BCB
+```
 
 Não commitar — Diego decide.
 

@@ -23,7 +23,7 @@ import pandas as pd
 from bcb import sgs
 
 sys.path.insert(0, os.path.dirname(__file__))
-from config import PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS
+from config import PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS, update_dashboard_state
 
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
@@ -821,6 +821,19 @@ def main():
                 print(f"⚠️  --tlh-config inválido: {e}")
         print("  Buscando PTAX histórica do BCB para lotes de compra...")
         verificar_tlh(lotes_por_ticker, usd_brl_fim)
+
+    # ── Export dashboard_state.json ──
+    shadows_data = {
+        "periodo": periodo_label,
+        "atual": round(r_atual * 100, 2),
+        "target": round(r_target * 100, 2),
+        "shadow_a": round(r_shadow_a * 100, 2),
+        "shadow_b": round(r_shadow_b * 100, 2),
+        "shadow_c": round(r_shadow_c * 100, 2),
+        "delta_a": round((r_atual - r_shadow_a) * 100, 2),
+        "delta_b": round((r_atual - r_shadow_b) * 100, 2),
+    }
+    update_dashboard_state("shadows", shadows_data, generator="checkin_mensal.py")
 
     # Output
     formatar_output(
