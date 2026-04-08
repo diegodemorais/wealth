@@ -7,21 +7,26 @@ Compara:
   - Target   : 50% SWRD + 30% AVGS + 20% AVEM (rebalanceado mensalmente, FI-equity-redistribuicao 2026-04-01)
   - Shadow A  : 100% VWRA (market cap puro)
 
-Períodos de dados (descrescente por qualidade):
-  Regime 1 — UCITS reais (Dez/2024+)  : todos os 4 ETFs alvo disponíveis
-  Regime 2 — 1 proxy (Set/2024+)      : AVEM.L substituído por AVEM US-listed
-  Regime 3 — 2 proxies (Jul/2019+)    : AVEM + AVGS com proxies canônicos
-  Regime 4 — máx histórico (Fev/2019+): começa com SWRD.L real, JPGL sem dados até Jul/2019
+Períodos de dados (decrescente por qualidade):
+  Regime 1 — UCITS reais (Dez/2024+)         : todos os 4 ETFs alvo disponíveis
+  Regime 2 — 1 proxy (Set/2024+)             : AVEM.L substituído por AVEM US-listed
+  Regime 3 — 2 proxies (Jul/2019+)           : AVEM + AVGS com proxies canônicos
+  Regime 4 — máx histórico ETFs (Jul/2019+)  : idem Regime 3, até hoje
+  Regime 5 — proxy longo 21 anos (Dez/2004+) : ETFs US-listed mais antigos (IVV+VBR+EEM)
+  Regime 6 — proxy longo + IntlSC (Dez/2006+): idem R5 + SCZ para componente Intl SC
 
 Proxies canônicos (agentes/referencia/proxies-canonicos.md):
-  AVGS  → AVUV 58% + AVDV 42%  (Avantis US+Intl SC Value, pesos factsheet)  ⚠️
-  AVEM  → AVEM (US-listed)      (mesma estratégia Avantis, UCITS lançado Dez/2024) ⚠️
+  AVGS (Regimes 3/4) → AVUV 58% + AVDV 42%  (Avantis US+Intl SC Value)  ⚠️
+  AVEM (Regimes 2/3/4) → AVEM (US-listed)   (mesma estratégia Avantis)  ⚠️
+  SWRD (Regimes 5/6) → IVV                  (S&P 500, sem DM ex-US)     ⚠️
+  AVGS (Regimes 5/6) → VBR (+SCZ no R6)     (SC Value US + Intl SC)     ⚠️
 
 Uso:
     python3 backtest_portfolio.py                    # regime melhor disponível
     python3 backtest_portfolio.py --regime 1         # só UCITS reais
-    python3 backtest_portfolio.py --regime 3         # desde Nov/2019
-    python3 backtest_portfolio.py --regime 4         # máximo histórico
+    python3 backtest_portfolio.py --regime 4         # máximo histórico (ETFs, Jul/2019+)
+    python3 backtest_portfolio.py --regime 5         # proxy longo 21 anos (Dez/2004+)
+    python3 backtest_portfolio.py --regime 6         # proxy longo + IntlSC 19 anos (Dez/2006+)
     python3 backtest_portfolio.py --desde 2021-01    # período customizado
 
 Venv: ~/claude/finance-tools/.venv/bin/python3
@@ -93,6 +98,58 @@ REGIMES = {
         "proxies": [
             "AVUV 58% + AVDV 42% ⚠️ proxy de AVGS.L",
             "AVEM (US-listed) ⚠️ proxy de AVEM.L",
+        ],
+    },
+    5: {
+        "inicio": "2004-12-01",
+        "label":  "Regime 5 — proxy longo 21 anos (Dez/2004+)",
+        # Target: ETFs US-listed mais antigos como proxy da estratégia fatorial
+        #   IVV  = proxy SWRD.L  (S&P 500 — ⚠️ sem DM ex-US; MSCI World ~65% US)
+        #   VBR  = proxy AVGS.L  (Vanguard SC Value US — ⚠️ sem componente Intl SC)
+        #   EEM  = proxy AVEM.L  (MSCI EM broad — sem SC/Value tilt)
+        # Limitação: SWRD inclui ~35% DM ex-US que IVV não captura.
+        #            AVGS inclui ~42% Intl SC Value que VBR não captura.
+        #            Para versão com Intl SC: usar --regime 6 (desde Dez/2006, inclui SCZ)
+        "target": {
+            "IVV": 0.50,   # proxy SWRD.L
+            "VBR": 0.30,   # proxy AVGS.L (US SC Value only)
+            "EEM": 0.20,   # proxy AVEM.L
+        },
+        # Shadow A: blend que aproxima MSCI ACWI (VWRA) antes de ACWI ETF existir
+        "shadow": {
+            "IVV": 0.65,   # proxy VWRA — US allocation
+            "EFA": 0.25,   # proxy VWRA — DM ex-US
+            "EEM": 0.10,   # proxy VWRA — EM
+        },
+        "proxies": [
+            "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target)",
+            "VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value)",
+            "EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt)",
+            "Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)",
+        ],
+    },
+    6: {
+        "inicio": "2006-12-01",
+        "label":  "Regime 6 — proxy longo + Intl SC 19 anos (Dez/2006+)",
+        # Igual ao Regime 5 mas com SCZ (iShares MSCI EAFE SC, lançado Nov/2007)
+        # para capturar o componente Intl SC Value do AVGS
+        "target": {
+            "IVV": 0.50,   # proxy SWRD.L
+            "VBR": 0.174,  # proxy AVGS — US SC Value (mesmos pesos do Regime 3)
+            "SCZ": 0.126,  # proxy AVGS — Intl SC (MSCI EAFE SC, sem tilt value)
+            "EEM": 0.20,   # proxy AVEM.L
+        },
+        "shadow": {
+            "IVV": 0.65,
+            "EFA": 0.25,
+            "EEM": 0.10,
+        },
+        "proxies": [
+            "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World)",
+            "VBR ⚠️ proxy AVGS US-part (SC Value US only)",
+            "SCZ ⚠️ proxy AVGS Intl-part (MSCI EAFE SC — sem Value tilt)",
+            "EEM ⚠️ proxy de AVEM.L (MSCI EM broad)",
+            "Shadow A = IVV 65% + EFA 25% + EEM 10%",
         ],
     },
 }
@@ -254,8 +311,8 @@ def imprimir_alerta_advocate(tab: pd.DataFrame):
 
 def main():
     parser = argparse.ArgumentParser(description="Backtest fatorial UCITS — Target vs Shadow A")
-    parser.add_argument("--regime",  type=int, choices=[1, 2, 3, 4], default=None,
-                        help="Regime de dados (1=UCITS real, 4=máx histórico). Default: melhor disponível.")
+    parser.add_argument("--regime",  type=int, choices=[1, 2, 3, 4, 5, 6], default=None,
+                        help="Regime de dados (1=UCITS real, 4=máx histórico ETFs, 5=21 anos proxy, 6=19 anos proxy+IntlSC). Default: melhor disponível.")
     parser.add_argument("--desde",   type=str, default=None,
                         help="Data início customizada YYYY-MM (sobrepõe --regime).")
     args = parser.parse_args()

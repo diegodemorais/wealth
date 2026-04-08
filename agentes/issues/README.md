@@ -28,7 +28,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | 1 | HD-swrd-114-cotas | Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json | Bookkeeper | 🟡 Média |
 | 2 | HD-tearsheet-longrun | Tearsheet QuantStats com histórico longo (proxies) | Head | 🟡 Média |
-| 3 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
+| 3 | HD-backtest-longrun | Pipeline backtest 50+ anos via Ken French / MSCI | Head | 🟡 Média |
+| 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
 | 4 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |
