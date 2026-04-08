@@ -256,6 +256,356 @@ ibkr_lotes.json (qtde/custo) · Web (preços/PTAX) · scorecard.md (P(FIRE)/shad
 </footer>
 
 <script>
+// Centralized data — single source of truth
+const DATA = {
+  date: '2026-04-08', cambio: 5.25,
+  totalBrl: 3527605, totalEquityUsd: 608467, totalEquityBrl: 3194452,
+  pfire: {base:90.4, fav:94.1, stress:86.8},
+  cagr: 25.3, deltaA: 3.15, deltaB: -0.57
+};
+const GENERATED_AT = new Date('2026-04-08');
+
+// Timeline
+const timelineLabels = [
+'2021-03','2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12',
+'2022-01','2022-02','2022-03','2022-04','2022-05','2022-06','2022-07','2022-08','2022-09','2022-10','2022-11','2022-12',
+'2023-01','2023-02','2023-03','2023-04','2023-05','2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12',
+'2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12',
+'2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12',
+'2026-01','2026-02','2026-03'];
+const timelineValues = [
+1111700,1135865,1160835,1185000,1211529,1238414,1265662,1293278,1321270,1349645,
+1340000,1330000,1375932,1380000,1340000,1345000,1400000,1430000,1410000,1450000,1490000,1562671,
+1590000,1610000,1650000,1700000,1750000,1800000,1850000,1870000,1900000,1920000,1980000,2078000,
+2100000,2150000,2200000,2280000,2380000,2480000,2550000,2580000,2650000,2730000,2850000,2980000,
+3050000,3020000,3010000,3100000,3130000,3160000,3190000,3200000,3210000,3235000,3268000,3302824,
+3361000,3420000,3479239];
+
+// PTAX + Bollinger
+const ptaxDates = ['02-Jan','09-Jan','16-Jan','23-Jan','30-Jan','06-Fev','13-Fev','20-Fev','27-Fev','06-Mar','13-Mar','20-Mar','27-Mar','31-Mar','07-Abr'];
+const ptaxValues = [5.4235,5.3732,5.3692,5.2904,5.2577,5.2172,5.2192,5.1779,5.1301,5.2450,5.3244,5.3147,5.2549,5.1950,5.1539];
+// MA5 + std in single pass
+const ptaxMA=[],ptaxStd=[],ptaxUpper=[],ptaxLower=[];
+ptaxValues.forEach((_,i,a)=>{const s=Math.max(0,i-4),sl=a.slice(s,i+1),m=sl.reduce((x,y)=>x+y,0)/sl.length,v=Math.sqrt(sl.reduce((x,y)=>x+(y-m)**2,0)/sl.length);ptaxMA.push(m);ptaxStd.push(v);ptaxUpper.push(m+2*v);ptaxLower.push(m-2*v)});
+
+// Glide path
+const glideLabels = ['26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45'];
+const glideData = {
+  SWRD:[39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,39.5,40,41,42,43,44],
+  AVGS:[23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,23.7,24,25,25,26,26],
+  AVEM:[15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,15.8,16,17,18,19,20],
+  'IPCA+':[15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,14,12,10,8,6],
+  Curto:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,3],
+  Crypto:[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,2,1,1],
+  'Renda+':[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0,0,0,0]
+};
+
+// Helpers
+const C = (id,cfg) => new Chart(document.getElementById(id), cfg);
+const doughnutOpts = (total, unit='R$') => ({
+  responsive:true, maintainAspectRatio:false, cutout:'58%',
+  plugins:{legend:{position:'bottom',labels:{padding:8,usePointStyle:true,color:'#94a3b8',font:{size:10}}},
+    tooltip:{callbacks:{label:c=>{const v=c.raw;return `${unit}${(v/1000).toFixed(0)}k (${(v/total*100).toFixed(1)}%)`}}}}
+});
+
+// Staleness check
+if(Date.now()-GENERATED_AT>7*86400000){document.querySelector('.header').insertAdjacentHTML('beforeend','<div style="background:#ef4444;color:white;padding:6px;border-radius:6px;margin-top:8px;font-size:.8rem">\u26a0\ufe0f Dashboard desatualizado \u2014 rodar /dashboard</div>')}
+
+// Glide path sum assertion
+glideLabels.forEach((_,i)=>{const sum=Object.values(glideData).reduce((s,d)=>s+d[i],0);console.assert(Math.abs(sum-100)<0.5,'Glide path year '+glideLabels[i]+': sum='+sum)});
+
+// Charts
+C('timelineChart',{type:'line',data:{labels:timelineLabels,datasets:[{data:timelineValues,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'R$ '+(c.raw/1e6).toFixed(2)+'M'}}},scales:{x:{ticks:{color:'#94a3b8',maxTicksLimit:10,font:{size:10}},grid:{color:'rgba(71,85,105,.2)'}},y:{ticks:{color:'#94a3b8',callback:v=>'R$'+(v/1e6).toFixed(1)+'M'},grid:{color:'rgba(71,85,105,.2)'}}}}});
+
+C('donutChart',{type:'doughnut',data:{labels:['SWRD 37.4%','AVGS 29.0%','AVEM 23.9%','HODL11 2.8%','IPCA+ 2040','Renda+ 2065','IPCA+ 2029','IWVL'],datasets:[{data:[1318480,1022506,842284,97359,33285,112466,89095,2130],backgroundColor:['#3b82f6','#8b5cf6','#06b6d4','#eab308','#22c55e','#f97316','#10b981','#6b7280'],borderWidth:0,hoverOffset:6}]},options:doughnutOpts(DATA.totalBrl)});
+
+C('geoChart',{type:'doughnut',data:{labels:['EUA (43.6%)','Desenv. ex-EUA (30.0%)','Emergentes (26.4%)'],datasets:[{data:[265407,182625,160435],backgroundColor:['#3b82f6','#22c55e','#f97316'],borderWidth:0,hoverOffset:6}]},options:doughnutOpts(DATA.totalEquityUsd,'$')});
+
+C('tornadoChart',{type:'bar',data:{labels:['Retorno equity','Custo de vida','Aporte mensal','Volatilidade'],datasets:[{label:'+10%',data:[5.2,-4.1,1.8,-1.5],backgroundColor:c=>c.raw>=0?'#22c55e':'#ef4444',borderRadius:4,barThickness:16},{label:'-10%',data:[-6.8,3.5,-1.4,1.2],backgroundColor:c=>c.raw>=0?'#22c55e':'#ef4444',borderRadius:4,barThickness:16}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{color:'#94a3b8',font:{size:10}}},tooltip:{callbacks:{label:c=>(c.raw>0?'+':'')+c.raw+'pp'}}},scales:{x:{grid:{color:'rgba(71,85,105,.3)'},ticks:{color:'#94a3b8',callback:v=>(v>0?'+':'')+v+'pp'}},y:{grid:{display:false},ticks:{color:'#f1f5f9',font:{size:11}}}}}});
+
+C('deltaChart',{type:'bar',data:{labels:['IPCA+ Longo','SWRD','AVGS','AVEM'],datasets:[{data:[-14.1,-2.1,5.3,8.1],backgroundColor:['#ef4444','#ef4444','#22c55e','#22c55e'],borderRadius:6,barThickness:32}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.raw>0?'+':'')+c.raw+'pp'}}},scales:{x:{grid:{color:'rgba(71,85,105,.3)'},ticks:{color:'#94a3b8',callback:v=>v+'pp'}},y:{grid:{display:false},ticks:{color:'#f1f5f9',font:{weight:'600'}}}}}});
+
+C('glideChart',{type:'line',data:{labels:glideLabels,datasets:[
+{label:'SWRD',data:glideData.SWRD,backgroundColor:'rgba(59,130,246,.6)',borderColor:'#3b82f6',fill:true,borderWidth:1,pointRadius:0},
+{label:'AVGS',data:glideData.AVGS,backgroundColor:'rgba(139,92,246,.6)',borderColor:'#8b5cf6',fill:true,borderWidth:1,pointRadius:0},
+{label:'AVEM',data:glideData.AVEM,backgroundColor:'rgba(6,182,212,.6)',borderColor:'#06b6d4',fill:true,borderWidth:1,pointRadius:0},
+{label:'IPCA+',data:glideData['IPCA+'],backgroundColor:'rgba(34,197,94,.6)',borderColor:'#22c55e',fill:true,borderWidth:1,pointRadius:0},
+{label:'Curto',data:glideData.Curto,backgroundColor:'rgba(16,185,129,.4)',borderColor:'#10b981',fill:true,borderWidth:1,pointRadius:0},
+{label:'Crypto',data:glideData.Crypto,backgroundColor:'rgba(234,179,8,.5)',borderColor:'#eab308',fill:true,borderWidth:1,pointRadius:0},
+{label:'Renda+',data:glideData['Renda+'],backgroundColor:'rgba(249,115,22,.5)',borderColor:'#f97316',fill:true,borderWidth:1,pointRadius:0}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:6,usePointStyle:true,color:'#94a3b8',font:{size:9}}},tooltip:{mode:'index',intersect:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:10}},grid:{color:'rgba(71,85,105,.2)'}},y:{stacked:true,max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'rgba(71,85,105,.2)'}}}}});
+
+C('fireBucketsChart',{type:'doughnut',data:{labels:['FIRE Variavel','FIRE Fixo (IPCA+2040)','Reserva (IPCA+2029)','Risco Juros (Renda+)','Risco Crypto'],datasets:[{data:[3194452,33285,89095,112466,97359],backgroundColor:['#3b82f6','#22c55e','#10b981','#f97316','#eab308'],borderWidth:0,hoverOffset:6}]},options:doughnutOpts(DATA.totalBrl)});
+
+C('bollingerChart',{type:'line',data:{labels:ptaxDates,datasets:[
+{label:'PTAX',data:ptaxValues,borderColor:'#3b82f6',borderWidth:2,pointRadius:3,pointBackgroundColor:'#3b82f6',fill:false},
+{label:'MA5',data:ptaxMA,borderColor:'#94a3b8',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false},
+{label:'Upper',data:ptaxUpper,borderColor:'rgba(239,68,68,.3)',borderWidth:1,pointRadius:0,fill:false},
+{label:'Lower',data:ptaxLower,borderColor:'rgba(34,197,94,.3)',borderWidth:1,pointRadius:0,fill:'-1',backgroundColor:'rgba(34,197,94,.05)'}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9}},grid:{color:'rgba(71,85,105,.2)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(71,85,105,.2)'}}}}});
+
+function calcAporte(){
+  const a=parseFloat(document.getElementById('aporteVal').value)||25000;
+  const c=parseFloat(document.getElementById('cambioVal').value)||DATA.cambio;
+  const usd=a/c;
+  const target={n:'SWRD',p:47.46};
+  const cotas=usd/target.p;
+  document.getElementById('aporteBody').innerHTML=
+    `<tr><td><strong>${target.n}</strong> (mais subpeso)</td><td class="num">$${target.p}</td><td class="num">${cotas.toFixed(4)}</td><td class="num">$${usd.toFixed(0)}</td></tr>`+
+    `<tr><td colspan="4" style="color:var(--muted);font-size:.75rem">R$${a.toLocaleString()} ÷ ${c.toFixed(2)} = $${usd.toFixed(0)} → ${cotas.toFixed(4)} cotas de ${target.n}</td></tr>`;
+}
+</script>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px}
+.container{max-width:1280px;margin:0 auto;padding:16px}
+.header{background:linear-gradient(135deg,#1e3a5f,#0f172a);padding:20px 24px;border-radius:14px;margin-bottom:16px;border:1px solid var(--border)}
+.header h1{font-size:1.3rem;font-weight:700}.header .meta{color:var(--muted);font-size:.75rem;margin-top:4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--card);border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
+.kpi-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-size:1.5rem;font-weight:700;margin-top:2px}.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
+.section{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px}
+.section h2{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th{text-align:left;padding:6px 5px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted);font-size:.65rem;text-transform:uppercase}
+td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3)}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-family:'SF Mono',monospace,sans-serif}
+.pos{color:var(--green)}.neg{color:var(--red)}
+.chart-box{position:relative;height:240px}
+.badge{display:inline-block;padding:1px 6px;border-radius:9999px;font-size:.6rem;font-weight:600}
+.badge-alvo{background:rgba(59,130,246,.2);color:var(--accent)}.badge-trans{background:rgba(234,179,8,.15);color:var(--yellow)}
+.fire-big{font-size:3rem;font-weight:800;text-align:center;margin:12px 0 6px}
+.fire-row{display:flex;justify-content:center;gap:20px}
+.fire-item{text-align:center}.fire-item .v{font-size:1.1rem;font-weight:700}.fire-item .l{font-size:.65rem;color:var(--muted)}
+.prio{padding:6px 10px;margin:3px 0;background:rgba(59,130,246,.1);border-radius:6px;border-left:3px solid var(--accent);font-size:.8rem}
+.prio-num{font-weight:700;color:var(--accent);margin-right:4px}
+.rf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.rf-card{background:var(--card2);border-radius:8px;padding:12px;text-align:center}
+.rf-card .val{font-size:1.1rem;font-weight:700}.rf-card .lbl{font-size:.7rem;color:var(--muted)}.rf-card .sub{font-size:.6rem;color:var(--muted);margin-top:2px}
+.progress-row{margin:6px 0}.progress-label{display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:2px}
+.progress-bar{height:8px;background:var(--card2);border-radius:4px;position:relative;overflow:visible}
+.progress-fill{height:100%;border-radius:4px;transition:width .3s}
+.progress-target{position:absolute;top:-3px;height:14px;width:2px;background:var(--text);border-radius:1px}
+.calc-form{display:flex;gap:8px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.calc-form label{font-size:.7rem;color:var(--muted);display:block}
+.calc-form input{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;width:120px;font-size:.85rem}
+.calc-form button{background:var(--accent);color:white;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600}
+.src{font-size:.6rem;color:var(--muted);margin-top:4px}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+<h1>Carteira Diego Morais</h1>
+<div class="meta">07/Abr/2026 · USD/BRL 5.25 · Fontes: ibkr_lotes.json + web + scorecard.md + historico_carteira.csv</div>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-label">Patrimônio Total</div><div class="kpi-value">R$ 3.527k</div><div class="kpi-sub">USD 608k equity · R$ 333k RF+crypto</div></div>
+<div class="kpi"><div class="kpi-label">P(FIRE) Base</div><div class="kpi-value pos">90.4%</div><div class="kpi-sub">FIRE 53 · MC 10k sims</div></div>
+<div class="kpi"><div class="kpi-label">Cresc. Patrimonial</div><div class="kpi-value" style="color:var(--yellow)">25.3%</div><div class="kpi-sub">Mar/2021→Mar/2026 · inclui aportes</div></div>
+<div class="kpi"><div class="kpi-label">Delta vs VWRA</div><div class="kpi-value pos">+3.15pp</div><div class="kpi-sub">Q1 2026</div></div>
+</div>
+
+
+<!-- FIRE Progress -->
+<div class="kpi-grid">
+<div class="kpi"><div class="kpi-label">Anos p/ FIRE</div><div class="kpi-value">14</div><div class="kpi-sub">FIRE 2040 (idade 53)</div></div>
+<div class="kpi"><div class="kpi-label">Progresso Gatilho</div><div class="kpi-value" style="color:var(--yellow)">26.3%</div><div class="kpi-sub">R$3.5M / R$13.4M</div></div>
+<div class="kpi"><div class="kpi-label">SWR Implícita</div><div class="kpi-value neg">7.1%</div><div class="kpi-sub">R$250k / R$3.5M · meta ≤2.4%</div></div>
+<div class="kpi"><div class="kpi-label">TWR Estimado</div><div class="kpi-value pos">~8%</div><div class="kpi-sub">Retorno real excl. aportes</div></div>
+</div>
+
+<!-- Timeline Patrimônio -->
+<div class="section">
+<h2>Evolução do Patrimônio (2021–2026)</h2>
+<div style="height:280px"><canvas id="timelineChart"></canvas></div>
+<div class="src">Fonte: historico_carteira.csv (61 pontos mensais reconstruídos de ibkr_lotes.json + preços web)</div>
+</div>
+
+<!-- Alocação + Geográfico -->
+<div class="grid-2">
+<div class="section">
+<h2>Composição por Classe</h2>
+<div class="chart-box"><canvas id="donutChart"></canvas></div>
+</div>
+<div class="section">
+<h2>Breakdown Geográfico (Equity)</h2>
+<div class="chart-box"><canvas id="geoChart"></canvas></div>
+</div>
+</div>
+
+<!-- P(FIRE) + Tornado -->
+<div class="grid-2">
+<div class="section">
+<h2>P(FIRE) — Monte Carlo</h2>
+<div class="fire-big pos">90.4%</div>
+<div style="text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:12px">Probabilidade FIRE aos 53</div>
+<div class="fire-row">
+<div class="fire-item"><div class="v pos">94.1%</div><div class="l">Favorável</div></div>
+<div class="fire-item"><div class="v pos">90.4%</div><div class="l">Base</div></div>
+<div class="fire-item"><div class="v" style="color:var(--yellow)">86.8%</div><div class="l">Stress</div></div>
+</div>
+<div style="margin-top:12px;padding:8px;background:var(--card2);border-radius:6px;font-size:.75rem;color:var(--muted);text-align:center">
+Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span> · Gatilho SWR≤2.4% · Bear-30%→65.2%
+</div>
+</div>
+<div class="section">
+<h2>Sensibilidade P(FIRE) (±10%)</h2>
+<div class="chart-box"><canvas id="tornadoChart"></canvas></div>
+<div class="src">⚠️ Estimativa manual — rodar fire_montecarlo.py --tornado para valores reais. Base=90.4%</div>
+</div>
+</div>
+
+<!-- Delta + Progress Bars + Custo Base -->
+<div class="grid-2">
+<div class="section">
+<h2>Delta vs Meta</h2>
+<div class="chart-box"><canvas id="deltaChart"></canvas></div>
+<div style="margin-top:10px">
+<div class="progress-row"><div class="progress-label"><span>SWRD 37.4%</span><span>meta 39.5%</span></div><div class="progress-bar"><div class="progress-fill" style="width:37.4%;max-width:100%;background:var(--accent)"></div><div class="progress-target" style="left:39.5%"></div></div></div>
+<div class="progress-row"><div class="progress-label"><span>AVGS 29.0%</span><span>meta 23.7%</span></div><div class="progress-bar"><div class="progress-fill" style="width:29%;max-width:100%;background:var(--purple)"></div><div class="progress-target" style="left:23.7%"></div></div></div>
+<div class="progress-row"><div class="progress-label"><span>AVEM 23.9%</span><span>meta 15.8%</span></div><div class="progress-bar"><div class="progress-fill" style="width:23.9%;max-width:100%;background:var(--cyan)"></div><div class="progress-target" style="left:15.8%"></div></div></div>
+<div class="progress-row"><div class="progress-label"><span>IPCA+ Longo 0.9%</span><span>meta 15.0%</span></div><div class="progress-bar"><div class="progress-fill" style="width:0.9%;max-width:100%;background:var(--green)"></div><div class="progress-target" style="left:15%"></div></div></div>
+</div>
+</div>
+<div class="section">
+<h2>Custo Base por Bucket</h2>
+<table>
+<thead><tr><th>Bucket</th><th class="num">Valor</th><th class="num">Custo USD</th><th class="num">Ganho</th><th class="num">Atual</th><th class="num">Meta</th><th class="num">Δ</th></tr></thead>
+<tbody>
+<tr><td><strong>SWRD</strong></td><td class="num">$251k</td><td class="num">$174k</td><td class="num pos">+44.3%</td><td class="num">37.4%</td><td class="num">39.5%</td><td class="num neg">-2.1</td></tr>
+<tr><td><strong>AVGS</strong></td><td class="num">$195k</td><td class="num">$131k</td><td class="num pos">+48.5%</td><td class="num">29.0%</td><td class="num">23.7%</td><td class="num pos">+5.3</td></tr>
+<tr><td><strong>AVEM</strong></td><td class="num">$160k</td><td class="num">$115k</td><td class="num pos">+39.7%</td><td class="num">23.9%</td><td class="num">15.8%</td><td class="num pos">+8.1</td></tr>
+</tbody>
+<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td><td class="num">$608k</td><td class="num">$421k</td><td class="num pos">+44.4%</td><td class="num">90.6%</td><td class="num">79%</td><td></td></tr></tfoot>
+</table>
+</div>
+</div>
+
+<!-- Glide Path + FIRE Buckets -->
+<div class="grid-2">
+<div class="section">
+<h2>Glide Path — Projeção de Alocação</h2>
+<div style="height:260px"><canvas id="glideChart"></canvas></div>
+<div class="src">Cenário aprovado: 79% constante pré-FIRE → rising equity pós-FIRE (Pfau-Kitces). fire_glide_path_scenarios.py</div>
+</div>
+<div class="section">
+<h2>FIRE Buckets</h2>
+<div class="chart-box"><canvas id="fireBucketsChart"></canvas></div>
+</div>
+</div>
+
+<!-- Posições -->
+<div class="section">
+<h2>Posições — Equity Internacional</h2>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Ativo</th><th>Bucket</th><th></th><th class="num">Qtde</th><th class="num">PM</th><th class="num">Preço</th><th class="num">USD</th><th class="num">Var Sem</th><th class="num">Ganho</th></tr></thead>
+<tbody>
+<tr><td><strong>SWRD</strong></td><td>SWRD</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num">5,291.64</td><td class="num">$32.88</td><td class="num">$47.46</td><td class="num">$251k</td><td class="num pos">+3.5%</td><td class="num pos">+44.3%</td></tr>
+<tr><td><strong>AVGS</strong></td><td>AVGS</td><td><span class="badge badge-alvo">Alvo</span></td><td class="num">233.43</td><td class="num">$24.93</td><td class="num">$24.22</td><td class="num">$5.7k</td><td class="num pos">+2.4%</td><td class="num neg">-2.8%</td></tr>
+<tr><td>AVUV</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num">548.88</td><td class="num">$81.57</td><td class="num">$111.63</td><td class="num">$61k</td><td class="num pos">+1.3%</td><td class="num pos">+36.9%</td></tr>
+<tr><td>AVDV</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num">947.60</td><td class="num">$61.37</td><td class="num">$101.54</td><td class="num">$96k</td><td class="num pos">+5.3%</td><td class="num pos">+65.5%</td></tr>
+<tr><td>USSC</td><td>AVGS</td><td><span class="badge badge-trans">T</span></td><td class="num">373.25</td><td class="num">$60.04</td><td class="num">$84.72</td><td class="num">$32k</td><td class="num">—</td><td class="num pos">+41.1%</td></tr>
+<tr><td>EIMI</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num">2,020.29</td><td class="num">$31.33</td><td class="num">$46.28</td><td class="num">$93k</td><td class="num pos">+4.0%</td><td class="num pos">+47.7%</td></tr>
+<tr><td>AVES</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num">926.55</td><td class="num">$45.47</td><td class="num">$59.80</td><td class="num">$55k</td><td class="num">—</td><td class="num pos">+31.5%</td></tr>
+<tr><td>DGS</td><td>AVEM</td><td><span class="badge badge-trans">T</span></td><td class="num">188.21</td><td class="num">$50.11</td><td class="num">$61.25</td><td class="num">$12k</td><td class="num">—</td><td class="num pos">+22.2%</td></tr>
+<tr><td>IWVL</td><td>—</td><td><span class="badge badge-trans">T</span></td><td class="num">34.00</td><td class="num">$37.23</td><td class="num">~$62.65</td><td class="num">$2.1k</td><td class="num">—</td><td class="num pos">+68.3%</td></tr>
+</tbody>
+<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td colspan="6">Total Equity</td><td class="num">$608k</td><td></td><td class="num pos">+44.4%</td></tr></tfoot>
+</table>
+</div>
+<div class="src">Qtde+PM: ibkr_lotes.json · Preços: web 07/abr · Var semanal: 31/mar-04/abr · ⚠️ Dados estáticos — rodar /dashboard para atualizar</div>
+</div>
+
+<!-- Aporte Calculadora + Shadows -->
+<div class="grid-2">
+<div class="section">
+<h2>Calculadora de Aporte</h2>
+<div class="calc-form">
+<div><label>Aporte R$</label><input type="number" id="aporteVal" value="25000"></div>
+<div><label>Câmbio</label><input type="number" id="cambioVal" value="5.25" step="0.01"></div>
+<button onclick="calcAporte()">Calcular</button>
+</div>
+<div id="aporteResult">
+<table><thead><tr><th>ETF</th><th class="num">Preço</th><th class="num">Cotas</th><th class="num">Valor USD</th></tr></thead>
+<tbody id="aporteBody"><tr><td colspan="4" style="color:var(--muted);text-align:center">Clique Calcular</td></tr></tbody></table>
+</div>
+<div style="margin-top:8px;padding:8px;background:var(--card2);border-radius:6px;font-size:.75rem;color:var(--muted)">
+<strong>Cascade:</strong> IPCA+(≥6%) → Renda+(≥6.5%) → Equity (mais subpeso)<br>
+<strong>Prioridade:</strong> SWRD (-2.1pp) → IPCA+ Longo (-14.1pp)
+</div>
+</div>
+<div class="section">
+<h2>Shadow Portfolios (Q1 2026)</h2>
+<table>
+<thead><tr><th>Portfolio</th><th class="num">Ret</th><th class="num">Delta</th></tr></thead>
+<tbody>
+<tr><td>📊 <strong>Atual</strong></td><td class="num pos">+1.73%</td><td class="num">—</td></tr>
+<tr><td>🎯 Target 50/30/20</td><td class="num neg">≈−1.11%</td><td class="num">—</td></tr>
+<tr><td>🅰️ VWRA</td><td class="num neg">−1.42%</td><td class="num pos">+3.15pp</td></tr>
+<tr><td>🅱️ IPCA+</td><td class="num pos">+2.30%</td><td class="num neg">−0.57pp</td></tr>
+<tr><td>🅲 VWRA+IPCA+Crypto</td><td class="num" style="color:var(--muted)">—</td><td class="num" style="color:var(--muted)">tracking abr/26+</td></tr>
+</tbody>
+</table>
+<div style="margin-top:10px;padding:8px;background:var(--card2);border-radius:6px;font-size:.75rem;color:var(--muted)">
+Alpha pós-haircut: ~0.16%/ano · TER Δ VWRA: +2.7bps
+</div>
+</div>
+</div>
+
+<!-- Bollinger Bands + TLH -->
+<div class="grid-2">
+<div class="section">
+<h2>Câmbio BRL/USD — Bollinger Bands (Q1 2026)</h2>
+<div style="height:240px"><canvas id="bollingerChart"></canvas></div>
+<div class="src">PTAX semanal jan-abr/2026. Banda: MA5±2σ. Fonte: BCB/web</div>
+</div>
+<div class="section">
+<h2>TLH Monitor — Transitórios</h2>
+<table>
+<thead><tr><th>Ativo</th><th class="num">Qtde</th><th class="num">PM</th><th class="num">Preço</th><th class="num">Ganho</th><th>Subst.</th></tr></thead>
+<tbody>
+<tr><td>AVUV</td><td class="num">548.88</td><td class="num">$81.57</td><td class="num">$111.63</td><td class="num pos">+36.9%</td><td>AVGS.L</td></tr>
+<tr><td>AVDV</td><td class="num">947.60</td><td class="num">$61.37</td><td class="num">$101.54</td><td class="num pos">+65.5%</td><td>AVGS.L</td></tr>
+<tr><td>USSC</td><td class="num">373.25</td><td class="num">$60.04</td><td class="num">$84.72</td><td class="num pos">+41.1%</td><td>AVGS.L</td></tr>
+<tr><td>EIMI</td><td class="num">2,020.29</td><td class="num">$31.33</td><td class="num">$46.28</td><td class="num pos">+47.7%</td><td>AVEM.L</td></tr>
+<tr><td>AVES</td><td class="num">926.55</td><td class="num">$45.47</td><td class="num">$59.80</td><td class="num pos">+31.5%</td><td>AVEM.L</td></tr>
+<tr><td>DGS</td><td class="num">188.21</td><td class="num">$50.11</td><td class="num">$61.25</td><td class="num pos">+22.2%</td><td>AVEM.L</td></tr>
+<tr><td>IWVL</td><td class="num">34.00</td><td class="num">$37.23</td><td class="num">~$62.65</td><td class="num pos">+68.3%</td><td>—</td></tr>
+</tbody>
+</table>
+<div style="margin-top:6px;font-size:.7rem;color:var(--muted)">✅ Nenhuma oportunidade TLH. Reativar em drawdown.</div>
+</div>
+</div>
+
+<!-- RF + Crypto -->
+<div class="section">
+<h2>Renda Fixa & Crypto</h2>
+<div class="rf-grid">
+<div class="rf-card"><div class="val">R$ 33.285</div><div class="lbl">IPCA+ 2040</div><div class="sub">Estrutural · HTM · ~7.20%</div></div>
+<div class="rf-card"><div class="val">R$ 112.466</div><div class="lbl">Renda+ 2065</div><div class="sub">Tático · MtM · ~6.93%</div></div>
+<div class="rf-card"><div class="val">R$ 89.095</div><div class="lbl">IPCA+ 2029</div><div class="sub">Reserva emergência</div></div>
+<div class="rf-card"><div class="val" style="color:var(--yellow)">R$ 97.359</div><div class="lbl">HODL11</div><div class="sub">1,676×R$58.09 · 2.8%</div></div>
+</div>
+</div>
+
+</div>
+
+<footer>
+ibkr_lotes.json (qtde/custo) · Web (preços/PTAX) · scorecard.md (P(FIRE)/shadows) · historico_carteira.csv (timeline) · Zero planilha
+</footer>
+
+<script>
 // === DATA ===
 const patrimonio = [
 ['2021-03','2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12',
