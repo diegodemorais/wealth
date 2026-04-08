@@ -105,6 +105,25 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 ---
 
+## Regra de Proveniência de Dados (Data Provenance)
+
+> Originada de HD-swrd-114-cotas (2026-04-08): holdings.md foi populado com SWRD 5,405.56 errado porque o dado veio de contexto/estado intermediário, não da fonte primária.
+
+**Regra**: Qualquer escrita em `dados/holdings.md`, `dados/dashboard_state.json` ou qualquer arquivo em `dados/` DEVE ter a fonte verificada diretamente antes de escrever.
+
+| Dado | Fonte primária obrigatória | Como verificar |
+|------|---------------------------|----------------|
+| Quantidades de ETFs (IBKR) | Carteira Viva (Google Sheets, aba Utils) via `gws sheets read` OU `ibkr_analysis.py` | Comparar qtde por qtde antes de escrever |
+| Posições Tesouro Direto | Tesouro Direto / extrato corretora | Confirmar com Diego se não há extrato recente |
+| Preços / valores USD | yfinance via script (`generate_data.py`) | Nunca hardcodar preço — usar pipeline |
+| Câmbio de referência | PTAX BCB via `fx_utils.py` | Nunca usar número de cabeça |
+
+**Proibido**: populado a partir de contexto da conversa, memória de sessão, ou arquivo intermediário sem rastrear até a fonte primária.
+
+**Se a fonte primária não estiver acessível** (ex: fora de sessão com gws): documentar explicitamente no arquivo o que está desatualizado e por quê, e não escrever o valor antigo como se fosse atual.
+
+---
+
 ## Checklist Obrigatório — Antes de Lançar Qualquer Agente
 
 > **REGRA**: Antes de lançar o primeiro agente em qualquer issue, o Head DEVE executar este checklist. Sem exceção.

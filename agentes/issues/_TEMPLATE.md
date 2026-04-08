@@ -38,6 +38,11 @@
 - [ ] Item 2
 - [ ] Item 3
 
+> **Se esta issue toca `dados/holdings.md` ou qualquer arquivo em `dados/`:**
+> - [ ] Verificar qtdes via `gws sheets read` (Carteira Viva, aba Utils) OU `ibkr_analysis.py` antes de qualquer escrita
+> - [ ] Comparar campo a campo com a fonte primária — nunca usar valor de contexto/memória de sessão
+> - [ ] Documentar a fonte no cabeçalho do arquivo atualizado
+
 ---
 
 ## Raciocinio
