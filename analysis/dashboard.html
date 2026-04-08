@@ -95,8 +95,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- S1: PRÓXIMAS AÇÕES -->
 <div class="actions-box">
 <h2>⚡ Próximas Ações</h2>
-<div class="prio"><span class="prio-num">1.</span> <strong>Aporte equity → SWRD</strong> — underweight -3.4pp. Prioridade de aportes equity. Piso cascade: IPCA+ taxa ≥ 6.0% → DCA IPCA+ 2040 simultâneo.</div>
-<div class="prio"><span class="prio-num">2.</span> <strong>IPCA+ longo DCA ativo</strong> — gap -14.1pp vs alvo 15%. Taxa atual ~7.20% → piso 6.0%. Comprar TD 2040 (80%) + TD 2050 (20%).</div>
+<div class="prio"><span class="prio-num">1.</span> <strong>IPCA+ longo DCA ativo</strong> — taxa ~7.20% ≥ piso 6.0% → <em>janela ativa, prioridade máxima</em>. Gap -14.1pp vs alvo 15%. Comprar TD 2040 (80%) + TD 2050 (20%). <span style="color:var(--muted);font-size:.75em">IPCA+ tem prioridade enquanto taxa ≥ 6.0% (janela ativa)</span></div>
+<div class="prio"><span class="prio-num">2.</span> <strong>Renda+ 2065 DCA</strong> — taxa ~6.93% ≥ piso 6.5% → segunda prioridade cascade. Gap vs alvo: manter posição atual, aumentar se oportunidade.</div>
+<div class="prio"><span class="prio-num">3.</span> <strong>Equity → SWRD</strong> — underweight -3.4pp. Caso IPCA+ e Renda+ já atingidos ou taxa abaixo dos pisos: aportar SWRD (equity mais subpeso).</div>
 <div class="prio-warn">🔔 <strong>Gatilho:</strong> AVGS underperformance — verificar rolling 12m vs SWRD trimestralmente. AVGS AUM ≥ $300M monitorar.</div>
 <div class="prio-warn">📋 <strong>Casamento/Filho iminente (~2026-27)</strong> — ao decidir: recalibrar custo de vida, seguro de vida, testamento, estrutura patrimonial.</div>
 </div>
@@ -114,17 +115,17 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <div class="kpi-sub"><span class="pv" id="kpiPatUsd">USD 607k equity</span></div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">TWR USD / ano</div>
+  <div class="kpi-label">CAGR Target (USD)</div>
   <div class="kpi-value pos" id="kpiTwrUsd">12.9%</div>
-  <div class="kpi-sub">Retorno ETFs em USD · sem câmbio · backtest R3</div>
+  <div class="kpi-sub" title="Backtest R3 (ago/2019–abr/2026) com proxies AVUV/AVDV→AVGS, AVEM US→AVEM.L. Não representa retorno real do portfolio.">Backtest R3 · proxies · não é retorno real</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">TWR BRL / ano</div>
+  <div class="kpi-label">CAGR Target (BRL est.)</div>
   <div class="kpi-value pos" id="kpiTwrBrl">—</div>
-  <div class="kpi-sub">TWR USD + contribuição cambial BRL/USD</div>
+  <div class="kpi-sub" title="CAGR USD + contribuição cambial estimada desde jul/2019 (câmbio ≈ R$3.79). Estimativa indicativa.">CAGR USD + câmbio jul/2019→atual · estimativa</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">Delta vs Shadow A</div>
+  <div class="kpi-label">Delta vs VWRA</div>
   <div class="kpi-value pos">+3.15pp</div>
   <div class="kpi-sub">Q1 2026: +3.15pp | 21 anos (R6): +0.38pp</div>
 </div>
@@ -205,7 +206,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
     <div class="progress-bar"><div class="progress-fill" style="background:var(--yellow);width:60%"></div></div>
   </div>
   <div class="progress-row">
-    <div class="progress-label"><span>Shadow A (VWRA)</span><span>0.220%</span></div>
+    <div class="progress-label"><span>VWRA (mercado puro)</span><span>0.220%</span></div>
     <div class="progress-bar"><div class="progress-fill" style="background:var(--green);width:55%"></div></div>
   </div>
   <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Delta +2.7bps vs VWRA · Alpha ~0.16%/ano</div>
@@ -544,38 +545,6 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src">Cascade: IPCA+ taxa ≥ 6.0% → DCA IPCA+ 2040 simultâneo com equity. Pisos de portfolio_analytics.py.</div>
 </div>
 
-<!-- S23: SHADOWS -->
-<div class="section">
-<h2>Shadow Portfolios — Tracking</h2>
-<table>
-<thead><tr>
-  <th>Shadow</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira (Q1 2026)</th><th class="num">Status</th>
-</tr></thead>
-<tbody>
-<tr>
-  <td><strong>Shadow A</strong></td><td>100% VWRA.L</td>
-  <td class="num">0.220%</td>
-  <td class="num neg">−3.15pp</td>
-  <td><span class="badge badge-alvo">Benchmark primário</span></td>
-</tr>
-<tr>
-  <td><strong>Shadow B</strong></td><td>100% IPCA+ 2040</td>
-  <td class="num">0.200%</td>
-  <td class="num neg" title="Shadow B (IPCA+) superou a carteira em 0.57pp — IPCA+ bateu equity. Ruim para a carteira.">Shadow B superou por +0.57pp</td>
-  <td><span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF benchmark</span></td>
-</tr>
-<tr>
-  <td><strong>Shadow C</strong></td><td>79% VWRA + 15% IPCA+ + 3% HODL11</td>
-  <td class="num">0.207%</td>
-  <td class="num">Tracking desde Abr/2026</td>
-  <td><span class="badge badge-trans">Novo</span></td>
-</tr>
-</tbody>
-</table>
-<div class="src">Fonte: scorecard.md 1.2 + 1.3 · Shadow C adicionado HD-scorecard 2026-03-26</div>
-</div>
-
-
 <!-- S24: BOLLINGER BANDS -->
 <div class="section">
 <h2>Bollinger Bands — Retornos Mensais (MA5 ± 2σ)</h2>
@@ -637,7 +606,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S27: BACKTEST HISTÓRICO -->
 <div class="section">
-<h2>Backtest Histórico — Target vs Shadow A (base 100)</h2>
+<h2>Backtest Histórico — Target vs VWRA (base 100)</h2>
 <div class="period-btns" id="backtestPeriodBtns">
   <button onclick="setBacktestPeriod('1y')">1y</button>
   <button onclick="setBacktestPeriod('3y')">3y</button>
@@ -648,7 +617,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="overflow-x:auto;margin-top:12px">
 <table id="backtestMetricsTable">
 <thead><tr>
-  <th>Métrica</th><th class="num">Target</th><th class="num">Shadow A</th><th class="num">Delta</th>
+  <th>Métrica</th><th class="num">Target</th><th class="num">VWRA</th><th class="num">Delta</th>
 </tr></thead>
 <tbody id="backtestMetricsBody"></tbody>
 </table>
@@ -658,6 +627,37 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div
 </div>
+</div>
+
+<!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
+<div class="section">
+<h2>Shadow Portfolios — Tracking</h2>
+<table>
+<thead><tr>
+  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira (Q1 2026)</th><th class="num">Status</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td><strong>VWRA (mercado puro)</strong></td><td>100% VWRA.L</td>
+  <td class="num">0.220%</td>
+  <td class="num neg">−3.15pp</td>
+  <td><span class="badge badge-alvo">Benchmark primário</span></td>
+</tr>
+<tr>
+  <td><strong>IPCA+ longo (RF puro)</strong></td><td>100% IPCA+ 2040</td>
+  <td class="num">0.200%</td>
+  <td class="num neg" title="IPCA+ (RF puro) superou a carteira em 0.57pp — IPCA+ bateu equity. Ruim para a carteira.">IPCA+ superou por +0.57pp</td>
+  <td><span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF benchmark</span></td>
+</tr>
+<tr>
+  <td><strong>VWRA + RF (60/40)</strong></td><td>79% VWRA + 15% IPCA+ + 3% HODL11</td>
+  <td class="num">0.207%</td>
+  <td class="num">Tracking desde Abr/2026</td>
+  <td><span class="badge badge-trans">Novo</span></td>
+</tr>
+</tbody>
+</table>
+<div class="src">Fonte: scorecard.md 1.2 + 1.3 · Benchmark 60/40 adicionado HD-scorecard 2026-03-26</div>
 </div>
 
 <footer>
@@ -893,15 +893,17 @@ const patFim = DATA.timeline.values[DATA.timeline.values.length - 1];
 const anos = (2026 + 3/12) - (2021 + 3/12);
 const cagr = (Math.pow(patFim / patInicio, 1/anos) - 1) * 100;
 
-// D1 — TWR real (sem aportes)
-// TWR_USD: CAGR do Target em USD — backtest_portfolio.py --regime 3 (Aug/2019→Apr/2026, 81 meses)
-const TWR_USD = 12.88; // %/ano — fonte: backtest R3, confirmado 2026-04-08
-// TWR_BRL: TWR_USD + contribuição cambial estimada
-// Câmbio 2021-03 ≈ R$5.70, atual 5.1687 → depreciação anual ≈ (5.1687/5.70)^(1/anos)-1
-const cambioInicio = 5.70; // estimativa USD/BRL mar/2021
+// D1 — CAGR Backtest Target (não é TWR real — sem fluxos reais de aportes/retiradas)
+// CAGR_USD: CAGR do Target em USD — backtest_portfolio.py --regime 3 (Aug/2019→Apr/2026, 81 meses)
+const TWR_USD = 12.88; // %/ano — fonte: backtest R3, confirmado 2026-04-08 (CAGR com proxies, não TWR GIPS)
+// CAGR_BRL: CAGR_USD + contribuição cambial estimada desde início do backtest R3 (Jul/2019)
+// Câmbio Jul/2019 ≈ R$3.79 (USDBRL=X yfinance — início do backtest R3)
+const cambioInicio = 3.79; // estimativa USD/BRL jul/2019 — início do backtest R3
 const cambioFim = DATA.cambio;
-const fx_contrib_anual = (Math.pow(cambioFim / cambioInicio, 1 / anos) - 1) * 100;
-// TWR_BRL = (1 + TWR_USD/100) * (1 + fx_contrib/100) - 1, em %/ano
+// anos para câmbio: Jul/2019 → Abr/2026 ≈ 6.75 anos
+const anosCambio = 6.75;
+const fx_contrib_anual = (Math.pow(cambioFim / cambioInicio, 1 / anosCambio) - 1) * 100;
+// CAGR_BRL = (1 + CAGR_USD/100) * (1 + fx_contrib/100) - 1, em %/ano
 const TWR_BRL = ((1 + TWR_USD/100) * (1 + fx_contrib_anual/100) - 1) * 100;
 
 // Progress FIRE
@@ -947,7 +949,7 @@ function calcWellness() {
 
   // Progresso FIRE (15pts)
   const progPts = Math.min(15, (DATA.premissas.patrimonio_atual / PAT_GATILHO) * 15);
-  add('Progresso FIRE', progPts, 15, '#3b82f6', `${(progPts/15*100).toFixed(0)}%`);
+  add('Progresso FIRE', progPts, 15, '#3b82f6', `${(progPts/15*100).toFixed(1)}%`);
 
   // IPCA+ gap vs alvo (10pts) — gap = alvo 15% vs atual 0.9% = 14.1pp
   const ipcaGap = Math.abs(DATA.drift.IPCA.alvo - DATA.drift.IPCA.atual);
@@ -962,7 +964,7 @@ function calcWellness() {
   // TER vs benchmark (5pts) — 0.247% vs 0.220%
   const terDelta = 0.247 - 0.220;
   const terPts = terDelta <= 0 ? 5 : terDelta <= 0.1 ? 3 : 0;
-  add('TER vs Shadow A', terPts, 5, terPts >= 5 ? '#22c55e' : '#eab308', `+${(terDelta*100).toFixed(2)}bp`);
+  add('TER vs VWRA', terPts, 5, terPts >= 5 ? '#22c55e' : '#eab308', `+${(terDelta*100).toFixed(2)}bp`);
 
   // TLH opps (5pts) — nenhuma oportunidade (todos com lucro)
   const tlhOpps = DATA.tlh.filter(t => (t.price / t.pm - 1) <= -0.05).length;
@@ -1230,7 +1232,7 @@ function buildDeltaBar() {
   charts.delta = new Chart(document.getElementById('deltaChart'), {
     type: 'bar',
     data: {
-      labels: ['vs Shadow A\n(VWRA)', 'vs Shadow B\n(IPCA+ puro)', 'vs Shadow C\n(VWRA+RF+Crypto)'],
+      labels: ['vs VWRA\n(mercado puro)', 'vs IPCA+\n(RF puro)', 'vs 60/40\n(VWRA+RF+Crypto)'],
       datasets: [{
         label: 'Delta (pp)',
         data: [3.15, -0.57, null],
@@ -1272,10 +1274,13 @@ function buildGlidePath() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
+      plugins: {
+        legend: { labels: { color: '#94a3b8' } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+      },
       scales: {
         x: { stacked: true, ticks: { color: '#94a3b8' } },
-        y: { stacked: true, max: 105, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        y: { stacked: true, min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
@@ -1427,7 +1432,7 @@ function buildFeeAnalysis() {
   charts.fee = new Chart(document.getElementById('feeChart'), {
     type: 'bar',
     data: {
-      labels: ['Carteira (0.247%)', 'Shadow A (0.220%)', 'Shadow C (0.207%)'],
+      labels: ['Carteira (0.247%)', 'VWRA (0.220%)', '60/40 (0.207%)'],
       datasets: [{ label: 'TER acumulado 11 anos', data: [custo, custo_a, 0.00207*pat*anos].map(v => Math.round(v)), backgroundColor: ['rgba(234,179,8,.7)','rgba(34,197,94,.7)','rgba(168,85,247,.7)'] }]
     },
     options: {
@@ -1634,7 +1639,7 @@ function buildBacktest(period) {
       labels: dates,
       datasets: [
         { label: 'Target (50/30/20)', data: target, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.2 },
-        { label: 'Shadow A (VWRA)', data: shadowA, borderColor: '#94a3b8', borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.2, borderDash: [4,2] },
+        { label: 'VWRA', data: shadowA, borderColor: '#94a3b8', borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.2, borderDash: [4,2] },
       ]
     },
     options: {

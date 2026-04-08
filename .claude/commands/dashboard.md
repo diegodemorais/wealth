@@ -123,7 +123,8 @@ Implementar uma função `periodSelector(containerId, chartInstance, allLabels, 
 Seções (todas obrigatórias, nesta ordem):
 
 1. **Próximas Ações** (TOPO): próximo aporte via cascade (pisos de `portfolio_analytics.py`), gatilhos ativos (`gatilhos.md`), drift alerts. Background amarelo.
-   - Ordem dos gatilhos: **Equity primeiro** (threshold de patrimônio para mudar alocação equity), **IPCA+ segundo** (meta de alocação RF). Não inverter.
+   - **Cascade de aportes** (ler de `otimizador_aporte` em `portfolio_analytics.py`): IPCA+ longo é prioridade 1 quando taxa >= 6.0% ("aproveitar janela"), Renda+ é prioridade 2 quando taxa >= 6.5%, equity é o default. Exibir nesta ordem — não inverter.
+   - **Nomes dos benchmarks**: Shadow A = "VWRA (mercado puro)", Shadow B = "IPCA+ longo (RF puro)", Shadow C = "VWRA + RF (60/40)".
 
 2. **Financial Wellness Score**: nota 0-100 calculada em JS (não hardcoded) com os pesos abaixo. Semáforo: ≥80 verde, 60-79 amarelo, <60 vermelho. **Posicionamento**: card secundário, menor que P(FIRE). Não deve ser o indicador de destaque — P(FIRE) é o KPI principal.
 
