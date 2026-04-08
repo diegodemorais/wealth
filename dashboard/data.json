@@ -1,69 +1,69 @@
 {
-  "_generated": "2026-04-08T11:12:52",
-  "_generated_brt": "2026-04-08T11:12:52-03:00",
+  "_generated": "2026-04-08T13:16:33",
+  "_generated_brt": "2026-04-08T13:16:33-03:00",
   "date": "2026-04-08",
-  "cambio": 5.1383,
+  "cambio": 5.0992,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.13,
+      "price": 47.98,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.75,
+      "price": 26.6775,
       "bucket": "AVGS",
       "status": "alvo"
     },
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.71,
+      "price": 114.5056,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.805,
+      "price": 105.4,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.6013,
+      "price": 84.21,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.52,
+      "price": 49.33,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.24,
+      "price": 63.0838,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.645,
+      "price": 62.5299,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 66.07,
+      "price": 65.99,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -80,9 +80,9 @@
     "pisoTaxaRendaPlus": 6.5
   },
   "pfire50": {
-    "base": 90.4,
-    "fav": 94.1,
-    "stress": 86.8
+    "base": 85.4,
+    "fav": 91.3,
+    "stress": 81.1
   },
   "pfire53": {
     "base": 90.4,
@@ -90,7 +90,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3564002,
+    "patrimonio_atual": 3529204,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1565,11 +1565,11 @@
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.6,
+      "atual": 24.5,
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 3.4,
+      "atual": 3.5,
       "alvo": 15.0
     },
     "HODL11": {
@@ -1583,7 +1583,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.71,
+      "price": 114.5056,
       "ucits": "AVGS.L"
     },
     {
@@ -1591,7 +1591,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.805,
+      "price": 105.4,
       "ucits": "AVGS.L"
     },
     {
@@ -1599,7 +1599,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.6013,
+      "price": 84.21,
       "ucits": "AVGS.L"
     },
     {
@@ -1607,7 +1607,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.52,
+      "price": 49.33,
       "ucits": "AVEM.L"
     },
     {
@@ -1615,7 +1615,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.24,
+      "price": 63.0838,
       "ucits": "AVEM.L"
     },
     {
@@ -1623,7 +1623,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.645,
+      "price": 62.5299,
       "ucits": "AVEM.L"
     },
     {
@@ -1631,7 +1631,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 66.07,
+      "price": 65.99,
       "ucits": "JPGL.L"
     }
   ],
@@ -1639,7 +1639,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2452302.0,
+    "crescReal": 2417504.0,
     "_estimativa": true
   },
   "shadows": {
@@ -1651,5 +1651,37 @@
       "delta_a": 3.15,
       "delta_b": -0.57
     }
-  }
+  },
+  "minilog": [
+    {
+      "data": "2026-03-13",
+      "tipo": "Depósito IBKR",
+      "ativo": "USD",
+      "valor": "$5,600"
+    },
+    {
+      "data": "2026-03-13",
+      "tipo": "Compra",
+      "ativo": "AVGS",
+      "valor": "233 × $24.93"
+    },
+    {
+      "data": "2026-03-09",
+      "tipo": "Compra",
+      "ativo": "SWRD",
+      "valor": "361 × $46.84"
+    },
+    {
+      "data": "2026-03-06",
+      "tipo": "Depósito IBKR",
+      "ativo": "USD",
+      "valor": "$5,000"
+    },
+    {
+      "data": "2026-01-29",
+      "tipo": "Depósito IBKR",
+      "ativo": "USD",
+      "valor": "$3,750"
+    }
+  ]
 }

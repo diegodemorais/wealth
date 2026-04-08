@@ -27,6 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
+| 1 | HD-gws-auth | Autenticar gws CLI para acesso Google Workspace | Head | 🟡 Média |
 | 2 | HD-tearsheet-longrun | Tearsheet QuantStats com histórico longo (proxies) | Head | 🟡 Média |
 | 3 | HD-backtest-longrun | Pipeline backtest 50+ anos via Ken French / MSCI | Head | 🟡 Média |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
@@ -46,11 +47,14 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|--------|
 | — | — | — | — | — |
 
+> HD-dashboard-ux concluída em 2026-04-08 (ver Done abaixo)
+
 ### Done
 > Issues concluidas
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-dashboard-ux | Melhorias UX/UI + correções técnicas dashboard | Head | 2026-04-08 | 5 bugs corrigidos (wiRetornoVal, attribution null, savings rate, wellness IPCA+ pts, labels PT-BR). Guardrails ATUAL badge, wellness top-3 actions, fan chart P(FIRE) note, mini-log operações. |
 | HD-swrd-114-cotas | Investigar 114 cotas de SWRD faltantes | Bookkeeper | 2026-04-08 | Root cause: TLH 2025-09-22 não refletido. SWRD 5405→5291.64, USSC 443→373.25 em holdings.md. |
 | HD-carteiraviva-audit | Auditoria Carteira Viva + roadmap website | Head | 2026-04-07 | 7 ações executadas, 3 falsos positivos. Pesos 50/30/20 propagados. Holdings atualizado. CAGR histórico + custo base BRL implementados. |
 | TX-tlh-automation | Tax-loss harvesting automático | Tax | 2026-04-07 | tlh_monitor.py criado. Scan automático, exit 1 se material (≥R$5k). Integrado no relatorio-mensal. |

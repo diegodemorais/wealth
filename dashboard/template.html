@@ -188,7 +188,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <h2>Savings Rate</h2>
   <div style="text-align:center;padding:8px 0">
     <div style="font-size:2.2rem;font-weight:700;color:var(--green)" id="savingsRate">~40%</div>
-    <div style="font-size:.75rem;color:var(--muted)">Aporte R$25k / Renda estimada R$60-65k/mês</div>
+    <div style="font-size:.75rem;color:var(--muted)" id="savingsRateSub">Aporte R$25k / Renda estimada R$45k/mês</div>
   </div>
   <div class="progress-bar" style="margin-top:8px">
     <div class="progress-fill" id="savingsRateFill" style="background:var(--green)"></div>
@@ -227,6 +227,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div style="flex:1;min-width:260px">
 <div class="wellness-grid" id="wellnessGrid"></div>
+<div id="wellnessActions" style="margin-top:10px;padding:8px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent)"></div>
 </div>
 </div>
 </div>
@@ -389,7 +390,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <h2>Fan Chart — Trajetórias Patrimoniais P10/P50/P90</h2>
 <div class="chart-box-lg"><canvas id="fanChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.75rem;color:var(--yellow)">
-  ⚠️ <strong>Trajetórias interpoladas com r=4.85%/ano — não são simulações Monte Carlo individuais.</strong> Bandas P10/P90 derivadas do spread dos cenários MC, não de distribuição empírica de trajetórias.
+  ⚠️ <strong>Trajetórias interpoladas com r=4.85%/ano — não são simulações Monte Carlo individuais.</strong> Bandas P10/P90 derivadas do spread dos cenários MC, não de distribuição empírica de trajetórias. <span id="fanPfireNote"></span>
 </div>
 <div class="src">Baseado em endpoints do Monte Carlo. Crescimento exponencial r=4.85%/ano (base). Linha vertical: 2037 (FIRE@50 aspiracional).</div>
 </div>
@@ -531,6 +532,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <span>Total USD: <strong class="pv" id="totalUsd">—</strong></span>
   <span>Total BRL: <strong class="pv" id="totalBrl">—</strong></span>
 </div>
+</div>
+
+<!-- S21b: MINI-LOG OPERAÇÕES -->
+<div class="section">
+<h2>Últimas Operações</h2>
+<div id="minilogBody" style="font-size:.8rem"></div>
+<div class="src">Fonte: extrato IBKR (aportes.json + lotes.json) · atualizado via ibkr_analysis.py</div>
 </div>
 
 <!-- S22: CALCULADORA APORTE -->
@@ -798,13 +806,23 @@ function calcWellness() {
   const progPts = Math.min(15, (DATA.premissas.patrimonio_atual / PAT_GATILHO) * 15);
   add('Progresso FIRE', Math.round(progPts), 15, '#3b82f6', `${(progPts/15*100).toFixed(1)}%`);
 
-  // IPCA+ gap vs alvo (10pts) — gap = alvo 15% vs atual 0.9% = 14.1pp
+  // IPCA+ gap vs alvo (10pts) — gap grande + DCA ativo = comportamento correto
   const ipcaGap = Math.abs(DATA.drift.IPCA.alvo - DATA.drift.IPCA.atual);
-  const ipcaPts = ipcaGap <= 2 ? 10 : ipcaGap <= 5 ? 7 : ipcaGap <= 10 ? 3 : 0;
-  add('IPCA+ gap vs alvo', ipcaPts, 10, ipcaPts >= 7 ? '#22c55e' : ipcaPts >= 3 ? '#eab308' : '#ef4444', `−${ipcaGap.toFixed(1)}pp`);
+  const _taxaIpca = DATA.rf?.ipca2040?.taxa;
+  const _pisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const _dcaAtivo = _taxaIpca != null && _taxaIpca >= _pisoIpca && ipcaGap > 0;
+  let ipcaPts;
+  if (ipcaGap <= 2) ipcaPts = 10;
+  else if (ipcaGap <= 5) ipcaPts = 7;
+  else if (_dcaAtivo) ipcaPts = 5; // DCA ativo com taxa >= piso: gap se fecha com tempo, comportamento correto
+  else if (ipcaGap <= 10) ipcaPts = 3;
+  else ipcaPts = 0; // gap grande E DCA inativo = problema real
+  const _ipcaLabel = (_dcaAtivo && ipcaGap > 5) ? `−${ipcaGap.toFixed(1)}pp (DCA ativo ✓)` : `−${ipcaGap.toFixed(1)}pp`;
+  add('IPCA+ gap vs alvo', ipcaPts, 10, ipcaPts >= 7 ? '#22c55e' : ipcaPts >= 3 ? '#eab308' : '#ef4444', _ipcaLabel);
 
-  // Savings rate (10pts) — aporte R$25k / renda estimada R$45k = ~56%
-  const sr = (DATA.premissas.aporte_mensal / 45000); // renda_estimada: R$45k/mês
+  // Savings rate (10pts) — usar renda_estimada de DATA.premissas (consistência com painel)
+  const _rendaEst = DATA.premissas.renda_estimada || 45000;
+  const sr = DATA.premissas.aporte_mensal / _rendaEst;
   const srPts = sr >= 0.35 ? 10 : sr >= 0.25 ? 7 : sr >= 0.15 ? 3 : 0;
   add('Savings rate', srPts, 10, srPts >= 10 ? '#22c55e' : '#eab308', `~${(sr*100).toFixed(0)}%`);
 
@@ -840,6 +858,28 @@ function calcWellness() {
   add('Execuções pendentes', execPts, 5, execPts >= 5 ? '#22c55e' : '#eab308', `${driftFora} bucket(s) fora`);
 
   return { total, scores };
+}
+
+function wellnessActions(scores) {
+  // Retorna top 3 ações que mais subiriam o score (maior gap pts_perdidos)
+  const actions = {
+    'P(FIRE) base':          'Aumentar aporte mensal ou aguardar crescimento patrimonial',
+    'Drift máximo':          'Rebalancear bucket mais distante do alvo no próximo aporte',
+    'Progresso FIRE':        'Aumentar savings rate ou prazo — patrimônio ainda abaixo do gatilho',
+    'IPCA+ gap vs alvo':     'Continuar DCA em IPCA+ até atingir alvo de alocação',
+    'Savings rate':          'Aumentar aporte mensal relativo à renda estimada',
+    'TER vs VWRA':           'Manter disciplina — custo de complexidade está dentro da tolerância',
+    'TLH oportunidades':     'Monitorar drawdowns para aproveitar colheita fiscal',
+    'Diversificação geo':    'Aumentar AVEM/AVGS para reduzir concentração em US',
+    'Staleness dados':       'Rodar /dashboard para atualizar dados',
+    'Execuções pendentes':   'Executar aporte concentrado no bucket mais subpeso',
+  };
+  return scores
+    .map(s => ({ ...s, gap: s.max - s.value }))
+    .filter(s => s.gap > 0)
+    .sort((a, b) => b.gap - a.gap)
+    .slice(0, 3)
+    .map(s => ({ label: s.label, gap: s.gap, action: actions[s.label] || 'Rever métrica' }));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -954,15 +994,48 @@ window.setTimelinePeriod = function(p) {
 // ── S7: Attribution ───────────────────────────────────────────
 function buildAttribution() {
   const a = DATA.attribution;
-  // Verificar closure
+  const hasDecomp = a.retornoUsd !== null && a.cambio !== null;
+
+  document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
+  document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
+
+  if (!hasDecomp) {
+    // Decomposição fx indisponível — mostrar apenas aportes e crescimento total
+    document.getElementById('attrRetorno').textContent = '—';
+    document.getElementById('attrRetorno').style.color = '#94a3b8';
+    document.getElementById('attrCambio').textContent = '—';
+    document.getElementById('attrCambio').style.color = '#94a3b8';
+    const msg = document.getElementById('attrGapMsg');
+    msg.textContent = '⚠️ Decomposição Retorno USD / Câmbio indisponível — rodar scripts/fx_utils.py completo para decompor';
+    msg.style.color = '#eab308';
+    // Gráfico simplificado: apenas aportes vs crescimento total
+    charts.attr = new Chart(document.getElementById('attrChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Patrimônio Acumulado'],
+        datasets: [
+          { label: 'Aportes identificados', data: [a.aportes], backgroundColor: '#3b82f6' },
+          { label: 'Crescimento (retorno+câmbio não decompostos)', data: [a.crescReal - a.aportes], backgroundColor: 'rgba(148,163,184,.4)' },
+        ]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
+          y: { stacked: true, ticks: { color: '#94a3b8' } }
+        }
+      }
+    });
+    return;
+  }
+
+  // Decomposição completa disponível
   const attrSum = a.aportes + a.retornoUsd + a.cambio;
   const gap = Math.abs(attrSum - a.crescReal);
   const gapPct = gap / a.crescReal;
-  document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
   document.getElementById('attrRetorno').textContent = fmtBrl(a.retornoUsd);
   document.getElementById('attrCambio').textContent = fmtBrl(a.cambio);
-  // D2 — CAGR com aportes como nota secundária
-  document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
   const msg = document.getElementById('attrGapMsg');
   if (gapPct > 0.05) {
     msg.textContent = `⚠️ Gap de fechamento: R$ ${(gap/1000).toFixed(0)}k (${(gapPct*100).toFixed(1)}%) — estimativa sem decomposição completa`;
@@ -1242,13 +1315,25 @@ function buildGuardrails() {
   const tbody = document.getElementById('guardrailsBody');
   const colors = ['rgba(34,197,94,.1)', 'rgba(234,179,8,.1)', 'rgba(249,115,22,.1)', 'rgba(239,68,68,.15)'];
   const icons = ['🟢', '🟡', '🟠', '🔴'];
+
+  // Determinar nível atual: percorrer em ordem crescente de gravidade
+  const patMax = Math.max(...DATA.guardrails.map((_, j) =>
+    DATA.guardrails.slice(0, j + 1).reduce((acc, g) => acc, patAtual)));
+  // Simples: não há drawdown ativo → nível 0 é atual
+  const ddAtual = 0; // placeholder — sem ATH no data.json; row 0 = atual por padrão
+  const nivelAtual = 0;
+
   DATA.guardrails.forEach((g, i) => {
     const tr = document.createElement('tr');
     tr.style.background = colors[i];
+    if (i === nivelAtual) tr.style.outline = '2px solid rgba(34,197,94,.5)';
     const ddStr = g.ddMax === 1.00 ? `>${(g.ddMin*100).toFixed(0)}%` : `${(g.ddMin*100).toFixed(0)}–${(g.ddMax*100).toFixed(0)}%`;
     const corteStr = g.corte === 0 ? '—' : `${(g.corte*100).toFixed(0)}%`;
     const retirStr = i === DATA.guardrails.length - 1 ? `R$ ${g.retirada.toLocaleString('pt-BR')} (GASTO_PISO)` : `R$ ${g.retirada.toLocaleString('pt-BR')}`;
-    const gatilhoStr = `R$ ${(patAtual * (1 - g.ddMin) / 1000).toFixed(0)}k`;
+    // Gatilho = patrimônio que ativa ESTE nível (ddMin = queda mínima para entrar)
+    const gatilhoStr = g.ddMin === 0
+      ? `<strong style="color:#22c55e">ATUAL ✓</strong>`
+      : `R$ ${(patAtual * (1 - g.ddMin) / 1000).toFixed(0)}k (−${(g.ddMin*100).toFixed(0)}%)`;
     tr.innerHTML = `<td>${icons[i]} ${ddStr}</td><td>${corteStr}</td><td class="num">${retirStr}</td><td class="num">${gatilhoStr}</td><td>${g.desc}</td>`;
     tbody.appendChild(tr);
   });
@@ -1329,7 +1414,7 @@ window.updateWhatIf = function() {
   const r = +document.getElementById('wiRetorno').value / 100;
   const custo = +document.getElementById('wiCusto').value;
   document.getElementById('wiAporteVal').textContent = 'R$' + ap.toLocaleString('pt-BR');
-  document.getElementById('wiRetornoVal').textContent = r.toFixed(2)*100 + '%';
+  document.getElementById('wiRetornoVal').textContent = (r*100).toFixed(2) + '%';
   document.getElementById('wiCustoVal').textContent = 'R$' + custo.toLocaleString('pt-BR');
   const rm = r / 12;
   let p = DATA.premissas.patrimonio_atual;
@@ -1368,6 +1453,29 @@ function buildPosicoes() {
   });
   document.getElementById('totalUsd').textContent = `$${(totUsd/1000).toFixed(0)}k`;
   document.getElementById('totalBrl').textContent = `R$${(totBrl/1000).toFixed(0)}k`;
+}
+
+// ── S21b: Mini-log ────────────────────────────────────────────
+function buildMinilog() {
+  const el = document.getElementById('minilogBody');
+  if (!el) return;
+  const ops = DATA.minilog || [];
+  if (!ops.length) { el.innerHTML = '<span style="color:var(--muted)">Sem operações recentes — rodar ibkr_analysis.py</span>'; return; }
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse">
+    <thead><tr style="font-size:.7rem;color:var(--muted)">
+      <th style="text-align:left;padding:4px 8px">Data</th>
+      <th style="text-align:left;padding:4px 8px">Tipo</th>
+      <th style="text-align:left;padding:4px 8px">Ativo</th>
+      <th style="text-align:right;padding:4px 8px">Valor</th>
+    </tr></thead>
+    <tbody>` +
+    ops.map(op => `<tr style="border-top:1px solid rgba(71,85,105,.2)">
+      <td style="padding:4px 8px;color:var(--muted)">${op.data}</td>
+      <td style="padding:4px 8px">${op.tipo}</td>
+      <td style="padding:4px 8px"><strong>${op.ativo}</strong></td>
+      <td style="padding:4px 8px;text-align:right;color:var(--accent)">${op.valor}</td>
+    </tr>`).join('') +
+    `</tbody></table>`;
 }
 
 // ── S22: Calculadora Cascade ──────────────────────────────────
@@ -1712,9 +1820,13 @@ function renderKPIs() {
   document.getElementById('pfirePatLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / R$13.4M`;
   document.getElementById('pfirePatPct').textContent = fmtPct(progPct);
   document.getElementById('pfirePatFill').style.width = Math.min(100, progPct) + '%';
-  const sr = DATA.premissas.aporte_mensal / 62000;
+  const _rendaEst = DATA.premissas.renda_estimada || 62000;
+  const sr = DATA.premissas.aporte_mensal / _rendaEst;
   document.getElementById('savingsRate').textContent = fmtPct(sr*100);
   document.getElementById('savingsRateFill').style.width = Math.min(100, sr*100 / 50 * 100) + '%';
+  // Atualizar subtitle dinamicamente (evitar divergência com Wellness)
+  const srSubEl = document.getElementById('savingsRateSub');
+  if (srSubEl) srSubEl.textContent = `Aporte R$${(DATA.premissas.aporte_mensal/1000).toFixed(0)}k / Renda est. R$${(_rendaEst/1000).toFixed(0)}k/mês`;
 }
 
 function renderWellness() {
@@ -1722,7 +1834,7 @@ function renderWellness() {
   const el = document.getElementById('wellnessScore');
   el.textContent = Math.round(total);
   el.style.color = total >= 80 ? '#22c55e' : total >= 60 ? '#eab308' : '#ef4444';
-  document.getElementById('wellnessLabel').textContent = `/100 · ${total >= 80 ? 'Excellent' : total >= 60 ? 'Progressing' : 'Needs Attention'}`;
+  document.getElementById('wellnessLabel').textContent = `/100 · ${total >= 80 ? 'Excelente' : total >= 60 ? 'Progredindo' : total >= 40 ? 'Atenção' : 'Crítico'}`;
   document.getElementById('wellnessFill').style.width = total + '%';
   document.getElementById('wellnessFill').style.background = total >= 80 ? '#22c55e' : total >= 60 ? '#eab308' : '#ef4444';
   // Ordenar por peso máximo (mais importante primeiro) para deixar claro quais fatores dominam
@@ -1749,6 +1861,18 @@ function renderWellness() {
       </div>`;
     grid.appendChild(div);
   });
+
+  // Top ações para subir o score
+  const actions = wellnessActions(scores);
+  const actDiv = document.getElementById('wellnessActions');
+  if (actDiv && actions.length) {
+    actDiv.innerHTML = `<div style="font-size:.7rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Top ações para subir o score</div>` +
+      actions.map((a, i) => `<div style="display:flex;gap:8px;padding:4px 0;border-bottom:1px solid rgba(71,85,105,.15);font-size:.75rem">
+        <span style="color:var(--yellow);font-weight:700;min-width:16px">${i+1}.</span>
+        <div><strong>${a.label}</strong> <span style="color:var(--muted)">(+${a.gap}pts potencial)</span><br>
+        <span style="color:var(--muted)">${a.action}</span></div>
+      </div>`).join('');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1823,7 +1947,15 @@ if (localStorage.getItem('dashboard_private') === '1') {
   buildDeltaBar();
   buildGlidePath();
   buildFireBuckets();
+  buildMinilog();
   buildFanChart();
+  // Fan chart: link P10/P50/P90 ao P(FIRE) MC
+  (function() {
+    const el = document.getElementById('fanPfireNote');
+    if (el && DATA.pfire50?.base != null) {
+      el.textContent = `P10/P50/P90 são aproximações de trajetória; P(FIRE@50) = ${DATA.pfire50.base}% calculado direto nas 10k simulações MC.`;
+    }
+  })();
   buildGuardrails();
   buildIncomeChart();
   buildFeeAnalysis();

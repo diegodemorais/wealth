@@ -43,8 +43,9 @@ VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
 STATE_PATH = ROOT / "dados" / "dashboard_state.json"
 CSV_PATH   = ROOT / "dados" / "historico_carteira.csv"
 HOLDINGS_PATH = ROOT / "dados" / "holdings.md"
-LOTES_PATH = ROOT / "dados" / "ibkr" / "lotes.json"
-OUT_PATH   = ROOT / "dashboard" / "data.json"
+LOTES_PATH   = ROOT / "dados" / "ibkr" / "lotes.json"
+APORTES_PATH = ROOT / "dados" / "ibkr" / "aportes.json"
+OUT_PATH     = ROOT / "dashboard" / "data.json"
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
@@ -126,8 +127,12 @@ def get_pfire_tornado():
         state = load_state()
         fire = state.get("fire", {})
         return (
-            {"base": fire.get("pfire_base"), "fav": fire.get("pfire_fav"), "stress": fire.get("pfire_stress")},
-            {"base": fire.get("pfire_base"), "fav": fire.get("pfire_fav"), "stress": fire.get("pfire_stress")},
+            {"base": fire.get("pfire50_base", fire.get("pfire_base")),
+             "fav":  fire.get("pfire50_fav",  fire.get("pfire_fav")),
+             "stress": fire.get("pfire50_stress", fire.get("pfire_stress"))},
+            {"base": fire.get("pfire53_base", fire.get("pfire_base")),
+             "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
+             "stress": fire.get("pfire53_stress", fire.get("pfire_stress"))},
             []
         )
 
@@ -577,6 +582,28 @@ def main():
             # Fallback: usar pfire_base genérico (pode ser qualquer rodada)
             pfire53 = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
 
+    # ─── Mini-log: últimas operações IBKR ────────────────────────────────────
+    def _build_minilog():
+        """Retorna as 5 últimas operações: compras de lotes + depósitos."""
+        entries = []
+        if APORTES_PATH.exists():
+            ap = json.loads(APORTES_PATH.read_text())
+            for dep in ap.get("depositos", [])[:5]:
+                entries.append({"data": dep["data"], "tipo": "Depósito IBKR",
+                                 "ativo": "USD", "valor": f"${dep['usd']:,.0f}"})
+        if LOTES_PATH.exists():
+            lotes_raw = json.loads(LOTES_PATH.read_text())
+            compras = []
+            for ticker, info in lotes_raw.items():
+                for lot in info.get("lotes", []):
+                    if lot.get("qty", 0) >= 1:
+                        compras.append({"data": lot["data"], "tipo": "Compra",
+                                        "ativo": ticker, "valor": f"{lot['qty']:.0f} × ${lot['custo_por_share']:.2f}"})
+            compras.sort(key=lambda x: x["data"], reverse=True)
+            entries += compras[:5]
+        entries.sort(key=lambda x: x["data"], reverse=True)
+        return entries[:5]
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -612,6 +639,7 @@ def main():
         "tlh":        tlh,
         "attribution":attr,
         "shadows":    shadows,
+        "minilog":    _build_minilog(),
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)
