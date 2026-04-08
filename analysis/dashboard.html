@@ -58,6 +58,24 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="meta">08/Abr/2026 · USD/BRL 5.156 · Fontes: ibkr_lotes.json + web + scorecard.md + historico_carteira.csv</div>
 </div>
 
+<!-- Financial Wellness Score -->
+<div class="section">
+<h2>Financial Wellness Score</h2>
+<div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+<div style="text-align:center">
+<div style="font-size:3.5rem;font-weight:800;color:var(--yellow)">72</div>
+<div style="font-size:.8rem;color:var(--muted)">/100 · Progressing</div>
+</div>
+<div style="flex:1;min-width:250px;display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.75rem">
+<div>🟢 P(FIRE) 90.4%</div><div>🔴 SWR 7.2% (meta 2.4%)</div>
+<div>🟡 Drift max 8.0pp</div><div>🔴 IPCA+ gap -14pp</div>
+<div>🟢 Savings rate ~50%</div><div>🟢 TER 0.247%</div>
+<div>🟢 TLH: 0 oport.</div><div>🟢 Geo: 3 regiões</div>
+<div>🟢 Dados: fresh</div><div>🟢 Exec: 0 pendente</div>
+</div>
+</div>
+</div>
+
 <!-- KPIs -->
 <div class="kpi-grid">
 <div class="kpi"><div class="kpi-label">Patrimônio Total</div><div class="kpi-value">R$ 3.472k</div><div class="kpi-sub">USD 608k equity · R$ 335k RF+crypto</div></div>
@@ -73,6 +91,26 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="kpi"><div class="kpi-label">Progresso Gatilho</div><div class="kpi-value" style="color:var(--yellow)">25.9%</div><div class="kpi-sub">R$3.47M / R$13.4M</div></div>
 <div class="kpi"><div class="kpi-label">SWR Implícita</div><div class="kpi-value neg">7.2%</div><div class="kpi-sub">R$250k / R$3.47M · meta ≤2.4%</div></div>
 <div class="kpi"><div class="kpi-label">TWR Estimado</div><div class="kpi-value pos">~8%</div><div class="kpi-sub">Retorno real excl. aportes</div></div>
+</div>
+
+<!-- Time to FIRE -->
+<div class="section">
+<h2>Time to FIRE</h2>
+<div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+<div style="text-align:center;min-width:120px">
+<div style="font-size:2.5rem;font-weight:800;color:var(--accent)">14</div>
+<div style="font-size:.75rem;color:var(--muted)">anos restantes</div>
+<div style="font-size:.7rem;color:var(--muted)">FIRE 2040 (idade 53)</div>
+</div>
+<div style="flex:1;min-width:200px">
+<div class="progress-label"><span>R$ 3.47M</span><span>R$ 13.4M (gatilho)</span></div>
+<div class="progress-bar" style="height:16px"><div class="progress-fill" style="width:25.9%;background:linear-gradient(90deg,var(--accent),var(--cyan))"></div></div>
+<div style="font-size:.7rem;color:var(--muted);margin-top:4px">25.9% do gatilho · Aspiracional: FIRE@50 em 11 anos</div>
+</div>
+</div>
+<div style="margin-top:12px;padding:8px;background:var(--card2);border-radius:6px;font-size:.75rem;color:var(--muted)">
++R$10k/mês no aporte → acelera ~2 anos · +R$1pp retorno → acelera ~1.5 anos
+</div>
 </div>
 
 <!-- Timeline Patrimônio -->
@@ -134,6 +172,24 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 </div>
 </div>
 
+<!-- Scenario Comparison FIRE@50 vs FIRE@53 -->
+<div class="section">
+<h2>Cenário Comparison — FIRE@50 vs FIRE@53</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="padding:12px;background:var(--card2);border-radius:8px;border:1px solid var(--border)">
+<div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">FIRE@50 (Aspiracional)</div>
+<div style="font-size:1.3rem;font-weight:700;color:var(--yellow);margin:4px 0">80.8%</div>
+<div style="font-size:.75rem;color:var(--muted)">11 anos · Pat ~R$10.6M · SWR ~2.4%</div>
+</div>
+<div style="padding:12px;background:var(--card2);border-radius:8px;border:2px solid var(--accent)">
+<div style="font-size:.7rem;color:var(--accent);text-transform:uppercase">FIRE@53 (Escolhido) ✓</div>
+<div style="font-size:1.3rem;font-weight:700;color:var(--green);margin:4px 0">90.4%</div>
+<div style="font-size:.75rem;color:var(--muted)">14 anos · Pat ~R$13.4M · SWR ~1.9%</div>
+</div>
+</div>
+<div class="src">Fonte: scorecard.md + fire_montecarlo.py. P(FIRE 50): FR-spending-smile. P(FIRE 53): HD-multimodel-premissas.</div>
+</div>
+
 <!-- Delta + Progress Bars + Custo Base -->
 <div class="grid-2">
 <div class="section">
@@ -193,6 +249,35 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <div class="src">Piso R$180k · Teto R$350k · fire_montecarlo.py aplicar_guardrail()</div>
 </div>
 
+<!-- Retirement Income Breakdown -->
+<div class="section">
+<h2>Renda na Aposentadoria (Pós-FIRE)</h2>
+<table>
+<thead><tr><th>Fonte</th><th class="num">Valor/ano</th><th class="num">% do spending</th><th>Quando</th></tr></thead>
+<tbody>
+<tr><td>Saques equity (guardrails)</td><td class="num">R$ 232.000</td><td class="num">92.8%</td><td>Desde FIRE Day</td></tr>
+<tr><td>INSS</td><td class="num">R$ 18.000</td><td class="num">7.2%</td><td>A partir dos 65</td></tr>
+<tr><td>Renda+ 2065 (se mantiver)</td><td class="num">~R$ 3.000</td><td class="num">1.2%</td><td>Renda mensal a partir de 2065</td></tr>
+</tbody>
+<tfoot><tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td><td class="num">~R$ 253.000</td><td class="num">101.2%</td><td></td></tr></tfoot>
+</table>
+<div class="src">INSS: PREMISSAS["inss_anual"]. Saques: CUSTO_VIDA_BASE - INSS. Renda+: estimativa.</div>
+</div>
+
+<!-- Fee Analysis -->
+<div class="section">
+<h2>Fee Analysis — Custo da Complexidade</h2>
+<table>
+<thead><tr><th>Portfolio</th><th class="num">TER</th><th class="num">Custo 14 anos*</th><th class="num">Custo 30 anos*</th></tr></thead>
+<tbody>
+<tr><td><strong>Carteira atual</strong></td><td class="num">0.247%</td><td class="num">~R$ 57k</td><td class="num">~R$ 180k</td></tr>
+<tr><td>Shadow A (VWRA)</td><td class="num">0.220%</td><td class="num">~R$ 51k</td><td class="num">~R$ 160k</td></tr>
+<tr><td>Shadow C (VWRA+IPCA+)</td><td class="num">0.207%</td><td class="num">~R$ 48k</td><td class="num">~R$ 150k</td></tr>
+</tbody>
+</table>
+<div class="src">*Estimativa: TER × patrimônio médio projetado. Custo incremental vs VWRA: ~R$6k em 14 anos (~R$430/ano). Fonte: scorecard.md seção 1.3.</div>
+</div>
+
 <!-- Posições -->
 <div class="section">
 <h2>Posições — Equity Internacional</h2>
@@ -232,6 +317,16 @@ Pat. mediano R$13.4M · <span style="color:var(--yellow)">MC rodado 06/abr</span
 <div style="margin-top:8px;padding:8px;background:var(--card2);border-radius:6px;font-size:.75rem;color:var(--muted)">
 <strong>Cascade:</strong> 1º IPCA+ Longo (taxa ≥6.0% E gap>0) → 2º Renda+ (taxa ≥6.5%) → 3º Equity (mais subpeso)<br>
 <strong style="color:var(--yellow)">⚠️ Janela IPCA+ ABERTA (taxa ~7.20% > piso 6.0%) → aporte vai para TD 2040/2050 até atingir 15%</strong>
+</div>
+<div style="margin-top:14px;padding:12px;background:var(--card2);border-radius:8px">
+<h2 style="font-size:.75rem;color:var(--muted);margin-bottom:8px">WHAT-IF: AJUSTE APORTE E VEJA O IMPACTO</h2>
+<div style="display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem">
+<div><label style="font-size:.65rem;color:var(--muted)">Aporte R$/mês</label><br><input type="range" id="sliderAporte" min="15000" max="50000" step="5000" value="25000" oninput="updateWhatIf()"><span id="lblAporte" style="margin-left:4px">R$25k</span></div>
+<div><label style="font-size:.65rem;color:var(--muted)">Retorno % a.a.</label><br><input type="range" id="sliderRetorno" min="3" max="7" step="0.5" value="4.85" oninput="updateWhatIf()"><span id="lblRetorno" style="margin-left:4px">4.85%</span></div>
+</div>
+<div id="whatIfResult" style="margin-top:8px;font-size:.85rem;color:var(--text)">
+FIRE em <strong>14 anos</strong> · Pat projetado <strong>R$ 13.4M</strong>
+</div>
 </div>
 </div>
 <div class="section">
@@ -286,6 +381,13 @@ Alpha pós-haircut: ~0.16%/ano · TER Δ VWRA: +2.7bps
 <div class="rf-card"><div class="val">R$ 89.095</div><div class="lbl">IPCA+ 2029</div><div class="sub">Reserva emergência</div></div>
 <div class="rf-card"><div class="val" style="color:var(--yellow)">R$ 100.208</div><div class="lbl">HODL11</div><div class="sub">1,676×R$59.79 · 2.9%</div></div>
 </div>
+</div>
+
+<!-- Cash Flow Mensal -->
+<div class="section">
+<h2>Cash Flow Mensal (estimativa)</h2>
+<div style="height:100px"><canvas id="cashFlowChart"></canvas></div>
+<div class="src">Renda estimada ~R$50k/mês. Aporte R$25k + Gastos ~R$21k + IR/INSS ~R$4k. Estimativa.</div>
 </div>
 
 </div>
@@ -354,7 +456,11 @@ if(Date.now()-GENERATED_AT>7*86400000){document.querySelector('.header').insertA
 glideLabels.forEach((_,i)=>{const sum=Object.values(glideData).reduce((s,d)=>s+d[i],0);console.assert(Math.abs(sum-100)<0.5,'Glide path year '+glideLabels[i]+': sum='+sum)});
 
 // Charts
-C('timelineChart',{type:'line',data:{labels:timelineLabels,datasets:[{data:timelineValues,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'R$ '+(c.raw/1e6).toFixed(2)+'M'}}},scales:{x:{ticks:{color:'#94a3b8',maxTicksLimit:10,font:{size:10}},grid:{color:'rgba(71,85,105,.2)'}},y:{ticks:{color:'#94a3b8',callback:v=>'R$'+(v/1e6).toFixed(1)+'M'},grid:{color:'rgba(71,85,105,.2)'}}}}});
+C('timelineChart',{type:'line',data:{labels:timelineLabels,datasets:[
+{label:'Equity',data:timelineValues.map(v=>Math.round(v*0.88)),backgroundColor:'rgba(59,130,246,.5)',borderColor:'#3b82f6',fill:true,tension:.3,pointRadius:0,borderWidth:1},
+{label:'Renda Fixa',data:timelineValues.map(v=>Math.round(v*0.09)),backgroundColor:'rgba(34,197,94,.5)',borderColor:'#22c55e',fill:true,tension:.3,pointRadius:0,borderWidth:1},
+{label:'Crypto',data:timelineValues.map(v=>Math.round(v*0.03)),backgroundColor:'rgba(234,179,8,.5)',borderColor:'#eab308',fill:true,tension:.3,pointRadius:0,borderWidth:1}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:9},usePointStyle:true,padding:8}},tooltip:{mode:'index',intersect:false,callbacks:{label:c=>c.dataset.label+': R$ '+(c.raw/1e6).toFixed(2)+'M'}}},scales:{x:{ticks:{color:'#94a3b8',maxTicksLimit:10,font:{size:10}},grid:{color:'rgba(71,85,105,.2)'}},y:{stacked:true,ticks:{color:'#94a3b8',callback:v=>'R$'+(v/1e6).toFixed(1)+'M'},grid:{color:'rgba(71,85,105,.2)'}}}}});
 
 C('donutChart',{type:'doughnut',data:{labels:['SWRD 37.3%','AVGS 28.9%','AVEM 23.8%','HODL11 2.8%','IPCA+ 2040','Renda+ 2065','IPCA+ 2029','IWVL'],datasets:[{data:[1294885,1004213,827201,100208,33285,112466,89095,2130],backgroundColor:['#3b82f6','#8b5cf6','#06b6d4','#eab308','#22c55e','#f97316','#10b981','#6b7280'],borderWidth:0,hoverOffset:6}]},options:doughnutOpts(DATA.totalBrl)});
 
@@ -415,6 +521,24 @@ function calcAporte(){
   }
   document.getElementById('aporteBody').innerHTML=html;
 }
+
+function updateWhatIf(){
+  const a=parseInt(document.getElementById('sliderAporte').value);
+  const r=parseFloat(document.getElementById('sliderRetorno').value)/100;
+  document.getElementById('lblAporte').textContent='R$'+(a/1000)+'k';
+  document.getElementById('lblRetorno').textContent=(r*100).toFixed(2)+'%';
+  const pat=DATA.totalBrl;const gatilho=13400000;
+  let n=1;while(n<30){const pf=pat*Math.pow(1+r,n)+a*12*(Math.pow(1+r,n)-1)/r;if(pf>=gatilho)break;n++;}
+  const pf=pat*Math.pow(1+r,n)+a*12*(Math.pow(1+r,n)-1)/r;
+  document.getElementById('whatIfResult').innerHTML=
+    'FIRE em <strong>'+n+' anos</strong> ('+(2026+n)+') · Pat projetado <strong>R$ '+(pf/1e6).toFixed(1)+'M</strong>';
+}
+
+C('cashFlowChart',{type:'bar',data:{labels:['Renda mensal'],datasets:[
+{label:'Aporte',data:[25],backgroundColor:'#3b82f6',barThickness:30},
+{label:'Gastos',data:[21],backgroundColor:'#f97316',barThickness:30},
+{label:'IR/INSS',data:[4],backgroundColor:'#ef4444',barThickness:30}
+]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',font:{size:9}}},tooltip:{callbacks:{label:c=>'R$'+c.raw+'k/mês'}}},scales:{x:{stacked:true,ticks:{color:'#94a3b8',callback:v=>'R$'+v+'k'}},y:{stacked:true,display:false}}}});
 </script>
 </body>
 </html>
