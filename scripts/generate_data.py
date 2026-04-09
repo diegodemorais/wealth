@@ -1229,6 +1229,9 @@ def main():
     # DCA Status — calculado após total_brl estar disponível
     dca_status = get_dca_status(rf, total_brl)
 
+    # IR diferido (Lei 14.754/2023)
+    tax_data = compute_tax_diferido(posicoes, cambio)
+
     # Premissas — garantir patrimônio atual
     premissas = {
         "patrimonio_atual":       total_brl,
@@ -1385,6 +1388,69 @@ def main():
     print("  ▶ macro data ...")
     macro = get_macro_data(state)
 
+    # ─── Bond Pool Readiness ─────────────────────────────────────────────
+    # Bond pool = IPCA+ 2040 + IPCA+ 2050 + Reserva (IPCA+ 2029)
+    # Meta: 7 anos de gastos (bond tent anos 1-7 pos-FIRE, carteira.md)
+    bp_ipca2040 = rf.get("ipca2040", {}).get("valor", 0)
+    bp_ipca2050 = rf.get("ipca2050", {}).get("valor", 0)  # pode nao existir ainda
+    bp_ipca2029 = rf.get("ipca2029", {}).get("valor", 0)
+    bp_valor = bp_ipca2040 + bp_ipca2050 + bp_ipca2029
+    bp_custo_anual = premissas["custo_vida_base"]
+    bp_anos = round(bp_valor / bp_custo_anual, 1) if bp_custo_anual > 0 else 0
+    bp_meta_anos = 7  # bond tent = 7 anos pos-FIRE (carteira.md)
+    if bp_anos >= bp_meta_anos * 0.8:
+        bp_status = "on_track"
+    elif bp_anos >= bp_meta_anos * 0.4:
+        bp_status = "building"
+    else:
+        bp_status = "early"
+    bond_pool_readiness = {
+        "valor_atual_brl": round(bp_valor),
+        "anos_gastos":     bp_anos,
+        "meta_anos":       bp_meta_anos,
+        "status":          bp_status,
+        "composicao": {
+            "ipca2040": round(bp_ipca2040),
+            "ipca2050": round(bp_ipca2050),
+            "ipca2029": round(bp_ipca2029),
+        },
+    }
+    print(f"  -> bond pool: R${bp_valor/1e3:.0f}k = {bp_anos} anos de gastos (meta: {bp_meta_anos})")
+
+    # ─── Scenario Comparison (FIRE@53 vs FIRE@50) ───────────────────────────
+    fire_state = state.get("fire", {})
+    scenario_comparison = {
+        "fire53": {
+            "base":        pfire53.get("base"),
+            "fav":         pfire53.get("fav"),
+            "stress":      pfire53.get("stress"),
+            "pat_mediano": fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire")),
+            "pat_p10":     fire_state.get("pat_p10_fire53", fire_state.get("pat_p10_fire")),
+            "pat_p90":     fire_state.get("pat_p90_fire53", fire_state.get("pat_p90_fire")),
+        },
+        "fire50": {
+            "base":        pfire50.get("base"),
+            "fav":         pfire50.get("fav"),
+            "stress":      pfire50.get("stress"),
+            "pat_mediano": fire_state.get("pat_mediano_fire50"),
+            "pat_p10":     fire_state.get("pat_p10_fire50"),
+            "pat_p90":     fire_state.get("pat_p90_fire50"),
+        },
+        "nota_fire50_pat": (
+            f"Pat. mediano no FIRE Day (base): R${fire_state.get('pat_mediano_fire53', 0)/1e6:.2f}M (@53) / "
+            f"R${fire_state.get('pat_mediano_fire50', 0)/1e6:.2f}M (@50). "
+            "Fonte: fire_montecarlo.py MC 10k sims."
+        ) if fire_state.get("pat_mediano_fire53") else None,
+    }
+
+    # ─── FIRE aggregate ─────────────────────────────────────────────────
+    fire_section = {
+        "bond_pool_readiness": bond_pool_readiness,
+        "pat_mediano_fire":    fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire")),
+        "pat_mediano_fire50":  fire_state.get("pat_mediano_fire50"),
+        "mc_date":             fire_state.get("mc_date"),
+    }
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -1405,6 +1471,8 @@ def main():
         "spendingSensibilidade": spending_sens,
         "saude_base": premissas_raw.get("saude_base", 18_000),
         "tornado":    tornado,
+        "fire":       fire_section,
+        "scenario_comparison": scenario_comparison,
 
         "timeline":   timeline,
         "bollinger":  bollinger,
@@ -1437,6 +1505,7 @@ def main():
         # Valores auxiliares para o dashboard (evitar hardcoded no template)
         "cryptoLegado": 3_000,     # R$ — estimativa crypto legado (BTC+ETH+BNB+ADA) — atualizar manualmente
         "tlhGatilho":   0.05,       # 5% — gatilho de perda para TLH
+        "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)
@@ -1445,6 +1514,7 @@ def main():
     print(f"   Patrimônio: R${total_brl/1e6:.2f}M | Câmbio: {cambio:.4f}")
     print(f"   P(FIRE@50): {pfire50.get('base')}% | Tornado: {len(tornado)} variáveis")
     print(f"   Timeline: {len(timeline['labels'])} pontos | Bollinger: {len(bollinger['dates'])} meses")
+    print(f"   IR diferido: R${tax_data['ir_diferido_total_brl']:,.0f} sobre {len(tax_data['ir_por_etf'])} ETFs" if tax_data else "   IR diferido: N/A")
     print(f"   Factor: rolling {len(factor_rolling.get('dates', []))} pts | loadings {len(factor_loadings)} ETFs")
     print(f"   Macro: Selic {macro.get('selic_meta')}% | Fed Funds {macro.get('fed_funds')}% | Spread {macro.get('spread_selic_ff')}pp | Exp. USD {macro.get('exposicao_cambial_pct')}%")
 

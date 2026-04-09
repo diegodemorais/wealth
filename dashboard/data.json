@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T08:39:11",
-  "_generated_brt": "2026-04-09T05:39:11-03:00",
+  "_generated": "2026-04-09T08:39:48",
+  "_generated_brt": "2026-04-09T05:39:48-03:00",
   "date": "2026-04-09",
   "cambio": 5.156,
   "posicoes": {
@@ -107,9 +107,54 @@
     "renda_estimada": 45000,
     "ano_atual": 2026
   },
-  "guardrails": [],
+  "guardrails": [
+    {
+      "ddMin": 0.0,
+      "ddMax": 0.15,
+      "corte": 0.0,
+      "retirada": 250000,
+      "desc": "Normal — sem corte"
+    },
+    {
+      "ddMin": 0.15,
+      "ddMax": 0.25,
+      "corte": 0.1,
+      "retirada": 225000,
+      "desc": "Corte 10% → R$225k"
+    },
+    {
+      "ddMin": 0.25,
+      "ddMax": 0.35,
+      "corte": 0.2,
+      "retirada": 200000,
+      "desc": "Corte 20% → R$200k"
+    },
+    {
+      "ddMin": 0.35,
+      "ddMax": 1.0,
+      "corte": 0.28,
+      "retirada": 180000,
+      "desc": "Piso — R$180k"
+    }
+  ],
   "gasto_piso": 180000,
-  "spendingSmile": {},
+  "spendingSmile": {
+    "go_go": {
+      "gasto": 242000,
+      "inicio": 0,
+      "fim": 15
+    },
+    "slow_go": {
+      "gasto": 200000,
+      "inicio": 15,
+      "fim": 30
+    },
+    "no_go": {
+      "gasto": 187000,
+      "inicio": 30,
+      "fim": 99
+    }
+  },
   "spendingSensibilidade": [
     {
       "label": "R$250k",
@@ -135,6 +180,41 @@
   ],
   "saude_base": 18000,
   "tornado": [],
+  "fire": {
+    "bond_pool_readiness": {
+      "valor_atual_brl": 122380,
+      "anos_gastos": 0.5,
+      "meta_anos": 7,
+      "status": "early",
+      "composicao": {
+        "ipca2040": 33285,
+        "ipca2050": 0,
+        "ipca2029": 89095
+      }
+    },
+    "pat_mediano_fire": 11527476.0,
+    "pat_mediano_fire50": 9339651.0,
+    "mc_date": "2026-04-08"
+  },
+  "scenario_comparison": {
+    "fire53": {
+      "base": 90.4,
+      "fav": 94.1,
+      "stress": 86.8,
+      "pat_mediano": 11527476.0,
+      "pat_p10": 6834909.0,
+      "pat_p90": 18916227.0
+    },
+    "fire50": {
+      "base": 85.4,
+      "fav": 91.3,
+      "stress": 81.1,
+      "pat_mediano": 9339651.0,
+      "pat_p10": 5873669.0,
+      "pat_p90": 14560082.0
+    },
+    "nota_fire50_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$9.34M (@50). Fonte: fire_montecarlo.py MC 10k sims."
+  },
   "timeline": {
     "labels": [
       "2021-03",
@@ -2001,87 +2081,87 @@
   "cryptoLegado": 3000,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 144909.94,
+    "ir_diferido_total_brl": 133075.41,
     "ir_por_etf": {
       "SWRD": {
         "ganho_usd": 77155.01,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.2983,
         "ptax_atual": 5.156,
-        "custo_total_brl": 897073.33,
+        "custo_total_brl": 921828.52,
         "valor_atual_brl": 1294884.57,
-        "ganho_brl": 397811.24,
-        "ir_estimado": 59671.69
+        "ganho_brl": 373056.05,
+        "ir_estimado": 55958.41
       },
       "EIMI": {
         "ganho_usd": 30195.08,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.3834,
         "ptax_atual": 5.156,
-        "custo_total_brl": 326395.92,
+        "custo_total_brl": 340791.78,
         "valor_atual_brl": 482081.76,
-        "ganho_brl": 155685.84,
-        "ir_estimado": 23352.88
+        "ganho_brl": 141289.99,
+        "ir_estimado": 21193.5
       },
       "USSC": {
         "ganho_usd": 9211.86,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.7742,
         "ptax_atual": 5.156,
-        "custo_total_brl": 115545.23,
+        "custo_total_brl": 129398.06,
         "valor_atual_brl": 163041.6,
-        "ganho_brl": 47496.37,
-        "ir_estimado": 7124.46
+        "ganho_brl": 33643.54,
+        "ir_estimado": 5046.53
       },
       "IWVL": {
         "ganho_usd": 864.42,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.2228,
         "ptax_atual": 5.156,
-        "custo_total_brl": 6525.85,
+        "custo_total_brl": 6610.44,
         "valor_atual_brl": 10982.8,
-        "ganho_brl": 4456.95,
-        "ir_estimado": 668.54
+        "ganho_brl": 4372.35,
+        "ir_estimado": 655.85
       },
       "AVDV": {
         "ganho_usd": 38062.08,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.2065,
         "ptax_atual": 5.156,
-        "custo_total_brl": 299857.75,
+        "custo_total_brl": 302795.42,
         "valor_atual_brl": 496105.84,
-        "ganho_brl": 196248.09,
-        "ir_estimado": 29437.21
+        "ganho_brl": 193310.43,
+        "ir_estimado": 28996.56
       },
       "AVUV": {
         "ganho_usd": 16501.81,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.3015,
         "ptax_atual": 5.156,
-        "custo_total_brl": 230831.95,
+        "custo_total_brl": 237343.79,
         "valor_atual_brl": 315915.26,
-        "ganho_brl": 85083.31,
-        "ir_estimado": 12762.5
+        "ganho_brl": 78571.47,
+        "ir_estimado": 11785.72
       },
       "DGS": {
         "ganho_usd": 2095.79,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.3224,
         "ptax_atual": 5.156,
-        "custo_total_brl": 48631.99,
+        "custo_total_brl": 50201.81,
         "valor_atual_brl": 59437.88,
-        "ganho_brl": 10805.89,
-        "ir_estimado": 1620.88
+        "ganho_brl": 9236.08,
+        "ir_estimado": 1385.41
       },
       "AVES": {
         "ganho_usd": 13281.33,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.5071,
         "ptax_atual": 5.156,
-        "custo_total_brl": 217202.34,
+        "custo_total_brl": 231991.38,
         "valor_atual_brl": 285680.88,
-        "ganho_brl": 68478.54,
-        "ir_estimado": 10271.78
+        "ganho_brl": 53689.49,
+        "ir_estimado": 8053.42
       },
       "AVGS": {
         "ganho_usd": -166.34,
-        "ptax_compra_medio": 5.156,
+        "ptax_compra_medio": 5.2541,
         "ptax_atual": 5.156,
-        "custo_total_brl": 30007.91,
+        "custo_total_brl": 30578.85,
         "valor_atual_brl": 29150.25,
-        "ganho_brl": -857.66,
+        "ganho_brl": -1428.6,
         "ir_estimado": 0.0
       }
     },
@@ -2097,7 +2177,7 @@
       "AVES": "ACC — diferimento fiscal",
       "AVGS": "ACC — diferimento fiscal"
     },
-    "ptax_source": "fallback (câmbio atual)",
+    "ptax_source": "BCB PTAX ask",
     "ptax_atual": 5.156
   }
 }

@@ -69,7 +69,8 @@ TICKERS_YF = {
 # ─── PISOS E GATILHOS OPERACIONAIS (fonte: carteira.md + gatilhos.md) ────────
 
 PISO_TAXA_IPCA_LONGO = 6.0    # % a.a. — abaixo disso não prioriza DCA IPCA+
-PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não prioriza DCA Renda+
+PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não aporta DCA Renda+ (piso compra)
+PISO_VENDA_RENDA_PLUS = 6.0   # % a.a. — abaixo disso VENDER toda posição Renda+ 2065 (gatilho saída)
 
 
 # ─── FIRE (fonte: carteira.md + fire_montecarlo.py PREMISSAS) ────────────────
