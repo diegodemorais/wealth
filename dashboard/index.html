@@ -133,8 +133,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="display:flex;justify-content:space-between;align-items:center">
   <h1>🏦 Carteira Diego Morais</h1>
   <div style="display:flex;gap:8px;align-items:center">
-    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600">⟳</button>
-    <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
+    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:1.2rem;font-weight:600">⟳</button>
+    <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
   </div>
 </div>
 <div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
@@ -890,8 +890,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T21:19:25-03:00'); // BRT (UTC-3)
-const VERSION = '1.48';
+const GENERATED_AT = new Date('2026-04-08T21:25:02-03:00'); // BRT (UTC-3)
+const VERSION = '1.50';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -3500,7 +3500,7 @@ const DATA = {
     "nota": "Soma pode não fechar (renda estimada vs. gastos reais). Renda: R$540,000 | Must: R$130,619 | Like: R$51,403 | Impostos: R$50,268 | Investimentos: R$300,000",
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' de spending_analysis (aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026) — ESTIMADO"
   },
-  "version": "1.48"
+  "version": "1.50"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -6263,12 +6263,14 @@ fetchLive();
 function togglePrivacy() {
   document.body.classList.toggle('private-mode');
   const on = document.body.classList.contains('private-mode');
-  document.getElementById('privacyBtn').textContent = on ? '👁‍🗨' : '👁';
+  document.getElementById('privacyBtn').innerHTML = on
+    ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   localStorage.setItem('dashboard_private', on ? '1' : '0');
 }
 if (localStorage.getItem('dashboard_private') === '1') {
   document.body.classList.add('private-mode');
-  document.getElementById('privacyBtn').textContent = '👁‍🗨';
+  document.getElementById('privacyBtn').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 }
 
 // ── Tab system ────────────────────────────────────────────────
