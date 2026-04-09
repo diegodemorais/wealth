@@ -864,33 +864,38 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
 </div>
 
-<!-- Presets -->
-<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;align-items:center">
-  <span style="font-size:.65rem;color:var(--muted);white-space:nowrap;margin-right:2px">Cenário:</span>
-  <button class="preset-btn" id="preset-fire50"    onclick="setFirePreset('fire50')">🎯 FIRE@50</button>
-  <button class="preset-btn" id="preset-fire53"    onclick="setFirePreset('fire53')">📋 FIRE@53</button>
-  <button class="preset-btn" id="preset-casamento" onclick="setFirePreset('casamento')">💍 Casamento</button>
-  <button class="preset-btn" id="preset-filho"     onclick="setFirePreset('filho')">👶 Filho</button>
-  <button class="preset-btn" id="preset-stress"    onclick="setFirePreset('stress')">⚠️ Stress</button>
-  <button class="preset-btn" id="preset-ok"        onclick="setFirePreset('ok')">✅ Base</button>
-  <button class="preset-btn" id="preset-fav"       onclick="setFirePreset('fav')">🚀 Favorável</button>
+<!-- Presets — 2 eixos: Condição × Mercado -->
+<div style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px">
+  <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+    <span style="font-size:.6rem;color:var(--muted);min-width:58px">Condição:</span>
+    <button class="preset-btn active" id="pcond-solteiro"  onclick="setFireCond('solteiro')">👤 Solteiro</button>
+    <button class="preset-btn"        id="pcond-casamento" onclick="setFireCond('casamento')">💍 Casamento</button>
+    <button class="preset-btn"        id="pcond-filho"     onclick="setFireCond('filho')">👶 Filho</button>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+    <span style="font-size:.6rem;color:var(--muted);min-width:58px">Mercado:</span>
+    <button class="preset-btn"        id="pmkt-stress"  onclick="setFireMkt('stress')">⚠️ Stress</button>
+    <button class="preset-btn active" id="pmkt-base"    onclick="setFireMkt('base')">✅ Base</button>
+    <button class="preset-btn"        id="pmkt-fav"     onclick="setFireMkt('fav')">🚀 Favorável</button>
+    <button class="preset-btn"        id="pcond-fire50" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 FIRE@50 aspiracional</button>
+  </div>
 </div>
 
 <!-- Sliders -->
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:12px">
   <div class="slider-row">
     <label><span>Aporte Mensal</span><span id="simAporteVal" style="font-weight:700;color:var(--accent)">—</span></label>
-    <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="updateFireSim()">
+    <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="_firePresetCustom();updateFireSim()">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$5k</span><span>R$100k</span></div>
   </div>
   <div class="slider-row">
     <label><span>Retorno Real Equity</span><span id="simRetornoVal" style="font-weight:700;color:var(--muted)">—</span></label>
-    <input type="range" id="simRetorno" min="0" max="10" step="0.25" value="4.85" oninput="updateFireSim()">
+    <input type="range" id="simRetorno" min="0" max="10" step="0.25" value="4.85" oninput="_firePresetCustom();updateFireSim()">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>0%</span><span>10%</span></div>
   </div>
   <div class="slider-row">
     <label><span>Custo de Vida /ano</span><span id="simCustoVal" style="font-weight:700;color:var(--muted)">—</span></label>
-    <input type="range" id="simCusto" min="150000" max="500000" step="10000" value="250000" oninput="updateFireSim()">
+    <input type="range" id="simCusto" min="150000" max="500000" step="10000" value="250000" oninput="_firePresetCustom();updateFireSim()">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$150k</span><span>R$500k</span></div>
   </div>
 </div>
@@ -1199,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T15:42:58-03:00'); // BRT (UTC-3)
-const VERSION = '1.98';
+const GENERATED_AT = new Date('2026-04-09T15:59:34-03:00'); // BRT (UTC-3)
+const VERSION = '1.99';
 
 const DATA = {
   "_generated": "2026-04-09T15:37:53",
@@ -4204,7 +4209,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.98"
+  "version": "1.99"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5786,41 +5791,73 @@ function buildEarliestFire() {
 // ═══════════════════════════════════════════════════════════════
 // F3b: SIMULADOR FIRE INTERATIVO (BOLDIN-style)
 // ═══════════════════════════════════════════════════════════════
-window.setFirePreset = function(name) {
-  const p  = DATA.premissas;
-  const sm = DATA.spendingSmile;
-  const aporteBase  = p?.aporte_mensal         || 25000;
-  const retornoBase = ((p?.retorno_equity_base  || 0.0485) * 100);
-  const custoBase   = p?.custo_vida_base        || 250000;
-  const goGoGasto   = sm?.go_go?.gasto          || 242000;
+// ── Estado dos dois eixos de preset ────────────────────────────────────────
+window._fireCond = 'solteiro';
+window._fireMkt  = 'base';
 
-  // Valores por preset — âncoras em DATA onde aplicável
-  const presets = {
-    fire50:    { aporte: 50000,      retorno: 5.5,         custo: goGoGasto,  label: 'FIRE@50 (aspiracional)' },
-    fire53:    { aporte: aporteBase, retorno: retornoBase,  custo: custoBase,  label: 'FIRE@53 — plano base' },
-    casamento: { aporte: 20000,      retorno: retornoBase,  custo: 320000,     label: 'Casamento (+R$70k/ano, −R$5k aporte)' },
-    filho:     { aporte: 15000,      retorno: retornoBase,  custo: 400000,     label: 'Filho (+R$150k/ano, −R$10k aporte)' },
-    stress:    { aporte: aporteBase, retorno: 2.0,          custo: 300000,     label: 'Stress — retorno comprimido' },
-    ok:        { aporte: aporteBase, retorno: retornoBase,  custo: custoBase,  label: 'Base — premissas atuais' },
-    fav:       { aporte: 35000,      retorno: 6.5,          custo: custoBase,  label: 'Favorável — aporte maior + bull' },
-  };
+// Condição de vida → aporte mensal + custo anual
+// null = usa DATA.premissas (valores base aprovados)
+const _FIRE_COND = {
+  solteiro:  { aporte: null,  custo: null   },  // premissas base
+  casamento: { aporte: 20000, custo: 270000 },  // carteira.md: custo R$270k, aporte −R$5k
+  filho:     { aporte: 15000, custo: 300000 },  // MC Bloco A aprovado: R$300k, aporte −R$10k
+};
 
-  const cfg = presets[name];
-  if (!cfg) return;
+// Cenário de mercado → retorno real equity
+// null = usa DATA.premissas.retorno_equity_base
+const _FIRE_MKT = {
+  stress: 4.35,  // depreciação 0%, ponderado 50/30/20
+  base:   null,  // 4.85% das premissas
+  fav:    5.85,  // depreciação 1.5%, ponderado 50/30/20
+};
+
+function _applyFireAxes() {
+  const p   = DATA.premissas;
+  const cv  = _FIRE_COND[window._fireCond] || {};
+  const aporte  = cv.aporte  ?? (p?.aporte_mensal        || 25000);
+  const custo   = cv.custo   ?? (p?.custo_vida_base       || 250000);
+  const retorno = _FIRE_MKT[window._fireMkt] ?? ((p?.retorno_equity_base || 0.0485) * 100);
 
   const sA = document.getElementById('simAporte');
   const sR = document.getElementById('simRetorno');
   const sC = document.getElementById('simCusto');
-  if (sA) sA.value = Math.min(100000, Math.max(5000,   cfg.aporte));
-  if (sR) sR.value = Math.min(10,     Math.max(0,      cfg.retorno));
-  if (sC) sC.value = Math.min(500000, Math.max(150000, cfg.custo));
-
-  // Highlight botão ativo
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('preset-' + name);
-  if (btn) btn.classList.add('active');
-
+  if (sA) sA.value = Math.min(100000, Math.max(5000,   aporte));
+  if (sR) sR.value = Math.min(10,     Math.max(0,      retorno));
+  if (sC) sC.value = Math.min(500000, Math.max(150000, custo));
   updateFireSim();
+}
+
+window.setFireCond = function(cond) {
+  window._fireCond = cond;
+  document.querySelectorAll('[id^="pcond-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('pcond-' + cond)?.classList.add('active');
+  _applyFireAxes();
+};
+
+window.setFireMkt = function(mkt) {
+  window._fireMkt = mkt;
+  document.querySelectorAll('[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('pmkt-' + mkt)?.classList.add('active');
+  _applyFireAxes();
+};
+
+// FIRE@50 aspiracional — override completo
+window.setFirePreset50 = function() {
+  document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('pcond-fire50')?.classList.add('active');
+  const goGo = DATA.spendingSmile?.go_go?.gasto ?? 242000;
+  const sA = document.getElementById('simAporte');
+  const sR = document.getElementById('simRetorno');
+  const sC = document.getElementById('simCusto');
+  if (sA) sA.value = 50000;
+  if (sR) sR.value = 5.50;
+  if (sC) sC.value = Math.min(500000, Math.max(150000, goGo));
+  updateFireSim();
+};
+
+// Slider manual → desativa todos os presets (modo "custom")
+window._firePresetCustom = function() {
+  document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
 };
 
 window.updateFireSim = function() {
@@ -7579,7 +7616,7 @@ function _initTabCharts(tab) {
                  [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
                  updateWhatIf();
                }],
-    projecao: [() => { setFirePreset('ok'); }, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
+    projecao: [() => { _applyFireAxes(); }, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
                buildSpendingBreakdown, buildIncomeProjection,
                buildNetWorthProjection, buildStressTest, buildSankey],
   };
