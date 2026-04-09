@@ -4820,6 +4820,8 @@ window.switchTab = function(name) {
   if (!_tabInitialized[name]) {
     _tabInitialized[name] = true;
     _initTabCharts(name);
+    // Aplicar privacy após lazy init (charts inexistentes no page load)
+    if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
   }
   requestAnimationFrame(() => {
     Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
