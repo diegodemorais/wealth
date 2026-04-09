@@ -484,6 +484,13 @@ def get_timeline_bollinger():
         print(f"  ⚠️ CSV: {e}")
         return {"labels": [], "values": []}, {"dates": [], "values": []}
 
+    # Deduplicar labels mantendo o último registro para cada label (ex: duas entradas do mesmo mês)
+    seen: dict = {}
+    for lbl, val in zip(labels, values):
+        seen[lbl] = val
+    labels = list(seen.keys())
+    values = list(seen.values())
+
     # Bollinger: retornos mensais entre pares consecutivos ≤35 dias
     boll_dates, boll_vals = [], []
     for i in range(1, len(labels)):
@@ -1241,6 +1248,12 @@ def compute_spending_guardrails(pfire53: dict, premissas_raw: dict, guardrails_r
         elif corte == 0.20:
             lower_spending = retirada
 
+    nota = (
+        f"Spending atual R${spending_atual/1000:.0f}k/ano. "
+        f"Upper guardrail ~R${upper_spending/1000:.0f}k (P≈95%). "
+        f"Safe target ~R${safe_spending/1000:.0f}k (P≈80%). "
+        f"Lower ~R${lower_spending/1000:.0f}k (P≈70%)."
+    )
     return {
         "zona":                       zona,
         "pfire_atual":                pfire_atual,
@@ -1248,6 +1261,7 @@ def compute_spending_guardrails(pfire53: dict, premissas_raw: dict, guardrails_r
         "upper_guardrail_spending":   upper_spending,
         "safe_target_spending":       safe_spending,
         "lower_guardrail_spending":   lower_spending,
+        "nota":                       nota,
     }
 
 
@@ -1701,8 +1715,20 @@ def main():
     backtest = backtest_data.get("backtest", {})
     backtest_r5 = backtest_data.get("backtestR5", {})
 
-    # Shadows
-    shadows = state.get("shadows", {})
+    # Shadows — ler do state e adicionar campos flat no nível raiz
+    _shadows_raw = state.get("shadows", {})
+    # Campos flat esperados pelo template: delta_vwra, delta_ipca, delta_shadow_c
+    # shadow A = VWRA, shadow B = IPCA+, shadow C = 60/40 (não disponível ainda)
+    _q1 = _shadows_raw.get("q1_2026", {})
+    shadows = {
+        **_shadows_raw,  # mantém estrutura original
+        "delta_vwra":     _q1.get("delta_a"),       # shadow A = VWRA benchmark primário
+        "delta_ipca":     _q1.get("delta_b"),       # shadow B = IPCA+ RF benchmark
+        "delta_shadow_c": None,                      # shadow C (60/40) não disponível ainda
+        "periodo":        _q1.get("periodo", "Q1 2026"),
+        "atual":          _q1.get("atual"),
+        "target":         _q1.get("target"),
+    } if _q1 else {**_shadows_raw, "delta_vwra": None, "delta_ipca": None, "delta_shadow_c": None}
 
     # P(FIRE@53): ler chave específica pfire53_* (salva quando fire_montecarlo roda sem --anos)
     if pfire53.get("base") is None:

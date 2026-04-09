@@ -68,6 +68,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .slider-row{margin:12px 0}
 .slider-row label{font-size:.75rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px}
 .slider-row input[type=range]{width:100%;accent-color:var(--accent)}
+/* ── Lazy tab: esconder todas as abas exceto status no carregamento inicial ── */
+[data-in-tab]:not([data-in-tab="status"]) { display: none; }
 /* ── Hierarquia tipográfica ── */
 .section-critical{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
 .actions-box{border-width:2px}
@@ -762,8 +764,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
 </div>
 
-<!-- S24: RETORNOS MENSAIS — Bollinger (colapsado por default) -->
-<div class="section collapsible" data-in-tab="perf">
+<!-- S24: RETORNOS MENSAIS — Bollinger (aberto por default) -->
+<div class="section collapsible open" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Retornos Mensais — Carteira</h2>
 <div class="collapse-body">
 <div class="period-btns" id="bollingerPeriodBtns">
@@ -903,8 +905,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
 
-<!-- S27: BACKTEST HISTÓRICO (colapsado por default) -->
-<div class="section collapsible" data-in-tab="perf">
+<!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
+<div class="section collapsible open" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Backtest Histórico — Target vs VWRA (base 100)</h2>
 <div class="collapse-body">
 <div class="period-btns" id="backtestPeriodBtns">
@@ -944,8 +946,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /collapse-body -->
 </div>
 
-<!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (colapsado por default) -->
-<div class="section collapsible" id="factorRollingSection" data-in-tab="perf">
+<!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (aberto por default) -->
+<div class="section collapsible open" id="factorRollingSection" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
 <div class="collapse-body">
 <div id="factorRollingBody">
@@ -955,8 +957,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /collapse-body -->
 </div>
 
-<!-- P2: FACTOR LOADINGS TABLE (colapsado por default) -->
-<div class="section collapsible" id="factorLoadingsSection" data-in-tab="perf">
+<!-- P2: FACTOR LOADINGS TABLE (aberto por default) -->
+<div class="section collapsible open" id="factorLoadingsSection" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
 <div class="collapse-body">
 <div id="factorLoadingsBody"><!-- gerado por buildFactorLoadings() --></div>
@@ -1070,12 +1072,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T10:58:04-03:00'); // BRT (UTC-3)
-const VERSION = '1.74';
+const GENERATED_AT = new Date('2026-04-09T12:23:33-03:00'); // BRT (UTC-3)
+const VERSION = '1.75';
 
 const DATA = {
-  "_generated": "2026-04-09T10:57:59",
-  "_generated_brt": "2026-04-09T10:57:59-03:00",
+  "_generated": "2026-04-09T12:23:29",
+  "_generated_brt": "2026-04-09T12:23:29-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1085,68 +1087,68 @@ const DATA = {
     "fire_mc": "2026-04-09",
     "geral": "2026-04-09"
   },
-  "cambio": 5.08,
+  "cambio": 5.0732,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.04,
+      "price": 47.9771,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.66,
+      "price": 26.7859,
       "bucket": "AVGS",
       "status": "alvo"
     },
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.895,
+      "price": 114.87,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 104.615,
+      "price": 104.695,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.43,
+      "price": 84.29,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.12,
+      "price": 48.8,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 62.87,
+      "price": 62.805,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.22,
+      "price": 62.13,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.9,
+      "price": 65.57,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -1175,7 +1177,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3514545,
+    "patrimonio_atual": 3505358,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1380,7 +1382,6 @@ const DATA = {
       "2025-10",
       "2025-11",
       "2025-12",
-      "2026-03",
       "2026-03"
     ],
     "values": [
@@ -1442,7 +1443,6 @@ const DATA = {
       3234647.22,
       3268176.78,
       3302824.0,
-      3492736.58,
       3479239.0
     ]
   },
@@ -1504,8 +1504,7 @@ const DATA = {
       "2025-09",
       "2025-10",
       "2025-11",
-      "2025-12",
-      "2026-03"
+      "2025-12"
     ],
     "values": [
       2.1737,
@@ -1564,8 +1563,7 @@ const DATA = {
       1.0295,
       1.0827,
       1.0366,
-      1.0601,
-      -0.3864
+      1.0601
     ]
   },
   "backtest": {
@@ -2668,8 +2666,8 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 60.7,
-    "valor": 101733.2,
+    "preco": 60.87,
+    "valor": 102018.12,
     "preco_medio": null,
     "pnl_brl": null,
     "pnl_pct": null,
@@ -2677,7 +2675,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.89,
+      "atual_pct": 2.91,
       "status": "verde"
     }
   },
@@ -2760,7 +2758,7 @@ const DATA = {
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.5,
+      "atual": 24.4,
       "alvo": 15.8
     },
     "IPCA": {
@@ -2778,7 +2776,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.895,
+      "price": 114.87,
       "ucits": "AVGS.L"
     },
     {
@@ -2786,7 +2784,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 104.615,
+      "price": 104.695,
       "ucits": "AVGS.L"
     },
     {
@@ -2794,7 +2792,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.43,
+      "price": 84.29,
       "ucits": "AVGS.L"
     },
     {
@@ -2802,7 +2800,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.12,
+      "price": 48.8,
       "ucits": "AVEM.L"
     },
     {
@@ -2810,7 +2808,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 62.87,
+      "price": 62.805,
       "ucits": "AVEM.L"
     },
     {
@@ -2818,7 +2816,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.22,
+      "price": 62.13,
       "ucits": "AVEM.L"
     },
     {
@@ -2826,15 +2824,15 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.9,
+      "price": 65.57,
       "ucits": "JPGL.L"
     }
   ],
   "attribution": {
-    "aportes": 1500000,
+    "aportes": 1475000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2402845.0,
+    "crescReal": 2393658.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2845,7 +2843,13 @@ const DATA = {
       "shadow_b": 2.3,
       "delta_a": 3.15,
       "delta_b": -0.57
-    }
+    },
+    "delta_vwra": 3.15,
+    "delta_ipca": -0.57,
+    "delta_shadow_c": null,
+    "periodo": "Q1 2026",
+    "atual": 1.73,
+    "target": -1.11
   },
   "macro": {
     "selic_meta": 14.75,
@@ -2853,8 +2857,8 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 70725.68,
-    "cambio": 5.08
+    "bitcoin_usd": 71383.1,
+    "cambio": 5.0732
   },
   "minilog": [
     {
@@ -3188,88 +3192,88 @@ const DATA = {
   "cryptoLegado": 3000,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 138963.6,
+    "ir_diferido_total_brl": 137542.83,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 80224.16,
+        "ganho_usd": 79891.32,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1291389.12,
-        "ganho_brl": 369560.61,
-        "ir_estimado": 55434.09
+        "valor_atual_brl": 1287971.91,
+        "ganho_brl": 366143.39,
+        "ir_estimado": 54921.51
       },
       "EIMI": {
-        "ganho_usd": 35932.72,
+        "ganho_usd": 35286.22,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 504123.0,
-        "ganho_brl": 163331.23,
-        "ir_estimado": 24499.68
+        "valor_atual_brl": 500168.4,
+        "ganho_brl": 159376.63,
+        "ir_estimado": 23906.49
       },
       "USSC": {
-        "ganho_usd": 9103.62,
+        "ganho_usd": 9051.37,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 160088.48,
-        "ganho_brl": 30690.42,
-        "ir_estimado": 4603.56
+        "valor_atual_brl": 159609.09,
+        "ganho_brl": 30211.03,
+        "ir_estimado": 4531.65
       },
       "IWVL": {
-        "ganho_usd": 974.92,
+        "ganho_usd": 963.7,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11382.25,
-        "ganho_brl": 4771.8,
-        "ir_estimado": 715.77
+        "valor_atual_brl": 11310.09,
+        "ganho_brl": 4699.65,
+        "ir_estimado": 704.95
       },
       "AVDV": {
-        "ganho_usd": 40975.95,
+        "ganho_usd": 41051.75,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 503595.62,
-        "ganho_brl": 200800.2,
-        "ir_estimado": 30120.03
+        "valor_atual_brl": 503306.1,
+        "ganho_brl": 200510.69,
+        "ir_estimado": 30076.6
       },
       "AVUV": {
-        "ganho_usd": 18293.9,
+        "ganho_usd": 18280.17,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 320362.46,
-        "ganho_brl": 83018.67,
-        "ir_estimado": 12452.8
+        "valor_atual_brl": 319864.01,
+        "ganho_brl": 82520.22,
+        "ir_estimado": 12378.03
       },
       "DGS": {
-        "ganho_usd": 2278.35,
+        "ganho_usd": 2261.42,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59489.19,
-        "ganho_brl": 9287.38,
-        "ir_estimado": 1393.11
+        "valor_atual_brl": 59323.62,
+        "ganho_brl": 9121.82,
+        "ir_estimado": 1368.27
       },
       "AVES": {
-        "ganho_usd": 16125.83,
+        "ganho_usd": 16065.6,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 295919.95,
-        "ganho_brl": 63928.57,
-        "ir_estimado": 9589.29
+        "valor_atual_brl": 295218.31,
+        "ganho_brl": 63226.92,
+        "ir_estimado": 9484.04
       },
       "AVGS": {
-        "ganho_usd": 403.22,
+        "ganho_usd": 432.61,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.08,
+        "ptax_atual": 5.0732,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31613.97,
-        "ganho_brl": 1035.12,
-        "ir_estimado": 155.27
+        "valor_atual_brl": 31720.75,
+        "ganho_brl": 1141.9,
+        "ir_estimado": 171.28
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -3285,12 +3289,12 @@ const DATA = {
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.08
+    "ptax_atual": 5.0732
   },
   "concentracao_brasil": {
     "brasil_pct": 9.7,
     "composicao": {
-      "hodl11_brl": 101733,
+      "hodl11_brl": 102018,
       "rf_total_brl": 234846,
       "rf_detalhe": {
         "ipca2029": 89095,
@@ -3299,8 +3303,8 @@ const DATA = {
       },
       "crypto_legado_brl": 3000
     },
-    "total_brasil_brl": 339579,
-    "total_portfolio_brl": 3514545,
+    "total_brasil_brl": 339864,
+    "total_portfolio_brl": 3505358,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3312,20 +3316,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33670,
-      "delta_brl": 8670,
-      "delta_pct": 34.7,
+      "realizado_media_brl": 33624,
+      "delta_brl": 8624,
+      "delta_pct": 34.5,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.08,
+      "cambio_conversao": 5.0732,
       "por_ano_brl": {
-        "2026": 96520,
-        "2025": 286880,
-        "2024": 378316,
-        "2023": 399834,
-        "2022": 489679,
-        "2021": 335271
+        "2026": 96391,
+        "2025": 286496,
+        "2024": 377810,
+        "2023": 399298,
+        "2022": 489024,
+        "2021": 334823
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -3746,20 +3750,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3514545,
-      3685549,
-      3864874,
-      4052924,
-      4250124,
-      4456918,
-      4673775,
-      4901183,
-      5139656,
-      5389732,
-      5651976,
-      5926979,
-      6215363,
-      6517779,
+      3505358,
+      3676603,
+      3856213,
+      4044598,
+      4242185,
+      4449425,
+      4666790,
+      4894773,
+      5133894,
+      5384696,
+      5647750,
+      5923656,
+      6213039,
+      6516560,
       6834909,
       6924402,
       7018236,
@@ -3800,20 +3804,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3514545,
-      3825750,
-      4164512,
-      4533270,
-      4934682,
-      5371637,
-      5847284,
-      6365048,
-      6928659,
-      7542176,
-      8210020,
-      8936999,
-      9728351,
-      10589775,
+      3505358,
+      3816463,
+      4155179,
+      4523957,
+      4925464,
+      5362606,
+      5838545,
+      6356723,
+      6920891,
+      7535129,
+      8203882,
+      8931988,
+      9724714,
+      10587795,
       11527476,
       11844559,
       12177020,
@@ -3854,20 +3858,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3514545,
-      3963519,
-      4469848,
-      5040859,
-      5684815,
-      6411036,
-      7230028,
-      8153645,
-      9195252,
-      10369921,
-      11694651,
-      13188611,
-      14873422,
-      16773462,
+      3505358,
+      3953897,
+      4459831,
+      5030503,
+      5674197,
+      6400257,
+      7219223,
+      8142981,
+      9184943,
+      10360232,
+      11685908,
+      13181216,
+      14867861,
+      16770326,
       18916227,
       19591664,
       20299860,
@@ -3937,7 +3941,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.74"
+  "version": "1.75"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5418,7 +5422,7 @@ function buildSpendingGuardrails() {
     <div style="position:relative;height:36px;border-radius:8px;overflow:hidden;margin-bottom:32px">
       <!-- zonas coloridas -->
       <div style="position:absolute;left:0;width:${posUpper}%;height:100%;background:rgba(59,130,246,.15)"></div>
-      <div style="position:absolute;left:${posUpper}%;width:${posAtual-posUpper}%;height:100%;background:rgba(34,197,94,.2)"></div>
+      <div style="position:absolute;left:${posUpper}%;width:${Math.max(2, posAtual-posUpper)}%;height:100%;background:rgba(34,197,94,.2)"></div>
       <div style="position:absolute;left:${posAtual}%;width:${posSafe-posAtual}%;height:100%;background:rgba(234,179,8,.15)"></div>
       <div style="position:absolute;left:${posSafe}%;width:${posLower-posSafe}%;height:100%;background:rgba(249,115,22,.15)"></div>
       <div style="position:absolute;left:${posLower}%;width:${100-posLower}%;height:100%;background:rgba(239,68,68,.2)"></div>
@@ -6822,12 +6826,47 @@ if (localStorage.getItem('dashboard_private') === '1') {
   document.getElementById('privacyBtn').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
 }
 
-// ── Tab system ────────────────────────────────────────────────
+// ── Tab system com lazy initialization ───────────────────────
+const _tabInitialized = {};
+function _initTabCharts(tab) {
+  const tabFns = {
+    status:   [buildSemaforoPanel, buildMacroCards, buildBrasilConcentracao, buildDcaStatus,
+               renderKPIs, buildTimestamps, buildScenarios, buildTornado, buildPremissasVsRealizado],
+    perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
+               renderIpcaProgress, function() { buildBollinger('1y'); },
+               function() { buildBacktest('since2009'); }, buildCagrVsTwr,
+               buildFactorRolling, buildFactorLoadings,
+               buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],
+    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, buildShadowTable],
+    plan:     [buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
+               function() {
+                 const wiA = document.getElementById('wiAporte');
+                 const wiR = document.getElementById('wiRetorno');
+                 const wiC = document.getElementById('wiCusto');
+                 if (wiA && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
+                 if (wiR && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
+                 if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
+                 [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
+                 updateWhatIf();
+               },
+               calcAporte],
+    projecao: [buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
+               buildSpendingBreakdown, buildLifeEventsEnhanced, buildIncomeProjection,
+               buildNetWorthProjection, buildStressTest, buildSankey],
+  };
+  const fns = tabFns[tab] || [];
+  fns.forEach(fn => { try { fn(); } catch(e) { console.warn('[lazy]', fn.name || tab, e); } });
+}
 window.switchTab = function(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('[data-in-tab]').forEach(el => {
     el.style.display = el.dataset.inTab === name ? '' : 'none';
   });
+  // Lazy init: inicializar charts da aba apenas na primeira abertura
+  if (!_tabInitialized[name]) {
+    _tabInitialized[name] = true;
+    _initTabCharts(name);
+  }
   requestAnimationFrame(() => {
     Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
   });
@@ -6846,74 +6885,133 @@ function buildSemaforoPanel() {
     return '<span class="semaforo-dot ' + cls + '"></span>';
   }
 
+  // ctx: linha de contexto secondary (taxa vs posição)
+  function mkRow(gatilho, tipo, status, valorPrimario, ctx, acao) {
+    const tipoBadge = tipo === 'taxa'
+      ? '<span style="font-size:.55rem;background:rgba(6,182,212,.15);color:var(--cyan);padding:1px 5px;border-radius:4px;margin-left:4px">taxa</span>'
+      : tipo === 'posicao'
+        ? '<span style="font-size:.55rem;background:rgba(168,85,247,.15);color:var(--purple);padding:1px 5px;border-radius:4px;margin-left:4px">posição</span>'
+        : tipo === 'crypto'
+          ? '<span style="font-size:.55rem;background:rgba(234,179,8,.15);color:var(--yellow);padding:1px 5px;border-radius:4px;margin-left:4px">crypto</span>'
+          : '';
+    const ctxHtml = ctx
+      ? '<div style="font-size:.65rem;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums">' + ctx + '</div>'
+      : '';
+    return '<tr>' +
+      '<td>' + gatilho + tipoBadge + ctxHtml + '</td>' +
+      '<td>' + dot(status) + '<span style="font-size:.75rem">' + status + '</span></td>' +
+      '<td style="font-variant-numeric:tabular-nums;font-size:.78rem">' + valorPrimario + '</td>' +
+      '<td style="font-size:.75rem">' + acao + '</td>' +
+      '</tr>';
+  }
+
   const rows = [];
 
-  // 1. IPCA+ DCA status
+  // 1. IPCA+ DCA status — TIPO: taxa
   const dcaIpca = DATA.dca_status?.ipca_longo;
   if (dcaIpca) {
     const taxa = dcaIpca.taxa_atual;
     const piso = dcaIpca.piso;
     const status = (taxa != null && piso != null && taxa >= piso) ? 'verde' : 'amarelo';
-    rows.push({
-      gatilho: 'IPCA+ taxa vs piso',
-      status: status,
-      valor: taxa != null ? taxa.toFixed(2) + '% (piso ' + piso.toFixed(1) + '%)' : '--',
-      acao: dcaIpca.ativo ? 'DCA ativo' : 'DCA pausado'
-    });
+    const valorIpca2040 = DATA.rf?.ipca2040?.valor;
+    const valorIpca2029 = DATA.rf?.ipca2029?.valor;
+    const posicaoBrl = valorIpca2040 != null ? (valorIpca2040 + (valorIpca2029 || 0)) : null;
+    const pctAtual = dcaIpca.pct_carteira_atual;
+    const pctAlvo  = dcaIpca.alvo_pct;
+    const gapAlvo  = dcaIpca.gap_alvo_pp;
+    const ctx = taxa != null
+      ? 'taxa: ' + taxa.toFixed(2) + '% · piso ' + piso.toFixed(1) + '% · posição: ' +
+        (posicaoBrl != null ? 'R$' + (posicaoBrl/1000).toFixed(0) + 'k' : '--') +
+        (pctAtual != null ? ' (' + pctAtual.toFixed(1) + '% vs alvo ' + pctAlvo.toFixed(1) + '%, gap ' + gapAlvo.toFixed(1) + 'pp)' : '')
+      : null;
+    rows.push(mkRow(
+      'IPCA+ 2040 — DCA',
+      'taxa',
+      status,
+      taxa != null ? taxa.toFixed(2) + '% vs piso ' + piso.toFixed(1) + '%' : '--',
+      ctx,
+      dcaIpca.ativo ? 'DCA ativo' : 'DCA pausado'
+    ));
   }
 
-  // 2. Renda+ distância gatilho
+  // 2. Renda+ distância gatilho — TIPO: taxa
   const dg = DATA.rf?.renda2065?.distancia_gatilho;
   if (dg) {
-    rows.push({
-      gatilho: 'Renda+ taxa vs piso venda',
-      status: dg.status || 'verde',
-      valor: dg.taxa_atual != null ? dg.taxa_atual.toFixed(2) + '% (piso ' + dg.piso_venda.toFixed(1) + '%, gap ' + dg.gap_pp.toFixed(2) + 'pp)' : '--',
-      acao: dg.status === 'verde' ? 'Monitorar' : dg.status === 'amarelo' ? 'Atenção — próximo do piso' : 'Avaliar venda'
-    });
+    const valorRenda = DATA.rf?.renda2065?.valor;
+    const ctx = dg.taxa_atual != null
+      ? 'taxa: ' + dg.taxa_atual.toFixed(2) + '% · piso venda ' + dg.piso_venda.toFixed(1) + '% · gap ' + dg.gap_pp.toFixed(2) + 'pp' +
+        (valorRenda != null ? ' · posição R$' + (valorRenda/1000).toFixed(0) + 'k' : '')
+      : null;
+    rows.push(mkRow(
+      'Renda+ 2065 — Taxa',
+      'taxa',
+      dg.status || 'verde',
+      dg.taxa_atual != null ? dg.taxa_atual.toFixed(2) + '% (gatilho ≤' + dg.piso_venda.toFixed(1) + '%)' : '--',
+      ctx,
+      dg.status === 'verde' ? 'Monitorar' : dg.status === 'amarelo' ? 'Atenção — próximo do piso' : 'Avaliar venda'
+    ));
   }
 
-  // 3. Drift SWRD vs alvo
+  // 3. Drift SWRD vs alvo — TIPO: posição
   const driftSwrd = DATA.drift?.SWRD;
   if (driftSwrd) {
-    const gap = Math.abs(driftSwrd.atual - driftSwrd.alvo);
-    const status = gap <= 3 ? 'verde' : gap <= 5 ? 'amarelo' : 'vermelho';
-    rows.push({
-      gatilho: 'Drift SWRD vs alvo',
-      status: status,
-      valor: driftSwrd.atual.toFixed(1) + '% (alvo ' + driftSwrd.alvo.toFixed(1) + '%, gap ' + gap.toFixed(1) + 'pp)',
-      acao: status === 'verde' ? 'OK' : 'Priorizar aporte SWRD'
-    });
+    const gap = driftSwrd.alvo - driftSwrd.atual; // positivo = subpeso
+    const absGap = Math.abs(gap);
+    const status = absGap <= 3 ? 'verde' : absGap <= 5 ? 'amarelo' : 'vermelho';
+    const impactoR = totalBrl > 0 ? Math.abs(gap / 100 * totalBrl) : null;
+    const ctx = 'atual: ' + driftSwrd.atual.toFixed(1) + '% · alvo ' + driftSwrd.alvo.toFixed(1) + '% · gap ' +
+      (gap >= 0 ? '-' : '+') + absGap.toFixed(1) + 'pp' +
+      (impactoR != null ? ' · ~R$' + (impactoR/1000).toFixed(0) + 'k para rebalancear' : '');
+    rows.push(mkRow(
+      'Equity SWRD — Drift',
+      'posicao',
+      status,
+      driftSwrd.atual.toFixed(1) + '% (alvo ' + driftSwrd.alvo.toFixed(1) + '%)',
+      ctx,
+      status === 'verde' ? 'OK' : 'Priorizar aporte SWRD'
+    ));
   }
 
-  // 4. HODL11 banda
+  // 4. HODL11 banda — TIPO: crypto
   const banda = DATA.hodl11?.banda;
   if (banda) {
-    rows.push({
-      gatilho: 'Crypto vs banda',
-      status: banda.status || 'verde',
-      valor: banda.atual_pct != null ? banda.atual_pct.toFixed(1) + '% (alvo ' + banda.alvo_pct.toFixed(0) + '%, banda ' + banda.min_pct.toFixed(1) + '-' + banda.max_pct.toFixed(1) + '%)' : '--',
-      acao: banda.status === 'verde' ? 'Dentro da banda' : banda.status === 'amarelo' ? 'Perto do limite' : 'Fora da banda'
-    });
+    const ctx = banda.atual_pct != null
+      ? 'atual: ' + banda.atual_pct.toFixed(1) + '% · alvo ' + banda.alvo_pct.toFixed(0) + '% · banda ' + banda.min_pct.toFixed(1) + '–' + banda.max_pct.toFixed(1) + '%'
+      : null;
+    rows.push(mkRow(
+      'Crypto HODL11 — Banda',
+      'crypto',
+      banda.status || 'verde',
+      banda.atual_pct != null ? banda.atual_pct.toFixed(1) + '% (banda ' + banda.min_pct.toFixed(1) + '–' + banda.max_pct.toFixed(1) + '%)' : '--',
+      ctx,
+      banda.status === 'verde' ? 'Dentro da banda' : banda.status === 'amarelo' ? 'Perto do limite' : 'Fora da banda'
+    ));
   }
 
-  // 5. Max drift across all buckets
-  const maxDrift = Math.max(...Object.values(DATA.drift || {}).map(d => Math.abs(d.atual - d.alvo)));
-  const maxDriftBucket = Object.entries(DATA.drift || {}).sort((a,b) => Math.abs(b[1].atual - b[1].alvo) - Math.abs(a[1].atual - a[1].alvo))[0];
-  if (maxDriftBucket) {
-    const gap = Math.abs(maxDriftBucket[1].atual - maxDriftBucket[1].alvo);
-    const status = gap <= 3 ? 'verde' : gap <= 5 ? 'amarelo' : 'vermelho';
-    rows.push({
-      gatilho: 'Drift máximo (' + maxDriftBucket[0] + ')',
-      status: status,
-      valor: gap.toFixed(1) + 'pp',
-      acao: status === 'verde' ? 'OK' : 'Rebalancear via aporte'
-    });
+  // 5. Drift máximo global — TIPO: posição
+  const _driftEntries = Object.entries(DATA.drift || {});
+  const maxDriftEntry = _driftEntries.sort((a,b) => Math.abs(b[1].atual - b[1].alvo) - Math.abs(a[1].atual - a[1].alvo))[0];
+  if (maxDriftEntry) {
+    const [bucket, bDrift] = maxDriftEntry;
+    const bGap = bDrift.alvo - bDrift.atual;
+    const bAbsGap = Math.abs(bGap);
+    const status = bAbsGap <= 3 ? 'verde' : bAbsGap <= 5 ? 'amarelo' : 'vermelho';
+    const impactoR = totalBrl > 0 ? Math.abs(bAbsGap / 100 * totalBrl) : null;
+    const ctx = 'atual: ' + bDrift.atual.toFixed(1) + '% · alvo ' + bDrift.alvo.toFixed(1) + '% · gap ' +
+      (bGap >= 0 ? '-' : '+') + bAbsGap.toFixed(1) + 'pp' +
+      (impactoR != null ? ' · ~R$' + (impactoR/1000).toFixed(0) + 'k' : '');
+    rows.push(mkRow(
+      'Drift máximo (' + bucket + ')',
+      'posicao',
+      status,
+      bAbsGap.toFixed(1) + 'pp',
+      ctx,
+      status === 'verde' ? 'OK' : 'Rebalancear via aporte'
+    ));
   }
 
   el.innerHTML = '<thead><tr><th>Gatilho</th><th>Status</th><th>Valor</th><th>Ação</th></tr></thead><tbody>' +
-    rows.map(r => '<tr><td>' + r.gatilho + '</td><td>' + dot(r.status) + r.status + '</td><td style="font-variant-numeric:tabular-nums">' + r.valor + '</td><td>' + r.acao + '</td></tr>').join('') +
-    '</tbody>';
+    rows.join('') + '</tbody>';
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -7333,34 +7431,20 @@ function buildCagrVsTwr() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// INIT — render tudo
+// INIT — lazy tab loading
+// Apenas funções globais (não ligadas a nenhuma aba específica) e a tab inicial.
 // ═══════════════════════════════════════════════════════════════
 (function init() {
+  // Funções globais (header, hero, semáforo — sempre visíveis)
   renderKPIs();
   renderWellness();
-  buildSemaforoPanel();
-  buildMacroCards();
-  buildBrasilConcentracao();
-  buildTimestamps();
-  buildDcaStatus();
-  buildTaxIR();
-  buildPremissasVsRealizado();
-  renderIpcaProgress();
-  buildRfCards();
-  buildShadowTable();
-  buildIncomeTable();
-  buildTimeline('all');
-  buildAttribution();
-  buildDonuts();
-  buildScenarios();
-  buildTornado();
-  buildDeltaBar();
-  buildGlidePath();
-  buildFireBuckets();
-  buildBondPool();
+  buildWellnessExtras();
   buildMinilog();
   buildEventosVida();
   buildPfireFamilia();
+  buildGlidePath();
+  buildFireBuckets();
+  buildBondPool();
   buildFanChart();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
@@ -7369,54 +7453,13 @@ function buildCagrVsTwr() {
       el.textContent = `P10/P50/P90 são aproximações de trajetória; P(FIRE@50) = ${DATA.pfire50.base}% calculado direto nas 10k simulações MC.`;
     }
   })();
-  buildGuardrails();
-  buildIncomeChart();
-  buildFeeAnalysis();
-  buildPosicoes();
-  buildCustoBase();
-  buildTLH();
-  renderHodl11();
-  buildBollinger('1y');
-  buildBacktest('since2009');
-  buildCagrVsTwr();
-  buildFactorRolling();
-  buildFactorLoadings();
-  buildShadowChart('since2009');
   updateContrib();
-  // What-if: initialize slider values from DATA and trigger render
-  (function() {
-    const wiA = document.getElementById('wiAporte');
-    const wiR = document.getElementById('wiRetorno');
-    const wiC = document.getElementById('wiCusto');
-    if (wiA && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
-    if (wiR && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
-    if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
-    [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
-  })();
-  updateWhatIf();
-  calcAporte();
-  // Projeções — try/catch isolados para que erro numa função não quebre as demais
-  [
-    ['buildEarliestFire', buildEarliestFire],
-    ['buildSpendingGuardrails', buildSpendingGuardrails],
-    ['buildScenarioComparison', buildScenarioComparison],
-    ['buildSpendingBreakdown', buildSpendingBreakdown],
-    ['buildLifeEventsEnhanced', buildLifeEventsEnhanced],
-    ['buildIncomeProjection', buildIncomeProjection],
-    ['buildNetWorthProjection', buildNetWorthProjection],
-    ['buildStressTest', buildStressTest],
-    ['buildSankey', buildSankey],
-  ].forEach(([name, fn]) => {
-    try { fn(); } catch(e) { console.warn('⚠️ ' + name + ':', e); }
-  });
-  buildWellnessExtras();
-  // Ativar tab inicial (status) — esconde o resto, então resize
-  switchTab('status');
-})();
 
-// Restaurar última tab
-(function() {
-  try { const t = localStorage.getItem('dash_tab'); if (t) switchTab(t); } catch(e) {}
+  // Ativar tab inicial (status) — aciona lazy init para a aba status
+  // Restaurar última tab se disponível; senão, status
+  let _startTab = 'status';
+  try { const t = localStorage.getItem('dash_tab'); if (t) _startTab = t; } catch(e) {}
+  switchTab(_startTab);
 })();
 </script>
 </body>
