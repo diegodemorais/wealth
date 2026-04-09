@@ -231,8 +231,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="hero-strip">
   <div class="hero-kpi primary">
     <div class="hlbl">Patrimônio Total</div>
-    <div class="hval pv" id="heroPatrimonioUsd">—</div>
-    <div class="hsub pv" id="heroPatrimonioBrl">— em BRL</div>
+    <div class="hval pv" id="heroPatrimonioBrl">—</div>
+    <div class="hsub pv" id="heroPatrimonioUsd">— em USD</div>
   </div>
   <div class="hero-kpi primary">
     <div class="hlbl">P(FIRE) Base · @53</div>
@@ -3619,9 +3619,9 @@ function buildWellnessExtras() {
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 function renderKPIs() {
-  // Hero strip — USD primário (câmbio flutua sem gerar informação de retorno)
-  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k`;
-  document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M em BRL`;
+  // Hero strip — BRL primário, USD secundário
+  document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
+  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k em USD`;
   const heroPf = document.getElementById('heroPfire');
   const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
   const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
@@ -3799,7 +3799,8 @@ function renderKPIs() {
       grid.appendChild(col);
     });
   })();
-  document.getElementById('fireCountdown').textContent = `${yrInt} anos ${moInt} meses`;
+  const _idadeFireAlvo = DATA.premissas.idade_fire_alvo;
+  document.getElementById('fireCountdown').textContent = `${yrInt} anos ${moInt} meses · ${_anoFire} (${_idadeFireAlvo} anos)`;
   const fbPct = Math.min(100, (Math.log(totalBrl/patInicio) / Math.log(PAT_GATILHO/patInicio)) * 100);
   document.getElementById('fireProgressBar').style.width = fbPct + '%';
   document.getElementById('fireProgressLabel').textContent = `Atual R$${(totalBrl/1e6).toFixed(2)}M`;
