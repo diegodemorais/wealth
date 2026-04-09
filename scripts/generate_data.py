@@ -281,6 +281,18 @@ def get_pfire_tornado():
     if args.skip_scripts:
         state = load_state()
         fire = state.get("fire", {})
+        # Normalizar tornado: garantir campos "label" (schema) e "variavel" (template)
+        raw_tornado = fire.get("tornado", [])
+        norm_tornado = []
+        for t in raw_tornado:
+            var = t.get("variavel", t.get("label", ""))
+            norm_tornado.append({
+                "label":    var,
+                "variavel": var,
+                "mais10":   t.get("mais10", 0),
+                "menos10":  t.get("menos10", 0),
+                "delta":    t.get("delta", abs(t.get("mais10", 0)) + abs(t.get("menos10", 0))),
+            })
         return (
             {"base": fire.get("pfire50_base", fire.get("pfire_base")),
              "fav":  fire.get("pfire50_fav",  fire.get("pfire_fav")),
@@ -288,7 +300,7 @@ def get_pfire_tornado():
             {"base": fire.get("pfire53_base", fire.get("pfire_base")),
              "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
              "stress": fire.get("pfire53_stress", fire.get("pfire_stress"))},
-            fire.get("tornado", [])
+            norm_tornado
         )
 
     # Rodar @50 (--anos 11) com tornado
@@ -342,28 +354,47 @@ def get_pfire_tornado():
         pf53 = parse_pfire_generic(out53)
 
     # Tornado — parsear do output @50
-    # fire_montecarlo output format: "  Retorno equity (+/-10%)    +3.2%    -2.8%        6.0%"
+    # fire_montecarlo output format:
+    #   "  Volatilidade equity (+/-10%)        -4.1%    +4.0%          8.2%"
+    # Grupos: 1=label  2=up(+10%)  3=down(-10%)  4=impacto_total
     tornado = []
     in_tornado = False
+    _tornado_pattern = re.compile(
+        r'^\s+(.+?)\s+([+-]?\d+\.?\d*)%\s+([+-]?\d+\.?\d*)%\s+(\d+\.?\d*)%'
+    )
     for line in out50.splitlines():
         if "tornado" in line.lower() or "sensibilidade" in line.lower():
             in_tornado = True
         if in_tornado:
-            # Match: "  label    +X.X%    -Y.Y%    Z.Z%"
-            m = re.search(r'^\s{1,4}(.+?)\s{2,}([+-]\d+\.?\d*)%\s+([+-]\d+\.?\d*)%\s+(\d+\.?\d*)%', line)
+            m = _tornado_pattern.match(line)
             if m:
                 label = m.group(1).strip()
+                # Skip header lines like "Variável   ▲ +10%   ▼ -10%  Impacto Total"
+                if any(x in label for x in ["Variável", "▲", "▼", "---"]):
+                    continue
                 tornado.append({
-                    "variavel": label,
-                    "mais10": float(m.group(2)),   # pp
-                    "menos10": float(m.group(3)),  # pp
+                    "label":    label,              # schema canonical field
+                    "variavel": label,              # alias usado pelo template
+                    "mais10":   float(m.group(2)),  # delta ao aumentar +10%
+                    "menos10":  float(m.group(3)),  # delta ao diminuir -10%
+                    "delta":    float(m.group(4)),  # impacto total absoluto
                 })
 
     # Fallback: ler tornado de dashboard_state.json (salvo por fire_montecarlo.py --tornado)
     if not tornado:
         state_tornado = load_state().get("fire", {}).get("tornado", [])
         if state_tornado:
-            tornado = state_tornado
+            # Normalizar: garantir que cada item tem "label" (schema) e "variavel" (template)
+            tornado = []
+            for t in state_tornado:
+                var = t.get("variavel", t.get("label", ""))
+                tornado.append({
+                    "label":    var,
+                    "variavel": var,
+                    "mais10":   t.get("mais10", 0),
+                    "menos10":  t.get("menos10", 0),
+                    "delta":    t.get("delta", abs(t.get("mais10", 0)) + abs(t.get("menos10", 0))),
+                })
             print(f"  -> tornado: {len(tornado)} variaveis (de dashboard_state.json)")
 
     # Fallback do state
@@ -414,39 +445,84 @@ def get_backtest():
 
 # ─── 4. ATTRIBUTION ───────────────────────────────────────────────────────────
 def get_attribution():
-    """Lê fx_utils.py output e tenta usar decompose_return().
-    retornoUsd e cambio podem ser null — o template trata null graciosamente.
+    """Decomposição YTD do crescimento patrimonial em 3 componentes:
+      - aportes: aportes_mensais × meses_decorridos (jan-hoje)
+      - retornoUsd: proxy 65% do crescimento não-aporte (equity USD)
+      - cambio: resíduo (variação cambial + RF BRL)
+
+    Usa CSV e dashboard_state.json como fontes primárias.
+    Marca _estimativa: True — não é atribuição exata, é decomposição proxy.
     """
-    if args.skip_scripts:
+    try:
+        # 1. Patrimônio início do ano: última linha de dez/2025 ou 2025-12-31 no CSV
+        pat_inicio = None
+        if CSV_PATH.exists():
+            with open(CSV_PATH) as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    keys = list(row.keys())
+                    date_col = next((k for k in keys if 'data' in k.lower() or 'date' in k.lower()), keys[0] if keys else None)
+                    val_col  = next((k for k in keys if 'patrimônio' in k.lower() or 'patrimonio' in k.lower() or 'total' in k.lower() or 'valor' in k.lower()), keys[1] if len(keys) > 1 else None)
+                    if not date_col or not val_col:
+                        continue
+                    d = row[date_col].strip()
+                    if d.startswith("2025-12") or d.startswith("2026-01"):
+                        try:
+                            v = float(row[val_col].replace(',', '.').replace(' ', ''))
+                            pat_inicio = v
+                        except ValueError:
+                            pass
+
+        # 2. Patrimônio atual — de dashboard_state.json
+        state = load_state()
+        pat_atual = state.get("patrimonio", {}).get("total_brl")
+        if pat_atual is None:
+            # Tentar de posicoes
+            posicoes_raw = state.get("posicoes", {})
+            cambio_state = state.get("patrimonio", {}).get("cambio", CAMBIO_FALLBACK)
+            _total = 0
+            for tk, pos in posicoes_raw.items():
+                if "valor_brl" in pos:
+                    _total += pos["valor_brl"]
+                elif "qty" in pos and "price" in pos and pos.get("moeda") == "USD":
+                    _total += pos["qty"] * pos["price"] * cambio_state
+            if _total > 0:
+                pat_atual = _total
+
+        if pat_inicio is None or pat_atual is None:
+            return None
+
+        # 3. Aportes YTD: jan=1 ... hoje
+        hoje = date.today()
+        # Meses completos decorridos (jan=1 completo se passamos de fev)
+        meses = hoje.month - 1  # meses completos (jan completo = 1, fev completo = 2 ...)
+        if meses <= 0:
+            meses = 1  # pelo menos 1 mês
+        aportes_ytd = APORTE_MENSAL * meses
+
+        # 4. Crescimento real
+        cresc_real = pat_atual - pat_inicio
+
+        # 5. Crescimento não-aporte
+        cresc_nao_aporte = cresc_real - aportes_ytd
+
+        # 6. Proxy decomposição: 65% equity USD, 35% câmbio+RF
+        retorno_usd = round(cresc_nao_aporte * 0.65)
+        cambio_fx   = round(cresc_nao_aporte - retorno_usd)
+
+        print(f"  → attribution: pat_inicio=R${pat_inicio/1e3:.0f}k | pat_atual=R${pat_atual/1e3:.0f}k | "
+              f"aportes=R${aportes_ytd/1e3:.0f}k | retornoUsd=R${retorno_usd/1e3:.0f}k | cambio=R${cambio_fx/1e3:.0f}k")
+
+        return {
+            "aportes":     aportes_ytd,
+            "retornoUsd":  retorno_usd,
+            "cambio":      cambio_fx,
+            "crescReal":   round(cresc_real),
+            "_estimativa": True,
+        }
+    except Exception as e:
+        print(f"  ⚠️ attribution: {e}")
         return None
-
-    print("  ▶ fx_utils.py ...")
-    out, err = run([VENV_PY, "scripts/fx_utils.py"], cwd=ROOT)
-
-    attr = {"aportes": None, "retornoUsd": None, "cambio": None, "crescReal": None}
-    for line in out.splitlines():
-        m = re.search(r'[Aa]portes?.*?R\$\s*([\d_,.]+)', line)
-        if m: attr["aportes"] = float(m.group(1).replace('_','').replace(',','.'))
-        m = re.search(r'[Rr]etorno\s+USD.*?R\$\s*([\d_,.]+)', line)
-        if m: attr["retornoUsd"] = float(m.group(1).replace('_','').replace(',','.'))
-        m = re.search(r'[Cc]âmbio.*?R\$\s*([\d_,.]+)', line)
-        if m: attr["cambio"] = float(m.group(1).replace('_','').replace(',','.'))
-
-    # Tentar usar decompose_return() diretamente se retornoUsd/cambio não parseados
-    if attr["retornoUsd"] is None and attr["cambio"] is None:
-        try:
-            import importlib.util
-            spec = importlib.util.spec_from_file_location("fx_utils", ROOT / "scripts" / "fx_utils.py")
-            mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
-            if hasattr(mod, 'decompose_return'):
-                # Valores não disponíveis diretamente — manter null
-                # decompose_return precisa de r_usd e r_fx que não temos aqui
-                pass
-        except Exception:
-            pass
-
-    return attr
 
 
 # ─── 5. TIMELINE + BOLLINGER (do CSV) ────────────────────────────────────────
@@ -509,6 +585,37 @@ def get_timeline_bollinger():
         {"labels": labels, "values": values},
         {"dates": boll_dates, "values": boll_vals}
     )
+
+
+# ─── 5b. FACTOR: CACHE BOOTSTRAP ────────────────────────────────────────────
+def _try_populate_factor_cache():
+    """Se factor_cache.json não existe, tenta computar rolling + loadings inline.
+    Chamado no início do pipeline — não bloqueia se falhar.
+    """
+    if FACTOR_CACHE.exists():
+        return  # já existe
+    print("  ▶ factor cache não encontrado — tentando popular inline ...")
+    try:
+        # Temporariamente desabilitar skip_scripts para computar factor data
+        _orig = args.skip_scripts
+        args.skip_scripts = False
+        rolling  = get_factor_rolling()
+        loadings = get_factor_loadings()
+        args.skip_scripts = _orig
+
+        cache_data = {}
+        if rolling.get("dates"):
+            cache_data["factor_rolling"] = rolling
+        if loadings:
+            cache_data["factor_loadings"] = loadings
+        if cache_data:
+            FACTOR_CACHE.parent.mkdir(exist_ok=True)
+            FACTOR_CACHE.write_text(json.dumps(cache_data, indent=2))
+            print(f"  ✓ factor cache salvo: rolling={len(rolling.get('dates',[]))} pts, loadings={len(loadings)} ETFs")
+        else:
+            print("  ⚠️ factor cache: sem dados para salvar")
+    except Exception as e:
+        print(f"  ⚠️ _try_populate_factor_cache: {e}")
 
 
 # ─── 5b. FACTOR: ROLLING 12m AVGS vs SWRD ───────────────────────────────────
@@ -1492,6 +1599,9 @@ def main():
     attr = get_attribution()
 
     # Factor data (rolling + loadings)
+    # Se --skip-scripts e cache não existe, tenta popular inline antes de chamar as funções
+    if args.skip_scripts and not FACTOR_CACHE.exists():
+        _try_populate_factor_cache()
     factor_rolling = get_factor_rolling()
     factor_loadings = get_factor_loadings()
 
