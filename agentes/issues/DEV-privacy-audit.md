@@ -158,3 +158,31 @@ Em `private-mode`: resetar sliders para centro do range (não usar `DATA.premiss
 
 - DATA via fetch autenticado → overengineering; senha Netlify é a proteção real
 - Remover `senha: diego2040` do `carteira.md` → trivial, mas fora do escopo de privacidade do dashboard
+
+---
+
+## Implementação v2 — 2026-04-09 (v1.106)
+
+Segunda rodada de gaps identificados por Diego após v1.104. 19 itens auditados:
+
+| # | Elemento | Implementação | Versão |
+|---|----------|---------------|--------|
+| 1 | Calculadora de aporte — default 25k | Input numérico oculto (`visibility:hidden`) + slider para centro em private mode | v1.106 |
+| 2 | Minilog — coluna Valor (montante) | `class="pv"` na td Valor; preço do ativo permanece visível | v1.106 |
+| 3 | Base de custo — linha Total equity | `class="pv"` nas células valor e custo USD | v1.106 |
+| 4 | Indicadores topo — heroProgressoSub | `class="pv"` no elemento HTML | v1.106 |
+| 5 | KPI Origem equity IBKR — sub label | `class="pv"` em kpiOrigemPat e kpiOrigemPatSub | v1.106 |
+| 6 | Decomposição crescimento — eixo X | Bug corrigido: era oculto Y (errado para bar horizontal); agora oculta X | v1.106 |
+| 7 | Premissas vs realizado — aportes por ano | `class="pv"` no `<td>` de breakdown anual | v1.106 |
+| 8 | Shadow portfolios — escala Y | **Não sensível**: base-100 normalizado, não revela R$ | — |
+| 9 | Bond pool — valores atuais | `class="pv"` em valor atual, meta, IPCA+ 2040/2029, total, Renda+ | v1.106 |
+| 10 | Guardrails — colunas Retirada e Gatilho | `class="pv"` nas tds retirStr e gatilhoStr | v1.106 |
+| 11 | Renda na aposentadoria — gráfico+tabela | incomeChart adicionado a absCharts (Y oculto); colunas Fonte+Gasto com pv; src divs com pv | v1.106 |
+| 12 | Eventos de vida — campo impacto | `class="pv"` na div de ev.impacto | v1.106 |
+| 13 | Cenários família — label com valor | Span `R$Xk/ano` com pv; pfireFamiliaSrc com pv dinâmico | v1.106 |
+| 14 | Simulador FIRE — sliders aporte e custo | Resetam para centro do range em private mode (Fase 4 original) | v1.106 |
+| 15 | Spending guardrails — valores em cima e em baixo | Seção inteira oculta em private mode; mantém só P(FIRE)% e semáforo | v1.106 |
+| 16 | Comparação FIRE 50 e 53 — patrimônios | `fmtPat()` envolve valores em `<span class="pv">` | v1.106 |
+| 17 | Projeção patrimônio — label gatilho | Dataset label sem valor em private mode ("Gatilho FIRE" vs "Gatilho FIRE R$13.1M") | v1.106 |
+| 18 | Stress test — bloco de rodapé | patrimônio atual, pós-shock e perda bruta com `class="pv"` | v1.106 |
+| 19 | Sankey — rodapé | Já coberto: seção oculta + span pv no R$45k/mês | v1.104 |
