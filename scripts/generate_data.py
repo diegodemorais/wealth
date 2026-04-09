@@ -53,6 +53,8 @@ CSV_PATH   = ROOT / "dados" / "historico_carteira.csv"
 HOLDINGS_PATH = ROOT / "dados" / "holdings.md"
 LOTES_PATH   = ROOT / "dados" / "ibkr" / "lotes.json"
 APORTES_PATH    = ROOT / "dados" / "ibkr" / "aportes.json"
+XP_LOTES_PATH   = ROOT / "dados" / "xp" / "lotes.json"
+NUBANK_TD_PATH  = ROOT / "dados" / "nubank" / "resumo_td.json"
 WELLNESS_CONFIG = ROOT / "agentes" / "referencia" / "wellness_config.json"
 FACTOR_CACHE        = ROOT / "dados" / "factor_cache.json"
 SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
@@ -1021,6 +1023,21 @@ def get_rf(state):
     if taxa_renda and "renda2065" in rf:
         rf["renda2065"]["taxa"] = taxa_renda
 
+    # ── Custo base RF da Nubank (dados/nubank/resumo_td.json) ───────────────
+    # Enriquece cada título com total_aplicado e liquido_aplicado (custo base)
+    if NUBANK_TD_PATH.exists():
+        try:
+            nubank_td = json.loads(NUBANK_TD_PATH.read_text())
+            for nb_key, nb_data in nubank_td.items():
+                if nb_key in rf and not nb_data.get("zerado"):
+                    rf[nb_key]["custo_base_brl"] = nb_data.get("liquido_aplicado", 0)
+                    rf[nb_key]["total_aplicado_brl"] = nb_data.get("total_aplicado", 0)
+                    rf[nb_key]["total_resgatado_brl"] = nb_data.get("total_resgatado", 0)
+                    rf[nb_key]["n_aplicacoes"] = len(nb_data.get("aplicacoes", []))
+            print(f"  ✓ RF custo base Nubank: {', '.join(k for k in nubank_td if k in rf and not nubank_td[k].get('zerado'))}")
+        except Exception as e:
+            print(f"  ⚠️ Nubank TD: {e}")
+
     # ── Campos adicionais para Renda+ 2065 ──────────────────────────────────
     # Duration modificada, MtM por 1pp e distância ao gatilho de venda.
     # Fonte metodológica: ANBIMA Manual MtM 2023, Seção 5.2 (NTN-B).
@@ -1765,11 +1782,22 @@ def main():
                    hodl11_raw.get("valor", hodl11_raw.get("valor_brl", 0))
 
     # ── P&L HODL11 ──────────────────────────────────────────────────────────────
-    # TODO: preco_medio deve ser atualizado manualmente em dashboard_state.json
-    # quando houver novas compras de HODL11 (campo: rf.hodl11.avg_cost).
-    # Fonte sugerida: nota de corretagem da B3 (XP/Nubank).
-    # Custo médio atual: não disponível em nenhuma fonte automatizada.
-    hodl11_preco_medio = hodl11_raw.get("avg_cost")  # None se não cadastrado
+    # Fonte primária: dados/xp/lotes.json (gerado por broker_analysis.py)
+    # Fallback: dashboard_state.json rf.hodl11.avg_cost
+    hodl11_preco_medio = None
+    if XP_LOTES_PATH.exists():
+        try:
+            xp_lotes = json.loads(XP_LOTES_PATH.read_text())
+            if "HODL11" in xp_lotes:
+                hodl11_preco_medio = xp_lotes["HODL11"].get("avg_cost_brl")
+                print(f"  ✓ HODL11 avg_cost R${hodl11_preco_medio} (de dados/xp/lotes.json)")
+        except Exception as e:
+            print(f"  ⚠️ XP lotes: {e}")
+    if hodl11_preco_medio is None:
+        hodl11_preco_medio = hodl11_raw.get("avg_cost")  # fallback dashboard_state.json
+        if hodl11_preco_medio:
+            print(f"  ✓ HODL11 avg_cost R${hodl11_preco_medio} (fallback dashboard_state.json)")
+
     if hodl11_preco_medio and hodl11_qty and hodl11_preco_atual:
         custo_total     = hodl11_qty * hodl11_preco_medio
         pnl_brl         = round(hodl11_brl - custo_total, 2)
@@ -1783,10 +1811,9 @@ def main():
         "qty":          hodl11_qty,
         "preco":        hodl11_preco_atual,
         "valor":        round(hodl11_brl, 2),
-        # P&L — None quando preco_medio não cadastrado em dashboard_state.json
-        "preco_medio":  hodl11_preco_medio,   # custo médio BRL/cota; TODO: alimentar via nota B3
-        "pnl_brl":      pnl_brl,              # R$ ganho/perda realizado se vendido hoje
-        "pnl_pct":      pnl_pct,              # % ganho/perda vs custo médio
+        "preco_medio":  hodl11_preco_medio,
+        "pnl_brl":      pnl_brl,
+        "pnl_pct":      pnl_pct,
     }
 
     # Drift

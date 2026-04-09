@@ -1,8 +1,8 @@
 # Holdings — Quantidades e Valores por Ativo
 
-> Atualizado em: 2026-04-08
-> Fonte: Carteira Viva (Google Sheets, aba Utils) + auditoria HD-carteiraviva-audit + ibkr_analysis.py (CSV 2021-2026-03-31)
-> Cambio de referencia: R$ 5,15
+> Atualizado em: 2026-04-09
+> Fonte: Carteira Viva + ibkr_analysis.py + broker_analysis.py (XP notas + Nubank screenshots)
+> Cambio de referencia: R$ 5,07
 > Atualizar sempre que houver compra/venda
 
 ---
@@ -43,19 +43,23 @@
 
 ## Renda Fixa (Tesouro Direto)
 
-| Ativo | Cotas | Corretora | Valor estimado | Notas |
-|-------|-------|-----------|---------------|-------|
-| Tesouro IPCA+ 2029 | 24.18 | Nubank | ~R$ 89,095 | Reserva emergencia |
-| Tesouro IPCA+ 2040 | — | XP | ~R$ 33,285 | Bloco IPCA+ longo. DCA ativo (taxa ~7.20%) |
-| Renda+ 2065 | 606.87 | Nubank | ~R$ 112,466 | Tatico. Gatilho venda: taxa <= 6.0%. Taxa atual ~6.93% |
+| Ativo | Corretora | Custo base (aplicado) | Valor estimado | Notas |
+|-------|-----------|----------------------|---------------|-------|
+| Tesouro IPCA+ 2029 | Nubank | R$ 76,860 (5 aplic, 1 resgate parcial) | ~R$ 89,095 | Reserva emergencia |
+| Tesouro IPCA+ 2040 | Nubank | R$ 20,035 (1 aplic, abr/2026) | ~R$ 33,285 | Bloco IPCA+ longo. DCA ativo (taxa ~7.20%) |
+| Renda+ 2065 | Nubank | R$ 108,554 (4 aplic, set-dez/2025) | ~R$ 112,466 | Tatico. Gatilho venda: taxa <= 6.0%. Taxa atual ~6.93% |
+| Tesouro IPCA+ 2045 | Nubank | — | ZERADO | Resgate total jan/2025. P&L: -R$ 10,620 |
+
+> Fonte custo base: `dados/nubank/resumo_td.json` (screenshots app Nubank, 09/04/2026)
+> `generate_data.py` le automaticamente de `dados/nubank/resumo_td.json`
 
 ---
 
 ## Cripto
 
-| Ativo | Qtde | Tipo | Valor estimado |
-|-------|------|------|---------------|
-| HODL11 | 1,676 | ETF B3 | ~R$ 104,951 |
+| Ativo | Qtde | Tipo | Custo medio | Custo total | Valor estimado |
+|-------|------|------|-------------|-------------|---------------|
+| HODL11 | 1,676 | ETF B3 (XP) | R$ 79.03 | R$ 132,453 | ~R$ 100,208 |
 | Bitcoin spot | 0.00434697 | Legado | ~R$ 2,000 |
 | Ethereum | 0.06606465 | Legado | ~R$ 700 |
 | BNB | 0.20507877 | Legado | ~R$ 350 |
