@@ -18,6 +18,8 @@ Pipeline:
     3. Roda fire_montecarlo.py --anos 11 --tornado   → parseia P(FIRE) + tornado
     4. Roda backtest_portfolio.py                     → parseia séries
     5. Roda fx_utils.py                              → parseia attribution
+    5b. Factor rolling 12m AVGS vs SWRD              → yfinance + rolling diff
+    5c. Factor loadings FF5+MOM por ETF              → Ken French + OLS regression
     6. Lê historico_carteira.csv                     → timeline + bollinger
     7. Lê holdings.md                                → taxas RF
     8. Escreve dashboard/data.json
@@ -32,11 +34,11 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
-    PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS,
+    PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS, PISO_VENDA_RENDA_PLUS,
     PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL, RENDA_ESTIMADA,
     IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
-    TICKERS_YF, GLIDE_PATH,
+    TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA,
 )
 
 VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
@@ -46,6 +48,7 @@ HOLDINGS_PATH = ROOT / "dados" / "holdings.md"
 LOTES_PATH   = ROOT / "dados" / "ibkr" / "lotes.json"
 APORTES_PATH    = ROOT / "dados" / "ibkr" / "aportes.json"
 WELLNESS_CONFIG = ROOT / "agentes" / "referencia" / "wellness_config.json"
+FACTOR_CACHE    = ROOT / "dados" / "factor_cache.json"
 OUT_PATH        = ROOT / "dashboard" / "data.json"
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
@@ -86,6 +89,82 @@ def read_holdings_taxas():
     except Exception as e:
         print(f"  ⚠️ holdings.md: {e}")
     return taxa_ipca2040, taxa_renda2065
+
+
+# ─── DURATION + MtM HELPERS ───────────────────────────────────────────────────
+
+def calcular_duration_modificada_ntnb(taxa_real_pct: float, anos_vencimento: int,
+                                      cupom_semestral_pct: float = 0.5) -> tuple[float, float]:
+    """Calcula Duration de Macaulay e Duration Modificada para NTN-B (IPCA+).
+
+    NTN-B paga cupom semestral de 6% a.a. real (0.5% a cada semestre) sobre o
+    VNA (Valor Nominal Atualizado). O último fluxo = principal + último cupom.
+
+    Fonte metodológica: ANBIMA — Manual de Marcação a Mercado (2023),
+    Seção 5.2 (NTN-B). Duration de Macaulay = Σ[t × CF_t / P] / 2 (em anos).
+    Duration Modificada = DM_Macaulay / (1 + ytm_semestral).
+
+    Args:
+        taxa_real_pct: yield to maturity real a.a. em % (ex: 6.93 para 6,93%)
+        anos_vencimento: anos inteiros até o vencimento (ex: 39 para 2065)
+        cupom_semestral_pct: cupom semestral em % do VNA (padrão 0.5% → 6% a.a.)
+
+    Returns:
+        (duration_macaulay_anos, duration_modificada_anos)
+    """
+    ytm_aa = taxa_real_pct / 100.0
+    # Converter ytm anual para semestral equivalente
+    ytm_sem = (1 + ytm_aa) ** 0.5 - 1
+
+    n_semestres = anos_vencimento * 2  # total de períodos semestrais
+    cupom = cupom_semestral_pct / 100.0  # cupom por período (0.005)
+
+    # Calcular PV de cada fluxo e peso temporal (Macaulay)
+    soma_pv = 0.0
+    soma_t_pv = 0.0
+    for t in range(1, n_semestres + 1):
+        fluxo = cupom
+        if t == n_semestres:
+            fluxo += 1.0  # principal no vencimento
+        pv_t = fluxo / (1 + ytm_sem) ** t
+        soma_pv += pv_t
+        soma_t_pv += t * pv_t  # t em semestres
+
+    if soma_pv == 0:
+        return 0.0, 0.0
+
+    macaulay_semestres = soma_t_pv / soma_pv
+    macaulay_anos = macaulay_semestres / 2.0
+    duration_mod = macaulay_anos / (1 + ytm_aa)  # Duration Modificada em anos
+    return round(macaulay_anos, 2), round(duration_mod, 2)
+
+
+def calcular_mtm_1pp(duration_modificada: float, taxa_real_pct: float) -> float:
+    """Estima variação % no preço do título para +1pp de taxa (mark-to-market).
+
+    Fórmula: ΔP/P ≈ -D_mod × Δy
+    Para Δy = +0.01 (1pp), ΔP/P ≈ -D_mod × 0.01
+
+    Retorna variação em % (negativa = perda de preço se taxa sobe).
+    """
+    return round(-duration_modificada * 0.01 * 100, 2)
+
+
+def calcular_status_semaforo(taxa_atual: float, piso_venda: float,
+                              zona_alerta_pp: float = 0.5) -> str:
+    """Retorna status semaforo: verde / amarelo / vermelho.
+
+    Gatilho de venda Renda+: taxa <= piso_venda (6.0%) — fonte: carteira.md
+    verde:    taxa > piso_venda + zona_alerta_pp   (margem confortavel, taxa >= 6.5%)
+    amarelo:  piso_venda < taxa <= piso_venda + zona_alerta_pp  (zona de atencao)
+    vermelho: taxa <= piso_venda  (gatilho de venda ativado — vender tudo)
+    """
+    if taxa_atual <= piso_venda:
+        return "vermelho"
+    elif taxa_atual <= piso_venda + zona_alerta_pp:
+        return "amarelo"
+    else:
+        return "verde"
 
 
 # ─── 1. PREMISSAS (fire_montecarlo.py) ────────────────────────────────────────
@@ -134,7 +213,7 @@ def get_pfire_tornado():
             {"base": fire.get("pfire53_base", fire.get("pfire_base")),
              "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
              "stress": fire.get("pfire53_stress", fire.get("pfire_stress"))},
-            []
+            fire.get("tornado", [])
         )
 
     # Rodar @50 (--anos 11) com tornado
@@ -188,19 +267,29 @@ def get_pfire_tornado():
         pf53 = parse_pfire_generic(out53)
 
     # Tornado — parsear do output @50
+    # fire_montecarlo output format: "  Retorno equity (+/-10%)    +3.2%    -2.8%        6.0%"
     tornado = []
     in_tornado = False
     for line in out50.splitlines():
         if "tornado" in line.lower() or "sensibilidade" in line.lower():
             in_tornado = True
         if in_tornado:
-            m = re.search(r'(.+?)\s+\+10%[:\s]+([-+]?\d+\.?\d*)pp\s+-10%[:\s]+([-+]?\d+\.?\d*)pp', line)
+            # Match: "  label    +X.X%    -Y.Y%    Z.Z%"
+            m = re.search(r'^\s{1,4}(.+?)\s{2,}([+-]\d+\.?\d*)%\s+([+-]\d+\.?\d*)%\s+(\d+\.?\d*)%', line)
             if m:
+                label = m.group(1).strip()
                 tornado.append({
-                    "variavel": m.group(1).strip(),
-                    "mais10": float(m.group(2)),
-                    "menos10": float(m.group(3)),
+                    "variavel": label,
+                    "mais10": float(m.group(2)),   # pp
+                    "menos10": float(m.group(3)),  # pp
                 })
+
+    # Fallback: ler tornado de dashboard_state.json (salvo por fire_montecarlo.py --tornado)
+    if not tornado:
+        state_tornado = load_state().get("fire", {}).get("tornado", [])
+        if state_tornado:
+            tornado = state_tornado
+            print(f"  -> tornado: {len(tornado)} variaveis (de dashboard_state.json)")
 
     # Fallback do state
     s = load_state().get("fire", {})
@@ -323,11 +412,233 @@ def get_timeline_bollinger():
     )
 
 
+# ─── 5b. FACTOR: ROLLING 12m AVGS vs SWRD ───────────────────────────────────
+def get_factor_rolling():
+    """Rolling 12-month return difference AVGS.L minus SWRD.L (percentage points).
+
+    Returns dict: {dates: [YYYY-MM, ...], avgs_vs_swrd_12m: [float, ...], threshold: -5}
+    Threshold at -5pp flags periods where AVGS significantly underperforms SWRD.
+    """
+    THRESHOLD = -5  # pp
+
+    if args.skip_scripts:
+        try:
+            cache = json.loads(FACTOR_CACHE.read_text())
+            if "factor_rolling" in cache:
+                print("  ✓ factor_rolling (cache)")
+                return cache["factor_rolling"]
+        except Exception:
+            pass
+        return {"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD}
+
+    print("  ▶ factor rolling 12m AVGS vs SWRD ...")
+    try:
+        import yfinance as yf
+        import pandas as pd
+
+        tickers = ["AVGS.L", "SWRD.L"]
+        data = yf.download(tickers, start="2019-01-01", progress=False, auto_adjust=True)
+
+        # Handle MultiIndex columns from yfinance
+        if isinstance(data.columns, pd.MultiIndex):
+            close = data["Close"]
+        else:
+            close = data[["Close"]]
+
+        # Resample to month-end
+        monthly = close.resample("ME").last().dropna(how="all")
+
+        # Compute 12-month rolling cumulative return for each ETF
+        # Return = (P_t / P_{t-12}) - 1, expressed in percentage points
+        dates = []
+        diffs = []
+        for i in range(12, len(monthly)):
+            row = monthly.iloc[i]
+            row_12 = monthly.iloc[i - 12]
+
+            avgs_now = row.get("AVGS.L")
+            avgs_ago = row_12.get("AVGS.L")
+            swrd_now = row.get("SWRD.L")
+            swrd_ago = row_12.get("SWRD.L")
+
+            if any(v is None or (isinstance(v, float) and math.isnan(v))
+                   for v in [avgs_now, avgs_ago, swrd_now, swrd_ago]):
+                continue
+            if avgs_ago == 0 or swrd_ago == 0:
+                continue
+
+            ret_avgs = (avgs_now / avgs_ago - 1) * 100  # %
+            ret_swrd = (swrd_now / swrd_ago - 1) * 100  # %
+            diff_pp = round(ret_avgs - ret_swrd, 2)
+
+            dt = monthly.index[i]
+            dates.append(dt.strftime("%Y-%m"))
+            diffs.append(diff_pp)
+
+        result = {"dates": dates, "avgs_vs_swrd_12m": diffs, "threshold": THRESHOLD}
+        print(f"    → {len(dates)} data points, latest diff: {diffs[-1] if diffs else 'N/A'}pp")
+        return result
+
+    except Exception as e:
+        print(f"  ⚠️ factor rolling: {e}")
+        return {"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD}
+
+
+# ─── 5c. FACTOR: LOADINGS POR ETF (FF5 + Momentum) ─────────────────────────
+def get_factor_loadings():
+    """Run Fama-French 5-factor + momentum regression on portfolio ETFs.
+
+    Returns dict: {TICKER: {alpha, mkt_rf, smb, hml, rmw, cma, mom, r2, n_months}, ...}
+    Uses Developed Markets factors from Ken French Data Library.
+    Caches result to dados/factor_cache.json for --skip-scripts.
+    """
+    if args.skip_scripts:
+        try:
+            cache = json.loads(FACTOR_CACHE.read_text())
+            if "factor_loadings" in cache:
+                print("  ✓ factor_loadings (cache)")
+                return cache["factor_loadings"]
+        except Exception:
+            pass
+        return {}
+
+    print("  ▶ factor loadings (FF5 + MOM) ...")
+    try:
+        import io as _io
+        import zipfile as _zf
+        import urllib.request as _url
+        import pandas as _pd
+        import yfinance as yf
+        import statsmodels.api as _sm
+
+        # --- Download FF factors ---
+        def _download_ff(url):
+            req = _url.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            resp = _url.urlopen(req, timeout=30)
+            z = _zf.ZipFile(_io.BytesIO(resp.read()))
+            csv_name = [n for n in z.namelist() if n.lower().endswith(".csv")][0]
+            raw = z.read(csv_name).decode("utf-8")
+
+            lines = raw.split("\n")
+            data_lines, started = [], False
+            for line in lines:
+                stripped = line.strip()
+                if not stripped:
+                    if started:
+                        break
+                    continue
+                parts = stripped.split(",")
+                if parts[0].strip().isdigit() and len(parts[0].strip()) == 6:
+                    started = True
+                    data_lines.append(stripped)
+                elif started:
+                    break
+
+            header_line = None
+            for line in lines:
+                stripped = line.strip()
+                if "Mkt-RF" in stripped or "Mkt_RF" in stripped:
+                    header_line = stripped
+                    break
+
+            if header_line:
+                cols = [c.strip() for c in header_line.split(",")[1:]]
+            else:
+                n_cols = len(data_lines[0].split(",")) - 1
+                if n_cols == 6:
+                    cols = ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "RF"]
+                elif n_cols == 2:
+                    cols = ["WML", "RF"]
+                else:
+                    cols = [f"F{i}" for i in range(n_cols)]
+
+            df = _pd.DataFrame([l.split(",") for l in data_lines], columns=["Date"] + cols)
+            df["Date"] = _pd.to_datetime(df["Date"].str.strip(), format="%Y%m")
+            for c in cols:
+                df[c] = _pd.to_numeric(df[c].str.strip(), errors="coerce") / 100.0
+            return df.set_index("Date")
+
+        ff5 = _download_ff("https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Developed_5_Factors_CSV.zip")
+        mom = _download_ff("https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/Developed_Mom_Factor_CSV.zip")
+        if "WML" in mom.columns:
+            mom = mom.rename(columns={"WML": "MOM"})
+        elif len(mom.columns) >= 1 and mom.columns[0] != "MOM":
+            mom = mom.rename(columns={mom.columns[0]: "MOM"})
+        factors = ff5.join(mom[["MOM"]], how="inner")
+
+        # --- Download ETF prices ---
+        # Main ETFs + transitional that still have positions
+        etf_map = {
+            "SWRD.L": "SWRD", "AVGS.L": "AVGS", "AVEM.L": "AVEM",
+            "EIMI.L": "EIMI", "AVUV": "AVUV", "AVDV": "AVDV",
+            "DGS": "DGS", "USSC.L": "USSC", "IWVL.L": "IWVL",
+        }
+        tickers = list(etf_map.keys())
+        price_data = yf.download(tickers, start="2019-07-01", progress=False, auto_adjust=True)
+
+        prices = {}
+        if isinstance(price_data.columns, _pd.MultiIndex):
+            close = price_data["Close"]
+            for yf_tk, label in etf_map.items():
+                if yf_tk in close.columns:
+                    series = close[yf_tk].dropna()
+                    if len(series) > 24:  # need at least 2 years
+                        prices[label] = series
+        else:
+            # Single ticker fallback
+            for yf_tk, label in etf_map.items():
+                if "Close" in price_data.columns:
+                    prices[label] = price_data["Close"].dropna()
+
+        # --- Monthly returns + regression ---
+        factor_cols = [f for f in ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "MOM"] if f in factors.columns]
+        loadings = {}
+
+        for label, price_series in prices.items():
+            try:
+                monthly = price_series.resample("ME").last()
+                ret = monthly.pct_change().dropna()
+                ret.index = ret.index.to_period("M").to_timestamp()
+
+                merged = _pd.DataFrame({"ret": ret}).join(factors, how="inner")
+                if len(merged) < 18:
+                    continue
+
+                merged["excess"] = merged["ret"] - merged["RF"]
+                y = merged["excess"]
+                X = merged[factor_cols]
+                X_const = _sm.add_constant(X)
+                model = _sm.OLS(y, X_const).fit(cov_type="HC1")
+
+                loadings[label] = {
+                    "alpha":  round(float(model.params["const"] * 12), 5),  # annualized
+                    "mkt_rf": round(float(model.params.get("Mkt-RF", 0)), 4),
+                    "smb":    round(float(model.params.get("SMB", 0)), 4),
+                    "hml":    round(float(model.params.get("HML", 0)), 4),
+                    "rmw":    round(float(model.params.get("RMW", 0)), 4),
+                    "cma":    round(float(model.params.get("CMA", 0)), 4),
+                    "mom":    round(float(model.params.get("MOM", 0)), 4),
+                    "r2":     round(float(model.rsquared), 4),
+                    "n_months": int(model.nobs),
+                }
+            except Exception as e:
+                print(f"    ⚠️ {label}: {e}")
+                continue
+
+        print(f"    → {len(loadings)} ETFs regressed: {list(loadings.keys())}")
+        return loadings
+
+    except Exception as e:
+        print(f"  ⚠️ factor loadings: {e}")
+        return {}
+
+
 # ─── 6. POSIÇÕES + PREÇOS ────────────────────────────────────────────────────
 def get_posicoes_precos(state):
     posicoes = state.get("posicoes", {})
     cambio   = state.get("patrimonio", {}).get("cambio", 5.10)
 
+    prices = {}  # cache de preços live; inclui HODL11 quando disponível
     if not args.skip_prices:
         print("  ▶ yfinance preços ...")
         try:
@@ -335,7 +646,6 @@ def get_posicoes_precos(state):
             tickers_yf = {tk: yf_sym for tk, yf_sym in TICKERS_YF.items() if tk in posicoes or tk in ("USD_BRL", "HODL11")}
             syms = list(set(tickers_yf.values()))
             data = yf.download(syms, period="2d", progress=False, auto_adjust=True)
-            prices = {}
             if hasattr(data, 'columns') and 'Close' in data:
                 close = data['Close']
                 for tk, yf_sym in tickers_yf.items():
@@ -361,10 +671,15 @@ def get_posicoes_precos(state):
         if "status" not in pos:
             pos["status"] = "alvo" if tk in ("SWRD", "AVGS", "AVEM", "AVUV_UCITS") else "transitório"
 
-    return posicoes, cambio
+    return posicoes, cambio, prices
 
 
 # ─── 7. RF (holdings.md + state) ─────────────────────────────────────────────
+
+# Constantes fixas da Renda+ 2065 (NTN-B estruturado)
+_RENDA_PLUS_ANO_VENC = 2065   # vencimento nominal do título
+_RENDA_PLUS_TAXA_DEFAULT = 7.08  # fallback se não encontrar em holdings.md ou state
+
 def get_rf(state):
     rf_raw = state.get("rf", {})
     taxa_ipca, taxa_renda = read_holdings_taxas()
@@ -374,7 +689,7 @@ def get_rf(state):
     notas_map = {
         "ipca2029":  "Reserva · Nubank · migrar 2029",
         "ipca2040":  "DCA ativo · XP · HTM SEMPRE",
-        "renda2065": f"Tático · Nubank · Vender ≤{PISO_TAXA_RENDA_PLUS}%",
+        "renda2065": f"Tático · Nubank · Vender ≤{PISO_VENDA_RENDA_PLUS}%",
     }
     for key, raw in rf_raw.items():
         if key == "hodl11":
@@ -395,7 +710,196 @@ def get_rf(state):
         rf["ipca2040"]["taxa"] = taxa_ipca
     if taxa_renda and "renda2065" in rf:
         rf["renda2065"]["taxa"] = taxa_renda
+
+    # ── Campos adicionais para Renda+ 2065 ──────────────────────────────────
+    # Duration modificada, MtM por 1pp e distância ao gatilho de venda.
+    # Fonte metodológica: ANBIMA Manual MtM 2023, Seção 5.2 (NTN-B).
+    # Cupom NTN-B: 6% a.a. real = 0.5% semestral sobre VNA.
+    # Renda+ é estruturada como NTN-B com fluxos de renda vitalícia pós-2065;
+    # para fins de duration, usar o vencimento nominal 2065 é conservador
+    # (subestima duration caso haja prorrogação) e aceito para monitoramento
+    # de risco de MtM no dashboard.
+    if "renda2065" in rf:
+        _ano_atual = datetime.now().year
+        _anos_venc = _RENDA_PLUS_ANO_VENC - _ano_atual  # ex: 39 em 2026
+        _taxa_atual = rf["renda2065"].get("taxa") or _RENDA_PLUS_TAXA_DEFAULT
+
+        _dur_mac, _dur_mod = calcular_duration_modificada_ntnb(
+            taxa_real_pct=_taxa_atual,
+            anos_vencimento=_anos_venc,
+        )
+        _mtm_1pp = calcular_mtm_1pp(_dur_mod, _taxa_atual)
+        _gap_pp   = round(_taxa_atual - PISO_VENDA_RENDA_PLUS, 2)
+        _status   = calcular_status_semaforo(_taxa_atual, PISO_VENDA_RENDA_PLUS)
+
+        rf["renda2065"]["duration"] = {
+            "macaulay_anos":  _dur_mac,
+            "modificada_anos": _dur_mod,
+            "metodologia": "NTN-B ANBIMA: cupom 6% a.a. real (0.5%/sem), desconto taxa YTM real a.a.",
+        }
+        rf["renda2065"]["mtm_impact_1pp"] = _mtm_1pp  # % variação preço por +1pp taxa
+        rf["renda2065"]["distancia_gatilho"] = {
+            "taxa_atual":   _taxa_atual,
+            "piso_venda":   PISO_VENDA_RENDA_PLUS,
+            "gap_pp":       _gap_pp,   # positivo = acima do piso (seguro); negativo = gatilho ativado
+            "status":       _status,   # verde / amarelo / vermelho
+        }
+
     return rf
+
+
+# ─── 7b. IR DIFERIDO — Lei 14.754/2023 (ETFs UCITS ACC) ─────────────────────
+# Ganho de capital em BRL por lote:
+#   custo_brl = qty * custo_usd * ptax_compra
+#   valor_brl = qty * preco_atual_usd * ptax_atual
+#   ganho_brl = valor_brl - custo_brl
+#   ir        = 15% * max(0, ganho_brl)
+# PTAX da compra vem da série BCB (D+0 ou último dia útil anterior).
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _fetch_ptax_series():
+    """Busca série PTAX ask BRL/USD de 2021-01-01 até hoje via python-bcb.
+    Retorna dict {date_str: float} ou {} em caso de falha."""
+    try:
+        from bcb import currency
+        end = date.today()
+        start = date(2021, 1, 1)
+        df = currency.get(["USD"], start=str(start), end=str(end))
+        if df is None or df.empty:
+            return {}
+        series = {}
+        for idx, row in df.iterrows():
+            d = idx.strftime("%Y-%m-%d") if hasattr(idx, "strftime") else str(idx)[:10]
+            val = float(row.iloc[0]) if hasattr(row, "iloc") else float(row)
+            series[d] = val
+        return series
+    except Exception as e:
+        print(f"  ⚠️ PTAX series fetch failed: {e}")
+        return {}
+
+
+def _lookup_ptax(dt_str, ptax_series, fallback_cambio):
+    """Retorna PTAX da data ou do último dia útil anterior.
+    Se não encontrar em até 10 dias, usa fallback_cambio."""
+    try:
+        d = datetime.strptime(dt_str, "%Y-%m-%d").date()
+    except ValueError:
+        return fallback_cambio
+    for offset in range(11):
+        key = (d - timedelta(days=offset)).strftime("%Y-%m-%d")
+        if key in ptax_series:
+            return ptax_series[key]
+    return fallback_cambio
+
+
+# ETFs UCITS ACC da carteira (todos acumulam — sem distribuição)
+_ETFS_ACC = {"SWRD", "AVGS", "AVEM", "AVUV", "AVDV", "USSC", "EIMI", "AVES", "DGS", "IWVL"}
+
+
+def compute_tax_diferido(posicoes, cambio_atual):
+    """Calcula IR diferido sobre ganhos não realizados de ETFs UCITS.
+
+    Retorna dict com:
+      - ir_diferido_total_brl: soma do IR latente
+      - ir_por_etf: detalhamento por ETF
+      - regime: descrição legal
+      - badges: {ticker: "ACC — diferimento fiscal"} para ETFs alvo
+    """
+    print("  ▶ calculando IR diferido (Lei 14.754/2023) ...")
+
+    # Carregar lotes
+    if not LOTES_PATH.exists():
+        print("  ⚠️ lotes.json não encontrado — IR diferido não calculado")
+        return None
+
+    lotes_data = json.loads(LOTES_PATH.read_text())
+
+    # Buscar série PTAX inteira (um único request)
+    ptax_series = _fetch_ptax_series()
+    ptax_source = "BCB PTAX ask"
+    if not ptax_series:
+        ptax_source = "fallback (câmbio atual)"
+        print(f"  ⚠️ PTAX série indisponível — usando câmbio atual R\ como fallback")
+
+    ir_total = 0.0
+    ir_por_etf = {}
+
+    for ticker, info in lotes_data.items():
+        # Somente ETFs relevantes com posição > 0
+        if info.get("total_qty", 0) <= 0:
+            continue
+        if ticker not in _ETFS_ACC:
+            continue
+
+        # Preço atual: da posição (dashboard_state) se disponível
+        preco_atual = None
+        if ticker in posicoes:
+            preco_atual = posicoes[ticker].get("price")
+        if preco_atual is None or preco_atual <= 0:
+            # Sem preço atual -> não dá para calcular
+            continue
+
+        custo_total_brl = 0.0
+        valor_total_brl = 0.0
+        ganho_total_usd = 0.0
+        ptax_soma = 0.0
+        ptax_peso = 0.0
+
+        for lot in info.get("lotes", []):
+            qty = lot.get("qty", 0)
+            if qty <= 0:
+                continue
+            custo_usd = lot["custo_por_share"]
+            data_compra = lot["data"]
+
+            ptax_compra = _lookup_ptax(data_compra, ptax_series, cambio_atual)
+
+            custo_brl = qty * custo_usd * ptax_compra
+            valor_brl = qty * preco_atual * cambio_atual
+            ganho_usd_lot = qty * (preco_atual - custo_usd)
+
+            custo_total_brl += custo_brl
+            valor_total_brl += valor_brl
+            ganho_total_usd += ganho_usd_lot
+
+            # Média ponderada de PTAX de compra (por valor investido)
+            peso = qty * custo_usd
+            ptax_soma += ptax_compra * peso
+            ptax_peso += peso
+
+        ganho_brl = valor_total_brl - custo_total_brl
+        ir_etf = IR_ALIQUOTA * max(0.0, ganho_brl)
+        ir_total += ir_etf
+
+        ptax_compra_medio = (ptax_soma / ptax_peso) if ptax_peso > 0 else cambio_atual
+
+        ir_por_etf[ticker] = {
+            "ganho_usd":         round(ganho_total_usd, 2),
+            "ptax_compra_medio": round(ptax_compra_medio, 4),
+            "ptax_atual":        round(cambio_atual, 4),
+            "custo_total_brl":   round(custo_total_brl, 2),
+            "valor_atual_brl":   round(valor_total_brl, 2),
+            "ganho_brl":         round(ganho_brl, 2),
+            "ir_estimado":       round(ir_etf, 2),
+        }
+
+    # Badges: todos os ETFs UCITS ACC com posição recebem badge
+    badges = {}
+    for ticker in ir_por_etf:
+        badges[ticker] = "ACC — diferimento fiscal"
+
+    result = {
+        "ir_diferido_total_brl": round(ir_total, 2),
+        "ir_por_etf":            ir_por_etf,
+        "regime":                "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
+        "badges":                badges,
+        "ptax_source":           ptax_source,
+        "ptax_atual":            round(cambio_atual, 4),
+    }
+
+    n_etfs = len(ir_por_etf)
+    print(f"  → IR diferido: R\ sobre {n_etfs} ETFs ({ptax_source})")
+    return result
 
 
 # ─── 8. DRIFT ─────────────────────────────────────────────────────────────────
@@ -425,6 +929,197 @@ def compute_drift(posicoes, rf, hodl11_brl, cambio):
     return drift, round(total)
 
 
+# ─── 9. MACRO ─────────────────────────────────────────────────────────────────
+def get_macro_data(state: dict) -> dict:
+    """
+    Retorna dados macro para o dashboard.
+
+    Fontes (por prioridade):
+      - Selic:     python-bcb SGS serie 432 -> cached no state -> hardcoded c/ TODO
+      - Fed Funds: FRED FEDFUNDS CSV (publico, sem API key) -> cached -> hardcoded c/ TODO
+      - Spread:    calculado automaticamente
+      - Depreciacao BRL: premissa oficial do plano (0.5%/ano base, carteira.md)
+      - Exposicao cambial: calculado das posicoes do state
+    """
+    import math
+    import urllib.request
+
+    # -- Selic -------------------------------------------------------
+    selic_meta = None
+    try:
+        # Tenta python-bcb (disponivel no venv de producao)
+        # SystemExit capturado pois fx_utils chama sys.exit(1) se python-bcb nao instalado
+        from fx_utils import get_selic_atual
+        val = get_selic_atual()
+        if not math.isnan(val):
+            selic_meta = round(val, 2)
+    except (Exception, SystemExit):
+        pass
+
+    if selic_meta is None:
+        # Fallback 1: snapshot em dashboard_state.json
+        cached_macro = state.get("macro", {})
+        selic_meta = cached_macro.get("selic_meta")
+
+    if selic_meta is None:
+        # Fallback 2: valor do snapshot de memoria (agentes/memoria/08-macro.md -- Abril/2026)
+        # TODO: atualizar quando COPOM alterar Selic
+        selic_meta = 14.75
+
+    # -- Fed Funds ---------------------------------------------------
+    fed_funds = None
+    try:
+        url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=FEDFUNDS"
+        with urllib.request.urlopen(url, timeout=5) as resp:
+            lines = resp.read().decode("utf-8").strip().splitlines()
+        # CSV: DATE,FEDFUNDS -- ultima linha nao-vazia com valor numerico
+        for line in reversed(lines):
+            line = line.strip()
+            if line and not line.startswith("DATE"):
+                parts = line.split(",")
+                if len(parts) == 2:
+                    try:
+                        fed_funds = round(float(parts[1]), 2)
+                        break
+                    except ValueError:
+                        continue
+    except Exception:
+        pass
+
+    if fed_funds is None:
+        # Fallback 1: cached no state
+        cached_macro = state.get("macro", {})
+        fed_funds = cached_macro.get("fed_funds")
+
+    if fed_funds is None:
+        # Fallback 2: snapshot de memoria 08-macro.md (mar/2026: 3.64%)
+        # TODO: atualizar mensalmente via /macro-bcb
+        fed_funds = 3.64
+
+    # -- Spread Selic - Fed Funds ------------------------------------
+    spread_selic_ff = None
+    if selic_meta is not None and fed_funds is not None:
+        spread_selic_ff = round(selic_meta - fed_funds, 2)
+
+    # -- Exposicao cambial (equity USD convertido / total BRL) ------
+    exposicao_cambial_pct = None
+    try:
+        pat = state.get("patrimonio", {})
+        equity_usd = pat.get("equity_usd", 0)
+        cambio_ref  = pat.get("cambio", 5.10)
+        total_brl   = pat.get("total_brl", 0)
+        if total_brl and total_brl > 0:
+            equity_brl = equity_usd * cambio_ref
+            exposicao_cambial_pct = round(equity_brl / total_brl * 100, 1)
+    except Exception:
+        pass
+
+    return {
+        "selic_meta":               selic_meta,           # % a.a. -- taxa Selic meta vigente
+        "fed_funds":                fed_funds,             # % a.a. -- Fed Funds rate (FRED FEDFUNDS)
+        "spread_selic_ff":          spread_selic_ff,       # pp    -- diferencial Selic - Fed Funds
+        "depreciacao_brl_premissa": 0.5,                   # %/ano -- premissa base do plano (carteira.md)
+        "exposicao_cambial_pct":    exposicao_cambial_pct, # %     -- parcela do patrimonio em USD
+    }
+
+
+
+# ─── 10. DCA STATUS ───────────────────────────────────────────────────────────
+
+def get_dca_status(rf: dict, total_brl: float) -> dict:
+    """Calcula o status do DCA de renda fixa longa para o dashboard.
+
+    Dois instrumentos monitorados:
+      1. IPCA+ longo (TD 2040 + TD 2050): DCA ativo se taxa >= PISO_TAXA_IPCA_LONGO (6.0%)
+      2. Renda+ 2065 (tático): DCA PAUSADO — posição ~3% próxima do target <=3%
+
+    Fonte das regras: carteira.md + config.py
+    """
+    # ── IPCA+ longo ─────────────────────────────────────────────────────────
+    taxa_ipca = rf.get("ipca2040", {}).get("taxa")
+    valor_ipca2040 = rf.get("ipca2040", {}).get("valor", 0) or 0
+    pct_ipca_atual = round((valor_ipca2040 / total_brl) * 100, 1) if total_brl else 0
+    alvo_ipca_pct = round(IPCA_LONGO_PCT * 100, 1)  # 15.0%
+    gap_alvo_ipca = round(alvo_ipca_pct - pct_ipca_atual, 1)  # pp faltando
+
+    ipca_ativo = False
+    ipca_proxima_acao = "Aguardando dados de taxa"
+    if taxa_ipca is not None:
+        if taxa_ipca >= PISO_TAXA_IPCA_LONGO:
+            ipca_ativo = True
+            ipca_proxima_acao = (
+                f"DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) "
+                f"ate {alvo_ipca_pct}% da carteira"
+            )
+        else:
+            ipca_proxima_acao = (
+                f"DCA pausado: taxa {taxa_ipca:.2f}% abaixo do piso {PISO_TAXA_IPCA_LONGO}%. "
+                f"Redirecionar aportes para equity (SWRD/AVGS/AVEM)"
+            )
+
+    dca_ipca = {
+        "instrumento":        "TD IPCA+ 2040 (80%) + TD 2050 (20%)",
+        "ativo":              ipca_ativo,
+        "taxa_atual":         taxa_ipca,
+        "piso":               PISO_TAXA_IPCA_LONGO,
+        "gap_pp":             round((taxa_ipca - PISO_TAXA_IPCA_LONGO), 2) if taxa_ipca else None,
+        "pct_carteira_atual": pct_ipca_atual,
+        "alvo_pct":           alvo_ipca_pct,
+        "gap_alvo_pp":        gap_alvo_ipca,
+        "proxima_acao":       ipca_proxima_acao,
+    }
+
+    # ── Renda+ 2065 ─────────────────────────────────────────────────────────
+    taxa_renda = rf.get("renda2065", {}).get("taxa")
+    valor_renda = rf.get("renda2065", {}).get("valor", 0) or 0
+    pct_renda_atual = round((valor_renda / total_brl) * 100, 1) if total_brl else 0
+    alvo_renda_pct = round(RENDA_PLUS_PCT * 100, 1)  # 3.0%
+
+    renda_dca_ativo = False
+    renda_proxima_acao = "Aguardando dados de taxa"
+    if taxa_renda is not None:
+        if taxa_renda <= PISO_VENDA_RENDA_PLUS:
+            renda_proxima_acao = (
+                f"VENDER TUDO: taxa {taxa_renda:.2f}% <= piso de venda {PISO_VENDA_RENDA_PLUS}%. "
+                f"Aguardar 720 dias se holding < 2 anos (carry domina IR)"
+            )
+        elif taxa_renda < PISO_TAXA_RENDA_PLUS:
+            renda_proxima_acao = (
+                f"DCA pausado: taxa {taxa_renda:.2f}% abaixo do piso de compra {PISO_TAXA_RENDA_PLUS}%. "
+                f"Manter posicao atual ({pct_renda_atual}%)"
+            )
+        else:
+            if pct_renda_atual < alvo_renda_pct:
+                renda_dca_ativo = True
+                renda_proxima_acao = (
+                    f"DCA ativo: taxa {taxa_renda:.2f}% >= piso {PISO_TAXA_RENDA_PLUS}%. "
+                    f"Aportar ate {alvo_renda_pct}% da carteira"
+                )
+            else:
+                renda_proxima_acao = (
+                    f"DCA pausado: posicao {pct_renda_atual}% >= alvo {alvo_renda_pct}%. "
+                    f"Manter sem novos aportes"
+                )
+
+    dca_renda_plus = {
+        "instrumento":        "Renda+ 2065",
+        "ativo":              renda_dca_ativo,
+        "taxa_atual":         taxa_renda,
+        "piso_compra":        PISO_TAXA_RENDA_PLUS,
+        "piso_venda":         PISO_VENDA_RENDA_PLUS,
+        "gap_pp":             round((taxa_renda - PISO_TAXA_RENDA_PLUS), 2) if taxa_renda else None,
+        "pct_carteira_atual": pct_renda_atual,
+        "alvo_pct":           alvo_renda_pct,
+        "gap_alvo_pp":        round(pct_renda_atual - alvo_renda_pct, 1),
+        "proxima_acao":       renda_proxima_acao,
+    }
+
+    return {
+        "ipca_longo": dca_ipca,
+        "renda_plus": dca_renda_plus,
+    }
+
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 def main():
     print("📊 generate_data.py — iniciando")
@@ -444,27 +1139,95 @@ def main():
     # Attribution
     attr = get_attribution()
 
+    # Factor data (rolling + loadings)
+    factor_rolling = get_factor_rolling()
+    factor_loadings = get_factor_loadings()
+
+    # Cache factor data for --skip-scripts
+    if factor_rolling.get("dates") or factor_loadings:
+        _factor_cache = {}
+        if factor_rolling.get("dates"):
+            _factor_cache["factor_rolling"] = factor_rolling
+        if factor_loadings:
+            _factor_cache["factor_loadings"] = factor_loadings
+        try:
+            FACTOR_CACHE.parent.mkdir(exist_ok=True)
+            FACTOR_CACHE.write_text(json.dumps(_factor_cache, indent=2))
+            print(f"  ✓ factor cache saved → {FACTOR_CACHE.relative_to(ROOT)}")
+        except Exception as e:
+            print(f"  ⚠️ factor cache write: {e}")
+
     # Timeline + Bollinger
     print("  ▶ lendo CSV ...")
     timeline, bollinger = get_timeline_bollinger()
 
     # Posições + preços
     print("  ▶ posições ...")
-    posicoes, cambio = get_posicoes_precos(state)
+    posicoes, cambio, prices_live = get_posicoes_precos(state)
 
     # RF
     rf = get_rf(state)
     hodl11_raw = rf.pop("hodl11", {})
     # state usa "preco_brl" / "valor_brl"; normalizar para "preco" / "valor"
-    hodl11_brl = hodl11_raw.get("valor", hodl11_raw.get("valor_brl", 0))
+    hodl11_qty   = hodl11_raw.get("qty", 0)
+    hodl11_preco_state = hodl11_raw.get("preco", hodl11_raw.get("preco_brl", 0))
+    # Usar preço live do yfinance se disponível, senão fallback para o state
+    hodl11_preco_atual = prices_live.get("HODL11") or hodl11_preco_state
+    hodl11_brl   = hodl11_qty * hodl11_preco_atual if hodl11_qty and hodl11_preco_atual else \
+                   hodl11_raw.get("valor", hodl11_raw.get("valor_brl", 0))
+
+    # ── P&L HODL11 ──────────────────────────────────────────────────────────────
+    # TODO: preco_medio deve ser atualizado manualmente em dashboard_state.json
+    # quando houver novas compras de HODL11 (campo: rf.hodl11.avg_cost).
+    # Fonte sugerida: nota de corretagem da B3 (XP/Nubank).
+    # Custo médio atual: não disponível em nenhuma fonte automatizada.
+    hodl11_preco_medio = hodl11_raw.get("avg_cost")  # None se não cadastrado
+    if hodl11_preco_medio and hodl11_qty and hodl11_preco_atual:
+        custo_total     = hodl11_qty * hodl11_preco_medio
+        pnl_brl         = round(hodl11_brl - custo_total, 2)
+        pnl_pct         = round((hodl11_preco_atual / hodl11_preco_medio - 1) * 100, 2)
+    else:
+        custo_total = None
+        pnl_brl     = None
+        pnl_pct     = None
+
     hodl11 = {
-        "qty":   hodl11_raw.get("qty", 0),
-        "preco": hodl11_raw.get("preco", hodl11_raw.get("preco_brl", 0)),
-        "valor": hodl11_brl,
+        "qty":          hodl11_qty,
+        "preco":        hodl11_preco_atual,
+        "valor":        round(hodl11_brl, 2),
+        # P&L — None quando preco_medio não cadastrado em dashboard_state.json
+        "preco_medio":  hodl11_preco_medio,   # custo médio BRL/cota; TODO: alimentar via nota B3
+        "pnl_brl":      pnl_brl,              # R$ ganho/perda realizado se vendido hoje
+        "pnl_pct":      pnl_pct,              # % ganho/perda vs custo médio
     }
 
     # Drift
     drift, total_brl = compute_drift(posicoes, rf, hodl11_brl, cambio)
+
+    # ── Bandas visuais HODL11 ────────────────────────────────────────────────────
+    # Política: piso 1.5% / alvo 3% / teto 5% do portfolio total.
+    # Status: verde = [2.0%, 3.5%); amarelo = [1.5%, 2.0%) ou [3.5%, 5.0%]; vermelho = fora.
+    # Fontes: carteira.md ("piso 1,5%, teto 5%") + perfis/06-risco.md.
+    _HODL11_PISO_PCT  = 1.5
+    _HODL11_ALVO_PCT  = 3.0
+    _HODL11_TETO_PCT  = 5.0
+    _hodl11_atual_pct = round(hodl11_brl / total_brl * 100, 2) if total_brl else 0.0
+    if _hodl11_atual_pct < _HODL11_PISO_PCT or _hodl11_atual_pct > _HODL11_TETO_PCT:
+        _hodl11_banda_status = "vermelho"
+    elif _hodl11_atual_pct >= 3.5 or _hodl11_atual_pct < 2.0:
+        _hodl11_banda_status = "amarelo"
+    else:
+        _hodl11_banda_status = "verde"
+    hodl11["banda"] = {
+        "min_pct":    _HODL11_PISO_PCT,
+        "alvo_pct":   _HODL11_ALVO_PCT,
+        "max_pct":    _HODL11_TETO_PCT,
+        "atual_pct":  _hodl11_atual_pct,
+        "status":     _hodl11_banda_status,  # verde / amarelo / vermelho
+    }
+
+    # DCA Status — calculado após total_brl estar disponível
+    dca_status = get_dca_status(rf, total_brl)
 
     # Premissas — garantir patrimônio atual
     premissas = {
@@ -537,8 +1300,9 @@ def main():
 
     # Pisos cascade
     pisos = {
-        "pisoTaxaIpcaLongo": PISO_TAXA_IPCA_LONGO,
-        "pisoTaxaRendaPlus": PISO_TAXA_RENDA_PLUS,
+        "pisoTaxaIpcaLongo":  PISO_TAXA_IPCA_LONGO,
+        "pisoTaxaRendaPlus":  PISO_TAXA_RENDA_PLUS,   # piso de compra DCA
+        "pisoVendaRendaPlus": PISO_VENDA_RENDA_PLUS,  # gatilho de venda
     }
 
     # Pesos alvo
@@ -617,6 +1381,10 @@ def main():
         entries.sort(key=lambda x: x["data"], reverse=True)
         return entries[:5]
 
+    # Macro
+    print("  ▶ macro data ...")
+    macro = get_macro_data(state)
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -644,14 +1412,19 @@ def main():
         "backtest":   backtest,
         "backtestR5": backtest_r5,
 
+        "factor_rolling":  factor_rolling,
+        "factor_loadings": factor_loadings,
+
         "rf":         rf,
         "hodl11":     hodl11,
+        "dca_status": dca_status,
 
         "glide":      glide,
         "drift":      drift,
         "tlh":        tlh,
         "attribution":attr,
         "shadows":    shadows,
+        "macro":      macro,
         "minilog":    _build_minilog(),
         "wellness_config": json.loads(WELLNESS_CONFIG.read_text(encoding="utf-8")) if WELLNESS_CONFIG.exists() else {},
         "eventos_vida": [
@@ -672,6 +1445,8 @@ def main():
     print(f"   Patrimônio: R${total_brl/1e6:.2f}M | Câmbio: {cambio:.4f}")
     print(f"   P(FIRE@50): {pfire50.get('base')}% | Tornado: {len(tornado)} variáveis")
     print(f"   Timeline: {len(timeline['labels'])} pontos | Bollinger: {len(bollinger['dates'])} meses")
+    print(f"   Factor: rolling {len(factor_rolling.get('dates', []))} pts | loadings {len(factor_loadings)} ETFs")
+    print(f"   Macro: Selic {macro.get('selic_meta')}% | Fed Funds {macro.get('fed_funds')}% | Spread {macro.get('spread_selic_ff')}pp | Exp. USD {macro.get('exposicao_cambial_pct')}%")
 
 
 if __name__ == "__main__":

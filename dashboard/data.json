@@ -1,41 +1,41 @@
 {
-  "_generated": "2026-04-08T20:51:38",
-  "_generated_brt": "2026-04-08T20:51:38-03:00",
-  "date": "2026-04-08",
-  "cambio": 5.1506,
+  "_generated": "2026-04-09T08:38:29",
+  "_generated_brt": "2026-04-09T05:38:29-03:00",
+  "date": "2026-04-09",
+  "cambio": 5.156,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 46.445,
+      "price": 47.46,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 25.995,
+      "price": 24.22,
       "bucket": "AVGS",
       "status": "alvo"
     },
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.74,
+      "price": 111.63,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.42,
+      "price": 101.54,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 82.46,
+      "price": 84.72,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -49,21 +49,21 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.01,
+      "price": 59.8,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.62,
+      "price": 61.25,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 63.26,
+      "price": 62.65,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -77,7 +77,8 @@
   },
   "pisos": {
     "pisoTaxaIpcaLongo": 6.0,
-    "pisoTaxaRendaPlus": 6.5
+    "pisoTaxaRendaPlus": 6.5,
+    "pisoVendaRendaPlus": 6.0
   },
   "pfire50": {
     "base": 85.4,
@@ -90,7 +91,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3483659,
+    "patrimonio_atual": 3472336,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -106,54 +107,9 @@
     "renda_estimada": 45000,
     "ano_atual": 2026
   },
-  "guardrails": [
-    {
-      "ddMin": 0.0,
-      "ddMax": 0.15,
-      "corte": 0.0,
-      "retirada": 250000,
-      "desc": "Normal — sem corte"
-    },
-    {
-      "ddMin": 0.15,
-      "ddMax": 0.25,
-      "corte": 0.1,
-      "retirada": 225000,
-      "desc": "Corte 10% → R$225k"
-    },
-    {
-      "ddMin": 0.25,
-      "ddMax": 0.35,
-      "corte": 0.2,
-      "retirada": 200000,
-      "desc": "Corte 20% → R$200k"
-    },
-    {
-      "ddMin": 0.35,
-      "ddMax": 1.0,
-      "corte": 0.28,
-      "retirada": 180000,
-      "desc": "Piso — R$180k"
-    }
-  ],
+  "guardrails": [],
   "gasto_piso": 180000,
-  "spendingSmile": {
-    "go_go": {
-      "gasto": 242000,
-      "inicio": 0,
-      "fim": 15
-    },
-    "slow_go": {
-      "gasto": 200000,
-      "inicio": 15,
-      "fim": 30
-    },
-    "no_go": {
-      "gasto": 187000,
-      "inicio": 30,
-      "fim": 99
-    }
-  },
+  "spendingSmile": {},
   "spendingSensibilidade": [
     {
       "label": "R$250k",
@@ -1487,6 +1443,12 @@
     },
     "note": "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target); VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value); EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
   },
+  "factor_rolling": {
+    "dates": [],
+    "avgs_vs_swrd_12m": [],
+    "threshold": -5
+  },
+  "factor_loadings": {},
   "rf": {
     "ipca2029": {
       "cotas": null,
@@ -1504,13 +1466,60 @@
       "cotas": null,
       "valor": 112466,
       "taxa": 6.93,
-      "notas": "Tático · Nubank · Vender ≤6.5%"
+      "notas": "Tático · Nubank · Vender ≤6.0%",
+      "duration": {
+        "macaulay_anos": 21.52,
+        "modificada_anos": 20.12,
+        "metodologia": "NTN-B ANBIMA: cupom 6% a.a. real (0.5%/sem), desconto taxa YTM real a.a."
+      },
+      "mtm_impact_1pp": -20.12,
+      "distancia_gatilho": {
+        "taxa_atual": 6.93,
+        "piso_venda": 6.0,
+        "gap_pp": 0.93,
+        "status": "verde"
+      }
     }
   },
   "hodl11": {
     "qty": 1676,
     "preco": 59.79,
-    "valor": 100208
+    "valor": 100208.04,
+    "preco_medio": null,
+    "pnl_brl": null,
+    "pnl_pct": null,
+    "banda": {
+      "min_pct": 1.5,
+      "alvo_pct": 3.0,
+      "max_pct": 5.0,
+      "atual_pct": 2.89,
+      "status": "verde"
+    }
+  },
+  "dca_status": {
+    "ipca_longo": {
+      "instrumento": "TD IPCA+ 2040 (80%) + TD 2050 (20%)",
+      "ativo": true,
+      "taxa_atual": 7.2,
+      "piso": 6.0,
+      "gap_pp": 1.2,
+      "pct_carteira_atual": 1.0,
+      "alvo_pct": 15.0,
+      "gap_alvo_pp": 14.0,
+      "proxima_acao": "DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) ate 15.0% da carteira"
+    },
+    "renda_plus": {
+      "instrumento": "Renda+ 2065",
+      "ativo": false,
+      "taxa_atual": 6.93,
+      "piso_compra": 6.5,
+      "piso_venda": 6.0,
+      "gap_pp": 0.43,
+      "pct_carteira_atual": 3.2,
+      "alvo_pct": 3.0,
+      "gap_alvo_pp": 0.2,
+      "proxima_acao": "DCA pausado: posicao 3.2% >= alvo 3.0%. Manter sem novos aportes"
+    }
   },
   "glide": {
     "idades": [
@@ -1558,15 +1567,15 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 36.3,
+      "atual": 37.3,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.5,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.2,
+      "atual": 23.8,
       "alvo": 15.8
     },
     "IPCA": {
@@ -1584,7 +1593,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.74,
+      "price": 111.63,
       "ucits": "AVGS.L"
     },
     {
@@ -1592,7 +1601,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.42,
+      "price": 101.54,
       "ucits": "AVGS.L"
     },
     {
@@ -1600,7 +1609,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 82.46,
+      "price": 84.72,
       "ucits": "AVGS.L"
     },
     {
@@ -1616,7 +1625,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.01,
+      "price": 59.8,
       "ucits": "AVEM.L"
     },
     {
@@ -1624,7 +1633,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.62,
+      "price": 61.25,
       "ucits": "AVEM.L"
     },
     {
@@ -1632,7 +1641,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 63.26,
+      "price": 62.65,
       "ucits": "JPGL.L"
     }
   ],
@@ -1640,7 +1649,7 @@
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2371959.0,
+    "crescReal": 2360636.0,
     "_estimativa": true
   },
   "shadows": {
@@ -1652,6 +1661,13 @@
       "delta_a": 3.15,
       "delta_b": -0.57
     }
+  },
+  "macro": {
+    "selic_meta": 14.75,
+    "fed_funds": 3.64,
+    "spread_selic_ff": 11.11,
+    "depreciacao_brl_premissa": 0.5,
+    "exposicao_cambial_pct": 90.4
   },
   "minilog": [
     {
