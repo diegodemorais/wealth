@@ -3968,14 +3968,14 @@ const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
     status:   [buildSemaforoPanel, buildMacroCards, buildBrasilConcentracao, buildDcaStatus,
-               renderKPIs, buildTimestamps, buildScenarios, buildTornado, buildPremissasVsRealizado],
+               renderKPIs, buildTimestamps, buildTornado, buildPremissasVsRealizado],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, function() { buildBollinger('1y'); },
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, buildShadowTable],
-    plan:     [buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
+    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11],
+    plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
                function() {
                  const wiA = document.getElementById('wiAporte');
                  const wiR = document.getElementById('wiRetorno');
