@@ -15,7 +15,7 @@ description: |
   assistant: "Vou analisar o sequence of returns risk."
   </example>
 
-model: opus
+model: sonnet
 color: magenta
 ---
 

@@ -15,7 +15,7 @@ description: |
   assistant: "Vou verificar a exposicao a US-listed."
   </example>
 
-model: opus
+model: sonnet
 color: red
 ---
 

@@ -15,7 +15,7 @@ description: |
   assistant: "Vou incluir stress-test de premissas."
   </example>
 
-model: opus
+model: sonnet
 color: red
 ---
 

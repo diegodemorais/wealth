@@ -15,7 +15,7 @@ description: |
   assistant: "Fact-Checker vai validar claims de ambos os lados."
   </example>
 
-model: sonnet
+model: haiku
 color: yellow
 ---
 

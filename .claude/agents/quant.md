@@ -15,7 +15,7 @@ description: |
   assistant: "Quant vai reconciliar os numeros."
   </example>
 
-model: opus
+model: sonnet
 color: cyan
 ---
 

@@ -15,7 +15,7 @@ description: |
   assistant: "Alem de manter disciplina, vou verificar oportunidades."
   </example>
 
-model: opus
+model: sonnet
 color: magenta
 ---
 

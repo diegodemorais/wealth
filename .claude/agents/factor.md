@@ -15,7 +15,7 @@ description: |
   assistant: "Vou buscar as evidencias academicas."
   </example>
 
-model: opus
+model: sonnet
 color: green
 ---
 
