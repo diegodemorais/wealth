@@ -75,3 +75,9 @@ Explorar se o sistema atual tem potencial como produto — open-source template,
 ## Critério para sair de Discovery
 
 Diego decide avançar. Sugestão: após concluir as issues operacionais do backlog (quantstats, ibkr-import, commands), revisitar com mais clareza sobre o que generalizar.
+
+---
+
+## Bloqueador Impeditivo (2026-04-09)
+
+**Custo deve ser zero.** Qualquer nível de monetização (hosting, API keys, infra) é bloqueador. Antes de avançar além de Discovery, validar que o modelo é viável sem custo operacional. Nível 1 (open-source template, zero hosting) é o único caminho imediato viável. Níveis 2 e 3 ficam congelados até resolver bloqueador de custo.

@@ -28,7 +28,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
 | ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
-| 2 | HD-tearsheet-longrun | Tearsheet QuantStats com histórico longo (proxies) | Head | 🟡 Média |
+| 2 | HD-tearsheet-longrun | Tearsheet QuantStats — drawdown table + histórico longo | Head | 🟢 Baixa |
 | 3 | HD-backtest-longrun | Pipeline backtest 50+ anos via Ken French / MSCI | Head | 🟡 Média |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
@@ -57,6 +57,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| DEV-privacy-audit | Auditoria completa de privacidade do dashboard | Dev | 2026-04-09 | 4 fases implementadas: +49 .pv, spans hardcoded, eixo Y/tooltip ocultos, Sankey oculto. v1.104. |
+| DEV-dashboard-coherence | Auditoria de coerência — cálculos e premissas | Dev | 2026-04-09 | 4 bugs críticos corrigidos (fan chart aportes, P10/P90 MC, labels hardcoded, inssInicio). v1.103. |
+| DEV-heatmap-rolling | Heatmap mensal + Rolling Sharpe 12m no dashboard | Dev | 2026-04-09 | Heatmap substituiu barras. Rolling Sharpe novo chart. Privacy mode integrado. v1.105. |
 | DEV-dashboard-review | Review técnico completo do dashboard | Dev | 2026-04-08 | 30 hardcodes críticos eliminados. 5 novas funções (renderProximasAcoes, buildRfCards, buildShadowTable, buildIncomeTable, renderIpcaProgress). cryptoLegado e tlhGatilho movidos para data.json. |
 | HD-dashboard-ux | Melhorias UX/UI + correções técnicas dashboard | Head | 2026-04-08 | 5 bugs corrigidos (wiRetornoVal, attribution null, savings rate, wellness IPCA+ pts, labels PT-BR). Guardrails ATUAL badge, wellness top-3 actions, fan chart P(FIRE) note, mini-log operações. |
 | HD-swrd-114-cotas | Investigar 114 cotas de SWRD faltantes | Bookkeeper | 2026-04-08 | Root cause: TLH 2025-09-22 não refletido. SWRD 5405→5291.64, USSC 443→373.25 em holdings.md. |

@@ -794,22 +794,22 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 
-<!-- S24: RETORNOS MENSAIS — Bollinger (aberto por default) -->
+<!-- S24: RETORNOS MENSAIS — Heatmap (aberto por default) -->
 <div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Retornos Mensais — Carteira</h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Retornos Mensais — Heatmap</h2>
 <div class="collapse-body">
-<div class="period-btns" id="bollingerPeriodBtns">
-  <button onclick="setBollingerPeriod('3m')">3m</button>
-  <button onclick="setBollingerPeriod('6m')">6m</button>
-  <button onclick="setBollingerPeriod('ytd')">YTD</button>
-  <button onclick="setBollingerPeriod('1y')" class="active">1y</button>
-  <button onclick="setBollingerPeriod('3y')">3y</button>
-  <button onclick="setBollingerPeriod('5y')">5y</button>
-  <button onclick="setBollingerPeriod('all')">All</button>
+<div id="heatmapContainer" style="overflow-x:auto"></div>
+<div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px"></div>
+<div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
+</div><!-- /collapse-body -->
 </div>
-<div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div id="bollingerStats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px"></div>
-<div class="src">Retornos mensais da carteira por período selecionado. Linha branca = média do período.</div>
+
+<!-- S24b: ROLLING SHARPE 12m -->
+<div class="section collapsible open" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12 meses</h2>
+<div class="collapse-body">
+<div class="chart-box"><canvas id="rollingSharpChart"></canvas></div>
+<div class="src">Sharpe anualizado em janela móvel de 12 meses (σ populacional). Azul = Sharpe &gt; 1 (excelente), amarelo = 0–1, vermelho &lt; 0. Linha tracejada = referência Sharpe=1.</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -1204,12 +1204,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T18:02:21-03:00'); // BRT (UTC-3)
-const VERSION = '1.104';
+const GENERATED_AT = new Date('2026-04-09T18:33:42-03:00'); // BRT (UTC-3)
+const VERSION = '1.105';
 
 const DATA = {
-  "_generated": "2026-04-09T17:18:52",
-  "_generated_brt": "2026-04-09T17:18:52-03:00",
+  "_generated": "2026-04-09T18:33:42",
+  "_generated_brt": "2026-04-09T18:33:42-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.104"
+  "version": "1.105"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5434,51 +5434,162 @@ window.calcAporte = function() {
     </div>`;
 };
 
-// ── S24: Bollinger ────────────────────────────────────────────
-function buildBollinger(period) {
-  const allL = DATA.bollinger.dates;
-  const allV = DATA.bollinger.values;
+// ── S24: Retornos Mensais — Heatmap ──────────────────────────
+function buildRetornoHeatmap() {
+  const allL = DATA.bollinger?.dates || [];
+  const allV = DATA.bollinger?.values || [];
+  const container = document.getElementById('heatmapContainer');
+  if (!container || !allL.length) return;
 
-  const { labels, values } = filterByPeriod(allL, allV, period);
-  if (!labels.length) { checkMinPoints('bollingerChart', 0, 2); return; }
+  const isPrivate = document.body.classList.contains('private-mode');
 
-  // Colorir pontos: positivo verde, negativo vermelho
-  const pointBg = values.map(v => v >= 0 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.7)');
+  // Agrupar por {ano: {mes(0-11): valor}}
+  const byYear = {};
+  allL.forEach((lbl, i) => {
+    const parts = lbl.split('-');
+    const yr = parseInt(parts[0]);
+    const mo = parseInt(parts[1]) - 1;
+    if (!byYear[yr]) byYear[yr] = {};
+    byYear[yr][mo] = allV[i];
+  });
+  const years = Object.keys(byYear).map(Number).sort();
+  const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-  if (charts.bollinger) charts.bollinger.destroy();
-  if (checkMinPoints('bollingerChart', labels.length, 1)) return;
+  const retColor = v => {
+    if (v === undefined || v === null) return 'rgba(71,85,105,0.2)';
+    const c = Math.max(-8, Math.min(8, v));
+    return c >= 0
+      ? `rgba(34,197,94,${0.15 + (c/8)*0.65})`
+      : `rgba(239,68,68,${0.15 + (-c/8)*0.65})`;
+  };
+  const textCol = v => v !== undefined && Math.abs(v) > 3 ? '#fff' : '#94a3b8';
+  const pvWrap = (txt) => `<span class="pv">${txt}</span>`;
+  const fmtCell = (v) => {
+    if (v === undefined) return '—';
+    const s = (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
+    return isPrivate ? pvWrap(s) : s;
+  };
+  const fmtAccum = (pct) => {
+    const s = (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%';
+    return isPrivate ? pvWrap(s) : s;
+  };
 
-  const avgRet = values.length ? values.reduce((a,b) => a+b, 0) / values.length : 0;
-  const stdDev = values.length > 1 ? Math.sqrt(values.reduce((s,v) => s + (v-avgRet)**2, 0) / values.length) : 0;
-  const posMonths = values.filter(v => v > 0).length;
-  const pctPos = values.length ? posMonths / values.length * 100 : 0;
-  const bestMonth  = values.length ? Math.max(...values) : 0;
-  const worstMonth = values.length ? Math.min(...values) : 0;
-  const bestLabel  = values.length ? labels[values.indexOf(bestMonth)]  : '';
-  const worstLabel = values.length ? labels[values.indexOf(worstMonth)] : '';
+  let html = `<table style="border-collapse:separate;border-spacing:2px;width:100%;font-size:.72rem">
+    <thead><tr>
+      <th style="color:var(--muted);padding:4px 8px;text-align:left;font-weight:400">Ano</th>
+      ${MONTHS.map(m => `<th style="color:var(--muted);padding:4px 2px;text-align:center;font-weight:400;min-width:44px">${m}</th>`).join('')}
+      <th style="color:var(--muted);padding:4px 8px;text-align:center;font-weight:400">Acum.</th>
+    </tr></thead><tbody>`;
 
-  charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
-    type: 'bar',
+  years.forEach(yr => {
+    const row = byYear[yr];
+    const monthVals = Object.values(row);
+    const yearPct = (monthVals.reduce((acc, v) => acc * (1 + v/100), 1) - 1) * 100;
+
+    html += `<tr><td style="color:var(--muted);padding:4px 8px;font-weight:600">${yr}</td>`;
+    for (let m = 0; m < 12; m++) {
+      const v = row[m];
+      const bg = retColor(v);
+      const color = textCol(v);
+      const tip = v !== undefined ? (v>=0?'+':'') + v.toFixed(2) + '%' : '—';
+      html += `<td style="background:${bg};color:${color};padding:5px 2px;text-align:center;border-radius:3px" title="${isPrivate ? '***' : tip}">${fmtCell(v)}</td>`;
+    }
+    const acumBg = retColor(yearPct);
+    const acumColor = textCol(yearPct);
+    html += `<td style="background:${acumBg};color:${acumColor};padding:5px 8px;text-align:center;border-radius:3px;font-weight:600">${fmtAccum(yearPct)}</td></tr>`;
+  });
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+
+  // Stats cards
+  const statsDiv = document.getElementById('monthlyRetStats');
+  if (statsDiv && allV.length) {
+    const avg = allV.reduce((a,b) => a+b, 0) / allV.length;
+    const std = Math.sqrt(allV.reduce((s,v) => s+(v-avg)**2, 0) / allV.length);
+    const pctPos = allV.filter(v => v > 0).length / allV.length * 100;
+    const best = Math.max(...allV);
+    const worst = Math.min(...allV);
+    const bestL = allL[allV.indexOf(best)];
+    const worstL = allL[allV.indexOf(worst)];
+    const ss = 'background:var(--card2);border-radius:8px;padding:8px;text-align:center';
+    const mu = 'font-size:.6rem;color:var(--muted);margin-bottom:2px';
+    const big = (v, c) => `<div style="font-size:1rem;font-weight:700;color:${c}">${v}</div>`;
+    const pv = isPrivate ? ' class="pv"' : '';
+    statsDiv.innerHTML = `
+      <div style="${ss}"><div style="${mu}">Retorno médio/mês</div>
+        <div${pv}>${big((avg>=0?'+':'')+avg.toFixed(2)+'%', avg>=0?'var(--green)':'var(--red)')}</div></div>
+      <div style="${ss}"><div style="${mu}">Volatilidade (σ)</div>
+        ${big(std.toFixed(2)+'%', '#94a3b8')}</div>
+      <div style="${ss}"><div style="${mu}">% meses positivos</div>
+        ${big(pctPos.toFixed(0)+'%', pctPos>=50?'var(--green)':'var(--yellow)')}</div>
+      <div style="${ss}"><div style="${mu}">Melhor mês</div>
+        <div${pv}>${big('+'+best.toFixed(2)+'%', 'var(--green)')}</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(bestL)}</div></div>
+      <div style="${ss}"><div style="${mu}">Pior mês</div>
+        <div${pv}>${big(worst.toFixed(2)+'%', 'var(--red)')}</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(worstL)}</div></div>`;
+  }
+}
+
+// ── S24b: Rolling Sharpe 12m ──────────────────────────────────
+function buildRollingSharp() {
+  const allL = DATA.bollinger?.dates || [];
+  const allV = DATA.bollinger?.values || [];
+  const WIN = 12;
+
+  if (allV.length < WIN + 1) {
+    checkMinPoints('rollingSharpChart', allV.length, WIN + 1);
+    return;
+  }
+
+  const labels = [];
+  const sharpes = [];
+
+  for (let i = WIN - 1; i < allV.length; i++) {
+    const win = allV.slice(i - WIN + 1, i + 1);
+    const mean = win.reduce((a,b) => a+b, 0) / WIN;
+    const std  = Math.sqrt(win.reduce((s,v) => s+(v-mean)**2, 0) / WIN);
+    labels.push(allL[i]);
+    sharpes.push(std > 0 ? +(mean / std * Math.sqrt(12)).toFixed(3) : 0);
+  }
+
+  if (charts.rollingSharp) charts.rollingSharp.destroy();
+
+  const ptColors = sharpes.map(v => v >= 1 ? 'rgba(34,197,94,.85)' : v >= 0 ? 'rgba(234,179,8,.85)' : 'rgba(239,68,68,.85)');
+
+  charts.rollingSharp = new Chart(document.getElementById('rollingSharpChart'), {
+    type: 'line',
     data: {
       labels,
       datasets: [
         {
-          label: 'Retorno %',
-          data: values,
-          backgroundColor: pointBg,
-          borderRadius: 2,
-          order: 2,
+          label: 'Rolling Sharpe 12m',
+          data: sharpes,
+          borderColor: 'rgba(99,179,237,.9)',
+          borderWidth: 2,
+          pointBackgroundColor: ptColors,
+          pointRadius: 3,
+          fill: false,
+          tension: 0.3,
         },
         {
-          label: 'Média',
-          data: labels.map(() => +avgRet.toFixed(4)),
-          type: 'line',
-          borderColor: 'rgba(255,255,255,.6)',
-          borderWidth: 1.5,
+          label: 'Sharpe=1',
+          data: labels.map(() => 1),
+          borderColor: 'rgba(255,255,255,.25)',
+          borderWidth: 1,
           borderDash: [4,3],
           pointRadius: 0,
           fill: false,
-          order: 1,
+        },
+        {
+          label: 'Zero',
+          data: labels.map(() => 0),
+          borderColor: 'rgba(239,68,68,.35)',
+          borderWidth: 1,
+          borderDash: [2,2],
+          pointRadius: 0,
+          fill: false,
         }
       ]
     },
@@ -5489,54 +5600,19 @@ function buildBollinger(period) {
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => ctx.dataset.label === 'Média'
-              ? ` Média: ${avgRet >= 0 ? '+' : ''}${avgRet.toFixed(2)}%`
-              : ` ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%`,
+            label: ctx => ctx.dataset.label === 'Rolling Sharpe 12m'
+              ? ` Sharpe: ${ctx.parsed.y.toFixed(2)}`
+              : '',
           }
         }
       },
       scales: {
         x: { ticks: { color: '#94a3b8', maxTicksLimit: 12, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
-
-  // Stats abaixo do chart
-  const statsDiv = document.getElementById('bollingerStats');
-  if (statsDiv && values.length) {
-    const statStyle = 'background:var(--card2);border-radius:8px;padding:8px;text-align:center';
-    const muted = 'font-size:.6rem;color:var(--muted);margin-bottom:2px';
-    const big   = (v, c) => `<div style="font-size:1rem;font-weight:700;color:${c}">${v}</div>`;
-    statsDiv.innerHTML = `
-      <div style="${statStyle}">
-        <div style="${muted}">Retorno médio</div>
-        ${big((avgRet>=0?'+':'')+avgRet.toFixed(2)+'%', avgRet>=0?'var(--green)':'var(--red)')}
-      </div>
-      <div style="${statStyle}">
-        <div style="${muted}">Volatilidade (σ)</div>
-        ${big(stdDev.toFixed(2)+'%', '#94a3b8')}
-      </div>
-      <div style="${statStyle}">
-        <div style="${muted}">% meses positivos</div>
-        ${big(pctPos.toFixed(0)+'%', pctPos>=50?'var(--green)':'var(--yellow)')}
-      </div>
-      <div style="${statStyle}">
-        <div style="${muted}">Melhor mês</div>
-        ${big('+'+bestMonth.toFixed(2)+'%', 'var(--green)')}
-        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(bestLabel)}</div>
-      </div>
-      <div style="${statStyle}">
-        <div style="${muted}">Pior mês</div>
-        ${big(worstMonth.toFixed(2)+'%', 'var(--red)')}
-        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(worstLabel)}</div>
-      </div>`;
-  }
 }
-window.setBollingerPeriod = function(p) {
-  setActivePeriodBtn('bollingerPeriodBtns', p);
-  buildBollinger(p);
-};
 
 // ── S25: TLH Monitor ─────────────────────────────────────────
 function buildTLH() {
@@ -7657,6 +7733,8 @@ function _applyPrivacyCharts(isPrivate) {
   // Sankey: ocultar seção inteira em modo privado (fluxos em R$/ano revelam renda)
   const _sankeyWrap = document.getElementById('sankeySection');
   if (_sankeyWrap) _sankeyWrap.style.display = isPrivate ? 'none' : '';
+  // Heatmap: re-renderizar com/sem spans .pv (a função lê o estado do body)
+  if (document.getElementById('heatmapContainer')?.innerHTML) buildRetornoHeatmap();
 }
 
 function togglePrivacy() {
@@ -7680,7 +7758,7 @@ function _initTabCharts(tab) {
   const tabFns = {
     status:   [buildSemaforoPanel, buildTimestamps, buildPremissasVsRealizado],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
-               renderIpcaProgress, function() { buildBollinger('1y'); },
+               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],

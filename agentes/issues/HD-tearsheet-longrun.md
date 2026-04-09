@@ -7,7 +7,7 @@
 | **ID** | HD-tearsheet-longrun |
 | **Dono** | Head |
 | **Status** | Backlog |
-| **Prioridade** | 🟡 Média |
+| **Prioridade** | 🟢 Baixa |
 | **Participantes** | Head (lead), Factor, Quant |
 | **Co-sponsor** | Factor |
 | **Dependencias** | HD-proxies-canonicos (Done) |
@@ -29,7 +29,15 @@ Gerar um tearsheet QuantStats com histórico estendido do portfólio Target (SWR
 
 ---
 
-## Escopo
+## Escopo Redefinido (2026-04-09 — decisão CIO)
+
+**Arquivado:** heatmap mensal (implementado no dashboard v1.105) e rolling Sharpe (implementado no dashboard v1.105) e histórico 20a com proxies (false precision — AVGS lançado 2019).
+
+**Escopo remanescente:**
+- [ ] **Drawdown table detalhada** — top N drawdowns com data início/fim/duração/recuperação. Artefato de crise (calibração comportamental), não de rotina. Gerado por script quando necessário, não embutido no dashboard.
+- [ ] **Série sintética** apenas para validar os dados reais do período 2021–2026 — não para uso operacional.
+
+## Escopo Original (referência)
 
 - [ ] **Mapear período viável**: verificar cobertura dos proxies canônicos e definir se 10 ou 20 anos é confiável
   - 20 anos (2006): canônico per HD-metodologia-analitica — mas AVEM/AVGS têm proxies sintéticos
