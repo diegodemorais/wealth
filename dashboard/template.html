@@ -255,7 +255,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="hero-kpi">
     <div class="hlbl">Savings Rate</div>
     <div class="hval" id="heroSavings">—</div>
-    <div class="hsub" id="heroSavingsSub">—</div>
+    <div class="hsub pv" id="heroSavingsSub">—</div>
   </div>
 </div>
 
@@ -345,7 +345,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- P2: TAX — IR DIFERIDO -->
 <div class="section collapsible" id="taxIrSection" data-in-tab="plan">
-<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Passivo Tributário Latente <span id="taxIrTotalHeader" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Passivo Tributário Latente <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
 <div class="collapse-body">
 <div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
 <div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
@@ -360,7 +360,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div id="fireProgressBar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .5s"></div>
 </div>
 <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:4px">
-  <span id="fireProgressStart">—</span><span id="fireProgressLabel">—</span><span id="fireProgressEnd">—</span>
+  <span id="fireProgressStart" class="pv">—</span><span id="fireProgressLabel" class="pv">—</span><span id="fireProgressEnd" class="pv">—</span>
 </div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="fireScenarioGrid"></div>
@@ -373,14 +373,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <h2>Progresso FIRE</h2>
   <div style="text-align:center;padding:8px 0">
     <div id="fireProgPct" style="font-size:2.2rem;font-weight:700">—</div>
-    <div style="font-size:.75rem;color:var(--muted)" id="fireProgLabel">—</div>
+    <div style="font-size:.75rem;color:var(--muted)" class="pv" id="fireProgLabel">—</div>
   </div>
   <div class="progress-bar" style="margin-top:8px">
     <div id="fireProgFill" class="progress-fill" style="background:var(--accent)"></div>
   </div>
   <div style="margin-top:12px;font-size:.75rem">
     <div style="display:flex;justify-content:space-between"><span>SWR no FIRE Day projetada:</span><span style="font-weight:600;color:var(--cyan)" id="swrFireDayVal">—</span></div>
-    <div style="font-size:.6rem;color:var(--muted);margin-top:2px" id="swrFireDaySub">—</div>
+    <div style="font-size:.6rem;color:var(--muted);margin-top:2px" class="pv" id="swrFireDaySub">—</div>
   </div>
 </div>
 <div class="section">
@@ -473,12 +473,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio BRL/USD</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio BRL/USD</div></div>
   </div>
-  <div id="attrGapMsg" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
-  <div id="attrCagrNote" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
+  <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
+  <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
     📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal">—</strong>/ano
     <span title="Este CAGR de 18.1%/ano inclui os aportes mensais de R$25k — não é retorno puro do investimento. Use TWR USD/BRL para avaliar performance real dos ETFs." style="cursor:help;color:var(--accent)"> ⓘ</span>
   </div>
@@ -537,12 +537,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Progresso Patrimonial</div>
   <div class="progress-row">
-    <div class="progress-label"><span id="pfirePatLabel">—</span><span id="pfirePatPct">—</span></div>
+    <div class="progress-label"><span id="pfirePatLabel" class="pv">—</span><span id="pfirePatPct">—</span></div>
     <div class="progress-bar">
       <div id="pfirePatFill" class="progress-fill" style="background:var(--accent)"></div>
     </div>
   </div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="pfirePatMeta">—</div>
+  <div style="font-size:.65rem;color:var(--muted);margin-top:4px" class="pv" id="pfirePatMeta">—</div>
 </div>
 <div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
@@ -637,7 +637,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <tbody id="guardrailsBody"></tbody>
 </table>
 <div style="margin-top:10px;font-size:.75rem;background:rgba(34,197,94,.07);border-radius:6px;padding:8px;border-left:3px solid var(--green)">
-  <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto R$350k)
+  <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto <span class="pv">R$350k</span>)
 </div>
 <div class="src" id="guardrailsSrc">—</div>
 </div>
@@ -688,7 +688,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="grid-3" style="margin-bottom:12px">
 <div>
   <div class="slider-row">
-    <label><span>Aporte Mensal</span><span id="wiAporteVal">—</span></label>
+    <label><span>Aporte Mensal</span><span id="wiAporteVal" class="pv">—</span></label>
     <input type="range" id="wiAporte" min="10000" max="60000" step="1000" value="25000" oninput="updateWhatIf()">
   </div>
 </div>
@@ -700,7 +700,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div>
   <div class="slider-row">
-    <label><span>Custo de Vida /ano</span><span id="wiCustoVal">R$250,000</span></label>
+    <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$250,000</span></label>
     <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
   </div>
 </div>
@@ -850,7 +850,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
       </div>
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
         <div style="font-size:.6rem;color:var(--muted)">Patrimônio projetado</div>
-        <div style="font-size:1rem;font-weight:700" id="simPatFire">—</div>
+        <div style="font-size:1rem;font-weight:700" class="pv" id="simPatFire">—</div>
       </div>
     </div>
     <!-- Mini timeline bar -->
@@ -884,17 +884,17 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- Sliders -->
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:12px">
   <div class="slider-row">
-    <label><span>Aporte Mensal</span><span id="simAporteVal" style="font-weight:700;color:var(--accent)">—</span></label>
+    <label><span>Aporte Mensal</span><span id="simAporteVal" class="pv" style="font-weight:700;color:var(--accent)">—</span></label>
     <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="_firePresetCustom();updateFireSim()">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$5k</span><span>R$100k</span></div>
   </div>
   <div class="slider-row">
-    <label><span>Retorno Real Equity</span><span id="simRetornoVal" style="font-weight:700;color:var(--muted)">—</span></label>
+    <label><span>Retorno Real Equity</span><span id="simRetornoVal" class="pv" style="font-weight:700;color:var(--muted)">—</span></label>
     <input type="range" id="simRetorno" min="0" max="10" step="0.25" value="4.85" oninput="_firePresetCustom();updateFireSim()">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>0%</span><span>10%</span></div>
   </div>
   <div class="slider-row">
-    <label><span>Custo de Vida /ano</span><span id="simCustoVal" style="font-weight:700;color:var(--muted)">—</span></label>
+    <label><span>Custo de Vida /ano</span><span id="simCustoVal" class="pv" style="font-weight:700;color:var(--muted)">—</span></label>
     <input type="range" id="simCusto" min="150000" max="500000" step="10000" value="250000" oninput="_firePresetCustom();updateFireSim()">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$150k</span><span>R$500k</span></div>
   </div>
@@ -936,7 +936,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
 <div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
-  Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa R$45k/mês · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS R$18k/ano a partir dos 65.
+  Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa <span class="pv">R$45k/mês</span> · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS <span class="pv">R$18k/ano</span> a partir dos 65.
 </div>
 <div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending smile (R$ reais 2026)</div>
 </div>
@@ -947,9 +947,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
   ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
-  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS R$18k/ano real a partir de age 65.
+  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS <span class="pv">R$18k/ano</span> real a partir de age 65.
 </div>
-<div class="src" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
+<div class="src pv" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
 </div>
 
 <!-- F11: Stress Test -->
@@ -968,7 +968,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
   <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
     <div style="font-size:.8rem;color:var(--muted)">
-      Patrimônio pós-shock: <strong id="stressPatShock" style="color:var(--red)">—</strong>
+      Patrimônio pós-shock: <strong id="stressPatShock" class="pv" style="color:var(--red)">—</strong>
     </div>
     <button id="stressSimBtn" style="display:none"></button>
   </div>
@@ -983,11 +983,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- F8: Sankey Cash Flow -->
-<div class="section" data-in-tab="projecao">
+<div class="section" id="sankeySection" data-in-tab="projecao">
 <h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
 <div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
-  ⚠️ Valores estimados: renda = R$45k/mês × 12. Impostos* = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
+  ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
 </div>
 <div class="src" id="sankeySrc">Fonte: premissas.renda_estimada · spending_summary.json · hipoteca_sac.json</div>
 </div>
@@ -2198,8 +2198,8 @@ function buildCustoBase() {
     tr.style.borderBottom = '1px solid rgba(71,85,105,.3)';
     tr.innerHTML = `
       <td style="padding:7px 8px"><strong style="color:${colors[b]}">${b}</strong></td>
-      <td class="num" style="padding:7px 8px">$${(valor/1000).toFixed(0)}k</td>
-      <td class="num" style="padding:7px 8px;color:var(--muted)">$${(custo/1000).toFixed(0)}k</td>
+      <td class="num pv" style="padding:7px 8px">$${(valor/1000).toFixed(0)}k</td>
+      <td class="num pv" style="padding:7px 8px;color:var(--muted)">$${(custo/1000).toFixed(0)}k</td>
       <td class="num" style="padding:7px 8px;color:${gainColor}">${gain >= 0 ? '+' : ''}${gain.toFixed(1)}%</td>
       <td class="num" style="padding:7px 8px">${peso.toFixed(1)}%</td>
       <td class="num" style="padding:7px 8px;color:var(--muted)">${cfg.meta}%</td>
@@ -3101,21 +3101,21 @@ function buildSpendingBreakdown() {
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.6rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Essenciais</div>
-        <div style="font-size:1.4rem;font-weight:700;color:var(--red)">R$${must.toLocaleString('pt-BR')}</div>
+        <div class="pv" style="font-size:1.4rem;font-weight:700;color:var(--red)">R$${must.toLocaleString('pt-BR')}</div>
         <div style="font-size:.65rem;color:var(--muted)">/mês · ${pMust.toFixed(0)}% do total</div>
         <div class="spend-cat-bar" style="background:rgba(239,68,68,.5);width:${pMust.toFixed(0)}%"></div>
-        <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Inclui principal hipoteca (R$1.517/mês = equity)</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Inclui principal hipoteca (<span class="pv">R$1.517/mês</span> = equity)</div>
       </div>
       <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Discricionários</div>
-        <div style="font-size:1.4rem;font-weight:700;color:var(--accent)">R$${like.toLocaleString('pt-BR')}</div>
+        <div class="pv" style="font-size:1.4rem;font-weight:700;color:var(--accent)">R$${like.toLocaleString('pt-BR')}</div>
         <div style="font-size:.65rem;color:var(--muted)">/mês · ${pLike.toFixed(0)}% do total</div>
         <div class="spend-cat-bar" style="background:rgba(59,130,246,.5);width:${pLike.toFixed(0)}%"></div>
         <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Discricionários cortáveis</div>
       </div>
       <div style="background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.25);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.6rem;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Imprevistos</div>
-        <div style="font-size:1.4rem;font-weight:700;color:var(--yellow)">R$${imp.toLocaleString('pt-BR')}</div>
+        <div class="pv" style="font-size:1.4rem;font-weight:700;color:var(--yellow)">R$${imp.toLocaleString('pt-BR')}</div>
         <div style="font-size:.65rem;color:var(--muted)">/mês · ${pImp.toFixed(0)}% do total</div>
         <div class="spend-cat-bar" style="background:rgba(234,179,8,.5);width:${Math.max(pImp,3).toFixed(0)}%"></div>
         <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Gifts e pontuais</div>
@@ -3123,15 +3123,15 @@ function buildSpendingBreakdown() {
     </div>
     <div style="background:var(--card2);border-radius:8px;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center">
       <div>
-        <div style="font-size:1.1rem;font-weight:700">R$${total.toLocaleString('pt-BR')}/mês</div>
-        <div style="font-size:.65rem;color:var(--muted)">Total real · R$${(anual/1000).toFixed(0)}k/ano</div>
+        <div class="pv" style="font-size:1.1rem;font-weight:700">R$${total.toLocaleString('pt-BR')}/mês</div>
+        <div class="pv" style="font-size:.65rem;color:var(--muted)">Total real · R$${(anual/1000).toFixed(0)}k/ano</div>
       </div>
       <div>
-        <div style="font-size:1.1rem;font-weight:700;color:var(--muted)">R$${(modelo/1000).toFixed(0)}k/ano</div>
+        <div class="pv" style="font-size:1.1rem;font-weight:700;color:var(--muted)">R$${(modelo/1000).toFixed(0)}k/ano</div>
         <div style="font-size:.65rem;color:var(--muted)">Modelo FIRE</div>
       </div>
       <div>
-        <div style="font-size:1.1rem;font-weight:700;color:${bufferColor}">${bufferIcon} R$${Math.abs(bufferAnual/1000).toFixed(0)}k/ano</div>
+        <div class="pv" style="font-size:1.1rem;font-weight:700;color:${bufferColor}">${bufferIcon} R$${Math.abs(bufferAnual/1000).toFixed(0)}k/ano</div>
         <div style="font-size:.65rem;color:var(--muted)">${bufferAnual >= 0 ? 'Buffer vs. modelo' : 'Acima do modelo'}</div>
       </div>
     </div>
@@ -4328,7 +4328,7 @@ function buildRfCards() {
   html += `<div class="rf-card">
     <div class="val pv" id="hodl11Val">—</div>
     <div class="lbl">HODL11</div>
-    <div class="sub" id="hodl11Sub">— cotas · B3</div>
+    <div class="sub pv" id="hodl11Sub">— cotas · B3</div>
     <div class="sub">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Piso 1.5% · Teto 5%</div>
     ${hodlBandHtml}
   </div>`;
@@ -4613,6 +4613,41 @@ fetchLive();
 // ═══════════════════════════════════════════════════════════════
 // PRIVACY TOGGLE — única implementação (fim do body)
 // ═══════════════════════════════════════════════════════════════
+// ── Fase 3: ocultar escala Y de charts com valores absolutos ──
+function _applyPrivacyCharts(isPrivate) {
+  // Charts com eixo Y em R$ absoluto — ocultar ticks em modo privado
+  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection'];
+  absCharts.forEach(name => {
+    const c = charts[name];
+    if (!c) return;
+    try {
+      const sc = c.options.scales;
+      if (sc?.y) {
+        sc.y.ticks = sc.y.ticks || {};
+        sc.y.ticks.display = !isPrivate;
+        if (sc.y.title) sc.y.title.display = !isPrivate;
+      }
+      // Tooltip: em privado, desabilitar para charts com valores absolutos
+      if (c.options.plugins?.tooltip) {
+        c.options.plugins.tooltip.enabled = !isPrivate;
+      }
+      c.update('none');
+    } catch(e) { /* chart ainda não inicializado */ }
+  });
+  // Attribution bar: ocultar Y axis (valores em R$)
+  if (charts.attr) {
+    try {
+      const sc = charts.attr.options.scales;
+      if (sc?.y) { sc.y.ticks = sc.y.ticks || {}; sc.y.ticks.display = !isPrivate; }
+      if (charts.attr.options.plugins?.tooltip) charts.attr.options.plugins.tooltip.enabled = !isPrivate;
+      charts.attr.update('none');
+    } catch(e) {}
+  }
+  // Sankey: ocultar seção inteira em modo privado (fluxos em R$/ano revelam renda)
+  const _sankeyWrap = document.getElementById('sankeySection');
+  if (_sankeyWrap) _sankeyWrap.style.display = isPrivate ? 'none' : '';
+}
+
 function togglePrivacy() {
   document.body.classList.toggle('private-mode');
   const on = document.body.classList.contains('private-mode');
@@ -4620,10 +4655,12 @@ function togglePrivacy() {
     ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
     : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   localStorage.setItem('dashboard_private', on ? '1' : '0');
+  _applyPrivacyCharts(on);
 }
 if (localStorage.getItem('dashboard_private') === '1') {
   document.body.classList.add('private-mode');
   document.getElementById('privacyBtn').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  _applyPrivacyCharts(true);
 }
 
 // ── Tab system com lazy initialization ───────────────────────
@@ -5163,8 +5200,8 @@ function buildTaxIR() {
     const badge = badges[ticker] ? ' <span class="badge-acc">' + badges[ticker] + '</span>' : '';
     html += '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
       '<td style="padding:5px 6px;font-weight:600">' + ticker + badge + '</td>' +
-      '<td style="text-align:right;padding:5px 6px;color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + ';font-variant-numeric:tabular-nums">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</td>' +
-      '<td style="text-align:right;padding:5px 6px;color:var(--yellow);font-variant-numeric:tabular-nums">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</td>' +
+      '<td class="pv" style="text-align:right;padding:5px 6px;color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + ';font-variant-numeric:tabular-nums">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</td>' +
+      '<td class="pv" style="text-align:right;padding:5px 6px;color:var(--yellow);font-variant-numeric:tabular-nums">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</td>' +
       '<td style="text-align:right;padding:5px 6px;color:var(--muted);font-variant-numeric:tabular-nums">' + (e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '--') + '</td>' +
       '</tr>';
   });
@@ -5172,7 +5209,7 @@ function buildTaxIR() {
   html += '<tr style="border-top:2px solid var(--border);font-weight:700">' +
     '<td style="padding:6px 6px">Total</td>' +
     '<td style="text-align:right;padding:6px 6px"></td>' +
-    '<td style="text-align:right;padding:6px 6px;color:var(--yellow)">R$ ' + (totalIR/1000).toFixed(0) + 'k</td>' +
+    '<td class="pv" style="text-align:right;padding:6px 6px;color:var(--yellow)">R$ ' + (totalIR/1000).toFixed(0) + 'k</td>' +
     '<td></td></tr></tbody></table>' +
     '<div style="margin-top:6px;font-size:.68rem;color:var(--muted)">' + regime + '</div>';
 
