@@ -78,6 +78,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .collapsible h2{cursor:pointer;user-select:none}
 .collapsible h2::after{content:' ▸';font-size:1em;color:var(--muted)}
 .collapsible.open h2::after{content:' ▾'}
+.preset-btn{font-size:.7rem;padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;line-height:1.6}
+.preset-btn:hover{border-color:var(--accent);color:var(--accent)}
+.preset-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .what-if-result{background:var(--card2);border-radius:8px;padding:12px;text-align:center;margin-top:8px}
 .what-if-result .big{font-size:2rem;font-weight:700}
 .scenario-card{background:var(--card2);border-radius:8px;padding:12px;border:1px solid var(--border)}
@@ -839,6 +842,18 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
       <div id="simTimelineLabelFire" style="position:absolute;bottom:-18px;font-size:.6rem;color:var(--green);font-weight:700;transform:translateX(-50%);white-space:nowrap;transition:left .4s"></div>
     </div>
   </div>
+</div>
+
+<!-- Presets -->
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;align-items:center">
+  <span style="font-size:.65rem;color:var(--muted);white-space:nowrap;margin-right:2px">Cenário:</span>
+  <button class="preset-btn" id="preset-fire50"    onclick="setFirePreset('fire50')">🎯 FIRE@50</button>
+  <button class="preset-btn" id="preset-fire53"    onclick="setFirePreset('fire53')">📋 FIRE@53</button>
+  <button class="preset-btn" id="preset-casamento" onclick="setFirePreset('casamento')">💍 Casamento</button>
+  <button class="preset-btn" id="preset-filho"     onclick="setFirePreset('filho')">👶 Filho</button>
+  <button class="preset-btn" id="preset-stress"    onclick="setFirePreset('stress')">⚠️ Stress</button>
+  <button class="preset-btn" id="preset-ok"        onclick="setFirePreset('ok')">✅ Base</button>
+  <button class="preset-btn" id="preset-fav"       onclick="setFirePreset('fav')">🚀 Favorável</button>
 </div>
 
 <!-- Sliders -->
@@ -2745,6 +2760,43 @@ function buildEarliestFire() {
 // ═══════════════════════════════════════════════════════════════
 // F3b: SIMULADOR FIRE INTERATIVO (BOLDIN-style)
 // ═══════════════════════════════════════════════════════════════
+window.setFirePreset = function(name) {
+  const p  = DATA.premissas;
+  const sm = DATA.spendingSmile;
+  const aporteBase  = p?.aporte_mensal         || 25000;
+  const retornoBase = ((p?.retorno_equity_base  || 0.0485) * 100);
+  const custoBase   = p?.custo_vida_base        || 250000;
+  const goGoGasto   = sm?.go_go?.gasto          || 242000;
+
+  // Valores por preset — âncoras em DATA onde aplicável
+  const presets = {
+    fire50:    { aporte: 50000,      retorno: 5.5,         custo: goGoGasto,  label: 'FIRE@50 (aspiracional)' },
+    fire53:    { aporte: aporteBase, retorno: retornoBase,  custo: custoBase,  label: 'FIRE@53 — plano base' },
+    casamento: { aporte: 20000,      retorno: retornoBase,  custo: 320000,     label: 'Casamento (+R$70k/ano, −R$5k aporte)' },
+    filho:     { aporte: 15000,      retorno: retornoBase,  custo: 400000,     label: 'Filho (+R$150k/ano, −R$10k aporte)' },
+    stress:    { aporte: aporteBase, retorno: 2.0,          custo: 300000,     label: 'Stress — retorno comprimido' },
+    ok:        { aporte: aporteBase, retorno: retornoBase,  custo: custoBase,  label: 'Base — premissas atuais' },
+    fav:       { aporte: 35000,      retorno: 6.5,          custo: custoBase,  label: 'Favorável — aporte maior + bull' },
+  };
+
+  const cfg = presets[name];
+  if (!cfg) return;
+
+  const sA = document.getElementById('simAporte');
+  const sR = document.getElementById('simRetorno');
+  const sC = document.getElementById('simCusto');
+  if (sA) sA.value = Math.min(100000, Math.max(5000,   cfg.aporte));
+  if (sR) sR.value = Math.min(10,     Math.max(0,      cfg.retorno));
+  if (sC) sC.value = Math.min(500000, Math.max(150000, cfg.custo));
+
+  // Highlight botão ativo
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('preset-' + name);
+  if (btn) btn.classList.add('active');
+
+  updateFireSim();
+};
+
 window.updateFireSim = function() {
   const simA = document.getElementById('simAporte');
   const simR = document.getElementById('simRetorno');
@@ -4447,7 +4499,7 @@ function _initTabCharts(tab) {
                  [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
                  updateWhatIf();
                }],
-    projecao: [updateFireSim, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
+    projecao: [() => { setFirePreset('ok'); }, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
                buildSpendingBreakdown, buildIncomeProjection,
                buildNetWorthProjection, buildStressTest, buildSankey],
   };
