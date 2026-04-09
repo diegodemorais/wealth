@@ -100,19 +100,25 @@
     }
   },
   "fire": {
-    "pfire_base": 84.8,
-    "pfire_fav": 91.2,
-    "pfire_stress": 80.6,
-    "pat_mediano_fire": 9275073.0,
-    "pat_p10_fire": 5710985.0,
-    "pat_p90_fire": 14724131.0,
+    "pfire_base": 90.4,
+    "pfire_fav": 94.1,
+    "pfire_stress": 86.8,
+    "pat_mediano_fire": 11527476.0,
+    "pat_p10_fire": 6834909.0,
+    "pat_p90_fire": 18916227.0,
     "mc_date": "2026-04-08",
     "pfire50_base": 85.4,
     "pfire50_fav": 91.3,
     "pfire50_stress": 81.1,
-    "pfire53_base": 84.8,
-    "pfire53_fav": 91.2,
-    "pfire53_stress": 80.6
+    "pfire53_base": 90.4,
+    "pfire53_fav": 94.1,
+    "pfire53_stress": 86.8,
+    "pat_mediano_fire50": 9339651.0,
+    "pat_p10_fire50": 5873669.0,
+    "pat_p90_fire50": 14560082.0,
+    "pat_mediano_fire53": 11527476.0,
+    "pat_p10_fire53": 6834909.0,
+    "pat_p90_fire53": 18916227.0
   },
   "shadows": {
     "q1_2026": {

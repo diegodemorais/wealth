@@ -704,6 +704,10 @@ def main():
     fire_data[f"{prefix}_base"]   = fire_data["pfire_base"]
     fire_data[f"{prefix}_fav"]    = fire_data["pfire_fav"]
     fire_data[f"{prefix}_stress"] = fire_data["pfire_stress"]
+    # Patrimônio percentis específicos por idade (para scenario_comparison no dashboard)
+    fire_data[f"pat_mediano_fire{idade_fire}"] = round(resultados[0]["pat_mediana_fire"], 0)
+    fire_data[f"pat_p10_fire{idade_fire}"]     = round(resultados[0]["pat_p10_fire"], 0)
+    fire_data[f"pat_p90_fire{idade_fire}"]     = round(resultados[0]["pat_p90_fire"], 0)
 
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 

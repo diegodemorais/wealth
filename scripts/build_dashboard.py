@@ -694,11 +694,11 @@ def build(data_path: Path, template_path: Path, out_path: Path,
                     "base": data["pfire50"]["base"],
                     "fav":  data["pfire50"]["fav"],
                     "stress": data["pfire50"]["stress"],
-                    "pat_mediano": None,  # TODO: rodar MC com FIRE@50
-                    "pat_p10": None,
-                    "pat_p90": None,
+                    "pat_mediano": _fire_state.get("pat_mediano_fire50", None),
+                    "pat_p10": _fire_state.get("pat_p10_fire50", None),
+                    "pat_p90": _fire_state.get("pat_p90_fire50", None),
                 },
-                "nota_fire50_pat": "Patrimônio mediano FIRE@50 não disponível — requer MC com idade_fire=50",
+                "nota_fire50_pat": None,
             }
         except Exception as e:
             print(f"⚠️  scenario_comparison: erro ao ler dashboard_state.json — {e}")
