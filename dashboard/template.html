@@ -2378,8 +2378,10 @@ function buildBollinger(period) {
   const stdDev = values.length > 1 ? Math.sqrt(values.reduce((s,v) => s + (v-avgRet)**2, 0) / values.length) : 0;
   const posMonths = values.filter(v => v > 0).length;
   const pctPos = values.length ? posMonths / values.length * 100 : 0;
-  const bestMonth = values.length ? Math.max(...values) : 0;
+  const bestMonth  = values.length ? Math.max(...values) : 0;
   const worstMonth = values.length ? Math.min(...values) : 0;
+  const bestLabel  = values.length ? labels[values.indexOf(bestMonth)]  : '';
+  const worstLabel = values.length ? labels[values.indexOf(worstMonth)] : '';
 
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
     type: 'bar',
@@ -2448,10 +2450,12 @@ function buildBollinger(period) {
       <div style="${statStyle}">
         <div style="${muted}">Melhor mês</div>
         ${big('+'+bestMonth.toFixed(2)+'%', 'var(--green)')}
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(bestLabel)}</div>
       </div>
       <div style="${statStyle}">
         <div style="${muted}">Pior mês</div>
         ${big(worstMonth.toFixed(2)+'%', 'var(--red)')}
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(worstLabel)}</div>
       </div>`;
   }
 }

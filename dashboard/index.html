@@ -1156,12 +1156,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T14:45:11-03:00'); // BRT (UTC-3)
-const VERSION = '1.91';
+const GENERATED_AT = new Date('2026-04-09T15:10:38-03:00'); // BRT (UTC-3)
+const VERSION = '1.92';
 
 const DATA = {
-  "_generated": "2026-04-09T14:45:11",
-  "_generated_brt": "2026-04-09T14:45:11-03:00",
+  "_generated": "2026-04-09T15:10:38",
+  "_generated_brt": "2026-04-09T15:10:38-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -4155,7 +4155,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.91"
+  "version": "1.92"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5378,8 +5378,10 @@ function buildBollinger(period) {
   const stdDev = values.length > 1 ? Math.sqrt(values.reduce((s,v) => s + (v-avgRet)**2, 0) / values.length) : 0;
   const posMonths = values.filter(v => v > 0).length;
   const pctPos = values.length ? posMonths / values.length * 100 : 0;
-  const bestMonth = values.length ? Math.max(...values) : 0;
+  const bestMonth  = values.length ? Math.max(...values) : 0;
   const worstMonth = values.length ? Math.min(...values) : 0;
+  const bestLabel  = values.length ? labels[values.indexOf(bestMonth)]  : '';
+  const worstLabel = values.length ? labels[values.indexOf(worstMonth)] : '';
 
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
     type: 'bar',
@@ -5448,10 +5450,12 @@ function buildBollinger(period) {
       <div style="${statStyle}">
         <div style="${muted}">Melhor mês</div>
         ${big('+'+bestMonth.toFixed(2)+'%', 'var(--green)')}
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(bestLabel)}</div>
       </div>
       <div style="${statStyle}">
         <div style="${muted}">Pior mês</div>
         ${big(worstMonth.toFixed(2)+'%', 'var(--red)')}
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${fmtMonthLabel(worstLabel)}</div>
       </div>`;
   }
 }
