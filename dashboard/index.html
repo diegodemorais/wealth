@@ -1204,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T20:07:46-03:00'); // BRT (UTC-3)
-const VERSION = '1.113';
+const GENERATED_AT = new Date('2026-04-09T20:10:44-03:00'); // BRT (UTC-3)
+const VERSION = '1.114';
 
 const DATA = {
   "_generated": "2026-04-09T19:54:55",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.113"
+  "version": "1.114"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5571,9 +5571,10 @@ function buildRollingSharp() {
         {
           label: 'Rolling Sharpe 12m',
           data: sharpes,
-          borderColor: 'rgba(99,179,237,.9)',
-          borderWidth: 2,
+          borderColor: 'rgba(148,163,184,.3)',
+          borderWidth: 1.5,
           pointBackgroundColor: ptColors,
+          pointBorderColor: ptColors,
           pointRadius: 3,
           fill: false,
           tension: 0.3,
