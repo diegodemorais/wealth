@@ -68,6 +68,11 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .slider-row{margin:12px 0}
 .slider-row label{font-size:.75rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px}
 .slider-row input[type=range]{width:100%;accent-color:var(--accent)}
+.collapsible .collapse-body{display:none}
+.collapsible.open .collapse-body{display:block}
+.collapsible h2{cursor:pointer;user-select:none}
+.collapsible h2::after{content:' ▸';font-size:.7rem;color:var(--muted)}
+.collapsible.open h2::after{content:' ▾'}
 .what-if-result{background:var(--card2);border-radius:8px;padding:12px;text-align:center;margin-top:8px}
 .what-if-result .big{font-size:2rem;font-weight:700}
 .scenario-card{background:var(--card2);border-radius:8px;padding:12px;border:1px solid var(--border)}
@@ -280,9 +285,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 
 
-<!-- S2: FINANCIAL WELLNESS SCORE (movido abaixo dos KPIs principais — D4) -->
-<div class="section" style="border-color:rgba(71,85,105,.4)" data-in-tab="status">
-<h2>Financial Wellness Score <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(indicador secundário)</span></h2>
+<!-- S2: FINANCIAL WELLNESS SCORE (colapsável) -->
+<div class="section collapsible" style="border-color:rgba(71,85,105,.4)" data-in-tab="status">
+<h2 onclick="this.parentElement.classList.toggle('open')">Financial Wellness Score <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(indicador secundário)</span></h2>
+<div class="collapse-body">
 <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
 <div style="text-align:center;min-width:100px">
 <div id="wellnessScore" style="font-size:2.2rem;font-weight:800">—</div>
@@ -294,6 +300,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="flex:1;min-width:260px">
 <div class="wellness-grid" id="wellnessGrid"></div>
 <div id="wellnessActions" style="margin-top:10px;padding:8px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent)"></div>
+</div>
 </div>
 </div>
 </div>
@@ -346,8 +353,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S9: SCENARIO COMPARISON -->
-<div class="grid-2" data-in-tab="status">
+<!-- S9: SCENARIO COMPARISON (movido para plan) -->
+<div class="grid-2" data-in-tab="plan">
 <div class="section">
   <h2>FIRE@53 vs FIRE@50 — Comparação</h2>
   <div class="chart-box-sm"><canvas id="scenarioChart"></canvas></div>
@@ -431,8 +438,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S12: GLIDE PATH -->
-<div class="section" data-in-tab="aloc">
+<!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
+<div class="section" data-in-tab="plan">
 <h2>Glide Path — Alocação por Idade</h2>
 <div class="chart-box"><canvas id="glideChart"></canvas></div>
 <div class="src">Fonte: agentes/contexto/carteira.md tabela de alocação. Crypto: 3% pré e pós-FIRE (ler tabela). Assertion: soma = 100% por ano.</div>
@@ -451,14 +458,16 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S14: FAN CHART P10/P50/P90 -->
-<div class="section" data-in-tab="plan">
-<h2>Fan Chart — Trajetórias Patrimoniais P10/P50/P90</h2>
+<!-- S14: FAN CHART P10/P50/P90 (colapsável — F7 é versão superior com spending smile) -->
+<div class="section collapsible" data-in-tab="plan">
+<h2 onclick="this.parentElement.classList.toggle('open')">Fan Chart — Trajetórias Patrimoniais P10/P50/P90 <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(ver F7 em Projeções)</span></h2>
+<div class="collapse-body">
 <div class="chart-box-lg"><canvas id="fanChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.75rem;color:var(--yellow)">
   ⚠️ <strong>Trajetórias interpoladas com r=4.85%/ano — não são simulações Monte Carlo individuais.</strong> Bandas P10/P90 derivadas do spread dos cenários MC, não de distribuição empírica de trajetórias. <span id="fanPfireNote"></span>
 </div>
 <div class="src" id="fanChartSrc">Baseado em endpoints do Monte Carlo. Crescimento exponencial.</div>
+</div>
 </div>
 
 
@@ -495,9 +504,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src" id="incomeChartSrc">—</div>
 </div>
 
-<!-- S17: FEE ANALYSIS -->
-<div class="section" data-in-tab="perf">
-<h2>Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
+<!-- S17: FEE ANALYSIS (colapsável) -->
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
+<div class="collapse-body">
 <div style="overflow-x:auto">
 <table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -512,20 +522,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
 </div>
+</div>
 
-<!-- S18: CONTRIBUTION SLIDER -->
-<div class="section" data-in-tab="aloc">
-<h2>Monthly Contribution Needed — Slider</h2>
-<div class="slider-row">
-  <label><span>Aporte Mensal</span><span id="contribVal">—</span></label>
-  <input type="range" id="contribSlider" min="5000" max="80000" step="1000" value="25000" oninput="updateContrib()">
-</div>
-<div class="what-if-result">
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Anos até FIRE@53 estimados (determinístico r=4.85%)</div>
-  <div class="big" id="contribResult">—</div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Nota: aproximação — P(FIRE) real via MC</div>
-</div>
-</div>
+<!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
@@ -600,11 +599,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src">Calculado de ibkr_lotes.json · Ganho sobre custo USD (preço médio × qtde) · Peso intra-equity (SWRD+AVGS+AVEM) · Meta: 50/30/20</div>
 </div>
 
-<!-- S21c: EVENTOS DE VIDA -->
-<div class="section" style="border-color:rgba(234,179,8,.3)" data-in-tab="plan">
-<h2>Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
+<!-- S21c: EVENTOS DE VIDA (colapsável) -->
+<div class="section collapsible" style="border-color:rgba(234,179,8,.3)" data-in-tab="plan">
+<h2 onclick="this.parentElement.classList.toggle('open')">Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
+<div class="collapse-body">
 <div id="eventosVidaBody"></div>
 <div class="src">Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente.</div>
+</div>
 </div>
 
 <!-- S21d: P(FIRE) CENÁRIOS FAMÍLIA -->
@@ -633,9 +634,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
 </div>
 
-<!-- S24: BOLLINGER BANDS -->
+<!-- S24: RETORNOS MENSAIS -->
 <div class="section" data-in-tab="perf">
-<h2>Bollinger Bands — Retornos Mensais (MA5 ± 2σ)</h2>
+<h2>Retornos Mensais — Carteira</h2>
 <div class="period-btns" id="bollingerPeriodBtns">
   <button onclick="setBollingerPeriod('3m')">3m</button>
   <button onclick="setBollingerPeriod('6m')">6m</button>
@@ -646,8 +647,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button onclick="setBollingerPeriod('all')">All</button>
 </div>
 <div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div id="bollingerNote" style="display:none;font-size:.72rem;color:var(--yellow);margin-top:4px"></div>
-<div class="src">Retornos mensais. MA5 fixo · σ populacional (÷N). Upper em verde, Lower em vermelho. Pontos fora das bandas destacados. Bandas suprimidas em 3m/6m (σ instável).</div>
+<div class="src">Retornos mensais da carteira por período selecionado.</div>
 </div>
 
 <!-- S25: TLH MONITOR -->
@@ -765,8 +765,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
-<!-- S26: RF + CRYPTO CARDS -->
-<div class="section" data-in-tab="plan">
+<!-- S26: RF + CRYPTO CARDS (movido para status — são posições, não projeções) -->
+<div class="section" data-in-tab="status">
 <h2>Renda Fixa + Cripto</h2>
 <div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
@@ -902,8 +902,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T04:50:27-03:00'); // BRT (UTC-3)
-const VERSION = '1.58';
+const GENERATED_AT = new Date('2026-04-09T05:12:18-03:00'); // BRT (UTC-3)
+const VERSION = '1.59';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -3517,7 +3517,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.58"
+  "version": "1.59"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -4643,113 +4643,44 @@ window.calcAporte = function() {
 function buildBollinger(period) {
   const allL = DATA.bollinger.dates;
   const allV = DATA.bollinger.values;
-  const WSIZE = 5; // MA5 window
 
-  // Find start index of display window
-  const { labels: dispLabels } = filterByPeriod(allL, allV, period);
-  if (!dispLabels.length) { checkMinPoints('bollingerChart', 0, WSIZE); return; }
-  const dispStart = period === 'all' ? 0 : allL.indexOf(dispLabels[0]);
+  const { labels, values } = filterByPeriod(allL, allV, period);
+  if (!labels.length) { checkMinPoints('bollingerChart', 0, 2); return; }
 
-  // Pre-warm: include up to WSIZE-1 extra points before display window
-  const warmStart = Math.max(0, dispStart - (WSIZE - 1));
-  const workL = allL.slice(warmStart);
-  const workV = allV.slice(warmStart);
-
-  // Compute MA5 over warm-up + display
-  const MA5all = [], upperAll = [], lowerAll = [], retAll = [];
-  for (let i = 0; i < workV.length; i++) {
-    if (i < WSIZE - 1) { MA5all.push(null); upperAll.push(null); lowerAll.push(null); retAll.push(null); continue; }
-    const win = workV.slice(i - (WSIZE - 1), i + 1);
-    const ma = win.reduce((s, v) => s + v, 0) / WSIZE;
-    const variance = win.reduce((s, v) => s + (v - ma) ** 2, 0) / WSIZE;
-    const sigma = Math.sqrt(variance);
-    MA5all.push(+ma.toFixed(3)); upperAll.push(+(ma + 2*sigma).toFixed(3));
-    lowerAll.push(+(ma - 2*sigma).toFixed(3)); retAll.push(+workV[i].toFixed(3));
-  }
-
-  // Slice to display window only (drop warm-up points)
-  const offset = dispStart - warmStart;
-  const labels = workL.slice(offset);
-  const MA5 = MA5all.slice(offset);
-  const upper = upperAll.slice(offset);
-  const lower = lowerAll.slice(offset);
-  const retPlot = retAll.slice(offset);
-
-  // Períodos curtos (3m/6m): σ instável — suprimir bandas, mostrar só retorno
-  const SHORT = period === '3m' || period === '6m';
-
-  // Breakout detection: retorno fora das bandas
-  const retRadius = retPlot.map((v, i) => {
-    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 2;
-    if (v > upper[i] || v < lower[i]) return 6;
-    return 2;
-  });
-  const retPointBg = retPlot.map((v, i) => {
-    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 'rgba(255,255,255,.4)';
-    if (v > upper[i]) return '#22c55e';   // acima da banda superior → verde
-    if (v < lower[i]) return '#ef4444';   // abaixo da banda inferior → vermelho
-    return 'rgba(255,255,255,.4)';
-  });
-  const retPointBorder = retPlot.map((v, i) => {
-    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 'transparent';
-    if (v > upper[i]) return '#16a34a';
-    if (v < lower[i]) return '#dc2626';
-    return 'transparent';
-  });
+  // Colorir pontos: positivo verde, negativo vermelho
+  const pointBg = values.map(v => v >= 0 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.7)');
 
   if (charts.bollinger) charts.bollinger.destroy();
   if (checkMinPoints('bollingerChart', labels.length, 1)) return;
 
-  const datasets = [];
-  if (!SHORT) {
-    datasets.push(
-      { label: 'Upper (MA5+2σ)', data: upper, borderColor: 'rgba(34,197,94,.55)', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.3 },
-      { label: 'MA5', data: MA5, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
-      { label: 'Lower (MA5-2σ)', data: lower, borderColor: 'rgba(239,68,68,.55)', borderWidth: 1, pointRadius: 0, fill: '-2', backgroundColor: 'rgba(59,130,246,.07)', tension: 0.3 }
-    );
-  }
-  datasets.push(
-    { label: 'Retorno %', data: retPlot, borderColor: 'rgba(255,255,255,.45)', borderWidth: 1,
-      pointRadius: retRadius, pointBackgroundColor: retPointBg, pointBorderColor: retPointBorder, pointBorderWidth: 1,
-      fill: false, tension: 0.1 }
-  );
-
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
-    type: 'line',
-    data: { labels, datasets },
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Retorno %',
+        data: values,
+        backgroundColor: pointBg,
+        borderRadius: 2,
+      }]
+    },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8', font:{size:10} } },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => {
-              if (ctx.parsed.y === null) return '';
-              const v = ` ${ctx.dataset.label}: ${ctx.parsed.y}%`;
-              if (ctx.dataset.label === 'Retorno %') {
-                const i = ctx.dataIndex;
-                if (!SHORT && upper[i] !== null && retPlot[i] > upper[i]) return v + ' ↑ acima da banda';
-                if (!SHORT && lower[i] !== null && retPlot[i] < lower[i]) return v + ' ↓ abaixo da banda';
-              }
-              return v;
-            },
+            label: ctx => ` ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%`,
           }
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 12, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
-
-  // Nota sobre período curto
-  const r5note = document.getElementById('bollingerNote');
-  if (r5note) {
-    r5note.textContent = SHORT ? '⚠️ Bandas suprimidas em 3m/6m — σ instável com poucos pontos (recomendação Quant)' : '';
-    r5note.style.display = SHORT ? 'block' : 'none';
-  }
 }
 window.setBollingerPeriod = function(p) {
   setActivePeriodBtn('bollingerPeriodBtns', p);
@@ -5797,10 +5728,7 @@ function buildWellnessExtras() {
   const we = DATA.wellness_extras;
   if (!we) return;
 
-  const sep = document.createElement('div');
-  sep.style.cssText = 'font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 2px;border-top:1px solid rgba(71,85,105,.2);margin-top:4px';
-  sep.textContent = '+ Métricas Adicionais';
-  grid.appendChild(sep);
+  // Métricas extras integradas no grid principal (sem separador — padrão Boldin)
 
   const metricasCfg = [
     {
@@ -5852,9 +5780,11 @@ function renderKPIs() {
   document.getElementById('heroPatrimonio').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
   document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k equity`;
   const heroPf = document.getElementById('heroPfire');
-  heroPf.textContent = `${DATA.pfire53.base}%`;
+  const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
+  const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
+  heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
   heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
-  document.getElementById('heroPfireSub').textContent = `@50: ${DATA.pfire50.base}% · MC 10k`;
+  document.getElementById('heroPfireSub').textContent = `base ${DATA.pfire53.base}% · @50: ${DATA.pfire50.base}% · MC 10k`;
   document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
   // Anos sub: Base/Aspir — usar vars module-level
   const _anoFireAlvo = _anoFireAlvoGlobal;
