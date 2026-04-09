@@ -2527,8 +2527,9 @@ function buildRollingSharp() {
   const allV = DATA.bollinger?.values || [];
   const WIN = 12;
   // Risk-free: Selic meta anualizada → retorno mensal em %
-  const selicAnual = DATA.macro?.selic_meta || 14.75;
-  const rfMensal = ((1 + selicAnual / 100) ** (1/12) - 1) * 100;
+  // Nota: usa Selic atual para toda a janela (aproximação; série histórica de CDI não disponível no data.json)
+  const selicAnual = DATA.macro?.selic_meta ?? 0;
+  const rfMensal = selicAnual > 0 ? ((1 + selicAnual / 100) ** (1/12) - 1) * 100 : 0;
 
   if (allV.length < WIN + 1) {
     checkMinPoints('rollingSharpChart', allV.length, WIN + 1);

@@ -1204,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T20:04:21-03:00'); // BRT (UTC-3)
-const VERSION = '1.112';
+const GENERATED_AT = new Date('2026-04-09T20:07:46-03:00'); // BRT (UTC-3)
+const VERSION = '1.113';
 
 const DATA = {
   "_generated": "2026-04-09T19:54:55",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.112"
+  "version": "1.113"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5538,8 +5538,9 @@ function buildRollingSharp() {
   const allV = DATA.bollinger?.values || [];
   const WIN = 12;
   // Risk-free: Selic meta anualizada → retorno mensal em %
-  const selicAnual = DATA.macro?.selic_meta || 14.75;
-  const rfMensal = ((1 + selicAnual / 100) ** (1/12) - 1) * 100;
+  // Nota: usa Selic atual para toda a janela (aproximação; série histórica de CDI não disponível no data.json)
+  const selicAnual = DATA.macro?.selic_meta ?? 0;
+  const rfMensal = selicAnual > 0 ? ((1 + selicAnual / 100) ** (1/12) - 1) * 100 : 0;
 
   if (allV.length < WIN + 1) {
     checkMinPoints('rollingSharpChart', allV.length, WIN + 1);
