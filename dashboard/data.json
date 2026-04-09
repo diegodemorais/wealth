@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T08:38:29",
-  "_generated_brt": "2026-04-09T05:38:29-03:00",
+  "_generated": "2026-04-09T08:39:11",
+  "_generated_brt": "2026-04-09T05:39:11-03:00",
   "date": "2026-04-09",
   "cambio": 5.156,
   "posicoes": {
@@ -1999,5 +1999,105 @@
     }
   ],
   "cryptoLegado": 3000,
-  "tlhGatilho": 0.05
+  "tlhGatilho": 0.05,
+  "tax": {
+    "ir_diferido_total_brl": 144909.94,
+    "ir_por_etf": {
+      "SWRD": {
+        "ganho_usd": 77155.01,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 897073.33,
+        "valor_atual_brl": 1294884.57,
+        "ganho_brl": 397811.24,
+        "ir_estimado": 59671.69
+      },
+      "EIMI": {
+        "ganho_usd": 30195.08,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 326395.92,
+        "valor_atual_brl": 482081.76,
+        "ganho_brl": 155685.84,
+        "ir_estimado": 23352.88
+      },
+      "USSC": {
+        "ganho_usd": 9211.86,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 115545.23,
+        "valor_atual_brl": 163041.6,
+        "ganho_brl": 47496.37,
+        "ir_estimado": 7124.46
+      },
+      "IWVL": {
+        "ganho_usd": 864.42,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 6525.85,
+        "valor_atual_brl": 10982.8,
+        "ganho_brl": 4456.95,
+        "ir_estimado": 668.54
+      },
+      "AVDV": {
+        "ganho_usd": 38062.08,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 299857.75,
+        "valor_atual_brl": 496105.84,
+        "ganho_brl": 196248.09,
+        "ir_estimado": 29437.21
+      },
+      "AVUV": {
+        "ganho_usd": 16501.81,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 230831.95,
+        "valor_atual_brl": 315915.26,
+        "ganho_brl": 85083.31,
+        "ir_estimado": 12762.5
+      },
+      "DGS": {
+        "ganho_usd": 2095.79,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 48631.99,
+        "valor_atual_brl": 59437.88,
+        "ganho_brl": 10805.89,
+        "ir_estimado": 1620.88
+      },
+      "AVES": {
+        "ganho_usd": 13281.33,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 217202.34,
+        "valor_atual_brl": 285680.88,
+        "ganho_brl": 68478.54,
+        "ir_estimado": 10271.78
+      },
+      "AVGS": {
+        "ganho_usd": -166.34,
+        "ptax_compra_medio": 5.156,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 30007.91,
+        "valor_atual_brl": 29150.25,
+        "ganho_brl": -857.66,
+        "ir_estimado": 0.0
+      }
+    },
+    "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
+    "badges": {
+      "SWRD": "ACC — diferimento fiscal",
+      "EIMI": "ACC — diferimento fiscal",
+      "USSC": "ACC — diferimento fiscal",
+      "IWVL": "ACC — diferimento fiscal",
+      "AVDV": "ACC — diferimento fiscal",
+      "AVUV": "ACC — diferimento fiscal",
+      "DGS": "ACC — diferimento fiscal",
+      "AVES": "ACC — diferimento fiscal",
+      "AVGS": "ACC — diferimento fiscal"
+    },
+    "ptax_source": "fallback (câmbio atual)",
+    "ptax_atual": 5.156
+  }
 }
