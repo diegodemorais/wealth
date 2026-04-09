@@ -2835,17 +2835,18 @@ window.setFireMkt = function(mkt) {
   _applyFireAxes();
 };
 
-// FIRE@50 aspiracional — override completo
+// FIRE@50 aspiracional — mesmo aporte base, retorno favorável, custo go-go
 window.setFirePreset50 = function() {
   document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
   document.getElementById('pcond-fire50')?.classList.add('active');
+  const p    = DATA.premissas;
   const goGo = DATA.spendingSmile?.go_go?.gasto ?? 242000;
-  const sA = document.getElementById('simAporte');
-  const sR = document.getElementById('simRetorno');
-  const sC = document.getElementById('simCusto');
-  if (sA) sA.value = 50000;
-  if (sR) sR.value = 5.50;
-  if (sC) sC.value = Math.min(500000, Math.max(150000, goGo));
+  const sA   = document.getElementById('simAporte');
+  const sR   = document.getElementById('simRetorno');
+  const sC   = document.getElementById('simCusto');
+  if (sA) sA.value = Math.min(100000, Math.max(5000, p?.aporte_mensal || 25000)); // mesmo aporte base
+  if (sR) sR.value = 5.85;   // retorno favorável (cenário _MKT_VALS.fav)
+  if (sC) sC.value = Math.min(500000, Math.max(150000, goGo));                    // custo go-go
   updateFireSim();
 };
 
@@ -3812,7 +3813,11 @@ function renderKPIs() {
   // Anos sub: Base/Aspir — usar vars module-level
   const _anoFireAlvo = _anoFireAlvoGlobal;
   const _heroAnosSub = document.getElementById('heroAnosSub');
-  if (_heroAnosSub) _heroAnosSub.textContent = `Base: ${_anoFireAlvo} · Aspir: ${_anoFireAspir}`;
+  if (_heroAnosSub) {
+    const _idAlvo  = DATA.premissas?.idade_fire_alvo          || 53;
+    const _idAspir = DATA.premissas?.idade_fire_aspiracional  || 50;
+    _heroAnosSub.textContent = `Base: ${_anoFireAlvo} (${_idAlvo}a) · Aspir: ${_anoFireAspir} (${_idAspir}a)`;
+  }
   const heroProgEl = document.getElementById('heroProgresso');
   heroProgEl.textContent = fmtPct(progPct);
   heroProgEl.style.color = progPct >= 50 ? '#22c55e' : '#eab308';
