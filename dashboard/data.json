@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T15:15:24",
-  "_generated_brt": "2026-04-09T15:15:24-03:00",
+  "_generated": "2026-04-09T15:37:53",
+  "_generated_brt": "2026-04-09T15:37:53-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1906,6 +1906,12 @@
     "exposicao_cambial_pct": 90.4,
     "bitcoin_usd": null,
     "cambio": 5.156
+  },
+  "mercado": {
+    "cambio_brl_usd": 5.156,
+    "btc_usd": 71877.1,
+    "fonte": "yfinance BTC-USD + PTAX BCB",
+    "updated": "2026-04-09"
   },
   "minilog": [
     {

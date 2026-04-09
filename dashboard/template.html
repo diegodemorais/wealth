@@ -312,6 +312,30 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
+<!-- KPI row 2 — mercado snapshot -->
+<div class="kpi-grid" data-in-tab="status" style="margin-top:-4px;margin-bottom:16px">
+<div class="kpi">
+  <div class="kpi-label">Dólar</div>
+  <div class="kpi-value" id="kpiCambio">—</div>
+  <div class="kpi-sub">BRL/USD · PTAX BCB</div>
+</div>
+<div class="kpi">
+  <div class="kpi-label">Bitcoin</div>
+  <div class="kpi-value" id="kpiBtcUsd">—</div>
+  <div class="kpi-sub">BTC/USD · yfinance</div>
+</div>
+<div class="kpi">
+  <div class="kpi-label">IPCA+ 2040 — Mercado</div>
+  <div class="kpi-value" id="kpiIpcaMercado">—</div>
+  <div class="kpi-sub" id="kpiIpcaMercadoSub">—</div>
+</div>
+<div class="kpi">
+  <div class="kpi-label">Renda+ 2065 — Mercado</div>
+  <div class="kpi-value" id="kpiRendaMercado">—</div>
+  <div class="kpi-sub" id="kpiRendaMercadoSub">—</div>
+</div>
+</div>
+
 <!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
 <div class="section section-critical collapsible" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
 <h2 onclick="this.parentElement.classList.toggle('open')">Semáforos de Gatilhos</h2>
@@ -3890,6 +3914,60 @@ function renderKPIs() {
     el.textContent = ai.pct_retorno.toFixed(0) + '% ret · ' + ai.pct_aportes.toFixed(0) + '% ap';
     el.style.color = ai.pct_retorno >= 40 ? '#22c55e' : ai.pct_retorno >= 25 ? '#eab308' : '#94a3b8';
     if (subEl) subEl.textContent = `$${(ai.retorno_usd/1000).toFixed(0)}k retorno de $${(ai.patrimonio_equity_usd/1000).toFixed(0)}k`;
+  })();
+
+  // KPI row 2: mercado snapshot (Dólar, BTC, IPCA+ taxa, Renda+ taxa)
+  (function() {
+    // Dólar BRL
+    const kpiC = document.getElementById('kpiCambio');
+    if (kpiC) {
+      const fx = DATA.mercado?.cambio_brl_usd ?? DATA.cambio;
+      kpiC.textContent = fx != null ? 'R$' + fx.toFixed(3) : '—';
+    }
+
+    // Bitcoin USD
+    const kpiB = document.getElementById('kpiBtcUsd');
+    if (kpiB) {
+      const btc = DATA.mercado?.btc_usd ?? DATA.macro?.bitcoin_usd;
+      kpiB.textContent = btc != null ? '$' + Math.round(btc).toLocaleString('pt-BR') : '—';
+    }
+
+    // IPCA+ 2040 — taxa de mercado + badge DCA
+    (function() {
+      const el    = document.getElementById('kpiIpcaMercado');
+      const subEl = document.getElementById('kpiIpcaMercadoSub');
+      if (!el) return;
+      const taxa = DATA.rf?.ipca2040?.taxa;
+      if (taxa == null) { el.textContent = '—'; return; }
+      el.textContent = taxa.toFixed(2) + '%';
+      if (subEl) {
+        const piso  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+        const ativo = taxa >= piso;
+        const dot   = ativo ? '🟢' : '🔴';
+        subEl.textContent = dot + (ativo ? ' DCA ativo' : ' pausado') + ' (piso ' + piso.toFixed(1) + '%)';
+        subEl.style.color = ativo ? '#22c55e' : '#ef4444';
+      }
+    })();
+
+    // Renda+ 2065 — taxa de mercado + badge compra/manter/venda
+    (function() {
+      const el    = document.getElementById('kpiRendaMercado');
+      const subEl = document.getElementById('kpiRendaMercadoSub');
+      if (!el) return;
+      const taxa = DATA.rf?.renda2065?.taxa;
+      if (taxa == null) { el.textContent = '—'; return; }
+      el.textContent = taxa.toFixed(2) + '%';
+      if (subEl) {
+        const pisoC = DATA.pisos?.pisoTaxaRendaPlus   ?? 6.5;
+        const pisoV = DATA.pisos?.pisoVendaRendaPlus  ?? 6.0;
+        let dot, label, color;
+        if (taxa >= pisoC)       { dot = '🟢'; label = 'compra (>' + pisoC.toFixed(1) + '%)'; color = '#22c55e'; }
+        else if (taxa >= pisoV)  { dot = '🟡'; label = 'manter (' + pisoV.toFixed(1) + '–' + pisoC.toFixed(1) + '%)'; color = '#eab308'; }
+        else                     { dot = '🔴'; label = 'venda (<' + pisoV.toFixed(1) + '%)'; color = '#ef4444'; }
+        subEl.textContent = dot + ' ' + label;
+        subEl.style.color = color;
+      }
+    })();
   })();
 
   // Fire scenario grid — 6 cards (3 estados × 2 idades)

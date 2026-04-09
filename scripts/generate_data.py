@@ -1964,6 +1964,16 @@ def main():
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
 
+    # ─── Mercado snapshot (BTC + câmbio) ────────────────────────────────────
+    # BTC-USD já fetchado em get_macro_data() — reutilizar, sem novo download
+    _mercado_state = state.get("mercado", {})
+    mercado = {
+        "cambio_brl_usd": cambio,
+        "btc_usd":        macro.get("bitcoin_usd") or _mercado_state.get("btc_usd"),
+        "fonte":          "yfinance BTC-USD + PTAX BCB",
+        "updated":        str(date.today()),
+    }
+
     # ─── Bond Pool Readiness ─────────────────────────────────────────────
     # Bond pool = IPCA+ 2040 + IPCA+ 2050 + Reserva (IPCA+ 2029)
     # Meta: 7 anos de gastos (bond tent anos 1-7 pos-FIRE, carteira.md)
@@ -2084,6 +2094,7 @@ def main():
         "equity_attribution": equity_attribution,
         "shadows":    shadows,
         "macro":      macro,
+        "mercado":    mercado,
         "minilog":    _build_minilog(),
         "wellness_config": json.loads(WELLNESS_CONFIG.read_text(encoding="utf-8")) if WELLNESS_CONFIG.exists() else {},
         "eventos_vida": [
