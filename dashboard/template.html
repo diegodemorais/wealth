@@ -85,6 +85,59 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
 .privacy-toggle:hover{opacity:1}
+/* ── P2: Semáforo panel ── */
+.semaforo-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.semaforo-table th{padding:6px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.65rem;text-transform:uppercase;text-align:left}
+.semaforo-table td{padding:7px 8px;border-bottom:1px solid rgba(71,85,105,.25)}
+.semaforo-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.semaforo-verde{background:var(--green)}.semaforo-amarelo{background:var(--yellow)}.semaforo-vermelho{background:var(--red)}
+/* ── P2: Macro KPI strip ── */
+.macro-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.macro-kpi{background:var(--card2);border-radius:8px;padding:10px 12px;text-align:center}
+.macro-kpi .mv{font-size:1.1rem;font-weight:700}.macro-kpi .ml{font-size:.65rem;color:var(--muted);margin-top:2px}
+/* ── P2: DCA Status cards ── */
+.dca-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.dca-card{background:var(--card2);border-radius:8px;padding:14px;border-left:3px solid var(--accent)}
+.dca-card.paused{border-left-color:var(--muted);opacity:.8}
+.dca-card .dca-title{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.dca-card .dca-row{display:flex;justify-content:space-between;font-size:.75rem;padding:2px 0}
+.dca-card .dca-row .dca-val{font-weight:600}
+/* ── P2: Bond pool bar ── */
+.bond-pool-bar{position:relative;height:20px;background:var(--card2);border-radius:6px;overflow:hidden;margin:10px 0}
+.bond-pool-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
+/* ── P2: HODL11 band bar ── */
+.hodl-band-bar{position:relative;height:14px;background:linear-gradient(90deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.2) 30%,rgba(34,197,94,.2) 30%,rgba(34,197,94,.2) 60%,rgba(234,179,8,.2) 60%,rgba(234,179,8,.2) 80%,rgba(239,68,68,.2) 80%);border-radius:4px;margin:8px 0;overflow:visible}
+.hodl-band-marker{position:absolute;top:-4px;width:3px;height:22px;background:var(--text);border-radius:2px;z-index:2}
+.hodl-band-label{position:absolute;top:18px;font-size:.55rem;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+/* ── P2: Factor loadings table ── */
+.factor-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.factor-table th{padding:5px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:right}
+.factor-table th:first-child{text-align:left}
+.factor-table td{padding:5px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;font-variant-numeric:tabular-nums}
+.factor-table td:first-child{text-align:left;font-weight:600}
+/* ── P2: Tax badge ── */
+.badge-acc{background:rgba(34,197,94,.15);color:var(--green);font-size:.55rem;padding:1px 5px;border-radius:9999px;margin-left:4px;font-weight:600;vertical-align:middle}
+/* ── P2: Duration card enrichment ── */
+.duration-block{margin-top:8px;padding:8px;background:rgba(249,115,22,.06);border-radius:6px;border-left:2px solid var(--orange);font-size:.72rem}
+.duration-block .dur-row{display:flex;justify-content:space-between;padding:2px 0}
+.duration-block .dur-label{color:var(--muted)}.duration-block .dur-val{font-weight:600}
+/* ── P2: Tax IR section ── */
+.tax-ir-card{background:var(--card2);border-radius:8px;padding:14px;border-left:3px solid var(--green)}
+.tax-ir-etf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
+.tax-ir-etf{background:rgba(71,85,105,.15);border-radius:6px;padding:8px 10px;font-size:.72rem}
+.tax-ir-etf .etf-name{font-weight:700;font-size:.78rem;margin-bottom:2px}
+.tax-ir-etf .etf-row{display:flex;justify-content:space-between;padding:1px 0}
+/* ── P2: Bond pool card ── */
+.bond-pool-card{background:var(--card2);border-radius:8px;padding:14px}
+.bond-pool-card .bp-title{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.bond-pool-card .bp-row{display:flex;justify-content:space-between;font-size:.75rem;padding:2px 0}
+.bond-pool-card .bp-val{font-weight:600}
+/* ── P2: Factor rolling chart ── */
+.factor-no-data{padding:24px;text-align:center;color:var(--muted);font-size:.8rem}
+/* ── P2: CAGR vs TWR inline ── */
+.cagr-twr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.cagr-twr-card{background:var(--card2);border-radius:8px;padding:10px 14px;text-align:center}
+.cagr-twr-card .ctv{font-size:1.3rem;font-weight:700}.cagr-twr-card .ctl{font-size:.65rem;color:var(--muted);margin-top:2px}
 /* ── F2: Spending Guardrails ── */
 .guardrail-bar{position:relative;height:28px;background:var(--card2);border-radius:6px;overflow:visible;margin:12px 0}
 .guardrail-bar-fill{position:absolute;top:0;height:100%;border-radius:6px}
@@ -183,6 +236,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="proximasAcoesBody"><!-- gerado por renderProximasAcoes() --></div>
 </div>
 
+<!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
+<div class="section" id="semaforoPanel" style="border-color:rgba(59,130,246,.3);margin-bottom:14px">
+<h2>Semáforos de Gatilhos</h2>
+<table class="semaforo-table" id="semaforoBody">
+<!-- gerado por buildSemaforoPanel() -->
+</table>
+</div>
+
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
   <button class="tab-btn active" data-tab="status" onclick="switchTab('status')">📊 Status</button>
@@ -224,6 +285,26 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-value" id="kpiWellnessCompact">—</div>
   <div class="kpi-sub" id="kpiWellnessSub">—</div>
 </div>
+</div>
+
+<!-- P2: MACRO CONTEXT -->
+<div class="section" data-in-tab="status" id="macroSection">
+<h2>Contexto Macro</h2>
+<div class="macro-strip" id="macroStrip"><!-- gerado por buildMacroCards() --></div>
+<div class="src">Fonte: BCB/FRED via data.json · Premissa depreciação BRL usada em projeções FIRE</div>
+</div>
+
+<!-- P2: DCA STATUS -->
+<div class="section" data-in-tab="status" id="dcaSection">
+<h2>DCA Status</h2>
+<div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
+</div>
+
+<!-- P2: TAX — IR DIFERIDO -->
+<div class="section" id="taxIrSection" data-in-tab="status">
+<h2>IR Diferido — Passivo Tributário Latente</h2>
+<div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
+<div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
 </div>
 
 <!-- S4: TIME TO FIRE -->
@@ -458,6 +539,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="chart-box-sm"><canvas id="equityWeightsChart"></canvas></div>
   <div class="src">Alvo: SWRD 50% / AVGS 30% / AVEM 20% (FI-equity-redistribuicao 2026-04-01)</div>
 </div>
+</div>
+
+<!-- P2: BOND POOL READINESS -->
+<div class="section" id="bondPoolSection" data-in-tab="plan">
+<h2>Bond Pool Readiness — Proteção SoRR</h2>
+<div id="bondPoolBody"><!-- gerado por buildBondPool() --></div>
+<div class="src">Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos de gastos.</div>
 </div>
 
 <!-- S14: FAN CHART P10/P50/P90 (colapsável — F7 é versão superior com spending smile) -->
@@ -793,10 +881,39 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <tbody id="backtestMetricsBody"></tbody>
 </table>
 </div>
+<!-- P3: CAGR patrimonial vs TWR -->
+<div class="cagr-twr-row" id="cagrTwrRow">
+  <div class="cagr-twr-card">
+    <div class="ctl">CAGR Patrimonial (incl. aportes)</div>
+    <div class="ctv pv" id="cagrPatrimonial">--</div>
+    <div class="ctl">Crescimento total do patrimônio. Inflado por aportes — NÃO é performance dos ETFs.</div>
+  </div>
+  <div class="cagr-twr-card">
+    <div class="ctl">TWR USD (retorno puro, ex-aportes)</div>
+    <div class="ctv" id="twrPure">--</div>
+    <div class="ctl">Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.</div>
+  </div>
+</div>
 <div style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
   ⚠️ ago/2019–abr/2026: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos.
 </div>
 <div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
+</div>
+
+<!-- P2: FACTOR ROLLING 12M AVGS vs SWRD -->
+<div class="section" id="factorRollingSection" data-in-tab="perf">
+<h2>Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
+<div id="factorRollingBody">
+<div class="chart-box"><canvas id="factorRollingChart"></canvas></div>
+</div>
+<div class="src">Fonte: factor_rolling (cache). Linha vermelha = threshold -5pp (gatilho de revisão da tese fatorial). Dados podem estar vazios se cache não populado.</div>
+</div>
+
+<!-- P2: FACTOR LOADINGS TABLE -->
+<div class="section" id="factorLoadingsSection" data-in-tab="perf">
+<h2>Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
+<div id="factorLoadingsBody"><!-- gerado por buildFactorLoadings() --></div>
+<div class="src">Fonte: factor_regression.py · Regressão FF5+Mom por ETF · R² indica poder explicativo do modelo.</div>
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
@@ -1801,9 +1918,10 @@ function buildPosicoes() {
     totUsd += valUsd; totBrl += valBrl;
     const tr = document.createElement('tr');
     const statusBadge = p.status === 'alvo' ? '<span class="badge badge-alvo">alvo</span>' : '<span class="badge badge-trans">transit.</span>';
+    const accBadge = (DATA.tax?.badges?.[ticker]) ? '<span class="badge-acc">ACC</span>' : '';
     const gainStr = `${gain >= 0 ? '+' : ''}${gain.toFixed(1)}%`;
     tr.innerHTML = `
-      <td><strong>${ticker}</strong></td>
+      <td><strong>${ticker}</strong>${accBadge}</td>
       <td><span style="color:${bucketColors[p.bucket] || '#94a3b8'};font-size:.7rem">${p.bucket}</span></td>
       <td>${statusBadge}</td>
       <td class="num hide-mobile">$${pm.toFixed(2)}</td>
@@ -3421,19 +3539,61 @@ function buildRfCards() {
   let html = cards.map(c => {
     const valStr = c.val != null ? `~R$ ${(c.val/1000).toFixed(0)}k` : '—';
     const flagStyle = c.taxaFlag ? 'color:var(--green)' : '';
+    let extra = '';
+    // Enrich Renda+ 2065 with duration + MtM + gatilho semáforo
+    if (c.key === 'renda2065') {
+      const dur = rf.renda2065?.duration;
+      const mtm = rf.renda2065?.mtm_impact_1pp;
+      const dg = rf.renda2065?.distancia_gatilho;
+      if (dur || mtm != null || dg) {
+        extra = '<div class="duration-block">';
+        if (dur) {
+          extra += `<div class="dur-row"><span class="dur-label">Duration Macaulay</span><span class="dur-val">${dur.macaulay_anos != null ? dur.macaulay_anos.toFixed(1) + ' anos' : '--'}</span></div>`;
+          extra += `<div class="dur-row"><span class="dur-label">Duration Modificada</span><span class="dur-val">${dur.modificada_anos != null ? dur.modificada_anos.toFixed(1) + ' anos' : '--'}</span></div>`;
+        }
+        if (mtm != null) {
+          extra += `<div class="dur-row"><span class="dur-label">MtM se taxa +1pp</span><span class="dur-val" style="color:var(--red)">${mtm.toFixed(1)}%</span></div>`;
+        }
+        if (dg) {
+          const dgColor = dg.status === 'verde' ? 'var(--green)' : dg.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+          extra += `<div class="dur-row"><span class="dur-label">Gap vs piso venda</span><span class="dur-val" style="color:${dgColor}">${dg.gap_pp != null ? dg.gap_pp.toFixed(2) + 'pp' : '--'} (${dg.status || '--'})</span></div>`;
+        }
+        extra += '</div>';
+      }
+    }
     return `<div class="rf-card">
       <div class="val pv" style="${flagStyle}">${valStr}</div>
       <div class="lbl">${c.label}</div>
       <div class="sub">${c.sub1}</div>
       <div class="sub">${c.sub2}</div>
+      ${extra}
     </div>`;
   }).join('');
-  // HODL11
+  // HODL11 with band visualization
+  const _banda = DATA.hodl11?.banda;
+  let hodlBandHtml = '';
+  if (_banda && _banda.min_pct != null) {
+    // Calculate marker position: scale 0% to max_pct+1 to full bar width
+    const barMax = Math.max(_banda.max_pct + 1, (_banda.atual_pct || 0) + 0.5);
+    const markerPct = (_banda.atual_pct / barMax * 100).toFixed(1);
+    const minPct = (_banda.min_pct / barMax * 100).toFixed(1);
+    const alvoPct = (_banda.alvo_pct / barMax * 100).toFixed(1);
+    const maxPct = (_banda.max_pct / barMax * 100).toFixed(1);
+    // Colored zones: [0, min] = red, [min, max] = green, [max, barMax] = red
+    hodlBandHtml = `<div style="position:relative;height:14px;border-radius:4px;margin:8px 0;overflow:visible;background:linear-gradient(90deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.2) ${minPct}%,rgba(34,197,94,.2) ${minPct}%,rgba(34,197,94,.2) ${maxPct}%,rgba(239,68,68,.2) ${maxPct}%)">
+      <div class="hodl-band-marker" style="left:${markerPct}%"></div>
+      <div class="hodl-band-label" style="left:${minPct}%">${_banda.min_pct}%</div>
+      <div class="hodl-band-label" style="left:${alvoPct}%">alvo ${_banda.alvo_pct}%</div>
+      <div class="hodl-band-label" style="left:${maxPct}%">${_banda.max_pct}%</div>
+    </div>
+    <div style="font-size:.6rem;color:var(--muted);text-align:center">Atual: ${_banda.atual_pct != null ? _banda.atual_pct.toFixed(1) + '%' : '--'} · Status: <span style="color:${_banda.status === 'verde' ? 'var(--green)' : _banda.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)'}">${_banda.status || '--'}</span></div>`;
+  }
   html += `<div class="rf-card">
     <div class="val pv" id="hodl11Val">—</div>
     <div class="lbl">HODL11</div>
     <div class="sub" id="hodl11Sub">— cotas · B3</div>
     <div class="sub">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Piso 1.5% · Teto 5%</div>
+    ${hodlBandHtml}
   </div>`;
   // Crypto legado
   const _legadoVal = DATA.cryptoLegado ?? 3000;
@@ -3742,12 +3902,353 @@ window.switchTab = function(name) {
 };
 
 // ═══════════════════════════════════════════════════════════════
+// P1/P2: SEMÁFORO PANEL
+// ═══════════════════════════════════════════════════════════════
+function buildSemaforoPanel() {
+  const el = document.getElementById('semaforoBody');
+  if (!el) return;
+
+  function dot(status) {
+    const cls = status === 'verde' ? 'semaforo-verde' : status === 'amarelo' ? 'semaforo-amarelo' : 'semaforo-vermelho';
+    return '<span class="semaforo-dot ' + cls + '"></span>';
+  }
+
+  const rows = [];
+
+  // 1. IPCA+ DCA status
+  const dcaIpca = DATA.dca_status?.ipca_longo;
+  if (dcaIpca) {
+    const taxa = dcaIpca.taxa_atual;
+    const piso = dcaIpca.piso;
+    const status = (taxa != null && piso != null && taxa >= piso) ? 'verde' : 'amarelo';
+    rows.push({
+      gatilho: 'IPCA+ taxa vs piso',
+      status: status,
+      valor: taxa != null ? taxa.toFixed(2) + '% (piso ' + piso.toFixed(1) + '%)' : '--',
+      acao: dcaIpca.ativo ? 'DCA ativo' : 'DCA pausado'
+    });
+  }
+
+  // 2. Renda+ distância gatilho
+  const dg = DATA.rf?.renda2065?.distancia_gatilho;
+  if (dg) {
+    rows.push({
+      gatilho: 'Renda+ taxa vs piso venda',
+      status: dg.status || 'verde',
+      valor: dg.taxa_atual != null ? dg.taxa_atual.toFixed(2) + '% (piso ' + dg.piso_venda.toFixed(1) + '%, gap ' + dg.gap_pp.toFixed(2) + 'pp)' : '--',
+      acao: dg.status === 'verde' ? 'Monitorar' : dg.status === 'amarelo' ? 'Atenção — próximo do piso' : 'Avaliar venda'
+    });
+  }
+
+  // 3. Drift SWRD vs alvo
+  const driftSwrd = DATA.drift?.SWRD;
+  if (driftSwrd) {
+    const gap = Math.abs(driftSwrd.atual - driftSwrd.alvo);
+    const status = gap <= 3 ? 'verde' : gap <= 5 ? 'amarelo' : 'vermelho';
+    rows.push({
+      gatilho: 'Drift SWRD vs alvo',
+      status: status,
+      valor: driftSwrd.atual.toFixed(1) + '% (alvo ' + driftSwrd.alvo.toFixed(1) + '%, gap ' + gap.toFixed(1) + 'pp)',
+      acao: status === 'verde' ? 'OK' : 'Priorizar aporte SWRD'
+    });
+  }
+
+  // 4. HODL11 banda
+  const banda = DATA.hodl11?.banda;
+  if (banda) {
+    rows.push({
+      gatilho: 'Crypto vs banda',
+      status: banda.status || 'verde',
+      valor: banda.atual_pct != null ? banda.atual_pct.toFixed(1) + '% (alvo ' + banda.alvo_pct.toFixed(0) + '%, banda ' + banda.min_pct.toFixed(1) + '-' + banda.max_pct.toFixed(1) + '%)' : '--',
+      acao: banda.status === 'verde' ? 'Dentro da banda' : banda.status === 'amarelo' ? 'Perto do limite' : 'Fora da banda'
+    });
+  }
+
+  // 5. Max drift across all buckets
+  const maxDrift = Math.max(...Object.values(DATA.drift || {}).map(d => Math.abs(d.atual - d.alvo)));
+  const maxDriftBucket = Object.entries(DATA.drift || {}).sort((a,b) => Math.abs(b[1].atual - b[1].alvo) - Math.abs(a[1].atual - a[1].alvo))[0];
+  if (maxDriftBucket) {
+    const gap = Math.abs(maxDriftBucket[1].atual - maxDriftBucket[1].alvo);
+    const status = gap <= 3 ? 'verde' : gap <= 5 ? 'amarelo' : 'vermelho';
+    rows.push({
+      gatilho: 'Drift máximo (' + maxDriftBucket[0] + ')',
+      status: status,
+      valor: gap.toFixed(1) + 'pp',
+      acao: status === 'verde' ? 'OK' : 'Rebalancear via aporte'
+    });
+  }
+
+  el.innerHTML = '<thead><tr><th>Gatilho</th><th>Status</th><th>Valor</th><th>Ação</th></tr></thead><tbody>' +
+    rows.map(r => '<tr><td>' + r.gatilho + '</td><td>' + dot(r.status) + r.status + '</td><td style="font-variant-numeric:tabular-nums">' + r.valor + '</td><td>' + r.acao + '</td></tr>').join('') +
+    '</tbody>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: MACRO CARDS
+// ═══════════════════════════════════════════════════════════════
+function buildMacroCards() {
+  const el = document.getElementById('macroStrip');
+  if (!el) return;
+  const m = DATA.macro;
+  if (!m) { document.getElementById('macroSection').style.display = 'none'; return; }
+
+  const cards = [
+    { label: 'Selic Meta', value: m.selic_meta != null ? m.selic_meta.toFixed(2) + '%' : '--', color: '' },
+    { label: 'Fed Funds', value: m.fed_funds != null ? m.fed_funds.toFixed(2) + '%' : '--', color: '' },
+    { label: 'Spread Selic-FF', value: m.spread_selic_ff != null ? m.spread_selic_ff.toFixed(2) + 'pp' : '--', color: m.spread_selic_ff > 10 ? 'color:var(--yellow)' : '' },
+    { label: 'Depreciação BRL (premissa)', value: m.depreciacao_brl_premissa != null ? m.depreciacao_brl_premissa.toFixed(1) + '%/ano' : '--', color: '' },
+    { label: 'Exposição Cambial', value: m.exposicao_cambial_pct != null ? m.exposicao_cambial_pct.toFixed(1) + '%' : '--', color: m.exposicao_cambial_pct > 85 ? 'color:var(--yellow)' : '' },
+  ];
+
+  el.innerHTML = cards.map(c =>
+    '<div class="macro-kpi"><div class="mv" style="' + c.color + '">' + c.value + '</div><div class="ml">' + c.label + '</div></div>'
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: DCA STATUS
+// ═══════════════════════════════════════════════════════════════
+function buildDcaStatus() {
+  const el = document.getElementById('dcaGrid');
+  if (!el) return;
+  const dca = DATA.dca_status;
+  if (!dca) { document.getElementById('dcaSection').style.display = 'none'; return; }
+
+  function renderCard(key, d) {
+    if (!d) return '';
+    const paused = !d.ativo;
+    const statusDot = d.ativo ? '<span style="color:var(--green);font-weight:700">ATIVO</span>' : '<span style="color:var(--muted);font-weight:700">PAUSADO</span>';
+    return '<div class="dca-card' + (paused ? ' paused' : '') + '">' +
+      '<div class="dca-title">' + (d.instrumento || key) + ' ' + statusDot + '</div>' +
+      '<div class="dca-row"><span>Taxa atual</span><span class="dca-val">' + (d.taxa_atual != null ? d.taxa_atual.toFixed(2) + '%' : '--') + '</span></div>' +
+      (d.piso != null ? '<div class="dca-row"><span>Piso compra</span><span class="dca-val">' + d.piso.toFixed(1) + '%</span></div>' : '') +
+      (d.piso_compra != null ? '<div class="dca-row"><span>Piso compra</span><span class="dca-val">' + d.piso_compra.toFixed(1) + '%</span></div>' : '') +
+      (d.piso_venda != null ? '<div class="dca-row"><span>Piso venda</span><span class="dca-val">' + d.piso_venda.toFixed(1) + '%</span></div>' : '') +
+      (d.gap_pp != null ? '<div class="dca-row"><span>Gap vs piso</span><span class="dca-val" style="color:' + (d.gap_pp > 0.5 ? 'var(--green)' : 'var(--yellow)') + '">' + d.gap_pp.toFixed(2) + 'pp</span></div>' : '') +
+      '<div class="dca-row"><span>% carteira</span><span class="dca-val">' + (d.pct_carteira_atual != null ? d.pct_carteira_atual.toFixed(1) + '%' : '--') + ' / ' + (d.alvo_pct != null ? d.alvo_pct.toFixed(0) + '%' : '--') + '</span></div>' +
+      '<div style="margin-top:6px;font-size:.68rem;color:var(--muted);border-top:1px solid rgba(71,85,105,.2);padding-top:4px">' + (d.proxima_acao || '--') + '</div>' +
+    '</div>';
+  }
+
+  el.innerHTML = renderCard('ipca_longo', dca.ipca_longo) + renderCard('renda_plus', dca.renda_plus);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: BOND POOL READINESS
+// ═══════════════════════════════════════════════════════════════
+function buildBondPool() {
+  const el = document.getElementById('bondPoolBody');
+  if (!el) return;
+  const bp = DATA.fire?.bond_pool_readiness;
+  if (!bp) { document.getElementById('bondPoolSection').style.display = 'none'; return; }
+
+  const pct = bp.meta_anos > 0 ? Math.min(100, (bp.anos_gastos / bp.meta_anos) * 100) : 0;
+  const statusColor = bp.status === 'early' ? 'var(--yellow)' : bp.status === 'ok' ? 'var(--green)' : 'var(--red)';
+  const statusLabel = bp.status === 'early' ? 'Em construção' : bp.status === 'ok' ? 'Adequado' : bp.status || '--';
+
+  let composHtml = '';
+  if (bp.composicao) {
+    composHtml = '<div style="margin-top:8px;font-size:.72rem;color:var(--muted)">' +
+      Object.entries(bp.composicao).filter(([,v]) => v > 0).map(([k,v]) =>
+        '<span style="margin-right:10px">' + k + ': R$' + (v/1000).toFixed(0) + 'k</span>'
+      ).join('') +
+    '</div>';
+  }
+
+  el.innerHTML =
+    '<div class="bond-pool-card">' +
+      '<div class="bp-title">Bond Pool — ' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' / ' + bp.meta_anos + ' anos de gastos</div>' +
+      '<div class="bond-pool-bar"><div class="bond-pool-fill" style="width:' + pct.toFixed(0) + '%"></div></div>' +
+      '<div class="bp-row"><span>Valor atual</span><span class="bp-val pv">R$ ' + (bp.valor_atual_brl != null ? (bp.valor_atual_brl/1000).toFixed(0) + 'k' : '--') + '</span></div>' +
+      '<div class="bp-row"><span>Cobertura</span><span class="bp-val">' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' anos</span></div>' +
+      '<div class="bp-row"><span>Meta</span><span class="bp-val">' + bp.meta_anos + ' anos</span></div>' +
+      '<div class="bp-row"><span>Status</span><span class="bp-val" style="color:' + statusColor + '">' + statusLabel + '</span></div>' +
+      composHtml +
+    '</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: TAX IR DIFERIDO
+// ═══════════════════════════════════════════════════════════════
+function buildTaxIR() {
+  const el = document.getElementById('taxIrBody');
+  if (!el) return;
+  const tax = DATA.tax;
+  if (!tax) { document.getElementById('taxIrSection').style.display = 'none'; return; }
+
+  const totalIR = tax.ir_diferido_total_brl;
+  const regime = tax.regime || '--';
+  const badges = tax.badges || {};
+  const etfs = tax.ir_por_etf || {};
+
+  // Main KPI
+  let html = '<div class="tax-ir-card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">' +
+      '<div>' +
+        '<div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">IR Diferido Total (latente)</div>' +
+        '<div style="font-size:1.8rem;font-weight:800;color:var(--yellow)" class="pv">' + (totalIR != null ? 'R$ ' + (totalIR/1000).toFixed(0) + 'k' : '--') + '</div>' +
+      '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);max-width:300px">' + regime + '</div>' +
+    '</div>' +
+  '</div>';
+
+  // Per-ETF grid
+  const etfEntries = Object.entries(etfs).filter(([,v]) => v.ir_estimado > 0).sort((a,b) => b[1].ir_estimado - a[1].ir_estimado);
+  if (etfEntries.length > 0) {
+    html += '<div class="tax-ir-etf-grid">';
+    etfEntries.forEach(([ticker, e]) => {
+      const badge = badges[ticker] ? '<span class="badge-acc">' + badges[ticker] + '</span>' : '';
+      html += '<div class="tax-ir-etf">' +
+        '<div class="etf-name">' + ticker + ' ' + badge + '</div>' +
+        '<div class="etf-row"><span>Ganho BRL</span><span class="pv" style="color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + '">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</span></div>' +
+        '<div class="etf-row"><span>IR estimado</span><span class="pv" style="color:var(--yellow)">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</span></div>' +
+        '<div class="etf-row"><span>PTAX compra</span><span>' + (e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '--') + '</span></div>' +
+      '</div>';
+    });
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: FACTOR ROLLING 12M AVGS vs SWRD
+// ═══════════════════════════════════════════════════════════════
+function buildFactorRolling() {
+  const sec = document.getElementById('factorRollingSection');
+  const body = document.getElementById('factorRollingBody');
+  if (!sec || !body) return;
+  const fr = DATA.factor_rolling;
+  if (!fr || !fr.dates || fr.dates.length === 0) {
+    body.innerHTML = '<div class="factor-no-data">Dados de rolling 12m ainda não disponíveis. Cache não populado — rodar <code>scripts/factor_regression.py</code> para gerar.</div>';
+    return;
+  }
+
+  const threshold = fr.threshold ?? -5;
+  body.innerHTML = '<div class="chart-box"><canvas id="factorRollingChart"></canvas></div>';
+
+  if (charts.factorRolling) charts.factorRolling.destroy();
+  charts.factorRolling = new Chart(document.getElementById('factorRollingChart'), {
+    type: 'line',
+    data: {
+      labels: fr.dates,
+      datasets: [
+        {
+          label: 'AVGS vs SWRD 12m (pp)',
+          data: fr.avgs_vs_swrd_12m,
+          borderColor: '#8b5cf6',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Threshold ' + threshold + 'pp',
+          data: fr.dates.map(() => threshold),
+          borderColor: '#ef4444',
+          borderWidth: 1.5,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          fill: false
+        },
+        {
+          label: '0 (par)',
+          data: fr.dates.map(() => 0),
+          borderColor: 'rgba(148,163,184,.3)',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8' } },
+        tooltip: {
+          callbacks: {
+            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
+            label: ctx => ' ' + ctx.dataset.label.split(' (')[0] + ': ' + (ctx.parsed.y > 0 ? '+' : '') + ctx.parsed.y.toFixed(2) + 'pp'
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
+        y: { ticks: { color: '#94a3b8', callback: v => (v > 0 ? '+' : '') + v + 'pp' }, grid: { color: 'rgba(71,85,105,.2)' } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: FACTOR LOADINGS TABLE
+// ═══════════════════════════════════════════════════════════════
+function buildFactorLoadings() {
+  const el = document.getElementById('factorLoadingsBody');
+  const sec = document.getElementById('factorLoadingsSection');
+  if (!el || !sec) return;
+  const fl = DATA.factor_loadings;
+  if (!fl || Object.keys(fl).length === 0) {
+    el.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Rodar <code>scripts/factor_regression.py</code> para gerar dados.</div>';
+    return;
+  }
+
+  const factors = ['alpha', 'mkt_rf', 'smb', 'hml', 'rmw', 'cma', 'mom', 'r2'];
+  const factorLabels = ['Alpha', 'Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'Mom', 'R²'];
+
+  let html = '<table class="factor-table"><thead><tr><th>ETF</th>';
+  factorLabels.forEach(l => { html += '<th>' + l + '</th>'; });
+  html += '</tr></thead><tbody>';
+
+  Object.entries(fl).sort().forEach(([ticker, vals]) => {
+    html += '<tr><td>' + ticker + '</td>';
+    factors.forEach(f => {
+      const v = vals[f];
+      if (v == null) { html += '<td>--</td>'; return; }
+      let color = '';
+      if (f === 'r2') {
+        color = v > 0.8 ? 'color:var(--green)' : v > 0.5 ? '' : 'color:var(--muted)';
+      } else if (f !== 'alpha') {
+        color = Math.abs(v) > 0.3 ? (v > 0 ? 'color:var(--green)' : 'color:var(--red)') : '';
+      }
+      const formatted = f === 'r2' ? (v * 100).toFixed(1) + '%' : v.toFixed(3);
+      html += '<td style="' + color + '">' + formatted + '</td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P3: CAGR PATRIMONIAL vs TWR
+// ═══════════════════════════════════════════════════════════════
+function buildCagrVsTwr() {
+  const cagrEl = document.getElementById('cagrPatrimonial');
+  const twrEl = document.getElementById('twrPure');
+  if (cagrEl && cagr) {
+    cagrEl.textContent = cagr.toFixed(1) + '%/ano';
+    cagrEl.style.color = '#eab308'; // yellow — includes contributions
+  }
+  if (twrEl && TWR_USD) {
+    twrEl.textContent = TWR_USD.toFixed(1) + '%/ano';
+    twrEl.style.color = '#22c55e';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // INIT — render tudo
 // ═══════════════════════════════════════════════════════════════
 (function init() {
   renderKPIs();
   renderWellness();
   renderProximasAcoes();
+  buildSemaforoPanel();
+  buildMacroCards();
+  buildDcaStatus();
+  buildTaxIR();
   renderIpcaProgress();
   buildRfCards();
   buildShadowTable();
@@ -3760,6 +4261,7 @@ window.switchTab = function(name) {
   buildDeltaBar();
   buildGlidePath();
   buildFireBuckets();
+  buildBondPool();
   buildMinilog();
   buildEventosVida();
   buildPfireFamilia();
@@ -3780,6 +4282,9 @@ window.switchTab = function(name) {
   renderHodl11();
   buildBollinger('1y');
   buildBacktest('since2009');
+  buildCagrVsTwr();
+  buildFactorRolling();
+  buildFactorLoadings();
   buildShadowChart('since2009');
   updateContrib();
   updateWhatIf();
