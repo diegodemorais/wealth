@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-dashboard-v2 |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Em andamento |
 | **Prioridade** | 🔴 Crítica |
 | **Participantes** | Dev, FIRE, Factor, RF, Risco, Macro, Tax, Quant, Behavioral, Advocate, Bookkeeper, CIO |
 | **Co-sponsor** | CIO |
@@ -210,22 +210,22 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 
 ## Escopo — Resumo de Prioridades
 
-### 🔴 P0 — Bugs críticos (corrigir antes de qualquer outra coisa)
-- [ ] F1: Reconciliar os 4 valores de patrimônio — definir fonte única e sincronizar
-- [ ] F4: Header lendo câmbio de `DATA.cambio` em vez de hardcoded
-- [ ] F6: Corrigir glide path — Renda+ 2065 não deve ser somado em cima
-- [ ] F13: Reconciliar gatilho de venda Renda+ 2065 entre `carteira.md` e `data.json`
+### 🔴 P0 — Bugs críticos ✅ TODOS RESOLVIDOS (v1.47)
+- [x] F1: Reconciliar os 4 valores de patrimônio — fonte única `DATA.premissas.patrimonio_atual`
+- [x] F4: Header lendo câmbio de `DATA.cambio` (JS atualiza no runtime)
+- [x] F6: Corrigir glide path — assertion + stacked chart corrigido
+- [x] F13: Reconciliar gatilho Renda+ — pisos separados: 6.0% (IPCA+), 6.5% (Renda+)
 
-### 🟠 P1 — Estrutura e navegação (Sprint 1)
+### 🟠 P1 — Estrutura e navegação ✅ PARCIALMENTE (v1.58–v1.59)
 - [ ] Painel de Semáforos de Gatilhos fixo abaixo das Próximas Ações
 - [ ] DCA Status widget (IPCA+ tranches, taxa vs piso, próxima ação)
-- [ ] P(FIRE) como range no hero (87–94%) em vez de ponto com decimal
-- [ ] Reorganizar abas: Check-in / Posições / Performance / Planejamento
+- [x] P(FIRE) como range no hero (87–94%) — v1.59
+- [x] Reorganizar abas: 5 tabs implementadas (Status/Perf/Aloc/Plan/Projeções) — v1.46
 - [ ] Dividir aba Alocação em Posições + Ferramentas
-- [ ] Mover seções para abas corretas (S9, S26, Glide Path)
-- [ ] Eliminar S18 (Contribution Slider — subconjunto de S19)
+- [x] Mover seções para abas corretas (S9→plan, S26→status, GlidePath→plan) — v1.59
+- [x] Eliminar S18 (Contribution Slider removido, S19 What-If cobre) — v1.59
 
-### 🟡 P2 — Dados faltando por domínio (Sprint 2)
+### 🟡 P2 — Dados faltando por domínio (Sprint 2) — PENDENTE
 - [ ] Rolling 12m AVGS vs SWRD com threshold visual (Factor)
 - [ ] KPI "IR diferido total" em BRL com PTAX histórico (Tax)
 - [ ] Selic + premissa depreciação BRL visíveis (Macro)
@@ -237,11 +237,21 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 - [ ] Factor loadings fluindo de `factor_regression.py` para `data.json` (Factor)
 - [ ] Tornado chart com dados reais do pipeline (FIRE)
 
-### 🟢 P3 — Design, remoções e behavioral (Sprint 3)
-- [ ] Remover Bollinger Bands, Fee Analysis, FIRE Buckets Donut, Contribution Slider
-- [ ] Avaliar remoção/colapso: Wellness Score, Cenários Família, Eventos de Vida
+### 🟢 P3 — Design, remoções e behavioral — RE-ANALISADO (v1.59, 6 agentes)
+Re-análise completa em 2026-04-09 por FIRE, Factor, Behavioral, Risco, RF e Advocate.
+Decisões finais divergiram da proposta original da v1.43.
+
+- [x] Bollinger Bands → simplificado para "Retornos Mensais" (bar chart, sem bandas/MA5)
+- [x] Contribution Slider (S18) removido — S19 What-If cobre
+- [x] Wellness Score → COLAPSADO (métricas extras integradas no grid, padrão Boldin)
+- [x] Fee Analysis → COLAPSADO (default fechado, consulta trimestral)
+- [x] Eventos de Vida → COLAPSADO (accordion)
+- [x] Fan Chart S14 → COLAPSADO (F7 Projeções é superior com spending smile)
+- [ ] FIRE Buckets Donut — MANTIDO (4/6 votaram manter — monitor de bond pool)
+- [ ] Cenários Família — MANTIDO (4/6 votaram manter — casamento iminente)
+- [ ] Ganho % — MANTIDO (Advocate reverteu: é input tributário da regra TLH, não vanity metric)
+- [ ] Perf Attribution — MANTIDO (Advocate reverteu: dados agora funcionais em v1.58)
 - [ ] Patrimônio em USD como primário no hero (Behavioral)
-- [ ] Remover "Ganho %" da tabela de posições (Behavioral)
 - [ ] CAGR patrimonial lado a lado com TWR (Behavioral)
 - [ ] "Nenhuma ação necessária" quando tudo verde (Behavioral)
 - [ ] Nudge de frequência mensal (Behavioral)
@@ -269,7 +279,7 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 
 ## Conclusão
 
-> Preencher ao finalizar.
+P0 resolvido (v1.47). P1 parcial (v1.59). P3 re-analisado por 6 agentes — 4 reversões vs proposta original (Advocate fez autocrítica). P2 (dados por domínio) é o backlog principal restante.
 
 ---
 
@@ -277,15 +287,16 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 
 | Tipo | Detalhe |
 |------|---------|
-| **Código** | — |
-| **Estratégia** | — |
-| **Conhecimento** | — |
-| **Memória** | — |
+| **Código** | v1.58: projeções reais + spending smile. v1.59: remoções, colapsáveis, P(FIRE) range, reorganização tabs |
+| **Estratégia** | Advocate reverteu 4/10 vereditos: FIRE Buckets, Cenários Família, Perf Attribution e Ganho % têm valor operacional. Bollinger simplificado (não removido integralmente). |
+| **Conhecimento** | Re-análise com time completo: dashboard deve passar no teste "isso muda uma decisão de aporte, alocação ou withdrawal?" |
+| **Memória** | Regra permanente: deploy obrigatório ao alterar dashboard (CLAUDE.md + memoria Head) |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Diego valida prioridades e define quais sprints executar
-- [ ] DEV lidera execução começando pelos P0 (bugs críticos do Quant)
-- [ ] Cada sprint gera commit + deploy para GitHub Pages
+- [ ] P2: dados por domínio — rolling AVGS vs SWRD, IR diferido, Selic, bond pool readiness, tornado
+- [ ] P3 restante: patrimônio USD no hero, CAGR vs TWR, zebra striping, concentração Brasil
+- [ ] Painel de Semáforos de Gatilhos (P1 pendente)
+- [ ] DCA Status widget (P1 pendente)
