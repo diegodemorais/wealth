@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carteira Diego — Dashboard</title>
+<title>Carteira Diego de Morais — Dashboard FIRE</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.14.0/dist/chartjs-chart-sankey.min.js"></script>
 <style>
@@ -220,13 +220,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- HEADER -->
 <div class="header">
 <div style="display:flex;justify-content:space-between;align-items:center">
-  <h1>🏦 Carteira Diego Morais</h1>
+  <h1>🏦 Carteira Diego de Morais</h1>
   <div style="display:flex;gap:8px;align-items:center">
     <span onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" class="privacy-toggle">⟳</span>
     <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
   </div>
 </div>
-<div class="meta" id="headerMeta">— · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
+<div class="meta" id="headerMeta">— · Fontes: IBKR · Tesouro Direto · BCB</div>
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
 </div>
 
@@ -318,7 +318,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="kpi">
   <div class="kpi-label">Bitcoin</div>
   <div class="kpi-value" id="kpiBtcUsd">—</div>
-  <div class="kpi-sub">BTC/USD · yfinance</div>
+  <div class="kpi-sub">BTC/USD</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">IPCA+ 2040 — Mercado</div>
@@ -345,7 +345,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- P2: TAX — IR DIFERIDO -->
 <div class="section collapsible" id="taxIrSection" data-in-tab="plan">
-<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Passivo Tributário Latente <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Ganhos não Realizados (ETFs UCITS) <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
 <div class="collapse-body">
 <div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
 <div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
@@ -405,7 +405,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div class="progress-bar"><div id="terCarteiraFill" class="progress-fill" style="background:var(--yellow);width:60%"></div></div>
   </div>
   <div class="progress-row">
-    <div class="progress-label"><span>VWRA (mercado puro)</span><span id="terVwraLabel">—</span></div>
+    <div class="progress-label"><span>VWRA (benchmark)</span><span id="terVwraLabel">—</span></div>
     <div class="progress-bar"><div id="terVwraFill" class="progress-fill" style="background:var(--green);width:55%"></div></div>
   </div>
   <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="terDeltaLabel">—</div>
@@ -442,7 +442,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
   </div>
 </div>
-<div class="src" style="margin-top:8px">Fonte: BCB/FRED via data.json · Premissa depreciação BRL usada em projeções FIRE</div>
+<div class="src" style="margin-top:8px">Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE</div>
 </div>
 
 <!-- P2: DCA STATUS -->
@@ -453,7 +453,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S6: NET WORTH TIMELINE -->
 <div class="section" data-in-tab="perf">
-<h2>Patrimônio — Timeline (Série CSV completa)</h2>
+<h2>Patrimônio — Evolução Histórica</h2>
 <div class="period-btns" id="timelinePeriodBtns">
   <button onclick="setTimelinePeriod('6m')">6m</button>
   <button onclick="setTimelinePeriod('ytd')">YTD</button>
@@ -464,12 +464,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
 <div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
-<div class="src">Fonte: dados/historico_carteira.csv · Split equity/RF/crypto = proporção atual usada para todos os pontos (estimativa)</div>
+<div class="src">Split equity/RF/crypto = proporção atual (estimativa retrospectiva)</div>
 </div>
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <div class="section" id="attrSection" data-in-tab="perf">
-<h2>Performance Attribution — Decomposição do Crescimento</h2>
+<h2>Performance Attribution — Decomposição do Retorno</h2>
 <div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
@@ -483,7 +483,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <span title="Este CAGR de 18.1%/ano inclui os aportes mensais de R$25k — não é retorno puro do investimento. Use TWR USD/BRL para avaliar performance real dos ETFs." style="cursor:help;color:var(--accent)"> ⓘ</span>
   </div>
 </div>
-<div class="src">Fonte: fx_utils.py · ⚠️ Estimativa — retorno USD e câmbio são componentes residuais, não cálculos exatos de decomposição fx. Crescimento incl. aportes ≠ performance dos ETFs.</div>
+<div class="src">⚠️ Estimativa — retorno USD e câmbio são componentes residuais, não cálculos exatos de decomposição. Crescimento inclui aportes ≠ performance dos ETFs.</div>
 </div>
 
 <!-- S8: ALOCAÇÃO DONUTS -->
@@ -508,7 +508,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section">
   <h2>Sensibilidade P(FIRE) × Spending</h2>
   <div class="chart-box-sm"><canvas id="spendingChart"></canvas></div>
-  <div class="src">Fonte: carteira.md FR-spending-modelo-familia 2026-04-06</div>
+  <div class="src">Modelo de spending familiar</div>
 </div>
 </div>
 
@@ -553,7 +553,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
 <div class="section" data-in-tab="perf">
-<h2>Delta vs Benchmarks + IPCA+ Gap</h2>
+<h2>Delta vs Benchmarks — Performance Relativa</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div>
@@ -591,7 +591,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" data-in-tab="plan">
 <h2>Glide Path — Alocação por Idade</h2>
 <div class="chart-box"><canvas id="glideChart"></canvas></div>
-<div class="src">Fonte: agentes/contexto/carteira.md tabela de alocação. Crypto: 3% pré e pós-FIRE (ler tabela). Assertion: soma = 100% por ano.</div>
+<div class="src">Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.</div>
 </div>
 
 <!-- S13: FIRE BUCKETS DONUT -->
@@ -603,7 +603,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section">
   <h2>Intra-Equity — Pesos vs Alvo</h2>
   <div class="chart-box-sm"><canvas id="equityWeightsChart"></canvas></div>
-  <div class="src">Alvo: SWRD 50% / AVGS 30% / AVEM 20% (FI-equity-redistribuicao 2026-04-01)</div>
+  <div class="src">Alvo: SWRD 50% / AVGS 30% / AVEM 20%</div>
 </div>
 </div>
 
@@ -632,7 +632,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2>Guardrails de Retirada — FIRE Day</h2>
 <table class="guardrail-table">
 <thead><tr>
-  <th>Drawdown</th><th>Corte</th><th>Retirada Anual</th><th>Pat. Gatilho (atual)</th><th>Status</th>
+  <th>Drawdown</th><th>Corte</th><th>Retirada Anual</th><th>Patrimônio Gatilho</th><th>Status</th>
 </tr></thead>
 <tbody id="guardrailsBody"></tbody>
 </table>
@@ -684,7 +684,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
-<h2>What-If Scenarios — 3 Sliders</h2>
+<h2>What-If Scenarios — Aporte / Retorno / Gasto</h2>
 <div class="grid-3" style="margin-bottom:12px">
 <div>
   <div class="slider-row">
@@ -758,7 +758,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <tbody id="custoBaseBody"></tbody>
 </table>
 </div>
-<div class="src">Calculado de ibkr_lotes.json · Ganho sobre custo USD (preço médio × qtde) · Peso intra-equity (SWRD+AVGS+AVEM) · Meta: 50/30/20</div>
+<div class="src">Fonte: IBKR · Custo médio ponderado (USD) · Pesos intra-equity vs alvo 50/30/20</div>
 </div>
 
 <!-- S21c: EVENTOS DE VIDA (colapsável) -->
@@ -774,14 +774,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" style="border-color:rgba(139,92,246,.3)" data-in-tab="plan">
 <h2>P(FIRE) — Cenários de Família <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(impacto no custo de vida)</span></h2>
 <div id="pfireFamiliaBody"></div>
-<div class="src" id="pfireFamiliaSrc">Base: MC 10k simulações. Dados de spending_sens (fire_montecarlo.py).</div>
+<div class="src" id="pfireFamiliaSrc">Base: Monte Carlo 10k simulações · Sensibilidade ao custo de vida</div>
 </div>
 
 <!-- S21b: MINI-LOG OPERAÇÕES -->
 <div class="section" data-in-tab="aloc">
 <h2>Últimas Operações</h2>
 <div id="minilogBody" style="font-size:.8rem"></div>
-<div class="src">Fonte: extrato IBKR (aportes.json + lotes.json) · atualizado via ibkr_analysis.py</div>
+<div class="src">Fonte: extrato IBKR</div>
 </div>
 
 <!-- PREMISSAS VS REALIZADO -->
@@ -790,7 +790,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <table class="pvr-table" id="premissasVsRealizadoBody">
 <!-- gerado por buildPremissasVsRealizado() -->
 </table>
-<div class="src" id="premissasVsRealizadoSrc">Fonte: fire_montecarlo.py (premissas) · ibkr_analysis.py (aportes realizados) · backtest_portfolio.py (CAGR)</div>
+<div class="src" id="premissasVsRealizadoSrc">Premissas: modelo FIRE · Aportes: IBKR · CAGR: backtest histórico</div>
 </div>
 
 
@@ -815,7 +815,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S25: TLH MONITOR -->
 <div class="section" data-in-tab="aloc">
-<h2>TLH Monitor — Ativos Transitorios</h2>
+<h2>TLH Monitor — Posições em Consolidação</h2>
 <div id="tlhContent"></div>
 <div class="src">Gatilho TLH: perda ≥ 5%. Transitorios: EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL — não comprar mais, diluir via aportes.</div>
 </div>
@@ -908,7 +908,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <h2 onclick="this.parentElement.classList.toggle('open')">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
   <div class="collapse-body">
   <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
-  <div class="src" id="spendingGuardrailsSrc">Fonte: spendingSensibilidade (fire_montecarlo.py) · interpolação/extrapolação linear</div>
+  <div class="src" id="spendingGuardrailsSrc">Base: Monte Carlo 10k · Interpolação linear entre pontos simulados</div>
   </div>
 </div>
 <div class="section">
@@ -921,14 +921,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" data-in-tab="projecao">
 <h2>FIRE@53 vs. FIRE@50 — Comparação Detalhada</h2>
 <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
-<div class="src">Fonte: fire_montecarlo.py MC 10k simulações · Patrimônio mediano FIRE@50: não disponível (requer MC com idade_fire=50)</div>
+<div class="src">Base: Monte Carlo 10k simulações</div>
 </div>
 
 <!-- F5: Must / Like to Spend -->
 <div class="section" data-in-tab="projecao">
 <h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
-<div class="src" id="spendingBreakdownSrc">Fonte: spending_analysis.py · All-Accounts CSV · Must Spend inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
+<div class="src" id="spendingBreakdownSrc">All-Accounts CSV · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
 </div>
 
 <!-- F1: Lifetime Income Projection Chart -->
@@ -938,7 +938,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
   Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa <span class="pv">R$45k/mês</span> · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS <span class="pv">R$18k/ano</span> a partir dos 65.
 </div>
-<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending smile (R$ reais 2026)</div>
+<div class="src" id="incomeProjectionSrc">Valores em R$ reais constante 2026 · Spending smile (Go-Go/Slow-Go/No-Go)</div>
 </div>
 
 <!-- F7: Net Worth Projection P10/P50/P90 -->
@@ -949,7 +949,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
   Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS <span class="pv">R$18k/ano</span> real a partir de age 65.
 </div>
-<div class="src pv" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
+<div class="src pv" id="netWorthProjectionSrc">Base: Monte Carlo 10k simulações · R$ reais constante 2026</div>
 </div>
 
 <!-- F11: Stress Test -->
@@ -978,7 +978,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
 
 <div class="src" style="margin-top:10px">
-  Dados pré-calculados para shock −40% (fire_montecarlo.py, 10k trials). Outros valores usam MC simplificado (2k trials, ~2s). ⚡ = pré-calc. · ✅ = simulado ao vivo
+  ⚡ = pré-calculado · ✅ = simulado ao vivo
 </div>
 </div>
 
@@ -987,9 +987,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
 <div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
-  ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
+  ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" da análise de gastos (estimado). Nota: <span id="sankeyNota"></span>
 </div>
-<div class="src" id="sankeySrc">Fonte: premissas.renda_estimada · spending_summary.json · hipoteca_sac.json</div>
+<div class="src" id="sankeySrc">Valores estimados · Renda, gastos e hipoteca anualizados</div>
 </div>
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
@@ -1028,7 +1028,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
 <div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Backtest Histórico — Target vs VWRA (base 100)</h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Backtest Histórico — Target vs VWRA</h2>
 <div class="collapse-body">
 <div class="period-btns" id="backtestPeriodBtns">
   <button onclick="setBacktestPeriod('all')" title="jan/2005–abr/2026 (21 anos)">Tudo (21a)</button>
@@ -1074,7 +1074,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="factorRollingBody">
 <div class="chart-box"><canvas id="factorRollingChart"></canvas></div>
 </div>
-<div class="src">Fonte: factor_rolling (cache). Linha vermelha = threshold -5pp (gatilho de revisão da tese fatorial). Dados podem estar vazios se cache não populado.</div>
+<div class="src">Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -1083,7 +1083,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2 onclick="this.parentElement.classList.toggle('open')">Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
 <div class="collapse-body">
 <div id="factorLoadingsBody"><!-- gerado por buildFactorLoadings() --></div>
-<div class="src">Fonte: factor_regression.py · Regressão FF5+Mom por ETF · R² indica poder explicativo do modelo.</div>
+<div class="src">Regressão Fama-French 5 fatores + Momentum por ETF · R² = poder explicativo do modelo</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -1111,11 +1111,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
 <div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
-<div class="src">Fonte: backtest_portfolio.py · Target=50/30/20 UCITS proxies · VWRA=100% VWRA.L</div>
+<div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
 </div>
 
 <footer>
-  Dashboard regenerado em <strong id="footerDate">—</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
+  Dashboard regenerado em <strong id="footerDate">—</strong> · Carteira Diego de Morais · Dashboard FIRE<br>
   <div class="ts-bar" id="timestampsBar"><!-- gerado por buildTimestamps() --></div>
   <span id="footerNudge" style="opacity:.5;font-size:.65rem"></span>
 </footer>
@@ -1204,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T19:04:55-03:00'); // BRT (UTC-3)
-const VERSION = '1.107';
+const GENERATED_AT = new Date('2026-04-09T19:16:54-03:00'); // BRT (UTC-3)
+const VERSION = '1.108';
 
 const DATA = {
   "_generated": "2026-04-09T19:04:55",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.107"
+  "version": "1.108"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -4607,8 +4607,8 @@ function buildAttribution() {
     const sec = document.getElementById('attrSection');
     if (sec) sec.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:.8rem">
       📊 <strong>Performance Attribution indisponível</strong><br>
-      <span style="font-size:.7rem">Decomposição Retorno USD + Câmbio requer fx_utils.py completo (12+ meses de dados).<br>
-      Rodar <code>python3 scripts/fx_utils.py</code> para habilitar esta seção.</span>
+      <span style="font-size:.7rem">Decomposição Retorno USD + Câmbio requer 12+ meses de dados.<br>
+      Atualizar dashboard para habilitar esta seção.</span>
     </div>`;
     return;
   }
@@ -4634,7 +4634,7 @@ function buildAttribution() {
   charts.attr = new Chart(document.getElementById('attrChart'), {
     type: 'bar',
     data: {
-      labels: ['Decomposição do Crescimento'],
+      labels: ['Decomposição do Retorno'],
       datasets: [
         { label: 'Aportes', data: [a.aportes], backgroundColor: '#3b82f6' },
         { label: 'Retorno USD', data: [a.retornoUsd], backgroundColor: '#22c55e' },
@@ -4764,7 +4764,7 @@ function buildDeltaBar() {
   charts.delta = new Chart(document.getElementById('deltaChart'), {
     type: 'bar',
     data: {
-      labels: ['vs VWRA\n(mercado puro)', 'vs IPCA+\n(RF puro)', 'vs 60/40\n(VWRA+RF+Crypto)'],
+      labels: ['vs VWRA\n(benchmark)', 'vs IPCA+\n(RF puro)', 'vs 60/40\n(VWRA+RF+Crypto)'],
       datasets: [{
         label: 'Delta (pp)',
         data: deltaData,
@@ -5259,7 +5259,7 @@ function buildPfireFamilia() {
   const el = document.getElementById('pfireFamiliaBody');
   if (!el) return;
   const ss = DATA.spendingSensibilidade || [];
-  if (!ss.length) { el.innerHTML = '<span style="color:var(--muted);font-size:.8rem">Sem dados — rodar fire_montecarlo.py</span>'; return; }
+  if (!ss.length) { el.innerHTML = '<span style="color:var(--muted);font-size:.8rem">Sem dados de sensibilidade — atualizar dashboard</span>'; return; }
   // Labels mapeados para contexto de família
   const labelMap = {
     'R$250k': 'Solteiro / FIRE Day', 'Solteiro/FIRE Day': 'Solteiro / FIRE Day',
@@ -5271,7 +5271,7 @@ function buildPfireFamilia() {
   // Update src with actual base cost
   const _pfSrc = document.getElementById('pfireFamiliaSrc');
   const _baseScen = ss.find(s => s.label.includes('250') || s.label.includes('Solteiro'));
-  if (_pfSrc && _baseScen?.custo) { _pfSrc.textContent = `Base: MC 10k simulações · custo de vida base R$${(_baseScen.custo/1000).toFixed(0)}k/ano. Dados de spending_sens (fire_montecarlo.py).`; _pfSrc.className = 'src pv'; }
+  if (_pfSrc && _baseScen?.custo) { _pfSrc.textContent = `Base: Monte Carlo 10k simulações · custo de vida base R$${(_baseScen.custo/1000).toFixed(0)}k/ano · Sensibilidade ao custo de vida`; _pfSrc.className = 'src pv'; }
   // Zonas: Excelente ≥90%, Bom 80-90%, Regular 70-80%, Crítico <70%
   function _zoneLabel(v) {
     if (v == null) return { label: '—', color: 'var(--muted)', bg: 'rgba(71,85,105,.15)' };
@@ -5326,7 +5326,7 @@ function buildMinilog() {
   const el = document.getElementById('minilogBody');
   if (!el) return;
   const ops = DATA.minilog || [];
-  if (!ops.length) { el.innerHTML = '<span style="color:var(--muted)">Sem operações recentes — rodar ibkr_analysis.py</span>'; return; }
+  if (!ops.length) { el.innerHTML = '<span style="color:var(--muted)">Sem operações recentes</span>'; return; }
   el.innerHTML = `<table style="width:100%;border-collapse:collapse">
     <thead><tr style="font-size:.7rem;color:var(--muted)">
       <th style="text-align:left;padding:4px 8px">Data</th>
@@ -5821,7 +5821,7 @@ function buildShadowChart(period) {
   const metricsDiv = document.getElementById('shadowMetrics');
   metricsDiv.innerHTML = [
     `<div style="background:var(--card2);padding:8px;border-radius:6px"><div style="color:var(--muted);font-size:.65rem">Target (50/30/20)</div><strong>${tMeta}</strong></div>`,
-    `<div style="background:var(--card2);padding:8px;border-radius:6px"><div style="color:var(--muted);font-size:.65rem">VWRA (mercado puro)</div><strong>${sMeta}</strong></div>`,
+    `<div style="background:var(--card2);padding:8px;border-radius:6px"><div style="color:var(--muted);font-size:.65rem">VWRA (benchmark)</div><strong>${sMeta}</strong></div>`,
     `<div style="background:var(--card2);padding:8px;border-radius:6px"><div style="color:var(--muted);font-size:.65rem">Delta Target vs VWRA</div><strong style="color:${delta>=0?'#22c55e':'#ef4444'}">${delta>=0?'+':''}${delta.toFixed(2)}pp/a</strong></div>`,
   ].join('');
 
@@ -5832,7 +5832,7 @@ function buildShadowChart(period) {
       labels: dates,
       datasets: [
         { label: 'Target (50/30/20)', data: target, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.2 },
-        { label: 'VWRA (mercado puro)', data: shadowA, borderColor: '#94a3b8', borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.2, borderDash: [4,2] },
+        { label: 'VWRA (benchmark)', data: shadowA, borderColor: '#94a3b8', borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.2, borderDash: [4,2] },
       ]
     },
     options: {
@@ -6171,7 +6171,7 @@ function buildSpendingBreakdown() {
   if (!el) return;
   const sb = DATA.spending_breakdown;
   if (!sb) {
-    el.innerHTML = '<div style="color:var(--muted);font-size:.8rem">Dados não disponíveis — rodar: <code>python3 scripts/spending_analysis.py &lt;csv&gt; --json-output</code></div>';
+    el.innerHTML = '<div style="color:var(--muted);font-size:.8rem">Dados de gastos não disponíveis — importar CSV de gastos</div>';
     return;
   }
 
@@ -6231,7 +6231,7 @@ function buildSpendingBreakdown() {
     <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${_fmtPeriodo(sb.periodo)} (${sb.meses} meses)</div>`;
 
   const srcEl = document.getElementById('spendingBreakdownSrc');
-  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+  if (srcEl) srcEl.textContent = `All-Accounts CSV · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -6242,7 +6242,7 @@ function buildLifeEventsEnhanced() {
   if (!el) return;
   const evs = DATA.life_events_planejados || [];
   if (!evs.length) {
-    el.innerHTML = '<span style="color:var(--muted);font-size:.8rem">Nenhum evento planejado em dados/life_events.json</span>';
+    el.innerHTML = '<span style="color:var(--muted);font-size:.8rem">Nenhum evento de vida planejado</span>';
     return;
   }
   const anoAtual = DATA.premissas.ano_atual || new Date().getFullYear();
@@ -6264,7 +6264,7 @@ function buildLifeEventsEnhanced() {
       <div style="text-align:right">
         <div style="font-size:.65rem;color:var(--muted);margin-bottom:2px">Impacto P(FIRE)</div>
         <div style="font-size:.75rem;color:var(--muted)" title="Requer MC dedicado para calcular impacto exato">—</div>
-        <div style="font-size:.55rem;color:var(--muted)">TODO: rodar MC</div>
+        <div style="font-size:.55rem;color:var(--muted)">—</div>
       </div>
     </div>`;
   }).join('');
@@ -6514,7 +6514,7 @@ function buildNetWorthProjection() {
     const mc = DATA.scenario_comparison?.fire53;
     srcEl.textContent = mc
       ? `MC endpoints: P50=R$${(mc.pat_mediano/1e6).toFixed(2)}M · P10=R$${(mc.pat_p10/1e6).toFixed(2)}M · P90=R$${(mc.pat_p90/1e6).toFixed(2)}M no FIRE Day ${nw.ano_fire}`
-      : 'Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas';
+      : 'Monte Carlo · premissas do modelo';
   }
 }
 
@@ -7451,7 +7451,7 @@ function buildShadowTable() {
   const _trackingLabel = DATA.date ? new Date(DATA.date).toLocaleDateString('pt-BR', {month:'short', year:'numeric'}) : 'Abr/2026';
   const rows = [
     {
-      name: 'VWRA (mercado puro)', comp: '100% VWRA.L', ter: benchTer,
+      name: 'VWRA (benchmark)', comp: '100% VWRA.L', ter: benchTer,
       delta: deltaVwra, badge: '<span class="badge badge-alvo">Primário</span>',
       deltaNote: deltaVwra !== null ? `(${_trackingLabel})` : `desde ${_trackingLabel}`,
       invertColor: true, // positivo = carteira > VWRA = verde para carteira
@@ -7663,7 +7663,7 @@ function renderWellness() {
 // Staleness banner
 if (Date.now() - GENERATED_AT > 7*86400000) {
   document.querySelector('.header').insertAdjacentHTML('beforeend',
-    '<div style="background:#ef4444;color:white;padding:6px;border-radius:6px;margin-top:8px;font-size:.8rem">⚠️ Dashboard desatualizado — rodar /dashboard</div>');
+    '<div style="background:#ef4444;color:white;padding:6px;border-radius:6px;margin-top:8px;font-size:.8rem">⚠️ Dashboard desatualizado — rebuild necessário</div>');
 }
 // Attribution closure check (só quando decomposição completa disponível)
 if (DATA.attribution.retornoUsd !== null && DATA.attribution.cambio !== null) {
@@ -8193,7 +8193,7 @@ function buildTimestamps() {
 
   const labels = {
     posicoes_ibkr: 'IBKR',
-    precos_yfinance: 'Preços',
+    precos_yfinance: 'Cotações',
     historico_csv: 'Histórico',
     holdings_md: 'Holdings',
     fire_mc: 'FIRE MC',
@@ -8357,7 +8357,7 @@ function buildFactorRolling() {
   if (!sec || !body) return;
   const fr = DATA.factor_rolling;
   if (!fr || !fr.dates || fr.dates.length === 0) {
-    body.innerHTML = '<div class="factor-no-data">Dados de rolling 12m ainda não disponíveis. Cache não populado — rodar <code>scripts/factor_regression.py</code> para gerar.</div>';
+    body.innerHTML = '<div class="factor-no-data">Dados de rolling 12m ainda não disponíveis. Atualizar dashboard para gerar.</div>';
     return;
   }
 
@@ -8427,7 +8427,7 @@ function buildFactorLoadings() {
   if (!el || !sec) return;
   const fl = DATA.factor_loadings;
   if (!fl || Object.keys(fl).length === 0) {
-    el.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Rodar <code>scripts/factor_regression.py</code> para gerar dados.</div>';
+    el.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Atualizar dashboard para gerar.</div>';
     return;
   }
 
