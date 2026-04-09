@@ -806,7 +806,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S24b: ROLLING SHARPE 12m -->
 <div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12 meses</h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (vs CDI)</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="rollingSharpChart"></canvas></div>
 <div class="src">Sharpe anualizado em janela móvel de 12 meses (σ populacional). Azul = Sharpe &gt; 1 (excelente), amarelo = 0–1, vermelho &lt; 0. Linha tracejada = referência Sharpe=1.</div>
@@ -1204,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T19:55:02-03:00'); // BRT (UTC-3)
-const VERSION = '1.111';
+const GENERATED_AT = new Date('2026-04-09T20:04:21-03:00'); // BRT (UTC-3)
+const VERSION = '1.112';
 
 const DATA = {
   "_generated": "2026-04-09T19:54:55",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.111"
+  "version": "1.112"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5532,11 +5532,14 @@ function buildRetornoHeatmap() {
   }
 }
 
-// ── S24b: Rolling Sharpe 12m ──────────────────────────────────
+// ── S24b: Rolling Sharpe 12m (excess return over CDI) ────────
 function buildRollingSharp() {
   const allL = DATA.bollinger?.dates || [];
   const allV = DATA.bollinger?.values || [];
   const WIN = 12;
+  // Risk-free: Selic meta anualizada → retorno mensal em %
+  const selicAnual = DATA.macro?.selic_meta || 14.75;
+  const rfMensal = ((1 + selicAnual / 100) ** (1/12) - 1) * 100;
 
   if (allV.length < WIN + 1) {
     checkMinPoints('rollingSharpChart', allV.length, WIN + 1);
@@ -5548,8 +5551,9 @@ function buildRollingSharp() {
 
   for (let i = WIN - 1; i < allV.length; i++) {
     const win = allV.slice(i - WIN + 1, i + 1);
-    const mean = win.reduce((a,b) => a+b, 0) / WIN;
-    const std  = Math.sqrt(win.reduce((s,v) => s+(v-mean)**2, 0) / WIN);
+    const excess = win.map(v => v - rfMensal);
+    const mean = excess.reduce((a,b) => a+b, 0) / WIN;
+    const std  = Math.sqrt(excess.reduce((s,v) => s+(v-mean)**2, 0) / WIN);
     labels.push(allL[i]);
     sharpes.push(std > 0 ? +(mean / std * Math.sqrt(12)).toFixed(3) : 0);
   }
