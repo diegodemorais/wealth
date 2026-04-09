@@ -546,18 +546,19 @@ def _compute_wellness_extras(data: dict) -> dict:
 
 
 def _compute_sankey_data(data: dict) -> dict:
-    """Gera dados para o Sankey Cash Flow (F8).
+    """Gera dados para o Sankey Cash Flow (F8) — estrutura 2 níveis.
+
+    Nível 1: Renda → Investimentos (residual) + Gastos
+    Nível 2: Gastos → Impostos + Hipoteca + Must Spend + Like to Spend + Imprevistos
 
     Fontes:
     - Renda total: renda_estimada × 12
-    - Spending por categoria: de spending_summary.json se disponível
-    - Aportes: aporte_mensal × 12
-
-    Nota: soma pode não fechar — exibir como está sem ajuste.
+    - Spending por categoria: de spending_summary.json
+    - Hipoteca (despesa real): dados/hipoteca_sac.json → total_despesa_real_mensal × 12
+    - Investimentos = residual (Renda - Gastos totais)
     """
     premissas = data.get("premissas", {})
     renda_anual = premissas.get("renda_estimada", 45000) * 12   # 540k
-    aporte_anual = premissas.get("aporte_mensal", 25000) * 12   # 300k
 
     spending_summary = {}
     if SPENDING_SUMMARY.exists():
@@ -566,43 +567,65 @@ def _compute_sankey_data(data: dict) -> dict:
         except Exception:
             pass
 
-    must_anual = spending_summary.get("must_spend_anual", 180888)
-    like_anual = spending_summary.get("like_spend_anual", 51408)
+    must_anual       = spending_summary.get("must_spend_anual", 180888)
+    like_anual       = spending_summary.get("like_spend_anual", 51408)
+    imprevistos_anual = spending_summary.get("imprevistos_anual", 4357)
 
-    # Impostos: categoria 'Taxes & Fees' está embutida no must_spend.
-    # Não há separação automática disponível no spending_summary.json.
-    # Valor derivado de spending_analysis.py rodado em 2026-04-08 (categoria Taxes & Fees).
-    # TODO: adicionar campo taxes_anual ao spending_summary.json quando spending_analysis.py
-    #       for atualizado para exportar breakdown por categoria.
-    impostos_anual = spending_summary.get("taxes_anual", None)  # None se não disponível
+    # Impostos: categoria 'Taxes & Fees' embutida no must_spend.
+    # Valor auditado: R$4.189/mês média ago/2025-mar/2026 × 12 = R$50.268/ano
+    impostos_anual = spending_summary.get("taxes_anual", None)
     if impostos_anual is None:
-        # Fallback: usar proporção histórica conhecida de spending_analysis (Taxes & Fees)
-        # Valor auditado: R$4.189/mês média ago/2025-mar/2026 × 12 = R$50.268/ano
-        # Marcar como estimado no Sankey
         impostos_anual = 50268
         impostos_estimado = True
     else:
         impostos_estimado = False
-    must_sem_impostos = max(0, must_anual - impostos_anual)
+
+    # Hipoteca despesa real: juros + seguros (sem principal = investimento equity imóvel)
+    hipoteca_despesa_anual = 0.0
+    hipoteca_file = ROOT / "dados" / "hipoteca_sac.json"
+    if hipoteca_file.exists():
+        try:
+            hipoteca_data = json.loads(hipoteca_file.read_text(encoding="utf-8"))
+            total_despesa_real_mensal = (
+                hipoteca_data.get("classificacao_financeira", {})
+                .get("total_despesa_real_mensal", 0)
+            )
+            hipoteca_despesa_anual = total_despesa_real_mensal * 12
+        except Exception:
+            hipoteca_despesa_anual = 31404  # fallback: 2616.95 × 12
+
+    # Must Spend outros = must_anual - impostos - hipoteca (ambos já incluídos no must_spend)
+    must_outros = max(0, must_anual - impostos_anual - hipoteca_despesa_anual)
+
+    # Gastos totais (must já inclui impostos e hipoteca)
+    gastos_totais = must_anual + like_anual + imprevistos_anual
+
+    # Investimentos = residual
+    investimentos = max(0, renda_anual - gastos_totais)
+
+    savings_rate = investimentos / renda_anual * 100 if renda_anual > 0 else 0
 
     return {
         "renda_total": renda_anual,
+        "gastos_totais": gastos_totais,
+        "investimentos": investimentos,
         "impostos": impostos_anual,
         "impostos_estimado": impostos_estimado,
-        "must_spend": must_sem_impostos,
+        "hipoteca": hipoteca_despesa_anual,
+        "must_outros": must_outros,
         "like_spend": like_anual,
-        "investimentos": aporte_anual,
+        "imprevistos": imprevistos_anual,
         "nota": (
-            "Soma pode não fechar (renda estimada vs. gastos reais). "
-            f"Renda: R${renda_anual:,.0f} | Must: R${must_sem_impostos:,.0f} | "
-            f"Like: R${like_anual:,.0f} | Impostos: R${impostos_anual:,.0f} | "
-            f"Investimentos: R${aporte_anual:,.0f}"
+            f"Savings rate: {savings_rate:.0f}% | "
+            f"Renda: R${renda_anual:,.0f} | "
+            f"Gastos: R${gastos_totais:,.0f} | "
+            f"Investimentos: R${investimentos:,.0f}"
         ),
         "nota_impostos": (
-            "Impostos = categoria 'Taxes & Fees' de spending_analysis "
-            "(aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026)"
-            + (" — ESTIMADO" if impostos_estimado else "")
+            "Impostos = categoria 'Taxes & Fees' do spending_analysis "
+            "(estimado R$50.3k/ano)" if impostos_estimado else ""
         ),
+        "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel).",
     }
 
 

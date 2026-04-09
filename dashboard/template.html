@@ -756,12 +756,11 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- F8: Sankey Cash Flow -->
 <div class="section" data-in-tab="projecao">
 <h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
-<div class="chart-box" style="height:280px"><canvas id="sankeyChart"></canvas></div>
+<div class="chart-box" style="height:400px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
-  ⚠️ Valores estimados: renda = R$45k/mês × 12. Soma pode não fechar (renda estimada vs. gastos reais).
-  Impostos = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
+  ⚠️ Valores estimados: renda = R$45k/mês × 12. Impostos* = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
 </div>
-<div class="src" id="sankeySrc">Fonte: premissas.renda_estimada · spending_summary.json · aporte_mensal</div>
+<div class="src" id="sankeySrc">Fonte: premissas.renda_estimada · spending_summary.json · hipoteca_sac.json</div>
 </div>
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
@@ -3075,14 +3074,42 @@ function buildSankey() {
   if (notaEl) notaEl.textContent = sk.nota || '';
 
   const fmt = v => 'R$' + (v/1000).toFixed(0) + 'k';
+  const pct = v => (v / sk.renda_total * 100).toFixed(0) + '%';
 
-  // chartjs-chart-sankey espera array de {from, to, flow}
+  // Nomes dos nós (fixos, sem valor embutido — valor aparece no label)
+  const N_RENDA   = 'Renda';
+  const N_INVEST  = 'Investimentos';
+  const N_GASTOS  = 'Gastos';
+  const N_IMP     = sk.impostos_estimado ? 'Impostos*' : 'Impostos';
+  const N_HIP     = 'Hipoteca';
+  const N_MUST    = 'Must Spend';
+  const N_LIKE    = 'Like to Spend';
+  const N_IMPRV   = 'Imprevistos';
+
+  // Estrutura 2 níveis: Renda → {Investimentos, Gastos} → subcategorias
   const flowData = [
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`, flow: sk.impostos },
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Must Spend ${fmt(sk.must_spend)}`, flow: sk.must_spend },
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Like to Spend ${fmt(sk.like_spend)}`, flow: sk.like_spend },
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Investimentos ${fmt(sk.investimentos)}`, flow: sk.investimentos },
+    // Nível 1
+    { from: N_RENDA,  to: N_INVEST, flow: sk.investimentos },
+    { from: N_RENDA,  to: N_GASTOS, flow: sk.gastos_totais },
+    // Nível 2
+    { from: N_GASTOS, to: N_IMP,   flow: sk.impostos },
+    { from: N_GASTOS, to: N_HIP,   flow: sk.hipoteca },
+    { from: N_GASTOS, to: N_MUST,  flow: sk.must_outros },
+    { from: N_GASTOS, to: N_LIKE,  flow: sk.like_spend },
+    { from: N_GASTOS, to: N_IMPRV, flow: sk.imprevistos },
   ];
+
+  // Cores por nó de destino (colorTo) e origem (colorFrom)
+  const NODE_COLORS = {
+    [N_RENDA]:  '#3b82f6',
+    [N_INVEST]: '#22c55e',
+    [N_GASTOS]: '#f97316',
+    [N_IMP]:    '#ef4444',
+    [N_HIP]:    '#f59e0b',
+    [N_MUST]:   '#dc2626',
+    [N_LIKE]:   '#8b5cf6',
+    [N_IMPRV]:  '#6b7280',
+  };
 
   if (charts.sankey) charts.sankey.destroy();
   try {
@@ -3092,24 +3119,8 @@ function buildSankey() {
         datasets: [{
           label: 'Fluxo de Caixa Anual',
           data: flowData,
-          colorFrom: (c) => {
-            const labels = {
-              [`Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`]: '#ef4444',
-              [`Must Spend ${fmt(sk.must_spend)}`]: '#f97316',
-              [`Like to Spend ${fmt(sk.like_spend)}`]: '#3b82f6',
-              [`Investimentos ${fmt(sk.investimentos)}`]: '#22c55e',
-            };
-            return labels[c.dataset.data[c.dataIndex].to] || '#94a3b8';
-          },
-          colorTo: (c) => {
-            const labels = {
-              [`Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`]: '#ef4444',
-              [`Must Spend ${fmt(sk.must_spend)}`]: '#f97316',
-              [`Like to Spend ${fmt(sk.like_spend)}`]: '#3b82f6',
-              [`Investimentos ${fmt(sk.investimentos)}`]: '#22c55e',
-            };
-            return labels[c.dataset.data[c.dataIndex].to] || '#94a3b8';
-          },
+          colorFrom: (c) => NODE_COLORS[c.dataset.data[c.dataIndex].from] || '#64748b',
+          colorTo:   (c) => NODE_COLORS[c.dataset.data[c.dataIndex].to]   || '#64748b',
           colorMode: 'gradient',
           size: 'min',
         }]
@@ -3121,7 +3132,18 @@ function buildSankey() {
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: ctx => ` ${ctx.dataset.data[ctx.dataIndex].from} → ${ctx.dataset.data[ctx.dataIndex].to}: R$${(ctx.dataset.data[ctx.dataIndex].flow/1000).toFixed(0)}k`,
+              label: (c) => {
+                const d = c.dataset.data[c.dataIndex];
+                return ` ${d.from} → ${d.to}: ${fmt(d.flow)} (${pct(d.flow)})`;
+              }
+            }
+          },
+          // Label dos nós com valor + % da renda
+          sankeyNodeLabel: {
+            enabled: true,
+            formatter: (node) => {
+              const val = typeof node.value !== 'undefined' ? node.value : 0;
+              return `${node.label} ${fmt(val)} (${pct(val)})`;
             }
           }
         }
@@ -3130,7 +3152,13 @@ function buildSankey() {
   } catch(e) {
     ctx.parentElement.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:.8rem;text-align:center;padding:20px">
       ⚠️ Sankey indisponível (plugin não carregado)<br>
-      <span style="font-size:.7rem;margin-top:4px">Renda: R$${(sk.renda_total/1000).toFixed(0)}k → Impostos: R$${(sk.impostos/1000).toFixed(0)}k · Must: R$${(sk.must_spend/1000).toFixed(0)}k · Like: R$${(sk.like_spend/1000).toFixed(0)}k · Invest.: R$${(sk.investimentos/1000).toFixed(0)}k</span>
+      <span style="font-size:.7rem;margin-top:4px">
+        Renda: ${fmt(sk.renda_total)} →
+        Investimentos: ${fmt(sk.investimentos)} (${pct(sk.investimentos)}) |
+        Gastos: ${fmt(sk.gastos_totais)} (${pct(sk.gastos_totais)})<br>
+        Impostos: ${fmt(sk.impostos)} · Hipoteca: ${fmt(sk.hipoteca)} ·
+        Must: ${fmt(sk.must_outros)} · Like: ${fmt(sk.like_spend)} · Imprevistos: ${fmt(sk.imprevistos)}
+      </span>
     </div>`;
   }
 }
