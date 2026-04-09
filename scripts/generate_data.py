@@ -96,6 +96,76 @@ def read_holdings_taxas():
     return taxa_ipca2040, taxa_renda2065
 
 
+def get_source_timestamps():
+    """Extrai timestamps de última atualização de cada fonte de dados.
+
+    Retorna dict com datas YYYY-MM-DD de cada fonte:
+    - posicoes_ibkr: mtime de lotes.json
+    - precos_yfinance: data atual (fetch do dia) ou None se --skip-prices
+    - historico_csv: última data no CSV (última linha)
+    - holdings_md: mtime de holdings.md
+    - fire_mc: _meta.generated em dashboard_state.json
+    - geral: data atual da execução
+    """
+    timestamps = {}
+
+    # IBKR lotes
+    if LOTES_PATH.exists():
+        mtime = datetime.fromtimestamp(LOTES_PATH.stat().st_mtime)
+        timestamps["posicoes_ibkr"] = mtime.strftime("%Y-%m-%d")
+    else:
+        timestamps["posicoes_ibkr"] = None
+
+    # Preços yfinance — sempre hoje se online, None se --skip-prices
+    timestamps["precos_yfinance"] = str(date.today()) if not args.skip_prices else None
+
+    # Histórico CSV — última linha
+    if CSV_PATH.exists():
+        try:
+            lines = CSV_PATH.read_text().strip().split('\n')
+            if len(lines) > 1:
+                last_line = lines[-1]
+                # Formato esperado: Data,... ou 2026-03-31,...
+                first_col = last_line.split(',')[0].strip()
+                # Tenta parsear como data
+                try:
+                    datetime.strptime(first_col, "%Y-%m-%d")
+                    timestamps["historico_csv"] = first_col
+                except ValueError:
+                    timestamps["historico_csv"] = None
+            else:
+                timestamps["historico_csv"] = None
+        except Exception:
+            timestamps["historico_csv"] = None
+    else:
+        timestamps["historico_csv"] = None
+
+    # Holdings.md
+    if HOLDINGS_PATH.exists():
+        mtime = datetime.fromtimestamp(HOLDINGS_PATH.stat().st_mtime)
+        timestamps["holdings_md"] = mtime.strftime("%Y-%m-%d")
+    else:
+        timestamps["holdings_md"] = None
+
+    # Fire MC (dashboard_state.json -> _meta.generated)
+    state = load_state()
+    if state and state.get("_meta", {}).get("generated"):
+        try:
+            # Formato esperado: "2026-04-09T10:30:00"
+            ts_str = state["_meta"]["generated"]
+            ts_obj = datetime.fromisoformat(ts_str)
+            timestamps["fire_mc"] = ts_obj.strftime("%Y-%m-%d")
+        except (ValueError, KeyError):
+            timestamps["fire_mc"] = None
+    else:
+        timestamps["fire_mc"] = None
+
+    # Data geral (hoje)
+    timestamps["geral"] = str(date.today())
+
+    return timestamps
+
+
 # ─── DURATION + MtM HELPERS ───────────────────────────────────────────────────
 
 def calcular_duration_modificada_ntnb(taxa_real_pct: float, anos_vencimento: int,
@@ -1457,11 +1527,15 @@ def main():
         "mc_date":             fire_state.get("mc_date"),
     }
 
+    # ─── Timestamps de fontes de dados ──────────────────────────────────────────
+    timestamps = get_source_timestamps()
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "_generated_brt": (datetime.utcnow() + timedelta(hours=-3)).strftime("%Y-%m-%dT%H:%M:%S") + "-03:00",
         "date":       str(date.today()),
+        "timestamps": timestamps,
         "cambio":     cambio,
 
         "posicoes":   posicoes,

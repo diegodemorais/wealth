@@ -1,7 +1,15 @@
 {
-  "_generated": "2026-04-09T08:40:53",
-  "_generated_brt": "2026-04-09T05:40:53-03:00",
+  "_generated": "2026-04-09T12:03:51",
+  "_generated_brt": "2026-04-09T09:03:51-03:00",
   "date": "2026-04-09",
+  "timestamps": {
+    "posicoes_ibkr": "2026-04-09",
+    "precos_yfinance": "2026-04-09",
+    "historico_csv": "2026-03-20",
+    "holdings_md": "2026-04-09",
+    "fire_mc": "2026-04-09",
+    "geral": "2026-04-09"
+  },
   "cambio": 5.156,
   "posicoes": {
     "SWRD": {
@@ -78,7 +86,8 @@
   "pisos": {
     "pisoTaxaIpcaLongo": 6.0,
     "pisoTaxaRendaPlus": 6.5,
-    "pisoVendaRendaPlus": 6.0
+    "pisoVendaRendaPlus": 6.0,
+    "ir_aliquota": 0.15
   },
   "pfire50": {
     "base": 85.4,
