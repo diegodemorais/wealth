@@ -977,6 +977,147 @@ def compute_tax_diferido(posicoes, cambio_atual):
     return result
 
 
+# ─── 7c. CONCENTRAÇÃO BRASIL ─────────────────────────────────────────────────
+def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float) -> dict | None:
+    """Calcula exposição total a Brasil (ativos BRL na B3 + Tesouro Direto).
+
+    Composição:
+      - HODL11 (B3, cripto): wrapper B3, risco operacional BR (custódia, regulação).
+        Ativo subjacente é BTC global -- NÃO é risco fiscal BR.
+        Incluído porque: custódia B3, jurisdição BR, bloqueável por regulador local.
+      - RF total (Tesouro Direto): risco soberano BR direto.
+        Inclui: IPCA+ 2029 (reserva), IPCA+ 2040, IPCA+ 2050, Renda+ 2065.
+      - Crypto legado (spot BRL): pequeno, estimativa de config.py.
+
+    Retorna dict com brasil_pct e composição detalhada, ou None se dados insuficientes.
+
+    Fonte da regra: agentes/memoria/10-advocate.md — HODL11 é wrapper B3 de BTC,
+    risco Brasil é operacional (custódia), não fiscal. RF é risco soberano direto.
+    """
+    if total_brl is None or total_brl <= 0:
+        return None
+
+    # RF: somar todos os títulos (excl. hodl11 que já foi extraído do dict rf)
+    rf_total_brl = 0.0
+    rf_composicao = {}
+    for key, item in rf.items():
+        if key == "hodl11":
+            continue  # hodl11 tratado separadamente
+        valor = item.get("valor", item.get("valor_brl", 0)) or 0
+        rf_total_brl += valor
+        rf_composicao[key] = round(valor)
+
+    # Crypto legado (spot fora da B3 -- pequeno, estimativa)
+    crypto_legado = CRYPTO_LEGADO_BRL
+
+    # Total Brasil = HODL11 + RF total + crypto legado
+    brasil_total = hodl11_brl + rf_total_brl + crypto_legado
+    brasil_pct = round(brasil_total / total_brl * 100, 1)
+
+    return {
+        "brasil_pct": brasil_pct,
+        "composicao": {
+            "hodl11_brl": round(hodl11_brl),
+            "rf_total_brl": round(rf_total_brl),
+            "rf_detalhe": rf_composicao,
+            "crypto_legado_brl": round(crypto_legado),
+        },
+        "total_brasil_brl": round(brasil_total),
+        "total_portfolio_brl": round(total_brl),
+        "nota": (
+            "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). "
+            "RF = risco soberano BR direto. "
+            "Crypto legado = spot BRL (estimativa)."
+        ),
+    }
+
+
+# ─── 7d. PREMISSAS VS REALIZADO ────────────────────────────────────────────
+def compute_premissas_vs_realizado(
+    premissas: dict,
+    backtest_data: dict,
+    cambio: float,
+) -> dict | None:
+    """Compara premissas do plano FIRE com dados realizados.
+
+    Dimensões comparadas:
+      1. Retorno equity: premissa (4.85% real BRL base) vs backtest CAGR.
+         NOTA: backtest CAGR é nominal USD (inclui inflação US, exclui BRL).
+         Comparação direta não é apple-to-apple -- flag explícito.
+      2. Aporte mensal: premissa (R$25k/mês) vs média real dos depósitos IBKR.
+         Conversão USD→BRL pelo câmbio de referência atual (aproximação).
+         Aportes RF (Tesouro Direto) NÃO estão incluídos no IBKR --
+         aporte real total é maior que o calculado aqui.
+
+    Retorna dict com comparação, ou None se dados insuficientes.
+    """
+    result = {"retorno_equity": None, "aporte_mensal": None}
+
+    # ── 1. Retorno equity ───────────────────────────────────────────────
+    premissa_retorno = premissas.get("retorno_equity_base")  # 0.0485
+    backtest_metrics = backtest_data.get("backtest", {}).get("metrics", {})
+    target_cagr = backtest_metrics.get("target", {}).get("cagr")  # ex: 12.88 (%)
+    shadow_cagr = backtest_metrics.get("shadowA", {}).get("cagr")  # VWRA benchmark
+
+    if premissa_retorno is not None:
+        result["retorno_equity"] = {
+            "premissa_real_brl_pct": round(premissa_retorno * 100, 2),
+            "backtest_nominal_usd_pct": target_cagr,
+            "benchmark_vwra_nominal_usd_pct": shadow_cagr,
+            "nota": (
+                "Premissa = retorno real em BRL (pós-depreciação cambial 0.5%/ano). "
+                "Backtest = nominal em USD (período curto, inclui inflação US ~2-3%/ano). "
+                "Comparação direta inadequada -- usar apenas como referência direcional."
+            ),
+        }
+
+    # ── 2. Aporte mensal ────────────────────────────────────────────────
+    premissa_aporte = premissas.get("aporte_mensal")  # 25000 (BRL)
+    aportes = None
+    try:
+        if APORTES_PATH.exists():
+            aportes = json.loads(APORTES_PATH.read_text())
+    except Exception:
+        pass
+
+    if aportes and premissa_aporte:
+        depositos = aportes.get("depositos", [])
+        if depositos:
+            # Calcular período coberto (primeiro ao último depósito)
+            datas = sorted(d["data"] for d in depositos)
+            primeira = datetime.strptime(datas[0], "%Y-%m-%d")
+            ultima = datetime.strptime(datas[-1], "%Y-%m-%d")
+            meses_span = max(1, round((ultima - primeira).days / 30.44))
+
+            total_usd = aportes.get("total_usd", sum(d["usd"] for d in depositos))
+            total_brl_approx = total_usd * cambio
+            media_mensal_brl = round(total_brl_approx / meses_span)
+
+            # Por ano
+            por_ano_brl = {}
+            for ano, val_usd in aportes.get("por_ano", {}).items():
+                por_ano_brl[ano] = round(val_usd * cambio)
+
+            result["aporte_mensal"] = {
+                "premissa_brl": premissa_aporte,
+                "realizado_media_brl": media_mensal_brl,
+                "delta_brl": media_mensal_brl - premissa_aporte,
+                "delta_pct": round((media_mensal_brl / premissa_aporte - 1) * 100, 1),
+                "periodo": f"{datas[0]} a {datas[-1]}",
+                "meses_span": meses_span,
+                "total_usd": round(total_usd),
+                "cambio_conversao": round(cambio, 4),
+                "por_ano_brl": por_ano_brl,
+                "nota": (
+                    "Apenas depósitos IBKR (equity offshore). "
+                    "Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. "
+                    "Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
+                ),
+            }
+
+    return result if any(v is not None for v in result.values()) else None
+
+
 # ─── 8. DRIFT ─────────────────────────────────────────────────────────────────
 def compute_drift(posicoes, rf, hodl11_brl, cambio):
     # Total
@@ -1326,6 +1467,18 @@ def main():
         "ano_atual":              datetime.now().year,
     }
 
+    # Concentração Brasil (Advocate dataset)
+    concentracao_brasil = compute_concentracao_brasil(rf, hodl11_brl, total_brl)
+    if concentracao_brasil:
+        print(f"  -> concentração Brasil: {concentracao_brasil['brasil_pct']}% (RF R${concentracao_brasil['composicao']['rf_total_brl']/1e3:.0f}k + HODL11 R${hodl11_brl/1e3:.0f}k)")
+
+    # Premissas vs Realizado (Advocate dataset)
+    premissas_vs_realizado = compute_premissas_vs_realizado(premissas, backtest_data, cambio)
+    if premissas_vs_realizado:
+        _pvr_aporte = premissas_vs_realizado.get("aporte_mensal", {})
+        _pvr_ret = premissas_vs_realizado.get("retorno_equity", {})
+        print(f"  -> premissas vs realizado: aporte R${_pvr_aporte.get('realizado_media_brl', 0)/1e3:.0f}k/mês vs premissa R${premissas.get('aporte_mensal', 0)/1e3:.0f}k | backtest CAGR {_pvr_ret.get('backtest_nominal_usd_pct', 'N/A')}% (nominal USD)")
+
     # Guardrails — suporta lista de tuples (dd_min, dd_max, corte, desc) ou dicts
     guardrails = []
     custo = premissas["custo_vida_base"]
@@ -1586,6 +1739,10 @@ def main():
         "cryptoLegado": CRYPTO_LEGADO_BRL,
         "tlhGatilho":   TLH_GATILHO,
         "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
+
+        # Advocate datasets — concentração Brasil + premissas vs realizado
+        "concentracao_brasil": concentracao_brasil,
+        "premissas_vs_realizado": premissas_vs_realizado,
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)
@@ -1597,6 +1754,8 @@ def main():
     print(f"   IR diferido: R${tax_data['ir_diferido_total_brl']:,.0f} sobre {len(tax_data['ir_por_etf'])} ETFs" if tax_data else "   IR diferido: N/A")
     print(f"   Factor: rolling {len(factor_rolling.get('dates', []))} pts | loadings {len(factor_loadings)} ETFs")
     print(f"   Macro: Selic {macro.get('selic_meta')}% | Fed Funds {macro.get('fed_funds')}% | Spread {macro.get('spread_selic_ff')}pp | Exp. USD {macro.get('exposicao_cambial_pct')}%")
+    print(f"   Brasil: {concentracao_brasil['brasil_pct']}%" if concentracao_brasil else "   Brasil: N/A")
+    print(f"   Premissas vs Real: aporte R${premissas_vs_realizado['aporte_mensal']['realizado_media_brl']/1e3:.0f}k/mês" if premissas_vs_realizado and premissas_vs_realizado.get('aporte_mensal') else "   Premissas vs Real: N/A")
 
 
 if __name__ == "__main__":

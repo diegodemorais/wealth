@@ -1,10 +1,10 @@
 {
-  "_generated": "2026-04-09T12:03:51",
-  "_generated_brt": "2026-04-09T09:03:51-03:00",
+  "_generated": "2026-04-09T12:06:03",
+  "_generated_brt": "2026-04-09T09:06:03-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-09",
-    "precos_yfinance": "2026-04-09",
+    "precos_yfinance": null,
     "historico_csv": "2026-03-20",
     "holdings_md": "2026-04-09",
     "fire_mc": "2026-04-09",
@@ -2209,5 +2209,48 @@
     },
     "ptax_source": "BCB PTAX ask",
     "ptax_atual": 5.156
+  },
+  "concentracao_brasil": {
+    "brasil_pct": 9.7,
+    "composicao": {
+      "hodl11_brl": 100208,
+      "rf_total_brl": 234846,
+      "rf_detalhe": {
+        "ipca2029": 89095,
+        "ipca2040": 33285,
+        "renda2065": 112466
+      },
+      "crypto_legado_brl": 3000
+    },
+    "total_brasil_brl": 338054,
+    "total_portfolio_brl": 3472336,
+    "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
+  },
+  "premissas_vs_realizado": {
+    "retorno_equity": {
+      "premissa_real_brl_pct": 4.85,
+      "backtest_nominal_usd_pct": 12.88,
+      "benchmark_vwra_nominal_usd_pct": 11.53,
+      "nota": "Premissa = retorno real em BRL (pós-depreciação cambial 0.5%/ano). Backtest = nominal em USD (período curto, inclui inflação US ~2-3%/ano). Comparação direta inadequada -- usar apenas como referência direcional."
+    },
+    "aporte_mensal": {
+      "premissa_brl": 25000,
+      "realizado_media_brl": 34173,
+      "delta_brl": 9173,
+      "delta_pct": 36.7,
+      "periodo": "2021-04-13 a 2026-03-13",
+      "meses_span": 59,
+      "total_usd": 391043,
+      "cambio_conversao": 5.156,
+      "por_ano_brl": {
+        "2026": 97964,
+        "2025": 291172,
+        "2024": 383976,
+        "2023": 405815,
+        "2022": 497005,
+        "2021": 340287
+      },
+      "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
+    }
   }
 }
