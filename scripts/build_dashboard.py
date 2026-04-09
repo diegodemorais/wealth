@@ -398,27 +398,44 @@ def _compute_stress_test(data: dict) -> dict:
 
     # Tentar ler cenários pré-calculados de dashboard_state.json
     pfire_pos_shock = None
+    pfire_pos_shock_fav = None
+    pfire_pos_shock_stress = None
+    pat_pos_shock_stored = None
     calc_date = None
+    descricao_shock = None
     dashboard_state_path = ROOT / "dados" / "dashboard_state.json"
     if dashboard_state_path.exists():
         try:
             ds = json.loads(dashboard_state_path.read_text(encoding="utf-8"))
             st = ds.get("stress_test", {})
             pfire_pos_shock = st.get("pfire_pos_shock_base", None)
+            pfire_pos_shock_fav = st.get("pfire_pos_shock_fav", None)
+            pfire_pos_shock_stress = st.get("pfire_pos_shock_stress", None)
+            pat_pos_shock_stored = st.get("pat_pos_shock", None)
             calc_date = st.get("calc_date", None)
+            descricao_shock = st.get("descricao_shock", None)
         except Exception:
             pass
+
+    # Usar pat_pos_shock do estado se disponível (mais preciso), senão calcular
+    if pat_pos_shock_stored:
+        pat_pos_shock = pat_pos_shock_stored
 
     return {
         "shock_pct": shock_pct,
         "pat_pos_shock": pat_pos_shock,
         "pfire_pos_shock_base": pfire_pos_shock,
+        "pfire_pos_shock_fav": pfire_pos_shock_fav,
+        "pfire_pos_shock_stress": pfire_pos_shock_stress,
         "calc_date": calc_date,
+        "descricao_shock": descricao_shock,
         "nota": (
-            f"Bear market -{shock_pct}%: patrimônio × {1-shock_pct/100:.2f} = R${pat_pos_shock:,.0f}. "
-            "Para calcular P(FIRE) pós-shock: rodar "
-            f"`fire_montecarlo.py --patrimonio {pat_pos_shock}` "
-            "e salvar em dashboard_state.json stress_test.pfire_pos_shock_base."
+            descricao_shock or (
+                f"Bear market -{shock_pct}%: patrimônio × {1-shock_pct/100:.2f} = R${pat_pos_shock:,.0f}. "
+                "Para calcular P(FIRE) pós-shock: rodar "
+                f"`fire_montecarlo.py --patrimonio {pat_pos_shock}` "
+                "e salvar em dashboard_state.json stress_test.pfire_pos_shock_base."
+            )
         ),
     }
 

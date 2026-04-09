@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carteira Diego — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.12.0/build/chartjs-chart-sankey.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.14.0/build/chartjs-chart-sankey.min.js"></script>
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -2443,7 +2443,7 @@ function buildSpendingGuardrails() {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px">
       <div style="background:rgba(59,130,246,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--accent)">~R$${(upper/1000).toFixed(0)}k</div>
-        <div style="font-size:.55rem;color:var(--muted)">Upper (~95%)</div>
+        <div style="font-size:.55rem;color:var(--muted)">Conservador (P95)</div>
       </div>
       <div style="background:rgba(34,197,94,.1);border-radius:6px;padding:6px;text-align:center;border:1px solid rgba(34,197,94,.3)">
         <div style="font-size:.7rem;font-weight:700;color:var(--green)">R$${(atual/1000).toFixed(0)}k</div>
@@ -2451,11 +2451,11 @@ function buildSpendingGuardrails() {
       </div>
       <div style="background:rgba(234,179,8,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--yellow)">~R$${(safe/1000).toFixed(0)}k</div>
-        <div style="font-size:.55rem;color:var(--muted)">Safe (~80%)</div>
+        <div style="font-size:.55rem;color:var(--muted)">Sustentável (P80)</div>
       </div>
       <div style="background:rgba(239,68,68,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--red)">~R$${(lower/1000).toFixed(0)}k</div>
-        <div style="font-size:.55rem;color:var(--muted)">Lower (~70%)</div>
+        <div style="font-size:.55rem;color:var(--muted)">Limite (P70)</div>
       </div>
     </div>
     <div style="font-size:.6rem;color:var(--muted);margin-top:8px">${sg.nota}</div>`;
@@ -2497,6 +2497,13 @@ function buildScenarioComparison() {
 // ═══════════════════════════════════════════════════════════════
 // F5: MUST / LIKE TO SPEND
 // ═══════════════════════════════════════════════════════════════
+function _fmtPeriodo(periodo) {
+  // "2025-08 a 2026-03" → "Ago/2025 a Mar/2026"
+  if (!periodo) return periodo;
+  const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return periodo.replace(/(\d{4})-(\d{2})/g, (_, y, m) => `${MESES_PT[parseInt(m,10)-1]}/${y}`);
+}
+
 function buildSpendingBreakdown() {
   const el = document.getElementById('spendingBreakdownBody');
   if (!el) return;
@@ -2559,10 +2566,10 @@ function buildSpendingBreakdown() {
         <div style="font-size:.65rem;color:var(--muted)">${bufferAnual >= 0 ? 'Buffer vs. modelo' : 'Acima do modelo'}</div>
       </div>
     </div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${sb.periodo} (${sb.meses} meses)</div>`;
+    <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${_fmtPeriodo(sb.periodo)} (${sb.meses} meses)</div>`;
 
   const srcEl = document.getElementById('spendingBreakdownSrc');
-  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${sb.periodo} · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${_fmtPeriodo(sb.periodo)} · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2717,7 +2724,10 @@ function buildNetWorthProjection() {
   const ctx = document.getElementById('netWorthProjectionChart');
   if (!ctx) return;
 
-  const labels = nw.anos.map(a => String(a));
+  const labels = nw.anos.map(a => {
+    const idade = a - 1987;
+    return `${a} (${idade} anos)`;
+  });
   const anoFireIdx = nw.anos.indexOf(nw.ano_fire);
   const gatilho = DATA.premissas.patrimonio_gatilho;
 
@@ -2825,8 +2835,14 @@ function buildStressTest() {
 
   const deltaM = (patAtual - patShock) / 1e6;
 
+  const fmtPfire = (v, isBase) => {
+    if (v == null) return `<span style="color:var(--muted)">⏳</span>`;
+    const color = v >= 85 ? 'var(--green)' : v >= 70 ? 'var(--yellow)' : 'var(--red)';
+    return `<span style="font-size:${isBase ? '2rem' : '1.2rem'};font-weight:800;color:${color}">⚡ ${v}%</span>`;
+  };
+
   el.innerHTML = `
-    <div class="grid-2" style="margin-bottom:0">
+    <div class="grid-2" style="margin-bottom:12px">
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:14px">
         <div style="font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Cenário: Bear Market −${pct}%</div>
         <div style="font-size:2rem;font-weight:800;color:var(--red)">−${pct}%</div>
@@ -2835,19 +2851,30 @@ function buildStressTest() {
           <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Após shock (×${(1-pct/100).toFixed(2)})</span><strong class="pv" style="color:var(--red)">R$${(patShock/1e6).toFixed(2)}M</strong></div>
           <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Perda bruta</span><strong style="color:var(--red)">−R$${deltaM.toFixed(2)}M</strong></div>
         </div>
+        ${st.descricao_shock ? `<div style="margin-top:8px;font-size:.65rem;color:var(--muted)">${st.descricao_shock}</div>` : ''}
       </div>
       <div style="background:${hasPfire ? 'rgba(34,197,94,.07)' : 'rgba(71,85,105,.07)'};border:1px solid ${hasPfire ? 'rgba(34,197,94,.3)' : 'rgba(71,85,105,.3)'};border-radius:8px;padding:14px">
         <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">P(FIRE) Pós-Shock</div>
         ${hasPfire
-          ? `<div style="font-size:2rem;font-weight:800;color:${st.pfire_pos_shock_base>=85?'var(--green)':st.pfire_pos_shock_base>=70?'var(--yellow)':'var(--red)'}">${st.pfire_pos_shock_base}%</div>
-             <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Calculado em ${st.calc_date || '—'}</div>`
+          ? `${fmtPfire(st.pfire_pos_shock_base, true)}
+             <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Cenário base · calculado em ${st.calc_date || '—'}</div>
+             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+               <div style="background:var(--card2);border-radius:6px;padding:6px;text-align:center">
+                 ${fmtPfire(st.pfire_pos_shock_fav, false)}
+                 <div style="font-size:.55rem;color:var(--muted)">Favorável</div>
+               </div>
+               <div style="background:var(--card2);border-radius:6px;padding:6px;text-align:center">
+                 ${fmtPfire(st.pfire_pos_shock_stress, false)}
+                 <div style="font-size:.55rem;color:var(--muted)">Stress</div>
+               </div>
+             </div>`
           : `<div style="font-size:1.5rem;color:var(--muted);margin:8px 0">⏳</div>
              <div style="font-size:.75rem;color:var(--muted)">Não calculado</div>
              <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Rodar offline:<br><code style="font-size:.6rem;background:var(--card2);padding:2px 6px;border-radius:4px">fire_montecarlo.py --patrimonio ${patShock}</code></div>`
         }
       </div>
     </div>
-    <div style="margin-top:8px;font-size:.65rem;color:var(--muted)">${st.nota}</div>`;
+    <div style="font-size:.6rem;color:var(--muted)">⚡ = pré-calculado · ⏳ = requer Python local para recalcular ao vivo</div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -3019,7 +3046,8 @@ function renderKPIs() {
   // Câmbio
   if (CAMBIO) {
     document.getElementById('kpiCambio').textContent = `R$ ${CAMBIO.toFixed(2)}`;
-    document.getElementById('kpiCambioSub').textContent = `PTAX BCB · ${DATA.date || ''}`;
+    const _cambioDate = DATA.date ? (() => { const _d = new Date(DATA.date); const _M = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; return `${String(_d.getDate()).padStart(2,'0')}/${_M[_d.getMonth()]}/${_d.getFullYear()}`; })() : '';
+    document.getElementById('kpiCambioSub').textContent = `PTAX BCB · ${_cambioDate}`;
   }
   // Fire scenario grid — 6 cards (3 estados × 2 idades)
   (function buildFireGrid() {
@@ -3267,13 +3295,13 @@ function buildShadowTable() {
     {
       name: 'VWRA (mercado puro)', comp: '100% VWRA.L', ter: benchTer,
       delta: deltaVwra, badge: '<span class="badge badge-alvo">Primário</span>',
-      deltaNote: deltaVwra !== null ? `(${DATA.date?.slice(0,7) || ''})` : `desde ${_trackingLabel}`,
+      deltaNote: deltaVwra !== null ? `(${_trackingLabel})` : `desde ${_trackingLabel}`,
       invertColor: true, // positivo = carteira > VWRA = verde para carteira
     },
     {
       name: 'IPCA+ longo (RF puro)', comp: '100% IPCA+ 2040', ter: DATA.shadows?.ipca_ter ?? 0.200,
       delta: deltaIpca, badge: '<span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF bench</span>',
-      deltaNote: deltaIpca !== null ? `(${DATA.date?.slice(0,7) || ''})` : `desde ${_trackingLabel}`,
+      deltaNote: deltaIpca !== null ? `(${_trackingLabel})` : `desde ${_trackingLabel}`,
       invertColor: false, // negativo = IPCA+ bateu carteira = ruim
     },
     {

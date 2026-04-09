@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carteira Diego — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.12.0/build/chartjs-chart-sankey.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.14.0/build/chartjs-chart-sankey.min.js"></script>
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -877,8 +877,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T20:51:38-03:00'); // BRT (UTC-3)
-const VERSION = '1.46';
+const GENERATED_AT = new Date('2026-04-08T21:07:45-03:00'); // BRT (UTC-3)
+const VERSION = '1.47';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -2909,9 +2909,9 @@ const DATA = {
       "base": 90.4,
       "fav": 94.1,
       "stress": 86.8,
-      "pat_mediano": 11527476.0,
-      "pat_p10": 6834909.0,
-      "pat_p90": 18916227.0
+      "pat_mediano": 9275073.0,
+      "pat_p10": 5710985.0,
+      "pat_p90": 14724131.0
     },
     "fire50": {
       "base": 85.4,
@@ -3302,33 +3302,33 @@ const DATA = {
     ],
     "p10": [
       3483659,
-      3655465,
-      3835743,
-      4024913,
-      4223411,
-      4431700,
-      4650260,
-      4879600,
-      5120249,
-      5372768,
-      5637739,
-      5915779,
-      6207531,
-      6513671,
-      6834909,
-      6583569,
-      6301998,
-      5988203,
-      5640082,
-      5255414,
-      4831860,
-      4366951,
-      3858082,
-      3302509,
-      2697339,
-      2039522,
-      1325846,
-      552926,
+      3608856,
+      3738553,
+      3872911,
+      4012097,
+      4156286,
+      4305656,
+      4460395,
+      4620695,
+      4786755,
+      4958784,
+      5136995,
+      5321611,
+      5512861,
+      5710985,
+      5426939,
+      5111710,
+      4763278,
+      4379511,
+      3958161,
+      3496857,
+      2993098,
+      2444250,
+      1847535,
+      1200025,
+      498637,
+      0,
+      0,
       0,
       0,
       0,
@@ -3356,111 +3356,111 @@ const DATA = {
     ],
     "p50": [
       3483659,
-      3794521,
-      4133123,
-      4501939,
-      4903667,
-      5341242,
-      5817865,
-      6337018,
-      6902498,
-      7518437,
-      8189340,
-      8920111,
-      9716091,
-      10583100,
-      11527476,
-      11636323,
-      11736266,
-      11826460,
-      11906007,
-      11973956,
-      12029297,
-      12070963,
-      12097821,
-      12108675,
-      12102258,
-      12077228,
-      12032170,
-      11965586,
-      11875895,
-      11761424,
-      11620411,
-      11450993,
-      11251206,
-      11018977,
-      10752122,
-      10448336,
-      10105191,
-      9720130,
-      9290455,
-      8813331,
-      8285766,
-      7704617,
-      7066572,
-      6368147,
-      5605679,
-      4775314,
-      3872998,
-      2894473,
-      1835259,
-      690653,
+      3736052,
+      4006731,
+      4297021,
+      4608342,
+      4942219,
+      5300285,
+      5684293,
+      6096123,
+      6537791,
+      7011457,
+      7519441,
+      8064228,
+      8648486,
+      9275073,
+      9274678,
+      9260082,
+      9230181,
+      9183808,
+      9119730,
+      9036642,
+      8933163,
+      8807839,
+      8659129,
+      8485408,
+      8284962,
+      8055979,
+      7796549,
+      7504659,
+      7178184,
+      6814883,
+      6412397,
+      5968238,
+      5479786,
+      4944280,
+      4358814,
+      3720327,
+      3025600,
+      2271241,
+      1453684,
+      569177,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
       0,
       0
     ],
     "p90": [
       3483659,
-      3931165,
-      4436157,
-      5006020,
-      5649086,
-      6374760,
-      7193652,
-      8117739,
-      9160532,
-      10337282,
-      11665194,
-      13163689,
-      14854678,
-      16762890,
-      18916227,
-      19658659,
-      20440270,
-      21263640,
-      22131533,
-      23046909,
-      24012939,
-      25033021,
-      26110793,
-      27250153,
-      28455276,
-      29730632,
-      31081012,
-      32511544,
-      34027721,
-      35635426,
-      37340959,
-      39151065,
-      41072965,
-      43114394,
-      45283629,
-      47589535,
-      50041598,
-      52649974,
-      55425534,
-      58379910,
-      61525553,
-      64875787,
-      68444867,
-      72248048,
-      76301649,
-      80623129,
-      85231165,
-      90145733,
-      95388201,
-      100981421,
-      106949830,
-      113319560
+      3861442,
+      4280193,
+      4744355,
+      5258854,
+      5829146,
+      6461283,
+      7161973,
+      7938647,
+      8799548,
+      9753809,
+      10811553,
+      11984004,
+      13283601,
+      14724131,
+      15202252,
+      15702886,
+      16227564,
+      16777932,
+      17355764,
+      17962967,
+      18601599,
+      19273869,
+      19982161,
+      20729037,
+      21517254,
+      22349780,
+      23229808,
+      24160772,
+      25146366,
+      26190563,
+      27297636,
+      28472178,
+      29719127,
+      31043791,
+      32451875,
+      33949508,
+      35543278,
+      37240261,
+      39048056,
+      40974826,
+      43029336,
+      45220997,
+      47559913,
+      50056927,
+      52723678,
+      55572653,
+      58617252,
+      61871849,
+      65351863,
+      69073828,
+      73055477
     ],
     "ano_fire": 2040,
     "nota_imovel": "// TODO: apreciação imobiliária — taxa não definida nas premissas",
@@ -3469,10 +3469,13 @@ const DATA = {
   },
   "stress_test": {
     "shock_pct": 40,
-    "pat_pos_shock": 2090195,
-    "pfire_pos_shock_base": null,
-    "calc_date": null,
-    "nota": "Bear market -40%: patrimônio × 0.60 = R$2,090,195. Para calcular P(FIRE) pós-shock: rodar `fire_montecarlo.py --patrimonio 2090195` e salvar em dashboard_state.json stress_test.pfire_pos_shock_base."
+    "pat_pos_shock": 2083000,
+    "pfire_pos_shock_base": 80.6,
+    "pfire_pos_shock_fav": 91.2,
+    "pfire_pos_shock_stress": 84.8,
+    "calc_date": "08/Abr/2026",
+    "descricao_shock": "Patrimônio financeiro -40% (R$3.47M → R$2.08M)",
+    "nota": "Patrimônio financeiro -40% (R$3.47M → R$2.08M)"
   },
   "sankey_data": {
     "renda_total": 540000,
@@ -3484,7 +3487,7 @@ const DATA = {
     "nota": "Soma pode não fechar (renda estimada vs. gastos reais). Renda: R$540,000 | Must: R$130,619 | Like: R$51,403 | Impostos: R$50,268 | Investimentos: R$300,000",
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' de spending_analysis (aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026) — ESTIMADO"
   },
-  "version": "1.46"
+  "version": "1.47"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5051,7 +5054,7 @@ function buildSpendingGuardrails() {
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px">
       <div style="background:rgba(59,130,246,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--accent)">~R$${(upper/1000).toFixed(0)}k</div>
-        <div style="font-size:.55rem;color:var(--muted)">Upper (~95%)</div>
+        <div style="font-size:.55rem;color:var(--muted)">Conservador (P95)</div>
       </div>
       <div style="background:rgba(34,197,94,.1);border-radius:6px;padding:6px;text-align:center;border:1px solid rgba(34,197,94,.3)">
         <div style="font-size:.7rem;font-weight:700;color:var(--green)">R$${(atual/1000).toFixed(0)}k</div>
@@ -5059,11 +5062,11 @@ function buildSpendingGuardrails() {
       </div>
       <div style="background:rgba(234,179,8,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--yellow)">~R$${(safe/1000).toFixed(0)}k</div>
-        <div style="font-size:.55rem;color:var(--muted)">Safe (~80%)</div>
+        <div style="font-size:.55rem;color:var(--muted)">Sustentável (P80)</div>
       </div>
       <div style="background:rgba(239,68,68,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--red)">~R$${(lower/1000).toFixed(0)}k</div>
-        <div style="font-size:.55rem;color:var(--muted)">Lower (~70%)</div>
+        <div style="font-size:.55rem;color:var(--muted)">Limite (P70)</div>
       </div>
     </div>
     <div style="font-size:.6rem;color:var(--muted);margin-top:8px">${sg.nota}</div>`;
@@ -5105,6 +5108,13 @@ function buildScenarioComparison() {
 // ═══════════════════════════════════════════════════════════════
 // F5: MUST / LIKE TO SPEND
 // ═══════════════════════════════════════════════════════════════
+function _fmtPeriodo(periodo) {
+  // "2025-08 a 2026-03" → "Ago/2025 a Mar/2026"
+  if (!periodo) return periodo;
+  const MESES_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return periodo.replace(/(\d{4})-(\d{2})/g, (_, y, m) => `${MESES_PT[parseInt(m,10)-1]}/${y}`);
+}
+
 function buildSpendingBreakdown() {
   const el = document.getElementById('spendingBreakdownBody');
   if (!el) return;
@@ -5167,10 +5177,10 @@ function buildSpendingBreakdown() {
         <div style="font-size:.65rem;color:var(--muted)">${bufferAnual >= 0 ? 'Buffer vs. modelo' : 'Acima do modelo'}</div>
       </div>
     </div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${sb.periodo} (${sb.meses} meses)</div>`;
+    <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${_fmtPeriodo(sb.periodo)} (${sb.meses} meses)</div>`;
 
   const srcEl = document.getElementById('spendingBreakdownSrc');
-  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${sb.periodo} · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${_fmtPeriodo(sb.periodo)} · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5325,7 +5335,10 @@ function buildNetWorthProjection() {
   const ctx = document.getElementById('netWorthProjectionChart');
   if (!ctx) return;
 
-  const labels = nw.anos.map(a => String(a));
+  const labels = nw.anos.map(a => {
+    const idade = a - 1987;
+    return `${a} (${idade} anos)`;
+  });
   const anoFireIdx = nw.anos.indexOf(nw.ano_fire);
   const gatilho = DATA.premissas.patrimonio_gatilho;
 
@@ -5433,8 +5446,14 @@ function buildStressTest() {
 
   const deltaM = (patAtual - patShock) / 1e6;
 
+  const fmtPfire = (v, isBase) => {
+    if (v == null) return `<span style="color:var(--muted)">⏳</span>`;
+    const color = v >= 85 ? 'var(--green)' : v >= 70 ? 'var(--yellow)' : 'var(--red)';
+    return `<span style="font-size:${isBase ? '2rem' : '1.2rem'};font-weight:800;color:${color}">⚡ ${v}%</span>`;
+  };
+
   el.innerHTML = `
-    <div class="grid-2" style="margin-bottom:0">
+    <div class="grid-2" style="margin-bottom:12px">
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:14px">
         <div style="font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Cenário: Bear Market −${pct}%</div>
         <div style="font-size:2rem;font-weight:800;color:var(--red)">−${pct}%</div>
@@ -5443,19 +5462,30 @@ function buildStressTest() {
           <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Após shock (×${(1-pct/100).toFixed(2)})</span><strong class="pv" style="color:var(--red)">R$${(patShock/1e6).toFixed(2)}M</strong></div>
           <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Perda bruta</span><strong style="color:var(--red)">−R$${deltaM.toFixed(2)}M</strong></div>
         </div>
+        ${st.descricao_shock ? `<div style="margin-top:8px;font-size:.65rem;color:var(--muted)">${st.descricao_shock}</div>` : ''}
       </div>
       <div style="background:${hasPfire ? 'rgba(34,197,94,.07)' : 'rgba(71,85,105,.07)'};border:1px solid ${hasPfire ? 'rgba(34,197,94,.3)' : 'rgba(71,85,105,.3)'};border-radius:8px;padding:14px">
         <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">P(FIRE) Pós-Shock</div>
         ${hasPfire
-          ? `<div style="font-size:2rem;font-weight:800;color:${st.pfire_pos_shock_base>=85?'var(--green)':st.pfire_pos_shock_base>=70?'var(--yellow)':'var(--red)'}">${st.pfire_pos_shock_base}%</div>
-             <div style="font-size:.7rem;color:var(--muted);margin-top:4px">Calculado em ${st.calc_date || '—'}</div>`
+          ? `${fmtPfire(st.pfire_pos_shock_base, true)}
+             <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Cenário base · calculado em ${st.calc_date || '—'}</div>
+             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+               <div style="background:var(--card2);border-radius:6px;padding:6px;text-align:center">
+                 ${fmtPfire(st.pfire_pos_shock_fav, false)}
+                 <div style="font-size:.55rem;color:var(--muted)">Favorável</div>
+               </div>
+               <div style="background:var(--card2);border-radius:6px;padding:6px;text-align:center">
+                 ${fmtPfire(st.pfire_pos_shock_stress, false)}
+                 <div style="font-size:.55rem;color:var(--muted)">Stress</div>
+               </div>
+             </div>`
           : `<div style="font-size:1.5rem;color:var(--muted);margin:8px 0">⏳</div>
              <div style="font-size:.75rem;color:var(--muted)">Não calculado</div>
              <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Rodar offline:<br><code style="font-size:.6rem;background:var(--card2);padding:2px 6px;border-radius:4px">fire_montecarlo.py --patrimonio ${patShock}</code></div>`
         }
       </div>
     </div>
-    <div style="margin-top:8px;font-size:.65rem;color:var(--muted)">${st.nota}</div>`;
+    <div style="font-size:.6rem;color:var(--muted)">⚡ = pré-calculado · ⏳ = requer Python local para recalcular ao vivo</div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5627,7 +5657,8 @@ function renderKPIs() {
   // Câmbio
   if (CAMBIO) {
     document.getElementById('kpiCambio').textContent = `R$ ${CAMBIO.toFixed(2)}`;
-    document.getElementById('kpiCambioSub').textContent = `PTAX BCB · ${DATA.date || ''}`;
+    const _cambioDate = DATA.date ? (() => { const _d = new Date(DATA.date); const _M = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; return `${String(_d.getDate()).padStart(2,'0')}/${_M[_d.getMonth()]}/${_d.getFullYear()}`; })() : '';
+    document.getElementById('kpiCambioSub').textContent = `PTAX BCB · ${_cambioDate}`;
   }
   // Fire scenario grid — 6 cards (3 estados × 2 idades)
   (function buildFireGrid() {
@@ -5875,13 +5906,13 @@ function buildShadowTable() {
     {
       name: 'VWRA (mercado puro)', comp: '100% VWRA.L', ter: benchTer,
       delta: deltaVwra, badge: '<span class="badge badge-alvo">Primário</span>',
-      deltaNote: deltaVwra !== null ? `(${DATA.date?.slice(0,7) || ''})` : `desde ${_trackingLabel}`,
+      deltaNote: deltaVwra !== null ? `(${_trackingLabel})` : `desde ${_trackingLabel}`,
       invertColor: true, // positivo = carteira > VWRA = verde para carteira
     },
     {
       name: 'IPCA+ longo (RF puro)', comp: '100% IPCA+ 2040', ter: DATA.shadows?.ipca_ter ?? 0.200,
       delta: deltaIpca, badge: '<span class="badge" style="background:rgba(168,85,247,.2);color:var(--purple)">RF bench</span>',
-      deltaNote: deltaIpca !== null ? `(${DATA.date?.slice(0,7) || ''})` : `desde ${_trackingLabel}`,
+      deltaNote: deltaIpca !== null ? `(${_trackingLabel})` : `desde ${_trackingLabel}`,
       invertColor: false, // negativo = IPCA+ bateu carteira = ruim
     },
     {
