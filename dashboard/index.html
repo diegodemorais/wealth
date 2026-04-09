@@ -306,7 +306,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-sub" id="kpiFactorSignalSub">—</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">Origem — Equity IBKR</div>
+  <div class="kpi-label">P&amp;L — Equity IBKR</div>
   <div class="kpi-value pv" id="kpiOrigemPat">—</div>
   <div class="kpi-sub pv" id="kpiOrigemPatSub">—</div>
 </div>
@@ -1204,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T19:16:54-03:00'); // BRT (UTC-3)
-const VERSION = '1.108';
+const GENERATED_AT = new Date('2026-04-09T19:20:25-03:00'); // BRT (UTC-3)
+const VERSION = '1.109';
 
 const DATA = {
   "_generated": "2026-04-09T19:04:55",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.108"
+  "version": "1.109"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -7056,9 +7056,11 @@ function renderKPIs() {
     if (!el) return;
     const ai = DATA.equity_attribution;
     if (!ai) { el.textContent = '—'; if (subEl) subEl.textContent = 'equity IBKR'; return; }
-    el.textContent = ai.pct_retorno.toFixed(0) + '% ret · ' + ai.pct_aportes.toFixed(0) + '% ap';
-    el.style.color = ai.pct_retorno >= 40 ? '#22c55e' : ai.pct_retorno >= 25 ? '#eab308' : '#94a3b8';
-    if (subEl) subEl.textContent = `$${(ai.retorno_usd/1000).toFixed(0)}k retorno de $${(ai.patrimonio_equity_usd/1000).toFixed(0)}k`;
+    const custoUsd = ai.patrimonio_equity_usd - ai.retorno_usd;
+    const retPctCusto = custoUsd > 0 ? (ai.retorno_usd / custoUsd * 100) : 0;
+    el.textContent = `+$${(ai.retorno_usd/1000).toFixed(0)}k`;
+    el.style.color = ai.retorno_usd > 0 ? '#22c55e' : '#ef4444';
+    if (subEl) subEl.textContent = `custo $${(custoUsd/1000).toFixed(0)}k → $${(ai.patrimonio_equity_usd/1000).toFixed(0)}k · +${retPctCusto.toFixed(0)}%`;
   })();
 
   // KPI row 2: mercado snapshot (Dólar, BTC, IPCA+ taxa, Renda+ taxa) + MtD
