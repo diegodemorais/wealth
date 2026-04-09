@@ -1,58 +1,35 @@
-name: Deploy Dashboard
+name: Sync index.html to wealth-dash
 
 on:
-  workflow_dispatch:
-    inputs:
-      skip_prices:
-        description: 'Skip yfinance prices (use cached)'
-        type: boolean
-        default: false
+  push:
+    paths:
+      - dashboard/index.html   # ajuste se necessário
 
 jobs:
-  deploy:
+  sync:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-      - name: Checkout wealth
+      - name: Checkout origem (wealth)
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install dependencies
-        run: pip install yfinance
-
-      - name: Generate data
+      - name: Clonar destino (wealth-dash)
         run: |
-          cd scripts
-          if [ "${{ inputs.skip_prices }}" = "true" ]; then
-            python3 generate_data.py --skip-scripts --skip-prices
-          else
-            python3 generate_data.py --skip-scripts
-          fi
+          git clone https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/diegodemorais/wealth-dash.git /tmp/wealth-dash
 
-      - name: Build dashboard
-        run: python3 scripts/build_dashboard.py
-
-      - name: Deploy to wealth-dash
-        env:
-          DEPLOY_TOKEN: ${{ secrets.WEALTH_DASH_TOKEN }}
+      - name: Copiar index.html
         run: |
-          git clone https://x-access-token:${DEPLOY_TOKEN}@github.com/diegodemorais/wealth-dash.git /tmp/wealth-dash
           cp dashboard/index.html /tmp/wealth-dash/index.html
+
+      - name: Commit se mudou
+        run: |
           cd /tmp/wealth-dash
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
           if git diff --cached --quiet; then
-            echo "No changes to deploy"
+            echo "No changes"
           else
-            DATE_BRT=$(TZ="America/Sao_Paulo" date '+%Y-%m-%d %H:%M')
-            git commit -m "dashboard: deploy $DATE_BRT"
+            git commit -m "sync index.html"
             git push origin main
-            echo "✅ Deployed to https://diegodemorais.github.io/wealth-dash/"
           fi
