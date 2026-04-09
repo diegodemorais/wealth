@@ -3775,7 +3775,7 @@ function renderKPIs() {
     const el    = document.getElementById('kpiOrigemPat');
     const subEl = document.getElementById('kpiOrigemPatSub');
     if (!el) return;
-    const ai = DATA.attribution_ibkr;
+    const ai = DATA.equity_attribution;
     if (!ai) { el.textContent = '—'; if (subEl) subEl.textContent = 'equity IBKR'; return; }
     el.textContent = ai.pct_retorno.toFixed(0) + '% ret · ' + ai.pct_aportes.toFixed(0) + '% ap';
     el.style.color = ai.pct_retorno >= 40 ? '#22c55e' : ai.pct_retorno >= 25 ? '#eab308' : '#94a3b8';

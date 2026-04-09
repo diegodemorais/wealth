@@ -1694,14 +1694,14 @@ def main():
     posicoes, cambio, prices_live = get_posicoes_precos(state)
 
     # Attribution IBKR: aportes vs retorno gerado (equity IBKR only)
-    attribution_ibkr = None
+    equity_attribution = None
     try:
         _ap = json.loads(APORTES_PATH.read_text())
         _total_ap  = _ap.get("total_usd", 0)
         _pat_eq    = sum(p.get("qty", 0) * p.get("price", 0) for p in posicoes.values())
         if _pat_eq > 0:
             _ret = _pat_eq - _total_ap
-            attribution_ibkr = {
+            equity_attribution = {
                 "total_aportado_usd":    round(_total_ap),
                 "patrimonio_equity_usd": round(_pat_eq),
                 "retorno_usd":           round(_ret),
@@ -1712,7 +1712,7 @@ def main():
                 "updated": str(date.today()),
             }
     except Exception as _e:
-        print(f"  ⚠️ attribution_ibkr: {_e}")
+        print(f"  ⚠️ equity_attribution: {_e}")
 
     # RF
     rf = get_rf(state)
@@ -2081,7 +2081,7 @@ def main():
         "drift":      drift,
         "tlh":        tlh,
         "attribution":      attr,
-        "attribution_ibkr": attribution_ibkr,
+        "equity_attribution": equity_attribution,
         "shadows":    shadows,
         "macro":      macro,
         "minilog":    _build_minilog(),

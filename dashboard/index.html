@@ -1156,12 +1156,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T14:42:58-03:00'); // BRT (UTC-3)
-const VERSION = '1.90';
+const GENERATED_AT = new Date('2026-04-09T14:45:11-03:00'); // BRT (UTC-3)
+const VERSION = '1.91';
 
 const DATA = {
-  "_generated": "2026-04-09T14:42:57",
-  "_generated_brt": "2026-04-09T14:42:57-03:00",
+  "_generated": "2026-04-09T14:45:11",
+  "_generated_brt": "2026-04-09T14:45:11-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -3033,7 +3033,7 @@ const DATA = {
     "crescReal": 169511,
     "_estimativa": true
   },
-  "attribution_ibkr": {
+  "equity_attribution": {
     "total_aportado_usd": 391043,
     "patrimonio_equity_usd": 608472,
     "retorno_usd": 217429,
@@ -4155,7 +4155,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.90"
+  "version": "1.91"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -6775,7 +6775,7 @@ function renderKPIs() {
     const el    = document.getElementById('kpiOrigemPat');
     const subEl = document.getElementById('kpiOrigemPatSub');
     if (!el) return;
-    const ai = DATA.attribution_ibkr;
+    const ai = DATA.equity_attribution;
     if (!ai) { el.textContent = '—'; if (subEl) subEl.textContent = 'equity IBKR'; return; }
     el.textContent = ai.pct_retorno.toFixed(0) + '% ret · ' + ai.pct_aportes.toFixed(0) + '% ap';
     el.style.color = ai.pct_retorno >= 40 ? '#22c55e' : ai.pct_retorno >= 25 ? '#eab308' : '#94a3b8';
