@@ -55,6 +55,7 @@ APORTES_PATH    = ROOT / "dados" / "ibkr" / "aportes.json"
 WELLNESS_CONFIG = ROOT / "agentes" / "referencia" / "wellness_config.json"
 FACTOR_CACHE        = ROOT / "dados" / "factor_cache.json"
 SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
+HEAD_RELAY          = ROOT / "dados" / "head_relay.json"
 OUT_PATH        = ROOT / "dashboard" / "data.json"
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
@@ -2021,6 +2022,7 @@ def main():
         "earliest_fire":        earliest_fire,
         "spending_guardrails":  spending_guardrails,
         "spending_breakdown":   json.loads(SPENDING_SUMMARY.read_text()) if SPENDING_SUMMARY.exists() else None,
+        "head_relay":           json.loads(HEAD_RELAY.read_text()) if HEAD_RELAY.exists() else None,
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)

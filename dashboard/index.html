@@ -1006,7 +1006,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   background:var(--accent); border:none; cursor:pointer;
   font-size:1.4rem; box-shadow:0 4px 16px rgba(0,0,0,.4);
   transition:transform .2s;
-" title="Assistente IA">🤖</button>
+" title="Head · Time FIRE">🤖</button>
 
 <div id="agentPanel" style="
   position:fixed; right:-420px; top:0; width:400px; height:100vh;
@@ -1015,12 +1015,32 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   padding:0; box-shadow:-4px 0 24px rgba(0,0,0,.3);
 ">
   <!-- Header -->
-  <div style="padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center">
+  <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center">
     <div>
-      <div style="font-weight:700; font-size:.9rem">Assistente</div>
-      <div style="font-size:.7rem; color:var(--muted)" id="agentStatus">Configure a API key para começar</div>
+      <div style="font-weight:700; font-size:.9rem">Head · Time FIRE</div>
+      <div style="font-size:.68rem; color:var(--muted)" id="agentStatus">Configure a API key para começar</div>
     </div>
-    <button onclick="toggleAgent()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem">✕</button>
+    <div style="display:flex; gap:6px; align-items:center">
+      <!-- Mode toggle: Fast (haiku) vs Head (sonnet) -->
+      <div id="agentModeToggle" style="display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; font-size:.65rem">
+        <button onclick="setAgentMode('fast')" id="modeFast" style="
+          padding:4px 8px; border:none; cursor:pointer; font-size:.65rem; font-weight:600;
+          background:var(--accent); color:white;
+        ">⚡ Fast</button>
+        <button onclick="setAgentMode('head')" id="modeHead" style="
+          padding:4px 8px; border:none; cursor:pointer; font-size:.65rem; font-weight:600;
+          background:transparent; color:var(--muted);
+        ">🧠 Head</button>
+      </div>
+      <button onclick="toggleAgent()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem">✕</button>
+    </div>
+  </div>
+
+  <!-- Head Relay Banner (mensagens do Head via build) -->
+  <div id="headRelayBanner" style="display:none; padding:10px 14px; background:rgba(59,130,246,.1); border-bottom:1px solid rgba(59,130,246,.3)">
+    <div style="font-size:.63rem; color:var(--accent); font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:.5px">📨 Head — última mensagem</div>
+    <div id="headRelayText" style="font-size:.78rem; line-height:1.4; color:var(--text)"></div>
+    <div id="headRelayTs" style="font-size:.62rem; color:var(--muted); margin-top:3px"></div>
   </div>
 
   <!-- API Key setup (mostra se não configurada) -->
@@ -1041,7 +1061,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <!-- Mensagens -->
   <div id="agentMessages" style="flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px">
     <div style="text-align:center; color:var(--muted); font-size:.75rem; padding:20px 0">
-      Pergunte qualquer coisa sobre sua carteira
+      ⚡ Fast: respostas rápidas (haiku)<br>🧠 Head: análise profunda com time FIRE (sonnet)
     </div>
   </div>
 
@@ -1139,83 +1159,83 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T13:01:10-03:00'); // BRT (UTC-3)
-const VERSION = '1.82';
+const GENERATED_AT = new Date('2026-04-09T13:17:00-03:00'); // BRT (UTC-3)
+const VERSION = '1.83';
 
 const DATA = {
-  "_generated": "2026-04-09T13:01:07",
-  "_generated_brt": "2026-04-09T13:01:07-03:00",
+  "_generated": "2026-04-09T13:17:00",
+  "_generated_brt": "2026-04-09T13:17:00-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": "2026-04-09",
+    "precos_yfinance": null,
     "historico_csv": "2026-03-20",
     "holdings_md": "2026-04-08",
     "fire_mc": "2026-04-09",
     "geral": "2026-04-09"
   },
-  "cambio": 5.0708,
+  "cambio": 5.156,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.16,
+      "price": 47.46,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.805,
+      "price": 24.22,
       "bucket": "AVGS",
       "status": "alvo"
     },
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 115.25,
+      "price": 111.63,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.185,
+      "price": 101.54,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.405,
+      "price": 84.72,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.17,
+      "price": 46.28,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.18,
+      "price": 59.8,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.665,
+      "price": 61.25,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.93,
+      "price": 62.65,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -1244,7 +1264,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3519801,
+    "patrimonio_atual": 3472336,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2835,8 +2855,8 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.62,
-    "valor": 103275.12,
+    "preco": 59.79,
+    "valor": 100208.04,
     "preco_medio": null,
     "pnl_brl": null,
     "pnl_pct": null,
@@ -2844,7 +2864,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.93,
+      "atual_pct": 2.89,
       "status": "verde"
     }
   },
@@ -2855,9 +2875,9 @@ const DATA = {
       "taxa_atual": 7.2,
       "piso": 6.0,
       "gap_pp": 1.2,
-      "pct_carteira_atual": 0.9,
+      "pct_carteira_atual": 1.0,
       "alvo_pct": 15.0,
-      "gap_alvo_pp": 14.1,
+      "gap_alvo_pp": 14.0,
       "proxima_acao": "DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) ate 15.0% da carteira"
     },
     "renda_plus": {
@@ -2919,7 +2939,7 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.7,
+      "atual": 37.3,
       "alvo": 39.5
     },
     "AVGS": {
@@ -2927,7 +2947,7 @@ const DATA = {
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.4,
+      "atual": 23.8,
       "alvo": 15.8
     },
     "IPCA": {
@@ -2945,7 +2965,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 115.25,
+      "price": 111.63,
       "ucits": "AVGS.L"
     },
     {
@@ -2953,7 +2973,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.185,
+      "price": 101.54,
       "ucits": "AVGS.L"
     },
     {
@@ -2961,7 +2981,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.405,
+      "price": 84.72,
       "ucits": "AVGS.L"
     },
     {
@@ -2969,7 +2989,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.17,
+      "price": 46.28,
       "ucits": "AVEM.L"
     },
     {
@@ -2977,7 +2997,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.18,
+      "price": 59.8,
       "ucits": "AVEM.L"
     },
     {
@@ -2985,7 +3005,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.665,
+      "price": 61.25,
       "ucits": "AVEM.L"
     },
     {
@@ -2993,7 +3013,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.93,
+      "price": 62.65,
       "ucits": "JPGL.L"
     }
   ],
@@ -3026,8 +3046,8 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 72103.43,
-    "cambio": 5.0708
+    "bitcoin_usd": null,
+    "cambio": 5.156
   },
   "minilog": [
     {
@@ -3361,88 +3381,88 @@ const DATA = {
   "cryptoLegado": 3000,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 139520.76,
+    "ir_diferido_total_brl": 133075.41,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 80859.16,
+        "ganho_usd": 77155.01,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1292270.33,
-        "ganho_brl": 370441.81,
-        "ir_estimado": 55566.27
+        "valor_atual_brl": 1294884.57,
+        "ganho_brl": 373056.05,
+        "ir_estimado": 55958.41
       },
       "EIMI": {
-        "ganho_usd": 36033.73,
+        "ganho_usd": 30195.08,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 503722.25,
-        "ganho_brl": 162930.47,
-        "ir_estimado": 24439.57
+        "valor_atual_brl": 482081.76,
+        "ganho_brl": 141289.99,
+        "ir_estimado": 21193.5
       },
       "USSC": {
-        "ganho_usd": 9094.29,
+        "ganho_usd": 9211.86,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 159751.24,
-        "ganho_brl": 30353.18,
-        "ir_estimado": 4552.98
+        "valor_atual_brl": 163041.6,
+        "ganho_brl": 33643.54,
+        "ir_estimado": 5046.53
       },
       "IWVL": {
-        "ganho_usd": 975.94,
+        "ganho_usd": 864.42,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11366.81,
-        "ganho_brl": 4756.36,
-        "ir_estimado": 713.45
+        "valor_atual_brl": 10982.8,
+        "ganho_brl": 4372.35,
+        "ir_estimado": 655.85
       },
       "AVDV": {
-        "ganho_usd": 41516.08,
+        "ganho_usd": 38062.08,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 505422.49,
-        "ganho_brl": 202627.08,
-        "ir_estimado": 30394.06
+        "valor_atual_brl": 496105.84,
+        "ganho_brl": 193310.43,
+        "ir_estimado": 28996.56
       },
       "AVUV": {
-        "ganho_usd": 18488.75,
+        "ganho_usd": 16501.81,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 320770.33,
-        "ganho_brl": 83426.54,
-        "ir_estimado": 12513.98
+        "valor_atual_brl": 315915.26,
+        "ganho_brl": 78571.47,
+        "ir_estimado": 11785.72
       },
       "DGS": {
-        "ganho_usd": 2362.11,
+        "ganho_usd": 2095.79,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59806.15,
-        "ganho_brl": 9604.34,
-        "ir_estimado": 1440.65
+        "valor_atual_brl": 59437.88,
+        "ganho_brl": 9236.08,
+        "ir_estimado": 1385.41
       },
       "AVES": {
-        "ganho_usd": 16413.06,
+        "ganho_usd": 13281.33,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 296840.52,
-        "ganho_brl": 64849.14,
-        "ir_estimado": 9727.37
+        "valor_atual_brl": 285680.88,
+        "ganho_brl": 53689.49,
+        "ir_estimado": 8053.42
       },
       "AVGS": {
-        "ganho_usd": 437.07,
+        "ganho_usd": -166.34,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.0708,
+        "ptax_atual": 5.156,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31728.35,
-        "ganho_brl": 1149.5,
-        "ir_estimado": 172.42
+        "valor_atual_brl": 29150.25,
+        "ganho_brl": -1428.6,
+        "ir_estimado": 0.0
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -3458,12 +3478,12 @@ const DATA = {
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.0708
+    "ptax_atual": 5.156
   },
   "concentracao_brasil": {
     "brasil_pct": 9.7,
     "composicao": {
-      "hodl11_brl": 103275,
+      "hodl11_brl": 100208,
       "rf_total_brl": 234846,
       "rf_detalhe": {
         "ipca2029": 89095,
@@ -3472,8 +3492,8 @@ const DATA = {
       },
       "crypto_legado_brl": 3000
     },
-    "total_brasil_brl": 341121,
-    "total_portfolio_brl": 3519801,
+    "total_brasil_brl": 338054,
+    "total_portfolio_brl": 3472336,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3485,20 +3505,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33609,
-      "delta_brl": 8609,
-      "delta_pct": 34.4,
+      "realizado_media_brl": 34173,
+      "delta_brl": 9173,
+      "delta_pct": 36.7,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0708,
+      "cambio_conversao": 5.156,
       "por_ano_brl": {
-        "2026": 96345,
-        "2025": 286361,
-        "2024": 377631,
-        "2023": 399109,
-        "2022": 488792,
-        "2021": 334664
+        "2026": 97964,
+        "2025": 291172,
+        "2024": 383976,
+        "2023": 405815,
+        "2022": 497005,
+        "2021": 340287
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -3535,6 +3555,12 @@ const DATA = {
     "modelo_fire_anual": 250000,
     "updated_at": "2026-04-09",
     "fonte": "All-Accounts_03abril26.csv"
+  },
+  "head_relay": {
+    "from": "Head",
+    "ts": "2026-04-09T13:15:00-03:00",
+    "text": "Dashboard atualizado. Dois modos disponíveis: ⚡ Fast (haiku) para consultas rápidas, 🧠 Head (sonnet) para análise profunda com o time completo. Para enviar uma mensagem ao Head desta sessão, use o /dashboard e descreva o que quer comunicar.",
+    "msg_id": "init-001"
   },
   "wellness_extras": {
     "cash_flow_12m": {
@@ -3919,20 +3945,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3519801,
-      3690667,
-      3869828,
-      4057686,
-      4254663,
-      4461202,
-      4677768,
-      4904847,
-      5142949,
-      5392609,
-      5654389,
-      5928877,
-      6216690,
-      6518475,
+      3472336,
+      3644430,
+      3825054,
+      4014630,
+      4213601,
+      4422434,
+      4641617,
+      4871663,
+      5113110,
+      5366524,
+      5632498,
+      5911653,
+      6204644,
+      6512156,
       6834909,
       6924402,
       7018236,
@@ -3973,20 +3999,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3519801,
-      3831063,
-      4169850,
-      4538596,
-      4939952,
-      5376800,
-      5852279,
-      6369805,
-      6933098,
-      7546203,
-      8213526,
-      8939861,
-      9730428,
-      10590905,
+      3472336,
+      3783067,
+      4121605,
+      4490438,
+      4892277,
+      5330075,
+      5807051,
+      6326711,
+      6892873,
+      7509701,
+      8181726,
+      8913890,
+      9711573,
+      10580639,
       11527476,
       11844559,
       12177020,
@@ -4027,20 +4053,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3519801,
-      3969023,
-      4475577,
-      5046781,
-      5690887,
-      6417197,
-      7236205,
-      8159740,
-      9201143,
-      10375457,
-      11699645,
-      13192835,
-      14876597,
-      16775252,
+      3472336,
+      3919299,
+      4423795,
+      4993231,
+      5635965,
+      6361432,
+      7180282,
+      8104536,
+      9147760,
+      10325269,
+      11654349,
+      13154509,
+      14847771,
+      16758992,
       18916227,
       19591664,
       20299860,
@@ -4110,7 +4136,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.82"
+  "version": "1.83"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -7634,12 +7660,27 @@ function buildCagrVsTwr() {
 // ── Agent Widget ─────────────────────────────────────────────
 let _agentOpen = false;
 const _agentHistory = [];
+let _agentMode = 'fast'; // 'fast' (haiku) | 'head' (sonnet)
+
+function setAgentMode(mode) {
+  _agentMode = mode;
+  const btnFast = document.getElementById('modeFast');
+  const btnHead = document.getElementById('modeHead');
+  if (mode === 'fast') {
+    btnFast.style.background = 'var(--accent)'; btnFast.style.color = 'white';
+    btnHead.style.background = 'transparent'; btnHead.style.color = 'var(--muted)';
+    document.getElementById('agentStatus').textContent = 'Fast — respostas rápidas';
+    document.getElementById('agentInput').placeholder = 'Como está minha alocação?';
+  } else {
+    btnHead.style.background = 'var(--accent)'; btnHead.style.color = 'white';
+    btnFast.style.background = 'transparent'; btnFast.style.color = 'var(--muted)';
+    document.getElementById('agentStatus').textContent = 'Head — análise profunda com time FIRE';
+    document.getElementById('agentInput').placeholder = 'Analise meu drift. Devo rebalancear?';
+  }
+}
 
 function buildAgentContext() {
-  // 1. Tab ativa
   const activeTab = document.querySelector('.tab-btn.active')?.textContent?.trim() || 'Status';
-
-  // 2. Scan do DOM — todos os elementos visíveis com conteúdo financeiro
   const domSnapshot = [];
   document.querySelectorAll('[data-in-tab]').forEach(section => {
     if (section.style.display === 'none') return;
@@ -7649,18 +7690,65 @@ function buildAgentContext() {
       .filter(x => x.value);
     if (title || values.length) domSnapshot.push({ section: title, values });
   });
+  return { activeTab, domSnapshot, fullData: DATA };
+}
 
-  // 3. KPIs principais sempre incluídos
-  const kpis = {
-    patrimonio_brl: DATA.totalBrl,
-    cambio: DATA.cambio,
-    pfire50_base: DATA.pfire50?.base,
-    pfire53_base: DATA.pfire53?.base,
-    alocacao: DATA.drift,
-    tornado: DATA.tornado,
-  };
+function _buildSystemPrompt(ctx, mode) {
+  const d = ctx.fullData;
+  const pat = d.totalBrl, cambio = d.cambio;
+  const pf50 = d.pfire50?.base, pf53 = d.pfire53?.base;
+  const drift = JSON.stringify(d.drift).slice(0, 1500);
+  const tornado = JSON.stringify(d.tornado).slice(0, 1000);
+  const premissas = JSON.stringify(d.premissas).slice(0, 800);
+  const rf = JSON.stringify(d.rf).slice(0, 400);
+  const macro = JSON.stringify(d.macro).slice(0, 500);
 
-  return { activeTab, domSnapshot, kpis, fullData: DATA };
+  const baseContext = `
+Estado atual (aba: ${ctx.activeTab}):
+- Patrimônio: R$${(pat/1e6).toFixed(2)}M | Câmbio: R$${cambio}
+- P(FIRE@50): ${pf50}% | P(FIRE@53): ${pf53}%
+- Drift: ${drift}
+- Tornado: ${tornado}
+- Premissas: ${premissas}
+- RF: ${rf}
+- Macro: ${macro}
+- DOM: ${JSON.stringify(ctx.domSnapshot).slice(0, 1500)}`;
+
+  if (mode === 'fast') {
+    return `Você é o assistente da carteira FIRE de Diego Morais. Responda direto, em português, com números reais.
+Estratégia: SWRD 50% / AVGS 30% / AVEM 20% + RF IPCA+ longo 15% + HODL11 ~3%. Meta: FIRE@50 (aspiracional) / FIRE@53 (base). Diego tem 39 anos.
+${baseContext}`;
+  }
+
+  // Head mode — persona completa
+  return `Você é o Head do time de gestão de portfolio de Diego Morais — coordenador de uma estratégia FIRE evidence-based.
+
+IDENTIDADE: Responda como "Head:" — direto, analítico, com opiniões baseadas em evidência. Nunca sycophantic.
+
+PERFIL DE DIEGO:
+- 39 anos, meta FIRE@50 (aspiracional) / FIRE@53 (base)
+- Estratégia: equity factor UCITS (SWRD 50%/AVGS 30%/AVEM 20%), RF IPCA+ longo (TD 2040/2050) 15%, HODL11 ~3% tático
+- Patrimônio total: R$${(pat/1e6).toFixed(2)}M | Câmbio: R$${cambio}
+- ETFs transitórios (liquidar gradual via TLH): AVUV, AVDV, AVES, DGS, USSC
+- Contribuição mensal: R$${(d.premissas?.aporte_mensal/1000||25).toFixed(0)}k/mês
+- Custo de vida: R$${(d.premissas?.custo_vida_base/1000||20).toFixed(0)}k/mês (base FIRE)
+
+TIME DISPONÍVEL (simule quando necessário):
+- Factor: ETFs UCITS, factor premiums, Fama-French
+- RF: IPCA+ longo, Renda+ 2065, duration, marcação a mercado
+- FIRE: Monte Carlo, guardrails, withdrawal, desacumulação
+- Macro: Selic, câmbio, ciclo de juros
+- Advocate: stress-test, devil's advocate, inversão
+- Quant: validação numérica, cálculos
+
+REGRAS:
+- Cite números reais do contexto
+- Se há evidência acadêmica relevante, mencione
+- Aponte riscos que Diego pode não estar vendo
+- Separe dado de interpretação
+- Português. Markdown básico OK.
+
+${baseContext}`;
 }
 
 function toggleAgent() {
@@ -7670,7 +7758,14 @@ function toggleAgent() {
   if (_agentOpen) {
     const key = localStorage.getItem('claude_api_key');
     document.getElementById('agentKeySetup').style.display = key ? 'none' : 'block';
-    document.getElementById('agentStatus').textContent = key ? 'Pronto' : 'Configure a API key';
+    if (key) setAgentMode(_agentMode);
+    else document.getElementById('agentStatus').textContent = 'Configure a API key';
+    // Show head relay if exists
+    if (DATA.head_relay?.text) {
+      document.getElementById('headRelayBanner').style.display = 'block';
+      document.getElementById('headRelayText').textContent = DATA.head_relay.text;
+      document.getElementById('headRelayTs').textContent = `${DATA.head_relay.from || 'Head'} · ${DATA.head_relay.ts || ''}`;
+    }
     setTimeout(() => document.getElementById('agentInput').focus(), 300);
   }
 }
@@ -7680,7 +7775,7 @@ function saveAgentKey() {
   if (!key.startsWith('sk-ant-')) { alert('API key inválida — deve começar com sk-ant-'); return; }
   localStorage.setItem('claude_api_key', key);
   document.getElementById('agentKeySetup').style.display = 'none';
-  document.getElementById('agentStatus').textContent = 'Pronto';
+  setAgentMode(_agentMode);
   document.getElementById('agentKeyInput').value = '';
 }
 
@@ -7709,18 +7804,10 @@ async function sendAgentMessage() {
   _agentAddMsg('user', msg);
   _agentHistory.push({ role: 'user', content: msg });
 
-  // Contexto atual da página
   const ctx = buildAgentContext();
-  const systemPrompt = `Você é o assistente financeiro pessoal de Diego Morais, embutido no dashboard da carteira FIRE.
-
-Acesso em tempo real ao estado da página:
-- Aba ativa: ${ctx.activeTab}
-- KPIs: patrimônio R$${(ctx.kpis.patrimonio_brl/1e6).toFixed(2)}M | câmbio R$${ctx.kpis.cambio} | P(FIRE@50) ${ctx.kpis.pfire50_base}% | P(FIRE@53) ${ctx.kpis.pfire53_base}%
-- DOM snapshot: ${JSON.stringify(ctx.domSnapshot).slice(0, 2000)}
-- Dados completos: ${JSON.stringify({ drift: ctx.fullData.drift, tornado: ctx.fullData.tornado, premissas: ctx.fullData.premissas, rf: ctx.fullData.rf, pfire50: ctx.fullData.pfire50, pfire53: ctx.fullData.pfire53, macro: ctx.fullData.macro }).slice(0, 3000)}
-
-Contexto: Diego, 39 anos, meta FIRE@50 (aspiracional) / FIRE@53 (base). Estratégia: factor UCITS (SWRD 50% / AVGS 30% / AVEM 20%), RF IPCA+, HODL11.
-Responda em português, direto, cite números reais do contexto. Sem introduções longas.`;
+  const systemPrompt = _buildSystemPrompt(ctx, _agentMode);
+  const model = _agentMode === 'head' ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
+  const maxTokens = _agentMode === 'head' ? 2048 : 1024;
 
   const streamDiv = _agentAddMsg('assistant', '…', true);
   let fullText = '';
@@ -7734,10 +7821,10 @@ Responda em português, direto, cite números reais do contexto. Sem introduçõ
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
+        model,
+        max_tokens: maxTokens,
         system: systemPrompt,
-        messages: _agentHistory.slice(-10),
+        messages: _agentHistory.slice(-12),
         stream: true,
       }),
     });
