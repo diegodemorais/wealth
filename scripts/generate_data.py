@@ -414,6 +414,9 @@ def get_backtest():
 
 # ─── 4. ATTRIBUTION ───────────────────────────────────────────────────────────
 def get_attribution():
+    """Lê fx_utils.py output e tenta usar decompose_return().
+    retornoUsd e cambio podem ser null — o template trata null graciosamente.
+    """
     if args.skip_scripts:
         return None
 
@@ -428,6 +431,20 @@ def get_attribution():
         if m: attr["retornoUsd"] = float(m.group(1).replace('_','').replace(',','.'))
         m = re.search(r'[Cc]âmbio.*?R\$\s*([\d_,.]+)', line)
         if m: attr["cambio"] = float(m.group(1).replace('_','').replace(',','.'))
+
+    # Tentar usar decompose_return() diretamente se retornoUsd/cambio não parseados
+    if attr["retornoUsd"] is None and attr["cambio"] is None:
+        try:
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("fx_utils", ROOT / "scripts" / "fx_utils.py")
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            if hasattr(mod, 'decompose_return'):
+                # Valores não disponíveis diretamente — manter null
+                # decompose_return precisa de r_usd e r_fx que não temos aqui
+                pass
+        except Exception:
+            pass
 
     return attr
 
@@ -1145,6 +1162,95 @@ def compute_drift(posicoes, rf, hodl11_brl, cambio):
     return drift, round(total)
 
 
+# ─── 8b. EARLIEST FIRE ────────────────────────────────────────────────────────
+def compute_earliest_fire(pfire50: dict, pfire53: dict, premissas_raw: dict) -> dict:
+    """Calcula o ano mais cedo onde P(FIRE) >= 85%.
+
+    Lógica:
+      - Se pfire50.base >= 85: earliest = ano aspiracional (idade 50), status = 'aspiracional'
+      - Se pfire53.base >= 85: earliest = ano alvo (idade 53), status = 'base'
+      - Senão: status = 'abaixo_threshold'
+    """
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("fire_mc", ROOT / "scripts" / "fire_montecarlo.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        idade_atual = getattr(mod, 'PREMISSAS', {}).get('idade_atual', IDADE_ATUAL)
+        idade_aspir = getattr(mod, 'PREMISSAS', {}).get('idade_fire_aspiracional', IDADE_FIRE_ASPIRACIONAL)
+        idade_alvo  = getattr(mod, 'PREMISSAS', {}).get('idade_fire_alvo', IDADE_FIRE_ALVO)
+    except Exception:
+        idade_atual = premissas_raw.get('idade_atual', IDADE_ATUAL)
+        idade_aspir = premissas_raw.get('idade_fire_aspiracional', IDADE_FIRE_ASPIRACIONAL)
+        idade_alvo  = premissas_raw.get('idade_fire_alvo', IDADE_FIRE_ALVO)
+
+    ano_atual = datetime.now().year
+    ano_aspir = ano_atual + (idade_aspir - idade_atual)
+    ano_alvo  = ano_atual + (idade_alvo  - idade_atual)
+
+    pf50_base = pfire50.get('base')
+    pf53_base = pfire53.get('base')
+
+    THRESHOLD = 85.0
+    if pf50_base is not None and pf50_base >= THRESHOLD:
+        return {"ano": ano_aspir, "idade": idade_aspir, "pfire": pf50_base, "status": "aspiracional"}
+    elif pf53_base is not None and pf53_base >= THRESHOLD:
+        return {"ano": ano_alvo, "idade": idade_alvo, "pfire": pf53_base, "status": "base"}
+    else:
+        # Retorna o alvo base mesmo abaixo do threshold (para exibição)
+        return {
+            "ano": ano_alvo, "idade": idade_alvo,
+            "pfire": pf53_base,
+            "status": "abaixo_threshold",
+        }
+
+
+# ─── 8c. SPENDING GUARDRAILS ───────────────────────────────────────────────────
+def compute_spending_guardrails(pfire53: dict, premissas_raw: dict, guardrails_raw: list, gasto_piso: int) -> dict | None:
+    """Calcula spending_guardrails com zonas de P(FIRE) × custo de vida.
+
+    Deriva upper/safe/lower guardrail a partir da lista GUARDRAILS do fire_montecarlo.py.
+    """
+    pfire_atual = pfire53.get('base')
+    spending_atual = premissas_raw.get('custo_vida_base', CUSTO_VIDA_BASE)
+
+    if pfire_atual is None:
+        return None
+
+    # Zona
+    zona = 'verde' if pfire_atual >= 85 else ('amarelo' if pfire_atual >= 75 else 'vermelho')
+
+    # Derivar guardrails de spending a partir da lista GUARDRAILS
+    # Cada guardrail: (dd_min, dd_max, corte_pct, desc)
+    # upper_guardrail: gasto máximo (sem corte = 0%)
+    # safe_target:     corte 10%
+    # lower_guardrail: corte 20%
+    upper_spending = spending_atual  # sem corte
+    safe_spending  = spending_atual
+    lower_spending = spending_atual
+    for g in guardrails_raw:
+        if isinstance(g, (tuple, list)):
+            corte = g[2]
+        else:
+            corte = g.get('corte', 0)
+        retirada = round(spending_atual * (1 - corte))
+        if corte == 0.0:
+            upper_spending = retirada
+        elif corte == 0.10:
+            safe_spending = retirada
+        elif corte == 0.20:
+            lower_spending = retirada
+
+    return {
+        "zona":                       zona,
+        "pfire_atual":                pfire_atual,
+        "spending_atual":             spending_atual,
+        "upper_guardrail_spending":   upper_spending,
+        "safe_target_spending":       safe_spending,
+        "lower_guardrail_spending":   lower_spending,
+    }
+
+
 # ─── 9. MACRO ─────────────────────────────────────────────────────────────────
 def get_macro_data(state: dict) -> dict:
     """
@@ -1230,12 +1336,28 @@ def get_macro_data(state: dict) -> dict:
     except Exception:
         pass
 
+    # -- Bitcoin USD via yfinance ----------------------------------------
+    bitcoin_usd = None
+    if not args.skip_prices:
+        try:
+            import yfinance as yf
+            btc_data = yf.download("BTC-USD", period="2d", progress=False, auto_adjust=True)
+            if btc_data is not None and not btc_data.empty:
+                close = btc_data['Close'] if 'Close' in btc_data.columns else btc_data.iloc[:, 0]
+                last = close.dropna()
+                if len(last):
+                    bitcoin_usd = round(float(last.iloc[-1]), 2)
+        except Exception as e:
+            print(f"  ⚠️ bitcoin yfinance: {e}")
+
     return {
         "selic_meta":               selic_meta,           # % a.a. -- taxa Selic meta vigente
         "fed_funds":                fed_funds,             # % a.a. -- Fed Funds rate (FRED FEDFUNDS)
         "spread_selic_ff":          spread_selic_ff,       # pp    -- diferencial Selic - Fed Funds
         "depreciacao_brl_premissa": DEPRECIACAO_BRL_BASE,
         "exposicao_cambial_pct":    exposicao_cambial_pct, # %     -- parcela do patrimonio em USD
+        "bitcoin_usd":              bitcoin_usd,           # USD   -- preço BTC-USD (yfinance)
+        # cambio será injetado pelo main() após compute
     }
 
 
@@ -1616,6 +1738,8 @@ def main():
     # Macro
     print("  ▶ macro data ...")
     macro = get_macro_data(state)
+    # Inject cambio into macro for template convenience
+    macro["cambio"] = cambio
 
     # ─── Bond Pool Readiness ─────────────────────────────────────────────
     # Bond pool = IPCA+ 2040 + IPCA+ 2050 + Reserva (IPCA+ 2029)
@@ -1680,6 +1804,15 @@ def main():
         "mc_date":             fire_state.get("mc_date"),
     }
 
+    # Earliest FIRE date
+    earliest_fire = compute_earliest_fire(pfire50, pfire53, premissas_raw)
+    print(f"  -> earliest_fire: {earliest_fire}")
+
+    # Spending guardrails
+    spending_guardrails = compute_spending_guardrails(pfire53, premissas_raw, guardrails_raw, gasto_piso)
+    if spending_guardrails:
+        print(f"  -> spending_guardrails: zona={spending_guardrails['zona']} | P(FIRE)={spending_guardrails['pfire_atual']}% | spending=R${spending_guardrails['spending_atual']/1e3:.0f}k")
+
     # ─── Timestamps de fontes de dados ──────────────────────────────────────────
     timestamps = get_source_timestamps()
 
@@ -1743,6 +1876,10 @@ def main():
         # Advocate datasets — concentração Brasil + premissas vs realizado
         "concentracao_brasil": concentracao_brasil,
         "premissas_vs_realizado": premissas_vs_realizado,
+
+        # FIRE planner
+        "earliest_fire":        earliest_fire,
+        "spending_guardrails":  spending_guardrails,
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)
