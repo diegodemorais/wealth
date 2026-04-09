@@ -297,32 +297,27 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-value" id="kpiWellnessCompact">—</div>
   <div class="kpi-sub" id="kpiWellnessSub">—</div>
 </div>
+<div class="kpi">
+  <div class="kpi-label">Factor Signal (AVGS vs SWRD)</div>
+  <div class="kpi-value" id="kpiFactorSignal">—</div>
+  <div class="kpi-sub" id="kpiFactorSignalSub">—</div>
+</div>
+<div class="kpi">
+  <div class="kpi-label">Origem — Equity IBKR</div>
+  <div class="kpi-value" id="kpiOrigemPat">—</div>
+  <div class="kpi-sub" id="kpiOrigemPatSub">—</div>
+</div>
 </div>
 
 <!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
-<div class="section section-critical" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
-<h2>Semáforos de Gatilhos</h2>
+<div class="section section-critical collapsible" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
+<h2 onclick="this.parentElement.classList.toggle('open')">Semáforos de Gatilhos</h2>
+<div id="semaforoSummary" style="font-size:.75rem;color:var(--muted);margin:4px 0 2px">—</div>
+<div class="collapse-body">
 <table class="semaforo-table" id="semaforoBody">
 <!-- gerado por buildSemaforoPanel() -->
 </table>
 </div>
-
-<!-- P2: MACRO CONTEXT -->
-<div class="section" data-in-tab="status" id="macroSection">
-<h2>Contexto Macro</h2>
-<div class="grid-2" style="margin-bottom:0">
-  <div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
-  <div>
-    <div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
-  </div>
-</div>
-<div class="src" style="margin-top:8px">Fonte: BCB/FRED via data.json · Premissa depreciação BRL usada em projeções FIRE</div>
-</div>
-
-<!-- P2: DCA STATUS -->
-<div class="section" data-in-tab="status" id="dcaSection">
-<h2>DCA Status</h2>
-<div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
 </div>
 
 <!-- P2: TAX — IR DIFERIDO -->
@@ -413,6 +408,24 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 </div>
+</div>
+
+<!-- P2: MACRO CONTEXT -->
+<div class="section" data-in-tab="status" id="macroSection">
+<h2>Contexto Macro</h2>
+<div class="grid-2" style="margin-bottom:0">
+  <div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
+  <div>
+    <div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
+  </div>
+</div>
+<div class="src" style="margin-top:8px">Fonte: BCB/FRED via data.json · Premissa depreciação BRL usada em projeções FIRE</div>
+</div>
+
+<!-- P2: DCA STATUS -->
+<div class="section" data-in-tab="status" id="dcaSection">
+<h2>DCA Status</h2>
+<div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
 </div>
 
 <!-- S6: NET WORTH TIMELINE -->
@@ -3662,27 +3675,28 @@ function renderKPIs() {
 
   // KPI 2: IPCA+ 2040 taxa + badge DCA ativo/pausado
   const _kpiIpca = DATA.rf?.ipca2040?.taxa;
-  const _kpiPisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const _kpiPisoIpca = DATA.pisos?.pisoTaxaIpcaLongo;
   const _kpiIpcaEl = document.getElementById('kpiIpcaTaxa');
   const _kpiIpcaSubEl = document.getElementById('kpiIpcaSub');
-  if (_kpiIpcaEl && _kpiIpca != null) {
+  if (_kpiIpcaEl && _kpiIpca != null && _kpiPisoIpca != null) {
     const _dcaAtivo = _kpiIpca >= _kpiPisoIpca;
     _kpiIpcaEl.textContent = _kpiIpca.toFixed(2) + '%';
     _kpiIpcaEl.style.color = _dcaAtivo ? '#22c55e' : '#eab308';
+    if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = `piso ${_kpiPisoIpca.toFixed(1)}% · ${_dcaAtivo ? '🟢 DCA ativo' : '🔴 pausado'}`;
+  } else {
+    if (_kpiIpcaEl) _kpiIpcaEl.textContent = '—';
+    if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = 'aguardando dados';
   }
-  if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = _kpiIpca != null
-    ? `piso ${_kpiPisoIpca.toFixed(1)}% · ${_kpiIpca >= _kpiPisoIpca ? '🟢 DCA ativo' : '🔴 pausado'}`
-    : 'aguardando dados';
 
   // KPI 3: Renda+ 2065 taxa + badge compra/manter/venda
   (function() {
     const el    = document.getElementById('kpiRenda2065');
     const subEl = document.getElementById('kpiRenda2065Sub');
     if (!el) return;
-    const taxa = DATA.rf?.renda2065?.taxa;
-    const pisoCompra = DATA.pisos?.pisoTaxaRendaPlus ?? 6.5;
-    const pisoVenda  = 6.0;
-    if (taxa != null) {
+    const taxa      = DATA.rf?.renda2065?.taxa;
+    const pisoCompra = DATA.pisos?.pisoTaxaRendaPlus;
+    const pisoVenda  = DATA.pisos?.pisoVendaRendaPlus;
+    if (taxa != null && pisoCompra != null && pisoVenda != null) {
       el.textContent = taxa.toFixed(2) + '%';
       if (taxa >= pisoCompra) {
         el.style.color = '#22c55e';
@@ -3738,6 +3752,36 @@ function renderKPIs() {
       el.textContent = '—'; if (subEl) subEl.textContent = 'tracking em andamento';
     }
   })();
+
+  // KPI 7: Factor Signal — excess return AVGS vs SWRD (YTD)
+  (function() {
+    const el    = document.getElementById('kpiFactorSignal');
+    const subEl = document.getElementById('kpiFactorSignalSub');
+    if (!el) return;
+    const fs = DATA.factor_signal;
+    if (!fs) { el.textContent = '—'; if (subEl) subEl.textContent = 'aguardando dados'; return; }
+    const ex = fs.excess_ytd_pp;
+    el.textContent = (ex >= 0 ? '+' : '') + ex.toFixed(1) + 'pp YTD';
+    el.style.color = ex >= 0 ? '#22c55e' : '#ef4444';
+    if (subEl) {
+      const exL = fs.excess_since_launch_pp;
+      const mo  = Math.round(fs.meses_desde_launch);
+      subEl.textContent = `since oct/24 (${mo}m): ${(exL >= 0 ? '+' : '') + exL.toFixed(1)}pp · ⚠️ período curto`;
+    }
+  })();
+
+  // KPI 8: Origem do patrimônio — equity IBKR
+  (function() {
+    const el    = document.getElementById('kpiOrigemPat');
+    const subEl = document.getElementById('kpiOrigemPatSub');
+    if (!el) return;
+    const ai = DATA.attribution_ibkr;
+    if (!ai) { el.textContent = '—'; if (subEl) subEl.textContent = 'equity IBKR'; return; }
+    el.textContent = ai.pct_retorno.toFixed(0) + '% ret · ' + ai.pct_aportes.toFixed(0) + '% ap';
+    el.style.color = ai.pct_retorno >= 40 ? '#22c55e' : ai.pct_retorno >= 25 ? '#eab308' : '#94a3b8';
+    if (subEl) subEl.textContent = `$${(ai.retorno_usd/1000).toFixed(0)}k retorno de $${(ai.patrimonio_equity_usd/1000).toFixed(0)}k`;
+  })();
+
   // Fire scenario grid — 6 cards (3 estados × 2 idades)
   (function buildFireGrid() {
     const grid = document.getElementById('fireScenarioGrid');
@@ -4402,6 +4446,7 @@ function buildSemaforoPanel() {
   }
 
   const rows = [];
+  const rowMeta = []; // para mini summary quando colapsado
 
   // 1. IPCA+ DCA status — TIPO: taxa
   const dcaIpca = DATA.dca_status?.ipca_longo;
@@ -4508,6 +4553,17 @@ function buildSemaforoPanel() {
 
   el.innerHTML = '<thead><tr><th>Gatilho</th><th>Status</th><th>Valor</th><th>Ação</th></tr></thead><tbody>' +
     rows.join('') + '</tbody>';
+
+  // Mini-resumo para estado colapsado (1ª linha = IPCA+ DCA)
+  const _sumEl = document.getElementById('semaforoSummary');
+  if (_sumEl && rows.length > 0) {
+    const _d1 = DATA.dca_status?.ipca_longo;
+    const _st1 = (_d1?.taxa_atual != null && _d1?.piso != null && _d1.taxa_atual >= _d1.piso) ? 'verde' : 'amarelo';
+    const _c1  = _st1 === 'verde' ? '#22c55e' : '#eab308';
+    const _txt1 = _d1?.ativo ? 'DCA ativo' : 'DCA pausado';
+    _sumEl.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${_c1};margin-right:5px;vertical-align:middle"></span>` +
+      `IPCA+ 2040: ${_txt1} · ${rows.length} gatilhos monitorados`;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════

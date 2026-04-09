@@ -695,6 +695,66 @@ def get_factor_rolling():
         return {"dates": [], "avgs_vs_swrd_12m": [], "threshold": THRESHOLD}
 
 
+# ─── FACTOR SIGNAL: YTD + since-launch excess return AVGS vs SWRD ────────────
+def get_factor_signal():
+    """YTD and since-launch excess return of AVGS.L vs SWRD.L.
+
+    Different from factor_rolling (rolling 12-month window) — shows discrete
+    periods useful for KPI card display.
+    Falls back to dashboard_state.json when --skip-scripts.
+    """
+    AVGS_LAUNCH = date(2024, 10, 14)
+    AVGS_LAUNCH_STR = "2024-10-14"
+
+    if args.skip_scripts:
+        try:
+            s = json.loads((ROOT / "dados" / "dashboard_state.json").read_text())
+            fs = s.get("factor_signal")
+            if fs:
+                print("  ✓ factor_signal (state)")
+                return fs
+        except Exception:
+            pass
+        return None
+
+    print("  ▶ factor signal (YTD + since launch) ...")
+    try:
+        import yfinance as yf
+
+        today = date.today()
+        ytd_start = f"{today.year}-01-01"
+
+        tickers = yf.download(
+            ['SWRD.L', 'AVGS.L'], start=AVGS_LAUNCH_STR,
+            auto_adjust=True, progress=False
+        )['Close']
+
+        ytd   = tickers[tickers.index >= ytd_start]
+        swrd_ytd        = float((ytd['SWRD.L'].iloc[-1] / ytd['SWRD.L'].iloc[0] - 1) * 100)
+        avgs_ytd        = float((ytd['AVGS.L'].iloc[-1] / ytd['AVGS.L'].iloc[0] - 1) * 100)
+        swrd_launch     = float((tickers['SWRD.L'].iloc[-1] / tickers['SWRD.L'].iloc[0] - 1) * 100)
+        avgs_launch_ret = float((tickers['AVGS.L'].iloc[-1] / tickers['AVGS.L'].iloc[0] - 1) * 100)
+        meses = (today - AVGS_LAUNCH).days / 30.44
+
+        result = {
+            "swrd_ytd_pct":           round(swrd_ytd, 2),
+            "avgs_ytd_pct":           round(avgs_ytd, 2),
+            "excess_ytd_pp":          round(avgs_ytd - swrd_ytd, 2),
+            "swrd_since_launch_pct":  round(swrd_launch, 2),
+            "avgs_since_launch_pct":  round(avgs_launch_ret, 2),
+            "excess_since_launch_pp": round(avgs_launch_ret - swrd_launch, 2),
+            "avgs_launch_date":       AVGS_LAUNCH_STR,
+            "meses_desde_launch":     round(meses, 1),
+            "fonte":  "yfinance · SWRD.L + AVGS.L · preços diários",
+            "updated": str(today),
+        }
+        print(f"    → AVGS YTD {avgs_ytd:+.1f}% vs SWRD YTD {swrd_ytd:+.1f}% (excess: {avgs_ytd-swrd_ytd:+.1f}pp)")
+        return result
+    except Exception as e:
+        print(f"  ⚠️ factor_signal: {e}")
+        return None
+
+
 # ─── 5c. FACTOR: LOADINGS POR ETF (FF5 + Momentum) ─────────────────────────
 def get_factor_loadings():
     """Run Fama-French 5-factor + momentum regression on portfolio ETFs.
@@ -1607,7 +1667,8 @@ def main():
     # Se --skip-scripts e cache não existe, tenta popular inline antes de chamar as funções
     if args.skip_scripts and not FACTOR_CACHE.exists():
         _try_populate_factor_cache()
-    factor_rolling = get_factor_rolling()
+    factor_rolling  = get_factor_rolling()
+    factor_signal   = get_factor_signal()
     factor_loadings = get_factor_loadings()
 
     # Cache factor data for --skip-scripts
@@ -1631,6 +1692,27 @@ def main():
     # Posições + preços
     print("  ▶ posições ...")
     posicoes, cambio, prices_live = get_posicoes_precos(state)
+
+    # Attribution IBKR: aportes vs retorno gerado (equity IBKR only)
+    attribution_ibkr = None
+    try:
+        _ap = json.loads(APORTES_PATH.read_text())
+        _total_ap  = _ap.get("total_usd", 0)
+        _pat_eq    = sum(p.get("qty", 0) * p.get("price", 0) for p in posicoes.values())
+        if _pat_eq > 0:
+            _ret = _pat_eq - _total_ap
+            attribution_ibkr = {
+                "total_aportado_usd":    round(_total_ap),
+                "patrimonio_equity_usd": round(_pat_eq),
+                "retorno_usd":           round(_ret),
+                "pct_aportes":           round(_total_ap / _pat_eq * 100, 1),
+                "pct_retorno":           round(_ret     / _pat_eq * 100, 1),
+                "nota":   "Equity IBKR only — exclui RF, HODL11, Nubank",
+                "fonte":  "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
+                "updated": str(date.today()),
+            }
+    except Exception as _e:
+        print(f"  ⚠️ attribution_ibkr: {_e}")
 
     # RF
     rf = get_rf(state)
@@ -1987,8 +2069,9 @@ def main():
         "backtest":   backtest,
         "backtestR5": backtest_r5,
 
-        "factor_rolling":  factor_rolling,
-        "factor_loadings": factor_loadings,
+        "factor_rolling":   factor_rolling,
+        "factor_signal":    factor_signal,
+        "factor_loadings":  factor_loadings,
 
         "rf":         rf,
         "hodl11":     hodl11,
@@ -1997,7 +2080,8 @@ def main():
         "glide":      glide,
         "drift":      drift,
         "tlh":        tlh,
-        "attribution":attr,
+        "attribution":      attr,
+        "attribution_ibkr": attribution_ibkr,
         "shadows":    shadows,
         "macro":      macro,
         "minilog":    _build_minilog(),

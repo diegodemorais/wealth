@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T14:33:23",
-  "_generated_brt": "2026-04-09T14:33:23-03:00",
+  "_generated": "2026-04-09T14:42:57",
+  "_generated_brt": "2026-04-09T14:42:57-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1578,6 +1578,18 @@
     ],
     "threshold": -5
   },
+  "factor_signal": {
+    "swrd_ytd_pct": 0.4,
+    "avgs_ytd_pct": 11.79,
+    "excess_ytd_pp": 11.39,
+    "swrd_since_launch_pct": 20.91,
+    "avgs_since_launch_pct": 33.42,
+    "excess_since_launch_pp": 12.51,
+    "avgs_launch_date": "2024-10-14",
+    "meses_desde_launch": 17.8,
+    "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
+    "updated": "2026-04-09"
+  },
   "factor_loadings": {
     "SWRD": {
       "alpha": 0.0089,
@@ -1859,6 +1871,16 @@
     "cambio": 28353,
     "crescReal": 169511,
     "_estimativa": true
+  },
+  "attribution_ibkr": {
+    "total_aportado_usd": 391043,
+    "patrimonio_equity_usd": 608472,
+    "retorno_usd": 217429,
+    "pct_aportes": 64.3,
+    "pct_retorno": 35.7,
+    "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
+    "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
+    "updated": "2026-04-09"
   },
   "shadows": {
     "q1_2026": {
