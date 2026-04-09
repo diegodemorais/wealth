@@ -166,10 +166,9 @@ Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este ven
 | `scripts/fx_utils.py` | PTAX/macro BCB, decomposição retorno BRL/USD | `python3 scripts/fx_utils.py` |
 | `scripts/resampled_frontier.py` | Michaud Resampled Frontier — IC 90% dos pesos ótimos vs Target 50/30/20 | `python3 scripts/resampled_frontier.py` |
 
-## Deploy Dashboard (REGRA PERMANENTE)
+## Dashboard
 
-Deploy é automático via GitHub Actions ao push para `main`. Não há deploy manual.
-Toda alteração em `template.html`, `build_dashboard.py` ou `data.json` deve ser commitada e pushada — o CI cuida do resto.
+`dashboard/index.html` é gerado pelo pipeline (`generate_data.py` → `build_dashboard.py`) — nunca editar diretamente. Todo commit em `main` dispara deploy automático via GitHub Actions.
 
 ## Estrutura do Projeto
 
