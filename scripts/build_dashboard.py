@@ -286,34 +286,34 @@ def _compute_net_worth_projection(data: dict) -> dict:
     """Projeção simplificada do portfólio financeiro: P10/P50/P90 de 2026 a 2077.
 
     Usa endpoints do MC para âncoras, interpolação exponencial entre eles,
-    e retorno real 4.85% pós-FIRE com saque de spending inflacionado.
+    e loop iterativo em termos REAIS pós-FIRE (elimina bug r-real × desp-nominal).
+
+    Premissas pós-FIRE:
+    - spending_real = R$250k constante em termos reais (não inflacionar)
+    - inss_real = R$18k constante em termos reais a partir de age 65
+    - P50: retorno real 4.85% | P10: 2.50% | P90: 7.00%
 
     Componentes de imóvel, INSS e capital humano: TODO (dados não aprovados).
     """
     premissas = data.get("premissas", {})
-    fire_data = data.get("fire", {})
-    # Lê fire dos dados internos do data.json (pfire53 seção)
     pat_atual = premissas.get("patrimonio_atual", 3472335)
-    r = premissas.get("retorno_equity_base", 0.0485)
     custo_vida = premissas.get("custo_vida_base", 250000)
-    ipca = premissas.get("ipca_anual", 0.04)
+    inss_anual = premissas.get("inss_anual", 18000)
     ano_atual = premissas.get("ano_atual", 2026)
     idade_atual = premissas.get("idade_atual", 39)
     idade_fire = premissas.get("idade_fire_alvo", 53)
 
+    # Retornos reais por percentil (pós-FIRE)
+    r_p50 = 0.0485  # base
+    r_p10 = 0.0250  # stress
+    r_p90 = 0.0700  # favorável
+
     ano_fire = ano_atual + (idade_fire - idade_atual)
     anos_longevidade = 90
     ano_fim = ano_atual + (anos_longevidade - idade_atual)
+    ano_inss_global = ano_atual + (65 - idade_atual)  # age 65
 
-    # Endpoints MC do data.json
-    # Ler de fire section do data source (dashboard_state.json merges via checkin)
-    # Valores disponíveis em data["fire"] (armazenados em dashboard_state.json)
-    # Mas data.json usa estrutura diferente — pfire50/pfire53 são P(FIRE), não patrimônio
-    # Patrimônio mediano/P10/P90 vivem em dashboard_state.json fire section
-    # Precisamos usar os valores do data.json se existirem; senão fallback
-
-    # O data.json não tem pat_mediano_fire diretamente — está em dashboard_state.json
-    # Tentar carregar de dashboard_state.json
+    # Tentar carregar endpoints MC de dashboard_state.json
     dashboard_state_path = ROOT / "dados" / "dashboard_state.json"
     fire_state = {}
     if dashboard_state_path.exists():
@@ -327,17 +327,47 @@ def _compute_net_worth_projection(data: dict) -> dict:
     pat_p10_fire = fire_state.get("pat_p10_fire", None)
     pat_p90_fire = fire_state.get("pat_p90_fire", None)
 
+    anos_ate_fire = ano_fire - ano_atual
+
+    def _sim_portfolio(pat_base: float, r_real: float, anos_sim: int) -> list:
+        """Simula portfólio pós-FIRE em termos reais. Retorna lista de valores por ano.
+
+        spending e INSS são constantes em termos reais (R$ 2026).
+        """
+        vals = [pat_base]
+        for i in range(1, anos_sim + 1):
+            ano_corrente = ano_fire + i
+            inss = inss_anual if ano_corrente >= ano_inss_global else 0.0
+            saque = max(0.0, custo_vida - inss)
+            novo = vals[-1] * (1 + r_real) - saque
+            vals.append(max(0.0, novo))
+        return vals[1:]  # sem o ponto inicial (já incluído antes)
+
+    # Pré-computar séries pós-FIRE para cada percentil
+    if pat_p50_fire is not None:
+        base_p50 = pat_p50_fire
+        base_p10 = pat_p10_fire or base_p50 * 0.59
+        base_p90 = pat_p90_fire or base_p50 * 1.64
+    else:
+        base_p50 = pat_atual
+        base_p10 = pat_atual * 0.85
+        base_p90 = pat_atual * 1.20
+
+    anos_pos_fire = ano_fim - ano_fire
+    serie_p50 = _sim_portfolio(base_p50, r_p50, anos_pos_fire)
+    serie_p10 = _sim_portfolio(base_p10, r_p10, anos_pos_fire)
+    serie_p90 = _sim_portfolio(base_p90, r_p90, anos_pos_fire)
+
     anos = list(range(ano_atual, ano_fim + 1))
     p10_vals = []
     p50_vals = []
     p90_vals = []
-    anos_ate_fire = ano_fire - ano_atual
 
     for ano in anos:
         t = ano - ano_atual
 
         if t <= anos_ate_fire and pat_p50_fire is not None:
-            # Interpolação exponencial de pat_atual até endpoints MC no FIRE
+            # Fase de acumulação: interpolação exponencial de pat_atual até endpoints MC
             frac = t / anos_ate_fire if anos_ate_fire > 0 else 1.0
             p50 = pat_atual * ((pat_p50_fire / pat_atual) ** frac)
             if pat_p10_fire:
@@ -348,23 +378,17 @@ def _compute_net_worth_projection(data: dict) -> dict:
                 p90 = pat_atual * ((pat_p90_fire / pat_atual) ** frac)
             else:
                 p90 = p50 * (1 + 0.20 * (frac ** 0.5))
+        elif t <= anos_ate_fire:
+            # Sem dados MC: fase de acumulação com crescimento exponencial simples
+            p50 = base_p50
+            p10 = base_p10
+            p90 = base_p90
         else:
-            # Pré-MC ou sem dados: crescimento exponencial simples com aportes
-            if pat_p50_fire is not None:
-                base_p50 = pat_p50_fire
-                base_p10 = pat_p10_fire or base_p50 * 0.59
-                base_p90 = pat_p90_fire or base_p50 * 1.64
-            else:
-                base_p50 = pat_atual
-                base_p10 = pat_atual * 0.85
-                base_p90 = pat_atual * 1.20
-
-            t_pos_fire = t - anos_ate_fire
-            desp_anual = custo_vida * ((1 + ipca) ** t)
-            # Saque do portfólio (simplificado: descontar spending de cada trajetória)
-            p50 = base_p50 * ((1 + r) ** t_pos_fire) - desp_anual * t_pos_fire
-            p10 = base_p10 * ((1 + r * 0.6) ** t_pos_fire) - desp_anual * t_pos_fire
-            p90 = base_p90 * ((1 + r * 1.3) ** t_pos_fire) - desp_anual * t_pos_fire
+            # Pós-FIRE: loop iterativo em termos reais (sem bug r-real × desp-nominal)
+            idx = t - anos_ate_fire - 1  # índice na série pós-FIRE (0-based)
+            p50 = serie_p50[idx]
+            p10 = serie_p10[idx]
+            p90 = serie_p90[idx]
 
         p10_vals.append(round(max(0, p10)))
         p50_vals.append(round(max(0, p50)))
@@ -376,6 +400,7 @@ def _compute_net_worth_projection(data: dict) -> dict:
         "p50": p50_vals,
         "p90": p90_vals,
         "ano_fire": ano_fire,
+        "nota_unidades": "Projeção pós-FIRE em R$ reais (constante 2026). Spending R$250k/ano real; INSS R$18k/ano real a partir de age 65.",
         "nota_imovel": "// TODO: apreciação imobiliária — taxa não definida nas premissas",
         "nota_inss": "// TODO: PV do INSS futuro — taxa de desconto não aprovada",
         "nota_cap_humano": "// TODO: capital humano — sem projeção aprovada",
