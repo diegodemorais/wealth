@@ -68,8 +68,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .slider-row{margin:12px 0}
 .slider-row label{font-size:.75rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px}
 .slider-row input[type=range]{width:100%;accent-color:var(--accent)}
-/* ── Lazy tab: esconder todas as abas exceto status no carregamento inicial ── */
-[data-in-tab]:not([data-in-tab="status"]) { display: none; }
+/* ── Lazy tab: ocultação via JS imperativo (ver topo do <script>) ── */
 /* ── Hierarquia tipográfica ── */
 .section-critical{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
 .actions-box{border-width:2px}
@@ -1001,6 +1000,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /container -->
 
 <script>
+// ── Esconde todas as abas exceto status IMEDIATAMENTE (evita FOUC) ──
+// Roda síncrono antes de qualquer render — não espera DOMContentLoaded.
+(function() {
+  document.querySelectorAll('[data-in-tab]').forEach(function(el) {
+    if (el.getAttribute('data-in-tab') !== 'status') el.style.display = 'none';
+  });
+})();
+
 // @ts-check
 // ═══════════════════════════════════════════════════════════════
 // JSDoc typedef — shape de DATA (espelha dashboard/data.schema.json)
