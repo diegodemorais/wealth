@@ -250,7 +250,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="hero-kpi">
     <div class="hlbl">Progresso FIRE</div>
     <div class="hval" id="heroProgresso">—</div>
-    <div class="hsub" id="heroProgressoSub">—</div>
+    <div class="hsub pv" id="heroProgressoSub">—</div>
   </div>
   <div class="hero-kpi">
     <div class="hlbl">Savings Rate</div>
@@ -307,8 +307,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div class="kpi">
   <div class="kpi-label">Origem — Equity IBKR</div>
-  <div class="kpi-value" id="kpiOrigemPat">—</div>
-  <div class="kpi-sub" id="kpiOrigemPatSub">—</div>
+  <div class="kpi-value pv" id="kpiOrigemPat">—</div>
+  <div class="kpi-sub pv" id="kpiOrigemPatSub">—</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">Dólar</div>
@@ -655,9 +655,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </tr></thead>
 <tbody id="incomeTableBody"><!-- gerado por buildIncomeTable() --></tbody>
 </table>
-<div class="src" style="margin-bottom:8px" id="incomeSrc">—</div>
+<div class="src pv" style="margin-bottom:8px" id="incomeSrc">—</div>
 <div class="chart-box-sm"><canvas id="incomeChart"></canvas></div>
-<div class="src" id="incomeChartSrc">—</div>
+<div class="src pv" id="incomeChartSrc">—</div>
 </div>
 
 <!-- S17: FEE ANALYSIS (colapsável) -->
@@ -928,7 +928,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" data-in-tab="projecao">
 <h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
-<div class="src" id="spendingBreakdownSrc">Fonte: spending_analysis.py · All-Accounts CSV · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)</div>
+<div class="src" id="spendingBreakdownSrc">Fonte: spending_analysis.py · All-Accounts CSV · Must Spend inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
 </div>
 
 <!-- F1: Lifetime Income Projection Chart -->
@@ -1985,7 +1985,7 @@ function buildGuardrails() {
     const gatilhoStr = g.ddMin === 0
       ? `<strong style="color:#22c55e">ATUAL ✓</strong>`
       : `R$ ${(patAtual * (1 - g.ddMin) / 1000).toFixed(0)}k (−${(g.ddMin*100).toFixed(0)}%)`;
-    tr.innerHTML = `<td>${icons[i]} ${ddStr}</td><td>${corteStr}</td><td class="num">${retirStr}</td><td class="num">${gatilhoStr}</td><td>${g.desc}</td>`;
+    tr.innerHTML = `<td>${icons[i]} ${ddStr}</td><td>${corteStr}</td><td class="num pv">${retirStr}</td><td class="num pv">${gatilhoStr}</td><td>${g.desc}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -2214,8 +2214,8 @@ function buildCustoBase() {
   totTr.style.fontWeight = '600';
   totTr.innerHTML = `
     <td style="padding:7px 8px">Total equity</td>
-    <td class="num" style="padding:7px 8px">$${(totValor/1000).toFixed(0)}k</td>
-    <td class="num" style="padding:7px 8px;color:var(--muted)">$${(totCusto/1000).toFixed(0)}k</td>
+    <td class="num pv" style="padding:7px 8px">$${(totValor/1000).toFixed(0)}k</td>
+    <td class="num pv" style="padding:7px 8px;color:var(--muted)">$${(totCusto/1000).toFixed(0)}k</td>
     <td class="num" style="padding:7px 8px;color:${totGain >= 0 ? '#22c55e' : '#ef4444'}">${totGain >= 0 ? '+' : ''}${totGain.toFixed(1)}%</td>
     <td class="num" style="padding:7px 8px">—</td><td class="num" style="padding:7px 8px;color:var(--muted)">—</td><td class="num" style="padding:7px 8px">—</td>
   `;
@@ -2237,7 +2237,7 @@ function buildEventosVida() {
           <span style="font-size:.7rem;color:var(--yellow)">${ev.data_est}</span>
           <span style="font-size:.65rem;padding:1px 6px;border-radius:9999px;background:rgba(234,179,8,.15);color:var(--yellow)">${ev.status}</span>
         </div>
-        <div style="font-size:.78rem;color:var(--accent);margin-top:3px">💸 ${ev.impacto}</div>
+        <div style="font-size:.78rem;color:var(--accent);margin-top:3px" class="pv">💸 ${ev.impacto}</div>
         <div style="font-size:.7rem;color:var(--muted);margin-top:4px">${ev.acoes.map(a => `▸ ${a}`).join(' · ')}</div>
       </div>
     </div>`).join('');
@@ -2260,7 +2260,7 @@ function buildPfireFamilia() {
   // Update src with actual base cost
   const _pfSrc = document.getElementById('pfireFamiliaSrc');
   const _baseScen = ss.find(s => s.label.includes('250') || s.label.includes('Solteiro'));
-  if (_pfSrc && _baseScen?.custo) _pfSrc.textContent = `Base: MC 10k simulações · custo de vida base R$${(_baseScen.custo/1000).toFixed(0)}k/ano. Dados de spending_sens (fire_montecarlo.py).`;
+  if (_pfSrc && _baseScen?.custo) { _pfSrc.textContent = `Base: MC 10k simulações · custo de vida base R$${(_baseScen.custo/1000).toFixed(0)}k/ano. Dados de spending_sens (fire_montecarlo.py).`; _pfSrc.className = 'src pv'; }
   // Zonas: Excelente ≥90%, Bom 80-90%, Regular 70-80%, Crítico <70%
   function _zoneLabel(v) {
     if (v == null) return { label: '—', color: 'var(--muted)', bg: 'rgba(71,85,105,.15)' };
@@ -2303,7 +2303,7 @@ function buildPfireFamilia() {
         <span style="font-size:1rem;font-weight:700;color:${zone.color}">${pf != null ? pf + '%' : '—'}</span>
         <span style="font-size:.65rem;font-weight:600;background:${zone.bg};color:${zone.color};padding:1px 5px;border-radius:4px">${zone.label}</span>
         ${deltaStr}
-        <span style="font-size:.65rem;color:var(--muted);margin-left:auto">R$${s.custo != null ? (s.custo/1000).toFixed(0)+'k' : '—'}/ano</span>
+        <span style="font-size:.65rem;color:var(--muted);margin-left:auto" class="pv">R$${s.custo != null ? (s.custo/1000).toFixed(0)+'k' : '—'}/ano</span>
       </div>
       ${bar}
     </div>`;
@@ -2328,7 +2328,7 @@ function buildMinilog() {
       <td style="padding:4px 8px;color:var(--muted)">${op.data}</td>
       <td style="padding:4px 8px">${op.tipo}</td>
       <td style="padding:4px 8px"><strong>${op.ativo}</strong></td>
-      <td style="padding:4px 8px;text-align:right;color:var(--accent)">${op.valor}</td>
+      <td style="padding:4px 8px;text-align:right;color:var(--accent)" class="pv">${op.valor}</td>
     </tr>`).join('') +
     `</tbody></table>`;
 }
@@ -3037,6 +3037,12 @@ function buildSpendingGuardrails() {
   if (!el) return;
   const sg = DATA.spending_guardrails;
   if (!sg) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
+  if (document.body.classList.contains('private-mode')) {
+    const zc = sg.zona === 'verde' ? 'var(--green)' : sg.zona === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+    const zl = sg.zona === 'verde' ? '🟢 No caminho certo' : sg.zona === 'amarelo' ? '🟡 Atenção' : '🔴 Alerta';
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:12px"><div style="font-size:2rem;font-weight:800;color:${zc}">${sg.pfire_atual}%</div><div style="font-size:.85rem;font-weight:600;color:${zc}">${zl}</div></div><div style="text-align:center;padding:16px;color:var(--muted);font-size:.75rem;margin-top:8px">🔒 Valores ocultos em modo privado</div>`;
+    return;
+  }
 
   const zoneColor = sg.zona === 'verde' ? 'var(--green)' : sg.zona === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
   const zoneLabel = sg.zona === 'verde' ? '🟢 No caminho certo' : sg.zona === 'amarelo' ? '🟡 Atenção' : '🔴 Alerta';
@@ -3116,7 +3122,7 @@ function buildScenarioComparison() {
   if (!sc) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
 
   const fmtPfire = v => v != null ? `<span style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
-  const fmtPat = v => v != null ? `R$${(v/1e6).toFixed(2)}M` : '<span style="color:var(--muted)">n/d</span>';
+  const fmtPat = v => v != null ? `<span class="pv">R$${(v/1e6).toFixed(2)}M</span>` : '<span style="color:var(--muted)">n/d</span>';
 
   const rows = [
     ['P(FIRE) Base',     fmtPfire(sc.fire53.base),   fmtPfire(sc.fire50.base)],
@@ -3449,7 +3455,7 @@ function buildNetWorthProjection() {
           tension: 0.3,
         },
         {
-          label: `Gatilho FIRE R$${(gatilho/1e6).toFixed(1)}M`,
+          label: document.body.classList.contains('private-mode') ? 'Gatilho FIRE' : `Gatilho FIRE R$${(gatilho/1e6).toFixed(1)}M`,
           data: labels.map(() => gatilho),
           borderColor: 'rgba(234,179,8,.6)',
           borderWidth: 1.5,
@@ -3556,10 +3562,10 @@ function _renderStressCards(vals, stData) {
     </div>
     <div style="margin-top:12px;font-size:.72rem;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px">
       <div style="display:flex;flex-wrap:wrap;gap:16px">
-        <div><span style="color:var(--muted)">Patrimônio atual:</span> <strong>R$${(patAtual/1e6).toFixed(2)}M</strong></div>
+        <div><span style="color:var(--muted)">Patrimônio atual:</span> <strong class="pv">R$${(patAtual/1e6).toFixed(2)}M</strong></div>
         <div><span style="color:var(--muted)">Shock aplicado:</span> <strong style="color:var(--red)">−${pct}%</strong></div>
-        <div><span style="color:var(--muted)">Pós-shock:</span> <strong style="color:var(--red)">R$${(patShock/1e6).toFixed(2)}M</strong></div>
-        <div><span style="color:var(--red)">Perda bruta:</span> <strong style="color:var(--red)">−R$${deltaM.toFixed(2)}M</strong></div>
+        <div><span style="color:var(--muted)">Pós-shock:</span> <strong style="color:var(--red)" class="pv">R$${(patShock/1e6).toFixed(2)}M</strong></div>
+        <div><span style="color:var(--red)">Perda bruta:</span> <strong style="color:var(--red)" class="pv">−R$${deltaM.toFixed(2)}M</strong></div>
       </div>
       ${stData && stData.descricao_shock ? `<div style="margin-top:6px;color:var(--muted)">${stData.descricao_shock}</div>` : ''}
     </div>`;
@@ -4508,8 +4514,8 @@ function buildIncomeTable() {
   tbody.innerHTML = fases.map(f => `<tr>
     <td><strong style="color:${f.color}">${f.label}</strong></td>
     <td>${f.idadeStr}</td>
-    <td>${f.fonte}</td>
-    <td class="num"><strong>${f.gasto != null ? 'R$' + (f.gasto/1000).toFixed(0) + 'k/ano' : '—'}</strong></td>
+    <td class="pv">${f.fonte}</td>
+    <td class="num pv"><strong>${f.gasto != null ? 'R$' + (f.gasto/1000).toFixed(0) + 'k/ano' : '—'}</strong></td>
     <td style="font-size:.7rem;color:var(--muted)">${f.obs}</td>
   </tr>`).join('');
   // Atualizar src
@@ -4710,13 +4716,22 @@ function _applyPrivacyCharts(isPrivate) {
       c.update('none');
     } catch(e) { /* chart ainda não inicializado */ }
   });
-  // Attribution bar: ocultar Y axis (valores em R$)
+  // Attribution bar: é horizontal (indexAxis:'y'), então X é o eixo de valores em R$
   if (charts.attr) {
     try {
       const sc = charts.attr.options.scales;
-      if (sc?.y) { sc.y.ticks = sc.y.ticks || {}; sc.y.ticks.display = !isPrivate; }
+      if (sc?.x) { sc.x.ticks = sc.x.ticks || {}; sc.x.ticks.display = !isPrivate; }
       if (charts.attr.options.plugins?.tooltip) charts.attr.options.plugins.tooltip.enabled = !isPrivate;
       charts.attr.update('none');
+    } catch(e) {}
+  }
+  // Income chart: Y axis mostra R$k — ocultar em privado
+  if (charts.income) {
+    try {
+      const sc = charts.income.options.scales;
+      if (sc?.y) { sc.y.ticks = sc.y.ticks || {}; sc.y.ticks.display = !isPrivate; }
+      if (charts.income.options.plugins?.tooltip) charts.income.options.plugins.tooltip.enabled = !isPrivate;
+      charts.income.update('none');
     } catch(e) {}
   }
   // Sankey: ocultar seção inteira em modo privado (fluxos em R$/ano revelam renda)
@@ -4724,6 +4739,32 @@ function _applyPrivacyCharts(isPrivate) {
   if (_sankeyWrap) _sankeyWrap.style.display = isPrivate ? 'none' : '';
   // Heatmap: re-renderizar com/sem spans .pv (a função lê o estado do body)
   if (document.getElementById('heatmapContainer')?.innerHTML) buildRetornoHeatmap();
+  // Spending guardrails: re-renderizar (função checa privacy internamente)
+  if (document.getElementById('spendingGuardrailsViz')?.innerHTML) buildSpendingGuardrails();
+  // Sliders (Fase 4): em private mode, resetar para centro do range — posição revela valor
+  const _sliders = [
+    { id: 'simAporte', numId: 'simAporteVal' },
+    { id: 'simCusto',  numId: 'simCustoVal' },
+    { id: 'wiAporte',  numId: 'wiAporteVal' },
+    { id: 'wiCusto',   numId: 'wiCustoVal' },
+  ];
+  _sliders.forEach(({ id, numId }) => {
+    const sl = document.getElementById(id);
+    if (!sl) return;
+    if (isPrivate) {
+      const mid = Math.round((+sl.min + +sl.max) / 2 / +sl.step) * +sl.step;
+      sl.value = mid;
+      const lbl = document.getElementById(numId);
+      if (lbl) lbl.textContent = '***';
+    }
+  });
+  // Calculadora de aporte: ocultar valor numérico e resetar slider em private mode
+  const _calcNum = document.getElementById('calcAporteNum');
+  if (_calcNum) _calcNum.style.visibility = isPrivate ? 'hidden' : '';
+  const _calcSlider = document.getElementById('calcAporte');
+  if (_calcSlider && isPrivate) {
+    _calcSlider.value = Math.round((+_calcSlider.min + +_calcSlider.max) / 2);
+  }
 }
 
 function togglePrivacy() {
@@ -5076,7 +5117,7 @@ function buildBondPool() {
       '<div class="bond-pool-bar"><div class="bond-pool-fill" style="width:' + pct.toFixed(0) + '%"></div></div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;font-size:.75rem">' +
         '<div class="bp-row"><span>Valor atual</span><span class="bp-val pv">R$ ' + (bp.valor_atual_brl != null ? (bp.valor_atual_brl/1000).toFixed(0) + 'k' : '--') + '</span></div>' +
-        '<div class="bp-row"><span>Meta (7 anos)</span><span class="bp-val pv">R$ ' + (metaBrl/1000).toFixed(0) + 'k</span></div>' +
+        '<div class="bp-row"><span>Meta (' + bp.meta_anos + ' anos)</span><span class="bp-val pv">R$ ' + (metaBrl/1000).toFixed(0) + 'k</span></div>' +
         '<div class="bp-row"><span>Cobertura atual</span><span class="bp-val">' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' anos</span></div>' +
         '<div class="bp-row"><span>Status</span><span class="bp-val" style="color:' + statusColor + '">' + statusLabel + '</span></div>' +
       '</div>' +
@@ -5088,21 +5129,21 @@ function buildBondPool() {
       '<table style="width:100%;font-size:.75rem;border-collapse:collapse">' +
         '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
           '<td style="padding:4px 4px;font-weight:600">IPCA+ 2040</td>' +
-          '<td style="text-align:right;padding:4px 4px;color:var(--green)">R$ ' + (ipca2040Brl/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--green)" class="pv">R$ ' + (ipca2040Brl/1000).toFixed(0) + 'k</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2040Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
         '</tr>' +
         '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
           '<td style="padding:4px 4px;font-weight:600">IPCA+ 2029</td>' +
-          '<td style="text-align:right;padding:4px 4px;color:var(--green)">R$ ' + (ipca2029Brl/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--green)" class="pv">R$ ' + (ipca2029Brl/1000).toFixed(0) + 'k</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2029Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
         '</tr>' +
         '<tr style="border-bottom:2px solid var(--border);font-weight:700">' +
           '<td style="padding:4px 4px">Total bond pool</td>' +
-          '<td style="text-align:right;padding:4px 4px;color:var(--accent)">R$ ' + (bondTotal/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--accent)" class="pv">R$ ' + (bondTotal/1000).toFixed(0) + 'k</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--accent)">' + pctMeta.toFixed(0) + '% da meta</td>' +
         '</tr>' +
       '</table>' +
-      (renda2065Brl > 0 ? '<div style="margin-top:4px;font-size:.68rem;color:var(--muted)">⚠️ Renda+ 2065 (R$ ' + (renda2065Brl/1000).toFixed(0) + 'k) não conta para bond pool — vencimento pós-FIRE, não provê liquidez pré-aposentadoria.</div>' : '') +
+      (renda2065Brl > 0 ? '<div style="margin-top:4px;font-size:.68rem;color:var(--muted)">⚠️ Renda+ 2065 (<span class="pv">R$ ' + (renda2065Brl/1000).toFixed(0) + 'k</span>) não conta para bond pool — vencimento pós-FIRE, não provê liquidez pré-aposentadoria.</div>' : '') +
     '</div>' +
 
     // Estratégias
@@ -5237,7 +5278,7 @@ function buildPremissasVsRealizado() {
     // Breakdown por ano (se disponível)
     if (am.por_ano_brl) {
       var anos = Object.entries(am.por_ano_brl).sort(function(a, b) { return Number(b[0]) - Number(a[0]); });
-      html += '<tr><td colspan="5" style="padding-top:8px;font-size:.68rem;color:var(--muted)">Aportes por ano (IBKR equity): ' +
+      html += '<tr><td colspan="5" style="padding-top:8px;font-size:.68rem;color:var(--muted)" class="pv">Aportes por ano (IBKR equity): ' +
         anos.map(function(entry) { return entry[0] + ': R$' + (entry[1] / 1000).toFixed(0) + 'k'; }).join(' · ') +
         '</td></tr>';
     }
