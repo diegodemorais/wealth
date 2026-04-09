@@ -835,6 +835,16 @@ def main():
     }
     update_dashboard_state("shadows", shadows_data, generator="checkin_mensal.py")
 
+    # ── Mercado — preços de referência (BTC/USD + câmbio) ──
+    # btc_usd_fim e usd_brl_fim já foram buscados acima para Shadow C / retornos
+    mercado_data = {
+        "cambio_brl_usd": round(usd_brl_fim, 4),
+        "btc_usd": round(btc_usd_fim, 2),
+        "fonte": "yfinance BTC-USD + USDBRL=X",
+        "updated": str(date.today()),
+    }
+    update_dashboard_state("mercado", mercado_data, generator="checkin_mensal.py")
+
     # Output
     formatar_output(
         periodo_label, pat_atual, pat_anterior, aportes, r_atual,
