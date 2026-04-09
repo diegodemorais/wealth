@@ -1346,10 +1346,10 @@ function calcWellness() {
   // ── Savings rate (15pts) ──────────────────────────────────────
   const srM = (cfg.metrics || []).find(m => m.id === 'savings_rate') || {};
   const srMax = srM.max ?? 15;
-  // SR = aporte / (aporte + custo_vida_mensal) — definição padrão (0-100%)
-  const _custoMensalSR = DATA.premissas.custo_vida_base / 12;
+  // SR = aporte / renda_estimada — definição padrão FIRE (renda_estimada = R$45k/mês de config.py)
   const _aporteSR = DATA.premissas.aporte_mensal;
-  const sr = _aporteSR / (_aporteSR + _custoMensalSR);
+  const _rendaEstimadaSR = DATA.premissas.renda_estimada ?? 45000;
+  const sr = _aporteSR / _rendaEstimadaSR;
   const srPct = sr * 100; // ex: 54.6%
   const srThr = srM.thresholds || [{min_pct:50,pts:15},{min_pct:40,pts:10},{min_pct:25,pts:5},{min_pct:0,pts:0}];
   let srPts = 0;
@@ -1866,18 +1866,32 @@ function buildFanChart() {
   const startYear = today.getFullYear() + today.getMonth() / 12;
   const endYear = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual) + 30;
   const labels = [], p10 = [], p50 = [], p90 = [];
-  const spread50_10 = 0.15, spread90_50 = 0.20;
   // Labels com ano + idade para contexto temporal duplo
   const _idadeBase = DATA.premissas.idade_atual;
   const _anoBase = today.getFullYear();
+  const _aporteAnual = (DATA.premissas.aporte_mensal ?? 25000) * 12; // R$/ano — inclui aportes na projeção
+  // Âncoras MC para P10/P90 no FIRE@53 — calibra spread vs heurística
+  const _tFire53 = (DATA.premissas.idade_fire_alvo ?? 53) - (DATA.premissas.idade_atual ?? 39);
+  const _mc53 = DATA.scenario_comparison?.fire53;
+  // med(t_fire53) com aportes: usado para derivar ratio_10/ratio_90 do MC
+  const _medFire53 = r > 0
+    ? pat0 * Math.pow(1+r, _tFire53) + _aporteAnual * (Math.pow(1+r, _tFire53) - 1) / r
+    : pat0 + _aporteAnual * _tFire53;
+  const _ratio10 = _mc53?.pat_p10  ? (_mc53.pat_p10  / _medFire53) : 0.593;
+  const _ratio90 = _mc53?.pat_p90  ? (_mc53.pat_p90  / _medFire53) : 1.641;
   for (let yr = Math.ceil(startYear); yr <= endYear; yr++) {
     const t = yr - startYear;
-    const med = pat0 * Math.pow(1 + r, t);
+    // P50: pat0*(1+r)^t + aporte_anual * ((1+r)^t - 1) / r  (inclui aportes reais)
+    const med = r > 0
+      ? pat0 * Math.pow(1+r, t) + _aporteAnual * (Math.pow(1+r, t) - 1) / r
+      : pat0 + _aporteAnual * t;
     const _idade = _idadeBase + (yr - _anoBase);
     labels.push([String(yr), `(${_idade} anos)`]);
     p50.push(Math.round(med));
-    p10.push(Math.round(med * (1 - spread50_10 * Math.sqrt(t))));
-    p90.push(Math.round(med * (1 + spread90_50 * Math.sqrt(t))));
+    // P10/P90: spread calibrado pelo MC no FIRE@53, escalado por sqrt(t/t_fire53)
+    const _frac = _tFire53 > 0 ? Math.sqrt(Math.min(t, _tFire53) / _tFire53) : 0;
+    p10.push(Math.round(med * (1 - (1 - _ratio10) * _frac)));
+    p90.push(Math.round(med * (1 + (_ratio90 - 1) * _frac)));
   }
   // FIRE day markers
   const _anoFire50 = _anoBase + (DATA.premissas.idade_fire_aspiracional ?? 50) - _idadeBase;
@@ -1983,7 +1997,7 @@ function buildIncomeChart() {
   charts.income = new Chart(document.getElementById('incomeChart'), {
     type: 'bar',
     data: {
-      labels: ['Go-Go (53–68)', 'Slow-Go (68–83)', 'No-Go (83+)'],
+      labels: (function() { const a = DATA.premissas?.idade_fire_alvo ?? 53; return [`Go-Go (${a}–${a+15})`, `Slow-Go (${a+15}–${a+30})`, `No-Go (${a+30}+)`]; })(),
       datasets: [
         { label: 'Lifestyle ex-saúde', data: [sm.go_go.gasto, sm.slow_go.gasto, sm.no_go.gasto], backgroundColor: 'rgba(59,130,246,.7)' },
         { label: 'Saúde (SAUDE_BASE+inflator)', data: [saude, saude * 1.3, saude * 2.0], backgroundColor: 'rgba(239,68,68,.5)' },
@@ -3181,7 +3195,7 @@ function buildIncomeProjection() {
   const inssInicio    = p.inss_inicio_ano   || 12;   // anos após FIRE → age 65
   const inssAnual     = p.inss_anual        || 18000;
   const custoBase     = p.custo_vida_base   || 250000;
-  const rendaAtiva    = 45000 * 12;                  // R$45k/mês pré-FIRE (renda_estimada)
+  const rendaAtiva    = (p.renda_estimada ?? 45000) * 12; // R$/ano pré-FIRE (de DATA.premissas.renda_estimada)
 
   const anoFire = anoAtual + (idadeFireAlvo - idadeAtual);
   const anoInss = anoFire  + inssInicio;             // 2039 + 12 = 2051 → age 65
@@ -3824,13 +3838,13 @@ function renderKPIs() {
   // Progresso sub: gatilho de DATA
   const _heroProgressoSub = document.getElementById('heroProgressoSub');
   if (_heroProgressoSub) _heroProgressoSub.textContent = `vs gatilho R$${(PAT_GATILHO/1e6).toFixed(1)}M`;
-  const _custoMensalHero = DATA.premissas.custo_vida_base / 12;
   const _aporteHero = DATA.premissas.aporte_mensal;
-  const srHero = _aporteHero / (_aporteHero + _custoMensalHero);
+  const _rendaHero = DATA.premissas.renda_estimada ?? 45000;
+  const srHero = _aporteHero / _rendaHero;
   const heroSrEl = document.getElementById('heroSavings');
   heroSrEl.textContent = fmtPct(srHero * 100);
   heroSrEl.style.color = srHero >= 0.5 ? '#22c55e' : srHero >= 0.4 ? '#eab308' : '#ef4444';
-  document.getElementById('heroSavingsSub').textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_custoMensalHero/1000).toFixed(1)}k custo`;
+  document.getElementById('heroSavingsSub').textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_rendaHero/1000).toFixed(0)}k renda`;
 
   // KPI 1: P(FIRE@50) — fonte: DATA.pfire50.base
   (function() {
@@ -4141,13 +4155,13 @@ function renderKPIs() {
   const _swrSubEl = document.getElementById('swrFireDaySub');
   if (_swrEl) { _swrEl.textContent = fmtPct(swrFireDay * 100, 2); }
   if (_swrSubEl) _swrSubEl.textContent = `R$${(DATA.premissas.custo_vida_base/1000).toFixed(0)}k / ${_gatilhoStr} · Meta ≤ ${((DATA.premissas.swr_gatilho ?? 0.024)*100).toFixed(1)}%`;
-  const _custoMensal = DATA.premissas.custo_vida_base / 12;
   const _aporteKPI = DATA.premissas.aporte_mensal;
-  const sr = _aporteKPI / (_aporteKPI + _custoMensal);
+  const _rendaEstimadaKPI = DATA.premissas.renda_estimada ?? 45000;
+  const sr = _aporteKPI / _rendaEstimadaKPI;
   document.getElementById('savingsRate').textContent = fmtPct(sr*100);
   document.getElementById('savingsRateFill').style.width = Math.min(100, sr * 2 * 100) + '%'; // 50% = full bar
   const srSubEl = document.getElementById('savingsRateSub');
-  if (srSubEl) srSubEl.textContent = `Aporte R$${(_aporteKPI/1000).toFixed(0)}k / Custo vida R$${(_custoMensal/1000).toFixed(1)}k/mês`;
+  if (srSubEl) srSubEl.textContent = `Aporte R$${(_aporteKPI/1000).toFixed(0)}k / Renda estimada R$${(_rendaEstimadaKPI/1000).toFixed(0)}k/mês`;
 
   // TER — lê de wellness_config
   const _terCfgKPI = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
@@ -4389,7 +4403,7 @@ function buildIncomeTable() {
   if (!tbody) return;
   const sm = DATA.spendingSmile || {};
   const inss = DATA.premissas.inss_anual ?? 18000;
-  const inssInicio = DATA.premissas.inss_inicio_ano ?? 65;
+  const inssInicio = DATA.premissas.inss_inicio_ano ?? 12; // anos após FIRE = age 65
   const ageAlvo = DATA.premissas.idade_fire_alvo ?? 53;
   // Fases: Go-Go, Slow-Go, No-Go
   const fases = [
