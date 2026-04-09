@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Broker Analysis — Multi-corretora (IBKR + XP + futuro Nubank)
+Broker Analysis — Multi-corretora (IBKR + XP + Nubank)
 Orquestra parsing de extratos e gera outputs padronizados em dados/<broker>/
 
 Uso:
-    python3 analysis/broker_analysis.py                # roda todos os brokers
-    python3 analysis/broker_analysis.py --broker xp    # só XP
-    python3 analysis/broker_analysis.py --broker ibkr  # só IBKR (delega ao ibkr_analysis.py)
+    python3 analysis/broker_analysis.py                  # roda todos os brokers
+    python3 analysis/broker_analysis.py --broker xp      # só XP
+    python3 analysis/broker_analysis.py --broker nubank  # só Nubank (Tesouro Direto)
+    python3 analysis/broker_analysis.py --broker ibkr    # só IBKR (delega ao ibkr_analysis.py)
 """
 
 import json
@@ -20,6 +21,8 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 XP_PDF_DIR = ROOT / "analysis" / "raw" / "negociacoes xp"
 XP_OUTPUT_DIR = ROOT / "dados" / "xp"
+NUBANK_INPUT = ROOT / "dados" / "nubank" / "operacoes_td.json"
+NUBANK_OUTPUT_DIR = ROOT / "dados" / "nubank"
 IBKR_SCRIPT = ROOT / "analysis" / "ibkr_analysis.py"
 
 
@@ -328,6 +331,127 @@ def generate_xp_outputs(operations: list[dict], open_lots: dict, realized: list[
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# NUBANK — Tesouro Direto (input manual JSON)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Mapeamento título → chave canônica
+NUBANK_TITULO_MAP = {
+    "IPCA+ 2029": "ipca2029",
+    "IPCA+ 2045": "ipca2045",
+    "IPCA+ 2040": "ipca2040",
+    "Tesouro IPCA+ 2040": "ipca2040",
+    "RendA+ 2065": "renda2065",
+}
+
+
+def parse_nubank() -> list[dict]:
+    """Lê operacoes_td.json (input manual de screenshots Nubank)."""
+    if not NUBANK_INPUT.exists():
+        print(f"  ⚠ Arquivo não encontrado: {NUBANK_INPUT}")
+        return []
+    data = json.loads(NUBANK_INPUT.read_text())
+    ops = data.get("operacoes", [])
+    # Normalizar
+    for op in ops:
+        op["titulo_key"] = NUBANK_TITULO_MAP.get(op["titulo"], op["titulo"])
+    return sorted(ops, key=lambda x: x["data"])
+
+
+def analyze_nubank(ops: list[dict]) -> dict:
+    """
+    Analisa operações de Tesouro Direto: total aplicado por título,
+    resgates, e posição líquida (aplicado - resgatado).
+
+    Nota: Tesouro Direto não tem 'lotes' como ações/ETFs — o valor aplicado
+    compra frações de títulos cujo preço unitário muda diariamente.
+    Rastreamos valor aplicado (custo base) por título.
+    """
+    by_titulo = defaultdict(lambda: {"aplicacoes": [], "resgates": [],
+                                      "total_aplicado": 0, "total_resgatado": 0})
+
+    for op in ops:
+        key = op["titulo_key"]
+        entry = {"data": op["data"], "valor": op["valor_brl"]}
+        if op.get("nota"):
+            entry["nota"] = op["nota"]
+
+        if op["tipo"] == "aplicacao":
+            by_titulo[key]["aplicacoes"].append(entry)
+            by_titulo[key]["total_aplicado"] += op["valor_brl"]
+        elif op["tipo"] == "resgate":
+            by_titulo[key]["resgates"].append(entry)
+            by_titulo[key]["total_resgatado"] += op["valor_brl"]
+
+    # Posição líquida (custo base restante)
+    for key, data in by_titulo.items():
+        data["liquido_aplicado"] = round(data["total_aplicado"] - data["total_resgatado"], 2)
+        data["total_aplicado"] = round(data["total_aplicado"], 2)
+        data["total_resgatado"] = round(data["total_resgatado"], 2)
+
+    return dict(by_titulo)
+
+
+def generate_nubank_outputs(ops: list[dict], by_titulo: dict):
+    """Gera JSONs em dados/nubank/."""
+    NUBANK_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # ── resumo_td.json (posição por título)
+    resumo_path = NUBANK_OUTPUT_DIR / "resumo_td.json"
+    resumo_path.write_text(json.dumps(by_titulo, indent=2, ensure_ascii=False))
+    print(f"  ✓ {resumo_path.relative_to(ROOT)}")
+
+    return by_titulo
+
+
+def run_nubank():
+    """Processa operações Nubank (Tesouro Direto)."""
+    print(f"\n{'═' * 70}")
+    print("NUBANK — Tesouro Direto")
+    print(f"{'═' * 70}\n")
+
+    ops = parse_nubank()
+    if not ops:
+        print("  Nenhuma operação encontrada.")
+        return
+
+    print(f"  Total: {len(ops)} operações")
+    print(f"  Período: {ops[0]['data']} → {ops[-1]['data']}")
+
+    by_titulo = analyze_nubank(ops)
+
+    # Resumo
+    print(f"\n{'─' * 70}")
+    print("POSIÇÃO POR TÍTULO (custo base)")
+    print(f"{'─' * 70}")
+    total_app = 0
+    total_res = 0
+    for key in sorted(by_titulo.keys()):
+        t = by_titulo[key]
+        n_app = len(t["aplicacoes"])
+        n_res = len(t["resgates"])
+        total_app += t["total_aplicado"]
+        total_res += t["total_resgatado"]
+        status = "ATIVO" if t["liquido_aplicado"] > 0 else "ZERADO"
+        print(f"  {key:<12} {n_app} aplic. R${t['total_aplicado']:>12,.2f}"
+              f"  |  {n_res} resg. R${t['total_resgatado']:>12,.2f}"
+              f"  |  líquido R${t['liquido_aplicado']:>12,.2f}  [{status}]")
+
+    print(f"\n  Total aplicado:  R${total_app:>12,.2f}")
+    print(f"  Total resgatado: R${total_res:>12,.2f}")
+    print(f"  Líquido:         R${total_app - total_res:>12,.2f}")
+
+    # Salvar
+    print(f"\n{'─' * 70}")
+    print("SALVANDO OUTPUTS")
+    print(f"{'─' * 70}")
+    generate_nubank_outputs(ops, by_titulo)
+
+    print(f"\n{'═' * 70}")
+    print("NUBANK ANÁLISE CONCLUÍDA")
+    print(f"{'═' * 70}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # IBKR — delega ao script existente
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -412,12 +536,14 @@ def run_xp():
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Broker Analysis — Multi-corretora")
-    parser.add_argument("--broker", choices=["xp", "ibkr", "all"], default="all",
+    parser.add_argument("--broker", choices=["xp", "ibkr", "nubank", "all"], default="all",
                         help="Qual corretora processar (default: all)")
     args = parser.parse_args()
 
     if args.broker in ("xp", "all"):
         run_xp()
+    if args.broker in ("nubank", "all"):
+        run_nubank()
     if args.broker in ("ibkr", "all"):
         run_ibkr()
 
