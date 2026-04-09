@@ -66,16 +66,16 @@ def _validate_data(data: dict) -> None:
 
 
 def _compute_income_projection(data: dict) -> dict:
-    """Computa projeção de renda de 2026 a 2077 (age 90).
+    """Projeção de renda de 2026 a 2077 (age 90) em R$ REAIS (constante 2026).
+
+    Todas as séries em termos reais — sem inflação nominal.
+    Despesas pós-FIRE usam spending smile (go-go / slow-go / no-go).
 
     Fontes:
     - premissas.renda_estimada: R$45k/mês (config.py RENDA_ESTIMADA — mensal)
-    - premissas.aporte_mensal: R$25k/mês
-    - premissas.custo_vida_base: R$250k/ano
-    - premissas.ipca_anual: 4% a.a.
-    - premissas.inss_anual: R$18k/ano
-    - premissas.inss_inicio_ano: 12 anos pós-FIRE (age 65 = ano 2052)
-    - premissas.idade_fire_alvo: 53, idade_fire_aspiracional: 50, idade_atual: 39
+    - premissas.custo_vida_base: R$250k/ano (pré-FIRE)
+    - premissas.inss_anual: R$18k/ano real
+    - spendingSmile: go_go R$242k / slow_go R$200k / no_go R$187k
     - life_events.json: casamento R$100k em 2027
     """
     premissas = data.get("premissas", {})
@@ -84,12 +84,16 @@ def _compute_income_projection(data: dict) -> dict:
     idade_fire_alvo = premissas.get("idade_fire_alvo", 53)
     idade_fire_aspir = premissas.get("idade_fire_aspiracional", 50)
     custo_vida_base = premissas.get("custo_vida_base", 250000)
-    ipca = premissas.get("ipca_anual", 0.04)
     inss_anual = premissas.get("inss_anual", 18000)
-    inss_inicio_ano = premissas.get("inss_inicio_ano", 12)  # 12 anos pós-FIRE = age 65
     # RENDA_ESTIMADA em config.py é mensal (R$45k/mês)
     renda_estimada_mensal = premissas.get("renda_estimada", 45000)
     renda_ativa_anual = renda_estimada_mensal * 12  # R$540k/ano
+
+    # Spending smile (pós-FIRE): gasto lifestyle declina com idade
+    smile = data.get("spendingSmile", {})
+    go_go  = smile.get("go_go",  {"gasto": 242000, "inicio": 0,  "fim": 15})
+    slow_go = smile.get("slow_go", {"gasto": 200000, "inicio": 15, "fim": 30})
+    no_go  = smile.get("no_go",  {"gasto": 187000, "inicio": 30, "fim": 99})
 
     ano_fire_base = ano_atual + (idade_fire_alvo - idade_atual)   # 2040
     ano_fire_aspir = ano_atual + (idade_fire_aspir - idade_atual)  # 2037
@@ -100,6 +104,15 @@ def _compute_income_projection(data: dict) -> dict:
     # Fim hipoteca: fev/2051 (age 64)
     ano_hipoteca_fim = ano_atual + (64 - idade_atual)              # 2051
 
+    def _smile_spending(anos_pos_fire: int) -> float:
+        """Retorna gasto real para dado ano pós-FIRE usando spending smile."""
+        if anos_pos_fire < go_go["fim"]:
+            return go_go["gasto"]
+        elif anos_pos_fire < slow_go["fim"]:
+            return slow_go["gasto"]
+        else:
+            return no_go["gasto"]
+
     anos = list(range(ano_atual, ano_fim + 1))
     renda_ativa = []
     saque_portfolio = []
@@ -107,22 +120,18 @@ def _compute_income_projection(data: dict) -> dict:
     despesas = []
 
     for ano in anos:
-        t = ano - ano_atual  # anos desde hoje
-        desp = custo_vida_base * ((1 + ipca) ** t)
-
         if ano < ano_fire_base:
-            # Pré-FIRE: renda ativa, sem saque
+            # Pré-FIRE: renda ativa, despesa constante real, sem saque
+            desp = custo_vida_base
             ra = renda_ativa_anual
             inss_v = 0.0
             saque = 0.0
         else:
-            # Pós-FIRE: sem renda ativa, saque cobre gap
+            # Pós-FIRE: spending smile, sem renda ativa
+            anos_pos = ano - ano_fire_base
+            desp = _smile_spending(anos_pos)
             ra = 0.0
-            t_inss = ano - ano_inss
-            if ano >= ano_inss:
-                inss_v = inss_anual * ((1 + ipca) ** t_inss)
-            else:
-                inss_v = 0.0
+            inss_v = inss_anual if ano >= ano_inss else 0.0
             saque = max(0.0, desp - inss_v)
 
         renda_ativa.append(round(ra))
@@ -289,7 +298,7 @@ def _compute_net_worth_projection(data: dict) -> dict:
     e loop iterativo em termos REAIS pós-FIRE (elimina bug r-real × desp-nominal).
 
     Premissas pós-FIRE:
-    - spending_real = R$250k constante em termos reais (não inflacionar)
+    - spending smile: go-go R$242k / slow-go R$200k / no-go R$187k (termos reais)
     - inss_real = R$18k constante em termos reais a partir de age 65
     - P10/P50/P90: mesma taxa real 4.85% (Opção A Quant 2026-04-08 — dispersão via endpoints MC)
 
@@ -297,11 +306,16 @@ def _compute_net_worth_projection(data: dict) -> dict:
     """
     premissas = data.get("premissas", {})
     pat_atual = premissas.get("patrimonio_atual", 3472335)
-    custo_vida = premissas.get("custo_vida_base", 250000)
     inss_anual = premissas.get("inss_anual", 18000)
     ano_atual = premissas.get("ano_atual", 2026)
     idade_atual = premissas.get("idade_atual", 39)
     idade_fire = premissas.get("idade_fire_alvo", 53)
+
+    # Spending smile (pós-FIRE): gasto lifestyle declina com idade
+    smile = data.get("spendingSmile", {})
+    go_go  = smile.get("go_go",  {"gasto": 242000, "inicio": 0,  "fim": 15})
+    slow_go = smile.get("slow_go", {"gasto": 200000, "inicio": 15, "fim": 30})
+    no_go  = smile.get("no_go",  {"gasto": 187000, "inicio": 30, "fim": 99})
 
     # Retornos reais por percentil (pós-FIRE)
     # r_p50: lido de premissas (fonte: dashboard_state.json / fire_montecarlo.py)
@@ -333,15 +347,25 @@ def _compute_net_worth_projection(data: dict) -> dict:
 
     anos_ate_fire = ano_fire - ano_atual
 
+    def _smile_spending(anos_pos_fire: int) -> float:
+        """Retorna gasto real para dado ano pós-FIRE usando spending smile."""
+        if anos_pos_fire < go_go["fim"]:
+            return go_go["gasto"]
+        elif anos_pos_fire < slow_go["fim"]:
+            return slow_go["gasto"]
+        else:
+            return no_go["gasto"]
+
     def _sim_portfolio(pat_base: float, r_real: float, anos_sim: int) -> list:
         """Simula portfólio pós-FIRE em termos reais. Retorna lista de valores por ano.
 
-        spending e INSS são constantes em termos reais (R$ 2026).
+        spending usa spending smile (go-go/slow-go/no-go). INSS constante real.
         """
         vals = [pat_base]
         for i in range(1, anos_sim + 1):
             ano_corrente = ano_fire + i
             inss = inss_anual if ano_corrente >= ano_inss_global else 0.0
+            custo_vida = _smile_spending(i - 1)  # ano 0-based pós-FIRE
             saque = max(0.0, custo_vida - inss)
             novo = vals[-1] * (1 + r_real) - saque
             vals.append(max(0.0, novo))
@@ -404,7 +428,7 @@ def _compute_net_worth_projection(data: dict) -> dict:
         "p50": p50_vals,
         "p90": p90_vals,
         "ano_fire": ano_fire,
-        "nota_unidades": "Projeção pós-FIRE em R$ reais (constante 2026). Spending R$250k/ano real; INSS R$18k/ano real a partir de age 65.",
+        "nota_unidades": f"Projeção pós-FIRE em R$ reais (constante 2026). Spending smile: Go-Go R${go_go['gasto']//1000}k / Slow-Go R${slow_go['gasto']//1000}k / No-Go R${no_go['gasto']//1000}k. INSS R$18k/ano real a partir de age 65.",
         "nota_imovel": "// TODO: apreciação imobiliária — taxa não definida nas premissas",
         "nota_inss": "// TODO: PV do INSS futuro — taxa de desconto não aprovada",
         "nota_cap_humano": "// TODO: capital humano — sem projeção aprovada",

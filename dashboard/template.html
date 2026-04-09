@@ -19,7 +19,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kpi-value{font-size:1.5rem;font-weight:700;margin-top:2px}.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
 .kpi-fire{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
 .section{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
-.section h2{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.section h2{font-size:.8rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 @media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
@@ -704,9 +704,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
 <div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
-  Pré-FIRE: renda ativa (estimativa R$45k/mês) · Pós-FIRE: saque do portfólio cobre gap despesas − INSS · INSS: R$18k/ano a partir dos 65 (inflacionado 4%/ano)
+  Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa R$45k/mês · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS R$18k/ano a partir dos 65.
 </div>
-<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano</div>
+<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending smile (R$ reais 2026)</div>
 </div>
 
 <!-- F7: Net Worth Projection P10/P50/P90 -->
@@ -715,7 +715,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
   ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
-  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending R$250k/ano constante (R$ 2026). INSS R$18k/ano a partir de age 65.
+  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS R$18k/ano real a partir de age 65.
 </div>
 <div class="src" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
 </div>
@@ -2683,7 +2683,7 @@ function buildIncomeProjection() {
           order: 2,
         },
         {
-          label: 'Despesas (R$250k × 4%/ano)',
+          label: 'Despesas — Spending Smile (R$ reais)',
           data: ip.despesas,
           type: 'line',
           borderColor: 'rgba(239,68,68,.85)',
@@ -3123,8 +3123,8 @@ function buildSankey() {
           colorTo:   (c) => NODE_COLORS[c.dataset.data[c.dataIndex].to]   || '#64748b',
           colorMode: 'gradient',
           size: 'min',
-          // Espaçamento entre nós — aumentado para legibilidade em 200px de altura
-          nodePadding: 12,
+          // Espaçamento entre nós — aumentado para respiração visual
+          nodePadding: 24,
           borderWidth: 0,
           // Labels em branco para legibilidade sobre fundos escuros
           color: '#e2e8f0',
