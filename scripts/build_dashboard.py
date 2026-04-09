@@ -291,7 +291,7 @@ def _compute_net_worth_projection(data: dict) -> dict:
     Premissas pós-FIRE:
     - spending_real = R$250k constante em termos reais (não inflacionar)
     - inss_real = R$18k constante em termos reais a partir de age 65
-    - P50: retorno real 4.85% | P10: 2.50% | P90: 7.00%
+    - P10/P50/P90: mesma taxa real 4.85% (Opção A Quant 2026-04-08 — dispersão via endpoints MC)
 
     Componentes de imóvel, INSS e capital humano: TODO (dados não aprovados).
     """
@@ -306,12 +306,11 @@ def _compute_net_worth_projection(data: dict) -> dict:
     # Retornos reais por percentil (pós-FIRE)
     # r_p50: lido de premissas (fonte: dashboard_state.json / fire_montecarlo.py)
     r_p50 = premissas.get("retorno_equity_base", 0.0485)
-    # r_p10 / r_p90: derivados via aproximação log-normal no horizonte longo.
-    # P10 ≈ mediana − 0.5×vol  |  P90 ≈ mediana + 0.5×vol
-    # (0.5σ captura ~± 1/2 desvio-padrão, conservador para horizonte 30+ anos)
-    vol = premissas.get("volatilidade_equity", 0.168)
-    r_p10 = r_p50 - vol * 0.5
-    r_p90 = r_p50 + vol * 0.5
+    # Opção A (Quant 2026-04-08): usar mesma taxa para P10/P50/P90.
+    # Dispersão representada pelos patrimônios iniciais MC (endpoints reais).
+    # vol * 0.5 produzia r_p90=13.25% real → absurdo (R$1.4B).
+    r_p10 = r_p50
+    r_p90 = r_p50
 
     ano_fire = ano_atual + (idade_fire - idade_atual)
     anos_longevidade = 90
