@@ -96,7 +96,8 @@
     "hodl11": {
       "qty": 1676,
       "preco_brl": 59.79,
-      "valor_brl": 100208
+      "valor_brl": 100208,
+      "avg_cost": null
     }
   },
   "fire": {
