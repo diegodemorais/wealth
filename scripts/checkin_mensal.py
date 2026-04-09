@@ -23,7 +23,7 @@ import pandas as pd
 from bcb import sgs
 
 sys.path.insert(0, os.path.dirname(__file__))
-from config import PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS, update_dashboard_state
+from config import PESOS_TARGET, PESOS_SHADOW_C, IR_ALIQUOTA, BUCKET_TICKERS, update_dashboard_state, load_dashboard_state
 
 
 # ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
@@ -835,15 +835,30 @@ def main():
     }
     update_dashboard_state("shadows", shadows_data, generator="checkin_mensal.py")
 
-    # ── Mercado — preços de referência (BTC/USD + câmbio) ──
+    # ── Mercado — preços de referência (BTC/USD + câmbio) + MtD seed ──
     # btc_usd_fim e usd_brl_fim já foram buscados acima para Shadow C / retornos
     mercado_data = {
         "cambio_brl_usd": round(usd_brl_fim, 4),
-        "btc_usd": round(btc_usd_fim, 2),
-        "fonte": "yfinance BTC-USD + USDBRL=X",
-        "updated": str(date.today()),
+        "btc_usd":        round(btc_usd_fim, 2),
+        "fonte":          "yfinance BTC-USD + USDBRL=X",
+        "updated":        str(date.today()),
     }
     update_dashboard_state("mercado", mercado_data, generator="checkin_mensal.py")
+
+    # MtD reference — seed/atualiza início do mês
+    from datetime import date as _date
+    _mes_atual = _date.today().strftime("%Y-%m")
+    _state_now = load_dashboard_state()
+    _mtd_ref   = _state_now.get("mercado_mtd", {})
+    if _mtd_ref.get("ref_mes") != _mes_atual:
+        _rf_state = _state_now.get("rf", {})
+        update_dashboard_state("mercado_mtd", {
+            "ref_mes":        _mes_atual,
+            "cambio":         round(usd_brl_fim, 4),
+            "btc_usd":        round(btc_usd_fim, 2),
+            "ipca2040_taxa":  _rf_state.get("ipca2040",  {}).get("taxa"),
+            "renda2065_taxa": _rf_state.get("renda2065", {}).get("taxa"),
+        }, generator="checkin_mensal.py")
 
     # Output
     formatar_output(

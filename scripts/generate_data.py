@@ -44,6 +44,7 @@ from config import (
     FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
     BOND_TENT_META_ANOS,
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
+    update_dashboard_state,
 )
 
 VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
@@ -1964,14 +1965,46 @@ def main():
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
 
-    # ─── Mercado snapshot (BTC + câmbio) ────────────────────────────────────
+    # ─── Mercado snapshot (BTC + câmbio) + deltas MtD ──────────────────────
     # BTC-USD já fetchado em get_macro_data() — reutilizar, sem novo download
     _mercado_state = state.get("mercado", {})
+    _btc_current   = macro.get("bitcoin_usd") or _mercado_state.get("btc_usd")
+
+    # MtD reference — seed no início de cada mês
+    _mes_atual = date.today().strftime("%Y-%m")
+    _mtd_ref   = state.get("mercado_mtd", {})
+    _taxa_ipca_atual  = rf.get("ipca2040",  {}).get("taxa")
+    _taxa_renda_atual = rf.get("renda2065", {}).get("taxa")
+
+    if _mtd_ref.get("ref_mes") != _mes_atual:
+        # Novo mês: seed com valores atuais (delta = 0 por ora)
+        _mtd_ref = {
+            "ref_mes":       _mes_atual,
+            "cambio":        cambio,
+            "btc_usd":       _btc_current,
+            "ipca2040_taxa": _taxa_ipca_atual,
+            "renda2065_taxa": _taxa_renda_atual,
+        }
+        update_dashboard_state("mercado_mtd", _mtd_ref, generator="generate_data.py")
+
+    # Calcular deltas vs referência de início do mês
+    def _pct(cur, ref):
+        if cur is None or ref is None or ref == 0: return None
+        return round((cur / ref - 1) * 100, 2)
+    def _pp(cur, ref):
+        if cur is None or ref is None: return None
+        return round(cur - ref, 3)
+
     mercado = {
-        "cambio_brl_usd": cambio,
-        "btc_usd":        macro.get("bitcoin_usd") or _mercado_state.get("btc_usd"),
-        "fonte":          "yfinance BTC-USD + PTAX BCB",
-        "updated":        str(date.today()),
+        "cambio_brl_usd":    cambio,
+        "btc_usd":           _btc_current,
+        "cambio_mtd_pct":    _pct(cambio,            _mtd_ref.get("cambio")),
+        "btc_mtd_pct":       _pct(_btc_current,      _mtd_ref.get("btc_usd")),
+        "ipca2040_mtd_pp":   _pp(_taxa_ipca_atual,   _mtd_ref.get("ipca2040_taxa")),
+        "renda2065_mtd_pp":  _pp(_taxa_renda_atual,  _mtd_ref.get("renda2065_taxa")),
+        "ref_mes":           _mes_atual,
+        "fonte":             "yfinance BTC-USD + PTAX BCB",
+        "updated":           str(date.today()),
     }
 
     # ─── Bond Pool Readiness ─────────────────────────────────────────────

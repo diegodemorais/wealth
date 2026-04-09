@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T15:37:53",
-  "_generated_brt": "2026-04-09T15:37:53-03:00",
+  "_generated": "2026-04-09T17:18:52",
+  "_generated_brt": "2026-04-09T17:18:52-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1910,6 +1910,11 @@
   "mercado": {
     "cambio_brl_usd": 5.156,
     "btc_usd": 71877.1,
+    "cambio_mtd_pct": 0.0,
+    "btc_mtd_pct": 0.0,
+    "ipca2040_mtd_pp": 0.0,
+    "renda2065_mtd_pp": 0.0,
+    "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
     "updated": "2026-04-09"
   },

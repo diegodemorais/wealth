@@ -1204,12 +1204,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T15:59:34-03:00'); // BRT (UTC-3)
-const VERSION = '1.99';
+const GENERATED_AT = new Date('2026-04-09T17:18:53-03:00'); // BRT (UTC-3)
+const VERSION = '1.100';
 
 const DATA = {
-  "_generated": "2026-04-09T15:37:53",
-  "_generated_brt": "2026-04-09T15:37:53-03:00",
+  "_generated": "2026-04-09T17:18:52",
+  "_generated_brt": "2026-04-09T17:18:52-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -3119,6 +3119,11 @@ const DATA = {
   "mercado": {
     "cambio_brl_usd": 5.156,
     "btc_usd": 71877.1,
+    "cambio_mtd_pct": 0.0,
+    "btc_mtd_pct": 0.0,
+    "ipca2040_mtd_pp": 0.0,
+    "renda2065_mtd_pp": 0.0,
+    "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
     "updated": "2026-04-09"
   },
@@ -4209,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.99"
+  "version": "1.100"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -6955,55 +6960,74 @@ function renderKPIs() {
     if (subEl) subEl.textContent = `$${(ai.retorno_usd/1000).toFixed(0)}k retorno de $${(ai.patrimonio_equity_usd/1000).toFixed(0)}k`;
   })();
 
-  // KPI row 2: mercado snapshot (Dólar, BTC, IPCA+ taxa, Renda+ taxa)
+  // KPI row 2: mercado snapshot (Dólar, BTC, IPCA+ taxa, Renda+ taxa) + MtD
   (function() {
-    // Dólar BRL
-    const kpiC = document.getElementById('kpiCambio');
-    if (kpiC) {
-      const fx = DATA.mercado?.cambio_brl_usd ?? DATA.cambio;
-      kpiC.textContent = fx != null ? 'R$' + fx.toFixed(3) : '—';
+    const m = DATA.mercado ?? {};
+
+    // Helper: seta + variação MtD
+    // delta: número (% ou pp) | mode: 'pct' | 'pp' | up_good: bool (seta verde se sobe)
+    function _mtdBadge(delta, mode, up_good) {
+      if (delta == null) return '';
+      const up    = delta > 0;
+      const zero  = Math.abs(delta) < 0.005;
+      const arrow = zero ? '→' : (up ? '↑' : '↓');
+      const good  = zero ? null : (up === up_good);
+      const color = good == null ? '#94a3b8' : (good ? '#22c55e' : '#ef4444');
+      const str   = mode === 'pp'
+        ? (delta > 0 ? '+' : '') + delta.toFixed(2) + 'pp'
+        : (delta > 0 ? '+' : '') + delta.toFixed(1) + '%';
+      return `<span style="color:${color};font-size:.7em;margin-left:3px">${arrow} ${str} MtD</span>`;
     }
+
+    // Dólar BRL
+    (function() {
+      const el    = document.getElementById('kpiCambio');
+      const subEl = document.querySelector('#kpiCambio + .kpi-sub, #kpiCambio ~ .kpi-sub');
+      if (!el) return;
+      const fx = m.cambio_brl_usd ?? DATA.cambio;
+      el.innerHTML = (fx != null ? 'R$' + fx.toFixed(3) : '—') + _mtdBadge(m.cambio_mtd_pct, 'pct', false);
+    })();
 
     // Bitcoin USD
-    const kpiB = document.getElementById('kpiBtcUsd');
-    if (kpiB) {
-      const btc = DATA.mercado?.btc_usd ?? DATA.macro?.bitcoin_usd;
-      kpiB.textContent = btc != null ? '$' + Math.round(btc).toLocaleString('pt-BR') : '—';
-    }
+    (function() {
+      const el = document.getElementById('kpiBtcUsd');
+      if (!el) return;
+      const btc = m.btc_usd ?? DATA.macro?.bitcoin_usd;
+      el.innerHTML = (btc != null ? '$' + Math.round(btc).toLocaleString('pt-BR') : '—') + _mtdBadge(m.btc_mtd_pct, 'pct', true);
+    })();
 
-    // IPCA+ 2040 — taxa de mercado + badge DCA
+    // IPCA+ 2040 — taxa de mercado + badge DCA + MtD
     (function() {
       const el    = document.getElementById('kpiIpcaMercado');
       const subEl = document.getElementById('kpiIpcaMercadoSub');
       if (!el) return;
       const taxa = DATA.rf?.ipca2040?.taxa;
       if (taxa == null) { el.textContent = '—'; return; }
-      el.textContent = taxa.toFixed(2) + '%';
+      el.innerHTML = taxa.toFixed(2) + '%' + _mtdBadge(m.ipca2040_mtd_pp, 'pp', true);
       if (subEl) {
         const piso  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
         const ativo = taxa >= piso;
-        const dot   = ativo ? '🟢' : '🔴';
-        subEl.textContent = dot + (ativo ? ' DCA ativo' : ' pausado') + ' (piso ' + piso.toFixed(1) + '%)';
+        subEl.textContent = (ativo ? '● DCA ativo' : '● pausado') + ' (piso ' + piso.toFixed(1) + '%)';
         subEl.style.color = ativo ? '#22c55e' : '#ef4444';
       }
     })();
 
-    // Renda+ 2065 — taxa de mercado + badge compra/manter/venda
+    // Renda+ 2065 — taxa de mercado + badge compra/manter/venda + MtD
     (function() {
       const el    = document.getElementById('kpiRendaMercado');
       const subEl = document.getElementById('kpiRendaMercadoSub');
       if (!el) return;
       const taxa = DATA.rf?.renda2065?.taxa;
       if (taxa == null) { el.textContent = '—'; return; }
-      el.textContent = taxa.toFixed(2) + '%';
+      el.innerHTML = taxa.toFixed(2) + '%' + _mtdBadge(m.renda2065_mtd_pp, 'pp', true);
       if (subEl) {
-        const pisoC = DATA.pisos?.pisoTaxaRendaPlus   ?? 6.5;
-        const pisoV = DATA.pisos?.pisoVendaRendaPlus  ?? 6.0;
-        let dot, label, color;
-        if (taxa >= pisoC)       { dot = '🟢'; label = 'compra (>' + pisoC.toFixed(1) + '%)'; color = '#22c55e'; }
-        else if (taxa >= pisoV)  { dot = '🟡'; label = 'manter (' + pisoV.toFixed(1) + '–' + pisoC.toFixed(1) + '%)'; color = '#eab308'; }
-        else                     { dot = '🔴'; label = 'venda (<' + pisoV.toFixed(1) + '%)'; color = '#ef4444'; }
-        subEl.textContent = dot + ' ' + label;
+        const pisoC = DATA.pisos?.pisoTaxaRendaPlus  ?? 6.5;
+        const pisoV = DATA.pisos?.pisoVendaRendaPlus ?? 6.0;
+        let label, color;
+        if (taxa >= pisoC)      { label = '● compra (>' + pisoC.toFixed(1) + '%)'; color = '#22c55e'; }
+        else if (taxa >= pisoV) { label = '● manter (' + pisoV.toFixed(1) + '–' + pisoC.toFixed(1) + '%)'; color = '#eab308'; }
+        else                    { label = '● venda (<' + pisoV.toFixed(1) + '%)'; color = '#ef4444'; }
+        subEl.textContent = label;
         subEl.style.color = color;
       }
     })();
