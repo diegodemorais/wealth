@@ -633,6 +633,24 @@ def build(data_path: Path, template_path: Path, out_path: Path,
         try:
             _ds = json.loads(_ds_path.read_text(encoding="utf-8"))
             _fire_state = _ds.get("fire", {})
+
+            # Garantir que pfire50/pfire53 existem em data (fallback de dashboard_state.json)
+            # generate_data.py já popula esses campos, mas se data.json vier de outra fonte
+            # ou se os campos estiverem ausentes, ler das chaves planas do state.
+            if not data.get("pfire50") or data["pfire50"].get("base") is None:
+                fire_st = _fire_state
+                data["pfire50"] = {
+                    "base":   fire_st.get("pfire50_base", None),
+                    "fav":    fire_st.get("pfire50_fav", None),
+                    "stress": fire_st.get("pfire50_stress", None),
+                }
+            if not data.get("pfire53") or data["pfire53"].get("base") is None:
+                fire_st = _fire_state
+                data["pfire53"] = {
+                    "base":   fire_st.get("pfire53_base", fire_st.get("pfire_base", None)),
+                    "fav":    fire_st.get("pfire53_fav",  fire_st.get("pfire_fav", None)),
+                    "stress": fire_st.get("pfire53_stress", fire_st.get("pfire_stress", None)),
+                }
             data["scenario_comparison"] = {
                 "fire53": {
                     "base": data["pfire53"]["base"],

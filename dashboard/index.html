@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Carteira Diego — Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.14.0/build/chartjs-chart-sankey.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.14.0/dist/chartjs-chart-sankey.min.js"></script>
 <style>
 :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--text:#f1f5f9;--muted:#94a3b8;--border:#475569;--accent:#3b82f6;--green:#22c55e;--red:#ef4444;--yellow:#eab308;--purple:#a855f7;--cyan:#06b6d4;--orange:#f97316}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -133,8 +133,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="display:flex;justify-content:space-between;align-items:center">
   <h1>🏦 Carteira Diego Morais</h1>
   <div style="display:flex;gap:8px;align-items:center">
-    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600">⟳ Reload</button>
-    <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores">👁</span>
+    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600">⟳</button>
+    <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
   </div>
 </div>
 <div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
@@ -722,9 +722,22 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F11: Stress Test -->
 <div class="section" data-in-tab="projecao">
-<h2>Stress Test — Bear Market −40%</h2>
+<h2>Stress Test — Bear Market Interativo</h2>
 <div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
-<div class="src">Para calcular P(FIRE) pós-shock: rodar fire_montecarlo.py com patrimônio reduzido e atualizar dashboard_state.json</div>
+<div style="margin-top:14px;background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border)">
+  <div style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Simulação Interativa (MC Browser)</div>
+  <div class="slider-row">
+    <label>Shock <span id="stressShockLabel" style="color:var(--red);font-weight:700">−40%</span> <span id="stressMcStatus" style="font-size:.65rem;margin-left:6px;color:var(--muted)">⚡ pré-calculado como referência</span></label>
+    <input type="range" id="stressShockSlider" min="-70" max="0" step="1" value="-40" oninput="onStressShockChange(this.value)">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted);margin-top:2px"><span>−70%</span><span>0%</span></div>
+  </div>
+  <div class="what-if-result" id="stressMcResult" style="margin-top:10px">
+    <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">P(FIRE) Calculado ao Vivo</div>
+    <div class="big" id="stressMcPfire" style="color:var(--accent)">—</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="stressMcNote">Mova o slider para calcular</div>
+  </div>
+</div>
+<div class="src">⚡ = pré-calculado (Python MC 10k) · ✅ = calculado ao vivo (JS MC 2k) · Para máxima precisão: rodar fire_montecarlo.py offline</div>
 </div>
 
 <!-- F8: Sankey Cash Flow -->
@@ -877,8 +890,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T21:07:45-03:00'); // BRT (UTC-3)
-const VERSION = '1.47';
+const GENERATED_AT = new Date('2026-04-08T21:19:25-03:00'); // BRT (UTC-3)
+const VERSION = '1.48';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -3487,7 +3500,7 @@ const DATA = {
     "nota": "Soma pode não fechar (renda estimada vs. gastos reais). Renda: R$540,000 | Must: R$130,619 | Like: R$51,403 | Impostos: R$50,268 | Investimentos: R$300,000",
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' de spending_analysis (aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026) — ESTIMADO"
   },
-  "version": "1.47"
+  "version": "1.48"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5486,6 +5499,94 @@ function buildStressTest() {
       </div>
     </div>
     <div style="font-size:.6rem;color:var(--muted)">⚡ = pré-calculado · ⏳ = requer Python local para recalcular ao vivo</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// F11: STRESS TEST INTERATIVO — MC em JS (Browser)
+// ═══════════════════════════════════════════════════════════════
+
+// Box-Muller para normal padrão
+function _randNorm() {
+  const u1 = Math.random(), u2 = Math.random();
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+/**
+ * Monte Carlo simplificado (log-normal) — roda 100% no browser.
+ * @param {number} patrimonioInicial - patrimônio financeiro após shock (BRL)
+ * @param {number} spendingAnual - gasto anual na aposentadoria (BRL)
+ * @param {number} anosAcumulo - anos de acumulação até FIRE (com aportes)
+ * @param {number} anosAposentadoria - anos de desacumulação
+ * @param {number} retReal - retorno real anual esperado (ex: 0.0509)
+ * @param {number} vol - volatilidade anual (ex: 0.14)
+ * @param {number} nTrials - número de simulações (ex: 2000)
+ * @param {number} aporteAnual - aporte anual durante acumulação (ex: 300000)
+ * @returns {string} P(FIRE) em % com 1 decimal
+ */
+function runMC(patrimonioInicial, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, nTrials, aporteAnual) {
+  let sucessos = 0;
+  const mu = Math.log(1 + retReal) - 0.5 * vol * vol;
+  for (let i = 0; i < nTrials; i++) {
+    let pat = patrimonioInicial;
+    // Fase acumulação (com aportes anuais)
+    for (let t = 0; t < anosAcumulo; t++) {
+      const r = Math.exp(mu + vol * _randNorm());
+      pat = pat * r + aporteAnual;
+    }
+    // Fase desacumulação
+    let ok = true;
+    for (let t = 0; t < anosAposentadoria; t++) {
+      const r = Math.exp(mu + vol * _randNorm());
+      pat = pat * r - spendingAnual;
+      if (pat <= 0) { ok = false; break; }
+    }
+    if (ok) sucessos++;
+  }
+  return (sucessos / nTrials * 100).toFixed(1);
+}
+
+let _stressDebounceTimer = null;
+
+function onStressShockChange(val) {
+  const pct = Math.abs(parseInt(val, 10)); // 0–70
+  const labelEl = document.getElementById('stressShockLabel');
+  const statusEl = document.getElementById('stressMcStatus');
+  const pfireEl = document.getElementById('stressMcPfire');
+  const noteEl = document.getElementById('stressMcNote');
+
+  if (labelEl) labelEl.textContent = `−${pct}%`;
+  if (statusEl) { statusEl.textContent = '⏳ calculando…'; statusEl.style.color = 'var(--yellow)'; }
+  if (pfireEl) pfireEl.textContent = '…';
+
+  if (_stressDebounceTimer) clearTimeout(_stressDebounceTimer);
+  _stressDebounceTimer = setTimeout(() => {
+    // Parâmetros base lidos de DATA
+    const p = DATA.premissas;
+    const patOriginal = p.patrimonio_atual || 3471000;
+    const shockFactor = 1 - pct / 100;
+    const patShock = patOriginal * shockFactor;
+
+    const spendingAnual = p.custo_vida_base || 250000;
+    const idadeAtual = p.idade_atual || 39;
+    const idadeFireAlvo = p.idade_fire_alvo || 53;
+    const anosAcumulo = Math.max(0, idadeFireAlvo - idadeAtual);
+    const anosAposentadoria = 40; // de 53 a 93
+    const retReal = 0.0509; // retorno real líquido tilt fatorial (premissa FIRE)
+    const vol = p.volatilidade_equity || 0.14;
+    const aporteAnual = (p.aporte_mensal || 25000) * 12;
+    const nTrials = 2000;
+
+    const pfire = runMC(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, nTrials, aporteAnual);
+    const pfireNum = parseFloat(pfire);
+    const color = pfireNum >= 85 ? 'var(--green)' : pfireNum >= 70 ? 'var(--yellow)' : 'var(--red)';
+
+    if (pfireEl) { pfireEl.textContent = `${pfire}%`; pfireEl.style.color = color; }
+    if (statusEl) { statusEl.textContent = '✅ calculado ao vivo (MC 2k)'; statusEl.style.color = 'var(--green)'; }
+    if (noteEl) {
+      const patShockM = (patShock / 1e6).toFixed(2);
+      noteEl.textContent = `Patrimônio pós-shock: R$${patShockM}M · shock −${pct}% · 2k simulações · retReal ${(retReal*100).toFixed(2)}% · vol ${(vol*100).toFixed(0)}%`;
+    }
+  }, 300);
 }
 
 // ═══════════════════════════════════════════════════════════════
