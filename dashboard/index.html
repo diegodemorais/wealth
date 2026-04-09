@@ -273,14 +273,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-sub" id="kpiIpcaSub">—</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">CAGR Target (USD)</div>
-  <div class="kpi-value pos" id="kpiTwrUsd">—</div>
-  <div class="kpi-sub" id="kpiTwrSub" title="Backtest ago/2019–abr/2026 com proxies UCITS (AVUV/AVDV→AVGS, AVEM US→AVEM.L). Não representa retorno real do portfolio.">backtest · proxies UCITS · ≠ retorno real</div>
+  <div class="kpi-label">Retorno YTD (BRL)</div>
+  <div class="kpi-value" id="kpiYtd">—</div>
+  <div class="kpi-sub" id="kpiYtdSub">—</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">CAGR Target (BRL est.)</div>
-  <div class="kpi-value pos" id="kpiTwrBrl">—</div>
-  <div class="kpi-sub" id="kpiTwrBrlSub" title="CAGR USD + contribuição cambial estimada desde início do backtest.">CAGR USD + câmbio histórico</div>
+  <div class="kpi-label">Drift Máximo</div>
+  <div class="kpi-value" id="kpiDriftMax">—</div>
+  <div class="kpi-sub" id="kpiDriftMaxSub">—</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">Delta vs VWRA</div>
@@ -1143,12 +1143,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T14:24:41-03:00'); // BRT (UTC-3)
-const VERSION = '1.86';
+const GENERATED_AT = new Date('2026-04-09T14:28:48-03:00'); // BRT (UTC-3)
+const VERSION = '1.87';
 
 const DATA = {
-  "_generated": "2026-04-09T14:24:41",
-  "_generated_brt": "2026-04-09T14:24:41-03:00",
+  "_generated": "2026-04-09T14:28:48",
+  "_generated_brt": "2026-04-09T14:28:48-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -4120,7 +4120,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.86"
+  "version": "1.87"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -6635,9 +6635,69 @@ function renderKPIs() {
     _kpiIpcaEl.style.color = _kpiIpca >= _kpiPisoIpca ? '#22c55e' : '#eab308';
   }
   if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = _kpiIpca != null ? `piso ${_kpiPisoIpca.toFixed(1)}% · ${_kpiIpca >= _kpiPisoIpca ? '✅ janela ativa' : '⏸ pausado'}` : 'aguardando dados';
-  document.getElementById('kpiTwrUsd').textContent = TWR_USD.toFixed(1) + '%';
-  document.getElementById('kpiTwrSub').textContent = _btPeriodStr + ' · proxies UCITS · ≠ retorno real do portfolio';
-  document.getElementById('kpiTwrBrl').textContent = TWR_BRL.toFixed(1) + '%';
+  // KPI: Retorno YTD BRL (gross desde dez/ano anterior — inclui aportes)
+  (function() {
+    const tl = DATA.timeline;
+    if (!tl?.labels?.length) return;
+    const curYear = new Date(DATA.date || Date.now()).getFullYear();
+    // Último ponto de dezembro do ano anterior
+    let prevDecVal = null;
+    for (let i = tl.labels.length - 1; i >= 0; i--) {
+      const lbl = tl.labels[i];
+      const yr = parseInt(lbl.slice(0, 4));
+      const mo = parseInt(lbl.slice(5, 7));
+      if (yr === curYear - 1 && mo === 12) { prevDecVal = tl.values[i]; break; }
+      if (yr < curYear - 1) break;
+    }
+    const ytdEl    = document.getElementById('kpiYtd');
+    const ytdSubEl = document.getElementById('kpiYtdSub');
+    if (ytdEl && prevDecVal && totalBrl) {
+      const ytd = (totalBrl / prevDecVal - 1) * 100;
+      ytdEl.textContent = (ytd >= 0 ? '+' : '') + ytd.toFixed(1) + '%';
+      ytdEl.style.color = ytd >= 0 ? '#22c55e' : '#ef4444';
+      if (ytdSubEl) ytdSubEl.textContent = `incl. aportes · desde dez/${curYear-1}`;
+    }
+  })();
+
+  // KPI: Drift máximo (ETF mais longe do alvo)
+  (function() {
+    const el    = document.getElementById('kpiDriftMax');
+    const subEl = document.getElementById('kpiDriftMaxSub');
+    if (!el || !DATA.drift) return;
+    const entries = Object.entries(DATA.drift)
+      .map(([k, v]) => ({ k, diff: v.atual - v.alvo, abs: Math.abs(v.atual - v.alvo) }))
+      .sort((a, b) => b.abs - a.abs);
+    const top = entries[0];
+    if (top) {
+      el.textContent = (top.diff >= 0 ? '+' : '') + top.diff.toFixed(1) + 'pp';
+      el.style.color = top.abs > 5 ? '#ef4444' : top.abs > 2 ? '#eab308' : '#22c55e';
+      if (subEl) subEl.textContent = `${top.k}: ${DATA.drift[top.k].atual}% vs alvo ${DATA.drift[top.k].alvo}%`;
+    }
+  })();
+
+  // KPI: Delta vs VWRA — backtest CAGR (source: backtest.metrics)
+  (function() {
+    const el    = document.getElementById('kpiDelta');
+    const subEl = document.getElementById('kpiDeltaSub');
+    if (!el) return;
+    // Tentar backtest primeiro, fallback para shadows
+    const btTarget  = DATA.backtest?.metrics?.target?.cagr;
+    const btShadowA = DATA.backtest?.metrics?.shadowA?.cagr;
+    const sh = DATA.shadows;
+    if (btTarget != null && btShadowA != null) {
+      const delta = btTarget - btShadowA;
+      el.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(2) + 'pp';
+      el.style.color = delta >= 0 ? '#22c55e' : '#ef4444';
+      if (subEl) subEl.textContent = `CAGR ${btTarget.toFixed(1)}% vs VWRA ${btShadowA.toFixed(1)}% · backtest`;
+    } else if (sh?.delta_vwra != null) {
+      const delta = sh.delta_vwra;
+      el.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(2) + 'pp';
+      el.style.color = delta >= 0 ? '#22c55e' : '#ef4444';
+      if (subEl) subEl.textContent = `${sh.periodo || 'período parcial'}`;
+    } else {
+      el.textContent = '—'; if (subEl) subEl.textContent = 'tracking em andamento';
+    }
+  })();
   // Câmbio
   if (CAMBIO) {
     document.getElementById('kpiCambio').textContent = `R$ ${CAMBIO.toFixed(2)}`;
