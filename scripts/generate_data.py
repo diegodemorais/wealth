@@ -506,8 +506,11 @@ def get_attribution():
         # 5. Crescimento não-aporte
         cresc_nao_aporte = cresc_real - aportes_ytd
 
-        # 6. Proxy decomposição: 65% equity USD, 35% câmbio+RF
-        retorno_usd = round(cresc_nao_aporte * 0.65)
+        # 6. Proxy decomposição: usa peso equity real do portfolio como base
+        # Limitação: sem PTAX de início de ano não é possível separar r_usd de r_fx exatamente.
+        # Proxy: pesos_target["equity"] como fração do crescimento em USD; restante = câmbio+RF.
+        peso_equity = PESOS_TARGET.get("equity", 0.70)  # lê de PESOS_TARGET, sem hardcode
+        retorno_usd = round(cresc_nao_aporte * peso_equity)
         cambio_fx   = round(cresc_nao_aporte - retorno_usd)
 
         print(f"  → attribution: pat_inicio=R${pat_inicio/1e3:.0f}k | pat_atual=R${pat_atual/1e3:.0f}k | "

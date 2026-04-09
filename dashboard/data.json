@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T12:42:19",
-  "_generated_brt": "2026-04-09T12:42:19-03:00",
+  "_generated": "2026-04-09T12:45:22",
+  "_generated_brt": "2026-04-09T12:45:22-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,12 +10,12 @@
     "fire_mc": "2026-04-09",
     "geral": "2026-04-09"
   },
-  "cambio": 5.0709,
+  "cambio": 5.1506,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.055,
+      "price": 48.05,
       "bucket": "SWRD",
       "status": "alvo"
     },
@@ -36,21 +36,21 @@
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.06,
+      "price": 105.03,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.4,
+      "price": 84.72,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.07,
+      "price": 49.03,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -64,7 +64,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.31,
+      "price": 62.6486,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -100,7 +100,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3513253,
+    "patrimonio_atual": 3563381,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -194,28 +194,28 @@
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -1691,8 +1691,8 @@
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.13,
-    "valor": 102453.88,
+    "preco": 61.11,
+    "valor": 102420.36,
     "preco_medio": null,
     "pnl_brl": null,
     "pnl_pct": null,
@@ -1700,7 +1700,7 @@
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.92,
+      "atual_pct": 2.87,
       "status": "verde"
     }
   },
@@ -1775,19 +1775,19 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 36.7,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.9,
+      "atual": 29.0,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.4,
+      "atual": 24.5,
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 3.5,
+      "atual": 3.4,
       "alvo": 15.0
     },
     "HODL11": {
@@ -1809,7 +1809,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.06,
+      "price": 105.03,
       "ucits": "AVGS.L"
     },
     {
@@ -1817,7 +1817,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.4,
+      "price": 84.72,
       "ucits": "AVGS.L"
     },
     {
@@ -1825,7 +1825,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.07,
+      "price": 49.03,
       "ucits": "AVEM.L"
     },
     {
@@ -1841,7 +1841,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.31,
+      "price": 62.6486,
       "ucits": "AVEM.L"
     },
     {
@@ -1855,8 +1855,8 @@
   ],
   "attribution": {
     "aportes": 75000,
-    "retornoUsd": 61432,
-    "cambio": 33079,
+    "retornoUsd": 66158,
+    "cambio": 28353,
     "crescReal": 169511,
     "_estimativa": true
   },
@@ -1882,8 +1882,8 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 71883.35,
-    "cambio": 5.0709
+    "bitcoin_usd": 71981.23,
+    "cambio": 5.1506
   },
   "minilog": [
     {
@@ -2217,88 +2217,88 @@
   "cryptoLegado": 3000,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 138661.76,
+    "ir_diferido_total_brl": 146185.96,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 80303.54,
+        "ganho_usd": 80277.08,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1289478.31,
-        "ganho_brl": 367649.79,
-        "ir_estimado": 55147.47
+        "valor_atual_brl": 1309608.93,
+        "ganho_brl": 387780.42,
+        "ir_estimado": 58167.06
       },
       "EIMI": {
-        "ganho_usd": 35831.7,
+        "ganho_usd": 35750.89,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 502707.71,
-        "ganho_brl": 161915.94,
-        "ir_estimado": 24287.39
+        "valor_atual_brl": 510192.61,
+        "ganho_brl": 169400.83,
+        "ir_estimado": 25410.12
       },
       "USSC": {
-        "ganho_usd": 9092.42,
+        "ganho_usd": 9211.86,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 159744.93,
-        "ganho_brl": 30346.86,
-        "ir_estimado": 4552.03
+        "valor_atual_brl": 162870.85,
+        "ganho_brl": 33472.78,
+        "ir_estimado": 5020.92
       },
       "IWVL": {
         "ganho_usd": 971.86,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11346.34,
-        "ganho_brl": 4735.9,
-        "ir_estimado": 710.38
+        "valor_atual_brl": 11524.67,
+        "ganho_brl": 4914.23,
+        "ir_estimado": 737.13
       },
       "AVDV": {
-        "ganho_usd": 41397.63,
+        "ganho_usd": 41369.2,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 504831.81,
-        "ganho_brl": 202036.4,
-        "ir_estimado": 30305.46
+        "valor_atual_brl": 512619.9,
+        "ganho_brl": 209824.48,
+        "ir_estimado": 31473.67
       },
       "AVUV": {
         "ganho_usd": 18439.35,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 320526.16,
-        "ganho_brl": 83182.36,
-        "ir_estimado": 12477.35
+        "valor_atual_brl": 325563.91,
+        "ganho_brl": 88220.12,
+        "ir_estimado": 13233.02
       },
       "DGS": {
-        "ganho_usd": 2295.29,
+        "ganho_usd": 2359.02,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59468.52,
-        "ganho_brl": 9266.71,
-        "ir_estimado": 1390.01
+        "valor_atual_brl": 60731.43,
+        "ganho_brl": 10529.62,
+        "ir_estimado": 1579.44
       },
       "AVES": {
         "ganho_usd": 16274.07,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 296141.61,
-        "ganho_brl": 64150.23,
-        "ir_estimado": 9622.53
+        "valor_atual_brl": 300796.11,
+        "ganho_brl": 68804.72,
+        "ir_estimado": 10320.71
       },
       "AVGS": {
         "ganho_usd": 432.61,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.0709,
+        "ptax_atual": 5.1506,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31706.37,
-        "ganho_brl": 1127.52,
-        "ir_estimado": 169.13
+        "valor_atual_brl": 32204.7,
+        "ganho_brl": 1625.85,
+        "ir_estimado": 243.88
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -2314,12 +2314,12 @@
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.0709
+    "ptax_atual": 5.1506
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.7,
+    "brasil_pct": 9.5,
     "composicao": {
-      "hodl11_brl": 102454,
+      "hodl11_brl": 102420,
       "rf_total_brl": 234846,
       "rf_detalhe": {
         "ipca2029": 89095,
@@ -2328,8 +2328,8 @@
       },
       "crypto_legado_brl": 3000
     },
-    "total_brasil_brl": 340300,
-    "total_portfolio_brl": 3513253,
+    "total_brasil_brl": 340266,
+    "total_portfolio_brl": 3563381,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -2341,20 +2341,20 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33609,
-      "delta_brl": 8609,
-      "delta_pct": 34.4,
+      "realizado_media_brl": 34137,
+      "delta_brl": 9137,
+      "delta_pct": 36.5,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0709,
+      "cambio_conversao": 5.1506,
       "por_ano_brl": {
-        "2026": 96347,
-        "2025": 286367,
-        "2024": 377638,
-        "2023": 399117,
-        "2022": 488802,
-        "2021": 334671
+        "2026": 97861,
+        "2025": 290867,
+        "2024": 383574,
+        "2023": 405390,
+        "2022": 496484,
+        "2021": 339931
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
