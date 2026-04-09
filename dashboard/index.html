@@ -723,21 +723,34 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- F11: Stress Test -->
 <div class="section" data-in-tab="projecao">
 <h2>Stress Test — Bear Market Interativo</h2>
-<div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
-<div style="margin-top:14px;background:var(--card2);border-radius:10px;padding:14px;border:1px solid var(--border)">
-  <div style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Simulação Interativa (MC Browser)</div>
+
+<!-- Slider de shock -->
+<div style="background:var(--card2);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px">
   <div class="slider-row">
-    <label>Shock <span id="stressShockLabel" style="color:var(--red);font-weight:700">−40%</span> <span id="stressMcStatus" style="font-size:.65rem;margin-left:6px;color:var(--muted)">⚡ pré-calculado como referência</span></label>
+    <label style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:.8rem;color:var(--muted)">Shock:</span>
+      <span id="stressShockLabel" style="color:var(--red);font-weight:700;font-size:1rem">−40%</span>
+    </label>
     <input type="range" id="stressShockSlider" min="-70" max="0" step="1" value="-40" oninput="onStressShockChange(this.value)">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted);margin-top:2px"><span>−70%</span><span>0%</span></div>
   </div>
-  <div class="what-if-result" id="stressMcResult" style="margin-top:10px">
-    <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px">P(FIRE) Calculado ao Vivo</div>
-    <div class="big" id="stressMcPfire" style="color:var(--accent)">—</div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="stressMcNote">Mova o slider para calcular</div>
+  <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <div style="font-size:.8rem;color:var(--muted)">
+      Patrimônio pós-shock: <strong id="stressPatShock" style="color:var(--red)">—</strong>
+    </div>
+    <button id="stressSimBtn" onclick="runStressSimulation()"
+      style="display:none;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .2s">
+      ▶ Simular ao vivo
+    </button>
   </div>
 </div>
-<div class="src">⚡ = pré-calculado (Python MC 10k) · ✅ = calculado ao vivo (JS MC 2k) · Para máxima precisão: rodar fire_montecarlo.py offline</div>
+
+<!-- Cards de cenário -->
+<div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
+
+<div class="src" style="margin-top:10px">
+  Dados pré-calculados para shock −40% (fire_montecarlo.py, 10k trials). Outros valores usam MC simplificado (2k trials, ~2s). ⚡ = pré-calc. · ✅ = simulado ao vivo
+</div>
 </div>
 
 <!-- F8: Sankey Cash Flow -->
@@ -890,8 +903,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T21:25:02-03:00'); // BRT (UTC-3)
-const VERSION = '1.50';
+const GENERATED_AT = new Date('2026-04-08T21:31:54-03:00'); // BRT (UTC-3)
+const VERSION = '1.52';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -3329,22 +3342,22 @@ const DATA = {
       5321611,
       5512861,
       5710985,
-      5426939,
-      5111710,
-      4763278,
-      4379511,
-      3958161,
-      3496857,
-      2993098,
-      2444250,
-      1847535,
-      1200025,
-      498637,
-      0,
-      0,
-      0,
-      0,
-      0,
+      5258245,
+      4821577,
+      4400411,
+      3994197,
+      3602403,
+      3224517,
+      2860047,
+      2508515,
+      2169463,
+      1842447,
+      1527040,
+      1240830,
+      964781,
+      698531,
+      441733,
+      194052,
       0,
       0,
       0,
@@ -3383,43 +3396,43 @@ const DATA = {
       8064228,
       8648486,
       9275073,
-      9274678,
-      9260082,
-      9230181,
-      9183808,
-      9119730,
-      9036642,
-      8933163,
-      8807839,
-      8659129,
-      8485408,
-      8284962,
-      8055979,
-      7796549,
-      7504659,
-      7178184,
-      6814883,
-      6412397,
-      5968238,
-      5479786,
-      4944280,
-      4358814,
-      3720327,
-      3025600,
-      2271241,
-      1453684,
-      569177,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      9474914,
+      9684447,
+      9904143,
+      10134494,
+      10376017,
+      10629254,
+      10894773,
+      11173169,
+      11465068,
+      11771124,
+      12092023,
+      12446486,
+      12818141,
+      13207821,
+      13616400,
+      14044795,
+      14493968,
+      14964925,
+      15458724,
+      15976472,
+      16519331,
+      17088519,
+      17685312,
+      18311050,
+      18967135,
+      19655041,
+      20376311,
+      21132562,
+      21925491,
+      22756878,
+      23628586,
+      24542573,
+      25500887,
+      26505681,
+      27559206,
+      28663827,
+      29822023
     ],
     "p90": [
       3483659,
@@ -3437,45 +3450,46 @@ const DATA = {
       11984004,
       13283601,
       14724131,
-      15202252,
-      15702886,
-      16227564,
-      16777932,
-      17355764,
-      17962967,
-      18601599,
-      19273869,
-      19982161,
-      20729037,
-      21517254,
-      22349780,
-      23229808,
-      24160772,
-      25146366,
-      26190563,
-      27297636,
-      28472178,
-      29719127,
-      31043791,
-      32451875,
-      33949508,
-      35543278,
-      37240261,
-      39048056,
-      40974826,
-      43029336,
-      45220997,
-      47559913,
-      50056927,
-      52723678,
-      55572653,
-      58617252,
-      61871849,
-      65351863,
-      69073828,
-      73055477
+      16425078,
+      18351401,
+      20532962,
+      23003579,
+      25801554,
+      28970259,
+      32558819,
+      36622862,
+      41225392,
+      46437756,
+      52340759,
+      59043909,
+      66635227,
+      75232395,
+      84968687,
+      95995038,
+      108482381,
+      122624296,
+      138640015,
+      156777817,
+      177318878,
+      200581630,
+      226926695,
+      256762483,
+      290551512,
+      328817587,
+      372153917,
+      421232311,
+      476813592,
+      539759393,
+      611045513,
+      691777043,
+      783205502,
+      886748231,
+      1004010371,
+      1136809745,
+      1287205037
     ],
     "ano_fire": 2040,
+    "nota_unidades": "Projeção pós-FIRE em R$ reais (constante 2026). Spending R$250k/ano real; INSS R$18k/ano real a partir de age 65.",
     "nota_imovel": "// TODO: apreciação imobiliária — taxa não definida nas premissas",
     "nota_inss": "// TODO: PV do INSS futuro — taxa de desconto não aprovada",
     "nota_cap_humano": "// TODO: capital humano — sem projeção aprovada"
@@ -3500,7 +3514,7 @@ const DATA = {
     "nota": "Soma pode não fechar (renda estimada vs. gastos reais). Renda: R$540,000 | Must: R$130,619 | Like: R$51,403 | Impostos: R$50,268 | Investimentos: R$300,000",
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' de spending_analysis (aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026) — ESTIMADO"
   },
-  "version": "1.50"
+  "version": "1.52"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5446,59 +5460,86 @@ function buildNetWorthProjection() {
 // ═══════════════════════════════════════════════════════════════
 // F11: STRESS TEST
 // ═══════════════════════════════════════════════════════════════
-function buildStressTest() {
+
+/**
+ * Renderiza os 3 cards de cenário (Base / Favorável / Stress) no stressTestBody.
+ * @param {object} vals  - { base, fav, stress } — cada um { pfire, badge }
+ *   badge: 'precalc' | 'live' | 'pending'
+ * @param {object} stData - DATA.stress_test (para exibir patrimônio pós-shock no card lateral)
+ */
+function _renderStressCards(vals, stData) {
   const el = document.getElementById('stressTestBody');
   if (!el) return;
-  const st = DATA.stress_test;
-  if (!st) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
 
-  const patAtual = DATA.premissas.patrimonio_atual;
-  const patShock = st.pat_pos_shock;
-  const pct = st.shock_pct;
-  const hasPfire = st.pfire_pos_shock_base !== null && st.pfire_pos_shock_base !== undefined;
-
-  const deltaM = (patAtual - patShock) / 1e6;
-
-  const fmtPfire = (v, isBase) => {
-    if (v == null) return `<span style="color:var(--muted)">⏳</span>`;
-    const color = v >= 85 ? 'var(--green)' : v >= 70 ? 'var(--yellow)' : 'var(--red)';
-    return `<span style="font-size:${isBase ? '2rem' : '1.2rem'};font-weight:800;color:${color}">⚡ ${v}%</span>`;
+  const badgeHtml = (b) => {
+    if (b === 'precalc')  return `<span style="font-size:.6rem;background:rgba(71,85,105,.25);color:var(--muted);border-radius:4px;padding:2px 6px;font-weight:600">⚡ pré-calc.</span>`;
+    if (b === 'live')     return `<span style="font-size:.6rem;background:rgba(59,130,246,.2);color:var(--accent);border-radius:4px;padding:2px 6px;font-weight:600">✅ simulado</span>`;
+    return `<span style="font-size:.6rem;background:rgba(234,179,8,.15);color:var(--yellow);border-radius:4px;padding:2px 6px;font-weight:600">— aguardando</span>`;
   };
 
+  const cardHtml = (label, icon, accent, v) => {
+    const pfire = v.pfire;
+    const badge = v.badge;
+    const color = pfire == null ? 'var(--muted)' : pfire >= 85 ? 'var(--green)' : pfire >= 70 ? 'var(--yellow)' : 'var(--red)';
+    const pfireDisp = pfire != null ? `${pfire}%` : '—';
+    return `
+      <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">${icon} ${label}</div>
+        <div style="font-size:2rem;font-weight:800;color:${color};line-height:1">${pfireDisp}</div>
+        <div style="font-size:.65rem;color:var(--muted)">P(FIRE)</div>
+        ${badgeHtml(badge)}
+      </div>`;
+  };
+
+  const patAtual = DATA.premissas.patrimonio_atual;
+  const pct = stData ? stData.shock_pct : 40;
+  const patShock = stData ? stData.pat_pos_shock : patAtual * 0.60;
+  const deltaM = (patAtual - patShock) / 1e6;
+
   el.innerHTML = `
-    <div class="grid-2" style="margin-bottom:12px">
-      <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:14px">
-        <div style="font-size:.65rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Cenário: Bear Market −${pct}%</div>
-        <div style="font-size:2rem;font-weight:800;color:var(--red)">−${pct}%</div>
-        <div style="margin-top:8px;font-size:.8rem">
-          <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Patrimônio atual</span><strong class="pv">R$${(patAtual/1e6).toFixed(2)}M</strong></div>
-          <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Após shock (×${(1-pct/100).toFixed(2)})</span><strong class="pv" style="color:var(--red)">R$${(patShock/1e6).toFixed(2)}M</strong></div>
-          <div style="display:flex;justify-content:space-between;margin:4px 0"><span style="color:var(--muted)">Perda bruta</span><strong style="color:var(--red)">−R$${deltaM.toFixed(2)}M</strong></div>
-        </div>
-        ${st.descricao_shock ? `<div style="margin-top:8px;font-size:.65rem;color:var(--muted)">${st.descricao_shock}</div>` : ''}
-      </div>
-      <div style="background:${hasPfire ? 'rgba(34,197,94,.07)' : 'rgba(71,85,105,.07)'};border:1px solid ${hasPfire ? 'rgba(34,197,94,.3)' : 'rgba(71,85,105,.3)'};border-radius:8px;padding:14px">
-        <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">P(FIRE) Pós-Shock</div>
-        ${hasPfire
-          ? `${fmtPfire(st.pfire_pos_shock_base, true)}
-             <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Cenário base · calculado em ${st.calc_date || '—'}</div>
-             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
-               <div style="background:var(--card2);border-radius:6px;padding:6px;text-align:center">
-                 ${fmtPfire(st.pfire_pos_shock_fav, false)}
-                 <div style="font-size:.55rem;color:var(--muted)">Favorável</div>
-               </div>
-               <div style="background:var(--card2);border-radius:6px;padding:6px;text-align:center">
-                 ${fmtPfire(st.pfire_pos_shock_stress, false)}
-                 <div style="font-size:.55rem;color:var(--muted)">Stress</div>
-               </div>
-             </div>`
-          : `<div style="font-size:1.5rem;color:var(--muted);margin:8px 0">⏳</div>
-             <div style="font-size:.75rem;color:var(--muted)">Não calculado</div>
-             <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Rodar offline:<br><code style="font-size:.6rem;background:var(--card2);padding:2px 6px;border-radius:4px">fire_montecarlo.py --patrimonio ${patShock}</code></div>`
-        }
-      </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+      ${cardHtml('Base', '🔵', 'var(--accent)', vals.base)}
+      ${cardHtml('Favorável', '🟢', 'var(--green)', vals.fav)}
+      ${cardHtml('Stress', '🔴', 'var(--red)', vals.stress)}
     </div>
-    <div style="font-size:.6rem;color:var(--muted)">⚡ = pré-calculado · ⏳ = requer Python local para recalcular ao vivo</div>`;
+    <div style="margin-top:12px;font-size:.72rem;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px">
+      <div style="display:flex;flex-wrap:wrap;gap:16px">
+        <div><span style="color:var(--muted)">Patrimônio atual:</span> <strong>R$${(patAtual/1e6).toFixed(2)}M</strong></div>
+        <div><span style="color:var(--muted)">Shock aplicado:</span> <strong style="color:var(--red)">−${pct}%</strong></div>
+        <div><span style="color:var(--muted)">Pós-shock:</span> <strong style="color:var(--red)">R$${(patShock/1e6).toFixed(2)}M</strong></div>
+        <div><span style="color:var(--red)">Perda bruta:</span> <strong style="color:var(--red)">−R$${deltaM.toFixed(2)}M</strong></div>
+      </div>
+      ${stData && stData.descricao_shock ? `<div style="margin-top:6px;color:var(--muted)">${stData.descricao_shock}</div>` : ''}
+    </div>`;
+}
+
+function buildStressTest() {
+  const st = DATA.stress_test;
+
+  // Atualizar patrimônio pós-shock no header (slider em -40%)
+  const patAtual = DATA.premissas.patrimonio_atual;
+  const patShockEl = document.getElementById('stressPatShock');
+  if (patShockEl) {
+    const ps = st ? st.pat_pos_shock : patAtual * 0.60;
+    patShockEl.textContent = `R$${(ps / 1e6).toFixed(2)}M`;
+  }
+
+  if (!st) {
+    const el = document.getElementById('stressTestBody');
+    if (el) el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>';
+    return;
+  }
+
+  const hasPfire = st.pfire_pos_shock_base != null;
+
+  _renderStressCards(
+    {
+      base:   { pfire: hasPfire ? st.pfire_pos_shock_base   : null, badge: hasPfire ? 'precalc' : 'pending' },
+      fav:    { pfire: hasPfire ? st.pfire_pos_shock_fav    : null, badge: hasPfire ? 'precalc' : 'pending' },
+      stress: { pfire: hasPfire ? st.pfire_pos_shock_stress : null, badge: hasPfire ? 'precalc' : 'pending' },
+    },
+    st
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5545,48 +5586,91 @@ function runMC(patrimonioInicial, spendingAnual, anosAcumulo, anosAposentadoria,
   return (sucessos / nTrials * 100).toFixed(1);
 }
 
-let _stressDebounceTimer = null;
-
+/**
+ * Chamado pelo slider de shock do stress test.
+ * Lógica UX:
+ *   - Se slider = −40% e há dados pré-calc → exibe pré-calc, esconde botão
+ *   - Se slider ≠ −40% → mostra botão "Simular ao vivo", cards ficam em 'pending'
+ */
 function onStressShockChange(val) {
   const pct = Math.abs(parseInt(val, 10)); // 0–70
   const labelEl = document.getElementById('stressShockLabel');
-  const statusEl = document.getElementById('stressMcStatus');
-  const pfireEl = document.getElementById('stressMcPfire');
-  const noteEl = document.getElementById('stressMcNote');
+  const patShockEl = document.getElementById('stressPatShock');
+  const simBtn = document.getElementById('stressSimBtn');
+
+  const p = DATA.premissas;
+  const patOriginal = p.patrimonio_atual || 3471000;
+  const patShock = patOriginal * (1 - pct / 100);
 
   if (labelEl) labelEl.textContent = `−${pct}%`;
-  if (statusEl) { statusEl.textContent = '⏳ calculando…'; statusEl.style.color = 'var(--yellow)'; }
-  if (pfireEl) pfireEl.textContent = '…';
+  if (patShockEl) patShockEl.textContent = `R$${(patShock / 1e6).toFixed(2)}M`;
 
-  if (_stressDebounceTimer) clearTimeout(_stressDebounceTimer);
-  _stressDebounceTimer = setTimeout(() => {
-    // Parâmetros base lidos de DATA
+  const st = DATA.stress_test;
+  const hasPrecalc = st && st.pfire_pos_shock_base != null;
+  const isDefaultShock = pct === (st ? st.shock_pct : 40);
+
+  if (isDefaultShock && hasPrecalc) {
+    // Voltar para pré-calculado
+    if (simBtn) simBtn.style.display = 'none';
+    buildStressTest();
+  } else {
+    // Mostrar cards em estado "aguardando" e habilitar botão
+    if (simBtn) simBtn.style.display = 'block';
+    _renderStressCards(
+      {
+        base:   { pfire: null, badge: 'pending' },
+        fav:    { pfire: null, badge: 'pending' },
+        stress: { pfire: null, badge: 'pending' },
+      },
+      { shock_pct: pct, pat_pos_shock: patShock, pat_atual: patOriginal }
+    );
+  }
+}
+
+/**
+ * Executa MC simplificado para o shock atual e atualiza os 3 cards.
+ * Chamado pelo botão "Simular ao vivo".
+ */
+function runStressSimulation() {
+  const sliderEl = document.getElementById('stressShockSlider');
+  const simBtn = document.getElementById('stressSimBtn');
+  const pct = Math.abs(parseInt(sliderEl ? sliderEl.value : '-40', 10));
+
+  if (simBtn) { simBtn.textContent = '⏳ Calculando…'; simBtn.disabled = true; }
+
+  // Yield para o browser renderizar antes do MC (que bloqueia)
+  setTimeout(() => {
     const p = DATA.premissas;
     const patOriginal = p.patrimonio_atual || 3471000;
-    const shockFactor = 1 - pct / 100;
-    const patShock = patOriginal * shockFactor;
-
+    const patShock = patOriginal * (1 - pct / 100);
     const spendingAnual = p.custo_vida_base || 250000;
     const idadeAtual = p.idade_atual || 39;
     const idadeFireAlvo = p.idade_fire_alvo || 53;
     const anosAcumulo = Math.max(0, idadeFireAlvo - idadeAtual);
-    const anosAposentadoria = 40; // de 53 a 93
-    const retReal = 0.0509; // retorno real líquido tilt fatorial (premissa FIRE)
-    const vol = p.volatilidade_equity || 0.14;
+    const anosAposentadoria = 40; // idade FIRE até 93
+    const retReal = p.retorno_equity_base || 0.0509;
+    const vol = p.volatilidade_equity || 0.168;
     const aporteAnual = (p.aporte_mensal || 25000) * 12;
     const nTrials = 2000;
 
-    const pfire = runMC(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, nTrials, aporteAnual);
-    const pfireNum = parseFloat(pfire);
-    const color = pfireNum >= 85 ? 'var(--green)' : pfireNum >= 70 ? 'var(--yellow)' : 'var(--red)';
+    // Cenário base
+    const pfireBase = parseFloat(runMC(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, nTrials, aporteAnual));
+    // Cenário favorável: retorno +2pp
+    const pfireFav = parseFloat(runMC(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal + 0.02, vol, nTrials, aporteAnual));
+    // Cenário stress: retorno −2pp
+    const pfireStress = parseFloat(runMC(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal - 0.02, vol, nTrials, aporteAnual));
 
-    if (pfireEl) { pfireEl.textContent = `${pfire}%`; pfireEl.style.color = color; }
-    if (statusEl) { statusEl.textContent = '✅ calculado ao vivo (MC 2k)'; statusEl.style.color = 'var(--green)'; }
-    if (noteEl) {
-      const patShockM = (patShock / 1e6).toFixed(2);
-      noteEl.textContent = `Patrimônio pós-shock: R$${patShockM}M · shock −${pct}% · 2k simulações · retReal ${(retReal*100).toFixed(2)}% · vol ${(vol*100).toFixed(0)}%`;
-    }
-  }, 300);
+    _renderStressCards(
+      {
+        base:   { pfire: pfireBase,   badge: 'live' },
+        fav:    { pfire: pfireFav,    badge: 'live' },
+        stress: { pfire: pfireStress, badge: 'live' },
+      },
+      { shock_pct: pct, pat_pos_shock: patShock }
+    );
+
+    if (simBtn) { simBtn.textContent = '▶ Simular ao vivo'; simBtn.disabled = false; }
+  }, 30);
 }
 
 // ═══════════════════════════════════════════════════════════════

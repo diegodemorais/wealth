@@ -304,9 +304,14 @@ def _compute_net_worth_projection(data: dict) -> dict:
     idade_fire = premissas.get("idade_fire_alvo", 53)
 
     # Retornos reais por percentil (pós-FIRE)
-    r_p50 = 0.0485  # base
-    r_p10 = 0.0250  # stress
-    r_p90 = 0.0700  # favorável
+    # r_p50: lido de premissas (fonte: dashboard_state.json / fire_montecarlo.py)
+    r_p50 = premissas.get("retorno_equity_base", 0.0485)
+    # r_p10 / r_p90: derivados via aproximação log-normal no horizonte longo.
+    # P10 ≈ mediana − 0.5×vol  |  P90 ≈ mediana + 0.5×vol
+    # (0.5σ captura ~± 1/2 desvio-padrão, conservador para horizonte 30+ anos)
+    vol = premissas.get("volatilidade_equity", 0.168)
+    r_p10 = r_p50 - vol * 0.5
+    r_p90 = r_p50 + vol * 0.5
 
     ano_fire = ano_atual + (idade_fire - idade_atual)
     anos_longevidade = 90
