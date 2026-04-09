@@ -15,13 +15,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .header h1{font-size:1.3rem;font-weight:700}.header .meta{color:var(--muted);font-size:.75rem;margin-top:4px}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px}
 .kpi{background:var(--card);border-radius:10px;padding:14px 16px;border:1px solid var(--border)}
-.kpi-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.kpi-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
 .kpi-value{font-size:1.5rem;font-weight:700;margin-top:2px}.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
 .kpi-fire{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
-.section{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
-.section h2{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.section{background:var(--card);border-radius:10px;padding:20px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
+.section h2{font-size:.85rem;font-weight:700;color:var(--text);letter-spacing:.3px;margin-bottom:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
 @media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
 table{width:100%;border-collapse:collapse;font-size:.78rem}
 th{text-align:left;padding:6px 5px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted);font-size:.65rem;text-transform:uppercase}
@@ -50,7 +50,7 @@ td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3);overflow-wrap:break-wo
 .calc-form label{font-size:.7rem;color:var(--muted);display:block}
 .calc-form input,select.calc-input{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;width:120px;font-size:.85rem}
 .calc-form button{background:var(--accent);color:white;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600}
-.src{font-size:.6rem;color:var(--muted);margin-top:4px}
+.src{font-size:.65rem;color:var(--muted);margin-top:6px}
 footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .period-btns{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
 .period-btns button{background:var(--card2);border:1px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:5px;cursor:pointer;font-size:.7rem;font-weight:500;transition:all .15s}
@@ -60,7 +60,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .wellness-item{display:flex;align-items:center;gap:6px;font-size:.75rem;padding:4px 0}
 .wellness-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .actions-box{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.3);border-radius:10px;padding:16px;margin-bottom:14px}
-.actions-box h2{font-size:.8rem;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.actions-box h2{font-size:.85rem;font-weight:700;color:var(--yellow);letter-spacing:.3px;margin-bottom:10px}
 .guardrail-table tr:nth-child(2){background:rgba(34,197,94,.1)}
 .guardrail-table tr:nth-child(3){background:rgba(234,179,8,.08)}
 .guardrail-table tr:nth-child(4){background:rgba(249,115,22,.08)}
@@ -133,7 +133,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="display:flex;justify-content:space-between;align-items:center">
   <h1>🏦 Carteira Diego Morais</h1>
   <div style="display:flex;gap:8px;align-items:center">
-    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600">⟳ Reload</button>
+    <button onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Atualizar dados" style="background:rgba(59,130,246,.15);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600">⟳ Atualizar</button>
     <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores">👁</span>
   </div>
 </div>
@@ -172,17 +172,17 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S1: PRÓXIMAS AÇÕES -->
 <div class="actions-box" id="proximasAcoes">
-<h2>⚡ Próximas Ações</h2>
+<h2>Próximas Ações</h2>
 <div id="proximasAcoesBody"><!-- gerado por renderProximasAcoes() --></div>
 </div>
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" data-tab="status" onclick="switchTab('status')">📊 Status</button>
-  <button class="tab-btn" data-tab="perf"   onclick="switchTab('perf')">📈 Performance</button>
-  <button class="tab-btn" data-tab="aloc"   onclick="switchTab('aloc')">🎯 Alocação</button>
-  <button class="tab-btn" data-tab="plan"   onclick="switchTab('plan')">🔭 Planejamento</button>
-  <button class="tab-btn" data-tab="projecao" onclick="switchTab('projecao')">📅 Projeções</button>
+  <button class="tab-btn active" data-tab="status" onclick="switchTab('status')">Resumo</button>
+  <button class="tab-btn" data-tab="perf"   onclick="switchTab('perf')">Performance</button>
+  <button class="tab-btn" data-tab="aloc"   onclick="switchTab('aloc')">Carteira</button>
+  <button class="tab-btn" data-tab="plan"   onclick="switchTab('plan')">Plano FIRE</button>
+  <button class="tab-btn" data-tab="projecao" onclick="switchTab('projecao')">Projeções</button>
 </div>
 
 <!-- S3: KPI CARDS -->
@@ -282,7 +282,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S2: FINANCIAL WELLNESS SCORE (movido abaixo dos KPIs principais — D4) -->
 <div class="section" style="border-color:rgba(71,85,105,.4)" data-in-tab="status">
-<h2>Financial Wellness Score <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(indicador secundário)</span></h2>
+<h2>Saúde Financeira <span style="font-size:.65rem;color:var(--muted);font-weight:400;letter-spacing:0">(secundário)</span></h2>
 <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
 <div style="text-align:center;min-width:100px">
 <div id="wellnessScore" style="font-size:2.2rem;font-weight:800">—</div>
@@ -300,7 +300,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S6: NET WORTH TIMELINE -->
 <div class="section" data-in-tab="perf">
-<h2>Patrimônio — Timeline (Série CSV completa)</h2>
+<h2>Evolução do Patrimônio</h2>
 <div class="period-btns" id="timelinePeriodBtns">
   <button onclick="setTimelinePeriod('6m')">6m</button>
   <button onclick="setTimelinePeriod('ytd')">YTD</button>
@@ -311,12 +311,12 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
 <div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
-<div class="src">Fonte: dados/historico_carteira.csv · Split equity/RF/crypto = proporção atual usada para todos os pontos (estimativa)</div>
+<div class="src">historico_carteira.csv · Split por proporção atual (estimativa)</div>
 </div>
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <div class="section" id="attrSection" data-in-tab="perf">
-<h2>Performance Attribution — Decomposição do Crescimento</h2>
+<h2>Decomposição do Crescimento</h2>
 <div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
@@ -330,7 +330,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
     <span title="Este CAGR de 18.1%/ano inclui os aportes mensais de R$25k — não é retorno puro do investimento. Use TWR USD/BRL para avaliar performance real dos ETFs." style="cursor:help;color:var(--accent)"> ⓘ</span>
   </div>
 </div>
-<div class="src">Fonte: fx_utils.py · ⚠️ Estimativa — retorno USD e câmbio são componentes residuais, não cálculos exatos de decomposição fx. Crescimento incl. aportes ≠ performance dos ETFs.</div>
+<div class="src">⚠️ Estimativa — componentes residuais, não decomposição exata. Inclui aportes.</div>
 </div>
 
 <!-- S8: ALOCAÇÃO DONUTS -->
@@ -361,7 +361,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S10: P(FIRE) + TORNADO + SPENDING -->
 <div class="section" data-in-tab="status">
-<h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
+<h2>P(FIRE) — Monte Carlo e Sensibilidade</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações</div>
@@ -397,7 +397,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
 <div class="section" data-in-tab="perf">
-<h2>Delta vs Benchmarks + IPCA+ Gap</h2>
+<h2>Performance vs Benchmarks</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div>
@@ -435,7 +435,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="section" data-in-tab="plan">
 <h2>Glide Path — Alocação por Idade</h2>
 <div class="chart-box"><canvas id="glideChart"></canvas></div>
-<div class="src">Fonte: agentes/contexto/carteira.md tabela de alocação. Crypto: 3% pré e pós-FIRE (ler tabela). Assertion: soma = 100% por ano.</div>
+<div class="src">carteira.md · Crypto 3% pré/pós-FIRE · Soma = 100%/ano</div>
 </div>
 
 <!-- S13: FIRE BUCKETS DONUT REMOVIDO (duplica S8). Mantido: Intra-Equity -->
@@ -447,10 +447,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S14: FAN CHART P10/P50/P90 -->
 <div class="section" data-in-tab="plan">
-<h2>Fan Chart — Trajetórias Patrimoniais P10/P50/P90</h2>
+<h2>Cenários de Patrimônio — P10/P50/P90</h2>
 <div class="chart-box-lg"><canvas id="fanChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.75rem;color:var(--yellow)">
-  ⚠️ <strong>Trajetórias interpoladas com r=4.85%/ano — não são simulações Monte Carlo individuais.</strong> Bandas P10/P90 derivadas do spread dos cenários MC, não de distribuição empírica de trajetórias. <span id="fanPfireNote"></span>
+  ⚠️ <strong>Trajetórias interpoladas (r=4.85%/ano)</strong> — não são MC individuais. Bandas P10/P90 = spread dos endpoints MC. <span id="fanPfireNote"></span>
 </div>
 <div class="src" id="fanChartSrc">Baseado em endpoints do Monte Carlo. Crescimento exponencial.</div>
 </div>
@@ -458,7 +458,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S15: GUARDRAILS -->
 <div class="section" data-in-tab="plan">
-<h2>Guardrails de Retirada — FIRE Day</h2>
+<h2>Guardrails de Retirada</h2>
 <table class="guardrail-table">
 <thead><tr>
   <th>Drawdown</th><th>Corte</th><th>Retirada Anual</th><th>Pat. Gatilho (atual)</th><th>Status</th>
@@ -473,7 +473,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S16: RETIREMENT INCOME -->
 <div class="section" data-in-tab="plan">
-<h2>Renda na Aposentadoria — Fases Temporais</h2>
+<h2>Renda na Aposentadoria</h2>
 <table class="fases-table" style="margin-bottom:12px">
 <thead><tr>
   <th>Fase</th>
@@ -495,7 +495,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
-<h2>What-If Scenarios — 3 Sliders</h2>
+<h2>Simulador What-If</h2>
 <div class="grid-3" style="margin-bottom:12px">
 <div>
   <div class="slider-row">
@@ -526,7 +526,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S21: POSIÇÕES -->
 <div class="section" data-in-tab="aloc">
-<h2>Posições — ETFs Internacionais (IBKR)</h2>
+<h2>Posições IBKR</h2>
 <div style="overflow-x:auto">
 <table id="posTable">
 <thead><tr>
@@ -548,7 +548,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S21b2: CUSTO BASE POR BUCKET -->
 <div class="section" data-in-tab="aloc">
-<h2>Base de Custo e Alocação — Equity por Bucket</h2>
+<h2>Custo e Alocação — Equity</h2>
 <div style="overflow-x:auto">
 <table id="custoBaseTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -563,19 +563,19 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <tbody id="custoBaseBody"></tbody>
 </table>
 </div>
-<div class="src">Calculado de ibkr_lotes.json · Ganho sobre custo USD (preço médio × qtde) · Peso intra-equity (SWRD+AVGS+AVEM) · Meta: 50/30/20</div>
+<div class="src">Ganho sobre custo USD · Peso intra-equity · Meta: 50/30/20</div>
 </div>
 
 <!-- S21c: EVENTOS DE VIDA -->
 <div class="section" style="border-color:rgba(234,179,8,.3)" data-in-tab="plan">
-<h2>Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
+<h2>Eventos de Vida — Impacto FIRE</h2>
 <div id="eventosVidaBody"></div>
 <div class="src">Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente.</div>
 </div>
 
 <!-- S21d: P(FIRE) CENÁRIOS FAMÍLIA -->
 <div class="section" style="border-color:rgba(139,92,246,.3)" data-in-tab="plan">
-<h2>P(FIRE) — Cenários de Família <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(impacto no custo de vida)</span></h2>
+<h2>P(FIRE) — Cenários de Família</h2>
 <div id="pfireFamiliaBody"></div>
 <div class="src" id="pfireFamiliaSrc">Base: MC 10k simulações. Dados de spending_sens (fire_montecarlo.py).</div>
 </div>
@@ -589,23 +589,23 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S22: CALCULADORA APORTE -->
 <div class="section" data-in-tab="aloc">
-<h2>Calculadora de Aporte — Cascade</h2>
+<h2>Calculadora de Aporte</h2>
 <div class="calc-form">
   <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000" class="calc-aporte-input"></div>
   <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" step="0.01"></div>
   <button onclick="calcAporte()">Calcular</button>
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
-<div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
+<div class="src" id="calcAporteSrc">IPCA+ taxa ≥ piso → DCA simultâneo equity. Pisos na estratégia.</div>
 </div>
 
 <!-- S24: BOLLINGER BANDS — REMOVIDO (HD-dashboard-v2 P3: zero valor decisório para buy-and-hold) -->
 
 <!-- S25: TLH MONITOR -->
 <div class="section" data-in-tab="aloc">
-<h2>TLH Monitor — Ativos Transitorios</h2>
+<h2>TLH — Ativos em Diluição</h2>
 <div id="tlhContent"></div>
-<div class="src">Gatilho TLH: perda ≥ 5%. Transitorios: EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL — não comprar mais, diluir via aportes.</div>
+<div class="src">Gatilho: perda ≥ 5% · Não aportar — diluir via novos aportes</div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -638,21 +638,21 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F5: Must / Like to Spend -->
 <div class="section" data-in-tab="projecao">
-<h2>Spending — Must vs. Like to Spend <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
+<h2>Gastos — Essencial vs. Desejável</h2>
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
-<div class="src" id="spendingBreakdownSrc">Fonte: spending_analysis.py · All-Accounts CSV · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)</div>
+<div class="src" id="spendingBreakdownSrc">spending_analysis.py · Must Spend inclui hipoteca (R$1.517/mês)</div>
 </div>
 
 <!-- F6: Life Events (enhanced) -->
 <div class="section" style="border-color:rgba(234,179,8,.3)" data-in-tab="projecao">
-<h2>Eventos de Vida Planejados — Impacto Financeiro</h2>
+<h2>Eventos de Vida — Impacto Financeiro</h2>
 <div id="lifeEventsEnhanced"><!-- gerado por buildLifeEventsEnhanced() --></div>
 <div class="src">Fonte: dados/life_events.json · Impacto em P(FIRE): calculado via delta de spending nos cenários MC</div>
 </div>
 
 <!-- F1: Lifetime Income Projection Chart -->
 <div class="section" data-in-tab="projecao">
-<h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
+<h2>Projeção de Renda — Ciclo de Vida</h2>
 <div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
   Pré-FIRE: renda ativa (estimativa R$45k/mês) · Pós-FIRE: saque do portfólio cobre gap despesas − INSS · INSS: R$18k/ano a partir dos 65 (inflacionado 4%/ano)
@@ -662,11 +662,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F7: Net Worth Projection P10/P50/P90 -->
 <div class="section" data-in-tab="projecao">
-<h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
+<h2>Projeção de Patrimônio — P10/P50/P90</h2>
 <div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
-  ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
-  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com saque de spending inflacionado.
+  ⚠️ Portfólio financeiro apenas. Exclui imóvel, INSS e capital humano. Pós-FIRE: r=4.85% real com spending smile.
 </div>
 <div class="src" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
 </div>
@@ -680,11 +679,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F8: Sankey Cash Flow -->
 <div class="section" data-in-tab="projecao">
-<h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
+<h2>Fluxo de Caixa Anual</h2>
 <div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
-  ⚠️ Valores estimados: renda = R$45k/mês × 12. Soma pode não fechar (renda estimada vs. gastos reais).
-  Impostos = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
+  ⚠️ Estimativa (renda R$45k/mês). Soma pode divergir dos gastos reais. <span id="sankeyNota"></span>
 </div>
 <div class="src" id="sankeySrc">Fonte: premissas.renda_estimada · spending_summary.json · aporte_mensal</div>
 </div>
@@ -699,7 +697,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- S27: BACKTEST HISTÓRICO -->
 <div class="section" data-in-tab="perf">
-<h2>Backtest Histórico — Target vs VWRA (base 100)</h2>
+<h2>Backtest — Target vs VWRA</h2>
 <div class="period-btns" id="backtestPeriodBtns">
   <button onclick="setBacktestPeriod('all')" title="jan/2005–abr/2026 (21 anos)">Tudo (21a)</button>
   <button onclick="setBacktestPeriod('since2009')" title="jan/2009–abr/2026 (17 anos)" class="active">Desde 2009</button>
@@ -718,14 +716,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </table>
 </div>
 <div style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
-  ⚠️ ago/2019–abr/2026: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos.
+  ⚠️ Inclui 2 proxies UCITS (AVUV/AVDV→AVGS, AVEM→AVEM.L). Resultados indicativos.
 </div>
 <div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
 <div class="section" data-in-tab="perf">
-<h2>Shadow Portfolios — Tracking</h2>
+<h2>Shadow Portfolios</h2>
 <div style="overflow-x:auto">
 <table style="width:100%;table-layout:fixed">
 <colgroup>
@@ -828,8 +826,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T23:19:03-03:00'); // BRT (UTC-3)
-const VERSION = '1.51';
+const GENERATED_AT = new Date('2026-04-08T23:25:10-03:00'); // BRT (UTC-3)
+const VERSION = '1.52';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -3438,7 +3436,7 @@ const DATA = {
     "nota": "Soma pode não fechar (renda estimada vs. gastos reais). Renda: R$540,000 | Must: R$130,619 | Like: R$51,403 | Impostos: R$50,268 | Investimentos: R$300,000",
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' de spending_analysis (aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026) — ESTIMADO"
   },
-  "version": "1.51"
+  "version": "1.52"
 };
 
 // ═══════════════════════════════════════════════════════════════
