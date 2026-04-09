@@ -382,11 +382,20 @@ def analyze_nubank(ops: list[dict]) -> dict:
             by_titulo[key]["resgates"].append(entry)
             by_titulo[key]["total_resgatado"] += op["valor_brl"]
 
+    # Títulos com resgate total (zerados — valor resgatado != valor aplicado por MtM/IR)
+    ZERADOS = {"ipca2045"}
+
     # Posição líquida (custo base restante)
     for key, data in by_titulo.items():
-        data["liquido_aplicado"] = round(data["total_aplicado"] - data["total_resgatado"], 2)
         data["total_aplicado"] = round(data["total_aplicado"], 2)
         data["total_resgatado"] = round(data["total_resgatado"], 2)
+        if key in ZERADOS:
+            data["liquido_aplicado"] = 0
+            data["pnl_realizado"] = round(data["total_resgatado"] - data["total_aplicado"], 2)
+            data["zerado"] = True
+        else:
+            data["liquido_aplicado"] = round(data["total_aplicado"] - data["total_resgatado"], 2)
+            data["zerado"] = False
 
     return dict(by_titulo)
 
@@ -431,7 +440,7 @@ def run_nubank():
         n_res = len(t["resgates"])
         total_app += t["total_aplicado"]
         total_res += t["total_resgatado"]
-        status = "ATIVO" if t["liquido_aplicado"] > 0 else "ZERADO"
+        status = "ZERADO" if t.get("zerado") else ("ATIVO" if t["liquido_aplicado"] > 0 else "ZERADO")
         print(f"  {key:<12} {n_app} aplic. R${t['total_aplicado']:>12,.2f}"
               f"  |  {n_res} resg. R${t['total_resgatado']:>12,.2f}"
               f"  |  líquido R${t['liquido_aplicado']:>12,.2f}  [{status}]")

@@ -31,7 +31,8 @@
     ],
     "total_aplicado": 117438.37,
     "total_resgatado": 40578.42,
-    "liquido_aplicado": 76859.95
+    "liquido_aplicado": 76859.95,
+    "zerado": false
   },
   "ipca2045": {
     "aplicacoes": [
@@ -44,12 +45,14 @@
       {
         "data": "2025-01-16",
         "valor": 59375.15,
-        "nota": "Resgate total do titulo"
+        "nota": "Resgate total do titulo. Perda de R$10.619,81 (MtM + IR). Motivo: emprestimo emergencial a amigo."
       }
     ],
     "total_aplicado": 69994.96,
     "total_resgatado": 59375.15,
-    "liquido_aplicado": 10619.81
+    "liquido_aplicado": 0,
+    "pnl_realizado": -10619.81,
+    "zerado": true
   },
   "renda2065": {
     "aplicacoes": [
@@ -73,7 +76,8 @@
     "resgates": [],
     "total_aplicado": 108553.71,
     "total_resgatado": 0,
-    "liquido_aplicado": 108553.71
+    "liquido_aplicado": 108553.71,
+    "zerado": false
   },
   "ipca2040": {
     "aplicacoes": [
@@ -85,6 +89,7 @@
     "resgates": [],
     "total_aplicado": 20035.48,
     "total_resgatado": 0,
-    "liquido_aplicado": 20035.48
+    "liquido_aplicado": 20035.48,
+    "zerado": false
   }
 }
