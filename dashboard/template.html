@@ -1180,7 +1180,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
  *   saude_base: number,
  *   tornado: Array<{ label: string, delta: number }>,
  *   timeline: { labels: string[], values: number[] },
- *   bollinger: { dates: string[], values: number[] },
+ *   retornos_mensais: { dates: string[], values: number[] },
+ *   rolling_sharpe: { dates: string[], values: number[], window: number, rf_anual: number },
  *   backtest: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, cambioInicio?: number },
  *   backtestR5: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, note?: string },
  *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, renda2065: RfTitulo },
@@ -2425,8 +2426,8 @@ window.calcAporte = function() {
 
 // ── S24: Retornos Mensais — Heatmap ──────────────────────────
 function buildRetornoHeatmap() {
-  const allL = DATA.bollinger?.dates || [];
-  const allV = DATA.bollinger?.values || [];
+  const allL = DATA.retornos_mensais?.dates || [];
+  const allV = DATA.retornos_mensais?.values || [];
   const container = document.getElementById('heatmapContainer');
   if (!container || !allL.length) return;
 
@@ -2521,31 +2522,15 @@ function buildRetornoHeatmap() {
   }
 }
 
-// ── S24b: Rolling Sharpe 12m (excess return over CDI) ────────
+// ── S24b: Rolling Sharpe 12m (pre-computed server-side) ──────
 function buildRollingSharp() {
-  const allL = DATA.bollinger?.dates || [];
-  const allV = DATA.bollinger?.values || [];
-  const WIN = 12;
-  // Risk-free: Selic meta anualizada → retorno mensal em %
-  // Nota: usa Selic atual para toda a janela (aproximação; série histórica de CDI não disponível no data.json)
-  const selicAnual = DATA.macro?.selic_meta ?? 0;
-  const rfMensal = selicAnual > 0 ? ((1 + selicAnual / 100) ** (1/12) - 1) * 100 : 0;
+  const rs = DATA.rolling_sharpe || {};
+  const labels = rs.dates || [];
+  const sharpes = rs.values || [];
 
-  if (allV.length < WIN + 1) {
-    checkMinPoints('rollingSharpChart', allV.length, WIN + 1);
+  if (!sharpes.length) {
+    checkMinPoints('rollingSharpChart', 0, 13);
     return;
-  }
-
-  const labels = [];
-  const sharpes = [];
-
-  for (let i = WIN - 1; i < allV.length; i++) {
-    const win = allV.slice(i - WIN + 1, i + 1);
-    const excess = win.map(v => v - rfMensal);
-    const mean = excess.reduce((a,b) => a+b, 0) / WIN;
-    const std  = Math.sqrt(excess.reduce((s,v) => s+(v-mean)**2, 0) / WIN);
-    labels.push(allL[i]);
-    sharpes.push(std > 0 ? +(mean / std * Math.sqrt(12)).toFixed(3) : 0);
   }
 
   if (charts.rollingSharp) charts.rollingSharp.destroy();

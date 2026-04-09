@@ -20,7 +20,8 @@
     "saude_base",
     "tornado",
     "timeline",
-    "bollinger",
+    "retornos_mensais",
+    "rolling_sharpe",
     "backtest",
     "backtestR5",
     "rf",
@@ -239,14 +240,26 @@
         }
       }
     },
-    "bollinger": {
+    "retornos_mensais": {
       "type": "object",
-      "description": "Retornos mensais para Bollinger Bands. MA5 e bandas ±2σ calculados no JS.",
+      "description": "Retornos mensais do patrimônio (% MoM). Calculados de historico_carteira.csv.",
       "required": ["dates","values"],
       "additionalProperties": false,
       "properties": {
         "dates":  { "type": "array", "items": { "type": "string" } },
         "values": { "type": "array", "items": { "type": "number" } }
+      }
+    },
+    "rolling_sharpe": {
+      "type": "object",
+      "description": "Rolling Sharpe 12m (excess return sobre CDI). Calculado server-side em generate_data.py.",
+      "required": ["dates","values","window","rf_anual"],
+      "additionalProperties": false,
+      "properties": {
+        "dates":  { "type": "array", "items": { "type": "string" } },
+        "values": { "type": "array", "items": { "type": "number" } },
+        "window": { "type": "integer" },
+        "rf_anual": { "type": "number" }
       }
     },
     "backtest": {

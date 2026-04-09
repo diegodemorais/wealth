@@ -20,7 +20,7 @@ Pipeline:
     5. Roda fx_utils.py                              → parseia attribution
     5b. Factor rolling 12m AVGS vs SWRD              → yfinance + rolling diff
     5c. Factor loadings FF5+MOM por ETF              → Ken French + OLS regression
-    6. Lê historico_carteira.csv                     → timeline + bollinger
+    6. Lê historico_carteira.csv                     → timeline + retornos_mensais + rolling_sharpe
     7. Lê holdings.md                                → taxas RF
     8. Escreve dashboard/data.json
 """
@@ -531,8 +531,8 @@ def get_attribution():
         return None
 
 
-# ─── 5. TIMELINE + BOLLINGER (do CSV) ────────────────────────────────────────
-def get_timeline_bollinger():
+# ─── 5. TIMELINE + RETORNOS MENSAIS (do CSV) ─────────────────────────────────
+def get_timeline_retornos():
     labels, values = [], []
     try:
         with open(CSV_PATH) as f:
@@ -573,8 +573,8 @@ def get_timeline_bollinger():
     labels = list(seen.keys())
     values = list(seen.values())
 
-    # Bollinger: retornos mensais entre pares consecutivos ≤35 dias
-    boll_dates, boll_vals = [], []
+    # Retornos mensais entre pares consecutivos ≤35 dias
+    ret_dates, ret_vals = [], []
     for i in range(1, len(labels)):
         try:
             d1 = datetime.strptime(labels[i-1] + "-01", "%Y-%m-%d")
@@ -582,15 +582,53 @@ def get_timeline_bollinger():
             gap_days = (d2 - d1).days
             if gap_days <= 35 and values[i-1] > 0:
                 ret = (values[i] / values[i-1] - 1) * 100
-                boll_dates.append(labels[i])
-                boll_vals.append(round(ret, 4))
+                ret_dates.append(labels[i])
+                ret_vals.append(round(ret, 4))
         except Exception:
             continue
 
     return (
         {"labels": labels, "values": values},
-        {"dates": boll_dates, "values": boll_vals}
+        {"dates": ret_dates, "values": ret_vals}
     )
+
+
+def compute_rolling_sharpe(retornos_mensais: dict, selic_meta: float, window: int = 12) -> dict:
+    """Calcula Rolling Sharpe 12m (excess return sobre CDI) server-side.
+
+    Args:
+        retornos_mensais: {"dates": [...], "values": [...]} — retornos mensais em %
+        selic_meta: Selic meta anualizada em % (ex: 14.75)
+        window: janela rolling em meses (default 12)
+
+    Returns:
+        {"dates": [...], "values": [...], "window": 12, "rf_anual": 14.75}
+        values = Sharpe anualizado (mean excess / std excess * sqrt(12))
+    """
+    import math
+    dates = retornos_mensais.get("dates", [])
+    vals = retornos_mensais.get("values", [])
+
+    if len(vals) < window + 1:
+        return {"dates": [], "values": [], "window": window, "rf_anual": selic_meta}
+
+    # Risk-free mensal (Selic composta → mensal em %)
+    rf_mensal = ((1 + selic_meta / 100) ** (1/12) - 1) * 100 if selic_meta > 0 else 0
+
+    out_dates = []
+    out_vals = []
+
+    for i in range(window - 1, len(vals)):
+        win = vals[i - window + 1 : i + 1]
+        excess = [v - rf_mensal for v in win]
+        mean = sum(excess) / window
+        variance = sum((v - mean) ** 2 for v in excess) / window  # σ populacional
+        std = math.sqrt(variance)
+        sharpe = round(mean / std * math.sqrt(12), 3) if std > 0 else 0
+        out_dates.append(dates[i])
+        out_vals.append(sharpe)
+
+    return {"dates": out_dates, "values": out_vals, "window": window, "rf_anual": selic_meta}
 
 
 # ─── 5b. FACTOR: CACHE BOOTSTRAP ────────────────────────────────────────────
@@ -1686,9 +1724,9 @@ def main():
         except Exception as e:
             print(f"  ⚠️ factor cache write: {e}")
 
-    # Timeline + Bollinger
+    # Timeline + Retornos mensais
     print("  ▶ lendo CSV ...")
-    timeline, bollinger = get_timeline_bollinger()
+    timeline, retornos_mensais = get_timeline_retornos()
 
     # Posições + preços
     print("  ▶ posições ...")
@@ -1965,6 +2003,11 @@ def main():
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
 
+    # Rolling Sharpe 12m (server-side — dados prontos para o dashboard)
+    _selic = macro.get("selic_meta") or 0
+    rolling_sharpe = compute_rolling_sharpe(retornos_mensais, _selic)
+    print(f"  ✓ Rolling Sharpe: {len(rolling_sharpe['dates'])} pontos (rf={_selic}%)")
+
     # ─── Mercado snapshot (BTC + câmbio) + deltas MtD ──────────────────────
     # BTC-USD já fetchado em get_macro_data() — reutilizar, sem novo download
     _mercado_state = state.get("mercado", {})
@@ -2107,7 +2150,8 @@ def main():
         "scenario_comparison": scenario_comparison,
 
         "timeline":   timeline,
-        "bollinger":  bollinger,
+        "retornos_mensais": retornos_mensais,
+        "rolling_sharpe": rolling_sharpe,
 
         "backtest":   backtest,
         "backtestR5": backtest_r5,
@@ -2158,7 +2202,7 @@ def main():
     print(f"\n✅ {OUT_PATH.relative_to(ROOT)}")
     print(f"   Patrimônio: R${total_brl/1e6:.2f}M | Câmbio: {cambio:.4f}")
     print(f"   P(FIRE@50): {pfire50.get('base')}% | Tornado: {len(tornado)} variáveis | Bond pool: {bp_anos} anos")
-    print(f"   Timeline: {len(timeline['labels'])} pontos | Bollinger: {len(bollinger['dates'])} meses")
+    print(f"   Timeline: {len(timeline['labels'])} pontos | Retornos mensais: {len(retornos_mensais['dates'])} meses")
     print(f"   IR diferido: R${tax_data['ir_diferido_total_brl']:,.0f} sobre {len(tax_data['ir_por_etf'])} ETFs" if tax_data else "   IR diferido: N/A")
     print(f"   Factor: rolling {len(factor_rolling.get('dates', []))} pts | loadings {len(factor_loadings)} ETFs")
     print(f"   Macro: Selic {macro.get('selic_meta')}% | Fed Funds {macro.get('fed_funds')}% | Spread {macro.get('spread_selic_ff')}pp | Exp. USD {macro.get('exposicao_cambial_pct')}%")

@@ -123,7 +123,7 @@ Se WebSearch falhar para algum preço, ler `dashboard/data.json` atual e extrair
 
 **Timeline**: extrair TODAS as linhas do CSV → arrays `timelineLabels` e `timelineValues` espelhando o CSV exatamente. Não reconstruir independentemente. Para split histórico equity/RF/crypto: usar proporção atual para o último ponto e interpolar retroativamente com base nos registros disponíveis — documentar no tooltip que é estimativa para pontos históricos.
 
-**Retornos mensais para Bollinger**:
+**Retornos mensais (retornos_mensais)**:
 - Iterar as linhas do CSV em ordem cronológica
 - Calcular retorno apenas entre pares de datas consecutivas com gap ≤ 35 dias (meses completos)
 - `ret[i] = (pat[i] / pat[i-1]) - 1` em percentual
@@ -214,7 +214,7 @@ BLOCO 4 — PERFORMANCE (como está indo)
   14. Net worth timeline
   15. Performance Attribution
   16. CAGR Backtest Target (USD/BRL)
-  17. Bollinger Bands
+  17. Retornos Mensais (heatmap)
   18. Backtest histórico Target vs VWRA
   19. Benchmarks (VWRA / IPCA+ / 60-40)
 
@@ -306,10 +306,9 @@ BLOCO 5 — ANÁLISE & GOVERNANÇA (deep dive)
 - Período calculado dinamicamente das datas do backtest, não hardcoded
 - Câmbio início = câmbio na data de início do backtest R3 (~R$3.79 em jul/2019)
 
-**17. Bollinger Bands**
-- **Period selector [6m | ytd | 1y | 3y | 5y | all]** (remover 3m)
-- Default: `1y`
-- Sigma populacional, MA5, primeiros 4 pontos omitidos
+**17. Retornos Mensais (heatmap)**
+- Heatmap de retornos mensais do patrimônio
+- Dados em `retornos_mensais` (calculado server-side de historico_carteira.csv)
 
 **18. Backtest histórico Target vs VWRA**
 - **Period selector por ciclo**: `[Tudo (21a) | Desde 2009 (pós-crise) | Desde 2013 (pós-QE) | Desde 2020 (pós-COVID) | 5a | 3a]`
@@ -497,7 +496,7 @@ P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 
 **Ocultar (classe `pv`):** patrimônio R$/USD nos KPIs, valores absolutos nas tabelas, eixo Y do timeline e fan chart, cards RF, resultado da calculadora, sub-métricas do Wellness com valores absolutos.
 
-**Sempre visível:** percentuais (P(FIRE), ganho%, delta%, progresso%), charts estruturais (donut, delta bar, glide path, Bollinger), Wellness Score 0-100, labels e títulos.
+**Sempre visível:** percentuais (P(FIRE), ganho%, delta%, progresso%), charts estruturais (donut, delta bar, glide path, heatmap retornos), Wellness Score 0-100, labels e títulos.
 
 ## Regras
 
@@ -505,7 +504,8 @@ P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 - **Zero valores hardcoded.** Todos os valores (guardrails, premissas, pesos, pisos, taxas, percentuais) vêm de arquivos do codebase. Se o arquivo mudar, o dashboard reflete automaticamente.
 - **Dados do DATA object, não inline.** Cada valor aparece 1x no JS.
 - **Timeline = espelho do CSV.** Nunca reconstruir a série de patrimônio independentemente do CSV.
-- **Bollinger = apenas meses completos.** Períodos parciais são excluídos da série.
+- **Retornos mensais = apenas meses completos.** Períodos parciais são excluídos da série.
+- **Rolling Sharpe = calculado server-side.** O dashboard apenas renderiza `DATA.rolling_sharpe` pré-computado.
 - **Guardrails = GUARDRAILS + GASTO_PISO do fire_montecarlo.py.** O piso absoluto tem prioridade sobre cálculo percentual.
 - **Tornado = output de `--tornado`.** Nunca estimativa manual.
 - **P(FIRE@50) = output de `--anos 11`.** Nunca valor de modelo antigo.
@@ -538,7 +538,8 @@ P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 | Drift threshold | `agentes/contexto/gatilhos.md` | |
 | RF (IPCA+, Renda+, HODL11) | `dados/holdings.md` | |
 | Timeline patrimônio | `dados/historico_carteira.csv` (todas as linhas) | |
-| Retornos mensais (Bollinger) | Calcular de `historico_carteira.csv` (pares consecutivos ≤35d) | |
+| Retornos mensais | Calcular de `historico_carteira.csv` (pares consecutivos ≤35d) | |
+| Rolling Sharpe 12m | Calculado server-side em `generate_data.py` (excess return sobre CDI) | |
 | Attribution | `scripts/fx_utils.py decompose_return()` output | |
 | Backtest séries + métricas | `scripts/backtest_portfolio.py` output | |
 | Preços ETFs | WebSearch | |
@@ -552,6 +553,7 @@ P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
 | Fan chart | Line + fill P10-P90 |
 | Guardrails | Tabela colorida verde→vermelho |
 | Geo | Doughnut |
-| Bollinger | Line MA5±2σ + period selector |
+| Retornos Mensais | Heatmap mensal |
+| Rolling Sharpe | Line pre-computed (server-side) |
 | Backtest | Line multi-série + period selector + métricas table |
 | Mobile | `@media(max-width:480px)` + `.hide-mobile` |
