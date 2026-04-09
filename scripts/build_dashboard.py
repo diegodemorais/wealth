@@ -65,17 +65,51 @@ def _validate_data(data: dict) -> None:
                   f"(jsonschema não instalado — validação de tipos ignorada)")
 
 
+def _spending_smile_real(ano_pos_fire: int, saude_base: float = 18_000,
+                         saude_inflator: float = 0.027,
+                         saude_decay: float = 0.50) -> float:
+    """Gasto total (lifestyle + saúde) em R$ reais (base 2026) via spending smile.
+
+    Replica a lógica de fire_montecarlo.py gasto_spending_smile() para o dashboard.
+    """
+    SMILE = {
+        "go_go":   {"gasto": 242_000, "inicio": 0,  "fim": 15},
+        "slow_go": {"gasto": 200_000, "inicio": 15, "fim": 30},
+        "no_go":   {"gasto": 187_000, "inicio": 30, "fim": 99},
+    }
+    # ANS faixa etária multiplier (age = 53 + ano_pos_fire)
+    def _ans(a_pos):
+        idade = 53 + a_pos
+        if idade >= 64: return 6.0 / 3.0
+        if idade >= 59: return 5.0 / 3.0
+        if idade >= 54: return 4.0 / 3.0
+        return 1.0
+
+    gasto_base = SMILE["no_go"]["gasto"]
+    for cfg in SMILE.values():
+        if cfg["inicio"] <= ano_pos_fire < cfg["fim"]:
+            gasto_base = cfg["gasto"]
+            break
+
+    saude = saude_base * (1 + saude_inflator) ** ano_pos_fire * _ans(ano_pos_fire)
+    if ano_pos_fire >= SMILE["no_go"]["inicio"]:
+        saude *= saude_decay
+
+    return gasto_base + saude
+
+
 def _compute_income_projection(data: dict) -> dict:
     """Computa projeção de renda de 2026 a 2077 (age 90).
 
+    VALORES EM R$ REAIS (base 2026) — sem inflação nominal.
+    Pós-FIRE usa spending smile (go-go/slow-go/no-go + saúde VCMH).
+
     Fontes:
     - premissas.renda_estimada: R$45k/mês (config.py RENDA_ESTIMADA — mensal)
-    - premissas.aporte_mensal: R$25k/mês
-    - premissas.custo_vida_base: R$250k/ano
-    - premissas.ipca_anual: 4% a.a.
-    - premissas.inss_anual: R$18k/ano
+    - premissas.custo_vida_base: R$250k/ano (pré-FIRE)
+    - premissas.inss_anual: R$18k/ano (real constante)
     - premissas.inss_inicio_ano: 12 anos pós-FIRE (age 65 = ano 2052)
-    - premissas.idade_fire_alvo: 53, idade_fire_aspiracional: 50, idade_atual: 39
+    - Spending smile: go-go R$242k / slow-go R$200k / no-go R$187k + saúde
     - life_events.json: casamento R$100k em 2027
     """
     premissas = data.get("premissas", {})
@@ -84,9 +118,7 @@ def _compute_income_projection(data: dict) -> dict:
     idade_fire_alvo = premissas.get("idade_fire_alvo", 53)
     idade_fire_aspir = premissas.get("idade_fire_aspiracional", 50)
     custo_vida_base = premissas.get("custo_vida_base", 250000)
-    ipca = premissas.get("ipca_anual", 0.04)
     inss_anual = premissas.get("inss_anual", 18000)
-    inss_inicio_ano = premissas.get("inss_inicio_ano", 12)  # 12 anos pós-FIRE = age 65
     # RENDA_ESTIMADA em config.py é mensal (R$45k/mês)
     renda_estimada_mensal = premissas.get("renda_estimada", 45000)
     renda_ativa_anual = renda_estimada_mensal * 12  # R$540k/ano
@@ -107,20 +139,19 @@ def _compute_income_projection(data: dict) -> dict:
     despesas = []
 
     for ano in anos:
-        t = ano - ano_atual  # anos desde hoje
-        desp = custo_vida_base * ((1 + ipca) ** t)
-
         if ano < ano_fire_base:
-            # Pré-FIRE: renda ativa, sem saque
+            # Pré-FIRE: renda ativa, custo de vida constante em reais
             ra = renda_ativa_anual
+            desp = custo_vida_base
             inss_v = 0.0
             saque = 0.0
         else:
-            # Pós-FIRE: sem renda ativa, saque cobre gap
+            # Pós-FIRE: spending smile (lifestyle + saúde) em reais
             ra = 0.0
-            t_inss = ano - ano_inss
+            ano_pos_fire = ano - ano_fire_base
+            desp = _spending_smile_real(ano_pos_fire)
             if ano >= ano_inss:
-                inss_v = inss_anual * ((1 + ipca) ** t_inss)
+                inss_v = inss_anual  # real constante
             else:
                 inss_v = 0.0
             saque = max(0.0, desp - inss_v)
@@ -285,35 +316,27 @@ def _compute_earliest_fire(data: dict) -> dict:
 def _compute_net_worth_projection(data: dict) -> dict:
     """Projeção simplificada do portfólio financeiro: P10/P50/P90 de 2026 a 2077.
 
+    VALORES EM R$ REAIS (base 2026) — retorno real, spending smile, sem inflação.
     Usa endpoints do MC para âncoras, interpolação exponencial entre eles,
-    e retorno real 4.85% pós-FIRE com saque de spending inflacionado.
+    e retorno real 4.85% pós-FIRE com saque via spending smile.
 
     Componentes de imóvel, INSS e capital humano: TODO (dados não aprovados).
     """
     premissas = data.get("premissas", {})
-    fire_data = data.get("fire", {})
-    # Lê fire dos dados internos do data.json (pfire53 seção)
     pat_atual = premissas.get("patrimonio_atual", 3472335)
     r = premissas.get("retorno_equity_base", 0.0485)
-    custo_vida = premissas.get("custo_vida_base", 250000)
-    ipca = premissas.get("ipca_anual", 0.04)
     ano_atual = premissas.get("ano_atual", 2026)
     idade_atual = premissas.get("idade_atual", 39)
     idade_fire = premissas.get("idade_fire_alvo", 53)
+    inss_anual = premissas.get("inss_anual", 18000)
 
     ano_fire = ano_atual + (idade_fire - idade_atual)
+    age_inss = 65
+    ano_inss = ano_atual + (age_inss - idade_atual)
     anos_longevidade = 90
     ano_fim = ano_atual + (anos_longevidade - idade_atual)
 
-    # Endpoints MC do data.json
-    # Ler de fire section do data source (dashboard_state.json merges via checkin)
-    # Valores disponíveis em data["fire"] (armazenados em dashboard_state.json)
-    # Mas data.json usa estrutura diferente — pfire50/pfire53 são P(FIRE), não patrimônio
-    # Patrimônio mediano/P10/P90 vivem em dashboard_state.json fire section
-    # Precisamos usar os valores do data.json se existirem; senão fallback
-
-    # O data.json não tem pat_mediano_fire diretamente — está em dashboard_state.json
-    # Tentar carregar de dashboard_state.json
+    # Endpoints MC do dashboard_state.json
     dashboard_state_path = ROOT / "dados" / "dashboard_state.json"
     fire_state = {}
     if dashboard_state_path.exists():
@@ -349,7 +372,7 @@ def _compute_net_worth_projection(data: dict) -> dict:
             else:
                 p90 = p50 * (1 + 0.20 * (frac ** 0.5))
         else:
-            # Pré-MC ou sem dados: crescimento exponencial simples com aportes
+            # Pós-FIRE: retorno real + saque via spending smile (R$ reais)
             if pat_p50_fire is not None:
                 base_p50 = pat_p50_fire
                 base_p10 = pat_p10_fire or base_p50 * 0.59
@@ -360,11 +383,25 @@ def _compute_net_worth_projection(data: dict) -> dict:
                 base_p90 = pat_atual * 1.20
 
             t_pos_fire = t - anos_ate_fire
-            desp_anual = custo_vida * ((1 + ipca) ** t)
-            # Saque do portfólio (simplificado: descontar spending de cada trajetória)
-            p50 = base_p50 * ((1 + r) ** t_pos_fire) - desp_anual * t_pos_fire
-            p10 = base_p10 * ((1 + r * 0.6) ** t_pos_fire) - desp_anual * t_pos_fire
-            p90 = base_p90 * ((1 + r * 1.3) ** t_pos_fire) - desp_anual * t_pos_fire
+            # Spending smile em R$ reais (lifestyle + saúde escalando)
+            desp_smile = _spending_smile_real(t_pos_fire)
+            # INSS abate do saque (real constante)
+            inss_v = inss_anual if ano >= ano_inss else 0.0
+            saque_real = max(0.0, desp_smile - inss_v)
+            # Saque acumulado (cada ano retira do portfólio)
+            # Modelo simplificado: crescimento composto - soma de saques descontados
+            p50 = base_p50 * ((1 + r) ** t_pos_fire)
+            p10 = base_p10 * ((1 + r * 0.6) ** t_pos_fire)
+            p90 = base_p90 * ((1 + r * 1.3) ** t_pos_fire)
+            # Descontar saques acumulados (FV dos saques anuais)
+            for yr in range(t_pos_fire):
+                yr_desp = _spending_smile_real(yr)
+                yr_inss = inss_anual if (ano_fire + yr) >= ano_inss else 0.0
+                yr_saque = max(0.0, yr_desp - yr_inss)
+                yrs_growth = t_pos_fire - yr
+                p50 -= yr_saque * ((1 + r) ** yrs_growth)
+                p10 -= yr_saque * ((1 + r * 0.6) ** yrs_growth)
+                p90 -= yr_saque * ((1 + r * 1.3) ** yrs_growth)
 
         p10_vals.append(round(max(0, p10)))
         p50_vals.append(round(max(0, p50)))

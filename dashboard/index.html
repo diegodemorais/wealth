@@ -346,8 +346,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S9: SCENARIO COMPARISON -->
-<div class="grid-2" data-in-tab="status">
+<!-- S9: SCENARIO COMPARISON (movido de status → plan, HD-dashboard-v2) -->
+<div class="grid-2" data-in-tab="plan">
 <div class="section">
   <h2>FIRE@53 vs FIRE@50 — Comparação</h2>
   <div class="chart-box-sm"><canvas id="scenarioChart"></canvas></div>
@@ -431,24 +431,18 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S12: GLIDE PATH -->
-<div class="section" data-in-tab="aloc">
+<!-- S12: GLIDE PATH (movido de aloc → plan, HD-dashboard-v2) -->
+<div class="section" data-in-tab="plan">
 <h2>Glide Path — Alocação por Idade</h2>
 <div class="chart-box"><canvas id="glideChart"></canvas></div>
 <div class="src">Fonte: agentes/contexto/carteira.md tabela de alocação. Crypto: 3% pré e pós-FIRE (ler tabela). Assertion: soma = 100% por ano.</div>
 </div>
 
-<!-- S13: FIRE BUCKETS DONUT -->
-<div class="grid-2" data-in-tab="plan">
-<div class="section">
-  <h2>FIRE Buckets — Alocação Atual</h2>
-  <div class="chart-box-sm"><canvas id="fireBucketsDonut"></canvas></div>
-</div>
-<div class="section">
+<!-- S13: FIRE BUCKETS DONUT REMOVIDO (duplica S8). Mantido: Intra-Equity -->
+<div class="section" data-in-tab="plan">
   <h2>Intra-Equity — Pesos vs Alvo</h2>
   <div class="chart-box-sm"><canvas id="equityWeightsChart"></canvas></div>
   <div class="src">Alvo: SWRD 50% / AVGS 30% / AVEM 20% (FI-equity-redistribuicao 2026-04-01)</div>
-</div>
 </div>
 
 <!-- S14: FAN CHART P10/P50/P90 -->
@@ -495,37 +489,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src" id="incomeChartSrc">—</div>
 </div>
 
-<!-- S17: FEE ANALYSIS -->
-<div class="section" data-in-tab="perf">
-<h2>Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
-<div style="overflow-x:auto">
-<table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
-<thead><tr style="border-bottom:1px solid var(--border)">
-  <th style="text-align:left;padding:6px 8px;color:var(--muted);font-weight:600">Portfolio</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">TER</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Custo 14a</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Alpha 14a</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Net vs VWRA</th>
-</tr></thead>
-<tbody id="feeBody"></tbody>
-</table>
-</div>
-<div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
-</div>
+<!-- S17: FEE ANALYSIS — REMOVIDO (HD-dashboard-v2 P3: análise estática, delta 2.7bps raramente muda) -->
 
-<!-- S18: CONTRIBUTION SLIDER -->
-<div class="section" data-in-tab="aloc">
-<h2>Monthly Contribution Needed — Slider</h2>
-<div class="slider-row">
-  <label><span>Aporte Mensal</span><span id="contribVal">—</span></label>
-  <input type="range" id="contribSlider" min="5000" max="80000" step="1000" value="25000" oninput="updateContrib()">
-</div>
-<div class="what-if-result">
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Anos até FIRE@53 estimados (determinístico r=4.85%)</div>
-  <div class="big" id="contribResult">—</div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Nota: aproximação — P(FIRE) real via MC</div>
-</div>
-</div>
+<!-- S18: CONTRIBUTION SLIDER — REMOVIDO (HD-dashboard-v2 P3: subconjunto do What-If S19) -->
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
@@ -626,29 +592,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <h2>Calculadora de Aporte — Cascade</h2>
 <div class="calc-form">
   <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000" class="calc-aporte-input"></div>
-  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="5.1687" step="0.01"></div>
+  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" step="0.01"></div>
   <button onclick="calcAporte()">Calcular</button>
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
 <div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
 </div>
 
-<!-- S24: BOLLINGER BANDS -->
-<div class="section" data-in-tab="perf">
-<h2>Bollinger Bands — Retornos Mensais (MA5 ± 2σ)</h2>
-<div class="period-btns" id="bollingerPeriodBtns">
-  <button onclick="setBollingerPeriod('3m')">3m</button>
-  <button onclick="setBollingerPeriod('6m')">6m</button>
-  <button onclick="setBollingerPeriod('ytd')">YTD</button>
-  <button onclick="setBollingerPeriod('1y')" class="active">1y</button>
-  <button onclick="setBollingerPeriod('3y')">3y</button>
-  <button onclick="setBollingerPeriod('5y')">5y</button>
-  <button onclick="setBollingerPeriod('all')">All</button>
-</div>
-<div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div id="bollingerNote" style="display:none;font-size:.72rem;color:var(--yellow);margin-top:4px"></div>
-<div class="src">Retornos mensais. MA5 fixo · σ populacional (÷N). Upper em verde, Lower em vermelho. Pontos fora das bandas destacados. Bandas suprimidas em 3m/6m (σ instável).</div>
-</div>
+<!-- S24: BOLLINGER BANDS — REMOVIDO (HD-dashboard-v2 P3: zero valor decisório para buy-and-hold) -->
 
 <!-- S25: TLH MONITOR -->
 <div class="section" data-in-tab="aloc">
@@ -706,7 +657,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
   Pré-FIRE: renda ativa (estimativa R$45k/mês) · Pós-FIRE: saque do portfólio cobre gap despesas − INSS · INSS: R$18k/ano a partir dos 65 (inflacionado 4%/ano)
 </div>
-<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano</div>
+<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · R$ reais 2026 · spending smile (go-go/slow-go/no-go + saúde VCMH)</div>
 </div>
 
 <!-- F7: Net Worth Projection P10/P50/P90 -->
@@ -730,7 +681,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <!-- F8: Sankey Cash Flow -->
 <div class="section" data-in-tab="projecao">
 <h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
-<div class="chart-box" style="height:280px"><canvas id="sankeyChart"></canvas></div>
+<div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
   ⚠️ Valores estimados: renda = R$45k/mês × 12. Soma pode não fechar (renda estimada vs. gastos reais).
   Impostos = categoria "Taxes &amp; Fees" do spending_analysis (estimado). Nota: <span id="sankeyNota"></span>
@@ -740,8 +691,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
-<!-- S26: RF + CRYPTO CARDS -->
-<div class="section" data-in-tab="plan">
+<!-- S26: RF + CRYPTO CARDS (movido de plan → aloc, HD-dashboard-v2) -->
+<div class="section" data-in-tab="aloc">
 <h2>Renda Fixa + Cripto</h2>
 <div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
@@ -877,8 +828,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-08T21:07:45-03:00'); // BRT (UTC-3)
-const VERSION = '1.47';
+const GENERATED_AT = new Date('2026-04-08T23:19:03-03:00'); // BRT (UTC-3)
+const VERSION = '1.51';
 
 const DATA = {
   "_generated": "2026-04-08T20:51:38",
@@ -3072,44 +3023,44 @@ const DATA = {
       0,
       0,
       0,
-      432919,
-      450236,
-      468245,
-      486975,
-      506454,
-      526712,
-      547781,
-      569692,
-      592480,
-      616179,
-      640826,
-      666459,
-      675117,
-      702122,
-      730207,
-      759415,
-      789792,
-      821384,
-      854239,
-      888409,
-      923945,
-      960903,
-      999339,
-      1039312,
-      1080885,
-      1124120,
-      1169085,
-      1215848,
-      1264482,
-      1315062,
-      1367664,
-      1422371,
-      1479265,
-      1538436,
-      1599974,
-      1663972,
-      1730531,
-      1799753
+      260000,
+      266648,
+      267313,
+      267997,
+      268699,
+      269420,
+      277200,
+      278151,
+      279127,
+      280129,
+      281158,
+      290259,
+      273562,
+      274900,
+      276274,
+      235686,
+      237135,
+      238624,
+      240153,
+      241723,
+      243335,
+      244991,
+      246692,
+      248439,
+      250233,
+      252075,
+      253967,
+      255910,
+      257906,
+      259955,
+      209030,
+      210111,
+      211221,
+      212361,
+      213532,
+      214734,
+      215969,
+      217237
     ],
     "inss": [
       0,
@@ -3139,85 +3090,85 @@ const DATA = {
       0,
       0,
       18000,
-      18720,
-      19469,
-      20248,
-      21057,
-      21900,
-      22776,
-      23687,
-      24634,
-      25620,
-      26644,
-      27710,
-      28819,
-      29971,
-      31170,
-      32417,
-      33714,
-      35062,
-      36465,
-      37923,
-      39440,
-      41018,
-      42659,
-      44365,
-      46139,
-      47985
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000,
+      18000
     ],
     "despesas": [
       250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
+      250000,
       260000,
-      270400,
-      281216,
-      292465,
-      304163,
-      316330,
-      328983,
-      342142,
-      355828,
-      370061,
-      384864,
-      400258,
-      416268,
-      432919,
-      450236,
-      468245,
-      486975,
-      506454,
-      526712,
-      547781,
-      569692,
-      592480,
-      616179,
-      640826,
-      666459,
-      693117,
-      720842,
-      749676,
-      779663,
-      810849,
-      843283,
-      877015,
-      912095,
-      948579,
-      986522,
-      1025983,
-      1067022,
-      1109703,
-      1154091,
-      1200255,
-      1248265,
-      1298196,
-      1350124,
-      1404129,
-      1460294,
-      1518706,
-      1579454,
-      1642632,
-      1708337,
-      1776671,
-      1847738
+      266648,
+      267313,
+      267997,
+      268699,
+      269420,
+      277200,
+      278151,
+      279127,
+      280129,
+      281158,
+      290259,
+      291562,
+      292900,
+      294274,
+      253686,
+      255135,
+      256624,
+      258153,
+      259723,
+      261335,
+      262991,
+      264692,
+      266439,
+      268233,
+      270075,
+      271967,
+      273910,
+      275906,
+      277955,
+      227030,
+      228111,
+      229221,
+      230361,
+      231532,
+      232734,
+      233969,
+      235237
     ],
     "life_events": [
       {
@@ -3316,40 +3267,40 @@ const DATA = {
       5321611,
       5512861,
       5710985,
-      5426939,
-      5111710,
-      4763278,
-      4379511,
-      3958161,
-      3496857,
-      2993098,
-      2444250,
-      1847535,
-      1200025,
-      498637,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
+      5609609,
+      5498441,
+      5383353,
+      5264213,
+      5140884,
+      5013223,
+      4873842,
+      4729426,
+      4579803,
+      4424794,
+      4264216,
+      4089599,
+      3927084,
+      3758462,
+      3583520,
+      3445256,
+      3301477,
+      3151982,
+      2996563,
+      2835006,
+      2667089,
+      2492580,
+      2311243,
+      2122832,
+      1927092,
+      1723760,
+      1512563,
+      1293222,
+      1065444,
+      828928,
+      637937,
+      440276,
+      235721,
+      24040,
       0,
       0,
       0
@@ -3370,43 +3321,43 @@ const DATA = {
       8064228,
       8648486,
       9275073,
-      9274678,
-      9260082,
-      9230181,
-      9183808,
-      9119730,
-      9036642,
-      8933163,
-      8807839,
-      8659129,
-      8485408,
-      8284962,
-      8055979,
-      7796549,
-      7504659,
-      7178184,
-      6814883,
-      6412397,
-      5968238,
-      5479786,
-      4944280,
-      4358814,
-      3720327,
-      3025600,
-      2271241,
-      1453684,
-      569177,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      9452304,
+      9631160,
+      9817993,
+      10013171,
+      10217079,
+      10430121,
+      10645338,
+      10869996,
+      11104526,
+      11349381,
+      11605031,
+      11863538,
+      12152090,
+      12453234,
+      12767542,
+      13139652,
+      13528288,
+      13934213,
+      14358222,
+      14801150,
+      15263868,
+      15747292,
+      16252379,
+      16780131,
+      17331598,
+      17907880,
+      18510128,
+      19139547,
+      19797401,
+      20485012,
+      21259367,
+      22070145,
+      22919082,
+      23807997,
+      24738797,
+      25713481,
+      26734141
     ],
     "p90": [
       3483659,
@@ -3424,43 +3375,43 @@ const DATA = {
       11984004,
       13283601,
       14724131,
-      15202252,
-      15702886,
-      16227564,
-      16777932,
-      17355764,
-      17962967,
-      18601599,
-      19273869,
-      19982161,
-      20729037,
-      21517254,
-      22349780,
-      23229808,
-      24160772,
-      25146366,
-      26190563,
-      27297636,
-      28472178,
-      29719127,
-      31043791,
-      32451875,
-      33949508,
-      35543278,
-      37240261,
-      39048056,
-      40974826,
-      43029336,
-      45220997,
-      47559913,
-      50056927,
-      52723678,
-      55572653,
-      58617252,
-      61871849,
-      65351863,
-      69073828,
-      73055477
+      15376094,
+      16062097,
+      16790645,
+      17564401,
+      18386196,
+      19259039,
+      20178644,
+      21155219,
+      22192330,
+      23293766,
+      24463552,
+      25697419,
+      27026831,
+      28438641,
+      29938004,
+      31575049,
+      33313769,
+      35160533,
+      37122110,
+      39205696,
+      41418937,
+      43769963,
+      46267413,
+      48920470,
+      51738896,
+      54733065,
+      57914005,
+      61293438,
+      64883822,
+      68698402,
+      72807626,
+      77174789,
+      81816121,
+      86748877,
+      91991400,
+      97563184,
+      103484958
     ],
     "ano_fire": 2040,
     "nota_imovel": "// TODO: apreciação imobiliária — taxa não definida nas premissas",
@@ -3487,7 +3438,7 @@ const DATA = {
     "nota": "Soma pode não fechar (renda estimada vs. gastos reais). Renda: R$540,000 | Must: R$130,619 | Like: R$51,403 | Impostos: R$50,268 | Investimentos: R$300,000",
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' de spending_analysis (aprox R$4.189/mês × 12 = R$50.268/ano, período ago/2025-mar/2026) — ESTIMADO"
   },
-  "version": "1.47"
+  "version": "1.51"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3799,6 +3750,11 @@ function setActivePeriodBtn(containerID, period) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// CHART DEFAULTS — fonte branca para fundo escuro
+// ═══════════════════════════════════════════════════════════════
+Chart.defaults.color = '#f1f5f9';
+
+// ═══════════════════════════════════════════════════════════════
 // CHART INSTANCES
 // ═══════════════════════════════════════════════════════════════
 const charts = {};
@@ -3844,7 +3800,7 @@ function buildTimeline(period) {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#94a3b8', boxWidth: 12 } },
+        legend: { labels: { color: '#f1f5f9', boxWidth: 12 } },
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
@@ -3856,8 +3812,8 @@ function buildTimeline(period) {
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        x: { ticks: { color: '#f1f5f9', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { stacked: true, ticks: { color: '#f1f5f9', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
@@ -3913,10 +3869,10 @@ function buildAttribution() {
     },
     options: {
       indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
+      plugins: { legend: { labels: { color: '#f1f5f9' } } },
       scales: {
-        x: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8' } }
+        x: { stacked: true, ticks: { color: '#f1f5f9', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { stacked: true, ticks: { color: '#f1f5f9' } }
       }
     }
   });
@@ -3937,7 +3893,7 @@ function buildDonuts() {
       labels: ['SWRD', 'AVGS (incl. transitorios)', 'AVEM (incl. transitorios)', 'RF', 'Crypto', 'JPGL (legado)'],
       datasets: [{ data: [swrdBrl, avgsBrl, avemBrl, rfBrl, cryptoBrl, jpglBrl].map(v => Math.round(v/bucketTot*100)), backgroundColor: ['#3b82f6','#8b5cf6','#06b6d4','#22c55e','#eab308','#f97316'], borderWidth: 1, borderColor: '#1e293b' }]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } }, cutout: '60%' }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f1f5f9', font: { size: 10 } } }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } }, cutout: '60%' }
   });
 
   // Geo
@@ -3948,7 +3904,7 @@ function buildDonuts() {
       labels: ['US', 'DM ex-US', 'EM'],
       datasets: [{ data: [geoUS, geoDM, geoEM].map(v => Math.round(v/geoTot*100)), backgroundColor: ['#3b82f6','#22c55e','#f97316'], borderWidth: 1, borderColor: '#1e293b' }]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }, cutout: '60%' }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f1f5f9' } } }, cutout: '60%' }
   });
 }
 
@@ -3965,10 +3921,10 @@ function buildScenarios() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
+      plugins: { legend: { labels: { color: '#f1f5f9' } } },
       scales: {
-        y: { min: 70, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8' } }
+        y: { min: 70, max: 100, ticks: { color: '#f1f5f9', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#f1f5f9' } }
       }
     }
   });
@@ -3986,10 +3942,10 @@ function buildScenarios() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8', font:{size:10} } } },
+      plugins: { legend: { labels: { color: '#f1f5f9', font:{size:10} } } },
       scales: {
-        y: { min: 75, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8', font:{size:9} } }
+        y: { min: 75, max: 100, ticks: { color: '#f1f5f9', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#f1f5f9', font:{size:9} } }
       }
     }
   });
@@ -4009,10 +3965,10 @@ function buildTornado() {
     },
     options: {
       indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.x > 0 ? '+' : ''}${ctx.parsed.x}pp P(FIRE)` } } },
+      plugins: { legend: { labels: { color: '#f1f5f9' } }, tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.x > 0 ? '+' : ''}${ctx.parsed.x}pp P(FIRE)` } } },
       scales: {
-        x: { ticks: { color: '#94a3b8', callback: v => (v>0?'+':'')+v+'pp' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { ticks: { color: '#94a3b8', font: { size: 10 } } }
+        x: { ticks: { color: '#f1f5f9', callback: v => (v>0?'+':'')+v+'pp' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { ticks: { color: '#f1f5f9', font: { size: 10 } } }
       }
     }
   });
@@ -4041,8 +3997,8 @@ function buildDeltaBar() {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y !== null ? ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}pp` : ` Tracking desde ${_trackingStart}` } } },
       scales: {
-        y: { ticks: { color: '#94a3b8', callback: v => (v>0?'+':'')+v+'pp' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8', font:{size:10} } }
+        y: { ticks: { color: '#f1f5f9', callback: v => (v>0?'+':'')+v+'pp' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#f1f5f9', font:{size:10} } }
       }
     }
   });
@@ -4054,10 +4010,16 @@ function buildGlidePath() {
   const _anoAtual = today.getFullYear();
   const _idadeAtual = DATA.premissas.idade_atual;
   const labels = g.idades.map(a => [String(_anoAtual + (a - _idadeAtual)), `(${a} anos)`]);
-  // Assertion: soma = 100%/ano
+
+  // Fix F6 (HD-dashboard-v2): Renda+ é overlay tático, não stacked.
+  // Equity efetivo = equity - renda_plus_overlay quando ativo.
+  const rendaOverlay = g.renda_plus_overlay || g.renda_plus || g.idades.map(() => 0);
+  const equityEfetivo = g.equity.map((e, i) => e - (rendaOverlay[i] || 0));
+
+  // Assertion: soma 4 buckets estratégicos = 100%
   g.idades.forEach((_, i) => {
-    const s = g.ipca_longo[i] + g.ipca_curto[i] + g.equity[i] + g.hodl11[i] + g.renda_plus[i];
-    console.assert(Math.abs(s - 100) < 0.5, `Glide path idade ${g.idades[i]}: soma ${s}% ≠ 100%`);
+    const s = g.ipca_longo[i] + g.ipca_curto[i] + g.equity[i] + g.hodl11[i];
+    console.assert(Math.abs(s - 100) < 0.5, `Glide path idade ${g.idades[i]}: soma estratégica ${s}% ≠ 100%`);
   });
 
   charts.glide = new Chart(document.getElementById('glideChart'), {
@@ -4065,25 +4027,33 @@ function buildGlidePath() {
     data: {
       labels,
       datasets: [
-        { label: 'Equity Total',    data: g.equity,     fill: true, backgroundColor: 'rgba(59,130,246,.65)', borderColor: 'rgba(59,130,246,.9)',   borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'Equity (ex-Renda+)', data: equityEfetivo, fill: true, backgroundColor: 'rgba(59,130,246,.65)', borderColor: 'rgba(59,130,246,.9)',   borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
+        { label: 'Renda+ 2065 (tático)', data: rendaOverlay, fill: true, backgroundColor: 'rgba(249,115,22,.55)', borderColor: 'rgba(249,115,22,.9)',   borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
         { label: 'IPCA+ Longo',     data: g.ipca_longo, fill: true, backgroundColor: 'rgba(34,197,94,.55)',  borderColor: 'rgba(34,197,94,.9)',    borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
         { label: 'IPCA+ Curto',     data: g.ipca_curto, fill: true, backgroundColor: 'rgba(6,182,212,.5)',   borderColor: 'rgba(6,182,212,.9)',    borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
         { label: 'Crypto (HODL11)', data: g.hodl11,     fill: true, backgroundColor: 'rgba(234,179,8,.55)',  borderColor: 'rgba(234,179,8,.9)',    borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
-        { label: 'Renda+ 2065',     data: g.renda_plus, fill: true, backgroundColor: 'rgba(249,115,22,.55)', borderColor: 'rgba(249,115,22,.9)',   borderWidth: 1.5, pointRadius: 3, tension: 0.3 },
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8' } },
+        legend: { labels: { color: '#f1f5f9' } },
         tooltip: {
           mode: 'index', intersect: false,
-          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` }
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%`,
+            footer: items => {
+              const i = items[0]?.dataIndex;
+              if (i == null) return '';
+              const rp = rendaOverlay[i];
+              return rp ? `Nota: Renda+ (${rp}%) carve-out de Equity` : '';
+            }
+          }
         }
       },
       scales: {
-        x: { stacked: true, ticks: { color: '#94a3b8', maxRotation: 0 } },
-        y: { stacked: true, min: 0, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        x: { stacked: true, ticks: { color: '#f1f5f9', maxRotation: 0 } },
+        y: { stacked: true, min: 0, max: 100, ticks: { color: '#f1f5f9', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
@@ -4091,6 +4061,8 @@ function buildGlidePath() {
 
 // ── S13: FIRE Buckets + Equity Weights ────────────────────────
 function buildFireBuckets() {
+  // S13 FIRE Buckets Donut removido (HD-dashboard-v2) — canvas não existe mais
+  if (!document.getElementById('fireBucketsDonut')) return;
   const eqBrl = totalEquityUsd * CAMBIO;
   // RF split: usar valores reais de DATA.rf em vez de proporções hardcoded
   const _ipca2040Brl  = DATA.rf?.ipca2040?.valor ?? 0;
@@ -4102,7 +4074,7 @@ function buildFireBuckets() {
       labels: ['Equity', 'IPCA+ Longo (2040)', 'Crypto', 'Renda+ 2065', 'Reserva (2029)'],
       datasets: [{ data: [eqBrl, _ipca2040Brl, cryptoBrl, _renda2065Brl, _ipca2029Brl].map(v => Math.round(v/totalBrl*100)), backgroundColor: ['#3b82f6','#22c55e','#eab308','#f97316','#06b6d4'], borderWidth: 1, borderColor: '#1e293b' }]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font:{size:10} } } }, cutout: '55%' }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#f1f5f9', font:{size:10} } } }, cutout: '55%' }
   });
 
   // Intra-equity actual vs target
@@ -4126,10 +4098,10 @@ function buildFireBuckets() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
+      plugins: { legend: { labels: { color: '#f1f5f9' } } },
       scales: {
-        y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8' } }
+        y: { ticks: { color: '#f1f5f9', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#f1f5f9' } }
       }
     }
   });
@@ -4200,7 +4172,7 @@ function buildFanChart() {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8' } },
+        legend: { labels: { color: '#f1f5f9' } },
         tooltip: {
           callbacks: {
             label: ctx => {
@@ -4216,8 +4188,8 @@ function buildFanChart() {
         annotation: {}
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 14, autoSkip: true, maxRotation: 0 }, grid: { color: 'rgba(71,85,105,.2)' } },
-        y: { ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000000).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.2)' } }
+        x: { ticks: { color: '#f1f5f9', maxTicksLimit: 14, autoSkip: true, maxRotation: 0 }, grid: { color: 'rgba(71,85,105,.2)' } },
+        y: { ticks: { color: '#f1f5f9', callback: v => 'R$' + (v/1000000).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.2)' } }
       }
     }
   });
@@ -4269,10 +4241,10 @@ function buildIncomeChart() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8', font:{size:10} } } },
+      plugins: { legend: { labels: { color: '#f1f5f9', font:{size:10} } } },
       scales: {
-        y: { ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8' } }
+        y: { ticks: { color: '#f1f5f9', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#f1f5f9' } }
       }
     }
   });
@@ -4550,7 +4522,7 @@ window.calcAporte = function() {
   const _apEl = document.getElementById('calcAporte');
   if (_apEl && +_apEl.value === 25000 && DATA.premissas?.aporte_mensal) _apEl.value = DATA.premissas.aporte_mensal;
   const _fxEl = document.getElementById('calcCambio');
-  if (_fxEl && +_fxEl.value === 5.1687 && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
+  if (_fxEl && (!_fxEl.value || +_fxEl.value === 0) && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
   const ap = +_apEl.value;
   const fx = +_fxEl.value;
   const apUsd = ap / fx;
@@ -4609,8 +4581,9 @@ window.calcAporte = function() {
     </div>`;
 };
 
-// ── S24: Bollinger ────────────────────────────────────────────
+// ── S24: Bollinger (REMOVIDO do HTML — guard para função órfã) ──
 function buildBollinger(period) {
+  if (!document.getElementById('bollingerChart')) return;
   const allL = DATA.bollinger.dates;
   const allV = DATA.bollinger.values;
   const WSIZE = 5; // MA5 window
@@ -4690,7 +4663,7 @@ function buildBollinger(period) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8', font:{size:10} } },
+        legend: { labels: { color: '#f1f5f9', font:{size:10} } },
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
@@ -4708,8 +4681,8 @@ function buildBollinger(period) {
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        x: { ticks: { color: '#f1f5f9', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { ticks: { color: '#f1f5f9', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
@@ -4821,12 +4794,12 @@ function buildBacktest(period) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8' } },
+        legend: { labels: { color: '#f1f5f9' } },
         tooltip: { callbacks: { title: items => items.length ? fmtMonthLabel(items[0].label) : '', label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
-        y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.2)' } }
+        x: { ticks: { color: '#f1f5f9', maxTicksLimit: 10, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
+        y: { ticks: { color: '#f1f5f9', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.2)' } }
       }
     }
   });
@@ -4950,12 +4923,12 @@ function buildShadowChart(period) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8', font:{size:10} } },
+        legend: { labels: { color: '#f1f5f9', font:{size:10} } },
         tooltip: { callbacks: { title: items => items.length ? fmtMonthLabel(items[0].label) : '', label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} (base 100)` } }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, autoSkip: true, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.3)' } }
+        x: { ticks: { color: '#f1f5f9', maxTicksLimit: 8, autoSkip: true, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { ticks: { color: '#f1f5f9', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
@@ -5269,7 +5242,7 @@ function buildIncomeProjection() {
           order: 2,
         },
         {
-          label: 'Despesas (R$250k × 4%/ano)',
+          label: 'Despesas (R$ reais 2026 — spending smile)',
           data: ip.despesas,
           type: 'line',
           borderColor: 'rgba(239,68,68,.85)',
@@ -5287,7 +5260,7 @@ function buildIncomeProjection() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#94a3b8', font: { size: 10 } } },
+        legend: { labels: { color: '#f1f5f9', font: { size: 10 } } },
         tooltip: {
           callbacks: {
             title: items => {
@@ -5306,12 +5279,12 @@ function buildIncomeProjection() {
       scales: {
         x: {
           stacked: true,
-          ticks: { color: '#94a3b8', maxTicksLimit: 14, autoSkip: true, maxRotation: 0 },
+          ticks: { color: '#f1f5f9', maxTicksLimit: 14, autoSkip: true, maxRotation: 0 },
           grid: { color: 'rgba(71,85,105,.2)' }
         },
         y: {
           stacked: true,
-          ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0) + 'k' },
+          ticks: { color: '#f1f5f9', callback: v => 'R$' + (v/1000).toFixed(0) + 'k' },
           grid: { color: 'rgba(71,85,105,.2)' }
         }
       }
@@ -5322,7 +5295,7 @@ function buildIncomeProjection() {
   const leDiv = document.getElementById('incomeProjectionSrc');
   if (leDiv && ip.life_events && ip.life_events.length) {
     const evStr = ip.life_events.map(ev => `${ev.ano}: ${ev.label} (R$${(ev.valor/1000).toFixed(0)}k)`).join(' · ');
-    leDiv.textContent = `Eventos: ${evStr} · Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano`;
+    leDiv.textContent = `Eventos: ${evStr} · Fonte: premissas MC · config.py · life_events.json · R$ reais 2026 · spending smile (go-go/slow-go/no-go + saúde VCMH)`;
   }
 }
 
@@ -5393,7 +5366,7 @@ function buildNetWorthProjection() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#94a3b8', font: { size: 10 } } },
+        legend: { labels: { color: '#f1f5f9', font: { size: 10 } } },
         tooltip: {
           callbacks: {
             title: items => {
@@ -5410,11 +5383,11 @@ function buildNetWorthProjection() {
       },
       scales: {
         x: {
-          ticks: { color: '#94a3b8', maxTicksLimit: 12, autoSkip: true, maxRotation: 0 },
+          ticks: { color: '#f1f5f9', maxTicksLimit: 12, autoSkip: true, maxRotation: 0 },
           grid: { color: 'rgba(71,85,105,.2)' }
         },
         y: {
-          ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
+          ticks: { color: '#f1f5f9', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.2)' }
         }
       }
@@ -5502,13 +5475,14 @@ function buildSankey() {
   if (notaEl) notaEl.textContent = sk.nota || '';
 
   const fmt = v => 'R$' + (v/1000).toFixed(0) + 'k';
+  const pct = v => (v / sk.renda_total * 100).toFixed(0) + '%';
 
   // chartjs-chart-sankey espera array de {from, to, flow}
   const flowData = [
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`, flow: sk.impostos },
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Must Spend ${fmt(sk.must_spend)}`, flow: sk.must_spend },
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Like to Spend ${fmt(sk.like_spend)}`, flow: sk.like_spend },
-    { from: `Renda ${fmt(sk.renda_total)}`, to: `Investimentos ${fmt(sk.investimentos)}`, flow: sk.investimentos },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Impostos ${fmt(sk.impostos)} (${pct(sk.impostos)})${sk.impostos_estimado ? '*' : ''}`, flow: sk.impostos },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Must Spend ${fmt(sk.must_spend)} (${pct(sk.must_spend)})`, flow: sk.must_spend },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Like to Spend ${fmt(sk.like_spend)} (${pct(sk.like_spend)})`, flow: sk.like_spend },
+    { from: `Renda ${fmt(sk.renda_total)}`, to: `Investimentos ${fmt(sk.investimentos)} (${pct(sk.investimentos)})`, flow: sk.investimentos },
   ];
 
   if (charts.sankey) charts.sankey.destroy();
@@ -5520,25 +5494,30 @@ function buildSankey() {
           label: 'Fluxo de Caixa Anual',
           data: flowData,
           colorFrom: (c) => {
-            const labels = {
-              [`Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`]: '#ef4444',
-              [`Must Spend ${fmt(sk.must_spend)}`]: '#f97316',
-              [`Like to Spend ${fmt(sk.like_spend)}`]: '#3b82f6',
-              [`Investimentos ${fmt(sk.investimentos)}`]: '#22c55e',
-            };
-            return labels[c.dataset.data[c.dataIndex].to] || '#94a3b8';
+            const d = c.dataset.data[c.dataIndex];
+            if (!d) return '#94a3b8';
+            const t = d.to;
+            if (t.startsWith('Impostos')) return '#ef4444';
+            if (t.startsWith('Must'))     return '#f97316';
+            if (t.startsWith('Like'))     return '#3b82f6';
+            if (t.startsWith('Invest'))   return '#22c55e';
+            return '#94a3b8';
           },
           colorTo: (c) => {
-            const labels = {
-              [`Impostos ${fmt(sk.impostos)}${sk.impostos_estimado ? '*' : ''}`]: '#ef4444',
-              [`Must Spend ${fmt(sk.must_spend)}`]: '#f97316',
-              [`Like to Spend ${fmt(sk.like_spend)}`]: '#3b82f6',
-              [`Investimentos ${fmt(sk.investimentos)}`]: '#22c55e',
-            };
-            return labels[c.dataset.data[c.dataIndex].to] || '#94a3b8';
+            const d = c.dataset.data[c.dataIndex];
+            if (!d) return '#94a3b8';
+            const t = d.to;
+            if (t.startsWith('Impostos')) return '#ef4444';
+            if (t.startsWith('Must'))     return '#f97316';
+            if (t.startsWith('Like'))     return '#3b82f6';
+            if (t.startsWith('Invest'))   return '#22c55e';
+            return '#94a3b8';
           },
           colorMode: 'gradient',
           size: 'min',
+          nodeWidth: 12,
+          nodePadding: 16,
+          color: '#f1f5f9',
         }]
       },
       options: {
@@ -6235,6 +6214,11 @@ window.switchTab = function(name) {
   buildStressTest();
   buildSankey();
   buildWellnessExtras();
+  // F4 fix: header câmbio dinâmico de DATA.cambio (não hardcoded)
+  const _hMeta = document.getElementById('headerMeta');
+  if (_hMeta && DATA.cambio) {
+    _hMeta.textContent = _hMeta.textContent.replace(/USD\/BRL [\d.]+/, 'USD/BRL ' + Number(DATA.cambio).toFixed(4));
+  }
   // Ativar tab inicial (status) — esconde o resto, então resize
   switchTab('status');
 })();

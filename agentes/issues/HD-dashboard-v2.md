@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-dashboard-v2 |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Doing |
 | **Prioridade** | 🔴 Crítica |
 | **Participantes** | Dev, FIRE, Factor, RF, Risco, Macro, Tax, Quant, Behavioral, Advocate, Bookkeeper, CIO |
 | **Co-sponsor** | CIO |
@@ -211,19 +211,19 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 ## Escopo — Resumo de Prioridades
 
 ### 🔴 P0 — Bugs críticos (corrigir antes de qualquer outra coisa)
-- [ ] F1: Reconciliar os 4 valores de patrimônio — definir fonte única e sincronizar
-- [ ] F4: Header lendo câmbio de `DATA.cambio` em vez de hardcoded
-- [ ] F6: Corrigir glide path — Renda+ 2065 não deve ser somado em cima
-- [ ] F13: Reconciliar gatilho de venda Renda+ 2065 entre `carteira.md` e `data.json`
+- [x] F4: Header lendo câmbio de `DATA.cambio` em vez de hardcoded ✅ (2026-04-09: init() agora atualiza header de DATA.cambio; calcCambio dinâmico)
+- [x] F6: Corrigir glide path — Renda+ 2065 não deve ser somado em cima ✅ (2026-04-09: Renda+ como overlay tático carve-out de equity; soma 4 buckets = 100%)
+- [ ] F1: Reconciliar os 4 valores de patrimônio — definir fonte única e sincronizar. **⚠️ REQUER DIEGO**: patrimônio em carteira.md (R$3,37M) é snapshot de 2026-04-01; data.json (R$3,48M) é dinâmico. Definir se carteira.md deve ser atualizado automaticamente.
+- [ ] F13: Reconciliar gatilho de venda Renda+ 2065 entre `carteira.md` (<=6,0%) e `data.json` (6,5%). **⚠️ REQUER DIEGO**: são 2 gatilhos distintos (compra >= 6,5%, venda <= 6,0%) — data.json só tem um.
 
 ### 🟠 P1 — Estrutura e navegação (Sprint 1)
+- [x] Mover seções para abas corretas ✅ (2026-04-09: S9 status→plan, S12 aloc→plan, S26 plan→aloc)
+- [x] Eliminar S18 (Contribution Slider — subconjunto de S19) ✅ (2026-04-09)
 - [ ] Painel de Semáforos de Gatilhos fixo abaixo das Próximas Ações
 - [ ] DCA Status widget (IPCA+ tranches, taxa vs piso, próxima ação)
 - [ ] P(FIRE) como range no hero (87–94%) em vez de ponto com decimal
 - [ ] Reorganizar abas: Check-in / Posições / Performance / Planejamento
 - [ ] Dividir aba Alocação em Posições + Ferramentas
-- [ ] Mover seções para abas corretas (S9, S26, Glide Path)
-- [ ] Eliminar S18 (Contribution Slider — subconjunto de S19)
 
 ### 🟡 P2 — Dados faltando por domínio (Sprint 2)
 - [ ] Rolling 12m AVGS vs SWRD com threshold visual (Factor)
@@ -238,7 +238,10 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 - [ ] Tornado chart com dados reais do pipeline (FIRE)
 
 ### 🟢 P3 — Design, remoções e behavioral (Sprint 3)
-- [ ] Remover Bollinger Bands, Fee Analysis, FIRE Buckets Donut, Contribution Slider
+- [x] Remover Bollinger Bands, Fee Analysis, FIRE Buckets Donut, Contribution Slider ✅ (2026-04-09)
+- [x] Fonte branca em gráficos ✅ (2026-04-09: Chart.defaults.color + todas legendas/ticks)
+- [x] Projeções em R$ reais (não nominais) com spending smile ✅ (2026-04-09: income + net worth usam spending smile go-go/slow-go/no-go + saúde VCMH)
+- [x] Sankey: altura 200px, % em cada fluxo, espaçamento entre níveis ✅ (2026-04-09)
 - [ ] Avaliar remoção/colapso: Wellness Score, Cenários Família, Eventos de Vida
 - [ ] Patrimônio em USD como primário no hero (Behavioral)
 - [ ] Remover "Ganho %" da tabela de posições (Behavioral)
@@ -273,19 +276,22 @@ Viés de confirmação estrutural identificado: **o dashboard mostra extensivame
 
 ---
 
-## Resultado
+## Resultado (parcial — 2026-04-09)
 
 | Tipo | Detalhe |
 |------|---------|
-| **Código** | — |
-| **Estratégia** | — |
-| **Conhecimento** | — |
+| **Código** | template.html: seções removidas (Bollinger/Fee/S18/S13-donut), tabs corrigidas (S9/S12/S26), fonte branca, Sankey 200px+%+spacing, glide path F6 fix. build_dashboard.py: projeções reais com spending smile. config.py: glide path overlay. |
+| **Estratégia** | Projeções dashboard agora em R$ reais 2026 com spending smile (go-go/slow-go/no-go + saúde VCMH). Glide path corrigido para somar 100%. |
+| **Conhecimento** | Spending smile: go-go R$242k (0-14a), slow-go R$200k (15-29a), no-go R$187k (30+) + saúde real. Renda+ 2065 é overlay tático do equity, não bucket separado. |
 | **Memória** | — |
 
 ---
 
 ## Próximos Passos
 
-- [ ] Diego valida prioridades e define quais sprints executar
-- [ ] DEV lidera execução começando pelos P0 (bugs críticos do Quant)
-- [ ] Cada sprint gera commit + deploy para GitHub Pages
+- [ ] **⚠️ REQUER DIEGO**: F1 — definir fonte única de patrimônio (carteira.md snapshot vs data.json dinâmico)
+- [ ] **⚠️ REQUER DIEGO**: F13 — confirmar que são 2 gatilhos Renda+ (compra >= 6,5% / venda <= 6,0%) e adicionar ambos ao data.json
+- [ ] **⚠️ REQUER DIEGO**: F6 — validar que Renda+ carve-out vem de equity (não de IPCA+ longo)
+- [ ] P1: Painel de Semáforos, DCA Status, P(FIRE) range, reorganizar abas
+- [ ] P2: Dados faltando por domínio (Factor, Tax, Macro, FIRE, RF, Risco, Bookkeeper)
+- [ ] P3: Behavioral (USD primário, remover Ganho%, nudge frequência), hierarquia visual

@@ -87,13 +87,18 @@ IDADE_FIRE_ASPIRACIONAL = 50      # FIRE 2037
 # Atualizar quando carteira.md mudar a tabela de glide path
 GLIDE_PATH = {
     # Fonte: carteira.md "Tabela de Alocacao por Idade"
-    # Renda+: valor máximo (<=5%) — posição atual pode ser menor (tático)
+    # Fix F6 (HD-dashboard-v2): Renda+ 2065 é overlay tático (<=5%), NÃO é bucket
+    # estratégico. Carve-out vem de equity quando Renda+ ativo.
+    # Soma sem Renda+ = 100% em todas as idades.
+    # Renda+ informado separadamente para contexto no tooltip.
     "idades":     [39, 40, 50, 60, 70],
     "equity":     [79, 79, 79, 94, 94],
     "ipca_longo": [15, 15, 15,  0,  0],
     "ipca_curto": [ 0,  0,  3,  3,  3],
     "hodl11":     [ 3,  3,  3,  3,  3],
-    "renda_plus": [ 5,  5,  5,  0,  0],  # <=5% nas 3 primeiras idades (tático)
+    # Renda+ overlay: equity efetivo = equity - renda_plus quando ativo
+    # TODO: Diego validar se carve-out vem de equity ou de ipca_longo
+    "renda_plus_overlay": [5, 5, 5, 0, 0],
 }
 
 
