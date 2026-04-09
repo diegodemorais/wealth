@@ -258,10 +258,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" data-tab="status" onclick="switchTab('status')">📊 Status</button>
-  <button class="tab-btn" data-tab="perf"   onclick="switchTab('perf')">📈 Performance</button>
-  <button class="tab-btn" data-tab="aloc"   onclick="switchTab('aloc')">🎯 Alocação</button>
-  <button class="tab-btn" data-tab="plan"   onclick="switchTab('plan')">🔭 Planejamento</button>
+  <button class="tab-btn active" data-tab="status"   onclick="switchTab('status')">📊 Status</button>
+  <button class="tab-btn" data-tab="aloc"     onclick="switchTab('aloc')">🎯 Alocação</button>
+  <button class="tab-btn" data-tab="perf"     onclick="switchTab('perf')">📈 Performance</button>
+  <button class="tab-btn" data-tab="plan"     onclick="switchTab('plan')">🔭 Planejamento</button>
   <button class="tab-btn" data-tab="projecao" onclick="switchTab('projecao')">📅 Projeções</button>
 </div>
 
@@ -770,24 +770,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src" id="premissasVsRealizadoSrc">Fonte: fire_montecarlo.py (premissas) · ibkr_analysis.py (aportes realizados) · backtest_portfolio.py (CAGR)</div>
 </div>
 
-<!-- S22: CALCULADORA APORTE -->
-<div class="section" data-in-tab="plan">
-<h2>Calculadora de Aporte — Cascade</h2>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-  <div class="slider-row">
-    <label><span>Aporte Mensal</span><span id="calcAporteLabel" style="font-weight:700;color:var(--accent)">R$ 25k</span></label>
-    <input type="range" id="calcAporte" min="5" max="200" step="5" value="25" oninput="calcAporte()">
-    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$ 5k</span><span>R$ 200k</span></div>
-  </div>
-  <div class="slider-row">
-    <label><span>Câmbio USD/BRL</span><span id="calcCambioLabel" style="font-weight:700;color:var(--muted)">—</span></label>
-    <input type="range" id="calcCambio" min="4.00" max="7.00" step="0.05" value="5.16" oninput="calcAporte()">
-    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$4</span><span>R$7</span></div>
-  </div>
-</div>
-<div id="calcResult" style="font-size:.8rem"></div>
-<div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040. Overflow acima do gap preenche próximo nível. Pisos definidos na estratégia.</div>
-</div>
 
 <!-- S24: RETORNOS MENSAIS — Bollinger (aberto por default) -->
 <div class="section collapsible open" data-in-tab="perf">
@@ -976,6 +958,32 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" data-in-tab="aloc">
 <h2>Renda Fixa + Cripto</h2>
 <div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
+</div>
+
+<!-- S22: CALCULADORA APORTE -->
+<div class="section" data-in-tab="aloc">
+<h2>Calculadora de Aporte — Cascade</h2>
+<div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+  <div class="slider-row" style="flex:1;min-width:240px">
+    <label style="display:flex;justify-content:space-between;align-items:center">
+      <span>Aporte Mensal</span>
+      <span style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:.65rem;color:var(--muted)">R$</span>
+        <input type="number" id="calcAporteNum" min="1000" max="1000000" step="1000" value="25000"
+          style="width:90px;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:5px;font-size:.8rem;font-weight:700;text-align:right"
+          oninput="const s=document.getElementById('calcAporte');if(s)s.value=Math.round(+this.value/1000);calcAporte()">
+      </span>
+    </label>
+    <input type="range" id="calcAporte" min="1" max="1000" step="1" value="25"
+      oninput="const n=document.getElementById('calcAporteNum');if(n)n.value=+this.value*1000;calcAporte()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$ 1k</span><span>R$ 1M</span></div>
+  </div>
+  <div style="font-size:.75rem;color:var(--muted);white-space:nowrap">
+    Câmbio: <span id="calcCambioLabel" style="font-weight:600;color:var(--text)">—</span> <span style="font-size:.6rem">(PTAX BCB)</span>
+  </div>
+</div>
+<div id="calcResult" style="font-size:.8rem"></div>
+<div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040. Overflow acima do gap preenche próximo nível. Pisos definidos na estratégia.</div>
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
@@ -2273,19 +2281,20 @@ function buildMinilog() {
 
 // ── S22: Calculadora Cascade ──────────────────────────────────
 window.calcAporte = function() {
-  const _apEl = document.getElementById('calcAporte');
-  const _fxEl = document.getElementById('calcCambio');
-  // Slider em R$ mil; inicializar com DATA se primeiro uso
-  if (_apEl && +_apEl.value === 25 && DATA.premissas?.aporte_mensal)
-    _apEl.value = Math.round(DATA.premissas.aporte_mensal / 1000);
-  if (_fxEl && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(2);
+  const _apNum = document.getElementById('calcAporteNum');
+  const _apEl  = document.getElementById('calcAporte');
+  // Inicializar com DATA.premissas se primeiro uso
+  if (_apNum && +_apNum.value === 25000 && DATA.premissas?.aporte_mensal) {
+    _apNum.value = DATA.premissas.aporte_mensal;
+    if (_apEl) _apEl.value = Math.round(DATA.premissas.aporte_mensal / 1000);
+  }
 
-  const ap  = +_apEl.value * 1000;  // converter k → R$
-  const fx  = +_fxEl.value;
+  const ap  = Math.max(0, +(_apNum?.value ?? 25000));  // R$ direto do input numérico
+  const fx  = DATA.cambio ?? 5.16;                      // câmbio informativo — PTAX BCB
   const apUsd = ap / fx;
   const _lblAp = document.getElementById('calcAporteLabel');
   const _lblFx = document.getElementById('calcCambioLabel');
-  if (_lblAp) _lblAp.textContent = `R$ ${(ap/1000).toFixed(0)}k`;
+  if (_lblAp) _lblAp.textContent = `R$ ${ap >= 1000 ? (ap/1000).toFixed(0)+'k' : ap}`;
   if (_lblFx) _lblFx.textContent = `R$ ${fx.toFixed(2)}`;
   const div = document.getElementById('calcResult');
 
@@ -4381,7 +4390,7 @@ function _initTabCharts(tab) {
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11],
+    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte],
     plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
                function() {
                  const wiA = document.getElementById('wiAporte');
@@ -4392,8 +4401,7 @@ function _initTabCharts(tab) {
                  if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
                  [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
                  updateWhatIf();
-               },
-               calcAporte],
+               }],
     projecao: [updateFireSim, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
                buildSpendingBreakdown, buildIncomeProjection,
                buildNetWorthProjection, buildStressTest, buildSankey],
