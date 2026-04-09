@@ -1590,8 +1590,12 @@ function buildScenarios() {
 
 // ── S10: Tornado ─────────────────────────────────────────────
 function buildTornado() {
+  if (charts.tornado) { charts.tornado.destroy(); charts.tornado = null; }
   const t = DATA.tornado;
-  charts.tornado = new Chart(document.getElementById('tornadoChart'), {
+  if (!t || !t.length) return;
+  const canvas = document.getElementById('tornadoChart');
+  if (!canvas) return;
+  charts.tornado = new Chart(canvas, {
     type: 'bar',
     data: {
       labels: t.map(x => x.variavel),
@@ -3990,7 +3994,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildTimestamps, buildTornado, buildPremissasVsRealizado],
+    status:   [buildSemaforoPanel, buildTimestamps, buildPremissasVsRealizado],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, function() { buildBollinger('1y'); },
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -4665,6 +4669,7 @@ function buildCagrVsTwr() {
   buildMacroCards();
   buildDcaStatus();
   buildFanChart();
+  buildTornado();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');

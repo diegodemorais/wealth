@@ -1078,12 +1078,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T13:36:13-03:00'); // BRT (UTC-3)
-const VERSION = '1.84';
+const GENERATED_AT = new Date('2026-04-09T14:14:39-03:00'); // BRT (UTC-3)
+const VERSION = '1.85';
 
 const DATA = {
-  "_generated": "2026-04-09T13:36:13",
-  "_generated_brt": "2026-04-09T13:36:13-03:00",
+  "_generated": "2026-04-09T14:14:39",
+  "_generated_brt": "2026-04-09T14:14:39-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -4055,7 +4055,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.84"
+  "version": "1.85"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -4568,8 +4568,12 @@ function buildScenarios() {
 
 // ── S10: Tornado ─────────────────────────────────────────────
 function buildTornado() {
+  if (charts.tornado) { charts.tornado.destroy(); charts.tornado = null; }
   const t = DATA.tornado;
-  charts.tornado = new Chart(document.getElementById('tornadoChart'), {
+  if (!t || !t.length) return;
+  const canvas = document.getElementById('tornadoChart');
+  if (!canvas) return;
+  charts.tornado = new Chart(canvas, {
     type: 'bar',
     data: {
       labels: t.map(x => x.variavel),
@@ -6968,7 +6972,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildTimestamps, buildTornado, buildPremissasVsRealizado],
+    status:   [buildSemaforoPanel, buildTimestamps, buildPremissasVsRealizado],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, function() { buildBollinger('1y'); },
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -7643,6 +7647,7 @@ function buildCagrVsTwr() {
   buildMacroCards();
   buildDcaStatus();
   buildFanChart();
+  buildTornado();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');
