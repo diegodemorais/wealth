@@ -1,0 +1,82 @@
+{
+  "total_brl": -8681.16,
+  "por_ticker": {
+    "BBDC4": -24744.0,
+    "HASH11": 4956.36,
+    "B5P211": 11106.48
+  },
+  "detalhado": [
+    {
+      "data_venda": "2020-04-24",
+      "ticker": "BBDC4",
+      "qty": 100,
+      "custo_cota": 34.2,
+      "venda_cota": 17.7,
+      "pnl_brl": -1650.0,
+      "data_compra": "2020-01-23"
+    },
+    {
+      "data_venda": "2020-04-24",
+      "ticker": "BBDC4",
+      "qty": 800,
+      "custo_cota": 34.2,
+      "venda_cota": 17.7,
+      "pnl_brl": -13200.0,
+      "data_compra": "2020-01-23"
+    },
+    {
+      "data_venda": "2020-04-24",
+      "ticker": "BBDC4",
+      "qty": 600,
+      "custo_cota": 34.2,
+      "venda_cota": 17.71,
+      "pnl_brl": -9894.0,
+      "data_compra": "2020-01-23"
+    },
+    {
+      "data_venda": "2025-08-07",
+      "ticker": "HASH11",
+      "qty": 103,
+      "custo_cota": 40.35,
+      "venda_cota": 88.47,
+      "pnl_brl": 4956.36,
+      "data_compra": "externo"
+    },
+    {
+      "data_venda": "2025-12-23",
+      "ticker": "B5P211",
+      "qty": 300,
+      "custo_cota": 80.68,
+      "venda_cota": 101.13,
+      "pnl_brl": 6135.0,
+      "data_compra": "2023-04-10"
+    },
+    {
+      "data_venda": "2026-01-26",
+      "ticker": "B5P211",
+      "qty": 124,
+      "custo_cota": 80.68,
+      "venda_cota": 102.28,
+      "pnl_brl": 2678.4,
+      "data_compra": "2023-04-10"
+    },
+    {
+      "data_venda": "2026-01-26",
+      "ticker": "B5P211",
+      "qty": 154,
+      "custo_cota": 90.46,
+      "venda_cota": 102.28,
+      "pnl_brl": 1820.28,
+      "data_compra": "2024-08-15"
+    },
+    {
+      "data_venda": "2026-01-26",
+      "ticker": "B5P211",
+      "qty": 40,
+      "custo_cota": 90.46,
+      "venda_cota": 102.28,
+      "pnl_brl": 472.8,
+      "data_compra": "2024-08-15"
+    }
+  ]
+}
