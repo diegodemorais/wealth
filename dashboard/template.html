@@ -81,6 +81,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 .private-mode .pv{visibility:hidden}
+/* ── Zebra striping em tabelas longas ── */
+tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
 .privacy-toggle:hover{opacity:1}
 /* ── F2: Spending Guardrails ── */
@@ -150,8 +152,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="hero-strip">
   <div class="hero-kpi primary">
     <div class="hlbl">Patrimônio Total</div>
-    <div class="hval pv" id="heroPatrimonio">—</div>
-    <div class="hsub pv" id="heroPatrimonioUsd">— equity</div>
+    <div class="hval pv" id="heroPatrimonioUsd">—</div>
+    <div class="hsub pv" id="heroPatrimonioBrl">— em BRL</div>
   </div>
   <div class="hero-kpi primary">
     <div class="hlbl">P(FIRE) Base · @53</div>
@@ -826,7 +828,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <footer>
   Dashboard regenerado em <strong id="footerDate">—</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
-  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance
+  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance<br>
+  <span id="footerNudge" style="opacity:.5;font-size:.65rem"></span>
 </footer>
 </div><!-- /container -->
 
@@ -995,6 +998,9 @@ const _anoFireAlvoGlobal = today.getFullYear() + (DATA.premissas.idade_fire_alvo
 const _anoFireAspir = today.getFullYear() + ((DATA.premissas.idade_fire_aspiracional ?? 50) - DATA.premissas.idade_atual);
 const _footerDate = document.getElementById('footerDate');
 if (_footerDate && DATA.date) { const _d = new Date(DATA.date); _footerDate.textContent = `${String(_d.getDate()).padStart(2,'0')}/${String(_d.getMonth()+1).padStart(2,'0')}/${_d.getFullYear()}`; }
+// Nudge de frequência mensal — próxima consulta sugerida +30 dias
+const _nudgeEl = document.getElementById('footerNudge');
+if (_nudgeEl && DATA.date) { const _nd = new Date(DATA.date); _nd.setDate(_nd.getDate() + 30); const _meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; _nudgeEl.textContent = `Próxima consulta sugerida: ${String(_nd.getDate()).padStart(2,'0')}/${_meses[_nd.getMonth()]}/${_nd.getFullYear()}`; }
 const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
 const fireDate = new Date(`${_anoFire}-01-01`);
 const msLeft = fireDate - today;
@@ -3160,9 +3166,9 @@ function buildWellnessExtras() {
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 function renderKPIs() {
-  // Hero strip
-  document.getElementById('heroPatrimonio').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
-  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k equity`;
+  // Hero strip — USD primário (câmbio flutua sem gerar informação de retorno)
+  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k`;
+  document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M em BRL`;
   const heroPf = document.getElementById('heroPfire');
   const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
   const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
@@ -3366,7 +3372,19 @@ function renderProximasAcoes() {
       html += `<div class="prio-warn">📋 <strong>${ev.evento} iminente (${ev.data_est})</strong> — ${ev.acoes.slice(0,2).join(' · ')}</div>`;
     }
   });
-  el.innerHTML = html || '<div style="color:var(--muted);font-size:.8rem">Sem ações prioritárias</div>';
+  if (!html) {
+    // Tudo verde — mensagem positiva e visual verde
+    const box = document.getElementById('proximasAcoes');
+    if (box) {
+      box.style.background = 'rgba(34,197,94,.08)';
+      box.style.borderColor = 'rgba(34,197,94,.3)';
+      const h2 = box.querySelector('h2');
+      if (h2) { h2.style.color = 'var(--green)'; h2.textContent = '✅ Próximas Ações'; }
+    }
+    el.innerHTML = '<div style="color:var(--green);font-size:.85rem;text-align:center;padding:8px 0">Nenhuma ação necessária — carteira alinhada com o plano. Próxima revisão no check-in mensal.</div>';
+  } else {
+    el.innerHTML = html;
+  }
 }
 
 // ── RF Cards (gerado dinamicamente) ───────────────────────────

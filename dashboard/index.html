@@ -81,6 +81,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 .private-mode .pv{visibility:hidden}
+/* ── Zebra striping em tabelas longas ── */
+tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
 .privacy-toggle:hover{opacity:1}
 /* ── F2: Spending Guardrails ── */
@@ -150,8 +152,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="hero-strip">
   <div class="hero-kpi primary">
     <div class="hlbl">Patrimônio Total</div>
-    <div class="hval pv" id="heroPatrimonio">—</div>
-    <div class="hsub pv" id="heroPatrimonioUsd">— equity</div>
+    <div class="hval pv" id="heroPatrimonioUsd">—</div>
+    <div class="hsub pv" id="heroPatrimonioBrl">— em BRL</div>
   </div>
   <div class="hero-kpi primary">
     <div class="hlbl">P(FIRE) Base · @53</div>
@@ -826,7 +828,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <footer>
   Dashboard regenerado em <strong id="footerDate">—</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
-  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance
+  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance<br>
+  <span id="footerNudge" style="opacity:.5;font-size:.65rem"></span>
 </footer>
 </div><!-- /container -->
 
@@ -902,47 +905,47 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T05:12:18-03:00'); // BRT (UTC-3)
-const VERSION = '1.59';
+const GENERATED_AT = new Date('2026-04-09T05:44:05-03:00'); // BRT (UTC-3)
+const VERSION = '1.61';
 
 const DATA = {
-  "_generated": "2026-04-08T20:51:38",
-  "_generated_brt": "2026-04-08T20:51:38-03:00",
-  "date": "2026-04-08",
-  "cambio": 5.1506,
+  "_generated": "2026-04-09T08:40:53",
+  "_generated_brt": "2026-04-09T05:40:53-03:00",
+  "date": "2026-04-09",
+  "cambio": 5.156,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 46.445,
+      "price": 47.46,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 25.995,
+      "price": 24.22,
       "bucket": "AVGS",
       "status": "alvo"
     },
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.74,
+      "price": 111.63,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.42,
+      "price": 101.54,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 82.46,
+      "price": 84.72,
       "bucket": "AVGS",
       "status": "transitorio"
     },
@@ -956,21 +959,21 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.01,
+      "price": 59.8,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.62,
+      "price": 61.25,
       "bucket": "AVEM",
       "status": "transitorio"
     },
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 63.26,
+      "price": 62.65,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -984,7 +987,8 @@ const DATA = {
   },
   "pisos": {
     "pisoTaxaIpcaLongo": 6.0,
-    "pisoTaxaRendaPlus": 6.5
+    "pisoTaxaRendaPlus": 6.5,
+    "pisoVendaRendaPlus": 6.0
   },
   "pfire50": {
     "base": 85.4,
@@ -997,7 +1001,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3483659,
+    "patrimonio_atual": 3472336,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1085,7 +1089,63 @@ const DATA = {
     }
   ],
   "saude_base": 18000,
-  "tornado": [],
+  "tornado": [
+    {
+      "variavel": "Volatilidade equity (+/-10%)",
+      "mais10": -4.1,
+      "menos10": 3.4
+    },
+    {
+      "variavel": "Retorno equity (+/-10%)",
+      "mais10": 2.2,
+      "menos10": -3.4
+    },
+    {
+      "variavel": "Custo de vida (+/-10%)",
+      "mais10": -2.3,
+      "menos10": 1.2
+    },
+    {
+      "variavel": "Aporte mensal (+/-10%)",
+      "mais10": 1.0,
+      "menos10": -1.5
+    }
+  ],
+  "fire": {
+    "bond_pool_readiness": {
+      "valor_atual_brl": 122380,
+      "anos_gastos": 0.5,
+      "meta_anos": 7,
+      "status": "early",
+      "composicao": {
+        "ipca2040": 33285,
+        "ipca2050": 0,
+        "ipca2029": 89095
+      }
+    },
+    "pat_mediano_fire": 11527476.0,
+    "pat_mediano_fire50": 9339651.0,
+    "mc_date": "2026-04-08"
+  },
+  "scenario_comparison": {
+    "fire53": {
+      "base": 90.4,
+      "fav": 94.1,
+      "stress": 86.8,
+      "pat_mediano": 11527476.0,
+      "pat_p10": 6834909.0,
+      "pat_p90": 18916227.0
+    },
+    "fire50": {
+      "base": 85.4,
+      "fav": 91.3,
+      "stress": 81.1,
+      "pat_mediano": 9339651.0,
+      "pat_p10": 5873669.0,
+      "pat_p90": 14560082.0
+    },
+    "nota_fire50_pat": null
+  },
   "timeline": {
     "labels": [
       "2021-03",
@@ -2394,6 +2454,12 @@ const DATA = {
     },
     "note": "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target); VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value); EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
   },
+  "factor_rolling": {
+    "dates": [],
+    "avgs_vs_swrd_12m": [],
+    "threshold": -5
+  },
+  "factor_loadings": {},
   "rf": {
     "ipca2029": {
       "cotas": null,
@@ -2411,13 +2477,60 @@ const DATA = {
       "cotas": null,
       "valor": 112466,
       "taxa": 6.93,
-      "notas": "Tático · Nubank · Vender ≤6.5%"
+      "notas": "Tático · Nubank · Vender ≤6.0%",
+      "duration": {
+        "macaulay_anos": 21.52,
+        "modificada_anos": 20.12,
+        "metodologia": "NTN-B ANBIMA: cupom 6% a.a. real (0.5%/sem), desconto taxa YTM real a.a."
+      },
+      "mtm_impact_1pp": -20.12,
+      "distancia_gatilho": {
+        "taxa_atual": 6.93,
+        "piso_venda": 6.0,
+        "gap_pp": 0.93,
+        "status": "verde"
+      }
     }
   },
   "hodl11": {
     "qty": 1676,
     "preco": 59.79,
-    "valor": 100208
+    "valor": 100208.04,
+    "preco_medio": null,
+    "pnl_brl": null,
+    "pnl_pct": null,
+    "banda": {
+      "min_pct": 1.5,
+      "alvo_pct": 3.0,
+      "max_pct": 5.0,
+      "atual_pct": 2.89,
+      "status": "verde"
+    }
+  },
+  "dca_status": {
+    "ipca_longo": {
+      "instrumento": "TD IPCA+ 2040 (80%) + TD 2050 (20%)",
+      "ativo": true,
+      "taxa_atual": 7.2,
+      "piso": 6.0,
+      "gap_pp": 1.2,
+      "pct_carteira_atual": 1.0,
+      "alvo_pct": 15.0,
+      "gap_alvo_pp": 14.0,
+      "proxima_acao": "DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) ate 15.0% da carteira"
+    },
+    "renda_plus": {
+      "instrumento": "Renda+ 2065",
+      "ativo": false,
+      "taxa_atual": 6.93,
+      "piso_compra": 6.5,
+      "piso_venda": 6.0,
+      "gap_pp": 0.43,
+      "pct_carteira_atual": 3.2,
+      "alvo_pct": 3.0,
+      "gap_alvo_pp": 0.2,
+      "proxima_acao": "DCA pausado: posicao 3.2% >= alvo 3.0%. Manter sem novos aportes"
+    }
   },
   "glide": {
     "idades": [
@@ -2465,15 +2578,15 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.3,
+      "atual": 37.3,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.5,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.2,
+      "atual": 23.8,
       "alvo": 15.8
     },
     "IPCA": {
@@ -2491,7 +2604,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.74,
+      "price": 111.63,
       "ucits": "AVGS.L"
     },
     {
@@ -2499,7 +2612,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.42,
+      "price": 101.54,
       "ucits": "AVGS.L"
     },
     {
@@ -2507,7 +2620,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 82.46,
+      "price": 84.72,
       "ucits": "AVGS.L"
     },
     {
@@ -2523,7 +2636,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.01,
+      "price": 59.8,
       "ucits": "AVEM.L"
     },
     {
@@ -2531,7 +2644,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.62,
+      "price": 61.25,
       "ucits": "AVEM.L"
     },
     {
@@ -2539,7 +2652,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 63.26,
+      "price": 62.65,
       "ucits": "JPGL.L"
     }
   ],
@@ -2547,7 +2660,7 @@ const DATA = {
     "aportes": 1500000,
     "retornoUsd": null,
     "cambio": null,
-    "crescReal": 2371959.0,
+    "crescReal": 2360636.0,
     "_estimativa": true
   },
   "shadows": {
@@ -2559,6 +2672,13 @@ const DATA = {
       "delta_a": 3.15,
       "delta_b": -0.57
     }
+  },
+  "macro": {
+    "selic_meta": 14.75,
+    "fed_funds": 3.64,
+    "spread_selic_ff": 11.11,
+    "depreciacao_brl_premissa": 0.5,
+    "exposicao_cambial_pct": 90.4
   },
   "minilog": [
     {
@@ -2891,6 +3011,106 @@ const DATA = {
   ],
   "cryptoLegado": 3000,
   "tlhGatilho": 0.05,
+  "tax": {
+    "ir_diferido_total_brl": 133075.41,
+    "ir_por_etf": {
+      "SWRD": {
+        "ganho_usd": 77155.01,
+        "ptax_compra_medio": 5.2983,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 921828.52,
+        "valor_atual_brl": 1294884.57,
+        "ganho_brl": 373056.05,
+        "ir_estimado": 55958.41
+      },
+      "EIMI": {
+        "ganho_usd": 30195.08,
+        "ptax_compra_medio": 5.3834,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 340791.78,
+        "valor_atual_brl": 482081.76,
+        "ganho_brl": 141289.99,
+        "ir_estimado": 21193.5
+      },
+      "USSC": {
+        "ganho_usd": 9211.86,
+        "ptax_compra_medio": 5.7742,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 129398.06,
+        "valor_atual_brl": 163041.6,
+        "ganho_brl": 33643.54,
+        "ir_estimado": 5046.53
+      },
+      "IWVL": {
+        "ganho_usd": 864.42,
+        "ptax_compra_medio": 5.2228,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 6610.44,
+        "valor_atual_brl": 10982.8,
+        "ganho_brl": 4372.35,
+        "ir_estimado": 655.85
+      },
+      "AVDV": {
+        "ganho_usd": 38062.08,
+        "ptax_compra_medio": 5.2065,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 302795.42,
+        "valor_atual_brl": 496105.84,
+        "ganho_brl": 193310.43,
+        "ir_estimado": 28996.56
+      },
+      "AVUV": {
+        "ganho_usd": 16501.81,
+        "ptax_compra_medio": 5.3015,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 237343.79,
+        "valor_atual_brl": 315915.26,
+        "ganho_brl": 78571.47,
+        "ir_estimado": 11785.72
+      },
+      "DGS": {
+        "ganho_usd": 2095.79,
+        "ptax_compra_medio": 5.3224,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 50201.81,
+        "valor_atual_brl": 59437.88,
+        "ganho_brl": 9236.08,
+        "ir_estimado": 1385.41
+      },
+      "AVES": {
+        "ganho_usd": 13281.33,
+        "ptax_compra_medio": 5.5071,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 231991.38,
+        "valor_atual_brl": 285680.88,
+        "ganho_brl": 53689.49,
+        "ir_estimado": 8053.42
+      },
+      "AVGS": {
+        "ganho_usd": -166.34,
+        "ptax_compra_medio": 5.2541,
+        "ptax_atual": 5.156,
+        "custo_total_brl": 30578.85,
+        "valor_atual_brl": 29150.25,
+        "ganho_brl": -1428.6,
+        "ir_estimado": 0.0
+      }
+    },
+    "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
+    "badges": {
+      "SWRD": "ACC — diferimento fiscal",
+      "EIMI": "ACC — diferimento fiscal",
+      "USSC": "ACC — diferimento fiscal",
+      "IWVL": "ACC — diferimento fiscal",
+      "AVDV": "ACC — diferimento fiscal",
+      "AVUV": "ACC — diferimento fiscal",
+      "DGS": "ACC — diferimento fiscal",
+      "AVES": "ACC — diferimento fiscal",
+      "AVGS": "ACC — diferimento fiscal"
+    },
+    "ptax_source": "BCB PTAX ask",
+    "ptax_atual": 5.156
+  },
   "earliest_fire": {
     "ano": 2037,
     "idade": 50,
@@ -2928,25 +3148,6 @@ const DATA = {
       "renda_mensal": 45000,
       "metodologia": "Boldin: mortgage / income"
     }
-  },
-  "scenario_comparison": {
-    "fire53": {
-      "base": 90.4,
-      "fav": 94.1,
-      "stress": 86.8,
-      "pat_mediano": 11527476.0,
-      "pat_p10": 6834909.0,
-      "pat_p90": 18916227.0
-    },
-    "fire50": {
-      "base": 85.4,
-      "fav": 91.3,
-      "stress": 81.1,
-      "pat_mediano": 9339651.0,
-      "pat_p10": 5873669.0,
-      "pat_p90": 14560082.0
-    },
-    "nota_fire50_pat": null
   },
   "life_events_planejados": [
     {
@@ -3326,20 +3527,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3483659,
-      3655465,
-      3835743,
-      4024913,
-      4223411,
-      4431700,
-      4650260,
-      4879600,
-      5120249,
-      5372768,
-      5637739,
-      5915779,
-      6207531,
-      6513671,
+      3472336,
+      3644430,
+      3825054,
+      4014630,
+      4213601,
+      4422434,
+      4641617,
+      4871663,
+      5113110,
+      5366524,
+      5632498,
+      5911653,
+      6204644,
+      6512156,
       6834909,
       6924402,
       7018236,
@@ -3380,20 +3581,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3483659,
-      3794521,
-      4133123,
-      4501939,
-      4903667,
-      5341242,
-      5817865,
-      6337018,
-      6902498,
-      7518437,
-      8189340,
-      8920111,
-      9716091,
-      10583100,
+      3472336,
+      3783067,
+      4121605,
+      4490438,
+      4892277,
+      5330075,
+      5807051,
+      6326711,
+      6892873,
+      7509701,
+      8181726,
+      8913890,
+      9711573,
+      10580639,
       11527476,
       11844559,
       12177020,
@@ -3434,20 +3635,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3483659,
-      3931165,
-      4436157,
-      5006020,
-      5649086,
-      6374760,
-      7193652,
-      8117739,
-      9160532,
-      10337282,
-      11665194,
-      13163689,
-      14854678,
-      16762890,
+      3472336,
+      3919299,
+      4423795,
+      4993231,
+      5635965,
+      6361432,
+      7180282,
+      8104536,
+      9147760,
+      10325269,
+      11654349,
+      13154509,
+      14847771,
+      16758992,
       18916227,
       19591664,
       20299860,
@@ -3517,7 +3718,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.59"
+  "version": "1.61"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -3611,6 +3812,9 @@ const _anoFireAlvoGlobal = today.getFullYear() + (DATA.premissas.idade_fire_alvo
 const _anoFireAspir = today.getFullYear() + ((DATA.premissas.idade_fire_aspiracional ?? 50) - DATA.premissas.idade_atual);
 const _footerDate = document.getElementById('footerDate');
 if (_footerDate && DATA.date) { const _d = new Date(DATA.date); _footerDate.textContent = `${String(_d.getDate()).padStart(2,'0')}/${String(_d.getMonth()+1).padStart(2,'0')}/${_d.getFullYear()}`; }
+// Nudge de frequência mensal — próxima consulta sugerida +30 dias
+const _nudgeEl = document.getElementById('footerNudge');
+if (_nudgeEl && DATA.date) { const _nd = new Date(DATA.date); _nd.setDate(_nd.getDate() + 30); const _meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; _nudgeEl.textContent = `Próxima consulta sugerida: ${String(_nd.getDate()).padStart(2,'0')}/${_meses[_nd.getMonth()]}/${_nd.getFullYear()}`; }
 const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
 const fireDate = new Date(`${_anoFire}-01-01`);
 const msLeft = fireDate - today;
@@ -5776,9 +5980,9 @@ function buildWellnessExtras() {
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 function renderKPIs() {
-  // Hero strip
-  document.getElementById('heroPatrimonio').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
-  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k equity`;
+  // Hero strip — USD primário (câmbio flutua sem gerar informação de retorno)
+  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k`;
+  document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M em BRL`;
   const heroPf = document.getElementById('heroPfire');
   const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
   const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
@@ -5982,7 +6186,19 @@ function renderProximasAcoes() {
       html += `<div class="prio-warn">📋 <strong>${ev.evento} iminente (${ev.data_est})</strong> — ${ev.acoes.slice(0,2).join(' · ')}</div>`;
     }
   });
-  el.innerHTML = html || '<div style="color:var(--muted);font-size:.8rem">Sem ações prioritárias</div>';
+  if (!html) {
+    // Tudo verde — mensagem positiva e visual verde
+    const box = document.getElementById('proximasAcoes');
+    if (box) {
+      box.style.background = 'rgba(34,197,94,.08)';
+      box.style.borderColor = 'rgba(34,197,94,.3)';
+      const h2 = box.querySelector('h2');
+      if (h2) { h2.style.color = 'var(--green)'; h2.textContent = '✅ Próximas Ações'; }
+    }
+    el.innerHTML = '<div style="color:var(--green);font-size:.85rem;text-align:center;padding:8px 0">Nenhuma ação necessária — carteira alinhada com o plano. Próxima revisão no check-in mensal.</div>';
+  } else {
+    el.innerHTML = html;
+  }
 }
 
 // ── RF Cards (gerado dinamicamente) ───────────────────────────
