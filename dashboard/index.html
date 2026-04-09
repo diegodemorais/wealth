@@ -914,7 +914,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- F11: Stress Test -->
 <div class="section" data-in-tab="projecao">
-<h2>Stress Test — Bear Market Interativo</h2>
+<h2>Stress Test Monte Carlo — Bear Market Interativo</h2>
 
 <!-- Slider de shock -->
 <div style="background:var(--card2);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px">
@@ -1164,8 +1164,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T15:15:24-03:00'); // BRT (UTC-3)
-const VERSION = '1.94';
+const GENERATED_AT = new Date('2026-04-09T15:26:00-03:00'); // BRT (UTC-3)
+const VERSION = '1.95';
 
 const DATA = {
   "_generated": "2026-04-09T15:15:24",
@@ -4163,7 +4163,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.94"
+  "version": "1.95"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -6057,23 +6057,66 @@ function buildLifeEventsEnhanced() {
 // F1: LIFETIME INCOME PROJECTION CHART
 // ═══════════════════════════════════════════════════════════════
 function buildIncomeProjection() {
-  const ip = DATA.income_projection;
-  if (!ip) return;
   const ctx = document.getElementById('incomeProjectionChart');
   if (!ctx) return;
 
-  const anos = ip.anos;
-  const labels = anos.map(a => String(a));
+  const p  = DATA.premissas;
+  const sm = DATA.spendingSmile;
+  if (!p || !sm) return;
 
-  // Life events como pontos extras na série de despesas
-  const lifeEventAnos = new Set((ip.life_events || []).map(ev => ev.ano));
+  // ── Parâmetros ──────────────────────────────────────────────────
+  const anoAtual      = new Date().getFullYear();
+  const idadeAtual    = p.idade_atual       || 39;
+  const idadeFireAlvo = p.idade_fire_alvo   || 53;
+  const inssInicio    = p.inss_inicio_ano   || 12;   // anos após FIRE → age 65
+  const inssAnual     = p.inss_anual        || 18000;
+  const custoBase     = p.custo_vida_base   || 250000;
+  const rendaAtiva    = 45000 * 12;                  // R$45k/mês pré-FIRE (renda_estimada)
 
-  // Milestones: linhas verticais via annotation (não disponível sem plugin)
-  // Usar dataset extra com pontos nulos e apenas 1 ponto no milestone
-  const milestoneData = anos.map(a => {
-    const m = (ip.milestones || []).find(ms => ms.ano === a);
-    return m ? (ip.despesas[anos.indexOf(a)] * 1.1) : null; // posição acima das despesas
-  });
+  const anoFire = anoAtual + (idadeFireAlvo - idadeAtual);
+  const anoInss = anoFire  + inssInicio;             // 2039 + 12 = 2051 → age 65
+  const anoFim  = anoAtual + (90 - idadeAtual);      // até age 90
+
+  // Spending smile: go_go / slow_go / no_go em anos após FIRE
+  const goGoFim    = sm.go_go?.fim    ?? 15;
+  const slowGoFim  = sm.slow_go?.fim  ?? 30;
+  const goGoGasto  = sm.go_go?.gasto  ?? custoBase;
+  const slowGoGasto= sm.slow_go?.gasto?? custoBase;
+  const noGoGasto  = sm.no_go?.gasto  ?? custoBase;
+
+  // ── Séries ──────────────────────────────────────────────────────
+  const anos = [], labels = [];
+  const renda_ativa = [], saque_portfolio = [], inss_arr = [], despesas = [];
+
+  for (let ano = anoAtual; ano <= anoFim; ano++) {
+    const anosAposFire = ano - anoFire;
+    const preFire = ano < anoFire;
+
+    // Spending smile — valores em R$ reais constantes 2026
+    let gasto;
+    if (preFire) {
+      gasto = custoBase;
+    } else if (anosAposFire < goGoFim) {
+      gasto = goGoGasto;   // Go-Go (anos 0–14 após FIRE)
+    } else if (anosAposFire < slowGoFim) {
+      gasto = slowGoGasto; // Slow-Go (anos 15–29 após FIRE)
+    } else {
+      gasto = noGoGasto;   // No-Go (anos 30+)
+    }
+
+    const inssVal  = ano >= anoInss ? inssAnual : 0;
+    const saqueVal = preFire ? 0 : Math.max(0, gasto - inssVal);
+
+    anos.push(ano);
+    labels.push(String(ano));
+    renda_ativa.push(preFire ? rendaAtiva : 0);
+    saque_portfolio.push(saqueVal);
+    inss_arr.push(preFire ? 0 : inssVal);
+    despesas.push(gasto);
+  }
+
+  // Milestones: FIRE, INSS
+  const milestoneMap = { [anoFire]: `FIRE (age ${idadeFireAlvo})`, [anoInss]: 'INSS (age 65)' };
 
   if (charts.incomeProjection) charts.incomeProjection.destroy();
   charts.incomeProjection = new Chart(ctx, {
@@ -6083,31 +6126,32 @@ function buildIncomeProjection() {
       datasets: [
         {
           label: 'Renda Ativa (pré-FIRE)',
-          data: ip.renda_ativa,
+          data: renda_ativa,
           backgroundColor: 'rgba(59,130,246,.65)',
           stack: 'renda',
           order: 2,
         },
         {
           label: 'Saque Portfólio (pós-FIRE)',
-          data: ip.saque_portfolio,
+          data: saque_portfolio,
           backgroundColor: 'rgba(168,85,247,.6)',
           stack: 'renda',
           order: 2,
         },
         {
-          label: 'INSS (age 65+)',
-          data: ip.inss,
+          label: `INSS (age 65+, R$${(inssAnual/1000).toFixed(0)}k/ano)`,
+          data: inss_arr,
           backgroundColor: 'rgba(34,197,94,.65)',
           stack: 'renda',
           order: 2,
         },
         {
-          label: 'Despesas — Spending Smile (R$ reais)',
-          data: ip.despesas,
+          label: 'Despesas — Spending Smile (R$ reais constante 2026)',
+          data: despesas,
           type: 'line',
           borderColor: 'rgba(239,68,68,.85)',
           borderWidth: 2,
+          borderDash: [],
           pointRadius: 0,
           fill: false,
           tension: 0.3,
@@ -6126,13 +6170,13 @@ function buildIncomeProjection() {
           callbacks: {
             title: items => {
               if (!items.length) return '';
-              const ano = labels[items[0].dataIndex];
-              const m = (ip.milestones || []).find(ms => String(ms.ano) === ano);
-              return ano + (m ? ` — ${m.label}` : '');
+              const ano = parseInt(labels[items[0].dataIndex], 10);
+              const ms = milestoneMap[ano];
+              return labels[items[0].dataIndex] + (ms ? ` — ${ms}` : '');
             },
-            label: ctx => {
-              if (ctx.parsed.y === null || ctx.parsed.y === 0) return null;
-              return ` ${ctx.dataset.label}: R$${(ctx.parsed.y/1000).toFixed(0)}k`;
+            label: c => {
+              if (c.parsed.y === null || c.parsed.y === 0) return null;
+              return ` ${c.dataset.label}: R$${(c.parsed.y/1000).toFixed(0)}k`;
             },
           }
         }
@@ -6151,13 +6195,6 @@ function buildIncomeProjection() {
       }
     }
   });
-
-  // Life events markers: adicionar anotação visual abaixo do chart
-  const leDiv = document.getElementById('incomeProjectionSrc');
-  if (leDiv && ip.life_events && ip.life_events.length) {
-    const evStr = ip.life_events.map(ev => `${ev.ano}: ${ev.label} (R$${(ev.valor/1000).toFixed(0)}k)`).join(' · ');
-    leDiv.textContent = `Eventos: ${evStr} · Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano`;
-  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -6284,17 +6321,25 @@ function _renderStressCards(vals, stData) {
     return `<span style="font-size:.6rem;background:rgba(234,179,8,.15);color:var(--yellow);border-radius:4px;padding:2px 6px;font-weight:600">— aguardando</span>`;
   };
 
+  const scenarioDesc = {
+    'Base':      'Retorno histórico MSCI World (~5% real/ano) com volatilidade normal.',
+    'Favorável': 'Bull market prolongado: retorno +2pp acima da base — mercado em expansão.',
+    'Stress':    'Retorno −2pp abaixo da base — décadas de retorno comprimido pós-crise.',
+  };
+
   const cardHtml = (label, icon, accent, v) => {
     const pfire = v.pfire;
     const badge = v.badge;
     const color = pfire == null ? 'var(--muted)' : pfire >= 85 ? 'var(--green)' : pfire >= 70 ? 'var(--yellow)' : 'var(--red)';
     const pfireDisp = pfire != null ? `${pfire}%` : '—';
+    const desc = scenarioDesc[label] || '';
     return `
       <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px">
         <div style="font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">${icon} ${label}</div>
         <div style="font-size:2rem;font-weight:800;color:${color};line-height:1">${pfireDisp}</div>
-        <div style="font-size:.65rem;color:var(--muted)">P(FIRE)</div>
+        <div style="font-size:.65rem;color:var(--muted)">P(FIRE) Monte Carlo</div>
         ${badgeHtml(badge)}
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px;max-width:160px;line-height:1.35">${desc}</div>
       </div>`;
   };
 
