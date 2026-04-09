@@ -79,8 +79,8 @@ dashboard/
 
 scripts/
 ├── generate_data.py  ← agrega todas as fontes → data.json
-├── build_dashboard.py← injeta data.json no template → index.html
-└── deploy_dashboard.sh ← build + push para wealth-dash (GitHub Pages)
+└── build_dashboard.py← injeta data.json no template → index.html
+                         (deploy automático via GitHub Actions ao push para main)
 
 agentes/referencia/
 └── wellness_config.json ← fonte de verdade do wellness score

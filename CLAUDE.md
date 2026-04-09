@@ -168,12 +168,8 @@ Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este ven
 
 ## Deploy Dashboard (REGRA PERMANENTE)
 
-Toda alteração em `template.html`, `build_dashboard.py` ou `data.json` **DEVE** incluir deploy para o repo `wealth-dash` (GitHub Pages). Fluxo:
-1. Build: `python3 scripts/build_dashboard.py`
-2. Copiar: `cp dashboard/index.html ~/tmp/wealth-dash/index.html`
-3. Commit + push no wealth-dash: `git -C ~/tmp/wealth-dash add index.html && git -C ~/tmp/wealth-dash commit -m "chore: atualizar dashboard" && git -C ~/tmp/wealth-dash push origin main`
-
-Se o ambiente não tem acesso ao repo wealth-dash, **avisar Diego** para deploy manual: `./scripts/deploy_dashboard.sh --skip-scripts`
+Deploy é automático via GitHub Actions ao push para `main`. Não há deploy manual.
+Toda alteração em `template.html`, `build_dashboard.py` ou `data.json` deve ser commitada e pushada — o CI cuida do resto.
 
 ## Estrutura do Projeto
 
@@ -190,7 +186,7 @@ wealth/
 ├── scripts/           # Python: analytics, FIRE, factor, spending, pipeline dashboard
 ├── dashboard/         # Dashboard — todos os artefatos commitados juntos
 │   ├── template.html  #   fonte: template com __DATA_PLACEHOLDER__
-│   ├── index.html     #   output: gerado por build_dashboard.py (serve no GitHub Pages via wealth-dash)
+│   ├── index.html     #   output: gerado por build_dashboard.py (deploy automático via GitHub Actions)
 │   └── data.json      #   output: snapshot JSON intermediário (auditável)
 ├── dados/             # Estado persistente (fonte de verdade dos dados)
 │   ├── dashboard_state.json  # estado acumulado pelos scripts
