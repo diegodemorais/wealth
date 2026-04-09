@@ -669,11 +669,17 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
 </div>
 </div>
-<div class="what-if-result">
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio projetado no FIRE Day (determinístico)</div>
-  <div class="big pv" id="wiResult">—</div>
-  <div id="wiResultSub" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Aproximação determinística — P(FIRE) real via MC</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <div class="what-if-result">
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio projetado no FIRE Day</div>
+    <div class="big pv" id="wiResult">—</div>
+    <div id="wiResultSub" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
+  </div>
+  <div class="what-if-result" style="border-color:var(--accent)">
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Aposentar mais cedo — Idade estimada</div>
+    <div class="big" id="wiFireAge" style="color:var(--accent)">—</div>
+    <div id="wiFireAgeNote" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
+  </div>
 </div>
 </div>
 
@@ -820,16 +826,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- F5: Must / Like to Spend -->
 <div class="section" data-in-tab="projecao">
-<h2>Spending — Must vs. Like to Spend <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
+<h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
 <div class="src" id="spendingBreakdownSrc">Fonte: spending_analysis.py · All-Accounts CSV · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)</div>
-</div>
-
-<!-- F6: Life Events (enhanced) -->
-<div class="section" style="border-color:rgba(234,179,8,.3)" data-in-tab="projecao">
-<h2>Eventos de Vida Planejados — Impacto Financeiro</h2>
-<div id="lifeEventsEnhanced"><!-- gerado por buildLifeEventsEnhanced() --></div>
-<div class="src">Fonte: dados/life_events.json · Impacto em P(FIRE): calculado via delta de spending nos cenários MC</div>
 </div>
 
 <!-- F1: Lifetime Income Projection Chart -->
@@ -871,10 +870,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div style="font-size:.8rem;color:var(--muted)">
       Patrimônio pós-shock: <strong id="stressPatShock" style="color:var(--red)">—</strong>
     </div>
-    <button id="stressSimBtn" onclick="runStressSimulation()"
-      style="display:none;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 18px;font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .2s">
-      ▶ Simular ao vivo
-    </button>
+    <button id="stressSimBtn" style="display:none"></button>
   </div>
 </div>
 
@@ -999,85 +995,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </footer>
 </div><!-- /container -->
 
-<!-- ── Agent Widget ─────────────────────────────────────────── -->
-<button id="agentBtn" onclick="toggleAgent()" style="
-  position:fixed; bottom:24px; right:24px; z-index:9999;
-  width:52px; height:52px; border-radius:50%;
-  background:var(--accent); border:none; cursor:pointer;
-  font-size:1.4rem; box-shadow:0 4px 16px rgba(0,0,0,.4);
-  transition:transform .2s;
-" title="Head · Time FIRE">🤖</button>
 
-<div id="agentPanel" style="
-  position:fixed; right:-420px; top:0; width:400px; height:100vh;
-  background:var(--card); border-left:1px solid var(--border);
-  z-index:9998; transition:right .3s; display:flex; flex-direction:column;
-  padding:0; box-shadow:-4px 0 24px rgba(0,0,0,.3);
-">
-  <!-- Header -->
-  <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center">
-    <div>
-      <div style="font-weight:700; font-size:.9rem">Head · Time FIRE</div>
-      <div style="font-size:.68rem; color:var(--muted)" id="agentStatus">Configure a API key para começar</div>
-    </div>
-    <div style="display:flex; gap:6px; align-items:center">
-      <!-- Mode toggle: Fast (haiku) vs Head (sonnet) -->
-      <div id="agentModeToggle" style="display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; font-size:.65rem">
-        <button onclick="setAgentMode('fast')" id="modeFast" style="
-          padding:4px 8px; border:none; cursor:pointer; font-size:.65rem; font-weight:600;
-          background:var(--accent); color:white;
-        ">⚡ Fast</button>
-        <button onclick="setAgentMode('head')" id="modeHead" style="
-          padding:4px 8px; border:none; cursor:pointer; font-size:.65rem; font-weight:600;
-          background:transparent; color:var(--muted);
-        ">🧠 Head</button>
-      </div>
-      <button onclick="toggleAgent()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem">✕</button>
-    </div>
-  </div>
 
-  <!-- Head Relay Banner (mensagens do Head via build) -->
-  <div id="headRelayBanner" style="display:none; padding:10px 14px; background:rgba(59,130,246,.1); border-bottom:1px solid rgba(59,130,246,.3)">
-    <div style="font-size:.63rem; color:var(--accent); font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:.5px">📨 Head — última mensagem</div>
-    <div id="headRelayText" style="font-size:.78rem; line-height:1.4; color:var(--text)"></div>
-    <div id="headRelayTs" style="font-size:.62rem; color:var(--muted); margin-top:3px"></div>
-  </div>
-
-  <!-- API Key setup (mostra se não configurada) -->
-  <div id="agentKeySetup" style="padding:16px; border-bottom:1px solid var(--border)">
-    <div style="font-size:.75rem; color:var(--muted); margin-bottom:8px">Anthropic API Key (salva localmente)</div>
-    <div style="display:flex; gap:8px">
-      <input type="password" id="agentKeyInput" placeholder="sk-ant-..." style="
-        flex:1; background:var(--card2); border:1px solid var(--border); border-radius:6px;
-        padding:8px; color:var(--text); font-size:.78rem;
-      ">
-      <button onclick="saveAgentKey()" style="
-        background:var(--accent); border:none; border-radius:6px; padding:8px 12px;
-        color:white; cursor:pointer; font-size:.78rem; font-weight:600;
-      ">Salvar</button>
-    </div>
-  </div>
-
-  <!-- Mensagens -->
-  <div id="agentMessages" style="flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px">
-    <div style="text-align:center; color:var(--muted); font-size:.75rem; padding:20px 0">
-      ⚡ Fast: respostas rápidas (haiku)<br>🧠 Head: análise profunda com time FIRE (sonnet)
-    </div>
-  </div>
-
-  <!-- Input -->
-  <div style="padding:12px; border-top:1px solid var(--border); display:flex; gap:8px">
-    <input type="text" id="agentInput" placeholder="Como está minha alocação?" style="
-      flex:1; background:var(--card2); border:1px solid var(--border); border-radius:8px;
-      padding:10px 12px; color:var(--text); font-size:.82rem;
-    " onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendAgentMessage();}">
-    <button onclick="sendAgentMessage()" id="agentSendBtn" style="
-      background:var(--accent); border:none; border-radius:8px; padding:10px 14px;
-      color:white; cursor:pointer; font-size:.9rem;
-    ">➤</button>
-  </div>
-</div>
-<!-- ── /Agent Widget ──────────────────────────────────────── -->
 
 <script>
 // ── Esconde todas as abas exceto status IMEDIATAMENTE (evita FOUC) ──
@@ -1159,12 +1078,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T13:17:00-03:00'); // BRT (UTC-3)
-const VERSION = '1.83';
+const GENERATED_AT = new Date('2026-04-09T13:36:13-03:00'); // BRT (UTC-3)
+const VERSION = '1.84';
 
 const DATA = {
-  "_generated": "2026-04-09T13:17:00",
-  "_generated_brt": "2026-04-09T13:17:00-03:00",
+  "_generated": "2026-04-09T13:36:13",
+  "_generated_brt": "2026-04-09T13:36:13-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -4136,7 +4055,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.83"
+  "version": "1.84"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5011,13 +4930,40 @@ window.updateWhatIf = function() {
   document.getElementById('wiCustoVal').textContent = 'R$' + custo.toLocaleString('pt-BR');
   const rm = r / 12;
   let p = DATA.premissas.patrimonio_atual;
-  const anos = DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual;
+  const idadeAtual = DATA.premissas.idade_atual;
+  const anos = DATA.premissas.idade_fire_alvo - idadeAtual;
   for (let m = 0; m < anos * 12; m++) p = p * (1 + rm) + ap;
   document.getElementById('wiResult').textContent = `R$ ${(p/1000000).toFixed(2)}M`;
   const swr = custo / p;
   const _swrMeta = DATA.premissas.swr_gatilho ?? 0.024;
-  document.getElementById('wiResultSub').textContent = `SWR projetada: ${(swr*100).toFixed(2)}% (meta ≤ ${(_swrMeta*100).toFixed(1)}%) · ${p >= PAT_GATILHO && swr <= _swrMeta ? '✅ Gatilho FIRE atingido' : '⚠️ Abaixo do gatilho'}`;
+  document.getElementById('wiResultSub').textContent = `SWR: ${(swr*100).toFixed(2)}% (meta ≤ ${(_swrMeta*100).toFixed(1)}%) · ${p >= PAT_GATILHO && swr <= _swrMeta ? '✅ Gatilho FIRE' : '⚠️ Abaixo do gatilho'}`;
   document.getElementById('wiResultSub').style.color = (p >= PAT_GATILHO && swr <= _swrMeta) ? '#22c55e' : '#eab308';
+
+  // Compute earliest FIRE age: iterate monthly until PAT_GATILHO AND swr <= meta
+  let pEarly = DATA.premissas.patrimonio_atual;
+  let mEarly = 0;
+  const maxMonths = (70 - idadeAtual) * 12;
+  while (mEarly < maxMonths) {
+    pEarly = pEarly * (1 + rm) + ap;
+    mEarly++;
+    if (pEarly >= PAT_GATILHO && custo / pEarly <= _swrMeta) break;
+  }
+  const fireAgeEarly = idadeAtual + mEarly / 12;
+  const fireAgeEl = document.getElementById('wiFireAge');
+  const fireAgeNoteEl = document.getElementById('wiFireAgeNote');
+  if (mEarly >= maxMonths) {
+    fireAgeEl.textContent = '> 70';
+    fireAgeNoteEl.textContent = 'Gatilho não atingido com esses parâmetros';
+    fireAgeEl.style.color = 'var(--red)';
+  } else {
+    const anosFire = Math.floor(fireAgeEarly);
+    const mesesFire = Math.round((fireAgeEarly - anosFire) * 12);
+    fireAgeEl.textContent = `${anosFire} anos`;
+    const diffVsPlano = DATA.premissas.idade_fire_alvo - fireAgeEarly;
+    const diffStr = diffVsPlano > 0.1 ? `${diffVsPlano.toFixed(1)} anos mais cedo` : diffVsPlano < -0.1 ? `${(-diffVsPlano).toFixed(1)} anos mais tarde` : 'no prazo';
+    fireAgeNoteEl.textContent = `${mesesFire > 0 ? anosFire + 'a ' + mesesFire + 'm' : anosFire + ' anos'} · ${diffStr} vs FIRE@${DATA.premissas.idade_fire_alvo}`;
+    fireAgeEl.style.color = diffVsPlano > 0 ? 'var(--green)' : diffVsPlano < 0 ? 'var(--red)' : 'var(--accent)';
+  }
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -5726,14 +5672,14 @@ function buildSpendingBreakdown() {
   el.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:12px;text-align:center">
-        <div style="font-size:.6rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Must Spend</div>
+        <div style="font-size:.6rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Essenciais</div>
         <div style="font-size:1.4rem;font-weight:700;color:var(--red)">R$${must.toLocaleString('pt-BR')}</div>
         <div style="font-size:.65rem;color:var(--muted)">/mês · ${pMust.toFixed(0)}% do total</div>
         <div class="spend-cat-bar" style="background:rgba(239,68,68,.5);width:${pMust.toFixed(0)}%"></div>
         <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Inclui principal hipoteca (R$1.517/mês = equity)</div>
       </div>
       <div style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:8px;padding:12px;text-align:center">
-        <div style="font-size:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Like to Spend</div>
+        <div style="font-size:.6rem;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Discricionários</div>
         <div style="font-size:1.4rem;font-weight:700;color:var(--accent)">R$${like.toLocaleString('pt-BR')}</div>
         <div style="font-size:.65rem;color:var(--muted)">/mês · ${pLike.toFixed(0)}% do total</div>
         <div class="spend-cat-bar" style="background:rgba(59,130,246,.5);width:${pLike.toFixed(0)}%"></div>
@@ -5764,7 +5710,7 @@ function buildSpendingBreakdown() {
     <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${_fmtPeriodo(sb.periodo)} (${sb.meses} meses)</div>`;
 
   const srcEl = document.getElementById('spendingBreakdownSrc');
-  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${_fmtPeriodo(sb.periodo)} · Must Spend inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+  if (srcEl) srcEl.textContent = `Fonte: ${sb.fonte || 'spending_analysis.py'} · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -6167,20 +6113,16 @@ function onStressShockChange(val) {
   const isDefaultShock = pct === (st ? st.shock_pct : 40);
 
   if (isDefaultShock && hasPrecalc) {
-    // Voltar para pré-calculado
-    if (simBtn) simBtn.style.display = 'none';
     buildStressTest();
   } else {
-    // Mostrar cards em estado "aguardando" e habilitar botão
-    if (simBtn) simBtn.style.display = 'block';
+    // Auto-calculate: show pending briefly then run MC
+    if (simBtn) simBtn.style.display = 'none';
     _renderStressCards(
-      {
-        base:   { pfire: null, badge: 'pending' },
-        fav:    { pfire: null, badge: 'pending' },
-        stress: { pfire: null, badge: 'pending' },
-      },
+      { base: { pfire: null, badge: 'pending' }, fav: { pfire: null, badge: 'pending' }, stress: { pfire: null, badge: 'pending' } },
       { shock_pct: pct, pat_pos_shock: patShock, pat_atual: patOriginal }
     );
+    clearTimeout(window._stressDebounce);
+    window._stressDebounce = setTimeout(runStressSimulation, 250);
   }
 }
 
@@ -6252,8 +6194,8 @@ function buildSankey() {
   const N_GASTOS  = 'Gastos';
   const N_IMP     = sk.impostos_estimado ? 'Impostos*' : 'Impostos';
   const N_HIP     = 'Hipoteca';
-  const N_MUST    = 'Must Spend';
-  const N_LIKE    = 'Like to Spend';
+  const N_MUST    = 'Essenciais';
+  const N_LIKE    = 'Discricionários';
   const N_IMPRV   = 'Imprevistos';
 
   // Estrutura 2 níveis: Renda → {Investimentos, Gastos} → subcategorias
@@ -6442,6 +6384,7 @@ function renderKPIs() {
   (function buildFireGrid() {
     const grid = document.getElementById('fireScenarioGrid');
     if (!grid) return;
+    grid.innerHTML = '';
     const ss = DATA.spendingSensibilidade || [];
     const base53 = DATA.pfire53.base, base50 = DATA.pfire50.base;
     const casado53 = ss[1]?.base ?? null;
@@ -7025,8 +6968,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildMacroCards, buildBrasilConcentracao, buildDcaStatus,
-               renderKPIs, buildTimestamps, buildTornado, buildPremissasVsRealizado],
+    status:   [buildSemaforoPanel, buildTimestamps, buildTornado, buildPremissasVsRealizado],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, function() { buildBollinger('1y'); },
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -7046,7 +6988,7 @@ function _initTabCharts(tab) {
                },
                calcAporte],
     projecao: [buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
-               buildSpendingBreakdown, buildLifeEventsEnhanced, buildIncomeProjection,
+               buildSpendingBreakdown, buildIncomeProjection,
                buildNetWorthProjection, buildStressTest, buildSankey],
   };
   const fns = tabFns[tab] || [];
@@ -7307,24 +7249,81 @@ function buildBondPool() {
   const statusColor = bp.status === 'early' ? 'var(--yellow)' : bp.status === 'ok' ? 'var(--green)' : 'var(--red)';
   const statusLabel = bp.status === 'early' ? 'Em construção' : bp.status === 'ok' ? 'Adequado' : bp.status || '--';
 
-  let composHtml = '';
-  if (bp.composicao) {
-    composHtml = '<div style="margin-top:8px;font-size:.72rem;color:var(--muted)">' +
-      Object.entries(bp.composicao).filter(([,v]) => v > 0).map(([k,v]) =>
-        '<span style="margin-right:10px">' + k + ': R$' + (v/1000).toFixed(0) + 'k</span>'
-      ).join('') +
-    '</div>';
-  }
+  // Meta em R$ = meta_anos × gasto_anual
+  const gastoAnual = DATA.premissas?.custo_vida_base ?? 0;
+  const metaBrl = bp.meta_anos * gastoAnual;
+
+  // Ativos que compõem (ou devem compor) o bond pool
+  const rf = DATA.rf || {};
+  const ipca2040Brl = rf.ipca2040?.valor ?? 0;
+  const ipca2029Brl = rf.ipca2029?.valor ?? 0;
+  const renda2065Brl = rf.renda2065?.valor ?? 0;
+  const bondTotal = ipca2040Brl + ipca2029Brl;
+  const pctMeta = metaBrl > 0 ? Math.min(100, bondTotal / metaBrl * 100) : 0;
+
+  // Taxa atual para decidir estratégia ativa
+  const taxaIpca = rf.ipca2040?.taxa ?? 0;
+  const pisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const janelaAtiva = taxaIpca >= pisoIpca;
+
+  // Anos até FIRE@53 (estratégia B: 3 anos antes)
+  const idadeAtual = DATA.premissas?.idade_atual ?? 39;
+  const idadeFire = DATA.premissas?.idade_fire_alvo ?? 53;
+  const anosParaFire = idadeFire - idadeAtual;
+  const estratBAtiva = anosParaFire <= 3;
 
   el.innerHTML =
+    // Barra de progresso principal
     '<div class="bond-pool-card">' +
       '<div class="bp-title">Bond Pool — ' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' / ' + bp.meta_anos + ' anos de gastos</div>' +
       '<div class="bond-pool-bar"><div class="bond-pool-fill" style="width:' + pct.toFixed(0) + '%"></div></div>' +
-      '<div class="bp-row"><span>Valor atual</span><span class="bp-val pv">R$ ' + (bp.valor_atual_brl != null ? (bp.valor_atual_brl/1000).toFixed(0) + 'k' : '--') + '</span></div>' +
-      '<div class="bp-row"><span>Cobertura</span><span class="bp-val">' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' anos</span></div>' +
-      '<div class="bp-row"><span>Meta</span><span class="bp-val">' + bp.meta_anos + ' anos</span></div>' +
-      '<div class="bp-row"><span>Status</span><span class="bp-val" style="color:' + statusColor + '">' + statusLabel + '</span></div>' +
-      composHtml +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;font-size:.75rem">' +
+        '<div class="bp-row"><span>Valor atual</span><span class="bp-val pv">R$ ' + (bp.valor_atual_brl != null ? (bp.valor_atual_brl/1000).toFixed(0) + 'k' : '--') + '</span></div>' +
+        '<div class="bp-row"><span>Meta (7 anos)</span><span class="bp-val pv">R$ ' + (metaBrl/1000).toFixed(0) + 'k</span></div>' +
+        '<div class="bp-row"><span>Cobertura atual</span><span class="bp-val">' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' anos</span></div>' +
+        '<div class="bp-row"><span>Status</span><span class="bp-val" style="color:' + statusColor + '">' + statusLabel + '</span></div>' +
+      '</div>' +
+    '</div>' +
+
+    // Ativos atuais do bond pool
+    '<div style="margin-top:10px">' +
+      '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Composição atual</div>' +
+      '<table style="width:100%;font-size:.75rem;border-collapse:collapse">' +
+        '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
+          '<td style="padding:4px 4px;font-weight:600">IPCA+ 2040</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--green)">R$ ' + (ipca2040Brl/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2040Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
+        '</tr>' +
+        '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
+          '<td style="padding:4px 4px;font-weight:600">IPCA+ 2029</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--green)">R$ ' + (ipca2029Brl/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2029Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
+        '</tr>' +
+        '<tr style="border-bottom:2px solid var(--border);font-weight:700">' +
+          '<td style="padding:4px 4px">Total bond pool</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--accent)">R$ ' + (bondTotal/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--accent)">' + pctMeta.toFixed(0) + '% da meta</td>' +
+        '</tr>' +
+      '</table>' +
+      (renda2065Brl > 0 ? '<div style="margin-top:4px;font-size:.68rem;color:var(--muted)">⚠️ Renda+ 2065 (R$ ' + (renda2065Brl/1000).toFixed(0) + 'k) não conta para bond pool — vencimento pós-FIRE, não provê liquidez pré-aposentadoria.</div>' : '') +
+    '</div>' +
+
+    // Estratégias
+    '<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+      // Estratégia A
+      '<div style="padding:10px;border-radius:8px;border-left:3px solid ' + (janelaAtiva ? 'var(--green)' : 'var(--muted)') + ';background:rgba(34,197,94,' + (janelaAtiva ? '.07' : '.02') + ')">' +
+        '<div style="font-size:.65rem;font-weight:700;color:' + (janelaAtiva ? 'var(--green)' : 'var(--muted)') + ';text-transform:uppercase;margin-bottom:4px">' +
+          (janelaAtiva ? '🟢 Estratégia A — Janela ATIVA' : '🔘 Estratégia A — Janela fechada') +
+        '</div>' +
+        '<div style="font-size:.72rem;color:var(--text);line-height:1.4">Aportes em IPCA+ longo enquanto taxa ≥ ' + pisoIpca.toFixed(1) + '%.<br>Taxa atual: <strong style="color:' + (janelaAtiva ? 'var(--green)' : 'var(--muted)') + '">' + taxaIpca.toFixed(2) + '%</strong></div>' +
+      '</div>' +
+      // Estratégia B
+      '<div style="padding:10px;border-radius:8px;border-left:3px solid ' + (estratBAtiva ? 'var(--yellow)' : 'var(--muted)') + ';background:rgba(234,179,8,' + (estratBAtiva ? '.07' : '.02') + ')">' +
+        '<div style="font-size:.65rem;font-weight:700;color:' + (estratBAtiva ? 'var(--yellow)' : 'var(--muted)') + ';text-transform:uppercase;margin-bottom:4px">' +
+          (estratBAtiva ? '🟡 Estratégia B — ATIVAR AGORA' : '⏳ Estratégia B — ' + anosParaFire + ' anos para FIRE') +
+        '</div>' +
+        '<div style="font-size:.72rem;color:var(--text);line-height:1.4">Nos 3 anos pré-FIRE: aportar em IPCA+ curto (~2 anos) independente da taxa.<br>Protege SoRR dos primeiros anos.</div>' +
+      '</div>' +
     '</div>';
 }
 
@@ -7468,32 +7467,32 @@ function buildTaxIR() {
   const badges = tax.badges || {};
   const etfs = tax.ir_por_etf || {};
 
-  // Main KPI
-  let html = '<div class="tax-ir-card">' +
-    '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">' +
-      '<div>' +
-        '<div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">IR Diferido Total (latente)</div>' +
-        '<div style="font-size:1.8rem;font-weight:800;color:var(--yellow)" class="pv">' + (totalIR != null ? 'R$ ' + (totalIR/1000).toFixed(0) + 'k' : '--') + '</div>' +
-      '</div>' +
-      '<div style="font-size:.7rem;color:var(--muted);max-width:300px">' + regime + '</div>' +
-    '</div>' +
-  '</div>';
-
-  // Per-ETF grid
   const etfEntries = Object.entries(etfs).filter(([,v]) => v.ir_estimado > 0).sort((a,b) => b[1].ir_estimado - a[1].ir_estimado);
-  if (etfEntries.length > 0) {
-    html += '<div class="tax-ir-etf-grid">';
-    etfEntries.forEach(([ticker, e]) => {
-      const badge = badges[ticker] ? '<span class="badge-acc">' + badges[ticker] + '</span>' : '';
-      html += '<div class="tax-ir-etf">' +
-        '<div class="etf-name">' + ticker + ' ' + badge + '</div>' +
-        '<div class="etf-row"><span>Ganho BRL</span><span class="pv" style="color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + '">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</span></div>' +
-        '<div class="etf-row"><span>IR estimado</span><span class="pv" style="color:var(--yellow)">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</span></div>' +
-        '<div class="etf-row"><span>PTAX compra</span><span>' + (e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '--') + '</span></div>' +
-      '</div>';
-    });
-    html += '</div>';
-  }
+
+  let html = '<table style="width:100%;border-collapse:collapse;font-size:.78rem">' +
+    '<thead><tr style="border-bottom:2px solid var(--border)">' +
+    '<th style="text-align:left;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">ETF</th>' +
+    '<th style="text-align:right;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">Ganho BRL</th>' +
+    '<th style="text-align:right;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">IR est. (15%)</th>' +
+    '<th style="text-align:right;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">PTAX médio</th>' +
+    '</tr></thead><tbody>';
+
+  etfEntries.forEach(([ticker, e]) => {
+    const badge = badges[ticker] ? ' <span class="badge-acc">' + badges[ticker] + '</span>' : '';
+    html += '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
+      '<td style="padding:5px 6px;font-weight:600">' + ticker + badge + '</td>' +
+      '<td style="text-align:right;padding:5px 6px;color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + ';font-variant-numeric:tabular-nums">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</td>' +
+      '<td style="text-align:right;padding:5px 6px;color:var(--yellow);font-variant-numeric:tabular-nums">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</td>' +
+      '<td style="text-align:right;padding:5px 6px;color:var(--muted);font-variant-numeric:tabular-nums">' + (e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '--') + '</td>' +
+      '</tr>';
+  });
+
+  html += '<tr style="border-top:2px solid var(--border);font-weight:700">' +
+    '<td style="padding:6px 6px">Total</td>' +
+    '<td style="text-align:right;padding:6px 6px"></td>' +
+    '<td style="text-align:right;padding:6px 6px;color:var(--yellow)">R$ ' + (totalIR/1000).toFixed(0) + 'k</td>' +
+    '<td></td></tr></tbody></table>' +
+    '<div style="margin-top:6px;font-size:.68rem;color:var(--muted)">' + regime + '</div>';
 
   el.innerHTML = html;
 }
@@ -7640,6 +7639,9 @@ function buildCagrVsTwr() {
   buildGlidePath();
   buildFireBuckets();
   buildBondPool();
+  buildBrasilConcentracao();
+  buildMacroCards();
+  buildDcaStatus();
   buildFanChart();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
@@ -7657,214 +7659,6 @@ function buildCagrVsTwr() {
   switchTab(_startTab);
 })();
 
-// ── Agent Widget ─────────────────────────────────────────────
-let _agentOpen = false;
-const _agentHistory = [];
-let _agentMode = 'fast'; // 'fast' (haiku) | 'head' (sonnet)
-
-function setAgentMode(mode) {
-  _agentMode = mode;
-  const btnFast = document.getElementById('modeFast');
-  const btnHead = document.getElementById('modeHead');
-  if (mode === 'fast') {
-    btnFast.style.background = 'var(--accent)'; btnFast.style.color = 'white';
-    btnHead.style.background = 'transparent'; btnHead.style.color = 'var(--muted)';
-    document.getElementById('agentStatus').textContent = 'Fast — respostas rápidas';
-    document.getElementById('agentInput').placeholder = 'Como está minha alocação?';
-  } else {
-    btnHead.style.background = 'var(--accent)'; btnHead.style.color = 'white';
-    btnFast.style.background = 'transparent'; btnFast.style.color = 'var(--muted)';
-    document.getElementById('agentStatus').textContent = 'Head — análise profunda com time FIRE';
-    document.getElementById('agentInput').placeholder = 'Analise meu drift. Devo rebalancear?';
-  }
-}
-
-function buildAgentContext() {
-  const activeTab = document.querySelector('.tab-btn.active')?.textContent?.trim() || 'Status';
-  const domSnapshot = [];
-  document.querySelectorAll('[data-in-tab]').forEach(section => {
-    if (section.style.display === 'none') return;
-    const title = section.querySelector('h2')?.textContent?.trim();
-    const values = [...section.querySelectorAll('.kpi-value, .num, .big, [class*="val"]')]
-      .map(el => ({ label: el.closest('[class*="card"], .kpi')?.querySelector('.kpi-label, .hlbl')?.textContent?.trim() || '', value: el.textContent?.trim() }))
-      .filter(x => x.value);
-    if (title || values.length) domSnapshot.push({ section: title, values });
-  });
-  return { activeTab, domSnapshot, fullData: DATA };
-}
-
-function _buildSystemPrompt(ctx, mode) {
-  const d = ctx.fullData;
-  const pat = d.totalBrl, cambio = d.cambio;
-  const pf50 = d.pfire50?.base, pf53 = d.pfire53?.base;
-  const drift = JSON.stringify(d.drift).slice(0, 1500);
-  const tornado = JSON.stringify(d.tornado).slice(0, 1000);
-  const premissas = JSON.stringify(d.premissas).slice(0, 800);
-  const rf = JSON.stringify(d.rf).slice(0, 400);
-  const macro = JSON.stringify(d.macro).slice(0, 500);
-
-  const baseContext = `
-Estado atual (aba: ${ctx.activeTab}):
-- Patrimônio: R$${(pat/1e6).toFixed(2)}M | Câmbio: R$${cambio}
-- P(FIRE@50): ${pf50}% | P(FIRE@53): ${pf53}%
-- Drift: ${drift}
-- Tornado: ${tornado}
-- Premissas: ${premissas}
-- RF: ${rf}
-- Macro: ${macro}
-- DOM: ${JSON.stringify(ctx.domSnapshot).slice(0, 1500)}`;
-
-  if (mode === 'fast') {
-    return `Você é o assistente da carteira FIRE de Diego Morais. Responda direto, em português, com números reais.
-Estratégia: SWRD 50% / AVGS 30% / AVEM 20% + RF IPCA+ longo 15% + HODL11 ~3%. Meta: FIRE@50 (aspiracional) / FIRE@53 (base). Diego tem 39 anos.
-${baseContext}`;
-  }
-
-  // Head mode — persona completa
-  return `Você é o Head do time de gestão de portfolio de Diego Morais — coordenador de uma estratégia FIRE evidence-based.
-
-IDENTIDADE: Responda como "Head:" — direto, analítico, com opiniões baseadas em evidência. Nunca sycophantic.
-
-PERFIL DE DIEGO:
-- 39 anos, meta FIRE@50 (aspiracional) / FIRE@53 (base)
-- Estratégia: equity factor UCITS (SWRD 50%/AVGS 30%/AVEM 20%), RF IPCA+ longo (TD 2040/2050) 15%, HODL11 ~3% tático
-- Patrimônio total: R$${(pat/1e6).toFixed(2)}M | Câmbio: R$${cambio}
-- ETFs transitórios (liquidar gradual via TLH): AVUV, AVDV, AVES, DGS, USSC
-- Contribuição mensal: R$${(d.premissas?.aporte_mensal/1000||25).toFixed(0)}k/mês
-- Custo de vida: R$${(d.premissas?.custo_vida_base/1000||20).toFixed(0)}k/mês (base FIRE)
-
-TIME DISPONÍVEL (simule quando necessário):
-- Factor: ETFs UCITS, factor premiums, Fama-French
-- RF: IPCA+ longo, Renda+ 2065, duration, marcação a mercado
-- FIRE: Monte Carlo, guardrails, withdrawal, desacumulação
-- Macro: Selic, câmbio, ciclo de juros
-- Advocate: stress-test, devil's advocate, inversão
-- Quant: validação numérica, cálculos
-
-REGRAS:
-- Cite números reais do contexto
-- Se há evidência acadêmica relevante, mencione
-- Aponte riscos que Diego pode não estar vendo
-- Separe dado de interpretação
-- Português. Markdown básico OK.
-
-${baseContext}`;
-}
-
-function toggleAgent() {
-  _agentOpen = !_agentOpen;
-  document.getElementById('agentPanel').style.right = _agentOpen ? '0' : '-420px';
-  document.getElementById('agentBtn').style.transform = _agentOpen ? 'scale(0.9)' : 'scale(1)';
-  if (_agentOpen) {
-    const key = localStorage.getItem('claude_api_key');
-    document.getElementById('agentKeySetup').style.display = key ? 'none' : 'block';
-    if (key) setAgentMode(_agentMode);
-    else document.getElementById('agentStatus').textContent = 'Configure a API key';
-    // Show head relay if exists
-    if (DATA.head_relay?.text) {
-      document.getElementById('headRelayBanner').style.display = 'block';
-      document.getElementById('headRelayText').textContent = DATA.head_relay.text;
-      document.getElementById('headRelayTs').textContent = `${DATA.head_relay.from || 'Head'} · ${DATA.head_relay.ts || ''}`;
-    }
-    setTimeout(() => document.getElementById('agentInput').focus(), 300);
-  }
-}
-
-function saveAgentKey() {
-  const key = document.getElementById('agentKeyInput').value.trim();
-  if (!key.startsWith('sk-ant-')) { alert('API key inválida — deve começar com sk-ant-'); return; }
-  localStorage.setItem('claude_api_key', key);
-  document.getElementById('agentKeySetup').style.display = 'none';
-  setAgentMode(_agentMode);
-  document.getElementById('agentKeyInput').value = '';
-}
-
-function _agentAddMsg(role, content, isStreaming) {
-  const msgs = document.getElementById('agentMessages');
-  const div = document.createElement('div');
-  div.style.cssText = role === 'user'
-    ? 'align-self:flex-end;background:var(--accent);color:white;padding:8px 12px;border-radius:12px 12px 2px 12px;max-width:85%;font-size:.82rem;line-height:1.4'
-    : 'align-self:flex-start;background:var(--card2);padding:8px 12px;border-radius:12px 12px 12px 2px;max-width:90%;font-size:.82rem;line-height:1.5;white-space:pre-wrap';
-  div.textContent = content;
-  if (isStreaming) div.id = 'agentStreaming';
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-  return div;
-}
-
-async function sendAgentMessage() {
-  const input = document.getElementById('agentInput');
-  const msg = input.value.trim();
-  if (!msg) return;
-  const key = localStorage.getItem('claude_api_key');
-  if (!key) { alert('Configure a API key primeiro'); return; }
-
-  input.value = '';
-  document.getElementById('agentSendBtn').disabled = true;
-  _agentAddMsg('user', msg);
-  _agentHistory.push({ role: 'user', content: msg });
-
-  const ctx = buildAgentContext();
-  const systemPrompt = _buildSystemPrompt(ctx, _agentMode);
-  const model = _agentMode === 'head' ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
-  const maxTokens = _agentMode === 'head' ? 2048 : 1024;
-
-  const streamDiv = _agentAddMsg('assistant', '…', true);
-  let fullText = '';
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: maxTokens,
-        system: systemPrompt,
-        messages: _agentHistory.slice(-12),
-        stream: true,
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      streamDiv.textContent = `Erro: ${err.error?.message || res.status}`;
-      return;
-    }
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value);
-      for (const line of chunk.split('\n')) {
-        if (!line.startsWith('data: ')) continue;
-        const data = line.slice(6);
-        if (data === '[DONE]') break;
-        try {
-          const evt = JSON.parse(data);
-          if (evt.type === 'content_block_delta' && evt.delta?.text) {
-            fullText += evt.delta.text;
-            streamDiv.textContent = fullText;
-            document.getElementById('agentMessages').scrollTop = 999999;
-          }
-        } catch(e) {}
-      }
-    }
-    streamDiv.id = '';
-    _agentHistory.push({ role: 'assistant', content: fullText });
-  } catch (e) {
-    streamDiv.textContent = `Erro de conexão: ${e.message}`;
-  } finally {
-    document.getElementById('agentSendBtn').disabled = false;
-    input.focus();
-  }
-}
-// ── /Agent Widget ────────────────────────────────────────────
 </script>
 </body>
 </html>
