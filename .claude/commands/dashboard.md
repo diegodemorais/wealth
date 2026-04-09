@@ -33,7 +33,7 @@ scripts/generate_data.py   →  dashboard/data.json
                                          ↓
 scripts/build_dashboard.py →  dashboard/index.html
                                          ↓
-scripts/deploy_dashboard.sh →  GitHub Pages (diegodemorais.github.io/wealth-dash/)
+                              GitHub Actions →  GitHub Pages (deploy automático ao push)
 ```
 
 ### Gerar dashboard (comando padrão):
@@ -53,10 +53,7 @@ scripts/deploy_dashboard.sh →  GitHub Pages (diegodemorais.github.io/wealth-da
 ```
 
 ### Deploy (GitHub Pages):
-```bash
-bash scripts/deploy_dashboard.sh              # completo
-bash scripts/deploy_dashboard.sh --skip-scripts  # rápido
-```
+Deploy automático via GitHub Actions ao push para `main`. Não há script manual.
 
 ### Para modificar o dashboard:
 - **Lógica/dados**: editar `scripts/generate_data.py`
@@ -476,13 +473,9 @@ Se algum valor não puder ser obtido dos scripts (ex: script falhou), o campo de
 
 Não commitar — Diego decide.
 
-### 5. Deploy Netlify
+### 5. Deploy
 
-```bash
-bash scripts/deploy_netlify.sh
-```
-
-Token em `.netlify_token`. Site: `stunning-crepe-8aa19f`.
+Deploy automático via GitHub Actions ao push para `main`.
 
 ### 6. Output
 
@@ -490,7 +483,6 @@ Token em `.netlify_token`. Site: `stunning-crepe-8aa19f`.
 Dashboard regenerado: dashboard/index.html
 Data: DD/MM/AAAA | Patrimônio: R$ X.XXXk | Equity: $XXXk | Câmbio: R$ X.XX
 P(FIRE): XX.X% | Cresc. patrimonial: XX.X% (inclui aportes) | Delta A: +X.Xpp
-✅ Publicado: https://stunning-crepe-8aa19f.netlify.app (senha: diego2040)
 ```
 
 ## Toggle de Privacidade

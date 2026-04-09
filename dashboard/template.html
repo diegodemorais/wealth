@@ -19,7 +19,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kpi-value{font-size:1.5rem;font-weight:700;margin-top:2px}.kpi-sub{font-size:.7rem;color:var(--muted);margin-top:2px}
 .kpi-fire{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
 .section{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
-.section h2{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.section h2{font-size:.8rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 @media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
@@ -68,6 +68,15 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .slider-row{margin:12px 0}
 .slider-row label{font-size:.75rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px}
 .slider-row input[type=range]{width:100%;accent-color:var(--accent)}
+/* ── Hierarquia tipográfica ── */
+.section-critical{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
+.actions-box{border-width:2px}
+.collapsible{border-color:rgba(71,85,105,.3)}
+.collapsible .collapse-body{display:none}
+.collapsible.open .collapse-body{display:block}
+.collapsible h2{cursor:pointer;user-select:none}
+.collapsible h2::after{content:' ▸';font-size:.7rem;color:var(--muted)}
+.collapsible.open h2::after{content:' ▾'}
 .what-if-result{background:var(--card2);border-radius:8px;padding:12px;text-align:center;margin-top:8px}
 .what-if-result .big{font-size:2rem;font-weight:700}
 .scenario-card{background:var(--card2);border-radius:8px;padding:12px;border:1px solid var(--border)}
@@ -76,8 +85,63 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 .private-mode .pv{visibility:hidden}
+/* ── Zebra striping em tabelas longas ── */
+tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
 .privacy-toggle:hover{opacity:1}
+/* ── P2: Semáforo panel ── */
+.semaforo-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.semaforo-table th{padding:6px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.65rem;text-transform:uppercase;text-align:left}
+.semaforo-table td{padding:7px 8px;border-bottom:1px solid rgba(71,85,105,.25)}
+.semaforo-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.semaforo-verde{background:var(--green)}.semaforo-amarelo{background:var(--yellow)}.semaforo-vermelho{background:var(--red)}
+/* ── P2: Macro KPI strip ── */
+.macro-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.macro-kpi{background:var(--card2);border-radius:8px;padding:10px 12px;text-align:center}
+.macro-kpi .mv{font-size:1.1rem;font-weight:700}.macro-kpi .ml{font-size:.65rem;color:var(--muted);margin-top:2px}
+/* ── P2: DCA Status cards ── */
+.dca-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.dca-card{background:var(--card2);border-radius:8px;padding:14px;border-left:3px solid var(--accent)}
+.dca-card.paused{border-left-color:var(--muted);opacity:.8}
+.dca-card .dca-title{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.dca-card .dca-row{display:flex;justify-content:space-between;font-size:.75rem;padding:2px 0}
+.dca-card .dca-row .dca-val{font-weight:600}
+/* ── P2: Bond pool bar ── */
+.bond-pool-bar{position:relative;height:20px;background:var(--card2);border-radius:6px;overflow:hidden;margin:10px 0}
+.bond-pool-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
+/* ── P2: HODL11 band bar ── */
+.hodl-band-bar{position:relative;height:14px;background:linear-gradient(90deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.2) 30%,rgba(34,197,94,.2) 30%,rgba(34,197,94,.2) 60%,rgba(234,179,8,.2) 60%,rgba(234,179,8,.2) 80%,rgba(239,68,68,.2) 80%);border-radius:4px;margin:8px 0;overflow:visible}
+.hodl-band-marker{position:absolute;top:-4px;width:3px;height:22px;background:var(--text);border-radius:2px;z-index:2}
+.hodl-band-label{position:absolute;top:18px;font-size:.55rem;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+/* ── P2: Factor loadings table ── */
+.factor-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.factor-table th{padding:5px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:right}
+.factor-table th:first-child{text-align:left}
+.factor-table td{padding:5px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;font-variant-numeric:tabular-nums}
+.factor-table td:first-child{text-align:left;font-weight:600}
+/* ── P2: Tax badge ── */
+.badge-acc{background:rgba(34,197,94,.15);color:var(--green);font-size:.55rem;padding:1px 5px;border-radius:9999px;margin-left:4px;font-weight:600;vertical-align:middle}
+/* ── P2: Duration card enrichment ── */
+.duration-block{margin-top:8px;padding:8px;background:rgba(249,115,22,.06);border-radius:6px;border-left:2px solid var(--orange);font-size:.72rem}
+.duration-block .dur-row{display:flex;justify-content:space-between;padding:2px 0}
+.duration-block .dur-label{color:var(--muted)}.duration-block .dur-val{font-weight:600}
+/* ── P2: Tax IR section ── */
+.tax-ir-card{background:var(--card2);border-radius:8px;padding:14px;border-left:3px solid var(--green)}
+.tax-ir-etf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
+.tax-ir-etf{background:rgba(71,85,105,.15);border-radius:6px;padding:8px 10px;font-size:.72rem}
+.tax-ir-etf .etf-name{font-weight:700;font-size:.78rem;margin-bottom:2px}
+.tax-ir-etf .etf-row{display:flex;justify-content:space-between;padding:1px 0}
+/* ── P2: Bond pool card ── */
+.bond-pool-card{background:var(--card2);border-radius:8px;padding:14px}
+.bond-pool-card .bp-title{font-size:.8rem;font-weight:700;margin-bottom:6px}
+.bond-pool-card .bp-row{display:flex;justify-content:space-between;font-size:.75rem;padding:2px 0}
+.bond-pool-card .bp-val{font-weight:600}
+/* ── P2: Factor rolling chart ── */
+.factor-no-data{padding:24px;text-align:center;color:var(--muted);font-size:.8rem}
+/* ── P2: CAGR vs TWR inline ── */
+.cagr-twr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.cagr-twr-card{background:var(--card2);border-radius:8px;padding:10px 14px;text-align:center}
+.cagr-twr-card .ctv{font-size:1.3rem;font-weight:700}.cagr-twr-card .ctl{font-size:.65rem;color:var(--muted);margin-top:2px}
 /* ── F2: Spending Guardrails ── */
 .guardrail-bar{position:relative;height:28px;background:var(--card2);border-radius:6px;overflow:visible;margin:12px 0}
 .guardrail-bar-fill{position:absolute;top:0;height:100%;border-radius:6px}
@@ -123,6 +187,27 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .tab-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .15s;white-space:nowrap}
 .tab-btn:hover{border-color:var(--accent);color:var(--text)}
 .tab-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+/* ── Timestamps / Staleness badges ── */
+.ts-bar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
+.ts-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:600;background:rgba(71,85,105,.25);color:var(--muted)}
+.ts-badge.stale{background:rgba(239,68,68,.2);color:var(--red)}
+.ts-badge .ts-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ts-dot-ok{background:var(--green)}.ts-dot-stale{background:var(--red)}
+/* ── Concentração Brasil card ── */
+.brasil-card{background:var(--card2);border-radius:8px;padding:14px;margin-top:10px;border-left:3px solid var(--yellow)}
+.brasil-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.brasil-header .brasil-pct{font-size:1.3rem;font-weight:700;color:var(--yellow)}
+.brasil-header .brasil-lbl{font-size:.75rem;color:var(--muted)}
+.brasil-row{display:flex;justify-content:space-between;font-size:.72rem;padding:2px 0;border-bottom:1px solid rgba(71,85,105,.15)}
+.brasil-row:last-child{border-bottom:none}
+.brasil-row .br-val{font-weight:600;font-variant-numeric:tabular-nums}
+/* ── Premissas vs Realizado table ── */
+.pvr-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.pvr-table th{padding:6px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.65rem;text-transform:uppercase;text-align:left}
+.pvr-table th:not(:first-child){text-align:right}
+.pvr-table td{padding:7px 8px;border-bottom:1px solid rgba(71,85,105,.25)}
+.pvr-table td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.pvr-delta-pos{color:var(--green);font-weight:600}.pvr-delta-neg{color:var(--red);font-weight:600}
 </style>
 </head>
 <body>
@@ -137,7 +222,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
     <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
   </div>
 </div>
-<div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
+<div class="meta" id="headerMeta">— · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
 </div>
 
@@ -145,8 +230,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="hero-strip">
   <div class="hero-kpi primary">
     <div class="hlbl">Patrimônio Total</div>
-    <div class="hval pv" id="heroPatrimonio">—</div>
-    <div class="hsub pv" id="heroPatrimonioUsd">— equity</div>
+    <div class="hval pv" id="heroPatrimonioUsd">—</div>
+    <div class="hsub pv" id="heroPatrimonioBrl">— em BRL</div>
   </div>
   <div class="hero-kpi primary">
     <div class="hlbl">P(FIRE) Base · @53</div>
@@ -174,6 +259,14 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="actions-box" id="proximasAcoes">
 <h2>⚡ Próximas Ações</h2>
 <div id="proximasAcoesBody"><!-- gerado por renderProximasAcoes() --></div>
+</div>
+
+<!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
+<div class="section section-critical" id="semaforoPanel" style="margin-bottom:14px">
+<h2>Semáforos de Gatilhos</h2>
+<table class="semaforo-table" id="semaforoBody">
+<!-- gerado por buildSemaforoPanel() -->
+</table>
 </div>
 
 <!-- TAB NAV -->
@@ -217,6 +310,27 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <div class="kpi-value" id="kpiWellnessCompact">—</div>
   <div class="kpi-sub" id="kpiWellnessSub">—</div>
 </div>
+</div>
+
+<!-- P2: MACRO CONTEXT -->
+<div class="section" data-in-tab="status" id="macroSection">
+<h2>Contexto Macro</h2>
+<div class="macro-strip" id="macroStrip"><!-- gerado por buildMacroCards() --></div>
+<div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
+<div class="src">Fonte: BCB/FRED via data.json · Premissa depreciação BRL usada em projeções FIRE</div>
+</div>
+
+<!-- P2: DCA STATUS -->
+<div class="section" data-in-tab="status" id="dcaSection">
+<h2>DCA Status</h2>
+<div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
+</div>
+
+<!-- P2: TAX — IR DIFERIDO -->
+<div class="section" id="taxIrSection" data-in-tab="status">
+<h2>IR Diferido — Passivo Tributário Latente</h2>
+<div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
+<div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
 </div>
 
 <!-- S4: TIME TO FIRE -->
@@ -280,9 +394,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 
 
-<!-- S2: FINANCIAL WELLNESS SCORE (movido abaixo dos KPIs principais — D4) -->
-<div class="section" style="border-color:rgba(71,85,105,.4)" data-in-tab="status">
-<h2>Financial Wellness Score <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(indicador secundário)</span></h2>
+<!-- S2: FINANCIAL WELLNESS SCORE (colapsável) -->
+<div class="section collapsible" data-in-tab="status">
+<h2 onclick="this.parentElement.classList.toggle('open')">Financial Wellness Score <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(indicador secundário)</span></h2>
+<div class="collapse-body">
 <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
 <div style="text-align:center;min-width:100px">
 <div id="wellnessScore" style="font-size:2.2rem;font-weight:800">—</div>
@@ -294,6 +409,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div style="flex:1;min-width:260px">
 <div class="wellness-grid" id="wellnessGrid"></div>
 <div id="wellnessActions" style="margin-top:10px;padding:8px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent)"></div>
+</div>
 </div>
 </div>
 </div>
@@ -346,8 +462,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S9: SCENARIO COMPARISON -->
-<div class="grid-2" data-in-tab="status">
+<!-- S9: SCENARIO COMPARISON (movido para plan) -->
+<div class="grid-2" data-in-tab="plan">
 <div class="section">
   <h2>FIRE@53 vs FIRE@50 — Comparação</h2>
   <div class="chart-box-sm"><canvas id="scenarioChart"></canvas></div>
@@ -431,8 +547,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S12: GLIDE PATH -->
-<div class="section" data-in-tab="aloc">
+<!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
+<div class="section" data-in-tab="plan">
 <h2>Glide Path — Alocação por Idade</h2>
 <div class="chart-box"><canvas id="glideChart"></canvas></div>
 <div class="src">Fonte: agentes/contexto/carteira.md tabela de alocação. Crypto: 3% pré e pós-FIRE (ler tabela). Assertion: soma = 100% por ano.</div>
@@ -451,14 +567,23 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 </div>
 
-<!-- S14: FAN CHART P10/P50/P90 -->
-<div class="section" data-in-tab="plan">
-<h2>Fan Chart — Trajetórias Patrimoniais P10/P50/P90</h2>
+<!-- P2: BOND POOL READINESS -->
+<div class="section" id="bondPoolSection" data-in-tab="plan">
+<h2>Bond Pool Readiness — Proteção SoRR</h2>
+<div id="bondPoolBody"><!-- gerado por buildBondPool() --></div>
+<div class="src">Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos de gastos.</div>
+</div>
+
+<!-- S14: FAN CHART P10/P50/P90 (colapsável — F7 é versão superior com spending smile) -->
+<div class="section collapsible" data-in-tab="plan">
+<h2 onclick="this.parentElement.classList.toggle('open')">Fan Chart — Trajetórias Patrimoniais P10/P50/P90 <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(ver F7 em Projeções)</span></h2>
+<div class="collapse-body">
 <div class="chart-box-lg"><canvas id="fanChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.75rem;color:var(--yellow)">
   ⚠️ <strong>Trajetórias interpoladas com r=4.85%/ano — não são simulações Monte Carlo individuais.</strong> Bandas P10/P90 derivadas do spread dos cenários MC, não de distribuição empírica de trajetórias. <span id="fanPfireNote"></span>
 </div>
 <div class="src" id="fanChartSrc">Baseado em endpoints do Monte Carlo. Crescimento exponencial.</div>
+</div>
 </div>
 
 
@@ -495,9 +620,10 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src" id="incomeChartSrc">—</div>
 </div>
 
-<!-- S17: FEE ANALYSIS -->
-<div class="section" data-in-tab="perf">
-<h2>Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
+<!-- S17: FEE ANALYSIS (colapsável) -->
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
+<div class="collapse-body">
 <div style="overflow-x:auto">
 <table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -512,20 +638,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 </div>
 <div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
 </div>
+</div>
 
-<!-- S18: CONTRIBUTION SLIDER -->
-<div class="section" data-in-tab="aloc">
-<h2>Monthly Contribution Needed — Slider</h2>
-<div class="slider-row">
-  <label><span>Aporte Mensal</span><span id="contribVal">—</span></label>
-  <input type="range" id="contribSlider" min="5000" max="80000" step="1000" value="25000" oninput="updateContrib()">
-</div>
-<div class="what-if-result">
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Anos até FIRE@53 estimados (determinístico r=4.85%)</div>
-  <div class="big" id="contribResult">—</div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Nota: aproximação — P(FIRE) real via MC</div>
-</div>
-</div>
+<!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
@@ -600,11 +715,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src">Calculado de ibkr_lotes.json · Ganho sobre custo USD (preço médio × qtde) · Peso intra-equity (SWRD+AVGS+AVEM) · Meta: 50/30/20</div>
 </div>
 
-<!-- S21c: EVENTOS DE VIDA -->
-<div class="section" style="border-color:rgba(234,179,8,.3)" data-in-tab="plan">
-<h2>Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
+<!-- S21c: EVENTOS DE VIDA (colapsável) -->
+<div class="section collapsible" style="border-color:rgba(234,179,8,.3)" data-in-tab="plan">
+<h2 onclick="this.parentElement.classList.toggle('open')">Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
+<div class="collapse-body">
 <div id="eventosVidaBody"></div>
 <div class="src">Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente.</div>
+</div>
 </div>
 
 <!-- S21d: P(FIRE) CENÁRIOS FAMÍLIA -->
@@ -621,21 +738,30 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="src">Fonte: extrato IBKR (aportes.json + lotes.json) · atualizado via ibkr_analysis.py</div>
 </div>
 
+<!-- PREMISSAS VS REALIZADO -->
+<div class="section" data-in-tab="plan" id="premissasVsRealizadoSection">
+<h2>Premissas vs Realizado</h2>
+<table class="pvr-table" id="premissasVsRealizadoBody">
+<!-- gerado por buildPremissasVsRealizado() -->
+</table>
+<div class="src" id="premissasVsRealizadoSrc">Fonte: fire_montecarlo.py (premissas) · ibkr_analysis.py (aportes realizados) · backtest_portfolio.py (CAGR)</div>
+</div>
+
 <!-- S22: CALCULADORA APORTE -->
-<div class="section" data-in-tab="aloc">
+<div class="section" data-in-tab="plan">
 <h2>Calculadora de Aporte — Cascade</h2>
 <div class="calc-form">
   <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000" class="calc-aporte-input"></div>
-  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="5.1687" step="0.01"></div>
+  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="0" step="0.01"></div>
   <button onclick="calcAporte()">Calcular</button>
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
 <div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
 </div>
 
-<!-- S24: BOLLINGER BANDS -->
+<!-- S24: RETORNOS MENSAIS -->
 <div class="section" data-in-tab="perf">
-<h2>Bollinger Bands — Retornos Mensais (MA5 ± 2σ)</h2>
+<h2>Retornos Mensais — Carteira</h2>
 <div class="period-btns" id="bollingerPeriodBtns">
   <button onclick="setBollingerPeriod('3m')">3m</button>
   <button onclick="setBollingerPeriod('6m')">6m</button>
@@ -646,8 +772,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
   <button onclick="setBollingerPeriod('all')">All</button>
 </div>
 <div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div id="bollingerNote" style="display:none;font-size:.72rem;color:var(--yellow);margin-top:4px"></div>
-<div class="src">Retornos mensais. MA5 fixo · σ populacional (÷N). Upper em verde, Lower em vermelho. Pontos fora das bandas destacados. Bandas suprimidas em 3m/6m (σ instável).</div>
+<div class="src">Retornos mensais da carteira por período selecionado.</div>
 </div>
 
 <!-- S25: TLH MONITOR -->
@@ -704,9 +829,9 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
 <div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
-  Pré-FIRE: renda ativa (estimativa R$45k/mês) · Pós-FIRE: saque do portfólio cobre gap despesas − INSS · INSS: R$18k/ano a partir dos 65 (inflacionado 4%/ano)
+  Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa R$45k/mês · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS R$18k/ano a partir dos 65.
 </div>
-<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending inflacionado 4%/ano</div>
+<div class="src" id="incomeProjectionSrc">Fonte: premissas MC · config.py · life_events.json · spending smile (R$ reais 2026)</div>
 </div>
 
 <!-- F7: Net Worth Projection P10/P50/P90 -->
@@ -715,7 +840,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
   ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
-  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending R$250k/ano constante (R$ 2026). INSS R$18k/ano a partir de age 65.
+  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS R$18k/ano real a partir de age 65.
 </div>
 <div class="src" id="netWorthProjectionSrc">Fonte: fire_montecarlo.py MC · dashboard_state.json · premissas</div>
 </div>
@@ -765,8 +890,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
-<!-- S26: RF + CRYPTO CARDS -->
-<div class="section" data-in-tab="plan">
+<!-- S26: RF + CRYPTO CARDS (movido para status — são posições, não projeções) -->
+<div class="section" data-in-tab="status">
 <h2>Renda Fixa + Cripto</h2>
 <div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
@@ -791,10 +916,39 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 <tbody id="backtestMetricsBody"></tbody>
 </table>
 </div>
+<!-- P3: CAGR patrimonial vs TWR -->
+<div class="cagr-twr-row" id="cagrTwrRow">
+  <div class="cagr-twr-card">
+    <div class="ctl">CAGR Patrimonial (incl. aportes)</div>
+    <div class="ctv pv" id="cagrPatrimonial">--</div>
+    <div class="ctl">Crescimento total do patrimônio. Inflado por aportes — NÃO é performance dos ETFs.</div>
+  </div>
+  <div class="cagr-twr-card">
+    <div class="ctl">TWR USD (retorno puro, ex-aportes)</div>
+    <div class="ctv" id="twrPure">--</div>
+    <div class="ctl">Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.</div>
+  </div>
+</div>
 <div style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
   ⚠️ ago/2019–abr/2026: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos.
 </div>
 <div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
+</div>
+
+<!-- P2: FACTOR ROLLING 12M AVGS vs SWRD -->
+<div class="section" id="factorRollingSection" data-in-tab="perf">
+<h2>Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
+<div id="factorRollingBody">
+<div class="chart-box"><canvas id="factorRollingChart"></canvas></div>
+</div>
+<div class="src">Fonte: factor_rolling (cache). Linha vermelha = threshold -5pp (gatilho de revisão da tese fatorial). Dados podem estar vazios se cache não populado.</div>
+</div>
+
+<!-- P2: FACTOR LOADINGS TABLE -->
+<div class="section" id="factorLoadingsSection" data-in-tab="perf">
+<h2>Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
+<div id="factorLoadingsBody"><!-- gerado por buildFactorLoadings() --></div>
+<div class="src">Fonte: factor_regression.py · Regressão FF5+Mom por ETF · R² indica poder explicativo do modelo.</div>
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
@@ -826,7 +980,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 
 <footer>
   Dashboard regenerado em <strong id="footerDate">—</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
-  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance
+  <div class="ts-bar" id="timestampsBar"><!-- gerado por buildTimestamps() --></div>
+  <span id="footerNudge" style="opacity:.5;font-size:.65rem"></span>
 </footer>
 </div><!-- /container -->
 
@@ -995,6 +1150,9 @@ const _anoFireAlvoGlobal = today.getFullYear() + (DATA.premissas.idade_fire_alvo
 const _anoFireAspir = today.getFullYear() + ((DATA.premissas.idade_fire_aspiracional ?? 50) - DATA.premissas.idade_atual);
 const _footerDate = document.getElementById('footerDate');
 if (_footerDate && DATA.date) { const _d = new Date(DATA.date); _footerDate.textContent = `${String(_d.getDate()).padStart(2,'0')}/${String(_d.getMonth()+1).padStart(2,'0')}/${_d.getFullYear()}`; }
+// Nudge de frequência mensal — próxima consulta sugerida +30 dias
+const _nudgeEl = document.getElementById('footerNudge');
+if (_nudgeEl && DATA.date) { const _nd = new Date(DATA.date); _nd.setDate(_nd.getDate() + 30); const _meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; _nudgeEl.textContent = `Próxima consulta sugerida: ${String(_nd.getDate()).padStart(2,'0')}/${_meses[_nd.getMonth()]}/${_nd.getFullYear()}`; }
 const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
 const fireDate = new Date(`${_anoFire}-01-01`);
 const msLeft = fireDate - today;
@@ -1795,9 +1953,10 @@ function buildPosicoes() {
     totUsd += valUsd; totBrl += valBrl;
     const tr = document.createElement('tr');
     const statusBadge = p.status === 'alvo' ? '<span class="badge badge-alvo">alvo</span>' : '<span class="badge badge-trans">transit.</span>';
+    const accBadge = (DATA.tax?.badges?.[ticker]) ? '<span class="badge-acc">ACC</span>' : '';
     const gainStr = `${gain >= 0 ? '+' : ''}${gain.toFixed(1)}%`;
     tr.innerHTML = `
-      <td><strong>${ticker}</strong></td>
+      <td><strong>${ticker}</strong>${accBadge}</td>
       <td><span style="color:${bucketColors[p.bucket] || '#94a3b8'};font-size:.7rem">${p.bucket}</span></td>
       <td>${statusBadge}</td>
       <td class="num hide-mobile">$${pm.toFixed(2)}</td>
@@ -1964,7 +2123,7 @@ window.calcAporte = function() {
   const _apEl = document.getElementById('calcAporte');
   if (_apEl && +_apEl.value === 25000 && DATA.premissas?.aporte_mensal) _apEl.value = DATA.premissas.aporte_mensal;
   const _fxEl = document.getElementById('calcCambio');
-  if (_fxEl && +_fxEl.value === 5.1687 && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
+  if (_fxEl && (+_fxEl.value === 0 || +_fxEl.value === 5.1687) && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
   const ap = +_apEl.value;
   const fx = +_fxEl.value;
   const apUsd = ap / fx;
@@ -2027,113 +2186,44 @@ window.calcAporte = function() {
 function buildBollinger(period) {
   const allL = DATA.bollinger.dates;
   const allV = DATA.bollinger.values;
-  const WSIZE = 5; // MA5 window
 
-  // Find start index of display window
-  const { labels: dispLabels } = filterByPeriod(allL, allV, period);
-  if (!dispLabels.length) { checkMinPoints('bollingerChart', 0, WSIZE); return; }
-  const dispStart = period === 'all' ? 0 : allL.indexOf(dispLabels[0]);
+  const { labels, values } = filterByPeriod(allL, allV, period);
+  if (!labels.length) { checkMinPoints('bollingerChart', 0, 2); return; }
 
-  // Pre-warm: include up to WSIZE-1 extra points before display window
-  const warmStart = Math.max(0, dispStart - (WSIZE - 1));
-  const workL = allL.slice(warmStart);
-  const workV = allV.slice(warmStart);
-
-  // Compute MA5 over warm-up + display
-  const MA5all = [], upperAll = [], lowerAll = [], retAll = [];
-  for (let i = 0; i < workV.length; i++) {
-    if (i < WSIZE - 1) { MA5all.push(null); upperAll.push(null); lowerAll.push(null); retAll.push(null); continue; }
-    const win = workV.slice(i - (WSIZE - 1), i + 1);
-    const ma = win.reduce((s, v) => s + v, 0) / WSIZE;
-    const variance = win.reduce((s, v) => s + (v - ma) ** 2, 0) / WSIZE;
-    const sigma = Math.sqrt(variance);
-    MA5all.push(+ma.toFixed(3)); upperAll.push(+(ma + 2*sigma).toFixed(3));
-    lowerAll.push(+(ma - 2*sigma).toFixed(3)); retAll.push(+workV[i].toFixed(3));
-  }
-
-  // Slice to display window only (drop warm-up points)
-  const offset = dispStart - warmStart;
-  const labels = workL.slice(offset);
-  const MA5 = MA5all.slice(offset);
-  const upper = upperAll.slice(offset);
-  const lower = lowerAll.slice(offset);
-  const retPlot = retAll.slice(offset);
-
-  // Períodos curtos (3m/6m): σ instável — suprimir bandas, mostrar só retorno
-  const SHORT = period === '3m' || period === '6m';
-
-  // Breakout detection: retorno fora das bandas
-  const retRadius = retPlot.map((v, i) => {
-    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 2;
-    if (v > upper[i] || v < lower[i]) return 6;
-    return 2;
-  });
-  const retPointBg = retPlot.map((v, i) => {
-    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 'rgba(255,255,255,.4)';
-    if (v > upper[i]) return '#22c55e';   // acima da banda superior → verde
-    if (v < lower[i]) return '#ef4444';   // abaixo da banda inferior → vermelho
-    return 'rgba(255,255,255,.4)';
-  });
-  const retPointBorder = retPlot.map((v, i) => {
-    if (SHORT || upper[i] === null || lower[i] === null || v === null) return 'transparent';
-    if (v > upper[i]) return '#16a34a';
-    if (v < lower[i]) return '#dc2626';
-    return 'transparent';
-  });
+  // Colorir pontos: positivo verde, negativo vermelho
+  const pointBg = values.map(v => v >= 0 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.7)');
 
   if (charts.bollinger) charts.bollinger.destroy();
   if (checkMinPoints('bollingerChart', labels.length, 1)) return;
 
-  const datasets = [];
-  if (!SHORT) {
-    datasets.push(
-      { label: 'Upper (MA5+2σ)', data: upper, borderColor: 'rgba(34,197,94,.55)', borderWidth: 1, pointRadius: 0, fill: false, tension: 0.3 },
-      { label: 'MA5', data: MA5, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.3 },
-      { label: 'Lower (MA5-2σ)', data: lower, borderColor: 'rgba(239,68,68,.55)', borderWidth: 1, pointRadius: 0, fill: '-2', backgroundColor: 'rgba(59,130,246,.07)', tension: 0.3 }
-    );
-  }
-  datasets.push(
-    { label: 'Retorno %', data: retPlot, borderColor: 'rgba(255,255,255,.45)', borderWidth: 1,
-      pointRadius: retRadius, pointBackgroundColor: retPointBg, pointBorderColor: retPointBorder, pointBorderWidth: 1,
-      fill: false, tension: 0.1 }
-  );
-
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
-    type: 'line',
-    data: { labels, datasets },
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Retorno %',
+        data: values,
+        backgroundColor: pointBg,
+        borderRadius: 2,
+      }]
+    },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { labels: { color: '#94a3b8', font:{size:10} } },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => {
-              if (ctx.parsed.y === null) return '';
-              const v = ` ${ctx.dataset.label}: ${ctx.parsed.y}%`;
-              if (ctx.dataset.label === 'Retorno %') {
-                const i = ctx.dataIndex;
-                if (!SHORT && upper[i] !== null && retPlot[i] > upper[i]) return v + ' ↑ acima da banda';
-                if (!SHORT && lower[i] !== null && retPlot[i] < lower[i]) return v + ' ↓ abaixo da banda';
-              }
-              return v;
-            },
+            label: ctx => ` ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%`,
           }
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 12, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
         y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     }
   });
-
-  // Nota sobre período curto
-  const r5note = document.getElementById('bollingerNote');
-  if (r5note) {
-    r5note.textContent = SHORT ? '⚠️ Bandas suprimidas em 3m/6m — σ instável com poucos pontos (recomendação Quant)' : '';
-    r5note.style.display = SHORT ? 'block' : 'none';
-  }
 }
 window.setBollingerPeriod = function(p) {
   setActivePeriodBtn('bollingerPeriodBtns', p);
@@ -2159,14 +2249,14 @@ function buildTLH() {
     const ganhoUsd = t.qty * (t.price - t.pm);   // ganho em USD
     const isTLH = gain <= -(tlhGatilho * 100);
     const color = isTLH ? 'var(--red)' : gain < 0 ? 'var(--yellow)' : 'var(--green)';
-    // IR: 15% sobre ganho em USD convertido para BRL
-    // Para perdas: mostrar benefício potencial (economia de IR se houvesse ganho a compensar)
+    // IR: alíquota de DATA.pisos sobre ganho em USD convertido para BRL
+    const _irAliq = DATA.pisos?.ir_aliquota ?? 0.15;
     let irCell;
     if (ganhoUsd > 0) {
-      const irBrl = ganhoUsd * CAMBIO * 0.15;
+      const irBrl = ganhoUsd * CAMBIO * _irAliq;
       irCell = `<span class="pv" style="color:var(--red)">R$${(irBrl/1000).toFixed(1)}k</span>`;
     } else if (ganhoUsd < 0) {
-      const beneficioBrl = Math.abs(ganhoUsd) * CAMBIO * 0.15;
+      const beneficioBrl = Math.abs(ganhoUsd) * CAMBIO * _irAliq;
       irCell = `<span style="color:var(--green);font-size:.7rem">💸 −R$${(beneficioBrl/1000).toFixed(1)}k ${isTLH ? '⚠️' : ''}</span>`;
     } else {
       irCell = `<span style="color:var(--muted)">—</span>`;
@@ -2683,7 +2773,7 @@ function buildIncomeProjection() {
           order: 2,
         },
         {
-          label: 'Despesas (R$250k × 4%/ano)',
+          label: 'Despesas — Spending Smile (R$ reais)',
           data: ip.despesas,
           type: 'line',
           borderColor: 'rgba(239,68,68,.85)',
@@ -2750,7 +2840,7 @@ function buildNetWorthProjection() {
   if (!ctx) return;
 
   const labels = nw.anos.map(a => {
-    const idade = a - 1987;
+    const idade = a - (DATA.premissas.ano_atual - DATA.premissas.idade_atual);
     return `${a} (${idade} anos)`;
   });
   const anoFireIdx = nw.anos.indexOf(nw.ano_fire);
@@ -2986,7 +3076,7 @@ function onStressShockChange(val) {
   const simBtn = document.getElementById('stressSimBtn');
 
   const p = DATA.premissas;
-  const patOriginal = p.patrimonio_atual || 3471000;
+  const patOriginal = p.patrimonio_atual;
   const patShock = patOriginal * (1 - pct / 100);
 
   if (labelEl) labelEl.textContent = `−${pct}%`;
@@ -3028,14 +3118,14 @@ function runStressSimulation() {
   // Yield para o browser renderizar antes do MC (que bloqueia)
   setTimeout(() => {
     const p = DATA.premissas;
-    const patOriginal = p.patrimonio_atual || 3471000;
+    const patOriginal = p.patrimonio_atual;
     const patShock = patOriginal * (1 - pct / 100);
     const spendingAnual = p.custo_vida_base || 250000;
     const idadeAtual = p.idade_atual || 39;
     const idadeFireAlvo = p.idade_fire_alvo || 53;
     const anosAcumulo = Math.max(0, idadeFireAlvo - idadeAtual);
     const anosAposentadoria = 40; // idade FIRE até 93
-    const retReal = p.retorno_equity_base || 0.0509;
+    const retReal = p.retorno_equity_base || 0.0485;
     const vol = p.volatilidade_equity || 0.168;
     const aporteAnual = (p.aporte_mensal || 25000) * 12;
     const nTrials = 2000;
@@ -3123,8 +3213,8 @@ function buildSankey() {
           colorTo:   (c) => NODE_COLORS[c.dataset.data[c.dataIndex].to]   || '#64748b',
           colorMode: 'gradient',
           size: 'min',
-          // Espaçamento entre nós — aumentado para legibilidade em 200px de altura
-          nodePadding: 12,
+          // Espaçamento entre nós — aumentado para respiração visual
+          nodePadding: 24,
           borderWidth: 0,
           // Labels em branco para legibilidade sobre fundos escuros
           color: '#e2e8f0',
@@ -3181,10 +3271,7 @@ function buildWellnessExtras() {
   const we = DATA.wellness_extras;
   if (!we) return;
 
-  const sep = document.createElement('div');
-  sep.style.cssText = 'font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 2px;border-top:1px solid rgba(71,85,105,.2);margin-top:4px';
-  sep.textContent = '+ Métricas Adicionais';
-  grid.appendChild(sep);
+  // Métricas extras integradas no grid principal (sem separador — padrão Boldin)
 
   const metricasCfg = [
     {
@@ -3232,13 +3319,15 @@ function buildWellnessExtras() {
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 function renderKPIs() {
-  // Hero strip
-  document.getElementById('heroPatrimonio').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
-  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k equity`;
+  // Hero strip — USD primário (câmbio flutua sem gerar informação de retorno)
+  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k`;
+  document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M em BRL`;
   const heroPf = document.getElementById('heroPfire');
-  heroPf.textContent = `${DATA.pfire53.base}%`;
+  const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
+  const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
+  heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
   heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
-  document.getElementById('heroPfireSub').textContent = `@50: ${DATA.pfire50.base}% · MC 10k`;
+  document.getElementById('heroPfireSub').textContent = `base ${DATA.pfire53.base}% · @50: ${DATA.pfire50.base}% · MC 10k`;
   document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
   // Anos sub: Base/Aspir — usar vars module-level
   const _anoFireAlvo = _anoFireAlvoGlobal;
@@ -3275,8 +3364,8 @@ function renderKPIs() {
     if (!grid) return;
     const ss = DATA.spendingSensibilidade || [];
     const base53 = DATA.pfire53.base, base50 = DATA.pfire50.base;
-    const casado53 = ss[1]?.base ?? (base53 - 5.4);
-    const filho53  = ss[2]?.base ?? (base53 - 8.3);
+    const casado53 = ss[1]?.base ?? null;
+    const filho53  = ss[2]?.base ?? null;
     const deltaCasado = casado53 - base53;
     const deltaFilho  = filho53  - base53;
     const casado50 = Math.max(0, Math.round((base50 + deltaCasado) * 10) / 10);
@@ -3436,7 +3525,19 @@ function renderProximasAcoes() {
       html += `<div class="prio-warn">📋 <strong>${ev.evento} iminente (${ev.data_est})</strong> — ${ev.acoes.slice(0,2).join(' · ')}</div>`;
     }
   });
-  el.innerHTML = html || '<div style="color:var(--muted);font-size:.8rem">Sem ações prioritárias</div>';
+  if (!html) {
+    // Tudo verde — mensagem positiva e visual verde
+    const box = document.getElementById('proximasAcoes');
+    if (box) {
+      box.style.background = 'rgba(34,197,94,.08)';
+      box.style.borderColor = 'rgba(34,197,94,.3)';
+      const h2 = box.querySelector('h2');
+      if (h2) { h2.style.color = 'var(--green)'; h2.textContent = '✅ Próximas Ações'; }
+    }
+    el.innerHTML = '<div style="color:var(--green);font-size:.85rem;text-align:center;padding:8px 0">Nenhuma ação necessária — carteira alinhada com o plano. Próxima revisão no check-in mensal.</div>';
+  } else {
+    el.innerHTML = html;
+  }
 }
 
 // ── RF Cards (gerado dinamicamente) ───────────────────────────
@@ -3473,19 +3574,61 @@ function buildRfCards() {
   let html = cards.map(c => {
     const valStr = c.val != null ? `~R$ ${(c.val/1000).toFixed(0)}k` : '—';
     const flagStyle = c.taxaFlag ? 'color:var(--green)' : '';
+    let extra = '';
+    // Enrich Renda+ 2065 with duration + MtM + gatilho semáforo
+    if (c.key === 'renda2065') {
+      const dur = rf.renda2065?.duration;
+      const mtm = rf.renda2065?.mtm_impact_1pp;
+      const dg = rf.renda2065?.distancia_gatilho;
+      if (dur || mtm != null || dg) {
+        extra = '<div class="duration-block">';
+        if (dur) {
+          extra += `<div class="dur-row"><span class="dur-label">Duration Macaulay</span><span class="dur-val">${dur.macaulay_anos != null ? dur.macaulay_anos.toFixed(1) + ' anos' : '--'}</span></div>`;
+          extra += `<div class="dur-row"><span class="dur-label">Duration Modificada</span><span class="dur-val">${dur.modificada_anos != null ? dur.modificada_anos.toFixed(1) + ' anos' : '--'}</span></div>`;
+        }
+        if (mtm != null) {
+          extra += `<div class="dur-row"><span class="dur-label">MtM se taxa +1pp</span><span class="dur-val" style="color:var(--red)">${mtm.toFixed(1)}%</span></div>`;
+        }
+        if (dg) {
+          const dgColor = dg.status === 'verde' ? 'var(--green)' : dg.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+          extra += `<div class="dur-row"><span class="dur-label">Gap vs piso venda</span><span class="dur-val" style="color:${dgColor}">${dg.gap_pp != null ? dg.gap_pp.toFixed(2) + 'pp' : '--'} (${dg.status || '--'})</span></div>`;
+        }
+        extra += '</div>';
+      }
+    }
     return `<div class="rf-card">
       <div class="val pv" style="${flagStyle}">${valStr}</div>
       <div class="lbl">${c.label}</div>
       <div class="sub">${c.sub1}</div>
       <div class="sub">${c.sub2}</div>
+      ${extra}
     </div>`;
   }).join('');
-  // HODL11
+  // HODL11 with band visualization
+  const _banda = DATA.hodl11?.banda;
+  let hodlBandHtml = '';
+  if (_banda && _banda.min_pct != null) {
+    // Calculate marker position: scale 0% to max_pct+1 to full bar width
+    const barMax = Math.max(_banda.max_pct + 1, (_banda.atual_pct || 0) + 0.5);
+    const markerPct = (_banda.atual_pct / barMax * 100).toFixed(1);
+    const minPct = (_banda.min_pct / barMax * 100).toFixed(1);
+    const alvoPct = (_banda.alvo_pct / barMax * 100).toFixed(1);
+    const maxPct = (_banda.max_pct / barMax * 100).toFixed(1);
+    // Colored zones: [0, min] = red, [min, max] = green, [max, barMax] = red
+    hodlBandHtml = `<div style="position:relative;height:14px;border-radius:4px;margin:8px 0;overflow:visible;background:linear-gradient(90deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.2) ${minPct}%,rgba(34,197,94,.2) ${minPct}%,rgba(34,197,94,.2) ${maxPct}%,rgba(239,68,68,.2) ${maxPct}%)">
+      <div class="hodl-band-marker" style="left:${markerPct}%"></div>
+      <div class="hodl-band-label" style="left:${minPct}%">${_banda.min_pct}%</div>
+      <div class="hodl-band-label" style="left:${alvoPct}%">alvo ${_banda.alvo_pct}%</div>
+      <div class="hodl-band-label" style="left:${maxPct}%">${_banda.max_pct}%</div>
+    </div>
+    <div style="font-size:.6rem;color:var(--muted);text-align:center">Atual: ${_banda.atual_pct != null ? _banda.atual_pct.toFixed(1) + '%' : '--'} · Status: <span style="color:${_banda.status === 'verde' ? 'var(--green)' : _banda.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)'}">${_banda.status || '--'}</span></div>`;
+  }
   html += `<div class="rf-card">
     <div class="val pv" id="hodl11Val">—</div>
     <div class="lbl">HODL11</div>
     <div class="sub" id="hodl11Sub">— cotas · B3</div>
     <div class="sub">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Piso 1.5% · Teto 5%</div>
+    ${hodlBandHtml}
   </div>`;
   // Crypto legado
   const _legadoVal = DATA.cryptoLegado ?? 3000;
@@ -3794,12 +3937,479 @@ window.switchTab = function(name) {
 };
 
 // ═══════════════════════════════════════════════════════════════
+// P1/P2: SEMÁFORO PANEL
+// ═══════════════════════════════════════════════════════════════
+function buildSemaforoPanel() {
+  const el = document.getElementById('semaforoBody');
+  if (!el) return;
+
+  function dot(status) {
+    const cls = status === 'verde' ? 'semaforo-verde' : status === 'amarelo' ? 'semaforo-amarelo' : 'semaforo-vermelho';
+    return '<span class="semaforo-dot ' + cls + '"></span>';
+  }
+
+  const rows = [];
+
+  // 1. IPCA+ DCA status
+  const dcaIpca = DATA.dca_status?.ipca_longo;
+  if (dcaIpca) {
+    const taxa = dcaIpca.taxa_atual;
+    const piso = dcaIpca.piso;
+    const status = (taxa != null && piso != null && taxa >= piso) ? 'verde' : 'amarelo';
+    rows.push({
+      gatilho: 'IPCA+ taxa vs piso',
+      status: status,
+      valor: taxa != null ? taxa.toFixed(2) + '% (piso ' + piso.toFixed(1) + '%)' : '--',
+      acao: dcaIpca.ativo ? 'DCA ativo' : 'DCA pausado'
+    });
+  }
+
+  // 2. Renda+ distância gatilho
+  const dg = DATA.rf?.renda2065?.distancia_gatilho;
+  if (dg) {
+    rows.push({
+      gatilho: 'Renda+ taxa vs piso venda',
+      status: dg.status || 'verde',
+      valor: dg.taxa_atual != null ? dg.taxa_atual.toFixed(2) + '% (piso ' + dg.piso_venda.toFixed(1) + '%, gap ' + dg.gap_pp.toFixed(2) + 'pp)' : '--',
+      acao: dg.status === 'verde' ? 'Monitorar' : dg.status === 'amarelo' ? 'Atenção — próximo do piso' : 'Avaliar venda'
+    });
+  }
+
+  // 3. Drift SWRD vs alvo
+  const driftSwrd = DATA.drift?.SWRD;
+  if (driftSwrd) {
+    const gap = Math.abs(driftSwrd.atual - driftSwrd.alvo);
+    const status = gap <= 3 ? 'verde' : gap <= 5 ? 'amarelo' : 'vermelho';
+    rows.push({
+      gatilho: 'Drift SWRD vs alvo',
+      status: status,
+      valor: driftSwrd.atual.toFixed(1) + '% (alvo ' + driftSwrd.alvo.toFixed(1) + '%, gap ' + gap.toFixed(1) + 'pp)',
+      acao: status === 'verde' ? 'OK' : 'Priorizar aporte SWRD'
+    });
+  }
+
+  // 4. HODL11 banda
+  const banda = DATA.hodl11?.banda;
+  if (banda) {
+    rows.push({
+      gatilho: 'Crypto vs banda',
+      status: banda.status || 'verde',
+      valor: banda.atual_pct != null ? banda.atual_pct.toFixed(1) + '% (alvo ' + banda.alvo_pct.toFixed(0) + '%, banda ' + banda.min_pct.toFixed(1) + '-' + banda.max_pct.toFixed(1) + '%)' : '--',
+      acao: banda.status === 'verde' ? 'Dentro da banda' : banda.status === 'amarelo' ? 'Perto do limite' : 'Fora da banda'
+    });
+  }
+
+  // 5. Max drift across all buckets
+  const maxDrift = Math.max(...Object.values(DATA.drift || {}).map(d => Math.abs(d.atual - d.alvo)));
+  const maxDriftBucket = Object.entries(DATA.drift || {}).sort((a,b) => Math.abs(b[1].atual - b[1].alvo) - Math.abs(a[1].atual - a[1].alvo))[0];
+  if (maxDriftBucket) {
+    const gap = Math.abs(maxDriftBucket[1].atual - maxDriftBucket[1].alvo);
+    const status = gap <= 3 ? 'verde' : gap <= 5 ? 'amarelo' : 'vermelho';
+    rows.push({
+      gatilho: 'Drift máximo (' + maxDriftBucket[0] + ')',
+      status: status,
+      valor: gap.toFixed(1) + 'pp',
+      acao: status === 'verde' ? 'OK' : 'Rebalancear via aporte'
+    });
+  }
+
+  el.innerHTML = '<thead><tr><th>Gatilho</th><th>Status</th><th>Valor</th><th>Ação</th></tr></thead><tbody>' +
+    rows.map(r => '<tr><td>' + r.gatilho + '</td><td>' + dot(r.status) + r.status + '</td><td style="font-variant-numeric:tabular-nums">' + r.valor + '</td><td>' + r.acao + '</td></tr>').join('') +
+    '</tbody>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: MACRO CARDS
+// ═══════════════════════════════════════════════════════════════
+function buildMacroCards() {
+  const el = document.getElementById('macroStrip');
+  if (!el) return;
+  const m = DATA.macro;
+  if (!m) { document.getElementById('macroSection').style.display = 'none'; return; }
+
+  const cards = [
+    { label: 'Selic Meta', value: m.selic_meta != null ? m.selic_meta.toFixed(2) + '%' : '--', color: '' },
+    { label: 'Fed Funds', value: m.fed_funds != null ? m.fed_funds.toFixed(2) + '%' : '--', color: '' },
+    { label: 'Spread Selic-FF', value: m.spread_selic_ff != null ? m.spread_selic_ff.toFixed(2) + 'pp' : '--', color: m.spread_selic_ff > 10 ? 'color:var(--yellow)' : '' },
+    { label: 'Depreciação BRL (premissa)', value: m.depreciacao_brl_premissa != null ? m.depreciacao_brl_premissa.toFixed(1) + '%/ano' : '--', color: '' },
+    { label: 'Exposição Cambial', value: m.exposicao_cambial_pct != null ? m.exposicao_cambial_pct.toFixed(1) + '%' : '--', color: m.exposicao_cambial_pct > 85 ? 'color:var(--yellow)' : '' },
+  ];
+
+  el.innerHTML = cards.map(c =>
+    '<div class="macro-kpi"><div class="mv" style="' + c.color + '">' + c.value + '</div><div class="ml">' + c.label + '</div></div>'
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: DCA STATUS
+// ═══════════════════════════════════════════════════════════════
+function buildDcaStatus() {
+  const el = document.getElementById('dcaGrid');
+  if (!el) return;
+  const dca = DATA.dca_status;
+  if (!dca) { document.getElementById('dcaSection').style.display = 'none'; return; }
+
+  function renderCard(key, d) {
+    if (!d) return '';
+    const paused = !d.ativo;
+    const statusDot = d.ativo ? '<span style="color:var(--green);font-weight:700">ATIVO</span>' : '<span style="color:var(--muted);font-weight:700">PAUSADO</span>';
+    return '<div class="dca-card' + (paused ? ' paused' : '') + '">' +
+      '<div class="dca-title">' + (d.instrumento || key) + ' ' + statusDot + '</div>' +
+      '<div class="dca-row"><span>Taxa atual</span><span class="dca-val">' + (d.taxa_atual != null ? d.taxa_atual.toFixed(2) + '%' : '--') + '</span></div>' +
+      (d.piso != null ? '<div class="dca-row"><span>Piso compra</span><span class="dca-val">' + d.piso.toFixed(1) + '%</span></div>' : '') +
+      (d.piso_compra != null ? '<div class="dca-row"><span>Piso compra</span><span class="dca-val">' + d.piso_compra.toFixed(1) + '%</span></div>' : '') +
+      (d.piso_venda != null ? '<div class="dca-row"><span>Piso venda</span><span class="dca-val">' + d.piso_venda.toFixed(1) + '%</span></div>' : '') +
+      (d.gap_pp != null ? '<div class="dca-row"><span>Gap vs piso</span><span class="dca-val" style="color:' + (d.gap_pp > 0.5 ? 'var(--green)' : 'var(--yellow)') + '">' + d.gap_pp.toFixed(2) + 'pp</span></div>' : '') +
+      '<div class="dca-row"><span>% carteira</span><span class="dca-val">' + (d.pct_carteira_atual != null ? d.pct_carteira_atual.toFixed(1) + '%' : '--') + ' / ' + (d.alvo_pct != null ? d.alvo_pct.toFixed(0) + '%' : '--') + '</span></div>' +
+      '<div style="margin-top:6px;font-size:.68rem;color:var(--muted);border-top:1px solid rgba(71,85,105,.2);padding-top:4px">' + (d.proxima_acao || '--') + '</div>' +
+    '</div>';
+  }
+
+  el.innerHTML = renderCard('ipca_longo', dca.ipca_longo) + renderCard('renda_plus', dca.renda_plus);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: BOND POOL READINESS
+// ═══════════════════════════════════════════════════════════════
+function buildBondPool() {
+  const el = document.getElementById('bondPoolBody');
+  if (!el) return;
+  const bp = DATA.fire?.bond_pool_readiness;
+  if (!bp) { document.getElementById('bondPoolSection').style.display = 'none'; return; }
+
+  const pct = bp.meta_anos > 0 ? Math.min(100, (bp.anos_gastos / bp.meta_anos) * 100) : 0;
+  const statusColor = bp.status === 'early' ? 'var(--yellow)' : bp.status === 'ok' ? 'var(--green)' : 'var(--red)';
+  const statusLabel = bp.status === 'early' ? 'Em construção' : bp.status === 'ok' ? 'Adequado' : bp.status || '--';
+
+  let composHtml = '';
+  if (bp.composicao) {
+    composHtml = '<div style="margin-top:8px;font-size:.72rem;color:var(--muted)">' +
+      Object.entries(bp.composicao).filter(([,v]) => v > 0).map(([k,v]) =>
+        '<span style="margin-right:10px">' + k + ': R$' + (v/1000).toFixed(0) + 'k</span>'
+      ).join('') +
+    '</div>';
+  }
+
+  el.innerHTML =
+    '<div class="bond-pool-card">' +
+      '<div class="bp-title">Bond Pool — ' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' / ' + bp.meta_anos + ' anos de gastos</div>' +
+      '<div class="bond-pool-bar"><div class="bond-pool-fill" style="width:' + pct.toFixed(0) + '%"></div></div>' +
+      '<div class="bp-row"><span>Valor atual</span><span class="bp-val pv">R$ ' + (bp.valor_atual_brl != null ? (bp.valor_atual_brl/1000).toFixed(0) + 'k' : '--') + '</span></div>' +
+      '<div class="bp-row"><span>Cobertura</span><span class="bp-val">' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' anos</span></div>' +
+      '<div class="bp-row"><span>Meta</span><span class="bp-val">' + bp.meta_anos + ' anos</span></div>' +
+      '<div class="bp-row"><span>Status</span><span class="bp-val" style="color:' + statusColor + '">' + statusLabel + '</span></div>' +
+      composHtml +
+    '</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: TIMESTAMPS / STALENESS BADGES (footer)
+// ═══════════════════════════════════════════════════════════════
+function buildTimestamps() {
+  const el = document.getElementById('timestampsBar');
+  if (!el) return;
+  const ts = DATA.timestamps;
+  if (!ts) { el.style.display = 'none'; return; }
+
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const hoje = DATA.date ? new Date(DATA.date) : new Date();
+  const staleMs = 7 * 24 * 60 * 60 * 1000; // 7 dias
+
+  const labels = {
+    posicoes_ibkr: 'IBKR',
+    precos_yfinance: 'Preços',
+    historico_csv: 'Histórico',
+    holdings_md: 'Holdings',
+    fire_mc: 'FIRE MC',
+    geral: 'Geral'
+  };
+
+  el.innerHTML = Object.entries(ts).map(function(entry) {
+    var key = entry[0], val = entry[1];
+    var label = labels[key] || key;
+    if (val == null) {
+      return '<span class="ts-badge stale"><span class="ts-dot ts-dot-stale"></span>' + label + ': --</span>';
+    }
+    var d = new Date(val);
+    var diff = hoje - d;
+    var isStale = diff > staleMs;
+    var formatted = String(d.getDate()).padStart(2, '0') + '/' + meses[d.getMonth()];
+    return '<span class="ts-badge' + (isStale ? ' stale' : '') + '"><span class="ts-dot ' + (isStale ? 'ts-dot-stale' : 'ts-dot-ok') + '"></span>' + label + ': ' + formatted + '</span>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: CONCENTRAÇÃO BRASIL (macro section)
+// ═══════════════════════════════════════════════════════════════
+function buildBrasilConcentracao() {
+  var el = document.getElementById('brasilConcentracao');
+  if (!el) return;
+  var cb = DATA.concentracao_brasil;
+  if (!cb) { el.style.display = 'none'; return; }
+
+  var pct = cb.brasil_pct != null ? cb.brasil_pct.toFixed(1) + '%' : '--';
+  var comp = cb.composicao || {};
+
+  function fmtBrl(v) {
+    if (v == null) return '--';
+    return 'R$ ' + (v / 1000).toFixed(0) + 'k';
+  }
+
+  var rows = '';
+  if (comp.hodl11_brl != null) rows += '<div class="brasil-row"><span>HODL11 (BTC wrapper)</span><span class="br-val pv">' + fmtBrl(comp.hodl11_brl) + '</span></div>';
+  if (comp.rf_total_brl != null) {
+    rows += '<div class="brasil-row"><span>Renda Fixa BR</span><span class="br-val pv">' + fmtBrl(comp.rf_total_brl) + '</span></div>';
+    if (comp.rf_detalhe) {
+      Object.entries(comp.rf_detalhe).forEach(function(entry) {
+        var k = entry[0], v = entry[1];
+        if (v != null && v > 0) rows += '<div class="brasil-row" style="padding-left:12px;color:var(--muted)"><span>' + k + '</span><span class="br-val pv">' + fmtBrl(v) + '</span></div>';
+      });
+    }
+  }
+  if (comp.crypto_legado_brl != null) rows += '<div class="brasil-row"><span>Crypto legado (spot)</span><span class="br-val pv">' + fmtBrl(comp.crypto_legado_brl) + '</span></div>';
+
+  var totalBr = cb.total_brasil_brl != null ? fmtBrl(cb.total_brasil_brl) : '--';
+  var nota = cb.nota || '';
+
+  el.innerHTML =
+    '<div class="brasil-card">' +
+      '<div class="brasil-header">' +
+        '<div><span class="brasil-lbl">Exposição Brasil</span></div>' +
+        '<div class="brasil-pct">' + pct + '</div>' +
+      '</div>' +
+      rows +
+      '<div class="brasil-row" style="margin-top:4px;border-top:1px solid rgba(71,85,105,.3);padding-top:4px;font-weight:700"><span>Total Brasil</span><span class="br-val pv">' + totalBr + '</span></div>' +
+      (nota ? '<div style="margin-top:6px;font-size:.6rem;color:var(--muted);line-height:1.4">' + nota + '</div>' : '') +
+    '</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: PREMISSAS VS REALIZADO (plan tab)
+// ═══════════════════════════════════════════════════════════════
+function buildPremissasVsRealizado() {
+  var el = document.getElementById('premissasVsRealizadoBody');
+  if (!el) return;
+  var pvr = DATA.premissas_vs_realizado;
+  if (!pvr) { document.getElementById('premissasVsRealizadoSection').style.display = 'none'; return; }
+
+  var html = '<thead><tr><th>Variável</th><th>Premissa</th><th>Realizado</th><th>Delta</th><th>Nota</th></tr></thead><tbody>';
+
+  // Retorno equity
+  var re = pvr.retorno_equity;
+  if (re) {
+    var premR = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
+    var realR = re.backtest_nominal_usd_pct != null ? re.backtest_nominal_usd_pct.toFixed(2) + '% nom USD' : '--';
+    var benchR = re.benchmark_vwra_nominal_usd_pct != null ? ' (VWRA ' + re.benchmark_vwra_nominal_usd_pct.toFixed(2) + '%)' : '';
+    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + realR + benchR + '</td><td class="num" style="color:var(--muted)">n/a*</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (re.nota || '--') + '</td></tr>';
+  }
+
+  // Aporte mensal
+  var am = pvr.aporte_mensal;
+  if (am) {
+    var premA = am.premissa_brl != null ? 'R$ ' + (am.premissa_brl / 1000).toFixed(0) + 'k/mês' : '--';
+    var realA = am.realizado_media_brl != null ? 'R$ ' + (am.realizado_media_brl / 1000).toFixed(1) + 'k/mês' : '--';
+    var deltaA = am.delta_pct != null ? (am.delta_pct > 0 ? '+' : '') + am.delta_pct.toFixed(1) + '%' : '--';
+    var deltaColor = am.delta_pct != null ? (am.delta_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
+    html += '<tr><td>Aporte Mensal</td><td class="num pv">' + premA + '</td><td class="num pv">' + realA + '</td><td class="num" style="color:' + deltaColor + '">' + deltaA + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (am.nota || '--') + '</td></tr>';
+
+    // Breakdown por ano (se disponível)
+    if (am.por_ano_brl) {
+      var anos = Object.entries(am.por_ano_brl).sort(function(a, b) { return Number(b[0]) - Number(a[0]); });
+      html += '<tr><td colspan="5" style="padding-top:8px;font-size:.68rem;color:var(--muted)">Aportes por ano (IBKR equity): ' +
+        anos.map(function(entry) { return entry[0] + ': R$' + (entry[1] / 1000).toFixed(0) + 'k'; }).join(' · ') +
+        '</td></tr>';
+    }
+  }
+
+  html += '</tbody>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: TAX IR DIFERIDO
+// ═══════════════════════════════════════════════════════════════
+function buildTaxIR() {
+  const el = document.getElementById('taxIrBody');
+  if (!el) return;
+  const tax = DATA.tax;
+  if (!tax) { document.getElementById('taxIrSection').style.display = 'none'; return; }
+
+  const totalIR = tax.ir_diferido_total_brl;
+  const regime = tax.regime || '--';
+  const badges = tax.badges || {};
+  const etfs = tax.ir_por_etf || {};
+
+  // Main KPI
+  let html = '<div class="tax-ir-card">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">' +
+      '<div>' +
+        '<div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">IR Diferido Total (latente)</div>' +
+        '<div style="font-size:1.8rem;font-weight:800;color:var(--yellow)" class="pv">' + (totalIR != null ? 'R$ ' + (totalIR/1000).toFixed(0) + 'k' : '--') + '</div>' +
+      '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);max-width:300px">' + regime + '</div>' +
+    '</div>' +
+  '</div>';
+
+  // Per-ETF grid
+  const etfEntries = Object.entries(etfs).filter(([,v]) => v.ir_estimado > 0).sort((a,b) => b[1].ir_estimado - a[1].ir_estimado);
+  if (etfEntries.length > 0) {
+    html += '<div class="tax-ir-etf-grid">';
+    etfEntries.forEach(([ticker, e]) => {
+      const badge = badges[ticker] ? '<span class="badge-acc">' + badges[ticker] + '</span>' : '';
+      html += '<div class="tax-ir-etf">' +
+        '<div class="etf-name">' + ticker + ' ' + badge + '</div>' +
+        '<div class="etf-row"><span>Ganho BRL</span><span class="pv" style="color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + '">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</span></div>' +
+        '<div class="etf-row"><span>IR estimado</span><span class="pv" style="color:var(--yellow)">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</span></div>' +
+        '<div class="etf-row"><span>PTAX compra</span><span>' + (e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '--') + '</span></div>' +
+      '</div>';
+    });
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: FACTOR ROLLING 12M AVGS vs SWRD
+// ═══════════════════════════════════════════════════════════════
+function buildFactorRolling() {
+  const sec = document.getElementById('factorRollingSection');
+  const body = document.getElementById('factorRollingBody');
+  if (!sec || !body) return;
+  const fr = DATA.factor_rolling;
+  if (!fr || !fr.dates || fr.dates.length === 0) {
+    body.innerHTML = '<div class="factor-no-data">Dados de rolling 12m ainda não disponíveis. Cache não populado — rodar <code>scripts/factor_regression.py</code> para gerar.</div>';
+    return;
+  }
+
+  const threshold = fr.threshold ?? -5;
+  body.innerHTML = '<div class="chart-box"><canvas id="factorRollingChart"></canvas></div>';
+
+  if (charts.factorRolling) charts.factorRolling.destroy();
+  charts.factorRolling = new Chart(document.getElementById('factorRollingChart'), {
+    type: 'line',
+    data: {
+      labels: fr.dates,
+      datasets: [
+        {
+          label: 'AVGS vs SWRD 12m (pp)',
+          data: fr.avgs_vs_swrd_12m,
+          borderColor: '#8b5cf6',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3
+        },
+        {
+          label: 'Threshold ' + threshold + 'pp',
+          data: fr.dates.map(() => threshold),
+          borderColor: '#ef4444',
+          borderWidth: 1.5,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          fill: false
+        },
+        {
+          label: '0 (par)',
+          data: fr.dates.map(() => 0),
+          borderColor: 'rgba(148,163,184,.3)',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8' } },
+        tooltip: {
+          callbacks: {
+            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
+            label: ctx => ' ' + ctx.dataset.label.split(' (')[0] + ': ' + (ctx.parsed.y > 0 ? '+' : '') + ctx.parsed.y.toFixed(2) + 'pp'
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
+        y: { ticks: { color: '#94a3b8', callback: v => (v > 0 ? '+' : '') + v + 'pp' }, grid: { color: 'rgba(71,85,105,.2)' } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: FACTOR LOADINGS TABLE
+// ═══════════════════════════════════════════════════════════════
+function buildFactorLoadings() {
+  const el = document.getElementById('factorLoadingsBody');
+  const sec = document.getElementById('factorLoadingsSection');
+  if (!el || !sec) return;
+  const fl = DATA.factor_loadings;
+  if (!fl || Object.keys(fl).length === 0) {
+    el.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Rodar <code>scripts/factor_regression.py</code> para gerar dados.</div>';
+    return;
+  }
+
+  const factors = ['alpha', 'mkt_rf', 'smb', 'hml', 'rmw', 'cma', 'mom', 'r2'];
+  const factorLabels = ['Alpha', 'Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'Mom', 'R²'];
+
+  let html = '<table class="factor-table"><thead><tr><th>ETF</th>';
+  factorLabels.forEach(l => { html += '<th>' + l + '</th>'; });
+  html += '</tr></thead><tbody>';
+
+  Object.entries(fl).sort().forEach(([ticker, vals]) => {
+    html += '<tr><td>' + ticker + '</td>';
+    factors.forEach(f => {
+      const v = vals[f];
+      if (v == null) { html += '<td>--</td>'; return; }
+      let color = '';
+      if (f === 'r2') {
+        color = v > 0.8 ? 'color:var(--green)' : v > 0.5 ? '' : 'color:var(--muted)';
+      } else if (f !== 'alpha') {
+        color = Math.abs(v) > 0.3 ? (v > 0 ? 'color:var(--green)' : 'color:var(--red)') : '';
+      }
+      const formatted = f === 'r2' ? (v * 100).toFixed(1) + '%' : v.toFixed(3);
+      html += '<td style="' + color + '">' + formatted + '</td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P3: CAGR PATRIMONIAL vs TWR
+// ═══════════════════════════════════════════════════════════════
+function buildCagrVsTwr() {
+  const cagrEl = document.getElementById('cagrPatrimonial');
+  const twrEl = document.getElementById('twrPure');
+  if (cagrEl && cagr) {
+    cagrEl.textContent = cagr.toFixed(1) + '%/ano';
+    cagrEl.style.color = '#eab308'; // yellow — includes contributions
+  }
+  if (twrEl && TWR_USD) {
+    twrEl.textContent = TWR_USD.toFixed(1) + '%/ano';
+    twrEl.style.color = '#22c55e';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // INIT — render tudo
 // ═══════════════════════════════════════════════════════════════
 (function init() {
   renderKPIs();
   renderWellness();
   renderProximasAcoes();
+  buildSemaforoPanel();
+  buildMacroCards();
+  buildBrasilConcentracao();
+  buildTimestamps();
+  buildDcaStatus();
+  buildTaxIR();
+  buildPremissasVsRealizado();
   renderIpcaProgress();
   buildRfCards();
   buildShadowTable();
@@ -3812,6 +4422,7 @@ window.switchTab = function(name) {
   buildDeltaBar();
   buildGlidePath();
   buildFireBuckets();
+  buildBondPool();
   buildMinilog();
   buildEventosVida();
   buildPfireFamilia();
@@ -3832,6 +4443,9 @@ window.switchTab = function(name) {
   renderHodl11();
   buildBollinger('1y');
   buildBacktest('since2009');
+  buildCagrVsTwr();
+  buildFactorRolling();
+  buildFactorLoadings();
   buildShadowChart('since2009');
   updateContrib();
   updateWhatIf();

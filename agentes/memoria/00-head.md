@@ -27,6 +27,7 @@
 | Revisao premissas de vida | Anual ou quando Diego sinalizar | Recalibrar plano com todos os agentes | Anual |
 | Protecao/seguros | Mudanca de estado civil | Avaliar seguro de vida, DIT, saude | Pendente avaliacao |
 | Cash flow | Mudanca de renda ou custo | Reavaliar capacidade de aporte e meta FIRE | Monitorando |
+| **Deploy dashboard** | **Qualquer alteração em template.html, build_dashboard.py ou data.json** | **Deploy automático via GitHub Actions ao push para main.** Commitar e pushar — CI cuida do resto. | **REGRA PERMANENTE (2026-04-09)** |
 
 ---
 

@@ -166,6 +166,11 @@ Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este ven
 | `scripts/fx_utils.py` | PTAX/macro BCB, decomposição retorno BRL/USD | `python3 scripts/fx_utils.py` |
 | `scripts/resampled_frontier.py` | Michaud Resampled Frontier — IC 90% dos pesos ótimos vs Target 50/30/20 | `python3 scripts/resampled_frontier.py` |
 
+## Deploy Dashboard (REGRA PERMANENTE)
+
+Deploy é automático via GitHub Actions ao push para `main`. Não há deploy manual.
+Toda alteração em `template.html`, `build_dashboard.py` ou `data.json` deve ser commitada e pushada — o CI cuida do resto.
+
 ## Estrutura do Projeto
 
 ```
@@ -181,7 +186,7 @@ wealth/
 ├── scripts/           # Python: analytics, FIRE, factor, spending, pipeline dashboard
 ├── dashboard/         # Dashboard — todos os artefatos commitados juntos
 │   ├── template.html  #   fonte: template com __DATA_PLACEHOLDER__
-│   ├── index.html     #   output: gerado por build_dashboard.py (serve no GitHub Pages via wealth-dash)
+│   ├── index.html     #   output: gerado por build_dashboard.py (deploy automático via GitHub Actions)
 │   └── data.json      #   output: snapshot JSON intermediário (auditável)
 ├── dados/             # Estado persistente (fonte de verdade dos dados)
 │   ├── dashboard_state.json  # estado acumulado pelos scripts
