@@ -256,14 +256,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
 </div>
 
-<!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
-<div class="section section-critical" id="semaforoPanel" style="margin-bottom:14px">
-<h2>Semáforos de Gatilhos</h2>
-<table class="semaforo-table" id="semaforoBody">
-<!-- gerado por buildSemaforoPanel() -->
-</table>
-</div>
-
 <!-- TAB NAV -->
 <div class="tab-nav" id="tabNav">
   <button class="tab-btn active" data-tab="status" onclick="switchTab('status')">📊 Status</button>
@@ -276,9 +268,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- S3: KPI CARDS -->
 <div class="kpi-grid" data-in-tab="status">
 <div class="kpi">
-  <div class="kpi-label">Patrimônio Total</div>
-  <div class="kpi-value pv" id="kpiPat">—</div>
-  <div class="kpi-sub"><span class="pv" id="kpiPatUsd">USD 607k equity</span></div>
+  <div class="kpi-label">IPCA+ 2040 — Taxa</div>
+  <div class="kpi-value" id="kpiIpcaTaxa">—</div>
+  <div class="kpi-sub" id="kpiIpcaSub">—</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">CAGR Target (USD)</div>
@@ -305,6 +297,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-value" id="kpiWellnessCompact">—</div>
   <div class="kpi-sub" id="kpiWellnessSub">—</div>
 </div>
+</div>
+
+<!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
+<div class="section section-critical" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
+<h2>Semáforos de Gatilhos</h2>
+<table class="semaforo-table" id="semaforoBody">
+<!-- gerado por buildSemaforoPanel() -->
+</table>
 </div>
 
 <!-- P2: MACRO CONTEXT -->
@@ -760,13 +760,20 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- S22: CALCULADORA APORTE -->
 <div class="section" data-in-tab="plan">
 <h2>Calculadora de Aporte — Cascade</h2>
-<div class="calc-form">
-  <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000" class="calc-aporte-input"></div>
-  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="0" step="0.01"></div>
-  <button onclick="calcAporte()">Calcular</button>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+  <div class="slider-row">
+    <label><span>Aporte Mensal</span><span id="calcAporteLabel" style="font-weight:700;color:var(--accent)">R$ 25k</span></label>
+    <input type="range" id="calcAporte" min="5" max="200" step="5" value="25" oninput="calcAporte()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$ 5k</span><span>R$ 200k</span></div>
+  </div>
+  <div class="slider-row">
+    <label><span>Câmbio USD/BRL</span><span id="calcCambioLabel" style="font-weight:700;color:var(--muted)">—</span></label>
+    <input type="range" id="calcCambio" min="4.00" max="7.00" step="0.05" value="5.16" oninput="calcAporte()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$4</span><span>R$7</span></div>
+  </div>
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
-<div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040 simultâneo com equity. Pisos definidos na estratégia.</div>
+<div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040. Overflow acima do gap preenche próximo nível. Pisos definidos na estratégia.</div>
 </div>
 
 <!-- S24: RETORNOS MENSAIS — Bollinger (aberto por default) -->
@@ -783,7 +790,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <button onclick="setBollingerPeriod('all')">All</button>
 </div>
 <div class="chart-box"><canvas id="bollingerChart"></canvas></div>
-<div class="src">Retornos mensais da carteira por período selecionado.</div>
+<div id="bollingerStats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px"></div>
+<div class="src">Retornos mensais da carteira por período selecionado. Linha branca = média do período.</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -798,15 +806,69 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
      TAB: PROJEÇÕES — F1, F2, F3, F4, F5, F6, F7, F8, F11
      ═══════════════════════════════════════════════════════ -->
 
-<!-- F3: Earliest Possible FIRE Date + F2: Spending Guardrails — lado a lado -->
-<div class="grid-2" data-in-tab="projecao">
+<!-- F3: SIMULADOR FIRE INTERATIVO (BOLDIN-style) -->
+<div class="section section-critical" data-in-tab="projecao">
+<h2>Simulador FIRE — Aposentadoria Antecipada</h2>
 
-<div class="section">
-  <h2>FIRE Date Mais Cedo Possível</h2>
-  <div id="earliestFireCard"><!-- gerado por buildEarliestFire() --></div>
-  <div class="src" style="margin-top:8px">Threshold: P(FIRE) ≥ 85% · Baseado em MC 10k simulações</div>
+<!-- Resultado principal -->
+<div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:18px;background:var(--card2);border-radius:10px;padding:16px">
+  <div style="text-align:center;min-width:140px">
+    <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Com esses parâmetros</div>
+    <div style="font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">você pode aposentar em</div>
+    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno">—</div>
+    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade">— anos</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire">P = —%</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff">—</div>
+  </div>
+  <div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted)">FIRE@50</div>
+        <div style="font-size:1.1rem;font-weight:700" id="simPfire50">—</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--accent)">
+        <div style="font-size:.6rem;color:var(--muted)">FIRE@53 (plano)</div>
+        <div style="font-size:1.1rem;font-weight:700" id="simPfire53">—</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted)">Patrimônio projetado</div>
+        <div style="font-size:1rem;font-weight:700" id="simPatFire">—</div>
+      </div>
+    </div>
+    <!-- Mini timeline bar -->
+    <div style="position:relative;height:8px;background:var(--card);border-radius:4px;overflow:visible;margin-bottom:18px">
+      <div id="simTimelineBar" style="position:absolute;left:0;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .4s"></div>
+      <div id="simTimelinePin" style="position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:var(--green);border:2px solid white;transform:translateX(-50%);transition:left .4s;z-index:2"></div>
+      <div id="simTimelineLabelL" style="position:absolute;bottom:-18px;left:0;font-size:.55rem;color:var(--muted)">Hoje</div>
+      <div id="simTimelineLabelR" style="position:absolute;bottom:-18px;right:0;font-size:.55rem;color:var(--muted)">70 anos</div>
+      <div id="simTimelineLabelFire" style="position:absolute;bottom:-18px;font-size:.6rem;color:var(--green);font-weight:700;transform:translateX(-50%);white-space:nowrap;transition:left .4s"></div>
+    </div>
+  </div>
 </div>
 
+<!-- Sliders -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:12px">
+  <div class="slider-row">
+    <label><span>Aporte Mensal</span><span id="simAporteVal" style="font-weight:700;color:var(--accent)">—</span></label>
+    <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="updateFireSim()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$5k</span><span>R$100k</span></div>
+  </div>
+  <div class="slider-row">
+    <label><span>Retorno Real Equity</span><span id="simRetornoVal" style="font-weight:700;color:var(--muted)">—</span></label>
+    <input type="range" id="simRetorno" min="0" max="10" step="0.25" value="4.85" oninput="updateFireSim()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>0%</span><span>10%</span></div>
+  </div>
+  <div class="slider-row">
+    <label><span>Custo de Vida /ano</span><span id="simCustoVal" style="font-weight:700;color:var(--muted)">—</span></label>
+    <input type="range" id="simCusto" min="150000" max="500000" step="10000" value="250000" oninput="updateFireSim()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$150k</span><span>R$500k</span></div>
+  </div>
+</div>
+<div class="src">Simulação determinística (sem MC). Critério: patrimônio ≥ gatilho R$13.4M E SWR ≤ 2.4%. FIRE@50 e FIRE@53 são outputs do MC 10k (fixos).</div>
+</div>
+
+<!-- F2: Spending Guardrails -->
+<div class="grid-2" data-in-tab="projecao">
 <div class="section collapsible open">
   <h2 onclick="this.parentElement.classList.toggle('open')">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
   <div class="collapse-body">
@@ -814,7 +876,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="src" id="spendingGuardrailsSrc">Fonte: spendingSensibilidade (fire_montecarlo.py) · interpolação/extrapolação linear</div>
   </div>
 </div>
-
+<div class="section">
+  <div id="earliestFireCard"><!-- gerado por buildEarliestFire() → static card (MC-based) --></div>
+  <div class="src" style="margin-top:8px">Threshold: P(FIRE) ≥ 85% · Baseado em MC 10k simulações</div>
+</div>
 </div>
 
 <!-- F4: Scenario Comparison Table -->
@@ -2121,27 +2186,51 @@ function buildPfireFamilia() {
   const _pfSrc = document.getElementById('pfireFamiliaSrc');
   const _baseScen = ss.find(s => s.label.includes('250') || s.label.includes('Solteiro'));
   if (_pfSrc && _baseScen?.custo) _pfSrc.textContent = `Base: MC 10k simulações · custo de vida base R$${(_baseScen.custo/1000).toFixed(0)}k/ano. Dados de spending_sens (fire_montecarlo.py).`;
+  // Zonas: Excelente ≥90%, Bom 80-90%, Regular 70-80%, Crítico <70%
+  function _zoneLabel(v) {
+    if (v == null) return { label: '—', color: 'var(--muted)', bg: 'rgba(71,85,105,.15)' };
+    if (v >= 90) return { label: 'Excelente', color: '#22c55e', bg: 'rgba(34,197,94,.15)' };
+    if (v >= 80) return { label: 'Bom',       color: '#3b82f6', bg: 'rgba(59,130,246,.15)' };
+    if (v >= 70) return { label: 'Regular',   color: '#eab308', bg: 'rgba(234,179,8,.15)' };
+    return             { label: 'Crítico',    color: '#ef4444', bg: 'rgba(239,68,68,.15)' };
+  }
+  // Zona bar: marcadores visuais nas faixas 70/80/90
+  const zoneBar = `<div style="position:relative;height:22px;border-radius:6px;overflow:hidden;background:var(--card2)">
+    <div style="position:absolute;left:0;width:70%;height:100%;background:rgba(239,68,68,.25)"></div>
+    <div style="position:absolute;left:70%;width:10%;height:100%;background:rgba(234,179,8,.3)"></div>
+    <div style="position:absolute;left:80%;width:10%;height:100%;background:rgba(59,130,246,.3)"></div>
+    <div style="position:absolute;left:90%;width:10%;height:100%;background:rgba(34,197,94,.3)"></div>
+    <div style="position:absolute;left:70%;top:0;width:1px;height:100%;background:rgba(234,179,8,.6)"></div>
+    <div style="position:absolute;left:80%;top:0;width:1px;height:100%;background:rgba(59,130,246,.6)"></div>
+    <div style="position:absolute;left:90%;top:0;width:1px;height:100%;background:rgba(34,197,94,.6)"></div>
+    <div style="position:absolute;bottom:-1px;left:70%;font-size:.45rem;color:rgba(234,179,8,.8);transform:translateX(-50%)">70</div>
+    <div style="position:absolute;bottom:-1px;left:80%;font-size:.45rem;color:rgba(59,130,246,.8);transform:translateX(-50%)">80</div>
+    <div style="position:absolute;bottom:-1px;left:90%;font-size:.45rem;color:rgba(34,197,94,.8);transform:translateX(-50%)">90%</div>
+    <POINT>
+  </div>`;
+
   el.innerHTML = ss.map(s => {
     const label = labelMap[s.label] || s.label;
     const icon = icons[label] || '📊';
     const pf = s.base ?? s.pfire;
     const delta = pf != null ? (pf - base) : null;
-    const color = pf >= 90 ? '#22c55e' : pf >= 80 ? '#eab308' : '#ef4444';
+    const zone = _zoneLabel(pf);
     const deltaStr = delta !== null && delta !== 0
-      ? `<span style="font-size:.7rem;color:${delta < 0 ? '#ef4444' : '#22c55e'}">${delta > 0 ? '+' : ''}${delta.toFixed(1)}pp vs base</span>`
+      ? `<span style="font-size:.65rem;color:${delta < 0 ? '#ef4444' : '#22c55e'}">${delta > 0 ? '+' : ''}${delta.toFixed(1)}pp</span>`
       : '';
-    const barW = Math.min(100, pf ?? 0);
-    return `<div style="margin-bottom:12px">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
-        <span style="font-size:1.1rem">${icon}</span>
+    const posX = Math.min(99, pf ?? 0);
+    const pointHtml = `<div style="position:absolute;left:${posX}%;top:50%;width:12px;height:12px;border-radius:50%;background:${zone.color};border:2px solid white;transform:translate(-50%,-50%);z-index:2"></div>`;
+    const bar = zoneBar.replace('<POINT>', pointHtml);
+    return `<div style="margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:1rem">${icon}</span>
         <span style="font-size:.85rem;font-weight:600">${label}</span>
-        <span style="font-size:1rem;font-weight:700;color:${color}">${pf != null ? pf + '%' : '—'}</span>
+        <span style="font-size:1rem;font-weight:700;color:${zone.color}">${pf != null ? pf + '%' : '—'}</span>
+        <span style="font-size:.65rem;font-weight:600;background:${zone.bg};color:${zone.color};padding:1px 5px;border-radius:4px">${zone.label}</span>
         ${deltaStr}
-        <span style="font-size:.7rem;color:var(--muted)">R$${s.custo != null ? (s.custo/1000).toFixed(0)+'k' : '—'}/ano</span>
+        <span style="font-size:.65rem;color:var(--muted);margin-left:auto">R$${s.custo != null ? (s.custo/1000).toFixed(0)+'k' : '—'}/ano</span>
       </div>
-      <div style="background:var(--card2);border-radius:4px;height:8px">
-        <div style="width:${barW}%;height:100%;border-radius:4px;background:${color};transition:width .5s"></div>
-      </div>
+      ${bar}
     </div>`;
   }).join('');
 }
@@ -2171,65 +2260,89 @@ function buildMinilog() {
 
 // ── S22: Calculadora Cascade ──────────────────────────────────
 window.calcAporte = function() {
-  // Inicializar com valor de DATA se ainda no default
   const _apEl = document.getElementById('calcAporte');
-  if (_apEl && +_apEl.value === 25000 && DATA.premissas?.aporte_mensal) _apEl.value = DATA.premissas.aporte_mensal;
   const _fxEl = document.getElementById('calcCambio');
-  if (_fxEl && (+_fxEl.value === 0 || +_fxEl.value === 5.1687) && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
-  const ap = +_apEl.value;
-  const fx = +_fxEl.value;
+  // Slider em R$ mil; inicializar com DATA se primeiro uso
+  if (_apEl && +_apEl.value === 25 && DATA.premissas?.aporte_mensal)
+    _apEl.value = Math.round(DATA.premissas.aporte_mensal / 1000);
+  if (_fxEl && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(2);
+
+  const ap  = +_apEl.value * 1000;  // converter k → R$
+  const fx  = +_fxEl.value;
   const apUsd = ap / fx;
+  const _lblAp = document.getElementById('calcAporteLabel');
+  const _lblFx = document.getElementById('calcCambioLabel');
+  if (_lblAp) _lblAp.textContent = `R$ ${(ap/1000).toFixed(0)}k`;
+  if (_lblFx) _lblFx.textContent = `R$ ${fx.toFixed(2)}`;
   const div = document.getElementById('calcResult');
 
-  // Pisos de portfolio_analytics.py — PISO_TAXA_IPCA_LONGO / PISO_TAXA_RENDA_PLUS
-  const pisoIpca   = DATA.pisos.pisoTaxaIpcaLongo  ?? 6.0;  // corrigido: pisoTaxaIpcaLongo
-  const pisoRenda  = DATA.pisos.pisoTaxaRendaPlus   ?? 6.5;
+  const pisoIpca  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const pisoRenda = DATA.pisos?.pisoTaxaRendaPlus  ?? 6.5;
+  const taxaIpca  = DATA.rf?.ipca2040?.taxa;
+  const taxaRenda = DATA.rf?.renda2065?.taxa;
+  const ipcaGapPp = (DATA.drift?.IPCA?.alvo ?? 15) - (DATA.drift?.IPCA?.atual ?? 0);
 
-  // Taxas atuais de DATA.rf (não hardcoded)
-  const taxaIpca  = DATA.rf.ipca2040.taxa;   // ex: 7.20
-  const taxaRenda = DATA.rf.renda2065.taxa;  // ex: 6.93
+  // R$ máximo que IPCA+ pode absorver para fechar o gap para o alvo
+  const pat = DATA.premissas?.patrimonio_atual ?? 0;
+  const apIpcaMax = ipcaGapPp > 0 ? Math.max(0, (ipcaGapPp / 100) * pat) : 0;
 
-  // Gap IPCA+ vs alvo
-  const ipcaGapPp = (DATA.drift.IPCA?.alvo ?? 15) - (DATA.drift.IPCA?.atual ?? 0);
-
-  // ── CASCADE — mesma lógica de otimizador_aporte() em portfolio_analytics.py ──
-  // #1: IPCA+ longo (taxa >= piso E gap > 0) → 100% para IPCA+
-  // #2: Renda+ 2065 (taxa >= piso E gap > 0) → 100% para Renda+
-  // #3: Equity (padrão) → mais subpeso entre SWRD/AVGS/AVEM
   const ipca_active  = taxaIpca  != null && taxaIpca  >= pisoIpca  && ipcaGapPp > 0;
   const renda_active = taxaRenda != null && taxaRenda >= pisoRenda;
 
-  // Bucket equity mais subpeso
   const equityBuckets = ['SWRD','AVGS','AVEM']
-    .map(k => ({ k, gap: (DATA.drift[k]?.alvo ?? 0) - (DATA.drift[k]?.atual ?? 0) }))
+    .map(k => ({ k, gap: (DATA.drift?.[k]?.alvo ?? 0) - (DATA.drift?.[k]?.atual ?? 0) }))
     .sort((a,b) => b.gap - a.gap);
   const topBucket = equityBuckets[0];
 
+  // Cascade com overflow: calcula quanto vai para cada nível
   let rows = '';
+  let restante = ap;
+  let nivelNum = 1;
+
+  function fmtK(v) { return v >= 1000 ? `R$${(v/1000).toFixed(1)}k` : `R$${v.toFixed(0)}`; }
+
   if (ipca_active) {
-    rows += `<div class="prio"><span class="prio-num">1.</span> <strong>IPCA+ longo</strong> — taxa ${taxaIpca?.toFixed(2)}% ≥ piso ${pisoIpca}% · janela ativa<br>
-      <span style="font-size:.75rem;color:var(--muted)">→ <strong>R$${ap.toLocaleString('pt-BR')}</strong> integralmente (TD 2040 80% + TD 2050 20%) · gap vs alvo: −${ipcaGapPp.toFixed(1)}pp</span></div>`;
-    rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ Renda+ (${taxaRenda?.toFixed(2)}% ${taxaRenda >= pisoRenda ? '≥' : '<'} ${pisoRenda}%) e Equity pausados enquanto IPCA+ ativo</div>`;
-  } else if (renda_active) {
+    const paraIpca = Math.min(restante, apIpcaMax);
+    const overflow = restante - paraIpca;
+    rows += `<div class="prio"><span class="prio-num">${nivelNum++}.</span>
+      <strong>IPCA+ longo</strong> — ${taxaIpca?.toFixed(2)}% ≥ piso ${pisoIpca}% · janela ativa<br>
+      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(paraIpca)}</strong> (TD 2040 80% + TD 2050 20%)
+      · gap restante: −${Math.max(0, ipcaGapPp - paraIpca/pat*100).toFixed(1)}pp</span></div>`;
+    restante = overflow;
+    if (overflow > 0) {
+      rows += `<div style="font-size:.7rem;color:var(--yellow);padding:2px 0 4px 12px">↳ Gap IPCA+ preenchido — excedente ${fmtK(overflow)} segue para próximo nível</div>`;
+    } else {
+      rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 12px">▸ Renda+ e Equity aguardam IPCA+ atingir alvo de ${DATA.drift?.IPCA?.alvo}%</div>`;
+    }
+  } else if (taxaIpca != null) {
     rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ IPCA+ (${taxaIpca?.toFixed(2)}% < piso ${pisoIpca}%) — pausado</div>`;
-    rows += `<div class="prio"><span class="prio-num">1.</span> <strong>Renda+ 2065</strong> — taxa ${taxaRenda?.toFixed(2)}% ≥ piso ${pisoRenda}% · janela ativa<br>
-      <span style="font-size:.75rem;color:var(--muted)">→ <strong>R$${ap.toLocaleString('pt-BR')}</strong> integralmente em Renda+ 2065</span></div>`;
-    rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ Equity pausado enquanto Renda+ ativo</div>`;
-  } else {
-    rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ IPCA+ (${taxaIpca?.toFixed(2)}% < piso ${pisoIpca}%) e Renda+ (${taxaRenda?.toFixed(2)}% < piso ${pisoRenda}%) — ambos pausados</div>`;
-    rows += `<div class="prio"><span class="prio-num">1.</span> <strong>Equity — ${topBucket.k}.L</strong> — mais subpeso (−${(-topBucket.gap).toFixed(1)}pp)<br>
-      <span style="font-size:.75rem;color:var(--muted)">→ <strong>R$${ap.toLocaleString('pt-BR')}</strong> ($${apUsd.toFixed(0)}) integralmente em ${topBucket.k}.L</span></div>`;
+  }
+
+  if (restante > 0 && renda_active) {
+    rows += `<div class="prio"><span class="prio-num">${nivelNum++}.</span>
+      <strong>Renda+ 2065</strong> — ${taxaRenda?.toFixed(2)}% ≥ piso ${pisoRenda}% · janela ativa<br>
+      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> integralmente em Renda+ 2065</span></div>`;
+    restante = 0;
+  } else if (restante > 0 && taxaRenda != null && !renda_active) {
+    rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ Renda+ (${taxaRenda?.toFixed(2)}% < piso ${pisoRenda}%) — pausado</div>`;
+  }
+
+  if (restante > 0 && topBucket) {
+    rows += `<div class="prio"><span class="prio-num">${nivelNum++}.</span>
+      <strong>Equity — ${topBucket.k}.L</strong> — mais subpeso (−${Math.abs(topBucket.gap).toFixed(1)}pp)<br>
+      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> ($${(restante/fx).toFixed(0)}) em ${topBucket.k}.L</span></div>`;
     equityBuckets.slice(1).forEach(b => {
-      rows += `<div style="font-size:.7rem;color:var(--muted);padding:1px 0 1px 8px">▸ ${b.k}: drift ${b.gap > 0 ? '−' : '+'}${Math.abs(b.gap).toFixed(1)}pp</div>`;
+      rows += `<div style="font-size:.7rem;color:var(--muted);padding:1px 0 1px 12px">▸ ${b.k}: drift ${b.gap > 0 ? '−' : '+'}${Math.abs(b.gap).toFixed(1)}pp</div>`;
     });
   }
 
   div.innerHTML = `
     <div style="background:var(--card2);border-radius:8px;padding:12px">
-      <div style="font-weight:600;margin-bottom:8px">Cascade — aporte R$${ap.toLocaleString('pt-BR')} (≈ $${apUsd.toFixed(0)})</div>
+      <div style="font-weight:600;margin-bottom:8px">Cascade — aporte ${fmtK(ap)} (≈ $${apUsd.toFixed(0)})</div>
       ${rows}
       <div style="font-size:.65rem;color:var(--muted);margin-top:8px;border-top:1px solid rgba(71,85,105,.3);padding-top:6px">
-        Câmbio: R$${fx} · Piso IPCA+ ≥ ${pisoIpca.toFixed(1)}% · Piso Renda+ ≥ ${pisoRenda.toFixed(1)}% · Lógica: <em>portfolio_analytics.py otimizador_aporte()</em>
+        Câmbio: R$${fx} · Piso IPCA+ ≥ ${pisoIpca.toFixed(1)}% · Piso Renda+ ≥ ${pisoRenda.toFixed(1)}%
+        · Overflow: excedente acima do gap flui para próximo nível
       </div>
     </div>`;
 };
@@ -2248,16 +2361,37 @@ function buildBollinger(period) {
   if (charts.bollinger) charts.bollinger.destroy();
   if (checkMinPoints('bollingerChart', labels.length, 1)) return;
 
+  const avgRet = values.length ? values.reduce((a,b) => a+b, 0) / values.length : 0;
+  const stdDev = values.length > 1 ? Math.sqrt(values.reduce((s,v) => s + (v-avgRet)**2, 0) / values.length) : 0;
+  const posMonths = values.filter(v => v > 0).length;
+  const pctPos = values.length ? posMonths / values.length * 100 : 0;
+  const bestMonth = values.length ? Math.max(...values) : 0;
+  const worstMonth = values.length ? Math.min(...values) : 0;
+
   charts.bollinger = new Chart(document.getElementById('bollingerChart'), {
     type: 'bar',
     data: {
       labels,
-      datasets: [{
-        label: 'Retorno %',
-        data: values,
-        backgroundColor: pointBg,
-        borderRadius: 2,
-      }]
+      datasets: [
+        {
+          label: 'Retorno %',
+          data: values,
+          backgroundColor: pointBg,
+          borderRadius: 2,
+          order: 2,
+        },
+        {
+          label: 'Média',
+          data: labels.map(() => +avgRet.toFixed(4)),
+          type: 'line',
+          borderColor: 'rgba(255,255,255,.6)',
+          borderWidth: 1.5,
+          borderDash: [4,3],
+          pointRadius: 0,
+          fill: false,
+          order: 1,
+        }
+      ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
@@ -2266,7 +2400,9 @@ function buildBollinger(period) {
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => ` ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%`,
+            label: ctx => ctx.dataset.label === 'Média'
+              ? ` Média: ${avgRet >= 0 ? '+' : ''}${avgRet.toFixed(2)}%`
+              : ` ${ctx.parsed.y >= 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}%`,
           }
         }
       },
@@ -2276,6 +2412,35 @@ function buildBollinger(period) {
       }
     }
   });
+
+  // Stats abaixo do chart
+  const statsDiv = document.getElementById('bollingerStats');
+  if (statsDiv && values.length) {
+    const statStyle = 'background:var(--card2);border-radius:8px;padding:8px;text-align:center';
+    const muted = 'font-size:.6rem;color:var(--muted);margin-bottom:2px';
+    const big   = (v, c) => `<div style="font-size:1rem;font-weight:700;color:${c}">${v}</div>`;
+    statsDiv.innerHTML = `
+      <div style="${statStyle}">
+        <div style="${muted}">Retorno médio</div>
+        ${big((avgRet>=0?'+':'')+avgRet.toFixed(2)+'%', avgRet>=0?'var(--green)':'var(--red)')}
+      </div>
+      <div style="${statStyle}">
+        <div style="${muted}">Volatilidade (σ)</div>
+        ${big(stdDev.toFixed(2)+'%', '#94a3b8')}
+      </div>
+      <div style="${statStyle}">
+        <div style="${muted}">% meses positivos</div>
+        ${big(pctPos.toFixed(0)+'%', pctPos>=50?'var(--green)':'var(--yellow)')}
+      </div>
+      <div style="${statStyle}">
+        <div style="${muted}">Melhor mês</div>
+        ${big('+'+bestMonth.toFixed(2)+'%', 'var(--green)')}
+      </div>
+      <div style="${statStyle}">
+        <div style="${muted}">Pior mês</div>
+        ${big(worstMonth.toFixed(2)+'%', 'var(--red)')}
+      </div>`;
+  }
 }
 window.setBollingerPeriod = function(p) {
   setActivePeriodBtn('bollingerPeriodBtns', p);
@@ -2550,6 +2715,93 @@ function buildEarliestFire() {
       </div>
     </div>`;
 }
+
+// ═══════════════════════════════════════════════════════════════
+// F3b: SIMULADOR FIRE INTERATIVO (BOLDIN-style)
+// ═══════════════════════════════════════════════════════════════
+window.updateFireSim = function() {
+  const simA = document.getElementById('simAporte');
+  const simR = document.getElementById('simRetorno');
+  const simC = document.getElementById('simCusto');
+  if (!simA || !simR || !simC) return;
+
+  // Inicializar com valores de DATA na primeira chamada
+  if (+simA.value === 25000 && DATA.premissas?.aporte_mensal) simA.value = DATA.premissas.aporte_mensal;
+  if (+simR.value === 4.85  && DATA.premissas?.retorno_equity_base) simR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
+  if (+simC.value === 250000 && DATA.premissas?.custo_vida_base) simC.value = DATA.premissas.custo_vida_base;
+
+  const ap    = +simA.value;
+  const r     = +simR.value / 100;
+  const custo = +simC.value;
+
+  document.getElementById('simAporteVal').textContent = `R$${(ap/1000).toFixed(0)}k/mês`;
+  document.getElementById('simRetornoVal').textContent = (r*100).toFixed(2) + '%/ano real';
+  document.getElementById('simCustoVal').textContent   = `R$${(custo/1000).toFixed(0)}k/ano`;
+
+  const rm = r / 12;
+  const idadeAtual = DATA.premissas.idade_atual;
+  const patAtual   = DATA.premissas.patrimonio_atual;
+  const gatilho    = PAT_GATILHO;
+  const swrMeta    = DATA.premissas.swr_gatilho ?? 0.024;
+  const maxMonths  = (70 - idadeAtual) * 12;
+
+  // Iterar mensalmente até atingir gatilho E SWR
+  let pat = patAtual;
+  let m   = 0;
+  while (m < maxMonths) {
+    pat = pat * (1 + rm) + ap;
+    m++;
+    if (pat >= gatilho && custo / pat <= swrMeta) break;
+  }
+
+  const fireAge  = idadeAtual + m / 12;
+  const fireAno  = Math.round(new Date().getFullYear() + m / 12);
+  const yrInt    = Math.floor(fireAge - idadeAtual);
+  const moInt    = Math.round((fireAge - idadeAtual - yrInt) * 12);
+  const reached  = m < maxMonths;
+  const idadeFire53 = DATA.premissas.idade_fire_alvo;
+  const idadeFire50 = DATA.premissas.idade_fire_aspiracional;
+  const diffVs53 = idadeFire53 - fireAge;
+
+  // Cor semáforo
+  const cor = !reached ? '#ef4444' : diffVs53 > 1 ? '#22c55e' : diffVs53 > -0.5 ? '#3b82f6' : '#eab308';
+  const zone = !reached ? 'Crítico' : diffVs53 > 2 ? 'Excelente — antes do plano' : diffVs53 > 0 ? 'Bom — antes de FIRE@53' : diffVs53 > -2 ? 'Regular — próximo ao plano' : 'Crítico — depois do plano';
+
+  const _ano = document.getElementById('simFireAno');
+  const _idade = document.getElementById('simFireIdade');
+  const _pfire = document.getElementById('simFirePfire');
+  const _diff  = document.getElementById('simFireDiff');
+  if (_ano)   { _ano.textContent = reached ? fireAno : '>2061'; _ano.style.color = cor; }
+  if (_idade) { _idade.textContent = reached ? `${Math.floor(fireAge)} anos` : '> 70 anos'; _idade.style.color = cor; }
+  if (_pfire) { _pfire.textContent = reached ? `≈ ${(custo/pat*100 < swrMeta*100 ? '✅' : '⚠️')} SWR ${(custo/pat*100).toFixed(2)}%` : '⚠️ Gatilho não atingido'; _pfire.style.color = cor; }
+  if (_diff) {
+    const diffStr = Math.abs(diffVs53) < 0.25 ? 'no prazo exato'
+      : diffVs53 > 0 ? `${Math.floor(Math.abs(diffVs53))}a ${Math.round((Math.abs(diffVs53) % 1) * 12)}m mais cedo`
+      : `${Math.floor(Math.abs(diffVs53))}a ${Math.round((Math.abs(diffVs53) % 1) * 12)}m mais tarde`;
+    _diff.textContent = reached ? `${zone} · ${diffStr} vs FIRE@${idadeFire53}` : 'Aumentar aporte ou reduzir custo';
+    _diff.style.color = cor;
+  }
+
+  // Cards fixos MC
+  const _p50 = document.getElementById('simPfire50');
+  const _p53 = document.getElementById('simPfire53');
+  if (_p50) { _p50.textContent = `${DATA.pfire50.base}%`; _p50.style.color = DATA.pfire50.base >= 85 ? '#22c55e' : '#eab308'; }
+  if (_p53) { _p53.textContent = `${DATA.pfire53.base}%`; _p53.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : '#3b82f6'; }
+  const _pat = document.getElementById('simPatFire');
+  if (_pat) { _pat.textContent = `R$${(pat/1e6).toFixed(2)}M`; _pat.style.color = pat >= gatilho ? '#22c55e' : '#eab308'; }
+
+  // Timeline bar (idadeAtual..70 → hoje..projeção)
+  const totalYears = 70 - idadeAtual;
+  const pctFire = reached ? Math.min(99, (fireAge - idadeAtual) / totalYears * 100) : 100;
+  const pin = document.getElementById('simTimelinePin');
+  const bar = document.getElementById('simTimelineBar');
+  const lbl = document.getElementById('simTimelineLabelFire');
+  if (pin)  pin.style.left  = pctFire + '%';
+  if (bar)  bar.style.width = pctFire + '%';
+  if (lbl)  { lbl.textContent = reached ? `${fireAno} (${Math.floor(fireAge)}a)` : 'Não atingido'; lbl.style.left = pctFire + '%'; lbl.style.color = cor; }
+  const _lblL = document.getElementById('simTimelineLabelL');
+  if (_lblL) _lblL.textContent = `Hoje (${idadeAtual}a)`;
+};
 
 // ═══════════════════════════════════════════════════════════════
 // F2: SPENDING GUARDRAILS
@@ -3395,8 +3647,16 @@ function renderKPIs() {
   heroSrEl.style.color = srHero >= 0.5 ? '#22c55e' : srHero >= 0.4 ? '#eab308' : '#ef4444';
   document.getElementById('heroSavingsSub').textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_custoMensalHero/1000).toFixed(1)}k custo`;
 
-  document.getElementById('kpiPat').textContent = `R$ ${(totalBrl/1000000).toFixed(2)}M`;
-  document.getElementById('kpiPatUsd').textContent = `USD ${(totalEquityUsd/1000).toFixed(0)}k equity`;
+  // KPI: IPCA+ taxa (substituiu Patrimônio que já está no hero)
+  const _kpiIpca = DATA.rf?.ipca2040?.taxa;
+  const _kpiPisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+  const _kpiIpcaEl = document.getElementById('kpiIpcaTaxa');
+  const _kpiIpcaSubEl = document.getElementById('kpiIpcaSub');
+  if (_kpiIpcaEl && _kpiIpca != null) {
+    _kpiIpcaEl.textContent = _kpiIpca.toFixed(2) + '%';
+    _kpiIpcaEl.style.color = _kpiIpca >= _kpiPisoIpca ? '#22c55e' : '#eab308';
+  }
+  if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = _kpiIpca != null ? `piso ${_kpiPisoIpca.toFixed(1)}% · ${_kpiIpca >= _kpiPisoIpca ? '✅ janela ativa' : '⏸ pausado'}` : 'aguardando dados';
   document.getElementById('kpiTwrUsd').textContent = TWR_USD.toFixed(1) + '%';
   document.getElementById('kpiTwrSub').textContent = _btPeriodStr + ' · proxies UCITS · ≠ retorno real do portfolio';
   document.getElementById('kpiTwrBrl').textContent = TWR_BRL.toFixed(1) + '%';
@@ -4013,7 +4273,7 @@ function _initTabCharts(tab) {
                  updateWhatIf();
                },
                calcAporte],
-    projecao: [buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
+    projecao: [updateFireSim, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
                buildSpendingBreakdown, buildIncomeProjection,
                buildNetWorthProjection, buildStressTest, buildSankey],
   };
