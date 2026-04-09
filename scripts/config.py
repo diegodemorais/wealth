@@ -78,7 +78,7 @@ PATRIMONIO_GATILHO = 13_400_000   # R$ 2026 real — gatilho formal FIRE
 SWR_GATILHO = 0.024               # 2.4% — safe withdrawal rate meta
 CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
 APORTE_MENSAL = 25_000            # R$/mês
-RENDA_ESTIMADA = 45_000           # R$/ano — renda estimada para savings rate dashboard
+RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para savings rate dashboard
 IDADE_ATUAL = 39
 IDADE_FIRE_ALVO = 53              # FIRE 2040
 IDADE_FIRE_ASPIRACIONAL = 50      # FIRE 2037
