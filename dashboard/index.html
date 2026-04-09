@@ -334,9 +334,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
 <div class="section section-critical collapsible" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
-<h2 onclick="this.parentElement.classList.toggle('open')">Semáforos de Gatilhos</h2>
+<h2 onclick="toggleSemaforoPanel()">Semáforos de Gatilhos</h2>
 <div id="semaforoSummary" style="font-size:.75rem;color:var(--muted);margin:4px 0 2px">—</div>
-<div class="collapse-body">
+<div class="collapse-body" id="semaforoCollapseBody" style="display:none">
 <table class="semaforo-table" id="semaforoBody">
 <!-- gerado por buildSemaforoPanel() -->
 </table>
@@ -1204,8 +1204,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T17:19:50-03:00'); // BRT (UTC-3)
-const VERSION = '1.101';
+const GENERATED_AT = new Date('2026-04-09T17:27:01-03:00'); // BRT (UTC-3)
+const VERSION = '1.102';
 
 const DATA = {
   "_generated": "2026-04-09T17:18:52",
@@ -4214,7 +4214,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.101"
+  "version": "1.102"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -7671,6 +7671,15 @@ window.switchTab = function(name) {
 // ═══════════════════════════════════════════════════════════════
 // P1/P2: SEMÁFORO PANEL
 // ═══════════════════════════════════════════════════════════════
+function toggleSemaforoPanel() {
+  const panel = document.getElementById('semaforoPanel');
+  const body  = document.getElementById('semaforoCollapseBody');
+  if (!panel || !body) return;
+  const opening = !panel.classList.contains('open');
+  panel.classList.toggle('open', opening);
+  body.style.display = opening ? 'block' : 'none';
+}
+
 function buildSemaforoPanel() {
   const el = document.getElementById('semaforoBody');
   if (!el) return;

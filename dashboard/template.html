@@ -334,9 +334,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
 <div class="section section-critical collapsible" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
-<h2 onclick="this.parentElement.classList.toggle('open')">Semáforos de Gatilhos</h2>
+<h2 onclick="toggleSemaforoPanel()">Semáforos de Gatilhos</h2>
 <div id="semaforoSummary" style="font-size:.75rem;color:var(--muted);margin:4px 0 2px">—</div>
-<div class="collapse-body">
+<div class="collapse-body" id="semaforoCollapseBody" style="display:none">
 <table class="semaforo-table" id="semaforoBody">
 <!-- gerado por buildSemaforoPanel() -->
 </table>
@@ -4660,6 +4660,15 @@ window.switchTab = function(name) {
 // ═══════════════════════════════════════════════════════════════
 // P1/P2: SEMÁFORO PANEL
 // ═══════════════════════════════════════════════════════════════
+function toggleSemaforoPanel() {
+  const panel = document.getElementById('semaforoPanel');
+  const body  = document.getElementById('semaforoCollapseBody');
+  if (!panel || !body) return;
+  const opening = !panel.classList.contains('open');
+  panel.classList.toggle('open', opening);
+  body.style.display = opening ? 'block' : 'none';
+}
+
 function buildSemaforoPanel() {
   const el = document.getElementById('semaforoBody');
   if (!el) return;
