@@ -1022,13 +1022,21 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T06:04:10-03:00'); // BRT (UTC-3)
-const VERSION = '1.65';
+const GENERATED_AT = new Date('2026-04-09T09:04:24-03:00'); // BRT (UTC-3)
+const VERSION = '1.66';
 
 const DATA = {
-  "_generated": "2026-04-09T08:40:53",
-  "_generated_brt": "2026-04-09T05:40:53-03:00",
+  "_generated": "2026-04-09T12:03:51",
+  "_generated_brt": "2026-04-09T09:03:51-03:00",
   "date": "2026-04-09",
+  "timestamps": {
+    "posicoes_ibkr": "2026-04-09",
+    "precos_yfinance": "2026-04-09",
+    "historico_csv": "2026-03-20",
+    "holdings_md": "2026-04-09",
+    "fire_mc": "2026-04-09",
+    "geral": "2026-04-09"
+  },
   "cambio": 5.156,
   "posicoes": {
     "SWRD": {
@@ -1105,7 +1113,8 @@ const DATA = {
   "pisos": {
     "pisoTaxaIpcaLongo": 6.0,
     "pisoTaxaRendaPlus": 6.5,
-    "pisoVendaRendaPlus": 6.0
+    "pisoVendaRendaPlus": 6.0,
+    "ir_aliquota": 0.15
   },
   "pfire50": {
     "base": 85.4,
@@ -3835,7 +3844,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.65"
+  "version": "1.66"
 };
 
 // ═══════════════════════════════════════════════════════════════
