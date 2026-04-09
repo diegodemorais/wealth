@@ -1,14 +1,20 @@
 {
   "_meta": {
     "generated": "2026-04-09",
-    "last_update_section": "macro",
-    "last_update_generator": "manual seed (2026-04-09)",
+    "last_update_section": "mercado_mtd",
+    "last_update_generator": "generate_data.py",
     "version": 1
   },
   "macro": {
     "selic_meta": 14.75,
     "fed_funds": 3.64,
     "_note": "Seed inicial. Atualizado automaticamente por generate_data.py quando BCB/FRED online."
+  },
+  "mercado": {
+    "cambio_brl_usd": 5.156,
+    "btc_usd": 71877.1,
+    "fonte": "yfinance BTC-USD + PTAX BCB",
+    "updated": "2026-04-09"
   },
   "patrimonio": {
     "total_brl": 3472335,
@@ -112,7 +118,7 @@
     "pat_mediano_fire": 11527476.0,
     "pat_p10_fire": 6834909.0,
     "pat_p90_fire": 18916227.0,
-    "mc_date": "2026-04-08",
+    "mc_date": "2026-04-09",
     "pfire50_base": 85.4,
     "pfire50_fav": 91.3,
     "pfire50_stress": 81.1,
@@ -129,22 +135,22 @@
       {
         "variavel": "Volatilidade equity (+/-10%)",
         "mais10": -4.1,
-        "menos10": 3.4
+        "menos10": 4.0
       },
       {
         "variavel": "Retorno equity (+/-10%)",
-        "mais10": 2.2,
-        "menos10": -3.4
+        "mais10": 3.4,
+        "menos10": -4.1
       },
       {
         "variavel": "Custo de vida (+/-10%)",
-        "mais10": -2.3,
-        "menos10": 1.2
+        "mais10": -2.8,
+        "menos10": 1.9
       },
       {
         "variavel": "Aporte mensal (+/-10%)",
-        "mais10": 1.0,
-        "menos10": -1.5
+        "mais10": 1.2,
+        "menos10": -1.4
       }
     ]
   },
@@ -237,5 +243,34 @@
         "status": "green"
       }
     }
+  },
+  "factor_signal": {
+    "swrd_ytd_pct": 0.4,
+    "avgs_ytd_pct": 11.79,
+    "excess_ytd_pp": 11.39,
+    "swrd_since_launch_pct": 20.91,
+    "avgs_since_launch_pct": 33.42,
+    "excess_since_launch_pp": 12.51,
+    "avgs_launch_date": "2024-10-14",
+    "meses_desde_launch": 17.8,
+    "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
+    "updated": "2026-04-09"
+  },
+  "equity_attribution": {
+    "total_aportado_usd": 391043,
+    "patrimonio_equity_usd": 608472,
+    "retorno_usd": 217429,
+    "pct_aportes": 64.3,
+    "pct_retorno": 35.7,
+    "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
+    "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
+    "updated": "2026-04-09"
+  },
+  "mercado_mtd": {
+    "ref_mes": "2026-04",
+    "cambio": 5.156,
+    "btc_usd": 71877.1,
+    "ipca2040_taxa": 7.2,
+    "renda2065_taxa": 6.93
   }
 }
