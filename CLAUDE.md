@@ -166,6 +166,15 @@ Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este ven
 | `scripts/fx_utils.py` | PTAX/macro BCB, decomposição retorno BRL/USD | `python3 scripts/fx_utils.py` |
 | `scripts/resampled_frontier.py` | Michaud Resampled Frontier — IC 90% dos pesos ótimos vs Target 50/30/20 | `python3 scripts/resampled_frontier.py` |
 
+## Deploy Dashboard (REGRA PERMANENTE)
+
+Toda alteração em `template.html`, `build_dashboard.py` ou `data.json` **DEVE** incluir deploy para o repo `wealth-dash` (GitHub Pages). Fluxo:
+1. Build: `python3 scripts/build_dashboard.py`
+2. Copiar: `cp dashboard/index.html ~/tmp/wealth-dash/index.html`
+3. Commit + push no wealth-dash: `git -C ~/tmp/wealth-dash add index.html && git -C ~/tmp/wealth-dash commit -m "chore: atualizar dashboard" && git -C ~/tmp/wealth-dash push origin main`
+
+Se o ambiente não tem acesso ao repo wealth-dash, **avisar Diego** para deploy manual: `./scripts/deploy_dashboard.sh --skip-scripts`
+
 ## Estrutura do Projeto
 
 ```
