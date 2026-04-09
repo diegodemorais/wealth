@@ -2550,7 +2550,8 @@ function buildRollingSharp() {
 
   if (charts.rollingSharp) charts.rollingSharp.destroy();
 
-  const ptColors = sharpes.map(v => v >= 1 ? 'rgba(34,197,94,.85)' : v >= 0 ? 'rgba(234,179,8,.85)' : 'rgba(239,68,68,.85)');
+  const colorFor = v => v >= 1 ? 'rgba(34,197,94,.7)' : v >= 0 ? 'rgba(234,179,8,.7)' : 'rgba(239,68,68,.7)';
+  const ptColors = sharpes.map(colorFor);
 
   charts.rollingSharp = new Chart(document.getElementById('rollingSharpChart'), {
     type: 'line',
@@ -2560,11 +2561,11 @@ function buildRollingSharp() {
         {
           label: 'Rolling Sharpe 12m',
           data: sharpes,
-          borderColor: 'rgba(148,163,184,.3)',
+          segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
           borderWidth: 1.5,
           pointBackgroundColor: ptColors,
-          pointBorderColor: ptColors,
-          pointRadius: 3,
+          pointBorderWidth: 0,
+          pointRadius: 1.5,
           fill: false,
           tension: 0.3,
         },
