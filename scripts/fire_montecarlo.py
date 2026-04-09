@@ -716,6 +716,17 @@ def main():
         tornado = rodar_tornado(premissas, n_sim=5_000)
         imprimir_tornado(tornado, resultados[0]["p_sucesso"])
 
+        # Salvar tornado no dashboard_state.json para o pipeline generate_data.py
+        tornado_data = []
+        for r in tornado:
+            tornado_data.append({
+                "variavel": r["variavel"],
+                "mais10":   round(r["impacto_up"] * 100, 1),   # em pp
+                "menos10":  round(r["impacto_down"] * 100, 1), # em pp
+            })
+        fire_data_with_tornado = {**fire_data, "tornado": tornado_data}
+        update_dashboard_state("fire", fire_data_with_tornado, generator="fire_montecarlo.py")
+
 
 if __name__ == "__main__":
     main()

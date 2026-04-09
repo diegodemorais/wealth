@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-09T08:39:48",
-  "_generated_brt": "2026-04-09T05:39:48-03:00",
+  "_generated": "2026-04-09T08:40:53",
+  "_generated_brt": "2026-04-09T05:40:53-03:00",
   "date": "2026-04-09",
   "cambio": 5.156,
   "posicoes": {
@@ -179,7 +179,28 @@
     }
   ],
   "saude_base": 18000,
-  "tornado": [],
+  "tornado": [
+    {
+      "variavel": "Volatilidade equity (+/-10%)",
+      "mais10": -4.1,
+      "menos10": 3.4
+    },
+    {
+      "variavel": "Retorno equity (+/-10%)",
+      "mais10": 2.2,
+      "menos10": -3.4
+    },
+    {
+      "variavel": "Custo de vida (+/-10%)",
+      "mais10": -2.3,
+      "menos10": 1.2
+    },
+    {
+      "variavel": "Aporte mensal (+/-10%)",
+      "mais10": 1.0,
+      "menos10": -1.5
+    }
+  ],
   "fire": {
     "bond_pool_readiness": {
       "valor_atual_brl": 122380,

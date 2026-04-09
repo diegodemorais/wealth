@@ -1512,7 +1512,7 @@ def main():
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))
     print(f"\n✅ {OUT_PATH.relative_to(ROOT)}")
     print(f"   Patrimônio: R${total_brl/1e6:.2f}M | Câmbio: {cambio:.4f}")
-    print(f"   P(FIRE@50): {pfire50.get('base')}% | Tornado: {len(tornado)} variáveis")
+    print(f"   P(FIRE@50): {pfire50.get('base')}% | Tornado: {len(tornado)} variáveis | Bond pool: {bp_anos} anos")
     print(f"   Timeline: {len(timeline['labels'])} pontos | Bollinger: {len(bollinger['dates'])} meses")
     print(f"   IR diferido: R${tax_data['ir_diferido_total_brl']:,.0f} sobre {len(tax_data['ir_por_etf'])} ETFs" if tax_data else "   IR diferido: N/A")
     print(f"   Factor: rolling {len(factor_rolling.get('dates', []))} pts | loadings {len(factor_loadings)} ETFs")

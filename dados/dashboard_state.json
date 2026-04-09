@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generated": "2026-04-08",
+    "generated": "2026-04-09",
     "last_update_section": "fire",
-    "last_update_generator": "fire_montecarlo.py",
+    "last_update_generator": "fire_montecarlo.py (tornado seed)",
     "version": 1
   },
   "patrimonio": {
@@ -119,7 +119,29 @@
     "pat_p90_fire50": 14560082.0,
     "pat_mediano_fire53": 11527476.0,
     "pat_p10_fire53": 6834909.0,
-    "pat_p90_fire53": 18916227.0
+    "pat_p90_fire53": 18916227.0,
+    "tornado": [
+      {
+        "variavel": "Volatilidade equity (+/-10%)",
+        "mais10": -4.1,
+        "menos10": 3.4
+      },
+      {
+        "variavel": "Retorno equity (+/-10%)",
+        "mais10": 2.2,
+        "menos10": -3.4
+      },
+      {
+        "variavel": "Custo de vida (+/-10%)",
+        "mais10": -2.3,
+        "menos10": 1.2
+      },
+      {
+        "variavel": "Aporte mensal (+/-10%)",
+        "mais10": 1.0,
+        "menos10": -1.5
+      }
+    ]
   },
   "shadows": {
     "q1_2026": {
