@@ -267,30 +267,30 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S3: KPI CARDS -->
 <div class="kpi-grid" data-in-tab="status">
+<div class="kpi kpi-fire">
+  <div class="kpi-label">P(FIRE@50)</div>
+  <div class="kpi-value" id="kpiPfire50">—</div>
+  <div class="kpi-sub" id="kpiPfire50Sub">cenário base</div>
+</div>
 <div class="kpi">
   <div class="kpi-label">IPCA+ 2040 — Taxa</div>
   <div class="kpi-value" id="kpiIpcaTaxa">—</div>
   <div class="kpi-sub" id="kpiIpcaSub">—</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">Retorno YTD (BRL)</div>
-  <div class="kpi-value" id="kpiYtd">—</div>
-  <div class="kpi-sub" id="kpiYtdSub">—</div>
+  <div class="kpi-label">Renda+ 2065 — Taxa</div>
+  <div class="kpi-value" id="kpiRenda2065">—</div>
+  <div class="kpi-sub" id="kpiRenda2065Sub">—</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">Drift Máximo</div>
-  <div class="kpi-value" id="kpiDriftMax">—</div>
-  <div class="kpi-sub" id="kpiDriftMaxSub">—</div>
+  <div class="kpi-label">Bond Pool Runway</div>
+  <div class="kpi-value" id="kpiBondPool">—</div>
+  <div class="kpi-sub" id="kpiBondPoolSub">—</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">Delta vs VWRA</div>
+  <div class="kpi-label">Delta CAGR vs SWRD</div>
   <div class="kpi-value pos" id="kpiDelta">—</div>
   <div class="kpi-sub" id="kpiDeltaSub">—</div>
-</div>
-<div class="kpi">
-  <div class="kpi-label">Câmbio BRL/USD</div>
-  <div class="kpi-value" id="kpiCambio">—</div>
-  <div class="kpi-sub" id="kpiCambioSub">PTAX BCB</div>
 </div>
 <div class="kpi">
   <div class="kpi-label">Wellness Score</div>
@@ -3647,62 +3647,80 @@ function renderKPIs() {
   heroSrEl.style.color = srHero >= 0.5 ? '#22c55e' : srHero >= 0.4 ? '#eab308' : '#ef4444';
   document.getElementById('heroSavingsSub').textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_custoMensalHero/1000).toFixed(1)}k custo`;
 
-  // KPI: IPCA+ taxa (substituiu Patrimônio que já está no hero)
+  // KPI 1: P(FIRE@50) — fonte: DATA.pfire50.base
+  (function() {
+    const el    = document.getElementById('kpiPfire50');
+    const subEl = document.getElementById('kpiPfire50Sub');
+    if (!el) return;
+    const p = DATA.pfire50?.base;
+    if (p != null) {
+      el.textContent = p.toFixed(1) + '%';
+      el.style.color = p >= 80 ? '#22c55e' : p >= 60 ? '#eab308' : '#ef4444';
+      if (subEl) subEl.textContent = `fav ${(DATA.pfire50?.fav ?? p).toFixed(0)}% · stress ${(DATA.pfire50?.stress ?? p).toFixed(0)}%`;
+    }
+  })();
+
+  // KPI 2: IPCA+ 2040 taxa + badge DCA ativo/pausado
   const _kpiIpca = DATA.rf?.ipca2040?.taxa;
   const _kpiPisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
   const _kpiIpcaEl = document.getElementById('kpiIpcaTaxa');
   const _kpiIpcaSubEl = document.getElementById('kpiIpcaSub');
   if (_kpiIpcaEl && _kpiIpca != null) {
+    const _dcaAtivo = _kpiIpca >= _kpiPisoIpca;
     _kpiIpcaEl.textContent = _kpiIpca.toFixed(2) + '%';
-    _kpiIpcaEl.style.color = _kpiIpca >= _kpiPisoIpca ? '#22c55e' : '#eab308';
+    _kpiIpcaEl.style.color = _dcaAtivo ? '#22c55e' : '#eab308';
   }
-  if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = _kpiIpca != null ? `piso ${_kpiPisoIpca.toFixed(1)}% · ${_kpiIpca >= _kpiPisoIpca ? '✅ janela ativa' : '⏸ pausado'}` : 'aguardando dados';
-  // KPI: Retorno YTD BRL (gross desde dez/ano anterior — inclui aportes)
+  if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = _kpiIpca != null
+    ? `piso ${_kpiPisoIpca.toFixed(1)}% · ${_kpiIpca >= _kpiPisoIpca ? '🟢 DCA ativo' : '🔴 pausado'}`
+    : 'aguardando dados';
+
+  // KPI 3: Renda+ 2065 taxa + badge compra/manter/venda
   (function() {
-    const tl = DATA.timeline;
-    if (!tl?.labels?.length) return;
-    const curYear = new Date(DATA.date || Date.now()).getFullYear();
-    // Último ponto de dezembro do ano anterior
-    let prevDecVal = null;
-    for (let i = tl.labels.length - 1; i >= 0; i--) {
-      const lbl = tl.labels[i];
-      const yr = parseInt(lbl.slice(0, 4));
-      const mo = parseInt(lbl.slice(5, 7));
-      if (yr === curYear - 1 && mo === 12) { prevDecVal = tl.values[i]; break; }
-      if (yr < curYear - 1) break;
-    }
-    const ytdEl    = document.getElementById('kpiYtd');
-    const ytdSubEl = document.getElementById('kpiYtdSub');
-    if (ytdEl && prevDecVal && totalBrl) {
-      const ytd = (totalBrl / prevDecVal - 1) * 100;
-      ytdEl.textContent = (ytd >= 0 ? '+' : '') + ytd.toFixed(1) + '%';
-      ytdEl.style.color = ytd >= 0 ? '#22c55e' : '#ef4444';
-      if (ytdSubEl) ytdSubEl.textContent = `incl. aportes · desde dez/${curYear-1}`;
+    const el    = document.getElementById('kpiRenda2065');
+    const subEl = document.getElementById('kpiRenda2065Sub');
+    if (!el) return;
+    const taxa = DATA.rf?.renda2065?.taxa;
+    const pisoCompra = DATA.pisos?.pisoTaxaRendaPlus ?? 6.5;
+    const pisoVenda  = 6.0;
+    if (taxa != null) {
+      el.textContent = taxa.toFixed(2) + '%';
+      if (taxa >= pisoCompra) {
+        el.style.color = '#22c55e';
+        if (subEl) subEl.textContent = `🟢 compra ≥${pisoCompra.toFixed(1)}%`;
+      } else if (taxa >= pisoVenda) {
+        el.style.color = '#eab308';
+        if (subEl) subEl.textContent = `🟡 manter ${pisoVenda.toFixed(1)}–${pisoCompra.toFixed(1)}%`;
+      } else {
+        el.style.color = '#ef4444';
+        if (subEl) subEl.textContent = `🔴 venda ≤${pisoVenda.toFixed(1)}%`;
+      }
+    } else {
+      el.textContent = '—'; if (subEl) subEl.textContent = 'aguardando dados';
     }
   })();
 
-  // KPI: Drift máximo (ETF mais longe do alvo)
+  // KPI 4: Bond Pool Runway — fonte: DATA.fire.bond_pool_readiness
   (function() {
-    const el    = document.getElementById('kpiDriftMax');
-    const subEl = document.getElementById('kpiDriftMaxSub');
-    if (!el || !DATA.drift) return;
-    const entries = Object.entries(DATA.drift)
-      .map(([k, v]) => ({ k, diff: v.atual - v.alvo, abs: Math.abs(v.atual - v.alvo) }))
-      .sort((a, b) => b.abs - a.abs);
-    const top = entries[0];
-    if (top) {
-      el.textContent = (top.diff >= 0 ? '+' : '') + top.diff.toFixed(1) + 'pp';
-      el.style.color = top.abs > 5 ? '#ef4444' : top.abs > 2 ? '#eab308' : '#22c55e';
-      if (subEl) subEl.textContent = `${top.k}: ${DATA.drift[top.k].atual}% vs alvo ${DATA.drift[top.k].alvo}%`;
+    const el    = document.getElementById('kpiBondPool');
+    const subEl = document.getElementById('kpiBondPoolSub');
+    if (!el) return;
+    const bp = DATA.fire?.bond_pool_readiness;
+    const anos = bp?.anos_gastos;
+    const meta  = bp?.meta_anos ?? 7;
+    if (anos != null) {
+      el.textContent = anos.toFixed(1) + 'a';
+      el.style.color = anos >= meta ? '#22c55e' : anos >= meta * 0.5 ? '#eab308' : '#ef4444';
+      if (subEl) subEl.textContent = `meta ${meta}a · ${(anos / meta * 100).toFixed(0)}% construído`;
+    } else {
+      el.textContent = '—'; if (subEl) subEl.textContent = `meta ${meta}a`;
     }
   })();
 
-  // KPI: Delta vs VWRA — backtest CAGR (source: backtest.metrics)
+  // KPI 5: Delta CAGR vs SWRD — backtest (source: backtest.metrics)
   (function() {
     const el    = document.getElementById('kpiDelta');
     const subEl = document.getElementById('kpiDeltaSub');
     if (!el) return;
-    // Tentar backtest primeiro, fallback para shadows
     const btTarget  = DATA.backtest?.metrics?.target?.cagr;
     const btShadowA = DATA.backtest?.metrics?.shadowA?.cagr;
     const sh = DATA.shadows;
@@ -3710,7 +3728,7 @@ function renderKPIs() {
       const delta = btTarget - btShadowA;
       el.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(2) + 'pp';
       el.style.color = delta >= 0 ? '#22c55e' : '#ef4444';
-      if (subEl) subEl.textContent = `CAGR ${btTarget.toFixed(1)}% vs VWRA ${btShadowA.toFixed(1)}% · backtest`;
+      if (subEl) subEl.textContent = `Target ${btTarget.toFixed(1)}% vs SWRD ${btShadowA.toFixed(1)}% · backtest`;
     } else if (sh?.delta_vwra != null) {
       const delta = sh.delta_vwra;
       el.textContent = (delta >= 0 ? '+' : '') + delta.toFixed(2) + 'pp';
@@ -3720,12 +3738,6 @@ function renderKPIs() {
       el.textContent = '—'; if (subEl) subEl.textContent = 'tracking em andamento';
     }
   })();
-  // Câmbio
-  if (CAMBIO) {
-    document.getElementById('kpiCambio').textContent = `R$ ${CAMBIO.toFixed(2)}`;
-    const _cambioDate = DATA.date ? (() => { const _d = new Date(DATA.date); const _M = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; return `${String(_d.getDate()).padStart(2,'0')}/${_M[_d.getMonth()]}/${_d.getFullYear()}`; })() : '';
-    document.getElementById('kpiCambioSub').textContent = `PTAX BCB · ${_cambioDate}`;
-  }
   // Fire scenario grid — 6 cards (3 estados × 2 idades)
   (function buildFireGrid() {
     const grid = document.getElementById('fireScenarioGrid');
