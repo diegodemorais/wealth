@@ -187,6 +187,27 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .tab-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .15s;white-space:nowrap}
 .tab-btn:hover{border-color:var(--accent);color:var(--text)}
 .tab-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+/* ── Timestamps / Staleness badges ── */
+.ts-bar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
+.ts-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:600;background:rgba(71,85,105,.25);color:var(--muted)}
+.ts-badge.stale{background:rgba(239,68,68,.2);color:var(--red)}
+.ts-badge .ts-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ts-dot-ok{background:var(--green)}.ts-dot-stale{background:var(--red)}
+/* ── Concentração Brasil card ── */
+.brasil-card{background:var(--card2);border-radius:8px;padding:14px;margin-top:10px;border-left:3px solid var(--yellow)}
+.brasil-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.brasil-header .brasil-pct{font-size:1.3rem;font-weight:700;color:var(--yellow)}
+.brasil-header .brasil-lbl{font-size:.75rem;color:var(--muted)}
+.brasil-row{display:flex;justify-content:space-between;font-size:.72rem;padding:2px 0;border-bottom:1px solid rgba(71,85,105,.15)}
+.brasil-row:last-child{border-bottom:none}
+.brasil-row .br-val{font-weight:600;font-variant-numeric:tabular-nums}
+/* ── Premissas vs Realizado table ── */
+.pvr-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.pvr-table th{padding:6px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.65rem;text-transform:uppercase;text-align:left}
+.pvr-table th:not(:first-child){text-align:right}
+.pvr-table td{padding:7px 8px;border-bottom:1px solid rgba(71,85,105,.25)}
+.pvr-table td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.pvr-delta-pos{color:var(--green);font-weight:600}.pvr-delta-neg{color:var(--red);font-weight:600}
 </style>
 </head>
 <body>
@@ -295,6 +316,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" data-in-tab="status" id="macroSection">
 <h2>Contexto Macro</h2>
 <div class="macro-strip" id="macroStrip"><!-- gerado por buildMacroCards() --></div>
+<div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
 <div class="src">Fonte: BCB/FRED via data.json · Premissa depreciação BRL usada em projeções FIRE</div>
 </div>
 
@@ -716,6 +738,15 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">Fonte: extrato IBKR (aportes.json + lotes.json) · atualizado via ibkr_analysis.py</div>
 </div>
 
+<!-- PREMISSAS VS REALIZADO -->
+<div class="section" data-in-tab="plan" id="premissasVsRealizadoSection">
+<h2>Premissas vs Realizado</h2>
+<table class="pvr-table" id="premissasVsRealizadoBody">
+<!-- gerado por buildPremissasVsRealizado() -->
+</table>
+<div class="src" id="premissasVsRealizadoSrc">Fonte: fire_montecarlo.py (premissas) · ibkr_analysis.py (aportes realizados) · backtest_portfolio.py (CAGR)</div>
+</div>
+
 <!-- S22: CALCULADORA APORTE -->
 <div class="section" data-in-tab="plan">
 <h2>Calculadora de Aporte — Cascade</h2>
@@ -949,7 +980,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <footer>
   Dashboard regenerado em <strong id="footerDate">—</strong> · Sistema de agentes FIRE — Carteira Diego Morais<br>
-  Dados: posições IBKR · histórico da carteira · simulação Monte Carlo · yfinance<br>
+  <div class="ts-bar" id="timestampsBar"><!-- gerado por buildTimestamps() --></div>
   <span id="footerNudge" style="opacity:.5;font-size:.65rem"></span>
 </footer>
 </div><!-- /container -->
@@ -4072,6 +4103,129 @@ function buildBondPool() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// P2: TIMESTAMPS / STALENESS BADGES (footer)
+// ═══════════════════════════════════════════════════════════════
+function buildTimestamps() {
+  const el = document.getElementById('timestampsBar');
+  if (!el) return;
+  const ts = DATA.timestamps;
+  if (!ts) { el.style.display = 'none'; return; }
+
+  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const hoje = DATA.date ? new Date(DATA.date) : new Date();
+  const staleMs = 7 * 24 * 60 * 60 * 1000; // 7 dias
+
+  const labels = {
+    posicoes_ibkr: 'IBKR',
+    precos_yfinance: 'Preços',
+    historico_csv: 'Histórico',
+    holdings_md: 'Holdings',
+    fire_mc: 'FIRE MC',
+    geral: 'Geral'
+  };
+
+  el.innerHTML = Object.entries(ts).map(function(entry) {
+    var key = entry[0], val = entry[1];
+    var label = labels[key] || key;
+    if (val == null) {
+      return '<span class="ts-badge stale"><span class="ts-dot ts-dot-stale"></span>' + label + ': --</span>';
+    }
+    var d = new Date(val);
+    var diff = hoje - d;
+    var isStale = diff > staleMs;
+    var formatted = String(d.getDate()).padStart(2, '0') + '/' + meses[d.getMonth()];
+    return '<span class="ts-badge' + (isStale ? ' stale' : '') + '"><span class="ts-dot ' + (isStale ? 'ts-dot-stale' : 'ts-dot-ok') + '"></span>' + label + ': ' + formatted + '</span>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: CONCENTRAÇÃO BRASIL (macro section)
+// ═══════════════════════════════════════════════════════════════
+function buildBrasilConcentracao() {
+  var el = document.getElementById('brasilConcentracao');
+  if (!el) return;
+  var cb = DATA.concentracao_brasil;
+  if (!cb) { el.style.display = 'none'; return; }
+
+  var pct = cb.brasil_pct != null ? cb.brasil_pct.toFixed(1) + '%' : '--';
+  var comp = cb.composicao || {};
+
+  function fmtBrl(v) {
+    if (v == null) return '--';
+    return 'R$ ' + (v / 1000).toFixed(0) + 'k';
+  }
+
+  var rows = '';
+  if (comp.hodl11_brl != null) rows += '<div class="brasil-row"><span>HODL11 (BTC wrapper)</span><span class="br-val pv">' + fmtBrl(comp.hodl11_brl) + '</span></div>';
+  if (comp.rf_total_brl != null) {
+    rows += '<div class="brasil-row"><span>Renda Fixa BR</span><span class="br-val pv">' + fmtBrl(comp.rf_total_brl) + '</span></div>';
+    if (comp.rf_detalhe) {
+      Object.entries(comp.rf_detalhe).forEach(function(entry) {
+        var k = entry[0], v = entry[1];
+        if (v != null && v > 0) rows += '<div class="brasil-row" style="padding-left:12px;color:var(--muted)"><span>' + k + '</span><span class="br-val pv">' + fmtBrl(v) + '</span></div>';
+      });
+    }
+  }
+  if (comp.crypto_legado_brl != null) rows += '<div class="brasil-row"><span>Crypto legado (spot)</span><span class="br-val pv">' + fmtBrl(comp.crypto_legado_brl) + '</span></div>';
+
+  var totalBr = cb.total_brasil_brl != null ? fmtBrl(cb.total_brasil_brl) : '--';
+  var nota = cb.nota || '';
+
+  el.innerHTML =
+    '<div class="brasil-card">' +
+      '<div class="brasil-header">' +
+        '<div><span class="brasil-lbl">Exposição Brasil</span></div>' +
+        '<div class="brasil-pct">' + pct + '</div>' +
+      '</div>' +
+      rows +
+      '<div class="brasil-row" style="margin-top:4px;border-top:1px solid rgba(71,85,105,.3);padding-top:4px;font-weight:700"><span>Total Brasil</span><span class="br-val pv">' + totalBr + '</span></div>' +
+      (nota ? '<div style="margin-top:6px;font-size:.6rem;color:var(--muted);line-height:1.4">' + nota + '</div>' : '') +
+    '</div>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// P2: PREMISSAS VS REALIZADO (plan tab)
+// ═══════════════════════════════════════════════════════════════
+function buildPremissasVsRealizado() {
+  var el = document.getElementById('premissasVsRealizadoBody');
+  if (!el) return;
+  var pvr = DATA.premissas_vs_realizado;
+  if (!pvr) { document.getElementById('premissasVsRealizadoSection').style.display = 'none'; return; }
+
+  var html = '<thead><tr><th>Variável</th><th>Premissa</th><th>Realizado</th><th>Delta</th><th>Nota</th></tr></thead><tbody>';
+
+  // Retorno equity
+  var re = pvr.retorno_equity;
+  if (re) {
+    var premR = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
+    var realR = re.backtest_nominal_usd_pct != null ? re.backtest_nominal_usd_pct.toFixed(2) + '% nom USD' : '--';
+    var benchR = re.benchmark_vwra_nominal_usd_pct != null ? ' (VWRA ' + re.benchmark_vwra_nominal_usd_pct.toFixed(2) + '%)' : '';
+    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + realR + benchR + '</td><td class="num" style="color:var(--muted)">n/a*</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (re.nota || '--') + '</td></tr>';
+  }
+
+  // Aporte mensal
+  var am = pvr.aporte_mensal;
+  if (am) {
+    var premA = am.premissa_brl != null ? 'R$ ' + (am.premissa_brl / 1000).toFixed(0) + 'k/mês' : '--';
+    var realA = am.realizado_media_brl != null ? 'R$ ' + (am.realizado_media_brl / 1000).toFixed(1) + 'k/mês' : '--';
+    var deltaA = am.delta_pct != null ? (am.delta_pct > 0 ? '+' : '') + am.delta_pct.toFixed(1) + '%' : '--';
+    var deltaColor = am.delta_pct != null ? (am.delta_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
+    html += '<tr><td>Aporte Mensal</td><td class="num pv">' + premA + '</td><td class="num pv">' + realA + '</td><td class="num" style="color:' + deltaColor + '">' + deltaA + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (am.nota || '--') + '</td></tr>';
+
+    // Breakdown por ano (se disponível)
+    if (am.por_ano_brl) {
+      var anos = Object.entries(am.por_ano_brl).sort(function(a, b) { return Number(b[0]) - Number(a[0]); });
+      html += '<tr><td colspan="5" style="padding-top:8px;font-size:.68rem;color:var(--muted)">Aportes por ano (IBKR equity): ' +
+        anos.map(function(entry) { return entry[0] + ': R$' + (entry[1] / 1000).toFixed(0) + 'k'; }).join(' · ') +
+        '</td></tr>';
+    }
+  }
+
+  html += '</tbody>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // P2: TAX IR DIFERIDO
 // ═══════════════════════════════════════════════════════════════
 function buildTaxIR() {
@@ -4251,8 +4405,11 @@ function buildCagrVsTwr() {
   renderProximasAcoes();
   buildSemaforoPanel();
   buildMacroCards();
+  buildBrasilConcentracao();
+  buildTimestamps();
   buildDcaStatus();
   buildTaxIR();
+  buildPremissasVsRealizado();
   renderIpcaProgress();
   buildRfCards();
   buildShadowTable();
