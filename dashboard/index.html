@@ -144,7 +144,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <span class="privacy-toggle" onclick="togglePrivacy()" id="privacyBtn" title="Ocultar valores"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span>
   </div>
 </div>
-<div class="meta" id="headerMeta">08/Abr/2026 · USD/BRL 5.1687 · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
+<div class="meta" id="headerMeta">— · Fontes: posições IBKR + yfinance + scorecard + histórico da carteira</div>
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
 </div>
 
@@ -629,7 +629,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2>Calculadora de Aporte — Cascade</h2>
 <div class="calc-form">
   <div><label>Aporte (R$)</label><input type="number" id="calcAporte" value="25000" step="1000" class="calc-aporte-input"></div>
-  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="5.1687" step="0.01"></div>
+  <div><label>Câmbio USD/BRL</label><input type="number" id="calcCambio" value="0" step="0.01"></div>
   <button onclick="calcAporte()">Calcular</button>
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
@@ -905,8 +905,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T05:44:05-03:00'); // BRT (UTC-3)
-const VERSION = '1.61';
+const GENERATED_AT = new Date('2026-04-09T05:54:42-03:00'); // BRT (UTC-3)
+const VERSION = '1.62';
 
 const DATA = {
   "_generated": "2026-04-09T08:40:53",
@@ -3718,7 +3718,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.61"
+  "version": "1.62"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -4784,7 +4784,7 @@ window.calcAporte = function() {
   const _apEl = document.getElementById('calcAporte');
   if (_apEl && +_apEl.value === 25000 && DATA.premissas?.aporte_mensal) _apEl.value = DATA.premissas.aporte_mensal;
   const _fxEl = document.getElementById('calcCambio');
-  if (_fxEl && +_fxEl.value === 5.1687 && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
+  if (_fxEl && (+_fxEl.value === 0 || +_fxEl.value === 5.1687) && DATA.cambio) _fxEl.value = DATA.cambio.toFixed(4);
   const ap = +_apEl.value;
   const fx = +_fxEl.value;
   const apUsd = ap / fx;
@@ -4910,14 +4910,14 @@ function buildTLH() {
     const ganhoUsd = t.qty * (t.price - t.pm);   // ganho em USD
     const isTLH = gain <= -(tlhGatilho * 100);
     const color = isTLH ? 'var(--red)' : gain < 0 ? 'var(--yellow)' : 'var(--green)';
-    // IR: 15% sobre ganho em USD convertido para BRL
-    // Para perdas: mostrar benefício potencial (economia de IR se houvesse ganho a compensar)
+    // IR: alíquota de DATA.pisos sobre ganho em USD convertido para BRL
+    const _irAliq = DATA.pisos?.ir_aliquota ?? 0.15;
     let irCell;
     if (ganhoUsd > 0) {
-      const irBrl = ganhoUsd * CAMBIO * 0.15;
+      const irBrl = ganhoUsd * CAMBIO * _irAliq;
       irCell = `<span class="pv" style="color:var(--red)">R$${(irBrl/1000).toFixed(1)}k</span>`;
     } else if (ganhoUsd < 0) {
-      const beneficioBrl = Math.abs(ganhoUsd) * CAMBIO * 0.15;
+      const beneficioBrl = Math.abs(ganhoUsd) * CAMBIO * _irAliq;
       irCell = `<span style="color:var(--green);font-size:.7rem">💸 −R$${(beneficioBrl/1000).toFixed(1)}k ${isTLH ? '⚠️' : ''}</span>`;
     } else {
       irCell = `<span style="color:var(--muted)">—</span>`;
@@ -5501,7 +5501,7 @@ function buildNetWorthProjection() {
   if (!ctx) return;
 
   const labels = nw.anos.map(a => {
-    const idade = a - 1987;
+    const idade = a - (DATA.premissas.ano_atual - DATA.premissas.idade_atual);
     return `${a} (${idade} anos)`;
   });
   const anoFireIdx = nw.anos.indexOf(nw.ano_fire);
@@ -5737,7 +5737,7 @@ function onStressShockChange(val) {
   const simBtn = document.getElementById('stressSimBtn');
 
   const p = DATA.premissas;
-  const patOriginal = p.patrimonio_atual || 3471000;
+  const patOriginal = p.patrimonio_atual;
   const patShock = patOriginal * (1 - pct / 100);
 
   if (labelEl) labelEl.textContent = `−${pct}%`;
@@ -5779,14 +5779,14 @@ function runStressSimulation() {
   // Yield para o browser renderizar antes do MC (que bloqueia)
   setTimeout(() => {
     const p = DATA.premissas;
-    const patOriginal = p.patrimonio_atual || 3471000;
+    const patOriginal = p.patrimonio_atual;
     const patShock = patOriginal * (1 - pct / 100);
     const spendingAnual = p.custo_vida_base || 250000;
     const idadeAtual = p.idade_atual || 39;
     const idadeFireAlvo = p.idade_fire_alvo || 53;
     const anosAcumulo = Math.max(0, idadeFireAlvo - idadeAtual);
     const anosAposentadoria = 40; // idade FIRE até 93
-    const retReal = p.retorno_equity_base || 0.0509;
+    const retReal = p.retorno_equity_base || 0.0485;
     const vol = p.volatilidade_equity || 0.168;
     const aporteAnual = (p.aporte_mensal || 25000) * 12;
     const nTrials = 2000;
@@ -6025,8 +6025,8 @@ function renderKPIs() {
     if (!grid) return;
     const ss = DATA.spendingSensibilidade || [];
     const base53 = DATA.pfire53.base, base50 = DATA.pfire50.base;
-    const casado53 = ss[1]?.base ?? (base53 - 5.4);
-    const filho53  = ss[2]?.base ?? (base53 - 8.3);
+    const casado53 = ss[1]?.base ?? null;
+    const filho53  = ss[2]?.base ?? null;
     const deltaCasado = casado53 - base53;
     const deltaFilho  = filho53  - base53;
     const casado50 = Math.max(0, Math.round((base50 + deltaCasado) * 10) / 10);

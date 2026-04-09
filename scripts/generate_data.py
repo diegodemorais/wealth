@@ -35,10 +35,15 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
     PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS, PISO_VENDA_RENDA_PLUS,
+    RENDA_PLUS_ANO_VENC, RENDA_PLUS_TAXA_DEFAULT,
     PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL, RENDA_ESTIMADA,
-    IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL,
+    IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL, ANO_NASCIMENTO,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
     TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA,
+    HODL11_PISO_PCT, HODL11_ALVO_PCT, HODL11_TETO_PCT,
+    FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
+    BOND_TENT_META_ANOS,
+    CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
 )
 
 VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
@@ -419,7 +424,7 @@ def get_factor_rolling():
     Returns dict: {dates: [YYYY-MM, ...], avgs_vs_swrd_12m: [float, ...], threshold: -5}
     Threshold at -5pp flags periods where AVGS significantly underperforms SWRD.
     """
-    THRESHOLD = -5  # pp
+    THRESHOLD = FACTOR_UNDERPERF_THRESHOLD
 
     if args.skip_scripts:
         try:
@@ -636,7 +641,7 @@ def get_factor_loadings():
 # ─── 6. POSIÇÕES + PREÇOS ────────────────────────────────────────────────────
 def get_posicoes_precos(state):
     posicoes = state.get("posicoes", {})
-    cambio   = state.get("patrimonio", {}).get("cambio", 5.10)
+    cambio   = state.get("patrimonio", {}).get("cambio", CAMBIO_FALLBACK)
 
     prices = {}  # cache de preços live; inclui HODL11 quando disponível
     if not args.skip_prices:
@@ -677,8 +682,8 @@ def get_posicoes_precos(state):
 # ─── 7. RF (holdings.md + state) ─────────────────────────────────────────────
 
 # Constantes fixas da Renda+ 2065 (NTN-B estruturado)
-_RENDA_PLUS_ANO_VENC = 2065   # vencimento nominal do título
-_RENDA_PLUS_TAXA_DEFAULT = 7.08  # fallback se não encontrar em holdings.md ou state
+_RENDA_PLUS_ANO_VENC = RENDA_PLUS_ANO_VENC
+_RENDA_PLUS_TAXA_DEFAULT = RENDA_PLUS_TAXA_DEFAULT
 
 def get_rf(state):
     rf_raw = state.get("rf", {})
@@ -964,7 +969,7 @@ def get_macro_data(state: dict) -> dict:
     if selic_meta is None:
         # Fallback 2: valor do snapshot de memoria (agentes/memoria/08-macro.md -- Abril/2026)
         # TODO: atualizar quando COPOM alterar Selic
-        selic_meta = 14.75
+        selic_meta = SELIC_META_SNAPSHOT
 
     # -- Fed Funds ---------------------------------------------------
     fed_funds = None
@@ -994,7 +999,7 @@ def get_macro_data(state: dict) -> dict:
     if fed_funds is None:
         # Fallback 2: snapshot de memoria 08-macro.md (mar/2026: 3.64%)
         # TODO: atualizar mensalmente via /macro-bcb
-        fed_funds = 3.64
+        fed_funds = FED_FUNDS_SNAPSHOT
 
     # -- Spread Selic - Fed Funds ------------------------------------
     spread_selic_ff = None
@@ -1006,7 +1011,7 @@ def get_macro_data(state: dict) -> dict:
     try:
         pat = state.get("patrimonio", {})
         equity_usd = pat.get("equity_usd", 0)
-        cambio_ref  = pat.get("cambio", 5.10)
+        cambio_ref  = pat.get("cambio", CAMBIO_FALLBACK)
         total_brl   = pat.get("total_brl", 0)
         if total_brl and total_brl > 0:
             equity_brl = equity_usd * cambio_ref
@@ -1018,7 +1023,7 @@ def get_macro_data(state: dict) -> dict:
         "selic_meta":               selic_meta,           # % a.a. -- taxa Selic meta vigente
         "fed_funds":                fed_funds,             # % a.a. -- Fed Funds rate (FRED FEDFUNDS)
         "spread_selic_ff":          spread_selic_ff,       # pp    -- diferencial Selic - Fed Funds
-        "depreciacao_brl_premissa": 0.5,                   # %/ano -- premissa base do plano (carteira.md)
+        "depreciacao_brl_premissa": DEPRECIACAO_BRL_BASE,
         "exposicao_cambial_pct":    exposicao_cambial_pct, # %     -- parcela do patrimonio em USD
     }
 
@@ -1208,9 +1213,9 @@ def main():
     # Política: piso 1.5% / alvo 3% / teto 5% do portfolio total.
     # Status: verde = [2.0%, 3.5%); amarelo = [1.5%, 2.0%) ou [3.5%, 5.0%]; vermelho = fora.
     # Fontes: carteira.md ("piso 1,5%, teto 5%") + perfis/06-risco.md.
-    _HODL11_PISO_PCT  = 1.5
-    _HODL11_ALVO_PCT  = 3.0
-    _HODL11_TETO_PCT  = 5.0
+    _HODL11_PISO_PCT  = HODL11_PISO_PCT
+    _HODL11_ALVO_PCT  = HODL11_ALVO_PCT
+    _HODL11_TETO_PCT  = HODL11_TETO_PCT
     _hodl11_atual_pct = round(hodl11_brl / total_brl * 100, 2) if total_brl else 0.0
     if _hodl11_atual_pct < _HODL11_PISO_PCT or _hodl11_atual_pct > _HODL11_TETO_PCT:
         _hodl11_banda_status = "vermelho"
@@ -1306,6 +1311,7 @@ def main():
         "pisoTaxaIpcaLongo":  PISO_TAXA_IPCA_LONGO,
         "pisoTaxaRendaPlus":  PISO_TAXA_RENDA_PLUS,   # piso de compra DCA
         "pisoVendaRendaPlus": PISO_VENDA_RENDA_PLUS,  # gatilho de venda
+        "ir_aliquota":        IR_ALIQUOTA,              # 0.15 = 15%
     }
 
     # Pesos alvo
@@ -1397,7 +1403,7 @@ def main():
     bp_valor = bp_ipca2040 + bp_ipca2050 + bp_ipca2029
     bp_custo_anual = premissas["custo_vida_base"]
     bp_anos = round(bp_valor / bp_custo_anual, 1) if bp_custo_anual > 0 else 0
-    bp_meta_anos = 7  # bond tent = 7 anos pos-FIRE (carteira.md)
+    bp_meta_anos = BOND_TENT_META_ANOS
     if bp_anos >= bp_meta_anos * 0.8:
         bp_status = "on_track"
     elif bp_anos >= bp_meta_anos * 0.4:
@@ -1503,8 +1509,8 @@ def main():
         ],
 
         # Valores auxiliares para o dashboard (evitar hardcoded no template)
-        "cryptoLegado": 3_000,     # R$ — estimativa crypto legado (BTC+ETH+BNB+ADA) — atualizar manualmente
-        "tlhGatilho":   0.05,       # 5% — gatilho de perda para TLH
+        "cryptoLegado": CRYPTO_LEGADO_BRL,
+        "tlhGatilho":   TLH_GATILHO,
         "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
     }
 

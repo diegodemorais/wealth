@@ -1,9 +1,14 @@
 {
   "_meta": {
     "generated": "2026-04-09",
-    "last_update_section": "fire",
-    "last_update_generator": "fire_montecarlo.py (tornado seed)",
+    "last_update_section": "macro",
+    "last_update_generator": "manual seed (2026-04-09)",
     "version": 1
+  },
+  "macro": {
+    "selic_meta": 14.75,
+    "fed_funds": 3.64,
+    "_note": "Seed inicial. Atualizado automaticamente por generate_data.py quando BCB/FRED online."
   },
   "patrimonio": {
     "total_brl": 3472335,

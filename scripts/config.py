@@ -71,6 +71,22 @@ TICKERS_YF = {
 PISO_TAXA_IPCA_LONGO = 6.0    # % a.a. — abaixo disso não prioriza DCA IPCA+
 PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não aporta DCA Renda+ (piso compra)
 PISO_VENDA_RENDA_PLUS = 6.0   # % a.a. — abaixo disso VENDER toda posição Renda+ 2065 (gatilho saída)
+RENDA_PLUS_ANO_VENC = 2065    # vencimento nominal do título
+RENDA_PLUS_TAXA_DEFAULT = 7.08  # % a.a. — fallback se taxa não encontrada (carteira.md 2026-04-01)
+
+# HODL11 bandas (fonte: carteira.md — "Alvo 3%, piso 1,5%, teto 5%")
+HODL11_PISO_PCT = 1.5
+HODL11_ALVO_PCT = 3.0
+HODL11_TETO_PCT = 5.0
+
+# Factor underperformance (fonte: carteira.md — gatilho revisão AVGS)
+FACTOR_UNDERPERF_THRESHOLD = -5  # pp — AVGS vs SWRD rolling 12m
+
+# TLH
+TLH_GATILHO = 0.05              # 5% — perda mínima para acionar TLH
+
+# Crypto legado (BTC+ETH+BNB+ADA spot — estimativa manual)
+CRYPTO_LEGADO_BRL = 3_000
 
 
 # ─── FIRE (fonte: carteira.md + fire_montecarlo.py PREMISSAS) ────────────────
@@ -81,8 +97,16 @@ CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
 APORTE_MENSAL = 25_000            # R$/mês
 RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para savings rate dashboard
 IDADE_ATUAL = 39
+ANO_NASCIMENTO = 1987             # para calcular idade dinâmica
 IDADE_FIRE_ALVO = 53              # FIRE 2040
 IDADE_FIRE_ASPIRACIONAL = 50      # FIRE 2037
+BOND_TENT_META_ANOS = 7           # anos de gastos cobertos pelo bond pool no FIRE Day
+
+# Fallbacks macro (snapshot — atualizar quando taxas mudarem significativamente)
+CAMBIO_FALLBACK = 5.10            # USD/BRL — fallback offline
+SELIC_META_SNAPSHOT = 14.75       # % a.a. — Abr/2026
+FED_FUNDS_SNAPSHOT = 3.64         # % — Mar/2026
+DEPRECIACAO_BRL_BASE = 0.5        # % a.a. — premissa do plano FIRE (carteira.md)
 
 # ─── GLIDE PATH (fonte: carteira.md — tabela alocação por idade) ─────────────
 # Atualizar quando carteira.md mudar a tabela de glide path
