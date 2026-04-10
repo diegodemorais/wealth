@@ -46,17 +46,19 @@
 | Ativo | Corretora | Cotas | Custo base | Valor MtM | Taxa | Notas |
 |-------|-----------|------:|----------:|---------:|-----:|-------|
 | Tesouro IPCA+ 2029 | Nubank | 23.34 | R$ 76,860 | R$ 86,555 | 7.58% | Reserva emergencia |
-| Tesouro IPCA+ 2040 | Nubank | 11.58 + ? | R$ 20,035 + 46.498,08 | Atualizar | 7.07% / 7.10% | Bloco IPCA+ longo. DCA ativo. Compra 2026-04-10: R$ 46.498,08 @ 7,10% — **cotas a confirmar com PU de compra** |
-| Tesouro IPCA+ 2050 | Nubank/XP | ? | R$ 11.660,71 | Atualizar | 6.85% | **NOVO: Compra 2026-04-10**. Bloco IPCA+ longo, split 20%. Cotas a confirmar com PU de compra |
+| Tesouro IPCA+ 2040 | Nubank | 11.58 + ? | R$ 20,035 + 46.498,08 | Pendente | 7.07% / 7.10% | Bloco IPCA+ longo. DCA ativo. **OPERAÇÃO 2026-04-10 PENDENTE** (liquidação 13/04). Compra: R$ 46.498,08 @ taxa 7,10%. Cotas = R$ 46.498,08 / PU(13/04) — aguardar confirmação no extrato Nubank |
+| Tesouro IPCA+ 2050 | Nubank/XP | ? | R$ 11.660,71 | Pendente | 6.85% | **NOVO: Operação 2026-04-10 PENDENTE** (liquidação 13/04). Bloco IPCA+ longo, split 20%. Compra: R$ 11.660,71 @ taxa 6,85%. Cotas = R$ 11.660,71 / PU(13/04) — primeira operação neste título, PU inicial não disponível, confirmar em 13/04 |
 | Renda+ 2065 | Nubank | 158.93 | R$ 108,554 | R$ 117,833 | 6.80% | Tatico. Gatilho venda: taxa <= 6.0% |
 | Tesouro IPCA+ 2045 | Nubank | — | — | ZERADO | — | Resgate total jan/2025. P&L: -R$ 10,620 |
 
-> **Cotas aguardando atualização (operações 2026-04-10):**
-> - TD IPCA+ 2040: cotas após investimento de R$ 46.498,08 a taxa 7,10%
-> - TD IPCA+ 2050: cotas do investimento inicial R$ 11.660,71 a taxa 6,85%
-> Pendente: obter PU de compra 2026-04-10 do Tesouro Transparente ou do Nubank/XP para cálculo preciso.
-> MtM anterior = cotas × PU venda 08/04/2026 (fonte: `dados/td_precos.json`)
-> Taxas: Tesouro Transparente 08/04/2026 (referência) + 2026-04-10 (operações novas)
+> **Operações 2026-04-10 PENDENTES DE LIQUIDAÇÃO (13/04/2026):**
+> - **TD IPCA+ 2040**: Compra enfileirada R$ 46.498,08 @ taxa 7,10%. PU ref 08/04 = R$ 1.757,66 @ 7,07%. Cotas estimadas: ~26.44 (usando PU ref). **CONFIRMAR PU real com extrato Nubank 13/04 e atualizar.**
+> - **TD IPCA+ 2050**: Compra enfileirada R$ 11.660,71 @ taxa 6,85%. **Primeira operação neste título.** PU inicial desconhecido. **CONFIRMAR PU real com extrato Nubank 13/04 e calcular cotas.**
+>
+> **Ação do Diego**: Verificar extrato Nubank/XP em 13/04 (segunda-feira) para obter PU de execução real. Comunicar ao Bookkeeper para atualizar cotas neste arquivo.
+>
+> Referência: MtM anterior = cotas × PU venda 08/04/2026 (fonte: `dados/td_precos.json`)
+> Taxas: Tesouro Transparente 08/04/2026 (referência) + 2026-04-10 (operações novas) — será confirmado com execução
 
 ---
 
