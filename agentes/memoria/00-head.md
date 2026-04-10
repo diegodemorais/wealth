@@ -17,6 +17,8 @@
 | 2026-04-07 | **Withdrawal strategy confirmada: GUARDRAILS** — FR-withdrawal-engine | 5 estratégias + GK Hybrid testados. Guardrails = melhor P(FIRE)/vol. Vol R$41k vs GK R$189k (4.6×). Delta GK +1.1pp dentro do IC. | FIRE, Advocate (2/2) |
 | 2026-04-07 | **Rebalanceamento pós-FIRE: Opção D** — FR-rebalance-desacumulacao | Spending-based trimestral. Safety valve 10pp drift. Sem vendas tributáveis. Bond pool → caixa no FIRE Day 2040. | FIRE, Factor |
 | 2026-04-07 | **50/30/20 confirmado via Michaud Resampled Frontier** — FI-portfolio-optimization | IC 90% = [0%–100%] — indistinguível. Sem base quantitativa para desviar. Factor drought (AVGS 2% real): P(FIRE) 83.7% — sobrevivível, monitorar. | Factor, Advocate (2/2) |
+| 2026-04-10 | **Premissas MC mantidas (4.85% retorno, 16.8% vol)** — CORE-portfolio-history | Dados reais 5 anos: CAGR TWR 12.69%, vol 18.34%. CIO: diferença explicada por expansão de múltiplos (não recorrente) + depreciação BRL + value recovery. Forward-looking é a prática correta (Vanguard VCMM, Fama & French 2002, Campbell & Shiller 1998). 5 anos insuficientes para recalibrar (IC inclui 4.85%). Dados reais servem como referência visual no output do MC, não como input. | CIO/Factor |
+| 2026-04-10 | **Sharpe rolling usa CDI como RF** — CORE-portfolio-history | Sharpe BRL vs CDI (Selic 14.75%) = métrica principal. Sharpe USD vs T-Bill (Fed Funds 3.64%) = complementar (qualidade equity isolada). Unanimidade literatura: AQR, Fama, DFA, Vanguard — RF = moeda dos retornos. | CIO/Factor |
 
 ---
 
