@@ -2,6 +2,7 @@
 
 **Dono:** Dev
 **Prioridade:** 🔴 Crítica
+**Status:** ✅ Done — 2026-04-10
 **Origem:** Diego reportou 2026-04-09. Problema recorrente.
 
 ---
