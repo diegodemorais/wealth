@@ -661,9 +661,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S17: FEE ANALYSIS (colapsável) -->
-<div class="section collapsible" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
-<div class="collapse-body">
+<div class="section" data-in-tab="perf">
+<details>
+<summary style="cursor:pointer;font-size:1.1rem;font-weight:600;color:var(--text);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px">
+  <span style="font-size:.85em;color:var(--muted)">▶</span>
+  Fee Analysis — Custo de Complexidade (14 anos até FIRE)
+</summary>
+<div style="margin-top:12px">
 <div style="overflow-x:auto">
 <table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -678,6 +682,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
 </div>
+</details>
 </div>
 
 <!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
@@ -1231,12 +1236,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-10T17:12:44-03:00'); // BRT (UTC-3)
-const VERSION = '1.126';
+const GENERATED_AT = new Date('2026-04-10T18:44:41-03:00'); // BRT (UTC-3)
+const VERSION = '1.127';
 
 const DATA = {
-  "_generated": "2026-04-10T17:12:38",
-  "_generated_brt": "2026-04-10T17:12:38-03:00",
+  "_generated": "2026-04-10T18:44:41",
+  "_generated_brt": "2026-04-10T18:44:41-03:00",
   "date": "2026-04-10",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1246,7 +1251,7 @@ const DATA = {
     "fire_mc": "2026-04-10",
     "geral": "2026-04-10"
   },
-  "cambio": 5.0116,
+  "cambio": 5.0031,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -1267,7 +1272,7 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.7501,
+      "price": 114.73,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1275,7 +1280,7 @@ const DATA = {
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.505,
+      "price": 105.53,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1299,7 +1304,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.45,
+      "price": 63.39,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1345,7 +1350,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3486578,
+    "patrimonio_atual": 3481425,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -3093,7 +3098,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -3276,7 +3281,7 @@ const DATA = {
       "n_months": 77
     },
     "DGS": {
-      "alpha": -0.00127,
+      "alpha": -0.00126,
       "mkt_rf": 0.8246,
       "smb": 0.6262,
       "hml": 0.1524,
@@ -3355,16 +3360,16 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.84,
-    "valor": 103643.84,
+    "preco": 62.09,
+    "valor": 104062.84,
     "preco_medio": 79.03,
-    "pnl_brl": -28810.44,
-    "pnl_pct": -21.75,
+    "pnl_brl": -28391.44,
+    "pnl_pct": -21.43,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.97,
+      "atual_pct": 2.99,
       "status": "verde"
     }
   },
@@ -3465,7 +3470,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.7501,
+      "price": 114.73,
       "ucits": "AVGS.L"
     },
     {
@@ -3473,7 +3478,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.505,
+      "price": 105.53,
       "ucits": "AVGS.L"
     },
     {
@@ -3497,7 +3502,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.45,
+      "price": 63.39,
       "ucits": "AVEM.L"
     },
     {
@@ -3527,10 +3532,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 630243,
-    "retorno_usd": 239200,
-    "pct_aportes": 62.0,
-    "pct_retorno": 38.0,
+    "patrimonio_equity_usd": 630200,
+    "retorno_usd": 239157,
+    "pct_aportes": 62.1,
+    "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-10"
@@ -3557,14 +3562,14 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 73235.09,
-    "cambio": 5.0116
+    "bitcoin_usd": 73017.0,
+    "cambio": 5.0031
   },
   "mercado": {
-    "cambio_brl_usd": 5.0116,
-    "btc_usd": 73235.09,
-    "cambio_mtd_pct": -2.8,
-    "btc_mtd_pct": 1.89,
+    "cambio_brl_usd": 5.0031,
+    "btc_usd": 73017.0,
+    "cambio_mtd_pct": -2.97,
+    "btc_mtd_pct": 1.59,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3903,88 +3908,88 @@ const DATA = {
   "cryptoLegado": 3944,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 136047.91,
+    "ir_diferido_total_brl": 135212.13,
     "ir_por_etf": {
       "SWRD": {
         "ganho_usd": 82129.15,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1283548.18,
-        "ganho_brl": 361719.66,
-        "ir_estimado": 54257.95
+        "valor_atual_brl": 1281371.2,
+        "ganho_brl": 359542.68,
+        "ir_estimado": 53931.4
       },
       "EIMI": {
         "ganho_usd": 37104.49,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 503207.65,
-        "ganho_brl": 162415.87,
-        "ir_estimado": 24362.38
+        "valor_atual_brl": 502354.18,
+        "ganho_brl": 161562.4,
+        "ir_estimado": 24234.36
       },
       "USSC": {
         "ganho_usd": 9196.93,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 158400.6,
-        "ganho_brl": 29002.54,
-        "ir_estimado": 4350.38
+        "valor_atual_brl": 158131.95,
+        "ganho_brl": 28733.88,
+        "ir_estimado": 4310.08
       },
       "IWVL": {
         "ganho_usd": 986.14,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11285.22,
-        "ganho_brl": 4674.78,
-        "ir_estimado": 701.22
+        "valor_atual_brl": 11266.08,
+        "ganho_brl": 4655.64,
+        "ir_estimado": 698.35
       },
       "AVDV": {
-        "ganho_usd": 41819.31,
+        "ganho_usd": 41843.0,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 501041.52,
-        "ganho_brl": 198246.1,
-        "ir_estimado": 29736.92
+        "valor_atual_brl": 500310.24,
+        "ganho_brl": 197514.83,
+        "ir_estimado": 29627.22
       },
       "AVUV": {
-        "ganho_usd": 18214.36,
+        "ganho_usd": 18203.33,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 315650.33,
-        "ganho_brl": 78306.54,
-        "ir_estimado": 11745.98
+        "valor_atual_brl": 315059.77,
+        "ganho_brl": 77715.98,
+        "ir_estimado": 11657.4
       },
       "DGS": {
         "ganho_usd": 2398.81,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59291.86,
-        "ganho_brl": 9090.06,
-        "ir_estimado": 1363.51
+        "valor_atual_brl": 59191.3,
+        "ganho_brl": 8989.49,
+        "ir_estimado": 1348.42
       },
       "AVES": {
-        "ganho_usd": 16663.22,
+        "ganho_usd": 16607.63,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 294628.74,
-        "ganho_brl": 62637.36,
-        "ir_estimado": 9395.6
+        "valor_atual_brl": 293850.89,
+        "ganho_brl": 61859.51,
+        "ir_estimado": 9278.93
       },
       "AVGS": {
         "ganho_usd": 459.83,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.0116,
+        "ptax_atual": 5.0031,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31471.99,
-        "ganho_brl": 893.14,
-        "ir_estimado": 133.97
+        "valor_atual_brl": 31418.61,
+        "ganho_brl": 839.76,
+        "ir_estimado": 125.96
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -4000,12 +4005,12 @@ const DATA = {
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.0116
+    "ptax_atual": 5.0031
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.5,
+    "brasil_pct": 9.6,
     "composicao": {
-      "hodl11_brl": 103644,
+      "hodl11_brl": 104063,
       "rf_total_brl": 224406,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -4014,8 +4019,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 332062,
-    "total_portfolio_brl": 3486578,
+    "total_brasil_brl": 332481,
+    "total_portfolio_brl": 3481425,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4031,20 +4036,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33216,
-      "delta_brl": 8216,
-      "delta_pct": 32.9,
+      "realizado_media_brl": 33160,
+      "delta_brl": 8160,
+      "delta_pct": 32.6,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0116,
+      "cambio_conversao": 5.0031,
       "por_ano_brl": {
-        "2026": 95220,
-        "2025": 283018,
-        "2024": 373222,
-        "2023": 394450,
-        "2022": 483086,
-        "2021": 330757
+        "2026": 95059,
+        "2025": 282538,
+        "2024": 372589,
+        "2023": 393781,
+        "2022": 482266,
+        "2021": 330196
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -4471,20 +4476,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3486578,
-      3658309,
-      3838498,
-      4027562,
-      4225939,
-      4434086,
-      4652486,
-      4881644,
-      5122088,
-      5374375,
-      5639089,
-      5916841,
-      6208273,
-      6514060,
+      3481425,
+      3653288,
+      3833635,
+      4022884,
+      4221477,
+      4429872,
+      4648556,
+      4878035,
+      5118842,
+      5371537,
+      5636706,
+      5914966,
+      6206962,
+      6513372,
       6834909,
       6924402,
       7018236,
@@ -4525,20 +4530,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3486578,
-      3797473,
-      4136091,
-      4504903,
-      4906601,
-      5344119,
-      5820650,
-      6339672,
-      6904976,
-      7520687,
-      8191300,
-      8921712,
-      9717254,
-      10583733,
+      3481425,
+      3792261,
+      4130851,
+      4499671,
+      4901420,
+      5339040,
+      5815732,
+      6334986,
+      6900600,
+      7516715,
+      8187839,
+      8918885,
+      9715201,
+      10582615,
       11527476,
       11844559,
       12177020,
@@ -4579,20 +4584,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3486578,
-      3934224,
-      4439343,
-      5009315,
-      5652466,
-      6378193,
-      7197096,
-      8121139,
-      9163821,
-      10340374,
-      11667986,
-      13166052,
-      14856456,
-      16763892,
+      3481425,
+      3928824,
+      4433718,
+      5003497,
+      5646498,
+      6372131,
+      7191016,
+      8115136,
+      9158014,
+      10334914,
+      11663057,
+      13161880,
+      14853317,
+      16762121,
       18916227,
       19591664,
       20299860,
@@ -4662,7 +4667,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.126"
+  "version": "1.127"
 };
 
 // ═══════════════════════════════════════════════════════════════

@@ -171,5 +171,7 @@ P1, P2 e P3 executados. O maior gap de manutenibilidade do pipeline — ausênci
 - [x] P1 — JSON Schema + validação no build
 - [x] P2 — Auditoria de relevância (documentação)
 - [x] P3 — `// @ts-check` + JSDoc types no template
-- [ ] P2 — Separação `generate_data.py` em módulos (issue separada)
-- [ ] Decidir com Diego: remover/colapsar Bollinger, Fee Analysis, Guardrails?
+- [ ] P2 — Separar domínios factor/macro/tax do `generate_data.py` (padrão CORE — baixa urgência)
+- [x] Bollinger → já substituído por heatmap de retornos mensais (DEV-heatmap-rolling v1.105)
+- [x] Fee Analysis → colapsado em accordion (v1.127)
+- [x] Guardrails → manter visível (decisão: regra de execução pós-FIRE)

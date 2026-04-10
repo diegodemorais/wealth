@@ -661,9 +661,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S17: FEE ANALYSIS (colapsável) -->
-<div class="section collapsible" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Fee Analysis — Custo de Complexidade (14 anos até FIRE)</h2>
-<div class="collapse-body">
+<div class="section" data-in-tab="perf">
+<details>
+<summary style="cursor:pointer;font-size:1.1rem;font-weight:600;color:var(--text);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px">
+  <span style="font-size:.85em;color:var(--muted)">▶</span>
+  Fee Analysis — Custo de Complexidade (14 anos até FIRE)
+</summary>
+<div style="margin-top:12px">
 <div style="overflow-x:auto">
 <table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -678,6 +682,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
 </div>
+</details>
 </div>
 
 <!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
