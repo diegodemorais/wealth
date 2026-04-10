@@ -1,0 +1,101 @@
+{
+  "_generated": "2026-04-10T18:50:10",
+  "ir_diferido_total_brl": 133075.41,
+  "ir_por_etf": {
+    "SWRD": {
+      "ganho_usd": 77155.01,
+      "ptax_compra_medio": 5.2983,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 921828.52,
+      "valor_atual_brl": 1294884.57,
+      "ganho_brl": 373056.05,
+      "ir_estimado": 55958.41
+    },
+    "EIMI": {
+      "ganho_usd": 30195.08,
+      "ptax_compra_medio": 5.3834,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 340791.78,
+      "valor_atual_brl": 482081.76,
+      "ganho_brl": 141289.99,
+      "ir_estimado": 21193.5
+    },
+    "USSC": {
+      "ganho_usd": 9211.86,
+      "ptax_compra_medio": 5.7742,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 129398.06,
+      "valor_atual_brl": 163041.6,
+      "ganho_brl": 33643.54,
+      "ir_estimado": 5046.53
+    },
+    "IWVL": {
+      "ganho_usd": 864.42,
+      "ptax_compra_medio": 5.2228,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 6610.44,
+      "valor_atual_brl": 10982.8,
+      "ganho_brl": 4372.35,
+      "ir_estimado": 655.85
+    },
+    "AVDV": {
+      "ganho_usd": 38062.08,
+      "ptax_compra_medio": 5.2065,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 302795.42,
+      "valor_atual_brl": 496105.84,
+      "ganho_brl": 193310.43,
+      "ir_estimado": 28996.56
+    },
+    "AVUV": {
+      "ganho_usd": 16501.81,
+      "ptax_compra_medio": 5.3015,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 237343.79,
+      "valor_atual_brl": 315915.26,
+      "ganho_brl": 78571.47,
+      "ir_estimado": 11785.72
+    },
+    "DGS": {
+      "ganho_usd": 2095.79,
+      "ptax_compra_medio": 5.3224,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 50201.81,
+      "valor_atual_brl": 59437.88,
+      "ganho_brl": 9236.08,
+      "ir_estimado": 1385.41
+    },
+    "AVES": {
+      "ganho_usd": 13281.33,
+      "ptax_compra_medio": 5.5071,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 231991.38,
+      "valor_atual_brl": 285680.88,
+      "ganho_brl": 53689.49,
+      "ir_estimado": 8053.42
+    },
+    "AVGS": {
+      "ganho_usd": -166.34,
+      "ptax_compra_medio": 5.2541,
+      "ptax_atual": 5.156,
+      "custo_total_brl": 30578.85,
+      "valor_atual_brl": 29150.25,
+      "ganho_brl": -1428.6,
+      "ir_estimado": 0.0
+    }
+  },
+  "regime": "ACC UCITS \u2014 diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na aliena\u00e7\u00e3o)",
+  "badges": {
+    "SWRD": "ACC \u2014 diferimento fiscal",
+    "EIMI": "ACC \u2014 diferimento fiscal",
+    "USSC": "ACC \u2014 diferimento fiscal",
+    "IWVL": "ACC \u2014 diferimento fiscal",
+    "AVDV": "ACC \u2014 diferimento fiscal",
+    "AVUV": "ACC \u2014 diferimento fiscal",
+    "DGS": "ACC \u2014 diferimento fiscal",
+    "AVES": "ACC \u2014 diferimento fiscal",
+    "AVGS": "ACC \u2014 diferimento fiscal"
+  },
+  "ptax_source": "BCB PTAX ask",
+  "ptax_atual": 5.156
+}

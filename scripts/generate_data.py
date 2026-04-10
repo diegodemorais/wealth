@@ -61,6 +61,9 @@ ROLLING_CORE    = ROOT / "dados" / "rolling_metrics.json"
 SUMMARY_CORE    = ROOT / "dados" / "portfolio_summary.json"
 WELLNESS_CONFIG = ROOT / "agentes" / "referencia" / "wellness_config.json"
 FACTOR_CACHE        = ROOT / "dados" / "factor_cache.json"
+FACTOR_SNAPSHOT     = ROOT / "dados" / "factor_snapshot.json"
+MACRO_SNAPSHOT      = ROOT / "dados" / "macro_snapshot.json"
+TAX_SNAPSHOT        = ROOT / "dados" / "tax_snapshot.json"
 SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
 HEAD_RELAY          = ROOT / "dados" / "head_relay.json"
 OUT_PATH        = ROOT / "dashboard" / "data.json"
@@ -1797,27 +1800,40 @@ def main():
     # Attribution
     attr = get_attribution()
 
-    # Factor data (rolling + loadings)
-    # Se --skip-scripts e cache não existe, tenta popular inline antes de chamar as funções
-    if args.skip_scripts and not FACTOR_CACHE.exists():
-        _try_populate_factor_cache()
-    factor_rolling  = get_factor_rolling()
-    factor_signal   = get_factor_signal()
-    factor_loadings = get_factor_loadings()
-
-    # Cache factor data for --skip-scripts
-    if factor_rolling.get("dates") or factor_loadings:
-        _factor_cache = {}
-        if factor_rolling.get("dates"):
-            _factor_cache["factor_rolling"] = factor_rolling
-        if factor_loadings:
-            _factor_cache["factor_loadings"] = factor_loadings
+    # Factor data — lê factor_snapshot.json (gerado por reconstruct_factor.py)
+    # Fallback: factor_cache.json legado, depois inline (--skip-scripts=False)
+    _factor_snap = {}
+    if FACTOR_SNAPSHOT.exists():
         try:
-            FACTOR_CACHE.parent.mkdir(exist_ok=True)
-            FACTOR_CACHE.write_text(json.dumps(_factor_cache, indent=2))
-            print(f"  ✓ factor cache saved → {FACTOR_CACHE.relative_to(ROOT)}")
+            _factor_snap = json.loads(FACTOR_SNAPSHOT.read_text())
+            print(f"  ✓ factor snapshot ({FACTOR_SNAPSHOT.relative_to(ROOT)})")
         except Exception as e:
-            print(f"  ⚠️ factor cache write: {e}")
+            print(f"  ⚠️ factor snapshot read: {e}")
+
+    if _factor_snap:
+        factor_rolling  = _factor_snap.get("factor_rolling",  {"dates": [], "avgs_vs_swrd_12m": [], "threshold": FACTOR_UNDERPERF_THRESHOLD})
+        factor_signal   = _factor_snap.get("factor_signal")
+        factor_loadings = _factor_snap.get("factor_loadings", {})
+    else:
+        # Fallback: calcular inline (comportamento anterior)
+        if args.skip_scripts and not FACTOR_CACHE.exists():
+            _try_populate_factor_cache()
+        factor_rolling  = get_factor_rolling()
+        factor_signal   = get_factor_signal()
+        factor_loadings = get_factor_loadings()
+        # Persist legacy cache para compatibilidade
+        if factor_rolling.get("dates") or factor_loadings:
+            _factor_cache = {}
+            if factor_rolling.get("dates"):
+                _factor_cache["factor_rolling"] = factor_rolling
+            if factor_loadings:
+                _factor_cache["factor_loadings"] = factor_loadings
+            try:
+                FACTOR_CACHE.parent.mkdir(exist_ok=True)
+                FACTOR_CACHE.write_text(json.dumps(_factor_cache, indent=2))
+                print(f"  ✓ factor cache saved (legado) → {FACTOR_CACHE.relative_to(ROOT)}")
+            except Exception as e:
+                print(f"  ⚠️ factor cache write: {e}")
 
     # Timeline + Retornos mensais
     # Preferir JSONs core (gerados por reconstruct_history.py) se disponíveis
@@ -1931,8 +1947,24 @@ def main():
     # DCA Status — calculado após total_brl estar disponível
     dca_status = get_dca_status(rf, total_brl)
 
-    # IR diferido (Lei 14.754/2023)
-    tax_data = compute_tax_diferido(posicoes, cambio)
+    # IR diferido — lê tax_snapshot.json (gerado por reconstruct_tax.py)
+    # Fallback: calcular inline (compute_tax_diferido)
+    tax_data = None
+    if TAX_SNAPSHOT.exists():
+        try:
+            _tax_snap = json.loads(TAX_SNAPSHOT.read_text())
+            # Validar que o snapshot é coerente com câmbio atual (tolerância 5%)
+            _snap_cambio = _tax_snap.get("ptax_atual", 0)
+            if _snap_cambio > 0 and abs(_snap_cambio - cambio) / cambio < 0.05:
+                tax_data = {k: v for k, v in _tax_snap.items() if not k.startswith("_")}
+                print(f"  ✓ tax snapshot ({TAX_SNAPSHOT.relative_to(ROOT)}) — IR R${tax_data.get('ir_diferido_total_brl', 0):,.0f}")
+            else:
+                print(f"  ⚠️ tax snapshot câmbio {_snap_cambio} vs atual {cambio:.4f} (>5%) — recalculando inline")
+        except Exception as e:
+            print(f"  ⚠️ tax snapshot read: {e}")
+
+    if tax_data is None:
+        tax_data = compute_tax_diferido(posicoes, cambio)
 
     # Premissas — garantir patrimônio atual
     premissas = {
@@ -2121,9 +2153,20 @@ def main():
         entries.sort(key=lambda x: x["data"], reverse=True)
         return entries[:5]
 
-    # Macro
-    print("  ▶ macro data ...")
-    macro = get_macro_data(state)
+    # Macro — lê macro_snapshot.json (gerado por reconstruct_macro.py)
+    # Fallback: calcular inline (get_macro_data)
+    macro = None
+    if MACRO_SNAPSHOT.exists():
+        try:
+            macro = json.loads(MACRO_SNAPSHOT.read_text())
+            print(f"  ✓ macro snapshot ({MACRO_SNAPSHOT.relative_to(ROOT)})")
+        except Exception as e:
+            print(f"  ⚠️ macro snapshot read: {e}")
+
+    if macro is None:
+        print("  ▶ macro data (inline fallback) ...")
+        macro = get_macro_data(state)
+
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
 
