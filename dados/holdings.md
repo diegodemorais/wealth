@@ -61,10 +61,15 @@
 | Ativo | Qtde | Tipo | Custo medio | Custo total | Valor estimado | Ref |
 |-------|------|------|-------------|-------------|---------------|-----|
 | HODL11 | 1,676 | ETF B3 (XP) | R$ 79.03 | R$ 132,453 | R$ 100,208 | yfinance 09/04/2026 |
-| Bitcoin spot | 0.00434697 | Legado (wallet) | — | — | ~R$ 2,000 | BTC ~R$460k, 07/04/2026 |
-| Ethereum | 0.06606465 | Legado (wallet) | — | — | ~R$ 700 | ETH ~R$11k, 07/04/2026 |
-| BNB | 0.20507877 | Legado (wallet) | — | — | ~R$ 350 | BNB ~R$1.7k, 07/04/2026 |
-| Cardano | 47.96176001 | Legado (wallet) | — | — | ~R$ 88 | ADA ~R$1.84, 07/04/2026 |
+| Bitcoin spot | 0.00435900 | Binance Earn | — | — | $382 (R$ 1,937) | Binance statement 23/03/2026 |
+| Ethereum | 0.06761700 | Binance Earn | — | — | $201 (R$ 1,019) | Binance statement 23/03/2026 |
+| BNB | 0.20519500 | Binance Spot | — | — | $177 (R$ 897) | Binance statement 23/03/2026 |
+| Cardano | 48.39219300 | Binance Spot | — | — | $16 (R$ 81) | Binance statement 23/03/2026 |
+| Outros (ENA, PENGU, etc) | — | Binance Spot | — | — | $1 (R$ 5) | Dust |
+
+> Fonte: `analysis/raw/binance_saldo.pdf` (Account Statement 23/03/2026, total $778 USD)
+> `dados/binance/saldo.json` gerado por `broker_analysis.py --broker binance`
+> `dashboard_state.json crypto_legado_brl` atualizado automaticamente: R$4,012
 
 ---
 

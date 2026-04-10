@@ -23,6 +23,8 @@ XP_PDF_DIR = ROOT / "analysis" / "raw" / "negociacoes xp"
 XP_OUTPUT_DIR = ROOT / "dados" / "xp"
 NUBANK_INPUT = ROOT / "dados" / "nubank" / "operacoes_td.json"
 NUBANK_OUTPUT_DIR = ROOT / "dados" / "nubank"
+BINANCE_PDF = ROOT / "analysis" / "raw" / "binance_saldo.pdf"
+BINANCE_OUTPUT_DIR = ROOT / "dados" / "binance"
 IBKR_SCRIPT = ROOT / "analysis" / "ibkr_analysis.py"
 
 
@@ -461,6 +463,197 @@ def run_nubank():
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# BINANCE — Saldo de crypto (PDF statement)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def parse_binance_pdf() -> dict:
+    """
+    Parseia PDF de Account Statement da Binance.
+    Extrai saldos consolidados (Top 10 + all holdings).
+    Retorna {symbol: {qty, value_usd, price_usd}}.
+    """
+    if not BINANCE_PDF.exists():
+        print(f"  ⚠ PDF não encontrado: {BINANCE_PDF}")
+        return {}
+
+    text = subprocess.run(
+        ["pdftotext", str(BINANCE_PDF), "-"],
+        capture_output=True, text=True, timeout=30
+    ).stdout
+
+    # Extrair da seção "Asset Allocation Your Consolidated Top 10 Assets"
+    # e da seção HOLDINGS REPORT que lista TODOS os ativos
+    holdings = {}
+
+    # Padrão: SYMBOL Name   QTY   PRICE   VALUE
+    # O pdftotext gera blocos por ativo com formato:
+    # "BTC Bitcoin" seguido de "0.004359 0.004351 / 0.000008" etc
+    lines = text.split("\n")
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+
+        # Detectar bloco de ativo na seção Holdings Report (última seção, mais completa)
+        # Formato: "SYMBOL Name" numa linha, seguido de price, qty, value
+        # Procurar padrão: "XXX Xxxxx" seguido de números
+        # Usar a seção "HOLDINGS REPORT" que tem formato mais limpo
+
+        # Padrão simplificado: encontrar linhas com symbol + name
+        # seguido de linhas com números no formato "$XX,XXX.XXXXXX $..."
+        # e "X.XXXXXX X.XXXXXX" (qty)
+        # e "$XXX.XX $..." (value)
+
+        i += 1
+
+    # Approach mais robusto: regex no texto completo
+    # Seção "Asset Allocation" tem o formato mais limpo
+    import re
+
+    # Extrair blocos da seção Asset Allocation
+    asset_section = text.split("Asset Allocation")[1] if "Asset Allocation" in text else text
+    asset_section = asset_section.split("CONSOLIDATED")[0] if "CONSOLIDATED" in asset_section else asset_section
+
+    # Pattern: SYMBOL Name \n QTY_NOW QTY_BEGIN / QTY_CHANGE \n PRICE_NOW ... \n VALUE_NOW ...
+    # Mas o pdftotext mistura tudo. Vou usar a seção HOLDINGS REPORT que é a mais completa.
+
+    # Approach final: buscar todas as linhas com pattern "SYMBOL Name" seguidas de $ values
+    # Na seção HOLDINGS REPORT, cada ativo tem:
+    # Line 1: "BTC Bitcoin"
+    # Line 2: "$87,648.220000 $-6,943.570000"
+    # Line 3: "0.004359 0.000008"
+    # Line 4: "$382.09 $-29.49"
+
+    holdings_section = text.split("HOLDINGS REPORT")[1] if "HOLDINGS REPORT" in text else ""
+    if not holdings_section:
+        # Fallback: use Asset Allocation section
+        holdings_section = asset_section
+
+    # Parse each symbol block from consolidated top 10
+    # Format in text: "SYMBOL Name" then qty, price, value on subsequent conceptual rows
+    # But pdftotext collapses columns into single lines
+
+    # Best approach: use the explicit data from the consolidated section
+    # which has clear format: Symbol, Quantity (Begin / Change), Price (Begin / Change), Value (Begin / Change)
+    consol = text.split("Asset Allocation Your Consolidated Top 10 Assets")
+    if len(consol) > 1:
+        block = consol[1].split("CONSOLIDATED")[0]
+
+        # Each asset block:
+        # "BTC Bitcoin\n\n0.004359 0.004351 / 0.000008\n\n$87,648.220000..."
+        # Parse symbol lines
+        symbol_pattern = re.compile(
+            r'^([A-Z0-9]+)\s+\S.*$',  # "BTC Bitcoin" or "ADA Cardano"
+            re.MULTILINE
+        )
+
+        qty_pattern = re.compile(r'^([\d.]+)\s+([\d.]+)\s*/\s*([-\d.]+)')  # qty_now qty_begin / change
+        price_pattern = re.compile(r'^\$([\d,.]+)\s+\$([\d,.]+)')  # $price_now $price_begin
+        value_pattern = re.compile(r'^\$([\d,.]+)\s+\$([\d,.]+)')  # $value_now $value_begin
+
+        current_symbol = None
+        state = "symbol"  # symbol → qty → price → value
+        lines = block.split("\n")
+
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            if state == "symbol":
+                m = re.match(r'^([A-Z][A-Z0-9]{1,10})\s+\S', line)
+                if m:
+                    current_symbol = m.group(1)
+                    state = "qty"
+            elif state == "qty" and current_symbol:
+                m = qty_pattern.match(line)
+                if m:
+                    qty_now = float(m.group(1))
+                    holdings[current_symbol] = {"qty": qty_now}
+                    state = "price"
+            elif state == "price" and current_symbol:
+                m = re.match(r'^\$([\d,]+\.[\d]+)', line)
+                if m:
+                    price = float(m.group(1).replace(",", ""))
+                    holdings[current_symbol]["price_usd"] = price
+                    state = "value"
+            elif state == "value" and current_symbol:
+                m = re.match(r'^\$([\d,]+\.[\d]+)', line)
+                if m:
+                    value = float(m.group(1).replace(",", ""))
+                    holdings[current_symbol]["value_usd"] = value
+                    state = "symbol"
+                    current_symbol = None
+
+    return holdings
+
+
+def generate_binance_outputs(holdings: dict):
+    """Gera JSON em dados/binance/."""
+    BINANCE_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    total_usd = sum(h.get("value_usd", 0) for h in holdings.values())
+
+    output = {
+        "_generated": datetime.now().isoformat(timespec="seconds"),
+        "_source": "Binance Account Statement PDF (pdftotext)",
+        "_pdf": str(BINANCE_PDF.relative_to(ROOT)),
+        "total_usd": round(total_usd, 2),
+        "holdings": {k: {
+            "qty": round(v.get("qty", 0), 8),
+            "price_usd": round(v.get("price_usd", 0), 6),
+            "value_usd": round(v.get("value_usd", 0), 2),
+        } for k, v in sorted(holdings.items(), key=lambda x: -x[1].get("value_usd", 0))},
+    }
+
+    out_path = BINANCE_OUTPUT_DIR / "saldo.json"
+    out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False))
+    print(f"  ✓ {out_path.relative_to(ROOT)}")
+    return output
+
+
+def run_binance():
+    """Parseia saldo Binance."""
+    print(f"\n{'═' * 70}")
+    print("BINANCE — Crypto Spot + Earn")
+    print(f"{'═' * 70}\n")
+
+    holdings = parse_binance_pdf()
+    if not holdings:
+        print("  Nenhum holding extraído.")
+        return
+
+    total = sum(h.get("value_usd", 0) for h in holdings.values())
+    print(f"  {len(holdings)} ativos, total ${total:,.2f} USD\n")
+
+    print(f"  {'Symbol':<10} {'Qty':>14} {'Price USD':>14} {'Value USD':>12}")
+    print(f"  {'-'*52}")
+    for sym, h in sorted(holdings.items(), key=lambda x: -x[1].get("value_usd", 0)):
+        if h.get("value_usd", 0) >= 0.10:
+            print(f"  {sym:<10} {h['qty']:>14.6f} {h.get('price_usd',0):>14.2f} {h.get('value_usd',0):>12.2f}")
+
+    print(f"\n  TOTAL: ${total:,.2f} USD")
+
+    output = generate_binance_outputs(holdings)
+
+    # Atualizar crypto_legado_brl no dashboard_state
+    state_path = ROOT / "dados" / "dashboard_state.json"
+    if state_path.exists():
+        cambio = 5.07  # fallback
+        try:
+            state = json.loads(state_path.read_text())
+            cambio = state.get("patrimonio", {}).get("cambio") or cambio
+            state["crypto_legado_brl"] = round(total * cambio, 2)
+            state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
+            print(f"\n  ✓ dashboard_state.json crypto_legado_brl = R${total * cambio:,.2f}")
+        except Exception as e:
+            print(f"  ⚠ dashboard_state update: {e}")
+
+    print(f"\n{'═' * 70}")
+    print("BINANCE ANÁLISE CONCLUÍDA")
+    print(f"{'═' * 70}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # IBKR — delega ao script existente
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -545,7 +738,7 @@ def run_xp():
 def main():
     import argparse
     parser = argparse.ArgumentParser(description="Broker Analysis — Multi-corretora")
-    parser.add_argument("--broker", choices=["xp", "ibkr", "nubank", "all"], default="all",
+    parser.add_argument("--broker", choices=["xp", "ibkr", "nubank", "binance", "all"], default="all",
                         help="Qual corretora processar (default: all)")
     args = parser.parse_args()
 
@@ -553,6 +746,8 @@ def main():
         run_xp()
     if args.broker in ("nubank", "all"):
         run_nubank()
+    if args.broker in ("binance", "all"):
+        run_binance()
     if args.broker in ("ibkr", "all"):
         run_ibkr()
 
