@@ -612,7 +612,9 @@ def _generate_core_jsons(rows: list[dict]):
     Fonte de verdade para todos os consumidores (dashboard, checkin, FIRE MC, retros).
     """
     import math
-    from datetime import datetime
+    import json as _json
+    import urllib.request as _url_req
+    from datetime import datetime, timedelta
 
     now_iso = datetime.now().isoformat(timespec="seconds")
 
@@ -690,6 +692,69 @@ def _generate_core_jsons(rows: list[dict]):
             comp_fx.append(0)
             comp_other.append(0)
 
+    # ── Deflação IPCA → twr_real_brl_pct, ipca_cagr_periodo_pct ────────
+    # Calcula CAGR nominal BRL do período completo e deflaciona pelo IPCA BCB série 433.
+    # Fallback: IPCA_CAGR_FALLBACK de config.py.
+    twr_nominal_brl_cagr = None
+    twr_real_brl_pct = None
+    ipca_cagr_periodo_pct = None
+    periodo_anos = None
+
+    n_meses = len(twr_pct)
+    if n_meses >= 6:
+        acum_brl = 1.0
+        for r in twr_pct:
+            acum_brl *= (1 + r / 100)
+        periodo_anos = round(n_meses / 12, 2)
+        twr_nominal_brl_cagr = round((acum_brl ** (12 / n_meses) - 1) * 100, 2)
+
+        # Buscar IPCA BCB série 433
+        _ipca_cagr = None
+        if dates:
+            try:
+                _d0 = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
+                _d1 = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+                _d1_last = (_d1.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+                _dt_ini = _d0.strftime("%d/%m/%Y")
+                _dt_fim = _d1_last.strftime("%d/%m/%Y")
+                _bcb_url = (
+                    f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados"
+                    f"?formato=json&dataInicial={_dt_ini}&dataFinal={_dt_fim}"
+                )
+                with _url_req.urlopen(_bcb_url, timeout=10) as _resp:
+                    _ipca_raw = _json.loads(_resp.read().decode())
+                _acum_ipca = 1.0
+                _n_ipca = 0
+                for _row in _ipca_raw:
+                    try:
+                        _acum_ipca *= (1 + float(_row["valor"]) / 100)
+                        _n_ipca += 1
+                    except (KeyError, ValueError):
+                        pass
+                if _n_ipca >= 6:
+                    _ipca_cagr = round((_acum_ipca ** (12 / _n_ipca) - 1) * 100, 2)
+                    print(f"  -> IPCA BCB: {_n_ipca} meses, CAGR={_ipca_cagr:.2f}% (API)")
+                else:
+                    raise ValueError(f"Apenas {_n_ipca} meses IPCA na API — usando fallback")
+            except Exception as _e:
+                print(f"  ⚠️ IPCA BCB falhou ({_e}), usando fallback")
+
+        if _ipca_cagr is None:
+            sys.path.insert(0, str(ROOT / "scripts"))
+            try:
+                from config import IPCA_CAGR_FALLBACK as _IPCA_FB
+            except ImportError:
+                _IPCA_FB = 6.14
+            _ipca_cagr = _IPCA_FB
+            print(f"  ⚠️ IPCA usando fallback={_ipca_cagr}%")
+
+        ipca_cagr_periodo_pct = _ipca_cagr
+        # Fórmula: twr_real = (1 + nominal/100) / (1 + ipca/100) - 1
+        twr_real_brl_pct = round(
+            ((1 + twr_nominal_brl_cagr / 100) / (1 + ipca_cagr_periodo_pct / 100) - 1) * 100, 2
+        )
+        print(f"  -> TWR nominal BRL CAGR: {twr_nominal_brl_cagr:.2f}% | IPCA CAGR: {ipca_cagr_periodo_pct:.2f}% | TWR real BRL: {twr_real_brl_pct:.2f}%")
+
     retornos = {
         "_generated": now_iso,
         "_source": "reconstruct_history.py → TWR (Modified Dietz simplificado)",
@@ -703,6 +768,9 @@ def _generate_core_jsons(rows: list[dict]):
             "fx": comp_fx,
             "rf_xp": comp_other,
         },
+        "twr_real_brl_pct":      twr_real_brl_pct,
+        "ipca_cagr_periodo_pct": ipca_cagr_periodo_pct,
+        "periodo_anos":          periodo_anos,
     }
 
     retornos_path = ROOT / "dados" / "retornos_mensais.json"
