@@ -185,12 +185,10 @@ def patrimonio_shadow(pat_anterior: float, retorno: float, aportes: float) -> fl
 
 def calcular_cagr_historico(csv_path: str = None) -> dict:
     """
-    Calcula CAGR acumulado desde o primeiro até o último ponto do histórico.
+    Retorna CAGR e métricas históricas do portfolio.
 
-    Lê dados/historico_carteira.csv, ordena por data, e calcula:
-    - CAGR = (Pat_fim / Pat_ini)^(1/anos) - 1
-    - Retorno acumulado total
-    - Período em anos e meses
+    Fonte primária: dados/portfolio_summary.json (TWR — desconta aportes).
+    Fallback: calcula do CSV (patrimônio bruto, inclui aportes — menos preciso).
 
     Retorna dict com:
     {
@@ -199,39 +197,62 @@ def calcular_cagr_historico(csv_path: str = None) -> dict:
         "patrimonio_inicio": float,
         "patrimonio_fim": float,
         "anos": float,
-        "cagr": float,
-        "retorno_acumulado": float,
-        "status": "OK" ou mensagem de erro
+        "cagr": float,              # TWR CAGR (descontando aportes)
+        "retorno_acumulado": float,  # TWR acumulado (descontando aportes)
+        "total_aportes": float,      # total aportado no período
+        "ganho_mercado": float,      # patrimônio gerado pelo mercado
+        "max_drawdown": float,       # max drawdown TWR
+        "volatilidade": float,       # vol anualizada
+        "status": "OK" ou mensagem de erro,
+        "fonte": "portfolio_summary.json" ou "historico_carteira.csv"
     }
-
-    Se menos de 2 pontos ou dados faltando, retorna status com erro.
     """
+    # ── Fonte primária: portfolio_summary.json (TWR) ──
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    summary_path = os.path.join(script_dir, "../dados/portfolio_summary.json")
+    try:
+        import json as _json
+        with open(summary_path) as f:
+            s = _json.load(f)
+        from datetime import date as _date
+        d0 = _date.fromisoformat(s["periodo"]["inicio"])
+        d1 = _date.fromisoformat(s["periodo"]["fim"])
+        return {
+            "data_inicio": d0,
+            "data_fim": d1,
+            "patrimonio_inicio": s["patrimonio"]["inicio_brl"],
+            "patrimonio_fim": s["patrimonio"]["fim_brl"],
+            "anos": s["periodo"]["anos"],
+            "cagr": s["retorno_twr"]["cagr_pct"] / 100,
+            "retorno_acumulado": s["retorno_twr"]["acumulado_pct"] / 100,
+            "total_aportes": s["patrimonio"]["total_aportes_brl"],
+            "ganho_mercado": s["patrimonio"]["ganho_mercado_brl"],
+            "max_drawdown": s["risco"]["max_drawdown_pct"] / 100,
+            "volatilidade": s["risco"]["volatilidade_anual_pct"] / 100,
+            "status": "OK",
+            "num_pontos": s["periodo"]["meses"],
+            "fonte": "portfolio_summary.json (TWR)",
+        }
+    except (FileNotFoundError, KeyError, Exception):
+        pass  # fallback ao CSV
+
+    # ── Fallback: CSV (patrimônio bruto — inclui aportes) ──
     if csv_path is None:
-        # Buscar csv_path relativo ao diretório do script
-        script_dir = os.path.dirname(os.path.abspath(__file__))
         csv_path = os.path.join(script_dir, "../dados/historico_carteira.csv")
 
     try:
         df = pd.read_csv(csv_path)
     except FileNotFoundError:
-        return {
-            "status": f"ERRO: arquivo não encontrado: {csv_path}"
-        }
+        return {"status": f"ERRO: arquivo não encontrado: {csv_path}"}
     except Exception as e:
-        return {
-            "status": f"ERRO ao ler CSV: {e}"
-        }
+        return {"status": f"ERRO ao ler CSV: {e}"}
 
-    # Filtrar linhas com patrimonio_brl válido (não vazio/NaN)
     df["data"] = pd.to_datetime(df["data"])
     df_valido = df[df["patrimonio_brl"].notna()].copy()
 
     if len(df_valido) < 2:
-        return {
-            "status": f"AVISO: apenas {len(df_valido)} ponto(s) com patrimônio válido. CAGR requer mín 2 pontos."
-        }
+        return {"status": f"AVISO: apenas {len(df_valido)} ponto(s). CAGR requer mín 2."}
 
-    # Ordenar por data e pegar primeiro e último
     df_valido = df_valido.sort_values("data")
     row_ini = df_valido.iloc[0]
     row_fim = df_valido.iloc[-1]
@@ -241,22 +262,14 @@ def calcular_cagr_historico(csv_path: str = None) -> dict:
     pat_inicio = float(row_ini["patrimonio_brl"])
     pat_fim = float(row_fim["patrimonio_brl"])
 
-    # Validação
     if pat_inicio <= 0 or pat_fim <= 0:
-        return {
-            "status": "ERRO: patrimônio inicial ou final <= 0"
-        }
+        return {"status": "ERRO: patrimônio inicial ou final <= 0"}
 
-    # Calcular período em anos (com precisão decimal para períodos < 1 ano)
-    delta = data_fim - data_inicio
-    anos = delta.days / 365.25
-
+    anos = (data_fim - data_inicio).days / 365.25
     if anos <= 0:
-        return {
-            "status": f"ERRO: data_fim {data_fim} não é posterior a data_inicio {data_inicio}"
-        }
+        return {"status": f"ERRO: data_fim {data_fim} não posterior a data_inicio {data_inicio}"}
 
-    # CAGR
+    # CAGR bruto (AVISO: inclui aportes — usar portfolio_summary.json para TWR correto)
     cagr = (pat_fim / pat_inicio) ** (1 / anos) - 1
     retorno_acumulado = pat_fim / pat_inicio - 1
 
@@ -268,8 +281,9 @@ def calcular_cagr_historico(csv_path: str = None) -> dict:
         "anos": anos,
         "cagr": cagr,
         "retorno_acumulado": retorno_acumulado,
-        "status": "OK",
-        "num_pontos": len(df_valido)
+        "status": "OK (AVISO: CAGR bruto inclui aportes — rode reconstruct_history.py para TWR)",
+        "num_pontos": len(df_valido),
+        "fonte": "historico_carteira.csv (bruto)",
     }
 
 

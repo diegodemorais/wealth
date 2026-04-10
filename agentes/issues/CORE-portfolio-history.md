@@ -155,11 +155,11 @@ Antes de qualquer JSON core ser consumido por outros scripts:
 - [x] Fase 0: Reconstruir CSV com dados reais (IBKR + XP + Nubank) — Done
 - [x] Fase 0: Implementar TWR (descontar aportes dos retornos) — Done
 - [x] Fase 0: Rolling Sharpe server-side em generate_data.py — Done
-- [ ] Fase 1: Gerar `portfolio_history.json` de reconstruct_history.py
-- [ ] Fase 1: Gerar `retornos_mensais.json`
-- [ ] Fase 1: Gerar `rolling_metrics.json` (Sharpe + Sortino + Vol + MaxDD)
-- [ ] Fase 1: Gerar `portfolio_summary.json`
-- [ ] Fase 2: Migrar generate_data.py para ler JSONs core
-- [ ] Fase 2: Migrar checkin_mensal.py
-- [ ] Fase 2: Calibrar fire_montecarlo.py
-- [ ] Fase 3: Decomposição retorno equity/FX/RF
+- [x] Fase 1: Gerar `retornos_mensais.json` (TWR BRL + USD + decomposição) — Done
+- [x] Fase 1: Gerar `rolling_metrics.json` (dual Sharpe BRL/USD + Sortino + Vol + MaxDD) — Done
+- [x] Fase 1: Gerar `portfolio_summary.json` (CAGR TWR 12.69%, MaxDD -22.7%) — Done
+- [x] Fase 2: Migrar generate_data.py para ler JSONs core — Done
+- [x] Fase 2: Migrar checkin_mensal.py → portfolio_summary.json (TWR) — Done
+- [x] Fase 2: Calibrar fire_montecarlo.py — referência real no output (premissas acadêmicas mantidas) — Done
+- [x] Fase 3: Decomposição retorno equity_usd/FX/RF+XP — Done
+- [ ] Fase 3: Information ratio vs benchmark (VWRA) — Backlog

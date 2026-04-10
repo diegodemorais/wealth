@@ -551,6 +551,22 @@ def imprimir_resultados(resultados: list, premissas: dict):
     vbp = premissas.get("vol_bond_pool")
     if vbp:
         print(f"  Vol bond pool:    {vbp:.1%} (anos 0-{premissas.get('anos_bond_pool',7)-1}) → {premissas['volatilidade_equity']:.1%} (anos {premissas.get('anos_bond_pool',7)}+)")
+
+    # ── Calibração: comparar premissas vs dados reais do portfolio ──
+    try:
+        import json as _json
+        _summary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../dados/portfolio_summary.json")
+        with open(_summary_path) as _f:
+            _ps = _json.load(_f)
+        _cagr_real = _ps["retorno_twr"]["cagr_pct"]
+        _vol_real = _ps["risco"]["volatilidade_anual_pct"]
+        _anos_real = _ps["periodo"]["anos"]
+        print(f"\n  ── Calibração vs dados reais ({_anos_real:.0f} anos, TWR) ──")
+        print(f"  Retorno real:  premissa {premissas['retorno_equity_base']:.2%} vs realizado {_cagr_real:.2f}% a.a.")
+        print(f"  Volatilidade:  premissa {premissas['volatilidade_equity']:.1%} vs realizada {_vol_real:.1f}%")
+        print(f"  (Premissas acadêmicas mantidas — dados reais como referência)")
+    except Exception:
+        pass
     print("═"*60)
 
     print(f"\n{'Cenário':<12} {'P(FIRE)':>8} {'P(Gatilho)':>11}  {'Pat.Mediana@50':>15}  {'r_equity':>10}")

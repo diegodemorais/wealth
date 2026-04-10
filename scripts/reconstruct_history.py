@@ -603,6 +603,10 @@ def _generate_core_jsons(rows: list[dict]):
     twr_usd_pct = []       # Equity block em USD
     acumulado = []
     acumulado_usd = []
+    # Decomposição por componente
+    comp_equity_usd = []   # Contribuição do retorno equity em USD
+    comp_fx = []           # Contribuição do câmbio
+    comp_other = []        # Contribuição RF + XP (residual)
     cum = 1.0
     cum_usd = 1.0
 
@@ -626,6 +630,47 @@ def _generate_core_jsons(rows: list[dict]):
             twr_usd_pct.append(None)
             acumulado_usd.append(None)
 
+        # ── Decomposição de retorno ──
+        # ret_total_brl = w_equity × (ret_equity_usd + ret_fx + ret_equity_usd × ret_fx) + w_other × ret_other
+        # Simplificado: contribuições aditivas em % do patrimônio
+        prev = rows[i - 1]
+        pat_prev = prev["patrimonio_brl"]
+        if pat_prev > 0:
+            # Equity contribution: (equity_brl_now - equity_brl_prev - aporte_ibkr_brl) / pat_prev
+            eq_brl_prev = prev.get("equity_brl", 0)
+            eq_brl_now = row.get("equity_brl", 0)
+            aporte_brl = row.get("aporte_brl", 0)
+            # Aporte equity (IBKR) in BRL = aporte_usd × cambio
+            aporte_eq_brl = row.get("aporte_usd", 0) * row.get("usdbrl", 5.0)
+            eq_contrib = (eq_brl_now - eq_brl_prev - aporte_eq_brl) / pat_prev * 100
+
+            # Decompor equity BRL em: equity USD component + FX component
+            # equity_brl = equity_usd × cambio
+            # Δ(equity_brl) = Δ(equity_usd) × cambio_prev + equity_usd_prev × Δ(cambio) + cross
+            eq_usd_prev = prev.get("equity_usd", 0)
+            eq_usd_now = row.get("equity_usd", 0)
+            cambio_prev = prev.get("usdbrl", 5.0)
+            cambio_now = row.get("usdbrl", 5.0)
+            aporte_usd = row.get("aporte_usd", 0)
+
+            delta_eq_usd = eq_usd_now - eq_usd_prev - aporte_usd  # market-only change in USD
+            delta_cambio = cambio_now - cambio_prev
+
+            # Equity USD contribution (market return in USD × previous FX)
+            eq_usd_contrib = delta_eq_usd * cambio_prev / pat_prev * 100 if pat_prev > 0 else 0
+            # FX contribution (previous USD position × change in FX)
+            fx_contrib = eq_usd_prev * delta_cambio / pat_prev * 100 if pat_prev > 0 else 0
+            # Other (RF + XP non-IBKR) = total - equity contribution
+            other_contrib = ret * 100 - eq_contrib
+
+            comp_equity_usd.append(round(eq_usd_contrib, 2))
+            comp_fx.append(round(fx_contrib, 2))
+            comp_other.append(round(other_contrib, 2))
+        else:
+            comp_equity_usd.append(0)
+            comp_fx.append(0)
+            comp_other.append(0)
+
     retornos = {
         "_generated": now_iso,
         "_source": "reconstruct_history.py → TWR (Modified Dietz simplificado)",
@@ -634,6 +679,11 @@ def _generate_core_jsons(rows: list[dict]):
         "twr_usd_pct": twr_usd_pct,
         "acumulado_pct": acumulado,
         "acumulado_usd_pct": acumulado_usd,
+        "decomposicao": {
+            "equity_usd": comp_equity_usd,
+            "fx": comp_fx,
+            "rf_xp": comp_other,
+        },
     }
 
     retornos_path = ROOT / "dados" / "retornos_mensais.json"
