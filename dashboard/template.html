@@ -822,6 +822,25 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 </div><!-- /collapse-body -->
 </div>
 
+<!-- S24c: INFORMATION RATIO vs VWRA -->
+<div class="section collapsible open" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Information Ratio vs VWRA — ITD + Rolling 36m</h2>
+<div class="collapse-body">
+
+<!-- Cards ITD -->
+<div id="irITDCards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"></div>
+
+<!-- Gráfico rolling 36m -->
+<div class="chart-box"><canvas id="rollingIRChart"></canvas></div>
+<div class="src" id="rollingIRNota" style="line-height:1.6">
+<strong>Como ler:</strong> IR = Active Return / Tracking Error (janela 36m).<br>
+<span style="color:rgba(34,197,94,.9)">■</span> <strong>&gt;0</strong> = carteira supera VWRA ajustado ao risco de tracking
+<span style="color:rgba(239,68,68,.9)">■</span> <strong>&lt;0</strong> = underperformance relativa.<br>
+Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
+</div>
+</div><!-- /collapse-body -->
+</div>
+
 <!-- S25: TLH MONITOR -->
 <div class="section" data-in-tab="aloc">
 <h2>TLH Monitor — Posições em Consolidação</h2>
@@ -2612,6 +2631,114 @@ function buildRollingSharp() {
               if (ctx.parsed.y === null || ctx.parsed.y === undefined) return '';
               if (lbl.startsWith('Sharpe')) return ` ${lbl}: ${ctx.parsed.y.toFixed(2)}`;
               return '';
+            },
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 12, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } }
+      }
+    }
+  });
+}
+
+// ── S24c: Information Ratio vs VWRA ──────────────────────────
+function buildInformationRatio() {
+  const ir = DATA.rolling_sharpe?.information_ratio;
+  if (!ir) return;
+
+  // ── Cards ITD ──
+  const itd = ir.itd || {};
+  const cardsEl = document.getElementById('irITDCards');
+  if (cardsEl) {
+    const irVal  = itd.ir   != null ? (itd.ir >= 0 ? '+' : '') + itd.ir.toFixed(4) : '—';
+    const teVal  = itd.tracking_error_pct != null ? itd.tracking_error_pct.toFixed(2) + '%' : '—';
+    const arVal  = itd.active_return_anual_pct != null ? (itd.active_return_anual_pct >= 0 ? '+' : '') + itd.active_return_anual_pct.toFixed(2) + '%/ano' : '—';
+    const nMeses = itd.n_meses != null ? itd.n_meses + 'm' : '';
+    const bench  = ir.benchmark || 'VWRA.L';
+    const base   = ir.base || 'USD';
+    const subtitle = `vs ${bench} (${base}${nMeses ? ', ' + nMeses : ''})`;
+    const irColor = itd.ir >= 0 ? 'var(--green)' : 'var(--red)';
+    const arColor = (itd.active_return_anual_pct || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+    cardsEl.innerHTML = `
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Information Ratio ITD</div>
+        <div style="font-size:1.6rem;font-weight:700;color:${irColor}">${irVal}</div>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:2px">${subtitle}</div>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Tracking Error ITD</div>
+        <div style="font-size:1.6rem;font-weight:700;color:var(--yellow)">${teVal}</div>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:2px">anualizado (p.p.)</div>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Active Return ITD</div>
+        <div style="font-size:1.6rem;font-weight:700;color:${arColor}">${arVal}</div>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:2px">retorno ativo anualizado</div>
+      </div>`;
+  }
+
+  // ── Gráfico rolling 36m ──
+  const r36 = ir.rolling_36m || {};
+  const labels = r36.dates || [];
+  const values = r36.values || [];
+  const nota   = r36.nota || '';
+
+  // Atualizar nota de robustez
+  const notaEl = document.getElementById('rollingIRNota');
+  if (notaEl && nota) {
+    notaEl.innerHTML += `<br><span style="color:var(--yellow);font-size:.7rem">⚠ ${nota}</span>`;
+  }
+
+  if (!values.length) {
+    checkMinPoints('rollingIRChart', 0, 13);
+    return;
+  }
+
+  if (charts.rollingIR) charts.rollingIR.destroy();
+
+  const colorFor = v => v >= 0 ? 'rgba(34,197,94,.85)' : 'rgba(248,113,113,.85)';
+  const ptColors = values.map(colorFor);
+
+  charts.rollingIR = new Chart(document.getElementById('rollingIRChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'IR 36m vs VWRA',
+          data: values,
+          segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
+          borderWidth: 1.5,
+          pointBackgroundColor: ptColors,
+          pointBorderWidth: 0,
+          pointRadius: 2,
+          fill: false,
+          tension: 0.3,
+        },
+        {
+          label: 'IR=0',
+          data: labels.map(() => 0),
+          borderColor: 'rgba(239,68,68,.35)',
+          borderWidth: 1,
+          borderDash: [4,3],
+          pointRadius: 0,
+          fill: false,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 10 } }, position: 'top' },
+        tooltip: {
+          callbacks: {
+            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
+            label: ctx => {
+              if (ctx.dataset.label === 'IR=0') return '';
+              if (ctx.parsed.y == null) return '';
+              return ` IR 36m: ${ctx.parsed.y.toFixed(3)}`;
             },
           }
         }
@@ -4818,7 +4945,7 @@ function _initTabCharts(tab) {
   const tabFns = {
     status:   [buildSemaforoPanel, buildTimestamps],
     perf:     [buildPremissasVsRealizado, function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
-               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp,
+               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],

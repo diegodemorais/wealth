@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-10T17:04:20",
-  "_generated_brt": "2026-04-10T17:04:20-03:00",
+  "_generated": "2026-04-10T17:12:38",
+  "_generated_brt": "2026-04-10T17:12:38-03:00",
   "date": "2026-04-10",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,7 +10,7 @@
     "fire_mc": "2026-04-10",
     "geral": "2026-04-10"
   },
-  "cambio": 5.0099,
+  "cambio": 5.0116,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3485255,
+    "patrimonio_atual": 3486578,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -340,28 +340,28 @@
       420915.64,
       490988.76,
       565657.33,
-      684131.72,
+      684131.79,
       675607.95,
       732248.52,
-      725229.89,
+      725229.61,
       691047.75,
       713377.88,
-      770010.32,
+      770010.23,
       754620.95,
       815582.45,
       808318.38,
       791736.33,
       938991.84,
-      991444.0,
-      1050758.47,
+      991443.88,
+      1050758.57,
       1106304.24,
       1118930.84,
       1139151.33,
-      1114216.19,
+      1114216.09,
       1203225.25,
       1277252.32,
       1324699.12,
-      1434617.61,
+      1434617.78,
       1531321.32,
       1637481.11,
       1819616.7,
@@ -372,7 +372,7 @@
       2289000.17,
       2474100.63,
       2490040.35,
-      2395364.91,
+      2395365.28,
       2359159.03,
       2430267.24,
       3055327.87,
@@ -831,6 +831,73 @@
     "rf_usd": {
       "taxa_anual": 3.64,
       "nome": "US T-Bill 3m (≈ Fed Funds)"
+    },
+    "information_ratio": {
+      "benchmark": "VWRA.L",
+      "base": "USD",
+      "itd": {
+        "ir": 0.0721,
+        "tracking_error_pct": 15.3467,
+        "active_return_anual_pct": 1.1068,
+        "n_meses": 60
+      },
+      "rolling_36m": {
+        "dates": [
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10",
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04"
+        ],
+        "values": [
+          -0.844,
+          -0.834,
+          -0.9259,
+          -0.6718,
+          -0.7039,
+          -0.6777,
+          -0.6638,
+          -0.5626,
+          -0.629,
+          -0.5336,
+          -0.5836,
+          -0.2633,
+          0.4999,
+          0.4607,
+          0.4797,
+          0.4919,
+          0.5248,
+          0.1823,
+          0.1496,
+          0.1247,
+          0.131,
+          0.162,
+          0.2057,
+          0.2487,
+          0.2558
+        ],
+        "nota": "N=25 pontos — baixa robustez estatística"
+      }
     }
   },
   "backtest": {
@@ -1537,7 +1604,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -1973,7 +2040,7 @@
       "n_months": 77
     },
     "DGS": {
-      "alpha": -0.00126,
+      "alpha": -0.00127,
       "mkt_rf": 0.8246,
       "smb": 0.6262,
       "hml": 0.1524,
@@ -2052,11 +2119,11 @@
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.69,
-    "valor": 103392.44,
+    "preco": 61.84,
+    "valor": 103643.84,
     "preco_medio": 79.03,
-    "pnl_brl": -29061.84,
-    "pnl_pct": -21.94,
+    "pnl_brl": -28810.44,
+    "pnl_pct": -21.75,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -2254,14 +2321,14 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 73218.2,
-    "cambio": 5.0099
+    "bitcoin_usd": 73235.09,
+    "cambio": 5.0116
   },
   "mercado": {
-    "cambio_brl_usd": 5.0099,
-    "btc_usd": 73218.2,
-    "cambio_mtd_pct": -2.83,
-    "btc_mtd_pct": 1.87,
+    "cambio_brl_usd": 5.0116,
+    "btc_usd": 73235.09,
+    "cambio_mtd_pct": -2.8,
+    "btc_mtd_pct": 1.89,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -2600,88 +2667,88 @@
   "cryptoLegado": 3944,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 135887.2,
+    "ir_diferido_total_brl": 136047.91,
     "ir_por_etf": {
       "SWRD": {
         "ganho_usd": 82129.15,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1283112.79,
-        "ganho_brl": 361284.27,
-        "ir_estimado": 54192.64
+        "valor_atual_brl": 1283548.18,
+        "ganho_brl": 361719.66,
+        "ir_estimado": 54257.95
       },
       "EIMI": {
         "ganho_usd": 37104.49,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 503036.95,
-        "ganho_brl": 162245.18,
-        "ir_estimado": 24336.78
+        "valor_atual_brl": 503207.65,
+        "ganho_brl": 162415.87,
+        "ir_estimado": 24362.38
       },
       "USSC": {
         "ganho_usd": 9196.93,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 158346.87,
-        "ganho_brl": 28948.81,
-        "ir_estimado": 4342.32
+        "valor_atual_brl": 158400.6,
+        "ganho_brl": 29002.54,
+        "ir_estimado": 4350.38
       },
       "IWVL": {
         "ganho_usd": 986.14,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11281.39,
-        "ganho_brl": 4670.95,
-        "ir_estimado": 700.64
+        "valor_atual_brl": 11285.22,
+        "ganho_brl": 4674.78,
+        "ir_estimado": 701.22
       },
       "AVDV": {
         "ganho_usd": 41819.31,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 500871.56,
-        "ganho_brl": 198076.14,
-        "ir_estimado": 29711.42
+        "valor_atual_brl": 501041.52,
+        "ganho_brl": 198246.1,
+        "ir_estimado": 29736.92
       },
       "AVUV": {
         "ganho_usd": 18214.36,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 315543.26,
-        "ganho_brl": 78199.47,
-        "ir_estimado": 11729.92
+        "valor_atual_brl": 315650.33,
+        "ganho_brl": 78306.54,
+        "ir_estimado": 11745.98
       },
       "DGS": {
         "ganho_usd": 2398.81,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59271.75,
-        "ganho_brl": 9069.94,
-        "ir_estimado": 1360.49
+        "valor_atual_brl": 59291.86,
+        "ganho_brl": 9090.06,
+        "ir_estimado": 1363.51
       },
       "AVES": {
         "ganho_usd": 16663.22,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 294528.8,
-        "ganho_brl": 62537.41,
-        "ir_estimado": 9380.61
+        "valor_atual_brl": 294628.74,
+        "ganho_brl": 62637.36,
+        "ir_estimado": 9395.6
       },
       "AVGS": {
         "ganho_usd": 459.83,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31461.32,
-        "ganho_brl": 882.46,
-        "ir_estimado": 132.37
+        "valor_atual_brl": 31471.99,
+        "ganho_brl": 893.14,
+        "ir_estimado": 133.97
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -2697,12 +2764,12 @@
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.0099
+    "ptax_atual": 5.0116
   },
   "concentracao_brasil": {
     "brasil_pct": 9.5,
     "composicao": {
-      "hodl11_brl": 103392,
+      "hodl11_brl": 103644,
       "rf_total_brl": 224406,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -2711,8 +2778,8 @@
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 331810,
-    "total_portfolio_brl": 3485255,
+    "total_brasil_brl": 332062,
+    "total_portfolio_brl": 3486578,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -2728,20 +2795,20 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33205,
-      "delta_brl": 8205,
-      "delta_pct": 32.8,
+      "realizado_media_brl": 33216,
+      "delta_brl": 8216,
+      "delta_pct": 32.9,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0099,
+      "cambio_conversao": 5.0116,
       "por_ano_brl": {
-        "2026": 95188,
-        "2025": 282922,
-        "2024": 373096,
-        "2023": 394316,
-        "2022": 482922,
-        "2021": 330645
+        "2026": 95220,
+        "2025": 283018,
+        "2024": 373222,
+        "2023": 394450,
+        "2022": 483086,
+        "2021": 330757
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }

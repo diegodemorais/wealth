@@ -606,6 +606,155 @@ def main():
 # CORE JSON GENERATION
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def _compute_information_ratio(dates: list[str], twr_usd_pct: list) -> dict | None:
+    """
+    Calcula Information Ratio do portfolio equity block vs VWRA.L.
+
+    Base: USD — twr_usd_pct (equity block retornos mensais simples em %).
+    Benchmark: VWRA.L via yfinance, auto_adjust=True, retornos mensais simples
+               (pct_change no último dia útil de cada mês).
+    Active return: portfolio_usd_t - benchmark_usd_t (ambos em % simples mensal).
+    IR = mean(AR) / std(AR, ddof=1) * sqrt(12)
+    Rolling 36m: janela deslizante, resulta em N-35 pontos.
+    Fallback: se yfinance falhar, retorna None (campo omitido).
+
+    Spec aprovado Factor + Quant 2026-04-10.
+    """
+    import math as _math
+    import warnings
+
+    # ── 1. Filtrar apenas meses com twr_usd_pct não-None ──
+    valid_pairs = [
+        (d, r) for d, r in zip(dates, twr_usd_pct) if r is not None
+    ]
+    if len(valid_pairs) < 12:
+        print("  ⚠ IR: menos de 12 meses USD válidos — omitindo")
+        return None
+
+    valid_dates = [p[0] for p in valid_pairs]   # lista de "YYYY-MM"
+    port_rets   = [p[1] for p in valid_pairs]   # retornos mensais em %
+
+    # ── 2. Baixar VWRA.L via yfinance ──
+    try:
+        import yfinance as yf
+    except ImportError:
+        print("  ⚠ IR: yfinance não instalado — omitindo")
+        return None
+
+    # Período: do primeiro mês até o último (+ margem para capturar o mês inteiro)
+    from datetime import datetime as _dt, timedelta as _td
+    d_start = _dt.strptime(valid_dates[0] + "-01", "%Y-%m-%d")
+    d_end   = _dt.strptime(valid_dates[-1] + "-01", "%Y-%m-%d")
+    # Avançar d_end para o primeiro dia do mês seguinte (para garantir que o mês fechado entre)
+    if d_end.month == 12:
+        d_end_fetch = _dt(d_end.year + 1, 1, 1)
+    else:
+        d_end_fetch = _dt(d_end.year, d_end.month + 1, 1)
+    # Buffer de 5 dias antes do início para capturar o preço de abertura do período
+    d_start_fetch = d_start - _td(days=5)
+
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            ticker = yf.Ticker("VWRA.L")
+            hist = ticker.history(
+                start=d_start_fetch.strftime("%Y-%m-%d"),
+                end=d_end_fetch.strftime("%Y-%m-%d"),
+                interval="1d",
+                auto_adjust=True,
+            )
+        if hist is None or hist.empty:
+            print("  ⚠ IR: VWRA.L retornou dados vazios — omitindo")
+            return None
+    except Exception as _e:
+        print(f"  ⚠ IR: yfinance VWRA.L falhou ({_e}) — omitindo")
+        return None
+
+    # ── 3. Calcular retornos mensais do benchmark (pct_change no último dia útil) ──
+    # Resample para o último dia útil de cada mês, depois pct_change
+    try:
+        import pandas as _pd
+        # Garantir índice tz-naive para uniformidade
+        if hist.index.tz is not None:
+            hist.index = hist.index.tz_localize(None)
+        close = hist["Close"].resample("ME").last()   # último dia útil do mês
+        bm_rets_raw = close.pct_change() * 100        # retorno simples em %
+        # Construir dict YYYY-MM → retorno mensal benchmark
+        bm_dict: dict[str, float] = {}
+        for ts, val in bm_rets_raw.items():
+            if _pd.isna(val):
+                continue
+            ym = ts.strftime("%Y-%m")
+            bm_dict[ym] = round(float(val), 6)
+    except Exception as _e:
+        print(f"  ⚠ IR: erro ao calcular retornos VWRA.L ({_e}) — omitindo")
+        return None
+
+    # ── 4. Alinhar às datas do portfolio ──
+    aligned_port: list[float] = []
+    aligned_bm:   list[float] = []
+    aligned_dates: list[str]  = []
+
+    for d, p in zip(valid_dates, port_rets):
+        if d in bm_dict:
+            aligned_dates.append(d)
+            aligned_port.append(p)
+            aligned_bm.append(bm_dict[d])
+
+    n = len(aligned_dates)
+    if n < 12:
+        print(f"  ⚠ IR: apenas {n} meses alinhados com VWRA.L — omitindo")
+        return None
+
+    # ── 5. Active returns ──
+    ar = [p - b for p, b in zip(aligned_port, aligned_bm)]
+
+    # ── 6. IR ITD ──
+    def _ir(ar_window: list[float]) -> tuple[float, float, float]:
+        """Retorna (IR anualizado, TE anualizado %, AR anual %)."""
+        n_w = len(ar_window)
+        mean_ar = sum(ar_window) / n_w
+        # std ddof=1
+        var = sum((v - mean_ar) ** 2 for v in ar_window) / (n_w - 1)
+        std = _math.sqrt(var)
+        ir_val = mean_ar / std * _math.sqrt(12) if std > 0 else 0.0
+        te_ann = std * _math.sqrt(12)             # tracking error anualizado em %
+        ar_ann = mean_ar * 12                     # active return anual em %
+        return round(ir_val, 4), round(te_ann, 4), round(ar_ann, 4)
+
+    ir_itd, te_itd, ar_itd = _ir(ar)
+
+    # ── 7. Rolling 36m ──
+    ROLL_WIN = 36
+    roll_ir_dates: list[str]  = []
+    roll_ir_vals:  list[float] = []
+
+    if n >= ROLL_WIN:
+        for i in range(ROLL_WIN - 1, n):
+            window_ar = ar[i - ROLL_WIN + 1: i + 1]
+            ir_val_r, _, _ = _ir(window_ar)
+            roll_ir_dates.append(aligned_dates[i])
+            roll_ir_vals.append(ir_val_r)
+
+    # ── 8. Montar bloco de saída ──
+    result = {
+        "benchmark": "VWRA.L",
+        "base": "USD",
+        "itd": {
+            "ir": ir_itd,
+            "tracking_error_pct": te_itd,
+            "active_return_anual_pct": ar_itd,
+            "n_meses": n,
+        },
+        "rolling_36m": {
+            "dates": roll_ir_dates,
+            "values": roll_ir_vals,
+            "nota": f"N={len(roll_ir_dates)} pontos — baixa robustez estatística",
+        },
+    }
+    return result
+
+
 def _generate_core_jsons(rows: list[dict]):
     """
     Gera os JSONs core da camada de dados do portfolio.
@@ -930,6 +1079,20 @@ def _generate_core_jsons(rows: list[dict]):
         "volatilidade": roll_vol,
         "max_dd": roll_maxdd,
     }
+
+    # ── Information Ratio vs VWRA.L ─────────────────────────────────
+    ir_block = _compute_information_ratio(dates, twr_usd_pct)
+    if ir_block is not None:
+        rolling["information_ratio"] = ir_block
+        itd = ir_block.get("itd", {})
+        print(
+            f"  ✓ IR vs VWRA.L: ITD IR={itd.get('ir'):.4f} | "
+            f"TE={itd.get('tracking_error_pct'):.2f}% | "
+            f"AR anual={itd.get('active_return_anual_pct'):.2f}% | "
+            f"N={itd.get('n_meses')} meses"
+        )
+    else:
+        print("  ⚠ Information Ratio omitido (yfinance falhou ou dados insuficientes)")
 
     rolling_path = ROOT / "dados" / "rolling_metrics.json"
     rolling_path.write_text(json.dumps(rolling, indent=2, ensure_ascii=False))

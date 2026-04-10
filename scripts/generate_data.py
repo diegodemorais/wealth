@@ -2144,8 +2144,9 @@ def main():
             "window": _rm["window"],
             "rf_brl": _rf_brl,
             "rf_usd": _rf_usd,
+            "information_ratio": _rm.get("information_ratio"),
         }
-        print(f"  ✓ Rolling metrics: {len(rolling_sharpe['dates'])} pontos (Sharpe BRL+USD, Sortino, Vol, MaxDD)")
+        print(f"  ✓ Rolling metrics: {len(rolling_sharpe['dates'])} pontos (Sharpe BRL+USD, Sortino, Vol, MaxDD, IR)")
     else:
         rolling_sharpe = compute_rolling_sharpe(retornos_mensais, _selic)
         print(f"  ✓ Rolling Sharpe: {len(rolling_sharpe['dates'])} pontos (computed, rf={_selic}%)")

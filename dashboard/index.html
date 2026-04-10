@@ -822,6 +822,25 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 </div><!-- /collapse-body -->
 </div>
 
+<!-- S24c: INFORMATION RATIO vs VWRA -->
+<div class="section collapsible open" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Information Ratio vs VWRA — ITD + Rolling 36m</h2>
+<div class="collapse-body">
+
+<!-- Cards ITD -->
+<div id="irITDCards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"></div>
+
+<!-- Gráfico rolling 36m -->
+<div class="chart-box"><canvas id="rollingIRChart"></canvas></div>
+<div class="src" id="rollingIRNota" style="line-height:1.6">
+<strong>Como ler:</strong> IR = Active Return / Tracking Error (janela 36m).<br>
+<span style="color:rgba(34,197,94,.9)">■</span> <strong>&gt;0</strong> = carteira supera VWRA ajustado ao risco de tracking
+<span style="color:rgba(239,68,68,.9)">■</span> <strong>&lt;0</strong> = underperformance relativa.<br>
+Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
+</div>
+</div><!-- /collapse-body -->
+</div>
+
 <!-- S25: TLH MONITOR -->
 <div class="section" data-in-tab="aloc">
 <h2>TLH Monitor — Posições em Consolidação</h2>
@@ -1212,12 +1231,12 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-10T17:04:25-03:00'); // BRT (UTC-3)
-const VERSION = '1.125';
+const GENERATED_AT = new Date('2026-04-10T17:12:44-03:00'); // BRT (UTC-3)
+const VERSION = '1.126';
 
 const DATA = {
-  "_generated": "2026-04-10T17:04:20",
-  "_generated_brt": "2026-04-10T17:04:20-03:00",
+  "_generated": "2026-04-10T17:12:38",
+  "_generated_brt": "2026-04-10T17:12:38-03:00",
   "date": "2026-04-10",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1227,7 +1246,7 @@ const DATA = {
     "fire_mc": "2026-04-10",
     "geral": "2026-04-10"
   },
-  "cambio": 5.0099,
+  "cambio": 5.0116,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -1326,7 +1345,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3485255,
+    "patrimonio_atual": 3486578,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1557,28 +1576,28 @@ const DATA = {
       420915.64,
       490988.76,
       565657.33,
-      684131.72,
+      684131.79,
       675607.95,
       732248.52,
-      725229.89,
+      725229.61,
       691047.75,
       713377.88,
-      770010.32,
+      770010.23,
       754620.95,
       815582.45,
       808318.38,
       791736.33,
       938991.84,
-      991444.0,
-      1050758.47,
+      991443.88,
+      1050758.57,
       1106304.24,
       1118930.84,
       1139151.33,
-      1114216.19,
+      1114216.09,
       1203225.25,
       1277252.32,
       1324699.12,
-      1434617.61,
+      1434617.78,
       1531321.32,
       1637481.11,
       1819616.7,
@@ -1589,7 +1608,7 @@ const DATA = {
       2289000.17,
       2474100.63,
       2490040.35,
-      2395364.91,
+      2395365.28,
       2359159.03,
       2430267.24,
       3055327.87,
@@ -2048,6 +2067,73 @@ const DATA = {
     "rf_usd": {
       "taxa_anual": 3.64,
       "nome": "US T-Bill 3m (≈ Fed Funds)"
+    },
+    "information_ratio": {
+      "benchmark": "VWRA.L",
+      "base": "USD",
+      "itd": {
+        "ir": 0.0721,
+        "tracking_error_pct": 15.3467,
+        "active_return_anual_pct": 1.1068,
+        "n_meses": 60
+      },
+      "rolling_36m": {
+        "dates": [
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10",
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04"
+        ],
+        "values": [
+          -0.844,
+          -0.834,
+          -0.9259,
+          -0.6718,
+          -0.7039,
+          -0.6777,
+          -0.6638,
+          -0.5626,
+          -0.629,
+          -0.5336,
+          -0.5836,
+          -0.2633,
+          0.4999,
+          0.4607,
+          0.4797,
+          0.4919,
+          0.5248,
+          0.1823,
+          0.1496,
+          0.1247,
+          0.131,
+          0.162,
+          0.2057,
+          0.2487,
+          0.2558
+        ],
+        "nota": "N=25 pontos — baixa robustez estatística"
+      }
     }
   },
   "backtest": {
@@ -2754,7 +2840,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -3190,7 +3276,7 @@ const DATA = {
       "n_months": 77
     },
     "DGS": {
-      "alpha": -0.00126,
+      "alpha": -0.00127,
       "mkt_rf": 0.8246,
       "smb": 0.6262,
       "hml": 0.1524,
@@ -3269,11 +3355,11 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.69,
-    "valor": 103392.44,
+    "preco": 61.84,
+    "valor": 103643.84,
     "preco_medio": 79.03,
-    "pnl_brl": -29061.84,
-    "pnl_pct": -21.94,
+    "pnl_brl": -28810.44,
+    "pnl_pct": -21.75,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -3471,14 +3557,14 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 73218.2,
-    "cambio": 5.0099
+    "bitcoin_usd": 73235.09,
+    "cambio": 5.0116
   },
   "mercado": {
-    "cambio_brl_usd": 5.0099,
-    "btc_usd": 73218.2,
-    "cambio_mtd_pct": -2.83,
-    "btc_mtd_pct": 1.87,
+    "cambio_brl_usd": 5.0116,
+    "btc_usd": 73235.09,
+    "cambio_mtd_pct": -2.8,
+    "btc_mtd_pct": 1.89,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3817,88 +3903,88 @@ const DATA = {
   "cryptoLegado": 3944,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 135887.2,
+    "ir_diferido_total_brl": 136047.91,
     "ir_por_etf": {
       "SWRD": {
         "ganho_usd": 82129.15,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1283112.79,
-        "ganho_brl": 361284.27,
-        "ir_estimado": 54192.64
+        "valor_atual_brl": 1283548.18,
+        "ganho_brl": 361719.66,
+        "ir_estimado": 54257.95
       },
       "EIMI": {
         "ganho_usd": 37104.49,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 503036.95,
-        "ganho_brl": 162245.18,
-        "ir_estimado": 24336.78
+        "valor_atual_brl": 503207.65,
+        "ganho_brl": 162415.87,
+        "ir_estimado": 24362.38
       },
       "USSC": {
         "ganho_usd": 9196.93,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 158346.87,
-        "ganho_brl": 28948.81,
-        "ir_estimado": 4342.32
+        "valor_atual_brl": 158400.6,
+        "ganho_brl": 29002.54,
+        "ir_estimado": 4350.38
       },
       "IWVL": {
         "ganho_usd": 986.14,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11281.39,
-        "ganho_brl": 4670.95,
-        "ir_estimado": 700.64
+        "valor_atual_brl": 11285.22,
+        "ganho_brl": 4674.78,
+        "ir_estimado": 701.22
       },
       "AVDV": {
         "ganho_usd": 41819.31,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 500871.56,
-        "ganho_brl": 198076.14,
-        "ir_estimado": 29711.42
+        "valor_atual_brl": 501041.52,
+        "ganho_brl": 198246.1,
+        "ir_estimado": 29736.92
       },
       "AVUV": {
         "ganho_usd": 18214.36,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 315543.26,
-        "ganho_brl": 78199.47,
-        "ir_estimado": 11729.92
+        "valor_atual_brl": 315650.33,
+        "ganho_brl": 78306.54,
+        "ir_estimado": 11745.98
       },
       "DGS": {
         "ganho_usd": 2398.81,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59271.75,
-        "ganho_brl": 9069.94,
-        "ir_estimado": 1360.49
+        "valor_atual_brl": 59291.86,
+        "ganho_brl": 9090.06,
+        "ir_estimado": 1363.51
       },
       "AVES": {
         "ganho_usd": 16663.22,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 294528.8,
-        "ganho_brl": 62537.41,
-        "ir_estimado": 9380.61
+        "valor_atual_brl": 294628.74,
+        "ganho_brl": 62637.36,
+        "ir_estimado": 9395.6
       },
       "AVGS": {
         "ganho_usd": 459.83,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.0099,
+        "ptax_atual": 5.0116,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31461.32,
-        "ganho_brl": 882.46,
-        "ir_estimado": 132.37
+        "valor_atual_brl": 31471.99,
+        "ganho_brl": 893.14,
+        "ir_estimado": 133.97
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -3914,12 +4000,12 @@ const DATA = {
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.0099
+    "ptax_atual": 5.0116
   },
   "concentracao_brasil": {
     "brasil_pct": 9.5,
     "composicao": {
-      "hodl11_brl": 103392,
+      "hodl11_brl": 103644,
       "rf_total_brl": 224406,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -3928,8 +4014,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 331810,
-    "total_portfolio_brl": 3485255,
+    "total_brasil_brl": 332062,
+    "total_portfolio_brl": 3486578,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3945,20 +4031,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33205,
-      "delta_brl": 8205,
-      "delta_pct": 32.8,
+      "realizado_media_brl": 33216,
+      "delta_brl": 8216,
+      "delta_pct": 32.9,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0099,
+      "cambio_conversao": 5.0116,
       "por_ano_brl": {
-        "2026": 95188,
-        "2025": 282922,
-        "2024": 373096,
-        "2023": 394316,
-        "2022": 482922,
-        "2021": 330645
+        "2026": 95220,
+        "2025": 283018,
+        "2024": 373222,
+        "2023": 394450,
+        "2022": 483086,
+        "2021": 330757
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -4385,20 +4471,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3485255,
-      3657020,
-      3837249,
-      4026361,
-      4224793,
-      4433005,
-      4651477,
-      4880717,
-      5121255,
-      5373647,
-      5638477,
-      5916360,
-      6207937,
-      6513884,
+      3486578,
+      3658309,
+      3838498,
+      4027562,
+      4225939,
+      4434086,
+      4652486,
+      4881644,
+      5122088,
+      5374375,
+      5639089,
+      5916841,
+      6208273,
+      6514060,
       6834909,
       6924402,
       7018236,
@@ -4439,20 +4525,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3485255,
-      3796135,
-      4134746,
-      4503560,
-      4905271,
-      5342815,
-      5819387,
-      6338469,
-      6903853,
-      7519667,
-      8190412,
-      8920986,
-      9716727,
-      10583446,
+      3486578,
+      3797473,
+      4136091,
+      4504903,
+      4906601,
+      5344119,
+      5820650,
+      6339672,
+      6904976,
+      7520687,
+      8191300,
+      8921712,
+      9717254,
+      10583733,
       11527476,
       11844559,
       12177020,
@@ -4493,20 +4579,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3485255,
-      3932837,
-      4437899,
-      5007821,
-      5650934,
-      6376637,
-      7195535,
-      8119598,
-      9162331,
-      10338973,
-      11666721,
-      13164981,
-      14855650,
-      16763438,
+      3486578,
+      3934224,
+      4439343,
+      5009315,
+      5652466,
+      6378193,
+      7197096,
+      8121139,
+      9163821,
+      10340374,
+      11667986,
+      13166052,
+      14856456,
+      16763892,
       18916227,
       19591664,
       20299860,
@@ -4576,7 +4662,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.125"
+  "version": "1.126"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5977,6 +6063,114 @@ function buildRollingSharp() {
               if (ctx.parsed.y === null || ctx.parsed.y === undefined) return '';
               if (lbl.startsWith('Sharpe')) return ` ${lbl}: ${ctx.parsed.y.toFixed(2)}`;
               return '';
+            },
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', maxTicksLimit: 12, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } }
+      }
+    }
+  });
+}
+
+// ── S24c: Information Ratio vs VWRA ──────────────────────────
+function buildInformationRatio() {
+  const ir = DATA.rolling_sharpe?.information_ratio;
+  if (!ir) return;
+
+  // ── Cards ITD ──
+  const itd = ir.itd || {};
+  const cardsEl = document.getElementById('irITDCards');
+  if (cardsEl) {
+    const irVal  = itd.ir   != null ? (itd.ir >= 0 ? '+' : '') + itd.ir.toFixed(4) : '—';
+    const teVal  = itd.tracking_error_pct != null ? itd.tracking_error_pct.toFixed(2) + '%' : '—';
+    const arVal  = itd.active_return_anual_pct != null ? (itd.active_return_anual_pct >= 0 ? '+' : '') + itd.active_return_anual_pct.toFixed(2) + '%/ano' : '—';
+    const nMeses = itd.n_meses != null ? itd.n_meses + 'm' : '';
+    const bench  = ir.benchmark || 'VWRA.L';
+    const base   = ir.base || 'USD';
+    const subtitle = `vs ${bench} (${base}${nMeses ? ', ' + nMeses : ''})`;
+    const irColor = itd.ir >= 0 ? 'var(--green)' : 'var(--red)';
+    const arColor = (itd.active_return_anual_pct || 0) >= 0 ? 'var(--green)' : 'var(--red)';
+    cardsEl.innerHTML = `
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Information Ratio ITD</div>
+        <div style="font-size:1.6rem;font-weight:700;color:${irColor}">${irVal}</div>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:2px">${subtitle}</div>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Tracking Error ITD</div>
+        <div style="font-size:1.6rem;font-weight:700;color:var(--yellow)">${teVal}</div>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:2px">anualizado (p.p.)</div>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Active Return ITD</div>
+        <div style="font-size:1.6rem;font-weight:700;color:${arColor}">${arVal}</div>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:2px">retorno ativo anualizado</div>
+      </div>`;
+  }
+
+  // ── Gráfico rolling 36m ──
+  const r36 = ir.rolling_36m || {};
+  const labels = r36.dates || [];
+  const values = r36.values || [];
+  const nota   = r36.nota || '';
+
+  // Atualizar nota de robustez
+  const notaEl = document.getElementById('rollingIRNota');
+  if (notaEl && nota) {
+    notaEl.innerHTML += `<br><span style="color:var(--yellow);font-size:.7rem">⚠ ${nota}</span>`;
+  }
+
+  if (!values.length) {
+    checkMinPoints('rollingIRChart', 0, 13);
+    return;
+  }
+
+  if (charts.rollingIR) charts.rollingIR.destroy();
+
+  const colorFor = v => v >= 0 ? 'rgba(34,197,94,.85)' : 'rgba(248,113,113,.85)';
+  const ptColors = values.map(colorFor);
+
+  charts.rollingIR = new Chart(document.getElementById('rollingIRChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'IR 36m vs VWRA',
+          data: values,
+          segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
+          borderWidth: 1.5,
+          pointBackgroundColor: ptColors,
+          pointBorderWidth: 0,
+          pointRadius: 2,
+          fill: false,
+          tension: 0.3,
+        },
+        {
+          label: 'IR=0',
+          data: labels.map(() => 0),
+          borderColor: 'rgba(239,68,68,.35)',
+          borderWidth: 1,
+          borderDash: [4,3],
+          pointRadius: 0,
+          fill: false,
+        },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#94a3b8', font: { size: 10 } }, position: 'top' },
+        tooltip: {
+          callbacks: {
+            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
+            label: ctx => {
+              if (ctx.dataset.label === 'IR=0') return '';
+              if (ctx.parsed.y == null) return '';
+              return ` IR 36m: ${ctx.parsed.y.toFixed(3)}`;
             },
           }
         }
@@ -8183,7 +8377,7 @@ function _initTabCharts(tab) {
   const tabFns = {
     status:   [buildSemaforoPanel, buildTimestamps],
     perf:     [buildPremissasVsRealizado, function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
-               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp,
+               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],

@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | CORE-portfolio-history |
 | **Dono** | Bookkeeper |
-| **Status** | Doing |
+| **Status** | ✅ Done — 2026-04-10 |
 | **Prioridade** | 🔴 Crítica |
 | **Participantes** | Bookkeeper, Quant, Dev, FIRE, Factor |
 | **Co-sponsor** | Head, CIO |
