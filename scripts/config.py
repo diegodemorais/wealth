@@ -106,7 +106,7 @@ IDADE_FIRE_ASPIRACIONAL = 50      # FIRE 2037
 BOND_TENT_META_ANOS = 7           # anos de gastos cobertos pelo bond pool no FIRE Day
 
 # Fallbacks macro (snapshot — atualizar quando taxas mudarem significativamente)
-CAMBIO_FALLBACK = 5.10            # USD/BRL — fallback offline
+CAMBIO_FALLBACK = 5.07            # USD/BRL — fallback offline (atualizar via /macro-bcb). Ref: PTAX 09/04/2026
 SELIC_META_SNAPSHOT = 14.75       # % a.a. — Abr/2026
 FED_FUNDS_SNAPSHOT = 3.64         # % — Mar/2026
 DEPRECIACAO_BRL_BASE = 0.5        # % a.a. — premissa do plano FIRE (carteira.md)

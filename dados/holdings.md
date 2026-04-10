@@ -43,27 +43,28 @@
 
 ## Renda Fixa (Tesouro Direto)
 
-| Ativo | Corretora | Custo base (aplicado) | Valor estimado | Notas |
-|-------|-----------|----------------------|---------------|-------|
-| Tesouro IPCA+ 2029 | Nubank | R$ 76,860 (5 aplic, 1 resgate parcial) | ~R$ 89,095 | Reserva emergencia |
-| Tesouro IPCA+ 2040 | Nubank | R$ 20,035 (1 aplic, abr/2026) | ~R$ 33,285 | Bloco IPCA+ longo. DCA ativo (taxa ~7.20%) |
-| Renda+ 2065 | Nubank | R$ 108,554 (4 aplic, set-dez/2025) | ~R$ 112,466 | Tatico. Gatilho venda: taxa <= 6.0%. Taxa atual ~6.93% |
-| Tesouro IPCA+ 2045 | Nubank | — | ZERADO | Resgate total jan/2025. P&L: -R$ 10,620 |
+| Ativo | Corretora | Cotas | Custo base | Valor MtM | Taxa | Notas |
+|-------|-----------|------:|----------:|---------:|-----:|-------|
+| Tesouro IPCA+ 2029 | Nubank | 23.34 | R$ 76,860 | R$ 86,555 | 7.58% | Reserva emergencia |
+| Tesouro IPCA+ 2040 | Nubank | 11.58 | R$ 20,035 | R$ 20,019 | 7.07% | Bloco IPCA+ longo. DCA ativo |
+| Renda+ 2065 | Nubank | 158.93 | R$ 108,554 | R$ 117,833 | 6.80% | Tatico. Gatilho venda: taxa <= 6.0% |
+| Tesouro IPCA+ 2045 | Nubank | — | — | ZERADO | — | Resgate total jan/2025. P&L: -R$ 10,620 |
 
-> Fonte custo base: `dados/nubank/resumo_td.json` (screenshots app Nubank, 09/04/2026)
-> `generate_data.py` le automaticamente de `dados/nubank/resumo_td.json`
+> Cotas calculadas de operacoes Nubank × PU historico (Tesouro Transparente CSV)
+> MtM = cotas × PU venda 08/04/2026 (fonte: `dados/td_precos.json`)
+> Taxas: Tesouro Transparente 08/04/2026 (compra manhã)
 
 ---
 
 ## Cripto
 
-| Ativo | Qtde | Tipo | Custo medio | Custo total | Valor estimado |
-|-------|------|------|-------------|-------------|---------------|
-| HODL11 | 1,676 | ETF B3 (XP) | R$ 79.03 | R$ 132,453 | ~R$ 100,208 |
-| Bitcoin spot | 0.00434697 | Legado | ~R$ 2,000 |
-| Ethereum | 0.06606465 | Legado | ~R$ 700 |
-| BNB | 0.20507877 | Legado | ~R$ 350 |
-| Cardano | 47.96176001 | Legado | ~R$ 88 |
+| Ativo | Qtde | Tipo | Custo medio | Custo total | Valor estimado | Ref |
+|-------|------|------|-------------|-------------|---------------|-----|
+| HODL11 | 1,676 | ETF B3 (XP) | R$ 79.03 | R$ 132,453 | R$ 100,208 | yfinance 09/04/2026 |
+| Bitcoin spot | 0.00434697 | Legado (wallet) | — | — | ~R$ 2,000 | BTC ~R$460k, 07/04/2026 |
+| Ethereum | 0.06606465 | Legado (wallet) | — | — | ~R$ 700 | ETH ~R$11k, 07/04/2026 |
+| BNB | 0.20507877 | Legado (wallet) | — | — | ~R$ 350 | BNB ~R$1.7k, 07/04/2026 |
+| Cardano | 47.96176001 | Legado (wallet) | — | — | ~R$ 88 | ADA ~R$1.84, 07/04/2026 |
 
 ---
 
