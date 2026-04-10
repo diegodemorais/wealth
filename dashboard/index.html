@@ -1214,8 +1214,8 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-10T15:58:31-03:00'); // BRT (UTC-3)
-const VERSION = '1.118';
+const GENERATED_AT = new Date('2026-04-10T16:14:15-03:00'); // BRT (UTC-3)
+const VERSION = '1.119';
 
 const DATA = {
   "_generated": "2026-04-09T22:26:16",
@@ -4563,7 +4563,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.118"
+  "version": "1.119"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5465,14 +5465,16 @@ window.updateWhatIf = function() {
   document.getElementById('wiResultSub').textContent = `SWR: ${(swr*100).toFixed(2)}% (meta ≤ ${(_swrMeta*100).toFixed(1)}%) · ${p >= PAT_GATILHO && swr <= _swrMeta ? '✅ Gatilho FIRE' : '⚠️ Abaixo do gatilho'}`;
   document.getElementById('wiResultSub').style.color = (p >= PAT_GATILHO && swr <= _swrMeta) ? '#22c55e' : '#eab308';
 
-  // Compute earliest FIRE age: iterate monthly until PAT_GATILHO AND swr <= meta
+  // Compute earliest FIRE age: iterate monthly until gatilho escalonado AND swr <= meta
+  const _custoBase = DATA.premissas.custo_vida_base || 250000;
+  const _gatilhoEarly = PAT_GATILHO * (custo / _custoBase);
   let pEarly = DATA.premissas.patrimonio_atual;
   let mEarly = 0;
   const maxMonths = (70 - idadeAtual) * 12;
   while (mEarly < maxMonths) {
     pEarly = pEarly * (1 + rm) + ap;
     mEarly++;
-    if (pEarly >= PAT_GATILHO && custo / pEarly <= _swrMeta) break;
+    if (pEarly >= _gatilhoEarly && custo / pEarly <= _swrMeta) break;
   }
   const fireAgeEarly = idadeAtual + mEarly / 12;
   const fireAgeEl = document.getElementById('wiFireAge');
@@ -6338,7 +6340,10 @@ window.updateFireSim = function() {
   const rm = r / 12;
   const idadeAtual = DATA.premissas.idade_atual;
   const patAtual   = DATA.premissas.patrimonio_atual;
-  const gatilho    = PAT_GATILHO;
+  // Escalar gatilho proporcionalmente ao custo simulado (DEV-fire-sim-fixes)
+  // Custo menor → patrimônio necessário menor → FIRE antecipado
+  const custoBase  = DATA.premissas.custo_vida_base || 250000;
+  const gatilho    = PAT_GATILHO * (custo / custoBase);
   const swrMeta    = DATA.premissas.swr_gatilho ?? 0.024;
   const maxMonths  = (70 - idadeAtual) * 12;
 

@@ -495,11 +495,12 @@ def rodar_tornado(premissas: dict, variacao: float = 0.10, n_sim: int = 5_000) -
     base = rodar_monte_carlo(premissas, n_sim=n_sim, cenario="base")
     p_base = base["p_sucesso"]
 
+    # Ordem manual: volatilidade, custo de vida, retorno, aporte (DEV-fire-sim-fixes)
     variaveis = {
+        "volatilidade_equity": "Volatilidade equity (+/-10%)",
+        "custo_vida_base":     "Custo de vida (+/-10%)",
         "retorno_equity_base": "Retorno equity (+/-10%)",
         "aporte_mensal":       "Aporte mensal (+/-10%)",
-        "custo_vida_base":     "Custo de vida (+/-10%)",
-        "volatilidade_equity": "Volatilidade equity (+/-10%)",
         # ipca_anual e dep_brl_base omitidos: já embutidos nos retornos reais BRL
     }
 
@@ -527,7 +528,7 @@ def rodar_tornado(premissas: dict, variacao: float = 0.10, n_sim: int = 5_000) -
             "impacto_abs": impacto_abs,
         })
 
-    return sorted(resultados, key=lambda x: x["impacto_abs"], reverse=True)
+    return resultados  # ordem preservada do dict variaveis (DEV-fire-sim-fixes)
 
 
 # ─── OUTPUT ───────────────────────────────────────────────────────────────────
