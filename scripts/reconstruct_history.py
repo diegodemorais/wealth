@@ -21,6 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 IBKR_CSV = ROOT / "analysis" / "raw" / "U5947683.TRANSACTIONS.20210408.20260331.csv"
+IBKR_APORTES = ROOT / "dados" / "ibkr" / "aportes.json"
 XP_OPS = ROOT / "dados" / "xp" / "operacoes.json"
 NUBANK_OPS = ROOT / "dados" / "nubank" / "operacoes_td.json"
 OUTPUT_CSV = ROOT / "dados" / "historico_carteira.csv"
@@ -408,15 +409,51 @@ def main():
     print(f"\n5. Fetching FX (BRL/USD)...")
     fx = fetch_monthly_fx(start_date, end_date)
 
-    # ── Step 4: Compute monthly patrimonio ────────────────────────────────
-    print(f"\n6. Computing monthly patrimônio...")
+    # ── Step 4: Build monthly cash flows (aportes) ─────────────────────
+    print(f"\n6. Building monthly cash flows (aportes)...")
+    aportes_by_month = defaultdict(float)  # month → total BRL inflow
+
+    # IBKR deposits (USD → BRL usando câmbio do mês)
+    if IBKR_APORTES.exists():
+        ibkr_ap = json.loads(IBKR_APORTES.read_text())
+        for dep in ibkr_ap.get("depositos", []):
+            month = dep["data"][:7]
+            usd = dep.get("usd", dep.get("amount_usd", 0))
+            cambio_mes = fx.get(month, 5.0)
+            aportes_by_month[month] += usd * cambio_mes
+
+    # XP purchases (BRL) — compras são aportes
+    if XP_OPS.exists():
+        xp_ops = json.loads(XP_OPS.read_text())
+        for op in xp_ops:
+            if op["cv"] == "C" and op.get("valor"):
+                month = op["data"][:7]
+                aportes_by_month[month] += op["valor"]
+            elif op["cv"] == "V" and op.get("valor"):
+                month = op["data"][:7]
+                aportes_by_month[month] -= op["valor"]  # resgate = outflow
+
+    # Nubank TD (BRL)
+    if NUBANK_OPS.exists():
+        nb_data = json.loads(NUBANK_OPS.read_text())
+        for op in nb_data.get("operacoes", []):
+            month = op["data"][:7]
+            if op["tipo"] == "aplicacao":
+                aportes_by_month[month] += op["valor_brl"]
+            elif op["tipo"] == "resgate":
+                aportes_by_month[month] -= op["valor_brl"]
+
+    total_aportes = sum(v for v in aportes_by_month.values())
+    print(f"   Total aportes líquidos: R${total_aportes:,.2f}")
+
+    # ── Step 5: Compute monthly patrimonio + TWR ─────────────────────
+    print(f"\n7. Computing monthly patrimônio + TWR...")
     rows = []
     prev_pat = None
 
     for month in all_months:
         cambio = fx.get(month)
         if not cambio:
-            # Try nearest available
             for offset in range(1, 4):
                 m = datetime.strptime(month + "-01", "%Y-%m-%d").date()
                 for delta in [-offset, offset]:
@@ -427,7 +464,7 @@ def main():
                 if cambio:
                     break
         if not cambio:
-            cambio = 5.0  # absolute fallback, shouldn't happen
+            cambio = 5.0
 
         # IBKR equity (USD → BRL)
         ibkr_pos = ibkr_positions.get(month, {})
@@ -455,16 +492,20 @@ def main():
         # Total
         patrimonio_brl = equity_brl + xp_brl + rf_brl
 
-        # Variation
-        var_pct = ""
+        # TWR: retorno = (patrimônio_fim - aporte_mês) / patrimônio_início - 1
+        # Modified Dietz simplificado: assume aporte no meio do mês
+        aporte_mes = aportes_by_month.get(month, 0)
+        twr_pct = ""
         if prev_pat and prev_pat > 0:
-            var_pct = f"{(patrimonio_brl / prev_pat - 1) * 100:.2f}"
+            retorno = (patrimonio_brl - aporte_mes) / prev_pat - 1
+            twr_pct = f"{retorno * 100:.2f}"
         prev_pat = patrimonio_brl
 
         rows.append({
-            "data": month + "-28",  # approximate month-end
+            "data": month + "-28",
             "patrimonio_brl": round(patrimonio_brl, 2),
-            "patrimonio_var": var_pct,
+            "patrimonio_var": twr_pct,
+            "aporte_brl": round(aporte_mes, 2),
             "equity_usd": round(equity_usd, 2),
             "equity_brl": round(equity_brl, 2),
             "xp_brl": round(xp_brl, 2),
@@ -472,25 +513,28 @@ def main():
             "usdbrl": cambio,
         })
 
-        print(f"  {month}: equity ${equity_usd:>12,.2f} × {cambio:.2f} = R${equity_brl:>14,.2f}"
-              f"  |  XP R${xp_brl:>10,.2f}  |  RF R${rf_brl:>10,.2f}"
-              f"  |  TOTAL R${patrimonio_brl:>14,.2f}"
-              f"  {'(' + var_pct + '%)' if var_pct else ''}")
+        aporte_str = f" aporte R${aporte_mes:>10,.2f}" if aporte_mes else ""
+        print(f"  {month}: R${patrimonio_brl:>14,.2f}  TWR={twr_pct:>7s}%{aporte_str}")
 
     # ── Step 5: Filter zero months and write CSV ────────────────────────
     rows = [r for r in rows if r["patrimonio_brl"] > 0]
 
-    print(f"\n7. Writing {OUTPUT_CSV.relative_to(ROOT)}...")
-    fieldnames = ["data", "patrimonio_brl", "patrimonio_var", "equity_usd", "equity_brl",
-                  "xp_brl", "rf_brl", "usdbrl"]
+    print(f"\n8. Writing {OUTPUT_CSV.relative_to(ROOT)}...")
+    fieldnames = ["data", "patrimonio_brl", "patrimonio_var", "aporte_brl",
+                  "equity_usd", "equity_brl", "xp_brl", "rf_brl", "usdbrl"]
 
-    # Recalculate variations after filtering
+    # Recalculate TWR after filtering zeros
     for i, row in enumerate(rows):
         if i == 0:
             row["patrimonio_var"] = ""
         else:
             prev = rows[i-1]["patrimonio_brl"]
-            row["patrimonio_var"] = f"{(row['patrimonio_brl'] / prev - 1) * 100:.2f}" if prev > 0 else ""
+            aporte = row.get("aporte_brl", 0)
+            if prev > 0:
+                retorno = (row["patrimonio_brl"] - aporte) / prev - 1
+                row["patrimonio_var"] = f"{retorno * 100:.2f}"
+            else:
+                row["patrimonio_var"] = ""
 
     with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)

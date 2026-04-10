@@ -535,7 +535,7 @@ def get_attribution():
 
 # ─── 5. TIMELINE + RETORNOS MENSAIS (do CSV) ─────────────────────────────────
 def get_timeline_retornos():
-    labels, values = [], []
+    labels, values, twr_values = [], [], []
     try:
         with open(CSV_PATH) as f:
             reader = csv.DictReader(f)
@@ -543,18 +543,18 @@ def get_timeline_retornos():
                 date_col = [k for k in row if 'data' in k.lower() or 'date' in k.lower()]
                 val_col  = [k for k in row if 'patrimônio' in k.lower() or 'total' in k.lower() or 'patrimonio' in k.lower() or 'valor' in k.lower()]
                 if not date_col or not val_col:
-                    # tentar primeiras 2 colunas
                     keys = list(row.keys())
                     if len(keys) >= 2:
                         date_col = [keys[0]]
                         val_col  = [keys[1]]
                 d = row[date_col[0]].strip()
                 v_str = row[val_col[0]].replace(',', '.').replace(' ', '').strip()
+                # TWR pré-calculado (coluna patrimonio_var — retorno descontando aportes)
+                twr_str = row.get("patrimonio_var", "").strip()
                 try:
                     v = float(v_str)
-                    # Normalizar data para YYYY-MM
                     if len(d) == 10 and d[4] == '-':
-                        lbl = d[:7]  # YYYY-MM
+                        lbl = d[:7]
                     elif '/' in d:
                         parts = d.split('/')
                         lbl = f"{parts[2]}-{parts[1].zfill(2)}"
@@ -562,6 +562,7 @@ def get_timeline_retornos():
                         lbl = d[:7]
                     labels.append(lbl)
                     values.append(v)
+                    twr_values.append(float(twr_str) if twr_str else None)
                 except ValueError:
                     continue
     except Exception as e:
@@ -570,12 +571,14 @@ def get_timeline_retornos():
 
     # Deduplicar labels mantendo o último registro para cada label (ex: duas entradas do mesmo mês)
     seen: dict = {}
-    for lbl, val in zip(labels, values):
+    seen_twr: dict = {}
+    for lbl, val, twr in zip(labels, values, twr_values):
         seen[lbl] = val
+        seen_twr[lbl] = twr
     labels = list(seen.keys())
     values = list(seen.values())
 
-    # Retornos mensais entre pares consecutivos ≤35 dias
+    # Retornos mensais: usar TWR pré-calculado se disponível, senão calcular do patrimônio
     ret_dates, ret_vals = [], []
     for i in range(1, len(labels)):
         try:
@@ -583,7 +586,12 @@ def get_timeline_retornos():
             d2 = datetime.strptime(labels[i]   + "-01", "%Y-%m-%d")
             gap_days = (d2 - d1).days
             if gap_days <= 35 and values[i-1] > 0:
-                ret = (values[i] / values[i-1] - 1) * 100
+                # Preferir TWR pré-calculado (desconta aportes)
+                twr = seen_twr.get(labels[i])
+                if twr is not None:
+                    ret = twr
+                else:
+                    ret = (values[i] / values[i-1] - 1) * 100
                 ret_dates.append(labels[i])
                 ret_vals.append(round(ret, 4))
         except Exception:
