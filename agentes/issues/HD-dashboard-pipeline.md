@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-dashboard-pipeline |
 | **Dono** | Dev |
-| **Status** | Doing |
+| **Status** | ✅ Done — 2026-04-10 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Dev, Head |
 | **Co-sponsor** | Head |
