@@ -443,13 +443,24 @@ def main():
             elif op["tipo"] == "resgate":
                 aportes_by_month[month] -= op["valor_brl"]
 
+    # IBKR aportes em USD por mês (para TWR do equity block em USD)
+    ibkr_aportes_usd_by_month = defaultdict(float)
+    if IBKR_APORTES.exists():
+        ibkr_ap = json.loads(IBKR_APORTES.read_text())
+        for dep in ibkr_ap.get("depositos", []):
+            month = dep["data"][:7]
+            usd = dep.get("usd", dep.get("amount_usd", 0))
+            ibkr_aportes_usd_by_month[month] += usd
+
     total_aportes = sum(v for v in aportes_by_month.values())
-    print(f"   Total aportes líquidos: R${total_aportes:,.2f}")
+    print(f"   Total aportes líquidos BRL: R${total_aportes:,.2f}")
+    print(f"   Total aportes IBKR USD: ${sum(ibkr_aportes_usd_by_month.values()):,.2f}")
 
     # ── Step 5: Compute monthly patrimonio + TWR ─────────────────────
     print(f"\n7. Computing monthly patrimônio + TWR...")
     rows = []
     prev_pat = None
+    prev_equity_usd = None
 
     for month in all_months:
         cambio = fx.get(month)
@@ -492,49 +503,66 @@ def main():
         # Total
         patrimonio_brl = equity_brl + xp_brl + rf_brl
 
-        # TWR: retorno = (patrimônio_fim - aporte_mês) / patrimônio_início - 1
-        # Modified Dietz simplificado: assume aporte no meio do mês
-        aporte_mes = aportes_by_month.get(month, 0)
+        # TWR BRL: retorno = (patrimônio_fim - aporte_mês) / patrimônio_início - 1
+        aporte_mes_brl = aportes_by_month.get(month, 0)
         twr_pct = ""
         if prev_pat and prev_pat > 0:
-            retorno = (patrimonio_brl - aporte_mes) / prev_pat - 1
+            retorno = (patrimonio_brl - aporte_mes_brl) / prev_pat - 1
             twr_pct = f"{retorno * 100:.2f}"
         prev_pat = patrimonio_brl
+
+        # TWR USD (equity block only): descontar aportes IBKR em USD
+        aporte_mes_usd = ibkr_aportes_usd_by_month.get(month, 0)
+        twr_usd_pct = ""
+        if prev_equity_usd and prev_equity_usd > 0:
+            ret_usd = (equity_usd - aporte_mes_usd) / prev_equity_usd - 1
+            twr_usd_pct = f"{ret_usd * 100:.2f}"
+        prev_equity_usd = equity_usd
 
         rows.append({
             "data": month + "-28",
             "patrimonio_brl": round(patrimonio_brl, 2),
             "patrimonio_var": twr_pct,
-            "aporte_brl": round(aporte_mes, 2),
+            "aporte_brl": round(aporte_mes_brl, 2),
             "equity_usd": round(equity_usd, 2),
+            "equity_var_usd": twr_usd_pct,
+            "aporte_usd": round(aporte_mes_usd, 2),
             "equity_brl": round(equity_brl, 2),
             "xp_brl": round(xp_brl, 2),
             "rf_brl": round(rf_brl, 2),
             "usdbrl": cambio,
         })
 
-        aporte_str = f" aporte R${aporte_mes:>10,.2f}" if aporte_mes else ""
-        print(f"  {month}: R${patrimonio_brl:>14,.2f}  TWR={twr_pct:>7s}%{aporte_str}")
+        aporte_str = f" aporte R${aporte_mes_brl:>10,.2f}" if aporte_mes_brl else ""
+        print(f"  {month}: R${patrimonio_brl:>14,.2f}  TWR_BRL={twr_pct:>7s}%  TWR_USD={twr_usd_pct:>7s}%{aporte_str}")
 
     # ── Step 5: Filter zero months and write CSV ────────────────────────
     rows = [r for r in rows if r["patrimonio_brl"] > 0]
 
     print(f"\n8. Writing {OUTPUT_CSV.relative_to(ROOT)}...")
     fieldnames = ["data", "patrimonio_brl", "patrimonio_var", "aporte_brl",
-                  "equity_usd", "equity_brl", "xp_brl", "rf_brl", "usdbrl"]
+                  "equity_usd", "equity_var_usd", "aporte_usd",
+                  "equity_brl", "xp_brl", "rf_brl", "usdbrl"]
 
     # Recalculate TWR after filtering zeros
     for i, row in enumerate(rows):
         if i == 0:
             row["patrimonio_var"] = ""
+            row["equity_var_usd"] = ""
         else:
-            prev = rows[i-1]["patrimonio_brl"]
-            aporte = row.get("aporte_brl", 0)
-            if prev > 0:
-                retorno = (row["patrimonio_brl"] - aporte) / prev - 1
-                row["patrimonio_var"] = f"{retorno * 100:.2f}"
+            prev_brl = rows[i-1]["patrimonio_brl"]
+            aporte_brl = row.get("aporte_brl", 0)
+            if prev_brl > 0:
+                row["patrimonio_var"] = f"{((row['patrimonio_brl'] - aporte_brl) / prev_brl - 1) * 100:.2f}"
             else:
                 row["patrimonio_var"] = ""
+
+            prev_usd = rows[i-1]["equity_usd"]
+            aporte_usd = row.get("aporte_usd", 0)
+            if prev_usd > 0:
+                row["equity_var_usd"] = f"{((row['equity_usd'] - aporte_usd) / prev_usd - 1) * 100:.2f}"
+            else:
+                row["equity_var_usd"] = ""
 
     with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -571,12 +599,16 @@ def _generate_core_jsons(rows: list[dict]):
 
     # ── 1. retornos_mensais.json ─────────────────────────────────────
     dates = []
-    twr_pct = []
+    twr_pct = []           # Portfolio total em BRL
+    twr_usd_pct = []       # Equity block em USD
     acumulado = []
+    acumulado_usd = []
     cum = 1.0
+    cum_usd = 1.0
 
     for i, row in enumerate(rows):
         var_str = row.get("patrimonio_var", "")
+        var_usd_str = row.get("equity_var_usd", "")
         if i == 0 or not var_str:
             continue
         ret = float(var_str) / 100
@@ -585,17 +617,28 @@ def _generate_core_jsons(rows: list[dict]):
         twr_pct.append(round(ret * 100, 4))
         acumulado.append(round((cum - 1) * 100, 2))
 
+        if var_usd_str:
+            ret_usd = float(var_usd_str) / 100
+            cum_usd *= (1 + ret_usd)
+            twr_usd_pct.append(round(ret_usd * 100, 4))
+            acumulado_usd.append(round((cum_usd - 1) * 100, 2))
+        else:
+            twr_usd_pct.append(None)
+            acumulado_usd.append(None)
+
     retornos = {
         "_generated": now_iso,
         "_source": "reconstruct_history.py → TWR (Modified Dietz simplificado)",
         "dates": dates,
         "twr_pct": twr_pct,
+        "twr_usd_pct": twr_usd_pct,
         "acumulado_pct": acumulado,
+        "acumulado_usd_pct": acumulado_usd,
     }
 
     retornos_path = ROOT / "dados" / "retornos_mensais.json"
     retornos_path.write_text(json.dumps(retornos, indent=2, ensure_ascii=False))
-    print(f"  ✓ {retornos_path.relative_to(ROOT)} ({len(dates)} meses)")
+    print(f"  ✓ {retornos_path.relative_to(ROOT)} ({len(dates)} meses, BRL + USD)")
 
     # ── 2. rolling_metrics.json ──────────────────────────────────────
     WINDOW = 12
@@ -609,31 +652,55 @@ def _generate_core_jsons(rows: list[dict]):
         except Exception:
             pass
 
-    rf_mensal = ((1 + selic / 100) ** (1/12) - 1) * 100
+    rf_mensal_brl = ((1 + selic / 100) ** (1/12) - 1) * 100
+
+    # US T-Bill 3m rate (proxy: ~3.5-4.5% range 2021-2026)
+    TBILL_ANUAL = 4.0  # fallback conservador
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text())
+            _ff = state.get("macro", {}).get("fed_funds")
+            if _ff:
+                TBILL_ANUAL = _ff  # T-Bill ≈ Fed Funds
+        except Exception:
+            pass
+    rf_mensal_usd = ((1 + TBILL_ANUAL / 100) ** (1/12) - 1) * 100
 
     roll_dates = []
-    roll_sharpe = []
+    roll_sharpe_brl = []    # Sharpe BRL vs CDI
+    roll_sharpe_usd = []    # Sharpe USD equity vs T-Bill
     roll_sortino = []
     roll_vol = []
     roll_maxdd = []
 
     for i in range(WINDOW - 1, len(twr_pct)):
+        # ── Sharpe BRL (portfolio total vs CDI) ──
         win = twr_pct[i - WINDOW + 1: i + 1]
-        excess = [v - rf_mensal for v in win]
+        excess = [v - rf_mensal_brl for v in win]
         mean_ex = sum(excess) / WINDOW
         var_pop = sum((v - mean_ex) ** 2 for v in excess) / WINDOW
         std_pop = math.sqrt(var_pop)
+        sharpe_brl = round(mean_ex / std_pop * math.sqrt(12), 3) if std_pop > 0 else 0
 
-        # Sharpe anualizado
-        sharpe = round(mean_ex / std_pop * math.sqrt(12), 3) if std_pop > 0 else 0
+        # ── Sharpe USD (equity block vs T-Bill) ──
+        win_usd = twr_usd_pct[i - WINDOW + 1: i + 1]
+        win_usd_clean = [v for v in win_usd if v is not None]
+        if len(win_usd_clean) >= WINDOW:
+            excess_usd = [v - rf_mensal_usd for v in win_usd_clean]
+            mean_ex_usd = sum(excess_usd) / len(win_usd_clean)
+            var_usd = sum((v - mean_ex_usd) ** 2 for v in excess_usd) / len(win_usd_clean)
+            std_usd = math.sqrt(var_usd)
+            sharpe_usd = round(mean_ex_usd / std_usd * math.sqrt(12), 3) if std_usd > 0 else 0
+        else:
+            sharpe_usd = None
 
-        # Sortino (downside deviation only)
+        # Sortino (BRL, downside deviation only)
         downside = [v for v in excess if v < 0]
         dd_sq = sum(v ** 2 for v in downside) / WINDOW
         dd_std = math.sqrt(dd_sq)
         sortino = round(mean_ex / dd_std * math.sqrt(12), 3) if dd_std > 0 else 0
 
-        # Volatilidade anualizada (dos retornos totais, não excess)
+        # Volatilidade anualizada (BRL, retornos totais)
         mean_ret = sum(win) / WINDOW
         var_ret = sum((v - mean_ret) ** 2 for v in win) / WINDOW
         vol = round(math.sqrt(var_ret) * math.sqrt(12), 3)
@@ -652,7 +719,8 @@ def _generate_core_jsons(rows: list[dict]):
                 max_dd = dd
 
         roll_dates.append(dates[i])
-        roll_sharpe.append(sharpe)
+        roll_sharpe_brl.append(sharpe_brl)
+        roll_sharpe_usd.append(sharpe_usd)
         roll_sortino.append(sortino)
         roll_vol.append(vol)
         roll_maxdd.append(round(max_dd * 100, 2))
@@ -661,9 +729,11 @@ def _generate_core_jsons(rows: list[dict]):
         "_generated": now_iso,
         "_source": "reconstruct_history.py",
         "window": WINDOW,
-        "rf_anual": selic,
+        "rf_brl": {"taxa_anual": selic, "nome": "Selic meta (CDI)"},
+        "rf_usd": {"taxa_anual": TBILL_ANUAL, "nome": "US T-Bill 3m (≈ Fed Funds)"},
         "dates": roll_dates,
-        "sharpe": roll_sharpe,
+        "sharpe_brl": roll_sharpe_brl,
+        "sharpe_usd": roll_sharpe_usd,
         "sortino": roll_sortino,
         "volatilidade": roll_vol,
         "max_dd": roll_maxdd,
@@ -671,7 +741,7 @@ def _generate_core_jsons(rows: list[dict]):
 
     rolling_path = ROOT / "dados" / "rolling_metrics.json"
     rolling_path.write_text(json.dumps(rolling, indent=2, ensure_ascii=False))
-    print(f"  ✓ {rolling_path.relative_to(ROOT)} ({len(roll_dates)} pontos)")
+    print(f"  ✓ {rolling_path.relative_to(ROOT)} ({len(roll_dates)} pontos, dual Sharpe BRL+USD)")
 
     # ── 3. portfolio_summary.json ────────────────────────────────────
     first = rows[0]
