@@ -809,7 +809,16 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="rollingSharpChart"></canvas></div>
-<div class="src">Sharpe anualizado 12m (TWR, σ populacional). Linha cheia = BRL vs CDI (custo de oportunidade real). Linha tracejada azul = USD vs T-Bill (qualidade equity isolada). Ref: Sharpe=1 (cinza).</div>
+<div class="src" style="line-height:1.6">
+<strong>Como ler:</strong> Sharpe mede retorno ajustado ao risco em janela de 12 meses.<br>
+<span style="color:rgba(34,197,94,.9)">■</span> <strong>&gt;1</strong> = excelente (carteira supera CDI com folga)
+<span style="color:rgba(234,179,8,.9)">■</span> <strong>0–1</strong> = neutro (retorno positivo vs CDI, mas baixo p/ risco)
+<span style="color:rgba(239,68,68,.9)">■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)<br>
+<span style="color:rgba(96,165,250,.7)">┈┈</span> Tracejada azul = Sharpe em USD vs T-Bill (performance do equity isolado, sem câmbio).
+<span style="color:rgba(255,255,255,.3)">┈┈</span> Cinza = referência Sharpe=1.
+<span style="color:rgba(239,68,68,.4)">┈┈</span> Vermelha = zero (break-even vs CDI).<br>
+Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado √12.
+</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -2536,7 +2545,7 @@ function buildRollingSharp() {
 
   if (charts.rollingSharp) charts.rollingSharp.destroy();
 
-  const colorFor = v => v >= 1 ? 'rgba(34,197,94,.7)' : v >= 0 ? 'rgba(234,179,8,.7)' : 'rgba(239,68,68,.7)';
+  const colorFor = v => v >= 1 ? 'rgba(34,197,94,.85)' : v >= 0 ? 'rgba(250,204,21,.8)' : 'rgba(248,113,113,.85)';
   const ptColors = sharpesBrl.map(colorFor);
 
   const datasets = [
