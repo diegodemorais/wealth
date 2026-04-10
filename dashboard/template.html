@@ -1069,9 +1069,7 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
     <div class="ctl">Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.</div>
   </div>
 </div>
-<div style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
-  ⚠️ ago/2019–abr/2026: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos.
-</div>
+<div id="backtestNotaProxy" style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem"></div>
 <div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
 </div><!-- /collapse-body -->
 </div>
@@ -2690,6 +2688,10 @@ const BACKTEST_CYCLES = {
 };
 
 function buildBacktest(period) {
+  // Injetar nota_proxy do data.json (substitui texto hardcoded)
+  const _notaEl = document.getElementById('backtestNotaProxy');
+  if (_notaEl) _notaEl.textContent = DATA.backtest?.nota_proxy || '';
+
   const cycle = BACKTEST_CYCLES[period] || BACKTEST_CYCLES['since2009'];
   const useR5 = cycle.useR5;
   const allDates = useR5 ? DATA.backtestR5.dates : DATA.backtest.dates;
@@ -5291,9 +5293,16 @@ function buildPremissasVsRealizado() {
   var re = pvr.retorno_equity;
   if (re) {
     var premR = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
-    var realR = re.backtest_nominal_usd_pct != null ? re.backtest_nominal_usd_pct.toFixed(2) + '% nom USD' : '--';
+    // Usar TWR BRL anualizado como "Realizado" — base compatível com a premissa
+    var twrR = re.twr_brl_cagr_pct != null ? re.twr_brl_cagr_pct.toFixed(2) + '% BRL (TWR)' : '--';
+    var benchUsd = re.backtest_nominal_usd_pct != null ? ' · backtest nom USD: ' + re.backtest_nominal_usd_pct.toFixed(2) + '%' : '';
     var benchR = re.benchmark_vwra_nominal_usd_pct != null ? ' (VWRA ' + re.benchmark_vwra_nominal_usd_pct.toFixed(2) + '%)' : '';
-    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + realR + benchR + '</td><td class="num" style="color:var(--muted)">n/a*</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (re.nota || '--') + '</td></tr>';
+    // Delta: TWR BRL vs premissa real BRL (comparação apple-to-apple)
+    var deltaREq = (re.twr_brl_cagr_pct != null && re.premissa_real_brl_pct != null)
+      ? (re.twr_brl_cagr_pct - re.premissa_real_brl_pct) : null;
+    var deltaRStr = deltaREq != null ? (deltaREq >= 0 ? '+' : '') + deltaREq.toFixed(2) + 'pp' : 'n/a';
+    var deltaRColor = deltaREq != null ? (deltaREq >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--muted)';
+    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + twrR + benchUsd + benchR + '</td><td class="num" style="color:' + deltaRColor + '">' + deltaRStr + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (re.nota || '--') + '</td></tr>';
   }
 
   // Aporte mensal

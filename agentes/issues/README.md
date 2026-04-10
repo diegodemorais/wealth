@@ -49,7 +49,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | ✅ Done 2026-04-10 |
 | HD-perplexity-review | Review externo Perplexity — 5 refinamentos + 5 features novas | Head | 🟡 Média | Backlog |
 | DEV-pvr-broken | Premissas vs Realizado não renderiza (recorrente) | Dev | 🔴 Crítica | ✅ Done 2026-04-10 |
-| DEV-perf-audit-fixes | 6 correções aba Performance (TER, attribution, CDI, shadows) | Dev+Quant | 🔴 Alta | Backlog |
+| DEV-perf-audit-fixes | 6 correções aba Performance (TER, attribution, CDI, shadows) | Dev+Quant | 🔴 Alta | ✅ Done 2026-04-10 |
 | CORE-portfolio-history | Camada Core de Histórico de Portfolio | Bookkeeper | 🔴 Crítica | Fase 1 em andamento |
 | HD-dashboard-pipeline | Refatoração do pipeline e arquitetura do dashboard | Dev | 🟡 Média | Em andamento |
 | HD-dashboard-v2 | Redesign e correções — revisão completa 12 agentes | Dev | 🔴 Crítica | Done (v1.43→v1.71, P0/P1/P2/P3 completos) |

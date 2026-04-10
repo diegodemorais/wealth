@@ -39,7 +39,7 @@ from config import (
     PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL, RENDA_ESTIMADA,
     IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL, ANO_NASCIMENTO,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
-    TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA,
+    TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA, ETF_TER,
     HODL11_PISO_PCT, HODL11_ALVO_PCT, HODL11_TETO_PCT,
     FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
     BOND_TENT_META_ANOS,
@@ -455,14 +455,14 @@ def get_backtest():
 def get_attribution():
     """Decomposição YTD do crescimento patrimonial em 3 componentes:
       - aportes: aportes_mensais × meses_decorridos (jan-hoje)
-      - retornoUsd: proxy 65% do crescimento não-aporte (equity USD)
-      - cambio: resíduo (variação cambial + RF BRL)
+      - retornoUsd: retorno equity USD (contrib. equity_usd de decomposicao, ou proxy)
+      - cambio: variação cambial (contrib. fx de decomposicao, ou proxy)
 
-    Usa CSV e dashboard_state.json como fontes primárias.
-    Marca _estimativa: True — não é atribuição exata, é decomposição proxy.
+    Fonte primária: retornos_mensais.json decomposicao (dados reais — sem _estimativa).
+    Fallback: proxy via pesos_target se decomposicao não disponível (_estimativa: True).
     """
     try:
-        # 1. Patrimônio início do ano: última linha de dez/2025 ou 2025-12-31 no CSV
+        # 1. Patrimônio início do ano: última linha de dez/2025 ou 2026-01 no CSV
         pat_inicio = None
         if CSV_PATH.exists():
             with open(CSV_PATH) as f:
@@ -485,7 +485,6 @@ def get_attribution():
         state = load_state()
         pat_atual = state.get("patrimonio", {}).get("total_brl")
         if pat_atual is None:
-            # Tentar de posicoes
             posicoes_raw = state.get("posicoes", {})
             cambio_state = state.get("patrimonio", {}).get("cambio", CAMBIO_FALLBACK)
             _total = 0
@@ -502,26 +501,63 @@ def get_attribution():
 
         # 3. Aportes YTD: jan=1 ... hoje
         hoje = date.today()
-        # Meses completos decorridos (jan=1 completo se passamos de fev)
-        meses = hoje.month - 1  # meses completos (jan completo = 1, fev completo = 2 ...)
+        meses = hoje.month - 1
         if meses <= 0:
-            meses = 1  # pelo menos 1 mês
+            meses = 1
         aportes_ytd = APORTE_MENSAL * meses
 
-        # 4. Crescimento real
+        # 4. Crescimento real total
         cresc_real = pat_atual - pat_inicio
 
-        # 5. Crescimento não-aporte
-        cresc_nao_aporte = cresc_real - aportes_ytd
+        # 5. Tentar usar decomposicao real de retornos_mensais.json (dados não-estimados)
+        if RETORNOS_CORE.exists():
+            try:
+                _rc = json.loads(RETORNOS_CORE.read_text())
+                _dates = _rc.get("dates", [])
+                _dec = _rc.get("decomposicao", {})
+                _eq_usd = _dec.get("equity_usd", [])
+                _fx = _dec.get("fx", [])
 
-        # 6. Proxy decomposição: usa peso equity real do portfolio como base
-        # Limitação: sem PTAX de início de ano não é possível separar r_usd de r_fx exatamente.
-        # Proxy: pesos_target["equity"] como fração do crescimento em USD; restante = câmbio+RF.
+                if _eq_usd and _fx and len(_eq_usd) == len(_dates):
+                    # Filtrar meses YTD (a partir de jan do ano corrente)
+                    ano_atual = str(hoje.year)
+                    ytd_eq_usd = []
+                    ytd_fx = []
+                    for i, d in enumerate(_dates):
+                        if d.startswith(ano_atual):
+                            if i < len(_eq_usd):
+                                ytd_eq_usd.append(_eq_usd[i])
+                            if i < len(_fx):
+                                ytd_fx.append(_fx[i])
+
+                    if ytd_eq_usd or ytd_fx:
+                        # Contribuições em pp; converter para BRL usando pat_inicio como base
+                        # Acumular: contrib_total ≈ soma_pp/100 × pat_inicio (aproximação 1ª ordem)
+                        total_eq_usd_pp = sum(ytd_eq_usd)
+                        total_fx_pp = sum(ytd_fx)
+                        retorno_usd = round(total_eq_usd_pp / 100 * pat_inicio)
+                        cambio_fx   = round(total_fx_pp  / 100 * pat_inicio)
+                        print(f"  → attribution (decomposicao real): pat_inicio=R${pat_inicio/1e3:.0f}k | "
+                              f"aportes=R${aportes_ytd/1e3:.0f}k | retornoUsd=R${retorno_usd/1e3:.0f}k | "
+                              f"cambio=R${cambio_fx/1e3:.0f}k | meses_ytd={len(ytd_eq_usd)}")
+                        return {
+                            "aportes":     aportes_ytd,
+                            "retornoUsd":  retorno_usd,
+                            "cambio":      cambio_fx,
+                            "crescReal":   round(cresc_real),
+                            "_estimativa": False,  # dados reais de retornos_mensais.json
+                            "_fonte":      "retornos_mensais.json decomposicao",
+                        }
+            except Exception as _e:
+                print(f"  ⚠️ attribution decomposicao: {_e} — usando proxy")
+
+        # 6. Fallback: proxy via pesos_target
+        cresc_nao_aporte = cresc_real - aportes_ytd
         peso_equity = PESOS_TARGET.get("equity", 0.70)  # lê de PESOS_TARGET, sem hardcode
         retorno_usd = round(cresc_nao_aporte * peso_equity)
         cambio_fx   = round(cresc_nao_aporte - retorno_usd)
 
-        print(f"  → attribution: pat_inicio=R${pat_inicio/1e3:.0f}k | pat_atual=R${pat_atual/1e3:.0f}k | "
+        print(f"  → attribution (proxy): pat_inicio=R${pat_inicio/1e3:.0f}k | pat_atual=R${pat_atual/1e3:.0f}k | "
               f"aportes=R${aportes_ytd/1e3:.0f}k | retornoUsd=R${retorno_usd/1e3:.0f}k | cambio=R${cambio_fx/1e3:.0f}k")
 
         return {
@@ -987,12 +1023,15 @@ def get_posicoes_precos(state):
         except Exception as e:
             print(f"  ⚠️ yfinance: {e}")
 
-    # Garantir bucket e status em cada posição
+    # Garantir bucket, status e TER em cada posição
     for tk, pos in posicoes.items():
         if "bucket" not in pos:
             pos["bucket"] = BUCKET_MAP.get(tk, tk)
         if "status" not in pos:
             pos["status"] = "alvo" if tk in ("SWRD", "AVGS", "AVEM", "AVUV_UCITS") else "transitório"
+        # Injetar TER (% a.a.) — fonte: config.py ETF_TER
+        if "ter" not in pos:
+            pos["ter"] = ETF_TER.get(tk)
 
     return posicoes, cambio, prices
 
@@ -1323,15 +1362,37 @@ def compute_premissas_vs_realizado(
     target_cagr = backtest_metrics.get("target", {}).get("cagr")  # ex: 12.88 (%)
     shadow_cagr = backtest_metrics.get("shadowA", {}).get("cagr")  # VWRA benchmark
 
+    # Retorno realizado BRL real — TWR acumulado anualizado de retornos_mensais.json
+    # Esta é a comparação correta: premissa (real BRL) vs realizado (TWR BRL, inclui câmbio)
+    twr_brl_cagr = None
+    try:
+        if RETORNOS_CORE.exists():
+            _rc = json.loads(RETORNOS_CORE.read_text())
+            _twr = _rc.get("twr_pct", [])
+            _dates = _rc.get("dates", [])
+            if _twr and _dates:
+                # Acumular retorno total para anualizar (produto de (1 + r_mensal/100))
+                acum = 1.0
+                for r in _twr:
+                    acum *= (1 + r / 100)
+                # Número de anos cobertos pela série
+                n_meses = len(_twr)
+                if n_meses >= 6:  # mínimo 6 meses para ser significativo
+                    cagr = (acum ** (12 / n_meses) - 1) * 100
+                    twr_brl_cagr = round(cagr, 2)
+    except Exception as _e:
+        print(f"  ⚠️ PvR twr_brl_cagr: {_e}")
+
     if premissa_retorno is not None:
         result["retorno_equity"] = {
             "premissa_real_brl_pct": round(premissa_retorno * 100, 2),
-            "backtest_nominal_usd_pct": target_cagr,
+            "twr_brl_cagr_pct":      twr_brl_cagr,          # realizado BRL real (TWR anualizado)
+            "backtest_nominal_usd_pct": target_cagr,         # CAGR backtest (nominal USD, referência)
             "benchmark_vwra_nominal_usd_pct": shadow_cagr,
             "nota": (
                 "Premissa = retorno real em BRL (pós-depreciação cambial 0.5%/ano). "
-                "Backtest = nominal em USD (período curto, inclui inflação US ~2-3%/ano). "
-                "Comparação direta inadequada -- usar apenas como referência direcional."
+                "Realizado = TWR anualizado BRL (inclui câmbio + RF — comparação correta). "
+                "Backtest USD = nominal em USD (inclui inflação US ~2-3%/ano, referência apenas)."
             ),
         }
 
@@ -1998,6 +2059,16 @@ def main():
     # Backtest — usar cache do script ou deixar vazio (será populado na próxima rodada)
     backtest = backtest_data.get("backtest", {})
     backtest_r5 = backtest_data.get("backtestR5", {})
+    # Nota explicativa do backtest (substitui texto hardcoded no template)
+    # Derivada dinamicamente das datas reais do backtest
+    _bt_dates = backtest.get("dates", [])
+    _bt_start = _bt_dates[0] if _bt_dates else "ago/2019"
+    _bt_end   = _bt_dates[-1] if _bt_dates else "abr/2026"
+    backtest["nota_proxy"] = (
+        f"⚠️ {_bt_start}–{_bt_end}: 2 proxies UCITS ativos "
+        "(AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). "
+        "Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos."
+    )
 
     # Shadows — ler do state e adicionar campos flat no nível raiz
     _shadows_raw = state.get("shadows", {})
@@ -2008,7 +2079,7 @@ def main():
         **_shadows_raw,  # mantém estrutura original
         "delta_vwra":     _q1.get("delta_a"),       # shadow A = VWRA benchmark primário
         "delta_ipca":     _q1.get("delta_b"),       # shadow B = IPCA+ RF benchmark
-        "delta_shadow_c": None,                      # shadow C (60/40) não disponível ainda
+        "delta_shadow_c": _q1.get("delta_c"),        # shadow C (60/40) — None se não disponível
         "periodo":        _q1.get("periodo", "Q1 2026"),
         "atual":          _q1.get("atual"),
         "target":         _q1.get("target"),

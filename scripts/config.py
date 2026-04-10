@@ -124,6 +124,20 @@ GLIDE_PATH = {
 }
 
 
+# ─── TER POR ETF (Total Expense Ratio) ──────────────────────────────────────
+# Fontes: factsheet oficial de cada ETF (Invesco, Avantis, Hashdex)
+# 0% para títulos do Tesouro Direto (TD) — sem taxa de administração
+ETF_TER = {
+    "SWRD":    0.12,   # Invesco MSCI World UCITS ETF (Acc)
+    "AVGS":    0.25,   # Avantis Global Small Cap Value UCITS ETF
+    "AVEM":    0.25,   # Avantis Emerging Markets UCITS ETF
+    "JPGL":    0.38,   # JPMorgan Global Equity Premium Income UCITS (legado, target 0%)
+    "HODL11":  0.70,   # Hashdex Nasdaq Crypto Index (B3) — TER ~0.70%
+    "RENDA":   0.00,   # Renda+ 2065 (Tesouro Direto) — sem TER
+    "IPCA":    0.00,   # Tesouro IPCA+ (Tesouro Direto) — sem TER
+}
+
+
 # ─── TRIBUTAÇÃO (fonte: carteira.md — Lei 14.754/2023) ───────────────────────
 
 IR_ALIQUOTA = 0.15                # 15% flat sobre ganho de capital ETFs exterior

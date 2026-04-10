@@ -711,8 +711,13 @@ def _generate_core_jsons(rows: list[dict]):
 
     # ── 2. rolling_metrics.json ──────────────────────────────────────
     WINDOW = 12
-    # Selic meta atual — lida de dashboard_state se disponível
-    selic = 14.75
+    # Selic meta atual — prioridade: dashboard_state.json > config.py SELIC_META_SNAPSHOT
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        from config import SELIC_META_SNAPSHOT as _SELIC_SNAPSHOT
+    except ImportError:
+        _SELIC_SNAPSHOT = 14.75  # last-resort se config.py não encontrado
+    selic = _SELIC_SNAPSHOT
     state_path = ROOT / "dados" / "dashboard_state.json"
     if state_path.exists():
         try:
