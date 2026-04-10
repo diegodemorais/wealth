@@ -46,13 +46,17 @@
 | Ativo | Corretora | Cotas | Custo base | Valor MtM | Taxa | Notas |
 |-------|-----------|------:|----------:|---------:|-----:|-------|
 | Tesouro IPCA+ 2029 | Nubank | 23.34 | R$ 76,860 | R$ 86,555 | 7.58% | Reserva emergencia |
-| Tesouro IPCA+ 2040 | Nubank | 11.58 | R$ 20,035 | R$ 20,019 | 7.07% | Bloco IPCA+ longo. DCA ativo |
+| Tesouro IPCA+ 2040 | Nubank | 11.58 + ? | R$ 20,035 + 46.498,08 | Atualizar | 7.07% / 7.10% | Bloco IPCA+ longo. DCA ativo. Compra 2026-04-10: R$ 46.498,08 @ 7,10% — **cotas a confirmar com PU de compra** |
+| Tesouro IPCA+ 2050 | Nubank/XP | ? | R$ 11.660,71 | Atualizar | 6.85% | **NOVO: Compra 2026-04-10**. Bloco IPCA+ longo, split 20%. Cotas a confirmar com PU de compra |
 | Renda+ 2065 | Nubank | 158.93 | R$ 108,554 | R$ 117,833 | 6.80% | Tatico. Gatilho venda: taxa <= 6.0% |
 | Tesouro IPCA+ 2045 | Nubank | — | — | ZERADO | — | Resgate total jan/2025. P&L: -R$ 10,620 |
 
-> Cotas calculadas de operacoes Nubank × PU historico (Tesouro Transparente CSV)
-> MtM = cotas × PU venda 08/04/2026 (fonte: `dados/td_precos.json`)
-> Taxas: Tesouro Transparente 08/04/2026 (compra manhã)
+> **Cotas aguardando atualização (operações 2026-04-10):**
+> - TD IPCA+ 2040: cotas após investimento de R$ 46.498,08 a taxa 7,10%
+> - TD IPCA+ 2050: cotas do investimento inicial R$ 11.660,71 a taxa 6,85%
+> Pendente: obter PU de compra 2026-04-10 do Tesouro Transparente ou do Nubank/XP para cálculo preciso.
+> MtM anterior = cotas × PU venda 08/04/2026 (fonte: `dados/td_precos.json`)
+> Taxas: Tesouro Transparente 08/04/2026 (referência) + 2026-04-10 (operações novas)
 
 ---
 
@@ -107,15 +111,15 @@ A planilha precisa ser atualizada com os sub-blocos corretos. Ver secao "Gaps" a
 
 ### Gap por Bucket (% do patrimonio total)
 
-| Bloco | Alvo | Atual | Gap | Acao |
-|-------|------|-------|-----|------|
-| SWRD | 39.5% | ~36.1% | -3.4% under | Aportar SWRD |
-| AVGS | 23.7% | ~28.6% | +4.9% over | Overweight via transitorios. Aportar so AVGS UCITS |
-| AVEM | 15.8% | ~23.6% | +7.8% over | Overweight via transitorios |
-| IPCA+ longo | 15.0% | ~0.9% | **-14.1% under** | **DCA ATIVO** (taxa ~7.20% > piso 6.0%) |
-| Cripto | 3.0% | ~2.9% | ~0% | On target |
-| Renda+ 2065 | <=3% | ~3.2% | ~0% | Proximo do target. DCA parado |
-| Reserva | transitorio | ~2.5% | n/a | Migrar para Selic em 2029 |
+| Bloco | Alvo | Atual (pré-04-10) | Novo (pós-04-10) | Gap reduzido | Acao |
+|-------|------|-------------------|------------------|--------------|------|
+| SWRD | 39.5% | ~36.1% | ~36.1% | -3.4% under | Aportar SWRD |
+| AVGS | 23.7% | ~28.6% | ~28.6% | +4.9% over | Overweight via transitorios. Aportar so AVGS UCITS |
+| AVEM | 15.8% | ~23.6% | ~23.6% | +7.8% over | Overweight via transitorios |
+| IPCA+ longo | 15.0% | ~0.9% | ~2.6% | **-12.4% under** (era -14.1%) | **DCA ATIVO** (taxa 7,10% e 6,85% > piso 6.0%). Aporte 2026-04-10: R$ 58.158,79 |
+| Cripto | 3.0% | ~2.9% | ~2.9% | ~0% | On target |
+| Renda+ 2065 | <=3% | ~3.2% | ~3.2% | ~0% | Proximo do target. DCA parado |
+| Reserva | transitorio | ~2.5% | ~2.5% | n/a | Migrar para Selic em 2029 |
 
 ### Prioridade de Aportes (por gap)
 
