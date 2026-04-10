@@ -806,10 +806,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S24b: ROLLING SHARPE 12m -->
 <div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (vs CDI)</h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="rollingSharpChart"></canvas></div>
-<div class="src">Sharpe anualizado em janela móvel de 12 meses (σ populacional). Azul = Sharpe &gt; 1 (excelente), amarelo = 0–1, vermelho &lt; 0. Linha tracejada = referência Sharpe=1.</div>
+<div class="src">Sharpe anualizado 12m (TWR, σ populacional). Linha cheia = BRL vs CDI (custo de oportunidade real). Linha tracejada azul = USD vs T-Bill (qualidade equity isolada). Ref: Sharpe=1 (cinza).</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -2526,9 +2526,10 @@ function buildRetornoHeatmap() {
 function buildRollingSharp() {
   const rs = DATA.rolling_sharpe || {};
   const labels = rs.dates || [];
-  const sharpes = rs.values || [];
+  const sharpesBrl = rs.values || [];
+  const sharpesUsd = rs.values_usd || [];
 
-  if (!sharpes.length) {
+  if (!sharpesBrl.length) {
     checkMinPoints('rollingSharpChart', 0, 13);
     return;
   }
@@ -2536,54 +2537,72 @@ function buildRollingSharp() {
   if (charts.rollingSharp) charts.rollingSharp.destroy();
 
   const colorFor = v => v >= 1 ? 'rgba(34,197,94,.7)' : v >= 0 ? 'rgba(234,179,8,.7)' : 'rgba(239,68,68,.7)';
-  const ptColors = sharpes.map(colorFor);
+  const ptColors = sharpesBrl.map(colorFor);
+
+  const datasets = [
+    {
+      label: 'Sharpe BRL vs CDI',
+      data: sharpesBrl,
+      segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
+      borderWidth: 1.5,
+      pointBackgroundColor: ptColors,
+      pointBorderWidth: 0,
+      pointRadius: 1.5,
+      fill: false,
+      tension: 0.3,
+    },
+  ];
+
+  // Sharpe USD vs T-Bill (linha secundária)
+  if (sharpesUsd.length) {
+    datasets.push({
+      label: 'Sharpe USD vs T-Bill',
+      data: sharpesUsd,
+      borderColor: 'rgba(96,165,250,.5)',
+      borderWidth: 1.2,
+      borderDash: [5,3],
+      pointRadius: 0,
+      fill: false,
+      tension: 0.3,
+    });
+  }
+
+  datasets.push(
+    {
+      label: 'Sharpe=1',
+      data: labels.map(() => 1),
+      borderColor: 'rgba(255,255,255,.2)',
+      borderWidth: 1,
+      borderDash: [4,3],
+      pointRadius: 0,
+      fill: false,
+    },
+    {
+      label: 'Zero',
+      data: labels.map(() => 0),
+      borderColor: 'rgba(239,68,68,.3)',
+      borderWidth: 1,
+      borderDash: [2,2],
+      pointRadius: 0,
+      fill: false,
+    }
+  );
 
   charts.rollingSharp = new Chart(document.getElementById('rollingSharpChart'), {
     type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Rolling Sharpe 12m',
-          data: sharpes,
-          segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
-          borderWidth: 1.5,
-          pointBackgroundColor: ptColors,
-          pointBorderWidth: 0,
-          pointRadius: 1.5,
-          fill: false,
-          tension: 0.3,
-        },
-        {
-          label: 'Sharpe=1',
-          data: labels.map(() => 1),
-          borderColor: 'rgba(255,255,255,.25)',
-          borderWidth: 1,
-          borderDash: [4,3],
-          pointRadius: 0,
-          fill: false,
-        },
-        {
-          label: 'Zero',
-          data: labels.map(() => 0),
-          borderColor: 'rgba(239,68,68,.35)',
-          borderWidth: 1,
-          borderDash: [2,2],
-          pointRadius: 0,
-          fill: false,
-        }
-      ]
-    },
+    data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
+        legend: { labels: { color: '#94a3b8', font: { size: 10 } }, position: 'top' },
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => ctx.dataset.label === 'Rolling Sharpe 12m'
-              ? ` Sharpe: ${ctx.parsed.y.toFixed(2)}`
-              : '',
+            label: ctx => {
+              const lbl = ctx.dataset.label;
+              if (lbl.startsWith('Sharpe')) return ` ${lbl}: ${ctx.parsed.y.toFixed(2)}`;
+              return '';
+            },
           }
         }
       },

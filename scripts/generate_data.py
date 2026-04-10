@@ -2054,17 +2054,21 @@ def main():
     _selic = macro.get("selic_meta") or 0
     if ROLLING_CORE.exists():
         _rm = json.loads(ROLLING_CORE.read_text())
-        # sharpe_brl (portfolio BRL vs CDI) — campo principal
         _sharpe_key = "sharpe_brl" if "sharpe_brl" in _rm else "sharpe"
-        _rf_info = _rm.get("rf_brl", {})
-        _rf_val = _rf_info.get("taxa_anual", _rm.get("rf_anual", 0))
+        _rf_brl = _rm.get("rf_brl", {})
+        _rf_usd = _rm.get("rf_usd", {})
         rolling_sharpe = {
             "dates": _rm["dates"],
             "values": _rm[_sharpe_key],
+            "values_usd": _rm.get("sharpe_usd", []),
+            "sortino": _rm.get("sortino", []),
+            "volatilidade": _rm.get("volatilidade", []),
+            "max_dd": _rm.get("max_dd", []),
             "window": _rm["window"],
-            "rf_anual": _rf_val,
+            "rf_brl": _rf_brl,
+            "rf_usd": _rf_usd,
         }
-        print(f"  ✓ Rolling Sharpe BRL: {len(rolling_sharpe['dates'])} pontos (core JSON, rf={_rf_val}%)")
+        print(f"  ✓ Rolling metrics: {len(rolling_sharpe['dates'])} pontos (Sharpe BRL+USD, Sortino, Vol, MaxDD)")
     else:
         rolling_sharpe = compute_rolling_sharpe(retornos_mensais, _selic)
         print(f"  ✓ Rolling Sharpe: {len(rolling_sharpe['dates'])} pontos (computed, rf={_selic}%)")
