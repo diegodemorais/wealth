@@ -806,10 +806,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S24b: ROLLING SHARPE 12m -->
 <div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (vs CDI)</h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="rollingSharpChart"></canvas></div>
-<div class="src">Sharpe anualizado em janela móvel de 12 meses (σ populacional). Azul = Sharpe &gt; 1 (excelente), amarelo = 0–1, vermelho &lt; 0. Linha tracejada = referência Sharpe=1.</div>
+<div class="src">Sharpe anualizado 12m (TWR, σ populacional). Linha cheia = BRL vs CDI (custo de oportunidade real). Linha tracejada azul = USD vs T-Bill (qualidade equity isolada). Ref: Sharpe=1 (cinza).</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -1180,7 +1180,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
  *   saude_base: number,
  *   tornado: Array<{ label: string, delta: number }>,
  *   timeline: { labels: string[], values: number[] },
- *   bollinger: { dates: string[], values: number[] },
+ *   retornos_mensais: { dates: string[], values: number[] },
+ *   rolling_sharpe: { dates: string[], values: number[], values_usd?: (number|null)[], sortino?: number[], volatilidade?: number[], max_dd?: number[], window: number, rf_brl?: {taxa_anual: number, nome: string}, rf_usd?: {taxa_anual: number, nome: string} },
  *   backtest: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, cambioInicio?: number },
  *   backtestR5: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, note?: string },
  *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, renda2065: RfTitulo },
@@ -1204,34 +1205,34 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-09T20:11:13-03:00'); // BRT (UTC-3)
-const VERSION = '1.115';
+const GENERATED_AT = new Date('2026-04-09T22:26:29-03:00'); // BRT (UTC-3)
+const VERSION = '1.116';
 
 const DATA = {
-  "_generated": "2026-04-09T19:54:55",
-  "_generated_brt": "2026-04-09T19:54:55-03:00",
+  "_generated": "2026-04-09T22:26:16",
+  "_generated_brt": "2026-04-09T22:26:16-03:00",
   "date": "2026-04-09",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
     "precos_yfinance": "2026-04-09",
-    "historico_csv": "2026-03-20",
-    "holdings_md": "2026-04-08",
+    "historico_csv": "2026-04-28",
+    "holdings_md": "2026-04-09",
     "fire_mc": "2026-04-09",
     "geral": "2026-04-09"
   },
-  "cambio": 5.0698,
+  "cambio": 5.1002,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.16,
+      "price": 47.98,
       "bucket": "SWRD",
       "status": "alvo"
     },
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.805,
+      "price": 26.6775,
       "bucket": "AVGS",
       "status": "alvo"
     },
@@ -1252,14 +1253,14 @@ const DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.405,
+      "price": 84.21,
       "bucket": "AVGS",
       "status": "transitorio"
     },
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.17,
+      "price": 49.33,
       "bucket": "AVEM",
       "status": "transitorio"
     },
@@ -1280,7 +1281,7 @@ const DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.93,
+      "price": 65.99,
       "bucket": "JPGL",
       "status": "transitorio"
     }
@@ -1309,7 +1310,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3518903,
+    "patrimonio_atual": 3523815,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1429,14 +1430,14 @@ const DATA = {
   ],
   "fire": {
     "bond_pool_readiness": {
-      "valor_atual_brl": 122380,
-      "anos_gastos": 0.5,
+      "valor_atual_brl": 106574,
+      "anos_gastos": 0.4,
       "meta_anos": 7,
       "status": "early",
       "composicao": {
-        "ipca2040": 33285,
+        "ipca2040": 20019,
         "ipca2050": 0,
-        "ipca2029": 89095
+        "ipca2029": 86555
       }
     },
     "pat_mediano_fire": 11527476.0,
@@ -1464,7 +1465,6 @@ const DATA = {
   },
   "timeline": {
     "labels": [
-      "2021-03",
       "2021-04",
       "2021-05",
       "2021-06",
@@ -1522,73 +1522,77 @@ const DATA = {
       "2025-10",
       "2025-11",
       "2025-12",
-      "2026-03"
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04"
     ],
     "values": [
-      1111700.0,
-      1135864.84,
-      1160835.16,
-      1185000.0,
-      1203532.61,
-      1222065.22,
-      1240000.0,
-      1266956.52,
-      1293043.48,
-      1320000.0,
-      1354444.44,
-      1385555.56,
-      1420000.0,
-      1439780.22,
-      1460219.78,
-      1480000.0,
-      1486739.13,
-      1493478.26,
-      1500000.0,
-      1520439.56,
-      1540219.78,
-      1560000.0,
-      1591648.35,
-      1619340.66,
-      1650000.0,
-      1715934.07,
-      1784065.93,
-      1850000.0,
-      1884065.93,
-      1918131.87,
-      1950000.0,
-      1995714.29,
-      2038571.43,
-      2080000.0,
-      2160666.67,
-      2231555.56,
-      2300000.0,
-      2389673.91,
-      2473913.04,
-      2550000.0,
-      2602659.57,
-      2652127.66,
-      2700000.0,
-      2784239.13,
-      2865760.87,
-      2950000.0,
-      2932777.78,
-      2917222.22,
-      2900000.0,
-      2965934.07,
-      3034065.93,
-      3100000.0,
-      3133695.65,
-      3167391.3,
-      3200000.0,
-      3234647.22,
-      3268176.78,
-      3302824.0,
-      3479239.0
+      257684.36,
+      264737.03,
+      250943.73,
+      277844.02,
+      282783.12,
+      298555.23,
+      334304.43,
+      348793.7,
+      382233.51,
+      440801.01,
+      420915.64,
+      490988.76,
+      565657.33,
+      684131.79,
+      675607.95,
+      732248.52,
+      725229.98,
+      691047.75,
+      713377.88,
+      770010.32,
+      754620.95,
+      815582.45,
+      808318.38,
+      791736.33,
+      938991.84,
+      991444.0,
+      1050758.57,
+      1106304.24,
+      1118931.01,
+      1139151.33,
+      1114216.19,
+      1203225.25,
+      1277252.48,
+      1324699.12,
+      1434617.61,
+      1531321.32,
+      1637481.11,
+      1819616.7,
+      1986584.34,
+      2116778.52,
+      2193148.4,
+      2205120.15,
+      2289000.17,
+      2474100.63,
+      2490040.35,
+      2395364.91,
+      2359159.03,
+      2430267.24,
+      3055327.87,
+      3284960.24,
+      3311788.57,
+      3483267.77,
+      3546073.57,
+      3069043.3,
+      3173685.18,
+      3229421.05,
+      3417546.3,
+      3457504.49,
+      3532892.74,
+      3413534.6,
+      3500125.07
     ]
   },
-  "bollinger": {
+  "retornos_mensais": {
     "dates": [
-      "2021-04",
       "2021-05",
       "2021-06",
       "2021-07",
@@ -1644,67 +1648,391 @@ const DATA = {
       "2025-09",
       "2025-10",
       "2025-11",
-      "2025-12"
+      "2025-12",
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04"
     ],
     "values": [
-      2.1737,
-      2.1984,
-      2.0817,
-      1.5639,
-      1.5399,
-      1.4676,
-      2.1739,
-      2.059,
-      2.0847,
-      2.6094,
-      2.297,
-      2.486,
-      1.393,
-      1.4196,
-      1.3546,
-      0.4553,
-      0.4533,
-      0.4367,
-      1.3626,
-      1.301,
-      1.2842,
-      2.0287,
-      1.7399,
-      1.8933,
-      3.996,
-      3.9705,
-      3.6957,
-      1.8414,
-      1.8081,
-      1.6614,
-      2.3443,
-      2.1475,
-      2.0322,
-      3.8782,
-      3.2809,
-      3.0671,
-      3.8989,
-      3.5251,
-      3.0756,
-      2.0651,
-      1.9007,
-      1.8051,
-      3.12,
-      2.928,
-      2.9395,
-      -0.5838,
-      -0.5304,
-      -0.5904,
-      2.2736,
-      2.2971,
-      2.1731,
-      1.087,
-      1.0753,
-      1.0295,
-      1.0827,
-      1.0366,
-      1.0601
+      0.29,
+      -5.26,
+      5.05,
+      1.78,
+      0.49,
+      7.37,
+      -4.69,
+      2.66,
+      10.85,
+      -4.51,
+      -7.67,
+      -4.08,
+      -4.48,
+      -1.25,
+      5.58,
+      -3.68,
+      -4.71,
+      3.23,
+      7.94,
+      -2.0,
+      4.64,
+      -0.89,
+      -2.05,
+      -1.6,
+      -2.65,
+      1.9,
+      2.89,
+      0.13,
+      -0.47,
+      -3.47,
+      5.31,
+      4.93,
+      1.9,
+      3.05,
+      4.85,
+      -0.3,
+      4.75,
+      8.01,
+      3.62,
+      0.88,
+      -0.42,
+      3.09,
+      6.51,
+      -0.25,
+      -1.15,
+      -2.27,
+      -3.11,
+      24.47,
+      6.37,
+      0.82,
+      3.66,
+      1.22,
+      -14.58,
+      2.69,
+      0.34,
+      3.81,
+      -0.13,
+      1.75,
+      -4.96,
+      1.95
     ]
+  },
+  "rolling_sharpe": {
+    "dates": [
+      "2022-04",
+      "2022-05",
+      "2022-06",
+      "2022-07",
+      "2022-08",
+      "2022-09",
+      "2022-10",
+      "2022-11",
+      "2022-12",
+      "2023-01",
+      "2023-02",
+      "2023-03",
+      "2023-04",
+      "2023-05",
+      "2023-06",
+      "2023-07",
+      "2023-08",
+      "2023-09",
+      "2023-10",
+      "2023-11",
+      "2023-12",
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06",
+      "2024-07",
+      "2024-08",
+      "2024-09",
+      "2024-10",
+      "2024-11",
+      "2024-12",
+      "2025-01",
+      "2025-02",
+      "2025-03",
+      "2025-04",
+      "2025-05",
+      "2025-06",
+      "2025-07",
+      "2025-08",
+      "2025-09",
+      "2025-10",
+      "2025-11",
+      "2025-12",
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04"
+    ],
+    "values": [
+      -0.615,
+      -0.845,
+      -0.661,
+      -0.628,
+      -0.906,
+      -1.153,
+      -1.468,
+      -0.714,
+      -0.958,
+      -1.502,
+      -1.317,
+      -1.079,
+      -0.939,
+      -0.837,
+      -0.604,
+      -0.854,
+      -0.584,
+      -0.257,
+      -0.844,
+      -1.259,
+      -0.501,
+      -0.824,
+      -0.406,
+      0.294,
+      0.439,
+      1.286,
+      1.667,
+      1.729,
+      1.826,
+      1.833,
+      3.128,
+      3.135,
+      2.396,
+      1.897,
+      1.227,
+      0.47,
+      1.231,
+      1.291,
+      1.011,
+      1.012,
+      1.027,
+      0.368,
+      0.355,
+      0.149,
+      0.287,
+      0.323,
+      0.465,
+      0.396,
+      -0.608
+    ],
+    "values_usd": [
+      -1.278,
+      -1.509,
+      -1.948,
+      -1.374,
+      -1.729,
+      -1.905,
+      -1.701,
+      -0.884,
+      -1.183,
+      -0.422,
+      -0.503,
+      -0.497,
+      -0.108,
+      -0.285,
+      0.507,
+      0.508,
+      0.478,
+      0.96,
+      0.371,
+      0.377,
+      0.893,
+      0.42,
+      0.786,
+      1.044,
+      0.83,
+      1.359,
+      1.08,
+      0.952,
+      1.357,
+      2.024,
+      2.255,
+      2.171,
+      1.028,
+      1.46,
+      0.918,
+      0.295,
+      1.2,
+      1.286,
+      1.403,
+      1.347,
+      1.45,
+      0.75,
+      0.893,
+      0.823,
+      1.008,
+      1.063,
+      1.255,
+      1.019,
+      0.541
+    ],
+    "sortino": [
+      -0.791,
+      -1.044,
+      -0.851,
+      -0.815,
+      -1.131,
+      -1.375,
+      -1.628,
+      -0.915,
+      -1.196,
+      -1.594,
+      -1.448,
+      -1.286,
+      -1.162,
+      -1.076,
+      -0.796,
+      -1.06,
+      -0.775,
+      -0.391,
+      -1.12,
+      -1.431,
+      -0.659,
+      -1.008,
+      -0.524,
+      0.427,
+      0.656,
+      2.232,
+      3.404,
+      3.544,
+      3.756,
+      3.777,
+      11.965,
+      12.521,
+      8.487,
+      5.443,
+      2.772,
+      0.854,
+      4.807,
+      5.064,
+      3.917,
+      3.924,
+      3.981,
+      0.648,
+      0.625,
+      0.259,
+      0.501,
+      0.565,
+      0.823,
+      0.686,
+      -0.643
+    ],
+    "volatilidade": [
+      18.792,
+      19.315,
+      18.635,
+      18.782,
+      19.04,
+      19.474,
+      18.111,
+      19.56,
+      19.432,
+      16.53,
+      16.101,
+      14.453,
+      13.965,
+      13.471,
+      13.466,
+      12.669,
+      11.994,
+      10.75,
+      11.216,
+      9.607,
+      10.324,
+      9.592,
+      9.763,
+      9.966,
+      9.648,
+      9.043,
+      10.643,
+      10.683,
+      10.527,
+      10.511,
+      8.259,
+      8.622,
+      9.118,
+      9.911,
+      10.984,
+      11.738,
+      24.605,
+      24.724,
+      24.461,
+      24.461,
+      24.431,
+      29.74,
+      29.729,
+      29.384,
+      29.397,
+      29.309,
+      28.982,
+      29.377,
+      17.926
+    ],
+    "max_dd": [
+      -15.43,
+      -19.22,
+      -20.23,
+      -20.23,
+      -20.23,
+      -22.7,
+      -22.7,
+      -22.7,
+      -22.7,
+      -22.7,
+      -19.05,
+      -12.32,
+      -8.59,
+      -8.22,
+      -8.22,
+      -8.22,
+      -7.01,
+      -7.01,
+      -7.01,
+      -7.01,
+      -7.01,
+      -7.01,
+      -6.17,
+      -4.21,
+      -3.92,
+      -3.92,
+      -3.92,
+      -3.92,
+      -3.92,
+      -3.47,
+      -0.42,
+      -0.42,
+      -0.42,
+      -1.4,
+      -3.64,
+      -6.63,
+      -6.63,
+      -6.63,
+      -6.63,
+      -6.63,
+      -6.63,
+      -14.58,
+      -14.58,
+      -14.58,
+      -14.58,
+      -14.58,
+      -14.58,
+      -14.58,
+      -14.58
+    ],
+    "window": 12,
+    "rf_brl": {
+      "taxa_anual": 14.75,
+      "nome": "Selic meta (CDI)"
+    },
+    "rf_usd": {
+      "taxa_anual": 3.64,
+      "nome": "US T-Bill 3m (≈ Fed Funds)"
+    }
   },
   "backtest": {
     "dates": [
@@ -2880,32 +3208,44 @@ const DATA = {
   },
   "rf": {
     "ipca2029": {
-      "cotas": null,
-      "valor": 89095,
-      "taxa": null,
-      "notas": "Reserva · Nubank · migrar 2029"
+      "cotas": 23.3371,
+      "valor": 86554.71,
+      "taxa": 7.58,
+      "notas": "Reserva · Nubank · migrar 2029",
+      "custo_base_brl": 76859.95,
+      "total_aplicado_brl": 117438.37,
+      "total_resgatado_brl": 40578.42,
+      "n_aplicacoes": 5
     },
     "ipca2040": {
-      "cotas": null,
-      "valor": 33285,
-      "taxa": 7.2,
-      "notas": "DCA ativo · XP · HTM SEMPRE"
+      "cotas": 11.5789,
+      "valor": 20018.92,
+      "taxa": 7.07,
+      "notas": "DCA ativo · XP · HTM SEMPRE",
+      "custo_base_brl": 20035.48,
+      "total_aplicado_brl": 20035.48,
+      "total_resgatado_brl": 0,
+      "n_aplicacoes": 1
     },
     "renda2065": {
-      "cotas": null,
-      "valor": 112466,
-      "taxa": 6.93,
+      "cotas": 158.9283,
+      "valor": 117832.62,
+      "taxa": 6.8,
       "notas": "Tático · Nubank · Vender ≤6.0%",
+      "custo_base_brl": 108553.71,
+      "total_aplicado_brl": 108553.71,
+      "total_resgatado_brl": 0,
+      "n_aplicacoes": 4,
       "duration": {
-        "macaulay_anos": 21.52,
-        "modificada_anos": 20.12,
+        "macaulay_anos": 21.79,
+        "modificada_anos": 20.4,
         "metodologia": "NTN-B ANBIMA: cupom 6% a.a. real (0.5%/sem), desconto taxa YTM real a.a."
       },
-      "mtm_impact_1pp": -20.12,
+      "mtm_impact_1pp": -20.4,
       "distancia_gatilho": {
-        "taxa_atual": 6.93,
+        "taxa_atual": 6.8,
         "piso_venda": 6.0,
-        "gap_pp": 0.93,
+        "gap_pp": 0.8,
         "status": "verde"
       }
     }
@@ -2914,9 +3254,9 @@ const DATA = {
     "qty": 1676,
     "preco": 61.55,
     "valor": 103157.8,
-    "preco_medio": null,
-    "pnl_brl": null,
-    "pnl_pct": null,
+    "preco_medio": 79.03,
+    "pnl_brl": -29296.48,
+    "pnl_pct": -22.12,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -2929,25 +3269,25 @@ const DATA = {
     "ipca_longo": {
       "instrumento": "TD IPCA+ 2040 (80%) + TD 2050 (20%)",
       "ativo": true,
-      "taxa_atual": 7.2,
+      "taxa_atual": 7.07,
       "piso": 6.0,
-      "gap_pp": 1.2,
-      "pct_carteira_atual": 0.9,
+      "gap_pp": 1.07,
+      "pct_carteira_atual": 0.6,
       "alvo_pct": 15.0,
-      "gap_alvo_pp": 14.1,
+      "gap_alvo_pp": 14.4,
       "proxima_acao": "DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) ate 15.0% da carteira"
     },
     "renda_plus": {
       "instrumento": "Renda+ 2065",
       "ativo": false,
-      "taxa_atual": 6.93,
+      "taxa_atual": 6.8,
       "piso_compra": 6.5,
       "piso_venda": 6.0,
-      "gap_pp": 0.43,
-      "pct_carteira_atual": 3.2,
+      "gap_pp": 0.3,
+      "pct_carteira_atual": 3.3,
       "alvo_pct": 3.0,
-      "gap_alvo_pp": 0.2,
-      "proxima_acao": "DCA pausado: posicao 3.2% >= alvo 3.0%. Manter sem novos aportes"
+      "gap_alvo_pp": 0.3,
+      "proxima_acao": "DCA pausado: posicao 3.3% >= alvo 3.0%. Manter sem novos aportes"
     }
   },
   "glide": {
@@ -3000,15 +3340,15 @@ const DATA = {
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.9,
+      "atual": 29.0,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.5,
+      "atual": 24.6,
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 3.5,
+      "atual": 3.0,
       "alvo": 15.0
     },
     "HODL11": {
@@ -3038,7 +3378,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.405,
+      "price": 84.21,
       "ucits": "AVGS.L"
     },
     {
@@ -3046,7 +3386,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.17,
+      "price": 49.33,
       "ucits": "AVEM.L"
     },
     {
@@ -3070,23 +3410,23 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.93,
+      "price": 65.99,
       "ucits": "JPGL.L"
     }
   ],
   "attribution": {
     "aportes": 75000,
-    "retornoUsd": 66158,
-    "cambio": 28353,
-    "crescReal": 169511,
+    "retornoUsd": -42119,
+    "cambio": -18050,
+    "crescReal": 14831,
     "_estimativa": true
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 627421,
-    "retorno_usd": 236378,
-    "pct_aportes": 62.3,
-    "pct_retorno": 37.7,
+    "patrimonio_equity_usd": 626691,
+    "retorno_usd": 235648,
+    "pct_aportes": 62.4,
+    "pct_retorno": 37.6,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-09"
@@ -3113,16 +3453,16 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 72306.59,
-    "cambio": 5.0698
+    "bitcoin_usd": 71730.3,
+    "cambio": 5.1002
   },
   "mercado": {
-    "cambio_brl_usd": 5.0698,
-    "btc_usd": 72306.59,
-    "cambio_mtd_pct": -1.67,
-    "btc_mtd_pct": 0.6,
-    "ipca2040_mtd_pp": 0.0,
-    "renda2065_mtd_pp": 0.0,
+    "cambio_brl_usd": 5.1002,
+    "btc_usd": 71730.3,
+    "cambio_mtd_pct": -1.08,
+    "btc_mtd_pct": -0.2,
+    "ipca2040_mtd_pp": -0.13,
+    "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
     "updated": "2026-04-09"
@@ -3456,91 +3796,91 @@ const DATA = {
       ]
     }
   ],
-  "cryptoLegado": 3000,
+  "cryptoLegado": 3944,
   "tlhGatilho": 0.05,
   "tax": {
-    "ir_diferido_total_brl": 139403.74,
+    "ir_diferido_total_brl": 141706.5,
     "ir_por_etf": {
       "SWRD": {
-        "ganho_usd": 80859.16,
+        "ganho_usd": 79906.66,
         "ptax_compra_medio": 5.2983,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 921828.52,
-        "valor_atual_brl": 1292015.49,
-        "ganho_brl": 370186.97,
-        "ir_estimado": 55528.05
+        "valor_atual_brl": 1294904.87,
+        "ganho_brl": 373076.35,
+        "ir_estimado": 55961.45
       },
       "EIMI": {
-        "ganho_usd": 36033.73,
+        "ganho_usd": 36356.98,
         "ptax_compra_medio": 5.3834,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 340791.78,
-        "valor_atual_brl": 503622.91,
-        "ganho_brl": 162831.14,
-        "ir_estimado": 24424.67
+        "valor_atual_brl": 508291.41,
+        "ganho_brl": 167499.63,
+        "ir_estimado": 25124.94
       },
       "USSC": {
-        "ganho_usd": 9094.29,
+        "ganho_usd": 9021.51,
         "ptax_compra_medio": 5.7742,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 129398.06,
-        "valor_atual_brl": 159719.74,
-        "ganho_brl": 30321.67,
-        "ir_estimado": 4548.25
+        "valor_atual_brl": 160306.25,
+        "ganho_brl": 30908.19,
+        "ir_estimado": 4636.23
       },
       "IWVL": {
-        "ganho_usd": 975.94,
+        "ganho_usd": 977.98,
         "ptax_compra_medio": 5.2228,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 6610.44,
-        "valor_atual_brl": 11364.57,
-        "ganho_brl": 4754.12,
-        "ir_estimado": 713.12
+        "valor_atual_brl": 11443.11,
+        "ganho_brl": 4832.67,
+        "ir_estimado": 724.9
       },
       "AVDV": {
         "ganho_usd": 41302.87,
         "ptax_compra_medio": 5.2065,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 302795.42,
-        "valor_atual_brl": 504241.89,
-        "ganho_brl": 201446.47,
-        "ir_estimado": 30216.97
+        "valor_atual_brl": 507265.47,
+        "ganho_brl": 204470.06,
+        "ir_estimado": 30670.51
       },
       "AVUV": {
         "ganho_usd": 18604.01,
         "ptax_compra_medio": 5.3015,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 237343.79,
-        "valor_atual_brl": 321291.44,
-        "ganho_brl": 83947.65,
-        "ir_estimado": 12592.15
+        "valor_atual_brl": 323218.0,
+        "ganho_brl": 85874.2,
+        "ir_estimado": 12881.13
       },
       "DGS": {
         "ganho_usd": 2374.34,
         "ptax_compra_medio": 5.3224,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 50201.81,
-        "valor_atual_brl": 59856.38,
-        "ganho_brl": 9654.57,
-        "ir_estimado": 1448.19
+        "valor_atual_brl": 60215.29,
+        "ganho_brl": 10013.49,
+        "ir_estimado": 1502.02
       },
       "AVES": {
         "ganho_usd": 16468.65,
         "ptax_compra_medio": 5.5071,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 231991.38,
-        "valor_atual_brl": 297063.82,
-        "ganho_brl": 65072.44,
-        "ir_estimado": 9760.87
+        "valor_atual_brl": 298845.11,
+        "ganho_brl": 66853.72,
+        "ir_estimado": 10028.06
       },
       "AVGS": {
-        "ganho_usd": 437.07,
+        "ganho_usd": 407.31,
         "ptax_compra_medio": 5.2541,
-        "ptax_atual": 5.0698,
+        "ptax_atual": 5.1002,
         "custo_total_brl": 30578.85,
-        "valor_atual_brl": 31722.09,
-        "ganho_brl": 1143.24,
-        "ir_estimado": 171.49
+        "valor_atual_brl": 31760.51,
+        "ganho_brl": 1181.66,
+        "ir_estimado": 177.25
       }
     },
     "regime": "ACC UCITS — diferimento fiscal (Lei 14.754/2023, art. 2-3: 15% flat sobre ganho nominal em BRL na alienação)",
@@ -3556,22 +3896,22 @@ const DATA = {
       "AVGS": "ACC — diferimento fiscal"
     },
     "ptax_source": "BCB PTAX ask",
-    "ptax_atual": 5.0698
+    "ptax_atual": 5.1002
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.7,
+    "brasil_pct": 9.4,
     "composicao": {
       "hodl11_brl": 103158,
-      "rf_total_brl": 234846,
+      "rf_total_brl": 224406,
       "rf_detalhe": {
-        "ipca2029": 89095,
-        "ipca2040": 33285,
-        "renda2065": 112466
+        "ipca2029": 86555,
+        "ipca2040": 20019,
+        "renda2065": 117833
       },
-      "crypto_legado_brl": 3000
+      "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 341004,
-    "total_portfolio_brl": 3518903,
+    "total_brasil_brl": 331576,
+    "total_portfolio_brl": 3523815,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3583,20 +3923,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33602,
-      "delta_brl": 8602,
-      "delta_pct": 34.4,
+      "realizado_media_brl": 33803,
+      "delta_brl": 8803,
+      "delta_pct": 35.2,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0698,
+      "cambio_conversao": 5.1002,
       "por_ano_brl": {
-        "2026": 96326,
-        "2025": 286304,
-        "2024": 377557,
-        "2023": 399031,
-        "2022": 488696,
-        "2021": 334598
+        "2026": 96904,
+        "2025": 288021,
+        "2024": 379821,
+        "2023": 401423,
+        "2022": 491626,
+        "2021": 336604
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -4023,20 +4363,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3518903,
-      3689793,
-      3868981,
-      4056872,
-      4253887,
-      4460470,
-      4677086,
-      4904221,
-      5142386,
-      5392118,
-      5653977,
-      5928553,
-      6216463,
-      6518356,
+      3523815,
+      3694575,
+      3873610,
+      4061321,
+      4258128,
+      4464472,
+      4680815,
+      4907642,
+      5145461,
+      5394805,
+      5656231,
+      5930325,
+      6217702,
+      6519005,
       6834909,
       6924402,
       7018236,
@@ -4077,20 +4417,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3518903,
-      3830155,
-      4168938,
-      4537687,
-      4939052,
-      5375918,
-      5851426,
-      6368993,
-      6932340,
-      7545515,
-      8212927,
-      8939372,
-      9730073,
-      10590712,
+      3523815,
+      3835119,
+      4173925,
+      4542663,
+      4943975,
+      5380741,
+      5856092,
+      6373437,
+      6936485,
+      7549275,
+      8216201,
+      8942045,
+      9732012,
+      10591767,
       11527476,
       11844559,
       12177020,
@@ -4131,20 +4471,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3518903,
-      3968082,
-      4474598,
-      5045770,
-      5689850,
-      6416145,
-      7235150,
-      8158699,
-      9200137,
-      10374511,
-      11698792,
-      13192114,
-      14876055,
-      16774947,
+      3523815,
+      3973225,
+      4479951,
+      5051303,
+      5695522,
+      6421901,
+      7240919,
+      8164391,
+      9205638,
+      10379681,
+      11703456,
+      13196058,
+      14879020,
+      16776618,
       18916227,
       19591664,
       20299860,
@@ -4214,7 +4554,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.115"
+  "version": "1.116"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -5436,8 +5776,8 @@ window.calcAporte = function() {
 
 // ── S24: Retornos Mensais — Heatmap ──────────────────────────
 function buildRetornoHeatmap() {
-  const allL = DATA.bollinger?.dates || [];
-  const allV = DATA.bollinger?.values || [];
+  const allL = DATA.retornos_mensais?.dates || [];
+  const allV = DATA.retornos_mensais?.values || [];
   const container = document.getElementById('heatmapContainer');
   if (!container || !allL.length) return;
 
@@ -5532,84 +5872,88 @@ function buildRetornoHeatmap() {
   }
 }
 
-// ── S24b: Rolling Sharpe 12m (excess return over CDI) ────────
+// ── S24b: Rolling Sharpe 12m (pre-computed server-side) ──────
 function buildRollingSharp() {
-  const allL = DATA.bollinger?.dates || [];
-  const allV = DATA.bollinger?.values || [];
-  const WIN = 12;
-  // Risk-free: Selic meta anualizada → retorno mensal em %
-  // Nota: usa Selic atual para toda a janela (aproximação; série histórica de CDI não disponível no data.json)
-  const selicAnual = DATA.macro?.selic_meta ?? 0;
-  const rfMensal = selicAnual > 0 ? ((1 + selicAnual / 100) ** (1/12) - 1) * 100 : 0;
+  const rs = DATA.rolling_sharpe || {};
+  const labels = rs.dates || [];
+  const sharpesBrl = rs.values || [];
+  const sharpesUsd = rs.values_usd || [];
 
-  if (allV.length < WIN + 1) {
-    checkMinPoints('rollingSharpChart', allV.length, WIN + 1);
+  if (!sharpesBrl.length) {
+    checkMinPoints('rollingSharpChart', 0, 13);
     return;
-  }
-
-  const labels = [];
-  const sharpes = [];
-
-  for (let i = WIN - 1; i < allV.length; i++) {
-    const win = allV.slice(i - WIN + 1, i + 1);
-    const excess = win.map(v => v - rfMensal);
-    const mean = excess.reduce((a,b) => a+b, 0) / WIN;
-    const std  = Math.sqrt(excess.reduce((s,v) => s+(v-mean)**2, 0) / WIN);
-    labels.push(allL[i]);
-    sharpes.push(std > 0 ? +(mean / std * Math.sqrt(12)).toFixed(3) : 0);
   }
 
   if (charts.rollingSharp) charts.rollingSharp.destroy();
 
   const colorFor = v => v >= 1 ? 'rgba(34,197,94,.7)' : v >= 0 ? 'rgba(234,179,8,.7)' : 'rgba(239,68,68,.7)';
-  const ptColors = sharpes.map(colorFor);
+  const ptColors = sharpesBrl.map(colorFor);
+
+  const datasets = [
+    {
+      label: 'Sharpe BRL vs CDI',
+      data: sharpesBrl,
+      segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
+      borderWidth: 1.5,
+      pointBackgroundColor: ptColors,
+      pointBorderWidth: 0,
+      pointRadius: 1.5,
+      fill: false,
+      tension: 0.3,
+    },
+  ];
+
+  // Sharpe USD vs T-Bill (linha secundária)
+  if (sharpesUsd.length) {
+    datasets.push({
+      label: 'Sharpe USD vs T-Bill',
+      data: sharpesUsd,
+      borderColor: 'rgba(96,165,250,.5)',
+      borderWidth: 1.2,
+      borderDash: [5,3],
+      pointRadius: 0,
+      fill: false,
+      tension: 0.3,
+    });
+  }
+
+  datasets.push(
+    {
+      label: 'Sharpe=1',
+      data: labels.map(() => 1),
+      borderColor: 'rgba(255,255,255,.2)',
+      borderWidth: 1,
+      borderDash: [4,3],
+      pointRadius: 0,
+      fill: false,
+    },
+    {
+      label: 'Zero',
+      data: labels.map(() => 0),
+      borderColor: 'rgba(239,68,68,.3)',
+      borderWidth: 1,
+      borderDash: [2,2],
+      pointRadius: 0,
+      fill: false,
+    }
+  );
 
   charts.rollingSharp = new Chart(document.getElementById('rollingSharpChart'), {
     type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
-          label: 'Rolling Sharpe 12m',
-          data: sharpes,
-          segment: { borderColor: ctx => colorFor(ctx.p1.parsed.y) },
-          borderWidth: 1.5,
-          pointBackgroundColor: ptColors,
-          pointBorderWidth: 0,
-          pointRadius: 1.5,
-          fill: false,
-          tension: 0.3,
-        },
-        {
-          label: 'Sharpe=1',
-          data: labels.map(() => 1),
-          borderColor: 'rgba(255,255,255,.25)',
-          borderWidth: 1,
-          borderDash: [4,3],
-          pointRadius: 0,
-          fill: false,
-        },
-        {
-          label: 'Zero',
-          data: labels.map(() => 0),
-          borderColor: 'rgba(239,68,68,.35)',
-          borderWidth: 1,
-          borderDash: [2,2],
-          pointRadius: 0,
-          fill: false,
-        }
-      ]
-    },
+    data: { labels, datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
+        legend: { labels: { color: '#94a3b8', font: { size: 10 } }, position: 'top' },
         tooltip: {
           callbacks: {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => ctx.dataset.label === 'Rolling Sharpe 12m'
-              ? ` Sharpe: ${ctx.parsed.y.toFixed(2)}`
-              : '',
+            label: ctx => {
+              const lbl = ctx.dataset.label;
+              if (ctx.parsed.y === null || ctx.parsed.y === undefined) return '';
+              if (lbl.startsWith('Sharpe')) return ` ${lbl}: ${ctx.parsed.y.toFixed(2)}`;
+              return '';
+            },
           }
         }
       },

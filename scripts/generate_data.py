@@ -1272,7 +1272,7 @@ def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float) -
 
     # Crypto legado (spot fora da B3 — BTC/ETH/BNB/ADA em carteiras pessoais)
     # Fonte primária: dashboard_state.json; fallback: config.py CRYPTO_LEGADO_BRL
-    crypto_legado = state.get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
+    crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
 
     # Total Brasil = HODL11 + RF total + crypto legado
     brasil_total = hodl11_brl + rf_total_brl + crypto_legado
