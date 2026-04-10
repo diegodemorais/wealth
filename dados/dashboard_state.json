@@ -91,18 +91,22 @@
   },
   "rf": {
     "ipca2029": {
-      "valor_brl": 89095,
-      "tipo": "reserva"
+      "valor_brl": 86554.71,
+      "tipo": "reserva",
+      "cotas": 23.3371,
+      "taxa": 7.58
     },
     "ipca2040": {
-      "valor_brl": 33285,
+      "valor_brl": 20018.92,
       "tipo": "estrutural",
-      "taxa": 7.2
+      "taxa": 7.07,
+      "cotas": 11.5789
     },
     "renda2065": {
-      "valor_brl": 112466,
+      "valor_brl": 117832.62,
       "tipo": "tatico",
-      "taxa": 6.93
+      "taxa": 6.8,
+      "cotas": 158.9283
     },
     "hodl11": {
       "qty": 1676,

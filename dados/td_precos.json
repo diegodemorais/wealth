@@ -1,0 +1,64 @@
+{
+  "_generated": "2026-04-10T00:48:48",
+  "_source": "Tesouro Transparente (CSV público)",
+  "_url": "https://www.tesourotransparente.gov.br/ckan/dataset/df56aa42-484a-4a59-8184-7676580c81e3/resource/796d2059-14e9-44e3-80c9-2d9e30b405c1/download/precotaxatesourodireto.csv",
+  "titulos": {
+    "ipca2029": {
+      "data": "2026-04-08",
+      "data_br": "08/04/2026",
+      "titulo_csv": "Tesouro IPCA+",
+      "vencimento": "15/05/2029",
+      "pu_venda": 3708.89,
+      "pu_compra": 3723.54,
+      "pu_base": 3708.89,
+      "taxa_compra": 7.58,
+      "taxa_venda": 7.7
+    },
+    "ipca2040": {
+      "data": "2026-04-08",
+      "data_br": "08/04/2026",
+      "titulo_csv": "Tesouro IPCA+",
+      "vencimento": "15/08/2040",
+      "pu_venda": 1728.92,
+      "pu_compra": 1757.66,
+      "pu_base": 1728.92,
+      "taxa_compra": 7.07,
+      "taxa_venda": 7.19
+    },
+    "renda2065": {
+      "data": "2026-04-08",
+      "data_br": "08/04/2026",
+      "titulo_csv": "Tesouro Renda+ Aposentadoria Extra",
+      "vencimento": "15/12/2064",
+      "pu_venda": 741.42,
+      "pu_compra": 764.13,
+      "pu_base": 741.42,
+      "taxa_compra": 6.8,
+      "taxa_venda": 6.92
+    }
+  },
+  "posicoes": {
+    "ipca2029": {
+      "cotas": 23.3371,
+      "pu_venda": 3708.89,
+      "valor_mtm_brl": 86554.71,
+      "taxa_compra": 7.58,
+      "data_preco": "2026-04-08"
+    },
+    "ipca2040": {
+      "cotas": 11.5789,
+      "pu_venda": 1728.92,
+      "valor_mtm_brl": 20018.92,
+      "taxa_compra": 7.07,
+      "data_preco": "2026-04-08"
+    },
+    "renda2065": {
+      "cotas": 158.9283,
+      "pu_venda": 741.42,
+      "valor_mtm_brl": 117832.62,
+      "taxa_compra": 6.8,
+      "data_preco": "2026-04-08"
+    }
+  },
+  "_nota": "Cotas calculadas de operacoes_td.json × PU historico. MtM = cotas × PU venda atual."
+}

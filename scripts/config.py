@@ -85,7 +85,10 @@ FACTOR_UNDERPERF_THRESHOLD = -5  # pp — AVGS vs SWRD rolling 12m
 # TLH
 TLH_GATILHO = 0.05              # 5% — perda mínima para acionar TLH
 
-# Crypto legado (BTC+ETH+BNB+ADA spot — estimativa manual)
+# Crypto legado (BTC+ETH+BNB+ADA spot em carteiras pessoais)
+# Fonte: holdings.md linhas 59-62 — BTC 0.00435, ETH 0.066, BNB 0.205, ADA 47.96
+# Atualizar via dashboard_state.json campo "crypto_legado_brl" ou manualmente aqui.
+# Estimativa conservadora R$3k (abr/2026: BTC ~R$500k → 0.00435 = R$2.175 + ETH/BNB/ADA ~R$1k)
 CRYPTO_LEGADO_BRL = 3_000
 
 

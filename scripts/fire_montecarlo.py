@@ -73,7 +73,7 @@ PREMISSAS = {
     "aliquota_ir_equity":       IR_ALIQUOTA,
 
     # INSS (HD-mc-audit 2026-04-06)
-    "inss_anual":               18_000, # R$18k/ano real — estimativa central (TX-inss-beneficio: R$46-55k nominal, uso R$18k real conservador)
+    "inss_anual":               18_000, # R$18k/ano REAL — conservador. NIT 119.60772.92-3 (Contabilizei): benefício nominal R$46-55k → R$18k real pós-IR pós-IPCA. Atualizar quando benefício for confirmado pelo INSS aos 65.
     "inss_inicio_ano":          12,     # ano 12 pós-FIRE = age 65
 
     # Volatilidade por fase (HD-mc-audit 2026-04-06)

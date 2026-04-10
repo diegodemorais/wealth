@@ -1270,8 +1270,9 @@ def compute_concentracao_brasil(rf: dict, hodl11_brl: float, total_brl: float) -
         rf_total_brl += valor
         rf_composicao[key] = round(valor)
 
-    # Crypto legado (spot fora da B3 -- pequeno, estimativa)
-    crypto_legado = CRYPTO_LEGADO_BRL
+    # Crypto legado (spot fora da B3 — BTC/ETH/BNB/ADA em carteiras pessoais)
+    # Fonte primária: dashboard_state.json; fallback: config.py CRYPTO_LEGADO_BRL
+    crypto_legado = state.get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
 
     # Total Brasil = HODL11 + RF total + crypto legado
     brasil_total = hodl11_brl + rf_total_brl + crypto_legado

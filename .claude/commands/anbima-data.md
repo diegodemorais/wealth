@@ -45,7 +45,15 @@ WebFetch: https://www.tesourotransparente.gov.br/ckan/dataset/taxas-dos-titulos-
 Baixar CSV com séries históricas de taxas por título e data — excelente para backtests de marcação a mercado.
 
 ```
-URL direta (CSV): https://www.tesourotransparente.gov.br/ckan/dataset/df56aa42-484a-4a59-8184-7676580c81e3/resource/796d2059-14e9-44e3-80a7-2dface7a3513/download/PrecoTaxaTesouroDireto.csv
+URL direta (CSV): https://www.tesourotransparente.gov.br/ckan/dataset/df56aa42-484a-4a59-8184-7676580c81e3/resource/796d2059-14e9-44e3-80c9-2d9e30b405c1/download/precotaxatesourodireto.csv
+
+Download + cache local:
+curl -sL "https://www.tesourotransparente.gov.br/ckan/dataset/df56aa42-484a-4a59-8184-7676580c81e3/resource/796d2059-14e9-44e3-80c9-2d9e30b405c1/download/precotaxatesourodireto.csv" -o analysis/raw/PrecoTaxaTesouroDireto.csv
+
+Ler preços:
+python3 scripts/td_prices.py                  # mostra últimos preços dos títulos de Diego
+python3 scripts/td_prices.py --update         # baixa CSV atualizado + mostra preços
+python3 scripts/td_prices.py --json           # output JSON para pipeline
 ```
 
 ### IMA-B via Anbima

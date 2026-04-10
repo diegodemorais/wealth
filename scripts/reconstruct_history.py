@@ -359,6 +359,25 @@ def fetch_monthly_fx(start: str, end: str) -> dict[str, float]:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# HELPERS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _last_known_fx(fx: dict, month: str) -> float:
+    """Retorna último câmbio conhecido anterior ao mês dado. Nunca retorna hardcoded."""
+    sorted_months = sorted(fx.keys())
+    last = None
+    for m in sorted_months:
+        if m <= month:
+            last = fx[m]
+    if last:
+        return last
+    # Se nenhum anterior, pegar o primeiro disponível
+    if sorted_months:
+        return fx[sorted_months[0]]
+    raise ValueError(f"Nenhum dado de câmbio disponível para fallback (mês={month})")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # 6. MAIN: reconstruct monthly patrimonio
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -419,7 +438,7 @@ def main():
         for dep in ibkr_ap.get("depositos", []):
             month = dep["data"][:7]
             usd = dep.get("usd", dep.get("amount_usd", 0))
-            cambio_mes = fx.get(month, 5.0)
+            cambio_mes = fx.get(month) or _last_known_fx(fx, month)
             aportes_by_month[month] += usd * cambio_mes
 
     # XP purchases (BRL) — compras são aportes
@@ -475,7 +494,7 @@ def main():
                 if cambio:
                     break
         if not cambio:
-            cambio = 5.0
+            cambio = _last_known_fx(fx, month)
 
         # IBKR equity (USD → BRL)
         ibkr_pos = ibkr_positions.get(month, {})
@@ -704,16 +723,18 @@ def _generate_core_jsons(rows: list[dict]):
 
     rf_mensal_brl = ((1 + selic / 100) ** (1/12) - 1) * 100
 
-    # US T-Bill 3m rate (proxy: ~3.5-4.5% range 2021-2026)
-    TBILL_ANUAL = 4.0  # fallback conservador
+    # US T-Bill 3m ≈ Fed Funds — fonte: dashboard_state.json (atualizado via /macro-bcb)
+    TBILL_ANUAL = None
     if state_path.exists():
         try:
             state = json.loads(state_path.read_text())
-            _ff = state.get("macro", {}).get("fed_funds")
-            if _ff:
-                TBILL_ANUAL = _ff  # T-Bill ≈ Fed Funds
+            TBILL_ANUAL = state.get("macro", {}).get("fed_funds")
         except Exception:
             pass
+    if TBILL_ANUAL is None:
+        from scripts.config import FED_FUNDS_SNAPSHOT
+        TBILL_ANUAL = FED_FUNDS_SNAPSHOT
+        print(f"  ⚠ T-Bill usando snapshot config.py: {TBILL_ANUAL}% (rode /macro-bcb para atualizar)")
     rf_mensal_usd = ((1 + TBILL_ANUAL / 100) ** (1/12) - 1) * 100
 
     roll_dates = []
