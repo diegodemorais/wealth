@@ -46,7 +46,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | Backlog |
+| DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | ✅ Done 2026-04-10 |
 | HD-perplexity-review | Review externo Perplexity — 5 refinamentos + 5 features novas | Head | 🟡 Média | Backlog |
 | DEV-pvr-broken | Premissas vs Realizado não renderiza (recorrente) | Dev | 🔴 Crítica | ✅ Done 2026-04-10 |
 | DEV-perf-audit-fixes | 6 correções aba Performance (TER, attribution, CDI, shadows) | Dev+Quant | 🔴 Alta | Backlog |
