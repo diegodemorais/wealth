@@ -26,7 +26,7 @@ Substituir o gráfico de barras mensais por um heatmap ano×mês e adicionar um 
 - Cor: `rgba(34,197,94,...)` para positivo, `rgba(239,68,68,...)` para negativo (intensidade ∝ magnitude, clamp ±8%)
 - Privacy mode: valores embrulhados em `<span class="pv">` dinamicamente; re-renderiza ao toggle
 - Stats cards abaixo: média/mês, σ, % meses positivos, melhor mês, pior mês
-- Zero hardcoded: lê de `DATA.bollinger.dates/values`
+- Zero hardcoded: lê de `DATA.retornos_mensais.dates/values`
 
 ### Rolling Sharpe (S24b)
 - Nova função `buildRollingSharp()`

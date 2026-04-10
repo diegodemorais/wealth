@@ -252,14 +252,19 @@
     },
     "rolling_sharpe": {
       "type": "object",
-      "description": "Rolling Sharpe 12m (excess return sobre CDI). Calculado server-side em generate_data.py.",
-      "required": ["dates","values","window","rf_anual"],
-      "additionalProperties": false,
+      "description": "Rolling metrics 12m. Sharpe BRL vs CDI (primary) + USD vs T-Bill. Sortino, Vol, MaxDD. Source: dados/rolling_metrics.json via generate_data.py.",
+      "required": ["dates","values","window"],
+      "additionalProperties": true,
       "properties": {
-        "dates":  { "type": "array", "items": { "type": "string" } },
-        "values": { "type": "array", "items": { "type": "number" } },
-        "window": { "type": "integer" },
-        "rf_anual": { "type": "number" }
+        "dates":        { "type": "array", "items": { "type": "string" } },
+        "values":       { "type": "array", "items": { "type": "number" }, "description": "Sharpe BRL vs CDI" },
+        "values_usd":   { "type": "array", "items": { "type": ["number","null"] }, "description": "Sharpe USD vs T-Bill" },
+        "sortino":      { "type": "array", "items": { "type": "number" } },
+        "volatilidade": { "type": "array", "items": { "type": "number" } },
+        "max_dd":       { "type": "array", "items": { "type": "number" } },
+        "window":       { "type": "integer" },
+        "rf_brl":       { "type": "object", "description": "{ taxa_anual, nome }" },
+        "rf_usd":       { "type": "object", "description": "{ taxa_anual, nome }" }
       }
     },
     "backtest": {

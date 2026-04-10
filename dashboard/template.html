@@ -1181,7 +1181,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
  *   tornado: Array<{ label: string, delta: number }>,
  *   timeline: { labels: string[], values: number[] },
  *   retornos_mensais: { dates: string[], values: number[] },
- *   rolling_sharpe: { dates: string[], values: number[], window: number, rf_anual: number },
+ *   rolling_sharpe: { dates: string[], values: number[], values_usd?: (number|null)[], sortino?: number[], volatilidade?: number[], max_dd?: number[], window: number, rf_brl?: {taxa_anual: number, nome: string}, rf_usd?: {taxa_anual: number, nome: string} },
  *   backtest: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, cambioInicio?: number },
  *   backtestR5: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, note?: string },
  *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, renda2065: RfTitulo },
@@ -2600,6 +2600,7 @@ function buildRollingSharp() {
             title: items => items.length ? fmtMonthLabel(items[0].label) : '',
             label: ctx => {
               const lbl = ctx.dataset.label;
+              if (ctx.parsed.y === null || ctx.parsed.y === undefined) return '';
               if (lbl.startsWith('Sharpe')) return ` ${lbl}: ${ctx.parsed.y.toFixed(2)}`;
               return '';
             },
