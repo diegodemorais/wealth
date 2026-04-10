@@ -5287,22 +5287,27 @@ function buildPremissasVsRealizado() {
   var pvr = DATA.premissas_vs_realizado;
   if (!pvr) { document.getElementById('premissasVsRealizadoSection').style.display = 'none'; return; }
 
-  var html = '<thead><tr><th>Variável</th><th>Premissa</th><th>Realizado</th><th>Delta</th><th>Nota</th></tr></thead><tbody>';
+  var html = '<thead><tr><th>Variável</th><th>Premissa</th><th>Realizado (real BRL, pós-IPCA)</th><th>Delta</th><th>Nota</th></tr></thead><tbody>';
 
   // Retorno equity
   var re = pvr.retorno_equity;
   if (re) {
     var premR = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
-    // Usar TWR BRL anualizado como "Realizado" — base compatível com a premissa
-    var twrR = re.twr_brl_cagr_pct != null ? re.twr_brl_cagr_pct.toFixed(2) + '% BRL (TWR)' : '--';
+    // Usar TWR real BRL (pós-IPCA) como "Realizado" — base compatível com a premissa
+    var twrReal = re.twr_real_brl_pct != null ? re.twr_real_brl_pct.toFixed(2) + '% real BRL (TWR)' : '--';
+    var nominalSub = re.twr_nominal_brl_cagr_pct != null ? ' · nom BRL: ' + re.twr_nominal_brl_cagr_pct.toFixed(2) + '%' : '';
     var benchUsd = re.backtest_nominal_usd_pct != null ? ' · backtest nom USD: ' + re.backtest_nominal_usd_pct.toFixed(2) + '%' : '';
     var benchR = re.benchmark_vwra_nominal_usd_pct != null ? ' (VWRA ' + re.benchmark_vwra_nominal_usd_pct.toFixed(2) + '%)' : '';
-    // Delta: TWR BRL vs premissa real BRL (comparação apple-to-apple)
-    var deltaREq = (re.twr_brl_cagr_pct != null && re.premissa_real_brl_pct != null)
-      ? (re.twr_brl_cagr_pct - re.premissa_real_brl_pct) : null;
+    // Delta: TWR real BRL vs premissa real BRL (comparação apple-to-apple)
+    var deltaREq = (re.twr_real_brl_pct != null && re.premissa_real_brl_pct != null)
+      ? (re.twr_real_brl_pct - re.premissa_real_brl_pct) : null;
     var deltaRStr = deltaREq != null ? (deltaREq >= 0 ? '+' : '') + deltaREq.toFixed(2) + 'pp' : 'n/a';
     var deltaRColor = deltaREq != null ? (deltaREq >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--muted)';
-    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + twrR + benchUsd + benchR + '</td><td class="num" style="color:' + deltaRColor + '">' + deltaRStr + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (re.nota || '--') + '</td></tr>';
+    var nAnos = re.periodo_anos != null ? re.periodo_anos.toFixed(1) : null;
+    var notaJanela = nAnos
+      ? 'Retornos em termos reais BRL (pós-IPCA). Janela de ' + nAnos + ' anos — insuficiente para validar premissa estrutural de longo prazo.'
+      : (re.nota || '--');
+    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + twrReal + nominalSub + benchUsd + benchR + '</td><td class="num" style="color:' + deltaRColor + '">' + deltaRStr + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + notaJanela + '</td></tr>';
   }
 
   // Aporte mensal

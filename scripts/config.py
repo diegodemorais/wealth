@@ -106,6 +106,11 @@ BOND_TENT_META_ANOS = 7           # anos de gastos cobertos pelo bond pool no FI
 
 # Fallbacks macro (snapshot — atualizar quando taxas mudarem significativamente)
 CAMBIO_FALLBACK = 5.07            # USD/BRL — fallback offline (atualizar via /macro-bcb). Ref: PTAX 09/04/2026
+# IPCA acumulado CAGR estimado para o período Abr/2021–Mar/2026 (5 anos).
+# Calculado a partir das variações mensais BCB série 433: produto composto anualizado.
+# Fonte: BCB API série 433 — usado como fallback quando a API está indisponível.
+# Atualizar sempre que o período de cálculo do PvR mudar.
+IPCA_CAGR_FALLBACK = 6.14         # % a.a. — IPCA CAGR Abr/2021–Mar/2026 (estimativa)
 SELIC_META_SNAPSHOT = 14.75       # % a.a. — Abr/2026
 FED_FUNDS_SNAPSHOT = 3.64         # % — Mar/2026
 DEPRECIACAO_BRL_BASE = 0.5        # % a.a. — premissa do plano FIRE (carteira.md)

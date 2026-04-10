@@ -44,6 +44,7 @@ from config import (
     FACTOR_UNDERPERF_THRESHOLD, TLH_GATILHO, CRYPTO_LEGADO_BRL,
     BOND_TENT_META_ANOS,
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
+    IPCA_CAGR_FALLBACK,
     update_dashboard_state,
 )
 
@@ -1362,36 +1363,86 @@ def compute_premissas_vs_realizado(
     target_cagr = backtest_metrics.get("target", {}).get("cagr")  # ex: 12.88 (%)
     shadow_cagr = backtest_metrics.get("shadowA", {}).get("cagr")  # VWRA benchmark
 
-    # Retorno realizado BRL real — TWR acumulado anualizado de retornos_mensais.json
-    # Esta é a comparação correta: premissa (real BRL) vs realizado (TWR BRL, inclui câmbio)
-    twr_brl_cagr = None
+    # Retorno realizado BRL nominal → deflacionar pelo IPCA para obter real BRL
+    # Premissa é real BRL (pós-IPCA); comparação correta exige mesma base.
+    twr_nominal_brl_cagr = None
+    twr_real_brl_cagr    = None
+    ipca_cagr_periodo    = None
+    periodo_anos         = None
+    twr_first_date       = None
+    twr_last_date        = None
     try:
         if RETORNOS_CORE.exists():
             _rc = json.loads(RETORNOS_CORE.read_text())
-            _twr = _rc.get("twr_pct", [])
+            _twr   = _rc.get("twr_pct", [])
             _dates = _rc.get("dates", [])
             if _twr and _dates:
-                # Acumular retorno total para anualizar (produto de (1 + r_mensal/100))
+                twr_first_date = _dates[0]   # ex: "2021-04"
+                twr_last_date  = _dates[-1]  # ex: "2026-03"
+                # Acumular retorno nominal BRL total
                 acum = 1.0
                 for r in _twr:
                     acum *= (1 + r / 100)
-                # Número de anos cobertos pela série
                 n_meses = len(_twr)
                 if n_meses >= 6:  # mínimo 6 meses para ser significativo
-                    cagr = (acum ** (12 / n_meses) - 1) * 100
-                    twr_brl_cagr = round(cagr, 2)
+                    periodo_anos = round(n_meses / 12, 2)
+                    twr_nominal_brl_cagr = round((acum ** (12 / n_meses) - 1) * 100, 2)
     except Exception as _e:
-        print(f"  ⚠️ PvR twr_brl_cagr: {_e}")
+        print(f"  ⚠️ PvR twr_nominal_brl_cagr: {_e}")
+
+    # Buscar IPCA mensal BCB série 433 para o mesmo período que o TWR
+    if twr_nominal_brl_cagr is not None and twr_first_date and twr_last_date:
+        try:
+            import urllib.request as _url
+            # Converter "YYYY-MM" para "DD/MM/YYYY" (BCB formato)
+            _d0 = datetime.strptime(twr_first_date + "-01", "%Y-%m-%d")
+            _d1 = datetime.strptime(twr_last_date  + "-01", "%Y-%m-%d")
+            # Último dia do mês final
+            _d1_last = (_d1.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+            _dt_ini = _d0.strftime("%d/%m/%Y")
+            _dt_fim = _d1_last.strftime("%d/%m/%Y")
+            _bcb_url = (
+                f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados"
+                f"?formato=json&dataInicial={_dt_ini}&dataFinal={_dt_fim}"
+            )
+            with _url.urlopen(_bcb_url, timeout=10) as _resp:
+                _ipca_raw = json.loads(_resp.read().decode())
+            # Produto composto dos retornos mensais IPCA
+            _acum_ipca = 1.0
+            _n_ipca = 0
+            for _row in _ipca_raw:
+                try:
+                    _acum_ipca *= (1 + float(_row["valor"]) / 100)
+                    _n_ipca += 1
+                except (KeyError, ValueError):
+                    pass
+            if _n_ipca >= 6:
+                # CAGR anualizado do IPCA no mesmo período
+                ipca_cagr_periodo = round((_acum_ipca ** (12 / _n_ipca) - 1) * 100, 2)
+                print(f"  -> IPCA BCB: {_n_ipca} meses, CAGR={ipca_cagr_periodo:.2f}% (API)")
+            else:
+                raise ValueError(f"Apenas {_n_ipca} meses IPCA na API — usando fallback")
+        except Exception as _e:
+            ipca_cagr_periodo = IPCA_CAGR_FALLBACK
+            print(f"  ⚠️ IPCA BCB falhou ({_e}), usando fallback={IPCA_CAGR_FALLBACK}%")
+
+        # Deflacionar: retorno real = (1 + nominal/100) / (1 + ipca/100) - 1
+        twr_real_brl_cagr = round(
+            ((1 + twr_nominal_brl_cagr / 100) / (1 + ipca_cagr_periodo / 100) - 1) * 100, 2
+        )
 
     if premissa_retorno is not None:
         result["retorno_equity"] = {
-            "premissa_real_brl_pct": round(premissa_retorno * 100, 2),
-            "twr_brl_cagr_pct":      twr_brl_cagr,          # realizado BRL real (TWR anualizado)
-            "backtest_nominal_usd_pct": target_cagr,         # CAGR backtest (nominal USD, referência)
+            "premissa_real_brl_pct":         round(premissa_retorno * 100, 2),
+            "twr_real_brl_pct":              twr_real_brl_cagr,     # realizado real BRL (pós-IPCA) — comparação correta
+            "twr_nominal_brl_cagr_pct":      twr_nominal_brl_cagr,  # nominal BRL (auditoria)
+            "ipca_cagr_periodo_pct":         ipca_cagr_periodo,     # IPCA CAGR do período
+            "periodo_anos":                  periodo_anos,
+            "backtest_nominal_usd_pct":      target_cagr,           # CAGR backtest (nominal USD, referência)
             "benchmark_vwra_nominal_usd_pct": shadow_cagr,
             "nota": (
-                "Premissa = retorno real em BRL (pós-depreciação cambial 0.5%/ano). "
-                "Realizado = TWR anualizado BRL (inclui câmbio + RF — comparação correta). "
+                "Premissa = retorno real em BRL (pós-IPCA, pós-depreciação cambial 0.5%/ano). "
+                "Realizado = TWR anualizado BRL deflacionado pelo IPCA do período (comparação correta). "
                 "Backtest USD = nominal em USD (inclui inflação US ~2-3%/ano, referência apenas)."
             ),
         }

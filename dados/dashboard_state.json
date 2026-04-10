@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generated": "2026-04-09",
-    "last_update_section": "mercado_mtd",
-    "last_update_generator": "generate_data.py",
+    "generated": "2026-04-10",
+    "last_update_section": "fire",
+    "last_update_generator": "fire_montecarlo.py",
     "version": 1
   },
   "macro": {
@@ -122,7 +122,7 @@
     "pat_mediano_fire": 11527476.0,
     "pat_p10_fire": 6834909.0,
     "pat_p90_fire": 18916227.0,
-    "mc_date": "2026-04-09",
+    "mc_date": "2026-04-10",
     "pfire50_base": 85.4,
     "pfire50_fav": 91.3,
     "pfire50_stress": 81.1,
@@ -142,14 +142,14 @@
         "menos10": 4.0
       },
       {
-        "variavel": "Retorno equity (+/-10%)",
-        "mais10": 3.4,
-        "menos10": -4.1
-      },
-      {
         "variavel": "Custo de vida (+/-10%)",
         "mais10": -2.8,
         "menos10": 1.9
+      },
+      {
+        "variavel": "Retorno equity (+/-10%)",
+        "mais10": 3.4,
+        "menos10": -4.1
       },
       {
         "variavel": "Aporte mensal (+/-10%)",
