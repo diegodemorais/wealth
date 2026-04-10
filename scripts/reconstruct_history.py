@@ -794,7 +794,46 @@ def _generate_core_jsons(rows: list[dict]):
         except Exception:
             pass
 
-    rf_mensal_brl = ((1 + selic / 100) ** (1/12) - 1) * 100
+    # rf_mensal_brl_atual: taxa corrente (usada como fallback mês a mês)
+    rf_mensal_brl_atual = ((1 + selic / 100) ** (1/12) - 1) * 100
+
+    # ── Série CDI histórica: BCB série 4391 (CDI over acumulado mensal, % ao mês) ──
+    # Formato resposta: [{data: "DD/MM/YYYY", valor: "X.XXXX"}, ...]
+    # rf_cdi_series: {YYYY-MM: float} — taxa mensal em % ao mês
+    rf_cdi_series: dict[str, float] = {}
+    if dates:
+        try:
+            import urllib.request as _url_req2
+            import json as _json2
+            _d0_cdi = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
+            _d1_cdi = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d1_cdi_last = (_d1_cdi.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+            _dt_ini_cdi = _d0_cdi.strftime("%d/%m/%Y")
+            _dt_fim_cdi = _d1_cdi_last.strftime("%d/%m/%Y")
+            _bcb_cdi_url = (
+                f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.4391/dados"
+                f"?formato=json&dataInicial={_dt_ini_cdi}&dataFinal={_dt_fim_cdi}"
+            )
+            with _url_req2.urlopen(_bcb_cdi_url, timeout=15) as _resp_cdi:
+                _cdi_raw = _json2.loads(_resp_cdi.read().decode())
+            for _row_cdi in _cdi_raw:
+                try:
+                    _dt_cdi = datetime.strptime(_row_cdi["data"].strip(), "%d/%m/%Y")
+                    _ym_cdi = _dt_cdi.strftime("%Y-%m")
+                    rf_cdi_series[_ym_cdi] = float(_row_cdi["valor"])
+                except (KeyError, ValueError):
+                    pass
+            print(f"  -> CDI BCB série 4391: {len(rf_cdi_series)} meses carregados ({_dt_ini_cdi} → {_dt_fim_cdi})")
+        except Exception as _e_cdi:
+            print(f"  ⚠ CDI BCB série 4391 falhou ({_e_cdi}). Fallback: Selic meta constante {selic}%")
+
+    # Para cada mês YYYY-MM, retorna a taxa CDI mensal (% ao mês).
+    # Se o mês não constar na série (API falhou ou fora do range), usa rf_mensal_brl_atual.
+    def _rf_mes(ym: str) -> float:
+        return rf_cdi_series.get(ym, rf_mensal_brl_atual)
+
+    # rf_mensal_brl mantido como alias do fallback (usado em Sortino e Sortino USD abaixo)
+    rf_mensal_brl = rf_mensal_brl_atual
 
     # US T-Bill 3m ≈ Fed Funds — fonte: dashboard_state.json (atualizado via /macro-bcb)
     TBILL_ANUAL = None
@@ -818,9 +857,12 @@ def _generate_core_jsons(rows: list[dict]):
     roll_maxdd = []
 
     for i in range(WINDOW - 1, len(twr_pct)):
-        # ── Sharpe BRL (portfolio total vs CDI) ──
+        # ── Sharpe BRL (portfolio total vs CDI histórico mês a mês) ──
+        # Para cada mês j da janela [i-WINDOW+1 .. i], usa CDI real do mês dates[j].
+        # Fórmula: excess_j = twr_pct[j] - rf_cdi_series.get(dates[j], rf_mensal_brl_atual)
         win = twr_pct[i - WINDOW + 1: i + 1]
-        excess = [v - rf_mensal_brl for v in win]
+        win_dates = dates[i - WINDOW + 1: i + 1]
+        excess = [v - _rf_mes(ym) for v, ym in zip(win, win_dates)]
         mean_ex = sum(excess) / WINDOW
         var_pop = sum((v - mean_ex) ** 2 for v in excess) / WINDOW
         std_pop = math.sqrt(var_pop)
@@ -873,7 +915,13 @@ def _generate_core_jsons(rows: list[dict]):
         "_generated": now_iso,
         "_source": "reconstruct_history.py",
         "window": WINDOW,
+        # rf_brl_atual: taxa corrente (Selic meta do momento) — ainda útil como referência puntual
+        "rf_brl_atual": {"taxa_anual": selic, "nome": "Selic meta (CDI) — taxa atual"},
+        # rf_brl legado mantido por compatibilidade com dashboard (mesmo conteúdo que rf_brl_atual)
         "rf_brl": {"taxa_anual": selic, "nome": "Selic meta (CDI)"},
+        # rf_brl_series: série histórica BCB 4391 usada no cálculo do Sharpe rolling.
+        # {YYYY-MM: valor_pct_ao_mes}. Vazio se API falhou (Sharpe usou fallback constante).
+        "rf_brl_series": rf_cdi_series,
         "rf_usd": {"taxa_anual": TBILL_ANUAL, "nome": "US T-Bill 3m (≈ Fed Funds)"},
         "dates": roll_dates,
         "sharpe_brl": roll_sharpe_brl,

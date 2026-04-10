@@ -9,6 +9,7 @@
 | Data | Issue/Contexto | Resultado | Finding |
 |------|---------------|-----------|---------|
 | 2026-03-23 | Backtest portfolio_backtest.py | Aprovado com 2 findings | IOF amortization timing leve fav. equity (+10-20bps); ACWI proxy subestima SWRD -0.5-0.7pp/aa. Efeitos parcialmente cancelam. IOF 1.1% (IB) correto — nao verificado antes do Tax errar. |
+| 2026-04-10 | Rolling Sharpe BRL — reconstruct_history.py | Corrigido | Bug: Selic 14.75% constante para todo o período 2021-2026 superestimava custo de oportunidade. Corrigido com CDI histórico BCB série 4391 (% ao mês). Impacto: Sharpe médio +0.62 (de -0.276 para +0.343 amostral). Janela inicial 2022-04 usava CDI médio 0.576%/mes vs 1.153%/mes constante — diferença de 0.577pp/mes no excess return. Anos 2021-2022 com Selic 2-10%: mais afetados. `rf_brl_series` persistido em rolling_metrics.json. |
 
 ---
 
