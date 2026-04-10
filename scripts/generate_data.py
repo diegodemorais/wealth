@@ -55,6 +55,9 @@ LOTES_PATH   = ROOT / "dados" / "ibkr" / "lotes.json"
 APORTES_PATH    = ROOT / "dados" / "ibkr" / "aportes.json"
 XP_LOTES_PATH   = ROOT / "dados" / "xp" / "lotes.json"
 NUBANK_TD_PATH  = ROOT / "dados" / "nubank" / "resumo_td.json"
+RETORNOS_CORE   = ROOT / "dados" / "retornos_mensais.json"
+ROLLING_CORE    = ROOT / "dados" / "rolling_metrics.json"
+SUMMARY_CORE    = ROOT / "dados" / "portfolio_summary.json"
 WELLNESS_CONFIG = ROOT / "agentes" / "referencia" / "wellness_config.json"
 FACTOR_CACHE        = ROOT / "dados" / "factor_cache.json"
 SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
@@ -1750,8 +1753,17 @@ def main():
             print(f"  ⚠️ factor cache write: {e}")
 
     # Timeline + Retornos mensais
-    print("  ▶ lendo CSV ...")
-    timeline, retornos_mensais = get_timeline_retornos()
+    # Preferir JSONs core (gerados por reconstruct_history.py) se disponíveis
+    if RETORNOS_CORE.exists():
+        print("  ▶ lendo retornos de dados/retornos_mensais.json (core) ...")
+        _rc = json.loads(RETORNOS_CORE.read_text())
+        retornos_mensais = {"dates": _rc["dates"], "values": _rc["twr_pct"]}
+        # Timeline ainda vem do CSV (patrimônio absoluto para o gráfico)
+        timeline, _ = get_timeline_retornos()
+        print(f"  ✓ Retornos core: {len(retornos_mensais['dates'])} meses (TWR)")
+    else:
+        print("  ▶ lendo CSV (fallback — rode reconstruct_history.py para gerar core) ...")
+        timeline, retornos_mensais = get_timeline_retornos()
 
     # Posições + preços
     print("  ▶ posições ...")
@@ -2038,10 +2050,20 @@ def main():
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
 
-    # Rolling Sharpe 12m (server-side — dados prontos para o dashboard)
+    # Rolling Sharpe 12m — preferir JSON core
     _selic = macro.get("selic_meta") or 0
-    rolling_sharpe = compute_rolling_sharpe(retornos_mensais, _selic)
-    print(f"  ✓ Rolling Sharpe: {len(rolling_sharpe['dates'])} pontos (rf={_selic}%)")
+    if ROLLING_CORE.exists():
+        _rm = json.loads(ROLLING_CORE.read_text())
+        rolling_sharpe = {
+            "dates": _rm["dates"],
+            "values": _rm["sharpe"],
+            "window": _rm["window"],
+            "rf_anual": _rm["rf_anual"],
+        }
+        print(f"  ✓ Rolling Sharpe: {len(rolling_sharpe['dates'])} pontos (core JSON, rf={_rm['rf_anual']}%)")
+    else:
+        rolling_sharpe = compute_rolling_sharpe(retornos_mensais, _selic)
+        print(f"  ✓ Rolling Sharpe: {len(rolling_sharpe['dates'])} pontos (computed, rf={_selic}%)")
 
     # ─── Mercado snapshot (BTC + câmbio) + deltas MtD ──────────────────────
     # BTC-USD já fetchado em get_macro_data() — reutilizar, sem novo download

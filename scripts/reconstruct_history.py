@@ -541,12 +541,214 @@ def main():
         writer.writeheader()
         writer.writerows(rows)
 
+    # ═══════════════════════════════════════════════════════════════════
+    # 9. Generate core JSON structures
+    # ═══════════════════════════════════════════════════════════════════
+    print(f"\n9. Generating core JSON structures...")
+    _generate_core_jsons(rows)
+
     print(f"\n{'=' * 70}")
     print(f"✅ {len(rows)} meses escritos em {OUTPUT_CSV.relative_to(ROOT)}")
     print(f"   Período: {rows[0]['data']} → {rows[-1]['data']}")
     print(f"   Patrimônio inicial: R${rows[0]['patrimonio_brl']:,.2f}")
     print(f"   Patrimônio final:   R${rows[-1]['patrimonio_brl']:,.2f}")
     print(f"{'=' * 70}")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CORE JSON GENERATION
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def _generate_core_jsons(rows: list[dict]):
+    """
+    Gera os JSONs core da camada de dados do portfolio.
+    Fonte de verdade para todos os consumidores (dashboard, checkin, FIRE MC, retros).
+    """
+    import math
+    from datetime import datetime
+
+    now_iso = datetime.now().isoformat(timespec="seconds")
+
+    # ── 1. retornos_mensais.json ─────────────────────────────────────
+    dates = []
+    twr_pct = []
+    acumulado = []
+    cum = 1.0
+
+    for i, row in enumerate(rows):
+        var_str = row.get("patrimonio_var", "")
+        if i == 0 or not var_str:
+            continue
+        ret = float(var_str) / 100
+        cum *= (1 + ret)
+        dates.append(row["data"][:7])
+        twr_pct.append(round(ret * 100, 4))
+        acumulado.append(round((cum - 1) * 100, 2))
+
+    retornos = {
+        "_generated": now_iso,
+        "_source": "reconstruct_history.py → TWR (Modified Dietz simplificado)",
+        "dates": dates,
+        "twr_pct": twr_pct,
+        "acumulado_pct": acumulado,
+    }
+
+    retornos_path = ROOT / "dados" / "retornos_mensais.json"
+    retornos_path.write_text(json.dumps(retornos, indent=2, ensure_ascii=False))
+    print(f"  ✓ {retornos_path.relative_to(ROOT)} ({len(dates)} meses)")
+
+    # ── 2. rolling_metrics.json ──────────────────────────────────────
+    WINDOW = 12
+    # Selic meta atual — lida de dashboard_state se disponível
+    selic = 14.75
+    state_path = ROOT / "dados" / "dashboard_state.json"
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text())
+            selic = state.get("macro", {}).get("selic_meta") or selic
+        except Exception:
+            pass
+
+    rf_mensal = ((1 + selic / 100) ** (1/12) - 1) * 100
+
+    roll_dates = []
+    roll_sharpe = []
+    roll_sortino = []
+    roll_vol = []
+    roll_maxdd = []
+
+    for i in range(WINDOW - 1, len(twr_pct)):
+        win = twr_pct[i - WINDOW + 1: i + 1]
+        excess = [v - rf_mensal for v in win]
+        mean_ex = sum(excess) / WINDOW
+        var_pop = sum((v - mean_ex) ** 2 for v in excess) / WINDOW
+        std_pop = math.sqrt(var_pop)
+
+        # Sharpe anualizado
+        sharpe = round(mean_ex / std_pop * math.sqrt(12), 3) if std_pop > 0 else 0
+
+        # Sortino (downside deviation only)
+        downside = [v for v in excess if v < 0]
+        dd_sq = sum(v ** 2 for v in downside) / WINDOW
+        dd_std = math.sqrt(dd_sq)
+        sortino = round(mean_ex / dd_std * math.sqrt(12), 3) if dd_std > 0 else 0
+
+        # Volatilidade anualizada (dos retornos totais, não excess)
+        mean_ret = sum(win) / WINDOW
+        var_ret = sum((v - mean_ret) ** 2 for v in win) / WINDOW
+        vol = round(math.sqrt(var_ret) * math.sqrt(12), 3)
+
+        # Max drawdown trailing (dentro da janela)
+        cum_win = [1.0]
+        for r in win:
+            cum_win.append(cum_win[-1] * (1 + r / 100))
+        peak = cum_win[0]
+        max_dd = 0
+        for c in cum_win[1:]:
+            if c > peak:
+                peak = c
+            dd = (c - peak) / peak
+            if dd < max_dd:
+                max_dd = dd
+
+        roll_dates.append(dates[i])
+        roll_sharpe.append(sharpe)
+        roll_sortino.append(sortino)
+        roll_vol.append(vol)
+        roll_maxdd.append(round(max_dd * 100, 2))
+
+    rolling = {
+        "_generated": now_iso,
+        "_source": "reconstruct_history.py",
+        "window": WINDOW,
+        "rf_anual": selic,
+        "dates": roll_dates,
+        "sharpe": roll_sharpe,
+        "sortino": roll_sortino,
+        "volatilidade": roll_vol,
+        "max_dd": roll_maxdd,
+    }
+
+    rolling_path = ROOT / "dados" / "rolling_metrics.json"
+    rolling_path.write_text(json.dumps(rolling, indent=2, ensure_ascii=False))
+    print(f"  ✓ {rolling_path.relative_to(ROOT)} ({len(roll_dates)} pontos)")
+
+    # ── 3. portfolio_summary.json ────────────────────────────────────
+    first = rows[0]
+    last = rows[-1]
+    pat_inicio = first["patrimonio_brl"]
+    pat_fim = last["patrimonio_brl"]
+
+    # CAGR via TWR acumulado (não via patrimônio bruto, que inclui aportes)
+    twr_total = cum - 1  # retorno acumulado TWR
+    d0 = datetime.strptime(first["data"][:10], "%Y-%m-%d")
+    d1 = datetime.strptime(last["data"][:10], "%Y-%m-%d")
+    anos = (d1 - d0).days / 365.25
+    cagr_twr = ((1 + twr_total) ** (1 / anos) - 1) * 100 if anos > 0 else 0
+
+    # Max drawdown histórico
+    cum_series = [1.0]
+    dd_series = []
+    for r in twr_pct:
+        cum_series.append(cum_series[-1] * (1 + r / 100))
+    peak = cum_series[0]
+    max_dd_val = 0
+    max_dd_date = dates[0] if dates else ""
+    for j, c in enumerate(cum_series[1:]):
+        if c > peak:
+            peak = c
+        dd = (c - peak) / peak
+        dd_series.append(dd)
+        if dd < max_dd_val:
+            max_dd_val = dd
+            max_dd_date = dates[j] if j < len(dates) else ""
+
+    # Melhor/pior mês
+    best_idx = twr_pct.index(max(twr_pct))
+    worst_idx = twr_pct.index(min(twr_pct))
+    pos_months = sum(1 for r in twr_pct if r > 0)
+    neg_months = sum(1 for r in twr_pct if r <= 0)
+
+    # Total aportado
+    total_aportes = sum(r.get("aporte_brl", 0) for r in rows)
+
+    summary = {
+        "_generated": now_iso,
+        "_source": "reconstruct_history.py",
+        "periodo": {
+            "inicio": first["data"][:10],
+            "fim": last["data"][:10],
+            "meses": len(twr_pct),
+            "anos": round(anos, 2),
+        },
+        "patrimonio": {
+            "inicio_brl": pat_inicio,
+            "fim_brl": pat_fim,
+            "total_aportes_brl": round(total_aportes, 2),
+            "ganho_mercado_brl": round(pat_fim - pat_inicio - total_aportes, 2),
+        },
+        "retorno_twr": {
+            "acumulado_pct": round(twr_total * 100, 2),
+            "cagr_pct": round(cagr_twr, 2),
+            "media_mensal_pct": round(sum(twr_pct) / len(twr_pct), 2) if twr_pct else 0,
+        },
+        "risco": {
+            "max_drawdown_pct": round(max_dd_val * 100, 2),
+            "max_drawdown_date": max_dd_date,
+            "volatilidade_anual_pct": round(math.sqrt(sum((r - sum(twr_pct)/len(twr_pct))**2 for r in twr_pct) / len(twr_pct)) * math.sqrt(12), 2) if twr_pct else 0,
+        },
+        "distribuicao": {
+            "melhor_mes": {"date": dates[best_idx], "twr_pct": twr_pct[best_idx]},
+            "pior_mes": {"date": dates[worst_idx], "twr_pct": twr_pct[worst_idx]},
+            "meses_positivos": pos_months,
+            "meses_negativos": neg_months,
+            "hit_rate_pct": round(pos_months / len(twr_pct) * 100, 1) if twr_pct else 0,
+        },
+    }
+
+    summary_path = ROOT / "dados" / "portfolio_summary.json"
+    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+    print(f"  ✓ {summary_path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
