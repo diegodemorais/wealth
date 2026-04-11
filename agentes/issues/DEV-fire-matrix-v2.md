@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | DEV-fire-matrix-v2 |
 | **Dono** | Head |
-| **Status** | 🔵 Doing |
+| **Status** | ✅ Done — 2026-04-11 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | FIRE (spec), Dev (implementação) |
 | **Criado em** | 2026-04-11 |
@@ -44,8 +44,10 @@
 
 Geração das 3 matrizes em `reconstruct_fire_data.py` + `dados/fire_matrix.json`
 
-## Fase 2 — Dashboard 📋 Pendente
+## Fase 2 — Dashboard ✅ (2026-04-11)
 
-`buildFireMatrix()` com seletor + heatmap + marcador
+`buildFireMatrix()` reescrito: seletor Base/Favorável/Stress, heatmap gradiente contínuo, marcador ★ (P50 patrimônio × gasto base), tooltip SWR implícito. `interpolateFireMatrix()` atualizado para novo formato.
 
-## Fase 3 — Quant Validação 📋 Pendente
+## Fase 3 — Quant Validação ✅ (2026-04-11)
+
+PASS contra spec. Flags registrados: floating-point cosmético em stress (0.0435...) e n_sim=5000 no limite do spec (abaixo do padrão Bloco F de 10k — aceitável conforme spec aprovado).
