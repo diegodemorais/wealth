@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-04-10",
+    "generated": "2026-04-11",
     "last_update_section": "fire",
     "last_update_generator": "fire_montecarlo.py",
     "version": 1
@@ -122,7 +122,7 @@
     "pat_mediano_fire": 11527476.0,
     "pat_p10_fire": 6834909.0,
     "pat_p90_fire": 18916227.0,
-    "mc_date": "2026-04-10",
+    "mc_date": "2026-04-11",
     "pfire50_base": 85.4,
     "pfire50_fav": 91.3,
     "pfire50_stress": 81.1,
@@ -173,15 +173,24 @@
     "scenarios": [
       {
         "label": "R$250k",
-        "pfire": 90.4
+        "pfire": 90.4,
+        "base": 90.4,
+        "fav": 94.1,
+        "stress": 86.8
       },
       {
         "label": "R$270k",
-        "pfire": 85.0
+        "pfire": 88.8,
+        "base": 88.8,
+        "fav": 93.7,
+        "stress": 85.5
       },
       {
         "label": "R$300k",
-        "pfire": 82.1
+        "pfire": 85.8,
+        "base": 85.8,
+        "fav": 92.2,
+        "stress": 82.1
       }
     ]
   },

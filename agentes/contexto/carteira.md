@@ -14,7 +14,7 @@
 - **Meta FIRE**: **2040 (53 anos) — base.** Patrimônio real ≥ R$13.4M (R$2026) e SWR ≤ 2.4% → P(FIRE 2040): **90,4% base / 94,1% favorável / 86,8% stress** (MC 10k, spending smile ex-saúde + guardrails + bond tent + IR 15% nominal + INSS R$18k/ano@65 + vol bond pool 13.3% + SAUDE_BASE R$18k, `fire_montecarlo.py` HD-multimodel-premissas Bloco A 2026-04-06). FIRE 50 (2037) = aspiracional — se patrimônio atingir R$13.4M antes. Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).**
 - **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
-- **Renda estimada**: R$ 45k/ano (para cálculo savings rate no dashboard)
+- **Renda estimada**: R$ 45k/mês (para cálculo savings rate no dashboard — SR = aporte R$25k / renda R$45k = 55.6%)
 - **Custo de vida**: R$ 250k/ano
 - **Estado civil**: Solteiro, namorada (casamento iminente ~2026-2027). Filho previsto ~2028. **GATILHO**: ao casar/ter filho, recalibrar imediatamente: custo de vida (R$250k → R$270-300k+), FIRE date, sucessao, seguro de vida (gap critico), estrutura empresarial, testamento
 - **Empresas**: 2 PJs no Simples Nacional (contabilidade: Contabilizei)

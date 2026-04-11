@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-11T07:14:19",
-  "_generated_brt": "2026-04-11T07:14:19-03:00",
+  "_generated": "2026-04-11T07:53:13",
+  "_generated_brt": "2026-04-11T07:53:13-03:00",
   "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -184,16 +184,16 @@
     {
       "label": "R$270k",
       "custo": 270000,
-      "base": 85.0,
-      "fav": 88.7,
-      "stress": 81.4
+      "base": 88.8,
+      "fav": 93.7,
+      "stress": 85.5
     },
     {
       "label": "R$300k",
       "custo": 300000,
-      "base": 82.1,
-      "fav": 85.8,
-      "stress": 78.5
+      "base": 85.8,
+      "fav": 92.2,
+      "stress": 82.1
     }
   ],
   "saude_base": 18000,
@@ -203,28 +203,28 @@
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -2003,9 +2003,9 @@
     "avgs_since_launch_pct": 34.55,
     "excess_since_launch_pp": 12.58,
     "avgs_launch_date": "2024-10-14",
-    "meses_desde_launch": 17.8,
+    "meses_desde_launch": 17.9,
     "fonte": "yfinance · SWRD.L + AVGS.L · preços diários",
-    "updated": "2026-04-10"
+    "updated": "2026-04-11"
   },
   "factor_loadings": {
     "SWRD": {
@@ -2017,7 +2017,16 @@
       "cma": 0.066,
       "mom": 0.0077,
       "r2": 0.9678,
-      "n_months": 79
+      "n_months": 79,
+      "t_stats": {
+        "alpha": 0.764,
+        "mkt_rf": 34.753,
+        "smb": -2.126,
+        "hml": -1.864,
+        "rmw": -1.821,
+        "cma": 0.835,
+        "mom": 0.258
+      }
     },
     "EIMI": {
       "alpha": 0.01801,
@@ -2028,7 +2037,16 @@
       "cma": 0.4094,
       "mom": -0.0505,
       "r2": 0.6612,
-      "n_months": 79
+      "n_months": 79,
+      "t_stats": {
+        "alpha": 0.453,
+        "mkt_rf": 7.988,
+        "smb": 2.449,
+        "hml": -1.263,
+        "rmw": -1.531,
+        "cma": 1.432,
+        "mom": -0.339
+      }
     },
     "AVUV": {
       "alpha": -0.00206,
@@ -2039,7 +2057,16 @@
       "cma": -0.521,
       "mom": 0.0665,
       "r2": 0.8855,
-      "n_months": 77
+      "n_months": 77,
+      "t_stats": {
+        "alpha": -0.055,
+        "mkt_rf": 13.985,
+        "smb": 3.782,
+        "hml": 4.303,
+        "rmw": -0.046,
+        "cma": -1.742,
+        "mom": 0.601
+      }
     },
     "AVDV": {
       "alpha": 0.02916,
@@ -2050,10 +2077,19 @@
       "cma": 0.1097,
       "mom": -0.0421,
       "r2": 0.9455,
-      "n_months": 77
+      "n_months": 77,
+      "t_stats": {
+        "alpha": 1.37,
+        "mkt_rf": 20.634,
+        "smb": 8.584,
+        "hml": 3.401,
+        "rmw": 2.99,
+        "cma": 0.682,
+        "mom": -0.726
+      }
     },
     "DGS": {
-      "alpha": -0.00126,
+      "alpha": -0.00127,
       "mkt_rf": 0.8246,
       "smb": 0.6262,
       "hml": 0.1524,
@@ -2061,7 +2097,16 @@
       "cma": 0.1373,
       "mom": -0.103,
       "r2": 0.7785,
-      "n_months": 79
+      "n_months": 79,
+      "t_stats": {
+        "alpha": -0.037,
+        "mkt_rf": 9.358,
+        "smb": 3.715,
+        "hml": 0.764,
+        "rmw": 1.056,
+        "cma": 0.515,
+        "mom": -0.844
+      }
     },
     "USSC": {
       "alpha": 0.02134,
@@ -2072,7 +2117,16 @@
       "cma": -0.2941,
       "mom": -0.0827,
       "r2": 0.8914,
-      "n_months": 79
+      "n_months": 79,
+      "t_stats": {
+        "alpha": 0.596,
+        "mkt_rf": 16.508,
+        "smb": 4.13,
+        "hml": 2.503,
+        "rmw": -1.698,
+        "cma": -1.107,
+        "mom": -0.915
+      }
     },
     "IWVL": {
       "alpha": 0.01068,
@@ -2083,7 +2137,16 @@
       "cma": 0.3649,
       "mom": -0.1774,
       "r2": 0.9297,
-      "n_months": 79
+      "n_months": 79,
+      "t_stats": {
+        "alpha": 0.552,
+        "mkt_rf": 20.094,
+        "smb": 2.045,
+        "hml": 1.974,
+        "rmw": -0.984,
+        "cma": 2.569,
+        "mom": -2.663
+      }
     }
   },
   "rf": {

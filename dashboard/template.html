@@ -3784,7 +3784,7 @@ function buildIncomeProjection() {
   const rendaAtiva    = (p.renda_estimada ?? 45000) * 12; // R$/ano pré-FIRE (de DATA.premissas.renda_estimada)
 
   const anoFire = anoAtual + (idadeFireAlvo - idadeAtual);
-  const anoInss = anoFire  + inssInicio;             // 2039 + 12 = 2051 → age 65
+  const anoInss = anoFire  + inssInicio;             // 2040 + 12 = 2052 → age 65
   const anoFim  = anoAtual + (90 - idadeAtual);      // até age 90
 
   // Spending smile: go_go / slow_go / no_go em anos após FIRE

@@ -1340,12 +1340,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T07:20:43-03:00'); // BRT (UTC-3)
-const VERSION = '1.144';
+const GENERATED_AT = new Date('2026-04-11T07:53:13-03:00'); // BRT (UTC-3)
+const VERSION = '1.145';
 
 const DATA = {
-  "_generated": "2026-04-11T07:20:42",
-  "_generated_brt": "2026-04-11T07:20:42-03:00",
+  "_generated": "2026-04-11T07:53:13",
+  "_generated_brt": "2026-04-11T07:53:13-03:00",
   "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1529,16 +1529,16 @@ const DATA = {
     {
       "label": "R$270k",
       "custo": 270000,
-      "base": 85.0,
-      "fav": 88.7,
-      "stress": 81.4
+      "base": 88.8,
+      "fav": 93.7,
+      "stress": 85.5
     },
     {
       "label": "R$300k",
       "custo": 300000,
-      "base": 82.1,
-      "fav": 85.8,
-      "stress": 78.5
+      "base": 85.8,
+      "fav": 92.2,
+      "stress": 82.1
     }
   ],
   "saude_base": 18000,
@@ -4298,11 +4298,11 @@ const DATA = {
     "spending_atual": 250000,
     "pfire_atual": 90.4,
     "zona": "verde",
-    "upper_guardrail_spending": 233000,
+    "upper_guardrail_spending": 193000,
     "upper_guardrail_pfire": 95.0,
-    "safe_target_spending": 322000,
+    "safe_target_spending": 358000,
     "safe_target_pfire": 80.0,
-    "lower_guardrail_spending": 425000,
+    "lower_guardrail_spending": 458000,
     "lower_guardrail_pfire": 70.0,
     "nota": "Upper/lower estimados por interpolação/extrapolação linear dos cenários MC"
   },
@@ -6883,7 +6883,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.144"
+  "version": "1.145"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -9328,7 +9328,7 @@ function buildIncomeProjection() {
   const rendaAtiva    = (p.renda_estimada ?? 45000) * 12; // R$/ano pré-FIRE (de DATA.premissas.renda_estimada)
 
   const anoFire = anoAtual + (idadeFireAlvo - idadeAtual);
-  const anoInss = anoFire  + inssInicio;             // 2039 + 12 = 2051 → age 65
+  const anoInss = anoFire  + inssInicio;             // 2040 + 12 = 2052 → age 65
   const anoFim  = anoAtual + (90 - idadeAtual);      // até age 90
 
   // Spending smile: go_go / slow_go / no_go em anos após FIRE
