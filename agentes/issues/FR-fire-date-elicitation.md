@@ -62,3 +62,34 @@ Conduzir um processo estruturado de elicitação para entender:
 - **Separação temporal** — responder as mesmas perguntas hoje e em 30 dias; comparar estabilidade das preferências
 - **Reference class** — O que fazem pessoas com perfil similar (capital humano, patrimônio, família) quando chegam ao número?
 
+
+---
+
+## Conclusão
+
+### Achados principais
+
+| Dimensão | Achado |
+|----------|--------|
+| Motivação FIRE | Additive (hábitos, família, esporte) — não fuga do trabalho |
+| Satisfação profissional | 9/10 — estável, alta |
+| Satisfação pessoal | 7/10 — em tendência de alta (namorada 8 meses, casamento ~2026-2027) |
+| Distribuição subjetiva | Centro 47–53 (60%), 20% "não quis parar ou vida mudou" |
+| Risco <47 | Invalidez/doença involuntária — não cenário planejável |
+| Gap amigos | Estrutural (mora longe), não resolvido por FIRE |
+| Cansaço | Volume de trabalho + gestão de energia (ambos) |
+| Cozinhar como motivação FIRE | Projeção de identidade ("deveria saber"), não preferência real |
+
+### Atualizações no modelo
+
+- `carteira.md`: distribuição subjetiva documentada + gatilhos de vida + flag behavioral + gatilho R$10M → rodar MC FIRE@48–50
+- Prognóstico behavioral: 7/10 pessoal não é crônico — está em movimento com a namorada e vida a dois chegando
+
+### Resultado
+
+| Tipo | Detalhe |
+|------|---------|
+| **Estratégia** | Gatilho R$10M adicionado — rodar MC FIRE@48–50 quando cruzar |
+| **Conhecimento** | Distribuição real de intenções ≠ binário @50/@53. 20% chance de nunca parar completamente. |
+| **Behavioral** | Gap 9/7 em movimento, não cristalizado. Risco de obsessão com FIRE identificado mas mitigado pela vida pessoal melhorando. |
+| **Memória** | Registrado em carteira.md |
