@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-fire-date-elicitation |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | ✅ Done — 2026-04-11 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | FIRE (lead), Behavioral, Head |
 | **Co-sponsor** | Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-11 |
 | **Origem** | Diego — explorar melhor intenções sobre data de FIRE via questionários e odds de cenários |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-11 |
 
 ---
 
