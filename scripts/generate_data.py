@@ -68,6 +68,7 @@ SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
 HEAD_RELAY          = ROOT / "dados" / "head_relay.json"
 OUT_PATH        = ROOT / "dashboard" / "data.json"
 
+BACKTEST_R7_PATH        = ROOT / "dados" / "backtest_r7.json"
 FIRE_MATRIX_PATH        = ROOT / "dados" / "fire_matrix.json"
 FIRE_SWR_PCT_PATH       = ROOT / "dados" / "fire_swr_percentis.json"
 FIRE_APORTE_SENS_PATH   = ROOT / "dados" / "fire_aporte_sensitivity.json"
@@ -2332,6 +2333,7 @@ def main():
                 print(f"  ⚠️ {label}: {e}")
         return None
 
+    backtest_r7_data    = _load_json_safe(BACKTEST_R7_PATH,      "backtest_r7")
     fire_matrix_data    = _load_json_safe(FIRE_MATRIX_PATH,      "fire_matrix")
     fire_swr_pct_data   = _load_json_safe(FIRE_SWR_PCT_PATH,     "fire_swr_percentis")
     fire_aporte_data    = _load_json_safe(FIRE_APORTE_SENS_PATH, "fire_aporte_sensitivity")
@@ -2411,6 +2413,9 @@ def main():
         "spending_guardrails":  spending_guardrails,
         "spending_breakdown":   json.loads(SPENDING_SUMMARY.read_text()) if SPENDING_SUMMARY.exists() else None,
         "head_relay":           json.loads(HEAD_RELAY.read_text()) if HEAD_RELAY.exists() else None,
+
+        # Backtest Regime 7 — série longa 1994-2026
+        "backtest_r7":             backtest_r7_data,
 
         # HD-perplexity-review: novos datasets
         "fire_matrix":             fire_matrix_data,

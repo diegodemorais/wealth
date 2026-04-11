@@ -1159,6 +1159,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <button onclick="setBacktestPeriod('since2020')" title="jan/2020–abr/2026 (6 anos)">Desde 2020</button>
   <button onclick="setBacktestPeriod('5y')" title="jan/2021–abr/2026 (5 anos)">5a</button>
   <button onclick="setBacktestPeriod('3y')" title="jan/2023–abr/2026 (3 anos)">3a</button>
+  <button onclick="setBacktestPeriod('r7')" title="jan/1995–atual (31 anos)">R7 (31a)</button>
 </div>
 <div class="chart-box-lg"><canvas id="backtestChart"></canvas></div>
 <div style="overflow-x:auto;margin-top:12px">
@@ -1185,6 +1186,29 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div id="backtestNotaProxy" style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem"></div>
 <div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
 </div><!-- /collapse-body -->
+</div>
+
+<!-- S27b: BACKTEST LONGO — Regime 7 (1995–2026) -->
+<div class="section collapsible" data-in-tab="perf" id="backtestR7Section">
+<h2 onclick="this.parentElement.classList.toggle('open')">Backtest Longo — Regime 7 (1995–2026)</h2>
+<div class="collapse-body">
+<!-- Cards de métricas globais -->
+<div id="r7MetricsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px"></div>
+<!-- Win Rate -->
+<div id="r7WinRateSection"></div>
+<!-- Factor Drought + Drawdown Recovery -->
+<div id="r7RiskGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px"></div>
+<!-- CAGR por Década -->
+<div id="r7DecadesTable" style="margin-top:14px;overflow-x:auto"></div>
+<!-- Chart retorno acumulado -->
+<div class="chart-box" style="height:280px;margin-top:14px"><canvas id="backtestR7Chart"></canvas></div>
+<!-- Factor regression collapsível -->
+<details style="margin-top:10px">
+<summary style="cursor:pointer;font-size:.8rem;color:var(--muted);padding:4px 0">▸ Factor Regression FF5 (técnico)</summary>
+<div id="r7RegressionDetails" style="margin-top:8px"></div>
+</details>
+<div class="src">Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.</div>
+</div>
 </div>
 
 <!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (aberto por default) -->
@@ -2914,6 +2938,7 @@ const BACKTEST_CYCLES = {
   'since2020': { cutDate: '2020-01', label: 'jan/2020–abr/2026 (6 anos)',  useR5: false },
   '5y':        { cutDate: '2021-01', label: 'jan/2021–abr/2026 (5 anos)',  useR5: false },
   '3y':        { cutDate: '2023-01', label: 'jan/2023–abr/2026 (3 anos)',  useR5: false },
+  'r7':        { cutDate: '1995-01', label: 'jan/1995–atual (31 anos)',     useR7: true  },
 };
 
 function buildBacktest(period) {
@@ -2922,6 +2947,57 @@ function buildBacktest(period) {
   if (_notaEl) _notaEl.textContent = DATA.backtest?.nota_proxy || '';
 
   const cycle = BACKTEST_CYCLES[period] || BACKTEST_CYCLES['since2009'];
+
+  // R7: usar cumulative_returns do backtest_r7 diretamente
+  if (cycle.useR7 && DATA.backtest_r7?.cumulative_returns) {
+    const cr = DATA.backtest_r7.cumulative_returns;
+    const base_t = cr.target[0];
+    const base_b = cr.bench[0];
+    const dates   = cr.dates.map(d => d.slice(0, 7)); // YYYY-MM-DD → YYYY-MM
+    const target  = cr.target.map(v => +(v / base_t * 100).toFixed(2));
+    const bench   = cr.bench.map(v  => +(v / base_b * 100).toFixed(2));
+    if (charts.backtest) charts.backtest.destroy();
+    charts.backtest = new Chart(document.getElementById('backtestChart'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [
+          { label: 'Target (50/30/20)', data: target, borderColor: '#3b82f6', borderWidth: 2, pointRadius: 0, fill: false, tension: 0.2 },
+          { label: 'Benchmark (ACWI)', data: bench,  borderColor: '#94a3b8', borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.2, borderDash: [4,2] },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#94a3b8' } },
+          tooltip: { callbacks: { title: items => items.length ? fmtMonthLabel(items[0].label) : '', label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}` } }
+        },
+        scales: {
+          x: { ticks: { color: '#94a3b8', maxTicksLimit: 10, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
+          y: { ticks: { color: '#94a3b8', callback: v => v.toFixed(0) }, grid: { color: 'rgba(71,85,105,.2)' } }
+        }
+      }
+    });
+    // Show metrics from pre-computed R7 data
+    const mg = DATA.backtest_r7.metricas_globais;
+    const tbody = document.querySelector('#backtestMetricsTable tbody');
+    if (tbody && mg) {
+      const rows = [
+        ['CAGR', mg.cagr_target_pct?.toFixed(2) + '%', mg.cagr_bench_pct?.toFixed(2) + '%', (mg.alpha_pp >= 0 ? '+' : '') + mg.alpha_pp?.toFixed(2) + 'pp'],
+        ['Sharpe', mg.sharpe_target?.toFixed(2), mg.sharpe_bench?.toFixed(2), (mg.sharpe_target - mg.sharpe_bench >= 0 ? '+' : '') + (mg.sharpe_target - mg.sharpe_bench).toFixed(2)],
+        ['Sortino', mg.sortino_target?.toFixed(2), '—', '—'],
+        ['Max DD', mg.max_dd_target_pct?.toFixed(1) + '%', mg.max_dd_bench_pct?.toFixed(1) + '%', ((mg.max_dd_target_pct - mg.max_dd_bench_pct) >= 0 ? '+' : '') + (mg.max_dd_target_pct - mg.max_dd_bench_pct).toFixed(1) + 'pp'],
+      ];
+      tbody.innerHTML = rows.map(r => {
+        const isGood = parseFloat(r[3]) >= 0;
+        return `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td class="num ${r[3] !== '—' ? (isGood ? 'pos' : 'neg') : ''}">${r[3]}</td></tr>`;
+      }).join('');
+    }
+    // Hide nota proxy (not applicable for R7)
+    if (_notaEl) _notaEl.textContent = 'Regime 7 — proxies acadêmicos (DFA + Ken French). Série longa ' + (DATA.backtest_r7.periodo?.start?.slice(0,7) || '1995-01') + ' → ' + (DATA.backtest_r7.periodo?.end?.slice(0,7) || 'atual') + '.';
+    return;
+  }
+
   const useR5 = cycle.useR5;
   const allDates = useR5 ? DATA.backtestR5.dates : DATA.backtest.dates;
   const allTarget = useR5 ? DATA.backtestR5.target : DATA.backtest.target;
@@ -3020,6 +3096,133 @@ window.setBacktestPeriod = function(p) {
   });
   buildBacktest(p);
 };
+
+// ── S27b: Backtest R7 Section ─────────────────────────────────
+function buildBacktestR7() {
+  const r7 = DATA.backtest_r7;
+  if (!r7) return;
+
+  // Métricas globais — cards
+  const mg = r7.metricas_globais;
+  const metricas = [
+    { label: 'CAGR Target',    value: mg.cagr_target_pct?.toFixed(1) + '%', color: 'green' },
+    { label: 'CAGR Benchmark', value: mg.cagr_bench_pct?.toFixed(1) + '%',  color: '' },
+    { label: 'Alpha',          value: (mg.alpha_pp >= 0 ? '+' : '') + mg.alpha_pp?.toFixed(2) + 'pp', color: mg.alpha_pp >= 0 ? 'green' : 'red' },
+    { label: 'Sharpe Target',  value: mg.sharpe_target?.toFixed(2), color: '' },
+    { label: 'Sortino Target', value: mg.sortino_target?.toFixed(2), color: '' },
+    { label: 'Max DD',         value: mg.max_dd_target_pct?.toFixed(1) + '%', color: 'red' },
+  ];
+  const grid = document.getElementById('r7MetricsGrid');
+  if (grid) grid.innerHTML = metricas.map(m => `
+    <div style="background:var(--card2);border-radius:8px;padding:10px;text-align:center">
+      <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">${m.label}</div>
+      <div style="font-size:1.1rem;font-weight:700;color:${m.color === 'green' ? 'var(--green)' : m.color === 'red' ? 'var(--red)' : 'var(--text)'}">${m.value ?? '—'}</div>
+    </div>`).join('');
+
+  // Win Rate
+  const wr = r7.win_rates;
+  const wrEl = document.getElementById('r7WinRateSection');
+  if (wrEl) wrEl.innerHTML = `
+    <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Win Rate — Target vs Benchmark</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Janelas 10 anos (120m)</div>
+        <div style="font-size:1.4rem;font-weight:700;color:${wr['120m_pct'] >= 60 ? 'var(--green)' : 'var(--yellow)'}">${wr['120m_pct'] != null ? wr['120m_pct'].toFixed(1) + '%' : '—'}</div>
+        <div style="font-size:.65rem;color:var(--muted)">${wr['120m_target_wins'] ?? '—'} de ${wr['120m_janelas_total'] ?? '—'} janelas</div>
+      </div>
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Janelas 20 anos (240m)</div>
+        <div style="font-size:1.4rem;font-weight:700;color:${wr['240m_pct'] >= 70 ? 'var(--green)' : 'var(--yellow)'}">${wr['240m_pct'] != null ? wr['240m_pct'].toFixed(1) + '%' : '—'}</div>
+        <div style="font-size:.65rem;color:var(--muted)">${wr['240m_target_wins'] ?? '—'} de ${wr['240m_janelas_total'] ?? '—'} janelas</div>
+      </div>
+    </div>`;
+
+  // Factor Drought + Drawdown Recovery
+  const fd = r7.factor_drought;
+  const dr = r7.drawdown_recovery;
+  const riskEl = document.getElementById('r7RiskGrid');
+  if (riskEl) riskEl.innerHTML = `
+    <div style="background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Factor Drought Máximo</div>
+      <div style="font-size:1.3rem;font-weight:700;color:var(--yellow)">${fd?.max_meses ?? '—'} meses</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Rolling ${fd?.window_meses ?? 36}m · gatilho: 60m</div>
+    </div>
+    <div style="background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Recovery Pior Caso</div>
+      <div style="font-size:1.3rem;font-weight:700;color:${dr?.max_meses <= 84 ? 'var(--green)' : 'var(--red)'}">${dr?.max_meses ?? '—'} meses</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:4px">P90: ${dr?.p90_meses ?? '—'}m · Bond pool: 84m ✓</div>
+    </div>`;
+
+  // CAGR por Década
+  const decades = r7.cagr_por_decada;
+  const decEl = document.getElementById('r7DecadesTable');
+  if (decEl && decades?.length) {
+    decEl.innerHTML = `
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">CAGR por Década</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.78rem">
+        <thead><tr>
+          <th style="text-align:left;padding:5px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Período</th>
+          <th style="text-align:right;padding:5px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Target</th>
+          <th style="text-align:right;padding:5px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Benchmark</th>
+          <th style="text-align:right;padding:5px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Alpha</th>
+        </tr></thead>
+        <tbody>${decades.map(d => `<tr>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(71,85,105,.2)">${d.Decada}</td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;font-weight:600">${(d.Target*100).toFixed(1)}%</td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right">${(d.Benchmark*100).toFixed(1)}%</td>
+          <td style="padding:5px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;color:${d.Delta >= 0 ? 'var(--green)' : 'var(--red)'};font-weight:600">${d.Delta >= 0 ? '+' : ''}${(d.Delta*100).toFixed(2)}pp</td>
+        </tr>`).join('')}</tbody>
+      </table>`;
+  }
+
+  // Chart retorno acumulado
+  const cr = r7.cumulative_returns;
+  if (cr?.dates?.length) {
+    const base_t = cr.target[0];
+    const base_b = cr.bench[0];
+    const tVals = cr.target.map(v => +(v / base_t * 100).toFixed(2));
+    const bVals = cr.bench.map(v  => +(v / base_b * 100).toFixed(2));
+    const dates = cr.dates.map(d => d.slice(0, 7));
+    if (charts.backtestR7) charts.backtestR7.destroy();
+    charts.backtestR7 = new Chart(document.getElementById('backtestR7Chart'), {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [
+          { label: 'Target (50/30/20)', data: tVals, borderColor: '#3b82f6', borderWidth: 1.5, pointRadius: 0, fill: false },
+          { label: 'Benchmark (ACWI)', data: bVals, borderColor: '#94a3b8', borderWidth: 1, borderDash: [4,2], pointRadius: 0, fill: false },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { font: { size: 10 }, color: '#94a3b8' } },
+          tooltip: { mode: 'index', intersect: false, callbacks: { title: items => items.length ? fmtMonthLabel(items[0].label) : '' } }
+        },
+        scales: {
+          x: { ticks: { maxTicksLimit: 10, font: { size: 9 }, color: '#94a3b8', callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.2)' } },
+          y: { ticks: { font: { size: 9 }, color: '#94a3b8', callback: v => v + '%' }, grid: { color: 'rgba(71,85,105,.2)' } }
+        }
+      }
+    });
+  }
+
+  // Factor regression details
+  const fr = r7.factor_regression;
+  const frEl = document.getElementById('r7RegressionDetails');
+  if (frEl && fr) {
+    const chow = fr.chow;
+    frEl.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:.75rem">
+        <tbody>
+          <tr><td style="padding:4px 8px;color:var(--muted)">Alpha anualizado</td><td style="padding:4px 8px;font-weight:600;color:${fr.alpha_ann_pct >= 0 ? 'var(--green)' : 'var(--red)'}">${fr.alpha_ann_pct != null ? (fr.alpha_ann_pct >= 0 ? '+' : '') + fr.alpha_ann_pct.toFixed(2) + '%/ano' : '—'}</td><td style="padding:4px 8px;color:var(--muted)">t-stat: ${fr.alpha_t?.toFixed(2) ?? '—'} · p: ${fr.alpha_p?.toFixed(3) ?? '—'}</td></tr>
+          <tr><td style="padding:4px 8px;color:var(--muted)">R²</td><td style="padding:4px 8px;font-weight:600">${fr.r2?.toFixed(3) ?? '—'}</td><td style="padding:4px 8px;color:var(--muted)">${fr.n_meses ?? '—'} meses</td></tr>
+          ${chow && !chow.error ? `<tr><td style="padding:4px 8px;color:var(--muted)">Chow test</td><td style="padding:4px 8px;font-weight:600;color:${chow.p > 0.05 ? 'var(--green)' : 'var(--red)'}">${chow.conclusao ?? '—'}</td><td style="padding:4px 8px;color:var(--muted)">F=${chow.F?.toFixed(2)}, p=${chow.p?.toFixed(3)}</td></tr>` : ''}
+          ${fr.betas ? Object.entries(fr.betas).map(([k,v]) => `<tr><td style="padding:4px 8px;color:var(--muted)">β ${k}</td><td style="padding:4px 8px">${v.toFixed(3)}</td><td></td></tr>`).join('') : ''}
+        </tbody>
+      </table>`;
+  }
+}
 
 // ── S23: Shadow Chart ─────────────────────────────────────────
 function buildShadowChart(period) {
@@ -5050,7 +5253,7 @@ function _initTabCharts(tab) {
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
-               buildDrawdownHistory],
+               buildDrawdownHistory, buildBacktestR7],
     aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
     plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
                buildFireMatrix, buildSwrPercentiles, buildAporteSensitivity, buildLumpyEvents,

@@ -1038,13 +1038,19 @@ def run_regime7():
 
     # ── Métricas avançadas ────────────────────────────────────────────────────
     print(f"\n  METRICAS AVANCADAS:")
+    wr_dict = {}
     for w in REGIME7_CONFIG["win_rate_windows"]:
-        wr, n_janelas = _win_rate_rolling(r_target_anual, r_bench_anual, w)
+        wr_rate, n_janelas = _win_rate_rolling(r_target_anual, r_bench_anual, w)
         anos_w = w // 12
+        wins = round(wr_rate / 100 * n_janelas) if n_janelas > 0 else 0
+        wr_dict[w] = {"total": n_janelas, "wins": wins, "rate": wr_rate}
         if n_janelas > 0:
-            print(f"    Win Rate {anos_w:2d} anos (rolling):   {wr:.0f}% (N={n_janelas} janelas)")
+            print(f"    Win Rate {anos_w:2d} anos (rolling):   {wr_rate:.0f}% (N={n_janelas} janelas)")
         else:
             print(f"    Win Rate {anos_w:2d} anos (rolling):   N/A (historico insuficiente)")
+
+    wr_120 = wr_dict.get(120, {"total": 0, "wins": 0, "rate": None})
+    wr_240 = wr_dict.get(240, {"total": 0, "wins": 0, "rate": None})
 
     dd_analysis = _drawdown_recovery_analysis(r_target_anual)
     print(f"    Max Drawdown Recovery:        {dd_analysis['max_recovery_months']:.0f} meses (P90: {dd_analysis['p90_recovery_months']:.0f} meses)")
@@ -1055,6 +1061,7 @@ def run_regime7():
 
     # ── CAGR por período ──────────────────────────────────────────────────────
     df_decadas = _cagr_por_periodo(r_target_anual, r_bench_anual)
+    cagr_df = df_decadas
     if not df_decadas.empty:
         print(f"\n  CAGR POR DECADA:")
         print(f"    {'Decada':<15}  {'Target':>8}  {'Benchmark':>10}  {'Delta':>7}  {'N meses':>7}")
@@ -1102,6 +1109,64 @@ def run_regime7():
     print(f"    - Pesos Target: SWRD {pesos['SWRD']:.0%} / AVGS {pesos['AVGS']:.0%} / AVEM {pesos['AVEM']:.0%} (lidos de config.py)")
 
     print("\n" + "=" * 68 + "\n")
+
+    # ── Retorno acumulado (base 100) ──────────────────────────────────────────
+    cum_target = (1 + r_target_anual).cumprod()
+    cum_bench  = (1 + r_bench_anual).cumprod()
+
+    # ── Variáveis para regressão sub_c ────────────────────────────────────────
+    _sub_c = reg.get("sub_c", {"error": True}) if "error" not in reg else {"error": True}
+    _has_sub_c = "error" not in _sub_c
+
+    import datetime as _dt
+    return {
+        "gerado_em": _dt.date.today().isoformat(),
+        "periodo": {"start": str(r_target_anual.index[0].date()), "end": str(r_target_anual.index[-1].date())},
+        "n_meses": len(r_target_anual),
+        "metricas_globais": {
+            "cagr_target_pct": round(cagr_t * 100, 2),
+            "cagr_bench_pct": round(cagr_b * 100, 2),
+            "alpha_pp": round((cagr_t - cagr_b) * 100, 2),
+            "sharpe_target": round(float(sharpe_t), 3),
+            "sharpe_bench": round(float(sharpe_b), 3),
+            "sortino_target": round(float(sortino_t), 3),
+            "max_dd_target_pct": round(float(maxdd_t) * 100, 2),
+            "max_dd_bench_pct": round(float(maxdd_b) * 100, 2),
+        },
+        "win_rates": {
+            "120m_janelas_total": wr_120["total"],
+            "120m_target_wins": wr_120["wins"],
+            "120m_pct": round(wr_120["rate"], 1) if wr_120["total"] > 0 else None,
+            "240m_janelas_total": wr_240["total"],
+            "240m_target_wins": wr_240["wins"],
+            "240m_pct": round(wr_240["rate"], 1) if wr_240["total"] > 0 else None,
+        },
+        "factor_drought": {
+            "max_meses": drought["max_drought_months"],
+            "window_meses": drought.get("window_meses", 36),
+            "nota": f"Pior período de underperformance acumulada em janela {drought.get('window_meses',36)}m vs benchmark"
+        },
+        "drawdown_recovery": {
+            "max_meses": int(dd_analysis["max_recovery_months"]),
+            "p90_meses": int(dd_analysis["p90_recovery_months"]),
+            "nota": "Meses para recuperar pico após drawdown. Bond pool atual: 7 anos (84 meses)."
+        },
+        "cagr_por_decada": cagr_df.to_dict(orient="records") if not cagr_df.empty else [],
+        "factor_regression": {
+            "alpha_ann_pct": round(_sub_c["alpha_ann_pct"], 2) if _has_sub_c else None,
+            "alpha_t": round(_sub_c["alpha_t"], 2) if _has_sub_c else None,
+            "alpha_p": round(_sub_c["alpha_p"], 3) if _has_sub_c else None,
+            "r2": round(_sub_c["r2"], 3) if _has_sub_c else None,
+            "n_meses": _sub_c.get("n") if _has_sub_c else None,
+            "betas": _sub_c.get("betas") if _has_sub_c else None,
+            "chow": reg.get("chow"),
+        },
+        "cumulative_returns": {
+            "dates": [str(d.date()) for d in cum_target.index],
+            "target": [round(float(v), 4) for v in cum_target.values],
+            "bench": [round(float(v), 4) for v in cum_bench.values],
+        },
+    }
 
 
 def main():
