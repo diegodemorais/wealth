@@ -744,39 +744,35 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
-<h2>What-If Scenarios — Aporte / Retorno / Gasto</h2>
-<div class="grid-3" style="margin-bottom:12px">
-<div>
-  <div class="slider-row">
-    <label><span>Aporte Mensal</span><span id="wiAporteVal" class="pv">—</span></label>
-    <input type="range" id="wiAporte" min="10000" max="60000" step="1000" value="25000" oninput="updateWhatIf()">
-  </div>
+<h2>What-If Scenarios — Cenário / Gasto</h2>
+
+<!-- Seletor de cenário -->
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 3.0%)</button>
+  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (SWR 2.4%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 2.0%)</button>
 </div>
-<div>
-  <div class="slider-row">
-    <label><span>Retorno Equity Real</span><span id="wiRetornoVal">—</span></label>
-    <input type="range" id="wiRetorno" min="0" max="10" step="0.25" value="4.85" oninput="updateWhatIf()">
-  </div>
+
+<!-- Slider custo de vida -->
+<div class="slider-row">
+  <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$ 250k/ano</span></label>
+  <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
 </div>
-<div>
-  <div class="slider-row">
-    <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$250,000</span></label>
-    <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
-  </div>
-</div>
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+<!-- Output -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
   <div class="what-if-result">
-    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio projetado no FIRE Day</div>
-    <div class="big pv" id="wiResult">—</div>
-    <div id="wiResultSub" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">P(Sucesso 30 anos)</div>
+    <div class="big" id="wiPsucesso">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px">MC interpolado</div>
   </div>
-  <div class="what-if-result" style="border-color:var(--accent)">
-    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Aposentar mais cedo — Idade estimada</div>
-    <div class="big" id="wiFireAge" style="color:var(--accent)">—</div>
-    <div id="wiFireAgeNote" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
+  <div class="what-if-result">
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio necessário</div>
+    <div class="big pv" id="wiPatNecessario">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
   </div>
 </div>
+<div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
 </div>
 
 <!-- S21: POSIÇÕES -->
@@ -1329,27 +1325,27 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-10T22:06:27-03:00'); // BRT (UTC-3)
-const VERSION = '1.131';
+const GENERATED_AT = new Date('2026-04-10T22:44:44-03:00'); // BRT (UTC-3)
+const VERSION = '1.132';
 
 const DATA = {
-  "_generated": "2026-04-10T22:01:59",
-  "_generated_brt": "2026-04-10T22:01:59-03:00",
+  "_generated": "2026-04-10T22:08:38",
+  "_generated_brt": "2026-04-10T22:08:38-03:00",
   "date": "2026-04-10",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": null,
+    "precos_yfinance": "2026-04-10",
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-10",
     "fire_mc": "2026-04-10",
     "geral": "2026-04-10"
   },
-  "cambio": 5.156,
+  "cambio": 5.0126,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 47.46,
+      "price": 48.16,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -1357,7 +1353,7 @@ const DATA = {
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 24.22,
+      "price": 26.805,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -1365,7 +1361,7 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 111.63,
+      "price": 114.73,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1373,7 +1369,7 @@ const DATA = {
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 101.54,
+      "price": 105.53,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1381,7 +1377,7 @@ const DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.72,
+      "price": 84.405,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1389,7 +1385,7 @@ const DATA = {
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 46.28,
+      "price": 49.17,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1397,7 +1393,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1405,7 +1401,7 @@ const DATA = {
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 61.25,
+      "price": 62.86,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1413,7 +1409,7 @@ const DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 62.65,
+      "price": 65.93,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -1443,7 +1439,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3461896,
+    "patrimonio_atual": 3474999,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1537,28 +1533,28 @@ const DATA = {
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.1
+      "delta": 8.2
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.699999999999999
+      "delta": 4.7
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.5
+      "delta": 7.6
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.5999999999999996
+      "delta": 2.6
     }
   ],
   "fire": {
@@ -2951,7 +2947,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -3466,16 +3462,16 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 59.79,
-    "valor": 100208.04,
+    "preco": 62.09,
+    "valor": 104062.84,
     "preco_medio": 79.03,
-    "pnl_brl": -32246.24,
-    "pnl_pct": -24.35,
+    "pnl_brl": -28391.44,
+    "pnl_pct": -21.43,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.89,
+      "atual_pct": 2.99,
       "status": "verde"
     }
   },
@@ -3550,7 +3546,7 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 37.4,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
@@ -3558,7 +3554,7 @@ const DATA = {
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 23.9,
+      "atual": 24.5,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3566,7 +3562,7 @@ const DATA = {
       "alvo": 15.0
     },
     "HODL11": {
-      "atual": 2.9,
+      "atual": 3.0,
       "alvo": 3.0
     }
   },
@@ -3576,7 +3572,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 111.63,
+      "price": 114.73,
       "ucits": "AVGS.L"
     },
     {
@@ -3584,7 +3580,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 101.54,
+      "price": 105.53,
       "ucits": "AVGS.L"
     },
     {
@@ -3592,7 +3588,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.72,
+      "price": 84.405,
       "ucits": "AVGS.L"
     },
     {
@@ -3600,7 +3596,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 46.28,
+      "price": 49.17,
       "ucits": "AVEM.L"
     },
     {
@@ -3608,7 +3604,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "ucits": "AVEM.L"
     },
     {
@@ -3616,7 +3612,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 61.25,
+      "price": 62.86,
       "ucits": "AVEM.L"
     },
     {
@@ -3624,7 +3620,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 62.65,
+      "price": 65.93,
       "ucits": "JPGL.L"
     }
   ],
@@ -3638,10 +3634,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 608472,
-    "retorno_usd": 217429,
-    "pct_aportes": 64.3,
-    "pct_retorno": 35.7,
+    "patrimonio_equity_usd": 627724,
+    "retorno_usd": 236681,
+    "pct_aportes": 62.3,
+    "pct_retorno": 37.7,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-10"
@@ -3683,12 +3679,12 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.156
+    "cambio": 5.0126
   },
   "mercado": {
-    "cambio_brl_usd": 5.156,
+    "cambio_brl_usd": 5.0126,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": 0.0,
+    "cambio_mtd_pct": -2.78,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -4128,9 +4124,9 @@ const DATA = {
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.5,
+    "brasil_pct": 9.6,
     "composicao": {
-      "hodl11_brl": 100208,
+      "hodl11_brl": 104063,
       "rf_total_brl": 224406,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -4139,8 +4135,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 328626,
-    "total_portfolio_brl": 3461896,
+    "total_brasil_brl": 332481,
+    "total_portfolio_brl": 3474999,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4156,20 +4152,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 34173,
-      "delta_brl": 9173,
-      "delta_pct": 36.7,
+      "realizado_media_brl": 33223,
+      "delta_brl": 8223,
+      "delta_pct": 32.9,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.156,
+      "cambio_conversao": 5.0126,
       "por_ano_brl": {
-        "2026": 97964,
-        "2025": 291172,
-        "2024": 383976,
-        "2023": 405815,
-        "2022": 497005,
-        "2021": 340287
+        "2026": 95239,
+        "2025": 283074,
+        "2024": 373297,
+        "2023": 394529,
+        "2022": 483182,
+        "2021": 330823
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -5363,20 +5359,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3461896,
-      3634255,
-      3815195,
-      4005143,
-      4204548,
-      4413882,
-      4633637,
-      4864334,
-      5106516,
-      5360756,
-      5627654,
-      5907840,
-      6201976,
-      6510756,
+      3474999,
+      3647026,
+      3827569,
+      4017049,
+      4215909,
+      4424614,
+      4643651,
+      4873531,
+      5114791,
+      5367994,
+      5633732,
+      5912624,
+      6205324,
+      6512513,
       6834909,
       6924402,
       7018236,
@@ -5417,20 +5413,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3461896,
-      3772504,
-      4110981,
-      4479827,
-      4881766,
-      5319768,
-      5797068,
-      6317193,
-      6883984,
-      7501629,
-      8174690,
-      8908140,
-      9707396,
-      10578364,
+      3474999,
+      3785761,
+      4124314,
+      4493144,
+      4894957,
+      5332703,
+      5809596,
+      6329136,
+      6895138,
+      7511757,
+      8183519,
+      8915354,
+      9712637,
+      10581219,
       11527476,
       11844559,
       12177020,
@@ -5471,20 +5467,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3461896,
-      3908355,
-      4412392,
-      4981431,
-      5623856,
-      6349130,
-      7167938,
-      8092343,
-      9135962,
-      10314171,
-      11644326,
-      13146024,
-      14841385,
-      16755388,
+      3474999,
+      3922090,
+      4426703,
+      4996239,
+      5639052,
+      6364568,
+      7183428,
+      8107643,
+      9150766,
+      10328097,
+      11656902,
+      13156670,
+      14849397,
+      16759910,
       18916227,
       19591664,
       20299860,
@@ -5554,7 +5550,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.131"
+  "version": "1.132"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -6431,58 +6427,66 @@ window.updateContrib = function() {
 };
 
 // ── S19: What-If ──────────────────────────────────────────────
-window.updateWhatIf = function() {
-  // Inicializar sliders com valores de DATA se ainda não alterados
-  const wiA = document.getElementById('wiAporte');
-  const wiR = document.getElementById('wiRetorno');
-  const wiC = document.getElementById('wiCusto');
-  if (wiA && +wiA.value === 25000 && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
-  if (wiR && +wiR.value === 4.85 && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
-  if (wiC && +wiC.value === 250000 && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
-  const ap = +wiA.value;
-  const r = +wiR.value / 100;
-  const custo = +wiC.value;
-  document.getElementById('wiAporteVal').textContent = 'R$' + ap.toLocaleString('pt-BR');
-  document.getElementById('wiRetornoVal').textContent = (r*100).toFixed(2) + '%';
-  document.getElementById('wiCustoVal').textContent = 'R$' + custo.toLocaleString('pt-BR');
-  const rm = r / 12;
-  let p = DATA.premissas.patrimonio_atual;
-  const idadeAtual = DATA.premissas.idade_atual;
-  const anos = DATA.premissas.idade_fire_alvo - idadeAtual;
-  for (let m = 0; m < anos * 12; m++) p = p * (1 + rm) + ap;
-  document.getElementById('wiResult').textContent = `R$ ${(p/1000000).toFixed(2)}M`;
-  const swr = custo / p;
-  const _swrMeta = DATA.premissas.swr_gatilho ?? 0.024;
-  document.getElementById('wiResultSub').textContent = `SWR: ${(swr*100).toFixed(2)}% (meta ≤ ${(_swrMeta*100).toFixed(1)}%) · ${p >= PAT_GATILHO && swr <= _swrMeta ? '✅ Gatilho FIRE' : '⚠️ Abaixo do gatilho'}`;
-  document.getElementById('wiResultSub').style.color = (p >= PAT_GATILHO && swr <= _swrMeta) ? '#22c55e' : '#eab308';
+const SWR_BY_PRESET = { stress: 0.030, base: 0.024, fav: 0.020 };
 
-  // Compute earliest FIRE age: iterate monthly until gatilho escalonado AND swr <= meta
-  const _custoBase = DATA.premissas.custo_vida_base || 250000;
-  const _gatilhoEarly = PAT_GATILHO * (custo / _custoBase);
-  let pEarly = DATA.premissas.patrimonio_atual;
-  let mEarly = 0;
-  const maxMonths = (70 - idadeAtual) * 12;
-  while (mEarly < maxMonths) {
-    pEarly = pEarly * (1 + rm) + ap;
-    mEarly++;
-    if (pEarly >= _gatilhoEarly && custo / pEarly <= _swrMeta) break;
-  }
-  const fireAgeEarly = idadeAtual + mEarly / 12;
-  const fireAgeEl = document.getElementById('wiFireAge');
-  const fireAgeNoteEl = document.getElementById('wiFireAgeNote');
-  if (mEarly >= maxMonths) {
-    fireAgeEl.textContent = '> 70';
-    fireAgeNoteEl.textContent = 'Gatilho não atingido com esses parâmetros';
-    fireAgeEl.style.color = 'var(--red)';
-  } else {
-    const anosFire = Math.floor(fireAgeEarly);
-    const mesesFire = Math.round((fireAgeEarly - anosFire) * 12);
-    fireAgeEl.textContent = `${anosFire} anos`;
-    const diffVsPlano = DATA.premissas.idade_fire_alvo - fireAgeEarly;
-    const diffStr = diffVsPlano > 0.1 ? `${diffVsPlano.toFixed(1)} anos mais cedo` : diffVsPlano < -0.1 ? `${(-diffVsPlano).toFixed(1)} anos mais tarde` : 'no prazo';
-    fireAgeNoteEl.textContent = `${mesesFire > 0 ? anosFire + 'a ' + mesesFire + 'm' : anosFire + ' anos'} · ${diffStr} vs FIRE@${DATA.premissas.idade_fire_alvo}`;
-    fireAgeEl.style.color = diffVsPlano > 0 ? 'var(--green)' : diffVsPlano < 0 ? 'var(--red)' : 'var(--accent)';
-  }
+function interpolateFireMatrix(gastoAnual, swrTarget) {
+  const fm = DATA.fire_matrix;
+  if (!fm) return null;
+
+  const gastos = fm.gastos;
+  const swrs = fm.swrs;
+  const matrix = fm.matrix;
+
+  const g = Math.max(gastos[0], Math.min(gastos[gastos.length-1], gastoAnual));
+  const s = Math.max(swrs[0], Math.min(swrs[swrs.length-1], swrTarget));
+
+  let gi = gastos.findIndex(v => v >= g);
+  if (gi <= 0) gi = 1;
+  let si = swrs.findIndex(v => v >= s);
+  if (si <= 0) si = 1;
+
+  const g0 = gastos[gi-1], g1 = gastos[gi];
+  const s0 = swrs[si-1],   s1 = swrs[si];
+
+  const fmtKey = (sw, ga) => sw.toFixed(3) + '_' + Math.round(ga);
+  const p00 = matrix[fmtKey(s0, g0)] ?? null;
+  const p01 = matrix[fmtKey(s0, g1)] ?? null;
+  const p10 = matrix[fmtKey(s1, g0)] ?? null;
+  const p11 = matrix[fmtKey(s1, g1)] ?? null;
+
+  if (p00 == null || p01 == null || p10 == null || p11 == null) return null;
+
+  const tg = (g - g0) / (g1 - g0);
+  const ts = (s - s0) / (s1 - s0);
+  const p = p00*(1-tg)*(1-ts) + p01*tg*(1-ts) + p10*(1-tg)*ts + p11*tg*ts;
+  return p;
+}
+
+window.setWiPreset = function(p) {
+  window._wiPreset = p;
+  document.querySelectorAll('.wi-preset-btn').forEach(b => b.classList.toggle('active', b.dataset.preset === p));
+  updateWhatIf();
+};
+
+window.updateWhatIf = function() {
+  const wiC = document.getElementById('wiCusto');
+  if (wiC && +wiC.value === 250000 && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
+  const gasto = +wiC.value;
+  const preset = window._wiPreset || 'base';
+  const swr = SWR_BY_PRESET[preset];
+
+  document.getElementById('wiCustoVal').textContent = 'R$ ' + (gasto/1000).toFixed(0) + 'k/ano';
+
+  const pSuccesso = interpolateFireMatrix(gasto, swr);
+  const patNecessario = gasto / swr;
+
+  const pPct = pSuccesso != null ? (pSuccesso * 100).toFixed(1) : '--';
+  const cor = pSuccesso == null ? 'var(--muted)' : pSuccesso >= 0.90 ? 'var(--green)' : pSuccesso >= 0.80 ? 'var(--yellow)' : 'var(--red)';
+  document.getElementById('wiPsucesso').textContent = pPct + (pSuccesso != null ? '%' : '');
+  document.getElementById('wiPsucesso').style.color = cor;
+
+  document.getElementById('wiPatNecessario').textContent = 'R$ ' + (patNecessario/1e6).toFixed(2) + 'M';
+  document.getElementById('wiSWRLabel').textContent = 'SWR ' + (swr*100).toFixed(1) + '%';
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -9226,7 +9230,6 @@ function _applyPrivacyCharts(isPrivate) {
   const _sliders = [
     { id: 'simAporte', numId: 'simAporteVal' },
     { id: 'simCusto',  numId: 'simCustoVal' },
-    { id: 'wiAporte',  numId: 'wiAporteVal' },
     { id: 'wiCusto',   numId: 'wiCustoVal' },
   ];
   _sliders.forEach(({ id, numId }) => {
@@ -9278,13 +9281,9 @@ function _initTabCharts(tab) {
     plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
                buildFireMatrix, buildSwrPercentiles, buildAporteSensitivity, buildLumpyEvents,
                function() {
-                 const wiA = document.getElementById('wiAporte');
-                 const wiR = document.getElementById('wiRetorno');
                  const wiC = document.getElementById('wiCusto');
-                 if (wiA && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
-                 if (wiR && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
                  if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
-                 [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
+                 if (!window._wiPreset) window._wiPreset = 'base';
                  updateWhatIf();
                }],
     projecao: [() => { _applyFireAxes(); }, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,

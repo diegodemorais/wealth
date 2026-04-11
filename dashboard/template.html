@@ -744,39 +744,35 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S19: WHAT-IF SCENARIOS -->
 <div class="section" data-in-tab="plan">
-<h2>What-If Scenarios — Aporte / Retorno / Gasto</h2>
-<div class="grid-3" style="margin-bottom:12px">
-<div>
-  <div class="slider-row">
-    <label><span>Aporte Mensal</span><span id="wiAporteVal" class="pv">—</span></label>
-    <input type="range" id="wiAporte" min="10000" max="60000" step="1000" value="25000" oninput="updateWhatIf()">
-  </div>
+<h2>What-If Scenarios — Cenário / Gasto</h2>
+
+<!-- Seletor de cenário -->
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 3.0%)</button>
+  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (SWR 2.4%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 2.0%)</button>
 </div>
-<div>
-  <div class="slider-row">
-    <label><span>Retorno Equity Real</span><span id="wiRetornoVal">—</span></label>
-    <input type="range" id="wiRetorno" min="0" max="10" step="0.25" value="4.85" oninput="updateWhatIf()">
-  </div>
+
+<!-- Slider custo de vida -->
+<div class="slider-row">
+  <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$ 250k/ano</span></label>
+  <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
 </div>
-<div>
-  <div class="slider-row">
-    <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$250,000</span></label>
-    <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
-  </div>
-</div>
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+<!-- Output -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
   <div class="what-if-result">
-    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio projetado no FIRE Day</div>
-    <div class="big pv" id="wiResult">—</div>
-    <div id="wiResultSub" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">P(Sucesso 30 anos)</div>
+    <div class="big" id="wiPsucesso">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px">MC interpolado</div>
   </div>
-  <div class="what-if-result" style="border-color:var(--accent)">
-    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Aposentar mais cedo — Idade estimada</div>
-    <div class="big" id="wiFireAge" style="color:var(--accent)">—</div>
-    <div id="wiFireAgeNote" style="font-size:.75rem;color:var(--muted);margin-top:4px">—</div>
+  <div class="what-if-result">
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio necessário</div>
+    <div class="big pv" id="wiPatNecessario">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
   </div>
 </div>
+<div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
 </div>
 
 <!-- S21: POSIÇÕES -->
@@ -2205,58 +2201,66 @@ window.updateContrib = function() {
 };
 
 // ── S19: What-If ──────────────────────────────────────────────
-window.updateWhatIf = function() {
-  // Inicializar sliders com valores de DATA se ainda não alterados
-  const wiA = document.getElementById('wiAporte');
-  const wiR = document.getElementById('wiRetorno');
-  const wiC = document.getElementById('wiCusto');
-  if (wiA && +wiA.value === 25000 && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
-  if (wiR && +wiR.value === 4.85 && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
-  if (wiC && +wiC.value === 250000 && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
-  const ap = +wiA.value;
-  const r = +wiR.value / 100;
-  const custo = +wiC.value;
-  document.getElementById('wiAporteVal').textContent = 'R$' + ap.toLocaleString('pt-BR');
-  document.getElementById('wiRetornoVal').textContent = (r*100).toFixed(2) + '%';
-  document.getElementById('wiCustoVal').textContent = 'R$' + custo.toLocaleString('pt-BR');
-  const rm = r / 12;
-  let p = DATA.premissas.patrimonio_atual;
-  const idadeAtual = DATA.premissas.idade_atual;
-  const anos = DATA.premissas.idade_fire_alvo - idadeAtual;
-  for (let m = 0; m < anos * 12; m++) p = p * (1 + rm) + ap;
-  document.getElementById('wiResult').textContent = `R$ ${(p/1000000).toFixed(2)}M`;
-  const swr = custo / p;
-  const _swrMeta = DATA.premissas.swr_gatilho ?? 0.024;
-  document.getElementById('wiResultSub').textContent = `SWR: ${(swr*100).toFixed(2)}% (meta ≤ ${(_swrMeta*100).toFixed(1)}%) · ${p >= PAT_GATILHO && swr <= _swrMeta ? '✅ Gatilho FIRE' : '⚠️ Abaixo do gatilho'}`;
-  document.getElementById('wiResultSub').style.color = (p >= PAT_GATILHO && swr <= _swrMeta) ? '#22c55e' : '#eab308';
+const SWR_BY_PRESET = { stress: 0.030, base: 0.024, fav: 0.020 };
 
-  // Compute earliest FIRE age: iterate monthly until gatilho escalonado AND swr <= meta
-  const _custoBase = DATA.premissas.custo_vida_base || 250000;
-  const _gatilhoEarly = PAT_GATILHO * (custo / _custoBase);
-  let pEarly = DATA.premissas.patrimonio_atual;
-  let mEarly = 0;
-  const maxMonths = (70 - idadeAtual) * 12;
-  while (mEarly < maxMonths) {
-    pEarly = pEarly * (1 + rm) + ap;
-    mEarly++;
-    if (pEarly >= _gatilhoEarly && custo / pEarly <= _swrMeta) break;
-  }
-  const fireAgeEarly = idadeAtual + mEarly / 12;
-  const fireAgeEl = document.getElementById('wiFireAge');
-  const fireAgeNoteEl = document.getElementById('wiFireAgeNote');
-  if (mEarly >= maxMonths) {
-    fireAgeEl.textContent = '> 70';
-    fireAgeNoteEl.textContent = 'Gatilho não atingido com esses parâmetros';
-    fireAgeEl.style.color = 'var(--red)';
-  } else {
-    const anosFire = Math.floor(fireAgeEarly);
-    const mesesFire = Math.round((fireAgeEarly - anosFire) * 12);
-    fireAgeEl.textContent = `${anosFire} anos`;
-    const diffVsPlano = DATA.premissas.idade_fire_alvo - fireAgeEarly;
-    const diffStr = diffVsPlano > 0.1 ? `${diffVsPlano.toFixed(1)} anos mais cedo` : diffVsPlano < -0.1 ? `${(-diffVsPlano).toFixed(1)} anos mais tarde` : 'no prazo';
-    fireAgeNoteEl.textContent = `${mesesFire > 0 ? anosFire + 'a ' + mesesFire + 'm' : anosFire + ' anos'} · ${diffStr} vs FIRE@${DATA.premissas.idade_fire_alvo}`;
-    fireAgeEl.style.color = diffVsPlano > 0 ? 'var(--green)' : diffVsPlano < 0 ? 'var(--red)' : 'var(--accent)';
-  }
+function interpolateFireMatrix(gastoAnual, swrTarget) {
+  const fm = DATA.fire_matrix;
+  if (!fm) return null;
+
+  const gastos = fm.gastos;
+  const swrs = fm.swrs;
+  const matrix = fm.matrix;
+
+  const g = Math.max(gastos[0], Math.min(gastos[gastos.length-1], gastoAnual));
+  const s = Math.max(swrs[0], Math.min(swrs[swrs.length-1], swrTarget));
+
+  let gi = gastos.findIndex(v => v >= g);
+  if (gi <= 0) gi = 1;
+  let si = swrs.findIndex(v => v >= s);
+  if (si <= 0) si = 1;
+
+  const g0 = gastos[gi-1], g1 = gastos[gi];
+  const s0 = swrs[si-1],   s1 = swrs[si];
+
+  const fmtKey = (sw, ga) => sw.toFixed(3) + '_' + Math.round(ga);
+  const p00 = matrix[fmtKey(s0, g0)] ?? null;
+  const p01 = matrix[fmtKey(s0, g1)] ?? null;
+  const p10 = matrix[fmtKey(s1, g0)] ?? null;
+  const p11 = matrix[fmtKey(s1, g1)] ?? null;
+
+  if (p00 == null || p01 == null || p10 == null || p11 == null) return null;
+
+  const tg = (g - g0) / (g1 - g0);
+  const ts = (s - s0) / (s1 - s0);
+  const p = p00*(1-tg)*(1-ts) + p01*tg*(1-ts) + p10*(1-tg)*ts + p11*tg*ts;
+  return p;
+}
+
+window.setWiPreset = function(p) {
+  window._wiPreset = p;
+  document.querySelectorAll('.wi-preset-btn').forEach(b => b.classList.toggle('active', b.dataset.preset === p));
+  updateWhatIf();
+};
+
+window.updateWhatIf = function() {
+  const wiC = document.getElementById('wiCusto');
+  if (wiC && +wiC.value === 250000 && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
+  const gasto = +wiC.value;
+  const preset = window._wiPreset || 'base';
+  const swr = SWR_BY_PRESET[preset];
+
+  document.getElementById('wiCustoVal').textContent = 'R$ ' + (gasto/1000).toFixed(0) + 'k/ano';
+
+  const pSuccesso = interpolateFireMatrix(gasto, swr);
+  const patNecessario = gasto / swr;
+
+  const pPct = pSuccesso != null ? (pSuccesso * 100).toFixed(1) : '--';
+  const cor = pSuccesso == null ? 'var(--muted)' : pSuccesso >= 0.90 ? 'var(--green)' : pSuccesso >= 0.80 ? 'var(--yellow)' : 'var(--red)';
+  document.getElementById('wiPsucesso').textContent = pPct + (pSuccesso != null ? '%' : '');
+  document.getElementById('wiPsucesso').style.color = cor;
+
+  document.getElementById('wiPatNecessario').textContent = 'R$ ' + (patNecessario/1e6).toFixed(2) + 'M';
+  document.getElementById('wiSWRLabel').textContent = 'SWR ' + (swr*100).toFixed(1) + '%';
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -5000,7 +5004,6 @@ function _applyPrivacyCharts(isPrivate) {
   const _sliders = [
     { id: 'simAporte', numId: 'simAporteVal' },
     { id: 'simCusto',  numId: 'simCustoVal' },
-    { id: 'wiAporte',  numId: 'wiAporteVal' },
     { id: 'wiCusto',   numId: 'wiCustoVal' },
   ];
   _sliders.forEach(({ id, numId }) => {
@@ -5052,13 +5055,9 @@ function _initTabCharts(tab) {
     plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
                buildFireMatrix, buildSwrPercentiles, buildAporteSensitivity, buildLumpyEvents,
                function() {
-                 const wiA = document.getElementById('wiAporte');
-                 const wiR = document.getElementById('wiRetorno');
                  const wiC = document.getElementById('wiCusto');
-                 if (wiA && DATA.premissas?.aporte_mensal) wiA.value = DATA.premissas.aporte_mensal;
-                 if (wiR && DATA.premissas?.retorno_equity_base) wiR.value = (DATA.premissas.retorno_equity_base * 100).toFixed(2);
                  if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
-                 [wiA, wiR, wiC].forEach(el => { if (el) el.dispatchEvent(new Event('input')); });
+                 if (!window._wiPreset) window._wiPreset = 'base';
                  updateWhatIf();
                }],
     projecao: [() => { _applyFireAxes(); }, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
