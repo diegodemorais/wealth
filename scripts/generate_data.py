@@ -2141,27 +2141,39 @@ def main():
             # Fallback: usar pfire_base genérico (pode ser qualquer rodada)
             pfire53 = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
 
-    # ─── Mini-log: últimas operações IBKR ────────────────────────────────────
+    # ─── Mini-log: últimas operações IBKR + XP ───────────────────────────────
     def _build_minilog():
-        """Retorna as 5 últimas operações: compras de lotes + depósitos."""
+        """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas)"""
         entries = []
+        # XP operações
+        xp_path = ROOT / "dados" / "xp" / "operacoes.json"
+        if xp_path.exists():
+            xp_ops = json.loads(xp_path.read_text())
+            for op in xp_ops:
+                tipo = "Compra XP" if op.get("cv") == "C" else "Venda XP"
+                entries.append({"data": op["data"], "tipo": tipo,
+                                 "ativo": op.get("ticker", op.get("ativo_xp", "")),
+                                 "valor": f"R$ {op['valor']:,.0f}",
+                                 "corretora": "XP"})
+        # IBKR depósitos
         if APORTES_PATH.exists():
             ap = json.loads(APORTES_PATH.read_text())
-            for dep in ap.get("depositos", [])[:5]:
+            for dep in ap.get("depositos", []):
                 entries.append({"data": dep["data"], "tipo": "Depósito IBKR",
-                                 "ativo": "USD", "valor": f"${dep['usd']:,.0f}"})
+                                 "ativo": "USD", "valor": f"${dep['usd']:,.0f}",
+                                 "corretora": "IBKR"})
+        # IBKR lote compras
         if LOTES_PATH.exists():
             lotes_raw = json.loads(LOTES_PATH.read_text())
-            compras = []
             for ticker, info in lotes_raw.items():
                 for lot in info.get("lotes", []):
                     if lot.get("qty", 0) >= 1:
-                        compras.append({"data": lot["data"], "tipo": "Compra",
-                                        "ativo": ticker, "valor": f"{lot['qty']:.0f} × ${lot['custo_por_share']:.2f}"})
-            compras.sort(key=lambda x: x["data"], reverse=True)
-            entries += compras[:5]
+                        entries.append({"data": lot["data"], "tipo": "Compra",
+                                        "ativo": ticker,
+                                        "valor": f"{lot['qty']:.0f} × ${lot['custo_por_share']:.2f}",
+                                        "corretora": "IBKR"})
         entries.sort(key=lambda x: x["data"], reverse=True)
-        return entries[:5]
+        return entries[:10]
 
     # Macro — lê macro_snapshot.json (gerado por reconstruct_macro.py)
     # Fallback: calcular inline (get_macro_data)

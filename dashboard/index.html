@@ -841,9 +841,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- PREMISSAS VS REALIZADO -->
 <div class="section" data-in-tab="perf" id="premissasVsRealizadoSection">
 <h2>Premissas vs Realizado</h2>
-<table class="pvr-table" id="premissasVsRealizadoBody">
-<!-- gerado por buildPremissasVsRealizado() -->
-</table>
+<div id="premissasVsRealizadoBody"></div>
 <div class="src" id="premissasVsRealizadoSrc">Premissas: modelo FIRE · Aportes: IBKR · CAGR: backtest histórico</div>
 </div>
 
@@ -1137,7 +1135,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="section" data-in-tab="aloc">
 <h2>Últimas Operações</h2>
 <div id="minilogBody" style="font-size:.8rem"></div>
-<div class="src">Fonte: extrato IBKR</div>
+<div class="src">Fonte: extrato IBKR + XP</div>
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
@@ -1341,27 +1339,27 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T06:59:11-03:00'); // BRT (UTC-3)
-const VERSION = '1.139';
+const GENERATED_AT = new Date('2026-04-11T07:06:11-03:00'); // BRT (UTC-3)
+const VERSION = '1.140';
 
 const DATA = {
-  "_generated": "2026-04-10T23:59:57",
-  "_generated_brt": "2026-04-10T23:59:57-03:00",
-  "date": "2026-04-10",
+  "_generated": "2026-04-11T07:06:11",
+  "_generated_brt": "2026-04-11T07:06:11-03:00",
+  "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": "2026-04-10",
+    "precos_yfinance": "2026-04-11",
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-10",
-    "fire_mc": "2026-04-10",
-    "geral": "2026-04-10"
+    "fire_mc": "2026-04-11",
+    "geral": "2026-04-11"
   },
   "cambio": 5.0126,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.16,
+      "price": 48.4,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -1369,7 +1367,7 @@ const DATA = {
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.805,
+      "price": 26.9025,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -1393,7 +1391,7 @@ const DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.405,
+      "price": 84.68,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1401,7 +1399,7 @@ const DATA = {
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.17,
+      "price": 49.7,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1425,7 +1423,7 @@ const DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.93,
+      "price": 66.23,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -1455,7 +1453,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3474999,
+    "patrimonio_atual": 3487412,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2424,7 +2422,7 @@ const DATA = {
       231.31,
       239.2,
       222.65,
-      235.03
+      235.7
     ],
     "shadowA": [
       96.75,
@@ -2507,22 +2505,22 @@ const DATA = {
       219.2,
       222.31,
       205.09,
-      217.59
+      218.64
     ],
     "metrics": {
       "target": {
-        "cagr": 13.5,
-        "sharpe": 0.55,
-        "sortino": 0.75,
+        "cagr": 13.54,
+        "sharpe": 0.56,
+        "sortino": 0.76,
         "maxdd": -27.23,
-        "vol": 16.87
+        "vol": 16.89
       },
       "shadowA": {
-        "cagr": 12.21,
+        "cagr": 12.29,
         "sharpe": 0.53,
-        "sortino": 0.8,
+        "sortino": 0.81,
         "maxdd": -24.29,
-        "vol": 15.04
+        "vol": 15.07
       }
     },
     "nota_proxy": "⚠️ 2019-08–2026-04: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos."
@@ -2963,7 +2961,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -3042,7 +3040,7 @@ const DATA = {
       689.73,
       701.37,
       660.44,
-      691.67
+      690.95
     ],
     "shadowA": [
       98.02,
@@ -3216,7 +3214,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -3300,18 +3298,18 @@ const DATA = {
       646.9,
       654.74,
       614.61,
-      644.24
+      644.67
     ],
     "metrics": {
       "target": {
-        "cagr": 9.49,
+        "cagr": 9.48,
         "sharpe": 0.35,
         "sortino": 0.45,
         "maxdd": -53.3,
         "vol": 16.17
       },
       "shadowA": {
-        "cagr": 9.12,
+        "cagr": 9.13,
         "sharpe": 0.34,
         "sortino": 0.44,
         "maxdd": -53.39,
@@ -3487,7 +3485,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.99,
+      "atual_pct": 2.98,
       "status": "verde"
     }
   },
@@ -3566,11 +3564,11 @@ const DATA = {
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.0,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.5,
+      "atual": 24.6,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3604,7 +3602,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.405,
+      "price": 84.68,
       "ucits": "AVGS.L"
     },
     {
@@ -3612,7 +3610,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.17,
+      "price": 49.7,
       "ucits": "AVEM.L"
     },
     {
@@ -3636,7 +3634,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.93,
+      "price": 66.23,
       "ucits": "JPGL.L"
     }
   ],
@@ -3650,13 +3648,13 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 627724,
-    "retorno_usd": 236681,
-    "pct_aportes": 62.3,
-    "pct_retorno": 37.7,
+    "patrimonio_equity_usd": 630200,
+    "retorno_usd": 239157,
+    "pct_aportes": 62.1,
+    "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
-    "updated": "2026-04-10"
+    "updated": "2026-04-11"
   },
   "shadows": {
     "q1_2026": {
@@ -3706,38 +3704,78 @@ const DATA = {
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
-    "updated": "2026-04-10"
+    "updated": "2026-04-11"
   },
   "minilog": [
     {
       "data": "2026-03-13",
       "tipo": "Depósito IBKR",
       "ativo": "USD",
-      "valor": "$5,600"
+      "valor": "$5,600",
+      "corretora": "IBKR"
     },
     {
       "data": "2026-03-13",
       "tipo": "Compra",
       "ativo": "AVGS",
-      "valor": "233 × $24.93"
+      "valor": "233 × $24.93",
+      "corretora": "IBKR"
     },
     {
       "data": "2026-03-09",
       "tipo": "Compra",
       "ativo": "SWRD",
-      "valor": "361 × $46.84"
+      "valor": "361 × $46.84",
+      "corretora": "IBKR"
     },
     {
       "data": "2026-03-06",
       "tipo": "Depósito IBKR",
       "ativo": "USD",
-      "valor": "$5,000"
+      "valor": "$5,000",
+      "corretora": "IBKR"
+    },
+    {
+      "data": "2026-02-23",
+      "tipo": "Compra XP",
+      "ativo": "HODL11",
+      "valor": "R$ 15,044",
+      "corretora": "XP"
     },
     {
       "data": "2026-01-29",
       "tipo": "Depósito IBKR",
       "ativo": "USD",
-      "valor": "$3,750"
+      "valor": "$3,750",
+      "corretora": "IBKR"
+    },
+    {
+      "data": "2026-01-26",
+      "tipo": "Compra XP",
+      "ativo": "HODL11",
+      "valor": "R$ 29,519",
+      "corretora": "XP"
+    },
+    {
+      "data": "2026-01-26",
+      "tipo": "Compra XP",
+      "ativo": "HODL11",
+      "valor": "R$ 3,915",
+      "corretora": "XP"
+    },
+    {
+      "data": "2026-01-26",
+      "tipo": "Venda XP",
+      "ativo": "B5P211",
+      "valor": "R$ 28,434",
+      "corretora": "XP"
+    },
+    {
+      "data": "2026-01-26",
+      "tipo": "Venda XP",
+      "ativo": "B5P211",
+      "valor": "R$ 4,091",
+      "corretora": "XP"
     }
   ],
   "wellness_config": {
@@ -4140,7 +4178,7 @@ const DATA = {
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.6,
+    "brasil_pct": 9.5,
     "composicao": {
       "hodl11_brl": 104063,
       "rf_total_brl": 224406,
@@ -4152,7 +4190,7 @@ const DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 332481,
-    "total_portfolio_brl": 3474999,
+    "total_portfolio_brl": 3487412,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4162,8 +4200,8 @@ const DATA = {
       "twr_nominal_brl_cagr_pct": 12.82,
       "ipca_cagr_periodo_pct": 5.9,
       "periodo_anos": 5.0,
-      "backtest_nominal_usd_pct": 13.5,
-      "benchmark_vwra_nominal_usd_pct": 12.21,
+      "backtest_nominal_usd_pct": 13.54,
+      "benchmark_vwra_nominal_usd_pct": 12.29,
       "nota": "Premissa = retorno real em BRL (pós-IPCA, pós-depreciação cambial 0.5%/ano). Realizado = TWR anualizado BRL deflacionado pelo IPCA do período (comparação correta). Backtest USD = nominal em USD (inclui inflação US ~2-3%/ano, referência apenas)."
     },
     "aporte_mensal": {
@@ -6590,20 +6628,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3474999,
-      3647026,
-      3827569,
-      4017049,
-      4215909,
-      4424614,
-      4643651,
-      4873531,
-      5114791,
-      5367994,
-      5633732,
-      5912624,
-      6205324,
-      6512513,
+      3487412,
+      3659121,
+      3839285,
+      4028319,
+      4226661,
+      4434768,
+      4653122,
+      4882227,
+      5122613,
+      5374834,
+      5639474,
+      5917144,
+      6208485,
+      6514172,
       6834909,
       6924402,
       7018236,
@@ -6644,20 +6682,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3474999,
-      3785761,
-      4124314,
-      4493144,
-      4894957,
-      5332703,
-      5809596,
-      6329136,
-      6895138,
-      7511757,
-      8183519,
-      8915354,
-      9712637,
-      10581219,
+      3487412,
+      3798317,
+      4136939,
+      4505749,
+      4907440,
+      5344941,
+      5821445,
+      6340430,
+      6905683,
+      7521329,
+      8191860,
+      8922169,
+      9717586,
+      10583914,
       11527476,
       11844559,
       12177020,
@@ -6698,20 +6736,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3474999,
-      3922090,
-      4426703,
-      4996239,
-      5639052,
-      6364568,
-      7183428,
-      8107643,
-      9150766,
-      10328097,
-      11656902,
-      13156670,
-      14849397,
-      16759910,
+      3487412,
+      3935097,
+      4440253,
+      5010256,
+      5653432,
+      6379174,
+      7198080,
+      8122110,
+      9164760,
+      10341258,
+      11668784,
+      13166727,
+      14856963,
+      16764179,
       18916227,
       19591664,
       20299860,
@@ -6781,7 +6819,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.139"
+  "version": "1.140"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -7905,20 +7943,22 @@ function buildMinilog() {
   const ops = DATA.minilog || [];
   if (!ops.length) { el.innerHTML = '<span style="color:var(--muted)">Sem operações recentes</span>'; return; }
   el.innerHTML = `<table style="width:100%;border-collapse:collapse">
-    <thead><tr style="font-size:.7rem;color:var(--muted)">
-      <th style="text-align:left;padding:4px 8px">Data</th>
-      <th style="text-align:left;padding:4px 8px">Tipo</th>
-      <th style="text-align:left;padding:4px 8px">Ativo</th>
-      <th style="text-align:right;padding:4px 8px">Valor</th>
-    </tr></thead>
-    <tbody>` +
-    ops.map(op => `<tr style="border-top:1px solid rgba(71,85,105,.2)">
-      <td style="padding:4px 8px;color:var(--muted)">${op.data}</td>
-      <td style="padding:4px 8px">${op.tipo}</td>
-      <td style="padding:4px 8px"><strong>${op.ativo}</strong></td>
-      <td style="padding:4px 8px;text-align:right;color:var(--accent)" class="pv">${op.valor}</td>
-    </tr>`).join('') +
-    `</tbody></table>`;
+  <thead><tr style="font-size:.7rem;color:var(--muted)">
+    <th style="text-align:left;padding:4px 8px">Data</th>
+    <th style="text-align:left;padding:4px 8px">Tipo</th>
+    <th style="text-align:left;padding:4px 8px">Ativo</th>
+    <th style="text-align:left;padding:4px 8px">Corretora</th>
+    <th style="text-align:right;padding:4px 8px">Valor</th>
+  </tr></thead>
+  <tbody>` +
+  ops.map(op => `<tr style="border-top:1px solid rgba(71,85,105,.2)">
+    <td style="padding:4px 8px;color:var(--muted)">${op.data}</td>
+    <td style="padding:4px 8px">${op.tipo}</td>
+    <td style="padding:4px 8px"><strong>${op.ativo}</strong></td>
+    <td style="padding:4px 8px;color:var(--muted)">${op.corretora ?? 'IBKR'}</td>
+    <td style="padding:4px 8px;text-align:right;color:var(--accent)" class="pv">${op.valor}</td>
+  </tr>`).join('') +
+  `</tbody></table>`;
 }
 
 // ── S22: Calculadora Cascade ──────────────────────────────────
@@ -11633,49 +11673,48 @@ function buildPremissasVsRealizado() {
   var pvr = DATA.premissas_vs_realizado;
   if (!pvr) { document.getElementById('premissasVsRealizadoSection').style.display = 'none'; return; }
 
-  var html = '<thead><tr><th>Variável</th><th>Premissa</th><th>Realizado (real BRL, pós-IPCA)</th><th>Delta</th><th>Nota</th></tr></thead><tbody>';
+  var cards = '';
 
-  // Retorno equity
+  // Card 1 — Retorno Equity
   var re = pvr.retorno_equity;
   if (re) {
-    var premR = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
-    // Usar TWR real BRL (pós-IPCA) como "Realizado" — base compatível com a premissa
-    var twrReal = re.twr_real_brl_pct != null ? re.twr_real_brl_pct.toFixed(2) + '% real BRL (TWR)' : '--';
-    var nominalSub = re.twr_nominal_brl_cagr_pct != null ? ' · nom BRL: ' + re.twr_nominal_brl_cagr_pct.toFixed(2) + '%' : '';
-    var benchUsd = re.backtest_nominal_usd_pct != null ? ' · backtest nom USD: ' + re.backtest_nominal_usd_pct.toFixed(2) + '%' : '';
-    var benchR = re.benchmark_vwra_nominal_usd_pct != null ? ' (VWRA ' + re.benchmark_vwra_nominal_usd_pct.toFixed(2) + '%)' : '';
-    // Delta: TWR real BRL vs premissa real BRL (comparação apple-to-apple)
     var deltaREq = (re.twr_real_brl_pct != null && re.premissa_real_brl_pct != null)
       ? (re.twr_real_brl_pct - re.premissa_real_brl_pct) : null;
-    var deltaRStr = deltaREq != null ? (deltaREq >= 0 ? '+' : '') + deltaREq.toFixed(2) + 'pp' : 'n/a';
-    var deltaRColor = deltaREq != null ? (deltaREq >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--muted)';
+    var mainColorRE = re.twr_real_brl_pct != null ? (re.twr_real_brl_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
+    var mainRE = re.twr_real_brl_pct != null ? re.twr_real_brl_pct.toFixed(2) + '%' : '--';
+    var premRE = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
+    var deltaREStr = deltaREq != null ? (deltaREq >= 0 ? '+' : '') + deltaREq.toFixed(2) + 'pp' : 'n/a';
     var nAnos = re.periodo_anos != null ? re.periodo_anos.toFixed(1) : null;
-    var notaJanela = nAnos
-      ? 'Retornos em termos reais BRL (pós-IPCA). Janela de ' + nAnos + ' anos — insuficiente para validar premissa estrutural de longo prazo.'
-      : (re.nota || '--');
-    html += '<tr><td>Retorno Equity</td><td class="num">' + premR + '</td><td class="num">' + twrReal + nominalSub + benchUsd + benchR + '</td><td class="num" style="color:' + deltaRColor + '">' + deltaRStr + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + notaJanela + '</td></tr>';
+    var notaRE = nAnos ? 'Janela ' + nAnos + 'a — curta para validar premissa longo prazo' : (re.nota || '');
+    cards += '<div class="kpi-card">' +
+      '<div class="kpi-label">Retorno Equity (TWR real BRL)</div>' +
+      '<div class="kpi-main pv" style="color:' + mainColorRE + '">' + mainRE + '</div>' +
+      '<div style="font-size:.65rem;color:var(--muted);margin-top:4px">vs premissa: ' + premRE + ' · delta: ' + deltaREStr + '</div>' +
+      '<div style="font-size:.6rem;color:var(--muted);margin-top:6px">' + notaRE + '</div>' +
+      '</div>';
   }
 
-  // Aporte mensal
+  // Card 2 — Aporte Mensal
   var am = pvr.aporte_mensal;
   if (am) {
-    var premA = am.premissa_brl != null ? 'R$ ' + (am.premissa_brl / 1000).toFixed(0) + 'k/mês' : '--';
-    var realA = am.realizado_media_brl != null ? 'R$ ' + (am.realizado_media_brl / 1000).toFixed(1) + 'k/mês' : '--';
-    var deltaA = am.delta_pct != null ? (am.delta_pct > 0 ? '+' : '') + am.delta_pct.toFixed(1) + '%' : '--';
-    var deltaColor = am.delta_pct != null ? (am.delta_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
-    html += '<tr><td>Aporte Mensal</td><td class="num pv">' + premA + '</td><td class="num pv">' + realA + '</td><td class="num" style="color:' + deltaColor + '">' + deltaA + '</td><td style="font-size:.6rem;color:var(--muted);max-width:200px">' + (am.nota || '--') + '</td></tr>';
-
-    // Breakdown por ano (se disponível)
+    var deltaAmSign = am.delta_pct != null ? (am.delta_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
+    var mainAM = am.realizado_media_brl != null ? 'R$ ' + (am.realizado_media_brl / 1000).toFixed(1) + 'k/mês' : '--';
+    var premAM = am.premissa_brl != null ? 'R$ ' + (am.premissa_brl / 1000).toFixed(0) + 'k/mês' : '--';
+    var deltaAMStr = am.delta_pct != null ? (am.delta_pct > 0 ? '+' : '') + am.delta_pct.toFixed(1) + '%' : '--';
+    var notaAM = '';
     if (am.por_ano_brl) {
-      var anos = Object.entries(am.por_ano_brl).sort(function(a, b) { return Number(b[0]) - Number(a[0]); });
-      html += '<tr><td colspan="5" style="padding-top:8px;font-size:.68rem;color:var(--muted)" class="pv">Aportes por ano (IBKR equity): ' +
-        anos.map(function(entry) { return entry[0] + ': R$' + (entry[1] / 1000).toFixed(0) + 'k'; }).join(' · ') +
-        '</td></tr>';
+      var anos = Object.entries(am.por_ano_brl).sort(function(a, b) { return Number(b[0]) - Number(a[0]); }).slice(0, 2);
+      notaAM = anos.map(function(entry) { return entry[0] + ': R$' + (entry[1] / 1000).toFixed(0) + 'k'; }).join(' · ');
     }
+    cards += '<div class="kpi-card">' +
+      '<div class="kpi-label">Aporte Mensal (média)</div>' +
+      '<div class="kpi-main pv" style="color:' + deltaAmSign + '">' + mainAM + '</div>' +
+      '<div style="font-size:.65rem;color:var(--muted);margin-top:4px">vs premissa: ' + premAM + ' · delta: ' + deltaAMStr + '</div>' +
+      '<div style="font-size:.6rem;color:var(--muted);margin-top:6px">' + notaAM + '</div>' +
+      '</div>';
   }
 
-  html += '</tbody>';
-  el.innerHTML = html;
+  el.innerHTML = '<div class="grid-2">' + cards + '</div>';
 }
 
 // ═══════════════════════════════════════════════════════════════
