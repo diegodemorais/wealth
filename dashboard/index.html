@@ -911,20 +911,13 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
 
-<!-- P2: TAX — IR DIFERIDO -->
+<!-- IR DIFERIDO + TLH — merged -->
 <div class="section collapsible" id="taxIrSection" data-in-tab="aloc">
-<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Ganhos não Realizados (ETFs UCITS) <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Alvo &amp; Transitório <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
 <div class="collapse-body">
-<div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
-<div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
+<div id="taxIrBody"><!-- gerado por buildIrDiferido() --></div>
+<div class="src">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat. PTAX histórica por lote. Transitórios: diluir via aportes, não comprar mais. TLH: ⚠️ = perda ≥ 5%.</div>
 </div>
-</div>
-
-<!-- S25: TLH MONITOR -->
-<div class="section" data-in-tab="aloc">
-<h2>TLH Monitor — Posições em Consolidação</h2>
-<div id="tlhContent"></div>
-<div class="src">Gatilho TLH: perda ≥ 5%. Transitorios: EIMI, AVES, AVUV, AVDV, DGS, USSC, IWVL — não comprar mais, diluir via aportes.</div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -1348,8 +1341,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T06:53:22-03:00'); // BRT (UTC-3)
-const VERSION = '1.138';
+const GENERATED_AT = new Date('2026-04-11T06:59:11-03:00'); // BRT (UTC-3)
+const VERSION = '1.139';
 
 const DATA = {
   "_generated": "2026-04-10T23:59:57",
@@ -6788,7 +6781,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.138"
+  "version": "1.139"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8317,49 +8310,100 @@ function buildInformationRatio() {
   });
 }
 
-// ── S25: TLH Monitor ─────────────────────────────────────────
-function buildTLH() {
-  const div = document.getElementById('tlhContent');
-  const tlhGatilho = DATA.tlhGatilho ?? 0.05; // 5% perda para acionar TLH (configurável)
-  // Header da tabela
-  let html = `<table style="width:100%;border-collapse:collapse;font-size:.78rem;margin-bottom:6px">
-    <thead><tr style="font-size:.65rem;color:var(--muted)">
-      <th style="padding:4px 6px;text-align:left">Ativo</th>
-      <th style="padding:4px 6px;text-align:right">Ganho %</th>
-      <th style="padding:4px 6px;text-align:right">Valor USD</th>
-      <th style="padding:4px 6px;text-align:right">IR est. (R$)</th>
-      <th style="padding:4px 6px;text-align:left;color:var(--muted)">UCITS alvo</th>
-    </tr></thead><tbody>`;
-  DATA.tlh.forEach(t => {
-    const gain = (t.price / t.pm - 1) * 100;
-    const valUsd = t.qty * t.price;
-    const ganhoUsd = t.qty * (t.price - t.pm);   // ganho em USD
-    const isTLH = gain <= -(tlhGatilho * 100);
-    const color = isTLH ? 'var(--red)' : gain < 0 ? 'var(--yellow)' : 'var(--green)';
-    // IR: alíquota de DATA.pisos sobre ganho em USD convertido para BRL
-    const _irAliq = DATA.pisos?.ir_aliquota ?? 0.15;
-    let irCell;
-    if (ganhoUsd > 0) {
-      const irBrl = ganhoUsd * CAMBIO * _irAliq;
-      irCell = `<span class="pv" style="color:var(--red)">R$${(irBrl/1000).toFixed(1)}k</span>`;
-    } else if (ganhoUsd < 0) {
-      const beneficioBrl = Math.abs(ganhoUsd) * CAMBIO * _irAliq;
-      irCell = `<span style="color:var(--green);font-size:.7rem">💸 −R$${(beneficioBrl/1000).toFixed(1)}k ${isTLH ? '⚠️' : ''}</span>`;
-    } else {
-      irCell = `<span style="color:var(--muted)">—</span>`;
-    }
-    html += `<tr style="border-top:1px solid rgba(71,85,105,.2)">
-      <td style="padding:5px 6px"><strong>${t.ticker}</strong> <span style="color:var(--muted);font-size:.65rem">${t.nome}</span></td>
-      <td style="padding:5px 6px;text-align:right;color:${color}">${gain >= 0 ? '+' : ''}${gain.toFixed(1)}%</td>
-      <td style="padding:5px 6px;text-align:right;color:var(--muted);font-size:.75rem" class="pv">$${(valUsd/1000).toFixed(1)}k</td>
-      <td style="padding:5px 6px;text-align:right">${irCell}</td>
-      <td style="padding:5px 6px;color:var(--muted);font-size:.65rem">${t.ucits}</td>
-    </tr>`;
+// ── IR Diferido + TLH Monitor (merged) ───────────────────────
+function buildTLH() { buildIrDiferido(); } // alias para compatibilidade tabFns
+function buildIrDiferido() {
+  const el = document.getElementById('taxIrBody');
+  if (!el) return;
+  const tax = DATA.tax;
+  if (!tax) { const s = document.getElementById('taxIrSection'); if (s) s.style.display = 'none'; return; }
+
+  const etfs   = tax.ir_por_etf || {};
+  const tlhGatilho = DATA.tlhGatilho ?? 0.05;
+  const _irAliq    = DATA.pisos?.ir_aliquota ?? 0.15;
+
+  // Mapa ticker → info TLH (transitórios)
+  const tlhMap = {};
+  (DATA.tlh || []).forEach(t => { tlhMap[t.ticker] = t; });
+  const transitorioTickers = new Set(Object.keys(tlhMap));
+
+  // Separar alvo vs transitório
+  const alvo = [], trans = [];
+  Object.entries(etfs).forEach(([ticker, e]) => {
+    (transitorioTickers.has(ticker) ? trans : alvo).push([ticker, e]);
   });
+  // Ordenar por IR estimado desc
+  const sortIr = arr => arr.sort((a, b) => (b[1].ir_estimado || 0) - (a[1].ir_estimado || 0));
+  sortIr(alvo); sortIr(trans);
+
+  const TH = `<th style="padding:5px 8px;text-align:right;font-size:.6rem;color:var(--muted);text-transform:uppercase;border-bottom:2px solid var(--border)">`;
+  const THL = `<th style="padding:5px 8px;text-align:left;font-size:.6rem;color:var(--muted);text-transform:uppercase;border-bottom:2px solid var(--border)">`;
+
+  function renderGroup(entries, isTransitorio) {
+    if (!entries.length) return '';
+    const label = isTransitorio ? '🔄 Transitório — diluir via aportes' : '🎯 Alvo';
+    let h = `<tr><td colspan="${isTransitorio ? 6 : 5}" style="padding:8px 8px 4px;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;background:rgba(71,85,105,.08)">${label}</td></tr>`;
+    let totalGanho = 0, totalIr = 0;
+    entries.forEach(([ticker, e]) => {
+      const ganho  = e.ganho_brl   || 0;
+      const ir     = e.ir_estimado || 0;
+      totalGanho  += ganho;
+      totalIr     += ir;
+      const pct    = e.custo_total_brl > 0 ? (ganho / e.custo_total_brl * 100) : null;
+      const pctStr = pct != null ? `<span style="color:${pct >= 0 ? 'var(--green)' : 'var(--red)'};font-size:.68rem">${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%</span>` : '';
+      const irColor = ir > 0 ? 'var(--yellow)' : (ganho < 0 ? 'var(--green)' : 'var(--muted)');
+      const irStr  = ir > 0 ? `<span class="pv" style="color:var(--yellow)">R$${(ir/1000).toFixed(1)}k</span>`
+                            : (ganho < 0 ? `<span style="color:var(--green);font-size:.68rem">−R$${(Math.abs(ganho)*_irAliq/1000).toFixed(1)}k</span>` : '<span style="color:var(--muted)">—</span>');
+
+      let tlhCell = '';
+      if (isTransitorio) {
+        const t = tlhMap[ticker];
+        const isTLH = t && (t.price / t.pm - 1) <= -tlhGatilho;
+        tlhCell = `<td style="padding:5px 8px;font-size:.65rem;color:var(--muted)">${t ? t.ucits : '—'}${isTLH ? ' <span style="color:var(--red)">⚠️ TLH</span>' : ''}</td>`;
+      }
+      h += `<tr style="border-bottom:1px solid rgba(71,85,105,.15)">
+        <td style="padding:5px 8px;font-weight:600">${ticker}</td>
+        <td style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums">${pctStr}</td>
+        <td class="pv" style="padding:5px 8px;text-align:right;color:${ganho >= 0 ? 'var(--green)' : 'var(--red)'};font-variant-numeric:tabular-nums">R$${(ganho/1000).toFixed(0)}k</td>
+        <td style="padding:5px 8px;text-align:right">${irStr}</td>
+        <td style="padding:5px 8px;text-align:right;color:var(--muted);font-size:.68rem">${e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '—'}</td>
+        ${tlhCell}
+      </tr>`;
+    });
+    // Subtotal
+    h += `<tr style="border-top:1px solid rgba(71,85,105,.3);font-weight:700;font-size:.75rem">
+      <td style="padding:5px 8px;color:var(--muted)">Subtotal</td>
+      <td></td>
+      <td class="pv" style="padding:5px 8px;text-align:right;color:${totalGanho >= 0 ? 'var(--green)' : 'var(--red)'}">R$${(totalGanho/1000).toFixed(0)}k</td>
+      <td class="pv" style="padding:5px 8px;text-align:right;color:var(--yellow)">R$${(totalIr/1000).toFixed(1)}k</td>
+      <td></td>${isTransitorio ? '<td></td>' : ''}
+    </tr>`;
+    return h;
+  }
+
+  // Colunas: 5 para alvo, 6 para transitório (+UCITS alvo)
+  const hasTransit = trans.length > 0;
+  const cols = hasTransit ? 6 : 5;
+  let html = `<table style="width:100%;border-collapse:collapse;font-size:.78rem">
+    <thead><tr>
+      ${THL}ETF</th>${TH}Ganho%</th>${TH}Ganho BRL</th>${TH}IR Est.</th>${TH}PTAX médio</th>${hasTransit ? TH + 'UCITS alvo</th>' : ''}
+    </tr></thead><tbody>`;
+  html += renderGroup(alvo, false);
+  if (hasTransit) html += renderGroup(trans, true);
+
+  // Total geral
+  const totalIR = tax.ir_diferido_total_brl || 0;
+  html += `<tr style="border-top:2px solid var(--border);font-weight:700">
+    <td style="padding:6px 8px">Total</td>
+    <td></td><td></td>
+    <td class="pv" style="padding:6px 8px;text-align:right;color:var(--yellow)">R$${(totalIR/1000).toFixed(0)}k</td>
+    <td></td>${hasTransit ? '<td></td>' : ''}
+  </tr>`;
   html += '</tbody></table>';
-  const noOpps = DATA.tlh.every(t => (t.price / t.pm - 1) > -0.05);
-  html += noOpps ? '<div style="color:var(--green);font-size:.75rem;margin-top:4px">✅ Nenhuma oportunidade TLH — todos os transitórios com ganho</div>' : '';
-  div.innerHTML = html;
+
+  const hdr = document.getElementById('taxIrTotalHeader');
+  if (hdr) hdr.textContent = `— R$${(totalIR/1000).toFixed(0)}k latente`;
+  el.innerHTML = html;
 }
 
 // ── S26: HODL11 ───────────────────────────────────────────────
@@ -10694,7 +10738,7 @@ function _initTabCharts(tab) {
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildTaxIR],
+    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
     plan:     [buildFireTrilha, buildScenarios, buildScenarioComparison, buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
                buildNetWorthProjection],
@@ -11637,49 +11681,7 @@ function buildPremissasVsRealizado() {
 // ═══════════════════════════════════════════════════════════════
 // P2: TAX IR DIFERIDO
 // ═══════════════════════════════════════════════════════════════
-function buildTaxIR() {
-  const el = document.getElementById('taxIrBody');
-  if (!el) return;
-  const tax = DATA.tax;
-  if (!tax) { document.getElementById('taxIrSection').style.display = 'none'; return; }
-
-  const totalIR = tax.ir_diferido_total_brl;
-  // Show total in collapsible header so it's always visible
-  const hdr = document.getElementById('taxIrTotalHeader');
-  if (hdr && totalIR != null) hdr.textContent = `— R$ ${(totalIR/1000).toFixed(0)}k latente`;
-  const regime = tax.regime || '--';
-  const badges = tax.badges || {};
-  const etfs = tax.ir_por_etf || {};
-
-  const etfEntries = Object.entries(etfs).filter(([,v]) => v.ir_estimado > 0).sort((a,b) => b[1].ir_estimado - a[1].ir_estimado);
-
-  let html = '<table style="width:100%;border-collapse:collapse;font-size:.78rem">' +
-    '<thead><tr style="border-bottom:2px solid var(--border)">' +
-    '<th style="text-align:left;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">ETF</th>' +
-    '<th style="text-align:right;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">Ganho BRL</th>' +
-    '<th style="text-align:right;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">IR est. (15%)</th>' +
-    '<th style="text-align:right;padding:5px 6px;font-size:.65rem;color:var(--muted);text-transform:uppercase">PTAX médio</th>' +
-    '</tr></thead><tbody>';
-
-  etfEntries.forEach(([ticker, e]) => {
-    const badge = badges[ticker] ? ' <span class="badge-acc">' + badges[ticker] + '</span>' : '';
-    html += '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
-      '<td style="padding:5px 6px;font-weight:600">' + ticker + badge + '</td>' +
-      '<td class="pv" style="text-align:right;padding:5px 6px;color:' + (e.ganho_brl >= 0 ? 'var(--green)' : 'var(--red)') + ';font-variant-numeric:tabular-nums">R$ ' + (e.ganho_brl/1000).toFixed(0) + 'k</td>' +
-      '<td class="pv" style="text-align:right;padding:5px 6px;color:var(--yellow);font-variant-numeric:tabular-nums">R$ ' + (e.ir_estimado/1000).toFixed(1) + 'k</td>' +
-      '<td style="text-align:right;padding:5px 6px;color:var(--muted);font-variant-numeric:tabular-nums">' + (e.ptax_compra_medio != null ? e.ptax_compra_medio.toFixed(4) : '--') + '</td>' +
-      '</tr>';
-  });
-
-  html += '<tr style="border-top:2px solid var(--border);font-weight:700">' +
-    '<td style="padding:6px 6px">Total</td>' +
-    '<td style="text-align:right;padding:6px 6px"></td>' +
-    '<td class="pv" style="text-align:right;padding:6px 6px;color:var(--yellow)">R$ ' + (totalIR/1000).toFixed(0) + 'k</td>' +
-    '<td></td></tr></tbody></table>' +
-    '<div style="margin-top:6px;font-size:.68rem;color:var(--muted)">' + regime + '</div>';
-
-  el.innerHTML = html;
-}
+function buildTaxIR() { buildIrDiferido(); } // alias — lógica migrada para buildIrDiferido()
 
 // ═══════════════════════════════════════════════════════════════
 // P2: FACTOR ROLLING 12M AVGS vs SWRD
