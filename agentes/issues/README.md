@@ -46,6 +46,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-factor-tstats | t-stats + R² warning no Factor Loadings chart | Dev+Quant | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | ✅ Done 2026-04-10 |
 | HD-perplexity-review | Review externo Perplexity — 9 features implementadas | Head | 🟡 Média | ✅ Done 2026-04-10 |
 | DEV-pvr-broken | Premissas vs Realizado não renderiza (recorrente) | Dev | 🔴 Crítica | ✅ Done 2026-04-10 |

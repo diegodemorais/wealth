@@ -993,6 +993,15 @@ def get_factor_loadings():
                     "mom":    round(float(model.params.get("MOM", 0)), 4),
                     "r2":     round(float(model.rsquared), 4),
                     "n_months": int(model.nobs),
+                    "t_stats": {
+                        "alpha":  round(float(model.tvalues["const"]), 3),
+                        "mkt_rf": round(float(model.tvalues.get("Mkt-RF", 0)), 3),
+                        "smb":    round(float(model.tvalues.get("SMB", 0)), 3),
+                        "hml":    round(float(model.tvalues.get("HML", 0)), 3),
+                        "rmw":    round(float(model.tvalues.get("RMW", 0)), 3),
+                        "cma":    round(float(model.tvalues.get("CMA", 0)), 3),
+                        "mom":    round(float(model.tvalues.get("MOM", 0)), 3),
+                    },
                 }
             except Exception as e:
                 print(f"    ⚠️ {label}: {e}")
