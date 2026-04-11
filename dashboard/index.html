@@ -1138,6 +1138,33 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src">Fonte: extrato IBKR + XP</div>
 </div>
 
+<!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
+<div class="section" data-in-tab="perf">
+<h2>Shadow Portfolios — Tracking</h2>
+<div style="overflow-x:auto">
+<table style="width:100%;table-layout:fixed">
+<colgroup>
+  <col style="width:22%"><col style="width:32%"><col style="width:8%"><col style="width:26%"><col style="width:12%">
+</colgroup>
+<thead><tr>
+  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
+</tr></thead>
+<tbody id="shadowTableBody"><!-- gerado por buildShadowTable() --></tbody>
+</table>
+</div>
+<div class="period-btns" id="shadowPeriodBtns" style="margin-top:12px">
+  <button onclick="buildShadowChart('since2009')" class="active">Desde 2009</button>
+  <button onclick="buildShadowChart('since2013')">Desde 2013</button>
+  <button onclick="buildShadowChart('since2020')">Desde 2020</button>
+  <button onclick="buildShadowChart('5y')">5 anos</button>
+  <button onclick="buildShadowChart('3y')">3 anos</button>
+  <button onclick="buildShadowChart('all')">Tudo (21a)</button>
+</div>
+<div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
+<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
+<div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
+</div>
+
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
 <div class="section collapsible open" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Backtest Histórico — Target vs VWRA</h2>
@@ -1216,36 +1243,10 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="section collapsible open" id="factorLoadingsSection" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
 <div class="collapse-body">
-<div id="factorLoadingsBody"><!-- gerado por buildFactorLoadings() --></div>
+<div id="factorLoadingsCards" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
+<div class="chart-box" style="height:320px"><canvas id="factorLoadingsChart"></canvas></div>
 <div class="src">Regressão Fama-French 5 fatores + Momentum por ETF · R² = poder explicativo do modelo</div>
 </div><!-- /collapse-body -->
-</div>
-
-<!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
-<div class="section" data-in-tab="perf">
-<h2>Shadow Portfolios — Tracking</h2>
-<div style="overflow-x:auto">
-<table style="width:100%;table-layout:fixed">
-<colgroup>
-  <col style="width:22%"><col style="width:32%"><col style="width:8%"><col style="width:26%"><col style="width:12%">
-</colgroup>
-<thead><tr>
-  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
-</tr></thead>
-<tbody id="shadowTableBody"><!-- gerado por buildShadowTable() --></tbody>
-</table>
-</div>
-<div class="period-btns" id="shadowPeriodBtns" style="margin-top:12px">
-  <button onclick="buildShadowChart('since2009')" class="active">Desde 2009</button>
-  <button onclick="buildShadowChart('since2013')">Desde 2013</button>
-  <button onclick="buildShadowChart('since2020')">Desde 2020</button>
-  <button onclick="buildShadowChart('5y')">5 anos</button>
-  <button onclick="buildShadowChart('3y')">3 anos</button>
-  <button onclick="buildShadowChart('all')">Tudo (21a)</button>
-</div>
-<div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
-<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
-<div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
 </div>
 
 <footer>
@@ -1339,12 +1340,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T07:06:11-03:00'); // BRT (UTC-3)
-const VERSION = '1.140';
+const GENERATED_AT = new Date('2026-04-11T07:11:50-03:00'); // BRT (UTC-3)
+const VERSION = '1.141';
 
 const DATA = {
-  "_generated": "2026-04-11T07:06:11",
-  "_generated_brt": "2026-04-11T07:06:11-03:00",
+  "_generated": "2026-04-11T07:11:50",
+  "_generated_brt": "2026-04-11T07:11:50-03:00",
   "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1585,7 +1586,7 @@ const DATA = {
     },
     "pat_mediano_fire": 11527476.0,
     "pat_mediano_fire50": 9339651.0,
-    "mc_date": "2026-04-10",
+    "mc_date": "2026-04-11",
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -2961,7 +2962,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -3225,7 +3226,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -3708,6 +3709,13 @@ const DATA = {
   },
   "minilog": [
     {
+      "data": "2026-04-06",
+      "tipo": "Aplicação NB",
+      "ativo": "IPCA+ 2040",
+      "valor": "R$ 20,035",
+      "corretora": "Nubank"
+    },
+    {
       "data": "2026-03-13",
       "tipo": "Depósito IBKR",
       "ativo": "USD",
@@ -3768,13 +3776,6 @@ const DATA = {
       "tipo": "Venda XP",
       "ativo": "B5P211",
       "valor": "R$ 28,434",
-      "corretora": "XP"
-    },
-    {
-      "data": "2026-01-26",
-      "tipo": "Venda XP",
-      "ativo": "B5P211",
-      "valor": "R$ 4,091",
       "corretora": "XP"
     }
   ],
@@ -6819,7 +6820,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.140"
+  "version": "1.141"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -11793,44 +11794,92 @@ function buildFactorRolling() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// P2: FACTOR LOADINGS TABLE
+// P2: FACTOR LOADINGS — Grouped Horizontal Bar Chart
 // ═══════════════════════════════════════════════════════════════
 function buildFactorLoadings() {
-  const el = document.getElementById('factorLoadingsBody');
+  const cardsEl = document.getElementById('factorLoadingsCards');
   const sec = document.getElementById('factorLoadingsSection');
-  if (!el || !sec) return;
+  if (!cardsEl || !sec) return;
   const fl = DATA.factor_loadings;
   if (!fl || Object.keys(fl).length === 0) {
-    el.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Atualizar dashboard para gerar.</div>';
+    cardsEl.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Atualizar dashboard para gerar.</div>';
     return;
   }
 
-  const factors = ['alpha', 'mkt_rf', 'smb', 'hml', 'rmw', 'cma', 'mom', 'r2'];
-  const factorLabels = ['Alpha', 'Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'Mom', 'R²'];
+  // ── Ticker colors ──────────────────────────────────────────────
+  const TICKER_COLORS = {
+    SWRD:  '#60a5fa',
+    EIMI:  '#f59e0b',
+    AVUV:  '#34d399',
+    AVDV:  '#a78bfa',
+    DGS:   '#fb923c',
+    USSC:  '#f472b6',
+    IWVL:  '#94a3b8',
+  };
 
-  let html = '<table class="factor-table"><thead><tr><th>ETF</th>';
-  factorLabels.forEach(l => { html += '<th>' + l + '</th>'; });
-  html += '</tr></thead><tbody>';
+  // ── Factors for chart (skip alpha and r2) ─────────────────────
+  const CHART_FACTORS = ['mkt_rf', 'smb', 'hml', 'rmw', 'cma', 'mom'];
+  const CHART_LABELS  = ['Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'Mom'];
 
-  Object.entries(fl).sort().forEach(([ticker, vals]) => {
-    html += '<tr><td>' + ticker + '</td>';
-    factors.forEach(f => {
-      const v = vals[f];
-      if (v == null) { html += '<td>--</td>'; return; }
-      let color = '';
-      if (f === 'r2') {
-        color = v > 0.8 ? 'color:var(--green)' : v > 0.5 ? '' : 'color:var(--muted)';
-      } else if (f !== 'alpha') {
-        color = Math.abs(v) > 0.3 ? (v > 0 ? 'color:var(--green)' : 'color:var(--red)') : '';
-      }
-      const formatted = f === 'r2' ? (v * 100).toFixed(1) + '%' : v.toFixed(3);
-      html += '<td style="' + color + '">' + formatted + '</td>';
-    });
-    html += '</tr>';
+  const tickers = Object.keys(fl).sort();
+
+  // ── A) Cards row ───────────────────────────────────────────────
+  cardsEl.innerHTML = tickers.map(ticker => {
+    const vals = fl[ticker];
+    const r2pct = vals.r2 != null ? (vals.r2 * 100).toFixed(1) + '%' : '--';
+    const nm    = vals.n_months != null ? vals.n_months + 'm' : '--';
+    const color = TICKER_COLORS[ticker] || '#94a3b8';
+    return `<div style="background:rgba(51,65,85,.4);border-radius:6px;padding:6px 10px;font-size:.7rem;border-left:3px solid ${color}">
+      <strong style="color:${color}">${ticker}</strong>
+      <div style="color:var(--muted)">R² ${r2pct} · ${nm}</div>
+    </div>`;
+  }).join('');
+
+  // ── B) Grouped horizontal bar chart ───────────────────────────
+  const datasets = tickers.map(ticker => {
+    const vals = fl[ticker];
+    const color = TICKER_COLORS[ticker] || '#94a3b8';
+    // TODO: opacity by t-stat when available (use solid for |t|>2, 50% for not significant)
+    return {
+      label: ticker,
+      data: CHART_FACTORS.map(f => vals[f] != null ? +vals[f].toFixed(4) : null),
+      backgroundColor: color,
+      borderColor: color,
+      borderWidth: 1,
+      borderRadius: 3,
+    };
   });
 
-  html += '</tbody></table>';
-  el.innerHTML = html;
+  if (charts.factorLoadings) charts.factorLoadings.destroy();
+  const ctx = document.getElementById('factorLoadingsChart');
+  if (!ctx) return;
+  charts.factorLoadings = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: CHART_LABELS, datasets },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 }, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.x != null ? ctx.parsed.x.toFixed(3) : '--'}`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(148,163,184,.15)' },
+          ticks: { color: '#94a3b8', font: { size: 10 } }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#94a3b8', font: { size: 11 } }
+        }
+      }
+    }
+  });
 }
 
 // ═══════════════════════════════════════════════════════════════

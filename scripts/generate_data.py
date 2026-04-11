@@ -2143,7 +2143,7 @@ def main():
 
     # ─── Mini-log: últimas operações IBKR + XP ───────────────────────────────
     def _build_minilog():
-        """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas)"""
+        """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas) + Nubank (Tesouro Direto)"""
         entries = []
         # XP operações
         xp_path = ROOT / "dados" / "xp" / "operacoes.json"
@@ -2172,6 +2172,17 @@ def main():
                                         "ativo": ticker,
                                         "valor": f"{lot['qty']:.0f} × ${lot['custo_por_share']:.2f}",
                                         "corretora": "IBKR"})
+        # Nubank — Tesouro Direto
+        nb_path = ROOT / "dados" / "nubank" / "operacoes_td.json"
+        if nb_path.exists():
+            nb_data = json.loads(nb_path.read_text())
+            for op in nb_data.get("operacoes", []):
+                tipo = "Aplicação NB" if op.get("tipo") == "aplicacao" else "Resgate NB"
+                ativo = op.get("titulo", "").replace("Tesouro ", "")
+                entries.append({"data": op["data"], "tipo": tipo,
+                                 "ativo": ativo,
+                                 "valor": f"R$ {op['valor_brl']:,.0f}",
+                                 "corretora": "Nubank"})
         entries.sort(key=lambda x: x["data"], reverse=True)
         return entries[:10]
 
