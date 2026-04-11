@@ -1246,9 +1246,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div id="factorLoadingsCards" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
 <div class="period-btns" id="factorLoadingsBtns" style="margin-bottom:10px">
   <button onclick="setFactorView('all')" class="active">Todos</button>
-  <button onclick="setFactorView('market')">Market</button>
-  <button onclick="setFactorView('value')">Value</button>
-  <button onclick="setFactorView('small')">Small</button>
+  <button onclick="setFactorView('market')">Mkt-RF</button>
+  <button onclick="setFactorView('small')">SMB</button>
+  <button onclick="setFactorView('value')">HML</button>
+  <button onclick="setFactorView('profitability')">RMW</button>
+  <button onclick="setFactorView('investment')">CMA</button>
+  <button onclick="setFactorView('momentum')">Mom</button>
 </div>
 <div class="chart-box" style="height:260px"><canvas id="factorLoadingsChart"></canvas></div>
 <div class="src">Regressão FF5+MOM · Barra sólida = significativo (|t|>2) · barra opaca = não significativo · ⚠️ R²&lt;0.80: modelo FF5 DM explica mal este ETF (limitação para EM e SC globais)</div>
@@ -6326,10 +6329,13 @@ function buildFactorRolling() {
 window._factorView = 'all';
 
 const _FL_VIEWS = {
-  all:    { factors: ['mkt_rf','smb','hml','rmw','cma','mom'], labels: ['Mkt-RF','SMB','HML','RMW','CMA','Mom'] },
-  market: { factors: ['mkt_rf'],              labels: ['Mkt-RF'] },
-  value:  { factors: ['hml','rmw','cma'],     labels: ['HML','RMW','CMA'] },
-  small:  { factors: ['smb'],                 labels: ['SMB'] },
+  all:          { factors: ['mkt_rf','smb','hml','rmw','cma','mom'], labels: ['Mkt-RF','SMB','HML','RMW','CMA','Mom'] },
+  market:       { factors: ['mkt_rf'],  labels: ['Mkt-RF'] },
+  small:        { factors: ['smb'],     labels: ['SMB'] },
+  value:        { factors: ['hml'],     labels: ['HML'] },
+  profitability:{ factors: ['rmw'],     labels: ['RMW'] },
+  investment:   { factors: ['cma'],     labels: ['CMA'] },
+  momentum:     { factors: ['mom'],     labels: ['Mom'] },
 };
 
 window.setFactorView = function(view) {
