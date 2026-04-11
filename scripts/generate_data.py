@@ -68,6 +68,15 @@ SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
 HEAD_RELAY          = ROOT / "dados" / "head_relay.json"
 OUT_PATH        = ROOT / "dashboard" / "data.json"
 
+FIRE_MATRIX_PATH        = ROOT / "dados" / "fire_matrix.json"
+FIRE_SWR_PCT_PATH       = ROOT / "dados" / "fire_swr_percentis.json"
+FIRE_APORTE_SENS_PATH   = ROOT / "dados" / "fire_aporte_sensitivity.json"
+FIRE_TRILHA_PATH        = ROOT / "dados" / "fire_trilha.json"
+DRAWDOWN_HIST_PATH      = ROOT / "dados" / "drawdown_history.json"
+ETF_COMP_PATH           = ROOT / "dados" / "etf_composition.json"
+BOND_POOL_RUNWAY_PATH   = ROOT / "dados" / "bond_pool_runway.json"
+LUMPY_EVENTS_PATH       = ROOT / "dados" / "lumpy_events.json"
+
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
 parser.add_argument("--skip-scripts", action="store_true")
@@ -2297,6 +2306,7 @@ def main():
         "pat_mediano_fire":    fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire")),
         "pat_mediano_fire50":  fire_state.get("pat_mediano_fire50"),
         "mc_date":             fire_state.get("mc_date"),
+        "plano_status":        macro.get("plano_status") if macro else None,
     }
 
     # Earliest FIRE date
@@ -2310,6 +2320,26 @@ def main():
 
     # ─── Timestamps de fontes de dados ──────────────────────────────────────────
     timestamps = get_source_timestamps()
+
+    # ── Novos JSONs core HD-perplexity-review ───────────────────────────────────
+    def _load_json_safe(path, label):
+        if path.exists():
+            try:
+                d = json.loads(path.read_text())
+                print(f"  ✓ {label} ({path.name})")
+                return d
+            except Exception as e:
+                print(f"  ⚠️ {label}: {e}")
+        return None
+
+    fire_matrix_data    = _load_json_safe(FIRE_MATRIX_PATH,      "fire_matrix")
+    fire_swr_pct_data   = _load_json_safe(FIRE_SWR_PCT_PATH,     "fire_swr_percentis")
+    fire_aporte_data    = _load_json_safe(FIRE_APORTE_SENS_PATH, "fire_aporte_sensitivity")
+    fire_trilha_data    = _load_json_safe(FIRE_TRILHA_PATH,      "fire_trilha")
+    drawdown_hist_data  = _load_json_safe(DRAWDOWN_HIST_PATH,    "drawdown_history")
+    etf_comp_data       = _load_json_safe(ETF_COMP_PATH,         "etf_composition")
+    bond_pool_rwy_data  = _load_json_safe(BOND_POOL_RUNWAY_PATH, "bond_pool_runway")
+    lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
@@ -2381,6 +2411,16 @@ def main():
         "spending_guardrails":  spending_guardrails,
         "spending_breakdown":   json.loads(SPENDING_SUMMARY.read_text()) if SPENDING_SUMMARY.exists() else None,
         "head_relay":           json.loads(HEAD_RELAY.read_text()) if HEAD_RELAY.exists() else None,
+
+        # HD-perplexity-review: novos datasets
+        "fire_matrix":             fire_matrix_data,
+        "fire_swr_percentis":      fire_swr_pct_data,
+        "fire_aporte_sensitivity": fire_aporte_data,
+        "fire_trilha":             fire_trilha_data,
+        "drawdown_history":        drawdown_hist_data,
+        "etf_composition":         etf_comp_data,
+        "bond_pool_runway":        bond_pool_rwy_data,
+        "lumpy_events":            lumpy_data,
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)

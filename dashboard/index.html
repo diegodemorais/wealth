@@ -212,6 +212,41 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .pvr-table td{padding:7px 8px;border-bottom:1px solid rgba(71,85,105,.25)}
 .pvr-table td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
 .pvr-delta-pos{color:var(--green);font-weight:600}.pvr-delta-neg{color:var(--red);font-weight:600}
+/* ── HD-perplexity-review: FIRE Matrix ── */
+.fire-matrix-table{border-collapse:collapse;font-size:.72rem;width:100%}
+.fire-matrix-table th{padding:5px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:center}
+.fire-matrix-table th:first-child{text-align:left}
+.fire-matrix-table td{padding:5px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center;font-variant-numeric:tabular-nums;font-weight:600;border-radius:4px}
+.fire-matrix-table td:first-child{text-align:left;color:var(--muted);font-weight:400;font-size:.68rem}
+.fm-green{background:rgba(34,197,94,.18);color:var(--green)}
+.fm-yellow{background:rgba(234,179,8,.18);color:var(--yellow)}
+.fm-red{background:rgba(239,68,68,.18);color:var(--red)}
+/* ── SWR Percentiles cards ── */
+.swr-pct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.swr-pct-card{background:var(--card2);border-radius:8px;padding:12px;text-align:center;border-left:3px solid var(--muted)}
+.swr-pct-card.p10{border-left-color:var(--red)}
+.swr-pct-card.p50{border-left-color:var(--yellow)}
+.swr-pct-card.p90{border-left-color:var(--green)}
+.swr-pct-card .spv{font-size:1.4rem;font-weight:700}.swr-pct-card .spl{font-size:.6rem;color:var(--muted);margin-top:2px}
+.swr-pct-card .spsub{font-size:.65rem;color:var(--muted)}
+/* ── Macro Status Badge ── */
+.macro-status-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:9999px;font-size:.78rem;font-weight:700;margin-bottom:10px}
+.macro-status-green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.macro-status-yellow{background:rgba(234,179,8,.15);color:var(--yellow);border:1px solid rgba(234,179,8,.3)}
+.macro-status-red{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+/* ── Lumpy Events table ── */
+.lumpy-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.lumpy-table th{padding:6px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:left}
+.lumpy-table td{padding:7px 8px;border-bottom:1px solid rgba(71,85,105,.2)}
+/* ── ETF Composition grid ── */
+.etf-comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px}
+.etf-comp-card{background:var(--card2);border-radius:8px;padding:12px}
+.etf-comp-card .etf-name{font-size:.78rem;font-weight:700;margin-bottom:8px}
+.etf-comp-bar-row{display:flex;justify-content:space-between;align-items:center;font-size:.68rem;margin-bottom:3px}
+.etf-comp-bar{height:5px;border-radius:3px;background:var(--accent);margin-top:2px;margin-bottom:4px}
+.etf-factor-row{display:flex;justify-content:space-between;align-items:center;font-size:.65rem;margin-bottom:3px;color:var(--muted)}
+/* ── chart footnote ── */
+.chart-footnote{font-size:.6rem;color:var(--muted);margin-top:6px;line-height:1.5;font-style:italic}
 </style>
 </head>
 <body>
@@ -436,6 +471,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- P2: MACRO CONTEXT -->
 <div class="section" data-in-tab="status" id="macroSection">
 <h2>Contexto Macro</h2>
+<div id="macroStatusBadge"></div>
 <div class="grid-2" style="margin-bottom:0">
   <div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
   <div>
@@ -499,6 +535,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
+<!-- N2: ETF COMPOSITION — Região + Fator -->
+<div class="section" data-in-tab="aloc" id="etfCompSection">
+<h2>Composição por Região e Fator — ETFs da Carteira</h2>
+<div class="etf-comp-grid" id="etfCompGrid"></div>
+<div class="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
+</div>
+
 <!-- S9: SCENARIO COMPARISON (movido para plan) -->
 <div class="grid-2" data-in-tab="plan">
 <div class="section">
@@ -549,6 +592,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="chart-box-sm"><canvas id="tornadoChart"></canvas></div>
 </div>
 </div>
+</div>
+
+<!-- R5: FIRE TRILHA — Realizado vs Projetado -->
+<div class="section" data-in-tab="status" id="fireTrilhaSection">
+<h2>Trilha FIRE — Realizado vs Projetado</h2>
+<div class="chart-box" style="height:260px"><canvas id="fireTrilhaChart"></canvas></div>
+<div class="src" id="fireTrilhaSrc">Trilha patrimonial realizada vs projeção linear para meta FIRE.</div>
 </div>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
@@ -611,6 +661,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" id="bondPoolSection" data-in-tab="plan">
 <h2>Bond Pool Readiness — Proteção SoRR</h2>
 <div id="bondPoolBody"><!-- gerado por buildBondPool() --></div>
+<div id="bondPoolRunwayChartWrap" style="margin-top:14px;display:none">
+  <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)</div>
+  <div class="chart-box-sm"><canvas id="bondPoolRunwayChart"></canvas></div>
+  <p id="bondPoolRunwayNota" class="chart-footnote"></p>
+</div>
 <div class="src">Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos de gastos.</div>
 </div>
 
@@ -782,6 +837,34 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src" id="pfireFamiliaSrc">Base: Monte Carlo 10k simulações · Sensibilidade ao custo de vida</div>
 </div>
 
+<!-- R1: FIRE MATRIX — P(Sucesso) por SWR × Gasto -->
+<div class="section" data-in-tab="plan" id="fireMatrixSection">
+<h2>FIRE Matrix — P(Sucesso 30 anos) por SWR × Gasto</h2>
+<div id="fireMatrixTable" style="overflow-x:auto"></div>
+<div class="src">Verde ≥90%, Amarelo 80-90%, Vermelho &lt;80%. Eixo: SWR (linha) × Gasto Anual BRL (coluna).</div>
+</div>
+
+<!-- R2: SWR PERCENTIS P10/P50/P90 -->
+<div class="section" data-in-tab="plan" id="swrPercentilesSection">
+<h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
+<div class="swr-pct-grid" id="swrPercentilesCards"></div>
+<div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
+</div>
+
+<!-- R3: APORTE SENSITIVITY -->
+<div class="section" data-in-tab="plan" id="aporteSensSection">
+<h2>Sensibilidade P(FIRE@53) ao Aporte Mensal</h2>
+<div class="chart-box-sm"><canvas id="aporteSensChart"></canvas></div>
+<div class="src">Aporte base: R$25k/mês. Linha vertical = aporte atual.</div>
+</div>
+
+<!-- N4: LUMPY EVENTS -->
+<div class="section" data-in-tab="plan" id="lumpyEventsSection">
+<h2>Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
+<div id="lumpyEventsBody"></div>
+<div class="src">Base: spending R$250k/ano. Impacto de eventos permanentes no custo de vida.</div>
+</div>
+
 <!-- S21b: MINI-LOG OPERAÇÕES -->
 <div class="section" data-in-tab="aloc">
 <h2>Últimas Operações</h2>
@@ -807,6 +890,16 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px"></div>
 <div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
 </div><!-- /collapse-body -->
+</div>
+
+<!-- N1: DRAWDOWN HISTORY -->
+<div class="section collapsible" data-in-tab="perf" id="drawdownHistSection">
+<h2 onclick="this.parentElement.classList.toggle('open')">Drawdown Histórico — Série Completa</h2>
+<div class="collapse-body">
+<div class="chart-box" style="height:220px"><canvas id="drawdownHistChart"></canvas></div>
+<div id="drawdownCrisesTable" style="margin-top:10px"></div>
+<p id="drawdownHistNota" class="chart-footnote"></p>
+</div>
 </div>
 
 <!-- S24b: ROLLING SHARPE 12m -->
@@ -1236,27 +1329,27 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-10T18:50:25-03:00'); // BRT (UTC-3)
-const VERSION = '1.128';
+const GENERATED_AT = new Date('2026-04-10T22:02:03-03:00'); // BRT (UTC-3)
+const VERSION = '1.130';
 
 const DATA = {
-  "_generated": "2026-04-10T18:50:21",
-  "_generated_brt": "2026-04-10T18:50:21-03:00",
+  "_generated": "2026-04-10T22:01:59",
+  "_generated_brt": "2026-04-10T22:01:59-03:00",
   "date": "2026-04-10",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": "2026-04-10",
+    "precos_yfinance": null,
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-10",
     "fire_mc": "2026-04-10",
     "geral": "2026-04-10"
   },
-  "cambio": 5.0031,
+  "cambio": 5.156,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.4,
+      "price": 47.46,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -1264,7 +1357,7 @@ const DATA = {
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.9025,
+      "price": 24.22,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -1272,7 +1365,7 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.73,
+      "price": 111.63,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1280,7 +1373,7 @@ const DATA = {
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.53,
+      "price": 101.54,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1288,7 +1381,7 @@ const DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.68,
+      "price": 84.72,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1296,7 +1389,7 @@ const DATA = {
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.7,
+      "price": 46.28,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1304,7 +1397,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.39,
+      "price": 59.8,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1312,7 +1405,7 @@ const DATA = {
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.86,
+      "price": 61.25,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1320,7 +1413,7 @@ const DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 66.23,
+      "price": 62.65,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -1350,7 +1443,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3481425,
+    "patrimonio_atual": 3461896,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1444,28 +1537,28 @@ const DATA = {
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -1482,7 +1575,20 @@ const DATA = {
     },
     "pat_mediano_fire": 11527476.0,
     "pat_mediano_fire50": 9339651.0,
-    "mc_date": "2026-04-10"
+    "mc_date": "2026-04-10",
+    "plano_status": {
+      "status": "MONITORAR",
+      "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
+      "todos_gatilhos": [
+        "Drift 8.0pp entre 5–10pp — MONITORAR",
+        "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
+      ],
+      "inputs": {
+        "pfire": 0.904,
+        "drift_max_pp": 8.0,
+        "ipca_taxa_pct": 7.2
+      }
+    }
   },
   "scenario_comparison": {
     "fire53": {
@@ -3360,16 +3466,16 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 62.09,
-    "valor": 104062.84,
+    "preco": 59.79,
+    "valor": 100208.04,
     "preco_medio": 79.03,
-    "pnl_brl": -28391.44,
-    "pnl_pct": -21.43,
+    "pnl_brl": -32246.24,
+    "pnl_pct": -24.35,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.99,
+      "atual_pct": 2.89,
       "status": "verde"
     }
   },
@@ -3444,15 +3550,15 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.8,
+      "atual": 37.4,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.9,
+      "atual": 29.0,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.6,
+      "atual": 23.9,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3460,7 +3566,7 @@ const DATA = {
       "alvo": 15.0
     },
     "HODL11": {
-      "atual": 3.0,
+      "atual": 2.9,
       "alvo": 3.0
     }
   },
@@ -3470,7 +3576,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.73,
+      "price": 111.63,
       "ucits": "AVGS.L"
     },
     {
@@ -3478,7 +3584,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.53,
+      "price": 101.54,
       "ucits": "AVGS.L"
     },
     {
@@ -3486,7 +3592,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.68,
+      "price": 84.72,
       "ucits": "AVGS.L"
     },
     {
@@ -3494,7 +3600,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.7,
+      "price": 46.28,
       "ucits": "AVEM.L"
     },
     {
@@ -3502,7 +3608,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.39,
+      "price": 59.8,
       "ucits": "AVEM.L"
     },
     {
@@ -3510,7 +3616,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.86,
+      "price": 61.25,
       "ucits": "AVEM.L"
     },
     {
@@ -3518,7 +3624,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 66.23,
+      "price": 62.65,
       "ucits": "JPGL.L"
     }
   ],
@@ -3532,10 +3638,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 630200,
-    "retorno_usd": 239157,
-    "pct_aportes": 62.1,
-    "pct_retorno": 37.9,
+    "patrimonio_equity_usd": 608472,
+    "retorno_usd": 217429,
+    "pct_aportes": 64.3,
+    "pct_retorno": 35.7,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-10"
@@ -3557,20 +3663,33 @@ const DATA = {
     "target": -1.11
   },
   "macro": {
-    "_generated": "2026-04-10T18:50:07",
+    "_generated": "2026-04-10T21:43:55",
     "selic_meta": 14.75,
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 90.4,
-    "bitcoin_usd": 73117.25,
-    "cambio": 5.0031
+    "bitcoin_usd": 72925.62,
+    "plano_status": {
+      "status": "MONITORAR",
+      "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
+      "todos_gatilhos": [
+        "Drift 8.0pp entre 5–10pp — MONITORAR",
+        "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
+      ],
+      "inputs": {
+        "pfire": 0.904,
+        "drift_max_pp": 8.0,
+        "ipca_taxa_pct": 7.2
+      }
+    },
+    "cambio": 5.156
   },
   "mercado": {
-    "cambio_brl_usd": 5.0031,
-    "btc_usd": 73117.25,
-    "cambio_mtd_pct": -2.97,
-    "btc_mtd_pct": 1.73,
+    "cambio_brl_usd": 5.156,
+    "btc_usd": 72925.62,
+    "cambio_mtd_pct": 0.0,
+    "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -4009,9 +4128,9 @@ const DATA = {
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.6,
+    "brasil_pct": 9.5,
     "composicao": {
-      "hodl11_brl": 104063,
+      "hodl11_brl": 100208,
       "rf_total_brl": 224406,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -4020,8 +4139,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 332481,
-    "total_portfolio_brl": 3481425,
+    "total_brasil_brl": 328626,
+    "total_portfolio_brl": 3461896,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4037,20 +4156,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33160,
-      "delta_brl": 8160,
-      "delta_pct": 32.6,
+      "realizado_media_brl": 34173,
+      "delta_brl": 9173,
+      "delta_pct": 36.7,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0031,
+      "cambio_conversao": 5.156,
       "por_ano_brl": {
-        "2026": 95059,
-        "2025": 282538,
-        "2024": 372589,
-        "2023": 393781,
-        "2022": 482266,
-        "2021": 330196
+        "2026": 97964,
+        "2025": 291172,
+        "2024": 383976,
+        "2023": 405815,
+        "2022": 497005,
+        "2021": 340287
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -4093,6 +4212,773 @@ const DATA = {
     "ts": "2026-04-09T13:15:00-03:00",
     "text": "Dashboard atualizado. Dois modos disponíveis: ⚡ Fast (haiku) para consultas rápidas, 🧠 Head (sonnet) para análise profunda com o time completo. Para enviar uma mensagem ao Head desta sessão, use o /dashboard e descreva o que quer comunicar.",
     "msg_id": "init-001"
+  },
+  "fire_matrix": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
+    "swrs": [
+      0.02,
+      0.022,
+      0.024,
+      0.026,
+      0.028,
+      0.03
+    ],
+    "gastos": [
+      220000,
+      240000,
+      250000,
+      270000,
+      300000
+    ],
+    "n_anos_desacumulacao": 30,
+    "n_sim": 5000,
+    "matrix": {
+      "0.02_220000": 0.9728,
+      "0.02_240000": 0.9736,
+      "0.02_250000": 0.9746,
+      "0.02_270000": 0.975,
+      "0.02_300000": 0.9752,
+      "0.022_220000": 0.9654,
+      "0.022_240000": 0.9688,
+      "0.022_250000": 0.9688,
+      "0.022_270000": 0.9698,
+      "0.022_300000": 0.9704,
+      "0.024_220000": 0.959,
+      "0.024_240000": 0.9614,
+      "0.024_250000": 0.9618,
+      "0.024_270000": 0.9628,
+      "0.024_300000": 0.9646,
+      "0.026_220000": 0.9444,
+      "0.026_240000": 0.9516,
+      "0.026_250000": 0.9532,
+      "0.026_270000": 0.9572,
+      "0.026_300000": 0.9572,
+      "0.028_220000": 0.9376,
+      "0.028_240000": 0.939,
+      "0.028_250000": 0.9396,
+      "0.028_270000": 0.9422,
+      "0.028_300000": 0.945,
+      "0.03_220000": 0.921,
+      "0.03_240000": 0.9312,
+      "0.03_250000": 0.9356,
+      "0.03_270000": 0.9348,
+      "0.03_300000": 0.9336
+    },
+    "patrimonio_necessario": {
+      "0.02_220000": 11000000.0,
+      "0.02_240000": 12000000.0,
+      "0.02_250000": 12500000.0,
+      "0.02_270000": 13500000.0,
+      "0.02_300000": 15000000.0,
+      "0.022_220000": 10000000.0,
+      "0.022_240000": 10909091.0,
+      "0.022_250000": 11363636.0,
+      "0.022_270000": 12272727.0,
+      "0.022_300000": 13636364.0,
+      "0.024_220000": 9166667.0,
+      "0.024_240000": 10000000.0,
+      "0.024_250000": 10416667.0,
+      "0.024_270000": 11250000.0,
+      "0.024_300000": 12500000.0,
+      "0.026_220000": 8461538.0,
+      "0.026_240000": 9230769.0,
+      "0.026_250000": 9615385.0,
+      "0.026_270000": 10384615.0,
+      "0.026_300000": 11538462.0,
+      "0.028_220000": 7857143.0,
+      "0.028_240000": 8571429.0,
+      "0.028_250000": 8928571.0,
+      "0.028_270000": 9642857.0,
+      "0.028_300000": 10714286.0,
+      "0.03_220000": 7333333.0,
+      "0.03_240000": 8000000.0,
+      "0.03_250000": 8333333.0,
+      "0.03_270000": 9000000.0,
+      "0.03_300000": 10000000.0
+    }
+  },
+  "fire_swr_percentis": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py → dashboard_state.json fire section",
+    "custo_vida_base": 250000,
+    "patrimonio_p10_2040": 6834909.0,
+    "patrimonio_p50_2040": 11527476.0,
+    "patrimonio_p90_2040": 18916227.0,
+    "swr_p10": 0.0366,
+    "swr_p50": 0.0217,
+    "swr_p90": 0.0132,
+    "swr_p10_pct": 3.66,
+    "swr_p50_pct": 2.17,
+    "swr_p90_pct": 1.32,
+    "mc_date": "2026-04-10"
+  },
+  "fire_aporte_sensitivity": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
+    "aportes_brl": [
+      15000,
+      20000,
+      25000,
+      30000,
+      35000,
+      40000
+    ],
+    "pfire_2040": [
+      0.8304,
+      0.871,
+      0.8994,
+      0.9182,
+      0.9288,
+      0.9422
+    ],
+    "aporte_base": 25000,
+    "n_sim": 5000
+  },
+  "fire_trilha": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py",
+    "dates": [
+      "2021-04",
+      "2021-05",
+      "2021-06",
+      "2021-07",
+      "2021-08",
+      "2021-09",
+      "2021-10",
+      "2021-11",
+      "2021-12",
+      "2022-01",
+      "2022-02",
+      "2022-03",
+      "2022-04",
+      "2022-05",
+      "2022-06",
+      "2022-07",
+      "2022-08",
+      "2022-09",
+      "2022-10",
+      "2022-11",
+      "2022-12",
+      "2023-01",
+      "2023-02",
+      "2023-03",
+      "2023-04",
+      "2023-05",
+      "2023-06",
+      "2023-07",
+      "2023-08",
+      "2023-09",
+      "2023-10",
+      "2023-11",
+      "2023-12",
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06",
+      "2024-07",
+      "2024-08",
+      "2024-09",
+      "2024-10",
+      "2024-11",
+      "2024-12",
+      "2025-01",
+      "2025-02",
+      "2025-03",
+      "2025-04",
+      "2025-05",
+      "2025-06",
+      "2025-07",
+      "2025-08",
+      "2025-09",
+      "2025-10",
+      "2025-11",
+      "2025-12",
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04"
+    ],
+    "trilha_brl": [
+      257684.0,
+      283703.0,
+      309825.0,
+      336050.0,
+      362379.0,
+      388812.0,
+      415350.0,
+      441993.0,
+      468740.0,
+      495594.0,
+      522554.0,
+      549620.0,
+      576794.0,
+      604075.0,
+      631464.0,
+      658961.0,
+      686567.0,
+      714282.0,
+      742106.0,
+      770041.0,
+      798086.0,
+      826242.0,
+      854509.0,
+      882889.0,
+      911380.0,
+      939984.0,
+      968701.0,
+      997532.0,
+      1026477.0,
+      1055536.0,
+      1084710.0,
+      1114000.0,
+      1143405.0,
+      1172927.0,
+      1202565.0,
+      1232320.0,
+      1262194.0,
+      1292185.0,
+      1322295.0,
+      1352524.0,
+      1382873.0,
+      1413341.0,
+      1443930.0,
+      1474640.0,
+      1505472.0,
+      1536425.0,
+      1567501.0,
+      1598700.0,
+      1630022.0,
+      1661468.0,
+      1693038.0,
+      1724733.0,
+      1756554.0,
+      1788500.0,
+      1820573.0,
+      1852772.0,
+      1885099.0,
+      1917554.0,
+      1950137.0,
+      1982848.0,
+      2015690.0
+    ],
+    "realizado_brl": [
+      257684.0,
+      264737.0,
+      250944.0,
+      277844.0,
+      282783.0,
+      298555.0,
+      334304.0,
+      348794.0,
+      382234.0,
+      440801.0,
+      420916.0,
+      490989.0,
+      565657.0,
+      684132.0,
+      675608.0,
+      732249.0,
+      725230.0,
+      691048.0,
+      713378.0,
+      770010.0,
+      754621.0,
+      815582.0,
+      808318.0,
+      791736.0,
+      938992.0,
+      991444.0,
+      1050759.0,
+      1106304.0,
+      1118931.0,
+      1139151.0,
+      1114216.0,
+      1203225.0,
+      1277252.0,
+      1324699.0,
+      1434618.0,
+      1531321.0,
+      1637481.0,
+      1819617.0,
+      1986584.0,
+      2116779.0,
+      2193148.0,
+      2205120.0,
+      2289000.0,
+      2474101.0,
+      2490040.0,
+      2395365.0,
+      2359159.0,
+      2430267.0,
+      3055328.0,
+      3284960.0,
+      3311789.0,
+      3483268.0,
+      3546074.0,
+      3069043.0,
+      3173685.0,
+      3229421.0,
+      3417546.0,
+      3457504.0,
+      3532893.0,
+      3413535.0,
+      3519199.0
+    ],
+    "status": [
+      "on_track",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "behind",
+      "on_track",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "on_track",
+      "on_track",
+      "on_track",
+      "behind",
+      "on_track",
+      "behind",
+      "behind",
+      "on_track",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "on_track",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead",
+      "ahead"
+    ],
+    "meta_fire_brl": 13400000,
+    "meta_fire_date": "2040-01",
+    "retorno_anual_premissa": 0.0485,
+    "aporte_mensal_premissa": 25000
+  },
+  "drawdown_history": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py → historico_carteira.csv",
+    "dates": [
+      "2021-04",
+      "2021-05",
+      "2021-06",
+      "2021-07",
+      "2021-08",
+      "2021-09",
+      "2021-10",
+      "2021-11",
+      "2021-12",
+      "2022-01",
+      "2022-02",
+      "2022-03",
+      "2022-04",
+      "2022-05",
+      "2022-06",
+      "2022-07",
+      "2022-08",
+      "2022-09",
+      "2022-10",
+      "2022-11",
+      "2022-12",
+      "2023-01",
+      "2023-02",
+      "2023-03",
+      "2023-04",
+      "2023-05",
+      "2023-06",
+      "2023-07",
+      "2023-08",
+      "2023-09",
+      "2023-10",
+      "2023-11",
+      "2023-12",
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06",
+      "2024-07",
+      "2024-08",
+      "2024-09",
+      "2024-10",
+      "2024-11",
+      "2024-12",
+      "2025-01",
+      "2025-02",
+      "2025-03",
+      "2025-04",
+      "2025-05",
+      "2025-06",
+      "2025-07",
+      "2025-08",
+      "2025-09",
+      "2025-10",
+      "2025-11",
+      "2025-12",
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04"
+    ],
+    "drawdown_pct": [
+      0.0,
+      0.0,
+      -5.21,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -4.51,
+      0.0,
+      0.0,
+      0.0,
+      -1.25,
+      0.0,
+      -0.96,
+      -5.63,
+      -2.58,
+      0.0,
+      -2.0,
+      0.0,
+      -0.89,
+      -2.92,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -2.19,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -3.8,
+      -5.26,
+      -2.4,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -13.45,
+      -10.5,
+      -8.93,
+      -3.62,
+      -2.5,
+      -0.37,
+      -3.74,
+      -0.76
+    ],
+    "max_drawdown": -13.45,
+    "metodologia": "drawdown_patrimonio_absoluto",
+    "nota_metodologia": "Drawdown calculado sobre patrimônio total em BRL (inclui efeito de aportes mensais que compram novos picos). Para drawdown de retorno puro (TWR, descontado de aportes), ver portfolio_summary.risco.max_drawdown_pct = -22.7%",
+    "crises": [
+      {
+        "nome": "Rate shock Fed",
+        "inicio": "2022-01",
+        "fim": "2022-10",
+        "drawdown_max": -5.6
+      },
+      {
+        "nome": "Tariffs Trump",
+        "inicio": "2025-04",
+        "fim": "2025-06",
+        "drawdown_max": 0.0
+      },
+      {
+        "nome": "Carry trade unwind",
+        "inicio": "2025-09",
+        "fim": "2025-11",
+        "drawdown_max": -13.4
+      }
+    ]
+  },
+  "etf_composition": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "config.py ETF_COMPOSITION",
+    "etfs": {
+      "SWRD": {
+        "nome": "MSCI World",
+        "descricao": "Invesco MSCI World UCITS ETF (Acc)",
+        "regiao_primaria": "Developed Markets",
+        "regioes": {
+          "EUA": 0.65,
+          "Europa": 0.22,
+          "Japão": 0.06,
+          "Outros DM": 0.07
+        },
+        "fatores": {
+          "market": 1.0,
+          "value": 0.0,
+          "size": 0.0,
+          "quality": 0.0
+        }
+      },
+      "AVGS": {
+        "nome": "Avantis Global Small Cap Value",
+        "descricao": "Avantis Global Small Cap Value UCITS ETF",
+        "regiao_primaria": "Global Developed Markets",
+        "regioes": {
+          "Europa": 0.45,
+          "Japão": 0.25,
+          "EUA": 0.15,
+          "Outros": 0.15
+        },
+        "fatores": {
+          "market": 1.0,
+          "value": 0.7,
+          "size": 0.8,
+          "quality": 0.3
+        }
+      },
+      "AVEM": {
+        "nome": "Avantis Emerging Markets",
+        "descricao": "Avantis Emerging Markets UCITS ETF",
+        "regiao_primaria": "Emerging Markets",
+        "regioes": {
+          "China": 0.28,
+          "India": 0.19,
+          "Taiwan": 0.16,
+          "Outros EM": 0.37
+        },
+        "fatores": {
+          "market": 1.0,
+          "value": 0.5,
+          "size": 0.3,
+          "quality": 0.2
+        }
+      }
+    }
+  },
+  "bond_pool_runway": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py",
+    "anos_pre_fire": [
+      2026,
+      2027,
+      2028,
+      2029,
+      2030,
+      2031,
+      2032,
+      2033,
+      2034,
+      2035,
+      2036,
+      2037,
+      2038,
+      2039,
+      2040
+    ],
+    "pool_td2040_brl": [
+      20019.0,
+      117434.0,
+      221737.0,
+      333414.0,
+      356986.0,
+      382225.0,
+      409248.0,
+      438182.0,
+      469162.0,
+      502331.0,
+      537846.0,
+      575872.0,
+      616586.0,
+      660179.0,
+      706853.0
+    ],
+    "pool_td2050_brl": [
+      11661,
+      36460.0,
+      62957.0,
+      91270.0,
+      97522.0,
+      104202.0,
+      111340.0,
+      118967.0,
+      127116.0,
+      135823.0,
+      145127.0,
+      155068.0,
+      165691.0,
+      177040.0,
+      189168.0
+    ],
+    "pool_total_brl": [
+      31680.0,
+      153894.0,
+      284694.0,
+      424684.0,
+      454508.0,
+      486427.0,
+      520588.0,
+      557149.0,
+      596278.0,
+      638154.0,
+      682973.0,
+      730940.0,
+      782277.0,
+      837219.0,
+      896021.0
+    ],
+    "alvo_pool_pct": 0.15,
+    "alvo_pool_brl_2040": 1729121.0,
+    "anos_cobertura_pos_fire": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "pool_disponivel_pos_fire": [
+      709338.0,
+      509592.0,
+      295520.0,
+      66407.0,
+      -178899.0,
+      -441545.0,
+      -722767.0,
+      -1023889.0,
+      -1346449.0,
+      -1691837.0
+    ],
+    "custo_vida_anual": 250000,
+    "taxa_crescimento_pool_pct": 7.07,
+    "metodologia_runway": "v[t] = v[t-1] × (1 + 7.07%) − R$250k/ano. Pool continua rendendo IPCA+7.07% enquanto não sacado. Runway: ~4.3 anos (gap a partir do ano 5).",
+    "gap_anos": [
+      {
+        "ano_pos_fire": 5,
+        "gap_brl": -178899.0
+      },
+      {
+        "ano_pos_fire": 6,
+        "gap_brl": -441545.0
+      },
+      {
+        "ano_pos_fire": 7,
+        "gap_brl": -722767.0
+      },
+      {
+        "ano_pos_fire": 8,
+        "gap_brl": -1023889.0
+      },
+      {
+        "ano_pos_fire": 9,
+        "gap_brl": -1346449.0
+      },
+      {
+        "ano_pos_fire": 10,
+        "gap_brl": -1691837.0
+      }
+    ],
+    "taxas": {
+      "td2040_real_pct": 7.07,
+      "td2050_real_pct": 6.85
+    },
+    "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação.",
+    "nota_pool_projetado": "Pool de R$896k em 2040 reflete posições atuais + DCA 2026-2028 sem novos aportes pós-2028. Para cenário DCA IPCA+ completo (projetado R$2.3M em carteira.md), pool cobre o custo de vida inteiramente — gap só ocorre no cenário atual subinvestido."
+  },
+  "lumpy_events": {
+    "_generated": "2026-04-10T21:44:11",
+    "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
+    "base": {
+      "pfire_2040": 0.8994,
+      "spending_brl": 250000
+    },
+    "eventos": [
+      {
+        "id": "casamento",
+        "label": "Casamento (2027)",
+        "spending_novo": 270000,
+        "ano_inicio": 2027,
+        "confirmado": true,
+        "pfire_2040": 0.8818,
+        "delta_pp": -1.8,
+        "patrimonio_necessario": 11250000.0
+      },
+      {
+        "id": "filho_escola",
+        "label": "Filho + escola (2030)",
+        "spending_novo": 300000,
+        "ano_inicio": 2030,
+        "confirmado": false,
+        "pfire_2040": 0.858,
+        "delta_pp": -4.1,
+        "patrimonio_necessario": 12500000.0
+      },
+      {
+        "id": "combinado",
+        "label": "Casamento + filho (2027-2030)",
+        "spending_novo": 300000,
+        "ano_inicio": 2030,
+        "confirmado": false,
+        "pfire_2040": 0.858,
+        "delta_pp": -4.1,
+        "patrimonio_necessario": 12500000.0
+      }
+    ],
+    "n_sim": 5000,
+    "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) não capturado — conservador (pior caso)."
   },
   "wellness_extras": {
     "cash_flow_12m": {
@@ -4477,20 +5363,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3481425,
-      3653288,
-      3833635,
-      4022884,
-      4221477,
-      4429872,
-      4648556,
-      4878035,
-      5118842,
-      5371537,
-      5636706,
-      5914966,
-      6206962,
-      6513372,
+      3461896,
+      3634255,
+      3815195,
+      4005143,
+      4204548,
+      4413882,
+      4633637,
+      4864334,
+      5106516,
+      5360756,
+      5627654,
+      5907840,
+      6201976,
+      6510756,
       6834909,
       6924402,
       7018236,
@@ -4531,20 +5417,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3481425,
-      3792261,
-      4130851,
-      4499671,
-      4901420,
-      5339040,
-      5815732,
-      6334986,
-      6900600,
-      7516715,
-      8187839,
-      8918885,
-      9715201,
-      10582615,
+      3461896,
+      3772504,
+      4110981,
+      4479827,
+      4881766,
+      5319768,
+      5797068,
+      6317193,
+      6883984,
+      7501629,
+      8174690,
+      8908140,
+      9707396,
+      10578364,
       11527476,
       11844559,
       12177020,
@@ -4585,20 +5471,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3481425,
-      3928824,
-      4433718,
-      5003497,
-      5646498,
-      6372131,
-      7191016,
-      8115136,
-      9158014,
-      10334914,
-      11663057,
-      13161880,
-      14853317,
-      16762121,
+      3461896,
+      3908355,
+      4412392,
+      4981431,
+      5623856,
+      6349130,
+      7167938,
+      8092343,
+      9135962,
+      10314171,
+      11644326,
+      13146024,
+      14841385,
+      16755388,
       18916227,
       19591664,
       20299860,
@@ -4668,7 +5554,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.128"
+  "version": "1.130"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8381,14 +9267,16 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildTimestamps],
+    status:   [buildSemaforoPanel, buildTimestamps, buildFireTrilha],
     perf:     [buildPremissasVsRealizado, function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
-               buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte],
+               buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
+               buildDrawdownHistory],
+    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
     plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
+               buildFireMatrix, buildSwrPercentiles, buildAporteSensitivity, buildLumpyEvents,
                function() {
                  const wiA = document.getElementById('wiAporte');
                  const wiR = document.getElementById('wiRetorno');
@@ -8763,6 +9651,438 @@ function buildBondPool() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: R1 — FIRE MATRIX
+// ═══════════════════════════════════════════════════════════════
+function buildFireMatrix() {
+  const el = document.getElementById('fireMatrixTable');
+  const sec = document.getElementById('fireMatrixSection');
+  if (!el || !sec) return;
+  const d = DATA.fire_matrix;
+  if (!d || !d.matrix || !d.swrs || !d.gastos) { sec.style.display = 'none'; return; }
+
+  const swrs = d.swrs;
+  const gastos = d.gastos;
+  const fmt = v => v != null ? (v * 100).toFixed(1) + '%' : '--';
+  const fmtGasto = v => 'R$' + (v / 1000).toFixed(0) + 'k';
+  const fmtSwr = v => (v * 100).toFixed(1) + '%';
+
+  let html = '<table class="fire-matrix-table"><thead><tr><th>SWR \\ Gasto</th>';
+  gastos.forEach(g => { html += '<th>' + fmtGasto(g) + '</th>'; });
+  html += '</tr></thead><tbody>';
+
+  swrs.forEach(swr => {
+    html += '<tr><td>SWR ' + fmtSwr(swr) + '</td>';
+    gastos.forEach(g => {
+      const key = swr + '_' + g;
+      const val = d.matrix[key];
+      const pct = val != null ? val * 100 : null;
+      const cls = pct == null ? '' : pct >= 90 ? 'fm-green' : pct >= 80 ? 'fm-yellow' : 'fm-red';
+      html += '<td class="' + cls + '">' + fmt(val) + '</td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: R2 — SWR PERCENTIS
+// ═══════════════════════════════════════════════════════════════
+function buildSwrPercentiles() {
+  const el = document.getElementById('swrPercentilesCards');
+  const sec = document.getElementById('swrPercentilesSection');
+  if (!el || !sec) return;
+  const d = DATA.fire_swr_percentis;
+  if (!d) { sec.style.display = 'none'; return; }
+
+  const fmtBrl = v => v != null ? 'R$' + (v / 1e6).toFixed(2) + 'M' : '--';
+  const fmtSwr = v => v != null ? v.toFixed(2) + '%' : '--';
+
+  const cards = [
+    { key: 'p10', label: 'P10 — Pessimista', swr: d.swr_p10_pct, pat: d.patrimonio_p10_2040, desc: 'Poucos recursos → SWR alta (mais exigência do portfólio)', cls: 'p10' },
+    { key: 'p50', label: 'P50 — Mediana', swr: d.swr_p50_pct, pat: d.patrimonio_p50_2040, desc: 'Cenário base (trajetória mediana do MC)', cls: 'p50' },
+    { key: 'p90', label: 'P90 — Otimista', swr: d.swr_p90_pct, pat: d.patrimonio_p90_2040, desc: 'Maior patrimônio → SWR baixa (carteira confortável)', cls: 'p90' },
+  ];
+
+  el.innerHTML = cards.map(c =>
+    '<div class="swr-pct-card ' + c.cls + '">' +
+      '<div class="spl">' + c.label + '</div>' +
+      '<div class="spv">' + fmtSwr(c.swr) + '</div>' +
+      '<div class="spsub pv">' + fmtBrl(c.pat) + ' em 2040</div>' +
+      '<div style="font-size:.6rem;color:var(--muted);margin-top:4px;line-height:1.4">' + c.desc + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: R3 — APORTE SENSITIVITY
+// ═══════════════════════════════════════════════════════════════
+function buildAporteSensitivity() {
+  const el = document.getElementById('aporteSensChart');
+  const sec = document.getElementById('aporteSensSection');
+  if (!el || !sec) return;
+  const d = DATA.fire_aporte_sensitivity;
+  if (!d || !d.aportes_brl || !d.pfire_2040) { sec.style.display = 'none'; return; }
+
+  const aportes = d.aportes_brl;
+  const pfires = d.pfire_2040.map(v => +(v * 100).toFixed(1));
+  const base = d.aporte_base || 25000;
+
+  if (charts.aporteSens) { charts.aporteSens.destroy(); }
+  const ctx = el.getContext('2d');
+  charts.aporteSens = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: aportes.map(v => 'R$' + (v / 1000).toFixed(0) + 'k'),
+      datasets: [{
+        label: 'P(FIRE@53) %',
+        data: pfires,
+        borderColor: 'rgba(59,130,246,1)',
+        backgroundColor: 'rgba(59,130,246,.12)',
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: aportes.map(v => Math.abs(v - base) < 1 ? 'rgba(234,179,8,1)' : 'rgba(59,130,246,1)'),
+        fill: true,
+        tension: 0.3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' P(FIRE) = ' + ctx.parsed.y + '%' } },
+        annotation: undefined,
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(71,85,105,.2)' } },
+        y: {
+          ticks: { color: '#94a3b8', font: { size: 10 }, callback: v => v + '%' },
+          grid: { color: 'rgba(71,85,105,.2)' },
+          min: Math.max(0, Math.min(...pfires) - 5),
+          max: Math.min(100, Math.max(...pfires) + 2),
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: R4 — MACRO STATUS BADGE
+// ═══════════════════════════════════════════════════════════════
+function renderMacroStatus() {
+  const el = document.getElementById('macroStatusBadge');
+  if (!el) return;
+  const status = DATA.fire?.plano_status || DATA.macro?.plano_status;
+  if (!status) { el.style.display = 'none'; return; }
+
+  let cls, icon, label;
+  if (status === 'PERMANECE') {
+    cls = 'macro-status-green'; icon = '✓'; label = 'Plano no Caminho';
+  } else if (status === 'MONITORAR') {
+    cls = 'macro-status-yellow'; icon = '⚠'; label = 'Monitorar';
+  } else {
+    cls = 'macro-status-red'; icon = '✕'; label = 'Revisar Plano';
+  }
+
+  el.innerHTML = '<span class="macro-status-badge ' + cls + '">' + icon + ' ' + label + '</span>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: R5 — FIRE TRILHA
+// ═══════════════════════════════════════════════════════════════
+function buildFireTrilha() {
+  const el = document.getElementById('fireTrilhaChart');
+  const sec = document.getElementById('fireTrilhaSection');
+  if (!el || !sec) return;
+  const d = DATA.fire_trilha;
+  if (!d || !d.dates || !d.realizado_brl) { sec.style.display = 'none'; return; }
+
+  const dates = d.dates;
+  const realizado = d.realizado_brl;
+  const trilha = d.trilha_brl || [];
+  const meta = d.meta_fire_brl;
+
+  // Linha horizontal de meta (replicar para todos os pontos)
+  const metaLine = meta != null ? dates.map(() => meta) : null;
+
+  const datasets = [
+    {
+      label: 'Realizado',
+      data: realizado,
+      borderColor: 'rgba(59,130,246,1)',
+      backgroundColor: 'rgba(59,130,246,.08)',
+      borderWidth: 2,
+      pointRadius: 0,
+      fill: false,
+      tension: 0.2,
+    },
+    {
+      label: 'Projetado',
+      data: trilha,
+      borderColor: 'rgba(59,130,246,.5)',
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderDash: [6, 3],
+      pointRadius: 0,
+      fill: false,
+      tension: 0.2,
+    },
+  ];
+
+  if (metaLine) {
+    datasets.push({
+      label: 'Meta FIRE',
+      data: metaLine,
+      borderColor: 'rgba(34,197,94,.7)',
+      backgroundColor: 'transparent',
+      borderWidth: 2,
+      borderDash: [4, 4],
+      pointRadius: 0,
+      fill: false,
+    });
+  }
+
+  if (charts.fireTrilha) { charts.fireTrilha.destroy(); }
+  const ctx = el.getContext('2d');
+  charts.fireTrilha = new Chart(ctx, {
+    type: 'line',
+    data: { labels: dates, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, labels: { color: '#94a3b8', font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const v = ctx.parsed.y;
+              return ' ' + ctx.dataset.label + ': R$' + (v / 1e6).toFixed(2) + 'M';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.15)' } },
+        y: {
+          ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => 'R$' + (v / 1e6).toFixed(1) + 'M' },
+          grid: { color: 'rgba(71,85,105,.15)' },
+        }
+      }
+    }
+  });
+
+  const srcEl = document.getElementById('fireTrilhaSrc');
+  if (srcEl && d.retorno_anual_premissa) {
+    srcEl.textContent = 'Projeção: r=' + (d.retorno_anual_premissa * 100).toFixed(2) + '%/ano · Aporte: R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês · Meta: R$' + (meta / 1e6).toFixed(2) + 'M em ' + d.meta_fire_date;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: N1 — DRAWDOWN HISTORY
+// ═══════════════════════════════════════════════════════════════
+function buildDrawdownHistory() {
+  const el = document.getElementById('drawdownHistChart');
+  const sec = document.getElementById('drawdownHistSection');
+  if (!el || !sec) return;
+  const d = DATA.drawdown_history;
+  if (!d || !d.dates || !d.drawdown_pct) { sec.style.display = 'none'; return; }
+
+  const dates = d.dates;
+  const vals = d.drawdown_pct;
+
+  if (charts.drawdownHist) { charts.drawdownHist.destroy(); }
+  const ctx = el.getContext('2d');
+  charts.drawdownHist = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Drawdown %',
+        data: vals,
+        backgroundColor: vals.map(v => v < -10 ? 'rgba(239,68,68,.7)' : v < -5 ? 'rgba(239,68,68,.45)' : 'rgba(239,68,68,.25)'),
+        borderColor: vals.map(v => v < -10 ? 'rgba(239,68,68,.9)' : 'rgba(239,68,68,.4)'),
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' Drawdown: ' + ctx.parsed.y.toFixed(1) + '%' } },
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', font: { size: 8 }, maxTicksLimit: 10 }, grid: { color: 'rgba(71,85,105,.1)' } },
+        y: {
+          ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => v + '%' },
+          grid: { color: 'rgba(71,85,105,.15)' },
+          max: 2,
+        }
+      }
+    }
+  });
+
+  // Crises table
+  const crisesEl = document.getElementById('drawdownCrisesTable');
+  if (crisesEl && d.crises && d.crises.length > 0) {
+    let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:4px">';
+    html += '<thead><tr><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:left">Crise</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Início</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Fim</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:right">Max DD</th></tr></thead><tbody>';
+    d.crises.forEach(c => {
+      html += '<tr><td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2)">' + (c.nome || '--') + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center">' + (c.inicio || '--') + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center">' + (c.fim || '--') + '</td>' +
+        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;color:var(--red);font-weight:600">' + (c.drawdown_max != null ? c.drawdown_max.toFixed(1) + '%' : '--') + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    crisesEl.innerHTML = html;
+  }
+
+  // Nota metodologia
+  const notaEl = document.getElementById('drawdownHistNota');
+  if (notaEl && d.nota_metodologia) {
+    notaEl.textContent = d.nota_metodologia + (d.max_drawdown != null ? ' · Max drawdown: ' + d.max_drawdown.toFixed(1) + '%' : '');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: N2 — ETF COMPOSITION
+// ═══════════════════════════════════════════════════════════════
+function buildEtfComposition() {
+  const el = document.getElementById('etfCompGrid');
+  const sec = document.getElementById('etfCompSection');
+  if (!el || !sec) return;
+  const d = DATA.etf_composition;
+  if (!d || !d.etfs) { sec.style.display = 'none'; return; }
+
+  const factorColors = { market: '#3b82f6', value: '#f97316', size: '#a855f7', quality: '#22c55e' };
+  const factorLabels = { market: 'Market', value: 'Value', size: 'Size', quality: 'Quality' };
+
+  let html = '';
+  Object.entries(d.etfs).forEach(([ticker, etf]) => {
+    html += '<div class="etf-comp-card">';
+    html += '<div class="etf-name">' + ticker + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></div>';
+
+    // Regiões
+    if (etf.regioes) {
+      html += '<div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Regiões</div>';
+      Object.entries(etf.regioes).forEach(([reg, pct]) => {
+        const pctPx = Math.round(pct * 100);
+        html += '<div class="etf-comp-bar-row"><span>' + reg + '</span><span>' + pctPx + '%</span></div>';
+        html += '<div class="etf-comp-bar" style="width:' + pctPx + '%;background:rgba(59,130,246,.5)"></div>';
+      });
+    }
+
+    // Fatores
+    if (etf.fatores) {
+      html += '<div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:8px;margin-bottom:4px">Exposição Fatorial</div>';
+      Object.entries(etf.fatores).forEach(([f, v]) => {
+        if (v == null || v === 0) return;
+        const pctPx = Math.round(v * 100);
+        const color = factorColors[f] || '#94a3b8';
+        html += '<div class="etf-comp-bar-row" style="color:var(--text)"><span>' + (factorLabels[f] || f) + '</span><span>' + pctPx + '%</span></div>';
+        html += '<div class="etf-comp-bar" style="width:' + pctPx + '%;background:' + color + ';opacity:0.7"></div>';
+      });
+    }
+
+    html += '</div>';
+  });
+
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: N3 — BOND POOL RUNWAY CHART
+// ═══════════════════════════════════════════════════════════════
+function buildBondPoolRunway() {
+  const el = document.getElementById('bondPoolRunwayChart');
+  const wrap = document.getElementById('bondPoolRunwayChartWrap');
+  if (!el || !wrap) return;
+  const d = DATA.bond_pool_runway;
+  if (!d || !d.anos_cobertura_pos_fire || !d.pool_disponivel_pos_fire) return;
+
+  const anos = d.anos_cobertura_pos_fire;
+  const pool = d.pool_disponivel_pos_fire;
+
+  wrap.style.display = 'block';
+
+  if (charts.bondPoolRunway) { charts.bondPoolRunway.destroy(); }
+  const ctx = el.getContext('2d');
+  charts.bondPoolRunway = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: anos.map(a => 'Ano ' + a),
+      datasets: [{
+        label: 'Pool disponível (R$)',
+        data: pool,
+        backgroundColor: pool.map(v => v >= 0 ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.5)'),
+        borderColor: pool.map(v => v >= 0 ? 'rgba(34,197,94,.8)' : 'rgba(239,68,68,.8)'),
+        borderWidth: 1,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' R$' + (ctx.parsed.y / 1000).toFixed(0) + 'k' } },
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: 'rgba(71,85,105,.1)' } },
+        y: {
+          ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => 'R$' + (v / 1000).toFixed(0) + 'k' },
+          grid: { color: 'rgba(71,85,105,.15)' },
+        }
+      }
+    }
+  });
+
+  const notaEl = document.getElementById('bondPoolRunwayNota');
+  if (notaEl && d.metodologia_runway) {
+    notaEl.textContent = d.metodologia_runway + (d.nota_pool_projetado ? ' · ' + d.nota_pool_projetado : '');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HD-perplexity-review: N4 — LUMPY EVENTS
+// ═══════════════════════════════════════════════════════════════
+function buildLumpyEvents() {
+  const el = document.getElementById('lumpyEventsBody');
+  const sec = document.getElementById('lumpyEventsSection');
+  if (!el || !sec) return;
+  const d = DATA.lumpy_events;
+  if (!d || !d.eventos) { sec.style.display = 'none'; return; }
+
+  const basePfire = d.base?.pfire_2040;
+  const baseSpending = d.base?.spending_brl;
+
+  let html = '';
+  if (basePfire != null) {
+    html += '<div style="margin-bottom:10px;padding:8px 12px;background:rgba(34,197,94,.08);border-radius:6px;border-left:3px solid var(--green);font-size:.78rem">' +
+      '<strong>Base:</strong> Spending R$' + (baseSpending / 1000).toFixed(0) + 'k/ano → P(FIRE@53) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
+    '</div>';
+  }
+
+  html += '<table class="lumpy-table"><thead><tr>' +
+    '<th>Evento</th><th>Spending novo</th><th>Início</th><th>Confirmado</th><th style="text-align:right">P(FIRE)</th><th style="text-align:right">Delta</th>' +
+    '</tr></thead><tbody>';
+
+  d.eventos.forEach(e => {
+    const delta = e.delta_pp;
+    const deltaColor = delta < 0 ? 'var(--red)' : 'var(--green)';
+    const confirmado = e.confirmado ? '<span style="color:var(--yellow)">Sim</span>' : '<span style="color:var(--muted)">Não</span>';
+    html += '<tr>' +
+      '<td><strong>' + (e.label || e.id) + '</strong></td>' +
+      '<td class="pv">R$' + ((e.spending_novo || 0) / 1000).toFixed(0) + 'k/ano</td>' +
+      '<td>' + (e.ano_inicio || '--') + '</td>' +
+      '<td>' + confirmado + '</td>' +
+      '<td style="text-align:right;font-weight:600">' + (e.pfire_2040 != null ? (e.pfire_2040 * 100).toFixed(1) + '%' : '--') + '</td>' +
+      '<td style="text-align:right;font-weight:700;color:' + deltaColor + '">' + (delta != null ? (delta > 0 ? '+' : '') + delta.toFixed(1) + 'pp' : '--') + '</td>' +
+    '</tr>';
+  });
+
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // P2: TIMESTAMPS / STALENESS BADGES (footer)
 // ═══════════════════════════════════════════════════════════════
 function buildTimestamps() {
@@ -9086,6 +10406,8 @@ function buildCagrVsTwr() {
   buildGlidePath();
   buildFireBuckets();
   buildBondPool();
+  buildBondPoolRunway();
+  renderMacroStatus();
   buildBrasilConcentracao();
   buildMacroCards();
   buildDcaStatus();
