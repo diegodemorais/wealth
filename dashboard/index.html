@@ -642,10 +642,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.</div>
 </div>
 
-<!-- S13: FIRE BUCKETS DONUT -->
-<div class="grid-2" data-in-tab="plan">
+<!-- S13: ASSET MIX -->
+<div class="grid-2" data-in-tab="aloc">
 <div class="section">
-  <h2>FIRE Buckets — Alocação Atual</h2>
+  <h2>Asset Mix — por Classe</h2>
   <div class="chart-box-sm"><canvas id="fireBucketsDonut"></canvas></div>
 </div>
 <div class="section">
@@ -1340,8 +1340,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T07:14:19-03:00'); // BRT (UTC-3)
-const VERSION = '1.142';
+const GENERATED_AT = new Date('2026-04-11T07:16:54-03:00'); // BRT (UTC-3)
+const VERSION = '1.143';
 
 const DATA = {
   "_generated": "2026-04-11T07:14:19",
@@ -6820,7 +6820,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.142"
+  "version": "1.143"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10779,7 +10779,7 @@ function _initTabCharts(tab) {
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
+    aloc:     [buildFireBuckets, buildDonuts, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
     plan:     [buildFireTrilha, buildScenarios, buildScenarioComparison, buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
                buildNetWorthProjection],
@@ -11911,7 +11911,6 @@ function buildCagrVsTwr() {
   buildEventosVida();
   buildPfireFamilia();
   buildGlidePath();
-  buildFireBuckets();
   buildBondPool();
   buildBondPoolRunway();
   renderMacroStatus();

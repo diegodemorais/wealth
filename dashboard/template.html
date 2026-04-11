@@ -642,10 +642,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.</div>
 </div>
 
-<!-- S13: FIRE BUCKETS DONUT -->
-<div class="grid-2" data-in-tab="plan">
+<!-- S13: ASSET MIX -->
+<div class="grid-2" data-in-tab="aloc">
 <div class="section">
-  <h2>FIRE Buckets — Alocação Atual</h2>
+  <h2>Asset Mix — por Classe</h2>
   <div class="chart-box-sm"><canvas id="fireBucketsDonut"></canvas></div>
 </div>
 <div class="section">
@@ -5298,7 +5298,7 @@ function _initTabCharts(tab) {
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
+    aloc:     [buildFireBuckets, buildDonuts, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
     plan:     [buildFireTrilha, buildScenarios, buildScenarioComparison, buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
                buildNetWorthProjection],
@@ -6430,7 +6430,6 @@ function buildCagrVsTwr() {
   buildEventosVida();
   buildPfireFamilia();
   buildGlidePath();
-  buildFireBuckets();
   buildBondPool();
   buildBondPoolRunway();
   renderMacroStatus();
