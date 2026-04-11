@@ -4,6 +4,7 @@
   "_note": "Top N drawdown events. 61 meses de histórico real (2021-2026). Não usar para inferência estatística de longo prazo.",
   "events": [
     {
+      "name": "Tightening 2022",
       "start": "2022-02",
       "trough": "2022-09",
       "end": "2024-03",
@@ -14,6 +15,7 @@
       "recovered": true
     },
     {
+      "name": "Tariff Shock",
       "start": "2025-09",
       "trough": "2025-09",
       "end": null,
@@ -24,6 +26,7 @@
       "recovered": false
     },
     {
+      "name": "DeepSeek/Tech Selloff",
       "start": "2025-01",
       "trough": "2025-03",
       "end": "2025-04",
@@ -34,6 +37,7 @@
       "recovered": true
     },
     {
+      "name": "Tapering Scare",
       "start": "2021-06",
       "trough": "2021-06",
       "end": "2021-07",
@@ -44,6 +48,7 @@
       "recovered": true
     },
     {
+      "name": "Omicron/Reflation",
       "start": "2021-11",
       "trough": "2021-11",
       "end": "2022-01",

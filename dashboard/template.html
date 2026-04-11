@@ -6119,7 +6119,7 @@ function buildDrawdownHistory() {
   if (crisesEl && evts && evts.length > 0) {
     const th = s => '<th style="padding:4px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:' + (s||'center') + '">';
     let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:8px">';
-    html += '<thead><tr>' + th('left') + '#</th>' + th() + 'Início</th>' + th() + 'Fundo</th>' + th() + 'Recuperação</th>' + th('right') + 'Profund.</th>' + th('right') + 'Dur.</th>' + th('right') + 'Recup.</th></tr></thead><tbody>';
+    html += '<thead><tr>' + th('left') + 'Evento</th>' + th() + 'Início</th>' + th() + 'Fundo</th>' + th() + 'Recuperação</th>' + th('right') + 'Profund.</th>' + th('right') + 'Dur.</th>' + th('right') + 'Recup.</th></tr></thead><tbody>';
     evts.forEach((e, i) => {
       const end   = e.end    || (e.recovered === false ? '<span style="color:var(--yellow)">em aberto</span>' : '--');
       const dur   = e.duration_months != null ? (e.duration_months > 0 ? e.duration_months + 'm' : '<1m') : '--';
@@ -6127,8 +6127,9 @@ function buildDrawdownHistory() {
       const depth = e.depth_pct != null ? e.depth_pct.toFixed(1) + '%' : (e.drawdown_max != null ? e.drawdown_max.toFixed(1) + '%' : '--');
       const start = e.start  || e.inicio || '--';
       const trough = e.trough || e.fim   || '--';
+      const name  = e.name || ('#' + (i+1));
       const td = (v, align, extra) => '<td style="padding:4px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:' + (align||'center') + ';' + (extra||'') + '">' + v + '</td>';
-      html += '<tr>' + td(i+1,'left') + td(start) + td(trough) + td(end) +
+      html += '<tr>' + td(name,'left','font-weight:500') + td(start) + td(trough) + td(end) +
         td(depth, 'right', 'color:var(--red);font-weight:600') + td(dur,'right') + td(recup,'right') + '</tr>';
     });
     html += '</tbody></table>';

@@ -1368,12 +1368,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T10:08:18-03:00'); // BRT (UTC-3)
-const VERSION = '1.152';
+const GENERATED_AT = new Date('2026-04-11T12:25:40-03:00'); // BRT (UTC-3)
+const VERSION = '1.153';
 
 const DATA = {
-  "_generated": "2026-04-11T10:08:18",
-  "_generated_brt": "2026-04-11T10:08:18-03:00",
+  "_generated": "2026-04-11T12:25:40",
+  "_generated_brt": "2026-04-11T12:25:40-03:00",
   "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -2816,7 +2816,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -2990,7 +2990,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2999,7 +2999,7 @@ const DATA = {
       253.74,
       283.54,
       296.13,
-      304.68,
+      304.69,
       321.64,
       339.22,
       328.39,
@@ -3030,7 +3030,7 @@ const DATA = {
       390.1,
       419.59,
       398.21,
-      428.81,
+      428.82,
       413.99,
       417.32,
       418.77,
@@ -3243,7 +3243,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -6236,6 +6236,7 @@ const DATA = {
     ],
     "events": [
       {
+        "name": "Tightening 2022",
         "start": "2022-02",
         "trough": "2022-09",
         "end": "2024-03",
@@ -6246,6 +6247,7 @@ const DATA = {
         "recovered": true
       },
       {
+        "name": "Tariff Shock",
         "start": "2025-09",
         "trough": "2025-09",
         "end": null,
@@ -6256,6 +6258,7 @@ const DATA = {
         "recovered": false
       },
       {
+        "name": "DeepSeek/Tech Selloff",
         "start": "2025-01",
         "trough": "2025-03",
         "end": "2025-04",
@@ -6266,6 +6269,7 @@ const DATA = {
         "recovered": true
       },
       {
+        "name": "Tapering Scare",
         "start": "2021-06",
         "trough": "2021-06",
         "end": "2021-07",
@@ -6276,6 +6280,7 @@ const DATA = {
         "recovered": true
       },
       {
+        "name": "Omicron/Reflation",
         "start": "2021-11",
         "trough": "2021-11",
         "end": "2022-01",
@@ -7093,7 +7098,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.152"
+  "version": "1.153"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -11845,7 +11850,7 @@ function buildDrawdownHistory() {
   if (crisesEl && evts && evts.length > 0) {
     const th = s => '<th style="padding:4px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:' + (s||'center') + '">';
     let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:8px">';
-    html += '<thead><tr>' + th('left') + '#</th>' + th() + 'Início</th>' + th() + 'Fundo</th>' + th() + 'Recuperação</th>' + th('right') + 'Profund.</th>' + th('right') + 'Dur.</th>' + th('right') + 'Recup.</th></tr></thead><tbody>';
+    html += '<thead><tr>' + th('left') + 'Evento</th>' + th() + 'Início</th>' + th() + 'Fundo</th>' + th() + 'Recuperação</th>' + th('right') + 'Profund.</th>' + th('right') + 'Dur.</th>' + th('right') + 'Recup.</th></tr></thead><tbody>';
     evts.forEach((e, i) => {
       const end   = e.end    || (e.recovered === false ? '<span style="color:var(--yellow)">em aberto</span>' : '--');
       const dur   = e.duration_months != null ? (e.duration_months > 0 ? e.duration_months + 'm' : '<1m') : '--';
@@ -11853,8 +11858,9 @@ function buildDrawdownHistory() {
       const depth = e.depth_pct != null ? e.depth_pct.toFixed(1) + '%' : (e.drawdown_max != null ? e.drawdown_max.toFixed(1) + '%' : '--');
       const start = e.start  || e.inicio || '--';
       const trough = e.trough || e.fim   || '--';
+      const name  = e.name || ('#' + (i+1));
       const td = (v, align, extra) => '<td style="padding:4px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:' + (align||'center') + ';' + (extra||'') + '">' + v + '</td>';
-      html += '<tr>' + td(i+1,'left') + td(start) + td(trough) + td(end) +
+      html += '<tr>' + td(name,'left','font-weight:500') + td(start) + td(trough) + td(end) +
         td(depth, 'right', 'color:var(--red);font-weight:600') + td(dur,'right') + td(recup,'right') + '</tr>';
     });
     html += '</tbody></table>';
