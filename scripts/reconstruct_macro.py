@@ -128,6 +128,83 @@ def _get_bitcoin(cache: dict) -> float | None:
     return val
 
 
+def _calc_plano_status(state: dict, selic_meta: float | None) -> dict:
+    """
+    R4 — Engine mecânica de status do plano.
+    Regras do IPS (config.MACRO_REGRAS). Zero interpretação subjetiva.
+    Inputs lidos de dashboard_state.json e macro_snapshot.json.
+    """
+    try:
+        from config import MACRO_REGRAS, PISO_TAXA_IPCA_LONGO
+    except ImportError:
+        return {"status": "INDEFINIDO", "gatilho_ativo": "config.MACRO_REGRAS não encontrado"}
+
+    # Inputs
+    fire_data = state.get("fire", {})
+    wellness  = state.get("wellness", {}).get("metrics", {})
+
+    pfire = fire_data.get("pfire_base", None)  # ex: 90.4 → 0.904
+    if pfire is not None and pfire > 1:
+        pfire = pfire / 100.0  # normalizar se vier como percentual
+
+    drift_max = wellness.get("drift_max", {}).get("value", None)   # pp
+    ipca_taxa = state.get("mercado_mtd", {}).get("ipca2040_taxa", None)  # % a.a.
+    if ipca_taxa is None:
+        # Fallback: rf.ipca2040.taxa
+        ipca_taxa = state.get("rf", {}).get("ipca2040", {}).get("taxa", None)
+
+    # Avaliar cada dimensão
+    status_final = MACRO_REGRAS["status_permanece"]
+    gatilhos = []
+
+    # 1. P(FIRE)
+    if pfire is not None:
+        if pfire < MACRO_REGRAS["pfire_monitorar_min"]:
+            status_final = MACRO_REGRAS["status_revisar"]
+            gatilhos.append(f"P(FIRE) {pfire:.1%} < 80% — REVISAR")
+        elif pfire < MACRO_REGRAS["pfire_permanece_min"]:
+            if status_final != MACRO_REGRAS["status_revisar"]:
+                status_final = MACRO_REGRAS["status_monitorar"]
+            gatilhos.append(f"P(FIRE) {pfire:.1%} entre 80–85% — MONITORAR")
+
+    # 2. Drift máximo
+    if drift_max is not None:
+        if drift_max > MACRO_REGRAS["drift_monitorar_max"]:
+            status_final = MACRO_REGRAS["status_revisar"]
+            gatilhos.append(f"Drift {drift_max:.1f}pp > 10pp — REVISAR")
+        elif drift_max > MACRO_REGRAS["drift_permanece_max"]:
+            if status_final != MACRO_REGRAS["status_revisar"]:
+                status_final = MACRO_REGRAS["status_monitorar"]
+            gatilhos.append(f"Drift {drift_max:.1f}pp entre 5–10pp — MONITORAR")
+
+    # 3. Taxa IPCA+
+    if ipca_taxa is not None:
+        if ipca_taxa < MACRO_REGRAS["ipca_taxa_revisar_max"]:
+            status_final = MACRO_REGRAS["status_revisar"]
+            gatilhos.append(f"Taxa IPCA+ {ipca_taxa:.2f}% < 5.5% — REVISAR")
+        elif ipca_taxa < PISO_TAXA_IPCA_LONGO:  # piso = 6.0%
+            if status_final != MACRO_REGRAS["status_revisar"]:
+                status_final = MACRO_REGRAS["status_monitorar"]
+            gatilhos.append(f"Taxa IPCA+ {ipca_taxa:.2f}% entre 5.5–6.0% — MONITORAR")
+        else:
+            gatilhos.append(f"DCA IPCA+ ativo — {ipca_taxa:.2f}% ≥ 6.0%")
+
+    gatilho_ativo = gatilhos[0] if gatilhos else "Nenhum gatilho ativo"
+
+    print(f"    → Plano: {status_final} | {gatilho_ativo}")
+
+    return {
+        "status": status_final,
+        "gatilho_ativo": gatilho_ativo,
+        "todos_gatilhos": gatilhos,
+        "inputs": {
+            "pfire": round(pfire, 4) if pfire is not None else None,
+            "drift_max_pp": drift_max,
+            "ipca_taxa_pct": ipca_taxa,
+        },
+    }
+
+
 def main():
     print("reconstruct_macro.py — macro snapshot")
     cache = _load_cache()
@@ -162,6 +239,9 @@ def main():
     except Exception:
         depreciacao_brl_premissa = cache.get("depreciacao_brl_premissa", 0.005)
 
+    # ── R4: plano_status — engine mecânica (fonte: IPS + config.MACRO_REGRAS) ──
+    plano_status = _calc_plano_status(state, selic_meta)
+
     snapshot = {
         "_generated":              datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "selic_meta":              selic_meta,
@@ -170,6 +250,7 @@ def main():
         "depreciacao_brl_premissa": depreciacao_brl_premissa,
         "exposicao_cambial_pct":   exposicao_cambial_pct,
         "bitcoin_usd":             bitcoin_usd,
+        "plano_status":            plano_status,
         # cambio é injetado pelo generate_data.py no momento da montagem do DATA
     }
 

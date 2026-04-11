@@ -158,6 +158,62 @@ PESOS_SHADOW_C = {
 }
 
 
+# ─── ETF COMPOSITION (fonte: factsheets FTSE/justETF — dados target, aproximados) ───
+# Regiões: participação aproximada no índice. Fatores: exposição relativa (0=none, 1=full).
+# Atualizar quando factsheets forem revisados (anual).
+
+ETF_COMPOSITION = {
+    "SWRD": {
+        "nome": "MSCI World",
+        "descricao": "Invesco MSCI World UCITS ETF (Acc)",
+        "regiao_primaria": "Developed Markets",
+        "regioes": {"EUA": 0.65, "Europa": 0.22, "Japão": 0.06, "Outros DM": 0.07},
+        "fatores": {"market": 1.0, "value": 0.0, "size": 0.0, "quality": 0.0},
+    },
+    "AVGS": {
+        "nome": "Avantis Global Small Cap Value",
+        "descricao": "Avantis Global Small Cap Value UCITS ETF",
+        "regiao_primaria": "Developed Markets ex-US",
+        "regioes": {"Europa": 0.45, "Japão": 0.25, "EUA": 0.15, "Outros": 0.15},
+        "fatores": {"market": 1.0, "value": 0.7, "size": 0.8, "quality": 0.3},
+    },
+    "AVEM": {
+        "nome": "Avantis Emerging Markets",
+        "descricao": "Avantis Emerging Markets UCITS ETF",
+        "regiao_primaria": "Emerging Markets",
+        "regioes": {"China": 0.28, "India": 0.19, "Taiwan": 0.16, "Outros EM": 0.37},
+        "fatores": {"market": 1.0, "value": 0.5, "size": 0.3, "quality": 0.2},
+    },
+}
+
+
+# ─── MACRO REGRAS — engine de status do plano (fonte: IPS + carteira.md) ─────
+# Regras mecânicas: zero interpretação subjetiva. Inputs lidos de outros JSONs.
+# Ordem de prioridade: REVISAR > MONITORAR > PERMANECE (pior estado vence).
+
+MACRO_REGRAS = {
+    # Thresholds P(FIRE)
+    "pfire_permanece_min": 0.85,   # P(FIRE) > 85% → PERMANECE (se demais OK)
+    "pfire_monitorar_min": 0.80,   # 80–85% → MONITORAR
+    # Abaixo de 80% → REVISAR
+
+    # Thresholds drift máximo (pp = percentage points)
+    "drift_permanece_max": 5.0,    # drift < 5pp → PERMANECE
+    "drift_monitorar_max": 10.0,   # 5–10pp → MONITORAR
+    # Acima de 10pp → REVISAR
+
+    # Thresholds taxa IPCA+ (% a.a.)
+    "ipca_taxa_monitorar_min": 5.5,  # taxa entre 5.5–6.0% → MONITORAR
+    "ipca_taxa_revisar_max": 5.5,    # taxa < 5.5% → REVISAR
+    # taxa >= 6.0% = normal (acima do piso)
+
+    # Status labels
+    "status_permanece": "PLANO_PERMANECE",
+    "status_monitorar": "MONITORAR",
+    "status_revisar": "REVISAR",
+}
+
+
 # ─── DASHBOARD STATE (JSON compartilhado entre scripts e HTML) ───────────────
 
 import json
