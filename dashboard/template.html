@@ -367,26 +367,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
-<!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
-<div class="section section-critical collapsible" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
-<h2 onclick="toggleSemaforoPanel()">Semáforos de Gatilhos</h2>
-<div id="semaforoSummary" style="font-size:.75rem;color:var(--muted);margin:4px 0 2px">—</div>
-<div class="collapse-body" id="semaforoCollapseBody" style="display:none">
-<table class="semaforo-table" id="semaforoBody">
-<!-- gerado por buildSemaforoPanel() -->
-</table>
-</div>
-</div>
-
-<!-- P2: TAX — IR DIFERIDO -->
-<div class="section collapsible" id="taxIrSection" data-in-tab="plan">
-<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Ganhos não Realizados (ETFs UCITS) <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
-<div class="collapse-body">
-<div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
-<div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
-</div>
-</div>
-
 <!-- S4: TIME TO FIRE -->
 <div class="section" data-in-tab="status">
 <h2>Time to FIRE</h2>
@@ -400,6 +380,17 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="fireScenarioGrid"></div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-top:6px" id="fireScenarioNote">—</div>
+</div>
+
+<!-- P1: PAINEL DE SEMÁFOROS DE GATILHOS -->
+<div class="section section-critical collapsible" data-in-tab="status" id="semaforoPanel" style="margin-bottom:14px">
+<h2 onclick="toggleSemaforoPanel()">Semáforos de Gatilhos</h2>
+<div id="semaforoSummary" style="font-size:.75rem;color:var(--muted);margin:4px 0 2px">—</div>
+<div class="collapse-body" id="semaforoCollapseBody" style="display:none">
+<table class="semaforo-table" id="semaforoBody">
+<!-- gerado por buildSemaforoPanel() -->
+</table>
+</div>
 </div>
 
 <!-- S5: KPI FIRE -->
@@ -447,6 +438,45 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
+
+<!-- S10: P(FIRE) + TORNADO + SPENDING -->
+<div class="section" data-in-tab="status">
+<h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
+<div class="grid-2" style="margin-bottom:0">
+<div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações — FIRE@53</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px" id="pfireScenarioRow">
+    <div class="scenario-card" style="text-align:center;padding:10px 8px">
+      <div id="pfire53BaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
+      <div style="font-size:1.6rem;font-weight:800" id="pfire53Base">—</div>
+      <div style="font-size:.6rem;color:var(--muted)">Base</div>
+    </div>
+    <div class="scenario-card" style="text-align:center;padding:10px 8px">
+      <div id="pfire53FavBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Favorável</div>
+      <div style="font-size:1.6rem;font-weight:800" id="pfire53Fav">—</div>
+      <div style="font-size:.6rem;color:var(--muted)">Favorável</div>
+    </div>
+    <div class="scenario-card" style="text-align:center;padding:10px 8px">
+      <div id="pfire53StressBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Stress</div>
+      <div style="font-size:1.6rem;font-weight:800" id="pfire53Stress">—</div>
+      <div style="font-size:.6rem;color:var(--muted)">Stress</div>
+    </div>
+  </div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Progresso Patrimonial</div>
+  <div class="progress-row">
+    <div class="progress-label"><span id="pfirePatLabel" class="pv">—</span><span id="pfirePatPct">—</span></div>
+    <div class="progress-bar">
+      <div id="pfirePatFill" class="progress-fill" style="background:var(--accent)"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted);margin-top:4px" class="pv" id="pfirePatMeta">—</div>
+</div>
+<div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
+  <div class="chart-box-sm"><canvas id="tornadoChart"></canvas></div>
+</div>
+</div>
+</div>
 
 <!-- S2: FINANCIAL WELLNESS SCORE (colapsável) -->
 <div class="section collapsible" data-in-tab="status">
@@ -542,6 +572,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
 </div>
 
+<!-- R5: FIRE TRILHA — Realizado vs Projetado -->
+<div class="section" data-in-tab="plan" id="fireTrilhaSection">
+<h2>Trilha FIRE — Realizado vs Projetado</h2>
+<div class="chart-box" style="height:260px"><canvas id="fireTrilhaChart"></canvas></div>
+<div class="src" id="fireTrilhaSrc">Trilha patrimonial realizada vs projeção linear para meta FIRE.</div>
+</div>
+
 <!-- S9: SCENARIO COMPARISON (movido para plan) -->
 <div class="grid-2" data-in-tab="plan">
 <div class="section">
@@ -555,50 +592,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
-<!-- S10: P(FIRE) + TORNADO + SPENDING -->
-<div class="section" data-in-tab="status">
-<h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
-<div class="grid-2" style="margin-bottom:0">
-<div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações — FIRE@53</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px" id="pfireScenarioRow">
-    <div class="scenario-card" style="text-align:center;padding:10px 8px">
-      <div id="pfire53BaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
-      <div style="font-size:1.6rem;font-weight:800" id="pfire53Base">—</div>
-      <div style="font-size:.6rem;color:var(--muted)">Base</div>
-    </div>
-    <div class="scenario-card" style="text-align:center;padding:10px 8px">
-      <div id="pfire53FavBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Favorável</div>
-      <div style="font-size:1.6rem;font-weight:800" id="pfire53Fav">—</div>
-      <div style="font-size:.6rem;color:var(--muted)">Favorável</div>
-    </div>
-    <div class="scenario-card" style="text-align:center;padding:10px 8px">
-      <div id="pfire53StressBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Stress</div>
-      <div style="font-size:1.6rem;font-weight:800" id="pfire53Stress">—</div>
-      <div style="font-size:.6rem;color:var(--muted)">Stress</div>
-    </div>
-  </div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Progresso Patrimonial</div>
-  <div class="progress-row">
-    <div class="progress-label"><span id="pfirePatLabel" class="pv">—</span><span id="pfirePatPct">—</span></div>
-    <div class="progress-bar">
-      <div id="pfirePatFill" class="progress-fill" style="background:var(--accent)"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:4px" class="pv" id="pfirePatMeta">—</div>
-</div>
-<div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
-  <div class="chart-box-sm"><canvas id="tornadoChart"></canvas></div>
-</div>
-</div>
-</div>
-
-<!-- R5: FIRE TRILHA — Realizado vs Projetado -->
-<div class="section" data-in-tab="status" id="fireTrilhaSection">
-<h2>Trilha FIRE — Realizado vs Projetado</h2>
-<div class="chart-box" style="height:260px"><canvas id="fireTrilhaChart"></canvas></div>
-<div class="src" id="fireTrilhaSrc">Trilha patrimonial realizada vs projeção linear para meta FIRE.</div>
+<!-- F4: Scenario Comparison Table -->
+<div class="section" data-in-tab="plan">
+<h2>FIRE@53 vs. FIRE@50 — Comparação Detalhada</h2>
+<div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
+<div class="src">Base: Monte Carlo 10k simulações</div>
 </div>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
@@ -671,7 +669,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S14: FAN CHART P10/P50/P90 (colapsável — F7 é versão superior com spending smile) -->
 <div class="section collapsible" data-in-tab="plan">
-<h2 onclick="this.parentElement.classList.toggle('open')">Fan Chart — Trajetórias Patrimoniais P10/P50/P90 <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(ver F7 em Projeções)</span></h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Fan Chart — Trajetórias Patrimoniais P10/P50/P90 <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(ver F7 abaixo)</span></h2>
 <div class="collapse-body">
 <div class="chart-box-lg"><canvas id="fanChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.75rem;color:var(--yellow)">
@@ -681,6 +679,30 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
+<!-- F7: Net Worth Projection P10/P50/P90 -->
+<div class="section" data-in-tab="plan">
+<h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
+<div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
+<div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
+  ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
+  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS <span class="pv">R$18k/ano</span> real a partir de age 65.
+</div>
+<div class="src pv" id="netWorthProjectionSrc">Base: Monte Carlo 10k simulações · R$ reais constante 2026</div>
+</div>
+
+<!-- R2: SWR PERCENTIS P10/P50/P90 -->
+<div class="section" data-in-tab="plan" id="swrPercentilesSection">
+<h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
+<div class="swr-pct-grid" id="swrPercentilesCards"></div>
+<div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
+</div>
+
+<!-- R1: FIRE MATRIX — P(Sucesso) por SWR × Gasto -->
+<div class="section" data-in-tab="plan" id="fireMatrixSection">
+<h2>FIRE Matrix — P(Sucesso 30 anos) por SWR × Gasto</h2>
+<div id="fireMatrixTable" style="overflow-x:auto"></div>
+<div class="src">Verde ≥90%, Amarelo 80-90%, Vermelho &lt;80%. Eixo: SWR (linha) × Gasto Anual BRL (coluna).</div>
+</div>
 
 <!-- S15: GUARDRAILS -->
 <div class="section" data-in-tab="plan">
@@ -695,6 +717,15 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto <span class="pv">R$350k</span>)
 </div>
 <div class="src" id="guardrailsSrc">—</div>
+</div>
+
+<!-- F2: Spending Guardrails -->
+<div class="section collapsible open" data-in-tab="plan">
+  <h2 onclick="this.parentElement.classList.toggle('open')">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
+  <div class="collapse-body">
+  <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
+  <div class="src" id="spendingGuardrailsSrc">Base: Monte Carlo 10k · Interpolação linear entre pontos simulados</div>
+  </div>
 </div>
 
 <!-- S16: RETIREMENT INCOME -->
@@ -741,39 +772,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
-
-<!-- S19: WHAT-IF SCENARIOS -->
-<div class="section" data-in-tab="plan">
-<h2>What-If Scenarios — Cenário / Gasto</h2>
-
-<!-- Seletor de cenário -->
-<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 3.0%)</button>
-  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (SWR 2.4%)</button>
-  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 2.0%)</button>
-</div>
-
-<!-- Slider custo de vida -->
-<div class="slider-row">
-  <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$ 250k/ano</span></label>
-  <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
-</div>
-
-<!-- Output -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
-  <div class="what-if-result">
-    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">P(Sucesso 30 anos)</div>
-    <div class="big" id="wiPsucesso">—</div>
-    <div style="font-size:.7rem;color:var(--muted);margin-top:4px">MC interpolado</div>
-  </div>
-  <div class="what-if-result">
-    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio necessário</div>
-    <div class="big pv" id="wiPatNecessario">—</div>
-    <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
-  </div>
-</div>
-<div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
-</div>
 
 <!-- S21: POSIÇÕES -->
 <div class="section" data-in-tab="aloc">
@@ -833,39 +831,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src" id="pfireFamiliaSrc">Base: Monte Carlo 10k simulações · Sensibilidade ao custo de vida</div>
 </div>
 
-<!-- R1: FIRE MATRIX — P(Sucesso) por SWR × Gasto -->
-<div class="section" data-in-tab="plan" id="fireMatrixSection">
-<h2>FIRE Matrix — P(Sucesso 30 anos) por SWR × Gasto</h2>
-<div id="fireMatrixTable" style="overflow-x:auto"></div>
-<div class="src">Verde ≥90%, Amarelo 80-90%, Vermelho &lt;80%. Eixo: SWR (linha) × Gasto Anual BRL (coluna).</div>
-</div>
-
-<!-- R2: SWR PERCENTIS P10/P50/P90 -->
-<div class="section" data-in-tab="plan" id="swrPercentilesSection">
-<h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
-<div class="swr-pct-grid" id="swrPercentilesCards"></div>
-<div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
-</div>
-
-<!-- R3: APORTE SENSITIVITY -->
-<div class="section" data-in-tab="plan" id="aporteSensSection">
-<h2>Sensibilidade P(FIRE@53) ao Aporte Mensal</h2>
-<div class="chart-box-sm"><canvas id="aporteSensChart"></canvas></div>
-<div class="src">Aporte base: R$25k/mês. Linha vertical = aporte atual.</div>
-</div>
-
 <!-- N4: LUMPY EVENTS -->
 <div class="section" data-in-tab="plan" id="lumpyEventsSection">
 <h2>Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
 <div id="lumpyEventsBody"></div>
 <div class="src">Base: spending R$250k/ano. Impacto de eventos permanentes no custo de vida.</div>
-</div>
-
-<!-- S21b: MINI-LOG OPERAÇÕES -->
-<div class="section" data-in-tab="aloc">
-<h2>Últimas Operações</h2>
-<div id="minilogBody" style="font-size:.8rem"></div>
-<div class="src">Fonte: extrato IBKR</div>
 </div>
 
 <!-- PREMISSAS VS REALIZADO -->
@@ -933,6 +903,21 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 </div><!-- /collapse-body -->
+</div>
+
+<!-- S26: RF + CRYPTO CARDS -->
+<div class="section" data-in-tab="aloc">
+<h2>Renda Fixa + Cripto</h2>
+<div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
+</div>
+
+<!-- P2: TAX — IR DIFERIDO -->
+<div class="section collapsible" id="taxIrSection" data-in-tab="aloc">
+<h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Ganhos não Realizados (ETFs UCITS) <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
+<div class="collapse-body">
+<div id="taxIrBody"><!-- gerado por buildTaxIR() --></div>
+<div class="src" id="taxIrSrc">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat sobre ganho nominal em BRL na alienação. PTAX histórica por lote.</div>
+</div>
 </div>
 
 <!-- S25: TLH MONITOR -->
@@ -1024,54 +1009,44 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src">Simulação determinística (sem MC). Critério: patrimônio ≥ gatilho R$13.4M E SWR ≤ 2.4%. FIRE@50 e FIRE@53 são outputs do MC 10k (fixos).</div>
 </div>
 
-<!-- F2: Spending Guardrails -->
-<div class="grid-2" data-in-tab="projecao">
-<div class="section collapsible open">
-  <h2 onclick="this.parentElement.classList.toggle('open')">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
-  <div class="collapse-body">
-  <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
-  <div class="src" id="spendingGuardrailsSrc">Base: Monte Carlo 10k · Interpolação linear entre pontos simulados</div>
+<!-- S19: WHAT-IF SCENARIOS -->
+<div class="section" data-in-tab="projecao">
+<h2>What-If Scenarios — Cenário / Gasto</h2>
+
+<!-- Seletor de cenário -->
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 3.0%)</button>
+  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (SWR 2.4%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 2.0%)</button>
+</div>
+
+<!-- Slider custo de vida -->
+<div class="slider-row">
+  <label><span>Custo de Vida /ano</span><span id="wiCustoVal" class="pv">R$ 250k/ano</span></label>
+  <input type="range" id="wiCusto" min="150000" max="400000" step="10000" value="250000" oninput="updateWhatIf()">
+</div>
+
+<!-- Output -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+  <div class="what-if-result">
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">P(Sucesso 30 anos)</div>
+    <div class="big" id="wiPsucesso">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px">MC interpolado</div>
+  </div>
+  <div class="what-if-result">
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio necessário</div>
+    <div class="big pv" id="wiPatNecessario">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
   </div>
 </div>
-<div class="section">
-  <div id="earliestFireCard"><!-- gerado por buildEarliestFire() → static card (MC-based) --></div>
-  <div class="src" style="margin-top:8px">Threshold: P(FIRE) ≥ 85% · Baseado em MC 10k simulações</div>
-</div>
+<div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
 </div>
 
-<!-- F4: Scenario Comparison Table -->
-<div class="section" data-in-tab="projecao">
-<h2>FIRE@53 vs. FIRE@50 — Comparação Detalhada</h2>
-<div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
-<div class="src">Base: Monte Carlo 10k simulações</div>
-</div>
-
-<!-- F5: Must / Like to Spend -->
-<div class="section" data-in-tab="projecao">
-<h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
-<div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
-<div class="src" id="spendingBreakdownSrc">All-Accounts CSV · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
-</div>
-
-<!-- F1: Lifetime Income Projection Chart -->
-<div class="section" data-in-tab="projecao">
-<h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
-<div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
-<div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
-  Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa <span class="pv">R$45k/mês</span> · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS <span class="pv">R$18k/ano</span> a partir dos 65.
-</div>
-<div class="src" id="incomeProjectionSrc">Valores em R$ reais constante 2026 · Spending smile (Go-Go/Slow-Go/No-Go)</div>
-</div>
-
-<!-- F7: Net Worth Projection P10/P50/P90 -->
-<div class="section" data-in-tab="projecao">
-<h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
-<div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div>
-<div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
-  ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
-  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS <span class="pv">R$18k/ano</span> real a partir de age 65.
-</div>
-<div class="src pv" id="netWorthProjectionSrc">Base: Monte Carlo 10k simulações · R$ reais constante 2026</div>
+<!-- R3: APORTE SENSITIVITY -->
+<div class="section" data-in-tab="projecao" id="aporteSensSection">
+<h2>Sensibilidade P(FIRE@53) ao Aporte Mensal</h2>
+<div class="chart-box-sm"><canvas id="aporteSensChart"></canvas></div>
+<div class="src">Aporte base: R$25k/mês. Linha vertical = aporte atual.</div>
 </div>
 
 <!-- F11: Stress Test -->
@@ -1104,6 +1079,29 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 </div>
 
+<!-- Earliest FIRE Card (extraído do grid-2 F2) -->
+<div class="section" data-in-tab="projecao">
+  <div id="earliestFireCard"><!-- gerado por buildEarliestFire() → static card (MC-based) --></div>
+  <div class="src" style="margin-top:8px">Threshold: P(FIRE) ≥ 85% · Baseado em MC 10k simulações</div>
+</div>
+
+<!-- F1: Lifetime Income Projection Chart -->
+<div class="section" data-in-tab="projecao">
+<h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
+<div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
+<div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
+  Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa <span class="pv">R$45k/mês</span> · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS <span class="pv">R$18k/ano</span> a partir dos 65.
+</div>
+<div class="src" id="incomeProjectionSrc">Valores em R$ reais constante 2026 · Spending smile (Go-Go/Slow-Go/No-Go)</div>
+</div>
+
+<!-- F5: Must / Like to Spend -->
+<div class="section" data-in-tab="projecao">
+<h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
+<div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
+<div class="src" id="spendingBreakdownSrc">All-Accounts CSV · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
+</div>
+
 <!-- F8: Sankey Cash Flow -->
 <div class="section" id="sankeySection" data-in-tab="projecao">
 <h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
@@ -1115,12 +1113,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
-
-<!-- S26: RF + CRYPTO CARDS -->
-<div class="section" data-in-tab="aloc">
-<h2>Renda Fixa + Cripto</h2>
-<div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
-</div>
 
 <!-- S22: CALCULADORA APORTE -->
 <div class="section" data-in-tab="aloc">
@@ -1146,6 +1138,13 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 <div id="calcResult" style="font-size:.8rem"></div>
 <div class="src" id="calcAporteSrc">Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040. Overflow acima do gap preenche próximo nível. Pisos definidos na estratégia.</div>
+</div>
+
+<!-- S21b: MINI-LOG OPERAÇÕES -->
+<div class="section" data-in-tab="aloc">
+<h2>Últimas Operações</h2>
+<div id="minilogBody" style="font-size:.8rem"></div>
+<div class="src">Fonte: extrato IBKR</div>
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
@@ -5247,25 +5246,26 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildTimestamps, buildFireTrilha],
+    status:   [buildSemaforoPanel, buildTimestamps],
     perf:     [buildPremissasVsRealizado, function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
-    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
-    plan:     [buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable, buildTaxIR,
-               buildFireMatrix, buildSwrPercentiles, buildAporteSensitivity, buildLumpyEvents,
+    aloc:     [buildDonuts, buildPosicoes, buildCustoBase, buildTLH, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildTaxIR],
+    plan:     [buildFireTrilha, buildScenarios, buildScenarioComparison, buildGuardrails, buildIncomeChart, buildIncomeTable,
+               buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
+               buildNetWorthProjection],
+    projecao: [() => { _applyFireAxes(); }, buildEarliestFire, buildAporteSensitivity,
                function() {
                  const wiC = document.getElementById('wiCusto');
                  if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
                  if (!window._wiPreset) window._wiPreset = 'base';
                  updateWhatIf();
-               }],
-    projecao: [() => { _applyFireAxes(); }, buildEarliestFire, buildSpendingGuardrails, buildScenarioComparison,
+               },
                buildSpendingBreakdown, buildIncomeProjection,
-               buildNetWorthProjection, buildStressTest, buildSankey],
+               buildStressTest, buildSankey],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.warn('[lazy]', fn.name || tab, e); } });
