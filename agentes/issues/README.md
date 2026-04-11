@@ -46,6 +46,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-fire-matrix-v2 | FIRE Matrix v2 — 3 cenários + eixos Patrimônio×Gasto + visual | Head | 🟡 Média | 🔵 Doing — Fase 1 core |
 | DEV-dashboard-audit | Auditoria completa 60 blocos — map→Quant→fix→confirm | Head | 🔴 Alta | ✅ Done 2026-04-11 |
 | DEV-factor-tstats | t-stats + R² warning no Factor Loadings chart | Dev+Quant | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | ✅ Done 2026-04-10 |

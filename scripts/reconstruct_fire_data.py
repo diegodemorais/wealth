@@ -403,62 +403,73 @@ def gen_fire_aporte_sensitivity(n_sim: int = 5_000):
 # ─── R1: Fire Matrix ──────────────────────────────────────────────────────────
 
 def gen_fire_matrix(n_sim: int = 3_000):
-    """R1 — Matriz SWR × Gasto → P(sucesso 30 anos desacumulação)."""
-    swrs = [0.020, 0.022, 0.024, 0.026, 0.028, 0.030]
-    gastos = [220_000, 240_000, 250_000, 270_000, 300_000]
+    """R1 — Matriz Patrimônio × Gasto → P(sucesso 30 anos) por cenário base/fav/stress.
 
-    print(f"    R1: rodando matriz {len(swrs)}×{len(gastos)} ({n_sim} sims cada)...")
+    Eixos (spec DEV-fire-matrix-v2):
+      - Linhas (patrimônios): R$7M, 9M, 11M, 12M, 13M, 14M, 16M
+      - Colunas (gastos anuais): R$180k, 220k, 250k, 270k, 300k, 350k
+    Cenários: base (4.85%), fav (+1pp = 5.85%), stress (-0.5pp = 4.35%)
+    """
+    from fire_montecarlo import simular_trajetoria, PREMISSAS as _PREM
 
-    matrix = {}
-    pat_necessario = {}
+    patrimonios = [7_000_000, 9_000_000, 11_000_000, 12_000_000,
+                   13_000_000, 14_000_000, 16_000_000]
+    gastos = [180_000, 220_000, 250_000, 270_000, 300_000, 350_000]
+    n_anos_desacum = 30
 
-    for swr in swrs:
-        for gasto in gastos:
-            key = f"{swr}_{gasto}"
-            # Patrimônio necessário = gasto / swr
-            pat_nec = round(gasto / swr, 0)
-            pat_necessario[key] = pat_nec
+    cenarios = {
+        "base":   _PREM["retorno_equity_base"],
+        "fav":    _PREM["retorno_equity_base"] + _PREM["adj_favoravel"],
+        "stress": _PREM["retorno_equity_base"] + _PREM["adj_stress"],
+    }
 
-            # Simular desacumulação partindo do patrimônio necessário por 30 anos
-            # Usar apenas a fase de desacumulação (30 anos fixos)
-            from fire_montecarlo import simular_trajetoria, PREMISSAS as _PREM
-            rng = np.random.default_rng(42)
-            n_anos_desacum = 30
-            sucessos = 0
-            for _ in range(n_sim):
-                sobreviveu, _, _, _ = simular_trajetoria(
-                    patrimonio_inicial=pat_nec,
-                    n_anos=n_anos_desacum,
-                    retorno_equity=_PREM["retorno_equity_base"],
-                    volatilidade=_PREM["volatilidade_equity"],
-                    df=_PREM["t_dist_df"],
-                    rng=rng,
-                    escala_custo_vida=gasto / CUSTO_VIDA_BASE,
-                    aplicar_ir=_PREM["aplicar_ir_desacumulacao"],
-                    anos_bond_pool=_PREM["anos_bond_pool"],
-                    ipca_anual=_PREM["ipca_anual"],
-                    aliquota_ir=_PREM["aliquota_ir_equity"],
-                    inss_anual=_PREM["inss_anual"],
-                    inss_inicio_ano=_PREM["inss_inicio_ano"],
-                    vol_bond_pool=_PREM["vol_bond_pool"],
-                    strategy="guardrails",
-                )
-                if sobreviveu:
-                    sucessos += 1
-            p_suc = round(sucessos / n_sim, 4)
-            matrix[key] = p_suc
+    print(f"    R1: rodando matriz {len(patrimonios)}×{len(gastos)} × 3 cenários ({n_sim} sims cada)...")
 
-        print(f"      SWR {swr:.1%} ✓")
+    resultado_cenarios = {}
+    for cenario_nome, retorno_equity in cenarios.items():
+        matrix = {}
+        rng = np.random.default_rng(42)
+        for pat in patrimonios:
+            for gasto in gastos:
+                key = f"{pat}_{gasto}"
+                sucessos = 0
+                for _ in range(n_sim):
+                    sobreviveu, _, _, _ = simular_trajetoria(
+                        patrimonio_inicial=pat,
+                        n_anos=n_anos_desacum,
+                        retorno_equity=retorno_equity,
+                        volatilidade=_PREM["volatilidade_equity"],
+                        df=_PREM["t_dist_df"],
+                        rng=rng,
+                        escala_custo_vida=gasto / CUSTO_VIDA_BASE,
+                        aplicar_ir=_PREM["aplicar_ir_desacumulacao"],
+                        anos_bond_pool=_PREM["anos_bond_pool"],
+                        ipca_anual=_PREM["ipca_anual"],
+                        aliquota_ir=_PREM["aliquota_ir_equity"],
+                        inss_anual=_PREM["inss_anual"],
+                        inss_inicio_ano=_PREM["inss_inicio_ano"],
+                        vol_bond_pool=_PREM["vol_bond_pool"],
+                        strategy="guardrails",
+                    )
+                    if sobreviveu:
+                        sucessos += 1
+                matrix[key] = round(sucessos / n_sim, 4)
+        resultado_cenarios[cenario_nome] = matrix
+        print(f"      cenário {cenario_nome} (r={retorno_equity:.2%}) ✓")
 
     data = {
         "_generated": NOW,
         "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
-        "swrs": swrs,
+        "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
+        "patrimonios": patrimonios,
         "gastos": gastos,
-        "n_anos_desacumulacao": 30,
+        "n_anos_desacumulacao": n_anos_desacum,
         "n_sim": n_sim,
-        "matrix": matrix,
-        "patrimonio_necessario": pat_necessario,
+        "retornos_equity": {k: v for k, v in cenarios.items()},
+        "cenarios": resultado_cenarios,
+        # legado — manter para compatibilidade com buildFireMatrix() atual até migração
+        "swrs": [0.020, 0.022, 0.024, 0.026, 0.028, 0.030],
+        "matrix": resultado_cenarios["base"],  # fallback: base
     }
     _save(DADOS / "fire_matrix.json", data)
 

@@ -697,11 +697,16 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
 </div>
 
-<!-- R1: FIRE MATRIX — P(Sucesso) por SWR × Gasto -->
+<!-- R1: FIRE MATRIX — P(Sucesso) por Patrimônio × Gasto -->
 <div class="section" data-in-tab="plan" id="fireMatrixSection">
-<h2>FIRE Matrix — P(Sucesso 30 anos) por SWR × Gasto</h2>
+<h2>FIRE Matrix — P(Sucesso 30 anos)</h2>
+<div class="period-btns" id="fireMatrixBtns" style="margin-bottom:12px">
+  <button onclick="setFireMatrixCenario('base')" class="active">Base</button>
+  <button onclick="setFireMatrixCenario('fav')">Favorável</button>
+  <button onclick="setFireMatrixCenario('stress')">Stress</button>
+</div>
 <div id="fireMatrixTable" style="overflow-x:auto"></div>
-<div class="src">Verde ≥90%, Amarelo 80-90%, Vermelho &lt;80%. Eixo: SWR (linha) × Gasto Anual BRL (coluna).</div>
+<div class="src">Verde &gt;95%, Amarelo 88–95%, Vermelho &lt;88%. Eixo: Patrimônio no FIRE Day (linha) × Gasto Anual BRL (coluna). ★ = você aqui (P50 × gasto base).</div>
 </div>
 
 <!-- S15: GUARDRAILS -->
@@ -1349,8 +1354,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T08:01:05-03:00'); // BRT (UTC-3)
-const VERSION = '1.147';
+const GENERATED_AT = new Date('2026-04-11T08:15:36-03:00'); // BRT (UTC-3)
+const VERSION = '1.148';
 
 const DATA = {
   "_generated": "2026-04-11T07:53:13",
@@ -6892,7 +6897,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.147"
+  "version": "1.148"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -7775,17 +7780,47 @@ function interpolateFireMatrix(gastoAnual, swrTarget) {
   const fm = DATA.fire_matrix;
   if (!fm) return null;
 
+  // New format: patrimônio × gasto
+  if (fm.cenarios && fm.patrimonios && fm.gastos) {
+    const cenario = window._fireMatrixCenario || 'base';
+    const matrix = fm.cenarios[cenario];
+    if (!matrix) return null;
+    const pats  = fm.patrimonios;
+    const gastos = fm.gastos;
+    const patrimonioImplied = gastoAnual / swrTarget;
+
+    const g = Math.max(gastos[0], Math.min(gastos[gastos.length-1], gastoAnual));
+    const p = Math.max(pats[0],  Math.min(pats[pats.length-1],  patrimonioImplied));
+
+    let gi = gastos.findIndex(v => v >= g); if (gi <= 0) gi = 1;
+    let pi = pats.findIndex(v => v >= p);   if (pi <= 0) pi = 1;
+
+    const g0 = gastos[gi-1], g1 = gastos[gi];
+    const p0 = pats[pi-1],   p1 = pats[pi];
+
+    const fmtKey = (pt, ga) => String(pt) + '_' + Math.round(ga);
+    const p00 = matrix[fmtKey(p0, g0)] ?? null;
+    const p01 = matrix[fmtKey(p0, g1)] ?? null;
+    const p10 = matrix[fmtKey(p1, g0)] ?? null;
+    const p11 = matrix[fmtKey(p1, g1)] ?? null;
+    if (p00 == null || p01 == null || p10 == null || p11 == null) return null;
+
+    const tg = (g - g0) / (g1 - g0);
+    const tp = (p - p0) / (p1 - p0);
+    return p00*(1-tg)*(1-tp) + p01*tg*(1-tp) + p10*(1-tg)*tp + p11*tg*tp;
+  }
+
+  // Legacy format: SWR × gasto
   const gastos = fm.gastos;
-  const swrs = fm.swrs;
+  const swrs   = fm.swrs;
   const matrix = fm.matrix;
+  if (!gastos || !swrs || !matrix) return null;
 
   const g = Math.max(gastos[0], Math.min(gastos[gastos.length-1], gastoAnual));
-  const s = Math.max(swrs[0], Math.min(swrs[swrs.length-1], swrTarget));
+  const s = Math.max(swrs[0],   Math.min(swrs[swrs.length-1],     swrTarget));
 
-  let gi = gastos.findIndex(v => v >= g);
-  if (gi <= 0) gi = 1;
-  let si = swrs.findIndex(v => v >= s);
-  if (si <= 0) si = 1;
+  let gi = gastos.findIndex(v => v >= g); if (gi <= 0) gi = 1;
+  let si = swrs.findIndex(v => v >= s);   if (si <= 0) si = 1;
 
   const g0 = gastos[gi-1], g1 = gastos[gi];
   const s0 = swrs[si-1],   s1 = swrs[si];
@@ -7795,13 +7830,11 @@ function interpolateFireMatrix(gastoAnual, swrTarget) {
   const p01 = matrix[fmtKey(s0, g1)] ?? null;
   const p10 = matrix[fmtKey(s1, g0)] ?? null;
   const p11 = matrix[fmtKey(s1, g1)] ?? null;
-
   if (p00 == null || p01 == null || p10 == null || p11 == null) return null;
 
   const tg = (g - g0) / (g1 - g0);
   const ts = (s - s0) / (s1 - s0);
-  const p = p00*(1-tg)*(1-ts) + p01*tg*(1-ts) + p10*(1-tg)*ts + p11*tg*ts;
-  return p;
+  return p00*(1-tg)*(1-ts) + p01*tg*(1-ts) + p10*(1-tg)*ts + p11*tg*ts;
 }
 
 window.setWiPreset = function(p) {
@@ -11227,37 +11260,91 @@ function buildBondPool() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R1 — FIRE MATRIX
 // ═══════════════════════════════════════════════════════════════
-function buildFireMatrix() {
+window._fireMatrixCenario = 'base';
+window.setFireMatrixCenario = function(c) {
+  window._fireMatrixCenario = c;
+  setActivePeriodBtn('fireMatrixBtns', c);
+  _renderFireMatrix();
+};
+
+function _fmCellColor(pct) {
+  if (pct == null) return 'transparent';
+  if (pct >= 95) {
+    const t = Math.min(1, (pct - 95) / 5);
+    return 'rgba(34,197,94,' + (0.15 + t * 0.25).toFixed(2) + ')';
+  } else if (pct >= 88) {
+    const t = (pct - 88) / 7;
+    return 'rgba(234,179,8,' + (0.15 + (1 - t) * 0.2).toFixed(2) + ')';
+  } else {
+    const t = Math.min(1, (88 - pct) / 15);
+    return 'rgba(239,68,68,' + (0.15 + t * 0.25).toFixed(2) + ')';
+  }
+}
+
+function _fmTextColor(pct) {
+  if (pct == null) return 'var(--muted)';
+  if (pct >= 95) return 'var(--green)';
+  if (pct >= 88) return 'var(--yellow)';
+  return 'var(--red)';
+}
+
+function _renderFireMatrix() {
   const el = document.getElementById('fireMatrixTable');
-  const sec = document.getElementById('fireMatrixSection');
-  if (!el || !sec) return;
+  if (!el) return;
   const d = DATA.fire_matrix;
-  if (!d || !d.matrix || !d.swrs || !d.gastos) { sec.style.display = 'none'; return; }
+  if (!d || !d.cenarios || !d.patrimonios || !d.gastos) return;
+  const cenario = window._fireMatrixCenario || 'base';
+  const matrix = d.cenarios[cenario];
+  if (!matrix) return;
 
-  const swrs = d.swrs;
+  const pats = d.patrimonios;
   const gastos = d.gastos;
-  const fmt = v => v != null ? (v * 100).toFixed(1) + '%' : '--';
-  const fmtGasto = v => 'R$' + (v / 1000).toFixed(0) + 'k';
-  const fmtSwr = v => (v * 100).toFixed(1) + '%';
 
-  let html = '<table class="fire-matrix-table"><thead><tr><th>SWR \\ Gasto</th>';
+  // "Você aqui" marker: nearest cell to (P50 patrimônio @ FIRE@53, gasto base)
+  const p50 = DATA.pfire53?.pat_mediano;
+  const gastoBase = DATA.premissas?.custo_vida_base || 250000;
+  let youPat = null, youGasto = null;
+  if (p50) {
+    let minD = Infinity;
+    pats.forEach(p => { const dd = Math.abs(p - p50); if (dd < minD) { minD = dd; youPat = p; } });
+  }
+  { let minD = Infinity; gastos.forEach(g => { const dd = Math.abs(g - gastoBase); if (dd < minD) { minD = dd; youGasto = g; } }); }
+
+  const fmtGasto = v => 'R$' + (v / 1000).toFixed(0) + 'k';
+  const fmtPat   = v => 'R$' + (v / 1e6).toFixed(0) + 'M';
+
+  let html = '<table class="fire-matrix-table"><thead><tr><th>Patrimônio</th>';
   gastos.forEach(g => { html += '<th>' + fmtGasto(g) + '</th>'; });
   html += '</tr></thead><tbody>';
 
-  swrs.forEach(swr => {
-    html += '<tr><td>SWR ' + fmtSwr(swr) + '</td>';
+  pats.forEach(pat => {
+    html += '<tr><td>' + fmtPat(pat) + '</td>';
     gastos.forEach(g => {
-      const key = swr + '_' + g;
-      const val = d.matrix[key];
-      const pct = val != null ? val * 100 : null;
-      const cls = pct == null ? '' : pct >= 90 ? 'fm-green' : pct >= 80 ? 'fm-yellow' : 'fm-red';
-      html += '<td class="' + cls + '">' + fmt(val) + '</td>';
+      const key = pat + '_' + g;
+      const val = matrix[key];
+      const pct = val != null ? parseFloat((val * 100).toFixed(1)) : null;
+      const isYou = (pat === youPat && g === youGasto);
+      const bg = _fmCellColor(pct);
+      const tc = _fmTextColor(pct);
+      const swr = (g / pat * 100).toFixed(1) + '%';
+      const tip = pct != null ? ('P(FIRE)=' + pct + '% | SWR=' + swr) : '';
+      html += '<td style="background:' + bg + ';color:' + tc + '" title="' + tip + '">' +
+        (pct != null ? pct.toFixed(1) + '%' : '--') + (isYou ? ' ★' : '') + '</td>';
     });
     html += '</tr>';
   });
 
   html += '</tbody></table>';
   el.innerHTML = html;
+}
+
+function buildFireMatrix() {
+  const sec = document.getElementById('fireMatrixSection');
+  const el  = document.getElementById('fireMatrixTable');
+  if (!el || !sec) return;
+  const d = DATA.fire_matrix;
+  if (!d || !d.cenarios || !d.patrimonios || !d.gastos) { sec.style.display = 'none'; return; }
+  _renderFireMatrix();
 }
 
 // ═══════════════════════════════════════════════════════════════
