@@ -5752,6 +5752,36 @@ window.setFireMatrixPerfil = function(p) {
   _renderFireMatrix();
 };
 
+// Interpola a idade provável para atingir um dado patrimônio
+// Âncoras: (idade_atual, pat_atual) → (50, pat_p50@50) → (53, pat_p50@53) + extrapolação
+function _fmEstimateAge(pat) {
+  const p  = DATA.premissas;
+  const f0 = DATA.pfire50;
+  const f1 = DATA.pfire53;
+  if (!p || !f0 || !f1) return null;
+
+  const anchors = [
+    { age: p.idade_atual,              pat: p.patrimonio_atual },
+    { age: p.idade_fire_aspiracional,  pat: f0.pat_mediano },
+    { age: p.idade_fire_alvo,          pat: f1.pat_mediano },
+  ].filter(a => a.pat != null);
+
+  if (anchors.length < 2) return null;
+
+  // Interpola/extrapola entre os segmentos
+  for (let i = 0; i < anchors.length - 1; i++) {
+    const a = anchors[i], b = anchors[i + 1];
+    if (pat <= b.pat) {
+      const t = (pat - a.pat) / (b.pat - a.pat);
+      return Math.round(a.age + t * (b.age - a.age));
+    }
+  }
+  // Extrapolação acima da última âncora
+  const a = anchors[anchors.length - 2], b = anchors[anchors.length - 1];
+  const slope = (b.age - a.age) / (b.pat - a.pat);
+  return Math.round(b.age + slope * (pat - b.pat));
+}
+
 function _fmCellColor(pct) {
   if (pct == null) return 'transparent';
   if (pct >= 95) {
@@ -5818,7 +5848,9 @@ function _renderFireMatrix() {
   pats.forEach(pat => {
     const isAlvoRow = (pat === youPat);
     const rowStyle  = isAlvoRow ? ' style="outline:1px solid var(--accent);outline-offset:-1px"' : '';
-    html += '<tr' + rowStyle + '><td>' + fmtPat(pat) + (isAlvoRow ? ' →' : '') + '</td>';
+    const age       = _fmEstimateAge(pat);
+    const ageLabel  = age != null ? '<span style="font-size:.58rem;color:var(--muted);margin-left:3px">~' + age + 'a</span>' : '';
+    html += '<tr' + rowStyle + '><td>' + fmtPat(pat) + ageLabel + (isAlvoRow ? ' →' : '') + '</td>';
     gastos.forEach(g => {
       const key = pat + '_' + g;
       const val = matrix[key];
