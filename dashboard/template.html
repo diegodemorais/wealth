@@ -6113,16 +6113,23 @@ function buildDrawdownHistory() {
     }
   });
 
-  // Crises table
+  // Eventos de drawdown (top N com duração e recuperação)
   const crisesEl = document.getElementById('drawdownCrisesTable');
-  if (crisesEl && d.crises && d.crises.length > 0) {
-    let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:4px">';
-    html += '<thead><tr><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:left">Crise</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Início</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Fim</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:right">Max DD</th></tr></thead><tbody>';
-    d.crises.forEach(c => {
-      html += '<tr><td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2)">' + (c.nome || '--') + '</td>' +
-        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center">' + (c.inicio || '--') + '</td>' +
-        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center">' + (c.fim || '--') + '</td>' +
-        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;color:var(--red);font-weight:600">' + (c.drawdown_max != null ? c.drawdown_max.toFixed(1) + '%' : '--') + '</td></tr>';
+  const evts = d.events || d.crises;
+  if (crisesEl && evts && evts.length > 0) {
+    const th = s => '<th style="padding:4px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:' + (s||'center') + '">';
+    let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:8px">';
+    html += '<thead><tr>' + th('left') + '#</th>' + th() + 'Início</th>' + th() + 'Fundo</th>' + th() + 'Recuperação</th>' + th('right') + 'Profund.</th>' + th('right') + 'Dur.</th>' + th('right') + 'Recup.</th></tr></thead><tbody>';
+    evts.forEach((e, i) => {
+      const end   = e.end    || (e.recovered === false ? '<span style="color:var(--yellow)">em aberto</span>' : '--');
+      const dur   = e.duration_months != null ? (e.duration_months > 0 ? e.duration_months + 'm' : '<1m') : '--';
+      const recup = e.recovery_months != null ? e.recovery_months + 'm' : '—';
+      const depth = e.depth_pct != null ? e.depth_pct.toFixed(1) + '%' : (e.drawdown_max != null ? e.drawdown_max.toFixed(1) + '%' : '--');
+      const start = e.start  || e.inicio || '--';
+      const trough = e.trough || e.fim   || '--';
+      const td = (v, align, extra) => '<td style="padding:4px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:' + (align||'center') + ';' + (extra||'') + '">' + v + '</td>';
+      html += '<tr>' + td(i+1,'left') + td(start) + td(trough) + td(end) +
+        td(depth, 'right', 'color:var(--red);font-weight:600') + td(dur,'right') + td(recup,'right') + '</tr>';
     });
     html += '</tbody></table>';
     crisesEl.innerHTML = html;

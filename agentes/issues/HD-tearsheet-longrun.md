@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | HD-tearsheet-longrun |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | ✅ Done — 2026-04-11 |
 | **Prioridade** | 🟢 Baixa |
 | **Participantes** | Head (lead), Factor, Quant |
 | **Co-sponsor** | Factor |
 | **Dependencias** | HD-proxies-canonicos (Done) |
 | **Criado em** | 2026-04-07 |
 | **Origem** | Pedido Diego — tearsheet atual cobre só ~5 anos (IBKR 2021+). Proxies canônicos já mapeados (HD-proxies-canonicos). |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-11 |
 
 ---
 

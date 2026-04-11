@@ -74,6 +74,7 @@ FIRE_SWR_PCT_PATH       = ROOT / "dados" / "fire_swr_percentis.json"
 FIRE_APORTE_SENS_PATH   = ROOT / "dados" / "fire_aporte_sensitivity.json"
 FIRE_TRILHA_PATH        = ROOT / "dados" / "fire_trilha.json"
 DRAWDOWN_HIST_PATH      = ROOT / "dados" / "drawdown_history.json"
+DRAWDOWN_EVENTS_PATH    = ROOT / "dados" / "drawdown_events.json"
 ETF_COMP_PATH           = ROOT / "dados" / "etf_composition.json"
 BOND_POOL_RUNWAY_PATH   = ROOT / "dados" / "bond_pool_runway.json"
 LUMPY_EVENTS_PATH       = ROOT / "dados" / "lumpy_events.json"
@@ -2389,6 +2390,10 @@ def main():
     fire_aporte_data    = _load_json_safe(FIRE_APORTE_SENS_PATH, "fire_aporte_sensitivity")
     fire_trilha_data    = _load_json_safe(FIRE_TRILHA_PATH,      "fire_trilha")
     drawdown_hist_data  = _load_json_safe(DRAWDOWN_HIST_PATH,    "drawdown_history")
+    drawdown_evts_data  = _load_json_safe(DRAWDOWN_EVENTS_PATH,  "drawdown_events")
+    # Merge eventos na estrutura drawdown_history (alimenta drawdownCrisesTable no N1)
+    if drawdown_hist_data and drawdown_evts_data and drawdown_evts_data.get("events"):
+        drawdown_hist_data["events"] = drawdown_evts_data["events"]
     etf_comp_data       = _load_json_safe(ETF_COMP_PATH,         "etf_composition")
     bond_pool_rwy_data  = _load_json_safe(BOND_POOL_RUNWAY_PATH, "bond_pool_runway")
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")

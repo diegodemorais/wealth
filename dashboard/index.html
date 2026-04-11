@@ -1368,12 +1368,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T09:01:53-03:00'); // BRT (UTC-3)
-const VERSION = '1.151';
+const GENERATED_AT = new Date('2026-04-11T10:08:18-03:00'); // BRT (UTC-3)
+const VERSION = '1.152';
 
 const DATA = {
-  "_generated": "2026-04-11T08:31:52",
-  "_generated_brt": "2026-04-11T08:31:52-03:00",
+  "_generated": "2026-04-11T10:08:18",
+  "_generated_brt": "2026-04-11T10:08:18-03:00",
   "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -2816,7 +2816,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -2990,7 +2990,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -2999,7 +2999,7 @@ const DATA = {
       253.74,
       283.54,
       296.13,
-      304.69,
+      304.68,
       321.64,
       339.22,
       328.39,
@@ -3030,7 +3030,7 @@ const DATA = {
       390.1,
       419.59,
       398.21,
-      428.82,
+      428.81,
       413.99,
       417.32,
       418.77,
@@ -3243,7 +3243,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -6233,6 +6233,58 @@ const DATA = {
         "fim": "2025-11",
         "drawdown_max": -13.4
       }
+    ],
+    "events": [
+      {
+        "start": "2022-02",
+        "trough": "2022-09",
+        "end": "2024-03",
+        "depth_pct": -22.7,
+        "duration_months": 7,
+        "recovery_months": 18,
+        "total_months": 25,
+        "recovered": true
+      },
+      {
+        "start": "2025-09",
+        "trough": "2025-09",
+        "end": null,
+        "depth_pct": -14.58,
+        "duration_months": 0,
+        "recovery_months": null,
+        "total_months": null,
+        "recovered": false
+      },
+      {
+        "start": "2025-01",
+        "trough": "2025-03",
+        "end": "2025-04",
+        "depth_pct": -6.63,
+        "duration_months": 2,
+        "recovery_months": 1,
+        "total_months": 3,
+        "recovered": true
+      },
+      {
+        "start": "2021-06",
+        "trough": "2021-06",
+        "end": "2021-07",
+        "depth_pct": -5.26,
+        "duration_months": 0,
+        "recovery_months": 1,
+        "total_months": 1,
+        "recovered": true
+      },
+      {
+        "start": "2021-11",
+        "trough": "2021-11",
+        "end": "2022-01",
+        "depth_pct": -4.69,
+        "duration_months": 0,
+        "recovery_months": 2,
+        "total_months": 2,
+        "recovered": true
+      }
     ]
   },
   "etf_composition": {
@@ -7041,7 +7093,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.151"
+  "version": "1.152"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -11787,16 +11839,23 @@ function buildDrawdownHistory() {
     }
   });
 
-  // Crises table
+  // Eventos de drawdown (top N com duração e recuperação)
   const crisesEl = document.getElementById('drawdownCrisesTable');
-  if (crisesEl && d.crises && d.crises.length > 0) {
-    let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:4px">';
-    html += '<thead><tr><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:left">Crise</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Início</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase">Fim</th><th style="padding:4px 6px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:right">Max DD</th></tr></thead><tbody>';
-    d.crises.forEach(c => {
-      html += '<tr><td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2)">' + (c.nome || '--') + '</td>' +
-        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center">' + (c.inicio || '--') + '</td>' +
-        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:center">' + (c.fim || '--') + '</td>' +
-        '<td style="padding:4px 6px;border-bottom:1px solid rgba(71,85,105,.2);text-align:right;color:var(--red);font-weight:600">' + (c.drawdown_max != null ? c.drawdown_max.toFixed(1) + '%' : '--') + '</td></tr>';
+  const evts = d.events || d.crises;
+  if (crisesEl && evts && evts.length > 0) {
+    const th = s => '<th style="padding:4px 8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:.6rem;text-transform:uppercase;text-align:' + (s||'center') + '">';
+    let html = '<table style="width:100%;font-size:.72rem;border-collapse:collapse;margin-top:8px">';
+    html += '<thead><tr>' + th('left') + '#</th>' + th() + 'Início</th>' + th() + 'Fundo</th>' + th() + 'Recuperação</th>' + th('right') + 'Profund.</th>' + th('right') + 'Dur.</th>' + th('right') + 'Recup.</th></tr></thead><tbody>';
+    evts.forEach((e, i) => {
+      const end   = e.end    || (e.recovered === false ? '<span style="color:var(--yellow)">em aberto</span>' : '--');
+      const dur   = e.duration_months != null ? (e.duration_months > 0 ? e.duration_months + 'm' : '<1m') : '--';
+      const recup = e.recovery_months != null ? e.recovery_months + 'm' : '—';
+      const depth = e.depth_pct != null ? e.depth_pct.toFixed(1) + '%' : (e.drawdown_max != null ? e.drawdown_max.toFixed(1) + '%' : '--');
+      const start = e.start  || e.inicio || '--';
+      const trough = e.trough || e.fim   || '--';
+      const td = (v, align, extra) => '<td style="padding:4px 8px;border-bottom:1px solid rgba(71,85,105,.2);text-align:' + (align||'center') + ';' + (extra||'') + '">' + v + '</td>';
+      html += '<tr>' + td(i+1,'left') + td(start) + td(trough) + td(end) +
+        td(depth, 'right', 'color:var(--red);font-weight:600') + td(dur,'right') + td(recup,'right') + '</tr>';
     });
     html += '</tbody></table>';
     crisesEl.innerHTML = html;

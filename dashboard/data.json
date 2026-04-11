@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-11T08:31:52",
-  "_generated_brt": "2026-04-11T08:31:52-03:00",
+  "_generated": "2026-04-11T10:08:18",
+  "_generated_brt": "2026-04-11T10:08:18-03:00",
   "date": "2026-04-11",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1443,7 +1443,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -1617,7 +1617,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -1626,7 +1626,7 @@
       253.74,
       283.54,
       296.13,
-      304.69,
+      304.68,
       321.64,
       339.22,
       328.39,
@@ -1657,7 +1657,7 @@
       390.1,
       419.59,
       398.21,
-      428.82,
+      428.81,
       413.99,
       417.32,
       418.77,
@@ -1870,7 +1870,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -4856,6 +4856,58 @@
         "inicio": "2025-09",
         "fim": "2025-11",
         "drawdown_max": -13.4
+      }
+    ],
+    "events": [
+      {
+        "start": "2022-02",
+        "trough": "2022-09",
+        "end": "2024-03",
+        "depth_pct": -22.7,
+        "duration_months": 7,
+        "recovery_months": 18,
+        "total_months": 25,
+        "recovered": true
+      },
+      {
+        "start": "2025-09",
+        "trough": "2025-09",
+        "end": null,
+        "depth_pct": -14.58,
+        "duration_months": 0,
+        "recovery_months": null,
+        "total_months": null,
+        "recovered": false
+      },
+      {
+        "start": "2025-01",
+        "trough": "2025-03",
+        "end": "2025-04",
+        "depth_pct": -6.63,
+        "duration_months": 2,
+        "recovery_months": 1,
+        "total_months": 3,
+        "recovered": true
+      },
+      {
+        "start": "2021-06",
+        "trough": "2021-06",
+        "end": "2021-07",
+        "depth_pct": -5.26,
+        "duration_months": 0,
+        "recovery_months": 1,
+        "total_months": 1,
+        "recovered": true
+      },
+      {
+        "start": "2021-11",
+        "trough": "2021-11",
+        "end": "2022-01",
+        "depth_pct": -4.69,
+        "duration_months": 0,
+        "recovery_months": 2,
+        "total_months": 2,
+        "recovered": true
       }
     ]
   },

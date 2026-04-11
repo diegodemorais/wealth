@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | 1 | FR-bond-tent-fire-date | Bond Tent — Robustez para FIRE Date Incerta | FIRE | 🟡 Média |
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
 | ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
-| 2 | HD-tearsheet-longrun | Tearsheet QuantStats — drawdown table + histórico longo | Head | 🟢 Baixa |
+| 2 | ~~HD-tearsheet-longrun~~ | ~~Tearsheet QuantStats — drawdown table + histórico longo~~ | Head | ✅ Done |
 | ~~HD-backtest-longrun~~ | ~~Pipeline backtest 50+ anos via Ken French / MSCI~~ | Head | ✅ Done |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |

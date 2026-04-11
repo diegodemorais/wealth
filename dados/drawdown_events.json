@@ -1,0 +1,57 @@
+{
+  "_generated": "2026-04-11T10:07:16",
+  "_source": "scripts/drawdown_table.py → dados/historico_carteira.csv",
+  "_note": "Top N drawdown events. 61 meses de histórico real (2021-2026). Não usar para inferência estatística de longo prazo.",
+  "events": [
+    {
+      "start": "2022-02",
+      "trough": "2022-09",
+      "end": "2024-03",
+      "depth_pct": -22.7,
+      "duration_months": 7,
+      "recovery_months": 18,
+      "total_months": 25,
+      "recovered": true
+    },
+    {
+      "start": "2025-09",
+      "trough": "2025-09",
+      "end": null,
+      "depth_pct": -14.58,
+      "duration_months": 0,
+      "recovery_months": null,
+      "total_months": null,
+      "recovered": false
+    },
+    {
+      "start": "2025-01",
+      "trough": "2025-03",
+      "end": "2025-04",
+      "depth_pct": -6.63,
+      "duration_months": 2,
+      "recovery_months": 1,
+      "total_months": 3,
+      "recovered": true
+    },
+    {
+      "start": "2021-06",
+      "trough": "2021-06",
+      "end": "2021-07",
+      "depth_pct": -5.26,
+      "duration_months": 0,
+      "recovery_months": 1,
+      "total_months": 1,
+      "recovered": true
+    },
+    {
+      "start": "2021-11",
+      "trough": "2021-11",
+      "end": "2022-01",
+      "depth_pct": -4.69,
+      "duration_months": 0,
+      "recovery_months": 2,
+      "total_months": 2,
+      "recovered": true
+    }
+  ]
+}
