@@ -166,6 +166,30 @@ No arquivo da issue, seção "Validação Multi-Model":
 
 ---
 
+## Etapa Obrigatória — Quant após qualquer alteração no Dashboard
+
+> **REGRA**: Toda issue ou correção que altere cálculos, dados ou blocos do dashboard DEVE ter o Quant como etapa final de confirmação antes de fechar. Sem exceção.
+
+### Quando se aplica
+- Qualquer mudança em `dashboard/template.html` que afete lógica de cálculo
+- Qualquer mudança em scripts de geração de dados (`generate_data.py`, `reconstruct_*.py`)
+- Qualquer novo JSON em `dados/` que alimente o dashboard
+- Qualquer correção de fórmula ou premissa exibida no dash
+
+### O que o Quant verifica
+- Estrutura dos dados (campos esperados presentes)
+- Sample check numérico (células/valores representativos)
+- Gradiente/direção correta (fav > base > stress, etc.)
+- Consistência com premissas em `carteira.md`
+
+### Formato de chamada
+```
+Quant: validar [bloco/feature] pós-implementação. Verificar [o que checar especificamente].
+Report: PASS ou FAIL com evidência numérica. Máximo 200 palavras.
+```
+
+---
+
 ## "Too Hard" Pile (D3 — Berkshire)
 
 Issue debatida **3+ vezes** sem resolução (sem convergência, sem dado novo, sem progresso):

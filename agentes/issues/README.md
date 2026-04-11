@@ -27,6 +27,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
 | 1 | FR-bond-tent-fire-date | Bond Tent — Robustez para FIRE Date Incerta | FIRE | 🟡 Média |
+| 2 | FR-fire-date-elicitation | Elicitação data de FIRE — intenções, cenários e odds | FIRE | 🟡 Média |
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
 | ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
 | 2 | ~~HD-tearsheet-longrun~~ | ~~Tearsheet QuantStats — drawdown table + histórico longo~~ | Head | ✅ Done |
