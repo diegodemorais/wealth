@@ -6,7 +6,7 @@
 |-------|-------|
 | **ID** | HD-backtest-longrun |
 | **Dono** | Head |
-| **Status** | Backlog |
+| **Status** | ✅ Done — 2026-04-11 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head (lead), Factor, Quant |
 | **Criado em** | 2026-04-08 |
@@ -39,19 +39,12 @@ Construir pipeline que permita comparar Target vs Shadow A em janelas de 20-50 a
 
 ## Escopo
 
-- [ ] Mapear sources de dados disponíveis:
-  - Ken French: `factor_regression.py` já usa biblioteca French (verificar cobertura geográfica)
-  - MSCI: retornos públicos em `msci.com/end-of-day-data-search` (necessita download manual ou scraping)
-  - Alternativa: AQR data portal (factor returns globais, já temos o skill `aqr-data`)
-- [ ] Definir proxy acadêmico para cada bucket:
-  - SWRD → MSCI World Index (Net, USD)
-  - AVGS → French Global Small Value (ou AQR QMJ global)
-  - AVEM → MSCI EM Index (Net, USD)
-  - VWRA → MSCI ACWI (Net, USD)
-- [ ] Implementar stitching: índice bruto até data de lançamento do ETF, depois ETF real
-- [ ] Adicionar Regime 7 ao `backtest_portfolio.py` com dados costurados
-- [ ] Validar que a juntura (splice) não cria descontinuidade artificial
-- [ ] Exportar série 50 anos para dashboard — seção 27 (Backtest histórico)
+- [x] Mapear sources de dados disponíveis — MSCI World NR via yfinance `^990100-USD-STRD`, EM via Ken French `Emerging_5_Factors`
+- [x] Definir proxy acadêmico — SWRD→MSCI World NR, AVGS→DFSVX 58%+DISVX 42%, AVEM→French EM pre-1994+DFEMX, Benchmark→MSCI World+French EM pre-2008+ACWI
+- [x] Implementar stitching via return splice (não level splice) — sem descontinuidade artificial
+- [x] Adicionar Regime 7 ao `backtest_portfolio.py` (`--regime 7`)
+- [x] Validar juntura — Chow test F=1.19, p=0.311 → loadings estáveis
+- [x] Exportar para dashboard — seção S27b nova + botão R7 no S27 existente
 
 ---
 

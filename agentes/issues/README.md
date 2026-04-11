@@ -30,7 +30,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
 | ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
 | 2 | HD-tearsheet-longrun | Tearsheet QuantStats — drawdown table + histórico longo | Head | 🟢 Baixa |
-| 3 | HD-backtest-longrun | Pipeline backtest 50+ anos via Ken French / MSCI | Head | 🟡 Média |
+| ~~HD-backtest-longrun~~ | ~~Pipeline backtest 50+ anos via Ken French / MSCI~~ | Head | ✅ Done |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
@@ -63,6 +63,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-backtest-longrun | Pipeline backtest 50+ anos — Regime 7 | Head | 2026-04-11 | Regime 7 (1989–2026, 374m). CAGR +9.79% vs +7.80% (+1.99pp). WR 20a: 100%. Drought 74m. Recovery 43m < bond pool 84m. v1.135. |
 | HD-perplexity-review | Review externo Perplexity — 9 features novas | Head+Dev | 2026-04-10 | 9 features: FIRE Matrix, SWR Percentis, Aporte Sens, Macro Status, Trilha, Drawdown, ETF Comp, Bond Runway, Lumpy. v1.131. |
 | DEV-privacy-audit | Auditoria completa de privacidade do dashboard | Dev | 2026-04-09 | 4 fases implementadas: +49 .pv, spans hardcoded, eixo Y/tooltip ocultos, Sankey oculto. v1.104. |
 | DEV-dashboard-coherence | Auditoria de coerência — cálculos e premissas | Dev | 2026-04-09 | 4 bugs críticos corrigidos (fan chart aportes, P10/P90 MC, labels hardcoded, inssInicio). v1.103. |
