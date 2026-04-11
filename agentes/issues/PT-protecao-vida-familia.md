@@ -13,7 +13,7 @@
 | **Dependencias** | — |
 | **Criado em** | 2026-04-06 |
 | **Origem** | Merge de TX-seguro-vida + PT-planejamento-patrimonial |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-11 |
 
 ---
 
@@ -77,3 +77,20 @@ Diego decide avançar. Sugestão de gatilho natural: após mudança de estado ci
 **Argumento central:** Proteção de vida e patrimônio são tópicos importantes mas não urgentes no momento. A única ação com urgência real é o testamento (custo R$2–5k, independe de qualquer outro evento). O restante pode aguardar.
 
 **SLA:** sem prazo. Revisitar na retro semestral ou quando Diego decidir avançar.
+
+---
+
+## Conclusão
+
+**Veredicto:** Discovery encerrada. Nenhuma ação imediata.
+
+| Dimensão | Achado |
+|----------|--------|
+| Auto-seguro | Válido — R$3.5M, sem dependentes, sem renda de terceiros a substituir |
+| Seguro de vida | Desnecessário agora; gatilho = casamento/filho |
+| Plano de saúde | Notredame Americana + Care Plus via Katia — cobertura adequada |
+| Testamento | Recomendado mas não urgente; incluir no pacote ao casar |
+| Holding familiar | Threshold atingido (R$7.8M); estruturar 6–12 meses pós nova fase de vida |
+| ITCMD ETFs | Risco R$140–280k; iniciar conversa com advogado em 2–3 anos |
+
+**Gatilho de reabertura:** casamento → ativar como issue executiva com escopo: seguro de vida term life, testamento público, regime de bens, beneficiários VGBL, continuidade das PJs.

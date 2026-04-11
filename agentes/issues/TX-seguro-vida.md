@@ -13,7 +13,7 @@
 | **Dependencias** | — |
 | **Criado em** | 2026-04-03 |
 | **Origem** | Escalação — identificado urgente em FR-fire-execution-plan + TX-estate-tax (2+ issues sem prazo) |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-11 |
 
 ---
 
@@ -59,3 +59,19 @@ Contexto adicional: estate tax US-listed ~$65k — seguro poderia cobrir esse pa
 ## SLA
 
 **Prazo de análise:** até 2026-05-15 (antes do próximo check-in mensal de maio).
+
+---
+
+## Conclusão
+
+**Veredicto:** Nenhuma ação agora.
+
+| Dimensão | Achado |
+|----------|--------|
+| Auto-seguro | Válido com R$3.5M e sem dependentes |
+| Plano de saúde | Notredame Americana + Care Plus via Katia (cobertura atual suficiente) |
+| Seguro de vida | Desnecessário antes de ter dependentes |
+| Seguro D&O/invalidez | Irrelevante no momento — sem dependentes, patrimônio cobre |
+| Gatilho real | Casamento → revisitar junto com testamento, beneficiários e regime de bens |
+
+**Ação futura:** Ao casar, abrir PT-protecao-vida-familia como issue ativa e estruturar tudo de uma vez (seguro de vida, testamento, beneficiários VGBL, regime de bens, continuidade das PJs).
