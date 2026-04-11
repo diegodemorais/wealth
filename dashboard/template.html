@@ -2222,7 +2222,7 @@ function interpolateFireMatrix(gastoAnual, swrTarget) {
   const g0 = gastos[gi-1], g1 = gastos[gi];
   const s0 = swrs[si-1],   s1 = swrs[si];
 
-  const fmtKey = (sw, ga) => sw.toFixed(3) + '_' + Math.round(ga);
+  const fmtKey = (sw, ga) => String(sw) + '_' + Math.round(ga);
   const p00 = matrix[fmtKey(s0, g0)] ?? null;
   const p01 = matrix[fmtKey(s0, g1)] ?? null;
   const p10 = matrix[fmtKey(s1, g0)] ?? null;
