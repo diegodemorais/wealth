@@ -5246,7 +5246,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildTimestamps],
+    status:   [buildTimestamps],
     perf:     [buildPremissasVsRealizado, function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -6387,6 +6387,7 @@ function buildCagrVsTwr() {
   buildBrasilConcentracao();
   buildMacroCards();
   buildDcaStatus();
+  buildSemaforoPanel();
   buildFanChart();
   buildTornado();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC

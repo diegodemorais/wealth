@@ -1348,8 +1348,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T00:34:36-03:00'); // BRT (UTC-3)
-const VERSION = '1.137';
+const GENERATED_AT = new Date('2026-04-11T06:53:22-03:00'); // BRT (UTC-3)
+const VERSION = '1.138';
 
 const DATA = {
   "_generated": "2026-04-10T23:59:57",
@@ -6788,7 +6788,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.137"
+  "version": "1.138"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10687,7 +10687,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    status:   [buildSemaforoPanel, buildTimestamps],
+    status:   [buildTimestamps],
     perf:     [buildPremissasVsRealizado, function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -11828,6 +11828,7 @@ function buildCagrVsTwr() {
   buildBrasilConcentracao();
   buildMacroCards();
   buildDcaStatus();
+  buildSemaforoPanel();
   buildFanChart();
   buildTornado();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
