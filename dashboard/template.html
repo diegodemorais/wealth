@@ -5547,7 +5547,7 @@ function buildAporteSensitivity() {
 function renderMacroStatus() {
   const el = document.getElementById('macroStatusBadge');
   if (!el) return;
-  const status = DATA.fire?.plano_status || DATA.macro?.plano_status;
+  const status = DATA.fire?.plano_status?.status || DATA.macro?.plano_status?.status || DATA.fire?.plano_status || DATA.macro?.plano_status;
   if (!status) { el.style.display = 'none'; return; }
 
   let cls, icon, label;

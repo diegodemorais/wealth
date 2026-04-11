@@ -1,21 +1,21 @@
 {
-  "_generated": "2026-04-10T22:01:59",
-  "_generated_brt": "2026-04-10T22:01:59-03:00",
+  "_generated": "2026-04-10T22:08:38",
+  "_generated_brt": "2026-04-10T22:08:38-03:00",
   "date": "2026-04-10",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": null,
+    "precos_yfinance": "2026-04-10",
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-10",
     "fire_mc": "2026-04-10",
     "geral": "2026-04-10"
   },
-  "cambio": 5.156,
+  "cambio": 5.0126,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 47.46,
+      "price": 48.16,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -23,7 +23,7 @@
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 24.22,
+      "price": 26.805,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -31,7 +31,7 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 111.63,
+      "price": 114.73,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -39,7 +39,7 @@
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 101.54,
+      "price": 105.53,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -47,7 +47,7 @@
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.72,
+      "price": 84.405,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -55,7 +55,7 @@
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 46.28,
+      "price": 49.17,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -63,7 +63,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -71,7 +71,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 61.25,
+      "price": 62.86,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -79,7 +79,7 @@
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 62.65,
+      "price": 65.93,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3461896,
+    "patrimonio_atual": 3474999,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -203,28 +203,28 @@
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.1
+      "delta": 8.2
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.699999999999999
+      "delta": 4.7
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.5
+      "delta": 7.6
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.5999999999999996
+      "delta": 2.6
     }
   ],
   "fire": {
@@ -1617,7 +1617,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -2132,16 +2132,16 @@
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 59.79,
-    "valor": 100208.04,
+    "preco": 62.09,
+    "valor": 104062.84,
     "preco_medio": 79.03,
-    "pnl_brl": -32246.24,
-    "pnl_pct": -24.35,
+    "pnl_brl": -28391.44,
+    "pnl_pct": -21.43,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.89,
+      "atual_pct": 2.99,
       "status": "verde"
     }
   },
@@ -2216,7 +2216,7 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 37.4,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
@@ -2224,7 +2224,7 @@
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 23.9,
+      "atual": 24.5,
       "alvo": 15.8
     },
     "IPCA": {
@@ -2232,7 +2232,7 @@
       "alvo": 15.0
     },
     "HODL11": {
-      "atual": 2.9,
+      "atual": 3.0,
       "alvo": 3.0
     }
   },
@@ -2242,7 +2242,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 111.63,
+      "price": 114.73,
       "ucits": "AVGS.L"
     },
     {
@@ -2250,7 +2250,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 101.54,
+      "price": 105.53,
       "ucits": "AVGS.L"
     },
     {
@@ -2258,7 +2258,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.72,
+      "price": 84.405,
       "ucits": "AVGS.L"
     },
     {
@@ -2266,7 +2266,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 46.28,
+      "price": 49.17,
       "ucits": "AVEM.L"
     },
     {
@@ -2274,7 +2274,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "ucits": "AVEM.L"
     },
     {
@@ -2282,7 +2282,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 61.25,
+      "price": 62.86,
       "ucits": "AVEM.L"
     },
     {
@@ -2290,7 +2290,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 62.65,
+      "price": 65.93,
       "ucits": "JPGL.L"
     }
   ],
@@ -2304,10 +2304,10 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 608472,
-    "retorno_usd": 217429,
-    "pct_aportes": 64.3,
-    "pct_retorno": 35.7,
+    "patrimonio_equity_usd": 627724,
+    "retorno_usd": 236681,
+    "pct_aportes": 62.3,
+    "pct_retorno": 37.7,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-10"
@@ -2349,12 +2349,12 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.156
+    "cambio": 5.0126
   },
   "mercado": {
-    "cambio_brl_usd": 5.156,
+    "cambio_brl_usd": 5.0126,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": 0.0,
+    "cambio_mtd_pct": -2.78,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -2794,9 +2794,9 @@
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.5,
+    "brasil_pct": 9.6,
     "composicao": {
-      "hodl11_brl": 100208,
+      "hodl11_brl": 104063,
       "rf_total_brl": 224406,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -2805,8 +2805,8 @@
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 328626,
-    "total_portfolio_brl": 3461896,
+    "total_brasil_brl": 332481,
+    "total_portfolio_brl": 3474999,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -2822,20 +2822,20 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 34173,
-      "delta_brl": 9173,
-      "delta_pct": 36.7,
+      "realizado_media_brl": 33223,
+      "delta_brl": 8223,
+      "delta_pct": 32.9,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.156,
+      "cambio_conversao": 5.0126,
       "por_ano_brl": {
-        "2026": 97964,
-        "2025": 291172,
-        "2024": 383976,
-        "2023": 405815,
-        "2022": 497005,
-        "2021": 340287
+        "2026": 95239,
+        "2025": 283074,
+        "2024": 373297,
+        "2023": 394529,
+        "2022": 483182,
+        "2021": 330823
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }

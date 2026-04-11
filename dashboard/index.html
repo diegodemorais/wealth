@@ -1329,8 +1329,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-10T22:02:03-03:00'); // BRT (UTC-3)
-const VERSION = '1.130';
+const GENERATED_AT = new Date('2026-04-10T22:06:27-03:00'); // BRT (UTC-3)
+const VERSION = '1.131';
 
 const DATA = {
   "_generated": "2026-04-10T22:01:59",
@@ -5554,7 +5554,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.130"
+  "version": "1.131"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -9773,7 +9773,7 @@ function buildAporteSensitivity() {
 function renderMacroStatus() {
   const el = document.getElementById('macroStatusBadge');
   if (!el) return;
-  const status = DATA.fire?.plano_status || DATA.macro?.plano_status;
+  const status = DATA.fire?.plano_status?.status || DATA.macro?.plano_status?.status || DATA.fire?.plano_status || DATA.macro?.plano_status;
   if (!status) { el.style.display = 'none'; return; }
 
   let cls, icon, label;

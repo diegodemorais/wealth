@@ -173,7 +173,7 @@ ETF_COMPOSITION = {
     "AVGS": {
         "nome": "Avantis Global Small Cap Value",
         "descricao": "Avantis Global Small Cap Value UCITS ETF",
-        "regiao_primaria": "Developed Markets ex-US",
+        "regiao_primaria": "Global Developed Markets",
         "regioes": {"Europa": 0.45, "Japão": 0.25, "EUA": 0.15, "Outros": 0.15},
         "fatores": {"market": 1.0, "value": 0.7, "size": 0.8, "quality": 0.3},
     },

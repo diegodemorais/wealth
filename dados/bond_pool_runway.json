@@ -84,51 +84,50 @@
     10
   ],
   "pool_disponivel_pos_fire": [
-    646021.0,
-    396021.0,
-    146021.0,
-    -103979.0,
-    -353979.0,
-    -603979.0,
-    -853979.0,
-    -1103979.0,
-    -1353979.0,
-    -1603979.0
+    709338.0,
+    509592.0,
+    295520.0,
+    66407.0,
+    -178899.0,
+    -441545.0,
+    -722767.0,
+    -1023889.0,
+    -1346449.0,
+    -1691837.0
   ],
   "custo_vida_anual": 250000,
+  "taxa_crescimento_pool_pct": 7.07,
+  "metodologia_runway": "v[t] = v[t-1] × (1 + 7.07%) − R$250k/ano. Pool continua rendendo IPCA+7.07% enquanto não sacado. Runway: ~4.3 anos (gap a partir do ano 5).",
   "gap_anos": [
     {
-      "ano_pos_fire": 4,
-      "gap_brl": -103979.0
-    },
-    {
       "ano_pos_fire": 5,
-      "gap_brl": -353979.0
+      "gap_brl": -178899.0
     },
     {
       "ano_pos_fire": 6,
-      "gap_brl": -603979.0
+      "gap_brl": -441545.0
     },
     {
       "ano_pos_fire": 7,
-      "gap_brl": -853979.0
+      "gap_brl": -722767.0
     },
     {
       "ano_pos_fire": 8,
-      "gap_brl": -1103979.0
+      "gap_brl": -1023889.0
     },
     {
       "ano_pos_fire": 9,
-      "gap_brl": -1353979.0
+      "gap_brl": -1346449.0
     },
     {
       "ano_pos_fire": 10,
-      "gap_brl": -1603979.0
+      "gap_brl": -1691837.0
     }
   ],
   "taxas": {
     "td2040_real_pct": 7.07,
     "td2050_real_pct": 6.85
   },
-  "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
+  "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação.",
+  "nota_pool_projetado": "Pool de R$896k em 2040 reflete posições atuais + DCA 2026-2028 sem novos aportes pós-2028. Para cenário DCA IPCA+ completo (projetado R$2.3M em carteira.md), pool cobre o custo de vida inteiramente — gap só ocorre no cenário atual subinvestido."
 }

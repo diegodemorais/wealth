@@ -2,6 +2,7 @@
 
 **Dono:** Head (triagem) → Dev + CIO + FIRE (execução)
 **Prioridade:** 🟡 Média
+**Status:** ✅ Done — 2026-04-10
 **Origem:** Review externo Perplexity Comet, 2026-04-09
 
 ---
@@ -93,3 +94,23 @@ Dados: MC já roda com diferentes spending. Pipeline gera a matriz. Dev renderiz
 - CIO define o que mostrar. Dev define como. FIRE valida lógica MC.
 - Nada hardcoded. Dados novos vão em data.json via pipeline.
 - Cada item vira sub-issue própria quando entrar em Doing.
+
+---
+
+## Resultado (2026-04-10)
+
+9 features implementadas em v1.131. Processo: votação estruturada 6 agentes (2 rounds) → aprovação Diego → 6 etapas (core → quant → dev → privacy → quant → head).
+
+| Feature | Aba | Status |
+|---------|-----|--------|
+| R1 FIRE Matrix SWR×Gasto | Planejamento | ✅ |
+| R2 SWR Percentis P10/P50/P90 | Planejamento | ✅ |
+| R3 Aporte Sensitivity | Planejamento | ✅ |
+| R4 Macro Status badge | Status | ✅ |
+| R5 FIRE Trilha realizado vs projetado | Status | ✅ |
+| N1 Drawdown histórico | Performance | ✅ |
+| N2 ETF composição regional+fatorial | Alocação | ✅ |
+| N3 Bond Pool Runway chart | Planejamento | ✅ |
+| N4 Lumpy Events impacto P(FIRE) | Planejamento | ✅ |
+
+N5 (IPS embutido) excluído — decisão Diego. Infraestrutura: 8 novos JSONs core em dados/, reconstruct_fire_data.py criado.

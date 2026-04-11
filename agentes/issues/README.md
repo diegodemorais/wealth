@@ -47,7 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
 | DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | ✅ Done 2026-04-10 |
-| HD-perplexity-review | Review externo Perplexity — 5 refinamentos + 5 features novas | Head | 🟡 Média | Backlog |
+| HD-perplexity-review | Review externo Perplexity — 9 features implementadas | Head | 🟡 Média | ✅ Done 2026-04-10 |
 | DEV-pvr-broken | Premissas vs Realizado não renderiza (recorrente) | Dev | 🔴 Crítica | ✅ Done 2026-04-10 |
 | DEV-perf-audit-fixes | 6 correções aba Performance (TER, attribution, CDI, shadows) | Dev+Quant | 🔴 Alta | ✅ Done 2026-04-10 |
 | CORE-portfolio-history | Camada Core de Histórico de Portfolio | Bookkeeper | 🔴 Crítica | ✅ Done 2026-04-10 |
@@ -63,6 +63,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| HD-perplexity-review | Review externo Perplexity — 9 features novas | Head+Dev | 2026-04-10 | 9 features: FIRE Matrix, SWR Percentis, Aporte Sens, Macro Status, Trilha, Drawdown, ETF Comp, Bond Runway, Lumpy. v1.131. |
 | DEV-privacy-audit | Auditoria completa de privacidade do dashboard | Dev | 2026-04-09 | 4 fases implementadas: +49 .pv, spans hardcoded, eixo Y/tooltip ocultos, Sankey oculto. v1.104. |
 | DEV-dashboard-coherence | Auditoria de coerência — cálculos e premissas | Dev | 2026-04-09 | 4 bugs críticos corrigidos (fan chart aportes, P10/P90 MC, labels hardcoded, inssInicio). v1.103. |
 | DEV-heatmap-rolling | Heatmap mensal + Rolling Sharpe 12m no dashboard | Dev | 2026-04-09 | Heatmap substituiu barras. Rolling Sharpe novo chart. Privacy mode integrado. v1.105. |
