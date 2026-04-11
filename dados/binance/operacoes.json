@@ -1,0 +1,86 @@
+{
+  "_fonte": "binance_historico.pdf",
+  "_periodo": "2025-01-01 to 2025-12-31",
+  "operacoes": [
+    {
+      "data": "2025-03-26",
+      "operacao": "Simple Earn Locked Redemption",
+      "moeda": "BNB",
+      "alterar": 0.20472646,
+      "obs": "Binance Earn",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-03-26",
+      "operacao": "Simple Earn Locked Redemption",
+      "moeda": "ADA",
+      "alterar": 47.57733683,
+      "obs": "Binance Earn",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-03-04",
+      "operacao": "HODLer Airdrops Distribution",
+      "moeda": "GPS",
+      "alterar": 3.57235083,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-02-27",
+      "operacao": "HODLer Airdrops Distribution",
+      "moeda": "SHELL",
+      "alterar": 0.2992142,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-02-27",
+      "operacao": "Launchpool Airdrop - System Distribution",
+      "moeda": "RED",
+      "alterar": 0.3453316,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-02-19",
+      "operacao": "HODLer Airdrops Distribution",
+      "moeda": "KAITO",
+      "alterar": 0.24033309,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-02-11",
+      "operacao": "HODLer Airdrops Distribution",
+      "moeda": "LAYER",
+      "alterar": 0.36268559,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-02-06",
+      "operacao": "HODLer Airdrops Distribution",
+      "moeda": "BERA",
+      "alterar": 0.12107753,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-01-22",
+      "operacao": "HODLer Airdrops Distribution",
+      "moeda": "ANIME",
+      "alterar": 5.96798019,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    },
+    {
+      "data": "2025-01-02",
+      "operacao": "Launchpool Airdrop - System Distribution",
+      "moeda": "BIO",
+      "alterar": 0.95539203,
+      "obs": "Binance Launchpool",
+      "conta": "Spot"
+    }
+  ]
+}

@@ -2143,7 +2143,7 @@ def main():
 
     # ─── Mini-log: últimas operações IBKR + XP ───────────────────────────────
     def _build_minilog():
-        """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas) + Nubank (Tesouro Direto)"""
+        """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas) + Nubank (Tesouro Direto) + Binance (airdrops/resgates)"""
         entries = []
         # XP operações
         xp_path = ROOT / "dados" / "xp" / "operacoes.json"
@@ -2183,6 +2183,24 @@ def main():
                                  "ativo": ativo,
                                  "valor": f"R$ {op['valor_brl']:,.0f}",
                                  "corretora": "Nubank"})
+        # Binance — airdrops + resgates (excluindo earn diário)
+        bn_path = ROOT / "dados" / "binance" / "operacoes.json"
+        if bn_path.exists():
+            bn_data = json.loads(bn_path.read_text())
+            for op in bn_data.get("operacoes", []):
+                op_type = op.get("operacao", "")
+                if "Airdrop" in op_type:
+                    tipo = "Airdrop BN"
+                elif "Redemption" in op_type:
+                    tipo = "Resgate BN"
+                else:
+                    tipo = "Op BN"
+                qty = op.get("alterar", 0)
+                moeda = op.get("moeda", "")
+                entries.append({"data": op["data"], "tipo": tipo,
+                                 "ativo": moeda,
+                                 "valor": f"{qty:.4f} {moeda}",
+                                 "corretora": "Binance"})
         entries.sort(key=lambda x: x["data"], reverse=True)
         return entries[:10]
 
