@@ -5587,7 +5587,7 @@ function _initTabCharts(tab) {
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
-    carteira: [buildFireBuckets, buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition],
+    carteira: [buildFireBuckets, buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
     fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
                buildNetWorthProjection,
@@ -5599,7 +5599,9 @@ function _initTabCharts(tab) {
                  updateWhatIf();
                },
                buildSpendingBreakdown, buildIncomeProjection,
-               buildStressTest, buildSankey],
+               buildStressTest, buildSankey,
+               buildGlidePath, buildBondPool, buildBondPoolRunway,
+               buildEventosVida, buildPfireFamilia],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.warn('[lazy]', fn.name || tab, e); } });
@@ -6898,12 +6900,6 @@ function buildCagrVsTwr() {
   renderKPIs();
   renderWellness();
   buildWellnessExtras();
-  buildMinilog();
-  buildEventosVida();
-  buildPfireFamilia();
-  buildGlidePath();
-  buildBondPool();
-  buildBondPoolRunway();
   renderMacroStatus();
   buildBrasilConcentracao();
   buildMacroCards();

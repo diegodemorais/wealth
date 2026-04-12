@@ -47,16 +47,22 @@ Um analista de BI especialista (agente temporário) revisa o dashboard completo:
 
 ## Conclusao
 
-> A preencher.
+Phase 1 completa: 13 correções implementadas pelo dev + tab restructure (Hoje/Carteira/Perf/FIRE → Now/Portfolio/Performance/FIRE). Todos os fixes validados pelo Quant. Bug de charts não carregando ao trocar de aba corrigido em v1.156. Dashboard chegou a v1.156.
 
 ---
 
 ## Resultado
 
-> A preencher.
+- Nova estrutura de abas: Now | Portfolio | Performance | FIRE
+- 13 correções de dados e apresentação aplicadas
+- Fix CAGR backtest label (Alpha ITD): "CAGR backtest · desde 2021"
+- Fix staleness dinâmico (new Date() ao invés de DATA.date)
+- Fix savings rate toFixed(1)
+- Fix lazy-init de 6 charts para evitar render com dimensão 0 na troca de abas
+- Dashboard: v1.156
 
 ---
 
 ## Proximos Passos
 
-> A preencher.
+- DEV-manifest (Phase 2) executada na sequência — spec.json gerado com 64 blocos

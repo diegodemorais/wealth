@@ -47,8 +47,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| DEV-manifest | spec.json — Manifesto único do dashboard | Dev | 🔴 Alta | 🔵 Aguardando DEV-bi-review |
-| DEV-bi-review | Revisão BI externa + nova estrutura de abas | Dev | 🟡 Média | 🔵 Dev implementando Phase 1 |
+| DEV-manifest | spec.json — Manifesto único do dashboard | Dev | 🔴 Alta | ✅ Done 2026-04-11 |
+| DEV-bi-review | Revisão BI externa + nova estrutura de abas | Dev | 🟡 Média | ✅ Done 2026-04-11 |
 | EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-fire-matrix-v2 | FIRE Matrix v2 — 3 cenários + eixos Patrimônio×Gasto + visual | Head | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-dashboard-audit | Auditoria completa 60 blocos — map→Quant→fix→confirm | Head | 🔴 Alta | ✅ Done 2026-04-11 |
