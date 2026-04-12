@@ -50,6 +50,17 @@ Se um cenário abaixo ocorrer, executar a resposta **sem debate**. O debate já 
 
 ---
 
+## Dashboard / Build
+
+| Cenário | Resposta | Origem |
+|---------|----------|--------|
+| **Build concluído** | Rodar `python scripts/test_dashboard.py` antes de qualquer commit. | DEV-tester |
+| **CRITICAL ou HIGH fail no tester** | NÃO commitar. Voltar ao `dev` para correção. Re-testar. | DEV-tester |
+| **Mesmo bloco CRITICAL falha 3 ciclos** | `ESCALATE_TO_DIEGO`. Não prosseguir até decisão explícita. | DEV-tester |
+| **Tester verde (0 CRITICAL, 0 HIGH)** | Autorizado para commit + push. | DEV-tester |
+
+---
+
 ## Meta-regra
 
 Se um cenário NÃO está nesta lista, é deliberação normal (Fast-Path ou Full-Path). Se está na lista mas as premissas mudaram fundamentalmente desde a decisão original, re-abrir como issue antes de executar.

@@ -32,7 +32,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
 | 2 | ~~HD-tearsheet-longrun~~ | ~~Tearsheet QuantStats — drawdown table + histórico longo~~ | Head | ✅ Done |
 | ~~HD-backtest-longrun~~ | ~~Pipeline backtest 50+ anos via Ken French / MSCI~~ | Head | ✅ Done |
-| — | DEV-tester | Agente Tester — Suite de testes funcionais para todos os 64 blocos | Dev | 🔴 Alta |
+| ~~DEV-tester~~ | ~~Agente Tester — Suite de testes funcionais para todos os 64 blocos~~ | Dev | ✅ Done 2026-04-12 |
 | — | DEV-fire-tab-split | Split da aba FIRE em 2 tabs coerentes | Dev | 🟡 Média |
 | — | DEV-hero-kpi-review | Revisão completa KPIs hero strip + aba Now | Dev + Head | 🟡 Média |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |

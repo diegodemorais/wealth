@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | DEV-tester |
 | **Dono** | Dev |
-| **Status** | Refinamento |
+| **Status** | ✅ Done |
 | **Prioridade** | 🔴 Alta |
 | **Participantes** | Dev, Quant, FIRE, Factor, RF, Risco, Macro, FX, Tax, Bookkeeper, Head |
 | **Co-sponsor** | Head |
 | **Dependencias** | DEV-manifest (spec.json deve estar concluído — ✅ Done 2026-04-11) |
 | **Criado em** | 2026-04-12 |
 | **Origem** | Diego — componentes quebram com frequência (~64 blocos), necessidade de cobertura de testes sistemática |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-12 |
 
 ---
 
@@ -195,18 +195,23 @@ dashboard/tests/
 
 ## Conclusao
 
-> A preencher após execução completa
+Suite completa entregue e integrada:
+- **425 testes** cobrindo 64 blocos em 10 domínios
+- **10 módulos**: dev, head, fire, factor, rf, risco, macro, fx, tax, bookkeeper
+- **0 CRITICAL, 0 HIGH, 0 MEDIUM** failures no primeiro run limpo
+- Runner: `python scripts/test_dashboard.py` com flags `--quick` e `--domain`
+- Ciclo de falhas: 3 CRITICAL consecutivos → `ESCALATE_TO_DIEGO`
+- CLAUDE.md e flight rules atualizados com protocolo build→tester→deploy
+- Fix real detectado pelo tester: `pfire_atual=90.4` hardcoded no `build_dashboard.py`
 
 ---
 
 ## Resultado
 
-> A preencher após deploy
+425 testes, 100% passando. Suite integrada ao workflow de build.
 
 ---
 
 ## Proximos Passos
 
-- [ ] Fase 1: acionar todos os agentes em paralelo para contribuir testes dos seus domínios
-- [ ] Fase 2: Dev implementa runner + Quant valida cobertura de data_fields
-- [ ] Fase 3: integrar no CLAUDE.md e flight rules
+Concluído.

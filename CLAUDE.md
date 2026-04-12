@@ -120,7 +120,11 @@ Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/pyt
 - Todo componente tem versão privacy (valores sensíveis ocultos)
 - Pipeline: `generate_data.py` → `build_dashboard.py` → `dashboard/index.html`
 - Nunca editar `index.html` diretamente
-- Após aprovação Diego + Quant: commit → push → deploy automático (GitHub Actions)
+- Após build: `python scripts/test_dashboard.py` valida 425 testes (64 blocks, 10 domínios)
+  - CRITICAL/HIGH fail → volta ao `dev` para correção
+  - Mesmo bloco falha 3 ciclos consecutivos → `ESCALATE_TO_DIEGO`, não prosseguir
+  - Resultados em `dashboard/tests/last_run.json`
+- Após aprovação Diego + Quant + tester verde: commit → push → deploy automático (GitHub Actions)
 
 ## Referências
 

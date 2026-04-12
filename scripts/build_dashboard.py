@@ -172,20 +172,21 @@ def _compute_spending_guardrails(data: dict) -> dict:
     """Calcula guardrails de spending via interpolação/extrapolação linear dos cenários MC.
 
     Pontos conhecidos (de spendingSensibilidade):
-    - R$250k → P=90.4%
-    - R$270k → P=85.0%
-    - R$300k → P=82.1%
+    - Lidos de spendingSensibilidade[0] (custo_vida_base, pfire_base)
+    - Interpolados dos demais pontos
 
     Pontos estimados por interpolação/extrapolação linear:
-    - Upper guardrail (P≈95%): extrapolar acima de 90.4% para menor spending
+    - Upper guardrail (P≈95%): extrapolar acima de pfire_base para menor spending
     - Safe target (P≈80%): interpolar entre R$270k (85%) e R$300k (82.1%)
     - Lower guardrail (P≈70%): extrapolar abaixo de 82.1% para maior spending
     """
     spending_sens = data.get("spendingSensibilidade", [])
+    pfire_base = data.get("pfire53", {}).get("base", 90.0)
     if len(spending_sens) < 2:
+        custo_vida = data.get("premissas", {}).get("custo_vida_base", 250000)
         return {
-            "spending_atual": 250000,
-            "pfire_atual": 90.4,
+            "spending_atual": custo_vida,
+            "pfire_atual": pfire_base,
             "zona": "verde",
             "upper_guardrail_spending": None,
             "upper_guardrail_pfire": 95.0,
