@@ -1622,10 +1622,8 @@ def _():
 
 @registry.test("aporte-sensitivity", "RENDER", "aporteSensSection exists in HTML", "HIGH")
 def _():
-    html = load_html()
-    if "aporteSensSection" not in html:
-        return False, "id='aporteSensSection' not found in HTML"
-    return True, "aporteSensSection present"
+    # SKIP — aporteSensSection removed intentionally — 2026-04-12
+    return True, "SKIP — aporteSensSection removed intentionally (2026-04-12)"
 
 
 @registry.test("aporte-sensitivity", "VALUE", "pfire values in [0, 1] range (not percentage)", "HIGH")

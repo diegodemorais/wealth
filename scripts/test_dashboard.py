@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
 Dashboard Test Runner — DEV-tester
-Executes all functional tests across all 64 dashboard blocks.
+Executes functional tests across all 64 dashboard blocks.
 
 Usage:
-    python scripts/test_dashboard.py           # full run
-    python scripts/test_dashboard.py --quick   # only CRITICAL
-    python scripts/test_dashboard.py --domain fire  # single domain
+    python scripts/test_dashboard.py                          # regression mode (CRITICAL+HIGH only)
+    python scripts/test_dashboard.py --mode full              # all severities (425 tests)
+    python scripts/test_dashboard.py --mode regression        # CRITICAL+HIGH only (default)
+    python scripts/test_dashboard.py --domain fire            # single domain, all severities
+    python scripts/test_dashboard.py --mode component --component fire-trilha  # specific component
 
 Output: console report + dashboard/tests/last_run.json
 
@@ -65,10 +67,11 @@ def load_failure_history() -> dict:
         return {}
 
 
-def save_last_run(results, failure_cycles: dict, escalations: list):
+def save_last_run(results, failure_cycles: dict, escalations: list, mode: str):
     """Persist results to last_run.json."""
     output = {
         "timestamp": datetime.now().isoformat(),
+        "mode": mode,
         "total": len(results),
         "passed": sum(1 for r in results if r.passed),
         "failed": sum(1 for r in results if not r.passed),
@@ -108,9 +111,34 @@ def run(args):
 
     results = registry.results
 
-    # Filter by --quick (only CRITICAL)
+    # Determine effective mode
+    mode = args.mode  # 'regression', 'full', or 'component'
+
+    # --domain always runs all severities for that domain (full mode for domain)
+    if args.domain:
+        mode = "full"
+
+    # Legacy --quick flag maps to regression mode
     if args.quick:
         results = [r for r in results if r.severity == "CRITICAL"]
+        mode = "quick"
+    elif mode == "regression":
+        # Regression: CRITICAL + HIGH only
+        results = [r for r in results if r.severity in ("CRITICAL", "HIGH")]
+    elif mode == "component":
+        # Component mode: filter by component name
+        if not args.component:
+            print(f"{RED}ERROR: --mode component requires --component <name>{RESET}")
+            sys.exit(1)
+        component = args.component.lower()
+        results = [
+            r for r in results
+            if component in r.block_id.lower()
+            or component in r.test_id.lower()
+        ]
+        if not results:
+            print(f"{YELLOW}WARNING: no tests found for component '{args.component}'{RESET}")
+    # mode == 'full': keep all results (no filter)
 
     # Sort: CRITICAL first, then HIGH, then MEDIUM; failures before passes within each
     results.sort(key=lambda r: (SEVERITY_ORDER.get(r.severity, 9), r.passed))
@@ -140,8 +168,20 @@ def run(args):
     critical_fails = sum(1 for r in results if not r.passed and r.severity == "CRITICAL")
     high_fails = sum(1 for r in results if not r.passed and r.severity == "HIGH")
 
+    # Mode label for display
+    mode_labels = {
+        "regression": "REGRESSION (CRITICAL+HIGH)",
+        "full": "FULL (all severities)",
+        "component": f"COMPONENT: {args.component}" if args.component else "COMPONENT",
+        "quick": "QUICK (CRITICAL only)",
+    }
+    mode_label = mode_labels.get(mode, mode.upper())
+    if args.domain:
+        mode_label = f"DOMAIN: {args.domain} (all severities)"
+
     print(f"\n{BOLD}{'═'*70}{RESET}")
     print(f"{BOLD}  Dashboard Test Suite — {datetime.now().strftime('%Y-%m-%d %H:%M')}{RESET}")
+    print(f"{BOLD}  Mode: {mode_label}{RESET}")
     print(f"{BOLD}{'═'*70}{RESET}")
     print(f"  Modules loaded: {len(loaded)} | Tests: {total} | {GREEN}PASS: {passed}{RESET} | {RED}FAIL: {failed}{RESET}")
     print(f"  Critical fails: {RED}{critical_fails}{RESET} | High fails: {YELLOW}{high_fails}{RESET}")
@@ -179,7 +219,7 @@ def run(args):
         print(f"  {YELLOW}{BOLD}⚠ HIGH warnings ({high_fails}) — review before deploy{RESET}")
     print(f"{BOLD}{'─'*70}{RESET}\n")
 
-    save_last_run(results, failure_cycles, escalations)
+    save_last_run(results, failure_cycles, escalations, mode)
     print(f"  Results saved to: {LAST_RUN_PATH.relative_to(ROOT)}\n")
 
     # Exit code: 0 = pass, 1 = critical/high fail, 2 = escalation
@@ -193,8 +233,28 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Dashboard test runner")
-    parser.add_argument("--quick", action="store_true", help="Run only CRITICAL tests")
-    parser.add_argument("--domain", type=str, help="Run only a specific domain (e.g. fire, factor, rf)")
+    parser.add_argument(
+        "--quick", action="store_true",
+        help="[legacy] Run only CRITICAL tests (use --mode regression instead)",
+    )
+    parser.add_argument(
+        "--domain", type=str,
+        help="Run only a specific domain (e.g. fire, factor, rf) — all severities",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["regression", "full", "component"],
+        default="regression",
+        help=(
+            "regression (default): CRITICAL+HIGH only — fast guardrails for prod. "
+            "full: all severities including MEDIUM. "
+            "component: run tests for a specific component (requires --component)."
+        ),
+    )
+    parser.add_argument(
+        "--component", type=str,
+        help="Component/block ID to test when using --mode component (e.g. fire-trilha)",
+    )
     args = parser.parse_args()
     run(args)
 

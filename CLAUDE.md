@@ -120,7 +120,7 @@ Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/pyt
 - Todo componente tem versão privacy (valores sensíveis ocultos)
 - Pipeline: `generate_data.py` → `build_dashboard.py` → `dashboard/index.html`
 - Nunca editar `index.html` diretamente
-- Após build: `python scripts/test_dashboard.py` valida 425 testes (64 blocks, 10 domínios)
+- Após build: `python scripts/test_dashboard.py` (regression mode — CRITICAL+HIGH only). Para cobertura completa: `--mode full`. Para componente específico: `--mode component --component <block-id>`
   - CRITICAL/HIGH fail → volta ao `dev` para correção
   - Mesmo bloco falha 3 ciclos consecutivos → `ESCALATE_TO_DIEGO`, não prosseguir
   - Resultados em `dashboard/tests/last_run.json`

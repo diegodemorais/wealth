@@ -4,7 +4,21 @@ Covers: all 64 blocks across all tabs
 """
 
 import re
+from pathlib import Path
 from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_PY, SPEC_JSON
+
+ROOT = Path(__file__).parent.parent.parent
+TEMPLATE_HTML = ROOT / "dashboard" / "template.html"
+
+_TEMPLATE = None
+
+
+def load_template() -> str:
+    global _TEMPLATE
+    if _TEMPLATE is None:
+        with open(TEMPLATE_HTML) as f:
+            _TEMPLATE = f.read()
+    return _TEMPLATE
 
 
 # ── SPEC COVERAGE ────────────────────────────────────────────────────────────
@@ -235,3 +249,118 @@ def _():
     if n < 65:
         return False, f"Only {n} blocks in spec (expected ~72) — blocks may have been removed"
     return True, f"{n} blocks in spec"
+
+
+# ── TAB_SWITCH — destroy guard regression tests ───────────────────────────────
+# Verifies that every chart canvas that appears in index.html has a charts.XXX
+# destroy() guard in template.html before its new Chart( call.
+# Prevents "canvas already in use" error when revisiting a tab.
+#
+# Format:
+# TEST tab-switch-guard :: TAB_SWITCH :: <canvas_id> tem destroy guard antes de new Chart
+# GIVEN template.html
+# WHEN buscar charts.<id> antes de new Chart(document.getElementById('<id>')
+# THEN guard presente — sem canvas-already-in-use ao re-visitar aba
+# SEVERITY: HIGH
+
+def _check_destroy_guard(canvas_id: str, charts_key: str) -> tuple[bool, str]:
+    """
+    Verify that template.html has a destroy guard for charts.<charts_key>
+    somewhere before the new Chart(document.getElementById('<canvas_id>') call.
+    Also checks the canvas_id exists in index.html.
+    """
+    html = load_html()
+    template = load_template()
+
+    # Step 1: canvas must exist in index.html
+    if f'id="{canvas_id}"' not in html and f"getElementById('{canvas_id}')" not in html:
+        return False, f"canvas id='{canvas_id}' not found in index.html"
+
+    # Step 2: must have new Chart call referencing this canvas in template
+    new_chart_pattern = f"new Chart(document.getElementById('{canvas_id}')"
+    # Some charts use a ctx variable — also check for the canvas id near a new Chart call
+    has_new_chart = new_chart_pattern in template
+    if not has_new_chart:
+        # Check if canvas id is used to get ctx then new Chart(ctx
+        if f"getElementById('{canvas_id}')" not in template:
+            return False, f"new Chart call for '{canvas_id}' not found in template.html"
+        # Canvas is referenced but via ctx variable — accept
+        has_new_chart = True
+
+    # Step 3: must have a destroy guard using charts.<charts_key>
+    destroy_guard = f"charts.{charts_key}"
+    if destroy_guard not in template:
+        return False, f"No destroy guard 'charts.{charts_key}' found in template.html"
+
+    # Step 4: verify guard appears before new Chart call (by line position)
+    lines = template.splitlines()
+    guard_lines = [i for i, ln in enumerate(lines) if destroy_guard in ln and "destroy" in ln]
+    if new_chart_pattern in template:
+        chart_lines = [i for i, ln in enumerate(lines) if new_chart_pattern in ln]
+    else:
+        # Using ctx pattern
+        ctx_get_lines = [i for i, ln in enumerate(lines) if f"getElementById('{canvas_id}')" in ln]
+        chart_lines = [i for i, ln in enumerate(lines) if "new Chart(" in ln]
+        # Find new Chart( after any ctx assignment
+        if ctx_get_lines and chart_lines:
+            first_ctx = min(ctx_get_lines)
+            chart_lines = [cl for cl in chart_lines if cl > first_ctx]
+
+    if not guard_lines:
+        return False, f"destroy guard line not found for charts.{charts_key}"
+    if not chart_lines:
+        return False, f"new Chart line not found for canvas '{canvas_id}'"
+
+    # Guard must appear before the new Chart call
+    first_guard = min(guard_lines)
+    first_chart = min(chart_lines)
+    if first_guard >= first_chart:
+        return False, (
+            f"destroy guard (line {first_guard+1}) appears AFTER new Chart "
+            f"(line {first_chart+1}) for '{canvas_id}'"
+        )
+
+    return True, f"guard present — charts.{charts_key}.destroy() before new Chart('{canvas_id}')"
+
+
+# Canvas IDs with their corresponding charts.<key> names.
+# Note: allocBar (div-based, not a canvas) and netWorthChart (renamed to
+# netWorthProjectionChart) are not included — they don't exist as chart canvases.
+_TAB_SWITCH_CHARTS = [
+    # (canvas_id, charts_key)
+    ("geoDonut",              "geo"),
+    ("attrChart",             "attr"),
+    ("scenarioChart",         "scenario"),
+    ("fireTrilhaChart",       "fireTrilha"),
+    ("glideChart",            "glide"),
+    ("netWorthProjectionChart", "netWorth"),
+    ("tornadoChart",          "tornado"),
+    ("deltaChart",            "delta"),
+    ("fanChart",              "fan"),
+    ("incomeChart",           "income"),
+    ("drawdownHistChart",     "drawdownHist"),
+    ("bondPoolRunwayChart",   "bondPoolRunway"),
+    ("incomeProjectionChart", "incomeProjection"),
+    ("rollingSharpChart",     "rollingSharp"),
+    ("rollingIRChart",        "rollingIR"),
+    ("backtestChart",         "backtest"),
+    ("backtestR7Chart",       "backtestR7"),
+    ("shadowChart",           "shadow"),
+    ("factorRollingChart",    "factorRolling"),
+    ("factorLoadingsChart",   "factorLoadings"),
+]
+
+for _canvas_id, _charts_key in _TAB_SWITCH_CHARTS:
+    # Use closure to capture loop variables
+    def _make_tab_switch_test(cid, ckey):
+        @registry.test(
+            f"tab-switch-guard",
+            "TAB_SWITCH",
+            f"{cid} tem destroy guard antes de new Chart",
+            "HIGH",
+        )
+        def _tab_switch_test():
+            return _check_destroy_guard(cid, ckey)
+        return _tab_switch_test
+
+    _make_tab_switch_test(_canvas_id, _charts_key)

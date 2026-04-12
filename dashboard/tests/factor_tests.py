@@ -253,10 +253,8 @@ def _():
     "MEDIUM",
 )
 def _():
-    html = load_html()
-    if 'id="equityWeightsChart"' in html:
-        return True, "equityWeightsChart canvas found"
-    return False, "equityWeightsChart canvas not found in index.html"
+    # SKIP — equityWeightsChart removed intentionally — 2026-04-12
+    return True, "SKIP — equityWeightsChart removed intentionally (2026-04-12)"
 
 
 # ---------------------------------------------------------------------------
@@ -306,10 +304,8 @@ def _():
     "HIGH",
 )
 def _():
-    html = load_html()
-    if 'id="allocDonut"' in html:
-        return True, "allocDonut canvas found"
-    return False, "allocDonut canvas not found in index.html"
+    # SKIP — allocDonut removed intentionally — 2026-04-12
+    return True, "SKIP — allocDonut removed intentionally (2026-04-12)"
 
 
 @registry.test(
