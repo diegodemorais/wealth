@@ -1397,12 +1397,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T18:31:42-03:00'); // BRT (UTC-3)
-const VERSION = '1.184';
+const GENERATED_AT = new Date('2026-04-12T18:39:06-03:00'); // BRT (UTC-3)
+const VERSION = '1.185';
 
 const DATA = {
-  "_generated": "2026-04-12T18:31:42",
-  "_generated_brt": "2026-04-12T18:31:42-03:00",
+  "_generated": "2026-04-12T18:39:04",
+  "_generated_brt": "2026-04-12T18:39:04-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -3021,7 +3021,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -3061,7 +3061,7 @@ const DATA = {
       390.1,
       419.59,
       398.21,
-      428.81,
+      428.82,
       413.99,
       417.32,
       418.77,
@@ -3274,7 +3274,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -8056,7 +8056,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.184"
+  "version": "1.185"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8792,8 +8792,8 @@ function buildDeltaBar() {
   const deltaIpca = sh.delta_ipca ?? null;
   const delta6040 = sh.delta_shadow_c ?? null;
   const rawData = [deltaVwra, deltaIpca, delta6040];
-  // Substituir null por 0 para garantir que a barra renderiza; tooltip indica "em tracking"
-  const deltaData = rawData.map(v => v ?? 0);
+  // Substituir null por 0.001 placeholder para garantir que a barra renderiza com estilo "em tracking"
+  const deltaData = rawData.map(v => v ?? 0.001);
   const isTracking = rawData.map(v => v === null);
   if (charts.delta) { charts.delta.destroy(); charts.delta = null; }
   charts.delta = new Chart(document.getElementById('deltaChart'), {
@@ -8889,6 +8889,11 @@ function buildStackedAlloc() {
 // ── S12: Glide Path ───────────────────────────────────────────
 function buildGlidePath() {
   const g = DATA.glide;
+  const sec = document.getElementById('glideSection') || document.getElementById('glidepathSection');
+  if (!g || !g.idades || !g.equity || !g.ipca_longo) {
+    if (sec) sec.style.display = 'none';
+    return;
+  }
   const _anoAtual = today.getFullYear();
   const _idadeAtual = DATA.premissas.idade_atual;
   const labels = g.idades.map(a => [String(_anoAtual + (a - _idadeAtual)), `(${a} anos)`]);
@@ -10583,8 +10588,14 @@ function buildSpendingGuardrails() {
       <div style="position:absolute;left:${posUpper}%;top:0;width:2px;height:36px;background:#3b82f6;z-index:2">
         <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:#3b82f6;white-space:nowrap">~R$${(upper/1000).toFixed(0)}k (~95%)</div>
       </div>
-      <div style="position:absolute;left:${posAtual}%;top:0;width:3px;height:36px;background:var(--green);z-index:3">
-        <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--green);white-space:nowrap;font-weight:700">R$${(atual/1000).toFixed(0)}k (${sg.pfire_atual}%) ◀ ATUAL</div>
+      <div style="position:absolute;left:${posAtual}%;top:0;z-index:4;transform:translateX(-50%)">
+        <div style="position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);
+                    white-space:nowrap;font-size:.6rem;font-weight:700;color:var(--green);
+                    text-align:center;line-height:1.2">
+          R$${(atual/1000).toFixed(0)}k<br>${sg.pfire_atual}%
+        </div>
+        <div style="width:10px;height:10px;border-radius:50%;background:var(--green);
+                    border:2px solid #0f172a;margin-top:13px;"></div>
       </div>
       <div style="position:absolute;left:${posSafe}%;top:0;width:2px;height:36px;background:var(--yellow);z-index:2">
         <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--yellow);white-space:nowrap">~R$${(safe/1000).toFixed(0)}k (~80%)</div>
@@ -10926,6 +10937,12 @@ function buildNetWorthProjection() {
   const aHojeIdx = nw.anos.indexOf(anoAtual);
   const patAtual = DATA.premissas.patrimonio_atual;
 
+  // Compute Y max com cap para evitar escala astronômica
+  const _nwAllVals = [...(nw.p90||[]), ...(nw.p50||[]), ...(nw.p10||[])]
+    .filter(v => v != null && isFinite(v) && v > 0);
+  const _nwDataMax = _nwAllVals.length ? Math.max(..._nwAllVals) : 15e6;
+  const _nwYMax = Math.min(_nwDataMax * 1.1, 150e6); // cap em R$150M
+
   if (charts.netWorth) { charts.netWorth.destroy(); charts.netWorth = null; }
 
   // Plugin inline para linha vertical "Hoje" e shading
@@ -11051,7 +11068,8 @@ function buildNetWorthProjection() {
           grid: { color: 'rgba(71,85,105,.2)' }
         },
         y: {
-          suggestedMax: 15000000,
+          max: _nwYMax,
+          min: 0,
           ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.2)' }
         }
@@ -11182,7 +11200,7 @@ function buildStressTest() {
     try {
       const traj = runMCTrajectories(_patShock, _spending, _anosAcumulo, 40, _retReal, _vol, 500, _aporte);
       buildStressFanChart(traj, _onsetAge, _anosAcumulo, _shockPct);
-    } catch(e) { console.warn('[stress-fan-chart]', e); }
+    } catch(e) { console.error('[stress-fan-chart ERROR]', e); }
   }, 50);
 }
 
@@ -13478,10 +13496,14 @@ function buildFireTrilha() {
     });
   }
 
-  // Scale: cap at 2.5× current realizado max so near-term progress is legible
-  const _rVals = realizado.filter(v => v != null && !isNaN(v) && v > 0);
-  const _yMax = _rVals.length ? Math.max(..._rVals) * 2.5 : (meta || 15e6) * 1.1;
-  const _yMin = _rVals.length ? Math.min(..._rVals) * 0.85 : 0;
+  // Scale: include trilha values and cap at 1.5× meta to avoid flattening visible progress
+  const _rVals = realizado.filter(v => v != null && isFinite(v) && v > 0);
+  const _tVals = (trilha || []).filter(v => v != null && isFinite(v) && v > 0);
+  const _metaVal = meta ?? 15e6;
+  const _dataMax = [..._rVals, ..._tVals].length ? Math.max(..._rVals, ..._tVals) : _metaVal;
+  // Cap: nunca mais que 1.5x a meta, para não achatar o progresso visível
+  const _yMax = Math.min(_dataMax * 1.1, _metaVal * 1.5);
+  const _yMin = _rVals.length ? Math.min(..._rVals.slice(0, 5)) * 0.85 : 0;
 
   if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
   const ctx = el.getContext('2d');

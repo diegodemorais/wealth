@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-04-12T18:31:45.888996",
+  "timestamp": "2026-04-12T18:39:09.288001",
   "mode": "full",
-  "total": 576,
-  "passed": 576,
+  "total": 579,
+  "passed": 579,
   "failed": 0,
   "failure_cycles": {
     "net-worth-projection": 0
@@ -15,7 +15,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 514,384 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 515,482 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -63,7 +63,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 514,384 chars"
+      "message": "index.html: 515,482 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -111,7 +111,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5073)"
+      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5091)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroPfireSub::DOM_REF::renderKPIs: getElementById('heroPfireSub') existe no DOM ou tem null guard",
@@ -119,7 +119,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5079)"
+      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5097)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroAnos::DOM_REF::renderKPIs: getElementById('heroAnos') existe no DOM ou tem null guard",
@@ -159,7 +159,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5100)"
+      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5118)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroSavingsSub::DOM_REF::renderKPIs: getElementById('heroSavingsSub') existe no DOM ou tem null guard",
@@ -167,7 +167,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5104)"
+      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5122)"
     },
     {
       "test_id": "dom-ref-renderKPIs-kpiPfire50::DOM_REF::renderKPIs: getElementById('kpiPfire50') existe no DOM ou tem null guard",
@@ -775,7 +775,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2483)"
+      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2488)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribVal::DOM_REF::updateContrib: getElementById('contribVal') existe no DOM ou tem null guard",
@@ -783,7 +783,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2489)"
+      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2494)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribResult::DOM_REF::updateContrib: getElementById('contribResult') existe no DOM ou tem null guard",
@@ -791,7 +791,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2490)"
+      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2495)"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::posicoes top-level key exists and is non-empty dict",
@@ -1288,6 +1288,22 @@
       "severity": "CRITICAL",
       "passed": true,
       "message": "All evento pfire_2040 values in [0, 1]"
+    },
+    {
+      "test_id": "net-worth-projection::RENDER::netWorthProjectionChart canvas exists in HTML",
+      "block_id": "net-worth-projection",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "netWorthProjectionChart canvas present"
+    },
+    {
+      "test_id": "stress-fan-chart::RENDER::stressProjectionChart canvas exists in HTML",
+      "block_id": "stress-fan-chart",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "stressProjectionChart canvas present"
     },
     {
       "test_id": "factor-signal-kpi::DATA::factor_signal fields present and numeric",
@@ -2015,7 +2031,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVEM', 'SWRD', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2031,7 +2047,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'performance', 'retiro', 'portfolio', 'now', 'fire'}"
+      "message": "All blocks use valid tabs: {'performance', 'fire', 'portfolio', 'retiro', 'now'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2287,7 +2303,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5505)"
+      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5523)"
     },
     {
       "test_id": "dom-ref-renderProximasAcoes-proximasAcoes::DOM_REF::renderProximasAcoes: getElementById('proximasAcoes') existe no DOM ou tem null guard",
@@ -2295,7 +2311,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5540)"
+      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5558)"
     },
     {
       "test_id": "dom-ref-buildStressTest-stressPatShock::DOM_REF::buildStressTest: getElementById('stressPatShock') existe no DOM ou tem null guard",
@@ -2471,7 +2487,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2833)"
+      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2838)"
     },
     {
       "test_id": "dom-ref-calcAporte-calcCambioLabel::DOM_REF::calcAporte: getElementById('calcCambioLabel') existe no DOM ou tem null guard",
@@ -2568,6 +2584,14 @@
       "severity": "HIGH",
       "passed": true,
       "message": "id='etfCompSection' presente em index.html"
+    },
+    {
+      "test_id": "delta-bar::RENDER::buildDeltaBar defined in template and deltaChart canvas in HTML",
+      "block_id": "delta-bar",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildDeltaBar defined and deltaChart canvas present"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::rf and hodl11 top-level keys exist",
@@ -4175,7 +4199,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Generated: 2026-04-12T18:31:42"
+      "message": "Generated: 2026-04-12T18:39:04"
     },
     {
       "test_id": "render-global::RENDER::no empty canvas elements (uninitialized charts)",
@@ -4503,7 +4527,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4511,7 +4535,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'cambio', 'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

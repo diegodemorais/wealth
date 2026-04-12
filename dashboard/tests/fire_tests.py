@@ -1982,3 +1982,23 @@ def _():
     if re.search(pattern, build_text):
         return False, f"Possible hardcoded pfire53 base={base} dict literal in build script"
     return True, f"pfire53.base={base} not hardcoded as dict literal"
+
+
+# ── B4: Net Worth Projection anti-regression ──────────────────────────────────
+
+@registry.test("net-worth-projection", "RENDER", "netWorthProjectionChart canvas exists in HTML", "CRITICAL")
+def _():
+    html = load_html()
+    if 'id="netWorthProjectionChart"' not in html:
+        return False, "netWorthProjectionChart canvas missing from HTML"
+    return True, "netWorthProjectionChart canvas present"
+
+
+# ── B7: Stress Fan Chart anti-regression ──────────────────────────────────────
+
+@registry.test("stress-fan-chart", "RENDER", "stressProjectionChart canvas exists in HTML", "CRITICAL")
+def _():
+    html = load_html()
+    if 'id="stressProjectionChart"' not in html:
+        return False, "stressProjectionChart canvas missing from HTML"
+    return True, "stressProjectionChart canvas present"

@@ -566,3 +566,19 @@ def _get_dom_ref_tests():
 
 
 _get_dom_ref_tests()
+
+
+# ── B1: Delta Bar anti-regression ────────────────────────────────────────────
+
+@registry.test("delta-bar", "RENDER", "buildDeltaBar defined in template and deltaChart canvas in HTML", "HIGH")
+def _():
+    template = load_template()
+    html = load_html()
+    errors = []
+    if "function buildDeltaBar" not in template:
+        errors.append("buildDeltaBar not defined in template.html")
+    if 'id="deltaChart"' not in html:
+        errors.append("deltaChart canvas missing from HTML")
+    if errors:
+        return False, "; ".join(errors)
+    return True, "buildDeltaBar defined and deltaChart canvas present"
