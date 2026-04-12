@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-12T14:05:55.135202",
+  "timestamp": "2026-04-12T14:30:36.283679",
   "mode": "smart",
   "total": 276,
   "passed": 276,
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 490,730 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 491,080 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -957,7 +957,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'performance', 'fire', 'retiro', 'portfolio', 'now'}"
+      "message": "All blocks use valid tabs: {'portfolio', 'performance', 'now', 'retiro', 'fire'}"
     },
     {
       "test_id": "privacy-global::PRIVACY::privacy toggle mechanism present in HTML",
@@ -2133,7 +2133,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -2141,7 +2141,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'cambio', 'concentracao_brasil.brasil_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
