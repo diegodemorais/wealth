@@ -1088,7 +1088,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
       <label style="font-size:.8rem;color:var(--muted)">Idade do shock:</label>
       <select id="stressOnsetAge" onchange="onStressShockChange(document.getElementById('stressShockSlider').value)"
         style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;cursor:pointer">
-        <option value="39">39 anos (hoje)</option>
+        <option value="39" id="stressOnsetAgeToday">39 anos (hoje)</option>
         <option value="40">40 anos</option>
         <option value="42">42 anos</option>
         <option value="45">45 anos</option>
@@ -4414,7 +4414,7 @@ function onStressShockChange(val) {
   const mesesAteOnset = Math.max(0, (selectedAge - idadeAtual) * 12);
   let patNaIdade = patOriginal;
   if (mesesAteOnset > 0) {
-    const rMensal = 0.00407;
+    const rMensal = Math.pow(1 + (p.retorno_equity_base || 0.0485), 1/12) - 1;
     const aporteMensal = p.aporte_mensal || 33000;
     const fv = Math.pow(1 + rMensal, mesesAteOnset);
     patNaIdade = patOriginal * fv + aporteMensal * (fv - 1) / rMensal;
@@ -4473,7 +4473,7 @@ function runStressSimulation() {
     const mesesAteOnset = Math.max(0, (idadeOnset - idadeAtual) * 12);
     let patNaIdade = patOriginal;
     if (mesesAteOnset > 0) {
-      const rMensal = 0.00407; // ~5% real/ano conservador
+      const rMensal = Math.pow(1 + (p.retorno_equity_base || 0.0485), 1/12) - 1;
       const aporteMensal = p.aporte_mensal || 33000;
       const fv = Math.pow(1 + rMensal, mesesAteOnset);
       patNaIdade = patOriginal * fv + aporteMensal * (fv - 1) / rMensal;
@@ -6415,7 +6415,7 @@ function buildEtfComposition() {
 
   const allTickers = Object.keys(d.etfs);
   // Separate VEM into its own table to keep the main region table narrow
-  const VEM_TICKER = 'VEM';
+  const VEM_TICKER = 'AVEM';
   const mainTickers = allTickers.filter(t => t !== VEM_TICKER);
   const vemTicker = allTickers.find(t => t === VEM_TICKER);
 
@@ -6962,6 +6962,13 @@ function buildCagrVsTwr() {
 // Apenas funções globais (não ligadas a nenhuma aba específica) e a tab inicial.
 // ═══════════════════════════════════════════════════════════════
 (function init() {
+  // Atualiza label dinâmico da idade atual no seletor de stress test
+  (function() {
+    const idadeAtual = DATA.premissas?.idade_atual || 39;
+    const opt = document.getElementById('stressOnsetAgeToday');
+    if (opt) { opt.value = String(idadeAtual); opt.textContent = `${idadeAtual} anos (hoje)`; }
+  })();
+
   // Funções globais (header, hero, semáforo — sempre visíveis)
   renderKPIs();
   renderWellness();

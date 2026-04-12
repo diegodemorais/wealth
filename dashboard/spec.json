@@ -723,17 +723,6 @@
       "privacy": false
     },
     {
-      "id": "spending-sensitivity",
-      "tab": "fire",
-      "label": "Sensibilidade P(FIRE) × Spending",
-      "type": "chart-line",
-      "purpose": "Mostra como P(FIRE) varia conforme custo de vida aumenta para identificar o nível de gasto máximo sustentável",
-      "data_fields": [
-        "spendingSensibilidade"
-      ],
-      "privacy": false
-    },
-    {
       "id": "guardrails-retirada",
       "tab": "retiro",
       "label": "Guardrails de Retirada",
@@ -887,19 +876,6 @@
         "earliest_fire.idade",
         "earliest_fire.pfire",
         "premissas.idade_fire_aspiracional"
-      ],
-      "privacy": false
-    },
-    {
-      "id": "aporte-sensitivity",
-      "tab": "fire",
-      "label": "Sensibilidade P(FIRE) × Aporte",
-      "type": "chart-line",
-      "purpose": "Mostra como P(FIRE@53) varia conforme o aporte mensal muda para identificar o aporte mínimo necessário",
-      "data_fields": [
-        "fire_aporte_sensitivity.aportes_brl",
-        "fire_aporte_sensitivity.pfire_2040",
-        "fire_aporte_sensitivity.aporte_base"
       ],
       "privacy": false
     },
