@@ -914,7 +914,7 @@ def test_posicoes_aggregation():
 
 @registry.test(
     "reconciliation",
-    "CRITICAL",
+    "DATA",
     "all posicoes have valid drift reference",
     "CRITICAL"
 )
