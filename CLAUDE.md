@@ -120,8 +120,8 @@ Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/pyt
 - Todo componente tem versão privacy (valores sensíveis ocultos)
 - Pipeline: `generate_data.py` → `build_dashboard.py` → `dashboard/index.html`
 - Nunca editar `index.html` diretamente
-- Durante iteração (build intermediário): `python scripts/test_dashboard.py --smart` (só testes relevantes ao que mudou)
-- **Antes de todo push** (todo push = deploy): `python scripts/test_dashboard.py --mode full`
+- **Toda alteração (padrão):** `python scripts/test_dashboard.py --smart` (só testes relevantes ao que mudou)
+- **Refactor grande / muitos arquivos alterados:** `python scripts/test_dashboard.py --mode full`
 - Para componente específico: `--mode component --component <block-id>`
   - CRITICAL/HIGH fail → volta ao `dev` para correção
   - Mesmo bloco falha 3 ciclos consecutivos → `ESCALATE_TO_DIEGO`, não prosseguir
