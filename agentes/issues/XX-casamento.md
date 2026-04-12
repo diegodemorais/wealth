@@ -40,7 +40,7 @@
 | Plano de saúde | Excelente (empresa grande) | Alta |
 | Diego como dependente | Custo adicional baixo ou zero | Média |
 | Reserva própria | ~R$0 | Média |
-| Patrimônio no FIRE 55 | ~R$800k estimado | Baixa |
+| Patrimônio no FIRE 55 | ~R$800k estimado | Baixa — PGBL ~R$490k é componente principal (TX-pgbl-katia) |
 | Gastos mensais | ~R$13-15k/mês | Média |
 
 ---
