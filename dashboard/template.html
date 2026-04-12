@@ -89,6 +89,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 .private-mode .pv{visibility:hidden}
+.tab-hidden{display:none!important}
 /* ── Zebra striping em tabelas longas ── */
 tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .privacy-toggle{cursor:pointer;font-size:1.3rem;opacity:.7;user-select:none}
@@ -1279,7 +1280,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Roda síncrono antes de qualquer render — não espera DOMContentLoaded.
 (function() {
   document.querySelectorAll('[data-in-tab]').forEach(function(el) {
-    if (el.getAttribute('data-in-tab') !== 'hoje') el.style.display = 'none';
+    if (el.getAttribute('data-in-tab') !== 'hoje') el.classList.add('tab-hidden');
   });
 })();
 
@@ -4672,9 +4673,12 @@ function renderKPIs() {
   const _rendaHero = DATA.premissas.renda_estimada ?? 45000;
   const srHero = _aporteHero / _rendaHero;
   const heroSrEl = document.getElementById('heroSavings');
-  heroSrEl.textContent = fmtPct(srHero * 100);
-  heroSrEl.style.color = srHero >= 0.5 ? '#22c55e' : srHero >= 0.4 ? '#eab308' : '#ef4444';
-  document.getElementById('heroSavingsSub').textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_rendaHero/1000).toFixed(0)}k renda`;
+  if (heroSrEl) {
+    heroSrEl.textContent = fmtPct(srHero * 100);
+    heroSrEl.style.color = srHero >= 0.5 ? '#22c55e' : srHero >= 0.4 ? '#eab308' : '#ef4444';
+    const heroSrSubEl = document.getElementById('heroSavingsSub');
+    if (heroSrSubEl) heroSrSubEl.textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_rendaHero/1000).toFixed(0)}k renda`;
+  }
 
   // KPI 1: P(FIRE@50) — fonte: DATA.pfire50.base
   (function() {
@@ -5645,7 +5649,7 @@ function _initTabCharts(tab) {
 window.switchTab = function(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('[data-in-tab]').forEach(el => {
-    el.style.display = el.dataset.inTab === name ? '' : 'none';
+    el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
   });
   // Lazy init: inicializar charts da aba apenas na primeira abertura
   if (!_tabInitialized[name]) {
