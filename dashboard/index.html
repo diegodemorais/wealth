@@ -1356,8 +1356,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T10:26:01-03:00'); // BRT (UTC-3)
-const VERSION = '1.167';
+const GENERATED_AT = new Date('2026-04-12T10:33:27-03:00'); // BRT (UTC-3)
+const VERSION = '1.168';
 
 const DATA = {
   "_generated": "2026-04-12T08:57:38",
@@ -7747,7 +7747,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.167"
+  "version": "1.168"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8696,11 +8696,14 @@ function buildFeeAnalysis() {
 window.updateContrib = function() {
   // Inicializar slider com aporte de DATA se ainda não foi alterado
   const slider = document.getElementById('contribSlider');
-  if (slider && +slider.value === 25000 && DATA.premissas?.aporte_mensal) {
+  if (!slider) return; // UI do simulador de aporte não está presente
+  if (+slider.value === 25000 && DATA.premissas?.aporte_mensal) {
     slider.value = DATA.premissas.aporte_mensal;
   }
   const ap = +slider.value;
-  document.getElementById('contribVal').textContent = 'R$' + ap.toLocaleString('pt-BR');
+  const valEl = document.getElementById('contribVal');
+  const resEl = document.getElementById('contribResult');
+  if (valEl) valEl.textContent = 'R$' + ap.toLocaleString('pt-BR');
   const r = DATA.premissas.retorno_equity_base / 12;
   const pat = DATA.premissas.patrimonio_atual;
   const meta = PAT_GATILHO;
@@ -8708,8 +8711,10 @@ window.updateContrib = function() {
   while (p < meta && n < 600) { p = p * (1 + r) + ap; n++; }
   const anos = n / 12;
   const _contribAnoFire = today.getFullYear() + (anos | 0) + (anos % 1 > 0.5 ? 1 : 0);
-  document.getElementById('contribResult').textContent = n < 600 ? `${anos.toFixed(1)} anos (${_contribAnoFire})` : '> 50 anos';
-  document.getElementById('contribResult').style.color = n < 600 ? '#22c55e' : '#ef4444';
+  if (resEl) {
+    resEl.textContent = n < 600 ? `${anos.toFixed(1)} anos (${_contribAnoFire})` : '> 50 anos';
+    resEl.style.color = n < 600 ? '#22c55e' : '#ef4444';
+  }
 };
 
 // ── S19: What-If ──────────────────────────────────────────────

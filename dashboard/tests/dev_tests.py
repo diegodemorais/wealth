@@ -364,3 +364,235 @@ for _canvas_id, _charts_key in _TAB_SWITCH_CHARTS:
         return _tab_switch_test
 
     _make_tab_switch_test(_canvas_id, _charts_key)
+
+
+# ── JS_REF — getElementById reference integrity ───────────────────────────────
+# Verifies that every getElementById('xxx') in template.html either:
+#   a) has the element id='xxx' present in index.html (built output), OR
+#   b) has a null guard on the same line or next 3 lines
+#
+# Format:
+# TEST js-ref-<id> :: JS_REF :: getElementById('<id>') existe no DOM ou tem null guard
+# GIVEN template.html com getElementById('<id>')
+# WHEN buscar id='<id>' em index.html
+# THEN elemento presente OU null guard explícito nas linhas seguintes
+# SEVERITY: HIGH
+
+
+def _extract_getelementbyid_refs(template_path):
+    """
+    Extract all getElementById(id) calls from template_path.
+    Returns list of (elem_id, line_number_1based, has_null_guard).
+    """
+    with open(template_path) as f:
+        lines = f.readlines()
+    refs = []
+    seen = set()
+    for i, line in enumerate(lines):
+        matches = re.findall(r"getElementById\(['\"](\w[\w-]*)['\"]", line)
+        for m in matches:
+            if m in seen:
+                continue
+            seen.add(m)
+            # Check current line + next 3 lines for null guard patterns
+            context = ''.join(lines[i:i + 4])
+            has_guard = bool(re.search(r'if\s*\(|&&|\?\.|!= null|!== null|\|\| null', context))
+            refs.append((m, i + 1, has_guard))
+    return refs
+
+
+def _check_id_in_html(html_content, elem_id):
+    """Check if id='elem_id' or id="elem_id" is present in html_content."""
+    return bool(re.search(r'id=["\']' + re.escape(elem_id) + r'["\']', html_content))
+
+
+def _get_js_ref_tests():
+    """
+    Build and register JS_REF tests: one per unique getElementById call in template.html.
+    Each test checks that the referenced id exists in index.html OR has a null guard.
+    """
+    refs = _extract_getelementbyid_refs(TEMPLATE_HTML)
+    html_content = load_html()
+
+    for elem_id, lineno, has_guard in refs:
+        def _make_js_ref_test(eid, lno, guard):
+            @registry.test(
+                f"js-ref-{eid}",
+                "JS_REF",
+                f"getElementById('{eid}') existe no DOM ou tem null guard",
+                "HIGH",
+            )
+            def _js_ref_test():
+                in_html = _check_id_in_html(html_content, eid)
+                if in_html:
+                    return True, f"id='{eid}' presente em index.html"
+                if guard:
+                    return True, f"id='{eid}' ausente do HTML mas null guard detectado (template.html linha {lno})"
+                return (
+                    False,
+                    f"FAIL: id='{eid}' não encontrado em index.html E sem null guard "
+                    f"(template.html linha {lno}) — risco de crash silencioso",
+                )
+            return _js_ref_test
+
+        _make_js_ref_test(elem_id, lineno, has_guard)
+
+
+_get_js_ref_tests()
+
+
+# ── RENDER_REF — render functions getElementById check ────────────────────────
+# Verifies that each render function that runs in init() has all its
+# getElementById calls either present in index.html OR guarded with null checks.
+# Severity: CRITICAL — these functions run unconditionally; a missing element
+# crashes the entire Now tab silently.
+#
+# Format:
+# TEST render-ref-<fn>-<id> :: RENDER_REF :: <fn>: getElementById('<id>') existe no DOM ou tem null guard
+# GIVEN template.html função <fn>
+# WHEN buscar id='<id>' em index.html
+# THEN elemento presente OU null guard explícito nas linhas seguintes
+# SEVERITY: CRITICAL
+
+# Render functions that run unconditionally in init()
+_RENDER_FUNCTIONS = [
+    "renderKPIs",
+    "renderWellness",
+    "buildWellnessExtras",
+    "renderMacroStatus",
+    "buildBrasilConcentracao",
+    "buildMacroCards",
+    "buildDcaStatus",
+    "buildSemaforoPanel",
+    "updateContrib",
+]
+
+
+def _extract_function_body(template_path, fn_name):
+    """
+    Extract the body of a top-level JS function (or window.fn = function) from template_path.
+    Returns list of (line_content, absolute_line_number_1based).
+    Uses brace counting to find the function end.
+    """
+    with open(template_path) as f:
+        lines = f.readlines()
+
+    # Find the function start — matches both:
+    #   function fnName(
+    #   window.fnName = function(
+    start_patterns = [
+        re.compile(r'^\s*function\s+' + re.escape(fn_name) + r'\s*\('),
+        re.compile(r'^\s*window\.' + re.escape(fn_name) + r'\s*=\s*function\s*\('),
+    ]
+
+    start_line = None
+    for i, line in enumerate(lines):
+        for pat in start_patterns:
+            if pat.search(line):
+                start_line = i
+                break
+        if start_line is not None:
+            break
+
+    if start_line is None:
+        return []
+
+    # Collect body by counting braces
+    body = []
+    depth = 0
+    for i in range(start_line, len(lines)):
+        line = lines[i]
+        body.append((line, i + 1))
+        depth += line.count('{') - line.count('}')
+        if i > start_line and depth <= 0:
+            break
+
+    return body
+
+
+def _get_render_ref_tests():
+    """
+    Build and register RENDER_REF tests for each render function.
+    For each getElementById call within the function body, verify the element
+    exists in index.html OR has a null guard on the same or next 3 lines.
+    """
+    html_content = load_html()
+
+    with open(TEMPLATE_HTML) as f:
+        all_lines = f.readlines()
+
+    for fn_name in _RENDER_FUNCTIONS:
+        body = _extract_function_body(TEMPLATE_HTML, fn_name)
+        if not body:
+            # Function not found — register a failing test
+            def _make_missing_fn_test(fname):
+                @registry.test(
+                    f"render-ref-{fname}",
+                    "RENDER_REF",
+                    f"{fname}: função encontrada em template.html",
+                    "CRITICAL",
+                )
+                def _missing_fn_test():
+                    return False, f"função '{fname}' não encontrada em template.html"
+                return _missing_fn_test
+            _make_missing_fn_test(fn_name)
+            continue
+
+        # Build a map: elem_id -> (line_number, has_guard)
+        # Use the same deduplication-per-function approach
+        seen_in_fn = {}
+        for line_content, abs_lineno in body:
+            matches = re.findall(r"getElementById\(['\"](\w[\w-]*)['\"]", line_content)
+            for m in matches:
+                if m in seen_in_fn:
+                    continue
+                # Context: current line + next 3 lines from the full file
+                line_idx = abs_lineno - 1  # 0-based
+                context = ''.join(all_lines[line_idx:line_idx + 4])
+                has_guard = bool(re.search(r'if\s*\(|&&|\?\.|!= null|!== null|\|\| null', context))
+                seen_in_fn[m] = (abs_lineno, has_guard)
+
+        if not seen_in_fn:
+            # Function has no getElementById calls — register a passing informational test
+            def _make_no_refs_test(fname):
+                @registry.test(
+                    f"render-ref-{fname}",
+                    "RENDER_REF",
+                    f"{fname}: sem getElementById direto (sem risco de null crash)",
+                    "CRITICAL",
+                )
+                def _no_refs_test():
+                    return True, f"{fname}: no direct getElementById calls found"
+                return _no_refs_test
+            _make_no_refs_test(fn_name)
+            continue
+
+        # Register one test per unique getElementById in the function
+        for elem_id, (lineno, has_guard) in seen_in_fn.items():
+            def _make_render_ref_test(fname, eid, lno, guard):
+                @registry.test(
+                    f"render-ref-{fname}-{eid}",
+                    "RENDER_REF",
+                    f"{fname}: getElementById('{eid}') existe no DOM ou tem null guard",
+                    "CRITICAL",
+                )
+                def _render_ref_test():
+                    in_html = _check_id_in_html(html_content, eid)
+                    if in_html:
+                        return True, f"id='{eid}' presente em index.html"
+                    if guard:
+                        return True, (
+                            f"id='{eid}' ausente do HTML mas null guard detectado "
+                            f"em {fname} (template.html linha {lno})"
+                        )
+                    return (
+                        False,
+                        f"FAIL CRITICAL: id='{eid}' não encontrado em index.html E sem null guard "
+                        f"em {fname} (template.html linha {lno}) — toda a aba Now pode travar",
+                    )
+                return _render_ref_test
+
+            _make_render_ref_test(fn_name, elem_id, lineno, has_guard)
+
+
+_get_render_ref_tests()
