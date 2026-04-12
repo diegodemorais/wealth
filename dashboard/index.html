@@ -170,7 +170,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 /* ── Wellness extras ── */
 .wellness-extra-row{display:grid;grid-template-columns:1.4rem 11rem 1fr 4.5rem 3rem;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid rgba(71,85,105,.12)}
 /* Hero strip */
-.hero-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.hero-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:900px){.hero-strip{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:480px){.hero-strip{grid-template-columns:repeat(2,1fr)}}
 .hero-kpi{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center}
@@ -265,8 +265,17 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
 </div>
 
-<!-- HERO STRIP -->
-<div class="hero-strip">
+<!-- TAB NAV -->
+<div class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="hoje"     onclick="switchTab('hoje')">🏠 Now</button>
+  <button class="tab-btn" data-tab="carteira"  onclick="switchTab('carteira')">🎯 Portfolio</button>
+  <button class="tab-btn" data-tab="perf"      onclick="switchTab('perf')">📈 Performance</button>
+  <button class="tab-btn" data-tab="fire"      onclick="switchTab('fire')">🔥 FIRE</button>
+  <button class="tab-btn" data-tab="retiro"    onclick="switchTab('retiro')">🏖️ Retirada</button>
+</div>
+
+<!-- HERO STRIP (aba Now) -->
+<div class="hero-strip" data-in-tab="hoje">
   <div class="hero-kpi primary">
     <div class="hlbl">Patrimônio Total</div>
     <div class="hval pv" id="heroPatrimonioBrl">—</div>
@@ -287,28 +296,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div class="hval" id="heroProgresso">—</div>
     <div class="hsub pv" id="heroProgressoSub">—</div>
   </div>
-  <div class="hero-kpi">
-    <div class="hlbl">Savings Rate Modelo</div>
-    <div class="hval" id="heroSavings">—</div>
-    <div class="hsub pv" id="heroSavingsSub"><span style="font-size:.58rem;color:var(--muted)">(premissas fixas)</span></div>
-  </div>
 </div>
 
-<!-- P(FIRE) HEADLINE PERSISTENTE — visível em todas as abas -->
-<div id="pfireHeadline" style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);border-radius:8px;margin-bottom:10px;flex-wrap:wrap">
-  <span style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">P(FIRE@53) Base</span>
+<!-- P(FIRE) HEADLINE — aba Now -->
+<div id="pfireHeadline" data-in-tab="hoje" style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);border-radius:8px;margin-bottom:10px;flex-wrap:wrap">
+  <span style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">P(FIRE@50)</span>
   <span style="font-size:1.2rem;font-weight:800;color:var(--accent)" id="pfireHeadlineVal">—</span>
   <span style="font-size:.65rem;color:var(--muted)" id="pfireHeadlineSub">—</span>
-  <span style="margin-left:auto;font-size:.6rem;color:var(--muted)">P(FIRE@50): <strong id="pfireHeadline50">—</strong></span>
-</div>
-
-<!-- TAB NAV -->
-<div class="tab-nav" id="tabNav">
-  <button class="tab-btn active" data-tab="hoje"     onclick="switchTab('hoje')">🏠 Now</button>
-  <button class="tab-btn" data-tab="carteira"  onclick="switchTab('carteira')">🎯 Portfolio</button>
-  <button class="tab-btn" data-tab="perf"      onclick="switchTab('perf')">📈 Performance</button>
-  <button class="tab-btn" data-tab="fire"      onclick="switchTab('fire')">🔥 FIRE</button>
-  <button class="tab-btn" data-tab="retiro"    onclick="switchTab('retiro')">🏖️ Retirada</button>
 </div>
 
 <!-- S3: KPI CARDS — hierarquia primários vs contextuais (#4) -->
@@ -321,25 +315,18 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-sub" id="kpiPfire50Sub">cenário base</div>
 </div>
 <div class="kpi kpi-fire" style="border-width:2px">
-  <div class="kpi-label">Bond Pool Runway</div>
-  <div class="kpi-value" id="kpiBondPool">—</div>
-  <div class="kpi-sub" id="kpiBondPoolSub">—</div>
-</div>
-<div class="kpi kpi-fire" style="border-width:2px">
   <div class="kpi-label">Drift Máximo</div>
   <div class="kpi-value" id="kpiDriftMax">—</div>
   <div class="kpi-sub" id="kpiDriftMaxSub">vs alvo IPS</div>
 </div>
 <div class="kpi">
-  <div class="kpi-label">Wellness Score</div>
-  <div class="kpi-value" id="kpiWellnessCompact">—</div>
-  <div class="kpi-sub" id="kpiWellnessSub">—</div>
-</div>
-<div class="kpi">
-  <div class="kpi-label">Aporte / Lucro — Equity</div>
+  <div class="kpi-label">Aporte do Mês</div>
   <div class="kpi-value pv" id="kpiOrigemPat">—</div>
   <div class="kpi-sub pv" id="kpiOrigemPatSub">—</div>
 </div>
+<!-- kpiBondPool e kpiWellnessCompact mantidos ocultos para evitar erros JS -->
+<span id="kpiBondPool" style="display:none"></span><span id="kpiBondPoolSub" style="display:none"></span>
+<span id="kpiWellnessCompact" style="display:none"></span><span id="kpiWellnessSub" style="display:none"></span>
 </div>
 <!-- KPIs Contextuais -->
 <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px" data-in-tab="hoje">Contexto de Mercado</div>
@@ -355,25 +342,18 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-sub">BTC/USD</div>
 </div>
 <div class="kpi" style="opacity:.85">
-  <div class="kpi-label">IPCA+ 2040 — Taxa</div>
+  <div class="kpi-label" style="display:flex;align-items:center;gap:4px">IPCA+ 2040 — Taxa <span id="kpiIpcaSemaforo" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--muted);flex-shrink:0"></span></div>
   <div class="kpi-value" id="kpiIpcaTaxa">—</div>
   <div class="kpi-sub" id="kpiIpcaSub">—</div>
 </div>
 <div class="kpi" style="opacity:.85">
-  <div class="kpi-label">Renda+ 2065 — Taxa</div>
+  <div class="kpi-label" style="display:flex;align-items:center;gap:4px">Renda+ 2065 — Taxa <span id="kpiRendaSemaforo" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--muted);flex-shrink:0"></span></div>
   <div class="kpi-value" id="kpiRenda2065">—</div>
   <div class="kpi-sub" id="kpiRenda2065Sub">—</div>
 </div>
-<div class="kpi" style="opacity:.85">
-  <div class="kpi-label">Alpha Desde o Início vs SWRD (USD)</div>
-  <div class="kpi-value pos" id="kpiDelta">—</div>
-  <div class="kpi-sub" id="kpiDeltaSub">—</div>
-</div>
-<div class="kpi" style="opacity:.85">
-  <div class="kpi-label">Factor Signal (AVGS vs SWRD)</div>
-  <div class="kpi-value" id="kpiFactorSignal">—</div>
-  <div class="kpi-sub" id="kpiFactorSignalSub">—</div>
-</div>
+<!-- kpiDelta e kpiFactorSignal removidos do Now — mantidos ocultos para evitar erros JS -->
+<span id="kpiDelta" style="display:none"></span><span id="kpiDeltaSub" style="display:none"></span>
+<span id="kpiFactorSignal" style="display:none"></span><span id="kpiFactorSignalSub" style="display:none"></span>
 <div class="kpi" style="opacity:.85;display:none">
   <div class="kpi-label">IPCA+ 2040 — Mercado</div>
   <div class="kpi-value" id="kpiIpcaMercado">—</div>
@@ -413,7 +393,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S5: KPI FIRE -->
-<div class="grid-3" data-in-tab="hoje">
+<div class="grid-2" data-in-tab="hoje">
 <div class="section">
   <h2>Progresso FIRE</h2>
   <div style="text-align:center;padding:8px 0">
@@ -429,7 +409,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
 </div>
 <div class="section">
-  <h2>Savings Rate Modelo <span style="font-size:.6rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(premissas fixas)</span></h2>
+  <h2>Aporte do Mês</h2>
   <div style="text-align:center;padding:8px 0">
     <div style="font-size:2.2rem;font-weight:700;color:var(--green)" id="savingsRate">—</div>
     <div style="font-size:.75rem;color:var(--muted)" id="savingsRateSub">—</div>
@@ -437,24 +417,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="progress-bar" style="margin-top:8px">
     <div class="progress-fill" id="savingsRateFill" style="background:var(--green)"></div>
   </div>
-  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)" id="savingsRateNote">≥50% excelente · ≥40% ok · ≥25% atenção</div>
+  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)" id="savingsRateNote">—</div>
 </div>
-<div class="section">
-  <h2>TER da Carteira</h2>
-  <div style="text-align:center;padding:8px 0">
-    <div style="font-size:2.2rem;font-weight:700" id="terCarteira">—</div>
-    <div style="font-size:.75rem;color:var(--muted)">Equity ponderado</div>
-  </div>
-  <div class="progress-row" style="margin-top:8px">
-    <div class="progress-label"><span>Carteira</span><span id="terCarteiraLabel">—</span></div>
-    <div class="progress-bar"><div id="terCarteiraFill" class="progress-fill" style="background:var(--yellow);width:60%"></div></div>
-  </div>
-  <div class="progress-row">
-    <div class="progress-label"><span>VWRA (benchmark)</span><span id="terVwraLabel">—</span></div>
-    <div class="progress-bar"><div id="terVwraFill" class="progress-fill" style="background:var(--green);width:55%"></div></div>
-  </div>
-  <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="terDeltaLabel">—</div>
-</div>
+<!-- TER da Carteira removido do grid — elementos mantidos ocultos para evitar erros JS -->
+<span id="terCarteira" style="display:none"></span><span id="terCarteiraLabel" style="display:none"></span>
+<span id="terCarteiraFill" style="display:none"></span><span id="terVwraLabel" style="display:none"></span>
+<span id="terVwraFill" style="display:none"></span><span id="terDeltaLabel" style="display:none"></span>
 </div>
 
 
@@ -1271,7 +1239,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <h2 onclick="this.parentElement.classList.toggle('open')">Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
 <div class="collapse-body">
 <div id="factorRollingBody">
-<div class="chart-box"><canvas id="factorRollingChart"></canvas></div>
+<!-- canvas factorRollingChart é criado dinamicamente via JS — não inserir estático aqui -->
 </div>
 <div class="src">Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.</div>
 </div><!-- /collapse-body -->
@@ -1387,8 +1355,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T09:05:08-03:00'); // BRT (UTC-3)
-const VERSION = '1.165';
+const GENERATED_AT = new Date('2026-04-12T10:16:42-03:00'); // BRT (UTC-3)
+const VERSION = '1.166';
 
 const DATA = {
   "_generated": "2026-04-12T08:57:38",
@@ -7778,7 +7746,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.165"
+  "version": "1.166"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -11113,25 +11081,28 @@ function renderKPIs() {
     }
   })();
 
-  // KPI 2: IPCA+ 2040 taxa + badge DCA ativo/pausado
+  // KPI 2: IPCA+ 2040 taxa + badge DCA ativo/pausado + semáforo
   const _kpiIpca = DATA.rf?.ipca2040?.taxa;
   const _kpiPisoIpca = DATA.pisos?.pisoTaxaIpcaLongo;
   const _kpiIpcaEl = document.getElementById('kpiIpcaTaxa');
   const _kpiIpcaSubEl = document.getElementById('kpiIpcaSub');
+  const _kpiIpcaSem = document.getElementById('kpiIpcaSemaforo');
   if (_kpiIpcaEl && _kpiIpca != null && _kpiPisoIpca != null) {
     const _dcaAtivo = _kpiIpca >= _kpiPisoIpca;
     _kpiIpcaEl.textContent = _kpiIpca.toFixed(2) + '%';
     _kpiIpcaEl.style.color = _dcaAtivo ? '#22c55e' : '#eab308';
-    if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = `piso ${_kpiPisoIpca.toFixed(1)}% · ${_dcaAtivo ? '🟢 DCA ativo' : '🔴 pausado'}`;
+    if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = `piso ${_kpiPisoIpca.toFixed(1)}% · ${_dcaAtivo ? '✓ DCA ativo' : '⚠ pausar DCA'}`;
+    if (_kpiIpcaSem) _kpiIpcaSem.style.background = _dcaAtivo ? '#22c55e' : '#eab308';
   } else {
     if (_kpiIpcaEl) _kpiIpcaEl.textContent = '—';
     if (_kpiIpcaSubEl) _kpiIpcaSubEl.textContent = 'aguardando dados';
   }
 
-  // KPI 3: Renda+ 2065 taxa + badge compra/manter/venda
+  // KPI 3: Renda+ 2065 taxa + badge compra/manter/venda + semáforo
   (function() {
     const el    = document.getElementById('kpiRenda2065');
     const subEl = document.getElementById('kpiRenda2065Sub');
+    const sem   = document.getElementById('kpiRendaSemaforo');
     if (!el) return;
     const taxa      = DATA.rf?.renda2065?.taxa;
     const pisoCompra = DATA.pisos?.pisoTaxaRendaPlus;
@@ -11140,13 +11111,16 @@ function renderKPIs() {
       el.textContent = taxa.toFixed(2) + '%';
       if (taxa >= pisoCompra) {
         el.style.color = '#22c55e';
-        if (subEl) subEl.textContent = `🟢 compra ≥${pisoCompra.toFixed(1)}%`;
+        if (subEl) subEl.textContent = `✓ compra ≥${pisoCompra.toFixed(1)}%`;
+        if (sem) sem.style.background = '#22c55e';
       } else if (taxa >= pisoVenda) {
         el.style.color = '#eab308';
-        if (subEl) subEl.textContent = `🟡 manter ${pisoVenda.toFixed(1)}–${pisoCompra.toFixed(1)}%`;
+        if (subEl) subEl.textContent = `⚠ manter ${pisoVenda.toFixed(1)}–${pisoCompra.toFixed(1)}%`;
+        if (sem) sem.style.background = '#eab308';
       } else {
         el.style.color = '#ef4444';
-        if (subEl) subEl.textContent = `🔴 venda ≤${pisoVenda.toFixed(1)}%`;
+        if (subEl) subEl.textContent = `✕ vender ≤${pisoVenda.toFixed(1)}%`;
+        if (sem) sem.style.background = '#ef4444';
       }
     } else {
       el.textContent = '—'; if (subEl) subEl.textContent = 'aguardando dados';
@@ -11182,23 +11156,24 @@ function renderKPIs() {
     }, null);
     el.textContent = maxDrift.toFixed(1) + 'pp';
     el.style.color = maxDrift <= 5 ? '#22c55e' : maxDrift <= 10 ? '#eab308' : '#ef4444';
-    if (subEl && maxBucket) subEl.textContent = `${maxBucket} é o mais distante do alvo`;
+    if (subEl && maxBucket) {
+      const mb = DATA.drift[maxBucket];
+      const sign = (mb.atual - mb.alvo) >= 0 ? '+' : '';
+      subEl.textContent = `${maxBucket} ${sign}${(mb.atual - mb.alvo).toFixed(1)}pp vs alvo`;
+    }
   })();
 
-  // P(FIRE) Headline persistente (#4)
+  // P(FIRE) Headline persistente — mostra P(FIRE@50) (#4)
   (function() {
     const el    = document.getElementById('pfireHeadlineVal');
     const sub   = document.getElementById('pfireHeadlineSub');
-    const el50  = document.getElementById('pfireHeadline50');
     if (!el) return;
-    const p53 = DATA.pfire53?.base;
     const p50 = DATA.pfire50?.base;
-    if (p53 != null) {
-      el.textContent = p53.toFixed(1) + '%';
-      el.style.color = p53 >= 90 ? '#22c55e' : p53 >= 80 ? '#eab308' : '#ef4444';
+    if (p50 != null) {
+      el.textContent = p50.toFixed(1) + '%';
+      el.style.color = p50 >= 90 ? '#22c55e' : p50 >= 80 ? '#eab308' : '#ef4444';
     }
-    if (sub) sub.textContent = `stress ${DATA.pfire53?.stress?.toFixed(0) ?? '—'}% · fav ${DATA.pfire53?.fav?.toFixed(0) ?? '—'}%`;
-    if (el50 && p50 != null) { el50.textContent = p50.toFixed(1) + '%'; }
+    if (sub) sub.textContent = `stress ${DATA.pfire50?.stress?.toFixed(0) ?? '—'}% · fav ${DATA.pfire50?.fav?.toFixed(0) ?? '—'}%`;
   })();
 
   // KPI 5: Alpha ITD vs SWRD — backtest (source: backtest.metrics) (#13)
@@ -11446,10 +11421,17 @@ function renderKPIs() {
   const _aporteKPI = DATA.premissas.aporte_mensal;
   const _rendaEstimadaKPI = DATA.premissas.renda_estimada ?? 45000;
   const sr = _aporteKPI / _rendaEstimadaKPI;
-  document.getElementById('savingsRate').textContent = fmtPct(sr*100);
+  // Card "Aporte do Mês" — mostra valor BRL do aporte
+  const _srEl = document.getElementById('savingsRate');
+  if (_srEl && _aporteKPI != null) {
+    _srEl.textContent = `R$${(_aporteKPI/1000).toFixed(0)}k`;
+    _srEl.style.color = '#22c55e';
+  }
   document.getElementById('savingsRateFill').style.width = Math.min(100, sr * 2 * 100) + '%'; // 50% = full bar
   const srSubEl = document.getElementById('savingsRateSub');
-  if (srSubEl) srSubEl.textContent = `Aporte R$${(_aporteKPI/1000).toFixed(0)}k / Renda estimada R$${(_rendaEstimadaKPI/1000).toFixed(0)}k/mês`;
+  if (srSubEl) srSubEl.textContent = `${fmtPct(sr*100)} savings rate · renda est. R$${(_rendaEstimadaKPI/1000).toFixed(0)}k/mês`;
+  const srNoteEl = document.getElementById('savingsRateNote');
+  if (srNoteEl) srNoteEl.textContent = `≥50% excelente · ≥40% ok · ≥25% atenção`;
 
   // TER — lê de wellness_config
   const _terCfgKPI = (DATA.wellness_config?.metrics || []).find(m => m.id === 'ter') || {};
