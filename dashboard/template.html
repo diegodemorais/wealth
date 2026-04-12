@@ -487,8 +487,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- P2: MACRO CONTEXT -->
-<div class="section" data-in-tab="hoje" id="macroSection">
-<h2>Contexto Macro</h2>
+<div class="section collapsible" data-in-tab="hoje" id="macroSection">
+<h2 onclick="this.parentElement.classList.toggle('open')">Contexto Macro</h2>
+<div class="collapse-body">
 <div id="macroStatusBadge"></div>
 <div class="grid-2" style="margin-bottom:0">
   <div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
@@ -497,6 +498,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
 </div>
 <div class="src" style="margin-top:8px">Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- P2: DCA STATUS -->
@@ -567,12 +569,14 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- N2: ETF COMPOSITION — Região + Fator -->
-<div class="section" data-in-tab="carteira" id="etfCompSection">
-<h2>Composição por Região e Fator — ETFs da Carteira</h2>
+<div class="section collapsible" data-in-tab="carteira" id="etfCompSection">
+<h2 onclick="this.parentElement.classList.toggle('open')">Composição por Região e Fator — ETFs da Carteira</h2>
+<div class="collapse-body">
 <div id="etfRegionTable" style="margin-bottom:16px"></div>
 <div id="etfVemTable" style="margin-bottom:16px"></div>
 <div id="etfFactorTable"></div>
 <div class="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- R5: FIRE TRILHA — Realizado vs Projetado -->
@@ -595,8 +599,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <canvas id="scenarioChart" style="display:none"></canvas>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
-<div class="section" data-in-tab="perf">
-<h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
+<div class="collapse-body">
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div>
@@ -628,13 +633,16 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div style="font-size:.65rem;color:var(--muted)" id="ipcaTaxaStatus">—</div>
 </div>
 </div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
-<div class="section" data-in-tab="fire">
-<h2>Glide Path — Alocação por Idade</h2>
+<div class="section collapsible" data-in-tab="fire">
+<h2 onclick="this.parentElement.classList.toggle('open')">Glide Path — Alocação por Idade</h2>
+<div class="collapse-body">
 <div class="chart-box"><canvas id="glideChart"></canvas></div>
 <div class="src">Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.</div>
+</div><!-- /collapse-body -->
 </div>
 
 
@@ -671,8 +679,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- R1: FIRE MATRIX — P(Sucesso) por Patrimônio × Gasto -->
-<div class="section" data-in-tab="fire" id="fireMatrixSection">
-<h2>FIRE Matrix — P(Sucesso 30 anos)</h2>
+<div class="section collapsible" data-in-tab="fire" id="fireMatrixSection">
+<h2 onclick="this.parentElement.classList.toggle('open')">FIRE Matrix — P(Sucesso 30 anos)</h2>
+<div class="collapse-body">
 <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
   <div>
     <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Retorno</div>
@@ -694,11 +703,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div id="fireMatrixTable" style="overflow-x:auto"></div>
 <div class="src">Verde &gt;95%, Amarelo 88–95%, Vermelho &lt;88%. Eixo: Patrimônio no FIRE Day (linha) × Gasto Anual BRL (coluna). ★ = gasto típico do perfil · → = patrimônio-alvo do perfil.</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S15: GUARDRAILS -->
-<div class="section" data-in-tab="retiro">
-<h2>Guardrails de Retirada — FIRE Day</h2>
+<div class="section collapsible" data-in-tab="retiro">
+<h2 onclick="this.parentElement.classList.toggle('open')">Guardrails de Retirada — FIRE Day</h2>
+<div class="collapse-body">
 <table class="guardrail-table">
 <thead><tr>
   <th>Drawdown</th><th>Corte</th><th>Retirada Anual</th><th>Patrimônio Gatilho</th><th>Status</th>
@@ -709,10 +720,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto <span class="pv">R$350k</span>)
 </div>
 <div class="src" id="guardrailsSrc">—</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- F2: Spending Guardrails -->
-<div class="section collapsible open" data-in-tab="retiro">
+<div class="section collapsible" data-in-tab="retiro">
   <h2 onclick="this.parentElement.classList.toggle('open')">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
   <div class="collapse-body">
   <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
@@ -721,8 +733,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S16: RETIREMENT INCOME — gráfico de barras removido (duplicata de F1/Ciclo de Vida) -->
-<div class="section" data-in-tab="retiro">
-<h2>Renda na Aposentadoria — Fases Temporais</h2>
+<div class="section collapsible" data-in-tab="retiro">
+<h2 onclick="this.parentElement.classList.toggle('open')">Renda na Aposentadoria — Fases Temporais</h2>
+<div class="collapse-body">
 <table class="fases-table" style="margin-bottom:12px">
 <thead><tr>
   <th>Fase</th>
@@ -737,6 +750,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- canvas incomeChart mantido para evitar erros JS, oculto -->
 <canvas id="incomeChart" style="display:none"></canvas>
 <span id="incomeChartSrc" style="display:none"></span>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
@@ -767,8 +781,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S21b2: CUSTO BASE POR BUCKET -->
-<div class="section" data-in-tab="carteira">
-<h2>Base de Custo e Alocação — Equity por Bucket</h2>
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="this.parentElement.classList.toggle('open')">Base de Custo e Alocação — Equity por Bucket</h2>
+<div class="collapse-body">
 <div style="overflow-x:auto">
 <table id="custoBaseTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
 <thead><tr style="border-bottom:1px solid var(--border)">
@@ -784,6 +799,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </table>
 </div>
 <div class="src">Fonte: IBKR · Custo médio ponderado (USD) · Pesos intra-equity vs alvo 50/30/20</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S21c: EVENTOS DE VIDA (colapsável) -->
@@ -796,10 +812,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S21d: P(FIRE) CENÁRIOS FAMÍLIA -->
-<div class="section" style="border-color:rgba(139,92,246,.3)" data-in-tab="fire">
-<h2>P(FIRE) — Cenários de Família <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(impacto no custo de vida)</span></h2>
+<div class="section collapsible" style="border-color:rgba(139,92,246,.3)" data-in-tab="fire">
+<h2 onclick="this.parentElement.classList.toggle('open')">P(FIRE) — Cenários de Família <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(impacto no custo de vida)</span></h2>
+<div class="collapse-body">
 <div id="pfireFamiliaBody"></div>
 <div class="src" id="pfireFamiliaSrc">Base: Monte Carlo 10k simulações · Sensibilidade ao custo de vida</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- N4: LUMPY EVENTS -->
@@ -840,7 +858,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S24b: ROLLING SHARPE 12m -->
-<div class="section collapsible open" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="rollingSharpChart"></canvas></div>
@@ -883,7 +901,7 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 </div>
 
 <!-- S24c: INFORMATION RATIO vs VWRA -->
-<div class="section collapsible open" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Information Ratio vs VWRA — Desde o Início + Rolling 36m</h2>
 <div class="collapse-body">
 
@@ -999,8 +1017,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S19: WHAT-IF SCENARIOS -->
-<div class="section" data-in-tab="fire">
-<h2>What-If Scenarios — Cenário / Gasto</h2>
+<div class="section collapsible" data-in-tab="fire">
+<h2 onclick="this.parentElement.classList.toggle('open')">What-If Scenarios — Cenário / Gasto</h2>
+<div class="collapse-body">
 
 <!-- Seletor de cenário -->
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
@@ -1029,6 +1048,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   </div>
 </div>
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- R3: APORTE SENSITIVITY — removido (redundante com Tornado chart) -->
@@ -1036,8 +1056,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <canvas id="aporteSensChart" style="display:none"></canvas>
 
 <!-- F11: Stress Test -->
-<div class="section" data-in-tab="fire">
-<h2>Stress Test Monte Carlo — Bear Market Interativo</h2>
+<div class="section collapsible" data-in-tab="fire">
+<h2 onclick="this.parentElement.classList.toggle('open')">Stress Test Monte Carlo — Bear Market Interativo</h2>
+<div class="collapse-body">
 
 <!-- Slider de shock -->
 <div style="background:var(--card2);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:14px">
@@ -1075,6 +1096,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src" style="margin-top:10px">
   ⚡ = pré-calculado · ✅ = simulado ao vivo
 </div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- Earliest FIRE Card (extraído do grid-2 F2) -->
@@ -1094,20 +1116,24 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- F5: Must / Like to Spend -->
-<div class="section" data-in-tab="retiro">
-<h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
+<div class="section collapsible" data-in-tab="retiro">
+<h2 onclick="this.parentElement.classList.toggle('open')">Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
+<div class="collapse-body">
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
 <div class="src" id="spendingBreakdownSrc">All-Accounts CSV · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- F8: Sankey Cash Flow -->
-<div class="section" id="sankeySection" data-in-tab="retiro">
-<h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
+<div class="section collapsible" id="sankeySection" data-in-tab="retiro">
+<h2 onclick="this.parentElement.classList.toggle('open')">Sankey — Fluxo de Caixa Anual (estimado)</h2>
+<div class="collapse-body">
 <div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
   ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" da análise de gastos (estimado). Nota: <span id="sankeyNota"></span>
 </div>
 <div class="src" id="sankeySrc">Valores estimados · Renda, gastos e hipoteca anualizados</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
@@ -1139,15 +1165,18 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S21b: MINI-LOG OPERAÇÕES -->
-<div class="section" data-in-tab="carteira">
-<h2>Últimas Operações</h2>
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="this.parentElement.classList.toggle('open')">Últimas Operações</h2>
+<div class="collapse-body">
 <div id="minilogBody" style="font-size:.8rem"></div>
 <div class="src">Fonte: IBKR · XP · Nubank · Binance</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
-<div class="section" data-in-tab="perf">
-<h2>Shadow Portfolios — Tracking</h2>
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="this.parentElement.classList.toggle('open')">Shadow Portfolios — Tracking</h2>
+<div class="collapse-body">
 <div style="overflow-x:auto">
 <table style="width:100%;table-layout:fixed">
 <colgroup>
@@ -1170,6 +1199,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
 <div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
 <div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
@@ -1236,7 +1266,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (aberto por default) -->
-<div class="section collapsible open" id="factorRollingSection" data-in-tab="perf">
+<div class="section collapsible" id="factorRollingSection" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
 <div class="collapse-body">
 <div id="factorRollingBody">
@@ -1247,7 +1277,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- P2: FACTOR LOADINGS TABLE (aberto por default) -->
-<div class="section collapsible open" id="factorLoadingsSection" data-in-tab="perf">
+<div class="section collapsible" id="factorLoadingsSection" data-in-tab="perf">
 <h2 onclick="this.parentElement.classList.toggle('open')">Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
 <div class="collapse-body">
 <div id="factorLoadingsCards" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>

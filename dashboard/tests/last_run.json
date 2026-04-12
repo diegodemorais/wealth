@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-12T12:32:40.433681",
+  "timestamp": "2026-04-12T13:30:00.567664",
   "mode": "smart",
   "total": 276,
   "passed": 276,
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 486,799 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 488,634 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -117,7 +117,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 4680)"
+      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 4710)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroSavingsSub::DOM_REF::renderKPIs: getElementById('heroSavingsSub') existe no DOM ou tem null guard",
@@ -125,7 +125,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 4684)"
+      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 4714)"
     },
     {
       "test_id": "dom-ref-renderKPIs-kpiPfire50::DOM_REF::renderKPIs: getElementById('kpiPfire50') existe no DOM ou tem null guard",
@@ -749,7 +749,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2306)"
+      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2336)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribVal::DOM_REF::updateContrib: getElementById('contribVal') existe no DOM ou tem null guard",
@@ -757,7 +757,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2312)"
+      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2342)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribResult::DOM_REF::updateContrib: getElementById('contribResult') existe no DOM ou tem null guard",
@@ -765,7 +765,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2313)"
+      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2343)"
     },
     {
       "test_id": "patrimonio-total-hero::RENDER::hero strip patrimonial elements present in HTML",
@@ -957,7 +957,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'now', 'portfolio', 'fire', 'retiro', 'performance'}"
+      "message": "All blocks use valid tabs: {'portfolio', 'now', 'retiro', 'fire', 'performance'}"
     },
     {
       "test_id": "privacy-global::PRIVACY::privacy toggle mechanism present in HTML",
@@ -1197,7 +1197,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5084)"
+      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5114)"
     },
     {
       "test_id": "dom-ref-renderProximasAcoes-proximasAcoes::DOM_REF::renderProximasAcoes: getElementById('proximasAcoes') existe no DOM ou tem null guard",
@@ -1205,7 +1205,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5119)"
+      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5149)"
     },
     {
       "test_id": "dom-ref-buildStressTest-stressPatShock::DOM_REF::buildStressTest: getElementById('stressPatShock') existe no DOM ou tem null guard",
@@ -1381,7 +1381,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2650)"
+      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2680)"
     },
     {
       "test_id": "dom-ref-calcAporte-calcCambioLabel::DOM_REF::calcAporte: getElementById('calcCambioLabel') existe no DOM ou tem null guard",
@@ -1853,7 +1853,7 @@
       "category": "PRIVACY",
       "severity": "HIGH",
       "passed": true,
-      "message": "Found 6 pv-class element(s) in stress-test-mc region"
+      "message": "Found 5 pv-class element(s) in stress-test-mc region"
     },
     {
       "test_id": "stress-test-mc::SPEC::spec.json declares stress-test-mc as privacy: true",
@@ -2133,7 +2133,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'cambio', 'mercado.cambio_mtd_pct'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct', 'cambio'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -2141,7 +2141,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

@@ -1,6 +1,6 @@
 {
   "major": 1,
-  "minor": 169,
+  "minor": 170,
   "label": "Pipeline data-driven + estrutura do projeto",
   "date": "2026-04-12",
   "history": [
@@ -851,6 +851,11 @@
     },
     {
       "version": "1.169",
+      "date": "2026-04-12",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.170",
       "date": "2026-04-12",
       "label": "Pipeline data-driven + estrutura do projeto"
     }
