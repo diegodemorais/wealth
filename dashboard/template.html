@@ -532,7 +532,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <div class="section" id="attrSection" data-in-tab="perf">
 <h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
-<div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
+<div class="chart-box-sm" style="height:320px;max-height:320px"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
@@ -1760,13 +1760,13 @@ function buildTimeline(period) {
 
     if (checkMinPoints('timelineChart', taDates.length, 2)) return;
     charts.timeline = new Chart(document.getElementById('timelineChart'), {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: taDates,
         datasets: [
-          { label: 'Aportes',           data: taAp, backgroundColor: 'rgba(59,130,246,.7)',  borderColor: '#3b82f6', borderWidth: 0 },
-          { label: 'Rentabilidade USD', data: taEq, backgroundColor: 'rgba(34,197,94,.7)',   borderColor: '#22c55e', borderWidth: 0 },
-          { label: 'Câmbio+RF',         data: taCR, backgroundColor: 'rgba(234,179,8,.7)',   borderColor: '#eab308', borderWidth: 0 },
+          { label: 'Aportes',           data: taAp, fill: true, backgroundColor: 'rgba(59,130,246,.35)', borderColor: 'rgba(59,130,246,.8)', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+          { label: 'Rentabilidade USD', data: taEq, fill: true, backgroundColor: 'rgba(34,197,94,.3)',   borderColor: 'rgba(34,197,94,.8)',  borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+          { label: 'Câmbio+RF',         data: taCR, fill: true, backgroundColor: 'rgba(234,179,8,.25)',  borderColor: 'rgba(234,179,8,.8)',  borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
         ]
       },
       options: {
@@ -1904,98 +1904,82 @@ function buildAttribution() {
 
   if (charts.attr) { charts.attr.destroy(); charts.attr = null; }
 
-  // Chart expandido com buckets se disponíveis
-  if (a.por_bucket && Object.keys(a.por_bucket).length > 0 && a.fx != null) {
-    const pb = a.por_bucket;
-    const bucketLabels   = ['Aportes', 'SWRD (Blend)', 'Factor Small Value', 'Emergentes', 'RF Local', 'Câmbio'];
-    const bucketColors   = ['#3b82f6', '#16a34a', '#22c55e', '#4ade80', '#a3e635', '#f97316'];
-    const bucketValues   = [
-      a.aportes,
-      pb['SWRD']  ?? 0,
-      pb['AVGS']  ?? 0,
-      pb['AVEM']  ?? 0,
-      a.rf ?? 0,
-      a.fx ?? 0,
-    ];
-    const attrTotalExp = bucketValues.reduce((s, v) => s + Math.abs(v), 0);
-    const attrLabelPluginExp = {
-      id: 'attrSegmentLabelsExp',
-      afterDatasetsDraw(chart) {
-        const ctx = chart.ctx;
-        chart.data.datasets.forEach((dataset, dsIdx) => {
-          const meta = chart.getDatasetMeta(dsIdx);
-          meta.data.forEach((bar, barIdx) => {
-            const val = dataset.data[barIdx];
-            if (!val) return;
-            const pct = attrTotalExp > 0 ? Math.abs(val) / attrTotalExp * 100 : 0;
-            if (pct < 4) return;
-            const { x, y, base, width } = bar.getProps(['x', 'y', 'base', 'width'], true);
-            const midY = (y + base) / 2;
-            ctx.save();
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = 'rgba(255,255,255,0.9)';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText(pct.toFixed(0) + '%', x, midY);
-            ctx.restore();
-          });
+  // Doughnut com 6 fatias (buckets ou fallback com zeros)
+  const pb = (a.por_bucket && a.fx != null) ? a.por_bucket : {};
+  const doughnutLabels = ['Aportes', 'SWRD (Blend)', 'Factor Small Value', 'Emergentes', 'RF Local', 'Câmbio'];
+  const doughnutValues = [
+    a.aportes,
+    pb['SWRD']  || 0,
+    pb['AVGS']  || 0,
+    pb['AVEM']  || 0,
+    a.rf        || 0,
+    a.fx        || 0,
+  ];
+  const doughnutColors = [
+    'rgba(59,130,246,.7)',
+    'rgba(34,197,94,.7)',
+    'rgba(168,85,247,.7)',
+    'rgba(234,179,8,.7)',
+    'rgba(20,184,166,.7)',
+    'rgba(249,115,22,.7)',
+  ];
+  const doughnutTotal = doughnutValues.reduce((s, v) => s + Math.abs(v), 0);
+
+  const attrArcLabelPlugin = {
+    id: 'attrArcLabels',
+    afterDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets.forEach((dataset, i) => {
+        const meta = chart.getDatasetMeta(i);
+        meta.data.forEach((arc, index) => {
+          const val = Math.abs(dataset.data[index]);
+          if (!val) return;
+          const pct = doughnutTotal > 0 ? val / doughnutTotal * 100 : 0;
+          if (pct < 5) return;
+          const midAngle = (arc.startAngle + arc.endAngle) / 2;
+          const r = (arc.innerRadius + arc.outerRadius) / 2;
+          const x = arc.x + r * Math.cos(midAngle);
+          const y = arc.y + r * Math.sin(midAngle);
+          ctx.save();
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.fillText(pct.toFixed(0) + '%', x, y);
+          ctx.restore();
         });
-      }
-    };
-    charts.attr = new Chart(document.getElementById('attrChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Origem do Patrimônio'],
-        datasets: bucketLabels.map((lbl, i) => ({
-          label: lbl,
-          data: [bucketValues[i]],
-          backgroundColor: bucketColors[i],
-        }))
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#94a3b8' } },
-          tooltip: {
-            callbacks: {
-              label: ctx => {
-                const val = ctx.parsed.y;
-                const pct = attrTotalExp > 0 ? (Math.abs(val) / attrTotalExp * 100).toFixed(1) : 0;
-                return ` ${ctx.dataset.label}: R$ ${(val/1e6).toFixed(2)}M (${pct}%)`;
-              }
+      });
+    }
+  };
+
+  charts.attr = new Chart(document.getElementById('attrChart'), {
+    type: 'doughnut',
+    data: {
+      labels: doughnutLabels,
+      datasets: [{
+        data: doughnutValues,
+        backgroundColor: doughnutColors,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,.2)',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 11 }, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const val = ctx.parsed;
+              const pct = doughnutTotal > 0 ? (Math.abs(val) / doughnutTotal * 100).toFixed(1) : 0;
+              return ` ${ctx.label}: R$ ${(val/1e6).toFixed(2)}M (${pct}%)`;
             }
           }
-        },
-        scales: {
-          x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
-          y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
         }
-      },
-      plugins: [attrLabelPluginExp]
-    });
-  } else {
-    // Fallback: chart original com 3 buckets
-    charts.attr = new Chart(document.getElementById('attrChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Origem do Patrimônio'],
-        datasets: [
-          { label: 'Aportes',      data: [a.aportes],     backgroundColor: '#3b82f6' },
-          { label: 'Retorno USD',  data: [a.retornoUsd],  backgroundColor: '#22c55e' },
-          { label: 'RF + Câmbio',  data: [a.cambio],      backgroundColor: '#eab308' },
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#94a3b8' } } },
-        scales: {
-          x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
-          y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
-        }
-      },
-      plugins: [attrLabelPlugin]
-    });
-  }
+      }
+    },
+    plugins: [attrArcLabelPlugin]
+  });
 }
 
 // ── S8: Geo Donut ────────────────────────────────────────────
