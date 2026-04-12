@@ -47,6 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 🟡 Média | 🔵 Fase 1 — debate interno |
 | DEV-fire-matrix-v2 | FIRE Matrix v2 — 3 cenários + eixos Patrimônio×Gasto + visual | Head | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-dashboard-audit | Auditoria completa 60 blocos — map→Quant→fix→confirm | Head | 🔴 Alta | ✅ Done 2026-04-11 |
 | DEV-factor-tstats | t-stats + R² warning no Factor Loadings chart | Dev+Quant | 🟡 Média | ✅ Done 2026-04-11 |
