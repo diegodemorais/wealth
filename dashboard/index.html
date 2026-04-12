@@ -1397,8 +1397,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-11T23:53:58-03:00'); // BRT (UTC-3)
-const VERSION = '1.157';
+const GENERATED_AT = new Date('2026-04-12T00:29:06-03:00'); // BRT (UTC-3)
+const VERSION = '1.158';
 
 const DATA = {
   "_generated": "2026-04-11T12:25:40",
@@ -7127,7 +7127,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.157"
+  "version": "1.158"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -11311,7 +11311,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    hoje:     [buildTimestamps],
+    hoje:     [buildTimestamps, buildTornado],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -11319,7 +11319,7 @@ function _initTabCharts(tab) {
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
     carteira: [buildFireBuckets, buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildGuardrails, buildIncomeChart, buildIncomeTable,
+    fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire, buildAporteSensitivity,
@@ -12637,7 +12637,6 @@ function buildCagrVsTwr() {
   buildDcaStatus();
   buildSemaforoPanel();
   buildFanChart();
-  buildTornado();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');
