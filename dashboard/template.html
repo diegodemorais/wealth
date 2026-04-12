@@ -1038,9 +1038,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 
 <!-- Seletor de cenário -->
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 2.0%)</button>
-  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (SWR 2.4%)</button>
-  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 3.0%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (4.35% · SWR 2.0%)</button>
+  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (4.85% · SWR 2.4%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (5.85% · SWR 3.0%)</button>
 </div>
 
 <!-- Slider custo de vida -->
@@ -2118,8 +2118,8 @@ function buildDeltaBar() {
   const deltaIpca = sh.delta_ipca ?? null;
   const delta6040 = sh.delta_shadow_c ?? null;
   const rawData = [deltaVwra, deltaIpca, delta6040];
-  // Substituir null por 0.001 placeholder para garantir que a barra renderiza com estilo "em tracking"
-  const deltaData = rawData.map(v => v ?? 1.0);  // placeholder de 1pp para visibilidade
+  // Substituir null por 1.0 placeholder (1pp) para garantir que a barra renderiza com estilo "em tracking"
+  const deltaData = rawData.map(v => v ?? 1.0);  // placeholder de 1pp para visibilidade mínima
   const isTracking = rawData.map(v => v === null);
   if (charts.delta) { charts.delta.destroy(); charts.delta = null; }
   charts.delta = new Chart(document.getElementById('deltaChart'), {
@@ -2228,6 +2228,10 @@ function buildGlidePath() {
     const s = g.ipca_longo[i] + g.ipca_curto[i] + g.equity[i] + g.hodl11[i] + g.renda_plus[i];
     console.assert(Math.abs(s - 100) < 0.5, `Glide path idade ${g.idades[i]}: soma ${s}% ≠ 100%`);
   });
+
+  // Canvas em seção colapsível fechada → sair; _toggleBlock reconstrói ao abrir
+  const _glideCanvas = document.getElementById('glideChart');
+  if (!_glideCanvas || _glideCanvas.offsetWidth === 0) return;
 
   if (charts.glide) { charts.glide.destroy(); charts.glide = null; }
   charts.glide = new Chart(document.getElementById('glideChart'), {
@@ -3941,13 +3945,13 @@ function buildSpendingGuardrails() {
         <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:#3b82f6;white-space:nowrap">~R$${(upper/1000).toFixed(0)}k (~95%)</div>
       </div>
       <div style="position:absolute;left:${posAtual}%;top:0;z-index:4;transform:translateX(-50%)">
-        <div style="position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);
-                    white-space:nowrap;font-size:.6rem;font-weight:700;color:var(--green);
-                    text-align:center;line-height:1.2">
-          R$${(atual/1000).toFixed(0)}k<br>${sg.pfire_atual}%
-        </div>
         <div style="width:10px;height:10px;border-radius:50%;background:var(--green);
                     border:2px solid #0f172a;margin-top:13px;"></div>
+        <div style="position:absolute;top:6px;left:calc(100% + 6px);
+                    white-space:nowrap;font-size:.6rem;font-weight:700;color:var(--green);
+                    line-height:1.2">
+          R$${(atual/1000).toFixed(0)}k<br>${sg.pfire_atual}%
+        </div>
       </div>
       <div style="position:absolute;left:${posSafe}%;top:0;width:2px;height:36px;background:var(--yellow);z-index:2">
         <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--yellow);white-space:nowrap">~R$${(safe/1000).toFixed(0)}k (~80%)</div>
@@ -4277,23 +4281,28 @@ function buildNetWorthProjection() {
   const ctx = document.getElementById('netWorthProjectionChart');
   if (!ctx) return;
 
-  const labels = nw.anos.map(a => {
+  // Focar no horizonte de acumulação até FIRE — cortar dados pós-FIRE (décadas irrelevantes)
+  const _anoFire = nw.ano_fire || 2040;
+  const _fireSlice = nw.anos.reduce((acc, a, i) => { if (a <= _anoFire) acc.push(i); return acc; }, []);
+  const _anos  = _fireSlice.map(i => nw.anos[i]);
+  const _p10   = _fireSlice.map(i => (nw.p10||[])[i]);
+  const _p50   = _fireSlice.map(i => (nw.p50||[])[i]);
+  const _p90   = _fireSlice.map(i => (nw.p90||[])[i]);
+
+  const labels = _anos.map(a => {
     const idade = a - (DATA.premissas.ano_atual - DATA.premissas.idade_atual);
     return `${a} (${idade} anos)`;
   });
-  const anoFireIdx = nw.anos.indexOf(nw.ano_fire);
+  const anoFireIdx = _anos.indexOf(_anoFire);
   const gatilho = DATA.premissas.patrimonio_gatilho;
 
-  // #15: Índice do ano atual (ponto de separação histórico vs projetado)
+  // Índice do ano atual
   const anoAtual = DATA.premissas.ano_atual;
-  const aHojeIdx = nw.anos.indexOf(anoAtual);
+  const aHojeIdx = _anos.indexOf(anoAtual);
   const patAtual = DATA.premissas.patrimonio_atual;
 
-  // Compute Y max com cap para evitar escala astronômica
-  const _nwAllVals = [...(nw.p90||[]), ...(nw.p50||[]), ...(nw.p10||[])]
-    .filter(v => v != null && isFinite(v) && v > 0);
-  const _nwDataMax = _nwAllVals.length ? Math.max(..._nwAllVals) : 15e6;
-  const _nwYMax = Math.min(_nwDataMax * 1.1, 150e6); // cap em R$150M
+  // Cap Y em R$15M — foco na fase de acumulação (P50 chega em ~R$13M no FIRE)
+  const _nwYMax = 15e6;
 
   if (charts.netWorth) { charts.netWorth.destroy(); charts.netWorth = null; }
 
@@ -4331,7 +4340,7 @@ function buildNetWorthProjection() {
       datasets: [
         {
           label: 'P90 (cenário favorável)',
-          data: nw.p90,
+          data: _p90,
           borderColor: 'rgba(34,197,94,.4)',
           borderWidth: 1.5,
           pointRadius: 0,
@@ -4340,28 +4349,28 @@ function buildNetWorthProjection() {
         },
         {
           label: 'P50 (mediana)',
-          data: nw.p50,
+          data: _p50,
           borderColor: '#3b82f6',
           borderWidth: 2.5,
-          pointRadius: nw.anos.map((a, i) => {
+          pointRadius: _anos.map((a, i) => {
             if (i === anoFireIdx) return 7;
             if (i === aHojeIdx) return 6;
             return 0;
           }),
-          pointBackgroundColor: nw.anos.map((a, i) => {
+          pointBackgroundColor: _anos.map((a, i) => {
             if (i === anoFireIdx) return '#3b82f6';
             if (i === aHojeIdx) return '#f1f5f9';
             return 'transparent';
           }),
-          pointBorderColor: nw.anos.map((a, i) => i === aHojeIdx ? '#3b82f6' : 'transparent'),
-          pointBorderWidth: nw.anos.map((a, i) => i === aHojeIdx ? 2 : 0),
+          pointBorderColor: _anos.map((a, i) => i === aHojeIdx ? '#3b82f6' : 'transparent'),
+          pointBorderWidth: _anos.map((a, i) => i === aHojeIdx ? 2 : 0),
           fill: '-2',
           backgroundColor: 'rgba(59,130,246,.08)',
           tension: 0.3,
         },
         {
           label: 'P10 (cenário stress)',
-          data: nw.p10,
+          data: _p10,
           borderColor: 'rgba(239,68,68,.4)',
           borderWidth: 1.5,
           pointRadius: 0,
@@ -4377,13 +4386,13 @@ function buildNetWorthProjection() {
           pointRadius: 0,
           fill: false,
         },
-        // #15: Marcador ponto "Hoje" com patrimônio atual
+        // Marcador ponto "Hoje" com patrimônio atual
         ...(aHojeIdx >= 0 && patAtual ? [{
           label: document.body.classList.contains('private-mode') ? 'Hoje' : `Hoje: R$${(patAtual/1e6).toFixed(3)}M`,
-          data: nw.anos.map((a, i) => i === aHojeIdx ? patAtual : null),
+          data: _anos.map((a, i) => i === aHojeIdx ? patAtual : null),
           borderColor: 'transparent',
           backgroundColor: '#f1f5f9',
-          pointRadius: nw.anos.map((a, i) => i === aHojeIdx ? 8 : 0),
+          pointRadius: _anos.map((a, i) => i === aHojeIdx ? 8 : 0),
           pointBackgroundColor: '#f1f5f9',
           pointBorderColor: '#3b82f6',
           pointBorderWidth: 2,
@@ -4405,7 +4414,7 @@ function buildNetWorthProjection() {
               const ano = labels[items[0].dataIndex];
               const anoNum = parseInt(ano);
               if (anoNum === anoAtual) return ano + ' — Hoje';
-              return ano + (anoNum === nw.ano_fire ? ` — FIRE Day (age ${DATA.premissas.idade_fire_alvo})` : '');
+              return ano + (anoNum === _anoFire ? ` — FIRE Day (age ${DATA.premissas.idade_fire_alvo})` : '');
             },
             label: ctx => {
               if (ctx.parsed.y === null) return null;
@@ -4661,6 +4670,8 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
   if (charts.stressProjection) { charts.stressProjection.destroy(); charts.stressProjection = null; }
   const ctx = document.getElementById('stressProjectionChart');
   if (!ctx) return;
+  // Canvas 0×0 em seção fechada → sair; _toggleBlock reconstrói ao abrir
+  if (ctx.offsetWidth === 0) return;
 
   const M = 1e6;
   const toM = arr => arr.map(v => +(v / M).toFixed(3));
@@ -6191,11 +6202,14 @@ window.switchTab = function(name) {
     el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
   });
   // Lazy init: inicializar charts da aba apenas na primeira abertura
+  // requestAnimationFrame garante que o browser fez layout flush antes de ler offsetWidth nos builders
   if (!_tabInitialized[name]) {
     _tabInitialized[name] = true;
-    _initTabCharts(name);
-    // Aplicar privacy após lazy init (charts inexistentes no page load)
-    if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
+    requestAnimationFrame(() => {
+      _initTabCharts(name);
+      // Aplicar privacy após lazy init (charts inexistentes no page load)
+      if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
+    });
   }
   requestAnimationFrame(() => {
     // Only act on charts in the active tab — resizing hidden-tab canvases (display:none)
@@ -6800,11 +6814,14 @@ function buildFireTrilha() {
 
   const dates = d.dates;
   const realizado = d.realizado_brl;
-  const trilha = d.trilha_brl || [];
-  const meta = d.meta_fire_brl;
+  const meta = d.meta_fire_brl ?? DATA.premissas?.patrimonio_gatilho ?? 13.4e6;
 
-  // Linha horizontal de meta (replicar para todos os pontos)
-  const metaLine = meta != null ? dates.map(() => meta) : null;
+  // Trilha: mostrar apenas a parte futura (onde realizado é null) para evitar descontinuidade visual
+  // A parte histórica é coberta pela linha de realizado
+  const trilhaFutura = (d.trilha_brl || []).map((v, i) => realizado[i] != null ? null : v);
+
+  // Linha horizontal de meta
+  const metaLine = dates.map(() => meta);
 
   const datasets = [
     {
@@ -6819,7 +6836,7 @@ function buildFireTrilha() {
     },
     {
       label: 'Projetado',
-      data: trilha,
+      data: trilhaFutura,
       borderColor: 'rgba(59,130,246,.5)',
       backgroundColor: 'transparent',
       borderWidth: 2,
@@ -6828,10 +6845,7 @@ function buildFireTrilha() {
       fill: false,
       tension: 0.2,
     },
-  ];
-
-  if (metaLine) {
-    datasets.push({
+    {
       label: 'Meta FIRE',
       data: metaLine,
       borderColor: 'rgba(34,197,94,.7)',
@@ -6840,17 +6854,19 @@ function buildFireTrilha() {
       borderDash: [4, 4],
       pointRadius: 0,
       fill: false,
-    });
-  }
+    },
+  ];
 
-  // Scale: include trilha values and cap at 1.5× meta to avoid flattening visible progress
+  // Scale: Y de 0 até trilha_max * 1.1, cap em 1.5× meta
   const _rVals = realizado.filter(v => v != null && isFinite(v) && v > 0);
-  const _tVals = (trilha || []).filter(v => v != null && isFinite(v) && v > 0);
-  const _metaVal = meta ?? 15e6;
+  const _tVals = trilhaFutura.filter(v => v != null && isFinite(v) && v > 0);
+  const _metaVal = meta;
   const _dataMax = [..._rVals, ..._tVals].length ? Math.max(..._rVals, ..._tVals) : _metaVal;
-  // Cap: nunca mais que 1.5x a meta, para não achatar o progresso visível
   const _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1);
-  const _yMin = _rVals.length ? Math.min(..._rVals.slice(0, 5)) * 0.85 : 0;
+  const _yMin = 0;
+
+  // Canvas 0×0 em tab oculta ou seção fechada → sair; _toggleBlock/switchTab reconstrói
+  if (el.offsetWidth === 0) return;
 
   if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
   const ctx = el.getContext('2d');
