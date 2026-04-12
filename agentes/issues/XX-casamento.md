@@ -90,48 +90,53 @@ Ambos aposentam juntos (53 anos). 2 planos empresariais desde o FIRE Day.
 
 ---
 
-## Cenários Monte Carlo — FIRE Casal (recalibrado 2026-04-06)
+## Cenários Monte Carlo — FIRE Casal (recalibrado 2026-04-12)
 
-Script: `scripts/fire_montecarlo.py` com SAUDE_BASE=R$32k (2p) | 10k trajetórias | t-dist df=5 | seed 42
-Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 (Diego) + vol bond pool 13.3%
-**INSS Katia não incluído no MC atual:** ~R$93,6k/ano real 2026 a partir de 2049 (62 anos). Como o MC roda até 95 anos do Diego (2082) e o FIRE é 2040-2042, o INSS de Katia entra apenas na fase pós-2049 — reduz SWR requerido no tail. Incluir na próxima recalibração do MC casal.
+Script: `scripts/fire_montecarlo.py` (SAUDE_BASE=R$32k 2p) | 10k trajetórias | t-dist df=5 | seed 42
+Modelo: spending smile ex-saúde + IR 15% nominal + vol bond pool 13.3% + floors INSS/PGBL Katia
+
+**Premissa-base recalibrada 2026-04-12:** ambos aposentam juntos em **2040 (53 anos)**. Katia não trabalha até 55. Floors de renda incluídos: INSS Katia (30a contrib) + PGBL Katia a partir do ano 9 (age 62, 2049); INSS Diego a partir do ano 12 (age 65, 2052).
+
+**INSS Katia (30 anos de contribuição ao parar em 2040):**
+- Alíquota: 60% + 2%×(30-15) = 90% do SB
+- SB: 92.2% do teto → benefício: ~R$7.053/mês = **R$84.636/ano** (vs R$93.6k se trabalhasse até 62)
+- Disponível aos 62 anos (2049 = ano 9 pós-FIRE)
+
+**PGBL Katia:**
+- Saldo FIRE Day 2040: R$492k → cresce 9 anos a 4.5%/ano = R$731k em 2049
+- Floor income (4% SWR): **R$29.2k/ano** a partir de 2049 (ano 9)
+- Floor total Katia (INSS + PGBL): **R$113.8k/ano** from ano 9
 
 **P(FIRE) por cenário:**
 
-| Cenário | Aporte | FIRE | Pat Mediana | P(base) | vs 2026-04-02 | vs Original |
-|---------|--------|------|------------|---------|---------------|-------------|
-| Solo FIRE 53 (ref, SAUDE_BASE R$16k) | R$25k | 53 | R$11,53M | **90,8%** | +3,6pp | ref |
-| C1: FIRE 53, R$250k lifestyle | R$15k | 53 | R$9,30M | 78,2% | +4,2pp | — |
-| C2: FIRE 53, R$270k lifestyle | R$15k | 53 | R$9,30M | 75,6% | +3,9pp | — |
-| **C3: FIRE 55, R$250k lifestyle** | R$15k | 55 | R$10,34M | **82,2%** | +2,1pp | +16,8pp |
-| **C4: FIRE 55, R$270k lifestyle** | R$15k | 55 | R$10,34M | **79,8%** | +2,7pp | +14,4pp |
-| C5: FIRE 55, R$290k lifestyle | R$15k | 55 | R$10,34M | 77,8% | +2,4pp | — |
+| Cenário | Base | Favorável | Stress | Pat Mediana |
+|---------|------|-----------|--------|-------------|
+| Ref: Solo Diego FIRE 53 (R$25k/mês, R$250k) | 90.8% | 94.1% | 86.8% | R$11.5M |
+| C1: FIRE 53, R$250k, **sem floors** | 75.6% | 85.4% | 70.0% | R$9.3M |
+| C2: FIRE 53, R$270k, **sem floors** | 73.2% | 83.6% | 66.7% | R$9.3M |
+| **C3: FIRE 53, R$250k + floors Katia** | **91.5%** | **95.0%** | **89.0%** | R$9.3M |
+| **C4: FIRE 53, R$270k + floors Katia** | **89.4%** | **93.9%** | **86.4%** | R$9.3M |
+| **C5: FIRE 53, R$270k + floors Katia+Diego** | **91.7%** | **95.1%** | **88.8%** | R$9.3M |
+| **C6: FIRE 53, R$270k + Katia 35a voluntária** | **92.5%** | **95.9%** | **90.1%** | R$9.1M |
 
-**Comparativo histórico:**
-- Original (2026-03-27, saúde 7%, 2p individual): C4 = **65,4%**
-- Recalibrado (2026-04-02, VCMH 2,7%, 2p empresarial): C4 = **77,1%**
-- Modelo completo (2026-04-06, HD-mc-audit): C4 = **79,8%**
-- Ganho acumulado modelo correto: **+14,4pp**
+*C6: Katia contribui INSS voluntário 5 anos pós-FIRE (R$1.700/mês × 60 = R$102k) → alíquota 100% → R$95.2k/ano. Pat mediana cai R$0.2M pelo custo, mas P(FIRE) sobe 3.1pp e INSS extra = R$10.5k/ano a partir de 2049.*
 
-### Decomposição do ganho
+**Comparativo histórico (C4 equivalente, R$270k, FIRE 53):**
+- Original (2026-03-27, saúde 7%, individual, sem floors): **65.4%**
+- Recalibrado (2026-04-02, VCMH 2,7%, empresarial): **77.1%**
+- HD-mc-audit completo (2026-04-06): **79.8%** (FIRE 55 — não inclui floors Katia)
+- **Modelo correto FIRE 53 com floors (2026-04-12): 89.4%** (+9.6pp vs modelo anterior FIRE 55)
 
-| Fator | Impacto estimado |
-|-------|----------------|
-| Saúde base: R$37,9k/pp → R$16k/pp (empresarial) | +7-8pp |
-| VCMH 7% → 2,7% (crescimento muito mais lento) | +4-5pp |
-| **Total** | **~+12pp** |
+**Achado principal:** FIRE 53 com floors Katia = **MELHOR** que FIRE 55 sem floors. Os floors de Katia (+R$113.8k/ano from 2049) compensam com folga os 2 anos de acumulação perdidos.
 
-### Spending casal (C4 — FIRE 55, R$270k lifestyle)
+### Voluntário INSS Katia — análise de custo-benefício
 
-| Ano FIRE | Idade | Lifestyle | Saúde 2p | Total |
-|----------|-------|-----------|----------|-------|
-| 0 | 55 | R$291k | R$48k | R$339k |
-| 6 | 61 | R$291k | R$66k | R$357k |
-| 11 | 66 | R$291k | R$86k | R$377k |
-| 17 | 72 | R$231k | R$101k | R$332k |
-| 30 | 85 | R$291k | R$71k (decay) | R$362k |
+| Opção | INSS | Custo total | Break-even | P(C4) |
+|-------|------|------------|-----------|-------|
+| Para em 2040 (30a) | R$84.6k/ano | R$0 | — | 89.4% |
+| Contribui 5a voluntária (35a) | R$95.2k/ano | R$102k | ~10 anos após 2049 (≈ 71a) | 92.5% |
 
-*Lifestyle escalado por 270/250 vs spending_smile base. Saúde 2p: VCMH 2,7%/ano + ANS faixas etárias discretas.*
+**Recomendação:** voluntário compensa se expectativa de vida > ~71 anos — muito provável. Custo de R$102k ao longo de 5 anos (R$1.700/mês) é baixo no contexto do portfólio de R$9.3M.
 
 ---
 
@@ -152,23 +157,23 @@ Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 (D
 | Aportes por fase | R$15k/9k/16k | Estimativa — não testada na prática |
 | Lifestyle casal R$250-290k | Nunca vivido | Inclui viagens etc., nunca validado |
 | Casa R$1M Indaiatuba | Estimativa | Mercado não pesquisado |
-| Katia aposenta aos 62 (2049) | **Validado** (TX-inss-katia, 2026-04-12) | Regra Definitiva EC 103/2019: 62 anos + 15 anos. INSS: ~R$7.800/mês real 2026 (R$93,6k/ano). Ver TX-inss-katia. |
-| Patrimônio Katia no FIRE | R$800k | Depende de poupança dela até 2042 |
+| Katia aposenta com Diego (2040, 53a) | **Adotado (2026-04-12)** | Para de trabalhar em 2040. INSS com 30 anos: ~R$7.053/mês (R$84.6k/ano) a partir de 2049. PGBL ~R$492k no FIRE Day. Ver TX-inss-katia / TX-pgbl-katia. |
+| Patrimônio Katia no FIRE | R$800k | ~R$492k PGBL + R$300k poupança própria (baixa confiança) |
 | CNPJ Diego ativo pós-FIRE | Assumido | Risco: plano vai para individual (+40%) |
 
 ---
 
 ## Conclusão
 
-**Principal mudança vs 2026-03-27:** P(FIRE 55 casal) sobe de **65,4% → 79,8%** com modelo de saúde corrigido + HD-mc-audit.
+**Principal mudança vs 2026-04-06:** modelo recalibrado em 2026-04-12 com Katia aposentando junto em 2040 (53a) + floors INSS/PGBL incluídos.
 
-**Achados principais (modelo completo 2026-04-06):**
-1. P(FIRE 55, R$250k lifestyle) = **82,2%** — acima do threshold de 80%
-2. P(FIRE 55, R$270k lifestyle) = **79,8%** — marginalmente abaixo do threshold
-3. Saúde 2p na largada: R$32k (empresarial) vs R$75,8k (individual antigo) — −58%
-4. VCMH 2,7%/ano real (correto) vs 7% (antigo) = crescimento muito mais lento
-5. 80% base para o casal **é alcançável** com lifestyle R$250k — conclusão anterior ("estruturalmente fora de alcance") está REVOGADA
-6. Bear market nos primeiros anos continua sendo o risco dominante
+**Achados principais (modelo completo 2026-04-12):**
+1. P(FIRE 53, R$270k + floors Katia) = **89.4%** — **acima** do threshold de 80% mesmo com FIRE 2 anos antes
+2. P(FIRE 53, R$250k + floors Katia) = **91.5%** — acima do threshold de 90%
+3. FIRE 53 com floors > FIRE 55 sem floors (89.4% vs 79.8%) — floors de Katia valem mais que 2 anos de acumulação
+4. INSS Katia 30a = R$84.6k/ano (não R$93.6k) — ela para em 2040 com 30a contrib vs 39a se trabalhasse até 62
+5. Voluntário 5a: +R$10.5k/ano extra, custo R$102k, break-even ~71a — compensa se expectativa > 71a
+6. Bear market nos primeiros anos (pre-2049) continua sendo o risco dominante — INSS/PGBL só entram no ano 9
 
 **Itens urgentes (independentes de cálculos):**
 - Planejamento sucessório: testamento, regime de bens (patrimônio total ~R$7,86M)
@@ -182,9 +187,9 @@ Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 (D
 
 | Tipo | Detalhe |
 |------|---------|
-| **FIRE** | P(FIRE 55 casal) = 79,8% (R$270k) / 82,2% (R$250k) base — modelo HD-mc-audit completo. Evolução: 65,4% → 77,1% → 79,8%. |
-| **Estratégia** | Sem mudança de alocação. Revisitar quando vida real do casal testada. |
-| **Conhecimento** | Plano empresarial real (R$16k/pp, Bradesco SP) + VCMH 2,7% = base correta. Individual superestima em 2,4×. Ambos aposentam juntos = 2p desde FIRE Day. |
+| **FIRE** | P(FIRE 53 casal, R$270k + floors) = **89.4%** base / 91.5% (R$250k). Evolução: 65,4% → 77,1% → 79,8% → **89.4%**. Ambos aposentam 2040. |
+| **Estratégia** | Sem mudança de alocação. Avaliar INSS voluntário Katia (5a, R$102k) — compensa se expectativa > 71a. |
+| **Conhecimento** | Floors Katia: INSS R$84.6k/ano + PGBL R$29.2k/ano = R$113.8k/ano from 2049 (ano 9). INSS Katia 30a (não 39a — para em 2040). |
 | **Ação urgente** | Planejamento sucessório + seguro de vida — independente de cálculos. |
 
 ---
@@ -194,5 +199,5 @@ Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 (D
 - [ ] **Urgente (pré-casamento):** planejamento sucessório (testamento, regime de bens) + seguro de vida
 - [ ] **Reabrir quando:** casa escolhida + lifestyle real testado + data de casamento definida
 - [x] **Validado (2026-04-12):** Katia aposenta aos **62 anos (2049)**, não 65 — INSS ~R$7.800/mês real 2026. Ver TX-inss-katia.
-- [ ] **Na reabertura:** incluir INSS Katia (~R$93,6k/ano a partir de 2049) no MC casal — reduz SWR requerido no tail; rodar sensibilidade P(FIRE) com floor income conjunto
+- [x] **Concluído (2026-04-12):** MC casal com floors Katia rodado — P(FIRE 53, R$270k) = 89.4%. INSS Katia 30a = R$84.6k/ano (para em 2040). PGBL = R$29.2k/ano from 2049.
 - [ ] **Modelar risco CNPJ:** se Diego encerrar PJ pós-FIRE, saúde sobe ~40% → testar P(FIRE) com esse cenário
