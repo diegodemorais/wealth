@@ -76,9 +76,13 @@
 | Bug | Fix | Teste Anti-Regressão |
 |-----|-----|---------------------|
 | B1 — Alpha 60/40 bar | [x] | — |
-| B2 — Trilha FIRE escala | [x] | — |
-| B3 — Glide Path | [x] | [x] (fire_tests.py) |
-| B4 — Projeção escala | [x] | — |
+| B2 — Trilha FIRE escala | [x] | [x] (fire_tests.py — 2 testes CRITICAL: data range + JS formula) |
+| B3 — Glide Path | [x] | [x] (fire_tests.py — 2 testes CRITICAL: null guard + offsetWidth guard) |
+| B4 — Projeção escala | [x] | [x] (fire_tests.py — 2 testes CRITICAL: JS fireSlice+cap + data range p50) |
 | B5 — Guardrails marcador | [x] | — |
-| B6 — What-if invertido | [x] | — |
-| B7 — Fan chart stress | [x] | — |
+| B6 — What-if invertido | [x] | [x] (fire_tests.py — 2 testes CRITICAL: monotonia P vs gasto + patrimonioRef no JS) |
+| B7 — Fan chart stress | [x] | [x] (fire_tests.py — 1 teste CRITICAL: builder real em _chartBuilders) |
+
+**Anti-regressão implementada em 2026-04-12:** 9 testes CRITICAL adicionados em `dashboard/tests/fire_tests.py`.
+Estratégia: testes validam tanto os dados (range sano) quanto o código JS no template (fórmulas/guards presentes).
+Se um fix for revertido acidentalmente no template, os testes VALUE detectam imediatamente antes do deploy.

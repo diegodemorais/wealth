@@ -1,12 +1,10 @@
 {
-  "timestamp": "2026-04-12T18:39:09.288001",
+  "timestamp": "2026-04-12T20:13:21.881155",
   "mode": "full",
-  "total": 579,
-  "passed": 579,
+  "total": 588,
+  "passed": 588,
   "failed": 0,
-  "failure_cycles": {
-    "net-worth-projection": 0
-  },
+  "failure_cycles": {},
   "escalations": [],
   "results": [
     {
@@ -15,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 515,482 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 515,886 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -63,7 +61,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 515,482 chars"
+      "message": "index.html: 515,886 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -111,7 +109,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5091)"
+      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5114)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroPfireSub::DOM_REF::renderKPIs: getElementById('heroPfireSub') existe no DOM ou tem null guard",
@@ -119,7 +117,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5097)"
+      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5120)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroAnos::DOM_REF::renderKPIs: getElementById('heroAnos') existe no DOM ou tem null guard",
@@ -159,7 +157,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5118)"
+      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5141)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroSavingsSub::DOM_REF::renderKPIs: getElementById('heroSavingsSub') existe no DOM ou tem null guard",
@@ -167,7 +165,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5122)"
+      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5145)"
     },
     {
       "test_id": "dom-ref-renderKPIs-kpiPfire50::DOM_REF::renderKPIs: getElementById('kpiPfire50') existe no DOM ou tem null guard",
@@ -775,7 +773,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2488)"
+      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2478)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribVal::DOM_REF::updateContrib: getElementById('contribVal') existe no DOM ou tem null guard",
@@ -783,7 +781,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2494)"
+      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2484)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribResult::DOM_REF::updateContrib: getElementById('contribResult') existe no DOM ou tem null guard",
@@ -791,7 +789,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2495)"
+      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2485)"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::posicoes top-level key exists and is non-empty dict",
@@ -831,7 +829,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "fav=94.1 >= base=90.4 >= stress=86.8"
+      "message": "fav=95.9 >= base=93.3 >= stress=90.8"
     },
     {
       "test_id": "pfire-hero::VALUE::pfire50 ordering: fav >= base >= stress",
@@ -839,7 +837,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "fav=91.3 >= base=85.4 >= stress=81.1"
+      "message": "fav=93.9 >= base=89.4 >= stress=86.4"
     },
     {
       "test_id": "pfire-hero::VALUE::pfire50.base <= pfire53.base (retiring earlier is harder)",
@@ -847,7 +845,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire50.base=85.4 <= pfire53.base=90.4"
+      "message": "pfire50.base=89.4 <= pfire53.base=93.3"
     },
     {
       "test_id": "fire-countdown::DATA::all countdown premissas fields present",
@@ -1031,7 +1029,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "SWR order correct: p90=1.32% < p50=2.17% < p10=3.66%"
+      "message": "SWR order correct: p90=1.16% < p50=1.88% < p10=3.09%"
     },
     {
       "test_id": "swr-percentis::RENDER::swrPercentilesSection and swrPercentilesCards exist in HTML",
@@ -1127,7 +1125,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire53.base=90.4%"
+      "message": "pfire53.base=93.3%"
     },
     {
       "test_id": "simulador-fire::DATA::patrimonio_atual > 0 and < patrimonio_gatilho",
@@ -1135,7 +1133,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "R$3,487,412 / R$13,400,000 = 26.0% of FIRE goal"
+      "message": "R$3,483,315 / R$13,400,000 = 26.0% of FIRE goal"
     },
     {
       "test_id": "simulador-fire::RENDER::simulator UI elements exist in HTML",
@@ -1159,7 +1157,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire53: base=90.4, stress=86.8"
+      "message": "pfire53: base=93.3, stress=90.8"
     },
     {
       "test_id": "stress-test-mc::DATA::pfire53 stress < base (stress degrades P(FIRE))",
@@ -1167,7 +1165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire53: stress=86.8 < base=90.4"
+      "message": "pfire53: stress=90.8 < base=93.3"
     },
     {
       "test_id": "earliest-fire::DATA::earliest_fire has ano, idade, pfire",
@@ -1183,7 +1181,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "earliest_fire.pfire=85.4%"
+      "message": "earliest_fire.pfire=89.4%"
     },
     {
       "test_id": "aporte-sensitivity::DATA::fire_aporte_sensitivity has aportes_brl and pfire_2040",
@@ -1199,7 +1197,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Arrays aligned: 6 data points"
+      "message": "Arrays aligned: 7 data points"
     },
     {
       "test_id": "tornado-sensitivity::DATA::tornado is a non-empty list",
@@ -1255,7 +1253,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "lumpy_events has 3 eventos, base pfire=0.8994"
+      "message": "lumpy_events has 3 eventos, base pfire=0.9248"
     },
     {
       "test_id": "lumpy-events::DATA::each evento has id, label, delta_pp, pfire_2040",
@@ -1279,7 +1277,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire53.base=90.4 consistent with scenario_comparison"
+      "message": "pfire53.base=93.3 consistent with scenario_comparison"
     },
     {
       "test_id": "pfire-familia::DATA::lumpy evento pfire_2040 values in [0, 1]",
@@ -1290,6 +1288,30 @@
       "message": "All evento pfire_2040 values in [0, 1]"
     },
     {
+      "test_id": "fire-trilha::DATA::B2 anti-regress: trilha_brl values in sane range (< 50M)",
+      "block_id": "fire-trilha",
+      "category": "DATA",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B2: max trilha/realizado=14,408,729 within sane range (meta=13,400,000)"
+    },
+    {
+      "test_id": "fire-trilha::VALUE::B2 anti-regress: JS _yMax formula present in template",
+      "block_id": "fire-trilha",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B2: _yMax scale cap formula (_metaVal * 1.5 / _metaVal * 1.1) present in template"
+    },
+    {
+      "test_id": "glide-path::VALUE::B3 anti-regress: null guard for glide data present in template",
+      "block_id": "glide-path",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B3: null guards for g.idades, g.equity, g.ipca_longo with early return present"
+    },
+    {
       "test_id": "net-worth-projection::RENDER::netWorthProjectionChart canvas exists in HTML",
       "block_id": "net-worth-projection",
       "category": "RENDER",
@@ -1298,12 +1320,52 @@
       "message": "netWorthProjectionChart canvas present"
     },
     {
+      "test_id": "net-worth-projection::VALUE::B4 anti-regress: JS has _fireSlice filter and _nwYMax cap in template",
+      "block_id": "net-worth-projection",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B4: _fireSlice filter and Y-axis cap present in buildNetWorthProjection()"
+    },
+    {
+      "test_id": "net-worth-projection::DATA::B4 anti-regress: net_worth_projection p50 values in [1M, 200M]",
+      "block_id": "net-worth-projection",
+      "category": "DATA",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B4: p50 range [3,483,315, 55,691,250] within [500k, 200M]"
+    },
+    {
+      "test_id": "what-if-cenarios::DATA::B6 anti-regress: increasing gasto decreases P(success) with fixed patrimonio",
+      "block_id": "what-if-cenarios",
+      "category": "DATA",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B6: P(success) monotonically decreasing with gasto: g=180,000→P=0.981, g=220,000→P=0.982, g=250,000→P=0.979, g=270,000→P=0.973, g=300,000→P=0.968"
+    },
+    {
+      "test_id": "what-if-cenarios::VALUE::B6 anti-regress: interpolateFireMatrix uses patrimonio_gatilho in template",
+      "block_id": "what-if-cenarios",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B6: interpolateFireMatrix uses patrimonio_gatilho (not gasto/swr) as patrimonioRef"
+    },
+    {
       "test_id": "stress-fan-chart::RENDER::stressProjectionChart canvas exists in HTML",
       "block_id": "stress-fan-chart",
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
       "message": "stressProjectionChart canvas present"
+    },
+    {
+      "test_id": "stress-fan-chart::VALUE::B7 anti-regress: stressProjectionChart has real builder in _chartBuilders",
+      "block_id": "stress-fan-chart",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "B7: stressProjectionChart → buildStressTest() wired correctly in _chartBuilders"
     },
     {
       "test_id": "factor-signal-kpi::DATA::factor_signal fields present and numeric",
@@ -1439,7 +1501,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cagr=13.54%, patrimonio=3487412, cambio=5.0126"
+      "message": "cagr=13.54%, patrimonio=3483315, cambio=5.0061"
     },
     {
       "test_id": "cagr-patrimonial-twr::VALUE::patrimonio_atual in plausible range [R$1M, R$50M]",
@@ -1447,7 +1509,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "patrimonio_atual=R$3,487,412 within plausible range"
+      "message": "patrimonio_atual=R$3,483,315 within plausible range"
     },
     {
       "test_id": "backtest-regime-longo::DATA::backtestR5 present with dates, target, shadowA and metrics",
@@ -1647,7 +1709,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "hodl11.banda.atual_pct=2.98% in valid range"
+      "message": "hodl11.banda.atual_pct=2.99% in valid range"
     },
     {
       "test_id": "hodl11-status::VALUE::hodl11.banda ordering: min_pct < alvo_pct < max_pct",
@@ -1703,7 +1765,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire53 present with base=90.4, stress=86.8"
+      "message": "pfire53 present with base=93.3, stress=90.8"
     },
     {
       "test_id": "stress-test-mc::DATA::premissas.patrimonio_atual and premissas.patrimonio_gatilho present and positive",
@@ -1711,7 +1773,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "patrimonio_atual=3,487,412, patrimonio_gatilho=13,400,000"
+      "message": "patrimonio_atual=3,483,315, patrimonio_gatilho=13,400,000"
     },
     {
       "test_id": "stress-test-mc::VALUE::pfire53.stress < pfire53.base (stress scenario is worse than base)",
@@ -1719,7 +1781,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire53.stress=86.8% < pfire53.base=90.4% (stress is correctly worse)"
+      "message": "pfire53.stress=90.8% < pfire53.base=93.3% (stress is correctly worse)"
     },
     {
       "test_id": "stress-test-mc::RENDER::HTML contains stressShockSlider input element",
@@ -1799,7 +1861,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio=5.0126"
+      "message": "cambio=5.0061"
     },
     {
       "test_id": "exposicao-cambial::VALUE::exposicao_cambial_pct dentro do range [0, 100]",
@@ -1815,7 +1877,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio=5.0126 dentro de [3.0, 15.0]"
+      "message": "cambio=5.0061 dentro de [3.0, 15.0]"
     },
     {
       "test_id": "exposicao-cambial::RENDER::HTML contem brasilConcentracao para o gauge de exposicao",
@@ -1831,7 +1893,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio = 5.0126"
+      "message": "cambio = 5.0061"
     },
     {
       "test_id": "cambio-mercado::DATA::mercado.cambio_brl_usd exists and is a positive number",
@@ -1839,7 +1901,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "mercado.cambio_brl_usd = 5.0126"
+      "message": "mercado.cambio_brl_usd = 5.0061"
     },
     {
       "test_id": "cambio-mercado::VALUE::cambio and mercado.cambio_brl_usd are consistent (same source, delta <= tolerance)",
@@ -1847,7 +1909,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio top=5.0126, mercado=5.0126, delta=0.0000"
+      "message": "cambio top=5.0061, mercado=5.0061, delta=0.0000"
     },
     {
       "test_id": "cambio-mercado::VALUE::cambio is within plausible BRL/USD range [3.0, 15.0]",
@@ -1855,7 +1917,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio=5.0126 within [3.0, 15.0]"
+      "message": "cambio=5.0061 within [3.0, 15.0]"
     },
     {
       "test_id": "exposicao-cambial::DATA::macro.exposicao_cambial_pct exists and is a number",
@@ -1927,7 +1989,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "savings_rate=55.56% is in [0, 1]"
+      "message": "savings_rate=73.33% is in [0, 1]"
     },
     {
       "test_id": "posicoes-etfs-ibkr::DATA::posicoes dict exists and non-empty",
@@ -2031,7 +2093,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVEM', 'SWRD', 'AVGS'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2047,7 +2109,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'performance', 'fire', 'portfolio', 'retiro', 'now'}"
+      "message": "All blocks use valid tabs: {'now', 'performance', 'retiro', 'fire', 'portfolio'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2303,7 +2365,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5523)"
+      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5546)"
     },
     {
       "test_id": "dom-ref-renderProximasAcoes-proximasAcoes::DOM_REF::renderProximasAcoes: getElementById('proximasAcoes') existe no DOM ou tem null guard",
@@ -2311,7 +2373,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5558)"
+      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5581)"
     },
     {
       "test_id": "dom-ref-buildStressTest-stressPatShock::DOM_REF::buildStressTest: getElementById('stressPatShock') existe no DOM ou tem null guard",
@@ -2487,7 +2549,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2838)"
+      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2854)"
     },
     {
       "test_id": "dom-ref-calcAporte-calcCambioLabel::DOM_REF::calcAporte: getElementById('calcCambioLabel') existe no DOM ou tem null guard",
@@ -2607,7 +2669,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio present: 5.0126"
+      "message": "cambio present: 5.0061"
     },
     {
       "test_id": "patrimonio-total-hero::PRIVACY::hero patrimonio values use .pv class (privacy toggle)",
@@ -2647,7 +2709,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "patrimonio_atual=3,487,412"
+      "message": "patrimonio_atual=3,483,315"
     },
     {
       "test_id": "kpi-grid-primario::RENDER::primary KPI elements present in HTML",
@@ -2671,7 +2733,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio_brl_usd=5.0126"
+      "message": "cambio_brl_usd=5.0061"
     },
     {
       "test_id": "fire-countdown::VALUE::patrimonio_gatilho > patrimonio_atual (still in accumulation phase)",
@@ -2679,7 +2741,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "atual=3,487,412 | gatilho=13,400,000 | progress=26.0% | gap=9,912,588"
+      "message": "atual=3,483,315 | gatilho=13,400,000 | progress=26.0% | gap=9,916,685"
     },
     {
       "test_id": "fire-countdown::VALUE::idade_fire_alvo > idade_atual (target FIRE age is in the future)",
@@ -2791,7 +2853,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "Both sources agree: R$25,000/month"
+      "message": "Both sources agree: R$33,000/month"
     },
     {
       "test_id": "pvr-premissas-realizado::VALUE::retorno_equity_base not hardcoded in build script",
@@ -2831,7 +2893,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "fire53.base=90.4 >= fire50.base=85.4"
+      "message": "fire53.base=93.3 >= fire50.base=89.4"
     },
     {
       "test_id": "net-worth-projection::DATA::fav >= base >= stress for each scenario",
@@ -2871,7 +2933,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "fire53 has pat_mediano=11,527,476"
+      "message": "fire53 has pat_mediano=13,329,893"
     },
     {
       "test_id": "scenario-comparison::DATA::fire53 pat_p10 < pat_mediano < pat_p90",
@@ -2879,7 +2941,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "p10=6,834,909 < p50=11,527,476 < p90=18,916,227"
+      "message": "p10=8,083,717 < p50=13,329,893 < p90=21,498,675"
     },
     {
       "test_id": "scenario-comparison::RENDER::scenarioChart canvas exists in HTML",
@@ -2895,7 +2957,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "fire53.base=90.4 not hardcoded as dict literal in build script"
+      "message": "fire53.base=93.3 not hardcoded as dict literal in build script"
     },
     {
       "test_id": "fire-matrix::DATA::premissas.custo_vida_base appears in fire_matrix.gastos",
@@ -3007,7 +3069,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "swr_p50_pct=2.17 not hardcoded"
+      "message": "swr_p50_pct=1.88 not hardcoded"
     },
     {
       "test_id": "spending-breakdown::DATA::total_anual <= modelo_fire_anual (spending within model)",
@@ -3127,7 +3189,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "alvo_pool_brl_2040=R$1,729,121 not hardcoded"
+      "message": "alvo_pool_brl_2040=R$1,999,484 not hardcoded"
     },
     {
       "test_id": "simulador-fire::VALUE::patrimonio_atual not hardcoded in build script",
@@ -3135,7 +3197,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "patrimonio_atual=3,487,412 not hardcoded"
+      "message": "patrimonio_atual=3,483,315 not hardcoded"
     },
     {
       "test_id": "what-if-cenarios::DATA::premissas.swr_gatilho is in fire_matrix.swrs",
@@ -3191,7 +3253,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "pfire53.base=90.4 not hardcoded as dict literal in build script"
+      "message": "pfire53.base=93.3 not hardcoded as dict literal in build script"
     },
     {
       "test_id": "earliest-fire::DATA::earliest_fire.idade >= premissas.idade_fire_aspiracional",
@@ -3231,7 +3293,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "aporte_base=R$25,000 is in the sensitivity range"
+      "message": "aporte_base=R$33,000 is in the sensitivity range"
     },
     {
       "test_id": "aporte-sensitivity::DATA::aporte_base matches premissas.aporte_mensal",
@@ -3239,7 +3301,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "aporte_base=R$25,000 consistent with premissas"
+      "message": "aporte_base=R$33,000 consistent with premissas"
     },
     {
       "test_id": "aporte-sensitivity::RENDER::aporteSensSection exists in HTML",
@@ -3255,7 +3317,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "All 6 pfire_2040 values in [0, 1]"
+      "message": "All 7 pfire_2040 values in [0, 1]"
     },
     {
       "test_id": "tornado-sensitivity::DATA::tornado delta consistent with mais10 - menos10 (1dp rounding)",
@@ -3279,7 +3341,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "aporte_mensal=R$25,000 <= renda_estimada=R$45,000"
+      "message": "aporte_mensal=R$33,000 <= renda_estimada=R$45,000"
     },
     {
       "test_id": "sankey-cashflow::VALUE::renda_estimada not hardcoded in build script",
@@ -3295,7 +3357,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "All eventos reduce or maintain P(FIRE) vs base=0.8994"
+      "message": "All eventos reduce or maintain P(FIRE) vs base=0.9248"
     },
     {
       "test_id": "lumpy-events::DATA::evento delta_pp consistent with base and evento pfire",
@@ -3327,7 +3389,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "lumpy_events base pfire_2040=0.8994 not hardcoded"
+      "message": "lumpy_events base pfire_2040=0.9248 not hardcoded"
     },
     {
       "test_id": "lumpy-events::VALUE::lumpy_events sourced from pipeline not hardcoded",
@@ -3359,7 +3421,15 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "pfire53.base=90.4 not hardcoded as dict literal"
+      "message": "pfire53.base=93.3 not hardcoded as dict literal"
+    },
+    {
+      "test_id": "glide-path::VALUE::B3 anti-regress: offsetWidth guard present (no build on hidden canvas)",
+      "block_id": "glide-path",
+      "category": "VALUE",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "B3: offsetWidth guard present in buildGlidePath()"
     },
     {
       "test_id": "factor-signal-kpi::RENDER::semaforoPanel container present in HTML",
@@ -3575,7 +3645,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio=5.0126 BRL/USD within plausible range"
+      "message": "cambio=5.0061 BRL/USD within plausible range"
     },
     {
       "test_id": "backtest-regime-longo::VALUE::backtestR5 covers at least 15 years (180 months)",
@@ -3799,7 +3869,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "pfire53 base=90.4%, stress=86.8% both in [0, 100]"
+      "message": "pfire53 base=93.3%, stress=90.8% both in [0, 100]"
     },
     {
       "test_id": "stress-test-mc::VALUE::premissas.patrimonio_gatilho > premissas.patrimonio_atual (FIRE target ahead)",
@@ -3807,7 +3877,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "FIRE gap = R$ 9,912,588 (gatilho 13,400,000 > atual 3,487,412)"
+      "message": "FIRE gap = R$ 9,916,685 (gatilho 13,400,000 > atual 3,483,315)"
     },
     {
       "test_id": "stress-test-mc::RENDER::HTML contains stressShockLabel element (shock percentage display)",
@@ -3871,7 +3941,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "total_portfolio_brl=3,487,412"
+      "message": "total_portfolio_brl=3,483,315"
     },
     {
       "test_id": "exposicao-cambial::VALUE::brasil_pct dentro do range [0, 100]",
@@ -3903,7 +3973,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio_mtd_pct=-2.78%"
+      "message": "cambio_mtd_pct=-2.91%"
     },
     {
       "test_id": "cambio-mercado::RENDER::HTML references cambio_brl_usd rendering logic",
@@ -3927,7 +3997,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "total_portfolio_brl = R$3,487,412"
+      "message": "total_portfolio_brl = R$3,483,315"
     },
     {
       "test_id": "exposicao-cambial::VALUE::concentracao_brasil.brasil_pct is in [0, 100]",
@@ -4015,7 +4085,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "premissas.patrimonio_atual = 3,487,412"
+      "message": "premissas.patrimonio_atual = 3,483,315"
     },
     {
       "test_id": "fee-custo-complexidade::RENDER::HTML contains feeTable and feeBody elements",
@@ -4031,7 +4101,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "aporte_mensal=25,000, renda_estimada=45,000"
+      "message": "aporte_mensal=33,000, renda_estimada=45,000"
     },
     {
       "test_id": "savings-rate::VALUE::savings_rate >= 25% (minimum threshold for FIRE viability per model)",
@@ -4039,7 +4109,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "savings_rate=55.56% >= 25% floor"
+      "message": "savings_rate=73.33% >= 25% floor"
     },
     {
       "test_id": "savings-rate::RENDER::HTML contains savingsRate, savingsRateFill, and savingsRateNote elements",
@@ -4103,7 +4173,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "aporte_mensal = R$25,000"
+      "message": "aporte_mensal = R$33,000"
     },
     {
       "test_id": "minilog::DATA::timeline.labels and timeline.values exist",
@@ -4199,7 +4269,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Generated: 2026-04-12T18:39:04"
+      "message": "Generated: 2026-04-12T19:26:52"
     },
     {
       "test_id": "render-global::RENDER::no empty canvas elements (uninitialized charts)",
@@ -4255,7 +4325,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "pfire53.base=90.4"
+      "message": "pfire53.base=93.3"
     },
     {
       "test_id": "drift-maximo-kpi::VALUE::max absolute drift deviation is < 50pp (sanity bound)",
@@ -4303,7 +4373,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Trilha grows from 257,684 to 9,668,388"
+      "message": "Trilha grows from 257,684 to 14,408,729"
     },
     {
       "test_id": "scenario-comparison::DATA::fire50 pat_mediano < fire53 pat_mediano",
@@ -4311,7 +4381,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "fire53 median R$11,527,476 > fire50 median R$9,339,651"
+      "message": "fire53 median R$13,329,893 > fire50 median R$10,652,357"
     },
     {
       "test_id": "income-fases::DATA::inss_inicio_ano is positive (years after FIRE or absolute year)",
@@ -4367,7 +4437,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "First entry delta=8.2 is among top-2 most impactful"
+      "message": "First entry delta=6.8 is among top-2 most impactful"
     },
     {
       "test_id": "intra-equity-pesos::RENDER::equityWeightsChart canvas present in HTML",
@@ -4503,7 +4573,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "brasil_pct=9.5% coerente com R$332,481 / R$3,487,412 = 9.5%"
+      "message": "brasil_pct=9.5% coerente com R$332,481 / R$3,483,315 = 9.5%"
     },
     {
       "test_id": "exposicao-cambial::RENDER::HTML contem buildBrasilConcentracao para inicializacao do bloco",
@@ -4527,7 +4597,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'cambio', 'mercado.cambio_brl_usd'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4535,7 +4605,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
@@ -4567,7 +4637,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "patrimonio_atual=3,487,412 within plausible range"
+      "message": "patrimonio_atual=3,483,315 within plausible range"
     },
     {
       "test_id": "savings-rate::SPEC::spec.json declares savings-rate block with correct tab and privacy flag",

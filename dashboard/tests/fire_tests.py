@@ -1984,7 +1984,138 @@ def _():
     return True, f"pfire53.base={base} not hardcoded as dict literal"
 
 
+# ── B2: Fire Trilha — escala anti-regressão ───────────────────────────────────
+# Bug recorrente (3×): escala Y astronômica torna linhas indistinguíveis.
+# Root cause: sem cap relativo à meta; qualquer outlier na trilha infla o Y-max.
+
+@registry.test("fire-trilha", "DATA", "B2 anti-regress: trilha_brl values in sane range (< 50M)", "CRITICAL")
+def _():
+    """Garante que os valores de trilha_brl nunca excedem 50M BRL.
+    Se excederem, o JS _yMax = max(min(dataMax*1.1, meta*1.5), meta*1.1)
+    ainda produziria uma escala razoável — mas valores > 50M indicam bug
+    de escala nos dados (e.g., trilha em centavos ou unidade errada).
+    """
+    d = load_data()
+    ft = d.get("fire_trilha", {})
+    trilha = ft.get("trilha_brl", [])
+    realizado = ft.get("realizado_brl", [])
+    meta = ft.get("meta_fire_brl", 13_400_000)
+    if not trilha:
+        return False, "fire_trilha.trilha_brl empty"
+    vals_t = [v for v in trilha if v is not None and isinstance(v, (int, float)) and v > 0]
+    vals_r = [v for v in realizado if v is not None and isinstance(v, (int, float)) and v > 0]
+    all_vals = vals_t + vals_r
+    if not all_vals:
+        return False, "No non-null positive values in trilha_brl + realizado_brl"
+    max_val = max(all_vals)
+    MAX_SANE = 50_000_000  # 50M BRL — very conservative upper bound for FIRE portfolio
+    if max_val > MAX_SANE:
+        return False, (
+            f"B2: trilha/realizado max={max_val:,.0f} > {MAX_SANE:,.0f} (50M). "
+            f"Likely unit bug (should be BRL, not centavos or BRL×100). "
+            f"meta_fire_brl={meta:,}."
+        )
+    return True, f"B2: max trilha/realizado={max_val:,.0f} within sane range (meta={meta:,})"
+
+
+@registry.test("fire-trilha", "VALUE", "B2 anti-regress: JS _yMax formula present in template", "CRITICAL")
+def _():
+    """Verifica que o template.html contém a fórmula de cap da escala Y para o Fire Trilha.
+    Sem esta fórmula, qualquer pico nos dados (e.g., trilha máxima no FIRE) infla
+    a escala para valores como 100M tornando as linhas históricas indistinguíveis.
+    Fórmula correta: _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1)
+    """
+    import re
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    # Check that the Y-max cap formula exists using meta as anchor
+    # Pattern: Math.min(..., _metaVal * 1.5)  — ensures cap relative to goal
+    if "_metaVal * 1.5" not in template and "_metaVal*1.5" not in template:
+        return False, (
+            "B2: Scale cap formula missing in buildFireTrilha(). "
+            "Expected '_metaVal * 1.5' as upper bound for _yMax. "
+            "Without it, trilha scale regresses to astronomical values."
+        )
+    # Also check _yMax uses Math.max with _metaVal * 1.1 as floor
+    if "_metaVal * 1.1" not in template and "_metaVal*1.1" not in template:
+        return False, (
+            "B2: Floor formula missing in buildFireTrilha(). "
+            "Expected '_metaVal * 1.1' as min floor for _yMax. "
+            "Without it, a very small dataset could compress the scale below the goal line."
+        )
+    return True, "B2: _yMax scale cap formula (_metaVal * 1.5 / _metaVal * 1.1) present in template"
+
+
+# ── B3: Glide Path — null guard anti-regressão ────────────────────────────────
+# Bug recorrente (15×): seção não renderiza / erro silencioso.
+# Root cause: ausência de null guard para g.idades/g.equity/g.ipca_longo.
+
+@registry.test("glide-path", "VALUE", "B3 anti-regress: null guard for glide data present in template", "CRITICAL")
+def _():
+    """Verifica que buildGlidePath() tem null guard para campos obrigatórios.
+    Sem esse guard, se DATA.glide vier parcial (apenas idades sem equity, por exemplo),
+    o chart lança exceção silenciosa e a seção fica em branco — bug recorrente 15×.
+    Guard correto: if (!g || !g.idades || !g.equity || !g.ipca_longo) return;
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    # Find the buildGlidePath function body (up to 150 lines after its declaration)
+    idx = template.find("function buildGlidePath()")
+    if idx < 0:
+        return False, "B3: buildGlidePath() function not found in template"
+    snippet = template[idx : idx + 1200]  # check first ~1200 chars of the function
+    # Must guard for missing idades AND equity AND ipca_longo
+    has_idades_guard  = "!g.idades"  in snippet
+    has_equity_guard  = "!g.equity"  in snippet
+    has_ipca_guard    = "!g.ipca_longo" in snippet
+    if not has_idades_guard:
+        return False, "B3: null guard for g.idades missing in buildGlidePath()"
+    if not has_equity_guard:
+        return False, "B3: null guard for g.equity missing in buildGlidePath()"
+    if not has_ipca_guard:
+        return False, "B3: null guard for g.ipca_longo missing in buildGlidePath()"
+    # Also verify that the function returns early (not just logs a warning)
+    has_early_return  = "return;" in snippet
+    if not has_early_return:
+        return False, "B3: buildGlidePath() null guard does not include early return"
+    return True, "B3: null guards for g.idades, g.equity, g.ipca_longo with early return present"
+
+
+@registry.test("glide-path", "VALUE", "B3 anti-regress: offsetWidth guard present (no build on hidden canvas)", "HIGH")
+def _():
+    """Verifica que buildGlidePath() verifica offsetWidth antes de renderizar.
+    Canvas em seção colapsível fechada tem width=0 — renderizar nesse estado
+    produz chart com dimensões erradas que não se corrige com resize().
+    Guard correto: if (_glideCanvas.offsetWidth === 0) return;
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    idx = template.find("function buildGlidePath()")
+    if idx < 0:
+        return False, "B3: buildGlidePath() function not found in template"
+    snippet = template[idx : idx + 1200]
+    if "offsetWidth" not in snippet:
+        return False, (
+            "B3: offsetWidth check missing in buildGlidePath(). "
+            "Without it, chart builds on a 0×0 canvas when section is collapsed, "
+            "producing a corrupt chart that resize() cannot fix."
+        )
+    return True, "B3: offsetWidth guard present in buildGlidePath()"
+
+
 # ── B4: Net Worth Projection anti-regression ──────────────────────────────────
+# Bug recorrente (5×): escala Y em trilhões/quadrilhões.
+# Root cause: dados pós-FIRE vão a 100M+; sem filtro por fase de acumulação
+# e sem cap no Y-max, a escala explode.
 
 @registry.test("net-worth-projection", "RENDER", "netWorthProjectionChart canvas exists in HTML", "CRITICAL")
 def _():
@@ -1992,6 +2123,186 @@ def _():
     if 'id="netWorthProjectionChart"' not in html:
         return False, "netWorthProjectionChart canvas missing from HTML"
     return True, "netWorthProjectionChart canvas present"
+
+
+@registry.test("net-worth-projection", "VALUE", "B4 anti-regress: JS has _fireSlice filter and _nwYMax cap in template", "CRITICAL")
+def _():
+    """Verifica que buildNetWorthProjection() filtra os anos até FIRE e tem cap Y.
+    Sem _fireSlice, os anos pós-FIRE (p90 chega a 100M+) são incluídos e a escala
+    se torna astronômica. Sem _nwYMax, o chart expande para acomodar P90.
+    Fixes corretos: _fireSlice filter + const _nwYMax = 15e6 (ou similar).
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    idx = template.find("function buildNetWorthProjection()")
+    if idx < 0:
+        return False, "B4: buildNetWorthProjection() not found in template"
+    # Look for the function body (up to 3000 chars should cover entire function)
+    snippet = template[idx : idx + 3000]
+    # Check for year-filter / fireSlice limiting pre-FIRE data
+    has_fire_filter = "_fireSlice" in snippet or "_anoFire" in snippet or "ano_fire" in snippet.lower()
+    if not has_fire_filter:
+        return False, (
+            "B4: No FIRE year filter found in buildNetWorthProjection(). "
+            "Post-FIRE data (p90 > 100M) must be excluded or the scale explodes."
+        )
+    # Check for Y-axis cap (any form of max capping)
+    has_ycap = "_nwYMax" in snippet or "suggestedMax" in snippet or "15e6" in snippet or "max:" in snippet
+    if not has_ycap:
+        return False, (
+            "B4: No Y-axis cap found in buildNetWorthProjection(). "
+            "Without a max cap, P90 at FIRE (R$21.5M) or later will expand the scale to 100M+."
+        )
+    return True, "B4: _fireSlice filter and Y-axis cap present in buildNetWorthProjection()"
+
+
+@registry.test("net-worth-projection", "DATA", "B4 anti-regress: net_worth_projection p50 values in [1M, 200M]", "CRITICAL")
+def _():
+    """Verifica que os valores P50 gerados pelo build estão em escala correta (BRL).
+    Faixa esperada: R$1M (pat atual) a R$200M (limite generoso pós-FIRE).
+    Valores fora dessa faixa indicam bug de escala (e.g., centavos, USD sem converter).
+    Nota: net_worth_projection é gerado pelo build_dashboard.py, não pelo data.json.
+    """
+    import sys
+    ROOT_DIR = BUILD_PY.parent.parent
+    sys.path.insert(0, str(ROOT_DIR / "scripts"))
+    try:
+        from build_dashboard import _compute_net_worth_projection
+    except ImportError as e:
+        return False, f"B4: Could not import _compute_net_worth_projection: {e}"
+    d = load_data()
+    try:
+        nw = _compute_net_worth_projection(d)
+    except Exception as e:
+        return False, f"B4: _compute_net_worth_projection raised: {e}"
+    p50 = nw.get("p50", [])
+    if not p50:
+        return False, "B4: net_worth_projection.p50 empty"
+    valid_p50 = [v for v in p50 if v is not None and isinstance(v, (int, float)) and v > 0]
+    if not valid_p50:
+        return False, "B4: No non-zero p50 values"
+    max_p50 = max(valid_p50)
+    min_p50 = min(valid_p50)
+    errors = []
+    if min_p50 < 500_000:
+        errors.append(f"p50 min={min_p50:,.0f} < R$500k — likely wrong units or data bug")
+    if max_p50 > 200_000_000:
+        errors.append(f"p50 max={max_p50:,.0f} > R$200M — likely scale explosion bug")
+    if errors:
+        return False, f"B4: p50 out of sane range: {'; '.join(errors)}"
+    return True, f"B4: p50 range [{min_p50:,.0f}, {max_p50:,.0f}] within [500k, 200M]"
+
+
+# ── B6: What-if — lógica invertida anti-regressão ─────────────────────────────
+# Bug recorrente (2×): aumentar custo de vida aumentava P(FIRE) — invertido.
+# Root cause: interpolateFireMatrix usava gasto/SWR como patrimonioRef →
+# maior gasto = maior patrimônio implied = melhor P(success).
+# Fix correto: usar patrimonio_gatilho como referência fixa no eixo de patrimônio.
+
+@registry.test("what-if-cenarios", "DATA", "B6 anti-regress: increasing gasto decreases P(success) with fixed patrimonio", "CRITICAL")
+def _():
+    """Verifica monotonia da lógica what-if: maior gasto → menor P(success).
+    Testa diretamente na fire_matrix com patrimonio_gatilho fixo.
+    Se isso falhar, o what-if slider está com a lógica invertida.
+    """
+    d = load_data()
+    fm = d.get("fire_matrix")
+    if not fm:
+        return False, "B6: fire_matrix missing from data.json"
+    if not (fm.get("cenarios") and fm.get("patrimonios") and fm.get("gastos")):
+        return False, "B6: fire_matrix missing cenarios/patrimonios/gastos — old format"
+    pats  = fm["patrimonios"]
+    gastos_list = fm["gastos"]
+    matrix_base = fm["cenarios"].get("base")
+    if not matrix_base:
+        return False, "B6: fire_matrix.cenarios.base missing"
+
+    pat_gatilho = d.get("premissas", {}).get("patrimonio_gatilho", 13_400_000)
+
+    def _interpolate(gasto_anual: float) -> float | None:
+        """Replicates interpolateFireMatrix JS logic with fixed patrimônio = pat_gatilho."""
+        g = max(gastos_list[0], min(gastos_list[-1], gasto_anual))
+        p = max(pats[0], min(pats[-1], pat_gatilho))
+        gi = next((i for i, v in enumerate(gastos_list) if v >= g), len(gastos_list) - 1)
+        if gi <= 0: gi = 1
+        pi = next((i for i, v in enumerate(pats) if v >= p), len(pats) - 1)
+        if pi <= 0: pi = 1
+        g0, g1 = gastos_list[gi - 1], gastos_list[gi]
+        p0, p1 = pats[pi - 1], pats[pi]
+        fmt = lambda pt, ga: f"{pt}_{round(ga)}"
+        p00 = matrix_base.get(fmt(p0, g0))
+        p01 = matrix_base.get(fmt(p0, g1))
+        p10 = matrix_base.get(fmt(p1, g0))
+        p11 = matrix_base.get(fmt(p1, g1))
+        if None in (p00, p01, p10, p11):
+            return None
+        tg = (g - g0) / (g1 - g0)
+        tp = (p - p0) / (p1 - p0)
+        return p00 * (1 - tg) * (1 - tp) + p01 * tg * (1 - tp) + p10 * (1 - tg) * tp + p11 * tg * tp
+
+    # Use first 3 gasto values from matrix to test monotonicity
+    test_gastos = gastos_list[:min(5, len(gastos_list))]
+    p_values = []
+    for g in test_gastos:
+        p = _interpolate(g)
+        if p is None:
+            return False, f"B6: interpolation returned None for gasto={g:,} — check matrix key format"
+        p_values.append((g, p))
+
+    # Verify monotonically decreasing (allow small numeric tolerance)
+    violations = []
+    for i in range(1, len(p_values)):
+        prev_g, prev_p = p_values[i - 1]
+        curr_g, curr_p = p_values[i]
+        if curr_p > prev_p + 0.005:  # tolerance of 0.5pp
+            violations.append(
+                f"gasto {prev_g:,}→{curr_g:,}: P went {prev_p:.4f}→{curr_p:.4f} (increased!)"
+            )
+    if violations:
+        return False, (
+            f"B6 INVERTED LOGIC DETECTED: P(success) increased with higher gasto. "
+            f"Violations: {violations}. "
+            f"Fix: interpolateFireMatrix must use patrimonio_gatilho as patrimonioRef, "
+            f"not gasto/SWR."
+        )
+    summary = ", ".join(f"g={g:,}→P={p:.3f}" for g, p in p_values)
+    return True, f"B6: P(success) monotonically decreasing with gasto: {summary}"
+
+
+@registry.test("what-if-cenarios", "VALUE", "B6 anti-regress: interpolateFireMatrix uses patrimonio_gatilho in template", "CRITICAL")
+def _():
+    """Verifica que interpolateFireMatrix no template usa patrimonio_gatilho como referência,
+    não gasto/SWR. O bug original: patrimonioImplied = gasto/swr → maior gasto = maior
+    patrimônio implied = melhor P — completamente invertido.
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    idx = template.find("function interpolateFireMatrix(")
+    if idx < 0:
+        return False, "B6: interpolateFireMatrix() not found in template"
+    snippet = template[idx : idx + 2000]
+    # Must reference patrimonio_gatilho (fixed reference), not compute it from gasto/swr
+    if "patrimonio_gatilho" not in snippet:
+        return False, (
+            "B6: interpolateFireMatrix() does not reference patrimonio_gatilho. "
+            "This is the B6 bug: patrimonioRef must be patrimonio_gatilho (fixed), "
+            "not computed as gasto/SWR (which inverts the P direction)."
+        )
+    # Must NOT compute patrimonioRef from gasto / swr
+    import re
+    if re.search(r"patrimonioRef\s*=\s*gasto\s*/\s*swr", snippet):
+        return False, (
+            "B6: BUG DETECTED — interpolateFireMatrix computes patrimonioRef = gasto/swr. "
+            "This inverts P(success) direction: higher gasto → higher 'implied pat' → higher P. "
+            "Fix: use patrimonio_gatilho as fixed patrimonioRef."
+        )
+    return True, "B6: interpolateFireMatrix uses patrimonio_gatilho (not gasto/swr) as patrimonioRef"
 
 
 # ── B7: Stress Fan Chart anti-regression ──────────────────────────────────────
@@ -2002,3 +2313,34 @@ def _():
     if 'id="stressProjectionChart"' not in html:
         return False, "stressProjectionChart canvas missing from HTML"
     return True, "stressProjectionChart canvas present"
+
+
+@registry.test("stress-fan-chart", "VALUE", "B7 anti-regress: stressProjectionChart has real builder in _chartBuilders", "CRITICAL")
+def _():
+    """Verifica que _chartBuilders['stressProjectionChart'] chama buildStressTest(),
+    não um no-op. O bug B7: o builder era () => { /* ... */ } — ao abrir a seção
+    colapsível, _toggleBlock tentava reconstruir o chart mas chamava função vazia.
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    idx = template.find("_chartBuilders")
+    if idx < 0:
+        return False, "B7: _chartBuilders object not found in template"
+    snippet = template[idx : idx + 2000]
+    # Must have stressProjectionChart mapped to a real function
+    if "stressProjectionChart" not in snippet:
+        return False, "B7: stressProjectionChart key missing from _chartBuilders"
+    # Find the stressProjectionChart entry
+    sc_idx = snippet.find("stressProjectionChart")
+    sc_entry = snippet[sc_idx : sc_idx + 120]
+    # Must call buildStressTest — not be an empty arrow function or no-op comment
+    if "buildStressTest" not in sc_entry:
+        return False, (
+            f"B7: stressProjectionChart builder does not call buildStressTest(). "
+            f"Entry found: '{sc_entry.strip()}'. "
+            f"Fix: stressProjectionChart: () => buildStressTest()"
+        )
+    return True, "B7: stressProjectionChart → buildStressTest() wired correctly in _chartBuilders"
