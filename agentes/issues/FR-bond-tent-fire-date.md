@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-bond-tent-fire-date |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | ✅ Done — 2026-04-11 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | FIRE (lead), RF, Advocate, Quant |
 | **Co-sponsor** | RF (confirmou tensão do design 80/20 para FIRE fora de 2040) |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-10 |
 | **Origem** | Conversa — aporte R$58k levantou dúvida de FIRE date e robustez do bond tent |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-11 |
 
 ---
 
@@ -66,23 +66,42 @@ O split 80/20 (TD 2040 / TD 2050) é ótimo quando a data é 2040. Para date inc
 
 ## Análise
 
-> A preencher quando a issue entrar em Doing.
+Análise conduzida em conversa exploratória (2026-04-11). Principais achados:
+
+**Pool efetivo anos 1-7 (patrimônio mediano R$11.53M):**
+- TD 2040 (~12% = ~R$1.38M) + IPCA+ curto (3% = ~R$346k) = **R$1.73M**
+- TD 2050 (20% do bloco IPCA+ longo = ~3% portfolio) não está no pool 1-7 — vence em 2050 (Diego 63), é bridge anos 60-63
+- 7 anos × R$250k = R$1.75M — pool cobre com margem mínima no cenário solteiro
+
+**Tensões reavaliadas com distribuição subjetiva (FR-fire-date-elicitation 2026-04-11):**
+- P(47-50) = 30%, P(50-53) = 30% — distribuição centrada em 47-53, não num único ano
+- Tensão 1 (FIRE 2037): relevante mas dependente de patrimônio atingir R$13.4M antes de 2040 — IPCA+ curto 3% cobre anos 1-2; gap ano 3 existe mas equity maior compensa
+- Tensão 2 (FIRE 2043+): Decisão 7 (carteira.md) cobre parcialmente — TD 2050 permanece como RF longa pós-60
+- Split 80/20: adequado para cenário base; custo de mudar para 60/40 não justificado hoje
+
+**Gap não resolvido:** pool calibrado em R$250k/ano (solteiro). Custo FIRE Day pós-família R$270-300k pode zerar a folga. Recalibrar ao casar.
 
 ---
 
 ## Conclusão
 
-> A preencher quando concluída.
+**Veredicto: design do bond tent aprovado sem alteração. Nenhuma mudança de split ou instrumento necessária agora.**
+
+| Dimensão | Achado |
+|----------|--------|
+| Pool anos 1-7 | ~R$1.73M — adequado para R$250k/ano, margem mínima |
+| Tensão FIRE 2037 | Existe, mas só relevante se patrimônio atingir alvo antes de 2040 |
+| Tensão FIRE 2043+ | Coberta pela Decisão 7 (TD 2050 bridge anos 60-63) |
+| Split 80/20 | Mantido — custo de mudar não justificado |
+| Gap prioritário | Pool não reflete custo R$270-300k pós-família — recalibrar ao casar |
+| Gatilho de reabertura | Casamento/filho → recalibrar pool + P(FIRE) em conjunto |
 
 ---
 
 ## Resultado
 
-> A preencher quando concluída.
-
----
-
-## Próximos Passos
-
-- [ ] Entrar em Doing quando Diego priorizar
-- [ ] Se FIRE 2037 parecer mais provável (patrimônio atingir R$13.4M antes de 2040), priorizar urgentemente
+| Tipo | Detalhe |
+|------|---------|
+| **Decisão** | Nenhuma alteração no design do bond tent |
+| **Gap monitorar** | Pool calibrado em R$250k; pós-família custo R$270-300k elimina folga |
+| **Gatilho** | Casamento → recalibrar pool junto com P(FIRE) e spending |
