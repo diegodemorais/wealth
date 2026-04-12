@@ -5744,7 +5744,22 @@ window.switchTab = function(name) {
     if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
   }
   requestAnimationFrame(() => {
-    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
+    // Only act on charts in the active tab — resizing hidden-tab canvases (display:none)
+    // corrupts Chart.js internal dimensions and breaks re-render on next tab switch.
+    const tabCanvases = new Set(
+      Array.from(document.querySelectorAll('[data-in-tab="' + name + '"] canvas'))
+    );
+    Object.values(charts).forEach(c => {
+      if (!c || typeof c.resize !== 'function' || !tabCanvases.has(c.canvas)) return;
+      if (c.canvas.closest('.collapsible:not(.open)')) return; // skip collapsed
+      if (c.canvas.offsetWidth > 0 && c.canvas.offsetHeight > 0) {
+        c.resize();
+      } else {
+        // Open section but zero canvas — rebuild
+        const builder = _chartBuilders[c.canvas.id];
+        if (builder) { try { builder(); } catch(e) { console.warn('[tab-rebuild]', c.canvas.id, e); } }
+      }
+    });
   });
   try { localStorage.setItem('dash_tab', name); } catch(e) {}
 };
@@ -6364,6 +6379,11 @@ function buildFireTrilha() {
     });
   }
 
+  // Scale: cap at 2.5× current realizado max so near-term progress is legible
+  const _rVals = realizado.filter(v => v != null && !isNaN(v) && v > 0);
+  const _yMax = _rVals.length ? Math.max(..._rVals) * 2.5 : (meta || 15e6) * 1.1;
+  const _yMin = _rVals.length ? Math.min(..._rVals) * 0.85 : 0;
+
   if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
   const ctx = el.getContext('2d');
   charts.fireTrilha = new Chart(ctx, {
@@ -6386,6 +6406,7 @@ function buildFireTrilha() {
       scales: {
         x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.15)' } },
         y: {
+          min: _yMin, max: _yMax,
           ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => 'R$' + (v / 1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.15)' },
         }
