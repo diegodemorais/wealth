@@ -6133,7 +6133,7 @@ const _chartBuilders = {
   sankeyChart:           () => buildSankey(),
   bondPoolRunwayChart:   () => buildBondPoolRunway(),
   netWorthProjectionChart: () => buildNetWorthProjection(),
-  stressProjectionChart:   () => { /* rebuilt by onStressShockChange */ },
+  stressProjectionChart:   () => buildStressTest(),
 };
 window._toggleBlock = function(el) {
   const wasOpen = el.classList.contains('open');

@@ -1397,12 +1397,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T18:44:03-03:00'); // BRT (UTC-3)
-const VERSION = '1.186';
+const GENERATED_AT = new Date('2026-04-12T18:47:52-03:00'); // BRT (UTC-3)
+const VERSION = '1.187';
 
 const DATA = {
-  "_generated": "2026-04-12T18:43:55",
-  "_generated_brt": "2026-04-12T18:43:55-03:00",
+  "_generated": "2026-04-12T18:47:48",
+  "_generated_brt": "2026-04-12T18:47:48-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -8056,7 +8056,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.186"
+  "version": "1.187"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -12793,7 +12793,7 @@ const _chartBuilders = {
   sankeyChart:           () => buildSankey(),
   bondPoolRunwayChart:   () => buildBondPoolRunway(),
   netWorthProjectionChart: () => buildNetWorthProjection(),
-  stressProjectionChart:   () => { /* rebuilt by onStressShockChange */ },
+  stressProjectionChart:   () => buildStressTest(),
 };
 window._toggleBlock = function(el) {
   const wasOpen = el.classList.contains('open');
