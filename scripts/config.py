@@ -96,7 +96,7 @@ CRYPTO_LEGADO_BRL = 3_944
 PATRIMONIO_GATILHO = 13_400_000   # R$ 2026 real — gatilho formal FIRE
 SWR_GATILHO = 0.024               # 2.4% — safe withdrawal rate meta
 CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
-APORTE_MENSAL = 25_000            # R$/mês
+APORTE_MENSAL = 33_000            # R$/mês
 RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para savings rate dashboard
 IDADE_ATUAL = 39
 ANO_NASCIMENTO = 1987             # para calcular idade dinâmica

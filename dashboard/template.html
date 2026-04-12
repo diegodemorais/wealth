@@ -1060,6 +1060,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio necessário</div>
     <div class="big pv" id="wiPatNecessario">—</div>
     <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="wiPctLimite">—% do limite</div>
   </div>
 </div>
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
@@ -2117,7 +2118,7 @@ function buildDeltaBar() {
   const delta6040 = sh.delta_shadow_c ?? null;
   const rawData = [deltaVwra, deltaIpca, delta6040];
   // Substituir null por 0.001 placeholder para garantir que a barra renderiza com estilo "em tracking"
-  const deltaData = rawData.map(v => v ?? 0.001);
+  const deltaData = rawData.map(v => v ?? 1.0);  // placeholder de 1pp para visibilidade
   const isTracking = rawData.map(v => v === null);
   if (charts.delta) { charts.delta.destroy(); charts.delta = null; }
   charts.delta = new Chart(document.getElementById('deltaChart'), {
@@ -2586,6 +2587,10 @@ window.updateWhatIf = function() {
 
   document.getElementById('wiPatNecessario').textContent = 'R$ ' + (patNecessario/1e6).toFixed(2) + 'M';
   document.getElementById('wiSWRLabel').textContent = 'SWR ' + (swr*100).toFixed(1) + '%';
+  const gastoLimite = (DATA.premissas?.patrimonio_gatilho || 13400000) * swr;
+  const pctLimite = (gasto / gastoLimite * 100).toFixed(0);
+  const pctEl = document.getElementById('wiPctLimite');
+  if (pctEl) pctEl.textContent = pctLimite + '% do limite (' + (gastoLimite/1000).toFixed(0) + 'k/ano)';
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -6144,7 +6149,7 @@ window._toggleBlock = function(el) {
       el.querySelectorAll('canvas').forEach(canvas => {
         const chart = Object.values(charts).find(c => c && c.canvas === canvas);
         if (chart) {
-          if (canvas.offsetWidth === 0 || canvas.offsetHeight === 0) {
+          if (chart.width === 0 || chart.height === 0) {
             // Chart was created with zero dimensions — rebuild it
             const builder = _chartBuilders[canvas.id];
             if (builder) { try { builder(); } catch(e) { console.warn('[toggle-rebuild]', canvas.id, e); } }
@@ -6826,7 +6831,7 @@ function buildFireTrilha() {
   const _metaVal = meta ?? 15e6;
   const _dataMax = [..._rVals, ..._tVals].length ? Math.max(..._rVals, ..._tVals) : _metaVal;
   // Cap: nunca mais que 1.5x a meta, para não achatar o progresso visível
-  const _yMax = Math.min(_dataMax * 1.1, _metaVal * 1.5);
+  const _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1);
   const _yMin = _rVals.length ? Math.min(..._rVals.slice(0, 5)) * 0.85 : 0;
 
   if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
