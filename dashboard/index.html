@@ -526,7 +526,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
 <div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
-<div class="src">Split equity/RF/crypto = proporção atual (estimativa retrospectiva)</div>
+<div class="src">Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.</div>
 </div>
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
@@ -538,6 +538,10 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
+  </div>
+  <div id="attrFxRfRow" style="display:none;grid-template-columns:repeat(2,1fr);gap:8px;text-align:center;margin-top:6px">
+    <div><div style="font-size:.95rem;font-weight:700;color:#f97316" class="pv" id="attrFx">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio (FX)</div></div>
+    <div><div style="font-size:.95rem;font-weight:700;color:#a3e635" class="pv" id="attrRf">—</div><div style="font-size:.65rem;color:var(--muted)">RF Local</div></div>
   </div>
   <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
   <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
@@ -1393,12 +1397,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T18:18:51-03:00'); // BRT (UTC-3)
-const VERSION = '1.182';
+const GENERATED_AT = new Date('2026-04-12T18:31:42-03:00'); // BRT (UTC-3)
+const VERSION = '1.184';
 
 const DATA = {
-  "_generated": "2026-04-12T18:14:04",
-  "_generated_brt": "2026-04-12T18:14:04-03:00",
+  "_generated": "2026-04-12T18:31:42",
+  "_generated_brt": "2026-04-12T18:31:42-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -3017,7 +3021,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -3057,7 +3061,7 @@ const DATA = {
       390.1,
       419.59,
       398.21,
-      428.82,
+      428.81,
       413.99,
       417.32,
       418.77,
@@ -3270,7 +3274,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -3281,7 +3285,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -3764,10 +3768,272 @@ const DATA = {
     "aportes": 2284059,
     "retornoUsd": 871869,
     "cambio": 316407,
+    "fx": -23612,
+    "rf": 340019,
     "crescReal": 3472335,
     "_estimativa": false,
     "_fonte": "retornos_mensais.json decomposicao (desde início)",
-    "_inicio": "2021-04"
+    "_inicio": "2021-04",
+    "por_bucket": {
+      "SWRD": 397796,
+      "AVGS": 327976,
+      "AVEM": 234997,
+      "JPGL": 4456
+    }
+  },
+  "timeline_attribution": {
+    "dates": [
+      "2021-04",
+      "2021-05",
+      "2021-06",
+      "2021-07",
+      "2021-08",
+      "2021-09",
+      "2021-10",
+      "2021-11",
+      "2021-12",
+      "2022-01",
+      "2022-02",
+      "2022-03",
+      "2022-04",
+      "2022-05",
+      "2022-06",
+      "2022-07",
+      "2022-08",
+      "2022-09",
+      "2022-10",
+      "2022-11",
+      "2022-12",
+      "2023-01",
+      "2023-02",
+      "2023-03",
+      "2023-04",
+      "2023-05",
+      "2023-06",
+      "2023-07",
+      "2023-08",
+      "2023-09",
+      "2023-10",
+      "2023-11",
+      "2023-12",
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06",
+      "2024-07",
+      "2024-08",
+      "2024-09",
+      "2024-10",
+      "2024-11",
+      "2024-12",
+      "2025-01",
+      "2025-02",
+      "2025-03",
+      "2025-04",
+      "2025-05",
+      "2025-06",
+      "2025-07",
+      "2025-08",
+      "2025-09",
+      "2025-10",
+      "2025-11",
+      "2025-12",
+      "2026-01",
+      "2026-02",
+      "2026-03",
+      "2026-04"
+    ],
+    "aportes": [
+      251938,
+      258238,
+      258376,
+      272609,
+      272609,
+      286989,
+      300737,
+      330894,
+      355069,
+      372173,
+      372173,
+      474519,
+      569214,
+      713023,
+      713023,
+      731946,
+      751839,
+      751839,
+      751839,
+      751839,
+      751839,
+      777820,
+      777820,
+      777820,
+      937748,
+      1015130,
+      1055571,
+      1080780,
+      1091981,
+      1117462,
+      1132023,
+      1161913,
+      1176613,
+      1199829,
+      1269323,
+      1296429,
+      1407246,
+      1511587,
+      1532721,
+      1590984,
+      1648717,
+      1669961,
+      1685780,
+      1721775,
+      1743931,
+      1677990,
+      1696091,
+      1840619,
+      1870967,
+      1906091,
+      1906091,
+      1956270,
+      1976477,
+      2016496,
+      2038494,
+      2083459,
+      2148685,
+      2193183,
+      2208227,
+      2264025,
+      2284060
+    ],
+    "equity_usd": [
+      0,
+      4824,
+      5222,
+      5348,
+      11342,
+      3329,
+      13023,
+      -682,
+      10449,
+      -15211,
+      -18496,
+      -19001,
+      -61571,
+      -62136,
+      -267801,
+      -228804,
+      -248825,
+      -326629,
+      -290887,
+      -231554,
+      -249109,
+      -191380,
+      -212830,
+      -212749,
+      -208764,
+      -243055,
+      -193388,
+      -137289,
+      -156059,
+      -200493,
+      -243071,
+      -155566,
+      -81437,
+      -85877,
+      -50106,
+      6208,
+      -36082,
+      15007,
+      33397,
+      98753,
+      118025,
+      187566,
+      136940,
+      206600,
+      60520,
+      161970,
+      121180,
+      78391,
+      726114,
+      896348,
+      1012698,
+      1076857,
+      1193037,
+      740793,
+      789824,
+      818752,
+      872073,
+      705060,
+      821341,
+      558606,
+      731141
+    ],
+    "cambio_rf": [
+      0,
+      -4072,
+      -18401,
+      -5859,
+      -6913,
+      2492,
+      14799,
+      12836,
+      10969,
+      78092,
+      61492,
+      29724,
+      52268,
+      27499,
+      224640,
+      223360,
+      216469,
+      260092,
+      246681,
+      243981,
+      246146,
+      223398,
+      237584,
+      220921,
+      204263,
+      213624,
+      182831,
+      157069,
+      177264,
+      216438,
+      219520,
+      191134,
+      176332,
+      205003,
+      209657,
+      222941,
+      260573,
+      287279,
+      414722,
+      421297,
+      420662,
+      341849,
+      460536,
+      539981,
+      679844,
+      549660,
+      536142,
+      505511,
+      452500,
+      476775,
+      387253,
+      444395,
+      370815,
+      306010,
+      339622,
+      321465,
+      391043,
+      553516,
+      497579,
+      585157,
+      498250
+    ]
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
@@ -7790,7 +8056,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.182"
+  "version": "1.184"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8122,51 +8388,104 @@ function fmtMonthTick(val, _idx) {
 
 // ── S6: Timeline ──────────────────────────────────────────────
 function buildTimeline(period) {
-  const { labels, values } = filterByPeriod(DATA.timeline.labels, DATA.timeline.values, period);
-  // Split: usar proporção atual como proxy (estimativa)
-  const equityFrac = totalEquityUsd * CAMBIO / totalBrl;
-  const rfFrac = rfBrl / totalBrl;
-  const cryptoFrac = cryptoBrl / totalBrl;
-  const equityVals = values.map(v => v * equityFrac);
-  const rfVals = values.map(v => v * rfFrac);
-  const cryptoVals = values.map(v => v * cryptoFrac);
-
   if (charts.timeline) { charts.timeline.destroy(); charts.timeline = null; }
-  if (checkMinPoints('timelineChart', labels.length, 2)) return;
-  // Aviso para períodos curtos (dados mensais = poucos pontos)
-  const sparseNote = document.getElementById('timelineSparseNote');
-  if (sparseNote) sparseNote.textContent = labels.length < 6 ? `⚠️ ${labels.length} pontos disponíveis — dados mensais com lacunas em 2026` : '';
-  charts.timeline = new Chart(document.getElementById('timelineChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Equity', data: equityVals, fill: true, backgroundColor: 'rgba(59,130,246,.35)', borderColor: '#3b82f6', tension: 0.3, pointRadius: 1, borderWidth: 1.5 },
-        { label: 'RF', data: rfVals, fill: true, backgroundColor: 'rgba(34,197,94,.25)', borderColor: '#22c55e', tension: 0.3, pointRadius: 1, borderWidth: 1.5 },
-        { label: 'Crypto', data: cryptoVals, fill: true, backgroundColor: 'rgba(234,179,8,.2)', borderColor: '#eab308', tension: 0.3, pointRadius: 1, borderWidth: 1.5 },
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { labels: { color: '#94a3b8', boxWidth: 12 } },
-        tooltip: {
-          callbacks: {
-            title: items => items.length ? fmtMonthLabel(items[0].label) : '',
-            label: ctx => ` ${ctx.dataset.label}: R$ ${(ctx.parsed.y/1000).toFixed(0)}k`,
-            footer: items => {
-              if (items.length) return [`Total: R$ ${(items.reduce((s,i)=>s+i.parsed.y,0)/1000).toFixed(0)}k`, '⚠️ Split = proporção atual (estimativa)'];
-            }
-          }
-        }
-      },
-      scales: {
-        x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
+
+  const ta = DATA.timeline_attribution;
+  if (ta && ta.dates && ta.aportes && ta.dates.length >= 2) {
+    // Filtrar ta.dates pelo período selecionado (mesma lógica de filterByPeriod)
+    const now = new Date();
+    let cutoff = null;
+    if (period === '6m') { cutoff = new Date(now); cutoff.setMonth(cutoff.getMonth() - 6); }
+    else if (period === 'ytd') { cutoff = new Date(now.getFullYear(), 0, 1); }
+    else if (period === '1y') { cutoff = new Date(now); cutoff.setFullYear(cutoff.getFullYear() - 1); }
+    else if (period === '3y') { cutoff = new Date(now); cutoff.setFullYear(cutoff.getFullYear() - 3); }
+    else if (period === '5y') { cutoff = new Date(now); cutoff.setFullYear(cutoff.getFullYear() - 5); }
+
+    let taDates = ta.dates, taAp = ta.aportes, taEq = ta.equity_usd, taCR = ta.cambio_rf;
+    if (cutoff) {
+      const filtered = ta.dates.reduce((acc, d, i) => {
+        if (new Date(d + '-01') >= cutoff) acc.push(i);
+        return acc;
+      }, []);
+      if (filtered.length >= 2) {
+        taDates = filtered.map(i => ta.dates[i]);
+        taAp    = filtered.map(i => ta.aportes[i]);
+        taEq    = filtered.map(i => ta.equity_usd[i]);
+        taCR    = filtered.map(i => ta.cambio_rf[i]);
       }
     }
-  });
+
+    const sparseNote = document.getElementById('timelineSparseNote');
+    if (sparseNote) sparseNote.textContent = taDates.length < 6 ? `⚠️ ${taDates.length} pontos disponíveis — dados mensais com lacunas em 2026` : '';
+
+    if (checkMinPoints('timelineChart', taDates.length, 2)) return;
+    charts.timeline = new Chart(document.getElementById('timelineChart'), {
+      type: 'bar',
+      data: {
+        labels: taDates,
+        datasets: [
+          { label: 'Aportes',           data: taAp, backgroundColor: 'rgba(59,130,246,.7)',  borderColor: '#3b82f6', borderWidth: 0 },
+          { label: 'Rentabilidade USD', data: taEq, backgroundColor: 'rgba(34,197,94,.7)',   borderColor: '#22c55e', borderWidth: 0 },
+          { label: 'Câmbio+RF',         data: taCR, backgroundColor: 'rgba(234,179,8,.7)',   borderColor: '#eab308', borderWidth: 0 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#94a3b8', boxWidth: 12 } },
+          tooltip: {
+            callbacks: {
+              title: items => items.length ? fmtMonthLabel(items[0].label) : '',
+              label: ctx => ` ${ctx.dataset.label}: R$ ${(ctx.parsed.y/1000).toFixed(0)}k`,
+              footer: items => {
+                if (items.length) {
+                  const total = items.reduce((s,i) => s + i.parsed.y, 0);
+                  return [`Total acumulado: R$ ${(total/1000).toFixed(0)}k`];
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+          y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        }
+      }
+    });
+  } else {
+    // Fallback: total simples sem decomposição
+    const { labels, values } = filterByPeriod(DATA.timeline.labels, DATA.timeline.values, period);
+    const sparseNote = document.getElementById('timelineSparseNote');
+    if (sparseNote) sparseNote.textContent = labels.length < 6 ? `⚠️ ${labels.length} pontos disponíveis — dados mensais com lacunas em 2026` : '';
+    if (checkMinPoints('timelineChart', labels.length, 2)) return;
+    charts.timeline = new Chart(document.getElementById('timelineChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Patrimônio Total', data: values, fill: true, backgroundColor: 'rgba(59,130,246,.25)', borderColor: '#3b82f6', tension: 0.3, pointRadius: 1, borderWidth: 1.5 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#94a3b8', boxWidth: 12 } },
+          tooltip: {
+            callbacks: {
+              title: items => items.length ? fmtMonthLabel(items[0].label) : '',
+              label: ctx => ` ${ctx.dataset.label}: R$ ${(ctx.parsed.y/1000).toFixed(0)}k`,
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#94a3b8', maxTicksLimit: 8, callback: fmtMonthTick }, grid: { color: 'rgba(71,85,105,.3)' } },
+          y: { ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        }
+      }
+    });
+  }
 }
 window.setTimelinePeriod = function(p) {
   setActivePeriodBtn('timelinePeriodBtns', p);
@@ -8235,27 +8554,108 @@ function buildAttribution() {
     }
   };
 
+  // Mostrar FX/RF cards se disponíveis
+  const fxRfRow = document.getElementById('attrFxRfRow');
+  if (a.fx != null && a.rf != null && fxRfRow) {
+    fxRfRow.style.display = 'grid';
+    document.getElementById('attrFx').textContent = fmtBrl(a.fx);
+    document.getElementById('attrRf').textContent = fmtBrl(a.rf);
+  }
+
   if (charts.attr) { charts.attr.destroy(); charts.attr = null; }
-  charts.attr = new Chart(document.getElementById('attrChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Origem do Patrimônio'],
-      datasets: [
-        { label: 'Aportes',      data: [a.aportes],     backgroundColor: '#3b82f6' },
-        { label: 'Retorno USD',  data: [a.retornoUsd],  backgroundColor: '#22c55e' },
-        { label: 'RF + Câmbio',  data: [a.cambio],      backgroundColor: '#eab308' },
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
-      scales: {
-        x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
+
+  // Chart expandido com buckets se disponíveis
+  if (a.por_bucket && Object.keys(a.por_bucket).length > 0 && a.fx != null) {
+    const pb = a.por_bucket;
+    const bucketLabels   = ['Aportes', 'SWRD (Blend)', 'Factor Small Value', 'Emergentes', 'RF Local', 'Câmbio'];
+    const bucketColors   = ['#3b82f6', '#16a34a', '#22c55e', '#4ade80', '#a3e635', '#f97316'];
+    const bucketValues   = [
+      a.aportes,
+      pb['SWRD']  ?? 0,
+      pb['AVGS']  ?? 0,
+      pb['AVEM']  ?? 0,
+      a.rf ?? 0,
+      a.fx ?? 0,
+    ];
+    const attrTotalExp = bucketValues.reduce((s, v) => s + Math.abs(v), 0);
+    const attrLabelPluginExp = {
+      id: 'attrSegmentLabelsExp',
+      afterDatasetsDraw(chart) {
+        const ctx = chart.ctx;
+        chart.data.datasets.forEach((dataset, dsIdx) => {
+          const meta = chart.getDatasetMeta(dsIdx);
+          meta.data.forEach((bar, barIdx) => {
+            const val = dataset.data[barIdx];
+            if (!val) return;
+            const pct = attrTotalExp > 0 ? Math.abs(val) / attrTotalExp * 100 : 0;
+            if (pct < 4) return;
+            const { x, y, base, width } = bar.getProps(['x', 'y', 'base', 'width'], true);
+            const midY = (y + base) / 2;
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText(pct.toFixed(0) + '%', x, midY);
+            ctx.restore();
+          });
+        });
       }
-    },
-    plugins: [attrLabelPlugin]
-  });
+    };
+    charts.attr = new Chart(document.getElementById('attrChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Origem do Patrimônio'],
+        datasets: bucketLabels.map((lbl, i) => ({
+          label: lbl,
+          data: [bucketValues[i]],
+          backgroundColor: bucketColors[i],
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: '#94a3b8' } },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const val = ctx.parsed.y;
+                const pct = attrTotalExp > 0 ? (Math.abs(val) / attrTotalExp * 100).toFixed(1) : 0;
+                return ` ${ctx.dataset.label}: R$ ${(val/1e6).toFixed(2)}M (${pct}%)`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
+          y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        }
+      },
+      plugins: [attrLabelPluginExp]
+    });
+  } else {
+    // Fallback: chart original com 3 buckets
+    charts.attr = new Chart(document.getElementById('attrChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Origem do Patrimônio'],
+        datasets: [
+          { label: 'Aportes',      data: [a.aportes],     backgroundColor: '#3b82f6' },
+          { label: 'Retorno USD',  data: [a.retornoUsd],  backgroundColor: '#22c55e' },
+          { label: 'RF + Câmbio',  data: [a.cambio],      backgroundColor: '#eab308' },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        scales: {
+          x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
+          y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        }
+      },
+      plugins: [attrLabelPlugin]
+    });
+  }
 }
 
 // ── S8: Geo Donut ────────────────────────────────────────────

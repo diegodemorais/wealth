@@ -468,7 +468,140 @@ def get_backtest():
     return {}
 
 
-# ─── 4. ATTRIBUTION ───────────────────────────────────────────────────────────
+# ─── 4. TIMELINE ATTRIBUTION ─────────────────────────────────────────────────
+def get_timeline_attribution():
+    """
+    Reconstrói decomposição mensal cumulativa do patrimônio em 3 componentes:
+    - aportes_cumul: soma cumulativa de aporte_brl
+    - equity_usd_cumul: ganhos de equity USD acumulados (em BRL)
+    - cambio_rf_cumul: FX + RF acumulados (em BRL)
+
+    Lógica:
+    1. Lê CSV histórico: dates, patrimonio_brl, aporte_brl
+    2. Lê retornos_mensais.json: decomposicao (equity_usd, fx, rf_xp em %)
+    3. Para cada mês t (após t=0):
+       market_gain = patrimonio[t] - patrimonio[t-1] - aporte[t]
+       decomp_sum = equity_usd_pct + fx_pct + rf_xp_pct
+       Se decomp_sum != 0:
+           equity_gain = market_gain * equity_usd_pct / decomp_sum
+           fx_rf_gain = market_gain - equity_gain
+       Senão: equity_gain=0, fx_rf_gain=market_gain
+    4. Cumula cumulativamente
+    5. Inclui mês 0 (início) com aportes_cumul=aporte_0, outros=0
+
+    Output: {"dates": [...], "aportes": [...], "equity_usd": [...], "cambio_rf": [...]}
+    Ou None se dados insuficientes.
+    """
+    try:
+        # 1. Ler CSV histórico
+        if not CSV_PATH.exists():
+            return None
+        csv_dates, csv_pat, csv_aporte = [], [], []
+        with open(CSV_PATH) as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                keys = list(row.keys())
+                date_col = next((k for k in keys if 'data' in k.lower() or 'date' in k.lower()), keys[0])
+                pat_col  = next((k for k in keys if 'patrimonio' in k.lower() or 'patrimônio' in k.lower()), None)
+                ap_col   = next((k for k in keys if 'aporte' in k.lower()), None)
+                if not pat_col or not ap_col:
+                    continue
+                d_raw = row[date_col].strip()
+                # normalizar para YYYY-MM
+                if len(d_raw) >= 7 and d_raw[4] == '-':
+                    lbl = d_raw[:7]
+                elif '/' in d_raw:
+                    parts = d_raw.split('/')
+                    lbl = f"{parts[2]}-{parts[1].zfill(2)}" if len(parts) >= 3 else d_raw[:7]
+                else:
+                    lbl = d_raw[:7]
+                try:
+                    pat_v  = float(row[pat_col].replace(',', '.').replace(' ', ''))
+                    ap_v   = float(row[ap_col].replace(',', '.').replace(' ', ''))
+                    csv_dates.append(lbl)
+                    csv_pat.append(pat_v)
+                    csv_aporte.append(ap_v)
+                except ValueError:
+                    continue
+
+        if len(csv_dates) < 2:
+            return None
+
+        # Deduplicar (último registro por mês)
+        seen_pat: dict = {}
+        seen_ap: dict = {}
+        for lbl, pat, ap in zip(csv_dates, csv_pat, csv_aporte):
+            seen_pat[lbl] = pat
+            seen_ap[lbl]  = ap
+        csv_dates  = list(seen_pat.keys())
+        csv_pat    = list(seen_pat.values())
+        csv_aporte = [seen_ap[d] for d in csv_dates]
+
+        # 2. Ler retornos_mensais.json
+        if not RETORNOS_CORE.exists():
+            return None
+        _rc  = json.loads(RETORNOS_CORE.read_text())
+        _dec = _rc.get("decomposicao", {})
+        rc_dates = _rc.get("dates", [])
+        eq_pct   = _dec.get("equity_usd", [])
+        fx_pct   = _dec.get("fx", [])
+        rf_pct   = _dec.get("rf_xp", [])
+
+        if not rc_dates or not eq_pct:
+            return None
+
+        # Indexar retornos por data
+        rc_idx = {d: i for i, d in enumerate(rc_dates)}
+
+        # 3. Calcular ganhos mensais e acumular
+        out_dates    = [csv_dates[0]]
+        aportes_cumul    = [csv_aporte[0]]
+        equity_usd_cumul = [0.0]
+        cambio_rf_cumul  = [0.0]
+
+        for t in range(1, len(csv_dates)):
+            dt = csv_dates[t]
+            market_gain = csv_pat[t] - csv_pat[t-1] - csv_aporte[t]
+
+            # Pegar percentuais de decomposicao para este mês
+            idx = rc_idx.get(dt)
+            if idx is not None:
+                eq_p = eq_pct[idx]
+                fx_p = fx_pct[idx] if idx < len(fx_pct) else 0.0
+                rf_p = rf_pct[idx] if idx < len(rf_pct) else 0.0
+                decomp_sum = eq_p + fx_p + rf_p
+                if decomp_sum != 0:
+                    equity_gain = market_gain * eq_p / decomp_sum
+                    fx_rf_gain  = market_gain - equity_gain
+                else:
+                    equity_gain = 0.0
+                    fx_rf_gain  = market_gain
+            else:
+                equity_gain = 0.0
+                fx_rf_gain  = market_gain
+
+            out_dates.append(dt)
+            aportes_cumul.append(round(aportes_cumul[-1] + csv_aporte[t]))
+            equity_usd_cumul.append(round(equity_usd_cumul[-1] + equity_gain))
+            cambio_rf_cumul.append(round(cambio_rf_cumul[-1] + fx_rf_gain))
+
+        print(f"  → timeline_attribution: {len(out_dates)} meses | "
+              f"aportes={aportes_cumul[-1]/1e6:.2f}M | "
+              f"equityUsd={equity_usd_cumul[-1]/1e6:.2f}M | "
+              f"cambioRF={cambio_rf_cumul[-1]/1e6:.2f}M")
+
+        return {
+            "dates":      out_dates,
+            "aportes":    [round(v) for v in aportes_cumul],
+            "equity_usd": [round(v) for v in equity_usd_cumul],
+            "cambio_rf":  [round(v) for v in cambio_rf_cumul],
+        }
+    except Exception as e:
+        print(f"  ⚠️ timeline_attribution: {e}")
+        return None
+
+
+# ─── 4b. ATTRIBUTION ─────────────────────────────────────────────────────────
 def get_attribution():
     """Decomposição desde o início dos aportes do patrimônio em 3 componentes:
       - aportes:    soma de todos os aportes_brl do CSV (from day one)
@@ -538,6 +671,35 @@ def get_attribution():
                 if total_dec > 0:
                     retorno_usd = round(retorno_mercado * sum_eq  / total_dec)
                     cambio_rf   = round(retorno_mercado - retorno_usd)
+                    # Separar FX de RF dentro do bloco cambio_rf
+                    sum_fx_rf = sum_fx + sum_rf
+                    if sum_fx_rf != 0:
+                        fx_gain = round(cambio_rf * sum_fx / sum_fx_rf)
+                        rf_gain = round(cambio_rf - fx_gain)
+                    else:
+                        fx_gain = 0
+                        rf_gain = round(cambio_rf)
+
+                    # P&L por bucket usando posições do state
+                    por_bucket = {}
+                    try:
+                        _state = load_state()
+                        _posicoes = _state.get("posicoes", {})
+                        _cambio = _state.get("patrimonio", {}).get("cambio", CAMBIO_FALLBACK)
+                        for _tk, _pos in _posicoes.items():
+                            _qty = _pos.get("qty", 0)
+                            _price = _pos.get("price", 0)
+                            _avg = _pos.get("avg_cost", _price)
+                            if _qty and _price and _avg:
+                                _pnl_usd = _qty * (_price - _avg)
+                                _pnl_brl = round(_pnl_usd * _cambio)
+                                _bkt = BUCKET_MAP.get(_tk, _tk)
+                                por_bucket[_bkt] = por_bucket.get(_bkt, 0) + _pnl_brl
+                        por_bucket = {k: round(v) for k, v in por_bucket.items()}
+                    except Exception as _be:
+                        print(f"  ⚠️ attribution por_bucket: {_be}")
+                        por_bucket = {}
+
                     print(f"  → attribution (desde início, decomposicao real): "
                           f"inicio={data_inicio} | pat=R${pat_atual/1e6:.2f}M | "
                           f"aportes=R${total_aportes/1e6:.2f}M | retornoUsd=R${retorno_usd/1e6:.2f}M | "
@@ -546,10 +708,13 @@ def get_attribution():
                         "aportes":     round(total_aportes),
                         "retornoUsd":  retorno_usd,
                         "cambio":      cambio_rf,
+                        "fx":          fx_gain,
+                        "rf":          rf_gain,
                         "crescReal":   round(pat_atual),
                         "_estimativa": False,
                         "_fonte":      "retornos_mensais.json decomposicao (desde início)",
                         "_inicio":     data_inicio or "",
+                        "por_bucket":  por_bucket,
                     }
             except Exception as _e:
                 print(f"  ⚠️ attribution decomposicao: {_e} — usando proxy")
@@ -567,9 +732,12 @@ def get_attribution():
             "aportes":     round(total_aportes),
             "retornoUsd":  retorno_usd,
             "cambio":      cambio_rf,
+            "fx":          None,
+            "rf":          None,
             "crescReal":   round(pat_atual),
             "_estimativa": True,
             "_inicio":     data_inicio or "",
+            "por_bucket":  {},
         }
     except Exception as e:
         print(f"  ⚠️ attribution: {e}")
@@ -1809,6 +1977,7 @@ def main():
 
     # Attribution
     attr = get_attribution()
+    timeline_attribution = get_timeline_attribution()
 
     # Factor data — lê factor_snapshot.json (gerado por reconstruct_factor.py)
     # Fallback: factor_cache.json legado, depois inline (--skip-scripts=False)
@@ -2452,6 +2621,7 @@ def main():
         "drift":      drift,
         "tlh":        tlh,
         "attribution":      attr,
+        "timeline_attribution": timeline_attribution,
         "equity_attribution": equity_attribution,
         "shadows":    shadows,
         "macro":      macro,

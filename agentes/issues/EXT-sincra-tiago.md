@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | EXT-sincra-tiago |
 | **Dono** | Head |
-| **Status** | 🔵 Doing — Fase 2 (Relatório PDF) |
+| **Status** | ✅ Done |
+| **Concluído em** | 2026-04-12 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Todos os agentes |
 | **Criado em** | 2026-04-11 |

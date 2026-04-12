@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | DEV-hero-kpi-review |
 | **Dono** | Dev + Head |
-| **Status** | Backlog |
+| **Status** | ✅ Done |
+| **Concluído em** | 2026-04-12 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head, Dev, FIRE, Factor, RF, Risco, Macro, FX, Tax, Quant, Bookkeeper, Advocate |
 | **Criado em** | 2026-04-12 |
