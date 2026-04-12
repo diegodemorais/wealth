@@ -165,6 +165,14 @@
         "pisoTaxaRendaPlus": {
           "type": "number",
           "description": "Piso de taxa Renda+ (%, ex: 6.5)"
+        },
+        "pisoVendaRendaPlus": {
+          "type": "number",
+          "description": "Taxa abaixo da qual vender Renda+ 2065 (%, ex: 6.0)"
+        },
+        "ir_aliquota": {
+          "type": "number",
+          "description": "Alíquota de IR aplicável (decimal, ex: 0.15)"
         }
       }
     },
@@ -303,6 +311,14 @@
         "ano_atual": {
           "type": "integer",
           "description": "Ano atual (para cálculos de projeção)"
+        },
+        "ultimo_aporte_brl": {
+          "type": ["number", "null"],
+          "description": "Valor do último aporte em BRL"
+        },
+        "ultimo_aporte_data": {
+          "type": ["string", "null"],
+          "description": "Data do último aporte (YYYY-MM)"
         }
       }
     },
@@ -670,6 +686,22 @@
         "valor": {
           "type": "number",
           "description": "Valor total (BRL)"
+        },
+        "preco_medio": {
+          "type": ["number", "null"],
+          "description": "Preço médio de custo (BRL)"
+        },
+        "pnl_brl": {
+          "type": ["number", "null"],
+          "description": "P&L em BRL (valor - custo)"
+        },
+        "pnl_pct": {
+          "type": ["number", "null"],
+          "description": "P&L em % sobre custo"
+        },
+        "banda": {
+          "type": ["object", "null"],
+          "description": "Bandas de tolerância (min_pct, alvo_pct, max_pct, atual_pct, status)"
         }
       }
     },
@@ -832,39 +864,16 @@
     },
     "shadows": {
       "type": "object",
-      "description": "Shadow portfolios — resultados por período (ex: q1_2026). Chaves são nomes de período arbitrários.",
+      "description": "Shadow portfolios. Contém: (1) sub-objetos por período (ex: q1_2026) com retornos comparativos; (2) campos flat de delta para o gráfico Alpha (delta_vwra, delta_ipca, delta_shadow_c, atual, target, periodo).",
       "minProperties": 1,
-      "additionalProperties": {
-        "type": "object",
-        "required": [
-          "atual",
-          "target",
-          "shadow_a",
-          "shadow_b",
-          "delta_a",
-          "delta_b"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "atual": {
-            "type": "number"
-          },
-          "target": {
-            "type": "number"
-          },
-          "shadow_a": {
-            "type": "number"
-          },
-          "shadow_b": {
-            "type": "number"
-          },
-          "delta_a": {
-            "type": "number"
-          },
-          "delta_b": {
-            "type": "number"
-          }
-        }
+      "additionalProperties": true,
+      "properties": {
+        "delta_vwra": { "type": ["number", "null"], "description": "Delta Alpha vs VWRA (pp)" },
+        "delta_ipca": { "type": ["number", "null"], "description": "Delta Alpha vs IPCA+ (pp)" },
+        "delta_shadow_c": { "type": ["number", "null"], "description": "Delta Alpha vs 60/40 shadow C (pp)" },
+        "atual": { "type": ["number", "null"], "description": "Retorno atual do portfolio (%)" },
+        "target": { "type": ["number", "null"], "description": "Retorno target (%)" },
+        "periodo": { "type": ["string", "null"], "description": "Período de referência" }
       }
     },
     "minilog": {
@@ -883,6 +892,10 @@
           "data": {
             "type": "string",
             "description": "Data da operação (YYYY-MM-DD)"
+          },
+          "corretora": {
+            "type": "string",
+            "description": "Corretora da operação (ex: IBKR, XP, Nubank)"
           },
           "tipo": {
             "type": "string",
@@ -1061,6 +1074,31 @@
         },
         "notas": {
           "type": "string"
+        },
+        "tipo": {
+          "type": "string",
+          "description": "Tipo estratégico (ex: estrutural, tatico)"
+        },
+        "custo_base_brl": {
+          "type": ["number", "null"]
+        },
+        "total_aplicado_brl": {
+          "type": ["number", "null"]
+        },
+        "total_resgatado_brl": {
+          "type": ["number", "null"]
+        },
+        "n_aplicacoes": {
+          "type": ["integer", "null"]
+        },
+        "distancia_gatilho": {
+          "description": "Distância ao gatilho de venda — número (pp) ou objeto {taxa_atual, piso_venda, gap_pp, status}"
+        },
+        "duration": {
+          "description": "Duration — número (anos) ou objeto {macaulay_anos, modificada_anos, metodologia}"
+        },
+        "mtm_impact_1pp": {
+          "type": ["number", "null"]
         }
       }
     },
