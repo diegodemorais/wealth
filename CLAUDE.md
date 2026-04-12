@@ -20,7 +20,7 @@ Na PRIMEIRA interacao da conversa, leia em paralelo:
 Classifique CADA pergunta antes de processar:
 
 - **Fast-Path** (simples, 1 dominio): 1 especialista, sem briefing, sem sintese elaborada.
-- **Full-Path** (cross-domain, trade-offs, decisoes): briefing → pesquisa paralela → debate visivel ao Diego → sintese. Decisoes quantitativas vao a planilha, nao a votacao.
+- **Full-Path** (cross-domain, trade-offs, decisoes): briefing → pesquisa paralela → debate visivel ao Diego → sintese. Decisoes quantitativas vao para os scripts Python (portfolio_analytics.py, fire_montecarlo.py) — nao para votacao de agentes.
 
 ## Roteamento de Especialistas
 
@@ -28,11 +28,10 @@ Classifique CADA pergunta antes de processar:
 - **Wealth/Tax** → `tax` | **Crypto/Tactical** → `risco` | **Macro/FX** → `macro`
 - **Stress-test** → `advocate` | **Dados/numeros** → `bookkeeper` (Head NAO atualiza diretamente)
 - **Dashboard/pipeline/BI** → `dev` (arquitetura, chart type, zero hardcoded, review de código)
-- **Behavioral** → 4 gatilhos automáticos: (1) drawdown >10%, (2) mudança não-planejada, (3) votação unânime, (4) retro mensal
+- **Behavioral** → gatilhos: drawdown >10% (sequência: Behavioral→Risco→Advocate), mudança não-planejada, votação unânime, retro mensal
 - **CIO** → auto-acionado quando 3+ agentes participam (Full-Path cross-domain)
-- **Outside View** → obrigatório em decisões >5% portfolio; traz base rates e reference class
+- **Outside View** → obrigatório em decisões >5% do portfolio
 - **Ops** → check-in mensal + alerta de execuções pendentes, drift, prazos
-- **Drawdown >10% sequência:** (1) Behavioral (gate emocional) → (2) Risco (gatilhos) → (3) Advocate (stress-test)
 - **Cross-domain** → multiplos em paralelo
 
 ## Como Chamar Especialistas
@@ -41,37 +40,24 @@ Use **Agent direto** para debates, opinioes, analises, retros. Use **TeamCreate*
 
 - Acione multiplos especialistas **simultaneamente** quando possivel
 - **Reutilize** teammate ativo via SendMessage antes de spawnar novamente
-- Nomes fixos: `factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker` | `outside-view` | `ops` | `skeptic`
+- Nomes fixos: `factor` | `rf` | `fire` | `tax` | `risco` | `macro` | `advocate` | `quant` | `behavioral` | `bookkeeper` | `fact-checker` | `outside-view` | `ops` | `dev`
 
 ## Julgamentos Independentes (Full-Path)
 
-Multiplos agentes em paralelo registram posicao **antes** de ler os outros — nunca no mesmo prompt. Head agrega depois. Objetivo: evitar ancoragem.
+Multiplos agentes em paralelo registram posicao **antes** de ler os outros. Head agrega depois. Objetivo: evitar ancoragem.
 
 ### Head Silence Rule (D1 — Tetlock)
 
 Em Full-Path, Head **NUNCA** declara posição antes dos agentes. Fluxo:
-1. Head posta a pergunta e distribui dados (Information Asymmetry)
+1. Head posta a pergunta — cada agente recebe **subset de dados diferente** (Factor: premiums; Macro: ciclo de juros; FIRE: patrimônio/spending; Advocate: alternativa simples; Outside View: base rates)
 2. Agentes formam posições independentes
 3. Head **só então** sintetiza — sem revelar preferência prévia
-
-Violação desta regra foi a causa raiz da sycophancy em FI-equity-redistribuicao.
-
-### Information Asymmetry (diversidade estrutural)
-
-Em Full-Path, cada agente recebe **subset de dados diferente** antes de formar opinião:
-- Factor vê dados de factor premiums e regressões
-- Macro vê ciclo de juros e câmbio
-- FIRE vê projeção de patrimônio e spending
-- Advocate vê alternativa simples (VWRA puro)
-- Outside View vê base rates e distribuições de referência
-
-Só **depois** de formar posição, veem os argumentos dos outros. Head sintetiza.
 
 ### Key Assumptions Check (D2 — CIA/IC SATs)
 
 Em Full-Path, cada agente lista **top 3 premissas** com nível de confiança (Alta/Média/Baixa) **antes** de iniciar análise. Advocate usa essas premissas para Quadrant Crunching (flip sistemático: "e se premissa X estiver errada?").
 
-### Qualitative Veto Window (D7 — D.E. Shaw)
+### Qualitative Veto Window (D3 — D.E. Shaw)
 
 Após todo output quantitativo (MC, otimização, regressão), rotear para pelo menos 1 agente qualitativo: "O modelo não captura [mudança estrutural X]?" antes da síntese final.
 
@@ -106,7 +92,7 @@ Qualquer agente pode emitir `STOP: [razão]` sobre qualquer execução pendente.
 ### Minority Report (D6)
 Quando um agente dissente e perde a votação, registrar na issue: "Se [condição X] ocorrer em 6 meses, re-abrir issue automaticamente." Ops monitora as condições. Dissidentes ganham voz futura.
 
-### "Too Hard" Pile (D3 — Berkshire)
+### "Too Hard" Pile (D7 — Berkshire)
 Issue debatida 3+ vezes sem resolução → tagged "too-hard" e arquivada. Revisitar **apenas** com dado novo. Evita deliberation theater.
 
 ## Separacao Dado vs Interpretacao (todos os veredictos)
@@ -116,84 +102,36 @@ Issue debatida 3+ vezes sem resolução → tagged "too-hard" e arquivada. Revis
 
 Nao misturar no mesmo bullet. Diego aceita dados; questiona interpretacoes.
 
-## Dados em Tempo Real
+## Padrões
 
-Use **WebSearch** para: taxa IPCA+, Selic, cotacao HODL11, cambio BRL/USD, noticias.
-
-## Evidencias Academicas Primeiro
-
-Papers peer-reviewed, NBER/SSRN, Vanguard, AQR, DFA, Morningstar. NAO blogs ou influencers.
-
-## Idioma
-
-Portugues ou ingles conforme contexto. Termos de mercado em ingles. Papers em ingles.
-
-## Issues
-
-Referencia completa: `agentes/referencia/issues-guide.md`. Board: `agentes/issues/README.md`
-
-## Revisoes Periodicas
-
-Referencia completa: `agentes/referencia/revisoes-periodicas.md`
-
-## Retros
-
-Referencia completa: `agentes/referencia/retro-dinamica.md`
-
-## Flight Rules
-
-Respostas pré-comprometidas para cenários antecipados (drawdown, câmbio, vida): `agentes/referencia/flight-rules.md`
-
-## Believability Tracker
-
-Calibração de previsões por agente (Brier Score): `agentes/memoria/believability.md`
+- **Dados em tempo real:** WebSearch para taxa IPCA+, Selic, cotação HODL11, câmbio BRL/USD
+- **Fontes:** papers peer-reviewed, NBER/SSRN, Vanguard, AQR, DFA, Morningstar — não blogs ou influencers
+- **Idioma:** português ou inglês conforme contexto; termos de mercado e papers em inglês
 
 ## Scripts Python
 
-Venv: `~/claude/finance-tools/.venv/bin/python3` (todos os scripts usam este venv)
-
-| Script | Propósito | Uso típico |
-|--------|-----------|------------|
-| `scripts/checkin_mensal.py` | Shadow A/B/C/Target, preços, scorecard | `python3 scripts/checkin_mensal.py` |
-| `scripts/portfolio_analytics.py` | Fronteira eficiente, stress test CDaR, otimizador aporte | `python3 scripts/portfolio_analytics.py --aporte 25000` |
-| `scripts/fire_montecarlo.py` | Monte Carlo P(FIRE), 10k trajetórias, bond tent, guardrails | `python3 scripts/fire_montecarlo.py --tornado` — flags: `--strategy`, `--compare-strategies`, `--retorno-equity` |
-| `scripts/fire_glide_path_scenarios.py` | Compara 3 cenários de equity allocation pré-FIRE | `python3 scripts/fire_glide_path_scenarios.py` |
-| `scripts/backtest_portfolio.py` | Backtest histórico do tilt fatorial UCITS | `python3 scripts/backtest_portfolio.py` |
-| `scripts/factor_regression.py` | Regressão Fama-French 5-factor + momentum por ETF | `python3 scripts/factor_regression.py` |
-| `scripts/spending_analysis.py` | Analisa CSV de gastos (All-Accounts export) | `python3 scripts/spending_analysis.py [csv]` |
-| `analysis/ibkr_analysis.py` | Processa extrato IBKR, gera 5 JSONs (lotes, dividendos, etc) | `python3 analysis/ibkr_analysis.py` |
-| `scripts/ibkr_sync.py` | Sync posições IBKR via Flex Query — drift, trades, snapshot | `python3 scripts/ibkr_sync.py --cambio 5.15` |
-| `scripts/fx_utils.py` | PTAX/macro BCB, decomposição retorno BRL/USD | `python3 scripts/fx_utils.py` |
-| `scripts/resampled_frontier.py` | Michaud Resampled Frontier — IC 90% dos pesos ótimos vs Target 50/30/20 | `python3 scripts/resampled_frontier.py` |
+Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/python3`
 
 ## Dashboard
 
-`dashboard/index.html` é gerado pelo pipeline (`generate_data.py` → `build_dashboard.py`) — nunca editar diretamente. Todo commit em `main` dispara deploy automático via GitHub Actions.
+`dev` é o único agente autorizado. Quant valida toda mudança que envolva dados ou cálculos.
+
+- Zero hardcoded — fonte única são as estruturas internas (`agentes/`, `dados/`)
+- Todo componente tem versão privacy (valores sensíveis ocultos)
+- Pipeline: `generate_data.py` → `build_dashboard.py` → `dashboard/index.html`
+- Nunca editar `index.html` diretamente
+- Após aprovação Diego + Quant: commit → push → deploy automático (GitHub Actions)
+
+## Referências
+
+| Tópico | Arquivo |
+|--------|---------|
+| Issues | `agentes/referencia/issues-guide.md` |
+| Revisões periódicas | `agentes/referencia/revisoes-periodicas.md` |
+| Retros | `agentes/referencia/retro-dinamica.md` |
+| Flight Rules | `agentes/referencia/flight-rules.md` |
+| Believability Tracker | `agentes/memoria/believability.md` |
 
 ## Estrutura do Projeto
 
-```
-wealth/
-├── agentes/
-│   ├── contexto/      # carteira.md (fonte de verdade), IPS, gatilhos, operacoes
-│   ├── perfis/        # perfis dos agentes (00-head.md, 01-cio.md, 02-factor.md, ...)
-│   ├── memoria/       # memorias persistentes de cada agente
-│   ├── issues/        # board de issues (README.md + arquivos HD-*.md)
-│   ├── referencia/    # guias de processo (issues-guide, revisoes-periodicas, retro-dinamica)
-│   ├── retros/        # retros historicas
-│   └── metricas/      # shadowportfolio, scorecard, performance
-├── scripts/           # Python: analytics, FIRE, factor, spending, pipeline dashboard
-├── dashboard/         # Dashboard — todos os artefatos commitados juntos
-│   ├── template.html  #   fonte: template com __DATA_PLACEHOLDER__
-│   ├── index.html     #   output: gerado por build_dashboard.py (deploy automático via GitHub Actions)
-│   └── data.json      #   output: snapshot JSON intermediário (auditável)
-├── dados/             # Estado persistente (fonte de verdade dos dados)
-│   ├── dashboard_state.json  # estado acumulado pelos scripts
-│   ├── historico_carteira.csv
-│   ├── holdings.md
-│   ├── tlh_lotes.json        # lotes para TLH
-│   └── ibkr/                 # outputs do IBKR analysis
-│       ├── lotes.json, dividendos.json, aportes.json, realized_pnl.json
-└── analysis/          # análises ad-hoc (scripts Python, debates, arquivos de referência)
-    └── raw/           # dados brutos (CSVs/PDFs/XLSXs — gitignored para sensíveis)
-```
+`agentes/contexto/` (fonte de verdade) | `scripts/` (Python) | `dashboard/` (pipeline + deploy) | `dados/` (estado persistente) | `agentes/referencia/` (guias de processo)
