@@ -613,18 +613,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S9 + F4: FIRE@53 vs FIRE@50 — tabela unificada (gráfico de barras removido — duplicata) -->
-<div class="grid-2" data-in-tab="fire">
-<div class="section">
+<div class="section" data-in-tab="fire">
   <h2>FIRE@53 vs FIRE@50 — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div>
 </div>
-<div class="section">
-  <h2>Sensibilidade P(FIRE) × Spending</h2>
-  <div class="chart-box-sm"><canvas id="spendingChart"></canvas></div>
-  <div class="src">Modelo de spending familiar</div>
-</div>
-</div>
+<!-- canvas spendingChart mantido para evitar erros JS, oculto -->
+<canvas id="spendingChart" style="display:none"></canvas>
 
 <!-- canvas scenarioChart mantido para evitar erros JS, oculto -->
 <canvas id="scenarioChart" style="display:none"></canvas>
@@ -838,10 +833,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- N4: LUMPY EVENTS -->
-<div class="section" data-in-tab="fire" id="lumpyEventsSection">
-<h2>Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
+<div class="section collapsible" data-in-tab="fire" id="lumpyEventsSection">
+<h2 onclick="this.parentElement.classList.toggle('open')">Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
+<div class="collapse-body">
 <div id="lumpyEventsBody"></div>
 <div class="src">Base: spending R$250k/ano. Impacto de eventos permanentes no custo de vida.</div>
+</div>
 </div>
 
 <!-- PREMISSAS VS REALIZADO (movido de perf → fire — contexto de planejamento) -->
@@ -1064,12 +1061,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
 </div>
 
-<!-- R3: APORTE SENSITIVITY -->
-<div class="section" data-in-tab="fire" id="aporteSensSection">
-<h2>Sensibilidade P(FIRE@53) ao Aporte Mensal</h2>
-<div class="chart-box-sm"><canvas id="aporteSensChart"></canvas></div>
-<div class="src">Aporte base: R$25k/mês. Linha vertical = aporte atual.</div>
-</div>
+<!-- R3: APORTE SENSITIVITY — removido (redundante com Tornado chart) -->
+<!-- canvas aporteSensChart mantido para evitar erros JS, oculto -->
+<canvas id="aporteSensChart" style="display:none"></canvas>
 
 <!-- F11: Stress Test -->
 <div class="section" data-in-tab="fire">
@@ -1088,6 +1082,18 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
     <div style="font-size:.8rem;color:var(--muted)">
       Patrimônio pós-shock: <strong id="stressPatShock" class="pv" style="color:var(--red)">—</strong>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label style="font-size:.8rem;color:var(--muted)">Idade do shock:</label>
+      <select id="stressOnsetAge" onchange="onStressShockChange(document.getElementById('stressShockSlider').value)"
+        style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;cursor:pointer">
+        <option value="39">39 anos (hoje)</option>
+        <option value="40">40 anos</option>
+        <option value="42">42 anos</option>
+        <option value="45">45 anos</option>
+        <option value="47">47 anos</option>
+        <option value="50">50 anos (FIRE aspiracional)</option>
+      </select>
     </div>
     <button id="stressSimBtn" style="display:none"></button>
   </div>
@@ -1380,12 +1386,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T08:27:06-03:00'); // BRT (UTC-3)
-const VERSION = '1.161';
+const GENERATED_AT = new Date('2026-04-12T08:43:11-03:00'); // BRT (UTC-3)
+const VERSION = '1.163';
 
 const DATA = {
-  "_generated": "2026-04-12T08:26:13",
-  "_generated_brt": "2026-04-12T08:26:13-03:00",
+  "_generated": "2026-04-12T08:43:11",
+  "_generated_brt": "2026-04-12T08:43:11-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1448,7 +1454,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.39,
+      "price": 59.8,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1494,7 +1500,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3487412,
+    "patrimonio_atual": 3470738,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1626,7 +1632,7 @@ const DATA = {
     },
     "pat_mediano_fire": 11527476.0,
     "pat_mediano_fire50": 9339651.0,
-    "mc_date": "2026-04-11",
+    "mc_date": "2026-04-12",
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -3255,7 +3261,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -3266,7 +3272,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -3589,7 +3595,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.98,
+      "atual_pct": 3.0,
       "status": "verde"
     }
   },
@@ -3655,24 +3661,24 @@ const DATA = {
       3
     ],
     "renda_plus": [
-      5,
-      5,
-      5,
+      3,
+      3,
+      0,
       0,
       0
     ]
   },
   "drift": {
     "SWRD": {
-      "atual": 36.8,
+      "atual": 37.0,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.9,
+      "atual": 29.0,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.6,
+      "atual": 24.2,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3722,7 +3728,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.39,
+      "price": 59.8,
       "ucits": "AVEM.L"
     },
     {
@@ -3752,10 +3758,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 630200,
-    "retorno_usd": 239157,
-    "pct_aportes": 62.1,
-    "pct_retorno": 37.9,
+    "patrimonio_equity_usd": 626874,
+    "retorno_usd": 235831,
+    "pct_aportes": 62.4,
+    "pct_retorno": 37.6,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-12"
@@ -4282,7 +4288,7 @@ const DATA = {
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.5,
+    "brasil_pct": 9.6,
     "composicao": {
       "hodl11_brl": 104063,
       "rf_total_brl": 224406,
@@ -4294,7 +4300,7 @@ const DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 332481,
-    "total_portfolio_brl": 3487412,
+    "total_portfolio_brl": 3470738,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -5835,7 +5841,7 @@ const DATA = {
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-10T21:44:11",
+    "_generated": "2026-04-12T08:42:45",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -5898,7 +5904,172 @@ const DATA = {
       "2026-01",
       "2026-02",
       "2026-03",
-      "2026-04"
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08",
+      "2026-09",
+      "2026-10",
+      "2026-11",
+      "2026-12",
+      "2027-01",
+      "2027-02",
+      "2027-03",
+      "2027-04",
+      "2027-05",
+      "2027-06",
+      "2027-07",
+      "2027-08",
+      "2027-09",
+      "2027-10",
+      "2027-11",
+      "2027-12",
+      "2028-01",
+      "2028-02",
+      "2028-03",
+      "2028-04",
+      "2028-05",
+      "2028-06",
+      "2028-07",
+      "2028-08",
+      "2028-09",
+      "2028-10",
+      "2028-11",
+      "2028-12",
+      "2029-01",
+      "2029-02",
+      "2029-03",
+      "2029-04",
+      "2029-05",
+      "2029-06",
+      "2029-07",
+      "2029-08",
+      "2029-09",
+      "2029-10",
+      "2029-11",
+      "2029-12",
+      "2030-01",
+      "2030-02",
+      "2030-03",
+      "2030-04",
+      "2030-05",
+      "2030-06",
+      "2030-07",
+      "2030-08",
+      "2030-09",
+      "2030-10",
+      "2030-11",
+      "2030-12",
+      "2031-01",
+      "2031-02",
+      "2031-03",
+      "2031-04",
+      "2031-05",
+      "2031-06",
+      "2031-07",
+      "2031-08",
+      "2031-09",
+      "2031-10",
+      "2031-11",
+      "2031-12",
+      "2032-01",
+      "2032-02",
+      "2032-03",
+      "2032-04",
+      "2032-05",
+      "2032-06",
+      "2032-07",
+      "2032-08",
+      "2032-09",
+      "2032-10",
+      "2032-11",
+      "2032-12",
+      "2033-01",
+      "2033-02",
+      "2033-03",
+      "2033-04",
+      "2033-05",
+      "2033-06",
+      "2033-07",
+      "2033-08",
+      "2033-09",
+      "2033-10",
+      "2033-11",
+      "2033-12",
+      "2034-01",
+      "2034-02",
+      "2034-03",
+      "2034-04",
+      "2034-05",
+      "2034-06",
+      "2034-07",
+      "2034-08",
+      "2034-09",
+      "2034-10",
+      "2034-11",
+      "2034-12",
+      "2035-01",
+      "2035-02",
+      "2035-03",
+      "2035-04",
+      "2035-05",
+      "2035-06",
+      "2035-07",
+      "2035-08",
+      "2035-09",
+      "2035-10",
+      "2035-11",
+      "2035-12",
+      "2036-01",
+      "2036-02",
+      "2036-03",
+      "2036-04",
+      "2036-05",
+      "2036-06",
+      "2036-07",
+      "2036-08",
+      "2036-09",
+      "2036-10",
+      "2036-11",
+      "2036-12",
+      "2037-01",
+      "2037-02",
+      "2037-03",
+      "2037-04",
+      "2037-05",
+      "2037-06",
+      "2037-07",
+      "2037-08",
+      "2037-09",
+      "2037-10",
+      "2037-11",
+      "2037-12",
+      "2038-01",
+      "2038-02",
+      "2038-03",
+      "2038-04",
+      "2038-05",
+      "2038-06",
+      "2038-07",
+      "2038-08",
+      "2038-09",
+      "2038-10",
+      "2038-11",
+      "2038-12",
+      "2039-01",
+      "2039-02",
+      "2039-03",
+      "2039-04",
+      "2039-05",
+      "2039-06",
+      "2039-07",
+      "2039-08",
+      "2039-09",
+      "2039-10",
+      "2039-11",
+      "2039-12",
+      "2040-01"
     ],
     "trilha_brl": [
       257684.0,
@@ -5961,7 +6132,172 @@ const DATA = {
       1917554.0,
       1950137.0,
       1982848.0,
-      2015690.0
+      2015690.0,
+      2048661.0,
+      2081762.0,
+      2114994.0,
+      2148358.0,
+      2181854.0,
+      2215482.0,
+      2249243.0,
+      2283138.0,
+      2317167.0,
+      2351330.0,
+      2385628.0,
+      2420062.0,
+      2454632.0,
+      2489339.0,
+      2524183.0,
+      2559165.0,
+      2594286.0,
+      2629545.0,
+      2664943.0,
+      2700482.0,
+      2736161.0,
+      2771981.0,
+      2807943.0,
+      2844047.0,
+      2880294.0,
+      2916684.0,
+      2953218.0,
+      2989897.0,
+      3026720.0,
+      3063689.0,
+      3100805.0,
+      3138067.0,
+      3175476.0,
+      3213034.0,
+      3250740.0,
+      3288595.0,
+      3326600.0,
+      3364755.0,
+      3403061.0,
+      3441518.0,
+      3480128.0,
+      3518890.0,
+      3557805.0,
+      3596875.0,
+      3636099.0,
+      3675478.0,
+      3715012.0,
+      3754704.0,
+      3794552.0,
+      3834557.0,
+      3874721.0,
+      3915044.0,
+      3955526.0,
+      3996168.0,
+      4036971.0,
+      4077935.0,
+      4119061.0,
+      4160350.0,
+      4201802.0,
+      4243418.0,
+      4285199.0,
+      4327145.0,
+      4369257.0,
+      4411535.0,
+      4453980.0,
+      4496594.0,
+      4539376.0,
+      4582327.0,
+      4625447.0,
+      4668739.0,
+      4712201.0,
+      4755836.0,
+      4799643.0,
+      4843623.0,
+      4887777.0,
+      4932106.0,
+      4976610.0,
+      5021290.0,
+      5066147.0,
+      5111181.0,
+      5156393.0,
+      5201784.0,
+      5247355.0,
+      5293106.0,
+      5339037.0,
+      5385151.0,
+      5431446.0,
+      5477925.0,
+      5524588.0,
+      5571435.0,
+      5618467.0,
+      5665685.0,
+      5713090.0,
+      5760683.0,
+      5808463.0,
+      5856433.0,
+      5904592.0,
+      5952942.0,
+      6001483.0,
+      6050216.0,
+      6099142.0,
+      6148261.0,
+      6197574.0,
+      6247083.0,
+      6296787.0,
+      6346688.0,
+      6396786.0,
+      6447082.0,
+      6497577.0,
+      6548272.0,
+      6599167.0,
+      6650263.0,
+      6701562.0,
+      6753063.0,
+      6804768.0,
+      6856678.0,
+      6908793.0,
+      6961114.0,
+      7013641.0,
+      7066377.0,
+      7119321.0,
+      7172474.0,
+      7225838.0,
+      7279413.0,
+      7333199.0,
+      7387199.0,
+      7441411.0,
+      7495838.0,
+      7550481.0,
+      7605339.0,
+      7660415.0,
+      7715708.0,
+      7771220.0,
+      7826951.0,
+      7882903.0,
+      7939076.0,
+      7995471.0,
+      8052089.0,
+      8108932.0,
+      8165998.0,
+      8223291.0,
+      8280810.0,
+      8338557.0,
+      8396532.0,
+      8454736.0,
+      8513170.0,
+      8571836.0,
+      8630733.0,
+      8689863.0,
+      8749227.0,
+      8808826.0,
+      8868661.0,
+      8928732.0,
+      8989041.0,
+      9049588.0,
+      9110375.0,
+      9171402.0,
+      9232671.0,
+      9294181.0,
+      9355935.0,
+      9417933.0,
+      9480177.0,
+      9542666.0,
+      9605403.0,
+      9668388.0
     ],
     "realizado_brl": [
       257684.0,
@@ -6024,7 +6360,172 @@ const DATA = {
       3457504.0,
       3532893.0,
       3413535.0,
-      3519199.0
+      3519199.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
     ],
     "status": [
       "on_track",
@@ -6087,12 +6588,178 @@ const DATA = {
       "ahead",
       "ahead",
       "ahead",
-      "ahead"
+      "ahead",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future",
+      "future"
     ],
     "meta_fire_brl": 13400000,
     "meta_fire_date": "2040-01",
     "retorno_anual_premissa": 0.0485,
-    "aporte_mensal_premissa": 25000
+    "aporte_mensal_premissa": 25000,
+    "n_historico": 61
   },
   "drawdown_history": {
     "_generated": "2026-04-10T21:44:11",
@@ -6919,20 +7586,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3487412,
-      3659121,
-      3839285,
-      4028319,
-      4226661,
-      4434768,
-      4653122,
-      4882227,
-      5122613,
-      5374834,
-      5639474,
-      5917144,
-      6208485,
-      6514172,
+      3470738,
+      3642873,
+      3823545,
+      4013178,
+      4212216,
+      4421126,
+      4640396,
+      4870542,
+      5112102,
+      5365642,
+      5631757,
+      5911070,
+      6204236,
+      6511942,
       6834909,
       6924402,
       7018236,
@@ -6973,20 +7640,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3487412,
-      3798317,
-      4136939,
-      4505749,
-      4907440,
-      5344941,
-      5821445,
-      6340430,
-      6905683,
-      7521329,
-      8191860,
-      8922169,
-      9717586,
-      10583914,
+      3470738,
+      3781451,
+      4119979,
+      4488814,
+      4890669,
+      5328498,
+      5805524,
+      6325255,
+      6891514,
+      7508466,
+      8180650,
+      8913011,
+      9710935,
+      10580291,
       11527476,
       11844559,
       12177020,
@@ -7027,20 +7694,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3487412,
-      3935097,
-      4440253,
-      5010256,
-      5653432,
-      6379174,
-      7198080,
-      8122110,
-      9164760,
-      10341258,
-      11668784,
-      13166727,
-      14856963,
-      16764179,
+      3470738,
+      3917624,
+      4422050,
+      4991425,
+      5634112,
+      6359550,
+      7178394,
+      8102670,
+      9145955,
+      10323572,
+      11652816,
+      13153211,
+      14846795,
+      16758441,
       18916227,
       19591664,
       20299860,
@@ -7110,7 +7777,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.161"
+  "version": "1.163"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -7553,6 +8220,7 @@ function buildAttribution() {
     }
   };
 
+  if (charts.attr) { charts.attr.destroy(); charts.attr = null; }
   charts.attr = new Chart(document.getElementById('attrChart'), {
     type: 'bar',
     data: {
@@ -7605,6 +8273,7 @@ function buildDonuts() {
     }
   };
 
+  if (charts.geo) { charts.geo.destroy(); charts.geo = null; }
   charts.geo = new Chart(document.getElementById('geoDonut'), {
     type: 'doughnut',
     data: {
@@ -7618,6 +8287,7 @@ function buildDonuts() {
 
 // ── S9: Scenario + Spending ───────────────────────────────────
 function buildScenarios() {
+  if (charts.scenario) { charts.scenario.destroy(); charts.scenario = null; }
   charts.scenario = new Chart(document.getElementById('scenarioChart'), {
     type: 'bar',
     data: {
@@ -7637,26 +8307,6 @@ function buildScenarios() {
     }
   });
 
-  const ss = DATA.spendingSensibilidade;
-  charts.spending = new Chart(document.getElementById('spendingChart'), {
-    type: 'bar',
-    data: {
-      labels: ss.map(s => s.label),
-      datasets: [
-        { label: 'Base', data: ss.map(s => s.base), backgroundColor: 'rgba(59,130,246,.7)' },
-        { label: 'Favorável', data: ss.map(s => s.fav), backgroundColor: 'rgba(34,197,94,.6)' },
-        { label: 'Stress', data: ss.map(s => s.stress), backgroundColor: 'rgba(234,179,8,.6)' },
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8', font:{size:10} } } },
-      scales: {
-        y: { min: 75, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8', font:{size:9} } }
-      }
-    }
-  });
 }
 
 // ── S10: Tornado ─────────────────────────────────────────────
@@ -7728,6 +8378,7 @@ function buildDeltaBar() {
   // Substituir null por 0 para garantir que a barra renderiza; tooltip indica "em tracking"
   const deltaData = rawData.map(v => v ?? 0);
   const isTracking = rawData.map(v => v === null);
+  if (charts.delta) { charts.delta.destroy(); charts.delta = null; }
   charts.delta = new Chart(document.getElementById('deltaChart'), {
     type: 'bar',
     data: {
@@ -7830,6 +8481,7 @@ function buildGlidePath() {
     console.assert(Math.abs(s - 100) < 0.5, `Glide path idade ${g.idades[i]}: soma ${s}% ≠ 100%`);
   });
 
+  if (charts.glide) { charts.glide.destroy(); charts.glide = null; }
   charts.glide = new Chart(document.getElementById('glideChart'), {
     type: 'line',
     data: {
@@ -7925,6 +8577,7 @@ function buildFanChart() {
     return ` — gatilho ${Array.isArray(l) ? l[0] : l}${Array.isArray(l) ? ' ' + l[1] : ''}`;
   };
 
+  if (charts.fan) { charts.fan.destroy(); charts.fan = null; }
   charts.fan = new Chart(document.getElementById('fanChart'), {
     type: 'line',
     data: {
@@ -8001,6 +8654,7 @@ function buildIncomeChart() {
   if (!incCanvas || incCanvas.style.display === 'none') return;
   const sm = DATA.spendingSmile;
   const saude = DATA.saude_base;
+  if (charts.income) { charts.income.destroy(); charts.income = null; }
   charts.income = new Chart(document.getElementById('incomeChart'), {
     type: 'bar',
     data: {
@@ -9967,6 +10621,7 @@ function buildNetWorthProjection() {
           grid: { color: 'rgba(71,85,105,.2)' }
         },
         y: {
+          suggestedMax: 15000000,
           ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.2)' }
         }
@@ -10142,8 +10797,10 @@ function onStressShockChange(val) {
   const st = DATA.stress_test;
   const hasPrecalc = st && st.pfire_pos_shock_base != null;
   const isDefaultShock = pct === (st ? st.shock_pct : 40);
+  const selectedAge = parseInt(document.getElementById('stressOnsetAge')?.value || DATA.premissas.idade_atual || 39, 10);
+  const isDefaultAge = selectedAge === (DATA.premissas.idade_atual || 39);
 
-  if (isDefaultShock && hasPrecalc) {
+  if (isDefaultShock && isDefaultAge && hasPrecalc) {
     buildStressTest();
   } else {
     // Auto-calculate: show pending briefly then run MC
@@ -10174,9 +10831,10 @@ function runStressSimulation() {
     const patOriginal = p.patrimonio_atual;
     const patShock = patOriginal * (1 - pct / 100);
     const spendingAnual = p.custo_vida_base || 250000;
-    const idadeAtual = p.idade_atual || 39;
+    const idadeOnset = parseInt(document.getElementById('stressOnsetAge')?.value || p.idade_atual || 39, 10);
     const idadeFireAlvo = p.idade_fire_alvo || 53;
-    const anosAcumulo = Math.max(0, idadeFireAlvo - idadeAtual);
+    // Anos de acumulação após o shock (desde a idade do shock até FIRE)
+    const anosAcumulo = Math.max(0, idadeFireAlvo - idadeOnset);
     const anosAposentadoria = 40; // idade FIRE até 93
     const retReal = p.retorno_equity_base || 0.0485;
     const vol = p.volatilidade_equity || 0.168;
@@ -11339,7 +11997,7 @@ function _initTabCharts(tab) {
     fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios,
                buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
-               () => { _applyFireAxes(); }, buildEarliestFire, buildAporteSensitivity,
+               () => { _applyFireAxes(); }, buildEarliestFire,
                function() {
                  const wiC = document.getElementById('wiCusto');
                  if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
@@ -11911,57 +12569,7 @@ function buildSwrPercentiles() {
   ).join('');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// HD-perplexity-review: R3 — APORTE SENSITIVITY
-// ═══════════════════════════════════════════════════════════════
-function buildAporteSensitivity() {
-  const el = document.getElementById('aporteSensChart');
-  const sec = document.getElementById('aporteSensSection');
-  if (!el || !sec) return;
-  const d = DATA.fire_aporte_sensitivity;
-  if (!d || !d.aportes_brl || !d.pfire_2040) { sec.style.display = 'none'; return; }
-
-  const aportes = d.aportes_brl;
-  const pfires = d.pfire_2040.map(v => +(v * 100).toFixed(1));
-  const base = d.aporte_base || 25000;
-
-  if (charts.aporteSens) { charts.aporteSens.destroy(); }
-  const ctx = el.getContext('2d');
-  charts.aporteSens = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: aportes.map(v => 'R$' + (v / 1000).toFixed(0) + 'k'),
-      datasets: [{
-        label: 'P(FIRE@53) %',
-        data: pfires,
-        borderColor: 'rgba(59,130,246,1)',
-        backgroundColor: 'rgba(59,130,246,.12)',
-        borderWidth: 2,
-        pointRadius: 4,
-        pointBackgroundColor: aportes.map(v => Math.abs(v - base) < 1 ? 'rgba(234,179,8,1)' : 'rgba(59,130,246,1)'),
-        fill: true,
-        tension: 0.3,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' P(FIRE) = ' + ctx.parsed.y + '%' } },
-        annotation: undefined,
-      },
-      scales: {
-        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(71,85,105,.2)' } },
-        y: {
-          ticks: { color: '#94a3b8', font: { size: 10 }, callback: v => v + '%' },
-          grid: { color: 'rgba(71,85,105,.2)' },
-          min: Math.max(0, Math.min(...pfires) - 5),
-          max: Math.min(100, Math.max(...pfires) + 2),
-        }
-      }
-    }
-  });
-}
+// buildAporteSensitivity — removido (seção R3 descontinuada)
 
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R4 — MACRO STATUS BADGE

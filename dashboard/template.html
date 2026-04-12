@@ -613,18 +613,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S9 + F4: FIRE@53 vs FIRE@50 — tabela unificada (gráfico de barras removido — duplicata) -->
-<div class="grid-2" data-in-tab="fire">
-<div class="section">
+<div class="section" data-in-tab="fire">
   <h2>FIRE@53 vs FIRE@50 — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div>
 </div>
-<div class="section">
-  <h2>Sensibilidade P(FIRE) × Spending</h2>
-  <div class="chart-box-sm"><canvas id="spendingChart"></canvas></div>
-  <div class="src">Modelo de spending familiar</div>
-</div>
-</div>
+<!-- canvas spendingChart mantido para evitar erros JS, oculto -->
+<canvas id="spendingChart" style="display:none"></canvas>
 
 <!-- canvas scenarioChart mantido para evitar erros JS, oculto -->
 <canvas id="scenarioChart" style="display:none"></canvas>
@@ -838,10 +833,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- N4: LUMPY EVENTS -->
-<div class="section" data-in-tab="fire" id="lumpyEventsSection">
-<h2>Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
+<div class="section collapsible" data-in-tab="fire" id="lumpyEventsSection">
+<h2 onclick="this.parentElement.classList.toggle('open')">Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
+<div class="collapse-body">
 <div id="lumpyEventsBody"></div>
 <div class="src">Base: spending R$250k/ano. Impacto de eventos permanentes no custo de vida.</div>
+</div>
 </div>
 
 <!-- PREMISSAS VS REALIZADO (movido de perf → fire — contexto de planejamento) -->
@@ -1064,12 +1061,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
 </div>
 
-<!-- R3: APORTE SENSITIVITY -->
-<div class="section" data-in-tab="fire" id="aporteSensSection">
-<h2>Sensibilidade P(FIRE@53) ao Aporte Mensal</h2>
-<div class="chart-box-sm"><canvas id="aporteSensChart"></canvas></div>
-<div class="src">Aporte base: R$25k/mês. Linha vertical = aporte atual.</div>
-</div>
+<!-- R3: APORTE SENSITIVITY — removido (redundante com Tornado chart) -->
+<!-- canvas aporteSensChart mantido para evitar erros JS, oculto -->
+<canvas id="aporteSensChart" style="display:none"></canvas>
 
 <!-- F11: Stress Test -->
 <div class="section" data-in-tab="fire">
@@ -1088,6 +1082,18 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
     <div style="font-size:.8rem;color:var(--muted)">
       Patrimônio pós-shock: <strong id="stressPatShock" class="pv" style="color:var(--red)">—</strong>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label style="font-size:.8rem;color:var(--muted)">Idade do shock:</label>
+      <select id="stressOnsetAge" onchange="onStressShockChange(document.getElementById('stressShockSlider').value)"
+        style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;cursor:pointer">
+        <option value="39">39 anos (hoje)</option>
+        <option value="40">40 anos</option>
+        <option value="42">42 anos</option>
+        <option value="45">45 anos</option>
+        <option value="47">47 anos</option>
+        <option value="50">50 anos (FIRE aspiracional)</option>
+      </select>
     </div>
     <button id="stressSimBtn" style="display:none"></button>
   </div>
@@ -1822,6 +1828,7 @@ function buildAttribution() {
     }
   };
 
+  if (charts.attr) { charts.attr.destroy(); charts.attr = null; }
   charts.attr = new Chart(document.getElementById('attrChart'), {
     type: 'bar',
     data: {
@@ -1874,6 +1881,7 @@ function buildDonuts() {
     }
   };
 
+  if (charts.geo) { charts.geo.destroy(); charts.geo = null; }
   charts.geo = new Chart(document.getElementById('geoDonut'), {
     type: 'doughnut',
     data: {
@@ -1887,6 +1895,7 @@ function buildDonuts() {
 
 // ── S9: Scenario + Spending ───────────────────────────────────
 function buildScenarios() {
+  if (charts.scenario) { charts.scenario.destroy(); charts.scenario = null; }
   charts.scenario = new Chart(document.getElementById('scenarioChart'), {
     type: 'bar',
     data: {
@@ -1906,26 +1915,6 @@ function buildScenarios() {
     }
   });
 
-  const ss = DATA.spendingSensibilidade;
-  charts.spending = new Chart(document.getElementById('spendingChart'), {
-    type: 'bar',
-    data: {
-      labels: ss.map(s => s.label),
-      datasets: [
-        { label: 'Base', data: ss.map(s => s.base), backgroundColor: 'rgba(59,130,246,.7)' },
-        { label: 'Favorável', data: ss.map(s => s.fav), backgroundColor: 'rgba(34,197,94,.6)' },
-        { label: 'Stress', data: ss.map(s => s.stress), backgroundColor: 'rgba(234,179,8,.6)' },
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8', font:{size:10} } } },
-      scales: {
-        y: { min: 75, max: 100, ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8', font:{size:9} } }
-      }
-    }
-  });
 }
 
 // ── S10: Tornado ─────────────────────────────────────────────
@@ -1997,6 +1986,7 @@ function buildDeltaBar() {
   // Substituir null por 0 para garantir que a barra renderiza; tooltip indica "em tracking"
   const deltaData = rawData.map(v => v ?? 0);
   const isTracking = rawData.map(v => v === null);
+  if (charts.delta) { charts.delta.destroy(); charts.delta = null; }
   charts.delta = new Chart(document.getElementById('deltaChart'), {
     type: 'bar',
     data: {
@@ -2099,6 +2089,7 @@ function buildGlidePath() {
     console.assert(Math.abs(s - 100) < 0.5, `Glide path idade ${g.idades[i]}: soma ${s}% ≠ 100%`);
   });
 
+  if (charts.glide) { charts.glide.destroy(); charts.glide = null; }
   charts.glide = new Chart(document.getElementById('glideChart'), {
     type: 'line',
     data: {
@@ -2194,6 +2185,7 @@ function buildFanChart() {
     return ` — gatilho ${Array.isArray(l) ? l[0] : l}${Array.isArray(l) ? ' ' + l[1] : ''}`;
   };
 
+  if (charts.fan) { charts.fan.destroy(); charts.fan = null; }
   charts.fan = new Chart(document.getElementById('fanChart'), {
     type: 'line',
     data: {
@@ -2270,6 +2262,7 @@ function buildIncomeChart() {
   if (!incCanvas || incCanvas.style.display === 'none') return;
   const sm = DATA.spendingSmile;
   const saude = DATA.saude_base;
+  if (charts.income) { charts.income.destroy(); charts.income = null; }
   charts.income = new Chart(document.getElementById('incomeChart'), {
     type: 'bar',
     data: {
@@ -4236,6 +4229,7 @@ function buildNetWorthProjection() {
           grid: { color: 'rgba(71,85,105,.2)' }
         },
         y: {
+          suggestedMax: 15000000,
           ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.2)' }
         }
@@ -4411,8 +4405,10 @@ function onStressShockChange(val) {
   const st = DATA.stress_test;
   const hasPrecalc = st && st.pfire_pos_shock_base != null;
   const isDefaultShock = pct === (st ? st.shock_pct : 40);
+  const selectedAge = parseInt(document.getElementById('stressOnsetAge')?.value || DATA.premissas.idade_atual || 39, 10);
+  const isDefaultAge = selectedAge === (DATA.premissas.idade_atual || 39);
 
-  if (isDefaultShock && hasPrecalc) {
+  if (isDefaultShock && isDefaultAge && hasPrecalc) {
     buildStressTest();
   } else {
     // Auto-calculate: show pending briefly then run MC
@@ -4443,9 +4439,10 @@ function runStressSimulation() {
     const patOriginal = p.patrimonio_atual;
     const patShock = patOriginal * (1 - pct / 100);
     const spendingAnual = p.custo_vida_base || 250000;
-    const idadeAtual = p.idade_atual || 39;
+    const idadeOnset = parseInt(document.getElementById('stressOnsetAge')?.value || p.idade_atual || 39, 10);
     const idadeFireAlvo = p.idade_fire_alvo || 53;
-    const anosAcumulo = Math.max(0, idadeFireAlvo - idadeAtual);
+    // Anos de acumulação após o shock (desde a idade do shock até FIRE)
+    const anosAcumulo = Math.max(0, idadeFireAlvo - idadeOnset);
     const anosAposentadoria = 40; // idade FIRE até 93
     const retReal = p.retorno_equity_base || 0.0485;
     const vol = p.volatilidade_equity || 0.168;
@@ -5608,7 +5605,7 @@ function _initTabCharts(tab) {
     fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios,
                buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
-               () => { _applyFireAxes(); }, buildEarliestFire, buildAporteSensitivity,
+               () => { _applyFireAxes(); }, buildEarliestFire,
                function() {
                  const wiC = document.getElementById('wiCusto');
                  if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
@@ -6180,57 +6177,7 @@ function buildSwrPercentiles() {
   ).join('');
 }
 
-// ═══════════════════════════════════════════════════════════════
-// HD-perplexity-review: R3 — APORTE SENSITIVITY
-// ═══════════════════════════════════════════════════════════════
-function buildAporteSensitivity() {
-  const el = document.getElementById('aporteSensChart');
-  const sec = document.getElementById('aporteSensSection');
-  if (!el || !sec) return;
-  const d = DATA.fire_aporte_sensitivity;
-  if (!d || !d.aportes_brl || !d.pfire_2040) { sec.style.display = 'none'; return; }
-
-  const aportes = d.aportes_brl;
-  const pfires = d.pfire_2040.map(v => +(v * 100).toFixed(1));
-  const base = d.aporte_base || 25000;
-
-  if (charts.aporteSens) { charts.aporteSens.destroy(); }
-  const ctx = el.getContext('2d');
-  charts.aporteSens = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: aportes.map(v => 'R$' + (v / 1000).toFixed(0) + 'k'),
-      datasets: [{
-        label: 'P(FIRE@53) %',
-        data: pfires,
-        borderColor: 'rgba(59,130,246,1)',
-        backgroundColor: 'rgba(59,130,246,.12)',
-        borderWidth: 2,
-        pointRadius: 4,
-        pointBackgroundColor: aportes.map(v => Math.abs(v - base) < 1 ? 'rgba(234,179,8,1)' : 'rgba(59,130,246,1)'),
-        fill: true,
-        tension: 0.3,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' P(FIRE) = ' + ctx.parsed.y + '%' } },
-        annotation: undefined,
-      },
-      scales: {
-        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(71,85,105,.2)' } },
-        y: {
-          ticks: { color: '#94a3b8', font: { size: 10 }, callback: v => v + '%' },
-          grid: { color: 'rgba(71,85,105,.2)' },
-          min: Math.max(0, Math.min(...pfires) - 5),
-          max: Math.min(100, Math.max(...pfires) + 2),
-        }
-      }
-    }
-  });
-}
+// buildAporteSensitivity — removido (seção R3 descontinuada)
 
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R4 — MACRO STATUS BADGE

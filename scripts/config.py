@@ -119,13 +119,14 @@ DEPRECIACAO_BRL_BASE = 0.5        # % a.a. — premissa do plano FIRE (carteira.
 # Atualizar quando carteira.md mudar a tabela de glide path
 GLIDE_PATH = {
     # Fonte: carteira.md "Tabela de Alocacao por Idade"
-    # Renda+: valor máximo (<=5%) — posição atual pode ser menor (tático)
+    # Renda+: tático (≤3% nas idades 39/40 para soma=100%; 0% nos demais — sem espaço)
+    # Nota: valores normalizados para soma=100% por idade (exigido por stacked chart max:100)
     "idades":     [39, 40, 50, 60, 70],
     "equity":     [79, 79, 79, 94, 94],
     "ipca_longo": [15, 15, 15,  0,  0],
     "ipca_curto": [ 0,  0,  3,  3,  3],
     "hodl11":     [ 3,  3,  3,  3,  3],
-    "renda_plus": [ 5,  5,  5,  0,  0],  # <=5% nas 3 primeiras idades (tático)
+    "renda_plus": [ 3,  3,  0,  0,  0],  # normalizado: soma=100% por idade
 }
 
 
@@ -211,6 +212,124 @@ MACRO_REGRAS = {
     "status_permanece": "PLANO_PERMANECE",
     "status_monitorar": "MONITORAR",
     "status_revisar": "REVISAR",
+}
+
+
+# ─── REGIME 7 — Série Longa 1989-2026 (proxies acadêmicos) ─────────────────
+# Todos os parâmetros do backtest de longo prazo. Pesos do Target: usar EQUITY_WEIGHTS acima.
+# Fontes de dados: yfinance (ETFs/indices) + pandas_datareader (Ken French Library)
+
+REGIME7_CONFIG = {
+    "label": "Regime 7 — Série Longa 1989-2026 (proxies acadêmicos)",
+
+    # Janelas de dados
+    "start_full": "1994-12-01",       # todos os proxies disponíveis (DFSVX+DISVX+DFEMX)
+    "start_extended": "1989-07-01",   # AVEM via French EM (sem leg Intl de AVGS)
+    "benchmark_dm_start": "1972-01-01",  # MSCI World NR (DM only, sem EM)
+
+    # Sub-períodos para teste de Chow (proxy vs ETF real)
+    "proxy_period_end": "2019-08-31",    # antes dos ETFs AVGS/AVEM reais
+    "etf_real_period_start": "2019-09-01",  # Set/2019: AVEM US-listed como proxy Tier A
+
+    # Proxies — cadeia de stitching por bucket (return splice, cronológico: mais antigo primeiro)
+    "proxies": {
+        "SWRD": [
+            {
+                "ticker": "^990100-USD-STRD",
+                "start": "1972-01-01",
+                "end": None,
+                "label": "MSCI World NR USD (yfinance)",
+                "tier": "B",
+            },
+        ],
+        "AVGS": [
+            {
+                "ticker": "DFSVX",
+                "weight": 0.58,
+                "start": "1993-02-01",
+                "end": None,
+                "label": "DFA US SC Value",
+                "tier": "B",
+            },
+            {
+                "ticker": "DISVX",
+                "weight": 0.42,
+                "start": "1994-12-01",
+                "end": None,
+                "label": "DFA Intl SC Value",
+                "tier": "B",
+            },
+        ],
+        "AVEM": [
+            {
+                "source": "french_em",
+                "start": "1989-07-01",
+                "end": "1994-03-31",
+                "label": "French EM Mkt-RF + RF (Emerging_5_Factors)",
+                "tier": "C",
+                "corr_dfemx": 0.9657,
+            },
+            {
+                "ticker": "DFEMX",
+                "start": "1994-04-01",
+                "end": None,
+                "label": "DFA EM Core",
+                "tier": "B",
+            },
+        ],
+        "VWRA_benchmark": [
+            {
+                "source": "french_em+world",
+                "start": "1989-07-01",
+                "end": "2008-02-28",
+                "label": "MSCI World NR + French EM Mkt ponderados 90/10->88/12",
+                "nota": "benchmark DM+EM sintetico pre-ACWI ETF",
+            },
+            {
+                "ticker": "ACWI",
+                "start": "2008-03-01",
+                "end": None,
+                "label": "iShares MSCI ACWI ETF",
+                "tier": "A",
+            },
+        ],
+    },
+
+    # Pesos do benchmark VWRA sintético pré-2008 (DM vs EM)
+    # Aproximação: 90% DM / 10% EM no início (1989), interpolando para 88/12 em 2008
+    "benchmark_dm_weight_start": 0.90,
+    "benchmark_dm_weight_end": 0.88,
+    "benchmark_em_weight_start": 0.10,
+    "benchmark_em_weight_end": 0.12,
+
+    # Fator de correlação French EM vs DFEMX (para flagging de qualidade)
+    "french_em_corr_dfemx": 0.9657,
+
+    # French datasets (pandas_datareader)
+    "french_datasets": {
+        "us_5f": "F-F_Research_Data_5_Factors_2x3",
+        "em_5f": "Emerging_5_Factors",
+        "global_ex_us": "Global_ex_US_3_Factors",
+        "rf": "F-F_Research_Data_Factors",          # coluna RF para taxa livre de risco
+    },
+
+    # Rebalanceamento padrão e sensitivity
+    "rebalance_freq_padrao": "A",   # anual (dezembro)
+    "rebalance_freq_sensitivity": "ME",  # mensal
+
+    # Win rate: janelas rolantes (em meses)
+    "win_rate_windows": [120, 240],  # 10 anos, 20 anos
+
+    # Factor drought: janela de underperformance contínua
+    "factor_drought_window": 36,    # meses
+
+    # Décadas para CAGR por período
+    "decadas": [
+        {"label": "1994-1999", "start": "1994-12-01", "end": "1999-12-31"},
+        {"label": "2000-2009", "start": "2000-01-01", "end": "2009-12-31"},
+        {"label": "2010-2019", "start": "2010-01-01", "end": "2019-12-31"},
+        {"label": "2020-2026", "start": "2020-01-01", "end": None},
+    ],
 }
 
 

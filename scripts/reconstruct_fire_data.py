@@ -76,13 +76,14 @@ def gen_etf_composition():
 # ─── R5: Trilha Patrimonial ────────────────────────────────────────────────────
 
 def gen_fire_trilha():
-    """R5 — Trilha patrimonial esperada vs realizado por ano."""
+    """R5 — Trilha patrimonial esperada vs realizado por ano, extendida até 2040-01."""
     csv_path = DADOS / "historico_carteira.csv"
     if not csv_path.exists():
         print("  ⚠️  historico_carteira.csv não encontrado — skipping fire_trilha")
         return
 
     import csv as _csv
+    from dateutil.relativedelta import relativedelta
 
     rows = []
     with open(csv_path, newline="", encoding="utf-8") as f:
@@ -106,38 +107,65 @@ def gen_fire_trilha():
     aporte_mensal = APORTE_MENSAL  # 25000
 
     pat0 = rows[0]["patrimonio"]
-    trilha = []
-    for i, row in enumerate(rows):
-        # Trilha composta: pat0 × (1+r)^i + aportes acumulados
+
+    # Gerar trilha para todos os meses históricos
+    def _trilha_val(i):
         crescimento = pat0 * (1 + retorno_mensal) ** i
         aportes_acum = aporte_mensal * ((1 + retorno_mensal) ** i - 1) / retorno_mensal if retorno_mensal > 0 else aporte_mensal * i
-        trilha.append(round(crescimento + aportes_acum, 0))
+        return round(crescimento + aportes_acum, 0)
 
-    # Status: ahead/behind/on_track
-    status = []
-    for real, esp in zip([r["patrimonio"] for r in rows], trilha):
+    trilha_hist = [_trilha_val(i) for i, _ in enumerate(rows)]
+
+    # Status: ahead/behind/on_track (apenas para períodos históricos)
+    status_hist = []
+    for real, esp in zip([r["patrimonio"] for r in rows], trilha_hist):
         if real > esp * 1.05:
-            status.append("ahead")
+            status_hist.append("ahead")
         elif real < esp * 0.95:
-            status.append("behind")
+            status_hist.append("behind")
         else:
-            status.append("on_track")
+            status_hist.append("on_track")
+
+    # Extender datas até 2040-01 (data FIRE alvo)
+    fire_date_str = "2040-01"
+    last_hist_date_str = rows[-1]["date"]
+    last_hist_date = datetime.strptime(last_hist_date_str, "%Y-%m")
+    fire_date = datetime.strptime(fire_date_str, "%Y-%m")
+
+    # Gerar meses futuros (após último dado histórico até 2040-01 inclusive)
+    future_dates = []
+    future_trilha = []
+    cur = last_hist_date + relativedelta(months=1)
+    n_hist = len(rows)
+    while cur <= fire_date:
+        dt_str = cur.strftime("%Y-%m")
+        i = n_hist + len(future_dates)  # índice relativo ao início do histórico
+        future_dates.append(dt_str)
+        future_trilha.append(_trilha_val(i))
+        cur += relativedelta(months=1)
 
     # Meta FIRE: R$13.4M em 2040-01
     meta_fire_brl = PATRIMONIO_GATILHO
-    meta_fire_date = "2040-01"
+    meta_fire_date = fire_date_str
+
+    all_dates = [r["date"] for r in rows] + future_dates
+    all_trilha = trilha_hist + future_trilha
+    # realizado_brl: valor real para histórico, null para futuro
+    all_realizado = [round(r["patrimonio"], 0) for r in rows] + [None] * len(future_dates)
+    all_status = status_hist + ["future"] * len(future_dates)
 
     data = {
         "_generated": NOW,
         "_source": "reconstruct_fire_data.py",
-        "dates": [r["date"] for r in rows],
-        "trilha_brl": trilha,
-        "realizado_brl": [round(r["patrimonio"], 0) for r in rows],
-        "status": status,
+        "dates": all_dates,
+        "trilha_brl": all_trilha,
+        "realizado_brl": all_realizado,
+        "status": all_status,
         "meta_fire_brl": meta_fire_brl,
         "meta_fire_date": meta_fire_date,
         "retorno_anual_premissa": retorno_anual,
         "aporte_mensal_premissa": aporte_mensal,
+        "n_historico": n_hist,
     }
     _save(DADOS / "fire_trilha.json", data)
 
