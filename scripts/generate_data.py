@@ -468,35 +468,17 @@ def get_backtest():
 
 # ─── 4. ATTRIBUTION ───────────────────────────────────────────────────────────
 def get_attribution():
-    """Decomposição YTD do crescimento patrimonial em 3 componentes:
-      - aportes: aportes_mensais × meses_decorridos (jan-hoje)
-      - retornoUsd: retorno equity USD (contrib. equity_usd de decomposicao, ou proxy)
-      - cambio: variação cambial (contrib. fx de decomposicao, ou proxy)
+    """Decomposição desde o início dos aportes do patrimônio em 3 componentes:
+      - aportes:    soma de todos os aportes_brl do CSV (from day one)
+      - retornoUsd: retorno equity USD (fração equity_usd da decomposicao total)
+      - rfCambio:   RF doméstico + variação cambial (fração fx+rf_xp da decomposicao)
 
-    Fonte primária: retornos_mensais.json decomposicao (dados reais — sem _estimativa).
-    Fallback: proxy via pesos_target se decomposicao não disponível (_estimativa: True).
+    crescReal = pat_atual (total patrimônio), soma dos 3 = pat_atual.
+    Fonte primária: retornos_mensais.json decomposicao (todos os meses).
+    Fallback: proxy via pesos_target se decomposicao não disponível.
     """
     try:
-        # 1. Patrimônio início do ano: última linha de dez/2025 ou 2026-01 no CSV
-        pat_inicio = None
-        if CSV_PATH.exists():
-            with open(CSV_PATH) as f:
-                reader = csv.DictReader(f)
-                for row in reader:
-                    keys = list(row.keys())
-                    date_col = next((k for k in keys if 'data' in k.lower() or 'date' in k.lower()), keys[0] if keys else None)
-                    val_col  = next((k for k in keys if 'patrimônio' in k.lower() or 'patrimonio' in k.lower() or 'total' in k.lower() or 'valor' in k.lower()), keys[1] if len(keys) > 1 else None)
-                    if not date_col or not val_col:
-                        continue
-                    d = row[date_col].strip()
-                    if d.startswith("2025-12") or d.startswith("2026-01"):
-                        try:
-                            v = float(row[val_col].replace(',', '.').replace(' ', ''))
-                            pat_inicio = v
-                        except ValueError:
-                            pass
-
-        # 2. Patrimônio atual — de dashboard_state.json
+        # 1. Patrimônio atual — de dashboard_state.json
         state = load_state()
         pat_atual = state.get("patrimonio", {}).get("total_brl")
         if pat_atual is None:
@@ -511,76 +493,81 @@ def get_attribution():
             if _total > 0:
                 pat_atual = _total
 
-        if pat_inicio is None or pat_atual is None:
+        if pat_atual is None:
             return None
 
-        # 3. Aportes YTD: jan=1 ... hoje
-        hoje = date.today()
-        meses = hoje.month - 1
-        if meses <= 0:
-            meses = 1
-        aportes_ytd = APORTE_MENSAL * meses
+        # 2. Total aportes histórico: soma de todos aporte_brl do CSV
+        total_aportes = 0
+        data_inicio = None
+        if CSV_PATH.exists():
+            with open(CSV_PATH) as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    keys = list(row.keys())
+                    date_col = next((k for k in keys if 'data' in k.lower() or 'date' in k.lower()), keys[0] if keys else None)
+                    ap_col   = next((k for k in keys if 'aporte' in k.lower()), None)
+                    if not date_col or not ap_col:
+                        continue
+                    if data_inicio is None:
+                        data_inicio = row[date_col].strip()[:7]  # YYYY-MM
+                    try:
+                        v = float(row[ap_col].replace(',', '.').replace(' ', ''))
+                        total_aportes += v
+                    except ValueError:
+                        pass
 
-        # 4. Crescimento real total
-        cresc_real = pat_atual - pat_inicio
+        # 3. Retorno de mercado (tudo que não é aporte)
+        retorno_mercado = pat_atual - total_aportes
 
-        # 5. Tentar usar decomposicao real de retornos_mensais.json (dados não-estimados)
+        # 4. Decompor retorno_mercado em equity_usd vs rf+câmbio usando todos os meses
         if RETORNOS_CORE.exists():
             try:
                 _rc = json.loads(RETORNOS_CORE.read_text())
-                _dates = _rc.get("dates", [])
                 _dec = _rc.get("decomposicao", {})
                 _eq_usd = _dec.get("equity_usd", [])
-                _fx = _dec.get("fx", [])
+                _fx     = _dec.get("fx", [])
+                _rf     = _dec.get("rf_xp", [])
 
-                if _eq_usd and _fx and len(_eq_usd) == len(_dates):
-                    # Filtrar meses YTD (a partir de jan do ano corrente)
-                    ano_atual = str(hoje.year)
-                    ytd_eq_usd = []
-                    ytd_fx = []
-                    for i, d in enumerate(_dates):
-                        if d.startswith(ano_atual):
-                            if i < len(_eq_usd):
-                                ytd_eq_usd.append(_eq_usd[i])
-                            if i < len(_fx):
-                                ytd_fx.append(_fx[i])
+                sum_eq  = sum(_eq_usd) if _eq_usd else 0
+                sum_fx  = sum(_fx)     if _fx     else 0
+                sum_rf  = sum(_rf)     if _rf     else 0
+                total_dec = sum_eq + sum_fx + sum_rf
 
-                    if ytd_eq_usd or ytd_fx:
-                        # Contribuições em pp; converter para BRL usando pat_inicio como base
-                        # Acumular: contrib_total ≈ soma_pp/100 × pat_inicio (aproximação 1ª ordem)
-                        total_eq_usd_pp = sum(ytd_eq_usd)
-                        total_fx_pp = sum(ytd_fx)
-                        retorno_usd = round(total_eq_usd_pp / 100 * pat_inicio)
-                        cambio_fx   = round(total_fx_pp  / 100 * pat_inicio)
-                        print(f"  → attribution (decomposicao real): pat_inicio=R${pat_inicio/1e3:.0f}k | "
-                              f"aportes=R${aportes_ytd/1e3:.0f}k | retornoUsd=R${retorno_usd/1e3:.0f}k | "
-                              f"cambio=R${cambio_fx/1e3:.0f}k | meses_ytd={len(ytd_eq_usd)}")
-                        return {
-                            "aportes":     aportes_ytd,
-                            "retornoUsd":  retorno_usd,
-                            "cambio":      cambio_fx,
-                            "crescReal":   round(cresc_real),
-                            "_estimativa": False,  # dados reais de retornos_mensais.json
-                            "_fonte":      "retornos_mensais.json decomposicao",
-                        }
+                if total_dec > 0:
+                    retorno_usd = round(retorno_mercado * sum_eq  / total_dec)
+                    cambio_rf   = round(retorno_mercado - retorno_usd)
+                    print(f"  → attribution (desde início, decomposicao real): "
+                          f"inicio={data_inicio} | pat=R${pat_atual/1e6:.2f}M | "
+                          f"aportes=R${total_aportes/1e6:.2f}M | retornoUsd=R${retorno_usd/1e6:.2f}M | "
+                          f"rfCambio=R${cambio_rf/1e6:.2f}M | meses={len(_eq_usd)}")
+                    return {
+                        "aportes":     round(total_aportes),
+                        "retornoUsd":  retorno_usd,
+                        "cambio":      cambio_rf,
+                        "crescReal":   round(pat_atual),
+                        "_estimativa": False,
+                        "_fonte":      "retornos_mensais.json decomposicao (desde início)",
+                        "_inicio":     data_inicio or "",
+                    }
             except Exception as _e:
                 print(f"  ⚠️ attribution decomposicao: {_e} — usando proxy")
 
-        # 6. Fallback: proxy via pesos_target
-        cresc_nao_aporte = cresc_real - aportes_ytd
-        peso_equity = PESOS_TARGET.get("equity", 0.70)  # lê de PESOS_TARGET, sem hardcode
-        retorno_usd = round(cresc_nao_aporte * peso_equity)
-        cambio_fx   = round(cresc_nao_aporte - retorno_usd)
+        # 5. Fallback: proxy via pesos_target
+        peso_equity = PESOS_TARGET.get("equity", 0.70)
+        retorno_usd = round(retorno_mercado * peso_equity)
+        cambio_rf   = round(retorno_mercado - retorno_usd)
 
-        print(f"  → attribution (proxy): pat_inicio=R${pat_inicio/1e3:.0f}k | pat_atual=R${pat_atual/1e3:.0f}k | "
-              f"aportes=R${aportes_ytd/1e3:.0f}k | retornoUsd=R${retorno_usd/1e3:.0f}k | cambio=R${cambio_fx/1e3:.0f}k")
+        print(f"  → attribution (proxy desde início): pat=R${pat_atual/1e6:.2f}M | "
+              f"aportes=R${total_aportes/1e6:.2f}M | retornoUsd=R${retorno_usd/1e6:.2f}M | "
+              f"rfCambio=R${cambio_rf/1e6:.2f}M")
 
         return {
-            "aportes":     aportes_ytd,
+            "aportes":     round(total_aportes),
             "retornoUsd":  retorno_usd,
-            "cambio":      cambio_fx,
-            "crescReal":   round(cresc_real),
+            "cambio":      cambio_rf,
+            "crescReal":   round(pat_atual),
             "_estimativa": True,
+            "_inicio":     data_inicio or "",
         }
     except Exception as e:
         print(f"  ⚠️ attribution: {e}")

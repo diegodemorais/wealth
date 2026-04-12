@@ -530,21 +530,21 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <div class="section" id="attrSection" data-in-tab="perf">
-<h2>Performance Attribution — Decomposição do Retorno</h2>
+<h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
 <div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio BRL/USD</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
   </div>
   <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
   <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
     📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal">—</strong>/ano
-    <span title="Este CAGR de 18.1%/ano inclui os aportes mensais de R$25k — não é retorno puro do investimento. Use TWR USD/BRL para avaliar performance real dos ETFs." style="cursor:help;color:var(--accent)"> ⓘ</span>
+    <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style="cursor:help;color:var(--accent)"> ⓘ</span>
   </div>
 </div>
-<div class="src">⚠️ Estimativa — retorno USD e câmbio são componentes residuais, não cálculos exatos de decomposição. Crescimento inclui aportes ≠ performance dos ETFs.</div>
+<div class="src">Onde está o seu patrimônio hoje: aportes investidos + retorno em USD dos ETFs + RF doméstica e variação cambial. Use TWR para performance pura (sem efeito de aportes).</div>
 </div>
 
 <!-- S8: GEO DONUT -->
@@ -1386,12 +1386,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T14:30:36-03:00'); // BRT (UTC-3)
-const VERSION = '1.173';
+const GENERATED_AT = new Date('2026-04-12T16:37:42-03:00'); // BRT (UTC-3)
+const VERSION = '1.174';
 
 const DATA = {
-  "_generated": "2026-04-12T08:57:38",
-  "_generated_brt": "2026-04-12T08:57:38-03:00",
+  "_generated": "2026-04-12T16:37:39",
+  "_generated_brt": "2026-04-12T16:37:39-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1594,28 +1594,28 @@ const DATA = {
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -3749,12 +3749,13 @@ const DATA = {
     }
   ],
   "attribution": {
-    "aportes": 75000,
-    "retornoUsd": 235456,
-    "cambio": -216440,
-    "crescReal": 14831,
+    "aportes": 2284059,
+    "retornoUsd": 871869,
+    "cambio": 316407,
+    "crescReal": 3472335,
     "_estimativa": false,
-    "_fonte": "retornos_mensais.json decomposicao"
+    "_fonte": "retornos_mensais.json decomposicao (desde início)",
+    "_inicio": "2021-04"
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
@@ -7777,7 +7778,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.173"
+  "version": "1.174"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8163,35 +8164,37 @@ window.setTimelinePeriod = function(p) {
 // ── S7: Attribution ───────────────────────────────────────────
 function buildAttribution() {
   const a = DATA.attribution;
-  const hasDecomp = a.retornoUsd !== null && a.cambio !== null;
-
-  if (!hasDecomp) {
-    // Dado parcial = ruído. Ocultar seção inteira até decomposição ficar disponível.
+  if (!a || a.retornoUsd === null || a.retornoUsd === undefined) {
     const sec = document.getElementById('attrSection');
     if (sec) sec.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:.8rem">
       📊 <strong>Performance Attribution indisponível</strong><br>
-      <span style="font-size:.7rem">Decomposição Retorno USD + Câmbio requer 12+ meses de dados.<br>
-      Atualizar dashboard para habilitar esta seção.</span>
+      <span style="font-size:.7rem">Rode generate_data.py para habilitar esta seção.</span>
     </div>`;
     return;
   }
 
+  // Período desde o início
+  const periodoEl = document.getElementById('attrPeriodo');
+  if (periodoEl && a._inicio) periodoEl.textContent = `(desde ${a._inicio})`;
+
   document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
   document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
+  document.getElementById('attrRetorno').textContent = fmtBrl(a.retornoUsd);
+  document.getElementById('attrCambio').textContent  = fmtBrl(a.cambio);
 
-  // Decomposição completa disponível
+  // crescReal = pat_atual; attrSum = aportes + retornoUsd + cambio ≈ pat_atual
   const attrSum = a.aportes + a.retornoUsd + a.cambio;
   const gap = Math.abs(attrSum - a.crescReal);
-  const gapPct = gap / a.crescReal;
-  document.getElementById('attrRetorno').textContent = fmtBrl(a.retornoUsd);
-  document.getElementById('attrCambio').textContent = fmtBrl(a.cambio);
+  const gapPct = a.crescReal > 0 ? gap / a.crescReal : 0;
   const msg = document.getElementById('attrGapMsg');
-  if (gapPct > 0.05) {
-    msg.textContent = `⚠️ Gap de fechamento: R$ ${(gap/1000).toFixed(0)}k (${(gapPct*100).toFixed(1)}%) — estimativa sem decomposição completa`;
+  if (gapPct > 0.03) {
+    msg.textContent = `⚠️ Gap: R$ ${(gap/1000).toFixed(0)}k (${(gapPct*100).toFixed(1)}%) — aproximação da decomposição`;
     msg.style.color = '#eab308';
   } else {
-    msg.textContent = `✅ Soma fecha: ±${(gapPct*100).toFixed(1)}% do crescimento real`;
-    msg.style.color = '#22c55e';
+    const aportePct = a.crescReal > 0 ? (a.aportes / a.crescReal * 100).toFixed(0) : 0;
+    const retornoPct = a.crescReal > 0 ? (a.retornoUsd / a.crescReal * 100).toFixed(0) : 0;
+    msg.textContent = `${aportePct}% aportes · ${retornoPct}% retorno USD · resto RF+câmbio`;
+    msg.style.color = '#94a3b8';
   }
 
   const attrTotal = Math.abs(a.aportes) + Math.abs(a.retornoUsd) + Math.abs(a.cambio);
@@ -8224,19 +8227,19 @@ function buildAttribution() {
   charts.attr = new Chart(document.getElementById('attrChart'), {
     type: 'bar',
     data: {
-      labels: ['Decomposição do Retorno'],
+      labels: ['Origem do Patrimônio'],
       datasets: [
-        { label: 'Aportes', data: [a.aportes], backgroundColor: '#3b82f6' },
-        { label: 'Retorno USD', data: [a.retornoUsd], backgroundColor: '#22c55e' },
-        { label: 'Câmbio BRL/USD', data: [a.cambio], backgroundColor: '#eab308' },
+        { label: 'Aportes',      data: [a.aportes],     backgroundColor: '#3b82f6' },
+        { label: 'Retorno USD',  data: [a.retornoUsd],  backgroundColor: '#22c55e' },
+        { label: 'RF + Câmbio',  data: [a.cambio],      backgroundColor: '#eab308' },
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { labels: { color: '#94a3b8' } } },
       scales: {
-        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     },
     plugins: [attrLabelPlugin]
@@ -11914,12 +11917,14 @@ if (Date.now() - GENERATED_AT > 7*86400000) {
   document.querySelector('.header').insertAdjacentHTML('beforeend',
     '<div style="background:#ef4444;color:white;padding:6px;border-radius:6px;margin-top:8px;font-size:.8rem">⚠️ Dashboard desatualizado — rebuild necessário</div>');
 }
-// Attribution closure check (só quando decomposição completa disponível)
-if (DATA.attribution.retornoUsd !== null && DATA.attribution.cambio !== null) {
+// Attribution closure check (quando disponível)
+if (DATA.attribution && DATA.attribution.retornoUsd != null && DATA.attribution.cambio != null) {
   const attrSum = DATA.attribution.aportes + DATA.attribution.retornoUsd + DATA.attribution.cambio;
   const crescReal = DATA.attribution.crescReal;
-  console.assert(Math.abs(attrSum - crescReal) / crescReal < 0.05,
-    `Attribution não fecha: ${attrSum} vs ${crescReal} — gap ${((Math.abs(attrSum-crescReal)/crescReal)*100).toFixed(1)}%`);
+  if (crescReal > 0) {
+    console.assert(Math.abs(attrSum - crescReal) / crescReal < 0.05,
+      `Attribution não fecha: ${attrSum} vs ${crescReal} — gap ${((Math.abs(attrSum-crescReal)/crescReal)*100).toFixed(1)}%`);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -12136,7 +12141,22 @@ window.switchTab = function(name) {
     if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
   }
   requestAnimationFrame(() => {
-    Object.values(charts).forEach(c => { if (c && typeof c.resize === 'function') c.resize(); });
+    // Only act on charts in the active tab — resizing hidden-tab canvases (display:none)
+    // corrupts Chart.js internal dimensions and breaks re-render on next tab switch.
+    const tabCanvases = new Set(
+      Array.from(document.querySelectorAll('[data-in-tab="' + name + '"] canvas'))
+    );
+    Object.values(charts).forEach(c => {
+      if (!c || typeof c.resize !== 'function' || !tabCanvases.has(c.canvas)) return;
+      if (c.canvas.closest('.collapsible:not(.open)')) return; // skip collapsed
+      if (c.canvas.offsetWidth > 0 && c.canvas.offsetHeight > 0) {
+        c.resize();
+      } else {
+        // Open section but zero canvas — rebuild
+        const builder = _chartBuilders[c.canvas.id];
+        if (builder) { try { builder(); } catch(e) { console.warn('[tab-rebuild]', c.canvas.id, e); } }
+      }
+    });
   });
   try { localStorage.setItem('dash_tab', name); } catch(e) {}
 };
@@ -12756,6 +12776,11 @@ function buildFireTrilha() {
     });
   }
 
+  // Scale: cap at 2.5× current realizado max so near-term progress is legible
+  const _rVals = realizado.filter(v => v != null && !isNaN(v) && v > 0);
+  const _yMax = _rVals.length ? Math.max(..._rVals) * 2.5 : (meta || 15e6) * 1.1;
+  const _yMin = _rVals.length ? Math.min(..._rVals) * 0.85 : 0;
+
   if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
   const ctx = el.getContext('2d');
   charts.fireTrilha = new Chart(ctx, {
@@ -12778,6 +12803,7 @@ function buildFireTrilha() {
       scales: {
         x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.15)' } },
         y: {
+          min: _yMin, max: _yMax,
           ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => 'R$' + (v / 1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.15)' },
         }

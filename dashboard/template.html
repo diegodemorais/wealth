@@ -530,21 +530,21 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <div class="section" id="attrSection" data-in-tab="perf">
-<h2>Performance Attribution — Decomposição do Retorno</h2>
+<h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
 <div class="chart-box-sm"><canvas id="attrChart"></canvas></div>
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio BRL/USD</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
   </div>
   <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
   <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
     📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal">—</strong>/ano
-    <span title="Este CAGR de 18.1%/ano inclui os aportes mensais de R$25k — não é retorno puro do investimento. Use TWR USD/BRL para avaliar performance real dos ETFs." style="cursor:help;color:var(--accent)"> ⓘ</span>
+    <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style="cursor:help;color:var(--accent)"> ⓘ</span>
   </div>
 </div>
-<div class="src">⚠️ Estimativa — retorno USD e câmbio são componentes residuais, não cálculos exatos de decomposição. Crescimento inclui aportes ≠ performance dos ETFs.</div>
+<div class="src">Onde está o seu patrimônio hoje: aportes investidos + retorno em USD dos ETFs + RF doméstica e variação cambial. Use TWR para performance pura (sem efeito de aportes).</div>
 </div>
 
 <!-- S8: GEO DONUT -->
@@ -1771,35 +1771,37 @@ window.setTimelinePeriod = function(p) {
 // ── S7: Attribution ───────────────────────────────────────────
 function buildAttribution() {
   const a = DATA.attribution;
-  const hasDecomp = a.retornoUsd !== null && a.cambio !== null;
-
-  if (!hasDecomp) {
-    // Dado parcial = ruído. Ocultar seção inteira até decomposição ficar disponível.
+  if (!a || a.retornoUsd === null || a.retornoUsd === undefined) {
     const sec = document.getElementById('attrSection');
     if (sec) sec.innerHTML = `<div style="padding:12px;text-align:center;color:var(--muted);font-size:.8rem">
       📊 <strong>Performance Attribution indisponível</strong><br>
-      <span style="font-size:.7rem">Decomposição Retorno USD + Câmbio requer 12+ meses de dados.<br>
-      Atualizar dashboard para habilitar esta seção.</span>
+      <span style="font-size:.7rem">Rode generate_data.py para habilitar esta seção.</span>
     </div>`;
     return;
   }
 
+  // Período desde o início
+  const periodoEl = document.getElementById('attrPeriodo');
+  if (periodoEl && a._inicio) periodoEl.textContent = `(desde ${a._inicio})`;
+
   document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
   document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
+  document.getElementById('attrRetorno').textContent = fmtBrl(a.retornoUsd);
+  document.getElementById('attrCambio').textContent  = fmtBrl(a.cambio);
 
-  // Decomposição completa disponível
+  // crescReal = pat_atual; attrSum = aportes + retornoUsd + cambio ≈ pat_atual
   const attrSum = a.aportes + a.retornoUsd + a.cambio;
   const gap = Math.abs(attrSum - a.crescReal);
-  const gapPct = gap / a.crescReal;
-  document.getElementById('attrRetorno').textContent = fmtBrl(a.retornoUsd);
-  document.getElementById('attrCambio').textContent = fmtBrl(a.cambio);
+  const gapPct = a.crescReal > 0 ? gap / a.crescReal : 0;
   const msg = document.getElementById('attrGapMsg');
-  if (gapPct > 0.05) {
-    msg.textContent = `⚠️ Gap de fechamento: R$ ${(gap/1000).toFixed(0)}k (${(gapPct*100).toFixed(1)}%) — estimativa sem decomposição completa`;
+  if (gapPct > 0.03) {
+    msg.textContent = `⚠️ Gap: R$ ${(gap/1000).toFixed(0)}k (${(gapPct*100).toFixed(1)}%) — aproximação da decomposição`;
     msg.style.color = '#eab308';
   } else {
-    msg.textContent = `✅ Soma fecha: ±${(gapPct*100).toFixed(1)}% do crescimento real`;
-    msg.style.color = '#22c55e';
+    const aportePct = a.crescReal > 0 ? (a.aportes / a.crescReal * 100).toFixed(0) : 0;
+    const retornoPct = a.crescReal > 0 ? (a.retornoUsd / a.crescReal * 100).toFixed(0) : 0;
+    msg.textContent = `${aportePct}% aportes · ${retornoPct}% retorno USD · resto RF+câmbio`;
+    msg.style.color = '#94a3b8';
   }
 
   const attrTotal = Math.abs(a.aportes) + Math.abs(a.retornoUsd) + Math.abs(a.cambio);
@@ -1832,19 +1834,19 @@ function buildAttribution() {
   charts.attr = new Chart(document.getElementById('attrChart'), {
     type: 'bar',
     data: {
-      labels: ['Decomposição do Retorno'],
+      labels: ['Origem do Patrimônio'],
       datasets: [
-        { label: 'Aportes', data: [a.aportes], backgroundColor: '#3b82f6' },
-        { label: 'Retorno USD', data: [a.retornoUsd], backgroundColor: '#22c55e' },
-        { label: 'Câmbio BRL/USD', data: [a.cambio], backgroundColor: '#eab308' },
+        { label: 'Aportes',      data: [a.aportes],     backgroundColor: '#3b82f6' },
+        { label: 'Retorno USD',  data: [a.retornoUsd],  backgroundColor: '#22c55e' },
+        { label: 'RF + Câmbio',  data: [a.cambio],      backgroundColor: '#eab308' },
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { labels: { color: '#94a3b8' } } },
       scales: {
-        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
+        x: { stacked: true, ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1e6).toFixed(1)+'M' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
     },
     plugins: [attrLabelPlugin]
@@ -5522,12 +5524,14 @@ if (Date.now() - GENERATED_AT > 7*86400000) {
   document.querySelector('.header').insertAdjacentHTML('beforeend',
     '<div style="background:#ef4444;color:white;padding:6px;border-radius:6px;margin-top:8px;font-size:.8rem">⚠️ Dashboard desatualizado — rebuild necessário</div>');
 }
-// Attribution closure check (só quando decomposição completa disponível)
-if (DATA.attribution.retornoUsd !== null && DATA.attribution.cambio !== null) {
+// Attribution closure check (quando disponível)
+if (DATA.attribution && DATA.attribution.retornoUsd != null && DATA.attribution.cambio != null) {
   const attrSum = DATA.attribution.aportes + DATA.attribution.retornoUsd + DATA.attribution.cambio;
   const crescReal = DATA.attribution.crescReal;
-  console.assert(Math.abs(attrSum - crescReal) / crescReal < 0.05,
-    `Attribution não fecha: ${attrSum} vs ${crescReal} — gap ${((Math.abs(attrSum-crescReal)/crescReal)*100).toFixed(1)}%`);
+  if (crescReal > 0) {
+    console.assert(Math.abs(attrSum - crescReal) / crescReal < 0.05,
+      `Attribution não fecha: ${attrSum} vs ${crescReal} — gap ${((Math.abs(attrSum-crescReal)/crescReal)*100).toFixed(1)}%`);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════

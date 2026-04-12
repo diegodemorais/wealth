@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-12T08:57:38",
-  "_generated_brt": "2026-04-12T08:57:38-03:00",
+  "_generated": "2026-04-12T16:37:39",
+  "_generated_brt": "2026-04-12T16:37:39-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -203,28 +203,28 @@
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -2358,12 +2358,13 @@
     }
   ],
   "attribution": {
-    "aportes": 75000,
-    "retornoUsd": 235456,
-    "cambio": -216440,
-    "crescReal": 14831,
+    "aportes": 2284059,
+    "retornoUsd": 871869,
+    "cambio": 316407,
+    "crescReal": 3472335,
     "_estimativa": false,
-    "_fonte": "retornos_mensais.json decomposicao"
+    "_fonte": "retornos_mensais.json decomposicao (desde início)",
+    "_inicio": "2021-04"
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
