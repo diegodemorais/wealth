@@ -5,22 +5,20 @@ Executes functional tests across all dashboard blocks.
 
 Usage:
     python scripts/test_dashboard.py                          # TIA auto-routing (default)
-    python scripts/test_dashboard.py --mode smoke             # ~113 tests: DOM_REF CRITICAL + SPEC + SMOKE
-    python scripts/test_dashboard.py --mode smart             # ~235 tests: smoke + RENDER + TAB_SWITCH + DOM_REF HIGH + PRIVACY
-    python scripts/test_dashboard.py --mode full              # all tests (~576)
+    python scripts/test_dashboard.py --mode smart             # ~276 tests: structural checks
+    python scripts/test_dashboard.py --mode full              # 578 tests: all categories
     python scripts/test_dashboard.py --domain fire            # single domain, full mode
-    python scripts/test_dashboard.py --mode component --component fire-trilha  # specific component
+    python scripts/test_dashboard.py --mode component --component fire-trilha
 
 Mode definitions (by category):
-    smoke  = {SMOKE, SPEC, DOM_REF} at CRITICAL+HIGH — "did I break the page structure?"
-    smart  = {SMOKE, SPEC, DOM_REF, RENDER, TAB_SWITCH, PRIVACY} — "did I break any visible feature?"
-    full   = all categories — "are all contracts still valid?" (DATA + VALUE added)
+    smart = {SMOKE, SPEC, DOM_REF, RENDER, TAB_SWITCH, PRIVACY} — "did I break any visible feature?"
+    full  = all categories — "are all contracts still valid?" (adds DATA + VALUE)
 
 TIA auto-routing (default, no --mode flag):
-    docs/agentes/ only  → smoke
+    docs/agentes/ only  → 0 tests (no code changed)
     template.html       → smart
     *.py or dados/      → full
-    unknown files       → smart (safe default)
+    unknown files       → 0 tests (likely a doc)
 
 Output: console report + dashboard/tests/last_run.json
 
@@ -60,38 +58,32 @@ DOMAIN_MODULES = [
 SEVERITY_ORDER = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2}
 
 # ── Mode category filters ─────────────────────────────────────────────────────
-# smoke: fast sanity — did I break the page structure?
-SMOKE_CATS = {"SMOKE", "SPEC", "DOM_REF"}
-SMOKE_SEVERITIES = {"CRITICAL", "HIGH"}
-
-# smart: feature safety — did I break any visible feature?
+# smart: structural safety — did I break any visible feature?
 SMART_CATS = {"SMOKE", "SPEC", "DOM_REF", "RENDER", "TAB_SWITCH", "PRIVACY"}
-# (all severities within those categories)
 
 # full: contract validation — are all business contracts still valid?
-# (all categories, all severities)
+# (all categories, all severities — adds DATA + VALUE)
 
 # ── TIA — file → mode routing ────────────────────────────────────────────────
-# Patterns determine the MINIMUM mode for the changed file.
-# The highest mode across all changed files wins.
+# None  = 0 tests (docs only — no code changed)
+# smart = structural checks (~276 tests)
+# full  = all tests (578)
 #
-# Mode levels: smoke=0, smart=1, full=2
-# Docs → smoke; template/spec → smart; *.py/dados/ → full; unknown → smoke
-#
+# The highest level across all changed files wins.
 # Matching order: exact > startswith (dict insertion order, first match wins).
 # More specific patterns must come BEFORE broader prefix patterns.
 
 FILE_TO_MODE = {
-    # ── smoke: docs, test infra, generated artefacts ──────────────────────────
-    'CLAUDE.md':                        'smoke',
-    'README.md':                        'smoke',
-    'agentes/':                         'smoke',
-    'analysis/':                        'smoke',
-    'protocolos/':                      'smoke',
-    'dashboard/tests/':                 'smoke',
-    'dashboard/version.json':           'smoke',
-    'dashboard/last_run.json':          'smoke',
-    'scripts/test_dashboard.py':        'smoke',  # must be before scripts/ catch-all
+    # ── None: docs, test infra, generated artefacts ───────────────────────────
+    'CLAUDE.md':                        None,
+    'README.md':                        None,
+    'agentes/':                         None,
+    'analysis/':                        None,
+    'protocolos/':                      None,
+    'dashboard/tests/':                 None,
+    'dashboard/version.json':           None,
+    'dashboard/last_run.json':          None,
+    'scripts/test_dashboard.py':        None,  # must be before scripts/ catch-all
 
     # ── smart: template, spec, index ─────────────────────────────────────────
     'dashboard/template.html':          'smart',
@@ -99,23 +91,19 @@ FILE_TO_MODE = {
     'dashboard/spec.json':              'smart',
 
     # ── full: any script, source data, or pipeline output ────────────────────
-    # data.json is the pipeline output — DATA/VALUE tests validate its contents
     'dashboard/data.json':              'full',
-    # Named scripts (redundant with scripts/ catch-all, but explicit is clearer)
     'scripts/build_dashboard.py':       'full',
     'scripts/generate_data.py':         'full',
     'scripts/reconstruct_fire_data.py': 'full',
     'scripts/config.py':                'full',
     'scripts/fire_montecarlo.py':       'full',
     'scripts/portfolio_analytics.py':   'full',
-    # Catch-all: any script not explicitly listed above
     'scripts/':                         'full',
-    # All source data
     'dados/':                           'full',
 }
 
-MODE_LEVEL = {'smoke': 0, 'smart': 1, 'full': 2}
-LEVEL_MODE = {0: 'smoke', 1: 'smart', 2: 'full'}
+MODE_LEVEL = {None: 0, 'smart': 1, 'full': 2}
+LEVEL_MODE = {0: None, 1: 'smart', 2: 'full'}
 
 # ANSI colors
 RED = "\033[91m"
@@ -159,26 +147,25 @@ def _file_to_mode(changed_file: str) -> str:
         else:
             if changed_file == pattern or changed_file.startswith(pattern):
                 return mode
-    # Unknown file → smoke (likely a doc or untracked artefact — not a code change)
-    return 'smoke'
+    # Unknown file → None (likely a doc or untracked artefact — not a code change)
+    return None
 
 
-def resolve_tia_mode(modified_files: list[str]) -> str:
+def resolve_tia_mode(modified_files: list[str]) -> str | None:
     """
     Given a list of modified file paths, return the required test mode.
-    The highest mode level across all files wins.
+    Returns None (zero tests), 'smart', or 'full'.
+    The highest level across all files wins.
     """
     if not modified_files:
-        return 'smoke'
+        return None
     level = max(MODE_LEVEL[_file_to_mode(f)] for f in modified_files)
     return LEVEL_MODE[level]
 
 
-def filter_by_mode(results, mode: str):
-    """Filter test results to match the given mode's category/severity scope."""
-    if mode == 'smoke':
-        return [r for r in results if r.category in SMOKE_CATS and r.severity in SMOKE_SEVERITIES]
-    elif mode == 'smart':
+def filter_by_mode(results, mode):
+    """Filter test results to match the given mode's category scope."""
+    if mode == 'smart':
         return [r for r in results if r.category in SMART_CATS]
     else:  # full
         return list(results)
@@ -260,7 +247,7 @@ def run(args):
         results = list(all_results)
         mode = "full"
 
-    elif args.mode in ("smoke", "smart", "full"):
+    elif args.mode in ("smart", "full"):
         # Explicit mode — no TIA
         mode = args.mode
         results = filter_by_mode(all_results, mode)
@@ -276,10 +263,20 @@ def run(args):
             mode = resolve_tia_mode(modified)
             changed_names = [Path(f).name for f in modified] if modified else []
             files_str = ", ".join(changed_names) if changed_names else "nenhum"
-            tia_header = (
-                f"{CYAN}{BOLD}TIA — arquivos modificados: {files_str}{RESET}\n"
-                f"{CYAN}   Modo selecionado: {mode.upper()}{RESET}"
-            )
+            if mode is None:
+                tia_header = (
+                    f"{CYAN}{BOLD}TIA — arquivos modificados: {files_str}{RESET}\n"
+                    f"{CYAN}   Apenas docs/infra — 0 testes necessários{RESET}"
+                )
+                print(f"\n{tia_header}")
+                save_last_run([], {}, [], "none")
+                print(f"  Results saved to: {LAST_RUN_PATH.relative_to(ROOT)}\n")
+                sys.exit(0)
+            else:
+                tia_header = (
+                    f"{CYAN}{BOLD}TIA — arquivos modificados: {files_str}{RESET}\n"
+                    f"{CYAN}   Modo selecionado: {mode.upper()}{RESET}"
+                )
         results = filter_by_mode(all_results, mode)
 
     # Legacy --quick flag
@@ -320,8 +317,7 @@ def run(args):
 
     # Mode label for display
     mode_labels = {
-        "smoke": f"SMOKE (~{len(results)} tests — DOM_REF CRITICAL + SPEC + SMOKE)",
-        "smart": f"SMART (~{len(results)} tests — smoke + RENDER + TAB_SWITCH + DOM_REF HIGH + PRIVACY)",
+        "smart": f"SMART ({len(results)} tests — structural: DOM_REF + RENDER + TAB_SWITCH + PRIVACY)",
         "full":  f"FULL ({len(results)} tests — all categories)",
         "component": f"COMPONENT: {args.component}" if args.component else "COMPONENT",
         "quick": "QUICK (CRITICAL only)",
@@ -394,12 +390,11 @@ def main():
     )
     parser.add_argument(
         "--mode",
-        choices=["smoke", "smart", "full", "component"],
+        choices=["smart", "full", "component"],
         default=None,
         help=(
-            "smoke: ~113 tests — DOM_REF CRITICAL + SPEC + SMOKE. "
-            "smart: ~235 tests — smoke + RENDER + TAB_SWITCH + DOM_REF HIGH + PRIVACY. "
-            "full: all tests (~576) — adds DATA + VALUE contracts. "
+            "smart: ~276 tests — structural checks (DOM_REF, RENDER, TAB_SWITCH, PRIVACY). "
+            "full: 578 tests — adds DATA + VALUE contract validation. "
             "component: tests for a specific component (requires --component). "
             "Default: TIA auto-routing via git diff."
         ),
