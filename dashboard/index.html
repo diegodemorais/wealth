@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T20:32:47-03:00'); // BRT (UTC-3)
-const VERSION = '1.197';
+const GENERATED_AT = new Date('2026-04-12T20:45:57-03:00'); // BRT (UTC-3)
+const VERSION = '1.199';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.197"
+  "version": "1.199"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10941,6 +10941,8 @@ function buildNetWorthProjection() {
   if (!nw) return;
   const ctx = document.getElementById('netWorthProjectionChart');
   if (!ctx) return;
+  // Canvas 0×0 em tab oculta → sair; switchTab double-RAF reconstrói após reflow
+  if (ctx.offsetWidth === 0) return;
 
   // Focar no horizonte de acumulação até FIRE — cortar dados pós-FIRE (décadas irrelevantes)
   const _anoFire = nw.ano_fire || 2040;
@@ -12839,8 +12841,9 @@ window._toggleBlock = function(el) {
   const wasOpen = el.classList.contains('open');
   el.classList.toggle('open');
   if (!wasOpen) {
-    // Opening: give the browser one frame to apply display:block, then resize/rebuild
-    requestAnimationFrame(() => {
+    // Opening: double-RAF garante reflow completo após display:block antes de ler offsetWidth
+    // Single RAF não garante layout flush quando CSS muda de display:none → display:block.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       el.querySelectorAll('canvas').forEach(canvas => {
         const builder = _chartBuilders[canvas.id];
         if (builder) {
@@ -12852,7 +12855,7 @@ window._toggleBlock = function(el) {
           if (chart) chart.resize();
         }
       });
-    });
+    }));
   }
 };
 
@@ -12863,14 +12866,15 @@ window.switchTab = function(name) {
     el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
   });
   // Lazy init: inicializar charts da aba apenas na primeira abertura
-  // requestAnimationFrame garante que o browser fez layout flush antes de ler offsetWidth nos builders
+  // Double-RAF: primeiro frame remove tab-hidden; segundo frame garante reflow completo
+  // antes de ler offsetWidth nos builders (single RAF não garante layout flush após display change).
   if (!_tabInitialized[name]) {
     _tabInitialized[name] = true;
-    requestAnimationFrame(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       _initTabCharts(name);
       // Aplicar privacy após lazy init (charts inexistentes no page load)
       if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
-    });
+    }));
   }
   requestAnimationFrame(() => {
     // Only act on charts in the active tab — resizing hidden-tab canvases (display:none)

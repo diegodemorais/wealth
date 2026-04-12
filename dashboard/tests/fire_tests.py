@@ -2196,6 +2196,85 @@ def _():
     return True, f"B4: p50 range [{min_p50:,.0f}, {max_p50:,.0f}] within [500k, 200M]"
 
 
+# ── B5: Double-RAF + offsetWidth guards anti-regressão ───────────────────────
+# Bug recorrente: charts em tab oculta ou seção colapsível são construídos com
+# canvas 0×0. Single RAF não garante reflow após display change; buildNetWorthProjection
+# não tinha guard offsetWidth. Root cause: CSS .tab-hidden{display:none!important}
+# e .collapsible .collapse-body{display:none} — builders chamados antes do reflow.
+# Fix correto: (1) double-RAF em switchTab e _toggleBlock; (2) offsetWidth guard em
+# buildNetWorthProjection (estava presente em buildFireTrilha e buildGlidePath,
+# faltava aqui).
+
+@registry.test("net-worth-projection", "VALUE", "B5 anti-regress: offsetWidth guard present in buildNetWorthProjection", "CRITICAL")
+def _():
+    """Verifica que buildNetWorthProjection() tem guard offsetWidth === 0.
+    Sem esse guard, o chart é construído quando canvas está em tab oculta (display:none),
+    produzindo chart 0×0 com linhas flat — bug recorrente confirmado por screenshots.
+    Guard correto: if (ctx.offsetWidth === 0) return;
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    idx = template.find("function buildNetWorthProjection()")
+    if idx < 0:
+        return False, "B5: buildNetWorthProjection() function not found in template"
+    snippet = template[idx : idx + 800]
+    if "offsetWidth" not in snippet:
+        return False, (
+            "B5: offsetWidth guard missing in buildNetWorthProjection(). "
+            "Without it, chart builds on 0×0 canvas when tab is hidden, "
+            "producing flat lines at y=0 — confirmed by screenshots (4th recurrence)."
+        )
+    return True, "B5: offsetWidth === 0 guard present in buildNetWorthProjection()"
+
+
+@registry.test("glide-path", "VALUE", "B5 anti-regress: double-RAF pattern in switchTab and _toggleBlock", "CRITICAL")
+def _():
+    """Verifica que switchTab e _toggleBlock usam double-RAF (nested requestAnimationFrame).
+    Single RAF não garante reflow após display change — o layout flush pode não ter
+    ocorrido quando builders verificam offsetWidth, causando retorno prematuro.
+    Pattern correto: requestAnimationFrame(() => requestAnimationFrame(() => { ... }))
+    Aplica-se a TODOS os charts em tabs/colapsíveis: fireTrilha, netWorth, glide.
+    """
+    ROOT_DIR = BUILD_PY.parent.parent
+    template_path = ROOT_DIR / "dashboard" / "template.html"
+    if not template_path.exists():
+        return False, "template.html not found"
+    template = template_path.read_text(encoding="utf-8")
+    # Check double-RAF in switchTab
+    switchtab_idx = template.find("window.switchTab = function")
+    if switchtab_idx < 0:
+        return False, "B5: window.switchTab not found in template"
+    # Use 1200 chars to capture the RAF call (at ~660 chars from function start)
+    switchtab_snippet = template[switchtab_idx : switchtab_idx + 1200]
+    double_raf_switchtab = (
+        "requestAnimationFrame(() => requestAnimationFrame" in switchtab_snippet
+    )
+    if not double_raf_switchtab:
+        return False, (
+            "B5: switchTab does not use double-RAF for _initTabCharts(). "
+            "Single RAF does not guarantee layout flush after tab-hidden removal. "
+            "Fix: requestAnimationFrame(() => requestAnimationFrame(() => { _initTabCharts(name); }))"
+        )
+    # Check double-RAF in _toggleBlock
+    toggle_idx = template.find("window._toggleBlock = function")
+    if toggle_idx < 0:
+        return False, "B5: window._toggleBlock not found in template"
+    toggle_snippet = template[toggle_idx : toggle_idx + 1200]
+    double_raf_toggle = (
+        "requestAnimationFrame(() => requestAnimationFrame" in toggle_snippet
+    )
+    if not double_raf_toggle:
+        return False, (
+            "B5: _toggleBlock does not use double-RAF for builder calls. "
+            "Single RAF does not guarantee reflow after display:none → display:block. "
+            "Fix: requestAnimationFrame(() => requestAnimationFrame(() => { builder(); }))"
+        )
+    return True, "B5: double-RAF pattern present in both switchTab and _toggleBlock"
+
+
 # ── B6: What-if — lógica invertida anti-regressão ─────────────────────────────
 # Bug recorrente (2×): aumentar custo de vida aumentava P(FIRE) — invertido.
 # Root cause: interpolateFireMatrix usava gasto/SWR como patrimonioRef →
