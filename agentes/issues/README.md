@@ -47,7 +47,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 🟡 Média | 🔵 Fase 1 — debate interno |
+| EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-fire-matrix-v2 | FIRE Matrix v2 — 3 cenários + eixos Patrimônio×Gasto + visual | Head | 🟡 Média | ✅ Done 2026-04-11 |
 | DEV-dashboard-audit | Auditoria completa 60 blocos — map→Quant→fix→confirm | Head | 🔴 Alta | ✅ Done 2026-04-11 |
 | DEV-factor-tstats | t-stats + R² warning no Factor Loadings chart | Dev+Quant | 🟡 Média | ✅ Done 2026-04-11 |
@@ -68,6 +68,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 2026-04-11 | Diagnóstico 10 agentes + PDF gerado para Tiago. |
+| TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 2026-04-11 | Nenhuma ação agora. Gatilho = casamento. → PT-planejamento-patrimonial. |
 | HD-backtest-longrun | Pipeline backtest 50+ anos — Regime 7 | Head | 2026-04-11 | Regime 7 (1989–2026, 374m). CAGR +9.79% vs +7.80% (+1.99pp). WR 20a: 100%. Drought 74m. Recovery 43m < bond pool 84m. v1.135. |
 | HD-perplexity-review | Review externo Perplexity — 9 features novas | Head+Dev | 2026-04-10 | 9 features: FIRE Matrix, SWR Percentis, Aporte Sens, Macro Status, Trilha, Drawdown, ETF Comp, Bond Runway, Lumpy. v1.131. |
 | DEV-privacy-audit | Auditoria completa de privacidade do dashboard | Dev | 2026-04-09 | 4 fases implementadas: +49 .pv, spans hardcoded, eixo Y/tooltip ocultos, Sankey oculto. v1.104. |
