@@ -19,7 +19,8 @@
 - **Custo de vida**: R$ 250k/ano
 - **Estado civil**: Solteiro, namorada (casamento iminente ~2026-2027). Filho previsto ~2028. **GATILHO**: ao casar/ter filho, recalibrar imediatamente: custo de vida (R$250k → R$270-300k+), FIRE date, sucessao, seguro de vida (gap critico), estrutura empresarial, testamento
 - **Empresas**: 2 PJs no Simples Nacional (contabilidade: Contabilizei)
-- **INSS (extrato 26/03/2026)**: NIT 119.60772.92-3. CI desde 08/2003. Teto desde 01/2017. Tempo total: ~22a6m. Benefício estimado (65 anos, parar no FIRE/50): ~R$46-55k/ano real 2026 — requer validação previdenciária.
+- **INSS Diego (extrato 26/03/2026)**: NIT 119.60772.92-3. CI desde 08/2003. Teto desde 01/2017. Tempo total: ~22a6m. Benefício estimado (65 anos, parar no FIRE/50): ~R$46-55k/ano real 2026 — requer validação previdenciária.
+- **INSS Katia (extrato 22/01/2025 + contribuição contínua no teto confirmada)**: NIT 129.35576.25-1. CI desde 08/2006. Teto desde ~2016-2017. Tempo acumulado (04/2026): ~16 anos. Aposentadoria: **62 anos / novembro 2049** (Regra Definitiva EC 103/2019) ou ~61 anos pela Regra de Pontos. Benefício: **~R$7.800/mês bruto (R$93.600/ano) real R$2026** — SB = 93% do teto, 39 anos de contribuição → 100% do SB. PV hoje: ~R$440k. Floor income familiar a partir de 2049. Ver TX-inss-katia.
 - **Imóveis**: Apartamento Pinheiros: valor ~R$820k, hipoteca SAC R$453.417, termina 15/02/2051, equity ~R$367k. Terreno Nova Odessa: R$150k.
 
 ### Plataformas
