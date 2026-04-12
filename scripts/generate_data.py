@@ -277,7 +277,9 @@ def get_premissas():
         g = mod.GUARDRAILS
         piso = mod.GASTO_PISO
         smile = mod.SPENDING_SMILE
-        p.setdefault("saude_base", getattr(mod, "SAUDE_BASE", 18_000))
+        p.setdefault("saude_base",     getattr(mod, "SAUDE_BASE",         18_000))
+        p.setdefault("saude_inflator", getattr(mod, "SAUDE_INFLATOR",     0.027))
+        p.setdefault("saude_decay",    getattr(mod, "SAUDE_DECAY",        0.50))
         return p, g, piso, smile
     except Exception as e:
         print(f"  ⚠️ fire_montecarlo import: {e}")
@@ -1992,6 +1994,27 @@ def main():
         "renda_estimada":         RENDA_ESTIMADA,
         "ano_atual":              datetime.now().year,
     }
+
+    # Último aporte mensal (última linha do CSV historico_carteira.csv)
+    _ultimo_aporte_brl  = None
+    _ultimo_aporte_data = None
+    if CSV_PATH.exists():
+        try:
+            with open(CSV_PATH) as _f:
+                _rows = list(csv.DictReader(_f))
+            if _rows:
+                _last = _rows[-1]
+                _keys = list(_last.keys())
+                _dc   = next((k for k in _keys if 'data' in k.lower() or 'date' in k.lower()), _keys[0] if _keys else None)
+                _ac   = next((k for k in _keys if 'aporte' in k.lower()), None)
+                if _dc: _ultimo_aporte_data = _last[_dc].strip()[:7]
+                if _ac:
+                    try: _ultimo_aporte_brl = float(_last[_ac].replace(',', '.').replace(' ', ''))
+                    except ValueError: pass
+        except Exception: pass
+    if _ultimo_aporte_brl is not None:
+        premissas["ultimo_aporte_brl"]  = round(_ultimo_aporte_brl)
+        premissas["ultimo_aporte_data"] = _ultimo_aporte_data
 
     # Concentração Brasil (Advocate dataset)
     concentracao_brasil = compute_concentracao_brasil(rf, hodl11_brl, total_brl)

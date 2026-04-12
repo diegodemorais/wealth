@@ -282,11 +282,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div class="hval pv" id="heroPatrimonioBrl">—</div>
     <div class="hsub pv" id="heroPatrimonioUsd">— em USD</div>
   </div>
-  <div class="hero-kpi primary">
-    <div class="hlbl">P(FIRE) Base · @53</div>
-    <div class="hval pos" id="heroPfire">—</div>
-    <div class="hsub" id="heroPfireSub">MC 10k sims</div>
-  </div>
   <div class="hero-kpi">
     <div class="hlbl">Anos até FIRE</div>
     <div class="hval" id="heroAnos">—</div>
@@ -512,6 +507,18 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
 </div>
 
+<!-- F8: Sankey Cash Flow -->
+<div class="section collapsible" id="sankeySection" data-in-tab="hoje">
+<h2 onclick="_toggleBlock(this.parentElement)">Sankey — Fluxo de Caixa Anual (estimado)</h2>
+<div class="collapse-body">
+<div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
+<div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
+  ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" da análise de gastos (estimado). Nota: <span id="sankeyNota"></span>
+</div>
+<div class="src" id="sankeySrc">Valores estimados · Renda, gastos e hipoteca anualizados</div>
+</div><!-- /collapse-body -->
+</div>
+
 <!-- S6: NET WORTH TIMELINE -->
 <div class="section" data-in-tab="perf">
 <h2>Patrimônio — Evolução Histórica</h2>
@@ -568,14 +575,22 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
-<!-- N2: ETF COMPOSITION — Região + Fator -->
+<!-- N2: ETF COMPOSITION — Região -->
 <div class="section collapsible" data-in-tab="carteira" id="etfCompSection">
-<h2 onclick="_toggleBlock(this.parentElement)">Composição por Região e Fator — ETFs da Carteira</h2>
+<h2 onclick="_toggleBlock(this.parentElement)">Composição por Região — ETFs da Carteira</h2>
 <div class="collapse-body">
 <div id="etfRegionTable" style="margin-bottom:16px"></div>
-<div id="etfVemTable" style="margin-bottom:16px"></div>
-<div id="etfFactorTable"></div>
+<div id="etfVemTable"></div>
 <div class="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- N2b: ETF FACTOR EXPOSURE -->
+<div class="section collapsible" data-in-tab="carteira" id="etfFactorSection">
+<h2 onclick="_toggleBlock(this.parentElement)">Exposição Fatorial — ETFs da Carteira</h2>
+<div class="collapse-body">
+<div id="etfFactorTable"></div>
+<div class="src">Fonte: etf_composition.json · Fatores: Value, Size, Profitability, Investment</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -674,6 +689,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- R2: SWR PERCENTIS P10/P50/P90 -->
 <div class="section" data-in-tab="retiro" id="swrPercentilesSection">
 <h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
+<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px" id="swrScenarioNote">—</div>
 <div class="swr-pct-grid" id="swrPercentilesCards"></div>
 <div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
 </div>
@@ -742,6 +758,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <th>Idade</th>
   <th>Fonte de Renda</th>
   <th class="num">Gasto ex-saúde</th>
+  <th class="num">Saúde</th>
   <th>Observação</th>
 </tr></thead>
 <tbody id="incomeTableBody"><!-- gerado por buildIncomeTable() --></tbody>
@@ -1023,9 +1040,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 
 <!-- Seletor de cenário -->
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
-  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 3.0%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (SWR 2.0%)</button>
   <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (SWR 2.4%)</button>
-  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 2.0%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (SWR 3.0%)</button>
 </div>
 
 <!-- Slider custo de vida -->
@@ -1090,6 +1107,13 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   </div>
 </div>
 
+<!-- Projeção Fan Chart -->
+<div style="margin-bottom:14px">
+  <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px" id="stressFanTitle">Projeção — Evolução Patrimonial após Shock</div>
+  <div class="chart-box" style="height:260px"><canvas id="stressProjectionChart"></canvas></div>
+  <div style="font-size:.6rem;color:var(--muted);margin-top:3px">Bandas: P5–P95 (exterior) · P25–P75 (interior) · P50 mediana · 500 trajetórias MC · valores reais R$2026</div>
+</div>
+
 <!-- Cards de cenário -->
 <div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
 
@@ -1124,17 +1148,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div><!-- /collapse-body -->
 </div>
 
-<!-- F8: Sankey Cash Flow -->
-<div class="section collapsible" id="sankeySection" data-in-tab="retiro">
-<h2 onclick="_toggleBlock(this.parentElement)">Sankey — Fluxo de Caixa Anual (estimado)</h2>
-<div class="collapse-body">
-<div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
-<div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
-  ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" da análise de gastos (estimado). Nota: <span id="sankeyNota"></span>
-</div>
-<div class="src" id="sankeySrc">Valores estimados · Renda, gastos e hipoteca anualizados</div>
-</div><!-- /collapse-body -->
-</div>
 
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
@@ -1386,12 +1399,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T17:43:06-03:00'); // BRT (UTC-3)
-const VERSION = '1.176';
+const GENERATED_AT = new Date('2026-04-12T18:14:06-03:00'); // BRT (UTC-3)
+const VERSION = '1.180';
 
 const DATA = {
-  "_generated": "2026-04-12T17:43:06",
-  "_generated_brt": "2026-04-12T17:43:06-03:00",
+  "_generated": "2026-04-12T18:14:04",
+  "_generated_brt": "2026-04-12T18:14:04-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1514,7 +1527,9 @@ const DATA = {
     "inss_inicio_ano": 12,
     "ipca_anual": 0.04,
     "renda_estimada": 45000,
-    "ano_atual": 2026
+    "ano_atual": 2026,
+    "ultimo_aporte_brl": 20035,
+    "ultimo_aporte_data": "2026-04"
   },
   "guardrails": [
     {
@@ -1594,28 +1609,28 @@ const DATA = {
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.1
+      "delta": 8.2
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.699999999999999
+      "delta": 4.7
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.5
+      "delta": 7.6
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.5999999999999996
+      "delta": 2.6
     }
   ],
   "fire": {
@@ -2834,7 +2849,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -3008,7 +3023,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -7781,7 +7796,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.176"
+  "version": "1.180"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8754,7 +8769,9 @@ window.updateContrib = function() {
 };
 
 // ── S19: What-If ──────────────────────────────────────────────
-const SWR_BY_PRESET = { stress: 0.030, base: 0.024, fav: 0.020 };
+// Stress = retornos ruins → SWR mais conservador (menor) → patNecessario maior
+// Fav    = retornos bons  → pode retirar mais         → patNecessario menor
+const SWR_BY_PRESET = { stress: 0.020, base: 0.024, fav: 0.030 };
 
 function interpolateFireMatrix(gastoAnual, swrTarget) {
   const fm = DATA.fire_matrix;
@@ -8762,15 +8779,19 @@ function interpolateFireMatrix(gastoAnual, swrTarget) {
 
   // New format: patrimônio × gasto
   if (fm.cenarios && fm.patrimonios && fm.gastos) {
-    const cenario = window._fireMatrixCenario || 'base';
+    // Cenário vem do preset selecionado (base/fav/stress) — mapeia direto às colunas da matriz
+    const cenario = window._wiPreset || window._fireMatrixCenario || 'base';
     const matrix = fm.cenarios[cenario];
     if (!matrix) return null;
     const pats  = fm.patrimonios;
     const gastos = fm.gastos;
-    const patrimonioImplied = gastoAnual / swrTarget;
+    // P(sucesso) usa patrimônio alvo no FIRE day (gatilho), não gasto/SWR
+    // Usar gasto/SWR como patrimônio fazia P subir ao aumentar o gasto — incorreto.
+    const patrimonioRef = DATA.premissas?.patrimonio_gatilho
+                       ?? pats[Math.floor(pats.length / 2)];
 
     const g = Math.max(gastos[0], Math.min(gastos[gastos.length-1], gastoAnual));
-    const p = Math.max(pats[0],  Math.min(pats[pats.length-1],  patrimonioImplied));
+    const p = Math.max(pats[0],  Math.min(pats[pats.length-1],  patrimonioRef));
 
     let gi = gastos.findIndex(v => v >= g); if (gi <= 0) gi = 1;
     let pi = pats.findIndex(v => v >= p);   if (pi <= 0) pi = 1;
@@ -10155,25 +10176,27 @@ function buildSpendingGuardrails() {
         <div style="font-size:.7rem;color:var(--muted)">P(FIRE) atual · spending R$${(sg.spending_atual/1000).toFixed(0)}k/ano</div>
       </div>
     </div>
-    <div style="position:relative;height:36px;border-radius:8px;overflow:hidden;margin-bottom:32px">
-      <!-- zonas coloridas -->
-      <div style="position:absolute;left:0;width:${posUpper}%;height:100%;background:rgba(59,130,246,.15)"></div>
-      <div style="position:absolute;left:${posUpper}%;width:${Math.max(2, posAtual-posUpper)}%;height:100%;background:rgba(34,197,94,.2)"></div>
-      <div style="position:absolute;left:${posAtual}%;width:${posSafe-posAtual}%;height:100%;background:rgba(234,179,8,.15)"></div>
-      <div style="position:absolute;left:${posSafe}%;width:${posLower-posSafe}%;height:100%;background:rgba(249,115,22,.15)"></div>
-      <div style="position:absolute;left:${posLower}%;width:${100-posLower}%;height:100%;background:rgba(239,68,68,.2)"></div>
-      <!-- marcadores -->
-      <div style="position:absolute;left:${posUpper}%;top:0;width:2px;height:100%;background:#3b82f6;z-index:2">
-        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.55rem;color:#3b82f6;white-space:nowrap">~R$${(upper/1000).toFixed(0)}k (~95%)</div>
+    <div style="position:relative;margin-bottom:36px">
+      <!-- barra com zonas coloridas (overflow:hidden apenas aqui, para arredondar as zonas) -->
+      <div style="position:relative;height:36px;border-radius:8px;overflow:hidden">
+        <div style="position:absolute;left:0;width:${posUpper}%;height:100%;background:rgba(59,130,246,.15)"></div>
+        <div style="position:absolute;left:${posUpper}%;width:${Math.max(2, posAtual-posUpper)}%;height:100%;background:rgba(34,197,94,.2)"></div>
+        <div style="position:absolute;left:${posAtual}%;width:${posSafe-posAtual}%;height:100%;background:rgba(234,179,8,.15)"></div>
+        <div style="position:absolute;left:${posSafe}%;width:${posLower-posSafe}%;height:100%;background:rgba(249,115,22,.15)"></div>
+        <div style="position:absolute;left:${posLower}%;width:${100-posLower}%;height:100%;background:rgba(239,68,68,.2)"></div>
       </div>
-      <div style="position:absolute;left:${posAtual}%;top:0;width:3px;height:100%;background:var(--green);z-index:3">
-        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--green);white-space:nowrap;font-weight:700">R$${(atual/1000).toFixed(0)}k (${sg.pfire_atual}%) ◀ ATUAL</div>
+      <!-- marcadores verticais e labels fora do overflow:hidden -->
+      <div style="position:absolute;left:${posUpper}%;top:0;width:2px;height:36px;background:#3b82f6;z-index:2">
+        <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:#3b82f6;white-space:nowrap">~R$${(upper/1000).toFixed(0)}k (~95%)</div>
       </div>
-      <div style="position:absolute;left:${posSafe}%;top:0;width:2px;height:100%;background:var(--yellow);z-index:2">
-        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--yellow);white-space:nowrap">~R$${(safe/1000).toFixed(0)}k (~80%)</div>
+      <div style="position:absolute;left:${posAtual}%;top:0;width:3px;height:36px;background:var(--green);z-index:3">
+        <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--green);white-space:nowrap;font-weight:700">R$${(atual/1000).toFixed(0)}k (${sg.pfire_atual}%) ◀ ATUAL</div>
       </div>
-      <div style="position:absolute;left:${posLower}%;top:0;width:2px;height:100%;background:var(--red);z-index:2">
-        <div style="position:absolute;top:100%;margin-top:4px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--red);white-space:nowrap">~R$${(lower/1000).toFixed(0)}k (~70%)</div>
+      <div style="position:absolute;left:${posSafe}%;top:0;width:2px;height:36px;background:var(--yellow);z-index:2">
+        <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--yellow);white-space:nowrap">~R$${(safe/1000).toFixed(0)}k (~80%)</div>
+      </div>
+      <div style="position:absolute;left:${posLower}%;top:0;width:2px;height:36px;background:var(--red);z-index:2">
+        <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--red);white-space:nowrap">~R$${(lower/1000).toFixed(0)}k (~70%)</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px">
@@ -10749,6 +10772,24 @@ function buildStressTest() {
     },
     st
   );
+
+  // Fan chart — rodar MC para gerar trajetórias percentis (cenário padrão -40%)
+  const _p = DATA.premissas;
+  const _retReal  = _p.retorno_equity_base || 0.0485;
+  const _vol      = _p.volatilidade_equity || 0.168;
+  const _spending = _p.custo_vida_base     || 250000;
+  const _aporte   = (_p.aporte_mensal      || 33000) * 12;
+  const _fireAge  = _p.idade_fire_alvo     || 53;
+  const _onsetAge = _p.idade_atual         || 39;
+  const _anosAcumulo = Math.max(0, _fireAge - _onsetAge);
+  const _patShock = st ? st.pat_pos_shock : patAtual * 0.60;
+  const _shockPct = st ? st.shock_pct : 40;
+  setTimeout(() => {
+    try {
+      const traj = runMCTrajectories(_patShock, _spending, _anosAcumulo, 40, _retReal, _vol, 500, _aporte);
+      buildStressFanChart(traj, _onsetAge, _anosAcumulo, _shockPct);
+    } catch(e) { console.warn('[stress-fan-chart]', e); }
+  }, 50);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -10793,6 +10834,216 @@ function runMC(patrimonioInicial, spendingAnual, anosAcumulo, anosAposentadoria,
     if (ok) sucessos++;
   }
   return (sucessos / nTrials * 100).toFixed(1);
+}
+
+/**
+ * Gera trajetórias percentis para o fan chart de stress.
+ * Retorna { p5, p25, p50, p75, p95 } — arrays com (anosAcumulo + anosAposentadoria + 1) pontos.
+ */
+function runMCTrajectories(pat0, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, nTrials, aporteAnual) {
+  const nYears = anosAcumulo + anosAposentadoria;
+  const mu = Math.log(1 + retReal) - 0.5 * vol * vol;
+  // Pré-alocar: array de arrays por ano (mais eficiente para percentis)
+  const byYear = Array.from({ length: nYears + 1 }, () => new Float64Array(nTrials));
+
+  for (let i = 0; i < nTrials; i++) {
+    let pat = pat0;
+    byYear[0][i] = pat;
+    for (let t = 0; t < anosAcumulo; t++) {
+      pat = pat * Math.exp(mu + vol * _randNorm()) + aporteAnual;
+      if (pat < 0) pat = 0;
+      byYear[t + 1][i] = pat;
+    }
+    for (let t = 0; t < anosAposentadoria; t++) {
+      if (pat <= 0) { byYear[anosAcumulo + t + 1][i] = 0; continue; }
+      pat = pat * Math.exp(mu + vol * _randNorm()) - spendingAnual;
+      if (pat < 0) pat = 0;
+      byYear[anosAcumulo + t + 1][i] = pat;
+    }
+  }
+
+  const pctile = (arr, p) => {
+    const sorted = Float64Array.from(arr).sort();
+    const idx = Math.max(0, Math.min(sorted.length - 1, Math.floor(p * sorted.length)));
+    return sorted[idx];
+  };
+
+  const p5 = [], p25 = [], p50 = [], p75 = [], p95 = [];
+  for (let t = 0; t <= nYears; t++) {
+    p5.push(pctile(byYear[t], 0.05));
+    p25.push(pctile(byYear[t], 0.25));
+    p50.push(pctile(byYear[t], 0.50));
+    p75.push(pctile(byYear[t], 0.75));
+    p95.push(pctile(byYear[t], 0.95));
+  }
+  return { p5, p25, p50, p75, p95 };
+}
+
+/**
+ * Constrói/atualiza o fan chart de stress com bandas de percentis.
+ */
+function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
+  const fireAge = (DATA.premissas?.idade_fire_alvo ?? 53);
+  const nYears  = traj.p50.length;
+  const labels  = Array.from({ length: nYears }, (_, i) => onsetAge + i);
+  const gatilho = DATA.premissas?.patrimonio_gatilho;
+
+  // Índice do FIRE day no array (anosAcumulo anos após o shock)
+  const fireIdx = anosAcumulo;
+
+  const titleEl = document.getElementById('stressFanTitle');
+  if (titleEl) titleEl.textContent = `Projeção após shock de −${shockPct}% aos ${onsetAge} anos · FIRE aos ${fireAge}`;
+
+  if (charts.stressProjection) { charts.stressProjection.destroy(); charts.stressProjection = null; }
+  const ctx = document.getElementById('stressProjectionChart');
+  if (!ctx) return;
+
+  const M = 1e6;
+  const toM = arr => arr.map(v => +(v / M).toFixed(3));
+
+  // Anotações: gatilho + linhas verticais (via chartjs-plugin-annotation não disponível)
+  // Usar dataset extra para marcar FIRE day como linha vertical (trick: NaN fora do ponto)
+  const fireMarker = labels.map((_, i) => i === fireIdx ? null : null); // placeholder
+
+  charts.stressProjection = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        // Ordem: P5 (base) → P25 → P50 (median) → P75 → P95
+        // fill: '-1' preenche entre este dataset e o anterior
+        {
+          label: 'P5',
+          data: toM(traj.p5),
+          borderColor: 'rgba(239,68,68,0.4)',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3,
+        },
+        {
+          label: 'P25',
+          data: toM(traj.p25),
+          borderColor: 'rgba(239,68,68,0)',
+          borderWidth: 0,
+          pointRadius: 0,
+          fill: '-1',
+          backgroundColor: 'rgba(239,68,68,0.12)',
+          tension: 0.3,
+        },
+        {
+          label: 'P50 (mediana)',
+          data: toM(traj.p50),
+          borderColor: '#94a3b8',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: '-1',
+          backgroundColor: 'rgba(59,130,246,0.08)',
+          tension: 0.3,
+        },
+        {
+          label: 'P75',
+          data: toM(traj.p75),
+          borderColor: 'rgba(34,197,94,0)',
+          borderWidth: 0,
+          pointRadius: 0,
+          fill: '-1',
+          backgroundColor: 'rgba(34,197,94,0.10)',
+          tension: 0.3,
+        },
+        {
+          label: 'P95',
+          data: toM(traj.p95),
+          borderColor: 'rgba(34,197,94,0.4)',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: '-1',
+          backgroundColor: 'rgba(34,197,94,0.14)',
+          tension: 0.3,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#94a3b8', boxWidth: 10, font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            title: items => `Idade ${items[0].label}`,
+            label: ctx => ` ${ctx.dataset.label}: R$ ${ctx.parsed.y.toFixed(2)}M`,
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#94a3b8',
+            maxTicksLimit: 10,
+            callback: (v, i) => {
+              const age = onsetAge + i;
+              if (i === 0) return `${age} (shock)`;
+              if (i === fireIdx) return `${age} (FIRE)`;
+              return age;
+            }
+          },
+          grid: { color: 'rgba(71,85,105,.3)' }
+        },
+        y: {
+          ticks: { color: '#94a3b8', callback: v => 'R$' + v.toFixed(1) + 'M' },
+          grid: { color: 'rgba(71,85,105,.3)' }
+        }
+      }
+    },
+    plugins: [{
+      // Linhas verticais: shock (vermelho) e FIRE (verde) + linha horizontal gatilho
+      id: 'stressMarkers',
+      afterDraw(chart) {
+        const { ctx: c, chartArea: ca, scales: { x, y } } = chart;
+        if (!ca) return;
+        c.save();
+        const drawVLine = (idx, color, label) => {
+          const xPx = x.getPixelForValue(idx);
+          if (xPx < ca.left || xPx > ca.right) return;
+          c.beginPath();
+          c.setLineDash([4, 4]);
+          c.strokeStyle = color;
+          c.lineWidth = 1.5;
+          c.moveTo(xPx, ca.top);
+          c.lineTo(xPx, ca.bottom);
+          c.stroke();
+          c.fillStyle = color;
+          c.font = 'bold 9px sans-serif';
+          c.textAlign = 'center';
+          c.fillText(label, xPx, ca.top + 10);
+        };
+        drawVLine(0,       'rgba(239,68,68,0.8)',  `−${shockPct}%`);
+        drawVLine(fireIdx, 'rgba(34,197,94,0.8)',   'FIRE');
+        // Linha horizontal: gatilho
+        if (gatilho) {
+          const gatilhoM = gatilho / M;
+          const yPx = y.getPixelForValue(gatilhoM);
+          if (yPx >= ca.top && yPx <= ca.bottom) {
+            c.beginPath();
+            c.setLineDash([6, 3]);
+            c.strokeStyle = 'rgba(234,179,8,0.6)';
+            c.lineWidth = 1;
+            c.moveTo(ca.left, yPx);
+            c.lineTo(ca.right, yPx);
+            c.stroke();
+            c.fillStyle = 'rgba(234,179,8,0.8)';
+            c.font = '9px sans-serif';
+            c.textAlign = 'right';
+            c.fillText(`Meta R$${gatilhoM.toFixed(1)}M`, ca.right - 4, yPx - 3);
+          }
+        }
+        c.restore();
+      }
+    }]
+  });
 }
 
 /**
@@ -10904,6 +11155,10 @@ function runStressSimulation() {
           ? `Patrimônio projetado até ${idadeOnset} anos (R$${(patNaIdade/1e6).toFixed(2)}M) → após shock de −${pct}%: R$${(patShock/1e6).toFixed(2)}M`
           : null }
     );
+
+    // Fan chart — trajetórias percentis (cenário base, 500 trials)
+    const traj = runMCTrajectories(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, 500, aporteAnual);
+    buildStressFanChart(traj, idadeOnset, anosAcumulo, pct);
 
     if (simBtn) { simBtn.textContent = '▶ Simular ao vivo'; simBtn.disabled = false; }
   }, 30);
@@ -11084,9 +11339,12 @@ function renderKPIs() {
   const heroPf = document.getElementById('heroPfire');
   const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
   const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
-  heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
-  heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
-  document.getElementById('heroPfireSub').textContent = `base ${DATA.pfire53.base}% · @50: ${DATA.pfire50.base}% · MC 10k`;
+  if (heroPf) {
+    heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
+    heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
+    const _heroPfSub = document.getElementById('heroPfireSub');
+    if (_heroPfSub) _heroPfSub.textContent = `base ${DATA.pfire53.base}% · @50: ${DATA.pfire50.base}% · MC 10k`;
+  }
   document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
   // Anos sub: Base/Aspir — usar vars module-level
   const _anoFireAlvo = _anoFireAlvoGlobal;
@@ -11262,18 +11520,31 @@ function renderKPIs() {
     }
   })();
 
-  // KPI 8: Origem do patrimônio — equity IBKR
+  // KPI 8: Aporte do Mês — realizado vs meta
   (function() {
     const el    = document.getElementById('kpiOrigemPat');
     const subEl = document.getElementById('kpiOrigemPatSub');
     if (!el) return;
-    const ai = DATA.equity_attribution;
-    if (!ai) { el.textContent = '—'; if (subEl) subEl.textContent = 'equity IBKR'; return; }
-    const custoUsd = ai.patrimonio_equity_usd - ai.retorno_usd;
-    const retPctCusto = custoUsd > 0 ? (ai.retorno_usd / custoUsd * 100) : 0;
-    el.innerHTML = `<span style="color:#94a3b8">$${(custoUsd/1000).toFixed(0)}k</span> <span style="color:#64748b;font-size:.7em">/</span> <span style="color:#22c55e">+$${(ai.retorno_usd/1000).toFixed(0)}k</span>`;
-    el.style.color = '';
-    if (subEl) subEl.innerHTML = `<span style="color:#94a3b8">${ai.pct_aportes.toFixed(0)}% aportado</span> <span style="color:#64748b"> / </span> <span style="color:#22c55e">+${retPctCusto.toFixed(0)}% retorno</span>`;
+    const p      = DATA.premissas ?? {};
+    const meta   = p.aporte_mensal;
+    const real   = p.ultimo_aporte_brl;
+    const mesRef = p.ultimo_aporte_data ?? '';
+    if (!meta && !real) { el.textContent = '—'; if (subEl) subEl.textContent = 'sem dados'; return; }
+    if (real != null) {
+      const delta    = real - (meta ?? 0);
+      const deltaFmt = (delta >= 0 ? '+' : '') + 'R$' + Math.round(Math.abs(delta) / 1000) + 'k';
+      const color    = delta >= 0 ? '#22c55e' : '#f97316';
+      el.innerHTML   = `R$${(real / 1000).toFixed(0)}k <span style="color:${color};font-size:.75em">${delta >= 0 ? '▲' : '▼'} ${deltaFmt}</span>`;
+      el.style.color = '';
+      if (subEl) {
+        const metaStr = meta ? ` · meta R$${(meta/1000).toFixed(0)}k` : '';
+        subEl.textContent = `${mesRef}${metaStr}`;
+      }
+    } else if (meta) {
+      el.innerHTML   = `R$${(meta / 1000).toFixed(0)}k`;
+      el.style.color = '';
+      if (subEl) subEl.textContent = 'meta mensal (sem dado real)';
+    }
   })();
 
   // KPI row 2: mercado snapshot (Dólar, BTC, IPCA+ taxa, Renda+ taxa) + MtD
@@ -11775,6 +12046,14 @@ function buildIncomeTable() {
   const inss = DATA.premissas.inss_anual ?? 18000;
   const inssInicio = DATA.premissas.inss_inicio_ano ?? 12; // anos após FIRE = age 65
   const ageAlvo = DATA.premissas.idade_fire_alvo ?? 53;
+  // Saúde por fase
+  const sBase   = DATA.saude_base ?? 18000;
+  const vcmh    = DATA.premissas?.saude_inflator ?? 0.027;
+  const sDecay  = DATA.premissas?.saude_decay ?? 0.50;
+  const saudeGoGo  = sBase;                                              // ano 0 (FIRE Day)
+  const saudeSlowGo = sBase * Math.pow(1 + vcmh, sm.slow_go?.inicio ?? 15); // ano 15
+  const saudeNoGo   = sBase * Math.pow(1 + vcmh, sm.no_go?.inicio  ?? 30) * sDecay; // ano 30 × decay
+  const fmtSaude = v => 'R$' + Math.round(v / 1000) + 'k/ano';
   // Fases: Go-Go, Slow-Go, No-Go
   const fases = [
     {
@@ -11782,6 +12061,7 @@ function buildIncomeTable() {
       idadeStr: `${ageAlvo}–${ageAlvo+15} (anos 1–15)`,
       fonte: `Bond pool: TD 2040 vence no FIRE Day`,
       gasto: sm.go_go?.gasto,
+      saude: saudeGoGo,
       obs: 'Equity intacto · alta mobilidade · viagens',
     },
     {
@@ -11789,6 +12069,7 @@ function buildIncomeTable() {
       idadeStr: `${ageAlvo+15}–${ageAlvo+30} (anos 15–30)`,
       fonte: `Equity saques + INSS R$${(inss/1000).toFixed(0)}k/ano (a partir dos ${inssInicio})`,
       gasto: sm.slow_go?.gasto,
+      saude: saudeSlowGo,
       obs: 'Gasto declina · saúde começa a crescer',
     },
     {
@@ -11796,7 +12077,8 @@ function buildIncomeTable() {
       idadeStr: `${ageAlvo+30}+ (anos 30+)`,
       fonte: `Equity saques + INSS R$${(inss/1000).toFixed(0)}k/ano`,
       gasto: sm.no_go?.gasto,
-      obs: 'Saúde domina · lifestyle comprimento',
+      saude: saudeNoGo,
+      obs: 'Saúde domina · lifestyle crescente',
     },
   ];
   tbody.innerHTML = fases.map(f => `<tr>
@@ -11804,6 +12086,7 @@ function buildIncomeTable() {
     <td>${f.idadeStr}</td>
     <td class="pv">${f.fonte}</td>
     <td class="num pv"><strong>${f.gasto != null ? 'R$' + (f.gasto/1000).toFixed(0) + 'k/ano' : '—'}</strong></td>
+    <td class="num" style="color:var(--muted);font-size:.75rem">${fmtSaude(f.saude)}</td>
     <td style="font-size:.7rem;color:var(--muted)">${f.obs}</td>
   </tr>`).join('');
   // Atualizar src
@@ -11988,7 +12271,7 @@ fetchLive();
 // ── Fase 3: ocultar escala Y de charts com valores absolutos ──
 function _applyPrivacyCharts(isPrivate) {
   // Charts com eixo Y em R$ absoluto — ocultar ticks em modo privado
-  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection'];
+  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection', 'stressProjection'];
   absCharts.forEach(name => {
     const c = charts[name];
     if (!c) return;
@@ -12075,7 +12358,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    hoje:     [buildTimestamps, buildTornado],
+    hoje:     [buildTimestamps, buildTornado, buildSankey],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -12098,7 +12381,7 @@ function _initTabCharts(tab) {
     retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
-               buildSankey, buildBondPool, buildBondPoolRunway],
+               buildBondPool, buildBondPoolRunway],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.warn('[lazy]', fn.name || tab, e); } });
@@ -12126,6 +12409,7 @@ const _chartBuilders = {
   sankeyChart:           () => buildSankey(),
   bondPoolRunwayChart:   () => buildBondPoolRunway(),
   netWorthProjectionChart: () => buildNetWorthProjection(),
+  stressProjectionChart:   () => { /* rebuilt by onStressShockChange */ },
 };
 window._toggleBlock = function(el) {
   const wasOpen = el.classList.contains('open');
@@ -12154,6 +12438,7 @@ window._toggleBlock = function(el) {
 };
 
 window.switchTab = function(name) {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('[data-in-tab]').forEach(el => {
     el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
@@ -12703,6 +12988,16 @@ function buildSwrPercentiles() {
   if (!el || !sec) return;
   const d = DATA.fire_swr_percentis;
   if (!d) { sec.style.display = 'none'; return; }
+
+  // Populate scenario note
+  const noteEl = document.getElementById('swrScenarioNote');
+  if (noteEl) {
+    const ageAlvo   = DATA.premissas?.idade_fire_alvo ?? 53;
+    const fireYear  = (DATA.premissas?.ano_nascimento ?? 1987) + ageAlvo;
+    const gastoBase = d.custo_vida_base ? 'R$' + (d.custo_vida_base / 1000).toFixed(0) + 'k/ano' : '—';
+    const mcDate    = d.mc_date || '';
+    noteEl.textContent = `Solo Diego · FIRE ${ageAlvo} (${fireYear}) · Gasto base ${gastoBase} · MC 10k sims${mcDate ? ' · ' + mcDate : ''}`;
+  }
 
   const fmtBrl = v => v != null ? 'R$' + (v / 1e6).toFixed(2) + 'M' : '--';
   const fmtSwr = v => v != null ? v.toFixed(2) + '%' : '--';
