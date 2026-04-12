@@ -6529,22 +6529,31 @@ function buildEtfComposition() {
   });
 
   const thStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:right;white-space:nowrap';
-  const thFirstStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:left';
-  const tdStyle = 'padding:5px 10px;font-size:.72rem;text-align:right;color:var(--text)';
-  const tdFirstStyle = 'padding:5px 10px;font-size:.72rem;font-weight:700;text-align:left';
+  const thFirstStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:left;white-space:nowrap';
+  const tdStyle = 'padding:5px 10px;font-size:.75rem;text-align:right;white-space:nowrap';
+  const tdFirstStyle = 'padding:5px 10px;font-size:.72rem;font-weight:700;text-align:left;white-space:nowrap;min-width:90px';
   const tableStyle = 'width:100%;border-collapse:collapse';
   const trEvenStyle = 'background:var(--card2)';
+
+  // Abreviações de regiões para exibição compacta nos headers
+  const regionAbbr = { 'Outros DM': 'Out.DM', 'Outros EM': 'Out.EM', 'Outros': 'Outros' };
+  const regionLabel = r => regionAbbr[r] || r;
+
+  // Célula ETF: ticker em negrito + nome abaixo em muted pequeno
+  const etfCell = (ticker, nome) =>
+    `<td style="${tdFirstStyle}"><span style="font-size:.75rem;font-weight:700">${ticker}</span><br>` +
+    `<span style="font-size:.6rem;color:var(--muted);font-weight:400">${nome || ''}</span></td>`;
 
   // ── Tabela 1: Por Região (sem VEM) ──
   let regHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Por Região</div>';
   regHtml += '<table style="' + tableStyle + '"><thead><tr>';
   regHtml += '<th style="' + thFirstStyle + '">ETF</th>';
-  allRegions.forEach(r => { regHtml += '<th style="' + thStyle + '">' + r + '</th>'; });
+  allRegions.forEach(r => { regHtml += '<th style="' + thStyle + '">' + regionLabel(r) + '</th>'; });
   regHtml += '</tr></thead><tbody>';
   mainTickers.forEach((t, i) => {
     const etf = d.etfs[t];
     regHtml += '<tr' + (i % 2 === 0 ? ' style="' + trEvenStyle + '"' : '') + '>';
-    regHtml += '<td style="' + tdFirstStyle + '">' + t + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></td>';
+    regHtml += etfCell(t, etf.nome);
     allRegions.forEach(r => {
       const v = etf.regioes && etf.regioes[r] != null ? Math.round(etf.regioes[r] * 100) : 0;
       const color = v >= 50 ? '#3b82f6' : v >= 20 ? '#22c55e' : v > 0 ? '#94a3b8' : 'var(--muted)';
@@ -6563,10 +6572,10 @@ function buildEtfComposition() {
       let vemHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">VEM — Por Região</div>';
       vemHtml += '<table style="' + tableStyle + '"><thead><tr>';
       vemHtml += '<th style="' + thFirstStyle + '">ETF</th>';
-      vemRegions.forEach(r => { vemHtml += '<th style="' + thStyle + '">' + r + '</th>'; });
+      vemRegions.forEach(r => { vemHtml += '<th style="' + thStyle + '">' + regionLabel(r) + '</th>'; });
       vemHtml += '</tr></thead><tbody>';
       vemHtml += '<tr style="' + trEvenStyle + '">';
-      vemHtml += '<td style="' + tdFirstStyle + '">' + vemTicker + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (vemEtf.nome || '') + '</span></td>';
+      vemHtml += etfCell(vemTicker, vemEtf.nome);
       vemRegions.forEach(r => {
         const v = vemEtf.regioes[r] != null ? Math.round(vemEtf.regioes[r] * 100) : 0;
         const color = v >= 50 ? '#3b82f6' : v >= 20 ? '#22c55e' : v > 0 ? '#94a3b8' : 'var(--muted)';
@@ -6580,7 +6589,6 @@ function buildEtfComposition() {
   }
 
   // ── Tabela 2: Por Fator (todos os ETFs, incluindo VEM) ──
-  // Collect factors from ALL tickers (including VEM)
   const allFactorsFull = [];
   allTickers.forEach(t => {
     const etf = d.etfs[t];
@@ -6594,7 +6602,7 @@ function buildEtfComposition() {
   allTickers.forEach((t, i) => {
     const etf = d.etfs[t];
     facHtml += '<tr' + (i % 2 === 0 ? ' style="' + trEvenStyle + '"' : '') + '>';
-    facHtml += '<td style="' + tdFirstStyle + '">' + t + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></td>';
+    facHtml += etfCell(t, etf.nome);
     allFactorsFull.forEach(f => {
       const v = etf.fatores && etf.fatores[f] != null ? Math.round(etf.fatores[f] * 100) : 0;
       const color = factorColors[f] || '#94a3b8';
