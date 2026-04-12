@@ -5169,44 +5169,50 @@ function buildRfCards() {
   const pisoRenda = DATA.pisos?.pisoTaxaRendaPlus ?? 6.5;
   const pisoIpca  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
 
-  const th = s => `<th style="padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;${s||''}">${arguments[1]||''}</th>`;
-  const thStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px';
-  const tdStyle = 'padding:7px 10px;font-size:.75rem;color:var(--text)';
-  const tdMuted = 'padding:7px 10px;font-size:.72rem;color:var(--muted)';
+  const thStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap';
+  const tdStyle = 'padding:7px 10px;font-size:.75rem;color:var(--text);white-space:nowrap';
+  const tdMuted = 'padding:7px 10px;font-size:.72rem;color:var(--muted);white-space:nowrap';
+
+  const tipoBadge = t => {
+    if (!t) return '';
+    const colors = { reserva: '#3b82f6', estrutural: '#22c55e', tatico: '#f97316' };
+    return `<span style="font-size:.58rem;background:${colors[t]||'#64748b'}22;color:${colors[t]||'#94a3b8'};border:1px solid ${colors[t]||'#64748b'}44;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle">${t}</span>`;
+  };
+
+  const pnlCell = (val, custo, tdSt) => {
+    if (val == null || custo == null || custo === 0) return `<td style="${tdSt};text-align:right;color:var(--muted)">—</td>`;
+    const pnl = val - custo;
+    const pct = (pnl / custo * 100);
+    const color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    const sign = pnl >= 0 ? '+' : '';
+    return `<td style="${tdSt};text-align:right;color:${color}">${sign}${(pnl/1000).toFixed(1)}k<br><span style="font-size:.65rem">${sign}${pct.toFixed(1)}%</span></td>`;
+  };
 
   // ── RF Rows ──
   const rfRows = [
     {
-      label: 'IPCA+ 2029',
-      custod: 'Nubank',
-      val: rf.ipca2029?.valor,
-      taxa: null,
-      venc: '2029',
-      nota: 'Reserva emergência → Selic em 2029',
-      status: null,
-      statusColor: null,
+      label: 'IPCA+ 2029', tipo: rf.ipca2029?.tipo || 'reserva', custod: 'Nubank',
+      val: rf.ipca2029?.valor, custo: rf.ipca2029?.custo_base_brl,
+      taxa: rf.ipca2029?.taxa, piso: pisoIpca, venc: '2029',
+      nota: rf.ipca2029?.notas || 'Reserva emergência',
+      status: null, statusColor: null,
     },
     {
-      label: 'IPCA+ 2040',
-      custod: 'XP',
-      val: rf.ipca2040?.valor,
-      taxa: rf.ipca2040?.taxa,
-      taxaFlag: rf.ipca2040?.taxa != null && rf.ipca2040.taxa >= pisoIpca,
-      venc: '2040',
-      nota: 'DCA ativo · Hold to maturity',
+      label: 'IPCA+ 2040', tipo: rf.ipca2040?.tipo || 'estrutural', custod: 'XP',
+      val: rf.ipca2040?.valor, custo: rf.ipca2040?.custo_base_brl,
+      taxa: rf.ipca2040?.taxa, piso: pisoIpca, venc: '2040',
+      nota: rf.ipca2040?.notas || 'DCA ativo · HTM',
       status: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'verde' : 'amarelo') : null,
       statusColor: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'var(--green)' : 'var(--yellow)') : null,
     },
     {
-      label: 'Renda+ 2065',
-      custod: 'Nubank',
-      val: rf.renda2065?.valor,
-      taxa: rf.renda2065?.taxa,
-      venc: '2065',
+      label: 'Renda+ 2065', tipo: rf.renda2065?.tipo || 'tatico', custod: 'Nubank',
+      val: rf.renda2065?.valor, custo: rf.renda2065?.custo_base_brl,
+      taxa: rf.renda2065?.taxa, piso: pisoRenda, venc: '2065',
       nota: (() => {
         const dg = rf.renda2065?.distancia_gatilho;
-        if (dg && dg.gap_pp != null) return `Gap piso venda: ${dg.gap_pp.toFixed(2)}pp`;
-        return `Gatilho ≤${pisoRenda.toFixed(1)}% + 720 dias`;
+        if (dg?.gap_pp != null) return `Gap gatilho: ${dg.gap_pp.toFixed(2)}pp`;
+        return rf.renda2065?.notas || `Gatilho ≤${pisoRenda.toFixed(1)}%`;
       })(),
       status: rf.renda2065?.distancia_gatilho?.status || null,
       statusColor: (() => {
@@ -5219,8 +5225,8 @@ function buildRfCards() {
   let html = `<table style="width:100%;border-collapse:collapse;margin-bottom:14px">
     <thead><tr style="border-bottom:1px solid rgba(71,85,105,.3)">
       <th style="${thStyle};text-align:left">Instrumento</th>
-      <th style="${thStyle};text-align:left">Custodiante</th>
       <th style="${thStyle};text-align:right">Valor</th>
+      <th style="${thStyle};text-align:right">P&amp;L</th>
       <th style="${thStyle};text-align:right">Taxa IPCA+</th>
       <th style="${thStyle};text-align:right">Venc.</th>
       <th style="${thStyle};text-align:left">Nota</th>
@@ -5229,18 +5235,20 @@ function buildRfCards() {
 
   rfRows.forEach((r, i) => {
     const bg = i % 2 === 0 ? 'background:var(--card2)' : '';
-    const valStr = r.val != null ? `~R$ ${(r.val/1000).toFixed(0)}k` : '—';
-    const taxaStr = r.taxa != null ? `~${r.taxa.toFixed(2)}%` : '—';
-    const taxaColor = r.taxaFlag ? 'color:var(--green)' : '';
-    const statusDot = r.status ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.statusColor};margin-right:4px"></span>${r.status}` : '—';
+    const valStr = r.val != null ? `R$ ${(r.val/1000).toFixed(1)}k` : '—';
+    const taxaColor = r.taxa != null && r.piso != null && r.taxa >= r.piso ? 'color:var(--green)' : r.taxa != null ? 'color:var(--yellow)' : '';
+    const taxaStr = r.taxa != null ? `${r.taxa.toFixed(2)}%` : '—';
+    const statusDot = r.status
+      ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.statusColor}"></span>`
+      : '—';
     html += `<tr style="${bg}">
-      <td style="${tdStyle};font-weight:700">${r.label}</td>
-      <td style="${tdMuted}">${r.custod}</td>
+      <td style="${tdStyle};font-weight:700">${r.label}${tipoBadge(r.tipo)}</td>
       <td style="${tdStyle};text-align:right" class="pv">${valStr}</td>
+      ${pnlCell(r.val, r.custo, tdStyle)}
       <td style="${tdStyle};text-align:right;${taxaColor}">${taxaStr}</td>
       <td style="${tdMuted};text-align:right">${r.venc}</td>
-      <td style="${tdMuted}">${r.nota}</td>
-      <td style="${tdStyle};text-align:center;font-size:.7rem;${r.statusColor ? 'color:'+r.statusColor : ''}">${statusDot}</td>
+      <td style="${tdMuted};font-size:.7rem">${r.nota}</td>
+      <td style="${tdStyle};text-align:center">${statusDot}</td>
     </tr>`;
   });
   html += `</tbody></table>`;
@@ -5257,39 +5265,53 @@ function buildRfCards() {
     html += `</div>`;
   }
 
-  // HODL11 com banda visual
+  // ── HODL11 com banda e P&L ──
   const _banda = DATA.hodl11?.banda;
+  const _pnlBrl = DATA.hodl11?.pnl_brl;
+  const _pnlPct = DATA.hodl11?.pnl_pct;
+  const _pm = DATA.hodl11?.preco_medio;
+
   let hodlBandHtml = '';
-  if (_banda && _banda.min_pct != null) {
+  if (_banda?.min_pct != null) {
     const barMax = Math.max(_banda.max_pct + 1, (_banda.atual_pct || 0) + 0.5);
     const markerPct = (_banda.atual_pct / barMax * 100).toFixed(1);
-    const minPct = (_banda.min_pct / barMax * 100).toFixed(1);
-    const alvoPct = (_banda.alvo_pct / barMax * 100).toFixed(1);
-    const maxPct = (_banda.max_pct / barMax * 100).toFixed(1);
+    const minPct    = (_banda.min_pct  / barMax * 100).toFixed(1);
+    const alvoPct   = (_banda.alvo_pct / barMax * 100).toFixed(1);
+    const maxPct    = (_banda.max_pct  / barMax * 100).toFixed(1);
     hodlBandHtml = `<div style="position:relative;height:14px;border-radius:4px;margin:8px 0;overflow:visible;background:linear-gradient(90deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.2) ${minPct}%,rgba(34,197,94,.2) ${minPct}%,rgba(34,197,94,.2) ${maxPct}%,rgba(239,68,68,.2) ${maxPct}%)">
       <div class="hodl-band-marker" style="left:${markerPct}%"></div>
       <div class="hodl-band-label" style="left:${minPct}%">${_banda.min_pct}%</div>
       <div class="hodl-band-label" style="left:${alvoPct}%">alvo ${_banda.alvo_pct}%</div>
       <div class="hodl-band-label" style="left:${maxPct}%">${_banda.max_pct}%</div>
     </div>
-    <div style="font-size:.6rem;color:var(--muted);text-align:center">Atual: ${_banda.atual_pct != null ? _banda.atual_pct.toFixed(1) + '%' : '--'} · Status: <span style="color:${_banda.status === 'verde' ? 'var(--green)' : _banda.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)'}">${_banda.status || '--'}</span></div>`;
+    <div style="font-size:.6rem;color:var(--muted);text-align:center">Alocação atual: ${_banda.atual_pct != null ? _banda.atual_pct.toFixed(1) + '%' : '--'} · <span style="color:${_banda.status === 'verde' ? 'var(--green)' : _banda.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)'}">${_banda.status || '--'}</span></div>`;
   }
 
-  // Cripto: HODL11 + Legado em linha
+  const hodlPnlHtml = _pnlBrl != null ? (() => {
+    const color = _pnlBrl >= 0 ? 'var(--green)' : 'var(--red)';
+    const sign = _pnlBrl >= 0 ? '+' : '';
+    return `<div style="margin-top:6px;font-size:.72rem;color:${color}">
+      P&amp;L: <strong>${sign}R$ ${(_pnlBrl/1000).toFixed(1)}k (${sign}${_pnlPct?.toFixed(1)}%)</strong>
+      ${_pm ? `<span style="color:var(--muted);font-size:.65rem"> · PM R$${_pm.toFixed(2)}</span>` : ''}
+    </div>`;
+  })() : '';
+
+  // Cripto: HODL11 + Legado
   const _legadoVal = DATA.cryptoLegado ?? 3000;
-  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  html += `<div style="display:grid;grid-template-columns:2fr 1fr;gap:10px">
     <div style="background:var(--card2);border-radius:8px;padding:12px">
-      <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">HODL11</div>
+      <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">HODL11 <span style="font-weight:400;text-transform:none;font-size:.6rem">· BTC wrapper · B3</span></div>
       <div class="pv" id="hodl11Val" style="font-size:1.1rem;font-weight:700">—</div>
-      <div class="pv" id="hodl11Sub" style="font-size:.7rem;color:var(--muted);margin-top:2px">— cotas · B3</div>
-      <div style="font-size:.65rem;color:var(--muted);margin-top:2px">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Banda 1.5%–5%</div>
+      <div class="pv" id="hodl11Sub" style="font-size:.7rem;color:var(--muted);margin-top:2px">— cotas</div>
+      ${hodlPnlHtml}
+      <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Banda 1.5%–5%</div>
       ${hodlBandHtml}
     </div>
     <div style="background:var(--card2);border-radius:8px;padding:12px">
       <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Crypto Legado</div>
       <div class="pv" style="font-size:1.1rem;font-weight:700">~R$ ${(_legadoVal/1000).toFixed(0)}k</div>
       <div style="font-size:.7rem;color:var(--muted);margin-top:2px">BTC · ETH · BNB · ADA</div>
-      <div style="font-size:.65rem;color:var(--muted);margin-top:2px">Não mexer</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:4px">Não mexer</div>
     </div>
   </div>`;
 

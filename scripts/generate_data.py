@@ -1075,6 +1075,7 @@ def get_rf(state):
             "cotas": cotas,
             "valor": valor,
             "taxa":  taxa,
+            "tipo":  raw.get("tipo"),
             "notas": raw.get("notas", notas_map.get(key, "")),
         }
 
