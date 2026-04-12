@@ -48,20 +48,52 @@ DOMAIN_MODULES = [
 
 SEVERITY_ORDER = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2}
 
-# ── Smart mode — file → domain/category mapping ───────────────────────────────
+# ── Smart mode — file → domain mapping (TIA) ─────────────────────────────────
+# Patterns are matched in order of specificity:
+#   1. Exact file match
+#   2. Directory prefix match (ends with '/')
+#   3. File prefix match (e.g. 'dados/fire_')
+#
+# Empty list [] means "no tests needed" (docs, analysis, etc.)
+# Domain 'dev' covers JS_REF, RENDER_REF, TAB_SWITCH categories.
 
 FILE_TO_DOMAINS = {
-    'dashboard/template.html':           ['JS_REF', 'RENDER_REF', 'TAB_SWITCH'],
-    'dashboard/index.html':              ['JS_REF', 'RENDER_REF', 'TAB_SWITCH'],
-    'scripts/build_dashboard.py':        ['head', 'fire', 'factor', 'rf', 'risco', 'macro', 'fx', 'tax', 'bookkeeper'],
-    'scripts/generate_data.py':          ['head', 'fire', 'factor', 'rf', 'risco', 'macro', 'fx', 'tax', 'bookkeeper'],
-    'scripts/reconstruct_fire_data.py':  ['fire'],
-    'scripts/config.py':                 ['factor', 'fire', 'rf'],
-    'dados/':                            ['head', 'bookkeeper'],  # any file under dados/
-}
+    # Docs / analysis: zero testes
+    'CLAUDE.md':                        [],
+    'README.md':                        [],
+    'agentes/':                         [],
+    'analysis/':                        [],
 
-# Categories always included in --smart mode
-ALWAYS_RUN = ['JS_REF', 'RENDER_REF', 'TAB_SWITCH']
+    # Test infra / generated artefacts: zero testes
+    'dashboard/tests/':                 [],
+    'dashboard/data.json':              [],
+    'dashboard/version.json':           [],
+    'dashboard/spec.json':              [],
+    'dashboard/last_run.json':          [],
+
+    # Test scripts themselves: zero testes (changes here don't break production output)
+    'scripts/test_dashboard.py':        [],
+
+    # Template/HTML: domínio dev (JS_REF, RENDER_REF, TAB_SWITCH)
+    'dashboard/template.html':          ['dev'],
+    'dashboard/index.html':             ['dev'],
+
+    # Scripts por domínio
+    'scripts/build_dashboard.py':       ['head', 'fire', 'factor', 'rf', 'risco', 'macro', 'fx', 'tax', 'bookkeeper'],
+    'scripts/generate_data.py':         ['head', 'fire', 'factor', 'rf', 'risco', 'macro', 'fx', 'tax', 'bookkeeper'],
+    'scripts/reconstruct_fire_data.py': ['fire'],
+    'scripts/config.py':                ['factor', 'fire', 'rf'],
+    'scripts/fire_montecarlo.py':       ['fire'],
+    'scripts/portfolio_analytics.py':   ['head', 'bookkeeper'],
+
+    # Dados por prefixo (mais específico primeiro)
+    'dados/fire_':                      ['fire'],
+    'dados/factor_':                    ['factor'],
+    'dados/macro_':                     ['macro'],
+    'dados/tax_':                       ['tax'],
+    'dados/ibkr/':                      ['head', 'bookkeeper'],
+    'dados/':                           ['head', 'bookkeeper'],  # fallback
+}
 
 # ANSI colors
 RED = "\033[91m"
@@ -103,30 +135,49 @@ def get_modified_files() -> list[str] | None:
         return None
 
 
-def resolve_smart_targets(modified_files: list[str]) -> tuple[set[str], set[str]]:
+def _match_pattern(changed_file: str, pattern: str) -> bool:
     """
-    Given a list of modified file paths, return (active_domains, active_categories).
-    ALWAYS_RUN categories are always included.
+    Match a changed file path against a FILE_TO_DOMAINS pattern.
+    Matching order (by specificity):
+      1. Exact file match
+      2. Directory prefix match (pattern ends with '/')
+      3. File prefix match (e.g. 'dados/fire_')
+    """
+    if pattern.endswith('/'):
+        return changed_file.startswith(pattern)
+    else:
+        # Exact match OR file prefix match
+        return changed_file == pattern or changed_file.startswith(pattern)
+
+
+def resolve_smart_targets(modified_files: list[str]) -> tuple[set[str], bool]:
+    """
+    Given a list of modified file paths, return (active_domains, any_unmatched).
+    - active_domains: set of domain names to run tests for
+    - any_unmatched: True if any file had no pattern match at all (triggers full regression fallback)
+
+    Rules:
+    - Docs/analysis files → empty list → contribute 0 domains
+    - Template/HTML files → 'dev' domain
+    - Script files → their respective domains
+    - Data files → their prefixed domains
+    - Files with NO pattern match → any_unmatched=True (safe fallback)
     """
     active_domains: set[str] = set()
-    active_categories: set[str] = set(ALWAYS_RUN)
+    any_unmatched = False
 
     for changed_file in modified_files:
+        matched = False
+        # Try patterns in order — first match wins (dict preserves insertion order in Python 3.7+)
         for pattern, targets in FILE_TO_DOMAINS.items():
-            matched = False
-            if pattern.endswith('/'):
-                # Directory prefix match
-                matched = changed_file.startswith(pattern)
-            else:
-                matched = (changed_file == pattern or changed_file.endswith('/' + pattern))
-            if matched:
-                for t in targets:
-                    if t.isupper():
-                        active_categories.add(t)
-                    else:
-                        active_domains.add(t)
+            if _match_pattern(changed_file, pattern):
+                matched = True
+                active_domains.update(targets)
+                break
+        if not matched:
+            any_unmatched = True
 
-    return active_domains, active_categories
+    return active_domains, any_unmatched
 
 
 def load_failure_history() -> dict:
@@ -174,9 +225,9 @@ def run(args):
 
     # ── Smart mode: resolve targets before loading ────────────────────────────
     smart_active_domains: set[str] = set()
-    smart_active_categories: set[str] = set()
     smart_modified_files: list[str] = []
     smart_fallback = False
+    smart_any_unmatched = False
 
     if args.smart:
         modified = get_modified_files()
@@ -186,7 +237,7 @@ def run(args):
             print(f"{YELLOW}WARNING: git diff failed — falling back to regression mode{RESET}")
         else:
             smart_modified_files = modified
-            smart_active_domains, smart_active_categories = resolve_smart_targets(modified)
+            smart_active_domains, smart_any_unmatched = resolve_smart_targets(modified)
 
     # ── Load modules and tag tests with their domain ──────────────────────────
     loaded = []
@@ -226,33 +277,38 @@ def run(args):
     # ── Smart mode filtering ──────────────────────────────────────────────────
     if args.smart and not smart_fallback:
         total_before_smart = len(results)
-
-        if not smart_active_domains and smart_active_categories == set(ALWAYS_RUN):
-            # No relevant files changed — run only the 3 safety categories
-            results = [
-                r for i, r in enumerate(results)
-                if r.category in ALWAYS_RUN
-            ]
-        else:
-            # Filter: include if domain matches OR category matches
-            results = [
-                r for i, r in enumerate(results)
-                if test_domains.get(i, "") in smart_active_domains
-                or r.category in smart_active_categories
-            ]
-
-        # Smart mode always runs CRITICAL+HIGH only (regression subset)
-        results = [r for r in results if r.severity in ("CRITICAL", "HIGH")]
         mode = "smart"
 
         # Print smart mode header
         changed_names = [Path(f).name for f in smart_modified_files] if smart_modified_files else []
         files_str = ", ".join(changed_names) if changed_names else "nenhum"
-        domains_str = ", ".join(sorted(smart_active_domains)) if smart_active_domains else "nenhum"
-        cats_str = "/".join(ALWAYS_RUN)
-        print(f"\n{CYAN}{BOLD}Smart mode — arquivos modificados: {files_str}{RESET}")
-        print(f"{CYAN}   Domínios ativados: {domains_str} + {cats_str}{RESET}")
-        print(f"{CYAN}   Testes selecionados: {len(results)} / {total_before_smart}{RESET}")
+
+        if smart_any_unmatched:
+            # Unknown files changed — safe fallback to regression
+            results = [r for r in results if r.severity in ("CRITICAL", "HIGH")]
+            domains_str = "(fallback — arquivo não mapeado)"
+            print(f"\n{CYAN}{BOLD}Smart mode — arquivos modificados: {files_str}{RESET}")
+            print(f"{CYAN}   Domínios ativados: {domains_str}{RESET}")
+            print(f"{CYAN}   Testes selecionados: {len(results)} / {total_before_smart}{RESET}")
+        elif not smart_active_domains:
+            # All modified files are docs/analysis — zero tests needed
+            print(f"\n{CYAN}{BOLD}Smart mode — arquivos modificados: {files_str}{RESET}")
+            print(f"{CYAN}   Domínios ativados: (nenhum — apenas docs){RESET}")
+            print(f"{CYAN}   Testes selecionados: 0 / {total_before_smart} — nenhuma mudança de código detectada{RESET}")
+            save_last_run([], {}, [], mode)
+            print(f"  Results saved to: {LAST_RUN_PATH.relative_to(ROOT)}\n")
+            sys.exit(0)
+        else:
+            # Filter by active domains, CRITICAL+HIGH only
+            results = [
+                r for i, r in enumerate(results)
+                if test_domains.get(i, "") in smart_active_domains
+            ]
+            results = [r for r in results if r.severity in ("CRITICAL", "HIGH")]
+            domains_str = ", ".join(sorted(smart_active_domains))
+            print(f"\n{CYAN}{BOLD}Smart mode — arquivos modificados: {files_str}{RESET}")
+            print(f"{CYAN}   Domínios ativados: {domains_str}{RESET}")
+            print(f"{CYAN}   Testes selecionados: {len(results)} / {total_before_smart}{RESET}")
 
     # Legacy --quick flag maps to regression mode
     elif args.quick:
@@ -396,8 +452,8 @@ def main():
         "--smart", action="store_true",
         help=(
             "Run only tests relevant to files changed since last commit (git diff HEAD). "
-            "Always includes JS_REF, RENDER_REF, TAB_SWITCH categories. "
-            "Falls back to regression mode if git is unavailable."
+            "Docs/analysis changes → 0 tests. Template changes → dev domain. "
+            "Falls back to regression mode if git is unavailable or files are unmapped."
         ),
     )
     args = parser.parse_args()

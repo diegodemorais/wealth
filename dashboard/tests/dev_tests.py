@@ -21,6 +21,28 @@ def load_template() -> str:
     return _TEMPLATE
 
 
+# ── SMOKE ─────────────────────────────────────────────────────────────────────
+
+@registry.test("smoke-global", "SMOKE", "index.html existe, tamanho > 100k chars, JS não truncado", "CRITICAL")
+def _():
+    from .base import INDEX_HTML
+    if not INDEX_HTML.exists():
+        return False, "dashboard/index.html não encontrado"
+    html = INDEX_HTML.read_text(encoding="utf-8")
+    if len(html) < 100_000:
+        return False, f"index.html suspeito: {len(html):,} chars (esperado > 100k)"
+    # Strip CSS block comments before counting script tags to avoid false positives
+    # (e.g. <script> appearing inside /* ... */ comments in <style> blocks)
+    html_no_css_comments = re.sub(r'/\*.*?\*/', '', html, flags=re.DOTALL)
+    open_tags = len(re.findall(r'<script[\s>]', html_no_css_comments))
+    close_tags = html_no_css_comments.count("</script>")
+    if open_tags != close_tags:
+        return False, f"Tags <script> desbalanceadas: {open_tags} abertas vs {close_tags} fechadas — JS possivelmente truncado"
+    if "renderKPIs" not in html:
+        return False, "renderKPIs não encontrado em index.html — JS pode estar ausente ou truncado"
+    return True, f"index.html OK: {len(html):,} chars, {open_tags} blocos <script>, renderKPIs presente"
+
+
 # ── SPEC COVERAGE ────────────────────────────────────────────────────────────
 
 @registry.test("spec-global", "SPEC", "spec.json exists and is parseable", "CRITICAL")
