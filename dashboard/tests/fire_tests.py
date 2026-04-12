@@ -315,16 +315,16 @@ def _():
     return True, f"Spending decreases: {go_go:,} -> {slow_go:,} -> {no_go:,}"
 
 
-@registry.test("net-worth-projection", "RENDER", "pfireHeadline and scenario badges exist in HTML", "CRITICAL")
+@registry.test("net-worth-projection", "RENDER", "pfire53 scenario badges exist in HTML", "CRITICAL")
 def _():
     html = load_html()
     missing = []
-    for eid in ["pfireHeadline", "pfire53BaseBadge", "pfire53FavBadge", "pfire53StressBadge"]:
+    for eid in ["pfire53BaseBadge", "pfire53FavBadge", "pfire53StressBadge"]:
         if eid not in html:
             missing.append(eid)
     if missing:
         return False, f"Missing HTML elements: {missing}"
-    return True, "pfireHeadline and pfire53 badges present"
+    return True, "pfire53 badges present"
 
 
 @registry.test("net-worth-projection", "VALUE", "patrimonio_gatilho not hardcoded in build script", "HIGH")

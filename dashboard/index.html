@@ -294,12 +294,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
 </div>
 
-<!-- P(FIRE) HEADLINE — aba Now -->
-<div id="pfireHeadline" data-in-tab="hoje" style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.25);border-radius:8px;margin-bottom:10px;flex-wrap:wrap">
-  <span style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">P(FIRE@50)</span>
-  <span style="font-size:1.2rem;font-weight:800;color:var(--accent)" id="pfireHeadlineVal">—</span>
-  <span style="font-size:.65rem;color:var(--muted)" id="pfireHeadlineSub">—</span>
-</div>
 
 <!-- S3: KPI CARDS — hierarquia primários vs contextuais (#4) -->
 <!-- KPIs Primários -->
@@ -1399,8 +1393,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T18:14:06-03:00'); // BRT (UTC-3)
-const VERSION = '1.180';
+const GENERATED_AT = new Date('2026-04-12T18:18:51-03:00'); // BRT (UTC-3)
+const VERSION = '1.182';
 
 const DATA = {
   "_generated": "2026-04-12T18:14:04",
@@ -7796,7 +7790,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.180"
+  "version": "1.182"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -11466,18 +11460,6 @@ function renderKPIs() {
     }
   })();
 
-  // P(FIRE) Headline persistente — mostra P(FIRE@50) (#4)
-  (function() {
-    const el    = document.getElementById('pfireHeadlineVal');
-    const sub   = document.getElementById('pfireHeadlineSub');
-    if (!el) return;
-    const p50 = DATA.pfire50?.base;
-    if (p50 != null) {
-      el.textContent = p50.toFixed(1) + '%';
-      el.style.color = p50 >= 90 ? '#22c55e' : p50 >= 80 ? '#eab308' : '#ef4444';
-    }
-    if (sub) sub.textContent = `stress ${DATA.pfire50?.stress?.toFixed(0) ?? '—'}% · fav ${DATA.pfire50?.fav?.toFixed(0) ?? '—'}%`;
-  })();
 
   // KPI 5: Alpha ITD vs SWRD — backtest (source: backtest.metrics) (#13)
   (function() {

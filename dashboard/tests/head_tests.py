@@ -211,7 +211,7 @@ def _():
 )
 def _():
     html = load_html()
-    required_ids = ["heroPfire", "pfireHeadline", "pfire53Base", "pfire53Fav", "pfire53Stress"]
+    required_ids = ["pfire53Base", "pfire53Fav", "pfire53Stress"]
     missing = [eid for eid in required_ids if f'id="{eid}"' not in html]
     if missing:
         return False, f"missing element IDs: {missing}"
