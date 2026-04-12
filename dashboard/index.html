@@ -601,6 +601,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section" data-in-tab="carteira" id="etfCompSection">
 <h2>Composição por Região e Fator — ETFs da Carteira</h2>
 <div id="etfRegionTable" style="margin-bottom:16px"></div>
+<div id="etfVemTable" style="margin-bottom:16px"></div>
 <div id="etfFactorTable"></div>
 <div class="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
 </div>
@@ -1386,12 +1387,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T08:43:11-03:00'); // BRT (UTC-3)
-const VERSION = '1.163';
+const GENERATED_AT = new Date('2026-04-12T08:57:38-03:00'); // BRT (UTC-3)
+const VERSION = '1.164';
 
 const DATA = {
-  "_generated": "2026-04-12T08:43:11",
-  "_generated_brt": "2026-04-12T08:43:11-03:00",
+  "_generated": "2026-04-12T08:57:38",
+  "_generated_brt": "2026-04-12T08:57:38-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1454,7 +1455,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1500,7 +1501,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3470738,
+    "patrimonio_atual": 3487412,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2834,7 +2835,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -3595,7 +3596,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 3.0,
+      "atual_pct": 2.98,
       "status": "verde"
     }
   },
@@ -3670,15 +3671,15 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 37.0,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.0,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.2,
+      "atual": 24.6,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3728,7 +3729,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "ucits": "AVEM.L"
     },
     {
@@ -3758,10 +3759,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 626874,
-    "retorno_usd": 235831,
-    "pct_aportes": 62.4,
-    "pct_retorno": 37.6,
+    "patrimonio_equity_usd": 630200,
+    "retorno_usd": 239157,
+    "pct_aportes": 62.1,
+    "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-12"
@@ -4288,7 +4289,7 @@ const DATA = {
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.6,
+    "brasil_pct": 9.5,
     "composicao": {
       "hodl11_brl": 104063,
       "rf_total_brl": 224406,
@@ -4300,7 +4301,7 @@ const DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 332481,
-    "total_portfolio_brl": 3470738,
+    "total_portfolio_brl": 3487412,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -7586,20 +7587,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3470738,
-      3642873,
-      3823545,
-      4013178,
-      4212216,
-      4421126,
-      4640396,
-      4870542,
-      5112102,
-      5365642,
-      5631757,
-      5911070,
-      6204236,
-      6511942,
+      3487412,
+      3659121,
+      3839285,
+      4028319,
+      4226661,
+      4434768,
+      4653122,
+      4882227,
+      5122613,
+      5374834,
+      5639474,
+      5917144,
+      6208485,
+      6514172,
       6834909,
       6924402,
       7018236,
@@ -7640,20 +7641,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3470738,
-      3781451,
-      4119979,
-      4488814,
-      4890669,
-      5328498,
-      5805524,
-      6325255,
-      6891514,
-      7508466,
-      8180650,
-      8913011,
-      9710935,
-      10580291,
+      3487412,
+      3798317,
+      4136939,
+      4505749,
+      4907440,
+      5344941,
+      5821445,
+      6340430,
+      6905683,
+      7521329,
+      8191860,
+      8922169,
+      9717586,
+      10583914,
       11527476,
       11844559,
       12177020,
@@ -7694,20 +7695,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3470738,
-      3917624,
-      4422050,
-      4991425,
-      5634112,
-      6359550,
-      7178394,
-      8102670,
-      9145955,
-      10323572,
-      11652816,
-      13153211,
-      14846795,
-      16758441,
+      3487412,
+      3935097,
+      4440253,
+      5010256,
+      5653432,
+      6379174,
+      7198080,
+      8122110,
+      9164760,
+      10341258,
+      11668784,
+      13166727,
+      14856963,
+      16764179,
       18916227,
       19591664,
       20299860,
@@ -7777,7 +7778,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.163"
+  "version": "1.164"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8365,6 +8366,8 @@ function buildTornado() {
       }
     }
   });
+  // Force resize after layout is complete (chart may render with 0 dimensions on first paint)
+  setTimeout(() => { if (charts.tornado) charts.tornado.resize(); }, 100);
 }
 
 // ── S11: Delta bar ────────────────────────────────────────────
@@ -10680,10 +10683,13 @@ function _renderStressCards(vals, stData) {
       </div>`;
   };
 
-  const patAtual = DATA.premissas.patrimonio_atual;
+  const patAtualHoje = DATA.premissas.patrimonio_atual;
+  // stData.pat_atual may be the projected portfolio at onset age (if onset > current age)
+  const patBaseParaShock = (stData && stData.pat_atual) ? stData.pat_atual : patAtualHoje;
   const pct = stData ? stData.shock_pct : 40;
-  const patShock = stData ? stData.pat_pos_shock : patAtual * 0.60;
-  const deltaM = (patAtual - patShock) / 1e6;
+  const patShock = stData ? stData.pat_pos_shock : patAtualHoje * 0.60;
+  const deltaM = (patBaseParaShock - patShock) / 1e6;
+  const isProjected = stData && stData.pat_atual && Math.abs(stData.pat_atual - patAtualHoje) > 1000;
 
   el.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
@@ -10693,7 +10699,11 @@ function _renderStressCards(vals, stData) {
     </div>
     <div style="margin-top:12px;font-size:.72rem;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px">
       <div style="display:flex;flex-wrap:wrap;gap:16px">
-        <div><span style="color:var(--muted)">Patrimônio atual:</span> <strong class="pv">R$${(patAtual/1e6).toFixed(2)}M</strong></div>
+        ${isProjected
+          ? `<div><span style="color:var(--muted)">Patrimônio hoje:</span> <strong class="pv">R$${(patAtualHoje/1e6).toFixed(2)}M</strong></div>
+             <div><span style="color:var(--muted)">Projetado na idade do shock:</span> <strong class="pv">R$${(patBaseParaShock/1e6).toFixed(2)}M</strong></div>`
+          : `<div><span style="color:var(--muted)">Patrimônio atual:</span> <strong class="pv">R$${(patAtualHoje/1e6).toFixed(2)}M</strong></div>`
+        }
         <div><span style="color:var(--muted)">Shock aplicado:</span> <strong style="color:var(--red)">−${pct}%</strong></div>
         <div><span style="color:var(--muted)">Pós-shock:</span> <strong style="color:var(--red)" class="pv">R$${(patShock/1e6).toFixed(2)}M</strong></div>
         <div><span style="color:var(--red)">Perda bruta:</span> <strong style="color:var(--red)" class="pv">−R$${deltaM.toFixed(2)}M</strong></div>
@@ -10789,7 +10799,19 @@ function onStressShockChange(val) {
 
   const p = DATA.premissas;
   const patOriginal = p.patrimonio_atual;
-  const patShock = patOriginal * (1 - pct / 100);
+  const idadeAtual = p.idade_atual || 39;
+  const selectedAge = parseInt(document.getElementById('stressOnsetAge')?.value || idadeAtual, 10);
+
+  // Project portfolio to onset age if onset > current age
+  const mesesAteOnset = Math.max(0, (selectedAge - idadeAtual) * 12);
+  let patNaIdade = patOriginal;
+  if (mesesAteOnset > 0) {
+    const rMensal = 0.00407;
+    const aporteMensal = p.aporte_mensal || 33000;
+    const fv = Math.pow(1 + rMensal, mesesAteOnset);
+    patNaIdade = patOriginal * fv + aporteMensal * (fv - 1) / rMensal;
+  }
+  const patShock = patNaIdade * (1 - pct / 100);
 
   if (labelEl) labelEl.textContent = `−${pct}%`;
   if (patShockEl) patShockEl.textContent = `R$${(patShock / 1e6).toFixed(2)}M`;
@@ -10797,8 +10819,7 @@ function onStressShockChange(val) {
   const st = DATA.stress_test;
   const hasPrecalc = st && st.pfire_pos_shock_base != null;
   const isDefaultShock = pct === (st ? st.shock_pct : 40);
-  const selectedAge = parseInt(document.getElementById('stressOnsetAge')?.value || DATA.premissas.idade_atual || 39, 10);
-  const isDefaultAge = selectedAge === (DATA.premissas.idade_atual || 39);
+  const isDefaultAge = selectedAge === idadeAtual;
 
   if (isDefaultShock && isDefaultAge && hasPrecalc) {
     buildStressTest();
@@ -10807,7 +10828,7 @@ function onStressShockChange(val) {
     if (simBtn) simBtn.style.display = 'none';
     _renderStressCards(
       { base: { pfire: null, badge: 'pending' }, fav: { pfire: null, badge: 'pending' }, stress: { pfire: null, badge: 'pending' } },
-      { shock_pct: pct, pat_pos_shock: patShock, pat_atual: patOriginal }
+      { shock_pct: pct, pat_pos_shock: patShock, pat_atual: patNaIdade }
     );
     clearTimeout(window._stressDebounce);
     window._stressDebounce = setTimeout(runStressSimulation, 250);
@@ -10829,17 +10850,31 @@ function runStressSimulation() {
   setTimeout(() => {
     const p = DATA.premissas;
     const patOriginal = p.patrimonio_atual;
-    const patShock = patOriginal * (1 - pct / 100);
     const spendingAnual = p.custo_vida_base || 250000;
-    const idadeOnset = parseInt(document.getElementById('stressOnsetAge')?.value || p.idade_atual || 39, 10);
+    const idadeAtual = p.idade_atual || 39;
+    const idadeOnset = parseInt(document.getElementById('stressOnsetAge')?.value || idadeAtual, 10);
     const idadeFireAlvo = p.idade_fire_alvo || 53;
+    const retReal = p.retorno_equity_base || 0.0485;
+    const vol = p.volatilidade_equity || 0.168;
+    const aporteAnual = (p.aporte_mensal || 33000) * 12;
+    const nTrials = 2000;
+
+    // Project portfolio forward from current age to shock onset age before applying shock
+    // Formula: pat_na_idade = patAtual * (1+r)^n + aporte * ((1+r)^n - 1) / r
+    // Using monthly compounding: r_month = 0.407%/month (~5% real/year), n_months
+    const mesesAteOnset = Math.max(0, (idadeOnset - idadeAtual) * 12);
+    let patNaIdade = patOriginal;
+    if (mesesAteOnset > 0) {
+      const rMensal = 0.00407; // ~5% real/ano conservador
+      const aporteMensal = p.aporte_mensal || 33000;
+      const fv = Math.pow(1 + rMensal, mesesAteOnset);
+      patNaIdade = patOriginal * fv + aporteMensal * (fv - 1) / rMensal;
+    }
+
+    const patShock = patNaIdade * (1 - pct / 100);
     // Anos de acumulação após o shock (desde a idade do shock até FIRE)
     const anosAcumulo = Math.max(0, idadeFireAlvo - idadeOnset);
     const anosAposentadoria = 40; // idade FIRE até 93
-    const retReal = p.retorno_equity_base || 0.0485;
-    const vol = p.volatilidade_equity || 0.168;
-    const aporteAnual = (p.aporte_mensal || 25000) * 12;
-    const nTrials = 2000;
 
     // Cenário base
     const pfireBase = parseFloat(runMC(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, nTrials, aporteAnual));
@@ -10854,7 +10889,10 @@ function runStressSimulation() {
         fav:    { pfire: pfireFav,    badge: 'live' },
         stress: { pfire: pfireStress, badge: 'live' },
       },
-      { shock_pct: pct, pat_pos_shock: patShock }
+      { shock_pct: pct, pat_pos_shock: patShock, pat_atual: patNaIdade,
+        descricao_shock: mesesAteOnset > 0
+          ? `Patrimônio projetado até ${idadeOnset} anos (R$${(patNaIdade/1e6).toFixed(2)}M) → após shock de −${pct}%: R$${(patShock/1e6).toFixed(2)}M`
+          : null }
     );
 
     if (simBtn) { simBtn.textContent = '▶ Simular ao vivo'; simBtn.disabled = false; }
@@ -12760,20 +12798,26 @@ function buildDrawdownHistory() {
 // ═══════════════════════════════════════════════════════════════
 function buildEtfComposition() {
   const regEl = document.getElementById('etfRegionTable');
+  const vemEl = document.getElementById('etfVemTable');
   const facEl = document.getElementById('etfFactorTable');
   const sec = document.getElementById('etfCompSection');
   if (!regEl || !facEl || !sec) return;
   const d = DATA.etf_composition;
   if (!d || !d.etfs) { sec.style.display = 'none'; return; }
 
-  const tickers = Object.keys(d.etfs);
+  const allTickers = Object.keys(d.etfs);
+  // Separate VEM into its own table to keep the main region table narrow
+  const VEM_TICKER = 'VEM';
+  const mainTickers = allTickers.filter(t => t !== VEM_TICKER);
+  const vemTicker = allTickers.find(t => t === VEM_TICKER);
+
   const factorLabels = { market: 'Market', value: 'Value', size: 'Size', quality: 'Quality' };
   const factorColors = { market: '#3b82f6', value: '#f97316', size: '#a855f7', quality: '#22c55e' };
 
-  // Collect all unique regions and factors across ETFs
+  // Collect all unique regions and factors across main ETFs (excluding VEM)
   const allRegions = [];
   const allFactors = [];
-  tickers.forEach(t => {
+  mainTickers.forEach(t => {
     const etf = d.etfs[t];
     if (etf.regioes) Object.keys(etf.regioes).forEach(r => { if (!allRegions.includes(r)) allRegions.push(r); });
     if (etf.fatores) Object.keys(etf.fatores).forEach(f => { if (!allFactors.includes(f)) allFactors.push(f); });
@@ -12786,13 +12830,13 @@ function buildEtfComposition() {
   const tableStyle = 'width:100%;border-collapse:collapse';
   const trEvenStyle = 'background:var(--card2)';
 
-  // ── Tabela 1: Por Região ──
+  // ── Tabela 1: Por Região (sem VEM) ──
   let regHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Por Região</div>';
   regHtml += '<table style="' + tableStyle + '"><thead><tr>';
   regHtml += '<th style="' + thFirstStyle + '">ETF</th>';
   allRegions.forEach(r => { regHtml += '<th style="' + thStyle + '">' + r + '</th>'; });
   regHtml += '</tr></thead><tbody>';
-  tickers.forEach((t, i) => {
+  mainTickers.forEach((t, i) => {
     const etf = d.etfs[t];
     regHtml += '<tr' + (i % 2 === 0 ? ' style="' + trEvenStyle + '"' : '') + '>';
     regHtml += '<td style="' + tdFirstStyle + '">' + t + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></td>';
@@ -12806,17 +12850,47 @@ function buildEtfComposition() {
   regHtml += '</tbody></table>';
   regEl.innerHTML = regHtml;
 
-  // ── Tabela 2: Por Fator ──
+  // ── Tabela VEM (separada) ──
+  if (vemEl) {
+    if (vemTicker && d.etfs[vemTicker]) {
+      const vemEtf = d.etfs[vemTicker];
+      const vemRegions = vemEtf.regioes ? Object.keys(vemEtf.regioes) : [];
+      let vemHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">VEM — Por Região</div>';
+      vemHtml += '<table style="' + tableStyle + '"><thead><tr>';
+      vemHtml += '<th style="' + thFirstStyle + '">ETF</th>';
+      vemRegions.forEach(r => { vemHtml += '<th style="' + thStyle + '">' + r + '</th>'; });
+      vemHtml += '</tr></thead><tbody>';
+      vemHtml += '<tr style="' + trEvenStyle + '">';
+      vemHtml += '<td style="' + tdFirstStyle + '">' + vemTicker + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (vemEtf.nome || '') + '</span></td>';
+      vemRegions.forEach(r => {
+        const v = vemEtf.regioes[r] != null ? Math.round(vemEtf.regioes[r] * 100) : 0;
+        const color = v >= 50 ? '#3b82f6' : v >= 20 ? '#22c55e' : v > 0 ? '#94a3b8' : 'var(--muted)';
+        vemHtml += '<td style="' + tdStyle + ';color:' + color + '">' + (v > 0 ? v + '%' : '—') + '</td>';
+      });
+      vemHtml += '</tr></tbody></table>';
+      vemEl.innerHTML = vemHtml;
+    } else {
+      vemEl.innerHTML = '';
+    }
+  }
+
+  // ── Tabela 2: Por Fator (todos os ETFs, incluindo VEM) ──
+  // Collect factors from ALL tickers (including VEM)
+  const allFactorsFull = [];
+  allTickers.forEach(t => {
+    const etf = d.etfs[t];
+    if (etf.fatores) Object.keys(etf.fatores).forEach(f => { if (!allFactorsFull.includes(f)) allFactorsFull.push(f); });
+  });
   let facHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Exposição Fatorial</div>';
   facHtml += '<table style="' + tableStyle + '"><thead><tr>';
   facHtml += '<th style="' + thFirstStyle + '">ETF</th>';
-  allFactors.forEach(f => { facHtml += '<th style="' + thStyle + ';color:' + (factorColors[f] || '#94a3b8') + '">' + (factorLabels[f] || f) + '</th>'; });
+  allFactorsFull.forEach(f => { facHtml += '<th style="' + thStyle + ';color:' + (factorColors[f] || '#94a3b8') + '">' + (factorLabels[f] || f) + '</th>'; });
   facHtml += '</tr></thead><tbody>';
-  tickers.forEach((t, i) => {
+  allTickers.forEach((t, i) => {
     const etf = d.etfs[t];
     facHtml += '<tr' + (i % 2 === 0 ? ' style="' + trEvenStyle + '"' : '') + '>';
     facHtml += '<td style="' + tdFirstStyle + '">' + t + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></td>';
-    allFactors.forEach(f => {
+    allFactorsFull.forEach(f => {
       const v = etf.fatores && etf.fatores[f] != null ? Math.round(etf.fatores[f] * 100) : 0;
       const color = factorColors[f] || '#94a3b8';
       facHtml += '<td style="' + tdStyle + ';color:' + (v > 0 ? color : 'var(--muted)') + '">' + (v > 0 ? v + '%' : '—') + '</td>';
