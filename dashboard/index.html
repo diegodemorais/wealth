@@ -1061,6 +1061,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div class="big pv" id="wiPatNecessario">—</div>
     <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
     <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="wiPctLimite">—% do limite</div>
+    <div style="font-size:.65rem;color:var(--yellow);font-weight:600;margin-top:2px" id="wiFireEta">—</div>
   </div>
 </div>
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
@@ -1398,12 +1399,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T19:09:40-03:00'); // BRT (UTC-3)
-const VERSION = '1.188';
+const GENERATED_AT = new Date('2026-04-12T19:26:52-03:00'); // BRT (UTC-3)
+const VERSION = '1.191';
 
 const DATA = {
-  "_generated": "2026-04-12T19:09:38",
-  "_generated_brt": "2026-04-12T19:09:38-03:00",
+  "_generated": "2026-04-12T19:26:52",
+  "_generated_brt": "2026-04-12T19:26:52-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1413,7 +1414,7 @@ const DATA = {
     "fire_mc": "2026-04-12",
     "geral": "2026-04-12"
   },
-  "cambio": 5.0126,
+  "cambio": 5.0061,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -1512,7 +1513,7 @@ const DATA = {
     "stress": 90.8
   },
   "premissas": {
-    "patrimonio_atual": 3487412,
+    "patrimonio_atual": 3483315,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 33000,
     "custo_vida_base": 250000,
@@ -1644,8 +1645,8 @@ const DATA = {
         "ipca2029": 86555
       }
     },
-    "pat_mediano_fire": 11527476.0,
-    "pat_mediano_fire50": 9339651.0,
+    "pat_mediano_fire": 13329893.0,
+    "pat_mediano_fire50": 10652357.0,
     "mc_date": "2026-04-12",
     "plano_status": {
       "status": "MONITORAR",
@@ -3612,7 +3613,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.98,
+      "atual_pct": 2.99,
       "status": "verde"
     }
   },
@@ -4083,12 +4084,12 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0126
+    "cambio": 5.0061
   },
   "mercado": {
-    "cambio_brl_usd": 5.0126,
+    "cambio_brl_usd": 5.0061,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": -2.78,
+    "cambio_mtd_pct": -2.91,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -4580,7 +4581,7 @@ const DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 332481,
-    "total_portfolio_brl": 3487412,
+    "total_portfolio_brl": 3483315,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4596,20 +4597,20 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 33000,
-      "realizado_media_brl": 33223,
-      "delta_brl": 223,
-      "delta_pct": 0.7,
+      "realizado_media_brl": 33180,
+      "delta_brl": 180,
+      "delta_pct": 0.5,
       "periodo": "2021-04-13 a 2026-03-13",
       "meses_span": 59,
       "total_usd": 391043,
-      "cambio_conversao": 5.0126,
+      "cambio_conversao": 5.0061,
       "por_ano_brl": {
-        "2026": 95239,
-        "2025": 283074,
-        "2024": 373297,
-        "2023": 394529,
-        "2022": 483182,
-        "2021": 330823
+        "2026": 95116,
+        "2025": 282707,
+        "2024": 372813,
+        "2023": 394017,
+        "2022": 482556,
+        "2021": 330394
       },
       "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
     }
@@ -5869,7 +5870,7 @@ const DATA = {
     }
   },
   "fire_matrix": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
     "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
     "patrimonios": [
@@ -6084,28 +6085,29 @@ const DATA = {
     }
   },
   "fire_swr_percentis": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "reconstruct_fire_data.py → dashboard_state.json fire section",
     "custo_vida_base": 250000,
-    "patrimonio_p10_2040": 6834909.0,
-    "patrimonio_p50_2040": 11527476.0,
-    "patrimonio_p90_2040": 18916227.0,
-    "swr_p10": 0.0366,
-    "swr_p50": 0.0217,
-    "swr_p90": 0.0132,
-    "swr_p10_pct": 3.66,
-    "swr_p50_pct": 2.17,
-    "swr_p90_pct": 1.32,
+    "patrimonio_p10_2040": 8083717.0,
+    "patrimonio_p50_2040": 13329893.0,
+    "patrimonio_p90_2040": 21498675.0,
+    "swr_p10": 0.0309,
+    "swr_p50": 0.0188,
+    "swr_p90": 0.0116,
+    "swr_p10_pct": 3.09,
+    "swr_p50_pct": 1.88,
+    "swr_p90_pct": 1.16,
     "mc_date": "2026-04-12"
   },
   "fire_aporte_sensitivity": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:25:00",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "aportes_brl": [
       15000,
       20000,
       25000,
       30000,
+      33000,
       35000,
       40000
     ],
@@ -6114,6 +6116,7 @@ const DATA = {
       0.871,
       0.8994,
       0.9182,
+      0.9246,
       0.9288,
       0.9422
     ],
@@ -6121,7 +6124,7 @@ const DATA = {
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -6413,171 +6416,171 @@ const DATA = {
       2470510.0,
       2513280.0,
       2556219.0,
-      2599327.0,
-      2642607.0,
-      2686057.0,
-      2729679.0,
-      2773473.0,
-      2817441.0,
-      2861583.0,
-      2905899.0,
-      2950390.0,
-      2995058.0,
-      3039902.0,
-      3084923.0,
-      3130122.0,
-      3175500.0,
-      3221058.0,
-      3266796.0,
-      3312714.0,
-      3358815.0,
-      3405097.0,
-      3451562.0,
-      3498212.0,
-      3545045.0,
-      3592064.0,
-      3639269.0,
-      3686661.0,
-      3734240.0,
-      3782007.0,
-      3829963.0,
-      3878108.0,
-      3926444.0,
-      3974972.0,
-      4023691.0,
-      4072602.0,
-      4121708.0,
-      4171007.0,
-      4220501.0,
-      4270191.0,
-      4320078.0,
-      4370162.0,
-      4420443.0,
-      4470924.0,
-      4521605.0,
-      4572485.0,
-      4623567.0,
-      4674851.0,
-      4726338.0,
-      4778028.0,
-      4829923.0,
-      4882023.0,
-      4934329.0,
-      4986842.0,
-      5039562.0,
-      5092491.0,
-      5145630.0,
-      5198978.0,
-      5252538.0,
-      5306309.0,
-      5360293.0,
-      5414490.0,
-      5468902.0,
-      5523529.0,
-      5578372.0,
-      5633431.0,
-      5688709.0,
-      5744205.0,
-      5799920.0,
-      5855856.0,
-      5912013.0,
-      5968392.0,
-      6024994.0,
-      6081820.0,
-      6138871.0,
-      6196147.0,
-      6253650.0,
-      6311380.0,
-      6369339.0,
-      6427526.0,
-      6485944.0,
-      6544593.0,
-      6603473.0,
-      6662587.0,
-      6721934.0,
-      6781516.0,
-      6841334.0,
-      6901388.0,
-      6961680.0,
-      7022210.0,
-      7082979.0,
-      7143989.0,
-      7205240.0,
-      7266733.0,
-      7328469.0,
-      7390450.0,
-      7452675.0,
-      7515147.0,
-      7577866.0,
-      7640833.0,
-      7704048.0,
-      7767514.0,
-      7831231.0,
-      7895200.0,
-      7959421.0,
-      8023897.0,
-      8088628.0,
-      8153614.0,
-      8218858.0,
-      8284359.0,
-      8350120.0,
-      8416141.0,
-      8482422.0,
-      8548966.0,
-      8615773.0,
-      8682844.0,
-      8750181.0,
-      8817783.0,
-      8885653.0,
-      8953792.0,
-      9022200.0,
-      9090878.0,
-      9159828.0,
-      9229051.0,
-      9298547.0,
-      9368318.0,
-      9438366.0,
-      9508690.0,
-      9579292.0,
-      9650173.0,
-      9721335.0,
-      9792778.0,
-      9864504.0,
-      9936513.0,
-      10008807.0,
-      10081387.0,
-      10154254.0,
-      10227409.0,
-      10300854.0,
-      10374589.0,
-      10448615.0,
-      10522934.0,
-      10597547.0,
-      10672456.0,
-      10747660.0,
-      10823162.0,
-      10898962.0,
-      10975062.0,
-      11051463.0,
-      11128166.0,
-      11205173.0,
-      11282484.0,
-      11360100.0,
-      11438024.0,
-      11516256.0,
-      11594797.0,
-      11673649.0,
-      11752812.0,
-      11832289.0,
-      11912080.0,
-      11992187.0,
-      12072610.0,
-      12153351.0,
-      12234412.0,
-      12315793.0,
-      12397496.0,
-      12479522.0,
-      12561872.0
+      3566115.0,
+      3613218.0,
+      3660506.0,
+      3707982.0,
+      3755645.0,
+      3803497.0,
+      3851538.0,
+      3899769.0,
+      3948190.0,
+      3996803.0,
+      4045609.0,
+      4094607.0,
+      4143799.0,
+      4193186.0,
+      4242768.0,
+      4292546.0,
+      4342521.0,
+      4392694.0,
+      4443065.0,
+      4493635.0,
+      4544405.0,
+      4595376.0,
+      4646548.0,
+      4697923.0,
+      4749501.0,
+      4801283.0,
+      4853270.0,
+      4905462.0,
+      4957861.0,
+      5010467.0,
+      5063281.0,
+      5116304.0,
+      5169536.0,
+      5222979.0,
+      5276633.0,
+      5330500.0,
+      5384580.0,
+      5438873.0,
+      5493381.0,
+      5548105.0,
+      5603045.0,
+      5658202.0,
+      5713577.0,
+      5769172.0,
+      5824986.0,
+      5881021.0,
+      5937278.0,
+      5993757.0,
+      6050459.0,
+      6107386.0,
+      6164537.0,
+      6221915.0,
+      6279520.0,
+      6337352.0,
+      6395413.0,
+      6453704.0,
+      6512225.0,
+      6570978.0,
+      6629963.0,
+      6689181.0,
+      6748634.0,
+      6808321.0,
+      6868245.0,
+      6928406.0,
+      6988804.0,
+      7049441.0,
+      7110318.0,
+      7171436.0,
+      7232796.0,
+      7294398.0,
+      7356244.0,
+      7418334.0,
+      7480670.0,
+      7543252.0,
+      7606082.0,
+      7669161.0,
+      7732488.0,
+      7796067.0,
+      7859896.0,
+      7923978.0,
+      7988314.0,
+      8052904.0,
+      8117749.0,
+      8182851.0,
+      8248210.0,
+      8313828.0,
+      8379705.0,
+      8445842.0,
+      8512242.0,
+      8578903.0,
+      8645829.0,
+      8713019.0,
+      8780475.0,
+      8848197.0,
+      8916187.0,
+      8984447.0,
+      9052976.0,
+      9121776.0,
+      9190848.0,
+      9260193.0,
+      9329813.0,
+      9399708.0,
+      9469879.0,
+      9540328.0,
+      9611055.0,
+      9682062.0,
+      9753350.0,
+      9824920.0,
+      9896772.0,
+      9968909.0,
+      10041332.0,
+      10114040.0,
+      10187036.0,
+      10260321.0,
+      10333896.0,
+      10407761.0,
+      10481919.0,
+      10556370.0,
+      10631115.0,
+      10706156.0,
+      10781493.0,
+      10857129.0,
+      10933064.0,
+      11009299.0,
+      11085835.0,
+      11162674.0,
+      11239817.0,
+      11317265.0,
+      11395019.0,
+      11473081.0,
+      11551451.0,
+      11630132.0,
+      11709123.0,
+      11788427.0,
+      11868045.0,
+      11947977.0,
+      12028225.0,
+      12108791.0,
+      12189676.0,
+      12270880.0,
+      12352405.0,
+      12434253.0,
+      12516424.0,
+      12598921.0,
+      12681743.0,
+      12764893.0,
+      12848372.0,
+      12932181.0,
+      13016322.0,
+      13100795.0,
+      13185602.0,
+      13270745.0,
+      13356224.0,
+      13442042.0,
+      13528198.0,
+      13614696.0,
+      13701535.0,
+      13788718.0,
+      13876246.0,
+      13964120.0,
+      14052341.0,
+      14140911.0,
+      14229832.0,
+      14319104.0,
+      14408729.0
     ],
     "realizado_brl": [
       257684.0,
@@ -7042,7 +7045,7 @@ const DATA = {
     "n_historico": 61
   },
   "drawdown_history": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "reconstruct_fire_data.py → historico_carteira.csv",
     "dates": [
       "2021-04",
@@ -7250,7 +7253,7 @@ const DATA = {
     ]
   },
   "etf_composition": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "config.py ETF_COMPOSITION",
     "etfs": {
       "SWRD": {
@@ -7307,7 +7310,7 @@ const DATA = {
     }
   },
   "bond_pool_runway": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "reconstruct_fire_data.py",
     "anos_pre_fire": [
       2026,
@@ -7378,7 +7381,7 @@ const DATA = {
       896021.0
     ],
     "alvo_pool_pct": 0.15,
-    "alvo_pool_brl_2040": 1729121.0,
+    "alvo_pool_brl_2040": 1999484.0,
     "anos_cobertura_pos_fire": [
       1,
       2,
@@ -7441,7 +7444,7 @@ const DATA = {
     "nota": "td2050 baseado em operação pendente 2026-04-10 (liquidação 13/04). Atualizar após confirmação."
   },
   "lumpy_events": {
-    "_generated": "2026-04-12T19:09:02",
+    "_generated": "2026-04-12T19:23:13",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
     "base": {
       "pfire_2040": 0.9248,
@@ -7865,20 +7868,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3487412,
-      3703245,
-      3932435,
-      4175809,
-      4434246,
-      4708677,
-      5000093,
-      5309543,
-      5638146,
-      5987085,
-      6357620,
-      6751087,
-      7168905,
-      7612582,
+      3483315,
+      3699205,
+      3928475,
+      4171954,
+      4430524,
+      4705120,
+      4996735,
+      5306424,
+      5635306,
+      5984572,
+      6355485,
+      6749387,
+      7167701,
+      7611943,
       8083717,
       8233777,
       8391115,
@@ -7919,20 +7922,20 @@ const DATA = {
       25430831
     ],
     "p50": [
-      3487412,
-      3837937,
-      4223693,
-      4648222,
-      5115421,
-      5629579,
-      6195415,
-      6818125,
-      7503424,
-      8257603,
-      9087586,
-      10000992,
-      11006205,
-      12112454,
+      3483315,
+      3833750,
+      4219439,
+      4643931,
+      5111128,
+      5625326,
+      6191255,
+      6814119,
+      7499645,
+      8254137,
+      9084535,
+      9998473,
+      11004357,
+      12111437,
       13329893,
       13734393,
       14158511,
@@ -7973,20 +7976,20 @@ const DATA = {
       55691250
     ],
     "p90": [
-      3487412,
-      3971232,
-      4522175,
-      5149551,
-      5863965,
-      6677493,
-      7603883,
-      8658795,
-      9860059,
-      11227978,
-      12785672,
-      14559471,
-      16579355,
-      18879464,
+      3483315,
+      3966900,
+      4517620,
+      5144797,
+      5859044,
+      6672448,
+      7598777,
+      8653708,
+      9855093,
+      11223265,
+      12781379,
+      14555804,
+      16576571,
+      18877879,
       21498675,
       22299361,
       23138880,
@@ -8056,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.188"
+  "version": "1.191"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -9250,6 +9253,28 @@ window.updateWhatIf = function() {
   const pctLimite = (gasto / gastoLimite * 100).toFixed(0);
   const pctEl = document.getElementById('wiPctLimite');
   if (pctEl) pctEl.textContent = pctLimite + '% do limite (' + (gastoLimite/1000).toFixed(0) + 'k/ano)';
+
+  // Compute ETA to reach patNecessario from current patrimônio + aportes
+  const etaEl = document.getElementById('wiFireEta');
+  if (etaEl) {
+    const _rMes = Math.pow(1 + (DATA.premissas?.retorno_equity_base || 0.0485), 1/12) - 1;
+    const _aporte = DATA.premissas?.aporte_mensal || 33000;
+    const _patAtual = DATA.premissas?.patrimonio_atual || 0;
+    const _anoAtual = DATA.premissas?.ano_atual || 2026;
+    const _idadeAtual = DATA.premissas?.idade_atual || 39;
+    let _pat = _patAtual, _n = 0;
+    while (_pat < patNecessario && _n < 600) {
+      _pat = _pat * (1 + _rMes) + _aporte;
+      _n++;
+    }
+    if (_n >= 600) {
+      etaEl.textContent = 'Meta > 50 anos';
+    } else {
+      const _anoAlvo = _anoAtual + Math.floor(_n / 12);
+      const _idadeAlvo = _idadeAtual + Math.floor(_n / 12);
+      etaEl.textContent = `FIRE em ${_anoAlvo} — ${_idadeAlvo} anos`;
+    }
+  }
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -12806,19 +12831,14 @@ window._toggleBlock = function(el) {
     // Opening: give the browser one frame to apply display:block, then resize/rebuild
     requestAnimationFrame(() => {
       el.querySelectorAll('canvas').forEach(canvas => {
-        const chart = Object.values(charts).find(c => c && c.canvas === canvas);
-        if (chart) {
-          if (chart.width === 0 || chart.height === 0) {
-            // Chart was created with zero dimensions — rebuild it
-            const builder = _chartBuilders[canvas.id];
-            if (builder) { try { builder(); } catch(e) { console.warn('[toggle-rebuild]', canvas.id, e); } }
-          } else {
-            chart.resize();
-          }
+        const builder = _chartBuilders[canvas.id];
+        if (builder) {
+          // Always rebuild when opening — handles charts built at zero dimensions
+          // inside collapsed sections (Chart.js may get 0x0 from display:none canvas)
+          try { builder(); } catch(e) { console.warn('[toggle-rebuild]', canvas.id, e); }
         } else {
-          // Canvas exists but no chart yet — try named builder
-          const builder = _chartBuilders[canvas.id];
-          if (builder) { try { builder(); } catch(e) { console.warn('[toggle-init]', canvas.id, e); } }
+          const chart = Object.values(charts).find(c => c && c.canvas === canvas);
+          if (chart) chart.resize();
         }
       });
     });

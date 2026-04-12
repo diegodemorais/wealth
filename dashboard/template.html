@@ -1061,6 +1061,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div class="big pv" id="wiPatNecessario">—</div>
     <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
     <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="wiPctLimite">—% do limite</div>
+    <div style="font-size:.65rem;color:var(--yellow);font-weight:600;margin-top:2px" id="wiFireEta">—</div>
   </div>
 </div>
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
@@ -2591,6 +2592,28 @@ window.updateWhatIf = function() {
   const pctLimite = (gasto / gastoLimite * 100).toFixed(0);
   const pctEl = document.getElementById('wiPctLimite');
   if (pctEl) pctEl.textContent = pctLimite + '% do limite (' + (gastoLimite/1000).toFixed(0) + 'k/ano)';
+
+  // Compute ETA to reach patNecessario from current patrimônio + aportes
+  const etaEl = document.getElementById('wiFireEta');
+  if (etaEl) {
+    const _rMes = Math.pow(1 + (DATA.premissas?.retorno_equity_base || 0.0485), 1/12) - 1;
+    const _aporte = DATA.premissas?.aporte_mensal || 33000;
+    const _patAtual = DATA.premissas?.patrimonio_atual || 0;
+    const _anoAtual = DATA.premissas?.ano_atual || 2026;
+    const _idadeAtual = DATA.premissas?.idade_atual || 39;
+    let _pat = _patAtual, _n = 0;
+    while (_pat < patNecessario && _n < 600) {
+      _pat = _pat * (1 + _rMes) + _aporte;
+      _n++;
+    }
+    if (_n >= 600) {
+      etaEl.textContent = 'Meta > 50 anos';
+    } else {
+      const _anoAlvo = _anoAtual + Math.floor(_n / 12);
+      const _idadeAlvo = _idadeAtual + Math.floor(_n / 12);
+      etaEl.textContent = `FIRE em ${_anoAlvo} — ${_idadeAlvo} anos`;
+    }
+  }
 };
 
 // ── S21: Posições ─────────────────────────────────────────────
@@ -6147,19 +6170,14 @@ window._toggleBlock = function(el) {
     // Opening: give the browser one frame to apply display:block, then resize/rebuild
     requestAnimationFrame(() => {
       el.querySelectorAll('canvas').forEach(canvas => {
-        const chart = Object.values(charts).find(c => c && c.canvas === canvas);
-        if (chart) {
-          if (chart.width === 0 || chart.height === 0) {
-            // Chart was created with zero dimensions — rebuild it
-            const builder = _chartBuilders[canvas.id];
-            if (builder) { try { builder(); } catch(e) { console.warn('[toggle-rebuild]', canvas.id, e); } }
-          } else {
-            chart.resize();
-          }
+        const builder = _chartBuilders[canvas.id];
+        if (builder) {
+          // Always rebuild when opening — handles charts built at zero dimensions
+          // inside collapsed sections (Chart.js may get 0x0 from display:none canvas)
+          try { builder(); } catch(e) { console.warn('[toggle-rebuild]', canvas.id, e); }
         } else {
-          // Canvas exists but no chart yet — try named builder
-          const builder = _chartBuilders[canvas.id];
-          if (builder) { try { builder(); } catch(e) { console.warn('[toggle-init]', canvas.id, e); } }
+          const chart = Object.values(charts).find(c => c && c.canvas === canvas);
+          if (chart) chart.resize();
         }
       });
     });

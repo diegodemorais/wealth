@@ -133,15 +133,25 @@ def gen_fire_trilha():
     fire_date = datetime.strptime(fire_date_str, "%Y-%m")
 
     # Gerar meses futuros (após último dado histórico até 2040-01 inclusive)
+    # A projeção futura parte do ÚLTIMO REALIZADO (não do pat0 original), para
+    # que a trilha reflita "de onde estou hoje, vou chegar na meta?"
+    last_realizado = rows[-1]["patrimonio"]
+
+    def _trilha_future(j):
+        """j = meses a partir do último dado histórico (1-indexed)."""
+        crescimento = last_realizado * (1 + retorno_mensal) ** j
+        aportes_acum = aporte_mensal * ((1 + retorno_mensal) ** j - 1) / retorno_mensal if retorno_mensal > 0 else aporte_mensal * j
+        return round(crescimento + aportes_acum, 0)
+
+    n_hist = len(rows)
     future_dates = []
     future_trilha = []
     cur = last_hist_date + relativedelta(months=1)
-    n_hist = len(rows)
     while cur <= fire_date:
         dt_str = cur.strftime("%Y-%m")
-        i = n_hist + len(future_dates)  # índice relativo ao início do histórico
+        j = len(future_dates) + 1  # meses a partir do último histórico
         future_dates.append(dt_str)
-        future_trilha.append(_trilha_val(i))
+        future_trilha.append(_trilha_future(j))
         cur += relativedelta(months=1)
 
     # Meta FIRE: R$13.4M em 2040-01
@@ -407,7 +417,7 @@ def _rodar_mc_anos_acum(premissas_override: dict, anos_acum: int, n_sim: int = 5
 def gen_fire_aporte_sensitivity(n_sim: int = 5_000):
     """R3 — Tabela aporte → P(FIRE 2040) via MC real."""
     from config import MACRO_REGRAS as _  # noqa: verificar import
-    aportes = [15_000, 20_000, 25_000, 30_000, 35_000, 40_000]
+    aportes = [15_000, 20_000, 25_000, 30_000, 33_000, 35_000, 40_000]
     anos_acum = IDADE_FIRE_ALVO - IDADE_ATUAL  # 14 anos para FIRE 2040
 
     print(f"    R3: rodando MC para {len(aportes)} aportes ({n_sim} sims cada)...")

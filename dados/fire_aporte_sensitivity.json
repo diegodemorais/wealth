@@ -1,11 +1,12 @@
 {
-  "_generated": "2026-04-10T21:44:11",
+  "_generated": "2026-04-12T19:25:00",
   "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
   "aportes_brl": [
     15000,
     20000,
     25000,
     30000,
+    33000,
     35000,
     40000
   ],
@@ -14,9 +15,10 @@
     0.871,
     0.8994,
     0.9182,
+    0.9246,
     0.9288,
     0.9422
   ],
-  "aporte_base": 25000,
+  "aporte_base": 33000,
   "n_sim": 5000
 }
