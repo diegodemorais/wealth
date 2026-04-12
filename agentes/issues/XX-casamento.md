@@ -93,7 +93,8 @@ Ambos aposentam juntos (53 anos). 2 planos empresariais desde o FIRE Day.
 ## Cenários Monte Carlo — FIRE Casal (recalibrado 2026-04-06)
 
 Script: `scripts/fire_montecarlo.py` com SAUDE_BASE=R$32k (2p) | 10k trajetórias | t-dist df=5 | seed 42
-Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 + vol bond pool 13.3%
+Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 (Diego) + vol bond pool 13.3%
+**INSS Katia não incluído no MC atual:** ~R$93,6k/ano real 2026 a partir de 2049 (62 anos). Como o MC roda até 95 anos do Diego (2082) e o FIRE é 2040-2042, o INSS de Katia entra apenas na fase pós-2049 — reduz SWR requerido no tail. Incluir na próxima recalibração do MC casal.
 
 **P(FIRE) por cenário:**
 
@@ -151,7 +152,7 @@ Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 + 
 | Aportes por fase | R$15k/9k/16k | Estimativa — não testada na prática |
 | Lifestyle casal R$250-290k | Nunca vivido | Inclui viagens etc., nunca validado |
 | Casa R$1M Indaiatuba | Estimativa | Mercado não pesquisado |
-| Katia aposenta aos 65 | Estimativa | Pode ser antes (FIRE junto?) |
+| Katia aposenta aos 62 (2049) | **Validado** (TX-inss-katia, 2026-04-12) | Regra Definitiva EC 103/2019: 62 anos + 15 anos. INSS: ~R$7.800/mês real 2026 (R$93,6k/ano). Ver TX-inss-katia. |
 | Patrimônio Katia no FIRE | R$800k | Depende de poupança dela até 2042 |
 | CNPJ Diego ativo pós-FIRE | Assumido | Risco: plano vai para individual (+40%) |
 
@@ -192,5 +193,6 @@ Modelo HD-mc-audit: spending smile ex-saúde + IR 15% nominal + INSS R$18k@65 + 
 
 - [ ] **Urgente (pré-casamento):** planejamento sucessório (testamento, regime de bens) + seguro de vida
 - [ ] **Reabrir quando:** casa escolhida + lifestyle real testado + data de casamento definida
-- [ ] **Na reabertura:** validar premissa "Katia aposenta aos 65" — se ela aposentar mais cedo, saúde 2p começa antes; rodar sensibilidade
+- [x] **Validado (2026-04-12):** Katia aposenta aos **62 anos (2049)**, não 65 — INSS ~R$7.800/mês real 2026. Ver TX-inss-katia.
+- [ ] **Na reabertura:** incluir INSS Katia (~R$93,6k/ano a partir de 2049) no MC casal — reduz SWR requerido no tail; rodar sensibilidade P(FIRE) com floor income conjunto
 - [ ] **Modelar risco CNPJ:** se Diego encerrar PJ pós-FIRE, saúde sobe ~40% → testar P(FIRE) com esse cenário
