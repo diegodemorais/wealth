@@ -1,27 +1,787 @@
 {
-  "timestamp": "2026-04-12T09:09:20.380394",
-  "mode": "component",
-  "total": 6,
-  "passed": 6,
+  "timestamp": "2026-04-12T12:32:40.433681",
+  "mode": "smart",
+  "total": 276,
+  "passed": 276,
   "failed": 0,
   "failure_cycles": {},
   "escalations": [],
   "results": [
     {
-      "test_id": "fire-trilha::DATA::fire_trilha has all required fields",
-      "block_id": "fire-trilha",
-      "category": "DATA",
+      "test_id": "smoke-global::SMOKE::index.html existe, tamanho > 100k chars, JS não truncado",
+      "block_id": "smoke-global",
+      "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "All fire_trilha fields present"
+      "message": "index.html OK: 486,799 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
-      "test_id": "fire-trilha::DATA::trilha and realizado arrays have same length as dates",
-      "block_id": "fire-trilha",
-      "category": "DATA",
+      "test_id": "spec-global::SPEC::spec.json exists and is parseable",
+      "block_id": "spec-global",
+      "category": "SPEC",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "All arrays aligned at 226 points"
+      "message": "68 blocks declared"
+    },
+    {
+      "test_id": "spec-global::SPEC::all blocks have required fields (id, tab, type, data_fields)",
+      "block_id": "spec-global",
+      "category": "SPEC",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "All blocks have required fields"
+    },
+    {
+      "test_id": "render-global::RENDER::HTML has 5 tab containers (hoje/carteira/perf/fire/retiro)",
+      "block_id": "render-global",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "All 5 tabs present in HTML"
+    },
+    {
+      "test_id": "render-global::RENDER::Chart.js loaded in HTML",
+      "block_id": "render-global",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "Chart.js present"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroPatrimonioBrl::DOM_REF::renderKPIs: getElementById('heroPatrimonioBrl') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroPatrimonioBrl",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroPatrimonioBrl' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroPatrimonioUsd::DOM_REF::renderKPIs: getElementById('heroPatrimonioUsd') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroPatrimonioUsd",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroPatrimonioUsd' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroPfire::DOM_REF::renderKPIs: getElementById('heroPfire') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroPfire",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroPfire' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroPfireSub::DOM_REF::renderKPIs: getElementById('heroPfireSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroPfireSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroPfireSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroAnos::DOM_REF::renderKPIs: getElementById('heroAnos') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroAnos",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroAnos' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroAnosSub::DOM_REF::renderKPIs: getElementById('heroAnosSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroAnosSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroAnosSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroProgresso::DOM_REF::renderKPIs: getElementById('heroProgresso') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroProgresso",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroProgresso' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroProgressoSub::DOM_REF::renderKPIs: getElementById('heroProgressoSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroProgressoSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroProgressoSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroSavings::DOM_REF::renderKPIs: getElementById('heroSavings') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroSavings",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 4680)"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-heroSavingsSub::DOM_REF::renderKPIs: getElementById('heroSavingsSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-heroSavingsSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 4684)"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiPfire50::DOM_REF::renderKPIs: getElementById('kpiPfire50') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiPfire50",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiPfire50' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiPfire50Sub::DOM_REF::renderKPIs: getElementById('kpiPfire50Sub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiPfire50Sub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiPfire50Sub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiIpcaTaxa::DOM_REF::renderKPIs: getElementById('kpiIpcaTaxa') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiIpcaTaxa",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiIpcaTaxa' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiIpcaSub::DOM_REF::renderKPIs: getElementById('kpiIpcaSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiIpcaSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiIpcaSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiIpcaSemaforo::DOM_REF::renderKPIs: getElementById('kpiIpcaSemaforo') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiIpcaSemaforo",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiIpcaSemaforo' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiRenda2065::DOM_REF::renderKPIs: getElementById('kpiRenda2065') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiRenda2065",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiRenda2065' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiRenda2065Sub::DOM_REF::renderKPIs: getElementById('kpiRenda2065Sub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiRenda2065Sub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiRenda2065Sub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiRendaSemaforo::DOM_REF::renderKPIs: getElementById('kpiRendaSemaforo') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiRendaSemaforo",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiRendaSemaforo' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiBondPool::DOM_REF::renderKPIs: getElementById('kpiBondPool') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiBondPool",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiBondPool' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiBondPoolSub::DOM_REF::renderKPIs: getElementById('kpiBondPoolSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiBondPoolSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiBondPoolSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiDriftMax::DOM_REF::renderKPIs: getElementById('kpiDriftMax') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiDriftMax",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiDriftMax' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiDriftMaxSub::DOM_REF::renderKPIs: getElementById('kpiDriftMaxSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiDriftMaxSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiDriftMaxSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfireHeadlineVal::DOM_REF::renderKPIs: getElementById('pfireHeadlineVal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfireHeadlineVal",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfireHeadlineVal' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfireHeadlineSub::DOM_REF::renderKPIs: getElementById('pfireHeadlineSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfireHeadlineSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfireHeadlineSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiDelta::DOM_REF::renderKPIs: getElementById('kpiDelta') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiDelta",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiDelta' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiDeltaSub::DOM_REF::renderKPIs: getElementById('kpiDeltaSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiDeltaSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiDeltaSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiFactorSignal::DOM_REF::renderKPIs: getElementById('kpiFactorSignal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiFactorSignal",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiFactorSignal' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiFactorSignalSub::DOM_REF::renderKPIs: getElementById('kpiFactorSignalSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiFactorSignalSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiFactorSignalSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiOrigemPat::DOM_REF::renderKPIs: getElementById('kpiOrigemPat') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiOrigemPat",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiOrigemPat' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiOrigemPatSub::DOM_REF::renderKPIs: getElementById('kpiOrigemPatSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiOrigemPatSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiOrigemPatSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiCambio::DOM_REF::renderKPIs: getElementById('kpiCambio') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiCambio",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiCambio' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiBtcUsd::DOM_REF::renderKPIs: getElementById('kpiBtcUsd') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiBtcUsd",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiBtcUsd' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiIpcaMercado::DOM_REF::renderKPIs: getElementById('kpiIpcaMercado') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiIpcaMercado",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiIpcaMercado' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiIpcaMercadoSub::DOM_REF::renderKPIs: getElementById('kpiIpcaMercadoSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiIpcaMercadoSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiIpcaMercadoSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiRendaMercado::DOM_REF::renderKPIs: getElementById('kpiRendaMercado') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiRendaMercado",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiRendaMercado' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-kpiRendaMercadoSub::DOM_REF::renderKPIs: getElementById('kpiRendaMercadoSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-kpiRendaMercadoSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiRendaMercadoSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireScenarioGrid::DOM_REF::renderKPIs: getElementById('fireScenarioGrid') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireScenarioGrid",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireScenarioGrid' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireCountdown::DOM_REF::renderKPIs: getElementById('fireCountdown') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireCountdown",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireCountdown' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgressBar::DOM_REF::renderKPIs: getElementById('fireProgressBar') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgressBar",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgressBar' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgressLabel::DOM_REF::renderKPIs: getElementById('fireProgressLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgressLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgressLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgressStart::DOM_REF::renderKPIs: getElementById('fireProgressStart') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgressStart",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgressStart' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgressEnd::DOM_REF::renderKPIs: getElementById('fireProgressEnd') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgressEnd",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgressEnd' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgPct::DOM_REF::renderKPIs: getElementById('fireProgPct') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgPct",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgPct' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgLabel::DOM_REF::renderKPIs: getElementById('fireProgLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-fireProgFill::DOM_REF::renderKPIs: getElementById('fireProgFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-fireProgFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='fireProgFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfirePatLabel::DOM_REF::renderKPIs: getElementById('pfirePatLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfirePatLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfirePatLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfirePatPct::DOM_REF::renderKPIs: getElementById('pfirePatPct') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfirePatPct",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfirePatPct' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfirePatFill::DOM_REF::renderKPIs: getElementById('pfirePatFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfirePatFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfirePatFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfire53Base::DOM_REF::renderKPIs: getElementById('pfire53Base') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfire53Base",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfire53Base' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfire53Fav::DOM_REF::renderKPIs: getElementById('pfire53Fav') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfire53Fav",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfire53Fav' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfire53Stress::DOM_REF::renderKPIs: getElementById('pfire53Stress') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfire53Stress",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfire53Stress' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfire53BaseBadge::DOM_REF::renderKPIs: getElementById('pfire53BaseBadge') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfire53BaseBadge",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfire53BaseBadge' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfire53FavBadge::DOM_REF::renderKPIs: getElementById('pfire53FavBadge') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfire53FavBadge",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfire53FavBadge' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfire53StressBadge::DOM_REF::renderKPIs: getElementById('pfire53StressBadge') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfire53StressBadge",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfire53StressBadge' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-pfirePatMeta::DOM_REF::renderKPIs: getElementById('pfirePatMeta') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-pfirePatMeta",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='pfirePatMeta' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-swrFireDayVal::DOM_REF::renderKPIs: getElementById('swrFireDayVal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-swrFireDayVal",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='swrFireDayVal' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-swrFireDaySub::DOM_REF::renderKPIs: getElementById('swrFireDaySub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-swrFireDaySub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='swrFireDaySub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-savingsRate::DOM_REF::renderKPIs: getElementById('savingsRate') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-savingsRate",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='savingsRate' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-savingsRateFill::DOM_REF::renderKPIs: getElementById('savingsRateFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-savingsRateFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='savingsRateFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-savingsRateSub::DOM_REF::renderKPIs: getElementById('savingsRateSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-savingsRateSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='savingsRateSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-savingsRateNote::DOM_REF::renderKPIs: getElementById('savingsRateNote') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-savingsRateNote",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='savingsRateNote' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-terCarteira::DOM_REF::renderKPIs: getElementById('terCarteira') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-terCarteira",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='terCarteira' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-terCarteiraLabel::DOM_REF::renderKPIs: getElementById('terCarteiraLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-terCarteiraLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='terCarteiraLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-terVwraLabel::DOM_REF::renderKPIs: getElementById('terVwraLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-terVwraLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='terVwraLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-terDeltaLabel::DOM_REF::renderKPIs: getElementById('terDeltaLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-terDeltaLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='terDeltaLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-terCarteiraFill::DOM_REF::renderKPIs: getElementById('terCarteiraFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-terCarteiraFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='terCarteiraFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-terVwraFill::DOM_REF::renderKPIs: getElementById('terVwraFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-terVwraFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='terVwraFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-ipcaTaxaVsPiso::DOM_REF::renderKPIs: getElementById('ipcaTaxaVsPiso') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-ipcaTaxaVsPiso",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='ipcaTaxaVsPiso' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-ipcaTaxaStatus::DOM_REF::renderKPIs: getElementById('ipcaTaxaStatus') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-ipcaTaxaStatus",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='ipcaTaxaStatus' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs-ipcaTaxaFill::DOM_REF::renderKPIs: getElementById('ipcaTaxaFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderKPIs-ipcaTaxaFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='ipcaTaxaFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-wellnessScore::DOM_REF::renderWellness: getElementById('wellnessScore') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-wellnessScore",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='wellnessScore' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-wellnessLabel::DOM_REF::renderWellness: getElementById('wellnessLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-wellnessLabel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='wellnessLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-kpiWellnessCompact::DOM_REF::renderWellness: getElementById('kpiWellnessCompact') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-kpiWellnessCompact",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiWellnessCompact' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-kpiWellnessSub::DOM_REF::renderWellness: getElementById('kpiWellnessSub') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-kpiWellnessSub",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='kpiWellnessSub' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-wellnessFill::DOM_REF::renderWellness: getElementById('wellnessFill') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-wellnessFill",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='wellnessFill' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-wellnessGrid::DOM_REF::renderWellness: getElementById('wellnessGrid') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-wellnessGrid",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='wellnessGrid' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness-wellnessActions::DOM_REF::renderWellness: getElementById('wellnessActions') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderWellness-wellnessActions",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='wellnessActions' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildWellnessExtras-wellnessGrid::DOM_REF::buildWellnessExtras: getElementById('wellnessGrid') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildWellnessExtras-wellnessGrid",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='wellnessGrid' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderMacroStatus-macroStatusBadge::DOM_REF::renderMacroStatus: getElementById('macroStatusBadge') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderMacroStatus-macroStatusBadge",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='macroStatusBadge' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildBrasilConcentracao-brasilConcentracao::DOM_REF::buildBrasilConcentracao: getElementById('brasilConcentracao') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildBrasilConcentracao-brasilConcentracao",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='brasilConcentracao' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildMacroCards-macroStrip::DOM_REF::buildMacroCards: getElementById('macroStrip') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildMacroCards-macroStrip",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='macroStrip' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildMacroCards-macroSection::DOM_REF::buildMacroCards: getElementById('macroSection') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildMacroCards-macroSection",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='macroSection' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildDcaStatus-dcaGrid::DOM_REF::buildDcaStatus: getElementById('dcaGrid') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildDcaStatus-dcaGrid",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='dcaGrid' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildDcaStatus-dcaSection::DOM_REF::buildDcaStatus: getElementById('dcaSection') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildDcaStatus-dcaSection",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='dcaSection' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildDcaStatus-dcaAportePriority::DOM_REF::buildDcaStatus: getElementById('dcaAportePriority') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildDcaStatus-dcaAportePriority",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='dcaAportePriority' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildSemaforoPanel-semaforoBody::DOM_REF::buildSemaforoPanel: getElementById('semaforoBody') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildSemaforoPanel-semaforoBody",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='semaforoBody' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildSemaforoPanel-semaforoSummary::DOM_REF::buildSemaforoPanel: getElementById('semaforoSummary') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildSemaforoPanel-semaforoSummary",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='semaforoSummary' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateContrib-contribSlider::DOM_REF::updateContrib: getElementById('contribSlider') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateContrib-contribSlider",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2306)"
+    },
+    {
+      "test_id": "dom-ref-updateContrib-contribVal::DOM_REF::updateContrib: getElementById('contribVal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateContrib-contribVal",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2312)"
+    },
+    {
+      "test_id": "dom-ref-updateContrib-contribResult::DOM_REF::updateContrib: getElementById('contribResult') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateContrib-contribResult",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2313)"
+    },
+    {
+      "test_id": "patrimonio-total-hero::RENDER::hero strip patrimonial elements present in HTML",
+      "block_id": "patrimonio-total-hero",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "hero patrimonio elements found"
+    },
+    {
+      "test_id": "pvr-premissas-realizado::RENDER::premissasVsRealizadoSection exists in HTML",
+      "block_id": "pvr-premissas-realizado",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "premissasVsRealizadoSection and premissasVsRealizadoBody present"
     },
     {
       "test_id": "fire-trilha::RENDER::fireTrilhaSection and fireTrilhaChart exist in HTML",
@@ -32,28 +792,1428 @@
       "message": "fireTrilhaSection and fireTrilhaChart canvas present"
     },
     {
-      "test_id": "fire-trilha::DATA::meta_fire_brl matches premissas.patrimonio_gatilho",
-      "block_id": "fire-trilha",
-      "category": "DATA",
-      "severity": "HIGH",
+      "test_id": "net-worth-projection::RENDER::pfireHeadline and scenario badges exist in HTML",
+      "block_id": "net-worth-projection",
+      "category": "RENDER",
+      "severity": "CRITICAL",
       "passed": true,
-      "message": "meta_fire_brl=R$13,400,000 consistent with premissas"
+      "message": "pfireHeadline and pfire53 badges present"
     },
     {
-      "test_id": "fire-trilha::VALUE::meta_fire_brl not hardcoded in build script",
-      "block_id": "fire-trilha",
-      "category": "VALUE",
-      "severity": "HIGH",
+      "test_id": "fire-matrix::RENDER::fireMatrixSection and fireMatrixTable exist in HTML",
+      "block_id": "fire-matrix",
+      "category": "RENDER",
+      "severity": "CRITICAL",
       "passed": true,
-      "message": "meta_fire_brl=13,400,000 not hardcoded in build script"
+      "message": "fireMatrixSection and fireMatrixTable present"
     },
     {
-      "test_id": "fire-trilha::DATA::trilha_brl increases monotonically (projected path)",
-      "block_id": "fire-trilha",
-      "category": "DATA",
+      "test_id": "swr-percentis::RENDER::swrPercentilesSection and swrPercentilesCards exist in HTML",
+      "block_id": "swr-percentis",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "swrPercentilesSection and swrPercentilesCards present"
+    },
+    {
+      "test_id": "glide-path::RENDER::glideChart canvas exists in HTML",
+      "block_id": "glide-path",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "glideChart canvas present"
+    },
+    {
+      "test_id": "bond-pool-readiness::RENDER::bondPoolSection exists in HTML",
+      "block_id": "bond-pool-readiness",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "bondPoolSection present in HTML"
+    },
+    {
+      "test_id": "simulador-fire::RENDER::simulator UI elements exist in HTML",
+      "block_id": "simulador-fire",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "Simulator UI elements present"
+    },
+    {
+      "test_id": "tornado-sensitivity::RENDER::tornadoChart canvas exists in HTML",
+      "block_id": "tornado-sensitivity",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "tornadoChart canvas present"
+    },
+    {
+      "test_id": "sankey-cashflow::RENDER::sankeySection exists in HTML",
+      "block_id": "sankey-cashflow",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "sankeySection present"
+    },
+    {
+      "test_id": "lumpy-events::RENDER::lumpyEventsSection exists in HTML",
+      "block_id": "lumpy-events",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "lumpyEventsSection present"
+    },
+    {
+      "test_id": "hodl11-status::RENDER::HTML contains hodl11Val element (hodl11 value display)",
+      "block_id": "hodl11-status",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id=\"hodl11Val\" present in HTML"
+    },
+    {
+      "test_id": "hodl11-status::PRIVACY::hodl11Val element has pv class (privacy wrapper)",
+      "block_id": "hodl11-status",
+      "category": "PRIVACY",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "hodl11Val has pv class for privacy masking"
+    },
+    {
+      "test_id": "stress-cenarios::RENDER::HTML contains tornadoChart canvas element",
+      "block_id": "stress-cenarios",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id=\"tornadoChart\" canvas element present in HTML"
+    },
+    {
+      "test_id": "stress-test-mc::RENDER::HTML contains stressShockSlider input element",
+      "block_id": "stress-test-mc",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id=\"stressShockSlider\" present in HTML"
+    },
+    {
+      "test_id": "stress-test-mc::RENDER::HTML contains pfire53BaseBadge and pfire53StressBadge elements",
+      "block_id": "stress-test-mc",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "pfire53BaseBadge and pfire53StressBadge present in HTML"
+    },
+    {
+      "test_id": "macro-strip::RENDER::HTML contem macroStrip e macroSection",
+      "block_id": "macro-strip",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "macroStrip e macroSection presentes no HTML"
+    },
+    {
+      "test_id": "exposicao-cambial::RENDER::HTML contem brasilConcentracao para o gauge de exposicao",
+      "block_id": "exposicao-cambial",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "id=\"brasilConcentracao\" presente no HTML"
+    },
+    {
+      "test_id": "posicoes-etfs-ibkr::PRIVACY::privacy block marked with .pv class",
+      "block_id": "posicoes-etfs-ibkr",
+      "category": "PRIVACY",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "Privacy .pv class present (90 elements)"
+    },
+    {
+      "test_id": "custo-base-bucket::PRIVACY::privacy block marked on custo-base-bucket",
+      "block_id": "custo-base-bucket",
+      "category": "PRIVACY",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "Privacy .pv class present (90 elements)"
+    },
+    {
+      "test_id": "hodl11-pnl::PRIVACY::hodl11-pnl privacy block marked with .pv",
+      "block_id": "hodl11-pnl",
+      "category": "PRIVACY",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "Privacy .pv class present (90 elements), hodl11 present"
+    },
+    {
+      "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
+      "block_id": "spec-global",
+      "category": "SPEC",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "68 unique block IDs"
+    },
+    {
+      "test_id": "spec-global::SPEC::all tab IDs in blocks match declared tabs",
+      "block_id": "spec-global",
+      "category": "SPEC",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "All blocks use valid tabs: {'now', 'portfolio', 'fire', 'retiro', 'performance'}"
+    },
+    {
+      "test_id": "privacy-global::PRIVACY::privacy toggle mechanism present in HTML",
+      "block_id": "privacy-global",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "90 elements with .pv class in HTML"
+    },
+    {
+      "test_id": "privacy-global::PRIVACY::privacy toggle script present in index.html",
+      "block_id": "privacy-global",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Privacy toggle code present"
+    },
+    {
+      "test_id": "coverage-global::SPEC::key canvas elements exist in index.html",
+      "block_id": "coverage-global",
+      "category": "SPEC",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "All 10 required canvas elements present"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::geoDonut tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.geo.destroy() before new Chart('geoDonut')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::attrChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.attr.destroy() before new Chart('attrChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::scenarioChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.scenario.destroy() before new Chart('scenarioChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::fireTrilhaChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.fireTrilha.destroy() before new Chart('fireTrilhaChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::glideChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.glide.destroy() before new Chart('glideChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::netWorthProjectionChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.netWorth.destroy() before new Chart('netWorthProjectionChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::tornadoChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.tornado.destroy() before new Chart('tornadoChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::deltaChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.delta.destroy() before new Chart('deltaChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::fanChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.fan.destroy() before new Chart('fanChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::incomeChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.income.destroy() before new Chart('incomeChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::drawdownHistChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.drawdownHist.destroy() before new Chart('drawdownHistChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::bondPoolRunwayChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.bondPoolRunway.destroy() before new Chart('bondPoolRunwayChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::incomeProjectionChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.incomeProjection.destroy() before new Chart('incomeProjectionChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::rollingSharpChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.rollingSharp.destroy() before new Chart('rollingSharpChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::rollingIRChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.rollingIR.destroy() before new Chart('rollingIRChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::backtestChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.backtest.destroy() before new Chart('backtestChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::backtestR7Chart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.backtestR7.destroy() before new Chart('backtestR7Chart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::shadowChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.shadow.destroy() before new Chart('shadowChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::factorRollingChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.factorRolling.destroy() before new Chart('factorRollingChart')"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::factorLoadingsChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "guard present — charts.factorLoadings.destroy() before new Chart('factorLoadingsChart')"
+    },
+    {
+      "test_id": "dom-ref-buildPosicoes-ibkrStalenessBadge::DOM_REF::buildPosicoes: getElementById('ibkrStalenessBadge') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildPosicoes-ibkrStalenessBadge",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='ibkrStalenessBadge' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildPosicoes-posBody::DOM_REF::buildPosicoes: getElementById('posBody') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildPosicoes-posBody",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='posBody' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildPosicoes-totalUsd::DOM_REF::buildPosicoes: getElementById('totalUsd') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildPosicoes-totalUsd",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='totalUsd' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildPosicoes-totalBrl::DOM_REF::buildPosicoes: getElementById('totalBrl') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildPosicoes-totalBrl",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='totalBrl' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildBondPool-bondPoolBody::DOM_REF::buildBondPool: getElementById('bondPoolBody') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildBondPool-bondPoolBody",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='bondPoolBody' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildBondPool-bondPoolSection::DOM_REF::buildBondPool: getElementById('bondPoolSection') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildBondPool-bondPoolSection",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='bondPoolSection' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-renderProximasAcoes-proximasAcoesBody::DOM_REF::renderProximasAcoes: getElementById('proximasAcoesBody') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderProximasAcoes-proximasAcoesBody",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5084)"
+    },
+    {
+      "test_id": "dom-ref-renderProximasAcoes-proximasAcoes::DOM_REF::renderProximasAcoes: getElementById('proximasAcoes') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-renderProximasAcoes-proximasAcoes",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5119)"
+    },
+    {
+      "test_id": "dom-ref-buildStressTest-stressPatShock::DOM_REF::buildStressTest: getElementById('stressPatShock') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildStressTest-stressPatShock",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='stressPatShock' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildStressTest-stressTestBody::DOM_REF::buildStressTest: getElementById('stressTestBody') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildStressTest-stressTestBody",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='stressTestBody' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simAporte::DOM_REF::updateFireSim: getElementById('simAporte') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simAporte",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simAporte' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simRetorno::DOM_REF::updateFireSim: getElementById('simRetorno') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simRetorno",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simRetorno' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simCusto::DOM_REF::updateFireSim: getElementById('simCusto') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simCusto",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simCusto' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simAporteVal::DOM_REF::updateFireSim: getElementById('simAporteVal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simAporteVal",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simAporteVal' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simRetornoVal::DOM_REF::updateFireSim: getElementById('simRetornoVal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simRetornoVal",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simRetornoVal' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simCustoVal::DOM_REF::updateFireSim: getElementById('simCustoVal') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simCustoVal",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simCustoVal' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simFireAno::DOM_REF::updateFireSim: getElementById('simFireAno') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simFireAno",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simFireAno' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simFireIdade::DOM_REF::updateFireSim: getElementById('simFireIdade') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simFireIdade",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simFireIdade' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simFirePfire::DOM_REF::updateFireSim: getElementById('simFirePfire') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simFirePfire",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simFirePfire' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simFireDiff::DOM_REF::updateFireSim: getElementById('simFireDiff') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simFireDiff",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simFireDiff' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simPfire50::DOM_REF::updateFireSim: getElementById('simPfire50') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simPfire50",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simPfire50' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simPfire53::DOM_REF::updateFireSim: getElementById('simPfire53') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simPfire53",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simPfire53' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simPatFire::DOM_REF::updateFireSim: getElementById('simPatFire') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simPatFire",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simPatFire' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simTimelinePin::DOM_REF::updateFireSim: getElementById('simTimelinePin') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simTimelinePin",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simTimelinePin' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simTimelineBar::DOM_REF::updateFireSim: getElementById('simTimelineBar') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simTimelineBar",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simTimelineBar' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simTimelineLabelFire::DOM_REF::updateFireSim: getElementById('simTimelineLabelFire') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simTimelineLabelFire",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simTimelineLabelFire' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim-simTimelineLabelL::DOM_REF::updateFireSim: getElementById('simTimelineLabelL') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-updateFireSim-simTimelineLabelL",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='simTimelineLabelL' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-calcAporte-calcAporteNum::DOM_REF::calcAporte: getElementById('calcAporteNum') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-calcAporte-calcAporteNum",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='calcAporteNum' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-calcAporte-calcAporte::DOM_REF::calcAporte: getElementById('calcAporte') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-calcAporte-calcAporte",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='calcAporte' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-calcAporte-calcAporteLabel::DOM_REF::calcAporte: getElementById('calcAporteLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-calcAporte-calcAporteLabel",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2650)"
+    },
+    {
+      "test_id": "dom-ref-calcAporte-calcCambioLabel::DOM_REF::calcAporte: getElementById('calcCambioLabel') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-calcAporte-calcCambioLabel",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='calcCambioLabel' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-calcAporte-calcResult::DOM_REF::calcAporte: getElementById('calcResult') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-calcAporte-calcResult",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='calcResult' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildFireMatrix-fireMatrixSection::DOM_REF::buildFireMatrix: getElementById('fireMatrixSection') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildFireMatrix-fireMatrixSection",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='fireMatrixSection' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildFireMatrix-fireMatrixTable::DOM_REF::buildFireMatrix: getElementById('fireMatrixTable') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildFireMatrix-fireMatrixTable",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='fireMatrixTable' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildTimestamps-timestampsBar::DOM_REF::buildTimestamps: getElementById('timestampsBar') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildTimestamps-timestampsBar",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='timestampsBar' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildFactorRolling-factorRollingSection::DOM_REF::buildFactorRolling: getElementById('factorRollingSection') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildFactorRolling-factorRollingSection",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='factorRollingSection' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildFactorRolling-factorRollingBody::DOM_REF::buildFactorRolling: getElementById('factorRollingBody') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildFactorRolling-factorRollingBody",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='factorRollingBody' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildFactorRolling-factorRollingChart::DOM_REF::buildFactorRolling: getElementById('factorRollingChart') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildFactorRolling-factorRollingChart",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='factorRollingChart' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildEtfComposition-etfRegionTable::DOM_REF::buildEtfComposition: getElementById('etfRegionTable') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildEtfComposition-etfRegionTable",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='etfRegionTable' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildEtfComposition-etfVemTable::DOM_REF::buildEtfComposition: getElementById('etfVemTable') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildEtfComposition-etfVemTable",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='etfVemTable' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildEtfComposition-etfFactorTable::DOM_REF::buildEtfComposition: getElementById('etfFactorTable') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildEtfComposition-etfFactorTable",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='etfFactorTable' presente em index.html"
+    },
+    {
+      "test_id": "dom-ref-buildEtfComposition-etfCompSection::DOM_REF::buildEtfComposition: getElementById('etfCompSection') existe no DOM ou tem null guard",
+      "block_id": "dom-ref-buildEtfComposition-etfCompSection",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id='etfCompSection' presente em index.html"
+    },
+    {
+      "test_id": "patrimonio-total-hero::PRIVACY::hero patrimonio values use .pv class (privacy toggle)",
+      "block_id": "patrimonio-total-hero",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": ".pv class present on hero patrimonio values"
+    },
+    {
+      "test_id": "pfire-hero::RENDER::pfire hero and scenario headline elements present in HTML",
+      "block_id": "pfire-hero",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "pfire hero and scenario elements found"
+    },
+    {
+      "test_id": "kpi-grid-primario::RENDER::primary KPI elements present in HTML",
+      "block_id": "kpi-grid-primario",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "primary KPI elements found"
+    },
+    {
+      "test_id": "fire-countdown::RENDER::countdown and progress bar elements present in HTML",
+      "block_id": "fire-countdown",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "countdown elements found"
+    },
+    {
+      "test_id": "fire-countdown::PRIVACY::countdown value elements use .pv class (privacy toggle)",
+      "block_id": "fire-countdown",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "pv class present in hero strip"
+    },
+    {
+      "test_id": "wellness-score::RENDER::wellness score elements present in HTML",
+      "block_id": "wellness-score",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "wellness score elements found"
+    },
+    {
+      "test_id": "drift-maximo-kpi::RENDER::drift max KPI element present in HTML",
+      "block_id": "drift-maximo-kpi",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "drift max KPI elements found"
+    },
+    {
+      "test_id": "bond-pool-strip::RENDER::bond pool section element present in HTML",
+      "block_id": "bond-pool-strip",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "bond pool elements found"
+    },
+    {
+      "test_id": "ter-carteira::RENDER::TER carteira elements present in HTML",
+      "block_id": "ter-carteira",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "TER carteira elements found"
+    },
+    {
+      "test_id": "scenario-comparison::RENDER::scenarioChart canvas exists in HTML",
+      "block_id": "scenario-comparison",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "scenarioChart canvas present"
+    },
+    {
+      "test_id": "spending-sensitivity::RENDER::spending sensitivity section exists in HTML",
+      "block_id": "spending-sensitivity",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Spending sensitivity element present in HTML"
+    },
+    {
+      "test_id": "guardrails-retirada::RENDER::guardrail UI elements exist in HTML",
+      "block_id": "guardrails-retirada",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Guardrail UI elements present in HTML"
+    },
+    {
+      "test_id": "spending-breakdown::RENDER::spending breakdown renders in sankey or dedicated section",
+      "block_id": "spending-breakdown",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "sankeySection present (spending breakdown rendering target)"
+    },
+    {
+      "test_id": "income-fases::RENDER::incomeChart canvas exists in HTML",
+      "block_id": "income-fases",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "incomeChart canvas present"
+    },
+    {
+      "test_id": "bond-pool-runway::RENDER::bondPoolRunwayChartWrap exists in HTML",
+      "block_id": "bond-pool-runway",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "bondPoolRunwayChartWrap present"
+    },
+    {
+      "test_id": "what-if-cenarios::RENDER::fireMatrixSection and heatmapContainer exist",
+      "block_id": "what-if-cenarios",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "fireMatrixSection and heatmapContainer present"
+    },
+    {
+      "test_id": "stress-test-mc::RENDER::stress test UI elements exist in HTML",
+      "block_id": "stress-test-mc",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Stress test UI elements present"
+    },
+    {
+      "test_id": "earliest-fire::RENDER::earliestFireCard exists in HTML",
+      "block_id": "earliest-fire",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "earliestFireCard present"
+    },
+    {
+      "test_id": "aporte-sensitivity::RENDER::aporteSensSection exists in HTML",
+      "block_id": "aporte-sensitivity",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "SKIP — aporteSensSection removed intentionally (2026-04-12)"
+    },
+    {
+      "test_id": "eventos-vida::RENDER::lumpy events body render target exists in HTML",
+      "block_id": "eventos-vida",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "lumpyEventsBody render target present"
+    },
+    {
+      "test_id": "pfire-familia::RENDER::conditional pfire buttons exist in HTML",
+      "block_id": "pfire-familia",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Conditional pfire scenario buttons present"
+    },
+    {
+      "test_id": "factor-signal-kpi::RENDER::semaforoPanel container present in HTML",
+      "block_id": "factor-signal-kpi",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "semaforoPanel element found"
+    },
+    {
+      "test_id": "drift-semaforo-etf::RENDER::semaforoBody table element present in HTML",
+      "block_id": "drift-semaforo-etf",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "semaforoBody table found"
+    },
+    {
+      "test_id": "asset-mix-donut::RENDER::allocDonut canvas present in HTML",
+      "block_id": "asset-mix-donut",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "SKIP — allocDonut removed intentionally (2026-04-12)"
+    },
+    {
+      "test_id": "alloc-bucket-donut::RENDER::allocDonut canvas or stackedAllocBar element present in HTML",
+      "block_id": "alloc-bucket-donut",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Elements found: ['stackedAllocBar']"
+    },
+    {
+      "test_id": "geo-donut::RENDER::geoDonut canvas present in HTML",
+      "block_id": "geo-donut",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "geoDonut canvas found"
+    },
+    {
+      "test_id": "stacked-alloc::RENDER::stackedAllocBar and stackedAllocLegend elements present in HTML",
+      "block_id": "stacked-alloc",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "stackedAllocBar and stackedAllocLegend found"
+    },
+    {
+      "test_id": "etf-composicao-regiao::RENDER::geoDonut canvas present for etf-composicao-regiao rendering",
+      "block_id": "etf-composicao-regiao",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "geoDonut canvas present (used by etf-composicao-regiao)"
+    },
+    {
+      "test_id": "backtest-metricas::RENDER::backtestMetricsTable and backtestMetricsBody elements present",
+      "block_id": "backtest-metricas",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "backtestMetricsTable and backtestMetricsBody found"
+    },
+    {
+      "test_id": "shadow-portfolios::RENDER::shadowChart canvas and shadowTableBody present in HTML",
+      "block_id": "shadow-portfolios",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "shadowChart and shadowTableBody found"
+    },
+    {
+      "test_id": "cagr-patrimonial-twr::RENDER::cagrPatrimonial and cagrTwrRow elements present in HTML",
+      "block_id": "cagr-patrimonial-twr",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "cagrPatrimonial and cagrTwrRow found"
+    },
+    {
+      "test_id": "backtest-regime-longo::RENDER::backtestChart canvas present in HTML",
+      "block_id": "backtest-regime-longo",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "backtestChart canvas found"
+    },
+    {
+      "test_id": "factor-loadings-chart::RENDER::factorLoadingsChart canvas and factorLoadingsCards present",
+      "block_id": "factor-loadings-chart",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "factorLoadingsChart and factorLoadingsCards found"
+    },
+    {
+      "test_id": "factor-rolling-avgs::RENDER::factorRollingChart canvas and factorRollingSection present",
+      "block_id": "factor-rolling-avgs",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "factorRollingChart and factorRollingSection found"
+    },
+    {
+      "test_id": "ipca-dca-semaforo::RENDER::dcaSection and dcaGrid containers exist in HTML",
+      "block_id": "ipca-dca-semaforo",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "dcaSection and dcaGrid containers found in HTML"
+    },
+    {
+      "test_id": "ipca-dca-semaforo::RENDER::buildDcaStatus JS function exists in HTML",
+      "block_id": "ipca-dca-semaforo",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildDcaStatus function found in HTML"
+    },
+    {
+      "test_id": "renda-plus-semaforo::RENDER::ipcaTaxaStatus and ipcaProgressLabel elements exist in HTML",
+      "block_id": "renda-plus-semaforo",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "ipcaTaxaStatus and ipcaProgressLabel found in HTML"
+    },
+    {
+      "test_id": "rf-posicoes::RENDER::rfCardsGrid container and buildRfCards function exist in HTML",
+      "block_id": "rf-posicoes",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "rfCardsGrid container and buildRfCards function found in HTML"
+    },
+    {
+      "test_id": "rf-posicoes::PRIVACY::rf-posicoes block is marked privacy=true in spec.json",
+      "block_id": "rf-posicoes",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "rf-posicoes correctly marked privacy=True"
+    },
+    {
+      "test_id": "duration-renda-plus::RENDER::duration-block CSS class and rfCardsGrid container exist in HTML",
+      "block_id": "duration-renda-plus",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "duration-block class and rfCardsGrid container found in HTML"
+    },
+    {
+      "test_id": "duration-renda-plus::PRIVACY::duration-renda-plus block is marked privacy=true in spec.json",
+      "block_id": "duration-renda-plus",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "duration-renda-plus correctly marked privacy=True"
+    },
+    {
+      "test_id": "hodl11-status::RENDER::HTML contains hodl11Sub element (qty/cotas display)",
+      "block_id": "hodl11-status",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id=\"hodl11Sub\" present in HTML"
+    },
+    {
+      "test_id": "hodl11-status::RENDER::HTML contains hodl-band-marker class (band visualization)",
+      "block_id": "hodl11-status",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "'hodl-band-marker' present in HTML"
+    },
+    {
+      "test_id": "hodl11-status::PRIVACY::hodl11Sub element has pv class (qty/price privacy wrapper)",
+      "block_id": "hodl11-status",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "hodl11Sub has pv class for privacy masking"
+    },
+    {
+      "test_id": "hodl11-status::SPEC::spec.json declares hodl11-status as privacy: true",
+      "block_id": "hodl11-status",
+      "category": "SPEC",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "hodl11-status has privacy: true in spec.json"
+    },
+    {
+      "test_id": "stress-test-mc::RENDER::HTML contains stressShockLabel element (shock percentage display)",
+      "block_id": "stress-test-mc",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "id=\"stressShockLabel\" present in HTML"
+    },
+    {
+      "test_id": "stress-test-mc::PRIVACY::HTML stress-test-mc block contains pv class elements (value privacy)",
+      "block_id": "stress-test-mc",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Found 6 pv-class element(s) in stress-test-mc region"
+    },
+    {
+      "test_id": "stress-test-mc::SPEC::spec.json declares stress-test-mc as privacy: true",
+      "block_id": "stress-test-mc",
+      "category": "SPEC",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "stress-test-mc has privacy: true in spec.json"
+    },
+    {
+      "test_id": "macro-strip::RENDER::HTML contem classe macro-strip para layout CSS",
+      "block_id": "macro-strip",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "class=\"macro-strip\" presente no HTML"
+    },
+    {
+      "test_id": "exposicao-cambial::RENDER::HTML contem referencia a BRL/USD no display de cambio",
+      "block_id": "exposicao-cambial",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "BRL/USD presente no HTML"
+    },
+    {
+      "test_id": "cambio-mercado::RENDER::HTML references cambio_brl_usd rendering logic",
+      "block_id": "cambio-mercado",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "All cambio-mercado render anchors present"
+    },
+    {
+      "test_id": "exposicao-cambial::RENDER::HTML references exposicao_cambial_pct and brasil_pct rendering logic",
+      "block_id": "exposicao-cambial",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "All exposicao-cambial render anchors present"
+    },
+    {
+      "test_id": "tlh-monitor::RENDER::HTML contains taxIrSection container for TLH/IR block",
+      "block_id": "tlh-monitor",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "taxIrSection and taxIrBody containers present"
+    },
+    {
+      "test_id": "tlh-monitor::PRIVACY::taxIrTotalHeader uses .pv class for privacy masking",
+      "block_id": "tlh-monitor",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "taxIrTotalHeader carries .pv privacy class"
+    },
+    {
+      "test_id": "ir-diferido::RENDER::HTML contains taxIrBody container rendered by buildIrDiferido()",
+      "block_id": "ir-diferido",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "taxIrBody container and buildIrDiferido() present"
+    },
+    {
+      "test_id": "ir-diferido::PRIVACY::ir-diferido block values are wrapped with .pv privacy class",
+      "block_id": "ir-diferido",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "taxIrTotalHeader uses .pv class for privacy"
+    },
+    {
+      "test_id": "fee-custo-complexidade::RENDER::HTML contains feeTable and feeBody elements",
+      "block_id": "fee-custo-complexidade",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "feeTable and feeBody elements present"
+    },
+    {
+      "test_id": "savings-rate::RENDER::HTML contains savingsRate, savingsRateFill, and savingsRateNote elements",
+      "block_id": "savings-rate",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "savingsRate, savingsRateFill, savingsRateNote, savingsRateSub all present"
+    },
+    {
+      "test_id": "savings-rate::PRIVACY::savings-rate block section does not expose raw aporte/renda values as plaintext",
+      "block_id": "savings-rate",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "savingsRate placeholder is '—' — populated by JS (not hardcoded)"
+    },
+    {
+      "test_id": "posicoes-etfs-ibkr::RENDER::HTML contains posicoes table block",
+      "block_id": "posicoes-etfs-ibkr",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "positions table present in HTML"
+    },
+    {
+      "test_id": "custo-base-bucket::RENDER::HTML contains custo-base-bucket block",
+      "block_id": "custo-base-bucket",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "portfolio tables present in HTML"
+    },
+    {
+      "test_id": "render-global::RENDER::no empty canvas elements (uninitialized charts)",
+      "block_id": "render-global",
+      "category": "RENDER",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Trilha grows from 257,684 to 9,668,388"
+      "message": "23 canvas elements all have IDs"
+    },
+    {
+      "test_id": "coverage-global::SPEC::block count in spec matches expected ~72",
+      "block_id": "coverage-global",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "68 blocks in spec"
+    },
+    {
+      "test_id": "kpi-grid-mercado::RENDER::market KPI elements present in HTML",
+      "block_id": "kpi-grid-mercado",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "market KPI elements found"
+    },
+    {
+      "test_id": "bond-pool-strip::PRIVACY::bond pool section contains privacy-sensitive display (valor should be .pv)",
+      "block_id": "bond-pool-strip",
+      "category": "PRIVACY",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": ".pv class on kpi-value found (covers bond pool and other private KPI values)"
+    },
+    {
+      "test_id": "ter-carteira::SPEC::ter-carteira block declared in spec.json under now tab",
+      "block_id": "ter-carteira",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "ter-carteira declared in spec under tab=now"
+    },
+    {
+      "test_id": "income-lifecycle::RENDER::incomeChartSrc exists for lifecycle chart",
+      "block_id": "income-lifecycle",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "incomeChartSrc present"
+    },
+    {
+      "test_id": "intra-equity-pesos::RENDER::equityWeightsChart canvas present in HTML",
+      "block_id": "intra-equity-pesos",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "SKIP — equityWeightsChart removed intentionally (2026-04-12)"
+    },
+    {
+      "test_id": "alpha-itd-swrd::RENDER::McLean & Pontiff 2016 haircut reference present in HTML",
+      "block_id": "alpha-itd-swrd",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "McLean & Pontiff haircut reference found in HTML"
+    },
+    {
+      "test_id": "ipca-dca-semaforo::SPEC::ipca-dca-semaforo block exists in spec.json with required data_fields",
+      "block_id": "ipca-dca-semaforo",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "All required data_fields present in ipca-dca-semaforo spec"
+    },
+    {
+      "test_id": "renda-plus-semaforo::SPEC::renda-plus-semaforo block exists in spec.json with required data_fields",
+      "block_id": "renda-plus-semaforo",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "All required data_fields present in renda-plus-semaforo spec"
+    },
+    {
+      "test_id": "rf-posicoes::SPEC::rf-posicoes block exists in spec.json with required data_fields",
+      "block_id": "rf-posicoes",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "All required data_fields present in rf-posicoes spec"
+    },
+    {
+      "test_id": "duration-renda-plus::SPEC::duration-renda-plus block exists in spec.json with required data_fields",
+      "block_id": "duration-renda-plus",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "All required data_fields present in duration-renda-plus spec"
+    },
+    {
+      "test_id": "hodl11-status::SPEC::spec.json hodl11-status data_fields match expected set",
+      "block_id": "hodl11-status",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "hodl11-status data_fields match spec exactly"
+    },
+    {
+      "test_id": "stress-cenarios::RENDER::HTML contains Tornado section label text",
+      "block_id": "stress-cenarios",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "'Tornado' label present in HTML"
+    },
+    {
+      "test_id": "stress-cenarios::SPEC::spec.json declares stress-cenarios with tornado data_field",
+      "block_id": "stress-cenarios",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "stress-cenarios has 'tornado' in data_fields"
+    },
+    {
+      "test_id": "stress-test-mc::SPEC::spec.json declares stress-test-mc with all required data_fields",
+      "block_id": "stress-test-mc",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "stress-test-mc data_fields match spec exactly"
+    },
+    {
+      "test_id": "macro-strip::RENDER::HTML contem macroStatusBadge para semaforo do plano",
+      "block_id": "macro-strip",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "id=\"macroStatusBadge\" presente no HTML"
+    },
+    {
+      "test_id": "macro-strip::SPEC::spec.json define macro-strip com data_fields corretos",
+      "block_id": "macro-strip",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "macro-strip data_fields completos: ['macro.fed_funds', 'macro.plano_status.status', 'macro.selic_meta', 'macro.spread_selic_ff']"
+    },
+    {
+      "test_id": "exposicao-cambial::RENDER::HTML contem buildBrasilConcentracao para inicializacao do bloco",
+      "block_id": "exposicao-cambial",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "buildBrasilConcentracao presente no HTML"
+    },
+    {
+      "test_id": "exposicao-cambial::SPEC::spec.json define exposicao-cambial com data_fields corretos",
+      "block_id": "exposicao-cambial",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "exposicao-cambial data_fields completos: ['cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct']"
+    },
+    {
+      "test_id": "cambio-mercado::SPEC::spec.json defines cambio-mercado with required data_fields",
+      "block_id": "cambio-mercado",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'cambio', 'mercado.cambio_mtd_pct'}"
+    },
+    {
+      "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
+      "block_id": "exposicao-cambial",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct'}"
+    },
+    {
+      "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
+      "block_id": "ir-diferido",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "tax.regime correctly references Lei 14.754/2023 ACC deferral"
+    },
+    {
+      "test_id": "fee-custo-complexidade::RENDER::HTML references alpha haircut source note (McLean & Pontiff 58%)",
+      "block_id": "fee-custo-complexidade",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "McLean & Pontiff 58% haircut referenced in fee section"
+    },
+    {
+      "test_id": "savings-rate::SPEC::spec.json declares savings-rate block with correct tab and privacy flag",
+      "block_id": "savings-rate",
+      "category": "SPEC",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "savings-rate: tab='now', privacy=true confirmed in spec.json"
+    },
+    {
+      "test_id": "calc-aporte::RENDER::HTML contains calc-aporte slider block",
+      "block_id": "calc-aporte",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "Aporte calculator elements present in HTML"
+    },
+    {
+      "test_id": "minilog::RENDER::HTML contains minilog table block",
+      "block_id": "minilog",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "minilog content present in HTML"
+    },
+    {
+      "test_id": "evolucao-carteira::RENDER::HTML contains evolucao-carteira chart block",
+      "block_id": "evolucao-carteira",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "evolucao-carteira content present in HTML"
+    },
+    {
+      "test_id": "retorno-decomposicao::RENDER::HTML contains retorno-decomposicao waterfall block",
+      "block_id": "retorno-decomposicao",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "retorno-decomposicao content present in HTML"
+    },
+    {
+      "test_id": "heatmap-retornos::RENDER::HTML contains heatmap-retornos block",
+      "block_id": "heatmap-retornos",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "heatmap-retornos content present in HTML"
+    },
+    {
+      "test_id": "hodl11-pnl::RENDER::HTML contains hodl11-pnl KPI block",
+      "block_id": "hodl11-pnl",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "hodl11-pnl content present in HTML"
     }
   ]
 }

@@ -1696,7 +1696,7 @@ function buildTimeline(period) {
   const rfVals = values.map(v => v * rfFrac);
   const cryptoVals = values.map(v => v * cryptoFrac);
 
-  if (charts.timeline) charts.timeline.destroy();
+  if (charts.timeline) { charts.timeline.destroy(); charts.timeline = null; }
   if (checkMinPoints('timelineChart', labels.length, 2)) return;
   // Aviso para períodos curtos (dados mensais = poucos pontos)
   const sparseNote = document.getElementById('timelineSparseNote');
@@ -2834,7 +2834,7 @@ function buildRollingSharp() {
     return;
   }
 
-  if (charts.rollingSharp) charts.rollingSharp.destroy();
+  if (charts.rollingSharp) { charts.rollingSharp.destroy(); charts.rollingSharp = null; }
 
   const colorFor = v => v >= 1 ? 'rgba(34,197,94,.85)' : v >= 0 ? 'rgba(250,204,21,.8)' : 'rgba(248,113,113,.85)';
   const ptColors = sharpesBrl.map(colorFor);
@@ -2968,7 +2968,7 @@ function buildInformationRatio() {
     return;
   }
 
-  if (charts.rollingIR) charts.rollingIR.destroy();
+  if (charts.rollingIR) { charts.rollingIR.destroy(); charts.rollingIR = null; }
 
   const colorFor = v => v >= 0 ? 'rgba(34,197,94,.85)' : 'rgba(248,113,113,.85)';
   const ptColors = values.map(colorFor);
@@ -3153,7 +3153,7 @@ function buildBacktest(period) {
     const dates   = cr.dates.map(d => d.slice(0, 7)); // YYYY-MM-DD → YYYY-MM
     const target  = cr.target.map(v => +(v / base_t * 100).toFixed(2));
     const bench   = cr.bench.map(v  => +(v / base_b * 100).toFixed(2));
-    if (charts.backtest) charts.backtest.destroy();
+    if (charts.backtest) { charts.backtest.destroy(); charts.backtest = null; }
     charts.backtest = new Chart(document.getElementById('backtestChart'), {
       type: 'line',
       data: {
@@ -3212,7 +3212,7 @@ function buildBacktest(period) {
   const target = allTarget.slice(cutIdx).map(v => +(v / tBase * 100).toFixed(2));
   const shadowA = allShadowA.slice(cutIdx).map(v => +(v / sBase * 100).toFixed(2));
 
-  if (charts.backtest) charts.backtest.destroy();
+  if (charts.backtest) { charts.backtest.destroy(); charts.backtest = null; }
   charts.backtest = new Chart(document.getElementById('backtestChart'), {
     type: 'line',
     data: {
@@ -3380,7 +3380,7 @@ function buildBacktestR7() {
     const tVals = cr.target.map(v => +(v / base_t * 100).toFixed(2));
     const bVals = cr.bench.map(v  => +(v / base_b * 100).toFixed(2));
     const dates = cr.dates.map(d => d.slice(0, 7));
-    if (charts.backtestR7) charts.backtestR7.destroy();
+    if (charts.backtestR7) { charts.backtestR7.destroy(); charts.backtestR7 = null; }
     charts.backtestR7 = new Chart(document.getElementById('backtestR7Chart'), {
       type: 'line',
       data: {
@@ -3468,7 +3468,7 @@ function buildShadowChart(period) {
     `<div style="background:var(--card2);padding:8px;border-radius:6px"><div style="color:var(--muted);font-size:.65rem">Delta Target vs VWRA</div><strong style="color:${delta>=0?'#22c55e':'#ef4444'}">${delta>=0?'+':''}${delta.toFixed(2)}pp/a</strong></div>`,
   ].join('');
 
-  if (charts.shadow) charts.shadow.destroy();
+  if (charts.shadow) { charts.shadow.destroy(); charts.shadow = null; }
   charts.shadow = new Chart(document.getElementById('shadowChart'), {
     type: 'line',
     data: {
@@ -3981,7 +3981,7 @@ function buildIncomeProjection() {
   // Milestones: FIRE, INSS
   const milestoneMap = { [anoFire]: `FIRE (age ${idadeFireAlvo})`, [anoInss]: 'INSS (age 65)' };
 
-  if (charts.incomeProjection) charts.incomeProjection.destroy();
+  if (charts.incomeProjection) { charts.incomeProjection.destroy(); charts.incomeProjection = null; }
   charts.incomeProjection = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -4081,7 +4081,7 @@ function buildNetWorthProjection() {
   const aHojeIdx = nw.anos.indexOf(anoAtual);
   const patAtual = DATA.premissas.patrimonio_atual;
 
-  if (charts.netWorth) charts.netWorth.destroy();
+  if (charts.netWorth) { charts.netWorth.destroy(); charts.netWorth = null; }
 
   // Plugin inline para linha vertical "Hoje" e shading
   const verticalLinePlugin = {
@@ -4532,7 +4532,7 @@ function buildSankey() {
     [N_IMPRV]:  '#64748b',  // cinza (pequeno — absorvido visualmente em Must Spend)
   };
 
-  if (charts.sankey) charts.sankey.destroy();
+  if (charts.sankey) { charts.sankey.destroy(); charts.sankey = null; }
   try {
     charts.sankey = new Chart(ctx, {
       type: 'sankey',
@@ -6284,7 +6284,7 @@ function buildFireTrilha() {
     });
   }
 
-  if (charts.fireTrilha) { charts.fireTrilha.destroy(); }
+  if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
   const ctx = el.getContext('2d');
   charts.fireTrilha = new Chart(ctx, {
     type: 'line',
@@ -6331,7 +6331,7 @@ function buildDrawdownHistory() {
   const dates = d.dates;
   const vals = d.drawdown_pct;
 
-  if (charts.drawdownHist) { charts.drawdownHist.destroy(); }
+  if (charts.drawdownHist) { charts.drawdownHist.destroy(); charts.drawdownHist = null; }
   const ctx = el.getContext('2d');
   charts.drawdownHist = new Chart(ctx, {
     type: 'bar',
@@ -6515,7 +6515,7 @@ function buildBondPoolRunway() {
 
   wrap.style.display = 'block';
 
-  if (charts.bondPoolRunway) { charts.bondPoolRunway.destroy(); }
+  if (charts.bondPoolRunway) { charts.bondPoolRunway.destroy(); charts.bondPoolRunway = null; }
   const ctx = el.getContext('2d');
   charts.bondPoolRunway = new Chart(ctx, {
     type: 'bar',
@@ -6748,7 +6748,7 @@ function buildFactorRolling() {
   const threshold = fr.threshold ?? -5;
   body.innerHTML = '<div class="chart-box"><canvas id="factorRollingChart"></canvas></div>';
 
-  if (charts.factorRolling) charts.factorRolling.destroy();
+  if (charts.factorRolling) { charts.factorRolling.destroy(); charts.factorRolling = null; }
   charts.factorRolling = new Chart(document.getElementById('factorRollingChart'), {
     type: 'line',
     data: {
@@ -6902,7 +6902,7 @@ function _renderFactorChart() {
   const chartH = Math.max(180, factors.length * 55 + 80);
   ctx.parentElement.style.height = chartH + 'px';
 
-  if (charts.factorLoadings) charts.factorLoadings.destroy();
+  if (charts.factorLoadings) { charts.factorLoadings.destroy(); charts.factorLoadings = null; }
   charts.factorLoadings = new Chart(ctx, {
     type: 'bar',
     data: { labels, datasets },

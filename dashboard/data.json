@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-12T08:43:11",
-  "_generated_brt": "2026-04-12T08:43:11-03:00",
+  "_generated": "2026-04-12T08:57:38",
+  "_generated_brt": "2026-04-12T08:57:38-03:00",
   "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -63,7 +63,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3470738,
+    "patrimonio_atual": 3487412,
     "patrimonio_gatilho": 13400000,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1443,7 +1443,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -2204,7 +2204,7 @@
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 3.0,
+      "atual_pct": 2.98,
       "status": "verde"
     }
   },
@@ -2279,15 +2279,15 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 37.0,
+      "atual": 36.8,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 29.0,
+      "atual": 28.9,
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 24.2,
+      "atual": 24.6,
       "alvo": 15.8
     },
     "IPCA": {
@@ -2337,7 +2337,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 59.8,
+      "price": 63.39,
       "ucits": "AVEM.L"
     },
     {
@@ -2367,10 +2367,10 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 626874,
-    "retorno_usd": 235831,
-    "pct_aportes": 62.4,
-    "pct_retorno": 37.6,
+    "patrimonio_equity_usd": 630200,
+    "retorno_usd": 239157,
+    "pct_aportes": 62.1,
+    "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-12"
@@ -2897,7 +2897,7 @@
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 9.6,
+    "brasil_pct": 9.5,
     "composicao": {
       "hodl11_brl": 104063,
       "rf_total_brl": 224406,
@@ -2909,7 +2909,7 @@
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 332481,
-    "total_portfolio_brl": 3470738,
+    "total_portfolio_brl": 3487412,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
