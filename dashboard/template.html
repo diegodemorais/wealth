@@ -365,7 +365,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div class="kpi-sub" id="kpiRenda2065Sub">—</div>
 </div>
 <div class="kpi" style="opacity:.85">
-  <div class="kpi-label">Alpha ITD vs SWRD (USD)</div>
+  <div class="kpi-label">Alpha Desde o Início vs SWRD (USD)</div>
   <div class="kpi-value pos" id="kpiDelta">—</div>
   <div class="kpi-sub" id="kpiDeltaSub">—</div>
 </div>
@@ -576,22 +576,16 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">⚠️ Estimativa — retorno USD e câmbio são componentes residuais, não cálculos exatos de decomposição. Crescimento inclui aportes ≠ performance dos ETFs.</div>
 </div>
 
-<!-- S8: ALOCAÇÃO DONUTS -->
-<div class="grid-2" data-in-tab="carteira">
-<div class="section">
-  <h2>Alocação por Bucket</h2>
-  <div class="chart-box-sm"><canvas id="allocDonut"></canvas></div>
-</div>
-<div class="section">
-  <h2>Exposição Geográfica</h2>
-  <div class="chart-box-sm"><canvas id="geoDonut"></canvas></div>
-  <div class="src">Premissa: SWRD ≈ 67% US (MSCI World ~67% US). AVUV/USSC = 100% US. AVDV = 100% DM ex-US.</div>
-</div>
+<!-- S8: GEO DONUT -->
+<div class="section" data-in-tab="carteira">
+<h2>Exposição Geográfica</h2>
+<div class="chart-box-sm"><canvas id="geoDonut"></canvas></div>
+<div class="src">Premissa: SWRD ≈ 67% US (MSCI World ~67% US). AVUV/USSC = 100% US. AVDV = 100% DM ex-US.</div>
 </div>
 
-<!-- #7: PROTÓTIPO — Barras Empilhadas Horizontais (alternativa aos donuts) -->
+<!-- S7: Barras Empilhadas Horizontais -->
 <div class="section" data-in-tab="carteira" id="stackedAllocSection">
-<h2>Alocação — Barras Empilhadas <span style="font-size:.6rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0">protótipo — comparar com donuts acima</span></h2>
+<h2>Alocação — Barras Empilhadas</h2>
 <div style="margin-bottom:8px">
   <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Por Classe de Ativo</div>
   <div id="stackedAllocBar" style="height:32px;display:flex;border-radius:6px;overflow:hidden;width:100%"></div>
@@ -601,13 +595,13 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Intra-Equity — Pesos Atuais vs Alvo</div>
   <div id="stackedEquityBar" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
-<div class="src">Protótipo #7 — comparar UX com donuts S8/S13. Diego decide qual manter.</div>
 </div>
 
 <!-- N2: ETF COMPOSITION — Região + Fator -->
 <div class="section" data-in-tab="carteira" id="etfCompSection">
 <h2>Composição por Região e Fator — ETFs da Carteira</h2>
-<div class="etf-comp-grid" id="etfCompGrid"></div>
+<div id="etfRegionTable" style="margin-bottom:16px"></div>
+<div id="etfFactorTable"></div>
 <div class="src">Fonte: etf_composition.json · SWRD=MSCI World, AVGS=Global Small Cap Value, AVEM=Emerging Markets</div>
 </div>
 
@@ -637,7 +631,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
 <div class="section" data-in-tab="perf">
-<h2>Alpha ITD vs SWRD (USD) — Performance Relativa</h2>
+<h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div>
@@ -678,18 +672,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src">Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.</div>
 </div>
 
-<!-- S13: ASSET MIX -->
-<div class="grid-2" data-in-tab="carteira">
-<div class="section">
-  <h2>Asset Mix — por Classe</h2>
-  <div class="chart-box-sm"><canvas id="fireBucketsDonut"></canvas></div>
-</div>
-<div class="section">
-  <h2>Intra-Equity — Pesos vs Alvo</h2>
-  <div class="chart-box-sm"><canvas id="equityWeightsChart"></canvas></div>
-  <div class="src">Alvo: SWRD 50% / AVGS 30% / AVEM 20%</div>
-</div>
-</div>
 
 <!-- P2: BOND POOL READINESS -->
 <div class="section" id="bondPoolSection" data-in-tab="retiro">
@@ -790,31 +772,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- canvas incomeChart mantido para evitar erros JS, oculto -->
 <canvas id="incomeChart" style="display:none"></canvas>
 <span id="incomeChartSrc" style="display:none"></span>
-</div>
-
-<!-- S17: FEE ANALYSIS (colapsável) -->
-<div class="section" data-in-tab="perf">
-<details>
-<summary style="cursor:pointer;font-size:1.1rem;font-weight:600;color:var(--text);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px">
-  <span style="font-size:.85em;color:var(--muted)">▶</span>
-  Fee Analysis — Custo de Complexidade (14 anos até FIRE)
-</summary>
-<div style="margin-top:12px">
-<div style="overflow-x:auto">
-<table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
-<thead><tr style="border-bottom:1px solid var(--border)">
-  <th style="text-align:left;padding:6px 8px;color:var(--muted);font-weight:600">Portfolio</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">TER</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Custo 14a</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Alpha 14a</th>
-  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Net vs VWRA</th>
-</tr></thead>
-<tbody id="feeBody"></tbody>
-</table>
-</div>
-<div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
-</div>
-</details>
 </div>
 
 <!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
@@ -933,9 +890,34 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 </div><!-- /collapse-body -->
 </div>
 
+<!-- S17: FEE ANALYSIS (colapsável) -->
+<div class="section" data-in-tab="perf">
+<details>
+<summary style="cursor:pointer;font-size:1.1rem;font-weight:600;color:var(--text);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px">
+  <span style="font-size:.85em;color:var(--muted)">▶</span>
+  Fee Analysis — Custo de Complexidade (14 anos até FIRE)
+</summary>
+<div style="margin-top:12px">
+<div style="overflow-x:auto">
+<table id="feeTable" style="width:100%;border-collapse:collapse;font-size:.82rem">
+<thead><tr style="border-bottom:1px solid var(--border)">
+  <th style="text-align:left;padding:6px 8px;color:var(--muted);font-weight:600">Portfolio</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">TER</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Custo 14a</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Alpha 14a</th>
+  <th class="num" style="padding:6px 8px;color:var(--muted);font-weight:600">Net vs VWRA</th>
+</tr></thead>
+<tbody id="feeBody"></tbody>
+</table>
+</div>
+<div class="src">TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA</div>
+</div>
+</details>
+</div>
+
 <!-- S24c: INFORMATION RATIO vs VWRA -->
 <div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="this.parentElement.classList.toggle('open')">Information Ratio vs VWRA — ITD + Rolling 36m</h2>
+<h2 onclick="this.parentElement.classList.toggle('open')">Information Ratio vs VWRA — Desde o Início + Rolling 36m</h2>
 <div class="collapse-body">
 
 <!-- Cards ITD -->
@@ -952,12 +934,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div><!-- /collapse-body -->
 </div>
 
-<!-- S26: RF + CRYPTO CARDS -->
-<div class="section" data-in-tab="carteira">
-<h2>Renda Fixa + Cripto</h2>
-<div class="rf-grid" id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
-</div>
-
 <!-- IR DIFERIDO + TLH — merged -->
 <div class="section collapsible" id="taxIrSection" data-in-tab="carteira">
 <h2 onclick="this.parentElement.classList.toggle('open')">IR Diferido — Alvo &amp; Transitório <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
@@ -965,6 +941,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div id="taxIrBody"><!-- gerado por buildIrDiferido() --></div>
 <div class="src">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat. PTAX histórica por lote. Transitórios: diluir via aportes, não comprar mais. TLH: ⚠️ = perda ≥ 5%.</div>
 </div>
+</div>
+
+<!-- S26: RF + CRYPTO -->
+<div class="section" data-in-tab="carteira">
+<h2>Renda Fixa + Cripto</h2>
+<div id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -1814,6 +1796,32 @@ function buildAttribution() {
     msg.style.color = '#22c55e';
   }
 
+  const attrTotal = Math.abs(a.aportes) + Math.abs(a.retornoUsd) + Math.abs(a.cambio);
+  const attrLabelPlugin = {
+    id: 'attrSegmentLabels',
+    afterDatasetsDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets.forEach((dataset, dsIdx) => {
+        const meta = chart.getDatasetMeta(dsIdx);
+        meta.data.forEach((bar, barIdx) => {
+          const val = dataset.data[barIdx];
+          if (!val) return;
+          const pct = attrTotal > 0 ? Math.abs(val) / attrTotal * 100 : 0;
+          if (pct < 5) return;
+          const { x, y, base, width } = bar.getProps(['x', 'y', 'base', 'width'], true);
+          const midY = (y + base) / 2;
+          ctx.save();
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          ctx.font = 'bold 10px sans-serif';
+          ctx.fillText(pct.toFixed(0) + '%', x, midY);
+          ctx.restore();
+        });
+      });
+    }
+  };
+
   charts.attr = new Chart(document.getElementById('attrChart'), {
     type: 'bar',
     data: {
@@ -1825,43 +1833,55 @@ function buildAttribution() {
       ]
     },
     options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { labels: { color: '#94a3b8' } } },
       scales: {
-        x: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        y: { stacked: true, ticks: { color: '#94a3b8' } }
+        x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(71,85,105,.3)' } },
+        y: { stacked: true, ticks: { color: '#94a3b8', callback: v => 'R$'+(v/1000).toFixed(0)+'k' }, grid: { color: 'rgba(71,85,105,.3)' } }
       }
-    }
+    },
+    plugins: [attrLabelPlugin]
   });
 }
 
-// ── S8: Donuts ────────────────────────────────────────────────
+// ── S8: Geo Donut ────────────────────────────────────────────
 function buildDonuts() {
-  // Alocação por bucket (% do total BRL)
-  const swrdBrl = bucketUsd.SWRD * CAMBIO;
-  const avgsBrl = bucketUsd.AVGS * CAMBIO;
-  const avemBrl = bucketUsd.AVEM * CAMBIO;
-  const jpglBrl = bucketUsd.JPGL * CAMBIO;
-  const bucketTot = swrdBrl + avgsBrl + avemBrl + rfBrl + cryptoBrl + jpglBrl;
-
-  charts.alloc = new Chart(document.getElementById('allocDonut'), {
-    type: 'doughnut',
-    data: {
-      labels: ['SWRD', 'AVGS (incl. transitorios)', 'AVEM (incl. transitorios)', 'RF', 'Crypto', 'JPGL (legado)'],
-      datasets: [{ data: [swrdBrl, avgsBrl, avemBrl, rfBrl, cryptoBrl, jpglBrl].map(v => Math.round(v/bucketTot*100)), backgroundColor: ['#3b82f6','#8b5cf6','#06b6d4','#22c55e','#eab308','#f97316'], borderWidth: 1, borderColor: '#1e293b' }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } }, cutout: '60%' }
-  });
-
-  // Geo
   const geoTot = geoUS + geoDM + geoEM;
+  const geoData = [geoUS, geoDM, geoEM].map(v => Math.round(v / geoTot * 100));
+
+  const geoLabelPlugin = {
+    id: 'geoArcLabels',
+    afterDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets.forEach((dataset, i) => {
+        const meta = chart.getDatasetMeta(i);
+        meta.data.forEach((arc, index) => {
+          const val = dataset.data[index];
+          if (!val || val < 4) return;
+          const midAngle = (arc.startAngle + arc.endAngle) / 2;
+          const r = (arc.innerRadius + arc.outerRadius) / 2;
+          const x = arc.x + r * Math.cos(midAngle);
+          const y = arc.y + r * Math.sin(midAngle);
+          ctx.save();
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.fillText(val + '%', x, y);
+          ctx.restore();
+        });
+      });
+    }
+  };
+
   charts.geo = new Chart(document.getElementById('geoDonut'), {
     type: 'doughnut',
     data: {
       labels: ['US', 'DM ex-US', 'EM'],
-      datasets: [{ data: [geoUS, geoDM, geoEM].map(v => Math.round(v/geoTot*100)), backgroundColor: ['#3b82f6','#22c55e','#f97316'], borderWidth: 1, borderColor: '#1e293b' }]
+      datasets: [{ data: geoData, backgroundColor: ['#3b82f6','#22c55e','#f97316'], borderWidth: 1, borderColor: '#1e293b' }]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }, cutout: '60%' }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }, cutout: '60%' },
+    plugins: [geoLabelPlugin]
   });
 }
 
@@ -1968,13 +1988,15 @@ function buildTornado() {
 
 // ── S11: Delta bar ────────────────────────────────────────────
 function buildDeltaBar() {
-  // Deltas vêm de DATA.shadows se disponível; fallback para null (tracking)
+  // Deltas vêm de DATA.shadows se disponível; fallback para null (em tracking)
   const sh = DATA.shadows || {};
   const deltaVwra = sh.delta_vwra ?? (DATA.backtest?.metrics ? (DATA.backtest.metrics.target?.cagr ?? null) - (DATA.backtest.metrics.shadowA?.cagr ?? null) : null);
   const deltaIpca = sh.delta_ipca ?? null;
   const delta6040 = sh.delta_shadow_c ?? null;
-  const deltaData = [deltaVwra, deltaIpca, delta6040];
-  const _trackingStart = DATA.date ? new Date(DATA.date).toLocaleDateString('pt-BR', {month:'short', year:'numeric'}) : 'início';
+  const rawData = [deltaVwra, deltaIpca, delta6040];
+  // Substituir null por 0 para garantir que a barra renderiza; tooltip indica "em tracking"
+  const deltaData = rawData.map(v => v ?? 0);
+  const isTracking = rawData.map(v => v === null);
   charts.delta = new Chart(document.getElementById('deltaChart'), {
     type: 'bar',
     data: {
@@ -1982,12 +2004,18 @@ function buildDeltaBar() {
       datasets: [{
         label: 'Delta (pp)',
         data: deltaData,
-        backgroundColor: deltaData.map(v => v === null ? 'rgba(94,94,94,.4)' : v >= 0 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.6)'),
+        backgroundColor: rawData.map((v, i) => isTracking[i] ? 'rgba(94,94,94,.35)' : v >= 0 ? 'rgba(34,197,94,.7)' : 'rgba(239,68,68,.6)'),
+        borderColor: rawData.map((v, i) => isTracking[i] ? 'rgba(94,94,94,.6)' : 'transparent'),
+        borderWidth: rawData.map((v, i) => isTracking[i] ? 1 : 0),
+        borderDash: [4, 4],
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y !== null ? ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}pp` : ` Tracking desde ${_trackingStart}` } } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => isTracking[ctx.dataIndex] ? ' Em tracking (dados insuficientes)' : ` ${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y.toFixed(2)}pp` } }
+      },
       scales: {
         y: { ticks: { color: '#94a3b8', callback: v => (v>0?'+':'')+v+'pp' }, grid: { color: 'rgba(71,85,105,.3)' } },
         x: { ticks: { color: '#94a3b8', font:{size:10} } }
@@ -1996,7 +2024,7 @@ function buildDeltaBar() {
   });
 }
 
-// ── #7: Barras Empilhadas — protótipo alternativo aos donuts ──
+// ── S7: Barras Empilhadas — Alocação ─────────────────────────
 function buildStackedAlloc() {
   // Barra por classe de ativo
   const barEl = document.getElementById('stackedAllocBar');
@@ -2100,51 +2128,6 @@ function buildGlidePath() {
   });
 }
 
-// ── S13: FIRE Buckets + Equity Weights ────────────────────────
-function buildFireBuckets() {
-  const eqBrl = totalEquityUsd * CAMBIO;
-  // RF split: usar valores reais de DATA.rf em vez de proporções hardcoded
-  const _ipca2040Brl  = DATA.rf?.ipca2040?.valor ?? 0;
-  const _renda2065Brl = DATA.rf?.renda2065?.valor ?? 0;
-  const _ipca2029Brl  = DATA.rf?.ipca2029?.valor ?? 0;
-  charts.fireBuckets = new Chart(document.getElementById('fireBucketsDonut'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Equity', 'IPCA+ Longo (2040)', 'Crypto', 'Renda+ 2065', 'Reserva (2029)'],
-      datasets: [{ data: [eqBrl, _ipca2040Brl, cryptoBrl, _renda2065Brl, _ipca2029Brl].map(v => Math.round(v/totalBrl*100)), backgroundColor: ['#3b82f6','#22c55e','#eab308','#f97316','#06b6d4'], borderWidth: 1, borderColor: '#1e293b' }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font:{size:10} } } }, cutout: '55%' }
-  });
-
-  // Intra-equity actual vs target
-  const swrdActual = (DATA.posicoes.SWRD.qty * DATA.posicoes.SWRD.price) / totalEquityUsd * 100;
-  const avgsActual = (bucketUsd.AVGS) / totalEquityUsd * 100;
-  const avemActual = (bucketUsd.AVEM) / totalEquityUsd * 100;
-  // Alvos intra-equity de DATA.pesosTarget (normalizados para somar 100% dentro do bloco equity)
-  const _eqBuckets = ['SWRD','AVGS','AVEM'];
-  const _eqTotalTarget = _eqBuckets.reduce((s, k) => s + (DATA.pesosTarget[k] || 0), 0);
-  const _swrdAlvo = _eqTotalTarget > 0 ? DATA.pesosTarget.SWRD / _eqTotalTarget * 100 : 50;
-  const _avgsAlvo = _eqTotalTarget > 0 ? DATA.pesosTarget.AVGS / _eqTotalTarget * 100 : 30;
-  const _avemAlvo = _eqTotalTarget > 0 ? DATA.pesosTarget.AVEM / _eqTotalTarget * 100 : 20;
-  charts.equityW = new Chart(document.getElementById('equityWeightsChart'), {
-    type: 'bar',
-    data: {
-      labels: ['SWRD', 'AVGS+transit.', 'AVEM+transit.'],
-      datasets: [
-        { label: 'Atual', data: [swrdActual, avgsActual, avemActual].map(v => +v.toFixed(1)), backgroundColor: 'rgba(59,130,246,.6)' },
-        { label: 'Alvo', data: [+_swrdAlvo.toFixed(0), +_avgsAlvo.toFixed(0), +_avemAlvo.toFixed(0)], backgroundColor: 'rgba(255,255,255,.15)' },
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94a3b8' } } },
-      scales: {
-        y: { ticks: { color: '#94a3b8', callback: v => v+'%' }, grid: { color: 'rgba(71,85,105,.3)' } },
-        x: { ticks: { color: '#94a3b8' } }
-      }
-    }
-  });
-}
 
 // ── S14: Fan Chart ────────────────────────────────────────────
 function buildFanChart() {
@@ -2982,17 +2965,17 @@ function buildInformationRatio() {
     const arColor = (itd.active_return_anual_pct || 0) >= 0 ? 'var(--green)' : 'var(--red)';
     cardsEl.innerHTML = `
       <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
-        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Information Ratio ITD</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Information Ratio (Desde o Início)</div>
         <div style="font-size:1.6rem;font-weight:700;color:${irColor}">${irVal}</div>
         <div style="font-size:.55rem;color:var(--muted);margin-top:2px">${subtitle}</div>
       </div>
       <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
-        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Tracking Error ITD</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Tracking Error (Desde o Início)</div>
         <div style="font-size:1.6rem;font-weight:700;color:var(--yellow)">${teVal}</div>
         <div style="font-size:.55rem;color:var(--muted);margin-top:2px">anualizado (p.p.)</div>
       </div>
       <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
-        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Active Return ITD</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Active Return (Desde o Início)</div>
         <div style="font-size:1.6rem;font-weight:700;color:${arColor}">${arVal}</div>
         <div style="font-size:.55rem;color:var(--muted);margin-top:2px">retorno ativo anualizado</div>
       </div>`;
@@ -5127,74 +5110,104 @@ function buildRfCards() {
   const rf = DATA.rf || {};
   const pisoRenda = DATA.pisos?.pisoTaxaRendaPlus ?? 6.5;
   const pisoIpca  = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
-  const cards = [
+
+  const th = s => `<th style="padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;${s||''}">${arguments[1]||''}</th>`;
+  const thStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px';
+  const tdStyle = 'padding:7px 10px;font-size:.75rem;color:var(--text)';
+  const tdMuted = 'padding:7px 10px;font-size:.72rem;color:var(--muted)';
+
+  // ── RF Rows ──
+  const rfRows = [
     {
-      key: 'ipca2029',
       label: 'IPCA+ 2029',
-      sub1: rf.ipca2029 ? `${rf.ipca2029.cotas != null ? rf.ipca2029.cotas.toFixed(2) + ' cotas · ' : ''}Nubank · Reserva emergência` : 'Nubank · Reserva emergência',
-      sub2: 'Migrar para Selic em 2029',
+      custod: 'Nubank',
       val: rf.ipca2029?.valor,
+      taxa: null,
+      venc: '2029',
+      nota: 'Reserva emergência → Selic em 2029',
+      status: null,
+      statusColor: null,
     },
     {
-      key: 'ipca2040',
       label: 'IPCA+ 2040',
-      sub1: `XP · Taxa ${rf.ipca2040?.taxa != null ? '~' + rf.ipca2040.taxa.toFixed(2) + '%' : '—'} · DCA ativo`,
-      sub2: 'Hold to maturity SEMPRE',
+      custod: 'XP',
       val: rf.ipca2040?.valor,
+      taxa: rf.ipca2040?.taxa,
       taxaFlag: rf.ipca2040?.taxa != null && rf.ipca2040.taxa >= pisoIpca,
+      venc: '2040',
+      nota: 'DCA ativo · Hold to maturity',
+      status: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'verde' : 'amarelo') : null,
+      statusColor: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'var(--green)' : 'var(--yellow)') : null,
     },
     {
-      key: 'renda2065',
       label: 'Renda+ 2065',
-      sub1: rf.renda2065 ? `${rf.renda2065.cotas != null ? rf.renda2065.cotas.toFixed(2) + ' cotas · ' : ''}Nubank · Taxa ${rf.renda2065.taxa != null ? '~' + rf.renda2065.taxa.toFixed(2) + '%' : '—'}` : '—',
-      sub2: `Gatilho venda: ≤${pisoRenda.toFixed(1)}% + 720 dias`,
+      custod: 'Nubank',
       val: rf.renda2065?.valor,
+      taxa: rf.renda2065?.taxa,
+      venc: '2065',
+      nota: (() => {
+        const dg = rf.renda2065?.distancia_gatilho;
+        if (dg && dg.gap_pp != null) return `Gap piso venda: ${dg.gap_pp.toFixed(2)}pp`;
+        return `Gatilho ≤${pisoRenda.toFixed(1)}% + 720 dias`;
+      })(),
+      status: rf.renda2065?.distancia_gatilho?.status || null,
+      statusColor: (() => {
+        const s = rf.renda2065?.distancia_gatilho?.status;
+        return s === 'verde' ? 'var(--green)' : s === 'amarelo' ? 'var(--yellow)' : s ? 'var(--red)' : null;
+      })(),
     },
   ];
-  let html = cards.map(c => {
-    const valStr = c.val != null ? `~R$ ${(c.val/1000).toFixed(0)}k` : '—';
-    const flagStyle = c.taxaFlag ? 'color:var(--green)' : '';
-    let extra = '';
-    // Enrich Renda+ 2065 with duration + MtM + gatilho semáforo
-    if (c.key === 'renda2065') {
-      const dur = rf.renda2065?.duration;
-      const mtm = rf.renda2065?.mtm_impact_1pp;
-      const dg = rf.renda2065?.distancia_gatilho;
-      if (dur || mtm != null || dg) {
-        extra = '<div class="duration-block">';
-        if (dur) {
-          extra += `<div class="dur-row"><span class="dur-label">Duration Macaulay</span><span class="dur-val">${dur.macaulay_anos != null ? dur.macaulay_anos.toFixed(1) + ' anos' : '--'}</span></div>`;
-          extra += `<div class="dur-row"><span class="dur-label">Duration Modificada</span><span class="dur-val">${dur.modificada_anos != null ? dur.modificada_anos.toFixed(1) + ' anos' : '--'}</span></div>`;
-        }
-        if (mtm != null) {
-          extra += `<div class="dur-row"><span class="dur-label">MtM se taxa +1pp</span><span class="dur-val" style="color:var(--red)">${mtm.toFixed(1)}%</span></div>`;
-        }
-        if (dg) {
-          const dgColor = dg.status === 'verde' ? 'var(--green)' : dg.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
-          extra += `<div class="dur-row"><span class="dur-label">Gap vs piso venda</span><span class="dur-val" style="color:${dgColor}">${dg.gap_pp != null ? dg.gap_pp.toFixed(2) + 'pp' : '--'} (${dg.status || '--'})</span></div>`;
-        }
-        extra += '</div>';
-      }
-    }
-    return `<div class="rf-card">
-      <div class="val pv" style="${flagStyle}">${valStr}</div>
-      <div class="lbl">${c.label}</div>
-      <div class="sub">${c.sub1}</div>
-      <div class="sub">${c.sub2}</div>
-      ${extra}
-    </div>`;
-  }).join('');
-  // HODL11 with band visualization
+
+  let html = `<table style="width:100%;border-collapse:collapse;margin-bottom:14px">
+    <thead><tr style="border-bottom:1px solid rgba(71,85,105,.3)">
+      <th style="${thStyle};text-align:left">Instrumento</th>
+      <th style="${thStyle};text-align:left">Custodiante</th>
+      <th style="${thStyle};text-align:right">Valor</th>
+      <th style="${thStyle};text-align:right">Taxa IPCA+</th>
+      <th style="${thStyle};text-align:right">Venc.</th>
+      <th style="${thStyle};text-align:left">Nota</th>
+      <th style="${thStyle};text-align:center">Status</th>
+    </tr></thead><tbody>`;
+
+  rfRows.forEach((r, i) => {
+    const bg = i % 2 === 0 ? 'background:var(--card2)' : '';
+    const valStr = r.val != null ? `~R$ ${(r.val/1000).toFixed(0)}k` : '—';
+    const taxaStr = r.taxa != null ? `~${r.taxa.toFixed(2)}%` : '—';
+    const taxaColor = r.taxaFlag ? 'color:var(--green)' : '';
+    const statusDot = r.status ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${r.statusColor};margin-right:4px"></span>${r.status}` : '—';
+    html += `<tr style="${bg}">
+      <td style="${tdStyle};font-weight:700">${r.label}</td>
+      <td style="${tdMuted}">${r.custod}</td>
+      <td style="${tdStyle};text-align:right" class="pv">${valStr}</td>
+      <td style="${tdStyle};text-align:right;${taxaColor}">${taxaStr}</td>
+      <td style="${tdMuted};text-align:right">${r.venc}</td>
+      <td style="${tdMuted}">${r.nota}</td>
+      <td style="${tdStyle};text-align:center;font-size:.7rem;${r.statusColor ? 'color:'+r.statusColor : ''}">${statusDot}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+
+  // Renda+ 2065 duration detail (compact)
+  const dur = rf.renda2065?.duration;
+  const mtm = rf.renda2065?.mtm_impact_1pp;
+  if (dur || mtm != null) {
+    html += `<div style="font-size:.65rem;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;padding:6px 10px;background:var(--card2);border-radius:6px;margin-bottom:14px">
+      <span style="font-weight:700;color:var(--text)">Renda+ 2065</span>`;
+    if (dur?.macaulay_anos != null) html += `<span>Duration Macaulay: <strong>${dur.macaulay_anos.toFixed(1)} anos</strong></span>`;
+    if (dur?.modificada_anos != null) html += `<span>Modificada: <strong>${dur.modificada_anos.toFixed(1)} anos</strong></span>`;
+    if (mtm != null) html += `<span>MtM +1pp: <strong style="color:var(--red)">${mtm.toFixed(1)}%</strong></span>`;
+    html += `</div>`;
+  }
+
+  // HODL11 com banda visual
   const _banda = DATA.hodl11?.banda;
   let hodlBandHtml = '';
   if (_banda && _banda.min_pct != null) {
-    // Calculate marker position: scale 0% to max_pct+1 to full bar width
     const barMax = Math.max(_banda.max_pct + 1, (_banda.atual_pct || 0) + 0.5);
     const markerPct = (_banda.atual_pct / barMax * 100).toFixed(1);
     const minPct = (_banda.min_pct / barMax * 100).toFixed(1);
     const alvoPct = (_banda.alvo_pct / barMax * 100).toFixed(1);
     const maxPct = (_banda.max_pct / barMax * 100).toFixed(1);
-    // Colored zones: [0, min] = red, [min, max] = green, [max, barMax] = red
     hodlBandHtml = `<div style="position:relative;height:14px;border-radius:4px;margin:8px 0;overflow:visible;background:linear-gradient(90deg,rgba(239,68,68,.2) 0%,rgba(239,68,68,.2) ${minPct}%,rgba(34,197,94,.2) ${minPct}%,rgba(34,197,94,.2) ${maxPct}%,rgba(239,68,68,.2) ${maxPct}%)">
       <div class="hodl-band-marker" style="left:${markerPct}%"></div>
       <div class="hodl-band-label" style="left:${minPct}%">${_banda.min_pct}%</div>
@@ -5203,23 +5216,26 @@ function buildRfCards() {
     </div>
     <div style="font-size:.6rem;color:var(--muted);text-align:center">Atual: ${_banda.atual_pct != null ? _banda.atual_pct.toFixed(1) + '%' : '--'} · Status: <span style="color:${_banda.status === 'verde' ? 'var(--green)' : _banda.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)'}">${_banda.status || '--'}</span></div>`;
   }
-  html += `<div class="rf-card">
-    <div class="val pv" id="hodl11Val">—</div>
-    <div class="lbl">HODL11</div>
-    <div class="sub pv" id="hodl11Sub">— cotas · B3</div>
-    <div class="sub">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Piso 1.5% · Teto 5%</div>
-    ${hodlBandHtml}
-  </div>`;
-  // Crypto legado
+
+  // Cripto: HODL11 + Legado em linha
   const _legadoVal = DATA.cryptoLegado ?? 3000;
-  html += `<div class="rf-card">
-    <div class="val pv">~R$ ${(_legadoVal/1000).toFixed(0)}k</div>
-    <div class="lbl">Crypto Legado</div>
-    <div class="sub">BTC + ETH + BNB + ADA</div>
-    <div class="sub">Não mexer</div>
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">HODL11</div>
+      <div class="pv" id="hodl11Val" style="font-size:1.1rem;font-weight:700">—</div>
+      <div class="pv" id="hodl11Sub" style="font-size:.7rem;color:var(--muted);margin-top:2px">— cotas · B3</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:2px">Alvo ${((DATA.pisos?.cripto_pct ?? 0.03)*100).toFixed(0)}% · Banda 1.5%–5%</div>
+      ${hodlBandHtml}
+    </div>
+    <div style="background:var(--card2);border-radius:8px;padding:12px">
+      <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Crypto Legado</div>
+      <div class="pv" style="font-size:1.1rem;font-weight:700">~R$ ${(_legadoVal/1000).toFixed(0)}k</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:2px">BTC · ETH · BNB · ADA</div>
+      <div style="font-size:.65rem;color:var(--muted);margin-top:2px">Não mexer</div>
+    </div>
   </div>`;
+
   el.innerHTML = html;
-  // Agora que HODL11 foi inserido, atualizar
   renderHodl11();
 }
 
@@ -5588,7 +5604,7 @@ function _initTabCharts(tab) {
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
-    carteira: [buildFireBuckets, buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
+    carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
     fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios,
                buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
@@ -6404,46 +6420,72 @@ function buildDrawdownHistory() {
 // HD-perplexity-review: N2 — ETF COMPOSITION
 // ═══════════════════════════════════════════════════════════════
 function buildEtfComposition() {
-  const el = document.getElementById('etfCompGrid');
+  const regEl = document.getElementById('etfRegionTable');
+  const facEl = document.getElementById('etfFactorTable');
   const sec = document.getElementById('etfCompSection');
-  if (!el || !sec) return;
+  if (!regEl || !facEl || !sec) return;
   const d = DATA.etf_composition;
   if (!d || !d.etfs) { sec.style.display = 'none'; return; }
 
-  const factorColors = { market: '#3b82f6', value: '#f97316', size: '#a855f7', quality: '#22c55e' };
+  const tickers = Object.keys(d.etfs);
   const factorLabels = { market: 'Market', value: 'Value', size: 'Size', quality: 'Quality' };
+  const factorColors = { market: '#3b82f6', value: '#f97316', size: '#a855f7', quality: '#22c55e' };
 
-  let html = '';
-  Object.entries(d.etfs).forEach(([ticker, etf]) => {
-    html += '<div class="etf-comp-card">';
-    html += '<div class="etf-name">' + ticker + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></div>';
-
-    // Regiões
-    if (etf.regioes) {
-      html += '<div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Regiões</div>';
-      Object.entries(etf.regioes).forEach(([reg, pct]) => {
-        const pctPx = Math.round(pct * 100);
-        html += '<div class="etf-comp-bar-row"><span>' + reg + '</span><span>' + pctPx + '%</span></div>';
-        html += '<div class="etf-comp-bar" style="width:' + pctPx + '%;background:rgba(59,130,246,.5)"></div>';
-      });
-    }
-
-    // Fatores
-    if (etf.fatores) {
-      html += '<div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:8px;margin-bottom:4px">Exposição Fatorial</div>';
-      Object.entries(etf.fatores).forEach(([f, v]) => {
-        if (v == null || v === 0) return;
-        const pctPx = Math.round(v * 100);
-        const color = factorColors[f] || '#94a3b8';
-        html += '<div class="etf-comp-bar-row" style="color:var(--text)"><span>' + (factorLabels[f] || f) + '</span><span>' + pctPx + '%</span></div>';
-        html += '<div class="etf-comp-bar" style="width:' + pctPx + '%;background:' + color + ';opacity:0.7"></div>';
-      });
-    }
-
-    html += '</div>';
+  // Collect all unique regions and factors across ETFs
+  const allRegions = [];
+  const allFactors = [];
+  tickers.forEach(t => {
+    const etf = d.etfs[t];
+    if (etf.regioes) Object.keys(etf.regioes).forEach(r => { if (!allRegions.includes(r)) allRegions.push(r); });
+    if (etf.fatores) Object.keys(etf.fatores).forEach(f => { if (!allFactors.includes(f)) allFactors.push(f); });
   });
 
-  el.innerHTML = html;
+  const thStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:right;white-space:nowrap';
+  const thFirstStyle = 'padding:6px 10px;font-size:.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;text-align:left';
+  const tdStyle = 'padding:5px 10px;font-size:.72rem;text-align:right;color:var(--text)';
+  const tdFirstStyle = 'padding:5px 10px;font-size:.72rem;font-weight:700;text-align:left';
+  const tableStyle = 'width:100%;border-collapse:collapse';
+  const trEvenStyle = 'background:var(--card2)';
+
+  // ── Tabela 1: Por Região ──
+  let regHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Por Região</div>';
+  regHtml += '<table style="' + tableStyle + '"><thead><tr>';
+  regHtml += '<th style="' + thFirstStyle + '">ETF</th>';
+  allRegions.forEach(r => { regHtml += '<th style="' + thStyle + '">' + r + '</th>'; });
+  regHtml += '</tr></thead><tbody>';
+  tickers.forEach((t, i) => {
+    const etf = d.etfs[t];
+    regHtml += '<tr' + (i % 2 === 0 ? ' style="' + trEvenStyle + '"' : '') + '>';
+    regHtml += '<td style="' + tdFirstStyle + '">' + t + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></td>';
+    allRegions.forEach(r => {
+      const v = etf.regioes && etf.regioes[r] != null ? Math.round(etf.regioes[r] * 100) : 0;
+      const color = v >= 50 ? '#3b82f6' : v >= 20 ? '#22c55e' : v > 0 ? '#94a3b8' : 'var(--muted)';
+      regHtml += '<td style="' + tdStyle + ';color:' + color + '">' + (v > 0 ? v + '%' : '—') + '</td>';
+    });
+    regHtml += '</tr>';
+  });
+  regHtml += '</tbody></table>';
+  regEl.innerHTML = regHtml;
+
+  // ── Tabela 2: Por Fator ──
+  let facHtml = '<div style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Exposição Fatorial</div>';
+  facHtml += '<table style="' + tableStyle + '"><thead><tr>';
+  facHtml += '<th style="' + thFirstStyle + '">ETF</th>';
+  allFactors.forEach(f => { facHtml += '<th style="' + thStyle + ';color:' + (factorColors[f] || '#94a3b8') + '">' + (factorLabels[f] || f) + '</th>'; });
+  facHtml += '</tr></thead><tbody>';
+  tickers.forEach((t, i) => {
+    const etf = d.etfs[t];
+    facHtml += '<tr' + (i % 2 === 0 ? ' style="' + trEvenStyle + '"' : '') + '>';
+    facHtml += '<td style="' + tdFirstStyle + '">' + t + ' <span style="font-size:.6rem;color:var(--muted);font-weight:400">' + (etf.nome || '') + '</span></td>';
+    allFactors.forEach(f => {
+      const v = etf.fatores && etf.fatores[f] != null ? Math.round(etf.fatores[f] * 100) : 0;
+      const color = factorColors[f] || '#94a3b8';
+      facHtml += '<td style="' + tdStyle + ';color:' + (v > 0 ? color : 'var(--muted)') + '">' + (v > 0 ? v + '%' : '—') + '</td>';
+    });
+    facHtml += '</tr>';
+  });
+  facHtml += '</tbody></table>';
+  facEl.innerHTML = facHtml;
 }
 
 // ═══════════════════════════════════════════════════════════════

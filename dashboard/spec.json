@@ -313,32 +313,6 @@
       "privacy": false
     },
     {
-      "id": "asset-mix-donut",
-      "tab": "portfolio",
-      "label": "Asset Mix — por Classe",
-      "type": "chart-donut",
-      "purpose": "Mostra composição da carteira por classe (equity, RF, cripto) para confirmar se a alocação macro está alinhada ao glide path",
-      "data_fields": [
-        "drift.SWRD",
-        "drift.AVGS",
-        "drift.AVEM",
-        "drift.IPCA",
-        "drift.HODL11"
-      ],
-      "privacy": false
-    },
-    {
-      "id": "alloc-bucket-donut",
-      "tab": "portfolio",
-      "label": "Alocação por Bucket (Donut)",
-      "type": "chart-donut",
-      "purpose": "Mostra alocação por bucket de FIRE (equity / RF / cripto) em donut para leitura visual rápida da distribuição",
-      "data_fields": [
-        "drift"
-      ],
-      "privacy": false
-    },
-    {
       "id": "geo-donut",
       "tab": "portfolio",
       "label": "Exposição Geográfica (Donut)",
@@ -354,7 +328,7 @@
       "tab": "portfolio",
       "label": "Alocação — Barras Empilhadas",
       "type": "chart-bar",
-      "purpose": "Mostra alocação atual em barras empilhadas (equity/RF/cripto/transitório) como protótipo alternativo ao donut para comparação visual",
+      "purpose": "Mostra alocação atual em barras empilhadas (equity/RF/cripto/transitório) — visualização principal de alocação por classe e intra-equity atual vs alvo",
       "data_fields": [
         "drift",
         "pesosTarget"
@@ -365,8 +339,8 @@
       "id": "etf-composicao-regiao",
       "tab": "portfolio",
       "label": "Composição por Região e Fator",
-      "type": "card",
-      "purpose": "Mostra exposição geográfica e factor tilt de cada ETF (SWRD/AVGS/AVEM) para detalhar o que está por trás do bloco equity",
+      "type": "table",
+      "purpose": "Duas tabelas: (1) exposição por região por ETF, (2) exposição fatorial por ETF — detalha composição do bloco equity",
       "data_fields": [
         "etf_composition.etfs.SWRD",
         "etf_composition.etfs.AVGS",

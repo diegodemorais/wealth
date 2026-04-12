@@ -1,14 +1,14 @@
 {
-  "_generated": "2026-04-11T12:25:40",
-  "_generated_brt": "2026-04-11T12:25:40-03:00",
-  "date": "2026-04-11",
+  "_generated": "2026-04-12T08:26:13",
+  "_generated_brt": "2026-04-12T08:26:13-03:00",
+  "date": "2026-04-12",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": "2026-04-11",
+    "precos_yfinance": "2026-04-12",
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-10",
-    "fire_mc": "2026-04-11",
-    "geral": "2026-04-11"
+    "fire_mc": "2026-04-12",
+    "geral": "2026-04-12"
   },
   "cambio": 5.0126,
   "posicoes": {
@@ -1617,7 +1617,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -1870,7 +1870,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -2373,7 +2373,7 @@
     "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
-    "updated": "2026-04-11"
+    "updated": "2026-04-12"
   },
   "shadows": {
     "q1_2026": {
@@ -2423,7 +2423,7 @@
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
-    "updated": "2026-04-11"
+    "updated": "2026-04-12"
   },
   "minilog": [
     {
