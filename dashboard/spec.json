@@ -21,17 +21,26 @@
       "id": "fire",
       "label": "FIRE",
       "job": "Quando posso me aposentar?"
+    },
+    {
+      "id": "retiro",
+      "label": "Retirada",
+      "description": "Mecânicas da aposentadoria: bond pool, guardrails, renda, spending, projeções de ciclo de vida"
     }
   ],
   "blocks": [
-
     {
       "id": "patrimonio-total-hero",
       "tab": "now",
       "label": "Patrimônio Total",
       "type": "kpi-hero",
       "purpose": "Mostra patrimônio financeiro consolidado em R$ e USD para visão geral imediata",
-      "data_fields": ["posicoes", "rf", "hodl11", "cambio"],
+      "data_fields": [
+        "posicoes",
+        "rf",
+        "hodl11",
+        "cambio"
+      ],
       "privacy": true
     },
     {
@@ -40,7 +49,14 @@
       "label": "P(FIRE) — Cenários",
       "type": "kpi-hero",
       "purpose": "Mostra probabilidade de FIRE@53 e FIRE@50 nos 3 cenários (base/favorável/stress) para confirmar se o plano está on track",
-      "data_fields": ["pfire53.base", "pfire53.fav", "pfire53.stress", "pfire50.base", "pfire50.fav", "pfire50.stress"],
+      "data_fields": [
+        "pfire53.base",
+        "pfire53.fav",
+        "pfire53.stress",
+        "pfire50.base",
+        "pfire50.fav",
+        "pfire50.stress"
+      ],
       "global_headline": true,
       "privacy": false
     },
@@ -50,7 +66,12 @@
       "label": "KPIs Primários — S1",
       "type": "kpi",
       "purpose": "Mostra FIRE@50 base, bond pool, drift máximo, wellness score e origem do patrimônio como indicadores rápidos de status",
-      "data_fields": ["pfire50.base", "fire.bond_pool_readiness.anos_gastos", "drift", "premissas.patrimonio_atual"],
+      "data_fields": [
+        "pfire50.base",
+        "fire.bond_pool_readiness.anos_gastos",
+        "drift",
+        "premissas.patrimonio_atual"
+      ],
       "privacy": false
     },
     {
@@ -59,7 +80,11 @@
       "label": "KPIs de Mercado — S2",
       "type": "kpi",
       "purpose": "Mostra BTC/USD, taxa IPCA+, taxa Renda+ 2065 e variações de mercado para contextualizar o ambiente macro-financeiro do dia",
-      "data_fields": ["mercado.cambio_brl_usd", "dca_status.ipca_longo.taxa_atual", "dca_status.renda_plus.taxa_atual"],
+      "data_fields": [
+        "mercado.cambio_brl_usd",
+        "dca_status.ipca_longo.taxa_atual",
+        "dca_status.renda_plus.taxa_atual"
+      ],
       "privacy": false
     },
     {
@@ -68,7 +93,12 @@
       "label": "Time to FIRE — Countdown",
       "type": "kpi",
       "purpose": "Mostra anos restantes para FIRE@53 e barra de progresso patrimonial para responder onde Diego está na jornada",
-      "data_fields": ["premissas.patrimonio_atual", "premissas.patrimonio_gatilho", "premissas.idade_atual", "premissas.idade_fire_alvo"],
+      "data_fields": [
+        "premissas.patrimonio_atual",
+        "premissas.patrimonio_gatilho",
+        "premissas.idade_atual",
+        "premissas.idade_fire_alvo"
+      ],
       "privacy": true
     },
     {
@@ -77,7 +107,11 @@
       "label": "Financial Wellness Score",
       "type": "card",
       "purpose": "Agrega score de saúde da carteira (drift, drawdown, execuções, alocação) com ações recomendadas para dar uma nota operacional ao plano",
-      "data_fields": ["drift", "pfire53.base", "premissas.patrimonio_atual"],
+      "data_fields": [
+        "drift",
+        "pfire53.base",
+        "premissas.patrimonio_atual"
+      ],
       "privacy": false
     },
     {
@@ -86,7 +120,10 @@
       "label": "Savings Rate",
       "type": "kpi",
       "purpose": "Mostra taxa de poupança mensal (aporte/renda) para monitorar disciplina de acumulação",
-      "data_fields": ["premissas.aporte_mensal", "premissas.renda_estimada"],
+      "data_fields": [
+        "premissas.aporte_mensal",
+        "premissas.renda_estimada"
+      ],
       "privacy": true
     },
     {
@@ -95,7 +132,9 @@
       "label": "TER da Carteira",
       "type": "kpi",
       "purpose": "Mostra custo médio ponderado da carteira vs benchmark VWRA para monitorar o arrasto de custos sobre o retorno",
-      "data_fields": ["posicoes"],
+      "data_fields": [
+        "posicoes"
+      ],
       "privacy": false
     },
     {
@@ -104,7 +143,12 @@
       "label": "Factor Signal — AVGS vs SWRD",
       "type": "kpi",
       "purpose": "Mostra excess return de AVGS vs SWRD YTD e desde lançamento para indicar se o factor premium está ativo",
-      "data_fields": ["factor_signal.swrd_ytd_pct", "factor_signal.avgs_ytd_pct", "factor_signal.excess_ytd_pp", "factor_signal.excess_since_launch_pp"],
+      "data_fields": [
+        "factor_signal.swrd_ytd_pct",
+        "factor_signal.avgs_ytd_pct",
+        "factor_signal.excess_ytd_pp",
+        "factor_signal.excess_since_launch_pp"
+      ],
       "privacy": false
     },
     {
@@ -113,7 +157,13 @@
       "label": "Drift Máximo vs Alvo",
       "type": "kpi",
       "purpose": "Mostra o maior desvio individual de qualquer ETF vs target para indicar necessidade de rebalanceamento",
-      "data_fields": ["drift.SWRD", "drift.AVGS", "drift.AVEM", "drift.IPCA", "drift.HODL11"],
+      "data_fields": [
+        "drift.SWRD",
+        "drift.AVGS",
+        "drift.AVEM",
+        "drift.IPCA",
+        "drift.HODL11"
+      ],
       "privacy": false
     },
     {
@@ -122,7 +172,13 @@
       "label": "IPCA+ 2040 — DCA Status",
       "type": "semaforo",
       "purpose": "Mostra se taxa atual do TD IPCA+ 2040 está acima do piso operacional para indicar se o DCA deve estar ativo",
-      "data_fields": ["dca_status.ipca_longo.taxa_atual", "dca_status.ipca_longo.piso", "dca_status.ipca_longo.ativo", "dca_status.ipca_longo.proxima_acao", "pisos.pisoTaxaIpcaLongo"],
+      "data_fields": [
+        "dca_status.ipca_longo.taxa_atual",
+        "dca_status.ipca_longo.piso",
+        "dca_status.ipca_longo.ativo",
+        "dca_status.ipca_longo.proxima_acao",
+        "pisos.pisoTaxaIpcaLongo"
+      ],
       "privacy": false
     },
     {
@@ -131,7 +187,13 @@
       "label": "Renda+ 2065 — Distância do Gatilho",
       "type": "semaforo",
       "purpose": "Mostra distância entre taxa atual do Renda+ 2065 e piso de venda para indicar se a posição tática deve ser mantida",
-      "data_fields": ["dca_status.renda_plus.taxa_atual", "dca_status.renda_plus.piso_venda", "dca_status.renda_plus.gap_pp", "dca_status.renda_plus.proxima_acao", "pisos.pisoVendaRendaPlus"],
+      "data_fields": [
+        "dca_status.renda_plus.taxa_atual",
+        "dca_status.renda_plus.piso_venda",
+        "dca_status.renda_plus.gap_pp",
+        "dca_status.renda_plus.proxima_acao",
+        "pisos.pisoVendaRendaPlus"
+      ],
       "privacy": false
     },
     {
@@ -140,7 +202,12 @@
       "label": "Bond Pool — Cobertura",
       "type": "kpi",
       "purpose": "Mostra anos de gastos cobertos pelo bond pool atual para indicar se a proteção SoRR está sendo construída",
-      "data_fields": ["fire.bond_pool_readiness.valor_atual_brl", "fire.bond_pool_readiness.anos_gastos", "fire.bond_pool_readiness.meta_anos", "fire.bond_pool_readiness.status"],
+      "data_fields": [
+        "fire.bond_pool_readiness.valor_atual_brl",
+        "fire.bond_pool_readiness.anos_gastos",
+        "fire.bond_pool_readiness.meta_anos",
+        "fire.bond_pool_readiness.status"
+      ],
       "privacy": true
     },
     {
@@ -149,7 +216,16 @@
       "label": "HODL11 — Status e Banda",
       "type": "semaforo",
       "purpose": "Mostra posição atual do HODL11 e semáforo de banda (piso 1.5% / alvo 3% / teto 5%) para sinalizar se está na zona operacional",
-      "data_fields": ["hodl11.qty", "hodl11.preco", "hodl11.valor", "hodl11.banda.min_pct", "hodl11.banda.alvo_pct", "hodl11.banda.max_pct", "hodl11.banda.atual_pct", "hodl11.banda.status"],
+      "data_fields": [
+        "hodl11.qty",
+        "hodl11.preco",
+        "hodl11.valor",
+        "hodl11.banda.min_pct",
+        "hodl11.banda.alvo_pct",
+        "hodl11.banda.max_pct",
+        "hodl11.banda.atual_pct",
+        "hodl11.banda.status"
+      ],
       "privacy": true
     },
     {
@@ -158,7 +234,12 @@
       "label": "Macro — Selic / Fed Funds / Spread",
       "type": "semaforo",
       "purpose": "Exibe semáforos de Selic, Fed Funds e spread para sinalizar o regime de juros e impacto nos gatilhos de DCA",
-      "data_fields": ["macro.selic_meta", "macro.fed_funds", "macro.spread_selic_ff", "macro.plano_status.status"],
+      "data_fields": [
+        "macro.selic_meta",
+        "macro.fed_funds",
+        "macro.spread_selic_ff",
+        "macro.plano_status.status"
+      ],
       "privacy": false
     },
     {
@@ -167,7 +248,12 @@
       "label": "Exposição Cambial BRL/USD",
       "type": "gauge",
       "purpose": "Mostra percentual do portfólio exposto ao USD vs BRL para monitorar concentração cambial",
-      "data_fields": ["macro.exposicao_cambial_pct", "concentracao_brasil.brasil_pct", "concentracao_brasil.total_portfolio_brl", "cambio"],
+      "data_fields": [
+        "macro.exposicao_cambial_pct",
+        "concentracao_brasil.brasil_pct",
+        "concentracao_brasil.total_portfolio_brl",
+        "cambio"
+      ],
       "privacy": false
     },
     {
@@ -176,7 +262,9 @@
       "label": "Stress Test — Tornado",
       "type": "chart-bar-horizontal",
       "purpose": "Mostra impacto de variáveis adversas sobre P(FIRE) para identificar os principais riscos do plano",
-      "data_fields": ["tornado"],
+      "data_fields": [
+        "tornado"
+      ],
       "privacy": false
     },
     {
@@ -185,17 +273,27 @@
       "label": "Câmbio BRL/USD",
       "type": "kpi",
       "purpose": "Mostra cotação spot BRL/USD e variação MTD para contextualizar impacto cambial nos aportes",
-      "data_fields": ["cambio", "mercado.cambio_brl_usd", "mercado.cambio_mtd_pct"],
+      "data_fields": [
+        "cambio",
+        "mercado.cambio_brl_usd",
+        "mercado.cambio_mtd_pct"
+      ],
       "privacy": false
     },
-
     {
       "id": "drift-semaforo-etf",
       "tab": "portfolio",
       "label": "Drift por ETF",
       "type": "semaforo",
       "purpose": "Mostra desvio de cada ETF vs target IPS para indicar qual bucket priorizar no próximo aporte",
-      "data_fields": ["drift.SWRD", "drift.AVGS", "drift.AVEM", "drift.IPCA", "drift.HODL11", "pesosTarget"],
+      "data_fields": [
+        "drift.SWRD",
+        "drift.AVGS",
+        "drift.AVEM",
+        "drift.IPCA",
+        "drift.HODL11",
+        "pesosTarget"
+      ],
       "privacy": false
     },
     {
@@ -204,7 +302,14 @@
       "label": "Intra-Equity — Pesos vs Alvo",
       "type": "chart-bar",
       "purpose": "Mostra percentual atual de SWRD/AVGS/AVEM vs target 50/30/20 para indicar qual bucket requer rebalanceamento",
-      "data_fields": ["drift.SWRD", "drift.AVGS", "drift.AVEM", "pesosTarget.SWRD", "pesosTarget.AVGS", "pesosTarget.AVEM"],
+      "data_fields": [
+        "drift.SWRD",
+        "drift.AVGS",
+        "drift.AVEM",
+        "pesosTarget.SWRD",
+        "pesosTarget.AVGS",
+        "pesosTarget.AVEM"
+      ],
       "privacy": false
     },
     {
@@ -213,7 +318,13 @@
       "label": "Asset Mix — por Classe",
       "type": "chart-donut",
       "purpose": "Mostra composição da carteira por classe (equity, RF, cripto) para confirmar se a alocação macro está alinhada ao glide path",
-      "data_fields": ["drift.SWRD", "drift.AVGS", "drift.AVEM", "drift.IPCA", "drift.HODL11"],
+      "data_fields": [
+        "drift.SWRD",
+        "drift.AVGS",
+        "drift.AVEM",
+        "drift.IPCA",
+        "drift.HODL11"
+      ],
       "privacy": false
     },
     {
@@ -222,7 +333,9 @@
       "label": "Alocação por Bucket (Donut)",
       "type": "chart-donut",
       "purpose": "Mostra alocação por bucket de FIRE (equity / RF / cripto) em donut para leitura visual rápida da distribuição",
-      "data_fields": ["drift"],
+      "data_fields": [
+        "drift"
+      ],
       "privacy": false
     },
     {
@@ -231,7 +344,9 @@
       "label": "Exposição Geográfica (Donut)",
       "type": "chart-donut",
       "purpose": "Mostra distribuição geográfica da carteira equity (US / Developed ex-US / EM / Brasil) para monitorar diversificação regional",
-      "data_fields": ["etf_composition.etfs"],
+      "data_fields": [
+        "etf_composition.etfs"
+      ],
       "privacy": false
     },
     {
@@ -240,7 +355,10 @@
       "label": "Alocação — Barras Empilhadas",
       "type": "chart-bar",
       "purpose": "Mostra alocação atual em barras empilhadas (equity/RF/cripto/transitório) como protótipo alternativo ao donut para comparação visual",
-      "data_fields": ["drift", "pesosTarget"],
+      "data_fields": [
+        "drift",
+        "pesosTarget"
+      ],
       "privacy": false
     },
     {
@@ -249,7 +367,11 @@
       "label": "Composição por Região e Fator",
       "type": "card",
       "purpose": "Mostra exposição geográfica e factor tilt de cada ETF (SWRD/AVGS/AVEM) para detalhar o que está por trás do bloco equity",
-      "data_fields": ["etf_composition.etfs.SWRD", "etf_composition.etfs.AVGS", "etf_composition.etfs.AVEM"],
+      "data_fields": [
+        "etf_composition.etfs.SWRD",
+        "etf_composition.etfs.AVGS",
+        "etf_composition.etfs.AVEM"
+      ],
       "privacy": false
     },
     {
@@ -258,7 +380,11 @@
       "label": "Posições — ETFs Internacionais",
       "type": "table",
       "purpose": "Lista todos os ETFs IBKR com quantidade, preço médio, preço atual e bucket para visualizar o estado das posições individuais",
-      "data_fields": ["posicoes", "cambio", "timestamps.posicoes_ibkr"],
+      "data_fields": [
+        "posicoes",
+        "cambio",
+        "timestamps.posicoes_ibkr"
+      ],
       "privacy": true
     },
     {
@@ -267,7 +393,13 @@
       "label": "Base de Custo — por Bucket",
       "type": "table",
       "purpose": "Mostra custo médio consolidado e ganho latente por bucket (SWRD/AVGS/AVEM) para informar decisões de TLH e rebalanceamento",
-      "data_fields": ["posicoes", "drift.SWRD", "drift.AVGS", "drift.AVEM", "cambio"],
+      "data_fields": [
+        "posicoes",
+        "drift.SWRD",
+        "drift.AVGS",
+        "drift.AVEM",
+        "cambio"
+      ],
       "privacy": true
     },
     {
@@ -276,7 +408,12 @@
       "label": "Calculadora de Aporte",
       "type": "slider",
       "purpose": "Permite inserir valor de aporte e calcular a distribuição por ETF seguindo as regras de rebalanceamento para otimizar cada aporte sem vender",
-      "data_fields": ["drift", "pesosTarget", "posicoes", "premissas.aporte_mensal"],
+      "data_fields": [
+        "drift",
+        "pesosTarget",
+        "posicoes",
+        "premissas.aporte_mensal"
+      ],
       "privacy": false
     },
     {
@@ -285,7 +422,10 @@
       "label": "Últimas Operações",
       "type": "table",
       "purpose": "Mostra as operações mais recentes executadas na carteira para acompanhar histórico de transações recentes",
-      "data_fields": ["timeline.labels", "timeline.values"],
+      "data_fields": [
+        "timeline.labels",
+        "timeline.values"
+      ],
       "privacy": false
     },
     {
@@ -294,7 +434,9 @@
       "label": "TLH Monitor — Lotes e P&L",
       "type": "table",
       "purpose": "Lista lotes transitórios com P&L em USD e substituto UCITS alvo para identificar oportunidades de tax-loss harvesting",
-      "data_fields": ["tlh"],
+      "data_fields": [
+        "tlh"
+      ],
       "privacy": true
     },
     {
@@ -303,7 +445,10 @@
       "label": "IR Diferido por ETF",
       "type": "table",
       "purpose": "Mostra passivo fiscal diferido (IR 15% sobre ganho nominal BRL) por ETF para dimensionar o custo de saída em rebalanceamentos",
-      "data_fields": ["tax.ir_diferido_total_brl", "tax.ir_por_etf"],
+      "data_fields": [
+        "tax.ir_diferido_total_brl",
+        "tax.ir_por_etf"
+      ],
       "privacy": true
     },
     {
@@ -312,7 +457,15 @@
       "label": "Renda Fixa — Posições",
       "type": "table",
       "purpose": "Mostra inventário completo de RF (IPCA+ 2029, IPCA+ 2040, Renda+ 2065) com valor, taxa e custo base",
-      "data_fields": ["rf.ipca2029.valor", "rf.ipca2029.taxa", "rf.ipca2040.valor", "rf.ipca2040.taxa", "rf.renda2065.valor", "rf.renda2065.taxa", "concentracao_brasil.composicao.rf_total_brl"],
+      "data_fields": [
+        "rf.ipca2029.valor",
+        "rf.ipca2029.taxa",
+        "rf.ipca2040.valor",
+        "rf.ipca2040.taxa",
+        "rf.renda2065.valor",
+        "rf.renda2065.taxa",
+        "concentracao_brasil.composicao.rf_total_brl"
+      ],
       "privacy": true
     },
     {
@@ -321,17 +474,25 @@
       "label": "Duration — Renda+ 2065",
       "type": "card",
       "purpose": "Mostra duration Macaulay/modificada e impacto de 1pp de variação para quantificar risco mark-to-market da posição tática",
-      "data_fields": ["rf.renda2065.duration.macaulay_anos", "rf.renda2065.duration.modificada_anos", "rf.renda2065.mtm_impact_1pp", "rf.renda2065.taxa", "rf.renda2065.valor"],
+      "data_fields": [
+        "rf.renda2065.duration.macaulay_anos",
+        "rf.renda2065.duration.modificada_anos",
+        "rf.renda2065.mtm_impact_1pp",
+        "rf.renda2065.taxa",
+        "rf.renda2065.valor"
+      ],
       "privacy": true
     },
-
     {
       "id": "evolucao-carteira",
       "tab": "performance",
       "label": "Evolução Patrimonial",
       "type": "chart-line",
       "purpose": "Mostra trajetória histórica do patrimônio financeiro desde 2021 para acompanhar ritmo de acumulação ao longo do tempo",
-      "data_fields": ["timeline.labels", "timeline.values"],
+      "data_fields": [
+        "timeline.labels",
+        "timeline.values"
+      ],
       "privacy": false
     },
     {
@@ -340,7 +501,10 @@
       "label": "Backtest Histórico — Métricas",
       "type": "table",
       "purpose": "Mostra CAGR backtest, volatilidade, Sharpe, Sortino e max drawdown do Target vs VWRA para quantificar vantagem histórica da carteira fatorial",
-      "data_fields": ["backtest.metrics.target", "backtest.metrics.shadowA"],
+      "data_fields": [
+        "backtest.metrics.target",
+        "backtest.metrics.shadowA"
+      ],
       "privacy": false
     },
     {
@@ -349,7 +513,12 @@
       "label": "Shadow Portfolios — Retorno Acumulado",
       "type": "chart-line",
       "purpose": "Mostra retorno acumulado do Target vs VWRA e outros shadows para responder se a complexidade fatorial gera alpha vs índice simples",
-      "data_fields": ["backtest.dates", "backtest.target", "backtest.shadowA", "shadows"],
+      "data_fields": [
+        "backtest.dates",
+        "backtest.target",
+        "backtest.shadowA",
+        "shadows"
+      ],
       "privacy": false
     },
     {
@@ -358,7 +527,12 @@
       "label": "Alpha ITD vs SWRD",
       "type": "kpi",
       "purpose": "Mostra alpha acumulado da carteira vs SWRD (CAGR backtest) para monitorar se o tilt fatorial está gerando retorno adicional",
-      "data_fields": ["factor_signal.excess_ytd_pp", "factor_signal.excess_since_launch_pp", "backtest.metrics.target.cagr", "backtest.metrics.shadowA.cagr"],
+      "data_fields": [
+        "factor_signal.excess_ytd_pp",
+        "factor_signal.excess_since_launch_pp",
+        "backtest.metrics.target.cagr",
+        "backtest.metrics.shadowA.cagr"
+      ],
       "privacy": false
     },
     {
@@ -367,7 +541,11 @@
       "label": "CAGR Patrimonial vs TWR",
       "type": "kpi",
       "purpose": "Exibe CAGR patrimonial (inclui aportes) e CAGR backtest (ex-aportes) lado a lado para distinguir crescimento de riqueza de performance dos ETFs",
-      "data_fields": ["backtest.metrics.target.cagr", "premissas.patrimonio_atual", "cambio"],
+      "data_fields": [
+        "backtest.metrics.target.cagr",
+        "premissas.patrimonio_atual",
+        "cambio"
+      ],
       "privacy": false
     },
     {
@@ -376,7 +554,12 @@
       "label": "Backtest Longo — Regime 5-7",
       "type": "chart-line",
       "purpose": "Mostra retorno acumulado em 20+ anos com proxies acadêmicos para confirmar se o alpha fatorial é persistente ao longo do tempo",
-      "data_fields": ["backtestR5.dates", "backtestR5.target", "backtestR5.shadowA", "backtestR5.metrics"],
+      "data_fields": [
+        "backtestR5.dates",
+        "backtestR5.target",
+        "backtestR5.shadowA",
+        "backtestR5.metrics"
+      ],
       "privacy": false
     },
     {
@@ -385,7 +568,9 @@
       "label": "Factor Loadings — FF5 + Momentum",
       "type": "chart-bar-horizontal",
       "purpose": "Mostra exposição de cada ETF a Mkt-RF, SMB, HML, RMW, CMA, Mom para confirmar se o tilt fatorial pretendido está sendo entregue",
-      "data_fields": ["factor_loadings"],
+      "data_fields": [
+        "factor_loadings"
+      ],
       "privacy": false
     },
     {
@@ -394,7 +579,11 @@
       "label": "Rolling 12m — AVGS vs SWRD",
       "type": "chart-line",
       "purpose": "Mostra retorno relativo acumulado de AVGS vs SWRD em janela de 12 meses para monitorar se o factor premium está sendo capturado",
-      "data_fields": ["factor_rolling.dates", "factor_rolling.avgs_vs_swrd_12m", "factor_rolling.threshold"],
+      "data_fields": [
+        "factor_rolling.dates",
+        "factor_rolling.avgs_vs_swrd_12m",
+        "factor_rolling.threshold"
+      ],
       "privacy": false
     },
     {
@@ -403,7 +592,12 @@
       "label": "Decomposição de Retorno",
       "type": "waterfall",
       "purpose": "Decompõe crescimento patrimonial em aportes, retorno USD e variação cambial para separar alpha real de efeito de aportes e câmbio",
-      "data_fields": ["attribution.aportes", "attribution.retornoUsd", "attribution.cambio", "attribution.crescReal"],
+      "data_fields": [
+        "attribution.aportes",
+        "attribution.retornoUsd",
+        "attribution.cambio",
+        "attribution.crescReal"
+      ],
       "privacy": false
     },
     {
@@ -412,7 +606,10 @@
       "label": "Heatmap — Retornos Mensais",
       "type": "table",
       "purpose": "Mostra retornos mensais em heatmap de cores para visualizar sazonalidade e identificar meses de underperformance",
-      "data_fields": ["timeline.labels", "timeline.values"],
+      "data_fields": [
+        "timeline.labels",
+        "timeline.values"
+      ],
       "privacy": false
     },
     {
@@ -421,7 +618,10 @@
       "label": "Rolling Sharpe 12m",
       "type": "chart-line",
       "purpose": "Mostra Sharpe ratio em janela móvel de 12 meses para monitorar evolução da qualidade de retorno ajustado ao risco",
-      "data_fields": ["timeline.labels", "timeline.values"],
+      "data_fields": [
+        "timeline.labels",
+        "timeline.values"
+      ],
       "privacy": false
     },
     {
@@ -430,7 +630,11 @@
       "label": "Information Ratio vs VWRA",
       "type": "chart-line",
       "purpose": "Mostra information ratio rolling vs VWRA para quantificar consistência do alpha gerado pelo tilt fatorial",
-      "data_fields": ["backtest.dates", "backtest.target", "backtest.shadowA"],
+      "data_fields": [
+        "backtest.dates",
+        "backtest.target",
+        "backtest.shadowA"
+      ],
       "privacy": false
     },
     {
@@ -439,7 +643,11 @@
       "label": "Drawdown Histórico",
       "type": "chart-area",
       "purpose": "Mostra série histórica de drawdown para avaliar tail risk realizado e comparar com guardrails aprovados",
-      "data_fields": ["drawdown_history.dates", "drawdown_history.drawdown_pct", "drawdown_history.max_drawdown"],
+      "data_fields": [
+        "drawdown_history.dates",
+        "drawdown_history.drawdown_pct",
+        "drawdown_history.max_drawdown"
+      ],
       "privacy": false
     },
     {
@@ -448,7 +656,12 @@
       "label": "Premissas vs Realizado",
       "type": "card",
       "purpose": "Compara retorno, aporte e savings rate realizados com premissas do modelo FIRE para validar se o plano está sendo executado conforme modelado",
-      "data_fields": ["premissas_vs_realizado", "premissas.retorno_equity_base", "premissas.aporte_mensal", "premissas.renda_estimada"],
+      "data_fields": [
+        "premissas_vs_realizado",
+        "premissas.retorno_equity_base",
+        "premissas.aporte_mensal",
+        "premissas.renda_estimada"
+      ],
       "privacy": true
     },
     {
@@ -457,7 +670,12 @@
       "label": "HODL11 — P&L e Custo Médio",
       "type": "kpi",
       "purpose": "Mostra P&L absoluto e percentual do HODL11 vs preço médio para monitorar resultado da posição tática de cripto",
-      "data_fields": ["hodl11.preco", "hodl11.preco_medio", "hodl11.pnl_brl", "hodl11.pnl_pct"],
+      "data_fields": [
+        "hodl11.preco",
+        "hodl11.preco_medio",
+        "hodl11.pnl_brl",
+        "hodl11.pnl_pct"
+      ],
       "privacy": true
     },
     {
@@ -466,17 +684,25 @@
       "label": "Fee Analysis — Custo vs Alpha",
       "type": "table",
       "purpose": "Mostra TER, custo projetado e alpha líquido por alternativa para responder se o custo extra da carteira fatorial é justificado",
-      "data_fields": ["premissas.patrimonio_atual", "tlh"],
+      "data_fields": [
+        "premissas.patrimonio_atual",
+        "tlh"
+      ],
       "privacy": false
     },
-
     {
       "id": "fire-trilha",
       "tab": "fire",
       "label": "Trilha FIRE — Realizado vs Projetado",
       "type": "chart-line",
       "purpose": "Mostra trajetória patrimonial realizada versus projeção linear para a meta para responder se o ritmo de acúmulo está acima ou abaixo do plano",
-      "data_fields": ["fire_trilha.dates", "fire_trilha.trilha_brl", "fire_trilha.realizado_brl", "fire_trilha.meta_fire_brl", "fire_trilha.meta_fire_date"],
+      "data_fields": [
+        "fire_trilha.dates",
+        "fire_trilha.trilha_brl",
+        "fire_trilha.realizado_brl",
+        "fire_trilha.meta_fire_brl",
+        "fire_trilha.meta_fire_date"
+      ],
       "privacy": true
     },
     {
@@ -485,7 +711,14 @@
       "label": "Projeção Patrimônio P10/P50/P90",
       "type": "fan-chart",
       "purpose": "Mostra fan chart do patrimônio projetado em percentis P10/P50/P90 para visualizar o range de desfechos possíveis do plano",
-      "data_fields": ["scenario_comparison", "premissas.patrimonio_atual", "premissas.patrimonio_gatilho", "premissas.idade_atual", "premissas.idade_fire_alvo", "spendingSmile"],
+      "data_fields": [
+        "scenario_comparison",
+        "premissas.patrimonio_atual",
+        "premissas.patrimonio_gatilho",
+        "premissas.idade_atual",
+        "premissas.idade_fire_alvo",
+        "spendingSmile"
+      ],
       "privacy": true
     },
     {
@@ -494,7 +727,10 @@
       "label": "FIRE@53 vs FIRE@50 — Comparação",
       "type": "table",
       "purpose": "Compara os dois cenários de FIRE date em patrimônio mediano, P10/P90 e P(sucesso) para quantificar o custo de antecipar a aposentadoria",
-      "data_fields": ["scenario_comparison.fire53", "scenario_comparison.fire50"],
+      "data_fields": [
+        "scenario_comparison.fire53",
+        "scenario_comparison.fire50"
+      ],
       "privacy": true
     },
     {
@@ -503,7 +739,13 @@
       "label": "FIRE Matrix — P(Sucesso) × Gasto",
       "type": "table",
       "purpose": "Mostra P(FIRE) por combinação de patrimônio e gasto anual para apresentar o FIRE number como superfície de decisão, não ponto único",
-      "data_fields": ["fire_matrix.matrix", "fire_matrix.cenarios", "fire_matrix.swrs", "premissas.custo_vida_base", "premissas.patrimonio_gatilho"],
+      "data_fields": [
+        "fire_matrix.matrix",
+        "fire_matrix.cenarios",
+        "fire_matrix.swrs",
+        "premissas.custo_vida_base",
+        "premissas.patrimonio_gatilho"
+      ],
       "privacy": false
     },
     {
@@ -512,43 +754,61 @@
       "label": "Sensibilidade P(FIRE) × Spending",
       "type": "chart-line",
       "purpose": "Mostra como P(FIRE) varia conforme custo de vida aumenta para identificar o nível de gasto máximo sustentável",
-      "data_fields": ["spendingSensibilidade"],
+      "data_fields": [
+        "spendingSensibilidade"
+      ],
       "privacy": false
     },
     {
       "id": "guardrails-retirada",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Guardrails de Retirada",
       "type": "table",
       "purpose": "Mostra níveis de corte de gasto por faixa de drawdown para definir o spending floor e ceiling operacional na decumulação",
-      "data_fields": ["guardrails", "gasto_piso", "premissas.custo_vida_base"],
+      "data_fields": [
+        "guardrails",
+        "gasto_piso",
+        "premissas.custo_vida_base"
+      ],
       "privacy": true
     },
     {
       "id": "swr-percentis",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "SWR no FIRE Day — Percentis",
       "type": "kpi",
       "purpose": "Mostra SWR implícita nos percentis P10/P50/P90 de patrimônio no FIRE day para quantificar risco de depleção nos diferentes cenários",
-      "data_fields": ["fire_swr_percentis.swr_p10_pct", "fire_swr_percentis.swr_p50_pct", "fire_swr_percentis.swr_p90_pct", "premissas.custo_vida_base"],
+      "data_fields": [
+        "fire_swr_percentis.swr_p10_pct",
+        "fire_swr_percentis.swr_p50_pct",
+        "fire_swr_percentis.swr_p90_pct",
+        "premissas.custo_vida_base"
+      ],
       "privacy": true
     },
     {
       "id": "spending-breakdown",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Spending — Essenciais vs Discricionários",
       "type": "card",
       "purpose": "Mostra decomposição do gasto entre must-spend e like-spend para identificar a parcela compressível em cenários adversos",
-      "data_fields": ["spending_breakdown"],
+      "data_fields": [
+        "spending_breakdown"
+      ],
       "privacy": true
     },
     {
       "id": "income-fases",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Renda na Aposentadoria — Fases",
       "type": "table",
       "purpose": "Mostra estrutura de renda por fase (Go-Go/Slow-Go/No-Go) com spending smile para visualizar como o fluxo de caixa evolui na decumulação",
-      "data_fields": ["spendingSmile", "premissas.inss_anual", "premissas.inss_inicio_ano", "premissas.custo_vida_base"],
+      "data_fields": [
+        "spendingSmile",
+        "premissas.inss_anual",
+        "premissas.inss_inicio_ano",
+        "premissas.custo_vida_base"
+      ],
       "privacy": true
     },
     {
@@ -557,25 +817,45 @@
       "label": "Glide Path — Alocação por Idade",
       "type": "chart-area",
       "purpose": "Mostra evolução planejada da alocação (equity, IPCA longo/curto, Renda+, cripto) ao longo das idades para confirmar se a transição acumulação→decumulação está estruturada",
-      "data_fields": ["glide.idades", "glide.equity", "glide.ipca_longo", "glide.ipca_curto", "glide.hodl11", "glide.renda_plus", "premissas.idade_atual", "premissas.idade_fire_alvo"],
+      "data_fields": [
+        "glide.idades",
+        "glide.equity",
+        "glide.ipca_longo",
+        "glide.ipca_curto",
+        "glide.hodl11",
+        "glide.renda_plus",
+        "premissas.idade_atual",
+        "premissas.idade_fire_alvo"
+      ],
       "privacy": false
     },
     {
       "id": "bond-pool-readiness",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Bond Pool — Readiness Detail",
       "type": "gauge",
       "purpose": "Mostra composição e cobertura do bond pool (anos de gastos) vs meta de 7 anos para confirmar proteção contra sequence of returns risk",
-      "data_fields": ["fire.bond_pool_readiness.valor_atual_brl", "fire.bond_pool_readiness.anos_gastos", "fire.bond_pool_readiness.meta_anos", "fire.bond_pool_readiness.composicao"],
+      "data_fields": [
+        "fire.bond_pool_readiness.valor_atual_brl",
+        "fire.bond_pool_readiness.anos_gastos",
+        "fire.bond_pool_readiness.meta_anos",
+        "fire.bond_pool_readiness.composicao"
+      ],
       "privacy": true
     },
     {
       "id": "bond-pool-runway",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Bond Pool — Projeção até FIRE Day",
       "type": "chart-area",
       "purpose": "Mostra evolução projetada do bond pool até 2040 e cobertura pós-FIRE para confirmar se chegará ao alvo e sustentará os primeiros anos",
-      "data_fields": ["bond_pool_runway.anos_pre_fire", "bond_pool_runway.pool_total_brl", "bond_pool_runway.alvo_pool_brl_2040", "bond_pool_runway.anos_cobertura_pos_fire", "bond_pool_runway.custo_vida_anual"],
+      "data_fields": [
+        "bond_pool_runway.anos_pre_fire",
+        "bond_pool_runway.pool_total_brl",
+        "bond_pool_runway.alvo_pool_brl_2040",
+        "bond_pool_runway.anos_cobertura_pos_fire",
+        "bond_pool_runway.custo_vida_anual"
+      ],
       "privacy": true
     },
     {
@@ -584,7 +864,14 @@
       "label": "Simulador FIRE — Interativo",
       "type": "slider",
       "purpose": "Permite ajustar aporte mensal, retorno real e custo de vida para simular em qual ano o FIRE se torna viável",
-      "data_fields": ["premissas.patrimonio_atual", "premissas.aporte_mensal", "premissas.custo_vida_base", "premissas.retorno_equity_base", "premissas.idade_atual", "pfire53.base"],
+      "data_fields": [
+        "premissas.patrimonio_atual",
+        "premissas.aporte_mensal",
+        "premissas.custo_vida_base",
+        "premissas.retorno_equity_base",
+        "premissas.idade_atual",
+        "pfire53.base"
+      ],
       "privacy": true
     },
     {
@@ -593,7 +880,12 @@
       "label": "What-If Scenarios — Gasto vs P(FIRE)",
       "type": "slider",
       "purpose": "Mostra P(sucesso) e patrimônio necessário para dado custo de vida em cada cenário para responder o trade-off entre gasto e segurança na decumulação",
-      "data_fields": ["fire_matrix.matrix", "fire_matrix.cenarios", "premissas.custo_vida_base", "premissas.swr_gatilho"],
+      "data_fields": [
+        "fire_matrix.matrix",
+        "fire_matrix.cenarios",
+        "premissas.custo_vida_base",
+        "premissas.swr_gatilho"
+      ],
       "privacy": false
     },
     {
@@ -602,7 +894,12 @@
       "label": "Stress Test MC — Bear Market",
       "type": "slider",
       "purpose": "Mostra impacto de choque de mercado no P(FIRE) para responder quanto de queda o plano suporta sem comprometer a aposentadoria",
-      "data_fields": ["premissas.patrimonio_atual", "pfire53.base", "pfire53.stress", "premissas.patrimonio_gatilho"],
+      "data_fields": [
+        "premissas.patrimonio_atual",
+        "pfire53.base",
+        "pfire53.stress",
+        "premissas.patrimonio_gatilho"
+      ],
       "privacy": true
     },
     {
@@ -611,7 +908,12 @@
       "label": "Earliest FIRE Date",
       "type": "kpi",
       "purpose": "Mostra o ano e idade mais cedo em que P(FIRE) ≥ 85% para identificar janela de aposentadoria além do plano base",
-      "data_fields": ["earliest_fire.ano", "earliest_fire.idade", "earliest_fire.pfire", "premissas.idade_fire_aspiracional"],
+      "data_fields": [
+        "earliest_fire.ano",
+        "earliest_fire.idade",
+        "earliest_fire.pfire",
+        "premissas.idade_fire_aspiracional"
+      ],
       "privacy": false
     },
     {
@@ -620,7 +922,11 @@
       "label": "Sensibilidade P(FIRE) × Aporte",
       "type": "chart-line",
       "purpose": "Mostra como P(FIRE@53) varia conforme o aporte mensal muda para identificar o aporte mínimo necessário",
-      "data_fields": ["fire_aporte_sensitivity.aportes_brl", "fire_aporte_sensitivity.pfire_2040", "fire_aporte_sensitivity.aporte_base"],
+      "data_fields": [
+        "fire_aporte_sensitivity.aportes_brl",
+        "fire_aporte_sensitivity.pfire_2040",
+        "fire_aporte_sensitivity.aporte_base"
+      ],
       "privacy": false
     },
     {
@@ -629,25 +935,38 @@
       "label": "Tornado — Sensibilidade por Variável",
       "type": "chart-bar-horizontal",
       "purpose": "Mostra quais variáveis têm maior impacto no P(FIRE) para concentrar esforço de otimização nas que mais importam",
-      "data_fields": ["tornado"],
+      "data_fields": [
+        "tornado"
+      ],
       "privacy": false
     },
     {
       "id": "income-lifecycle",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Projeção de Renda — Ciclo de Vida",
       "type": "chart-line",
       "purpose": "Mostra projeção de renda e gasto de 2026 a 2077 com spending smile para confirmar sustentabilidade do plano ao longo de todo o ciclo de vida",
-      "data_fields": ["spendingSmile", "premissas.inss_anual", "premissas.inss_inicio_ano", "premissas.custo_vida_base", "premissas.idade_atual", "premissas.idade_fire_alvo"],
+      "data_fields": [
+        "spendingSmile",
+        "premissas.inss_anual",
+        "premissas.inss_inicio_ano",
+        "premissas.custo_vida_base",
+        "premissas.idade_atual",
+        "premissas.idade_fire_alvo"
+      ],
       "privacy": true
     },
     {
       "id": "sankey-cashflow",
-      "tab": "fire",
+      "tab": "retiro",
       "label": "Sankey — Fluxo de Caixa Anual",
       "type": "chart-area",
       "purpose": "Mostra fluxo estimado entre renda, impostos, hipoteca, aportes e custo de vida para visualizar como a renda corrente se distribui",
-      "data_fields": ["premissas.renda_estimada", "spending_breakdown", "premissas.aporte_mensal"],
+      "data_fields": [
+        "premissas.renda_estimada",
+        "spending_breakdown",
+        "premissas.aporte_mensal"
+      ],
       "privacy": true
     },
     {
@@ -656,7 +975,10 @@
       "label": "Eventos de Vida — Impacto no Plano",
       "type": "table",
       "purpose": "Mostra eventos planejados (casamento, filho) e seus impactos no custo de vida e P(FIRE) para identificar gatilhos de recalibração do plano",
-      "data_fields": ["lumpy_events.eventos", "lumpy_events.base.pfire_2040"],
+      "data_fields": [
+        "lumpy_events.eventos",
+        "lumpy_events.base.pfire_2040"
+      ],
       "privacy": false
     },
     {
@@ -665,7 +987,10 @@
       "label": "Lumpy Events — Gastos Grandes",
       "type": "table",
       "purpose": "Mostra impacto de gastos não-recorrentes (casamento, filho, imóvel) no P(FIRE) para identificar riscos materiais ao plano",
-      "data_fields": ["lumpy_events.eventos", "lumpy_events.base.pfire_2040"],
+      "data_fields": [
+        "lumpy_events.eventos",
+        "lumpy_events.base.pfire_2040"
+      ],
       "privacy": false
     },
     {
@@ -674,9 +999,12 @@
       "label": "P(FIRE) — Cenários de Família",
       "type": "card",
       "purpose": "Mostra P(FIRE) por perfil familiar (solteiro, casado, com filho) para quantificar impacto de mudanças estruturais no custo de vida",
-      "data_fields": ["lumpy_events.eventos", "lumpy_events.base.pfire_2040", "pfire53.base"],
+      "data_fields": [
+        "lumpy_events.eventos",
+        "lumpy_events.base.pfire_2040",
+        "pfire53.base"
+      ],
       "privacy": false
     }
-
   ]
 }

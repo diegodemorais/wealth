@@ -45,6 +45,8 @@ def _():
 def _():
     spec = load_spec()
     valid_tabs = {t["id"] for t in spec.get("tabs", [])}
+    # HTML uses different IDs than spec: now→hoje, portfolio→carteira, performance→perf
+    # retiro is new and matches directly
     invalid = [b["id"] for b in spec.get("blocks", []) if b.get("tab") not in valid_tabs]
     if invalid:
         return False, f"Blocks with invalid tab: {invalid}"
@@ -176,11 +178,11 @@ def _():
 
 # ── RENDER (structural) ───────────────────────────────────────────────────────
 
-@registry.test("render-global", "RENDER", "HTML has 4 tab containers (hoje/carteira/perf/fire)", "CRITICAL")
+@registry.test("render-global", "RENDER", "HTML has 5 tab containers (hoje/carteira/perf/fire/retiro)", "CRITICAL")
 def _():
     html = load_html()
     # Actual tab IDs in HTML (differ from spec names)
-    html_tab_ids = ["hoje", "carteira", "perf", "fire"]
+    html_tab_ids = ["hoje", "carteira", "perf", "fire", "retiro"]
     missing = []
     for tab_id in html_tab_ids:
         if f'data-tab="{tab_id}"' not in html and f"data-tab='{tab_id}'" not in html:
@@ -226,10 +228,10 @@ def _():
     return True, f"All {len(required_canvases)} required canvas elements present"
 
 
-@registry.test("coverage-global", "SPEC", "block count in spec matches expected 64", "MEDIUM")
+@registry.test("coverage-global", "SPEC", "block count in spec matches expected ~72", "MEDIUM")
 def _():
     spec = load_spec()
     n = len(spec.get("blocks", []))
-    if n < 60:
-        return False, f"Only {n} blocks in spec (expected ~64) — blocks may have been removed"
+    if n < 65:
+        return False, f"Only {n} blocks in spec (expected ~72) — blocks may have been removed"
     return True, f"{n} blocks in spec"

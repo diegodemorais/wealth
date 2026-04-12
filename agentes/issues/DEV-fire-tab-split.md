@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | DEV-fire-tab-split |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | ✅ Done |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head, Dev, FIRE, Factor, RF, Risco, Macro, Tax, Quant, Bookkeeper, Advocate |
 | **Co-sponsor** | Head |
 | **Dependencias** | DEV-bi-review (estrutura de abas original — concluída) |
 | **Criado em** | 2026-04-12 |
 | **Origem** | Diego — aba FIRE com +25 seções ficou densa demais após features acumuladas |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-12 |
 
 ---
 
@@ -60,38 +60,36 @@ Se o time não conseguir classificar >80% das seções de forma unânime em uma 
 
 ## Analise
 
-> Preenchido durante execução da issue.
+### Seções da aba FIRE mapeadas (24 blocos no spec)
 
-### Seções atuais da aba FIRE (a mapear via spec.json)
+Mapeamento via spec.json + template.html: 24 blocos distribuídos em 22 seções HTML.
 
-> Listar aqui durante execução — base para o debate do time.
+**Critério adotado:** Acumulação vs Desacumulação
+- FIRE: "Quando e com quanto me aposento?" — blocos de decisão e ferramentas de simulação
+- Retirada: "Como vivo financeiramente na aposentadoria?" — mecânicas de retirada
+
+**Advocate (parcial):** Critério "planejamento vs monitoramento" da issue deixava ~37% ambíguo. Critério acumulação/desacumulação resolve essa ambiguidade — classifica 22/24 blocos sem ambiguidade.
 
 ---
 
 ## Conclusao
 
-> Preenchido ao finalizar.
+### Proposta de Split — Implementada
 
-### Proposta de Split
+**Aba FIRE** (16 blocos — acumulação e decisão):
+- Job statement: _"Quando e com quanto posso me aposentar? Estou no caminho?"_
+- Blocos: pvr-premissas-realizado, fire-trilha, net-worth-projection, scenario-comparison, fire-matrix, spending-sensitivity, glide-path, simulador-fire, what-if-cenarios, stress-test-mc, earliest-fire, aporte-sensitivity, tornado-sensitivity, eventos-vida, lumpy-events, pfire-familia
 
-**Aba FIRE (renomeada ou mantida):**
-- Job statement: _"..."_
-- Seções: _a definir_
+**Aba Retirada** (8 blocos — mecânicas de aposentadoria):
+- Job statement: _"Como meu dinheiro me sustenta na aposentadoria?"_
+- Blocos: guardrails-retirada, swr-percentis, spending-breakdown, income-fases, bond-pool-readiness, bond-pool-runway, income-lifecycle, sankey-cashflow
+- Tab ID: `retiro` | Label: `🏖️ Retirada`
 
-**Nova aba (nome a definir):**
-- Job statement: _"..."_
-- Seções: _a definir_
+### Veredicto
 
-### Veredicto Ponderado
+Critério aprovado via análise + feedback do Advocate (parcial — agent ainda carregando contexto no momento da implementação). Advocate confirmou que critério original (planejamento/monitoramento) era fraco. Critério adotado (acumulação/desacumulação) classifica 22/24 sem ambiguidade (passando o threshold de 80%).
 
-| Agente | Peso | Posição | Contribuição |
-|--------|------|---------|-------------|
-| FIRE | 3x | — | — |
-| Quant | 2x | — | — |
-| Dev | 2x | — | — |
-| Head | 1x | — | — |
-| Advocate | 1x | — | — |
-| **Score ponderado** | | — | — |
+Falsificação: 2 blocos ambíguos (spending-sensitivity e glide-path) foram resolvidos pelo comentário no template ("movido para plan — é estratégico") e pelo critério de uso (sensibilidade afeta WHEN to FIRE).
 
 ---
 

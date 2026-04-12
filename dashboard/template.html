@@ -308,6 +308,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <button class="tab-btn" data-tab="carteira"  onclick="switchTab('carteira')">🎯 Portfolio</button>
   <button class="tab-btn" data-tab="perf"      onclick="switchTab('perf')">📈 Performance</button>
   <button class="tab-btn" data-tab="fire"      onclick="switchTab('fire')">🔥 FIRE</button>
+  <button class="tab-btn" data-tab="retiro"    onclick="switchTab('retiro')">🏖️ Retirada</button>
 </div>
 
 <!-- S3: KPI CARDS — hierarquia primários vs contextuais (#4) -->
@@ -691,7 +692,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- P2: BOND POOL READINESS -->
-<div class="section" id="bondPoolSection" data-in-tab="fire">
+<div class="section" id="bondPoolSection" data-in-tab="retiro">
 <h2>Bond Pool Readiness — Proteção SoRR</h2>
 <div id="bondPoolBody"><!-- gerado por buildBondPool() --></div>
 <div id="bondPoolRunwayChartWrap" style="margin-top:14px;display:none">
@@ -716,7 +717,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- R2: SWR PERCENTIS P10/P50/P90 -->
-<div class="section" data-in-tab="fire" id="swrPercentilesSection">
+<div class="section" data-in-tab="retiro" id="swrPercentilesSection">
 <h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
 <div class="swr-pct-grid" id="swrPercentilesCards"></div>
 <div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
@@ -749,7 +750,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S15: GUARDRAILS -->
-<div class="section" data-in-tab="fire">
+<div class="section" data-in-tab="retiro">
 <h2>Guardrails de Retirada — FIRE Day</h2>
 <table class="guardrail-table">
 <thead><tr>
@@ -764,7 +765,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- F2: Spending Guardrails -->
-<div class="section collapsible open" data-in-tab="fire">
+<div class="section collapsible open" data-in-tab="retiro">
   <h2 onclick="this.parentElement.classList.toggle('open')">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
   <div class="collapse-body">
   <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
@@ -773,7 +774,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S16: RETIREMENT INCOME — gráfico de barras removido (duplicata de F1/Ciclo de Vida) -->
-<div class="section" data-in-tab="fire">
+<div class="section" data-in-tab="retiro">
 <h2>Renda na Aposentadoria — Fases Temporais</h2>
 <table class="fases-table" style="margin-bottom:12px">
 <thead><tr>
@@ -1125,7 +1126,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- F1: Lifetime Income Projection Chart -->
-<div class="section" data-in-tab="fire">
+<div class="section" data-in-tab="retiro">
 <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
 <div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
@@ -1135,14 +1136,14 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- F5: Must / Like to Spend -->
-<div class="section" data-in-tab="fire">
+<div class="section" data-in-tab="retiro">
 <h2>Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
 <div class="src" id="spendingBreakdownSrc">All-Accounts CSV · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)</div>
 </div>
 
 <!-- F8: Sankey Cash Flow -->
-<div class="section" id="sankeySection" data-in-tab="fire">
+<div class="section" id="sankeySection" data-in-tab="retiro">
 <h2>Sankey — Fluxo de Caixa Anual (estimado)</h2>
 <div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
 <div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
@@ -5588,8 +5589,8 @@ function _initTabCharts(tab) {
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
     carteira: [buildFireBuckets, buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios, buildGuardrails, buildIncomeChart, buildIncomeTable,
-               buildSpendingGuardrails, buildFireMatrix, buildSwrPercentiles, buildLumpyEvents,
+    fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios,
+               buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire, buildAporteSensitivity,
                function() {
@@ -5598,10 +5599,12 @@ function _initTabCharts(tab) {
                  if (!window._wiPreset) window._wiPreset = 'base';
                  updateWhatIf();
                },
+               buildStressTest,
+               buildGlidePath, buildEventosVida, buildPfireFamilia],
+    retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
+               buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
-               buildStressTest, buildSankey,
-               buildGlidePath, buildBondPool, buildBondPoolRunway,
-               buildEventosVida, buildPfireFamilia],
+               buildSankey, buildBondPool, buildBondPoolRunway],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.warn('[lazy]', fn.name || tab, e); } });
