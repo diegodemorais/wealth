@@ -828,12 +828,15 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /collapse-body -->
 </div>
 
-<!-- S21c: EVENTOS DE VIDA (colapsável) -->
+<!-- S21c: EVENTOS DE VIDA + LUMPY EVENTS (merged) -->
 <div class="section collapsible" style="border-color:rgba(234,179,8,.3)" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
 <div class="collapse-body">
+<!-- Planejados (list view) -->
 <div id="eventosVidaBody"></div>
-<div class="src">Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente.</div>
+<!-- Impacto na P(FIRE) (table view) -->
+<div id="lumpyEventsBody" style="margin-top:16px"></div>
+<div class="src">Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente. Impacto de eventos permanentes no custo de vida.</div>
 </div>
 </div>
 
@@ -844,15 +847,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="pfireFamiliaBody"></div>
 <div class="src" id="pfireFamiliaSrc">Base: Monte Carlo 10k simulações · Sensibilidade ao custo de vida</div>
 </div><!-- /collapse-body -->
-</div>
-
-<!-- N4: LUMPY EVENTS -->
-<div class="section collapsible" data-in-tab="fire" id="lumpyEventsSection">
-<h2 onclick="_toggleBlock(this.parentElement)">Eventos de Impacto na P(FIRE) — Gastos Grandes</h2>
-<div class="collapse-body">
-<div id="lumpyEventsBody"></div>
-<div class="src">Base: spending R$250k/ano. Impacto de eventos permanentes no custo de vida.</div>
-</div>
 </div>
 
 <!-- PREMISSAS VS REALIZADO (movido de perf → fire — contexto de planejamento) -->
@@ -1442,8 +1436,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T16:23:15-03:00'); // BRT (UTC-3)
-const VERSION = '2.36';
+const GENERATED_AT = new Date('2026-04-13T16:24:00-03:00'); // BRT (UTC-3)
+const VERSION = '2.37';
 
 const DATA = {
   "_generated": "2026-04-13T14:47:54",
@@ -8213,7 +8207,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.36"
+  "version": "2.37"
 };
 
 // ═══════════════════════════════════════════════════════════════
