@@ -1870,45 +1870,85 @@ def get_macro_data(state: dict) -> dict:
 def get_dca_status(rf: dict, total_brl: float) -> dict:
     """Calcula o status do DCA de renda fixa longa para o dashboard.
 
-    Dois instrumentos monitorados:
-      1. IPCA+ longo (TD 2040 + TD 2050): DCA ativo se taxa >= PISO_TAXA_IPCA_LONGO (6.0%)
-      2. Renda+ 2065 (tático): DCA PAUSADO — posição ~3% próxima do target <=3%
+    Três instrumentos monitorados — cada um em card separado:
+      1. TD IPCA+ 2040: alvo 12% (80% de 15%)
+      2. TD IPCA+ 2050: alvo 3% (20% de 15%)
+      3. Renda+ 2065 (tático): alvo 3%
+
+    DCA 2040+2050 ativo se taxa >= PISO_TAXA_IPCA_LONGO (6.0%)
 
     Fonte das regras: carteira.md + config.py
     """
-    # ── IPCA+ longo ─────────────────────────────────────────────────────────
     taxa_ipca = rf.get("ipca2040", {}).get("taxa")
-    valor_ipca_longo = ((rf.get("ipca2040", {}).get("valor", 0) or 0)
-                        + (rf.get("ipca2050", {}).get("valor", 0) or 0))
-    pct_ipca_atual = round((valor_ipca_longo / total_brl) * 100, 1) if total_brl else 0
-    alvo_ipca_pct = round(IPCA_LONGO_PCT * 100, 1)  # 15.0%
-    gap_alvo_ipca = round(alvo_ipca_pct - pct_ipca_atual, 1)  # pp faltando
+    valor_2040 = rf.get("ipca2040", {}).get("valor", 0) or 0
+    valor_2050 = rf.get("ipca2050", {}).get("valor", 0) or 0
+    valor_ipca_longo = valor_2040 + valor_2050
 
-    ipca_ativo = False
-    ipca_proxima_acao = "Aguardando dados de taxa"
-    if taxa_ipca is not None:
-        if taxa_ipca >= PISO_TAXA_IPCA_LONGO:
-            ipca_ativo = True
-            ipca_proxima_acao = (
-                f"DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) "
-                f"ate {alvo_ipca_pct}% da carteira"
-            )
-        else:
-            ipca_proxima_acao = (
-                f"DCA pausado: taxa {taxa_ipca:.2f}% abaixo do piso {PISO_TAXA_IPCA_LONGO}%. "
-                f"Redirecionar aportes para equity (SWRD/AVGS/AVEM)"
-            )
+    # Alvos: 15% total, 80/20 split
+    alvo_total_pct = round(IPCA_LONGO_PCT * 100, 1)  # 15.0%
+    alvo_2040_pct = round(alvo_total_pct * 0.80, 1)  # 12.0%
+    alvo_2050_pct = round(alvo_total_pct * 0.20, 1)  # 3.0%
 
-    dca_ipca = {
-        "instrumento":        "TD IPCA+ 2040 (80%) + TD 2050 (20%)",
+    # Percentuais atuais
+    pct_2040_atual = round((valor_2040 / total_brl) * 100, 1) if total_brl else 0
+    pct_2050_atual = round((valor_2050 / total_brl) * 100, 1) if total_brl else 0
+    pct_ipca_longo_atual = round((valor_ipca_longo / total_brl) * 100, 1) if total_brl else 0
+
+    # DCA status: ativo se taxa >= piso
+    ipca_ativo = taxa_ipca is not None and taxa_ipca >= PISO_TAXA_IPCA_LONGO
+
+    # ── TD IPCA+ 2040 ───────────────────────────────────────────────────────
+    if ipca_ativo:
+        gap_2040 = alvo_2040_pct - pct_2040_atual
+        proxima_acao_2040 = (
+            f"DCA ativo: aportar em TD 2040 (80% do bloco IPCA+) "
+            f"ate {alvo_2040_pct}% da carteira"
+        ) if gap_2040 > 0.1 else (
+            f"No alvo: {pct_2040_atual}% == {alvo_2040_pct}% (com TD 2050)"
+        )
+    else:
+        proxima_acao_2040 = (
+            f"DCA pausado: taxa {taxa_ipca:.2f}% abaixo do piso {PISO_TAXA_IPCA_LONGO}%. "
+            f"Redirecionar aportes para equity"
+        ) if taxa_ipca else "Aguardando dados de taxa"
+
+    dca_2040 = {
+        "instrumento":        "TD IPCA+ 2040",
         "ativo":              ipca_ativo,
         "taxa_atual":         taxa_ipca,
         "piso":               PISO_TAXA_IPCA_LONGO,
         "gap_pp":             round((taxa_ipca - PISO_TAXA_IPCA_LONGO), 2) if taxa_ipca else None,
-        "pct_carteira_atual": pct_ipca_atual,
-        "alvo_pct":           alvo_ipca_pct,
-        "gap_alvo_pp":        gap_alvo_ipca,
-        "proxima_acao":       ipca_proxima_acao,
+        "pct_carteira_atual": pct_2040_atual,
+        "alvo_pct":           alvo_2040_pct,
+        "gap_alvo_pp":        round(alvo_2040_pct - pct_2040_atual, 1),
+        "proxima_acao":       proxima_acao_2040,
+    }
+
+    # ── TD IPCA+ 2050 ───────────────────────────────────────────────────────
+    if ipca_ativo:
+        gap_2050 = alvo_2050_pct - pct_2050_atual
+        proxima_acao_2050 = (
+            f"DCA ativo: aportar em TD 2050 (20% do bloco IPCA+) "
+            f"ate {alvo_2050_pct}% da carteira"
+        ) if gap_2050 > 0.1 else (
+            f"No alvo: {pct_2050_atual}% == {alvo_2050_pct}% (com TD 2040)"
+        )
+    else:
+        proxima_acao_2050 = (
+            f"DCA pausado: taxa {taxa_ipca:.2f}% abaixo do piso {PISO_TAXA_IPCA_LONGO}%. "
+            f"Manter posicao atual"
+        ) if taxa_ipca else "Aguardando dados de taxa"
+
+    dca_2050 = {
+        "instrumento":        "TD IPCA+ 2050",
+        "ativo":              ipca_ativo,
+        "taxa_atual":         taxa_ipca,
+        "piso":               PISO_TAXA_IPCA_LONGO,
+        "gap_pp":             round((taxa_ipca - PISO_TAXA_IPCA_LONGO), 2) if taxa_ipca else None,
+        "pct_carteira_atual": pct_2050_atual,
+        "alvo_pct":           alvo_2050_pct,
+        "gap_alvo_pp":        round(alvo_2050_pct - pct_2050_atual, 1),
+        "proxima_acao":       proxima_acao_2050,
     }
 
     # ── Renda+ 2065 ─────────────────────────────────────────────────────────
@@ -1957,7 +1997,8 @@ def get_dca_status(rf: dict, total_brl: float) -> dict:
     }
 
     return {
-        "ipca_longo": dca_ipca,
+        "ipca2040":   dca_2040,
+        "ipca2050":   dca_2050,
         "renda_plus": dca_renda_plus,
     }
 

@@ -87,7 +87,7 @@
       "purpose": "Mostra BTC/USD, taxa IPCA+, taxa Renda+ 2065 e variações de mercado para contextualizar o ambiente macro-financeiro do dia",
       "data_fields": [
         "mercado.cambio_brl_usd",
-        "dca_status.ipca_longo.taxa_atual",
+        "dca_status.ipca2040.taxa_atual",
         "dca_status.renda_plus.taxa_atual"
       ],
       "privacy": false
@@ -174,14 +174,18 @@
     {
       "id": "ipca-dca-semaforo",
       "tab": "now",
-      "label": "IPCA+ 2040 — DCA Status",
+      "label": "IPCA+ 2040 & 2050 — DCA Status",
       "type": "semaforo",
-      "purpose": "Mostra se taxa atual do TD IPCA+ 2040 está acima do piso operacional para indicar se o DCA deve estar ativo",
+      "purpose": "Mostra se taxa atual dos TD IPCA+ 2040 e 2050 está acima do piso operacional. Dois cards separados (80/20 split).",
       "data_fields": [
-        "dca_status.ipca_longo.taxa_atual",
-        "dca_status.ipca_longo.piso",
-        "dca_status.ipca_longo.ativo",
-        "dca_status.ipca_longo.proxima_acao",
+        "dca_status.ipca2040.taxa_atual",
+        "dca_status.ipca2040.piso",
+        "dca_status.ipca2040.ativo",
+        "dca_status.ipca2040.proxima_acao",
+        "dca_status.ipca2050.taxa_atual",
+        "dca_status.ipca2050.piso",
+        "dca_status.ipca2050.ativo",
+        "dca_status.ipca2050.proxima_acao",
         "pisos.pisoTaxaIpcaLongo"
       ],
       "privacy": false

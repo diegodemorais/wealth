@@ -1,11 +1,12 @@
 {
-  "timestamp": "2026-04-13T12:45:09.535129",
+  "timestamp": "2026-04-13T12:54:07.126158",
   "mode": "full",
   "total": 605,
   "passed": 605,
   "failed": 0,
   "failure_cycles": {
     "fire-trilha": 0,
+    "ipca-dca-semaforo": 0,
     "rf-posicoes": 0
   },
   "escalations": [],
@@ -1144,7 +1145,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "R$3,588,234 / R$8,333,333 = 43.1% of FIRE goal"
+      "message": "R$3,541,237 / R$8,333,333 = 42.5% of FIRE goal"
     },
     {
       "test_id": "simulador-fire::RENDER::simulator UI elements exist in HTML",
@@ -1344,7 +1345,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "B4: p50 range [3,588,234, 45,294,745] within [500k, 200M]"
+      "message": "B4: p50 range [3,541,237, 45,294,745] within [500k, 200M]"
     },
     {
       "test_id": "net-worth-projection::VALUE::B5 anti-regress: offsetWidth guard present in buildNetWorthProjection",
@@ -1480,7 +1481,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "drift.atual sum=96.50% (within [90%, 105%] — cash gap expected)"
+      "message": "drift.atual sum=96.40% (within [90%, 105%] — cash gap expected)"
     },
     {
       "test_id": "alloc-bucket-donut::DATA::drift object has all required buckets",
@@ -1560,7 +1561,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cagr=13.54%, patrimonio=3588234, cambio=5.0958"
+      "message": "cagr=13.54%, patrimonio=3541237, cambio=5.0233"
     },
     {
       "test_id": "cagr-patrimonial-twr::VALUE::patrimonio_atual in plausible range [R$1M, R$50M]",
@@ -1568,7 +1569,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "patrimonio_atual=R$3,588,234 within plausible range"
+      "message": "patrimonio_atual=R$3,541,237 within plausible range"
     },
     {
       "test_id": "backtest-regime-longo::DATA::backtestR5 present with dates, target, shadowA and metrics",
@@ -1619,36 +1620,36 @@
       "message": "factor_rolling aligned: 7 entries"
     },
     {
-      "test_id": "ipca-dca-semaforo::DATA::dca_status.ipca_longo required fields are present and non-null",
+      "test_id": "ipca-dca-semaforo::DATA::dca_status.ipca2040 and ipca2050 required fields are present and non-null",
       "block_id": "ipca-dca-semaforo",
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "All required ipca_longo fields present"
+      "message": "All required ipca2040 and ipca2050 fields present"
     },
     {
-      "test_id": "ipca-dca-semaforo::DATA::pisos.pisoTaxaIpcaLongo matches dca_status.ipca_longo.piso",
+      "test_id": "ipca-dca-semaforo::DATA::pisos.pisoTaxaIpcaLongo matches both dca_status.ipca2040.piso and ipca2050.piso",
       "block_id": "ipca-dca-semaforo",
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Piso consistent at 6.0%"
+      "message": "Piso consistent at 6.0% (2040 & 2050)"
     },
     {
-      "test_id": "ipca-dca-semaforo::VALUE::taxa_atual IPCA+ is within sanity range (0, 30)",
+      "test_id": "ipca-dca-semaforo::VALUE::taxa_atual IPCA+ (2040 and 2050) is within sanity range (0, 30)",
       "block_id": "ipca-dca-semaforo",
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "taxa_atual=7.07% within sanity range"
+      "message": "taxa_atual within sanity range (2040=7.07%, 2050=7.07%)"
     },
     {
-      "test_id": "ipca-dca-semaforo::VALUE::DCA ativo flag is consistent with taxa_atual vs piso comparison",
+      "test_id": "ipca-dca-semaforo::VALUE::DCA ativo flags (2040, 2050) are consistent with taxa_atual vs piso comparison",
       "block_id": "ipca-dca-semaforo",
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "ativo=True consistent with taxa=7.07 vs piso=6.0"
+      "message": "ativo=True consistent for both 2040 and 2050 (taxa=7.07% vs piso=6.0%)"
     },
     {
       "test_id": "renda-plus-semaforo::DATA::dca_status.renda_plus required fields are present and non-null",
@@ -1768,7 +1769,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "hodl11.banda.atual_pct=2.85% in valid range"
+      "message": "hodl11.banda.atual_pct=2.88% in valid range"
     },
     {
       "test_id": "hodl11-status::VALUE::hodl11.banda ordering: min_pct < alvo_pct < max_pct",
@@ -1832,7 +1833,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "patrimonio_atual=3,588,234, patrimonio_gatilho=8,333,333"
+      "message": "patrimonio_atual=3,541,237, patrimonio_gatilho=8,333,333"
     },
     {
       "test_id": "stress-test-mc::VALUE::pfire53.stress < pfire53.base (stress scenario is worse than base)",
@@ -1912,7 +1913,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "brasil_pct=10.8"
+      "message": "brasil_pct=11.0"
     },
     {
       "test_id": "exposicao-cambial::DATA::cambio (BRL/USD) presente em data.json — top-level ou macro.cambio",
@@ -1920,7 +1921,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio=5.0958"
+      "message": "cambio=5.0233"
     },
     {
       "test_id": "exposicao-cambial::VALUE::exposicao_cambial_pct dentro do range [0, 100]",
@@ -1936,7 +1937,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio=5.0958 dentro de [3.0, 15.0]"
+      "message": "cambio=5.0233 dentro de [3.0, 15.0]"
     },
     {
       "test_id": "exposicao-cambial::RENDER::HTML contem brasilConcentracao para o gauge de exposicao",
@@ -1952,7 +1953,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio = 5.0958"
+      "message": "cambio = 5.0233"
     },
     {
       "test_id": "cambio-mercado::DATA::mercado.cambio_brl_usd exists and is a positive number",
@@ -1960,7 +1961,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "mercado.cambio_brl_usd = 5.0958"
+      "message": "mercado.cambio_brl_usd = 5.0233"
     },
     {
       "test_id": "cambio-mercado::VALUE::cambio and mercado.cambio_brl_usd are consistent (same source, delta <= tolerance)",
@@ -1968,7 +1969,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio top=5.0958, mercado=5.0958, delta=0.0000"
+      "message": "cambio top=5.0233, mercado=5.0233, delta=0.0000"
     },
     {
       "test_id": "cambio-mercado::VALUE::cambio is within plausible BRL/USD range [3.0, 15.0]",
@@ -1976,7 +1977,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "cambio=5.0958 within [3.0, 15.0]"
+      "message": "cambio=5.0233 within [3.0, 15.0]"
     },
     {
       "test_id": "exposicao-cambial::DATA::macro.exposicao_cambial_pct exists and is a number",
@@ -2096,7 +2097,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "drift values valid: SWRD=36.3%, AVGS=28.5%, AVEM=24.2%"
+      "message": "drift values valid: SWRD=36.2%, AVGS=28.4%, AVEM=24.2%"
     },
     {
       "test_id": "custo-base-bucket::PRIVACY::privacy block marked on custo-base-bucket",
@@ -2152,7 +2153,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'AVEM', 'SWRD'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2168,7 +2169,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'fire', 'now', 'performance', 'portfolio', 'simuladores', 'retiro'}"
+      "message": "All blocks use valid tabs: {'retiro', 'portfolio', 'performance', 'now', 'fire', 'simuladores'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2784,7 +2785,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio present: 5.0958"
+      "message": "cambio present: 5.0233"
     },
     {
       "test_id": "patrimonio-total-hero::PRIVACY::hero patrimonio values use .pv class (privacy toggle)",
@@ -2824,7 +2825,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "patrimonio_atual=3,588,234"
+      "message": "patrimonio_atual=3,541,237"
     },
     {
       "test_id": "kpi-grid-primario::RENDER::primary KPI elements present in HTML",
@@ -2835,7 +2836,7 @@
       "message": "primary KPI elements found"
     },
     {
-      "test_id": "kpi-grid-mercado::DATA::mercado.cambio_brl_usd, dca_status.ipca_longo.taxa_atual, dca_status.renda_plus.taxa_atual all present",
+      "test_id": "kpi-grid-mercado::DATA::mercado.cambio_brl_usd, dca_status.ipca2040.taxa_atual, dca_status.renda_plus.taxa_atual all present",
       "block_id": "kpi-grid-mercado",
       "category": "DATA",
       "severity": "HIGH",
@@ -2848,7 +2849,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio_brl_usd=5.0958"
+      "message": "cambio_brl_usd=5.0233"
     },
     {
       "test_id": "fire-countdown::VALUE::patrimonio_gatilho > patrimonio_atual (still in accumulation phase)",
@@ -2856,7 +2857,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "atual=3,588,234 | gatilho=8,333,333 | progress=43.1% | gap=4,745,099"
+      "message": "atual=3,541,237 | gatilho=8,333,333 | progress=42.5% | gap=4,792,096"
     },
     {
       "test_id": "fire-countdown::VALUE::idade_fire_alvo > idade_atual (target FIRE age is in the future)",
@@ -3312,7 +3313,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "patrimonio_atual=3,588,234 not hardcoded"
+      "message": "patrimonio_atual=3,541,237 not hardcoded"
     },
     {
       "test_id": "what-if-cenarios::DATA::premissas.swr_gatilho is in fire_matrix.swrs",
@@ -3616,7 +3617,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "Equity atual: SWRD=36.3%, AVGS=28.5%, AVEM=24.2% — sum=89.0%"
+      "message": "Equity atual: SWRD=36.2%, AVGS=28.4%, AVEM=24.2% — sum=88.8%"
     },
     {
       "test_id": "intra-equity-pesos::VALUE::pesosTarget equity sum within [0.75, 1.0] of total",
@@ -3784,7 +3785,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio=5.0958 BRL/USD within plausible range"
+      "message": "cambio=5.0233 BRL/USD within plausible range"
     },
     {
       "test_id": "backtest-regime-longo::VALUE::backtestR5 covers at least 15 years (180 months)",
@@ -3944,7 +3945,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "hodl11.valor=102303.04 ≈ qty*preco=102303.04 (diff 0.00%)"
+      "message": "hodl11.valor=101817.00 ≈ qty*preco=101817.00 (diff 0.00%)"
     },
     {
       "test_id": "hodl11-status::VALUE::hodl11.banda.status is a recognized semaforo value",
@@ -4016,7 +4017,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "FIRE gap = R$ 4,745,099 (gatilho 8,333,333 > atual 3,588,234)"
+      "message": "FIRE gap = R$ 4,792,096 (gatilho 8,333,333 > atual 3,541,237)"
     },
     {
       "test_id": "stress-test-mc::RENDER::HTML contains stressShockLabel element (shock percentage display)",
@@ -4080,7 +4081,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "total_portfolio_brl=3,588,234"
+      "message": "total_portfolio_brl=3,541,237"
     },
     {
       "test_id": "exposicao-cambial::VALUE::brasil_pct dentro do range [0, 100]",
@@ -4088,7 +4089,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "brasil_pct=10.8% dentro de [0, 100]"
+      "message": "brasil_pct=11.0% dentro de [0, 100]"
     },
     {
       "test_id": "exposicao-cambial::VALUE::brasil_pct + exposicao_cambial_pct soma aproximadamente 100",
@@ -4096,7 +4097,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "brasil_pct(10.8) + exposicao_cambial(90.4) = 101.2 ~ 100"
+      "message": "brasil_pct(11.0) + exposicao_cambial(90.4) = 101.4 ~ 100"
     },
     {
       "test_id": "exposicao-cambial::RENDER::HTML contem referencia a BRL/USD no display de cambio",
@@ -4112,7 +4113,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio_mtd_pct=-1.17%"
+      "message": "cambio_mtd_pct=-2.57%"
     },
     {
       "test_id": "cambio-mercado::RENDER::HTML references cambio_brl_usd rendering logic",
@@ -4128,7 +4129,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "concentracao_brasil.brasil_pct = 10.8"
+      "message": "concentracao_brasil.brasil_pct = 11.0"
     },
     {
       "test_id": "exposicao-cambial::DATA::concentracao_brasil.total_portfolio_brl exists and is a positive number",
@@ -4136,7 +4137,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "total_portfolio_brl = R$3,588,234"
+      "message": "total_portfolio_brl = R$3,541,237"
     },
     {
       "test_id": "exposicao-cambial::VALUE::concentracao_brasil.brasil_pct is in [0, 100]",
@@ -4144,7 +4145,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "brasil_pct=10.8%"
+      "message": "brasil_pct=11.0%"
     },
     {
       "test_id": "exposicao-cambial::VALUE::exposicao_cambial_pct + brasil_pct approximately sum to 100 (asset-liability consistency)",
@@ -4152,7 +4153,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "USD 90.4% + BRL 10.8% = 101.2% (within 5.0pp of 100)"
+      "message": "USD 90.4% + BRL 11.0% = 101.4% (within 5.0pp of 100)"
     },
     {
       "test_id": "exposicao-cambial::RENDER::HTML references exposicao_cambial_pct and brasil_pct rendering logic",
@@ -4224,7 +4225,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "premissas.patrimonio_atual = 3,588,234"
+      "message": "premissas.patrimonio_atual = 3,541,237"
     },
     {
       "test_id": "fee-custo-complexidade::RENDER::HTML contains feeTable and feeBody elements",
@@ -4280,7 +4281,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "cambio = 5.10"
+      "message": "cambio = 5.02"
     },
     {
       "test_id": "custo-base-bucket::RENDER::HTML contains custo-base-bucket block",
@@ -4368,7 +4369,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "hodl11 prices valid (preco=61.04, preco_medio=79.03)"
+      "message": "hodl11 prices valid (preco=60.75, preco_medio=79.03)"
     },
     {
       "test_id": "hodl11-pnl::VALUE::hodl11.pnl_brl can be positive, negative, or zero",
@@ -4376,7 +4377,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "hodl11.pnl_brl = R$-30,151 (valid, can be negative)"
+      "message": "hodl11.pnl_brl = R$-30,637 (valid, can be negative)"
     },
     {
       "test_id": "hodl11-pnl::VALUE::hodl11.pnl_pct is in plausible range",
@@ -4384,7 +4385,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "hodl11.pnl_pct = -22.8% (valid)"
+      "message": "hodl11.pnl_pct = -23.1% (valid)"
     },
     {
       "test_id": "hodl11-pnl::VALUE::hodl11 P&L internal consistency: pnl_pct ≈ (preco / preco_medio - 1) * 100",
@@ -4392,7 +4393,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "hodl11 P&L consistent (pnl_pct: -22.76%)"
+      "message": "hodl11 P&L consistent (pnl_pct: -23.13%)"
     },
     {
       "test_id": "reconciliation::VALUE::posicoes.qty aggregates correctly",
@@ -4408,7 +4409,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Generated: 2026-04-13T12:45:06"
+      "message": "Generated: 2026-04-13T12:52:35"
     },
     {
       "test_id": "render-global::RENDER::no empty canvas elements (uninitialized charts)",
@@ -4440,7 +4441,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "ipca_longo=7.07, renda_plus=6.8"
+      "message": "ipca2040=7.07, renda_plus=6.8"
     },
     {
       "test_id": "kpi-grid-mercado::RENDER::market KPI elements present in HTML",
@@ -4472,7 +4473,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "max drift deviation=10.4pp < 50pp. Worst: IPCA: atual=4.6, alvo=15.0, dev=10.4pp"
+      "message": "max drift deviation=10.3pp < 50pp. Worst: IPCA: atual=4.7, alvo=15.0, dev=10.3pp"
     },
     {
       "test_id": "bond-pool-strip::VALUE::bond_pool status is one of known values (early/building/ready/excess)",
@@ -4624,7 +4625,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "All required data_fields present in ipca-dca-semaforo spec"
+      "message": "All required data_fields present in ipca-dca-semaforo spec (2040 & 2050)"
     },
     {
       "test_id": "renda-plus-semaforo::SPEC::renda-plus-semaforo block exists in spec.json with required data_fields",
@@ -4712,7 +4713,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "brasil_pct=10.8% coerente com R$388,880 / R$3,588,234 = 10.8%"
+      "message": "brasil_pct=11.0% coerente com R$388,394 / R$3,541,237 = 11.0%"
     },
     {
       "test_id": "exposicao-cambial::RENDER::HTML contem buildBrasilConcentracao para inicializacao do bloco",
@@ -4736,7 +4737,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'cambio', 'mercado.cambio_brl_usd'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4744,7 +4745,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct', 'cambio', 'macro.exposicao_cambial_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
@@ -4776,7 +4777,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "patrimonio_atual=3,588,234 within plausible range"
+      "message": "patrimonio_atual=3,541,237 within plausible range"
     },
     {
       "test_id": "savings-rate::SPEC::spec.json declares savings-rate block with correct tab and privacy flag",

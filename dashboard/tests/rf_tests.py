@@ -22,103 +22,122 @@ from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_P
 @registry.test(
     block_id="ipca-dca-semaforo",
     category="DATA",
-    description="dca_status.ipca_longo required fields are present and non-null",
+    description="dca_status.ipca2040 and ipca2050 required fields are present and non-null",
     severity="CRITICAL",
 )
 def _():
     """
     GIVEN data.json is loaded
-    WHEN dca_status.ipca_longo is accessed
-    THEN taxa_atual, piso, ativo, proxima_acao are all present and non-null
+    WHEN dca_status.ipca2040 and ipca2050 are accessed
+    THEN taxa_atual, piso, ativo, proxima_acao are all present and non-null for both
     """
     data = load_data()
-    required = [
-        "dca_status.ipca_longo.taxa_atual",
-        "dca_status.ipca_longo.piso",
-        "dca_status.ipca_longo.ativo",
-        "dca_status.ipca_longo.proxima_acao",
+    required_2040 = [
+        "dca_status.ipca2040.taxa_atual",
+        "dca_status.ipca2040.piso",
+        "dca_status.ipca2040.ativo",
+        "dca_status.ipca2040.proxima_acao",
     ]
-    missing = [f for f in required if get_nested(data, f) is None]
+    required_2050 = [
+        "dca_status.ipca2050.taxa_atual",
+        "dca_status.ipca2050.piso",
+        "dca_status.ipca2050.ativo",
+        "dca_status.ipca2050.proxima_acao",
+    ]
+    missing = [f for f in required_2040 + required_2050 if get_nested(data, f) is None]
     if missing:
         return False, f"Missing or null fields: {missing}"
-    return True, "All required ipca_longo fields present"
+    return True, "All required ipca2040 and ipca2050 fields present"
 
 
 @registry.test(
     block_id="ipca-dca-semaforo",
     category="DATA",
-    description="pisos.pisoTaxaIpcaLongo matches dca_status.ipca_longo.piso",
+    description="pisos.pisoTaxaIpcaLongo matches both dca_status.ipca2040.piso and ipca2050.piso",
     severity="CRITICAL",
 )
 def _():
     """
     GIVEN data.json is loaded
-    WHEN pisos.pisoTaxaIpcaLongo and dca_status.ipca_longo.piso are read
-    THEN they must be equal — single source of truth, no drift between fields
+    WHEN pisos.pisoTaxaIpcaLongo and dca_status.ipca2040/2050.piso are read
+    THEN they must all be equal — single source of truth, no drift between fields
     """
     data = load_data()
     piso_pisos = get_nested(data, "pisos.pisoTaxaIpcaLongo")
-    piso_dca = get_nested(data, "dca_status.ipca_longo.piso")
-    if piso_pisos is None or piso_dca is None:
-        return False, f"Missing values: pisos={piso_pisos}, dca_piso={piso_dca}"
-    if piso_pisos != piso_dca:
-        return False, f"Piso mismatch: pisos.pisoTaxaIpcaLongo={piso_pisos} != dca_status.ipca_longo.piso={piso_dca}"
-    return True, f"Piso consistent at {piso_pisos}%"
+    piso_2040 = get_nested(data, "dca_status.ipca2040.piso")
+    piso_2050 = get_nested(data, "dca_status.ipca2050.piso")
+    if piso_pisos is None or piso_2040 is None or piso_2050 is None:
+        return False, f"Missing values: pisos={piso_pisos}, ipca2040={piso_2040}, ipca2050={piso_2050}"
+    if piso_pisos != piso_2040 or piso_pisos != piso_2050:
+        return False, f"Piso mismatch: pisos={piso_pisos}, ipca2040={piso_2040}, ipca2050={piso_2050}"
+    return True, f"Piso consistent at {piso_pisos}% (2040 & 2050)"
 
 
 @registry.test(
     block_id="ipca-dca-semaforo",
     category="VALUE",
-    description="taxa_atual IPCA+ is within sanity range (0, 30)",
+    description="taxa_atual IPCA+ (2040 and 2050) is within sanity range (0, 30)",
     severity="CRITICAL",
 )
 def _():
     """
-    GIVEN dca_status.ipca_longo.taxa_atual is read from data.json
-    WHEN the value is checked
-    THEN it must be in the range (0, 30) — a real yield outside this range
-         signals a data pipeline error (e.g. percentage expressed as decimal,
-         stale data, or a field-name mismatch)
+    GIVEN dca_status.ipca2040.taxa_atual and ipca2050.taxa_atual are read from data.json
+    WHEN the values are checked
+    THEN they must be in the range (0, 30) — a real yield outside this range
+         signals a data pipeline error
     """
     data = load_data()
-    taxa = get_nested(data, "dca_status.ipca_longo.taxa_atual")
-    if taxa is None:
-        return False, "taxa_atual is None"
-    if not (0 < taxa < 30):
-        return False, f"taxa_atual={taxa} outside sanity range (0, 30)"
-    return True, f"taxa_atual={taxa}% within sanity range"
+    taxa_2040 = get_nested(data, "dca_status.ipca2040.taxa_atual")
+    taxa_2050 = get_nested(data, "dca_status.ipca2050.taxa_atual")
+    if taxa_2040 is None or taxa_2050 is None:
+        return False, f"taxa_atual missing: ipca2040={taxa_2040}, ipca2050={taxa_2050}"
+    if not (0 < taxa_2040 < 30):
+        return False, f"ipca2040.taxa_atual={taxa_2040} outside sanity range (0, 30)"
+    if not (0 < taxa_2050 < 30):
+        return False, f"ipca2050.taxa_atual={taxa_2050} outside sanity range (0, 30)"
+    return True, f"taxa_atual within sanity range (2040={taxa_2040}%, 2050={taxa_2050}%)"
 
 
 @registry.test(
     block_id="ipca-dca-semaforo",
     category="VALUE",
-    description="DCA ativo flag is consistent with taxa_atual vs piso comparison",
+    description="DCA ativo flags (2040, 2050) are consistent with taxa_atual vs piso comparison",
     severity="CRITICAL",
 )
 def _():
     """
-    GIVEN taxa_atual and piso are read from dca_status.ipca_longo
+    GIVEN taxa_atual and piso are read from dca_status.ipca2040 and ipca2050
     WHEN taxa_atual > piso
     THEN ativo must be True — otherwise the semaforo shows the wrong signal
-         and DCA decisions downstream are misleading
+
+    Both 2040 and 2050 must have the same ativo flag since they share the same piso/taxa
     """
     data = load_data()
-    taxa = get_nested(data, "dca_status.ipca_longo.taxa_atual")
-    piso = get_nested(data, "dca_status.ipca_longo.piso")
-    ativo = get_nested(data, "dca_status.ipca_longo.ativo")
-    if taxa is None or piso is None or ativo is None:
-        return False, f"Missing values: taxa={taxa}, piso={piso}, ativo={ativo}"
-    if taxa > piso and ativo is not True:
+    taxa_2040 = get_nested(data, "dca_status.ipca2040.taxa_atual")
+    taxa_2050 = get_nested(data, "dca_status.ipca2050.taxa_atual")
+    piso_2040 = get_nested(data, "dca_status.ipca2040.piso")
+    piso_2050 = get_nested(data, "dca_status.ipca2050.piso")
+    ativo_2040 = get_nested(data, "dca_status.ipca2040.ativo")
+    ativo_2050 = get_nested(data, "dca_status.ipca2050.ativo")
+
+    if taxa_2040 is None or piso_2040 is None or ativo_2040 is None:
+        return False, f"Missing 2040 values: taxa={taxa_2040}, piso={piso_2040}, ativo={ativo_2040}"
+    if taxa_2050 is None or piso_2050 is None or ativo_2050 is None:
+        return False, f"Missing 2050 values: taxa={taxa_2050}, piso={piso_2050}, ativo={ativo_2050}"
+
+    # Both should have same ativo flag
+    if ativo_2040 != ativo_2050:
+        return False, f"ativo mismatch: 2040={ativo_2040} vs 2050={ativo_2050} — should be consistent"
+
+    # Check consistency with taxa vs piso
+    expected_ativo = taxa_2040 >= piso_2040
+    if ativo_2040 is not expected_ativo:
         return False, (
-            f"taxa_atual={taxa} > piso={piso} but ativo={ativo} — "
-            "semaforo should show DCA ativo"
+            f"2040: taxa_atual={taxa_2040} vs piso={piso_2040} → "
+            f"ativo should be {expected_ativo}, got {ativo_2040}"
         )
-    if taxa < piso and ativo is not False:
-        return False, (
-            f"taxa_atual={taxa} < piso={piso} but ativo={ativo} — "
-            "semaforo should show DCA pausado"
-        )
-    return True, f"ativo={ativo} consistent with taxa={taxa} vs piso={piso}"
+
+    return True, f"ativo={ativo_2040} consistent for both 2040 and 2050 (taxa={taxa_2040}% vs piso={piso_2040}%)"
 
 
 @registry.test(
@@ -194,24 +213,28 @@ def _():
     """
     GIVEN spec.json is loaded
     WHEN ipca-dca-semaforo block is located
-    THEN it must define all five required data_fields from the RF domain spec
+    THEN it must define all required data_fields (2040 and 2050 separate cards)
     """
     spec = load_spec()
     blocks = {b["id"]: b for b in spec.get("blocks", [])}
     if "ipca-dca-semaforo" not in blocks:
         return False, "Block 'ipca-dca-semaforo' not found in spec.json"
     expected_fields = {
-        "dca_status.ipca_longo.taxa_atual",
-        "dca_status.ipca_longo.piso",
-        "dca_status.ipca_longo.ativo",
-        "dca_status.ipca_longo.proxima_acao",
+        "dca_status.ipca2040.taxa_atual",
+        "dca_status.ipca2040.piso",
+        "dca_status.ipca2040.ativo",
+        "dca_status.ipca2040.proxima_acao",
+        "dca_status.ipca2050.taxa_atual",
+        "dca_status.ipca2050.piso",
+        "dca_status.ipca2050.ativo",
+        "dca_status.ipca2050.proxima_acao",
         "pisos.pisoTaxaIpcaLongo",
     }
     actual_fields = set(blocks["ipca-dca-semaforo"].get("data_fields", []))
     missing = expected_fields - actual_fields
     if missing:
         return False, f"Missing data_fields in spec: {missing}"
-    return True, "All required data_fields present in ipca-dca-semaforo spec"
+    return True, "All required data_fields present in ipca-dca-semaforo spec (2040 & 2050)"
 
 
 # ─────────────────────────────────────────────────────────────────────────────

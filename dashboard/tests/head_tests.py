@@ -287,14 +287,14 @@ def _():
 
 @registry.test(
     "kpi-grid-mercado", "DATA",
-    "mercado.cambio_brl_usd, dca_status.ipca_longo.taxa_atual, dca_status.renda_plus.taxa_atual all present",
+    "mercado.cambio_brl_usd, dca_status.ipca2040.taxa_atual, dca_status.renda_plus.taxa_atual all present",
     "HIGH",
 )
 def _():
     data = load_data()
     paths = [
         "mercado.cambio_brl_usd",
-        "dca_status.ipca_longo.taxa_atual",
+        "dca_status.ipca2040.taxa_atual",
         "dca_status.renda_plus.taxa_atual",
     ]
     missing = [p for p in paths if get_nested(data, p) is None]
@@ -326,7 +326,7 @@ def _():
 def _():
     data = load_data()
     vals = {
-        "dca_status.ipca_longo.taxa_atual": get_nested(data, "dca_status.ipca_longo.taxa_atual"),
+        "dca_status.ipca2040.taxa_atual": get_nested(data, "dca_status.ipca2040.taxa_atual"),
         "dca_status.renda_plus.taxa_atual": get_nested(data, "dca_status.renda_plus.taxa_atual"),
     }
     errors = []
@@ -337,7 +337,7 @@ def _():
             errors.append(f"{path}={val} outside (0, 30)")
     if errors:
         return False, "; ".join(errors)
-    return True, f"ipca_longo={vals['dca_status.ipca_longo.taxa_atual']}, renda_plus={vals['dca_status.renda_plus.taxa_atual']}"
+    return True, f"ipca2040={vals['dca_status.ipca2040.taxa_atual']}, renda_plus={vals['dca_status.renda_plus.taxa_atual']}"
 
 
 @registry.test(
