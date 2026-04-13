@@ -1401,8 +1401,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T07:57:08-03:00'); // BRT (UTC-3)
-const VERSION = '2.0';
+const GENERATED_AT = new Date('2026-04-13T08:13:35-03:00'); // BRT (UTC-3)
+const VERSION = '2.1';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8061,7 +8061,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.0"
+  "version": "2.1"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10493,20 +10493,18 @@ window.updateFireSim = function() {
   const rm = r / 12;
   const idadeAtual = DATA.premissas.idade_atual;
   const patAtual   = DATA.premissas.patrimonio_atual;
-  // Escalar gatilho proporcionalmente ao custo simulado (DEV-fire-sim-fixes)
-  // Custo menor → patrimônio necessário menor → FIRE antecipado
-  const custoBase  = DATA.premissas.custo_vida_base || 250000;
-  const gatilho    = PAT_GATILHO * (custo / custoBase);
+  // Gatilho = SWR puro: patrimônio necessário escala naturalmente com o custo simulado
+  // PAT_GATILHO removido como condição — era redundante e forçava SWR implícito de ~1.87%
   const swrMeta    = DATA.premissas.swr_gatilho ?? 0.024;
   const maxMonths  = (70 - idadeAtual) * 12;
 
-  // Iterar mensalmente até atingir gatilho E SWR
+  // Iterar mensalmente até atingir SWR ≤ swrMeta (patrimônio = custo / swrMeta)
   let pat = patAtual;
   let m   = 0;
   while (m < maxMonths) {
     pat = pat * (1 + rm) + ap;
     m++;
-    if (pat >= gatilho && custo / pat <= swrMeta) break;
+    if (custo / pat <= swrMeta) break;
   }
 
   const fireAge  = idadeAtual + m / 12;
@@ -10543,7 +10541,8 @@ window.updateFireSim = function() {
   if (_p50) { _p50.textContent = `${DATA.pfire50.base}%`; _p50.style.color = DATA.pfire50.base >= 85 ? '#22c55e' : '#eab308'; }
   if (_p53) { _p53.textContent = `${DATA.pfire53.base}%`; _p53.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : '#3b82f6'; }
   const _pat = document.getElementById('simPatFire');
-  if (_pat) { _pat.textContent = `R$${(pat/1e6).toFixed(2)}M`; _pat.style.color = pat >= gatilho ? '#22c55e' : '#eab308'; }
+  const patMeta = custo / swrMeta;
+  if (_pat) { _pat.textContent = `R$${(pat/1e6).toFixed(2)}M`; _pat.style.color = pat >= patMeta ? '#22c55e' : '#eab308'; }
 
   // Timeline bar (idadeAtual..70 → hoje..projeção)
   const totalYears = 70 - idadeAtual;
