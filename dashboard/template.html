@@ -4604,19 +4604,31 @@ function buildStressTest() {
 
   // Fan chart — rodar MC para gerar trajetórias percentis (cenário padrão -40%)
   const _p = DATA.premissas;
-  const _retReal  = _p.retorno_equity_base || 0.0485;
-  const _vol      = _p.volatilidade_equity || 0.168;
-  const _spending = _p.custo_vida_base     || 250000;
-  const _aporte   = (_p.aporte_mensal      || 33000) * 12;
-  const _fireAge  = _p.idade_fire_alvo     || 53;
-  const _onsetAge = _p.idade_atual         || 39;
-  const _anosAcumulo = Math.max(0, _fireAge - _onsetAge);
-  const _patShock = st ? st.pat_pos_shock : patAtual * 0.60;
-  const _shockPct = st ? st.shock_pct : 40;
+  const _retReal    = _p.retorno_equity_base || 0.0485;
+  const _vol        = _p.volatilidade_equity || 0.168;
+  const _spending   = _p.custo_vida_base     || 250000;
+  const _aporte     = (_p.aporte_mensal      || 33000) * 12;
+  const _fireAge    = _p.idade_fire_alvo     || 53;
+  const _idadeAtual = _p.idade_atual         || 39;
+  const _onsetAge   = parseInt(document.getElementById('stressOnsetAge')?.value || _idadeAtual, 10);
+  const _anosPreShock = Math.max(0, _onsetAge - _idadeAtual);
+  const _anosAcumulo  = Math.max(0, _fireAge - _onsetAge);
+  const _patShock   = st ? st.pat_pos_shock : patAtual * 0.60;
+  const _shockPct   = st ? st.shock_pct : 40;
+
+  // Trajetória P50 determinística de hoje até o shock (E[crescimento] com aportes)
+  const _mu = Math.log(1 + _retReal) - 0.5 * _vol * _vol;
+  const preShockP50 = [patAtual];
+  let _pat = patAtual;
+  for (let t = 0; t < _anosPreShock; t++) {
+    _pat = _pat * Math.exp(_mu) + _aporte;
+    preShockP50.push(_pat);
+  }
+
   setTimeout(() => {
     try {
       const traj = runMCTrajectories(_patShock, _spending, _anosAcumulo, 40, _retReal, _vol, 500, _aporte);
-      buildStressFanChart(traj, _onsetAge, _anosAcumulo, _shockPct);
+      buildStressFanChart(traj, _onsetAge, _anosAcumulo, _shockPct, preShockP50, _idadeAtual);
     } catch(e) { console.error('[stress-fan-chart ERROR]', e); }
   }, 100); // 100ms: garante reflow completo após seção colapsível abrir (50ms era insuficiente em alguns browsers)
 }
@@ -4709,88 +4721,127 @@ function runMCTrajectories(pat0, spendingAnual, anosAcumulo, anosAposentadoria, 
 }
 
 /**
- * Constrói/atualiza o fan chart de stress com bandas de percentis.
+ * Constrói/atualiza o fan chart de stress com 3 fases:
+ *   Fase 1 — linha P50 determinística de hoje até o shock (trajetória esperada)
+ *   Fase 2 — marcador vertical do shock
+ *   Fase 3 — cone de percentis pós-shock (P5/P25/P50/P75/P95)
+ * @param {object} traj - { p5, p25, p50, p75, p95 } arrays pós-shock (length = anosAcumulo + 40 + 1)
+ * @param {number} onsetAge - idade em que o shock ocorre
+ * @param {number} anosAcumulo - anos de acumulação após o shock até FIRE
+ * @param {number} shockPct - magnitude do shock (ex: 40 para −40%)
+ * @param {number[]} [preShockP50] - patrimônio P50 determinístico de hoje até onsetAge (length = anosPreShock + 1)
+ * @param {number} [idadeAtual] - idade atual (padrão: DATA.premissas.idade_atual)
  */
-function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
-  const fireAge = (DATA.premissas?.idade_fire_alvo ?? 53);
-  const nYears  = traj.p50.length;
-  const labels  = Array.from({ length: nYears }, (_, i) => onsetAge + i);
-  const gatilho = DATA.premissas?.patrimonio_gatilho;
-
-  // Índice do FIRE day no array (anosAcumulo anos após o shock)
-  const fireIdx = anosAcumulo;
+function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct, preShockP50, idadeAtual) {
+  const _idadeAtual   = idadeAtual ?? (DATA.premissas?.idade_atual ?? 39);
+  const anosPreShock  = Math.max(0, onsetAge - _idadeAtual);
+  const shockIdx      = anosPreShock;
+  const fireAge       = (DATA.premissas?.idade_fire_alvo ?? 53);
+  const nYearsPost    = traj.p50.length; // = anosAcumulo + 40 + 1
+  const totalPoints   = anosPreShock + nYearsPost;
+  const fireIdx       = shockIdx + anosAcumulo;
+  const labels        = Array.from({ length: totalPoints }, (_, i) => _idadeAtual + i);
+  const gatilho       = DATA.premissas?.patrimonio_gatilho;
+  const M             = 1e6;
 
   const titleEl = document.getElementById('stressFanTitle');
-  if (titleEl) titleEl.textContent = `Projeção após shock de −${shockPct}% aos ${onsetAge} anos · FIRE aos ${fireAge}`;
+  if (titleEl) {
+    const shockLabel = anosPreShock > 0
+      ? `Projeção: hoje → shock −${shockPct}% aos ${onsetAge} anos → cone até FIRE aos ${fireAge}`
+      : `Projeção após shock de −${shockPct}% aos ${onsetAge} anos · FIRE aos ${fireAge}`;
+    titleEl.textContent = shockLabel;
+  }
 
   const ctx = document.getElementById('stressProjectionChart');
   if (!ctx) return;
   // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
   if (ctx.offsetWidth === 0) return;
 
-
   // Destroy any existing chart — Chart.getChart() catches orphaned instances
   const _stressExisting = Chart.getChart(ctx);
   if (_stressExisting) _stressExisting.destroy();
   if (charts.stressProjection) { try { charts.stressProjection.destroy(); } catch(_e) {} charts.stressProjection = null; }
 
-  const M = 1e6;
-  const toM = arr => arr.map(v => +(v / M).toFixed(3));
+  // ── Fase 1: pre-shock P50 (índices 0..shockIdx inclusive, null depois) ──
+  const preShockData = Array.from({ length: totalPoints }, (_, i) => {
+    if (!preShockP50 || i > shockIdx) return null;
+    const v = preShockP50[i];
+    return v != null ? +(v / M).toFixed(3) : null;
+  });
 
-  // Anotações: gatilho + linhas verticais (via chartjs-plugin-annotation não disponível)
-  // Usar dataset extra para marcar FIRE day como linha vertical (trick: NaN fora do ponto)
-  const fireMarker = labels.map((_, i) => i === fireIdx ? null : null); // placeholder
+  // ── Fase 3: datasets pós-shock (null antes de shockIdx, valores de shockIdx em diante) ──
+  const postShockData = arr => Array.from({ length: totalPoints }, (_, i) => {
+    const postIdx = i - shockIdx;
+    if (postIdx < 0 || postIdx >= arr.length) return null;
+    return +(arr[postIdx] / M).toFixed(3);
+  });
 
   charts.stressProjection = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets: [
-        // Ordem: P5 (base) → P25 → P50 (median) → P75 → P95
+        // Fase 1 — trajetória esperada pré-shock
+        {
+          label: 'Trajetória esperada',
+          data: preShockData,
+          borderColor: 'rgba(148,163,184,0.9)',
+          borderWidth: 2,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.3,
+          spanGaps: false,
+        },
+        // Fase 3 — cone pós-shock: P5 → P25 → P50 → P75 → P95
         // fill: '-1' preenche entre este dataset e o anterior
         {
           label: 'P5',
-          data: toM(traj.p5),
+          data: postShockData(traj.p5),
           borderColor: 'rgba(239,68,68,0.4)',
           borderWidth: 1,
           borderDash: [3, 3],
           pointRadius: 0,
           fill: false,
           tension: 0.3,
+          spanGaps: false,
         },
         {
           label: 'P25',
-          data: toM(traj.p25),
+          data: postShockData(traj.p25),
           borderColor: 'rgba(239,68,68,0)',
           borderWidth: 0,
           pointRadius: 0,
           fill: '-1',
           backgroundColor: 'rgba(239,68,68,0.12)',
           tension: 0.3,
+          spanGaps: false,
         },
         {
           label: 'P50 (mediana)',
-          data: toM(traj.p50),
+          data: postShockData(traj.p50),
           borderColor: '#94a3b8',
           borderWidth: 2,
           pointRadius: 0,
           fill: '-1',
           backgroundColor: 'rgba(59,130,246,0.08)',
           tension: 0.3,
+          spanGaps: false,
         },
         {
           label: 'P75',
-          data: toM(traj.p75),
+          data: postShockData(traj.p75),
           borderColor: 'rgba(34,197,94,0)',
           borderWidth: 0,
           pointRadius: 0,
           fill: '-1',
           backgroundColor: 'rgba(34,197,94,0.10)',
           tension: 0.3,
+          spanGaps: false,
         },
         {
           label: 'P95',
-          data: toM(traj.p95),
+          data: postShockData(traj.p95),
           borderColor: 'rgba(34,197,94,0.4)',
           borderWidth: 1,
           borderDash: [3, 3],
@@ -4798,6 +4849,7 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
           fill: '-1',
           backgroundColor: 'rgba(34,197,94,0.14)',
           tension: 0.3,
+          spanGaps: false,
         },
       ]
     },
@@ -4810,7 +4862,7 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
         tooltip: {
           callbacks: {
             title: items => `Idade ${items[0].label}`,
-            label: ctx => ` ${ctx.dataset.label}: R$ ${ctx.parsed.y.toFixed(2)}M`,
+            label: ctx => ctx.parsed.y != null ? ` ${ctx.dataset.label}: R$ ${ctx.parsed.y.toFixed(2)}M` : null,
           }
         }
       },
@@ -4818,11 +4870,11 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
         x: {
           ticks: {
             color: '#94a3b8',
-            maxTicksLimit: 10,
+            maxTicksLimit: 12,
             callback: (v, i) => {
-              const age = onsetAge + i;
-              if (i === 0) return `${age} (shock)`;
-              if (i === fireIdx) return `${age} (FIRE)`;
+              const age = _idadeAtual + i;
+              if (i === shockIdx) return `${age} (shock)`;
+              if (i === fireIdx)  return `${age} (FIRE)`;
               return age;
             }
           },
@@ -4856,8 +4908,8 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
           c.textAlign = 'center';
           c.fillText(label, xPx, ca.top + 10);
         };
-        drawVLine(0,       'rgba(239,68,68,0.8)',  `−${shockPct}%`);
-        drawVLine(fireIdx, 'rgba(34,197,94,0.8)',   'FIRE');
+        drawVLine(shockIdx, 'rgba(239,68,68,0.8)', `−${shockPct}%`);
+        drawVLine(fireIdx,  'rgba(34,197,94,0.8)',  'FIRE');
         // Linha horizontal: gatilho
         if (gatilho) {
           const gatilhoM = gatilho / M;
@@ -4992,9 +5044,18 @@ function runStressSimulation() {
           : null }
     );
 
+    // Trajetória P50 determinística de hoje até o shock (pré-shock)
+    const _mu = Math.log(1 + retReal) - 0.5 * vol * vol;
+    const preShockP50 = [patOriginal];
+    let _pPat = patOriginal;
+    for (let t = 0; t < Math.max(0, idadeOnset - idadeAtual); t++) {
+      _pPat = _pPat * Math.exp(_mu) + aporteAnual;
+      preShockP50.push(_pPat);
+    }
+
     // Fan chart — trajetórias percentis (cenário base, 500 trials)
     const traj = runMCTrajectories(patShock, spendingAnual, anosAcumulo, anosAposentadoria, retReal, vol, 500, aporteAnual);
-    buildStressFanChart(traj, idadeOnset, anosAcumulo, pct);
+    buildStressFanChart(traj, idadeOnset, anosAcumulo, pct, preShockP50, idadeAtual);
 
     if (simBtn) { simBtn.textContent = '▶ Simular ao vivo'; simBtn.disabled = false; }
   }, 30);
