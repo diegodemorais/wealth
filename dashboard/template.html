@@ -2231,7 +2231,12 @@ function buildGlidePath() {
 
   // Canvas em seção colapsível fechada → sair; _toggleBlock reconstrói ao abrir
   const _glideCanvas = document.getElementById('glideChart');
-  if (!_glideCanvas || _glideCanvas.offsetWidth === 0) return;
+  if (!_glideCanvas) return;
+  if (_glideCanvas.offsetWidth === 0) {
+    // Layout ainda não propagou — retry após próximo frame
+    requestAnimationFrame(() => { if (document.getElementById('glideChart')?.offsetWidth > 0) buildGlidePath(); });
+    return;
+  }
 
   if (charts.glide) { charts.glide.destroy(); charts.glide = null; }
   charts.glide = new Chart(document.getElementById('glideChart'), {
@@ -4368,7 +4373,7 @@ function buildNetWorthProjection() {
           }),
           pointBorderColor: _anos.map((a, i) => i === aHojeIdx ? '#3b82f6' : 'transparent'),
           pointBorderWidth: _anos.map((a, i) => i === aHojeIdx ? 2 : 0),
-          fill: '-2',
+          fill: '-1',
           backgroundColor: 'rgba(59,130,246,.08)',
           tension: 0.3,
         },
@@ -4378,7 +4383,7 @@ function buildNetWorthProjection() {
           borderColor: 'rgba(239,68,68,.4)',
           borderWidth: 1.5,
           pointRadius: 0,
-          fill: false,
+          fill: '-1',
           tension: 0.3,
         },
         {
@@ -4675,7 +4680,10 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
   const ctx = document.getElementById('stressProjectionChart');
   if (!ctx) return;
   // Canvas 0×0 em seção fechada → sair; _toggleBlock reconstrói ao abrir
-  if (ctx.offsetWidth === 0) return;
+  if (ctx.offsetWidth === 0) {
+    setTimeout(() => buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct), 200);
+    return;
+  }
 
   const M = 1e6;
   const toM = arr => arr.map(v => +(v / M).toFixed(3));
@@ -6874,7 +6882,7 @@ function buildFireTrilha() {
   const _metaVal = meta;
   const _dataMax = [..._rVals, ..._tVals].length ? Math.max(..._rVals, ..._tVals) : _metaVal;
   const _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1);
-  const _yMin = 0;
+  const _yMin = Math.max(0, Math.min(..._rVals.length ? _rVals : [0]) * 0.8);
 
   // Canvas 0×0 em tab oculta ou seção fechada → sair; _toggleBlock/switchTab reconstrói
   if (el.offsetWidth === 0) return;
@@ -6901,7 +6909,7 @@ function buildFireTrilha() {
       scales: {
         x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.15)' } },
         y: {
-          min: _yMin, max: _yMax,
+          suggestedMin: _yMin, suggestedMax: _yMax,
           ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => 'R$' + (v / 1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.15)' },
         }
