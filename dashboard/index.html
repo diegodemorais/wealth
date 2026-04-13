@@ -1409,8 +1409,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T13:15:16-03:00'); // BRT (UTC-3)
-const VERSION = '2.21';
+const GENERATED_AT = new Date('2026-04-13T13:18:11-03:00'); // BRT (UTC-3)
+const VERSION = '2.22';
 
 const DATA = {
   "_generated": "2026-04-13T13:07:58",
@@ -8176,7 +8176,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.21"
+  "version": "2.22"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -9657,6 +9657,9 @@ window.calcAporte = function() {
   const rendaPctAtual = DATA.dca_status?.renda_plus?.pct_carteira_atual ?? 0;
   const rendaGapPp = rendaAlvoPct - rendaPctAtual;  // negativo = need more, positivo = too much
 
+  // R$ máximo que Renda+ pode absorver para fechar o gap para o alvo
+  const apRendaMax = rendaGapPp > 0 ? Math.max(0, (rendaGapPp / 100) * pat) : 0;
+
   const ipca_active  = taxaIpca  != null && taxaIpca  >= pisoIpca  && ipcaGapPp > 0;
   const renda_active = taxaRenda != null && taxaRenda >= pisoRenda && rendaGapPp > 0;
 
@@ -9690,12 +9693,17 @@ window.calcAporte = function() {
   }
 
   if (restante > 0 && renda_active) {
-    const rendaGapAposAporte = rendaGapPp - restante/pat*100;
+    const paraRenda = Math.min(restante, apRendaMax);
+    const overflowRenda = restante - paraRenda;
+    const rendaGapAposAporte = rendaGapPp - paraRenda/pat*100;
     rows += `<div class="prio"><span class="prio-num">${nivelNum++}.</span>
       <strong>Renda+ 2065</strong> — ${taxaRenda?.toFixed(2)}% ≥ piso ${pisoRenda}% · janela ativa<br>
-      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> integralmente em Renda+ 2065
-      · gap restante: ${rendaGapAposAporte > 0 ? '+' : '−'}${Math.abs(rendaGapAposAporte).toFixed(1)}pp</span></div>`;
-    restante = 0;
+      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(paraRenda)}</strong> em Renda+ 2065
+      · gap restante: ${Math.max(0, rendaGapAposAporte).toFixed(1)}pp</span></div>`;
+    restante = overflowRenda;
+    if (overflowRenda > 0) {
+      rows += `<div style="font-size:.7rem;color:var(--yellow);padding:2px 0 4px 12px">↳ Gap Renda+ preenchido — excedente ${fmtK(overflowRenda)} segue para próximo nível</div>`;
+    }
   } else if (restante > 0 && taxaRenda != null && !renda_active) {
     rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ Renda+ (${taxaRenda?.toFixed(2)}% < piso ${pisoRenda}%) — pausado</div>`;
   }
