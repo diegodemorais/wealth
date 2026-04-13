@@ -1688,7 +1688,9 @@ def compute_drift(posicoes, rf, hodl11_brl, cambio):
     # Total
     eq_usd = sum(p["qty"] * p.get("price", p.get("avg_cost", 0)) for p in posicoes.values())
     rf_brl = sum(v.get("valor", 0) for k, v in rf.items() if k != "hodl11")
-    total  = eq_usd * cambio + rf_brl + hodl11_brl
+    # Crypto legado: precisa estar consistente com concentracao_brasil (para brasil_pct + exposicao_cambial_pct = 100%)
+    crypto_legado = load_state().get("crypto_legado_brl") or CRYPTO_LEGADO_BRL
+    total  = eq_usd * cambio + rf_brl + hodl11_brl + crypto_legado
 
     # Bucket USD sums
     buckets = {}
@@ -1809,7 +1811,7 @@ def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrail
 
 
 # ─── 9. MACRO ─────────────────────────────────────────────────────────────────
-def get_macro_data(state: dict) -> dict:
+def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
     """
     Retorna dados macro para o dashboard.
 
@@ -1819,6 +1821,10 @@ def get_macro_data(state: dict) -> dict:
       - Spread:    calculado automaticamente
       - Depreciacao BRL: premissa oficial do plano (0.5%/ano base, carteira.md)
       - Exposicao cambial: calculado das posicoes do state
+
+    Args:
+        state: Estado contendo dados macro cached
+        total_brl_override: Se fornecido, usa esse valor em vez de state.patrimonio.total_brl
     """
     import math
     import urllib.request
@@ -1886,7 +1892,9 @@ def get_macro_data(state: dict) -> dict:
         pat = state.get("patrimonio", {})
         equity_usd = pat.get("equity_usd", 0)
         cambio_ref  = pat.get("cambio", CAMBIO_FALLBACK)
-        total_brl   = pat.get("total_brl", 0)
+        # Usar total_brl_override se fornecido (calculado recentemente em compute_drift)
+        # Senão, ler do state (que pode estar desatualizado)
+        total_brl   = total_brl_override if total_brl_override is not None else pat.get("total_brl", 0)
         if total_brl and total_brl > 0:
             equity_brl = equity_usd * cambio_ref
             exposicao_cambial_pct = round(equity_brl / total_brl * 100, 1)
@@ -1907,6 +1915,67 @@ def get_macro_data(state: dict) -> dict:
         except Exception as e:
             print(f"  ⚠️ bitcoin yfinance: {e}")
 
+    # -- Plano Status (fallback quando não há snapshot) -----
+    plano_status = None
+    try:
+        fire_data = state.get("fire", {})
+        wellness  = state.get("wellness", {}).get("metrics", {})
+        pfire = fire_data.get("pfire_base", None)
+        if pfire is not None and pfire > 1:
+            pfire = pfire / 100.0
+        drift_max = wellness.get("drift_max", {}).get("value", None)
+        ipca_taxa = state.get("mercado_mtd", {}).get("ipca2040_taxa", None)
+        if ipca_taxa is None:
+            ipca_taxa = state.get("rf", {}).get("ipca2040", {}).get("taxa", None)
+
+        from config import MACRO_REGRAS, PISO_TAXA_IPCA_LONGO
+        status_final = MACRO_REGRAS.get("status_permanece", "INDEFINIDO")
+        gatilhos = []
+
+        if pfire is not None:
+            if pfire < MACRO_REGRAS.get("pfire_monitorar_min", 0.80):
+                status_final = MACRO_REGRAS.get("status_revisar", "REVISAR")
+                gatilhos.append(f"P(FIRE) {pfire:.1%} < 80% — REVISAR")
+            elif pfire < MACRO_REGRAS.get("pfire_permanece_min", 0.85):
+                if status_final != MACRO_REGRAS.get("status_revisar", "REVISAR"):
+                    status_final = MACRO_REGRAS.get("status_monitorar", "MONITORAR")
+                gatilhos.append(f"P(FIRE) {pfire:.1%} entre 80–85% — MONITORAR")
+
+        if drift_max is not None:
+            if drift_max > MACRO_REGRAS.get("drift_monitorar_max", 10.0):
+                status_final = MACRO_REGRAS.get("status_revisar", "REVISAR")
+                gatilhos.append(f"Drift {drift_max:.1f}pp > 10pp — REVISAR")
+            elif drift_max > MACRO_REGRAS.get("drift_permanece_max", 5.0):
+                if status_final != MACRO_REGRAS.get("status_revisar", "REVISAR"):
+                    status_final = MACRO_REGRAS.get("status_monitorar", "MONITORAR")
+                gatilhos.append(f"Drift {drift_max:.1f}pp entre 5–10pp — MONITORAR")
+
+        if ipca_taxa is not None:
+            if ipca_taxa < MACRO_REGRAS.get("ipca_taxa_revisar_max", 5.5):
+                status_final = MACRO_REGRAS.get("status_revisar", "REVISAR")
+                gatilhos.append(f"Taxa IPCA+ {ipca_taxa:.2f}% < 5.5% — REVISAR")
+            elif ipca_taxa < PISO_TAXA_IPCA_LONGO:
+                if status_final != MACRO_REGRAS.get("status_revisar", "REVISAR"):
+                    status_final = MACRO_REGRAS.get("status_monitorar", "MONITORAR")
+                gatilhos.append(f"Taxa IPCA+ {ipca_taxa:.2f}% entre 5.5–6.0% — MONITORAR")
+            else:
+                gatilhos.append(f"DCA IPCA+ ativo — {ipca_taxa:.2f}% ≥ 6.0%")
+
+        gatilho_ativo = gatilhos[0] if gatilhos else "Nenhum gatilho ativo"
+
+        plano_status = {
+            "status": status_final,
+            "gatilho_ativo": gatilho_ativo,
+            "todos_gatilhos": gatilhos,
+            "inputs": {
+                "pfire": round(pfire, 4) if pfire is not None else None,
+                "drift_max_pp": drift_max,
+                "ipca_taxa_pct": ipca_taxa,
+            },
+        }
+    except Exception:
+        plano_status = None
+
     return {
         "selic_meta":               selic_meta,           # % a.a. -- taxa Selic meta vigente
         "fed_funds":                fed_funds,             # % a.a. -- Fed Funds rate (FRED FEDFUNDS)
@@ -1914,6 +1983,7 @@ def get_macro_data(state: dict) -> dict:
         "depreciacao_brl_premissa": DEPRECIACAO_BRL_BASE,
         "exposicao_cambial_pct":    exposicao_cambial_pct, # %     -- parcela do patrimonio em USD
         "bitcoin_usd":              bitcoin_usd,           # USD   -- preço BTC-USD (yfinance)
+        "plano_status":             plano_status,          # dict  -- status do plano (fallback quando sem snapshot)
         # cambio será injetado pelo main() após compute
     }
 
@@ -2623,7 +2693,7 @@ def main():
 
     if macro is None:
         print("  ▶ macro data (inline fallback) ...")
-        macro = get_macro_data(state)
+        macro = get_macro_data(state, total_brl_override=total_brl)
 
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
