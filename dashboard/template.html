@@ -1753,17 +1753,18 @@ function buildTimeline(period) {
     else if (period === '3y') { cutoff = new Date(now); cutoff.setFullYear(cutoff.getFullYear() - 3); }
     else if (period === '5y') { cutoff = new Date(now); cutoff.setFullYear(cutoff.getFullYear() - 5); }
 
-    let taDates = ta.dates, taAp = ta.aportes, taEq = ta.equity_usd, taCR = ta.cambio_rf;
+    let taDates = ta.dates, taAp = ta.aportes, taEq = ta.equity_usd, taCambio = ta.cambio, taRF = ta.rf;
     if (cutoff) {
       const filtered = ta.dates.reduce((acc, d, i) => {
         if (new Date(d + '-01') >= cutoff) acc.push(i);
         return acc;
       }, []);
       if (filtered.length >= 2) {
-        taDates = filtered.map(i => ta.dates[i]);
-        taAp    = filtered.map(i => ta.aportes[i]);
-        taEq    = filtered.map(i => ta.equity_usd[i]);
-        taCR    = filtered.map(i => ta.cambio_rf[i]);
+        taDates  = filtered.map(i => ta.dates[i]);
+        taAp     = filtered.map(i => ta.aportes[i]);
+        taEq     = filtered.map(i => ta.equity_usd[i]);
+        taCambio = filtered.map(i => ta.cambio[i]);
+        taRF     = filtered.map(i => ta.rf[i]);
       }
     }
 
@@ -1776,9 +1777,10 @@ function buildTimeline(period) {
       data: {
         labels: taDates,
         datasets: [
-          { label: 'Aportes',           data: taAp, fill: true, backgroundColor: 'rgba(59,130,246,.35)', borderColor: 'rgba(59,130,246,.8)', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
-          { label: 'Rentabilidade USD', data: taEq, fill: true, backgroundColor: 'rgba(34,197,94,.3)',   borderColor: 'rgba(34,197,94,.8)',  borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
-          { label: 'Câmbio+RF',         data: taCR, fill: true, backgroundColor: 'rgba(234,179,8,.25)',  borderColor: 'rgba(234,179,8,.8)',  borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+          { label: 'Aportes',           data: taAp,      fill: true, backgroundColor: 'rgba(59,130,246,.35)', borderColor: 'rgba(59,130,246,.8)', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+          { label: 'Rentabilidade USD', data: taEq,      fill: true, backgroundColor: 'rgba(34,197,94,.3)',   borderColor: 'rgba(34,197,94,.8)',  borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+          { label: 'Câmbio (FX)',       data: taCambio,  fill: true, backgroundColor: 'rgba(239,68,68,.25)',  borderColor: 'rgba(239,68,68,.8)',  borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
+          { label: 'Renda Fixa (RF)',   data: taRF,      fill: true, backgroundColor: 'rgba(168,85,247,.25)', borderColor: 'rgba(168,85,247,.8)', borderWidth: 1.5, pointRadius: 0, tension: 0.3 },
         ]
       },
       options: {

@@ -471,10 +471,11 @@ def get_backtest():
 # ─── 4. TIMELINE ATTRIBUTION ─────────────────────────────────────────────────
 def get_timeline_attribution():
     """
-    Reconstrói decomposição mensal cumulativa do patrimônio em 3 componentes:
+    Reconstrói decomposição mensal cumulativa do patrimônio em 4 componentes:
     - aportes_cumul: soma cumulativa de aporte_brl
     - equity_usd_cumul: ganhos de equity USD acumulados (em BRL)
-    - cambio_rf_cumul: FX + RF acumulados (em BRL)
+    - cambio_cumul: ganhos FX (depreciação BRL) acumulados (em BRL)
+    - rf_cumul: ganhos RF (Tesouro Direto, etc) acumulados (em BRL)
 
     Lógica:
     1. Lê CSV histórico: dates, patrimonio_brl, aporte_brl
@@ -485,11 +486,13 @@ def get_timeline_attribution():
        Se decomp_sum != 0:
            equity_gain = market_gain * equity_usd_pct / decomp_sum
            fx_rf_gain = market_gain - equity_gain
-       Senão: equity_gain=0, fx_rf_gain=market_gain
+           cambio_gain = fx_rf_gain * fx_pct / (fx_pct + rf_xp_pct)  [se soma>0]
+           rf_gain = fx_rf_gain - cambio_gain
+       Senão: equity_gain=0, cambio_gain=0, rf_gain=market_gain
     4. Cumula cumulativamente
     5. Inclui mês 0 (início) com aportes_cumul=aporte_0, outros=0
 
-    Output: {"dates": [...], "aportes": [...], "equity_usd": [...], "cambio_rf": [...]}
+    Output: {"dates": [...], "aportes": [...], "equity_usd": [...], "cambio": [...], "rf": [...]}
     Ou None se dados insuficientes.
     """
     try:
@@ -553,11 +556,12 @@ def get_timeline_attribution():
         # Indexar retornos por data
         rc_idx = {d: i for i, d in enumerate(rc_dates)}
 
-        # 3. Calcular ganhos mensais e acumular
+        # 3. Calcular ganhos mensais e acumular (separando FX e RF)
         out_dates    = [csv_dates[0]]
         aportes_cumul    = [csv_aporte[0]]
         equity_usd_cumul = [0.0]
-        cambio_rf_cumul  = [0.0]
+        cambio_cumul     = [0.0]
+        rf_cumul         = [0.0]
 
         for t in range(1, len(csv_dates)):
             dt = csv_dates[t]
@@ -573,28 +577,42 @@ def get_timeline_attribution():
                 if decomp_sum != 0:
                     equity_gain = market_gain * eq_p / decomp_sum
                     fx_rf_gain  = market_gain - equity_gain
+                    # Separar FX e RF proporcionalmente ao seu peso na decomposição
+                    fx_rf_sum = fx_p + rf_p
+                    if fx_rf_sum != 0:
+                        cambio_gain = fx_rf_gain * fx_p / fx_rf_sum
+                        rf_gain     = fx_rf_gain - cambio_gain
+                    else:
+                        cambio_gain = 0.0
+                        rf_gain     = fx_rf_gain
                 else:
                     equity_gain = 0.0
-                    fx_rf_gain  = market_gain
+                    cambio_gain = 0.0
+                    rf_gain     = market_gain
             else:
                 equity_gain = 0.0
-                fx_rf_gain  = market_gain
+                cambio_gain = 0.0
+                rf_gain     = market_gain
 
             out_dates.append(dt)
             aportes_cumul.append(round(aportes_cumul[-1] + csv_aporte[t]))
             equity_usd_cumul.append(round(equity_usd_cumul[-1] + equity_gain))
-            cambio_rf_cumul.append(round(cambio_rf_cumul[-1] + fx_rf_gain))
+            cambio_cumul.append(round(cambio_cumul[-1] + cambio_gain))
+            rf_cumul.append(round(rf_cumul[-1] + rf_gain))
 
+        cambio_rf_total = cambio_cumul[-1] + rf_cumul[-1]
         print(f"  → timeline_attribution: {len(out_dates)} meses | "
               f"aportes={aportes_cumul[-1]/1e6:.2f}M | "
               f"equityUsd={equity_usd_cumul[-1]/1e6:.2f}M | "
-              f"cambioRF={cambio_rf_cumul[-1]/1e6:.2f}M")
+              f"cambio={cambio_cumul[-1]/1e6:.2f}M | "
+              f"rf={rf_cumul[-1]/1e6:.2f}M (total FX+RF={cambio_rf_total/1e6:.2f}M)")
 
         return {
             "dates":      out_dates,
             "aportes":    [round(v) for v in aportes_cumul],
             "equity_usd": [round(v) for v in equity_usd_cumul],
-            "cambio_rf":  [round(v) for v in cambio_rf_cumul],
+            "cambio":     [round(v) for v in cambio_cumul],
+            "rf":         [round(v) for v in rf_cumul],
         }
     except Exception as e:
         print(f"  ⚠️ timeline_attribution: {e}")
