@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T22:40:55-03:00'); // BRT (UTC-3)
-const VERSION = '1.203';
+const GENERATED_AT = new Date('2026-04-12T23:09:51-03:00'); // BRT (UTC-3)
+const VERSION = '1.204';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.203"
+  "version": "1.204"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8892,6 +8892,8 @@ function buildGlidePath() {
 
   const _glideCanvas = document.getElementById('glideChart');
   if (!_glideCanvas) return;
+  // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
+  if (_glideCanvas.offsetWidth === 0) return;
 
   // Destroy any existing chart — Chart.getChart() catches orphaned instances not tracked in charts.glide
   const _glideExisting = Chart.getChart(_glideCanvas);
@@ -10966,12 +10968,17 @@ function buildNetWorthProjection() {
   const aHojeIdx = _anos.indexOf(anoAtual);
   const patAtual = DATA.premissas.patrimonio_atual;
 
-  // Y max dinâmico baseado nos dados reais (P90 pode superar R$15M em cenário favorável)
+  // Y bounds dinâmicos: max com headroom, min zoom para que as linhas não fiquem coladas no fundo
   const _allNwVals = [..._p10, ..._p50, ..._p90].filter(v => v != null && isFinite(v) && v > 0);
   const _nwDataMax = _allNwVals.length ? Math.max(..._allNwVals) : 15e6;
   const _nwYMax = Math.min(_nwDataMax * 1.15, 30e6); // headroom 15%, cap em R$30M
+  const _p10Pos = _p10.filter(v => v != null && v > 0);
+  const _nwYMin = _p10Pos.length ? Math.floor(Math.min(..._p10Pos) * 0.75 / 1e6) * 1e6 : 0;
 
-  if (charts.netWorth) { charts.netWorth.destroy(); charts.netWorth = null; }
+  // Destroy any existing chart — Chart.getChart() catches orphaned instances not tracked in charts.netWorth
+  const _nwExisting = Chart.getChart(ctx);
+  if (_nwExisting) _nwExisting.destroy();
+  if (charts.netWorth) { try { charts.netWorth.destroy(); } catch(_e) {} charts.netWorth = null; }
 
   // Plugin inline para linha vertical "Hoje" e shading
   const verticalLinePlugin = {
@@ -11008,7 +11015,7 @@ function buildNetWorthProjection() {
         {
           label: 'P90 (cenário favorável)',
           data: _p90,
-          borderColor: 'rgba(34,197,94,.4)',
+          borderColor: 'rgba(34,197,94,.75)',
           borderWidth: 1.5,
           pointRadius: 0,
           fill: false,
@@ -11038,7 +11045,7 @@ function buildNetWorthProjection() {
         {
           label: 'P10 (cenário stress)',
           data: _p10,
-          borderColor: 'rgba(239,68,68,.4)',
+          borderColor: 'rgba(239,68,68,.7)',
           backgroundColor: 'rgba(239,68,68,.08)',
           borderWidth: 1.5,
           pointRadius: 0,
@@ -11098,7 +11105,7 @@ function buildNetWorthProjection() {
         },
         y: {
           max: _nwYMax,
-          min: 0,
+          min: _nwYMin,
           ticks: { color: '#94a3b8', callback: v => 'R$' + (v/1e6).toFixed(1) + 'M' },
           grid: { color: 'rgba(71,85,105,.2)' }
         }
@@ -11337,6 +11344,8 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
 
   const ctx = document.getElementById('stressProjectionChart');
   if (!ctx) return;
+  // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
+  if (ctx.offsetWidth === 0) return;
   // Destroy any existing chart — Chart.getChart() catches orphaned instances
   const _stressExisting = Chart.getChart(ctx);
   if (_stressExisting) _stressExisting.destroy();
@@ -12809,14 +12818,14 @@ function _initTabCharts(tab) {
                  updateWhatIf();
                },
                buildStressTest,
-               buildGlidePath, buildEventosVida, buildPfireFamilia],
+               buildEventosVida, buildPfireFamilia],
     retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
                buildBondPool, buildBondPoolRunway],
   };
   const fns = tabFns[tab] || [];
-  fns.forEach(fn => { try { fn(); } catch(e) { console.warn('[lazy]', fn.name || tab, e); } });
+  fns.forEach(fn => { try { fn(); } catch(e) { console.error('[chart-init ERROR]', fn.name || tab, e.message, e); } });
 }
 // Collapse toggle with chart lazy-resize: after opening, resize all Chart.js instances
 // inside the block. If a chart was rendered with zero dimensions (canvas was hidden),
@@ -13543,7 +13552,10 @@ function buildFireTrilha() {
   // Canvas 0×0 em tab oculta → sair; switchTab double-RAF reconstrói após reflow
   if (el.offsetWidth === 0) return;
 
-  if (charts.fireTrilha) { charts.fireTrilha.destroy(); charts.fireTrilha = null; }
+  // Destroy any existing chart — Chart.getChart() catches orphaned instances
+  const _trilhaExisting = Chart.getChart(el);
+  if (_trilhaExisting) _trilhaExisting.destroy();
+  if (charts.fireTrilha) { try { charts.fireTrilha.destroy(); } catch(_e) {} charts.fireTrilha = null; }
   const ctx = el.getContext('2d');
   charts.fireTrilha = new Chart(ctx, {
     type: 'line',
