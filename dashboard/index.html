@@ -3146,12 +3146,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T20:43:36-03:00'); // BRT (UTC-3)
-const VERSION = '2.93';
+const GENERATED_AT = new Date('2026-04-13T20:46:17-03:00'); // BRT (UTC-3)
+const VERSION = '2.94';
 
 const DATA = {
-  "_generated": "2026-04-13T20:37:48",
-  "_generated_brt": "2026-04-13T20:37:48-03:00",
+  "_generated": "2026-04-13T20:46:15",
+  "_generated_brt": "2026-04-13T20:46:15-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -3161,7 +3161,7 @@ const DATA = {
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.005,
+  "cambio": 4.9956,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -3260,7 +3260,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3600433,
+    "patrimonio_atual": 3594491,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -4770,7 +4770,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -5023,7 +5023,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -5085,7 +5085,7 @@ const DATA = {
       472.11,
       455.75,
       477.39,
-      487.54,
+      487.53,
       494.63,
       506.95,
       518.02,
@@ -5371,7 +5371,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.87,
+      "atual_pct": 2.88,
       "status": "verde"
     }
   },
@@ -5900,8 +5900,8 @@ const DATA = {
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 87.1,
-    "bitcoin_usd": 74787.9,
+    "exposicao_cambial_pct": 87.3,
+    "bitcoin_usd": 74595.63,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -5915,13 +5915,13 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.005
+    "cambio": 4.9956
   },
   "mercado": {
-    "cambio_brl_usd": 5.005,
-    "btc_usd": 74787.9,
-    "cambio_mtd_pct": -2.93,
-    "btc_mtd_pct": 4.05,
+    "cambio_brl_usd": 4.9956,
+    "btc_usd": 74595.63,
+    "cambio_mtd_pct": -3.11,
+    "btc_mtd_pct": 3.78,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -6413,7 +6413,7 @@ const DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 436568,
-    "total_portfolio_brl": 3600433,
+    "total_portfolio_brl": 3594491,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -6429,23 +6429,23 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72756,
-      "delta_brl": 47756,
-      "delta_pct": 191.0,
+      "realizado_media_brl": 72694,
+      "delta_brl": 47694,
+      "delta_pct": 190.8,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1957172,
+      "total_ibkr_brl": 1953497,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4365331,
-      "cambio_conversao": 5.005,
+      "total_aporte_brl": 4361656,
+      "cambio_conversao": 4.9956,
       "por_ano_brl": {
-        "2026": 95095,
-        "2025": 282645,
-        "2024": 372731,
-        "2023": 393931,
-        "2022": 482450,
-        "2021": 330321
+        "2026": 94916,
+        "2025": 282114,
+        "2024": 372031,
+        "2023": 393191,
+        "2022": 481543,
+        "2021": 329701
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
@@ -9725,20 +9725,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3600433,
-      3739379,
-      3883686,
-      4033563,
-      4189224,
-      4350892,
-      4518799,
-      4693186,
-      4874302,
-      5062408,
-      5257773,
-      5460678,
-      5671413,
-      5890281,
+      3594491,
+      3733648,
+      3878192,
+      4028332,
+      4184285,
+      4346275,
+      4514536,
+      4689311,
+      4870853,
+      5059423,
+      5255293,
+      5458746,
+      5670075,
+      5889586,
       6117595,
       6172298,
       6229655,
@@ -9779,20 +9779,20 @@ const DATA = {
       14090060
     ],
     "p50": [
-      3600433,
-      3857645,
-      4133231,
-      4428505,
-      4744873,
-      5083843,
-      5447028,
-      5836158,
-      6253088,
-      6699803,
-      7178430,
-      7691251,
-      8240707,
-      8829415,
+      3594491,
+      3851732,
+      4127384,
+      4422762,
+      4739279,
+      5078448,
+      5441889,
+      5831340,
+      6248663,
+      6695852,
+      7175044,
+      7688529,
+      8238762,
+      8828373,
       9460180,
       9676999,
       9904333,
@@ -9833,20 +9833,20 @@ const DATA = {
       33370394
     ],
     "p90": [
-      3600433,
-      3973840,
-      4385974,
-      4840851,
-      5342905,
-      5897027,
-      6508618,
-      7183638,
-      7928666,
-      8750962,
-      9658540,
-      10660244,
-      11765837,
-      12986092,
+      3594491,
+      3967750,
+      4379769,
+      4834573,
+      5336605,
+      5890769,
+      6502478,
+      7177708,
+      7923055,
+      8745801,
+      9653983,
+      10656471,
+      11763061,
+      12984560,
       14332903,
       14786049,
       15261172,
@@ -9916,7 +9916,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.93"
+  "version": "2.94"
 };
 
 // ═══════════════════════════════════════════════════════════════

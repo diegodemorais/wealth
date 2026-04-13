@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-13T20:33:15",
-  "_generated_brt": "2026-04-13T20:33:15-03:00",
+  "_generated": "2026-04-13T20:46:15",
+  "_generated_brt": "2026-04-13T20:46:15-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,7 +10,7 @@
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.005,
+  "cambio": 4.9956,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3600433,
+    "patrimonio_atual": 3594491,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -259,7 +259,7 @@
     }
   },
   "scenario_comparison": {
-    "fire53": {
+    "base": {
       "idade": 53,
       "base": 90.4,
       "fav": 94.1,
@@ -270,7 +270,7 @@
       "gasto_anual": 250000,
       "swr": 2.17
     },
-    "fire50": {
+    "aspiracional": {
       "idade": 49,
       "base": 86.5,
       "fav": 92.4,
@@ -281,7 +281,7 @@
       "gasto_anual": 250000,
       "swr": 2.46
     },
-    "nota_fire50_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$10.16M (@49). Fonte: fire_montecarlo.py MC 10k sims."
+    "nota_scenarios_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$10.16M (@49). Fonte: fire_montecarlo.py MC 10k sims."
   },
   "timeline": {
     "labels": [
@@ -1451,7 +1451,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -1878,7 +1878,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -1940,7 +1940,7 @@
       472.11,
       455.75,
       477.39,
-      487.54,
+      487.53,
       494.63,
       506.95,
       518.02,
@@ -2226,7 +2226,7 @@
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.87,
+      "atual_pct": 2.88,
       "status": "verde"
     }
   },
@@ -2755,8 +2755,8 @@
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 87.1,
-    "bitcoin_usd": 74856.67,
+    "exposicao_cambial_pct": 87.3,
+    "bitcoin_usd": 74595.63,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -2770,13 +2770,13 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.005
+    "cambio": 4.9956
   },
   "mercado": {
-    "cambio_brl_usd": 5.005,
-    "btc_usd": 74856.67,
-    "cambio_mtd_pct": -2.93,
-    "btc_mtd_pct": 4.15,
+    "cambio_brl_usd": 4.9956,
+    "btc_usd": 74595.63,
+    "cambio_mtd_pct": -3.11,
+    "btc_mtd_pct": 3.78,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3268,7 +3268,7 @@
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 436568,
-    "total_portfolio_brl": 3600433,
+    "total_portfolio_brl": 3594491,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3284,23 +3284,23 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72756,
-      "delta_brl": 47756,
-      "delta_pct": 191.0,
+      "realizado_media_brl": 72694,
+      "delta_brl": 47694,
+      "delta_pct": 190.8,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1957172,
+      "total_ibkr_brl": 1953497,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4365331,
-      "cambio_conversao": 5.005,
+      "total_aporte_brl": 4361656,
+      "cambio_conversao": 4.9956,
       "por_ano_brl": {
-        "2026": 95095,
-        "2025": 282645,
-        "2024": 372731,
-        "2023": 393931,
-        "2022": 482450,
-        "2021": 330321
+        "2026": 94916,
+        "2025": 282114,
+        "2024": 372031,
+        "2023": 393191,
+        "2022": 481543,
+        "2021": 329701
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
