@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-10T17:10:15",
+  "_generated": "2026-04-13T16:45:27",
   "_source": "reconstruct_history.py",
   "periodo": {
     "inicio": "2021-04-28",
@@ -9,19 +9,19 @@
   },
   "patrimonio": {
     "inicio_brl": 257684.36,
-    "fim_brl": 3519198.67,
-    "total_aportes_brl": 2284059.46,
-    "ganho_mercado_brl": 977454.85
+    "fim_brl": 3589664.35,
+    "total_aportes_brl": 2342218.25,
+    "ganho_mercado_brl": 989761.74
   },
   "retorno_twr": {
-    "acumulado_pct": 82.75,
-    "cagr_pct": 12.82,
+    "acumulado_pct": 83.39,
+    "cagr_pct": 12.9,
     "media_mensal_pct": 1.15
   },
   "risco": {
     "max_drawdown_pct": -22.7,
     "max_drawdown_date": "2022-09",
-    "volatilidade_anual_pct": 18.34
+    "volatilidade_anual_pct": 18.35
   },
   "distribuicao": {
     "melhor_mes": {
