@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | ARCH-003 |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Head, Quant |
 | **Co-sponsor** | Head |
 | **Dependencias** | ARCH-001, ARCH-002 (recomendado, não bloqueante) |
 | **Criado em** | 2026-04-13 |
 | **Origem** | Diagnóstico arquitetural — template monolítico 8000+ linhas |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-13 |
 
 ---
 
