@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T06:52:05-03:00'); // BRT (UTC-3)
-const VERSION = '1.208';
+const GENERATED_AT = new Date('2026-04-13T07:00:33-03:00'); // BRT (UTC-3)
+const VERSION = '1.209';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.208"
+  "version": "1.209"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -13515,6 +13515,18 @@ function buildTrackingFire() {
   if (charts.trackingFire) { try { charts.trackingFire.destroy(); } catch (_e) {} charts.trackingFire = null; }
 
   const ctx = el.getContext('2d');
+
+  // DEBUG: remover após diagnóstico
+  console.error('[TF DEBUG]', {
+    meta: meta, _yMax: _yMax,
+    realizadoLen: realizado.length,
+    realizadoNonNull: realizado.filter(v=>v!=null).length,
+    realizadoMax: Math.max(...realizado.filter(v=>v!=null&&v>0)),
+    trilhaLen: trilha.length,
+    trilhaMin: Math.min(...trilha.filter(v=>v!=null&&v>0)),
+    trilhaMax: Math.max(...trilha.filter(v=>v!=null&&v>0)),
+    canvasW: el.offsetWidth, canvasH: el.offsetHeight,
+  });
 
   // Plugin: linha meta desenhada via getPixelForValue (posição garantida independente dos datasets)
   const _metaPlugin = {

@@ -6855,6 +6855,18 @@ function buildTrackingFire() {
 
   const ctx = el.getContext('2d');
 
+  // DEBUG: remover após diagnóstico
+  console.error('[TF DEBUG]', {
+    meta: meta, _yMax: _yMax,
+    realizadoLen: realizado.length,
+    realizadoNonNull: realizado.filter(v=>v!=null).length,
+    realizadoMax: Math.max(...realizado.filter(v=>v!=null&&v>0)),
+    trilhaLen: trilha.length,
+    trilhaMin: Math.min(...trilha.filter(v=>v!=null&&v>0)),
+    trilhaMax: Math.max(...trilha.filter(v=>v!=null&&v>0)),
+    canvasW: el.offsetWidth, canvasH: el.offsetHeight,
+  });
+
   // Plugin: linha meta desenhada via getPixelForValue (posição garantida independente dos datasets)
   const _metaPlugin = {
     id: 'trackingFireMeta',
