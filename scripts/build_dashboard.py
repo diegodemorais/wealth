@@ -854,13 +854,45 @@ def build(data_path: Path, template_path: Path, out_path: Path,
         print(f"✅ Estrutura HTML validada")
 
 
+def _assemble_css() -> str:
+    """Monta CSS a partir de arquivos em dashboard/styles/ em ordem alfabética.
+
+    Lê 01-reset.css, 02-theme.css, 03-layout.css, 04-components.css, 05-responsive.css
+    e concatena numa única string.
+    """
+    styles_dir = ROOT / "dashboard" / "styles"
+
+    if not styles_dir.exists():
+        print("⚠️  dashboard/styles/ não encontrado — usando CSS inline")
+        return ""
+
+    css_files = sorted(styles_dir.glob("*.css"))
+    if not css_files:
+        print("⚠️  Nenhum arquivo CSS encontrado em dashboard/styles/ — usando CSS inline")
+        return ""
+
+    parts = []
+    for css_file in css_files:
+        try:
+            content = css_file.read_text(encoding="utf-8")
+            parts.append(content)
+        except Exception as e:
+            print(f"⚠️  Erro ao ler {css_file}: {e}")
+
+    assembled_css = "\n".join(parts)
+    print(f"   Assembled CSS from {len(css_files)} files ({len(assembled_css):,} chars)")
+    return assembled_css
+
+
 def _assemble_template(template_path: Path) -> str:
     """Monta template a partir de partials em dashboard/templates/ ou usa template.html fallback.
 
     Se templates/ existe, lê e concatena todos os .html em ordem alfabética.
+    Injetar CSS montado (dashboard/styles/) na primeira tag </style>.
     Caso contrário, usa template.html original.
     """
     templates_dir = ROOT / "dashboard" / "templates"
+    template_html = ""
 
     if templates_dir.exists():
         partials = sorted(templates_dir.glob("*.html"))
@@ -869,12 +901,20 @@ def _assemble_template(template_path: Path) -> str:
             parts = []
             for partial in partials:
                 parts.append(partial.read_text(encoding="utf-8"))
-            assembled = "".join(parts)
+            template_html = "".join(parts)
             print(f"   Assembling template from {len(partials)} partials...")
-            return assembled
 
-    # Fallback: ler template.html original
-    return template_path.read_text(encoding="utf-8")
+    if not template_html:
+        # Fallback: ler template.html original
+        template_html = template_path.read_text(encoding="utf-8")
+
+    # Injetar CSS montado no primeiro </style> (apenas se partials existirem)
+    css_content = _assemble_css()
+    if css_content and "</style>" in template_html:
+        # Encontrar primeira tag </style> e inserir CSS antes dela
+        template_html = template_html.replace("</style>", f"{css_content}\n</style>", 1)
+
+    return template_html
 
 
 def _build_data_js(data: dict, generated_at: str, version: str) -> str:

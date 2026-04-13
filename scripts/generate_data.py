@@ -2805,7 +2805,7 @@ def main():
     swr_50 = (gasto_anual / pat_med_50 * 100) if pat_med_50 > 0 else 0
 
     scenario_comparison = {
-        "fire53": {
+        "base": {
             "idade": age_base,
             "base":        pfire_base.get("base"),
             "fav":         pfire_base.get("fav"),
@@ -2816,7 +2816,7 @@ def main():
             "gasto_anual": gasto_anual,
             "swr":         round(swr_53, 2),
         },
-        "fire50": {
+        "aspiracional": {
             "idade": age_aspir,
             "base":        pfire_aspiracional.get("base"),
             "fav":         pfire_aspiracional.get("fav"),
@@ -2827,7 +2827,7 @@ def main():
             "gasto_anual": gasto_anual,
             "swr":         round(swr_50, 2),
         },
-        "nota_fire50_pat": (
+        "nota_scenarios_pat": (
             f"Pat. mediano no FIRE Day (base): R${pat_med_53/1e6:.2f}M (@{age_base}) / "
             f"R${pat_med_50/1e6:.2f}M (@{age_aspir}). "
             "Fonte: fire_montecarlo.py MC 10k sims."

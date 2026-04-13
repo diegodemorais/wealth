@@ -1164,7 +1164,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <button class="preset-btn"        id="pmkt-stress"  onclick="setFireMkt('stress')">⚠️ Stress</button>
     <button class="preset-btn active" id="pmkt-base"    onclick="setFireMkt('base')">✅ Base</button>
     <button class="preset-btn"        id="pmkt-fav"     onclick="setFireMkt('fav')">🚀 Favorável</button>
-    <button class="preset-btn"        id="pcond-fire50" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
+    <button class="preset-btn"        id="pcond-aspiracional" onclick="setFirePresetAspiracional()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
   </div>
 </div>
 
@@ -3877,13 +3877,13 @@ window.setFireMkt = function(mkt) {
 
 // Cenário Aspiracional — preset atômico (mesmo aporte base, retorno favorável, custo go-go)
 // Marca modo aspiracional; botões Mercado/Condição ficam visualmente desabilitados mas clicáveis
-window.setFirePreset50 = function() {
+window.setFirePresetAspiracional = function() {
   window._aspiracionalMode = true;
   document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => {
     b.classList.remove('active');
-    if (b.id !== 'pcond-fire50') b.classList.add('disabled');  // visual apenas (CSS opacity/pointer-events)
+    if (b.id !== 'pcond-aspiracional') b.classList.add('disabled');  // visual apenas (CSS opacity/pointer-events)
   });
-  document.getElementById('pcond-fire50')?.classList.add('active');
+  document.getElementById('pcond-aspiracional')?.classList.add('active');
   const p    = DATA.premissas;
   const goGo = DATA.spendingSmile?.go_go?.gasto ?? 242000;
   const sA   = document.getElementById('simAporte');

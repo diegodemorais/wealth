@@ -217,22 +217,22 @@ def _():
     return True, f"All {len(required)} required premissas fields present"
 
 
-@registry.test("net-worth-projection", "DATA", "scenario_comparison has fire53 and fire50", "CRITICAL")
+@registry.test("net-worth-projection", "DATA", "scenario_comparison has base and aspiracional", "CRITICAL")
 def _():
     d = load_data()
     sc = d.get("scenario_comparison")
     if sc is None:
         return False, "scenario_comparison missing"
-    if "fire53" not in sc or "fire50" not in sc:
+    if "base" not in sc or "aspiracional" not in sc:
         return False, f"Missing scenario keys: {list(sc.keys())}"
-    fire53 = sc["fire53"]
-    fire50 = sc["fire50"]
+    base = sc["base"]
+    aspiracional = sc["aspiracional"]
     for s in ["base", "fav", "stress"]:
-        if s not in fire53:
-            return False, f"fire53 missing '{s}' scenario"
-        if s not in fire50:
-            return False, f"fire50 missing '{s}' scenario"
-    return True, "scenario_comparison has fire53 and fire50 with base/fav/stress"
+        if s not in base:
+            return False, f"base missing '{s}' scenario"
+        if s not in aspiracional:
+            return False, f"aspiracional missing '{s}' scenario"
+    return True, "scenario_comparison has base and aspiracional with base/fav/stress"
 
 
 @registry.test("net-worth-projection", "DATA", "pfire values in [0, 100] range", "CRITICAL")
@@ -240,7 +240,7 @@ def _():
     d = load_data()
     sc = d.get("scenario_comparison", {})
     errors = []
-    for scenario_key in ["fire53", "fire50"]:
+    for scenario_key in ["base", "aspiracional"]:
         for variant in ["base", "fav", "stress"]:
             val = get_nested(d, f"scenario_comparison.{scenario_key}.{variant}")
             if val is None:
@@ -252,23 +252,23 @@ def _():
     return True, "All scenario pfire values in [0, 100]"
 
 
-@registry.test("net-worth-projection", "DATA", "fire53 base >= fire50 base (more time = higher P)", "HIGH")
+@registry.test("net-worth-projection", "DATA", "base P(FIRE) >= aspiracional P(FIRE) (more time = higher P)", "HIGH")
 def _():
     d = load_data()
-    f53 = get_nested(d, "scenario_comparison.fire53.base")
-    f50 = get_nested(d, "scenario_comparison.fire50.base")
-    if f53 is None or f50 is None:
-        return False, f"Missing: fire53.base={f53}, fire50.base={f50}"
-    if f53 < f50:
-        return False, f"Unexpected: fire53.base={f53} < fire50.base={f50} — retiring later should not decrease P(FIRE)"
-    return True, f"fire53.base={f53} >= fire50.base={f50}"
+    pfire_base = get_nested(d, "scenario_comparison.base.base")
+    pfire_aspir = get_nested(d, "scenario_comparison.aspiracional.base")
+    if pfire_base is None or pfire_aspir is None:
+        return False, f"Missing: base.base={pfire_base}, aspiracional.base={pfire_aspir}"
+    if pfire_base < pfire_aspir:
+        return False, f"Unexpected: base={pfire_base} < aspiracional={pfire_aspir} — retiring later should not decrease P(FIRE)"
+    return True, f"base={pfire_base} >= aspiracional={pfire_aspir}"
 
 
 @registry.test("net-worth-projection", "DATA", "fav >= base >= stress for each scenario", "HIGH")
 def _():
     d = load_data()
     errors = []
-    for scenario_key in ["fire53", "fire50"]:
+    for scenario_key in ["base", "aspiracional"]:
         fav = get_nested(d, f"scenario_comparison.{scenario_key}.fav")
         base = get_nested(d, f"scenario_comparison.{scenario_key}.base")
         stress = get_nested(d, f"scenario_comparison.{scenario_key}.stress")
@@ -279,7 +279,7 @@ def _():
             errors.append(f"{scenario_key}: fav={fav} >= base={base} >= stress={stress} violated")
     if errors:
         return False, f"Scenario ordering errors: {errors}"
-    return True, "fav >= base >= stress for both fire53 and fire50"
+    return True, "fav >= base >= stress for both base and aspiracional"
 
 
 @registry.test("net-worth-projection", "DATA", "spendingSmile has go_go/slow_go/no_go phases", "HIGH")
@@ -345,25 +345,25 @@ def _():
 # scenario-comparison
 # ---------------------------------------------------------------------------
 
-@registry.test("scenario-comparison", "DATA", "scenario_comparison.fire53 has pat_mediano and percentiles", "HIGH")
+@registry.test("scenario-comparison", "DATA", "scenario_comparison.base has pat_mediano and percentiles", "HIGH")
 def _():
     d = load_data()
-    f53 = get_nested(d, "scenario_comparison.fire53")
-    if f53 is None:
-        return False, "scenario_comparison.fire53 missing"
+    sc_base = get_nested(d, "scenario_comparison.base")
+    if sc_base is None:
+        return False, "scenario_comparison.base missing"
     required = ["pat_mediano", "pat_p10", "pat_p90"]
-    missing = [k for k in required if k not in f53]
+    missing = [k for k in required if k not in sc_base]
     if missing:
-        return False, f"fire53 missing: {missing}"
-    return True, f"fire53 has pat_mediano={f53['pat_mediano']:,.0f}"
+        return False, f"base missing: {missing}"
+    return True, f"base has pat_mediano={sc_base['pat_mediano']:,.0f}"
 
 
-@registry.test("scenario-comparison", "DATA", "fire53 pat_p10 < pat_mediano < pat_p90", "HIGH")
+@registry.test("scenario-comparison", "DATA", "base pat_p10 < pat_mediano < pat_p90", "HIGH")
 def _():
     d = load_data()
-    p10 = get_nested(d, "scenario_comparison.fire53.pat_p10")
-    p50 = get_nested(d, "scenario_comparison.fire53.pat_mediano")
-    p90 = get_nested(d, "scenario_comparison.fire53.pat_p90")
+    p10 = get_nested(d, "scenario_comparison.base.pat_p10")
+    p50 = get_nested(d, "scenario_comparison.base.pat_mediano")
+    p90 = get_nested(d, "scenario_comparison.base.pat_p90")
     if None in (p10, p50, p90):
         return False, f"Missing: p10={p10}, p50={p50}, p90={p90}"
     if not (p10 < p50 < p90):
@@ -371,16 +371,16 @@ def _():
     return True, f"p10={p10:,.0f} < p50={p50:,.0f} < p90={p90:,.0f}"
 
 
-@registry.test("scenario-comparison", "DATA", "fire50 pat_mediano < fire53 pat_mediano", "MEDIUM")
+@registry.test("scenario-comparison", "DATA", "aspiracional pat_mediano < base pat_mediano", "MEDIUM")
 def _():
     d = load_data()
-    f53_med = get_nested(d, "scenario_comparison.fire53.pat_mediano")
-    f50_med = get_nested(d, "scenario_comparison.fire50.pat_mediano")
-    if f53_med is None or f50_med is None:
-        return False, f"Missing: fire53.pat_mediano={f53_med}, fire50.pat_mediano={f50_med}"
-    if f53_med <= f50_med:
-        return False, f"Unexpected: fire53 median R${f53_med:,.0f} <= fire50 median R${f50_med:,.0f}"
-    return True, f"fire53 median R${f53_med:,.0f} > fire50 median R${f50_med:,.0f}"
+    pat_base = get_nested(d, "scenario_comparison.base.pat_mediano")
+    pat_aspir = get_nested(d, "scenario_comparison.aspiracional.pat_mediano")
+    if pat_base is None or pat_aspir is None:
+        return False, f"Missing: base.pat_mediano={pat_base}, aspiracional.pat_mediano={pat_aspir}"
+    if pat_base <= pat_aspir:
+        return False, f"Unexpected: base median R${pat_base:,.0f} <= aspiracional median R${pat_aspir:,.0f}"
+    return True, f"base median R${pat_base:,.0f} > aspiracional median R${pat_aspir:,.0f}"
 
 
 @registry.test("scenario-comparison", "RENDER", "scenarioChart canvas exists in HTML", "HIGH")
@@ -396,9 +396,9 @@ def _():
     import re
     build_text = BUILD_PY.read_text()
     d = load_data()
-    base = get_nested(d, "scenario_comparison.fire53.base")
+    base = get_nested(d, "scenario_comparison.base.base")
     if base is None:
-        return False, "scenario_comparison.fire53.base missing"
+        return False, "scenario_comparison.base.base missing"
     # Check for hardcode as a dict value (e.g. "pfire_atual": 90.4)
     # This is more specific than bare assignment and catches real hardcodes
     pattern = rf'"pfire[^"]*"\s*:\s*{re.escape(str(base))}\b'
@@ -407,7 +407,7 @@ def _():
             f"Hardcoded pfire value={base} found as dict literal in build_dashboard.py. "
             "Fallback defaults should read from data['pfire_base']['base'] not literal values."
         )
-    return True, f"fire53.base={base} not hardcoded as dict literal in build script"
+    return True, f"base.base={base} not hardcoded as dict literal in build script"
 
 
 # ---------------------------------------------------------------------------
@@ -1930,15 +1930,15 @@ def _():
     return True, f"{len(confirmados)}/{len(eventos)} eventos have 'confirmado' field"
 
 
-@registry.test("pfire-familia", "DATA", "pfire_base.base consistent with scenario_comparison.fire53.base", "CRITICAL")
+@registry.test("pfire-familia", "DATA", "pfire_base.base consistent with scenario_comparison.base.base", "CRITICAL")
 def _():
     d = load_data()
     pfire_base_base = get_nested(d, "pfire_base.base")
-    sc_fire53_base = get_nested(d, "scenario_comparison.fire53.base")
-    if pfire_base_base is None or sc_fire53_base is None:
-        return False, f"Missing: pfire_base.base={pfire_base_base}, scenario_comparison.fire53.base={sc_fire53_base}"
-    if abs(pfire_base_base - sc_fire53_base) > 0.1:
-        return False, f"Inconsistency: pfire_base.base={pfire_base_base} != scenario_comparison.fire53.base={sc_fire53_base}"
+    sc_base_base = get_nested(d, "scenario_comparison.base.base")
+    if pfire_base_base is None or sc_base_base is None:
+        return False, f"Missing: pfire_base.base={pfire_base_base}, scenario_comparison.base.base={sc_base_base}"
+    if abs(pfire_base_base - sc_base_base) > 0.1:
+        return False, f"Inconsistency: pfire_base.base={pfire_base_base} != scenario_comparison.base.base={sc_base_base}"
     return True, f"pfire_base.base={pfire_base_base} consistent with scenario_comparison"
 
 
@@ -1959,8 +1959,8 @@ def _():
 @registry.test("pfire-familia", "RENDER", "conditional pfire buttons exist in HTML", "HIGH")
 def _():
     html = load_html()
-    # pcond-fire50, pcond-casamento, pcond-filho, pcond-solteiro
-    expected = ["pcond-fire50", "pcond-casamento"]
+    # pcond-aspiracional, pcond-casamento, pcond-filho, pcond-solteiro
+    expected = ["pcond-aspiracional", "pcond-casamento"]
     missing = [e for e in expected if e not in html]
     if missing:
         return False, f"Conditional pfire buttons missing: {missing}"
@@ -2688,7 +2688,7 @@ def _():
 def _():
     d = load_data()
     errors = []
-    for scenario in ["fire53", "fire50"]:
+    for scenario in ["base", "aspiracional"]:
         p10 = get_nested(d, f"scenario_comparison.{scenario}.pat_p10")
         p50 = get_nested(d, f"scenario_comparison.{scenario}.pat_mediano")
         p90 = get_nested(d, f"scenario_comparison.{scenario}.pat_p90")
@@ -2699,7 +2699,7 @@ def _():
             errors.append(f"{scenario}: P10={p10:,.0f}, P50={p50:,.0f}, P90={p90:,.0f} — não monótono")
     if errors:
         return False, f"Ordem P10 < P50 < P90 violada: {errors}"
-    return True, "P10 < P50 < P90 validado em fire53 e fire50"
+    return True, "P10 < P50 < P90 validado em base e aspiracional"
 
 
 @registry.test("spending-sensitivity", "CALCULATIONS", "aumentar custo → reduz P(FIRE) monotonicamente", "HIGH")
@@ -2753,22 +2753,14 @@ def _():
 
 # ─── COHERENCE: Validar coerência de cenários ──────────────────────────────────
 
-@registry.test("scenario-comparison", "COHERENCE", "fire53 >= fire50 em todos cenários (mais tempo = melhor)", "HIGH")
+@registry.test("scenario-comparison", "COHERENCE", "base >= aspiracional em todos cenários (mais tempo = melhor)", "HIGH")
 def _():
     d = load_data()
-    errors = []
-    for scenario_type in ["pfire", "pat_mediano"]:
-        f53_key = f"scenario_comparison.fire53.{scenario_type}" if scenario_type == "pfire" else f"scenario_comparison.fire53.pat_mediano"
-        f50_key = f"scenario_comparison.fire50.{scenario_type}" if scenario_type == "pfire" else f"scenario_comparison.fire50.pat_mediano"
-        for variant in ["base", "fav", "stress"]:
-            f53 = get_nested(d, f"{f53_key}".replace("pfire", variant).replace("pat_mediano", variant))
-            f50 = get_nested(d, f"{f50_key}".replace("pfire", variant).replace("pat_mediano", variant))
-            # Simplify: just check base
-        f53_base = get_nested(d, "scenario_comparison.fire53.base")
-        f50_base = get_nested(d, "scenario_comparison.fire50.base")
-        if f53_base is not None and f50_base is not None and f53_base < f50_base:
-            return False, f"Inconsistência: fire53.base({f53_base}) < fire50.base({f50_base})"
-    return True, "fire53 >= fire50 validado em base"
+    pfire_base = get_nested(d, "scenario_comparison.base.base")
+    pfire_aspir = get_nested(d, "scenario_comparison.aspiracional.base")
+    if pfire_base is not None and pfire_aspir is not None and pfire_base < pfire_aspir:
+        return False, f"Inconsistência: base.base({pfire_base}) < aspiracional.base({pfire_aspir})"
+    return True, "base >= aspiracional validado em base"
 
 
 @registry.test("spending-smile", "COHERENCE", "gasto_go_go >= slow_go >= no_go (spending smile)", "HIGH")
@@ -2857,13 +2849,13 @@ def _():
     d = load_data()
     # Teste que P(FIRE) varia com patrimonio (não é constante)
     sc = get_nested(d, "scenario_comparison") or {}
-    fire50 = sc.get("fire50", {})
-    fire53 = sc.get("fire53", {})
-    aspiracional_base = fire50.get("base")
-    base_base = fire53.get("base")
-    if aspiracional_base is None or base_base is None:
-        return False, f"pfire dados faltando: fire50={aspiracional_base}, fire53={base_base}"
+    aspiracional = sc.get("aspiracional", {})
+    base = sc.get("base", {})
+    pfire_aspir = aspiracional.get("base")
+    pfire_base = base.get("base")
+    if pfire_aspir is None or pfire_base is None:
+        return False, f"pfire dados faltando: aspiracional={pfire_aspir}, base={pfire_base}"
     # Ambos devem ter P(FIRE) definido (valor diferente)
-    if aspiracional_base == base_base:
-        return False, f"pfire_fire50({aspiracional_base}) == pfire_fire53({base_base}) — cenários não diferenciados"
-    return True, f"P(FIRE) diferenciado: fire50@{fire50.get('idade')}={aspiracional_base}% vs fire53@{fire53.get('idade')}={base_base}%"
+    if pfire_aspir == pfire_base:
+        return False, f"pfire_aspiracional({pfire_aspir}) == pfire_base({pfire_base}) — cenários não diferenciados"
+    return True, f"P(FIRE) diferenciado: aspiracional@{aspiracional.get('idade')}={pfire_aspir}% vs base@{base.get('idade')}={pfire_base}%"

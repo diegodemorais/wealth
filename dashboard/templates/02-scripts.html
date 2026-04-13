@@ -2509,13 +2509,13 @@ window.setFireMkt = function(mkt) {
 
 // Cenário Aspiracional — preset atômico (mesmo aporte base, retorno favorável, custo go-go)
 // Marca modo aspiracional; botões Mercado/Condição ficam visualmente desabilitados mas clicáveis
-window.setFirePreset50 = function() {
+window.setFirePresetAspiracional = function() {
   window._aspiracionalMode = true;
   document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => {
     b.classList.remove('active');
-    if (b.id !== 'pcond-fire50') b.classList.add('disabled');  // visual apenas (CSS opacity/pointer-events)
+    if (b.id !== 'pcond-aspiracional') b.classList.add('disabled');  // visual apenas (CSS opacity/pointer-events)
   });
-  document.getElementById('pcond-fire50')?.classList.add('active');
+  document.getElementById('pcond-aspiracional')?.classList.add('active');
   const p    = DATA.premissas;
   const goGo = DATA.spendingSmile?.go_go?.gasto ?? 242000;
   const sA   = document.getElementById('simAporte');
@@ -2758,8 +2758,8 @@ function buildScenarioComparison() {
   const fmtGasto = v => v != null ? `<span class="pv">R$${(v/1000).toFixed(0)}k</span>` : '<span style="color:var(--muted)">—</span>';
   const fmtSwr = v => v != null ? `<span class="pv" style="color:${v<=4?'var(--green)':v<=5?'var(--accent)':'var(--yellow)'};">${v.toFixed(2)}%</span>` : '<span style="color:var(--muted)">—</span>';
 
-  const base = sc.fire_base || sc.fire53 || {};
-  const aspir = sc.fire_aspiracional || sc.fire50 || {};
+  const base = sc.base || {};
+  const aspir = sc.aspiracional || {};
 
   const rows = [
     ['P(FIRE) Base',     fmtPfire(base.base),   fmtPfire(aspir.base)],
@@ -2781,7 +2781,7 @@ function buildScenarioComparison() {
     </tr></thead>
     <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join('')}</tbody>
   </table>
-  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)">${sc.nota_fire50_pat || ''}</div>`;
+  <div style="margin-top:8px;font-size:.7rem;color:var(--muted)">${sc.nota_scenarios_pat || ''}</div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════
