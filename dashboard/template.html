@@ -4291,8 +4291,10 @@ function buildNetWorthProjection() {
   if (!nw) return;
   const ctx = document.getElementById('netWorthProjectionChart');
   if (!ctx) return;
-  // Canvas 0×0 em tab oculta → sair; switchTab double-RAF reconstrói após reflow
-  if (ctx.offsetWidth === 0) return;
+  // DEBUG B4 — antes do offsetWidth check
+  console.error('[NW DEBUG]', { offsetW: ctx.offsetWidth, offsetH: ctx.offsetHeight });
+  // Retry se canvas ainda tem 0 width (mobile: layout mais lento que double-RAF)
+  if (ctx.offsetWidth === 0) { setTimeout(buildNetWorthProjection, 300); return; }
 
   // Focar no horizonte de acumulação até FIRE — cortar dados pós-FIRE (décadas irrelevantes)
   const _anoFire = nw.ano_fire || 2040;
@@ -4321,10 +4323,9 @@ function buildNetWorthProjection() {
   const _p10Pos = _p10.filter(v => v != null && v > 0);
   const _nwYMin = _p10Pos.length ? Math.floor(Math.min(..._p10Pos) * 0.75 / 1e6) * 1e6 : 0;
 
-  // DEBUG B4
-  console.error('[NETWORTH DEBUG]', {
-    anos: _anos, p10Sample: _p10.slice(0,3), p50Sample: _p50.slice(0,3), p90Sample: _p90.slice(0,3),
-    _nwYMin: _nwYMin, _nwYMax: _nwYMax, gatilho: gatilho,
+  // DEBUG B4 — valores runtime
+  console.error('[NW DEBUG2]', {
+    p50Sample: _p50.slice(0,3), _nwYMin: _nwYMin, _nwYMax: _nwYMax, gatilho: gatilho,
     canvasW: ctx.offsetWidth, canvasH: ctx.offsetHeight,
   });
 
@@ -6867,7 +6868,9 @@ function buildTrackingFire() {
   if (!el || !sec) return;
   const d = DATA.fire_trilha;
   if (!d || !d.dates || !d.realizado_brl || !d.trilha_brl) { sec.style.display = 'none'; return; }
-  if (el.offsetWidth === 0) return;
+  // DEBUG B2 — antes do offsetWidth check
+  console.error('[TF DEBUG]', { offsetW: el.offsetWidth, offsetH: el.offsetHeight });
+  if (el.offsetWidth === 0) { setTimeout(buildTrackingFire, 300); return; }
 
   const dates    = d.dates;
   const realizado = d.realizado_brl;
@@ -6887,14 +6890,10 @@ function buildTrackingFire() {
 
   const ctx = el.getContext('2d');
 
-  // DEBUG: remover após diagnóstico
-  console.error('[TF DEBUG]', {
+  // DEBUG B2 — valores runtime
+  console.error('[TF DEBUG2]', {
     meta: meta, _yMax: _yMax,
-    realizadoLen: realizado.length,
-    realizadoNonNull: realizado.filter(v=>v!=null).length,
     realizadoMax: Math.max(...realizado.filter(v=>v!=null&&v>0)),
-    trilhaLen: trilha.length,
-    trilhaMin: Math.min(...trilha.filter(v=>v!=null&&v>0)),
     trilhaMax: Math.max(...trilha.filter(v=>v!=null&&v>0)),
     canvasW: el.offsetWidth, canvasH: el.offsetHeight,
   });
