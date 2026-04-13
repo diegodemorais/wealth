@@ -32,7 +32,9 @@
     "total_aplicado": 117438.37,
     "total_resgatado": 40578.42,
     "liquido_aplicado": 76859.95,
-    "zerado": false
+    "zerado": false,
+    "n_aplicacoes": 5,
+    "tipo": "estrutural"
   },
   "ipca2045": {
     "aplicacoes": [
@@ -50,9 +52,11 @@
     ],
     "total_aplicado": 69994.96,
     "total_resgatado": 59375.15,
-    "liquido_aplicado": 0,
-    "pnl_realizado": -10619.81,
-    "zerado": true
+    "liquido_aplicado": 10619.81,
+    "zerado": false,
+    "n_aplicacoes": 1,
+    "tipo": "estrutural",
+    "pnl_realizado": -10619.81
   },
   "renda2065": {
     "aplicacoes": [
@@ -75,21 +79,46 @@
     ],
     "resgates": [],
     "total_aplicado": 108553.71,
-    "total_resgatado": 0,
+    "total_resgatado": 0.0,
     "liquido_aplicado": 108553.71,
-    "zerado": false
+    "zerado": false,
+    "n_aplicacoes": 4,
+    "tipo": "estrutural"
   },
   "ipca2040": {
     "aplicacoes": [
       {
         "data": "2026-04-06",
         "valor": 20035.48
+      },
+      {
+        "data": "2026-04-10",
+        "valor": 46498.08
       }
     ],
     "resgates": [],
-    "total_aplicado": 20035.48,
-    "total_resgatado": 0,
-    "liquido_aplicado": 20035.48,
-    "zerado": false
+    "total_aplicado": 66533.56,
+    "total_resgatado": 0.0,
+    "liquido_aplicado": 66533.56,
+    "zerado": false,
+    "n_aplicacoes": 2,
+    "taxa": 7.1,
+    "tipo": "estrutural"
+  },
+  "ipca2050": {
+    "aplicacoes": [
+      {
+        "data": "2026-04-10",
+        "valor": 11660.71
+      }
+    ],
+    "resgates": [],
+    "total_aplicado": 11660.71,
+    "total_resgatado": 0.0,
+    "liquido_aplicado": 11660.71,
+    "zerado": false,
+    "n_aplicacoes": 1,
+    "taxa": 6.85,
+    "tipo": "estrutural"
   }
 }

@@ -55,6 +55,7 @@ HOLDINGS_PATH = ROOT / "dados" / "holdings.md"
 LOTES_PATH   = ROOT / "dados" / "ibkr" / "lotes.json"
 APORTES_PATH    = ROOT / "dados" / "ibkr" / "aportes.json"
 XP_LOTES_PATH   = ROOT / "dados" / "xp" / "lotes.json"
+NUBANK_OPS_PATH = ROOT / "dados" / "nubank" / "operacoes_td.json"
 NUBANK_TD_PATH  = ROOT / "dados" / "nubank" / "resumo_td.json"
 RETORNOS_CORE   = ROOT / "dados" / "retornos_mensais.json"
 ROLLING_CORE    = ROOT / "dados" / "rolling_metrics.json"
@@ -2056,9 +2057,126 @@ def get_dca_status(rf: dict, total_brl: float) -> dict:
     }
 
 
+# ─── SINCRONIZAÇÃO: operacoes_td.json → resumo_td.json ──────────────────────
+
+def sync_nubank_resumo():
+    """Sincroniza operacoes_td.json → resumo_td.json.
+
+    Agregação:
+    - Agrupa operações por título (mapeia nomes variáveis)
+    - Calcula total_aplicado, total_resgatado, líquido_aplicado
+    - Preserva cotas, taxa, notas do resumo antigo
+    - Escreve resumo_td.json atualizado
+    """
+    if not NUBANK_OPS_PATH.exists():
+        return
+
+    try:
+        ops_data = json.loads(NUBANK_OPS_PATH.read_text())
+        ops = ops_data.get("operacoes", [])
+
+        # Mapa título → chave de resumo (variações de nome)
+        titulo_map = {
+            "IPCA+ 2029": "ipca2029",
+            "IPCA+ 2040": "ipca2040",
+            "Tesouro IPCA+ 2040": "ipca2040",
+            "IPCA+ 2050": "ipca2050",
+            "Tesouro IPCA+ 2050": "ipca2050",
+            "RendA+ 2065": "renda2065",
+            "Renda+ 2065": "renda2065",
+            "IPCA+ 2045": "ipca2045",
+        }
+
+        # Agregar por título
+        resumo_raw = {}
+        for op in ops:
+            titulo = op.get("titulo", "").strip()
+            titulo_norm = titulo_map.get(titulo)
+            if not titulo_norm:
+                continue
+
+            if titulo_norm not in resumo_raw:
+                resumo_raw[titulo_norm] = {
+                    "aplicacoes": [],
+                    "resgates": [],
+                    "total_aplicado": 0.0,
+                    "total_resgatado": 0.0,
+                    "taxa": None,  # capturar taxa da operação (se houver)
+                    "tipo": "estrutural",  # padrão
+                }
+
+            valor = float(str(op.get("valor_brl", 0)).replace(",", "."))
+            tipo = op.get("tipo", "").strip().lower()
+
+            # Capturar taxa se houver (ex: "6,85%" em operacoes_td.json)
+            if op.get("taxa"):
+                taxa_str = str(op.get("taxa")).replace(",", ".")
+                try:
+                    resumo_raw[titulo_norm]["taxa"] = float(taxa_str.rstrip("%"))
+                except:
+                    pass
+
+            if tipo == "aplicacao":
+                resumo_raw[titulo_norm]["aplicacoes"].append({
+                    "data": op.get("data"),
+                    "valor": valor
+                })
+                resumo_raw[titulo_norm]["total_aplicado"] += valor
+            elif tipo == "resgate":
+                resumo_raw[titulo_norm]["resgates"].append({
+                    "data": op.get("data"),
+                    "valor": valor,
+                    "nota": op.get("nota", "")
+                })
+                resumo_raw[titulo_norm]["total_resgatado"] += valor
+
+        # Formatar como resumo_td.json
+        resumo_final = {}
+        for key, data in resumo_raw.items():
+            liquido = round(data["total_aplicado"] - data["total_resgatado"], 2)
+            resumo_final[key] = {
+                "aplicacoes": data["aplicacoes"],
+                "resgates": data["resgates"],
+                "total_aplicado": round(data["total_aplicado"], 2),
+                "total_resgatado": round(data["total_resgatado"], 2),
+                "liquido_aplicado": liquido,
+                "zerado": liquido == 0,
+                "n_aplicacoes": len(data["aplicacoes"]),
+            }
+            if data["taxa"] is not None:
+                resumo_final[key]["taxa"] = data["taxa"]
+            if data["tipo"]:
+                resumo_final[key]["tipo"] = data["tipo"]
+
+        # Preservar campos antigos (cotas, taxa, notas, etc)
+        resumo_antigo = {}
+        if NUBANK_TD_PATH.exists():
+            try:
+                resumo_antigo = json.loads(NUBANK_TD_PATH.read_text())
+            except:
+                pass
+
+        for key in resumo_final:
+            if key in resumo_antigo:
+                old = resumo_antigo[key]
+                for field in ["cotas", "taxa", "tipo", "notas", "custo_base_brl", "pnl_realizado", "duration", "mtm_impact_1pp", "distancia_gatilho"]:
+                    if field in old:
+                        resumo_final[key][field] = old[field]
+
+        # Escrever
+        NUBANK_TD_PATH.write_text(json.dumps(resumo_final, indent=2, ensure_ascii=False) + "\n")
+        print(f"  ✓ Nubank resumo sincronizado: {len(resumo_final)} títulos (incluindo ipca2050)")
+
+    except Exception as e:
+        print(f"  ⚠️ Sync Nubank: {e}")
+
+
 # ─── MAIN ─────────────────────────────────────────────────────────────────────
 def main():
     print("📊 generate_data.py — iniciando")
+
+    # Sincronizar operacoes_td.json → resumo_td.json (SEMPRE, antes de tudo)
+    sync_nubank_resumo()
 
     state = load_state()
 

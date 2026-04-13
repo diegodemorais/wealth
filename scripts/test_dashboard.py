@@ -1,24 +1,21 @@
 #!/usr/bin/env python3
 """
 Dashboard Test Runner — DEV-tester
-Executes functional tests across all dashboard blocks.
+Executes comprehensive functional tests across all dashboard blocks.
 
 Usage:
-    python scripts/test_dashboard.py                          # TIA auto-routing (default)
-    python scripts/test_dashboard.py --mode smart             # ~276 tests: structural checks
-    python scripts/test_dashboard.py --mode full              # 578 tests: all categories
-    python scripts/test_dashboard.py --domain fire            # single domain, full mode
+    python scripts/test_dashboard.py                          # FULL mode (padrão: todos os testes)
+    python scripts/test_dashboard.py --domain fire            # filtrar por domínio
     python scripts/test_dashboard.py --mode component --component fire-trilha
 
-Mode definitions (by category):
-    smart = {SMOKE, SPEC, DOM_REF, RENDER, TAB_SWITCH, PRIVACY} — "did I break any visible feature?"
-    full  = all categories — "are all contracts still valid?" (adds DATA + VALUE)
+Mode definitions (por categoria):
+    full = todos os testes (605+) — "todos os contratos de negócio ainda válidos?"
+           categorias: SMOKE + SPEC + DOM_REF + RENDER + TAB_SWITCH + DATA + VALUE + PRIVACY + domain logic
 
-TIA auto-routing (default, no --mode flag):
-    docs/agentes/ only  → 0 tests (no code changed)
-    template.html       → smart
-    *.py or dados/      → full
-    unknown files       → 0 tests (likely a doc)
+TIA auto-routing (default, sem --mode flag):
+    docs/agentes/ only  → 0 testes (nenhum código alterado)
+    *.py ou dados/      → FULL mode
+    unknown files       → 0 testes (provavelmente doc)
 
 Output: console report + dashboard/tests/last_run.json
 
@@ -247,18 +244,18 @@ def run(args):
         results = list(all_results)
         mode = "full"
 
-    elif args.mode in ("smart", "full"):
-        # Explicit mode — no TIA
-        mode = args.mode
+    elif args.mode == "full":
+        # Explicit FULL mode — no TIA
+        mode = "full"
         results = filter_by_mode(all_results, mode)
 
     else:
-        # Default: TIA auto-routing via git diff
+        # Default: TIA auto-routing via git diff → SEMPRE FULL para código/dados
         modified = get_modified_files()
         if modified is None:
-            # git unavailable — safe default to smart
-            mode = "smart"
-            tia_header = f"{YELLOW}WARNING: git diff indisponível — usando modo smart{RESET}"
+            # git unavailable — safe default to full
+            mode = "full"
+            tia_header = f"{YELLOW}WARNING: git diff indisponível — usando FULL mode{RESET}"
         else:
             mode = resolve_tia_mode(modified)
             changed_names = [Path(f).name for f in modified] if modified else []
@@ -273,9 +270,11 @@ def run(args):
                 print(f"  Results saved to: {LAST_RUN_PATH.relative_to(ROOT)}\n")
                 sys.exit(0)
             else:
+                # SEMPRE usar FULL quando há mudança de código (não mais smart)
+                mode = "full"
                 tia_header = (
                     f"{CYAN}{BOLD}TIA — arquivos modificados: {files_str}{RESET}\n"
-                    f"{CYAN}   Modo selecionado: {mode.upper()}{RESET}"
+                    f"{CYAN}   Modo: FULL (605+ testes — completo){RESET}"
                 )
         results = filter_by_mode(all_results, mode)
 
@@ -390,27 +389,18 @@ def main():
     )
     parser.add_argument(
         "--mode",
-        choices=["smart", "full", "component"],
+        choices=["full", "component"],
         default=None,
         help=(
-            "smart: ~276 tests — structural checks (DOM_REF, RENDER, TAB_SWITCH, PRIVACY). "
-            "full: 578 tests — adds DATA + VALUE contract validation. "
-            "component: tests for a specific component (requires --component). "
-            "Default: TIA auto-routing via git diff."
+            "full: 605+ testes — validação completa de contratos de negócio (padrão/TIA). "
+            "component: testes para um componente específico (requer --component). "
         ),
     )
     parser.add_argument(
         "--component", type=str,
-        help="Component/block ID to test when using --mode component (e.g. fire-trilha)",
-    )
-    parser.add_argument(
-        "--smart", action="store_true",
-        help="[legacy] Alias for TIA auto-routing (now the default behavior)",
+        help="Component/block ID para --mode component (ex: fire-trilha)",
     )
     args = parser.parse_args()
-    # --smart flag with no --mode → treat as TIA auto (default)
-    if args.smart and args.mode is None:
-        args.mode = None  # already the default
     run(args)
 
 

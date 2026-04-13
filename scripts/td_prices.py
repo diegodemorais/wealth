@@ -35,6 +35,7 @@ TD_URL = (
 TITULOS_DIEGO = {
     "ipca2029": ("Tesouro IPCA+", "15/05/2029"),
     "ipca2040": ("Tesouro IPCA+", "15/08/2040"),
+    "ipca2050": ("Tesouro IPCA+", "15/08/2050"),
     "renda2065": ("Tesouro Renda+ Aposentadoria Extra", "15/12/2064"),
 }
 
