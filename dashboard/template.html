@@ -1092,7 +1092,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div class="slider-row">
     <label style="display:flex;align-items:center;gap:8px">
       <span style="font-size:.8rem;color:var(--muted)">Shock:</span>
-      <span id="stressShockLabel" style="color:var(--red);font-weight:700;font-size:1rem">−40%</span>
+      <span id="stressShockLabel" class="pv" style="color:var(--red);font-weight:700;font-size:1rem">−40%</span>
     </label>
     <input type="range" id="stressShockSlider" min="-70" max="0" step="1" value="-40" oninput="onStressShockChange(this.value)">
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted);margin-top:2px"><span>−70%</span><span>0%</span></div>
@@ -6151,9 +6151,11 @@ function _applyPrivacyCharts(isPrivate) {
   if (document.getElementById('fireScenarioGrid')?.children.length) buildScenarios();
   // Sliders (Fase 4): em private mode, resetar para centro do range — posição revela valor
   const _sliders = [
-    { id: 'simAporte', numId: 'simAporteVal' },
-    { id: 'simCusto',  numId: 'simCustoVal' },
-    { id: 'wiCusto',   numId: 'wiCustoVal' },
+    { id: 'simAporte',       numId: 'simAporteVal' },
+    { id: 'simRetorno',      numId: 'simRetornoVal' },
+    { id: 'simCusto',        numId: 'simCustoVal' },
+    { id: 'wiCusto',         numId: 'wiCustoVal' },
+    { id: 'stressShockSlider', numId: 'stressShockLabel' },
   ];
   _sliders.forEach(({ id, numId }) => {
     const sl = document.getElementById(id);
