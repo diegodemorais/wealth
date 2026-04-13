@@ -23,9 +23,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 @media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}}
-table{width:100%;border-collapse:collapse;font-size:.78rem}
+table{width:100%;border-collapse:collapse;font-size:.78rem;min-width:100%;max-width:100%}
 th{text-align:left;padding:6px 5px;border-bottom:2px solid var(--border);font-weight:600;color:var(--muted);font-size:.65rem;text-transform:uppercase}
 td{padding:5px;border-bottom:1px solid rgba(71,85,105,.3);overflow-wrap:break-word;word-break:break-word}
+/* Responsividade para tabelas: envolver em container overflow-x:auto */
+.section table, .collapse-body table{display:block;overflow-x:auto}
 .num{text-align:right;font-variant-numeric:tabular-nums;font-family:'SF Mono',monospace,sans-serif}
 .pos{color:var(--green)}.neg{color:var(--red)}
 .chart-box{position:relative;height:240px;min-width:0;overflow:hidden}
@@ -496,7 +498,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="grid-2" style="margin-bottom:14px">
   <div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
   <div>
-    <div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
+    <div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
   </div>
 </div>
 <div class="src" style="margin-bottom:14px">Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE</div>
@@ -825,7 +827,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2 onclick="_toggleBlock(this.parentElement)">Retornos Mensais — Heatmap</h2>
 <div class="collapse-body">
 <div id="heatmapContainer" style="overflow-x:auto"></div><!-- /section section-822 -->
-<div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px"></div>
+<div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px"></div>
 <div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
 </div><!-- /collapse-body -->
 </div>
@@ -856,7 +858,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
   </div>
-  <div id="attrFxRfRow" style="display:none;grid-template-columns:repeat(2,1fr);gap:8px;text-align:center;margin-top:6px">
+  <div id="attrFxRfRow" style="display:none;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;text-align:center;margin-top:6px">
     <div><div style="font-size:.95rem;font-weight:700;color:#f97316" class="pv" id="attrFx">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio (FX)</div></div>
     <div><div style="font-size:.95rem;font-weight:700;color:#a3e635" class="pv" id="attrRf">—</div><div style="font-size:.65rem;color:var(--muted)">RF Local</div></div>
   </div>
@@ -1403,8 +1405,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T17:36:26-03:00'); // BRT (UTC-3)
-const VERSION = '2.59';
+const GENERATED_AT = new Date('2026-04-13T17:40:07-03:00'); // BRT (UTC-3)
+const VERSION = '2.62';
 
 const DATA = {
   "_generated": "2026-04-13T17:19:17",
@@ -8173,7 +8175,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.59"
+  "version": "2.62"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10817,7 +10819,7 @@ function buildSpendingGuardrails() {
         <div style="position:absolute;top:40px;left:50%;transform:translateX(-50%);font-size:.55rem;color:var(--red);white-space:nowrap">~R$${(lower/1000).toFixed(0)}k (~70%)</div>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(80px, 1fr));gap:6px;margin-top:4px">
       <div style="background:rgba(59,130,246,.1);border-radius:6px;padding:6px;text-align:center">
         <div style="font-size:.7rem;font-weight:700;color:var(--accent)">~R$${(upper/1000).toFixed(0)}k</div>
         <div style="font-size:.55rem;color:var(--muted)">Conservador (P95)</div>

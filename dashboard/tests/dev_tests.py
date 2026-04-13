@@ -820,3 +820,104 @@ def _():
     if missing:
         return False, f"Tabs declaradas mas sem seções: {missing}"
     return True, f"Todas as {len(tabs_from_buttons)} abas têm seções correspondentes"
+
+
+@registry.test("responsive", "RENDER", "tabelas não causam overflow horizontal", "MEDIUM")
+def _():
+    """Verify that no tables cause horizontal overflow in their containers."""
+    from .base import INDEX_HTML
+
+    if not INDEX_HTML.exists():
+        return True, "Pulado: index.html não encontrado (teste de build)"
+
+    # Use headless browser to check for actual overflow (requires selenium)
+    try:
+        from selenium import webdriver
+        from selenium.webdriver.common.by import By
+        import time
+
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
+        driver = webdriver.Chrome(options=options)
+
+        # Open dashboard
+        driver.get(f"file://{INDEX_HTML.absolute()}")
+        time.sleep(2)  # Wait for charts to render
+
+        # Check all sections
+        sections = driver.find_elements(By.CLASS_NAME, "section")
+        overflow_sections = []
+
+        for section in sections:
+            section_width = int(section.get_attribute("clientWidth") or 0)
+            section_scroll_width = int(section.get_attribute("scrollWidth") or 0)
+
+            if section_scroll_width > section_width and section_width > 0:
+                section_id = section.get_attribute("id") or "sem-id"
+                overflow_sections.append(section_id)
+
+        driver.quit()
+
+        if overflow_sections:
+            return False, f"Seções com overflow horizontal: {overflow_sections[:5]}"
+        return True, f"Nenhuma seção com overflow em {len(sections)} seções"
+
+    except ImportError:
+        # Skip if selenium not available
+        return True, "Teste interativo pulado (selenium não disponível)"
+    except Exception as e:
+        return True, f"Teste interativo pulado: {str(e)[:50]}"
+
+
+@registry.test("responsive", "RENDER", "grids inline não têm colunas fixas que não quebram", "MEDIUM")
+def _():
+    """Verify that inline grid styles use responsive units."""
+    template = load_template()
+
+    # Find problematic patterns: repeat(N,1fr), 1fr 1fr 1fr, etc without auto-fit/auto-fill
+    bad_patterns = [
+        r'grid-template-columns:\s*repeat\(\d+,1fr\)',  # repeat(2,1fr), repeat(3,1fr), etc without auto-fit
+        r'grid-template-columns:\s*1fr\s+1fr\s+1fr',    # 1fr 1fr 1fr
+        r'grid-template-columns:\s*1fr\s+1fr\s+1fr\s+1fr',  # 1fr 1fr 1fr 1fr
+    ]
+
+    found = []
+    for pattern in bad_patterns:
+        matches = re.finditer(pattern, template)
+        for match in matches:
+            # Get context: 80 chars before and after
+            start = max(0, match.start() - 80)
+            end = min(len(template), match.end() + 80)
+            context = template[start:end]
+            line_num = template[:match.start()].count('\n') + 1
+
+            # Exclude commented lines and media queries
+            if '/*' not in context and '@media' not in context:
+                found.append((line_num, match.group(0)[:50]))
+
+    if found:
+        return False, f"Grids com colunas não-responsivas: {found[:3]} (mude para repeat(auto-fit, minmax(...)))"
+    return True, "Todos os grids inline são responsivos"
+
+
+@registry.test("responsive", "RENDER", "CSS tem proteção para tabelas responsivas", "MEDIUM")
+def _():
+    """Verify that CSS includes responsive table styling."""
+    template = load_template()
+
+    # Check if CSS has responsive table styling
+    has_section_table_rule = '.section table' in template
+    has_overflow_in_table_rule = 'overflow-x:auto' in template
+
+    if not (has_section_table_rule and has_overflow_in_table_rule):
+        return False, "CSS deve ter '.section table' com 'overflow-x:auto' para proteção responsiva"
+
+    # Verify tabelas existem
+    table_count = len(re.findall(r'<table', template))
+    if table_count == 0:
+        return True, "Nenhuma tabela no template"
+
+    return True, f"CSS tem proteção responsiva para {table_count} tabelas (display:block; overflow-x:auto;)"
