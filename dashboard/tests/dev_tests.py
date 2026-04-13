@@ -105,18 +105,18 @@ def _():
     return True, "No hardcoded patrimonio_atual found"
 
 
-@registry.test("zero-hardcoded", "VALUE", "build_dashboard.py has no hardcoded pfire53.base value", "HIGH")
+@registry.test("zero-hardcoded", "VALUE", "build_dashboard.py has no hardcoded pfire_base.base value", "HIGH")
 def _():
     data = load_data()
-    pfire = get_nested(data, "pfire53.base")
+    pfire = get_nested(data, "pfire_base.base")
     if pfire is None:
-        return False, "pfire53.base missing from data.json"
+        return False, "pfire_base.base missing from data.json"
     build_src = BUILD_PY.read_text()
     val_str = f"{pfire:.4f}"
     # Remove trailing zeros for search
     if val_str.rstrip("0").rstrip(".") in build_src:
         return False, f"Hardcoded pfire={pfire} found in build_dashboard.py"
-    return True, "No hardcoded pfire53.base found"
+    return True, "No hardcoded pfire_base.base found"
 
 
 @registry.test("zero-hardcoded", "VALUE", "build_dashboard.py reads data from data.json, not inline literals", "CRITICAL")

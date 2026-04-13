@@ -198,7 +198,7 @@ def _():
 
 
 # ---------------------------------------------------------------------------
-# net-worth-projection  (pfireHeadline, scenarioChart, pfire53 badges)
+# net-worth-projection  (pfireHeadline, scenarioChart, pfire_base badges)
 # ---------------------------------------------------------------------------
 
 @registry.test("net-worth-projection", "DATA", "premissas has all required FIRE fields", "CRITICAL")
@@ -209,7 +209,7 @@ def _():
         return False, "premissas missing from data.json"
     required = [
         "patrimonio_atual", "patrimonio_gatilho", "idade_atual",
-        "idade_fire_alvo", "aporte_mensal", "custo_vida_base", "retorno_equity_base"
+        "idade_cenario_base", "aporte_mensal", "custo_vida_base", "retorno_equity_base"
     ]
     missing = [k for k in required if k not in premissas]
     if missing:
@@ -315,16 +315,16 @@ def _():
     return True, f"Spending decreases: {go_go:,} -> {slow_go:,} -> {no_go:,}"
 
 
-@registry.test("net-worth-projection", "RENDER", "pfire53 scenario badges exist in HTML", "CRITICAL")
+@registry.test("net-worth-projection", "RENDER", "pfire_base scenario badges exist in HTML", "CRITICAL")
 def _():
     html = load_html()
     missing = []
-    for eid in ["pfire53BaseBadge", "pfire53FavBadge", "pfire53StressBadge"]:
+    for eid in ["pfire_baseBaseBadge", "pfire_baseFavBadge", "pfire_baseStressBadge"]:
         if eid not in html:
             missing.append(eid)
     if missing:
         return False, f"Missing HTML elements: {missing}"
-    return True, "pfire53 badges present"
+    return True, "pfire_base badges present"
 
 
 @registry.test("net-worth-projection", "VALUE", "patrimonio_gatilho not hardcoded in build script", "HIGH")
@@ -405,7 +405,7 @@ def _():
     if re.search(pattern, build_text):
         return False, (
             f"Hardcoded pfire value={base} found as dict literal in build_dashboard.py. "
-            "Fallback defaults should read from data['pfire53']['base'] not literal values."
+            "Fallback defaults should read from data['pfire_base']['base'] not literal values."
         )
     return True, f"fire53.base={base} not hardcoded as dict literal in build script"
 
@@ -1048,7 +1048,7 @@ def _():
     return True, f"All {len(idades)} age points sum to ~100%"
 
 
-@registry.test("glide-path", "DATA", "glide idades span from premissas.idade_atual to beyond idade_fire_alvo", "HIGH")
+@registry.test("glide-path", "DATA", "glide idades span from premissas.idade_atual to beyond idade_cenario_base", "HIGH")
 def _():
     d = load_data()
     glide = d.get("glide", {})
@@ -1057,19 +1057,19 @@ def _():
         __import__("json").loads(idades_raw) if isinstance(idades_raw, str) else []
     )
     idade_atual = get_nested(d, "premissas.idade_atual")
-    idade_fire = get_nested(d, "premissas.idade_fire_alvo")
+    idade_fire = get_nested(d, "premissas.idade_cenario_base")
     if not idades:
         return False, "glide.idades empty"
     if idade_atual is None or idade_fire is None:
-        return False, f"Missing: idade_atual={idade_atual}, idade_fire_alvo={idade_fire}"
+        return False, f"Missing: idade_atual={idade_atual}, idade_cenario_base={idade_fire}"
     min_age, max_age = min(idades), max(idades)
     errors = []
     # idade_atual should be at or near the start of the glide
     if idade_atual < min_age or idade_atual > min_age + 5:
         errors.append(f"idade_atual={idade_atual} not near glide start (min={min_age})")
-    # glide should extend past idade_fire_alvo to show post-FIRE glidepath
+    # glide should extend past idade_cenario_base to show post-FIRE glidepath
     if max_age < idade_fire:
-        errors.append(f"glide max age={max_age} < idade_fire_alvo={idade_fire} — post-FIRE not covered")
+        errors.append(f"glide max age={max_age} < idade_cenario_base={idade_fire} — post-FIRE not covered")
     if errors:
         return False, f"Glide age coverage issues: {errors}"
     return True, f"Glide spans ages {min_age}–{max_age}, covering fire_alvo={idade_fire}"
@@ -1268,15 +1268,15 @@ def _():
     return True, "All simulator input premissas present"
 
 
-@registry.test("simulador-fire", "DATA", "pfire53.base is present and in [0, 100]", "CRITICAL")
+@registry.test("simulador-fire", "DATA", "pfire_base.base is present and in [0, 100]", "CRITICAL")
 def _():
     d = load_data()
-    base = get_nested(d, "pfire53.base")
+    base = get_nested(d, "pfire_base.base")
     if base is None:
-        return False, "pfire53.base missing"
+        return False, "pfire_base.base missing"
     if not (0 <= base <= 100):
-        return False, f"pfire53.base={base} outside [0, 100]"
-    return True, f"pfire53.base={base}%"
+        return False, f"pfire_base.base={base} outside [0, 100]"
+    return True, f"pfire_base.base={base}%"
 
 
 @registry.test("simulador-fire", "DATA", "patrimonio_atual > 0 and < patrimonio_gatilho", "CRITICAL")
@@ -1398,27 +1398,27 @@ def _():
 # stress-test-mc
 # ---------------------------------------------------------------------------
 
-@registry.test("stress-test-mc", "DATA", "pfire53 has base and stress", "CRITICAL")
+@registry.test("stress-test-mc", "DATA", "pfire_base has base and stress", "CRITICAL")
 def _():
     d = load_data()
-    p = d.get("pfire53")
+    p = d.get("pfire_base")
     if p is None:
-        return False, "pfire53 missing"
+        return False, "pfire_base missing"
     if "base" not in p or "stress" not in p:
-        return False, f"pfire53 missing base or stress: keys={list(p.keys())}"
-    return True, f"pfire53: base={p['base']}, stress={p['stress']}"
+        return False, f"pfire_base missing base or stress: keys={list(p.keys())}"
+    return True, f"pfire_base: base={p['base']}, stress={p['stress']}"
 
 
-@registry.test("stress-test-mc", "DATA", "pfire53 stress < base (stress degrades P(FIRE))", "CRITICAL")
+@registry.test("stress-test-mc", "DATA", "pfire_base stress < base (stress degrades P(FIRE))", "CRITICAL")
 def _():
     d = load_data()
-    base = get_nested(d, "pfire53.base")
-    stress = get_nested(d, "pfire53.stress")
+    base = get_nested(d, "pfire_base.base")
+    stress = get_nested(d, "pfire_base.stress")
     if None in (base, stress):
         return False, f"Missing: base={base}, stress={stress}"
     if stress >= base:
         return False, f"stress={stress} >= base={base} — stress scenario should be worse"
-    return True, f"pfire53: stress={stress} < base={base}"
+    return True, f"pfire_base: stress={stress} < base={base}"
 
 
 @registry.test("stress-test-mc", "DATA", "patrimonio_gatilho is positive and reasonable (>= 5M BRL)", "HIGH")
@@ -1444,24 +1444,24 @@ def _():
     return True, "Stress test UI elements present"
 
 
-@registry.test("stress-test-mc", "VALUE", "pfire53 not set as hardcoded dict literal in build script", "HIGH")
+@registry.test("stress-test-mc", "VALUE", "pfire_base not set as hardcoded dict literal in build script", "HIGH")
 def _():
     import re
     build_text = BUILD_PY.read_text()
     d = load_data()
-    base = get_nested(d, "pfire53.base")
+    base = get_nested(d, "pfire_base.base")
     if base is None:
-        return False, "pfire53.base missing"
-    # Check that build script reads pfire53 from data (data.get("pfire53")) rather than
+        return False, "pfire_base.base missing"
+    # Check that build script reads pfire_base from data (data.get("pfire_base")) rather than
     # constructing it from hardcoded values — the specific concern is the fallback block
-    # Look for assignment of pfire53 as a literal dict with the actual base value
+    # Look for assignment of pfire_base as a literal dict with the actual base value
     pattern = rf'"base"\s*:\s*{re.escape(str(base))}\b'
     if re.search(pattern, build_text):
         return False, (
-            f"Hardcoded pfire53.base={base} found as dict literal in build_dashboard.py. "
-            "pfire53 fallback should come from dashboard_state.json, not be hardcoded."
+            f"Hardcoded pfire_base.base={base} found as dict literal in build_dashboard.py. "
+            "pfire_base fallback should come from dashboard_state.json, not be hardcoded."
         )
-    return True, f"pfire53.base={base} not hardcoded as dict literal in build script"
+    return True, f"pfire_base.base={base} not hardcoded as dict literal in build script"
 
 
 # ---------------------------------------------------------------------------
@@ -1492,16 +1492,16 @@ def _():
     return True, f"earliest_fire.pfire={pfire}%"
 
 
-@registry.test("earliest-fire", "DATA", "earliest_fire.idade >= premissas.idade_fire_aspiracional", "HIGH")
+@registry.test("earliest-fire", "DATA", "earliest_fire.idade >= premissas.idade_cenario_aspiracional", "HIGH")
 def _():
     d = load_data()
     ef_idade = get_nested(d, "earliest_fire.idade")
-    aspiracional = get_nested(d, "premissas.idade_fire_aspiracional")
+    aspiracional = get_nested(d, "premissas.idade_cenario_aspiracional")
     if ef_idade is None or aspiracional is None:
         return False, f"Missing: ef.idade={ef_idade}, aspiracional={aspiracional}"
     if ef_idade < aspiracional:
         return False, (
-            f"earliest_fire.idade={ef_idade} < idade_fire_aspiracional={aspiracional} — "
+            f"earliest_fire.idade={ef_idade} < idade_cenario_aspiracional={aspiracional} — "
             "computed earliest should be >= aspirational target"
         )
     return True, f"earliest FIRE age {ef_idade} >= aspiracional {aspiracional}"
@@ -1930,16 +1930,16 @@ def _():
     return True, f"{len(confirmados)}/{len(eventos)} eventos have 'confirmado' field"
 
 
-@registry.test("pfire-familia", "DATA", "pfire53.base consistent with scenario_comparison.fire53.base", "CRITICAL")
+@registry.test("pfire-familia", "DATA", "pfire_base.base consistent with scenario_comparison.fire53.base", "CRITICAL")
 def _():
     d = load_data()
-    pfire53_base = get_nested(d, "pfire53.base")
+    pfire_base_base = get_nested(d, "pfire_base.base")
     sc_fire53_base = get_nested(d, "scenario_comparison.fire53.base")
-    if pfire53_base is None or sc_fire53_base is None:
-        return False, f"Missing: pfire53.base={pfire53_base}, scenario_comparison.fire53.base={sc_fire53_base}"
-    if abs(pfire53_base - sc_fire53_base) > 0.1:
-        return False, f"Inconsistency: pfire53.base={pfire53_base} != scenario_comparison.fire53.base={sc_fire53_base}"
-    return True, f"pfire53.base={pfire53_base} consistent with scenario_comparison"
+    if pfire_base_base is None or sc_fire53_base is None:
+        return False, f"Missing: pfire_base.base={pfire_base_base}, scenario_comparison.fire53.base={sc_fire53_base}"
+    if abs(pfire_base_base - sc_fire53_base) > 0.1:
+        return False, f"Inconsistency: pfire_base.base={pfire_base_base} != scenario_comparison.fire53.base={sc_fire53_base}"
+    return True, f"pfire_base.base={pfire_base_base} consistent with scenario_comparison"
 
 
 @registry.test("pfire-familia", "DATA", "lumpy evento pfire_2040 values in [0, 1]", "CRITICAL")
@@ -1967,21 +1967,21 @@ def _():
     return True, "Conditional pfire scenario buttons present"
 
 
-@registry.test("pfire-familia", "VALUE", "pfire53 base not hardcoded in build script", "HIGH")
+@registry.test("pfire-familia", "VALUE", "pfire_base base not hardcoded in build script", "HIGH")
 def _():
     import re
     build_text = BUILD_PY.read_text()
     d = load_data()
-    base = get_nested(d, "pfire53.base")
+    base = get_nested(d, "pfire_base.base")
     if base is None:
-        return False, "pfire53.base missing"
-    # pfire53 must come from DATA not be set directly
-    if "pfire53" not in build_text:
-        return False, "build_dashboard.py doesn't reference pfire53"
+        return False, "pfire_base.base missing"
+    # pfire_base must come from DATA not be set directly
+    if "pfire_base" not in build_text:
+        return False, "build_dashboard.py doesn't reference pfire_base"
     pattern = rf'"base"\s*:\s*{re.escape(str(base))}'
     if re.search(pattern, build_text):
-        return False, f"Possible hardcoded pfire53 base={base} dict literal in build script"
-    return True, f"pfire53.base={base} not hardcoded as dict literal"
+        return False, f"Possible hardcoded pfire_base base={base} dict literal in build script"
+    return True, f"pfire_base.base={base} not hardcoded as dict literal"
 
 
 # ── B2: Fire Trilha — escala anti-regressão ───────────────────────────────────
@@ -2540,16 +2540,16 @@ def _():
 
 
 @registry.test("chartjs4-data-ranges", "DATA",
-               "pfire50.base entre 0 e 100 (probabilidade FIRE plausível)", "HIGH")
+               "pfire_aspiracional.base entre 0 e 100 (probabilidade FIRE plausível)", "HIGH")
 def _():
     d = load_data()
-    base = get_nested(d, "pfire50.base")
+    base = get_nested(d, "pfire_aspiracional.base")
     if base is None:
-        return False, "pfire50.base ausente de data.json"
+        return False, "pfire_aspiracional.base ausente de data.json"
     if not isinstance(base, (int, float)):
-        return False, f"pfire50.base não é numérico: {base!r}"
+        return False, f"pfire_aspiracional.base não é numérico: {base!r}"
     if not (0 <= base <= 100):
-        return False, f"pfire50.base={base} fora do range [0, 100]"
+        return False, f"pfire_aspiracional.base={base} fora do range [0, 100]"
     if base < 10:
-        return False, f"pfire50.base={base}% — suspeito (muito baixo; verificar pipeline MC)"
-    return True, f"pfire50.base={base}% dentro do range plausível"
+        return False, f"pfire_aspiracional.base={base}% — suspeito (muito baixo; verificar pipeline MC)"
+    return True, f"pfire_aspiracional.base={base}% dentro do range plausível"

@@ -37,7 +37,7 @@ from config import (
     PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS, PISO_VENDA_RENDA_PLUS,
     RENDA_PLUS_ANO_VENC, RENDA_PLUS_TAXA_DEFAULT,
     PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL, RENDA_ESTIMADA,
-    IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL, ANO_NASCIMENTO,
+    IDADE_ATUAL, IDADE_CENARIO_BASE, IDADE_CENARIO_ASPIRACIONAL, ANO_NASCIMENTO,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
     TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA, ETF_TER,
     HODL11_PISO_PCT, HODL11_ALVO_PCT, HODL11_TETO_PCT,
@@ -289,8 +289,8 @@ def get_premissas():
             "aporte_mensal":       APORTE_MENSAL,
             "custo_vida_base":     CUSTO_VIDA_BASE,
             "idade_atual":         IDADE_ATUAL,
-            "idade_fire_alvo":     IDADE_FIRE_ALVO,
-            "idade_fire_aspiracional": IDADE_FIRE_ASPIRACIONAL,
+            "idade_cenario_base":     IDADE_CENARIO_BASE,
+            "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
             "patrimonio_gatilho":  PATRIMONIO_GATILHO,
             "swr_gatilho":         SWR_GATILHO,
             "retorno_equity_base": 0.0485,
@@ -319,24 +319,24 @@ def get_pfire_tornado():
                 "delta":    t.get("delta", abs(t.get("mais10", 0)) + abs(t.get("menos10", 0))),
             })
         return (
-            {"base": fire.get("pfire50_base", fire.get("pfire_base")),
-             "fav":  fire.get("pfire50_fav",  fire.get("pfire_fav")),
-             "stress": fire.get("pfire50_stress", fire.get("pfire_stress"))},
-            {"base": fire.get("pfire53_base", fire.get("pfire_base")),
-             "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
-             "stress": fire.get("pfire53_stress", fire.get("pfire_stress"))},
+            {"base": fire.get("pfire_aspiracional_base", fire.get("pfire_base")),
+             "fav":  fire.get("pfire_aspiracional_fav",  fire.get("pfire_fav")),
+             "stress": fire.get("pfire_aspiracional_stress", fire.get("pfire_stress"))},
+            {"base": fire.get("pfire_base_base", fire.get("pfire_base")),
+             "fav":  fire.get("pfire_base_fav",  fire.get("pfire_fav")),
+             "stress": fire.get("pfire_base_stress", fire.get("pfire_stress"))},
             norm_tornado
         )
 
-    # Rodar @50 (--anos 11) com tornado
-    print("  ▶ fire_montecarlo.py --anos 11 --tornado ...")
-    out50, err50 = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "11", "--tornado"], cwd=ROOT)
-    if err50:
-        print(f"  ⚠️ stderr @50: {err50[:200]}")
+    # Rodar Cenário Aspiracional (--anos 10 --aporte 30000) com tornado
+    print("  ▶ fire_montecarlo.py --anos 10 --aporte 30000 --tornado ...")
+    out_aspiracional, err_aspiracional = run([VENV_PY, "scripts/fire_montecarlo.py", "--anos", "10", "--aporte", "30000", "--tornado"], cwd=ROOT)
+    if err_aspiracional:
+        print(f"  ⚠️ stderr aspiracional: {err_aspiracional[:200]}")
 
-    # Rodar @53 (default, sem --anos)
-    print("  ▶ fire_montecarlo.py (FIRE@53 default) ...")
-    out53, err53 = run([VENV_PY, "scripts/fire_montecarlo.py"], cwd=ROOT)
+    # Rodar Cenário Base (default, sem --anos)
+    print("  ▶ fire_montecarlo.py (Cenário Base default) ...")
+    out_base, err_base = run([VENV_PY, "scripts/fire_montecarlo.py"], cwd=ROOT)
 
     def parse_pfire(out, idade):
         """Parseia P(FIRE@{idade}) do output do fire_montecarlo."""
@@ -370,15 +370,15 @@ def get_pfire_tornado():
                     pf["base"] = float(m.group(1))
         return pf
 
-    pf50 = parse_pfire(out50, 50)
-    if pf50["base"] is None:
-        pf50 = parse_pfire_generic(out50)
+    pf_aspiracional = parse_pfire(out_aspiracional, 49)
+    if pf_aspiracional["base"] is None:
+        pf_aspiracional = parse_pfire_generic(out_aspiracional)
 
-    pf53 = parse_pfire(out53, 53)
-    if pf53["base"] is None:
-        pf53 = parse_pfire_generic(out53)
+    pf_base = parse_pfire(out_base, 53)
+    if pf_base["base"] is None:
+        pf_base = parse_pfire_generic(out_base)
 
-    # Tornado — parsear do output @50
+    # Tornado — parsear do output Aspiracional
     # fire_montecarlo output format:
     #   "  Volatilidade equity (+/-10%)        -4.1%    +4.0%          8.2%"
     # Grupos: 1=label  2=up(+10%)  3=down(-10%)  4=impacto_total
@@ -387,7 +387,7 @@ def get_pfire_tornado():
     _tornado_pattern = re.compile(
         r'^\s+(.+?)\s+([+-]?\d+\.?\d*)%\s+([+-]?\d+\.?\d*)%\s+(\d+\.?\d*)%'
     )
-    for line in out50.splitlines():
+    for line in out_aspiracional.splitlines():
         if "tornado" in line.lower() or "sensibilidade" in line.lower():
             in_tornado = True
         if in_tornado:
@@ -424,17 +424,17 @@ def get_pfire_tornado():
 
     # Fallback do state
     s = load_state().get("fire", {})
-    if pf50["base"] is None:
-        pf50 = {"base": s.get("pfire50_base", s.get("pfire_base")),
-                "fav":  s.get("pfire50_fav",  s.get("pfire_fav")),
-                "stress": s.get("pfire50_stress", s.get("pfire_stress"))}
-    if pf53["base"] is None:
-        pf53 = {"base": s.get("pfire53_base"),
-                "fav":  s.get("pfire53_fav"),
-                "stress": s.get("pfire53_stress")}
+    if pf_aspiracional["base"] is None:
+        pf_aspiracional = {"base": s.get("pfire_aspiracional_base", s.get("pfire_base")),
+                           "fav":  s.get("pfire_aspiracional_fav",  s.get("pfire_fav")),
+                           "stress": s.get("pfire_aspiracional_stress", s.get("pfire_stress"))}
+    if pf_base["base"] is None:
+        pf_base = {"base": s.get("pfire_base_base"),
+                   "fav":  s.get("pfire_base_fav"),
+                   "stress": s.get("pfire_base_stress")}
 
-    print(f"  → P(FIRE@50): {pf50} | P(FIRE@53): {pf53} | tornado: {len(tornado)} variáveis")
-    return pf50, pf53, tornado
+    print(f"  → P(FIRE@50): {pf_aspiracional} | P(FIRE@53): {pf_base} | tornado: {len(tornado)} variáveis")
+    return pf_aspiracional, pf_base, tornado
 
 
 # ─── 3. BACKTEST ──────────────────────────────────────────────────────────────
@@ -1712,12 +1712,12 @@ def compute_drift(posicoes, rf, hodl11_brl, cambio):
 
 
 # ─── 8b. EARLIEST FIRE ────────────────────────────────────────────────────────
-def compute_earliest_fire(pfire50: dict, pfire53: dict, premissas_raw: dict) -> dict:
+def compute_earliest_fire(pfire_aspiracional: dict, pfire_base: dict, premissas_raw: dict) -> dict:
     """Calcula o ano mais cedo onde P(FIRE) >= 85%.
 
     Lógica:
-      - Se pfire50.base >= 85: earliest = ano aspiracional (idade 50), status = 'aspiracional'
-      - Se pfire53.base >= 85: earliest = ano alvo (idade 53), status = 'base'
+      - Se pfire_aspiracional.base >= 85: earliest = ano aspiracional (idade 49), status = 'aspiracional'
+      - Se pfire_base.base >= 85: earliest = ano alvo (idade 53), status = 'base'
       - Senão: status = 'abaixo_threshold'
     """
     try:
@@ -1726,41 +1726,41 @@ def compute_earliest_fire(pfire50: dict, pfire53: dict, premissas_raw: dict) -> 
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
         idade_atual = getattr(mod, 'PREMISSAS', {}).get('idade_atual', IDADE_ATUAL)
-        idade_aspir = getattr(mod, 'PREMISSAS', {}).get('idade_fire_aspiracional', IDADE_FIRE_ASPIRACIONAL)
-        idade_alvo  = getattr(mod, 'PREMISSAS', {}).get('idade_fire_alvo', IDADE_FIRE_ALVO)
+        idade_aspir = getattr(mod, 'PREMISSAS', {}).get('idade_cenario_aspiracional', IDADE_CENARIO_ASPIRACIONAL)
+        idade_alvo  = getattr(mod, 'PREMISSAS', {}).get('idade_cenario_base', IDADE_CENARIO_BASE)
     except Exception:
         idade_atual = premissas_raw.get('idade_atual', IDADE_ATUAL)
-        idade_aspir = premissas_raw.get('idade_fire_aspiracional', IDADE_FIRE_ASPIRACIONAL)
-        idade_alvo  = premissas_raw.get('idade_fire_alvo', IDADE_FIRE_ALVO)
+        idade_aspir = premissas_raw.get('idade_cenario_aspiracional', IDADE_CENARIO_ASPIRACIONAL)
+        idade_alvo  = premissas_raw.get('idade_cenario_base', IDADE_CENARIO_BASE)
 
     ano_atual = datetime.now().year
     ano_aspir = ano_atual + (idade_aspir - idade_atual)
     ano_alvo  = ano_atual + (idade_alvo  - idade_atual)
 
-    pf50_base = pfire50.get('base')
-    pf53_base = pfire53.get('base')
+    pf_aspiracional_base = pfire_aspiracional.get('base')
+    pf_base_base = pfire_base.get('base')
 
     THRESHOLD = 85.0
-    if pf50_base is not None and pf50_base >= THRESHOLD:
-        return {"ano": ano_aspir, "idade": idade_aspir, "pfire": pf50_base, "status": "aspiracional"}
-    elif pf53_base is not None and pf53_base >= THRESHOLD:
-        return {"ano": ano_alvo, "idade": idade_alvo, "pfire": pf53_base, "status": "base"}
+    if pf_aspiracional_base is not None and pf_aspiracional_base >= THRESHOLD:
+        return {"ano": ano_aspir, "idade": idade_aspir, "pfire": pf_aspiracional_base, "status": "aspiracional"}
+    elif pf_base_base is not None and pf_base_base >= THRESHOLD:
+        return {"ano": ano_alvo, "idade": idade_alvo, "pfire": pf_base_base, "status": "base"}
     else:
         # Retorna o alvo base mesmo abaixo do threshold (para exibição)
         return {
             "ano": ano_alvo, "idade": idade_alvo,
-            "pfire": pf53_base,
+            "pfire": pf_base_base,
             "status": "abaixo_threshold",
         }
 
 
 # ─── 8c. SPENDING GUARDRAILS ───────────────────────────────────────────────────
-def compute_spending_guardrails(pfire53: dict, premissas_raw: dict, guardrails_raw: list, gasto_piso: int) -> dict | None:
+def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrails_raw: list, gasto_piso: int) -> dict | None:
     """Calcula spending_guardrails com zonas de P(FIRE) × custo de vida.
 
     Deriva upper/safe/lower guardrail a partir da lista GUARDRAILS do fire_montecarlo.py.
     """
-    pfire_atual = pfire53.get('base')
+    pfire_atual = pfire_base.get('base')
     spending_atual = premissas_raw.get('custo_vida_base', CUSTO_VIDA_BASE)
 
     if pfire_atual is None:
@@ -2067,7 +2067,7 @@ def main():
     premissas_raw, guardrails_raw, gasto_piso, spending_smile = get_premissas()
 
     # P(FIRE) + Tornado
-    pfire50, pfire53, tornado = get_pfire_tornado()
+    pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
 
     # Backtest
     backtest_data = get_backtest()
@@ -2249,8 +2249,8 @@ def main():
         "aporte_mensal":          premissas_raw.get("aporte_mensal", APORTE_MENSAL),
         "custo_vida_base":        premissas_raw.get("custo_vida_base", CUSTO_VIDA_BASE),
         "idade_atual":            premissas_raw.get("idade_atual", IDADE_ATUAL),
-        "idade_fire_alvo":        premissas_raw.get("idade_fire_alvo", IDADE_FIRE_ALVO),
-        "idade_fire_aspiracional":premissas_raw.get("idade_fire_aspiracional", IDADE_FIRE_ASPIRACIONAL),
+        "idade_cenario_base":        premissas_raw.get("idade_cenario_base", IDADE_CENARIO_BASE),
+        "idade_cenario_aspiracional":premissas_raw.get("idade_cenario_aspiracional", IDADE_CENARIO_ASPIRACIONAL),
         "retorno_equity_base":    premissas_raw.get("retorno_equity_base", 0.0485),
         "volatilidade_equity":    premissas_raw.get("volatilidade_equity", 0.168),
         "swr_gatilho":            premissas_raw.get("swr_gatilho", SWR_GATILHO),
@@ -2321,16 +2321,16 @@ def main():
             spending[k] = {"gasto": v.get("gasto"), "inicio": v.get("inicio", 0), "fim": v.get("fim", 99)}
 
     # Spending sensibilidade — state usa {label, pfire}; template espera {label, custo, base, fav, stress}
-    # Se fav/stress ausentes no state, inferir via delta do pfire53 base→fav/stress
+    # Se fav/stress ausentes no state, inferir via delta do pfire_base base→fav/stress
     _sens_raw = state.get("spending", {}).get("scenarios", [])
     spending_sens = []
     _custo_map = {"R$250k": 250_000, "R$270k": 270_000, "R$300k": 300_000,
                   "Solteiro/FIRE Day": 250_000, "Pós-casamento": 270_000, "Casamento+filho": 300_000}
-    _pf53_base   = pfire53.get("base")
-    _pf53_fav    = pfire53.get("fav")
-    _pf53_stress = pfire53.get("stress")
-    _delta_fav    = (_pf53_fav   - _pf53_base) if (_pf53_fav    is not None and _pf53_base is not None) else None
-    _delta_stress = (_pf53_stress - _pf53_base) if (_pf53_stress is not None and _pf53_base is not None) else None
+    _pf_base_base   = pfire_base.get("base")
+    _pf_base_fav    = pfire_base.get("fav")
+    _pf_base_stress = pfire_base.get("stress")
+    _delta_fav    = (_pf_base_fav   - _pf_base_base) if (_pf_base_fav    is not None and _pf_base_base is not None) else None
+    _delta_stress = (_pf_base_stress - _pf_base_base) if (_pf_base_stress is not None and _pf_base_base is not None) else None
     for s in _sens_raw:
         label = s.get("label", "")
         custo = s.get("custo", _custo_map.get(label, 0))
@@ -2421,14 +2421,14 @@ def main():
         "target":         _q1.get("target"),
     } if _q1 else {**_shadows_raw, "delta_vwra": None, "delta_ipca": None, "delta_shadow_c": None}
 
-    # P(FIRE@53): ler chave específica pfire53_* (salva quando fire_montecarlo roda sem --anos)
-    if pfire53.get("base") is None:
+    # P(FIRE@53): ler chave específica pfire_base_* (salva quando fire_montecarlo roda sem --anos)
+    if pfire_base.get("base") is None:
         s = state.get("fire", {})
-        if s.get("pfire53_base") is not None:
-            pfire53 = {"base": s["pfire53_base"], "fav": s.get("pfire53_fav"), "stress": s.get("pfire53_stress")}
+        if s.get("pfire_base_base") is not None:
+            pfire_base = {"base": s["pfire_base_base"], "fav": s.get("pfire_base_fav"), "stress": s.get("pfire_base_stress")}
         else:
             # Fallback: usar pfire_base genérico (pode ser qualquer rodada)
-            pfire53 = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
+            pfire_base = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
 
     # ─── Mini-log: últimas operações IBKR + XP ───────────────────────────────
     def _build_minilog():
@@ -2609,17 +2609,17 @@ def main():
     fire_state = state.get("fire", {})
     scenario_comparison = {
         "fire53": {
-            "base":        pfire53.get("base"),
-            "fav":         pfire53.get("fav"),
-            "stress":      pfire53.get("stress"),
+            "base":        pfire_base.get("base"),
+            "fav":         pfire_base.get("fav"),
+            "stress":      pfire_base.get("stress"),
             "pat_mediano": fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire")),
             "pat_p10":     fire_state.get("pat_p10_fire53", fire_state.get("pat_p10_fire")),
             "pat_p90":     fire_state.get("pat_p90_fire53", fire_state.get("pat_p90_fire")),
         },
         "fire50": {
-            "base":        pfire50.get("base"),
-            "fav":         pfire50.get("fav"),
-            "stress":      pfire50.get("stress"),
+            "base":        pfire_aspiracional.get("base"),
+            "fav":         pfire_aspiracional.get("fav"),
+            "stress":      pfire_aspiracional.get("stress"),
             "pat_mediano": fire_state.get("pat_mediano_fire50"),
             "pat_p10":     fire_state.get("pat_p10_fire50"),
             "pat_p90":     fire_state.get("pat_p90_fire50"),
@@ -2641,11 +2641,11 @@ def main():
     }
 
     # Earliest FIRE date
-    earliest_fire = compute_earliest_fire(pfire50, pfire53, premissas_raw)
+    earliest_fire = compute_earliest_fire(pfire_aspiracional, pfire_base, premissas_raw)
     print(f"  -> earliest_fire: {earliest_fire}")
 
     # Spending guardrails
-    spending_guardrails = compute_spending_guardrails(pfire53, premissas_raw, guardrails_raw, gasto_piso)
+    spending_guardrails = compute_spending_guardrails(pfire_base, premissas_raw, guardrails_raw, gasto_piso)
     if spending_guardrails:
         print(f"  -> spending_guardrails: zona={spending_guardrails['zona']} | P(FIRE)={spending_guardrails['pfire_atual']}% | spending=R${spending_guardrails['spending_atual']/1e3:.0f}k")
 
@@ -2689,8 +2689,8 @@ def main():
         "pesosTarget": pesos_target,
         "pisos":      pisos,
 
-        "pfire50":    pfire50,
-        "pfire53":    pfire53,
+        "pfire_aspiracional":    pfire_aspiracional,
+        "pfire_base":    pfire_base,
         "premissas":  premissas,
         "guardrails": guardrails,
         "gasto_piso": gasto_piso,
@@ -2767,7 +2767,7 @@ def main():
     OUT_PATH.write_text(json.dumps(data, indent=2, ensure_ascii=False))
     print(f"\n✅ {OUT_PATH.relative_to(ROOT)}")
     print(f"   Patrimônio: R${total_brl/1e6:.2f}M | Câmbio: {cambio:.4f}")
-    print(f"   P(FIRE@50): {pfire50.get('base')}% | Tornado: {len(tornado)} variáveis | Bond pool: {bp_anos} anos")
+    print(f"   P(FIRE@50): {pfire_aspiracional.get('base')}% | Tornado: {len(tornado)} variáveis | Bond pool: {bp_anos} anos")
     print(f"   Timeline: {len(timeline['labels'])} pontos | Retornos mensais: {len(retornos_mensais['dates'])} meses")
     print(f"   IR diferido: R${tax_data['ir_diferido_total_brl']:,.0f} sobre {len(tax_data['ir_por_etf'])} ETFs" if tax_data else "   IR diferido: N/A")
     print(f"   Factor: rolling {len(factor_rolling.get('dates', []))} pts | loadings {len(factor_loadings)} ETFs")

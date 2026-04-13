@@ -122,47 +122,71 @@
     }
   },
   "fire": {
-    "pfire_base": 90.4,
-    "pfire_fav": 94.1,
-    "pfire_stress": 86.8,
-    "pat_mediano_fire": 11527476.0,
-    "pat_p10_fire": 6834909.0,
-    "pat_p90_fire": 18916227.0,
+    "pfire_base": 86.5,
+    "pfire_fav": 92.4,
+    "pfire_stress": 82.5,
+    "pat_mediano_fire": 9460180.0,
+    "pat_p10_fire": 6117595.0,
+    "pat_p90_fire": 14332903.0,
     "mc_date": "2026-04-13",
-    "pfire50_base": 85.4,
-    "pfire50_fav": 91.3,
-    "pfire50_stress": 81.1,
+    "pfire50_base": 88.6,
+    "pfire50_fav": 93.0,
+    "pfire50_stress": 84.8,
     "pfire53_base": 90.4,
     "pfire53_fav": 94.1,
     "pfire53_stress": 86.8,
-    "pat_mediano_fire50": 9339651.0,
-    "pat_p10_fire50": 5873669.0,
-    "pat_p90_fire50": 14560082.0,
+    "pat_mediano_fire50": 10156721.0,
+    "pat_p10_fire50": 6488792.0,
+    "pat_p90_fire50": 15670253.0,
     "pat_mediano_fire53": 11527476.0,
     "pat_p10_fire53": 6834909.0,
     "pat_p90_fire53": 18916227.0,
     "tornado": [
       {
         "variavel": "Volatilidade equity (+/-10%)",
-        "mais10": -4.1,
-        "menos10": 4.0
+        "mais10": -4.0,
+        "menos10": 3.9
       },
       {
         "variavel": "Custo de vida (+/-10%)",
-        "mais10": -2.8,
-        "menos10": 1.9
+        "mais10": -2.4,
+        "menos10": 2.2
       },
       {
         "variavel": "Retorno equity (+/-10%)",
-        "mais10": 3.4,
-        "menos10": -4.1
+        "mais10": 3.1,
+        "menos10": -3.1
       },
       {
         "variavel": "Aporte mensal (+/-10%)",
-        "mais10": 1.2,
-        "menos10": -1.4
+        "mais10": 2.0,
+        "menos10": -2.1
       }
-    ]
+    ],
+    "pfire47_base": 81.0,
+    "pfire47_fav": 88.3,
+    "pfire47_stress": 76.3,
+    "pat_mediano_fire47": 8023828.0,
+    "pat_p10_fire47": 5408969.0,
+    "pat_p90_fire47": 11764071.0,
+    "pfire48_base": 84.2,
+    "pfire48_fav": 90.6,
+    "pfire48_stress": 79.7,
+    "pat_mediano_fire48": 8710163.0,
+    "pat_p10_fire48": 5713135.0,
+    "pat_p90_fire48": 12981013.0,
+    "pfire49_base": 86.5,
+    "pfire49_fav": 92.4,
+    "pfire49_stress": 82.5,
+    "pat_mediano_fire49": 9460180.0,
+    "pat_p10_fire49": 6117595.0,
+    "pat_p90_fire49": 14332903.0,
+    "pfire_base_base": 86.5,
+    "pfire_base_fav": 92.4,
+    "pfire_base_stress": 82.5,
+    "pat_mediano_base": 9460180.0,
+    "pat_p10_base": 6117595.0,
+    "pat_p90_base": 14332903.0
   },
   "shadows": {
     "q1_2026": {

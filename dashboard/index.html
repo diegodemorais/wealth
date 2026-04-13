@@ -310,7 +310,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;margin-top:2px" data-in-tab="hoje">Indicadores Primários</div>
 <div class="kpi-grid" data-in-tab="hoje" style="margin-bottom:8px">
 <div class="kpi kpi-fire" style="border-width:2px">
-  <div class="kpi-label">P(FIRE@50)</div>
+  <div class="kpi-label">P(Cenário Aspiracional)</div>
   <div class="kpi-value pv" id="kpiPfire50">—</div>
   <div class="kpi-sub pv" id="kpiPfire50Sub">cenário base</div>
 </div>
@@ -431,21 +431,21 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações — FIRE@53</div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações — Cenário Base</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px" id="pfireScenarioRow">
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
-      <div id="pfire53BaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
-      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire53Base">—</div>
+      <div id="pfire_baseBaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
+      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire_baseBase">—</div>
       <div style="font-size:.6rem;color:var(--muted)">Base</div>
     </div>
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
-      <div id="pfire53FavBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Favorável</div>
-      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire53Fav">—</div>
+      <div id="pfire_baseFavBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Favorável</div>
+      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire_baseFav">—</div>
       <div style="font-size:.6rem;color:var(--muted)">Favorável</div>
     </div>
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
-      <div id="pfire53StressBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Stress</div>
-      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire53Stress">—</div>
+      <div id="pfire_baseStressBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Stress</div>
+      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire_baseStress">—</div>
       <div style="font-size:.6rem;color:var(--muted)">Stress</div>
     </div>
   </div>
@@ -609,9 +609,9 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="src" id="trackingFireSrc">Patrimônio realizado vs projeção FIRE · Meta FIRE</div>
 </div>
 
-<!-- S9 + F4: FIRE@53 vs FIRE@50 — tabela unificada (gráfico de barras removido — duplicata) -->
+<!-- S9 + F4: Cenário Base vs Cenário Aspiracional — tabela unificada (gráfico de barras removido — duplicata) -->
 <div class="section" data-in-tab="fire">
-  <h2>FIRE@53 vs FIRE@50 — Comparação Detalhada</h2>
+  <h2>Cenário Base vs Cenário Aspiracional — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div>
 </div>
@@ -980,11 +980,11 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
-        <div style="font-size:.6rem;color:var(--muted)">FIRE@50</div>
+        <div style="font-size:.6rem;color:var(--muted)">Cenário Aspiracional</div>
         <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire50">—</div>
       </div>
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--accent)">
-        <div style="font-size:.6rem;color:var(--muted)">FIRE@53 (plano)</div>
+        <div style="font-size:.6rem;color:var(--muted)">Cenário Base (plano)</div>
         <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire53">—</div>
       </div>
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
@@ -1016,7 +1016,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <button class="preset-btn"        id="pmkt-stress"  onclick="setFireMkt('stress')">⚠️ Stress</button>
     <button class="preset-btn active" id="pmkt-base"    onclick="setFireMkt('base')">✅ Base</button>
     <button class="preset-btn"        id="pmkt-fav"     onclick="setFireMkt('fav')">🚀 Favorável</button>
-    <button class="preset-btn"        id="pcond-fire50" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 FIRE@50 aspiracional</button>
+    <button class="preset-btn"        id="pcond-fire50" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
   </div>
 </div>
 
@@ -1038,7 +1038,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$150k</span><span>R$500k</span></div>
   </div>
 </div>
-<div class="src">Simulação determinística (sem MC). Critério: SWR ≤ 3.0% (= R$250k/R$8.33M). FIRE@50 e FIRE@53 são outputs do MC 10k (fixos).</div>
+<div class="src">Simulação determinística (sem MC). Critério: SWR ≤ 3.0% (= R$250k/R$8.33M). Cenário Aspiracional e Cenário Base são outputs do MC 10k (fixos).</div>
 </div>
 
 <!-- S19: WHAT-IF SCENARIOS -->
@@ -1366,8 +1366,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
  *     aporte_mensal: number,
  *     custo_vida_base: number,
  *     idade_atual: number,
- *     idade_fire_alvo: number,
- *     idade_fire_aspiracional: number,
+ *     idade_cenario_base: number,
+ *     idade_cenario_aspiracional: number,
  *     retorno_equity_base: number,
  *     volatilidade_equity: number,
  *     swr_gatilho: number,
@@ -1409,12 +1409,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T13:18:11-03:00'); // BRT (UTC-3)
-const VERSION = '2.22';
+const GENERATED_AT = new Date('2026-04-13T14:18:23-03:00'); // BRT (UTC-3)
+const VERSION = '2.26';
 
 const DATA = {
-  "_generated": "2026-04-13T13:07:58",
-  "_generated_brt": "2026-04-13T13:07:58-03:00",
+  "_generated": "2026-04-13T14:12:58",
+  "_generated_brt": "2026-04-13T14:12:58-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1424,7 +1424,7 @@ const DATA = {
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.0208,
+  "cambio": 4.9903,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -1445,7 +1445,7 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.9,
+      "price": 115.4997,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1453,7 +1453,7 @@ const DATA = {
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.09,
+      "price": 105.78,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1477,7 +1477,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.2697,
+      "price": 63.6694,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1485,7 +1485,7 @@ const DATA = {
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.99,
+      "price": 63.3,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1512,24 +1512,24 @@ const DATA = {
     "pisoVendaRendaPlus": 6.0,
     "ir_aliquota": 0.15
   },
-  "pfire50": {
-    "base": 85.4,
-    "fav": 91.3,
-    "stress": 81.1
+  "pfire_aspiracional": {
+    "base": 86.5,
+    "fav": 92.4,
+    "stress": 82.5
   },
-  "pfire53": {
-    "base": 90.4,
-    "fav": 94.1,
-    "stress": 86.8
+  "pfire_base": {
+    "base": 86.5,
+    "fav": 92.4,
+    "stress": 82.5
   },
   "premissas": {
-    "patrimonio_atual": 3540458,
+    "patrimonio_atual": 3528331,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
     "idade_atual": 39,
-    "idade_fire_alvo": 53,
-    "idade_fire_aspiracional": 50,
+    "idade_cenario_base": 53,
+    "idade_cenario_aspiracional": 49,
     "retorno_equity_base": 0.0485,
     "volatilidade_equity": 0.168,
     "swr_gatilho": 0.03,
@@ -1617,30 +1617,30 @@ const DATA = {
     {
       "label": "Volatilidade equity (+/-10%)",
       "variavel": "Volatilidade equity (+/-10%)",
-      "mais10": -4.1,
-      "menos10": 4.0,
-      "delta": 8.2
+      "mais10": -4.0,
+      "menos10": 3.9,
+      "delta": 7.8
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
-      "mais10": -2.8,
-      "menos10": 1.9,
+      "mais10": -2.4,
+      "menos10": 2.2,
       "delta": 4.7
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
-      "mais10": 3.4,
-      "menos10": -4.1,
-      "delta": 7.6
+      "mais10": 3.1,
+      "menos10": -3.1,
+      "delta": 6.3
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
-      "mais10": 1.2,
-      "menos10": -1.4,
-      "delta": 2.6
+      "mais10": 2.0,
+      "menos10": -2.1,
+      "delta": 4.2
     }
   ],
   "fire": {
@@ -1656,7 +1656,7 @@ const DATA = {
       }
     },
     "pat_mediano_fire": 11527476.0,
-    "pat_mediano_fire50": 9339651.0,
+    "pat_mediano_fire50": 10156721.0,
     "mc_date": "2026-04-13",
     "plano_status": {
       "status": "MONITORAR",
@@ -1673,23 +1673,23 @@ const DATA = {
     }
   },
   "scenario_comparison": {
-    "fire53": {
-      "base": 90.4,
-      "fav": 94.1,
-      "stress": 86.8,
-      "pat_mediano": 11527476.0,
-      "pat_p10": 6834909.0,
-      "pat_p90": 18916227.0
+    "fire_base": {
+      "base": 86.5,
+      "fav": 92.4,
+      "stress": 82.5,
+      "pat_mediano": 9460180.0,
+      "pat_p10": 6117595.0,
+      "pat_p90": 14332903.0
     },
-    "fire50": {
-      "base": 85.4,
-      "fav": 91.3,
-      "stress": 81.1,
-      "pat_mediano": 9339651.0,
-      "pat_p10": 5873669.0,
-      "pat_p90": 14560082.0
+    "fire_aspiracional": {
+      "base": 86.5,
+      "fav": 92.4,
+      "stress": 82.5,
+      "pat_mediano": 10156721.0,
+      "pat_p10": 6488792.0,
+      "pat_p90": 15670253.0
     },
-    "nota_fire50_pat": null
+    "nota_fire_aspiracional_pat": null
   },
   "timeline": {
     "labels": [
@@ -3630,7 +3630,7 @@ const DATA = {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.88,
+      "atual_pct": 2.89,
       "status": "verde"
     }
   },
@@ -3716,11 +3716,11 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.2,
+      "atual": 36.1,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.4,
+      "atual": 28.5,
       "alvo": 23.7
     },
     "AVEM": {
@@ -3742,7 +3742,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.9,
+      "price": 115.4997,
       "ucits": "AVGS.L"
     },
     {
@@ -3750,7 +3750,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.09,
+      "price": 105.78,
       "ucits": "AVGS.L"
     },
     {
@@ -3774,7 +3774,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.2697,
+      "price": 63.6694,
       "ucits": "AVEM.L"
     },
     {
@@ -3782,7 +3782,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.99,
+      "price": 63.3,
       "ucits": "AVEM.L"
     },
     {
@@ -4130,10 +4130,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 628573,
-    "retorno_usd": 237530,
-    "pct_aportes": 62.2,
-    "pct_retorno": 37.8,
+    "patrimonio_equity_usd": 629985,
+    "retorno_usd": 238942,
+    "pct_aportes": 62.1,
+    "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-13"
@@ -4175,12 +4175,12 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0208
+    "cambio": 4.9903
   },
   "mercado": {
-    "cambio_brl_usd": 5.0208,
+    "cambio_brl_usd": 4.9903,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": -2.62,
+    "cambio_mtd_pct": -3.21,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -4673,7 +4673,7 @@ const DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 388528,
-    "total_portfolio_brl": 3540458,
+    "total_portfolio_brl": 3528331,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4689,31 +4689,31 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72858,
-      "delta_brl": 47858,
-      "delta_pct": 191.4,
+      "realizado_media_brl": 72660,
+      "delta_brl": 47660,
+      "delta_pct": 190.6,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1963351,
+      "total_ibkr_brl": 1951424,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4371510,
-      "cambio_conversao": 5.0208,
+      "total_aporte_brl": 4359583,
+      "cambio_conversao": 4.9903,
       "por_ano_brl": {
-        "2026": 95395,
-        "2025": 283537,
-        "2024": 373907,
-        "2023": 395174,
-        "2022": 483973,
-        "2021": 331364
+        "2026": 94816,
+        "2025": 281815,
+        "2024": 371636,
+        "2023": 392774,
+        "2022": 481033,
+        "2021": 329351
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
   },
   "earliest_fire": {
-    "ano": 2037,
-    "idade": 50,
-    "pfire": 85.4,
+    "ano": 2036,
+    "idade": 49,
+    "pfire": 86.5,
     "status": "aspiracional"
   },
   "spending_guardrails": {
@@ -7985,166 +7985,166 @@ const DATA = {
       2077
     ],
     "p10": [
-      3540458,
-      3710776,
-      3889286,
-      4076385,
-      4272483,
-      4478016,
-      4693436,
-      4919218,
-      5155862,
-      5403891,
-      5663851,
-      5936316,
-      6221889,
-      6521200,
-      6834909,
-      6924402,
-      7018236,
-      7116620,
-      7219776,
-      7327935,
-      7441340,
-      7560245,
-      7684917,
-      7815635,
-      7952694,
-      8096399,
-      8265075,
-      8441931,
-      8627365,
-      8821792,
-      9067649,
-      9325430,
-      9595713,
-      9879105,
-      10176242,
-      10487789,
-      10814447,
-      11156948,
-      11516060,
-      11892589,
-      12287379,
-      12701317,
-      13135331,
-      13590395,
-      14067529,
-      14580804,
-      15118973,
-      15683243,
-      16274880,
-      16895212,
-      17545630,
-      18227593
+      3528331,
+      3669793,
+      3816927,
+      3969959,
+      4129127,
+      4294677,
+      4466864,
+      4645955,
+      4832226,
+      5025966,
+      5227472,
+      5437058,
+      5655047,
+      5881776,
+      6117595,
+      6172298,
+      6229655,
+      6289793,
+      6352848,
+      6418961,
+      6488281,
+      6560962,
+      6637169,
+      6717072,
+      6800850,
+      6888691,
+      6998793,
+      7114234,
+      7235274,
+      7362185,
+      7537251,
+      7720808,
+      7913267,
+      8115060,
+      8326641,
+      8548483,
+      8781084,
+      9024967,
+      9280678,
+      9548791,
+      9829907,
+      10124657,
+      10433703,
+      10757738,
+      11097488,
+      11466716,
+      11853852,
+      12259764,
+      12685363,
+      13131603,
+      13599485,
+      14090060
     ],
     "p50": [
-      3540458,
-      3851936,
-      4190817,
-      4559512,
-      4960643,
-      5397064,
-      5871881,
-      6388470,
-      6950507,
-      7561990,
-      8227269,
-      8951078,
-      9738565,
-      10595333,
-      11527476,
-      11844559,
-      12177020,
-      12525605,
-      12891097,
-      13274315,
-      13676119,
-      14097411,
-      14539136,
-      15002284,
-      15487895,
-      15997057,
-      16548915,
-      17127537,
-      17734223,
-      18370332,
-      19079294,
-      19822639,
-      20602037,
-      21419236,
-      22276069,
-      23174458,
-      24116420,
-      25104066,
-      26139613,
-      27225384,
-      28363816,
-      29557461,
-      30808997,
-      32121234,
-      33497114,
-      34952724,
-      36478931,
-      38079159,
-      39756998,
-      41516213,
-      43360749,
-      45294745
+      3528331,
+      3785858,
+      4062182,
+      4358673,
+      4676806,
+      5018158,
+      5384425,
+      5777426,
+      6199110,
+      6651573,
+      7137060,
+      7657983,
+      8216926,
+      8816666,
+      9460180,
+      9676999,
+      9904333,
+      10142693,
+      10392614,
+      10654656,
+      10929407,
+      11217483,
+      11519531,
+      11836228,
+      12168285,
+      12516447,
+      12899494,
+      13301120,
+      13722224,
+      14163752,
+      14668694,
+      15198126,
+      15753235,
+      16335267,
+      16945527,
+      17585385,
+      18256276,
+      18959706,
+      19697252,
+      20470568,
+      21281391,
+      22131538,
+      23022918,
+      23957529,
+      24937470,
+      25977937,
+      27068867,
+      28212707,
+      29412023,
+      30669506,
+      31987977,
+      33370394
     ],
     "p90": [
-      3540458,
-      3990648,
-      4498081,
-      5070038,
-      5714723,
-      6441383,
-      7260442,
-      8183649,
-      9224247,
-      10397163,
-      11719222,
-      13209389,
-      14889038,
-      16782265,
-      18916227,
-      19591664,
-      20299860,
-      21042403,
-      21820959,
-      22637276,
-      23493184,
-      24390603,
-      25331548,
-      26318128,
-      27352557,
-      28437156,
-      29592358,
-      30803587,
-      32073561,
-      33405129,
-      34843278,
-      36351177,
-      37932209,
-      39589921,
-      41328032,
-      43150442,
-      45061238,
-      47064708,
-      49165346,
-      51367866,
-      53677207,
-      56098552,
-      58637331,
-      61299242,
-      64090255,
-      67029633,
-      70111570,
-      73342981,
-      76731115,
-      80283575,
-      84008328,
-      87913732
+      3528331,
+      3899891,
+      4310580,
+      4764518,
+      5266258,
+      5820836,
+      6433815,
+      7111345,
+      7860224,
+      8687967,
+      9602877,
+      10614134,
+      11731884,
+      12967342,
+      14332903,
+      14786049,
+      15261172,
+      15759339,
+      16281667,
+      16829328,
+      17403550,
+      18005622,
+      18636895,
+      19298784,
+      19992776,
+      20720425,
+      21501366,
+      22320182,
+      23178711,
+      24078878,
+      25064704,
+      26098342,
+      27182112,
+      28318444,
+      29509889,
+      30759118,
+      32068935,
+      33442279,
+      34882229,
+      36392017,
+      37975030,
+      39634819,
+      41375108,
+      43199801,
+      45112991,
+      47131971,
+      49248872,
+      51468442,
+      53795661,
+      56235751,
+      58794185,
+      61476703
     ],
     "ano_fire": 2040,
     "nota_unidades": "Projeção pós-FIRE em R$ reais (constante 2026). Spending smile: Go-Go R$242k / Slow-Go R$200k / No-Go R$187k. INSS R$18k/ano real a partir de age 65.",
@@ -8176,7 +8176,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.22"
+  "version": "2.26"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8263,17 +8263,17 @@ const progPct = (DATA.premissas.patrimonio_atual / PAT_GATILHO) * 100;
 // SWR no FIRE Day projetada
 const swrFireDay = DATA.premissas.custo_vida_base / PAT_GATILHO;
 
-// Years to FIRE — data derivada de premissas (idade_fire_alvo + idade_atual + ano atual)
+// Years to FIRE — data derivada de premissas (idade_cenario_base + idade_atual + ano atual)
 const today = new Date(DATA.date);
 // Anos FIRE alvo e aspiracional (module-level, usados por múltiplas funções)
-const _anoFireAlvoGlobal = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
-const _anoFireAspir = today.getFullYear() + ((DATA.premissas.idade_fire_aspiracional ?? 50) - DATA.premissas.idade_atual);
+const _anoFireAlvoGlobal = today.getFullYear() + (DATA.premissas.idade_cenario_base - DATA.premissas.idade_atual);
+const _anoFireAspir = today.getFullYear() + ((DATA.premissas.idade_cenario_aspiracional ?? 50) - DATA.premissas.idade_atual);
 const _footerDate = document.getElementById('footerDate');
 if (_footerDate && DATA.date) { const _d = new Date(DATA.date); _footerDate.textContent = `${String(_d.getDate()).padStart(2,'0')}/${String(_d.getMonth()+1).padStart(2,'0')}/${_d.getFullYear()}`; }
 // Nudge de frequência mensal — próxima consulta sugerida +30 dias
 const _nudgeEl = document.getElementById('footerNudge');
 if (_nudgeEl && DATA.date) { const _nd = new Date(DATA.date); _nd.setDate(_nd.getDate() + 30); const _meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; _nudgeEl.textContent = `Próxima consulta sugerida: ${String(_nd.getDate()).padStart(2,'0')}/${_meses[_nd.getMonth()]}/${_nd.getFullYear()}`; }
-const _anoFire = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual);
+const _anoFire = today.getFullYear() + (DATA.premissas.idade_cenario_base - DATA.premissas.idade_atual);
 const fireDate = new Date(`${_anoFire}-01-01`);
 const msLeft = fireDate - today;
 const yearsLeft = msLeft / (1000 * 60 * 60 * 24 * 365.25);
@@ -8302,7 +8302,7 @@ function calcWellness() {
   const pfMax = pfM.max ?? 35;
   const pfGood = pfM.colors?.good ?? 28;
   const pfWarn = pfM.colors?.warn ?? 10;
-  const pf = DATA.pfire53.base;
+  const pf = DATA.pfire_base.base;
   // interpolação linear por threshold step
   const pfThr = pfM.thresholds || [{min:95,pts:35},{min:90,pts:28},{min:85,pts:22},{min:75,pts:10},{min:0,pts:0}];
   let pfPts = 0;
@@ -8814,8 +8814,8 @@ function buildScenarios() {
     data: {
       labels: ['Base', 'Favorável', 'Stress'],
       datasets: [
-        { label: 'FIRE@53 ✅', data: [DATA.pfire53.base, DATA.pfire53.fav, DATA.pfire53.stress], backgroundColor: ['rgba(59,130,246,.7)','rgba(34,197,94,.7)','rgba(234,179,8,.7)'] },
-        { label: 'FIRE@50 🚀', data: [DATA.pfire50.base, DATA.pfire50.fav, DATA.pfire50.stress], backgroundColor: ['rgba(168,85,247,.5)','rgba(168,85,247,.7)','rgba(168,85,247,.4)'] },
+        { label: 'Cenário Base ✅', data: [DATA.pfire_base.base, DATA.pfire_base.fav, DATA.pfire_base.stress], backgroundColor: ['rgba(59,130,246,.7)','rgba(34,197,94,.7)','rgba(234,179,8,.7)'] },
+        { label: 'Cenário Aspiracional 🚀', data: [DATA.pfire_aspiracional.base, DATA.pfire_aspiracional.fav, DATA.pfire_aspiracional.stress], backgroundColor: ['rgba(168,85,247,.5)','rgba(168,85,247,.7)','rgba(168,85,247,.4)'] },
       ]
     },
     options: {
@@ -9057,14 +9057,14 @@ function buildFanChart() {
   const pat0 = DATA.premissas.patrimonio_atual;
   // startYear: ano atual + fração do mês atual; endYear: FIRE_alvo + 30 anos de retiradas
   const startYear = today.getFullYear() + today.getMonth() / 12;
-  const endYear = today.getFullYear() + (DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual) + 30;
+  const endYear = today.getFullYear() + (DATA.premissas.idade_cenario_base - DATA.premissas.idade_atual) + 30;
   const labels = [], p10 = [], p50 = [], p90 = [];
   // Labels com ano + idade para contexto temporal duplo
   const _idadeBase = DATA.premissas.idade_atual;
   const _anoBase = today.getFullYear();
   const _aporteAnual = (DATA.premissas.aporte_mensal ?? 25000) * 12; // R$/ano — inclui aportes na projeção
-  // Âncoras MC para P10/P90 no FIRE@53 — calibra spread vs heurística
-  const _tFire53 = (DATA.premissas.idade_fire_alvo ?? 53) - (DATA.premissas.idade_atual ?? 39);
+  // Âncoras MC para P10/P90 no Cenário Base — calibra spread vs heurística
+  const _tFire53 = (DATA.premissas.idade_cenario_base ?? 53) - (DATA.premissas.idade_atual ?? 39);
   const _mc53 = DATA.scenario_comparison?.fire53;
   // med(t_fire53) com aportes: usado para derivar ratio_10/ratio_90 do MC
   const _medFire53 = r > 0
@@ -9081,14 +9081,14 @@ function buildFanChart() {
     const _idade = _idadeBase + (yr - _anoBase);
     labels.push([String(yr), `(${_idade} anos)`]);
     p50.push(Math.round(med));
-    // P10/P90: spread calibrado pelo MC no FIRE@53, escalado por sqrt(t/t_fire53)
+    // P10/P90: spread calibrado pelo MC no Cenário Base, escalado por sqrt(t/t_fire53)
     const _frac = _tFire53 > 0 ? Math.sqrt(Math.min(t, _tFire53) / _tFire53) : 0;
     p10.push(Math.round(med * (1 - (1 - _ratio10) * _frac)));
     p90.push(Math.round(med * (1 + (_ratio90 - 1) * _frac)));
   }
   // FIRE day markers
-  const _anoFire50 = _anoBase + (DATA.premissas.idade_fire_aspiracional ?? 50) - _idadeBase;
-  const _anoFire53 = _anoBase + (DATA.premissas.idade_fire_alvo ?? 53) - _idadeBase;
+  const _anoFire50 = _anoBase + (DATA.premissas.idade_cenario_aspiracional ?? 50) - _idadeBase;
+  const _anoFire53 = _anoBase + (DATA.premissas.idade_cenario_base ?? 53) - _idadeBase;
   const fire50Idx = labels.findIndex(l => +(Array.isArray(l) ? l[0] : l) >= _anoFire50);
   const fire53Idx = labels.findIndex(l => +(Array.isArray(l) ? l[0] : l) >= _anoFire53);
 
@@ -9195,7 +9195,7 @@ function buildIncomeChart() {
   charts.income = new Chart(document.getElementById('incomeChart'), {
     type: 'bar',
     data: {
-      labels: (function() { const a = DATA.premissas?.idade_fire_alvo ?? 53; return [`Go-Go (${a}–${a+15})`, `Slow-Go (${a+15}–${a+30})`, `No-Go (${a+30}+)`]; })(),
+      labels: (function() { const a = DATA.premissas?.idade_cenario_base ?? 53; return [`Go-Go (${a}–${a+15})`, `Slow-Go (${a+15}–${a+30})`, `No-Go (${a+30}+)`]; })(),
       datasets: [
         { label: 'Lifestyle ex-saúde', data: [sm.go_go.gasto, sm.slow_go.gasto, sm.no_go.gasto], backgroundColor: 'rgba(59,130,246,.7)' },
         { label: 'Saúde (SAUDE_BASE+inflator)', data: [saude, saude * 1.3, saude * 2.0], backgroundColor: 'rgba(239,68,68,.5)' },
@@ -9220,7 +9220,7 @@ function buildFeeAnalysis() {
   const _benchTer  = _terCfg.benchmark_ter ?? 0.220;
   const _shadowCTer = _terCfg.shadow_c_ter ?? 0.207;
   const pat = DATA.premissas.patrimonio_atual;
-  const anos = DATA.premissas.idade_fire_alvo - DATA.premissas.idade_atual;
+  const anos = DATA.premissas.idade_cenario_base - DATA.premissas.idade_atual;
   const ALPHA_ANNUAL = _terCfg.alpha_anual ?? 0.00160;
 
   const portfolios = [
@@ -10522,12 +10522,12 @@ function buildEarliestFire() {
     </div>
     <div style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
-        <div style="font-size:1rem;font-weight:700;color:var(--purple)" class="pv">${DATA.pfire50.base}%</div>
-        <div style="font-size:.65rem;color:var(--muted)">FIRE@50 Base</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--purple)" class="pv">${DATA.pfire_aspiracional.base}%</div>
+        <div style="font-size:.65rem;color:var(--muted)">Cenário Aspiracional</div>
       </div>
       <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
-        <div style="font-size:1rem;font-weight:700;color:var(--accent)" class="pv">${DATA.pfire53.base}%</div>
-        <div style="font-size:.65rem;color:var(--muted)">FIRE@53 Base</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--accent)" class="pv">${DATA.pfire_base.base}%</div>
+        <div style="font-size:.65rem;color:var(--muted)">Cenário Base</div>
       </div>
     </div>`;
 }
@@ -10585,7 +10585,7 @@ window.setFireMkt = function(mkt) {
   _applyFireAxes();
 };
 
-// FIRE@50 aspiracional — mesmo aporte base, retorno favorável, custo go-go
+// Cenário Aspiracional — mesmo aporte base, retorno favorável, custo go-go
 window.setFirePreset50 = function() {
   document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
   document.getElementById('pcond-fire50')?.classList.add('active');
@@ -10629,7 +10629,7 @@ window.updateFireSim = function() {
   const patAtual   = DATA.premissas.patrimonio_atual;
   const swrMeta    = DATA.premissas.swr_gatilho ?? 0.030;
   const maxMonths  = (70 - idadeAtual) * 12;
-  const horizonte  = 37; // anos de desacumulação (FIRE@53 → ~90 anos)
+  const horizonte  = 37; // anos de desacumulação (Cenário Base → ~90 anos)
 
   // Floors de renda que reduzem o que o portfólio precisa cobrir
   // INSS Diego: R$18k/ano × 60% (haircut reforma) = R$10.8k efetivo, a partir dos 65
@@ -10665,14 +10665,14 @@ window.updateFireSim = function() {
   const yrInt    = Math.floor(fireAge - idadeAtual);
   const moInt    = Math.round((fireAge - idadeAtual - yrInt) * 12);
   const reached  = m < maxMonths;
-  const idadeFire53 = DATA.premissas.idade_fire_alvo;
-  const idadeFire50 = DATA.premissas.idade_fire_aspiracional;
+  const idadeFire53 = DATA.premissas.idade_cenario_base;
+  const idadeFire50 = DATA.premissas.idade_cenario_aspiracional;
   const diffVs53 = idadeFire53 - fireAge;
   const custoEf  = _custoEfetivo(fireAge); // custo efetivo do portfólio no FIRE Day
 
   // Cor semáforo
   const cor = !reached ? '#ef4444' : diffVs53 > 1 ? '#22c55e' : diffVs53 > -0.5 ? '#3b82f6' : '#eab308';
-  const zone = !reached ? 'Crítico' : diffVs53 > 2 ? 'Excelente — antes do plano' : diffVs53 > 0 ? 'Bom — antes de FIRE@53' : diffVs53 > -2 ? 'Regular — próximo ao plano' : 'Crítico — depois do plano';
+  const zone = !reached ? 'Crítico' : diffVs53 > 2 ? 'Excelente — antes do plano' : diffVs53 > 0 ? 'Bom — antes de Cenário Base' : diffVs53 > -2 ? 'Regular — próximo ao plano' : 'Crítico — depois do plano';
 
   const _ano = document.getElementById('simFireAno');
   const _idade = document.getElementById('simFireIdade');
@@ -10703,8 +10703,8 @@ window.updateFireSim = function() {
   // Cards fixos MC
   const _p50 = document.getElementById('simPfire50');
   const _p53 = document.getElementById('simPfire53');
-  if (_p50) { _p50.textContent = `${DATA.pfire50.base}%`; _p50.style.color = DATA.pfire50.base >= 85 ? '#22c55e' : '#eab308'; }
-  if (_p53) { _p53.textContent = `${DATA.pfire53.base}%`; _p53.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : '#3b82f6'; }
+  if (_p50) { _p50.textContent = `${DATA.pfire_aspiracional.base}%`; _p50.style.color = DATA.pfire_aspiracional.base >= 85 ? '#22c55e' : '#eab308'; }
+  if (_p53) { _p53.textContent = `${DATA.pfire_base.base}%`; _p53.style.color = DATA.pfire_base.base >= 90 ? '#22c55e' : '#3b82f6'; }
   const _pat = document.getElementById('simPatFire');
   const patMeta = custo / swrMeta;
   if (_pat) { _pat.textContent = `R$${(pat/1e6).toFixed(2)}M`; _pat.style.color = pat >= patMeta ? '#22c55e' : '#eab308'; }
@@ -10838,8 +10838,8 @@ function buildScenarioComparison() {
   el.innerHTML = `<table class="scenario-compare-table" style="width:100%">
     <thead><tr>
       <th style="text-align:left">Métrica</th>
-      <th class="num" style="color:var(--accent)">FIRE@53 ✅</th>
-      <th class="num" style="color:var(--purple)">FIRE@50 🚀</th>
+      <th class="num" style="color:var(--accent)">Cenário Base ✅</th>
+      <th class="num" style="color:var(--purple)">Cenário Aspiracional 🚀</th>
     </tr></thead>
     <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join('')}</tbody>
   </table>
@@ -10974,7 +10974,7 @@ function buildIncomeProjection() {
   // ── Parâmetros ──────────────────────────────────────────────────
   const anoAtual      = new Date().getFullYear();
   const idadeAtual    = p.idade_atual       || 39;
-  const idadeFireAlvo = p.idade_fire_alvo   || 53;
+  const idadeFireAlvo = p.idade_cenario_base   || 53;
   const inssInicio    = p.inss_inicio_ano   || 12;   // anos após FIRE → age 65
   const inssAnual     = p.inss_anual        || 18000;
   const custoBase     = p.custo_vida_base   || 250000;
@@ -11257,7 +11257,7 @@ function buildNetWorthProjection() {
               const ano = labels[items[0].dataIndex];
               const anoNum = parseInt(ano);
               if (anoNum === anoAtual) return ano + ' — Hoje';
-              return ano + (anoNum === _anoFire ? ` — FIRE Day (age ${DATA.premissas.idade_fire_alvo})` : '');
+              return ano + (anoNum === _anoFire ? ` — FIRE Day (age ${DATA.premissas.idade_cenario_base})` : '');
             },
             label: ctx => {
               if (ctx.parsed.y === null) return null;
@@ -11395,7 +11395,7 @@ function buildStressTest() {
   const _vol        = _p.volatilidade_equity || 0.168;
   const _spending   = _p.custo_vida_base     || 250000;
   const _aporte     = (_p.aporte_mensal      || 33000) * 12;
-  const _fireAge    = _p.idade_fire_alvo     || 53;
+  const _fireAge    = _p.idade_cenario_base     || 53;
   const _idadeAtual = _p.idade_atual         || 39;
   const _onsetAge   = parseInt(document.getElementById('stressOnsetAge')?.value || _idadeAtual, 10);
   const _anosPreShock = Math.max(0, _onsetAge - _idadeAtual);
@@ -11523,7 +11523,7 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct, preShockP50,
   const _idadeAtual   = idadeAtual ?? (DATA.premissas?.idade_atual ?? 39);
   const anosPreShock  = Math.max(0, onsetAge - _idadeAtual);
   const shockIdx      = anosPreShock;
-  const fireAge       = (DATA.premissas?.idade_fire_alvo ?? 53);
+  const fireAge       = (DATA.premissas?.idade_cenario_base ?? 53);
   const nYearsPost    = traj.p50.length; // = anosAcumulo + 40 + 1
   const totalPoints   = anosPreShock + nYearsPost;
   const fireIdx       = shockIdx + anosAcumulo;
@@ -11789,7 +11789,7 @@ function runStressSimulation() {
     const spendingAnual = p.custo_vida_base || 250000;
     const idadeAtual = p.idade_atual || 39;
     const idadeOnset = parseInt(document.getElementById('stressOnsetAge')?.value || idadeAtual, 10);
-    const idadeFireAlvo = p.idade_fire_alvo || 53;
+    const idadeFireAlvo = p.idade_cenario_base || 53;
     const retReal = p.retorno_equity_base || 0.0485;
     const vol = p.volatilidade_equity || 0.168;
     const aporteAnual = (p.aporte_mensal || 33000) * 12;
@@ -11983,7 +11983,7 @@ function buildWellnessExtras() {
     {
       key: 'fire_anos_restantes',
       icon: we.fire_anos_restantes.status === 'green' ? '✅' : we.fire_anos_restantes.status === 'yellow' ? '⚠️' : '❌',
-      label: `Anos até FIRE@${DATA.premissas.idade_fire_aspiracional}`,
+      label: `Anos até FIRE@${DATA.premissas.idade_cenario_aspiracional}`,
       color: we.fire_anos_restantes.status === 'green' ? '#22c55e' : we.fire_anos_restantes.status === 'yellow' ? '#eab308' : '#ef4444',
       detail: `${we.fire_anos_restantes.value} anos`,
       pct: Math.max(0, Math.min(100, (17 - we.fire_anos_restantes.value) / 17 * 100)),
@@ -12021,21 +12021,21 @@ function renderKPIs() {
   document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
   document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k em USD`;
   const heroPf = document.getElementById('heroPfire');
-  const _pfStress = DATA.pfire53.stress ?? DATA.pfire53.base;
-  const _pfFav = DATA.pfire53.fav ?? DATA.pfire53.base;
+  const _pfStress = DATA.pfire_base.stress ?? DATA.pfire_base.base;
+  const _pfFav = DATA.pfire_base.fav ?? DATA.pfire_base.base;
   if (heroPf) {
     heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
-    heroPf.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : DATA.pfire53.base >= 80 ? '#eab308' : '#ef4444';
+    heroPf.style.color = DATA.pfire_base.base >= 90 ? '#22c55e' : DATA.pfire_base.base >= 80 ? '#eab308' : '#ef4444';
     const _heroPfSub = document.getElementById('heroPfireSub');
-    if (_heroPfSub) _heroPfSub.textContent = `base ${DATA.pfire53.base}% · @50: ${DATA.pfire50.base}% · MC 10k`;
+    if (_heroPfSub) _heroPfSub.textContent = `base ${DATA.pfire_base.base}% · @50: ${DATA.pfire_aspiracional.base}% · MC 10k`;
   }
   document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
   // Anos sub: Base/Aspir — usar vars module-level
   const _anoFireAlvo = _anoFireAlvoGlobal;
   const _heroAnosSub = document.getElementById('heroAnosSub');
   if (_heroAnosSub) {
-    const _idAlvo  = DATA.premissas?.idade_fire_alvo          || 53;
-    const _idAspir = DATA.premissas?.idade_fire_aspiracional  || 50;
+    const _idAlvo  = DATA.premissas?.idade_cenario_base          || 53;
+    const _idAspir = DATA.premissas?.idade_cenario_aspiracional  || 50;
     _heroAnosSub.textContent = `Base: ${_anoFireAlvo} (${_idAlvo}a) · Aspir: ${_anoFireAspir} (${_idAspir}a)`;
   }
   const heroProgEl = document.getElementById('heroProgresso');
@@ -12055,16 +12055,16 @@ function renderKPIs() {
     if (heroSrSubEl) heroSrSubEl.textContent = `R$${(_aporteHero/1000).toFixed(0)}k aporte / R$${(_rendaHero/1000).toFixed(0)}k renda`;
   }
 
-  // KPI 1: P(FIRE@50) — fonte: DATA.pfire50.base
+  // KPI 1: P(Cenário Aspiracional) — fonte: DATA.pfire_aspiracional.base
   (function() {
     const el    = document.getElementById('kpiPfire50');
     const subEl = document.getElementById('kpiPfire50Sub');
     if (!el) return;
-    const p = DATA.pfire50?.base;
+    const p = DATA.pfire_aspiracional?.base;
     if (p != null) {
       el.textContent = p.toFixed(1) + '%';
       el.style.color = p >= 80 ? '#22c55e' : p >= 60 ? '#eab308' : '#ef4444';
-      if (subEl) subEl.textContent = `fav ${(DATA.pfire50?.fav ?? p).toFixed(0)}% · stress ${(DATA.pfire50?.stress ?? p).toFixed(0)}%`;
+      if (subEl) subEl.textContent = `fav ${(DATA.pfire_aspiracional?.fav ?? p).toFixed(0)}% · stress ${(DATA.pfire_aspiracional?.stress ?? p).toFixed(0)}%`;
     }
   })();
 
@@ -12298,7 +12298,7 @@ function renderKPIs() {
     if (!grid) return;
     grid.innerHTML = '';
     const ss = DATA.spendingSensibilidade || [];
-    const base53 = DATA.pfire53.base, base50 = DATA.pfire50.base;
+    const base53 = DATA.pfire_base.base, base50 = DATA.pfire_aspiracional.base;
     const casado53 = ss[1]?.base ?? null;
     const filho53  = ss[2]?.base ?? null;
     const deltaCasado = casado53 - base53;
@@ -12307,8 +12307,8 @@ function renderKPIs() {
     const filho50  = Math.max(0, Math.round((base50 + deltaFilho)  * 10) / 10);
     const _anoAtual = DATA.premissas.ano_atual ?? new Date().getFullYear();
     const _idadeAtual = DATA.premissas.idade_atual;
-    const _idadeFire53 = DATA.premissas.idade_fire_alvo;
-    const _idadeFire50 = DATA.premissas.idade_fire_aspiracional;
+    const _idadeFire53 = DATA.premissas.idade_cenario_base;
+    const _idadeFire50 = DATA.premissas.idade_cenario_aspiracional;
     const ano53 = _anoAtual + (_idadeFire53 - _idadeAtual);
     const ano50 = _anoAtual + (_idadeFire50 - _idadeAtual);
     const _priv = document.body.classList.contains('private-mode');
@@ -12354,7 +12354,7 @@ function renderKPIs() {
       grid.appendChild(col);
     });
   })();
-  const _idadeFireAlvo = DATA.premissas.idade_fire_alvo;
+  const _idadeFireAlvo = DATA.premissas.idade_cenario_base;
   document.getElementById('fireCountdown').textContent = `${yrInt} anos ${moInt} meses · ${_anoFire} (${_idadeFireAlvo} anos)`;
   const fbPct = Math.min(100, (Math.log(totalBrl/patInicio) / Math.log(PAT_GATILHO/patInicio)) * 100);
   document.getElementById('fireProgressBar').style.width = fbPct + '%';
@@ -12375,7 +12375,7 @@ function renderKPIs() {
   document.getElementById('pfirePatLabel').textContent = `R$${(DATA.premissas.patrimonio_atual/1e6).toFixed(2)}M / ${_gatilhoStr}`;
   document.getElementById('pfirePatPct').textContent = fmtPct(progPct);
   document.getElementById('pfirePatFill').style.width = Math.min(100, progPct) + '%';
-  // P(FIRE@53) cenários — 3 cards com badges coloridos
+  // P(Cenário Base) cenários — 3 cards com badges coloridos
   function _pfireBadgeStyle(v) {
     if (v == null) return 'background:rgba(71,85,105,.3);color:var(--muted)';
     if (v >= 90) return 'background:rgba(34,197,94,.25);color:var(--green)';
@@ -12390,15 +12390,15 @@ function renderKPIs() {
     if (v >= 75) return '#eab308';
     return '#ef4444';
   }
-  const _p53Base = document.getElementById('pfire53Base');
-  const _p53Fav  = document.getElementById('pfire53Fav');
-  const _p53St   = document.getElementById('pfire53Stress');
-  if (_p53Base) { _p53Base.textContent = `${DATA.pfire53.base ?? '—'}%`; _p53Base.style.color = _pfireColor(DATA.pfire53.base); }
-  if (_p53Fav)  { _p53Fav.textContent  = `${DATA.pfire53.fav  ?? '—'}%`; _p53Fav.style.color  = _pfireColor(DATA.pfire53.fav); }
-  if (_p53St)   { _p53St.textContent   = `${DATA.pfire53.stress ?? '—'}%`; _p53St.style.color = _pfireColor(DATA.pfire53.stress); }
-  const _b53Base = document.getElementById('pfire53BaseBadge'); if (_b53Base) { _b53Base.style.cssText += ';' + _pfireBadgeStyle(DATA.pfire53.base); _b53Base.textContent = 'Base'; }
-  const _b53Fav  = document.getElementById('pfire53FavBadge');  if (_b53Fav)  { _b53Fav.style.cssText  += ';' + _pfireBadgeStyle(DATA.pfire53.fav);  _b53Fav.textContent  = 'Favorável'; }
-  const _b53St   = document.getElementById('pfire53StressBadge'); if (_b53St) { _b53St.style.cssText   += ';' + _pfireBadgeStyle(DATA.pfire53.stress); _b53St.textContent = 'Stress'; }
+  const _p53Base = document.getElementById('pfire_baseBase');
+  const _p53Fav  = document.getElementById('pfire_baseFav');
+  const _p53St   = document.getElementById('pfire_baseStress');
+  if (_p53Base) { _p53Base.textContent = `${DATA.pfire_base.base ?? '—'}%`; _p53Base.style.color = _pfireColor(DATA.pfire_base.base); }
+  if (_p53Fav)  { _p53Fav.textContent  = `${DATA.pfire_base.fav  ?? '—'}%`; _p53Fav.style.color  = _pfireColor(DATA.pfire_base.fav); }
+  if (_p53St)   { _p53St.textContent   = `${DATA.pfire_base.stress ?? '—'}%`; _p53St.style.color = _pfireColor(DATA.pfire_base.stress); }
+  const _b53Base = document.getElementById('pfire_baseBaseBadge'); if (_b53Base) { _b53Base.style.cssText += ';' + _pfireBadgeStyle(DATA.pfire_base.base); _b53Base.textContent = 'Base'; }
+  const _b53Fav  = document.getElementById('pfire_baseFavBadge');  if (_b53Fav)  { _b53Fav.style.cssText  += ';' + _pfireBadgeStyle(DATA.pfire_base.fav);  _b53Fav.textContent  = 'Favorável'; }
+  const _b53St   = document.getElementById('pfire_baseStressBadge'); if (_b53St) { _b53St.style.cssText   += ';' + _pfireBadgeStyle(DATA.pfire_base.stress); _b53St.textContent = 'Stress'; }
   // FIRE meta label
   const _pfMeta = document.getElementById('pfirePatMeta');
   if (_pfMeta) _pfMeta.textContent = `Meta: patrimônio ≥ ${_gatilhoStr} E SWR ≤ ${((DATA.premissas.swr_gatilho ?? 0.024)*100).toFixed(1)}%`;
@@ -12726,7 +12726,7 @@ function buildIncomeTable() {
   const sm = DATA.spendingSmile || {};
   const inss = DATA.premissas.inss_anual ?? 18000;
   const inssInicio = DATA.premissas.inss_inicio_ano ?? 12; // anos após FIRE = age 65
-  const ageAlvo = DATA.premissas.idade_fire_alvo ?? 53;
+  const ageAlvo = DATA.premissas.idade_cenario_base ?? 53;
   // Saúde por fase
   const sBase   = DATA.saude_base ?? 18000;
   const vcmh    = DATA.premissas?.saude_inflator ?? 0.027;
@@ -12823,7 +12823,7 @@ function renderIpcaProgress() {
   // Fan chart src
   const _fanSrc = document.getElementById('fanChartSrc');
   const _retBase = DATA.premissas?.retorno_equity_base;
-  if (_fanSrc) _fanSrc.textContent = `Baseado em endpoints do Monte Carlo. Crescimento exponencial r=${_retBase != null ? (_retBase*100).toFixed(2) + '%' : '—'}/ano (base). Linha vertical: ${_anoFireAspir ?? '—'} (FIRE@50 aspiracional).`;
+  if (_fanSrc) _fanSrc.textContent = `Baseado em endpoints do Monte Carlo. Crescimento exponencial r=${_retBase != null ? (_retBase*100).toFixed(2) + '%' : '—'}/ano (base). Linha vertical: ${_anoFireAspir ?? '—'} (Cenário Aspiracional).`;
   // Fire scenario note
   const _scenNote = document.getElementById('fireScenarioNote');
   const ss = DATA.spendingSensibilidade || [];
@@ -13503,9 +13503,9 @@ function buildBondPool() {
   const pisoIpca = DATA.pisos?.pisoTaxaIpcaLongo ?? 6.0;
   const janelaAtiva = taxaIpca >= pisoIpca;
 
-  // Anos até FIRE@53 (estratégia B: 3 anos antes)
+  // Anos até Cenário Base (estratégia B: 3 anos antes)
   const idadeAtual = DATA.premissas?.idade_atual ?? 39;
-  const idadeFire = DATA.premissas?.idade_fire_alvo ?? 53;
+  const idadeFire = DATA.premissas?.idade_cenario_base ?? 53;
   const anosParaFire = idadeFire - idadeAtual;
   const estratBAtiva = anosParaFire <= 3;
 
@@ -13625,14 +13625,14 @@ window.setFireMatrixPerfil = function(p) {
 // Âncoras: (idade_atual, pat_atual) → (50, pat_p50@50) → (53, pat_p50@53) + extrapolação
 function _fmEstimateAge(pat) {
   const p  = DATA.premissas;
-  const f0 = DATA.pfire50;
-  const f1 = DATA.pfire53;
+  const f0 = DATA.pfire_aspiracional;
+  const f1 = DATA.pfire_base;
   if (!p || !f0 || !f1) return null;
 
   const anchors = [
     { age: p.idade_atual,              pat: p.patrimonio_atual },
-    { age: p.idade_fire_aspiracional,  pat: f0.pat_mediano },
-    { age: p.idade_fire_alvo,          pat: f1.pat_mediano },
+    { age: p.idade_cenario_aspiracional,  pat: f0.pat_mediano },
+    { age: p.idade_cenario_base,          pat: f1.pat_mediano },
   ].filter(a => a.pat != null);
 
   if (anchors.length < 2) return null;
@@ -13686,7 +13686,7 @@ function _renderFireMatrix() {
 
   // Perfil: resolve gasto-alvo e patrimônio-alvo
   const perfil     = _FM_PERFIS[window._fireMatrixPerfil || 'atual'];
-  const p50        = DATA.pfire53?.pat_mediano;
+  const p50        = DATA.pfire_base?.pat_mediano;
   const gastoBase  = DATA.premissas?.custo_vida_base || 250000;
 
   // Gasto marcado: perfil.gasto (se definido) ou gasto base atual
@@ -13760,7 +13760,7 @@ function buildSwrPercentiles() {
   // Populate scenario note
   const noteEl = document.getElementById('swrScenarioNote');
   if (noteEl) {
-    const ageAlvo   = DATA.premissas?.idade_fire_alvo ?? 53;
+    const ageAlvo   = DATA.premissas?.idade_cenario_base ?? 53;
     const fireYear  = (DATA.premissas?.ano_nascimento ?? 1987) + ageAlvo;
     const gastoBase = d.custo_vida_base ? 'R$' + (d.custo_vida_base / 1000).toFixed(0) + 'k/ano' : '—';
     const mcDate    = d.mc_date || '';
@@ -14184,7 +14184,7 @@ function buildLumpyEvents() {
   let html = '';
   if (basePfire != null) {
     html += '<div style="margin-bottom:10px;padding:8px 12px;background:rgba(34,197,94,.08);border-radius:6px;border-left:3px solid var(--green);font-size:.78rem">' +
-      '<strong>Base:</strong> Spending <span class="pv">R$' + (baseSpending / 1000).toFixed(0) + 'k/ano</span> → P(FIRE@53) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
+      '<strong>Base:</strong> Spending <span class="pv">R$' + (baseSpending / 1000).toFixed(0) + 'k/ano</span> → P(Cenário Base) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
     '</div>';
   }
 
@@ -14590,8 +14590,8 @@ function buildCagrVsTwr() {
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');
-    if (el && DATA.pfire50?.base != null) {
-      el.textContent = `P10/P50/P90 são aproximações de trajetória; P(FIRE@50) = ${DATA.pfire50.base}% calculado direto nas 10k simulações MC.`;
+    if (el && DATA.pfire_aspiracional?.base != null) {
+      el.textContent = `P10/P50/P90 são aproximações de trajetória; P(Cenário Aspiracional) = ${DATA.pfire_aspiracional.base}% calculado direto nas 10k simulações MC.`;
     }
   })();
   updateContrib();

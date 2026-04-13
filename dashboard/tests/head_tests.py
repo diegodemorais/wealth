@@ -105,13 +105,13 @@ def _():
 
 @registry.test(
     "pfire-hero", "DATA",
-    "pfire53 and pfire50 top-level keys exist with base/fav/stress",
+    "pfire_base and pfire_aspiracional top-level keys exist with base/fav/stress",
     "CRITICAL",
 )
 def _():
     data = load_data()
     errors = []
-    for key in ("pfire53", "pfire50"):
+    for key in ("pfire_base", "pfire_aspiracional"):
         obj = data.get(key)
         if not isinstance(obj, dict):
             errors.append(f"{key} missing or not a dict")
@@ -121,18 +121,18 @@ def _():
                 errors.append(f"{key}.{sub} missing")
     if errors:
         return False, "; ".join(errors)
-    return True, "pfire53 and pfire50 all sub-keys present"
+    return True, "pfire_base and pfire_aspiracional all sub-keys present"
 
 
 @registry.test(
     "pfire-hero", "VALUE",
-    "pfire53 and pfire50 values are floats in [0, 100] representing percentages",
+    "pfire_base and pfire_aspiracional values are floats in [0, 100] representing percentages",
     "CRITICAL",
 )
 def _():
     data = load_data()
     errors = []
-    for key in ("pfire53", "pfire50"):
+    for key in ("pfire_base", "pfire_aspiracional"):
         for sub in ("base", "fav", "stress"):
             val = get_nested(data, f"{key}.{sub}")
             if not isinstance(val, (int, float)):
@@ -146,14 +146,14 @@ def _():
 
 @registry.test(
     "pfire-hero", "VALUE",
-    "pfire53 ordering: fav >= base >= stress",
+    "pfire_base ordering: fav >= base >= stress",
     "CRITICAL",
 )
 def _():
     data = load_data()
-    fav = get_nested(data, "pfire53.fav")
-    base = get_nested(data, "pfire53.base")
-    stress = get_nested(data, "pfire53.stress")
+    fav = get_nested(data, "pfire_base.fav")
+    base = get_nested(data, "pfire_base.base")
+    stress = get_nested(data, "pfire_base.stress")
     if None in (fav, base, stress):
         return False, f"missing values: fav={fav}, base={base}, stress={stress}"
     errors = []
@@ -168,14 +168,14 @@ def _():
 
 @registry.test(
     "pfire-hero", "VALUE",
-    "pfire50 ordering: fav >= base >= stress",
+    "pfire_aspiracional ordering: fav >= base >= stress",
     "CRITICAL",
 )
 def _():
     data = load_data()
-    fav = get_nested(data, "pfire50.fav")
-    base = get_nested(data, "pfire50.base")
-    stress = get_nested(data, "pfire50.stress")
+    fav = get_nested(data, "pfire_aspiracional.fav")
+    base = get_nested(data, "pfire_aspiracional.base")
+    stress = get_nested(data, "pfire_aspiracional.stress")
     if None in (fav, base, stress):
         return False, f"missing values: fav={fav}, base={base}, stress={stress}"
     errors = []
@@ -190,18 +190,18 @@ def _():
 
 @registry.test(
     "pfire-hero", "VALUE",
-    "pfire50.base <= pfire53.base (retiring earlier is harder)",
+    "pfire_aspiracional.base <= pfire_base.base (retiring earlier is harder)",
     "CRITICAL",
 )
 def _():
     data = load_data()
-    p50 = get_nested(data, "pfire50.base")
-    p53 = get_nested(data, "pfire53.base")
+    p50 = get_nested(data, "pfire_aspiracional.base")
+    p53 = get_nested(data, "pfire_base.base")
     if None in (p50, p53):
-        return False, f"missing: pfire50.base={p50}, pfire53.base={p53}"
+        return False, f"missing: pfire_aspiracional.base={p50}, pfire_base.base={p53}"
     if p50 > p53:
-        return False, f"pfire50.base={p50} > pfire53.base={p53} — FIRE@50 should be harder"
-    return True, f"pfire50.base={p50} <= pfire53.base={p53}"
+        return False, f"pfire_aspiracional.base={p50} > pfire_base.base={p53} — FIRE@50 should be harder"
+    return True, f"pfire_aspiracional.base={p50} <= pfire_base.base={p53}"
 
 
 @registry.test(
@@ -211,7 +211,7 @@ def _():
 )
 def _():
     html = load_html()
-    required_ids = ["pfire53Base", "pfire53Fav", "pfire53Stress"]
+    required_ids = ["pfire_baseBase", "pfire_baseFav", "pfire_baseStress"]
     missing = [eid for eid in required_ids if f'id="{eid}"' not in html]
     if missing:
         return False, f"missing element IDs: {missing}"
@@ -224,13 +224,13 @@ def _():
 
 @registry.test(
     "kpi-grid-primario", "DATA",
-    "pfire50.base, fire.bond_pool_readiness.anos_gastos, drift, premissas.patrimonio_atual all present",
+    "pfire_aspiracional.base, fire.bond_pool_readiness.anos_gastos, drift, premissas.patrimonio_atual all present",
     "HIGH",
 )
 def _():
     data = load_data()
     checks = {
-        "pfire50.base": get_nested(data, "pfire50.base"),
+        "pfire_aspiracional.base": get_nested(data, "pfire_aspiracional.base"),
         "fire.bond_pool_readiness.anos_gastos": get_nested(data, "fire.bond_pool_readiness.anos_gastos"),
         "drift": data.get("drift"),
         "premissas.patrimonio_atual": get_nested(data, "premissas.patrimonio_atual"),
@@ -369,7 +369,7 @@ def _():
         "premissas.patrimonio_atual",
         "premissas.patrimonio_gatilho",
         "premissas.idade_atual",
-        "premissas.idade_fire_alvo",
+        "premissas.idade_cenario_base",
     ]
     missing = [p for p in paths if get_nested(data, p) is None]
     if missing:
@@ -401,18 +401,18 @@ def _():
 
 @registry.test(
     "fire-countdown", "VALUE",
-    "idade_fire_alvo > idade_atual (target FIRE age is in the future)",
+    "idade_cenario_base > idade_atual (target FIRE age is in the future)",
     "HIGH",
 )
 def _():
     data = load_data()
     atual = get_nested(data, "premissas.idade_atual")
-    alvo = get_nested(data, "premissas.idade_fire_alvo")
+    alvo = get_nested(data, "premissas.idade_cenario_base")
     if None in (atual, alvo):
-        return False, f"missing: idade_atual={atual}, idade_fire_alvo={alvo}"
+        return False, f"missing: idade_atual={atual}, idade_cenario_base={alvo}"
     if alvo <= atual:
-        return False, f"idade_fire_alvo={alvo} <= idade_atual={atual} — FIRE age already passed or data error"
-    return True, f"idade_atual={atual}, idade_fire_alvo={alvo}, anos_restantes={alvo - atual}"
+        return False, f"idade_cenario_base={alvo} <= idade_atual={atual} — FIRE age already passed or data error"
+    return True, f"idade_atual={atual}, idade_cenario_base={alvo}, anos_restantes={alvo - atual}"
 
 
 @registry.test(
@@ -497,17 +497,17 @@ def _():
 
 @registry.test(
     "wellness-score", "VALUE",
-    "pfire53.base used by wellness is present and non-zero",
+    "pfire_base.base used by wellness is present and non-zero",
     "MEDIUM",
 )
 def _():
     data = load_data()
-    val = get_nested(data, "pfire53.base")
+    val = get_nested(data, "pfire_base.base")
     if val is None:
-        return False, "pfire53.base missing"
+        return False, "pfire_base.base missing"
     if val == 0:
-        return False, "pfire53.base is 0 — wellness input degenerate"
-    return True, f"pfire53.base={val}"
+        return False, "pfire_base.base is 0 — wellness input degenerate"
+    return True, f"pfire_base.base={val}"
 
 
 # ---------------------------------------------------------------------------

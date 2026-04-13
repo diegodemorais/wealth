@@ -53,14 +53,14 @@
       "tab": "now",
       "label": "P(FIRE) — Cenários",
       "type": "kpi-hero",
-      "purpose": "Mostra probabilidade de FIRE@53 e FIRE@50 nos 3 cenários (base/favorável/stress) para confirmar se o plano está on track",
+      "purpose": "Mostra probabilidade Cenário Base e Cenário Aspiracional nos 3 cenários (base/favorável/stress) para confirmar se o plano está on track",
       "data_fields": [
-        "pfire53.base",
-        "pfire53.fav",
-        "pfire53.stress",
-        "pfire50.base",
-        "pfire50.fav",
-        "pfire50.stress"
+        "pfire_base.base",
+        "pfire_base.fav",
+        "pfire_base.stress",
+        "pfire_aspiracional.base",
+        "pfire_aspiracional.fav",
+        "pfire_aspiracional.stress"
       ],
       "global_headline": true,
       "privacy": false
@@ -70,9 +70,9 @@
       "tab": "now",
       "label": "KPIs Primários — S1",
       "type": "kpi",
-      "purpose": "Mostra FIRE@50 base, bond pool, drift máximo, wellness score e origem do patrimônio como indicadores rápidos de status",
+      "purpose": "Mostra Cenário Aspiracional base, bond pool, drift máximo, wellness score e origem do patrimônio como indicadores rápidos de status",
       "data_fields": [
-        "pfire50.base",
+        "pfire_aspiracional.base",
         "fire.bond_pool_readiness.anos_gastos",
         "drift",
         "premissas.patrimonio_atual"
@@ -97,12 +97,12 @@
       "tab": "now",
       "label": "Time to FIRE — Countdown",
       "type": "kpi",
-      "purpose": "Mostra anos restantes para FIRE@53 e barra de progresso patrimonial para responder onde Diego está na jornada",
+      "purpose": "Mostra anos restantes para Cenário Base e barra de progresso patrimonial para responder onde Diego está na jornada",
       "data_fields": [
         "premissas.patrimonio_atual",
         "premissas.patrimonio_gatilho",
         "premissas.idade_atual",
-        "premissas.idade_fire_alvo"
+        "premissas.idade_cenario_base"
       ],
       "privacy": true
     },
@@ -114,7 +114,7 @@
       "purpose": "Agrega score de saúde da carteira (drift, drawdown, execuções, alocação) com ações recomendadas para dar uma nota operacional ao plano",
       "data_fields": [
         "drift",
-        "pfire53.base",
+        "pfire_base.base",
         "premissas.patrimonio_atual"
       ],
       "privacy": false
@@ -699,7 +699,7 @@
         "premissas.patrimonio_atual",
         "premissas.patrimonio_gatilho",
         "premissas.idade_atual",
-        "premissas.idade_fire_alvo",
+        "premissas.idade_cenario_base",
         "spendingSmile"
       ],
       "privacy": true
@@ -707,12 +707,12 @@
     {
       "id": "scenario-comparison",
       "tab": "fire",
-      "label": "FIRE@53 vs FIRE@50 — Comparação",
+      "label": "Cenário Base vs Cenário Aspiracional — Comparação",
       "type": "table",
       "purpose": "Compara os dois cenários de FIRE date em patrimônio mediano, P10/P90 e P(sucesso) para quantificar o custo de antecipar a aposentadoria",
       "data_fields": [
-        "scenario_comparison.fire53",
-        "scenario_comparison.fire50"
+        "scenario_comparison.fire_base",
+        "scenario_comparison.fire_aspiracional"
       ],
       "privacy": true
     },
@@ -797,7 +797,7 @@
         "glide.hodl11",
         "glide.renda_plus",
         "premissas.idade_atual",
-        "premissas.idade_fire_alvo"
+        "premissas.idade_cenario_base"
       ],
       "privacy": false
     },
@@ -842,7 +842,7 @@
         "premissas.custo_vida_base",
         "premissas.retorno_equity_base",
         "premissas.idade_atual",
-        "pfire53.base"
+        "pfire_base.base"
       ],
       "privacy": true
     },
@@ -868,8 +868,8 @@
       "purpose": "Mostra impacto de choque de mercado no P(FIRE) para responder quanto de queda o plano suporta sem comprometer a aposentadoria",
       "data_fields": [
         "premissas.patrimonio_atual",
-        "pfire53.base",
-        "pfire53.stress",
+        "pfire_base.base",
+        "pfire_base.stress",
         "premissas.patrimonio_gatilho"
       ],
       "privacy": true
@@ -884,7 +884,7 @@
         "earliest_fire.ano",
         "earliest_fire.idade",
         "earliest_fire.pfire",
-        "premissas.idade_fire_aspiracional"
+        "premissas.idade_cenario_aspiracional"
       ],
       "privacy": false
     },
@@ -911,7 +911,7 @@
         "premissas.inss_inicio_ano",
         "premissas.custo_vida_base",
         "premissas.idade_atual",
-        "premissas.idade_fire_alvo"
+        "premissas.idade_cenario_base"
       ],
       "privacy": true
     },
@@ -961,7 +961,7 @@
       "data_fields": [
         "lumpy_events.eventos",
         "lumpy_events.base.pfire_2040",
-        "pfire53.base"
+        "pfire_base.base"
       ],
       "privacy": false
     }

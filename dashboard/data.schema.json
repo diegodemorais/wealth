@@ -10,8 +10,8 @@
     "posicoes",
     "pesosTarget",
     "pisos",
-    "pfire50",
-    "pfire53",
+    "pfire_aspiracional",
+    "pfire_base",
     "premissas",
     "guardrails",
     "gasto_piso",
@@ -176,9 +176,9 @@
         }
       }
     },
-    "pfire50": {
+    "pfire_aspiracional": {
       "type": "object",
-      "description": "P(FIRE) Monte Carlo para aposentadoria aos 50 anos (3 cenários).",
+      "description": "P(FIRE) Monte Carlo para Cenário Aspiracional (3 cenários).",
       "required": [
         "base",
         "fav",
@@ -203,9 +203,9 @@
         }
       }
     },
-    "pfire53": {
+    "pfire_base": {
       "type": "object",
-      "description": "P(FIRE) Monte Carlo para aposentadoria aos 53 anos (3 cenários). Cenário-alvo.",
+      "description": "P(FIRE) Monte Carlo para Cenário Base (3 cenários).",
       "required": [
         "base",
         "fav",
@@ -239,8 +239,8 @@
         "aporte_mensal",
         "custo_vida_base",
         "idade_atual",
-        "idade_fire_alvo",
-        "idade_fire_aspiracional",
+        "idade_cenario_base",
+        "idade_cenario_aspiracional",
         "retorno_equity_base",
         "volatilidade_equity",
         "swr_gatilho",
@@ -272,13 +272,13 @@
           "type": "integer",
           "description": "Idade atual de Diego"
         },
-        "idade_fire_alvo": {
+        "idade_cenario_base": {
           "type": "integer",
-          "description": "Idade-alvo de FIRE (53)"
+          "description": "Idade-alvo Cenário Base (53)"
         },
-        "idade_fire_aspiracional": {
+        "idade_cenario_aspiracional": {
           "type": "integer",
-          "description": "Idade aspiracional de FIRE (50)"
+          "description": "Idade-alvo Cenário Aspiracional (49)"
         },
         "retorno_equity_base": {
           "type": "number",

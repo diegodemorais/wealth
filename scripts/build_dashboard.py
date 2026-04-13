@@ -181,7 +181,7 @@ def _compute_spending_guardrails(data: dict) -> dict:
     - Lower guardrail (P≈70%): extrapolar abaixo de 82.1% para maior spending
     """
     spending_sens = data.get("spendingSensibilidade", [])
-    pfire_base = data.get("pfire53", {}).get("base", 90.0)
+    pfire_base = data.get("pfire_base", {}).get("base", 90.0)
     if len(spending_sens) < 2:
         custo_vida = data.get("premissas", {}).get("custo_vida_base", 250000)
         return {
@@ -253,21 +253,21 @@ def _compute_spending_guardrails(data: dict) -> dict:
 def _compute_earliest_fire(data: dict) -> dict:
     """Determina o FIRE date mais cedo possível com P(FIRE) >= 85%.
 
-    Lógica: se pfire50_base >= 85%, usar FIRE@50 como earliest.
-    Senão: usar FIRE@53 como earliest.
-    Dados disponíveis: pfire50.base e pfire53.base.
+    Lógica: se pfire_aspiracional_base >= 85%, usar Cenário Aspiracional como earliest.
+    Senão: usar Cenário Base como earliest.
+    Dados disponíveis: pfire_aspiracional.base e pfire_base.base.
     """
-    pfire50 = data.get("pfire50", {})
-    pfire53 = data.get("pfire53", {})
+    pfire_aspiracional = data.get("pfire_aspiracional", {})
+    pfire_base = data.get("pfire_base", {})
     premissas = data.get("premissas", {})
     ano_atual = premissas.get("ano_atual", 2026)
     idade_atual = premissas.get("idade_atual", 39)
-    idade_fire_aspir = premissas.get("idade_fire_aspiracional", 50)
-    idade_fire_alvo = premissas.get("idade_fire_alvo", 53)
+    idade_fire_aspir = premissas.get("idade_cenario_aspiracional", 49)
+    idade_fire_alvo = premissas.get("idade_cenario_base", 53)
 
     THRESHOLD = 85.0
-    p50 = pfire50.get("base", 0)
-    p53 = pfire53.get("base", 0)
+    p50 = pfire_aspiracional.get("base", 0)
+    p53 = pfire_base.get("base", 0)
 
     if p50 >= THRESHOLD:
         idade = idade_fire_aspir
@@ -711,41 +711,41 @@ def build(data_path: Path, template_path: Path, out_path: Path,
             _ds = json.loads(_ds_path.read_text(encoding="utf-8"))
             _fire_state = _ds.get("fire", {})
 
-            # Garantir que pfire50/pfire53 existem em data (fallback de dashboard_state.json)
+            # Garantir que pfire_aspiracional/pfire_base existem em data (fallback de dashboard_state.json)
             # generate_data.py já popula esses campos, mas se data.json vier de outra fonte
             # ou se os campos estiverem ausentes, ler das chaves planas do state.
-            if not data.get("pfire50") or data["pfire50"].get("base") is None:
+            if not data.get("pfire_aspiracional") or data["pfire_aspiracional"].get("base") is None:
                 fire_st = _fire_state
-                data["pfire50"] = {
-                    "base":   fire_st.get("pfire50_base", None),
-                    "fav":    fire_st.get("pfire50_fav", None),
-                    "stress": fire_st.get("pfire50_stress", None),
+                data["pfire_aspiracional"] = {
+                    "base":   fire_st.get("pfire_aspiracional_base", fire_st.get("pfire50_base", None)),
+                    "fav":    fire_st.get("pfire_aspiracional_fav", fire_st.get("pfire50_fav", None)),
+                    "stress": fire_st.get("pfire_aspiracional_stress", fire_st.get("pfire50_stress", None)),
                 }
-            if not data.get("pfire53") or data["pfire53"].get("base") is None:
+            if not data.get("pfire_base") or data["pfire_base"].get("base") is None:
                 fire_st = _fire_state
-                data["pfire53"] = {
-                    "base":   fire_st.get("pfire53_base", fire_st.get("pfire_base", None)),
-                    "fav":    fire_st.get("pfire53_fav",  fire_st.get("pfire_fav", None)),
-                    "stress": fire_st.get("pfire53_stress", fire_st.get("pfire_stress", None)),
+                data["pfire_base"] = {
+                    "base":   fire_st.get("pfire_base_base", fire_st.get("pfire_base", None)),
+                    "fav":    fire_st.get("pfire_base_fav",  fire_st.get("pfire_fav", None)),
+                    "stress": fire_st.get("pfire_base_stress", fire_st.get("pfire_stress", None)),
                 }
             data["scenario_comparison"] = {
-                "fire53": {
-                    "base": data["pfire53"]["base"],
-                    "fav":  data["pfire53"]["fav"],
-                    "stress": data["pfire53"]["stress"],
+                "fire_base": {
+                    "base": data["pfire_base"]["base"],
+                    "fav":  data["pfire_base"]["fav"],
+                    "stress": data["pfire_base"]["stress"],
                     "pat_mediano": _fire_state.get("pat_mediano_fire", None),
                     "pat_p10": _fire_state.get("pat_p10_fire", None),
                     "pat_p90": _fire_state.get("pat_p90_fire", None),
                 },
-                "fire50": {
-                    "base": data["pfire50"]["base"],
-                    "fav":  data["pfire50"]["fav"],
-                    "stress": data["pfire50"]["stress"],
+                "fire_aspiracional": {
+                    "base": data["pfire_aspiracional"]["base"],
+                    "fav":  data["pfire_aspiracional"]["fav"],
+                    "stress": data["pfire_aspiracional"]["stress"],
                     "pat_mediano": _fire_state.get("pat_mediano_fire50", None),
                     "pat_p10": _fire_state.get("pat_p10_fire50", None),
                     "pat_p90": _fire_state.get("pat_p90_fire50", None),
                 },
-                "nota_fire50_pat": None,
+                "nota_fire_aspiracional_pat": None,
             }
         except Exception as e:
             print(f"⚠️  scenario_comparison: erro ao ler dashboard_state.json — {e}")

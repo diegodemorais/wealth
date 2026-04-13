@@ -91,18 +91,30 @@ TLH_GATILHO = 0.05              # 5% — perda mínima para acionar TLH
 CRYPTO_LEGADO_BRL = 3_944
 
 
-# ─── FIRE (fonte: carteira.md + fire_montecarlo.py PREMISSAS) ────────────────
+# ─── FIRE CENÁRIOS (fonte: carteira.md + FR-swr-revisao-2026-04-13) ──────────
 
-PATRIMONIO_GATILHO = 8_333_333    # = 250k/3.0% — gatilho formal FIRE (revisado 2026-04-13, R$2026)
-SWR_GATILHO = 0.030               # 3.0% — safe withdrawal rate (revisado 2026-04-13: Pfau/ERN 40a + guardrails + SoRR BRL)
+PATRIMONIO_GATILHO = 8_333_333    # = 250k/3.0% — gatilho formal (revisado 2026-04-13)
+SWR_GATILHO = 0.030               # 3.0% — safe withdrawal rate
+
+# Cenário Base (FIRE 2040)
+IDADE_CENARIO_BASE = 53           # FIRE aos 53 anos
+APORTE_CENARIO_BASE = 25_000      # R$/mês — padrão
+P_SUCCESS_CENARIO_BASE = 0.904    # 90.4% — MC base 14 anos até 53
+
+# Cenário Aspiracional (FIRE 2035)
+IDADE_CENARIO_ASPIRACIONAL = 49   # FIRE aos 49 anos
+APORTE_CENARIO_ASPIRACIONAL = 30_000  # R$/mês — +R$5k para render + aportar
+P_SUCCESS_CENARIO_ASPIRACIONAL = 0.85  # 85% conservador — MC favorável 10 anos até 49
+
+# Config pessoal
 CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
-APORTE_MENSAL = 25_000            # R$/mês (média real — alguns meses mais, outros menos por viagens)
-RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para savings rate dashboard
+RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para dashboard
 IDADE_ATUAL = 39
 ANO_NASCIMENTO = 1987             # para calcular idade dinâmica
-IDADE_FIRE_ALVO = 53              # FIRE 2040
-IDADE_FIRE_ASPIRACIONAL = 50      # FIRE 2037
 BOND_TENT_META_ANOS = 7           # anos de gastos cobertos pelo bond pool no FIRE Day
+
+# Legacy (mantém compatibilidade com code antigo)
+APORTE_MENSAL = APORTE_CENARIO_BASE  # fallback
 
 # Fallbacks macro (snapshot — atualizar quando taxas mudarem significativamente)
 CAMBIO_FALLBACK = 5.07            # USD/BRL — fallback offline (atualizar via /macro-bcb). Ref: PTAX 09/04/2026

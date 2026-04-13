@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-13T13:07:58",
-  "_generated_brt": "2026-04-13T13:07:58-03:00",
+  "_generated": "2026-04-13T14:12:58",
+  "_generated_brt": "2026-04-13T14:12:58-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,7 +10,7 @@
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.0208,
+  "cambio": 4.9903,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -31,7 +31,7 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.9,
+      "price": 115.4997,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -39,7 +39,7 @@
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.09,
+      "price": 105.78,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -63,7 +63,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.2697,
+      "price": 63.6694,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -71,7 +71,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.99,
+      "price": 63.3,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -98,24 +98,24 @@
     "pisoVendaRendaPlus": 6.0,
     "ir_aliquota": 0.15
   },
-  "pfire50": {
-    "base": 85.4,
-    "fav": 91.3,
-    "stress": 81.1
+  "pfire_aspiracional": {
+    "base": 86.5,
+    "fav": 92.4,
+    "stress": 82.5
   },
-  "pfire53": {
-    "base": 90.4,
-    "fav": 94.1,
-    "stress": 86.8
+  "pfire_base": {
+    "base": 86.5,
+    "fav": 92.4,
+    "stress": 82.5
   },
   "premissas": {
-    "patrimonio_atual": 3540458,
+    "patrimonio_atual": 3528331,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
     "idade_atual": 39,
-    "idade_fire_alvo": 53,
-    "idade_fire_aspiracional": 50,
+    "idade_cenario_base": 53,
+    "idade_cenario_aspiracional": 49,
     "retorno_equity_base": 0.0485,
     "volatilidade_equity": 0.168,
     "swr_gatilho": 0.03,
@@ -203,30 +203,30 @@
     {
       "label": "Volatilidade equity (+/-10%)",
       "variavel": "Volatilidade equity (+/-10%)",
-      "mais10": -4.1,
-      "menos10": 4.0,
-      "delta": 8.2
+      "mais10": -4.0,
+      "menos10": 3.9,
+      "delta": 7.8
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
-      "mais10": -2.8,
-      "menos10": 1.9,
+      "mais10": -2.4,
+      "menos10": 2.2,
       "delta": 4.7
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
-      "mais10": 3.4,
-      "menos10": -4.1,
-      "delta": 7.6
+      "mais10": 3.1,
+      "menos10": -3.1,
+      "delta": 6.3
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
-      "mais10": 1.2,
-      "menos10": -1.4,
-      "delta": 2.6
+      "mais10": 2.0,
+      "menos10": -2.1,
+      "delta": 4.2
     }
   ],
   "fire": {
@@ -242,7 +242,7 @@
       }
     },
     "pat_mediano_fire": 11527476.0,
-    "pat_mediano_fire50": 9339651.0,
+    "pat_mediano_fire50": 10156721.0,
     "mc_date": "2026-04-13",
     "plano_status": {
       "status": "MONITORAR",
@@ -260,22 +260,22 @@
   },
   "scenario_comparison": {
     "fire53": {
-      "base": 90.4,
-      "fav": 94.1,
-      "stress": 86.8,
+      "base": 86.5,
+      "fav": 92.4,
+      "stress": 82.5,
       "pat_mediano": 11527476.0,
       "pat_p10": 6834909.0,
       "pat_p90": 18916227.0
     },
     "fire50": {
-      "base": 85.4,
-      "fav": 91.3,
-      "stress": 81.1,
-      "pat_mediano": 9339651.0,
-      "pat_p10": 5873669.0,
-      "pat_p90": 14560082.0
+      "base": 86.5,
+      "fav": 92.4,
+      "stress": 82.5,
+      "pat_mediano": 10156721.0,
+      "pat_p10": 6488792.0,
+      "pat_p90": 15670253.0
     },
-    "nota_fire50_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$9.34M (@50). Fonte: fire_montecarlo.py MC 10k sims."
+    "nota_fire50_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$10.16M (@50). Fonte: fire_montecarlo.py MC 10k sims."
   },
   "timeline": {
     "labels": [
@@ -2216,7 +2216,7 @@
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.88,
+      "atual_pct": 2.89,
       "status": "verde"
     }
   },
@@ -2302,11 +2302,11 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 36.2,
+      "atual": 36.1,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.4,
+      "atual": 28.5,
       "alvo": 23.7
     },
     "AVEM": {
@@ -2328,7 +2328,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.9,
+      "price": 115.4997,
       "ucits": "AVGS.L"
     },
     {
@@ -2336,7 +2336,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.09,
+      "price": 105.78,
       "ucits": "AVGS.L"
     },
     {
@@ -2360,7 +2360,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.2697,
+      "price": 63.6694,
       "ucits": "AVEM.L"
     },
     {
@@ -2368,7 +2368,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.99,
+      "price": 63.3,
       "ucits": "AVEM.L"
     },
     {
@@ -2716,10 +2716,10 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 628573,
-    "retorno_usd": 237530,
-    "pct_aportes": 62.2,
-    "pct_retorno": 37.8,
+    "patrimonio_equity_usd": 629985,
+    "retorno_usd": 238942,
+    "pct_aportes": 62.1,
+    "pct_retorno": 37.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-13"
@@ -2761,12 +2761,12 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0208
+    "cambio": 4.9903
   },
   "mercado": {
-    "cambio_brl_usd": 5.0208,
+    "cambio_brl_usd": 4.9903,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": -2.62,
+    "cambio_mtd_pct": -3.21,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -3259,7 +3259,7 @@
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 388528,
-    "total_portfolio_brl": 3540458,
+    "total_portfolio_brl": 3528331,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3275,36 +3275,36 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72858,
-      "delta_brl": 47858,
-      "delta_pct": 191.4,
+      "realizado_media_brl": 72660,
+      "delta_brl": 47660,
+      "delta_pct": 190.6,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1963351,
+      "total_ibkr_brl": 1951424,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4371510,
-      "cambio_conversao": 5.0208,
+      "total_aporte_brl": 4359583,
+      "cambio_conversao": 4.9903,
       "por_ano_brl": {
-        "2026": 95395,
-        "2025": 283537,
-        "2024": 373907,
-        "2023": 395174,
-        "2022": 483973,
-        "2021": 331364
+        "2026": 94816,
+        "2025": 281815,
+        "2024": 371636,
+        "2023": 392774,
+        "2022": 481033,
+        "2021": 329351
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
   },
   "earliest_fire": {
-    "ano": 2037,
-    "idade": 50,
-    "pfire": 85.4,
+    "ano": 2036,
+    "idade": 49,
+    "pfire": 86.5,
     "status": "aspiracional"
   },
   "spending_guardrails": {
     "zona": "verde",
-    "pfire_atual": 90.4,
+    "pfire_atual": 86.5,
     "spending_atual": 250000,
     "upper_guardrail_spending": 250000,
     "safe_target_spending": 225000,

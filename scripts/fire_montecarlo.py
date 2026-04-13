@@ -22,9 +22,10 @@ from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).parent))
 from config import (
     APORTE_MENSAL, CUSTO_VIDA_BASE,
-    IDADE_ATUAL, IDADE_FIRE_ALVO, IDADE_FIRE_ASPIRACIONAL,
+    IDADE_ATUAL, IDADE_CENARIO_BASE, IDADE_CENARIO_ASPIRACIONAL,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
     IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO,
+    APORTE_CENARIO_BASE, APORTE_CENARIO_ASPIRACIONAL,
     update_dashboard_state,
 )
 
@@ -36,11 +37,11 @@ PREMISSAS = {
     "aporte_mensal":       APORTE_MENSAL,
     "custo_vida_base":     CUSTO_VIDA_BASE,
 
-    # Horizonte
+    # Horizonte — Cenário Base (padrão)
     "idade_atual":         IDADE_ATUAL,
-    "idade_fire_alvo":     IDADE_FIRE_ALVO,
-    "idade_fire_aspiracional": IDADE_FIRE_ASPIRACIONAL,
-    "idade_safe_harbor":   53,
+    "idade_cenario_base":  IDADE_CENARIO_BASE,
+    "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
+    "idade_safe_harbor":   IDADE_CENARIO_BASE,
     "anos_simulacao":      37,          # anos de desacumulação (53→90)
 
     # Retornos reais anuais em BRL — cenário BASE (fonte: carteira.md premissas HD-006)
@@ -698,7 +699,11 @@ def main():
 
     # ── Export dashboard_state.json ──
     from datetime import date
-    idade_fire = premissas["idade_fire_alvo"]  # 50 se --anos 11, 53 se default
+    idade_fire = premissas["idade_cenario_base"]  # 53 = base, 49 = aspiracional
+
+    # Detectar cenário: base (53) ou aspiracional (49)
+    cenario = "base" if idade_fire == IDADE_CENARIO_BASE else "aspiracional"
+
     fire_data_existing = {}
     try:
         from config import load_dashboard_state
@@ -716,15 +721,15 @@ def main():
         "pat_p90_fire": round(resultados[0]["pat_p90_fire"], 0),
         "mc_date": str(date.today()),
     })
-    # Salvar com chave específica da idade FIRE para distinguir pfire50 e pfire53
-    prefix = f"pfire{idade_fire}"
+    # Salvar com chave específica do cenário (base ou aspiracional)
+    prefix = f"pfire_{cenario}"
     fire_data[f"{prefix}_base"]   = fire_data["pfire_base"]
     fire_data[f"{prefix}_fav"]    = fire_data["pfire_fav"]
     fire_data[f"{prefix}_stress"] = fire_data["pfire_stress"]
-    # Patrimônio percentis específicos por idade (para scenario_comparison no dashboard)
-    fire_data[f"pat_mediano_fire{idade_fire}"] = round(resultados[0]["pat_mediana_fire"], 0)
-    fire_data[f"pat_p10_fire{idade_fire}"]     = round(resultados[0]["pat_p10_fire"], 0)
-    fire_data[f"pat_p90_fire{idade_fire}"]     = round(resultados[0]["pat_p90_fire"], 0)
+    # Patrimônio percentis específicos por cenário
+    fire_data[f"pat_mediano_{cenario}"] = round(resultados[0]["pat_mediana_fire"], 0)
+    fire_data[f"pat_p10_{cenario}"]     = round(resultados[0]["pat_p10_fire"], 0)
+    fire_data[f"pat_p90_{cenario}"]     = round(resultados[0]["pat_p90_fire"], 0)
 
     update_dashboard_state("fire", fire_data, generator="fire_montecarlo.py")
 

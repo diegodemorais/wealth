@@ -412,7 +412,7 @@ def _stress_cenarios_spec():
 # ─────────────────────────────────────────────────────────────────────────────
 # BLOCK: stress-test-mc
 # Tab: fire
-# Data fields: premissas.patrimonio_atual, pfire53.base, pfire53.stress,
+# Data fields: premissas.patrimonio_atual, pfire_base.base, pfire_base.stress,
 #              premissas.patrimonio_gatilho
 # privacy: true
 # ─────────────────────────────────────────────────────────────────────────────
@@ -420,19 +420,19 @@ def _stress_cenarios_spec():
 @registry.test(
     "stress-test-mc",
     "DATA",
-    "pfire53 key exists with base, fav, stress fields",
+    "pfire_base key exists with base, fav, stress fields",
     "CRITICAL",
 )
-def _pfire53_key_exists():
+def _pfire_base_key_exists():
     data = load_data()
-    pfire53 = data.get("pfire53")
-    if not isinstance(pfire53, dict):
-        return False, f"pfire53 is {type(pfire53).__name__}, expected dict"
+    pfire_base = data.get("pfire_base")
+    if not isinstance(pfire_base, dict):
+        return False, f"pfire_base is {type(pfire_base).__name__}, expected dict"
     required = ["base", "stress"]
-    missing = [f for f in required if pfire53.get(f) is None]
+    missing = [f for f in required if pfire_base.get(f) is None]
     if missing:
-        return False, f"pfire53 missing fields: {missing}"
-    return True, f"pfire53 present with base={pfire53['base']}, stress={pfire53['stress']}"
+        return False, f"pfire_base missing fields: {missing}"
+    return True, f"pfire_base present with base={pfire_base['base']}, stress={pfire_base['stress']}"
 
 
 @registry.test(
@@ -458,34 +458,34 @@ def _premissas_patrimonio_present():
 @registry.test(
     "stress-test-mc",
     "VALUE",
-    "pfire53.stress < pfire53.base (stress scenario is worse than base)",
+    "pfire_base.stress < pfire_base.base (stress scenario is worse than base)",
     "CRITICAL",
 )
-def _pfire53_stress_lt_base():
+def _pfire_base_stress_lt_base():
     data = load_data()
-    base = get_nested(data, "pfire53.base")
-    stress = get_nested(data, "pfire53.stress")
+    base = get_nested(data, "pfire_base.base")
+    stress = get_nested(data, "pfire_base.stress")
     if not all(isinstance(v, (int, float)) for v in [base, stress]):
-        return False, f"Non-numeric pfire53 values: base={base!r}, stress={stress!r}"
+        return False, f"Non-numeric pfire_base values: base={base!r}, stress={stress!r}"
     if stress >= base:
         return False, (
-            f"pfire53.stress={stress} >= pfire53.base={base} "
+            f"pfire_base.stress={stress} >= pfire_base.base={base} "
             "— stress scenario must be worse (lower) than base"
         )
-    return True, f"pfire53.stress={stress}% < pfire53.base={base}% (stress is correctly worse)"
+    return True, f"pfire_base.stress={stress}% < pfire_base.base={base}% (stress is correctly worse)"
 
 
 @registry.test(
     "stress-test-mc",
     "VALUE",
-    "pfire53.base and pfire53.stress are in plausible P(FIRE) range [0, 100]",
+    "pfire_base.base and pfire_base.stress are in plausible P(FIRE) range [0, 100]",
     "HIGH",
 )
-def _pfire53_range():
+def _pfire_base_range():
     data = load_data()
     values = {
-        "base": get_nested(data, "pfire53.base"),
-        "stress": get_nested(data, "pfire53.stress"),
+        "base": get_nested(data, "pfire_base.base"),
+        "stress": get_nested(data, "pfire_base.stress"),
     }
     bad = []
     for key, val in values.items():
@@ -494,8 +494,8 @@ def _pfire53_range():
         elif not (0 <= val <= 100):
             bad.append(f"{key}={val} outside [0, 100]")
     if bad:
-        return False, f"pfire53 out-of-range: {bad}"
-    return True, f"pfire53 base={values['base']}%, stress={values['stress']}% both in [0, 100]"
+        return False, f"pfire_base out-of-range: {bad}"
+    return True, f"pfire_base base={values['base']}%, stress={values['stress']}% both in [0, 100]"
 
 
 @registry.test(
@@ -535,18 +535,18 @@ def _stress_mc_render_slider():
 @registry.test(
     "stress-test-mc",
     "RENDER",
-    "HTML contains pfire53BaseBadge and pfire53StressBadge elements",
+    "HTML contains pfire_baseBaseBadge and pfire_baseStressBadge elements",
     "CRITICAL",
 )
 def _stress_mc_render_badges():
     html = load_html()
     missing = []
-    for elem_id in ["pfire53BaseBadge", "pfire53StressBadge"]:
+    for elem_id in ["pfire_baseBaseBadge", "pfire_baseStressBadge"]:
         if f'id="{elem_id}"' not in html:
             missing.append(elem_id)
     if missing:
         return False, f"Missing HTML elements: {missing}"
-    return True, "pfire53BaseBadge and pfire53StressBadge present in HTML"
+    return True, "pfire_baseBaseBadge and pfire_baseStressBadge present in HTML"
 
 
 @registry.test(
@@ -571,7 +571,7 @@ def _stress_mc_render_shock_label():
 def _stress_mc_privacy():
     html = load_html()
     # The stress-test-mc block is privacy: true; pv class must appear in that region.
-    # We verify it appears anywhere near pfire53 rendering or stressShockSlider.
+    # We verify it appears anywhere near pfire_base rendering or stressShockSlider.
     import re
     # Find stressShockSlider position, then scan nearby region for pv
     idx = html.find('stressShockSlider')
@@ -601,8 +601,8 @@ def _stress_mc_spec_fields():
         return False, "Block 'stress-test-mc' not found in spec.json"
     expected = {
         "premissas.patrimonio_atual",
-        "pfire53.base",
-        "pfire53.stress",
+        "pfire_base.base",
+        "pfire_base.stress",
         "premissas.patrimonio_gatilho",
     }
     actual = set(block.get("data_fields", []))
