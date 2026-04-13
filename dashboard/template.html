@@ -98,12 +98,22 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 }
 @media(max-width:768px){
   /* Collapse all 2+ column grids to 1 column on tablets */
-  .grid-2,.grid-3,.hero-strip,.cagr-twr-row,.what-if-result,.fire-row,#r7RiskGrid,.scenario-card{grid-template-columns:1fr!important}
+  .grid-2,.grid-3,.hero-strip,.cagr-twr-row,.what-if-output,.fire-row,#r7RiskGrid,.scenario-card,.fire-sim-result,.fire-sim-sliders,.dynamic-2col,.cagr-twr-card{
+    grid-template-columns:1fr!important;
+    min-width:0!important
+  }
   /* Reduce large minmax values */
-  .kpi-grid{grid-template-columns:repeat(2,1fr)!important}
-  .macro-strip{grid-template-columns:repeat(2,1fr)!important}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)!important;min-width:0!important}
+  .macro-strip{grid-template-columns:repeat(2,1fr)!important;min-width:0!important}
+  .tax-ir-etf-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;min-width:0!important}
+  .etf-comp-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;min-width:0!important}
+  #macroStrip,#monthlyRetStats,#attrFxRfRow,#shadowMetrics,#r7MetricsGrid,#irITDCards{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;min-width:0!important}
   /* FIRE simulator layout */
-  .wellness-extra-row{grid-template-columns:1fr!important;gap:4px!important}
+  .wellness-extra-row{grid-template-columns:1fr!important;gap:4px!important;min-width:0!important}
+  /* Force children to not overflow grid */
+  .grid-2 > *,.grid-3 > *,.hero-strip > *,.fire-sim-sliders > *,.what-if-output > *,#r7RiskGrid > * {
+    min-width:0!important
+  }
 }
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 /* ── Privacy mode: transformar valores em placeholders legíveis ── */
