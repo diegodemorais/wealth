@@ -6792,12 +6792,39 @@ function buildBondPool() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R1 — FIRE MATRIX
 // ═══════════════════════════════════════════════════════════════
-const _FM_PERFIS = {
+// _FM_PERFIS — carregado dinamicamente de DATA.fire_matrix.perfis
+// Fallback se fire_matrix.perfis não existir
+let _FM_PERFIS = {
   atual:   { gasto: null,    patAlvo: null,       label: 'Atual' },
-  solteiro:{ gasto: 250000,  patAlvo: 13400000,   label: 'Solteiro' },
-  casado:  { gasto: 275000,  patAlvo: 14600000,   label: 'Casado' },
-  filho:   { gasto: 300000,  patAlvo: 15800000,   label: 'Casado + Filho' },
+  solteiro:{ gasto: 220000,  patAlvo: null,       label: 'Solteiro Minimalista' },
+  casado:  { gasto: 270000,  patAlvo: null,       label: 'Casado' },
+  filho:   { gasto: 300000,  patAlvo: null,       label: 'Casado + Filho' },
 };
+
+// Sobrescreve com dados do fire_matrix se disponível
+if (DATA?.fire_matrix?.perfis) {
+  const fperfis = DATA.fire_matrix.perfis;
+  _FM_PERFIS.atual = {
+    gasto: fperfis.atual?.gasto_anual || null,
+    patAlvo: null,
+    label: fperfis.atual?.label || 'Atual'
+  };
+  _FM_PERFIS.solteiro = {
+    gasto: fperfis.solteiro?.gasto_anual || 220000,
+    patAlvo: null,
+    label: fperfis.solteiro?.label || 'Solteiro Minimalista'
+  };
+  _FM_PERFIS.casado = {
+    gasto: fperfis.casado?.gasto_anual || 270000,
+    patAlvo: null,
+    label: fperfis.casado?.label || 'Casado'
+  };
+  _FM_PERFIS.filho = {
+    gasto: fperfis.filho?.gasto_anual || 300000,
+    patAlvo: null,
+    label: fperfis.filho?.label || 'Casado + Filho'
+  };
+}
 
 window._fireMatrixCenario = 'base';
 window._fireMatrixPerfil  = 'atual';

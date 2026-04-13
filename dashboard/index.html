@@ -1409,12 +1409,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T13:05:03-03:00'); // BRT (UTC-3)
-const VERSION = '2.18';
+const GENERATED_AT = new Date('2026-04-13T13:08:02-03:00'); // BRT (UTC-3)
+const VERSION = '2.20';
 
 const DATA = {
-  "_generated": "2026-04-13T13:03:04",
-  "_generated_brt": "2026-04-13T13:03:04-03:00",
+  "_generated": "2026-04-13T13:07:58",
+  "_generated_brt": "2026-04-13T13:07:58-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1424,7 +1424,7 @@ const DATA = {
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.0233,
+  "cambio": 5.0208,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -1445,7 +1445,7 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.775,
+      "price": 114.9,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1453,7 +1453,7 @@ const DATA = {
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.085,
+      "price": 105.09,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1477,7 +1477,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.3,
+      "price": 63.2697,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1485,7 +1485,7 @@ const DATA = {
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.861,
+      "price": 62.99,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1523,7 +1523,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3541864,
+    "patrimonio_atual": 3540458,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1619,28 +1619,28 @@ const DATA = {
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.1
+      "delta": 8.2
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.699999999999999
+      "delta": 4.7
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.5
+      "delta": 7.6
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.5999999999999996
+      "delta": 2.6
     }
   ],
   "fire": {
@@ -3033,7 +3033,7 @@ const DATA = {
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -3621,11 +3621,11 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 60.94,
-    "valor": 102135.44,
+    "preco": 60.83,
+    "valor": 101951.08,
     "preco_medio": 79.03,
-    "pnl_brl": -30318.84,
-    "pnl_pct": -22.89,
+    "pnl_brl": -30503.2,
+    "pnl_pct": -23.03,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
@@ -3742,7 +3742,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.775,
+      "price": 114.9,
       "ucits": "AVGS.L"
     },
     {
@@ -3750,7 +3750,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.085,
+      "price": 105.09,
       "ucits": "AVGS.L"
     },
     {
@@ -3774,7 +3774,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.3,
+      "price": 63.2697,
       "ucits": "AVEM.L"
     },
     {
@@ -3782,7 +3782,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.861,
+      "price": 62.99,
       "ucits": "AVEM.L"
     },
     {
@@ -4130,8 +4130,8 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 628504,
-    "retorno_usd": 237460,
+    "patrimonio_equity_usd": 628573,
+    "retorno_usd": 237530,
     "pct_aportes": 62.2,
     "pct_retorno": 37.8,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -4175,12 +4175,12 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0233
+    "cambio": 5.0208
   },
   "mercado": {
-    "cambio_brl_usd": 5.0233,
+    "cambio_brl_usd": 5.0208,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": -2.57,
+    "cambio_mtd_pct": -2.62,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -4662,7 +4662,7 @@ const DATA = {
   "concentracao_brasil": {
     "brasil_pct": 11.0,
     "composicao": {
-      "hodl11_brl": 102135,
+      "hodl11_brl": 101951,
       "rf_total_brl": 282565,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -4672,8 +4672,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 388712,
-    "total_portfolio_brl": 3541864,
+    "total_brasil_brl": 388528,
+    "total_portfolio_brl": 3540458,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4689,23 +4689,23 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72875,
-      "delta_brl": 47875,
-      "delta_pct": 191.5,
+      "realizado_media_brl": 72858,
+      "delta_brl": 47858,
+      "delta_pct": 191.4,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1964328,
+      "total_ibkr_brl": 1963351,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4372487,
-      "cambio_conversao": 5.0233,
+      "total_aporte_brl": 4371510,
+      "cambio_conversao": 5.0208,
       "por_ano_brl": {
-        "2026": 95443,
-        "2025": 283678,
-        "2024": 374094,
-        "2023": 395371,
-        "2022": 484214,
-        "2021": 331529
+        "2026": 95395,
+        "2025": 283537,
+        "2024": 373907,
+        "2023": 395174,
+        "2022": 483973,
+        "2021": 331364
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
@@ -5967,7 +5967,29 @@ const DATA = {
   "fire_matrix": {
     "_generated": "2026-04-13T08:41:44",
     "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
-    "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
+    "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários retorno + 4 perfis familiar",
+    "perfis": {
+      "atual": {
+        "label": "Atual (Solteiro)",
+        "gasto_anual": 250000,
+        "descricao": "Diego solo, custo de vida base"
+      },
+      "solteiro": {
+        "label": "Solteiro Minimalista",
+        "gasto_anual": 220000,
+        "descricao": "Despesas reduzidas, lifestyle mais austero"
+      },
+      "casado": {
+        "label": "Casado",
+        "gasto_anual": 270000,
+        "descricao": "Diego + parceira, custos compartilhados, saúde 2p"
+      },
+      "filho": {
+        "label": "Casado + Filho",
+        "gasto_anual": 300000,
+        "descricao": "Diego + parceira + criança(s), educação e saúde expandidas"
+      }
+    },
     "patrimonios": [
       7000000,
       9000000,
@@ -7963,20 +7985,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3541864,
-      3712144,
-      3890610,
-      4077656,
-      4273695,
-      4479159,
-      4694501,
-      4920195,
-      5156740,
-      5404657,
-      5664493,
-      5936821,
-      6222242,
-      6521385,
+      3540458,
+      3710776,
+      3889286,
+      4076385,
+      4272483,
+      4478016,
+      4693436,
+      4919218,
+      5155862,
+      5403891,
+      5663851,
+      5936316,
+      6221889,
+      6521200,
       6834909,
       6924402,
       7018236,
@@ -8017,20 +8039,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3541864,
-      3853357,
-      4192244,
-      4560934,
-      4962050,
-      5398442,
-      5873213,
-      6389738,
-      6951689,
-      7563062,
-      8228203,
-      8951840,
-      9739118,
-      10595633,
+      3540458,
+      3851936,
+      4190817,
+      4559512,
+      4960643,
+      5397064,
+      5871881,
+      6388470,
+      6950507,
+      7561990,
+      8227269,
+      8951078,
+      9738565,
+      10595333,
       11527476,
       11844559,
       12177020,
@@ -8071,20 +8093,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3541864,
-      3992119,
-      4499613,
-      5071620,
-      5716344,
-      6443027,
-      7262089,
-      8185274,
-      9225817,
-      10398637,
-      11720552,
-      13210513,
-      14889883,
-      16782741,
+      3540458,
+      3990648,
+      4498081,
+      5070038,
+      5714723,
+      6441383,
+      7260442,
+      8183649,
+      9224247,
+      10397163,
+      11719222,
+      13209389,
+      14889038,
+      16782265,
       18916227,
       19591664,
       20299860,
@@ -8154,7 +8176,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.18"
+  "version": "2.20"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -13538,12 +13560,39 @@ function buildBondPool() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R1 — FIRE MATRIX
 // ═══════════════════════════════════════════════════════════════
-const _FM_PERFIS = {
+// _FM_PERFIS — carregado dinamicamente de DATA.fire_matrix.perfis
+// Fallback se fire_matrix.perfis não existir
+let _FM_PERFIS = {
   atual:   { gasto: null,    patAlvo: null,       label: 'Atual' },
-  solteiro:{ gasto: 250000,  patAlvo: 13400000,   label: 'Solteiro' },
-  casado:  { gasto: 275000,  patAlvo: 14600000,   label: 'Casado' },
-  filho:   { gasto: 300000,  patAlvo: 15800000,   label: 'Casado + Filho' },
+  solteiro:{ gasto: 220000,  patAlvo: null,       label: 'Solteiro Minimalista' },
+  casado:  { gasto: 270000,  patAlvo: null,       label: 'Casado' },
+  filho:   { gasto: 300000,  patAlvo: null,       label: 'Casado + Filho' },
 };
+
+// Sobrescreve com dados do fire_matrix se disponível
+if (DATA?.fire_matrix?.perfis) {
+  const fperfis = DATA.fire_matrix.perfis;
+  _FM_PERFIS.atual = {
+    gasto: fperfis.atual?.gasto_anual || null,
+    patAlvo: null,
+    label: fperfis.atual?.label || 'Atual'
+  };
+  _FM_PERFIS.solteiro = {
+    gasto: fperfis.solteiro?.gasto_anual || 220000,
+    patAlvo: null,
+    label: fperfis.solteiro?.label || 'Solteiro Minimalista'
+  };
+  _FM_PERFIS.casado = {
+    gasto: fperfis.casado?.gasto_anual || 270000,
+    patAlvo: null,
+    label: fperfis.casado?.label || 'Casado'
+  };
+  _FM_PERFIS.filho = {
+    gasto: fperfis.filho?.gasto_anual || 300000,
+    patAlvo: null,
+    label: fperfis.filho?.label || 'Casado + Filho'
+  };
+}
 
 window._fireMatrixCenario = 'base';
 window._fireMatrixPerfil  = 'atual';

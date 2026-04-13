@@ -1,7 +1,29 @@
 {
   "_generated": "2026-04-13T08:41:44",
   "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
-  "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários",
+  "_spec": "DEV-fire-matrix-v2: eixos Patrimônio×Gasto, 3 cenários retorno + 4 perfis familiar",
+  "perfis": {
+    "atual": {
+      "label": "Atual (Solteiro)",
+      "gasto_anual": 250000,
+      "descricao": "Diego solo, custo de vida base"
+    },
+    "solteiro": {
+      "label": "Solteiro Minimalista",
+      "gasto_anual": 220000,
+      "descricao": "Despesas reduzidas, lifestyle mais austero"
+    },
+    "casado": {
+      "label": "Casado",
+      "gasto_anual": 270000,
+      "descricao": "Diego + parceira, custos compartilhados, saúde 2p"
+    },
+    "filho": {
+      "label": "Casado + Filho",
+      "gasto_anual": 300000,
+      "descricao": "Diego + parceira + criança(s), educação e saúde expandidas"
+    }
+  },
   "patrimonios": [
     7000000,
     9000000,
