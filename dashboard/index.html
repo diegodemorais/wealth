@@ -1400,8 +1400,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T07:12:07-03:00'); // BRT (UTC-3)
-const VERSION = '1.212';
+const GENERATED_AT = new Date('2026-04-13T07:21:51-03:00'); // BRT (UTC-3)
+const VERSION = '1.214';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8060,7 +8060,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.212"
+  "version": "1.214"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8896,11 +8896,6 @@ function buildGlidePath() {
   // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
   if (_glideCanvas.offsetWidth === 0) return;
 
-  // DEBUG B3
-  console.error('[GLIDE DEBUG]', {
-    idades: g.idades, equity: g.equity, ipca_longo: g.ipca_longo,
-    canvasW: _glideCanvas.offsetWidth, canvasH: _glideCanvas.offsetHeight,
-  });
 
   // Destroy any existing chart — Chart.getChart() catches orphaned instances not tracked in charts.glide
   const _glideExisting = Chart.getChart(_glideCanvas);
@@ -10952,8 +10947,6 @@ function buildNetWorthProjection() {
   if (!nw) return;
   const ctx = document.getElementById('netWorthProjectionChart');
   if (!ctx) return;
-  // DEBUG B4 — antes do offsetWidth check
-  console.error('[NW DEBUG]', { offsetW: ctx.offsetWidth, offsetH: ctx.offsetHeight });
   // Retry se canvas ainda tem 0 width (mobile: layout mais lento que double-RAF)
   if (ctx.offsetWidth === 0) { setTimeout(buildNetWorthProjection, 300); return; }
 
@@ -10984,11 +10977,6 @@ function buildNetWorthProjection() {
   const _p10Pos = _p10.filter(v => v != null && v > 0);
   const _nwYMin = _p10Pos.length ? Math.floor(Math.min(..._p10Pos) * 0.75 / 1e6) * 1e6 : 0;
 
-  // DEBUG B4 — valores runtime
-  console.error('[NW DEBUG2]', {
-    p50Sample: _p50.slice(0,3), _nwYMin: _nwYMin, _nwYMax: _nwYMax, gatilho: gatilho,
-    canvasW: ctx.offsetWidth, canvasH: ctx.offsetHeight,
-  });
 
   // Destroy any existing chart — Chart.getChart() catches orphaned instances not tracked in charts.netWorth
   const _nwExisting = Chart.getChart(ctx);
@@ -11001,7 +10989,7 @@ function buildNetWorthProjection() {
     afterDraw(chart) {
       if (aHojeIdx < 0) return;
       const { ctx: c, chartArea: { top, bottom }, scales: { x } } = chart;
-      const xPos = x.getPixelForIndex(aHojeIdx);
+      const xPos = x.getPixelForValue(aHojeIdx);
       c.save();
       // Linha vertical pontilhada
       c.beginPath();
@@ -11362,12 +11350,6 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
   // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
   if (ctx.offsetWidth === 0) return;
 
-  // DEBUG B7
-  console.error('[STRESS-FAN DEBUG]', {
-    trajLen: traj.p50.length, p50Sample: traj.p50.slice(0,3), p95Sample: traj.p95?.slice(0,3),
-    onsetAge: onsetAge, anosAcumulo: anosAcumulo, gatilho: DATA.premissas?.patrimonio_gatilho,
-    canvasW: ctx.offsetWidth, canvasH: ctx.offsetHeight,
-  });
 
   // Destroy any existing chart — Chart.getChart() catches orphaned instances
   const _stressExisting = Chart.getChart(ctx);
@@ -13529,8 +13511,6 @@ function buildTrackingFire() {
   if (!el || !sec) return;
   const d = DATA.fire_trilha;
   if (!d || !d.dates || !d.realizado_brl || !d.trilha_brl) { sec.style.display = 'none'; return; }
-  // DEBUG B2 — antes do offsetWidth check
-  console.error('[TF DEBUG]', { offsetW: el.offsetWidth, offsetH: el.offsetHeight });
   if (el.offsetWidth === 0) { setTimeout(buildTrackingFire, 300); return; }
 
   const dates    = d.dates;
@@ -13542,7 +13522,6 @@ function buildTrackingFire() {
   const _allPos = [...realizado, ...trilha].filter(v => v != null && isFinite(v) && v > 0);
   const _dataMax = _allPos.length ? Math.max(..._allPos) : meta;
   const _yMax    = Math.max(Math.min(_dataMax * 1.1, meta * 1.5), meta * 1.1);
-  const _metaVal = meta;
 
   // Destroy instâncias existentes
   const _ex = Chart.getChart(el);
@@ -13551,85 +13530,84 @@ function buildTrackingFire() {
 
   const ctx = el.getContext('2d');
 
-  // DEBUG B2 — valores runtime
-  console.error('[TF DEBUG2]', {
-    meta: meta, _yMax: _yMax,
-    realizadoMax: Math.max(...realizado.filter(v=>v!=null&&v>0)),
-    trilhaMax: Math.max(...trilha.filter(v=>v!=null&&v>0)),
-    canvasW: el.offsetWidth, canvasH: el.offsetHeight,
-  });
-
-  // Plugin: linha meta desenhada via getPixelForValue (posição garantida independente dos datasets)
-  const _metaPlugin = {
-    id: 'trackingFireMeta',
+  // Plugin único: desenha TODAS as linhas via getPixelForValue (bypassa o dataset renderer do Chart.js)
+  // Usa a mesma API que desenha a linha de meta — garantidamente correta.
+  const _drawPlugin = {
+    id: 'trackingFireDraw',
     afterDraw: function(chart) {
       const { ctx: c, scales, chartArea } = chart;
-      if (!scales.y || !chartArea) return;
-      const yPx = scales.y.getPixelForValue(_metaVal);
-      if (isNaN(yPx) || yPx < chartArea.top || yPx > chartArea.bottom) return;
+      if (!scales.y || !scales.x || !chartArea) return;
+      const n = dates.length;
+
+      // Linha Projeção (trilha_brl completa — azul claro tracejado)
       c.save();
-      c.strokeStyle = 'rgba(34,197,94,1)';
-      c.lineWidth = 2;
-      c.setLineDash([6, 4]);
+      c.strokeStyle = 'rgba(96,165,250,.75)';
+      c.lineWidth = 1.5;
+      c.setLineDash([6, 3]);
       c.beginPath();
-      c.moveTo(chartArea.left, yPx);
-      c.lineTo(chartArea.right, yPx);
+      let started = false;
+      for (let i = 0; i < n; i++) {
+        const v = trilha[i];
+        if (v == null || !isFinite(v)) { started = false; continue; }
+        const xPx = scales.x.getPixelForValue(i);
+        const yPx = scales.y.getPixelForValue(v);
+        if (!started) { c.moveTo(xPx, yPx); started = true; } else { c.lineTo(xPx, yPx); }
+      }
       c.stroke();
       c.setLineDash([]);
-      c.fillStyle = 'rgba(34,197,94,1)';
-      c.font = 'bold 9px sans-serif';
-      c.textAlign = 'right';
-      c.fillText('Meta R$' + (_metaVal / 1e6).toFixed(1) + 'M', chartArea.right - 2, yPx - 4);
+
+      // Linha Realizado (azul sólido — só onde não é null)
+      c.strokeStyle = 'rgba(59,130,246,1)';
+      c.lineWidth = 2.5;
+      c.beginPath();
+      started = false;
+      for (let i = 0; i < n; i++) {
+        const v = realizado[i];
+        if (v == null) { started = false; continue; }
+        const xPx = scales.x.getPixelForValue(i);
+        const yPx = scales.y.getPixelForValue(v);
+        if (!started) { c.moveTo(xPx, yPx); started = true; } else { c.lineTo(xPx, yPx); }
+      }
+      c.stroke();
+
+      // Linha Meta (verde tracejada)
+      const yMetaPx = scales.y.getPixelForValue(meta);
+      if (!isNaN(yMetaPx) && yMetaPx >= chartArea.top && yMetaPx <= chartArea.bottom) {
+        c.strokeStyle = 'rgba(34,197,94,1)';
+        c.lineWidth = 2;
+        c.setLineDash([6, 4]);
+        c.beginPath();
+        c.moveTo(chartArea.left, yMetaPx);
+        c.lineTo(chartArea.right, yMetaPx);
+        c.stroke();
+        c.setLineDash([]);
+        c.fillStyle = 'rgba(34,197,94,1)';
+        c.font = 'bold 9px sans-serif';
+        c.textAlign = 'right';
+        c.fillText('Meta R$' + (meta / 1e6).toFixed(1) + 'M', chartArea.right - 2, yMetaPx - 4);
+      }
       c.restore();
     }
   };
 
+  // Datasets vazios: só para a legenda. Rendering real feito pelo _drawPlugin.
   charts.trackingFire = new Chart(ctx, {
     type: 'line',
     data: {
       labels: dates,
       datasets: [
-        {
-          label: 'Projeção',
-          data: trilha,
-          borderColor: 'rgba(96,165,250,.65)',
-          borderWidth: 1.5,
-          borderDash: [6, 3],
-          pointRadius: 0,
-          fill: false,
-          tension: 0.2,
-          spanGaps: false,
-        },
-        {
-          label: 'Realizado',
-          data: realizado,
-          borderColor: 'rgba(59,130,246,1)',
-          backgroundColor: 'rgba(59,130,246,.07)',
-          borderWidth: 2.5,
-          pointRadius: 0,
-          fill: false,
-          tension: 0.2,
-          spanGaps: false,
-        },
+        { label: 'Projeção',  data: [], borderColor: 'rgba(96,165,250,.75)', borderWidth: 1.5, borderDash: [6,3] },
+        { label: 'Realizado', data: [], borderColor: 'rgba(59,130,246,1)',   borderWidth: 2.5 },
       ],
     },
-    plugins: [_metaPlugin],
+    plugins: [_drawPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: false,
       plugins: {
-        legend: { display: true, labels: { color: '#94a3b8', font: { size: 10 } } },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          callbacks: {
-            label: function(ctx) {
-              const v = ctx.parsed.y;
-              if (v == null || isNaN(v)) return null;
-              return ' ' + ctx.dataset.label + ': R$' + (v / 1e6).toFixed(2) + 'M';
-            }
-          }
-        }
+        legend: { display: true, labels: { color: '#94a3b8', font: { size: 10 }, usePointStyle: false } },
+        tooltip: { enabled: false },
       },
       scales: {
         x: {
@@ -13651,7 +13629,7 @@ function buildTrackingFire() {
   if (srcEl) {
     const r = d.retorno_anual_premissa ? (d.retorno_anual_premissa * 100).toFixed(2) + '%/ano' : '';
     const a = d.aporte_mensal_premissa ? 'R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês' : '';
-    const m = d.meta_fire_date ? 'Meta R$' + (_metaVal / 1e6).toFixed(1) + 'M em ' + d.meta_fire_date : '';
+    const m = d.meta_fire_date ? 'Meta R$' + (meta / 1e6).toFixed(1) + 'M em ' + d.meta_fire_date : '';
     srcEl.textContent = [r, a, m].filter(Boolean).join(' · ');
   }
 }
