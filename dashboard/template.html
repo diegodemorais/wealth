@@ -6870,12 +6870,11 @@ function buildFireTrilha() {
       tension: 0.2,
     },
     {
-      label: 'Meta FIRE',
+      label: 'Meta FIRE R$' + (meta / 1e6).toFixed(1) + 'M',
       data: metaLine,
-      borderColor: 'rgba(34,197,94,.7)',
+      borderColor: 'rgba(34,197,94,0)',  // transparent — plugin draws the correct line
       backgroundColor: 'transparent',
-      borderWidth: 2,
-      borderDash: [4, 4],
+      borderWidth: 0,
       pointRadius: 0,
       fill: false,
     },
@@ -6896,9 +6895,37 @@ function buildFireTrilha() {
   if (_trilhaExisting) _trilhaExisting.destroy();
   if (charts.fireTrilha) { try { charts.fireTrilha.destroy(); } catch(_e) {} charts.fireTrilha = null; }
   const ctx = el.getContext('2d');
+
+  // Plugin: draws meta line at correct Y position via getPixelForValue (bypasses dataset rendering)
+  // This guarantees the line is at the right position regardless of null-data Chart.js quirks.
+  const _fireMetaPlugin = {
+    id: 'fireMetaLine',
+    afterDraw: function(chart) {
+      const { ctx: c, scales, chartArea } = chart;
+      if (!scales.y || !chartArea) return;
+      const yPx = scales.y.getPixelForValue(_metaVal);
+      if (isNaN(yPx) || yPx < chartArea.top || yPx > chartArea.bottom) return;
+      c.save();
+      c.strokeStyle = 'rgba(34,197,94,1)';
+      c.lineWidth = 2;
+      c.setLineDash([6, 4]);
+      c.beginPath();
+      c.moveTo(chartArea.left, yPx);
+      c.lineTo(chartArea.right, yPx);
+      c.stroke();
+      c.setLineDash([]);
+      c.fillStyle = 'rgba(34,197,94,1)';
+      c.font = 'bold 9px sans-serif';
+      c.textAlign = 'right';
+      c.fillText('Meta R$' + (_metaVal / 1e6).toFixed(1) + 'M', chartArea.right - 2, yPx - 4);
+      c.restore();
+    }
+  };
+
   charts.fireTrilha = new Chart(ctx, {
     type: 'line',
     data: { labels: dates, datasets },
+    plugins: [_fireMetaPlugin],
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
