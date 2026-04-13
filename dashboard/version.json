@@ -1,8 +1,8 @@
 {
-  "major": 1,
-  "minor": 202,
-  "label": "Pipeline data-driven + estrutura do projeto",
-  "date": "2026-04-12",
+  "major": 2,
+  "minor": 0,
+  "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests",
+  "date": "2026-04-13",
   "history": [
     {
       "version": "1.0",
@@ -1018,6 +1018,91 @@
       "version": "1.202",
       "date": "2026-04-12",
       "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.203",
+      "date": "2026-04-12",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.204",
+      "date": "2026-04-12",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.205",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.206",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.207",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.208",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.209",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.210",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.211",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.212",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.213",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.214",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.215",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.216",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.217",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "1.218",
+      "date": "2026-04-13",
+      "label": "Pipeline data-driven + estrutura do projeto"
+    },
+    {
+      "version": "2.0",
+      "date": "2026-04-13",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
     }
   ]
 }
