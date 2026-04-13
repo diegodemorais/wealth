@@ -268,6 +268,14 @@
         "concentracao_brasil.total_portfolio_brl",
         "cambio"
       ],
+      "constraints": {
+        "brasil_cambial_sum": {
+          "type": "sum_near_100",
+          "fields": ["concentracao_brasil.brasil_pct", "macro.exposicao_cambial_pct"],
+          "tolerance": 2.0,
+          "reason": "brasil_pct (BRL assets) + exposicao_cambial_pct (USD exposure) devem somar ~100% — são perspectivas complementares do portfólio"
+        }
+      },
       "privacy": false
     },
     {
@@ -639,21 +647,6 @@
       "privacy": false
     },
     {
-      "id": "pvr-premissas-realizado",
-      "tab": "performance",
-      "label": "Premissas vs Realizado — 5 Anos",
-      "type": "card",
-      "purpose": "Compara retorno, aporte, volatilidade, drawdown e savings rate realizados com premissas do modelo FIRE para validar execução do plano (2021-04-13 a 2026-04-28)",
-      "data_fields": [
-        "premissas_vs_realizado.retorno_equity",
-        "premissas_vs_realizado.aporte_mensal",
-        "premissas_vs_realizado.volatilidade",
-        "premissas_vs_realizado.max_drawdown",
-        "premissas_vs_realizado.savings_rate"
-      ],
-      "privacy": true
-    },
-    {
       "id": "hodl11-pnl",
       "tab": "performance",
       "label": "HODL11 — P&L e Custo Médio",
@@ -707,18 +700,6 @@
         "premissas.idade_atual",
         "premissas.idade_cenario_base",
         "spendingSmile"
-      ],
-      "privacy": true
-    },
-    {
-      "id": "scenario-comparison",
-      "tab": "fire",
-      "label": "Cenário Base vs Cenário Aspiracional — Comparação",
-      "type": "table",
-      "purpose": "Compara os dois cenários de FIRE date em patrimônio mediano, P10/P90 e P(sucesso) para quantificar o custo de antecipar a aposentadoria",
-      "data_fields": [
-        "scenario_comparison.fire_base",
-        "scenario_comparison.fire_aspiracional"
       ],
       "privacy": true
     },

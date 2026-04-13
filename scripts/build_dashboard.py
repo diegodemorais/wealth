@@ -16,6 +16,10 @@ import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+# Importar validador de contrato
+sys.path.insert(0, str(Path(__file__).parent))
+from validate_schema import validate_schema
+
 ROOT = Path(__file__).parent.parent
 TEMPLATE          = ROOT / "dashboard" / "template.html"
 DATA_FILE         = ROOT / "dashboard" / "data.json"
@@ -789,8 +793,15 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     # F8: Sankey Cash Flow
     data["sankey_data"] = _compute_sankey_data(data)
 
-    # 1c. Validar schema
+    # 1c. Validar schema (warnings only — não bloqueia)
     _validate_data(data)
+
+    # 1d. Validar contrato spec.json vs data.json (constraints vinculantes)
+    spec_path = ROOT / "dashboard" / "spec.json"
+    if not validate_schema(spec_path, data_path, verbose=False):
+        print(f"❌ Contrato violado — spec.json e data.json não estão em acordo", file=sys.stderr)
+        print(f"   Execute: python3 scripts/validate_schema.py --verbose", file=sys.stderr)
+        sys.exit(1)
 
     # 2. Ler template
     if not template_path.exists():
