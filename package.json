@@ -1,0 +1,11 @@
+{
+  "name": "wealth-dashboard",
+  "version": "1.0.0",
+  "description": "Browser automation for dashboard responsive testing",
+  "scripts": {
+    "test:responsive": "node scripts/test_responsive.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
