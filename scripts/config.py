@@ -94,9 +94,9 @@ CRYPTO_LEGADO_BRL = 3_944
 # ─── FIRE (fonte: carteira.md + fire_montecarlo.py PREMISSAS) ────────────────
 
 PATRIMONIO_GATILHO = 13_400_000   # R$ 2026 real — gatilho formal FIRE
-SWR_GATILHO = 0.024               # 2.4% — safe withdrawal rate meta
+SWR_GATILHO = 0.030               # 3.0% — safe withdrawal rate (revisado 2026-04-13: Pfau/ERN 40a + guardrails + SoRR BRL)
 CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
-APORTE_MENSAL = 33_000            # R$/mês
+APORTE_MENSAL = 25_000            # R$/mês (média real — alguns meses mais, outros menos por viagens)
 RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para savings rate dashboard
 IDADE_ATUAL = 39
 ANO_NASCIMENTO = 1987             # para calcular idade dinâmica

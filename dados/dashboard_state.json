@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-04-12",
+    "generated": "2026-04-13",
     "last_update_section": "fire",
     "last_update_generator": "fire_montecarlo.py",
     "version": 1
@@ -116,45 +116,45 @@
     }
   },
   "fire": {
-    "pfire_base": 93.3,
-    "pfire_fav": 95.9,
-    "pfire_stress": 90.8,
-    "pat_mediano_fire": 13329893.0,
-    "pat_p10_fire": 8083717.0,
-    "pat_p90_fire": 21498675.0,
-    "mc_date": "2026-04-12",
-    "pfire50_base": 89.4,
-    "pfire50_fav": 93.9,
-    "pfire50_stress": 86.4,
-    "pfire53_base": 93.3,
-    "pfire53_fav": 95.9,
-    "pfire53_stress": 90.8,
-    "pat_mediano_fire50": 10652357.0,
-    "pat_p10_fire50": 6853338.0,
-    "pat_p90_fire50": 16333643.0,
-    "pat_mediano_fire53": 13329893.0,
-    "pat_p10_fire53": 8083717.0,
-    "pat_p90_fire53": 21498675.0,
+    "pfire_base": 90.4,
+    "pfire_fav": 94.1,
+    "pfire_stress": 86.8,
+    "pat_mediano_fire": 11527476.0,
+    "pat_p10_fire": 6834909.0,
+    "pat_p90_fire": 18916227.0,
+    "mc_date": "2026-04-13",
+    "pfire50_base": 85.4,
+    "pfire50_fav": 91.3,
+    "pfire50_stress": 81.1,
+    "pfire53_base": 90.4,
+    "pfire53_fav": 94.1,
+    "pfire53_stress": 86.8,
+    "pat_mediano_fire50": 9339651.0,
+    "pat_p10_fire50": 5873669.0,
+    "pat_p90_fire50": 14560082.0,
+    "pat_mediano_fire53": 11527476.0,
+    "pat_p10_fire53": 6834909.0,
+    "pat_p90_fire53": 18916227.0,
     "tornado": [
       {
         "variavel": "Volatilidade equity (+/-10%)",
-        "mais10": -3.9,
-        "menos10": 2.9
+        "mais10": -4.1,
+        "menos10": 4.0
       },
       {
         "variavel": "Custo de vida (+/-10%)",
-        "mais10": -2.3,
-        "menos10": 0.9
+        "mais10": -2.8,
+        "menos10": 1.9
       },
       {
         "variavel": "Retorno equity (+/-10%)",
-        "mais10": 2.4,
-        "menos10": -3.5
+        "mais10": 3.4,
+        "menos10": -4.1
       },
       {
         "variavel": "Aporte mensal (+/-10%)",
-        "mais10": 1.8,
-        "menos10": -1.2
+        "mais10": 1.2,
+        "menos10": -1.4
       }
     ]
   },
