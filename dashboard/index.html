@@ -117,8 +117,8 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
     grid-template-columns:1fr!important
   }
   /* Reduce large minmax values */
-  .kpi-grid{grid-template-columns:repeat(2,1fr)!important;min-width:0!important}
-  .macro-strip{grid-template-columns:repeat(2,1fr)!important;min-width:0!important}
+  .kpi-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))!important;min-width:0!important}
+  .macro-strip{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))!important;min-width:0!important}
   .tax-ir-etf-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;min-width:0!important}
   .etf-comp-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;min-width:0!important}
   #macroStrip,#monthlyRetStats,#attrFxRfRow,#shadowMetrics,#r7MetricsGrid,#irITDCards{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;min-width:0!important}
@@ -135,7 +135,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
     min-width:0!important
   }
 }
-@media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
+@media(max-width:480px){.kpi-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 /* ── Privacy mode: transformar valores em placeholders legíveis ── */
 .private-mode .pv{color:transparent!important;position:relative;white-space:nowrap}
 .private-mode .pv::after{content:"••••";color:var(--muted);position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;pointer-events:none;font-weight:400;font-style:normal;text-decoration:none}
@@ -229,7 +229,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 /* Hero strip */
 .hero-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:900px){.hero-strip{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:480px){.hero-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.hero-strip{grid-template-columns:repeat(auto-fit,minmax(100px,1fr))}}
 .hero-kpi{background:var(--card);border-radius:12px;padding:16px;border:1px solid var(--border);text-align:center}
 .hero-kpi.primary{border:2px solid var(--accent);background:rgba(59,130,246,.07)}
 .hero-kpi .hval{font-size:2rem;font-weight:800;margin:4px 0;line-height:1}
@@ -1447,8 +1447,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T19:23:00-03:00'); // BRT (UTC-3)
-const VERSION = '2.77';
+const GENERATED_AT = new Date('2026-04-13T19:44:58-03:00'); // BRT (UTC-3)
+const VERSION = '2.80';
 
 const DATA = {
   "_generated": "2026-04-13T17:19:17",
@@ -7643,6 +7643,76 @@ const DATA = {
     "n_sim": 5000,
     "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) não capturado — conservador (pior caso)."
   },
+  "_provenance": {
+    "concentracao_brasil.brasil_pct": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1519,
+      "formula": "(hodl11_brl + rf_total_brl + crypto_legado) / total_brl * 100",
+      "input_fields": [
+        "posicoes.HODL11.valor_brl",
+        "rf.ipca2029.valor",
+        "rf.ipca2040.valor",
+        "rf.ipca2050.valor",
+        "rf.renda_plus_2065.valor",
+        "patrimonio.crypto_legado_brl"
+      ],
+      "reason": "Concentração em ativos de risco Brasil (HODL11 B3 + RF soberano BR + Crypto legacy)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "macro.exposicao_cambial_pct": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1900,
+      "formula": "(equity_usd * cambio) / total_brl * 100",
+      "input_fields": [
+        "patrimonio.equity_usd",
+        "macro.cambio",
+        "patrimonio.total_brl"
+      ],
+      "reason": "Exposição cambial (equity USD convertido para BRL / total do portfólio)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "concentracao_brasil.composicao.hodl11_brl": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1510,
+      "formula": "posicoes.HODL11.qty * posicoes.HODL11.preco",
+      "input_fields": [
+        "posicoes.HODL11.qty",
+        "posicoes.HODL11.preco"
+      ],
+      "reason": "HODL11 (BTC B3) em BRL: quantidade × preço",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "macro.cambio": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1880,
+      "formula": "patrimonio.cambio (from dashboard_state.json ou fallback config.CAMBIO_FALLBACK)",
+      "input_fields": [
+        "patrimonio.cambio"
+      ],
+      "reason": "Taxa de câmbio BRL/USD para conversão de exposição USD",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "macro.selic_meta": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1850,
+      "formula": "config.SELIC_META_SNAPSHOT (snapshot de referência)",
+      "input_fields": [],
+      "reason": "Meta Selic vigente (snapshot em momento de execução)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "fire.pfire_base": {
+      "source_file": "scripts/fire_montecarlo.py",
+      "source_line": null,
+      "formula": "P(patrimônio >= gastos_esperados em 50 anos) via Monte Carlo",
+      "input_fields": [
+        "patrimonio.total_brl",
+        "premissas.taxa_real_equity",
+        "premissas.taxa_real_rf"
+      ],
+      "reason": "Probabilidade de não quebrar (FIRE baseline)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    }
+  },
   "wellness_extras": {
     "cash_flow_12m": {
       "value": 290000,
@@ -8217,7 +8287,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.77"
+  "version": "2.80"
 };
 
 // ═══════════════════════════════════════════════════════════════

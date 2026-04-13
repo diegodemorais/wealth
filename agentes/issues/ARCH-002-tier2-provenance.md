@@ -191,4 +191,5 @@ Cada campo rastreia:
 
 ## Proximos Passos
 
-- [ ] Após ARCH-002 completo: avaliar ARCH-003 (Componentizar Template)
+- [x] ARCH-002 completo: responsividade tests GREEN (634/634)
+- [ ] Avaliar ARCH-003 (Componentizar Template)

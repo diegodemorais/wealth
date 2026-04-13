@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-13T19:40:39.175424",
+  "timestamp": "2026-04-13T19:45:02.403256",
   "mode": "full",
   "total": 634,
-  "passed": 633,
-  "failed": 1,
+  "passed": 634,
+  "failed": 0,
   "failure_cycles": {},
   "escalations": [],
   "results": [
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 546,032 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 548,765 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -61,7 +61,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 546,032 chars"
+      "message": "index.html: 548,765 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -2165,7 +2165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVGS', 'AVEM'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2181,7 +2181,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'retiro', 'simuladores', 'now', 'fire', 'performance', 'backtest', 'portfolio'}"
+      "message": "All blocks use valid tabs: {'simuladores', 'performance', 'backtest', 'portfolio', 'now', 'fire', 'retiro'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4536,14 +4536,6 @@
       "message": "posicoes aggregates: ['SWRD', 'AVGS', 'AVEM', 'JPGL']"
     },
     {
-      "test_id": "responsive::RENDER::grids inline não têm colunas fixas que não quebram",
-      "block_id": "responsive",
-      "category": "RENDER",
-      "severity": "MEDIUM",
-      "passed": false,
-      "message": "Grids com colunas não-responsivas: [(121, 'grid-template-columns:repeat(2,1fr)')] (mude para repeat(auto-fit, minmax(...)))"
-    },
-    {
       "test_id": "pipeline::DATA::data.json has _generated timestamp",
       "block_id": "pipeline",
       "category": "DATA",
@@ -4598,6 +4590,14 @@
       "severity": "MEDIUM",
       "passed": true,
       "message": "Teste responsivo: proteção em cascata detectada (768px, dynamic-2col, !important overrides)"
+    },
+    {
+      "test_id": "responsive::RENDER::grids inline não têm colunas fixas que não quebram",
+      "block_id": "responsive",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "Todos os grids inline são responsivos"
     },
     {
       "test_id": "responsive::RENDER::CSS tem proteção para tabelas responsivas",
@@ -4965,7 +4965,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'cambio', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4973,7 +4973,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct', 'cambio', 'macro.exposicao_cambial_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'macro.exposicao_cambial_pct', 'cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
