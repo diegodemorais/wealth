@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-12T21:44:30.919722",
+  "timestamp": "2026-04-13T09:16:42.514079",
   "mode": "smart",
-  "total": 277,
-  "passed": 277,
+  "total": 284,
+  "passed": 284,
   "failed": 0,
   "failure_cycles": {
-    "glide-path": 0
+    "fire-trilha": 0
   },
   "escalations": [],
   "results": [
@@ -15,7 +15,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 517,338 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 524,335 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -34,12 +34,12 @@
       "message": "All blocks have required fields"
     },
     {
-      "test_id": "render-global::RENDER::HTML has 5 tab containers (hoje/carteira/perf/fire/retiro)",
+      "test_id": "render-global::RENDER::HTML has 6 tab containers (hoje/carteira/perf/fire/retiro/simuladores)",
       "block_id": "render-global",
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "All 5 tabs present in HTML"
+      "message": "All 6 tabs present in HTML"
     },
     {
       "test_id": "render-global::RENDER::Chart.js loaded in HTML",
@@ -71,7 +71,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5126)"
+      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5175)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroPfireSub::DOM_REF::renderKPIs: getElementById('heroPfireSub') existe no DOM ou tem null guard",
@@ -79,7 +79,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5132)"
+      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5181)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroAnos::DOM_REF::renderKPIs: getElementById('heroAnos') existe no DOM ou tem null guard",
@@ -119,7 +119,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5153)"
+      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5202)"
     },
     {
       "test_id": "dom-ref-renderKPIs-heroSavingsSub::DOM_REF::renderKPIs: getElementById('heroSavingsSub') existe no DOM ou tem null guard",
@@ -127,7 +127,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5157)"
+      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5206)"
     },
     {
       "test_id": "dom-ref-renderKPIs-kpiPfire50::DOM_REF::renderKPIs: getElementById('kpiPfire50') existe no DOM ou tem null guard",
@@ -735,7 +735,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2483)"
+      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2493)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribVal::DOM_REF::updateContrib: getElementById('contribVal') existe no DOM ou tem null guard",
@@ -743,7 +743,7 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2489)"
+      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2499)"
     },
     {
       "test_id": "dom-ref-updateContrib-contribResult::DOM_REF::updateContrib: getElementById('contribResult') existe no DOM ou tem null guard",
@@ -751,7 +751,15 @@
       "category": "DOM_REF",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2490)"
+      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2500)"
+    },
+    {
+      "test_id": "chartjs4-banned-api::RENDER::getPixelForIndex ausente em template.html (removido no Chart.js 4 — causa TypeError silencioso)",
+      "block_id": "chartjs4-banned-api",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "getPixelForIndex ausente — API correta (getPixelForValue)"
     },
     {
       "test_id": "patrimonio-total-hero::RENDER::hero strip patrimonial elements present in HTML",
@@ -770,12 +778,12 @@
       "message": "premissasVsRealizadoSection and premissasVsRealizadoBody present"
     },
     {
-      "test_id": "fire-trilha::RENDER::fireTrilhaSection and fireTrilhaChart exist in HTML",
+      "test_id": "fire-trilha::RENDER::trackingFireSection and trackingFireChart exist in HTML",
       "block_id": "fire-trilha",
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "fireTrilhaSection and fireTrilhaChart canvas present"
+      "message": "trackingFireSection and trackingFireChart canvas present"
     },
     {
       "test_id": "net-worth-projection::RENDER::pfire53 scenario badges exist in HTML",
@@ -927,7 +935,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (92 elements)"
+      "message": "Privacy .pv class present (146 elements)"
     },
     {
       "test_id": "custo-base-bucket::PRIVACY::privacy block marked on custo-base-bucket",
@@ -935,7 +943,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (92 elements)"
+      "message": "Privacy .pv class present (146 elements)"
     },
     {
       "test_id": "hodl11-pnl::PRIVACY::hodl11-pnl privacy block marked with .pv",
@@ -943,7 +951,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (92 elements), hodl11 present"
+      "message": "Privacy .pv class present (146 elements), hodl11 present"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -959,7 +967,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'fire', 'now', 'portfolio', 'performance', 'retiro'}"
+      "message": "All blocks use valid tabs: {'retiro', 'now', 'performance', 'fire', 'portfolio', 'simuladores'}"
     },
     {
       "test_id": "privacy-global::PRIVACY::privacy toggle mechanism present in HTML",
@@ -967,7 +975,7 @@
       "category": "PRIVACY",
       "severity": "HIGH",
       "passed": true,
-      "message": "92 elements with .pv class in HTML"
+      "message": "146 elements with .pv class in HTML"
     },
     {
       "test_id": "privacy-global::PRIVACY::privacy toggle script present in index.html",
@@ -1010,12 +1018,12 @@
       "message": "guard present — charts.scenario.destroy() before new Chart('scenarioChart')"
     },
     {
-      "test_id": "tab-switch-guard::TAB_SWITCH::fireTrilhaChart tem destroy guard antes de new Chart",
+      "test_id": "tab-switch-guard::TAB_SWITCH::trackingFireChart tem destroy guard antes de new Chart",
       "block_id": "tab-switch-guard",
       "category": "TAB_SWITCH",
       "severity": "HIGH",
       "passed": true,
-      "message": "guard present — charts.fireTrilha.destroy() before new Chart('fireTrilhaChart')"
+      "message": "guard present — charts.trackingFire.destroy() before new Chart('trackingFireChart')"
     },
     {
       "test_id": "tab-switch-guard::TAB_SWITCH::glideChart tem destroy guard antes de new Chart",
@@ -1199,7 +1207,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5558)"
+      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5608)"
     },
     {
       "test_id": "dom-ref-renderProximasAcoes-proximasAcoes::DOM_REF::renderProximasAcoes: getElementById('proximasAcoes') existe no DOM ou tem null guard",
@@ -1207,7 +1215,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5593)"
+      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5643)"
     },
     {
       "test_id": "dom-ref-buildStressTest-stressPatShock::DOM_REF::buildStressTest: getElementById('stressPatShock') existe no DOM ou tem null guard",
@@ -1383,7 +1391,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2859)"
+      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2869)"
     },
     {
       "test_id": "dom-ref-calcAporte-calcCambioLabel::DOM_REF::calcAporte: getElementById('calcCambioLabel') existe no DOM ou tem null guard",
@@ -1488,6 +1496,54 @@
       "severity": "HIGH",
       "passed": true,
       "message": "buildDeltaBar defined and deltaChart canvas present"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-retry::RENDER::buildTrackingFire: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
+      "block_id": "chartjs4-offsetwidth-retry",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildTrackingFire: offsetWidth guard + setTimeout retry presentes"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-retry::RENDER::buildNetWorthProjection: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
+      "block_id": "chartjs4-offsetwidth-retry",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildNetWorthProjection: offsetWidth guard + setTimeout retry presentes"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-guard::RENDER::buildGlidePath: offsetWidth===0 guard presente (seção colapsável)",
+      "block_id": "chartjs4-offsetwidth-guard",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildGlidePath: offsetWidth===0 guard presente"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-guard::RENDER::buildStressFanChart: offsetWidth===0 guard presente (seção colapsável)",
+      "block_id": "chartjs4-offsetwidth-guard",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildStressFanChart: offsetWidth===0 guard presente"
+    },
+    {
+      "test_id": "chartjs4-afterdraw-brl::RENDER::buildTrackingFire usa plugin afterDraw com id 'trackingFireDraw' (bypass do dataset renderer)",
+      "block_id": "chartjs4-afterdraw-brl",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "buildTrackingFire: trackingFireDraw + afterDraw + getPixelForValue presentes"
+    },
+    {
+      "test_id": "chartjs4-afterdraw-brl::RENDER::buildTrackingFire: datasets Projeção/Realizado têm data:[] (rendering via afterDraw, não dataset renderer)",
+      "block_id": "chartjs4-afterdraw-brl",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Projeção e Realizado com data:[] — rendering correto via afterDraw"
     },
     {
       "test_id": "patrimonio-total-hero::PRIVACY::hero patrimonio values use .pv class (privacy toggle)",
@@ -1863,7 +1919,7 @@
       "category": "PRIVACY",
       "severity": "HIGH",
       "passed": true,
-      "message": "Found 5 pv-class element(s) in stress-test-mc region"
+      "message": "Found 10 pv-class element(s) in stress-test-mc region"
     },
     {
       "test_id": "stress-test-mc::SPEC::spec.json declares stress-test-mc as privacy: true",
@@ -2151,7 +2207,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'cambio', 'concentracao_brasil.brasil_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

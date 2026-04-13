@@ -294,12 +294,12 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
   <div class="hero-kpi">
     <div class="hlbl">Anos até FIRE</div>
-    <div class="hval" id="heroAnos">—</div>
-    <div class="hsub" id="heroAnosSub">—</div>
+    <div class="hval pv" id="heroAnos">—</div>
+    <div class="hsub pv" id="heroAnosSub">—</div>
   </div>
   <div class="hero-kpi">
     <div class="hlbl">Progresso FIRE</div>
-    <div class="hval" id="heroProgresso">—</div>
+    <div class="hval pv" id="heroProgresso">—</div>
     <div class="hsub pv" id="heroProgressoSub">—</div>
   </div>
 </div>
@@ -311,8 +311,8 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="kpi-grid" data-in-tab="hoje" style="margin-bottom:8px">
 <div class="kpi kpi-fire" style="border-width:2px">
   <div class="kpi-label">P(FIRE@50)</div>
-  <div class="kpi-value" id="kpiPfire50">—</div>
-  <div class="kpi-sub" id="kpiPfire50Sub">cenário base</div>
+  <div class="kpi-value pv" id="kpiPfire50">—</div>
+  <div class="kpi-sub pv" id="kpiPfire50Sub">cenário base</div>
 </div>
 <div class="kpi kpi-fire" style="border-width:2px">
   <div class="kpi-label">Drift Máximo</div>
@@ -369,7 +369,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- S4: TIME TO FIRE -->
 <div class="section" data-in-tab="hoje">
 <h2>Time to FIRE</h2>
-<div class="fire-big" id="fireCountdown">—</div>
+<div class="fire-big pv" id="fireCountdown">—</div>
 <div style="margin:10px 0;background:var(--card2);border-radius:6px;height:12px">
   <div id="fireProgressBar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .5s"></div>
 </div>
@@ -397,22 +397,22 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="section">
   <h2>Progresso FIRE</h2>
   <div style="text-align:center;padding:8px 0">
-    <div id="fireProgPct" style="font-size:2.2rem;font-weight:700">—</div>
+    <div id="fireProgPct" class="pv" style="font-size:2.2rem;font-weight:700">—</div>
     <div style="font-size:.75rem;color:var(--muted)" class="pv" id="fireProgLabel">—</div>
   </div>
   <div class="progress-bar" style="margin-top:8px">
     <div id="fireProgFill" class="progress-fill" style="background:var(--accent)"></div>
   </div>
   <div style="margin-top:12px;font-size:.75rem">
-    <div style="display:flex;justify-content:space-between"><span>SWR no FIRE Day projetada:</span><span style="font-weight:600;color:var(--cyan)" id="swrFireDayVal">—</span></div>
+    <div style="display:flex;justify-content:space-between"><span>SWR no FIRE Day projetada:</span><span style="font-weight:600;color:var(--cyan)" class="pv" id="swrFireDayVal">—</span></div>
     <div style="font-size:.6rem;color:var(--muted);margin-top:2px" class="pv" id="swrFireDaySub">—</div>
   </div>
 </div>
 <div class="section">
   <h2>Aporte do Mês</h2>
   <div style="text-align:center;padding:8px 0">
-    <div style="font-size:2.2rem;font-weight:700;color:var(--green)" id="savingsRate">—</div>
-    <div style="font-size:.75rem;color:var(--muted)" id="savingsRateSub">—</div>
+    <div style="font-size:2.2rem;font-weight:700;color:var(--green)" class="pv" id="savingsRate">—</div>
+    <div style="font-size:.75rem;color:var(--muted)" class="pv" id="savingsRateSub">—</div>
   </div>
   <div class="progress-bar" style="margin-top:8px">
     <div class="progress-fill" id="savingsRateFill" style="background:var(--green)"></div>
@@ -435,23 +435,23 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px" id="pfireScenarioRow">
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
       <div id="pfire53BaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
-      <div style="font-size:1.6rem;font-weight:800" id="pfire53Base">—</div>
+      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire53Base">—</div>
       <div style="font-size:.6rem;color:var(--muted)">Base</div>
     </div>
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
       <div id="pfire53FavBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Favorável</div>
-      <div style="font-size:1.6rem;font-weight:800" id="pfire53Fav">—</div>
+      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire53Fav">—</div>
       <div style="font-size:.6rem;color:var(--muted)">Favorável</div>
     </div>
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
       <div id="pfire53StressBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Stress</div>
-      <div style="font-size:1.6rem;font-weight:800" id="pfire53Stress">—</div>
+      <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire53Stress">—</div>
       <div style="font-size:.6rem;color:var(--muted)">Stress</div>
     </div>
   </div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Progresso Patrimonial</div>
   <div class="progress-row">
-    <div class="progress-label"><span id="pfirePatLabel" class="pv">—</span><span id="pfirePatPct">—</span></div>
+    <div class="progress-label"><span id="pfirePatLabel" class="pv">—</span><span id="pfirePatPct" class="pv">—</span></div>
     <div class="progress-bar">
       <div id="pfirePatFill" class="progress-fill" style="background:var(--accent)"></div>
     </div>
@@ -555,7 +555,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   </div>
   <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
   <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
-    📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal">—</strong>/ano
+    📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal" class="pv">—</strong>/ano
     <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style="cursor:help;color:var(--accent)"> ⓘ</span>
   </div>
 </div>
@@ -697,7 +697,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <!-- R2: SWR PERCENTIS P10/P50/P90 -->
 <div class="section" data-in-tab="retiro" id="swrPercentilesSection">
 <h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
-<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px" id="swrScenarioNote">—</div>
+<div style="font-size:.65rem;color:var(--muted);margin-bottom:10px" class="pv" id="swrScenarioNote">—</div>
 <div class="swr-pct-grid" id="swrPercentilesCards"></div>
 <div class="src">P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).</div>
 </div>
@@ -981,11 +981,11 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
         <div style="font-size:.6rem;color:var(--muted)">FIRE@50</div>
-        <div style="font-size:1.1rem;font-weight:700" id="simPfire50">—</div>
+        <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire50">—</div>
       </div>
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--accent)">
         <div style="font-size:.6rem;color:var(--muted)">FIRE@53 (plano)</div>
-        <div style="font-size:1.1rem;font-weight:700" id="simPfire53">—</div>
+        <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire53">—</div>
       </div>
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
         <div style="font-size:.6rem;color:var(--muted)">Patrimônio projetado</div>
@@ -1063,15 +1063,15 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
   <div class="what-if-result">
     <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">P(Sucesso 30 anos)</div>
-    <div class="big" id="wiPsucesso">—</div>
+    <div class="big pv" id="wiPsucesso">—</div>
     <div style="font-size:.7rem;color:var(--muted);margin-top:4px">MC interpolado</div>
   </div>
   <div class="what-if-result">
     <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">Patrimônio necessário</div>
     <div class="big pv" id="wiPatNecessario">—</div>
-    <div style="font-size:.7rem;color:var(--muted);margin-top:4px" id="wiSWRLabel">SWR 2.4%</div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:4px" id="wiPctLimite">—% do limite</div>
-    <div style="font-size:.65rem;color:var(--yellow);font-weight:600;margin-top:2px" id="wiFireEta">—</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-top:4px" class="pv" id="wiSWRLabel">SWR 2.4%</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:4px" class="pv" id="wiPctLimite">—% do limite</div>
+    <div style="font-size:.65rem;color:var(--yellow);font-weight:600;margin-top:2px" class="pv" id="wiFireEta">—</div>
   </div>
 </div>
 <div class="src" style="margin-top:6px">Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos</div>
@@ -2479,9 +2479,9 @@ function buildFeeAnalysis() {
     tr.innerHTML = `
       <td style="padding:7px 8px">${p.label}</td>
       <td class="num" style="padding:7px 8px;color:${terColor}">${p.ter.toFixed(3)}%</td>
-      <td class="num" style="padding:7px 8px">${fmtBrl(custo)}</td>
-      <td class="num" style="padding:7px 8px">${alphaStr}</td>
-      <td class="num" style="padding:7px 8px">${netStr}</td>
+      <td class="num pv" style="padding:7px 8px">${fmtBrl(custo)}</td>
+      <td class="num pv" style="padding:7px 8px">${alphaStr}</td>
+      <td class="num pv" style="padding:7px 8px">${netStr}</td>
     `;
     tbody.appendChild(tr);
   });
@@ -2933,7 +2933,7 @@ window.calcAporte = function() {
   }
 
   div.innerHTML = `
-    <div style="background:var(--card2);border-radius:8px;padding:12px">
+    <div style="background:var(--card2);border-radius:8px;padding:12px" class="pv">
       <div style="font-weight:600;margin-bottom:8px">Cascade — aporte ${fmtK(ap)} (≈ $${apUsd.toFixed(0)})</div>
       ${rows}
       <div style="font-size:.65rem;color:var(--muted);margin-top:8px;border-top:1px solid rgba(71,85,105,.3);padding-top:6px">
@@ -3728,18 +3728,18 @@ function buildEarliestFire() {
   el.innerHTML = `
     <div class="earliest-fire-card">
       <div style="font-size:.65rem;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${label}</div>
-      <div style="font-size:2.8rem;font-weight:800;line-height:1;color:${color}">${ef.ano}</div>
-      <div style="font-size:1.1rem;font-weight:600;margin:4px 0">idade ${ef.idade}</div>
-      <div style="font-size:1.5rem;font-weight:700;color:${pfireColor};margin:6px 0">P = ${ef.pfire}%</div>
+      <div style="font-size:2.8rem;font-weight:800;line-height:1;color:${color}" class="pv">${ef.ano}</div>
+      <div style="font-size:1.1rem;font-weight:600;margin:4px 0" class="pv">idade ${ef.idade}</div>
+      <div style="font-size:1.5rem;font-weight:700;color:${pfireColor};margin:6px 0" class="pv">P = ${ef.pfire}%</div>
       <div style="font-size:.75rem;color:var(--muted)">${yearsLeft} anos a partir de hoje</div>
     </div>
     <div style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
-        <div style="font-size:1rem;font-weight:700;color:var(--purple)">${DATA.pfire50.base}%</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--purple)" class="pv">${DATA.pfire50.base}%</div>
         <div style="font-size:.65rem;color:var(--muted)">FIRE@50 Base</div>
       </div>
       <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
-        <div style="font-size:1rem;font-weight:700;color:var(--accent)">${DATA.pfire53.base}%</div>
+        <div style="font-size:1rem;font-weight:700;color:var(--accent)" class="pv">${DATA.pfire53.base}%</div>
         <div style="font-size:.65rem;color:var(--muted)">FIRE@53 Base</div>
       </div>
     </div>`;
@@ -4035,7 +4035,7 @@ function buildScenarioComparison() {
   const sc = DATA.scenario_comparison;
   if (!sc) { el.innerHTML = '<span style="color:var(--muted)">Dados não disponíveis</span>'; return; }
 
-  const fmtPfire = v => v != null ? `<span style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
+  const fmtPfire = v => v != null ? `<span class="pv" style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
   const fmtPat = v => v != null ? `<span class="pv">R$${(v/1e6).toFixed(2)}M</span>` : '<span style="color:var(--muted)">n/d</span>';
 
   const rows = [
@@ -5782,7 +5782,7 @@ function buildRfCards() {
   const hodlPnlHtml = _pnlBrl != null ? (() => {
     const color = _pnlBrl >= 0 ? 'var(--green)' : 'var(--red)';
     const sign = _pnlBrl >= 0 ? '+' : '';
-    return `<div style="margin-top:6px;font-size:.72rem;color:${color}">
+    return `<div style="margin-top:6px;font-size:.72rem;color:${color}" class="pv">
       P&amp;L: <strong>${sign}R$ ${(_pnlBrl/1000).toFixed(1)}k (${sign}${_pnlPct?.toFixed(1)}%)</strong>
       ${_pm ? `<span style="color:var(--muted);font-size:.65rem"> · PM R$${_pm.toFixed(2)}</span>` : ''}
     </div>`;
@@ -5911,7 +5911,7 @@ function buildIncomeTable() {
     <td>${f.idadeStr}</td>
     <td class="pv">${f.fonte}</td>
     <td class="num pv"><strong>${f.gasto != null ? 'R$' + (f.gasto/1000).toFixed(0) + 'k/ano' : '—'}</strong></td>
-    <td class="num" style="color:var(--muted);font-size:.75rem">${fmtSaude(f.saude)}</td>
+    <td class="num pv" style="color:var(--muted);font-size:.75rem">${fmtSaude(f.saude)}</td>
     <td style="font-size:.7rem;color:var(--muted)">${f.obs}</td>
   </tr>`).join('');
   // Atualizar src
@@ -6821,7 +6821,7 @@ function _renderFireMatrix() {
   gastos.forEach(g => {
     const isCol = (g === youGasto);
     html += '<th' + (isCol ? ' style="color:var(--accent);border-bottom:2px solid var(--accent)"' : '') + '>'
-          + fmtGasto(g) + (isCol ? ' ★' : '') + '</th>';
+          + '<span class="pv">' + fmtGasto(g) + '</span>' + (isCol ? ' ★' : '') + '</th>';
   });
   html += '</tr></thead><tbody>';
 
@@ -6830,7 +6830,7 @@ function _renderFireMatrix() {
     const rowStyle  = isAlvoRow ? ' style="outline:1px solid var(--accent);outline-offset:-1px"' : '';
     const age       = _fmEstimateAge(pat);
     const ageLabel  = age != null ? '<span style="font-size:.58rem;color:var(--muted);margin-left:3px">~' + age + 'a</span>' : '';
-    html += '<tr' + rowStyle + '><td>' + fmtPat(pat) + ageLabel + (isAlvoRow ? ' →' : '') + '</td>';
+    html += '<tr' + rowStyle + '><td><span class="pv">' + fmtPat(pat) + '</span>' + ageLabel + (isAlvoRow ? ' →' : '') + '</td>';
     gastos.forEach(g => {
       const key = pat + '_' + g;
       const val = matrix[key];
@@ -6890,7 +6890,7 @@ function buildSwrPercentiles() {
   el.innerHTML = cards.map(c =>
     '<div class="swr-pct-card ' + c.cls + '">' +
       '<div class="spl">' + c.label + '</div>' +
-      '<div class="spv">' + fmtSwr(c.swr) + '</div>' +
+      '<div class="spv pv">' + fmtSwr(c.swr) + '</div>' +
       '<div class="spsub pv">' + fmtBrl(c.pat) + ' em 2040</div>' +
       '<div style="font-size:.6rem;color:var(--muted);margin-top:4px;line-height:1.4">' + c.desc + '</div>' +
     '</div>'
