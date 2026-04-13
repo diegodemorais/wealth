@@ -1038,11 +1038,11 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$150k</span><span>R$500k</span></div>
   </div>
 </div>
-<div class="src">Simulação determinística (sem MC). Critério: patrimônio ≥ gatilho R$13.4M E SWR ≤ 2.4%. FIRE@50 e FIRE@53 são outputs do MC 10k (fixos).</div>
+<div class="src">Simulação determinística (sem MC). Critério: SWR ≤ 3.0% (= R$250k/R$8.33M). FIRE@50 e FIRE@53 são outputs do MC 10k (fixos).</div>
 </div>
 
 <!-- S19: WHAT-IF SCENARIOS -->
-<div class="section collapsible" data-in-tab="simuladores">
+<div class="section collapsible open" data-in-tab="simuladores">
 <h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Cenário / Gasto</h2>
 <div class="collapse-body">
 
@@ -1083,7 +1083,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <canvas id="aporteSensChart" style="display:none"></canvas>
 
 <!-- F11: Stress Test -->
-<div class="section collapsible" data-in-tab="simuladores">
+<div class="section collapsible open" data-in-tab="simuladores">
 <h2 onclick="_toggleBlock(this.parentElement)">Stress Test Monte Carlo — Bear Market Interativo</h2>
 <div class="collapse-body">
 
@@ -1409,8 +1409,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T09:16:39-03:00'); // BRT (UTC-3)
-const VERSION = '2.10';
+const GENERATED_AT = new Date('2026-04-13T10:07:42-03:00'); // BRT (UTC-3)
+const VERSION = '2.11';
 
 const DATA = {
   "_generated": "2026-04-13T08:42:18",
@@ -8069,7 +8069,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.10"
+  "version": "2.11"
 };
 
 // ═══════════════════════════════════════════════════════════════
