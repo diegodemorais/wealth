@@ -33,7 +33,7 @@
 | Gatilho | Condicao | Acao | Status |
 |---------|----------|------|--------|
 | Transicao FIRE (base) | **2040 (53 anos)** | Iniciar fase de desacumulacao — data base confirmada 2026-04-02 | Aguardando 2040 |
-| Transicao FIRE (aspiracional) | Patrimônio real >= R$13.4M E SWR <= 2.4% ANTES de 2040 | FIRE antecipado aos 50 (2037) | Monitorar a partir de 2034 |
+| Transicao FIRE (aspiracional) | SWR <= 3.0% ANTES de 2040 (= R$250k/3.0% = R$8.33M equivalente, revisado 2026-04-13) | FIRE antecipado aos 50 (2037) | Monitorar a partir de 2034 |
 | Hard stop | 2040 | Nao trabalhar alem disso independente de P(FIRE) | Aguardando |
 | Bond tent | Anos 1-5 pos-FIRE | Sacar do bond pool (TD 2040 / caixa) antes do equity — guardrail de fonte mecanico | Ativar no FIRE |
 | VCMH | Media 3 anos IESS > 9% real | Recalibrar spending smile (saude base + inflator) na retro anual | Monitorar anualmente |

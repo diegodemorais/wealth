@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-12T19:25:00",
+  "_generated": "2026-04-13T08:41:44",
   "_source": "reconstruct_fire_data.py → fire_montecarlo.py",
   "aportes_brl": [
     15000,
@@ -15,7 +15,7 @@
     0.871,
     0.8994,
     0.9182,
-    0.9246,
+    0.9248,
     0.9288,
     0.9422
   ],

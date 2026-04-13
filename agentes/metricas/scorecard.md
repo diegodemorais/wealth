@@ -17,8 +17,8 @@
 | 2026-04-06 | **90.8%** base / **94.6%** favoravel / **87.4%** stress — FIRE 53 | `fire_montecarlo.py` HD-mc-audit | Spending smile ex-saúde (R$242k/R$200k/R$187k) + IR 15% nominal + INSS R$18k@65 + vol bond pool 13.3%. Patrimônio mediano R$11.53M | Superado por HD-multimodel-premissas |
 | 2026-04-06 | **90.4%** base / **94.1%** favoravel / **86.8%** stress — FIRE 53 | `fire_montecarlo.py` HD-multimodel-premissas Bloco A | SAUDE_BASE R$16k→R$18k/pp (ajuste conservador). Restante igual. | **Atual** |
 
-- **Patrimonio mediano projetado**: R$10.56M aos 50 (FIRE 50) / R$13.4M aos 53 (safe harbor)
-- **Gatilho de transicao FIRE**: patrimônio real >= R$13.4M (R$2026) **E** SWR <= 2.4%
+- **Patrimonio mediano projetado**: R$9.34M aos 50 (FIRE 50) / R$11.53M aos 53
+- **Gatilho de transicao FIRE**: SWR <= 3.0% (revisado 2026-04-13 — R$250k/3.0% = R$8.33M equivalente)
 - **Frequencia**: Anual (ou quando premissa de vida mudar)
 - **Meta**: >= 90% (FIRE 50 abaixo; FIRE 53 favoravel acima)
 - **Dono**: 04 FIRE
@@ -192,8 +192,8 @@ Decisoes ativas que tem resultado esperado e prazo. Ver detalhes em `previsoes.m
 | P(FIRE) base — FIRE 53 | **90.4%** (HD-multimodel-premissas, 2026-04-06) | >= 90% | **✅ OK** |
 | P(FIRE) favoravel — FIRE 53 | **94.1%** (HD-multimodel-premissas, 2026-04-06) | >= 90% | **✅ OK** |
 | P(FIRE) stress — FIRE 53 | **86.8%** (HD-multimodel-premissas, 2026-04-06) | >= 80% | **✅ OK** |
-| Patrimonio mediano projetado (FIRE 50) | **R$10.56M** | R$7-8M | **Folga** |
-| Patrimonio gatilho FIRE (real R$2026) | **R$13.4M** (SWR <= 2.4%) | — | Referencia |
+| Patrimonio mediano projetado (FIRE 50) | **R$9.34M** | R$7-8M | **Folga** |
+| Patrimonio gatilho FIRE (SWR equiv.) | **R$8.3M** (SWR <= 3.0%) | — | Referencia |
 | Alpha esperado pos-haircut | **~0.16%/ano** | > 0% | **Marginal/OK** |
 | Delta vs Shadow A (Q1 2026) | +3.15pp | > 0% rolling 3 anos | **OK** |
 | Delta vs Shadow B (Q1 2026) | -0.57pp | > 0% rolling 3 anos | **Normal** (regime inflacionario — esperado) |

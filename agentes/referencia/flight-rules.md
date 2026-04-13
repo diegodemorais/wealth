@@ -44,7 +44,7 @@ Se um cenário abaixo ocorrer, executar a resposta **sem debate**. O debate já 
 
 | Cenário | Resposta | Origem |
 |---------|----------|--------|
-| **Patrimônio atinge R$13.4M + SWR ≤ 2.4%** | FIRE Day. Executar playbook FR-fire-execution-plan. | FR-fire2040 |
+| **SWR ≤ 3.0%** | FIRE Day. Executar playbook FR-fire-execution-plan. | FR-fire2040 |
 | **P(FIRE base) cai <80% por 2 trimestres** | Revisar premissas com time completo. Considerar ajuste de idade-alvo. | FIRE, Head |
 | **P(FIRE base) sobe >95% por 2 trimestres** | Considerar FIRE antecipado. Rodar MC com idade menor. | FIRE, Head |
 
