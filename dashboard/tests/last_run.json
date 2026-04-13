@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-13T16:53:52.702073",
+  "timestamp": "2026-04-13T16:55:25.872544",
   "mode": "full",
   "total": 631,
   "passed": 628,
@@ -2165,7 +2165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVEM', 'SWRD', 'AVGS'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "exposicao-cambial::VALUE::brasil_pct + exposicao_cambial_pct soma aproximadamente 100",
@@ -2189,7 +2189,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'retiro', 'portfolio', 'performance', 'now', 'fire', 'backtest', 'simuladores'}"
+      "message": "All blocks use valid tabs: {'simuladores', 'backtest', 'performance', 'fire', 'retiro', 'now', 'portfolio'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4941,7 +4941,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4949,7 +4949,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
