@@ -16,9 +16,10 @@ import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-# Importar validador de contrato
+# Importar validadores
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_schema import validate_schema
+from validate_html_structure import validate_html_structure
 
 ROOT = Path(__file__).parent.parent
 TEMPLATE          = ROOT / "dashboard" / "template.html"
@@ -836,6 +837,16 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     print(f"✅ Dashboard gerado: {out_path}")
     print(f"   Versão: v{version_str} | Data/hora: {generated_at}")
     print(f"   Tamanho: {len(html):,} chars ({len(html.splitlines()):,} linhas)")
+
+    # 8. Validar estrutura HTML (bloqueia se quebrada)
+    is_valid, errors = validate_html_structure(str(out_path))
+    if not is_valid:
+        print(f"\n❌ VALIDAÇÃO HTML FALHOU — Build bloqueado:", file=sys.stderr)
+        for err in errors:
+            print(f"   {err}", file=sys.stderr)
+        sys.exit(1)
+    else:
+        print(f"✅ Estrutura HTML validada")
 
 
 def _build_data_js(data: dict, generated_at: str, version: str) -> str:
