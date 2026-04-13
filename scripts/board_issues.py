@@ -228,6 +228,23 @@ def gerar_board():
 
             output.append(f'| {data} | {issue_id} | {titulo} | {resultado} |')
 
+        output.append('')
+
+    # ════════════════════════════════════════════════════════════════════
+    # DISCOVERY
+    # ════════════════════════════════════════════════════════════════════
+    if 'Discovery' in by_estado:
+        output.append('### 🟢 Discovery\n')
+        output.append('| ID | Título | Dono | Prioridade |')
+        output.append('|----|--------|------|------------|')
+
+        for issue_id, meta in by_estado['Discovery']:
+            titulo = truncar_titulo(meta.get('titulo', issue_id), 40)
+            dono = abreviar_dono(meta.get('dono'))
+            prioridade = extrair_prioridade(meta.get('prioridade'))
+
+            output.append(f'| {issue_id} | {titulo} | {dono} | {prioridade} |')
+
     return '\n'.join(output)
 
 
