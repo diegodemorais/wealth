@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T06:34:04-03:00'); // BRT (UTC-3)
-const VERSION = '1.207';
+const GENERATED_AT = new Date('2026-04-13T06:52:05-03:00'); // BRT (UTC-3)
+const VERSION = '1.208';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.207"
+  "version": "1.208"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -13503,12 +13503,6 @@ function buildTrackingFire() {
   const trilha    = d.trilha_brl;
   const meta      = Number(d.meta_fire_brl ?? DATA.premissas?.patrimonio_gatilho ?? 13.4e6);
 
-  // Separar trilha em dois segmentos sem descontinuidade:
-  // - histórico: período com realizado (para comparação com o plano original)
-  // - futuro: projeção a partir do valor atual (começa onde realizado termina)
-  const trilhaHist = trilha.map((v, i) => (realizado[i] != null ? v : null));
-  const trilhaFut  = trilha.map((v, i) => (realizado[i] == null ? v : null));
-
   // Escala: 0 até max(dados, meta) × 1.1, cap em 1.5× meta
   const _allPos = [...realizado, ...trilha].filter(v => v != null && isFinite(v) && v > 0);
   const _dataMax = _allPos.length ? Math.max(..._allPos) : meta;
@@ -13553,14 +13547,15 @@ function buildTrackingFire() {
       labels: dates,
       datasets: [
         {
-          label: 'Plano original',
-          data: trilhaHist,
-          borderColor: 'rgba(148,163,184,.45)',
+          label: 'Projeção',
+          data: trilha,
+          borderColor: 'rgba(96,165,250,.65)',
           borderWidth: 1.5,
-          borderDash: [4, 4],
+          borderDash: [6, 3],
           pointRadius: 0,
           fill: false,
           tension: 0.2,
+          spanGaps: false,
         },
         {
           label: 'Realizado',
@@ -13571,16 +13566,7 @@ function buildTrackingFire() {
           pointRadius: 0,
           fill: false,
           tension: 0.2,
-        },
-        {
-          label: 'Projeção',
-          data: trilhaFut,
-          borderColor: 'rgba(96,165,250,.85)',
-          borderWidth: 2,
-          borderDash: [6, 3],
-          pointRadius: 0,
-          fill: false,
-          tension: 0.2,
+          spanGaps: false,
         },
       ],
     },
