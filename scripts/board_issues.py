@@ -200,14 +200,6 @@ def gerar_board():
 
                     output.append(f'| {issue_id} | {titulo} | {dono} | {prioridade} | {dias_str} | {deps_str} |')
 
-                # Separador entre grupos de prioridade
-                if pri_grupo != '—':
-                    output.append('')
-
-        # Remover última linha vazia se houver
-        if output[-1] == '':
-            output.pop()
-
         output.append('')
 
     # ════════════════════════════════════════════════════════════════════
