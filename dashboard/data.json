@@ -3298,6 +3298,27 @@
         "2021": 340287
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
+    },
+    "volatilidade": {
+      "realizado_anualizado_pct": 18.5,
+      "premissa_pct": 9.0,
+      "nota": "Realizado inclui EM + bonds + HODL11. Premissa de ~9% é para alocação conservadora apenas equities DM."
+    },
+    "max_drawdown": {
+      "realizado_pct": -22.7,
+      "data_realizado": "2025-09",
+      "premissa_pct": -22.0,
+      "percentil_fire_mc": "5º percentil",
+      "status": "Na expectativa",
+      "nota": "Realizado em set/2025. Premissa FIRE MC ~22% (5º percentil). Comportamento conforme esperado."
+    },
+    "savings_rate": {
+      "acumulado_5anos_pct": 127,
+      "meses_negativos": 25,
+      "meses_positivos": 35,
+      "total_meses": 60,
+      "percentual_meses_negativos": 42,
+      "nota": "Acumulado: 127% de aporte sobre patrimônio inicial. 25/60 meses com aporte = 0 ou negativo (saques). Execução forte."
     }
   },
   "earliest_fire": {

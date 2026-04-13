@@ -811,11 +811,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /collapse-body -->
 </div>
 
-<!-- PREMISSAS VS REALIZADO (movido de perf → fire — contexto de planejamento) -->
-<div class="section" data-in-tab="fire" id="premissasVsRealizadoSection">
-<h2>Premissas vs Realizado</h2>
+<!-- PREMISSAS VS REALIZADO — 5 Years Performance Review (Performance tab) -->
+<div class="section" data-in-tab="performance" id="premissasVsRealizadoSection">
+<h2>Premissas vs Realizado — 5 Anos (2021-2026)</h2>
 <div id="premissasVsRealizadoBody"></div>
-<div class="src" id="premissasVsRealizadoSrc">Premissas: modelo FIRE · Aportes: IBKR · CAGR: backtest histórico</div>
+<div class="src" id="premissasVsRealizadoSrc">Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados</div>
 </div>
 
 
@@ -1437,8 +1437,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T16:28:48-03:00'); // BRT (UTC-3)
-const VERSION = '2.39';
+const GENERATED_AT = new Date('2026-04-13T16:38:59-03:00'); // BRT (UTC-3)
+const VERSION = '2.40';
 
 const DATA = {
   "_generated": "2026-04-13T14:47:54",
@@ -4740,6 +4740,27 @@ const DATA = {
         "2021": 340287
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
+    },
+    "volatilidade": {
+      "realizado_anualizado_pct": 18.5,
+      "premissa_pct": 9.0,
+      "nota": "Realizado inclui EM + bonds + HODL11. Premissa de ~9% é para alocação conservadora apenas equities DM."
+    },
+    "max_drawdown": {
+      "realizado_pct": -22.7,
+      "data_realizado": "2025-09",
+      "premissa_pct": -22.0,
+      "percentil_fire_mc": "5º percentil",
+      "status": "Na expectativa",
+      "nota": "Realizado em set/2025. Premissa FIRE MC ~22% (5º percentil). Comportamento conforme esperado."
+    },
+    "savings_rate": {
+      "acumulado_5anos_pct": 127,
+      "meses_negativos": 25,
+      "meses_positivos": 35,
+      "total_meses": 60,
+      "percentual_meses_negativos": 42,
+      "nota": "Acumulado: 127% de aporte sobre patrimônio inicial. 25/60 meses com aporte = 0 ou negativo (saques). Execução forte."
     }
   },
   "earliest_fire": {
@@ -8208,7 +8229,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.39"
+  "version": "2.40"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -13152,11 +13173,11 @@ function _initTabCharts(tab) {
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
-               buildDrawdownHistory, buildBacktestR7],
+               buildDrawdownHistory, buildBacktestR7, buildPremissasVsRealizado],
     backtest: [function() { buildBacktest('since2009'); }, buildShadowTable,
                function() { buildShadowChart('since2009'); }, buildBacktestR7, buildDrawdownHistory],
     carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarioComparison, buildScenarios,
+    fire:     [buildTrackingFire, buildScenarioComparison, buildScenarios,
                buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire,
@@ -14362,46 +14383,110 @@ function buildPremissasVsRealizado() {
 
   var cards = '';
 
-  // Card 1 — Retorno Equity
+  // Período visível no bloco
+  var periodo = 'Período: 2021-04-13 a 2026-04-28 (60 meses / 5 anos)';
+
+  // Card 1 — Retorno Equity (TWR real BRL)
   var re = pvr.retorno_equity;
   if (re) {
     var deltaREq = (re.twr_real_brl_pct != null && re.premissa_real_brl_pct != null)
       ? (re.twr_real_brl_pct - re.premissa_real_brl_pct) : null;
-    var mainColorRE = re.twr_real_brl_pct != null ? (re.twr_real_brl_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
+    var mainColorRE = re.twr_real_brl_pct != null
+      ? (re.twr_real_brl_pct > re.premissa_real_brl_pct ? 'var(--green)' : 'var(--muted)')
+      : '';
     var mainRE = re.twr_real_brl_pct != null ? re.twr_real_brl_pct.toFixed(2) + '%' : '--';
-    var premRE = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '% real BRL' : '--';
+    var premRE = re.premissa_real_brl_pct != null ? re.premissa_real_brl_pct.toFixed(2) + '%' : '--';
     var deltaREStr = deltaREq != null ? (deltaREq >= 0 ? '+' : '') + deltaREq.toFixed(2) + 'pp' : 'n/a';
-    var nAnos = re.periodo_anos != null ? re.periodo_anos.toFixed(1) : null;
-    var notaRE = nAnos ? 'Janela ' + nAnos + 'a — curta para validar premissa longo prazo' : (re.nota || '');
     cards += '<div class="kpi-card">' +
-      '<div class="kpi-label">Retorno Equity (TWR real BRL)</div>' +
+      '<div class="kpi-label">Retorno Equity</div>' +
+      '<div class="kpi-label-sub">TWR real BRL CAGR</div>' +
       '<div class="kpi-main pv" style="color:' + mainColorRE + '">' + mainRE + '</div>' +
-      '<div style="font-size:.65rem;color:var(--muted);margin-top:4px">vs premissa: ' + premRE + ' · delta: ' + deltaREStr + '</div>' +
-      '<div style="font-size:.6rem;color:var(--muted);margin-top:6px">' + notaRE + '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);margin-top:8px">' +
+      'Realizado vs Premissa<br/>' +
+      '<strong>' + mainRE + '</strong> vs <strong>' + premRE + '</strong><br/>' +
+      'Delta: <strong>' + deltaREStr + '</strong>' +
+      '</div>' +
       '</div>';
   }
 
   // Card 2 — Aporte Mensal
   var am = pvr.aporte_mensal;
   if (am) {
-    var deltaAmSign = am.delta_pct != null ? (am.delta_pct >= 0 ? 'var(--green)' : 'var(--red)') : '';
-    var mainAM = am.realizado_media_brl != null ? 'R$ ' + (am.realizado_media_brl / 1000).toFixed(1) + 'k/mês' : '--';
-    var premAM = am.premissa_brl != null ? 'R$ ' + (am.premissa_brl / 1000).toFixed(0) + 'k/mês' : '--';
-    var deltaAMStr = am.delta_pct != null ? (am.delta_pct > 0 ? '+' : '') + am.delta_pct.toFixed(1) + '%' : '--';
-    var notaAM = '';
-    if (am.por_ano_brl) {
-      var anos = Object.entries(am.por_ano_brl).sort(function(a, b) { return Number(b[0]) - Number(a[0]); }).slice(0, 2);
-      notaAM = anos.map(function(entry) { return entry[0] + ': R$' + (entry[1] / 1000).toFixed(0) + 'k'; }).join(' · ');
-    }
+    var deltaAmSign = am.delta_pct != null && am.delta_pct >= 0 ? 'var(--green)' : 'var(--muted)';
+    var mainAM = am.realizado_media_brl != null ? 'R$ ' + (am.realizado_media_brl / 1000).toFixed(1) + 'k' : '--';
+    var premAM = am.premissa_brl != null ? 'R$ ' + (am.premissa_brl / 1000).toFixed(0) + 'k' : '--';
+    var deltaAMStr = am.delta_pct != null ? (am.delta_pct > 0 ? '+' : '') + am.delta_pct.toFixed(0) + '%' : '--';
+    var totalAporte = am.total_aporte_brl != null ? 'R$ ' + (am.total_aporte_brl / 1e6).toFixed(2) + 'M' : '--';
     cards += '<div class="kpi-card">' +
-      '<div class="kpi-label">Aporte Mensal (média)</div>' +
+      '<div class="kpi-label">Aporte Mensal</div>' +
+      '<div class="kpi-label-sub">Média 5 anos</div>' +
       '<div class="kpi-main pv" style="color:' + deltaAmSign + '">' + mainAM + '</div>' +
-      '<div style="font-size:.65rem;color:var(--muted);margin-top:4px">vs premissa: ' + premAM + ' · delta: ' + deltaAMStr + '</div>' +
-      '<div style="font-size:.6rem;color:var(--muted);margin-top:6px">' + notaAM + '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);margin-top:8px">' +
+      'Realizado vs Premissa: ' + mainAM + ' vs ' + premAM + '<br/>' +
+      'Execução: ' + deltaAMStr + '<br/>' +
+      'Total 5a: ' + totalAporte +
+      '</div>' +
       '</div>';
   }
 
-  el.innerHTML = '<div class="grid-2">' + cards + '</div>';
+  // Card 3 — Volatilidade Anualizada
+  var vol = pvr.volatilidade;
+  if (vol) {
+    var volColor = vol.realizado_anualizado_pct > vol.premissa_pct ? 'var(--yellow)' : 'var(--muted)';
+    var volReal = vol.realizado_anualizado_pct != null ? vol.realizado_anualizado_pct.toFixed(1) + '%' : '--';
+    var volPrem = vol.premissa_pct != null ? vol.premissa_pct.toFixed(1) + '%' : '--';
+    cards += '<div class="kpi-card">' +
+      '<div class="kpi-label">Volatilidade</div>' +
+      '<div class="kpi-label-sub">Anualizada</div>' +
+      '<div class="kpi-main pv" style="color:' + volColor + '">' + volReal + '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);margin-top:8px">' +
+      'Realizado vs Premissa<br/>' +
+      '<strong>' + volReal + '</strong> vs <strong>' + volPrem + '</strong><br/>' +
+      'Acima esperado (EM + bonds + cripto)' +
+      '</div>' +
+      '</div>';
+  }
+
+  // Card 4 — Max Drawdown
+  var dd = pvr.max_drawdown;
+  if (dd) {
+    var ddColor = dd.status === 'Na expectativa' ? 'var(--green)' : 'var(--yellow)';
+    var ddReal = dd.realizado_pct != null ? dd.realizado_pct.toFixed(1) + '%' : '--';
+    var ddPrem = dd.premissa_pct != null ? dd.premissa_pct.toFixed(1) + '%' : '--';
+    cards += '<div class="kpi-card">' +
+      '<div class="kpi-label">Max Drawdown</div>' +
+      '<div class="kpi-label-sub">Stress Test</div>' +
+      '<div class="kpi-main pv" style="color:' + ddColor + '">' + ddReal + '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);margin-top:8px">' +
+      'Realizado vs Premissa<br/>' +
+      '<strong>' + ddReal + '</strong> vs <strong>' + ddPrem + '</strong> (' + dd.percentil_fire_mc + ')<br/>' +
+      'Status: <strong>' + dd.status + '</strong>' +
+      '</div>' +
+      '</div>';
+  }
+
+  // Card 5 — Savings Rate
+  var sr = pvr.savings_rate;
+  if (sr) {
+    var srColor = 'var(--green)';
+    var srAcum = sr.acumulado_5anos_pct != null ? sr.acumulado_5anos_pct.toFixed(0) + '%' : '--';
+    var mesesNeg = sr.meses_negativos != null ? sr.meses_negativos + '/' + sr.total_meses : '--';
+    var percNeg = sr.percentual_meses_negativos != null ? sr.percentual_meses_negativos.toFixed(0) + '%' : '--';
+    cards += '<div class="kpi-card">' +
+      '<div class="kpi-label">Savings Rate</div>' +
+      '<div class="kpi-label-sub">Acumulado 5 anos</div>' +
+      '<div class="kpi-main pv" style="color:' + srColor + '">' + srAcum + '</div>' +
+      '<div style="font-size:.7rem;color:var(--muted);margin-top:8px">' +
+      'Aporte cumulativo sobre patrimônio inicial<br/>' +
+      'Meses c/ aporte: ' + mesesNeg + ' (' + percNeg + ' negativos/zero)<br/>' +
+      'Execução forte' +
+      '</div>' +
+      '</div>';
+  }
+
+  // Renderizar com grid responsivo (5 cards)
+  el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:12px">' + cards + '</div>' +
+    '<div style="font-size:.75rem;color:var(--muted);margin-top:12px">' + periodo + '</div>';
 }
 
 // ═══════════════════════════════════════════════════════════════

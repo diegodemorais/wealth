@@ -640,15 +640,16 @@
     },
     {
       "id": "pvr-premissas-realizado",
-      "tab": "fire",
-      "label": "Premissas vs Realizado",
+      "tab": "performance",
+      "label": "Premissas vs Realizado — 5 Anos",
       "type": "card",
-      "purpose": "Compara retorno, aporte e savings rate realizados com premissas do modelo FIRE para validar se o plano está sendo executado conforme modelado",
+      "purpose": "Compara retorno, aporte, volatilidade, drawdown e savings rate realizados com premissas do modelo FIRE para validar execução do plano (2021-04-13 a 2026-04-28)",
       "data_fields": [
-        "premissas_vs_realizado",
-        "premissas.retorno_equity_base",
-        "premissas.aporte_mensal",
-        "premissas.renda_estimada"
+        "premissas_vs_realizado.retorno_equity",
+        "premissas_vs_realizado.aporte_mensal",
+        "premissas_vs_realizado.volatilidade",
+        "premissas_vs_realizado.max_drawdown",
+        "premissas_vs_realizado.savings_rate"
       ],
       "privacy": true
     },
