@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T06:23:22-03:00'); // BRT (UTC-3)
-const VERSION = '1.205';
+const GENERATED_AT = new Date('2026-04-13T06:30:19-03:00'); // BRT (UTC-3)
+const VERSION = '1.206';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.205"
+  "version": "1.206"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -13501,9 +13501,9 @@ function buildFireTrilha() {
   const realizado = d.realizado_brl;
   const meta = d.meta_fire_brl ?? DATA.premissas?.patrimonio_gatilho ?? 13.4e6;
 
-  // Trilha: mostrar apenas a parte futura (onde realizado é null) para evitar descontinuidade visual
-  // A parte histórica é coberta pela linha de realizado
-  const trilhaFutura = (d.trilha_brl || []).map((v, i) => realizado[i] != null ? null : v);
+  // Trilha completa: histórica (plano original) + futura (projeção a partir do valor atual)
+  // O jump no boundary (onde realizado termina) é dado real: mostra que Diego superou o plano
+  const trilha = d.trilha_brl || [];
 
   // Linha horizontal de meta
   const metaLine = dates.map(() => meta);
@@ -13521,7 +13521,7 @@ function buildFireTrilha() {
     },
     {
       label: 'Projetado',
-      data: trilhaFutura,
+      data: trilha,
       borderColor: 'rgba(59,130,246,.5)',
       backgroundColor: 'transparent',
       borderWidth: 2,
@@ -13543,7 +13543,7 @@ function buildFireTrilha() {
 
   // Scale: Y de 0 até trilha_max * 1.1, cap em 1.5× meta
   const _rVals = realizado.filter(v => v != null && isFinite(v) && v > 0);
-  const _tVals = trilhaFutura.filter(v => v != null && isFinite(v) && v > 0);
+  const _tVals = trilha.filter(v => v != null && isFinite(v) && v > 0);
   const _metaVal = meta;
   const _dataMax = [..._rVals, ..._tVals].length ? Math.max(..._rVals, ..._tVals) : _metaVal;
   const _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1);
