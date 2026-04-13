@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-13T15:14:04.509172",
+  "timestamp": "2026-04-13T15:57:29.039564",
   "mode": "full",
   "total": 626,
   "passed": 626,
@@ -2165,7 +2165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVEM', 'SWRD', 'AVGS'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2181,7 +2181,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'portfolio', 'fire', 'performance', 'simuladores', 'now', 'retiro'}"
+      "message": "All blocks use valid tabs: {'retiro', 'simuladores', 'now', 'portfolio', 'performance', 'fire'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4909,7 +4909,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

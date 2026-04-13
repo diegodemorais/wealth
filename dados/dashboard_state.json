@@ -97,10 +97,11 @@
       "taxa": 7.58
     },
     "ipca2040": {
-      "valor_brl": 66517.0,
+      "valor_brl": 113015.08,
       "tipo": "estrutural",
       "taxa": 7.1,
-      "cotas": 11.5789
+      "cotas": 38.5514,
+      "nota": "HTM. Posição anterior 11.5789 cotas. Aporte 10/04/2026: +26.9725 cotas"
     },
     "renda2065": {
       "valor_brl": 117832.62,
@@ -118,7 +119,8 @@
       "valor_brl": 11660.71,
       "tipo": "estrutural",
       "taxa": 6.85,
-      "nota": "Primeira posicao 2026-04-10. Liquidacao 13/04/2026. PU/cotas pendente."
+      "nota": "Primeira posição 10/04/2026 (Salário aporte). Liquidação 13/04/2026.",
+      "cotas": 12.7557
     }
   },
   "fire": {
