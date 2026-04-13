@@ -2234,6 +2234,12 @@ function buildGlidePath() {
   // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
   if (_glideCanvas.offsetWidth === 0) return;
 
+  // DEBUG B3
+  console.error('[GLIDE DEBUG]', {
+    idades: g.idades, equity: g.equity, ipca_longo: g.ipca_longo,
+    canvasW: _glideCanvas.offsetWidth, canvasH: _glideCanvas.offsetHeight,
+  });
+
   // Destroy any existing chart — Chart.getChart() catches orphaned instances not tracked in charts.glide
   const _glideExisting = Chart.getChart(_glideCanvas);
   if (_glideExisting) _glideExisting.destroy();
@@ -4314,6 +4320,13 @@ function buildNetWorthProjection() {
   const _p10Pos = _p10.filter(v => v != null && v > 0);
   const _nwYMin = _p10Pos.length ? Math.floor(Math.min(..._p10Pos) * 0.75 / 1e6) * 1e6 : 0;
 
+  // DEBUG B4
+  console.error('[NETWORTH DEBUG]', {
+    anos: _anos, p10Sample: _p10.slice(0,3), p50Sample: _p50.slice(0,3), p90Sample: _p90.slice(0,3),
+    _nwYMin: _nwYMin, _nwYMax: _nwYMax, gatilho: gatilho,
+    canvasW: ctx.offsetWidth, canvasH: ctx.offsetHeight,
+  });
+
   // Destroy any existing chart — Chart.getChart() catches orphaned instances not tracked in charts.netWorth
   const _nwExisting = Chart.getChart(ctx);
   if (_nwExisting) _nwExisting.destroy();
@@ -4685,6 +4698,14 @@ function buildStressFanChart(traj, onsetAge, anosAcumulo, shockPct) {
   if (!ctx) return;
   // Canvas em seção colapsível fechada → sair; _toggleBlock double-RAF reconstrói ao abrir
   if (ctx.offsetWidth === 0) return;
+
+  // DEBUG B7
+  console.error('[STRESS-FAN DEBUG]', {
+    trajLen: traj.p50.length, p50Sample: traj.p50.slice(0,3), p95Sample: traj.p95?.slice(0,3),
+    onsetAge: onsetAge, anosAcumulo: anosAcumulo, gatilho: DATA.premissas?.patrimonio_gatilho,
+    canvasW: ctx.offsetWidth, canvasH: ctx.offsetHeight,
+  });
+
   // Destroy any existing chart — Chart.getChart() catches orphaned instances
   const _stressExisting = Chart.getChart(ctx);
   if (_stressExisting) _stressExisting.destroy();
