@@ -2754,6 +2754,9 @@ function buildScenarioComparison() {
 
   const fmtPfire = v => v != null ? `<span class="pv" style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
   const fmtPat = v => v != null ? `<span class="pv">R$${(v/1e6).toFixed(2)}M</span>` : '<span style="color:var(--muted)">n/d</span>';
+  const fmtIdade = v => v != null ? `<span class="pv">${v} anos</span>` : '<span style="color:var(--muted)">—</span>';
+  const fmtGasto = v => v != null ? `<span class="pv">R$${(v/1000).toFixed(0)}k</span>` : '<span style="color:var(--muted)">—</span>';
+  const fmtSwr = v => v != null ? `<span class="pv" style="color:${v<=4?'var(--green)':v<=5?'var(--accent)':'var(--yellow)'};">${v.toFixed(2)}%</span>` : '<span style="color:var(--muted)">—</span>';
 
   const base = sc.fire_base || sc.fire53 || {};
   const aspir = sc.fire_aspiracional || sc.fire50 || {};
@@ -2765,7 +2768,9 @@ function buildScenarioComparison() {
     ['Patrimônio Mediano', fmtPat(base.pat_mediano), fmtPat(aspir.pat_mediano)],
     ['Patrimônio P10',   fmtPat(base.pat_p10),  fmtPat(aspir.pat_p10)],
     ['Patrimônio P90',   fmtPat(base.pat_p90),  fmtPat(aspir.pat_p90)],
-    ['Anos de trabalho (delta)', '0 (base)', '<span style="color:var(--purple)">−3 anos</span>'],
+    ['Idade (FIRE Day)',  fmtIdade(base.idade),   fmtIdade(aspir.idade)],
+    ['Gasto por ano',    fmtGasto(base.gasto_anual), fmtGasto(aspir.gasto_anual)],
+    ['SWR (%)',          fmtSwr(base.swr),      fmtSwr(aspir.swr)],
   ];
 
   el.innerHTML = `<table class="scenario-compare-table" style="width:100%">

@@ -2795,28 +2795,43 @@ def main():
 
     # ─── Scenario Comparison (FIRE@53 vs FIRE@50) ───────────────────────────
     fire_state = state.get("fire", {})
+    # Extração de dados para scenario_comparison
+    pat_med_53 = fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire", 0))
+    pat_med_50 = fire_state.get("pat_mediano_fire50", 0)
+    age_base = premissas_raw.get("idade_cenario_base", 53)
+    age_aspir = premissas_raw.get("idade_cenario_aspiracional", 50)
+    gasto_anual = premissas_raw.get("custo_vida_base", 250000)
+    swr_53 = (gasto_anual / pat_med_53 * 100) if pat_med_53 > 0 else 0
+    swr_50 = (gasto_anual / pat_med_50 * 100) if pat_med_50 > 0 else 0
+
     scenario_comparison = {
         "fire53": {
+            "idade": age_base,
             "base":        pfire_base.get("base"),
             "fav":         pfire_base.get("fav"),
             "stress":      pfire_base.get("stress"),
-            "pat_mediano": fire_state.get("pat_mediano_fire53", fire_state.get("pat_mediano_fire")),
+            "pat_mediano": pat_med_53,
             "pat_p10":     fire_state.get("pat_p10_fire53", fire_state.get("pat_p10_fire")),
             "pat_p90":     fire_state.get("pat_p90_fire53", fire_state.get("pat_p90_fire")),
+            "gasto_anual": gasto_anual,
+            "swr":         round(swr_53, 2),
         },
         "fire50": {
+            "idade": age_aspir,
             "base":        pfire_aspiracional.get("base"),
             "fav":         pfire_aspiracional.get("fav"),
             "stress":      pfire_aspiracional.get("stress"),
-            "pat_mediano": fire_state.get("pat_mediano_fire50"),
+            "pat_mediano": pat_med_50,
             "pat_p10":     fire_state.get("pat_p10_fire50"),
             "pat_p90":     fire_state.get("pat_p90_fire50"),
+            "gasto_anual": gasto_anual,
+            "swr":         round(swr_50, 2),
         },
         "nota_fire50_pat": (
-            f"Pat. mediano no FIRE Day (base): R${fire_state.get('pat_mediano_fire53', 0)/1e6:.2f}M (@53) / "
-            f"R${fire_state.get('pat_mediano_fire50', 0)/1e6:.2f}M (@50). "
+            f"Pat. mediano no FIRE Day (base): R${pat_med_53/1e6:.2f}M (@{age_base}) / "
+            f"R${pat_med_50/1e6:.2f}M (@{age_aspir}). "
             "Fonte: fire_montecarlo.py MC 10k sims."
-        ) if fire_state.get("pat_mediano_fire53") else None,
+        ) if pat_med_53 else None,
     }
 
     # ─── FIRE aggregate ─────────────────────────────────────────────────

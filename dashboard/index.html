@@ -1449,12 +1449,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T20:09:22-03:00'); // BRT (UTC-3)
-const VERSION = '2.85';
+const GENERATED_AT = new Date('2026-04-13T20:15:18-03:00'); // BRT (UTC-3)
+const VERSION = '2.87';
 
 const DATA = {
-  "_generated": "2026-04-13T20:07:27",
-  "_generated_brt": "2026-04-13T20:07:27-03:00",
+  "_generated": "2026-04-13T20:15:01",
+  "_generated_brt": "2026-04-13T20:15:01-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -2899,7 +2899,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -3326,7 +3326,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -4204,7 +4204,7 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 87.1,
-    "bitcoin_usd": 74650.99,
+    "bitcoin_usd": 74711.15,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -4222,9 +4222,9 @@ const DATA = {
   },
   "mercado": {
     "cambio_brl_usd": 5.005,
-    "btc_usd": 74650.99,
+    "btc_usd": 74711.15,
     "cambio_mtd_pct": -2.93,
-    "btc_mtd_pct": 3.86,
+    "btc_mtd_pct": 3.94,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -8219,7 +8219,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.85"
+  "version": "2.87"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10895,6 +10895,9 @@ function buildScenarioComparison() {
 
   const fmtPfire = v => v != null ? `<span class="pv" style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
   const fmtPat = v => v != null ? `<span class="pv">R$${(v/1e6).toFixed(2)}M</span>` : '<span style="color:var(--muted)">n/d</span>';
+  const fmtIdade = v => v != null ? `<span class="pv">${v} anos</span>` : '<span style="color:var(--muted)">—</span>';
+  const fmtGasto = v => v != null ? `<span class="pv">R$${(v/1000).toFixed(0)}k</span>` : '<span style="color:var(--muted)">—</span>';
+  const fmtSwr = v => v != null ? `<span class="pv" style="color:${v<=4?'var(--green)':v<=5?'var(--accent)':'var(--yellow)'};">${v.toFixed(2)}%</span>` : '<span style="color:var(--muted)">—</span>';
 
   const base = sc.fire_base || sc.fire53 || {};
   const aspir = sc.fire_aspiracional || sc.fire50 || {};
@@ -10906,7 +10909,9 @@ function buildScenarioComparison() {
     ['Patrimônio Mediano', fmtPat(base.pat_mediano), fmtPat(aspir.pat_mediano)],
     ['Patrimônio P10',   fmtPat(base.pat_p10),  fmtPat(aspir.pat_p10)],
     ['Patrimônio P90',   fmtPat(base.pat_p90),  fmtPat(aspir.pat_p90)],
-    ['Anos de trabalho (delta)', '0 (base)', '<span style="color:var(--purple)">−3 anos</span>'],
+    ['Idade (FIRE Day)',  fmtIdade(base.idade),   fmtIdade(aspir.idade)],
+    ['Gasto por ano',    fmtGasto(base.gasto_anual), fmtGasto(aspir.gasto_anual)],
+    ['SWR (%)',          fmtSwr(base.swr),      fmtSwr(aspir.swr)],
   ];
 
   el.innerHTML = `<table class="scenario-compare-table" style="width:100%">
