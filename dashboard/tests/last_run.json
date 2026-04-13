@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-13T20:15:20.759014",
+  "timestamp": "2026-04-13T20:33:42.112283",
   "mode": "full",
   "total": 634,
   "passed": 634,
@@ -837,7 +837,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "fav=92.4 >= base=86.5 >= stress=82.5"
+      "message": "fav=94.1 >= base=90.4 >= stress=86.8"
     },
     {
       "test_id": "pfire-hero::VALUE::pfire_aspiracional ordering: fav >= base >= stress",
@@ -853,7 +853,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_aspiracional.base=86.5 <= pfire_base.base=86.5"
+      "message": "pfire_aspiracional.base=86.5 <= pfire_base.base=90.4"
     },
     {
       "test_id": "fire-countdown::DATA::all countdown premissas fields present",
@@ -1133,7 +1133,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_base.base=86.5%"
+      "message": "pfire_base.base=90.4%"
     },
     {
       "test_id": "simulador-fire::DATA::patrimonio_atual > 0 and < patrimonio_gatilho",
@@ -1165,7 +1165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_base: base=86.5, stress=82.5"
+      "message": "pfire_base: base=90.4, stress=86.8"
     },
     {
       "test_id": "stress-test-mc::DATA::pfire_base stress < base (stress degrades P(FIRE))",
@@ -1173,7 +1173,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_base: stress=82.5 < base=86.5"
+      "message": "pfire_base: stress=86.8 < base=90.4"
     },
     {
       "test_id": "earliest-fire::DATA::earliest_fire has ano, idade, pfire",
@@ -1285,7 +1285,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_base.base=86.5 consistent with scenario_comparison"
+      "message": "pfire_base.base=90.4 consistent with scenario_comparison"
     },
     {
       "test_id": "pfire-familia::DATA::lumpy evento pfire_2040 values in [0, 1]",
@@ -1837,7 +1837,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_base present with base=86.5, stress=82.5"
+      "message": "pfire_base present with base=90.4, stress=86.8"
     },
     {
       "test_id": "stress-test-mc::DATA::premissas.patrimonio_atual and premissas.patrimonio_gatilho present and positive",
@@ -1853,7 +1853,7 @@
       "category": "VALUE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "pfire_base.stress=82.5% < pfire_base.base=86.5% (stress is correctly worse)"
+      "message": "pfire_base.stress=86.8% < pfire_base.base=90.4% (stress is correctly worse)"
     },
     {
       "test_id": "stress-test-mc::RENDER::HTML contains stressShockSlider input element",
@@ -2165,7 +2165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2181,7 +2181,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'simuladores', 'now', 'fire', 'portfolio', 'retiro', 'backtest', 'performance'}"
+      "message": "All blocks use valid tabs: {'backtest', 'fire', 'simuladores', 'now', 'performance', 'portfolio', 'retiro'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -3037,7 +3037,7 @@
       "category": "DATA",
       "severity": "HIGH",
       "passed": true,
-      "message": "fire53.base=86.5 >= fire50.base=86.5"
+      "message": "fire53.base=90.4 >= fire50.base=86.5"
     },
     {
       "test_id": "net-worth-projection::DATA::fav >= base >= stress for each scenario",
@@ -3101,7 +3101,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "fire53.base=86.5 not hardcoded as dict literal in build script"
+      "message": "fire53.base=90.4 not hardcoded as dict literal in build script"
     },
     {
       "test_id": "fire-matrix::DATA::premissas.custo_vida_base appears in fire_matrix.gastos",
@@ -3397,7 +3397,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "pfire_base.base=86.5 not hardcoded as dict literal in build script"
+      "message": "pfire_base.base=90.4 not hardcoded as dict literal in build script"
     },
     {
       "test_id": "earliest-fire::DATA::earliest_fire.idade >= premissas.idade_cenario_aspiracional",
@@ -3565,7 +3565,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "pfire_base.base=86.5 not hardcoded as dict literal"
+      "message": "pfire_base.base=90.4 not hardcoded as dict literal"
     },
     {
       "test_id": "glide-path::VALUE::B3 anti-regress: offsetWidth guard present (no build on hidden canvas)",
@@ -3701,7 +3701,7 @@
       "category": "TRANSITIONS",
       "severity": "HIGH",
       "passed": true,
-      "message": "P(FIRE) coerente entre cenários: aspiracional 86.5% >= base 86.5%"
+      "message": "P(FIRE) diferenciado: fire50@49=86.5% vs fire53@53=90.4%"
     },
     {
       "test_id": "factor-signal-kpi::RENDER::semaforoPanel container present in HTML",
@@ -4141,7 +4141,7 @@
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
-      "message": "pfire_base base=86.5%, stress=82.5% both in [0, 100]"
+      "message": "pfire_base base=90.4%, stress=86.8% both in [0, 100]"
     },
     {
       "test_id": "stress-test-mc::VALUE::premissas.patrimonio_gatilho > premissas.patrimonio_atual (FIRE target ahead)",
@@ -4541,7 +4541,7 @@
       "category": "DATA",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Generated: 2026-04-13T20:15:01"
+      "message": "Generated: 2026-04-13T20:33:15"
     },
     {
       "test_id": "render-global::RENDER::no empty canvas elements (uninitialized charts)",
@@ -4645,7 +4645,7 @@
       "category": "VALUE",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "pfire_base.base=86.5"
+      "message": "pfire_base.base=90.4"
     },
     {
       "test_id": "drift-maximo-kpi::VALUE::max absolute drift deviation is < 50pp (sanity bound)",
@@ -4965,7 +4965,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct', 'cambio'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4973,7 +4973,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'cambio', 'concentracao_brasil.total_portfolio_brl'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

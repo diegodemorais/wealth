@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-13T20:15:01",
-  "_generated_brt": "2026-04-13T20:15:01-03:00",
+  "_generated": "2026-04-13T20:33:15",
+  "_generated_brt": "2026-04-13T20:33:15-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -104,9 +104,9 @@
     "stress": 82.5
   },
   "pfire_base": {
-    "base": 86.5,
-    "fav": 92.4,
-    "stress": 82.5
+    "base": 90.4,
+    "fav": 94.1,
+    "stress": 86.8
   },
   "premissas": {
     "patrimonio_atual": 3600433,
@@ -261,9 +261,9 @@
   "scenario_comparison": {
     "fire53": {
       "idade": 53,
-      "base": 86.5,
-      "fav": 92.4,
-      "stress": 82.5,
+      "base": 90.4,
+      "fav": 94.1,
+      "stress": 86.8,
       "pat_mediano": 11527476.0,
       "pat_p10": 6834909.0,
       "pat_p90": 18916227.0,
@@ -2756,7 +2756,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 87.1,
-    "bitcoin_usd": 74711.15,
+    "bitcoin_usd": 74856.67,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -2774,9 +2774,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 5.005,
-    "btc_usd": 74711.15,
+    "btc_usd": 74856.67,
     "cambio_mtd_pct": -2.93,
-    "btc_mtd_pct": 3.94,
+    "btc_mtd_pct": 4.15,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3313,7 +3313,7 @@
   },
   "spending_guardrails": {
     "zona": "verde",
-    "pfire_atual": 86.5,
+    "pfire_atual": 90.4,
     "spending_atual": 250000,
     "upper_guardrail_spending": 250000,
     "safe_target_spending": 225000,

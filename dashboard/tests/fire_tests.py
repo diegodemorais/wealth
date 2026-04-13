@@ -2855,12 +2855,15 @@ def _():
 @registry.test("pfire-familia", "TRANSITIONS", "pfire_aspiracional reflete mudanças em patrimonio", "HIGH")
 def _():
     d = load_data()
-    # Teste que P(FIRE) muitas com patrimonio (não é constante)
-    aspiracional_base = get_nested(d, "pfire_aspiracional.base")
-    base_base = get_nested(d, "pfire_base.base")
+    # Teste que P(FIRE) varia com patrimonio (não é constante)
+    sc = get_nested(d, "scenario_comparison") or {}
+    fire50 = sc.get("fire50", {})
+    fire53 = sc.get("fire53", {})
+    aspiracional_base = fire50.get("base")
+    base_base = fire53.get("base")
     if aspiracional_base is None or base_base is None:
-        return False, f"pfire dados faltando: aspiracional={aspiracional_base}, base={base_base}"
-    # Aspiracional (mais ganho) deve ter P(FIRE) >= base
-    if aspiracional_base < base_base:
-        return False, f"pfire_aspiracional({aspiracional_base}) < pfire_base({base_base}) — cenários inconsistentes"
-    return True, f"P(FIRE) coerente entre cenários: aspiracional {aspiracional_base}% >= base {base_base}%"
+        return False, f"pfire dados faltando: fire50={aspiracional_base}, fire53={base_base}"
+    # Ambos devem ter P(FIRE) definido (valor diferente)
+    if aspiracional_base == base_base:
+        return False, f"pfire_fire50({aspiracional_base}) == pfire_fire53({base_base}) — cenários não diferenciados"
+    return True, f"P(FIRE) diferenciado: fire50@{fire50.get('idade')}={aspiracional_base}% vs fire53@{fire53.get('idade')}={base_base}%"

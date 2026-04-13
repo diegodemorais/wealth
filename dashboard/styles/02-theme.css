@@ -1,0 +1,95 @@
+/* ═══════════════════════════════════════════════════════════════
+   THEME — Typography, header, semantic colors
+   ═══════════════════════════════════════════════════════════════ */
+
+.header {
+  background: linear-gradient(135deg, #1e3a5f, #0f172a);
+  padding: 20px 24px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.header h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.header .meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.section {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.section h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.section-critical {
+  border: 2px solid var(--accent);
+  background: rgba(59, 130, 246, 0.07);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+th {
+  text-align: left;
+  padding: 6px 5px;
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+
+td {
+  padding: 5px;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(71, 85, 105, 0.08);
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', monospace, sans-serif;
+}
+
+.pos {
+  color: var(--green);
+}
+
+.neg {
+  color: var(--red);
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
