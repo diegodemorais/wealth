@@ -1388,7 +1388,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
  *   rolling_sharpe: { dates: string[], values: number[], values_usd?: (number|null)[], sortino?: number[], volatilidade?: number[], max_dd?: number[], window: number, rf_brl?: {taxa_anual: number, nome: string}, rf_usd?: {taxa_anual: number, nome: string} },
  *   backtest: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, cambioInicio?: number },
  *   backtestR5: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, note?: string },
- *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, renda2065: RfTitulo },
+ *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, ipca2050: RfTitulo, renda2065: RfTitulo },
  *   hodl11: { qty: number|null, preco: number|null, valor: number },
  *   glide: { idades: number[], equity: number[], ipca_longo: number[], ipca_curto: number[], hodl11: number[], renda_plus: number[] },
  *   drift: { SWRD: DriftItem, AVGS: DriftItem, AVEM: DriftItem, IPCA: DriftItem, HODL11: DriftItem },
@@ -1422,14 +1422,14 @@ let totalEquityUsd = 0;
 Object.values(DATA.posicoes).forEach(p => { totalEquityUsd += p.qty * p.price; });
 
 // Total BRL = equity + RF + crypto
-const rfBrl = DATA.rf.ipca2029.valor + DATA.rf.ipca2040.valor + DATA.rf.renda2065.valor;
+const rfBrl = (DATA.rf.ipca2029?.valor ?? 0) + (DATA.rf.ipca2040?.valor ?? 0) + (DATA.rf.ipca2050?.valor ?? 0) + (DATA.rf.renda2065?.valor ?? 0);
 // cryptoBrl: hodl11 + crypto legado (valor estimado guardado em DATA.cryptoLegado se disponível)
 const cryptoLegado = DATA.cryptoLegado ?? 3000; // fallback 3k se não disponível
 const cryptoBrl = DATA.hodl11.valor + cryptoLegado;
 const totalBrl = totalEquityUsd * CAMBIO + rfBrl + cryptoBrl;
 
-// C3 — IPCA drift: somar TODOS os títulos IPCA+ (2029 reserva + 2040 DCA)
-const ipcaTotalBrl = DATA.rf.ipca2029.valor + DATA.rf.ipca2040.valor;
+// C3 — IPCA drift: somar TODOS os títulos IPCA+ (2029 reserva + 2040 DCA + 2050 DCA)
+const ipcaTotalBrl = (DATA.rf.ipca2029?.valor ?? 0) + (DATA.rf.ipca2040?.valor ?? 0) + (DATA.rf.ipca2050?.valor ?? 0);
 DATA.drift['IPCA'].atual = +(ipcaTotalBrl / totalBrl * 100).toFixed(1);
 
 // Bucket values
@@ -5754,9 +5754,17 @@ function buildRfCards() {
       label: 'IPCA+ 2040', tipo: rf.ipca2040?.tipo || 'estrutural', custod: 'XP',
       val: rf.ipca2040?.valor, custo: rf.ipca2040?.custo_base_brl,
       taxa: rf.ipca2040?.taxa, piso: pisoIpca, venc: '2040',
-      nota: rf.ipca2040?.notas || 'DCA ativo · HTM',
+      nota: rf.ipca2040?.notas || 'DCA ativo · HTM (80%)',
       status: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'verde' : 'amarelo') : null,
       statusColor: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'var(--green)' : 'var(--yellow)') : null,
+    },
+    {
+      label: 'IPCA+ 2050', tipo: rf.ipca2050?.tipo || 'estrutural', custod: 'XP',
+      val: rf.ipca2050?.valor, custo: rf.ipca2050?.custo_base_brl,
+      taxa: rf.ipca2050?.taxa, piso: pisoIpca, venc: '2050',
+      nota: rf.ipca2050?.notas || 'DCA ativo · HTM (20%)',
+      status: rf.ipca2050?.taxa != null ? (rf.ipca2050.taxa >= pisoIpca ? 'verde' : 'amarelo') : null,
+      statusColor: rf.ipca2050?.taxa != null ? (rf.ipca2050.taxa >= pisoIpca ? 'var(--green)' : 'var(--yellow)') : null,
     },
     {
       label: 'Renda+ 2065', tipo: rf.renda2065?.tipo || 'tatico', custod: 'Nubank',
@@ -6697,9 +6705,10 @@ function buildBondPool() {
   // Ativos que compõem (ou devem compor) o bond pool
   const rf = DATA.rf || {};
   const ipca2040Brl = rf.ipca2040?.valor ?? 0;
+  const ipca2050Brl = rf.ipca2050?.valor ?? 0;
   const ipca2029Brl = rf.ipca2029?.valor ?? 0;
   const renda2065Brl = rf.renda2065?.valor ?? 0;
-  const bondTotal = ipca2040Brl + ipca2029Brl;
+  const bondTotal = ipca2040Brl + ipca2050Brl + ipca2029Brl;
   const pctMeta = metaBrl > 0 ? Math.min(100, bondTotal / metaBrl * 100) : 0;
 
   // Taxa atual para decidir estratégia ativa
@@ -6734,6 +6743,11 @@ function buildBondPool() {
           '<td style="padding:4px 4px;font-weight:600">IPCA+ 2040</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--green)" class="pv">R$ ' + (ipca2040Brl/1000).toFixed(0) + 'k</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2040Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
+        '</tr>' +
+        '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
+          '<td style="padding:4px 4px;font-weight:600">IPCA+ 2050</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--green)" class="pv">R$ ' + (ipca2050Brl/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2050Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
         '</tr>' +
         '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
           '<td style="padding:4px 4px;font-weight:600">IPCA+ 2029</td>' +
