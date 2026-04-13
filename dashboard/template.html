@@ -3804,22 +3804,52 @@ function _applyFireAxes() {
 }
 
 window.setFireCond = function(cond) {
-  window._fireCond = cond;
-  document.querySelectorAll('[id^="pcond-"]').forEach(b => b.classList.remove('active'));
-  document.getElementById('pcond-' + cond)?.classList.add('active');
+  // Se "Cenário Aspiracional" estava ativo, volta ao default
+  const aspirBtn = document.getElementById('pcond-fire50');
+  if (aspirBtn?.classList.contains('active')) {
+    window._fireCond = 'solteiro';
+    window._fireMkt = 'base';
+    document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('active');
+    });
+    document.getElementById('pcond-solteiro')?.classList.add('active');
+    document.getElementById('pmkt-base')?.classList.add('active');
+  } else {
+    window._fireCond = cond;
+    document.querySelectorAll('[id^="pcond-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('pcond-' + cond)?.classList.add('active');
+  }
   _applyFireAxes();
 };
 
 window.setFireMkt = function(mkt) {
-  window._fireMkt = mkt;
-  document.querySelectorAll('[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
-  document.getElementById('pmkt-' + mkt)?.classList.add('active');
+  // Se "Cenário Aspiracional" estava ativo, volta ao default
+  const aspirBtn = document.getElementById('pcond-fire50');
+  if (aspirBtn?.classList.contains('active')) {
+    window._fireCond = 'solteiro';
+    window._fireMkt = 'base';
+    document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => {
+      b.disabled = false;
+      b.classList.remove('active');
+    });
+    document.getElementById('pcond-solteiro')?.classList.add('active');
+    document.getElementById('pmkt-base')?.classList.add('active');
+  } else {
+    window._fireMkt = mkt;
+    document.querySelectorAll('[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById('pmkt-' + mkt)?.classList.add('active');
+  }
   _applyFireAxes();
 };
 
-// Cenário Aspiracional — mesmo aporte base, retorno favorável, custo go-go
+// Cenário Aspiracional — preset atômico (mesmo aporte base, retorno favorável, custo go-go)
+// Desabilita controles de Mercado e Condição enquanto ativo
 window.setFirePreset50 = function() {
-  document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => {
+    b.classList.remove('active');
+    if (b.id !== 'pcond-fire50') b.disabled = true;  // desabilita Mercado + Condição
+  });
   document.getElementById('pcond-fire50')?.classList.add('active');
   const p    = DATA.premissas;
   const goGo = DATA.spendingSmile?.go_go?.gasto ?? 242000;
@@ -3832,9 +3862,12 @@ window.setFirePreset50 = function() {
   updateFireSim();
 };
 
-// Slider manual → desativa todos os presets (modo "custom")
+// Slider manual → desativa todos os presets (modo "custom") e reabilita controles
 window._firePresetCustom = function() {
-  document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[id^="pcond-"],[id^="pmkt-"]').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('active');
+  });
 };
 
 window.updateFireSim = function() {
