@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-04-13T14:48:39.288415",
+  "timestamp": "2026-04-13T15:14:04.509172",
   "mode": "full",
-  "total": 605,
-  "passed": 605,
+  "total": 626,
+  "passed": 626,
   "failed": 0,
   "failure_cycles": {},
   "escalations": [],
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 534,405 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 534,542 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -61,7 +61,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 534,405 chars"
+      "message": "index.html: 534,542 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -1424,6 +1424,22 @@
       "message": "fire_trilha: 226 datas alinhadas com trilha_brl e realizado_brl"
     },
     {
+      "test_id": "net-worth-projection::RANGES::patrimonio_atual > 0 e < 50M",
+      "block_id": "net-worth-projection",
+      "category": "RANGES",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "patrimonio_atual=R$3,520,055 válido"
+    },
+    {
+      "test_id": "scenario-comparison::CALCULATIONS::P10 < P50 < P90 em cada cenário",
+      "block_id": "scenario-comparison",
+      "category": "CALCULATIONS",
+      "severity": "CRITICAL",
+      "passed": true,
+      "message": "P10 < P50 < P90 validado em fire53 e fire50"
+    },
+    {
       "test_id": "factor-signal-kpi::DATA::factor_signal fields present and numeric",
       "block_id": "factor-signal-kpi",
       "category": "DATA",
@@ -2149,7 +2165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2165,7 +2181,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'simuladores', 'retiro', 'now', 'performance', 'portfolio', 'fire'}"
+      "message": "All blocks use valid tabs: {'portfolio', 'fire', 'performance', 'simuladores', 'now', 'retiro'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -3568,6 +3584,110 @@
       "message": "pfire_aspiracional.base=86.5% dentro do range plausível"
     },
     {
+      "test_id": "premissas::RANGES::aporte_mensal em range [5k, 100k]",
+      "block_id": "premissas",
+      "category": "RANGES",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "aporte_mensal=R$25,000 dentro do range"
+    },
+    {
+      "test_id": "premissas::RANGES::custo_vida_base em range [150k, 500k]",
+      "block_id": "premissas",
+      "category": "RANGES",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "custo_vida_base=R$250,000 dentro do range"
+    },
+    {
+      "test_id": "swr-percentis::RANGES::SWR p10, p50, p90 em range [0.5%, 10%]",
+      "block_id": "swr-percentis",
+      "category": "RANGES",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "SWR percentis em range: p10=3.66%, p50=2.17%, p90=1.32%"
+    },
+    {
+      "test_id": "guardrails-retirada::RANGES::drawdown guardrails com cobertura adequada",
+      "block_id": "guardrails-retirada",
+      "category": "RANGES",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "drawdown guardrails cobertem até 100% de queda (4 bandas)"
+    },
+    {
+      "test_id": "fire-trilha::CALCULATIONS::SWR gatilho é plausível em range [0.5%, 10%]",
+      "block_id": "fire-trilha",
+      "category": "CALCULATIONS",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "SWR=3.00% com patrimonio_gatilho=R$8,333,333 ✓"
+    },
+    {
+      "test_id": "spending-sensitivity::CALCULATIONS::aumentar custo → reduz P(FIRE) monotonicamente",
+      "block_id": "spending-sensitivity",
+      "category": "CALCULATIONS",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "Monotonia validada: P(FIRE) decresce com aumento de custo (n=3)"
+    },
+    {
+      "test_id": "fire-matrix::CALCULATIONS::alocação somada = 100% para cada combinação",
+      "block_id": "fire-matrix",
+      "category": "CALCULATIONS",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "fire_matrix: 42 combinações validadas (pfire ∈ [0, 1])"
+    },
+    {
+      "test_id": "guardrails-retirada::CALCULATIONS::retirada decresce monotonicamente com drawdown",
+      "block_id": "guardrails-retirada",
+      "category": "CALCULATIONS",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "retirada monótona decrescente: 250000% → 180000% (n=4 bands)"
+    },
+    {
+      "test_id": "scenario-comparison::COHERENCE::fire53 >= fire50 em todos cenários (mais tempo = melhor)",
+      "block_id": "scenario-comparison",
+      "category": "COHERENCE",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "fire53 >= fire50 validado em base"
+    },
+    {
+      "test_id": "spending-smile::COHERENCE::gasto_go_go >= slow_go >= no_go (spending smile)",
+      "block_id": "spending-smile",
+      "category": "COHERENCE",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "spending smile validado: 242000 >= 200000 >= 187000"
+    },
+    {
+      "test_id": "guardrails-retirada::COHERENCE::gasto_piso é base de retirada mínima",
+      "block_id": "guardrails-retirada",
+      "category": "COHERENCE",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "gasto_piso=R$180,000 é retirada mínima dos guardrails"
+    },
+    {
+      "test_id": "net-worth-projection::TRANSITIONS::patrimonio_atual é plausível e presente",
+      "block_id": "net-worth-projection",
+      "category": "TRANSITIONS",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "patrimonio_atual=R$3,520,055 válido"
+    },
+    {
+      "test_id": "pfire-familia::TRANSITIONS::pfire_aspiracional reflete mudanças em patrimonio",
+      "block_id": "pfire-familia",
+      "category": "TRANSITIONS",
+      "severity": "HIGH",
+      "passed": true,
+      "message": "P(FIRE) coerente entre cenários: aspiracional 86.5% >= base 86.5%"
+    },
+    {
       "test_id": "factor-signal-kpi::RENDER::semaforoPanel container present in HTML",
       "block_id": "factor-signal-kpi",
       "category": "RENDER",
@@ -4576,6 +4696,54 @@
       "message": "First entry delta=7.9 is among top-2 most impactful"
     },
     {
+      "test_id": "spending-sensitivity::RANGES::custos testados em range plausível",
+      "block_id": "spending-sensitivity",
+      "category": "RANGES",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "sensibilidade testa R$250,000 a R$300,000 (3 cenários)"
+    },
+    {
+      "test_id": "fire-matrix::RANGES::aportes testados em range [10k, 100k]",
+      "block_id": "fire-matrix",
+      "category": "RANGES",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "gastos testados: R$180,000 a R$350,000"
+    },
+    {
+      "test_id": "fire-matrix::RANGES::patrimônios testados em range plausível",
+      "block_id": "fire-matrix",
+      "category": "RANGES",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "patrimônios testados: R$7,000,000 a R$16,000,000 (7 pontos)"
+    },
+    {
+      "test_id": "fire-trilha::COHERENCE::trilha_brl monotonamente crescente (projeção)",
+      "block_id": "fire-trilha",
+      "category": "COHERENCE",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "trilha_brl monotonamente crescente em 226 pontos válidos"
+    },
+    {
+      "test_id": "premissas::PRIVACY::dados sensíveis podem ser marcados .pv",
+      "block_id": "premissas",
+      "category": "PRIVACY",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "estrutura de dados permite privacy mode .pv (design validado)"
+    },
+    {
+      "test_id": "patrimonio::PRIVACY::valores em patrimônio podem ser mascarados",
+      "block_id": "patrimonio",
+      "category": "PRIVACY",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "patrimonio_atual=3,520,055 numérico (pode ser mascarado em privacy mode)"
+    },
+    {
       "test_id": "intra-equity-pesos::RENDER::equityWeightsChart canvas present in HTML",
       "block_id": "intra-equity-pesos",
       "category": "RENDER",
@@ -4733,7 +4901,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'cambio', 'mercado.cambio_brl_usd'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4741,7 +4909,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'cambio', 'concentracao_brasil.total_portfolio_brl'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
