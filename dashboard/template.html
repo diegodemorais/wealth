@@ -486,34 +486,35 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 </div>
 
-<!-- P2: MACRO CONTEXT -->
-<div class="section collapsible" data-in-tab="hoje" id="macroSection">
-<h2 onclick="_toggleBlock(this.parentElement)">Contexto Macro</h2>
+<!-- P2: CONTEXTO MACRO + DCA STATUS (MERGED) -->
+<div class="section collapsible open" data-in-tab="hoje" id="macroSection">
+<h2 onclick="_toggleBlock(this.parentElement)">Contexto Macro & DCA Status</h2>
 <div class="collapse-body">
+<!-- MACRO CONTEXT -->
 <div id="macroStatusBadge"></div>
-<div class="grid-2" style="margin-bottom:0">
+<div class="grid-2" style="margin-bottom:14px">
   <div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
   <div>
     <div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
   </div>
 </div>
-<div class="src" style="margin-top:8px">Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE</div>
+<div class="src" style="margin-bottom:14px">Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE</div>
+
+<!-- DCA STATUS -->
+<div id="dcaSection" style="padding-top:10px;border-top:1px solid rgba(71,85,105,.3)">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+    <h2 style="margin-bottom:0;font-size:.8rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.5px">DCA Status</h2>
+    <div id="dcaAportePriority" style="font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:6px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--accent)">
+      Próximo aporte → calculando…
+    </div>
+  </div>
+  <div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
+</div>
 </div><!-- /collapse-body -->
 </div>
 
-<!-- P2: DCA STATUS -->
-<div class="section" data-in-tab="hoje" id="dcaSection">
-<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-  <h2 style="margin-bottom:0">DCA Status</h2>
-  <div id="dcaAportePriority" style="font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:6px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--accent)">
-    Próximo aporte → calculando…
-  </div>
-</div>
-<div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
-</div>
-
 <!-- F8: Sankey Cash Flow -->
-<div class="section collapsible" id="sankeySection" data-in-tab="hoje">
+<div class="section collapsible open" id="sankeySection" data-in-tab="hoje">
 <h2 onclick="_toggleBlock(this.parentElement)">Sankey — Fluxo de Caixa Anual (estimado)</h2>
 <div class="collapse-body">
 <div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div>
@@ -522,45 +523,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 <div class="src" id="sankeySrc">Valores estimados · Renda, gastos e hipoteca anualizados</div>
 </div><!-- /collapse-body -->
-</div>
-
-<!-- S6: NET WORTH TIMELINE -->
-<div class="section" data-in-tab="perf">
-<h2>Patrimônio — Evolução Histórica</h2>
-<div class="period-btns" id="timelinePeriodBtns">
-  <button onclick="setTimelinePeriod('6m')">6m</button>
-  <button onclick="setTimelinePeriod('ytd')">YTD</button>
-  <button onclick="setTimelinePeriod('1y')">1y</button>
-  <button onclick="setTimelinePeriod('3y')">3y</button>
-  <button onclick="setTimelinePeriod('5y')">5y</button>
-  <button onclick="setTimelinePeriod('all')" class="active">All</button>
-</div>
-<div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
-<div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
-<div class="src">Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.</div>
-</div>
-
-<!-- S7: PERFORMANCE ATTRIBUTION -->
-<div class="section" id="attrSection" data-in-tab="perf">
-<h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
-<div class="chart-box-sm" style="height:320px;max-height:320px"><canvas id="attrChart"></canvas></div>
-<div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
-    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
-  </div>
-  <div id="attrFxRfRow" style="display:none;grid-template-columns:repeat(2,1fr);gap:8px;text-align:center;margin-top:6px">
-    <div><div style="font-size:.95rem;font-weight:700;color:#f97316" class="pv" id="attrFx">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio (FX)</div></div>
-    <div><div style="font-size:.95rem;font-weight:700;color:#a3e635" class="pv" id="attrRf">—</div><div style="font-size:.65rem;color:var(--muted)">RF Local</div></div>
-  </div>
-  <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
-  <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
-    📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal" class="pv">—</strong>/ano
-    <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style="cursor:help;color:var(--accent)"> ⓘ</span>
-  </div>
-</div>
-<div class="src">Onde está o seu patrimônio hoje: aportes investidos + retorno em USD dos ETFs + RF doméstica e variação cambial. Use TWR para performance pura (sem efeito de aportes).</div>
 </div>
 
 <!-- S8: GEO DONUT -->
@@ -865,6 +827,45 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px"></div>
 <div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
 </div><!-- /collapse-body -->
+</div>
+
+<!-- S6: NET WORTH TIMELINE -->
+<div class="section" data-in-tab="perf">
+<h2>Patrimônio — Evolução Histórica</h2>
+<div class="period-btns" id="timelinePeriodBtns">
+  <button onclick="setTimelinePeriod('6m')">6m</button>
+  <button onclick="setTimelinePeriod('ytd')">YTD</button>
+  <button onclick="setTimelinePeriod('1y')">1y</button>
+  <button onclick="setTimelinePeriod('3y')">3y</button>
+  <button onclick="setTimelinePeriod('5y')">5y</button>
+  <button onclick="setTimelinePeriod('all')" class="active">All</button>
+</div>
+<div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
+<div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
+<div class="src">Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.</div>
+</div>
+
+<!-- S7: PERFORMANCE ATTRIBUTION -->
+<div class="section" id="attrSection" data-in-tab="perf">
+<h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
+<div class="chart-box-sm" style="height:320px;max-height:320px"><canvas id="attrChart"></canvas></div>
+<div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
+    <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
+  </div>
+  <div id="attrFxRfRow" style="display:none;grid-template-columns:repeat(2,1fr);gap:8px;text-align:center;margin-top:6px">
+    <div><div style="font-size:.95rem;font-weight:700;color:#f97316" class="pv" id="attrFx">—</div><div style="font-size:.65rem;color:var(--muted)">Câmbio (FX)</div></div>
+    <div><div style="font-size:.95rem;font-weight:700;color:#a3e635" class="pv" id="attrRf">—</div><div style="font-size:.65rem;color:var(--muted)">RF Local</div></div>
+  </div>
+  <div id="attrGapMsg" class="pv" style="text-align:center;font-size:.65rem;color:var(--muted);margin-top:6px"></div>
+  <div id="attrCagrNote" class="pv" style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:8px;padding:6px;background:rgba(255,255,255,.04);border-radius:4px">
+    📊 Crescimento patrimonial acumulado (incl. aportes): <strong id="attrCagrVal" class="pv">—</strong>/ano
+    <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style="cursor:help;color:var(--accent)"> ⓘ</span>
+  </div>
+</div>
+<div class="src">Onde está o seu patrimônio hoje: aportes investidos + retorno em USD dos ETFs + RF doméstica e variação cambial. Use TWR para performance pura (sem efeito de aportes).</div>
 </div>
 
 <!-- S24b: ROLLING SHARPE 12m -->
