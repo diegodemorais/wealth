@@ -1401,8 +1401,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T07:49:37-03:00'); // BRT (UTC-3)
-const VERSION = '1.217';
+const GENERATED_AT = new Date('2026-04-13T07:53:25-03:00'); // BRT (UTC-3)
+const VERSION = '1.218';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8061,7 +8061,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.217"
+  "version": "1.218"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -12832,7 +12832,7 @@ function _initTabCharts(tab) {
                buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
                buildBondPool, buildBondPoolRunway],
-    simuladores: [buildScenarios, buildStressTest,
+    simuladores: [() => { _applyFireAxes(); }, buildScenarios, buildStressTest,
                   function() {
                     const wiC = document.getElementById('wiCusto');
                     if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;

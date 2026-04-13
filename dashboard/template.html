@@ -6171,7 +6171,7 @@ function _initTabCharts(tab) {
                buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
                buildBondPool, buildBondPoolRunway],
-    simuladores: [buildScenarios, buildStressTest,
+    simuladores: [() => { _applyFireAxes(); }, buildScenarios, buildStressTest,
                   function() {
                     const wiC = document.getElementById('wiCusto');
                     if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
