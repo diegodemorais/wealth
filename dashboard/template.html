@@ -1306,13 +1306,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="collapse-body">
 <div id="factorLoadingsCards" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
 <div class="period-btns" id="factorLoadingsBtns" style="margin-bottom:10px">
-  <button onclick="setFactorView('all')" class="active">Todos</button>
-  <button onclick="setFactorView('market')">Mkt-RF</button>
-  <button onclick="setFactorView('small')">SMB</button>
-  <button onclick="setFactorView('value')">HML</button>
-  <button onclick="setFactorView('profitability')">RMW</button>
-  <button onclick="setFactorView('investment')">CMA</button>
-  <button onclick="setFactorView('momentum')">Mom</button>
+  <!-- buttons gerados dinamicamente por buildFactorLoadings() -->
 </div>
 <div class="chart-box" style="height:260px"><canvas id="factorLoadingsChart"></canvas></div>
 <div class="src">Regressão FF5+MOM · Barra sólida = significativo (|t|>2) · barra opaca = não significativo · ⚠️ R²&lt;0.80: modelo FF5 DM explica mal este ETF (limitação para EM e SC globais)</div>
@@ -7685,17 +7679,59 @@ function buildFactorRolling() {
 // Factor view state
 window._factorView = 'all';
 
-const _FL_VIEWS = {
-  all:          { factors: ['mkt_rf','smb','hml','rmw','cma','mom'], labels: ['Mkt-RF','SMB','HML','RMW','CMA','Mom'] },
-  market:       { factors: ['mkt_rf'],  labels: ['Mkt-RF'] },
-  small:        { factors: ['smb'],     labels: ['SMB'] },
-  value:        { factors: ['hml'],     labels: ['HML'] },
-  profitability:{ factors: ['rmw'],     labels: ['RMW'] },
-  investment:   { factors: ['cma'],     labels: ['CMA'] },
-  momentum:     { factors: ['mom'],     labels: ['Mom'] },
+// Dynamic factor views (built from available factors)
+let _FL_VIEWS = {};
+
+// Factor metadata: key → {label, viewKey}
+const FACTOR_META = {
+  mkt_rf:  { label: 'Mkt-RF',  viewKey: 'market' },
+  smb:     { label: 'SMB',     viewKey: 'small' },
+  hml:     { label: 'HML',     viewKey: 'value' },
+  rmw:     { label: 'RMW',     viewKey: 'profitability' },
+  cma:     { label: 'CMA',     viewKey: 'investment' },
+  mom:     { label: 'Mom',     viewKey: 'momentum' },
 };
 
+// Build dynamic views from available factors
+function _buildFactorViews(availableFactors) {
+  const views = {};
+
+  // "All" view includes all available factors
+  if (availableFactors.length > 0) {
+    const allLabels = availableFactors.map(f => FACTOR_META[f]?.label || f);
+    views.all = { factors: availableFactors, labels: allLabels };
+  }
+
+  // Individual views for each available factor
+  availableFactors.forEach(factor => {
+    const meta = FACTOR_META[factor];
+    if (meta) {
+      views[meta.viewKey] = {
+        factors: [factor],
+        labels: [meta.label]
+      };
+    }
+  });
+
+  return views;
+}
+
+// Get available factors from data (non-null across at least one ticker)
+function _getAvailableFactors() {
+  const fl = DATA.factor_loadings;
+  if (!fl || Object.keys(fl).length === 0) return [];
+
+  const factorKeys = Object.keys(FACTOR_META);
+  const tickers = Object.keys(fl);
+
+  // Factor is "available" if at least one ticker has a non-null value
+  return factorKeys.filter(factor => {
+    return tickers.some(ticker => fl[ticker][factor] != null);
+  });
+}
+
 window.setFactorView = function(view) {
+  if (!_FL_VIEWS[view]) return; // Safety check
   window._factorView = view;
   setActivePeriodBtn('factorLoadingsBtns', view);
   _renderFactorChart();
@@ -7703,8 +7739,9 @@ window.setFactorView = function(view) {
 
 function buildFactorLoadings() {
   const cardsEl = document.getElementById('factorLoadingsCards');
+  const btnsEl = document.getElementById('factorLoadingsBtns');
   const sec = document.getElementById('factorLoadingsSection');
-  if (!cardsEl || !sec) return;
+  if (!cardsEl || !btnsEl || !sec) return;
   const fl = DATA.factor_loadings;
   if (!fl || Object.keys(fl).length === 0) {
     cardsEl.innerHTML = '<div class="factor-no-data">Factor loadings ainda não disponíveis. Atualizar dashboard para gerar.</div>';
@@ -7718,7 +7755,32 @@ function buildFactorLoadings() {
 
   const tickers = Object.keys(fl).sort();
 
-  // ── A) Cards row ───────────────────────────────────────────────
+  // ── A) Detect available factors & build views ──────────────────
+  const availableFactors = _getAvailableFactors();
+  _FL_VIEWS = _buildFactorViews(availableFactors);
+
+  // Reset to 'all' if current view is no longer available
+  if (!_FL_VIEWS[window._factorView]) {
+    window._factorView = 'all';
+  }
+
+  // ── B) Build buttons dynamically ───────────────────────────────
+  if (availableFactors.length > 0) {
+    const buttons = [];
+    // "Todos" button (always first)
+    buttons.push(`<button onclick="setFactorView('all')" class="active">Todos</button>`);
+    // Individual factor buttons
+    availableFactors.forEach(factor => {
+      const meta = FACTOR_META[factor];
+      if (meta) {
+        const isActive = window._factorView === meta.viewKey ? 'active' : '';
+        buttons.push(`<button onclick="setFactorView('${meta.viewKey}')" class="${isActive}">${meta.label}</button>`);
+      }
+    });
+    btnsEl.innerHTML = buttons.join('');
+  }
+
+  // ── C) Cards row ───────────────────────────────────────────────
   cardsEl.innerHTML = tickers.map(ticker => {
     const vals  = fl[ticker];
     const r2    = vals.r2 ?? null;
@@ -7733,7 +7795,7 @@ function buildFactorLoadings() {
   </div>`;
   }).join('');
 
-  // ── B) Render chart (uses current view) ───────────────────────
+  // ── D) Render chart (uses current view) ───────────────────────
   _renderFactorChart();
 }
 
