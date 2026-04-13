@@ -2922,18 +2922,22 @@ window.calcAporte = function() {
   }
 
   if (restante > 0 && renda_active) {
+    const rendaGapAposAporte = rendaGapPp - restante/pat*100;
     rows += `<div class="prio"><span class="prio-num">${nivelNum++}.</span>
       <strong>Renda+ 2065</strong> — ${taxaRenda?.toFixed(2)}% ≥ piso ${pisoRenda}% · janela ativa<br>
-      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> integralmente em Renda+ 2065</span></div>`;
+      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> integralmente em Renda+ 2065
+      · gap restante: ${rendaGapAposAporte > 0 ? '+' : '−'}${Math.abs(rendaGapAposAporte).toFixed(1)}pp</span></div>`;
     restante = 0;
   } else if (restante > 0 && taxaRenda != null && !renda_active) {
     rows += `<div style="font-size:.7rem;color:var(--muted);padding:2px 0 4px 8px">▸ Renda+ (${taxaRenda?.toFixed(2)}% < piso ${pisoRenda}%) — pausado</div>`;
   }
 
   if (restante > 0 && topBucket) {
+    const topGapAposAporte = topBucket.gap - restante/fx/pat*100;
     rows += `<div class="prio"><span class="prio-num">${nivelNum++}.</span>
       <strong>Equity — ${topBucket.k}.L</strong> — mais subpeso (−${Math.abs(topBucket.gap).toFixed(1)}pp)<br>
-      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> ($${(restante/fx).toFixed(0)}) em ${topBucket.k}.L</span></div>`;
+      <span style="font-size:.75rem;color:var(--muted)">→ <strong>${fmtK(restante)}</strong> ($${(restante/fx).toFixed(0)}) em ${topBucket.k}.L
+      · gap restante: −${Math.abs(topGapAposAporte).toFixed(1)}pp</span></div>`;
     equityBuckets.slice(1).forEach(b => {
       rows += `<div style="font-size:.7rem;color:var(--muted);padding:1px 0 1px 12px">▸ ${b.k}: drift ${b.gap > 0 ? '−' : '+'}${Math.abs(b.gap).toFixed(1)}pp</div>`;
     });

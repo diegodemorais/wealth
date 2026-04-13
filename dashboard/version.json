@@ -1,6 +1,6 @@
 {
   "major": 2,
-  "minor": 20,
+  "minor": 21,
   "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests",
   "date": "2026-04-13",
   "history": [
@@ -1201,6 +1201,11 @@
     },
     {
       "version": "2.20",
+      "date": "2026-04-13",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
+    },
+    {
+      "version": "2.21",
       "date": "2026-04-13",
       "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
     }
