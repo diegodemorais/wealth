@@ -88,7 +88,15 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .income-phase{border-left:3px solid var(--accent);padding:8px 12px;margin:6px 0;background:rgba(59,130,246,.05);border-radius:0 6px 6px 0;font-size:.8rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
-.private-mode .pv{visibility:hidden}
+/* ── Privacy mode: transformar valores em placeholders legíveis ── */
+.private-mode .pv{color:transparent!important;position:relative;white-space:nowrap}
+.private-mode .pv::after{content:"••••";color:var(--muted);position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;pointer-events:none;font-weight:400;font-style:normal;text-decoration:none}
+/* placeholder customizado via data-pv-mask */
+.private-mode .pv[data-pv-mask]::after{content:attr(data-pv-mask)}
+/* td com alinhamento à direita: placeholder também à direita */
+.private-mode td.pv::after{justify-content:flex-end}
+/* strong/b/svg dentro de pv herdam transparent */
+.private-mode .pv strong,.private-mode .pv b,.private-mode .pv svg{color:transparent!important;opacity:0}
 .tab-hidden{display:none!important}
 /* ── Zebra striping em tabelas longas ── */
 tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
@@ -366,7 +374,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <div id="fireProgressBar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .5s"></div>
 </div>
 <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:4px">
-  <span id="fireProgressStart" class="pv">—</span><span id="fireProgressLabel" class="pv">—</span><span id="fireProgressEnd" class="pv">—</span>
+  <span id="fireProgressStart" class="pv" data-pv-mask="••">—</span><span id="fireProgressLabel" class="pv">—</span><span id="fireProgressEnd" class="pv" data-pv-mask="••">—</span>
 </div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="fireScenarioGrid"></div>
@@ -964,9 +972,9 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div style="text-align:center;min-width:140px">
     <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Com esses parâmetros</div>
     <div style="font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">você pode aposentar em</div>
-    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno" class="pv">—</div>
-    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade" class="pv">— anos</div>
-    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire" class="pv">P = —%</div>
+    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno" class="pv" data-pv-mask="••">—</div>
+    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade" class="pv" data-pv-mask="•• anos">— anos</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire" class="pv" data-pv-mask="P = ••%">P = —%</div>
     <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff" class="pv">—</div>
   </div>
   <div>
@@ -6150,16 +6158,43 @@ function _applyPrivacyCharts(isPrivate) {
   _sliders.forEach(({ id, numId }) => {
     const sl = document.getElementById(id);
     if (!sl) return;
+    const lbl = document.getElementById(numId);
     if (isPrivate) {
       const mid = Math.round((+sl.min + +sl.max) / 2 / +sl.step) * +sl.step;
+      sl.dataset.pvOriginal = sl.value;
       sl.value = mid;
-      const lbl = document.getElementById(numId);
-      if (lbl) lbl.textContent = '***';
+      // label já tem class="pv" → CSS exibe ••••; apenas preservar conteúdo original
+      if (lbl) lbl.dataset.pvOriginal = lbl.textContent;
+    } else {
+      if (sl.dataset.pvOriginal !== undefined) {
+        sl.value = sl.dataset.pvOriginal;
+        delete sl.dataset.pvOriginal;
+      }
+      if (lbl && lbl.dataset.pvOriginal !== undefined) {
+        lbl.textContent = lbl.dataset.pvOriginal;
+        delete lbl.dataset.pvOriginal;
+      }
     }
   });
-  // Calculadora de aporte: ocultar valor numérico e resetar slider em private mode
+  // Calculadora de aporte: em private mode, substituir valor por placeholder no input
   const _calcNum = document.getElementById('calcAporteNum');
-  if (_calcNum) _calcNum.style.visibility = isPrivate ? 'hidden' : '';
+  if (_calcNum) {
+    if (isPrivate) {
+      _calcNum.dataset.pvOriginal = _calcNum.value;
+      _calcNum.value = '••••';
+      _calcNum.disabled = true;
+      _calcNum.style.color = 'var(--muted)';
+      _calcNum.style.letterSpacing = '2px';
+    } else {
+      if (_calcNum.dataset.pvOriginal !== undefined) {
+        _calcNum.value = _calcNum.dataset.pvOriginal;
+        delete _calcNum.dataset.pvOriginal;
+      }
+      _calcNum.disabled = false;
+      _calcNum.style.color = '';
+      _calcNum.style.letterSpacing = '';
+    }
+  }
   const _calcSlider = document.getElementById('calcAporte');
   if (_calcSlider && isPrivate) {
     _calcSlider.value = Math.round((+_calcSlider.min + +_calcSlider.max) / 2);
