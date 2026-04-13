@@ -550,40 +550,6 @@
 </div><!-- /collapse-body -->
 </div>
 
-<!-- PREMISSAS VS REALIZADO — 5 Years Performance Review (Performance tab) -->
-<div class="section" data-in-tab="perf" id="premissasVsRealizadoSection">
-<h2>Premissas vs Realizado — 5 Anos (2021-2026)</h2>
-<div id="premissasVsRealizadoBody"></div><!-- /section premissasVsRealizadoSection -->
-<div class="src" id="premissasVsRealizadoSrc">Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados</div>
-</div>
-
-
-<!-- S24: RETORNOS MENSAIS — Heatmap (aberto por default) -->
-<div class="section collapsible open" data-in-tab="perf">
-<h2 onclick="_toggleBlock(this.parentElement)">Retornos Mensais — Heatmap</h2>
-<div class="collapse-body">
-<div id="heatmapContainer" style="overflow-x:auto"></div><!-- /section section-822 -->
-<div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px"></div>
-<div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
-</div><!-- /collapse-body -->
-</div>
-
-<!-- S6: NET WORTH TIMELINE -->
-<div class="section" data-in-tab="perf">
-<h2>Patrimônio — Evolução Histórica</h2>
-<div class="period-btns" id="timelinePeriodBtns">
-  <button onclick="setTimelinePeriod('6m')">6m</button>
-  <button onclick="setTimelinePeriod('ytd')">YTD</button>
-  <button onclick="setTimelinePeriod('1y')">1y</button>
-  <button onclick="setTimelinePeriod('3y')">3y</button>
-  <button onclick="setTimelinePeriod('5y')">5y</button>
-  <button onclick="setTimelinePeriod('all')" class="active">All</button>
-</div><!-- /section section-832 -->
-<div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
-<div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
-<div class="src">Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.</div>
-</div>
-
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <div class="section" id="attrSection" data-in-tab="perf">
 <h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
@@ -605,6 +571,32 @@
   </div>
 </div>
 <div class="src">Onde está o seu patrimônio hoje: aportes investidos + retorno em USD dos ETFs + RF doméstica e variação cambial. Use TWR para performance pura (sem efeito de aportes).</div>
+</div>
+
+<!-- S6: NET WORTH TIMELINE -->
+<div class="section" data-in-tab="perf">
+<h2>Patrimônio — Evolução Histórica</h2>
+<div class="period-btns" id="timelinePeriodBtns">
+  <button onclick="setTimelinePeriod('6m')">6m</button>
+  <button onclick="setTimelinePeriod('ytd')">YTD</button>
+  <button onclick="setTimelinePeriod('1y')">1y</button>
+  <button onclick="setTimelinePeriod('3y')">3y</button>
+  <button onclick="setTimelinePeriod('5y')">5y</button>
+  <button onclick="setTimelinePeriod('all')" class="active">All</button>
+</div><!-- /section section-832 -->
+<div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
+<div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
+<div class="src">Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.</div>
+</div>
+
+<!-- S24: RETORNOS MENSAIS — Heatmap (aberto por default) -->
+<div class="section collapsible open" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Retornos Mensais — Heatmap</h2>
+<div class="collapse-body">
+<div id="heatmapContainer" style="overflow-x:auto"></div><!-- /section section-822 -->
+<div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px"></div>
+<div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S24b: ROLLING SHARPE 12m -->
@@ -1045,6 +1037,15 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 <div class="chart-box" style="height:260px"><canvas id="factorLoadingsChart"></canvas></div>
 <div class="src">Regressão FF5+MOM · Barra sólida = significativo (|t|>2) · barra opaca = não significativo · ⚠️ R²&lt;0.80: modelo FF5 DM explica mal este ETF (limitação para EM e SC globais)</div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- PREMISSAS VS REALIZADO — 5 Years Performance Review (Performance tab) -->
+<div class="section collapsible" data-in-tab="perf" id="premissasVsRealizadoSection">
+<h2 onclick="_toggleBlock(this.parentElement)">Premissas vs Realizado — 5 Anos (2021-2026)</h2>
+<div class="collapse-body">
+<div id="premissasVsRealizadoBody"></div><!-- /section premissasVsRealizadoSection -->
+<div class="src" id="premissasVsRealizadoSrc">Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados</div>
 </div><!-- /collapse-body -->
 </div>
 
