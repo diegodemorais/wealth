@@ -6,13 +6,13 @@
 |-------|-------|
 | **ID** | DEV-hero-kpi-review |
 | **Dono** | Dev + Head |
-| **Status** | ✅ Done |
-| **Concluído em** | 2026-04-12 |
+| **Status** | ✅ Fechada — 2026-04-13 |
+| **Concluído em** | 2026-04-13 |
 | **Prioridade** | 🟡 Média |
 | **Participantes** | Head, Dev, FIRE, Factor, RF, Risco, Macro, FX, Tax, Quant, Bookkeeper, Advocate |
 | **Criado em** | 2026-04-12 |
 | **Origem** | Diego — card do FIRE quebrado no layout + duplicações entre hero strip e aba Now |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-13 |
 
 ---
 
@@ -122,22 +122,26 @@ Cada agente responde para os KPIs do seu domínio:
 
 ## Analise
 
-*(a preencher após debate dos agentes)*
+Dev mapeou o estado real (2026-04-13): hero strip tem apenas 3 cards visíveis (Patrimônio, Anos até FIRE, Progresso FIRE). P(FIRE) e Savings Rate no hero são dead JS — IDs removidos do HTML. pfireHeadline band não existe. 6 KPIs com `display:none` fixo invisíveis: Bond Pool Runway, Wellness, Alpha ITD, Factor Signal, TER da Carteira, IPCA+ Mercado duplicado.
+
+Debate com 5 agentes (FIRE, Factor, RF, Advocate, Macro) produziu proposta de redesign: hero strip 4 cards + remoção de 8 KPIs low-signal + melhoria nos displays de IPCA+/Renda+ com distância ao gatilho.
 
 ---
 
 ## Conclusao
 
-*(a preencher após aprovação de Diego)*
+Diego optou por manter o dashboard como está. Nenhuma alteração implementada.
+
+**Status quo preservado:** 3 cards no hero, KPIs atuais na aba Now, dead code mantido.
 
 ---
 
 ## Resultado
 
-*(a preencher após implementação)*
+Debate realizado. Proposta de redesign documentada no histórico. Nenhuma mudança no dashboard.
 
 ---
 
 ## Proximos Passos
 
-*(a preencher após conclusão)*
+Nenhum.

@@ -35,7 +35,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~DEV-tester~~ | ~~Agente Tester — Suite de testes funcionais para todos os 64 blocos~~ | Dev | ✅ Done 2026-04-12 |
 | ~~DEV-fire-tab-split~~ | ~~Split da aba FIRE em 2 tabs coerentes~~ | Dev | ✅ Done 2026-04-12 |
 | ~~DEV-privacy-sim-audit~~ | ~~Auditoria privacidade: simulador FIRE + todos os componentes~~ | Dev | ✅ Done 2026-04-13 |
-| — | DEV-hero-kpi-review | Revisão completa KPIs hero strip + aba Now | Dev + Head | 🟡 Média |
+| ~~DEV-hero-kpi-review~~ | ~~Revisão completa KPIs hero strip + aba Now~~ | Dev + Head | ✅ Done 2026-04-13 |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
@@ -74,6 +74,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| DEV-hero-kpi-review | Revisão completa KPIs hero strip + aba Now | Dev + Head | 2026-04-13 | Debate realizado (5 agentes). Proposta de redesign recusada por Diego. Status quo mantido. |
 | DEV-privacy-sim-audit | Auditoria privacidade completa — transformar em vez de ocultar | Dev | 2026-04-13 | 32 gaps corrigidos (v2.6→v2.10). CSS ::after "••••". Slider labels, hero strip, FIRE matrix, SWR percentis, fee analysis, HODL PnL cobertos. |
 | FR-swr-revisao-2026-04-13 | SWR gatilho revisão + floors simulador | FIRE+Quant+Dev | 2026-04-13 | SWR 2.4%→3.0% (Pfau/ERN). R$13.4M removido como referência. Floors INSS/Katia implementados. Aporte 33k→25k. Dashboard v2.5. 604/604 testes. |
 | HD-behavioral | Behavioral checklist enriquecido | Advocate | 2026-04-13 | Fechada (concluída em 2026-03-26 sem status update). 9 itens no checklist do Advocate. Item #9 echo chamber LLM único genuinamente novo. |
