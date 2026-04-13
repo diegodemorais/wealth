@@ -274,6 +274,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <button class="tab-btn" data-tab="perf"      onclick="switchTab('perf')">📈 Performance</button>
   <button class="tab-btn" data-tab="fire"      onclick="switchTab('fire')">🔥 FIRE</button>
   <button class="tab-btn" data-tab="retiro"    onclick="switchTab('retiro')">🏖️ Retirada</button>
+  <button class="tab-btn" data-tab="simuladores" onclick="switchTab('simuladores')">🧪 Simuladores</button>
 </div>
 
 <!-- HERO STRIP (aba Now) -->
@@ -418,7 +419,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 
 <!-- S10: P(FIRE) + TORNADO + SPENDING -->
-<div class="section" data-in-tab="hoje">
+<div class="section" data-in-tab="simuladores">
 <h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
@@ -601,7 +602,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S9 + F4: FIRE@53 vs FIRE@50 — tabela unificada (gráfico de barras removido — duplicata) -->
-<div class="section" data-in-tab="fire">
+<div class="section" data-in-tab="simuladores">
   <h2>FIRE@53 vs FIRE@50 — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div>
@@ -694,7 +695,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- R1: FIRE MATRIX — P(Sucesso) por Patrimônio × Gasto -->
-<div class="section collapsible" data-in-tab="fire" id="fireMatrixSection">
+<div class="section collapsible" data-in-tab="simuladores" id="fireMatrixSection">
 <h2 onclick="_toggleBlock(this.parentElement)">FIRE Matrix — P(Sucesso 30 anos)</h2>
 <div class="collapse-body">
 <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
@@ -1074,7 +1075,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <canvas id="aporteSensChart" style="display:none"></canvas>
 
 <!-- F11: Stress Test -->
-<div class="section collapsible" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="simuladores">
 <h2 onclick="_toggleBlock(this.parentElement)">Stress Test Monte Carlo — Bear Market Interativo</h2>
 <div class="collapse-body">
 
@@ -6153,7 +6154,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    hoje:     [buildTimestamps, buildTornado, buildSankey],
+    hoje:     [buildTimestamps, buildSankey],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -6161,8 +6162,8 @@ function _initTabCharts(tab) {
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
     carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarioComparison, buildScenarios,
-               buildFireMatrix, buildLumpyEvents,
+    fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarios,
+               buildLumpyEvents,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire,
                function() {
@@ -6171,12 +6172,12 @@ function _initTabCharts(tab) {
                  if (!window._wiPreset) window._wiPreset = 'base';
                  updateWhatIf();
                },
-               buildStressTest,
                buildEventosVida, buildPfireFamilia],
     retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
                buildBondPool, buildBondPoolRunway],
+    simuladores: [buildTornado, buildScenarioComparison, buildFireMatrix, buildStressTest],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.error('[chart-init ERROR]', fn.name || tab, e.message, e); } });

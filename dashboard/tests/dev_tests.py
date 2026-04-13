@@ -214,11 +214,10 @@ def _():
 
 # ── RENDER (structural) ───────────────────────────────────────────────────────
 
-@registry.test("render-global", "RENDER", "HTML has 5 tab containers (hoje/carteira/perf/fire/retiro)", "CRITICAL")
+@registry.test("render-global", "RENDER", "HTML has 6 tab containers (hoje/carteira/perf/fire/retiro/simuladores)", "CRITICAL")
 def _():
     html = load_html()
-    # Actual tab IDs in HTML (differ from spec names)
-    html_tab_ids = ["hoje", "carteira", "perf", "fire", "retiro"]
+    html_tab_ids = ["hoje", "carteira", "perf", "fire", "retiro", "simuladores"]
     missing = []
     for tab_id in html_tab_ids:
         if f'data-tab="{tab_id}"' not in html and f"data-tab='{tab_id}'" not in html:
