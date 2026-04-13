@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | ARCH-001 |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Alta |
 | **Participantes** | Quant, Head |
 | **Co-sponsor** | Head |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-13 |
 | **Origem** | Diagnóstico arquitetural — padrão recorrente de falhas |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-13 |
 
 ---
 
