@@ -324,43 +324,6 @@
 <canvas id="scenarioChart" style="display:none"></canvas>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
-<div class="section collapsible" data-in-tab="perf">
-<h2 onclick="_toggleBlock(this.parentElement)">Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
-<div class="collapse-body">
-<div class="grid-2" style="margin-bottom:0">
-<div>
-  <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div><!-- /section section-587 -->
-</div>
-<div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px" id="ipcaProgressTitle">IPCA+ Longo — Progresso vs Alvo —</div>
-  <div class="progress-row">
-    <div class="progress-label"><span>IPCA+ Longo</span><span id="ipcaProgressLabel">—</span></div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="ipcaProgressFill" style="background:var(--red)"></div>
-      <div class="progress-target" id="ipcaProgressTarget" style="left:15%"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="ipcaProgressGap">—</div>
-  <div class="progress-row" style="margin-top:12px">
-    <div class="progress-label"><span>Alpha líquido pós-haircut</span><span id="alphaLiquidoLabel">—</span></div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="alphaLiquidoFill" style="background:var(--green)"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted)" id="alphaLiquidoNote">McLean &amp; Pontiff 2016: haircut 58%</div>
-  <div class="progress-row" style="margin-top:8px">
-    <div class="progress-label"><span>IPCA+ taxa vs piso</span><span id="ipcaTaxaVsPiso">—</span></div>
-    <div class="progress-bar">
-      <div id="ipcaTaxaFill" class="progress-fill" style="background:var(--cyan);width:80%"></div>
-      <div class="progress-target" style="left:60%"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted)" id="ipcaTaxaStatus">—</div>
-</div>
-</div>
-</div><!-- /collapse-body -->
-</div>
-
 <!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
 <div class="section collapsible" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Glide Path — Alocação por Idade</h2>
@@ -596,6 +559,44 @@
 <div id="heatmapContainer" style="overflow-x:auto"></div><!-- /section section-822 -->
 <div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px"></div>
 <div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- S11: DELTA BAR + PROGRESS BARS (Alpha desde o início) -->
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
+<div class="collapse-body">
+<div class="grid-2" style="margin-bottom:0">
+<div>
+  <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div><!-- /section section-587 -->
+</div>
+<div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px" id="ipcaProgressTitle">IPCA+ Longo — Progresso vs Alvo —</div>
+  <div class="progress-row">
+    <div class="progress-label"><span>IPCA+ Longo</span><span id="ipcaProgressLabel">—</span></div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="ipcaProgressFill" style="background:var(--red)"></div>
+      <div class="progress-target" id="ipcaProgressTarget" style="left:15%"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="ipcaProgressGap">—</div>
+  <div class="progress-row" style="margin-top:12px">
+    <div class="progress-label"><span>Alpha líquido pós-haircut</span><span id="alphaLiquidoLabel">—</span></div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="alphaLiquidoFill" style="background:var(--green)"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted)" id="alphaLiquidoNote">McLean &amp; Pontiff 2016: haircut 58%</div>
+  <div class="progress-row" style="margin-top:8px">
+    <div class="progress-label"><span>IPCA+ taxa vs piso</span><span id="ipcaTaxaVsPiso">—</span></div>
+    <div class="progress-bar">
+      <div id="ipcaTaxaFill" class="progress-fill" style="background:var(--cyan);width:80%"></div>
+      <div class="progress-target" style="left:60%"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted)" id="ipcaTaxaStatus">—</div>
+</div>
+</div>
 </div><!-- /collapse-body -->
 </div>
 

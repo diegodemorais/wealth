@@ -632,43 +632,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <canvas id="scenarioChart" style="display:none"></canvas>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
-<div class="section collapsible" data-in-tab="perf">
-<h2 onclick="_toggleBlock(this.parentElement)">Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
-<div class="collapse-body">
-<div class="grid-2" style="margin-bottom:0">
-<div>
-  <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div><!-- /section section-587 -->
-</div>
-<div>
-  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px" id="ipcaProgressTitle">IPCA+ Longo — Progresso vs Alvo —</div>
-  <div class="progress-row">
-    <div class="progress-label"><span>IPCA+ Longo</span><span id="ipcaProgressLabel">—</span></div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="ipcaProgressFill" style="background:var(--red)"></div>
-      <div class="progress-target" id="ipcaProgressTarget" style="left:15%"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="ipcaProgressGap">—</div>
-  <div class="progress-row" style="margin-top:12px">
-    <div class="progress-label"><span>Alpha líquido pós-haircut</span><span id="alphaLiquidoLabel">—</span></div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="alphaLiquidoFill" style="background:var(--green)"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted)" id="alphaLiquidoNote">McLean &amp; Pontiff 2016: haircut 58%</div>
-  <div class="progress-row" style="margin-top:8px">
-    <div class="progress-label"><span>IPCA+ taxa vs piso</span><span id="ipcaTaxaVsPiso">—</span></div>
-    <div class="progress-bar">
-      <div id="ipcaTaxaFill" class="progress-fill" style="background:var(--cyan);width:80%"></div>
-      <div class="progress-target" style="left:60%"></div>
-    </div>
-  </div>
-  <div style="font-size:.65rem;color:var(--muted)" id="ipcaTaxaStatus">—</div>
-</div>
-</div>
-</div><!-- /collapse-body -->
-</div>
-
 <!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
 <div class="section collapsible" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Glide Path — Alocação por Idade</h2>
@@ -904,6 +867,44 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div id="heatmapContainer" style="overflow-x:auto"></div><!-- /section section-822 -->
 <div id="monthlyRetStats" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px"></div>
 <div class="src">Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.</div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- S11: DELTA BAR + PROGRESS BARS (Alpha desde o início) -->
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
+<div class="collapse-body">
+<div class="grid-2" style="margin-bottom:0">
+<div>
+  <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div><!-- /section section-587 -->
+</div>
+<div>
+  <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px" id="ipcaProgressTitle">IPCA+ Longo — Progresso vs Alvo —</div>
+  <div class="progress-row">
+    <div class="progress-label"><span>IPCA+ Longo</span><span id="ipcaProgressLabel">—</span></div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="ipcaProgressFill" style="background:var(--red)"></div>
+      <div class="progress-target" id="ipcaProgressTarget" style="left:15%"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="ipcaProgressGap">—</div>
+  <div class="progress-row" style="margin-top:12px">
+    <div class="progress-label"><span>Alpha líquido pós-haircut</span><span id="alphaLiquidoLabel">—</span></div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="alphaLiquidoFill" style="background:var(--green)"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted)" id="alphaLiquidoNote">McLean &amp; Pontiff 2016: haircut 58%</div>
+  <div class="progress-row" style="margin-top:8px">
+    <div class="progress-label"><span>IPCA+ taxa vs piso</span><span id="ipcaTaxaVsPiso">—</span></div>
+    <div class="progress-bar">
+      <div id="ipcaTaxaFill" class="progress-fill" style="background:var(--cyan);width:80%"></div>
+      <div class="progress-target" style="left:60%"></div>
+    </div>
+  </div>
+  <div style="font-size:.65rem;color:var(--muted)" id="ipcaTaxaStatus">—</div>
+</div>
+</div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -1448,12 +1449,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T20:06:26-03:00'); // BRT (UTC-3)
-const VERSION = '2.83';
+const GENERATED_AT = new Date('2026-04-13T20:09:22-03:00'); // BRT (UTC-3)
+const VERSION = '2.85';
 
 const DATA = {
-  "_generated": "2026-04-13T17:19:17",
-  "_generated_brt": "2026-04-13T17:19:17-03:00",
+  "_generated": "2026-04-13T20:07:27",
+  "_generated_brt": "2026-04-13T20:07:27-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1463,12 +1464,12 @@ const DATA = {
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.0024,
+  "cambio": 5.005,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.285,
+      "price": 48.4,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -1476,7 +1477,7 @@ const DATA = {
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.805,
+      "price": 26.9025,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -1500,7 +1501,7 @@ const DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.495,
+      "price": 84.68,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1508,7 +1509,7 @@ const DATA = {
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.45,
+      "price": 49.7,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1532,7 +1533,7 @@ const DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.91,
+      "price": 66.23,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -1562,7 +1563,7 @@ const DATA = {
     "stress": 82.5
   },
   "premissas": {
-    "patrimonio_atual": 3592118,
+    "patrimonio_atual": 3600433,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2898,7 +2899,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -3325,7 +3326,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -3336,7 +3337,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -3664,16 +3665,16 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.4,
-    "valor": 102906.4,
+    "preco": 61.75,
+    "valor": 103493.0,
     "preco_medio": 79.03,
-    "pnl_brl": -29547.88,
-    "pnl_pct": -22.31,
+    "pnl_brl": -28961.28,
+    "pnl_pct": -21.87,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.86,
+      "atual_pct": 2.87,
       "status": "verde"
     }
   },
@@ -3767,7 +3768,7 @@ const DATA = {
       "alvo": 23.7
     },
     "AVEM": {
-      "atual": 23.8,
+      "atual": 23.9,
       "alvo": 15.8
     },
     "IPCA": {
@@ -3801,7 +3802,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.495,
+      "price": 84.68,
       "ucits": "AVGS.L"
     },
     {
@@ -3809,7 +3810,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.45,
+      "price": 49.7,
       "ucits": "AVEM.L"
     },
     {
@@ -3833,7 +3834,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.91,
+      "price": 66.23,
       "ucits": "JPGL.L"
     }
   ],
@@ -4173,10 +4174,10 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 630925,
-    "retorno_usd": 239881,
-    "pct_aportes": 62.0,
-    "pct_retorno": 38.0,
+    "patrimonio_equity_usd": 632141,
+    "retorno_usd": 241097,
+    "pct_aportes": 61.9,
+    "pct_retorno": 38.1,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-13"
@@ -4202,8 +4203,8 @@ const DATA = {
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 87.3,
-    "bitcoin_usd": 73159.44,
+    "exposicao_cambial_pct": 87.1,
+    "bitcoin_usd": 74650.99,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -4217,13 +4218,13 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0024
+    "cambio": 5.005
   },
   "mercado": {
-    "cambio_brl_usd": 5.0024,
-    "btc_usd": 73159.44,
-    "cambio_mtd_pct": -2.98,
-    "btc_mtd_pct": 1.78,
+    "cambio_brl_usd": 5.005,
+    "btc_usd": 74650.99,
+    "cambio_mtd_pct": -2.93,
+    "btc_mtd_pct": 3.86,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -4704,7 +4705,7 @@ const DATA = {
   "concentracao_brasil": {
     "brasil_pct": 12.1,
     "composicao": {
-      "hodl11_brl": 102906,
+      "hodl11_brl": 103493,
       "rf_total_brl": 329063,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -4714,8 +4715,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 435981,
-    "total_portfolio_brl": 3592118,
+    "total_brasil_brl": 436568,
+    "total_portfolio_brl": 3600433,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4731,23 +4732,23 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72739,
-      "delta_brl": 47739,
+      "realizado_media_brl": 72756,
+      "delta_brl": 47756,
       "delta_pct": 191.0,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1956156,
+      "total_ibkr_brl": 1957172,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4364315,
-      "cambio_conversao": 5.0024,
+      "total_aporte_brl": 4365331,
+      "cambio_conversao": 5.005,
       "por_ano_brl": {
-        "2026": 95046,
-        "2025": 282498,
-        "2024": 372537,
-        "2023": 393726,
-        "2022": 482199,
-        "2021": 330150
+        "2026": 95095,
+        "2025": 282645,
+        "2024": 372731,
+        "2023": 393931,
+        "2022": 482450,
+        "2021": 330321
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
@@ -7644,76 +7645,6 @@ const DATA = {
     "n_sim": 5000,
     "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) não capturado — conservador (pior caso)."
   },
-  "_provenance": {
-    "concentracao_brasil.brasil_pct": {
-      "source_file": "scripts/generate_data.py",
-      "source_line": 1519,
-      "formula": "(hodl11_brl + rf_total_brl + crypto_legado) / total_brl * 100",
-      "input_fields": [
-        "posicoes.HODL11.valor_brl",
-        "rf.ipca2029.valor",
-        "rf.ipca2040.valor",
-        "rf.ipca2050.valor",
-        "rf.renda_plus_2065.valor",
-        "patrimonio.crypto_legado_brl"
-      ],
-      "reason": "Concentração em ativos de risco Brasil (HODL11 B3 + RF soberano BR + Crypto legacy)",
-      "last_updated": "2026-04-13T19:39:53.518454"
-    },
-    "macro.exposicao_cambial_pct": {
-      "source_file": "scripts/generate_data.py",
-      "source_line": 1900,
-      "formula": "(equity_usd * cambio) / total_brl * 100",
-      "input_fields": [
-        "patrimonio.equity_usd",
-        "macro.cambio",
-        "patrimonio.total_brl"
-      ],
-      "reason": "Exposição cambial (equity USD convertido para BRL / total do portfólio)",
-      "last_updated": "2026-04-13T19:39:53.518454"
-    },
-    "concentracao_brasil.composicao.hodl11_brl": {
-      "source_file": "scripts/generate_data.py",
-      "source_line": 1510,
-      "formula": "posicoes.HODL11.qty * posicoes.HODL11.preco",
-      "input_fields": [
-        "posicoes.HODL11.qty",
-        "posicoes.HODL11.preco"
-      ],
-      "reason": "HODL11 (BTC B3) em BRL: quantidade × preço",
-      "last_updated": "2026-04-13T19:39:53.518454"
-    },
-    "macro.cambio": {
-      "source_file": "scripts/generate_data.py",
-      "source_line": 1880,
-      "formula": "patrimonio.cambio (from dashboard_state.json ou fallback config.CAMBIO_FALLBACK)",
-      "input_fields": [
-        "patrimonio.cambio"
-      ],
-      "reason": "Taxa de câmbio BRL/USD para conversão de exposição USD",
-      "last_updated": "2026-04-13T19:39:53.518454"
-    },
-    "macro.selic_meta": {
-      "source_file": "scripts/generate_data.py",
-      "source_line": 1850,
-      "formula": "config.SELIC_META_SNAPSHOT (snapshot de referência)",
-      "input_fields": [],
-      "reason": "Meta Selic vigente (snapshot em momento de execução)",
-      "last_updated": "2026-04-13T19:39:53.518454"
-    },
-    "fire.pfire_base": {
-      "source_file": "scripts/fire_montecarlo.py",
-      "source_line": null,
-      "formula": "P(patrimônio >= gastos_esperados em 50 anos) via Monte Carlo",
-      "input_fields": [
-        "patrimonio.total_brl",
-        "premissas.taxa_real_equity",
-        "premissas.taxa_real_rf"
-      ],
-      "reason": "Probabilidade de não quebrar (FIRE baseline)",
-      "last_updated": "2026-04-13T19:39:53.518454"
-    }
-  },
   "wellness_extras": {
     "cash_flow_12m": {
       "value": 290000,
@@ -8097,20 +8028,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3592118,
-      3731359,
-      3875997,
-      4026242,
-      4182311,
-      4344430,
-      4512833,
-      4687763,
-      4869475,
-      5058230,
-      5254301,
-      5457973,
-      5669540,
-      5889308,
+      3600433,
+      3739379,
+      3883686,
+      4033563,
+      4189224,
+      4350892,
+      4518799,
+      4693186,
+      4874302,
+      5062408,
+      5257773,
+      5460678,
+      5671413,
+      5890281,
       6117595,
       6172298,
       6229655,
@@ -8151,20 +8082,20 @@ const DATA = {
       14090060
     ],
     "p50": [
-      3592118,
-      3849371,
-      4125048,
-      4420467,
-      4737044,
-      5076292,
-      5439836,
-      5829415,
-      6246895,
-      6694273,
-      7173690,
-      7687441,
-      8237985,
-      8827957,
+      3600433,
+      3857645,
+      4133231,
+      4428505,
+      4744873,
+      5083843,
+      5447028,
+      5836158,
+      6253088,
+      6699803,
+      7178430,
+      7691251,
+      8240707,
+      8829415,
       9460180,
       9676999,
       9904333,
@@ -8205,20 +8136,20 @@ const DATA = {
       33370394
     ],
     "p90": [
-      3592118,
-      3965318,
-      4377291,
-      4832065,
-      5334088,
-      5888268,
-      6500024,
-      7175338,
-      7920813,
-      8743739,
-      9652161,
-      10654964,
-      11761951,
-      12983948,
+      3600433,
+      3973840,
+      4385974,
+      4840851,
+      5342905,
+      5897027,
+      6508618,
+      7183638,
+      7928666,
+      8750962,
+      9658540,
+      10660244,
+      11765837,
+      12986092,
       14332903,
       14786049,
       15261172,
@@ -8288,7 +8219,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.83"
+  "version": "2.85"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10965,13 +10896,16 @@ function buildScenarioComparison() {
   const fmtPfire = v => v != null ? `<span class="pv" style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
   const fmtPat = v => v != null ? `<span class="pv">R$${(v/1e6).toFixed(2)}M</span>` : '<span style="color:var(--muted)">n/d</span>';
 
+  const base = sc.fire_base || sc.fire53 || {};
+  const aspir = sc.fire_aspiracional || sc.fire50 || {};
+
   const rows = [
-    ['P(FIRE) Base',     fmtPfire(sc.fire53.base),   fmtPfire(sc.fire50.base)],
-    ['P(FIRE) Favorável', fmtPfire(sc.fire53.fav),   fmtPfire(sc.fire50.fav)],
-    ['P(FIRE) Stress',   fmtPfire(sc.fire53.stress), fmtPfire(sc.fire50.stress)],
-    ['Patrimônio Mediano', fmtPat(sc.fire53.pat_mediano), fmtPat(sc.fire50.pat_mediano)],
-    ['Patrimônio P10',   fmtPat(sc.fire53.pat_p10),  fmtPat(sc.fire50.pat_p10)],
-    ['Patrimônio P90',   fmtPat(sc.fire53.pat_p90),  fmtPat(sc.fire50.pat_p90)],
+    ['P(FIRE) Base',     fmtPfire(base.base),   fmtPfire(aspir.base)],
+    ['P(FIRE) Favorável', fmtPfire(base.fav),   fmtPfire(aspir.fav)],
+    ['P(FIRE) Stress',   fmtPfire(base.stress), fmtPfire(aspir.stress)],
+    ['Patrimônio Mediano', fmtPat(base.pat_mediano), fmtPat(aspir.pat_mediano)],
+    ['Patrimônio P10',   fmtPat(base.pat_p10),  fmtPat(aspir.pat_p10)],
+    ['Patrimônio P90',   fmtPat(base.pat_p90),  fmtPat(aspir.pat_p90)],
     ['Anos de trabalho (delta)', '0 (base)', '<span style="color:var(--purple)">−3 anos</span>'],
   ];
 

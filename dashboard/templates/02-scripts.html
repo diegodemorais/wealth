@@ -2755,13 +2755,16 @@ function buildScenarioComparison() {
   const fmtPfire = v => v != null ? `<span class="pv" style="color:${v>=90?'var(--green)':v>=85?'var(--accent)':'var(--yellow)'};font-weight:700">${v}%</span>` : '<span style="color:var(--muted)">—</span>';
   const fmtPat = v => v != null ? `<span class="pv">R$${(v/1e6).toFixed(2)}M</span>` : '<span style="color:var(--muted)">n/d</span>';
 
+  const base = sc.fire_base || sc.fire53 || {};
+  const aspir = sc.fire_aspiracional || sc.fire50 || {};
+
   const rows = [
-    ['P(FIRE) Base',     fmtPfire(sc.fire53.base),   fmtPfire(sc.fire50.base)],
-    ['P(FIRE) Favorável', fmtPfire(sc.fire53.fav),   fmtPfire(sc.fire50.fav)],
-    ['P(FIRE) Stress',   fmtPfire(sc.fire53.stress), fmtPfire(sc.fire50.stress)],
-    ['Patrimônio Mediano', fmtPat(sc.fire53.pat_mediano), fmtPat(sc.fire50.pat_mediano)],
-    ['Patrimônio P10',   fmtPat(sc.fire53.pat_p10),  fmtPat(sc.fire50.pat_p10)],
-    ['Patrimônio P90',   fmtPat(sc.fire53.pat_p90),  fmtPat(sc.fire50.pat_p90)],
+    ['P(FIRE) Base',     fmtPfire(base.base),   fmtPfire(aspir.base)],
+    ['P(FIRE) Favorável', fmtPfire(base.fav),   fmtPfire(aspir.fav)],
+    ['P(FIRE) Stress',   fmtPfire(base.stress), fmtPfire(aspir.stress)],
+    ['Patrimônio Mediano', fmtPat(base.pat_mediano), fmtPat(aspir.pat_mediano)],
+    ['Patrimônio P10',   fmtPat(base.pat_p10),  fmtPat(aspir.pat_p10)],
+    ['Patrimônio P90',   fmtPat(base.pat_p90),  fmtPat(aspir.pat_p90)],
     ['Anos de trabalho (delta)', '0 (base)', '<span style="color:var(--purple)">−3 anos</span>'],
   ];
 
