@@ -154,17 +154,17 @@ def _():
     return True, f"meta_fire_brl=R${meta:,} consistent with premissas"
 
 
-@registry.test("fire-trilha", "RENDER", "fireTrilhaSection and fireTrilhaChart exist in HTML", "CRITICAL")
+@registry.test("fire-trilha", "RENDER", "trackingFireSection and trackingFireChart exist in HTML", "CRITICAL")
 def _():
     html = load_html()
     missing = []
-    if "fireTrilhaSection" not in html:
-        missing.append("fireTrilhaSection")
-    if "fireTrilhaChart" not in html:
-        missing.append("fireTrilhaChart (canvas)")
+    if "trackingFireSection" not in html:
+        missing.append("trackingFireSection")
+    if "trackingFireChart" not in html:
+        missing.append("trackingFireChart (canvas)")
     if missing:
         return False, f"Missing HTML elements: {missing}"
-    return True, "fireTrilhaSection and fireTrilhaChart canvas present"
+    return True, "trackingFireSection and trackingFireChart canvas present"
 
 
 @registry.test("fire-trilha", "VALUE", "meta_fire_brl not hardcoded in build script", "HIGH")

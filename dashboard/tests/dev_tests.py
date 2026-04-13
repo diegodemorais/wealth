@@ -254,7 +254,7 @@ def _():
     html = load_html()
     # Key canvas IDs that must exist in the built HTML
     required_canvases = [
-        "tornadoChart", "spendingChart", "fireTrilhaChart", "glideChart",
+        "tornadoChart", "spendingChart", "trackingFireChart", "glideChart",
         "bondPoolRunwayChart", "netWorthProjectionChart", "incomeProjectionChart",
         "aporteSensChart", "shadowChart", "factorLoadingsChart",
     ]
@@ -353,7 +353,7 @@ _TAB_SWITCH_CHARTS = [
     ("geoDonut",              "geo"),
     ("attrChart",             "attr"),
     ("scenarioChart",         "scenario"),
-    ("fireTrilhaChart",       "fireTrilha"),
+    ("trackingFireChart",     "trackingFire"),
     ("glideChart",            "glide"),
     ("netWorthProjectionChart", "netWorth"),
     ("tornadoChart",          "tornado"),

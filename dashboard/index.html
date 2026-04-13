@@ -592,11 +592,11 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /collapse-body -->
 </div>
 
-<!-- R5: FIRE TRILHA — Realizado vs Projetado -->
-<div class="section" data-in-tab="fire" id="fireTrilhaSection">
-<h2>Trilha FIRE — Realizado vs Projetado</h2>
-<div class="chart-box" style="height:260px"><canvas id="fireTrilhaChart"></canvas></div>
-<div class="src" id="fireTrilhaSrc">Trilha patrimonial realizada vs projeção linear para meta FIRE.</div>
+<!-- R5: TRACKING FIRE — Realizado vs Projeção -->
+<div class="section" data-in-tab="fire" id="trackingFireSection">
+<h2>Tracking FIRE — Realizado vs Projeção</h2>
+<div class="chart-box" style="height:280px"><canvas id="trackingFireChart"></canvas></div>
+<div class="src" id="trackingFireSrc">Patrimônio realizado vs projeção FIRE · Meta FIRE</div>
 </div>
 
 <!-- S9 + F4: FIRE@53 vs FIRE@50 — tabela unificada (gráfico de barras removido — duplicata) -->
@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T06:30:19-03:00'); // BRT (UTC-3)
-const VERSION = '1.206';
+const GENERATED_AT = new Date('2026-04-13T06:34:04-03:00'); // BRT (UTC-3)
+const VERSION = '1.207';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.206"
+  "version": "1.207"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -12807,7 +12807,7 @@ function _initTabCharts(tab) {
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
     carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildPremissasVsRealizado, buildFireTrilha, buildScenarioComparison, buildScenarios,
+    fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarioComparison, buildScenarios,
                buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire,
@@ -12833,7 +12833,7 @@ function _initTabCharts(tab) {
 const _chartBuilders = {
   glideChart:            () => buildGlidePath(),
   deltaChart:            () => buildDeltaBar(),
-  fireTrilhaChart:       () => buildFireTrilha(),
+  trackingFireChart:     () => buildTrackingFire(),
   tornadoChart:          () => buildTornado(),
   timelineChart:         () => { buildTimeline('all'); },
   attrChart:             () => buildAttribution(),
@@ -13488,79 +13488,43 @@ function renderMacroStatus() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// HD-perplexity-review: R5 — FIRE TRILHA
+// R5 — TRACKING FIRE: Realizado vs Projeção vs Meta
 // ═══════════════════════════════════════════════════════════════
-function buildFireTrilha() {
-  const el = document.getElementById('fireTrilhaChart');
-  const sec = document.getElementById('fireTrilhaSection');
+function buildTrackingFire() {
+  const el = document.getElementById('trackingFireChart');
+  const sec = document.getElementById('trackingFireSection');
   if (!el || !sec) return;
   const d = DATA.fire_trilha;
-  if (!d || !d.dates || !d.realizado_brl) { sec.style.display = 'none'; return; }
-
-  const dates = d.dates;
-  const realizado = d.realizado_brl;
-  const meta = d.meta_fire_brl ?? DATA.premissas?.patrimonio_gatilho ?? 13.4e6;
-
-  // Trilha completa: histórica (plano original) + futura (projeção a partir do valor atual)
-  // O jump no boundary (onde realizado termina) é dado real: mostra que Diego superou o plano
-  const trilha = d.trilha_brl || [];
-
-  // Linha horizontal de meta
-  const metaLine = dates.map(() => meta);
-
-  const datasets = [
-    {
-      label: 'Realizado',
-      data: realizado,
-      borderColor: 'rgba(59,130,246,1)',
-      backgroundColor: 'rgba(59,130,246,.08)',
-      borderWidth: 2,
-      pointRadius: 0,
-      fill: false,
-      tension: 0.2,
-    },
-    {
-      label: 'Projetado',
-      data: trilha,
-      borderColor: 'rgba(59,130,246,.5)',
-      backgroundColor: 'transparent',
-      borderWidth: 2,
-      borderDash: [6, 3],
-      pointRadius: 0,
-      fill: false,
-      tension: 0.2,
-    },
-    {
-      label: 'Meta FIRE R$' + (meta / 1e6).toFixed(1) + 'M',
-      data: metaLine,
-      borderColor: 'rgba(34,197,94,0)',  // transparent — plugin draws the correct line
-      backgroundColor: 'transparent',
-      borderWidth: 0,
-      pointRadius: 0,
-      fill: false,
-    },
-  ];
-
-  // Scale: Y de 0 até trilha_max * 1.1, cap em 1.5× meta
-  const _rVals = realizado.filter(v => v != null && isFinite(v) && v > 0);
-  const _tVals = trilha.filter(v => v != null && isFinite(v) && v > 0);
-  const _metaVal = meta;
-  const _dataMax = [..._rVals, ..._tVals].length ? Math.max(..._rVals, ..._tVals) : _metaVal;
-  const _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1);
-
-  // Canvas 0×0 em tab oculta → sair; switchTab double-RAF reconstrói após reflow
+  if (!d || !d.dates || !d.realizado_brl || !d.trilha_brl) { sec.style.display = 'none'; return; }
   if (el.offsetWidth === 0) return;
 
-  // Destroy any existing chart — Chart.getChart() catches orphaned instances
-  const _trilhaExisting = Chart.getChart(el);
-  if (_trilhaExisting) _trilhaExisting.destroy();
-  if (charts.fireTrilha) { try { charts.fireTrilha.destroy(); } catch(_e) {} charts.fireTrilha = null; }
+  const dates    = d.dates;
+  const realizado = d.realizado_brl;
+  const trilha    = d.trilha_brl;
+  const meta      = Number(d.meta_fire_brl ?? DATA.premissas?.patrimonio_gatilho ?? 13.4e6);
+
+  // Separar trilha em dois segmentos sem descontinuidade:
+  // - histórico: período com realizado (para comparação com o plano original)
+  // - futuro: projeção a partir do valor atual (começa onde realizado termina)
+  const trilhaHist = trilha.map((v, i) => (realizado[i] != null ? v : null));
+  const trilhaFut  = trilha.map((v, i) => (realizado[i] == null ? v : null));
+
+  // Escala: 0 até max(dados, meta) × 1.1, cap em 1.5× meta
+  const _allPos = [...realizado, ...trilha].filter(v => v != null && isFinite(v) && v > 0);
+  const _dataMax = _allPos.length ? Math.max(..._allPos) : meta;
+  const _yMax    = Math.max(Math.min(_dataMax * 1.1, meta * 1.5), meta * 1.1);
+  const _metaVal = meta;
+
+  // Destroy instâncias existentes
+  const _ex = Chart.getChart(el);
+  if (_ex) _ex.destroy();
+  if (charts.trackingFire) { try { charts.trackingFire.destroy(); } catch (_e) {} charts.trackingFire = null; }
+
   const ctx = el.getContext('2d');
 
-  // Plugin: draws meta line at correct Y position via getPixelForValue (bypasses dataset rendering)
-  // This guarantees the line is at the right position regardless of null-data Chart.js quirks.
-  const _fireMetaPlugin = {
-    id: 'fireMetaLine',
+  // Plugin: linha meta desenhada via getPixelForValue (posição garantida independente dos datasets)
+  const _metaPlugin = {
+    id: 'trackingFireMeta',
     afterDraw: function(chart) {
       const { ctx: c, scales, chartArea } = chart;
       if (!scales.y || !chartArea) return;
@@ -13583,38 +13547,83 @@ function buildFireTrilha() {
     }
   };
 
-  charts.fireTrilha = new Chart(ctx, {
+  charts.trackingFire = new Chart(ctx, {
     type: 'line',
-    data: { labels: dates, datasets },
-    plugins: [_fireMetaPlugin],
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: 'Plano original',
+          data: trilhaHist,
+          borderColor: 'rgba(148,163,184,.45)',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.2,
+        },
+        {
+          label: 'Realizado',
+          data: realizado,
+          borderColor: 'rgba(59,130,246,1)',
+          backgroundColor: 'rgba(59,130,246,.07)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.2,
+        },
+        {
+          label: 'Projeção',
+          data: trilhaFut,
+          borderColor: 'rgba(96,165,250,.85)',
+          borderWidth: 2,
+          borderDash: [6, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.2,
+        },
+      ],
+    },
+    plugins: [_metaPlugin],
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: { display: true, labels: { color: '#94a3b8', font: { size: 10 } } },
         tooltip: {
+          mode: 'index',
+          intersect: false,
           callbacks: {
-            label: ctx => {
+            label: function(ctx) {
               const v = ctx.parsed.y;
-              if (v == null || isNaN(v)) return null; // skip null points (future realizado)
+              if (v == null || isNaN(v)) return null;
               return ' ' + ctx.dataset.label + ': R$' + (v / 1e6).toFixed(2) + 'M';
             }
           }
         }
       },
       scales: {
-        x: { ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 8 }, grid: { color: 'rgba(71,85,105,.15)' } },
+        x: {
+          ticks: { color: '#94a3b8', font: { size: 9 }, maxTicksLimit: 8 },
+          grid: { color: 'rgba(71,85,105,.15)' }
+        },
         y: {
-          min: 0, max: _yMax,
-          ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => 'R$' + (v / 1e6).toFixed(1) + 'M' },
-          grid: { color: 'rgba(71,85,105,.15)' },
+          type: 'linear',
+          min: 0,
+          max: _yMax,
+          ticks: { color: '#94a3b8', font: { size: 9 }, callback: function(v) { return 'R$' + (v / 1e6).toFixed(1) + 'M'; } },
+          grid: { color: 'rgba(71,85,105,.15)' }
         }
       }
     }
   });
 
-  const srcEl = document.getElementById('fireTrilhaSrc');
-  if (srcEl && d.retorno_anual_premissa) {
-    srcEl.textContent = 'Projeção: r=' + (d.retorno_anual_premissa * 100).toFixed(2) + '%/ano · Aporte: R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês · Meta: R$' + (meta / 1e6).toFixed(2) + 'M em ' + d.meta_fire_date;
+  const srcEl = document.getElementById('trackingFireSrc');
+  if (srcEl) {
+    const r = d.retorno_anual_premissa ? (d.retorno_anual_premissa * 100).toFixed(2) + '%/ano' : '';
+    const a = d.aporte_mensal_premissa ? 'R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês' : '';
+    const m = d.meta_fire_date ? 'Meta R$' + (_metaVal / 1e6).toFixed(1) + 'M em ' + d.meta_fire_date : '';
+    srcEl.textContent = [r, a, m].filter(Boolean).join(' · ');
   }
 }
 
