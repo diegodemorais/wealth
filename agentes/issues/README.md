@@ -73,6 +73,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-swr-revisao-2026-04-13 | SWR gatilho revisão + floors simulador | FIRE+Quant+Dev | 2026-04-13 | SWR 2.4%→3.0% (Pfau/ERN). R$13.4M removido como referência. Floors INSS/Katia implementados. Aporte 33k→25k. Dashboard v2.5. 604/604 testes. |
+| HD-behavioral | Behavioral checklist enriquecido | Advocate | 2026-04-13 | Fechada (concluída em 2026-03-26 sem status update). 9 itens no checklist do Advocate. Item #9 echo chamber LLM único genuinamente novo. |
 | EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 2026-04-11 | PAXG 12% compliance crítico (IR revogado). Equity 53% subestimado. Renda+ aumentar 18–20%. FIRE number ausente. PDF entregue. |
 | TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 2026-04-11 | Nenhuma ação agora. Gatilho = casamento. → PT-planejamento-patrimonial. |
 | HD-backtest-longrun | Pipeline backtest 50+ anos — Regime 7 | Head | 2026-04-11 | Regime 7 (1989–2026, 374m). CAGR +9.79% vs +7.80% (+1.99pp). WR 20a: 100%. Drought 74m. Recovery 43m < bond pool 84m. v1.135. |

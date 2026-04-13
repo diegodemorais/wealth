@@ -1,7 +1,7 @@
 # FR-swr-revisao — Revisão do SWR Gatilho + Modelagem de Floors no Simulador
 
 **Data:** 2026-04-13  
-**Status:** ABERTA  
+**Status:** CONCLUÍDA — 2026-04-13  
 **Iniciado por:** Diego Morais  
 **Agentes:** FIRE, Quant, Advocate, Dev  
 
@@ -84,10 +84,14 @@ Quant deve validar que o novo número é consistente com a literatura citada ant
 
 ## Critério de fechamento
 
-- [ ] Q1 resolvida: novo SWR_GATILHO definido com justificativa acadêmica, validado pelo Quant
-- [ ] Q2 resolvida: spec de floors aprovada por Diego, implementada pelo Dev
-- [ ] Q3 executada: MC re-rodado, dados atualizados, dashboard buildado e testado
-- [ ] Diego valida o resultado no simulador antes de fechar
+- [x] Q1 resolvida: SWR_GATILHO = 3.0% — Pfau/ERN 40a + guardrails + SoRR BRL. Quant validou: mu=4.912%, sigma=12%, T=40, P90 → 3.41% → ajustes → 3.0%. Consenso FIRE+Quant.
+- [x] Q2 resolvida: floors implementados no `updateFireSim()` via `_custoEfetivo(fireAge)`. INSS Diego R$10.8k/ano@65, Katia R$113.8k/ano@62 (casado/família). Ponderação proporcional ao horizonte.
+- [x] Q3 executada: MC re-rodado (aporte 25k + SWR 3.0%). P(FIRE 53) = 90.4%/94.1%/86.8% (inalterado). Dashboard v2.5. 604/604 testes. Commit ec3ce7a.
+- [x] Diego validou: "Pode atualizar tudo e tirar 13,4M como referência."
+
+## Conclusão
+
+SWR revisado de 2.4% → 3.0%. R$13.4M removido como referência formal — substituído por SWR ≤ 3.0% (equivalente patrimonial: R$8.33M = R$250k/3.0%). Docs atualizados: config.py, carteira.md, gatilhos.md, 04-fire.md, scorecard.md, flight-rules.md. Simulador com floors INSS/Katia. APORTE_MENSAL corrigido 33k → 25k.
 
 ---
 

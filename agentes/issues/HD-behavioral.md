@@ -1,6 +1,6 @@
 # HD-behavioral: Behavioral Checklist Enriquecido com Evidencias do Curso
 
-## Status: Aberta
+## Status: Fechada — 2026-04-13
 ## Data: 2026-03-20
 ## Responsaveis: 10 Advocate (lead), 01 Head
 ## Prioridade: Baixa
