@@ -21,7 +21,7 @@ Esta regra foi violada 3x (2026-03-22, 2026-03-27, 2026-04-01). Ler antes de qua
 
 | Decisao | Aprovada em | Prazo | Status | Detalhes |
 |---------|-------------|-------|--------|----------|
-| IPCA+ 2040 — 7% (~R$244k) | 2026-03-19 | mar-abr 2026 | **PENDENTE — 0/3 tranches** | DCA em 2-3 tranches. Compra direta Tesouro. Taxa ref: ~7,31% |
+| IPCA+ longo ate 15% (TD 2040 80% + TD 2050 20%) | 2026-03-22 | DCA ativo enquanto taxa >= 6,0% | **EM EXECUCAO — 2/? tranches** | T1: 2026-04-06 (R$20.035,48 TD 2040). T2: 2026-04-10 executada (R$46.498,08 TD 2040 @ 7,10% + R$11.660,71 TD 2050 @ 6,85%), liq. 13/04. Alvo final: ~R$523k (15% da carteira) |
 | ~~Aportes mensais R$25k → JPGL~~ | ~~Permanente~~ | ~~Mensal~~ | **Superseded** | JPGL eliminado. Aportes direcionados conforme drift: SWRD 50%/AVGS 30%/AVEM 20%. Prioridade atual: SWRD (underweight) |
 
 ---
@@ -174,6 +174,14 @@ Diego e executor consistente acima da meta. Critica de "gap de execucao" feita e
 ### 2026-03
 - 05/03 e 11/03: Aporte de R$56.485 (registrado na planilha como mudanca no investido total)
 - 30/03: Check-in semanal. Equity -1,7% vs 23/Mar. Total patrimônio estimado ~R$3,372k (queda -3,4%). Sem operacoes novas detectadas.
+
+### 2026-04
+- 06/04: Tranche-1 IPCA+ DCA executada. R$20.035,48 TD 2040 comprado. Registrado em operacoes_td.json
+- 10/04: Tranche-2 IPCA+ DCA executada (aprovado Diego 2026-04-12). Duas operacoes:
+  * R$46.498,08 TD 2040 @ 7,10% (ratifica comprometimento com DCA acima de piso 6,0%)
+  * R$11.660,71 TD 2050 @ 6,85% (primeira posicao do eixo longo 2050, alvo 20% do bloco IPCA+ longo)
+  * Liquidacao esperada: 13/04/2026
+  * Total bloco IPCA+ longo pos-liquidacao: ~R$66.533 (0,8% da carteira, caminho para 15% com DCA contínuo)
 
 ---
 
