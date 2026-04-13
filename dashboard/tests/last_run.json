@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-13T17:19:54.814099",
+  "timestamp": "2026-04-13T17:25:28.175074",
   "mode": "full",
   "total": 631,
-  "passed": 629,
-  "failed": 2,
+  "passed": 631,
+  "failed": 0,
   "failure_cycles": {},
   "escalations": [],
   "results": [
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 538,850 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 541,206 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -61,7 +61,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 538,850 chars"
+      "message": "index.html: 541,206 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -2165,7 +2165,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVEM', 'AVGS', 'SWRD'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'AVEM', 'SWRD'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2181,7 +2181,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'retiro', 'now', 'backtest', 'performance', 'fire', 'simuladores', 'portfolio'}"
+      "message": "All blocks use valid tabs: {'performance', 'simuladores', 'retiro', 'fire', 'now', 'backtest', 'portfolio'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2797,7 +2797,7 @@
       "category": "RENDER",
       "severity": "HIGH",
       "passed": true,
-      "message": "Nenhum canvas duplicado em 23 seções"
+      "message": "Nenhum canvas duplicado em 50 seções"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::rf and hodl11 top-level keys exist",
@@ -4165,7 +4165,7 @@
       "category": "PRIVACY",
       "severity": "HIGH",
       "passed": true,
-      "message": "Found 10 pv-class element(s) in stress-test-mc region"
+      "message": "Found 9 pv-class element(s) in stress-test-mc region"
     },
     {
       "test_id": "stress-test-mc::SPEC::spec.json declares stress-test-mc as privacy: true",
@@ -4536,22 +4536,6 @@
       "message": "posicoes aggregates: ['SWRD', 'AVGS', 'AVEM', 'JPGL']"
     },
     {
-      "test_id": "tab-structure::RENDER::collapse-body divs têm comentários de fechamento",
-      "block_id": "tab-structure",
-      "category": "RENDER",
-      "severity": "MEDIUM",
-      "passed": false,
-      "message": "Collapse-body desbalanceado: 28 abertos vs 23 fechados com comentário"
-    },
-    {
-      "test_id": "tab-structure::RENDER::sections têm comentários de fechamento para rastreabilidade",
-      "block_id": "tab-structure",
-      "category": "RENDER",
-      "severity": "MEDIUM",
-      "passed": false,
-      "message": "Poucas sections com comentários de fechamento: 1/50"
-    },
-    {
       "test_id": "pipeline::DATA::data.json has _generated timestamp",
       "block_id": "pipeline",
       "category": "DATA",
@@ -4574,6 +4558,22 @@
       "severity": "MEDIUM",
       "passed": true,
       "message": "68 blocks in spec"
+    },
+    {
+      "test_id": "tab-structure::RENDER::collapse-body divs têm comentários de fechamento",
+      "block_id": "tab-structure",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "28 collapse-body divs bem fechados"
+    },
+    {
+      "test_id": "tab-structure::RENDER::sections têm comentários de fechamento para rastreabilidade",
+      "block_id": "tab-structure",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": true,
+      "message": "Sections têm comentários adequados (51/50)"
     },
     {
       "test_id": "tab-structure::RENDER::todas as abas declaradas têm seus data-in-tab correspondentes no HTML",
@@ -4941,7 +4941,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'cambio', 'mercado.cambio_mtd_pct'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct', 'cambio'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4949,7 +4949,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
