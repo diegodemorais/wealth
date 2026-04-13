@@ -17,7 +17,7 @@ Design notes:
 """
 
 from pathlib import Path
-from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_PY
+from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_PY, validate_required_fields
 
 # generate_data.py is the pipeline stage that writes fire_matrix, tornado, lumpy_events
 GENERATE_PY = BUILD_PY.parent / "generate_data.py"
@@ -118,8 +118,8 @@ def _():
     if ft is None:
         return False, "fire_trilha missing from data.json"
     required = ["dates", "trilha_brl", "realizado_brl", "meta_fire_brl", "meta_fire_date"]
-    missing = [k for k in required if k not in ft]
-    if missing:
+    is_valid, missing, none_vals = validate_required_fields(ft, required)
+    if missing or none_vals:
         return False, f"Missing fields: {missing}"
     return True, "All fire_trilha fields present"
 
@@ -211,8 +211,8 @@ def _():
         "patrimonio_atual", "patrimonio_gatilho", "idade_atual",
         "idade_cenario_base", "aporte_mensal", "custo_vida_base", "retorno_equity_base"
     ]
-    missing = [k for k in required if k not in premissas]
-    if missing:
+    is_valid, missing, none_vals = validate_required_fields(premissas, required)
+    if missing or none_vals:
         return False, f"Missing premissas fields: {missing}"
     return True, f"All {len(required)} required premissas fields present"
 
@@ -289,8 +289,8 @@ def _():
     if smile is None:
         return False, "spendingSmile missing"
     required = ["go_go", "slow_go", "no_go"]
-    missing = [k for k in required if k not in smile]
-    if missing:
+    is_valid, missing, none_vals = validate_required_fields(smile, required)
+    if missing or none_vals:
         return False, f"spendingSmile missing phases: {missing}"
     for phase in required:
         p = smile[phase]
@@ -352,9 +352,9 @@ def _():
     if sc_base is None:
         return False, "scenario_comparison.base missing"
     required = ["pat_mediano", "pat_p10", "pat_p90"]
-    missing = [k for k in required if k not in sc_base]
-    if missing:
-        return False, f"base missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(sc_base, required)
+    if missing or none_vals:
+        return False, f"base missing: {missing}, None values: {list(none_vals.keys())}"
     return True, f"base has pat_mediano={sc_base['pat_mediano']:,.0f}"
 
 
@@ -421,9 +421,9 @@ def _():
     if fm is None:
         return False, "fire_matrix missing"
     required = ["matrix", "cenarios", "swrs", "patrimonios", "gastos"]
-    missing = [k for k in required if k not in fm]
-    if missing:
-        return False, f"fire_matrix missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(fm, required)
+    if missing or none_vals:
+        return False, f"fire_matrix missing: {missing}, None values: {list(none_vals.keys())}"
     return True, "fire_matrix has all required keys"
 
 
@@ -722,8 +722,8 @@ def _():
     if swr is None:
         return False, "fire_swr_percentis missing"
     required = ["swr_p10_pct", "swr_p50_pct", "swr_p90_pct"]
-    missing = [k for k in required if k not in swr]
-    if missing:
+    is_valid, missing, none_vals = validate_required_fields(swr, required)
+    if missing or none_vals:
         return False, f"Missing swr fields: {missing}"
     return True, "fire_swr_percentis has all percentile fields"
 
@@ -816,8 +816,8 @@ def _():
         "must_spend_mensal", "like_spend_mensal", "total_mensal",
         "must_spend_anual", "total_anual", "modelo_fire_anual"
     ]
-    missing = [k for k in required if k not in sb]
-    if missing:
+    is_valid, missing, none_vals = validate_required_fields(sb, required)
+    if missing or none_vals:
         return False, f"Missing spending_breakdown fields: {missing}"
     return True, "All spending_breakdown fields present"
 
@@ -987,9 +987,9 @@ def _():
     if glide is None:
         return False, "glide missing"
     required = ["idades", "equity", "ipca_longo", "ipca_curto", "hodl11", "renda_plus"]
-    missing = [k for k in required if k not in glide]
-    if missing:
-        return False, f"glide missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(glide, required)
+    if missing or none_vals:
+        return False, f"glide missing: {missing}, None values: {list(none_vals.keys())}"
     return True, "All glide series present"
 
 
@@ -1111,9 +1111,9 @@ def _():
     if bpr is None:
         return False, "fire.bond_pool_readiness missing"
     required = ["valor_atual_brl", "anos_gastos", "meta_anos", "composicao"]
-    missing = [k for k in required if k not in bpr]
-    if missing:
-        return False, f"bond_pool_readiness missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(bpr, required)
+    if missing or none_vals:
+        return False, f"bond_pool_readiness missing: {missing}, None values: {list(none_vals.keys())}"
     return True, "fire.bond_pool_readiness has all required fields"
 
 
@@ -1184,9 +1184,9 @@ def _():
         "anos_pre_fire", "pool_total_brl", "alvo_pool_brl_2040",
         "anos_cobertura_pos_fire", "custo_vida_anual"
     ]
-    missing = [k for k in required if k not in bpr]
-    if missing:
-        return False, f"bond_pool_runway missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(bpr, required)
+    if missing or none_vals:
+        return False, f"bond_pool_runway missing: {missing}, None values: {list(none_vals.keys())}"
     return True, "All bond_pool_runway fields present"
 
 
@@ -1262,9 +1262,9 @@ def _():
         "patrimonio_atual", "aporte_mensal", "custo_vida_base",
         "retorno_equity_base", "idade_atual"
     ]
-    missing = [k for k in required if k not in premissas]
-    if missing:
-        return False, f"Simulator premissas missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(premissas, required)
+    if missing or none_vals:
+        return False, f"Simulator premissas missing: {missing}, None values: {list(none_vals.keys())}"
     return True, "All simulator input premissas present"
 
 
@@ -1475,9 +1475,9 @@ def _():
     if ef is None:
         return False, "earliest_fire missing"
     required = ["ano", "idade", "pfire"]
-    missing = [k for k in required if k not in ef]
-    if missing:
-        return False, f"earliest_fire missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(ef, required)
+    if missing or none_vals:
+        return False, f"earliest_fire missing: {missing}, None values: {list(none_vals.keys())}"
     return True, f"earliest_fire: age {ef['idade']} in {ef['ano']}"
 
 
@@ -1555,9 +1555,9 @@ def _():
     if fas is None:
         return False, "fire_aporte_sensitivity missing"
     required = ["aportes_brl", "pfire_2040", "aporte_base"]
-    missing = [k for k in required if k not in fas]
-    if missing:
-        return False, f"fire_aporte_sensitivity missing: {missing}"
+    is_valid, missing, none_vals = validate_required_fields(fas, required)
+    if missing or none_vals:
+        return False, f"fire_aporte_sensitivity missing: {missing}, None values: {list(none_vals.keys())}"
     return True, "fire_aporte_sensitivity has all required fields"
 
 
@@ -2448,8 +2448,8 @@ def _():
     if ft is None:
         return False, "fire_trilha ausente de data.json"
     required = ["dates", "trilha_brl", "realizado_brl", "meta_fire_brl"]
-    missing = [k for k in required if k not in ft]
-    if missing:
+    is_valid, missing, none_vals = validate_required_fields(ft, required)
+    if missing or none_vals:
         return False, f"fire_trilha faltando chaves: {missing}"
     return True, f"fire_trilha presente com {len(required)} chaves obrigatórias"
 

@@ -57,6 +57,18 @@ def get_nested(d: dict, path: str):
     return val
 
 
+def validate_required_fields(obj: dict, required_fields: list) -> tuple:
+    """
+    Valida que campos required existem E têm valores não-None.
+
+    Retorna: (is_valid, missing_keys_list, none_values_dict)
+    """
+    missing_keys = [k for k in required_fields if k not in obj]
+    none_values = {k: obj.get(k) for k in required_fields if k in obj and obj.get(k) is None}
+    is_valid = len(missing_keys) == 0 and len(none_values) == 0
+    return is_valid, missing_keys, none_values
+
+
 def get_provenance(field_name: str) -> dict:
     """
     Retorna provenance (origem/fórmula/entrada) de um field em data.json.
