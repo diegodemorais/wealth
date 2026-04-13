@@ -109,6 +109,13 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
     grid-template-columns:1fr!important;
     min-width:0!important
   }
+  /* Override inline grid-template-columns styles that resist class rules */
+  [style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr!important
+  }
+  [style*="grid-template-columns:repeat(2"]{
+    grid-template-columns:1fr!important
+  }
   /* Reduce large minmax values */
   .kpi-grid{grid-template-columns:repeat(2,1fr)!important;min-width:0!important}
   .macro-strip{grid-template-columns:repeat(2,1fr)!important;min-width:0!important}
@@ -3785,7 +3792,7 @@ function buildEarliestFire() {
       <div style="font-size:1.5rem;font-weight:700;color:${pfireColor};margin:6px 0" class="pv">P = ${ef.pfire}%</div>
       <div style="font-size:.75rem;color:var(--muted)">${yearsLeft} anos a partir de hoje</div>
     </div>
-    <div class="dynamic-2col" style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div class="dynamic-2col" style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px" class="responsive-grid">
       <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
         <div style="font-size:1rem;font-weight:700;color:var(--purple)" class="pv">${DATA.pfire_aspiracional.base}%</div>
         <div style="font-size:.65rem;color:var(--muted)">Cenário Aspiracional</div>
@@ -8031,6 +8038,45 @@ function buildCagrVsTwr() {
     if (t) _startTab = _tabMap[t] || t;
   } catch(e) {}
   switchTab(_startTab);
+})();
+
+// Force responsive grid override for inline styles at 768px breakpoint
+(function() {
+  function forceResponsiveGrids() {
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) return;
+
+    // Selectors with inline grid-template-columns that resist CSS rules
+    const selectors = [
+      '#r7RiskGrid',
+      '.what-if-output',
+      '.dynamic-2col'
+    ];
+
+    selectors.forEach(sel => {
+      const els = document.querySelectorAll(sel);
+      els.forEach(el => {
+        const style = el.getAttribute('style');
+        if (style && (style.includes('grid-template-columns:1fr 1fr') || style.includes('grid-template-columns:repeat(2'))) {
+          // Remove the inline grid-template-columns and let CSS handle it
+          const newStyle = style
+            .replace(/grid-template-columns:\s*1fr\s+1fr/gi, 'grid-template-columns: 1fr !important')
+            .replace(/grid-template-columns:\s*repeat\(\s*2\s*,/gi, 'grid-template-columns: repeat(1,');
+          el.setAttribute('style', newStyle);
+        }
+      });
+    });
+  }
+
+  // Run on load
+  forceResponsiveGrids();
+
+  // Run on resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(forceResponsiveGrids, 250);
+  });
 })();
 
 </script>

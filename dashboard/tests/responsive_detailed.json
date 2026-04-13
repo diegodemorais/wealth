@@ -254,7 +254,7 @@
         "details": []
       }
     },
-    "timestamp": "2026-04-13T21:54:44.967Z"
+    "timestamp": "2026-04-13T22:02:13.473Z"
   },
   {
     "viewport": "mobile",
@@ -312,7 +312,7 @@
           "clientWidth": 0,
           "scrollWidth": 0,
           "overflows": false,
-          "inlineStyle": "display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px",
+          "inlineStyle": "display:grid;grid-template-columns: 1fr !important;gap:10px;margin-top:10px",
           "hasMinWidth0InInline": false
         },
         {
@@ -325,7 +325,7 @@
           "clientWidth": 0,
           "scrollWidth": 0,
           "overflows": false,
-          "inlineStyle": "display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px",
+          "inlineStyle": "display:grid;grid-template-columns: 1fr !important;gap:10px;margin-top:10px",
           "hasMinWidth0InInline": false
         },
         {
@@ -511,6 +511,6 @@
         "details": []
       }
     },
-    "timestamp": "2026-04-13T21:54:46.822Z"
+    "timestamp": "2026-04-13T22:02:15.574Z"
   }
 ]
