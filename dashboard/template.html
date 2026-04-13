@@ -873,16 +873,6 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div><!-- /collapse-body -->
 </div>
 
-<!-- N1: DRAWDOWN HISTORY -->
-<div class="section collapsible" data-in-tab="backtest" id="drawdownHistSection">
-<h2 onclick="_toggleBlock(this.parentElement)">Drawdown Histórico — Série Completa</h2>
-<div class="collapse-body">
-<div class="chart-box" style="height:220px"><canvas id="drawdownHistChart"></canvas></div>
-<div id="drawdownCrisesTable" style="margin-top:10px"></div>
-<p id="drawdownHistNota" class="chart-footnote"></p>
-</div>
-</div>
-
 <!-- S24b: ROLLING SHARPE 12m -->
 <div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
@@ -893,6 +883,119 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <span style="color:rgba(34,197,94,.9)">■</span> <strong>&gt;1</strong> = excelente (carteira supera CDI com folga)
 <span style="color:rgba(234,179,8,.9)">■</span> <strong>0–1</strong> = neutro (retorno positivo vs CDI, mas baixo p/ risco)
 <span style="color:rgba(239,68,68,.9)">■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)<br>
+<!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
+<div class="section collapsible open" data-in-tab="backtest">
+<h2 onclick="_toggleBlock(this.parentElement)">Backtest Histórico — Target vs VWRA</h2>
+<div class="collapse-body">
+<div class="period-btns" id="backtestPeriodBtns">
+  <button onclick="setBacktestPeriod('r7')" title="jul/1989–atual (37 anos) · proxies acadêmicos Ken French + MSCI">Acadêmico (37a)</button>
+  <button onclick="setBacktestPeriod('all')" title="jan/2005–abr/2026 (21 anos)">Completo (21a)</button>
+  <button onclick="setBacktestPeriod('since2009')" title="jan/2009–abr/2026 (17 anos) · desde o fundo da crise de 2008" class="active">Pós-GFC (17a)</button>
+  <button onclick="setBacktestPeriod('since2013')" title="jan/2013–abr/2026 (13 anos) · pós-crise da dívida europeia">Pós-Euro (13a)</button>
+  <button onclick="setBacktestPeriod('since2020')" title="jan/2020–abr/2026 (6 anos) · desde o fundo de março 2020">Pós-COVID (6a)</button>
+  <button onclick="setBacktestPeriod('5y')" title="jan/2021–abr/2026 (5 anos)">5 anos</button>
+  <button onclick="setBacktestPeriod('3y')" title="jan/2023–abr/2026 (3 anos)">3 anos</button>
+</div>
+<div class="chart-box-lg"><canvas id="backtestChart"></canvas></div>
+<div style="overflow-x:auto;margin-top:12px">
+<table id="backtestMetricsTable">
+<thead><tr>
+  <th>Métrica</th><th class="num">Target</th><th class="num">VWRA</th><th class="num">Delta</th>
+</tr></thead>
+<tbody id="backtestMetricsBody"></tbody>
+</table>
+</div>
+<!-- P3: CAGR patrimonial vs TWR -->
+<div class="cagr-twr-row" id="cagrTwrRow">
+  <div class="cagr-twr-card">
+    <div class="ctl">CAGR Patrimonial (incl. aportes)</div>
+    <div class="ctv pv" id="cagrPatrimonial">--</div>
+    <div class="ctl">Crescimento total do patrimônio. Inflado por aportes — NÃO é performance dos ETFs.</div>
+  </div>
+  <div class="cagr-twr-card">
+    <div class="ctl">TWR USD (retorno puro, ex-aportes)</div>
+    <div class="ctv" id="twrPure">--</div>
+    <div class="ctl">Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.</div>
+  </div>
+</div>
+<div id="backtestNotaProxy" style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem"></div>
+<div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
+<div class="section collapsible" data-in-tab="backtest">
+<h2 onclick="_toggleBlock(this.parentElement)">Shadow Portfolios — Tracking</h2>
+<div class="collapse-body">
+<div style="overflow-x:auto">
+<table style="width:100%;table-layout:fixed">
+<colgroup>
+  <col style="width:22%"><col style="width:32%"><col style="width:8%"><col style="width:26%"><col style="width:12%">
+</colgroup>
+<thead><tr>
+  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
+</tr></thead>
+<tbody id="shadowTableBody"><!-- gerado por buildShadowTable() --></tbody>
+</table>
+</div>
+<div class="period-btns" id="shadowPeriodBtns" style="margin-top:12px">
+  <button onclick="buildShadowChart('since2009')" class="active">Desde 2009</button>
+  <button onclick="buildShadowChart('since2013')">Desde 2013</button>
+  <button onclick="buildShadowChart('since2020')">Desde 2020</button>
+  <button onclick="buildShadowChart('5y')">5 anos</button>
+  <button onclick="buildShadowChart('3y')">3 anos</button>
+  <button onclick="buildShadowChart('all')">Tudo (21a)</button>
+</div>
+<div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
+<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
+<div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- S27b: BACKTEST LONGO — Regime 7 (1995–2026) -->
+<div class="section collapsible open" data-in-tab="backtest" id="backtestR7Section">
+<h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 7 (1995–2026)</h2>
+<div class="collapse-body">
+<!-- Cards de métricas globais -->
+<div id="r7MetricsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px"></div>
+<!-- Win Rate -->
+<div id="r7WinRateSection"></div>
+<!-- Factor Drought + Drawdown Recovery -->
+<div id="r7RiskGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px"></div>
+<!-- CAGR por Década -->
+<div id="r7DecadesTable" style="margin-top:14px;overflow-x:auto"></div>
+<!-- Chart retorno acumulado -->
+<div class="chart-box" style="height:280px;margin-top:14px"><canvas id="backtestR7Chart"></canvas></div>
+<!-- Factor regression collapsível -->
+<details style="margin-top:10px">
+<summary style="cursor:pointer;font-size:.8rem;color:var(--muted);padding:4px 0">▸ Factor Regression FF5 (técnico)</summary>
+<div id="r7RegressionDetails" style="margin-top:8px"></div>
+</details>
+<div class="src">Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.</div>
+</div>
+</div>
+
+<!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (aberto por default) -->
+<div class="section collapsible open" id="factorRollingSection" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
+<div class="collapse-body">
+<div id="factorRollingBody">
+<!-- canvas factorRollingChart é criado dinamicamente via JS — não inserir estático aqui -->
+</div>
+<div class="src">Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.</div>
+</div><!-- /collapse-body -->
+</div>
+
+<!-- N1: DRAWDOWN HISTORY -->
+<div class="section collapsible" data-in-tab="backtest" id="drawdownHistSection">
+<h2 onclick="_toggleBlock(this.parentElement)">Drawdown Histórico — Série Completa</h2>
+<div class="collapse-body">
+<div class="chart-box" style="height:220px"><canvas id="drawdownHistChart"></canvas></div>
+<div id="drawdownCrisesTable" style="margin-top:10px"></div>
+<p id="drawdownHistNota" class="chart-footnote"></p>
+</div>
+</div>
+
 <span style="color:rgba(96,165,250,.7)">┈┈</span> Tracejada azul = Sharpe em USD vs T-Bill (performance do equity isolado, sem câmbio).
 <span style="color:rgba(255,255,255,.3)">┈┈</span> Cinza = referência Sharpe=1.
 <span style="color:rgba(239,68,68,.4)">┈┈</span> Vermelha = zero (break-even vs CDI).<br>
@@ -1197,36 +1300,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div><!-- /collapse-body -->
 </div>
 
-<!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
-<div class="section collapsible" data-in-tab="backtest">
-<h2 onclick="_toggleBlock(this.parentElement)">Shadow Portfolios — Tracking</h2>
-<div class="collapse-body">
-<div style="overflow-x:auto">
-<table style="width:100%;table-layout:fixed">
-<colgroup>
-  <col style="width:22%"><col style="width:32%"><col style="width:8%"><col style="width:26%"><col style="width:12%">
-</colgroup>
-<thead><tr>
-  <th>Benchmark</th><th>Composição</th><th class="num">TER</th><th class="num">Delta vs Carteira</th><th class="num">Status</th>
-</tr></thead>
-<tbody id="shadowTableBody"><!-- gerado por buildShadowTable() --></tbody>
-</table>
-</div>
-<div class="period-btns" id="shadowPeriodBtns" style="margin-top:12px">
-  <button onclick="buildShadowChart('since2009')" class="active">Desde 2009</button>
-  <button onclick="buildShadowChart('since2013')">Desde 2013</button>
-  <button onclick="buildShadowChart('since2020')">Desde 2020</button>
-  <button onclick="buildShadowChart('5y')">5 anos</button>
-  <button onclick="buildShadowChart('3y')">3 anos</button>
-  <button onclick="buildShadowChart('all')">Tudo (21a)</button>
-</div>
-<div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
-<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
-<div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
-</div><!-- /collapse-body -->
-</div>
-
-<!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
 <div class="section collapsible open" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Histórico — Target vs VWRA</h2>
 <div class="collapse-body">
@@ -1266,41 +1339,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div><!-- /collapse-body -->
 </div>
 
-<!-- S27b: BACKTEST LONGO — Regime 7 (1995–2026) -->
-<div class="section collapsible" data-in-tab="backtest" id="backtestR7Section">
-<h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 7 (1995–2026)</h2>
-<div class="collapse-body">
-<!-- Cards de métricas globais -->
-<div id="r7MetricsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:14px"></div>
-<!-- Win Rate -->
-<div id="r7WinRateSection"></div>
-<!-- Factor Drought + Drawdown Recovery -->
-<div id="r7RiskGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px"></div>
-<!-- CAGR por Década -->
-<div id="r7DecadesTable" style="margin-top:14px;overflow-x:auto"></div>
-<!-- Chart retorno acumulado -->
-<div class="chart-box" style="height:280px;margin-top:14px"><canvas id="backtestR7Chart"></canvas></div>
-<!-- Factor regression collapsível -->
-<details style="margin-top:10px">
-<summary style="cursor:pointer;font-size:.8rem;color:var(--muted);padding:4px 0">▸ Factor Regression FF5 (técnico)</summary>
-<div id="r7RegressionDetails" style="margin-top:8px"></div>
-</details>
-<div class="src">Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.</div>
-</div>
-</div>
-
-<!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (aberto por default) -->
-<div class="section collapsible" id="factorRollingSection" data-in-tab="perf">
-<h2 onclick="_toggleBlock(this.parentElement)">Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
-<div class="collapse-body">
-<div id="factorRollingBody">
-<!-- canvas factorRollingChart é criado dinamicamente via JS — não inserir estático aqui -->
-</div>
-<div class="src">Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.</div>
-</div><!-- /collapse-body -->
-</div>
-
-<!-- P2: FACTOR LOADINGS TABLE (aberto por default) -->
 <div class="section collapsible" id="factorLoadingsSection" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
 <div class="collapse-body">
@@ -6348,6 +6386,8 @@ function _initTabCharts(tab) {
                buildFactorRolling, buildFactorLoadings,
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
+    backtest: [function() { buildBacktest('since2009'); }, buildShadowTable,
+               function() { buildShadowChart('since2009'); }, buildBacktestR7, buildDrawdownHistory],
     carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
     fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarioComparison, buildScenarios,
                buildFireMatrix, buildLumpyEvents,
