@@ -16,6 +16,14 @@ async function debugEarliestFire() {
   const page = await context.newPage();
 
   try {
+    // Capture console messages
+    const consoleLogs = [];
+    page.on('console', msg => {
+      if (msg.text().includes('forceResponsiveGrids')) {
+        consoleLogs.push(msg.text());
+      }
+    });
+
     await page.goto(dashboardPath, { waitUntil: 'networkidle' });
     await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
@@ -23,7 +31,7 @@ async function debugEarliestFire() {
     // Clica em FIRE tab
     console.log('🖱️  Clicking FIRE tab...\n');
     await page.$('button[data-tab="fire"]').then(btn => btn.click());
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1500); // Wait for double-RAF + forceResponsiveGrids
 
     // Verificar se JavaScript foi executado
     const jsTest = await page.evaluate(() => {
@@ -34,6 +42,14 @@ async function debugEarliestFire() {
       };
     });
     console.log('JS Test:', jsTest);
+
+    // Check if forceResponsiveGrids ran and what it did
+    const beforeFix = await page.evaluate(() => {
+      const el = document.querySelector('.dynamic-2col');
+      return el ? el.getAttribute('style') : 'element not found';
+    });
+    console.log('\n🔍 INLINE STYLE AFTER PAGE LOAD:\n');
+    console.log('dynamic-2col style:', beforeFix);
 
     // Inspeciona estrutura
     const earlyFireDebug = await page.evaluate(() => {
@@ -88,7 +104,7 @@ async function debugEarliestFire() {
           clientWidth: child.clientWidth,
           scrollWidth: child.scrollWidth,
           overflows: child.scrollWidth > child.clientWidth + 2,
-          inlineStyle: (child.getAttribute('style') || '').substring(0, 80)
+          inlineStyle: child.getAttribute('style') || '(none)'
         });
       });
 
@@ -129,8 +145,8 @@ async function debugEarliestFire() {
       if (c.overflows) {
         console.log(`     ⚠️  OVERFLOWS by ${c.scrollWidth - c.clientWidth}px`);
       }
-      if (c.inlineStyle && c.inlineStyle !== 'none') {
-        console.log(`     inline: ${c.inlineStyle}...`);
+      if (c.inlineStyle && c.inlineStyle !== '(none)') {
+        console.log(`     inline: ${c.inlineStyle}`);
       }
     });
 
@@ -138,6 +154,13 @@ async function debugEarliestFire() {
     const screenshotPath = path.resolve(__dirname, '../dashboard/tests/debug_earliest_fire.png');
     await page.screenshot({ path: screenshotPath, fullPage: true });
     console.log(`\n✓ Screenshot saved: debug_earliest_fire.png`);
+
+    if (consoleLogs.length > 0) {
+      console.log(`\n📋 Console logs related to forceResponsiveGrids:`);
+      consoleLogs.forEach(log => console.log(`  ${log}`));
+    } else {
+      console.log(`\n⚠️  No forceResponsiveGrids logs found in console`);
+    }
 
   } catch (err) {
     console.error(`Error:`, err.message);

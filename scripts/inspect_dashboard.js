@@ -33,20 +33,23 @@ async function inspectDashboard() {
     const allTabBtns = await page.$$('button[data-tab]');
     console.log(`Found ${allTabBtns.length} tab buttons`);
 
-    const simBtn = await page.$('button[data-tab="simuladores"]');
-    if (simBtn) {
+    const fireBtn = await page.$('button[data-tab="fire"]');
+    if (fireBtn) {
       // Clica no botão
-      await simBtn.click();
-      await page.waitForTimeout(1000); // Aguarda transição + rAF
+      await fireBtn.click();
+      await page.waitForTimeout(1500); // Aguarda transição + rAF + forceResponsiveGrids
 
       // Verifica se tab-hidden foi removido
       const tabStatus = await page.evaluate(() => {
-        const tab = document.querySelector('[data-in-tab="simuladores"]');
+        const tab = document.querySelector('[data-in-tab="fire"]');
+        const dynamicDiv = document.querySelector('.dynamic-2col');
         return {
           found: !!tab,
           isHidden: tab ? tab.classList.contains('tab-hidden') : null,
           display: tab ? window.getComputedStyle(tab).display : null,
-          sectionCount: document.querySelectorAll('[data-in-tab="simuladores"].section').length
+          sectionCount: document.querySelectorAll('[data-in-tab="fire"].section').length,
+          dynamicDivFound: !!dynamicDiv,
+          dynamicDivStyle: dynamicDiv ? dynamicDiv.getAttribute('style') : null
         };
       });
 
@@ -55,7 +58,11 @@ async function inspectDashboard() {
       } else if (tabStatus.isHidden) {
         console.log(`⚠️  Tab STILL has tab-hidden (display: ${tabStatus.display})`);
       } else {
-        console.log(`✓ Simuladores tab is now VISIBLE (display: ${tabStatus.display}, ${tabStatus.sectionCount} sections)`);
+        console.log(`✓ FIRE tab is now VISIBLE (display: ${tabStatus.display}, ${tabStatus.sectionCount} sections)`);
+        console.log(`   .dynamic-2col found: ${tabStatus.dynamicDivFound}`);
+        if (tabStatus.dynamicDivStyle) {
+          console.log(`   .dynamic-2col style: ${tabStatus.dynamicDivStyle.substring(0, 150)}...`);
+        }
       }
     } else {
       console.log('❌ Could not find Simuladores button');

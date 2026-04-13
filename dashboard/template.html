@@ -6483,6 +6483,8 @@ window.switchTab = function(name) {
       _initTabCharts(name);
       // Aplicar privacy após lazy init (charts inexistentes no page load)
       if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
+      // Force responsive grid override after tab content is built
+      forceResponsiveGrids();
     }));
   }
   requestAnimationFrame(() => {
@@ -8042,9 +8044,14 @@ function buildCagrVsTwr() {
 
 // Force responsive grid override for inline styles at 768px breakpoint
 (function() {
-  function forceResponsiveGrids() {
-    const isMobile = window.innerWidth < 768;
-    if (!isMobile) return;
+  window.forceResponsiveGrids = function forceResponsiveGrids() {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+      console.log('[forceResponsiveGrids] window.innerWidth=' + window.innerWidth + ' > 768, skipping');
+      return;
+    }
+
+    console.log('[forceResponsiveGrids] Running on window.innerWidth=' + window.innerWidth);
 
     // Selectors with inline grid-template-columns that resist CSS rules
     const selectors = [
@@ -8055,9 +8062,11 @@ function buildCagrVsTwr() {
 
     selectors.forEach(sel => {
       const els = document.querySelectorAll(sel);
+      console.log('[forceResponsiveGrids] Selector "' + sel + '" found ' + els.length + ' elements');
       els.forEach(el => {
         const style = el.getAttribute('style');
         if (style && (style.includes('grid-template-columns:1fr 1fr') || style.includes('grid-template-columns:repeat(2'))) {
+          console.log('[forceResponsiveGrids] Fixing ' + sel + ' style');
           // Remove the inline grid-template-columns and let CSS handle it
           const newStyle = style
             .replace(/grid-template-columns:\s*1fr\s+1fr/gi, 'grid-template-columns: 1fr !important')
@@ -8066,16 +8075,16 @@ function buildCagrVsTwr() {
         }
       });
     });
-  }
+  };
 
   // Run on load
-  forceResponsiveGrids();
+  window.forceResponsiveGrids();
 
   // Run on resize
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(forceResponsiveGrids, 250);
+    resizeTimer = setTimeout(window.forceResponsiveGrids, 250);
   });
 })();
 
