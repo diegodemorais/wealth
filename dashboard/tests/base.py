@@ -57,6 +57,49 @@ def get_nested(d: dict, path: str):
     return val
 
 
+def get_provenance(field_name: str) -> dict:
+    """
+    Retorna provenance (origem/fórmula/entrada) de um field em data.json.
+
+    Exemplo:
+        prov = get_provenance("concentracao_brasil.brasil_pct")
+        # Retorna:
+        # {
+        #   "source_file": "scripts/generate_data.py",
+        #   "source_line": 1519,
+        #   "formula": "(hodl11_brl + rf_total_brl + ...) / total_brl * 100",
+        #   "input_fields": [...],
+        #   "last_updated": "2026-04-13T..."
+        # }
+    """
+    data = load_data()
+    provenance_map = data.get("_provenance", {})
+    return provenance_map.get(field_name, {})
+
+
+def format_provenance_msg(field_name: str, value=None) -> str:
+    """Formata mensagem de provenance para exibir em teste falho."""
+    prov = get_provenance(field_name)
+    if not prov:
+        return ""
+
+    lines = [f"  Origem: {prov.get('source_file', '?')}"]
+    if prov.get('source_line'):
+        lines[0] += f":{prov['source_line']}"
+
+    if prov.get('formula'):
+        lines.append(f"  Fórmula: {prov['formula']}")
+
+    if prov.get('reason'):
+        lines.append(f"  Razão: {prov['reason']}")
+
+    if prov.get('input_fields'):
+        inputs = prov['input_fields'][:3]  # Mostrar primeiros 3
+        lines.append(f"  Entrada: {', '.join(inputs)}")
+
+    return "\n".join(lines)
+
+
 @dataclass
 class TestResult:
     test_id: str

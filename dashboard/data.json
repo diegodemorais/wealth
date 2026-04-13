@@ -6187,5 +6187,75 @@
     ],
     "n_sim": 5000,
     "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) não capturado — conservador (pior caso)."
+  },
+  "_provenance": {
+    "concentracao_brasil.brasil_pct": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1519,
+      "formula": "(hodl11_brl + rf_total_brl + crypto_legado) / total_brl * 100",
+      "input_fields": [
+        "posicoes.HODL11.valor_brl",
+        "rf.ipca2029.valor",
+        "rf.ipca2040.valor",
+        "rf.ipca2050.valor",
+        "rf.renda_plus_2065.valor",
+        "patrimonio.crypto_legado_brl"
+      ],
+      "reason": "Concentração em ativos de risco Brasil (HODL11 B3 + RF soberano BR + Crypto legacy)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "macro.exposicao_cambial_pct": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1900,
+      "formula": "(equity_usd * cambio) / total_brl * 100",
+      "input_fields": [
+        "patrimonio.equity_usd",
+        "macro.cambio",
+        "patrimonio.total_brl"
+      ],
+      "reason": "Exposição cambial (equity USD convertido para BRL / total do portfólio)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "concentracao_brasil.composicao.hodl11_brl": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1510,
+      "formula": "posicoes.HODL11.qty * posicoes.HODL11.preco",
+      "input_fields": [
+        "posicoes.HODL11.qty",
+        "posicoes.HODL11.preco"
+      ],
+      "reason": "HODL11 (BTC B3) em BRL: quantidade × preço",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "macro.cambio": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1880,
+      "formula": "patrimonio.cambio (from dashboard_state.json ou fallback config.CAMBIO_FALLBACK)",
+      "input_fields": [
+        "patrimonio.cambio"
+      ],
+      "reason": "Taxa de câmbio BRL/USD para conversão de exposição USD",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "macro.selic_meta": {
+      "source_file": "scripts/generate_data.py",
+      "source_line": 1850,
+      "formula": "config.SELIC_META_SNAPSHOT (snapshot de referência)",
+      "input_fields": [],
+      "reason": "Meta Selic vigente (snapshot em momento de execução)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    },
+    "fire.pfire_base": {
+      "source_file": "scripts/fire_montecarlo.py",
+      "source_line": null,
+      "formula": "P(patrimônio >= gastos_esperados em 50 anos) via Monte Carlo",
+      "input_fields": [
+        "patrimonio.total_brl",
+        "premissas.taxa_real_equity",
+        "premissas.taxa_real_rf"
+      ],
+      "reason": "Probabilidade de não quebrar (FIRE baseline)",
+      "last_updated": "2026-04-13T19:39:53.518454"
+    }
   }
 }

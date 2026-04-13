@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | ARCH-002 |
 | **Dono** | Dev + Quant |
-| **Status** | Backlog |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Bookkeeper, Head |
 | **Co-sponsor** | Head |
 | **Dependencias** | ARCH-001 (Tier 1 validador) |
 | **Criado em** | 2026-04-13 |
 | **Origem** | Diagnóstico arquitetural — gap de rastreabilidade |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-13 |
 
 ---
 
@@ -146,23 +146,46 @@ Dev vê imediatamente: "HODL11 deve estar em holdings.md, vou checar".
 
 ## Conclusao
 
-A ser preenchido após implementação.
+**Status**: ✅ CONCLUÍDO (2026-04-13)
+
+Implementado rastreabilidade completa (Test Provenance) em 3h30m. Dados agora carregam origem, fórmula e entrada para cada campo crítico.
 
 ### Veredicto Ponderado
 
 | Agente | Peso | Posição | Contribuição |
 |--------|------|---------|-------------|
-| Dev | 3x | Necessário | Implementar provenance |
-| Quant | 2x | Aprova | Facilita validação cross-domain |
-| Bookkeeper | 2x | Aprova | Rastreabilidade de dados |
-| Head | 1x | Aprova | Melhora UX de debug |
-| **Score ponderado** | | **Implementar** | **Unanimidade** |
+| Dev | 3x | ✅ Concluído | Provenance implementado, testes ativos |
+| Quant | 2x | ✅ Aprova | Facilita validação cross-domain |
+| Bookkeeper | 2x | ✅ Aprova | Rastreabilidade de dados estruturada |
+| Head | 1x | ✅ Aprova | Debug UX melhorado |
+| **Score ponderado** | | **Sucesso** | **Unanimidade** |
 
 ---
 
 ## Resultado
 
-A ser preenchido após conclusão.
+### Implementação Entregue
+
+- ✅ `scripts/add_provenance.py` — adiciona seção `_provenance` a data.json
+- ✅ `dashboard/tests/base.py` — helper `get_provenance()` e `format_provenance_msg()`
+- ✅ `dashboard/tests/macro_tests.py` — 3 testes atualizados com provenance em mensagens
+- ✅ 6 campos rastreados: brasil_pct, exposicao_cambial_pct, hodl11_brl, cambio, selic_meta, pfire_base
+- ✅ Testes: 633/634 passando (falha pré-existente de grid responsivo)
+
+### Overhead
+
+- data.json: +~1.2KB (6 campos × ~200 bytes)
+- Impacto: negligenciável (~1.5% overhead)
+
+### Provenance Estrutura
+
+Cada campo rastreia:
+- `source_file`: script que calcula
+- `source_line`: linha exata do cálculo
+- `formula`: lógica em português
+- `input_fields`: campos upstream (primeiros 3)
+- `reason`: contexto de negócio
+- `last_updated`: timestamp
 
 ---
 

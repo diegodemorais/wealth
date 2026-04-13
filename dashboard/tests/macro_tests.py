@@ -10,7 +10,7 @@ Categories: DATA | RENDER | VALUE | PRIVACY | SPEC
 Severities: CRITICAL | HIGH | MEDIUM
 """
 
-from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_PY
+from .base import registry, load_data, load_html, load_spec, get_nested, get_provenance, format_provenance_msg, BUILD_PY
 
 # ─────────────────────────────────────────────────────────────────────────────
 # macro-strip — DATA
@@ -363,7 +363,11 @@ def _():
     if val is None:
         return False, "macro.exposicao_cambial_pct ausente"
     if not (0.0 <= val <= 100.0):
-        return False, f"exposicao_cambial_pct={val} fora de [0, 100]"
+        prov = format_provenance_msg("macro.exposicao_cambial_pct")
+        msg = f"exposicao_cambial_pct={val} fora de [0, 100]"
+        if prov:
+            msg += f"\n{prov}"
+        return False, msg
     return True, f"exposicao_cambial_pct={val:.1f}% dentro de [0, 100]"
 
 
@@ -381,7 +385,11 @@ def _():
     if val is None:
         return False, "concentracao_brasil.brasil_pct ausente"
     if not (0.0 <= val <= 100.0):
-        return False, f"brasil_pct={val} fora de [0, 100]"
+        prov = format_provenance_msg("concentracao_brasil.brasil_pct")
+        msg = f"brasil_pct={val} fora de [0, 100]"
+        if prov:
+            msg += f"\n{prov}"
+        return False, msg
     return True, f"brasil_pct={val:.1f}% dentro de [0, 100]"
 
 
@@ -403,10 +411,17 @@ def _():
     total = br + fx
     tolerance = 2.0
     if abs(total - 100.0) > tolerance:
-        return False, (
+        prov_br = format_provenance_msg("concentracao_brasil.brasil_pct")
+        prov_fx = format_provenance_msg("macro.exposicao_cambial_pct")
+        msg = (
             f"brasil_pct({br}) + exposicao_cambial_pct({fx}) = {total:.1f} "
-            f"(esperado ~100, delta={abs(total-100):.1f} > {tolerance})"
+            f"(esperado ~100, delta={abs(total-100):.1f} > {tolerance})\n"
         )
+        if prov_br:
+            msg += f"brasil_pct provenance:\n{prov_br}\n"
+        if prov_fx:
+            msg += f"exposicao_cambial_pct provenance:\n{prov_fx}"
+        return False, msg
     return True, f"brasil_pct({br:.1f}) + exposicao_cambial({fx:.1f}) = {total:.1f} ~ 100"
 
 
