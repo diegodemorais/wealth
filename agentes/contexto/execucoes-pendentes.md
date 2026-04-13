@@ -14,4 +14,4 @@ Decisoes que dependem de acao separada do Diego, sem relacao com entrada de caix
 
 | # | Tipo | Decisao | Aprovada | Prazo | Valor | Tranches | Status | Obs |
 |---|------|---------|----------|-------|-------|----------|--------|-----|
-| 1 | **A** | IPCA+ longo ate 15% (TD 2040 80% + TD 2050 20%) | 2026-03-22 | DCA ativo enquanto taxa >= 6,0% | ~R$523k target (15% da carteira) | 0/? feitas | **Aguardando aportes** | Compra direta Tesouro. Taxa ref ~7,16%. Piso operacional 6,0% (breakeven all-in ~5,5%). Se taxa 5,0-6,0%: pausar DCA, aportes para JPGL |
+| 1 | **A** | IPCA+ longo ate 15% (TD 2040 80% + TD 2050 20%) | 2026-03-22 | DCA ativo enquanto taxa >= 6,0% | ~R$523k target (15% da carteira) | 2/? feitas | **Aguardando aportes** | Tranche-1: 2026-04-06 (R$20.035,48 TD 2040). Tranche-2: 2026-04-10 executada (R$46.498,08 TD 2040 @ 7,10% + R$11.660,71 TD 2050 @ 6,85%), liq. 13/04/2026. Compra direta Tesouro. Piso operacional 6,0% (breakeven all-in ~5,5%). Se taxa 5,0-6,0%: pausar DCA, aportes para JPGL |
