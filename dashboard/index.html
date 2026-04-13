@@ -1401,8 +1401,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T08:29:15-03:00'); // BRT (UTC-3)
-const VERSION = '2.3';
+const GENERATED_AT = new Date('2026-04-13T08:32:41-03:00'); // BRT (UTC-3)
+const VERSION = '2.4';
 
 const DATA = {
   "_generated": "2026-04-13T08:29:08",
@@ -8061,7 +8061,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.3"
+  "version": "2.4"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10493,18 +10493,37 @@ window.updateFireSim = function() {
   const rm = r / 12;
   const idadeAtual = DATA.premissas.idade_atual;
   const patAtual   = DATA.premissas.patrimonio_atual;
-  // Gatilho = SWR puro: patrimônio necessário escala naturalmente com o custo simulado
-  // PAT_GATILHO removido como condição — era redundante e forçava SWR implícito de ~1.87%
-  const swrMeta    = DATA.premissas.swr_gatilho ?? 0.024;
+  const swrMeta    = DATA.premissas.swr_gatilho ?? 0.030;
   const maxMonths  = (70 - idadeAtual) * 12;
+  const horizonte  = 37; // anos de desacumulação (FIRE@53 → ~90 anos)
 
-  // Iterar mensalmente até atingir SWR ≤ swrMeta (patrimônio = custo / swrMeta)
+  // Floors de renda que reduzem o que o portfólio precisa cobrir
+  // INSS Diego: R$18k/ano × 60% (haircut reforma) = R$10.8k efetivo, a partir dos 65
+  // Katia (casado/familia): INSS R$84.6k + PGBL R$29.2k = R$113.8k/ano, a partir dos 62 de Diego
+  const cond = window._fireCond || 'solteiro';
+  const floorINSS  = 10800;   // R$/ano Diego (haircut 40%)
+  const floorKatia = 113800;  // R$/ano Katia (apenas casado/família)
+  const idadeINSS  = 65;
+  const idadeKatia = 62;      // ano 2049: Katia INSS+PGBL
+
+  // custoEfetivo = custo ponderado pelo tempo em que cada floor está ativo
+  // Calculado dinamicamente no loop conforme idade projetada do FIRE
+  function _custoEfetivo(fireAge) {
+    const anosAteINSS  = Math.max(0, idadeINSS  - fireAge);
+    const anosAteKatia = Math.max(0, idadeKatia - fireAge);
+    const redINSS  = floorINSS  * Math.max(0, horizonte - anosAteINSS)  / horizonte;
+    const redKatia = (cond !== 'solteiro') ? floorKatia * Math.max(0, horizonte - anosAteKatia) / horizonte : 0;
+    return custo - redINSS - redKatia;
+  }
+
+  // Iterar mensalmente até custo_efetivo / pat ≤ swrMeta
   let pat = patAtual;
   let m   = 0;
   while (m < maxMonths) {
     pat = pat * (1 + rm) + ap;
     m++;
-    if (custo / pat <= swrMeta) break;
+    const fa = idadeAtual + m / 12;
+    if (_custoEfetivo(fa) / pat <= swrMeta) break;
   }
 
   const fireAge  = idadeAtual + m / 12;
@@ -10515,6 +10534,7 @@ window.updateFireSim = function() {
   const idadeFire53 = DATA.premissas.idade_fire_alvo;
   const idadeFire50 = DATA.premissas.idade_fire_aspiracional;
   const diffVs53 = idadeFire53 - fireAge;
+  const custoEf  = _custoEfetivo(fireAge); // custo efetivo do portfólio no FIRE Day
 
   // Cor semáforo
   const cor = !reached ? '#ef4444' : diffVs53 > 1 ? '#22c55e' : diffVs53 > -0.5 ? '#3b82f6' : '#eab308';
@@ -10526,7 +10546,18 @@ window.updateFireSim = function() {
   const _diff  = document.getElementById('simFireDiff');
   if (_ano)   { _ano.textContent = reached ? fireAno : '>2061'; _ano.style.color = cor; }
   if (_idade) { _idade.textContent = reached ? `${Math.floor(fireAge)} anos` : '> 70 anos'; _idade.style.color = cor; }
-  if (_pfire) { _pfire.textContent = reached ? `≈ ${(custo/pat*100 < swrMeta*100 ? '✅' : '⚠️')} SWR ${(custo/pat*100).toFixed(2)}%` : '⚠️ Gatilho não atingido'; _pfire.style.color = cor; }
+  if (_pfire) {
+    if (reached) {
+      const swrBruta  = custo / pat * 100;
+      const swrLiquid = custoEf / pat * 100;
+      const ok = swrLiquid <= swrMeta * 100;
+      const floorLabel = cond !== 'solteiro' ? 'INSS+Katia' : 'INSS';
+      _pfire.textContent = `${ok ? '✅' : '⚠️'} SWR bruta ${swrBruta.toFixed(2)}% · líquida c/${floorLabel} ${swrLiquid.toFixed(2)}%`;
+    } else {
+      _pfire.textContent = '⚠️ Gatilho não atingido';
+    }
+    _pfire.style.color = cor;
+  }
   if (_diff) {
     const diffStr = Math.abs(diffVs53) < 0.25 ? 'no prazo exato'
       : diffVs53 > 0 ? `${Math.floor(Math.abs(diffVs53))}a ${Math.round((Math.abs(diffVs53) % 1) * 12)}m mais cedo`
