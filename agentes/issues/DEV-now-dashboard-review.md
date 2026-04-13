@@ -1,13 +1,26 @@
+# DEV-now-dashboard-review: Revisão Completa Aba NOW — Indicadores Repetidos, TIME TO FIRE Mal Estruturado
+
+## Metadados
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | DEV-now-dashboard-review |
+| **Dono** | Dev |
+| **Status** | Refinamento |
+| **Prioridade** | 🔴 Alta |
+| **Participantes** | FIRE, Advocate, Bookkeeper |
+| **Co-sponsor** | Head |
+| **Dependencias** | — |
+| **Criado em** | 2026-04-13 |
+| **Origem** | Diagnóstico Diego — aba NOW com indicadores repetidos e TIME TO FIRE confuso |
+| **Concluido em** | — |
+
 ---
-title: "DEV — Revisão completa aba NOW: indicadores repetidos, TIME TO FIRE mal estruturado"
-code: "DEV-now-dashboard-review"
-type: "Dashboard UI/UX Review"
-criado_em: 2026-04-13
-dono: "Dev"
-estado: "Refinamento"
-prioridade: "Alta"
-bloqueadores: []
-dependencias: []
+
+## Motivo / Gatilho
+
+Diego flaggeou 3 problemas na aba NOW: (1) informações repetidas em 2 locais, (2) TIME TO FIRE com 9 cards confusos, (3) DRIFT máximo sem destaque. Layout atual não comunica status de forma clara.
+
 ---
 
 ## Problema Identificado
