@@ -1399,8 +1399,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-12T20:45:57-03:00'); // BRT (UTC-3)
-const VERSION = '1.199';
+const GENERATED_AT = new Date('2026-04-12T21:08:37-03:00'); // BRT (UTC-3)
+const VERSION = '1.201';
 
 const DATA = {
   "_generated": "2026-04-12T20:29:59",
@@ -8059,7 +8059,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "1.199"
+  "version": "1.201"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10964,8 +10964,10 @@ function buildNetWorthProjection() {
   const aHojeIdx = _anos.indexOf(anoAtual);
   const patAtual = DATA.premissas.patrimonio_atual;
 
-  // Cap Y em R$15M — foco na fase de acumulação (P50 chega em ~R$13M no FIRE)
-  const _nwYMax = 15e6;
+  // Y max dinâmico baseado nos dados reais (P90 pode superar R$15M em cenário favorável)
+  const _allNwVals = [..._p10, ..._p50, ..._p90].filter(v => v != null && isFinite(v) && v > 0);
+  const _nwDataMax = _allNwVals.length ? Math.max(..._allNwVals) : 15e6;
+  const _nwYMax = Math.min(_nwDataMax * 1.15, 30e6); // headroom 15%, cap em R$30M
 
   if (charts.netWorth) { charts.netWorth.destroy(); charts.netWorth = null; }
 
@@ -11225,7 +11227,7 @@ function buildStressTest() {
       const traj = runMCTrajectories(_patShock, _spending, _anosAcumulo, 40, _retReal, _vol, 500, _aporte);
       buildStressFanChart(traj, _onsetAge, _anosAcumulo, _shockPct);
     } catch(e) { console.error('[stress-fan-chart ERROR]', e); }
-  }, 50);
+  }, 100); // 100ms: garante reflow completo após seção colapsível abrir (50ms era insuficiente em alguns browsers)
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -12844,6 +12846,11 @@ window._toggleBlock = function(el) {
     // Opening: double-RAF garante reflow completo após display:block antes de ler offsetWidth
     // Single RAF não garante layout flush quando CSS muda de display:none → display:block.
     requestAnimationFrame(() => requestAnimationFrame(() => {
+      // Force synchronous reflow so offsetWidth/offsetHeight are accurate in builders.
+      // Double-RAF garante que o browser processou o CSS display change, mas em alguns
+      // browsers o layout computed ainda pode estar pendente — getBoundingClientRect()
+      // força flush síncrono do layout antes de chamar os builders.
+      void el.getBoundingClientRect();
       el.querySelectorAll('canvas').forEach(canvas => {
         const builder = _chartBuilders[canvas.id];
         if (builder) {
