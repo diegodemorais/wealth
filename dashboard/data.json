@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-13T12:52:35",
-  "_generated_brt": "2026-04-13T12:52:35-03:00",
+  "_generated": "2026-04-13T12:59:21",
+  "_generated_brt": "2026-04-13T12:59:21-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,7 +10,7 @@
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.0233,
+  "cambio": 5.0243,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -23,7 +23,7 @@
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.82,
+      "price": 26.805,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -31,7 +31,7 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.74,
+      "price": 114.77,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -39,7 +39,7 @@
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.07,
+      "price": 105.105,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -63,7 +63,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.25,
+      "price": 63.3,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -71,7 +71,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.94,
+      "price": 62.87,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3541237,
+    "patrimonio_atual": 3542281,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -205,28 +205,28 @@
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -2207,16 +2207,16 @@
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 60.75,
-    "valor": 101817.0,
+    "preco": 60.76,
+    "valor": 101833.76,
     "preco_medio": 79.03,
-    "pnl_brl": -30637.28,
-    "pnl_pct": -23.13,
+    "pnl_brl": -30620.52,
+    "pnl_pct": -23.12,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.88,
+      "atual_pct": 2.87,
       "status": "verde"
     }
   },
@@ -2328,7 +2328,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.74,
+      "price": 114.77,
       "ucits": "AVGS.L"
     },
     {
@@ -2336,7 +2336,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.07,
+      "price": 105.105,
       "ucits": "AVGS.L"
     },
     {
@@ -2360,7 +2360,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.25,
+      "price": 63.3,
       "ucits": "AVEM.L"
     },
     {
@@ -2368,7 +2368,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.94,
+      "price": 62.87,
       "ucits": "AVEM.L"
     },
     {
@@ -2653,8 +2653,8 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 628443,
-    "retorno_usd": 237399,
+    "patrimonio_equity_usd": 628522,
+    "retorno_usd": 237478,
     "pct_aportes": 62.2,
     "pct_retorno": 37.8,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -2698,12 +2698,12 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0233
+    "cambio": 5.0243
   },
   "mercado": {
-    "cambio_brl_usd": 5.0233,
+    "cambio_brl_usd": 5.0243,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": -2.57,
+    "cambio_mtd_pct": -2.55,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -3185,7 +3185,7 @@
   "concentracao_brasil": {
     "brasil_pct": 11.0,
     "composicao": {
-      "hodl11_brl": 101817,
+      "hodl11_brl": 101834,
       "rf_total_brl": 282565,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -3195,8 +3195,8 @@
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 388394,
-    "total_portfolio_brl": 3541237,
+    "total_brasil_brl": 388410,
+    "total_portfolio_brl": 3542281,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3212,22 +3212,25 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33294,
-      "delta_brl": 8294,
-      "delta_pct": 33.2,
-      "periodo": "2021-04-13 a 2026-03-13",
-      "meses_span": 59,
-      "total_usd": 391043,
-      "cambio_conversao": 5.0233,
+      "realizado_media_brl": 72881,
+      "delta_brl": 47881,
+      "delta_pct": 191.5,
+      "periodo": "2021-04-13 a 2026-04-28",
+      "meses_span": 60,
+      "total_ibkr_usd": 391043,
+      "total_ibkr_brl": 1964719,
+      "total_rf_brl": 2408159,
+      "total_aporte_brl": 4372879,
+      "cambio_conversao": 5.0243,
       "por_ano_brl": {
-        "2026": 95443,
-        "2025": 283678,
-        "2024": 374094,
-        "2023": 395371,
-        "2022": 484214,
-        "2021": 331529
+        "2026": 95462,
+        "2025": 283735,
+        "2024": 374168,
+        "2023": 395450,
+        "2022": 484310,
+        "2021": 331595
       },
-      "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
+      "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
   },
   "earliest_fire": {

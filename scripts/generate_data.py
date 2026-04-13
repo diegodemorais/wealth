@@ -1522,6 +1522,7 @@ def compute_premissas_vs_realizado(
     premissas: dict,
     backtest_data: dict,
     cambio: float,
+    csv_rows: list | None = None,
 ) -> dict | None:
     """Compara premissas do plano FIRE com dados realizados.
 
@@ -1529,10 +1530,9 @@ def compute_premissas_vs_realizado(
       1. Retorno equity: premissa (4.85% real BRL base) vs backtest CAGR.
          NOTA: backtest CAGR é nominal USD (inclui inflação US, exclui BRL).
          Comparação direta não é apple-to-apple -- flag explícito.
-      2. Aporte mensal: premissa (R$25k/mês) vs média real dos depósitos IBKR.
+      2. Aporte mensal: premissa (R$25k/mês) vs média real dos depósitos.
+         Inclui: aportes IBKR (USD → BRL) + aportes RF (BRL direto).
          Conversão USD→BRL pelo câmbio de referência atual (aproximação).
-         Aportes RF (Tesouro Direto) NÃO estão incluídos no IBKR --
-         aporte real total é maior que o calculado aqui.
 
     Retorna dict com comparação, ou None se dados insuficientes.
     """
@@ -1594,17 +1594,49 @@ def compute_premissas_vs_realizado(
     if aportes and premissa_aporte:
         depositos = aportes.get("depositos", [])
         if depositos:
-            # Calcular período coberto (primeiro ao último depósito)
-            datas = sorted(d["data"] for d in depositos)
-            primeira = datetime.strptime(datas[0], "%Y-%m-%d")
-            ultima = datetime.strptime(datas[-1], "%Y-%m-%d")
+            # Calcular período coberto (primeiro ao último depósito IBKR)
+            datas_ibkr = sorted(d["data"] for d in depositos)
+            primeira_ibkr = datetime.strptime(datas_ibkr[0], "%Y-%m-%d")
+            ultima_ibkr = datetime.strptime(datas_ibkr[-1], "%Y-%m-%d")
+
+            # ─ Aportes IBKR (USD → BRL) ─
+            total_usd = aportes.get("total_usd", sum(d["usd"] for d in depositos))
+            total_ibkr_brl = total_usd * cambio
+
+            # ─ Aportes RF (BRL direto) ─
+            total_rf_brl = 0
+            data_primeira_rf = None
+            data_ultima_rf = None
+            if csv_rows:
+                for row in csv_rows:
+                    try:
+                        aporte_brl_val = float(row.get("aporte_brl", "0").replace(",", ".").replace(" ", ""))
+                        if aporte_brl_val > 0:
+                            total_rf_brl += aporte_brl_val
+                            row_data = row.get("data", "")
+                            if row_data:
+                                if not data_primeira_rf:
+                                    data_primeira_rf = row_data
+                                data_ultima_rf = row_data
+                    except (ValueError, KeyError, TypeError):
+                        pass
+
+            # ─ Período combinado: min(primeira IBKR, primeira RF) até max(ultima IBKR, ultima RF) ─
+            datas_todas = datas_ibkr.copy()
+            if data_primeira_rf:
+                datas_todas.append(data_primeira_rf)
+            if data_ultima_rf:
+                datas_todas.append(data_ultima_rf)
+            datas_todas_sorted = sorted(datas_todas)
+            primeira = datetime.strptime(datas_todas_sorted[0], "%Y-%m-%d")
+            ultima = datetime.strptime(datas_todas_sorted[-1], "%Y-%m-%d")
             meses_span = max(1, round((ultima - primeira).days / 30.44))
 
-            total_usd = aportes.get("total_usd", sum(d["usd"] for d in depositos))
-            total_brl_approx = total_usd * cambio
-            media_mensal_brl = round(total_brl_approx / meses_span)
+            # ─ Total de aportes (IBKR + RF) ─
+            total_aporte_brl = total_ibkr_brl + total_rf_brl
+            media_mensal_brl = round(total_aporte_brl / meses_span)
 
-            # Por ano
+            # Por ano (apenas IBKR, pois RF não tem breakdown por ano neste momento)
             por_ano_brl = {}
             for ano, val_usd in aportes.get("por_ano", {}).items():
                 por_ano_brl[ano] = round(val_usd * cambio)
@@ -1614,15 +1646,18 @@ def compute_premissas_vs_realizado(
                 "realizado_media_brl": media_mensal_brl,
                 "delta_brl": media_mensal_brl - premissa_aporte,
                 "delta_pct": round((media_mensal_brl / premissa_aporte - 1) * 100, 1),
-                "periodo": f"{datas[0]} a {datas[-1]}",
+                "periodo": f"{datas_todas_sorted[0]} a {datas_todas_sorted[-1]}",
                 "meses_span": meses_span,
-                "total_usd": round(total_usd),
+                "total_ibkr_usd": round(total_usd),
+                "total_ibkr_brl": round(total_ibkr_brl),
+                "total_rf_brl": round(total_rf_brl),
+                "total_aporte_brl": round(total_aporte_brl),
                 "cambio_conversao": round(cambio, 4),
                 "por_ano_brl": por_ano_brl,
                 "nota": (
-                    "Apenas depósitos IBKR (equity offshore). "
-                    "Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. "
-                    "Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
+                    "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). "
+                    "Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). "
+                    "Período: primeiro aporte até último aporte (IBKR ou RF)."
                 ),
             }
 
@@ -2211,10 +2246,12 @@ def main():
     # Último aporte mensal (última linha do CSV historico_carteira.csv)
     _ultimo_aporte_brl  = None
     _ultimo_aporte_data = None
+    _csv_rows = None
     if CSV_PATH.exists():
         try:
             with open(CSV_PATH) as _f:
                 _rows = list(csv.DictReader(_f))
+            _csv_rows = _rows  # Guardar para passar a compute_premissas_vs_realizado
             if _rows:
                 _last = _rows[-1]
                 _keys = list(_last.keys())
@@ -2235,7 +2272,7 @@ def main():
         print(f"  -> concentração Brasil: {concentracao_brasil['brasil_pct']}% (RF R${concentracao_brasil['composicao']['rf_total_brl']/1e3:.0f}k + HODL11 R${hodl11_brl/1e3:.0f}k)")
 
     # Premissas vs Realizado (Advocate dataset)
-    premissas_vs_realizado = compute_premissas_vs_realizado(premissas, backtest_data, cambio)
+    premissas_vs_realizado = compute_premissas_vs_realizado(premissas, backtest_data, cambio, csv_rows=_csv_rows)
     if premissas_vs_realizado:
         _pvr_aporte = premissas_vs_realizado.get("aporte_mensal", {})
         _pvr_ret = premissas_vs_realizado.get("retorno_equity", {})

@@ -1388,7 +1388,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
  *   rolling_sharpe: { dates: string[], values: number[], values_usd?: (number|null)[], sortino?: number[], volatilidade?: number[], max_dd?: number[], window: number, rf_brl?: {taxa_anual: number, nome: string}, rf_usd?: {taxa_anual: number, nome: string} },
  *   backtest: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, cambioInicio?: number },
  *   backtestR5: { dates: string[], target: number[], shadowA: number[], metrics: { target: PortfolioMetrics, shadowA: PortfolioMetrics }, note?: string },
- *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, renda2065: RfTitulo },
+ *   rf: { ipca2029: RfTitulo, ipca2040: RfTitulo, ipca2050: RfTitulo, renda2065: RfTitulo },
  *   hodl11: { qty: number|null, preco: number|null, valor: number },
  *   glide: { idades: number[], equity: number[], ipca_longo: number[], ipca_curto: number[], hodl11: number[], renda_plus: number[] },
  *   drift: { SWRD: DriftItem, AVGS: DriftItem, AVEM: DriftItem, IPCA: DriftItem, HODL11: DriftItem },
@@ -1409,12 +1409,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T12:45:07-03:00'); // BRT (UTC-3)
-const VERSION = '2.15';
+const GENERATED_AT = new Date('2026-04-13T12:59:24-03:00'); // BRT (UTC-3)
+const VERSION = '2.16';
 
 const DATA = {
-  "_generated": "2026-04-13T12:45:06",
-  "_generated_brt": "2026-04-13T12:45:06-03:00",
+  "_generated": "2026-04-13T12:59:21",
+  "_generated_brt": "2026-04-13T12:59:21-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -1424,12 +1424,12 @@ const DATA = {
     "fire_mc": "2026-04-13",
     "geral": "2026-04-13"
   },
-  "cambio": 5.0958,
+  "cambio": 5.0243,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.295,
+      "price": 48.285,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -1437,7 +1437,7 @@ const DATA = {
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.82,
+      "price": 26.805,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -1445,7 +1445,7 @@ const DATA = {
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 114.71,
+      "price": 114.77,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1453,7 +1453,7 @@ const DATA = {
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 105.11,
+      "price": 105.105,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1461,7 +1461,7 @@ const DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.54,
+      "price": 84.495,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -1469,7 +1469,7 @@ const DATA = {
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.48,
+      "price": 49.45,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1477,7 +1477,7 @@ const DATA = {
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 63.29,
+      "price": 63.3,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1485,7 +1485,7 @@ const DATA = {
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 62.92,
+      "price": 62.87,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -1493,7 +1493,7 @@ const DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.94,
+      "price": 65.91,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -1523,7 +1523,7 @@ const DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3588234,
+    "patrimonio_atual": 3542281,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1619,28 +1619,28 @@ const DATA = {
       "variavel": "Volatilidade equity (+/-10%)",
       "mais10": -4.1,
       "menos10": 4.0,
-      "delta": 8.2
+      "delta": 8.1
     },
     {
       "label": "Custo de vida (+/-10%)",
       "variavel": "Custo de vida (+/-10%)",
       "mais10": -2.8,
       "menos10": 1.9,
-      "delta": 4.7
+      "delta": 4.699999999999999
     },
     {
       "label": "Retorno equity (+/-10%)",
       "variavel": "Retorno equity (+/-10%)",
       "mais10": 3.4,
       "menos10": -4.1,
-      "delta": 7.6
+      "delta": 7.5
     },
     {
       "label": "Aporte mensal (+/-10%)",
       "variavel": "Aporte mensal (+/-10%)",
       "mais10": 1.2,
       "menos10": -1.4,
-      "delta": 2.6
+      "delta": 2.5999999999999996
     }
   ],
   "fire": {
@@ -3297,7 +3297,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -3621,30 +3621,41 @@ const DATA = {
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 61.04,
-    "valor": 102303.04,
+    "preco": 60.76,
+    "valor": 101833.76,
     "preco_medio": 79.03,
-    "pnl_brl": -30151.24,
-    "pnl_pct": -22.76,
+    "pnl_brl": -30620.52,
+    "pnl_pct": -23.12,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.85,
+      "atual_pct": 2.87,
       "status": "verde"
     }
   },
   "dca_status": {
-    "ipca_longo": {
-      "instrumento": "TD IPCA+ 2040 (80%) + TD 2050 (20%)",
+    "ipca2040": {
+      "instrumento": "TD IPCA+ 2040",
       "ativo": true,
       "taxa_atual": 7.07,
       "piso": 6.0,
       "gap_pp": 1.07,
-      "pct_carteira_atual": 2.2,
-      "alvo_pct": 15.0,
-      "gap_alvo_pp": 12.8,
-      "proxima_acao": "DCA ativo: aportar mensalmente em TD 2040 (80%) + TD 2050 (20%) ate 15.0% da carteira"
+      "pct_carteira_atual": 1.9,
+      "alvo_pct": 12.0,
+      "gap_alvo_pp": 10.1,
+      "proxima_acao": "DCA ativo: aportar em TD 2040 (80% do bloco IPCA+) ate 12.0% da carteira"
+    },
+    "ipca2050": {
+      "instrumento": "TD IPCA+ 2050",
+      "ativo": true,
+      "taxa_atual": 7.07,
+      "piso": 6.0,
+      "gap_pp": 1.07,
+      "pct_carteira_atual": 0.3,
+      "alvo_pct": 3.0,
+      "gap_alvo_pp": 2.7,
+      "proxima_acao": "DCA ativo: aportar em TD 2050 (20% do bloco IPCA+) ate 3.0% da carteira"
     },
     "renda_plus": {
       "instrumento": "Renda+ 2065",
@@ -3705,11 +3716,11 @@ const DATA = {
   },
   "drift": {
     "SWRD": {
-      "atual": 36.3,
+      "atual": 36.2,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.5,
+      "atual": 28.4,
       "alvo": 23.7
     },
     "AVEM": {
@@ -3717,7 +3728,7 @@ const DATA = {
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 4.6,
+      "atual": 4.7,
       "alvo": 15.0
     },
     "HODL11": {
@@ -3731,7 +3742,7 @@ const DATA = {
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 114.71,
+      "price": 114.77,
       "ucits": "AVGS.L"
     },
     {
@@ -3739,7 +3750,7 @@ const DATA = {
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 105.11,
+      "price": 105.105,
       "ucits": "AVGS.L"
     },
     {
@@ -3747,7 +3758,7 @@ const DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.54,
+      "price": 84.495,
       "ucits": "AVGS.L"
     },
     {
@@ -3755,7 +3766,7 @@ const DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.48,
+      "price": 49.45,
       "ucits": "AVEM.L"
     },
     {
@@ -3763,7 +3774,7 @@ const DATA = {
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 63.29,
+      "price": 63.3,
       "ucits": "AVEM.L"
     },
     {
@@ -3771,7 +3782,7 @@ const DATA = {
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 62.92,
+      "price": 62.87,
       "ucits": "AVEM.L"
     },
     {
@@ -3779,7 +3790,7 @@ const DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.94,
+      "price": 65.91,
       "ucits": "JPGL.L"
     }
   ],
@@ -4056,8 +4067,8 @@ const DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 628629,
-    "retorno_usd": 237585,
+    "patrimonio_equity_usd": 628522,
+    "retorno_usd": 237478,
     "pct_aportes": 62.2,
     "pct_retorno": 37.8,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -4101,12 +4112,12 @@ const DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 5.0958
+    "cambio": 5.0243
   },
   "mercado": {
-    "cambio_brl_usd": 5.0958,
+    "cambio_brl_usd": 5.0243,
     "btc_usd": 72925.62,
-    "cambio_mtd_pct": -1.17,
+    "cambio_mtd_pct": -2.55,
     "btc_mtd_pct": 1.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
@@ -4586,9 +4597,9 @@ const DATA = {
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 10.8,
+    "brasil_pct": 11.0,
     "composicao": {
-      "hodl11_brl": 102303,
+      "hodl11_brl": 101834,
       "rf_total_brl": 282565,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -4598,8 +4609,8 @@ const DATA = {
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 388880,
-    "total_portfolio_brl": 3588234,
+    "total_brasil_brl": 388410,
+    "total_portfolio_brl": 3542281,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -4615,22 +4626,25 @@ const DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 33774,
-      "delta_brl": 8774,
-      "delta_pct": 35.1,
-      "periodo": "2021-04-13 a 2026-03-13",
-      "meses_span": 59,
-      "total_usd": 391043,
-      "cambio_conversao": 5.0958,
+      "realizado_media_brl": 72881,
+      "delta_brl": 47881,
+      "delta_pct": 191.5,
+      "periodo": "2021-04-13 a 2026-04-28",
+      "meses_span": 60,
+      "total_ibkr_usd": 391043,
+      "total_ibkr_brl": 1964719,
+      "total_rf_brl": 2408159,
+      "total_aporte_brl": 4372879,
+      "cambio_conversao": 5.0243,
       "por_ano_brl": {
-        "2026": 96820,
-        "2025": 287773,
-        "2024": 379493,
-        "2023": 401077,
-        "2022": 491202,
-        "2021": 336314
+        "2026": 95462,
+        "2025": 283735,
+        "2024": 374168,
+        "2023": 395450,
+        "2022": 484310,
+        "2021": 331595
       },
-      "nota": "Apenas depósitos IBKR (equity offshore). Aportes em RF brasileira (Tesouro Direto, HODL11) NÃO incluídos. Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período)."
+      "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
   },
   "earliest_fire": {
@@ -7886,20 +7900,20 @@ const DATA = {
       2077
     ],
     "p10": [
-      3588234,
-      3757251,
-      3934229,
-      4119543,
-      4313586,
-      4516769,
-      4729523,
-      4952298,
-      5185566,
-      5429822,
-      5685583,
-      5953392,
-      6233815,
-      6527446,
+      3542281,
+      3712550,
+      3891003,
+      4078034,
+      4274055,
+      4479498,
+      4694816,
+      4920485,
+      5157000,
+      5404884,
+      5664684,
+      5936971,
+      6222347,
+      6521440,
       6834909,
       6924402,
       7018236,
@@ -7940,20 +7954,20 @@ const DATA = {
       18227593
     ],
     "p50": [
-      3588234,
-      3900179,
-      4239244,
-      4607785,
-      5008366,
-      5443771,
-      5917029,
-      6431429,
-      6990549,
-      7598277,
-      8258838,
-      8976825,
-      9757231,
-      10605482,
+      3542281,
+      3853778,
+      4192667,
+      4561356,
+      4962467,
+      5398850,
+      5873608,
+      6390114,
+      6952040,
+      7563380,
+      8228480,
+      8952066,
+      9739281,
+      10595722,
       11527476,
       11844559,
       12177020,
@@ -7994,20 +8008,20 @@ const DATA = {
       45294745
     ],
     "p90": [
-      3588234,
-      4040628,
-      4550059,
-      5123717,
-      5769700,
-      6497127,
-      7316266,
-      8238680,
-      9277389,
-      10447055,
-      11764190,
-      13247384,
-      14917576,
-      16798341,
+      3542281,
+      3992556,
+      4500067,
+      5072089,
+      5716825,
+      6443515,
+      7262578,
+      8185755,
+      9226282,
+      10399075,
+      11720946,
+      13210846,
+      14890133,
+      16782882,
       18916227,
       19591664,
       20299860,
@@ -8077,7 +8091,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.15"
+  "version": "2.16"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -8091,14 +8105,14 @@ let totalEquityUsd = 0;
 Object.values(DATA.posicoes).forEach(p => { totalEquityUsd += p.qty * p.price; });
 
 // Total BRL = equity + RF + crypto
-const rfBrl = DATA.rf.ipca2029.valor + DATA.rf.ipca2040.valor + DATA.rf.renda2065.valor;
+const rfBrl = (DATA.rf.ipca2029?.valor ?? 0) + (DATA.rf.ipca2040?.valor ?? 0) + (DATA.rf.ipca2050?.valor ?? 0) + (DATA.rf.renda2065?.valor ?? 0);
 // cryptoBrl: hodl11 + crypto legado (valor estimado guardado em DATA.cryptoLegado se disponível)
 const cryptoLegado = DATA.cryptoLegado ?? 3000; // fallback 3k se não disponível
 const cryptoBrl = DATA.hodl11.valor + cryptoLegado;
 const totalBrl = totalEquityUsd * CAMBIO + rfBrl + cryptoBrl;
 
-// C3 — IPCA drift: somar TODOS os títulos IPCA+ (2029 reserva + 2040 DCA)
-const ipcaTotalBrl = DATA.rf.ipca2029.valor + DATA.rf.ipca2040.valor;
+// C3 — IPCA drift: somar TODOS os títulos IPCA+ (2029 reserva + 2040 DCA + 2050 DCA)
+const ipcaTotalBrl = (DATA.rf.ipca2029?.valor ?? 0) + (DATA.rf.ipca2040?.valor ?? 0) + (DATA.rf.ipca2050?.valor ?? 0);
 DATA.drift['IPCA'].atual = +(ipcaTotalBrl / totalBrl * 100).toFixed(1);
 
 // Bucket values
@@ -12423,9 +12437,17 @@ function buildRfCards() {
       label: 'IPCA+ 2040', tipo: rf.ipca2040?.tipo || 'estrutural', custod: 'XP',
       val: rf.ipca2040?.valor, custo: rf.ipca2040?.custo_base_brl,
       taxa: rf.ipca2040?.taxa, piso: pisoIpca, venc: '2040',
-      nota: rf.ipca2040?.notas || 'DCA ativo · HTM',
+      nota: rf.ipca2040?.notas || 'DCA ativo · HTM (80%)',
       status: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'verde' : 'amarelo') : null,
       statusColor: rf.ipca2040?.taxa != null ? (rf.ipca2040.taxa >= pisoIpca ? 'var(--green)' : 'var(--yellow)') : null,
+    },
+    {
+      label: 'IPCA+ 2050', tipo: rf.ipca2050?.tipo || 'estrutural', custod: 'XP',
+      val: rf.ipca2050?.valor, custo: rf.ipca2050?.custo_base_brl,
+      taxa: rf.ipca2050?.taxa, piso: pisoIpca, venc: '2050',
+      nota: rf.ipca2050?.notas || 'DCA ativo · HTM (20%)',
+      status: rf.ipca2050?.taxa != null ? (rf.ipca2050.taxa >= pisoIpca ? 'verde' : 'amarelo') : null,
+      statusColor: rf.ipca2050?.taxa != null ? (rf.ipca2050.taxa >= pisoIpca ? 'var(--green)' : 'var(--yellow)') : null,
     },
     {
       label: 'Renda+ 2065', tipo: rf.renda2065?.tipo || 'tatico', custod: 'Nubank',
@@ -13343,7 +13365,7 @@ function buildDcaStatus() {
     '</div>';
   }
 
-  el.innerHTML = renderCard('ipca_longo', dca.ipca_longo) + renderCard('renda_plus', dca.renda_plus);
+  el.innerHTML = renderCard('ipca2040', dca.ipca2040) + renderCard('ipca2050', dca.ipca2050) + renderCard('renda_plus', dca.renda_plus);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -13366,9 +13388,10 @@ function buildBondPool() {
   // Ativos que compõem (ou devem compor) o bond pool
   const rf = DATA.rf || {};
   const ipca2040Brl = rf.ipca2040?.valor ?? 0;
+  const ipca2050Brl = rf.ipca2050?.valor ?? 0;
   const ipca2029Brl = rf.ipca2029?.valor ?? 0;
   const renda2065Brl = rf.renda2065?.valor ?? 0;
-  const bondTotal = ipca2040Brl + ipca2029Brl;
+  const bondTotal = ipca2040Brl + ipca2050Brl + ipca2029Brl;
   const pctMeta = metaBrl > 0 ? Math.min(100, bondTotal / metaBrl * 100) : 0;
 
   // Taxa atual para decidir estratégia ativa
@@ -13403,6 +13426,11 @@ function buildBondPool() {
           '<td style="padding:4px 4px;font-weight:600">IPCA+ 2040</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--green)" class="pv">R$ ' + (ipca2040Brl/1000).toFixed(0) + 'k</td>' +
           '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2040Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
+        '</tr>' +
+        '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
+          '<td style="padding:4px 4px;font-weight:600">IPCA+ 2050</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--green)" class="pv">R$ ' + (ipca2050Brl/1000).toFixed(0) + 'k</td>' +
+          '<td style="text-align:right;padding:4px 4px;color:var(--muted)">' + (metaBrl > 0 ? (ipca2050Brl/metaBrl*100).toFixed(0) + '% da meta' : '--') + '</td>' +
         '</tr>' +
         '<tr style="border-bottom:1px solid rgba(71,85,105,.25)">' +
           '<td style="padding:4px 4px;font-weight:600">IPCA+ 2029</td>' +
