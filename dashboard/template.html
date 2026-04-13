@@ -964,10 +964,10 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div style="text-align:center;min-width:140px">
     <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Com esses parâmetros</div>
     <div style="font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">você pode aposentar em</div>
-    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno">—</div>
-    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade">— anos</div>
-    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire">P = —%</div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff">—</div>
+    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno" class="pv">—</div>
+    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade" class="pv">— anos</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire" class="pv">P = —%</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff" class="pv">—</div>
   </div>
   <div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
@@ -3832,20 +3832,37 @@ window.updateFireSim = function() {
   const rm = r / 12;
   const idadeAtual = DATA.premissas.idade_atual;
   const patAtual   = DATA.premissas.patrimonio_atual;
-  // Escalar gatilho proporcionalmente ao custo simulado (DEV-fire-sim-fixes)
-  // Custo menor → patrimônio necessário menor → FIRE antecipado
-  const custoBase  = DATA.premissas.custo_vida_base || 250000;
-  const gatilho    = PAT_GATILHO * (custo / custoBase);
-  const swrMeta    = DATA.premissas.swr_gatilho ?? 0.024;
+  const swrMeta    = DATA.premissas.swr_gatilho ?? 0.030;
   const maxMonths  = (70 - idadeAtual) * 12;
+  const horizonte  = 37; // anos de desacumulação (FIRE@53 → ~90 anos)
 
-  // Iterar mensalmente até atingir gatilho E SWR
+  // Floors de renda que reduzem o que o portfólio precisa cobrir
+  // INSS Diego: R$18k/ano × 60% (haircut reforma) = R$10.8k efetivo, a partir dos 65
+  // Katia (casado/familia): INSS R$84.6k + PGBL R$29.2k = R$113.8k/ano, a partir dos 62 de Diego
+  const cond = window._fireCond || 'solteiro';
+  const floorINSS  = 10800;   // R$/ano Diego (haircut 40%)
+  const floorKatia = 113800;  // R$/ano Katia (apenas casado/família)
+  const idadeINSS  = 65;
+  const idadeKatia = 62;      // ano 2049: Katia INSS+PGBL
+
+  // custoEfetivo = custo ponderado pelo tempo em que cada floor está ativo
+  // Calculado dinamicamente no loop conforme idade projetada do FIRE
+  function _custoEfetivo(fireAge) {
+    const anosAteINSS  = Math.max(0, idadeINSS  - fireAge);
+    const anosAteKatia = Math.max(0, idadeKatia - fireAge);
+    const redINSS  = floorINSS  * Math.max(0, horizonte - anosAteINSS)  / horizonte;
+    const redKatia = (cond !== 'solteiro') ? floorKatia * Math.max(0, horizonte - anosAteKatia) / horizonte : 0;
+    return custo - redINSS - redKatia;
+  }
+
+  // Iterar mensalmente até custo_efetivo / pat ≤ swrMeta
   let pat = patAtual;
   let m   = 0;
   while (m < maxMonths) {
     pat = pat * (1 + rm) + ap;
     m++;
-    if (pat >= gatilho && custo / pat <= swrMeta) break;
+    const fa = idadeAtual + m / 12;
+    if (_custoEfetivo(fa) / pat <= swrMeta) break;
   }
 
   const fireAge  = idadeAtual + m / 12;
@@ -3856,6 +3873,7 @@ window.updateFireSim = function() {
   const idadeFire53 = DATA.premissas.idade_fire_alvo;
   const idadeFire50 = DATA.premissas.idade_fire_aspiracional;
   const diffVs53 = idadeFire53 - fireAge;
+  const custoEf  = _custoEfetivo(fireAge); // custo efetivo do portfólio no FIRE Day
 
   // Cor semáforo
   const cor = !reached ? '#ef4444' : diffVs53 > 1 ? '#22c55e' : diffVs53 > -0.5 ? '#3b82f6' : '#eab308';
@@ -3867,7 +3885,18 @@ window.updateFireSim = function() {
   const _diff  = document.getElementById('simFireDiff');
   if (_ano)   { _ano.textContent = reached ? fireAno : '>2061'; _ano.style.color = cor; }
   if (_idade) { _idade.textContent = reached ? `${Math.floor(fireAge)} anos` : '> 70 anos'; _idade.style.color = cor; }
-  if (_pfire) { _pfire.textContent = reached ? `≈ ${(custo/pat*100 < swrMeta*100 ? '✅' : '⚠️')} SWR ${(custo/pat*100).toFixed(2)}%` : '⚠️ Gatilho não atingido'; _pfire.style.color = cor; }
+  if (_pfire) {
+    if (reached) {
+      const swrBruta  = custo / pat * 100;
+      const swrLiquid = custoEf / pat * 100;
+      const ok = swrLiquid <= swrMeta * 100;
+      const floorLabel = cond !== 'solteiro' ? 'INSS+Katia' : 'INSS';
+      _pfire.textContent = `${ok ? '✅' : '⚠️'} SWR bruta ${swrBruta.toFixed(2)}% · líquida c/${floorLabel} ${swrLiquid.toFixed(2)}%`;
+    } else {
+      _pfire.textContent = '⚠️ Gatilho não atingido';
+    }
+    _pfire.style.color = cor;
+  }
   if (_diff) {
     const diffStr = Math.abs(diffVs53) < 0.25 ? 'no prazo exato'
       : diffVs53 > 0 ? `${Math.floor(Math.abs(diffVs53))}a ${Math.round((Math.abs(diffVs53) % 1) * 12)}m mais cedo`
@@ -3882,7 +3911,8 @@ window.updateFireSim = function() {
   if (_p50) { _p50.textContent = `${DATA.pfire50.base}%`; _p50.style.color = DATA.pfire50.base >= 85 ? '#22c55e' : '#eab308'; }
   if (_p53) { _p53.textContent = `${DATA.pfire53.base}%`; _p53.style.color = DATA.pfire53.base >= 90 ? '#22c55e' : '#3b82f6'; }
   const _pat = document.getElementById('simPatFire');
-  if (_pat) { _pat.textContent = `R$${(pat/1e6).toFixed(2)}M`; _pat.style.color = pat >= gatilho ? '#22c55e' : '#eab308'; }
+  const patMeta = custo / swrMeta;
+  if (_pat) { _pat.textContent = `R$${(pat/1e6).toFixed(2)}M`; _pat.style.color = pat >= patMeta ? '#22c55e' : '#eab308'; }
 
   // Timeline bar (idadeAtual..70 → hoje..projeção)
   const totalYears = 70 - idadeAtual;
@@ -4096,7 +4126,7 @@ function buildSpendingBreakdown() {
     <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${_fmtPeriodo(sb.periodo)} (${sb.meses} meses)</div>`;
 
   const srcEl = document.getElementById('spendingBreakdownSrc');
-  if (srcEl) srcEl.textContent = `All-Accounts CSV · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+  if (srcEl) srcEl.innerHTML = `All-Accounts CSV · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -4123,7 +4153,7 @@ function buildLifeEventsEnhanced() {
       </div>
       <div>
         <div style="font-size:.9rem;font-weight:600">${ev.label}</div>
-        <div style="font-size:.75rem;color:var(--accent);margin-top:2px">Impacto: R$${(ev.valor_brl/1000).toFixed(0)}k (gasto pontual)</div>
+        <div style="font-size:.75rem;color:var(--accent);margin-top:2px">Impacto: <span class="pv">R$${(ev.valor_brl/1000).toFixed(0)}k</span> (gasto pontual)</div>
         <div style="font-size:.65rem;color:var(--muted);margin-top:2px">${urgente ? '⚠️ Próximo — ' : ''}Em ${anosRestantes} anos · Tipo: ${ev.tipo}</div>
       </div>
       <div style="text-align:right">
@@ -5425,8 +5455,9 @@ function renderKPIs() {
     const _idadeFire50 = DATA.premissas.idade_fire_aspiracional;
     const ano53 = _anoAtual + (_idadeFire53 - _idadeAtual);
     const ano50 = _anoAtual + (_idadeFire50 - _idadeAtual);
-    const tagCasado = ss[1] ? `R$${(ss[1].custo/1000).toFixed(0)}k/ano` : 'Casado';
-    const tagFilho  = ss[2] ? `R$${(ss[2].custo/1000).toFixed(0)}k/ano` : 'c/ Filho';
+    const _priv = document.body.classList.contains('private-mode');
+    const tagCasado = ss[1] ? (_priv ? 'Casado' : `R$${(ss[1].custo/1000).toFixed(0)}k/ano`) : 'Casado';
+    const tagFilho  = ss[2] ? (_priv ? 'c/ Filho' : `R$${(ss[2].custo/1000).toFixed(0)}k/ano`) : 'c/ Filho';
     const grupos = [
       { label: 'Solteiro', icon: '🧑', color: '#3b82f6',
         cards: [
@@ -5877,11 +5908,11 @@ function buildIncomeTable() {
   </tr>`).join('');
   // Atualizar src
   const _src = document.getElementById('incomeSrc');
-  if (_src) _src.textContent = `Spending smile: gasto lifestyle declina com idade. Saúde: R$${((DATA.saude_base ?? 18000)/1000).toFixed(0)}k/ano base. INSS: R$${(inss/1000).toFixed(0)}k/ano conservador. Bond pool provê liquidez imediata no FIRE Day sem tocar equity.`;
+  if (_src) _src.innerHTML = `Spending smile: gasto lifestyle declina com idade. Saúde: <span class="pv">R$${((DATA.saude_base ?? 18000)/1000).toFixed(0)}k/ano</span> base. INSS: <span class="pv">R$${(inss/1000).toFixed(0)}k/ano</span> conservador. Bond pool provê liquidez imediata no FIRE Day sem tocar equity.`;
   const _chartSrc = document.getElementById('incomeChartSrc');
   if (_chartSrc) {
     const gg = sm.go_go?.gasto, sg = sm.slow_go?.gasto, ng = sm.no_go?.gasto;
-    _chartSrc.textContent = `Spending smile: Go-Go R$${gg != null ? (gg/1000).toFixed(0)+'k' : '—'} / Slow-Go R$${sg != null ? (sg/1000).toFixed(0)+'k' : '—'} / No-Go R$${ng != null ? (ng/1000).toFixed(0)+'k' : '—'} (ex-saúde). INSS: R$${(inss/1000).toFixed(0)}k/ano conservador.`;
+    _chartSrc.innerHTML = `Spending smile: Go-Go <span class="pv">R$${gg != null ? (gg/1000).toFixed(0)+'k' : '—'}</span> / Slow-Go <span class="pv">R$${sg != null ? (sg/1000).toFixed(0)+'k' : '—'}</span> / No-Go <span class="pv">R$${ng != null ? (ng/1000).toFixed(0)+'k' : '—'}</span> (ex-saúde). INSS: <span class="pv">R$${(inss/1000).toFixed(0)}k/ano</span> conservador.`;
   }
 }
 
@@ -6057,7 +6088,7 @@ fetchLive();
 // ── Fase 3: ocultar escala Y de charts com valores absolutos ──
 function _applyPrivacyCharts(isPrivate) {
   // Charts com eixo Y em R$ absoluto — ocultar ticks em modo privado
-  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection', 'stressProjection'];
+  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection', 'stressProjection', 'bondPoolRunway'];
   absCharts.forEach(name => {
     const c = charts[name];
     if (!c) return;
@@ -6093,6 +6124,14 @@ function _applyPrivacyCharts(isPrivate) {
       charts.income.update('none');
     } catch(e) {}
   }
+  // TrackingFire chart: Y axis mostra R$M — ocultar em privado
+  if (charts.trackingFire) {
+    try {
+      const sc = charts.trackingFire.options.scales;
+      if (sc?.y) { sc.y.ticks = sc.y.ticks || {}; sc.y.ticks.display = !isPrivate; }
+      charts.trackingFire.update('none');
+    } catch(e) {}
+  }
   // Sankey: ocultar seção inteira em modo privado (fluxos em R$/ano revelam renda)
   const _sankeyWrap = document.getElementById('sankeySection');
   if (_sankeyWrap) _sankeyWrap.style.display = isPrivate ? 'none' : '';
@@ -6100,6 +6139,8 @@ function _applyPrivacyCharts(isPrivate) {
   if (document.getElementById('heatmapContainer')?.innerHTML) buildRetornoHeatmap();
   // Spending guardrails: re-renderizar (função checa privacy internamente)
   if (document.getElementById('spendingGuardrailsViz')?.innerHTML) buildSpendingGuardrails();
+  // Fire scenario grid: re-renderizar (função lê privacy state no momento do render)
+  if (document.getElementById('fireScenarioGrid')?.children.length) buildScenarios();
   // Sliders (Fase 4): em private mode, resetar para centro do range — posição revela valor
   const _sliders = [
     { id: 'simAporte', numId: 'simAporteVal' },
@@ -6954,9 +6995,9 @@ function buildTrackingFire() {
   const srcEl = document.getElementById('trackingFireSrc');
   if (srcEl) {
     const r = d.retorno_anual_premissa ? (d.retorno_anual_premissa * 100).toFixed(2) + '%/ano' : '';
-    const a = d.aporte_mensal_premissa ? 'R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês' : '';
-    const m = d.meta_fire_date ? 'Meta R$' + (meta / 1e6).toFixed(1) + 'M em ' + d.meta_fire_date : '';
-    srcEl.textContent = [r, a, m].filter(Boolean).join(' · ');
+    const a = d.aporte_mensal_premissa ? '<span class="pv">R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês</span>' : '';
+    const m = d.meta_fire_date ? 'Meta <span class="pv">R$' + (meta / 1e6).toFixed(1) + 'M</span> em ' + d.meta_fire_date : '';
+    srcEl.innerHTML = [r, a, m].filter(Boolean).join(' · ');
   }
 }
 
@@ -7217,7 +7258,7 @@ function buildLumpyEvents() {
   let html = '';
   if (basePfire != null) {
     html += '<div style="margin-bottom:10px;padding:8px 12px;background:rgba(34,197,94,.08);border-radius:6px;border-left:3px solid var(--green);font-size:.78rem">' +
-      '<strong>Base:</strong> Spending R$' + (baseSpending / 1000).toFixed(0) + 'k/ano → P(FIRE@53) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
+      '<strong>Base:</strong> Spending <span class="pv">R$' + (baseSpending / 1000).toFixed(0) + 'k/ano</span> → P(FIRE@53) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
     '</div>';
   }
 

@@ -964,10 +964,10 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <div style="text-align:center;min-width:140px">
     <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Com esses parâmetros</div>
     <div style="font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">você pode aposentar em</div>
-    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno">—</div>
-    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade">— anos</div>
-    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire">P = —%</div>
-    <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff">—</div>
+    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno" class="pv">—</div>
+    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade" class="pv">— anos</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire" class="pv">P = —%</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff" class="pv">—</div>
   </div>
   <div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
@@ -1401,8 +1401,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T08:42:20-03:00'); // BRT (UTC-3)
-const VERSION = '2.5';
+const GENERATED_AT = new Date('2026-04-13T08:54:54-03:00'); // BRT (UTC-3)
+const VERSION = '2.6';
 
 const DATA = {
   "_generated": "2026-04-13T08:42:18",
@@ -8061,7 +8061,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.5"
+  "version": "2.6"
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -10787,7 +10787,7 @@ function buildSpendingBreakdown() {
     <div style="font-size:.65rem;color:var(--muted);margin-top:6px">Período: ${_fmtPeriodo(sb.periodo)} (${sb.meses} meses)</div>`;
 
   const srcEl = document.getElementById('spendingBreakdownSrc');
-  if (srcEl) srcEl.textContent = `All-Accounts CSV · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (R$1.517/mês = reconstrói equity do imóvel)`;
+  if (srcEl) srcEl.innerHTML = `All-Accounts CSV · Período: ${_fmtPeriodo(sb.periodo)} · Essenciais inclui principal da hipoteca (<span class="pv">R$1.517/mês</span> = reconstrói equity do imóvel)`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -10814,7 +10814,7 @@ function buildLifeEventsEnhanced() {
       </div>
       <div>
         <div style="font-size:.9rem;font-weight:600">${ev.label}</div>
-        <div style="font-size:.75rem;color:var(--accent);margin-top:2px">Impacto: R$${(ev.valor_brl/1000).toFixed(0)}k (gasto pontual)</div>
+        <div style="font-size:.75rem;color:var(--accent);margin-top:2px">Impacto: <span class="pv">R$${(ev.valor_brl/1000).toFixed(0)}k</span> (gasto pontual)</div>
         <div style="font-size:.65rem;color:var(--muted);margin-top:2px">${urgente ? '⚠️ Próximo — ' : ''}Em ${anosRestantes} anos · Tipo: ${ev.tipo}</div>
       </div>
       <div style="text-align:right">
@@ -12116,8 +12116,9 @@ function renderKPIs() {
     const _idadeFire50 = DATA.premissas.idade_fire_aspiracional;
     const ano53 = _anoAtual + (_idadeFire53 - _idadeAtual);
     const ano50 = _anoAtual + (_idadeFire50 - _idadeAtual);
-    const tagCasado = ss[1] ? `R$${(ss[1].custo/1000).toFixed(0)}k/ano` : 'Casado';
-    const tagFilho  = ss[2] ? `R$${(ss[2].custo/1000).toFixed(0)}k/ano` : 'c/ Filho';
+    const _priv = document.body.classList.contains('private-mode');
+    const tagCasado = ss[1] ? (_priv ? 'Casado' : `R$${(ss[1].custo/1000).toFixed(0)}k/ano`) : 'Casado';
+    const tagFilho  = ss[2] ? (_priv ? 'c/ Filho' : `R$${(ss[2].custo/1000).toFixed(0)}k/ano`) : 'c/ Filho';
     const grupos = [
       { label: 'Solteiro', icon: '🧑', color: '#3b82f6',
         cards: [
@@ -12568,11 +12569,11 @@ function buildIncomeTable() {
   </tr>`).join('');
   // Atualizar src
   const _src = document.getElementById('incomeSrc');
-  if (_src) _src.textContent = `Spending smile: gasto lifestyle declina com idade. Saúde: R$${((DATA.saude_base ?? 18000)/1000).toFixed(0)}k/ano base. INSS: R$${(inss/1000).toFixed(0)}k/ano conservador. Bond pool provê liquidez imediata no FIRE Day sem tocar equity.`;
+  if (_src) _src.innerHTML = `Spending smile: gasto lifestyle declina com idade. Saúde: <span class="pv">R$${((DATA.saude_base ?? 18000)/1000).toFixed(0)}k/ano</span> base. INSS: <span class="pv">R$${(inss/1000).toFixed(0)}k/ano</span> conservador. Bond pool provê liquidez imediata no FIRE Day sem tocar equity.`;
   const _chartSrc = document.getElementById('incomeChartSrc');
   if (_chartSrc) {
     const gg = sm.go_go?.gasto, sg = sm.slow_go?.gasto, ng = sm.no_go?.gasto;
-    _chartSrc.textContent = `Spending smile: Go-Go R$${gg != null ? (gg/1000).toFixed(0)+'k' : '—'} / Slow-Go R$${sg != null ? (sg/1000).toFixed(0)+'k' : '—'} / No-Go R$${ng != null ? (ng/1000).toFixed(0)+'k' : '—'} (ex-saúde). INSS: R$${(inss/1000).toFixed(0)}k/ano conservador.`;
+    _chartSrc.innerHTML = `Spending smile: Go-Go <span class="pv">R$${gg != null ? (gg/1000).toFixed(0)+'k' : '—'}</span> / Slow-Go <span class="pv">R$${sg != null ? (sg/1000).toFixed(0)+'k' : '—'}</span> / No-Go <span class="pv">R$${ng != null ? (ng/1000).toFixed(0)+'k' : '—'}</span> (ex-saúde). INSS: <span class="pv">R$${(inss/1000).toFixed(0)}k/ano</span> conservador.`;
   }
 }
 
@@ -12748,7 +12749,7 @@ fetchLive();
 // ── Fase 3: ocultar escala Y de charts com valores absolutos ──
 function _applyPrivacyCharts(isPrivate) {
   // Charts com eixo Y em R$ absoluto — ocultar ticks em modo privado
-  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection', 'stressProjection'];
+  const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection', 'stressProjection', 'bondPoolRunway'];
   absCharts.forEach(name => {
     const c = charts[name];
     if (!c) return;
@@ -12784,6 +12785,14 @@ function _applyPrivacyCharts(isPrivate) {
       charts.income.update('none');
     } catch(e) {}
   }
+  // TrackingFire chart: Y axis mostra R$M — ocultar em privado
+  if (charts.trackingFire) {
+    try {
+      const sc = charts.trackingFire.options.scales;
+      if (sc?.y) { sc.y.ticks = sc.y.ticks || {}; sc.y.ticks.display = !isPrivate; }
+      charts.trackingFire.update('none');
+    } catch(e) {}
+  }
   // Sankey: ocultar seção inteira em modo privado (fluxos em R$/ano revelam renda)
   const _sankeyWrap = document.getElementById('sankeySection');
   if (_sankeyWrap) _sankeyWrap.style.display = isPrivate ? 'none' : '';
@@ -12791,6 +12800,8 @@ function _applyPrivacyCharts(isPrivate) {
   if (document.getElementById('heatmapContainer')?.innerHTML) buildRetornoHeatmap();
   // Spending guardrails: re-renderizar (função checa privacy internamente)
   if (document.getElementById('spendingGuardrailsViz')?.innerHTML) buildSpendingGuardrails();
+  // Fire scenario grid: re-renderizar (função lê privacy state no momento do render)
+  if (document.getElementById('fireScenarioGrid')?.children.length) buildScenarios();
   // Sliders (Fase 4): em private mode, resetar para centro do range — posição revela valor
   const _sliders = [
     { id: 'simAporte', numId: 'simAporteVal' },
@@ -13645,9 +13656,9 @@ function buildTrackingFire() {
   const srcEl = document.getElementById('trackingFireSrc');
   if (srcEl) {
     const r = d.retorno_anual_premissa ? (d.retorno_anual_premissa * 100).toFixed(2) + '%/ano' : '';
-    const a = d.aporte_mensal_premissa ? 'R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês' : '';
-    const m = d.meta_fire_date ? 'Meta R$' + (meta / 1e6).toFixed(1) + 'M em ' + d.meta_fire_date : '';
-    srcEl.textContent = [r, a, m].filter(Boolean).join(' · ');
+    const a = d.aporte_mensal_premissa ? '<span class="pv">R$' + (d.aporte_mensal_premissa / 1000).toFixed(0) + 'k/mês</span>' : '';
+    const m = d.meta_fire_date ? 'Meta <span class="pv">R$' + (meta / 1e6).toFixed(1) + 'M</span> em ' + d.meta_fire_date : '';
+    srcEl.innerHTML = [r, a, m].filter(Boolean).join(' · ');
   }
 }
 
@@ -13908,7 +13919,7 @@ function buildLumpyEvents() {
   let html = '';
   if (basePfire != null) {
     html += '<div style="margin-bottom:10px;padding:8px 12px;background:rgba(34,197,94,.08);border-radius:6px;border-left:3px solid var(--green);font-size:.78rem">' +
-      '<strong>Base:</strong> Spending R$' + (baseSpending / 1000).toFixed(0) + 'k/ano → P(FIRE@53) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
+      '<strong>Base:</strong> Spending <span class="pv">R$' + (baseSpending / 1000).toFixed(0) + 'k/ano</span> → P(FIRE@53) = <strong>' + (basePfire * 100).toFixed(1) + '%</strong>' +
     '</div>';
   }
 
