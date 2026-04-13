@@ -2020,33 +2020,41 @@ def _():
 
 @registry.test("fire-trilha", "VALUE", "B2 anti-regress: JS _yMax formula present in template", "CRITICAL")
 def _():
-    """Verifica que o template.html contém a fórmula de cap da escala Y para o Fire Trilha.
-    Sem esta fórmula, qualquer pico nos dados (e.g., trilha máxima no FIRE) infla
-    a escala para valores como 100M tornando as linhas históricas indistinguíveis.
-    Fórmula correta: _yMax = Math.max(Math.min(_dataMax * 1.1, _metaVal * 1.5), _metaVal * 1.1)
+    """Verifica que o template.html contém a fórmula de cap da escala Y para o Tracking FIRE.
+    Sem esta fórmula, qualquer pico nos dados infla a escala tornando as linhas indistinguíveis.
+    Fórmula correta: _yMax = Math.max(Math.min(_dataMax * 1.1, meta * 1.5), meta * 1.1)
+    A variável de meta pode se chamar 'meta', '_metaVal' ou similar — checamos a estrutura.
     """
-    import re
     ROOT_DIR = BUILD_PY.parent.parent
     template_path = ROOT_DIR / "dashboard" / "template.html"
     if not template_path.exists():
         return False, "template.html not found"
     template = template_path.read_text(encoding="utf-8")
-    # Check that the Y-max cap formula exists using meta as anchor
-    # Pattern: Math.min(..., _metaVal * 1.5)  — ensures cap relative to goal
-    if "_metaVal * 1.5" not in template and "_metaVal*1.5" not in template:
-        return False, (
-            "B2: Scale cap formula missing in buildFireTrilha(). "
-            "Expected '_metaVal * 1.5' as upper bound for _yMax. "
-            "Without it, trilha scale regresses to astronomical values."
-        )
-    # Also check _yMax uses Math.max with _metaVal * 1.1 as floor
-    if "_metaVal * 1.1" not in template and "_metaVal*1.1" not in template:
-        return False, (
-            "B2: Floor formula missing in buildFireTrilha(). "
-            "Expected '_metaVal * 1.1' as min floor for _yMax. "
-            "Without it, a very small dataset could compress the scale below the goal line."
-        )
-    return True, "B2: _yMax scale cap formula (_metaVal * 1.5 / _metaVal * 1.1) present in template"
+
+    # Extrai o body de buildTrackingFire
+    import re
+    fn_start = template.find("function buildTrackingFire")
+    if fn_start < 0:
+        return False, "buildTrackingFire não encontrada em template.html"
+    body = template[fn_start:fn_start + 3000]  # primeiros 3000 chars são suficientes
+
+    # Verifica padrão: Math.min(..., <metaVar> * 1.5) — cap superior em 1.5× meta
+    has_cap = bool(re.search(r'Math\.min\([^)]*\*\s*1\.5', body))
+    # Verifica padrão: Math.max(..., <metaVar> * 1.1) — piso em 1.1× meta
+    has_floor = bool(re.search(r'Math\.max\([^)]*\*\s*1\.1', body))
+    # Verifica _yMax presente
+    has_ymax = "_yMax" in body
+
+    errors = []
+    if not has_ymax:
+        errors.append("_yMax ausente em buildTrackingFire")
+    if not has_cap:
+        errors.append("cap Math.min(...* 1.5) ausente — escala pode explodir para valores astronômicos")
+    if not has_floor:
+        errors.append("piso Math.max(...* 1.1) ausente — meta pode ficar fora da área visível")
+    if errors:
+        return False, "B2: " + "; ".join(errors)
+    return True, "B2: _yMax com cap *1.5 e piso *1.1 presentes em buildTrackingFire"
 
 
 # ── B3: Glide Path — null guard anti-regressão ────────────────────────────────
@@ -2423,3 +2431,125 @@ def _():
             f"Fix: stressProjectionChart: () => buildStressTest()"
         )
     return True, "B7: stressProjectionChart → buildStressTest() wired correctly in _chartBuilders"
+
+
+# ---------------------------------------------------------------------------
+# chartjs4-data-ranges — Grupo 4 anti-regressão
+# Garante que dados dos gráficos quebrados (B2/B3/B4) chegam ao JS em ranges
+# plausíveis. Detecta corrupção ou zeramento no pipeline antes de abrir o browser.
+# Origem: DEV-charts-render-2026-04-13
+# ---------------------------------------------------------------------------
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "fire_trilha presente em data.json com todas as chaves obrigatórias", "CRITICAL")
+def _():
+    d = load_data()
+    ft = d.get("fire_trilha")
+    if ft is None:
+        return False, "fire_trilha ausente de data.json"
+    required = ["dates", "trilha_brl", "realizado_brl", "meta_fire_brl"]
+    missing = [k for k in required if k not in ft]
+    if missing:
+        return False, f"fire_trilha faltando chaves: {missing}"
+    return True, f"fire_trilha presente com {len(required)} chaves obrigatórias"
+
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "fire_trilha.trilha_brl: max > R$1M e sem zeramento (detecta B2 no pipeline)", "CRITICAL")
+def _():
+    d = load_data()
+    trilha = d.get("fire_trilha", {}).get("trilha_brl", [])
+    valores = [v for v in trilha if v is not None and isinstance(v, (int, float))]
+    if not valores:
+        return False, "trilha_brl vazia ou todos None — pipeline quebrado"
+    max_v = max(valores)
+    if max_v < 1_000_000:
+        return False, f"trilha_brl max={max_v:,.0f} — suspeito (esperado > R$1M para projeção até FIRE)"
+    if max_v < 5_000_000:
+        return False, f"trilha_brl max={max_v:,.0f} — muito baixo (projeção até FIRE deve > R$5M)"
+    return True, f"trilha_brl OK: max=R${max_v:,.0f}, {len(valores)} pontos não-nulos"
+
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "fire_trilha.realizado_brl: ao menos 10 valores não-nulos > 0 (histórico presente)", "CRITICAL")
+def _():
+    d = load_data()
+    realizado = d.get("fire_trilha", {}).get("realizado_brl", [])
+    valores = [v for v in realizado if v is not None and isinstance(v, (int, float)) and v > 0]
+    if len(valores) < 10:
+        return False, f"realizado_brl: apenas {len(valores)} valores > 0 (esperado ≥ 10 meses de histórico)"
+    max_v = max(valores)
+    if max_v < 500_000:
+        return False, f"realizado_brl max={max_v:,.0f} — suspeito (patrimônio atual > R$500k)"
+    return True, f"realizado_brl OK: {len(valores)} pontos históricos, max=R${max_v:,.0f}"
+
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "fire_trilha.meta_fire_brl: entre R$5M e R$50M (meta FIRE plausível)", "HIGH")
+def _():
+    d = load_data()
+    meta = d.get("fire_trilha", {}).get("meta_fire_brl")
+    if meta is None:
+        return False, "meta_fire_brl ausente de fire_trilha"
+    if not isinstance(meta, (int, float)):
+        return False, f"meta_fire_brl não é numérico: {meta!r}"
+    if meta < 5_000_000:
+        return False, f"meta_fire_brl=R${meta:,.0f} — suspeito (esperado > R$5M)"
+    if meta > 50_000_000:
+        return False, f"meta_fire_brl=R${meta:,.0f} — suspeito (esperado < R$50M)"
+    return True, f"meta_fire_brl=R${meta:,.0f} dentro do range plausível"
+
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "fire_trilha.dates e trilha_brl têm mesmo comprimento (alinhamento X↔Y)", "CRITICAL")
+def _():
+    d = load_data()
+    ft = d.get("fire_trilha", {})
+    dates = ft.get("dates", [])
+    trilha = ft.get("trilha_brl", [])
+    realizado = ft.get("realizado_brl", [])
+    errors = []
+    if len(dates) != len(trilha):
+        errors.append(f"dates({len(dates)}) ≠ trilha_brl({len(trilha)})")
+    if len(dates) != len(realizado):
+        errors.append(f"dates({len(dates)}) ≠ realizado_brl({len(realizado)})")
+    if errors:
+        return False, f"Desalinhamento X↔Y em fire_trilha: {'; '.join(errors)}"
+    if len(dates) < 50:
+        return False, f"fire_trilha apenas {len(dates)} datas — suspeito (esperado > 50)"
+    return True, f"fire_trilha: {len(dates)} datas alinhadas com trilha_brl e realizado_brl"
+
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "glide: todas as idades têm alocação somando 100% (±1pp)", "HIGH")
+def _():
+    d = load_data()
+    g = d.get("glide", {})
+    idades = g.get("idades", [])
+    if not idades:
+        return False, "glide.idades ausente ou vazio"
+    chaves = ["equity", "ipca_longo", "ipca_curto", "hodl11", "renda_plus"]
+    erros = []
+    for i, idade in enumerate(idades):
+        total = sum(g.get(k, [0] * len(idades))[i] for k in chaves)
+        if abs(total - 100) > 1:
+            erros.append(f"idade {idade}: soma={total:.1f}% (esperado 100%)")
+    if erros:
+        return False, f"glide com alocações inválidas: {erros}"
+    return True, f"glide: {len(idades)} idades, todas somam 100% ±1pp"
+
+
+@registry.test("chartjs4-data-ranges", "DATA",
+               "pfire50.base entre 0 e 100 (probabilidade FIRE plausível)", "HIGH")
+def _():
+    d = load_data()
+    base = get_nested(d, "pfire50.base")
+    if base is None:
+        return False, "pfire50.base ausente de data.json"
+    if not isinstance(base, (int, float)):
+        return False, f"pfire50.base não é numérico: {base!r}"
+    if not (0 <= base <= 100):
+        return False, f"pfire50.base={base} fora do range [0, 100]"
+    if base < 10:
+        return False, f"pfire50.base={base}% — suspeito (muito baixo; verificar pipeline MC)"
+    return True, f"pfire50.base={base}% dentro do range plausível"

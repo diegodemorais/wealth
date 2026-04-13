@@ -582,3 +582,154 @@ def _():
     if errors:
         return False, "; ".join(errors)
     return True, "buildDeltaBar defined and deltaChart canvas present"
+
+
+# ── CHARTJS4 ANTI-REGRESSION ─────────────────────────────────────────────────
+# Cada teste aqui evita uma regressão que custou horas de debug.
+# Origem: DEV-charts-render-2026-04-13 (B2/B3/B4/B7)
+
+# Grupo 1 — Banned APIs
+# getPixelForIndex foi removido no Chart.js 4. Sua presença derruba o gráfico
+# inteiro silenciosamente (B4). Qualquer ocorrência fora de comentário é erro.
+
+@registry.test("chartjs4-banned-api", "RENDER",
+               "getPixelForIndex ausente em template.html (removido no Chart.js 4 — causa TypeError silencioso)",
+               "CRITICAL")
+def _():
+    template = load_template()
+    hits = []
+    for i, line in enumerate(template.splitlines(), 1):
+        stripped = line.strip()
+        # Ignora linhas de comentário
+        if stripped.startswith("//") or stripped.startswith("*") or stripped.startswith("/*"):
+            continue
+        if "getPixelForIndex" in line:
+            hits.append(f"L{i}: {stripped[:80]}")
+    if hits:
+        return False, f"getPixelForIndex encontrado em template.html (usar getPixelForValue): {hits}"
+    return True, "getPixelForIndex ausente — API correta (getPixelForValue)"
+
+
+# Grupo 2 — offsetWidth guards
+# Canvas em aba escondida tem offsetWidth=0. Sem guard, o gráfico nunca renderiza (B3/B7).
+# Builders NÃO-colapsáveis precisam de setTimeout retry — sem isso, mobile nunca recupera.
+# Builders colapsáveis podem usar plain return (_toggleBlock reconstrói ao abrir).
+
+_BUILDERS_NEED_SETTIMEOUT = [
+    # (função, canvas_id) — seções NÃO-colapsáveis: precisam de setTimeout retry
+    ("buildTrackingFire",        "buildTrackingFire"),
+    ("buildNetWorthProjection",  "buildNetWorthProjection"),
+]
+
+_BUILDERS_NEED_GUARD = [
+    # (função) — seções colapsáveis: plain return é suficiente (_toggleBlock retry)
+    "buildGlidePath",
+    "buildStressFanChart",
+]
+
+
+def _check_offsetwidth_settimeout(fn_name: str) -> tuple[bool, str]:
+    """Builder não-colapsável deve ter offsetWidth===0 com setTimeout retry."""
+    template = load_template()
+    body = _extract_function_body(TEMPLATE_HTML, fn_name)
+    if not body:
+        return False, f"função {fn_name} não encontrada em template.html"
+    body_text = "".join(line for line, _ in body)
+    has_guard = "offsetWidth === 0" in body_text
+    has_timeout = "setTimeout" in body_text and "offsetWidth" in body_text
+    if not has_guard:
+        return False, f"{fn_name}: offsetWidth===0 guard ausente — canvas em aba escondida não renderiza"
+    if not has_timeout:
+        return False, f"{fn_name}: setTimeout retry ausente — mobile nunca recupera após offsetWidth===0"
+    return True, f"{fn_name}: offsetWidth guard + setTimeout retry presentes"
+
+
+def _check_offsetwidth_guard(fn_name: str) -> tuple[bool, str]:
+    """Builder colapsável deve ter ao menos o guard de offsetWidth===0."""
+    body = _extract_function_body(TEMPLATE_HTML, fn_name)
+    if not body:
+        return False, f"função {fn_name} não encontrada em template.html"
+    body_text = "".join(line for line, _ in body)
+    if "offsetWidth === 0" not in body_text:
+        return False, f"{fn_name}: offsetWidth===0 guard ausente — canvas colapsável fechado renderiza com 0px"
+    return True, f"{fn_name}: offsetWidth===0 guard presente"
+
+
+for _fn in _BUILDERS_NEED_SETTIMEOUT:
+    def _make_settimeout_test(fn):
+        @registry.test(
+            "chartjs4-offsetwidth-retry",
+            "RENDER",
+            f"{fn}: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
+            "HIGH",
+        )
+        def _t():
+            return _check_offsetwidth_settimeout(fn)
+        return _t
+    _make_settimeout_test(_fn[0])
+
+for _fn in _BUILDERS_NEED_GUARD:
+    def _make_guard_test(fn):
+        @registry.test(
+            "chartjs4-offsetwidth-guard",
+            "RENDER",
+            f"{fn}: offsetWidth===0 guard presente (seção colapsável)",
+            "HIGH",
+        )
+        def _t():
+            return _check_offsetwidth_guard(fn)
+        return _t
+    _make_guard_test(_fn)
+
+
+# Grupo 3 — afterDraw pattern para dados BRL grandes
+# Chart.js 4.4.7 dataset renderer produz linhas em R$0 para valores BRL grandes (B2).
+# Builders críticos com dados BRL raw devem usar afterDraw + getPixelForValue.
+# Datasets de Projeção/Realizado devem ser vazios (data: []) — rendering no afterDraw.
+
+@registry.test("chartjs4-afterdraw-brl", "RENDER",
+               "buildTrackingFire usa plugin afterDraw com id 'trackingFireDraw' (bypass do dataset renderer)",
+               "HIGH")
+def _():
+    template = load_template()
+    body = _extract_function_body(TEMPLATE_HTML, "buildTrackingFire")
+    if not body:
+        return False, "buildTrackingFire não encontrada em template.html"
+    body_text = "".join(line for line, _ in body)
+    errors = []
+    if "trackingFireDraw" not in body_text:
+        errors.append("plugin id 'trackingFireDraw' ausente")
+    if "afterDraw" not in body_text:
+        errors.append("afterDraw ausente no builder")
+    if "getPixelForValue" not in body_text:
+        errors.append("getPixelForValue ausente — rendering das linhas incorreto")
+    if errors:
+        return False, f"buildTrackingFire: {'; '.join(errors)}"
+    return True, "buildTrackingFire: trackingFireDraw + afterDraw + getPixelForValue presentes"
+
+
+@registry.test("chartjs4-afterdraw-brl", "RENDER",
+               "buildTrackingFire: datasets Projeção/Realizado têm data:[] (rendering via afterDraw, não dataset renderer)",
+               "HIGH")
+def _():
+    body = _extract_function_body(TEMPLATE_HTML, "buildTrackingFire")
+    if not body:
+        return False, "buildTrackingFire não encontrada"
+    body_text = "".join(line for line, _ in body)
+    # Datasets vazios: label Projeção e Realizado com data: []
+    has_proj_empty = bool(re.search(r"label:\s*['\"]Projeção['\"].*?data:\s*\[\]", body_text, re.DOTALL))
+    has_real_empty = bool(re.search(r"label:\s*['\"]Realizado['\"].*?data:\s*\[\]", body_text, re.DOTALL))
+    errors = []
+    if not has_proj_empty:
+        errors.append("dataset 'Projeção' não tem data:[] — pode usar renderer quebrado")
+    if not has_real_empty:
+        errors.append("dataset 'Realizado' não tem data:[] — pode usar renderer quebrado")
+    if errors:
+        return False, "; ".join(errors)
+    return True, "Projeção e Realizado com data:[] — rendering correto via afterDraw"
+
+
+# Grupo 4 — Data ranges
+# Garante que os dados chegam ao JS dentro de ranges plausíveis.
+# Detecta se trilha/realizado/meta foram zerados ou corrompidos no pipeline.
+# Estes testes estão em fire_tests.py (domínio FIRE). Ver seção chartjs4-data-ranges lá.
