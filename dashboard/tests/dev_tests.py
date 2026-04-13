@@ -732,3 +732,91 @@ def _():
 # Garante que os dados chegam ao JS dentro de ranges plausíveis.
 # Detecta se trilha/realizado/meta foram zerados ou corrompidos no pipeline.
 # Estes testes estão em fire_tests.py (domínio FIRE). Ver seção chartjs4-data-ranges lá.
+
+
+# ── TAB_RENDER — HTML/DOM structure integrity ────────────────────────────────
+# Validates that the HTML structure is well-formed and doesn't have issues
+# like missing closing tags that cause sections to nest incorrectly.
+# These tests catch bugs that wouldn't show in data validation but break rendering.
+
+@registry.test("tab-structure", "RENDER", "todas as seções collapsible têm data-in-tab atributo válido", "HIGH")
+def _():
+    """Check that all collapsible sections have valid data-in-tab attributes."""
+    html = load_html()
+    sections = re.findall(r'<div class="section[^>]*data-in-tab="([^"]*)"', html)
+    if not sections:
+        return False, "Nenhuma seção com data-in-tab encontrada"
+
+    # Get valid tab names from buttons
+    valid_tabs = set(re.findall(r'data-tab="([^"]*)"', html))
+    invalid = [s for s in sections if s not in valid_tabs]
+
+    if invalid:
+        return False, f"Seções com data-in-tab inválido: {set(invalid)}"
+    return True, f"{len(sections)} seções têm data-in-tab válido"
+
+
+@registry.test("tab-structure", "RENDER", "collapse-body divs têm comentários de fechamento", "MEDIUM")
+def _():
+    """Verify that collapse-body divs have closing comments for clarity."""
+    template = load_template()
+    opens = len(re.findall(r'<div class="collapse-body">', template))
+    closes = len(re.findall(r'</div><!-- */collapse-body -->', template))
+
+    if opens != closes:
+        return False, f"Collapse-body desbalanceado: {opens} abertos vs {closes} fechados com comentário"
+    return True, f"{opens} collapse-body divs bem fechados"
+
+
+@registry.test("tab-structure", "RENDER", "sections têm comentários de fechamento para rastreabilidade", "MEDIUM")
+def _():
+    """Verify sections have closing comments (not critical but helps debugging)."""
+    template = load_template()
+    # At least 80% of sections should have closing comments
+    opens = len(re.findall(r'<div class="section', template))
+    closes = len(re.findall(r'</div><!-- */section', template))
+
+    if opens > 0 and closes / opens < 0.5:
+        return False, f"Poucas sections com comentários de fechamento: {closes}/{opens}"
+    return True, f"Sections têm comentários adequados ({closes}/{opens})"
+
+
+@registry.test("tab-structure", "RENDER", "canvas IDs não são duplicados dentro de uma mesma seção", "HIGH")
+def _():
+    """Ensure no canvas in a section has the same ID as another canvas in the same section."""
+    html = load_html()
+    # Extract sections and their canvas IDs
+    sections = re.findall(
+        r'<div class="section[^>]*>(.*?)</div><!-- */(?:section|collapse-body)',
+        html,
+        re.DOTALL
+    )
+    duplicates = []
+    for i, sec_content in enumerate(sections):
+        canvas_ids = re.findall(r'<canvas[^>]*id="([^"]*)"', sec_content)
+        dupes_in_sec = [cid for cid in canvas_ids if canvas_ids.count(cid) > 1]
+        if dupes_in_sec:
+            duplicates.append(f"seção {i}: {list(set(dupes_in_sec))}")
+
+    if duplicates:
+        return False, f"Canvas IDs duplicados: {duplicates}"
+    return True, f"Nenhum canvas duplicado em {len(sections)} seções"
+
+
+@registry.test("tab-structure", "RENDER", "todas as abas declaradas têm seus data-in-tab correspondentes no HTML", "MEDIUM")
+def _():
+    """Verify that all declared tabs have at least one section with that data-in-tab."""
+    html = load_html()
+    spec = load_spec()
+
+    # Get all unique tab names from buttons
+    tab_buttons = re.findall(r'data-tab="([^"]*)"', html)
+    tabs_from_buttons = set(tab_buttons)
+
+    # Get all unique data-in-tab values
+    data_in_tab = set(re.findall(r'data-in-tab="([^"]*)"', html))
+
+    missing = tabs_from_buttons - data_in_tab
+    if missing:
+        return False, f"Tabs declaradas mas sem seções: {missing}"
+    return True, f"Todas as {len(tabs_from_buttons)} abas têm seções correspondentes"

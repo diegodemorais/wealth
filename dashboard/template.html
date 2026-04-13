@@ -812,7 +812,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- PREMISSAS VS REALIZADO — 5 Years Performance Review (Performance tab) -->
-<div class="section" data-in-tab="performance" id="premissasVsRealizadoSection">
+<div class="section" data-in-tab="perf" id="premissasVsRealizadoSection">
 <h2>Premissas vs Realizado — 5 Anos (2021-2026)</h2>
 <div id="premissasVsRealizadoBody"></div>
 <div class="src" id="premissasVsRealizadoSrc">Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados</div>
@@ -923,7 +923,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
-<div class="section collapsible" data-in-tab="backtest">
+<div class="section collapsible open" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Shadow Portfolios — Tracking</h2>
 <div class="collapse-body">
 <div style="overflow-x:auto">
@@ -1296,45 +1296,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="collapse-body">
 <div id="minilogBody" style="font-size:.8rem"></div>
 <div class="src">Fonte: IBKR · XP · Nubank · Binance</div>
-</div><!-- /collapse-body -->
-</div>
-
-<div class="section collapsible open" data-in-tab="backtest">
-<h2 onclick="_toggleBlock(this.parentElement)">Backtest Histórico — Target vs VWRA</h2>
-<div class="collapse-body">
-<div class="period-btns" id="backtestPeriodBtns">
-  <button onclick="setBacktestPeriod('r7')" title="jul/1989–atual (37 anos) · proxies acadêmicos Ken French + MSCI">Acadêmico (37a)</button>
-  <button onclick="setBacktestPeriod('all')" title="jan/2005–abr/2026 (21 anos)">Completo (21a)</button>
-  <button onclick="setBacktestPeriod('since2009')" title="jan/2009–abr/2026 (17 anos) · desde o fundo da crise de 2008" class="active">Pós-GFC (17a)</button>
-  <button onclick="setBacktestPeriod('since2013')" title="jan/2013–abr/2026 (13 anos) · pós-crise da dívida europeia">Pós-Euro (13a)</button>
-  <button onclick="setBacktestPeriod('since2020')" title="jan/2020–abr/2026 (6 anos) · desde o fundo de março 2020">Pós-COVID (6a)</button>
-  <button onclick="setBacktestPeriod('5y')" title="jan/2021–abr/2026 (5 anos)">5 anos</button>
-  <button onclick="setBacktestPeriod('3y')" title="jan/2023–abr/2026 (3 anos)">3 anos</button>
-</div>
-<div class="chart-box-lg"><canvas id="backtestChart"></canvas></div>
-<div style="overflow-x:auto;margin-top:12px">
-<table id="backtestMetricsTable">
-<thead><tr>
-  <th>Métrica</th><th class="num">Target</th><th class="num">VWRA</th><th class="num">Delta</th>
-</tr></thead>
-<tbody id="backtestMetricsBody"></tbody>
-</table>
-</div>
-<!-- P3: CAGR patrimonial vs TWR -->
-<div class="cagr-twr-row" id="cagrTwrRow">
-  <div class="cagr-twr-card">
-    <div class="ctl">CAGR Patrimonial (incl. aportes)</div>
-    <div class="ctv pv" id="cagrPatrimonial">--</div>
-    <div class="ctl">Crescimento total do patrimônio. Inflado por aportes — NÃO é performance dos ETFs.</div>
-  </div>
-  <div class="cagr-twr-card">
-    <div class="ctl">TWR USD (retorno puro, ex-aportes)</div>
-    <div class="ctv" id="twrPure">--</div>
-    <div class="ctl">Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.</div>
-  </div>
-</div>
-<div id="backtestNotaProxy" style="margin-top:8px;padding:8px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem"></div>
-<div id="backtestR5Note" style="display:none;margin-top:6px;padding:8px;background:rgba(249,115,22,.08);border-radius:6px;border-left:3px solid var(--orange);font-size:.72rem;color:var(--orange)"></div>
 </div><!-- /collapse-body -->
 </div>
 
