@@ -2884,8 +2884,13 @@ window.calcAporte = function() {
   const pat = DATA.premissas?.patrimonio_atual ?? 0;
   const apIpcaMax = ipcaGapPp > 0 ? Math.max(0, (ipcaGapPp / 100) * pat) : 0;
 
+  // Renda+ gap: alvo_pct - pct_atual (negativo = underweight, positivo = overweight)
+  const rendaAlvoPct = DATA.dca_status?.renda_plus?.alvo_pct ?? 3.0;
+  const rendaPctAtual = DATA.dca_status?.renda_plus?.pct_carteira_atual ?? 0;
+  const rendaGapPp = rendaAlvoPct - rendaPctAtual;  // negativo = need more, positivo = too much
+
   const ipca_active  = taxaIpca  != null && taxaIpca  >= pisoIpca  && ipcaGapPp > 0;
-  const renda_active = taxaRenda != null && taxaRenda >= pisoRenda;
+  const renda_active = taxaRenda != null && taxaRenda >= pisoRenda && rendaGapPp > 0;
 
   const equityBuckets = ['SWRD','AVGS','AVEM']
     .map(k => ({ k, gap: (DATA.drift?.[k]?.alvo ?? 0) - (DATA.drift?.[k]?.atual ?? 0) }))
