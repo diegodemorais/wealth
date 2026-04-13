@@ -91,6 +91,20 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .income-phase{border-left:3px solid var(--accent);padding:8px 12px;margin:6px 0;background:rgba(59,130,246,.05);border-radius:0 6px 6px 0;font-size:.8rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
 @media(max-width:1024px){.grid-3{grid-template-columns:1fr 1fr}}
+@media(max-width:1024px){
+  .hero-strip{grid-template-columns:repeat(3,1fr)!important}
+  .cagr-twr-row{grid-template-columns:1fr!important}
+  #r7RiskGrid{grid-template-columns:1fr!important}
+}
+@media(max-width:768px){
+  /* Collapse all 2+ column grids to 1 column on tablets */
+  .grid-2,.grid-3,.hero-strip,.cagr-twr-row,.what-if-result,.fire-row,#r7RiskGrid,.scenario-card{grid-template-columns:1fr!important}
+  /* Reduce large minmax values */
+  .kpi-grid{grid-template-columns:repeat(2,1fr)!important}
+  .macro-strip{grid-template-columns:repeat(2,1fr)!important}
+  /* FIRE simulator layout */
+  .wellness-extra-row{grid-template-columns:1fr!important;gap:4px!important}
+}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 /* ── Privacy mode: transformar valores em placeholders legíveis ── */
 .private-mode .pv{color:transparent!important;position:relative;white-space:nowrap}
@@ -157,6 +171,28 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .factor-no-data{padding:24px;text-align:center;color:var(--muted);font-size:.8rem}
 /* ── P2: CAGR vs TWR inline ── */
 .cagr-twr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+/* Responsive fix for identified grid elements */
+@media(max-width:900px){
+  #macroStrip,#monthlyRetStats,#attrFxRfRow,#shadowMetrics,#r7MetricsGrid,#irITDCards{
+    grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important
+  }
+}
+@media(max-width:900px){
+  .tax-ir-etf-grid,.etf-comp-grid{
+    grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important
+  }
+}
+@media(max-width:768px){
+  #macroStrip,#monthlyRetStats,#attrFxRfRow,#shadowMetrics,#r7MetricsGrid,#irITDCards,#r7RiskGrid,.cagr-twr-row,.fire-sim-result,.fire-sim-sliders,.what-if-output,.tax-ir-etf-grid,.etf-comp-grid,.dynamic-2col{
+    grid-template-columns:1fr!important
+  }
+  /* Target dynamically generated grids */
+  #r7WinRateSection > div > div[style*="grid-template"],
+  #fireScenarioGrid > div[style*="grid-template"],
+  #pfireScenarioRow > div[style*="grid-template"]{
+    grid-template-columns:1fr!important
+  }
+}
 .cagr-twr-card{background:var(--card2);border-radius:8px;padding:10px 14px;text-align:center}
 .cagr-twr-card .ctv{font-size:1.3rem;font-weight:700}.cagr-twr-card .ctl{font-size:.65rem;color:var(--muted);margin-top:2px}
 /* ── F2: Spending Guardrails ── */
@@ -1074,7 +1110,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <h2>Simulador FIRE — Aposentadoria Antecipada</h2>
 
 <!-- Resultado principal -->
-<div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:18px;background:var(--card2);border-radius:10px;padding:16px">
+<div class="fire-sim-result" style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:18px;background:var(--card2);border-radius:10px;padding:16px">
   <div style="text-align:center;min-width:140px">
     <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Com esses parâmetros</div><!-- /section section-1069 -->
     <div style="font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">você pode aposentar em</div>
@@ -1127,7 +1163,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- Sliders -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:14px;margin-bottom:12px">
+<div class="fire-sim-sliders" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:14px;margin-bottom:12px">
   <div class="slider-row">
     <label><span>Aporte Mensal</span><span id="simAporteVal" class="pv" style="font-weight:700;color:var(--accent)">—</span></label>
     <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="_firePresetCustom();updateFireSim()">
@@ -1166,7 +1202,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- Output -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+<div class="what-if-output" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
   <div class="what-if-result">
     <div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">P(Sucesso 30 anos)</div>
     <div class="big pv" id="wiPsucesso">—</div>
@@ -3555,8 +3591,8 @@ function buildBacktestR7() {
   const wrEl = document.getElementById('r7WinRateSection');
   if (wrEl) wrEl.innerHTML = `
     <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Win Rate — Target vs Benchmark</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center">
+    <div class="dynamic-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:var(--card2);border-radius:8px;padding:12px;text-align:center;min-width:0">
         <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Janelas 10 anos (120m)</div>
         <div style="font-size:1.4rem;font-weight:700;color:${wr['120m_pct'] >= 60 ? 'var(--green)' : 'var(--yellow)'}">${wr['120m_pct'] != null ? wr['120m_pct'].toFixed(1) + '%' : '—'}</div>
         <div style="font-size:.65rem;color:var(--muted)">${wr['120m_target_wins'] ?? '—'} de ${wr['120m_janelas_total'] ?? '—'} janelas</div>
@@ -3748,7 +3784,7 @@ function buildEarliestFire() {
       <div style="font-size:1.5rem;font-weight:700;color:${pfireColor};margin:6px 0" class="pv">P = ${ef.pfire}%</div>
       <div style="font-size:.75rem;color:var(--muted)">${yearsLeft} anos a partir de hoje</div>
     </div>
-    <div style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div class="dynamic-2col" style="margin-top:10px;font-size:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="background:var(--card2);border-radius:6px;padding:8px;text-align:center">
         <div style="font-size:1rem;font-weight:700;color:var(--purple)" class="pv">${DATA.pfire_aspiracional.base}%</div>
         <div style="font-size:.65rem;color:var(--muted)">Cenário Aspiracional</div>
@@ -6770,7 +6806,7 @@ function buildBondPool() {
     '<div class="bond-pool-card">' +
       '<div class="bp-title">Bond Pool — ' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' / ' + bp.meta_anos + ' anos de gastos</div>' +
       '<div class="bond-pool-bar"><div class="bond-pool-fill" style="width:' + pct.toFixed(0) + '%"></div></div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;font-size:.75rem">' +
+      '<div class="dynamic-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px;font-size:.75rem">' +
         '<div class="bp-row"><span>Valor atual</span><span class="bp-val pv">R$ ' + (bp.valor_atual_brl != null ? (bp.valor_atual_brl/1000).toFixed(0) + 'k' : '--') + '</span></div>' +
         '<div class="bp-row"><span>Meta (' + bp.meta_anos + ' anos)</span><span class="bp-val pv">R$ ' + (metaBrl/1000).toFixed(0) + 'k</span></div>' +
         '<div class="bp-row"><span>Cobertura atual</span><span class="bp-val">' + (bp.anos_gastos != null ? bp.anos_gastos.toFixed(1) : '--') + ' anos</span></div>' +
@@ -6807,7 +6843,7 @@ function buildBondPool() {
     '</div>' +
 
     // Estratégias
-    '<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
+    '<div class="dynamic-2col" style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">' +
       // Estratégia A
       '<div style="padding:10px;border-radius:8px;border-left:3px solid ' + (janelaAtiva ? 'var(--green)' : 'var(--muted)') + ';background:rgba(34,197,94,' + (janelaAtiva ? '.07' : '.02') + ')">' +
         '<div style="font-size:.65rem;font-weight:700;color:' + (janelaAtiva ? 'var(--green)' : 'var(--muted)') + ';text-transform:uppercase;margin-bottom:4px">' +

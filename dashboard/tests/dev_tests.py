@@ -866,8 +866,27 @@ def _():
         return True, f"Nenhuma seção com overflow em {len(sections)} seções"
 
     except ImportError:
-        # Skip if selenium not available
-        return True, "Teste interativo pulado (selenium não disponível)"
+        # Fallback: CSS-based check when Selenium unavailable
+        # Check if major responsive protections are in place
+        template = load_template()
+        style_block = template[template.find('<style>'):template.find('</style>')] if '<style>' in template else ''
+
+        # Verify media queries exist for key breakpoints
+        has_768_breakpoint = '@media(max-width:768px)' in style_block or '@media (max-width: 768px)' in style_block
+        has_responsive_classes = 'dynamic-2col' in template and '.dynamic-2col' in style_block
+        has_grid_overrides = 'grid-template-columns:1fr!important' in style_block
+
+        if not (has_768_breakpoint and has_responsive_classes and has_grid_overrides):
+            missing = []
+            if not has_768_breakpoint:
+                missing.append("media query 768px")
+            if not has_responsive_classes:
+                missing.append("classe responsiva dynamic-2col")
+            if not has_grid_overrides:
+                missing.append("override grid-template com !important")
+            return False, f"Responsividade incompleta (faltam: {', '.join(missing)})"
+
+        return True, "Teste responsivo: proteção em cascata detectada (768px, dynamic-2col, !important overrides)"
     except Exception as e:
         return True, f"Teste interativo pulado: {str(e)[:50]}"
 
