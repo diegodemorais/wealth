@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from validate_schema import validate_schema
 from validate_html_structure import validate_html_structure
+from validate_template_sync import validate_template_integrity
 
 ROOT = Path(__file__).parent.parent
 TEMPLATE          = ROOT / "dashboard" / "template.html"
@@ -797,6 +798,10 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     # 1c. Validar schema (warnings only — não bloqueia)
     _validate_data(data)
 
+    # 1c. Validar template integrity (partials bem-montados)
+    if not validate_template_integrity():
+        sys.exit(1)
+
     # 1d. Validar contrato spec.json vs data.json (constraints vinculantes)
     spec_path = ROOT / "dashboard" / "spec.json"
     if not validate_schema(spec_path, data_path, verbose=False):
@@ -804,12 +809,12 @@ def build(data_path: Path, template_path: Path, out_path: Path,
         print(f"   Execute: python3 scripts/validate_schema.py --verbose", file=sys.stderr)
         sys.exit(1)
 
-    # 2. Ler template
-    if not template_path.exists():
+    # 2. Ler template (ou montar a partir de partials)
+    if not template_path.exists() and not (ROOT / "dashboard" / "templates").exists():
         print(f"❌ Template não encontrado: {template_path}", file=sys.stderr)
         sys.exit(1)
 
-    template = template_path.read_text(encoding="utf-8")
+    template = _assemble_template(template_path)
 
     if PLACEHOLDER not in template:
         print(f"❌ Placeholder '{PLACEHOLDER}' não encontrado no template", file=sys.stderr)
@@ -847,6 +852,29 @@ def build(data_path: Path, template_path: Path, out_path: Path,
         sys.exit(1)
     else:
         print(f"✅ Estrutura HTML validada")
+
+
+def _assemble_template(template_path: Path) -> str:
+    """Monta template a partir de partials em dashboard/templates/ ou usa template.html fallback.
+
+    Se templates/ existe, lê e concatena todos os .html em ordem alfabética.
+    Caso contrário, usa template.html original.
+    """
+    templates_dir = ROOT / "dashboard" / "templates"
+
+    if templates_dir.exists():
+        partials = sorted(templates_dir.glob("*.html"))
+        if partials:
+            # Concatenar partials
+            parts = []
+            for partial in partials:
+                parts.append(partial.read_text(encoding="utf-8"))
+            assembled = "".join(parts)
+            print(f"   Assembling template from {len(partials)} partials...")
+            return assembled
+
+    # Fallback: ler template.html original
+    return template_path.read_text(encoding="utf-8")
 
 
 def _build_data_js(data: dict, generated_at: str, version: str) -> str:
