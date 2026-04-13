@@ -640,18 +640,23 @@
     },
     "rf": {
       "type": "object",
-      "description": "Posições de Renda Fixa — títulos IPCA+ Tesouro Direto. Três sub-chaves fixas.",
+      "description": "Posições de Renda Fixa — títulos IPCA+ Tesouro Direto.",
       "required": [
         "ipca2029",
         "ipca2040",
         "renda2065"
       ],
-      "additionalProperties": false,
+      "additionalProperties": {
+        "$ref": "#/definitions/rfTitulo"
+      },
       "properties": {
         "ipca2029": {
           "$ref": "#/definitions/rfTitulo"
         },
         "ipca2040": {
+          "$ref": "#/definitions/rfTitulo"
+        },
+        "ipca2050": {
           "$ref": "#/definitions/rfTitulo"
         },
         "renda2065": {

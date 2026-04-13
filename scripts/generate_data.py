@@ -1649,7 +1649,9 @@ def compute_drift(posicoes, rf, hodl11_brl, cambio):
         alvo  = round(PESOS_TARGET.get(bk, 0) * 100, 1)
         drift[bk] = {"atual": atual, "alvo": alvo}
 
-    ipca_brl = rf.get("ipca2029", {}).get("valor", 0) + rf.get("ipca2040", {}).get("valor", 0)
+    ipca_brl = (rf.get("ipca2029", {}).get("valor", 0)
+                + rf.get("ipca2040", {}).get("valor", 0)
+                + rf.get("ipca2050", {}).get("valor", 0))
     drift["IPCA"]   = {"atual": round(ipca_brl / total * 100, 1) if total else 0, "alvo": round(IPCA_LONGO_PCT * 100, 1)}
     drift["HODL11"] = {"atual": round(hodl11_brl / total * 100, 1) if total else 0, "alvo": round(CRIPTO_PCT * 100, 1)}
 
@@ -1876,8 +1878,9 @@ def get_dca_status(rf: dict, total_brl: float) -> dict:
     """
     # ── IPCA+ longo ─────────────────────────────────────────────────────────
     taxa_ipca = rf.get("ipca2040", {}).get("taxa")
-    valor_ipca2040 = rf.get("ipca2040", {}).get("valor", 0) or 0
-    pct_ipca_atual = round((valor_ipca2040 / total_brl) * 100, 1) if total_brl else 0
+    valor_ipca_longo = ((rf.get("ipca2040", {}).get("valor", 0) or 0)
+                        + (rf.get("ipca2050", {}).get("valor", 0) or 0))
+    pct_ipca_atual = round((valor_ipca_longo / total_brl) * 100, 1) if total_brl else 0
     alvo_ipca_pct = round(IPCA_LONGO_PCT * 100, 1)  # 15.0%
     gap_alvo_ipca = round(alvo_ipca_pct - pct_ipca_atual, 1)  # pp faltando
 

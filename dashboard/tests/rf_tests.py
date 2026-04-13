@@ -454,10 +454,11 @@ def _():
     total = get_nested(data, "concentracao_brasil.composicao.rf_total_brl")
     v2029 = get_nested(data, "rf.ipca2029.valor")
     v2040 = get_nested(data, "rf.ipca2040.valor")
+    v2050 = get_nested(data, "rf.ipca2050.valor") or 0  # opcional — pode não existir
     v2065 = get_nested(data, "rf.renda2065.valor")
     if any(v is None for v in (total, v2029, v2040, v2065)):
         return False, f"Missing values: total={total}, 2029={v2029}, 2040={v2040}, 2065={v2065}"
-    computed = v2029 + v2040 + v2065
+    computed = v2029 + v2040 + v2050 + v2065
     diff = abs(total - computed)
     if diff > 1:
         return False, (

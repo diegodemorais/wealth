@@ -97,9 +97,9 @@
       "taxa": 7.58
     },
     "ipca2040": {
-      "valor_brl": 20018.92,
+      "valor_brl": 66517.0,
       "tipo": "estrutural",
-      "taxa": 7.07,
+      "taxa": 7.1,
       "cotas": 11.5789
     },
     "renda2065": {
@@ -113,6 +113,12 @@
       "preco_brl": 59.79,
       "valor_brl": 100208,
       "avg_cost": 79.03
+    },
+    "ipca2050": {
+      "valor_brl": 11660.71,
+      "tipo": "estrutural",
+      "taxa": 6.85,
+      "nota": "Primeira posicao 2026-04-10. Liquidacao 13/04/2026. PU/cotas pendente."
     }
   },
   "fire": {
