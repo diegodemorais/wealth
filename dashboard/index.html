@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carteira Diego de Morais — Dashboard FIRE</title>
+<title>Dashboard Wealth DM</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-sankey@0.14.0/dist/chartjs-chart-sankey.min.js"></script>
 <style>
@@ -283,6 +283,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <button class="tab-btn" data-tab="fire"      onclick="switchTab('fire')">🔥 FIRE</button>
   <button class="tab-btn" data-tab="retiro"    onclick="switchTab('retiro')">🏖️ Retirada</button>
   <button class="tab-btn" data-tab="simuladores" onclick="switchTab('simuladores')">🧪 Simuladores</button>
+  <button class="tab-btn" data-tab="backtest" onclick="switchTab('backtest')">📊 Backtest</button>
 </div>
 
 <!-- HERO STRIP (aba Now) -->
@@ -873,7 +874,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- N1: DRAWDOWN HISTORY -->
-<div class="section collapsible" data-in-tab="perf" id="drawdownHistSection">
+<div class="section collapsible" data-in-tab="backtest" id="drawdownHistSection">
 <h2 onclick="_toggleBlock(this.parentElement)">Drawdown Histórico — Série Completa</h2>
 <div class="collapse-body">
 <div class="chart-box" style="height:220px"><canvas id="drawdownHistChart"></canvas></div>
@@ -1162,7 +1163,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
 <!-- S22: CALCULADORA APORTE -->
-<div class="section" data-in-tab="carteira">
+<div class="section" data-in-tab="simuladores">
 <h2>Calculadora de Aporte — Cascade</h2>
 <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
   <div class="slider-row" style="flex:1;min-width:240px">
@@ -1197,7 +1198,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
-<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Shadow Portfolios — Tracking</h2>
 <div class="collapse-body">
 <div style="overflow-x:auto">
@@ -1226,7 +1227,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
-<div class="section collapsible open" data-in-tab="perf">
+<div class="section collapsible open" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Histórico — Target vs VWRA</h2>
 <div class="collapse-body">
 <div class="period-btns" id="backtestPeriodBtns">
@@ -1266,7 +1267,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S27b: BACKTEST LONGO — Regime 7 (1995–2026) -->
-<div class="section collapsible" data-in-tab="perf" id="backtestR7Section">
+<div class="section collapsible" data-in-tab="backtest" id="backtestR7Section">
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 7 (1995–2026)</h2>
 <div class="collapse-body">
 <!-- Cards de métricas globais -->
@@ -1409,8 +1410,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T15:57:26-03:00'); // BRT (UTC-3)
-const VERSION = '2.32';
+const GENERATED_AT = new Date('2026-04-13T16:15:29-03:00'); // BRT (UTC-3)
+const VERSION = '2.33';
 
 const DATA = {
   "_generated": "2026-04-13T14:47:54",
@@ -8180,7 +8181,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.32"
+  "version": "2.33"
 };
 
 // ═══════════════════════════════════════════════════════════════

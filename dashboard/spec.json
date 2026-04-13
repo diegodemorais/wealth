@@ -18,6 +18,11 @@
       "job": "Estou performando bem?"
     },
     {
+      "id": "backtest",
+      "label": "Backtest",
+      "job": "Análise histórica contrafactual e validação de estratégia"
+    },
+    {
       "id": "fire",
       "label": "FIRE",
       "job": "Quando posso me aposentar?"
@@ -387,7 +392,7 @@
     },
     {
       "id": "calc-aporte",
-      "tab": "portfolio",
+      "tab": "simuladores",
       "label": "Calculadora de Aporte",
       "type": "slider",
       "purpose": "Permite inserir valor de aporte e calcular a distribuição por ETF seguindo as regras de rebalanceamento para otimizar cada aporte sem vender",
@@ -480,7 +485,7 @@
     },
     {
       "id": "backtest-metricas",
-      "tab": "performance",
+      "tab": "backtest",
       "label": "Backtest Histórico — Métricas",
       "type": "table",
       "purpose": "Mostra CAGR backtest, volatilidade, Sharpe, Sortino e max drawdown do Target vs VWRA para quantificar vantagem histórica da carteira fatorial",
@@ -492,7 +497,7 @@
     },
     {
       "id": "shadow-portfolios",
-      "tab": "performance",
+      "tab": "backtest",
       "label": "Shadow Portfolios — Retorno Acumulado",
       "type": "chart-line",
       "purpose": "Mostra retorno acumulado do Target vs VWRA e outros shadows para responder se a complexidade fatorial gera alpha vs índice simples",
@@ -533,7 +538,7 @@
     },
     {
       "id": "backtest-regime-longo",
-      "tab": "performance",
+      "tab": "backtest",
       "label": "Backtest Longo — Regime 5-7",
       "type": "chart-line",
       "purpose": "Mostra retorno acumulado em 20+ anos com proxies acadêmicos para confirmar se o alpha fatorial é persistente ao longo do tempo",
@@ -622,7 +627,7 @@
     },
     {
       "id": "drawdown-historico",
-      "tab": "performance",
+      "tab": "backtest",
       "label": "Drawdown Histórico",
       "type": "chart-area",
       "purpose": "Mostra série histórica de drawdown para avaliar tail risk realizado e comparar com guardrails aprovados",
