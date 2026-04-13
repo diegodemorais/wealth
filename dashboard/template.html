@@ -88,6 +88,7 @@ footer{text-align:center;padding:20px;color:var(--muted);font-size:.7rem}
 .scenario-card.chosen{border-color:var(--accent);background:rgba(59,130,246,.07)}
 .income-phase{border-left:3px solid var(--accent);padding:8px 12px;margin:6px 0;background:rgba(59,130,246,.05);border-radius:0 6px 6px 0;font-size:.8rem}
 .tlh-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(71,85,105,.2);font-size:.78rem}
+@media(max-width:1024px){.grid-3{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-value{font-size:1.2rem}table{font-size:.7rem}th,td{padding:4px 3px}.chart-box{height:200px}.calc-form input{width:90px}.fire-big{font-size:2.5rem}.fire-row{gap:12px}.rf-grid{grid-template-columns:repeat(2,1fr)}.hide-mobile{display:none}.grid-2,.grid-3{grid-template-columns:1fr}}
 /* ── Privacy mode: transformar valores em placeholders legíveis ── */
 .private-mode .pv{color:transparent!important;position:relative;white-space:nowrap}
@@ -232,7 +233,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 .fm-yellow{background:rgba(234,179,8,.18);color:var(--yellow)}
 .fm-red{background:rgba(239,68,68,.18);color:var(--red)}
 /* ── SWR Percentiles cards ── */
-.swr-pct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.swr-pct-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;margin-top:10px}
 .swr-pct-card{background:var(--card2);border-radius:8px;padding:12px;text-align:center;border-left:3px solid var(--muted)}
 .swr-pct-card.p10{border-left-color:var(--red)}
 .swr-pct-card.p50{border-left-color:var(--yellow)}
@@ -378,7 +379,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <span id="fireProgressStart" class="pv" data-pv-mask="••">—</span><span id="fireProgressLabel" class="pv">—</span><span id="fireProgressEnd" class="pv" data-pv-mask="••">—</span>
 </div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="fireScenarioGrid"></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:10px" id="fireScenarioGrid"></div>
 <div style="font-size:.6rem;color:var(--muted);text-align:center;margin-top:6px" id="fireScenarioNote">—</div>
 </div>
 
@@ -433,7 +434,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <div class="grid-2" style="margin-bottom:0">
 <div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações — Cenário Base</div><!-- /section section-430 -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px" id="pfireScenarioRow">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:8px;margin-bottom:14px" id="pfireScenarioRow">
     <div class="scenario-card" style="text-align:center;padding:10px 8px">
       <div id="pfire_baseBaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
       <div style="font-size:1.6rem;font-weight:800" class="pv" id="pfire_baseBase">—</div>
@@ -850,7 +851,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
 <div class="chart-box-sm" style="height:320px;max-height:320px"><canvas id="attrChart"></canvas></div><!-- /section attrSection -->
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;text-align:center">
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--green)" class="pv" id="attrRetorno">—</div><div style="font-size:.65rem;color:var(--muted)">Retorno USD</div></div>
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--yellow)" class="pv" id="attrCambio">—</div><div style="font-size:.65rem;color:var(--muted)">RF + Câmbio</div></div>
@@ -946,7 +947,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <button onclick="buildShadowChart('all')">Tudo (21a)</button>
 </div>
 <div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
-<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
+<div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
 <div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
 </div><!-- /collapse-body -->
 </div>
@@ -1034,7 +1035,7 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 <div class="collapse-body">
 
 <!-- Cards ITD -->
-<div id="irITDCards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px"></div><!-- /section section-1031 -->
+<div id="irITDCards" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;margin-bottom:16px"></div><!-- /section section-1031 -->
 
 <!-- Gráfico rolling 36m -->
 <div class="chart-box"><canvas id="rollingIRChart"></canvas></div>
@@ -1081,7 +1082,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff" class="pv">—</div>
   </div>
   <div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:8px;margin-bottom:10px">
       <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
         <div style="font-size:.6rem;color:var(--muted)">Cenário Aspiracional</div>
         <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire50">—</div>
@@ -1124,7 +1125,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- Sliders -->
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:12px">
+<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:14px;margin-bottom:12px">
   <div class="slider-row">
     <label><span>Aporte Mensal</span><span id="simAporteVal" class="pv" style="font-weight:700;color:var(--accent)">—</span></label>
     <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="_firePresetCustom();updateFireSim()">
@@ -4134,7 +4135,7 @@ function buildSpendingBreakdown() {
   const bufferIcon  = bufferAnual >= 0 ? '✅' : '⚠️';
 
   el.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:10px;margin-bottom:14px">
       <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.6rem;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Essenciais</div>
         <div class="pv" style="font-size:1.4rem;font-weight:700;color:var(--red)">R$${must.toLocaleString('pt-BR')}</div>
@@ -4157,7 +4158,7 @@ function buildSpendingBreakdown() {
         <div style="font-size:.6rem;color:var(--muted);margin-top:4px">Gifts e pontuais</div>
       </div>
     </div>
-    <div style="background:var(--card2);border-radius:8px;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center">
+    <div style="background:var(--card2);border-radius:8px;padding:12px;display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:12px;text-align:center">
       <div>
         <div class="pv" style="font-size:1.1rem;font-weight:700">R$${total.toLocaleString('pt-BR')}/mês</div>
         <div class="pv" style="font-size:.65rem;color:var(--muted)">Total real · R$${(anual/1000).toFixed(0)}k/ano</div>
