@@ -702,7 +702,7 @@
     },
     {
       "id": "scenario-comparison",
-      "tab": "simuladores",
+      "tab": "fire",
       "label": "FIRE@53 vs FIRE@50 — Comparação",
       "type": "table",
       "purpose": "Compara os dois cenários de FIRE date em patrimônio mediano, P10/P90 e P(sucesso) para quantificar o custo de antecipar a aposentadoria",
@@ -714,7 +714,7 @@
     },
     {
       "id": "fire-matrix",
-      "tab": "simuladores",
+      "tab": "fire",
       "label": "FIRE Matrix — P(Sucesso) × Gasto",
       "type": "table",
       "purpose": "Mostra P(FIRE) por combinação de patrimônio e gasto anual para apresentar o FIRE number como superfície de decisão, não ponto único",
@@ -886,7 +886,7 @@
     },
     {
       "id": "tornado-sensitivity",
-      "tab": "simuladores",
+      "tab": "now",
       "label": "Tornado — Sensibilidade por Variável",
       "type": "chart-bar-horizontal",
       "purpose": "Mostra quais variáveis têm maior impacto no P(FIRE) para concentrar esforço de otimização nas que mais importam",

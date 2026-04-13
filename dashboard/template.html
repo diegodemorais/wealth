@@ -419,7 +419,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 
 
 <!-- S10: P(FIRE) + TORNADO + SPENDING -->
-<div class="section" data-in-tab="simuladores">
+<div class="section" data-in-tab="hoje">
 <h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
 <div class="grid-2" style="margin-bottom:0">
 <div>
@@ -602,7 +602,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- S9 + F4: FIRE@53 vs FIRE@50 — tabela unificada (gráfico de barras removido — duplicata) -->
-<div class="section" data-in-tab="simuladores">
+<div class="section" data-in-tab="fire">
   <h2>FIRE@53 vs FIRE@50 — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div>
@@ -695,7 +695,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 </div>
 
 <!-- R1: FIRE MATRIX — P(Sucesso) por Patrimônio × Gasto -->
-<div class="section collapsible" data-in-tab="simuladores" id="fireMatrixSection">
+<div class="section collapsible" data-in-tab="fire" id="fireMatrixSection">
 <h2 onclick="_toggleBlock(this.parentElement)">FIRE Matrix — P(Sucesso 30 anos)</h2>
 <div class="collapse-body">
 <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
@@ -956,7 +956,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
      ═══════════════════════════════════════════════════════ -->
 
 <!-- F3: SIMULADOR FIRE INTERATIVO (BOLDIN-style) -->
-<div class="section section-critical" data-in-tab="fire">
+<div class="section section-critical" data-in-tab="simuladores">
 <h2>Simulador FIRE — Aposentadoria Antecipada</h2>
 
 <!-- Resultado principal -->
@@ -1034,7 +1034,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S19: WHAT-IF SCENARIOS -->
-<div class="section collapsible" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="simuladores">
 <h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Cenário / Gasto</h2>
 <div class="collapse-body">
 
@@ -6154,7 +6154,7 @@ if (localStorage.getItem('dashboard_private') === '1') {
 const _tabInitialized = {};
 function _initTabCharts(tab) {
   const tabFns = {
-    hoje:     [buildTimestamps, buildSankey],
+    hoje:     [buildTimestamps, buildTornado, buildSankey],
     perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
                renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
                function() { buildBacktest('since2009'); }, buildCagrVsTwr,
@@ -6162,22 +6162,22 @@ function _initTabCharts(tab) {
                buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
                buildDrawdownHistory, buildBacktestR7],
     carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarios,
-               buildLumpyEvents,
+    fire:     [buildPremissasVsRealizado, buildTrackingFire, buildScenarioComparison, buildScenarios,
+               buildFireMatrix, buildLumpyEvents,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire,
-               function() {
-                 const wiC = document.getElementById('wiCusto');
-                 if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
-                 if (!window._wiPreset) window._wiPreset = 'base';
-                 updateWhatIf();
-               },
                buildEventosVida, buildPfireFamilia],
     retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
                buildSpendingGuardrails, buildSwrPercentiles,
                buildSpendingBreakdown, buildIncomeProjection,
                buildBondPool, buildBondPoolRunway],
-    simuladores: [buildTornado, buildScenarioComparison, buildFireMatrix, buildStressTest],
+    simuladores: [buildScenarios, buildStressTest,
+                  function() {
+                    const wiC = document.getElementById('wiCusto');
+                    if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
+                    if (!window._wiPreset) window._wiPreset = 'base';
+                    updateWhatIf();
+                  }],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.error('[chart-init ERROR]', fn.name || tab, e.message, e); } });
