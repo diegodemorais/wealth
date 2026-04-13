@@ -59,6 +59,18 @@ Se um cenário abaixo ocorrer, executar a resposta **sem debate**. O debate já 
 | **Mesmo bloco CRITICAL falha 3 ciclos** | `ESCALATE_TO_DIEGO`. Não prosseguir até decisão explícita. | DEV-tester |
 | **Tester verde (0 CRITICAL, 0 HIGH)** | Autorizado para commit + push. | DEV-tester |
 
+## Dashboard / Chart.js 4 — Armadilhas conhecidas
+
+Cada linha abaixo custou horas de debug. Não redescobrir.
+
+| Cenário | Resposta | Origem |
+|---------|----------|--------|
+| **Linha de gráfico renderiza próxima a R$0 apesar de dados corretos** | Dataset renderer do Chart.js 4 é frágil com valores BRL grandes. Bypass: `data: []` no dataset + desenhar via canvas API no `afterDraw` usando `getPixelForValue`. Linha meta (valor constante) funciona com renderer normal. | DEV-charts-render-2026-04-13 B2 |
+| **`TypeError: x.getPixelForIndex is not a function`** | Método removido no Chart.js 4. Substituir por `getPixelForValue(index)`. Erro é silencioso — derruba o gráfico inteiro sem mensagem visível. | DEV-charts-render-2026-04-13 B4 |
+| **Gráfico em aba/seção não carrega (seção não-colapsável)** | Canvas em aba escondida tem `offsetWidth === 0`. Sem retry, o gráfico nunca renderiza. Fix: `if (el.offsetWidth === 0) { setTimeout(buildFn, 300); return; }` no início de cada builder. | DEV-charts-render-2026-04-13 B3/B7 |
+| **Gráfico em seção colapsável não carrega ao abrir** | `_toggleBlock` usa double-RAF + `getBoundingClientRect`. Em mobile (layout mais lento), o canvas ainda tem `offsetWidth === 0` após o double-RAF. Mesmo fix: setTimeout retry no builder. | DEV-charts-render-2026-04-13 B3/B7 |
+| **Precisa debuggar JS no mobile sem cabo** | Eruda já está no header do dashboard — botão `_` no canto. Clica → console JS completo no browser. | DEV-charts-render-2026-04-13 |
+
 ---
 
 ## Meta-regra

@@ -142,6 +142,7 @@ Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/pyt
 | Retros | `agentes/referencia/retro-dinamica.md` |
 | Flight Rules | `agentes/referencia/flight-rules.md` |
 | Believability Tracker | `agentes/memoria/believability.md` |
+| Chart.js 4 patterns (dev) | `agentes/referencia/dev-chartjs-patterns.md` |
 
 ## Estrutura do Projeto
 
