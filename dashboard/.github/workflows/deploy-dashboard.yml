@@ -1,48 +1,40 @@
-name: Deploy Dashboard to GitHub Pages
+name: Sync index.html to wealth-dash
 
 on:
   push:
-    branches: [main]
     paths:
-      - 'dashboard/index.html'
-      - 'dashboard/bootstrap.mjs'
-      - 'dashboard/js/**'
-      - 'dashboard/styles/**'
-      - '.github/workflows/deploy-dashboard.yml'
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+      - dashboard/index.html
+      - dashboard/bootstrap.mjs
+      - dashboard/js/**
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  sync:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout origem (wealth)
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Copy dashboard files
+      - name: Clonar destino (wealth-dash)
         run: |
-          mkdir -p _site
-          cp -r dashboard/* _site/
-          ls -lh _site/
+          git clone https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/diegodemorais/wealth-dash.git /tmp/wealth-dash
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '_site'
+      - name: Copiar dashboard files
+        run: |
+          cp dashboard/index.html /tmp/wealth-dash/index.html
+          cp dashboard/bootstrap.mjs /tmp/wealth-dash/bootstrap.mjs
+          mkdir -p /tmp/wealth-dash/js
+          cp -r dashboard/js/*.mjs /tmp/wealth-dash/js/
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit se mudou
+        run: |
+          cd /tmp/wealth-dash
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html bootstrap.mjs js/
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "sync dashboard files"
+            git push origin main
+          fi
