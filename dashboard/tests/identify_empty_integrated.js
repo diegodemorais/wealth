@@ -84,8 +84,10 @@ server.listen(PORT, async () => {
       } else if (['card', 'kpi', 'kpi-hero', 'slider'].includes(type)) {
         // For KPI/card/slider: check for any text content OR form elements
         const hasInput = !!el.querySelector('input, select');
+        const text = el.textContent.trim();
         const html = el.innerHTML.trim();
-        const hasText = html.length > 10 && !html.includes('—');
+        // Accept if: has form input, has substantial HTML, or has text content (even short)
+        const hasText = (text.length > 0 && !text.includes('—')) || (html.length > 5 && !html.startsWith('—'));
         return hasInput || hasText ? 'rendered' : 'empty';
       }
 

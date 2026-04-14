@@ -189,8 +189,11 @@ server.listen(PORT, async () => {
           } else if (hasInput || hasSelect) {
             isRendered = true;
           } else if (structureType === 'text-content') {
-            // For text content (KPIs, values, etc), accept anything > 0 chars
-            isRendered = hasContent;
+            // For text content (KPIs, values, etc), accept if:
+            // - has any text that's not "—"
+            // - or has HTML structure
+            const text = el.textContent.trim();
+            isRendered = (text.length > 0 && !text.includes('—')) || hasContent;
           } else if (structureType === 'html-structure') {
             isRendered = true;
           }

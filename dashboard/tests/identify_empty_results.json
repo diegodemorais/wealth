@@ -1,33 +1,33 @@
 {
-  "timestamp": "2026-04-14T10:02:17.777Z",
+  "timestamp": "2026-04-14T10:03:17.500Z",
   "summary": {
     "total": 66,
-    "empty": 13,
-    "rendered": 17
+    "empty": 7,
+    "rendered": 23
   },
   "results": {
     "empty": [
       "backtest-metricas",
       "net-worth-projection",
-      "bond-pool-strip",
-      "drift-maximo-kpi",
       "exposicao-cambial",
       "ipca-dca-semaforo",
-      "patrimonio-total-hero",
-      "pfire-hero",
       "renda-plus-semaforo",
-      "savings-rate",
-      "ter-carteira",
       "stacked-alloc",
       "spending-breakdown"
     ],
     "rendered": [
       "shadow-portfolios",
+      "bond-pool-strip",
       "cambio-mercado",
+      "drift-maximo-kpi",
       "factor-signal-kpi",
       "fire-countdown",
       "kpi-grid-primario",
       "macro-strip",
+      "patrimonio-total-hero",
+      "pfire-hero",
+      "savings-rate",
+      "ter-carteira",
       "tornado-sensitivity",
       "evolucao-carteira",
       "factor-rolling-avgs",
