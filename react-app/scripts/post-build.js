@@ -20,7 +20,7 @@ const redirectHTML = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0;url=/wealth-dash/dashboard">
+  <meta http-equiv="refresh" content="0;url=/wealth-dash/dashboard.html">
   <title>Redirecting to Wealth Dashboard...</title>
   <style>
     body {
