@@ -843,12 +843,27 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     data["version"] = version_str
     data_js = _build_data_js(data, generated_at, version_str)
 
-    # 6. Copiar ou gerar bootstrap.mjs como arquivo separado
-    bootstrap_src = ROOT / "dashboard" / "js" / "bootstrap.mjs"
+    # 6. Copiar ou gerar bootstrap.mjs + módulos como arquivos separados
+    js_src_dir = ROOT / "dashboard" / "js"
+    bootstrap_src = js_src_dir / "bootstrap.mjs"
     bootstrap_dst = out_path.parent / "bootstrap.mjs"
     if bootstrap_src.exists():
+      # Copiar bootstrap.mjs
       bootstrap_dst.write_text(bootstrap_src.read_text(encoding="utf-8"), encoding="utf-8")
       print(f"   Copiado: bootstrap.mjs ({bootstrap_dst.stat().st_size:,} bytes)")
+
+      # Copiar módulos 01-07
+      js_dst_dir = out_path.parent / "js"
+      js_dst_dir.mkdir(parents=True, exist_ok=True)
+      modules = ["01-preamble.mjs", "02-data-wiring.mjs", "03-utils.mjs",
+                 "04-charts-portfolio.mjs", "05-fire-projections.mjs",
+                 "06-dashboard-render.mjs", "07-init-tabs.mjs"]
+      for mod in modules:
+        src = js_src_dir / mod
+        dst = js_dst_dir / mod
+        if src.exists():
+          dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+      print(f"   Copiado: {len(modules)} módulos JS para dashboard/js/")
     else:
       # Fallback: gerar bootstrap inline (compatibilidade)
       js_modules = _assemble_js()
