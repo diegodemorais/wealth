@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-04-14T12:08:18.323Z",
+  "timestamp": "2026-04-14T12:37:59.458Z",
   "summary": {
     "total": 66,
-    "pass": 62,
+    "pass": 57,
     "hidden": 0,
-    "empty": 3,
+    "empty": 8,
     "missing": 1
   },
   "components": [
@@ -15,10 +15,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": true,
+      "rendered": false,
       "structure": "canvas-element",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "backtest-regime-longo",
@@ -39,10 +39,10 @@
       "type": "chart-area",
       "found": true,
       "visible": true,
-      "rendered": true,
+      "rendered": false,
       "structure": "canvas-element",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "shadow-portfolios",
@@ -51,10 +51,10 @@
       "type": "chart-line",
       "found": true,
       "visible": true,
-      "rendered": true,
+      "rendered": false,
       "structure": "canvas-element",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "earliest-fire",
@@ -591,10 +591,10 @@
       "type": "chart-donut",
       "found": true,
       "visible": true,
-      "rendered": true,
+      "rendered": false,
       "structure": "canvas-element",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "intra-equity-pesos",
@@ -699,10 +699,10 @@
       "type": "chart-area",
       "found": true,
       "visible": true,
-      "rendered": true,
+      "rendered": false,
       "structure": "canvas-element",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "guardrails-retirada",

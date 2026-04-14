@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-14T09:08:18.413989",
+  "timestamp": "2026-04-14T09:37:59.562049",
   "mode": "full",
   "total": 559,
-  "passed": 559,
-  "failed": 0,
+  "passed": 557,
+  "failed": 2,
   "failure_cycles": {},
   "escalations": [],
   "results": [
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 225,375 chars, 4 blocos <script>, bootstrap.mjs carregado"
+      "message": "index.html OK: 228,138 chars, 4 blocos <script>, bootstrap.mjs carregado"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -61,7 +61,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 225,375 chars"
+      "message": "index.html: 228,138 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -237,7 +237,7 @@
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "⚠️ 62/66 componentes OK (94%) | Hidden: 0 | Empty: 3 | Missing: 1 — 80% OK"
+      "message": "⚠️ 57/66 componentes OK (86%) | Hidden: 0 | Empty: 8 | Missing: 1 — 80% OK"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::posicoes top-level key exists and is non-empty dict",
@@ -1581,7 +1581,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVEM', 'AVGS', 'SWRD'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -1597,7 +1597,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'retiro', 'backtest', 'fire', 'portfolio', 'simuladores', 'performance', 'now'}"
+      "message": "All blocks use valid tabs: {'retiro', 'fire', 'now', 'backtest', 'simuladores', 'performance', 'portfolio'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2189,7 +2189,7 @@
       "category": "RENDER",
       "severity": "HIGH",
       "passed": true,
-      "message": "65 seções têm data-in-tab válido"
+      "message": "121 seções têm data-in-tab válido"
     },
     {
       "test_id": "tab-structure::RENDER::canvas IDs não são duplicados dentro de uma mesma seção",
@@ -2197,7 +2197,7 @@
       "category": "RENDER",
       "severity": "HIGH",
       "passed": true,
-      "message": "Nenhum canvas duplicado em 9 seções"
+      "message": "Nenhum canvas duplicado em 64 seções"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::rf and hodl11 top-level keys exist",
@@ -3936,6 +3936,22 @@
       "message": "posicoes aggregates: ['SWRD', 'AVGS', 'AVEM', 'JPGL']"
     },
     {
+      "test_id": "responsive::RENDER::tabelas não causam overflow horizontal",
+      "block_id": "responsive",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": false,
+      "message": "Responsividade incompleta (faltam: media query 768px, classe responsiva dynamic-2col, override grid-template com !important)"
+    },
+    {
+      "test_id": "responsive::RENDER::CSS tem proteção para tabelas responsivas",
+      "block_id": "responsive",
+      "category": "RENDER",
+      "severity": "MEDIUM",
+      "passed": false,
+      "message": "CSS deve ter '.section table' com 'overflow-x:auto' para proteção responsiva"
+    },
+    {
       "test_id": "pipeline::DATA::data.json has _generated timestamp",
       "block_id": "pipeline",
       "category": "DATA",
@@ -3973,7 +3989,7 @@
       "category": "RENDER",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "Sections têm comentários adequados (51/68)"
+      "message": "Sections têm comentários adequados (51/67)"
     },
     {
       "test_id": "tab-structure::RENDER::todas as abas declaradas têm seus data-in-tab correspondentes no HTML",
@@ -3984,28 +4000,12 @@
       "message": "Todas as 7 abas têm seções correspondentes"
     },
     {
-      "test_id": "responsive::RENDER::tabelas não causam overflow horizontal",
-      "block_id": "responsive",
-      "category": "RENDER",
-      "severity": "MEDIUM",
-      "passed": true,
-      "message": "Teste responsivo: proteção em cascata detectada (768px, dynamic-2col, !important overrides)"
-    },
-    {
       "test_id": "responsive::RENDER::grids inline não têm colunas fixas que não quebram",
       "block_id": "responsive",
       "category": "RENDER",
       "severity": "MEDIUM",
       "passed": true,
       "message": "Todos os grids inline são responsivos"
-    },
-    {
-      "test_id": "responsive::RENDER::CSS tem proteção para tabelas responsivas",
-      "block_id": "responsive",
-      "category": "RENDER",
-      "severity": "MEDIUM",
-      "passed": true,
-      "message": "CSS tem proteção responsiva para 14 tabelas (display:block; overflow-x:auto;)"
     },
     {
       "test_id": "kpi-grid-primario::VALUE::bond_pool anos_gastos is a non-negative float",
@@ -4365,7 +4365,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4373,7 +4373,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'cambio'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
