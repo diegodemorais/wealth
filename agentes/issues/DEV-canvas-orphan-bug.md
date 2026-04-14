@@ -121,9 +121,23 @@ Adicionado `data-in-tab="<tabname>"` ao div-pai de cada canvas orfão:
 - **Playwright integration test**: `test_tab_content.mjs` executou 7/7 tabs, todos passaram ✓
 - **Build validation**: Sem erros de divs desbalanceados, index.html gerado corretamente
 
+### Problema Real Identificado
+Investigação mais profunda revelou que o problema não era só canvas orphãos, mas também **h2 headers orphãos**: 19 headers (`<h2>`) não tinham `data-in-tab` mas precediam divs com `data-in-tab`. Quando `switchTab()` era chamado:
+- Headers ficavam visíveis (sem `.tab-hidden`)
+- Canvas abaixo ficavam ocultos (com `.tab-hidden`)
+- Resultado: headers de outras abas apareciam com conteúdo vazio
+
+### Solução Final
+1. **Mapeamento de canvas** (commits anteriores): adicionou `data-in-tab` a 22 canvas orphãos
+2. **Sincronização de h2s** (novo): modificou `switchTab()` em `07-init-tabs.mjs` para:
+   - Detectar h2s sem `data-in-tab` que precedem divs com `data-in-tab`
+   - Toglar `.tab-hidden` em h2s para sincronizar visibilidade com conteúdo abaixo
+   - Check up to 10 siblings para encontrar a relação
+
 ### Commits
 - `3574003`: fix: DEV-canvas-orphan-bug — map all 26 canvas to data-in-tab containers
 - `d1d9b4f`: chore: remove temporary test files
+- `fbdfae7`: fix: DEV-canvas-orphan-bug — hide orphaned h2 headers during tab switch
 
 ---
 
