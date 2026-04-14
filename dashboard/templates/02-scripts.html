@@ -17,6 +17,11 @@
 
 __DATA_PLACEHOLDER__
 
+// Debug: window.DATA just defined, log it
+if (window.addDebugLog) {
+  window.addDebugLog(`2️⃣ window.DATA: ${typeof window.DATA}`);
+  window.addDebugLog(`   Keys: ${window.DATA ? Object.keys(window.DATA || {}).length : 'undef'}`);
+}
 </script>
 
 __JS_MODULES_PLACEHOLDER__

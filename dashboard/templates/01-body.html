@@ -13,9 +13,8 @@ function addDebugLog(msg) {
     panel.innerHTML = window.DEBUG_LOGS.slice(-12).map(m => `<div>${m}</div>`).join('');
   }
 }
+// Debug will be populated AFTER window.DATA is defined (in 02-scripts.html)
 addDebugLog('1️⃣ Body loaded');
-addDebugLog(`2️⃣ window.DATA: ${typeof window.DATA}`);
-addDebugLog(`   Keys: ${window.DATA ? Object.keys(window.DATA || {}).length : 'undef'}`);
 </script>
 
 <div class="container">
