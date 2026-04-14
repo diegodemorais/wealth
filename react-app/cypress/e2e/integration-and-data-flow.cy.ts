@@ -239,7 +239,7 @@ describe('Integration & Data Flow', () => {
         cy.wrap($card).should(($el) => {
           const text = $el.text();
           // Should not show actual numbers, should show masks
-          expect(text).to.include('••••').or.include('•');
+          expect(text === '••••' || text.includes('•')).to.be.true;
         });
       });
     });
