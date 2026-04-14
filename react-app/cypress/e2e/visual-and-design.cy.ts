@@ -341,7 +341,7 @@ describe('Visual Design & Consistency', () => {
     it('all pages use same navigation style', () => {
       const pages = ['/dashboard', '/portfolio', '/fire'];
 
-      let firstNavColor;
+      let firstNavColor: string | undefined;
 
       cy.visit(pages[0]);
       cy.get('nav').then($nav => {

@@ -130,7 +130,7 @@ describe('Integration & Data Flow', () => {
 
       // Set slider value
       cy.get('input[type="range"]').eq(0).invoke('val', 75).trigger('input');
-      cy.get('input[type="range"]").eq(0).should('have.value', '75');
+      cy.get('input[type="range"]').eq(0).should('have.value', '75');
 
       // Navigate away
       cy.contains('a', 'Dashboard').click();
@@ -239,7 +239,7 @@ describe('Integration & Data Flow', () => {
         cy.wrap($card).should(($el) => {
           const text = $el.text();
           // Should not show actual numbers, should show masks
-          expect(text).to.include('••••').or.include('•');
+          expect(text).to.satisfy((t: string) => t.includes('••••') || t.includes('•'));
         });
       });
     });
