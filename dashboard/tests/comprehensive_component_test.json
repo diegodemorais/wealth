@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-14T10:14:45.176Z",
+  "timestamp": "2026-04-14T11:39:30.705Z",
   "summary": {
     "total": 66,
-    "pass": 52,
+    "pass": 62,
     "hidden": 0,
-    "empty": 14,
-    "missing": 0
+    "empty": 3,
+    "missing": 1
   },
   "components": [
     {
@@ -123,10 +123,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "table",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "net-worth-projection",
@@ -159,10 +159,10 @@
       "type": "slider",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "what-if-cenarios",
@@ -171,10 +171,10 @@
       "type": "slider",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "bond-pool-strip",
@@ -267,10 +267,10 @@
       "type": "semaforo",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "kpi-grid-mercado",
@@ -291,10 +291,10 @@
       "type": "kpi",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "macro-strip",
@@ -339,10 +339,10 @@
       "type": "semaforo",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "savings-rate",
@@ -459,10 +459,10 @@
       "type": "chart-line",
       "found": true,
       "visible": true,
-      "rendered": true,
-      "structure": "canvas-chart",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "rendered": false,
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "fee-custo-complexidade",
@@ -471,10 +471,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": true,
-      "structure": "text-content",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "rendered": false,
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "heatmap-retornos",
@@ -483,10 +483,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": true,
-      "structure": "table",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "rendered": false,
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "hodl11-pnl",
@@ -514,15 +514,15 @@
     },
     {
       "specId": "retorno-decomposicao",
-      "htmlId": "simRetorno",
+      "htmlId": "retornoDecomposicaoChart",
       "label": "Decomposição de Retorno",
       "type": "waterfall",
-      "found": true,
-      "visible": true,
+      "found": false,
+      "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "structure": "NOT_IN_DOM",
+      "statusChar": "❌",
+      "statusText": "NOT_FOUND"
     },
     {
       "specId": "rolling-sharpe",
@@ -579,10 +579,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "geo-donut",
@@ -627,10 +627,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "posicoes-etfs-ibkr",
@@ -639,10 +639,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "rf-posicoes",
@@ -651,10 +651,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "stacked-alloc",
@@ -675,10 +675,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "bond-pool-readiness",
@@ -754,13 +754,13 @@
     },
     {
       "specId": "spending-breakdown",
-      "htmlId": "spendingChart",
+      "htmlId": "spendingBreakdownBody",
       "label": "Spending — Essenciais vs Discricionários",
       "type": "card",
       "found": true,
       "visible": true,
       "rendered": true,
-      "structure": "canvas-element",
+      "structure": "text-content",
       "statusChar": "✅",
       "statusText": "OK"
     },
@@ -783,10 +783,10 @@
       "type": "slider",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "stress-test-mc",
@@ -795,10 +795,10 @@
       "type": "slider",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     }
   ]
 }

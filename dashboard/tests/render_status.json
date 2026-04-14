@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-04-14T11:35:43.050Z",
+  "timestamp": "2026-04-14T11:38:52.895Z",
   "summary": {
-    "rendered": 62,
-    "empty": 4,
+    "rendered": 63,
+    "empty": 3,
     "total": 66
   },
   "results": [
@@ -752,12 +752,12 @@
     },
     {
       "specId": "spending-breakdown",
-      "status": "EMPTY",
+      "status": "RENDERED",
       "found": true,
       "visible": true,
-      "textLen": 0,
-      "children": 0,
-      "hasContent": false,
+      "textLen": 600,
+      "children": 3,
+      "hasContent": true,
       "canvasLen": 0,
       "tableLen": 0,
       "svgLen": 0

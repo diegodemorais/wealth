@@ -344,11 +344,12 @@
     },
     {
       "specId": "retorno-decomposicao",
-      "htmlId": "simRetorno",
+      "htmlId": "retornoDecomposicaoChart",
       "label": "Decomposição de Retorno",
       "tab": "perf",
       "type": "waterfall",
-      "found": true
+      "found": false,
+      "note": "Component documented in spec but not implemented in HTML template"
     },
     {
       "specId": "rolling-sharpe",
