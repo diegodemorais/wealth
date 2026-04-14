@@ -36,7 +36,7 @@ jobs:
       - name: Build Next.js
         env:
           NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
-          NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+          NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at || '' }}
         run: |
           cd react-app
           npm run build:no-test
@@ -63,16 +63,20 @@ jobs:
 
       - name: Clonar destino (wealth-dash)
         run: |
+          set -e
           git clone https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/diegodemorais/wealth-dash.git /tmp/wealth-dash
+          if [ ! -d "/tmp/wealth-dash" ]; then
+            echo "❌ Failed to clone wealth-dash repository"
+            exit 1
+          fi
+          echo "✅ wealth-dash repository cloned"
 
       - name: Copiar dashboard files
         run: |
+          set -e
           # Copy all static files from Next.js build
-          cp -r dashboard/* /tmp/wealth-dash/ || true
-          # Copy _next directory for assets
-          if [ -d "dashboard/_next" ]; then
-            cp -r dashboard/_next /tmp/wealth-dash/_next || true
-          fi
+          cp -r dashboard/* /tmp/wealth-dash/
+          echo "✅ Dashboard files copied"
 
       - name: Commit e push deploy
         run: |
@@ -89,17 +93,26 @@ jobs:
           fi
 
       - name: Deployment Summary
-        if: always()
+        if: success()
         run: |
           echo "## Deployment Status ✅"
           echo "- Build: Success"
           echo "- Deploy: Success"
 
+      - name: Deployment Failed
+        if: failure()
+        run: |
+          echo "## Deployment Status ❌"
+          echo "- Build: Success"
+          echo "- Deploy: Failed"
+          echo "Check logs above for details"
+          exit 1
+
   # NOTIFICAÇÃO FINAL: Deploy Completo
   notification:
     runs-on: ubuntu-latest
     needs: [build, deploy]
-    if: always()
+    if: success()
     name: Deployment Notification
 
     steps:
@@ -111,7 +124,6 @@ jobs:
           echo ""
           echo "📊 FINAL STATUS:"
           echo "  ✓ Build:             SUCCESS"
-          echo "  ✓ E2E Tests:         588/588 PASSED"
           echo "  ✓ Deploy:            SYNCED to wealth-dash"
           echo ""
           echo "🚀 DEPLOYMENT INFORMATION:"
@@ -127,3 +139,24 @@ jobs:
           echo "✨ GitHub Pages will be live in 1-5 minutes"
           echo ""
           echo "╔════════════════════════════════════════════════════════════════╗"
+
+  notification-failed:
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    if: failure()
+    name: Deployment Failed Notification
+
+    steps:
+      - name: Deployment Failed ❌
+        run: |
+          echo "╔════════════════════════════════════════════════════════════════╗"
+          echo "║                ❌ DEPLOYMENT FAILED                           ║"
+          echo "╚════════════════════════════════════════════════════════════════╝"
+          echo ""
+          echo "📊 FINAL STATUS:"
+          echo "  ✓ Build:             SUCCESS"
+          echo "  ✗ Deploy:            FAILED"
+          echo ""
+          echo "Check the workflow logs for detailed error information."
+          echo ""
+          exit 1
