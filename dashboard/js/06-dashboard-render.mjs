@@ -167,27 +167,43 @@ export function buildWellnessExtras() {
 // RENDER KPIs + WELLNESS
 // ═══════════════════════════════════════════════════════════════
 export function renderKPIs() {
-  // Hero strip — BRL primário, USD secundário
-  document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
-  document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k em USD`;
-  const heroPf = document.getElementById('heroPfire');
-  const _pfStress = DATA.pfire_base.stress ?? DATA.pfire_base.base;
-  const _pfFav = DATA.pfire_base.fav ?? DATA.pfire_base.base;
-  if (heroPf) {
-    heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
-    heroPf.style.color = DATA.pfire_base.base >= 90 ? '#22c55e' : DATA.pfire_base.base >= 80 ? '#eab308' : '#ef4444';
-    const _heroPfSub = document.getElementById('heroPfireSub');
-    if (_heroPfSub) _heroPfSub.textContent = `base ${DATA.pfire_base.base}% · @50: ${DATA.pfire_aspiracional.base}% · MC 10k`;
-  }
-  document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
-  // Anos sub: Base/Aspir — usar vars module-level
-  const _anoFireAlvo = _anoFireAlvoGlobal;
-  const _heroAnosSub = document.getElementById('heroAnosSub');
-  if (_heroAnosSub) {
-    const _idAlvo  = DATA.premissas?.idade_cenario_base          || 53;
-    const _idAspir = DATA.premissas?.idade_cenario_aspiracional  || 50;
-    _heroAnosSub.textContent = `Base: ${_anoFireAlvo} (${_idAlvo}a) · Aspir: ${_anoFireAspir} (${_idAspir}a)`;
-  }
+  try {
+    // Debug — log variables available
+    if (window.addDebugLog) {
+      window.addDebugLog('renderKPIs: Starting...');
+      window.addDebugLog(`  yrInt=${typeof yrInt}, moInt=${typeof moInt}, totalBrl=${typeof totalBrl}`);
+    }
+
+    // Hero strip — BRL primário, USD secundário
+    document.getElementById('heroPatrimonioBrl').textContent = `R$${(totalBrl/1e6).toFixed(2)}M`;
+    document.getElementById('heroPatrimonioUsd').textContent = `$${(totalEquityUsd/1000).toFixed(0)}k em USD`;
+
+    if (window.addDebugLog) window.addDebugLog('✓ Hero patrimônio renderizado');
+
+    const heroPf = document.getElementById('heroPfire');
+    const _pfStress = DATA.pfire_base.stress ?? DATA.pfire_base.base;
+    const _pfFav = DATA.pfire_base.fav ?? DATA.pfire_base.base;
+    if (heroPf) {
+      heroPf.textContent = `${Math.round(_pfStress)}–${Math.round(_pfFav)}%`;
+      heroPf.style.color = DATA.pfire_base.base >= 90 ? '#22c55e' : DATA.pfire_base.base >= 80 ? '#eab308' : '#ef4444';
+      const _heroPfSub = document.getElementById('heroPfireSub');
+      if (_heroPfSub) _heroPfSub.textContent = `base ${DATA.pfire_base.base}% · @50: ${DATA.pfire_aspiracional.base}% · MC 10k`;
+    }
+
+    // Debug antes de renderizar anos
+    if (window.addDebugLog) window.addDebugLog(`  yrInt=${yrInt}, moInt=${moInt}`);
+
+    document.getElementById('heroAnos').textContent = `${yrInt}a ${moInt}m`;
+    // Anos sub: Base/Aspir — usar vars module-level
+    const _anoFireAlvo = _anoFireAlvoGlobal;
+    const _heroAnosSub = document.getElementById('heroAnosSub');
+    if (_heroAnosSub) {
+      const _idAlvo  = DATA.premissas?.idade_cenario_base          || 53;
+      const _idAspir = DATA.premissas?.idade_cenario_aspiracional  || 50;
+      _heroAnosSub.textContent = `Base: ${_anoFireAlvo} (${_idAlvo}a) · Aspir: ${_anoFireAspir} (${_idAspir}a)`;
+    }
+
+    if (window.addDebugLog) window.addDebugLog('✓ Hero anos renderizado');
   const heroProgEl = document.getElementById('heroProgresso');
   heroProgEl.textContent = fmtPct(progPct);
   heroProgEl.style.color = progPct >= 50 ? '#22c55e' : '#eab308';
@@ -599,6 +615,10 @@ export function renderKPIs() {
     : `Alvo IPCA+: ≥${_pisoIpcaKPI}% · Atual: abaixo do piso`;
   const _ipcaFill = document.getElementById('ipcaTaxaFill');
   if (_ipcaFill && _taxaIpcaKPI) _ipcaFill.style.width = Math.min(100, _taxaIpcaKPI / (_pisoIpcaKPI * 1.5) * 100) + '%';
+  } catch (e) {
+    if (window.addDebugLog) window.addDebugLog(`❌ renderKPIs ERROR: ${e.message}`);
+    console.error('[renderKPIs] Error:', e);
+  }
 }
 
 // ── Próximas Ações (gerado dinamicamente) ─────────────────────

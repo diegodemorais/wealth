@@ -14,20 +14,26 @@ import * as initTabs from './js/07-init-tabs.mjs';
 // PHASE 1: FOUC Guard (synchronous, before DOM render)
 // ═══════════════════════════════════════════════════════════════
 console.log('[BOOTSTRAP] Phase 1: FOUC Guard');
+if (window.addDebugLog) window.addDebugLog('Phase 1: FOUC Guard');
 initFouc();
 console.log('[BOOTSTRAP] Phase 1 complete');
+if (window.addDebugLog) window.addDebugLog('✓ Phase 1 complete');
 
 // ═══════════════════════════════════════════════════════════════
 // PHASE 2: Data Wiring (assumes window.DATA is already injected)
 // ═══════════════════════════════════════════════════════════════
 console.log('[BOOTSTRAP] Phase 2: Data Wiring — checking window.DATA...');
+if (window.addDebugLog) window.addDebugLog(`Phase 2: DATA=${typeof window.DATA}`);
 if (!window.DATA) {
   console.error('Bootstrap: window.DATA not found. Ensure DATA is injected before this module loads.');
+  if (window.addDebugLog) window.addDebugLog('❌ Phase 2 FAILED: window.DATA missing');
 } else {
   console.log('[BOOTSTRAP] Phase 2: DATA found, initializing data wiring...');
+  if (window.addDebugLog) window.addDebugLog('✓ DATA found, calling initDataWiring()');
   // Initialize data wiring (computes all derived values)
   const dataDerived = initDataWiring(window.DATA);
   console.log('[BOOTSTRAP] Phase 2: Data wiring complete, exposing to window...');
+  if (window.addDebugLog) window.addDebugLog(`✓ initDataWiring() returned ${Object.keys(dataDerived).length} keys`);
 
   // Expose to window for backward compatibility (legacy code expects globals)
   Object.assign(window, {
@@ -104,24 +110,49 @@ if (!window.DATA) {
     GENERATED_AT: initTabs.GENERATED_AT,
     VERSION: initTabs.VERSION,
   });
-  console.log('[BOOTSTRAP] Phase 2 complete — window object populated with', Object.keys(window).filter(k => k.startsWith('build') || k === 'renderKPIs').length, 'functions');
+  const fnCount = Object.keys(window).filter(k => k.startsWith('build') || k === 'renderKPIs').length;
+  console.log('[BOOTSTRAP] Phase 2 complete — window object populated with', fnCount, 'functions');
+  if (window.addDebugLog) window.addDebugLog(`✓ Phase 2 complete: ${fnCount} functions exposed`);
 }
 
 // ═══════════════════════════════════════════════════════════════
 // PHASE 3: DOM Ready — Run initialization
 // ═══════════════════════════════════════════════════════════════
 console.log('[BOOTSTRAP] Phase 3: DOM Ready — document.readyState =', document.readyState);
+if (window.addDebugLog) window.addDebugLog(`Phase 3: DOM ready=${document.readyState}, init=${typeof window.init}`);
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     console.log('[BOOTSTRAP] Phase 3: DOMContentLoaded fired, calling window.init()');
-    if (window.init) window.init();
-    else console.error('[BOOTSTRAP] Phase 3 ERROR: window.init not found!');
+    if (window.addDebugLog) window.addDebugLog('Phase 3: DOMContentLoaded, calling init()');
+    if (window.init) {
+      try {
+        window.init();
+        if (window.addDebugLog) window.addDebugLog('✓ Phase 3 complete: init() succeeded');
+      } catch (e) {
+        if (window.addDebugLog) window.addDebugLog(`❌ Phase 3 ERROR: init() threw: ${e.message}`);
+      }
+    }
+    else {
+      console.error('[BOOTSTRAP] Phase 3 ERROR: window.init not found!');
+      if (window.addDebugLog) window.addDebugLog('❌ Phase 3 ERROR: window.init not found');
+    }
   });
 } else {
   // DOM already loaded (script was deferred)
   console.log('[BOOTSTRAP] Phase 3: DOM already loaded, calling window.init()');
-  if (window.init) window.init();
-  else console.error('[BOOTSTRAP] Phase 3 ERROR: window.init not found!');
+  if (window.addDebugLog) window.addDebugLog('Phase 3: DOM already loaded, calling init()');
+  if (window.init) {
+    try {
+      window.init();
+      if (window.addDebugLog) window.addDebugLog('✓ Phase 3 complete: init() succeeded');
+    } catch (e) {
+      if (window.addDebugLog) window.addDebugLog(`❌ Phase 3 ERROR: init() threw: ${e.message}`);
+    }
+  }
+  else {
+    console.error('[BOOTSTRAP] Phase 3 ERROR: window.init not found!');
+    if (window.addDebugLog) window.addDebugLog('❌ Phase 3 ERROR: window.init not found');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════

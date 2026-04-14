@@ -1804,23 +1804,29 @@ export function buildCagrVsTwr() {
 // Apenas funções globais (não ligadas a nenhuma aba específica) e a tab inicial.
 // ═══════════════════════════════════════════════════════════════
 export function init() {
-  // Atualiza label dinâmico da idade atual no seletor de stress test
-  (function() {
-    const idadeAtual = DATA.premissas?.idade_atual || 39;
-    const opt = document.getElementById('stressOnsetAgeToday');
-    if (opt) { opt.value = String(idadeAtual); opt.textContent = `${idadeAtual} anos (hoje)`; }
-  })();
+  if (window.addDebugLog) window.addDebugLog('init() called');
+  try {
+    // Atualiza label dinâmico da idade atual no seletor de stress test
+    (function() {
+      const idadeAtual = DATA.premissas?.idade_atual || 39;
+      const opt = document.getElementById('stressOnsetAgeToday');
+      if (opt) { opt.value = String(idadeAtual); opt.textContent = `${idadeAtual} anos (hoje)`; }
+    })();
 
-  // Funções globais (header, hero, semáforo — sempre visíveis)
-  renderKPIs();
-  renderWellness();
-  buildWellnessExtras();
-  renderMacroStatus();
-  buildBrasilConcentracao();
-  buildMacroCards();
-  buildDcaStatus();
-  buildSemaforoPanel();
-  buildFanChart();
+    // Funções globais (header, hero, semáforo — sempre visíveis)
+    if (window.addDebugLog) window.addDebugLog('→ renderKPIs()');
+    renderKPIs();
+    if (window.addDebugLog) window.addDebugLog('→ renderWellness()');
+    renderWellness();
+    if (window.addDebugLog) window.addDebugLog('→ buildWellnessExtras()');
+    buildWellnessExtras();
+    if (window.addDebugLog) window.addDebugLog('→ other build funcs');
+    renderMacroStatus();
+    buildBrasilConcentracao();
+    buildMacroCards();
+    buildDcaStatus();
+    buildSemaforoPanel();
+    buildFanChart();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');
@@ -1840,6 +1846,11 @@ export function init() {
     if (t) _startTab = _tabMap[t] || t;
   } catch(e) {}
   switchTab(_startTab);
+  if (window.addDebugLog) window.addDebugLog('✓ init() complete');
+  } catch (e) {
+    if (window.addDebugLog) window.addDebugLog(`❌ init() ERROR: ${e.message}`);
+    console.error('[init] Error:', e);
+  }
 }
 
 // Force responsive grid override for inline styles at 768px breakpoint
