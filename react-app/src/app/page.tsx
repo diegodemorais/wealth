@@ -20,8 +20,8 @@ export default function HomePage() {
     // Load data dynamically from public path
     // Use window.location.origin to build the full URL to account for basePath
     const dataUrl = typeof window !== 'undefined'
-      ? `${window.location.origin}/wealth-dash/data.json`
-      : '/wealth-dash/data.json';
+      ? `${window.location.origin}/wealth/dash/data.json`
+      : '/wealth/dash/data.json';
 
     fetch(dataUrl)
       .then(r => r.json())
