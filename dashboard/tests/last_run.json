@@ -1,70 +1,29 @@
 {
-  "timestamp": "2026-04-13T22:53:33.609060",
+  "timestamp": "2026-04-13T23:26:14.876909",
   "mode": "full",
   "total": 523,
   "passed": 460,
   "failed": 63,
   "failure_cycles": {
-    "smoke-global": 11,
-    "dom-ref-renderKPIs": 5,
-    "dom-ref-renderWellness": 5,
-    "dom-ref-buildWellnessExtras": 5,
-    "dom-ref-renderMacroStatus": 5,
-    "dom-ref-buildBrasilConcentracao": 5,
-    "dom-ref-buildMacroCards": 5,
-    "dom-ref-buildDcaStatus": 5,
-    "dom-ref-buildSemaforoPanel": 5,
-    "dom-ref-updateContrib": 5,
-    "lumpy-events": 0,
-    "fire-trilha": 0,
-    "glide-path": 0,
-    "net-worth-projection": 0,
-    "what-if-cenarios": 0,
-    "stress-fan-chart": 0,
-    "hodl11-status": 0
+    "smoke-global": 1,
+    "dom-ref-renderKPIs": 1,
+    "dom-ref-renderWellness": 1,
+    "dom-ref-buildWellnessExtras": 1,
+    "dom-ref-renderMacroStatus": 1,
+    "dom-ref-buildBrasilConcentracao": 1,
+    "dom-ref-buildMacroCards": 1,
+    "dom-ref-buildDcaStatus": 1,
+    "dom-ref-buildSemaforoPanel": 1,
+    "dom-ref-updateContrib": 1,
+    "lumpy-events": 1,
+    "fire-trilha": 1,
+    "glide-path": 1,
+    "net-worth-projection": 1,
+    "what-if-cenarios": 1,
+    "stress-fan-chart": 1,
+    "hodl11-status": 1
   },
-  "escalations": [
-    {
-      "block_id": "smoke-global",
-      "cycles": 11
-    },
-    {
-      "block_id": "dom-ref-renderKPIs",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-renderWellness",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-buildWellnessExtras",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-renderMacroStatus",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-buildBrasilConcentracao",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-buildMacroCards",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-buildDcaStatus",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-buildSemaforoPanel",
-      "cycles": 5
-    },
-    {
-      "block_id": "dom-ref-updateContrib",
-      "cycles": 5
-    }
-  ],
+  "escalations": [],
   "results": [
     {
       "test_id": "smoke-global::SMOKE::index.html existe, tamanho > 100k chars, JS não truncado",
@@ -1600,7 +1559,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'SWRD', 'AVEM'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "tab-switch-guard::TAB_SWITCH::geoDonut tem destroy guard antes de new Chart",
@@ -1960,7 +1919,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'fire', 'now', 'backtest', 'simuladores', 'retiro', 'portfolio', 'performance'}"
+      "message": "All blocks use valid tabs: {'now', 'simuladores', 'retiro', 'portfolio', 'backtest', 'performance', 'fire'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4144,7 +4103,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'cambio'}"
+      "message": "exposicao-cambial spec OK, fields={'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'cambio', 'concentracao_brasil.total_portfolio_brl'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

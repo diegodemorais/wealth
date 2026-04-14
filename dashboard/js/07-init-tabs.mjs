@@ -1,23 +1,26 @@
 // ═══════════════════════════════════════════════════════════════
 // IMPORTS — Function references injected from bootstrap
 // ═══════════════════════════════════════════════════════════════
+// Only import functions that are NOT defined in this file.
+// Functions defined locally: _initTabCharts, switchTab, buildSemaforoPanel, buildFireMatrix,
+// buildMacroCards, buildDcaStatus, buildBondPool, buildBrasilConcentracao, renderMacroStatus,
+// buildTrackingFire, buildDrawdownHistory, buildEtfComposition, buildBondPoolRunway,
+// buildLumpyEvents, buildTimestamps, buildFactorRolling, buildFactorLoadings, buildPremissasVsRealizado
 const {
   buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido,
-  buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog,
-  buildTimestamps, buildTornado, buildSankey,
+  buildRfCards, renderHodl11, calcAporte, buildMinilog,
+  buildTornado, buildSankey,
   buildAttribution, buildDeltaBar, renderIpcaProgress, buildRetornoHeatmap,
   buildRollingSharp, buildInformationRatio, buildBacktest, buildShadowChart,
-  buildShadowTable, buildFeeAnalysis, buildDrawdownHistory, buildBacktestR7,
-  buildTrackingFire, buildScenarioComparison, buildScenarios,
-  buildFireMatrix, buildLumpyEvents, buildGlidePath, buildNetWorthProjection,
+  buildShadowTable, buildFeeAnalysis, buildBacktestR7,
+  buildScenarioComparison, buildScenarios,
+  buildGlidePath, buildNetWorthProjection,
   buildEarliestFire, buildEventosVida, buildPfireFamilia,
   buildGuardrails, buildIncomeChart, buildIncomeTable,
-  buildSpendingGuardrails, buildSwrPercentiles, buildSpendingBreakdown,
-  buildIncomeProjection, buildBondPool, buildBondPoolRunway,
-  buildStressTest, buildCagrVsTwr, buildFactorRolling, buildFactorLoadings,
-  buildPremissasVsRealizado,
-  renderMacroStatus, buildBrasilConcentracao, buildMacroCards, buildDcaStatus,
-  buildSemaforoPanel, buildFanChart
+  buildSpendingGuardrails, buildSpendingBreakdown,
+  buildIncomeProjection,
+  buildStressTest,
+  buildFanChart
 } = window;
 
 // ═══════════════════════════════════════════════════════════════
