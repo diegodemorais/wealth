@@ -105,6 +105,17 @@ def main():
         "output": stdout,
     }
 
+    # ─── 2.5️⃣ TEMPLATE PARTIALS VALIDATION ──────────────────────────────────
+    success, stdout, stderr = run_command(
+        f"python3 {ROOT}/scripts/validate_partials.py",
+        "2.5️⃣  TEMPLATE PARTIALS VALIDATION (structure, content, coverage)",
+        optional=True
+    )
+    results["tests"]["partials_validation"] = {
+        "success": success,
+        "output": stdout,
+    }
+
     # ─── 3️⃣  COMPONENT RENDER STATUS (optional se --no-render) ───────────────
     if not args.no_render:
         success, stdout, stderr = run_command(
