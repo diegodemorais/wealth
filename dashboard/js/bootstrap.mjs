@@ -49,6 +49,7 @@ if (!window.DATA) {
     PAT_GATILHO: dataDerived.PAT_GATILHO,
     totalEquityUsd: dataDerived.totalEquityUsd,
     totalBrl: dataDerived.totalBrl,
+    cryptoBrl: dataDerived.cryptoBrl,
     bucketUsd: dataDerived.bucketUsd,
     geoUS: dataDerived.geoUS,
     geoDM: dataDerived.geoDM,
