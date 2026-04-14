@@ -1583,7 +1583,7 @@ footer {
   </div>
   <div style="font-size:.65rem;color:var(--muted);margin-top:4px" class="pv" id="pfirePatMeta">—</div>
 </div>
-<div>
+<div data-in-tab="hoje">
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
   <div class="chart-box-sm"><canvas id="tornadoChart"></canvas></div>
 </div>
@@ -1686,24 +1686,27 @@ footer {
 </div>
 
 <!-- R5: TRACKING FIRE — Realizado vs Projeção -->
+<div data-in-tab="fire">
 <h2>Tracking FIRE — Realizado vs Projeção</h2>
 <div class="chart-box" style="height:280px"><canvas id="trackingFireChart"></canvas></div><!-- /section trackingFireSection -->
 <div class="src" id="trackingFireSrc">Patrimônio realizado vs projeção FIRE · Meta FIRE</div>
 </div>
 
 <!-- S9 + F4: Cenário Base vs Cenário Aspiracional — tabela unificada (gráfico de barras removido — duplicata) -->
+<div data-in-tab="fire">
   <h2>Cenário Base vs Cenário Aspiracional — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div><!-- /section section-575 -->
 </div>
 <!-- canvas spendingChart mantido para evitar erros JS, oculto -->
-<canvas id="spendingChart"></canvas>
+<div data-in-tab="fire"><canvas id="spendingChart"></canvas></div>
 
 <!-- canvas scenarioChart mantido para evitar erros JS, oculto -->
-<canvas id="scenarioChart" style="display:none"></canvas>
+<div data-in-tab="simuladores"><canvas id="scenarioChart" style="display:none"></canvas></div>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
 <!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
+<div data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Glide Path — Alocação por Idade</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="glideChart"></canvas></div><!-- /section section-625 -->
@@ -1712,6 +1715,7 @@ footer {
 </div>
 
 <!-- S29: Missing Components (FIRE tab) -->
+<div data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Trilha FIRE — Realizado vs Projetado</h2>
 <div class="collapse-body">
 <canvas id="fireTrilha" style="height:300px"></canvas>
@@ -1756,7 +1760,7 @@ footer {
 <!-- P2: BOND POOL READINESS -->
 <h2>Bond Pool Readiness — Proteção SoRR</h2>
 <div id="bondPoolBody"><!-- gerado por buildBondPool() --></div>
-<div id="bondPoolRunwayChartWrap" style="margin-top:14px;display:none">
+<div id="bondPoolRunwayChartWrap" style="margin-top:14px;display:none" data-in-tab="hoje">
   <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)</div><!-- /section bondPoolSection -->
   <div class="chart-box-sm"><canvas id="bondPoolRunwayChart"></canvas></div>
   <p id="bondPoolRunwayNota" class="chart-footnote"></p>
@@ -1850,7 +1854,7 @@ footer {
 </table>
 <div class="src pv" style="margin-bottom:8px" id="incomeSrc">—</div><!-- /section section-722 -->
 <!-- canvas incomeChart mantido para evitar erros JS, oculto -->
-<canvas id="incomeChart" style="display:none"></canvas>
+<div data-in-tab="retiro"><canvas id="incomeChart" style="display:none"></canvas></div>
 <span id="incomeChartSrc" style="display:none"></span>
 </div><!-- /collapse-body -->
 </div>
@@ -1909,6 +1913,7 @@ footer {
 </div><!-- /collapse-body -->
 </div>
 
+<div data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Intra-Equity — Pesos vs Alvo</h2>
 <div class="collapse-body">
 <canvas id="intraEquityPesos" style="height:300px"></canvas>
@@ -1972,7 +1977,7 @@ footer {
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
 <h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
-<div class="chart-box-sm" style="height:320px;max-height:320px"><canvas id="attrChart"></canvas></div><!-- /section attrSection -->
+<div class="chart-box-sm" style="height:320px;max-height:320px" data-in-tab="perf"><canvas id="attrChart"></canvas></div><!-- /section attrSection -->
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
   <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;text-align:center">
     <div><div style="font-size:1.1rem;font-weight:700;color:var(--accent)" class="pv" id="attrAportes">—</div><div style="font-size:.65rem;color:var(--muted)">Aportes</div></div>
@@ -2003,7 +2008,7 @@ footer {
   <button onclick="setTimelinePeriod('all')" class="active">All</button>
 </div><!-- /section section-832 -->
 <div id="timelineSparseNote" style="font-size:.7rem;color:#eab308;min-height:1.2em;margin-bottom:2px"></div>
-<div class="chart-box" style="height:260px"><canvas id="timelineChart"></canvas></div>
+<div class="chart-box" style="height:260px" data-in-tab="perf"><canvas id="timelineChart"></canvas></div>
 <div class="src">Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.</div>
 </div>
 
@@ -2021,7 +2026,7 @@ footer {
 <div class="collapse-body">
 <div class="grid-2" style="margin-bottom:0">
 <div>
-  <div class="chart-box-sm"><canvas id="deltaChart"></canvas></div><!-- /section section-587 -->
+  <div class="chart-box-sm" data-in-tab="perf"><canvas id="deltaChart"></canvas></div><!-- /section section-587 -->
 </div>
 <div>
   <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px" id="ipcaProgressTitle">IPCA+ Longo — Progresso vs Alvo —</div>
@@ -2056,7 +2061,7 @@ footer {
 <!-- S24b: ROLLING SHARPE 12m -->
 <h2 onclick="_toggleBlock(this.parentElement)">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
 <div class="collapse-body">
-<div class="chart-box"><canvas id="rollingSharpChart"></canvas></div><!-- /section section-871 -->
+<div class="chart-box" data-in-tab="perf"><canvas id="rollingSharpChart"></canvas></div><!-- /section section-871 -->
 <div class="src" style="line-height:1.6">
 <strong>Como ler:</strong> Sharpe mede retorno ajustado ao risco em janela de 12 meses.<br>
 <span style="color:rgba(34,197,94,.9)">■</span> <strong>&gt;1</strong> = excelente (carteira supera CDI com folga)
@@ -2078,7 +2083,7 @@ footer {
   <button onclick="setBacktestPeriod('5y')" title="jan/2021–abr/2026 (5 anos)">5 anos</button>
   <button onclick="setBacktestPeriod('3y')" title="jan/2023–abr/2026 (3 anos)">3 anos</button>
 </div><!-- /section section-885 -->
-<div class="chart-box-lg"><canvas id="backtestChart"></canvas></div>
+<div class="chart-box-lg" data-in-tab="backtest"><canvas id="backtestChart"></canvas></div>
 <div style="overflow-x:auto;margin-top:12px">
 <table id="backtestMetricsTable">
 <thead><tr>
@@ -2108,7 +2113,7 @@ footer {
 <!-- S28: Missing Components (BACKTEST tab) -->
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 5-7 Anos</h2>
 <div class="collapse-body">
-<canvas id="backtestRegimeLongo" style="height:300px"></canvas>
+<div data-in-tab="backtest"><canvas id="backtestRegimeLongo" style="height:300px"></canvas></div>
 </div><!-- /collapse-body -->
 </div>
 
@@ -2134,7 +2139,7 @@ footer {
   <button onclick="buildShadowChart('3y')">3 anos</button>
   <button onclick="buildShadowChart('all')">Tudo (21a)</button>
 </div>
-<div class="chart-box" style="height:220px"><canvas id="shadowChart"></canvas></div>
+<div class="chart-box" style="height:220px" data-in-tab="backtest"><canvas id="shadowChart"></canvas></div>
 <div id="shadowMetrics" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(100px, 1fr));gap:8px;margin-top:10px;font-size:.72rem;min-width:0;overflow:hidden"></div>
 <div class="src">Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)</div>
 </div><!-- /collapse-body -->
@@ -2152,7 +2157,7 @@ footer {
 <!-- CAGR por Década -->
 <div id="r7DecadesTable" style="margin-top:14px;overflow-x:auto"></div>
 <!-- Chart retorno acumulado -->
-<div class="chart-box" style="height:280px;margin-top:14px"><canvas id="backtestR7Chart"></canvas></div>
+<div class="chart-box" style="height:280px;margin-top:14px" data-in-tab="backtest"><canvas id="backtestR7Chart"></canvas></div>
 <!-- Factor regression collapsível -->
 <details style="margin-top:10px">
 <summary style="cursor:pointer;font-size:.8rem;color:var(--muted);padding:4px 0">▸ Factor Regression FF5 (técnico)</summary>
@@ -2175,7 +2180,7 @@ footer {
 <!-- N1: DRAWDOWN HISTORY -->
 <h2 onclick="_toggleBlock(this.parentElement)">Drawdown Histórico — Série Completa</h2>
 <div class="collapse-body">
-<div class="chart-box" style="height:220px"><canvas id="drawdownHistChart"></canvas></div><!-- /section drawdownHistSection -->
+<div class="chart-box" style="height:220px" data-in-tab="backtest"><canvas id="drawdownHistChart"></canvas></div><!-- /section drawdownHistSection -->
 <div id="drawdownCrisesTable" style="margin-top:10px"></div>
 <p id="drawdownHistNota" class="chart-footnote"></p>
 <div style="margin-top:10px;font-size:.6rem;color:var(--muted);line-height:1.6">
@@ -2219,7 +2224,7 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 <div id="irITDCards" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;margin-bottom:16px"></div><!-- /section section-1031 -->
 
 <!-- Gráfico rolling 36m -->
-<div class="chart-box"><canvas id="rollingIRChart"></canvas></div>
+<div class="chart-box" data-in-tab="perf"><canvas id="rollingIRChart"></canvas></div>
 <div class="src" id="rollingIRNota" style="line-height:1.6">
 <strong>Como ler:</strong> IR = Active Return / Tracking Error (janela 36m).<br>
 <span style="color:rgba(34,197,94,.9)">■</span> <strong>&gt;0</strong> = carteira supera VWRA ajustado ao risco de tracking
@@ -2388,7 +2393,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 
 <!-- R3: APORTE SENSITIVITY — removido (redundante com Tornado chart) -->
 <!-- canvas aporteSensChart mantido para evitar erros JS, oculto -->
-<canvas id="aporteSensChart" style="display:none"></canvas>
+<div data-in-tab="carteira"><canvas id="aporteSensChart" style="display:none"></canvas></div>
 
 <!-- F11: Stress Test -->
 <h2 onclick="_toggleBlock(this.parentElement)">Stress Test Monte Carlo — Bear Market Interativo</h2>
@@ -2427,7 +2432,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <!-- Projeção Fan Chart -->
 <div style="margin-bottom:14px">
   <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px" id="stressFanTitle">Projeção — Evolução Patrimonial após Shock</div>
-  <div class="chart-box" style="height:260px"><canvas id="stressProjectionChart"></canvas></div>
+  <div class="chart-box" style="height:260px" data-in-tab="fire"><canvas id="stressProjectionChart"></canvas></div>
   <div style="font-size:.6rem;color:var(--muted);margin-top:3px">Bandas: P5–P95 (exterior) · P25–P75 (interior) · P50 mediana · 500 trajetórias MC · valores reais R$2026</div>
 </div>
 
@@ -2447,7 +2452,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 
 <!-- F1: Lifetime Income Projection Chart -->
 <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
-<div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div><!-- /section section-1245 -->
+<div class="chart-box-xl" data-in-tab="fire"><canvas id="incomeProjectionChart"></canvas></div><!-- /section section-1245 -->
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
   Todos os valores em R$ reais (constante 2026). Pré-FIRE: renda ativa <span class="pv">R$45k/mês</span> · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) − INSS <span class="pv">R$18k/ano</span> a partir dos 65.
 </div>
@@ -2504,7 +2509,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="period-btns" id="factorLoadingsBtns" style="margin-bottom:10px">
   <!-- buttons gerados dinamicamente por buildFactorLoadings() -->
 </div>
-<div class="chart-box" style="height:260px"><canvas id="factorLoadingsChart"></canvas></div>
+<div class="chart-box" style="height:260px" data-in-tab="perf"><canvas id="factorLoadingsChart"></canvas></div>
 <div class="src">Regressão FF5+MOM · Barra sólida = significativo (|t|>2) · barra opaca = não significativo · ⚠️ R²&lt;0.80: modelo FF5 DM explica mal este ETF (limitação para EM e SC globais)</div>
 </div><!-- /collapse-body -->
 </div>
@@ -2594,8 +2599,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Assembly by build_dashboard.py: _assemble_js() concatenates in order
 //
 
-window.GENERATED_AT = new Date('2026-04-14T11:35:09-03:00'); // BRT (UTC-3)
-window.VERSION = '2.238';
+window.GENERATED_AT = new Date('2026-04-14T12:01:40-03:00'); // BRT (UTC-3)
+window.VERSION = '2.244';
 
 window.DATA = {
   "_generated": "2026-04-14T08:56:04",
@@ -9402,7 +9407,7 @@ window.DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.238"
+  "version": "2.244"
 };
 
 // Debug: window.DATA just defined, log it

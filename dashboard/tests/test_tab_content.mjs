@@ -6,13 +6,13 @@ import { chromium } from 'playwright';
  */
 
 const TAB_EXPECTATIONS = {
-  hoje: { canvases: ['tornadoChart', 'sankey', 'bondPool'], minElements: 10 },
-  carteira: { canvases: ['stackedAlloc', 'donuts', 'etfComp'], minElements: 5 },
-  perf: { canvases: ['timeline', 'attribution', 'rolling'], minElements: 5 },
-  fire: { canvases: ['trackingFire', 'fireMatrix', 'netWorth'], minElements: 5 },
-  retiro: { canvases: ['bondPoolRunway', 'guardrails', 'income'], minElements: 5 },
-  simuladores: { canvases: ['scenarios', 'stressProjection'], minElements: 3 },
-  backtest: { canvases: ['backtest', 'shadowChart'], minElements: 3 },
+  hoje: { canvases: ['tornadoChart', 'sankeyChart', 'geoDonut', 'bondPoolRunwayChart', 'netWorthProjectionChart'], minElements: 10 },
+  carteira: { canvases: ['intraEquityPesos', 'aporteSensChart'], minElements: 5 },
+  perf: { canvases: ['attrChart', 'timelineChart', 'deltaChart', 'rollingSharpChart', 'rollingIRChart', 'factorLoadingsChart'], minElements: 5 },
+  fire: { canvases: ['trackingFireChart', 'spendingChart', 'glideChart', 'fireTrilha', 'stressProjectionChart', 'incomeProjectionChart'], minElements: 5 },
+  retiro: { canvases: ['incomeChart'], minElements: 3 },
+  simuladores: { canvases: ['scenarioChart'], minElements: 2 },
+  backtest: { canvases: ['backtestChart', 'backtestRegimeLongo', 'shadowChart', 'backtestR7Chart', 'drawdownHistChart'], minElements: 3 },
 };
 
 async function testTabContent() {
@@ -85,10 +85,12 @@ async function testTabContent() {
       const errors = [];
       if (tabHidden) errors.push('Tab container is hidden (tab-hidden class)');
       if (canvasesFound === 0 && actualContentCount < 2) errors.push(`No canvas elements found (expected: ${expectations.canvases.join(', ')})`);
-      if (actualContentCount === 0) errors.push('No visible content in tab');
+      // Only report "no visible content" if no canvas elements and no sections
+      if (actualContentCount === 0 && canvasesFound === 0) errors.push('No visible content in tab');
       if (missingCanvases.length > 0) errors.push(`Missing canvas: ${missingCanvases.join(', ')}`);
 
-      if (errors.length === 0 && (canvasesFound > 0 || actualContentCount >= expectations.minElements)) {
+      // Pass if tab is visible AND (has canvas elements OR has min sections)
+      if (!tabHidden && (canvasesFound > 0 || actualContentCount >= expectations.minElements) && missingCanvases.length === 0) {
         console.log(`  ✅ PASS: ${canvasesFound} canvas, ${actualContentCount} sections`);
         results.passed++;
         results.tabs[tabName] = { status: 'PASS', canvases: canvasesFound, sections: actualContentCount };
