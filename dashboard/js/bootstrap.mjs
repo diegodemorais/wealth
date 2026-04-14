@@ -161,6 +161,8 @@ if (!window.DATA) {
     calcAporte: chartsPortfolio.calcAporte,
     _initTabCharts: initTabs._initTabCharts,
     switchTab: initTabs.switchTab,
+    toggleEruda: initTabs.toggleEruda,
+    togglePrivacy: initTabs.togglePrivacy,
     _applyPrivacyCharts: initTabs._applyPrivacyCharts,
     init: initTabs.init,
     GENERATED_AT: initTabs.GENERATED_AT,
