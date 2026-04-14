@@ -2120,7 +2120,20 @@ def get_dca_status(rf: dict, total_brl: float) -> dict:
         "proxima_acao":       renda_proxima_acao,
     }
 
+    # Agregado ipca_longo (2040 + 2050) para dashboard semáforo
+    ipca_longo = {
+        "instrumento":        "IPCA+ Longo (2040 + 2050)",
+        "ativo":              ipca_ativo,
+        "taxa_atual":         taxa_ipca,
+        "piso":               PISO_TAXA_IPCA_LONGO,
+        "gap_pp":             round((taxa_ipca - PISO_TAXA_IPCA_LONGO), 2) if taxa_ipca else None,
+        "pct_carteira_atual": pct_ipca_longo_atual,
+        "alvo_pct":           alvo_total_pct,
+        "gap_alvo_pp":        round(alvo_total_pct - pct_ipca_longo_atual, 1),
+    }
+
     return {
+        "ipca_longo": ipca_longo,
         "ipca2040":   dca_2040,
         "ipca2050":   dca_2050,
         "renda_plus": dca_renda_plus,
