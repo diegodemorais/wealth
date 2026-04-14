@@ -165,23 +165,42 @@ export function _applyPrivacyCharts(isPrivate) {
 }
 
 export function toggleEruda() {
-  if (window.eruda && window.eruda._isInit) {
-    window.eruda.show();
-    return;
+  try {
+    if (window.eruda && window.eruda._isInit) {
+      window.eruda.show();
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/eruda';
+    s.onload = () => {
+      if (window.eruda) {
+        window.eruda.init();
+        window.eruda.show();
+      }
+    };
+    s.onerror = () => console.warn('Eruda CDN failed to load');
+    document.head.appendChild(s);
+  } catch(e) {
+    console.error('toggleEruda error:', e.message);
   }
-  const s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/eruda';
-  s.onload = () => { eruda.init(); eruda.show(); };
-  document.head.appendChild(s);
 }
 export function togglePrivacy() {
-  document.body.classList.toggle('private-mode');
-  const on = document.body.classList.contains('private-mode');
-  document.getElementById('privacyBtn').innerHTML = on
-    ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
-    : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-  localStorage.setItem('dashboard_private', on ? '1' : '0');
-  _applyPrivacyCharts(on);
+  try {
+    document.body.classList.toggle('private-mode');
+    const on = document.body.classList.contains('private-mode');
+    const btn = document.getElementById('privacyBtn');
+    if (btn) {
+      btn.innerHTML = on
+        ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:.7"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    }
+    localStorage.setItem('dashboard_private', on ? '1' : '0');
+    if (typeof _applyPrivacyCharts === 'function') {
+      _applyPrivacyCharts(on);
+    }
+  } catch(e) {
+    console.error('togglePrivacy error:', e.message);
+  }
 }
 if (localStorage.getItem('dashboard_private') === '1') {
   document.body.classList.add('private-mode');
