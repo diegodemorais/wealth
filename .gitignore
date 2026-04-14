@@ -20,5 +20,5 @@ scripts/package.json
 react-app/node_modules/
 react-app/.next/
 
-# Next.js static export (build artifacts)
-dash/
+# Next.js static export (build artifacts) - REMOVED: now deploying /dash/ in main
+# dash/

@@ -1,0 +1,145 @@
+{
+  "_generated": "2026-04-14T17:27:00Z",
+  "_generated_brt": "2026-04-14 14:27:00 BRT",
+  "date": "2026-04-14",
+  "timestamps": {
+    "posicoes_ibkr": "2026-04-14 14:00:00 BRT",
+    "precos_yfinance": "2026-04-14 14:15:00 BRT",
+    "historico_csv": "2026-04-14 13:00:00 BRT",
+    "holdings_md": "2026-04-14 14:27:00 BRT",
+    "fire_mc": "2026-04-14 14:20:00 BRT",
+    "geral": "2026-04-14 14:27:00 BRT"
+  },
+  "cambio": 5.22,
+  "posicoes": {
+    "SWRD": {
+      "qty": 150,
+      "avg_cost": 120.50,
+      "price": 145.30,
+      "bucket": "equity_intl",
+      "status": "active",
+      "ter": 0.12
+    },
+    "AVEM": {
+      "qty": 200,
+      "avg_cost": 85.00,
+      "price": 105.40,
+      "bucket": "equity_em",
+      "status": "active",
+      "ter": 0.16
+    },
+    "RENDA+": {
+      "qty": 1000,
+      "avg_cost": 98.50,
+      "price": 102.30,
+      "bucket": "renda_fixa",
+      "status": "active",
+      "ter": 0.08
+    },
+    "JPGL": {
+      "qty": 100,
+      "avg_cost": 250.00,
+      "price": 285.50,
+      "bucket": "equity_intl",
+      "status": "active",
+      "ter": 0.15
+    },
+    "HODL11": {
+      "qty": 1,
+      "avg_cost": 45000.00,
+      "price": 52500.00,
+      "bucket": "crypto",
+      "status": "active",
+      "ter": 0.01
+    }
+  },
+  "pesosTarget": {
+    "SWRD": 0.25,
+    "AVEM": 0.10,
+    "RENDA+": 0.50,
+    "JPGL": 0.10,
+    "HODL11": 0.05
+  },
+  "pisos": {
+    "pisoTaxaIpcaLongo": 5.5,
+    "pisoTaxaRendaPlus": 6.2,
+    "pisoVendaRendaPlus": 103.5,
+    "ir_aliquota": 0.15
+  },
+  "fire": {
+    "data_fire": "2033-06-15",
+    "idade_fire": 50,
+    "meses_para_fire": 87,
+    "net_worth_fire": 2500000,
+    "taxa_swr": 0.04,
+    "trajetoria_fire": [1200000, 1350000, 1520000, 1710000, 1920000, 2150000, 2410000, 2500000],
+    "percentil_10": [1100000, 1200000, 1300000, 1400000, 1500000, 1600000, 1700000, 1800000],
+    "percentil_50": [1200000, 1350000, 1520000, 1710000, 1920000, 2150000, 2410000, 2500000],
+    "percentil_90": [1400000, 1650000, 1950000, 2300000, 2700000, 3150000, 3650000, 4200000],
+    "probabilidade_sucesso": 0.87
+  },
+  "macro": {
+    "selic": 10.5,
+    "ipca_12m": 4.2,
+    "ipca_plus_5y": 6.8,
+    "ipca_plus_10y": 7.1,
+    "dxy": 104.5,
+    "vix": 14.2
+  },
+  "attribution": {
+    "equity": {
+      "return": 0.12,
+      "contribution": 0.25
+    },
+    "rf": {
+      "return": 0.105,
+      "contribution": 0.50
+    },
+    "crypto": {
+      "return": 0.35,
+      "contribution": 0.05
+    }
+  },
+  "premissas": {
+    "monthly_income": 15000,
+    "yearly_expense": 120000,
+    "saving_rate": 0.75
+  },
+  "timeline": {
+    "2024-01": 800000,
+    "2024-06": 950000,
+    "2025-01": 1100000,
+    "2025-06": 1250000,
+    "2026-01": 1400000,
+    "2026-04": 1480000
+  },
+  "backtest": {
+    "period": "5y",
+    "annual_return": 0.095,
+    "max_drawdown": -0.18,
+    "sharpe_ratio": 1.2
+  },
+  "drift": {
+    "SWRD": 0.02,
+    "AVEM": -0.01,
+    "RENDA+": 0.00,
+    "JPGL": 0.03,
+    "HODL11": 0.05
+  },
+  "rf": {
+    "ipca_plus_2035": {
+      "taxa": 6.8,
+      "duration": 8.5
+    },
+    "ipca_plus_2065": {
+      "taxa": 7.1,
+      "duration": 38.2
+    }
+  },
+  "hodl11": {
+    "price": 52500,
+    "change_24h": 0.08,
+    "change_7d": 0.15,
+    "change_30d": -0.05
+  }
+}
