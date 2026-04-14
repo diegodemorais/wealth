@@ -1,13 +1,39 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useDashboardStore } from '@/store/dashboardStore';
+import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
+import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
+
 export default function BacktestPage() {
+  const setData = useDashboardStore(s => s.setData);
+  const data = useDashboardStore(s => s.data);
+
+  useEffect(() => {
+    if (!data) {
+      fetch('/data.json')
+        .then(r => r.json())
+        .then(d => setData(d))
+        .catch(e => console.error('Failed to load data:', e));
+    }
+  }, [data, setData]);
+
+  if (!data) {
+    return <div>Loading backtest data...</div>;
+  }
+
   return (
     <div>
       <h1>📊 Backtest</h1>
-      <p>Backtest analysis coming in Phase 3...</p>
-      <div style={{ padding: '40px', backgroundColor: '#1f2937', borderRadius: '8px', marginTop: '20px' }}>
-        <p>📈 Historical equity curve & metrics</p>
-      </div>
+
+      <CollapsibleSection id="section-r7" title="Portfolio vs R7 Benchmark" defaultOpen={true}>
+        <BacktestR7Chart data={data} />
+      </CollapsibleSection>
+
+      <CollapsibleSection id="section-drawdown" title="Drawdown Analysis" defaultOpen={true}>
+        <DrawdownHistChart data={data} />
+      </CollapsibleSection>
     </div>
   );
 }
