@@ -122,7 +122,7 @@
       "specId": "bond-pool-strip",
       "htmlId": "kpiBondPool",
       "label": "Bond Pool — Cobertura",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -130,7 +130,7 @@
       "specId": "cambio-mercado",
       "htmlId": "kpiCambio",
       "label": "Câmbio BRL/USD",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -138,7 +138,7 @@
       "specId": "drift-maximo-kpi",
       "htmlId": "kpiDriftMax",
       "label": "Drift Máximo vs Alvo",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -146,7 +146,7 @@
       "specId": "exposicao-cambial",
       "htmlId": "exposicaoCambial",
       "label": "Exposição Cambial BRL/USD",
-      "tab": "now",
+      "tab": "hoje",
       "type": "gauge",
       "found": true
     },
@@ -154,7 +154,7 @@
       "specId": "factor-signal-kpi",
       "htmlId": "kpiFactorSignal",
       "label": "Factor Signal — AVGS vs SWRD",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -162,7 +162,7 @@
       "specId": "fire-countdown",
       "htmlId": "fireCountdown",
       "label": "Time to FIRE — Countdown",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -170,7 +170,7 @@
       "specId": "hodl11-status",
       "htmlId": "ipcaTaxaStatus",
       "label": "HODL11 — Status e Banda",
-      "tab": "now",
+      "tab": "hoje",
       "type": "semaforo",
       "found": true
     },
@@ -178,7 +178,7 @@
       "specId": "ipca-dca-semaforo",
       "htmlId": "kpiIpcaSemaforo",
       "label": "IPCA+ 2040 & 2050 — DCA Status",
-      "tab": "now",
+      "tab": "hoje",
       "type": "semaforo",
       "found": true
     },
@@ -186,7 +186,7 @@
       "specId": "kpi-grid-mercado",
       "htmlId": "kpiIpcaMercado",
       "label": "KPIs de Mercado — S2",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -194,7 +194,7 @@
       "specId": "kpi-grid-primario",
       "htmlId": "kpiGridPrimario",
       "label": "KPIs Primários — S1",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -202,7 +202,7 @@
       "specId": "macro-strip",
       "htmlId": "macroStrip",
       "label": "Macro — Selic / Fed Funds / Spread",
-      "tab": "now",
+      "tab": "hoje",
       "type": "semaforo",
       "found": true
     },
@@ -210,7 +210,7 @@
       "specId": "patrimonio-total-hero",
       "htmlId": "heroPatrimonioBrl",
       "label": "Patrimônio Total",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi-hero",
       "found": true
     },
@@ -218,7 +218,7 @@
       "specId": "pfire-hero",
       "htmlId": "heroAnos",
       "label": "P(FIRE) — Cenários",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi-hero",
       "found": true
     },
@@ -226,7 +226,7 @@
       "specId": "renda-plus-semaforo",
       "htmlId": "kpiRendaSemaforo",
       "label": "Renda+ 2065 — Distância do Gatilho",
-      "tab": "now",
+      "tab": "hoje",
       "type": "semaforo",
       "found": true
     },
@@ -234,7 +234,7 @@
       "specId": "savings-rate",
       "htmlId": "savingsRate",
       "label": "Savings Rate",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -242,7 +242,7 @@
       "specId": "stress-cenarios",
       "htmlId": "pmkt-stress",
       "label": "Stress Test — Tornado",
-      "tab": "now",
+      "tab": "hoje",
       "type": "chart-bar-horizontal",
       "found": true
     },
@@ -250,7 +250,7 @@
       "specId": "ter-carteira",
       "htmlId": "terCarteira",
       "label": "TER da Carteira",
-      "tab": "now",
+      "tab": "hoje",
       "type": "kpi",
       "found": true
     },
@@ -258,7 +258,7 @@
       "specId": "tornado-sensitivity",
       "htmlId": "tornadoChart",
       "label": "Tornado — Sensibilidade por Variável",
-      "tab": "now",
+      "tab": "hoje",
       "type": "chart-bar-horizontal",
       "found": true
     },
@@ -266,7 +266,7 @@
       "specId": "wellness-score",
       "htmlId": "wellnessScore",
       "label": "Financial Wellness Score",
-      "tab": "now",
+      "tab": "hoje",
       "type": "card",
       "found": true
     },
@@ -274,7 +274,7 @@
       "specId": "alpha-itd-swrd",
       "htmlId": "alphaItdSwrd",
       "label": "Alpha ITD vs SWRD",
-      "tab": "performance",
+      "tab": "perf",
       "type": "kpi",
       "found": true
     },
@@ -282,7 +282,7 @@
       "specId": "cagr-patrimonial-twr",
       "htmlId": "cagrTwrRow",
       "label": "CAGR Patrimonial vs TWR",
-      "tab": "performance",
+      "tab": "perf",
       "type": "kpi",
       "found": true
     },
@@ -290,7 +290,7 @@
       "specId": "evolucao-carteira",
       "htmlId": "timelineChart",
       "label": "Evolução Patrimonial",
-      "tab": "performance",
+      "tab": "perf",
       "type": "chart-line",
       "found": true
     },
@@ -298,7 +298,7 @@
       "specId": "factor-loadings-chart",
       "htmlId": "factorLoadingsChart",
       "label": "Factor Loadings — FF5 + Momentum",
-      "tab": "performance",
+      "tab": "perf",
       "type": "chart-bar-horizontal",
       "found": true
     },
@@ -306,7 +306,7 @@
       "specId": "factor-rolling-avgs",
       "htmlId": "factorRollingBody",
       "label": "Rolling 12m — AVGS vs SWRD",
-      "tab": "performance",
+      "tab": "perf",
       "type": "chart-line",
       "found": true
     },
@@ -314,7 +314,7 @@
       "specId": "fee-custo-complexidade",
       "htmlId": "feeBody",
       "label": "Fee Analysis — Custo vs Alpha",
-      "tab": "performance",
+      "tab": "perf",
       "type": "table",
       "found": true
     },
@@ -322,7 +322,7 @@
       "specId": "heatmap-retornos",
       "htmlId": "heatmapContainer",
       "label": "Heatmap — Retornos Mensais",
-      "tab": "performance",
+      "tab": "perf",
       "type": "table",
       "found": true
     },
@@ -330,7 +330,7 @@
       "specId": "hodl11-pnl",
       "htmlId": "hodl11Pnl",
       "label": "HODL11 — P&L e Custo Médio",
-      "tab": "performance",
+      "tab": "perf",
       "type": "kpi",
       "found": true
     },
@@ -338,7 +338,7 @@
       "specId": "information-ratio",
       "htmlId": "rollingIRChart",
       "label": "Information Ratio vs VWRA",
-      "tab": "performance",
+      "tab": "perf",
       "type": "chart-line",
       "found": true
     },
@@ -346,7 +346,7 @@
       "specId": "retorno-decomposicao",
       "htmlId": "simRetorno",
       "label": "Decomposição de Retorno",
-      "tab": "performance",
+      "tab": "perf",
       "type": "waterfall",
       "found": true
     },
@@ -354,7 +354,7 @@
       "specId": "rolling-sharpe",
       "htmlId": "rollingIRNota",
       "label": "Rolling Sharpe 12m",
-      "tab": "performance",
+      "tab": "perf",
       "type": "chart-line",
       "found": true
     },

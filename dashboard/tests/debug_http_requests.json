@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-04-14T10:25:14.266Z",
+  "summary": {
+    "total": 9,
+    "success": 4,
+    "errors500": 0,
+    "errors404": 0
+  },
+  "requests": [
+    {
+      "timestamp": "2026-04-14T10:25:10.518Z",
+      "method": "GET",
+      "url": "/",
+      "path": "/index.html",
+      "fileExists": true,
+      "status": 200,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.523Z",
+      "method": "GET",
+      "url": "/bootstrap.mjs",
+      "path": "/bootstrap.mjs",
+      "fileExists": true,
+      "status": 200,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.599Z",
+      "method": "GET",
+      "url": "/js/01-preamble.mjs",
+      "path": "/js/01-preamble.mjs",
+      "fileExists": true,
+      "status": null,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.599Z",
+      "method": "GET",
+      "url": "/js/02-data-wiring.mjs",
+      "path": "/js/02-data-wiring.mjs",
+      "fileExists": true,
+      "status": null,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.599Z",
+      "method": "GET",
+      "url": "/js/03-utils.mjs",
+      "path": "/js/03-utils.mjs",
+      "fileExists": true,
+      "status": null,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.599Z",
+      "method": "GET",
+      "url": "/js/04-charts-portfolio.mjs",
+      "path": "/js/04-charts-portfolio.mjs",
+      "fileExists": true,
+      "status": null,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.599Z",
+      "method": "GET",
+      "url": "/js/05-fire-projections.mjs",
+      "path": "/js/05-fire-projections.mjs",
+      "fileExists": true,
+      "status": null,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.599Z",
+      "method": "GET",
+      "url": "/js/06-dashboard-render.mjs",
+      "path": "/js/06-dashboard-render.mjs",
+      "fileExists": true,
+      "status": 200,
+      "error": null
+    },
+    {
+      "timestamp": "2026-04-14T10:25:10.600Z",
+      "method": "GET",
+      "url": "/js/07-init-tabs.mjs",
+      "path": "/js/07-init-tabs.mjs",
+      "fileExists": true,
+      "status": 200,
+      "error": null
+    }
+  ]
+}

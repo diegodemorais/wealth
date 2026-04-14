@@ -1,0 +1,680 @@
+{
+  "timestamp": "2026-04-14T10:54:22.270Z",
+  "summary": {
+    "total": 20,
+    "byRootCause": {
+      "completely-empty": 10,
+      "javascript-error": 9,
+      "missing-data": 1
+    }
+  },
+  "results": [
+    {
+      "specId": "backtest-metricas",
+      "tab": "backtest",
+      "type": "table",
+      "htmlId": "backtestChart",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "CANVAS",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "backtestData",
+          "backtestMetrics"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "earliest-fire",
+      "tab": "fire",
+      "type": "kpi",
+      "htmlId": "wiFireEta",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "FIRE em 2037 — 50 anos",
+      "textLength": 22,
+      "innerHTML": "FIRE em 2037 — 50 anos",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "pv",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "montecarlo",
+          "fireMetrics"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "lumpy-events",
+      "tab": "fire",
+      "type": "table",
+      "htmlId": "lumpyEventsBody",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "lifeEvents"
+        ],
+        "missingFields": [
+          "lifeEvents"
+        ],
+        "hasRequiredData": false
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "net-worth-projection",
+      "tab": "fire",
+      "type": "fan-chart",
+      "htmlId": "netWorthProjectionSrc",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "MC endpoints: P50=R$11.53M · P10=R$6.83M · P90=R$18.92M no FIRE Day 2040",
+      "textLength": 72,
+      "innerHTML": "MC endpoints: P50=R$11.53M · P10=R$6.83M · P90=R$18.92M no FIRE Day 2040",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "src pv",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "montecarlo",
+          "patrimonioProjecao"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "exposicao-cambial",
+      "tab": "now",
+      "type": "gauge",
+      "htmlId": "exposicaoCambial",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "—",
+      "textLength": 1,
+      "innerHTML": "—",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "gauge",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "cambio",
+          "exposicaoCambial"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "hodl11-status",
+      "tab": "now",
+      "type": "semaforo",
+      "htmlId": "ipcaTaxaStatus",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "Alvo IPCA+: ≥6% · Atual: acima — janela DCA ativa",
+      "textLength": 49,
+      "innerHTML": "Alvo IPCA+: ≥6% · Atual: acima — janela DCA ativa",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "hodl11",
+          "cryptoStatus"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "ipca-dca-semaforo",
+      "tab": "now",
+      "type": "semaforo",
+      "htmlId": "kpiIpcaSemaforo",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "SPAN",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "rendaFixa",
+          "dcaStatus"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "renda-plus-semaforo",
+      "tab": "now",
+      "type": "semaforo",
+      "htmlId": "kpiRendaSemaforo",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "SPAN",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "rendaFixa",
+          "dcaStatus"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "stress-cenarios",
+      "tab": "now",
+      "type": "chart-bar-horizontal",
+      "htmlId": "pmkt-stress",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "⚠️ Stress",
+      "textLength": 9,
+      "innerHTML": "⚠️ Stress",
+      "childCount": 0,
+      "tagName": "BUTTON",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "preset-btn",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "stressTest",
+          "cenarioStress"
+        ],
+        "missingFields": [
+          "cenarioStress"
+        ],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "alpha-itd-swrd",
+      "tab": "performance",
+      "type": "kpi",
+      "htmlId": "alphaItdSwrd",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "—",
+      "textLength": 1,
+      "innerHTML": "—",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "kpi-value pv",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "performanceAnalysis",
+          "alphaSwrd"
+        ],
+        "missingFields": [
+          "alphaSwrd"
+        ],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "hodl11-pnl",
+      "tab": "performance",
+      "type": "kpi",
+      "htmlId": "hodl11Pnl",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "—",
+      "textLength": 1,
+      "innerHTML": "—",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "kpi-value pv",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "hodl11",
+          "cryptoPnl"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "rolling-sharpe",
+      "tab": "performance",
+      "type": "chart-line",
+      "htmlId": "rollingIRNota",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "Como ler: IR = Active Return / Tracking Error (janela 36m).\n■ >0 = carteira supera VWRA ajustado ao risco de tracking\n■ <0 = underperformance relativa.\nBenchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).\n⚠ N=25 pontos — baixa robustez estatística",
+      "textLength": 269,
+      "innerHTML": "<strong>Como ler:</strong> IR = Active Return / Tracking Error (janela 36m).<br>\n<span style=\"color:",
+      "childCount": 9,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "src",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "performanceAnalysis",
+          "rollingMetrics"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()"
+      ]
+    },
+    {
+      "specId": "drift-semaforo-etf",
+      "tab": "portfolio",
+      "type": "semaforo",
+      "htmlId": "driftSemaforoEtf",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "—",
+      "textLength": 1,
+      "innerHTML": "—",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "posicoes",
+          "driftStatus"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "etf-composicao-regiao",
+      "tab": "portfolio",
+      "type": "table",
+      "htmlId": "etfComposicaoRegiao",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "TBODY",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "posicoes",
+          "etfComposicao"
+        ],
+        "missingFields": [
+          "etfComposicao"
+        ],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "minilog",
+      "tab": "portfolio",
+      "type": "table",
+      "htmlId": "minilogBody",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "operacoes",
+          "transacoes"
+        ],
+        "missingFields": [
+          "transacoes"
+        ],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "posicoes-etfs-ibkr",
+      "tab": "portfolio",
+      "type": "table",
+      "htmlId": "posicoesEtfsIbkr",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "TBODY",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "posicoes",
+          "etfsIbkr"
+        ],
+        "missingFields": [
+          "etfsIbkr"
+        ],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "rf-posicoes",
+      "tab": "portfolio",
+      "type": "table",
+      "htmlId": "rfPosicoes",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "TBODY",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "rendaFixa",
+          "posicoes"
+        ],
+        "missingFields": [],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "stacked-alloc",
+      "tab": "portfolio",
+      "type": "chart-bar",
+      "htmlId": "stackedAllocBar",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "88%",
+      "textLength": 3,
+      "innerHTML": "<div title=\"Equity: 88.2%\" style=\"width:88.20%;background:#3b82f6;transition:width .3s;position:rela",
+      "childCount": 5,
+      "tagName": "DIV",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "carteira",
+          "alocacao"
+        ],
+        "missingFields": [
+          "carteira",
+          "alocacao"
+        ],
+        "hasRequiredData": false
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "tlh-monitor",
+      "tab": "portfolio",
+      "type": "table",
+      "htmlId": "tlhMonitor",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "TBODY",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "tlh",
+          "lotes"
+        ],
+        "missingFields": [
+          "lotes"
+        ],
+        "hasRequiredData": true
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    },
+    {
+      "specId": "spending-breakdown",
+      "tab": "retiro",
+      "type": "card",
+      "htmlId": "spendingChart",
+      "elementFound": true,
+      "elementVisible": true,
+      "offsetParent": "visible",
+      "textContent": "",
+      "textLength": 0,
+      "innerHTML": "",
+      "childCount": 0,
+      "tagName": "CANVAS",
+      "hasCanvas": false,
+      "hasTable": false,
+      "hasInput": false,
+      "hasSvg": false,
+      "classNames": "",
+      "dataCheck": {
+        "dataExists": true,
+        "dataKeyCount": 94,
+        "requiredFields": [
+          "spending",
+          "gastos"
+        ],
+        "missingFields": [
+          "spending",
+          "gastos"
+        ],
+        "hasRequiredData": false
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 500 ()",
+        "Cannot read properties of undefined (reading 'name')"
+      ]
+    }
+  ]
+}

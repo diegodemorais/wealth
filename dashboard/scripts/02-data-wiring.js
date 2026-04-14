@@ -5,6 +5,40 @@
 __DATA_PLACEHOLDER__
 
 // ═══════════════════════════════════════════════════════════════
+// DATA NORMALIZATION — Add camelCase aliases for snake_case keys
+// (builders expect camelCase; data.json uses snake_case)
+// ═══════════════════════════════════════════════════════════════
+DATA.dcaStatus = DATA.dca_status;
+DATA.etfComposition = DATA.etf_composition;
+DATA.fireTriha = DATA.fire_trilha; // Note: typo in builder, keeping for compatibility
+DATA.fireTrilha = DATA.fire_trilha;
+DATA.fireSWRPercentis = DATA.fire_swr_percentis;
+DATA.fireMatrix = DATA.fire_matrix;
+DATA.lumpyEvents = DATA.lumpy_events;
+DATA.earliestFire = DATA.earliest_fire;
+DATA.rollingMetrics = DATA.rolling_sharpe;  // rolling_sharpe has the data needed
+DATA.driftStatus = DATA.drift;  // drift has status info
+DATA.trendStatus = DATA.tlh;
+DATA.gastoPiso = DATA.gasto_piso;
+DATA.bondPoolRunway = DATA.bond_pool_runway;
+DATA.spendingBreakdown = DATA.spending_breakdown;
+DATA.spendingGuardrails = DATA.spending_guardrails;
+DATA.spendingSensibilidade = DATA.spendingSensibilidade; // already camelCase
+DATA.rendaFixa = DATA.rf;
+DATA.cryptoStatus = { valor: DATA.hodl11?.valor, status: 'ativo' };
+DATA.cryptoPnl = DATA.hodl11;
+DATA.operacoes = DATA.minilog;
+// For components that need computed data (fire monte carlo, net worth, etc)
+DATA.montecarlo = DATA.fire_matrix;  // Use fire_matrix as base for montecarlo queries
+DATA.fireMetrics = { base: DATA.pfire_base, aspirational: DATA.pfire_aspiracional };
+DATA.backtestMetrics = DATA.backtest?.metrics || {};
+DATA.backtestData = DATA.backtest;
+DATA.patrimonioProjecao = DATA.timeline;  // timeline has patrimonio projection
+DATA.stressTest = DATA.scenario_comparison || {};
+DATA.performanceAnalysis = { rolling: DATA.factor_rolling, loadings: DATA.factor_loadings, attribution: DATA.attribution };
+DATA.exposicaoCambial = { cambio: DATA.cambio, posicoes: DATA.posicoes };
+
+// ═══════════════════════════════════════════════════════════════
 // COMPUTED VALUES
 // ═══════════════════════════════════════════════════════════════
 const CAMBIO = DATA.cambio;

@@ -24,6 +24,38 @@ function _fmtYearMonth(ym) {
  */
 export function initDataWiring(DATA) {
   // ═══════════════════════════════════════════════════════════════
+  // DATA NORMALIZATION — Add camelCase aliases for snake_case keys
+  // (builders expect camelCase; data.json uses snake_case)
+  // ═══════════════════════════════════════════════════════════════
+  DATA.dcaStatus = DATA.dca_status;
+  DATA.etfComposition = DATA.etf_composition;
+  DATA.fireTriha = DATA.fire_trilha;
+  DATA.fireTrilha = DATA.fire_trilha;
+  DATA.fireSWRPercentis = DATA.fire_swr_percentis;
+  DATA.fireMatrix = DATA.fire_matrix;
+  DATA.lumpyEvents = DATA.lumpy_events;
+  DATA.earliestFire = DATA.earliest_fire;
+  DATA.rollingMetrics = DATA.rolling_sharpe;
+  DATA.driftStatus = DATA.drift;
+  DATA.trendStatus = DATA.tlh;
+  DATA.gastoPiso = DATA.gasto_piso;
+  DATA.bondPoolRunway = DATA.bond_pool_runway;
+  DATA.spendingBreakdown = DATA.spending_breakdown;
+  DATA.spendingGuardrails = DATA.spending_guardrails;
+  DATA.rendaFixa = DATA.rf;
+  DATA.cryptoStatus = { valor: DATA.hodl11?.valor, status: 'ativo' };
+  DATA.cryptoPnl = DATA.hodl11;
+  DATA.operacoes = DATA.minilog;
+  DATA.montecarlo = DATA.fire_matrix;
+  DATA.fireMetrics = { base: DATA.pfire_base, aspirational: DATA.pfire_aspiracional };
+  DATA.backtestMetrics = DATA.backtest?.metrics || {};
+  DATA.backtestData = DATA.backtest;
+  DATA.patrimonioProjecao = DATA.timeline;
+  DATA.stressTest = DATA.scenario_comparison || {};
+  DATA.performanceAnalysis = { rolling: DATA.factor_rolling, loadings: DATA.factor_loadings, attribution: DATA.attribution };
+  DATA.exposicaoCambial = { cambio: DATA.cambio, posicoes: DATA.posicoes };
+
+  // ═══════════════════════════════════════════════════════════════
   // COMPUTED VALUES
   // ═══════════════════════════════════════════════════════════════
   const CAMBIO = DATA.cambio;

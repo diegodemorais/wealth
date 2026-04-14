@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-04-14T10:27:27.289Z",
+  "summary": {
+    "available": 12,
+    "missing": 0,
+    "total": 12
+  },
+  "functions": [
+    {
+      "name": "buildBacktest",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildEarliestFire",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildNetWorthProjection",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildStressTest",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildSemaforoPanel",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildDcaStatus",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildFireMatrix",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildBondPool",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildEtfComposition",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "buildMinilog",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "switchTab",
+      "type": "function",
+      "available": true
+    },
+    {
+      "name": "init",
+      "type": "function",
+      "available": true
+    }
+  ],
+  "errors": [],
+  "bootstrapLogs": [
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 1: FOUC Guard"
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 1 complete"
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 2: Data Wiring — checking window.DATA..."
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 2: DATA found, initializing data wiring..."
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 2: Data wiring complete, exposing to window..."
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 2 complete — window object populated with 61 functions"
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 3: DOM Ready — document.readyState = interactive"
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 3: DOM already loaded, calling window.init()"
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 4: Exports available for other modules"
+    },
+    {
+      "type": "log",
+      "text": "[BOOTSTRAP] Phase 4 complete — loaded 22 functions: renderKPIs, buildSankey, buildWellnessExtras, buildRfCards, buildShadowTable ..."
+    }
+  ]
+}
