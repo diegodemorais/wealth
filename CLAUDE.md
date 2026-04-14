@@ -121,17 +121,35 @@ Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/pyt
 - Pipeline: `generate_data.py` → `build_dashboard.py` → `dashboard/index.html`
 - Nunca editar `index.html` diretamente
 
-### QA — Quando rodar cada modo
+### QA — Test Protocol Completo
 
-| Situação | Comando | O que roda |
-|----------|---------|-----------|
-| Ajuste pontual (label, cor, lógica isolada) | `python scripts/test_dashboard.py --smart` | Só testes relevantes ao que mudou |
-| Refactor / mudança estrutural / vários arquivos | `python scripts/test_dashboard.py` | Regressão completa |
-| Testar bloco específico | `python scripts/test_dashboard.py --mode component --component <block-id>` | Testes daquele componente |
+**OBRIGATÓRIO antes de qualquer `git push` com mudanças no dashboard:**
 
-- CRITICAL/HIGH fail → volta ao `dev` para correção. Mesmo bloco falha 3 ciclos → `ESCALATE_TO_DIEGO`
-- Resultados em `dashboard/tests/last_run.json`
-- Após QA verde + aprovação Diego + Quant: commit → push → deploy automático (GitHub Actions)
+```bash
+./scripts/quick_dashboard_test.sh
+```
+
+Isso executa suite de 5 níveis:
+1. **Schema Validation** (spec.json ↔ data.json)
+2. **HTML Render Check** (elementos populados)
+3. **Component Render Status** (62/66 componentes esperados)
+4. **Dashboard Test Suite** (557/559 testes, todas categorias)
+5. **Playwright Validation** (bootstrap, tabs, CSS, KPIs, erros)
+
+Alternativas rápidas:
+
+| Situação | Comando |
+|----------|---------|
+| Ajuste pontual (label, cor) | `python scripts/validate_schema.py` |
+| Mudança estrutural | `./scripts/quick_dashboard_test.sh` |
+| Sem alteração de estrutura | `./scripts/quick_dashboard_test.sh --no-render` |
+| Componentes específicos | `node dashboard/tests/debug_render_status.js` |
+
+Resultado esperado: **DEPLOY APPROVED** ou lista de falhas.
+
+- CRITICAL/HIGH fail → volta ao `dev` para correção
+- Resultados em `dashboard/tests/full_test_run.json` e `dashboard/tests/last_run.json`
+- Ver guia completo: `scripts/DASHBOARD_TEST_PROTOCOL.md`
 
 ## Referências
 

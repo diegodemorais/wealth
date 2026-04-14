@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-04-14T11:38:52.895Z",
+  "timestamp": "2026-04-14T13:58:04.814Z",
   "summary": {
-    "rendered": 63,
-    "empty": 3,
+    "rendered": 62,
+    "empty": 4,
     "total": 66
   },
   "results": [
@@ -104,12 +104,12 @@
     },
     {
       "specId": "glide-path",
-      "status": "RENDERED",
+      "status": "EMPTY",
       "found": true,
       "visible": true,
       "textLen": 0,
       "children": 0,
-      "hasContent": true,
+      "hasContent": false,
       "canvasLen": 0,
       "tableLen": 0,
       "svgLen": 0
@@ -467,11 +467,11 @@
       "status": "RENDERED",
       "found": true,
       "visible": true,
-      "textLen": 226,
-      "children": 3,
+      "textLen": 464,
+      "children": 6,
       "hasContent": true,
       "canvasLen": 0,
-      "tableLen": 3,
+      "tableLen": 6,
       "svgLen": 0
     },
     {
@@ -513,22 +513,15 @@
     {
       "specId": "retorno-decomposicao",
       "status": "EMPTY",
-      "found": true,
-      "visible": true,
-      "textLen": 0,
-      "children": 0,
-      "hasContent": false,
-      "canvasLen": 0,
-      "tableLen": 0,
-      "svgLen": 0
+      "found": false
     },
     {
       "specId": "rolling-sharpe",
       "status": "RENDERED",
       "found": true,
       "visible": true,
-      "textLen": 269,
-      "children": 9,
+      "textLen": 311,
+      "children": 11,
       "hasContent": true,
       "canvasLen": 0,
       "tableLen": 0,

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-14T10:04:04.038719",
+  "timestamp": "2026-04-14T10:58:22.243818",
   "mode": "full",
   "total": 559,
   "passed": 557,
@@ -237,7 +237,7 @@
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "⚠️ 57/66 componentes OK (86%) | Hidden: 0 | Empty: 8 | Missing: 1 — 80% OK"
+      "message": "⚠️ 60/66 componentes OK (91%) | Hidden: 0 | Empty: 5 | Missing: 1 — 80% OK"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::posicoes top-level key exists and is non-empty dict",
@@ -1581,7 +1581,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVGS', 'AVEM', 'SWRD'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -1597,7 +1597,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'performance', 'portfolio', 'fire', 'retiro', 'now', 'simuladores', 'backtest'}"
+      "message": "All blocks use valid tabs: {'simuladores', 'portfolio', 'performance', 'backtest', 'now', 'retiro', 'fire'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2093,7 +2093,7 @@
       "category": "DOM_REF",
       "severity": "HIGH",
       "passed": true,
-      "message": "id='factorRollingChart' ausente do HTML mas null guard detectado em buildFactorRolling (template.html linha 1573)"
+      "message": "id='factorRollingChart' ausente do HTML mas null guard detectado em buildFactorRolling (template.html linha 1582)"
     },
     {
       "test_id": "dom-ref-buildEtfComposition-etfRegionTable::DOM_REF::buildEtfComposition: getElementById('etfRegionTable') existe no DOM ou tem null guard",
@@ -4365,7 +4365,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'cambio', 'mercado.cambio_brl_usd'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4373,7 +4373,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'cambio'}"
+      "message": "exposicao-cambial spec OK, fields={'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
