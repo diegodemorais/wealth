@@ -1451,7 +1451,7 @@ footer {
   <div class="kpi-sub pv" id="kpiOrigemPatSub">—</div>
 </div>
 <!-- kpiBondPool e kpiWellnessCompact mantidos ocultos para evitar erros JS -->
-<span id="kpiBondPool" style="display:none"></span><span id="kpiBondPoolSub" style="display:none"></span>
+<span id="kpiBondPool"></span><span id="kpiBondPoolSub"></span>
 <span id="kpiWellnessCompact" style="display:none"></span><span id="kpiWellnessSub" style="display:none"></span>
 </div>
 <!-- KPIs Contextuais -->
@@ -1479,7 +1479,7 @@ footer {
 </div>
 <!-- kpiDelta e kpiFactorSignal removidos do Now — mantidos ocultos para evitar erros JS -->
 <span id="kpiDelta" style="display:none"></span><span id="kpiDeltaSub" style="display:none"></span>
-<span id="kpiFactorSignal" style="display:none"></span><span id="kpiFactorSignalSub" style="display:none"></span>
+<span id="kpiFactorSignal"></span><span id="kpiFactorSignalSub"></span>
 <div class="kpi" style="opacity:.85;display:none">
   <div class="kpi-label">IPCA+ 2040 — Mercado</div>
   <div class="kpi-value" id="kpiIpcaMercado">—</div>
@@ -1546,7 +1546,7 @@ footer {
   <div style="margin-top:8px;font-size:.7rem;color:var(--muted)" id="savingsRateNote">—</div>
 </div>
 <!-- TER da Carteira removido do grid — elementos mantidos ocultos para evitar erros JS -->
-<span id="terCarteira" style="display:none"></span><span id="terCarteiraLabel" style="display:none"></span>
+<span id="terCarteira"></span><span id="terCarteiraLabel"></span>
 <span id="terCarteiraFill" style="display:none"></span><span id="terVwraLabel" style="display:none"></span>
 <span id="terVwraFill" style="display:none"></span><span id="terDeltaLabel" style="display:none"></span>
 </div>
@@ -1704,7 +1704,7 @@ footer {
   <div class="src">Base: Monte Carlo 10k simulações</div><!-- /section section-575 -->
 </div>
 <!-- canvas spendingChart mantido para evitar erros JS, oculto -->
-<canvas id="spendingChart" style="display:none"></canvas>
+<canvas id="spendingChart"></canvas>
 
 <!-- canvas scenarioChart mantido para evitar erros JS, oculto -->
 <canvas id="scenarioChart" style="display:none"></canvas>
@@ -2607,8 +2607,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Assembly by build_dashboard.py: _assemble_js() concatenates in order
 //
 
-window.GENERATED_AT = new Date('2026-04-14T06:42:08-03:00'); // BRT (UTC-3)
-window.VERSION = '2.174';
+window.GENERATED_AT = new Date('2026-04-14T06:43:30-03:00'); // BRT (UTC-3)
+window.VERSION = '2.175';
 
 window.DATA = {
   "_generated": "2026-04-14T05:13:28",
@@ -9415,7 +9415,7 @@ window.DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.174"
+  "version": "2.175"
 };
 
 // Debug: window.DATA just defined, log it

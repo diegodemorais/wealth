@@ -288,7 +288,7 @@
     },
     {
       "specId": "evolucao-carteira",
-      "htmlId": "—",
+      "htmlId": "timelineChart",
       "label": "Evolução Patrimonial",
       "tab": "performance",
       "type": "chart-line",
@@ -456,7 +456,7 @@
     },
     {
       "specId": "bond-pool-readiness",
-      "htmlId": "—",
+      "htmlId": "bondPoolBody",
       "label": "Bond Pool — Readiness Detail",
       "tab": "retiro",
       "type": "gauge",
@@ -464,7 +464,7 @@
     },
     {
       "specId": "bond-pool-runway",
-      "htmlId": "—",
+      "htmlId": "bondPoolRunwayChart",
       "label": "Bond Pool — Projeção até FIRE Day",
       "tab": "retiro",
       "type": "chart-area",
@@ -488,7 +488,7 @@
     },
     {
       "specId": "income-lifecycle",
-      "htmlId": "—",
+      "htmlId": "incomeProjectionChart",
       "label": "Projeção de Renda — Ciclo de Vida",
       "tab": "retiro",
       "type": "chart-line",
@@ -528,7 +528,7 @@
     },
     {
       "specId": "stress-test-mc",
-      "htmlId": "—",
+      "htmlId": "stressShockSlider",
       "label": "Stress Test MC — Bear Market",
       "tab": "simuladores",
       "type": "slider",

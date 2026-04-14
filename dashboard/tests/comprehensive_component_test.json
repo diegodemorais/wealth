@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-14T09:42:27.843Z",
+  "timestamp": "2026-04-14T09:44:10.566Z",
   "summary": {
     "total": 66,
-    "pass": 40,
-    "hidden": 4,
-    "empty": 17,
-    "missing": 5
+    "pass": 48,
+    "hidden": 0,
+    "empty": 18,
+    "missing": 0
   },
   "components": [
     {
@@ -182,11 +182,11 @@
       "label": "Bond Pool — Cobertura",
       "type": "kpi",
       "found": true,
-      "visible": false,
+      "visible": true,
       "rendered": true,
       "structure": "text-content",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "cambio-mercado",
@@ -230,11 +230,11 @@
       "label": "Factor Signal — AVGS vs SWRD",
       "type": "kpi",
       "found": true,
-      "visible": false,
+      "visible": true,
       "rendered": true,
       "structure": "text-content",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "fire-countdown",
@@ -374,11 +374,11 @@
       "label": "TER da Carteira",
       "type": "kpi",
       "found": true,
-      "visible": false,
+      "visible": true,
       "rendered": true,
       "structure": "text-content",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "tornado-sensitivity",
@@ -430,15 +430,15 @@
     },
     {
       "specId": "evolucao-carteira",
-      "htmlId": "—",
+      "htmlId": "timelineChart",
       "label": "Evolução Patrimonial",
       "type": "chart-line",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "N/A",
-      "statusChar": "❌",
-      "statusText": "NO HTML ID"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "factor-loadings-chart",
@@ -682,27 +682,27 @@
     },
     {
       "specId": "bond-pool-readiness",
-      "htmlId": "—",
+      "htmlId": "bondPoolBody",
       "label": "Bond Pool — Readiness Detail",
       "type": "gauge",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "N/A",
-      "statusChar": "❌",
-      "statusText": "NO HTML ID"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "table",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "bond-pool-runway",
-      "htmlId": "—",
+      "htmlId": "bondPoolRunwayChart",
       "label": "Bond Pool — Projeção até FIRE Day",
       "type": "chart-area",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "N/A",
-      "statusChar": "❌",
-      "statusText": "NO HTML ID"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "guardrails-retirada",
@@ -730,15 +730,15 @@
     },
     {
       "specId": "income-lifecycle",
-      "htmlId": "—",
+      "htmlId": "incomeProjectionChart",
       "label": "Projeção de Renda — Ciclo de Vida",
       "type": "chart-line",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "N/A",
-      "statusChar": "❌",
-      "statusText": "NO HTML ID"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "sankey-cashflow",
@@ -758,11 +758,11 @@
       "label": "Spending — Essenciais vs Discricionários",
       "type": "card",
       "found": true,
-      "visible": false,
+      "visible": true,
       "rendered": true,
       "structure": "canvas-element",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "swr-percentis",
@@ -790,15 +790,15 @@
     },
     {
       "specId": "stress-test-mc",
-      "htmlId": "—",
+      "htmlId": "stressShockSlider",
       "label": "Stress Test MC — Bear Market",
       "type": "slider",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "N/A",
-      "statusChar": "❌",
-      "statusText": "NO HTML ID"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     }
   ]
 }
