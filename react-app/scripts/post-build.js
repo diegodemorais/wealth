@@ -12,20 +12,20 @@
 const fs = require('fs');
 const path = require('path');
 
-// Copy public data files to dashboard output
+// Copy public data files to dash output
 const publicDir = path.join(__dirname, '../public');
-const dashboardDir = path.join(__dirname, '../../dashboard');
+const dashDir = path.join(__dirname, '../../dash');
 
 if (fs.existsSync(publicDir)) {
   const files = fs.readdirSync(publicDir);
   files.forEach(file => {
     if (file.endsWith('.json') || file.endsWith('.svg') || file.endsWith('.txt')) {
       const src = path.join(publicDir, file);
-      const dest = path.join(dashboardDir, file);
+      const dest = path.join(dashDir, file);
       fs.copyFileSync(src, dest);
       console.log(`✅ Copied ${file}`);
     }
   });
 }
 
-console.log('✅ Post-build: Root page renders dashboard directly (no redirect needed)');
+console.log('✅ Post-build: Dashboard files ready in /dash/');
