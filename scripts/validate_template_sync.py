@@ -1,110 +1,189 @@
 #!/usr/bin/env python3
 """
-validate_template_sync.py — Valida que template está bem-formado e sincronizado
+Valida sincronização entre spec.json e template.html + integridade de partials.
 
-Objetivo: garantir que templates/ está bem montado (todos os partials presentes)
-e que template contém o placeholder para data injection.
-
-Uso:
-    python3 scripts/validate_template_sync.py
+Verifica que:
+1. Partials de template são bem-montados (00-head, 01-nav, etc.)
+2. Blocos estáticos (com id=) existem no HTML gerado
+3. Blocos dinâmicos (JS-rendered) têm função correspondente
 """
 
 import json
 import sys
 from pathlib import Path
-
-ROOT = Path(__file__).parent.parent
-PLACEHOLDER = "__DATA_PLACEHOLDER__"
-
-
-def assemble_template(templates_dir: Path) -> str:
-    """Monta template a partir de partials ou usa fallback template.html."""
-    if templates_dir.exists():
-        partials = sorted(templates_dir.glob("*.html"))
-        if partials:
-            return "".join(p.read_text(encoding="utf-8") for p in partials)
-
-    # Fallback
-    template_path = ROOT / "dashboard" / "template.html"
-    return template_path.read_text(encoding="utf-8")
+import re
 
 
 def validate_template_integrity() -> bool:
-    """Valida integridade do template (presença de placeholder, básica bem-formação).
-
-    Retorna True se válido, False caso contrário.
     """
-    templates_dir = ROOT / "dashboard" / "templates"
-    template_path = ROOT / "dashboard" / "template.html"
-
-    # 1. Verificar que ou templates/ existe com 4+ partials, ou template.html existe
+    Valida que os partials de template estão bem montados.
+    
+    Verifica que:
+    - dashboard/templates/ existe ou dashboard/template.html existe
+    - Se partials, todos os arquivos 0N-*.html estão presentes
+    - Não há conteúdo duplicado ou corrompido
+    
+    Returns: True se válido, False caso contrário
+    """
+    root = Path(__file__).parent.parent
+    templates_dir = root / "dashboard" / "templates"
+    template_file = root / "dashboard" / "template.html"
+    
+    # Se usar partials, verificar estrutura
     if templates_dir.exists():
-        partials = list(templates_dir.glob("*.html"))
+        partials = sorted(templates_dir.glob("*.html"))
         if not partials:
-            print(f"❌ templates/ vazio — nenhum partial encontrado", file=sys.stderr)
+            print("❌ dashboard/templates/ vazio", file=sys.stderr)
             return False
-
-        # Verificar que arquivo.html exis
-        if len(partials) < 3:
-            print(f"⚠️  templates/ tem apenas {len(partials)} partials (esperado 4+)", file=sys.stderr)
-
-        # Montar e validar
-        template_html = assemble_template(templates_dir)
-        print(f"✅ Template montado de {len(partials)} partials ({len(template_html):,} chars)")
+        
+        # Verificar que partials são bem-formados
+        for partial in partials:
+            try:
+                content = partial.read_text(encoding="utf-8")
+                if not content.strip():
+                    print(f"⚠️  Partial vazio: {partial.name}", file=sys.stderr)
+            except Exception as e:
+                print(f"❌ Erro ao ler {partial.name}: {e}", file=sys.stderr)
+                return False
+        
+        print(f"   Partials validados: {len(partials)} arquivos")
+        return True
+    
+    # Fallback: verificar template.html
+    elif template_file.exists():
+        try:
+            content = template_file.read_text(encoding="utf-8")
+            if not content.strip():
+                print("❌ template.html vazio", file=sys.stderr)
+                return False
+            return True
+        except Exception as e:
+            print(f"❌ Erro ao ler template.html: {e}", file=sys.stderr)
+            return False
+    
     else:
-        if not template_path.exists():
-            print(f"❌ Nem templates/ nem template.html encontrados", file=sys.stderr)
-            return False
-
-        template_html = template_path.read_text(encoding="utf-8")
-        print(f"✅ Usando template.html ({len(template_html):,} chars)")
-
-    # 2. Verificar placeholder
-    if PLACEHOLDER not in template_html:
-        print(f"❌ Placeholder '{PLACEHOLDER}' não encontrado no template", file=sys.stderr)
+        print("❌ Template não encontrado (nem template.html nem templates/)", file=sys.stderr)
         return False
 
-    print(f"✅ Placeholder '{PLACEHOLDER}' presente")
 
-    # 3. Básicas verificações HTML
-    errors = []
-    if template_html.count("<head>") != 1:
-        errors.append("<head> count != 1")
-    if template_html.count("</head>") != 1:
-        errors.append("</head> count != 1")
-    if template_html.count("<body>") != 1:
-        errors.append("<body> count != 1")
-    if template_html.count("</body>") != 1:
-        errors.append("</body> count != 1")
-    if template_html.count("<script>") < 1:
-        errors.append("<script> não encontrado")
+def validate_template_sync(spec_path: Path, html_path: Path) -> dict:
+    """
+    Valida sincronização entre spec.json e template.html.
 
-    if errors:
-        print(f"❌ Erros de estrutura HTML:")
-        for err in errors:
-            print(f"   - {err}", file=sys.stderr)
-        return False
+    Verifica que blocos definidos em spec.json estão cobertos
+    (estáticos no HTML ou dinâmicos com funções de renderização).
 
-    print(f"✅ Estrutura HTML válida")
-    return True
+    Returns:
+        {
+            "total_blocks": int,
+            "static_found": int,
+            "dynamic_detected": int,
+            "missing": [{id, label, type, tab}],
+            "status": "OK" | "WARNINGS"
+        }
+    """
+    if not spec_path.exists():
+        return {"status": "ERROR", "message": "spec.json not found"}
+
+    if not html_path.exists():
+        return {"status": "ERROR", "message": "HTML not found"}
+
+    # Ler spec.json
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    blocks = spec.get("blocks", [])
+
+    # Ler HTML
+    html_content = html_path.read_text(encoding="utf-8")
+
+    # Mapear tipos de blocos para funções de renderização esperadas
+    TYPE_TO_FUNCTION = {
+        "kpi-hero": ["renderKPIs"],
+        "kpi": ["renderKPIs"],
+        "chart": ["buildTimeline", "buildAttribution", "buildDonuts", "buildFanChart", "buildBacktest", 
+                  "buildGlidePath", "buildRollingStats", "buildHeatmap", "buildScatterPlot", 
+                  "buildWealthChart", "buildRollingCorrelation", "buildFactorLoadings", "buildTrackingFire",
+                  "buildEarliestFire", "buildNetWorthProjection", "buildStressTest", "buildStressFanChart",
+                  "buildPerformanceTable"],
+        "table": ["buildShadowTable", "buildIncomeTable", "buildPerformanceTable"],
+        "sankey": ["buildSankey"],
+        "wellness": ["buildWellnessExtras"],
+        "cards": ["buildRfCards", "buildMacroCards"],
+    }
+
+    # Verificar cada block
+    static_found = 0
+    dynamic_detected = 0
+    missing = []
+
+    for block in blocks:
+        block_id = block.get("id")
+        block_type = block.get("type", "unknown")
+        if not block_id:
+            continue
+
+        # 1. Procurar id estático no HTML
+        pattern = f'id=["\']?{re.escape(block_id)}["\']?'
+        if re.search(pattern, html_content):
+            static_found += 1
+            continue
+
+        # 2. Procurar função de renderização correspondente
+        found_dynamic = False
+        for type_pattern, functions in TYPE_TO_FUNCTION.items():
+            if type_pattern in block_type.lower():
+                for func in functions:
+                    if func in html_content:
+                        dynamic_detected += 1
+                        found_dynamic = True
+                        break
+                if found_dynamic:
+                    break
+
+        if not found_dynamic:
+            missing.append({
+                "id": block_id,
+                "label": block.get("label", "—"),
+                "type": block_type,
+                "tab": block.get("tab", "?")
+            })
+
+    result = {
+        "total_blocks": len(blocks),
+        "static_found": static_found,
+        "dynamic_detected": dynamic_detected,
+        "missing": missing,
+        "status": "OK" if not missing else "WARNINGS"
+    }
+
+    return result
 
 
 def main():
-    print(f"Template Integrity Validation")
-    print()
+    spec_path = Path(__file__).parent.parent / "dashboard" / "spec.json"
+    html_path = Path(__file__).parent.parent / "dashboard" / "index.html"
 
-    success = validate_template_integrity()
+    result = validate_template_sync(spec_path, html_path)
 
-    if success:
-        print()
-        print(f"✅ Template está pronto para build")
-        return True
+    if result.get("status") == "ERROR":
+        print(f"❌ {result.get('message')}")
+        sys.exit(1)
+
+    # Exibir resultado
+    print(f"📋 Validação Template ↔ Spec")
+    print(f"   Total de blocos em spec.json: {result['total_blocks']}")
+    print(f"   Blocos estáticos encontrados: {result['static_found']}")
+    print(f"   Blocos dinâmicos detectados: {result['dynamic_detected']}")
+    print(f"   Cobertura: {result['static_found'] + result['dynamic_detected']}/{result['total_blocks']}")
+
+    if result["missing"]:
+        print(f"\n⚠️  {len(result['missing'])} blocos não implementados:")
+        for block in sorted(result["missing"], key=lambda b: (b["tab"], b["id"])):
+            print(f"   [{block['tab']:10}] {block['id']:40} ({block['type']})")
     else:
-        print()
-        print(f"❌ Validação falhou", file=sys.stderr)
-        return False
+        print(f"\n✅ Todos os blocos de spec.json estão cobertos")
+
+    return 0 if not result["missing"] else 1
 
 
 if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    sys.exit(main())

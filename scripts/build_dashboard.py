@@ -880,6 +880,17 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     else:
         print(f"✅ Estrutura HTML validada")
 
+    # 10. Validar sincronização Template ↔ Spec (informacional, não bloqueia)
+    from validate_template_sync import validate_template_sync as check_template_sync
+    spec_path = ROOT / "dashboard" / "spec.json"
+    sync_result = check_template_sync(spec_path, out_path)
+    if sync_result.get("status") != "ERROR":
+        covered = sync_result.get("static_found", 0) + sync_result.get("dynamic_detected", 0)
+        total = sync_result.get("total_blocks", 0)
+        print(f"\n📋 Template ↔ Spec: {covered}/{total} blocos cobertos")
+        if sync_result.get("missing"):
+            print(f"   ⚠️  {len(sync_result['missing'])} blocos ainda não implementados (informativo)")
+
 
 def _assemble_css() -> str:
     """Monta CSS a partir de arquivos em dashboard/styles/ em ordem alfabética.

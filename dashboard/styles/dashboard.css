@@ -1,3 +1,4 @@
+:root {
  --bg:#0f172a;
  --card:#1e293b;
  --card2:#334155;
@@ -106,6 +107,10 @@ body {
  gap:14px;
  margin-bottom:14px
 }
+@media(max-width:800px) {
+ .grid-2,.grid-3 {
+ grid-template-columns:1fr
+ }
 }
 table {
  width:100%;
@@ -494,7 +499,15 @@ footer {
  border-bottom:1px solid rgba(71,85,105,.2);
  font-size:.78rem
 }
+@media(max-width:1024px) {
+ .grid-3 {
+ grid-template-columns:1fr 1fr
+ }
 }
+@media(max-width:1024px) {
+ .hero-strip {
+ grid-template-columns:repeat(3,1fr)!important
+ }
  .cagr-twr-row {
  grid-template-columns:1fr!important
  }
@@ -502,7 +515,17 @@ footer {
  grid-template-columns:1fr!important
  }
 }
+@media(max-width:900px) {
+ /* Reduce grid breakpoint for 900px */ #macroStrip,#monthlyRetStats,#attrFxRfRow,#shadowMetrics,#r7MetricsGrid,#irITDCards,.tax-ir-etf-grid,.etf-comp-grid {
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;
+ min-width:0!important
+ }
 }
+@media(max-width:768px) {
+ /* Collapse all 2+ column grids to 1 column on tablets */ .grid-2,.grid-3,.hero-strip,.cagr-twr-row,.what-if-output,.fire-row,#r7RiskGrid,.scenario-card,.fire-sim-result,.fire-sim-sliders,.dynamic-2col,.cagr-twr-card {
+ grid-template-columns:1fr!important;
+ min-width:0!important
+ }
  /* Override inline grid-template-columns styles that resist class rules */ [style*="grid-template-columns:1fr 1fr"] {
  grid-template-columns:1fr!important
  }
@@ -541,6 +564,10 @@ footer {
  min-width:0!important
  }
 }
+@media(max-width:480px) {
+ .kpi-grid {
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr))
+ }
  .kpi-value {
  font-size:1.2rem
  }
@@ -964,7 +991,15 @@ footer {
  gap:10px;
  margin-bottom:16px
 }
+@media(max-width:900px) {
+ .hero-strip {
+ grid-template-columns:repeat(3,1fr)
+ }
 }
+@media(max-width:480px) {
+ .hero-strip {
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr))
+ }
 }
 .hero-kpi {
  background:var(--card);

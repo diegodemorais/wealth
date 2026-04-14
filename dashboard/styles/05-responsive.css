@@ -1,150 +1,34 @@
-/* ═══════════════════════════════════════════════════════════════
-   RESPONSIVE — Media queries for tablets, mobile
-   ═══════════════════════════════════════════════════════════════ */
-
-@media (max-width: 1024px) {
-  .grid-3 {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .hero-strip {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-
-  .cagr-twr-row {
-    grid-template-columns: 1fr !important;
-  }
-
-  #r7RiskGrid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-@media (max-width: 900px) {
-  .hero-strip {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-
-  #macroStrip, #monthlyRetStats, #attrFxRfRow, #shadowMetrics, #r7MetricsGrid, #irITDCards, .tax-ir-etf-grid, .etf-comp-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
-    min-width: 0 !important;
-  }
-}
-
-@media (max-width: 800px) {
-  .grid-2, .grid-3 {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Collapse all 2+ column grids to 1 column on tablets */
-  .grid-2, .grid-3, .hero-strip, .cagr-twr-row, .what-if-output, .fire-row, #r7RiskGrid, .scenario-card, .fire-sim-result, .fire-sim-sliders, .dynamic-2col, .cagr-twr-card {
-    grid-template-columns: 1fr !important;
-    min-width: 0 !important;
-  }
-
-  /* Override inline grid-template-columns styles that resist class rules */
-  [style*="grid-template-columns:1fr 1fr"] {
-    grid-template-columns: 1fr !important;
-  }
-
-  [style*="grid-template-columns:repeat(2"] {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Reduce large minmax values */
-  .kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
-    min-width: 0 !important;
-  }
-
-  .macro-strip {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
-    min-width: 0 !important;
-  }
-
-  .tax-ir-etf-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
-    min-width: 0 !important;
-  }
-
-  .etf-comp-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
-    min-width: 0 !important;
-  }
-
-  #macroStrip, #monthlyRetStats, #attrFxRfRow, #shadowMetrics, #r7MetricsGrid, #irITDCards {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
-    min-width: 0 !important;
-  }
-
-  /* FIRE simulator layout */
-  .wellness-extra-row {
-    grid-template-columns: 1fr !important;
-    gap: 4px !important;
-    min-width: 0 !important;
-  }
-
-  /* Additional 768px grid targets */
-  #r7WinRateSection > div > div[style*="grid-template"],
-  #fireScenarioGrid > div[style*="grid-template"],
-  #pfireScenarioRow > div[style*="grid-template"] {
-    grid-template-columns: 1fr !important;
-  }
-
-  /* Force children to not overflow grid */
-  .grid-2 > *, .grid-3 > *, .hero-strip > *, .fire-sim-sliders > *, .what-if-output > *, #r7RiskGrid > * {
-    min-width: 0 !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  }
-
-  .kpi-value {
-    font-size: 1.2rem;
-  }
-
-  table {
-    font-size: 0.7rem;
-  }
-
-  th, td {
-    padding: 4px 3px;
-  }
-
-  .chart-box {
-    height: 200px;
-  }
-
-  .calc-form input {
-    width: 90px;
-  }
-
-  .fire-big {
-    font-size: 2.5rem;
-  }
-
-  .fire-row {
-    gap: 12px;
-  }
-
-  .rf-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  }
-
-  .hide-mobile {
-    display: none;
-  }
-
-  .grid-2, .grid-3 {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-strip {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  }
-}
+@media(max-width:800px) {
+ .grid-2,.grid-3 {
+ grid-template-columns:1fr
+ }
+@media(max-width:1024px) {
+ .grid-3 {
+ grid-template-columns:1fr 1fr
+ }
+@media(max-width:1024px) {
+ .hero-strip {
+ grid-template-columns:repeat(3,1fr)!important
+ }
+@media(max-width:900px) {
+ /* Reduce grid breakpoint for 900px */ #macroStrip,#monthlyRetStats,#attrFxRfRow,#shadowMetrics,#r7MetricsGrid,#irITDCards,.tax-ir-etf-grid,.etf-comp-grid {
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr))!important;
+ min-width:0!important
+ }
+@media(max-width:768px) {
+ /* Collapse all 2+ column grids to 1 column on tablets */ .grid-2,.grid-3,.hero-strip,.cagr-twr-row,.what-if-output,.fire-row,#r7RiskGrid,.scenario-card,.fire-sim-result,.fire-sim-sliders,.dynamic-2col,.cagr-twr-card {
+ grid-template-columns:1fr!important;
+ min-width:0!important
+ }
+@media(max-width:480px) {
+ .kpi-grid {
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr))
+ }
+@media(max-width:900px) {
+ .hero-strip {
+ grid-template-columns:repeat(3,1fr)
+ }
+@media(max-width:480px) {
+ .hero-strip {
+ grid-template-columns:repeat(auto-fit,minmax(100px,1fr))
+ }
