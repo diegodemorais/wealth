@@ -235,6 +235,49 @@ def _():
     return True, "scenario_comparison has base and aspiracional with base/fav/stress"
 
 
+@registry.test("net-worth-projection", "BUILD", "scenario_comparison correctly injected in index.html", "CRITICAL")
+def _():
+    """Validates that scenario_comparison data from data.json was correctly injected into index.html.
+    This catches build-stage injection errors that wouldn't be caught by data.json validation alone."""
+    html = load_html()
+    data = load_data()
+
+    # Validate that critical scenario_comparison values are in the HTML
+    expected_base = data.get("scenario_comparison", {}).get("base", {}).get("base")
+    expected_aspir = data.get("scenario_comparison", {}).get("aspiracional", {}).get("base")
+    expected_base_pat = data.get("scenario_comparison", {}).get("base", {}).get("pat_mediano")
+    expected_aspir_pat = data.get("scenario_comparison", {}).get("aspiracional", {}).get("pat_mediano")
+
+    if None in (expected_base, expected_aspir, expected_base_pat, expected_aspir_pat):
+        return False, "scenario_comparison values missing from data.json"
+
+    # Check if these specific values appear in the HTML anywhere
+    # (they must be in the DATA injection since the dashboard is JS-rendered)
+    errors = []
+
+    # Check for P(FIRE) values in correct format
+    if f'"base": {expected_base}' not in html and f'"base":{expected_base}' not in html:
+        errors.append(f'P(FIRE) base {expected_base} not found')
+
+    if f'"base": {expected_aspir}' not in html and f'"base":{expected_aspir}' not in html:
+        errors.append(f'P(FIRE) aspiracional {expected_aspir} not found')
+
+    # Check for patrimônio values (more distinctive)
+    pat_base_str = str(int(expected_base_pat))  # convert to int format used in JSON
+    pat_aspir_str = str(int(expected_aspir_pat))
+
+    if pat_base_str not in html:
+        errors.append(f'Pat mediano base ({pat_base_str}) not found')
+
+    if pat_aspir_str not in html:
+        errors.append(f'Pat mediano aspiracional ({pat_aspir_str}) not found')
+
+    if errors:
+        return False, f"scenario_comparison injection incomplete: {'; '.join(errors)}"
+
+    return True, f"scenario_comparison correctly injected (base {expected_base}%, aspir {expected_aspir}%)"
+
+
 @registry.test("net-worth-projection", "DATA", "pfire values in [0, 100] range", "CRITICAL")
 def _():
     d = load_data()
