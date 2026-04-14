@@ -209,13 +209,13 @@ export function _initTabCharts(tab) {
     fire:     [w.buildTrackingFire, w.buildScenarioComparison, w.buildScenarios,
                w.buildFireMatrix, w.buildLumpyEvents, w.buildGlidePath,
                w.buildNetWorthProjection,
-               () => { _applyFireAxes(); }, w.buildEarliestFire,
+               () => { w._applyFireAxes(); }, w.buildEarliestFire,
                w.buildEventosVida, w.buildPfireFamilia],
     retiro:   [w.buildGuardrails, w.buildIncomeChart, w.buildIncomeTable,
                w.buildSpendingGuardrails, w.buildSwrPercentiles,
                w.buildSpendingBreakdown, w.buildIncomeProjection,
                w.buildBondPool, w.buildBondPoolRunway],
-    simuladores: [() => { _applyFireAxes(); }, w.buildScenarios, w.buildStressTest,
+    simuladores: [() => { w._applyFireAxes(); }, w.buildScenarios, w.buildStressTest,
                   function() {
                     const wiC = document.getElementById('wiCusto');
                     if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;

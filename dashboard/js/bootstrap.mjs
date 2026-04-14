@@ -125,6 +125,7 @@ if (!window.DATA) {
     buildIncomeProjection: fireProj.buildIncomeProjection,
     runMC: fireProj.runMC,
     runMCTrajectories: fireProj.runMCTrajectories,
+    _applyFireAxes: fireProj._applyFireAxes,
 
     // From 06-dashboard-render
     renderKPIs: dashboardRender.renderKPIs,
@@ -156,7 +157,7 @@ if (!window.DATA) {
     buildFactorRolling: initTabs.buildFactorRolling,
     buildFactorLoadings: initTabs.buildFactorLoadings,
     buildCagrVsTwr: initTabs.buildCagrVsTwr,
-    calcAporte: initTabs.calcAporte,
+    calcAporte: chartsPortfolio.calcAporte,
     _initTabCharts: initTabs._initTabCharts,
     switchTab: initTabs.switchTab,
     _applyPrivacyCharts: initTabs._applyPrivacyCharts,
