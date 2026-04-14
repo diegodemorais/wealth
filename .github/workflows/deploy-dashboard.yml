@@ -19,12 +19,12 @@ jobs:
 
     steps:
       - name: Checkout código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: react-app/package-lock.json
 
@@ -42,7 +42,7 @@ jobs:
           npm run build:no-test
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-dashboard
           path: dashboard/
@@ -55,12 +55,12 @@ jobs:
 
     steps:
       - name: Checkout código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: react-app/package-lock.json
 
@@ -78,7 +78,7 @@ jobs:
           npm run build:no-test
 
       - name: Cypress run (headless)
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v7
         with:
           working-directory: react-app
           browser: chrome
@@ -88,14 +88,14 @@ jobs:
           wait-on-timeout: 30
 
       - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: failure()
         with:
           name: cypress-screenshots
           path: react-app/cypress/screenshots
 
       - name: Upload Cypress videos
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: cypress-videos
@@ -110,10 +110,10 @@ jobs:
 
     steps:
       - name: Checkout origem (wealth)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: build-dashboard
           path: dashboard/
