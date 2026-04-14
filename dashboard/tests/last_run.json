@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-14T09:46:31.190414",
+  "timestamp": "2026-04-14T10:04:04.038719",
   "mode": "full",
   "total": 559,
   "passed": 557,
@@ -13,7 +13,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 228,138 chars, 4 blocos <script>, bootstrap.mjs carregado"
+      "message": "index.html OK: 238,706 chars, 4 blocos <script>, bootstrap.mjs carregado"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -61,7 +61,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 228,138 chars"
+      "message": "index.html: 238,706 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -1509,7 +1509,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (68 elements)"
+      "message": "Privacy .pv class present (83 elements)"
     },
     {
       "test_id": "custo-base-bucket::DATA::drift fields exist for major ETFs",
@@ -1533,7 +1533,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (68 elements)"
+      "message": "Privacy .pv class present (83 elements)"
     },
     {
       "test_id": "minilog::VALUE::timeline.labels and timeline.values have same length",
@@ -1573,7 +1573,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (68 elements), hodl11 present"
+      "message": "Privacy .pv class present (83 elements), hodl11 present"
     },
     {
       "test_id": "reconciliation::DATA::all posicoes have valid drift reference",
@@ -1581,7 +1581,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVGS', 'AVEM'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'AVEM', 'SWRD'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -1597,7 +1597,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'performance', 'simuladores', 'portfolio', 'fire', 'retiro', 'now', 'backtest'}"
+      "message": "All blocks use valid tabs: {'performance', 'portfolio', 'fire', 'retiro', 'now', 'simuladores', 'backtest'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -1621,7 +1621,7 @@
       "category": "PRIVACY",
       "severity": "HIGH",
       "passed": true,
-      "message": "68 elements with .pv class in HTML"
+      "message": "83 elements with .pv class in HTML"
     },
     {
       "test_id": "privacy-global::PRIVACY::privacy toggle script present in index.html",
@@ -2189,7 +2189,7 @@
       "category": "RENDER",
       "severity": "HIGH",
       "passed": true,
-      "message": "121 seções têm data-in-tab válido"
+      "message": "120 seções têm data-in-tab válido"
     },
     {
       "test_id": "tab-structure::RENDER::canvas IDs não são duplicados dentro de uma mesma seção",
@@ -2197,7 +2197,7 @@
       "category": "RENDER",
       "severity": "HIGH",
       "passed": true,
-      "message": "Nenhum canvas duplicado em 64 seções"
+      "message": "Nenhum canvas duplicado em 66 seções"
     },
     {
       "test_id": "patrimonio-total-hero::DATA::rf and hodl11 top-level keys exist",
@@ -3965,7 +3965,7 @@
       "category": "RENDER",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "26 canvas elements all have IDs"
+      "message": "27 canvas elements all have IDs"
     },
     {
       "test_id": "coverage-global::SPEC::block count in spec matches expected ~72",
@@ -4365,7 +4365,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd', 'cambio'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4373,7 +4373,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'cambio'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

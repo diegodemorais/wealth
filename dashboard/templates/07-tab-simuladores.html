@@ -1,8 +1,159 @@
+<!-- F3: SIMULADOR FIRE INTERATIVO (BOLDIN-style) -->
 <div class="section section-critical" data-in-tab="simuladores">
-<div class="section collapsible open" data-in-tab="simuladores">
-<div class="section collapsible open" data-in-tab="simuladores">
-<div class="section" data-in-tab="simuladores">
+<h2>Simulador FIRE — Aposentadoria Antecipada</h2>
+
+<!-- Resultado principal -->
+<div class="fire-sim-result" style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:18px;background:var(--card2);border-radius:10px;padding:16px">
+  <div style="text-align:center;min-width:140px">
+    <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Com esses parâmetros</div><!-- /section section-1069 -->
+    <div style="font-size:.7rem;font-weight:600;color:var(--muted);margin-bottom:2px">você pode aposentar em</div>
+    <div style="font-size:3rem;font-weight:800;line-height:1" id="simFireAno" class="pv" data-pv-mask="••">—</div>
+    <div style="font-size:1.2rem;font-weight:700;margin:2px 0" id="simFireIdade" class="pv" data-pv-mask="•• anos">— anos</div>
+    <div style="font-size:1rem;font-weight:700;margin-top:4px" id="simFirePfire" class="pv" data-pv-mask="P = ••%">P = —%</div>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:2px" id="simFireDiff" class="pv">—</div>
+  </div>
+  <div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:8px;margin-bottom:10px">
+      <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted)">Cenário Aspiracional</div>
+        <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire50">—</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--accent)">
+        <div style="font-size:.6rem;color:var(--muted)">Cenário Base (plano)</div>
+        <div style="font-size:1.1rem;font-weight:700" class="pv" id="simPfire53">—</div>
+      </div>
+      <div style="background:var(--card);border-radius:8px;padding:8px;text-align:center;border:1px solid var(--border)">
+        <div style="font-size:.6rem;color:var(--muted)">Patrimônio projetado</div>
+        <div style="font-size:1rem;font-weight:700" class="pv" id="simPatFire">—</div>
+      </div>
+    </div>
+    <!-- Mini timeline bar -->
+    <div style="position:relative;height:8px;background:var(--card);border-radius:4px;overflow:visible;margin-bottom:18px">
+      <div id="simTimelineBar" style="position:absolute;left:0;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .4s"></div>
+      <div id="simTimelinePin" style="position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:var(--green);border:2px solid white;transform:translateX(-50%);transition:left .4s;z-index:2"></div>
+      <div id="simTimelineLabelL" style="position:absolute;bottom:-18px;left:0;font-size:.55rem;color:var(--muted)">Hoje</div>
+      <div id="simTimelineLabelR" style="position:absolute;bottom:-18px;right:0;font-size:.55rem;color:var(--muted)">70 anos</div>
+      <div id="simTimelineLabelFire" style="position:absolute;bottom:-18px;font-size:.6rem;color:var(--green);font-weight:700;transform:translateX(-50%);white-space:nowrap;transition:left .4s"></div>
+    </div>
+  </div>
 </div>
+
+<!-- Presets — 2 eixos: Condição × Mercado -->
+<div style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px">
+  <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+    <span style="font-size:.6rem;color:var(--muted);min-width:58px">Condição:</span>
+    <button class="preset-btn active" id="pcond-solteiro"  onclick="setFireCond('solteiro')">👤 Solteiro</button>
+    <button class="preset-btn"        id="pcond-casamento" onclick="setFireCond('casamento')">💍 Casamento</button>
+    <button class="preset-btn"        id="pcond-filho"     onclick="setFireCond('filho')">👶 Filho</button>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+    <span style="font-size:.6rem;color:var(--muted);min-width:58px">Mercado:</span>
+    <button class="preset-btn"        id="pmkt-stress"  onclick="setFireMkt('stress')">⚠️ Stress</button>
+    <button class="preset-btn active" id="pmkt-base"    onclick="setFireMkt('base')">✅ Base</button>
+    <button class="preset-btn"        id="pmkt-fav"     onclick="setFireMkt('fav')">🚀 Favorável</button>
+    <button class="preset-btn"        id="pcond-aspiracional" onclick="setFirePresetAspiracional()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
+  </div>
+</div>
+
+<!-- Sliders -->
+<div class="fire-sim-sliders" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));gap:14px;margin-bottom:12px">
+  <div class="slider-row">
+    <label><span>Aporte Mensal</span><span id="simAporteVal" class="pv" style="font-weight:700;color:var(--accent)">—</span></label>
+    <input type="range" id="simAporte" min="5000" max="100000" step="1000" value="25000" oninput="_firePresetCustom();updateFireSim()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$5k</span><span>R$100k</span></div>
+  </div>
+  <div class="slider-row">
+    <label><span>Retorno Real Equity</span><span id="simRetornoVal" class="pv" style="font-weight:700;color:var(--muted)">—</span></label>
+    <input type="range" id="simRetorno" min="0" max="10" step="0.25" value="4.85" oninput="_firePresetCustom();updateFireSim()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>0%</span><span>10%</span></div>
+  </div>
+  <div class="slider-row">
+    <label><span>Custo de Vida /ano</span><span id="simCustoVal" class="pv" style="font-weight:700;color:var(--muted)">—</span></label>
+    <input type="range" id="simCusto" min="150000" max="500000" step="10000" value="250000" oninput="_firePresetCustom();updateFireSim()">
+    <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted)"><span>R$150k</span><span>R$500k</span></div>
+  </div>
+</div>
+<div class="src">Simulação determinística (sem MC). Critério: SWR ≤ 3.0% (= R$250k/R$8.33M). Cenário Aspiracional e Cenário Base são outputs do MC 10k (fixos).</div>
+</div>
+
+<!-- S19: WHAT-IF SCENARIOS -->
+<div class="section collapsible open" data-in-tab="simuladores">
+<h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Cenário / Gasto</h2>
+<div class="collapse-body">
+
+<!-- Seletor de cenário -->
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+  <button class="preset-btn wi-preset-btn" data-preset="stress" onclick="setWiPreset('stress')">⚠️ Stress (4.35% · SWR 2.0%)</button>
+  <button class="preset-btn wi-preset-btn active" data-preset="base" onclick="setWiPreset('base')">✅ Base (4.85% · SWR 2.4%)</button>
+  <button class="preset-btn wi-preset-btn" data-preset="fav" onclick="setWiPreset('fav')">🚀 Favorável (5.3% · SWR 2.8%)</button>
+</div>
+
+<!-- Slider custo de vida -->
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+  <label style="min-width:60px;font-size:.8rem">Custo Anual:</label>
+  <input type="range" id="whatIfSlider" min="150000" max="400000" step="10000" value="250000" style="flex:1" oninput="updateWhatIf()" />
+  <span id="whatIfCustoVal" class="pv" style="min-width:60px;text-align:right;font-weight:600">—</span>
+</div>
+
+<!-- Output -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:10px;margin-bottom:10px">
+  <div style="background:var(--card);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
+    <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">P(FIRE) neste cenário</div>
+    <div style="font-size:1.4rem;font-weight:700" id="whatIfPfire" class="pv">—%</div>
+  </div>
+  <div style="background:var(--card);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
+    <div style="font-size:.6rem;color:var(--muted);margin-bottom:4px">Limite de sustentabilidade</div>
+    <div style="font-size:1.2rem;font-weight:700" id="whatIfLimit" class="pv">SWR —%</div>
+  </div>
+</div>
+
+<div class="src">P(FIRE) em cada nível de gasto · SWR simulado = spending / patrimônio</div>
+</div>
+</div>
+
+<!-- S28: STRESS TEST — Drawdown Scenarios -->
+<div class="section collapsible open" data-in-tab="simuladores">
+<h2 onclick="_toggleBlock(this.parentElement)">Teste de Stress — Crash Imediato</h2>
+<div class="collapse-body">
+
+<!-- Slider -->
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+  <label style="min-width:60px;font-size:.8rem">Queda:</label>
+  <input type="range" id="stressShockSlider" min="-70" max="0" step="5" value="-20" oninput="onStressShockChange(this.value)" style="flex:1" />
+  <span id="stressShockVal" class="pv" style="min-width:40px;text-align:right;font-weight:600">—%</span>
+  <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--muted);margin-top:2px"><span>−70%</span><span>0%</span></div><!-- /section section-1188 -->
+</div>
+<div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+  <div style="font-size:.8rem;color:var(--muted)">
+    Patrimônio pós-shock: <strong id="stressPatShock" class="pv" style="color:var(--red)">—</strong>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <label style="font-size:.8rem;color:var(--muted)">Idade do shock:</label>
+    <select id="stressOnsetAge" onchange="onStressShockChange(document.getElementById('stressShockSlider').value)"
+      style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:.8rem;cursor:pointer">
+      <option value="39" id="stressOnsetAgeToday">39 anos (hoje)</option>
+      <option value="40">40 anos</option>
+      <option value="42">42 anos</option>
+      <option value="45">45 anos</option>
+      <option value="47">47 anos</option>
+      <option value="50">50 anos (FIRE aspiracional)</option>
+    </select>
+  </div>
+  <button id="stressSimBtn" style="display:none"></button>
+</div>
+
+<!-- Projeção Fan Chart -->
+<div style="margin-bottom:14px">
+  <div style="font-size:.65rem;color:var(--muted);margin-bottom:4px" id="stressFanTitle">Projeção — Evolução Patrimonial após Shock</div>
+  <div class="chart-box" style="height:260px"><canvas id="stressProjectionChart"></canvas></div>
+  <div style="font-size:.6rem;color:var(--muted);margin-top:3px">Bandas: P5–P95 (exterior) · P25–P75 (interior) · P50 mediana · 500 trajetórias MC · valores reais R$2026</div>
+</div>
+
+<!-- Cards de cenário -->
+<div id="stressTestBody"><!-- gerado por buildStressTest() --></div>
+
+<div class="src" style="margin-top:10px">
+  ⚡ = pré-calculado · ✅ = simulado ao vivo
 </div>
 </div>
 </div>
