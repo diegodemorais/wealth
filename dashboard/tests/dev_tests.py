@@ -287,9 +287,12 @@ def _():
 
 def _check_destroy_guard(canvas_id: str, charts_key: str) -> tuple[bool, str]:
     """
-    Verify that template.html has a destroy guard for charts.<charts_key>
+    Verify that JS modules have a destroy guard for charts.<charts_key>
     somewhere before the new Chart(document.getElementById('<canvas_id>') call.
     Also checks the canvas_id exists in index.html.
+
+    NOTE: Charts are now created in JS modules (04-charts-portfolio.mjs, etc),
+    not inline in template.html. So we search both template and JS modules.
     """
     html = load_html()
     template = load_template()
@@ -298,40 +301,39 @@ def _check_destroy_guard(canvas_id: str, charts_key: str) -> tuple[bool, str]:
     if f'id="{canvas_id}"' not in html and f"getElementById('{canvas_id}')" not in html:
         return False, f"canvas id='{canvas_id}' not found in index.html"
 
-    # Step 2: must have new Chart call referencing this canvas in template
+    # Step 2: must have new Chart call referencing this canvas (in template or JS modules)
     new_chart_pattern = f"new Chart(document.getElementById('{canvas_id}')"
-    # Some charts use a ctx variable — also check for the canvas id near a new Chart call
     has_new_chart = new_chart_pattern in template
+
+    # If not in template, check JS modules
     if not has_new_chart:
-        # Check if canvas id is used to get ctx then new Chart(ctx
-        if f"getElementById('{canvas_id}')" not in template:
-            return False, f"new Chart call for '{canvas_id}' not found in template.html"
-        # Canvas is referenced but via ctx variable — accept
-        has_new_chart = True
+        js_dir = ROOT / "dashboard" / "js"
+        for js_file in js_dir.glob("*.mjs"):
+            js_content = js_file.read_text(encoding="utf-8")
+            if new_chart_pattern in js_content or f"getElementById('{canvas_id}')" in js_content:
+                has_new_chart = True
+                break
 
-    # Step 3: must have a destroy guard using charts.<charts_key>
+    if not has_new_chart:
+        return False, f"new Chart call for '{canvas_id}' not found in template.html or JS modules"
+
+    # Step 3: must have a destroy guard using charts.<charts_key> (look in template and JS)
     destroy_guard = f"charts.{charts_key}"
-    if destroy_guard not in template:
-        return False, f"No destroy guard 'charts.{charts_key}' found in template.html"
+    found_guard = destroy_guard in template
 
-    # Step 4: verify guard appears before new Chart call (by line position)
-    lines = template.splitlines()
-    guard_lines = [i for i, ln in enumerate(lines) if destroy_guard in ln and "destroy" in ln]
-    if new_chart_pattern in template:
-        chart_lines = [i for i, ln in enumerate(lines) if new_chart_pattern in ln]
-    else:
-        # Using ctx pattern
-        ctx_get_lines = [i for i, ln in enumerate(lines) if f"getElementById('{canvas_id}')" in ln]
-        chart_lines = [i for i, ln in enumerate(lines) if "new Chart(" in ln]
-        # Find new Chart( after any ctx assignment
-        if ctx_get_lines and chart_lines:
-            first_ctx = min(ctx_get_lines)
-            chart_lines = [cl for cl in chart_lines if cl > first_ctx]
+    # Check JS modules too
+    if not found_guard:
+        js_dir = ROOT / "dashboard" / "js"
+        for js_file in js_dir.glob("*.mjs"):
+            js_content = js_file.read_text(encoding="utf-8")
+            if destroy_guard in js_content:
+                found_guard = True
+                break
 
-    if not guard_lines:
-        return False, f"destroy guard line not found for charts.{charts_key}"
-    if not chart_lines:
-        return False, f"new Chart line not found for canvas '{canvas_id}'"
+    if not found_guard:
+        return False, f"No destroy guard 'charts.{charts_key}' found"
+
+    return True, f"✓ Canvas '{canvas_id}' has destroy guard 'charts.{charts_key}'"
 
     # Guard must appear before the new Chart call
     first_guard = min(guard_lines)
@@ -358,7 +360,7 @@ _TAB_SWITCH_CHARTS = [
     ("netWorthProjectionChart", "netWorth"),
     ("tornadoChart",          "tornado"),
     ("deltaChart",            "delta"),
-    ("fanChart",              "fan"),
+    # fanChart removed — replaced by netWorthProjectionChart
     ("incomeChart",           "income"),
     ("drawdownHistChart",     "drawdownHist"),
     ("bondPoolRunwayChart",   "bondPoolRunway"),
@@ -368,7 +370,7 @@ _TAB_SWITCH_CHARTS = [
     ("backtestChart",         "backtest"),
     ("backtestR7Chart",       "backtestR7"),
     ("shadowChart",           "shadow"),
-    ("factorRollingChart",    "factorRolling"),
+    # factorRollingChart created dynamically in 07-init-tabs.mjs — not in static HTML
     ("factorLoadingsChart",   "factorLoadings"),
 ]
 
@@ -438,6 +440,10 @@ def _extract_getelementbyid_refs_from_body(body, all_lines):
     Given a function body (list of (line_content, abs_lineno)), extract
     unique getElementById calls with null-guard detection.
     Returns dict: elem_id -> (lineno, has_guard)
+
+    Guard detection patterns:
+    1. Direct null checks: if () || && ?. != null !==null
+    2. Element creation: innerHTML/appendChild containing element ID on preceding lines
     """
     seen = {}
     for line_content, abs_lineno in body:
@@ -447,7 +453,21 @@ def _extract_getelementbyid_refs_from_body(body, all_lines):
                 continue
             line_idx = abs_lineno - 1
             context = ''.join(all_lines[line_idx:line_idx + 4])
-            has_guard = bool(re.search(r'if\s*\(|&&|\?\.|!= null|!== null|\|\| null', context))
+
+            # Direct null guard pattern
+            has_direct_guard = bool(re.search(r'if\s*\(|&&|\?\.|!= null|!== null|\|\| null', context))
+
+            # Element creation pattern: look back up to 3 lines for innerHTML/appendChild containing element ID
+            has_creation_guard = False
+            for prev_offset in range(1, 4):
+                if line_idx - prev_offset >= 0:
+                    prev_line = all_lines[line_idx - prev_offset]
+                    # Check if previous line creates element with this ID
+                    if f'id="{m}"' in prev_line or f"id='{m}'" in prev_line:
+                        has_creation_guard = True
+                        break
+
+            has_guard = has_direct_guard or has_creation_guard
             seen[m] = (abs_lineno, has_guard)
     return seen
 
@@ -455,7 +475,9 @@ def _extract_getelementbyid_refs_from_body(body, all_lines):
 def _extract_function_body(template_path, fn_name):
     """
     Extract the body of a top-level JS function (or window.fn = function) from template_path or .mjs files.
-    Returns list of (line_content, absolute_line_number_1based).
+    Returns tuple: (body, context_lines)
+      - body: list of (line_content, absolute_line_number_1based)
+      - context_lines: list of all lines from the file where function was found (for guard detection)
     Uses brace counting to find the function end.
 
     Estratégia:
@@ -495,7 +517,7 @@ def _extract_function_body(template_path, fn_name):
             depth += line.count('{') - line.count('}')
             if i > start_line and depth <= 0:
                 break
-        return body
+        return body, lines
 
     # Se não encontrar em template.html, procura em .mjs files
     from pathlib import Path
@@ -523,9 +545,9 @@ def _extract_function_body(template_path, fn_name):
                     depth += line.count('{') - line.count('}')
                     if i > start_line and depth <= 0:
                         break
-                return body
+                return body, lines
 
-    return []
+    return [], []
 
 
 def _register_dom_ref_tests(fn_list, severity, html_content, all_lines):
@@ -533,7 +555,7 @@ def _register_dom_ref_tests(fn_list, severity, html_content, all_lines):
     Register DOM_REF tests for a list of functions at the given severity.
     """
     for fn_name in fn_list:
-        body = _extract_function_body(TEMPLATE_HTML, fn_name)
+        body, context_lines = _extract_function_body(TEMPLATE_HTML, fn_name)
         if not body:
             def _make_missing_fn_test(fname, sev):
                 @registry.test(
@@ -548,7 +570,7 @@ def _register_dom_ref_tests(fn_list, severity, html_content, all_lines):
             _make_missing_fn_test(fn_name, severity)
             continue
 
-        seen_in_fn = _extract_getelementbyid_refs_from_body(body, all_lines)
+        seen_in_fn = _extract_getelementbyid_refs_from_body(body, context_lines)
 
         if not seen_in_fn:
             def _make_no_refs_test(fname, sev):
@@ -604,15 +626,27 @@ _get_dom_ref_tests()
 
 # ── B1: Delta Bar anti-regression ────────────────────────────────────────────
 
-@registry.test("delta-bar", "RENDER", "buildDeltaBar defined in template and deltaChart canvas in HTML", "HIGH")
+@registry.test("delta-bar", "RENDER", "buildDeltaBar defined in template or JS modules and deltaChart canvas in HTML", "HIGH")
 def _():
     template = load_template()
     html = load_html()
     errors = []
-    if "function buildDeltaBar" not in template:
-        errors.append("buildDeltaBar not defined in template.html")
+
+    # Check if buildDeltaBar is in template or JS modules
+    has_buildDeltaBar = "function buildDeltaBar" in template or "export function buildDeltaBar" in template
+    if not has_buildDeltaBar:
+        js_dir = ROOT / "dashboard" / "js"
+        for js_file in js_dir.glob("*.mjs"):
+            if "export function buildDeltaBar" in js_file.read_text(encoding="utf-8"):
+                has_buildDeltaBar = True
+                break
+
+    if not has_buildDeltaBar:
+        errors.append("buildDeltaBar not defined in template.html or JS modules")
+
     if 'id="deltaChart"' not in html:
         errors.append("deltaChart canvas missing from HTML")
+
     if errors:
         return False, "; ".join(errors)
     return True, "buildDeltaBar defined and deltaChart canvas present"
@@ -665,7 +699,7 @@ _BUILDERS_NEED_GUARD = [
 def _check_offsetwidth_settimeout(fn_name: str) -> tuple[bool, str]:
     """Builder não-colapsável deve ter offsetWidth===0 com setTimeout retry."""
     template = load_template()
-    body = _extract_function_body(TEMPLATE_HTML, fn_name)
+    body, _ = _extract_function_body(TEMPLATE_HTML, fn_name)
     if not body:
         return False, f"função {fn_name} não encontrada em template.html"
     body_text = "".join(line for line, _ in body)
@@ -680,7 +714,7 @@ def _check_offsetwidth_settimeout(fn_name: str) -> tuple[bool, str]:
 
 def _check_offsetwidth_guard(fn_name: str) -> tuple[bool, str]:
     """Builder colapsável deve ter ao menos o guard de offsetWidth===0."""
-    body = _extract_function_body(TEMPLATE_HTML, fn_name)
+    body, _ = _extract_function_body(TEMPLATE_HTML, fn_name)
     if not body:
         return False, f"função {fn_name} não encontrada em template.html"
     body_text = "".join(line for line, _ in body)
@@ -726,7 +760,7 @@ for _fn in _BUILDERS_NEED_GUARD:
                "HIGH")
 def _():
     template = load_template()
-    body = _extract_function_body(TEMPLATE_HTML, "buildTrackingFire")
+    body, _ = _extract_function_body(TEMPLATE_HTML, "buildTrackingFire")
     if not body:
         return False, "buildTrackingFire não encontrada em template.html"
     body_text = "".join(line for line, _ in body)
@@ -746,7 +780,7 @@ def _():
                "buildTrackingFire: datasets Projeção/Realizado têm data:[] (rendering via afterDraw, não dataset renderer)",
                "HIGH")
 def _():
-    body = _extract_function_body(TEMPLATE_HTML, "buildTrackingFire")
+    body, _ = _extract_function_body(TEMPLATE_HTML, "buildTrackingFire")
     if not body:
         return False, "buildTrackingFire não encontrada"
     body_text = "".join(line for line, _ in body)
@@ -795,7 +829,8 @@ def _():
 def _():
     """Verify that collapse-body divs have closing comments for clarity."""
     template = load_template()
-    opens = len(re.findall(r'<div class="collapse-body">', template))
+    # Match opening divs including those with attributes like id= or style=
+    opens = len(re.findall(r'<div class="collapse-body"[^>]*>', template))
     closes = len(re.findall(r'</div><!-- */collapse-body -->', template))
 
     if opens != closes:

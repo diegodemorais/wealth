@@ -1514,7 +1514,7 @@ footer {
 <table class="semaforo-table" id="semaforoBody">
 <!-- gerado por buildSemaforoPanel() -->
 </table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S5: KPI FIRE -->
@@ -1715,7 +1715,7 @@ footer {
 <h2 onclick="_toggleBlock(this.parentElement)">Trilha FIRE — Realizado vs Projetado</h2>
 <div class="collapse-body">
 <canvas id="fireTrilha" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Simulador FIRE — Interativo</h2>
@@ -1725,7 +1725,7 @@ footer {
   <input type="range" id="simuladorFire" min="1" max="30" value="10" style="width:100%" />
   <div id="simuladorFireResult" style="margin-top:10px;text-align:center;color:var(--muted)">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Gasto vs P(FIRE)</h2>
@@ -1735,7 +1735,7 @@ footer {
   <input type="range" id="whatIfCenarios" min="150000" max="400000" step="10000" value="250000" style="width:100%" />
   <div id="whatIfResult" style="margin-top:10px;text-align:center;color:var(--muted)">P(FIRE) = —%</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- F9: Missing Components (HOJE tab) -->
@@ -1906,49 +1906,49 @@ footer {
 <h2 onclick="_toggleBlock(this.parentElement)">Drift por ETF — Semáforo</h2>
 <div class="collapse-body">
 <div id="driftSemaforoEtf" style="padding:20px;text-align:center;color:var(--muted)">—</div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Intra-Equity — Pesos vs Alvo</h2>
 <div class="collapse-body">
 <canvas id="intraEquityPesos" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Composição por Região e Fator</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Região</th><th>Fator</th><th>%</th></tr></thead><tbody id="etfComposicaoRegiao"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Posições — ETFs Internacionais</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ticker</th><th>Qty</th><th>Preço</th><th>Valor</th></tr></thead><tbody id="posicoesEtfsIbkr"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">TLH Monitor — Lotes e P&L</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ativo</th><th>Qty</th><th>PM</th><th>P&L</th></tr></thead><tbody id="tlhMonitor"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">IR Diferido por ETF</h2>
 <div class="collapse-body">
 <!-- Note: IR Diferido table removed — builder renders to #taxIrBody in section below -->
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Renda Fixa — Posições</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Título</th><th>Qtd</th><th>Taxa</th><th>Valor</th></tr></thead><tbody id="rfPosicoes"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Duration — Renda+ 2065</h2>
 <div class="collapse-body">
 <div class="card" id="durationRendaPlus" style="padding:20px;text-align:center;color:var(--muted)">Duration: —</div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S21c: EVENTOS DE VIDA + LUMPY EVENTS (merged) -->
@@ -2109,7 +2109,7 @@ footer {
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 5-7 Anos</h2>
 <div class="collapse-body">
 <canvas id="backtestRegimeLongo" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
@@ -2236,7 +2236,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <span class="kpi-label">Alpha ITD vs SWRD</span>
   <div class="kpi-value pv" id="alphaItdSwrd">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">HODL11 — P&L e Custo Médio</h2>
@@ -2245,7 +2245,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <span class="kpi-label">HODL11 P&L</span>
   <div class="kpi-value pv" id="hodl11Pnl">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- Information Ratio charts are rendered by buildInformationRatio() into irITDCards and rollingIRChart (above) -->
@@ -2253,7 +2253,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <h2 onclick="_toggleBlock(this.parentElement)">Fee Analysis — Custo vs Alpha</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeBody"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- IR DIFERIDO + TLH — merged -->
@@ -2325,7 +2325,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <button class="preset-btn"        id="pmkt-stress"  onclick="setFireMkt('stress')">⚠️ Stress</button>
     <button class="preset-btn active" id="pmkt-base"    onclick="setFireMkt('base')">✅ Base</button>
     <button class="preset-btn"        id="pmkt-fav"     onclick="setFireMkt('fav')">🚀 Favorável</button>
-    <button class="preset-btn"        id="pcond-fire50" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
+    <button class="preset-btn"        id="pcond-aspiracional" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
   </div>
 </div>
 
@@ -2516,22 +2516,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src" id="premissasVsRealizadoSrc">Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados</div>
 </div><!-- /collapse-body -->
 </div>
-</div><!-- /section unclosed-16 -->
-</div><!-- /section unclosed-15 -->
-</div><!-- /section unclosed-14 -->
-</div><!-- /section unclosed-13 -->
-</div><!-- /section unclosed-12 -->
-</div><!-- /section unclosed-11 -->
-</div><!-- /section unclosed-10 -->
-</div><!-- /section unclosed-9 -->
-</div><!-- /section unclosed-8 -->
-</div><!-- /section unclosed-7 -->
-</div><!-- /section unclosed-6 -->
-</div><!-- /section unclosed-5 -->
-</div><!-- /section unclosed-4 -->
-</div><!-- /section unclosed-3 -->
-</div><!-- /section unclosed-2 -->
-</div><!-- /section unclosed-1 -->
 <div class="section" data-in-tab="carteira">
 <div class="section" data-in-tab="carteira" id="stackedAllocSection">
 <div class="section collapsible" data-in-tab="carteira" id="etfCompSection">
@@ -2610,12 +2594,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Assembly by build_dashboard.py: _assemble_js() concatenates in order
 //
 
-window.GENERATED_AT = new Date('2026-04-14T08:35:26-03:00'); // BRT (UTC-3)
-window.VERSION = '2.198';
+window.GENERATED_AT = new Date('2026-04-14T09:07:30-03:00'); // BRT (UTC-3)
+window.VERSION = '2.204';
 
 window.DATA = {
-  "_generated": "2026-04-14T05:13:28",
-  "_generated_brt": "2026-04-14T05:13:28-03:00",
+  "_generated": "2026-04-14T08:56:04",
+  "_generated_brt": "2026-04-14T08:56:04-03:00",
   "date": "2026-04-14",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -2625,12 +2609,12 @@ window.DATA = {
     "fire_mc": "2026-04-14",
     "geral": "2026-04-14"
   },
-  "cambio": 4.9926,
+  "cambio": 4.9963,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.845,
+      "price": 48.875,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -2638,7 +2622,7 @@ window.DATA = {
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 27.135,
+      "price": 27.155,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -2662,7 +2646,7 @@ window.DATA = {
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 85.41,
+      "price": 85.46,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -2670,7 +2654,7 @@ window.DATA = {
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 50.39,
+      "price": 50.44,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -2694,7 +2678,7 @@ window.DATA = {
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 66.77,
+      "price": 66.73,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -2724,7 +2708,7 @@ window.DATA = {
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3613033,
+    "patrimonio_atual": 3616795,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -2858,7 +2842,7 @@ window.DATA = {
     },
     "pat_mediano_fire": 11527476.0,
     "pat_mediano_fire50": 10156721.0,
-    "mc_date": "2026-04-13",
+    "mc_date": "2026-04-14",
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -4874,9 +4858,9 @@ window.DATA = {
       "taxa_atual": 7.07,
       "piso": 6.0,
       "gap_pp": 1.07,
-      "pct_carteira_atual": 3.5,
+      "pct_carteira_atual": 3.4,
       "alvo_pct": 15.0,
-      "gap_alvo_pp": 11.5
+      "gap_alvo_pp": 11.6
     },
     "ipca2040": {
       "instrumento": "TD IPCA+ 2040",
@@ -5001,7 +4985,7 @@ window.DATA = {
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 85.41,
+      "price": 85.46,
       "ucits": "AVGS.L"
     },
     {
@@ -5009,7 +4993,7 @@ window.DATA = {
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 50.39,
+      "price": 50.44,
       "ucits": "AVEM.L"
     },
     {
@@ -5033,7 +5017,7 @@ window.DATA = {
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 66.77,
+      "price": 66.73,
       "ucits": "JPGL.L"
     }
   ],
@@ -5373,10 +5357,10 @@ window.DATA = {
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 636235,
-    "retorno_usd": 245191,
-    "pct_aportes": 61.5,
-    "pct_retorno": 38.5,
+    "patrimonio_equity_usd": 636517,
+    "retorno_usd": 245473,
+    "pct_aportes": 61.4,
+    "pct_retorno": 38.6,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-14"
@@ -5402,8 +5386,8 @@ window.DATA = {
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 86.8,
-    "bitcoin_usd": 74538.24,
+    "exposicao_cambial_pct": 86.7,
+    "bitcoin_usd": 74361.96,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -5417,13 +5401,13 @@ window.DATA = {
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 4.9926
+    "cambio": 4.9963
   },
   "mercado": {
-    "cambio_brl_usd": 4.9926,
-    "btc_usd": 74538.24,
-    "cambio_mtd_pct": -3.17,
-    "btc_mtd_pct": 3.7,
+    "cambio_brl_usd": 4.9963,
+    "btc_usd": 74361.96,
+    "cambio_mtd_pct": -3.1,
+    "btc_mtd_pct": 3.46,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -5915,7 +5899,7 @@ window.DATA = {
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 436568,
-    "total_portfolio_brl": 3613033,
+    "total_portfolio_brl": 3616795,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -5931,23 +5915,23 @@ window.DATA = {
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72675,
-      "delta_brl": 47675,
-      "delta_pct": 190.7,
+      "realizado_media_brl": 72699,
+      "delta_brl": 47699,
+      "delta_pct": 190.8,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1952323,
+      "total_ibkr_brl": 1953770,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4360482,
-      "cambio_conversao": 4.9926,
+      "total_aporte_brl": 4361929,
+      "cambio_conversao": 4.9963,
       "por_ano_brl": {
-        "2026": 94859,
-        "2025": 281945,
-        "2024": 371807,
-        "2023": 392955,
-        "2022": 481254,
-        "2021": 329503
+        "2026": 94930,
+        "2025": 282154,
+        "2024": 372083,
+        "2023": 393246,
+        "2022": 481611,
+        "2021": 329747
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
@@ -9227,20 +9211,20 @@ window.DATA = {
       2077
     ],
     "p10": [
-      3613033,
-      3751529,
-      3895333,
-      4044650,
-      4199691,
-      4360674,
-      4527829,
-      4701390,
-      4881605,
-      5068728,
-      5263024,
-      5464768,
-      5674244,
-      5891751,
+      3616795,
+      3755156,
+      3898809,
+      4047959,
+      4202814,
+      4363593,
+      4530522,
+      4703837,
+      4883783,
+      5070613,
+      5264589,
+      5465986,
+      5675088,
+      5892189,
       6117595,
       6172298,
       6229655,
@@ -9281,20 +9265,20 @@ window.DATA = {
       14090060
     ],
     "p50": [
-      3613033,
-      3870179,
-      4145626,
-      4440678,
-      4756728,
-      5095273,
-      5457912,
-      5846361,
-      6262457,
-      6708167,
-      7185599,
-      7697011,
-      8244820,
-      8831618,
+      3616795,
+      3873921,
+      4149326,
+      4444310,
+      4760266,
+      5098683,
+      5461159,
+      5849404,
+      6265251,
+      6710661,
+      7187736,
+      7698727,
+      8246046,
+      8832275,
       9460180,
       9676999,
       9904333,
@@ -9335,20 +9319,20 @@ window.DATA = {
       33370394
     ],
     "p90": [
-      3613033,
-      3986752,
-      4399127,
-      4854157,
-      5356254,
-      5910285,
-      6521624,
-      7196197,
-      7940546,
-      8761887,
-      9668185,
-      10668227,
-      11771710,
-      12989333,
+      3616795,
+      3990607,
+      4403053,
+      4858128,
+      5360237,
+      5914241,
+      6525503,
+      7199942,
+      7944088,
+      8765144,
+      9671060,
+      10670606,
+      11773460,
+      12990299,
       14332903,
       14786049,
       15261172,
@@ -9418,7 +9402,7 @@ window.DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.198"
+  "version": "2.204"
 };
 
 // Debug: window.DATA just defined, log it

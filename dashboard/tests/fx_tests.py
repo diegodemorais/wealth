@@ -12,9 +12,18 @@ Tests verify:
 - Spec defines both blocks with correct data_fields
 """
 
-from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_PY
+from .base import registry, load_data, load_html, load_spec, get_nested, BUILD_PY, ROOT
 
 CAMBIO_MIN = 3.0
+TEMPLATE_HTML = ROOT / "dashboard" / "template.html"
+_TEMPLATE = None
+
+def load_template() -> str:
+    global _TEMPLATE
+    if _TEMPLATE is None:
+        with open(TEMPLATE_HTML) as f:
+            _TEMPLATE = f.read()
+    return _TEMPLATE
 CAMBIO_MAX = 15.0
 CAMBIO_CONSISTENCY_TOLERANCE = 0.01   # R$ — same source, must be identical or within rounding
 MTD_MIN = -20.0
@@ -133,17 +142,31 @@ def _cambio_mtd_pct_plausible():
     severity="HIGH",
 )
 def _cambio_mercado_render_html():
+    from pathlib import Path
     html = load_html()
+    template = load_template()
     # The build injects DATA.cambio and mercado.cambio_brl_usd into the rendered page.
-    # Both must appear as inline JSON data and as JS references.
+    # Data keys must appear as JSON in HTML. JS references can be in template or JS modules.
     checks = [
         ("cambio_brl_usd", "mercado.cambio_brl_usd JSON key"),
         ("cambio_mtd_pct", "cambio_mtd_pct JSON key"),
-        ("DATA.cambio", "JS reference to DATA.cambio"),
     ]
     missing = [label for token, label in checks if token not in html]
     if missing:
         return False, f"HTML missing: {', '.join(missing)}"
+
+    # Check for DATA.cambio in template or JS modules
+    has_data_cambio = "DATA.cambio" in template
+    if not has_data_cambio:
+        js_dir = Path(__file__).parent.parent.parent / "dashboard" / "js"
+        for js_file in js_dir.glob("*.mjs"):
+            if "DATA.cambio" in js_file.read_text(encoding="utf-8"):
+                has_data_cambio = True
+                break
+
+    if not has_data_cambio:
+        return False, "DATA.cambio not found in template or JS modules"
+
     return True, "All cambio-mercado render anchors present"
 
 

@@ -437,7 +437,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <table class="semaforo-table" id="semaforoBody">
 <!-- gerado por buildSemaforoPanel() -->
 </table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S5: KPI FIRE -->
@@ -651,56 +651,56 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
 <h2 onclick="_toggleBlock(this.parentElement)">Drift por ETF — Semáforo</h2>
 <div class="collapse-body">
 <div id="driftSemaforoEtf" style="padding:20px;text-align:center;color:var(--muted)">—</div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Intra-Equity — Pesos vs Alvo</h2>
 <div class="collapse-body">
 <canvas id="intraEquityPesos" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Composição por Região e Fator</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Região</th><th>Fator</th><th>%</th></tr></thead><tbody id="etfComposicaoRegiao"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Posições — ETFs Internacionais</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ticker</th><th>Qty</th><th>Preço</th><th>Valor</th></tr></thead><tbody id="posicoesEtfsIbkr"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">TLH Monitor — Lotes e P&L</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ativo</th><th>Qty</th><th>PM</th><th>P&L</th></tr></thead><tbody id="tlhMonitor"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">IR Diferido por ETF</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>ETF</th><th>IR Diferido</th><th>Status</th></tr></thead><tbody id="irDiferido"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Renda Fixa — Posições</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Título</th><th>Qtd</th><th>Taxa</th><th>Valor</th></tr></thead><tbody id="rfPosicoes"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Duration — Renda+ 2065</h2>
 <div class="collapse-body">
 <div class="card" id="durationRendaPlus" style="padding:20px;text-align:center;color:var(--muted)">Duration: —</div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
@@ -1009,7 +1009,7 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <span class="kpi-label">Alpha ITD vs SWRD</span>
   <div class="kpi-value pv" id="alphaItdSwrd">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="perf">
@@ -1019,21 +1019,21 @@ tbody tr:nth-child(even){background:rgba(71,85,105,.08)}
   <span class="kpi-label">HODL11 P&L</span>
   <div class="kpi-value pv" id="hodl11Pnl">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Information Ratio vs VWRA</h2>
 <div class="collapse-body">
 <canvas id="informationRatio" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Fee Analysis — Custo vs Alpha</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeCustoComplexidade"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
@@ -1160,7 +1160,7 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 5-7 Anos</h2>
 <div class="collapse-body">
 <canvas id="backtestRegimeLongo" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S17: FEE ANALYSIS (colapsável) -->
@@ -1401,7 +1401,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <h2 onclick="_toggleBlock(this.parentElement)">Trilha FIRE — Realizado vs Projetado</h2>
 <div class="collapse-body">
 <canvas id="fireTrilha" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="fire">
@@ -1412,7 +1412,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <input type="range" id="simuladorFire" min="1" max="30" value="10" style="width:100%" />
   <div id="simuladorFireResult" style="margin-top:10px;text-align:center;color:var(--muted)">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <div class="section collapsible" data-in-tab="fire">
@@ -1423,7 +1423,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <input type="range" id="whatIfCenarios" min="150000" max="400000" step="10000" value="250000" style="width:100%" />
   <div id="whatIfResult" style="margin-top:10px;text-align:center;color:var(--muted)">P(FIRE) = —%</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- Earliest FIRE Card (extraído do grid-2 F2) -->

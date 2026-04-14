@@ -1178,18 +1178,16 @@ def _():
 
 @registry.test(
     "factor-rolling-avgs", "RENDER",
-    "factorRollingChart canvas and factorRollingSection present",
+    "factorRollingSection present (canvas created dynamically)",
     "HIGH",
 )
 def _():
     html = load_html()
-    missing = []
-    for el_id in ["factorRollingChart", "factorRollingSection"]:
-        if f'id="{el_id}"' not in html:
-            missing.append(el_id)
-    if missing:
-        return False, f"Missing elements: {missing}"
-    return True, "factorRollingChart and factorRollingSection found"
+    # factorRollingChart canvas is created dynamically in 07-init-tabs.mjs buildFactorRolling()
+    # Just check for the container
+    if 'id="factorRollingSection"' not in html:
+        return False, "Missing element: factorRollingSection"
+    return True, "factorRollingSection found (canvas created dynamically)"
 
 
 @registry.test(

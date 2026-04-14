@@ -102,7 +102,7 @@
 <table class="semaforo-table" id="semaforoBody">
 <!-- gerado por buildSemaforoPanel() -->
 </table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S5: KPI FIRE -->
@@ -303,7 +303,7 @@
 <h2 onclick="_toggleBlock(this.parentElement)">Trilha FIRE — Realizado vs Projetado</h2>
 <div class="collapse-body">
 <canvas id="fireTrilha" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Simulador FIRE — Interativo</h2>
@@ -313,7 +313,7 @@
   <input type="range" id="simuladorFire" min="1" max="30" value="10" style="width:100%" />
   <div id="simuladorFireResult" style="margin-top:10px;text-align:center;color:var(--muted)">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Gasto vs P(FIRE)</h2>
@@ -323,7 +323,7 @@
   <input type="range" id="whatIfCenarios" min="150000" max="400000" step="10000" value="250000" style="width:100%" />
   <div id="whatIfResult" style="margin-top:10px;text-align:center;color:var(--muted)">P(FIRE) = —%</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- F9: Missing Components (HOJE tab) -->
@@ -494,49 +494,49 @@
 <h2 onclick="_toggleBlock(this.parentElement)">Drift por ETF — Semáforo</h2>
 <div class="collapse-body">
 <div id="driftSemaforoEtf" style="padding:20px;text-align:center;color:var(--muted)">—</div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Intra-Equity — Pesos vs Alvo</h2>
 <div class="collapse-body">
 <canvas id="intraEquityPesos" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Composição por Região e Fator</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Região</th><th>Fator</th><th>%</th></tr></thead><tbody id="etfComposicaoRegiao"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Posições — ETFs Internacionais</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ticker</th><th>Qty</th><th>Preço</th><th>Valor</th></tr></thead><tbody id="posicoesEtfsIbkr"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">TLH Monitor — Lotes e P&L</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ativo</th><th>Qty</th><th>PM</th><th>P&L</th></tr></thead><tbody id="tlhMonitor"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">IR Diferido por ETF</h2>
 <div class="collapse-body">
 <!-- Note: IR Diferido table removed — builder renders to #taxIrBody in section below -->
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Renda Fixa — Posições</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Título</th><th>Qtd</th><th>Taxa</th><th>Valor</th></tr></thead><tbody id="rfPosicoes"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">Duration — Renda+ 2065</h2>
 <div class="collapse-body">
 <div class="card" id="durationRendaPlus" style="padding:20px;text-align:center;color:var(--muted)">Duration: —</div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S21c: EVENTOS DE VIDA + LUMPY EVENTS (merged) -->
@@ -697,7 +697,7 @@
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 5-7 Anos</h2>
 <div class="collapse-body">
 <canvas id="backtestRegimeLongo" style="height:300px"></canvas>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
@@ -824,7 +824,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <span class="kpi-label">Alpha ITD vs SWRD</span>
   <div class="kpi-value pv" id="alphaItdSwrd">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <h2 onclick="_toggleBlock(this.parentElement)">HODL11 — P&L e Custo Médio</h2>
@@ -833,7 +833,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
   <span class="kpi-label">HODL11 P&L</span>
   <div class="kpi-value pv" id="hodl11Pnl">—</div>
 </div>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- Information Ratio charts are rendered by buildInformationRatio() into irITDCards and rollingIRChart (above) -->
@@ -841,7 +841,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <h2 onclick="_toggleBlock(this.parentElement)">Fee Analysis — Custo vs Alpha</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeBody"></tbody></table>
-</div>
+</div><!-- /collapse-body -->
 </div>
 
 <!-- IR DIFERIDO + TLH — merged -->
@@ -913,7 +913,7 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
     <button class="preset-btn"        id="pmkt-stress"  onclick="setFireMkt('stress')">⚠️ Stress</button>
     <button class="preset-btn active" id="pmkt-base"    onclick="setFireMkt('base')">✅ Base</button>
     <button class="preset-btn"        id="pmkt-fav"     onclick="setFireMkt('fav')">🚀 Favorável</button>
-    <button class="preset-btn"        id="pcond-fire50" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
+    <button class="preset-btn"        id="pcond-aspiracional" onclick="setFirePreset50()" style="margin-left:8px;border-style:dashed">🎯 Cenário Aspiracional</button>
   </div>
 </div>
 
@@ -1104,19 +1104,3 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <div class="src" id="premissasVsRealizadoSrc">Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados</div>
 </div><!-- /collapse-body -->
 </div>
-</div><!-- /section unclosed-16 -->
-</div><!-- /section unclosed-15 -->
-</div><!-- /section unclosed-14 -->
-</div><!-- /section unclosed-13 -->
-</div><!-- /section unclosed-12 -->
-</div><!-- /section unclosed-11 -->
-</div><!-- /section unclosed-10 -->
-</div><!-- /section unclosed-9 -->
-</div><!-- /section unclosed-8 -->
-</div><!-- /section unclosed-7 -->
-</div><!-- /section unclosed-6 -->
-</div><!-- /section unclosed-5 -->
-</div><!-- /section unclosed-4 -->
-</div><!-- /section unclosed-3 -->
-</div><!-- /section unclosed-2 -->
-</div><!-- /section unclosed-1 -->
