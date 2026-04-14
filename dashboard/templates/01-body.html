@@ -1,26 +1,4 @@
 <body>
-<!-- DEBUG PANEL — Remove after diagnostics -->
-<div id="debug-panel" style="position:fixed;top:0;left:0;right:0;background:#000;color:#00ff00;font-family:monospace;font-size:11px;max-height:120px;overflow-y:auto;z-index:99999;padding:6px;border-bottom:2px solid #00ff00;line-height:1.4;display:none">
-  <div id="debug-status">⏳ Loading...</div>
-</div>
-<script>
-window.DEBUG_ON = true;
-window.DEBUG_LOG = [];
-function setDebug(show) {
-  document.getElementById('debug-panel').style.display = show ? 'block' : 'none';
-}
-function debug(msg) {
-  if (!window.DEBUG_ON) return;
-  const ts = new Date().toLocaleTimeString();
-  const entry = `[${ts}] ${msg}`;
-  window.DEBUG_LOG.push(entry);
-  setDebug(true);
-  document.getElementById('debug-status').innerHTML = window.DEBUG_LOG.slice(-6).map(m => m.replace(/</g,'&lt;').replace(/>/g,'&gt;')).join('<br>');
-  console.log(entry);
-}
-debug('1️⃣ Body script loaded');
-debug(`2️⃣ window.DATA: ${typeof window.DATA}`);
-</script>
 
 <div class="container">
 
