@@ -22,6 +22,7 @@ from validate_schema import validate_schema
 from validate_html_structure import validate_html_structure
 from validate_template_sync import validate_template_integrity
 from validate_bootstrap import validate_bootstrap
+from test_dashboard_static import DashboardTester
 
 ROOT = Path(__file__).parent.parent
 TEMPLATE          = ROOT / "dashboard" / "template.html"
@@ -900,6 +901,13 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     js_dir = out_path.parent / "js"
     if not validate_bootstrap(js_dir):
         print(f"\n❌ VALIDAÇÃO BOOTSTRAP FALHOU — Build bloqueado", file=sys.stderr)
+        sys.exit(1)
+
+    # 9c. Validar Dashboard Static (HTML structure + exports + elements)
+    tester = DashboardTester()
+    tester.run_all()
+    if tester.errors:
+        print(f"\n❌ VALIDAÇÃO STATIC FALHOU — Build bloqueado", file=sys.stderr)
         sys.exit(1)
 
     # 10. Validar sincronização Template ↔ Spec (informacional, não bloqueia)
