@@ -22,6 +22,7 @@ from validate_schema import validate_schema
 from validate_html_structure import validate_html_structure
 from validate_template_sync import validate_template_integrity
 from validate_bootstrap import validate_bootstrap
+from validate_globals import _extract_globals_from_builders, _extract_exposed_from_bootstrap
 from test_dashboard_static import DashboardTester
 
 ROOT = Path(__file__).parent.parent
@@ -926,6 +927,20 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     if not validate_bootstrap(js_dir):
         print(f"\n❌ VALIDAÇÃO BOOTSTRAP FALHOU — Build bloqueado", file=sys.stderr)
         sys.exit(1)
+
+    # 9b-2. Validar exposição de variáveis globais (todos os builders têm acesso)
+    print(f"\n🔍 Validando exposição de variáveis globais para builders...")
+    required = _extract_globals_from_builders()
+    exposed = _extract_exposed_from_bootstrap()
+    missing = required - exposed
+    if missing:
+        print(f"\n❌ VARIÁVEIS NÃO EXPOSTAS — Build bloqueado:", file=sys.stderr)
+        for var in sorted(missing):
+            print(f"   ❌ {var} (usada pelos builders, não está em bootstrap.mjs)", file=sys.stderr)
+        print(f"\n   Adicione as variáveis acima ao Object.assign(window, {{...}}) em bootstrap.mjs", file=sys.stderr)
+        sys.exit(1)
+    else:
+        print(f"✅ Todas as variáveis globais estão expostas no bootstrap ({len(exposed)} funções/valores)")
 
     # 9c. Validar Dashboard Static (HTML structure + exports + elements)
     tester = DashboardTester()
