@@ -3,7 +3,9 @@ name: Sync index.html to wealth-dash
 on:
   push:
     paths:
-      - dashboard/index.html   # ajuste se necessário
+      - dashboard/index.html
+      - dashboard/bootstrap.mjs
+      - dashboard/js/**
 
 jobs:
   sync:
@@ -17,19 +19,22 @@ jobs:
         run: |
           git clone https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/diegodemorais/wealth-dash.git /tmp/wealth-dash
 
-      - name: Copiar index.html
+      - name: Copiar dashboard files
         run: |
           cp dashboard/index.html /tmp/wealth-dash/index.html
+          cp dashboard/bootstrap.mjs /tmp/wealth-dash/bootstrap.mjs
+          mkdir -p /tmp/wealth-dash/js
+          cp -r dashboard/js/*.mjs /tmp/wealth-dash/js/
 
       - name: Commit se mudou
         run: |
           cd /tmp/wealth-dash
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html bootstrap.mjs js/
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "sync index.html"
+            git commit -m "sync dashboard files"
             git push origin main
           fi
