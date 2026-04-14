@@ -4,12 +4,12 @@ on:
   push:
     paths:
       - react-app/**
-      - dashboard/**
+      - dash/**
       - .github/workflows/deploy-dashboard.yml
   pull_request:
     paths:
       - react-app/**
-      - dashboard/**
+      - dash/**
 
 jobs:
   # PASSO 1: Build Next.js
@@ -45,33 +45,39 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: build-dashboard
-          path: dashboard/
+          path: dash/
 
   # PASSO 2: Deploy (apenas em push para main e build OK)
   deploy:
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    name: Deploy to GitHub Pages
-    permissions:
-      pages: write
-      id-token: write
+    name: Deploy to /dash/
 
     steps:
+      - name: Checkout código
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download build artifact
         uses: actions/download-artifact@v6
         with:
           name: build-dashboard
-          path: dashboard/
+          path: dash/
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dashboard/
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit e push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dash/
+          if git diff --cached --quiet; then
+            echo "✅ No changes to deploy"
+          else
+            git commit -m "🚀 Deploy: Dashboard build to /dash/ [CI skip]"
+            git push origin main
+            echo "✅ Deployed successfully"
+          fi
 
       - name: Deployment Summary
         if: success()
@@ -105,7 +111,7 @@ jobs:
           echo ""
           echo "📊 FINAL STATUS:"
           echo "  ✓ Build:             SUCCESS"
-          echo "  ✓ Deploy:            SYNCED to gh-pages"
+          echo "  ✓ Deploy:            SYNCED to /dash/"
           echo ""
           echo "🚀 DEPLOYMENT INFORMATION:"
           echo "  • Build Number:      ${{ github.run_number }}"
@@ -115,7 +121,7 @@ jobs:
           echo "  • Timestamp:         $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           echo ""
           echo "📍 LIVE URL:"
-          echo "  https://diegodemorais.github.io/wealth/"
+          echo "  https://diegodemorais.github.io/wealth/dash/"
           echo ""
           echo "✨ GitHub Pages will be live in 1-5 minutes"
           echo ""

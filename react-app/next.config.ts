@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'export',
-  distDir: '../dashboard',
-  basePath: '/wealth',
+  distDir: '../dash',
+  basePath: '/wealth/dash',
   images: {
     unoptimized: true,
   },
