@@ -1,8 +1,8 @@
 // Version and build information
 export const APP_VERSION = '0.1.0';
 
-// Build timestamp (ISO 8601 format)
-export const BUILD_TIMESTAMP = new Date().toISOString();
+// Build timestamp (ISO 8601 format) - set at build time
+export const BUILD_TIMESTAMP = process.env.NEXT_PUBLIC_BUILD_TIMESTAMP || 'unknown';
 
 // Build number (can be set via environment variable or CI/CD pipeline)
 export const BUILD_NUMBER = process.env.NEXT_PUBLIC_BUILD_NUMBER || 'local';

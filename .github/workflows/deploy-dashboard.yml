@@ -71,6 +71,7 @@ jobs:
       - name: Build Next.js
         env:
           NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
+          NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
         run: |
           cd react-app
           npm run build:no-test
@@ -106,6 +107,7 @@ jobs:
       - name: Build app
         env:
           NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
+          NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
         run: |
           cd react-app
           npm run build:no-test
