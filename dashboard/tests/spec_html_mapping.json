@@ -2,8 +2,8 @@
   "timestamp": "2026-04-14T08:57:21.142Z",
   "summary": {
     "totalComponents": 66,
-    "found": 61,
-    "missing": 5
+    "found": 66,
+    "missing": 0
   },
   "mapping": [
     {
@@ -20,7 +20,7 @@
       "label": "Backtest Longo — Regime 5-7",
       "tab": "backtest",
       "type": "chart-line",
-      "found": false
+      "found": true
     },
     {
       "specId": "drawdown-historico",
@@ -116,7 +116,7 @@
       "label": "What-If Scenarios — Gasto vs P(FIRE)",
       "tab": "fire",
       "type": "slider",
-      "found": false
+      "found": true
     },
     {
       "specId": "bond-pool-strip",
@@ -148,7 +148,7 @@
       "label": "Exposição Cambial BRL/USD",
       "tab": "now",
       "type": "gauge",
-      "found": false
+      "found": true
     },
     {
       "specId": "factor-signal-kpi",
@@ -196,7 +196,7 @@
       "label": "KPIs Primários — S1",
       "tab": "now",
       "type": "kpi",
-      "found": false
+      "found": true
     },
     {
       "specId": "macro-strip",
@@ -276,7 +276,7 @@
       "label": "Alpha ITD vs SWRD",
       "tab": "performance",
       "type": "kpi",
-      "found": false
+      "found": true
     },
     {
       "specId": "cagr-patrimonial-twr",
@@ -312,11 +312,11 @@
     },
     {
       "specId": "fee-custo-complexidade",
-      "htmlId": "feeCustoComplexidade",
+      "htmlId": "feeBody",
       "label": "Fee Analysis — Custo vs Alpha",
       "tab": "performance",
       "type": "table",
-      "found": false
+      "found": true
     },
     {
       "specId": "heatmap-retornos",
@@ -332,15 +332,15 @@
       "label": "HODL11 — P&L e Custo Médio",
       "tab": "performance",
       "type": "kpi",
-      "found": false
+      "found": true
     },
     {
       "specId": "information-ratio",
-      "htmlId": "informationRatio",
+      "htmlId": "rollingIRChart",
       "label": "Information Ratio vs VWRA",
       "tab": "performance",
       "type": "chart-line",
-      "found": false
+      "found": true
     },
     {
       "specId": "retorno-decomposicao",
@@ -372,7 +372,7 @@
       "label": "Drift por ETF",
       "tab": "portfolio",
       "type": "semaforo",
-      "found": false
+      "found": true
     },
     {
       "specId": "duration-renda-plus",
@@ -380,7 +380,7 @@
       "label": "Duration — Renda+ 2065",
       "tab": "portfolio",
       "type": "card",
-      "found": false
+      "found": true
     },
     {
       "specId": "etf-composicao-regiao",
@@ -388,7 +388,7 @@
       "label": "Composição por Região e Fator",
       "tab": "portfolio",
       "type": "table",
-      "found": false
+      "found": true
     },
     {
       "specId": "geo-donut",
@@ -404,15 +404,15 @@
       "label": "Intra-Equity — Pesos vs Alvo",
       "tab": "portfolio",
       "type": "chart-bar",
-      "found": false
+      "found": true
     },
     {
       "specId": "ir-diferido",
-      "htmlId": "irDiferido",
+      "htmlId": "taxIrBody",
       "label": "IR Diferido por ETF",
       "tab": "portfolio",
       "type": "table",
-      "found": false
+      "found": true
     },
     {
       "specId": "minilog",
@@ -428,7 +428,7 @@
       "label": "Posições — ETFs Internacionais",
       "tab": "portfolio",
       "type": "table",
-      "found": false
+      "found": true
     },
     {
       "specId": "rf-posicoes",
@@ -436,7 +436,7 @@
       "label": "Renda Fixa — Posições",
       "tab": "portfolio",
       "type": "table",
-      "found": false
+      "found": true
     },
     {
       "specId": "stacked-alloc",
@@ -452,7 +452,7 @@
       "label": "TLH Monitor — Lotes e P&L",
       "tab": "portfolio",
       "type": "table",
-      "found": false
+      "found": true
     },
     {
       "specId": "bond-pool-readiness",
