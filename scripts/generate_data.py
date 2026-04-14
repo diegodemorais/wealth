@@ -2804,29 +2804,37 @@ def main():
     swr_53 = (gasto_anual / pat_med_53 * 100) if pat_med_53 > 0 else 0
     swr_50 = (gasto_anual / pat_med_50 * 100) if pat_med_50 > 0 else 0
 
+    base_scenario = {
+        "idade": age_base,
+        "base":        pfire_base.get("base"),
+        "fav":         pfire_base.get("fav"),
+        "stress":      pfire_base.get("stress"),
+        "pat_mediano": pat_med_53,
+        "pat_p10":     fire_state.get("pat_p10_fire53", fire_state.get("pat_p10_fire")),
+        "pat_p90":     fire_state.get("pat_p90_fire53", fire_state.get("pat_p90_fire")),
+        "gasto_anual": gasto_anual,
+        "swr":         round(swr_53, 2),
+    }
+    aspiracional_scenario = {
+        "idade": age_aspir,
+        "base":        pfire_aspiracional.get("base"),
+        "fav":         pfire_aspiracional.get("fav"),
+        "stress":      pfire_aspiracional.get("stress"),
+        "pat_mediano": pat_med_50,
+        "pat_p10":     fire_state.get("pat_p10_fire50"),
+        "pat_p90":     fire_state.get("pat_p90_fire50"),
+        "gasto_anual": gasto_anual,
+        "swr":         round(swr_50, 2),
+    }
+
     scenario_comparison = {
-        "base": {
-            "idade": age_base,
-            "base":        pfire_base.get("base"),
-            "fav":         pfire_base.get("fav"),
-            "stress":      pfire_base.get("stress"),
-            "pat_mediano": pat_med_53,
-            "pat_p10":     fire_state.get("pat_p10_fire53", fire_state.get("pat_p10_fire")),
-            "pat_p90":     fire_state.get("pat_p90_fire53", fire_state.get("pat_p90_fire")),
-            "gasto_anual": gasto_anual,
-            "swr":         round(swr_53, 2),
-        },
-        "aspiracional": {
-            "idade": age_aspir,
-            "base":        pfire_aspiracional.get("base"),
-            "fav":         pfire_aspiracional.get("fav"),
-            "stress":      pfire_aspiracional.get("stress"),
-            "pat_mediano": pat_med_50,
-            "pat_p10":     fire_state.get("pat_p10_fire50"),
-            "pat_p90":     fire_state.get("pat_p90_fire50"),
-            "gasto_anual": gasto_anual,
-            "swr":         round(swr_50, 2),
-        },
+        # Semantic naming (primary)
+        "base": base_scenario,
+        "aspiracional": aspiracional_scenario,
+        # Backward compatibility aliases for fan chart code
+        "fire53": base_scenario,
+        "fire50": aspiracional_scenario,
+        # Metadata
         "nota_scenarios_pat": (
             f"Pat. mediano no FIRE Day (base): R${pat_med_53/1e6:.2f}M (@{age_base}) / "
             f"R${pat_med_50/1e6:.2f}M (@{age_aspir}). "

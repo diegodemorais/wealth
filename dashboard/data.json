@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-13T20:46:15",
-  "_generated_brt": "2026-04-13T20:46:15-03:00",
+  "_generated": "2026-04-13T21:00:09",
+  "_generated_brt": "2026-04-13T21:00:09-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -271,6 +271,28 @@
       "swr": 2.17
     },
     "aspiracional": {
+      "idade": 49,
+      "base": 86.5,
+      "fav": 92.4,
+      "stress": 82.5,
+      "pat_mediano": 10156721.0,
+      "pat_p10": 6488792.0,
+      "pat_p90": 15670253.0,
+      "gasto_anual": 250000,
+      "swr": 2.46
+    },
+    "fire53": {
+      "idade": 53,
+      "base": 90.4,
+      "fav": 94.1,
+      "stress": 86.8,
+      "pat_mediano": 11527476.0,
+      "pat_p10": 6834909.0,
+      "pat_p90": 18916227.0,
+      "gasto_anual": 250000,
+      "swr": 2.17
+    },
+    "fire50": {
       "idade": 49,
       "base": 86.5,
       "fav": 92.4,
@@ -1451,7 +1473,7 @@
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -1878,7 +1900,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -1889,7 +1911,7 @@
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -1940,7 +1962,7 @@
       472.11,
       455.75,
       477.39,
-      487.53,
+      487.54,
       494.63,
       506.95,
       518.02,
@@ -2756,7 +2778,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 87.3,
-    "bitcoin_usd": 74595.63,
+    "bitcoin_usd": 74532.74,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -2774,9 +2796,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9956,
-    "btc_usd": 74595.63,
+    "btc_usd": 74532.74,
     "cambio_mtd_pct": -3.11,
-    "btc_mtd_pct": 3.78,
+    "btc_mtd_pct": 3.69,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",

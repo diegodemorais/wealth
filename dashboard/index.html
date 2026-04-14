@@ -3146,12 +3146,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // DATA — todos os valores de fontes listadas. Zero hardcoded além
 // dos pré-computados (outputs de scripts já rodados).
 // ═══════════════════════════════════════════════════════════════
-const GENERATED_AT = new Date('2026-04-13T20:46:17-03:00'); // BRT (UTC-3)
-const VERSION = '2.94';
+const GENERATED_AT = new Date('2026-04-13T21:00:39-03:00'); // BRT (UTC-3)
+const VERSION = '2.98';
 
 const DATA = {
-  "_generated": "2026-04-13T20:46:15",
-  "_generated_brt": "2026-04-13T20:46:15-03:00",
+  "_generated": "2026-04-13T21:00:09",
+  "_generated_brt": "2026-04-13T21:00:09-03:00",
   "date": "2026-04-13",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -3410,23 +3410,51 @@ const DATA = {
     }
   },
   "scenario_comparison": {
-    "fire_base": {
+    "base": {
+      "idade": 53,
       "base": 90.4,
       "fav": 94.1,
       "stress": 86.8,
-      "pat_mediano": 9460180.0,
-      "pat_p10": 6117595.0,
-      "pat_p90": 14332903.0
+      "pat_mediano": 11527476.0,
+      "pat_p10": 6834909.0,
+      "pat_p90": 18916227.0,
+      "gasto_anual": 250000,
+      "swr": 2.17
     },
-    "fire_aspiracional": {
+    "aspiracional": {
+      "idade": 49,
       "base": 86.5,
       "fav": 92.4,
       "stress": 82.5,
       "pat_mediano": 10156721.0,
       "pat_p10": 6488792.0,
-      "pat_p90": 15670253.0
+      "pat_p90": 15670253.0,
+      "gasto_anual": 250000,
+      "swr": 2.46
     },
-    "nota_fire_aspiracional_pat": null
+    "fire53": {
+      "idade": 53,
+      "base": 90.4,
+      "fav": 94.1,
+      "stress": 86.8,
+      "pat_mediano": 11527476.0,
+      "pat_p10": 6834909.0,
+      "pat_p90": 18916227.0,
+      "gasto_anual": 250000,
+      "swr": 2.17
+    },
+    "fire50": {
+      "idade": 49,
+      "base": 86.5,
+      "fav": 92.4,
+      "stress": 82.5,
+      "pat_mediano": 10156721.0,
+      "pat_p10": 6488792.0,
+      "pat_p90": 15670253.0,
+      "gasto_anual": 250000,
+      "swr": 2.46
+    },
+    "nota_scenarios_pat": "Pat. mediano no FIRE Day (base): R$11.53M (@53) / R$10.16M (@49). Fonte: fire_montecarlo.py MC 10k sims."
   },
   "timeline": {
     "labels": [
@@ -4596,7 +4624,7 @@ const DATA = {
     "target": [
       97.68,
       101.29,
-      98.11,
+      98.12,
       95.51,
       99.7,
       101.62,
@@ -5023,7 +5051,7 @@ const DATA = {
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -5034,7 +5062,7 @@ const DATA = {
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -5085,7 +5113,7 @@ const DATA = {
       472.11,
       455.75,
       477.39,
-      487.53,
+      487.54,
       494.63,
       506.95,
       518.02,
@@ -5901,7 +5929,7 @@ const DATA = {
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 87.3,
-    "bitcoin_usd": 74595.63,
+    "bitcoin_usd": 74532.74,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -5919,9 +5947,9 @@ const DATA = {
   },
   "mercado": {
     "cambio_brl_usd": 4.9956,
-    "btc_usd": 74595.63,
+    "btc_usd": 74532.74,
     "cambio_mtd_pct": -3.11,
-    "btc_mtd_pct": 3.78,
+    "btc_mtd_pct": 3.69,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -9916,7 +9944,7 @@ const DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.94"
+  "version": "2.98"
 };
 
 // ═══════════════════════════════════════════════════════════════

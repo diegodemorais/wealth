@@ -717,42 +717,52 @@ def build(data_path: Path, template_path: Path, out_path: Path,
             _ds = json.loads(_ds_path.read_text(encoding="utf-8"))
             _fire_state = _ds.get("fire", {})
 
-            # Garantir que pfire_aspiracional/pfire_base existem em data (fallback de dashboard_state.json)
-            # generate_data.py já popula esses campos, mas se data.json vier de outra fonte
-            # ou se os campos estiverem ausentes, ler das chaves planas do state.
-            if not data.get("pfire_aspiracional") or data["pfire_aspiracional"].get("base") is None:
+            # Garantir que scenario_comparison existe e tem estrutura correta.
+            # generate_data.py já popula com nova estrutura (base/aspiracional + aliases fire53/fire50),
+            # mas mantém fallback para dados antigos se necessário.
+            # IMPORTANTE: não sobrescrever scenario_comparison se ele já existir corretamente em data.json
+            if not data.get("scenario_comparison") or not data["scenario_comparison"].get("base"):
+                # Fallback: construir a partir de pfire_base/pfire_aspiracional ou do state
                 fire_st = _fire_state
-                data["pfire_aspiracional"] = {
-                    "base":   fire_st.get("pfire_aspiracional_base", fire_st.get("pfire50_base", None)),
-                    "fav":    fire_st.get("pfire_aspiracional_fav", fire_st.get("pfire50_fav", None)),
-                    "stress": fire_st.get("pfire_aspiracional_stress", fire_st.get("pfire50_stress", None)),
-                }
-            if not data.get("pfire_base") or data["pfire_base"].get("base") is None:
-                fire_st = _fire_state
-                data["pfire_base"] = {
-                    "base":   fire_st.get("pfire_base_base", fire_st.get("pfire_base", None)),
-                    "fav":    fire_st.get("pfire_base_fav",  fire_st.get("pfire_fav", None)),
-                    "stress": fire_st.get("pfire_base_stress", fire_st.get("pfire_stress", None)),
-                }
-            data["scenario_comparison"] = {
-                "fire_base": {
+
+                if not data.get("pfire_aspiracional") or data["pfire_aspiracional"].get("base") is None:
+                    data["pfire_aspiracional"] = {
+                        "base":   fire_st.get("pfire_aspiracional_base", fire_st.get("pfire50_base", None)),
+                        "fav":    fire_st.get("pfire_aspiracional_fav", fire_st.get("pfire50_fav", None)),
+                        "stress": fire_st.get("pfire_aspiracional_stress", fire_st.get("pfire50_stress", None)),
+                    }
+                if not data.get("pfire_base") or data["pfire_base"].get("base") is None:
+                    data["pfire_base"] = {
+                        "base":   fire_st.get("pfire_base_base", fire_st.get("pfire_base", None)),
+                        "fav":    fire_st.get("pfire_base_fav",  fire_st.get("pfire_fav", None)),
+                        "stress": fire_st.get("pfire_base_stress", fire_st.get("pfire_stress", None)),
+                    }
+
+                base_scenario = {
                     "base": data["pfire_base"]["base"],
                     "fav":  data["pfire_base"]["fav"],
                     "stress": data["pfire_base"]["stress"],
                     "pat_mediano": _fire_state.get("pat_mediano_fire", None),
                     "pat_p10": _fire_state.get("pat_p10_fire", None),
                     "pat_p90": _fire_state.get("pat_p90_fire", None),
-                },
-                "fire_aspiracional": {
+                }
+                aspiracional_scenario = {
                     "base": data["pfire_aspiracional"]["base"],
                     "fav":  data["pfire_aspiracional"]["fav"],
                     "stress": data["pfire_aspiracional"]["stress"],
                     "pat_mediano": _fire_state.get("pat_mediano_fire50", None),
                     "pat_p10": _fire_state.get("pat_p10_fire50", None),
                     "pat_p90": _fire_state.get("pat_p90_fire50", None),
-                },
-                "nota_fire_aspiracional_pat": None,
-            }
+                }
+
+                # Nova estrutura com aliases para retrocompatibilidade
+                data["scenario_comparison"] = {
+                    "base": base_scenario,
+                    "aspiracional": aspiracional_scenario,
+                    "fire53": base_scenario,  # alias para fan chart
+                    "fire50": aspiracional_scenario,  # alias para fan chart
+                    "nota_scenarios_pat": None,
+                }
         except Exception as e:
             print(f"⚠️  scenario_comparison: erro ao ler dashboard_state.json — {e}")
             data["scenario_comparison"] = None
