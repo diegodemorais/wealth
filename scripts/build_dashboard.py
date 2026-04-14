@@ -843,17 +843,21 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     data["version"] = version_str
     data_js = _build_data_js(data, generated_at, version_str)
 
-    # 6. Substituir placeholder
-    html = template.replace(PLACEHOLDER, data_js, 1)
+    # 6. Montar módulos JavaScript
+    js_modules = _assemble_js()
 
-    # 7. Escrever output
+    # 7. Substituir placeholders
+    html = template.replace(PLACEHOLDER, data_js, 1)
+    html = html.replace("__JS_MODULES_PLACEHOLDER__", js_modules, 1)
+
+    # 8. Escrever output
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
     print(f"✅ Dashboard gerado: {out_path}")
     print(f"   Versão: v{version_str} | Data/hora: {generated_at}")
     print(f"   Tamanho: {len(html):,} chars ({len(html.splitlines()):,} linhas)")
 
-    # 8. Validar estrutura HTML (bloqueia se quebrada)
+    # 9. Validar estrutura HTML (bloqueia se quebrada)
     is_valid, errors = validate_html_structure(str(out_path))
     if not is_valid:
         print(f"\n❌ VALIDAÇÃO HTML FALHOU — Build bloqueado:", file=sys.stderr)
@@ -892,6 +896,35 @@ def _assemble_css() -> str:
     assembled_css = "\n".join(parts)
     print(f"   Assembled CSS from {len(css_files)} files ({len(assembled_css):,} chars)")
     return assembled_css
+
+
+def _assemble_js() -> str:
+    """Monta JavaScript a partir de arquivos em dashboard/scripts/ em ordem alfabética.
+
+    Lê 01-preamble.js através 07-init-tabs.js e concatena numa única string.
+    """
+    scripts_dir = ROOT / "dashboard" / "scripts"
+
+    if not scripts_dir.exists():
+        print("⚠️  dashboard/scripts/ não encontrado — usando JS inline")
+        return ""
+
+    js_files = sorted(scripts_dir.glob("*.js"))
+    if not js_files:
+        print("⚠️  Nenhum arquivo JS encontrado em dashboard/scripts/ — usando JS inline")
+        return ""
+
+    parts = []
+    for js_file in js_files:
+        try:
+            content = js_file.read_text(encoding="utf-8")
+            parts.append(content)
+        except Exception as e:
+            print(f"⚠️  Erro ao ler {js_file}: {e}")
+
+    assembled_js = "\n".join(parts)
+    print(f"   Assembled JS from {len(js_files)} files ({len(assembled_js):,} chars)")
+    return assembled_js
 
 
 def _assemble_template(template_path: Path) -> str:

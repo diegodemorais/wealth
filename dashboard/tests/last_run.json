@@ -1,10 +1,11 @@
 {
-  "timestamp": "2026-04-13T21:03:24.344339",
+  "timestamp": "2026-04-13T21:08:35.055471",
   "mode": "full",
   "total": 635,
   "passed": 635,
   "failed": 0,
   "failure_cycles": {
+    "smoke-global": 0,
     "net-worth-projection": 0
   },
   "escalations": [],
@@ -15,7 +16,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 577,582 chars, 3 blocos <script>, renderKPIs presente"
+      "message": "index.html OK: 575,480 chars, 3 blocos <script>, renderKPIs presente"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -63,7 +64,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 577,582 chars"
+      "message": "index.html: 575,480 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -2175,7 +2176,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVEM', 'SWRD', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2191,7 +2192,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'now', 'fire', 'backtest', 'retiro', 'portfolio', 'simuladores', 'performance'}"
+      "message": "All blocks use valid tabs: {'backtest', 'now', 'fire', 'retiro', 'portfolio', 'performance', 'simuladores'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4983,7 +4984,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
