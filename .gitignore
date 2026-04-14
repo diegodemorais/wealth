@@ -17,3 +17,19 @@ analysis/backtest_output/*.png
 scripts/node_modules/
 scripts/package-lock.json
 scripts/package.json
+react-app/node_modules/
+react-app/.next/
+
+# Next.js static export
+dashboard/_next/
+dashboard/_not-found/
+dashboard/*.html
+dashboard/*.txt
+dashboard/*.svg
+dashboard/backtest/
+dashboard/dashboard/
+dashboard/fire/
+dashboard/performance/
+dashboard/portfolio/
+dashboard/retirement/
+dashboard/simulators/
