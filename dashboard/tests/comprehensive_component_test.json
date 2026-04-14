@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-04-14T13:04:03.985Z",
+  "timestamp": "2026-04-14T13:25:32.047Z",
   "summary": {
     "total": 66,
-    "pass": 57,
+    "pass": 60,
     "hidden": 0,
-    "empty": 8,
+    "empty": 5,
     "missing": 1
   },
   "components": [
@@ -459,10 +459,10 @@
       "type": "chart-line",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "canvas-chart",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "fee-custo-complexidade",
@@ -471,10 +471,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "heatmap-retornos",
@@ -483,10 +483,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "table",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "hodl11-pnl",

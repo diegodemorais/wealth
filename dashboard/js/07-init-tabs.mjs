@@ -198,7 +198,16 @@ export function _initTabCharts(tab) {
   const tabFns = {
     hoje:     [w.buildTimestamps, w.buildTornado, w.buildSankey,
                w.buildTornadoSensitivity, w.buildIpcaDcaSemaforo, w.buildRendaPlusSemaforo,
-               w.buildKpiGridPrimario, w.buildKpiGridMercado, w.buildWellnessScore],
+               w.buildKpiGridPrimario, w.buildKpiGridMercado, w.buildWellnessScore,
+               // Performance & portfolio charts in HOJE tab (completing empty components)
+               w.buildDonuts, // geoDonut
+               function() { w.buildBacktest?.('since2009'); }, // backtestChart
+               function() { w.buildShadowChart?.('since2009'); }, // shadowChart
+               w.buildFactorRolling, // factorRollingBody
+               w.buildFeeAnalysis, // feeBody
+               w.buildRetornoHeatmap, // heatmapContainer
+               w.buildDrawdownHistory, // drawdownHistChart
+               w.buildBondPool, w.buildBondPoolRunway], // bondPool/bondPoolRunwayChart
     perf:     [function() { w.buildTimeline('all'); }, w.buildAttribution, w.buildDeltaBar,
                w.renderIpcaProgress, w.buildRetornoHeatmap, w.buildRollingSharp, w.buildInformationRatio,
                function() { w.buildBacktest('since2009'); }, w.buildCagrVsTwr,
