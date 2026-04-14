@@ -1,4 +1,26 @@
 // ═══════════════════════════════════════════════════════════════
+// IMPORTS — Function references injected from bootstrap
+// ═══════════════════════════════════════════════════════════════
+const {
+  buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido,
+  buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog,
+  buildTimestamps, buildTornado, buildSankey,
+  buildAttribution, buildDeltaBar, renderIpcaProgress, buildRetornoHeatmap,
+  buildRollingSharp, buildInformationRatio, buildBacktest, buildShadowChart,
+  buildShadowTable, buildFeeAnalysis, buildDrawdownHistory, buildBacktestR7,
+  buildTrackingFire, buildScenarioComparison, buildScenarios,
+  buildFireMatrix, buildLumpyEvents, buildGlidePath, buildNetWorthProjection,
+  buildEarliestFire, buildEventosVida, buildPfireFamilia,
+  buildGuardrails, buildIncomeChart, buildIncomeTable,
+  buildSpendingGuardrails, buildSwrPercentiles, buildSpendingBreakdown,
+  buildIncomeProjection, buildBondPool, buildBondPoolRunway,
+  buildStressTest, buildCagrVsTwr, buildFactorRolling, buildFactorLoadings,
+  buildPremissasVsRealizado,
+  renderMacroStatus, buildBrasilConcentracao, buildMacroCards, buildDcaStatus,
+  buildSemaforoPanel, buildFanChart
+} = window;
+
+// ═══════════════════════════════════════════════════════════════
 // RUNTIME ASSERTIONS
 // ═══════════════════════════════════════════════════════════════
 // Staleness banner
