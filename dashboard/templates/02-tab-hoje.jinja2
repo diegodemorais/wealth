@@ -1,0 +1,253 @@
+<div class="hero-strip" data-in-tab="hoje">
+<div class="hero-kpi primary">
+<div class="hlbl">Patrimônio Total</div>
+<div class="hval pv" id="heroPatrimonioBrl">—</div>
+<div class="hsub pv" id="heroPatrimonioUsd">— em USD</div>
+</div>
+<div class="hero-kpi">
+<div class="hlbl">Anos até FIRE</div>
+<div class="hval pv" id="heroAnos">—</div>
+<div class="hsub pv" id="heroAnosSub">—</div>
+</div>
+<div class="hero-kpi">
+<div class="hlbl">Progresso FIRE</div>
+<div class="hval pv" id="heroProgresso">—</div>
+<div class="hsub pv" id="heroProgressoSub">—</div>
+</div>
+</div>
+<div data-in-tab="hoje" style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;margin-top:2px">Indicadores Primários</div>
+<div class="kpi-grid" data-in-tab="hoje" style="margin-bottom:8px">
+<div class="kpi kpi-fire" style="border-width:2px">
+<div class="kpi-label">P(Cenário Aspiracional)</div>
+<div class="kpi-value pv" id="kpiPfire50">—</div>
+<div class="kpi-sub pv" id="kpiPfire50Sub">cenário base</div>
+</div>
+<div class="kpi kpi-fire" style="border-width:2px">
+<div class="kpi-label">Drift Máximo</div>
+<div class="kpi-value" id="kpiDriftMax">—</div>
+<div class="kpi-sub" id="kpiDriftMaxSub">vs alvo IPS</div>
+</div>
+<div class="kpi">
+<div class="kpi-label">Aporte do Mês</div>
+<div class="kpi-value pv" id="kpiOrigemPat">—</div>
+<div class="kpi-sub pv" id="kpiOrigemPatSub">—</div>
+</div>
+<!-- kpiBondPool e kpiWellnessCompact mantidos ocultos para evitar erros JS -->
+<span id="kpiBondPool"></span><span id="kpiBondPoolSub"></span>
+<span id="kpiWellnessCompact" style="display:none"></span><span id="kpiWellnessSub" style="display:none"></span>
+</div>
+<div data-in-tab="hoje" style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Contexto de Mercado</div>
+<div class="kpi-grid" data-in-tab="hoje" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-bottom:12px">
+<div class="kpi" style="opacity:.85">
+<div class="kpi-label">Dólar</div>
+<div class="kpi-value" id="kpiCambio">—</div>
+<div class="kpi-sub">BRL/USD · PTAX BCB</div>
+</div>
+<div class="kpi" style="opacity:.85">
+<div class="kpi-label">Bitcoin</div>
+<div class="kpi-value" id="kpiBtcUsd">—</div>
+<div class="kpi-sub">BTC/USD</div>
+</div>
+<div class="kpi" style="opacity:.85">
+<div class="kpi-label" style="display:flex;align-items:center;gap:4px">IPCA+ 2040 — Taxa <span id="kpiIpcaSemaforo" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--muted);flex-shrink:0"></span></div>
+<div class="kpi-value" id="kpiIpcaTaxa">—</div>
+<div class="kpi-sub" id="kpiIpcaSub">—</div>
+</div>
+<div class="kpi" style="opacity:.85">
+<div class="kpi-label" style="display:flex;align-items:center;gap:4px">Renda+ 2065 — Taxa <span id="kpiRendaSemaforo" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:var(--muted);flex-shrink:0"></span></div>
+<div class="kpi-value" id="kpiRenda2065">—</div>
+<div class="kpi-sub" id="kpiRenda2065Sub">—</div>
+</div>
+<!-- kpiDelta e kpiFactorSignal removidos do Now — mantidos ocultos para evitar erros JS -->
+<span id="kpiDelta" style="display:none"></span><span id="kpiDeltaSub" style="display:none"></span>
+<span id="kpiFactorSignal"></span><span id="kpiFactorSignalSub"></span>
+<div class="kpi" style="opacity:.85;display:none">
+<div class="kpi-label">IPCA+ 2040 — Mercado</div>
+<div class="kpi-value" id="kpiIpcaMercado">—</div>
+<div class="kpi-sub" id="kpiIpcaMercadoSub">—</div>
+</div>
+<div class="kpi" style="opacity:.85;display:none">
+<div class="kpi-label">Renda+ 2065 — Mercado</div>
+<div class="kpi-value" id="kpiRendaMercado">—</div>
+<div class="kpi-sub" id="kpiRendaMercadoSub">—</div>
+</div>
+</div>
+<div class="section" data-in-tab="hoje">
+<h2>Time to FIRE</h2>
+<div class="fire-big pv" id="fireCountdown">—</div><!-- /section section-370 -->
+<div style="margin:10px 0;background:var(--card2);border-radius:6px;height:12px">
+<div id="fireProgressBar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--purple));transition:width .5s"></div>
+</div>
+<div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--muted);margin-bottom:4px">
+<span class="pv" data-pv-mask="••" id="fireProgressStart">—</span><span class="pv" id="fireProgressLabel">—</span><span class="pv" data-pv-mask="••" id="fireProgressEnd">—</span>
+</div>
+<div style="font-size:.6rem;color:var(--muted);text-align:center;margin-bottom:8px" title="A barra usa escala logarítmica: ln(atual/início)/ln(meta/início). Reflete que duplicar patrimônio de R$1M→R$2M tem o mesmo visual que de R$6M→R$13M.">📏 Escala logarítmica — cada incremento visual representa a mesma multiplicação do patrimônio</div>
+<div id="fireScenarioGrid" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:10px"></div>
+<div id="fireScenarioNote" style="font-size:.6rem;color:var(--muted);text-align:center;margin-top:6px">—</div>
+</div>
+<div class="section section-critical collapsible" data-in-tab="hoje" id="semaforoPanel" style="margin-bottom:14px">
+<h2 onclick="toggleSemaforoPanel()">Semáforos de Gatilhos</h2>
+<div id="semaforoSummary" style="font-size:.75rem;color:var(--muted);margin:4px 0 2px">—</div><!-- /section semaforoPanel -->
+<div class="collapse-body" id="semaforoCollapseBody" style="display:none">
+<table class="semaforo-table" id="semaforoBody">
+<!-- gerado por buildSemaforoPanel() -->
+</table>
+</div><!-- /collapse-body -->
+</div>
+<div class="grid-2" data-in-tab="hoje">
+<div class="section">
+<h2>Progresso FIRE</h2>
+<div style="text-align:center;padding:8px 0">
+<div class="pv" id="fireProgPct" style="font-size:2.2rem;font-weight:700">—</div><!-- /section section-397 -->
+<div class="pv" id="fireProgLabel" style="font-size:.75rem;color:var(--muted)">—</div>
+</div>
+<div class="progress-bar" style="margin-top:8px">
+<div class="progress-fill" id="fireProgFill" style="background:var(--accent)"></div>
+</div>
+<div style="margin-top:12px;font-size:.75rem">
+<div style="display:flex;justify-content:space-between"><span>SWR no FIRE Day projetada:</span><span class="pv" id="swrFireDayVal" style="font-weight:600;color:var(--cyan)">—</span></div>
+<div class="pv" id="swrFireDaySub" style="font-size:.6rem;color:var(--muted);margin-top:2px">—</div>
+</div>
+</div>
+<div class="section">
+<h2>Aporte do Mês</h2>
+<div style="text-align:center;padding:8px 0">
+<div class="pv" id="savingsRate" style="font-size:2.2rem;font-weight:700;color:var(--green)">—</div><!-- /section section-411 -->
+<div class="pv" id="savingsRateSub" style="font-size:.75rem;color:var(--muted)">—</div>
+</div>
+<div class="progress-bar" style="margin-top:8px">
+<div class="progress-fill" id="savingsRateFill" style="background:var(--green)"></div>
+</div>
+<div id="savingsRateNote" style="margin-top:8px;font-size:.7rem;color:var(--muted)">—</div>
+</div>
+<!-- TER da Carteira removido do grid — elementos mantidos ocultos para evitar erros JS -->
+<span id="terCarteira"></span><span id="terCarteiraLabel"></span>
+<span id="terCarteiraFill" style="display:none"></span><span id="terVwraLabel" style="display:none"></span>
+<span id="terVwraFill" style="display:none"></span><span id="terDeltaLabel" style="display:none"></span>
+</div>
+<div class="section" data-in-tab="hoje">
+<h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
+<div class="grid-2" style="margin-bottom:0">
+<div>
+<div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Cenários MC 10k simulações — Cenário Base</div><!-- /section section-430 -->
+<div id="pfireScenarioRow" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:8px;margin-bottom:14px">
+<div class="scenario-card" style="text-align:center;padding:10px 8px">
+<div id="pfire_baseBaseBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Base</div>
+<div class="pv" id="pfire_baseBase" style="font-size:1.6rem;font-weight:800">—</div>
+<div style="font-size:.6rem;color:var(--muted)">Base</div>
+</div>
+<div class="scenario-card" style="text-align:center;padding:10px 8px">
+<div id="pfire_baseFavBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Favorável</div>
+<div class="pv" id="pfire_baseFav" style="font-size:1.6rem;font-weight:800">—</div>
+<div style="font-size:.6rem;color:var(--muted)">Favorável</div>
+</div>
+<div class="scenario-card" style="text-align:center;padding:10px 8px">
+<div id="pfire_baseStressBadge" style="display:inline-block;padding:2px 8px;border-radius:9999px;font-size:.6rem;font-weight:700;margin-bottom:4px">Stress</div>
+<div class="pv" id="pfire_baseStress" style="font-size:1.6rem;font-weight:800">—</div>
+<div style="font-size:.6rem;color:var(--muted)">Stress</div>
+</div>
+</div>
+<div style="font-size:.7rem;color:var(--muted);margin-bottom:6px">Progresso Patrimonial</div>
+<div class="progress-row">
+<div class="progress-label"><span class="pv" id="pfirePatLabel">—</span><span class="pv" id="pfirePatPct">—</span></div>
+<div class="progress-bar">
+<div class="progress-fill" id="pfirePatFill" style="background:var(--accent)"></div>
+</div>
+</div>
+<div class="pv" id="pfirePatMeta" style="font-size:.65rem;color:var(--muted);margin-top:4px">—</div>
+</div>
+<div data-in-tab="hoje">
+<div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
+<div class="chart-box-sm"><canvas id="tornadoChart"></canvas></div>
+</div>
+</div>
+</div>
+<div data-in-tab="hoje">
+<div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Tornado — Sensibilidade ±10% (pp de P(FIRE))</div>
+<div class="chart-box-sm"><canvas id="tornadoChart"></canvas></div>
+</div>
+<div class="section collapsible" data-in-tab="hoje">
+<h2 onclick="_toggleBlock(this.parentElement)">Financial Wellness Score <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(indicador secundário)</span></h2>
+<div class="collapse-body">
+<div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+<div style="text-align:center;min-width:100px">
+<div id="wellnessScore" style="font-size:2.2rem;font-weight:800">—</div><!-- /section section-469 -->
+<div id="wellnessLabel" style="font-size:.75rem;color:var(--muted)">/100</div>
+<div style="margin-top:6px;height:6px;background:var(--card2);border-radius:4px;width:80px">
+<div id="wellnessFill" style="height:100%;border-radius:4px;transition:width .5s"></div>
+</div>
+</div>
+<div style="flex:1;min-width:260px">
+<div class="wellness-grid" id="wellnessGrid"></div>
+<div id="wellnessActions" style="margin-top:10px;padding:8px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent)"></div>
+</div>
+</div>
+</div><!-- /collapse-body -->
+</div>
+<div class="section collapsible open" data-in-tab="hoje" id="macroSection">
+<h2 onclick="_toggleBlock(this.parentElement)">Contexto Macro &amp; DCA Status</h2>
+<div class="collapse-body">
+<!-- MACRO CONTEXT -->
+<div id="macroStatusBadge"></div><!-- /section macroSection -->
+<div class="grid-2" style="margin-bottom:14px">
+<div id="brasilConcentracao"><!-- gerado por buildBrasilConcentracao() --></div>
+<div>
+<div class="macro-strip" id="macroStrip" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:8px;margin-bottom:0"><!-- gerado por buildMacroCards() --></div>
+</div>
+</div>
+<div class="src" style="margin-bottom:14px">Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE</div>
+<!-- DCA STATUS -->
+<div id="dcaSection" style="padding-top:10px;border-top:1px solid rgba(71,85,105,.3)">
+<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+<h2 style="margin-bottom:0;font-size:.8rem;font-weight:600;color:var(--text);text-transform:uppercase;letter-spacing:.5px">DCA Status</h2>
+<div id="dcaAportePriority" style="font-size:.78rem;font-weight:700;padding:5px 12px;border-radius:6px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--accent)">
+      Próximo aporte → calculando…
+    </div>
+</div>
+<div class="dca-grid" id="dcaGrid"><!-- gerado por buildDcaStatus() --></div>
+</div>
+</div><!-- /collapse-body -->
+</div>
+<div class="section collapsible open" data-in-tab="hoje" id="sankeySection">
+<h2 onclick="_toggleBlock(this.parentElement)">Sankey — Fluxo de Caixa Anual (estimado)</h2>
+<div class="collapse-body">
+<div class="chart-box" style="height:200px"><canvas id="sankeyChart"></canvas></div><!-- /section sankeySection -->
+<div style="margin-top:8px;padding:6px 10px;background:rgba(71,85,105,.15);border-radius:6px;font-size:.7rem;color:var(--muted)">
+  ⚠️ Valores estimados: renda = <span class="pv">R$45k/mês</span> × 12. Impostos* = categoria "Taxes &amp; Fees" da análise de gastos (estimado). Nota: <span id="sankeyNota"></span>
+</div>
+<div class="src" id="sankeySrc">Valores estimados · Renda, gastos e hipoteca anualizados</div>
+</div><!-- /collapse-body -->
+</div>
+<div data-in-tab="hoje">
+<!-- S8: GEO DONUT -->
+<h2>Exposição Geográfica — Equities</h2>
+<div class="chart-box-sm"><canvas id="geoDonut"></canvas></div><!-- /section section-528 -->
+<div class="src">Premissa: SWRD ≈ 67% US. AVUV/USSC = 100% US. AVDV = 100% DM ex-US. AVGS ~58% US. (Exclui Fixed Income.)</div>
+</div>
+<div class="section" data-in-tab="hoje">
+<h2>KPIs Primários — Grid</h2>
+<div class="kpi-grid" id="kpiGridPrimario">
+<!-- Populated by JS -->
+</div>
+</div>
+<div class="section" data-in-tab="hoje">
+<h2>Exposição Cambial BRL/USD</h2>
+<div class="gauge-container">
+<div class="gauge" id="exposicaoCambial" style="text-align:center;padding:20px;color:var(--muted)">—</div>
+</div>
+</div>
+<div data-in-tab="hoje" id="bondPoolRunwayChartWrap" style="margin-top:14px;display:none">
+<div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)</div><!-- /section bondPoolSection -->
+<div class="chart-box-sm"><canvas id="bondPoolRunwayChart"></canvas></div>
+<p class="chart-footnote" id="bondPoolRunwayNota"></p>
+</div>
+<div data-in-tab="hoje">
+<!-- F7: Net Worth Projection P10/P50/P90 -->
+<h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
+<div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div><!-- /section section-649 -->
+<div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
+  ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.
+  Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS <span class="pv">R$18k/ano</span> real a partir de age 65.
+</div>
+<div class="src pv" id="netWorthProjectionSrc">Base: Monte Carlo 10k simulações · R$ reais constante 2026</div>
+</div>

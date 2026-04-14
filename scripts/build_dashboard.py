@@ -1060,33 +1060,54 @@ def _assemble_js() -> str:
 
 
 def _assemble_template(template_path: Path) -> str:
-    """Monta template a partir de partials em dashboard/templates/ ou usa template.html fallback.
+    """Monta template via Jinja2 (template.jinja2) ou fallback para concatenação de partials.
 
-    Se templates/ existe, lê e concatena todos os .html em ordem alfabética.
-    Injetar CSS montado (dashboard/styles/) na primeira tag </style>.
-    Caso contrário, usa template.html original.
+    Preferência:
+    1. Se template.jinja2 existe → usa Jinja2 com includes
+    2. Se dashboard/templates/*.jinja2 existem → concatena em ordem
+    3. Fallback: lê template.html original
+
+    Injeta CSS montado (dashboard/styles/) na primeira tag </style>.
     """
+    try:
+        from jinja2 import Environment, FileSystemLoader
+    except ImportError:
+        print("⚠️  Jinja2 não instalado — usando concatenação de partials")
+        # Continua com fallback abaixo
+
     templates_dir = ROOT / "dashboard" / "templates"
+    jinja_template = ROOT / "dashboard" / "template.jinja2"
     template_html = ""
 
-    if templates_dir.exists():
-        partials = sorted(templates_dir.glob("*.html"))
+    # Preferência 1: Usar template.jinja2 com Jinja2
+    if jinja_template.exists() and templates_dir.exists():
+        try:
+            env = Environment(loader=FileSystemLoader(str(ROOT / "dashboard")))
+            tmpl = env.get_template("template.jinja2")
+            template_html = tmpl.render()
+            print(f"   ✓ Assembled via Jinja2 template (template.jinja2 + {len(list(templates_dir.glob('*.jinja2')))} partials)")
+        except Exception as e:
+            print(f"   ⚠️  Jinja2 render failed: {e}")
+            template_html = ""
+
+    # Fallback 2: Concatenar partials .jinja2
+    if not template_html and templates_dir.exists():
+        partials = sorted(templates_dir.glob("*.jinja2"))
         if partials:
-            # Concatenar partials
             parts = []
             for partial in partials:
                 parts.append(partial.read_text(encoding="utf-8"))
             template_html = "".join(parts)
-            print(f"   Assembling template from {len(partials)} partials...")
+            print(f"   ✓ Assembled from {len(partials)} Jinja2 partials (direct concatenation)")
 
+    # Fallback 3: ler template.html original
     if not template_html:
-        # Fallback: ler template.html original
         template_html = template_path.read_text(encoding="utf-8")
+        print(f"   ✓ Using template.html (fallback)")
 
-    # Injetar CSS montado no primeiro </style> (apenas se partials existirem)
+    # Injetar CSS montado no primeiro </style>
     css_content = _assemble_css()
     if css_content and "</style>" in template_html:
-        # Encontrar primeira tag </style> e inserir CSS antes dela
         template_html = template_html.replace("</style>", f"{css_content}\n</style>", 1)
 
     return template_html

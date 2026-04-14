@@ -1,0 +1,20 @@
+<div class="header">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h1>Dashboard Wealth DM</h1>
+<div style="display:flex;gap:8px;align-items:center">
+<span class="privacy-toggle" onclick="window.location.href=window.location.pathname+'?r='+Date.now()" title="Forçar reload"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="vertical-align:middle;opacity:.7" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"></path></svg></span>
+<span class="privacy-toggle" id="erudaBtn" onclick="toggleEruda()" title="Console móvel (debug)"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="vertical-align:middle;opacity:.7" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg></span>
+<span class="privacy-toggle" id="privacyBtn" onclick="togglePrivacy()" title="Ocultar valores"><svg fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" style="vertical-align:middle;opacity:.7" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
+</div>
+</div>
+<div class="meta" id="headerGenerated" style="font-size:0.72rem;opacity:0.6;margin-top:2px"></div>
+</div>
+<div class="tab-nav" id="tabNav">
+<button class="tab-btn active" data-tab="hoje" onclick="switchTab('hoje')">📡 Now</button>
+<button class="tab-btn" data-tab="carteira" onclick="switchTab('carteira')">🎯 Portfolio</button>
+<button class="tab-btn" data-tab="perf" onclick="switchTab('perf')">📈 Performance</button>
+<button class="tab-btn" data-tab="fire" onclick="switchTab('fire')">🔥 FIRE</button>
+<button class="tab-btn" data-tab="retiro" onclick="switchTab('retiro')">🏖️ Retirada</button>
+<button class="tab-btn" data-tab="simuladores" onclick="switchTab('simuladores')">🧪 Simuladores</button>
+<button class="tab-btn" data-tab="backtest" onclick="switchTab('backtest')">📊 Backtest</button>
+</div>

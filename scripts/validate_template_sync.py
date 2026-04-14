@@ -31,11 +31,13 @@ def validate_template_integrity() -> bool:
     
     # Se usar partials, verificar estrutura
     if templates_dir.exists():
-        partials = sorted(templates_dir.glob("*.html"))
+        # Aceitar .html ou .jinja2 partials
+        partials = sorted(templates_dir.glob("*.html")) + sorted(templates_dir.glob("*.jinja2"))
+        partials = sorted(set(partials))  # Remove duplicatas
         if not partials:
             print("❌ dashboard/templates/ vazio", file=sys.stderr)
             return False
-        
+
         # Verificar que partials são bem-formados
         for partial in partials:
             try:
@@ -45,7 +47,7 @@ def validate_template_integrity() -> bool:
             except Exception as e:
                 print(f"❌ Erro ao ler {partial.name}: {e}", file=sys.stderr)
                 return False
-        
+
         print(f"   Partials validados: {len(partials)} arquivos")
         return True
     
