@@ -1,13 +1,55 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useDashboardStore } from '@/store/dashboardStore';
+import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { TimelineChart } from '@/components/charts/TimelineChart';
+import { AttributionChart } from '@/components/charts/AttributionChart';
+import { DeltaBarChart } from '@/components/charts/DeltaBarChart';
+import { RollingSharpChart } from '@/components/charts/RollingSharpChart';
+import { InformationRatioChart } from '@/components/charts/InformationRatioChart';
+import { BacktestChart } from '@/components/charts/BacktestChart';
+import { ShadowChart } from '@/components/charts/ShadowChart';
+
 export default function PerformancePage() {
+  const setData = useDashboardStore(s => s.setData);
+  const data = useDashboardStore(s => s.data);
+
+  useEffect(() => {
+    if (!data) {
+      fetch('/data.json')
+        .then(r => r.json())
+        .then(d => setData(d))
+        .catch(e => console.error('Failed to load data:', e));
+    }
+  }, [data, setData]);
+
+  if (!data) {
+    return <div>Loading performance data...</div>;
+  }
+
   return (
     <div>
       <h1>📈 Performance</h1>
-      <p>Performance analysis coming in Phase 3...</p>
-      <div style={{ padding: '40px', backgroundColor: '#1f2937', borderRadius: '8px', marginTop: '20px' }}>
-        <p>📊 Historical returns & attribution will be shown here</p>
-      </div>
+
+      <CollapsibleSection id="section-history" title="Historical Performance" defaultOpen={true}>
+        <TimelineChart data={data} />
+      </CollapsibleSection>
+
+      <CollapsibleSection id="section-attribution" title="Return Attribution" defaultOpen={true}>
+        <AttributionChart data={data} />
+        <DeltaBarChart data={data} />
+      </CollapsibleSection>
+
+      <CollapsibleSection id="section-risk" title="Risk Metrics" defaultOpen={true}>
+        <RollingSharpChart data={data} />
+        <InformationRatioChart data={data} />
+      </CollapsibleSection>
+
+      <CollapsibleSection id="section-backtest" title="Backtest & Comparisons" defaultOpen={false}>
+        <BacktestChart data={data} />
+        <ShadowChart data={data} />
+      </CollapsibleSection>
     </div>
   );
 }
