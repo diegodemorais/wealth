@@ -893,10 +893,11 @@ def build(data_path: Path, template_path: Path, out_path: Path,
 
 
 def _assemble_css() -> str:
-    """Monta CSS a partir de arquivos em dashboard/styles/ em ordem alfabética.
+    """Monta CSS a partir de arquivos em dashboard/styles/.
 
-    Lê 01-reset.css, 02-theme.css, 03-layout.css, 04-components.css, 05-responsive.css
-    e concatena numa única string.
+    Prioridade:
+    1. Se 5 módulos (01-05) estão bem-preenchidos (>1000 bytes total), usa eles
+    2. Caso contrário, usa dashboard.css como fallback
     """
     styles_dir = ROOT / "dashboard" / "styles"
 
@@ -904,21 +905,56 @@ def _assemble_css() -> str:
         print("⚠️  dashboard/styles/ não encontrado — usando CSS inline")
         return ""
 
-    css_files = sorted(styles_dir.glob("*.css"))
-    if not css_files:
+    # Tentar usar os 5 módulos
+    modules = ["01-reset.css", "02-theme.css", "03-layout.css", "04-components.css", "05-responsive.css"]
+    module_paths = [styles_dir / m for m in modules]
+
+    # Verificar se todos os 5 módulos existem e têm conteúdo significativo
+    if all(p.exists() for p in module_paths):
+        total_size = sum(p.stat().st_size for p in module_paths)
+        if total_size > 1000:  # Mínimo de conteúdo para considerar módulos populados
+            parts = []
+            for css_file in module_paths:
+                try:
+                    content = css_file.read_text(encoding="utf-8")
+                    if content.strip():  # Só inclui se tem conteúdo
+                        parts.append(content)
+                except Exception as e:
+                    print(f"⚠️  Erro ao ler {css_file}: {e}")
+
+            if parts:
+                assembled_css = "\n".join(parts)
+                print(f"   Assembled CSS from {len(modules)} modules ({len(assembled_css):,} chars)")
+                return assembled_css
+
+    # Fallback: usar dashboard.css
+    dashboard_css = styles_dir / "dashboard.css"
+    if dashboard_css.exists():
+        try:
+            content = dashboard_css.read_text(encoding="utf-8")
+            print(f"   Using dashboard.css ({len(content):,} chars)")
+            return content
+        except Exception as e:
+            print(f"⚠️  Erro ao ler dashboard.css: {e}")
+
+    # Se nada funcionou
+    all_css_files = sorted(styles_dir.glob("*.css"))
+    if not all_css_files:
         print("⚠️  Nenhum arquivo CSS encontrado em dashboard/styles/ — usando CSS inline")
         return ""
 
+    # Fallback final: concatenar tudo que encontrar
     parts = []
-    for css_file in css_files:
+    for css_file in all_css_files:
         try:
             content = css_file.read_text(encoding="utf-8")
-            parts.append(content)
+            if content.strip():
+                parts.append(content)
         except Exception as e:
             print(f"⚠️  Erro ao ler {css_file}: {e}")
 
     assembled_css = "\n".join(parts)
-    print(f"   Assembled CSS from {len(css_files)} files ({len(assembled_css):,} chars)")
+    print(f"   Assembled CSS from {len(all_css_files)} files (fallback, {len(assembled_css):,} chars)")
     return assembled_css
 
 
