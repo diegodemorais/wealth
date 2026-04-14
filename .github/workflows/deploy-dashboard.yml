@@ -52,7 +52,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    name: Deploy to wealth-dash
+    name: Deploy to GitHub Pages
+    permissions:
+      pages: write
+      id-token: write
 
     steps:
       - name: Download build artifact
@@ -61,43 +64,21 @@ jobs:
           name: build-dashboard
           path: dashboard/
 
-      - name: Clonar destino (wealth-dash)
-        run: |
-          set -e
-          git clone https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/diegodemorais/wealth-dash.git /tmp/wealth-dash
-          if [ ! -d "/tmp/wealth-dash" ]; then
-            echo "❌ Failed to clone wealth-dash repository"
-            exit 1
-          fi
-          echo "✅ wealth-dash repository cloned"
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard/
 
-      - name: Copiar dashboard files
-        run: |
-          set -e
-          # Copy all static files from Next.js build
-          cp -r dashboard/* /tmp/wealth-dash/
-          echo "✅ Dashboard files copied"
-
-      - name: Commit e push deploy
-        run: |
-          cd /tmp/wealth-dash
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "✅ No changes to deploy"
-          else
-            git commit -m "🚀 Deploy: sync dashboard files [CI skip]"
-            git push origin main
-            echo "✅ Deployed successfully"
-          fi
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Deployment Summary
         if: success()
         run: |
           echo "## Deployment Status ✅"
           echo "- Build: Success"
-          echo "- Deploy: Success"
+          echo "- Deploy: Success to gh-pages"
 
       - name: Deployment Failed
         if: failure()
@@ -124,7 +105,7 @@ jobs:
           echo ""
           echo "📊 FINAL STATUS:"
           echo "  ✓ Build:             SUCCESS"
-          echo "  ✓ Deploy:            SYNCED to wealth-dash"
+          echo "  ✓ Deploy:            SYNCED to gh-pages"
           echo ""
           echo "🚀 DEPLOYMENT INFORMATION:"
           echo "  • Build Number:      ${{ github.run_number }}"
@@ -134,7 +115,7 @@ jobs:
           echo "  • Timestamp:         $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           echo ""
           echo "📍 LIVE URL:"
-          echo "  https://diegodemorais.github.io/wealth-dash/"
+          echo "  https://diegodemorais.github.io/"
           echo ""
           echo "✨ GitHub Pages will be live in 1-5 minutes"
           echo ""
