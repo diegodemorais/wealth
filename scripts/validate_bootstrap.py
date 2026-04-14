@@ -159,7 +159,17 @@ def validate_bootstrap(js_dir: Path) -> bool:
         'buildBondPool', 'buildFireMatrix', 'buildSwrPercentiles', 'buildTrackingFire', 'buildDrawdownHistory',
         'buildEtfComposition', 'buildBondPoolRunway', 'buildLumpyEvents', 'buildTimestamps',
         'buildPremissasVsRealizado', 'buildFactorRolling', 'buildFactorLoadings', 'buildCagrVsTwr', 'calcAporte',
-        '_initTabCharts', 'switchTab', '_applyPrivacyCharts', 'init', 'GENERATED_AT', 'VERSION'
+        '_initTabCharts', 'switchTab', '_applyPrivacyCharts', 'init', 'GENERATED_AT', 'VERSION',
+        # Missing Builders (08-missing-builders) — stubs/placeholders
+        'buildTornadoSensitivity', 'buildIpcaDcaSemaforo', 'buildRendaPlusSemaforo', 'buildKpiGridPrimario',
+        'buildKpiGridMercado', 'buildWellnessScore', 'buildEvolucaoCarteira', 'buildFactorLoadingsChart',
+        'buildFactorRollingAvgs', 'buildRetornoDecomposicao', 'buildFeeCustoComplexidade', 'buildHeatmapRetornos',
+        'buildInformationRatioChart', 'buildBacktestMetricas', 'buildBacktestRegimeLongo',
+        'buildDrawdownHistoricoChart', 'buildShadowPortfolios', 'buildFireTrilha', 'buildGlidePathChart',
+        'buildLumpyEventsChart', 'buildSimuladorFire', 'buildWhatIfCenarios', 'buildCustoBaseBucket',
+        'buildEtfComposicaoRegiao', 'buildGeoDonut', 'buildIntraEquityPesos', 'buildMinilogChart',
+        'buildPosicoesEtfsIbkr', 'buildRfPosicoes', 'buildTlhMonitor', 'buildBondPoolRunwayChart',
+        'buildIncomeLifecycle', 'buildSpendingBreakdownChart', 'buildCalcAporteChart', 'buildStressTestMc'
     }
     
     datawiring_required = assign_keys - non_datawiring_keys
