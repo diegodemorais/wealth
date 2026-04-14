@@ -442,7 +442,7 @@ describe('Simulators - Complete Comprehensive Testing', () => {
 
     it('chart containers have proper spacing', () => {
       cy.get('canvas').parent().each($parent => {
-        cy.wrap($parent).should('have.css', 'padding').or('have.css', 'margin');
+        cy.wrap($parent).should('have.css', 'padding').and('have.css', 'margin');
       });
     });
 

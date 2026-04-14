@@ -313,7 +313,7 @@ describe('Responsive Design - All Viewports', () => {
     it('padding adjusts for mobile', () => {
       cy.viewport(375, 667);
       cy.visit('/');
-      cy.get('body').should('have.css', 'padding').or('have.css', 'margin');
+      cy.get('body').should('have.css', 'padding').and('have.css', 'margin');
     });
 
     it('content is not cramped', () => {

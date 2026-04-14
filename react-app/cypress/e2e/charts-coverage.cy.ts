@@ -5,7 +5,7 @@ describe('Charts - Complete Coverage', () => {
     });
 
     it('dashboard page loads with charts', () => {
-      cy.get('h1').should('contain', '📈').or('contain', '📡');
+      cy.get('h1').should('contain', '📈').and('contain', '📡');
       cy.get('canvas').should('have.length.greaterThan', 0);
     });
 
@@ -148,7 +148,7 @@ describe('Charts - Complete Coverage', () => {
 
     it('chart sections have proper spacing', () => {
       cy.get('canvas').parent().each($parent => {
-        cy.wrap($parent).should('have.css', 'padding').or('have.css', 'margin');
+        cy.wrap($parent).should('have.css', 'padding').and('have.css', 'margin');
       });
     });
 
@@ -268,7 +268,7 @@ describe('Charts - Complete Coverage', () => {
     it('chart elements have sufficient contrast', () => {
       // Check canvas and text elements
       cy.get('canvas, text, label').each($elem => {
-        cy.wrap($elem).should('have.css', 'color').or('have.css', 'background-color');
+        cy.wrap($elem).should('have.css', 'color').and('have.css', 'background-color');
       });
     });
 

@@ -4,7 +4,7 @@ describe('Integration & Data Flow', () => {
       cy.visit('/');
 
       // Dashboard
-      cy.get('h1').should('contain', '📈').or('contain', '📡');
+      cy.get('h1').should('contain', '📈').and('contain', '📡');
       cy.get('[style*="border-left"]').should('have.length.greaterThan', 0);
 
       // Portfolio

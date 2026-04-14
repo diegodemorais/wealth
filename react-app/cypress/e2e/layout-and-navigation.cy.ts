@@ -143,7 +143,7 @@ describe('Layout & Navigation - Complete Suite', () => {
   describe('Page Titles & Headings', () => {
     it('dashboard has correct heading', () => {
       cy.visit('/');
-      cy.get('h1').should('contain', '📈').or('contain', '📡');
+      cy.get('h1').should('contain', '📈').and('contain', '📡');
     });
 
     it('portfolio page has correct heading', () => {

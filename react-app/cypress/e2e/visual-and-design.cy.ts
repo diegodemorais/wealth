@@ -111,7 +111,7 @@ describe('Visual Design & Consistency', () => {
     it('text is left-aligned (or language-appropriate)', () => {
       cy.visit('/');
 
-      cy.get('body').should('have.css', 'text-align').or('have.css', 'direction');
+      cy.get('body').should('have.css', 'text-align').and('have.css', 'direction');
     });
   });
 

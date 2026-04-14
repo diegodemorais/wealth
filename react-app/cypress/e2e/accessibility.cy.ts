@@ -7,9 +7,8 @@ describe('Accessibility - Complete Coverage', () => {
     it('buttons have aria labels', () => {
       cy.get('button').each($btn => {
         cy.wrap($btn).should(($el) => {
-          expect(
-            $el.attr('aria-label') || $el.text().trim().length > 0
-          ).to.be.truthy;
+          const hasLabel = $el.attr('aria-label') || $el.text().trim().length > 0;
+          expect(hasLabel).to.be.ok;
         });
       });
     });
@@ -58,7 +57,7 @@ describe('Accessibility - Complete Coverage', () => {
       cy.focused().should('have.attr', 'href');
 
       // Tab to next link
-      cy.focused().tab();
+      cy.focused().type('{tab}');
       cy.focused().should('have.attr', 'href');
     });
 
@@ -83,7 +82,7 @@ describe('Accessibility - Complete Coverage', () => {
     it('can navigate away from inputs', () => {
       cy.visit('/simulators');
       cy.get('input[type="range"]').first().focus();
-      cy.focused().tab();
+      cy.focused().type('{tab}');
       cy.focused().should('exist');
     });
   });
@@ -171,7 +170,9 @@ describe('Accessibility - Complete Coverage', () => {
 
     it('focus is visible on interactive elements', () => {
       cy.get('button').first().focus();
-      cy.focused().should('have.attr', 'aria-label').or('have.text');
+      cy.focused().should(($el) => {
+        expect($el.attr('aria-label') || $el.text().length > 0).to.be.ok;
+      });
     });
 
     it('focus outline is present', () => {
@@ -183,7 +184,7 @@ describe('Accessibility - Complete Coverage', () => {
       cy.get('header button').first().focus();
       cy.focused().should('exist');
 
-      cy.focused().tab();
+      cy.focused().type('{tab}');
       cy.focused().should('exist');
     });
 
@@ -191,7 +192,7 @@ describe('Accessibility - Complete Coverage', () => {
       // If there are modals/dropdowns
       cy.get('button').first().focus();
       const initialFocus = cy.focused();
-      cy.focused().tab();
+      cy.focused().type('{tab}');
       cy.focused().should('exist');
     });
   });
@@ -218,11 +219,10 @@ describe('Accessibility - Complete Coverage', () => {
       cy.get('canvas').each($canvas => {
         // Should have title or aria-label
         cy.wrap($canvas).should(($el) => {
-          expect(
-            $el.attr('aria-label') ||
+          const hasLabel = $el.attr('aria-label') ||
             $el.parent().attr('aria-label') ||
-            $el.attr('title')
-          ).to.be.truthy;
+            $el.attr('title');
+          expect(hasLabel).to.be.ok;
         });
       });
     });
@@ -349,9 +349,8 @@ describe('Accessibility - Complete Coverage', () => {
         const href = $link.attr('href');
         if (href && href.startsWith('http')) {
           cy.wrap($link).should(($el) => {
-            expect(
-              $el.attr('aria-label') || $el.text().includes('↗')
-            ).to.be.truthy;
+            const hasIndicator = $el.attr('aria-label') || $el.text().includes('↗');
+            expect(hasIndicator).to.be.ok;
           });
         }
       });
@@ -366,9 +365,9 @@ describe('Accessibility - Complete Coverage', () => {
       cy.focused().should('exist');
 
       // Tab through several elements
-      cy.focused().tab();
+      cy.focused().type('{tab}');
       cy.focused().should('exist');
-      cy.focused().tab();
+      cy.focused().type('{tab}');
       cy.focused().should('exist');
     });
 
