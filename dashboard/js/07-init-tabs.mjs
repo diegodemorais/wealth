@@ -196,7 +196,9 @@ export function _initTabCharts(tab) {
   // This avoids issues with destructuring from window before bootstrap populates it
   const w = window;
   const tabFns = {
-    hoje:     [w.buildTimestamps, w.buildTornado, w.buildSankey],
+    hoje:     [w.buildTimestamps, w.buildTornado, w.buildSankey,
+               w.buildTornadoSensitivity, w.buildIpcaDcaSemaforo, w.buildRendaPlusSemaforo,
+               w.buildKpiGridPrimario, w.buildWellnessScore],
     perf:     [function() { w.buildTimeline('all'); }, w.buildAttribution, w.buildDeltaBar,
                w.renderIpcaProgress, w.buildRetornoHeatmap, w.buildRollingSharp, w.buildInformationRatio,
                function() { w.buildBacktest('since2009'); }, w.buildCagrVsTwr,
@@ -211,18 +213,21 @@ export function _initTabCharts(tab) {
                w.buildNetWorthProjection,
                () => { w._applyFireAxes(); }, w.buildEarliestFire,
                w.buildEventosVida, w.buildPfireFamilia,
-               () => { if (w.updateWhatIf) w.updateWhatIf(); }],
+               () => { if (w.updateWhatIf) w.updateWhatIf(); },
+               w.buildFireTrilha, w.buildSimuladorFire, w.buildWhatIfCenarios],
     retiro:   [w.buildGuardrails, w.buildIncomeChart, w.buildIncomeTable,
                w.buildSpendingGuardrails, w.buildSwrPercentiles,
                w.buildSpendingBreakdown, w.buildIncomeProjection,
-               w.buildBondPool, w.buildBondPoolRunway],
+               w.buildBondPool, w.buildBondPoolRunway,
+               w.buildIncomeLifecycle],
     simuladores: [() => { w._applyFireAxes(); }, w.buildScenarios, w.buildStressTest,
                   function() {
                     const wiC = document.getElementById('wiCusto');
                     if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
                     if (!window._wiPreset) window._wiPreset = 'base';
                     updateWhatIf();
-                  }],
+                  },
+                  w.buildCalcAporteChart, w.buildStressTestMc],
   };
   const fns = tabFns[tab] || [];
   fns.forEach(fn => { try { fn(); } catch(e) { console.error('[chart-init ERROR]', fn.name || tab, e.message, e); } });

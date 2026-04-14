@@ -9,6 +9,7 @@ import * as chartsPortfolio from './04-charts-portfolio.mjs';
 import * as fireProj from './05-fire-projections.mjs';
 import * as dashboardRender from './06-dashboard-render.mjs';
 import * as initTabs from './07-init-tabs.mjs';
+import * as missingBuilders from './08-missing-builders.mjs';
 
 // ═══════════════════════════════════════════════════════════════
 // PHASE 1: FOUC Guard (synchronous, before DOM render)
@@ -164,6 +165,43 @@ if (!window.DATA) {
     init: initTabs.init,
     GENERATED_AT: initTabs.GENERATED_AT,
     VERSION: initTabs.VERSION,
+
+    // From 08-missing-builders (stubs for empty components)
+    buildTornadoSensitivity: missingBuilders.buildTornadoSensitivity,
+    buildIpcaDcaSemaforo: missingBuilders.buildIpcaDcaSemaforo,
+    buildRendaPlusSemaforo: missingBuilders.buildRendaPlusSemaforo,
+    buildKpiGridPrimario: missingBuilders.buildKpiGridPrimario,
+    buildKpiGridMercado: missingBuilders.buildKpiGridMercado,
+    buildWellnessScore: missingBuilders.buildWellnessScore,
+    buildEvolucaoCarteira: missingBuilders.buildEvolucaoCarteira,
+    buildFactorLoadingsChart: missingBuilders.buildFactorLoadingsChart,
+    buildFactorRollingAvgs: missingBuilders.buildFactorRollingAvgs,
+    buildRetornoDecomposicao: missingBuilders.buildRetornoDecomposicao,
+    buildFeeCustoComplexidade: missingBuilders.buildFeeCustoComplexidade,
+    buildHeatmapRetornos: missingBuilders.buildHeatmapRetornos,
+    buildInformationRatioChart: missingBuilders.buildInformationRatioChart,
+    buildBacktestMetricas: missingBuilders.buildBacktestMetricas,
+    buildBacktestRegimeLongo: missingBuilders.buildBacktestRegimeLongo,
+    buildDrawdownHistoricoChart: missingBuilders.buildDrawdownHistoricoChart,
+    buildShadowPortfolios: missingBuilders.buildShadowPortfolios,
+    buildFireTrilha: missingBuilders.buildFireTrilha,
+    buildGlidePathChart: missingBuilders.buildGlidePathChart,
+    buildLumpyEventsChart: missingBuilders.buildLumpyEventsChart,
+    buildSimuladorFire: missingBuilders.buildSimuladorFire,
+    buildWhatIfCenarios: missingBuilders.buildWhatIfCenarios,
+    buildCustoBaseBucket: missingBuilders.buildCustoBaseBucket,
+    buildEtfComposicaoRegiao: missingBuilders.buildEtfComposicaoRegiao,
+    buildGeoDonut: missingBuilders.buildGeoDonut,
+    buildIntraEquityPesos: missingBuilders.buildIntraEquityPesos,
+    buildMinilogChart: missingBuilders.buildMinilogChart,
+    buildPosicoesEtfsIbkr: missingBuilders.buildPosicoesEtfsIbkr,
+    buildRfPosicoes: missingBuilders.buildRfPosicoes,
+    buildTlhMonitor: missingBuilders.buildTlhMonitor,
+    buildBondPoolRunwayChart: missingBuilders.buildBondPoolRunwayChart,
+    buildIncomeLifecycle: missingBuilders.buildIncomeLifecycle,
+    buildSpendingBreakdownChart: missingBuilders.buildSpendingBreakdownChart,
+    buildCalcAporteChart: missingBuilders.buildCalcAporteChart,
+    buildStressTestMc: missingBuilders.buildStressTestMc,
   });
   const fnCount = Object.keys(window).filter(k => k.startsWith('build') || k === 'renderKPIs').length;
   console.log('[BOOTSTRAP] Phase 2 complete — window object populated with', fnCount, 'functions');

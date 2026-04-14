@@ -875,6 +875,9 @@ def build(data_path: Path, template_path: Path, out_path: Path,
       ).replace(
         "from './07-init-tabs.mjs'",
         "from './js/07-init-tabs.mjs'"
+      ).replace(
+        "from './08-missing-builders.mjs'",
+        "from './js/08-missing-builders.mjs'"
       )
       bootstrap_dst.write_text(bootstrap_content, encoding="utf-8")
       print(f"   Copiado: bootstrap.mjs ({bootstrap_dst.stat().st_size:,} bytes)")
@@ -884,7 +887,7 @@ def build(data_path: Path, template_path: Path, out_path: Path,
       js_dst_dir.mkdir(parents=True, exist_ok=True)
       modules = ["01-preamble.mjs", "02-data-wiring.mjs", "03-utils.mjs",
                  "04-charts-portfolio.mjs", "05-fire-projections.mjs",
-                 "06-dashboard-render.mjs", "07-init-tabs.mjs"]
+                 "06-dashboard-render.mjs", "07-init-tabs.mjs", "08-missing-builders.mjs"]
       for mod in modules:
         src = js_src_dir / mod
         dst = js_dst_dir / mod

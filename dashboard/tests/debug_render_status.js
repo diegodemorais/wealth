@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 9881;
-const DASHBOARD_DIR = path.join(__dirname, '..');
+const DASHBOARD_DIR = path.join(__dirname, '..');  // Go to dashboard directory
 const SPEC = JSON.parse(fs.readFileSync(path.join(__dirname, 'spec_html_mapping.json'), 'utf-8'));
 
 const server = http.createServer((req, res) => {
@@ -49,6 +49,23 @@ server.listen(PORT, async () => {
 
   await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle', timeout: 30000 });
   await page.waitForTimeout(5000);  // Wait for tab initialization + RAF callbacks
+
+  // Initialize ALL tabs before checking render status (lazy loading)
+  const tabs = ['hoje', 'perf', 'backtest', 'carteira', 'fire', 'retiro', 'simuladores'];
+  for (const tab of tabs) {
+    await page.evaluate((tabName) => {
+      const btn = document.querySelector(`[data-tab="${tabName}"]`);
+      if (btn) btn.click();
+    }, tab);
+    await page.waitForTimeout(1000);  // Wait for tab to initialize
+  }
+
+  // Return to hoje tab for consistency
+  await page.evaluate(() => {
+    const btn = document.querySelector('[data-tab="hoje"]');
+    if (btn) btn.click();
+  });
+  await page.waitForTimeout(1000);
 
   const results = [];
   let rendered = 0, empty = 0;
