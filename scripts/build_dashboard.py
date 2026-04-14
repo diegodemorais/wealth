@@ -1021,13 +1021,13 @@ def _assemble_template(template_path: Path) -> str:
 
 
 def _build_data_js(data: dict, generated_at: str, version: str) -> str:
-    """Converte dashboard/data.json para o bloco JS const DATA = {...}"""
+    """Converte dashboard/data.json para o bloco JS window.DATA = {...}"""
     data_json = json.dumps(data, ensure_ascii=False, indent=2)
     lines = [
-        f"const GENERATED_AT = new Date('{generated_at}'); // BRT (UTC-3)",
-        f"const VERSION = '{version}';",
+        f"window.GENERATED_AT = new Date('{generated_at}'); // BRT (UTC-3)",
+        f"window.VERSION = '{version}';",
         "",
-        f"const DATA = {data_json};",
+        f"window.DATA = {data_json};",
     ]
     return "\n".join(lines)
 
