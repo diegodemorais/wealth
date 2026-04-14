@@ -134,7 +134,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [unit-tests, build, e2e-tests]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/claude/user-token-auth-coUQ3'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Deploy to wealth-dash
 
     steps:
