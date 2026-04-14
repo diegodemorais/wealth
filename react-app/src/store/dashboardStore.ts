@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { DashboardData, DerivedValues, MCParams, MCResult } from '@/types/dashboard';
 import { computeDerivedValues } from '@/utils/dataWiring';
+import { runMC } from '@/utils/montecarlo';
 
 export interface DashboardState {
   // Data
@@ -29,6 +30,7 @@ export interface DashboardState {
   setStressShock: (key: keyof DashboardState['stress'], value: number) => void;
   setMcParams: (params: Partial<MCParams>) => void;
   setMcResults: (results: MCResult | null) => void;
+  runMC: (params?: Partial<MCParams>) => void;
 }
 
 const defaultMcParams: MCParams = {
@@ -36,6 +38,7 @@ const defaultMcParams: MCParams = {
   monthlyContribution: 5000,
   returnMean: 0.07,
   returnStd: 0.12,
+  stressLevel: 0,
   years: 30,
   numSims: 1000,
 };
@@ -83,5 +86,57 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
   setMcResults: (results: MCResult | null) => {
     set({ mcResults: results });
+  },
+
+  runMC: (params?: Partial<MCParams>) => {
+    const state = get();
+    const finalParams = params ? { ...state.mcParams, ...params } : state.mcParams;
+
+    try {
+      // Apply stress level to returns
+      const stressedParams = {
+        ...finalParams,
+        returnMean: finalParams.returnMean * (1 - finalParams.stressLevel / 100),
+        returnStd: finalParams.returnStd * (1 + finalParams.stressLevel / 200),
+      };
+
+      const results = runMC(stressedParams);
+      const drawdownDistribution: { [key: string]: number } = {};
+
+      // Generate drawdown buckets from trajectories
+      if (results.trajectories && results.trajectories.length > 0) {
+        results.trajectories.forEach(trajectory => {
+          let maxDD = 0;
+          let peak = trajectory[0];
+
+          for (let i = 1; i < trajectory.length; i++) {
+            if (trajectory[i] > peak) {
+              peak = trajectory[i];
+            }
+            const dd = (peak - trajectory[i]) / peak;
+            if (dd > maxDD) {
+              maxDD = dd;
+            }
+          }
+
+          const bucket = `${Math.floor(maxDD * 100)}-${Math.floor(maxDD * 100) + 5}%`;
+          drawdownDistribution[bucket] = (drawdownDistribution[bucket] || 0) + 1;
+        });
+      }
+
+      const mcResult: MCResult = {
+        trajectories: results.trajectories || [],
+        endWealthDist: results.endWealthDist || [],
+        percentiles: results.percentiles || { p10: [], p50: [], p90: [] },
+        successRate: (results.successRate || 0) * 100,
+        medianEndWealth: results.medianEndWealth || 0,
+        drawdownDistribution,
+      };
+
+      set({ mcResults: mcResult });
+    } catch (error) {
+      console.error('Error running MC simulation:', error);
+      set({ mcResults: null });
+    }
   },
 }));

@@ -1,13 +1,48 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useDashboardStore } from '@/store/dashboardStore';
+import { SimulatorParams } from '@/components/simulators/SimulatorParams';
+import { SimulationTrajectories } from '@/components/simulators/SimulationTrajectories';
+import { SuccessRateCard } from '@/components/simulators/SuccessRateCard';
+import { DrawdownDistribution } from '@/components/simulators/DrawdownDistribution';
+
 export default function SimulatorsPage() {
+  const setData = useDashboardStore(s => s.setData);
+  const data = useDashboardStore(s => s.data);
+  const runMC = useDashboardStore(s => s.runMC);
+
+  useEffect(() => {
+    if (!data) {
+      fetch('/data.json')
+        .then(r => r.json())
+        .then(d => {
+          setData(d);
+          // Run initial simulation with default params
+          runMC();
+        })
+        .catch(e => console.error('Failed to load data:', e));
+    } else {
+      // Run initial simulation if not already done
+      runMC();
+    }
+  }, [data, setData, runMC]);
+
   return (
     <div>
       <h1>🧪 Simulators</h1>
-      <p>Interactive simulators coming in Phase 4...</p>
-      <div style={{ padding: '40px', backgroundColor: '#1f2937', borderRadius: '8px', marginTop: '20px' }}>
-        <p>🎚️ Sliders & Monte Carlo simulations will be here</p>
+      <p style={{ color: '#9ca3af', marginBottom: '24px' }}>
+        Adjust parameters below to stress-test your FIRE plan. Results update in real-time.
+      </p>
+
+      <SimulatorParams />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+        <SuccessRateCard />
+        <DrawdownDistribution />
       </div>
+
+      <SimulationTrajectories />
     </div>
   );
 }

@@ -1,0 +1,86 @@
+'use client';
+
+export interface SliderProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step?: number;
+  unit?: string;
+  onChange: (value: number) => void;
+}
+
+export function Slider({
+  label,
+  value,
+  min,
+  max,
+  step = 1,
+  unit = '',
+  onChange,
+}: SliderProps) {
+  const formattedValue = unit ? `${value.toFixed(1)}${unit}` : value.toFixed(0);
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <label style={styles.label}>{label}</label>
+        <span style={styles.value}>{formattedValue}</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        style={styles.input}
+      />
+      <div style={styles.footer}>
+        <span style={styles.minMax}>{min}</span>
+        <span style={styles.minMax}>{max}</span>
+      </div>
+    </div>
+  );
+}
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    marginBottom: '20px',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px',
+  },
+  label: {
+    color: '#d1d5db',
+    fontSize: '14px',
+    fontWeight: '600',
+  },
+  value: {
+    color: '#3b82f6',
+    fontSize: '16px',
+    fontWeight: '700',
+  },
+  input: {
+    width: '100%',
+    height: '6px',
+    borderRadius: '3px',
+    background: '#374151',
+    outline: 'none',
+    WebkitAppearance: 'none',
+    appearance: 'none',
+    cursor: 'pointer',
+  } as React.CSSProperties,
+  footer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '8px',
+  },
+  minMax: {
+    fontSize: '12px',
+    color: '#9ca3af',
+  },
+};

@@ -20,7 +20,7 @@ export function runMC(params: MCParams): MCResult {
   const p50 = sorted[Math.floor(sorted.length * 0.5)];
   const p90 = sorted[Math.floor(sorted.length * 0.9)];
 
-  const probabilityOfSuccess = endWealthDist.filter(w => w > params.initialCapital).length / endWealthDist.length;
+  const successRate = endWealthDist.filter(w => w > params.initialCapital).length / endWealthDist.length;
 
   return {
     trajectories,
@@ -30,7 +30,7 @@ export function runMC(params: MCParams): MCResult {
       p50: trajectories.map((_, i) => getPercentileAtMonth(trajectories, 0.5, i)),
       p90: trajectories.map((_, i) => getPercentileAtMonth(trajectories, 0.9, i)),
     },
-    probabilityOfSuccess,
+    successRate,
     medianEndWealth: p50,
   };
 }

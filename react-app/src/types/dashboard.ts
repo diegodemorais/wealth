@@ -109,6 +109,7 @@ export interface MCParams {
   monthlyContribution: number;
   returnMean: number;
   returnStd: number;
+  stressLevel: number; // 0-100, percentage shock to returns
   years: number;
   numSims: number;
 }
@@ -121,8 +122,11 @@ export interface MCResult {
     p50: number[];
     p90: number[];
   };
-  probabilityOfSuccess: number;
+  successRate: number;
   medianEndWealth: number;
+  drawdownDistribution?: {
+    [key: string]: number;
+  };
 }
 
 export type Period = 'all' | '1y' | '3m' | '1m';
