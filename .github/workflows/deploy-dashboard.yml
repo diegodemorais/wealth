@@ -115,7 +115,7 @@ jobs:
           echo "  • Timestamp:         $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           echo ""
           echo "📍 LIVE URL:"
-          echo "  https://diegodemorais.github.io/"
+          echo "  https://diegodemorais.github.io/wealth/"
           echo ""
           echo "✨ GitHub Pages will be live in 1-5 minutes"
           echo ""
