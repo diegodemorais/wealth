@@ -125,6 +125,7 @@ export function initDataWiring(DATA) {
   const yearsLeft = msLeft / (1000 * 60 * 60 * 24 * 365.25);
   const yrInt = Math.floor(yearsLeft);
   const moInt = Math.round((yearsLeft - yrInt) * 12);
+  if (window.addDebugLog) window.addDebugLog(`[02-data-wiring] yrInt=${yrInt}, moInt=${moInt}, yearsLeft=${yearsLeft.toFixed(2)}`);
 
   // Return all computed constants
   return {

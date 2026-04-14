@@ -31,9 +31,16 @@ if (!window.DATA) {
   console.log('[BOOTSTRAP] Phase 2: DATA found, initializing data wiring...');
   if (window.addDebugLog) window.addDebugLog('✓ DATA found, calling initDataWiring()');
   // Initialize data wiring (computes all derived values)
-  const dataDerived = initDataWiring(window.DATA);
-  console.log('[BOOTSTRAP] Phase 2: Data wiring complete, exposing to window...');
-  if (window.addDebugLog) window.addDebugLog(`✓ initDataWiring() returned ${Object.keys(dataDerived).length} keys`);
+  let dataDerived;
+  try {
+    dataDerived = initDataWiring(window.DATA);
+    console.log('[BOOTSTRAP] Phase 2: Data wiring complete, exposing to window...');
+    if (window.addDebugLog) window.addDebugLog(`✓ initDataWiring() returned ${Object.keys(dataDerived).length} keys`);
+  } catch (e) {
+    console.error('[BOOTSTRAP] Phase 2 ERROR in initDataWiring:', e.message, e.stack);
+    if (window.addDebugLog) window.addDebugLog(`❌ initDataWiring() ERROR: ${e.message}`);
+    throw e;
+  }
 
   // Expose to window for backward compatibility (legacy code expects globals)
   Object.assign(window, {
