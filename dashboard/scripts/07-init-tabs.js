@@ -1843,18 +1843,18 @@ export function init() {
 
     // Funções globais (header, hero, semáforo — sempre visíveis)
     if (window.addDebugLog) window.addDebugLog('→ renderKPIs()');
-    renderKPIs();
+    window.renderKPIs?.();
     if (window.addDebugLog) window.addDebugLog('→ renderWellness()');
-    renderWellness();
+    window.renderWellness?.();
     if (window.addDebugLog) window.addDebugLog('→ buildWellnessExtras()');
-    buildWellnessExtras();
+    window.buildWellnessExtras?.();
     if (window.addDebugLog) window.addDebugLog('→ other build funcs');
-    renderMacroStatus();
-    buildBrasilConcentracao();
-    buildMacroCards();
-    buildDcaStatus();
-    buildSemaforoPanel();
-    buildFanChart();
+    renderMacroStatus();  // defined locally in this file
+    buildBrasilConcentracao();  // defined locally in this file
+    buildMacroCards();  // defined locally in this file
+    buildDcaStatus();  // defined locally in this file
+    buildSemaforoPanel();  // defined locally in this file
+    window.buildFanChart?.();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');

@@ -1,8 +1,8 @@
 {
   "major": 2,
-  "minor": 160,
+  "minor": 165,
   "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests",
-  "date": "2026-04-13",
+  "date": "2026-04-14",
   "history": [
     {
       "version": "1.0",
@@ -1902,6 +1902,31 @@
     {
       "version": "2.160",
       "date": "2026-04-13",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
+    },
+    {
+      "version": "2.161",
+      "date": "2026-04-14",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
+    },
+    {
+      "version": "2.162",
+      "date": "2026-04-14",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
+    },
+    {
+      "version": "2.163",
+      "date": "2026-04-14",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
+    },
+    {
+      "version": "2.164",
+      "date": "2026-04-14",
+      "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
+    },
+    {
+      "version": "2.165",
+      "date": "2026-04-14",
       "label": "Milestone v2 — 6 tabs, aba Simuladores, Chart.js 4 fixes, 604 anti-regression tests"
     }
   ]

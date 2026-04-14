@@ -164,7 +164,7 @@
       231.31,
       239.2,
       222.65,
-      235.7
+      236.41
     ],
     "shadowA": [
       96.75,
@@ -247,22 +247,22 @@
       219.2,
       222.31,
       205.09,
-      218.64
+      218.12
     ],
     "metrics": {
       "target": {
-        "cagr": 13.54,
+        "cagr": 13.59,
         "sharpe": 0.56,
         "sortino": 0.76,
         "maxdd": -27.23,
-        "vol": 16.89
+        "vol": 16.9
       },
       "shadowA": {
-        "cagr": 12.29,
+        "cagr": 12.25,
         "sharpe": 0.53,
-        "sortino": 0.81,
+        "sortino": 0.8,
         "maxdd": -24.29,
-        "vol": 15.07
+        "vol": 15.05
       }
     }
   },
@@ -702,7 +702,7 @@
       311.82,
       313.23,
       303.16,
-      310.76,
+      310.75,
       318.34,
       326.44,
       338.99,
@@ -781,7 +781,7 @@
       689.73,
       701.37,
       660.44,
-      690.95
+      697.72
     ],
     "shadowA": [
       98.02,
@@ -966,7 +966,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -1039,22 +1039,22 @@
       646.9,
       654.74,
       614.61,
-      644.67
+      650.45
     ],
     "metrics": {
       "target": {
-        "cagr": 9.48,
+        "cagr": 9.53,
         "sharpe": 0.35,
         "sortino": 0.45,
         "maxdd": -53.3,
-        "vol": 16.17
+        "vol": 16.19
       },
       "shadowA": {
-        "cagr": 9.13,
+        "cagr": 9.17,
         "sharpe": 0.34,
-        "sortino": 0.44,
+        "sortino": 0.45,
         "maxdd": -53.39,
-        "vol": 15.1
+        "vol": 15.12
       }
     },
     "note": "IVV \u26a0\ufe0f proxy de SWRD.L (S&P 500 \u2260 MSCI World \u2014 sem DM ex-US no Target); VBR \u26a0\ufe0f proxy de AVGS.L (Vanguard SC Value US \u2014 sem Intl SC value); EEM \u26a0\ufe0f proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
