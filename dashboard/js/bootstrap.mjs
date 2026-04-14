@@ -62,6 +62,7 @@ if (!window.DATA) {
     moInt: dataDerived.moInt,
     _anoFireAlvoGlobal: dataDerived._anoFireAlvoGlobal,
     _anoFireAspir: dataDerived._anoFireAspir,
+    _anoFire: dataDerived._anoFire,
     _ymToDecimal: dataDerived._ymToDecimal,
 
     // From 03-utils

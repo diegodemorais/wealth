@@ -268,7 +268,7 @@ window._toggleBlock = function(el) {
   }
 };
 
-window.switchTab = function(name) {
+export function switchTab(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('[data-in-tab]').forEach(el => {
@@ -306,7 +306,7 @@ window.switchTab = function(name) {
     });
   });
   try { localStorage.setItem('dash_tab', name); } catch(e) {}
-};
+}
 
 // ═══════════════════════════════════════════════════════════════
 // P1/P2: SEMÁFORO PANEL
