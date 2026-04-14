@@ -173,7 +173,7 @@ def main():
         time.sleep(2)
 
         success, stdout, stderr = run_command(
-            f"cd {ROOT} && node {ROOT}/dashboard/validate_locally.mjs",
+            f"cd {ROOT} && node {ROOT}/dashboard/test_via_http.mjs",
             "",
             optional=False
         )

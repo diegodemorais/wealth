@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-14T10:58:22.243818",
+  "timestamp": "2026-04-14T11:21:52.571098",
   "mode": "full",
   "total": 559,
   "passed": 557,
@@ -1581,7 +1581,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'SWRD', 'AVGS', 'AVEM'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -1597,7 +1597,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'simuladores', 'portfolio', 'performance', 'backtest', 'now', 'retiro', 'fire'}"
+      "message": "All blocks use valid tabs: {'fire', 'portfolio', 'simuladores', 'retiro', 'backtest', 'now', 'performance'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4365,7 +4365,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_mtd_pct', 'cambio', 'mercado.cambio_brl_usd'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4373,7 +4373,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct', 'cambio'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl', 'concentracao_brasil.brasil_pct'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
