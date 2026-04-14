@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface ShadowChartProps {
@@ -11,56 +12,89 @@ export interface ShadowChartProps {
 
 export function ShadowChart({ data }: ShadowChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
+  const option = useMemo(() => {
     const months = 60;
-    const labels = Array.from({ length: months }, (_, i) => `M${i + 1}`);
-    const actual = Array.from({ length: months }, (_, i) => 
+    const xAxisData = Array.from({ length: months }, (_, i) => `M${i + 1}`);
+    const actualData = Array.from({ length: months }, (_, i) =>
       100 * Math.pow(1.0085, i)
     );
-    const shadow = Array.from({ length: months }, (_, i) => 
-      100 * Math.pow(1.0080, i)
+    const shadowData = Array.from({ length: months }, (_, i) =>
+      100 * Math.pow(1.008, i)
     );
 
     return {
-      labels,
-      datasets: [
+      color: ['#3b82f6', '#ec4899'],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params)) return '';
+          let result = params[0].axisValueLabel + '<br/>';
+          params.forEach((p: any) => {
+            result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(2)}<br/>`;
+          });
+          return result;
+        },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 60,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+        axisLine: { lineStyle: { color: '#374151' } },
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+          interval: 9, // Show every 10 months
+        },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      series: [
         {
-          label: 'Actual Portfolio',
-          data: actual,
-          borderColor: '#3b82f6',
-          borderWidth: 2,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Actual Portfolio',
+          type: 'line',
+          data: actualData,
+          smooth: true,
+          lineStyle: { width: 2 },
+          symbolSize: 0,
         },
         {
-          label: 'Shadow Portfolio (60/40)',
-          data: shadow,
-          borderColor: '#ec4899',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Shadow Portfolio (60/40)',
+          type: 'line',
+          data: shadowData,
+          smooth: true,
+          lineStyle: { width: 2, type: 'dashed' },
+          symbolSize: 0,
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(() => ({
-    responsive: true,
-    plugins: {
-      legend: { display: !privacyMode },
-      tooltip: { enabled: !privacyMode },
-    },
-    scales: {
-      y: { ticks: { display: !privacyMode } },
-    },
-  }), [privacyMode]);
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Actual vs Shadow Portfolio Comparison</h3>
-      <Line data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 400 }} />
     </div>
   );
 }

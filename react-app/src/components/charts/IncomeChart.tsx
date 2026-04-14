@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Bar } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface IncomeChartProps {
@@ -11,73 +12,74 @@ export interface IncomeChartProps {
 
 export function IncomeChart({ data }: IncomeChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
-    const labels = ['Salary', 'Dividends', 'Bond Coupons', 'Rental', 'Other'];
-    const amounts = [120000, 35000, 18000, 24000, 3000];
+  const option = useMemo(() => {
+    const categories = ['Salary', 'Dividends', 'Bond Coupons', 'Rental', 'Other'];
+    const amountsData = [120000, 35000, 18000, 24000, 3000];
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
 
     return {
-      labels,
-      datasets: [
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params) || params.length === 0) return '';
+          const p = params[0];
+          return `${p.name}<br/>${p.marker} R$ ${p.value.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`;
+        },
+        axisPointer: { type: 'shadow' },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 120,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          formatter: (value: number) => `R$ ${(value / 1e3).toFixed(0)}K`,
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      yAxis: {
+        type: 'category',
+        data: categories,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+        },
+        axisLine: { lineStyle: { color: '#374151' } },
+      },
+      series: [
         {
-          label: 'Annual Income by Source',
-          data: amounts,
-          backgroundColor: [
-            '#3b82f6',
-            '#10b981',
-            '#f59e0b',
-            '#8b5cf6',
-            '#ec4899',
-          ],
-          borderWidth: 0,
+          name: 'Annual Income',
+          type: 'bar',
+          data: amountsData.map((value, idx) => ({
+            value,
+            itemStyle: { color: colors[idx] },
+          })),
+          itemStyle: { borderRadius: [0, 4, 4, 0] },
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      indexAxis: 'y' as const,
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed.x;
-              return `R$ ${value.toLocaleString('pt-BR', {
-                maximumFractionDigits: 0,
-              })}`;
-            },
-          },
-        },
-      },
-      scales: {
-        x: {
-          ticks: {
-            display: !privacyMode,
-            callback: (value: any) =>
-              `R$ ${(value / 1e3).toFixed(0)}K`,
-          },
-        },
-        y: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Current Income Sources</h3>
-      <Bar data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 300 }} />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface IncomeProjectionChartProps {
@@ -11,107 +12,111 @@ export interface IncomeProjectionChartProps {
 
 export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
+  const option = useMemo(() => {
     const years = 30;
-    const labels = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
+    const xAxisData = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
 
     // Salary phase-out, dividend/bond growth
-    const salaryIncome = Array.from({ length: years }, (_, i) => {
+    const salaryIncomeData = Array.from({ length: years }, (_, i) => {
       if (i < 15) return 120000 * Math.pow(1.025, i); // Growth phase
       return 120000 * Math.pow(1.025, 15) * Math.pow(0.95, i - 15); // Retirement: 95% decline per year
     });
 
-    const portfolioIncome = Array.from({ length: years }, (_, i) => {
+    const portfolioIncomeData = Array.from({ length: years }, (_, i) => {
       return (35000 + 18000 + 24000) * Math.pow(1.04, i); // 4% annual growth
     });
 
-    const totalIncome = salaryIncome.map((s, i) => s + portfolioIncome[i]);
+    const totalIncomeData = salaryIncomeData.map((s, i) => s + portfolioIncomeData[i]);
 
     // Upper bound (optimistic: +20%)
-    const upperBound = totalIncome.map(x => x * 1.2);
+    const upperBoundData = totalIncomeData.map(x => x * 1.2);
     // Lower bound (conservative: -20%)
-    const lowerBound = totalIncome.map(x => x * 0.8);
+    const lowerBoundData = totalIncomeData.map(x => x * 0.8);
 
     return {
-      labels,
-      datasets: [
+      color: ['#10b981', '#3b82f6', '#ef4444'],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params)) return '';
+          let result = params[0].axisValueLabel + '<br/>';
+          params.forEach((p: any) => {
+            result += `${p.marker} ${p.seriesName}: R$ ${(p.value / 1e3).toFixed(0)}K<br/>`;
+          });
+          return result;
+        },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 60,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+        axisLine: { lineStyle: { color: '#374151' } },
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+          interval: 4, // Show every 5 years
+        },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          formatter: (value: number) => `R$ ${(value / 1e3).toFixed(0)}K`,
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      series: [
         {
-          label: 'Upper Projection (+20%)',
-          data: upperBound,
-          borderColor: '#10b981',
-          borderWidth: 1,
-          borderDash: [5, 5],
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Upper Projection (+20%)',
+          type: 'line',
+          data: upperBoundData,
+          smooth: true,
+          lineStyle: { width: 1, type: 'dashed' },
+          symbolSize: 0,
         },
         {
-          label: 'Total Income Projection',
-          data: totalIncome,
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          borderWidth: 3,
+          name: 'Total Income Projection',
+          type: 'line',
+          data: totalIncomeData,
+          smooth: true,
           fill: true,
-          tension: 0.4,
-          pointRadius: 0,
+          areaStyle: { opacity: 0.2 },
+          lineStyle: { width: 3 },
+          symbolSize: 0,
         },
         {
-          label: 'Lower Projection (-20%)',
-          data: lowerBound,
-          borderColor: '#ef4444',
-          borderWidth: 1,
-          borderDash: [5, 5],
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Lower Projection (-20%)',
+          type: 'line',
+          data: lowerBoundData,
+          smooth: true,
+          lineStyle: { width: 1, type: 'dashed' },
+          symbolSize: 0,
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed.y;
-              return `${context.dataset.label}: R$ ${value.toLocaleString('pt-BR', {
-                maximumFractionDigits: 0,
-              })}`;
-            },
-          },
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: !privacyMode,
-            callback: (value: any) =>
-              `R$ ${(value / 1e3).toFixed(0)}K`,
-          },
-        },
-        x: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Income Projection (30 Years)</h3>
-      <Line data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 400 }} />
     </div>
   );
 }

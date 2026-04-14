@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-04-14T20:42:36.735384",
+  "tests": {
+    "schema": {
+      "success": false,
+      "output": "\u274c Erro ao ler spec.json: [Errno 2] No such file or directory: '/Users/diegodemorais/claude/code/wealth/dashboard/spec.json'\n"
+    }
+  },
+  "summary": {
+    "blocker": "schema_invalid"
+  }
+}

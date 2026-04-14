@@ -1,127 +1,91 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { useUiStore } from '@/store/uiStore';
+import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 
-export interface DonutChartsProps {
+interface DonutChartsProps {
   data: DashboardData;
 }
 
 export function DonutCharts({ data }: DonutChartsProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  // Allocation by asset class
-  const classChartData = useMemo(() => {
-    const equity = 1500000;
-    const rf = 750000;
-    const crypto = 125000;
+  const option = useMemo(() => {
+    const posicoes = data.posicoes || {};
+    const cambio = data.cambio || 1;
+    
+    // Calculate allocation
+    let totalUsd = 0;
+    const buckets: Record<string, number> = { SWRD: 0, AVGS: 0, AVEM: 0 };
+    
+    Object.values(posicoes).forEach((p: any) => {
+      const val = (p.qty || 0) * (p.price || 0);
+      totalUsd += val;
+      if (p.bucket && buckets.hasOwnProperty(p.bucket)) {
+        buckets[p.bucket] += val;
+      }
+    });
+
+    const rfBrl = (data.rf?.ipca2029?.valor || 0) + (data.rf?.ipca2040?.valor || 0) + (data.rf?.ipca2050?.valor || 0) + (data.rf?.renda2065?.valor || 0);
+    const hodlBrl = data.hodl11?.valor || 0;
+    
+    const equityBrl = totalUsd * cambio;
+    const totalBrl = equityBrl + rfBrl + hodlBrl;
+
+    // Asset class allocation
+    const assetData = [
+      { value: equityBrl, name: 'Equity', color: '#3b82f6' },
+      { value: rfBrl, name: 'Renda Fixa', color: '#10b981' },
+      { value: hodlBrl, name: 'Bitcoin', color: '#f59e0b' },
+    ].filter((d) => d.value > 0);
+
+    // ETF allocation
+    const etfData = Object.entries(buckets)
+      .filter(([, v]) => v > 0)
+      .map(([k, v]) => ({
+        value: v,
+        name: k,
+        color: k === 'SWRD' ? '#3b82f6' : k === 'AVGS' ? '#8b5cf6' : '#06b6d4',
+      }));
 
     return {
-      labels: ['Equity', 'Fixed Income', 'Crypto'],
-      datasets: [
-        {
-          data: [equity, rf, crypto],
-          backgroundColor: ['#3b82f6', '#f59e0b', '#ec4899'],
-          borderColor: '#1f2937',
-          borderWidth: 2,
-        },
-      ],
-    };
-  }, []);
-
-  // Geographic allocation
-  const geoChartData = useMemo(() => {
-    const us = 800000;
-    const dm = 600000;
-    const em = 375000;
-
-    return {
-      labels: ['United States', 'Developed Markets', 'Emerging Markets'],
-      datasets: [
-        {
-          data: [us, dm, em],
-          backgroundColor: ['#10b981', '#0ea5e9', '#f59e0b'],
-          borderColor: '#1f2937',
-          borderWidth: 2,
-        },
-      ],
-    };
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-          position: 'bottom' as const,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed;
-              const total = context.dataset.data.reduce(
-                (a: number, b: number) => a + b,
-                0
-              );
-              const pct = ((value / total) * 100).toFixed(1);
-              return `${context.label}: R$ ${value.toLocaleString('pt-BR', {
-                maximumFractionDigits: 0,
-              })} (${pct}%)`;
-            },
-          },
+      tooltip: {
+        trigger: 'item',
+        formatter: (params: any) => {
+          const pct = ((params.value / totalBrl) * 100).toFixed(1);
+          return `${params.name}<br/>R$ ${(params.value / 1e6).toFixed(1)}M (${pct}%)`;
         },
       },
-    }),
-    [privacyMode]
-  );
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        textStyle: { color: '#d1d5db' },
+      },
+      series: [
+        {
+          name: 'Alocação por Classe',
+          type: 'pie',
+          radius: ['30%', '70%'],
+          center: ['50%', '50%'],
+          data: assetData,
+          itemStyle: { borderRadius: 6, borderColor: '#1f2937', borderWidth: 1 },
+          label: {
+            formatter: '{b}\n{d}%',
+            color: '#d1d5db',
+          },
+          emphasis: {
+            label: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
+          },
+        },
+      ],
+    };
+  }, [data]);
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Asset Allocation</h3>
-      <div style={styles.gridContainer}>
-        <div style={styles.chartWrapper}>
-          <h4 style={styles.chartTitle}>By Asset Class</h4>
-          <Doughnut data={classChartData} options={options} />
-        </div>
-        <div style={styles.chartWrapper}>
-          <h4 style={styles.chartTitle}>By Geography</h4>
-          <Doughnut data={geoChartData} options={options} />
-        </div>
-      </div>
+    <div style={{ height: '400px', width: '100%' }}>
+      <ReactECharts option={option} theme={theme} />
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '20px',
-  },
-  title: {
-    margin: '0 0 16px 0',
-    color: '#fff',
-  },
-  gridContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '20px',
-  },
-  chartWrapper: {
-    backgroundColor: '#111827',
-    borderRadius: '8px',
-    padding: '12px',
-  },
-  chartTitle: {
-    margin: '0 0 12px 0',
-    color: '#9ca3af',
-    fontSize: '14px',
-  },
-};

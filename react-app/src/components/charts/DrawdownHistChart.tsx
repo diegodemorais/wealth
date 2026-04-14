@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Bar } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface DrawdownHistChartProps {
@@ -11,63 +12,69 @@ export interface DrawdownHistChartProps {
 
 export function DrawdownHistChart({ data }: DrawdownHistChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
-    // Drawdown buckets and frequency distribution
-    const labels = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '25-30%'];
+  const option = useMemo(() => {
+    const buckets = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '25-30%'];
     const frequencies = [145, 89, 34, 18, 7, 2]; // Count of months in each drawdown bucket
 
     return {
-      labels,
-      datasets: [
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params) || params.length === 0) return '';
+          const p = params[0];
+          return `${p.name}<br/>${p.marker} ${p.value} months`;
+        },
+        axisPointer: { type: 'shadow' },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 120,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      yAxis: {
+        type: 'category',
+        data: buckets,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+        },
+        axisLine: { lineStyle: { color: '#374151' } },
+      },
+      series: [
         {
-          label: 'Frequency (months)',
+          name: 'Frequency (months)',
+          type: 'bar',
           data: frequencies,
-          backgroundColor: '#3b82f6',
-          borderColor: '#1e40af',
-          borderWidth: 1,
+          itemStyle: { color: '#3b82f6', borderRadius: [0, 4, 4, 0] },
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              return `${context.parsed.y} months`;
-            },
-          },
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-        x: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Historical Drawdown Distribution</h3>
-      <Bar data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 300 }} />
     </div>
   );
 }

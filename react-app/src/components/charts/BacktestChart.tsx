@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface BacktestChartProps {
@@ -11,55 +12,89 @@ export interface BacktestChartProps {
 
 export function BacktestChart({ data }: BacktestChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
+  const option = useMemo(() => {
     const months = 84;
-    const labels = Array.from({ length: months }, (_, i) => `M${i + 1}`);
-    const portfolio = Array.from({ length: months }, (_, i) => 
+    const xAxisData = Array.from({ length: months }, (_, i) => `M${i + 1}`);
+    const portfolioData = Array.from({ length: months }, (_, i) =>
       100 * Math.pow(1.0088, i)
     );
-    const benchmark = Array.from({ length: months }, (_, i) => 
+    const benchmarkData = Array.from({ length: months }, (_, i) =>
       100 * Math.pow(1.0075, i)
     );
 
     return {
-      labels,
-      datasets: [
+      color: ['#10b981', '#9ca3af'],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params)) return '';
+          let result = params[0].axisValueLabel + '<br/>';
+          params.forEach((p: any) => {
+            result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(2)}<br/>`;
+          });
+          return result;
+        },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 60,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+        axisLine: { lineStyle: { color: '#374151' } },
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+          interval: 11, // Show every year
+        },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      series: [
         {
-          label: 'Portfolio',
-          data: portfolio,
-          borderColor: '#10b981',
-          borderWidth: 2,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Portfolio',
+          type: 'line',
+          data: portfolioData,
+          smooth: true,
+          lineStyle: { width: 2 },
+          symbolSize: 0,
         },
         {
-          label: 'Benchmark',
-          data: benchmark,
-          borderColor: '#9ca3af',
-          borderWidth: 2,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Benchmark',
+          type: 'line',
+          data: benchmarkData,
+          smooth: true,
+          lineStyle: { width: 2 },
+          symbolSize: 0,
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(() => ({
-    responsive: true,
-    plugins: {
-      legend: { display: !privacyMode },
-      tooltip: { enabled: !privacyMode },
-    },
-    scales: {
-      y: { ticks: { display: !privacyMode } },
-    },
-  }), [privacyMode]);
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Backtest Equity Curve (7 years)</h3>
-      <Line data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 400 }} />
     </div>
   );
 }

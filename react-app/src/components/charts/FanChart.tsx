@@ -1,127 +1,122 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
-import { useUiStore } from '@/store/uiStore';
+import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 
-export interface FanChartProps {
+interface FanChartProps {
   data: DashboardData;
 }
 
 export function FanChart({ data }: FanChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
-    // Generate 30-year projection with uncertainty bands
-    const months = 360;
-    const labels = Array.from({ length: months }, (_, i) =>
-      `M${Math.floor(i / 12) + 1}`
-    );
+  const option = useMemo(() => {
+    const timeline = data.timeline || { values: [], labels: [] };
+    const values = timeline.values || [];
+    const labels = timeline.labels || [];
 
-    const initialCapital = 1000000;
-    const p10 = Array.from({ length: months }, (_, i) =>
-      initialCapital * Math.pow(1.05, i / 12)
-    );
-    const p50 = Array.from({ length: months }, (_, i) =>
-      initialCapital * Math.pow(1.07, i / 12)
-    );
-    const p90 = Array.from({ length: months }, (_, i) =>
-      initialCapital * Math.pow(1.09, i / 12)
-    );
+    if (values.length === 0) {
+      return { title: { text: 'No projection data available' } };
+    }
+
+    // Create fan chart with base, optimistic, pessimistic scenarios
+    const dates = labels.map((ym: string) => ym.replace('-', '/'));
+    const baseValue = values[values.length - 1] || 0;
+    
+    // Simple projections: base + 5% p.a. (otimista), base + 3% p.a. (base), base + 0% p.a. (pessimista)
+    const years = 10;
+    const months = dates.length + years * 12;
+    
+    const baselineProj = Array.from({ length: years * 12 }, (_, i) => {
+      const monthsOut = i + 1;
+      return baseValue * Math.pow(1 + 0.03 / 12, monthsOut);
+    });
+
+    const optimisticProj = Array.from({ length: years * 12 }, (_, i) => {
+      const monthsOut = i + 1;
+      return baseValue * Math.pow(1 + 0.05 / 12, monthsOut);
+    });
+
+    const pessimisticProj = Array.from({ length: years * 12 }, (_, i) => {
+      const monthsOut = i + 1;
+      return baseValue * Math.pow(1 + 0.00 / 12, monthsOut);
+    });
+
+    const forecastDates = Array.from({ length: years * 12 }, (_, i) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() + i + 1);
+      return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+    });
 
     return {
-      labels,
-      datasets: [
+      tooltip: {
+        trigger: 'axis',
+        formatter: (params: any) => {
+          if (!Array.isArray(params)) return '';
+          let html = `<div style="padding: 8px;">`;
+          params.forEach((p: any) => {
+            html += `<div>${p.seriesName}: <strong>R$ ${(p.value / 1e6).toFixed(1)}M</strong></div>`;
+          });
+          html += `</div>`;
+          return html;
+        },
+      },
+      legend: {
+        data: ['Histórico', 'Pessimista (0%)', 'Base (3% a.a.)', 'Otimista (5% a.a.)'],
+        textStyle: { color: '#d1d5db' },
+      },
+      grid: { left: 60, right: 40, top: 40, bottom: 40 },
+      xAxis: {
+        type: 'category',
+        data: [...dates.slice(-24), ...forecastDates.slice(0, 48)],
+        axisLabel: { interval: 12, formatter: (v: string) => v },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: { formatter: (v: number) => `R$ ${(v / 1e6).toFixed(0)}M` },
+      },
+      series: [
         {
-          label: '10th percentile',
-          data: p10,
-          borderColor: '#ef4444',
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-          borderWidth: 2,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Histórico',
+          type: 'line',
+          data: [...values.slice(-24), ...baselineProj.slice(0, 48)],
+          itemStyle: { color: '#f59e0b' },
+          lineStyle: { width: 2.5 },
+          smooth: true,
         },
         {
-          label: '50th percentile (median)',
-          data: p50,
-          borderColor: '#3b82f6',
-          borderWidth: 3,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Pessimista (0%)',
+          type: 'line',
+          data: Array(dates.slice(-24).length).fill(null).concat(pessimisticProj.slice(0, 48)),
+          itemStyle: { color: '#ef4444' },
+          lineStyle: { width: 1.5, type: 'dashed' },
+          smooth: true,
         },
         {
-          label: '90th percentile',
-          data: p90,
-          borderColor: '#10b981',
-          backgroundColor: 'rgba(16, 185, 129, 0.1)',
-          borderWidth: 2,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: 'Base (3% a.a.)',
+          type: 'line',
+          data: Array(dates.slice(-24).length).fill(null).concat(baselineProj.slice(0, 48)),
+          itemStyle: { color: '#10b981' },
+          lineStyle: { width: 1.5, type: 'dashed' },
+          smooth: true,
+        },
+        {
+          name: 'Otimista (5% a.a.)',
+          type: 'line',
+          data: Array(dates.slice(-24).length).fill(null).concat(optimisticProj.slice(0, 48)),
+          itemStyle: { color: '#3b82f6' },
+          lineStyle: { width: 1.5, type: 'dashed' },
+          smooth: true,
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed.y;
-              return `${context.dataset.label}: R$ ${value.toLocaleString('pt-BR', {
-                maximumFractionDigits: 0,
-              })}`;
-            },
-          },
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: !privacyMode,
-            callback: (value: any) =>
-              `R$ ${(value / 1e6).toFixed(1)}M`,
-          },
-        },
-        x: {
-          ticks: {
-            display: false,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [data]);
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Uncertainty Cone (Fan Chart)</h3>
-      <Line data={chartData} options={options} />
+    <div style={{ height: '400px', width: '100%' }}>
+      <ReactECharts option={option} theme={theme} />
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '20px',
-  },
-  title: {
-    margin: '0 0 16px 0',
-    color: '#fff',
-  },
-};

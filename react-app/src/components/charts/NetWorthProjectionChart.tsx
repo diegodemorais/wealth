@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface NetWorthProjectionChartProps {
@@ -11,82 +12,104 @@ export interface NetWorthProjectionChartProps {
 
 export function NetWorthProjectionChart({ data }: NetWorthProjectionChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
+  const option = useMemo(() => {
     const years = 30;
-    const labels = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
-    
-    const p10 = Array.from({ length: years }, (_, i) =>
+    const xAxisData = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
+
+    const p10Data = Array.from({ length: years }, (_, i) =>
       1250000 * Math.pow(1.05, i) + 60000 * i
     );
-    const p50 = Array.from({ length: years }, (_, i) =>
+    const p50Data = Array.from({ length: years }, (_, i) =>
       1250000 * Math.pow(1.07, i) + 60000 * i
     );
-    const p90 = Array.from({ length: years }, (_, i) =>
+    const p90Data = Array.from({ length: years }, (_, i) =>
       1250000 * Math.pow(1.09, i) + 60000 * i
     );
 
     return {
-      labels,
-      datasets: [
+      color: ['#ef4444', '#10b981', '#3b82f6'],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params)) return '';
+          let result = params[0].axisValueLabel + '<br/>';
+          params.forEach((p: any) => {
+            result += `${p.marker} ${p.seriesName}: R$ ${(p.value / 1e6).toFixed(1)}M<br/>`;
+          });
+          return result;
+        },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 60,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+        axisLine: { lineStyle: { color: '#374151' } },
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+          interval: 4, // Show every 5 years
+        },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          formatter: (value: number) => `R$ ${(value / 1e6).toFixed(0)}M`,
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      series: [
         {
-          label: '10th percentile',
-          data: p10,
-          borderColor: '#ef4444',
-          borderWidth: 1,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: '10th percentile',
+          type: 'line',
+          data: p10Data,
+          smooth: true,
+          lineStyle: { width: 1 },
+          symbolSize: 0,
         },
         {
-          label: '50th percentile (median)',
-          data: p50,
-          borderColor: '#10b981',
-          backgroundColor: 'rgba(16, 185, 129, 0.15)',
-          borderWidth: 3,
+          name: '50th percentile (median)',
+          type: 'line',
+          data: p50Data,
+          smooth: true,
           fill: true,
-          tension: 0.4,
-          pointRadius: 0,
+          areaStyle: { opacity: 0.2 },
+          lineStyle: { width: 3 },
+          symbolSize: 0,
         },
         {
-          label: '90th percentile',
-          data: p90,
-          borderColor: '#3b82f6',
-          borderWidth: 1,
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          name: '90th percentile',
+          type: 'line',
+          data: p90Data,
+          smooth: true,
+          lineStyle: { width: 1 },
+          symbolSize: 0,
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(() => ({
-    responsive: true,
-    plugins: {
-      legend: { display: !privacyMode },
-      tooltip: {
-        enabled: !privacyMode,
-        callbacks: {
-          label: (context: any) =>
-            `${context.dataset.label}: R$ ${(context.parsed.y / 1e6).toFixed(1)}M`,
-        },
-      },
-    },
-    scales: {
-      y: {
-        ticks: {
-          display: !privacyMode,
-          callback: (value: any) => `R$ ${(value / 1e6).toFixed(1)}M`,
-        },
-      },
-    },
-  }), [privacyMode]);
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Net Worth Projection (30 years, Monte Carlo)</h3>
-      <Line data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 400 }} />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
+import { useEChartsTheme } from '@/hooks/useEChartsTheme';
 import { DashboardData } from '@/types/dashboard';
 
 export interface BacktestR7ChartProps {
@@ -11,14 +12,14 @@ export interface BacktestR7ChartProps {
 
 export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
+  const theme = useEChartsTheme();
 
-  const chartData = useMemo(() => {
+  const option = useMemo(() => {
     const months = 84; // 7 years backtest
-    const labels = Array.from({ length: months }, (_, i) => `M${i + 1}`);
+    const xAxisData = Array.from({ length: months }, (_, i) => `M${i + 1}`);
 
-    // Current portfolio: diversified (SWRD, AVGS, AVEM, IPCA+, Crypto)
-    // Assume ~7% annual return = 0.56% monthly average with volatility
-    const portfolio = Array.from({ length: months }, (_, i) => {
+    // Current portfolio: diversified
+    const portfolioData = Array.from({ length: months }, (_, i) => {
       const monthlyReturn = 0.07 / 12;
       const volatility = 0.12 / Math.sqrt(12);
       const noise = (Math.random() - 0.5) * volatility * 2;
@@ -26,8 +27,7 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
     });
 
     // R7 Benchmark: 70% equity, 30% fixed income
-    // Assume ~6% annual return with higher volatility
-    const r7Benchmark = Array.from({ length: months }, (_, i) => {
+    const r7BenchmarkData = Array.from({ length: months }, (_, i) => {
       const monthlyReturn = 0.06 / 12;
       const volatility = 0.14 / Math.sqrt(12);
       const noise = (Math.random() - 0.5) * volatility * 2;
@@ -35,76 +35,81 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
     });
 
     return {
-      labels,
-      datasets: [
+      color: ['#3b82f6', '#f59e0b'],
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: theme.tooltip.backgroundColor,
+        borderColor: theme.tooltip.borderColor,
+        textStyle: theme.tooltip.textStyle,
+        formatter: (params: any) => {
+          if (!Array.isArray(params)) return '';
+          let result = params[0].axisValueLabel + '<br/>';
+          params.forEach((p: any) => {
+            result += `${p.marker} ${p.seriesName}: R$ ${(p.value / 1e6).toFixed(1)}M<br/>`;
+          });
+          return result;
+        },
+      },
+      legend: {
+        display: !privacyMode,
+        textStyle: { color: theme.textStyle.color },
+        top: 10,
+      },
+      grid: {
+        left: 60,
+        right: 20,
+        top: 40,
+        bottom: 40,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+        axisLine: { lineStyle: { color: '#374151' } },
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          fontSize: 12,
+          interval: 11, // Show every year
+        },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: privacyMode ? 'transparent' : '#9ca3af',
+          formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
+          fontSize: 12,
+        },
+        splitLine: { lineStyle: { color: '#2d3748' } },
+      },
+      series: [
         {
-          label: 'Current Portfolio',
-          data: portfolio,
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          borderWidth: 2,
+          name: 'Current Portfolio',
+          type: 'line',
+          data: portfolioData,
+          smooth: true,
           fill: true,
-          tension: 0.4,
-          pointRadius: 0,
-          pointHoverRadius: 6,
+          areaStyle: { opacity: 0.2 },
+          lineStyle: { width: 2 },
+          symbolSize: 0,
         },
         {
-          label: 'R7 Benchmark (70/30)',
-          data: r7Benchmark,
-          borderColor: '#f59e0b',
-          backgroundColor: 'rgba(245, 158, 11, 0.1)',
-          borderWidth: 2,
+          name: 'R7 Benchmark (70/30)',
+          type: 'line',
+          data: r7BenchmarkData,
+          smooth: true,
           fill: true,
-          tension: 0.4,
-          pointRadius: 0,
-          pointHoverRadius: 6,
+          areaStyle: { opacity: 0.2 },
+          lineStyle: { width: 2 },
+          symbolSize: 0,
         },
       ],
     };
-  }, []);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed.y;
-              return `${context.dataset.label}: R$ ${value.toLocaleString('pt-BR', {
-                maximumFractionDigits: 0,
-              })}`;
-            },
-          },
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: !privacyMode,
-            callback: (value: any) =>
-              `R$ ${(value / 1e6).toFixed(1)}M`,
-          },
-        },
-        x: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [privacyMode, theme]);
 
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Portfolio vs R7 Benchmark (84 months)</h3>
-      <Line data={chartData} options={options} />
+      <ReactECharts option={option} style={{ height: 400 }} />
     </div>
   );
 }
