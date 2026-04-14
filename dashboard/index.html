@@ -1961,7 +1961,7 @@ footer {
 <div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">IR Diferido por ETF</h2>
 <div class="collapse-body">
-<table style="width:100%;font-size:.8rem"><thead><tr><th>ETF</th><th>IR Diferido</th><th>Status</th></tr></thead><tbody id="irDiferido"></tbody></table>
+<!-- Note: IR Diferido table removed — builder renders to #taxIrBody in section below -->
 </div>
 </div>
 
@@ -2293,17 +2293,12 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="perf">
-<h2 onclick="_toggleBlock(this.parentElement)">Information Ratio vs VWRA</h2>
-<div class="collapse-body">
-<canvas id="informationRatio" style="height:300px"></canvas>
-</div>
-</div>
+<!-- Information Ratio charts are rendered by buildInformationRatio() into irITDCards and rollingIRChart (above) -->
 
 <div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Fee Analysis — Custo vs Alpha</h2>
 <div class="collapse-body">
-<table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeCustoComplexidade"></tbody></table>
+<table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeBody"></tbody></table>
 </div>
 </div>
 
@@ -2607,8 +2602,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Assembly by build_dashboard.py: _assemble_js() concatenates in order
 //
 
-window.GENERATED_AT = new Date('2026-04-14T06:43:30-03:00'); // BRT (UTC-3)
-window.VERSION = '2.175';
+window.GENERATED_AT = new Date('2026-04-14T06:51:10-03:00'); // BRT (UTC-3)
+window.VERSION = '2.177';
 
 window.DATA = {
   "_generated": "2026-04-14T05:13:28",
@@ -9415,7 +9410,7 @@ window.DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.175"
+  "version": "2.177"
 };
 
 // Debug: window.DATA just defined, log it
