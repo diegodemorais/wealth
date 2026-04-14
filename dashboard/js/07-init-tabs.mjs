@@ -197,7 +197,7 @@ export function _initTabCharts(tab) {
                function() { buildShadowChart('since2009'); }, buildBacktestR7, buildDrawdownHistory],
     carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
     fire:     [buildTrackingFire, buildScenarioComparison, buildScenarios,
-               buildFireMatrix, buildLumpyEvents,
+               buildFireMatrix, buildLumpyEvents, buildGlidePath,
                buildNetWorthProjection,
                () => { _applyFireAxes(); }, buildEarliestFire,
                buildEventosVida, buildPfireFamilia],

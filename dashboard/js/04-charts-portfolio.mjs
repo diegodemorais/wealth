@@ -122,7 +122,19 @@ export function buildAttribution() {
   const periodoEl = document.getElementById('attrPeriodo');
   if (periodoEl && a._inicio) periodoEl.textContent = `(desde ${a._inicio})`;
 
-  document.getElementById('attrCagrVal').textContent = cagr.toFixed(1) + '%';
+  // Calculate CAGR from period start to now
+  const cagrVal = (() => {
+    if (!a._inicio) return 0;
+    const inicioDate = new Date(a._inicio + '-01');
+    const today = new Date();
+    const years = (today - inicioDate) / (1000 * 60 * 60 * 24 * 365.25);
+    if (years <= 0) return 0;
+    const patInicial = DATA.premissas?.patrimonio_atual - a.crescReal || 500000;
+    if (patInicial <= 0) return 0;
+    const patFinal = patInicial + a.crescReal;
+    return (Math.pow(patFinal / patInicial, 1 / years) - 1) * 100;
+  })();
+  document.getElementById('attrCagrVal').textContent = cagrVal.toFixed(1) + '%';
   document.getElementById('attrAportes').textContent = fmtBrl(a.aportes);
   document.getElementById('attrRetorno').textContent = fmtBrl(a.retornoUsd);
   document.getElementById('attrCambio').textContent  = fmtBrl(a.cambio);
@@ -251,14 +263,40 @@ export function buildAttribution() {
           }
         }
       }
-    },
-    plugins: [attrArcLabelPlugin]
+    }
   });
+  // Render explicitly
+  setTimeout(() => { if (charts.attr) charts.attr.render(); }, 0);
 }
 
 // ── S8: Geo Donut ────────────────────────────────────────────
 export function buildDonuts() {
-  const geoTot = geoUS + geoDM + geoEM;
+  // Calculate geographic allocation from ETF composition and target weights
+  const pesos = DATA.pesosTarget || {};
+  const etfComp = DATA.etf_composition?.etfs || {};
+
+  let geoUS = 0, geoDM = 0, geoEM = 0;
+
+  // SWRD: 40% * (65% US + 35% DM)
+  if (pesos.SWRD && etfComp.SWRD) {
+    const swrdRegions = etfComp.SWRD.regioes || {};
+    geoUS += (pesos.SWRD || 0) * (swrdRegions.EUA || 0);
+    geoDM += (pesos.SWRD || 0) * ((swrdRegions.Europa || 0) + (swrdRegions.Japão || 0) + (swrdRegions['Outros DM'] || 0));
+  }
+
+  // AVGS: 24% * (15% US + 85% DM)
+  if (pesos.AVGS && etfComp.AVGS) {
+    const avgsRegions = etfComp.AVGS.regioes || {};
+    geoUS += (pesos.AVGS || 0) * (avgsRegions.EUA || 0);
+    geoDM += (pesos.AVGS || 0) * ((avgsRegions.Europa || 0) + (avgsRegions.Japão || 0) + (avgsRegions.Outros || 0));
+  }
+
+  // AVEM: 16% * 100% EM
+  if (pesos.AVEM && etfComp.AVEM) {
+    geoEM += (pesos.AVEM || 0);
+  }
+
+  const geoTot = geoUS + geoDM + geoEM || 1; // prevent division by zero
   const geoData = [geoUS, geoDM, geoEM].map(v => Math.round(v / geoTot * 100));
 
   const geoLabelPlugin = {
@@ -293,9 +331,10 @@ export function buildDonuts() {
       labels: ['US', 'DM ex-US', 'EM'],
       datasets: [{ data: geoData, backgroundColor: ['#3b82f6','#22c55e','#f97316'], borderWidth: 1, borderColor: '#1e293b' }]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }, cutout: '60%' },
-    plugins: [geoLabelPlugin]
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8' } } }, cutout: '60%' }
   });
+  // Render explicitly
+  setTimeout(() => { if (charts.geo) charts.geo.render(); }, 0);
 }
 
 // ── S9: Scenario + Spending ───────────────────────────────────
