@@ -1,6 +1,7 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
+import { FULL_VERSION } from '@/config/version';
 
 export function Header() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -21,6 +22,12 @@ export function Header() {
         {/* Logo */}
         <div style={styles.logoSection}>
           <h1 style={styles.logo}>💰 Wealth</h1>
+          <span
+            style={styles.version}
+            title={`Build: ${FULL_VERSION}`}
+          >
+            {FULL_VERSION}
+          </span>
         </div>
 
         {/* Controls */}
@@ -91,6 +98,14 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     fontSize: '24px',
     fontWeight: '600',
+  },
+  version: {
+    fontSize: '11px',
+    color: '#9ca3af',
+    fontFamily: 'monospace',
+    paddingLeft: '8px',
+    borderLeft: '1px solid #4b5563',
+    lineHeight: '1',
   },
   controls: {
     display: 'flex',
