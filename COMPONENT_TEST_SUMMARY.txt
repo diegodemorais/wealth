@@ -1,0 +1,233 @@
+================================================================================
+DASHBOARD COMPONENT TEST — INVESTIGATION SUMMARY
+================================================================================
+
+Data: 2026-04-14
+Test File: /Users/diegodemorais/claude/code/wealth/dashboard/tests/comprehensive_component_test.json
+Total Componentes: 66
+
+================================================================================
+RESUMO EXECUTIVO
+================================================================================
+
+Status          Qtd    %    Raiz Causa
+─────────────────────────────────────────────────────────────────────────────
+✅ OK            31   46%   Funcionando corretamente
+❌ MISSING       23   35%   Não existem no index.html
+⚠️  EMPTY         8   12%   Elemento existe mas sem dados JS
+🙈 HIDDEN         4    6%   Renderizado mas oculto por CSS/JS
+🔴 NO_MAPPING     5    7%   htmlId = '—' em spec_html_mapping.json
+─────────────────────────────────────────────────────────────────────────────
+PROBLEMAS       35   53%   Ações necessárias
+
+================================================================================
+INVESTIGAÇÃO DETALHADA
+================================================================================
+
+█ TIPO 1: MISSING (23 componentes) ❌
+─────────────────────────────────────────────────────────────────────────────
+
+SUB-TIPO 1A: Em template.html mas não copiado para 01-body.html (18 COMPONENTES)
+
+Raiz Causa:
+  • dashboard/templates/ foi criado para decomposição em partials
+  • build_dashboard.py prioriza partials sobre template.html (fallback)
+  • As 18 seções NÃO foram copiadas de template.html → 01-body.html
+  • Resultado: template.html nunca é usado; 01-body.html incompleto
+
+Solução:
+  → Copiar as 18 seções do template.html para 01-body.html (está mais abaixo)
+
+Distribuição por Tab (18 seções):
+  backtest      →  1 seção  (backtestRegimeLongo)
+  fire          →  3 seções (fireTrilha, simuladorFire, whatIfCenarios)
+  now           →  2 seções (kpiGridPrimario, exposicaoCambial)
+  performance   →  4 seções (alphaItdSwrd, feeCustoComplexidade, hodl11Pnl, informationRatio)
+  portfolio     →  8 seções (driftSemaforoEtf, durationRendaPlus, etfComposicaoRegiao,
+                              intraEquityPesos, irDiferido, posicoesEtfsIbkr, rfPosicoes, tlhMonitor)
+
+Arquivo com seções extraídas:
+  → /Users/diegodemorais/claude/code/wealth/MISSING_SECTIONS_EXTRACTED.txt
+
+
+SUB-TIPO 1B: Não têm htmlId válido (5 COMPONENTES)
+  Ver TIPO 4 (NO_MAPPING) abaixo
+
+
+█ TIPO 2: EMPTY (8 componentes) ⚠️
+─────────────────────────────────────────────────────────────────────────────
+
+Raiz Causa:
+  • Elemento encontrado e visível em index.html
+  • Mas JavaScript NÃO renderizou dados
+
+Causas possíveis (investigar cada uma):
+  A) Função JS não foi chamada / não foi inicializada
+  B) Dados obrigatórios não chegaram em data.json
+  C) Seletor CSS/ID na função JS diverge do HTML real
+
+Componentes EMPTY por tab:
+
+  [backtest]
+    • drawdown-historico (drawdownHistNota) — Type: chart-area
+
+  [fire]
+    • lumpy-events (lumpyEventsBody) — Type: table
+
+  [now]
+    • ipca-dca-semaforo (kpiIpcaSemaforo) — Type: semaforo
+    • renda-plus-semaforo (kpiRendaSemaforo) — Type: semaforo
+
+  [performance]
+    • factor-loadings-chart (factorLoadingsChart) — Type: chart-bar
+    • retorno-decomposicao (simRetorno) — Type: waterfall
+
+  [portfolio]
+    • minilog (minilogBody) — Type: table
+
+  [simuladores]
+    • calc-aporte (calcAporte) — Type: slider
+
+Próximas ações:
+  → grep -rn "htmlId" scripts/ para localizar funções renderizadoras
+  → Verificar se funções foram chamadas no flow de inicialização
+  → Debugar dados em data.json
+
+
+█ TIPO 3: HIDDEN (4 componentes) 🙈
+─────────────────────────────────────────────────────────────────────────────
+
+Raiz Causa:
+  • Elemento renderizado com sucesso (rendered=true)
+  • Mas oculto por CSS ou JS imperativo:
+    - display: none
+    - visibility: hidden
+    - style.display = 'none'
+
+Componentes HIDDEN:
+
+  [now]
+    • bond-pool-strip (kpiBondPool) — Check por CSS .pv ou visibility
+    • factor-signal-kpi (kpiFactorSignal) — Check por CSS .pv ou visibility
+    • ter-carteira (terCarteira) — Check por CSS .pv ou visibility
+
+  [retiro]
+    • spending-breakdown (spendingChart) — Check por CSS .hidden
+
+Próximas ações:
+  → grep -n "display:none\|visibility:hidden\|\.pv\|\.hidden" dashboard/templates/*.html
+  → Verificar se ocultação é intencional (feature flag) ou bug
+
+
+█ TIPO 4: NO HTML ID / NOT MAPPED (5 componentes) 🔴
+─────────────────────────────────────────────────────────────────────────────
+
+Raiz Causa:
+  • Specs definidos em spec.json mas sem htmlId válido em spec_html_mapping.json
+  • Marcados com htmlId: "—" (placeholder)
+  • Não podem ser testados pelo Playwright sem ID real
+
+Componentes NOT_MAPPED:
+
+  [performance]
+    • evolucao-carteira — Bond Pool — Readiness Detail
+
+  [retiro]
+    • bond-pool-readiness — Bond Pool — Readiness Detail
+    • bond-pool-runway — Bond Pool — Projeção até FIRE Day
+    • income-lifecycle — Projeção de Renda — Ciclo de Vida
+
+  [simuladores]
+    • stress-test-mc — Stress Test MC — Bear Market
+
+Solução (escolher uma):
+  1) Atribuir htmlId válido em spec_html_mapping.json (se componente implementado)
+  2) Remover spec se ainda não implementado
+
+
+█ TIPO 5: OK (31 componentes) ✅
+─────────────────────────────────────────────────────────────────────────────
+
+  backtest       2 componentes
+  fire           6 componentes
+  now           12 componentes
+  performance    4 componentes
+  portfolio      3 componentes
+  retiro         4 componentes
+
+Ver lista completa em DIAGNOSTIC_REPORT_2026-04-14.md
+
+
+================================================================================
+PLANO DE AÇÃO PRIORIZADO
+================================================================================
+
+PRIORIDADE 1 (BLOQUEANTE) — Tipo 1A: MISSING (18 seções)
+  Esforço: Alto (~120 linhas de código para copiar)
+  Impacto: Alto (18 componentes virão OK imediatamente após build)
+
+  Ação:
+    1) Abrir /Users/diegodemorais/claude/code/wealth/MISSING_SECTIONS_EXTRACTED.txt
+    2) Copiar as 18 seções para 01-body.html nas posições corretas por tab
+    3) Rodar: python3 scripts/build_dashboard.py
+    4) Re-executar teste de componentes
+
+  Resultado esperado: 31 OK → 49 OK (ganho de 18)
+
+
+PRIORIDADE 2 (IMPORTANTE) — Tipo 2: EMPTY (8 componentes)
+  Esforço: Médio-Alto (investigar cada função JS)
+  Impacto: Médio (8 componentes deixarão de estar vazios)
+
+  Ação:
+    1) Para cada componente EMPTY, procurar função JS renderizadora
+    2) Debugar por que função não foi chamada ou falhou
+    3) Verificar se dados obrigatórios estão em data.json
+    4) Corrigir seletores CSS/ID se divergentes
+
+
+PRIORIDADE 3 (INVESTIGAÇÃO) — Tipo 3: HIDDEN (4 componentes)
+  Esforço: Baixo
+  Impacto: Baixo-Médio
+
+  Ação:
+    1) Investigar por que foram ocultos
+    2) Verificar se é intencional (feature flag) ou bug
+    3) Decidir se mostra ou mantém oculto
+
+
+PRIORIDADE 4 (MAPPING) — Tipo 4: NO_MAPPING (5 componentes)
+  Esforço: Baixo
+  Impacto: Médio
+
+  Ação:
+    1) Editar spec_html_mapping.json
+    2) Para cada spec, atribuir htmlId válido OU remover
+
+
+================================================================================
+ARQUIVOS DE REFERÊNCIA CRIADOS
+================================================================================
+
+1. DIAGNOSTIC_REPORT_2026-04-14.md
+   → Relatório completo com análise detalhada
+
+2. MISSING_SECTIONS_EXTRACTED.txt
+   → 18 seções prontas para copiar do template.html
+
+3. COMPONENT_TEST_SUMMARY.txt (este arquivo)
+   → Resumo executivo e plano de ação
+
+
+================================================================================
+PRÓXIMOS PASSOS
+================================================================================
+
+1. Diego revisa este relatório
+2. Dev executa Prioridade 1 (copiar 18 seções)
+3. Após cópia: python3 scripts/build_dashboard.py
+4. Re-executar teste (esperado: 31 → 49 OK)
+5. Proceed para Prioridade 2 (investigar 8 EMPTY)
+
+
+================================================================================

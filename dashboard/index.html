@@ -1719,6 +1719,50 @@ footer {
 </div><!-- /collapse-body -->
 </div>
 
+<!-- S29: Missing Components (FIRE tab) -->
+<div class="section collapsible" data-in-tab="fire">
+<h2 onclick="_toggleBlock(this.parentElement)">Trilha FIRE — Realizado vs Projetado</h2>
+<div class="collapse-body">
+<canvas id="fireTrilha" style="height:300px"></canvas>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="fire">
+<h2 onclick="_toggleBlock(this.parentElement)">Simulador FIRE — Interativo</h2>
+<div class="collapse-body">
+<div class="slider-container">
+  <label>Anos até FIRE</label>
+  <input type="range" id="simuladorFire" min="1" max="30" value="10" style="width:100%" />
+  <div id="simuladorFireResult" style="margin-top:10px;text-align:center;color:var(--muted)">—</div>
+</div>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="fire">
+<h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Gasto vs P(FIRE)</h2>
+<div class="collapse-body">
+<div class="slider-container">
+  <label>Custo Anual</label>
+  <input type="range" id="whatIfCenarios" min="150000" max="400000" step="10000" value="250000" style="width:100%" />
+  <div id="whatIfResult" style="margin-top:10px;text-align:center;color:var(--muted)">P(FIRE) = —%</div>
+</div>
+</div>
+</div>
+
+<!-- F9: Missing Components (HOJE tab) -->
+<div class="section" data-in-tab="hoje">
+<h2>KPIs Primários — Grid</h2>
+<div class="kpi-grid" id="kpiGridPrimario">
+  <!-- Populated by JS -->
+</div>
+</div>
+
+<div class="section" data-in-tab="hoje">
+<h2>Exposição Cambial BRL/USD</h2>
+<div class="gauge-container">
+  <div class="gauge" id="exposicaoCambial" style="text-align:center;padding:20px;color:var(--muted)">—</div>
+</div>
+</div>
 
 <!-- P2: BOND POOL READINESS -->
 <div class="section" id="bondPoolSection" data-in-tab="retiro">
@@ -1876,6 +1920,63 @@ footer {
 </div><!-- /section section-771 -->
 <div class="src">Fonte: IBKR · Custo médio ponderado (USD) · Pesos intra-equity vs alvo 50/30/20</div>
 </div><!-- /collapse-body -->
+</div>
+
+<!-- S10: Missing Components (CARTEIRA tab) -->
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">Drift por ETF — Semáforo</h2>
+<div class="collapse-body">
+<div id="driftSemaforoEtf" style="padding:20px;text-align:center;color:var(--muted)">—</div>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">Intra-Equity — Pesos vs Alvo</h2>
+<div class="collapse-body">
+<canvas id="intraEquityPesos" style="height:300px"></canvas>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">Composição por Região e Fator</h2>
+<div class="collapse-body">
+<table style="width:100%;font-size:.8rem"><thead><tr><th>Região</th><th>Fator</th><th>%</th></tr></thead><tbody id="etfComposicaoRegiao"></tbody></table>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">Posições — ETFs Internacionais</h2>
+<div class="collapse-body">
+<table style="width:100%;font-size:.8rem"><thead><tr><th>Ticker</th><th>Qty</th><th>Preço</th><th>Valor</th></tr></thead><tbody id="posicoesEtfsIbkr"></tbody></table>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">TLH Monitor — Lotes e P&L</h2>
+<div class="collapse-body">
+<table style="width:100%;font-size:.8rem"><thead><tr><th>Ativo</th><th>Qty</th><th>PM</th><th>P&L</th></tr></thead><tbody id="tlhMonitor"></tbody></table>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">IR Diferido por ETF</h2>
+<div class="collapse-body">
+<table style="width:100%;font-size:.8rem"><thead><tr><th>ETF</th><th>IR Diferido</th><th>Status</th></tr></thead><tbody id="irDiferido"></tbody></table>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">Renda Fixa — Posições</h2>
+<div class="collapse-body">
+<table style="width:100%;font-size:.8rem"><thead><tr><th>Título</th><th>Qtd</th><th>Taxa</th><th>Valor</th></tr></thead><tbody id="rfPosicoes"></tbody></table>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="carteira">
+<h2 onclick="_toggleBlock(this.parentElement)">Duration — Renda+ 2065</h2>
+<div class="collapse-body">
+<div class="card" id="durationRendaPlus" style="padding:20px;text-align:center;color:var(--muted)">Duration: —</div>
+</div>
 </div>
 
 <!-- S21c: EVENTOS DE VIDA + LUMPY EVENTS (merged) -->
@@ -2040,6 +2141,14 @@ footer {
 </div><!-- /collapse-body -->
 </div>
 
+<!-- S28: Missing Components (BACKTEST tab) -->
+<div class="section collapsible" data-in-tab="backtest">
+<h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 5-7 Anos</h2>
+<div class="collapse-body">
+<canvas id="backtestRegimeLongo" style="height:300px"></canvas>
+</div>
+</div>
+
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
 <div class="section collapsible open" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Shadow Portfolios — Tracking</h2>
@@ -2161,6 +2270,41 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 </div><!-- /collapse-body -->
+</div>
+
+<!-- S26: Missing Components (PERF tab) -->
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Alpha ITD vs SWRD</h2>
+<div class="collapse-body">
+<div class="kpi">
+  <span class="kpi-label">Alpha ITD vs SWRD</span>
+  <div class="kpi-value pv" id="alphaItdSwrd">—</div>
+</div>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">HODL11 — P&L e Custo Médio</h2>
+<div class="collapse-body">
+<div class="kpi">
+  <span class="kpi-label">HODL11 P&L</span>
+  <div class="kpi-value pv" id="hodl11Pnl">—</div>
+</div>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Information Ratio vs VWRA</h2>
+<div class="collapse-body">
+<canvas id="informationRatio" style="height:300px"></canvas>
+</div>
+</div>
+
+<div class="section collapsible" data-in-tab="perf">
+<h2 onclick="_toggleBlock(this.parentElement)">Fee Analysis — Custo vs Alpha</h2>
+<div class="collapse-body">
+<table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeCustoComplexidade"></tbody></table>
+</div>
 </div>
 
 <!-- IR DIFERIDO + TLH — merged -->
@@ -2463,8 +2607,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Assembly by build_dashboard.py: _assemble_js() concatenates in order
 //
 
-window.GENERATED_AT = new Date('2026-04-14T06:21:30-03:00'); // BRT (UTC-3)
-window.VERSION = '2.173';
+window.GENERATED_AT = new Date('2026-04-14T06:42:08-03:00'); // BRT (UTC-3)
+window.VERSION = '2.174';
 
 window.DATA = {
   "_generated": "2026-04-14T05:13:28",
@@ -9271,7 +9415,7 @@ window.DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.173"
+  "version": "2.174"
 };
 
 // Debug: window.DATA just defined, log it

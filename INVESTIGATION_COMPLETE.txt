@@ -1,0 +1,283 @@
+================================================================================
+DASHBOARD COMPONENT TEST — COMPLETE INVESTIGATION REPORT
+================================================================================
+
+Investigator: dev agent
+Date: 2026-04-14
+Test Framework: Playwright + Chart.js detection
+Total Components Analyzed: 66
+
+================================================================================
+EXECUTIVE SUMMARY
+================================================================================
+
+Status Distribution:
+  ✅ OK (31)          — 46% — Fully functional
+  ❌ MISSING (23)     — 35% — Not in compiled index.html
+  ⚠️  EMPTY (8)       — 12% — Element exists, no data rendered
+  🙈 HIDDEN (4)       —  6% — Rendered but hidden by CSS/JS
+  🔴 NO_MAPPING (5)   —  7% — Missing htmlId in spec mapping
+
+Action Items: 35 components (53% of total)
+
+================================================================================
+ROOT CAUSE ANALYSIS BY TYPE
+================================================================================
+
+TYPE 1: MISSING (23 components) ❌
+─────────────────────────────────────────────────────────────────────────────
+
+Root Cause Distribution:
+  • 18 components (78%) — In template.html but NOT copied to 01-body.html
+  • 5 components (22%)  — Missing htmlId (see TYPE 4)
+
+WHY 18 SECTIONS WEREN'T COPIED:
+
+History:
+  1. Originally: single template.html (1603 lines) with all components
+  2. Refactor: Split into dashboard/templates/ partials (00-head.html, 01-body.html, 02-scripts.html, 03-closing.html)
+  3. Problem: 18 sections were NEVER copied from template.html to 01-body.html
+  4. Current state:
+     - template.html = 1603 lines (complete, 72 data-in-tab sections)
+     - 01-body.html = 1064 lines (incomplete, 54 data-in-tab sections)
+     - Gap = 539 lines = 18 missing sections
+
+Build Process:
+  build_dashboard.py flow:
+    1. Check if dashboard/templates/ directory exists
+    2. If YES: assemble from partials (00-head + 01-body + 02-scripts + 03-closing)
+    3. If NO: use template.html as fallback
+
+  Current state: templates/ EXISTS → always uses partials → template.html NEVER used
+
+Solution:
+  Copy 18 sections from template.html into 01-body.html at correct positions by tab
+
+Affected Components (18):
+  backtest    (1): backtestRegimeLongo
+  fire        (3): fireTrilha, simuladorFire, whatIfCenarios
+  now         (2): kpiGridPrimario, exposicaoCambial
+  performance (4): alphaItdSwrd, feeCustoComplexidade, hodl11Pnl, informationRatio
+  portfolio   (8): drift-semaforo-etf, durationRendaPlus, etf-composicao-regiao,
+                   intraEquityPesos, irDiferido, posicoesEtfsIbkr, rfPosicoes, tlhMonitor
+
+
+TYPE 2: EMPTY (8 components) ⚠️
+─────────────────────────────────────────────────────────────────────────────
+
+What They Have:
+  ✓ Element exists in DOM
+  ✓ Element is visible (not hidden)
+  ✗ No data rendered by JavaScript
+
+Root Causes (investigate each):
+  A) Function not called — JS function responsible for rendering was never invoked
+  B) Missing data — Required data not in data.json
+  C) Wrong selector — Function uses different ID/selector than HTML element
+
+Affected Components (8):
+
+  [backtest]
+    • drawdown-historico (drawdownHistNota) — chart-area
+
+  [fire]
+    • lumpy-events (lumpyEventsBody) — table
+
+  [now]
+    • ipca-dca-semaforo (kpiIpcaSemaforo) — semaforo
+    • renda-plus-semaforo (kpiRendaSemaforo) — semaforo
+
+  [performance]
+    • factor-loadings-chart (factorLoadingsChart) — chart
+    • retorno-decomposicao (simRetorno) — waterfall
+
+  [portfolio]
+    • minilog (minilogBody) — table
+
+  [simuladores]
+    • calc-aporte (calcAporte) — slider
+
+Investigation Steps:
+  grep -rn "drawdownHistNota\|lumpyEventsBody\|kpiIpcaSemaforo\|..." scripts/*.js
+
+
+TYPE 3: HIDDEN (4 components) 🙈
+─────────────────────────────────────────────────────────────────────────────
+
+What They Have:
+  ✓ Element exists in DOM
+  ✓ Rendered successfully (rendered=true)
+  ✗ Visibility: hidden (display:none or visibility:hidden)
+
+Possible Reasons:
+  • Intentional: feature flag / conditional visibility
+  • Bug: logic error hiding component unnecessarily
+
+Affected Components (4):
+
+  [now]
+    • bond-pool-strip (kpiBondPool) — KPI
+    • factor-signal-kpi (kpiFactorSignal) — KPI
+    • ter-carteira (terCarteira) — KPI
+
+  [retiro]
+    • spending-breakdown (spendingChart) — chart
+
+Investigation Steps:
+  grep -n "display:none\|visibility:hidden\|\.pv\|\.hidden" dashboard/templates/*.html scripts/*.js
+  Check if these components should be visible or are intentionally hidden
+
+
+TYPE 4: NO HTML ID / NOT MAPPED (5 components) 🔴
+─────────────────────────────────────────────────────────────────────────────
+
+What's Wrong:
+  • Spec defined in spec.json
+  • NO valid htmlId in spec_html_mapping.json
+  • Marked with htmlId: "—" (placeholder)
+  • Cannot be tested by Playwright without valid ID
+
+Affected Components (5):
+
+  [performance]
+    • evolucao-carteira — Evolução Patrimonial
+
+  [retiro]
+    • bond-pool-readiness — Bond Pool — Readiness Detail
+    • bond-pool-runway — Bond Pool — Projeção até FIRE Day
+    • income-lifecycle — Projeção de Renda — Ciclo de Vida
+
+  [simuladores]
+    • stress-test-mc — Stress Test MC — Bear Market
+
+Solution (choose one):
+  1) Assign valid htmlId in spec_html_mapping.json (if component is implemented)
+  2) Remove spec if component not yet implemented
+
+
+TYPE 5: OK (31 components) ✅
+─────────────────────────────────────────────────────────────────────────────
+
+Fully functional components by tab:
+  backtest      (2): backtest-metricas, shadow-portfolios
+  fire          (6): earliest-fire, eventos-vida, fire-matrix, glide-path, net-worth-projection, pfire-familia
+  now          (12): cambio-mercado, drift-maximo-kpi, fire-countdown, hodl11-status, kpi-grid-mercado, macro-strip,
+                     patrimonio-total-hero, pfire-hero, savings-rate, stress-cenarios, tornado-sensitivity, wellness-score
+  performance   (4): cagr-patrimonial-twr, factor-rolling-avgs, heatmap-retornos, rolling-sharpe
+  portfolio     (3): custo-base-bucket, geo-donut, stacked-alloc
+  retiro        (4): guardrails-retirada, income-fases, sankey-cashflow, swr-percentis
+
+================================================================================
+PRIORITIZED ACTION PLAN
+================================================================================
+
+PRIORITY 1 (BLOCKING): TYPE 1A — MISSING (18 sections)
+Effort: HIGH (copy 18 HTML sections, ~120 lines total)
+Impact: HIGH (18 components will become OK immediately)
+
+Steps:
+  1. Open: /Users/diegodemorais/claude/code/wealth/MISSING_SECTIONS_EXTRACTED.txt
+  2. Edit: /Users/diegodemorais/claude/code/wealth/dashboard/templates/01-body.html
+  3. Copy 18 sections from extracted file to 01-body.html (grouped by tab)
+  4. Run: python3 scripts/build_dashboard.py
+  5. Re-run test to verify
+
+Expected Result:
+  Before: 31 OK, 23 MISSING
+  After:  49 OK, 5 MISSING (5 are the NO_HTML_ID ones)
+
+
+PRIORITY 2 (IMPORTANT): TYPE 2 — EMPTY (8 components)
+Effort: MEDIUM-HIGH (debug 8 JS functions)
+Impact: MEDIUM (8 more components fixed)
+
+Steps:
+  1. For each EMPTY component:
+     a. grep -rn "htmlId" scripts/ to find rendering function
+     b. Check if function is called during initialization
+     c. Check if required data exists in data.json
+     d. Debug why data wasn't rendered
+  2. Fix issue (call function, provide data, correct selector)
+  3. Re-run test
+
+
+PRIORITY 3 (INVESTIGATION): TYPE 3 — HIDDEN (4 components)
+Effort: LOW
+Impact: LOW-MEDIUM
+
+Steps:
+  1. Investigate why each is hidden
+  2. Determine if intentional (feature flag) or bug
+  3. Either remove CSS/JS hiding or document as intentional
+
+
+PRIORITY 4 (MAPPING): TYPE 4 — NO_MAPPING (5 components)
+Effort: LOW
+Impact: MEDIUM
+
+Steps:
+  1. Edit: /Users/diegodemorais/claude/code/wealth/dashboard/tests/spec_html_mapping.json
+  2. For each spec with htmlId="—":
+     a. Assign valid htmlId (if component exists)
+     b. OR remove spec from mapping
+
+
+================================================================================
+FILES CREATED FOR REFERENCE
+================================================================================
+
+1. DIAGNOSTIC_REPORT_2026-04-14.md
+   Full diagnostic report with detailed analysis
+
+2. MISSING_SECTIONS_EXTRACTED.txt
+   All 18 missing HTML sections extracted from template.html, ready to copy
+
+3. COMPONENT_TEST_SUMMARY.txt
+   Executive summary and action plan
+
+4. INVESTIGATION_COMPLETE.txt
+   This file — complete investigation report
+
+
+================================================================================
+KEY FILES TO MODIFY
+================================================================================
+
+Priority 1 Target:
+  → /Users/diegodemorais/claude/code/wealth/dashboard/templates/01-body.html
+
+Priority 2 Targets:
+  → /Users/diegodemorais/claude/code/wealth/scripts/dashboard.js (find functions)
+  → /Users/diegodemorais/claude/code/wealth/dashboard/data.json (check data)
+
+Priority 3 Targets:
+  → /Users/diegodemorais/claude/code/wealth/dashboard/templates/01-body.html (CSS)
+  → /Users/diegodemorais/claude/code/wealth/scripts/dashboard.js (visibility logic)
+
+Priority 4 Target:
+  → /Users/diegodemorais/claude/code/wealth/dashboard/tests/spec_html_mapping.json
+
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Diego reviews this investigation report
+
+2. Dev executes PRIORITY 1:
+   • Copy 18 sections from MISSING_SECTIONS_EXTRACTED.txt
+   • Paste into 01-body.html
+   • Run build script
+   • Re-test (expect 31→49 OK)
+
+3. Dev executes PRIORITY 2:
+   • Debug 8 EMPTY components
+   • Fix rendering issues
+
+4. Dev executes PRIORITY 3:
+   • Investigate 4 HIDDEN components
+
+5. Dev executes PRIORITY 4:
+   • Map 5 unmapped components
+
+================================================================================

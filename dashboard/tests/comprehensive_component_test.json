@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-14T09:25:56.828Z",
+  "timestamp": "2026-04-14T09:42:27.843Z",
   "summary": {
     "total": 66,
-    "pass": 31,
+    "pass": 40,
     "hidden": 4,
-    "empty": 8,
-    "missing": 23
+    "empty": 17,
+    "missing": 5
   },
   "components": [
     {
@@ -25,12 +25,12 @@
       "htmlId": "backtestRegimeLongo",
       "label": "Backtest Longo — Regime 5-7",
       "type": "chart-line",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "drawdown-historico",
@@ -97,12 +97,12 @@
       "htmlId": "fireTrilha",
       "label": "Trilha FIRE — Realizado vs Projetado",
       "type": "chart-line",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "glide-path",
@@ -157,24 +157,24 @@
       "htmlId": "simuladorFire",
       "label": "Simulador FIRE — Interativo",
       "type": "slider",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "what-if-cenarios",
       "htmlId": "whatIfCenarios",
       "label": "What-If Scenarios — Gasto vs P(FIRE)",
       "type": "slider",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "bond-pool-strip",
@@ -217,12 +217,12 @@
       "htmlId": "exposicaoCambial",
       "label": "Exposição Cambial BRL/USD",
       "type": "gauge",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "factor-signal-kpi",
@@ -289,12 +289,12 @@
       "htmlId": "kpiGridPrimario",
       "label": "KPIs Primários — S1",
       "type": "kpi",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "macro-strip",
@@ -409,12 +409,12 @@
       "htmlId": "alphaItdSwrd",
       "label": "Alpha ITD vs SWRD",
       "type": "kpi",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "cagr-patrimonial-twr",
@@ -469,12 +469,12 @@
       "htmlId": "feeCustoComplexidade",
       "label": "Fee Analysis — Custo vs Alpha",
       "type": "table",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "heatmap-retornos",
@@ -493,24 +493,24 @@
       "htmlId": "hodl11Pnl",
       "label": "HODL11 — P&L e Custo Médio",
       "type": "kpi",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "information-ratio",
       "htmlId": "informationRatio",
       "label": "Information Ratio vs VWRA",
       "type": "chart-line",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "retorno-decomposicao",
@@ -553,36 +553,36 @@
       "htmlId": "driftSemaforoEtf",
       "label": "Drift por ETF",
       "type": "semaforo",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "duration-renda-plus",
       "htmlId": "durationRendaPlus",
       "label": "Duration — Renda+ 2065",
       "type": "card",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "etf-composicao-regiao",
       "htmlId": "etfComposicaoRegiao",
       "label": "Composição por Região e Fator",
       "type": "table",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "geo-donut",
@@ -601,24 +601,24 @@
       "htmlId": "intraEquityPesos",
       "label": "Intra-Equity — Pesos vs Alvo",
       "type": "chart-bar",
-      "found": false,
-      "visible": false,
-      "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "found": true,
+      "visible": true,
+      "rendered": true,
+      "structure": "canvas-element",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "ir-diferido",
       "htmlId": "irDiferido",
       "label": "IR Diferido por ETF",
       "type": "table",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "minilog",
@@ -637,24 +637,24 @@
       "htmlId": "posicoesEtfsIbkr",
       "label": "Posições — ETFs Internacionais",
       "type": "table",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "rf-posicoes",
       "htmlId": "rfPosicoes",
       "label": "Renda Fixa — Posições",
       "type": "table",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "stacked-alloc",
@@ -673,12 +673,12 @@
       "htmlId": "tlhMonitor",
       "label": "TLH Monitor — Lotes e P&L",
       "type": "table",
-      "found": false,
-      "visible": false,
+      "found": true,
+      "visible": true,
       "rendered": false,
-      "structure": "NOT_IN_DOM",
-      "statusChar": "❌",
-      "statusText": "NOT_FOUND"
+      "structure": "empty",
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "bond-pool-readiness",
