@@ -1,4 +1,11 @@
 // ═══════════════════════════════════════════════════════════════
+// NOTES — Function references accessed from window at runtime
+// ═══════════════════════════════════════════════════════════════
+// Functions are NOT destructured at module load time because bootstrap.mjs
+// populates window AFTER importing this module. Instead, functions are accessed
+// via window.* inside _initTabCharts() at runtime, when bootstrap has finished setup.
+
+// ═══════════════════════════════════════════════════════════════
 // RUNTIME ASSERTIONS
 // ═══════════════════════════════════════════════════════════════
 // Staleness banner
@@ -48,7 +55,7 @@ fetchLive();
 // PRIVACY TOGGLE — única implementação (fim do body)
 // ═══════════════════════════════════════════════════════════════
 // ── Fase 3: ocultar escala Y de charts com valores absolutos ──
-function _applyPrivacyCharts(isPrivate) {
+export function _applyPrivacyCharts(isPrivate) {
   // Charts com eixo Y em R$ absoluto — ocultar ticks em modo privado
   const absCharts = ['timeline', 'fan', 'netWorth', 'income', 'incomeProjection', 'stressProjection', 'bondPoolRunway'];
   absCharts.forEach(name => {
@@ -157,7 +164,7 @@ function _applyPrivacyCharts(isPrivate) {
   }
 }
 
-function toggleEruda() {
+export function toggleEruda() {
   if (window.eruda && window.eruda._isInit) {
     window.eruda.show();
     return;
@@ -167,7 +174,7 @@ function toggleEruda() {
   s.onload = () => { eruda.init(); eruda.show(); };
   document.head.appendChild(s);
 }
-function togglePrivacy() {
+export function togglePrivacy() {
   document.body.classList.toggle('private-mode');
   const on = document.body.classList.contains('private-mode');
   document.getElementById('privacyBtn').innerHTML = on
@@ -184,28 +191,31 @@ if (localStorage.getItem('dashboard_private') === '1') {
 
 // ── Tab system com lazy initialization ───────────────────────
 const _tabInitialized = {};
-function _initTabCharts(tab) {
+export function _initTabCharts(tab) {
+  // Use window.* to access functions that are set up by bootstrap.mjs
+  // This avoids issues with destructuring from window before bootstrap populates it
+  const w = window;
   const tabFns = {
-    hoje:     [buildTimestamps, buildTornado, buildSankey],
-    perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
-               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
-               function() { buildBacktest('since2009'); }, buildCagrVsTwr,
-               buildFactorRolling, buildFactorLoadings,
-               buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
-               buildDrawdownHistory, buildBacktestR7, buildPremissasVsRealizado],
-    backtest: [function() { buildBacktest('since2009'); }, buildShadowTable,
-               function() { buildShadowChart('since2009'); }, buildBacktestR7, buildDrawdownHistory],
-    carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildTrackingFire, buildScenarioComparison, buildScenarios,
-               buildFireMatrix, buildLumpyEvents,
-               buildNetWorthProjection,
-               () => { _applyFireAxes(); }, buildEarliestFire,
-               buildEventosVida, buildPfireFamilia],
-    retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
-               buildSpendingGuardrails, buildSwrPercentiles,
-               buildSpendingBreakdown, buildIncomeProjection,
-               buildBondPool, buildBondPoolRunway],
-    simuladores: [() => { _applyFireAxes(); }, buildScenarios, buildStressTest,
+    hoje:     [w.buildTimestamps, w.buildTornado, w.buildSankey],
+    perf:     [function() { w.buildTimeline('all'); }, w.buildAttribution, w.buildDeltaBar,
+               w.renderIpcaProgress, w.buildRetornoHeatmap, w.buildRollingSharp, w.buildInformationRatio,
+               function() { w.buildBacktest('since2009'); }, w.buildCagrVsTwr,
+               w.buildFactorRolling, w.buildFactorLoadings,
+               w.buildShadowTable, function() { w.buildShadowChart('since2009'); }, w.buildFeeAnalysis,
+               w.buildDrawdownHistory, w.buildBacktestR7, w.buildPremissasVsRealizado],
+    backtest: [function() { w.buildBacktest('since2009'); }, w.buildShadowTable,
+               function() { w.buildShadowChart('since2009'); }, w.buildBacktestR7, w.buildDrawdownHistory],
+    carteira: [w.buildDonuts, w.buildStackedAlloc, w.buildPosicoes, w.buildCustoBase, w.buildIrDiferido, w.buildRfCards, w.renderHodl11, w.calcAporte, w.buildEtfComposition, w.buildMinilog],
+    fire:     [w.buildTrackingFire, w.buildScenarioComparison, w.buildScenarios,
+               w.buildFireMatrix, w.buildLumpyEvents, w.buildGlidePath,
+               w.buildNetWorthProjection,
+               () => { _applyFireAxes(); }, w.buildEarliestFire,
+               w.buildEventosVida, w.buildPfireFamilia],
+    retiro:   [w.buildGuardrails, w.buildIncomeChart, w.buildIncomeTable,
+               w.buildSpendingGuardrails, w.buildSwrPercentiles,
+               w.buildSpendingBreakdown, w.buildIncomeProjection,
+               w.buildBondPool, w.buildBondPoolRunway],
+    simuladores: [() => { _applyFireAxes(); }, w.buildScenarios, w.buildStressTest,
                   function() {
                     const wiC = document.getElementById('wiCusto');
                     if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
@@ -220,26 +230,26 @@ function _initTabCharts(tab) {
 // inside the block. If a chart was rendered with zero dimensions (canvas was hidden),
 // Chart.js resize() alone won't fix it — we need to also rebuild it via its named builder.
 const _chartBuilders = {
-  glideChart:            () => buildGlidePath(),
-  deltaChart:            () => buildDeltaBar(),
-  trackingFireChart:     () => buildTrackingFire(),
-  tornadoChart:          () => buildTornado(),
-  timelineChart:         () => { buildTimeline('all'); },
-  attrChart:             () => buildAttribution(),
-  rollingSharpChart:     () => buildRollingSharp(),
-  rollingIRChart:        () => buildInformationRatio(),
-  drawdownHistChart:     () => buildDrawdownHistory(),
-  backtestChart:         () => { buildBacktest('since2009'); },
-  backtestR7Chart:       () => buildBacktestR7(),
-  shadowChart:           () => { buildShadowChart('since2009'); },
-  factorRollingChart:    () => buildFactorRolling(),
-  factorLoadingsChart:   () => buildFactorLoadings(),
-  incomeChart:           () => buildIncomeChart(),
-  incomeProjectionChart: () => buildIncomeProjection(),
-  sankeyChart:           () => buildSankey(),
-  bondPoolRunwayChart:   () => buildBondPoolRunway(),
-  netWorthProjectionChart: () => buildNetWorthProjection(),
-  stressProjectionChart:   () => buildStressTest(),
+  glideChart:            () => window.buildGlidePath?.(),
+  deltaChart:            () => window.buildDeltaBar?.(),
+  trackingFireChart:     () => window.buildTrackingFire?.(),
+  tornadoChart:          () => window.buildTornado?.(),
+  timelineChart:         () => { window.buildTimeline?.('all'); },
+  attrChart:             () => window.buildAttribution?.(),
+  rollingSharpChart:     () => window.buildRollingSharp?.(),
+  rollingIRChart:        () => window.buildInformationRatio?.(),
+  drawdownHistChart:     () => window.buildDrawdownHistory?.(),
+  backtestChart:         () => { window.buildBacktest?.('since2009'); },
+  backtestR7Chart:       () => window.buildBacktestR7?.(),
+  shadowChart:           () => { window.buildShadowChart?.('since2009'); },
+  factorRollingChart:    () => window.buildFactorRolling?.(),
+  factorLoadingsChart:   () => window.buildFactorLoadings?.(),
+  incomeChart:           () => window.buildIncomeChart?.(),
+  incomeProjectionChart: () => window.buildIncomeProjection?.(),
+  sankeyChart:           () => window.buildSankey?.(),
+  bondPoolRunwayChart:   () => window.buildBondPoolRunway?.(),
+  netWorthProjectionChart: () => window.buildNetWorthProjection?.(),
+  stressProjectionChart:   () => window.buildStressTest?.(),
 };
 window._toggleBlock = function(el) {
   const wasOpen = el.classList.contains('open');
@@ -268,7 +278,7 @@ window._toggleBlock = function(el) {
   }
 };
 
-window.switchTab = function(name) {
+export function switchTab(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('[data-in-tab]').forEach(el => {
@@ -285,6 +295,16 @@ window.switchTab = function(name) {
       if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
       // Force responsive grid override after tab content is built
       forceResponsiveGrids();
+      // Ensure all Chart.js instances in this tab are rendered
+      // (some charts may not render pixels on constructor alone)
+      // Use setTimeout to ensure update() happens after all other RAF callbacks
+      setTimeout(() => {
+        Object.values(charts).forEach(c => {
+          if (c && typeof c.update === 'function') {
+            try { c.update('none'); } catch(e) { /* ignore */ }
+          }
+        });
+      }, 0);
     }));
   }
   requestAnimationFrame(() => {
@@ -304,14 +324,22 @@ window.switchTab = function(name) {
         if (builder) { try { builder(); } catch(e) { console.warn('[tab-rebuild]', c.canvas.id, e); } }
       }
     });
+    // Ensure charts are rendered after resize (update() needed for pixel data on some Chart.js configs)
+    setTimeout(() => {
+      Object.values(charts).forEach(c => {
+        if (c && typeof c.update === 'function' && tabCanvases.has(c.canvas)) {
+          try { c.update('none'); } catch(e) { /* ignore */ }
+        }
+      });
+    }, 0);
   });
   try { localStorage.setItem('dash_tab', name); } catch(e) {}
-};
+}
 
 // ═══════════════════════════════════════════════════════════════
 // P1/P2: SEMÁFORO PANEL
 // ═══════════════════════════════════════════════════════════════
-function toggleSemaforoPanel() {
+export function toggleSemaforoPanel() {
   const panel = document.getElementById('semaforoPanel');
   const body  = document.getElementById('semaforoCollapseBody');
   if (!panel || !body) return;
@@ -320,7 +348,7 @@ function toggleSemaforoPanel() {
   body.style.display = opening ? 'block' : 'none';
 }
 
-function buildSemaforoPanel() {
+export function buildSemaforoPanel() {
   const el = document.getElementById('semaforoBody');
   if (!el) return;
 
@@ -473,7 +501,7 @@ function buildSemaforoPanel() {
 // ═══════════════════════════════════════════════════════════════
 // P2: MACRO CARDS
 // ═══════════════════════════════════════════════════════════════
-function buildMacroCards() {
+export function buildMacroCards() {
   const el = document.getElementById('macroStrip');
   if (!el) return;
   const m = DATA.macro;
@@ -530,7 +558,7 @@ function buildMacroCards() {
 // ═══════════════════════════════════════════════════════════════
 // P2: DCA STATUS
 // ═══════════════════════════════════════════════════════════════
-function buildDcaStatus() {
+export function buildDcaStatus() {
   const el = document.getElementById('dcaGrid');
   if (!el) return;
   const dca = DATA.dca_status;
@@ -577,7 +605,7 @@ function buildDcaStatus() {
 // ═══════════════════════════════════════════════════════════════
 // P2: BOND POOL READINESS
 // ═══════════════════════════════════════════════════════════════
-function buildBondPool() {
+export function buildBondPool() {
   const el = document.getElementById('bondPoolBody');
   if (!el) return;
   const bp = DATA.fire?.bond_pool_readiness;
@@ -725,7 +753,7 @@ window.setFireMatrixPerfil = function(p) {
 
 // Interpola a idade provável para atingir um dado patrimônio
 // Âncoras: (idade_atual, pat_atual) → (50, pat_p50@50) → (53, pat_p50@53) + extrapolação
-function _fmEstimateAge(pat) {
+export function _fmEstimateAge(pat) {
   const p  = DATA.premissas;
   const f0 = DATA.pfire_aspiracional;
   const f1 = DATA.pfire_base;
@@ -753,7 +781,7 @@ function _fmEstimateAge(pat) {
   return Math.round(b.age + slope * (pat - b.pat));
 }
 
-function _fmCellColor(pct) {
+export function _fmCellColor(pct) {
   if (pct == null) return 'transparent';
   if (pct >= 95) {
     const t = Math.min(1, (pct - 95) / 5);
@@ -767,14 +795,14 @@ function _fmCellColor(pct) {
   }
 }
 
-function _fmTextColor(pct) {
+export function _fmTextColor(pct) {
   if (pct == null) return 'var(--muted)';
   if (pct >= 95) return 'var(--green)';
   if (pct >= 88) return 'var(--yellow)';
   return 'var(--red)';
 }
 
-function _renderFireMatrix() {
+export function _renderFireMatrix() {
   const el = document.getElementById('fireMatrixTable');
   if (!el) return;
   const d = DATA.fire_matrix;
@@ -840,7 +868,7 @@ function _renderFireMatrix() {
   el.innerHTML = html;
 }
 
-function buildFireMatrix() {
+export function buildFireMatrix() {
   const sec = document.getElementById('fireMatrixSection');
   const el  = document.getElementById('fireMatrixTable');
   if (!el || !sec) return;
@@ -852,7 +880,7 @@ function buildFireMatrix() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R2 — SWR PERCENTIS
 // ═══════════════════════════════════════════════════════════════
-function buildSwrPercentiles() {
+export function buildSwrPercentiles() {
   const el = document.getElementById('swrPercentilesCards');
   const sec = document.getElementById('swrPercentilesSection');
   if (!el || !sec) return;
@@ -893,7 +921,7 @@ function buildSwrPercentiles() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: R4 — MACRO STATUS BADGE
 // ═══════════════════════════════════════════════════════════════
-function renderMacroStatus() {
+export function renderMacroStatus() {
   const el = document.getElementById('macroStatusBadge');
   if (!el) return;
   const status = DATA.fire?.plano_status?.status || DATA.macro?.plano_status?.status || DATA.fire?.plano_status || DATA.macro?.plano_status;
@@ -914,7 +942,7 @@ function renderMacroStatus() {
 // ═══════════════════════════════════════════════════════════════
 // R5 — TRACKING FIRE: Realizado vs Projeção vs Meta
 // ═══════════════════════════════════════════════════════════════
-function buildTrackingFire() {
+export function buildTrackingFire() {
   const el = document.getElementById('trackingFireChart');
   const sec = document.getElementById('trackingFireSection');
   if (!el || !sec) return;
@@ -1032,7 +1060,7 @@ function buildTrackingFire() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: N1 — DRAWDOWN HISTORY
 // ═══════════════════════════════════════════════════════════════
-function buildDrawdownHistory() {
+export function buildDrawdownHistory() {
   const el = document.getElementById('drawdownHistChart');
   const sec = document.getElementById('drawdownHistSection');
   if (!el || !sec) return;
@@ -1106,7 +1134,7 @@ function buildDrawdownHistory() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: N2 — ETF COMPOSITION
 // ═══════════════════════════════════════════════════════════════
-function buildEtfComposition() {
+export function buildEtfComposition() {
   const regEl = document.getElementById('etfRegionTable');
   const vemEl = document.getElementById('etfVemTable');
   const facEl = document.getElementById('etfFactorTable');
@@ -1222,7 +1250,7 @@ function buildEtfComposition() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: N3 — BOND POOL RUNWAY CHART
 // ═══════════════════════════════════════════════════════════════
-function buildBondPoolRunway() {
+export function buildBondPoolRunway() {
   const el = document.getElementById('bondPoolRunwayChart');
   const wrap = document.getElementById('bondPoolRunwayChartWrap');
   if (!el || !wrap) return;
@@ -1273,7 +1301,7 @@ function buildBondPoolRunway() {
 // ═══════════════════════════════════════════════════════════════
 // HD-perplexity-review: N4 — LUMPY EVENTS
 // ═══════════════════════════════════════════════════════════════
-function buildLumpyEvents() {
+export function buildLumpyEvents() {
   const el = document.getElementById('lumpyEventsBody');
   const sec = document.getElementById('lumpyEventsSection');
   if (!el || !sec) return;
@@ -1315,7 +1343,7 @@ function buildLumpyEvents() {
 // ═══════════════════════════════════════════════════════════════
 // P2: TIMESTAMPS / STALENESS BADGES (footer)
 // ═══════════════════════════════════════════════════════════════
-function buildTimestamps() {
+export function buildTimestamps() {
   const el = document.getElementById('timestampsBar');
   if (!el) return;
   const ts = DATA.timestamps;
@@ -1351,7 +1379,7 @@ function buildTimestamps() {
 // ═══════════════════════════════════════════════════════════════
 // P2: CONCENTRAÇÃO BRASIL (macro section)
 // ═══════════════════════════════════════════════════════════════
-function buildBrasilConcentracao() {
+export function buildBrasilConcentracao() {
   var el = document.getElementById('brasilConcentracao');
   if (!el) return;
   var cb = DATA.concentracao_brasil;
@@ -1396,7 +1424,7 @@ function buildBrasilConcentracao() {
 // ═══════════════════════════════════════════════════════════════
 // P2: PREMISSAS VS REALIZADO (plan tab)
 // ═══════════════════════════════════════════════════════════════
-function buildPremissasVsRealizado() {
+export function buildPremissasVsRealizado() {
   var el = document.getElementById('premissasVsRealizadoBody');
   if (!el) return;
   var pvr = DATA.premissas_vs_realizado;
@@ -1513,12 +1541,12 @@ function buildPremissasVsRealizado() {
 // ═══════════════════════════════════════════════════════════════
 // P2: TAX IR DIFERIDO
 // ═══════════════════════════════════════════════════════════════
-function buildTaxIR() { buildIrDiferido(); } // alias — lógica migrada para buildIrDiferido()
+export function buildTaxIR() { buildIrDiferido(); } // alias — lógica migrada para buildIrDiferido()
 
 // ═══════════════════════════════════════════════════════════════
 // P2: FACTOR ROLLING 12M AVGS vs SWRD
 // ═══════════════════════════════════════════════════════════════
-function buildFactorRolling() {
+export function buildFactorRolling() {
   const sec = document.getElementById('factorRollingSection');
   const body = document.getElementById('factorRollingBody');
   if (!sec || !body) return;
@@ -1606,7 +1634,7 @@ const FACTOR_META = {
 };
 
 // Build dynamic views from available factors
-function _buildFactorViews(availableFactors) {
+export function _buildFactorViews(availableFactors) {
   const views = {};
 
   // "All" view includes all available factors
@@ -1630,7 +1658,7 @@ function _buildFactorViews(availableFactors) {
 }
 
 // Get available factors from data (non-null across at least one ticker)
-function _getAvailableFactors() {
+export function _getAvailableFactors() {
   const fl = DATA.factor_loadings;
   if (!fl || Object.keys(fl).length === 0) return [];
 
@@ -1650,7 +1678,7 @@ window.setFactorView = function(view) {
   _renderFactorChart();
 };
 
-function buildFactorLoadings() {
+export function buildFactorLoadings() {
   const cardsEl = document.getElementById('factorLoadingsCards');
   const btnsEl = document.getElementById('factorLoadingsBtns');
   const sec = document.getElementById('factorLoadingsSection');
@@ -1712,7 +1740,7 @@ function buildFactorLoadings() {
   _renderFactorChart();
 }
 
-function _renderFactorChart() {
+export function _renderFactorChart() {
   const fl = DATA.factor_loadings;
   if (!fl) return;
   const ctx = document.getElementById('factorLoadingsChart');
@@ -1786,7 +1814,7 @@ function _renderFactorChart() {
 // ═══════════════════════════════════════════════════════════════
 // P3: CAGR PATRIMONIAL vs TWR
 // ═══════════════════════════════════════════════════════════════
-function buildCagrVsTwr() {
+export function buildCagrVsTwr() {
   const cagrEl = document.getElementById('cagrPatrimonial');
   const twrEl = document.getElementById('twrPure');
   if (cagrEl && cagr) {
@@ -1803,24 +1831,30 @@ function buildCagrVsTwr() {
 // INIT — lazy tab loading
 // Apenas funções globais (não ligadas a nenhuma aba específica) e a tab inicial.
 // ═══════════════════════════════════════════════════════════════
-(function init() {
-  // Atualiza label dinâmico da idade atual no seletor de stress test
-  (function() {
-    const idadeAtual = DATA.premissas?.idade_atual || 39;
-    const opt = document.getElementById('stressOnsetAgeToday');
-    if (opt) { opt.value = String(idadeAtual); opt.textContent = `${idadeAtual} anos (hoje)`; }
-  })();
+export function init() {
+  if (window.addDebugLog) window.addDebugLog('init() called');
+  try {
+    // Atualiza label dinâmico da idade atual no seletor de stress test
+    (function() {
+      const idadeAtual = DATA.premissas?.idade_atual || 39;
+      const opt = document.getElementById('stressOnsetAgeToday');
+      if (opt) { opt.value = String(idadeAtual); opt.textContent = `${idadeAtual} anos (hoje)`; }
+    })();
 
-  // Funções globais (header, hero, semáforo — sempre visíveis)
-  renderKPIs();
-  renderWellness();
-  buildWellnessExtras();
-  renderMacroStatus();
-  buildBrasilConcentracao();
-  buildMacroCards();
-  buildDcaStatus();
-  buildSemaforoPanel();
-  buildFanChart();
+    // Funções globais (header, hero, semáforo — sempre visíveis)
+    if (window.addDebugLog) window.addDebugLog('→ renderKPIs()');
+    renderKPIs();
+    if (window.addDebugLog) window.addDebugLog('→ renderWellness()');
+    renderWellness();
+    if (window.addDebugLog) window.addDebugLog('→ buildWellnessExtras()');
+    buildWellnessExtras();
+    if (window.addDebugLog) window.addDebugLog('→ other build funcs');
+    renderMacroStatus();
+    buildBrasilConcentracao();
+    buildMacroCards();
+    buildDcaStatus();
+    buildSemaforoPanel();
+    buildFanChart();
   // Fan chart: link P10/P50/P90 ao P(FIRE) MC
   (function() {
     const el = document.getElementById('fanPfireNote');
@@ -1828,7 +1862,7 @@ function buildCagrVsTwr() {
       el.textContent = `P10/P50/P90 são aproximações de trajetória; P(Cenário Aspiracional) = ${DATA.pfire_aspiracional.base}% calculado direto nas 10k simulações MC.`;
     }
   })();
-  updateContrib();
+  // updateContrib() — removed pending definition
 
   // Ativar tab inicial (hoje) — aciona lazy init para a aba hoje
   // Restaurar última tab se disponível; senão, hoje
@@ -1840,7 +1874,12 @@ function buildCagrVsTwr() {
     if (t) _startTab = _tabMap[t] || t;
   } catch(e) {}
   switchTab(_startTab);
-})();
+  if (window.addDebugLog) window.addDebugLog('✓ init() complete');
+  } catch (e) {
+    if (window.addDebugLog) window.addDebugLog(`❌ init() ERROR: ${e.message}`);
+    console.error('[init] Error:', e);
+  }
+}
 
 // Force responsive grid override for inline styles at 768px breakpoint
 (function() {
