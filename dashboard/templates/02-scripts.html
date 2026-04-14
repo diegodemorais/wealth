@@ -17,7 +17,35 @@
 
 __DATA_PLACEHOLDER__
 
+// Log after DATA is defined
+if (window.DEBUG_ON) {
+  debug(`3️⃣ DATA defined: ${typeof DATA}, keys: ${Object.keys(DATA || {}).length}`);
+}
 </script>
 
 __JS_MODULES_PLACEHOLDER__
+
+<script>
+// Log when bootstrap.mjs should have finished loading
+setTimeout(() => {
+  if (window.DEBUG_ON) {
+    debug(`4️⃣ After bootstrap: window.init = ${typeof window.init}`);
+    debug(`5️⃣ buildTimeline = ${typeof window.buildTimeline}`);
+    debug(`6️⃣ renderKPIs = ${typeof window.renderKPIs}`);
+  }
+}, 500);
+
+// Monitor errors
+window.addEventListener('error', (e) => {
+  if (window.DEBUG_ON) {
+    debug(`❌ Error: ${e.message}`);
+  }
+}, true);
+
+window.addEventListener('unhandledrejection', (e) => {
+  if (window.DEBUG_ON) {
+    debug(`❌ Rejection: ${e.reason}`);
+  }
+});
+</script>
 
