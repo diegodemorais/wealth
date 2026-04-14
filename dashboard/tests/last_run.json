@@ -1,16 +1,16 @@
 {
-  "timestamp": "2026-04-14T06:57:15.399616",
+  "timestamp": "2026-04-14T07:00:04.798626",
   "mode": "full",
   "total": 561,
   "passed": 529,
   "failed": 32,
   "failure_cycles": {
-    "browser": 3
+    "browser": 5
   },
   "escalations": [
     {
       "block_id": "browser",
-      "cycles": 3
+      "cycles": 5
     }
   ],
   "results": [
@@ -28,7 +28,7 @@
       "category": "SMOKE",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html OK: 225,009 chars, 4 blocos <script>, bootstrap.mjs carregado"
+      "message": "index.html OK: 225,576 chars, 4 blocos <script>, bootstrap.mjs carregado"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -76,7 +76,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 225,009 chars"
+      "message": "index.html: 225,576 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -1588,7 +1588,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "all active posicoes buckets ({'AVEM', 'AVGS', 'SWRD'}) have drift (retired: {'JPGL'})"
+      "message": "all active posicoes buckets ({'AVGS', 'AVEM', 'SWRD'}) have drift (retired: {'JPGL'})"
     },
     {
       "test_id": "tab-switch-guard::TAB_SWITCH::geoDonut tem destroy guard antes de new Chart",
@@ -1844,7 +1844,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'fire', 'performance', 'portfolio', 'simuladores', 'now', 'backtest', 'retiro'}"
+      "message": "All blocks use valid tabs: {'portfolio', 'simuladores', 'now', 'fire', 'retiro', 'performance', 'backtest'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -4388,7 +4388,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'cambio', 'mercado.cambio_mtd_pct'}"
+      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_brl_usd', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4396,7 +4396,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'concentracao_brasil.brasil_pct', 'cambio'}"
+      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'macro.exposicao_cambial_pct', 'concentracao_brasil.total_portfolio_brl'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",
