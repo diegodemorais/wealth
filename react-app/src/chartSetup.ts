@@ -7,6 +7,8 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
   PointElement,
   LineElement,
   BarElement,
@@ -24,6 +26,8 @@ import { SankeyController } from 'chartjs-chart-sankey';
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
   PointElement,
   LineElement,
   BarElement,
