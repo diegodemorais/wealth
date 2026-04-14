@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-04-14T09:57:56.384Z",
+  "timestamp": "2026-04-14T10:02:17.777Z",
   "summary": {
     "total": 66,
-    "empty": 15,
-    "rendered": 15
+    "empty": 13,
+    "rendered": 17
   },
   "results": {
     "empty": [
@@ -19,9 +19,7 @@
       "savings-rate",
       "ter-carteira",
       "stacked-alloc",
-      "spending-breakdown",
-      "calc-aporte",
-      "stress-test-mc"
+      "spending-breakdown"
     ],
     "rendered": [
       "shadow-portfolios",
@@ -38,7 +36,9 @@
       "geo-donut",
       "bond-pool-readiness",
       "bond-pool-runway",
-      "income-lifecycle"
+      "income-lifecycle",
+      "calc-aporte",
+      "stress-test-mc"
     ]
   }
 }

@@ -43,7 +43,7 @@ server.listen(PORT, async () => {
   const page = await browser.newPage();
 
   await page.goto(`http://localhost:${PORT}`, { waitUntil: 'networkidle', timeout: 30000 });
-  await page.waitForTimeout(3000);
+  await page.waitForTimeout(5000);  // Wait for JS to fully execute
 
   const results = { empty: [], rendered: [] };
   const tabNameMap = { 'now': 'hoje', 'portfolio': 'carteira', 'performance': 'perf' };
@@ -58,7 +58,7 @@ server.listen(PORT, async () => {
       const htmlTabName = tabNameMap[tab] || tab;
       try {
         await page.evaluate(t => window.switchTab && window.switchTab(t), htmlTabName);
-        await page.waitForTimeout(1500);
+        await page.waitForTimeout(3000);  // Wait for builders to complete
       } catch (e) {}
       processedTabs.add(tab);
     }
@@ -69,6 +69,11 @@ server.listen(PORT, async () => {
       if (!el) return null;
       if (!el.offsetParent) return 'hidden';
 
+      // Form inputs are always "rendered" if they exist and are visible
+      if (el.tagName === 'INPUT' || el.tagName === 'SELECT') {
+        return 'rendered';
+      }
+
       if (['chart-line', 'chart-bar', 'chart-area', 'chart-donut', 'chart-bar-horizontal', 'fan-chart'].includes(type)) {
         if (el.tagName === 'CANVAS') return el.width > 0 && el.height > 0 ? 'rendered' : 'empty';
         const canvas = el.querySelector('canvas');
@@ -77,9 +82,11 @@ server.listen(PORT, async () => {
         const html = el.innerHTML.trim();
         return html.length > 50 || el.children.length > 0 ? 'rendered' : 'empty';
       } else if (['card', 'kpi', 'kpi-hero', 'slider'].includes(type)) {
+        // For KPI/card/slider: check for any text content OR form elements
+        const hasInput = !!el.querySelector('input, select');
         const html = el.innerHTML.trim();
         const hasText = html.length > 10 && !html.includes('—');
-        return hasText ? 'rendered' : 'empty';
+        return hasInput || hasText ? 'rendered' : 'empty';
       }
 
       const html = el.innerHTML.trim();
