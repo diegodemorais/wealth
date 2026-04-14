@@ -17,10 +17,15 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Load data dynamically from public path
-    fetch('/data.json')
+    // Use window.location.origin to build the full URL to account for basePath
+    const dataUrl = typeof window !== 'undefined'
+      ? `${window.location.origin}/wealth-dash/data.json`
+      : '/wealth-dash/data.json';
+
+    fetch(dataUrl)
       .then(r => r.json())
       .then(data => setData(data))
-      .catch(e => console.error('Failed to load data:', e));
+      .catch(e => console.error('Failed to load data from', dataUrl, ':', e));
   }, [setData]);
 
   if (!derived) {
