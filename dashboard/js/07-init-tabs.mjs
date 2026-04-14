@@ -321,21 +321,40 @@ export function switchTab(name) {
     el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
   });
 
-  // Hide orphaned h2 headers (h2s that don't have data-in-tab but precede [data-in-tab] divs)
-  document.querySelectorAll('h2:not([data-in-tab])').forEach(h2 => {
-    let sibling = h2.nextElementSibling;
-    let shouldHide = false;
-    // Check next 10 siblings for [data-in-tab] divs
-    for (let i = 0; i < 10 && sibling; i++) {
-      if (sibling.hasAttribute('data-in-tab')) {
-        const tabName = sibling.getAttribute('data-in-tab');
-        shouldHide = (tabName !== name);
-        break;
-      }
-      sibling = sibling.nextElementSibling;
+  // Hide orphaned elements by tracking which tab they belong to
+  // Build a map of elements and their owning tabs based on proximity to [data-in-tab] divs
+  const mainContent = document.querySelector('body');
+  let lastTabName = 'hoje'; // default to first tab
+
+  // Get all direct and nested elements in order
+  const allElements = Array.from(mainContent.querySelectorAll('*'));
+
+  for (const el of allElements) {
+    // Update lastTabName when we see a [data-in-tab] element
+    if (el.hasAttribute('data-in-tab')) {
+      lastTabName = el.getAttribute('data-in-tab');
     }
-    h2.classList.toggle('tab-hidden', shouldHide);
-  });
+
+    // Skip elements that have a [data-in-tab] ancestor (they're already handled)
+    if (el.closest('[data-in-tab]')) continue;
+
+    // For orphaned h2, section, and chart elements, apply tab-hidden based on lastTabName
+    const shouldProcess =
+      el.tagName === 'H2' ||
+      el.tagName === 'H3' ||
+      el.tagName === 'SECTION' ||
+      el.classList.contains('chart-box') ||
+      el.classList.contains('chart-box-sm') ||
+      el.classList.contains('chart-box-lg') ||
+      el.classList.contains('period-btns') ||
+      el.classList.contains('src') ||
+      el.classList.contains('grid-2');
+
+    if (shouldProcess) {
+      const shouldHide = lastTabName !== name;
+      el.classList.toggle('tab-hidden', shouldHide);
+    }
+  }
   // Lazy init: inicializar charts da aba apenas na primeira abertura
   // Double-RAF: primeiro frame remove tab-hidden; segundo frame garante reflow completo
   // antes de ler offsetWidth nos builders (single RAF não garante layout flush após display change).
