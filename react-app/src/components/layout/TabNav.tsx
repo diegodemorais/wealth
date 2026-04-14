@@ -8,7 +8,7 @@ const TABS = [
   { href: '/portfolio', label: '🎯 Portfolio', id: 'tab-portfolio' },
   { href: '/performance', label: '📈 Performance', id: 'tab-performance' },
   { href: '/fire', label: '🔥 FIRE', id: 'tab-fire' },
-  { href: '/retirement', label: '🏖️ Retirement', id: 'tab-retirement' },
+  { href: '/withdraw', label: '💸 Withdraw', id: 'tab-withdraw' },
   { href: '/simulators', label: '🧪 Simulators', id: 'tab-simulators' },
   { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
 ];

@@ -7,7 +7,7 @@ import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
 import { IncomeChart } from '@/components/charts/IncomeChart';
 import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart';
 
-export default function RetirementPage() {
+export default function WithdrawPage() {
   const setData = useDashboardStore(s => s.setData);
   const data = useDashboardStore(s => s.data);
 
@@ -21,12 +21,12 @@ export default function RetirementPage() {
   }, [data, setData]);
 
   if (!data) {
-    return <div>Loading retirement data...</div>;
+    return <div>Loading withdrawal data...</div>;
   }
 
   return (
     <div>
-      <h1>🏖️ Retirement</h1>
+      <h1>💸 Withdraw</h1>
 
       <CollapsibleSection id="section-guardrails" title="Safe Spending Guardrails" defaultOpen={true}>
         <GuardrailsChart data={data} />
