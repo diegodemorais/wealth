@@ -1,7 +1,7 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
-import { FULL_VERSION } from '@/config/version';
+import { DASHBOARD_VERSION } from '@/config/version';
 
 export function Header() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -24,9 +24,9 @@ export function Header() {
           <h1 style={styles.logo}>💰 Wealth</h1>
           <span
             style={styles.version}
-            title={`Build: ${FULL_VERSION}`}
+            title={`Build: ${DASHBOARD_VERSION}`}
           >
-            {FULL_VERSION}
+            {DASHBOARD_VERSION}
           </span>
         </div>
 

@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Header } from '@/components/layout/Header';
 import { TabNav } from '@/components/layout/TabNav';
 import { Footer } from '@/components/layout/Footer';
+import { VersionFooter } from '@/components/primitives/VersionFooter';
 import { usePrivacyMode } from '@/hooks/usePrivacyMode';
 import { usePtaxLive } from '@/hooks/usePtaxLive';
 import { useChartSetup } from '@/hooks/useChartSetup';
@@ -33,6 +34,7 @@ export function LayoutClient({ children }: { children: ReactNode }) {
         {children}
       </main>
       <Footer />
+      <VersionFooter />
     </>
   );
 }
