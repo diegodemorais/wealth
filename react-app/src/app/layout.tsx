@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '../styles/dashboard.css';
 import '../chartSetup';
+import { LayoutClient } from './layout-client';
 
 export const metadata: Metadata = {
   title: 'Wealth Dashboard',
@@ -14,8 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>
-        <main>{children}</main>
+      <body style={{ margin: 0, backgroundColor: '#0f1117', color: '#fff' }}>
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
   );
