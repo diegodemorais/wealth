@@ -2,13 +2,13 @@
 // BOOTSTRAP — ES6 Module Orchestration
 // ═══════════════════════════════════════════════════════════════
 
-import { initFouc } from './js/01-preamble.mjs';
-import { initDataWiring } from './js/02-data-wiring.mjs';
-import * as utils from './js/03-utils.mjs';
-import * as chartsPortfolio from './js/04-charts-portfolio.mjs';
-import * as fireProj from './js/05-fire-projections.mjs';
-import * as dashboardRender from './js/06-dashboard-render.mjs';
-import * as initTabs from './js/07-init-tabs.mjs';
+import { initFouc } from './01-preamble.mjs';
+import { initDataWiring } from './02-data-wiring.mjs';
+import * as utils from './03-utils.mjs';
+import * as chartsPortfolio from './04-charts-portfolio.mjs';
+import * as fireProj from './05-fire-projections.mjs';
+import * as dashboardRender from './06-dashboard-render.mjs';
+import * as initTabs from './07-init-tabs.mjs';
 
 // ═══════════════════════════════════════════════════════════════
 // PHASE 1: FOUC Guard (synchronous, before DOM render)
@@ -80,12 +80,31 @@ if (!window.DATA) {
     fmtMonthTick: utils.fmtMonthTick,
     charts: utils.charts,
 
-    // From 04-charts-portfolio (main builders)
+    // From 04-charts-portfolio (all builders)
     buildTimeline: chartsPortfolio.buildTimeline,
     buildAttribution: chartsPortfolio.buildAttribution,
     buildDonuts: chartsPortfolio.buildDonuts,
+    buildScenarios: chartsPortfolio.buildScenarios,
+    buildTornado: chartsPortfolio.buildTornado,
+    buildDeltaBar: chartsPortfolio.buildDeltaBar,
+    buildStackedAlloc: chartsPortfolio.buildStackedAlloc,
     buildFanChart: chartsPortfolio.buildFanChart,
+    buildGuardrails: chartsPortfolio.buildGuardrails,
+    buildIncomeChart: chartsPortfolio.buildIncomeChart,
+    buildFeeAnalysis: chartsPortfolio.buildFeeAnalysis,
+    buildPosicoes: chartsPortfolio.buildPosicoes,
+    buildCustoBase: chartsPortfolio.buildCustoBase,
+    buildEventosVida: chartsPortfolio.buildEventosVida,
+    buildPfireFamilia: chartsPortfolio.buildPfireFamilia,
+    buildMinilog: chartsPortfolio.buildMinilog,
+    buildRetornoHeatmap: chartsPortfolio.buildRetornoHeatmap,
+    buildRollingSharp: chartsPortfolio.buildRollingSharp,
+    buildInformationRatio: chartsPortfolio.buildInformationRatio,
+    buildIrDiferido: chartsPortfolio.buildIrDiferido,
+    renderHodl11: chartsPortfolio.renderHodl11,
     buildBacktest: chartsPortfolio.buildBacktest,
+    buildBacktestR7: chartsPortfolio.buildBacktestR7,
+    buildShadowChart: chartsPortfolio.buildShadowChart,
     buildGlidePath: chartsPortfolio.buildGlidePath,
     buildRollingStats: chartsPortfolio.buildRollingStats,
     buildHeatmap: chartsPortfolio.buildHeatmap,
@@ -93,14 +112,16 @@ if (!window.DATA) {
     buildPerformanceTable: chartsPortfolio.buildPerformanceTable,
     buildWealthChart: chartsPortfolio.buildWealthChart,
     buildRollingCorrelation: chartsPortfolio.buildRollingCorrelation,
-    buildFactorLoadings: chartsPortfolio.buildFactorLoadings,
-    buildTrackingFire: chartsPortfolio.buildTrackingFire,
 
     // From 05-fire-projections (FIRE/MC)
     buildEarliestFire: fireProj.buildEarliestFire,
     buildNetWorthProjection: fireProj.buildNetWorthProjection,
     buildStressTest: fireProj.buildStressTest,
     buildStressFanChart: fireProj.buildStressFanChart,
+    buildSpendingGuardrails: fireProj.buildSpendingGuardrails,
+    buildScenarioComparison: fireProj.buildScenarioComparison,
+    buildSpendingBreakdown: fireProj.buildSpendingBreakdown,
+    buildIncomeProjection: fireProj.buildIncomeProjection,
     runMC: fireProj.runMC,
     runMCTrajectories: fireProj.runMCTrajectories,
 
@@ -121,6 +142,20 @@ if (!window.DATA) {
     buildMacroCards: initTabs.buildMacroCards,
     buildDcaStatus: initTabs.buildDcaStatus,
     buildSemaforoPanel: initTabs.buildSemaforoPanel,
+    buildBondPool: initTabs.buildBondPool,
+    buildFireMatrix: initTabs.buildFireMatrix,
+    buildSwrPercentiles: initTabs.buildSwrPercentiles,
+    buildTrackingFire: initTabs.buildTrackingFire,
+    buildDrawdownHistory: initTabs.buildDrawdownHistory,
+    buildEtfComposition: initTabs.buildEtfComposition,
+    buildBondPoolRunway: initTabs.buildBondPoolRunway,
+    buildLumpyEvents: initTabs.buildLumpyEvents,
+    buildTimestamps: initTabs.buildTimestamps,
+    buildPremissasVsRealizado: initTabs.buildPremissasVsRealizado,
+    buildFactorRolling: initTabs.buildFactorRolling,
+    buildFactorLoadings: initTabs.buildFactorLoadings,
+    buildCagrVsTwr: initTabs.buildCagrVsTwr,
+    calcAporte: initTabs.calcAporte,
     _initTabCharts: initTabs._initTabCharts,
     switchTab: initTabs.switchTab,
     _applyPrivacyCharts: initTabs._applyPrivacyCharts,
@@ -183,7 +218,7 @@ const loadedFunctions = [
   'renderKPIs', 'buildSankey', 'buildWellnessExtras', 'buildRfCards', 'buildShadowTable', 'buildIncomeTable',
   'buildTimeline', 'buildAttribution', 'buildDonuts', 'buildFanChart', 'buildBacktest', 'buildGlidePath',
   'buildRollingStats', 'buildHeatmap', 'buildScatterPlot', 'buildPerformanceTable', 'buildWealthChart',
-  'buildRollingCorrelation', 'buildFactorLoadings', 'buildTrackingFire',
+  'buildRollingCorrelation', 'buildTornado', 'buildStackedAlloc', 'buildBondPool', 'buildFireMatrix',
   'buildEarliestFire', 'buildNetWorthProjection', 'buildStressTest', 'buildStressFanChart', 'runMC', 'runMCTrajectories'
 ];
 const actualFunctions = loadedFunctions.filter(name => typeof window[name] === 'function');

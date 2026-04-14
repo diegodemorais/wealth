@@ -285,6 +285,16 @@ export function switchTab(name) {
       if (document.body.classList.contains('private-mode')) _applyPrivacyCharts(true);
       // Force responsive grid override after tab content is built
       forceResponsiveGrids();
+      // Ensure all Chart.js instances in this tab are rendered
+      // (some charts may not render pixels on constructor alone)
+      // Use setTimeout to ensure update() happens after all other RAF callbacks
+      setTimeout(() => {
+        Object.values(charts).forEach(c => {
+          if (c && typeof c.update === 'function') {
+            try { c.update('none'); } catch(e) { /* ignore */ }
+          }
+        });
+      }, 0);
     }));
   }
   requestAnimationFrame(() => {
@@ -304,6 +314,14 @@ export function switchTab(name) {
         if (builder) { try { builder(); } catch(e) { console.warn('[tab-rebuild]', c.canvas.id, e); } }
       }
     });
+    // Ensure charts are rendered after resize (update() needed for pixel data on some Chart.js configs)
+    setTimeout(() => {
+      Object.values(charts).forEach(c => {
+        if (c && typeof c.update === 'function' && tabCanvases.has(c.canvas)) {
+          try { c.update('none'); } catch(e) { /* ignore */ }
+        }
+      });
+    }, 0);
   });
   try { localStorage.setItem('dash_tab', name); } catch(e) {}
 }

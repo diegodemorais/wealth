@@ -136,7 +136,31 @@ def validate_bootstrap(js_dir: Path) -> bool:
     missing_in_datawiring = {k for k in assign_keys if k in datawiring_keys} - datawiring_keys
     
     # Chaves que NÃO precisam estar em dataDerived (são funções/utils)
-    non_datawiring_keys = {'calcWellness', 'wellnessActions', 'fmtBrl', 'fmtBrl2', 'fmtUsd', 'fmtPct', 'colorPct', 'filterByPeriod', 'checkMinPoints', 'setActivePeriodBtn', 'fmtMonthLabel', 'fmtMonthTick', 'charts', 'buildTimeline', 'buildAttribution', 'buildDonuts', 'buildFanChart', 'buildBacktest', 'buildGlidePath', 'buildRollingStats', 'buildHeatmap', 'buildScatterPlot', 'buildPerformanceTable', 'buildWealthChart', 'buildRollingCorrelation', 'buildFactorLoadings', 'buildTrackingFire', 'buildEarliestFire', 'buildNetWorthProjection', 'buildStressTest', 'buildStressFanChart', 'runMC', 'runMCTrajectories', 'renderKPIs', 'renderWellness', 'renderProximasAcoes', 'renderIpcaProgress', 'buildSankey', 'buildWellnessExtras', 'buildRfCards', 'buildShadowTable', 'buildIncomeTable', 'renderMacroStatus', 'buildBrasilConcentracao', 'buildMacroCards', 'buildDcaStatus', 'buildSemaforoPanel', '_initTabCharts', 'switchTab', '_applyPrivacyCharts', 'init', 'GENERATED_AT', 'VERSION'}
+    non_datawiring_keys = {
+        # Utils (03-utils)
+        'calcWellness', 'wellnessActions', 'fmtBrl', 'fmtBrl2', 'fmtUsd', 'fmtPct', 'colorPct',
+        'filterByPeriod', 'checkMinPoints', 'setActivePeriodBtn', 'fmtMonthLabel', 'fmtMonthTick', 'charts',
+        # Charts Portfolio (04-charts-portfolio)
+        'buildTimeline', 'buildAttribution', 'buildDonuts', 'buildScenarios', 'buildTornado', 'buildDeltaBar',
+        'buildStackedAlloc', 'buildFanChart', 'buildGuardrails', 'buildIncomeChart', 'buildFeeAnalysis',
+        'buildPosicoes', 'buildCustoBase', 'buildEventosVida', 'buildPfireFamilia', 'buildMinilog',
+        'buildRetornoHeatmap', 'buildRollingSharp', 'buildInformationRatio', 'buildIrDiferido', 'renderHodl11',
+        'buildBacktest', 'buildBacktestR7', 'buildShadowChart', 'buildGlidePath', 'buildRollingStats',
+        'buildHeatmap', 'buildScatterPlot', 'buildPerformanceTable', 'buildWealthChart', 'buildRollingCorrelation',
+        # Fire Projections (05-fire-projections)
+        'buildEarliestFire', 'buildNetWorthProjection', 'buildStressTest', 'buildStressFanChart',
+        'buildSpendingGuardrails', 'buildScenarioComparison', 'buildSpendingBreakdown', 'buildIncomeProjection',
+        'runMC', 'runMCTrajectories',
+        # Dashboard Render (06-dashboard-render)
+        'renderKPIs', 'renderWellness', 'renderProximasAcoes', 'renderIpcaProgress', 'buildSankey',
+        'buildWellnessExtras', 'buildRfCards', 'buildShadowTable', 'buildIncomeTable',
+        # Init Tabs (07-init-tabs)
+        'renderMacroStatus', 'buildBrasilConcentracao', 'buildMacroCards', 'buildDcaStatus', 'buildSemaforoPanel',
+        'buildBondPool', 'buildFireMatrix', 'buildSwrPercentiles', 'buildTrackingFire', 'buildDrawdownHistory',
+        'buildEtfComposition', 'buildBondPoolRunway', 'buildLumpyEvents', 'buildTimestamps',
+        'buildPremissasVsRealizado', 'buildFactorRolling', 'buildFactorLoadings', 'buildCagrVsTwr', 'calcAporte',
+        '_initTabCharts', 'switchTab', '_applyPrivacyCharts', 'init', 'GENERATED_AT', 'VERSION'
+    }
     
     datawiring_required = assign_keys - non_datawiring_keys
     missing_in_datawiring = datawiring_required - datawiring_keys

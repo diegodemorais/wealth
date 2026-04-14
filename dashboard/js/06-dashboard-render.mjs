@@ -522,6 +522,7 @@ export function renderKPIs() {
   })();
   const _idadeFireAlvo = DATA.premissas.idade_cenario_base;
   document.getElementById('fireCountdown').textContent = `${yrInt} anos ${moInt} meses · ${_anoFire} (${_idadeFireAlvo} anos)`;
+  const patInicio = DATA.timeline?.values?.[0] || DATA.premissas.patrimonio_inicial || DATA.premissas.patrimonio_atual;
   const fbPct = Math.min(100, (Math.log(totalBrl/patInicio) / Math.log(PAT_GATILHO/patInicio)) * 100);
   document.getElementById('fireProgressBar').style.width = fbPct + '%';
   document.getElementById('fireProgressLabel').textContent = `Atual R$${(totalBrl/1e6).toFixed(2)}M`;
@@ -569,6 +570,7 @@ export function renderKPIs() {
   const _pfMeta = document.getElementById('pfirePatMeta');
   if (_pfMeta) _pfMeta.textContent = `Meta: patrimônio ≥ ${_gatilhoStr} E SWR ≤ ${((DATA.premissas.swr_gatilho ?? 0.024)*100).toFixed(1)}%`;
   // SWR no FIRE Day
+  const swrFireDay = DATA.fire_swr_percentis?.swr_p50 ?? 0.0217;
   const _swrEl = document.getElementById('swrFireDayVal');
   const _swrSubEl = document.getElementById('swrFireDaySub');
   if (_swrEl) { _swrEl.textContent = fmtPct(swrFireDay * 100, 2); }

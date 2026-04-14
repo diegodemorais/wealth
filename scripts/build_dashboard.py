@@ -850,8 +850,32 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     bootstrap_src = js_src_dir / "bootstrap.mjs"
     bootstrap_dst = out_path.parent / "bootstrap.mjs"
     if bootstrap_src.exists():
-      # Copiar bootstrap.mjs
-      bootstrap_dst.write_text(bootstrap_src.read_text(encoding="utf-8"), encoding="utf-8")
+      # Copiar bootstrap.mjs e ajustar import paths (adicionar ./js/ prefix)
+      bootstrap_content = bootstrap_src.read_text(encoding="utf-8")
+      # Ajustar imports: './01-preamble.mjs' -> './js/01-preamble.mjs'
+      bootstrap_content = bootstrap_content.replace(
+        "from './01-preamble.mjs'",
+        "from './js/01-preamble.mjs'"
+      ).replace(
+        "from './02-data-wiring.mjs'",
+        "from './js/02-data-wiring.mjs'"
+      ).replace(
+        "from './03-utils.mjs'",
+        "from './js/03-utils.mjs'"
+      ).replace(
+        "from './04-charts-portfolio.mjs'",
+        "from './js/04-charts-portfolio.mjs'"
+      ).replace(
+        "from './05-fire-projections.mjs'",
+        "from './js/05-fire-projections.mjs'"
+      ).replace(
+        "from './06-dashboard-render.mjs'",
+        "from './js/06-dashboard-render.mjs'"
+      ).replace(
+        "from './07-init-tabs.mjs'",
+        "from './js/07-init-tabs.mjs'"
+      )
+      bootstrap_dst.write_text(bootstrap_content, encoding="utf-8")
       print(f"   Copiado: bootstrap.mjs ({bootstrap_dst.stat().st_size:,} bytes)")
 
       # Copiar módulos 01-07
