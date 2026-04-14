@@ -1,27 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
-// IMPORTS — Function references injected from bootstrap
+// NOTES — Function references accessed from window at runtime
 // ═══════════════════════════════════════════════════════════════
-// Only import functions that are NOT defined in this file.
-// Functions defined locally: _initTabCharts, switchTab, buildSemaforoPanel, buildFireMatrix,
-// buildMacroCards, buildDcaStatus, buildBondPool, buildBrasilConcentracao, renderMacroStatus,
-// buildTrackingFire, buildDrawdownHistory, buildEtfComposition, buildBondPoolRunway,
-// buildLumpyEvents, buildTimestamps, buildFactorRolling, buildFactorLoadings, buildPremissasVsRealizado
-const {
-  buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido,
-  buildRfCards, renderHodl11, calcAporte, buildMinilog,
-  buildTornado, buildSankey,
-  buildAttribution, buildDeltaBar, renderIpcaProgress, buildRetornoHeatmap,
-  buildRollingSharp, buildInformationRatio, buildBacktest, buildShadowChart,
-  buildShadowTable, buildFeeAnalysis, buildBacktestR7,
-  buildScenarioComparison, buildScenarios,
-  buildGlidePath, buildNetWorthProjection,
-  buildEarliestFire, buildEventosVida, buildPfireFamilia,
-  buildGuardrails, buildIncomeChart, buildIncomeTable,
-  buildSpendingGuardrails, buildSpendingBreakdown,
-  buildIncomeProjection,
-  buildStressTest,
-  buildFanChart
-} = window;
+// Functions are NOT destructured at module load time because bootstrap.mjs
+// populates window AFTER importing this module. Instead, functions are accessed
+// via window.* inside _initTabCharts() at runtime, when bootstrap has finished setup.
 
 // ═══════════════════════════════════════════════════════════════
 // RUNTIME ASSERTIONS
@@ -210,27 +192,30 @@ if (localStorage.getItem('dashboard_private') === '1') {
 // ── Tab system com lazy initialization ───────────────────────
 const _tabInitialized = {};
 export function _initTabCharts(tab) {
+  // Use window.* to access functions that are set up by bootstrap.mjs
+  // This avoids issues with destructuring from window before bootstrap populates it
+  const w = window;
   const tabFns = {
-    hoje:     [buildTimestamps, buildTornado, buildSankey],
-    perf:     [function() { buildTimeline('all'); }, buildAttribution, buildDeltaBar,
-               renderIpcaProgress, buildRetornoHeatmap, buildRollingSharp, buildInformationRatio,
-               function() { buildBacktest('since2009'); }, buildCagrVsTwr,
-               buildFactorRolling, buildFactorLoadings,
-               buildShadowTable, function() { buildShadowChart('since2009'); }, buildFeeAnalysis,
-               buildDrawdownHistory, buildBacktestR7, buildPremissasVsRealizado],
-    backtest: [function() { buildBacktest('since2009'); }, buildShadowTable,
-               function() { buildShadowChart('since2009'); }, buildBacktestR7, buildDrawdownHistory],
-    carteira: [buildDonuts, buildStackedAlloc, buildPosicoes, buildCustoBase, buildIrDiferido, buildRfCards, renderHodl11, calcAporte, buildEtfComposition, buildMinilog],
-    fire:     [buildTrackingFire, buildScenarioComparison, buildScenarios,
-               buildFireMatrix, buildLumpyEvents, buildGlidePath,
-               buildNetWorthProjection,
-               () => { _applyFireAxes(); }, buildEarliestFire,
-               buildEventosVida, buildPfireFamilia],
-    retiro:   [buildGuardrails, buildIncomeChart, buildIncomeTable,
-               buildSpendingGuardrails, buildSwrPercentiles,
-               buildSpendingBreakdown, buildIncomeProjection,
-               buildBondPool, buildBondPoolRunway],
-    simuladores: [() => { _applyFireAxes(); }, buildScenarios, buildStressTest,
+    hoje:     [w.buildTimestamps, w.buildTornado, w.buildSankey],
+    perf:     [function() { w.buildTimeline('all'); }, w.buildAttribution, w.buildDeltaBar,
+               w.renderIpcaProgress, w.buildRetornoHeatmap, w.buildRollingSharp, w.buildInformationRatio,
+               function() { w.buildBacktest('since2009'); }, w.buildCagrVsTwr,
+               w.buildFactorRolling, w.buildFactorLoadings,
+               w.buildShadowTable, function() { w.buildShadowChart('since2009'); }, w.buildFeeAnalysis,
+               w.buildDrawdownHistory, w.buildBacktestR7, w.buildPremissasVsRealizado],
+    backtest: [function() { w.buildBacktest('since2009'); }, w.buildShadowTable,
+               function() { w.buildShadowChart('since2009'); }, w.buildBacktestR7, w.buildDrawdownHistory],
+    carteira: [w.buildDonuts, w.buildStackedAlloc, w.buildPosicoes, w.buildCustoBase, w.buildIrDiferido, w.buildRfCards, w.renderHodl11, w.calcAporte, w.buildEtfComposition, w.buildMinilog],
+    fire:     [w.buildTrackingFire, w.buildScenarioComparison, w.buildScenarios,
+               w.buildFireMatrix, w.buildLumpyEvents, w.buildGlidePath,
+               w.buildNetWorthProjection,
+               () => { _applyFireAxes(); }, w.buildEarliestFire,
+               w.buildEventosVida, w.buildPfireFamilia],
+    retiro:   [w.buildGuardrails, w.buildIncomeChart, w.buildIncomeTable,
+               w.buildSpendingGuardrails, w.buildSwrPercentiles,
+               w.buildSpendingBreakdown, w.buildIncomeProjection,
+               w.buildBondPool, w.buildBondPoolRunway],
+    simuladores: [() => { _applyFireAxes(); }, w.buildScenarios, w.buildStressTest,
                   function() {
                     const wiC = document.getElementById('wiCusto');
                     if (wiC && DATA.premissas?.custo_vida_base) wiC.value = DATA.premissas.custo_vida_base;
@@ -245,26 +230,26 @@ export function _initTabCharts(tab) {
 // inside the block. If a chart was rendered with zero dimensions (canvas was hidden),
 // Chart.js resize() alone won't fix it — we need to also rebuild it via its named builder.
 const _chartBuilders = {
-  glideChart:            () => buildGlidePath(),
-  deltaChart:            () => buildDeltaBar(),
-  trackingFireChart:     () => buildTrackingFire(),
-  tornadoChart:          () => buildTornado(),
-  timelineChart:         () => { buildTimeline('all'); },
-  attrChart:             () => buildAttribution(),
-  rollingSharpChart:     () => buildRollingSharp(),
-  rollingIRChart:        () => buildInformationRatio(),
-  drawdownHistChart:     () => buildDrawdownHistory(),
-  backtestChart:         () => { buildBacktest('since2009'); },
-  backtestR7Chart:       () => buildBacktestR7(),
-  shadowChart:           () => { buildShadowChart('since2009'); },
-  factorRollingChart:    () => buildFactorRolling(),
-  factorLoadingsChart:   () => buildFactorLoadings(),
-  incomeChart:           () => buildIncomeChart(),
-  incomeProjectionChart: () => buildIncomeProjection(),
-  sankeyChart:           () => buildSankey(),
-  bondPoolRunwayChart:   () => buildBondPoolRunway(),
-  netWorthProjectionChart: () => buildNetWorthProjection(),
-  stressProjectionChart:   () => buildStressTest(),
+  glideChart:            () => window.buildGlidePath?.(),
+  deltaChart:            () => window.buildDeltaBar?.(),
+  trackingFireChart:     () => window.buildTrackingFire?.(),
+  tornadoChart:          () => window.buildTornado?.(),
+  timelineChart:         () => { window.buildTimeline?.('all'); },
+  attrChart:             () => window.buildAttribution?.(),
+  rollingSharpChart:     () => window.buildRollingSharp?.(),
+  rollingIRChart:        () => window.buildInformationRatio?.(),
+  drawdownHistChart:     () => window.buildDrawdownHistory?.(),
+  backtestChart:         () => { window.buildBacktest?.('since2009'); },
+  backtestR7Chart:       () => window.buildBacktestR7?.(),
+  shadowChart:           () => { window.buildShadowChart?.('since2009'); },
+  factorRollingChart:    () => window.buildFactorRolling?.(),
+  factorLoadingsChart:   () => window.buildFactorLoadings?.(),
+  incomeChart:           () => window.buildIncomeChart?.(),
+  incomeProjectionChart: () => window.buildIncomeProjection?.(),
+  sankeyChart:           () => window.buildSankey?.(),
+  bondPoolRunwayChart:   () => window.buildBondPoolRunway?.(),
+  netWorthProjectionChart: () => window.buildNetWorthProjection?.(),
+  stressProjectionChart:   () => window.buildStressTest?.(),
 };
 window._toggleBlock = function(el) {
   const wasOpen = el.classList.contains('open');
