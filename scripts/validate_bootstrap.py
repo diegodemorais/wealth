@@ -150,7 +150,7 @@ def validate_bootstrap(js_dir: Path) -> bool:
         # Fire Projections (05-fire-projections)
         'buildEarliestFire', 'buildNetWorthProjection', 'buildStressTest', 'buildStressFanChart',
         'buildSpendingGuardrails', 'buildScenarioComparison', 'buildSpendingBreakdown', 'buildIncomeProjection',
-        'runMC', 'runMCTrajectories',
+        'runMC', 'runMCTrajectories', '_applyFireAxes',
         # Dashboard Render (06-dashboard-render)
         'renderKPIs', 'renderWellness', 'renderProximasAcoes', 'renderIpcaProgress', 'buildSankey',
         'buildWellnessExtras', 'buildRfCards', 'buildShadowTable', 'buildIncomeTable',

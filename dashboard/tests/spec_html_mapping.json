@@ -2,22 +2,22 @@
   "timestamp": "2026-04-14T08:57:21.142Z",
   "summary": {
     "totalComponents": 66,
-    "found": 50,
-    "missing": 16
+    "found": 61,
+    "missing": 5
   },
   "mapping": [
     {
       "specId": "backtest-metricas",
       "htmlId": "backtestChart",
-      "label": "Backtest Hist\u00f3rico \u2014 M\u00e9tricas",
+      "label": "Backtest Histórico — Métricas",
       "tab": "backtest",
       "type": "table",
       "found": true
     },
     {
       "specId": "backtest-regime-longo",
-      "htmlId": "\u2014",
-      "label": "Backtest Longo \u2014 Regime 5-7",
+      "htmlId": "backtestRegimeLongo",
+      "label": "Backtest Longo — Regime 5-7",
       "tab": "backtest",
       "type": "chart-line",
       "found": false
@@ -25,7 +25,7 @@
     {
       "specId": "drawdown-historico",
       "htmlId": "drawdownHistNota",
-      "label": "Drawdown Hist\u00f3rico",
+      "label": "Drawdown Histórico",
       "tab": "backtest",
       "type": "chart-area",
       "found": true
@@ -33,7 +33,7 @@
     {
       "specId": "shadow-portfolios",
       "htmlId": "shadowChart",
-      "label": "Shadow Portfolios \u2014 Retorno Acumulado",
+      "label": "Shadow Portfolios — Retorno Acumulado",
       "tab": "backtest",
       "type": "chart-line",
       "found": true
@@ -49,7 +49,7 @@
     {
       "specId": "eventos-vida",
       "htmlId": "eventosVidaBody",
-      "label": "Eventos de Vida \u2014 Impacto no Plano",
+      "label": "Eventos de Vida — Impacto no Plano",
       "tab": "fire",
       "type": "table",
       "found": true
@@ -57,15 +57,15 @@
     {
       "specId": "fire-matrix",
       "htmlId": "fireMatrixTable",
-      "label": "FIRE Matrix \u2014 P(Sucesso) \u00d7 Gasto",
+      "label": "FIRE Matrix — P(Sucesso) × Gasto",
       "tab": "fire",
       "type": "table",
       "found": true
     },
     {
       "specId": "fire-trilha",
-      "htmlId": "\u2014",
-      "label": "Trilha FIRE \u2014 Realizado vs Projetado",
+      "htmlId": "fireTrilha",
+      "label": "Trilha FIRE — Realizado vs Projetado",
       "tab": "fire",
       "type": "chart-line",
       "found": true
@@ -73,7 +73,7 @@
     {
       "specId": "glide-path",
       "htmlId": "glideChart",
-      "label": "Glide Path \u2014 Aloca\u00e7\u00e3o por Idade",
+      "label": "Glide Path — Alocação por Idade",
       "tab": "fire",
       "type": "chart-area",
       "found": true
@@ -81,7 +81,7 @@
     {
       "specId": "lumpy-events",
       "htmlId": "lumpyEventsBody",
-      "label": "Lumpy Events \u2014 Gastos Grandes",
+      "label": "Lumpy Events — Gastos Grandes",
       "tab": "fire",
       "type": "table",
       "found": true
@@ -89,7 +89,7 @@
     {
       "specId": "net-worth-projection",
       "htmlId": "netWorthProjectionSrc",
-      "label": "Proje\u00e7\u00e3o Patrim\u00f4nio P10/P50/P90",
+      "label": "Projeção Patrimônio P10/P50/P90",
       "tab": "fire",
       "type": "fan-chart",
       "found": true
@@ -97,23 +97,23 @@
     {
       "specId": "pfire-familia",
       "htmlId": "kpiPfire50",
-      "label": "P(FIRE) \u2014 Cen\u00e1rios de Fam\u00edlia",
+      "label": "P(FIRE) — Cenários de Família",
       "tab": "fire",
       "type": "card",
       "found": true
     },
     {
       "specId": "simulador-fire",
-      "htmlId": "\u2014",
-      "label": "Simulador FIRE \u2014 Interativo",
+      "htmlId": "simuladorFire",
+      "label": "Simulador FIRE — Interativo",
       "tab": "fire",
       "type": "slider",
       "found": true
     },
     {
       "specId": "what-if-cenarios",
-      "htmlId": "\u2014",
-      "label": "What-If Scenarios \u2014 Gasto vs P(FIRE)",
+      "htmlId": "whatIfCenarios",
+      "label": "What-If Scenarios — Gasto vs P(FIRE)",
       "tab": "fire",
       "type": "slider",
       "found": false
@@ -121,7 +121,7 @@
     {
       "specId": "bond-pool-strip",
       "htmlId": "kpiBondPool",
-      "label": "Bond Pool \u2014 Cobertura",
+      "label": "Bond Pool — Cobertura",
       "tab": "now",
       "type": "kpi",
       "found": true
@@ -129,7 +129,7 @@
     {
       "specId": "cambio-mercado",
       "htmlId": "kpiCambio",
-      "label": "C\u00e2mbio BRL/USD",
+      "label": "Câmbio BRL/USD",
       "tab": "now",
       "type": "kpi",
       "found": true
@@ -137,15 +137,15 @@
     {
       "specId": "drift-maximo-kpi",
       "htmlId": "kpiDriftMax",
-      "label": "Drift M\u00e1ximo vs Alvo",
+      "label": "Drift Máximo vs Alvo",
       "tab": "now",
       "type": "kpi",
       "found": true
     },
     {
       "specId": "exposicao-cambial",
-      "htmlId": "\u2014",
-      "label": "Exposi\u00e7\u00e3o Cambial BRL/USD",
+      "htmlId": "exposicaoCambial",
+      "label": "Exposição Cambial BRL/USD",
       "tab": "now",
       "type": "gauge",
       "found": false
@@ -153,7 +153,7 @@
     {
       "specId": "factor-signal-kpi",
       "htmlId": "kpiFactorSignal",
-      "label": "Factor Signal \u2014 AVGS vs SWRD",
+      "label": "Factor Signal — AVGS vs SWRD",
       "tab": "now",
       "type": "kpi",
       "found": true
@@ -161,7 +161,7 @@
     {
       "specId": "fire-countdown",
       "htmlId": "fireCountdown",
-      "label": "Time to FIRE \u2014 Countdown",
+      "label": "Time to FIRE — Countdown",
       "tab": "now",
       "type": "kpi",
       "found": true
@@ -169,7 +169,7 @@
     {
       "specId": "hodl11-status",
       "htmlId": "ipcaTaxaStatus",
-      "label": "HODL11 \u2014 Status e Banda",
+      "label": "HODL11 — Status e Banda",
       "tab": "now",
       "type": "semaforo",
       "found": true
@@ -177,7 +177,7 @@
     {
       "specId": "ipca-dca-semaforo",
       "htmlId": "kpiIpcaSemaforo",
-      "label": "IPCA+ 2040 & 2050 \u2014 DCA Status",
+      "label": "IPCA+ 2040 & 2050 — DCA Status",
       "tab": "now",
       "type": "semaforo",
       "found": true
@@ -185,15 +185,15 @@
     {
       "specId": "kpi-grid-mercado",
       "htmlId": "kpiIpcaMercado",
-      "label": "KPIs de Mercado \u2014 S2",
+      "label": "KPIs de Mercado — S2",
       "tab": "now",
       "type": "kpi",
       "found": true
     },
     {
       "specId": "kpi-grid-primario",
-      "htmlId": "\u2014",
-      "label": "KPIs Prim\u00e1rios \u2014 S1",
+      "htmlId": "kpiGridPrimario",
+      "label": "KPIs Primários — S1",
       "tab": "now",
       "type": "kpi",
       "found": false
@@ -201,7 +201,7 @@
     {
       "specId": "macro-strip",
       "htmlId": "macroStrip",
-      "label": "Macro \u2014 Selic / Fed Funds / Spread",
+      "label": "Macro — Selic / Fed Funds / Spread",
       "tab": "now",
       "type": "semaforo",
       "found": true
@@ -209,7 +209,7 @@
     {
       "specId": "patrimonio-total-hero",
       "htmlId": "heroPatrimonioBrl",
-      "label": "Patrim\u00f4nio Total",
+      "label": "Patrimônio Total",
       "tab": "now",
       "type": "kpi-hero",
       "found": true
@@ -217,7 +217,7 @@
     {
       "specId": "pfire-hero",
       "htmlId": "heroAnos",
-      "label": "P(FIRE) \u2014 Cen\u00e1rios",
+      "label": "P(FIRE) — Cenários",
       "tab": "now",
       "type": "kpi-hero",
       "found": true
@@ -225,7 +225,7 @@
     {
       "specId": "renda-plus-semaforo",
       "htmlId": "kpiRendaSemaforo",
-      "label": "Renda+ 2065 \u2014 Dist\u00e2ncia do Gatilho",
+      "label": "Renda+ 2065 — Distância do Gatilho",
       "tab": "now",
       "type": "semaforo",
       "found": true
@@ -241,7 +241,7 @@
     {
       "specId": "stress-cenarios",
       "htmlId": "pmkt-stress",
-      "label": "Stress Test \u2014 Tornado",
+      "label": "Stress Test — Tornado",
       "tab": "now",
       "type": "chart-bar-horizontal",
       "found": true
@@ -257,7 +257,7 @@
     {
       "specId": "tornado-sensitivity",
       "htmlId": "tornadoChart",
-      "label": "Tornado \u2014 Sensibilidade por Vari\u00e1vel",
+      "label": "Tornado — Sensibilidade por Variável",
       "tab": "now",
       "type": "chart-bar-horizontal",
       "found": true
@@ -272,7 +272,7 @@
     },
     {
       "specId": "alpha-itd-swrd",
-      "htmlId": "\u2014",
+      "htmlId": "alphaItdSwrd",
       "label": "Alpha ITD vs SWRD",
       "tab": "performance",
       "type": "kpi",
@@ -288,8 +288,8 @@
     },
     {
       "specId": "evolucao-carteira",
-      "htmlId": "\u2014",
-      "label": "Evolu\u00e7\u00e3o Patrimonial",
+      "htmlId": "—",
+      "label": "Evolução Patrimonial",
       "tab": "performance",
       "type": "chart-line",
       "found": true
@@ -297,7 +297,7 @@
     {
       "specId": "factor-loadings-chart",
       "htmlId": "factorLoadingsChart",
-      "label": "Factor Loadings \u2014 FF5 + Momentum",
+      "label": "Factor Loadings — FF5 + Momentum",
       "tab": "performance",
       "type": "chart-bar-horizontal",
       "found": true
@@ -305,15 +305,15 @@
     {
       "specId": "factor-rolling-avgs",
       "htmlId": "factorRollingBody",
-      "label": "Rolling 12m \u2014 AVGS vs SWRD",
+      "label": "Rolling 12m — AVGS vs SWRD",
       "tab": "performance",
       "type": "chart-line",
       "found": true
     },
     {
       "specId": "fee-custo-complexidade",
-      "htmlId": "\u2014",
-      "label": "Fee Analysis \u2014 Custo vs Alpha",
+      "htmlId": "feeCustoComplexidade",
+      "label": "Fee Analysis — Custo vs Alpha",
       "tab": "performance",
       "type": "table",
       "found": false
@@ -321,22 +321,22 @@
     {
       "specId": "heatmap-retornos",
       "htmlId": "heatmapContainer",
-      "label": "Heatmap \u2014 Retornos Mensais",
+      "label": "Heatmap — Retornos Mensais",
       "tab": "performance",
       "type": "table",
       "found": true
     },
     {
       "specId": "hodl11-pnl",
-      "htmlId": "\u2014",
-      "label": "HODL11 \u2014 P&L e Custo M\u00e9dio",
+      "htmlId": "hodl11Pnl",
+      "label": "HODL11 — P&L e Custo Médio",
       "tab": "performance",
       "type": "kpi",
       "found": false
     },
     {
       "specId": "information-ratio",
-      "htmlId": "\u2014",
+      "htmlId": "informationRatio",
       "label": "Information Ratio vs VWRA",
       "tab": "performance",
       "type": "chart-line",
@@ -345,7 +345,7 @@
     {
       "specId": "retorno-decomposicao",
       "htmlId": "simRetorno",
-      "label": "Decomposi\u00e7\u00e3o de Retorno",
+      "label": "Decomposição de Retorno",
       "tab": "performance",
       "type": "waterfall",
       "found": true
@@ -361,14 +361,14 @@
     {
       "specId": "custo-base-bucket",
       "htmlId": "custoBaseBody",
-      "label": "Base de Custo \u2014 por Bucket",
+      "label": "Base de Custo — por Bucket",
       "tab": "portfolio",
       "type": "table",
       "found": true
     },
     {
       "specId": "drift-semaforo-etf",
-      "htmlId": "\u2014",
+      "htmlId": "driftSemaforoEtf",
       "label": "Drift por ETF",
       "tab": "portfolio",
       "type": "semaforo",
@@ -376,16 +376,16 @@
     },
     {
       "specId": "duration-renda-plus",
-      "htmlId": "\u2014",
-      "label": "Duration \u2014 Renda+ 2065",
+      "htmlId": "durationRendaPlus",
+      "label": "Duration — Renda+ 2065",
       "tab": "portfolio",
       "type": "card",
       "found": false
     },
     {
       "specId": "etf-composicao-regiao",
-      "htmlId": "\u2014",
-      "label": "Composi\u00e7\u00e3o por Regi\u00e3o e Fator",
+      "htmlId": "etfComposicaoRegiao",
+      "label": "Composição por Região e Fator",
       "tab": "portfolio",
       "type": "table",
       "found": false
@@ -393,22 +393,22 @@
     {
       "specId": "geo-donut",
       "htmlId": "geoDonut",
-      "label": "Exposi\u00e7\u00e3o Geogr\u00e1fica (Donut)",
+      "label": "Exposição Geográfica (Donut)",
       "tab": "portfolio",
       "type": "chart-donut",
       "found": true
     },
     {
       "specId": "intra-equity-pesos",
-      "htmlId": "\u2014",
-      "label": "Intra-Equity \u2014 Pesos vs Alvo",
+      "htmlId": "intraEquityPesos",
+      "label": "Intra-Equity — Pesos vs Alvo",
       "tab": "portfolio",
       "type": "chart-bar",
       "found": false
     },
     {
       "specId": "ir-diferido",
-      "htmlId": "\u2014",
+      "htmlId": "irDiferido",
       "label": "IR Diferido por ETF",
       "tab": "portfolio",
       "type": "table",
@@ -417,23 +417,23 @@
     {
       "specId": "minilog",
       "htmlId": "minilogBody",
-      "label": "\u00daltimas Opera\u00e7\u00f5es",
+      "label": "Últimas Operações",
       "tab": "portfolio",
       "type": "table",
       "found": true
     },
     {
       "specId": "posicoes-etfs-ibkr",
-      "htmlId": "\u2014",
-      "label": "Posi\u00e7\u00f5es \u2014 ETFs Internacionais",
+      "htmlId": "posicoesEtfsIbkr",
+      "label": "Posições — ETFs Internacionais",
       "tab": "portfolio",
       "type": "table",
       "found": false
     },
     {
       "specId": "rf-posicoes",
-      "htmlId": "\u2014",
-      "label": "Renda Fixa \u2014 Posi\u00e7\u00f5es",
+      "htmlId": "rfPosicoes",
+      "label": "Renda Fixa — Posições",
       "tab": "portfolio",
       "type": "table",
       "found": false
@@ -441,31 +441,31 @@
     {
       "specId": "stacked-alloc",
       "htmlId": "stackedAllocBar",
-      "label": "Aloca\u00e7\u00e3o \u2014 Barras Empilhadas",
+      "label": "Alocação — Barras Empilhadas",
       "tab": "portfolio",
       "type": "chart-bar",
       "found": true
     },
     {
       "specId": "tlh-monitor",
-      "htmlId": "\u2014",
-      "label": "TLH Monitor \u2014 Lotes e P&L",
+      "htmlId": "tlhMonitor",
+      "label": "TLH Monitor — Lotes e P&L",
       "tab": "portfolio",
       "type": "table",
       "found": false
     },
     {
       "specId": "bond-pool-readiness",
-      "htmlId": "\u2014",
-      "label": "Bond Pool \u2014 Readiness Detail",
+      "htmlId": "—",
+      "label": "Bond Pool — Readiness Detail",
       "tab": "retiro",
       "type": "gauge",
       "found": true
     },
     {
       "specId": "bond-pool-runway",
-      "htmlId": "\u2014",
-      "label": "Bond Pool \u2014 Proje\u00e7\u00e3o at\u00e9 FIRE Day",
+      "htmlId": "—",
+      "label": "Bond Pool — Projeção até FIRE Day",
       "tab": "retiro",
       "type": "chart-area",
       "found": true
@@ -481,15 +481,15 @@
     {
       "specId": "income-fases",
       "htmlId": "incomeSrc",
-      "label": "Renda na Aposentadoria \u2014 Fases",
+      "label": "Renda na Aposentadoria — Fases",
       "tab": "retiro",
       "type": "table",
       "found": true
     },
     {
       "specId": "income-lifecycle",
-      "htmlId": "\u2014",
-      "label": "Proje\u00e7\u00e3o de Renda \u2014 Ciclo de Vida",
+      "htmlId": "—",
+      "label": "Projeção de Renda — Ciclo de Vida",
       "tab": "retiro",
       "type": "chart-line",
       "found": true
@@ -497,7 +497,7 @@
     {
       "specId": "sankey-cashflow",
       "htmlId": "sankeySrc",
-      "label": "Sankey \u2014 Fluxo de Caixa Anual",
+      "label": "Sankey — Fluxo de Caixa Anual",
       "tab": "retiro",
       "type": "chart-area",
       "found": true
@@ -505,7 +505,7 @@
     {
       "specId": "spending-breakdown",
       "htmlId": "spendingChart",
-      "label": "Spending \u2014 Essenciais vs Discricion\u00e1rios",
+      "label": "Spending — Essenciais vs Discricionários",
       "tab": "retiro",
       "type": "card",
       "found": true
@@ -513,7 +513,7 @@
     {
       "specId": "swr-percentis",
       "htmlId": "wiSWRLabel",
-      "label": "SWR no FIRE Day \u2014 Percentis",
+      "label": "SWR no FIRE Day — Percentis",
       "tab": "retiro",
       "type": "kpi",
       "found": true
@@ -528,8 +528,8 @@
     },
     {
       "specId": "stress-test-mc",
-      "htmlId": "\u2014",
-      "label": "Stress Test MC \u2014 Bear Market",
+      "htmlId": "—",
+      "label": "Stress Test MC — Bear Market",
       "tab": "simuladores",
       "type": "slider",
       "found": true
