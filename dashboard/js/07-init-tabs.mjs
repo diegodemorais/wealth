@@ -320,6 +320,22 @@ export function switchTab(name) {
   document.querySelectorAll('[data-in-tab]').forEach(el => {
     el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
   });
+
+  // Hide orphaned h2 headers (h2s that don't have data-in-tab but precede [data-in-tab] divs)
+  document.querySelectorAll('h2:not([data-in-tab])').forEach(h2 => {
+    let sibling = h2.nextElementSibling;
+    let shouldHide = false;
+    // Check next 10 siblings for [data-in-tab] divs
+    for (let i = 0; i < 10 && sibling; i++) {
+      if (sibling.hasAttribute('data-in-tab')) {
+        const tabName = sibling.getAttribute('data-in-tab');
+        shouldHide = (tabName !== name);
+        break;
+      }
+      sibling = sibling.nextElementSibling;
+    }
+    h2.classList.toggle('tab-hidden', shouldHide);
+  });
   // Lazy init: inicializar charts da aba apenas na primeira abertura
   // Double-RAF: primeiro frame remove tab-hidden; segundo frame garante reflow completo
   // antes de ler offsetWidth nos builders (single RAF não garante layout flush após display change).
