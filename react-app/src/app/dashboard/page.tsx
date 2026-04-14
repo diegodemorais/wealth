@@ -6,9 +6,13 @@ import { KpiHero } from '@/components/primitives/KpiHero';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { Semaforo } from '@/components/primitives/Semaforo';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { TornadoChart } from '@/components/charts/TornadoChart';
+import { FanChart } from '@/components/charts/FanChart';
+import { SankeyChart } from '@/components/charts/SankeyChart';
 
 export default function DashboardPage() {
   const setData = useDashboardStore(s => s.setData);
+  const data = useDashboardStore(s => s.data);
   const derived = useDashboardStore(s => s.derived);
 
   useEffect(() => {
@@ -108,22 +112,19 @@ export default function DashboardPage() {
         </div>
       </CollapsibleSection>
 
-      {/* Placeholder for charts - Phase 3 */}
-      <CollapsibleSection
-        id="section-charts"
-        title="Charts (Coming in Phase 3)"
-        defaultOpen={false}
-        icon="📈"
-      >
-        <div style={styles.placeholder}>
-          <p>🚀 Charts will be implemented in Phase 3</p>
-          <ul>
-            <li>Tornado sensitivity analysis</li>
-            <li>Fan chart (uncertainty cone)</li>
-            <li>Sankey allocation flow</li>
-          </ul>
-        </div>
-      </CollapsibleSection>
+      {/* Charts Section */}
+      {data && (
+        <CollapsibleSection
+          id="section-charts"
+          title="Analysis & Projections"
+          defaultOpen={true}
+          icon="📈"
+        >
+          <TornadoChart data={data} />
+          <FanChart data={data} />
+          <SankeyChart data={data} />
+        </CollapsibleSection>
+      )}
     </div>
   );
 }
