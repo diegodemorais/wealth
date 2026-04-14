@@ -1410,7 +1410,6 @@ footer {
   <button class="tab-btn" data-tab="simuladores" onclick="switchTab('simuladores')">🧪 Simuladores</button>
   <button class="tab-btn" data-tab="backtest" onclick="switchTab('backtest')">📊 Backtest</button>
 </div>
-
 <!-- HERO STRIP (aba Now) -->
 <div class="hero-strip" data-in-tab="hoje">
   <div class="hero-kpi primary">
@@ -1651,14 +1650,12 @@ footer {
 </div>
 
 <!-- S8: GEO DONUT -->
-<div class="section" data-in-tab="carteira">
 <h2>Exposição Geográfica — Equities</h2>
 <div class="chart-box-sm"><canvas id="geoDonut"></canvas></div><!-- /section section-528 -->
 <div class="src">Premissa: SWRD ≈ 67% US. AVUV/USSC = 100% US. AVDV = 100% DM ex-US. AVGS ~58% US. (Exclui Fixed Income.)</div>
 </div>
 
 <!-- S7: Barras Empilhadas Horizontais -->
-<div class="section" data-in-tab="carteira" id="stackedAllocSection">
 <h2>Alocação — Barras Empilhadas</h2>
 <div style="margin-bottom:8px">
   <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Por Classe de Ativo</div><!-- /section stackedAllocSection -->
@@ -1672,7 +1669,6 @@ footer {
 </div>
 
 <!-- N2: ETF COMPOSITION — Região -->
-<div class="section collapsible" data-in-tab="carteira" id="etfCompSection">
 <h2 onclick="_toggleBlock(this.parentElement)">Composição por Região — ETFs da Carteira</h2>
 <div class="collapse-body">
 <div id="etfRegionTable" style="margin-bottom:16px"></div><!-- /section etfCompSection -->
@@ -1682,7 +1678,6 @@ footer {
 </div>
 
 <!-- N2b: ETF FACTOR EXPOSURE -->
-<div class="section collapsible" data-in-tab="carteira" id="etfFactorSection">
 <h2 onclick="_toggleBlock(this.parentElement)">Exposição Fatorial — ETFs da Carteira</h2>
 <div class="collapse-body">
 <div id="etfFactorTable"></div><!-- /section etfFactorSection -->
@@ -1691,14 +1686,12 @@ footer {
 </div>
 
 <!-- R5: TRACKING FIRE — Realizado vs Projeção -->
-<div class="section" data-in-tab="fire" id="trackingFireSection">
 <h2>Tracking FIRE — Realizado vs Projeção</h2>
 <div class="chart-box" style="height:280px"><canvas id="trackingFireChart"></canvas></div><!-- /section trackingFireSection -->
 <div class="src" id="trackingFireSrc">Patrimônio realizado vs projeção FIRE · Meta FIRE</div>
 </div>
 
 <!-- S9 + F4: Cenário Base vs Cenário Aspiracional — tabela unificada (gráfico de barras removido — duplicata) -->
-<div class="section" data-in-tab="fire">
   <h2>Cenário Base vs Cenário Aspiracional — Comparação Detalhada</h2>
   <div id="scenarioCompareBody"><!-- gerado por buildScenarioComparison() --></div>
   <div class="src">Base: Monte Carlo 10k simulações</div><!-- /section section-575 -->
@@ -1711,7 +1704,6 @@ footer {
 
 <!-- S11: DELTA BAR + PROGRESS BARS -->
 <!-- S12: GLIDE PATH (movido para plan — é estratégico, não operacional) -->
-<div class="section collapsible" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Glide Path — Alocação por Idade</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="glideChart"></canvas></div><!-- /section section-625 -->
@@ -1720,14 +1712,12 @@ footer {
 </div>
 
 <!-- S29: Missing Components (FIRE tab) -->
-<div class="section collapsible" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Trilha FIRE — Realizado vs Projetado</h2>
 <div class="collapse-body">
 <canvas id="fireTrilha" style="height:300px"></canvas>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Simulador FIRE — Interativo</h2>
 <div class="collapse-body">
 <div class="slider-container">
@@ -1738,7 +1728,6 @@ footer {
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Gasto vs P(FIRE)</h2>
 <div class="collapse-body">
 <div class="slider-container">
@@ -1765,7 +1754,6 @@ footer {
 </div>
 
 <!-- P2: BOND POOL READINESS -->
-<div class="section" id="bondPoolSection" data-in-tab="retiro">
 <h2>Bond Pool Readiness — Proteção SoRR</h2>
 <div id="bondPoolBody"><!-- gerado por buildBondPool() --></div>
 <div id="bondPoolRunwayChartWrap" style="margin-top:14px;display:none">
@@ -1779,7 +1767,6 @@ footer {
 <!-- S14: FAN CHART REMOVIDO — superado por F7 (Net Worth Projection com spending smile) -->
 
 <!-- F7: Net Worth Projection P10/P50/P90 -->
-<div class="section" data-in-tab="fire">
 <h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
 <div class="chart-box-lg"><canvas id="netWorthProjectionChart"></canvas></div><!-- /section section-649 -->
 <div style="margin-top:8px;padding:6px 10px;background:rgba(234,179,8,.08);border-radius:6px;border-left:3px solid var(--yellow);font-size:.72rem">
@@ -1790,7 +1777,6 @@ footer {
 </div>
 
 <!-- R2: SWR PERCENTIS P10/P50/P90 -->
-<div class="section" data-in-tab="retiro" id="swrPercentilesSection">
 <h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
 <div style="font-size:.65rem;color:var(--muted);margin-bottom:10px" class="pv" id="swrScenarioNote">—</div><!-- /section swrPercentilesSection -->
 <div class="swr-pct-grid" id="swrPercentilesCards"></div>
@@ -1798,7 +1784,6 @@ footer {
 </div>
 
 <!-- R1: FIRE MATRIX — P(Sucesso) por Patrimônio × Gasto -->
-<div class="section collapsible" data-in-tab="fire" id="fireMatrixSection">
 <h2 onclick="_toggleBlock(this.parentElement)">FIRE Matrix — P(Sucesso 30 anos)</h2>
 <div class="collapse-body">
 <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
@@ -1826,7 +1811,6 @@ footer {
 </div>
 
 <!-- S15: GUARDRAILS -->
-<div class="section collapsible" data-in-tab="retiro">
 <h2 onclick="_toggleBlock(this.parentElement)">Guardrails de Retirada — FIRE Day</h2>
 <div class="collapse-body">
 <table class="guardrail-table">
@@ -1843,7 +1827,6 @@ footer {
 </div>
 
 <!-- F2: Spending Guardrails -->
-<div class="section collapsible" data-in-tab="retiro">
   <h2 onclick="_toggleBlock(this.parentElement)">Spending Guardrails — P(FIRE) × Custo de Vida</h2>
   <div class="collapse-body">
   <div id="spendingGuardrailsViz"><!-- gerado por buildSpendingGuardrails() --></div>
@@ -1852,7 +1835,6 @@ footer {
 </div>
 
 <!-- S16: RETIREMENT INCOME — gráfico de barras removido (duplicata de F1/Ciclo de Vida) -->
-<div class="section collapsible" data-in-tab="retiro">
 <h2 onclick="_toggleBlock(this.parentElement)">Renda na Aposentadoria — Fases Temporais</h2>
 <div class="collapse-body">
 <table class="fases-table" style="margin-bottom:12px">
@@ -1876,7 +1858,6 @@ footer {
 <!-- S18: REMOVIDO — subconjunto do What-If (S19) -->
 
 <!-- S21: POSIÇÕES -->
-<div class="section" data-in-tab="carteira">
 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
   <h2 style="margin-bottom:0">Posições — ETFs Internacionais (IBKR)</h2>
   <span id="ibkrStalenessBadge"></span>
@@ -1901,7 +1882,6 @@ footer {
 </div>
 
 <!-- S21b2: CUSTO BASE POR BUCKET -->
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Base de Custo e Alocação — Equity por Bucket</h2>
 <div class="collapse-body">
 <div style="overflow-x:auto">
@@ -1923,56 +1903,48 @@ footer {
 </div>
 
 <!-- S10: Missing Components (CARTEIRA tab) -->
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Drift por ETF — Semáforo</h2>
 <div class="collapse-body">
 <div id="driftSemaforoEtf" style="padding:20px;text-align:center;color:var(--muted)">—</div>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Intra-Equity — Pesos vs Alvo</h2>
 <div class="collapse-body">
 <canvas id="intraEquityPesos" style="height:300px"></canvas>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Composição por Região e Fator</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Região</th><th>Fator</th><th>%</th></tr></thead><tbody id="etfComposicaoRegiao"></tbody></table>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Posições — ETFs Internacionais</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ticker</th><th>Qty</th><th>Preço</th><th>Valor</th></tr></thead><tbody id="posicoesEtfsIbkr"></tbody></table>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">TLH Monitor — Lotes e P&L</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Ativo</th><th>Qty</th><th>PM</th><th>P&L</th></tr></thead><tbody id="tlhMonitor"></tbody></table>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">IR Diferido por ETF</h2>
 <div class="collapse-body">
 <!-- Note: IR Diferido table removed — builder renders to #taxIrBody in section below -->
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Renda Fixa — Posições</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Título</th><th>Qtd</th><th>Taxa</th><th>Valor</th></tr></thead><tbody id="rfPosicoes"></tbody></table>
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Duration — Renda+ 2065</h2>
 <div class="collapse-body">
 <div class="card" id="durationRendaPlus" style="padding:20px;text-align:center;color:var(--muted)">Duration: —</div>
@@ -1980,7 +1952,6 @@ footer {
 </div>
 
 <!-- S21c: EVENTOS DE VIDA + LUMPY EVENTS (merged) -->
-<div class="section collapsible" style="border-color:rgba(234,179,8,.3)" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">Eventos de Vida — Impacto no Plano FIRE <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(gatilhos de recalibração)</span></h2>
 <div class="collapse-body">
 <!-- Planejados (list view) -->
@@ -1992,7 +1963,6 @@ footer {
 </div>
 
 <!-- S21d: P(FIRE) CENÁRIOS FAMÍLIA -->
-<div class="section collapsible" style="border-color:rgba(139,92,246,.3)" data-in-tab="fire">
 <h2 onclick="_toggleBlock(this.parentElement)">P(FIRE) — Cenários de Família <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(impacto no custo de vida)</span></h2>
 <div class="collapse-body">
 <div id="pfireFamiliaBody"></div><!-- /section section-805 -->
@@ -2001,7 +1971,6 @@ footer {
 </div>
 
 <!-- S7: PERFORMANCE ATTRIBUTION -->
-<div class="section" id="attrSection" data-in-tab="perf">
 <h2>Performance Attribution — Decomposição do Patrimônio <span id="attrPeriodo" style="font-size:.7rem;font-weight:400;color:var(--muted)"></span></h2>
 <div class="chart-box-sm" style="height:320px;max-height:320px"><canvas id="attrChart"></canvas></div><!-- /section attrSection -->
 <div style="margin-top:8px;font-size:.75rem;background:var(--card2);border-radius:6px;padding:10px">
@@ -2024,7 +1993,6 @@ footer {
 </div>
 
 <!-- S6: NET WORTH TIMELINE -->
-<div class="section" data-in-tab="perf">
 <h2>Patrimônio — Evolução Histórica</h2>
 <div class="period-btns" id="timelinePeriodBtns">
   <button onclick="setTimelinePeriod('6m')">6m</button>
@@ -2040,7 +2008,6 @@ footer {
 </div>
 
 <!-- S24: RETORNOS MENSAIS — Heatmap (aberto por default) -->
-<div class="section collapsible open" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Retornos Mensais — Heatmap</h2>
 <div class="collapse-body">
 <div id="heatmapContainer" style="overflow-x:auto"></div><!-- /section section-822 -->
@@ -2050,7 +2017,6 @@ footer {
 </div>
 
 <!-- S11: DELTA BAR + PROGRESS BARS (Alpha desde o início) -->
-<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
 <div class="collapse-body">
 <div class="grid-2" style="margin-bottom:0">
@@ -2088,7 +2054,6 @@ footer {
 </div>
 
 <!-- S24b: ROLLING SHARPE 12m -->
-<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)</h2>
 <div class="collapse-body">
 <div class="chart-box"><canvas id="rollingSharpChart"></canvas></div><!-- /section section-871 -->
@@ -2102,7 +2067,6 @@ footer {
 </div><!-- /section collapsible rolling sharpe -->
 
 <!-- S27: BACKTEST HISTÓRICO (aberto por default) -->
-<div class="section collapsible open" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Histórico — Target vs VWRA</h2>
 <div class="collapse-body">
 <div class="period-btns" id="backtestPeriodBtns">
@@ -2142,7 +2106,6 @@ footer {
 </div>
 
 <!-- S28: Missing Components (BACKTEST tab) -->
-<div class="section collapsible" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 5-7 Anos</h2>
 <div class="collapse-body">
 <canvas id="backtestRegimeLongo" style="height:300px"></canvas>
@@ -2150,7 +2113,6 @@ footer {
 </div>
 
 <!-- S23: SHADOWS — consolidado adjacente ao Backtest (ambos sobre performance vs benchmarks) -->
-<div class="section collapsible open" data-in-tab="backtest">
 <h2 onclick="_toggleBlock(this.parentElement)">Shadow Portfolios — Tracking</h2>
 <div class="collapse-body">
 <div style="overflow-x:auto">
@@ -2179,7 +2141,6 @@ footer {
 </div>
 
 <!-- S27b: BACKTEST LONGO — Regime 7 (1995–2026) -->
-<div class="section collapsible open" data-in-tab="backtest" id="backtestR7Section">
 <h2 onclick="_toggleBlock(this.parentElement)">Backtest Longo — Regime 7 (1995–2026)</h2>
 <div class="collapse-body">
 <!-- Cards de métricas globais -->
@@ -2202,7 +2163,6 @@ footer {
 </div>
 
 <!-- P2: FACTOR ROLLING 12M AVGS vs SWRD (aberto por default) -->
-<div class="section collapsible open" id="factorRollingSection" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Rolling 12m — AVGS vs SWRD (retorno relativo)</h2>
 <div class="collapse-body">
 <div id="factorRollingBody">
@@ -2213,7 +2173,6 @@ footer {
 </div>
 
 <!-- N1: DRAWDOWN HISTORY -->
-<div class="section collapsible" data-in-tab="backtest" id="drawdownHistSection">
 <h2 onclick="_toggleBlock(this.parentElement)">Drawdown Histórico — Série Completa</h2>
 <div class="collapse-body">
 <div class="chart-box" style="height:220px"><canvas id="drawdownHistChart"></canvas></div><!-- /section drawdownHistSection -->
@@ -2229,7 +2188,6 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 </div>
 
 <!-- S17: FEE ANALYSIS (colapsável) -->
-<div class="section" data-in-tab="perf">
 <details>
 <summary style="cursor:pointer;font-size:1.1rem;font-weight:600;color:var(--text);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px">
   <span style="font-size:.85em;color:var(--muted)">▶</span>
@@ -2254,7 +2212,6 @@ Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado
 </div>
 
 <!-- S24c: INFORMATION RATIO vs VWRA -->
-<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Information Ratio vs VWRA — Desde o Início + Rolling 36m</h2>
 <div class="collapse-body">
 
@@ -2273,7 +2230,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S26: Missing Components (PERF tab) -->
-<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Alpha ITD vs SWRD</h2>
 <div class="collapse-body">
 <div class="kpi">
@@ -2283,7 +2239,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 </div>
 
-<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">HODL11 — P&L e Custo Médio</h2>
 <div class="collapse-body">
 <div class="kpi">
@@ -2295,7 +2250,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 
 <!-- Information Ratio charts are rendered by buildInformationRatio() into irITDCards and rollingIRChart (above) -->
 
-<div class="section collapsible" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Fee Analysis — Custo vs Alpha</h2>
 <div class="collapse-body">
 <table style="width:100%;font-size:.8rem"><thead><tr><th>Item</th><th>Custo</th><th>Alpha</th><th>Ratio</th></tr></thead><tbody id="feeBody"></tbody></table>
@@ -2303,7 +2257,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- IR DIFERIDO + TLH — merged -->
-<div class="section collapsible" id="taxIrSection" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">IR Diferido — Alvo &amp; Transitório <span id="taxIrTotalHeader" class="pv" style="font-size:.75rem;color:var(--yellow);font-weight:400;text-transform:none;letter-spacing:0"></span></h2>
 <div class="collapse-body">
 <div id="taxIrBody"><!-- gerado por buildIrDiferido() --></div>
@@ -2312,7 +2265,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S26: RF + CRYPTO -->
-<div class="section" data-in-tab="carteira">
 <h2>Renda Fixa + Cripto</h2>
 <div id="rfCardsGrid"><!-- gerado por buildRfCards() --></div>
 </div><!-- /section section-1059 -->
@@ -2322,7 +2274,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
      ═══════════════════════════════════════════════════════ -->
 
 <!-- F3: SIMULADOR FIRE INTERATIVO (BOLDIN-style) -->
-<div class="section section-critical" data-in-tab="simuladores">
 <h2>Simulador FIRE — Aposentadoria Antecipada</h2>
 
 <!-- Resultado principal -->
@@ -2400,7 +2351,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S19: WHAT-IF SCENARIOS -->
-<div class="section collapsible open" data-in-tab="simuladores">
 <h2 onclick="_toggleBlock(this.parentElement)">What-If Scenarios — Cenário / Gasto</h2>
 <div class="collapse-body">
 
@@ -2441,7 +2391,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <canvas id="aporteSensChart" style="display:none"></canvas>
 
 <!-- F11: Stress Test -->
-<div class="section collapsible open" data-in-tab="simuladores">
 <h2 onclick="_toggleBlock(this.parentElement)">Stress Test Monte Carlo — Bear Market Interativo</h2>
 <div class="collapse-body">
 
@@ -2492,13 +2441,11 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- Earliest FIRE Card (extraído do grid-2 F2) -->
-<div class="section" data-in-tab="fire">
   <div id="earliestFireCard"><!-- gerado por buildEarliestFire() → static card (MC-based) --></div>
   <div class="src" style="margin-top:8px">Threshold: P(FIRE) ≥ 85% · Baseado em MC 10k simulações</div><!-- /section section-1239 -->
 </div>
 
 <!-- F1: Lifetime Income Projection Chart -->
-<div class="section" data-in-tab="retiro">
 <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
 <div class="chart-box-xl"><canvas id="incomeProjectionChart"></canvas></div><!-- /section section-1245 -->
 <div style="margin-top:8px;padding:6px 10px;background:rgba(59,130,246,.06);border-radius:6px;border-left:3px solid var(--accent);font-size:.72rem">
@@ -2508,7 +2455,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- F5: Must / Like to Spend -->
-<div class="section collapsible" data-in-tab="retiro">
 <h2 onclick="_toggleBlock(this.parentElement)">Spending — Essenciais vs. Discricionários <span style="font-size:.65rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(período ago/2025–mar/2026)</span></h2>
 <div class="collapse-body">
 <div id="spendingBreakdownBody"><!-- gerado por buildSpendingBreakdown() --></div>
@@ -2520,7 +2466,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 <!-- F10: Wellness Extras (novas métricas — fica no tab Status) -->
 
 <!-- S22: CALCULADORA APORTE -->
-<div class="section" data-in-tab="simuladores">
 <h2>Calculadora de Aporte — Cascade</h2>
 <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
   <div class="slider-row" style="flex:1;min-width:240px">
@@ -2546,7 +2491,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- S21b: MINI-LOG OPERAÇÕES -->
-<div class="section collapsible" data-in-tab="carteira">
 <h2 onclick="_toggleBlock(this.parentElement)">Últimas Operações</h2>
 <div class="collapse-body">
 <div id="minilogBody" style="font-size:.8rem"></div><!-- /section section-1293 -->
@@ -2554,7 +2498,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div><!-- /collapse-body -->
 </div>
 
-<div class="section collapsible" id="factorLoadingsSection" data-in-tab="perf">
 <h2 onclick="_toggleBlock(this.parentElement)">Factor Loadings — Regressão Fama-French 5F + Momentum</h2>
 <div class="collapse-body">
 <div id="factorLoadingsCards" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div><!-- /section factorLoadingsSection -->
@@ -2567,7 +2510,6 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div>
 
 <!-- PREMISSAS VS REALIZADO — 5 Years Performance Review (Performance tab) -->
-<div class="section collapsible" data-in-tab="perf" id="premissasVsRealizadoSection">
 <h2 onclick="_toggleBlock(this.parentElement)">Premissas vs Realizado — 5 Anos (2021-2026)</h2>
 <div class="collapse-body">
 <div id="premissasVsRealizadoBody"></div><!-- /section premissasVsRealizadoSection -->
@@ -2590,8 +2532,58 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 </div><!-- /section unclosed-3 -->
 </div><!-- /section unclosed-2 -->
 </div><!-- /section unclosed-1 -->
-
-<footer>
+<div class="section" data-in-tab="carteira">
+<div class="section" data-in-tab="carteira" id="stackedAllocSection">
+<div class="section collapsible" data-in-tab="carteira" id="etfCompSection">
+<div class="section collapsible" data-in-tab="carteira" id="etfFactorSection">
+<div class="section" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira">
+<div class="section collapsible" id="taxIrSection" data-in-tab="carteira">
+<div class="section" data-in-tab="carteira">
+<div class="section collapsible" data-in-tab="carteira"><div class="section" id="attrSection" data-in-tab="perf">
+<div class="section" data-in-tab="perf">
+<div class="section collapsible open" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible open" id="factorRollingSection" data-in-tab="perf">
+<div class="section" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf">
+<div class="section collapsible" id="factorLoadingsSection" data-in-tab="perf">
+<div class="section collapsible" data-in-tab="perf" id="premissasVsRealizadoSection"><div class="section" data-in-tab="fire" id="trackingFireSection">
+<div class="section" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="fire">
+<div class="section" data-in-tab="fire">
+<div class="section collapsible" data-in-tab="fire" id="fireMatrixSection">
+<div class="section collapsible" style="border-color:rgba(234,179,8,.3)" data-in-tab="fire">
+<div class="section collapsible" style="border-color:rgba(139,92,246,.3)" data-in-tab="fire">
+<div class="section" data-in-tab="fire"><div class="section" id="bondPoolSection" data-in-tab="retiro">
+<div class="section" data-in-tab="retiro" id="swrPercentilesSection">
+<div class="section collapsible" data-in-tab="retiro">
+<div class="section collapsible" data-in-tab="retiro">
+<div class="section collapsible" data-in-tab="retiro">
+<div class="section" data-in-tab="retiro">
+<div class="section collapsible" data-in-tab="retiro"><div class="section section-critical" data-in-tab="simuladores">
+<div class="section collapsible open" data-in-tab="simuladores">
+<div class="section collapsible open" data-in-tab="simuladores">
+<div class="section" data-in-tab="simuladores"><div class="section collapsible open" data-in-tab="backtest">
+<div class="section collapsible" data-in-tab="backtest">
+<div class="section collapsible open" data-in-tab="backtest">
+<div class="section collapsible open" data-in-tab="backtest" id="backtestR7Section">
+<div class="section collapsible" data-in-tab="backtest" id="drawdownHistSection"><footer>
   Dashboard regenerado em <strong id="footerDate">—</strong> · Carteira Diego de Morais · Dashboard FIRE<br>
   <div class="ts-bar" id="timestampsBar"><!-- gerado por buildTimestamps() --></div>
   <span id="footerNudge" style="opacity:.5;font-size:.65rem"></span>
@@ -2618,8 +2610,8 @@ Benchmark: VWRA.L (USD). Linha tracejada = IR=0 (break-even vs benchmark).
 // Assembly by build_dashboard.py: _assemble_js() concatenates in order
 //
 
-window.GENERATED_AT = new Date('2026-04-14T07:04:19-03:00'); // BRT (UTC-3)
-window.VERSION = '2.180';
+window.GENERATED_AT = new Date('2026-04-14T07:12:47-03:00'); // BRT (UTC-3)
+window.VERSION = '2.181';
 
 window.DATA = {
   "_generated": "2026-04-14T05:13:28",
@@ -9426,7 +9418,7 @@ window.DATA = {
     "nota_impostos": "Impostos = categoria 'Taxes & Fees' do spending_analysis (estimado R$50.3k/ano)",
     "nota_hipoteca": "Hipoteca: juros + seguros (sem principal). Principal = investimento (equity imóvel)."
   },
-  "version": "2.180"
+  "version": "2.181"
 };
 
 // Debug: window.DATA just defined, log it
