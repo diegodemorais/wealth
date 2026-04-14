@@ -15,7 +15,10 @@
     "test:watch": "vitest --watch",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "e2e:headed": "playwright test --headed"
+    "e2e:headed": "playwright test --headed",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:headless": "cypress run --headless"
   },
   "dependencies": {
     "chart.js": "^4.4.7",
@@ -36,6 +39,8 @@
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.1.4",
     "@vitest/ui": "^4.1.4",
+    "cypress": "^15.13.1",
+    "cypress-axe": "^1.7.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.3",
     "jsdom": "^29.0.2",

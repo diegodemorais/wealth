@@ -102,46 +102,77 @@ describe('KpiCard', () => {
 });
 ```
 
-## Tier 3: End-to-End Tests (Playwright)
+## Tier 3: End-to-End Tests (Playwright & Cypress)
 
 **Purpose:** Test complete user workflows across real browser environments.
 
+### Framework Selection
+
+**Playwright** (`e2e/*.spec.ts`) - Recommended for CI/CD
+- Multi-browser testing (Chromium, Firefox, Safari)
+- Advanced debugging (trace, screenshots on failure)
+- Better for complex interactions and visual regression
+
+**Cypress** (`cypress/e2e/*.cy.ts`) - Recommended for local development
+- Real application testing against live server
+- Easier debugging with interactive UI mode
+- Better for rapid iteration and TDD
+- Lighter system footprint
+
 ### Coverage Areas
 
-#### Navigation (`e2e/navigation.spec.ts`)
+#### Navigation (`cypress/e2e/dashboard.cy.ts` | Playwright: `e2e/navigation.spec.ts`)
 - ✅ All 7 tabs visible and clickable
 - ✅ Tab routing works (URL updates)
-- ✅ Active tab highlighting
 - ✅ Page loading states (no infinite loading)
-- ✅ Error handling (no error dialogs)
+- ✅ Chart rendering on each tab
+- ✅ Collapsible sections functional
 
-#### Charts (`e2e/charts.spec.ts`)
+#### Charts (`cypress/e2e/dashboard.cy.ts` | Playwright: `e2e/charts.spec.ts`)
 - ✅ Chart containers rendered
-- ✅ Canvas/SVG elements present
+- ✅ Canvas elements present for Chart.js
 - ✅ Data binding (charts display data, not empty)
 - ✅ Collapsible sections toggle
-- ✅ Hover interactions (tooltips if applicable)
+- ✅ Multiple viewports supported
 
-#### Simulators (`e2e/simulators.spec.ts`)
+#### Simulators (`cypress/e2e/simulators.cy.ts` | Playwright: `e2e/simulators.spec.ts`)
 - ✅ All 4 sliders present and adjustable
 - ✅ Slider changes trigger simulations
 - ✅ Success rate percentage displays (0-100%)
-- ✅ Drawdown histogram renders
+- ✅ Drawdown distribution chart renders
 - ✅ Monte Carlo trajectories update
-- ✅ Stress level affects outcomes
-- ✅ Monthly contribution affects projections
+- ✅ Responsive design (desktop, tablet, mobile)
 
-#### Privacy Mode (`e2e/privacy-and-design.spec.ts`)
-- ✅ Privacy toggle visible and functional
-- ✅ Sensitive values masked (blurred, —, •••)
-- ✅ Tooltips disabled in privacy mode
-- ✅ Privacy mode applies globally to all tabs
-- ✅ Design consistency (colors, spacing, fonts)
-- ✅ Responsive layout (desktop, tablet, mobile)
-- ✅ Header/tabs remain visible when scrolling
-- ✅ Text contrast meets WCAG standards
+#### Privacy & Design (`cypress/e2e/privacy.cy.ts` | Playwright: `e2e/privacy-and-design.spec.ts`)
+- ✅ Dark theme CSS applied
+- ✅ Sticky header/navigation on scroll
+- ✅ Cross-tab navigation without errors
+- ✅ Data loading verified (no "Loading..." state persists)
+- ✅ Text contrast and layout consistency
 
 ### Running E2E Tests
+
+#### Cypress (Local Development)
+
+```bash
+# Interactive UI mode (recommended for development)
+npm run cypress:open
+
+# Headless mode (for CI/CD or batch runs)
+npm run cypress:run
+
+# Run with debugging
+npm run cypress:headless -- --headed
+
+# Specific test file
+npm run cypress:run -- --spec "cypress/e2e/simulators.cy.ts"
+
+# Run tests against live server
+npm run start    # Terminal 1: Start the dev server
+npm run cypress:open    # Terminal 2: Open Cypress UI
+```
+
+#### Playwright (CI/CD & Cross-browser)
 
 ```bash
 # Install Playwright browsers (one-time)
@@ -161,6 +192,9 @@ npx playwright test e2e/navigation.spec.ts
 
 # Specific test
 npx playwright test -g "navigating between tabs"
+
+# Run against specific browser
+npx playwright test --project=firefox
 ```
 
 ## CI/CD Integration
@@ -174,7 +208,7 @@ npm run build
 # Internally runs:
 # 1. npm run test:ci (Vitest with coverage)
 # 2. next build (Next.js compilation)
-# 3. npm run e2e (Playwright E2E tests) - TODO: add to pipeline
+# 3. Optional: npm run e2e (Playwright) or npm run cypress:run (Cypress)
 ```
 
 ### Environment Setup
@@ -182,18 +216,46 @@ npm run build
 **Local Development:**
 ```bash
 npm install
-npm run test:watch     # Continuous testing
-npm run dev            # Dev server on :3000
-npm run e2e:ui         # Visual E2E debugging
+npm run test:watch              # Continuous unit testing
+npm run dev                     # Dev server on :3000
+npm run cypress:open            # Interactive Cypress UI (recommended)
+npm run e2e:ui                  # Playwright UI debugging
 ```
 
 **CI/CD (GitHub Actions, etc.):**
 ```bash
-npm ci                 # Install from lock file
-npm run test:ci        # Unit tests + coverage
-npm run build:no-test  # Compile without test gate
-npm run e2e            # Run E2E in headless mode
+npm ci                          # Install from lock file
+npm run test:ci                 # Unit tests + coverage
+npm run build:no-test           # Compile without test gate
+npm run cypress:run             # Cypress E2E tests (faster, recommended for CI)
+npm run e2e                     # Or use Playwright (multi-browser)
 ```
+
+### Recommended CI/CD Strategy
+
+For optimal balance of speed and coverage:
+1. **Unit Tests** (Vitest) - always run, fail fast
+2. **Cypress E2E** - run against built app, faster feedback
+3. **Playwright** - optional, run nightly for multi-browser coverage
+
+### Cypress Configuration
+
+Cypress is configured in `cypress.config.ts` with:
+```typescript
+{
+  e2e: {
+    baseUrl: 'http://localhost:3000',
+    viewportWidth: 1920,
+    viewportHeight: 1080,
+    setupNodeEvents(on, config) { ... }
+  }
+}
+```
+
+**Key Cypress Files:**
+- `cypress/e2e/dashboard.cy.ts` - Tab navigation, page rendering, collapsibles
+- `cypress/e2e/simulators.cy.ts` - Interactive sliders, Monte Carlo updates
+- `cypress/e2e/privacy.cy.ts` - Dark theme, sticky headers, cross-tab navigation
 
 ## Coverage Goals
 
