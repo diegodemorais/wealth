@@ -22,6 +22,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "if": "Bash(git push*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "SHA=$(git rev-parse --short HEAD 2>/dev/null); echo \"\"; echo \"📦 PUSH COMPLETO\"; echo \"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\"; if [ -n \"$SHA\" ]; then echo \"Commit: $SHA\"; fi; echo \"GitHub Actions: Reconstruindo...\"; echo \"\"; echo \"⏳ Nova versão será exibida no site\"; echo \"   após workflow completar (~2-3 min)\"; echo \"\"; echo \"📍 Link: https://diegodemorais.github.io/wealth-dash/\""
+          }
+        ]
+      }
     ]
   }
 }
