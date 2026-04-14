@@ -1,22 +1,194 @@
 {
-  "timestamp": "2026-04-13T21:08:35.055471",
+  "timestamp": "2026-04-13T21:28:37.374941",
   "mode": "full",
-  "total": 635,
-  "passed": 635,
-  "failed": 0,
+  "total": 523,
+  "passed": 460,
+  "failed": 63,
   "failure_cycles": {
-    "smoke-global": 0,
-    "net-worth-projection": 0
+    "smoke-global": 4,
+    "dom-ref-renderKPIs": 2,
+    "dom-ref-renderWellness": 2,
+    "dom-ref-buildWellnessExtras": 2,
+    "dom-ref-renderMacroStatus": 2,
+    "dom-ref-buildBrasilConcentracao": 2,
+    "dom-ref-buildMacroCards": 2,
+    "dom-ref-buildDcaStatus": 2,
+    "dom-ref-buildSemaforoPanel": 2,
+    "dom-ref-updateContrib": 2,
+    "lumpy-events": 0,
+    "fire-trilha": 0,
+    "glide-path": 0,
+    "net-worth-projection": 0,
+    "what-if-cenarios": 0,
+    "stress-fan-chart": 0,
+    "hodl11-status": 0
   },
-  "escalations": [],
+  "escalations": [
+    {
+      "block_id": "smoke-global",
+      "cycles": 4
+    }
+  ],
   "results": [
     {
       "test_id": "smoke-global::SMOKE::index.html existe, tamanho > 100k chars, JS não truncado",
       "block_id": "smoke-global",
       "category": "SMOKE",
       "severity": "CRITICAL",
-      "passed": true,
-      "message": "index.html OK: 575,480 chars, 3 blocos <script>, renderKPIs presente"
+      "passed": false,
+      "message": "renderKPIs não encontrado em index.html — JS pode estar ausente ou truncado"
+    },
+    {
+      "test_id": "dom-ref-renderKPIs::DOM_REF::renderKPIs: função encontrada em template.html",
+      "block_id": "dom-ref-renderKPIs",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'renderKPIs' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-renderWellness::DOM_REF::renderWellness: função encontrada em template.html",
+      "block_id": "dom-ref-renderWellness",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'renderWellness' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildWellnessExtras::DOM_REF::buildWellnessExtras: função encontrada em template.html",
+      "block_id": "dom-ref-buildWellnessExtras",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'buildWellnessExtras' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-renderMacroStatus::DOM_REF::renderMacroStatus: função encontrada em template.html",
+      "block_id": "dom-ref-renderMacroStatus",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'renderMacroStatus' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildBrasilConcentracao::DOM_REF::buildBrasilConcentracao: função encontrada em template.html",
+      "block_id": "dom-ref-buildBrasilConcentracao",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'buildBrasilConcentracao' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildMacroCards::DOM_REF::buildMacroCards: função encontrada em template.html",
+      "block_id": "dom-ref-buildMacroCards",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'buildMacroCards' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildDcaStatus::DOM_REF::buildDcaStatus: função encontrada em template.html",
+      "block_id": "dom-ref-buildDcaStatus",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'buildDcaStatus' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildSemaforoPanel::DOM_REF::buildSemaforoPanel: função encontrada em template.html",
+      "block_id": "dom-ref-buildSemaforoPanel",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'buildSemaforoPanel' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-updateContrib::DOM_REF::updateContrib: função encontrada em template.html",
+      "block_id": "dom-ref-updateContrib",
+      "category": "DOM_REF",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "função 'updateContrib' não encontrada em template.html"
+    },
+    {
+      "test_id": "lumpy-events::RENDER::lumpyEventsSection exists in HTML",
+      "block_id": "lumpy-events",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "id='lumpyEventsSection' not found in HTML"
+    },
+    {
+      "test_id": "fire-trilha::VALUE::B2 anti-regress: JS _yMax formula present in template",
+      "block_id": "fire-trilha",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "buildTrackingFire não encontrada em template.html"
+    },
+    {
+      "test_id": "glide-path::VALUE::B3 anti-regress: null guard for glide data present in template",
+      "block_id": "glide-path",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "B3: buildGlidePath() function not found in template"
+    },
+    {
+      "test_id": "net-worth-projection::VALUE::B4 anti-regress: JS has _fireSlice filter and _nwYMax cap in template",
+      "block_id": "net-worth-projection",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "B4: buildNetWorthProjection() not found in template"
+    },
+    {
+      "test_id": "net-worth-projection::VALUE::B5 anti-regress: offsetWidth guard present in buildNetWorthProjection",
+      "block_id": "net-worth-projection",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "B5: buildNetWorthProjection() function not found in template"
+    },
+    {
+      "test_id": "glide-path::VALUE::B5 anti-regress: double-RAF pattern in switchTab and _toggleBlock",
+      "block_id": "glide-path",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "B5: window.switchTab not found in template"
+    },
+    {
+      "test_id": "what-if-cenarios::VALUE::B6 anti-regress: interpolateFireMatrix uses patrimonio_gatilho in template",
+      "block_id": "what-if-cenarios",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "B6: interpolateFireMatrix() not found in template"
+    },
+    {
+      "test_id": "stress-fan-chart::VALUE::B7 anti-regress: stressProjectionChart has real builder in _chartBuilders",
+      "block_id": "stress-fan-chart",
+      "category": "VALUE",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "B7: _chartBuilders object not found in template"
+    },
+    {
+      "test_id": "hodl11-status::RENDER::HTML contains hodl11Val element (hodl11 value display)",
+      "block_id": "hodl11-status",
+      "category": "RENDER",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "Element id=\"hodl11Val\" not found in HTML"
+    },
+    {
+      "test_id": "hodl11-status::PRIVACY::hodl11Val element has pv class (privacy wrapper)",
+      "block_id": "hodl11-status",
+      "category": "PRIVACY",
+      "severity": "CRITICAL",
+      "passed": false,
+      "message": "Element id=\"hodl11Val\" not found — cannot verify privacy"
     },
     {
       "test_id": "spec-global::SPEC::spec.json exists and is parseable",
@@ -64,7 +236,7 @@
       "category": "DATA",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "index.html: 575,480 chars"
+      "message": "index.html: 246,806 chars"
     },
     {
       "test_id": "pipeline::DATA::all spec data_fields exist in data.json",
@@ -89,710 +261,6 @@
       "severity": "CRITICAL",
       "passed": true,
       "message": "Chart.js present"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroPatrimonioBrl::DOM_REF::renderKPIs: getElementById('heroPatrimonioBrl') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroPatrimonioBrl",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroPatrimonioBrl' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroPatrimonioUsd::DOM_REF::renderKPIs: getElementById('heroPatrimonioUsd') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroPatrimonioUsd",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroPatrimonioUsd' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroPfire::DOM_REF::renderKPIs: getElementById('heroPfire') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroPfire",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroPfire' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5321)"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroPfireSub::DOM_REF::renderKPIs: getElementById('heroPfireSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroPfireSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroPfireSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5327)"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroAnos::DOM_REF::renderKPIs: getElementById('heroAnos') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroAnos",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroAnos' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroAnosSub::DOM_REF::renderKPIs: getElementById('heroAnosSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroAnosSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroAnosSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroProgresso::DOM_REF::renderKPIs: getElementById('heroProgresso') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroProgresso",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroProgresso' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroProgressoSub::DOM_REF::renderKPIs: getElementById('heroProgressoSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroProgressoSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroProgressoSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroSavings::DOM_REF::renderKPIs: getElementById('heroSavings') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroSavings",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroSavings' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5348)"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-heroSavingsSub::DOM_REF::renderKPIs: getElementById('heroSavingsSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-heroSavingsSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='heroSavingsSub' ausente do HTML mas null guard detectado em renderKPIs (template.html linha 5352)"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiPfire50::DOM_REF::renderKPIs: getElementById('kpiPfire50') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiPfire50",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiPfire50' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiPfire50Sub::DOM_REF::renderKPIs: getElementById('kpiPfire50Sub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiPfire50Sub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiPfire50Sub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiIpcaTaxa::DOM_REF::renderKPIs: getElementById('kpiIpcaTaxa') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiIpcaTaxa",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiIpcaTaxa' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiIpcaSub::DOM_REF::renderKPIs: getElementById('kpiIpcaSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiIpcaSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiIpcaSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiIpcaSemaforo::DOM_REF::renderKPIs: getElementById('kpiIpcaSemaforo') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiIpcaSemaforo",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiIpcaSemaforo' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiRenda2065::DOM_REF::renderKPIs: getElementById('kpiRenda2065') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiRenda2065",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiRenda2065' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiRenda2065Sub::DOM_REF::renderKPIs: getElementById('kpiRenda2065Sub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiRenda2065Sub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiRenda2065Sub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiRendaSemaforo::DOM_REF::renderKPIs: getElementById('kpiRendaSemaforo') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiRendaSemaforo",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiRendaSemaforo' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiBondPool::DOM_REF::renderKPIs: getElementById('kpiBondPool') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiBondPool",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiBondPool' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiBondPoolSub::DOM_REF::renderKPIs: getElementById('kpiBondPoolSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiBondPoolSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiBondPoolSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiDriftMax::DOM_REF::renderKPIs: getElementById('kpiDriftMax') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiDriftMax",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiDriftMax' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiDriftMaxSub::DOM_REF::renderKPIs: getElementById('kpiDriftMaxSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiDriftMaxSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiDriftMaxSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiDelta::DOM_REF::renderKPIs: getElementById('kpiDelta') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiDelta",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiDelta' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiDeltaSub::DOM_REF::renderKPIs: getElementById('kpiDeltaSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiDeltaSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiDeltaSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiFactorSignal::DOM_REF::renderKPIs: getElementById('kpiFactorSignal') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiFactorSignal",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiFactorSignal' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiFactorSignalSub::DOM_REF::renderKPIs: getElementById('kpiFactorSignalSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiFactorSignalSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiFactorSignalSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiOrigemPat::DOM_REF::renderKPIs: getElementById('kpiOrigemPat') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiOrigemPat",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiOrigemPat' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiOrigemPatSub::DOM_REF::renderKPIs: getElementById('kpiOrigemPatSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiOrigemPatSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiOrigemPatSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiCambio::DOM_REF::renderKPIs: getElementById('kpiCambio') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiCambio",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiCambio' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiBtcUsd::DOM_REF::renderKPIs: getElementById('kpiBtcUsd') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiBtcUsd",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiBtcUsd' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiIpcaMercado::DOM_REF::renderKPIs: getElementById('kpiIpcaMercado') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiIpcaMercado",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiIpcaMercado' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiIpcaMercadoSub::DOM_REF::renderKPIs: getElementById('kpiIpcaMercadoSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiIpcaMercadoSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiIpcaMercadoSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiRendaMercado::DOM_REF::renderKPIs: getElementById('kpiRendaMercado') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiRendaMercado",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiRendaMercado' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-kpiRendaMercadoSub::DOM_REF::renderKPIs: getElementById('kpiRendaMercadoSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-kpiRendaMercadoSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiRendaMercadoSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireScenarioGrid::DOM_REF::renderKPIs: getElementById('fireScenarioGrid') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireScenarioGrid",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireScenarioGrid' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireCountdown::DOM_REF::renderKPIs: getElementById('fireCountdown') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireCountdown",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireCountdown' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgressBar::DOM_REF::renderKPIs: getElementById('fireProgressBar') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgressBar",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgressBar' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgressLabel::DOM_REF::renderKPIs: getElementById('fireProgressLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgressLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgressLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgressStart::DOM_REF::renderKPIs: getElementById('fireProgressStart') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgressStart",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgressStart' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgressEnd::DOM_REF::renderKPIs: getElementById('fireProgressEnd') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgressEnd",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgressEnd' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgPct::DOM_REF::renderKPIs: getElementById('fireProgPct') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgPct",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgPct' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgLabel::DOM_REF::renderKPIs: getElementById('fireProgLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-fireProgFill::DOM_REF::renderKPIs: getElementById('fireProgFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-fireProgFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='fireProgFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfirePatLabel::DOM_REF::renderKPIs: getElementById('pfirePatLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfirePatLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfirePatLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfirePatPct::DOM_REF::renderKPIs: getElementById('pfirePatPct') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfirePatPct",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfirePatPct' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfirePatFill::DOM_REF::renderKPIs: getElementById('pfirePatFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfirePatFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfirePatFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfire_baseBase::DOM_REF::renderKPIs: getElementById('pfire_baseBase') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfire_baseBase",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfire_baseBase' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfire_baseFav::DOM_REF::renderKPIs: getElementById('pfire_baseFav') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfire_baseFav",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfire_baseFav' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfire_baseStress::DOM_REF::renderKPIs: getElementById('pfire_baseStress') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfire_baseStress",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfire_baseStress' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfire_baseBaseBadge::DOM_REF::renderKPIs: getElementById('pfire_baseBaseBadge') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfire_baseBaseBadge",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfire_baseBaseBadge' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfire_baseFavBadge::DOM_REF::renderKPIs: getElementById('pfire_baseFavBadge') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfire_baseFavBadge",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfire_baseFavBadge' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfire_baseStressBadge::DOM_REF::renderKPIs: getElementById('pfire_baseStressBadge') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfire_baseStressBadge",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfire_baseStressBadge' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-pfirePatMeta::DOM_REF::renderKPIs: getElementById('pfirePatMeta') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-pfirePatMeta",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='pfirePatMeta' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-swrFireDayVal::DOM_REF::renderKPIs: getElementById('swrFireDayVal') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-swrFireDayVal",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='swrFireDayVal' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-swrFireDaySub::DOM_REF::renderKPIs: getElementById('swrFireDaySub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-swrFireDaySub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='swrFireDaySub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-savingsRate::DOM_REF::renderKPIs: getElementById('savingsRate') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-savingsRate",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='savingsRate' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-savingsRateFill::DOM_REF::renderKPIs: getElementById('savingsRateFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-savingsRateFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='savingsRateFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-savingsRateSub::DOM_REF::renderKPIs: getElementById('savingsRateSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-savingsRateSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='savingsRateSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-savingsRateNote::DOM_REF::renderKPIs: getElementById('savingsRateNote') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-savingsRateNote",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='savingsRateNote' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-terCarteira::DOM_REF::renderKPIs: getElementById('terCarteira') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-terCarteira",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='terCarteira' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-terCarteiraLabel::DOM_REF::renderKPIs: getElementById('terCarteiraLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-terCarteiraLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='terCarteiraLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-terVwraLabel::DOM_REF::renderKPIs: getElementById('terVwraLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-terVwraLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='terVwraLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-terDeltaLabel::DOM_REF::renderKPIs: getElementById('terDeltaLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-terDeltaLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='terDeltaLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-terCarteiraFill::DOM_REF::renderKPIs: getElementById('terCarteiraFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-terCarteiraFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='terCarteiraFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-terVwraFill::DOM_REF::renderKPIs: getElementById('terVwraFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-terVwraFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='terVwraFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-ipcaTaxaVsPiso::DOM_REF::renderKPIs: getElementById('ipcaTaxaVsPiso') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-ipcaTaxaVsPiso",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='ipcaTaxaVsPiso' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-ipcaTaxaStatus::DOM_REF::renderKPIs: getElementById('ipcaTaxaStatus') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-ipcaTaxaStatus",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='ipcaTaxaStatus' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderKPIs-ipcaTaxaFill::DOM_REF::renderKPIs: getElementById('ipcaTaxaFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderKPIs-ipcaTaxaFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='ipcaTaxaFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-wellnessScore::DOM_REF::renderWellness: getElementById('wellnessScore') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-wellnessScore",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='wellnessScore' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-wellnessLabel::DOM_REF::renderWellness: getElementById('wellnessLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-wellnessLabel",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='wellnessLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-kpiWellnessCompact::DOM_REF::renderWellness: getElementById('kpiWellnessCompact') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-kpiWellnessCompact",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiWellnessCompact' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-kpiWellnessSub::DOM_REF::renderWellness: getElementById('kpiWellnessSub') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-kpiWellnessSub",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='kpiWellnessSub' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-wellnessFill::DOM_REF::renderWellness: getElementById('wellnessFill') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-wellnessFill",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='wellnessFill' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-wellnessGrid::DOM_REF::renderWellness: getElementById('wellnessGrid') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-wellnessGrid",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='wellnessGrid' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderWellness-wellnessActions::DOM_REF::renderWellness: getElementById('wellnessActions') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderWellness-wellnessActions",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='wellnessActions' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildWellnessExtras-wellnessGrid::DOM_REF::buildWellnessExtras: getElementById('wellnessGrid') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildWellnessExtras-wellnessGrid",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='wellnessGrid' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderMacroStatus-macroStatusBadge::DOM_REF::renderMacroStatus: getElementById('macroStatusBadge') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderMacroStatus-macroStatusBadge",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='macroStatusBadge' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildBrasilConcentracao-brasilConcentracao::DOM_REF::buildBrasilConcentracao: getElementById('brasilConcentracao') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildBrasilConcentracao-brasilConcentracao",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='brasilConcentracao' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildMacroCards-macroStrip::DOM_REF::buildMacroCards: getElementById('macroStrip') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildMacroCards-macroStrip",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='macroStrip' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildMacroCards-macroSection::DOM_REF::buildMacroCards: getElementById('macroSection') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildMacroCards-macroSection",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='macroSection' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildDcaStatus-dcaGrid::DOM_REF::buildDcaStatus: getElementById('dcaGrid') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildDcaStatus-dcaGrid",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='dcaGrid' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildDcaStatus-dcaSection::DOM_REF::buildDcaStatus: getElementById('dcaSection') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildDcaStatus-dcaSection",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='dcaSection' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildDcaStatus-dcaAportePriority::DOM_REF::buildDcaStatus: getElementById('dcaAportePriority') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildDcaStatus-dcaAportePriority",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='dcaAportePriority' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildSemaforoPanel-semaforoBody::DOM_REF::buildSemaforoPanel: getElementById('semaforoBody') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildSemaforoPanel-semaforoBody",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='semaforoBody' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildSemaforoPanel-semaforoSummary::DOM_REF::buildSemaforoPanel: getElementById('semaforoSummary') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildSemaforoPanel-semaforoSummary",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='semaforoSummary' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateContrib-contribSlider::DOM_REF::updateContrib: getElementById('contribSlider') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateContrib-contribSlider",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='contribSlider' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2533)"
-    },
-    {
-      "test_id": "dom-ref-updateContrib-contribVal::DOM_REF::updateContrib: getElementById('contribVal') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateContrib-contribVal",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='contribVal' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2539)"
-    },
-    {
-      "test_id": "dom-ref-updateContrib-contribResult::DOM_REF::updateContrib: getElementById('contribResult') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateContrib-contribResult",
-      "category": "DOM_REF",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id='contribResult' ausente do HTML mas null guard detectado em updateContrib (template.html linha 2540)"
     },
     {
       "test_id": "chartjs4-banned-api::RENDER::getPixelForIndex ausente em template.html (removido no Chart.js 4 — causa TypeError silencioso)",
@@ -1283,14 +751,6 @@
       "message": "All 3 eventos have required fields"
     },
     {
-      "test_id": "lumpy-events::RENDER::lumpyEventsSection exists in HTML",
-      "block_id": "lumpy-events",
-      "category": "RENDER",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "lumpyEventsSection present"
-    },
-    {
       "test_id": "pfire-familia::DATA::pfire_base.base consistent with scenario_comparison.base.base",
       "block_id": "pfire-familia",
       "category": "DATA",
@@ -1315,36 +775,12 @@
       "message": "B2: max trilha/realizado=12,551,901 within sane range (meta=8,333,333)"
     },
     {
-      "test_id": "fire-trilha::VALUE::B2 anti-regress: JS _yMax formula present in template",
-      "block_id": "fire-trilha",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B2: _yMax com cap *1.5 e piso *1.1 presentes em buildTrackingFire"
-    },
-    {
-      "test_id": "glide-path::VALUE::B3 anti-regress: null guard for glide data present in template",
-      "block_id": "glide-path",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B3: null guards for g.idades, g.equity, g.ipca_longo with early return present"
-    },
-    {
       "test_id": "net-worth-projection::RENDER::netWorthProjectionChart canvas exists in HTML",
       "block_id": "net-worth-projection",
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
       "message": "netWorthProjectionChart canvas present"
-    },
-    {
-      "test_id": "net-worth-projection::VALUE::B4 anti-regress: JS has _fireSlice filter and _nwYMax cap in template",
-      "block_id": "net-worth-projection",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B4: _fireSlice filter and Y-axis cap present in buildNetWorthProjection()"
     },
     {
       "test_id": "net-worth-projection::DATA::B4 anti-regress: net_worth_projection p50 values in [1M, 200M]",
@@ -1355,22 +791,6 @@
       "message": "B4: p50 range [3,594,491, 33,370,394] within [500k, 200M]"
     },
     {
-      "test_id": "net-worth-projection::VALUE::B5 anti-regress: offsetWidth guard present in buildNetWorthProjection",
-      "block_id": "net-worth-projection",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B5: offsetWidth === 0 guard present in buildNetWorthProjection()"
-    },
-    {
-      "test_id": "glide-path::VALUE::B5 anti-regress: double-RAF pattern in switchTab and _toggleBlock",
-      "block_id": "glide-path",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B5: double-RAF pattern present in both switchTab and _toggleBlock"
-    },
-    {
       "test_id": "what-if-cenarios::DATA::B6 anti-regress: increasing gasto decreases P(success) with fixed patrimonio",
       "block_id": "what-if-cenarios",
       "category": "DATA",
@@ -1379,28 +799,12 @@
       "message": "B6: P(success) monotonically decreasing with gasto: g=180,000→P=0.947, g=220,000→P=0.939, g=250,000→P=0.921, g=270,000→P=0.900, g=300,000→P=0.872"
     },
     {
-      "test_id": "what-if-cenarios::VALUE::B6 anti-regress: interpolateFireMatrix uses patrimonio_gatilho in template",
-      "block_id": "what-if-cenarios",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B6: interpolateFireMatrix uses patrimonio_gatilho (not gasto/swr) as patrimonioRef"
-    },
-    {
       "test_id": "stress-fan-chart::RENDER::stressProjectionChart canvas exists in HTML",
       "block_id": "stress-fan-chart",
       "category": "RENDER",
       "severity": "CRITICAL",
       "passed": true,
       "message": "stressProjectionChart canvas present"
-    },
-    {
-      "test_id": "stress-fan-chart::VALUE::B7 anti-regress: stressProjectionChart has real builder in _chartBuilders",
-      "block_id": "stress-fan-chart",
-      "category": "VALUE",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "B7: stressProjectionChart → buildStressTest() wired correctly in _chartBuilders"
     },
     {
       "test_id": "chartjs4-data-ranges::DATA::fire_trilha presente em data.json com todas as chaves obrigatórias",
@@ -1803,22 +1207,6 @@
       "message": "Band ordering OK: 1.5% < 3.0% < 5.0%"
     },
     {
-      "test_id": "hodl11-status::RENDER::HTML contains hodl11Val element (hodl11 value display)",
-      "block_id": "hodl11-status",
-      "category": "RENDER",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "id=\"hodl11Val\" present in HTML"
-    },
-    {
-      "test_id": "hodl11-status::PRIVACY::hodl11Val element has pv class (privacy wrapper)",
-      "block_id": "hodl11-status",
-      "category": "PRIVACY",
-      "severity": "CRITICAL",
-      "passed": true,
-      "message": "hodl11Val has pv class for privacy masking"
-    },
-    {
       "test_id": "stress-cenarios::DATA::tornado key exists and is a non-empty list",
       "block_id": "stress-cenarios",
       "category": "DATA",
@@ -2104,7 +1492,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (153 elements)"
+      "message": "Privacy .pv class present (66 elements)"
     },
     {
       "test_id": "custo-base-bucket::DATA::drift fields exist for major ETFs",
@@ -2128,7 +1516,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (153 elements)"
+      "message": "Privacy .pv class present (66 elements)"
     },
     {
       "test_id": "minilog::VALUE::timeline.labels and timeline.values have same length",
@@ -2168,7 +1556,7 @@
       "category": "PRIVACY",
       "severity": "CRITICAL",
       "passed": true,
-      "message": "Privacy .pv class present (153 elements), hodl11 present"
+      "message": "Privacy .pv class present (66 elements), hodl11 present"
     },
     {
       "test_id": "reconciliation::DATA::all posicoes have valid drift reference",
@@ -2177,6 +1565,350 @@
       "severity": "CRITICAL",
       "passed": true,
       "message": "all active posicoes buckets ({'SWRD', 'AVEM', 'AVGS'}) have drift (retired: {'JPGL'})"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::geoDonut tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'geoDonut' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::attrChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'attrChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::scenarioChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'scenarioChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::trackingFireChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'trackingFireChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::glideChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'glideChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::netWorthProjectionChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'netWorthProjectionChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::tornadoChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'tornadoChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::deltaChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'deltaChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::fanChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "canvas id='fanChart' not found in index.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::incomeChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'incomeChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::drawdownHistChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'drawdownHistChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::bondPoolRunwayChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'bondPoolRunwayChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::incomeProjectionChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'incomeProjectionChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::rollingSharpChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'rollingSharpChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::rollingIRChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'rollingIRChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::backtestChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'backtestChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::backtestR7Chart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'backtestR7Chart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::shadowChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'shadowChart' not found in template.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::factorRollingChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "canvas id='factorRollingChart' not found in index.html"
+    },
+    {
+      "test_id": "tab-switch-guard::TAB_SWITCH::factorLoadingsChart tem destroy guard antes de new Chart",
+      "block_id": "tab-switch-guard",
+      "category": "TAB_SWITCH",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "new Chart call for 'factorLoadingsChart' not found in template.html"
+    },
+    {
+      "test_id": "dom-ref-buildPosicoes::DOM_REF::buildPosicoes: função encontrada em template.html",
+      "block_id": "dom-ref-buildPosicoes",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildPosicoes' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildBondPool::DOM_REF::buildBondPool: função encontrada em template.html",
+      "block_id": "dom-ref-buildBondPool",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildBondPool' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-renderProximasAcoes::DOM_REF::renderProximasAcoes: função encontrada em template.html",
+      "block_id": "dom-ref-renderProximasAcoes",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'renderProximasAcoes' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildStressTest::DOM_REF::buildStressTest: função encontrada em template.html",
+      "block_id": "dom-ref-buildStressTest",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildStressTest' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-updateFireSim::DOM_REF::updateFireSim: função encontrada em template.html",
+      "block_id": "dom-ref-updateFireSim",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'updateFireSim' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-calcAporte::DOM_REF::calcAporte: função encontrada em template.html",
+      "block_id": "dom-ref-calcAporte",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'calcAporte' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildFireMatrix::DOM_REF::buildFireMatrix: função encontrada em template.html",
+      "block_id": "dom-ref-buildFireMatrix",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildFireMatrix' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildTimestamps::DOM_REF::buildTimestamps: função encontrada em template.html",
+      "block_id": "dom-ref-buildTimestamps",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildTimestamps' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildFactorRolling::DOM_REF::buildFactorRolling: função encontrada em template.html",
+      "block_id": "dom-ref-buildFactorRolling",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildFactorRolling' não encontrada em template.html"
+    },
+    {
+      "test_id": "dom-ref-buildEtfComposition::DOM_REF::buildEtfComposition: função encontrada em template.html",
+      "block_id": "dom-ref-buildEtfComposition",
+      "category": "DOM_REF",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função 'buildEtfComposition' não encontrada em template.html"
+    },
+    {
+      "test_id": "delta-bar::RENDER::buildDeltaBar defined in template and deltaChart canvas in HTML",
+      "block_id": "delta-bar",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "buildDeltaBar not defined in template.html"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-retry::RENDER::buildTrackingFire: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
+      "block_id": "chartjs4-offsetwidth-retry",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função buildTrackingFire não encontrada em template.html"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-retry::RENDER::buildNetWorthProjection: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
+      "block_id": "chartjs4-offsetwidth-retry",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função buildNetWorthProjection não encontrada em template.html"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-guard::RENDER::buildGlidePath: offsetWidth===0 guard presente (seção colapsável)",
+      "block_id": "chartjs4-offsetwidth-guard",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função buildGlidePath não encontrada em template.html"
+    },
+    {
+      "test_id": "chartjs4-offsetwidth-guard::RENDER::buildStressFanChart: offsetWidth===0 guard presente (seção colapsável)",
+      "block_id": "chartjs4-offsetwidth-guard",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "função buildStressFanChart não encontrada em template.html"
+    },
+    {
+      "test_id": "chartjs4-afterdraw-brl::RENDER::buildTrackingFire usa plugin afterDraw com id 'trackingFireDraw' (bypass do dataset renderer)",
+      "block_id": "chartjs4-afterdraw-brl",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "buildTrackingFire não encontrada em template.html"
+    },
+    {
+      "test_id": "chartjs4-afterdraw-brl::RENDER::buildTrackingFire: datasets Projeção/Realizado têm data:[] (rendering via afterDraw, não dataset renderer)",
+      "block_id": "chartjs4-afterdraw-brl",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "buildTrackingFire não encontrada"
+    },
+    {
+      "test_id": "pfire-familia::RENDER::conditional pfire buttons exist in HTML",
+      "block_id": "pfire-familia",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "Conditional pfire buttons missing: ['pcond-aspiracional']"
+    },
+    {
+      "test_id": "glide-path::VALUE::B3 anti-regress: offsetWidth guard present (no build on hidden canvas)",
+      "block_id": "glide-path",
+      "category": "VALUE",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "B3: buildGlidePath() function not found in template"
+    },
+    {
+      "test_id": "factor-rolling-avgs::RENDER::factorRollingChart canvas and factorRollingSection present",
+      "block_id": "factor-rolling-avgs",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "Missing elements: ['factorRollingChart']"
+    },
+    {
+      "test_id": "hodl11-status::RENDER::HTML contains hodl11Sub element (qty/cotas display)",
+      "block_id": "hodl11-status",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "Element id=\"hodl11Sub\" not found in HTML"
+    },
+    {
+      "test_id": "hodl11-status::PRIVACY::hodl11Sub element has pv class (qty/price privacy wrapper)",
+      "block_id": "hodl11-status",
+      "category": "PRIVACY",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "Element id=\"hodl11Sub\" not found — cannot verify privacy"
+    },
+    {
+      "test_id": "cambio-mercado::RENDER::HTML references cambio_brl_usd rendering logic",
+      "block_id": "cambio-mercado",
+      "category": "RENDER",
+      "severity": "HIGH",
+      "passed": false,
+      "message": "HTML missing: JS reference to DATA.cambio"
     },
     {
       "test_id": "spec-global::SPEC::no duplicate block IDs in spec.json",
@@ -2192,7 +1924,7 @@
       "category": "SPEC",
       "severity": "HIGH",
       "passed": true,
-      "message": "All blocks use valid tabs: {'backtest', 'now', 'fire', 'retiro', 'portfolio', 'performance', 'simuladores'}"
+      "message": "All blocks use valid tabs: {'portfolio', 'now', 'backtest', 'fire', 'retiro', 'simuladores', 'performance'}"
     },
     {
       "test_id": "zero-hardcoded::VALUE::build_dashboard.py has no hardcoded patrimonio_atual value",
@@ -2216,7 +1948,7 @@
       "category": "PRIVACY",
       "severity": "HIGH",
       "passed": true,
-      "message": "153 elements with .pv class in HTML"
+      "message": "66 elements with .pv class in HTML"
     },
     {
       "test_id": "privacy-global::PRIVACY::privacy toggle script present in index.html",
@@ -2233,566 +1965,6 @@
       "severity": "HIGH",
       "passed": true,
       "message": "All 10 required canvas elements present"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::geoDonut tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.geo.destroy() before new Chart('geoDonut')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::attrChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.attr.destroy() before new Chart('attrChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::scenarioChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.scenario.destroy() before new Chart('scenarioChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::trackingFireChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.trackingFire.destroy() before new Chart('trackingFireChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::glideChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.glide.destroy() before new Chart('glideChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::netWorthProjectionChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.netWorth.destroy() before new Chart('netWorthProjectionChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::tornadoChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.tornado.destroy() before new Chart('tornadoChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::deltaChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.delta.destroy() before new Chart('deltaChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::fanChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.fan.destroy() before new Chart('fanChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::incomeChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.income.destroy() before new Chart('incomeChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::drawdownHistChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.drawdownHist.destroy() before new Chart('drawdownHistChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::bondPoolRunwayChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.bondPoolRunway.destroy() before new Chart('bondPoolRunwayChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::incomeProjectionChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.incomeProjection.destroy() before new Chart('incomeProjectionChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::rollingSharpChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.rollingSharp.destroy() before new Chart('rollingSharpChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::rollingIRChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.rollingIR.destroy() before new Chart('rollingIRChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::backtestChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.backtest.destroy() before new Chart('backtestChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::backtestR7Chart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.backtestR7.destroy() before new Chart('backtestR7Chart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::shadowChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.shadow.destroy() before new Chart('shadowChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::factorRollingChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.factorRolling.destroy() before new Chart('factorRollingChart')"
-    },
-    {
-      "test_id": "tab-switch-guard::TAB_SWITCH::factorLoadingsChart tem destroy guard antes de new Chart",
-      "block_id": "tab-switch-guard",
-      "category": "TAB_SWITCH",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "guard present — charts.factorLoadings.destroy() before new Chart('factorLoadingsChart')"
-    },
-    {
-      "test_id": "dom-ref-buildPosicoes-ibkrStalenessBadge::DOM_REF::buildPosicoes: getElementById('ibkrStalenessBadge') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildPosicoes-ibkrStalenessBadge",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='ibkrStalenessBadge' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildPosicoes-posBody::DOM_REF::buildPosicoes: getElementById('posBody') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildPosicoes-posBody",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='posBody' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildPosicoes-totalUsd::DOM_REF::buildPosicoes: getElementById('totalUsd') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildPosicoes-totalUsd",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='totalUsd' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildPosicoes-totalBrl::DOM_REF::buildPosicoes: getElementById('totalBrl') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildPosicoes-totalBrl",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='totalBrl' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildBondPool-bondPoolBody::DOM_REF::buildBondPool: getElementById('bondPoolBody') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildBondPool-bondPoolBody",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='bondPoolBody' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildBondPool-bondPoolSection::DOM_REF::buildBondPool: getElementById('bondPoolSection') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildBondPool-bondPoolSection",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='bondPoolSection' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-renderProximasAcoes-proximasAcoesBody::DOM_REF::renderProximasAcoes: getElementById('proximasAcoesBody') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderProximasAcoes-proximasAcoesBody",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='proximasAcoesBody' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5754)"
-    },
-    {
-      "test_id": "dom-ref-renderProximasAcoes-proximasAcoes::DOM_REF::renderProximasAcoes: getElementById('proximasAcoes') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-renderProximasAcoes-proximasAcoes",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='proximasAcoes' ausente do HTML mas null guard detectado em renderProximasAcoes (template.html linha 5789)"
-    },
-    {
-      "test_id": "dom-ref-buildStressTest-stressPatShock::DOM_REF::buildStressTest: getElementById('stressPatShock') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildStressTest-stressPatShock",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='stressPatShock' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildStressTest-stressTestBody::DOM_REF::buildStressTest: getElementById('stressTestBody') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildStressTest-stressTestBody",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='stressTestBody' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildStressTest-stressOnsetAge::DOM_REF::buildStressTest: getElementById('stressOnsetAge') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildStressTest-stressOnsetAge",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='stressOnsetAge' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simAporte::DOM_REF::updateFireSim: getElementById('simAporte') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simAporte",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simAporte' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simRetorno::DOM_REF::updateFireSim: getElementById('simRetorno') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simRetorno",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simRetorno' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simCusto::DOM_REF::updateFireSim: getElementById('simCusto') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simCusto",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simCusto' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simAporteVal::DOM_REF::updateFireSim: getElementById('simAporteVal') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simAporteVal",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simAporteVal' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simRetornoVal::DOM_REF::updateFireSim: getElementById('simRetornoVal') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simRetornoVal",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simRetornoVal' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simCustoVal::DOM_REF::updateFireSim: getElementById('simCustoVal') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simCustoVal",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simCustoVal' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simFireAno::DOM_REF::updateFireSim: getElementById('simFireAno') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simFireAno",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simFireAno' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simFireIdade::DOM_REF::updateFireSim: getElementById('simFireIdade') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simFireIdade",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simFireIdade' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simFirePfire::DOM_REF::updateFireSim: getElementById('simFirePfire') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simFirePfire",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simFirePfire' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simFireDiff::DOM_REF::updateFireSim: getElementById('simFireDiff') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simFireDiff",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simFireDiff' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simPfire50::DOM_REF::updateFireSim: getElementById('simPfire50') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simPfire50",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simPfire50' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simPfire53::DOM_REF::updateFireSim: getElementById('simPfire53') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simPfire53",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simPfire53' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simPatFire::DOM_REF::updateFireSim: getElementById('simPatFire') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simPatFire",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simPatFire' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simTimelinePin::DOM_REF::updateFireSim: getElementById('simTimelinePin') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simTimelinePin",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simTimelinePin' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simTimelineBar::DOM_REF::updateFireSim: getElementById('simTimelineBar') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simTimelineBar",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simTimelineBar' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simTimelineLabelFire::DOM_REF::updateFireSim: getElementById('simTimelineLabelFire') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simTimelineLabelFire",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simTimelineLabelFire' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-updateFireSim-simTimelineLabelL::DOM_REF::updateFireSim: getElementById('simTimelineLabelL') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-updateFireSim-simTimelineLabelL",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='simTimelineLabelL' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-calcAporte-calcAporteNum::DOM_REF::calcAporte: getElementById('calcAporteNum') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-calcAporte-calcAporteNum",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='calcAporteNum' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-calcAporte-calcAporte::DOM_REF::calcAporte: getElementById('calcAporte') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-calcAporte-calcAporte",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='calcAporte' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-calcAporte-calcAporteLabel::DOM_REF::calcAporte: getElementById('calcAporteLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-calcAporte-calcAporteLabel",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='calcAporteLabel' ausente do HTML mas null guard detectado em calcAporte (template.html linha 2909)"
-    },
-    {
-      "test_id": "dom-ref-calcAporte-calcCambioLabel::DOM_REF::calcAporte: getElementById('calcCambioLabel') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-calcAporte-calcCambioLabel",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='calcCambioLabel' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-calcAporte-calcResult::DOM_REF::calcAporte: getElementById('calcResult') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-calcAporte-calcResult",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='calcResult' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildFireMatrix-fireMatrixSection::DOM_REF::buildFireMatrix: getElementById('fireMatrixSection') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildFireMatrix-fireMatrixSection",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='fireMatrixSection' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildFireMatrix-fireMatrixTable::DOM_REF::buildFireMatrix: getElementById('fireMatrixTable') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildFireMatrix-fireMatrixTable",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='fireMatrixTable' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildTimestamps-timestampsBar::DOM_REF::buildTimestamps: getElementById('timestampsBar') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildTimestamps-timestampsBar",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='timestampsBar' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildFactorRolling-factorRollingSection::DOM_REF::buildFactorRolling: getElementById('factorRollingSection') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildFactorRolling-factorRollingSection",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='factorRollingSection' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildFactorRolling-factorRollingBody::DOM_REF::buildFactorRolling: getElementById('factorRollingBody') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildFactorRolling-factorRollingBody",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='factorRollingBody' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildFactorRolling-factorRollingChart::DOM_REF::buildFactorRolling: getElementById('factorRollingChart') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildFactorRolling-factorRollingChart",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='factorRollingChart' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildEtfComposition-etfRegionTable::DOM_REF::buildEtfComposition: getElementById('etfRegionTable') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildEtfComposition-etfRegionTable",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='etfRegionTable' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildEtfComposition-etfVemTable::DOM_REF::buildEtfComposition: getElementById('etfVemTable') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildEtfComposition-etfVemTable",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='etfVemTable' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildEtfComposition-etfFactorTable::DOM_REF::buildEtfComposition: getElementById('etfFactorTable') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildEtfComposition-etfFactorTable",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='etfFactorTable' presente em index.html"
-    },
-    {
-      "test_id": "dom-ref-buildEtfComposition-etfCompSection::DOM_REF::buildEtfComposition: getElementById('etfCompSection') existe no DOM ou tem null guard",
-      "block_id": "dom-ref-buildEtfComposition-etfCompSection",
-      "category": "DOM_REF",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id='etfCompSection' presente em index.html"
-    },
-    {
-      "test_id": "delta-bar::RENDER::buildDeltaBar defined in template and deltaChart canvas in HTML",
-      "block_id": "delta-bar",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "buildDeltaBar defined and deltaChart canvas present"
-    },
-    {
-      "test_id": "chartjs4-offsetwidth-retry::RENDER::buildTrackingFire: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
-      "block_id": "chartjs4-offsetwidth-retry",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "buildTrackingFire: offsetWidth guard + setTimeout retry presentes"
-    },
-    {
-      "test_id": "chartjs4-offsetwidth-retry::RENDER::buildNetWorthProjection: offsetWidth===0 guard + setTimeout retry (seção não-colapsável, mobile)",
-      "block_id": "chartjs4-offsetwidth-retry",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "buildNetWorthProjection: offsetWidth guard + setTimeout retry presentes"
-    },
-    {
-      "test_id": "chartjs4-offsetwidth-guard::RENDER::buildGlidePath: offsetWidth===0 guard presente (seção colapsável)",
-      "block_id": "chartjs4-offsetwidth-guard",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "buildGlidePath: offsetWidth===0 guard presente"
-    },
-    {
-      "test_id": "chartjs4-offsetwidth-guard::RENDER::buildStressFanChart: offsetWidth===0 guard presente (seção colapsável)",
-      "block_id": "chartjs4-offsetwidth-guard",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "buildStressFanChart: offsetWidth===0 guard presente"
-    },
-    {
-      "test_id": "chartjs4-afterdraw-brl::RENDER::buildTrackingFire usa plugin afterDraw com id 'trackingFireDraw' (bypass do dataset renderer)",
-      "block_id": "chartjs4-afterdraw-brl",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "buildTrackingFire: trackingFireDraw + afterDraw + getPixelForValue presentes"
-    },
-    {
-      "test_id": "chartjs4-afterdraw-brl::RENDER::buildTrackingFire: datasets Projeção/Realizado têm data:[] (rendering via afterDraw, não dataset renderer)",
-      "block_id": "chartjs4-afterdraw-brl",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "Projeção e Realizado com data:[] — rendering correto via afterDraw"
     },
     {
       "test_id": "tab-structure::RENDER::todas as seções collapsible têm data-in-tab atributo válido",
@@ -3563,28 +2735,12 @@
       "message": "3/3 eventos have 'confirmado' field"
     },
     {
-      "test_id": "pfire-familia::RENDER::conditional pfire buttons exist in HTML",
-      "block_id": "pfire-familia",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "Conditional pfire scenario buttons present"
-    },
-    {
       "test_id": "pfire-familia::VALUE::pfire_base base not hardcoded in build script",
       "block_id": "pfire-familia",
       "category": "VALUE",
       "severity": "HIGH",
       "passed": true,
       "message": "pfire_base.base=90.4 not hardcoded as dict literal"
-    },
-    {
-      "test_id": "glide-path::VALUE::B3 anti-regress: offsetWidth guard present (no build on hidden canvas)",
-      "block_id": "glide-path",
-      "category": "VALUE",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "B3: offsetWidth guard present in buildGlidePath()"
     },
     {
       "test_id": "chartjs4-data-ranges::DATA::fire_trilha.meta_fire_brl: entre R$5M e R$50M (meta FIRE plausível)",
@@ -3979,14 +3135,6 @@
       "message": "No hardcoded factor loading values in build script"
     },
     {
-      "test_id": "factor-rolling-avgs::RENDER::factorRollingChart canvas and factorRollingSection present",
-      "block_id": "factor-rolling-avgs",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "factorRollingChart and factorRollingSection found"
-    },
-    {
       "test_id": "factor-rolling-avgs::VALUE::threshold is negative (convention: negative = factor drought trigger)",
       "block_id": "factor-rolling-avgs",
       "category": "VALUE",
@@ -4099,28 +3247,12 @@
       "message": "hodl11.banda.status='verde' is valid"
     },
     {
-      "test_id": "hodl11-status::RENDER::HTML contains hodl11Sub element (qty/cotas display)",
-      "block_id": "hodl11-status",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "id=\"hodl11Sub\" present in HTML"
-    },
-    {
       "test_id": "hodl11-status::RENDER::HTML contains hodl-band-marker class (band visualization)",
       "block_id": "hodl11-status",
       "category": "RENDER",
       "severity": "HIGH",
       "passed": true,
       "message": "'hodl-band-marker' present in HTML"
-    },
-    {
-      "test_id": "hodl11-status::PRIVACY::hodl11Sub element has pv class (qty/price privacy wrapper)",
-      "block_id": "hodl11-status",
-      "category": "PRIVACY",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "hodl11Sub has pv class for privacy masking"
     },
     {
       "test_id": "hodl11-status::SPEC::spec.json declares hodl11-status as privacy: true",
@@ -4257,14 +3389,6 @@
       "severity": "HIGH",
       "passed": true,
       "message": "cambio_mtd_pct=-3.11%"
-    },
-    {
-      "test_id": "cambio-mercado::RENDER::HTML references cambio_brl_usd rendering logic",
-      "block_id": "cambio-mercado",
-      "category": "RENDER",
-      "severity": "HIGH",
-      "passed": true,
-      "message": "All cambio-mercado render anchors present"
     },
     {
       "test_id": "exposicao-cambial::DATA::concentracao_brasil.brasil_pct exists and is a number",
@@ -4560,7 +3684,7 @@
       "category": "RENDER",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "24 canvas elements all have IDs"
+      "message": "23 canvas elements all have IDs"
     },
     {
       "test_id": "coverage-global::SPEC::block count in spec matches expected ~72",
@@ -4616,7 +3740,7 @@
       "category": "RENDER",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "CSS tem proteção responsiva para 22 tabelas (display:block; overflow-x:auto;)"
+      "message": "CSS tem proteção responsiva para 8 tabelas (display:block; overflow-x:auto;)"
     },
     {
       "test_id": "kpi-grid-primario::VALUE::bond_pool anos_gastos is a non-negative float",
@@ -4976,7 +4100,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "cambio-mercado spec OK, fields={'cambio', 'mercado.cambio_mtd_pct', 'mercado.cambio_brl_usd'}"
+      "message": "cambio-mercado spec OK, fields={'mercado.cambio_brl_usd', 'cambio', 'mercado.cambio_mtd_pct'}"
     },
     {
       "test_id": "exposicao-cambial::SPEC::spec.json defines exposicao-cambial with required data_fields",
@@ -4984,7 +4108,7 @@
       "category": "SPEC",
       "severity": "MEDIUM",
       "passed": true,
-      "message": "exposicao-cambial spec OK, fields={'cambio', 'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct'}"
+      "message": "exposicao-cambial spec OK, fields={'concentracao_brasil.brasil_pct', 'concentracao_brasil.total_portfolio_brl', 'macro.exposicao_cambial_pct', 'cambio'}"
     },
     {
       "test_id": "ir-diferido::SPEC::tax regime references Lei 14.754/2023 ACC UCITS deferral",

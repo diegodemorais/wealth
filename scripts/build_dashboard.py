@@ -843,12 +843,25 @@ def build(data_path: Path, template_path: Path, out_path: Path,
     data["version"] = version_str
     data_js = _build_data_js(data, generated_at, version_str)
 
-    # 6. Montar módulos JavaScript
-    js_modules = _assemble_js()
+    # 6. Copiar ou gerar bootstrap.mjs como arquivo separado
+    bootstrap_src = ROOT / "dashboard" / "js" / "bootstrap.mjs"
+    bootstrap_dst = out_path.parent / "bootstrap.mjs"
+    if bootstrap_src.exists():
+      bootstrap_dst.write_text(bootstrap_src.read_text(encoding="utf-8"), encoding="utf-8")
+      print(f"   Copiado: bootstrap.mjs ({bootstrap_dst.stat().st_size:,} bytes)")
+    else:
+      # Fallback: gerar bootstrap inline (compatibilidade)
+      js_modules = _assemble_js()
+      html_module_ref = js_modules
 
     # 7. Substituir placeholders
     html = template.replace(PLACEHOLDER, data_js, 1)
-    html = html.replace("__JS_MODULES_PLACEHOLDER__", js_modules, 1)
+    if bootstrap_src.exists():
+      # Usar módulo separado
+      html = html.replace("__JS_MODULES_PLACEHOLDER__", '<script type="module" src="./bootstrap.mjs"></script>', 1)
+    else:
+      # Fallback: concatenação
+      html = html.replace("__JS_MODULES_PLACEHOLDER__", html_module_ref, 1)
 
     # 8. Escrever output
     out_path.parent.mkdir(parents=True, exist_ok=True)
