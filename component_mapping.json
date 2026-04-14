@@ -1,0 +1,46 @@
+{
+  "backtestR7Section": {
+    "tab": "backtest",
+    "spec_tab": "backtest"
+  },
+  "drawdownHistSection": {
+    "tab": "backtest",
+    "spec_tab": "backtest"
+  },
+  "etfCompSection": {
+    "tab": "carteira",
+    "spec_tab": "portfolio"
+  },
+  "etfFactorSection": {
+    "tab": "carteira",
+    "spec_tab": "portfolio"
+  },
+  "stackedAllocSection": {
+    "tab": "carteira",
+    "spec_tab": "portfolio"
+  },
+  "fireMatrixSection": {
+    "tab": "fire",
+    "spec_tab": "fire"
+  },
+  "trackingFireSection": {
+    "tab": "fire",
+    "spec_tab": "fire"
+  },
+  "macroSection": {
+    "tab": "hoje",
+    "spec_tab": "now"
+  },
+  "semaforoPanel": {
+    "tab": "hoje",
+    "spec_tab": "now"
+  },
+  "premissasVsRealizadoSection": {
+    "tab": "perf",
+    "spec_tab": "performance"
+  },
+  "swrPercentilesSection": {
+    "tab": "retiro",
+    "spec_tab": "retiro"
+  }
+}

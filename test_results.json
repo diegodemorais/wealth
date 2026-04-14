@@ -1,0 +1,530 @@
+{
+  "patrimonio-total-hero": {
+    "tab": "now",
+    "label": "Patrimônio Total",
+    "type": "kpi-hero",
+    "status": {
+      "found": false
+    }
+  },
+  "pfire-hero": {
+    "tab": "now",
+    "label": "P(FIRE) — Cenários",
+    "type": "kpi-hero",
+    "status": {
+      "found": false
+    }
+  },
+  "kpi-grid-primario": {
+    "tab": "now",
+    "label": "KPIs Primários — S1",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "kpi-grid-mercado": {
+    "tab": "now",
+    "label": "KPIs de Mercado — S2",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "fire-countdown": {
+    "tab": "now",
+    "label": "Time to FIRE — Countdown",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "wellness-score": {
+    "tab": "now",
+    "label": "Financial Wellness Score",
+    "type": "card",
+    "status": {
+      "found": false
+    }
+  },
+  "savings-rate": {
+    "tab": "now",
+    "label": "Savings Rate",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "ter-carteira": {
+    "tab": "now",
+    "label": "TER da Carteira",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "factor-signal-kpi": {
+    "tab": "now",
+    "label": "Factor Signal — AVGS vs SWRD",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "drift-maximo-kpi": {
+    "tab": "now",
+    "label": "Drift Máximo vs Alvo",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "ipca-dca-semaforo": {
+    "tab": "now",
+    "label": "IPCA+ 2040 & 2050 — DCA Status",
+    "type": "semaforo",
+    "status": {
+      "found": false
+    }
+  },
+  "renda-plus-semaforo": {
+    "tab": "now",
+    "label": "Renda+ 2065 — Distância do Gatilho",
+    "type": "semaforo",
+    "status": {
+      "found": false
+    }
+  },
+  "bond-pool-strip": {
+    "tab": "now",
+    "label": "Bond Pool — Cobertura",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "hodl11-status": {
+    "tab": "now",
+    "label": "HODL11 — Status e Banda",
+    "type": "semaforo",
+    "status": {
+      "found": false
+    }
+  },
+  "macro-strip": {
+    "tab": "now",
+    "label": "Macro — Selic / Fed Funds / Spread",
+    "type": "semaforo",
+    "status": {
+      "found": false
+    }
+  },
+  "exposicao-cambial": {
+    "tab": "now",
+    "label": "Exposição Cambial BRL/USD",
+    "type": "gauge",
+    "status": {
+      "found": false
+    }
+  },
+  "stress-cenarios": {
+    "tab": "now",
+    "label": "Stress Test — Tornado",
+    "type": "chart-bar-horizontal",
+    "status": {
+      "found": false
+    }
+  },
+  "cambio-mercado": {
+    "tab": "now",
+    "label": "Câmbio BRL/USD",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "drift-semaforo-etf": {
+    "tab": "portfolio",
+    "label": "Drift por ETF",
+    "type": "semaforo",
+    "status": {
+      "found": false
+    }
+  },
+  "intra-equity-pesos": {
+    "tab": "portfolio",
+    "label": "Intra-Equity — Pesos vs Alvo",
+    "type": "chart-bar",
+    "status": {
+      "found": false
+    }
+  },
+  "geo-donut": {
+    "tab": "portfolio",
+    "label": "Exposição Geográfica (Donut)",
+    "type": "chart-donut",
+    "status": {
+      "found": false
+    }
+  },
+  "stacked-alloc": {
+    "tab": "portfolio",
+    "label": "Alocação — Barras Empilhadas",
+    "type": "chart-bar",
+    "status": {
+      "found": false
+    }
+  },
+  "etf-composicao-regiao": {
+    "tab": "portfolio",
+    "label": "Composição por Região e Fator",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "posicoes-etfs-ibkr": {
+    "tab": "portfolio",
+    "label": "Posições — ETFs Internacionais",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "custo-base-bucket": {
+    "tab": "portfolio",
+    "label": "Base de Custo — por Bucket",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "calc-aporte": {
+    "tab": "simuladores",
+    "label": "Calculadora de Aporte",
+    "type": "slider",
+    "status": {
+      "found": false
+    }
+  },
+  "minilog": {
+    "tab": "portfolio",
+    "label": "Últimas Operações",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "tlh-monitor": {
+    "tab": "portfolio",
+    "label": "TLH Monitor — Lotes e P&L",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "ir-diferido": {
+    "tab": "portfolio",
+    "label": "IR Diferido por ETF",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "rf-posicoes": {
+    "tab": "portfolio",
+    "label": "Renda Fixa — Posições",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "duration-renda-plus": {
+    "tab": "portfolio",
+    "label": "Duration — Renda+ 2065",
+    "type": "card",
+    "status": {
+      "found": false
+    }
+  },
+  "evolucao-carteira": {
+    "tab": "performance",
+    "label": "Evolução Patrimonial",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "backtest-metricas": {
+    "tab": "backtest",
+    "label": "Backtest Histórico — Métricas",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "shadow-portfolios": {
+    "tab": "backtest",
+    "label": "Shadow Portfolios — Retorno Acumulado",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "alpha-itd-swrd": {
+    "tab": "performance",
+    "label": "Alpha ITD vs SWRD",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "cagr-patrimonial-twr": {
+    "tab": "performance",
+    "label": "CAGR Patrimonial vs TWR",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "backtest-regime-longo": {
+    "tab": "backtest",
+    "label": "Backtest Longo — Regime 5-7",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "factor-loadings-chart": {
+    "tab": "performance",
+    "label": "Factor Loadings — FF5 + Momentum",
+    "type": "chart-bar-horizontal",
+    "status": {
+      "found": false
+    }
+  },
+  "factor-rolling-avgs": {
+    "tab": "performance",
+    "label": "Rolling 12m — AVGS vs SWRD",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "retorno-decomposicao": {
+    "tab": "performance",
+    "label": "Decomposição de Retorno",
+    "type": "waterfall",
+    "status": {
+      "found": false
+    }
+  },
+  "heatmap-retornos": {
+    "tab": "performance",
+    "label": "Heatmap — Retornos Mensais",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "rolling-sharpe": {
+    "tab": "performance",
+    "label": "Rolling Sharpe 12m",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "information-ratio": {
+    "tab": "performance",
+    "label": "Information Ratio vs VWRA",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "drawdown-historico": {
+    "tab": "backtest",
+    "label": "Drawdown Histórico",
+    "type": "chart-area",
+    "status": {
+      "found": false
+    }
+  },
+  "hodl11-pnl": {
+    "tab": "performance",
+    "label": "HODL11 — P&L e Custo Médio",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "fee-custo-complexidade": {
+    "tab": "performance",
+    "label": "Fee Analysis — Custo vs Alpha",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "fire-trilha": {
+    "tab": "fire",
+    "label": "Trilha FIRE — Realizado vs Projetado",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "net-worth-projection": {
+    "tab": "fire",
+    "label": "Projeção Patrimônio P10/P50/P90",
+    "type": "fan-chart",
+    "status": {
+      "found": false
+    }
+  },
+  "fire-matrix": {
+    "tab": "fire",
+    "label": "FIRE Matrix — P(Sucesso) × Gasto",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "guardrails-retirada": {
+    "tab": "retiro",
+    "label": "Guardrails de Retirada",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "swr-percentis": {
+    "tab": "retiro",
+    "label": "SWR no FIRE Day — Percentis",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "spending-breakdown": {
+    "tab": "retiro",
+    "label": "Spending — Essenciais vs Discricionários",
+    "type": "card",
+    "status": {
+      "found": false
+    }
+  },
+  "income-fases": {
+    "tab": "retiro",
+    "label": "Renda na Aposentadoria — Fases",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "glide-path": {
+    "tab": "fire",
+    "label": "Glide Path — Alocação por Idade",
+    "type": "chart-area",
+    "status": {
+      "found": false
+    }
+  },
+  "bond-pool-readiness": {
+    "tab": "retiro",
+    "label": "Bond Pool — Readiness Detail",
+    "type": "gauge",
+    "status": {
+      "found": false
+    }
+  },
+  "bond-pool-runway": {
+    "tab": "retiro",
+    "label": "Bond Pool — Projeção até FIRE Day",
+    "type": "chart-area",
+    "status": {
+      "found": false
+    }
+  },
+  "simulador-fire": {
+    "tab": "fire",
+    "label": "Simulador FIRE — Interativo",
+    "type": "slider",
+    "status": {
+      "found": false
+    }
+  },
+  "what-if-cenarios": {
+    "tab": "fire",
+    "label": "What-If Scenarios — Gasto vs P(FIRE)",
+    "type": "slider",
+    "status": {
+      "found": false
+    }
+  },
+  "stress-test-mc": {
+    "tab": "simuladores",
+    "label": "Stress Test MC — Bear Market",
+    "type": "slider",
+    "status": {
+      "found": false
+    }
+  },
+  "earliest-fire": {
+    "tab": "fire",
+    "label": "Earliest FIRE Date",
+    "type": "kpi",
+    "status": {
+      "found": false
+    }
+  },
+  "tornado-sensitivity": {
+    "tab": "now",
+    "label": "Tornado — Sensibilidade por Variável",
+    "type": "chart-bar-horizontal",
+    "status": {
+      "found": false
+    }
+  },
+  "income-lifecycle": {
+    "tab": "retiro",
+    "label": "Projeção de Renda — Ciclo de Vida",
+    "type": "chart-line",
+    "status": {
+      "found": false
+    }
+  },
+  "sankey-cashflow": {
+    "tab": "retiro",
+    "label": "Sankey — Fluxo de Caixa Anual",
+    "type": "chart-area",
+    "status": {
+      "found": false
+    }
+  },
+  "eventos-vida": {
+    "tab": "fire",
+    "label": "Eventos de Vida — Impacto no Plano",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "lumpy-events": {
+    "tab": "fire",
+    "label": "Lumpy Events — Gastos Grandes",
+    "type": "table",
+    "status": {
+      "found": false
+    }
+  },
+  "pfire-familia": {
+    "tab": "fire",
+    "label": "P(FIRE) — Cenários de Família",
+    "type": "card",
+    "status": {
+      "found": false
+    }
+  }
+}

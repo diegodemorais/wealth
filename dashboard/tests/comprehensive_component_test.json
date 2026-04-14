@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-14T08:57:57.414Z",
+  "timestamp": "2026-04-14T09:11:30.481Z",
   "summary": {
     "total": 66,
-    "pass": 17,
-    "hidden": 7,
-    "empty": 26,
-    "missing": 16
+    "pass": 31,
+    "hidden": 4,
+    "empty": 8,
+    "missing": 23
   },
   "components": [
     {
@@ -15,10 +15,10 @@
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
+      "rendered": true,
       "structure": "canvas-element",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "backtest-regime-longo",
@@ -51,10 +51,10 @@
       "type": "chart-line",
       "found": true,
       "visible": true,
-      "rendered": false,
+      "rendered": true,
       "structure": "canvas-element",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "earliest-fire",
@@ -63,10 +63,10 @@
       "type": "kpi",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "eventos-vida",
@@ -82,27 +82,27 @@
     },
     {
       "specId": "fire-matrix",
-      "htmlId": "wiFireEta",
+      "htmlId": "fireMatrixTable",
       "label": "FIRE Matrix — P(Sucesso) × Gasto",
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "table",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "fire-trilha",
-      "htmlId": "wiFireEta",
+      "htmlId": "—",
       "label": "Trilha FIRE — Realizado vs Projetado",
       "type": "chart-line",
-      "found": true,
-      "visible": true,
+      "found": false,
+      "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     },
     {
       "specId": "glide-path",
@@ -111,10 +111,10 @@
       "type": "chart-area",
       "found": true,
       "visible": true,
-      "rendered": false,
+      "rendered": true,
       "structure": "canvas-element",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "lumpy-events",
@@ -147,22 +147,22 @@
       "type": "card",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "simulador-fire",
-      "htmlId": "wiFireEta",
+      "htmlId": "—",
       "label": "Simulador FIRE — Interativo",
       "type": "slider",
-      "found": true,
-      "visible": true,
+      "found": false,
+      "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     },
     {
       "specId": "what-if-cenarios",
@@ -183,8 +183,8 @@
       "type": "kpi",
       "found": true,
       "visible": false,
-      "rendered": false,
-      "structure": "empty",
+      "rendered": true,
+      "structure": "text-content",
       "statusChar": "🙈",
       "statusText": "HIDDEN"
     },
@@ -196,7 +196,7 @@
       "found": true,
       "visible": true,
       "rendered": true,
-      "structure": "html-structure",
+      "structure": "text-content",
       "statusChar": "✅",
       "statusText": "OK"
     },
@@ -207,10 +207,10 @@
       "type": "kpi",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "exposicao-cambial",
@@ -231,8 +231,8 @@
       "type": "kpi",
       "found": true,
       "visible": false,
-      "rendered": false,
-      "structure": "empty",
+      "rendered": true,
+      "structure": "text-content",
       "statusChar": "🙈",
       "statusText": "HIDDEN"
     },
@@ -280,7 +280,7 @@
       "found": true,
       "visible": true,
       "rendered": true,
-      "structure": "html-structure",
+      "structure": "text-content",
       "statusChar": "✅",
       "statusText": "OK"
     },
@@ -315,10 +315,10 @@
       "type": "kpi-hero",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "pfire-hero",
@@ -327,10 +327,10 @@
       "type": "kpi-hero",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "renda-plus-semaforo",
@@ -351,10 +351,10 @@
       "type": "kpi",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "stress-cenarios",
@@ -363,10 +363,10 @@
       "type": "chart-bar-horizontal",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "ter-carteira",
@@ -375,8 +375,8 @@
       "type": "kpi",
       "found": true,
       "visible": false,
-      "rendered": false,
-      "structure": "empty",
+      "rendered": true,
+      "structure": "text-content",
       "statusChar": "🙈",
       "statusText": "HIDDEN"
     },
@@ -387,10 +387,10 @@
       "type": "chart-bar-horizontal",
       "found": true,
       "visible": true,
-      "rendered": false,
+      "rendered": true,
       "structure": "canvas-element",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "wellness-score",
@@ -399,10 +399,10 @@
       "type": "card",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "alpha-itd-swrd",
@@ -430,15 +430,15 @@
     },
     {
       "specId": "evolucao-carteira",
-      "htmlId": "terCarteira",
+      "htmlId": "—",
       "label": "Evolução Patrimonial",
       "type": "chart-line",
-      "found": true,
+      "found": false,
       "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     },
     {
       "specId": "factor-loadings-chart",
@@ -591,10 +591,10 @@
       "type": "chart-donut",
       "found": true,
       "visible": true,
-      "rendered": false,
+      "rendered": true,
       "structure": "canvas-element",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "intra-equity-pesos",
@@ -664,7 +664,7 @@
       "found": true,
       "visible": true,
       "rendered": true,
-      "structure": "html-structure",
+      "structure": "text-content",
       "statusChar": "✅",
       "statusText": "OK"
     },
@@ -682,27 +682,27 @@
     },
     {
       "specId": "bond-pool-readiness",
-      "htmlId": "kpiBondPool",
+      "htmlId": "—",
       "label": "Bond Pool — Readiness Detail",
       "type": "gauge",
-      "found": true,
+      "found": false,
       "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     },
     {
       "specId": "bond-pool-runway",
-      "htmlId": "kpiBondPool",
+      "htmlId": "—",
       "label": "Bond Pool — Projeção até FIRE Day",
       "type": "chart-area",
-      "found": true,
+      "found": false,
       "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "🙈",
-      "statusText": "HIDDEN"
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     },
     {
       "specId": "guardrails-retirada",
@@ -730,15 +730,15 @@
     },
     {
       "specId": "income-lifecycle",
-      "htmlId": "incomeSrc",
+      "htmlId": "—",
       "label": "Projeção de Renda — Ciclo de Vida",
       "type": "chart-line",
-      "found": true,
-      "visible": true,
-      "rendered": true,
-      "structure": "text-content",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "found": false,
+      "visible": false,
+      "rendered": false,
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     },
     {
       "specId": "sankey-cashflow",
@@ -759,7 +759,7 @@
       "type": "card",
       "found": true,
       "visible": false,
-      "rendered": false,
+      "rendered": true,
       "structure": "canvas-element",
       "statusChar": "🙈",
       "statusText": "HIDDEN"
@@ -771,10 +771,10 @@
       "type": "kpi",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "calc-aporte",
@@ -790,15 +790,15 @@
     },
     {
       "specId": "stress-test-mc",
-      "htmlId": "pmkt-stress",
+      "htmlId": "—",
       "label": "Stress Test MC — Bear Market",
       "type": "slider",
-      "found": true,
-      "visible": true,
+      "found": false,
+      "visible": false,
       "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "structure": "N/A",
+      "statusChar": "❌",
+      "statusText": "NO HTML ID"
     }
   ]
 }

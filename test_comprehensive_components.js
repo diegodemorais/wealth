@@ -136,11 +136,32 @@ server.listen(PORT, async () => {
           const hasSvg = !!el.querySelector('svg');
           const hasInput = !!el.querySelector('input');
           const hasSelect = !!el.querySelector('select');
-          const hasContent = el.textContent.trim().length > 20;
+          const textContent = el.textContent.trim();
+          const hasContent = textContent.length > 0;
+          const hasContentLong = textContent.length > 20;
           const hasChildren = el.children.length > 0;
 
           const isVisible = window.getComputedStyle(el).display !== 'none' &&
                            window.getComputedStyle(el).visibility !== 'hidden';
+
+          // Check if canvas has rendered content (via imageData)
+          let canvasHasData = false;
+          if (isCanvas) {
+            try {
+              const imageData = el.toDataURL('image/png');
+              canvasHasData = imageData.length > 300; // Non-empty PNG > 300 chars
+            } catch (e) {
+              canvasHasData = false;
+            }
+          } else if (hasCanvas) {
+            try {
+              const canvas = el.querySelector('canvas');
+              const imageData = canvas.toDataURL('image/png');
+              canvasHasData = imageData.length > 300;
+            } catch (e) {
+              canvasHasData = false;
+            }
+          }
 
           let structureType = 'unknown';
           if (isCanvas) structureType = 'canvas-element';
@@ -148,17 +169,39 @@ server.listen(PORT, async () => {
           else if (hasTable) structureType = 'table';
           else if (hasSvg) structureType = 'svg';
           else if (hasInput || hasSelect) structureType = 'input';
-          else if (hasContent) structureType = 'text-content';
+          else if (hasContentLong) structureType = 'text-content';
+          else if (hasContent) structureType = 'text-content';  // Even short text is text-content
           else if (hasChildren) structureType = 'html-structure';
           else structureType = 'empty';
 
-          const isRendered = hasCanvas || hasTable || hasSvg || hasInput || hasSelect || hasContent || (hasChildren && structureType !== 'empty');
+          // For charts: use canvasHasData.
+          // For tables: check for rows OR content
+          // For KPIs/cards: check for any non-whitespace content (>0, not just >20)
+          // For others: use standard checks
+          let isRendered = false;
+          if (canvasHasData) {
+            isRendered = true;
+          } else if (hasTable) {
+            const tableRows = el.querySelectorAll('tbody tr, tr').length;
+            isRendered = tableRows > 0 || hasContent;
+          } else if (hasSvg) {
+            isRendered = true;
+          } else if (hasInput || hasSelect) {
+            isRendered = true;
+          } else if (structureType === 'text-content') {
+            // For text content (KPIs, values, etc), accept anything > 0 chars
+            isRendered = hasContent;
+          } else if (structureType === 'html-structure') {
+            isRendered = true;
+          }
+          isRendered = isRendered || hasContentLong;
 
           return {
             found: true,
             visible: isVisible,
             rendered: isRendered,
-            structure: structureType
+            structure: structureType,
+            canvasHasData: canvasHasData
           };
         }, htmlId);
 
