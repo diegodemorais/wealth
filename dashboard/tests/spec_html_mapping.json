@@ -24,7 +24,7 @@
     },
     {
       "specId": "drawdown-historico",
-      "htmlId": "drawdownHistNota",
+      "htmlId": "drawdownHistChart",
       "label": "Drawdown Histórico",
       "tab": "backtest",
       "type": "chart-area",

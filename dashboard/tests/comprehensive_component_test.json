@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-04-14T09:48:40.119Z",
+  "timestamp": "2026-04-14T09:57:15.310Z",
   "summary": {
     "total": 66,
-    "pass": 48,
+    "pass": 49,
     "hidden": 0,
-    "empty": 18,
+    "empty": 17,
     "missing": 0
   },
   "components": [
@@ -34,13 +34,13 @@
     },
     {
       "specId": "drawdown-historico",
-      "htmlId": "drawdownHistNota",
+      "htmlId": "drawdownHistChart",
       "label": "Drawdown Histórico",
       "type": "chart-area",
       "found": true,
       "visible": true,
       "rendered": false,
-      "structure": "empty",
+      "structure": "canvas-element",
       "statusChar": "⚠️",
       "statusText": "EMPTY"
     },
@@ -466,15 +466,15 @@
     },
     {
       "specId": "fee-custo-complexidade",
-      "htmlId": "feeCustoComplexidade",
+      "htmlId": "feeBody",
       "label": "Fee Analysis — Custo vs Alpha",
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "text-content",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "heatmap-retornos",
@@ -502,15 +502,15 @@
     },
     {
       "specId": "information-ratio",
-      "htmlId": "informationRatio",
+      "htmlId": "rollingIRChart",
       "label": "Information Ratio vs VWRA",
       "type": "chart-line",
       "found": true,
       "visible": true,
-      "rendered": true,
+      "rendered": false,
       "structure": "canvas-element",
-      "statusChar": "✅",
-      "statusText": "OK"
+      "statusChar": "⚠️",
+      "statusText": "EMPTY"
     },
     {
       "specId": "retorno-decomposicao",
@@ -610,15 +610,15 @@
     },
     {
       "specId": "ir-diferido",
-      "htmlId": "irDiferido",
+      "htmlId": "taxIrBody",
       "label": "IR Diferido por ETF",
       "type": "table",
       "found": true,
       "visible": true,
-      "rendered": false,
-      "structure": "empty",
-      "statusChar": "⚠️",
-      "statusText": "EMPTY"
+      "rendered": true,
+      "structure": "table",
+      "statusChar": "✅",
+      "statusText": "OK"
     },
     {
       "specId": "minilog",
