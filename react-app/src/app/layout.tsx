@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import '../styles/dashboard.css';
-import '../chartSetup';
 import { LayoutClient } from './layout-client';
 
 export const metadata: Metadata = {
