@@ -321,13 +321,10 @@ export function switchTab(name) {
     el.classList.toggle('tab-hidden', el.dataset.inTab !== name);
   });
 
-  // Hide orphaned elements by tracking which tab they belong to
-  // Build a map of elements and their owning tabs based on proximity to [data-in-tab] divs
-  const mainContent = document.querySelector('body');
-  let lastTabName = 'hoje'; // default to first tab
-
-  // Get all direct and nested elements in order
-  const allElements = Array.from(mainContent.querySelectorAll('*'));
+  // Hide orphaned h2 headers that precede [data-in-tab] divs
+  // Track which tab we're in as we traverse the DOM
+  let lastTabName = 'hoje';
+  const allElements = Array.from(document.body.querySelectorAll('*'));
 
   for (const el of allElements) {
     // Update lastTabName when we see a [data-in-tab] element
@@ -335,22 +332,8 @@ export function switchTab(name) {
       lastTabName = el.getAttribute('data-in-tab');
     }
 
-    // Skip elements that have a [data-in-tab] ancestor (they're already handled)
-    if (el.closest('[data-in-tab]')) continue;
-
-    // For orphaned h2, section, and chart elements, apply tab-hidden based on lastTabName
-    const shouldProcess =
-      el.tagName === 'H2' ||
-      el.tagName === 'H3' ||
-      el.tagName === 'SECTION' ||
-      el.classList.contains('chart-box') ||
-      el.classList.contains('chart-box-sm') ||
-      el.classList.contains('chart-box-lg') ||
-      el.classList.contains('period-btns') ||
-      el.classList.contains('src') ||
-      el.classList.contains('grid-2');
-
-    if (shouldProcess) {
+    // Only hide h2/h3 headers that have no [data-in-tab] ancestor
+    if ((el.tagName === 'H2' || el.tagName === 'H3') && !el.closest('[data-in-tab]')) {
       const shouldHide = lastTabName !== name;
       el.classList.toggle('tab-hidden', shouldHide);
     }
