@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: 'export',
   distDir: '../dashboard',
-  basePath: '',
+  basePath: '/wealth-dash',
   images: {
     unoptimized: true,
   },
