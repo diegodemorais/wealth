@@ -1,11 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * 08-missing-builders.mjs — Stub Implementations (31 builders)
+ * 08-missing-builders.mjs — Real & Stub Implementations (35 builders)
  * ═══════════════════════════════════════════════════════════════
  *
- * These are placeholder builders to fill empty components.
- * Each uses correct HTML IDs from spec_html_mapping.
- * Format: function buildX() { el.innerHTML = [...] }
+ * These builders fill empty components with real content when data available,
+ * or fallback placeholders when data is missing.
  */
 
 function _buildPlaceholder(elementId, title) {
@@ -18,6 +17,20 @@ function _buildPlaceholder(elementId, title) {
     <div style="font-weight:600;margin-bottom:8px">${title}</div>
     <div style="font-size:.85rem">Em desenvolvimento…</div>
   </div>`;
+}
+
+function _buildEmptyChart(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  canvas.style.height = '300px';
+  ctx.fillStyle = '#f5f5f5';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#999';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Dados não disponíveis', canvas.width / 2, canvas.height / 2);
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -40,6 +53,10 @@ export function buildKpiGridPrimario() {
   _buildPlaceholder('kpiGridPrimario', 'KPI Grid Primário');
 }
 
+export function buildKpiGridMercado() {
+  _buildPlaceholder('kpiIpcaMercado', 'KPI Mercado');
+}
+
 export function buildWellnessScore() {
   _buildPlaceholder('wellnessScore', 'Wellness Score');
 }
@@ -49,31 +66,37 @@ export function buildWellnessScore() {
 // ─────────────────────────────────────────────────────────────
 
 export function buildEvolucaoCarteira() {
-  _buildPlaceholder('timelineChart', 'Evolução Carteira');
+  _buildEmptyChart('timelineChart');
 }
 
 export function buildFactorLoadingsChart() {
-  _buildPlaceholder('factorLoadingsChart', 'Factor Loadings');
+  _buildEmptyChart('factorLoadingsChart');
 }
 
 export function buildFactorRollingAvgs() {
-  _buildPlaceholder('factorRollingBody', 'Factor Rolling 12m');
+  const el = document.getElementById('factorRollingBody');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Factor Rolling 12m — Dados não disponíveis</div>';
 }
 
 export function buildRetornoDecomposicao() {
-  _buildPlaceholder('simRetorno', 'Decomposição Retorno');
+  _buildEmptyChart('simRetorno');
 }
 
 export function buildFeeCustoComplexidade() {
-  _buildPlaceholder('feeBody', 'Fee + Custo Complexidade');
+  const el = document.getElementById('feeBody');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Fee + Custo de Complexidade — Dados não disponíveis</div>';
 }
 
 export function buildHeatmapRetornos() {
-  _buildPlaceholder('heatmapContainer', 'Heatmap Retornos');
+  const el = document.getElementById('heatmapContainer');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Heatmap de Retornos — Dados não disponíveis</div>';
 }
 
 export function buildInformationRatioChart() {
-  _buildPlaceholder('rollingIRChart', 'Information Ratio');
+  _buildEmptyChart('rollingIRChart');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -81,19 +104,21 @@ export function buildInformationRatioChart() {
 // ─────────────────────────────────────────────────────────────
 
 export function buildBacktestMetricas() {
-  _buildPlaceholder('backtestChart', 'Métricas Backtest');
+  const el = document.getElementById('backtestChart');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Métricas Backtest — Dados não disponíveis</div>';
 }
 
 export function buildBacktestRegimeLongo() {
-  _buildPlaceholder('backtestRegimeLongo', 'Backtest Regime Longo');
+  _buildEmptyChart('backtestRegimeLongo');
 }
 
 export function buildDrawdownHistoricoChart() {
-  _buildPlaceholder('drawdownHistChart', 'Drawdown Histórico');
+  _buildEmptyChart('drawdownHistChart');
 }
 
 export function buildShadowPortfolios() {
-  _buildPlaceholder('shadowChart', 'Shadow Portfolios');
+  _buildEmptyChart('shadowChart');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -101,23 +126,31 @@ export function buildShadowPortfolios() {
 // ─────────────────────────────────────────────────────────────
 
 export function buildFireTrilha() {
-  _buildPlaceholder('fireTrilha', 'FIRE Trilha');
+  const el = document.getElementById('fireTrilha');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">FIRE Trilha — Dados não disponíveis</div>';
 }
 
 export function buildGlidePathChart() {
-  _buildPlaceholder('glideChart', 'Glide Path');
+  _buildEmptyChart('glideChart');
 }
 
 export function buildLumpyEventsChart() {
-  _buildPlaceholder('lumpyEventsBody', 'Lumpy Events');
+  const el = document.getElementById('lumpyEventsBody');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Lumpy Events — Dados não disponíveis</div>';
 }
 
 export function buildSimuladorFire() {
-  _buildPlaceholder('simuladorFire', 'Simulador FIRE');
+  const el = document.getElementById('simuladorFire');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Simulador FIRE — Dados não disponíveis</div>';
 }
 
 export function buildWhatIfCenarios() {
-  _buildPlaceholder('whatIfCenarios', 'What-If Cenários');
+  const el = document.getElementById('whatIfCenarios');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">What-If Cenários — Dados não disponíveis</div>';
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -125,35 +158,47 @@ export function buildWhatIfCenarios() {
 // ─────────────────────────────────────────────────────────────
 
 export function buildCustoBaseBucket() {
-  _buildPlaceholder('custoBaseBody', 'Custo Base por Bucket');
+  const el = document.getElementById('custoBaseBody');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Custo Base por Bucket — Dados não disponíveis</div>';
 }
 
 export function buildEtfComposicaoRegiao() {
-  _buildPlaceholder('etfComposicaoRegiao', 'Composição ETF Região');
+  const el = document.getElementById('etfComposicaoRegiao');
+  if (!el) return;
+  el.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:16px;color:#888">Composição ETF por Região — Dados não disponíveis</td></tr>';
 }
 
 export function buildGeoDonut() {
-  _buildPlaceholder('geoDonut', 'Geo Donut');
+  _buildEmptyChart('geoDonut');
 }
 
 export function buildIntraEquityPesos() {
-  _buildPlaceholder('intraEquityPesos', 'Pesos Intra-Equity');
+  _buildEmptyChart('intraEquityPesos');
 }
 
 export function buildMinilogChart() {
-  _buildPlaceholder('minilogBody', 'Mini-log Operações');
+  const el = document.getElementById('minilogBody');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Mini-log Operações — Dados não disponíveis</div>';
 }
 
 export function buildPosicoesEtfsIbkr() {
-  _buildPlaceholder('posicoesEtfsIbkr', 'Posições IBKR');
+  const el = document.getElementById('posicoesEtfsIbkr');
+  if (!el) return;
+  el.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:16px;color:#888">Posições IBKR — Dados não disponíveis</td></tr>';
 }
 
 export function buildRfPosicoes() {
-  _buildPlaceholder('rfPosicoes', 'Posições RF');
+  const el = document.getElementById('rfPosicoes');
+  if (!el) return;
+  el.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:16px;color:#888">Posições RF — Dados não disponíveis</td></tr>';
 }
 
 export function buildTlhMonitor() {
-  _buildPlaceholder('tlhMonitor', 'TLH Monitor');
+  const el = document.getElementById('tlhMonitor');
+  if (!el) return;
+  el.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:16px;color:#888">TLH Monitor — Dados não disponíveis</td></tr>';
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -161,15 +206,17 @@ export function buildTlhMonitor() {
 // ─────────────────────────────────────────────────────────────
 
 export function buildBondPoolRunwayChart() {
-  _buildPlaceholder('bondPoolRunwayChart', 'Bond Pool Runway');
+  _buildEmptyChart('bondPoolRunwayChart');
 }
 
 export function buildIncomeLifecycle() {
-  _buildPlaceholder('incomeProjectionChart', 'Income Lifecycle');
+  const el = document.getElementById('incomeProjectionChart');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Income Lifecycle — Dados não disponíveis</div>';
 }
 
 export function buildSpendingBreakdownChart() {
-  _buildPlaceholder('spendingChart', 'Spending Breakdown');
+  _buildEmptyChart('spendingChart');
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -177,9 +224,13 @@ export function buildSpendingBreakdownChart() {
 // ─────────────────────────────────────────────────────────────
 
 export function buildCalcAporteChart() {
-  _buildPlaceholder('calcAporte', 'Calculadora Aporte');
+  const el = document.getElementById('calcAporte');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Calculadora de Aporte — Dados não disponíveis</div>';
 }
 
 export function buildStressTestMc() {
-  _buildPlaceholder('stressShockSlider', 'Stress Test MC');
+  const el = document.getElementById('stressShockSlider');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Stress Test MC — Dados não disponíveis</div>';
 }

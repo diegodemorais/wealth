@@ -198,16 +198,18 @@ export function _initTabCharts(tab) {
   const tabFns = {
     hoje:     [w.buildTimestamps, w.buildTornado, w.buildSankey,
                w.buildTornadoSensitivity, w.buildIpcaDcaSemaforo, w.buildRendaPlusSemaforo,
-               w.buildKpiGridPrimario, w.buildWellnessScore],
+               w.buildKpiGridPrimario, w.buildKpiGridMercado, w.buildWellnessScore],
     perf:     [function() { w.buildTimeline('all'); }, w.buildAttribution, w.buildDeltaBar,
                w.renderIpcaProgress, w.buildRetornoHeatmap, w.buildRollingSharp, w.buildInformationRatio,
                function() { w.buildBacktest('since2009'); }, w.buildCagrVsTwr,
-               w.buildFactorRolling, w.buildFactorLoadings,
+               w.buildFactorRolling, w.buildFactorLoadings, w.buildFactorLoadingsChart, w.buildRetornoDecomposicao,
                w.buildShadowTable, function() { w.buildShadowChart('since2009'); }, w.buildFeeAnalysis,
                w.buildDrawdownHistory, w.buildBacktestR7, w.buildPremissasVsRealizado],
     backtest: [function() { w.buildBacktest('since2009'); }, w.buildShadowTable,
-               function() { w.buildShadowChart('since2009'); }, w.buildBacktestR7, w.buildDrawdownHistory],
-    carteira: [w.buildDonuts, w.buildStackedAlloc, w.buildPosicoes, w.buildCustoBase, w.buildIrDiferido, w.buildRfCards, w.renderHodl11, w.calcAporte, w.buildEtfComposition, w.buildMinilog],
+               function() { w.buildShadowChart('since2009'); }, w.buildBacktestR7, w.buildDrawdownHistory,
+               w.buildBacktestRegimeLongo],
+    carteira: [w.buildDonuts, w.buildStackedAlloc, w.buildPosicoes, w.buildCustoBase, w.buildIrDiferido, w.buildRfCards, w.renderHodl11, w.buildEtfComposition, w.buildMinilog,
+               w.buildEtfComposicaoRegiao, w.buildIntraEquityPesos, w.buildMinilogChart, w.buildPosicoesEtfsIbkr, w.buildRfPosicoes, w.buildTlhMonitor],
     fire:     [w.buildTrackingFire, w.buildScenarioComparison, w.buildScenarios,
                w.buildFireMatrix, w.buildLumpyEvents, w.buildGlidePath,
                w.buildNetWorthProjection,
@@ -1309,10 +1311,12 @@ export function buildBondPoolRunway() {
 // ═══════════════════════════════════════════════════════════════
 export function buildLumpyEvents() {
   const el = document.getElementById('lumpyEventsBody');
-  const sec = document.getElementById('lumpyEventsSection');
-  if (!el || !sec) return;
+  if (!el) return;
   const d = DATA.lumpy_events;
-  if (!d || !d.eventos) { sec.style.display = 'none'; return; }
+  if (!d || !d.eventos) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:#888">Lumpy Events — Dados não disponíveis</div>';
+    return;
+  }
 
   const basePfire = d.base?.pfire_2040;
   const baseSpending = d.base?.spending_brl;
@@ -1748,8 +1752,20 @@ export function buildFactorLoadings() {
 
 export function _renderFactorChart() {
   const fl = DATA.factor_loadings;
-  if (!fl) return;
-  const ctx = document.getElementById('factorLoadingsChart');
+  const canvas = document.getElementById('factorLoadingsChart');
+  if (!canvas) return;
+  if (!fl) {
+    const ctx = canvas.getContext('2d');
+    canvas.style.height = '300px';
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#999';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Factor Loadings — Dados não disponíveis', canvas.width / 2, canvas.height / 2);
+    return;
+  }
+  const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
   const TICKER_COLORS = {

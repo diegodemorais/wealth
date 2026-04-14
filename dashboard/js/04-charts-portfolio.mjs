@@ -528,6 +528,17 @@ export function buildGlidePath() {
   const g = DATA.glide;
   const sec = document.getElementById('glideSection') || document.getElementById('glidepathSection');
   if (!g || !g.idades || !g.equity || !g.ipca_longo) {
+    const canvas = document.getElementById('glideChart');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      canvas.style.height = '300px';
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#999';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Glide Path — Dados não disponíveis', canvas.width / 2, canvas.height / 2);
+    }
     if (sec) sec.style.display = 'none';
     return;
   }

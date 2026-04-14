@@ -504,7 +504,7 @@
     },
     {
       "specId": "spending-breakdown",
-      "htmlId": "spendingChart",
+      "htmlId": "spendingBreakdownBody",
       "label": "Spending — Essenciais vs Discricionários",
       "tab": "retiro",
       "type": "card",

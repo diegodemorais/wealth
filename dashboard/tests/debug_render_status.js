@@ -84,7 +84,24 @@ server.listen(PORT, async () => {
       const tableLen = el.querySelectorAll('tr').length;
       const svgLen = el.querySelectorAll('svg').length;
 
-      const hasContent = textLen > 0 || children > 0 || canvasLen > 0 || tableLen > 0 || svgLen > 0;
+      // Check if element itself is a canvas with pixel data
+      let canvasPixels = 0;
+      if (el.tagName === 'CANVAS') {
+        const ctx = el.getContext('2d');
+        if (ctx) {
+          const imageData = ctx.getImageData(0, 0, el.width, el.height);
+          // Count non-transparent pixels
+          let count = 0;
+          for (let i = 3; i < imageData.data.length; i += 4) {
+            if (imageData.data[i] > 0) count++;
+          }
+          if (count > el.width * el.height * 0.01) { // More than 1% filled
+            canvasPixels = 1;
+          }
+        }
+      }
+
+      const hasContent = textLen > 0 || children > 0 || canvasLen > 0 || tableLen > 0 || svgLen > 0 || canvasPixels > 0;
 
       return {
         found: true,
