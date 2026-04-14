@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from validate_schema import validate_schema
 from validate_html_structure import validate_html_structure
 from validate_template_sync import validate_template_integrity
+from validate_bootstrap import validate_bootstrap
 
 ROOT = Path(__file__).parent.parent
 TEMPLATE          = ROOT / "dashboard" / "template.html"
@@ -894,6 +895,12 @@ def build(data_path: Path, template_path: Path, out_path: Path,
         sys.exit(1)
     else:
         print(f"✅ Estrutura HTML validada")
+
+    # 9b. Validar Bootstrap integrity (type-safety para ES6 modules)
+    js_dir = out_path.parent / "js"
+    if not validate_bootstrap(js_dir):
+        print(f"\n❌ VALIDAÇÃO BOOTSTRAP FALHOU — Build bloqueado", file=sys.stderr)
+        sys.exit(1)
 
     # 10. Validar sincronização Template ↔ Spec (informacional, não bloqueia)
     from validate_template_sync import validate_template_sync as check_template_sync
