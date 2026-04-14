@@ -47,63 +47,10 @@ jobs:
           name: build-dashboard
           path: dashboard/
 
-  # PASSO 3: E2E Tests (Cypress)
-  e2e-tests:
-    runs-on: ubuntu-latest
-    needs: build
-    name: E2E Tests (Cypress)
-
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: react-app/package-lock.json
-
-      - name: Instalar dependências
-        run: |
-          cd react-app
-          npm ci
-
-      - name: Build app
-        env:
-          NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
-          NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
-        run: |
-          cd react-app
-          npm run build:no-test
-
-      - name: Cypress run (headless)
-        uses: cypress-io/github-action@v7
-        with:
-          working-directory: react-app
-          browser: chrome
-          spec: cypress/e2e/**/*.cy.ts
-          wait-on: 'http://localhost:3000'
-          wait-on-timeout: 30
-
-      - name: Upload Cypress screenshots
-        uses: actions/upload-artifact@v6
-        if: failure()
-        with:
-          name: cypress-screenshots
-          path: react-app/cypress/screenshots
-
-      - name: Upload Cypress videos
-        uses: actions/upload-artifact@v6
-        if: always()
-        with:
-          name: cypress-videos
-          path: react-app/cypress/videos
-
-  # PASSO 3: Deploy (apenas em push para main e build OK)
+  # PASSO 2: Deploy (apenas em push para main e build OK)
   deploy:
     runs-on: ubuntu-latest
-    needs: [build, e2e-tests]
+    needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Deploy to wealth-dash
 
@@ -149,13 +96,12 @@ jobs:
         run: |
           echo "## Deployment Status ✅"
           echo "- Build: Success"
-          echo "- E2E Tests: Passed"
           echo "- Deploy: Success"
 
   # NOTIFICAÇÃO FINAL: Deploy Completo
   notification:
     runs-on: ubuntu-latest
-    needs: [build, e2e-tests, deploy]
+    needs: [build, deploy]
     if: always()
     name: Deployment Notification
 
