@@ -14,7 +14,7 @@ export default function SimulatorsPage() {
 
   useEffect(() => {
     if (!data) {
-      fetch('/data.json')
+      fetch('/wealth/dash/data.json')
         .then(r => r.json())
         .then(d => {
           setData(d);

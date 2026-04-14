@@ -12,7 +12,7 @@ export default function BacktestPage() {
 
   useEffect(() => {
     if (!data) {
-      fetch('/data.json')
+      fetch('/wealth/dash/data.json')
         .then(r => r.json())
         .then(d => setData(d))
         .catch(e => console.error('Failed to load data:', e));
