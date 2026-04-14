@@ -51,6 +51,8 @@ if (!window.DATA) {
     TWR_BRL: dataDerived.TWR_BRL,
     progPct: dataDerived.progPct,
     today: dataDerived.today,
+    yrInt: dataDerived.yrInt,
+    moInt: dataDerived.moInt,
     _anoFireAlvoGlobal: dataDerived._anoFireAlvoGlobal,
     _anoFireAspir: dataDerived._anoFireAspir,
     _ymToDecimal: dataDerived._ymToDecimal,
@@ -96,6 +98,9 @@ if (!window.DATA) {
 
     // From 06-dashboard-render
     renderKPIs: dashboardRender.renderKPIs,
+    renderWellness: dashboardRender.renderWellness,
+    renderProximasAcoes: dashboardRender.renderProximasAcoes,
+    renderIpcaProgress: dashboardRender.renderIpcaProgress,
     buildSankey: dashboardRender.buildSankey,
     buildWellnessExtras: dashboardRender.buildWellnessExtras,
     buildRfCards: dashboardRender.buildRfCards,
@@ -103,6 +108,11 @@ if (!window.DATA) {
     buildIncomeTable: dashboardRender.buildIncomeTable,
 
     // From 07-init-tabs
+    renderMacroStatus: initTabs.renderMacroStatus,
+    buildBrasilConcentracao: initTabs.buildBrasilConcentracao,
+    buildMacroCards: initTabs.buildMacroCards,
+    buildDcaStatus: initTabs.buildDcaStatus,
+    buildSemaforoPanel: initTabs.buildSemaforoPanel,
     _initTabCharts: initTabs._initTabCharts,
     switchTab: initTabs.switchTab,
     _applyPrivacyCharts: initTabs._applyPrivacyCharts,

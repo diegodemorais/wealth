@@ -1834,7 +1834,7 @@ export function init() {
       el.textContent = `P10/P50/P90 são aproximações de trajetória; P(Cenário Aspiracional) = ${DATA.pfire_aspiracional.base}% calculado direto nas 10k simulações MC.`;
     }
   })();
-  updateContrib();
+  // updateContrib() — removed pending definition
 
   // Ativar tab inicial (hoje) — aciona lazy init para a aba hoje
   // Restaurar última tab se disponível; senão, hoje
