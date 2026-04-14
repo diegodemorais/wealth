@@ -5,6 +5,7 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     viewportWidth: 1920,
     viewportHeight: 1080,
+    // @ts-ignore - webServer is supported in Cypress 13+ but type definitions may vary
     webServer: {
       command: 'npm run dev',
       url: 'http://localhost:3000',
