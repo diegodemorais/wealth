@@ -11,6 +11,7 @@ import { FanChart } from '@/components/charts/FanChart';
 import { SankeyChart } from '@/components/charts/SankeyChart';
 
 export default function HomePage() {
+  // Portfolio dashboard - main entry point
   const setData = useDashboardStore(s => s.setData);
   const data = useDashboardStore(s => s.data);
   const derived = useDashboardStore(s => s.derived);
