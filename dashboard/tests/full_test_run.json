@@ -1,12 +1,28 @@
 {
-  "timestamp": "2026-04-14T20:42:36.735384",
+  "timestamp": "2026-04-14T20:45:52.555131",
   "tests": {
     "schema": {
+      "success": true,
+      "output": "\n\ud83d\udccb Validando blocos (data_fields)...\n  \u2713 66 blocos | 3 data_fields \u00fanicos\n\n\ud83d\udd17 Validando constraints cruzados...\n  \u2713 1 constraint(s) validado(s)\n\n============================================================\n\u2705 VALIDA\u00c7\u00c3O PASSOU \u2014 spec.json e data.json est\u00e3o em acordo\n"
+    },
+    "html_render": {
       "success": false,
-      "output": "\u274c Erro ao ler spec.json: [Errno 2] No such file or directory: '/Users/diegodemorais/claude/code/wealth/dashboard/spec.json'\n"
+      "output": "\n================================================================================\n\ud83d\udd0d VERIFICANDO HTML RENDERIZADO \u2014 Elementos Populados\n================================================================================\n\n"
+    },
+    "partials_validation": {
+      "success": false,
+      "output": "======================================================================\nVALIDATING DASHBOARD TEMPLATE PARTIALS\n======================================================================\n\n\u26a0\ufe0f  Partials directory not found: /Users/diegodemorais/claude/code/wealth/dashboard/templates.incomplete\n   Checking fallback template...\n"
+    },
+    "render_status": {
+      "success": false,
+      "output": ""
+    },
+    "dashboard": {
+      "success": false,
+      "output": ""
     }
   },
   "summary": {
-    "blocker": "schema_invalid"
+    "blocker": "critical_tests_failed"
   }
 }

@@ -2459,6 +2459,7 @@ def main():
         "inss_inicio_ano":        premissas_raw.get("inss_inicio_ano", 12),
         "ipca_anual":             premissas_raw.get("ipca_anual", 0.04),
         "renda_estimada":         RENDA_ESTIMADA,
+        "renda_mensal_liquida":   RENDA_ESTIMADA,  # Usado pelo dashboard (monthly income display)
         "ano_atual":              datetime.now().year,
     }
 
