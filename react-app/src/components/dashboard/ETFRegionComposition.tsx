@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RegionData {
   region: string;
@@ -54,29 +55,16 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
   ];
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        ETF Região Composição
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          ETF Região Composição
+        </CardTitle>
+      </CardHeader>
 
-      {/* Tab buttons */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '8px',
-          marginBottom: '16px',
-          borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-          paddingBottom: '8px',
-        }}
-      >
+      <CardContent className="space-y-4">
+        {/* Tab buttons */}
+        <div className="flex gap-2 mb-4 border-b border-slate-700/25 pb-2">
         {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
           <button
             key={key}
@@ -99,18 +87,12 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
       </div>
 
       {/* Current ETF composition */}
-      <div style={{ marginTop: '12px' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '10px' }}>
+      <div className="mt-3">
+        <div className="text-xs font-semibold text-slate-200 mb-3">
           {currentEtf.name}
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-          }}
-        >
+        <div className="space-y-2">
           {regions.map(region => {
             const value = currentEtf.data[region.key];
             return (
@@ -167,18 +149,12 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
       </div>
 
       {/* Comparison table */}
-      <div
-        style={{
-          marginTop: '16px',
-          paddingTop: '16px',
-          borderTop: '1px solid rgba(71, 85, 105, 0.15)',
-        }}
-      >
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '10px' }}>
+      <div className="mt-4 pt-4 border-t border-slate-700/15">
+        <div className="text-xs font-semibold text-slate-200 mb-3">
           Comparação — 3 ETFs
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
+        <div className="overflow-x-auto">
           <table
             style={{
               width: '100%',
@@ -247,7 +223,8 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
           </table>
         </div>
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
