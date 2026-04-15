@@ -4,9 +4,9 @@ import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { withBasePath } from '@/utils/basePath';
 import { SimulatorParams } from '@/components/simulators/SimulatorParams';
-// import { SimulationTrajectories } from '@/components/simulators/SimulationTrajectories'; // Uses Chart.js - disabled
+import { SimulationTrajectories } from '@/components/simulators/SimulationTrajectories';
 import { SuccessRateCard } from '@/components/simulators/SuccessRateCard';
-// import { DrawdownDistribution } from '@/components/simulators/DrawdownDistribution'; // Uses Chart.js - disabled
+import { DrawdownDistribution } from '@/components/simulators/DrawdownDistribution';
 
 export default function SimulatorsPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -38,10 +38,10 @@ export default function SimulatorsPage() {
 
       <div className="grid-2-col">
         <SuccessRateCard />
-        {/* <DrawdownDistribution /> */}
+        <DrawdownDistribution />
       </div>
 
-      {/* <SimulationTrajectories /> */}
+      <SimulationTrajectories />
     </div>
   );
 }
