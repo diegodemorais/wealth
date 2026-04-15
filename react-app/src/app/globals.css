@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind v4 theme tokens — maps shadcn/ui utilities to our dark design system.
+ * bg-card → var(--color-card), text-muted-foreground → var(--color-muted-foreground), etc.
+ */
+@theme {
+  /* Core backgrounds */
+  --color-background: #0f172a;
+  --color-foreground: #f1f5f9;
+
+  /* Card / surface */
+  --color-card: #1e293b;
+  --color-card-foreground: #f1f5f9;
+
+  /* Popover */
+  --color-popover: #1e293b;
+  --color-popover-foreground: #f1f5f9;
+
+  /* Primary (accent blue) */
+  --color-primary: #3b82f6;
+  --color-primary-foreground: #f1f5f9;
+
+  /* Secondary (card2) */
+  --color-secondary: #334155;
+  --color-secondary-foreground: #f1f5f9;
+
+  /* Muted */
+  --color-muted: #334155;
+  --color-muted-foreground: #94a3b8;
+
+  /* Accent */
+  --color-accent: #334155;
+  --color-accent-foreground: #f1f5f9;
+
+  /* Destructive */
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #f1f5f9;
+
+  /* Borders / inputs */
+  --color-border: #475569;
+  --color-input: #334155;
+  --color-ring: #3b82f6;
+
+  /* Border radius */
+  --radius: 10px;
+  --radius-lg: 10px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
+}
+
+/* Dashboard always dark */
+:root {
+  color-scheme: dark;
+}
