@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | DEV-dashboard-components-alignment |
 | **Dono** | Dev |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | 🔴 Alta |
 | **Participantes** | Dev, Head, Quant, Bookkeeper |
 | **Co-sponsor** | Head |
 | **Dependencias** | DEV-manifest (spec.json vinculante) |
 | **Criado em** | 2026-04-15 |
 | **Origem** | Diego — requisição direta de melhorias visuais e informacionais |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-15 |
 
 ---
 
