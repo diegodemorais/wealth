@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface FireProgressWellnessProps {
   firePercentage: number;
@@ -58,110 +59,57 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
   const progressBarColor = firePercentage >= 0.8 ? '#22c55e' : firePercentage >= 0.6 ? '#eab308' : '#3b82f6';
 
   return (
-    <>
-      {/* FIRE Progress Section */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '14px',
-          marginBottom: '14px',
-        }}
-      >
-        <div
-          className="section"
-          style={{
-            padding: '12px 14px',
-            border: '1px solid rgba(71, 85, 105, 0.25)',
-            borderRadius: '8px',
-          }}
-        >
-          <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 8px', padding: 0 }}>
-            Progresso FIRE
-          </h2>
-          <div style={{ textAlign: 'center', padding: '8px 0' }}>
-            <div
-              style={{
-                fontSize: '2.2rem',
-                fontWeight: 700,
-                color: progressBarColor,
-                marginBottom: '4px',
-              }}
-            >
-              {privacyMode ? '••••' : (firePercentage * 100).toFixed(1) + '%'}
+    <div className="space-y-4">
+      {/* FIRE Progress & Wellness Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* FIRE Progress Card */}
+        <Card className="bg-slate-900/40 border-slate-700/25">
+          <CardContent className="p-4">
+            <h2 className="text-sm font-semibold text-slate-200 mb-3">
+              Progresso FIRE
+            </h2>
+            <div className="text-center mb-3">
+              <div className="text-2xl font-bold mb-1" style={{ color: progressBarColor }}>
+                {privacyMode ? '••••' : (firePercentage * 100).toFixed(1) + '%'}
+              </div>
+              <div className="text-xs text-slate-400">
+                {privacyMode
+                  ? 'R$••••M / R$••••M'
+                  : `R$${(firePatrimonioAtual / 1e6).toFixed(2)}M / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M`}
+              </div>
             </div>
-            <div
-              style={{
-                fontSize: '0.75rem',
-                color: '#94a3b8',
-                marginBottom: '8px',
-              }}
-            >
-              {privacyMode
-                ? 'R$••••M / R$••••M'
-                : `R$${(firePatrimonioAtual / 1e6).toFixed(2)}M / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M`}
-            </div>
-          </div>
 
-          {/* Progress Bar */}
-          <div
-            style={{
-              marginTop: '8px',
-              marginBottom: '12px',
-              height: '6px',
-              backgroundColor: 'rgba(71, 85, 105, 0.15)',
-              borderRadius: '3px',
-              overflow: 'hidden',
-            }}
-          >
-            <div
-              style={{
-                height: '100%',
-                width: Math.min(100, firePercentage * 100) + '%',
-                backgroundColor: progressBarColor,
-                transition: 'width 0.5s',
-              }}
-            />
-          </div>
+            {/* Progress Bar */}
+            <div className="h-1 bg-slate-700/15 rounded overflow-hidden mb-3">
+              <div
+                className="h-full transition-all duration-500"
+                style={{
+                  width: Math.min(100, firePercentage * 100) + '%',
+                  backgroundColor: progressBarColor,
+                }}
+              />
+            </div>
 
-          {/* SWR Info */}
-          <div style={{ fontSize: '0.75rem', marginTop: '8px' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '2px',
-              }}
-            >
-              <span>SWR FIRE Day:</span>
-              <span style={{ fontWeight: 600, color: '#06b6d4' }}>
-                {privacyMode ? '••••' : fmtPct(swrFireDay)}
-              </span>
+            {/* SWR Info */}
+            <div className="text-xs space-y-1">
+              <div className="flex justify-between">
+                <span className="text-slate-400">SWR FIRE Day:</span>
+                <span className="font-semibold text-cyan-400">
+                  {privacyMode ? '••••' : fmtPct(swrFireDay)}
+                </span>
+              </div>
+              <div className="text-xs text-slate-500">
+                {privacyMode
+                  ? 'R$••••k / R$••••M'
+                  : `R$${(250000 / 1000).toFixed(0)}k / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M · Meta ≤ 3.0%`}
+              </div>
             </div>
-            <div
-              style={{
-                fontSize: '0.6rem',
-                color: '#94a3b8',
-                marginTop: '2px',
-              }}
-            >
-              {privacyMode
-                ? 'R$••••k / R$••••M'
-                : `R$${(250000 / 1000).toFixed(0)}k / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M · Meta ≤ 3.0%`}
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Wellness Score Card */}
-        <div
-          className="section"
-          style={{
-            padding: '12px 14px',
-            border: '1px solid rgba(71, 85, 105, 0.25)',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'border-color 0.2s',
-          }}
+        <Card
+          className="bg-slate-900/40 border-slate-700/25 cursor-pointer transition-all hover:border-slate-600/50"
           onClick={() => setIsWellnessOpen(!isWellnessOpen)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') setIsWellnessOpen(!isWellnessOpen);
@@ -169,126 +117,73 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
           role="button"
           tabIndex={0}
         >
-          <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 8px', padding: 0 }}>
-            Financial Wellness
-            <span style={{ fontSize: '0.8rem', color: '#94a3b8', marginLeft: '6px' }}>
-              {isWellnessOpen ? '▼' : '▶'}
-            </span>
-          </h2>
+          <CardContent className="p-4">
+            <h2 className="text-sm font-semibold text-slate-200 mb-3 flex items-center justify-between">
+              Financial Wellness
+              <span className="text-xs text-slate-400">
+                {isWellnessOpen ? '▼' : '▶'}
+              </span>
+            </h2>
 
-          <div style={{ textAlign: 'center' }}>
-            <div
-              style={{
-                fontSize: '2.2rem',
-                fontWeight: 800,
-                color: getWellnessColor(),
-                marginBottom: '2px',
-              }}
-            >
-              {privacyMode ? '••' : Math.round(wellnessScore)}
-            </div>
-            <div
-              style={{
-                fontSize: '0.75rem',
-                color: '#94a3b8',
-              }}
-            >
-              /100 · {getWellnessLabel()}
-            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold mb-1" style={{ color: getWellnessColor() }}>
+                {privacyMode ? '••' : Math.round(wellnessScore)}
+              </div>
+              <div className="text-xs text-slate-400 mb-2">
+                /100 · {getWellnessLabel()}
+              </div>
 
-            {/* Mini progress bar */}
-            <div
-              style={{
-                marginTop: '6px',
-                height: '6px',
-                backgroundColor: 'rgba(71, 85, 105, 0.15)',
-                borderRadius: '4px',
-                width: '80px',
-                margin: '6px auto',
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  height: '100%',
-                  width: wellnessScore + '%',
-                  backgroundColor: getWellnessColor(),
-                  transition: 'width 0.5s',
-                }}
-              />
+              {/* Mini progress bar */}
+              <div className="h-1 bg-slate-700/15 rounded overflow-hidden w-20 mx-auto">
+                <div
+                  className="h-full transition-all duration-500"
+                  style={{
+                    width: wellnessScore + '%',
+                    backgroundColor: getWellnessColor(),
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Wellness Details (Collapsible) */}
       {isWellnessOpen && wellnessMetrics.length > 0 && (
-        <div
-          className="section"
-          style={{
-            padding: '12px 14px',
-            border: '1px solid rgba(71, 85, 105, 0.25)',
-            borderRadius: '8px',
-            marginBottom: '14px',
-          }}
-        >
-          <h3
-            style={{
-              fontSize: '0.8rem',
-              color: '#94a3b8',
-              textTransform: 'uppercase',
-              margin: '0 0 8px',
-              padding: 0,
-              fontWeight: 600,
-            }}
-          >
-            ⚠️ Métricas de Composição
-          </h3>
+        <Card className="bg-slate-900/40 border-slate-700/25">
+          <CardContent className="p-4">
+            <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">
+              ⚠️ Métricas de Composição
+            </h3>
 
-          {wellnessMetrics.map((metric, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 80px 60px 60px',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 2px',
-                borderBottom: idx < wellnessMetrics.length - 1 ? '1px solid rgba(71, 85, 105, 0.12)' : 'none',
-                fontSize: '0.75rem',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <span>{metric.label}</span>
-              </div>
-              <div
-                style={{
-                  height: '6px',
-                  backgroundColor: 'rgba(71, 85, 105, 0.15)',
-                  borderRadius: '3px',
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  style={{
-                    height: '100%',
-                    width: Math.min(100, (metric.value / metric.max) * 100) + '%',
-                    backgroundColor: metric.color,
-                    transition: 'width 0.3s',
-                  }}
-                />
-              </div>
-              <div style={{ textAlign: 'right', fontWeight: 600 }}>
-                {metric.value}/{metric.max}
-              </div>
-              <div style={{ textAlign: 'right', color: '#94a3b8' }}>
-                {metric.detail}
-              </div>
+            <div className="space-y-3">
+              {wellnessMetrics.map((metric, idx) => (
+                <div key={idx} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-300">{metric.label}</span>
+                    <span className="text-slate-400 font-semibold">
+                      {metric.value}/{metric.max}
+                    </span>
+                  </div>
+                  <div className="h-1 bg-slate-700/15 rounded overflow-hidden">
+                    <div
+                      className="h-full transition-all duration-300"
+                      style={{
+                        width: Math.min(100, (metric.value / metric.max) * 100) + '%',
+                        backgroundColor: metric.color,
+                      }}
+                    />
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {metric.detail}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </CardContent>
+        </Card>
       )}
-    </>
+    </div>
   );
 };
 
