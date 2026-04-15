@@ -31,8 +31,8 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
   };
 
   const scenarios = [
-    { name: 'Base', color: '#8b5cf6', data: baseScenario },
-    { name: 'Aspiracional', color: '#22c55e', data: aspirationalScenario },
+    { name: 'Base', color: 'var(--purple)', data: baseScenario },
+    { name: 'Aspiracional', color: 'var(--green)', data: aspirationalScenario },
   ];
 
   const deltaPatrimonio = aspirationalScenario.patrimonio50anos - baseScenario.patrimonio50anos;
@@ -51,7 +51,7 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
 
   const timeDeltaBg = deltaMeses < 0 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)';
   const timeDeltaBorder = deltaMeses < 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)';
-  const timeDeltaColor = deltaMeses < 0 ? '#22c55e' : '#ef4444';
+  const timeDeltaColor = deltaMeses < 0 ? 'var(--green)' : 'var(--red)';
 
   return (
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
@@ -102,7 +102,7 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
             <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
               <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Δ Patrimônio (aspiracional)</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#22c55e', marginBottom: '4px' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)', marginBottom: '4px' }}>
                 {privacyMode ? 'R$••••' : `+${fmtBrl(deltaPatrimonio)}`}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>+{deltaPatrimonioPct.toFixed(1)}%</div>
@@ -110,7 +110,7 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
 
             <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
               <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Δ P(FIRE)</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#22c55e', marginBottom: '4px' }}>+{deltaPfire.toFixed(1)}pp</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)', marginBottom: '4px' }}>+{deltaPfire.toFixed(1)}pp</div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{aspirationalScenario.pfirePercentual.toFixed(1)}% vs {baseScenario.pfirePercentual.toFixed(1)}%</div>
             </div>
 
@@ -139,8 +139,8 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#a78bfa' }}>Base</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#22c55e' }}>Aspiracional</th>
+                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: 'rgba(168, 85, 247, 0.7)' }}>Base</th>
+                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: 'var(--green)' }}>Aspiracional</th>
                   <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Diferença</th>
                 </tr>
               </thead>
@@ -148,13 +148,13 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
                 {metrics.map((metric, idx) => (
                   <tr key={idx}>
                     <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>{metric.label}</td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#a78bfa' }}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: 'rgba(168, 85, 247, 0.7)' }}>
                       {metric.unit === 'BRL' ? privacyMode ? 'R$••••' : (metric.baseVal / 1000000).toFixed(2) + 'M' : metric.baseVal.toFixed(1) + metric.unit}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#22c55e' }}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: 'var(--green)' }}>
                       {metric.unit === 'BRL' ? privacyMode ? 'R$••••' : (metric.aspVal / 1000000).toFixed(2) + 'M' : metric.aspVal.toFixed(1) + metric.unit}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: metric.deltaVal >= 0 ? '#22c55e' : '#ef4444' }}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: metric.deltaVal >= 0 ? 'var(--green)' : 'var(--red)' }}>
                       {metric.deltaVal >= 0 ? '+' : ''}
                       {metric.unit === 'BRL' ? privacyMode ? 'R$••••' : (metric.deltaVal / 1000000).toFixed(2) + 'M' : metric.deltaVal.toFixed(1) + metric.unit}
                     </td>

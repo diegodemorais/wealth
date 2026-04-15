@@ -26,10 +26,10 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
 
   const getPriorityColor = (priority?: string): string => {
     switch (priority) {
-      case 'alta': return '#ef4444';
-      case 'media': return '#eab308';
-      case 'baixa': return '#22c55e';
-      default: return '#06b6d4';
+      case 'alta': return 'var(--red)';
+      case 'media': return 'var(--yellow)';
+      case 'baixa': return 'var(--green)';
+      default: return 'var(--cyan)';
     }
   };
 
@@ -56,7 +56,7 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
           <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Wellness Score
           </div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#06b6d4', marginBottom: '4px' }}>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--cyan)', marginBottom: '4px' }}>
             {privacyMode ? '••' : Math.round(wellnessScore)}
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500, marginBottom: '12px' }}>
@@ -69,7 +69,7 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
               style={{
                 width: `${Math.min(100, wellnessScore)}%`,
                 height: '100%',
-                backgroundColor: wellnessScore >= 80 ? '#22c55e' : wellnessScore >= 60 ? '#eab308' : '#ef4444',
+                backgroundColor: wellnessScore >= 80 ? 'var(--green)' : wellnessScore >= 60 ? 'var(--yellow)' : 'var(--red)',
                 transition: 'width 0.5s',
               }}
             />

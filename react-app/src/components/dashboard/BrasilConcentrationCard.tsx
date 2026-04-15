@@ -32,7 +32,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
     return (val * 100).toFixed(1);
   };
 
-  const concentrationColor = concentrationBrazil > 0.65 ? '#ef4444' : concentrationBrazil > 0.55 ? '#eab308' : '#22c55e';
+  const concentrationColor = concentrationBrazil > 0.65 ? 'var(--red)' : concentrationBrazil > 0.55 ? 'var(--yellow)' : 'var(--green)';
   const concentrationBg = concentrationBrazil > 0.65
     ? 'rgba(239, 68, 68, 0.1)'
     : concentrationBrazil > 0.55

@@ -40,10 +40,10 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
   };
 
   const getTextColor = (pfire: number): string => {
-    if (pfire >= 90) return '#22c55e';
-    if (pfire >= 70) return '#eab308';
-    if (pfire >= 50) return '#f59e0b';
-    return '#ef4444';
+    if (pfire >= 90) return 'var(--green)';
+    if (pfire >= 70) return 'var(--yellow)';
+    if (pfire >= 50) return 'var(--yellow)';
+    return 'var(--red)';
   };
 
   return (
@@ -119,10 +119,10 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
       {/* Legend */}
       <div className="grid grid-cols-4 gap-3 text-xs">
         {[
-          { label: '≥90%', color: '#22c55e' },
-          { label: '70-90%', color: '#eab308' },
-          { label: '50-70%', color: '#f59e0b' },
-          { label: '<50%', color: '#ef4444' },
+          { label: '≥90%', color: 'var(--green)' },
+          { label: '70-90%', color: 'var(--yellow)' },
+          { label: '50-70%', color: 'var(--yellow)' },
+          { label: '<50%', color: 'var(--red)' },
         ].map(l => (
           <div key={l.label} className="flex items-center gap-2">
             <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: l.color }} />

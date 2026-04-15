@@ -69,8 +69,8 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: '#cbd5e1',
-            bodyColor: '#94a3b8',
+            titleColor: 'var(--muted)',
+            bodyColor: 'var(--muted)',
             borderColor: 'rgba(71, 85, 105, 0.5)',
             borderWidth: 1,
             padding: 8,
@@ -89,7 +89,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
               color: 'rgba(71, 85, 105, 0.1)',
             },
             ticks: {
-              color: '#94a3b8',
+              color: 'var(--muted)',
               callback: function (value) {
                 return `R$ ${(value as number / 1000000).toFixed(1)}M`;
               },
@@ -100,7 +100,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
               display: false,
             },
             ticks: {
-              color: '#cbd5e1',
+              color: 'var(--muted)',
               font: {
                 weight: 'bold',
               },

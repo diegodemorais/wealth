@@ -32,7 +32,7 @@ export function TimeToFireProgressBar({
           className="h-full transition-all duration-500"
           style={{
             width: `${progressPct}%`,
-            background: 'linear-gradient(90deg, #3b82f6 0%, #a855f7 100%)',
+            background: 'linear-gradient(90deg, var(--accent) 0%, var(--purple) 100%)',
           }}
         />
       </div>

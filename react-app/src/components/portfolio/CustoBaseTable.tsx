@@ -8,8 +8,8 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 const EQUITY_BUCKETS = ['SWRD', 'AVGS', 'AVEM'];
 const BUCKET_COLORS: Record<string, string> = {
   SWRD: 'var(--accent)',
-  AVGS: '#8b5cf6',
-  AVEM: '#06b6d4',
+  AVGS: 'var(--purple)',
+  AVEM: 'var(--cyan)',
 };
 
 /**

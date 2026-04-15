@@ -33,7 +33,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderTop: '1px solid rgba(107, 114, 128, 0.2)',
     backgroundColor: 'rgba(17, 24, 39, 0.5)',
     fontSize: '0.75rem',
-    color: '#9ca3af',
+    color: 'var(--muted)',
   },
   container: {
     maxWidth: '1200px',

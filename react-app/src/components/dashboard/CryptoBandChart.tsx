@@ -49,7 +49,7 @@ export function CryptoBandChart({
   const badgeColor = isInBand ? 'var(--green)' : isUnderweight ? 'var(--red)' : 'var(--yellow)'
   const badgeBg = isInBand ? 'rgba(34,197,94,0.2)' : isUnderweight ? 'rgba(239,68,68,0.2)' : 'rgba(234,179,8,0.2)'
   const badgeBorder = isInBand ? 'rgba(34,197,94,0.3)' : isUnderweight ? 'rgba(239,68,68,0.3)' : 'rgba(234,179,8,0.3)'
-  const markerColor = isInBand ? '#22c55e' : isUnderweight ? '#ef4444' : '#eab308'
+  const markerColor = isInBand ? 'var(--green)' : isUnderweight ? 'var(--red)' : 'var(--yellow)'
 
   return (
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px' }}>

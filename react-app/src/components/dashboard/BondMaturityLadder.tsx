@@ -41,12 +41,12 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
   };
 
   const buckets: MaturityBucket[] = [
-    { label: '1 ano', yearsRange: '0-1 anos', value: bonds1y, percentage: totalBonds > 0 ? (bonds1y / totalBonds) * 100 : 0, color: '#ef4444' },
-    { label: '2 anos', yearsRange: '1-2 anos', value: bonds2y, percentage: totalBonds > 0 ? (bonds2y / totalBonds) * 100 : 0, color: '#f97316' },
-    { label: '3 anos', yearsRange: '2-3 anos', value: bonds3y, percentage: totalBonds > 0 ? (bonds3y / totalBonds) * 100 : 0, color: '#f59e0b' },
-    { label: '5 anos', yearsRange: '3-5 anos', value: bonds5y, percentage: totalBonds > 0 ? (bonds5y / totalBonds) * 100 : 0, color: '#06b6d4' },
-    { label: '10 anos', yearsRange: '5-10 anos', value: bonds10y, percentage: totalBonds > 0 ? (bonds10y / totalBonds) * 100 : 0, color: '#3b82f6' },
-    { label: '10+ anos', yearsRange: '10+ anos', value: bondsOver10y, percentage: totalBonds > 0 ? (bondsOver10y / totalBonds) * 100 : 0, color: '#8b5cf6' },
+    { label: '1 ano', yearsRange: '0-1 anos', value: bonds1y, percentage: totalBonds > 0 ? (bonds1y / totalBonds) * 100 : 0, color: 'var(--red)' },
+    { label: '2 anos', yearsRange: '1-2 anos', value: bonds2y, percentage: totalBonds > 0 ? (bonds2y / totalBonds) * 100 : 0, color: 'var(--orange)' },
+    { label: '3 anos', yearsRange: '2-3 anos', value: bonds3y, percentage: totalBonds > 0 ? (bonds3y / totalBonds) * 100 : 0, color: 'var(--yellow)' },
+    { label: '5 anos', yearsRange: '3-5 anos', value: bonds5y, percentage: totalBonds > 0 ? (bonds5y / totalBonds) * 100 : 0, color: 'var(--cyan)' },
+    { label: '10 anos', yearsRange: '5-10 anos', value: bonds10y, percentage: totalBonds > 0 ? (bonds10y / totalBonds) * 100 : 0, color: 'var(--accent)' },
+    { label: '10+ anos', yearsRange: '10+ anos', value: bondsOver10y, percentage: totalBonds > 0 ? (bondsOver10y / totalBonds) * 100 : 0, color: 'var(--purple)' },
   ];
 
   const shortTermPct = buckets
@@ -136,19 +136,19 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
           <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Curto Prazo (0-2a)</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ef4444' }}>{shortTermPct.toFixed(1)}%</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--red)' }}>{shortTermPct.toFixed(1)}%</div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Próximos 2 anos</div>
           </div>
 
           <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Médio Prazo (2-5a)</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f59e0b' }}>{mediumTermPct.toFixed(1)}%</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--yellow)' }}>{mediumTermPct.toFixed(1)}%</div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>2-5 anos</div>
           </div>
 
           <div style={{ padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Longo Prazo (5+a)</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#3b82f6' }}>{longTermPct.toFixed(1)}%</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)' }}>{longTermPct.toFixed(1)}%</div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>5+ anos</div>
           </div>
 

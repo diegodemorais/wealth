@@ -39,11 +39,11 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
   const { privacyMode } = useUiStore();
 
   const driftItems: DriftItem[] = [
-    { ticker: 'SWRD', targetPercent: swrdTarget, currentPercent: swrdCurrent, driftPp: swrdCurrent - swrdTarget, driftDirection: (swrdCurrent - swrdTarget) > 0 ? 'over' : 'under', color: '#3b82f6' },
-    { ticker: 'AVGS', targetPercent: avgsTarget, currentPercent: avgsCurrent, driftPp: avgsCurrent - avgsTarget, driftDirection: (avgsCurrent - avgsTarget) > 0 ? 'over' : 'under', color: '#06b6d4' },
-    { ticker: 'AVEM', targetPercent: avemTarget, currentPercent: avemCurrent, driftPp: avemCurrent - avemTarget, driftDirection: (avemCurrent - avemTarget) > 0 ? 'over' : 'under', color: '#10b981' },
-    { ticker: 'IPCA+', targetPercent: ipcaTarget, currentPercent: ipcaCurrent, driftPp: ipcaCurrent - ipcaTarget, driftDirection: (ipcaCurrent - ipcaTarget) > 0 ? 'over' : 'under', color: '#f59e0b' },
-    { ticker: 'HODL11', targetPercent: hodl11Target, currentPercent: hodl11Current, driftPp: hodl11Current - hodl11Target, driftDirection: (hodl11Current - hodl11Target) > 0 ? 'over' : 'under', color: '#a78bfa' },
+    { ticker: 'SWRD', targetPercent: swrdTarget, currentPercent: swrdCurrent, driftPp: swrdCurrent - swrdTarget, driftDirection: (swrdCurrent - swrdTarget) > 0 ? 'over' : 'under', color: 'var(--accent)' },
+    { ticker: 'AVGS', targetPercent: avgsTarget, currentPercent: avgsCurrent, driftPp: avgsCurrent - avgsTarget, driftDirection: (avgsCurrent - avgsTarget) > 0 ? 'over' : 'under', color: 'var(--cyan)' },
+    { ticker: 'AVEM', targetPercent: avemTarget, currentPercent: avemCurrent, driftPp: avemCurrent - avemTarget, driftDirection: (avemCurrent - avemTarget) > 0 ? 'over' : 'under', color: 'var(--green)' },
+    { ticker: 'IPCA+', targetPercent: ipcaTarget, currentPercent: ipcaCurrent, driftPp: ipcaCurrent - ipcaTarget, driftDirection: (ipcaCurrent - ipcaTarget) > 0 ? 'over' : 'under', color: 'var(--yellow)' },
+    { ticker: 'HODL11', targetPercent: hodl11Target, currentPercent: hodl11Current, driftPp: hodl11Current - hodl11Target, driftDirection: (hodl11Current - hodl11Target) > 0 ? 'over' : 'under', color: 'rgba(168, 85, 247, 0.7)' },
   ];
 
   const maxDrift = Math.max(...driftItems.map(d => Math.abs(d.driftPp)));
@@ -52,11 +52,11 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
 
   const statusBg = needsRebalance ? 'rgba(245,158,11,0.1)' : 'rgba(34,197,94,0.1)';
   const statusBorder = needsRebalance ? 'rgba(245,158,11,0.25)' : 'rgba(34,197,94,0.25)';
-  const statusColor = needsRebalance ? '#f59e0b' : '#22c55e';
+  const statusColor = needsRebalance ? 'var(--yellow)' : 'var(--green)';
 
   const urgencyBg = itemsOutOfTolerance.length > 2 ? 'rgba(239,68,68,0.1)' : itemsOutOfTolerance.length > 0 ? 'rgba(245,158,11,0.1)' : 'rgba(34,197,94,0.1)';
   const urgencyBorder = itemsOutOfTolerance.length > 2 ? 'rgba(239,68,68,0.25)' : itemsOutOfTolerance.length > 0 ? 'rgba(245,158,11,0.25)' : 'rgba(34,197,94,0.25)';
-  const urgencyColor = itemsOutOfTolerance.length > 2 ? '#ef4444' : itemsOutOfTolerance.length > 0 ? '#f59e0b' : '#22c55e';
+  const urgencyColor = itemsOutOfTolerance.length > 2 ? 'var(--red)' : itemsOutOfTolerance.length > 0 ? 'var(--yellow)' : 'var(--green)';
 
   return (
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
@@ -148,7 +148,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
 
           <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Fora de Tolerância</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#ef4444', marginBottom: '4px' }}>{itemsOutOfTolerance.length}</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>{itemsOutOfTolerance.length}</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>de {driftItems.length} ativos</div>
           </div>
 
@@ -164,7 +164,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
         {/* Recommendations */}
         {itemsOutOfTolerance.length > 0 && (
           <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 600, marginBottom: '8px' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--yellow)', fontWeight: 600, marginBottom: '8px' }}>
               ⚠️ Ações Recomendadas:
             </div>
             <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.75rem', color: 'var(--text)', display: 'flex', flexDirection: 'column', gap: '4px' }}>

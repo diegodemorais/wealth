@@ -46,7 +46,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
   };
 
   const getTextColor = (returnValue: number): string => {
-    if (Math.abs(returnValue) < 0.02) return '#cbd5e1';
+    if (Math.abs(returnValue) < 0.02) return 'var(--muted)';
     return '#fff';
   };
 

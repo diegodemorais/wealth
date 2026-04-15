@@ -40,13 +40,13 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
           {
             label: 'Drawdown %',
             data: displayData,
-            borderColor: '#ef4444',
+            borderColor: 'var(--red)',
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             borderWidth: 2,
             fill: true,
             tension: 0.3,
             pointRadius: 2,
-            pointBackgroundColor: '#ef4444',
+            pointBackgroundColor: 'var(--red)',
             pointBorderColor: '#fff',
             pointBorderWidth: 1,
           },
@@ -59,12 +59,12 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
         plugins: {
           legend: {
             position: 'top' as const,
-            labels: { color: '#cbd5e1', font: { size: 12 }, padding: 12 },
+            labels: { color: 'var(--muted)', font: { size: 12 }, padding: 12 },
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: '#cbd5e1',
-            bodyColor: '#94a3b8',
+            titleColor: 'var(--muted)',
+            bodyColor: 'var(--muted)',
             borderColor: 'rgba(71, 85, 105, 0.5)',
             borderWidth: 1,
             padding: 8,
@@ -81,13 +81,13 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
             max: 0,
             grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
-              color: '#94a3b8',
+              color: 'var(--muted)',
               callback: function (value) { return (value as number).toFixed(0) + '%'; },
             },
           },
           x: {
             grid: { display: false },
-            ticks: { color: '#cbd5e1', maxRotation: 45, minRotation: 0 },
+            ticks: { color: 'var(--muted)', maxRotation: 45, minRotation: 0 },
           },
         },
       },
@@ -101,7 +101,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
   }, [dates, drawdownPct]);
 
   const currentDd = drawdownPct[drawdownPct.length - 1] || 0;
-  const currentColor = currentDd > -10 ? '#22c55e' : '#f59e0b';
+  const currentColor = currentDd > -10 ? 'var(--green)' : 'var(--yellow)';
   const currentBg = currentDd > -10 ? 'rgba(34,197,94,0.1)' : 'rgba(245,158,11,0.1)';
   const currentBorder = currentDd > -10 ? 'rgba(34,197,94,0.25)' : 'rgba(245,158,11,0.25)';
 
@@ -119,7 +119,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
           <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Max Drawdown</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ef4444' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }}>
               {privacyMode ? '••' : maxDrawdown.toFixed(2)}%
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Worst case (histórico)</div>
@@ -135,7 +135,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
 
           <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Recuperação</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>
               {currentDd > -5 ? 'ATH' : 'Recuperando'}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>vs. máximo histórico</div>

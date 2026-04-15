@@ -48,7 +48,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
       likeSpendMensal: 0,
       imprevistossMensal: 0,
       totalMensal: mustaveMonthly,
-      color: '#ef4444',
+      color: 'var(--red)',
     },
     {
       categoria: 'Like-to-Have (Conforto)',
@@ -56,7 +56,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
       likeSpendMensal: likesMonthly,
       imprevistossMensal: 0,
       totalMensal: likesMonthly,
-      color: '#f59e0b',
+      color: 'var(--yellow)',
     },
     {
       categoria: 'Imprevistos (Buffer)',
@@ -64,7 +64,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
       likeSpendMensal: 0,
       imprevistossMensal: imprevistosMonthly,
       totalMensal: imprevistosMonthly,
-      color: '#8b5cf6',
+      color: 'var(--purple)',
     },
   ];
 
@@ -76,7 +76,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   const isWellBalanced = mustavePercent <= 60 && mustavePercent >= 50;
   const isFlexible = mustavePercent < 50;
 
-  const flexColor = isWellBalanced ? '#22c55e' : isFlexible ? '#3b82f6' : '#f59e0b';
+  const flexColor = isWellBalanced ? 'var(--green)' : isFlexible ? 'var(--accent)' : 'var(--yellow)';
   const flexBg = isWellBalanced ? 'rgba(34,197,94,0.1)' : isFlexible ? 'rgba(59,130,246,0.1)' : 'rgba(245,158,11,0.1)';
   const flexBorder = isWellBalanced ? 'rgba(34,197,94,0.25)' : isFlexible ? 'rgba(59,130,246,0.25)' : 'rgba(245,158,11,0.25)';
   const flexLabel = isWellBalanced ? '✅ Balanceado' : isFlexible ? '🟢 Muito Flexível' : '⚠️ Rígido';
@@ -93,7 +93,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
           <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Despesa Anual Total (Baseline)
           </div>
-          <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>
+          <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>
             {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
@@ -110,7 +110,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
           <div style={{ display: 'flex', height: '64px', background: 'rgba(71,85,105,0.15)', borderRadius: '4px', overflow: 'hidden', gap: 0, marginBottom: '8px' }}>
             {/* Must-Have */}
             <div
-              style={{ flex: mustavePercent, backgroundColor: '#ef4444', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: mustavePercent > 12 ? 'auto' : '0px' }}
+              style={{ flex: mustavePercent, backgroundColor: 'var(--red)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: mustavePercent > 12 ? 'auto' : '0px' }}
               title={`Essencial: ${mustavePercent.toFixed(1)}%`}
             >
               {mustavePercent > 12 && (
@@ -120,7 +120,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
 
             {/* Like-to-Have */}
             <div
-              style={{ flex: likesPercent, backgroundColor: '#f59e0b', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: likesPercent > 12 ? 'auto' : '0px' }}
+              style={{ flex: likesPercent, backgroundColor: 'var(--yellow)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: likesPercent > 12 ? 'auto' : '0px' }}
               title={`Conforto: ${likesPercent.toFixed(1)}%`}
             >
               {likesPercent > 12 && (
@@ -130,7 +130,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
 
             {/* Imprevistos */}
             <div
-              style={{ flex: imprevistosPercent, backgroundColor: '#8b5cf6', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: imprevistosPercent > 12 ? 'auto' : '0px' }}
+              style={{ flex: imprevistosPercent, backgroundColor: 'var(--purple)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: imprevistosPercent > 12 ? 'auto' : '0px' }}
               title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
             >
               {imprevistosPercent > 12 && (
@@ -147,7 +147,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Essencial
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#ef4444', marginBottom: '4px' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>
               {mustavePercent.toFixed(1)}%
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
@@ -160,7 +160,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Conforto
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#f59e0b', marginBottom: '4px' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--yellow)', marginBottom: '4px' }}>
               {likesPercent.toFixed(1)}%
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
@@ -173,7 +173,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Buffer
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#8b5cf6', marginBottom: '4px' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--purple)', marginBottom: '4px' }}>
               {imprevistosPercent.toFixed(1)}%
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>

@@ -22,9 +22,9 @@ interface SemaforoTriggersProps {
 }
 
 const categoryColors: Record<string, { color: string; bg: string; border: string }> = {
-  taxa: { color: '#06b6d4', bg: 'rgba(6,182,212,0.1)', border: 'rgba(6,182,212,0.3)' },
-  posicao: { color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.3)' },
-  crypto: { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)' },
+  taxa: { color: 'var(--cyan)', bg: 'rgba(6,182,212,0.1)', border: 'rgba(6,182,212,0.3)' },
+  posicao: { color: 'var(--purple)', bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.3)' },
+  crypto: { color: 'var(--yellow)', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)' },
 }
 
 const rowBg: Record<string, string> = {
@@ -44,7 +44,7 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
     vermelhoCount > 0 ? "vermelho" : amareloCount > 0 ? "amarelo" : "verde"
 
   return (
-    <div style={{ borderLeft: '4px solid #eab308', borderRadius: '8px', background: 'var(--card)', padding: '24px', marginBottom: '16px' }}>
+    <div style={{ borderLeft: '4px solid var(--yellow)', borderRadius: '8px', background: 'var(--card)', padding: '24px', marginBottom: '16px' }}>
       {/* Header — clickable trigger */}
       <div
         style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: '8px', cursor: 'pointer', marginBottom: '12px' }}

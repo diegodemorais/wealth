@@ -28,8 +28,8 @@ export function DrawdownHistChart({ data }: DrawdownHistChartProps) {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--card2)',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '14px',

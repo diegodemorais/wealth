@@ -19,8 +19,8 @@ export function BucketAllocationChart({ data }: BucketAllocationChartProps) {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--card2)',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '14px',
@@ -30,10 +30,10 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
   },
   placeholder: {
-    backgroundColor: '#111827',
+    backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     padding: '24px',
     textAlign: 'center',
-    color: '#9ca3af',
+    color: 'var(--muted)',
   },
 };

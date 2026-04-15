@@ -50,16 +50,16 @@ export function FamilyScenarioCards({
   const pfireValues = getPfireForPerfil(selectedPerfil);
 
   const getPfireColor = (pfire: number): string => {
-    if (pfire >= 90) return '#22c55e';
-    if (pfire >= 70) return '#eab308';
-    if (pfire >= 50) return '#f59e0b';
-    return '#ef4444';
+    if (pfire >= 90) return 'var(--green)';
+    if (pfire >= 70) return 'var(--yellow)';
+    if (pfire >= 50) return 'var(--yellow)';
+    return 'var(--red)';
   };
 
   const scenarios = [
-    { label: 'Base', value: pfireValues.base, color: '#3b82f6' },
-    { label: 'Favorável', value: pfireValues.fav, color: '#10b981' },
-    { label: 'Stress', value: pfireValues.stress, color: '#ef4444' },
+    { label: 'Base', value: pfireValues.base, color: 'var(--accent)' },
+    { label: 'Favorável', value: pfireValues.fav, color: 'var(--green)' },
+    { label: 'Stress', value: pfireValues.stress, color: 'var(--red)' },
   ];
 
   return (
@@ -78,11 +78,11 @@ export function FamilyScenarioCards({
               onClick={() => setSelectedPerfil(key)}
               style={{
                 padding: '12px', borderRadius: '8px', cursor: 'pointer', textAlign: 'left',
-                border: isSelected ? '2px solid #3b82f6' : '2px solid var(--border)',
+                border: isSelected ? '2px solid var(--accent)' : '2px solid var(--border)',
                 background: isSelected ? 'rgba(59,130,246,0.1)' : 'var(--card)',
               }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '4px', color: isSelected ? '#3b82f6' : 'var(--text)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '4px', color: isSelected ? 'var(--accent)' : 'var(--text)' }}>
                 {perfil.label}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', textAlign: 'left' }}>
@@ -95,7 +95,7 @@ export function FamilyScenarioCards({
 
       {/* Selected Scenario Details */}
       {currentPerfil && (
-        <div style={{ background: 'var(--card)', borderLeft: '4px solid #3b82f6', borderRadius: '0 4px 4px 0', padding: '12px' }}>
+        <div style={{ background: 'var(--card)', borderLeft: '4px solid var(--accent)', borderRadius: '0 4px 4px 0', padding: '12px' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
             {currentPerfil.label}
           </div>

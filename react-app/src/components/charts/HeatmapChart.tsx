@@ -73,15 +73,15 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
       </div>
       <div style={styles.legend}>
         <div style={styles.legendItem}>
-          <div style={{ ...styles.legendBox, backgroundColor: '#ff6666' }} />
+          <div style={{ ...styles.legendBox, backgroundColor: 'var(--red)' }} />
           <span>Negative Correlation</span>
         </div>
         <div style={styles.legendItem}>
-          <div style={{ ...styles.legendBox, backgroundColor: '#ffffff', border: '1px solid #ccc' }} />
+          <div style={{ ...styles.legendBox, backgroundColor: 'var(--text)', border: '1px solid #ccc' }} />
           <span>No Correlation</span>
         </div>
         <div style={styles.legendItem}>
-          <div style={{ ...styles.legendBox, backgroundColor: '#66ff66' }} />
+          <div style={{ ...styles.legendBox, backgroundColor: 'var(--green)' }} />
           <span>Positive Correlation</span>
         </div>
       </div>
@@ -93,19 +93,19 @@ const CELL_SIZE = 80;
 const HEADER_HEIGHT = 40;
 
 const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
+  container: { backgroundColor: 'var(--card)', border: '1px solid var(--card2)', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
   title: { margin: '0 0 16px 0', color: '#fff' },
   heatmapWrapper: { display: 'inline-block', marginBottom: '16px' },
   headerRow: { display: 'flex' },
-  cornerCell: { width: HEADER_HEIGHT, height: HEADER_HEIGHT, backgroundColor: '#111827' },
-  headerCell: { width: CELL_SIZE, height: HEADER_HEIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d1d5db', fontSize: '12px', fontWeight: '600', backgroundColor: '#111827', borderRight: '1px solid #374151', borderBottom: '1px solid #374151' },
+  cornerCell: { width: HEADER_HEIGHT, height: HEADER_HEIGHT, backgroundColor: 'var(--bg)' },
+  headerCell: { width: CELL_SIZE, height: HEADER_HEIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--border)', fontSize: '12px', fontWeight: '600', backgroundColor: 'var(--bg)', borderRight: '1px solid var(--card2)', borderBottom: '1px solid var(--card2)' },
   dataRow: { display: 'flex' },
-  rowLabel: { width: HEADER_HEIGHT, height: CELL_SIZE, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d1d5db', fontSize: '12px', fontWeight: '600', backgroundColor: '#111827', borderRight: '1px solid #374151', borderBottom: '1px solid #374151' },
-  cell: { width: CELL_SIZE, height: CELL_SIZE, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid #374151', borderBottom: '1px solid #374151', cursor: 'pointer', transition: 'opacity 0.2s' },
+  rowLabel: { width: HEADER_HEIGHT, height: CELL_SIZE, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--border)', fontSize: '12px', fontWeight: '600', backgroundColor: 'var(--bg)', borderRight: '1px solid var(--card2)', borderBottom: '1px solid var(--card2)' },
+  cell: { width: CELL_SIZE, height: CELL_SIZE, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid var(--card2)', borderBottom: '1px solid var(--card2)', cursor: 'pointer', transition: 'opacity 0.2s' },
   cellValue: { color: '#000', fontWeight: '600', fontSize: '13px' },
-  masked: { minHeight: '400px', backgroundColor: '#111827', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  maskedText: { textAlign: 'center', color: '#9ca3af' },
-  legend: { display: 'flex', gap: '20px', marginTop: '12px', padding: '12px', backgroundColor: '#111827', borderRadius: '4px' },
-  legendItem: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#9ca3af' },
+  masked: { minHeight: '400px', backgroundColor: 'var(--bg)', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' },
+  maskedText: { textAlign: 'center', color: 'var(--muted)' },
+  legend: { display: 'flex', gap: '20px', marginTop: '12px', padding: '12px', backgroundColor: 'var(--bg)', borderRadius: '4px' },
+  legendItem: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--muted)' },
   legendBox: { width: '16px', height: '16px', borderRadius: '2px' },
 };

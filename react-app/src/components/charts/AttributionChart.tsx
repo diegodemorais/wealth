@@ -29,6 +29,6 @@ export function AttributionChart({ data }: AttributionChartProps) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
+  container: { backgroundColor: 'var(--card)', border: '1px solid var(--card2)', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
   title: { margin: '0 0 16px 0', color: '#fff' },
 };

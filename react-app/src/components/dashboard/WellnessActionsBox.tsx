@@ -135,7 +135,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
   if (actions.length === 0) {
     return (
       <div style={{ padding: '24px', textAlign: 'center' }}>
-        <p style={{ fontSize: '0.875rem', color: '#22c55e', fontWeight: 600 }}>
+        <p style={{ fontSize: '0.875rem', color: 'var(--green)', fontWeight: 600 }}>
           All wellness metrics at maximum.
         </p>
       </div>
@@ -154,7 +154,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
           borderRadius: '4px',
           border: '1px solid rgba(245,158,11,0.3)',
           background: 'rgba(245,158,11,0.1)',
-          color: '#f59e0b',
+          color: 'var(--yellow)',
           fontFamily: 'monospace',
           fontSize: '0.75rem',
           fontWeight: 600,
@@ -188,7 +188,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
                 fontSize: '0.875rem',
                 fontWeight: 700,
                 background: 'rgba(245,158,11,0.2)',
-                color: '#f59e0b',
+                color: 'var(--yellow)',
               }}>
                 {action.rank}
               </div>
@@ -199,7 +199,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
                   <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)' }}>
                     {action.metric}
                   </span>
-                  <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#f59e0b', flexShrink: 0 }}>
+                  <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--yellow)', flexShrink: 0 }}>
                     {privacyMode ? "••••" : `+${action.potential_pts}pts potential`}
                   </span>
                 </div>

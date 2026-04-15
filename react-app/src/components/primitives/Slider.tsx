@@ -57,12 +57,12 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '8px',
   },
   label: {
-    color: '#d1d5db',
+    color: 'var(--border)',
     fontSize: '14px',
     fontWeight: '600',
   },
   value: {
-    color: '#3b82f6',
+    color: 'var(--accent)',
     fontSize: '16px',
     fontWeight: '700',
   },
@@ -70,7 +70,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     height: '6px',
     borderRadius: '3px',
-    background: '#374151',
+    background: 'var(--card2)',
     outline: 'none',
     WebkitAppearance: 'none',
     appearance: 'none',
@@ -83,6 +83,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   minMax: {
     fontSize: '12px',
-    color: '#9ca3af',
+    color: 'var(--muted)',
   },
 };

@@ -26,11 +26,11 @@ export function KpiCard({
   const getStatusColor = (s: string) => {
     switch (s) {
       case 'critical':
-        return '#ef4444';
+        return 'var(--red)';
       case 'warning':
-        return '#f59e0b';
+        return 'var(--yellow)';
       default:
-        return '#10b981';
+        return 'var(--green)';
     }
   };
 
@@ -68,16 +68,16 @@ export function KpiCard({
 
 function getDeltaColor(delta: number | string): string {
   if (typeof delta === 'string') {
-    return delta.includes('-') ? '#ef4444' : '#10b981';
+    return delta.includes('-') ? 'var(--red)' : 'var(--green)';
   }
-  return delta >= 0 ? '#10b981' : '#ef4444';
+  return delta >= 0 ? 'var(--green)' : 'var(--red)';
 }
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
-    borderLeft: '4px solid #10b981',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--card2)',
+    borderLeft: '4px solid var(--green)',
     borderRadius: '8px',
     padding: '16px',
     display: 'flex',
@@ -95,7 +95,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
   },
   label: {
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontSize: '12px',
     textTransform: 'uppercase',
     fontWeight: '600',
@@ -112,7 +112,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '600',
   },
   unit: {
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontSize: '14px',
     fontWeight: '400',
     marginLeft: '4px',

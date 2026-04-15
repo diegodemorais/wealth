@@ -22,18 +22,18 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
   const [selectedTab, setSelectedTab] = useState<'swrd' | 'avgs' | 'avem'>('swrd');
 
   const etfs = {
-    swrd: { name: 'SWRD (Global Large Cap)', color: '#3b82f6', data: swrd },
-    avgs: { name: 'AVGS (Global Quality)', color: '#06b6d4', data: avgs },
-    avem: { name: 'AVEM (Global EM Value)', color: '#10b981', data: avem },
+    swrd: { name: 'SWRD (Global Large Cap)', color: 'var(--accent)', data: swrd },
+    avgs: { name: 'AVGS (Global Quality)', color: 'var(--cyan)', data: avgs },
+    avem: { name: 'AVEM (Global EM Value)', color: 'var(--green)', data: avem },
   };
 
   const currentEtf = etfs[selectedTab];
   const regions: Array<{ label: string; key: keyof ETFCompositionData; color: string }> = [
-    { label: 'USA', key: 'usa', color: '#3b82f6' },
-    { label: 'Europe', key: 'europe', color: '#8b5cf6' },
-    { label: 'Japan', key: 'japan', color: '#ec4899' },
-    { label: 'Other DM', key: 'otherDm', color: '#f59e0b' },
-    { label: 'EM', key: 'em', color: '#10b981' },
+    { label: 'USA', key: 'usa', color: 'var(--accent)' },
+    { label: 'Europe', key: 'europe', color: 'var(--purple)' },
+    { label: 'Japan', key: 'japan', color: 'var(--red)' },
+    { label: 'Other DM', key: 'otherDm', color: 'var(--yellow)' },
+    { label: 'EM', key: 'em', color: 'var(--green)' },
   ];
 
   return (

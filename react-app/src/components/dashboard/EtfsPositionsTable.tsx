@@ -42,7 +42,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
       });
   }, [data]);
 
-  const getStatusColor = (status: string): string => status === 'alvo' ? '#22c55e' : '#eab308';
+  const getStatusColor = (status: string): string => status === 'alvo' ? 'var(--green)' : 'var(--yellow)';
   const getStatusLabel = (status: string): string => status === 'alvo' ? 'Alvo' : 'Transição';
 
   if (positions.length === 0) {
@@ -100,10 +100,10 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
                   <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••••' : fmtBrl(pos.currentValue)}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, fontFamily: 'monospace', color: pl >= 0 ? '#22c55e' : '#ef4444' }}>
+                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, fontFamily: 'monospace', color: pl >= 0 ? 'var(--green)' : 'var(--red)' }}>
                     {privacyMode ? '••••' : `${pl >= 0 ? '+' : ''}${fmtBrl(pl)}`}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace', color: plPct >= 0 ? '#22c55e' : '#ef4444' }}>
+                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace', color: plPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
                     {privacyMode ? '••' : `${plPct >= 0 ? '+' : ''}${(plPct * 100).toFixed(1)}%`}
                   </td>
                   <td style={{ padding: '8px', textAlign: 'center' }}>
@@ -128,10 +128,10 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
               <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                 {privacyMode ? '••••' : fmtBrl(totals.currentValue)}
               </td>
-              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPL >= 0 ? '#22c55e' : '#ef4444' }}>
+              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPL >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {privacyMode ? '••••' : `${totalPL >= 0 ? '+' : ''}${fmtBrl(totalPL)}`}
               </td>
-              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPLPct >= 0 ? '#22c55e' : '#ef4444' }}>
+              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPLPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {privacyMode ? '••' : `${totalPLPct >= 0 ? '+' : ''}${(totalPLPct * 100).toFixed(1)}%`}
               </td>
               <td style={{ padding: '8px' }}></td>
@@ -143,8 +143,8 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
       {/* Legend */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginTop: '12px' }}>
         {[
-          { label: 'Alvo Status', value: 'Permanent holding', color: '#22c55e' },
-          { label: 'Transição Status', value: 'Being rebalanced', color: '#eab308' },
+          { label: 'Alvo Status', value: 'Permanent holding', color: 'var(--green)' },
+          { label: 'Transição Status', value: 'Being rebalanced', color: 'var(--yellow)' },
           { label: 'Total P/L', value: 'Unrealized gain/loss', color: 'var(--text)' },
         ].map(item => (
           <div key={item.label} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '4px', fontSize: '0.75rem' }}>

@@ -104,8 +104,8 @@ export function SimulatorParams() {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--card2)',
     borderRadius: '8px',
     padding: '20px',
     marginBottom: '14px',
@@ -129,12 +129,12 @@ const styles: Record<string, React.CSSProperties> = {
   hint: {
     margin: '8px 0 0 0',
     fontSize: '12px',
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontStyle: 'italic',
   },
   summary: {
-    backgroundColor: '#111827',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--bg)',
+    border: '1px solid var(--card2)',
     borderRadius: '4px',
     padding: '12px 16px',
   },
@@ -144,12 +144,12 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
   },
   summaryLabel: {
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontSize: '13px',
     fontWeight: '600',
   },
   summaryValue: {
-    color: '#3b82f6',
+    color: 'var(--accent)',
     fontSize: '14px',
     fontWeight: '700',
     fontFamily: 'monospace',

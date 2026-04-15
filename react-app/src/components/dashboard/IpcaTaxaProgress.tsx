@@ -46,7 +46,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
   const isOnTarget = Math.abs(ipcaTotalGap) < 2;
   const totalBg = isOnTarget || ipcaTotalGap > 0 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)';
   const totalBorder = isOnTarget || ipcaTotalGap > 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)';
-  const totalColor = isOnTarget || ipcaTotalGap > 0 ? '#22c55e' : '#ef4444';
+  const totalColor = isOnTarget || ipcaTotalGap > 0 ? 'var(--green)' : 'var(--red)';
 
   return (
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
@@ -59,13 +59,13 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
           <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Taxa IPCA+ Atual</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#06b6d4' }}>{taxaAtual.toFixed(2)}%</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cyan)' }}>{taxaAtual.toFixed(2)}%</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Rendimento real anual</div>
           </div>
 
           <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Total IPCA+</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#06b6d4' }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotalBrl)}</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cyan)' }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotalBrl)}</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{ipcaTotalCurrentPercent.toFixed(1)}% da carteira</div>
           </div>
 
@@ -99,7 +99,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
                 style={{
                   height: '100%', transition: 'width 0.5s',
                   width: `${ipca2040AtualPercent > 0 ? (ipca2040AtualPercent / (ipca2040AlvoPercent + ipca2050AlvoPercent)) * 100 : 0}%`,
-                  backgroundColor: ipca2040Gap <= 0 ? '#06b6d4' : '#f59e0b',
+                  backgroundColor: ipca2040Gap <= 0 ? 'var(--cyan)' : 'var(--yellow)',
                 }}
               />
             </div>
@@ -116,7 +116,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
                 style={{
                   height: '100%', transition: 'width 0.5s',
                   width: `${ipca2050AtualPercent > 0 ? (ipca2050AtualPercent / (ipca2040AlvoPercent + ipca2050AlvoPercent)) * 100 : 0}%`,
-                  backgroundColor: ipca2050Gap <= 0 ? '#8b5cf6' : '#f59e0b',
+                  backgroundColor: ipca2050Gap <= 0 ? 'var(--purple)' : 'var(--yellow)',
                 }}
               />
             </div>
@@ -141,19 +141,19 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
               <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>IPCA+ 2040</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#06b6d4', marginBottom: '4px' }}>{privacyMode ? 'R$••••' : fmtBrl(ipca2040Valor)}</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--cyan)', marginBottom: '4px' }}>{privacyMode ? 'R$••••' : fmtBrl(ipca2040Valor)}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Alvo: {ipca2040AlvoPercent.toFixed(1)}%</div>
               </div>
 
               <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>IPCA+ 2050</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>{privacyMode ? 'R$••••' : fmtBrl(ipca2050Valor)}</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>{privacyMode ? 'R$••••' : fmtBrl(ipca2050Valor)}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Alvo: {ipca2050AlvoPercent.toFixed(1)}%</div>
               </div>
 
               <div style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Deficit Total</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f59e0b', marginBottom: '4px' }}>{ipcaTotalGap > 0 ? '+' : ''}{ipcaTotalGap.toFixed(1)}pp</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--yellow)', marginBottom: '4px' }}>{ipcaTotalGap > 0 ? '+' : ''}{ipcaTotalGap.toFixed(1)}pp</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Ainda para alocar</div>
               </div>
             </div>

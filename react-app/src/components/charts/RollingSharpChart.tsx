@@ -24,7 +24,7 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
 
     return createSimpleLineChartOption({
       data, privacyMode, theme, xAxisData,
-      seriesData: [{ name: 'Rolling Sharpe Ratio (12m)', data: rollingSharpData, color: '#f59e0b' }],
+      seriesData: [{ name: 'Rolling Sharpe Ratio (12m)', data: rollingSharpData, color: 'var(--yellow)' }],
     });
   }, [privacyMode, theme]);
 

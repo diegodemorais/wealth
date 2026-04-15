@@ -45,10 +45,10 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
   const rfContribution = (rfAllocation / 100) * rfReturn;
 
   const contributions: ContributionItem[] = [
-    { label: 'SWRD (Global Large Cap)', allocation: swrdAllocation, return: swrdReturn, contribution: swrdContribution, color: '#3b82f6' },
-    { label: 'AVGS (Quality)', allocation: avgsAllocation, return: avgsReturn, contribution: avgsContribution, color: '#06b6d4' },
-    { label: 'AVEM (EM Value)', allocation: avemAllocation, return: avemReturn, contribution: avemContribution, color: '#10b981' },
-    { label: 'Fixed Income', allocation: rfAllocation, return: rfReturn, contribution: rfContribution, color: '#f59e0b' },
+    { label: 'SWRD (Global Large Cap)', allocation: swrdAllocation, return: swrdReturn, contribution: swrdContribution, color: 'var(--accent)' },
+    { label: 'AVGS (Quality)', allocation: avgsAllocation, return: avgsReturn, contribution: avgsContribution, color: 'var(--cyan)' },
+    { label: 'AVEM (EM Value)', allocation: avemAllocation, return: avemReturn, contribution: avemContribution, color: 'var(--green)' },
+    { label: 'Fixed Income', allocation: rfAllocation, return: rfReturn, contribution: rfContribution, color: 'var(--yellow)' },
   ];
 
   const topContributor = contributions.reduce((max, item) => item.contribution > max.contribution ? item : max);

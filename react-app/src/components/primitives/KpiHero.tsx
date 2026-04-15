@@ -45,7 +45,7 @@ export function KpiHero({
       label: 'Progresso FIRE',
       value: privacyMode ? '••••' : fmtPct(fireProgress, 1),
       subtitle: privacyMode ? '••••' : undefined,
-      color: '#facc15', // yellow
+      color: 'rgba(234, 179, 8, 0.8)', // yellow
     },
   ];
 

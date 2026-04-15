@@ -90,7 +90,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           legend: {
             position: 'top' as const,
             labels: {
-              color: '#cbd5e1',
+              color: 'var(--muted)',
               font: { size: 12 },
               padding: 12,
               usePointStyle: true,
@@ -98,8 +98,8 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: '#cbd5e1',
-            bodyColor: '#94a3b8',
+            titleColor: 'var(--muted)',
+            bodyColor: 'var(--muted)',
             borderColor: 'rgba(71, 85, 105, 0.5)',
             borderWidth: 1,
             padding: 8,
@@ -114,7 +114,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           y: {
             grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
-              color: '#94a3b8',
+              color: 'var(--muted)',
               callback: function (value) {
                 return (value as number).toFixed(0) + '%';
               },
@@ -122,7 +122,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           },
           x: {
             grid: { display: false },
-            ticks: { color: '#cbd5e1' },
+            ticks: { color: 'var(--muted)' },
           },
         },
       },

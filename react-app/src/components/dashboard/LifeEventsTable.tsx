@@ -45,8 +45,8 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
         {data.eventos.map(event => {
           const isExpanded = expandedId === event.id;
-          const deltaColor = event.delta_pp > 0 ? '#ef4444' : '#22c55e';
-          const dotColor = event.confirmado ? '#22c55e' : '#eab308';
+          const deltaColor = event.delta_pp > 0 ? 'var(--red)' : 'var(--green)';
+          const dotColor = event.confirmado ? 'var(--green)' : 'var(--yellow)';
 
           return (
             <div key={event.id} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>

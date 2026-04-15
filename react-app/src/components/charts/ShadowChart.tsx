@@ -24,7 +24,7 @@ export function ShadowChart({ data }: ShadowChartProps) {
     return createDualLineChartOption({
       data, privacyMode, theme, xAxisData, series1Data: actualData, series1Name: 'Actual Portfolio',
       series2Data: shadowData, series2Name: 'Shadow Portfolio (60/40)',
-      series1Color: '#3b82f6', series2Color: '#ec4899', dashed: true,
+      series1Color: 'var(--accent)', series2Color: 'var(--red)', dashed: true,
     });
   }, [privacyMode, theme]);
 
@@ -37,6 +37,6 @@ export function ShadowChart({ data }: ShadowChartProps) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
+  container: { backgroundColor: 'var(--card)', border: '1px solid var(--card2)', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
   title: { margin: '0 0 16px 0', color: '#fff' },
 };

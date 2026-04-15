@@ -69,26 +69,26 @@ const GlidePath: React.FC<GlidePathProps> = ({
           {
             label: 'Equity %',
             data: glidePathPoints.map(p => p.equityPercent),
-            borderColor: '#3b82f6',
+            borderColor: 'var(--accent)',
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             borderWidth: 2.5,
             fill: true,
             tension: 0.4,
             pointRadius: 4,
-            pointBackgroundColor: '#3b82f6',
+            pointBackgroundColor: 'var(--accent)',
             pointBorderColor: '#fff',
             pointBorderWidth: 2,
           },
           {
             label: 'RF %',
             data: glidePathPoints.map(p => p.rfPercent),
-            borderColor: '#f59e0b',
+            borderColor: 'var(--yellow)',
             backgroundColor: 'rgba(245, 158, 11, 0.1)',
             borderWidth: 2.5,
             fill: true,
             tension: 0.4,
             pointRadius: 4,
-            pointBackgroundColor: '#f59e0b',
+            pointBackgroundColor: 'var(--yellow)',
             pointBorderColor: '#fff',
             pointBorderWidth: 2,
           },
@@ -101,12 +101,12 @@ const GlidePath: React.FC<GlidePathProps> = ({
         plugins: {
           legend: {
             position: 'top' as const,
-            labels: { color: '#cbd5e1', font: { size: 12 }, padding: 12, usePointStyle: true },
+            labels: { color: 'var(--muted)', font: { size: 12 }, padding: 12, usePointStyle: true },
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: '#cbd5e1',
-            bodyColor: '#94a3b8',
+            titleColor: 'var(--muted)',
+            bodyColor: 'var(--muted)',
             borderColor: 'rgba(71, 85, 105, 0.5)',
             borderWidth: 1,
             padding: 8,
@@ -121,11 +121,11 @@ const GlidePath: React.FC<GlidePathProps> = ({
           y: {
             min: 0, max: 100,
             grid: { color: 'rgba(71, 85, 105, 0.1)' },
-            ticks: { color: '#94a3b8', callback: function (value) { return (value as number).toFixed(0) + '%'; } },
+            ticks: { color: 'var(--muted)', callback: function (value) { return (value as number).toFixed(0) + '%'; } },
           },
           x: {
             grid: { display: false },
-            ticks: { color: '#cbd5e1' },
+            ticks: { color: 'var(--muted)' },
           },
         },
       },
@@ -158,11 +158,11 @@ const GlidePath: React.FC<GlidePathProps> = ({
             </div>
             <div style={{ marginBottom: '8px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#60a5fa' }}>{currentEquityPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(59, 130, 246, 0.7)' }}>{currentEquityPercent.toFixed(1)}%</div>
             </div>
             <div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>RF</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fbbf24' }}>{currentRfPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>{currentRfPercent.toFixed(1)}%</div>
             </div>
           </div>
 
@@ -172,11 +172,11 @@ const GlidePath: React.FC<GlidePathProps> = ({
             </div>
             <div style={{ marginBottom: '8px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#60a5fa' }}>{retirementEquityPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(59, 130, 246, 0.7)' }}>{retirementEquityPercent.toFixed(1)}%</div>
             </div>
             <div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>RF</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#fbbf24' }}>{retirementRfPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>{retirementRfPercent.toFixed(1)}%</div>
             </div>
           </div>
 
@@ -186,14 +186,14 @@ const GlidePath: React.FC<GlidePathProps> = ({
             </div>
             <div style={{ marginBottom: '8px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: retirementEquityPercent < currentEquityPercent ? '#ef4444' : '#22c55e' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: retirementEquityPercent < currentEquityPercent ? 'var(--red)' : 'var(--green)' }}>
                 {retirementEquityPercent < currentEquityPercent ? '−' : '+'}
                 {Math.abs(retirementEquityPercent - currentEquityPercent).toFixed(1)}pp
               </div>
             </div>
             <div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Taxa Anual</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#a78bfa' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)' }}>
                 {yearsToRetirement > 0 ? (Math.abs(retirementEquityPercent - currentEquityPercent) / yearsToRetirement).toFixed(2) : '—'}pp/a
               </div>
             </div>
@@ -217,8 +217,8 @@ const GlidePath: React.FC<GlidePathProps> = ({
                   <div style={{ color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>
                     {p.label} (idade {p.age})
                   </div>
-                  <div style={{ color: '#60a5fa', marginBottom: '4px' }}>{p.equityPercent.toFixed(0)}% Equity</div>
-                  <div style={{ color: '#fbbf24' }}>{p.rfPercent.toFixed(0)}% RF</div>
+                  <div style={{ color: 'rgba(59, 130, 246, 0.7)', marginBottom: '4px' }}>{p.equityPercent.toFixed(0)}% Equity</div>
+                  <div style={{ color: 'rgba(249, 115, 22, 0.8)' }}>{p.rfPercent.toFixed(0)}% RF</div>
                 </div>
               ))}
           </div>

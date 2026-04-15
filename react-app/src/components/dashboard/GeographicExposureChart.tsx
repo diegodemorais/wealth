@@ -26,11 +26,11 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
   const { privacyMode } = useUiStore();
 
   const regions = [
-    { label: 'USA', value: usa, color: '#3b82f6' },
-    { label: 'Europe', value: europe, color: '#8b5cf6' },
-    { label: 'Japan', value: japan, color: '#ec4899' },
-    { label: 'Other DM', value: otherDm, color: '#f59e0b' },
-    { label: 'Emerging Markets', value: em, color: '#10b981' },
+    { label: 'USA', value: usa, color: 'var(--accent)' },
+    { label: 'Europe', value: europe, color: 'var(--purple)' },
+    { label: 'Japan', value: japan, color: 'var(--red)' },
+    { label: 'Other DM', value: otherDm, color: 'var(--yellow)' },
+    { label: 'Emerging Markets', value: em, color: 'var(--green)' },
   ];
 
   useEffect(() => {
@@ -63,12 +63,12 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
         plugins: {
           legend: {
             position: 'bottom' as const,
-            labels: { color: '#cbd5e1', font: { size: 12 }, padding: 12, usePointStyle: true },
+            labels: { color: 'var(--muted)', font: { size: 12 }, padding: 12, usePointStyle: true },
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: '#cbd5e1',
-            bodyColor: '#94a3b8',
+            titleColor: 'var(--muted)',
+            bodyColor: 'var(--muted)',
             borderColor: 'rgba(71, 85, 105, 0.5)',
             borderWidth: 1,
             padding: 8,

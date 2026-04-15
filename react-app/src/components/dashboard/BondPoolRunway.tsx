@@ -70,7 +70,7 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
   const isWarning = futureCoverage >= 1.5 && futureCoverage < 2.5;
   const isCritical = futureCoverage < 1.5;
 
-  const statusColor = isSafe ? '#22c55e' : isWarning ? '#f59e0b' : '#ef4444';
+  const statusColor = isSafe ? 'var(--green)' : isWarning ? 'var(--yellow)' : 'var(--red)';
   const statusBg = isSafe ? 'rgba(34,197,94,0.1)' : isWarning ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)';
   const statusBorder = isSafe ? 'rgba(34,197,94,0.25)' : isWarning ? 'rgba(245,158,11,0.25)' : 'rgba(239,68,68,0.25)';
   const statusLabel = isSafe ? '✅ Seguro' : isWarning ? '⚠️ Atenção' : '🚨 Crítico';
@@ -106,7 +106,7 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Cobertura Hoje
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#06b6d4', marginBottom: '4px' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cyan)', marginBottom: '4px' }}>
               {currentCoverage.toFixed(1)}x
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
@@ -118,7 +118,7 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Pool em +{projectedYears}a
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#a78bfa' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)' }}>
               {privacyMode ? 'R$••••' : fmtBrl(futurePoolValue)}
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
@@ -159,7 +159,7 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
             <tbody>
               {runwayData.map((row, idx) => {
                 const coverageColor = row.fireExpense > 0
-                  ? row.coverage >= 2.5 ? '#22c55e' : row.coverage >= 1.5 ? '#f59e0b' : '#ef4444'
+                  ? row.coverage >= 2.5 ? 'var(--green)' : row.coverage >= 1.5 ? 'var(--yellow)' : 'var(--red)'
                   : 'var(--muted)';
 
                 return (
@@ -170,13 +170,13 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
                     <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                       {privacyMode ? '••' : (row.startBalance / 1000000).toFixed(2) + 'M'}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: '#22c55e' }}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--green)' }}>
                       {privacyMode ? '••' : `+${(row.investmentReturn / 1000000).toFixed(2)}M`}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: row.fireExpense > 0 ? '#ef4444' : 'var(--muted)' }}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: row.fireExpense > 0 ? 'var(--red)' : 'var(--muted)' }}>
                       {privacyMode ? '••' : `−${(row.fireExpense / 1000000).toFixed(2)}M`}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: row.endBalance > 0 ? 'var(--text)' : '#ef4444' }}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: row.endBalance > 0 ? 'var(--text)' : 'var(--red)' }}>
                       {privacyMode ? '••' : (row.endBalance / 1000000).toFixed(2) + 'M'}
                     </td>
                     <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: coverageColor }}>
@@ -199,13 +199,13 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
             <div><strong>Taxa de retorno assumida:</strong> {expectedReturn.toFixed(2)}%/ano</div>
             <div><strong>Taxa sustentável (SWR):</strong> {swrPercent.toFixed(2)}%</div>
             {runoutYear !== Infinity && runoutYear > projectedYears && (
-              <div style={{ color: '#f59e0b' }}>
+              <div style={{ color: 'var(--yellow)' }}>
                 <strong>⚠️ Atenção:</strong> Com despesas de {fmtBrl(fireAnnualExpense)}/ano,
                 a cobertura esgota em ~{(runoutYear + 1) * 12} meses
               </div>
             )}
             {isSafe && (
-              <div style={{ color: '#22c55e' }}>
+              <div style={{ color: 'var(--green)' }}>
                 <strong>✅ Seguro:</strong> Bond pool sustenta gastos por 2.5+ anos em média
               </div>
             )}

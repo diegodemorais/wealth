@@ -67,13 +67,13 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       {
         label: label1,
         data: dataset1,
-        borderColor: '#3b82f6',
+        borderColor: 'var(--accent)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         borderWidth: 2,
         fill: true,
         tension: 0.3,
         pointRadius: 2,
-        pointBackgroundColor: '#3b82f6',
+        pointBackgroundColor: 'var(--accent)',
         pointBorderColor: '#fff',
         pointBorderWidth: 1,
       },
@@ -83,13 +83,13 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       datasets.push({
         label: label2,
         data: dataset2,
-        borderColor: '#06b6d4',
+        borderColor: 'var(--cyan)',
         backgroundColor: 'rgba(6, 182, 212, 0.05)',
         borderWidth: 2,
         fill: true,
         tension: 0.3,
         pointRadius: 2,
-        pointBackgroundColor: '#06b6d4',
+        pointBackgroundColor: 'var(--cyan)',
         pointBorderColor: '#fff',
         pointBorderWidth: 1,
       });
@@ -105,12 +105,12 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
         plugins: {
           legend: {
             position: 'top' as const,
-            labels: { color: '#cbd5e1', font: { size: 12 }, padding: 12 },
+            labels: { color: 'var(--muted)', font: { size: 12 }, padding: 12 },
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: '#cbd5e1',
-            bodyColor: '#94a3b8',
+            titleColor: 'var(--muted)',
+            bodyColor: 'var(--muted)',
             borderColor: 'rgba(71, 85, 105, 0.5)',
             borderWidth: 1,
             padding: 8,
@@ -127,7 +127,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
             min: yMin, max: yMax,
             grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
-              color: '#94a3b8',
+              color: 'var(--muted)',
               callback: function (value) {
                 if (activeMetric === 'volatilidade') return (value as number).toFixed(0) + '%';
                 return (value as number).toFixed(2);
@@ -136,7 +136,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
           },
           x: {
             grid: { display: false },
-            ticks: { color: '#cbd5e1', maxRotation: 45, minRotation: 0 },
+            ticks: { color: 'var(--muted)', maxRotation: 45, minRotation: 0 },
           },
         },
       },
@@ -169,7 +169,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
               style={{
                 padding: '6px 12px', fontSize: '0.75rem', fontWeight: 500, borderRadius: '4px',
                 cursor: 'pointer', border: 'none',
-                background: activeMetric === metric ? '#3b82f6' : 'rgba(71,85,105,0.2)',
+                background: activeMetric === metric ? 'var(--accent)' : 'rgba(71,85,105,0.2)',
                 color: activeMetric === metric ? 'white' : 'var(--text)',
               }}
             >
@@ -187,7 +187,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
           <div style={{ padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sharpe (BRL)</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSharpe > 1 ? '#22c55e' : currentSharpe > 0.5 ? '#f59e0b' : '#ef4444' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSharpe > 1 ? 'var(--green)' : currentSharpe > 0.5 ? 'var(--yellow)' : 'var(--red)' }}>
               {privacyMode ? '••' : currentSharpe.toFixed(2)}
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Retorno/risco</div>
@@ -195,7 +195,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
 
           <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sortino Ratio</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSortino > 1.5 ? '#22c55e' : currentSortino > 0.75 ? '#f59e0b' : '#ef4444' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSortino > 1.5 ? 'var(--green)' : currentSortino > 0.75 ? 'var(--yellow)' : 'var(--red)' }}>
               {privacyMode ? '••' : currentSortino.toFixed(2)}
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Risco downside</div>
@@ -203,7 +203,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
 
           <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Volatilidade</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fbbf24' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>
               {privacyMode ? '••' : currentVol.toFixed(2)}%
             </div>
             <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Desvio padrão</div>

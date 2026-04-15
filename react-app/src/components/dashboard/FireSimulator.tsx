@@ -93,10 +93,10 @@ export function FireSimulator({
     };
   }, [aporteMensal, custoVidaAnual, retornoEquity, idadeRetiro, patrimonioAtual, patrimonioGatilho]);
 
-  const pfireColor = results.pfireValue >= 90 ? '#22c55e'
-    : results.pfireValue >= 70 ? '#eab308'
-      : results.pfireValue >= 50 ? '#f59e0b'
-        : '#ef4444';
+  const pfireColor = results.pfireValue >= 90 ? 'var(--green)'
+    : results.pfireValue >= 70 ? 'var(--yellow)'
+      : results.pfireValue >= 50 ? 'var(--yellow)'
+        : 'var(--red)';
 
   const metricCard = (bg: string, border: string) => ({
     background: bg, border: `1px solid ${border}`, borderRadius: '4px', padding: '16px',
@@ -119,7 +119,7 @@ export function FireSimulator({
             type="range" min="5000" max="100000" step="5000"
             value={aporteMensal}
             onChange={(e) => setAporteMensal(Number(e.target.value))}
-            style={{ width: '100%', cursor: 'pointer', accentColor: '#3b82f6' }}
+            style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
           <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: R$ 5k — R$ 100k/month</div>
         </div>
@@ -133,7 +133,7 @@ export function FireSimulator({
             type="range" min="100000" max="500000" step="10000"
             value={custoVidaAnual}
             onChange={(e) => setCustoVidaAnual(Number(e.target.value))}
-            style={{ width: '100%', cursor: 'pointer', accentColor: '#3b82f6' }}
+            style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
           <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: R$ 100k — R$ 500k/year</div>
         </div>
@@ -147,7 +147,7 @@ export function FireSimulator({
             type="range" min="2" max="12" step="0.5"
             value={retornoEquity}
             onChange={(e) => setRetornoEquity(Number(e.target.value))}
-            style={{ width: '100%', cursor: 'pointer', accentColor: '#3b82f6' }}
+            style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
           <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: 2% — 12% annual</div>
         </div>
@@ -161,7 +161,7 @@ export function FireSimulator({
             type="range" min={idadeAtual} max={70} step="1"
             value={idadeRetiro}
             onChange={(e) => setIdadeRetiro(Number(e.target.value))}
-            style={{ width: '100%', cursor: 'pointer', accentColor: '#3b82f6' }}
+            style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
           <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: {idadeAtual} — 70 years old</div>
         </div>
@@ -200,7 +200,7 @@ export function FireSimulator({
           <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)' }}>
             {privacyMode ? '••••' : fmtBrl(results.sustainableSpending)}
           </div>
-          <div style={{ fontSize: '0.75rem', marginTop: '6px', fontWeight: 500, color: results.sustainableSpending >= results.monthlySpending ? '#22c55e' : '#ef4444' }}>
+          <div style={{ fontSize: '0.75rem', marginTop: '6px', fontWeight: 500, color: results.sustainableSpending >= results.monthlySpending ? 'var(--green)' : 'var(--red)' }}>
             Target: {privacyMode ? '••••' : fmtBrl(results.monthlySpending)}
           </div>
         </div>
@@ -238,7 +238,7 @@ export function FireSimulator({
               ].map(({ label, val }) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                   <span style={{ color: 'var(--muted)' }}>{label}</span>
-                  <span style={{ fontWeight: 600, color: val >= 90 ? '#22c55e' : '#f59e0b' }}>
+                  <span style={{ fontWeight: 600, color: val >= 90 ? 'var(--green)' : 'var(--yellow)' }}>
                     {fmtPct(val / 100, 0)}
                   </span>
                 </div>

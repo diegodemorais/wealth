@@ -32,10 +32,10 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
   };
 
   const assets = [
-    { label: 'Equity', value: equityBrl, pct: equityPct, color: '#3b82f6' },
-    { label: 'IPCA+ Ladder', value: ipcaBrl, pct: ipcaPct, color: '#06b6d4' },
-    { label: 'Renda+ 2065', value: rendaPlusBrl, pct: rendaPlusPct, color: '#f59e0b' },
-    { label: 'Crypto', value: cryptoBrl, pct: cryptoPct, color: '#8b5cf6' },
+    { label: 'Equity', value: equityBrl, pct: equityPct, color: 'var(--accent)' },
+    { label: 'IPCA+ Ladder', value: ipcaBrl, pct: ipcaPct, color: 'var(--cyan)' },
+    { label: 'Renda+ 2065', value: rendaPlusBrl, pct: rendaPlusPct, color: 'var(--yellow)' },
+    { label: 'Crypto', value: cryptoBrl, pct: cryptoPct, color: 'var(--purple)' },
   ];
 
   return (

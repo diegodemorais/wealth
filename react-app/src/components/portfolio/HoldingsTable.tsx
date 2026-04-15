@@ -47,8 +47,8 @@ export function HoldingsTable() {
 
   const bucketColors: Record<string, string> = {
     SWRD: 'var(--accent)',
-    AVGS: '#8b5cf6',
-    AVEM: '#06b6d4',
+    AVGS: 'var(--purple)',
+    AVEM: 'var(--cyan)',
   };
 
   const ibkrDate = data?.timestamps?.posicoes_ibkr;

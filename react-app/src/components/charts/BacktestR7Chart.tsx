@@ -34,7 +34,7 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
     return createDualLineChartOption({
       data, privacyMode, theme, xAxisData, series1Data: portfolioData, series1Name: 'Current Portfolio',
       series2Data: r7BenchmarkData, series2Name: 'R7 Benchmark (70/30)',
-      series1Color: '#3b82f6', series2Color: '#f59e0b',
+      series1Color: 'var(--accent)', series2Color: 'var(--yellow)',
       yAxisFormatter: (v) => `R$ ${(v / 1e6).toFixed(1)}M`,
     });
   }, [privacyMode, theme]);
@@ -49,8 +49,8 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--card2)',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '14px',

@@ -12,11 +12,11 @@ export function Semaforo({ status, label, description }: SemaforoProps) {
   const getColor = (s: SemaforoStatus) => {
     switch (s) {
       case 'critical':
-        return { bg: '#fee2e2', dot: '#dc2626', text: '#7f1d1d' };
+        return { bg: 'rgba(239, 68, 68, 0.15)', dot: 'rgba(239, 68, 68, 0.85)', text: 'rgba(239, 68, 68, 0.3)' };
       case 'warning':
-        return { bg: '#fef3c7', dot: '#d97706', text: '#78350f' };
+        return { bg: 'rgba(249, 115, 22, 0.15)', dot: 'rgba(249, 115, 22, 0.7)', text: 'rgba(249, 115, 22, 0.3)' };
       default:
-        return { bg: '#dcfce7', dot: '#16a34a', text: '#14532d' };
+        return { bg: 'rgba(34, 197, 94, 0.15)', dot: 'rgba(34, 197, 94, 0.6)', text: 'rgba(34, 197, 94, 0.3)' };
     }
   };
 
