@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface TrackingFireChartProps {
   realizadoBrl: number;
@@ -119,84 +120,57 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
   }, [realizadoBrl, projetadoP50Brl, fireGatilhoBrl]);
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Tracking FIRE — Realizado vs Projeção
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Tracking FIRE — Realizado vs Projeção
+        </CardTitle>
+      </CardHeader>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '16px',
-          marginBottom: '16px',
-        }}
-      >
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Chart */}
         <div>
           <canvas ref={chartRef} style={{ maxHeight: '200px' }} />
         </div>
 
         {/* Status cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div className="flex flex-col gap-2">
           {/* Realizado */}
-          <div
-            style={{
-              padding: '10px 12px',
-              backgroundColor: 'rgba(6, 182, 212, 0.1)',
-              border: '1px solid #06b6d4',
-              borderRadius: '6px',
-            }}
-          >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+          <div className="p-3 bg-cyan-500/10 border border-cyan-500 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
               Patrimônio Realizado
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#06b6d4' }}>
+            <div className="text-lg font-bold text-cyan-500">
               {privacyMode ? 'R$••••' : fmtBrl(patrimonioAtualBrl)}
             </div>
           </div>
 
           {/* P50 Projetado */}
-          <div
-            style={{
-              padding: '10px 12px',
-              backgroundColor: 'rgba(139, 92, 246, 0.1)',
-              border: '1px solid #8b5cf6',
-              borderRadius: '6px',
-            }}
-          >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+          <div className="p-3 bg-violet-500/10 border border-violet-500 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
               P50 Projetado
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#8b5cf6' }}>
+            <div className="text-lg font-bold text-violet-500">
               {privacyMode ? 'R$••••' : fmtBrl(projetadoP50Brl)}
             </div>
           </div>
 
           {/* Diferença */}
           <div
+            className="p-3 rounded"
             style={{
-              padding: '10px 12px',
               backgroundColor: `${statusColor}15`,
               border: `1px solid ${statusColor}`,
-              borderRadius: '6px',
             }}
           >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
               Diferença
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: statusColor, marginBottom: '2px' }}>
+            <div className="text-lg font-bold mb-1" style={{ color: statusColor }}>
               {privacyMode ? '••' : `${diferencaPct.toFixed(1)}%`}
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#64748b' }}>
+            <div className="text-xs text-slate-600">
               {status === 'ahead' && '✅ À frente da projeção'}
               {status === 'tracking' && '📊 Acompanhando projeção'}
               {status === 'behind' && '⚠️ Atrás da projeção'}
@@ -205,45 +179,29 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
         </div>
       </div>
 
-      {/* FIRE Gatilho progress */}
-      <div style={{ borderTop: '1px solid rgba(71, 85, 105, 0.15)', paddingTop: '14px' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '8px' }}>
-          Progresso para FIRE Gatilho
-        </div>
+        {/* FIRE Gatilho progress */}
+        <div className="border-t border-slate-700/15 pt-3">
+          <div className="text-xs font-semibold text-slate-200 mb-2">
+            Progresso para FIRE Gatilho
+          </div>
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '6px',
-            fontSize: '0.75rem',
-            color: '#94a3b8',
-          }}
-        >
-          <span>Meta FIRE: {privacyMode ? 'R$••••' : fmtBrl(fireGatilhoBrl)}</span>
-          <span>{privacyMode ? '••' : `${((patrimonioAtualBrl / fireGatilhoBrl) * 100).toFixed(1)}%`}</span>
-        </div>
+          <div className="flex justify-between items-center mb-2 text-xs text-slate-400">
+            <span>Meta FIRE: {privacyMode ? 'R$••••' : fmtBrl(fireGatilhoBrl)}</span>
+            <span>{privacyMode ? '••' : `${((patrimonioAtualBrl / fireGatilhoBrl) * 100).toFixed(1)}%`}</span>
+          </div>
 
-        <div
-          style={{
-            height: '12px',
-            backgroundColor: 'rgba(71, 85, 105, 0.15)',
-            borderRadius: '6px',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              height: '100%',
-              width: `${Math.min(100, (patrimonioAtualBrl / fireGatilhoBrl) * 100)}%`,
-              backgroundColor: (patrimonioAtualBrl / fireGatilhoBrl) >= 1 ? '#22c55e' : '#f59e0b',
-              transition: 'width 0.5s',
-            }}
-          />
+          <div className="h-3 bg-slate-700/15 rounded overflow-hidden">
+            <div
+              className="h-full transition-all duration-500"
+              style={{
+                width: `${Math.min(100, (patrimonioAtualBrl / fireGatilhoBrl) * 100)}%`,
+                backgroundColor: (patrimonioAtualBrl / fireGatilhoBrl) >= 1 ? '#22c55e' : '#f59e0b',
+              }}
+            />
+          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
