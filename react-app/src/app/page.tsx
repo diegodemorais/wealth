@@ -42,6 +42,7 @@ import { FamilyScenarioCards } from '@/components/dashboard/FamilyScenarioCards'
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
 import { LifeEventsTable } from '@/components/dashboard/LifeEventsTable';
 import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
+import { FireSimulator } from '@/components/dashboard/FireSimulator';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -244,6 +245,27 @@ export default function HomePage() {
           icon="📊"
         >
           <EtfsPositionsTable data={data.posicoes} />
+        </CollapsibleSection>
+      )}
+
+      {/* FIRE Simulator — What-If Analysis */}
+      {data && data.premissas && (
+        <CollapsibleSection
+          id="section-fire-simulator"
+          title="FIRE Simulator"
+          defaultOpen={false}
+          icon="🎯"
+        >
+          <FireSimulator
+            patrimonioAtual={data.premissas.patrimonio_atual}
+            patrimonioGatilho={data.premissas.patrimonio_gatilho}
+            aporteMensalBase={data.premissas.aporte_mensal}
+            custoVidaBase={data.premissas.custo_vida_base}
+            retornoEquityBase={data.premissas.retorno_equity_base}
+            idadeAtual={data.premissas.idade_atual}
+            idadeAposentadoria={data.premissas.idade_cenario_base}
+            swrGatilho={data.pfire_base?.swr_percent ? data.pfire_base.swr_percent / 100 : 0.03}
+          />
         </CollapsibleSection>
       )}
 
