@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 interface FireSimulatorProps {
   patrimonioAtual?: number;
@@ -113,34 +114,18 @@ export function FireSimulator({
         : '#ef4444';
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div className="mb-6">
       {/* Title */}
-      <h3 style={{
-        fontSize: '0.95rem',
-        fontWeight: '600',
-        marginBottom: '16px',
-        color: '#cbd5e1',
-      }}>
+      <h3 className="text-sm font-semibold text-slate-200 mb-4">
         FIRE Simulator — What-If Analysis
       </h3>
 
       {/* Controls Section */}
-      <div style={{
-        backgroundColor: 'rgba(30, 41, 59, 0.3)',
-        borderRadius: '8px',
-        padding: '16px',
-        marginBottom: '16px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-      }}>
+      <Card className="bg-slate-900/30 border-slate-700/25 mb-4">
+        <CardContent className="p-4">
         {/* Aporte Mensal */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{
-            display: 'block',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            color: '#cbd5e1',
-            marginBottom: '8px',
-          }}>
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-slate-200 mb-2">
             Monthly Contribution: {privacyMode ? '••••' : fmtBrl(aporteMensal)}
           </label>
           <input
@@ -150,30 +135,16 @@ export function FireSimulator({
             step="5000"
             value={aporteMensal}
             onChange={(e) => setAporteMensal(Number(e.target.value))}
-            style={{
-              width: '100%',
-              cursor: 'pointer',
-              accentColor: '#3b82f6',
-            }}
+            className="w-full cursor-pointer accent-blue-500"
           />
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginTop: '4px',
-          }}>
+          <div className="text-xs text-slate-500 mt-1">
             Range: R$ 5k — R$ 100k/month
           </div>
         </div>
 
         {/* Spending Anual */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{
-            display: 'block',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            color: '#cbd5e1',
-            marginBottom: '8px',
-          }}>
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-slate-200 mb-2">
             Annual Spending Target: {privacyMode ? '••••' : fmtBrl(custoVidaAnual)}
           </label>
           <input
@@ -183,30 +154,16 @@ export function FireSimulator({
             step="10000"
             value={custoVidaAnual}
             onChange={(e) => setCustoVidaAnual(Number(e.target.value))}
-            style={{
-              width: '100%',
-              cursor: 'pointer',
-              accentColor: '#3b82f6',
-            }}
+            className="w-full cursor-pointer accent-blue-500"
           />
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginTop: '4px',
-          }}>
+          <div className="text-xs text-slate-500 mt-1">
             Range: R$ 100k — R$ 500k/year
           </div>
         </div>
 
         {/* Retorno Equity */}
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{
-            display: 'block',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            color: '#cbd5e1',
-            marginBottom: '8px',
-          }}>
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-slate-200 mb-2">
             Expected Equity Return: {fmtPct(retornoEquity / 100, 1)}
           </label>
           <input
@@ -216,30 +173,16 @@ export function FireSimulator({
             step="0.5"
             value={retornoEquity}
             onChange={(e) => setRetornoEquity(Number(e.target.value))}
-            style={{
-              width: '100%',
-              cursor: 'pointer',
-              accentColor: '#3b82f6',
-            }}
+            className="w-full cursor-pointer accent-blue-500"
           />
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginTop: '4px',
-          }}>
+          <div className="text-xs text-slate-500 mt-1">
             Range: 2% — 12% annual
           </div>
         </div>
 
         {/* Idade Retiro */}
-        <div style={{ marginBottom: '0' }}>
-          <label style={{
-            display: 'block',
-            fontSize: '0.85rem',
-            fontWeight: 600,
-            color: '#cbd5e1',
-            marginBottom: '8px',
-          }}>
+        <div>
+          <label className="block text-xs font-semibold text-slate-200 mb-2">
             Retirement Age: {idadeRetiro} ({idadeRetiro - idadeAtual} years from now)
           </label>
           <input
@@ -249,312 +192,171 @@ export function FireSimulator({
             step="1"
             value={idadeRetiro}
             onChange={(e) => setIdadeRetiro(Number(e.target.value))}
-            style={{
-              width: '100%',
-              cursor: 'pointer',
-              accentColor: '#3b82f6',
-            }}
+            className="w-full cursor-pointer accent-blue-500"
           />
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginTop: '4px',
-          }}>
+          <div className="text-xs text-slate-500 mt-1">
             Range: {idadeAtual} — 70 years old
           </div>
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Results Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-        gap: '12px',
-        marginBottom: '16px',
-      }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
         {/* P(FIRE) @ Retirement */}
-        <div style={{
-          padding: '14px',
-          backgroundColor: 'rgba(30, 41, 59, 0.4)',
-          borderRadius: '8px',
-          border: '1px solid rgba(71, 85, 105, 0.25)',
-        }}>
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginBottom: '8px',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-          }}>
-            P(FIRE) @ Retirement
-          </div>
-          <div style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            color: pfireColor,
-            marginBottom: '4px',
-          }}>
-            {privacyMode ? '••' : fmtPct(results.pfireValue / 100, 0)}
-          </div>
-          <div style={{
-            height: '4px',
-            backgroundColor: 'rgba(71, 85, 105, 0.15)',
-            borderRadius: '2px',
-            overflow: 'hidden',
-          }}>
-            <div style={{
-              height: '100%',
-              width: `${Math.min(100, results.pfireValue)}%`,
-              backgroundColor: pfireColor,
-              transition: 'width 0.3s',
-            }} />
-          </div>
-        </div>
+        <Card className="bg-slate-900/40 border-slate-700/25">
+          <CardContent className="p-4">
+            <div className="text-xs text-slate-500 mb-2 uppercase font-semibold">
+              P(FIRE) @ Retirement
+            </div>
+            <div className="text-2xl font-bold mb-2" style={{ color: pfireColor }}>
+              {privacyMode ? '••' : fmtPct(results.pfireValue / 100, 0)}
+            </div>
+            <div className="h-1 bg-slate-700/15 rounded overflow-hidden">
+              <div
+                className="h-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(100, results.pfireValue)}%`,
+                  backgroundColor: pfireColor,
+                }}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Patrimonio @ Retirement */}
-        <div style={{
-          padding: '14px',
-          backgroundColor: 'rgba(30, 41, 59, 0.4)',
-          borderRadius: '8px',
-          border: '1px solid rgba(71, 85, 105, 0.25)',
-        }}>
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginBottom: '8px',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-          }}>
-            Patrimonio @ Retirement
-          </div>
-          <div style={{
-            fontSize: '0.95rem',
-            fontWeight: 700,
-            color: '#cbd5e1',
-          }}>
-            {privacyMode ? '••••' : fmtBrl(results.patrimonioAoRetiro)}
-          </div>
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginTop: '6px',
-          }}>
-            Target: {privacyMode ? '••••' : fmtBrl(patrimonioGatilho)}
-          </div>
-        </div>
+        <Card className="bg-slate-900/40 border-slate-700/25">
+          <CardContent className="p-4">
+            <div className="text-xs text-slate-500 mb-2 uppercase font-semibold">
+              Patrimonio @ Retirement
+            </div>
+            <div className="text-sm font-bold text-slate-200">
+              {privacyMode ? '••••' : fmtBrl(results.patrimonioAoRetiro)}
+            </div>
+            <div className="text-xs text-slate-500 mt-1.5">
+              Target: {privacyMode ? '••••' : fmtBrl(patrimonioGatilho)}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Monthly Sustainability */}
-        <div style={{
-          padding: '14px',
-          backgroundColor: 'rgba(30, 41, 59, 0.4)',
-          borderRadius: '8px',
-          border: '1px solid rgba(71, 85, 105, 0.25)',
-        }}>
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginBottom: '8px',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-          }}>
-            Sustainable Monthly
-          </div>
-          <div style={{
-            fontSize: '0.95rem',
-            fontWeight: 700,
-            color: '#cbd5e1',
-          }}>
-            {privacyMode ? '••••' : fmtBrl(results.sustainableSpending)}
-          </div>
-          <div style={{
-            fontSize: '0.7rem',
-            color: results.sustainableSpending >= results.monthlySpending ? '#22c55e' : '#ef4444',
-            marginTop: '6px',
-            fontWeight: 500,
-          }}>
-            Target: {privacyMode ? '••••' : fmtBrl(results.monthlySpending)}
-          </div>
-        </div>
+        <Card className="bg-slate-900/40 border-slate-700/25">
+          <CardContent className="p-4">
+            <div className="text-xs text-slate-500 mb-2 uppercase font-semibold">
+              Sustainable Monthly
+            </div>
+            <div className="text-sm font-bold text-slate-200">
+              {privacyMode ? '••••' : fmtBrl(results.sustainableSpending)}
+            </div>
+            <div className="text-xs mt-1.5 font-medium" style={{
+              color: results.sustainableSpending >= results.monthlySpending ? '#22c55e' : '#ef4444',
+            }}>
+              Target: {privacyMode ? '••••' : fmtBrl(results.monthlySpending)}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Time to Target */}
-        <div style={{
-          padding: '14px',
-          backgroundColor: 'rgba(30, 41, 59, 0.4)',
-          borderRadius: '8px',
-          border: '1px solid rgba(71, 85, 105, 0.25)',
-        }}>
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginBottom: '8px',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-          }}>
-            Time to Gateway
-          </div>
-          <div style={{
-            fontSize: '1.4rem',
-            fontWeight: 800,
-            color: '#cbd5e1',
-          }}>
-            {results.yearsToGateway}y
-          </div>
-          <div style={{
-            fontSize: '0.7rem',
-            color: '#94a3b8',
-            marginTop: '4px',
-          }}>
-            {results.monthsToGateway} months
-          </div>
-        </div>
+        <Card className="bg-slate-900/40 border-slate-700/25">
+          <CardContent className="p-4">
+            <div className="text-xs text-slate-500 mb-2 uppercase font-semibold">
+              Time to Gateway
+            </div>
+            <div className="text-lg font-bold text-slate-200">
+              {results.yearsToGateway}y
+            </div>
+            <div className="text-xs text-slate-500 mt-1">
+              {results.monthsToGateway} months
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Sensitivity Analysis */}
-      <div style={{
-        backgroundColor: 'rgba(30, 41, 59, 0.3)',
-        borderRadius: '8px',
-        padding: '16px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-      }}>
-        <h4 style={{
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          color: '#cbd5e1',
-          marginBottom: '12px',
-          marginTop: 0,
-        }}>
-          Sensitivity Analysis (Impact on P(FIRE))
-        </h4>
+      <Card className="bg-slate-900/30 border-slate-700/25">
+        <CardContent className="p-4">
+          <h4 className="text-xs font-semibold text-slate-200 mb-3">
+            Sensitivity Analysis (Impact on P(FIRE))
+          </h4>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '12px',
-        }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Contribution Sensitivity */}
-          <div style={{
-            padding: '10px',
-            backgroundColor: 'rgba(15, 23, 42, 0.5)',
-            borderRadius: '6px',
-            fontSize: '0.75rem',
-          }}>
-            <div style={{ color: '#94a3b8', marginBottom: '6px', fontWeight: 600 }}>
+          <div className="p-2.5 bg-slate-950/50 rounded text-xs">
+            <div className="text-slate-500 mb-1.5 font-semibold">
               Contribution
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '3px',
-            }}>
-              <span style={{ color: '#94a3b8' }}>-10%</span>
-              <span style={{ color: results.sensitivities.aporte.minus10 >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between mb-1">
+              <span className="text-slate-500">-10%</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.aporte.minus10 >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.aporte.minus10 / 100, 0)}
               </span>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '3px',
-            }}>
-              <span style={{ color: '#94a3b8' }}>Base</span>
-              <span style={{ color: results.sensitivities.aporte.base >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between mb-1">
+              <span className="text-slate-500">Base</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.aporte.base >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.aporte.base / 100, 0)}
               </span>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span style={{ color: '#94a3b8' }}>+10%</span>
-              <span style={{ color: results.sensitivities.aporte.plus10 >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between">
+              <span className="text-slate-500">+10%</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.aporte.plus10 >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.aporte.plus10 / 100, 0)}
               </span>
             </div>
           </div>
 
           {/* Spending Sensitivity */}
-          <div style={{
-            padding: '10px',
-            backgroundColor: 'rgba(15, 23, 42, 0.5)',
-            borderRadius: '6px',
-            fontSize: '0.75rem',
-          }}>
-            <div style={{ color: '#94a3b8', marginBottom: '6px', fontWeight: 600 }}>
+          <div className="p-2.5 bg-slate-950/50 rounded text-xs">
+            <div className="text-slate-500 mb-1.5 font-semibold">
               Spending
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '3px',
-            }}>
-              <span style={{ color: '#94a3b8' }}>-10%</span>
-              <span style={{ color: results.sensitivities.spending.minus10 >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between mb-1">
+              <span className="text-slate-500">-10%</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.spending.minus10 >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.spending.minus10 / 100, 0)}
               </span>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '3px',
-            }}>
-              <span style={{ color: '#94a3b8' }}>Base</span>
-              <span style={{ color: results.sensitivities.spending.base >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between mb-1">
+              <span className="text-slate-500">Base</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.spending.base >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.spending.base / 100, 0)}
               </span>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span style={{ color: '#94a3b8' }}>+10%</span>
-              <span style={{ color: results.sensitivities.spending.plus10 >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between">
+              <span className="text-slate-500">+10%</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.spending.plus10 >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.spending.plus10 / 100, 0)}
               </span>
             </div>
           </div>
 
           {/* Return Sensitivity */}
-          <div style={{
-            padding: '10px',
-            backgroundColor: 'rgba(15, 23, 42, 0.5)',
-            borderRadius: '6px',
-            fontSize: '0.75rem',
-          }}>
-            <div style={{ color: '#94a3b8', marginBottom: '6px', fontWeight: 600 }}>
+          <div className="p-2.5 bg-slate-950/50 rounded text-xs">
+            <div className="text-slate-500 mb-1.5 font-semibold">
               Market Return
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '3px',
-            }}>
-              <span style={{ color: '#94a3b8' }}>-1%</span>
-              <span style={{ color: results.sensitivities.retorno.minus10 >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between mb-1">
+              <span className="text-slate-500">-1%</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.retorno.minus10 >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.retorno.minus10 / 100, 0)}
               </span>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '3px',
-            }}>
-              <span style={{ color: '#94a3b8' }}>Base</span>
-              <span style={{ color: results.sensitivities.retorno.base >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between mb-1">
+              <span className="text-slate-500">Base</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.retorno.base >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.retorno.base / 100, 0)}
               </span>
             </div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}>
-              <span style={{ color: '#94a3b8' }}>+1%</span>
-              <span style={{ color: results.sensitivities.retorno.plus10 >= 90 ? '#22c55e' : '#f59e0b', fontWeight: 600 }}>
+            <div className="flex justify-between">
+              <span className="text-slate-500">+1%</span>
+              <span className="font-semibold" style={{ color: results.sensitivities.retorno.plus10 >= 90 ? '#22c55e' : '#f59e0b' }}>
                 {fmtPct(results.sensitivities.retorno.plus10 / 100, 0)}
               </span>
             </div>
           </div>
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
