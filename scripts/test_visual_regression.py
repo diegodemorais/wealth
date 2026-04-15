@@ -12,7 +12,9 @@ Uso:
     python3 scripts/test_visual_regression.py --baseline-only  # só validar baseline existe
 
 Fluxo:
-    1. Capture 7 screenshots via Playwright (se não existirem <1h)
+    1. Capture 7 screenshots via Puppeteer (se não existirem <1h)
+       - Usa direct routes para cada aba (/portfolio, /fire, /withdraw, etc.)
+       - GitHub Pages: https://diegodemorais.github.io/wealth
     2. Compare contra baseline HTML (25 screenshots em stable-v2.77)
     3. Analisa estrutura visual: componentes, spacing, colors, borders
     4. Gera relatório de divergências (Critical/Medium/Low)
@@ -133,7 +135,7 @@ KNOWN_GAPS = {}
 
 def capture_screenshots():
     """
-    Capture fresh screenshots via wkhtmltopdf from GitHub Pages
+    Capture fresh screenshots via Puppeteer from GitHub Pages (direct routes)
     Returns (success: bool, screenshots_captured: int)
     """
     print(f"\n{CYAN}Checking screenshots from GitHub Pages...{RESET}")
@@ -148,102 +150,47 @@ def capture_screenshots():
 
     print(f"  {YELLOW}Only {len(existing)}/7 screenshots found or too old, capturing...{RESET}")
 
-    # Ensure wkhtmltopdf is available
-    print(f"\n  1. Checking wkhtmltopdf...")
-    result = subprocess.run(
-        "which wkhtmltopdf",
-        shell=True,
-        capture_output=True,
-        text=True
-    )
-
-    if result.returncode != 0:
-        print(f"    {RED}❌ wkhtmltopdf not found{RESET}")
+    # Ensure Puppeteer script exists
+    script_path = ROOT / "scripts" / "capture_tabs_puppeteer.js"
+    if not script_path.exists():
+        print(f"    {RED}❌ Puppeteer script not found: {script_path}{RESET}")
         return False, 0
-
-    print(f"    ✓ wkhtmltopdf available: {result.stdout.strip()}")
 
     # Create screenshots directory
     REACT_SCREENSHOTS.mkdir(parents=True, exist_ok=True)
 
-    # GitHub Pages base URL
-    base_url = "https://diegodemorais.github.io/wealth/"
-
-    print(f"\n  2. Capturing screenshot via wkhtmltopdf...")
+    print(f"\n  1. Running Puppeteer capture (7 tabs from GitHub Pages)...")
 
     try:
-        # Capture single screenshot from GitHub Pages (main dashboard)
-        pdf_file = REACT_SCREENSHOTS / "dashboard.pdf"
-        png_file = REACT_SCREENSHOTS / "01-now-tab.png"
-
-        # Generate PDF
         result = subprocess.run(
-            [
-                "wkhtmltopdf",
-                "--enable-local-file-access",
-                "--javascript-delay", "4000",
-                "--window-status", "Ready",
-                "--dpi", "96",
-                "--page-size", "A4",
-                "--disable-smart-shrinking",
-                "--no-outline",
-                base_url,
-                str(pdf_file)
-            ],
+            f"node {str(script_path)}",
+            shell=True,
             capture_output=True,
             text=True,
-            timeout=120
+            timeout=300  # 5 minutes max
         )
 
-        if result.returncode == 0 and pdf_file.exists():
-            print(f"    ✓ PDF generated ({pdf_file.stat().st_size / 1024:.0f}KB)")
-
-            # Convert PDF to PNG
-            convert_result = subprocess.run(
-                f"pdftoppm {str(pdf_file)} {str(png_file.with_name('01-now-tab'))} -png -singlefile",
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-
-            if convert_result.returncode == 0 and png_file.exists():
-                # Clean up PDF
-                pdf_file.unlink()
-                print(f"    ✓ PNG generated ({png_file.stat().st_size / 1024:.0f}KB)")
-
-                # Create copies for other tabs (same dashboard, all tabs visible)
-                tabs = [
-                    "02-portfolio-tab",
-                    "03-performance-tab",
-                    "04-fire-tab",
-                    "05-withdraw-tab",
-                    "06-simuladores-tab",
-                    "07-backtest-tab",
-                ]
-
-                for tab_prefix in tabs:
-                    tab_file = REACT_SCREENSHOTS / f"{tab_prefix}.png"
-                    # For now, use same screenshot (in real usage, would navigate to each tab)
-                    if not tab_file.exists():
-                        import shutil
-                        shutil.copy2(png_file, tab_file)
-
-                print(f"    ✓ Created references for 7 tabs")
-                return True, 7
-
-            else:
-                print(f"    ❌ PNG conversion failed")
-                return False, 0
-        else:
-            print(f"    ❌ PDF generation failed: {result.stderr[:100]}")
+        if result.returncode != 0:
+            print(f"    {RED}❌ Puppeteer capture failed{RESET}")
+            print(f"       {result.stderr[:200]}")
             return False, 0
 
+        # Count captured screenshots
+        captured = len(list(REACT_SCREENSHOTS.glob("*.png")))
+
+        if captured >= 7:
+            print(f"    ✓ Puppeteer captured {captured} tabs")
+            print(f"       {result.stdout.strip()}")
+            return True, captured
+        else:
+            print(f"    {RED}❌ Expected 7 screenshots, got {captured}{RESET}")
+            return False, captured
+
     except subprocess.TimeoutExpired:
-        print(f"    ❌ Timeout (wkhtmltopdf too slow)")
+        print(f"    {RED}❌ Timeout (Puppeteer took too long){RESET}")
         return False, 0
     except Exception as e:
-        print(f"    ❌ Error: {str(e)[:80]}")
+        print(f"    {RED}❌ Error: {str(e)[:80]}{RESET}")
         return False, 0
 
 
@@ -286,14 +233,9 @@ def compare_screenshots(react_path, baseline_path):
         rms = sum(x**2 for x in stat.mean) ** 0.5 / 255
 
         # Count pixels that differ significantly (>10% in any channel)
-        # Use get_flattened_data for Pillow 13+ compatibility
-        diff_data = diff.getdata() if hasattr(diff, 'getdata') else diff.tobytes()
-        if isinstance(diff_data, bytes):
-            # Convert bytes to tuples
-            pixels = [diff_data[i:i+3] for i in range(0, len(diff_data), 3)]
-            diff_pixels = sum(1 for p in pixels if max(p) > 25)
-        else:
-            diff_pixels = sum(1 for p in diff_data if max(p[:3]) > 25)
+        diff_data = diff.tobytes()
+        pixels = [diff_data[i:i+3] for i in range(0, len(diff_data), 3)]
+        diff_pixels = sum(1 for p in pixels if max(p) > 25)
 
         similarity = max(0, 100 - (rms * 100))
 
