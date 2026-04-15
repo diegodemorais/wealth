@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface MaturityBucket {
   label: string;
@@ -98,258 +99,175 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
   const isTooShort = shortTermPct > 50;
   const isTooLong = longTermPct > 50;
 
+  // Color helpers for ladder health
+  const healthBg = isWellLaddered
+    ? 'bg-green-500/10'
+    : isTooShort || isTooLong
+      ? 'bg-amber-500/10'
+      : 'bg-red-500/10';
+  const healthBorder = isWellLaddered
+    ? 'border-green-500/25'
+    : isTooShort || isTooLong
+      ? 'border-amber-500/25'
+      : 'border-red-500/25';
+  const healthText = isWellLaddered
+    ? 'text-green-500'
+    : isTooShort || isTooLong
+      ? 'text-amber-500'
+      : 'text-red-500';
+
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Bond Maturity Ladder — Estrutura de Vencimentos
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Bond Maturity Ladder — Estrutura de Vencimentos
+        </CardTitle>
+      </CardHeader>
 
-      {/* Ladder structure */}
-      <div style={{ marginBottom: '16px' }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-            gap: '10px',
-          }}
-        >
-          {buckets.map(bucket => (
-            <div
-              key={bucket.label}
-              style={{
-                padding: '12px',
-                backgroundColor: `${bucket.color}15`,
-                border: `1px solid ${bucket.color}40`,
-                borderRadius: '6px',
-                textAlign: 'center',
-              }}
-            >
-              <div style={{ fontSize: '0.65rem', color: '#64748b', marginBottom: '4px' }}>
-                {bucket.yearsRange}
+      <CardContent className="space-y-4">
+
+        {/* Ladder structure */}
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+            {buckets.map(bucket => (
+              <div
+                key={bucket.label}
+                className="p-3 rounded text-center border"
+                style={{
+                  backgroundColor: `${bucket.color}15`,
+                  borderColor: `${bucket.color}40`,
+                }}
+              >
+                <div className="text-xs text-slate-400 mb-1">
+                  {bucket.yearsRange}
+                </div>
+                <div className="text-sm font-bold mb-1" style={{ color: bucket.color }}>
+                  {bucket.percentage.toFixed(1)}%
+                </div>
+                <div className="text-xs text-slate-400">
+                  {privacyMode ? '••' : fmtBrl(bucket.value)}
+                </div>
               </div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: bucket.color, marginBottom: '4px' }}>
-                {bucket.percentage.toFixed(1)}%
+            ))}
+          </div>
+        </div>
+
+        {/* Visualization */}
+        <div>
+          <div className="text-sm font-semibold text-slate-200 mb-3">
+            Distribuição por Vencimento
+          </div>
+
+          <div className="flex h-12 bg-slate-700/15 rounded overflow-hidden gap-0.5 p-0.5">
+            {buckets.map(bucket => (
+              <div
+                key={bucket.label}
+                className="flex items-center justify-center rounded text-xs font-semibold text-white"
+                style={{
+                  flex: bucket.percentage,
+                  backgroundColor: bucket.color,
+                  opacity: 0.8,
+                  minWidth: '20px',
+                }}
+                title={`${bucket.label}: ${bucket.percentage.toFixed(1)}%`}
+              >
+                {bucket.percentage > 8 && `${bucket.percentage.toFixed(0)}%`}
               </div>
-              <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>
-                {privacyMode ? '••' : fmtBrl(bucket.value)}
-              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Key metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          {/* Short term */}
+          <div className="p-3 bg-red-500/10 border border-red-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Curto Prazo (0-2a)
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Visualization */}
-      <div style={{ marginBottom: '16px' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '10px' }}>
-          Distribuição por Vencimento
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            height: '40px',
-            backgroundColor: 'rgba(71, 85, 105, 0.15)',
-            borderRadius: '6px',
-            overflow: 'hidden',
-            gap: '2px',
-            padding: '2px',
-          }}
-        >
-          {buckets.map(bucket => (
-            <div
-              key={bucket.label}
-              style={{
-                flex: bucket.percentage,
-                backgroundColor: bucket.color,
-                opacity: 0.8,
-                borderRadius: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.65rem',
-                color: 'white',
-                fontWeight: 600,
-                minWidth: '20px',
-              }}
-              title={`${bucket.label}: ${bucket.percentage.toFixed(1)}%`}
-            >
-              {bucket.percentage > 8 && `${bucket.percentage.toFixed(0)}%`}
+            <div className="text-base font-bold text-red-500">
+              {shortTermPct.toFixed(1)}%
             </div>
-          ))}
-        </div>
-      </div>
+            <div className="text-xs text-slate-500">
+              Próximos 2 anos
+            </div>
+          </div>
 
-      {/* Key metrics */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '12px',
-          marginBottom: '14px',
-        }}
-      >
-        {/* Short term */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid #ef444440',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Curto Prazo (0-2a)
+          {/* Medium term */}
+          <div className="p-3 bg-amber-500/10 border border-amber-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Médio Prazo (2-5a)
+            </div>
+            <div className="text-base font-bold text-amber-500">
+              {buckets
+                .filter(b => b.yearsRange === '2-3 anos' || b.yearsRange === '3-5 anos')
+                .reduce((sum, b) => sum + b.percentage, 0)
+                .toFixed(1)}
+              %
+            </div>
+            <div className="text-xs text-slate-500">
+              2-5 anos
+            </div>
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ef4444' }}>
-            {shortTermPct.toFixed(1)}%
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            Próximos 2 anos
-          </div>
-        </div>
 
-        {/* Medium term */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            border: '1px solid #f59e0b40',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Médio Prazo (2-5a)
+          {/* Long term */}
+          <div className="p-3 bg-blue-500/10 border border-blue-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Longo Prazo (5+a)
+            </div>
+            <div className="text-base font-bold text-blue-500">
+              {longTermPct.toFixed(1)}%
+            </div>
+            <div className="text-xs text-slate-500">
+              5+ anos
+            </div>
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f59e0b' }}>
-            {buckets
-              .filter(b => b.yearsRange === '2-3 anos' || b.yearsRange === '3-5 anos')
-              .reduce((sum, b) => sum + b.percentage, 0)
-              .toFixed(1)}
-            %
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            2-5 anos
+
+          {/* Ladder health */}
+          <div className={`p-3 rounded border ${healthBg} ${healthBorder}`}>
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Saúde da Escada
+            </div>
+            <div className={`text-base font-bold mb-1 ${healthText}`}>
+              {isWellLaddered ? '✅ Saudável' : isTooShort ? '⚠️ Curta' : isTooLong ? '⚠️ Longa' : '🚨 Desbalanceada'}
+            </div>
+            <div className="text-xs text-slate-500">
+              Distribuição
+            </div>
           </div>
         </div>
 
-        {/* Long term */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            border: '1px solid #3b82f640',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Longo Prazo (5+a)
+        {/* Recommendation */}
+        <div className="p-3 bg-slate-700/10 border border-slate-700/25 rounded">
+          <div className="text-xs text-slate-200 font-semibold mb-2">
+            Recomendação
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3b82f6' }}>
-            {longTermPct.toFixed(1)}%
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            5+ anos
+          <div className="text-xs text-slate-400 leading-relaxed">
+            {isWellLaddered && (
+              <>✅ Escada bem distribuída — renova-se gradualmente. Mantenha a estratégia de rolar posições.</>
+            )}
+            {isTooShort && !isWellLaddered && (
+              <>
+                ⚠️ Escada muito curta — excesso de vencimentos próximos.
+                <br />
+                Considere adicionar posições de médio/longo prazo para reduzir risco de reinvestimento.
+              </>
+            )}
+            {isTooLong && !isWellLaddered && (
+              <>
+                ⚠️ Escada muito longa — pouca liquidez de curto prazo.
+                <br />
+                Aumente alocação para títulos de 1-3 anos para melhorar cobertura de FIRE próximo.
+              </>
+            )}
           </div>
         </div>
 
-        {/* Ladder health */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor:
-              isWellLaddered
-                ? 'rgba(34, 197, 94, 0.1)'
-                : isTooShort || isTooLong
-                  ? 'rgba(245, 158, 11, 0.1)'
-                  : 'rgba(239, 68, 68, 0.1)',
-            border:
-              isWellLaddered
-                ? '1px solid #22c55e40'
-                : isTooShort || isTooLong
-                  ? '1px solid #f59e0b40'
-                  : '1px solid #ef444440',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Saúde da Escada
-          </div>
-          <div
-            style={{
-              fontSize: '1.1rem',
-              fontWeight: 700,
-              color:
-                isWellLaddered
-                  ? '#22c55e'
-                  : isTooShort || isTooLong
-                    ? '#f59e0b'
-                    : '#ef4444',
-            }}
-          >
-            {isWellLaddered ? '✅ Saudável' : isTooShort ? '⚠️ Curta' : isTooLong ? '⚠️ Longa' : '🚨 Desbalanceada'}
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            Distribuição
-          </div>
+        {/* Footer note */}
+        <div className="mt-3 p-2 text-xs text-slate-500 bg-slate-700/5 rounded">
+          <strong>📌 Nota:</strong> Uma escada bem distribuída garante fluxo de caixa regular e reduz risco de reinvestimento. Rebalanceamento anual recomendado.
         </div>
-      </div>
-
-      {/* Recommendation */}
-      <div
-        style={{
-          padding: '12px 14px',
-          backgroundColor: 'rgba(71, 85, 105, 0.1)',
-          border: '1px solid rgba(71, 85, 105, 0.3)',
-          borderRadius: '6px',
-        }}
-      >
-        <div style={{ fontSize: '0.75rem', color: '#cbd5e1', fontWeight: 600, marginBottom: '6px' }}>
-          Recomendação
-        </div>
-        <div style={{ fontSize: '0.7rem', color: '#94a3b8', lineHeight: '1.5' }}>
-          {isWellLaddered && (
-            <>✅ Escada bem distribuída — renova-se gradualmente. Mantenha a estratégia de rolar posições.</>
-          )}
-          {isTooShort && !isWellLaddered && (
-            <>
-              ⚠️ Escada muito curta — excesso de vencimentos próximos.
-              <br />
-              Considere adicionar posições de médio/longo prazo para reduzir risco de reinvestimento.
-            </>
-          )}
-          {isTooLong && !isWellLaddered && (
-            <>
-              ⚠️ Escada muito longa — pouca liquidez de curto prazo.
-              <br />
-              Aumente alocação para títulos de 1-3 anos para melhorar cobertura de FIRE próximo.
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Footer note */}
-      <div
-        style={{
-          marginTop: '12px',
-          fontSize: '0.7rem',
-          color: '#64748b',
-          padding: '8px',
-          backgroundColor: 'rgba(71, 85, 105, 0.08)',
-          borderRadius: '4px',
-        }}
-      >
-        <strong>📌 Nota:</strong> Uma escada bem distribuída garante fluxo de caixa regular e reduz risco de
-        reinvestimento. Rebalanceamento anual recomendado.
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
