@@ -12,6 +12,7 @@ import { BucketAllocationChart } from '@/components/charts/BucketAllocationChart
 import { TerChart } from '@/components/charts/TerChart';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
+import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 
 export default function PortfolioPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -49,6 +50,8 @@ export default function PortfolioPage() {
       </CollapsibleSection>
 
       <HoldingsTable />
+
+      <RFCryptoComposition />
 
       <CollapsibleSection id="section-glide" title="Lifecycle Planning" defaultOpen={false}>
         <GlidePathChart data={data} />
