@@ -7,6 +7,7 @@ analysis/__pycache__/
 
 # Imagens geradas por scripts
 analysis/backtest_output/*.png
+react-app/audit-screenshots/
 
 # Credenciais
 .env
