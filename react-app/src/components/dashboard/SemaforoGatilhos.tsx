@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Gatilho {
   nome: string;
@@ -70,56 +71,27 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
   };
 
   return (
-    <div
-      className="section section-critical collapsible"
-      style={{
-        marginBottom: '14px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        overflow: 'hidden',
-      }}
-      data-in-tab="hoje"
-    >
-      <h2
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4 section section-critical collapsible" data-in-tab="hoje">
+      <CardHeader
+        className="pb-3 cursor-pointer hover:bg-slate-800/20 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
-        style={{
-          cursor: 'pointer',
-          padding: '12px 14px',
-          margin: 0,
-          fontSize: '0.95rem',
-          fontWeight: 600,
-          borderBottom: isOpen ? '1px solid rgba(71, 85, 105, 0.25)' : 'none',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
       >
-        <span>Semáforos de Gatilhos</span>
-        <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-          {isOpen ? '▼' : '▶'}
-        </span>
-      </h2>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-semibold text-slate-200">
+            Semáforos de Gatilhos
+          </CardTitle>
+          <span className="text-xs text-slate-400">
+            {isOpen ? '▼' : '▶'}
+          </span>
+        </div>
+      </CardHeader>
 
       {/* Summary when collapsed */}
       {!isOpen && (
-        <div
-          style={{
-            fontSize: '0.75rem',
-            color: '#94a3b8',
-            padding: '8px 14px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-          }}
-        >
+        <div className="px-4 py-2 text-xs text-slate-400 flex items-center gap-1.5">
           <span
-            style={{
-              display: 'inline-block',
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor: getSemaforoColor(statusIpca),
-            }}
+            className="inline-block w-2 h-2 rounded-full"
+            style={{ backgroundColor: getSemaforoColor(statusIpca) }}
           />
           {resumo}
         </div>
@@ -127,66 +99,20 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
 
       {/* Expanded table */}
       {isOpen && (
-        <div style={{ padding: '0 14px 14px' }}>
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '0.78rem',
-            }}
-          >
+        <CardContent>
+          <table className="w-full border-collapse text-xs">
             <thead>
-              <tr
-                style={{
-                  borderBottom: '2px solid rgba(71, 85, 105, 0.25)',
-                }}
-              >
-                <th
-                  style={{
-                    padding: '6px 8px',
-                    color: '#94a3b8',
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                  }}
-                >
+              <tr className="border-b-2 border-slate-700/25">
+                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-left font-semibold">
                   Gatilho
                 </th>
-                <th
-                  style={{
-                    padding: '6px 8px',
-                    color: '#94a3b8',
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    textAlign: 'center',
-                    fontWeight: 600,
-                  }}
-                >
+                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-center font-semibold">
                   Status
                 </th>
-                <th
-                  style={{
-                    padding: '6px 8px',
-                    color: '#94a3b8',
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    textAlign: 'right',
-                    fontWeight: 600,
-                  }}
-                >
+                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-right font-semibold">
                   Valor
                 </th>
-                <th
-                  style={{
-                    padding: '6px 8px',
-                    color: '#94a3b8',
-                    fontSize: '0.65rem',
-                    textTransform: 'uppercase',
-                    textAlign: 'left',
-                    fontWeight: 600,
-                  }}
-                >
+                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-left font-semibold">
                   Ação
                 </th>
               </tr>
@@ -197,92 +123,41 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
                 const typeBadge = typeBadges[g.tipo];
 
                 return (
-                  <tr
-                    key={idx}
-                    style={{
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    }}
-                  >
-                    <td
-                      style={{
-                        padding: '7px 8px',
-                        fontSize: '0.78rem',
-                      }}
-                    >
-                      <div style={{ marginBottom: '4px' }}>
+                  <tr key={idx} className="border-b border-slate-700/15">
+                    <td className="px-2 py-1.5 text-xs">
+                      <div className="mb-1">
                         {g.nome}
                         <span
+                          className="text-xs px-1 rounded ml-1.5 inline-block"
                           style={{
-                            fontSize: '0.55rem',
                             backgroundColor: typeBadge.bg,
                             color: typeBadge.color,
-                            padding: '1px 5px',
-                            borderRadius: '4px',
-                            marginLeft: '6px',
-                            display: 'inline-block',
                           }}
                         >
                           {typeBadge.label}
                         </span>
                       </div>
                       {g.contexto && (
-                        <div
-                          style={{
-                            fontSize: '0.65rem',
-                            color: '#94a3b8',
-                            marginTop: '2px',
-                            fontVariantNumeric: 'tabular-nums',
-                          }}
-                        >
+                        <div className="text-xs text-slate-400 mt-1 tabular-nums">
                           {g.contexto}
                         </div>
                       )}
                     </td>
-                    <td
-                      style={{
-                        padding: '7px 8px',
-                        textAlign: 'center',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                        }}
-                      >
+                    <td className="px-2 py-1.5 text-center text-xs">
+                      <div className="flex items-center justify-center gap-1">
                         <span
-                          style={{
-                            display: 'inline-block',
-                            width: '10px',
-                            height: '10px',
-                            borderRadius: '50%',
-                            backgroundColor: statusColor.dot,
-                          }}
+                          className="inline-block w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: statusColor.dot }}
                         />
-                        <span style={{ textTransform: 'capitalize', color: statusColor.text }}>
+                        <span className="capitalize" style={{ color: statusColor.text }}>
                           {g.status}
                         </span>
                       </div>
                     </td>
-                    <td
-                      style={{
-                        padding: '7px 8px',
-                        textAlign: 'right',
-                        fontSize: '0.78rem',
-                        fontVariantNumeric: 'tabular-nums',
-                      }}
-                    >
+                    <td className="px-2 py-1.5 text-right text-xs tabular-nums">
                       {privacyMode ? '••••' : g.valorPrimario}
                     </td>
-                    <td
-                      style={{
-                        padding: '7px 8px',
-                        fontSize: '0.75rem',
-                      }}
-                    >
+                    <td className="px-2 py-1.5 text-xs">
                       {g.acao}
                     </td>
                   </tr>
@@ -290,9 +165,9 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
               })}
             </tbody>
           </table>
-        </div>
+        </CardContent>
       )}
-    </div>
+    </Card>
   );
 };
 
