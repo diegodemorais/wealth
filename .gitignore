@@ -9,6 +9,11 @@ analysis/__pycache__/
 analysis/backtest_output/*.png
 react-app/audit-screenshots/
 
+# Test reports
+dashboard/tests/visual_regression_report.json
+dashboard/tests/full_test_run.json
+dashboard/tests/last_run.json
+
 # Credenciais
 .env
 .netlify_token
