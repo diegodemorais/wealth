@@ -10,7 +10,8 @@ import { useChartSetup } from '@/hooks/useChartSetup';
 
 export function LayoutClient({ children }: { children: ReactNode }) {
   // Initialize Chart.js FIRST - must happen before any charts render
-  useChartSetup();
+  // TODO: Re-enable once charts are properly integrated
+  // useChartSetup();
 
   // Initialize privacy mode hook (handles localStorage + DOM class)
   usePrivacyMode();

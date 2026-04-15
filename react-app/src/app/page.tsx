@@ -6,9 +6,10 @@ import { KpiHero } from '@/components/primitives/KpiHero';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { Semaforo } from '@/components/primitives/Semaforo';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
-import { TornadoChart } from '@/components/charts/TornadoChart';
-import { FanChart } from '@/components/charts/FanChart';
-import { SankeyChart } from '@/components/charts/SankeyChart';
+// Chart imports temporarily disabled
+// import { TornadoChart } from '@/components/charts/TornadoChart';
+// import { FanChart } from '@/components/charts/FanChart';
+// import { SankeyChart } from '@/components/charts/SankeyChart';
 import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
@@ -207,7 +208,8 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
-      {/* Charts Section */}
+      {/* Charts Section - TODO: Fix missing data references */}
+      {/* Temporarily disabled due to missing data fields in data.json
       {data && (
         <CollapsibleSection
           id="section-charts"
@@ -220,6 +222,7 @@ export default function HomePage() {
           <SankeyChart data={data} />
         </CollapsibleSection>
       )}
+      */}
     </div>
   );
 }
