@@ -27,6 +27,7 @@ import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import GlidePath from '@/components/dashboard/GlidePath';
 import AttributionAnalysis from '@/components/dashboard/AttributionAnalysis';
+import BondPoolRunway from '@/components/dashboard/BondPoolRunway';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -381,6 +382,26 @@ export default function HomePage() {
           icon="📐"
         >
           <FactorLoadingsTable data={data.factor_loadings} />
+        </CollapsibleSection>
+      )}
+
+      {/* Tier-2: Bond Pool & Runway Management */}
+      {derived && (
+        <CollapsibleSection
+          id="section-bond-runway"
+          title="Bond Pool & Runway Management"
+          defaultOpen={false}
+          icon="🏛️"
+        >
+          {/* 4.1: Bond Pool Runway */}
+          <BondPoolRunway
+            poolCurrentValue={data?.fire?.bond_pool_readiness?.valor_atual_brl || 0}
+            fireAnnualExpense={data?.premissas?.custo_vida_fire || 250000}
+            expectedReturn={6.5}
+            projectedYears={10}
+            yearsToFire={Math.ceil((derived.fireMonthsAway || 0) / 12)}
+            swrPercent={data?.pfire_base?.swr_percent || 3.5}
+          />
         </CollapsibleSection>
       )}
 
