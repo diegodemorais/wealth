@@ -27,9 +27,9 @@ export function LayoutClient({ children }: { children: ReactNode }) {
       <TabNav />
       <main
         style={{
-          maxWidth: '1400px',
+          maxWidth: '1280px',
           margin: '0 auto',
-          padding: '20px',
+          padding: '16px',
           minHeight: 'calc(100vh - 200px)',
         }}
       >
