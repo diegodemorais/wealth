@@ -838,16 +838,20 @@
       "tab": "retiro",
       "label": "Bond Pool — Projeção até FIRE Day",
       "type": "chart-area",
-      "purpose": "Mostra P10/P50/P90 anos restantes pós-FIRE para confirmar se o bond pool sustentará os primeiros anos de decumulação",
-      "data_fields": [],
-      "optional_fields": [
-        "fire.bond_pool_runway.dates",
-        "fire.bond_pool_runway.p10",
-        "fire.bond_pool_runway.p50",
-        "fire.bond_pool_runway.p90"
+      "purpose": "Mostra evolução projetada do bond pool até 2040 (stacked bar IPCA+ 2040/2050 + total line + meta), e opcionalmente P10/P50/P90 spending scenarios pós-FIRE",
+      "data_fields": [
+        "bond_pool_runway.anos_pre_fire",
+        "bond_pool_runway.pool_total_brl",
+        "bond_pool_runway.alvo_pool_brl_2040",
+        "bond_pool_runway.custo_vida_anual"
       ],
-      "privacy": true,
-      "dependency": "FIRE agent must generate bond_pool_runway P10/P50/P90 projections"
+      "optional_fields": [
+        "bond_pool_runway.pool_td2040_brl",
+        "bond_pool_runway.pool_td2050_brl",
+        "bond_pool_runway.anos_cobertura_pos_fire",
+        "bond_pool_runway.pool_disponivel_pos_fire"
+      ],
+      "privacy": true
     },
     {
       "id": "simulador-fire",

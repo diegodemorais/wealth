@@ -61,9 +61,9 @@ export default function WithdrawPage() {
         </CollapsibleSection>
       )}
 
-      {data.fire?.bond_pool_runway && (
+      {(data.bond_pool_runway || data.fire?.bond_pool_runway) && (
         <CollapsibleSection id="section-bond-pool-runway" title="Bond Pool — Runway Projection" defaultOpen={true}>
-          <BondPoolRunwayChart data={data.fire.bond_pool_runway} />
+          <BondPoolRunwayChart data={data.bond_pool_runway || data.fire?.bond_pool_runway} />
         </CollapsibleSection>
       )}
     </div>
