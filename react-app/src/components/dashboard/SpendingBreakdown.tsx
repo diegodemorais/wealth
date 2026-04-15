@@ -118,8 +118,8 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
           <div className="flex h-16 bg-slate-700/15 rounded overflow-hidden gap-0 mb-2">
             {/* Must-Have */}
             <div
-              style={{ flex: mustavePercent, minWidth: '40px' }}
-              className="bg-red-500 opacity-80 flex items-center justify-center"
+              style={{ flex: mustavePercent }}
+              className="bg-red-500 opacity-80 flex items-center justify-center min-w-10"
               title={`Essencial: ${mustavePercent.toFixed(1)}%`}
             >
               {mustavePercent > 12 && (
@@ -129,8 +129,8 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
 
             {/* Like-to-Have */}
             <div
-              style={{ flex: likesPercent, minWidth: '40px' }}
-              className="bg-amber-500 opacity-80 flex items-center justify-center"
+              style={{ flex: likesPercent }}
+              className="bg-amber-500 opacity-80 flex items-center justify-center min-w-10"
               title={`Conforto: ${likesPercent.toFixed(1)}%`}
             >
               {likesPercent > 12 && (
@@ -140,8 +140,8 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
 
             {/* Imprevistos */}
             <div
-              style={{ flex: imprevistosPercent, minWidth: '40px' }}
-              className="bg-violet-500 opacity-80 flex items-center justify-center"
+              style={{ flex: imprevistosPercent }}
+              className="bg-violet-500 opacity-80 flex items-center justify-center min-w-10"
               title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
             >
               {imprevistosPercent > 12 && (
