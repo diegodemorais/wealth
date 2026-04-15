@@ -69,16 +69,12 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
           <button
             key={key}
             onClick={() => setSelectedTab(key)}
+            className="px-3 py-2 rounded text-xs cursor-pointer transition-all duration-200"
             style={{
-              padding: '8px 12px',
               backgroundColor: selectedTab === key ? etfs[key].color + '20' : 'transparent',
               border: selectedTab === key ? `1px solid ${etfs[key].color}` : '1px solid rgba(71, 85, 105, 0.25)',
-              borderRadius: '6px',
               color: selectedTab === key ? etfs[key].color : '#94a3b8',
-              fontSize: '0.85rem',
               fontWeight: selectedTab === key ? 600 : 500,
-              cursor: 'pointer',
-              transition: 'all 0.2s',
             }}
           >
             {etfs[key].name.split(' ')[0]}
@@ -96,33 +92,18 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
           {regions.map(region => {
             const value = currentEtf.data[region.key];
             return (
-              <div key={region.label} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div key={region.label} className="flex items-center gap-2.5">
                 {/* Bar chart */}
-                <div style={{ flex: '0 0 120px' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '4px' }}>
+                <div className="flex-shrink-0 w-[120px]">
+                  <div className="text-[0.75rem] text-slate-400 mb-1">
                     {region.label}
                   </div>
-                  <div
-                    style={{
-                      height: '20px',
-                      backgroundColor: 'rgba(71, 85, 105, 0.1)',
-                      borderRadius: '3px',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
+                  <div className="h-5 bg-slate-700/10 rounded-sm overflow-hidden flex items-center">
                     <div
+                      className="h-full flex items-center justify-center text-[0.65rem] font-semibold text-white"
                       style={{
-                        height: '100%',
                         width: `${value}%`,
                         backgroundColor: region.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.65rem',
-                        fontWeight: 600,
-                        color: 'white',
                       }}
                     >
                       {value > 5 && `${value}%`}
@@ -131,15 +112,7 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
                 </div>
 
                 {/* Percentage value */}
-                <div
-                  style={{
-                    flex: '0 0 40px',
-                    textAlign: 'right',
-                    fontSize: '0.9rem',
-                    fontWeight: 700,
-                    color: region.color,
-                  }}
-                >
+                <div className="flex-shrink-0 w-10 text-right text-sm font-bold" style={{ color: region.color }}>
                   {value}%
                 </div>
               </div>
@@ -155,36 +128,17 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
         </div>
 
         <div className="overflow-x-auto">
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '0.75rem',
-            }}
-          >
+          <table className="w-full border-collapse text-[0.75rem]">
             <thead>
               <tr>
-                <th
-                  style={{
-                    textAlign: 'left',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#94a3b8',
-                    fontWeight: 600,
-                  }}
-                >
+                <th className="text-left p-2 border-b border-slate-700/25 text-slate-400 font-semibold">
                   Região
                 </th>
                 {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
                   <th
                     key={key}
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                      color: etfs[key].color,
-                      fontWeight: 700,
-                    }}
+                    className="text-right p-2 border-b border-slate-700/25 font-bold"
+                    style={{ color: etfs[key].color }}
                   >
                     {etfs[key].name.split(' ')[0]}
                   </th>
@@ -194,25 +148,14 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
             <tbody>
               {regions.map(region => (
                 <tr key={region.label}>
-                  <td
-                    style={{
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: '#cbd5e1',
-                    }}
-                  >
+                  <td className="p-2 border-b border-slate-700/15 text-slate-300">
                     {region.label}
                   </td>
                   {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
                     <td
                       key={`${key}-${region.label}`}
-                      style={{
-                        padding: '8px',
-                        textAlign: 'right',
-                        borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                        color: region.color,
-                        fontWeight: 600,
-                      }}
+                      className="p-2 text-right border-b border-slate-700/15 font-semibold"
+                      style={{ color: region.color }}
                     >
                       {etfs[key].data[region.key]}%
                     </td>
