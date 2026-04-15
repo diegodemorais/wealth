@@ -16,6 +16,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build Application
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout código
