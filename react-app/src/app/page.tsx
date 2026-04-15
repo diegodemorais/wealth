@@ -41,6 +41,7 @@ import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { FamilyScenarioCards } from '@/components/dashboard/FamilyScenarioCards';
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
 import { LifeEventsTable } from '@/components/dashboard/LifeEventsTable';
+import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -231,6 +232,18 @@ export default function HomePage() {
           icon="📅"
         >
           <LifeEventsTable data={data.lumpy_events} />
+        </CollapsibleSection>
+      )}
+
+      {/* ETF Positions — IBKR Holdings */}
+      {data && data.posicoes && (
+        <CollapsibleSection
+          id="section-etf-positions"
+          title="ETF Positions"
+          defaultOpen={false}
+          icon="📊"
+        >
+          <EtfsPositionsTable data={data.posicoes} />
         </CollapsibleSection>
       )}
 
