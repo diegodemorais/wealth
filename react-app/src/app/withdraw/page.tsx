@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { withBasePath } from '@/utils/basePath';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
 import { IncomeChart } from '@/components/charts/IncomeChart';
@@ -14,7 +15,7 @@ export default function WithdrawPage() {
 
   useEffect(() => {
     if (!data) {
-      const dataUrl = '/data.json';
+      const dataUrl = withBasePath('/data.json');
       fetch(dataUrl)
         .then(r => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);

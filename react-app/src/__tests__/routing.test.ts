@@ -15,8 +15,13 @@ describe('Routing & Data Loading', () => {
     const configPath = path.join(__dirname, '../../next.config.ts');
     const configContent = fs.readFileSync(configPath, 'utf-8');
 
-    // Extract basePath from config
-    const basePathMatch = configContent.match(/basePath:\s*['"]([^'"]+)['"]/);
+    // Extract basePath from config (two patterns: inline or const variable)
+    let basePathMatch = configContent.match(/basePath:\s*['"]([^'"]+)['"]/);
+    if (!basePathMatch) {
+      // Try to find const basePath = '...'
+      basePathMatch = configContent.match(/const\s+basePath\s*=\s*['"]([^'"]+)['"]/);
+    }
+
     if (basePathMatch) {
       nextConfig = { basePath: basePathMatch[1] };
     } else {
@@ -91,8 +96,8 @@ describe('Routing & Data Loading', () => {
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, 'utf-8');
 
-        // Should use basePath when constructing data URL
-        expect(content).toMatch(/basePath.*data\.json|dataUrl.*basePath/i);
+        // Should use withBasePath utility when constructing data URL
+        expect(content).toMatch(/withBasePath.*data\.json|import.*withBasePath/i);
 
         // Should NOT have hardcoded /dash/ path
         expect(content).not.toMatch(/['"`]\/dash\/data\.json['"`]/);

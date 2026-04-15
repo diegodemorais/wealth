@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { withBasePath } from '@/utils/basePath';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { Semaforo } from '@/components/primitives/Semaforo';
@@ -22,8 +23,8 @@ export default function HomePage() {
 
   useEffect(() => {
     // Load data dynamically from public path
-    // Next.js basePath is configured in next.config.ts
-    const dataUrl = '/data.json';
+    // basePath is configured in next.config.ts and injected via env var
+    const dataUrl = withBasePath('/data.json');
 
     console.log('NOW page: fetching from', dataUrl);
     fetch(dataUrl)

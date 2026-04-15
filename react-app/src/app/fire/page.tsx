@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { withBasePath } from '@/utils/basePath';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
@@ -14,7 +15,7 @@ export default function FirePage() {
 
   useEffect(() => {
     if (!data) {
-      const dataUrl = '/data.json';
+      const dataUrl = withBasePath('/data.json');
       fetch(dataUrl)
         .then(r => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
