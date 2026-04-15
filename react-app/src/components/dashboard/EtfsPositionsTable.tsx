@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface EtfPosition {
   qty: number;
@@ -56,16 +57,11 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
 
   if (positions.length === 0) {
     return (
-      <div style={{
-        padding: '20px',
-        backgroundColor: 'rgba(30, 41, 59, 0.3)',
-        borderRadius: '8px',
-        textAlign: 'center',
-        color: '#94a3b8',
-        fontSize: '0.8rem',
-      }}>
-        No ETF positions available
-      </div>
+      <Card className="bg-slate-900/30">
+        <CardContent className="text-xs text-slate-400 text-center py-6">
+          No ETF positions available
+        </CardContent>
+      </Card>
     );
   }
 
@@ -79,117 +75,26 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
   const totalPLPct = totals.totalCost > 0 ? totalPL / totals.totalCost : 0;
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div className="space-y-4">
       {/* Title */}
-      <h3 style={{
-        fontSize: '0.95rem',
-        fontWeight: '600',
-        marginBottom: '16px',
-        color: '#cbd5e1',
-      }}>
+      <h3 className="text-sm font-semibold text-slate-200">
         ETF Positions — IBKR Holdings
       </h3>
 
       {/* Table */}
-      <div style={{
-        overflowX: 'auto',
-        borderRadius: '8px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-      }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          fontSize: '0.75rem',
-          backgroundColor: 'rgba(15, 23, 42, 0.5)',
-        }}>
+      <div className="overflow-x-auto rounded-lg border border-slate-700/25">
+        <table className="w-full border-collapse text-xs bg-slate-900/50">
           <thead>
-            <tr style={{ borderBottom: '2px solid rgba(71, 85, 105, 0.3)' }}>
-              <th style={{
-                padding: '10px 12px',
-                textAlign: 'left',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
+            <tr className="border-b-2 border-slate-700/30">
+              <th className="px-3 py-2 text-left font-semibold text-slate-400 bg-slate-900/40 uppercase">
                 ETF
               </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'right',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
-                Qty
-              </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'right',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
-                Avg Cost
-              </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'right',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
-                Price
-              </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'right',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
-                Total Value
-              </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'right',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
-                P/L
-              </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'right',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
-                P/L %
-              </th>
-              <th style={{
-                padding: '10px 8px',
-                textAlign: 'center',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
+              {['Qty', 'Avg Cost', 'Price', 'Total Value', 'P/L', 'P/L %'].map(label => (
+                <th key={label} className="px-2 py-2 text-right font-semibold text-slate-400 bg-slate-900/40 uppercase">
+                  {label}
+                </th>
+              ))}
+              <th className="px-2 py-2 text-center font-semibold text-slate-400 bg-slate-900/40 uppercase">
                 Status
               </th>
             </tr>

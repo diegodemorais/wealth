@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
 
@@ -65,53 +65,30 @@ export function FamilyScenarioCards({
   ];
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div className="space-y-4">
       {/* Title */}
-      <h3 style={{
-        fontSize: '0.95rem',
-        fontWeight: '600',
-        marginBottom: '16px',
-        color: '#cbd5e1',
-      }}>
+      <h3 className="text-sm font-semibold text-slate-200">
         Family Scenarios — P(FIRE) Impact
       </h3>
 
       {/* Scenario Selector — Auto-fit grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '12px',
-        marginBottom: '20px',
-      }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {Object.entries(perfis).map(([key, perfil]) => {
           const isSelected = key === selectedPerfil;
           return (
             <button
               key={key}
               onClick={() => setSelectedPerfil(key)}
-              style={{
-                padding: '12px 14px',
-                border: '2px solid',
-                borderRadius: '8px',
-                backgroundColor: isSelected ? 'rgba(59, 130, 246, 0.1)' : 'rgba(30, 41, 59, 0.3)',
-                borderColor: isSelected ? '#3b82f6' : 'rgba(71, 85, 105, 0.25)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
+              className={`p-3 border-2 rounded-lg transition cursor-pointer ${
+                isSelected
+                  ? 'border-blue-500 bg-blue-500/10'
+                  : 'border-slate-700/25 bg-slate-900/30'
+              }`}
             >
-              <div style={{
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                color: isSelected ? '#3b82f6' : '#cbd5e1',
-                marginBottom: '4px',
-              }}>
+              <div className={`text-xs font-semibold mb-1 ${isSelected ? 'text-blue-500' : 'text-slate-200'}`}>
                 {perfil.label}
               </div>
-              <div style={{
-                fontSize: '0.7rem',
-                color: '#94a3b8',
-                textAlign: 'left',
-              }}>
+              <div className="text-xs text-slate-400 text-left">
                 {privacyMode ? '••••/ano' : fmtBrl(perfil.gasto_anual / 1000).replace('R$', '') + 'k/ano'}
               </div>
             </button>
@@ -121,78 +98,40 @@ export function FamilyScenarioCards({
 
       {/* Selected Scenario Details */}
       {currentPerfil && (
-        <div style={{
-          marginBottom: '16px',
-          padding: '12px',
-          backgroundColor: 'rgba(30, 41, 59, 0.3)',
-          borderRadius: '6px',
-          borderLeft: '3px solid #3b82f6',
-        }}>
-          <div style={{
-            fontSize: '0.8rem',
-            color: '#cbd5e1',
-            marginBottom: '4px',
-            fontWeight: 500,
-          }}>
-            {currentPerfil.label}
-          </div>
-          <div style={{
-            fontSize: '0.75rem',
-            color: '#94a3b8',
-            lineHeight: '1.4',
-          }}>
-            {currentPerfil.descricao}
-          </div>
-        </div>
+        <Card className="bg-slate-900/30 border-l-4 border-l-blue-500">
+          <CardContent className="p-3">
+            <div className="text-xs font-semibold text-slate-200 mb-1">
+              {currentPerfil.label}
+            </div>
+            <div className="text-xs text-slate-400 leading-relaxed">
+              {currentPerfil.descricao}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* P(FIRE) Scenarios Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-        gap: '12px',
-      }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {scenarios.map((sc, idx) => (
-          <div
-            key={idx}
-            style={{
-              padding: '14px',
-              backgroundColor: 'rgba(30, 41, 59, 0.4)',
-              borderRadius: '8px',
-              border: '1px solid rgba(71, 85, 105, 0.25)',
-            }}
-          >
-            <div style={{
-              fontSize: '0.7rem',
-              color: '#94a3b8',
-              marginBottom: '8px',
-              textTransform: 'uppercase',
-              fontWeight: 600,
-            }}>
-              {sc.label}
-            </div>
-            <div style={{
-              fontSize: '2rem',
-              fontWeight: 800,
-              color: getPfireColor(sc.value),
-              marginBottom: '4px',
-            }}>
-              {privacyMode ? '••' : fmtPct(sc.value / 100, 0)}
-            </div>
-            <div style={{
-              height: '4px',
-              backgroundColor: 'rgba(71, 85, 105, 0.15)',
-              borderRadius: '2px',
-              overflow: 'hidden',
-            }}>
-              <div style={{
-                height: '100%',
-                width: `${Math.min(100, sc.value)}%`,
-                backgroundColor: sc.color,
-                transition: 'width 0.3s',
-              }} />
-            </div>
-          </div>
+          <Card key={idx} className="bg-slate-900/40 border-slate-700/25">
+            <CardContent className="p-3">
+              <div className="text-xs text-slate-400 mb-2 uppercase font-semibold">
+                {sc.label}
+              </div>
+              <div className={`text-2xl font-bold mb-2`} style={{ color: getPfireColor(sc.value) }}>
+                {privacyMode ? '••' : fmtPct(sc.value / 100, 0)}
+              </div>
+              <div className="h-1 bg-slate-700/15 rounded overflow-hidden">
+                <div
+                  className="h-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(100, sc.value)}%`,
+                    backgroundColor: sc.color,
+                  }}
+                />
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

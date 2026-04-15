@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct } from '@/utils/formatters';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface HeatmapData {
   [key: string]: number; // "2024-01": 0.025, etc
@@ -61,57 +62,33 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
 
   if (entries.length === 0) {
     return (
-      <div style={{
-        padding: '20px',
-        backgroundColor: 'rgba(30, 41, 59, 0.3)',
-        borderRadius: '8px',
-        textAlign: 'center',
-        color: '#94a3b8',
-        fontSize: '0.8rem',
-      }}>
-        Monthly returns heatmap — data will be available soon
-      </div>
+      <Card className="bg-slate-900/30">
+        <CardContent className="text-xs text-slate-400 text-center py-6">
+          Monthly returns heatmap — data will be available soon
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div className="space-y-4">
       {/* Title */}
-      <h3 style={{
-        fontSize: '0.95rem',
-        fontWeight: '600',
-        marginBottom: '16px',
-        color: '#cbd5e1',
-      }}>
+      <h3 className="text-sm font-semibold text-slate-200">
         Monthly Returns — 24-Month Heatmap
       </h3>
 
       {/* Heatmap Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${Math.min(12, entries.length)}, minmax(32px, 1fr))`,
-        gap: '4px',
-        padding: '12px',
-        backgroundColor: 'rgba(15, 23, 42, 0.5)',
-        borderRadius: '8px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        overflowX: 'auto',
-      }}>
+      <div className="grid gap-1 p-3 bg-slate-900/50 rounded-lg border border-slate-700/25 overflow-x-auto"
+        style={{
+          gridTemplateColumns: `repeat(${Math.min(12, entries.length)}, minmax(32px, 1fr))`,
+        }}
+      >
         {entries.map(([month, returnValue], idx) => (
           <div
             key={month}
+            className="aspect-square rounded flex items-center justify-center cursor-pointer transition-all text-xs font-semibold"
             style={{
-              position: 'relative',
-              aspectRatio: '1',
               backgroundColor: getColor(returnValue),
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              fontSize: '0.65rem',
-              fontWeight: 600,
               color: getTextColor(returnValue),
             }}
             title={`${month}: ${privacyMode ? '••••' : fmtPct(returnValue, 2)}`}
@@ -124,44 +101,28 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
       </div>
 
       {/* Legend */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginTop: '12px',
-        fontSize: '0.7rem',
-        color: '#94a3b8',
-      }}>
+      <div className="flex justify-between text-xs text-slate-400 mt-3">
         <div>← Worst</div>
-        <div style={{ color: '#22c55e', fontWeight: 600 }}>Positive Returns</div>
-        <div style={{ color: '#ef4444', fontWeight: 600 }}>Negative Returns</div>
+        <div className="font-semibold text-green-500">Positive Returns</div>
+        <div className="font-semibold text-red-500">Negative Returns</div>
         <div>Best →</div>
       </div>
 
       {/* Summary Stats */}
       {entries.length > 0 && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '12px',
-          marginTop: '12px',
-        }}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
           {[
             { label: 'Positive Months', value: `${entries.filter(([, v]) => v > 0).length}/${entries.length}` },
             { label: 'Avg Return', value: privacyMode ? '••••' : fmtPct(entries.reduce((sum, [, v]) => sum + v, 0) / entries.length, 2) },
             { label: 'Best Month', value: privacyMode ? '••••' : fmtPct(Math.max(...entries.map(([, v]) => v)), 2) },
             { label: 'Worst Month', value: privacyMode ? '••••' : fmtPct(Math.min(...entries.map(([, v]) => v)), 2) },
           ].map((stat, idx) => (
-            <div key={idx} style={{
-              padding: '10px 12px',
-              backgroundColor: 'rgba(30, 41, 59, 0.3)',
-              borderRadius: '6px',
-              fontSize: '0.75rem',
-            }}>
-              <div style={{ color: '#94a3b8', marginBottom: '4px' }}>{stat.label}</div>
-              <div style={{ color: '#cbd5e1', fontWeight: 600, fontSize: '0.85rem' }}>
-                {stat.value}
-              </div>
-            </div>
+            <Card key={idx} className="bg-slate-900/30">
+              <CardContent className="p-2">
+                <div className="text-xs text-slate-400 mb-1">{stat.label}</div>
+                <div className="text-slate-200 font-semibold text-sm">{stat.value}</div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}

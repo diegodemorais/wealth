@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface LifeEvent {
   id: string;
@@ -29,200 +31,126 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
 
   if (!data || !data.eventos || data.eventos.length === 0) {
     return (
-      <div style={{
-        padding: '16px',
-        backgroundColor: 'rgba(30, 41, 59, 0.3)',
-        borderRadius: '8px',
-        color: '#94a3b8',
-        fontSize: '0.8rem',
-      }}>
-        No life events scheduled
-      </div>
+      <Card className="bg-slate-900/30">
+        <CardContent className="text-xs text-slate-400 text-center py-6">
+          No life events scheduled
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div className="space-y-4">
       {/* Title */}
-      <h3 style={{
-        fontSize: '0.95rem',
-        fontWeight: '600',
-        marginBottom: '16px',
-        color: '#cbd5e1',
-      }}>
+      <h3 className="text-sm font-semibold text-slate-200 mb-4">
         Life Events — P(FIRE) Impact Analysis
       </h3>
 
       {/* Events List */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '12px',
-      }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {data.eventos.map(event => {
           const isExpanded = expandedId === event.id;
-          const deltaColor = event.delta_pp > 0 ? '#ef4444' : '#22c55e'; // red if delta positive (bad), green if negative (good)
+          const deltaColor = event.delta_pp > 0 ? 'text-red-500' : 'text-green-500';
+          const statusColor = event.confirmado ? 'bg-green-500/20' : 'bg-yellow-500/20';
+          const statusTextColor = event.confirmado ? 'text-green-500' : 'text-yellow-500';
+          const dotColor = event.confirmado ? 'bg-green-500' : 'bg-yellow-500';
 
           return (
-            <div
-              key={event.id}
-              style={{
-                border: '1px solid rgba(71, 85, 105, 0.25)',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(30, 41, 59, 0.3)',
-                overflow: 'hidden',
-              }}
-            >
+            <Card key={event.id} className="bg-slate-900/30 border-slate-700/25 overflow-hidden">
               {/* Header — Clickable */}
               <button
                 onClick={() => setExpandedId(isExpanded ? null : event.id)}
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '12px',
-                }}
+                className="w-full p-3 bg-transparent border-none cursor-pointer flex items-center justify-between gap-3 hover:bg-slate-800/20 transition"
               >
                 {/* Content */}
-                <div style={{ flex: 1, textAlign: 'left' }}>
-                  <div style={{
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    color: '#cbd5e1',
-                    marginBottom: '4px',
-                  }}>
+                <div className="flex-1 text-left">
+                  <div className="text-xs font-semibold text-slate-200 mb-1">
                     {event.label}
                   </div>
-                  <div style={{
-                    fontSize: '0.7rem',
-                    color: '#94a3b8',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                  }}>
+                  <div className="text-xs text-slate-400 flex items-center gap-2">
                     <span>
                       {event.confirmado ? '✓ Confirmado' : '○ Planejado'}
                     </span>
-                    <span style={{
-                      width: '4px',
-                      height: '4px',
-                      borderRadius: '50%',
-                      backgroundColor: event.confirmado ? '#22c55e' : '#eab308',
-                    }} />
+                    <span className={`w-1 h-1 rounded-full ${dotColor}`} />
                     <span>Ano {event.ano_inicio}</span>
                   </div>
                 </div>
 
                 {/* Delta Badge */}
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  gap: '4px',
-                }}>
-                  <div style={{
-                    fontSize: '0.75rem',
-                    color: '#94a3b8',
-                    textTransform: 'uppercase',
-                  }}>
+                <div className="flex flex-col items-end gap-1">
+                  <div className="text-xs text-slate-400 uppercase">
                     ΔP(FIRE)
                   </div>
-                  <div style={{
-                    fontSize: '1.1rem',
-                    fontWeight: 700,
-                    color: deltaColor,
-                  }}>
+                  <div className={`text-lg font-bold ${deltaColor}`}>
                     {privacyMode ? '••' : `${event.delta_pp > 0 ? '' : '+'}${event.delta_pp.toFixed(1)}pp`}
                   </div>
                 </div>
 
                 {/* Expand Arrow */}
-                <div style={{
-                  color: '#94a3b8',
-                  fontSize: '0.8rem',
-                }}>
+                <div className="text-slate-400 text-xs">
                   {isExpanded ? '▼' : '▶'}
                 </div>
               </button>
 
               {/* Details — Expandable */}
               {isExpanded && (
-                <div style={{
-                  borderTop: '1px solid rgba(71, 85, 105, 0.15)',
-                  padding: '12px 14px',
-                  backgroundColor: 'rgba(15, 23, 42, 0.5)',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                  gap: '12px',
-                  fontSize: '0.75rem',
-                }}>
+                <div className="border-t border-slate-700/15 p-3 bg-slate-900/50 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <div style={{ color: '#94a3b8', marginBottom: '4px' }}>
+                    <div className="text-slate-400 mb-1">
                       New Annual Spend
                     </div>
-                    <div style={{ color: '#cbd5e1', fontWeight: 600, fontSize: '0.9rem' }}>
+                    <div className="text-slate-200 font-semibold text-sm">
                       {privacyMode ? '••••' : fmtBrl(event.spending_novo)}
                     </div>
                   </div>
 
                   <div>
-                    <div style={{ color: '#94a3b8', marginBottom: '4px' }}>
+                    <div className="text-slate-400 mb-1">
                       P(FIRE) @ 2040
                     </div>
-                    <div style={{ color: '#cbd5e1', fontWeight: 600, fontSize: '0.9rem' }}>
+                    <div className="text-slate-200 font-semibold text-sm">
                       {privacyMode ? '••' : fmtPct(event.pfire_2040, 1)}
                     </div>
                   </div>
 
                   <div>
-                    <div style={{ color: '#94a3b8', marginBottom: '4px' }}>
+                    <div className="text-slate-400 mb-1">
                       Required Patrimonio
                     </div>
-                    <div style={{ color: '#cbd5e1', fontWeight: 600, fontSize: '0.9rem' }}>
+                    <div className="text-slate-200 font-semibold text-sm">
                       {privacyMode ? '••••' : fmtBrl(event.patrimonio_necessario)}
                     </div>
                   </div>
                 </div>
               )}
-            </div>
+            </Card>
           );
         })}
       </div>
 
       {/* Summary */}
       {data.eventos.length > 0 && (
-        <div style={{
-          marginTop: '16px',
-          padding: '12px 14px',
-          backgroundColor: 'rgba(30, 41, 59, 0.3)',
-          borderRadius: '6px',
-          fontSize: '0.75rem',
-          color: '#94a3b8',
-          lineHeight: '1.6',
-        }}>
-          <strong style={{ color: '#cbd5e1' }}>Impact Summary:</strong><br />
-          {data.eventos.filter(e => e.confirmado).length > 0 && (
-            <div>
-              {data.eventos
-                .filter(e => e.confirmado)
-                .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
-                .join(' • ')}
-            </div>
-          )}
-          {data.eventos.filter(e => !e.confirmado).length > 0 && (
-            <div style={{ opacity: 0.7 }}>
-              Planned: {data.eventos
-                .filter(e => !e.confirmado)
-                .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
-                .join(' • ')}
-            </div>
-          )}
-        </div>
+        <Card className="bg-slate-900/30 mt-4">
+          <CardContent className="p-3 text-xs text-slate-400 leading-relaxed">
+            <strong className="text-slate-200">Impact Summary:</strong><br />
+            {data.eventos.filter(e => e.confirmado).length > 0 && (
+              <div className="mt-1">
+                {data.eventos
+                  .filter(e => e.confirmado)
+                  .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
+                  .join(' • ')}
+              </div>
+            )}
+            {data.eventos.filter(e => !e.confirmado).length > 0 && (
+              <div className="opacity-70 mt-1">
+                Planned: {data.eventos
+                  .filter(e => !e.confirmado)
+                  .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
+                  .join(' • ')}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
     </div>
   );

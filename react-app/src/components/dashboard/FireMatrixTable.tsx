@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
 
@@ -51,39 +51,22 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
   };
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div className="space-y-4">
       {/* Title & Scenario Selector */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '16px',
-      }}>
-        <h3 style={{
-          fontSize: '0.95rem',
-          fontWeight: '600',
-          margin: 0,
-          color: '#cbd5e1',
-        }}>
+      <div className="flex justify-between items-center">
+        <h3 className="text-sm font-semibold text-slate-200 m-0">
           FIRE Matrix — P(FIRE) by Patrimônio × Gasto
         </h3>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="flex gap-2">
           {(['base', 'fav', 'stress'] as const).map(s => (
             <button
               key={s}
               onClick={() => setSelectedScenario(s)}
-              style={{
-                padding: '6px 12px',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                border: '1px solid',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                backgroundColor: selectedScenario === s ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
-                borderColor: selectedScenario === s ? '#3b82f6' : '#4b5563',
-                color: selectedScenario === s ? '#3b82f6' : '#9ca3af',
-                transition: 'all 0.2s',
-              }}
+              className={`px-3 py-1 text-xs font-semibold border rounded transition ${
+                selectedScenario === s
+                  ? 'border-blue-500 bg-blue-500/20 text-blue-500'
+                  : 'border-slate-600 bg-transparent text-slate-400'
+              }`}
             >
               {s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
@@ -92,42 +75,17 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
       </div>
 
       {/* Table */}
-      <div style={{
-        overflowX: 'auto',
-        borderRadius: '8px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-      }}>
-        <table style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          fontSize: '0.75rem',
-          backgroundColor: 'rgba(15, 23, 42, 0.5)',
-        }}>
+      <div className="overflow-x-auto rounded-lg border border-slate-700/25">
+        <table className="w-full border-collapse text-xs bg-slate-900/50">
           <thead>
-            <tr style={{ borderBottom: '2px solid rgba(71, 85, 105, 0.3)' }}>
-              <th style={{
-                padding: '10px 12px',
-                textAlign: 'left',
-                fontWeight: 600,
-                color: '#94a3b8',
-                backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                textTransform: 'uppercase',
-                fontSize: '0.7rem',
-              }}>
+            <tr className="border-b-2 border-slate-700/30">
+              <th className="px-3 py-2 text-left font-semibold text-slate-400 bg-slate-900/40 uppercase text-xs">
                 Patrimônio
               </th>
               {gastos.map(g => (
                 <th
                   key={g}
-                  style={{
-                    padding: '10px 8px',
-                    textAlign: 'center',
-                    fontWeight: 600,
-                    color: '#94a3b8',
-                    backgroundColor: 'rgba(30, 41, 59, 0.4)',
-                    fontSize: '0.7rem',
-                    textTransform: 'uppercase',
-                  }}
+                  className="px-2 py-2 text-center font-semibold text-slate-400 bg-slate-900/40 uppercase text-xs"
                 >
                   {privacyMode ? '••••' : fmtBrl(g / 1000).replace('R$', '')}k
                 </th>
@@ -136,15 +94,8 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
           </thead>
           <tbody>
             {patrimonios.map((pat, patIdx) => (
-              <tr key={pat} style={{
-                borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-              }}>
-                <td style={{
-                  padding: '10px 12px',
-                  fontWeight: 500,
-                  color: '#cbd5e1',
-                  backgroundColor: patIdx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                }}>
+              <tr key={pat} className="border-b border-slate-700/15">
+                <td className={`px-3 py-2 font-semibold text-slate-200 ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-slate-900/20'}`}>
                   {privacyMode ? '••••' : fmtBrl(pat)}
                 </td>
                 {gastos.map(gasto => {
@@ -152,12 +103,10 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
                   return (
                     <td
                       key={`${pat}_${gasto}`}
+                      className="px-2 py-2 text-center font-semibold"
                       style={{
-                        padding: '8px 6px',
-                        textAlign: 'center',
                         backgroundColor: getColor(pfire),
                         color: getTextColor(pfire),
-                        fontWeight: 600,
                       }}
                       title={`P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtBrl(pat)} e gasto ${fmtBrl(gasto)}`}
                     >
@@ -172,27 +121,19 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
       </div>
 
       {/* Legend */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-        gap: '12px',
-        marginTop: '12px',
-        fontSize: '0.7rem',
-      }}>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-xs">
         {[
           { label: '≥90%', color: '#22c55e' },
           { label: '70-90%', color: '#eab308' },
           { label: '50-70%', color: '#f59e0b' },
           { label: '<50%', color: '#ef4444' },
         ].map(l => (
-          <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <div style={{
-              width: '14px',
-              height: '14px',
-              borderRadius: '3px',
-              backgroundColor: l.color,
-            }} />
-            <span style={{ color: '#94a3b8' }}>{l.label}</span>
+          <div key={l.label} className="flex items-center gap-2">
+            <div
+              className="w-3.5 h-3.5 rounded"
+              style={{ backgroundColor: l.color }}
+            />
+            <span className="text-slate-400">{l.label}</span>
           </div>
         ))}
       </div>
