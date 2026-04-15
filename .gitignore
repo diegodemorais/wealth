@@ -28,3 +28,5 @@ react-app/.next/
 
 # Next.js static export (build artifacts) - REMOVED: now deploying /dash/ in main
 # dash/
+dashboard/audit-screenshots/
+dashboard/audit-reports/
