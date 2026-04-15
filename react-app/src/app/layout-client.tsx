@@ -15,6 +15,9 @@ export function LayoutClient({ children }: { children: ReactNode }) {
   // Initialize privacy mode hook (handles localStorage + DOM class)
   usePrivacyMode();
 
+  // Initialize Chart.js setup (required for /simulators route)
+  useChartSetup();
+
   // Note: PTAX live updates removed - cambio is loaded from data.json
   // API calls to BCB from browser cause CORS/406 errors and break rendering
 
