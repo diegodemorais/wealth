@@ -38,6 +38,7 @@ import { WellnessActionsBox } from '@/components/dashboard/WellnessActionsBox';
 import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
+import { FamilyScenarioCards } from '@/components/dashboard/FamilyScenarioCards';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -201,6 +202,23 @@ export default function HomePage() {
           </p>
         </div>
       </CollapsibleSection>
+
+      {/* Family Scenarios — Impact Analysis */}
+      {data && data.fire_matrix && (
+        <CollapsibleSection
+          id="section-family-scenarios"
+          title="Family Scenarios"
+          defaultOpen={true}
+          icon="👨‍👩‍👧"
+        >
+          <FamilyScenarioCards
+            data={data.fire_matrix}
+            pfireBase={derived?.pfire || 90}
+            pfireFav={derived?.pfire || 90}
+            pfireStress={derived?.pfireStress || 87}
+          />
+        </CollapsibleSection>
+      )}
 
       {/* Tier-1: Semáforos de Gatilhos */}
       {derived && derived.gatilhos && (
