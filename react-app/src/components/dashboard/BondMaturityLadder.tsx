@@ -162,12 +162,10 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
             {buckets.map(bucket => (
               <div
                 key={bucket.label}
-                className="flex items-center justify-center rounded text-xs font-semibold text-white"
+                className="flex items-center justify-center rounded text-xs font-semibold text-white opacity-80 min-w-5"
                 style={{
                   flex: bucket.percentage,
                   backgroundColor: bucket.color,
-                  opacity: 0.8,
-                  minWidth: '20px',
                 }}
                 title={`${bucket.label}: ${bucket.percentage.toFixed(1)}%`}
               >

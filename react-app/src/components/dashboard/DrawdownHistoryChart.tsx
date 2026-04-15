@@ -132,7 +132,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
       <CardContent className="space-y-4">
         {/* Chart */}
         <div className="mb-4">
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
+          <canvas ref={chartRef} className="max-h-[300px]" />
         </div>
 
       {/* Key metrics */}
