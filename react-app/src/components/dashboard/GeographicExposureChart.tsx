@@ -122,7 +122,7 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
         <div className="grid grid-cols-2 gap-4 items-start">
           {/* Chart */}
           <div className="flex justify-center">
-            <canvas ref={chartRef} style={{ maxWidth: '250px', maxHeight: '250px' }} />
+            <canvas ref={chartRef} className="max-w-[250px] max-h-[250px]" />
           </div>
 
           {/* Breakdown table */}
@@ -130,28 +130,23 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
           {calculations.map(region => (
             <div
               key={region.label}
+              className="p-3 rounded flex justify-between items-center"
               style={{
-                padding: '10px 12px',
                 backgroundColor: `${region.color}15`,
                 borderLeft: `3px solid ${region.color}`,
-                borderRadius: '4px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
               }}
             >
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1' }}>
+                <div className="text-xs font-semibold text-slate-200">
                   {region.label}
                 </div>
-                <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
+                <div className="text-xs text-slate-500">
                   {privacyMode ? 'USD ••••' : `USD ${(region.value / 1000).toFixed(1)}k`}
                 </div>
               </div>
               <div
+                className="text-sm font-bold"
                 style={{
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
                   color: region.color,
                 }}
               >
