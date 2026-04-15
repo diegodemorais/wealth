@@ -93,6 +93,7 @@ export interface DerivedValues {
   fireDate: Date;
   fireMonthsAway: number;
   firePercentage: number;
+  pfire: number; // Probability of FIRE success (0-1)
   wellnessScore: number;
   wellnessStatus: 'critical' | 'warning' | 'ok' | 'excellent';
   equityPercentage: number;

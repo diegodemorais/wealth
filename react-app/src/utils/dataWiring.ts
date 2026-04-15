@@ -149,6 +149,9 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const yrInt = Math.floor(yearsLeft);
   const moInt = Math.round((yearsLeft - yrInt) * 12);
 
+  // P(FIRE) — probability of success from pfire_base (base scenario)
+  const pfire = (data.pfire_base?.base ?? 90.4) / 100;
+
   return {
     // Core values
     networth: totalBrl,
@@ -160,6 +163,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     fireDate,
     fireMonthsAway: moInt + yrInt * 12,
     firePercentage: (progPct / 100),
+    pfire, // Probability of FIRE success (0-1)
 
     // Wellness score (simple heuristic)
     wellnessScore: Math.min(1, progPct / 100 * 1.2),

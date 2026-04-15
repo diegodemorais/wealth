@@ -1,55 +1,76 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
-import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { fmtBrl, fmtPct, fmtUsd } from '@/utils/formatters';
 
 export interface KpiHeroProps {
   networth: number;
-  fireProgress: number;
+  networthUsd: number;
+  fireProgress: number; // 0-1
   yearsToFire: number;
+  pfire: number; // 0-1, probability of FIRE
+  cambio?: number;
   fireStatus?: 'on-track' | 'warning' | 'critical';
 }
 
 export function KpiHero({
   networth,
+  networthUsd,
   fireProgress,
   yearsToFire,
+  pfire,
+  cambio = 5.156,
   fireStatus = 'on-track',
 }: KpiHeroProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
+  // Format years and months for "14a 0m" format
+  const yearsInt = Math.floor(yearsToFire);
+  const monthsInt = Math.round((yearsToFire - yearsInt) * 12);
+  const yearsMonthsStr = `${yearsInt}a ${monthsInt}m`;
+
   const kpis = [
     {
-      label: 'Net Worth',
+      label: 'Patrimônio Total',
       value: privacyMode ? '••••' : fmtBrl(networth),
-      icon: '💰',
-      color: '#3b82f6',
+      subtitle: privacyMode ? '••••' : `USD ${fmtUsd(networthUsd).replace('$', '')}`,
+      primary: true,
     },
     {
-      label: 'FIRE Progress',
-      value: privacyMode ? '••••' : fmtPct(fireProgress),
-      icon: '🔥',
-      color: '#f59e0b',
+      label: 'Anos até FIRE',
+      value: privacyMode ? '••••' : yearsMonthsStr,
     },
     {
-      label: 'Years to FIRE',
-      value: privacyMode ? '••••' : Math.round(yearsToFire),
-      icon: '⏱️',
-      color: '#10b981',
-      unit: 'y',
+      label: 'Progresso FIRE',
+      value: privacyMode ? '••••' : fmtPct(fireProgress, 1),
+      color: '#facc15', // yellow
+    },
+    {
+      label: 'P(FIRE)',
+      value: privacyMode ? '••••' : fmtPct(pfire, 1),
     },
   ];
 
   return (
     <div style={styles.hero}>
       {kpis.map((kpi, idx) => (
-        <div key={idx} style={styles.kpiItem}>
-          <div style={{ fontSize: '32px', marginBottom: '8px' }}>{kpi.icon}</div>
+        <div
+          key={idx}
+          style={{
+            ...styles.kpiItem,
+            ...(kpi.primary ? styles.kpiPrimary : {}),
+          }}
+        >
           <div style={styles.label}>{kpi.label}</div>
-          <div style={styles.heroValue}>
+          <div style={{
+            ...styles.heroValue,
+            color: kpi.color || '#fff',
+          }}>
             {kpi.value}
-            {kpi.unit && <span style={styles.unit}>{kpi.unit}</span>}
           </div>
+          {kpi.subtitle && (
+            <div style={styles.subtitle}>{kpi.subtitle}</div>
+          )}
         </div>
       ))}
     </div>
@@ -59,33 +80,39 @@ export function KpiHero({
 const styles: Record<string, React.CSSProperties> = {
   hero: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '20px',
-    marginBottom: '30px',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '10px',
+    marginBottom: '16px',
   },
   kpiItem: {
     backgroundColor: '#1f2937',
     border: '1px solid #374151',
     borderRadius: '12px',
-    padding: '24px',
+    padding: '16px',
     textAlign: 'center',
+  },
+  kpiPrimary: {
+    border: '2px solid #3b82f6',
+    backgroundColor: 'rgba(59, 130, 246, 0.07)',
   },
   label: {
     color: '#9ca3af',
-    fontSize: '13px',
+    fontSize: '0.6rem',
     textTransform: 'uppercase',
     fontWeight: '600',
-    marginBottom: '12px',
+    marginBottom: '4px',
+    letterSpacing: '0.5px',
   },
   heroValue: {
-    color: '#fff',
-    fontSize: '32px',
-    fontWeight: '700',
+    fontSize: '2rem',
+    fontWeight: '800',
+    marginTop: '4px',
+    marginBottom: '4px',
     lineHeight: '1',
   },
-  unit: {
-    fontSize: '16px',
+  subtitle: {
+    fontSize: '0.65rem',
     color: '#9ca3af',
-    marginLeft: '4px',
+    marginTop: '4px',
   },
 };

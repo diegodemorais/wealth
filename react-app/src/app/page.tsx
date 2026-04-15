@@ -56,8 +56,11 @@ export default function HomePage() {
       {/* Hero Strip */}
       <KpiHero
         networth={derived.networth}
+        networthUsd={derived.networthUsd}
         fireProgress={derived.firePercentage}
         yearsToFire={derived.fireMonthsAway / 12}
+        pfire={derived.pfire}
+        cambio={derived.CAMBIO}
       />
 
       {/* Wellness Status */}
