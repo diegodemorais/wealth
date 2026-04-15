@@ -107,7 +107,8 @@
         "premissas.patrimonio_atual",
         "premissas.patrimonio_gatilho",
         "premissas.idade_atual",
-        "premissas.idade_cenario_base"
+        "premissas.idade_cenario_base",
+        "fire.swr_current"
       ],
       "privacy": true
     },

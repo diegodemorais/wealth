@@ -3032,6 +3032,15 @@ def main():
         ) if pat_med_53 else None,
     }
 
+    # ─── SWR current (cobertura RF / gastos anuais) ────────────────────
+    rf_total_for_swr = 0.0
+    for _rk, _rv in rf.items():
+        if _rk == "hodl11":
+            continue
+        rf_total_for_swr += (_rv.get("valor", _rv.get("valor_brl", 0)) or 0)
+    swr_current = round(rf_total_for_swr / gasto_anual, 2) if gasto_anual > 0 else 0
+    print(f"  -> swr_current: {swr_current} (RF R${rf_total_for_swr/1e3:.0f}k / gastos R${gasto_anual/1e3:.0f}k)")
+
     # ─── FIRE aggregate ─────────────────────────────────────────────────
     fire_section = {
         "bond_pool_readiness": bond_pool_readiness,
@@ -3039,6 +3048,7 @@ def main():
         "pat_mediano_fire50":  fire_state.get("pat_mediano_fire50"),
         "mc_date":             fire_state.get("mc_date"),
         "plano_status":        macro.get("plano_status") if macro else None,
+        "swr_current":         swr_current,
     }
 
     # Earliest FIRE date
