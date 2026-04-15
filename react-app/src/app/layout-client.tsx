@@ -9,9 +9,8 @@ import { usePrivacyMode } from '@/hooks/usePrivacyMode';
 import { useChartSetup } from '@/hooks/useChartSetup';
 
 export function LayoutClient({ children }: { children: ReactNode }) {
-  // Initialize Chart.js FIRST - must happen before any charts render
-  // TODO: Re-enable once charts are properly integrated
-  // useChartSetup();
+  // Chart.js removed - using ECharts instead
+  // TODO: Remove useChartSetup hook and react-chartjs-2 dependencies
 
   // Initialize privacy mode hook (handles localStorage + DOM class)
   usePrivacyMode();

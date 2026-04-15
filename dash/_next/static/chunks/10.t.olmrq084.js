@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,34937,t=>{"use strict";let e="/wealth";t.s(["withBasePath",0,function(t){return e&&t.startsWith(e)?t:`${e}${t}`}])}]);
