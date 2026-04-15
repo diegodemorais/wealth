@@ -771,3 +771,290 @@ export function createDrawdownHistChartOption(options: BaseChartOptions) {
     ],
   };
 }
+
+/**
+ * Simple Line Chart (single/dual series)
+ * Used by: TimelineChart, InformationRatioChart, RollingSharpChart, ShadowChart
+ */
+export function createSimpleLineChartOption(options: {
+  data: DashboardData;
+  privacyMode: boolean;
+  theme: ChartTheme;
+  xAxisData: string[];
+  seriesData: Array<{ name: string; data: number[]; color?: string; areaStyle?: boolean; dashed?: boolean }>;
+  yAxisFormatter?: (value: number) => string;
+  tooltipFormatter?: (params: any) => string;
+}) {
+  const { privacyMode, theme, xAxisData, seriesData, yAxisFormatter, tooltipFormatter } = options;
+
+  return {
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: tooltipFormatter || ((params: any) => {
+        if (!Array.isArray(params)) return '';
+        let result = params[0].axisValueLabel + '<br/>';
+        params.forEach((p: any) => {
+          result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(2)}<br/>`;
+        });
+        return result;
+      }),
+    },
+    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
+    grid: { left: 60, right: 20, top: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: xAxisData,
+      axisLine: { lineStyle: { color: '#374151' } },
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLabel: {
+        color: privacyMode ? 'transparent' : '#9ca3af',
+        formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
+        fontSize: 12,
+      },
+      splitLine: { lineStyle: { color: '#2d3748' } },
+    },
+    series: seriesData.map(s => ({
+      name: s.name,
+      type: 'line' as const,
+      data: s.data,
+      smooth: true,
+      areaStyle: s.areaStyle ? { opacity: 0.2 } : undefined,
+      lineStyle: { width: 2, type: s.dashed ? 'dashed' as const : 'solid' as const, color: s.color },
+      symbolSize: 0,
+    })),
+  };
+}
+
+/**
+ * Bounded Line Chart (upper/target/lower bounds)
+ * Used by: GuardrailsChart, IncomeProjectionChart, TrackingFireChart
+ */
+export function createBoundedLineChartOption(options: {
+  data: DashboardData;
+  privacyMode: boolean;
+  theme: ChartTheme;
+  xAxisData: string[];
+  upperData: number[];
+  targetData: number[];
+  lowerData: number[];
+  upperLabel: string;
+  targetLabel: string;
+  lowerLabel: string;
+  yAxisFormatter?: (value: number) => string;
+  tooltipFormatter?: (params: any) => string;
+}) {
+  const {
+    privacyMode, theme, xAxisData, upperData, targetData, lowerData,
+    upperLabel, targetLabel, lowerLabel, yAxisFormatter, tooltipFormatter
+  } = options;
+
+  return {
+    color: ['#10b981', '#3b82f6', '#ef4444'],
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: tooltipFormatter || ((params: any) => {
+        if (!Array.isArray(params)) return '';
+        let result = params[0].axisValueLabel + '<br/>';
+        params.forEach((p: any) => {
+          result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(0)}<br/>`;
+        });
+        return result;
+      }),
+    },
+    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
+    grid: { left: 60, right: 20, top: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: xAxisData,
+      axisLine: { lineStyle: { color: '#374151' } },
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12, interval: 4 },
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLabel: {
+        color: privacyMode ? 'transparent' : '#9ca3af',
+        formatter: yAxisFormatter || ((v: number) => `${v.toFixed(0)}`),
+        fontSize: 12,
+      },
+      splitLine: { lineStyle: { color: '#2d3748' } },
+    },
+    series: [
+      {
+        name: upperLabel,
+        type: 'line' as const,
+        data: upperData,
+        smooth: true,
+        lineStyle: { width: 2, type: 'dashed' as const },
+        symbolSize: 0,
+      },
+      {
+        name: targetLabel,
+        type: 'line' as const,
+        data: targetData,
+        smooth: true,
+        areaStyle: { opacity: 0.2 },
+        lineStyle: { width: 3 },
+        symbolSize: 0,
+      },
+      {
+        name: lowerLabel,
+        type: 'line' as const,
+        data: lowerData,
+        smooth: true,
+        lineStyle: { width: 2, type: 'dashed' as const },
+        symbolSize: 0,
+      },
+    ],
+  };
+}
+
+/**
+ * Tornado Chart (Horizontal stacked bar for sensitivity analysis)
+ */
+export function createTornadoChartOption(options: {
+  data: DashboardData;
+  privacyMode: boolean;
+  theme: ChartTheme;
+  categories: string[];
+  downside: number[];
+  upside: number[];
+  downsideLabel?: string;
+  upsideLabel?: string;
+}) {
+  const { privacyMode, theme, categories, downside, upside, downsideLabel = 'Pessimistic', upsideLabel = 'Optimistic' } = options;
+
+  return {
+    tooltip: {
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
+      formatter: (params: any) => {
+        if (!Array.isArray(params)) return '';
+        let html = `<div style="padding: 8px;">`;
+        params.forEach((p: any) => {
+          const val = Math.abs(p.value);
+          html += `<div>${p.seriesName}: <strong>${val.toFixed(1)}%</strong></div>`;
+        });
+        html += `</div>`;
+        return html;
+      },
+    },
+    legend: {
+      data: [downsideLabel, upsideLabel],
+      textStyle: { color: '#d1d5db' },
+    },
+    grid: { left: 120, right: 60, top: 40, bottom: 40 },
+    xAxis: {
+      type: 'value' as const,
+      axisLabel: { formatter: (v: number) => `${v}%` },
+    },
+    yAxis: {
+      type: 'category' as const,
+      data: categories,
+    },
+    series: [
+      {
+        name: downsideLabel,
+        type: 'bar' as const,
+        stack: 'total',
+        data: downside,
+        itemStyle: { color: '#ef4444', opacity: 0.8 },
+      },
+      {
+        name: upsideLabel,
+        type: 'bar' as const,
+        stack: 'total',
+        data: upside,
+        itemStyle: { color: '#10b981', opacity: 0.8 },
+      },
+    ],
+  };
+}
+
+/**
+ * Dual-Line Comparison Chart (portfolio vs benchmark)
+ * Used by: BacktestR7Chart, ShadowChart
+ */
+export function createDualLineChartOption(options: {
+  data: DashboardData;
+  privacyMode: boolean;
+  theme: ChartTheme;
+  xAxisData: string[];
+  series1Data: number[];
+  series1Name: string;
+  series2Data: number[];
+  series2Name: string;
+  series1Color?: string;
+  series2Color?: string;
+  yAxisFormatter?: (value: number) => string;
+  tooltipFormatter?: (params: any) => string;
+  dashed?: boolean;
+}) {
+  const {
+    privacyMode, theme, xAxisData, series1Data, series1Name, series2Data, series2Name,
+    series1Color = '#3b82f6', series2Color = '#f59e0b', yAxisFormatter, tooltipFormatter, dashed = false
+  } = options;
+
+  return {
+    color: [series1Color, series2Color],
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: tooltipFormatter || ((params: any) => {
+        if (!Array.isArray(params)) return '';
+        let result = params[0].axisValueLabel + '<br/>';
+        params.forEach((p: any) => {
+          result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(2)}<br/>`;
+        });
+        return result;
+      }),
+    },
+    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
+    grid: { left: 60, right: 20, top: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: xAxisData,
+      axisLine: { lineStyle: { color: '#374151' } },
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLabel: {
+        color: privacyMode ? 'transparent' : '#9ca3af',
+        formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
+        fontSize: 12,
+      },
+      splitLine: { lineStyle: { color: '#2d3748' } },
+    },
+    series: [
+      {
+        name: series1Name,
+        type: 'line' as const,
+        data: series1Data,
+        smooth: true,
+        areaStyle: { opacity: 0.2 },
+        lineStyle: { width: 2 },
+        symbolSize: 0,
+      },
+      {
+        name: series2Name,
+        type: 'line' as const,
+        data: series2Data,
+        smooth: true,
+        areaStyle: { opacity: 0.2 },
+        lineStyle: { width: 2, type: dashed ? 'dashed' as const : 'solid' as const },
+        symbolSize: 0,
+      },
+    ],
+  };
+}

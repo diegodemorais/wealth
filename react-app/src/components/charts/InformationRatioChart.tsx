@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
+import { createSimpleLineChartOption } from '@/utils/chartSetup';
 
 export interface InformationRatioChartProps {
   data: DashboardData;
@@ -21,60 +22,10 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
       0.8 + 0.3 * Math.sin(i * 0.15) + (Math.random() - 0.5) * 0.2
     );
 
-    return {
-      color: ['#06b6d4'],
-      tooltip: {
-        trigger: 'axis',
-        backgroundColor: theme.tooltip.backgroundColor,
-        borderColor: theme.tooltip.borderColor,
-        textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
-          if (!Array.isArray(params) || params.length === 0) return '';
-          const p = params[0];
-          return `${p.axisValueLabel}<br/>${p.marker} IR: ${p.value.toFixed(2)}`;
-        },
-      },
-      legend: {
-        display: !privacyMode,
-        textStyle: { color: theme.textStyle.color },
-        top: 10,
-      },
-      grid: {
-        left: 60,
-        right: 20,
-        top: 40,
-        bottom: 40,
-        containLabel: true,
-      },
-      xAxis: {
-        type: 'category',
-        data: xAxisData,
-        axisLine: { lineStyle: { color: '#374151' } },
-        axisLabel: {
-          color: privacyMode ? 'transparent' : '#9ca3af',
-          fontSize: 12,
-          interval: 5, // Show every 6 months
-        },
-      },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          color: privacyMode ? 'transparent' : '#9ca3af',
-          fontSize: 12,
-        },
-        splitLine: { lineStyle: { color: '#2d3748' } },
-      },
-      series: [
-        {
-          name: 'Information Ratio',
-          type: 'line',
-          data: irData,
-          smooth: true,
-          lineStyle: { width: 2 },
-          symbolSize: 0,
-        },
-      ],
-    };
+    return createSimpleLineChartOption({
+      data, privacyMode, theme, xAxisData,
+      seriesData: [{ name: 'Information Ratio', data: irData, color: '#06b6d4' }],
+    });
   }, [privacyMode, theme]);
 
   return (
