@@ -163,7 +163,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
       <CardContent className="space-y-4">
         {/* Chart */}
         <div>
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
+          <canvas ref={chartRef} className="max-h-[300px]" />
         </div>
 
         {/* Alpha breakdown */}
