@@ -11,6 +11,7 @@ import { HeatmapChart } from '@/components/charts/HeatmapChart';
 import { BucketAllocationChart } from '@/components/charts/BucketAllocationChart';
 import { TerChart } from '@/components/charts/TerChart';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
+import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
 
 export default function PortfolioPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -46,6 +47,8 @@ export default function PortfolioPage() {
         <DonutCharts data={data} />
         <StackedAllocChart data={data} />
       </CollapsibleSection>
+
+      <HoldingsTable />
 
       <CollapsibleSection id="section-glide" title="Lifecycle Planning" defaultOpen={false}>
         <GlidePathChart data={data} />
