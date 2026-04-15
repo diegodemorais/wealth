@@ -26,6 +26,7 @@ import ScenarioCompare from '@/components/dashboard/ScenarioCompare';
 import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import GlidePath from '@/components/dashboard/GlidePath';
+import AttributionAnalysis from '@/components/dashboard/AttributionAnalysis';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -454,6 +455,22 @@ export default function HomePage() {
             currentRfPercent={(derived.rfPercentage || 0) * 100}
             retirementEquityPercent={40}
             retirementRfPercent={60}
+          />
+        )}
+
+        {/* 3.6: Attribution Analysis */}
+        {data && data.backtest?.attribution && (
+          <AttributionAnalysis
+            swrdAllocation={data.backtest.attribution.swrd_allocation || 50}
+            swrdReturn={data.backtest.attribution.swrd_return || 10.5}
+            avgsAllocation={data.backtest.attribution.avgs_allocation || 30}
+            avgsReturn={data.backtest.attribution.avgs_return || 11.8}
+            avemAllocation={data.backtest.attribution.avem_allocation || 20}
+            avemReturn={data.backtest.attribution.avem_return || 12.4}
+            rfAllocation={(derived?.rfPercentage || 0) * 100}
+            rfReturn={6.5}
+            totalReturn={11.2}
+            periodLabel="1 ano"
           />
         )}
       </CollapsibleSection>
