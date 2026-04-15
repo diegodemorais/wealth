@@ -16,8 +16,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build Application
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout código
@@ -35,28 +33,13 @@ jobs:
           cd react-app
           npm ci
 
-      - name: Test & Build
+      - name: Build
         env:
           NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
           NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at || '' }}
         run: |
           cd react-app
-          npm run build
-
-      - name: Commit version increment (if build succeeded)
-        if: success()
-        run: |
-          cd react-app
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet package.json; then
-            echo "✅ No version change"
-          else
-            git add package.json src/config/version.ts
-            VERSION=$(jq -r .version package.json)
-            git commit -m "chore: bump version to $VERSION [CI skip]"
-            git push origin main
-          fi
+          npm run build:no-test
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
