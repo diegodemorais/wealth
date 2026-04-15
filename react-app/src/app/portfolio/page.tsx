@@ -23,19 +23,19 @@ export default function PortfolioPage() {
   }, [loadDataOnce]);
 
   if (isLoading) {
-    return <div style={{ padding: '20px', textAlign: 'center' }}>⏳ Loading portfolio data...</div>;
+    return <div className="loading-state">⏳ Loading portfolio data...</div>;
   }
 
   if (dataError) {
     return (
-      <div style={{ padding: '20px', color: '#ef4444' }}>
+      <div className="error-state">
         <strong>❌ Error loading portfolio:</strong> {dataError}
       </div>
     );
   }
 
   if (!data) {
-    return <div style={{ padding: '20px', color: '#f59e0b' }}>⚠️ Data loaded but portfolio not ready</div>;
+    return <div className="warning-state">⚠️ Data loaded but portfolio not ready</div>;
   }
 
   return (

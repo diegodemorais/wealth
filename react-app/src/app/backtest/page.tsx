@@ -18,19 +18,19 @@ export default function BacktestPage() {
   }, [loadDataOnce]);
 
   if (isLoading) {
-    return <div style={{ padding: '20px', textAlign: 'center' }}>⏳ Loading backtest data...</div>;
+    return <div className="loading-state">⏳ Loading backtest data...</div>;
   }
 
   if (dataError) {
     return (
-      <div style={{ padding: '20px', color: '#ef4444' }}>
+      <div className="error-state">
         <strong>❌ Error loading backtest:</strong> {dataError}
       </div>
     );
   }
 
   if (!data) {
-    return <div style={{ padding: '20px', color: '#f59e0b' }}>⚠️ Data loaded but backtest section not ready</div>;
+    return <div className="warning-state">⚠️ Data loaded but backtest section not ready</div>;
   }
 
   return (

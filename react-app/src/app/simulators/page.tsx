@@ -30,13 +30,13 @@ export default function SimulatorsPage() {
   return (
     <div>
       <h1>🧪 Simulators</h1>
-      <p style={{ color: '#9ca3af', marginBottom: '24px' }}>
+      <p className="text-muted" style={{ marginBottom: '24px' }}>
         Adjust parameters below to stress-test your FIRE plan. Results update in real-time.
       </p>
 
       <SimulatorParams />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
+      <div className="grid-2-col">
         <SuccessRateCard />
         {/* <DrawdownDistribution /> */}
       </div>

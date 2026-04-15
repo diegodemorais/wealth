@@ -60,19 +60,19 @@ export default function HomePage() {
   }, [loadDataOnce]);
 
   if (isLoading) {
-    return <div style={{ padding: '20px', textAlign: 'center' }}>⏳ Loading dashboard data...</div>;
+    return <div className="loading-state">⏳ Loading dashboard data...</div>;
   }
 
   if (dataError) {
     return (
-      <div style={{ padding: '20px', color: '#ef4444' }}>
+      <div className="error-state">
         <strong>❌ Error loading dashboard:</strong> {dataError}
       </div>
     );
   }
 
   if (!derived) {
-    return <div style={{ padding: '20px', color: '#f59e0b' }}>⚠️ Data loaded but derived values not computed</div>;
+    return <div className="warning-state">⚠️ Data loaded but derived values not computed</div>;
   }
 
   return (
@@ -96,7 +96,7 @@ export default function HomePage() {
       />
 
       {/* FIRE Progress & Wellness */}
-      <section style={{ marginBottom: '30px' }}>
+      <section className="mb-30">
         <FireProgressWellness
           firePercentage={derived.firePercentage}
           firePatrimonioAtual={derived.firePatrimonioAtual}
