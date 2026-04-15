@@ -218,10 +218,10 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
                   <th className="text-left p-2 border-b border-slate-700/25 text-slate-400 font-semibold">
                     Métrica
                   </th>
-                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold" style={{ color: baseScenarioColor }}>
+                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold text-violet-500">
                     Base
                   </th>
-                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold" style={{ color: aspirationalColor }}>
+                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold text-green-500">
                     Aspiracional
                   </th>
                   <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
@@ -235,14 +235,14 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
                     <td className="p-2 border-b border-slate-700/15 text-slate-200">
                       {metric.label}
                     </td>
-                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold" style={{ color: baseScenarioColor }}>
+                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold text-violet-500">
                       {metric.unit === 'BRL'
                         ? privacyMode
                           ? 'R$••••'
                           : (metric.baseVal / 1000000).toFixed(2) + 'M'
                         : metric.baseVal.toFixed(1) + metric.unit}
                     </td>
-                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold" style={{ color: aspirationalColor }}>
+                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold text-green-500">
                       {metric.unit === 'BRL'
                         ? privacyMode
                           ? 'R$••••'
