@@ -649,12 +649,13 @@ td {
   .grid-3 {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 800px) {
-  .grid-2,
-  .grid-3 {
+  .dca-grid {
     grid-template-columns: 1fr;
+  }
+
+  .rf-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -684,6 +685,10 @@ td {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .dca-grid {
+    grid-template-columns: 1fr;
+  }
+
   .fire-row {
     gap: 10px;
   }
@@ -691,6 +696,121 @@ td {
   .calc-form input,
   .calc-input {
     width: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 8px;
+  }
+
+  .section {
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .header {
+    padding: 12px 8px;
+    margin-bottom: 12px;
+  }
+
+  .header h1 {
+    font-size: 1rem;
+  }
+
+  .tab-nav-container {
+    padding: 0 6px;
+  }
+
+  .tab-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+
+  .kpi-grid,
+  .dca-grid,
+  .rf-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-2-col {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .chart-box {
+    height: 200px;
+  }
+
+  .chart-box-sm {
+    height: 160px;
+  }
+
+  .chart-box-lg {
+    height: 280px;
+  }
+
+  .fire-big {
+    font-size: 2rem;
+  }
+
+  .fire-row {
+    gap: 8px;
+  }
+
+  .fire-item .v {
+    font-size: 1rem;
+  }
+
+  .calc-form {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .calc-form input,
+  .calc-input {
+    width: 100%;
+  }
+
+  .calc-form button {
+    width: 100%;
+  }
+
+  table {
+    font-size: 0.7rem;
+  }
+
+  th,
+  td {
+    padding: 4px 3px;
+  }
+
+  .kpi {
+    padding: 12px 14px;
+  }
+
+  .kpi-label {
+    font-size: 0.6rem;
+  }
+
+  .kpi-value {
+    font-size: 1.3rem;
+  }
+
+  .section h2 {
+    font-size: 0.75rem;
+  }
+
+  .period-btns {
+    gap: 3px;
+  }
+
+  .period-btns button {
+    padding: 2px 8px;
+    font-size: 0.65rem;
   }
 }
 
