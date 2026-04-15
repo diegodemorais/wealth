@@ -6,6 +6,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
 import { IncomeChart } from '@/components/charts/IncomeChart';
 import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart';
+import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
 
 export default function WithdrawPage() {
   const setData = useDashboardStore(s => s.setData);
@@ -27,6 +28,13 @@ export default function WithdrawPage() {
   return (
     <div>
       <h1>💸 Withdraw</h1>
+
+      {/* Tier-1: Guardrails de Retirada */}
+      {data && data.guardrails_retirada && (
+        <CollapsibleSection id="section-guardrails-table" title="Guardrails de Retirada" defaultOpen={true} icon="🚨">
+          <GuardrailsRetirada guardrails={data.guardrails_retirada} />
+        </CollapsibleSection>
+      )}
 
       <CollapsibleSection id="section-guardrails" title="Safe Spending Guardrails" defaultOpen={true}>
         <GuardrailsChart data={data} />

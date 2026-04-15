@@ -9,6 +9,8 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TornadoChart } from '@/components/charts/TornadoChart';
 import { FanChart } from '@/components/charts/FanChart';
 import { SankeyChart } from '@/components/charts/SankeyChart';
+import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
+import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -117,6 +119,67 @@ export default function HomePage() {
           </p>
         </div>
       </CollapsibleSection>
+
+      {/* Tier-1: Semáforos de Gatilhos */}
+      {data && data.semaforo_triggers && (
+        <CollapsibleSection
+          id="section-semaforo"
+          title="Semáforos de Gatilhos"
+          defaultOpen={true}
+          icon="🚦"
+        >
+          <SemaforoTriggers triggers={data.semaforo_triggers} />
+        </CollapsibleSection>
+      )}
+
+      {/* Tier-1: DCA Status Grid */}
+      {data && data.dca_status && (
+        <CollapsibleSection
+          id="section-dca"
+          title="DCA Status"
+          defaultOpen={true}
+          icon="📊"
+        >
+          <DCAStatusGrid
+            items={[
+              {
+                id: 'ipca2040',
+                nome: 'TD IPCA+ 2040',
+                regime: data.dca_status.ipca2040?.ativo ? 'ATIVO' : 'PAUSADO',
+                taxa_atual: data.dca_status.ipca2040?.taxa_atual || 0,
+                piso_compra: data.dca_status.ipca2040?.piso || 0,
+                gap_pp: data.dca_status.ipca2040?.gap_pp || 0,
+                pct_carteira_atual: data.dca_status.ipca2040?.pct_carteira_atual || 0,
+                alvo_pct: data.dca_status.ipca2040?.alvo_pct || 0,
+                proxima_acao: data.dca_status.ipca2040?.proxima_acao || '',
+              },
+              {
+                id: 'ipca2050',
+                nome: 'TD IPCA+ 2050',
+                regime: data.dca_status.ipca2050?.ativo ? 'ATIVO' : 'PAUSADO',
+                taxa_atual: data.dca_status.ipca2050?.taxa_atual || 0,
+                piso_compra: data.dca_status.ipca2050?.piso || 0,
+                gap_pp: data.dca_status.ipca2050?.gap_pp || 0,
+                pct_carteira_atual: data.dca_status.ipca2050?.pct_carteira_atual || 0,
+                alvo_pct: data.dca_status.ipca2050?.alvo_pct || 0,
+                proxima_acao: data.dca_status.ipca2050?.proxima_acao || '',
+              },
+              {
+                id: 'renda2065',
+                nome: 'Renda+ 2065',
+                regime: data.dca_status.renda_plus?.ativo ? 'ATIVO' : 'PAUSADO',
+                taxa_atual: data.dca_status.renda_plus?.taxa_atual || 0,
+                piso_compra: data.dca_status.renda_plus?.piso_compra || 0,
+                piso_venda: data.dca_status.renda_plus?.piso_venda,
+                gap_pp: data.dca_status.renda_plus?.gap_pp || 0,
+                pct_carteira_atual: data.dca_status.renda_plus?.pct_carteira_atual || 0,
+                alvo_pct: data.dca_status.renda_plus?.alvo_pct || 0,
+                proxima_acao: data.dca_status.renda_plus?.proxima_acao || '',
+              },
+            ]}
+          />
+        </CollapsibleSection>
+      )}
 
       {/* Charts Section */}
       {data && (
