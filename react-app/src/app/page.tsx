@@ -22,6 +22,8 @@ import GeographicExposureChart from '@/components/dashboard/GeographicExposureCh
 import StackedAllocationBar from '@/components/dashboard/StackedAllocationBar';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import TrackingFireChart from '@/components/dashboard/TrackingFireChart';
+import ScenarioCompare from '@/components/dashboard/ScenarioCompare';
+import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -393,6 +395,36 @@ export default function HomePage() {
             projetadoP50Brl={derived.totalBrl * 1.1 || 0}
             fireGatilhoBrl={derived.firePatrimonioGatilho || 0}
             patrimonioAtualBrl={derived.totalBrl || 0}
+          />
+        )}
+
+        {/* 3.2: Scenario Compare */}
+        {data && data.pfire_base && data.pfire_aspiracional && (
+          <ScenarioCompare
+            baseScenario={{
+              patrimonio50anos: (data.pfire_base?.patrimonio_50anos ?? 0),
+              pfirePercentual: (data.pfire_base?.base ?? 90.4),
+              swrPercent: (data.pfire_base?.swr_percent ?? 3.5),
+              mesesParaFire: derived.fireMonthsAway || 0,
+            }}
+            aspirationalScenario={{
+              patrimonio50anos: (data.pfire_aspiracional?.patrimonio_50anos ?? 0),
+              pfirePercentual: (data.pfire_aspiracional?.aspirational ?? 95.2),
+              swrPercent: (data.pfire_aspiracional?.swr_percent ?? 4.0),
+              mesesParaFire: Math.max(0, (derived.fireMonthsAway || 0) - 6),
+            }}
+            currentPatrimonio={derived.totalBrl || 0}
+          />
+        )}
+
+        {/* 3.3: Alpha vs SWRD */}
+        {data && data.backtest?.performance && (
+          <AlphaVsSWRDChart
+            oneYear={data.backtest.performance.oneYear || { targetReturn: 11.2, swrdReturn: 10.5 }}
+            threeYear={data.backtest.performance.threeYear || { targetReturn: 10.8, swrdReturn: 9.9 }}
+            fiveYear={data.backtest.performance.fiveYear || { targetReturn: 10.4, swrdReturn: 9.2 }}
+            tenYear={data.backtest.performance.tenYear || { targetReturn: 9.8, swrdReturn: 8.6 }}
+            alphaLiquidoPctYear={data.backtest.alpha_liquido_pct_year || 0.0016}
           />
         )}
       </CollapsibleSection>
