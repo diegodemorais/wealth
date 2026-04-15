@@ -213,7 +213,7 @@ export function AvaliarTab() {
 
       {/* Consolidation Opportunities */}
       <Card className="bg-slate-900/30 border-slate-700/25">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold text-slate-200">
             Consolidation Opportunities
           </CardTitle>
@@ -269,7 +269,7 @@ export function AvaliarTab() {
 
       {/* Next Steps */}
       <Card className="bg-blue-950/20 border-blue-900/30">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle className="text-sm font-semibold text-blue-300">
             Phase 2 → Phase 3 Roadmap
           </CardTitle>
