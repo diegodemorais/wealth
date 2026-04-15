@@ -141,51 +141,24 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
               );
             })}
             {/* Totals Row */}
-            <tr style={{
-              borderTop: '2px solid rgba(71, 85, 105, 0.3)',
-              backgroundColor: 'rgba(30, 41, 59, 0.3)',
-              fontWeight: 600,
-            }}>
-              <td style={{
-                padding: '10px 12px',
-                color: '#cbd5e1',
-              }}>
+            <tr className="border-t-2 border-slate-700/30 bg-slate-900/30 font-semibold">
+              <td className="px-3 py-2 text-slate-200">
                 TOTAL
               </td>
-              <td style={{
-                padding: '8px 6px',
-                textAlign: 'right',
-                color: '#cbd5e1',
-              }}>
+              <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
                 {privacyMode ? '••••' : totals.quantity.toFixed(2)}
               </td>
-              <td colSpan={2} style={{
-                padding: '8px 6px',
-              }}></td>
-              <td style={{
-                padding: '8px 6px',
-                textAlign: 'right',
-                color: '#cbd5e1',
-              }}>
+              <td colSpan={2} className="px-2 py-2"></td>
+              <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
                 {privacyMode ? '••••' : fmtBrl(totals.currentValue)}
               </td>
-              <td style={{
-                padding: '8px 6px',
-                textAlign: 'right',
-                color: totalPL >= 0 ? '#22c55e' : '#ef4444',
-              }}>
+              <td className="px-2 py-2 text-right tabular-nums" style={{ color: totalPL >= 0 ? '#22c55e' : '#ef4444' }}>
                 {privacyMode ? '••••' : `${totalPL >= 0 ? '+' : ''}${fmtBrl(totalPL)}`}
               </td>
-              <td style={{
-                padding: '8px 6px',
-                textAlign: 'right',
-                color: totalPLPct >= 0 ? '#22c55e' : '#ef4444',
-              }}>
+              <td className="px-2 py-2 text-right tabular-nums" style={{ color: totalPLPct >= 0 ? '#22c55e' : '#ef4444' }}>
                 {privacyMode ? '••' : `${totalPLPct >= 0 ? '+' : ''}${(totalPLPct * 100).toFixed(1)}%`}
               </td>
-              <td style={{
-                padding: '8px 6px',
-              }}></td>
+              <td className="px-2 py-2"></td>
             </tr>
           </tbody>
         </table>
