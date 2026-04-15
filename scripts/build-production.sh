@@ -1,12 +1,11 @@
 #!/bin/bash
 # Production build with version increment ONLY on success
 # Runs: tests → Next.js → post-build → validation → version increment
+# Assumes already in react-app directory
 
 set -e  # Exit on any error
 
 echo "🚀 Starting production build..."
-
-cd react-app
 
 echo "✓ Step 1: Running test suite..."
 npm run test:ci
