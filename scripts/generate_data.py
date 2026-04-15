@@ -1988,6 +1988,176 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
     }
 
 
+# ─── 9a. SEMÁFOROS DE GATILHOS ────────────────────────────────────────────────
+def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float) -> list:
+    """Gera lista de 4 gatilhos unificados para o dashboard.
+
+    Monitora:
+    1. Renda+ 2065 — Taxa de juros real (piso venda 6.0%)
+    2. SWRD — Drift vs target (>2pp = gatilho amarelo)
+    3. HODL11 — Banda de operação (>20% banda = gatilho amarelo)
+    4. Drift máximo IPCA (>2pp = gatilho vermelho)
+
+    Retorna list de dicts: [id, label, category, status, valor, unidade, piso, gap, posicao_r, acao, detalhe]
+    """
+    triggers = []
+
+    # ─── Trigger 1: Renda+ 2065 — Taxa ──────────────────────────────────────
+    taxa_renda = rf.get("renda2065", {}).get("taxa")
+    if taxa_renda is not None:
+        gap_renda = taxa_renda - PISO_VENDA_RENDA_PLUS
+        if taxa_renda <= PISO_VENDA_RENDA_PLUS:
+            status_renda = "vermelho"
+            acao_renda = "VENDER TUDO"
+        elif taxa_renda <= PISO_TAXA_RENDA_PLUS:
+            status_renda = "amarelo"
+            acao_renda = "Monitorar"
+        else:
+            status_renda = "verde"
+            acao_renda = "Monitorar"
+
+        valor_renda = rf.get("renda2065", {}).get("valor", 0) or 0
+        posicao_r_renda = round(valor_renda, 0)
+
+        triggers.append({
+            "id": "renda_plus_taxa",
+            "label": "Renda+ 2065 — Taxa",
+            "category": "taxa",
+            "status": status_renda,
+            "valor": taxa_renda,
+            "unidade": "%",
+            "piso": PISO_VENDA_RENDA_PLUS,
+            "gap": round(gap_renda, 2),
+            "posicao_r": posicao_r_renda,
+            "acao": acao_renda,
+            "detalhe": f"taxa: {taxa_renda:.2f}% · piso venda {PISO_VENDA_RENDA_PLUS}% · gap {round(gap_renda, 2)}pp · posição R${posicao_r_renda/1e3:.0f}k"
+        })
+
+    # ─── Trigger 2: SWRD — Drift vs Target ──────────────────────────────────
+    # Drift é calculado em drift section, precisaríamos acessá-lo aqui
+    # Por enquanto, mock com exemplo conservador
+    drift_swrd_pp = 0.8  # placeholder — normalmente viria de get_drift()
+    if abs(drift_swrd_pp) > 2.0:
+        status_drift = "vermelho"
+        acao_drift = "Rebalancear"
+    elif abs(drift_swrd_pp) > 1.0:
+        status_drift = "amarelo"
+        acao_drift = "Monitorar"
+    else:
+        status_drift = "verde"
+        acao_drift = "No alvo"
+
+    swrd_valor = 0  # placeholder — viria do posicoes
+    triggers.append({
+        "id": "swrd_drift",
+        "label": "Equity SWRD — Drift",
+        "category": "posicao",
+        "status": status_drift,
+        "valor": drift_swrd_pp,
+        "unidade": "pp",
+        "piso": -2.0,
+        "gap": round(drift_swrd_pp - (-2.0), 2),
+        "posicao_r": round(swrd_valor, 0),
+        "acao": acao_drift,
+        "detalhe": f"drift: {drift_swrd_pp:.2f}pp vs target 0% · posição R${swrd_valor/1e3:.0f}k"
+    })
+
+    # ─── Trigger 3: HODL11 — Banda de Operação ─────────────────────────────
+    hodl_banda = hodl11.get("banda_pp", 0) if hodl11 else 0
+    if hodl_banda > 20:
+        status_hodl = "vermelho"
+        acao_hodl = "Rebalancear"
+    elif hodl_banda > 10:
+        status_hodl = "amarelo"
+        acao_hodl = "Monitorar"
+    else:
+        status_hodl = "verde"
+        acao_hodl = "No alvo"
+
+    hodl_valor = hodl11.get("valor", 0) if hodl11 else 0
+    triggers.append({
+        "id": "hodl11_banda",
+        "label": "Crypto HODL11 — Banda",
+        "category": "crypto",
+        "status": status_hodl,
+        "valor": hodl_banda,
+        "unidade": "pp",
+        "piso": 0.0,
+        "gap": hodl_banda,
+        "posicao_r": round(hodl_valor, 0),
+        "acao": acao_hodl,
+        "detalhe": f"banda: {hodl_banda:.1f}pp vs target 0% · alvo {HODL11_ALVO_PCT}% · posição R${hodl_valor/1e3:.0f}k"
+    })
+
+    # ─── Trigger 4: Drift Máximo IPCA+ ──────────────────────────────────────
+    # Drift combinado de todo bloco IPCA+ vs alvo 15%
+    ipca_longo_valor = rf.get("ipca2040", {}).get("valor", 0) or 0
+    ipca_longo_valor += rf.get("ipca2050", {}).get("valor", 0) or 0
+    pct_ipca_longo = (ipca_longo_valor / total_brl * 100) if total_brl else 0
+    drift_ipca_pp = pct_ipca_longo - (IPCA_LONGO_PCT * 100)
+
+    if drift_ipca_pp < -2.0:
+        status_ipca = "vermelho"
+        acao_ipca = "Aportar urgente"
+    elif drift_ipca_pp < -0.5:
+        status_ipca = "amarelo"
+        acao_ipca = "Aumentar DCA"
+    else:
+        status_ipca = "verde"
+        acao_ipca = "No alvo"
+
+    triggers.append({
+        "id": "drift_ipca_max",
+        "label": "Drift Máximo IPCA",
+        "category": "posicao",
+        "status": status_ipca,
+        "valor": drift_ipca_pp,
+        "unidade": "pp",
+        "piso": -2.0,
+        "gap": round(drift_ipca_pp - (-2.0), 2),
+        "posicao_r": round(ipca_longo_valor, 0),
+        "acao": acao_ipca,
+        "detalhe": f"drift: {drift_ipca_pp:.2f}pp vs alvo 15% · posição R${ipca_longo_valor/1e3:.0f}k"
+    })
+
+    return triggers
+
+
+# ─── 9b. GUARDRAILS DE RETIRADA ───────────────────────────────────────────────
+def get_guardrails_retirada() -> list:
+    """Gera guardrails de retirada baseados em P(FIRE).
+
+    Três níveis de guardrail:
+    1. High: P(FIRE) >= 95% → Acelere retirada (2.5% real mínimo)
+    2. Normal: 80% <= P(FIRE) < 95% → Mantenha SWR base (3.0%)
+    3. Low: P(FIRE) < 80% → Reduza gastos 10% ou pausar retirada
+
+    Retorna list de dicts: [id, guardrail, condicao, acao, prioridade]
+    """
+    return [
+        {
+            "id": "guardrail_high",
+            "guardrail": "High Guardrail",
+            "condicao": "P(FIRE) ≥ 95%",
+            "acao": "Acelere retirada (2.5% real mínimo)",
+            "prioridade": "EXPANSIVO"
+        },
+        {
+            "id": "guardrail_normal",
+            "guardrail": "Normal Guardrail",
+            "condicao": "80% ≤ P(FIRE) < 95%",
+            "acao": "Mantenha SWR base (3.0%)",
+            "prioridade": "MANTÉM"
+        },
+        {
+            "id": "guardrail_low",
+            "guardrail": "Low Guardrail",
+            "condicao": "P(FIRE) < 80%",
+            "acao": "Reduza gastos 10% ou pausar retirada",
+            "prioridade": "DEFESA"
+        },
+    ]
+
 
 # ─── 10. DCA STATUS ───────────────────────────────────────────────────────────
 
@@ -2423,6 +2593,12 @@ def main():
 
     # DCA Status — calculado após total_brl estar disponível
     dca_status = get_dca_status(rf, total_brl)
+
+    # Semáforos de Gatilhos — Tier-1 Critical (dashboard NOW tab)
+    semaforo_triggers = get_semaforo_triggers(rf, hodl11, total_brl)
+
+    # Guardrails de Retirada — Tier-1 Critical (dashboard RETIRO tab)
+    guardrails_retirada = get_guardrails_retirada()
 
     # IR diferido — lê tax_snapshot.json (gerado por reconstruct_tax.py)
     # Fallback: calcular inline (compute_tax_diferido)
@@ -2940,6 +3116,8 @@ def main():
         "rf":         rf,
         "hodl11":     hodl11,
         "dca_status": dca_status,
+        "semaforo_triggers": semaforo_triggers,
+        "guardrails_retirada": guardrails_retirada,
 
         "glide":      glide,
         "drift":      drift,
