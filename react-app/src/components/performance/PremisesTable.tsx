@@ -3,14 +3,6 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 export function PremisesTable() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -89,34 +81,34 @@ export function PremisesTable() {
         Comparison of initial assumptions with realized outcomes
       </p>
       <div style={styles.tableWrapper}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Category</TableHead>
-              <TableHead>Item</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Assumption</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Actual</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Delta</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+              <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Item</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Assumption</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Actual</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Delta</th>
+            </tr>
+          </thead>
+          <tbody>
             {premises.map((row, idx) => (
-              <TableRow key={idx}>
-                <TableCell style={styles.category}>{row.category}</TableCell>
-                <TableCell>{row.item}</TableCell>
-                <TableCell style={{ textAlign: 'right' }}>
+              <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px', ...styles.category }}>{row.category}</td>
+                <td style={{ padding: '8px', color: 'var(--text)' }}>{row.item}</td>
+                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
                   {formatValue(row.assumption)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', fontWeight: '500' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
                   {formatValue(row.actual)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', color: getDeltaColor(row.delta), fontWeight: '500' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: getDeltaColor(row.delta), fontWeight: '500' }}>
                   {formatValue(row.delta)}
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
 
       {data.premissas_vs_realizado.aporte_mensal?.por_ano_brl && (

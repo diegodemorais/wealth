@@ -1,6 +1,5 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface StackedAllocationBarProps {
   equityBrl: number;
@@ -33,66 +32,68 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
   };
 
   const assets = [
-    { label: 'Equity', value: equityBrl, pct: equityPct, color: '#3b82f6' }, // blue
-    { label: 'IPCA+ Ladder', value: ipcaBrl, pct: ipcaPct, color: '#06b6d4' }, // cyan
-    { label: 'Renda+ 2065', value: rendaPlusBrl, pct: rendaPlusPct, color: '#f59e0b' }, // amber
-    { label: 'Crypto', value: cryptoBrl, pct: cryptoPct, color: '#8b5cf6' }, // violet
+    { label: 'Equity', value: equityBrl, pct: equityPct, color: '#3b82f6' },
+    { label: 'IPCA+ Ladder', value: ipcaBrl, pct: ipcaPct, color: '#06b6d4' },
+    { label: 'Renda+ 2065', value: rendaPlusBrl, pct: rendaPlusPct, color: '#f59e0b' },
+    { label: 'Crypto', value: cryptoBrl, pct: cryptoPct, color: '#8b5cf6' },
   ];
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Alocação Total do Portfólio
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Alocação Total do Portfólio
+      </h2>
 
-      <CardContent className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Stacked bar chart */}
-        <div className="flex gap-1 h-12 rounded-md overflow-hidden bg-slate-700/15 mb-4">
-        {assets.map(asset => (
-          asset.pct > 0 && (
-            <div
-              key={asset.label}
-              className="flex items-center justify-center text-xs font-semibold text-white transition-all duration-300"
-              style={{
-                flex: asset.pct,
-                backgroundColor: asset.color,
-                minWidth: asset.pct > 0.05 ? 'auto' : '0px',
-              }}
-              title={`${asset.label}: ${(asset.pct * 100).toFixed(1)}%`}
-            >
-              {asset.pct > 0.08 && `${(asset.pct * 100).toFixed(0)}%`}
-            </div>
-          )
-        ))}
-      </div>
+        <div style={{ display: 'flex', gap: '4px', height: '48px', borderRadius: '6px', overflow: 'hidden', background: 'rgba(71,85,105,0.15)', marginBottom: '16px' }}>
+          {assets.map(asset => (
+            asset.pct > 0 && (
+              <div
+                key={asset.label}
+                style={{
+                  flex: asset.pct,
+                  backgroundColor: asset.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  color: 'white',
+                  minWidth: asset.pct > 0.05 ? 'auto' : '0px',
+                  transition: 'all 0.3s',
+                }}
+                title={`${asset.label}: ${(asset.pct * 100).toFixed(1)}%`}
+              >
+                {asset.pct > 0.08 && `${(asset.pct * 100).toFixed(0)}%`}
+              </div>
+            )
+          ))}
+        </div>
 
         {/* Legend and breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
           {assets.map(asset => (
             asset.value > 0 && (
               <div
                 key={asset.label}
-                className="p-3 rounded"
                 style={{
+                  padding: '12px',
+                  borderRadius: '4px',
                   backgroundColor: `${asset.color}10`,
                   border: `1px solid ${asset.color}40`,
                 }}
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <div
-                    className="w-2 h-2 rounded-sm"
-                    style={{ backgroundColor: asset.color }}
-                  />
-                  <span className="text-xs font-semibold text-slate-200">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: asset.color }} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)' }}>
                     {asset.label}
                   </span>
                 </div>
-                <div className="text-sm font-bold mb-1" style={{ color: asset.color }}>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: asset.color, marginBottom: '4px' }}>
                   {(asset.pct * 100).toFixed(1)}%
                 </div>
-                <div className="text-xs text-slate-600">
+                <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
                   {privacyMode ? 'R$••••' : fmtBrl(asset.value)}
                 </div>
               </div>
@@ -101,16 +102,16 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
         </div>
 
         {/* Total */}
-        <div className="mt-3 p-3 bg-slate-700/10 rounded flex justify-between items-center border-l-4 border-slate-200">
-          <span className="text-xs font-semibold text-slate-200">
+        <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(71,85,105,0.1)', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '4px solid var(--text)' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)' }}>
             Patrimônio Total
           </span>
-          <span className="text-sm font-bold text-white">
+          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)' }}>
             {privacyMode ? 'R$••••' : fmtBrl(totalBrl)}
           </span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

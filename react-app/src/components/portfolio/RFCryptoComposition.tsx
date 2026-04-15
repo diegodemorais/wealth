@@ -3,14 +3,6 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 export function RFCryptoComposition() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -84,36 +76,36 @@ export function RFCryptoComposition() {
       <div style={styles.section}>
         <h4 style={styles.sectionTitle}>Fixed Income (RF)</h4>
         <div style={styles.tableWrapper}>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Instrument</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Type</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Value (BRL)</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Quotes</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Rate</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Instrument</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Type</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Value (BRL)</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Quotes</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Rate</th>
+              </tr>
+            </thead>
+            <tbody>
               {rfComposition.map((item) => (
-                <TableRow key={item.key}>
-                  <TableCell style={styles.instrumentName}>{item.name}</TableCell>
-                  <TableCell style={{ textAlign: 'right', fontSize: '12px', color: 'var(--muted)' }}>
+                <tr key={item.key} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '8px', ...styles.instrumentName }}>{item.name}</td>
+                  <td style={{ textAlign: 'right', padding: '8px', fontSize: '12px', color: 'var(--muted)' }}>
                     {item.type}
-                  </TableCell>
-                  <TableCell style={{ textAlign: 'right', fontWeight: '500' }}>
+                  </td>
+                  <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(item.valor)}
-                  </TableCell>
-                  <TableCell style={{ textAlign: 'right', fontSize: '12px' }}>
+                  </td>
+                  <td style={{ textAlign: 'right', padding: '8px', fontSize: '12px', color: 'var(--text)' }}>
                     {privacyMode ? '••••' : item.cotas.toFixed(2)}
-                  </TableCell>
-                  <TableCell style={{ textAlign: 'right', fontWeight: '500', color: 'var(--accent)' }}>
+                  </td>
+                  <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--accent)' }}>
                     {privacyMode ? '••••' : `${item.taxa.toFixed(2)}%`}
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
         <div style={styles.subtotalRow}>
           <span>Total Fixed Income</span>
@@ -125,36 +117,36 @@ export function RFCryptoComposition() {
       <div style={styles.section}>
         <h4 style={styles.sectionTitle}>Crypto (HODL)</h4>
         <div style={styles.tableWrapper}>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Asset</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Qty</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Price</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>Value (BRL)</TableHead>
-                <TableHead style={{ textAlign: 'right' }}>P&L</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Asset</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Qty</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Price</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Value (BRL)</th>
+                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>P&amp;L</th>
+              </tr>
+            </thead>
+            <tbody>
               {data.hodl11 && (
-                <TableRow>
-                  <TableCell style={styles.instrumentName}>HODL11 (BTC Wrapper)</TableCell>
-                  <TableCell style={{ textAlign: 'right' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '8px', ...styles.instrumentName }}>HODL11 (BTC Wrapper)</td>
+                  <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
                     {privacyMode ? '••••' : data.hodl11.qty.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
-                  </TableCell>
-                  <TableCell style={{ textAlign: 'right' }}>
+                  </td>
+                  <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
                     {privacyMode ? '••••' : `R$ ${data.hodl11.preco.toFixed(2)}`}
-                  </TableCell>
-                  <TableCell style={{ textAlign: 'right', fontWeight: '500' }}>
+                  </td>
+                  <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(data.hodl11.valor)}
-                  </TableCell>
-                  <TableCell style={{ textAlign: 'right', color: data.hodl11.pnl_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
+                  </td>
+                  <td style={{ textAlign: 'right', padding: '8px', color: data.hodl11.pnl_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
                     {privacyMode ? '••••' : `${data.hodl11.pnl_pct.toFixed(2)}%`}
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
         <div style={styles.subtotalRow}>
           <span>Total Crypto</span>

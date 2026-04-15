@@ -3,14 +3,6 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 export function TaxAnalysisGrid() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -78,44 +70,44 @@ export function TaxAnalysisGrid() {
     <div>
 
       <div style={styles.tableWrapper}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Ticker</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Ganho USD</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>PTAX Médio</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Custo BRL</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Valor Atual BRL</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Ganho BRL</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>IR Estimado</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+              <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Ticker</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Ganho USD</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>PTAX Médio</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Custo BRL</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Valor Atual BRL</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Ganho BRL</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>IR Estimado</th>
+            </tr>
+          </thead>
+          <tbody>
             {taxData.map((item) => (
-              <TableRow key={item.ticker}>
-                <TableCell style={styles.ticker}>{item.ticker}</TableCell>
-                <TableCell style={{ textAlign: 'right' }}>
+              <tr key={item.ticker} style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ padding: '8px', ...styles.ticker }}>{item.ticker}</td>
+                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
                   {formatUSD(item.ganho_usd)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', fontSize: '12px' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', fontSize: '12px', color: 'var(--text)' }}>
                   {formatRate(item.ptax_medio)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
                   {formatCurrency(item.custo_brl)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', fontWeight: '500' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
                   {formatCurrency(item.valor_brl)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', color: getGainColor(item.ganho_brl), fontWeight: '500' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: getGainColor(item.ganho_brl), fontWeight: '500' }}>
                   {formatCurrency(item.ganho_brl)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', color: 'var(--orange)', fontWeight: '600' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--orange)', fontWeight: '600' }}>
                   {formatCurrency(item.ir_estimado)}
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
 
       <div style={styles.summarySection}>

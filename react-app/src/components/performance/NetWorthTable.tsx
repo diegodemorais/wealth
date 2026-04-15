@@ -3,14 +3,6 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
 export function NetWorthTable() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -97,38 +89,38 @@ export function NetWorthTable() {
         Year-by-year portfolio growth analysis
       </p>
       <div style={styles.tableWrapper}>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead style={{ textAlign: 'center' }}>Year</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Start (BRL)</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>End (BRL)</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Gain</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Return %</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+              <th style={{ textAlign: 'center', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Year</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Start (BRL)</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>End (BRL)</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Gain</th>
+              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Return %</th>
+            </tr>
+          </thead>
+          <tbody>
             {yearlyData.map((year) => (
-              <TableRow key={year.year}>
-                <TableCell style={{ textAlign: 'center', fontWeight: '600' }}>
+              <tr key={year.year} style={{ borderBottom: '1px solid var(--border)' }}>
+                <td style={{ textAlign: 'center', padding: '8px', fontWeight: '600', color: 'var(--text)' }}>
                   {year.year}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
                   {formatCurrency(year.start)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', fontWeight: '500' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
                   {formatCurrency(year.end)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', color: getReturnColor(year.gain), fontWeight: '500' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: getReturnColor(year.gain), fontWeight: '500' }}>
                   {formatCurrency(year.gain)}
-                </TableCell>
-                <TableCell style={{ textAlign: 'right', color: getReturnColor(year.return_pct), fontWeight: '600' }}>
+                </td>
+                <td style={{ textAlign: 'right', padding: '8px', color: getReturnColor(year.return_pct), fontWeight: '600' }}>
                   {formatReturn(year.return_pct)}
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
 
       <div style={styles.summarySection}>

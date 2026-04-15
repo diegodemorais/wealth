@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
 
@@ -33,13 +32,12 @@ export function FamilyScenarioCards({
   const [selectedPerfil, setSelectedPerfil] = useState<string>('atual');
 
   if (!data || !data.perfis) {
-    return <div className="text-sm text-muted-foreground">Family scenarios data unavailable</div>;
+    return <div style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>Family scenarios data unavailable</div>;
   }
 
   const perfis = data.perfis;
   const currentPerfil = perfis[selectedPerfil];
 
-  // Map perfil to base pfire value (simplified — in production would use fire_matrix)
   const getPfireForPerfil = (perfil: string): { base: number; fav: number; stress: number } => {
     const mapping: Record<string, { base: number; fav: number; stress: number }> = {
       atual: { base: pfireBase || 90, fav: pfireFav || 94, stress: pfireStress || 87 },
@@ -52,10 +50,10 @@ export function FamilyScenarioCards({
   const pfireValues = getPfireForPerfil(selectedPerfil);
 
   const getPfireColor = (pfire: number): string => {
-    if (pfire >= 90) return '#22c55e'; // green
-    if (pfire >= 70) return '#eab308'; // yellow
-    if (pfire >= 50) return '#f59e0b'; // orange
-    return '#ef4444'; // red
+    if (pfire >= 90) return '#22c55e';
+    if (pfire >= 70) return '#eab308';
+    if (pfire >= 50) return '#f59e0b';
+    return '#ef4444';
   };
 
   const scenarios = [
@@ -65,30 +63,29 @@ export function FamilyScenarioCards({
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Title */}
-      <h3 className="text-sm font-semibold text-slate-200">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
         Family Scenarios — P(FIRE) Impact
       </h3>
 
-      {/* Scenario Selector — Auto-fit grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {/* Scenario Selector */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
         {Object.entries(perfis).map(([key, perfil]) => {
           const isSelected = key === selectedPerfil;
           return (
             <button
               key={key}
               onClick={() => setSelectedPerfil(key)}
-              className={`p-3 border-2 rounded-lg transition cursor-pointer ${
-                isSelected
-                  ? 'border-blue-500 bg-blue-500/10'
-                  : 'border-slate-700/25 bg-slate-900/30'
-              }`}
+              style={{
+                padding: '12px', borderRadius: '8px', cursor: 'pointer', textAlign: 'left',
+                border: isSelected ? '2px solid #3b82f6' : '2px solid var(--border)',
+                background: isSelected ? 'rgba(59,130,246,0.1)' : 'var(--card)',
+              }}
             >
-              <div className={`text-xs font-semibold mb-1 ${isSelected ? 'text-blue-500' : 'text-slate-200'}`}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '4px', color: isSelected ? '#3b82f6' : 'var(--text)' }}>
                 {perfil.label}
               </div>
-              <div className="text-xs text-slate-400 text-left">
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', textAlign: 'left' }}>
                 {privacyMode ? '••••/ano' : fmtBrl(perfil.gasto_anual / 1000).replace('R$', '') + 'k/ano'}
               </div>
             </button>
@@ -98,40 +95,37 @@ export function FamilyScenarioCards({
 
       {/* Selected Scenario Details */}
       {currentPerfil && (
-        <Card className="bg-slate-900/30 border-l-4 border-l-blue-500">
-          <CardContent className="p-3">
-            <div className="text-xs font-semibold text-slate-200 mb-1">
-              {currentPerfil.label}
-            </div>
-            <div className="text-xs text-slate-400 leading-relaxed">
-              {currentPerfil.descricao}
-            </div>
-          </CardContent>
-        </Card>
+        <div style={{ background: 'var(--card)', borderLeft: '4px solid #3b82f6', borderRadius: '0 4px 4px 0', padding: '12px' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
+            {currentPerfil.label}
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5 }}>
+            {currentPerfil.descricao}
+          </div>
+        </div>
       )}
 
       {/* P(FIRE) Scenarios Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
         {scenarios.map((sc, idx) => (
-          <Card key={idx} className="bg-slate-900/40 border-slate-700/25">
-            <CardContent className="p-3">
-              <div className="text-xs text-slate-400 mb-2 uppercase font-semibold">
-                {sc.label}
-              </div>
-              <div className={`text-2xl font-bold mb-2`} style={{ color: getPfireColor(sc.value) }}>
-                {privacyMode ? '••' : fmtPct(sc.value / 100, 0)}
-              </div>
-              <div className="h-1 bg-slate-700/15 rounded overflow-hidden">
-                <div
-                  className="h-full transition-all duration-300"
-                  style={{
-                    width: `${Math.min(100, sc.value)}%`,
-                    backgroundColor: sc.color,
-                  }}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div key={idx} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+              {sc.label}
+            </div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px', color: getPfireColor(sc.value) }}>
+              {privacyMode ? '••' : fmtPct(sc.value / 100, 0)}
+            </div>
+            <div style={{ height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
+              <div
+                style={{
+                  width: `${Math.min(100, sc.value)}%`,
+                  height: '100%',
+                  backgroundColor: sc.color,
+                  transition: 'width 0.3s',
+                }}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>

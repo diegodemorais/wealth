@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ComponentAudit {
   name: string;
@@ -77,222 +76,167 @@ const COMPONENT_AUDITS: ComponentAudit[] = [
   },
 ];
 
+const complexityColor = (c: string) => {
+  if (c === 'High') return 'var(--red)';
+  if (c === 'Medium') return 'var(--yellow)';
+  return 'var(--green)';
+};
+
 export function AvaliarTab() {
   const totalLinesRemoved = COMPONENT_AUDITS.reduce((sum, c) => sum + c.linesRemoved, 0);
   const totalLinesAdded = COMPONENT_AUDITS.reduce((sum, c) => sum + c.linesAdded, 0);
   const netReduction = totalLinesRemoved - totalLinesAdded;
 
+  const cardStyle: React.CSSProperties = {
+    background: 'var(--card)',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
+    padding: '16px',
+    marginBottom: '12px',
+  };
+
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-        <Card className="bg-slate-900/30 border-slate-700/25">
-          <CardContent className="p-4">
-            <div className="text-xs text-slate-500 mb-1 uppercase font-semibold">
-              Components Refactored
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+        {[
+          { label: 'Components Refactored', value: COMPONENT_AUDITS.length, color: 'var(--text)', sub: 'All HOJE tab components' },
+          { label: 'Lines Removed', value: totalLinesRemoved, color: 'var(--green)', sub: 'Inline styles eliminated' },
+          { label: 'Lines Added', value: totalLinesAdded, color: 'var(--accent)', sub: 'Tailwind + Card classes' },
+          { label: 'Net Reduction', value: netReduction, color: 'var(--yellow)', sub: `(${((netReduction / totalLinesRemoved) * 100).toFixed(0)}% efficiency)` },
+        ].map(item => (
+          <div key={item.label} style={cardStyle}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+              {item.label}
             </div>
-            <div className="text-2xl font-bold text-slate-200">
-              {COMPONENT_AUDITS.length}
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: item.color }}>
+              {item.value}
             </div>
-            <div className="text-xs text-slate-500 mt-2">
-              All HOJE tab components
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginTop: '8px' }}>
+              {item.sub}
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-900/30 border-slate-700/25">
-          <CardContent className="p-4">
-            <div className="text-xs text-slate-500 mb-1 uppercase font-semibold">
-              Lines Removed
-            </div>
-            <div className="text-2xl font-bold text-green-500">
-              {totalLinesRemoved}
-            </div>
-            <div className="text-xs text-slate-500 mt-2">
-              Inline styles eliminated
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-900/30 border-slate-700/25">
-          <CardContent className="p-4">
-            <div className="text-xs text-slate-500 mb-1 uppercase font-semibold">
-              Lines Added
-            </div>
-            <div className="text-2xl font-bold text-blue-500">
-              {totalLinesAdded}
-            </div>
-            <div className="text-xs text-slate-500 mt-2">
-              Tailwind + Card classes
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-900/30 border-slate-700/25">
-          <CardContent className="p-4">
-            <div className="text-xs text-slate-500 mb-1 uppercase font-semibold">
-              Net Reduction
-            </div>
-            <div className="text-2xl font-bold text-amber-500">
-              {netReduction}
-            </div>
-            <div className="text-xs text-slate-500 mt-2">
-              ({((netReduction / totalLinesRemoved) * 100).toFixed(0)}% efficiency)
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        ))}
       </div>
 
       {/* Detailed Audit */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-slate-200">
+      <div>
+        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
           Component Audit — Refactoring Details
         </h3>
 
         {COMPONENT_AUDITS.map((comp) => (
-          <Card key={comp.name} className="bg-slate-900/30 border-slate-700/25">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <CardTitle className="text-sm font-semibold text-slate-200">
-                    {comp.name}
-                  </CardTitle>
-                  <div className="text-xs text-slate-500 mt-1">
-                    {comp.phase} — Complexity: <span className={
-                      comp.complexity === 'High' ? 'text-red-500' :
-                      comp.complexity === 'Medium' ? 'text-amber-500' :
-                      'text-green-500'
-                    }>{comp.complexity}</span>
-                  </div>
+          <div key={comp.name} style={cardStyle}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)' }}>{comp.name}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginTop: '2px' }}>
+                  {comp.phase} — Complexity: <span style={{ color: complexityColor(comp.complexity) }}>{comp.complexity}</span>
                 </div>
               </div>
-            </CardHeader>
+            </div>
 
-            <CardContent className="space-y-3">
-              {/* Before/After */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="p-2 bg-slate-950/40 rounded">
-                  <div className="text-xs text-slate-500 mb-1 font-semibold">Before</div>
-                  <div className="text-xs text-slate-400">{comp.oldStyle}</div>
-                </div>
-                <div className="p-2 bg-slate-950/40 rounded">
-                  <div className="text-xs text-slate-500 mb-1 font-semibold">After</div>
-                  <div className="text-xs text-slate-400">{comp.newStyle}</div>
-                </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ padding: '8px', background: 'var(--bg)', borderRadius: '4px' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>Before</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text)' }}>{comp.oldStyle}</div>
               </div>
+              <div style={{ padding: '8px', background: 'var(--bg)', borderRadius: '4px' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>After</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text)' }}>{comp.newStyle}</div>
+              </div>
+            </div>
 
-              {/* Stats */}
-              <div className="flex gap-3 text-xs">
-                <div>
-                  <span className="text-slate-500">Removed: </span>
-                  <span className="text-green-500 font-semibold">{comp.linesRemoved}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500">Added: </span>
-                  <span className="text-blue-500 font-semibold">{comp.linesAdded}</span>
-                </div>
-                <div>
-                  <span className="text-slate-500">Net: </span>
-                  <span className="text-amber-500 font-semibold">
-                    {comp.linesRemoved - comp.linesAdded > 0 ? '-' : '+'}
-                    {Math.abs(comp.linesRemoved - comp.linesAdded)}
-                  </span>
-                </div>
+            <div style={{ display: 'flex', gap: '12px', fontSize: '0.75rem', marginBottom: '12px' }}>
+              <div>
+                <span style={{ color: 'var(--muted)' }}>Removed: </span>
+                <span style={{ color: 'var(--green)', fontWeight: 600 }}>{comp.linesRemoved}</span>
               </div>
+              <div>
+                <span style={{ color: 'var(--muted)' }}>Added: </span>
+                <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{comp.linesAdded}</span>
+              </div>
+              <div>
+                <span style={{ color: 'var(--muted)' }}>Net: </span>
+                <span style={{ color: 'var(--yellow)', fontWeight: 600 }}>
+                  {comp.linesRemoved - comp.linesAdded > 0 ? '-' : '+'}
+                  {Math.abs(comp.linesRemoved - comp.linesAdded)}
+                </span>
+              </div>
+            </div>
 
-              {/* Consolidation Notes */}
-              <div className="p-2 bg-blue-950/20 rounded border border-blue-900/30">
-                <div className="text-xs text-blue-400 leading-relaxed">
-                  💡 {comp.consolidationNotes}
-                </div>
+            <div style={{ padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--accent)', lineHeight: 1.5 }}>
+                {comp.consolidationNotes}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Consolidation Opportunities */}
-      <Card className="bg-slate-900/30 border-slate-700/25">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-slate-200">
-            Consolidation Opportunities
-          </CardTitle>
-        </CardHeader>
+      <div style={cardStyle}>
+        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+          Consolidation Opportunities
+        </h3>
 
-        <CardContent className="space-y-3 text-xs">
-          <div className="p-3 bg-amber-950/20 rounded border border-amber-900/30">
-            <div className="font-semibold text-amber-400 mb-1">🔀 Pattern: Color-Coded Status</div>
-            <div className="text-slate-400">
-              Used in: EtfsPositionsTable (P/L), LifeEventsTable (ΔP(FIRE)), FireSimulator (P(FIRE))
-              <br />
-              <span className="text-amber-300 mt-1 block">Consolidate into utility hook: `useStatusColor(value, thresholds)`</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.75rem' }}>
+          {[
+            {
+              title: 'Pattern: Color-Coded Status',
+              body: 'Used in: EtfsPositionsTable (P/L), LifeEventsTable (ΔP(FIRE)), FireSimulator (P(FIRE))',
+              note: 'Consolidate into utility hook: `useStatusColor(value, thresholds)`',
+            },
+            {
+              title: 'Pattern: Conditional Button Styling',
+              body: 'Used in: FireMatrixTable (scenario selector), FamilyScenarioCards (profile selector)',
+              note: 'Consolidate into component: <ToggleButton selected={} />',
+            },
+            {
+              title: 'Pattern: Progress Bar Visualization',
+              body: 'Used in: MonthlyReturnsHeatmap, FamilyScenarioCards, FireSimulator',
+              note: 'Consolidate into component: <ProgressBar value={} color={} />',
+            },
+            {
+              title: 'Pattern: Expandable Card with Details',
+              body: 'Used in: LifeEventsTable (event details)',
+              note: 'Reusable for: Portfolio/Performance tabs (position details, metric drilldown)',
+            },
+            {
+              title: 'Pattern: Sensitivity Grid (Key-Value Pairs)',
+              body: 'Used in: FireSimulator (3-column sensitivity analysis)',
+              note: 'Reusable for: Backtest tab (scenario sensitivity analysis)',
+            },
+          ].map(item => (
+            <div key={item.title} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '4px', border: '1px solid var(--border)' }}>
+              <div style={{ fontWeight: 600, color: 'var(--yellow)', marginBottom: '4px' }}>{item.title}</div>
+              <div style={{ color: 'var(--muted)' }}>{item.body}</div>
+              <div style={{ color: 'var(--accent)', marginTop: '4px' }}>{item.note}</div>
             </div>
-          </div>
-
-          <div className="p-3 bg-amber-950/20 rounded border border-amber-900/30">
-            <div className="font-semibold text-amber-400 mb-1">🔀 Pattern: Conditional Button Styling</div>
-            <div className="text-slate-400">
-              Used in: FireMatrixTable (scenario selector), FamilyScenarioCards (profile selector)
-              <br />
-              <span className="text-amber-300 mt-1 block">Consolidate into component: `&lt;ToggleButton selected={} /&gt;`</span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-amber-950/20 rounded border border-amber-900/30">
-            <div className="font-semibold text-amber-400 mb-1">🔀 Pattern: Progress Bar Visualization</div>
-            <div className="text-slate-400">
-              Used in: MonthlyReturnsHeatmap, FamilyScenarioCards, FireSimulator
-              <br />
-              <span className="text-amber-300 mt-1 block">Consolidate into component: `&lt;ProgressBar value={} color={} /&gt;`</span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-amber-950/20 rounded border border-amber-900/30">
-            <div className="font-semibold text-amber-400 mb-1">🔀 Pattern: Expandable Card with Details</div>
-            <div className="text-slate-400">
-              Used in: LifeEventsTable (event details)
-              <br />
-              <span className="text-amber-300 mt-1 block">Reusable for: Portfolio/Performance tabs (position details, metric drilldown)</span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-amber-950/20 rounded border border-amber-900/30">
-            <div className="font-semibold text-amber-400 mb-1">🔀 Pattern: Sensitivity Grid (Key-Value Pairs)</div>
-            <div className="text-slate-400">
-              Used in: FireSimulator (3-column sensitivity analysis)
-              <br />
-              <span className="text-amber-300 mt-1 block">Reusable for: Backtest tab (scenario sensitivity analysis)</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          ))}
+        </div>
+      </div>
 
       {/* Next Steps */}
-      <Card className="bg-blue-950/20 border-blue-900/30">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-semibold text-blue-300">
-            Phase 2 → Phase 3 Roadmap
-          </CardTitle>
-        </CardHeader>
+      <div style={{ ...cardStyle, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent)', marginBottom: '12px' }}>
+          Phase 2 → Phase 3 Roadmap
+        </h3>
 
-        <CardContent className="space-y-2 text-xs text-slate-400">
-          <div>
-            <span className="font-semibold text-blue-300">Priority 1:</span> Portfolio tab (29 components, high reuse of HOJE patterns)
-          </div>
-          <div>
-            <span className="font-semibold text-blue-300">Priority 2:</span> Performance tab (extract chart patterns, consolidate with Phase 1 color logic)
-          </div>
-          <div>
-            <span className="font-semibold text-blue-300">Priority 3:</span> FIRE tab (complex tables, consolidate with FireMatrixTable pattern)
-          </div>
-          <div>
-            <span className="font-semibold text-blue-300">Priority 4:</span> Withdraw tab (similar to FIRE, reuse scenario selector pattern)
-          </div>
-          <div>
-            <span className="font-semibold text-blue-300">Priority 5:</span> Simulators & Backtest (lowest priority, fewer inline styles)
-          </div>
-        </CardContent>
-      </Card>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+          {[
+            { label: 'Priority 1:', text: 'Portfolio tab (29 components, high reuse of HOJE patterns)' },
+            { label: 'Priority 2:', text: 'Performance tab (extract chart patterns, consolidate with Phase 1 color logic)' },
+            { label: 'Priority 3:', text: 'FIRE tab (complex tables, consolidate with FireMatrixTable pattern)' },
+            { label: 'Priority 4:', text: 'Withdraw tab (similar to FIRE, reuse scenario selector pattern)' },
+            { label: 'Priority 5:', text: 'Simulators & Backtest (lowest priority, fewer inline styles)' },
+          ].map(item => (
+            <div key={item.label}>
+              <span style={{ fontWeight: 600, color: 'var(--accent)' }}>{item.label}</span> {item.text}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

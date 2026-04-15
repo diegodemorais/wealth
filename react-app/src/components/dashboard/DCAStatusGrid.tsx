@@ -1,7 +1,5 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
 import { useUiStore } from "@/store/uiStore"
 
 interface DCAStatus {
@@ -23,10 +21,8 @@ interface DCAStatusGridProps {
 
 export function DCAStatusGrid({ items }: DCAStatusGridProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
-  // Defensive: validate items array
   const validItems = Array.isArray(items) ? items.filter(item => item && typeof item === 'object') : [];
 
-  // Get border class by instrument type
   const getBorderClass = (id: string): string => {
     if (id.includes('ipca2040') || id.includes('ipca_long')) return 'dca-card--border-cyan';
     if (id.includes('ipca2050')) return 'dca-card--border-violet';
@@ -44,14 +40,9 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
           {validItems.map((item) => (
             <div
               key={item.id}
-              className={cn(
-                "dca-card",
-                getBorderClass(item.id),
-                item.regime === "PAUSADO" && "dca-card.paused"
-              )}
+              className={`dca-card ${getBorderClass(item.id)} ${item.regime === "PAUSADO" ? "dca-card.paused" : ""}`}
             >
               <div className="pt-4 px-4 pb-4">
-                {/* Helper: validate numeric fields */}
                 {(() => {
                   const taxa = typeof item.taxa_atual === 'number' ? item.taxa_atual : 0;
                   const piso_c = typeof item.piso_compra === 'number' ? item.piso_compra : 0;
@@ -63,21 +54,21 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                       {/* Header: Nome + Status Badge */}
                       <div className="flex items-center justify-between gap-2 mb-4">
                         <h4 className="font-semibold text-sm">{item.nome}</h4>
-                        <Badge
-                          variant={item.regime === "ATIVO" ? "default" : "outline"}
-                          className={cn(
-                            item.regime === "ATIVO"
-                              ? "bg-green-500/20 text-green-400 border-green-500/30"
-                              : "bg-muted text-muted-foreground"
-                          )}
-                        >
+                        <span style={{
+                          fontSize: '0.7rem',
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          border: item.regime === "ATIVO" ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--border)',
+                          background: item.regime === "ATIVO" ? 'rgba(34,197,94,0.2)' : 'var(--bg)',
+                          color: item.regime === "ATIVO" ? 'var(--green)' : 'var(--muted)',
+                          fontWeight: 600,
+                        }}>
                           {item.regime}
-                        </Badge>
+                        </span>
                       </div>
 
                       {/* Rows */}
                       <div className="space-y-2 text-xs">
-                        {/* Taxa Atual */}
                         <div className="flex justify-between items-baseline">
                           <span className="text-muted-foreground">Taxa atual</span>
                           <span className="font-mono font-semibold">
@@ -85,13 +76,11 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                           </span>
                         </div>
 
-                        {/* Piso Compra */}
                         <div className="flex justify-between items-baseline">
                           <span className="text-muted-foreground">Piso compra</span>
                           <span className="font-mono">{privacyMode ? '••••' : `${piso_c.toFixed(1)}%`}</span>
                         </div>
 
-                        {/* Piso Venda (if exists) */}
                         {piso_v !== undefined && (
                           <div className="flex justify-between items-baseline">
                             <span className="text-muted-foreground">Piso venda</span>
@@ -101,20 +90,16 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                           </div>
                         )}
 
-                        {/* Gap vs Piso */}
                         <div className="flex justify-between items-baseline">
                           <span className="text-muted-foreground">Gap vs piso</span>
                           <span
-                            className={cn(
-                              "font-mono font-semibold",
-                              gap > 0.5 ? "text-green-400" : "text-yellow-400"
-                            )}
+                            className="font-mono font-semibold"
+                            style={{ color: gap > 0.5 ? 'var(--green)' : 'var(--yellow)' }}
                           >
                             {privacyMode ? '••••' : `${gap > 0 ? "+" : ""}${gap.toFixed(2)}pp`}
                           </span>
                         </div>
 
-                        {/* Portfolio % */}
                         {(() => {
                           const pct_atual = typeof item.pct_carteira_atual === 'number' ? item.pct_carteira_atual : 0;
                           const alvo = typeof item.alvo_pct === 'number' ? item.alvo_pct : 0;
@@ -129,10 +114,8 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                         })()}
                       </div>
 
-                      {/* Divider */}
                       <div className="border-t border-border my-3 opacity-30" />
 
-                      {/* Próxima Ação */}
                       <p className="text-xs text-muted-foreground leading-relaxed">
                         {item.proxima_acao}
                       </p>

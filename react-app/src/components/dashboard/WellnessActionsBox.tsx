@@ -1,8 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
 import { useUiStore } from "@/store/uiStore"
 
 interface WellnessMetric {
@@ -36,7 +33,6 @@ interface WellnessActionsBoxProps {
   dcaActive?: boolean
 }
 
-// Action recommendations per metric
 const ACTION_TEXT: Record<string, string> = {
   pfire: "Aumentar aporte mensal ou aguardar crescimento patrimonial",
   savings_rate: "Aumentar aporte relativo ao custo de vida",
@@ -64,7 +60,7 @@ function computeMetricScore(metric: WellnessMetric, props: WellnessActionsBoxPro
     }
     case "savings_rate": {
       const sr = props.savingsRate
-      if (sr == null) return Math.round(metric.max * 0.5) // neutral
+      if (sr == null) return Math.round(metric.max * 0.5)
       const pct = sr > 1 ? sr : sr * 100
       for (const t of thresholds) {
         if (typeof t.min_pct === "number" && pct >= t.min_pct) return typeof t.pts === "number" ? t.pts : 0
@@ -87,21 +83,19 @@ function computeMetricScore(metric: WellnessMetric, props: WellnessActionsBoxPro
           return typeof t.pts === "number" ? t.pts : 0
         }
       }
-      // Last threshold — check DCA active
       const lastT = thresholds[thresholds.length - 1]
       if (props.dcaActive && typeof lastT.pts_if_dca === "number") return lastT.pts_if_dca
       return typeof lastT.pts === "number" ? lastT.pts : 0
     }
     case "execution_fidelity":
-      return Math.round(metric.max * 0.7) // neutral without data
+      return Math.round(metric.max * 0.7)
     case "emergency_fund":
-      return metric.max // assume adequate
+      return metric.max
     case "ter": {
-      // Use config values if available
-      return 3 // delta ~0.03pp → 3pts
+      return 3
     }
     case "human_capital":
-      return metric.max // solteiro sem dependentes = max
+      return metric.max
     default:
       return Math.round(metric.max * 0.5)
   }
@@ -111,12 +105,10 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
   const privacyMode = useUiStore(s => s.privacyMode)
   const { wellnessConfig } = props
 
-  // Defensive validation
   if (!wellnessConfig || !Array.isArray(wellnessConfig.metrics) || wellnessConfig.metrics.length === 0) {
-    return <div className="text-muted-foreground text-sm">Wellness config unavailable</div>
+    return <div style={{ color: 'var(--muted)', fontSize: '0.875rem' }}>Wellness config unavailable</div>
   }
 
-  // Compute actions: score each metric, find gap, rank by potential
   const actions: WellnessAction[] = wellnessConfig.metrics
     .map((metric) => {
       const current = computeMetricScore(metric, props)
@@ -134,7 +126,6 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
     .slice(0, 3)
     .map((a, i) => ({ ...a, rank: i + 1 }))
 
-  // Compute total score
   const totalScore = wellnessConfig.metrics.reduce(
     (sum, m) => sum + computeMetricScore(m, props),
     0
@@ -143,74 +134,86 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
 
   if (actions.length === 0) {
     return (
-      <Card>
-        <CardContent className="pt-6 text-center">
-          <p className="text-sm text-green-400 font-semibold">
-            All wellness metrics at maximum.
-          </p>
-        </CardContent>
-      </Card>
+      <div style={{ padding: '24px', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.875rem', color: '#22c55e', fontWeight: 600 }}>
+          All wellness metrics at maximum.
+        </p>
+      </div>
     )
   }
 
   return (
-    <div className="space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Score summary */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', margin: 0 }}>
           Top actions to improve score
         </h3>
-        <Badge
-          variant="outline"
-          className="bg-amber-500/10 text-amber-400 border-amber-500/30 font-mono"
-        >
+        <span style={{
+          padding: '2px 10px',
+          borderRadius: '4px',
+          border: '1px solid rgba(245,158,11,0.3)',
+          background: 'rgba(245,158,11,0.1)',
+          color: '#f59e0b',
+          fontFamily: 'monospace',
+          fontSize: '0.75rem',
+          fontWeight: 600,
+        }}>
           {privacyMode ? "••••" : `${totalScore}/${totalMax}`}
-        </Badge>
+        </span>
       </div>
 
       {/* Actions list */}
-      <div className="space-y-3">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {actions.map((action) => (
-          <Card
+          <div
             key={action.rank}
-            className="border-amber-500/20 bg-amber-500/5"
+            style={{
+              border: '1px solid rgba(245,158,11,0.2)',
+              background: 'rgba(245,158,11,0.05)',
+              borderRadius: '8px',
+              padding: '16px',
+            }}
           >
-            <CardContent className="pt-4 pb-4">
-              <div className="flex items-start gap-3">
-                {/* Rank number */}
-                <div
-                  className={cn(
-                    "flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold",
-                    "bg-amber-500/20 text-amber-400"
-                  )}
-                >
-                  {action.rank}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline justify-between gap-2 mb-1">
-                    <span className="text-sm font-semibold text-foreground">
-                      {action.metric}
-                    </span>
-                    <span className="text-xs font-mono text-amber-400 flex-shrink-0">
-                      {privacyMode
-                        ? "••••"
-                        : `+${action.potential_pts}pts potential`}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {action.action}
-                  </p>
-                </div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+              {/* Rank number */}
+              <div style={{
+                flexShrink: 0,
+                width: '28px',
+                height: '28px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.875rem',
+                fontWeight: 700,
+                background: 'rgba(245,158,11,0.2)',
+                color: '#f59e0b',
+              }}>
+                {action.rank}
               </div>
-            </CardContent>
-          </Card>
+
+              {/* Content */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)' }}>
+                    {action.metric}
+                  </span>
+                  <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#f59e0b', flexShrink: 0 }}>
+                    {privacyMode ? "••••" : `+${action.potential_pts}pts potential`}
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
+                  {action.action}
+                </p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Footer note */}
-      <p className="text-xs text-muted-foreground leading-relaxed">
+      <p style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
         Score based on {wellnessConfig.metrics.length} metrics: discipline, protection, and execution.
       </p>
     </div>

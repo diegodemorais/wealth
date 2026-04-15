@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface PerformancePeriod {
   period: string;
@@ -92,9 +91,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
             position: 'top' as const,
             labels: {
               color: '#cbd5e1',
-              font: {
-                size: 12,
-              },
+              font: { size: 12 },
               padding: 12,
               usePointStyle: true,
             },
@@ -115,9 +112,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
         },
         scales: {
           y: {
-            grid: {
-              color: 'rgba(71, 85, 105, 0.1)',
-            },
+            grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
               color: '#94a3b8',
               callback: function (value) {
@@ -126,12 +121,8 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
             },
           },
           x: {
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: '#cbd5e1',
-            },
+            grid: { display: false },
+            ticks: { color: '#cbd5e1' },
           },
         },
       },
@@ -144,7 +135,6 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
     };
   }, []);
 
-  // Calculate alpha for each period
   const alphas = periods.map(p => ({
     period: p.period,
     alpha: p.targetReturn - p.swrdReturn,
@@ -153,40 +143,38 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
   const avgAlpha = alphas.reduce((sum, a) => sum + a.alpha, 0) / alphas.length;
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Alpha vs SWRD — Performance Relativa
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Alpha vs SWRD — Performance Relativa
+      </h2>
 
-      <CardContent className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Chart */}
         <div>
-          <canvas ref={chartRef} className="max-h-[300px]" />
+          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
         </div>
 
         {/* Alpha breakdown */}
         <div>
-          <div className="text-sm font-semibold text-slate-200 mb-3">
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
             Alpha por Período (Target − SWRD)
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '12px' }}>
             {alphas.map(a => (
               <div
                 key={a.period}
-                className="p-3 rounded"
                 style={{
+                  padding: '12px',
+                  borderRadius: '4px',
                   backgroundColor: a.alpha > 0 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  borderColor: a.alpha > 0 ? '#22c55e40' : '#ef444440',
-                  borderWidth: '1px',
+                  border: `1px solid ${a.alpha > 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}`,
                 }}
               >
-                <div className="text-xs text-slate-400 mb-1">
+                <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px' }}>
                   {a.period}
                 </div>
-                <div className="text-base font-bold" style={{ color: a.alpha > 0 ? '#22c55e' : '#ef4444' }}>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: a.alpha > 0 ? '#22c55e' : '#ef4444' }}>
                   {a.alpha > 0 ? '+' : ''}{a.alpha.toFixed(2)}%
                 </div>
               </div>
@@ -194,60 +182,57 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           </div>
         </div>
 
-        {/* Average alpha and liquid alpha */}
-        <div className="pt-4 border-t border-slate-700/15">
-          <div className="text-sm font-semibold text-slate-200 mb-3">
+        {/* Summary */}
+        <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
             Sumário de Alpha
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* Média de Alpha */}
-            <div className="p-3 bg-green-500/10 border border-green-500/25 rounded">
-              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px' }}>
+            <div style={{ padding: '12px', borderRadius: '4px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Média Alpha
               </div>
-              <div className="text-lg font-bold text-green-500">
+              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#22c55e' }}>
                 {avgAlpha.toFixed(2)}%
               </div>
-              <div className="text-xs text-slate-500">
+              <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
                 Períodos: 1y, 3y, 5y, 10y
               </div>
             </div>
 
-            {/* Alpha Líquido (com haircut) */}
-            <div className="p-3 bg-violet-500/10 border border-violet-500/25 rounded">
-              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+            <div style={{ padding: '12px', borderRadius: '4px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Alpha Líquido (Haircut 58%)
               </div>
-              <div className="text-lg font-bold text-violet-400">
+              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#a78bfa' }}>
                 {(alphaLiquidoPctYear * 100).toFixed(2)}bps
               </div>
-              <div className="text-xs text-slate-500">
+              <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
                 Retorno real anual após custos
               </div>
             </div>
 
-            {/* Source info */}
-            <div className="p-3 bg-slate-700/10 border border-slate-700/40 rounded">
-              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+            <div style={{ padding: '12px', borderRadius: '4px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Fonte
               </div>
-              <div className="text-xs text-slate-300 leading-relaxed">
-                Target: SWRD+AVGS+AVEM <br />
-                SWRD: Global Large Cap <br />
-                Haircut: McLean & Pontiff 2016
+              <div style={{ fontSize: '0.75rem', color: 'var(--text)', lineHeight: 1.5 }}>
+                Target: SWRD+AVGS+AVEM<br />
+                SWRD: Global Large Cap<br />
+                Haircut: McLean &amp; Pontiff 2016
               </div>
             </div>
           </div>
         </div>
 
         {/* Note */}
-        <div className="mt-3 p-2 text-xs text-slate-500 bg-slate-700/5 rounded">
-          <strong>📌 Nota:</strong> Alpha positivo indica que a alocação Target supera o benchmark SWRD, graças à diversificação
+        <div style={{ padding: '8px 12px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+          <strong>Nota:</strong> Alpha positivo indica que a alocação Target supera o benchmark SWRD, graças à diversificação
           fatorial (AVGS value/quality, AVEM emerging value).
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

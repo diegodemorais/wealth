@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface TrackingFireChartProps {
   realizadoBrl: number;
@@ -30,7 +29,6 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
     }).format(val);
   };
 
-  // Calculate status
   const diferenca = patrimonioAtualBrl - projetadoP50Brl;
   const diferencaPct = projetadoP50Brl > 0 ? (diferenca / projetadoP50Brl) * 100 : 0;
   const statusColor = diferenca > 0 ? '#22c55e' : diferenca < -100000 ? '#ef4444' : '#eab308';
@@ -120,88 +118,88 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
   }, [realizadoBrl, projetadoP50Brl, fireGatilhoBrl]);
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Tracking FIRE — Realizado vs Projeção
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Tracking FIRE — Realizado vs Projeção
+      </h2>
 
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4 mb-4">
-        {/* Chart */}
-        <div>
-          <canvas ref={chartRef} className="max-h-[200px]" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+          {/* Chart */}
+          <div>
+            <canvas ref={chartRef} style={{ maxHeight: '200px' }} />
+          </div>
+
+          {/* Status cards */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {/* Realizado */}
+            <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid #06b6d4', borderRadius: '4px' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+                Patrimônio Realizado
+              </div>
+              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#06b6d4' }}>
+                {privacyMode ? 'R$••••' : fmtBrl(patrimonioAtualBrl)}
+              </div>
+            </div>
+
+            {/* P50 Projetado */}
+            <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid #8b5cf6', borderRadius: '4px' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+                P50 Projetado
+              </div>
+              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#8b5cf6' }}>
+                {privacyMode ? 'R$••••' : fmtBrl(projetadoP50Brl)}
+              </div>
+            </div>
+
+            {/* Diferença */}
+            <div
+              style={{
+                padding: '12px',
+                borderRadius: '4px',
+                backgroundColor: `${statusColor}15`,
+                border: `1px solid ${statusColor}`,
+              }}
+            >
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+                Diferença
+              </div>
+              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: statusColor, marginBottom: '4px' }}>
+                {privacyMode ? '••' : `${diferencaPct.toFixed(1)}%`}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+                {status === 'ahead' && '✅ À frente da projeção'}
+                {status === 'tracking' && '📊 Acompanhando projeção'}
+                {status === 'behind' && '⚠️ Atrás da projeção'}
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Status cards */}
-        <div className="flex flex-col gap-2">
-          {/* Realizado */}
-          <div className="p-3 bg-cyan-500/10 border border-cyan-500 rounded">
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              Patrimônio Realizado
-            </div>
-            <div className="text-lg font-bold text-cyan-500">
-              {privacyMode ? 'R$••••' : fmtBrl(patrimonioAtualBrl)}
-            </div>
-          </div>
-
-          {/* P50 Projetado */}
-          <div className="p-3 bg-violet-500/10 border border-violet-500 rounded">
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              P50 Projetado
-            </div>
-            <div className="text-lg font-bold text-violet-500">
-              {privacyMode ? 'R$••••' : fmtBrl(projetadoP50Brl)}
-            </div>
-          </div>
-
-          {/* Diferença */}
-          <div
-            className="p-3 rounded"
-            style={{
-              backgroundColor: `${statusColor}15`,
-              border: `1px solid ${statusColor}`,
-            }}
-          >
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              Diferença
-            </div>
-            <div className="text-lg font-bold mb-1" style={{ color: statusColor }}>
-              {privacyMode ? '••' : `${diferencaPct.toFixed(1)}%`}
-            </div>
-            <div className="text-xs text-slate-600">
-              {status === 'ahead' && '✅ À frente da projeção'}
-              {status === 'tracking' && '📊 Acompanhando projeção'}
-              {status === 'behind' && '⚠️ Atrás da projeção'}
-            </div>
-          </div>
-        </div>
-      </div>
 
         {/* FIRE Gatilho progress */}
-        <div className="border-t border-slate-700/15 pt-3">
-          <div className="text-xs font-semibold text-slate-200 mb-2">
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Progresso para FIRE Gatilho
           </div>
 
-          <div className="flex justify-between items-center mb-2 text-xs text-slate-400">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '0.75rem', color: 'var(--muted)' }}>
             <span>Meta FIRE: {privacyMode ? 'R$••••' : fmtBrl(fireGatilhoBrl)}</span>
             <span>{privacyMode ? '••' : `${((patrimonioAtualBrl / fireGatilhoBrl) * 100).toFixed(1)}%`}</span>
           </div>
 
-          <div className="h-3 bg-slate-700/15 rounded overflow-hidden">
+          <div style={{ height: '12px', background: 'rgba(71,85,105,0.15)', borderRadius: '6px', overflow: 'hidden' }}>
             <div
-              className="h-full transition-all duration-500"
               style={{
                 width: `${Math.min(100, (patrimonioAtualBrl / fireGatilhoBrl) * 100)}%`,
+                height: '100%',
+                transition: 'all 0.5s',
                 backgroundColor: (patrimonioAtualBrl / fireGatilhoBrl) >= 1 ? '#22c55e' : '#f59e0b',
               }}
             />
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

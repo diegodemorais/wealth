@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface DrawdownHistoryChartProps {
   dates: string[];
@@ -30,7 +29,6 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
     const ctx = chartRef.current.getContext('2d');
     if (!ctx) return;
 
-    // Limit data to last 60 points for readability
     const displayDates = dates.slice(-60);
     const displayData = drawdownPct.slice(-60);
 
@@ -57,20 +55,11 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
       options: {
         responsive: true,
         maintainAspectRatio: true,
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: {
             position: 'top' as const,
-            labels: {
-              color: '#cbd5e1',
-              font: {
-                size: 12,
-              },
-              padding: 12,
-            },
+            labels: { color: '#cbd5e1', font: { size: 12 }, padding: 12 },
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
@@ -90,25 +79,15 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
           y: {
             min: -100,
             max: 0,
-            grid: {
-              color: 'rgba(71, 85, 105, 0.1)',
-            },
+            grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
               color: '#94a3b8',
-              callback: function (value) {
-                return (value as number).toFixed(0) + '%';
-              },
+              callback: function (value) { return (value as number).toFixed(0) + '%'; },
             },
           },
           x: {
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: '#cbd5e1',
-              maxRotation: 45,
-              minRotation: 0,
-            },
+            grid: { display: false },
+            ticks: { color: '#cbd5e1', maxRotation: 45, minRotation: 0 },
           },
         },
       },
@@ -121,83 +100,53 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
     };
   }, [dates, drawdownPct]);
 
+  const currentDd = drawdownPct[drawdownPct.length - 1] || 0;
+  const currentColor = currentDd > -10 ? '#22c55e' : '#f59e0b';
+  const currentBg = currentDd > -10 ? 'rgba(34,197,94,0.1)' : 'rgba(245,158,11,0.1)';
+  const currentBorder = currentDd > -10 ? 'rgba(34,197,94,0.25)' : 'rgba(245,158,11,0.25)';
+
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Drawdown History — Perdas Históricas
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Drawdown History — Perdas Históricas
+      </h2>
 
-      <CardContent className="space-y-4">
-        {/* Chart */}
-        <div className="mb-4">
-          <canvas ref={chartRef} className="max-h-[300px]" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div>
+          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
         </div>
 
-      {/* Key metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        {/* Max Drawdown */}
-        <div className="p-3 bg-red-500/10 border border-red-500/25 rounded">
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-            Max Drawdown
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
+          <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Max Drawdown</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ef4444' }}>
+              {privacyMode ? '••' : maxDrawdown.toFixed(2)}%
+            </div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Worst case (histórico)</div>
           </div>
-          <div className="text-lg font-bold text-red-500">
-            {privacyMode ? '••' : maxDrawdown.toFixed(2)}%
-          </div>
-          <div className="text-xs text-slate-500">
-            Worst case (histórico)
-          </div>
-        </div>
 
-        {/* Current Drawdown */}
-        <div
-          className="p-3 border rounded"
-          style={{
-            backgroundColor: drawdownPct[drawdownPct.length - 1] > -10
-              ? 'rgba(34, 197, 94, 0.1)'
-              : 'rgba(245, 158, 11, 0.1)',
-            borderColor: drawdownPct[drawdownPct.length - 1] > -10
-              ? 'rgba(34, 197, 94, 0.25)'
-              : 'rgba(245, 158, 11, 0.25)',
-          }}
-        >
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-            Drawdown Atual
+          <div style={{ padding: '12px', background: currentBg, border: `1px solid ${currentBorder}`, borderRadius: '4px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Drawdown Atual</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px', color: currentColor }}>
+              {privacyMode ? '••' : currentDd.toFixed(2)}%
+            </div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Posição presente</div>
           </div>
-          <div
-            className="text-lg font-bold mb-1"
-            style={{
-              color: drawdownPct[drawdownPct.length - 1] > -10 ? '#22c55e' : '#f59e0b',
-            }}
-          >
-            {privacyMode ? '••' : (drawdownPct[drawdownPct.length - 1] || 0).toFixed(2)}%
-          </div>
-          <div className="text-xs text-slate-500">
-            Posição presente
+
+          <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Recuperação</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>
+              {currentDd > -5 ? 'ATH' : 'Recuperando'}
+            </div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>vs. máximo histórico</div>
           </div>
         </div>
 
-        {/* Recovery Assessment */}
-        <div className="p-3 bg-violet-500/10 border border-violet-500/25 rounded">
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-            Status de Recuperação
-          </div>
-          <div className="text-lg font-bold text-violet-500 mb-1">
-            {drawdownPct[drawdownPct.length - 1] > -5 ? '✅ ATH' : '⚠️ Recuperando'}
-          </div>
-          <div className="text-xs text-slate-500">
-            vs. máximo histórico
-          </div>
+        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
+          <strong>Nota:</strong> Drawdown = queda máxima do pico anterior até o vale. Valores negativos indicam perda. Monitorar durante correções de mercado para manter disciplina.
         </div>
       </div>
-
-      {/* Footer note */}
-      <div className="text-xs text-slate-500 p-2 bg-slate-800/20 rounded">
-        <strong>📌 Nota:</strong> Drawdown = queda máxima do pico anterior até o vale. Valores negativos indicam perda. Monitorar durante correções de mercado para manter disciplina.
-      </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 };
 

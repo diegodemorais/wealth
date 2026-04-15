@@ -1,8 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
 import { useUiStore } from "@/store/uiStore"
 
 interface BandData {
@@ -20,10 +17,6 @@ interface CryptoBandChartProps {
   pnl_pct?: number
 }
 
-/**
- * Horizontal band chart showing allocation position relative to min/alvo/max zones.
- * Zones: underweight (red) | safe (green) | overweight (yellow) | over-limit (red)
- */
 export function CryptoBandChart({
   banda,
   label = "HODL11 — BTC Wrapper — B3",
@@ -32,18 +25,15 @@ export function CryptoBandChart({
 }: CryptoBandChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
-  // Defensive validation
   const min = typeof banda?.min_pct === "number" ? banda.min_pct : 0
   const alvo = typeof banda?.alvo_pct === "number" ? banda.alvo_pct : 0
   const max = typeof banda?.max_pct === "number" ? banda.max_pct : 0
   const atual = typeof banda?.atual_pct === "number" ? banda.atual_pct : 0
   const status = banda?.status || "verde"
 
-  // Chart range: 0% to max + 1% (or atual if over max)
   const chartMax = Math.max(max + 1, atual + 0.5)
   const chartMin = 0
 
-  // Position helpers (percentage of chart width)
   const toPercent = (val: number) =>
     Math.max(0, Math.min(100, ((val - chartMin) / (chartMax - chartMin)) * 100))
 
@@ -52,159 +42,92 @@ export function CryptoBandChart({
   const maxPos = toPercent(max)
   const atualPos = toPercent(atual)
 
-  // Zone determination
   const isUnderweight = atual < min
   const isOverweight = atual > max
   const isInBand = !isUnderweight && !isOverweight
 
-  const statusColors = {
-    verde: "text-green-400",
-    amarelo: "text-yellow-400",
-    vermelho: "text-red-400",
-  }
-
-  const statusLabels = {
-    verde: "In Band",
-    amarelo: "Near Limit",
-    vermelho: "Out of Band",
-  }
+  const badgeColor = isInBand ? 'var(--green)' : isUnderweight ? 'var(--red)' : 'var(--yellow)'
+  const badgeBg = isInBand ? 'rgba(34,197,94,0.2)' : isUnderweight ? 'rgba(239,68,68,0.2)' : 'rgba(234,179,8,0.2)'
+  const badgeBorder = isInBand ? 'rgba(34,197,94,0.3)' : isUnderweight ? 'rgba(239,68,68,0.3)' : 'rgba(234,179,8,0.3)'
+  const markerColor = isInBand ? '#22c55e' : isUnderweight ? '#ef4444' : '#eab308'
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h4 className="font-semibold text-sm">{label}</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              Atual: {atual.toFixed(1)}% · Alvo {alvo.toFixed(0)}% · Banda{" "}
-              {min.toFixed(1)}–{max.toFixed(1)}%
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="outline"
-              className={cn(
-                "text-xs",
-                isInBand
-                  ? "bg-green-500/20 text-green-400 border-green-500/30"
-                  : isUnderweight
-                    ? "bg-red-500/20 text-red-400 border-red-500/30"
-                    : "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-              )}
-            >
-              {isInBand ? "In Band" : isUnderweight ? "Underweight" : "Overweight"}
-            </Badge>
-          </div>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <div>
+          <h4 style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text)', margin: '0 0 4px 0' }}>{label}</h4>
+          <p style={{ fontSize: '0.75rem', color: 'var(--muted)', margin: 0 }}>
+            Atual: {atual.toFixed(1)}% · Alvo {alvo.toFixed(0)}% · Banda{" "}
+            {min.toFixed(1)}–{max.toFixed(1)}%
+          </p>
+        </div>
+        <span style={{
+          fontSize: '0.75rem',
+          padding: '2px 8px',
+          borderRadius: '4px',
+          border: `1px solid ${badgeBorder}`,
+          background: badgeBg,
+          color: badgeColor,
+        }}>
+          {isInBand ? "In Band" : isUnderweight ? "Underweight" : "Overweight"}
+        </span>
+      </div>
+
+      {/* Band Visualization */}
+      <div style={{ position: 'relative', height: '40px', marginBottom: '8px' }}>
+        <div style={{ position: 'absolute', inset: 0, borderRadius: '20px', background: 'var(--bg)', overflow: 'hidden' }}>
+          {/* Red zone: 0 to min */}
+          <div style={{ position: 'absolute', top: 0, bottom: 0, left: '0%', width: `${minPos}%`, background: 'rgba(239,68,68,0.2)' }} />
+          {/* Green zone: min to max */}
+          <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${minPos}%`, width: `${maxPos - minPos}%`, background: 'rgba(34,197,94,0.2)' }} />
+          {/* Yellow zone: max to end */}
+          <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${maxPos}%`, width: `${100 - maxPos}%`, background: 'rgba(234,179,8,0.15)' }} />
         </div>
 
-        {/* Band Visualization */}
-        <div className="relative h-10 mb-2">
-          {/* Background track */}
-          <div className="absolute inset-0 rounded-full bg-muted/30 overflow-hidden">
-            {/* Red zone: 0 to min */}
-            <div
-              className="absolute top-0 bottom-0 bg-red-500/20"
-              style={{ left: "0%", width: `${minPos}%` }}
-            />
-            {/* Green zone: min to max */}
-            <div
-              className="absolute top-0 bottom-0 bg-green-500/20"
-              style={{ left: `${minPos}%`, width: `${maxPos - minPos}%` }}
-            />
-            {/* Yellow/red zone: max to end */}
-            <div
-              className="absolute top-0 bottom-0 bg-yellow-500/15"
-              style={{ left: `${maxPos}%`, width: `${100 - maxPos}%` }}
-            />
-          </div>
+        {/* Min threshold line */}
+        <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${minPos}%`, width: '1px', background: 'rgba(239,68,68,0.6)' }} />
+        {/* Alvo center line */}
+        <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${alvoPos}%`, width: '1px', background: 'rgba(34,197,94,0.4)', borderRight: '1px dashed rgba(34,197,94,0.4)' }} />
+        {/* Max threshold line */}
+        <div style={{ position: 'absolute', top: 0, bottom: 0, left: `${maxPos}%`, width: '1px', background: 'rgba(234,179,8,0.6)' }} />
 
-          {/* Min threshold line */}
-          <div
-            className="absolute top-0 bottom-0 w-px bg-red-500/60"
-            style={{ left: `${minPos}%` }}
-          />
-          {/* Alvo center line */}
-          <div
-            className="absolute top-0 bottom-0 w-px bg-green-500/40 border-dashed"
-            style={{ left: `${alvoPos}%` }}
-          />
-          {/* Max threshold line */}
-          <div
-            className="absolute top-0 bottom-0 w-px bg-yellow-500/60"
-            style={{ left: `${maxPos}%` }}
-          />
-
-          {/* Current position marker */}
-          <div
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-            style={{ left: `${atualPos}%` }}
-          >
-            <div
-              className={cn(
-                "w-4 h-4 rounded-full border-2 shadow-lg",
-                isInBand
-                  ? "bg-green-500 border-green-300"
-                  : isUnderweight
-                    ? "bg-red-500 border-red-300"
-                    : "bg-yellow-500 border-yellow-300"
-              )}
-            />
-          </div>
+        {/* Current position marker */}
+        <div style={{ position: 'absolute', top: '50%', left: `${atualPos}%`, transform: 'translate(-50%, -50%)', zIndex: 10 }}>
+          <div style={{
+            width: '16px', height: '16px', borderRadius: '50%',
+            background: markerColor, border: `2px solid ${markerColor}55`,
+            boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          }} />
         </div>
+      </div>
 
-        {/* Scale labels */}
-        <div className="relative h-5 text-[10px] text-muted-foreground font-mono">
-          <span
-            className="absolute -translate-x-1/2"
-            style={{ left: `${minPos}%` }}
-          >
-            {min.toFixed(1)}%
-          </span>
-          <span
-            className="absolute -translate-x-1/2"
-            style={{ left: `${alvoPos}%` }}
-          >
-            {alvo.toFixed(0)}%
-          </span>
-          <span
-            className="absolute -translate-x-1/2"
-            style={{ left: `${maxPos}%` }}
-          >
-            {max.toFixed(1)}%
-          </span>
-          <span
-            className="absolute -translate-x-1/2 font-semibold"
-            style={{ left: `${atualPos}%` }}
-          >
-            ▲ {atual.toFixed(1)}%
-          </span>
-        </div>
+      {/* Scale labels */}
+      <div style={{ position: 'relative', height: '20px', fontSize: '10px', color: 'var(--muted)', fontFamily: 'monospace' }}>
+        <span style={{ position: 'absolute', transform: 'translateX(-50%)', left: `${minPos}%` }}>{min.toFixed(1)}%</span>
+        <span style={{ position: 'absolute', transform: 'translateX(-50%)', left: `${alvoPos}%` }}>{alvo.toFixed(0)}%</span>
+        <span style={{ position: 'absolute', transform: 'translateX(-50%)', left: `${maxPos}%` }}>{max.toFixed(1)}%</span>
+        <span style={{ position: 'absolute', transform: 'translateX(-50%)', left: `${atualPos}%`, fontWeight: 600, color: markerColor }}>
+          ▲ {atual.toFixed(1)}%
+        </span>
+      </div>
 
-        {/* Footer stats */}
-        {(valor !== undefined || pnl_pct !== undefined) && (
-          <>
-            <div className="border-t border-border my-3 opacity-30" />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              {valor !== undefined && (
-                <span>
-                  Posição: {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}
-                </span>
-              )}
-              {pnl_pct !== undefined && (
-                <span
-                  className={cn(
-                    "font-mono",
-                    pnl_pct >= 0 ? "text-green-400" : "text-red-400"
-                  )}
-                >
-                  P&L: {privacyMode ? '••••' : `${pnl_pct >= 0 ? "+" : ""}${pnl_pct.toFixed(1)}%`}
-                </span>
-              )}
-            </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+      {/* Footer stats */}
+      {(valor !== undefined || pnl_pct !== undefined) && (
+        <>
+          <div style={{ borderTop: '1px solid var(--border)', margin: '12px 0', opacity: 0.3 }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--muted)' }}>
+            {valor !== undefined && (
+              <span>Posição: {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}</span>
+            )}
+            {pnl_pct !== undefined && (
+              <span style={{ fontFamily: 'monospace', color: pnl_pct >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                P&amp;L: {privacyMode ? '••••' : `${pnl_pct >= 0 ? "+" : ""}${pnl_pct.toFixed(1)}%`}
+              </span>
+            )}
+          </div>
+        </>
+      )}
+    </div>
   )
 }

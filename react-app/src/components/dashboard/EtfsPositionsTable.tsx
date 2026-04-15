@@ -3,7 +3,6 @@
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface EtfPosition {
   qty: number;
@@ -26,11 +25,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
   const positions = useMemo(() => {
-    if (!data || Object.keys(data).length === 0) {
-      return [];
-    }
-
-    // Convert to array and sort by bucket priority
+    if (!data || Object.keys(data).length === 0) return [];
     const bucketOrder = { SWRD: 0, AVGS: 1, AVEM: 2, JPGL: 3 };
     return Object.entries(data)
       .map(([etf, pos]) => ({
@@ -47,21 +42,14 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
       });
   }, [data]);
 
-  const getStatusColor = (status: string): string => {
-    return status === 'alvo' ? '#22c55e' : '#eab308'; // green for alvo, yellow for transitorio
-  };
-
-  const getStatusLabel = (status: string): string => {
-    return status === 'alvo' ? 'Alvo' : 'Transição';
-  };
+  const getStatusColor = (status: string): string => status === 'alvo' ? '#22c55e' : '#eab308';
+  const getStatusLabel = (status: string): string => status === 'alvo' ? 'Alvo' : 'Transição';
 
   if (positions.length === 0) {
     return (
-      <Card className="bg-slate-900/30">
-        <CardContent className="text-xs text-slate-400 text-center py-6">
-          No ETF positions available
-        </CardContent>
-      </Card>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted)' }}>
+        No ETF positions available
+      </div>
     );
   }
 
@@ -75,62 +63,52 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
   const totalPLPct = totals.totalCost > 0 ? totalPL / totals.totalCost : 0;
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          ETF Positions — IBKR Holdings
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        ETF Positions — IBKR Holdings
+      </h2>
 
-      <CardContent>
-        {/* Table */}
-        <div className="overflow-x-auto rounded-lg border border-slate-700/25">
-          <table className="w-full border-collapse text-xs bg-slate-900/50">
+      <div style={{ overflowX: 'auto', borderRadius: '4px', border: '1px solid var(--border)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
           <thead>
-            <tr className="border-b-2 border-slate-700/30">
-              <th className="px-3 py-2 text-left font-semibold text-slate-400 bg-slate-900/40 uppercase">
-                ETF
-              </th>
+            <tr style={{ borderBottom: '2px solid var(--border)' }}>
+              <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: '0.65rem' }}>ETF</th>
               {['Qty', 'Avg Cost', 'Price', 'Total Value', 'P/L', 'P/L %'].map(label => (
-                <th key={label} className="px-2 py-2 text-right font-semibold text-slate-400 bg-slate-900/40 uppercase">
+                <th key={label} style={{ padding: '8px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: '0.65rem' }}>
                   {label}
                 </th>
               ))}
-              <th className="px-2 py-2 text-center font-semibold text-slate-400 bg-slate-900/40 uppercase">
-                Status
-              </th>
+              <th style={{ padding: '8px', textAlign: 'center', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: '0.65rem' }}>Status</th>
             </tr>
           </thead>
           <tbody>
             {positions.map((pos, idx) => {
               const pl = pos.currentValue - pos.totalCost;
               const plPct = pos.totalCost > 0 ? pl / pos.totalCost : 0;
-              const bgClass = idx % 2 === 0 ? '' : 'bg-slate-700/10';
               return (
-                <tr key={pos.etf} className={`border-b border-slate-700/15 ${bgClass}`}>
-                  <td className="px-3 py-2 font-medium text-slate-200">
-                    {pos.etf}
-                  </td>
-                  <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
+                <tr key={pos.etf} style={{ borderBottom: '1px solid var(--border)', background: idx % 2 === 1 ? 'var(--bg)' : 'transparent' }}>
+                  <td style={{ padding: '8px 12px', fontWeight: 500, color: 'var(--text)' }}>{pos.etf}</td>
+                  <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••••' : pos.qty.toFixed(2)}
                   </td>
-                  <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
+                  <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••' : `R$ ${pos.avg_cost.toFixed(2)}`}
                   </td>
-                  <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
+                  <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••' : `R$ ${pos.price.toFixed(2)}`}
                   </td>
-                  <td className="px-2 py-2 text-right font-medium text-slate-200 tabular-nums">
+                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••••' : fmtBrl(pos.currentValue)}
                   </td>
-                  <td className="px-2 py-2 text-right font-medium tabular-nums" style={{ color: pl >= 0 ? '#22c55e' : '#ef4444' }}>
+                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, fontFamily: 'monospace', color: pl >= 0 ? '#22c55e' : '#ef4444' }}>
                     {privacyMode ? '••••' : `${pl >= 0 ? '+' : ''}${fmtBrl(pl)}`}
                   </td>
-                  <td className="px-2 py-2 text-right font-semibold tabular-nums" style={{ color: plPct >= 0 ? '#22c55e' : '#ef4444' }}>
+                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace', color: plPct >= 0 ? '#22c55e' : '#ef4444' }}>
                     {privacyMode ? '••' : `${plPct >= 0 ? '+' : ''}${(plPct * 100).toFixed(1)}%`}
                   </td>
-                  <td className="px-2 py-2 text-center">
-                    <span className="inline-block px-1.5 py-0.5 rounded text-xs font-semibold" style={{
+                  <td style={{ padding: '8px', textAlign: 'center' }}>
+                    <span style={{
+                      display: 'inline-block', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600,
                       backgroundColor: `${getStatusColor(pos.status)}15`,
                       color: getStatusColor(pos.status),
                     }}>
@@ -141,45 +119,40 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
               );
             })}
             {/* Totals Row */}
-            <tr className="border-t-2 border-slate-700/30 bg-slate-900/30 font-semibold">
-              <td className="px-3 py-2 text-slate-200">
-                TOTAL
-              </td>
-              <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
+            <tr style={{ borderTop: '2px solid var(--border)', background: 'var(--bg)', fontWeight: 600 }}>
+              <td style={{ padding: '8px 12px', color: 'var(--text)' }}>TOTAL</td>
+              <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                 {privacyMode ? '••••' : totals.quantity.toFixed(2)}
               </td>
-              <td colSpan={2} className="px-2 py-2"></td>
-              <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
+              <td colSpan={2} style={{ padding: '8px' }}></td>
+              <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                 {privacyMode ? '••••' : fmtBrl(totals.currentValue)}
               </td>
-              <td className="px-2 py-2 text-right tabular-nums" style={{ color: totalPL >= 0 ? '#22c55e' : '#ef4444' }}>
+              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPL >= 0 ? '#22c55e' : '#ef4444' }}>
                 {privacyMode ? '••••' : `${totalPL >= 0 ? '+' : ''}${fmtBrl(totalPL)}`}
               </td>
-              <td className="px-2 py-2 text-right tabular-nums" style={{ color: totalPLPct >= 0 ? '#22c55e' : '#ef4444' }}>
+              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPLPct >= 0 ? '#22c55e' : '#ef4444' }}>
                 {privacyMode ? '••' : `${totalPLPct >= 0 ? '+' : ''}${(totalPLPct * 100).toFixed(1)}%`}
               </td>
-              <td className="px-2 py-2"></td>
+              <td style={{ padding: '8px' }}></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-        {/* Legend & TER Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
-          <div className="p-3 bg-slate-950/30 rounded text-xs">
-            <div className="text-slate-400 mb-1">Alvo Status</div>
-            <div className="text-green-500 font-semibold">Permanent holding</div>
+      {/* Legend */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginTop: '12px' }}>
+        {[
+          { label: 'Alvo Status', value: 'Permanent holding', color: '#22c55e' },
+          { label: 'Transição Status', value: 'Being rebalanced', color: '#eab308' },
+          { label: 'Total P/L', value: 'Unrealized gain/loss', color: 'var(--text)' },
+        ].map(item => (
+          <div key={item.label} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '4px', fontSize: '0.75rem' }}>
+            <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>{item.label}</div>
+            <div style={{ fontWeight: 600, color: item.color }}>{item.value}</div>
           </div>
-          <div className="p-3 bg-slate-950/30 rounded text-xs">
-            <div className="text-slate-400 mb-1">Transição Status</div>
-            <div className="text-yellow-500 font-semibold">Being rebalanced</div>
-          </div>
-          <div className="p-3 bg-slate-950/30 rounded text-xs">
-            <div className="text-slate-400 mb-1">Total P/L</div>
-            <div className="text-slate-200 font-semibold">Unrealized gain/loss</div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        ))}
+      </div>
+    </div>
   );
 }

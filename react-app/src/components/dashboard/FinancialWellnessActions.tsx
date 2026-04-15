@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface WellnessAction {
   rank: number;
@@ -25,140 +24,129 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
   const [expandActions, setExpandActions] = useState(false);
   const { privacyMode } = useUiStore();
 
-  // Get color based on action priority
   const getPriorityColor = (priority?: string): string => {
     switch (priority) {
-      case 'alta':
-        return '#ef4444'; // red
-      case 'media':
-        return '#eab308'; // yellow
-      case 'baixa':
-        return '#22c55e'; // green
-      default:
-        return '#06b6d4'; // cyan
+      case 'alta': return '#ef4444';
+      case 'media': return '#eab308';
+      case 'baixa': return '#22c55e';
+      default: return '#06b6d4';
     }
   };
 
-  // Get background color for priority badge
   const getPriorityBg = (priority?: string): string => {
     switch (priority) {
-      case 'alta':
-        return 'rgba(239, 68, 68, 0.15)';
-      case 'media':
-        return 'rgba(234, 179, 8, 0.15)';
-      case 'baixa':
-        return 'rgba(34, 197, 94, 0.15)';
-      default:
-        return 'rgba(6, 182, 212, 0.15)';
+      case 'alta': return 'rgba(239, 68, 68, 0.15)';
+      case 'media': return 'rgba(234, 179, 8, 0.15)';
+      case 'baixa': return 'rgba(34, 197, 94, 0.15)';
+      default: return 'rgba(6, 182, 212, 0.15)';
     }
   };
 
-  // Display top 5 actions (or all if fewer)
   const displayedAcoes = topAcoes.slice(0, 5);
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Financial Wellness & Ações Prioritárias
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Financial Wellness & Ações Prioritárias
+      </h2>
 
-      <CardContent className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Wellness Score Display */}
-        <div className="text-center p-3 bg-cyan-500/10 rounded">
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+        <div style={{ textAlign: 'center', padding: '12px', background: 'rgba(6,182,212,0.1)', borderRadius: '4px' }}>
+          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Wellness Score
           </div>
-          <div className="text-4xl font-black text-cyan-500 mb-1">
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#06b6d4', marginBottom: '4px' }}>
             {privacyMode ? '••' : Math.round(wellnessScore)}
           </div>
-          <div className="text-xs text-slate-200 font-medium mb-3">
+          <div style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500, marginBottom: '12px' }}>
             {wellnessLabel}
           </div>
 
           {/* Wellness Bar */}
-          <div className="h-1 bg-slate-700/15 rounded overflow-hidden">
+          <div style={{ height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
             <div
-              className="h-full transition-all duration-500"
               style={{
                 width: `${Math.min(100, wellnessScore)}%`,
+                height: '100%',
                 backgroundColor: wellnessScore >= 80 ? '#22c55e' : wellnessScore >= 60 ? '#eab308' : '#ef4444',
+                transition: 'width 0.5s',
               }}
             />
           </div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-slate-700/15" />
+        <div style={{ borderTop: '1px solid var(--border)' }} />
 
-      {/* Actions Section */}
-      <div>
-        <div
-          className="flex justify-between items-center cursor-pointer mb-3"
-          onClick={() => setExpandActions(!expandActions)}
-        >
-          <h3 className="text-sm font-semibold text-slate-200">
-            Top 5 Ações ({displayedAcoes.length})
-          </h3>
-          <span className="text-xs text-slate-400">
-            {expandActions ? '▼' : '▶'}
-          </span>
-        </div>
+        {/* Actions Section */}
+        <div>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', marginBottom: '12px' }}
+            onClick={() => setExpandActions(!expandActions)}
+          >
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+              Top 5 Ações ({displayedAcoes.length})
+            </h3>
+            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+              {expandActions ? '▼' : '▶'}
+            </span>
+          </div>
 
-        {(expandActions || displayedAcoes.length <= 3) && displayedAcoes.length > 0 && (
-          <div className="mt-3">
-            {displayedAcoes.map((acao, idx) => (
-              <div
-                key={idx}
-                className="flex gap-3 mb-3 p-3 rounded-sm"
-                style={{
-                  borderLeft: `4px solid ${getPriorityColor(acao.priority)}`,
-                  backgroundColor: getPriorityBg(acao.priority),
-                }}
-              >
-                {/* Rank badge */}
+          {(expandActions || displayedAcoes.length <= 3) && displayedAcoes.length > 0 && (
+            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {displayedAcoes.map((acao, idx) => (
                 <div
-                  className="flex items-center justify-center rounded-full flex-shrink-0 w-8 h-8"
+                  key={idx}
                   style={{
-                    backgroundColor: getPriorityColor(acao.priority),
+                    display: 'flex', gap: '12px', padding: '12px', borderRadius: '4px',
+                    borderLeft: `4px solid ${getPriorityColor(acao.priority)}`,
+                    backgroundColor: getPriorityBg(acao.priority),
                   }}
                 >
-                  <span className="text-xs font-black text-white">
-                    {acao.rank}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="text-xs font-semibold text-slate-200 mb-1">
-                    {acao.metric}
-                  </div>
-                  <div className="text-xs text-slate-400 mb-2">
-                    {acao.action}
-                  </div>
-                  <div className="flex gap-3 text-xs text-slate-500">
-                    <span>
-                      Atual: <span className="font-semibold text-slate-200">{acao.current_pts}pts</span>
-                    </span>
-                    <span>
-                      Potencial: <span className="font-semibold" style={{ color: getPriorityColor(acao.priority) }}>{acao.potential_pts}pts</span>
+                  {/* Rank badge */}
+                  <div
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      borderRadius: '50%', flexShrink: 0, width: '32px', height: '32px',
+                      backgroundColor: getPriorityColor(acao.priority),
+                    }}
+                  >
+                    <span style={{ fontSize: '0.75rem', fontWeight: 900, color: 'white' }}>
+                      {acao.rank}
                     </span>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
-        {displayedAcoes.length === 0 && (
-          <div className="text-xs text-slate-500 p-2 text-center">
-            Nenhuma ação prioritária identificada
-          </div>
-        )}
+                  {/* Content */}
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
+                      {acao.metric}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>
+                      {acao.action}
+                    </div>
+                    <div style={{ display: 'flex', gap: '12px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+                      <span>
+                        Atual: <span style={{ fontWeight: 600, color: 'var(--text)' }}>{acao.current_pts}pts</span>
+                      </span>
+                      <span>
+                        Potencial: <span style={{ fontWeight: 600, color: getPriorityColor(acao.priority) }}>{acao.potential_pts}pts</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {displayedAcoes.length === 0 && (
+            <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px', textAlign: 'center' }}>
+              Nenhuma ação prioritária identificada
+            </div>
+          )}
+        </div>
       </div>
-    </CardContent>
-    </Card>
+    </div>
   );
 };
 

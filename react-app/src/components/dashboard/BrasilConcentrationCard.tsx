@@ -1,6 +1,5 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface BrasilConcentrationCardProps {
   hodl11: number;
@@ -33,132 +32,100 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
     return (val * 100).toFixed(1);
   };
 
-  // Get color based on concentration risk
-  const getConcentrationColor = (pct: number): string => {
-    if (pct > 0.65) return '#ef4444'; // red - high risk
-    if (pct > 0.55) return '#eab308'; // yellow - moderate
-    return '#22c55e'; // green - acceptable
-  };
-
-  const concentrationColor = getConcentrationColor(concentrationBrazil);
+  const concentrationColor = concentrationBrazil > 0.65 ? '#ef4444' : concentrationBrazil > 0.55 ? '#eab308' : '#22c55e';
   const concentrationBg = concentrationBrazil > 0.65
     ? 'rgba(239, 68, 68, 0.1)'
     : concentrationBrazil > 0.55
     ? 'rgba(234, 179, 8, 0.1)'
     : 'rgba(34, 197, 94, 0.1)';
 
-  return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Brasil Concentration Risk
-        </CardTitle>
-      </CardHeader>
+  const rowStyle: React.CSSProperties = { marginBottom: '12px' };
+  const labelStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' };
+  const subStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--muted)', paddingLeft: '12px', marginBottom: '8px' };
 
-      <CardContent className="space-y-4">
+  return (
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Brasil Concentration Risk
+      </h2>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Main concentration metric */}
-        <div
-          className="p-3 rounded border text-center"
-          style={{
-            backgroundColor: concentrationBg,
-            borderColor: concentrationColor,
-          }}
-        >
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+        <div style={{ padding: '12px', borderRadius: '4px', textAlign: 'center', backgroundColor: concentrationBg, border: `1px solid ${concentrationColor}` }}>
+          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Brasil Concentration
           </div>
-          <div className="text-3xl font-extrabold mb-1" style={{ color: concentrationColor }}>
+          <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '4px', color: concentrationColor }}>
             {privacyMode ? '••' : `${fmtPct(concentrationBrazil)}%`}
           </div>
-          <div className="text-xs text-slate-500">
+          <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
             {concentrationBrazil > 0.65
-              ? '⚠️ Alto risco — acima de 65%'
+              ? 'Alto risco — acima de 65%'
               : concentrationBrazil > 0.55
-              ? '⚠️ Moderado — 55-65%'
-              : '✅ Aceitável — abaixo de 55%'}
+              ? 'Moderado — 55-65%'
+              : 'Aceitável — abaixo de 55%'}
           </div>
         </div>
 
-      {/* Breakdown by asset class */}
-      <div className="mb-4">
-        <div className="text-xs text-slate-400 mb-2 uppercase font-semibold">
-          Composição
-        </div>
+        {/* Breakdown by asset class */}
+        <div>
+          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+            Composição
+          </div>
 
-        {/* RF Ladder */}
-        <div className="mb-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-slate-200 font-medium">
-              Renda Fixa (IPCA+ Ladder)
-            </span>
-            <span className="text-xs text-slate-200 font-semibold">
-              {privacyMode ? 'R$••••' : fmtBrl(ipcaTotal)}
-            </span>
+          <div style={rowStyle}>
+            <div style={labelStyle}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Renda Fixa (IPCA+ Ladder)</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotal)}</span>
+            </div>
+            <div style={subStyle}>
+              <span>IPCA+ 2029/2040/2050</span>
+              <span>{privacyMode ? '••' : `${fmtPct(ipcaTotal / totalBrl)}%`}</span>
+            </div>
           </div>
-          <div className="flex justify-between text-xs text-slate-500 pl-3 mb-2">
-            <span>IPCA+ 2029/2040/2050</span>
-            <span>{privacyMode ? '••' : `${fmtPct(ipcaTotal / totalBrl)}%`}</span>
-          </div>
-        </div>
 
-        {/* Renda+ */}
-        <div className="mb-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-slate-200 font-medium">
-              Renda+ 2065
-            </span>
-            <span className="text-xs text-slate-200 font-semibold">
-              {privacyMode ? 'R$••••' : fmtBrl(rendaPlus)}
-            </span>
+          <div style={rowStyle}>
+            <div style={labelStyle}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Renda+ 2065</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(rendaPlus)}</span>
+            </div>
+            <div style={subStyle}>
+              <span>Título prefixado</span>
+              <span>{privacyMode ? '••' : `${fmtPct(rendaPlus / totalBrl)}%`}</span>
+            </div>
           </div>
-          <div className="flex justify-between text-xs text-slate-500 pl-3 mb-2">
-            <span>Título prefixado</span>
-            <span>{privacyMode ? '••' : `${fmtPct(rendaPlus / totalBrl)}%`}</span>
-          </div>
-        </div>
 
-        {/* HODL11 */}
-        <div className="mb-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-slate-200 font-medium">
-              Criptoativos (HODL11)
-            </span>
-            <span className="text-xs text-slate-200 font-semibold">
-              {privacyMode ? 'R$••••' : fmtBrl(hodl11)}
-            </span>
+          <div style={rowStyle}>
+            <div style={labelStyle}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Criptoativos (HODL11)</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(hodl11)}</span>
+            </div>
+            <div style={subStyle}>
+              <span>Bitcoin + Crypto Legado</span>
+              <span>{privacyMode ? '••' : `${fmtPct(hodl11 / totalBrl)}%`}</span>
+            </div>
           </div>
-          <div className="flex justify-between text-xs text-slate-500 pl-3 mb-2">
-            <span>Bitcoin + Crypto Legado</span>
-            <span>{privacyMode ? '••' : `${fmtPct(hodl11 / totalBrl)}%`}</span>
+
+          <div style={rowStyle}>
+            <div style={labelStyle}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Crypto Legado</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(cryptoLegado)}</span>
+            </div>
+            <div style={subStyle}>
+              <span>Posições anteriores</span>
+              <span>{privacyMode ? '••' : `${fmtPct(cryptoLegado / totalBrl)}%`}</span>
+            </div>
           </div>
         </div>
 
-        {/* Crypto Legado */}
-        <div className="mb-3">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-slate-200 font-medium">
-              Crypto Legado
-            </span>
-            <span className="text-xs text-slate-200 font-semibold">
-              {privacyMode ? 'R$••••' : fmtBrl(cryptoLegado)}
-            </span>
-          </div>
-          <div className="flex justify-between text-xs text-slate-500 pl-3 mb-2">
-            <span>Posições anteriores</span>
-            <span>{privacyMode ? '••' : `${fmtPct(cryptoLegado / totalBrl)}%`}</span>
-          </div>
+        <div style={{ borderTop: '1px solid var(--border)' }} />
+
+        {/* Risk note */}
+        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
+          <strong>Nota:</strong> Concentração acima de 65% em Brasil aumenta risco de taxa (Selic), câmbio e inflação. Meta: reduzir para 50-60% via alocação internacional.
         </div>
       </div>
-
-      {/* Divider */}
-      <div className="border-t border-slate-700/15 my-3" />
-
-      {/* Risk note */}
-      <div className="text-xs text-slate-500 p-2 bg-slate-800/20 rounded">
-        <strong>📌 Nota:</strong> Concentração acima de 65% em Brasil aumenta risco de taxa (Selic), câmbio e inflação. Meta: reduzir para 50-60% via alocação internacional.
-      </div>
-    </CardContent>
-  </Card>
+    </div>
   );
 };
 

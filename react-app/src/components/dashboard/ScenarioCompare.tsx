@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ScenarioData {
   patrimonio50anos: number;
@@ -32,16 +31,8 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
   };
 
   const scenarios = [
-    {
-      name: 'Base',
-      color: '#8b5cf6',
-      data: baseScenario,
-    },
-    {
-      name: 'Aspiracional',
-      color: '#22c55e',
-      data: aspirationalScenario,
-    },
+    { name: 'Base', color: '#8b5cf6', data: baseScenario },
+    { name: 'Aspiracional', color: '#22c55e', data: aspirationalScenario },
   ];
 
   const deltaPatrimonio = aspirationalScenario.patrimonio50anos - baseScenario.patrimonio50anos;
@@ -52,95 +43,50 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
   const deltaMeses = aspirationalScenario.mesesParaFire - baseScenario.mesesParaFire;
 
   const metrics = [
-    {
-      label: 'Patrimônio aos 50 anos',
-      baseVal: baseScenario.patrimonio50anos,
-      aspVal: aspirationalScenario.patrimonio50anos,
-      unit: 'BRL',
-      deltaVal: deltaPatrimonio,
-      deltaPct: deltaPatrimonioPct,
-    },
-    {
-      label: 'P(FIRE) Sucesso',
-      baseVal: baseScenario.pfirePercentual,
-      aspVal: aspirationalScenario.pfirePercentual,
-      unit: '%',
-      deltaVal: deltaPfire,
-      deltaPct: deltaPfire,
-    },
-    {
-      label: 'SWR no FIRE Day',
-      baseVal: baseScenario.swrPercent,
-      aspVal: aspirationalScenario.swrPercent,
-      unit: '%',
-      deltaVal: aspirationalScenario.swrPercent - baseScenario.swrPercent,
-      deltaPct: (((aspirationalScenario.swrPercent - baseScenario.swrPercent) / baseScenario.swrPercent) * 100) || 0,
-    },
-    {
-      label: 'Tempo até FIRE',
-      baseVal: baseScenario.mesesParaFire / 12,
-      aspVal: aspirationalScenario.mesesParaFire / 12,
-      unit: 'anos',
-      deltaVal: (aspirationalScenario.mesesParaFire - baseScenario.mesesParaFire) / 12,
-      deltaPct: deltaMeses / 12,
-    },
+    { label: 'Patrimônio aos 50 anos', baseVal: baseScenario.patrimonio50anos, aspVal: aspirationalScenario.patrimonio50anos, unit: 'BRL', deltaVal: deltaPatrimonio, deltaPct: deltaPatrimonioPct },
+    { label: 'P(FIRE) Sucesso', baseVal: baseScenario.pfirePercentual, aspVal: aspirationalScenario.pfirePercentual, unit: '%', deltaVal: deltaPfire, deltaPct: deltaPfire },
+    { label: 'SWR no FIRE Day', baseVal: baseScenario.swrPercent, aspVal: aspirationalScenario.swrPercent, unit: '%', deltaVal: aspirationalScenario.swrPercent - baseScenario.swrPercent, deltaPct: (((aspirationalScenario.swrPercent - baseScenario.swrPercent) / baseScenario.swrPercent) * 100) || 0 },
+    { label: 'Tempo até FIRE', baseVal: baseScenario.mesesParaFire / 12, aspVal: aspirationalScenario.mesesParaFire / 12, unit: 'anos', deltaVal: (aspirationalScenario.mesesParaFire - baseScenario.mesesParaFire) / 12, deltaPct: deltaMeses / 12 },
   ];
 
-  // Color helpers
-  const baseScenarioColor = '#8b5cf6';
-  const aspirationalColor = '#22c55e';
-  const timeDeltaColor = deltaMeses < 0 ? 'bg-green-500/10 border-green-500/25' : 'bg-red-500/10 border-red-500/25';
-  const timeDeltaTextColor = deltaMeses < 0 ? 'text-green-500' : 'text-red-500';
+  const timeDeltaBg = deltaMeses < 0 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)';
+  const timeDeltaBorder = deltaMeses < 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)';
+  const timeDeltaColor = deltaMeses < 0 ? '#22c55e' : '#ef4444';
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Comparativo de Cenários — Base vs Aspiracional
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Comparativo de Cenários — Base vs Aspiracional
+      </h2>
 
-      <CardContent className="space-y-4">
-
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Scenario cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
           {scenarios.map(scenario => (
             <div
               key={scenario.name}
-              className="p-3 rounded border"
-              style={{ backgroundColor: `${scenario.color}15`, borderColor: `${scenario.color}40` }}
+              style={{ padding: '12px', borderRadius: '4px', backgroundColor: `${scenario.color}15`, border: `1px solid ${scenario.color}40` }}
             >
-              <div className="text-xs text-slate-400 mb-2 uppercase font-semibold">
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Cenário {scenario.name}
               </div>
 
-              <div className="flex flex-col gap-2">
-                {/* Patrimonio */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div>
-                  <div className="text-xs text-slate-500 mb-1">
-                    Pat. aos 50a
-                  </div>
-                  <div className="text-sm font-bold" style={{ color: scenario.color }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Pat. aos 50a</div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 700, color: scenario.color }}>
                     {privacyMode ? 'R$••••' : fmtBrl(scenario.data.patrimonio50anos)}
                   </div>
                 </div>
-
-                {/* P(FIRE) */}
                 <div>
-                  <div className="text-xs text-slate-500 mb-1">
-                    P(FIRE)
-                  </div>
-                  <div className="text-sm font-bold" style={{ color: scenario.color }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>P(FIRE)</div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 700, color: scenario.color }}>
                     {scenario.data.pfirePercentual.toFixed(1)}%
                   </div>
                 </div>
-
-                {/* Meses até FIRE */}
                 <div>
-                  <div className="text-xs text-slate-500 mb-1">
-                    Tempo até FIRE
-                  </div>
-                  <div className="text-sm font-bold" style={{ color: scenario.color }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Tempo até FIRE</div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 700, color: scenario.color }}>
                     {(scenario.data.mesesParaFire / 12).toFixed(1)} anos
                   </div>
                 </div>
@@ -151,111 +97,66 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
 
         {/* Differences highlight */}
         <div>
-          <div className="text-sm font-semibold text-slate-200 mb-3">
-            Principais Diferenças
-          </div>
+          <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>Principais Diferenças</div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* Delta Patrimonio */}
-            <div className="p-3 bg-green-500/10 border border-green-500/25 rounded">
-              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-                Δ Patrimônio (aspiracional)
-              </div>
-              <div className="text-base font-bold text-green-500 mb-1">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+            <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Δ Patrimônio (aspiracional)</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#22c55e', marginBottom: '4px' }}>
                 {privacyMode ? 'R$••••' : `+${fmtBrl(deltaPatrimonio)}`}
               </div>
-              <div className="text-xs text-slate-500">
-                +{deltaPatrimonioPct.toFixed(1)}%
-              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>+{deltaPatrimonioPct.toFixed(1)}%</div>
             </div>
 
-            {/* Delta P(FIRE) */}
-            <div className="p-3 bg-green-500/10 border border-green-500/25 rounded">
-              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-                Δ P(FIRE)
-              </div>
-              <div className="text-base font-bold text-green-500 mb-1">
-                +{deltaPfire.toFixed(1)}pp
-              </div>
-              <div className="text-xs text-slate-500">
-                {aspirationalScenario.pfirePercentual.toFixed(1)}% vs {baseScenario.pfirePercentual.toFixed(1)}%
-              </div>
+            <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Δ P(FIRE)</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#22c55e', marginBottom: '4px' }}>+{deltaPfire.toFixed(1)}pp</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{aspirationalScenario.pfirePercentual.toFixed(1)}% vs {baseScenario.pfirePercentual.toFixed(1)}%</div>
             </div>
 
-            {/* Delta Tempo */}
-            <div className={`p-3 rounded border ${timeDeltaColor}`}>
-              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-                Δ Tempo até FIRE
-              </div>
-              <div className={`text-base font-bold mb-1 ${timeDeltaTextColor}`}>
+            <div style={{ padding: '12px', borderRadius: '4px', background: timeDeltaBg, border: `1px solid ${timeDeltaBorder}` }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Δ Tempo até FIRE</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: timeDeltaColor }}>
                 {deltaMeses < 0 ? '−' : '+'}{Math.abs(deltaMeses / 12).toFixed(1)} anos
               </div>
-              <div className="text-xs text-slate-500">
-                {deltaMeses < 0 ? 'Antecipa FIRE' : 'Adia FIRE'}
-              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{deltaMeses < 0 ? 'Antecipa FIRE' : 'Adia FIRE'}</div>
             </div>
           </div>
         </div>
 
         {/* Expandable details table */}
         <div
-          className="flex justify-between items-center p-3 cursor-pointer border-t border-slate-700/15 mt-3"
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '12px' }}
           onClick={() => setExpandDetails(!expandDetails)}
         >
-          <h3 className="text-sm font-semibold m-0 text-slate-200">
-            Detalhes Completos
-          </h3>
-          <span className="text-xs text-slate-400">
-            {expandDetails ? '▼' : '▶'}
-          </span>
+          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, color: 'var(--text)' }}>Detalhes Completos</h3>
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{expandDetails ? '▼' : '▶'}</span>
         </div>
 
         {expandDetails && (
-          <div className="mt-3 overflow-x-auto">
-            <table className="w-full border-collapse text-xs">
+          <div style={{ marginTop: '12px', overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
               <thead>
                 <tr>
-                  <th className="text-left p-2 border-b border-slate-700/25 text-slate-400 font-semibold">
-                    Métrica
-                  </th>
-                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold text-violet-500">
-                    Base
-                  </th>
-                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold text-green-500">
-                    Aspiracional
-                  </th>
-                  <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
-                    Diferença
-                  </th>
+                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
+                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#a78bfa' }}>Base</th>
+                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#22c55e' }}>Aspiracional</th>
+                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Diferença</th>
                 </tr>
               </thead>
               <tbody>
                 {metrics.map((metric, idx) => (
                   <tr key={idx}>
-                    <td className="p-2 border-b border-slate-700/15 text-slate-200">
-                      {metric.label}
+                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>{metric.label}</td>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#a78bfa' }}>
+                      {metric.unit === 'BRL' ? privacyMode ? 'R$••••' : (metric.baseVal / 1000000).toFixed(2) + 'M' : metric.baseVal.toFixed(1) + metric.unit}
                     </td>
-                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold text-violet-500">
-                      {metric.unit === 'BRL'
-                        ? privacyMode
-                          ? 'R$••••'
-                          : (metric.baseVal / 1000000).toFixed(2) + 'M'
-                        : metric.baseVal.toFixed(1) + metric.unit}
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: '#22c55e' }}>
+                      {metric.unit === 'BRL' ? privacyMode ? 'R$••••' : (metric.aspVal / 1000000).toFixed(2) + 'M' : metric.aspVal.toFixed(1) + metric.unit}
                     </td>
-                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold text-green-500">
-                      {metric.unit === 'BRL'
-                        ? privacyMode
-                          ? 'R$••••'
-                          : (metric.aspVal / 1000000).toFixed(2) + 'M'
-                        : metric.aspVal.toFixed(1) + metric.unit}
-                    </td>
-                    <td className={`text-right p-2 border-b border-slate-700/15 font-semibold ${metric.deltaVal >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: metric.deltaVal >= 0 ? '#22c55e' : '#ef4444' }}>
                       {metric.deltaVal >= 0 ? '+' : ''}
-                      {metric.unit === 'BRL'
-                        ? privacyMode
-                          ? 'R$••••'
-                          : (metric.deltaVal / 1000000).toFixed(2) + 'M'
-                        : metric.deltaVal.toFixed(1) + metric.unit}
+                      {metric.unit === 'BRL' ? privacyMode ? 'R$••••' : (metric.deltaVal / 1000000).toFixed(2) + 'M' : metric.deltaVal.toFixed(1) + metric.unit}
                     </td>
                   </tr>
                 ))}
@@ -263,8 +164,8 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
             </table>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

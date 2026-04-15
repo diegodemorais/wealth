@@ -3,7 +3,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RollingMetricsChartProps {
   dates: string[];
@@ -35,7 +34,6 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
     const ctx = chartRef.current.getContext('2d');
     if (!ctx) return;
 
-    // Limit to last 120 months for readability
     const displayDates = dates.slice(-120);
     let dataset1: number[] = [];
     let dataset2: number[] = [];
@@ -99,27 +97,15 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
 
     chartInstance.current = new Chart(ctx, {
       type: 'line',
-      data: {
-        labels: displayDates,
-        datasets: datasets as any,
-      },
+      data: { labels: displayDates, datasets: datasets as any },
       options: {
         responsive: true,
         maintainAspectRatio: true,
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: {
             position: 'top' as const,
-            labels: {
-              color: '#cbd5e1',
-              font: {
-                size: 12,
-              },
-              padding: 12,
-            },
+            labels: { color: '#cbd5e1', font: { size: 12 }, padding: 12 },
           },
           tooltip: {
             backgroundColor: 'rgba(30, 41, 59, 0.9)',
@@ -138,30 +124,19 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
         },
         scales: {
           y: {
-            min: yMin,
-            max: yMax,
-            grid: {
-              color: 'rgba(71, 85, 105, 0.1)',
-            },
+            min: yMin, max: yMax,
+            grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
               color: '#94a3b8',
               callback: function (value) {
-                if (activeMetric === 'volatilidade') {
-                  return (value as number).toFixed(0) + '%';
-                }
+                if (activeMetric === 'volatilidade') return (value as number).toFixed(0) + '%';
                 return (value as number).toFixed(2);
               },
             },
           },
           x: {
-            grid: {
-              display: false,
-            },
-            ticks: {
-              color: '#cbd5e1',
-              maxRotation: 45,
-              minRotation: 0,
-            },
+            grid: { display: false },
+            ticks: { color: '#cbd5e1', maxRotation: 45, minRotation: 0 },
           },
         },
       },
@@ -179,25 +154,24 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
   const currentVol = volatilidade[volatilidade.length - 1] || 0;
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Rolling Metrics — Sharpe, Sortino &amp; Volatilidade
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Rolling Metrics — Sharpe, Sortino &amp; Volatilidade
+      </h2>
 
-      <CardContent className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Metric Toggle */}
-        <div className="flex gap-2 flex-wrap">
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {['sharpe', 'sortino', 'volatilidade'].map(metric => (
             <button
               key={metric}
               onClick={() => setActiveMetric(metric as any)}
-              className={`px-3 py-1.5 text-xs font-medium rounded transition-all ${
-                activeMetric === metric
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-slate-700/20 text-slate-300 hover:bg-slate-700/30'
-              }`}
+              style={{
+                padding: '6px 12px', fontSize: '0.75rem', fontWeight: 500, borderRadius: '4px',
+                cursor: 'pointer', border: 'none',
+                background: activeMetric === metric ? '#3b82f6' : 'rgba(71,85,105,0.2)',
+                color: activeMetric === metric ? 'white' : 'var(--text)',
+              }}
             >
               {metric === 'sharpe' ? 'Sharpe' : metric === 'sortino' ? 'Sortino' : 'Volatilidade'}
             </button>
@@ -206,67 +180,42 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
 
         {/* Chart */}
         <div>
-          <canvas ref={chartRef} className="max-h-[300px]" />
+          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
         </div>
 
         {/* Key metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {/* Sharpe Ratio */}
-          <div className="p-3 bg-blue-500/10 border border-blue-500/25 rounded">
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              Sharpe (BRL)
-            </div>
-            <div
-              className="text-lg font-bold"
-              style={{
-                color: currentSharpe > 1 ? '#22c55e' : currentSharpe > 0.5 ? '#f59e0b' : '#ef4444',
-              }}
-            >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+          <div style={{ padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sharpe (BRL)</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSharpe > 1 ? '#22c55e' : currentSharpe > 0.5 ? '#f59e0b' : '#ef4444' }}>
               {privacyMode ? '••' : currentSharpe.toFixed(2)}
             </div>
-            <div className="text-xs text-slate-500">
-              Retorno/risco
-            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Retorno/risco</div>
           </div>
 
-          {/* Sortino Ratio */}
-          <div className="p-3 bg-cyan-500/10 border border-cyan-500/25 rounded">
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              Sortino Ratio
-            </div>
-            <div
-              className="text-lg font-bold"
-              style={{
-                color: currentSortino > 1.5 ? '#22c55e' : currentSortino > 0.75 ? '#f59e0b' : '#ef4444',
-              }}
-            >
+          <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sortino Ratio</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSortino > 1.5 ? '#22c55e' : currentSortino > 0.75 ? '#f59e0b' : '#ef4444' }}>
               {privacyMode ? '••' : currentSortino.toFixed(2)}
             </div>
-            <div className="text-xs text-slate-500">
-              Risco downside
-            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Risco downside</div>
           </div>
 
-          {/* Volatilidade */}
-          <div className="p-3 bg-amber-500/10 border border-amber-500/25 rounded">
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              Volatilidade
-            </div>
-            <div className="text-lg font-bold text-amber-400">
+          <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Volatilidade</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fbbf24' }}>
               {privacyMode ? '••' : currentVol.toFixed(2)}%
             </div>
-            <div className="text-xs text-slate-500">
-              Desvio padrão
-            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Desvio padrão</div>
           </div>
         </div>
 
         {/* Footer note */}
-        <div className="mt-3 p-2 text-xs text-slate-500 bg-slate-700/5 rounded">
+        <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>📌 Nota:</strong> Métricas calculadas em 12M rolling. Sharpe &gt; 1 indica bom retorno ajustado ao risco. Sortino penaliza apenas quedas. Volatilidade é desvio padrão mensal anualizado.
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface CashFlowSankeyProps {
   aporteMensal: number;
-  ipcaFlow: number; // R$ flowing to IPCA+
-  equityFlow: number; // R$ flowing to Equity
-  rendaPlusFlow: number; // R$ flowing to Renda+
-  cryptoFlow: number; // R$ flowing to Crypto
+  ipcaFlow: number;
+  equityFlow: number;
+  rendaPlusFlow: number;
+  cryptoFlow: number;
 }
 
 const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
@@ -35,192 +34,108 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
   const cryptoPct = totalFlow > 0 ? cryptoFlow / totalFlow : 0;
 
   const colors = {
-    ipca: '#06b6d4', // cyan
-    equity: '#3b82f6', // blue
-    rendaPlus: '#f59e0b', // amber
-    crypto: '#8b5cf6', // violet
+    ipca: '#06b6d4',
+    equity: '#3b82f6',
+    rendaPlus: '#f59e0b',
+    crypto: '#8b5cf6',
   };
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Fluxo de Caixa Anual — Aporte Distribuição
-        </CardTitle>
-      </CardHeader>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+        Fluxo de Caixa Anual — Aporte Distribuição
+      </h2>
 
-      <CardContent className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Input card (Aporte) */}
-        <div className="p-3 bg-green-500/10 border-2 border-green-500 rounded text-center">
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+        <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '2px solid #22c55e', borderRadius: '4px', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Aporte Mensal
           </div>
-          <div className="text-2xl font-bold text-green-500">
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#22c55e' }}>
             {privacyMode ? 'R$••••' : fmtBrl(aporteMensal)}
           </div>
         </div>
 
-        {/* Flow visualization: horizontal distribution */}
-        <div className="flex gap-1 h-8 bg-slate-700/15 rounded overflow-hidden">
-          {/* IPCA+ bar */}
-          <div
-            className="flex items-center justify-center text-xs font-semibold text-white"
-            style={{
-              flex: ipcaPct,
-              backgroundColor: colors.ipca,
-              minWidth: ipcaPct > 0.08 ? 'auto' : '0px',
-            }}
-          >
-            {ipcaPct > 0.08 ? `${(ipcaPct * 100).toFixed(0)}%` : ''}
-          </div>
-
-          {/* Equity bar */}
-          <div
-            className="flex items-center justify-center text-xs font-semibold text-white"
-            style={{
-              flex: equityPct,
-              backgroundColor: colors.equity,
-              minWidth: equityPct > 0.08 ? 'auto' : '0px',
-            }}
-          >
-            {equityPct > 0.08 ? `${(equityPct * 100).toFixed(0)}%` : ''}
-          </div>
-
-          {/* Renda+ bar */}
-          <div
-            className="flex items-center justify-center text-xs font-semibold text-white"
-            style={{
-              flex: rendaPlusPct,
-              backgroundColor: colors.rendaPlus,
-              minWidth: rendaPlusPct > 0.08 ? 'auto' : '0px',
-            }}
-          >
-            {rendaPlusPct > 0.08 ? `${(rendaPlusPct * 100).toFixed(0)}%` : ''}
-          </div>
-
-          {/* Crypto bar */}
-          <div
-            className="flex items-center justify-center text-xs font-semibold text-white"
-            style={{
-              flex: cryptoPct,
-              backgroundColor: colors.crypto,
-              minWidth: cryptoPct > 0.08 ? 'auto' : '0px',
-            }}
-          >
-            {cryptoPct > 0.08 ? `${(cryptoPct * 100).toFixed(0)}%` : ''}
-          </div>
+        {/* Flow visualization */}
+        <div style={{ display: 'flex', gap: '2px', height: '32px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden' }}>
+          {[
+            { pct: ipcaPct, color: colors.ipca },
+            { pct: equityPct, color: colors.equity },
+            { pct: rendaPlusPct, color: colors.rendaPlus },
+            { pct: cryptoPct, color: colors.crypto },
+          ].map((item, i) => (
+            <div
+              key={i}
+              style={{
+                flex: item.pct,
+                backgroundColor: item.color,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: item.pct > 0.08 ? 'auto' : '0px',
+              }}
+            >
+              {item.pct > 0.08 && (
+                <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'white' }}>
+                  {(item.pct * 100).toFixed(0)}%
+                </span>
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Expandable breakdown */}
         <div
-          className="flex justify-between items-center cursor-pointer pt-4 border-t border-slate-700/15"
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', paddingTop: '16px', borderTop: '1px solid var(--border)' }}
           onClick={() => setExpandBreakdown(!expandBreakdown)}
         >
-          <h3 className="text-sm font-semibold text-slate-200">
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
             Destinos
           </h3>
-          <span className="text-xs text-slate-400">
+          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
             {expandBreakdown ? '▼' : '▶'}
           </span>
         </div>
 
         {expandBreakdown && (
-          <div className="mt-3 space-y-2">
-            {/* IPCA+ row */}
-            <div
-              className="p-3 rounded flex justify-between items-center"
-              style={{ backgroundColor: 'rgba(6, 182, 212, 0.08)', borderLeft: `4px solid ${colors.ipca}` }}
-            >
-              <div>
-                <div className="text-sm font-semibold text-slate-200">
-                  IPCA+ Ladder
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[
+              { label: 'IPCA+ Ladder', sub: 'Renda fixa de longo prazo', value: ipcaFlow, pct: ipcaPct, color: colors.ipca },
+              { label: 'Equity International', sub: 'SWRD / AVGS / AVEM', value: equityFlow, pct: equityPct, color: colors.equity },
+              { label: 'Renda+ 2065', sub: 'Título prefixado tático', value: rendaPlusFlow, pct: rendaPlusPct, color: colors.rendaPlus },
+              { label: 'Criptoativos', sub: 'Bitcoin via HODL11', value: cryptoFlow, pct: cryptoPct, color: colors.crypto },
+            ].map(item => (
+              <div
+                key={item.label}
+                style={{
+                  padding: '12px',
+                  borderRadius: '4px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: `${item.color}14`,
+                  borderLeft: `4px solid ${item.color}`,
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)' }}>{item.label}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{item.sub}</div>
                 </div>
-                <div className="text-xs text-slate-400">
-                  Renda fixa de longo prazo
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-base font-bold" style={{ color: colors.ipca }}>
-                  {privacyMode ? 'R$••••' : fmtBrl(ipcaFlow)}
-                </div>
-                <div className="text-xs text-slate-500">
-                  {(ipcaPct * 100).toFixed(1)}%
-                </div>
-              </div>
-            </div>
-
-            {/* Equity row */}
-            <div
-              className="p-3 rounded flex justify-between items-center"
-              style={{ backgroundColor: 'rgba(59, 130, 246, 0.08)', borderLeft: `4px solid ${colors.equity}` }}
-            >
-              <div>
-                <div className="text-sm font-semibold text-slate-200">
-                  Equity International
-                </div>
-                <div className="text-xs text-slate-400">
-                  SWRD / AVGS / AVEM
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: item.color }}>
+                    {privacyMode ? 'R$••••' : fmtBrl(item.value)}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+                    {(item.pct * 100).toFixed(1)}%
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-base font-bold" style={{ color: colors.equity }}>
-                  {privacyMode ? 'R$••••' : fmtBrl(equityFlow)}
-                </div>
-                <div className="text-xs text-slate-500">
-                  {(equityPct * 100).toFixed(1)}%
-                </div>
-              </div>
-            </div>
-
-            {/* Renda+ row */}
-            <div
-              className="p-3 rounded flex justify-between items-center"
-              style={{ backgroundColor: 'rgba(245, 158, 11, 0.08)', borderLeft: `4px solid ${colors.rendaPlus}` }}
-            >
-              <div>
-                <div className="text-sm font-semibold text-slate-200">
-                  Renda+ 2065
-                </div>
-                <div className="text-xs text-slate-400">
-                  Título prefixado tático
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-base font-bold" style={{ color: colors.rendaPlus }}>
-                  {privacyMode ? 'R$••••' : fmtBrl(rendaPlusFlow)}
-                </div>
-                <div className="text-xs text-slate-500">
-                  {(rendaPlusPct * 100).toFixed(1)}%
-                </div>
-              </div>
-            </div>
-
-            {/* Crypto row */}
-            <div
-              className="p-3 rounded flex justify-between items-center"
-              style={{ backgroundColor: 'rgba(139, 92, 246, 0.08)', borderLeft: `4px solid ${colors.crypto}` }}
-            >
-              <div>
-                <div className="text-sm font-semibold text-slate-200">
-                  Criptoativos
-                </div>
-                <div className="text-xs text-slate-400">
-                  Bitcoin via HODL11
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-base font-bold" style={{ color: colors.crypto }}>
-                  {privacyMode ? 'R$••••' : fmtBrl(cryptoFlow)}
-                </div>
-                <div className="text-xs text-slate-500">
-                  {(cryptoPct * 100).toFixed(1)}%
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

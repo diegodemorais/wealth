@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 interface LifeEvent {
   id: string;
@@ -31,126 +29,112 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
 
   if (!data || !data.eventos || data.eventos.length === 0) {
     return (
-      <Card className="bg-slate-900/30">
-        <CardContent className="text-xs text-slate-400 text-center py-6">
-          No life events scheduled
-        </CardContent>
-      </Card>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px', padding: '24px', textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted)' }}>
+        No life events scheduled
+      </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {/* Title */}
-      <h3 className="text-sm font-semibold text-slate-200 mb-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', margin: 0 }}>
         Life Events — P(FIRE) Impact Analysis
       </h3>
 
       {/* Events List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
         {data.eventos.map(event => {
           const isExpanded = expandedId === event.id;
-          const deltaColor = event.delta_pp > 0 ? 'text-red-500' : 'text-green-500';
-          const statusColor = event.confirmado ? 'bg-green-500/20' : 'bg-yellow-500/20';
-          const statusTextColor = event.confirmado ? 'text-green-500' : 'text-yellow-500';
-          const dotColor = event.confirmado ? 'bg-green-500' : 'bg-yellow-500';
+          const deltaColor = event.delta_pp > 0 ? '#ef4444' : '#22c55e';
+          const dotColor = event.confirmado ? '#22c55e' : '#eab308';
 
           return (
-            <Card key={event.id} className="bg-slate-900/30 border-slate-700/25 overflow-hidden">
+            <div key={event.id} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', overflow: 'hidden' }}>
               {/* Header — Clickable */}
               <button
                 onClick={() => setExpandedId(isExpanded ? null : event.id)}
-                className="w-full p-3 bg-transparent border-none cursor-pointer flex items-center justify-between gap-3 hover:bg-slate-800/20 transition"
+                style={{
+                  width: '100%', padding: '12px', background: 'transparent', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+                }}
               >
                 {/* Content */}
-                <div className="flex-1 text-left">
-                  <div className="text-xs font-semibold text-slate-200 mb-1">
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
                     {event.label}
                   </div>
-                  <div className="text-xs text-slate-400 flex items-center gap-2">
-                    <span>
-                      {event.confirmado ? '✓ Confirmado' : '○ Planejado'}
-                    </span>
-                    <span className={`w-1 h-1 rounded-full ${dotColor}`} />
+                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>{event.confirmado ? '✓ Confirmado' : '○ Planejado'}</span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: dotColor, display: 'inline-block' }} />
                     <span>Ano {event.ano_inicio}</span>
                   </div>
                 </div>
 
                 {/* Delta Badge */}
-                <div className="flex flex-col items-end gap-1">
-                  <div className="text-xs text-slate-400 uppercase">
-                    ΔP(FIRE)
-                  </div>
-                  <div className={`text-lg font-bold ${deltaColor}`}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--muted)', textTransform: 'uppercase' }}>ΔP(FIRE)</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: deltaColor }}>
                     {privacyMode ? '••' : `${event.delta_pp > 0 ? '' : '+'}${event.delta_pp.toFixed(1)}pp`}
                   </div>
                 </div>
 
                 {/* Expand Arrow */}
-                <div className="text-slate-400 text-xs">
+                <div style={{ color: 'var(--muted)', fontSize: '0.75rem' }}>
                   {isExpanded ? '▼' : '▶'}
                 </div>
               </button>
 
               {/* Details — Expandable */}
               {isExpanded && (
-                <div className="border-t border-slate-700/15 p-3 bg-slate-900/50 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div style={{ borderTop: '1px solid var(--border)', padding: '12px', background: 'var(--bg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '12px', fontSize: '0.75rem' }}>
                   <div>
-                    <div className="text-slate-400 mb-1">
-                      New Annual Spend
-                    </div>
-                    <div className="text-slate-200 font-semibold text-sm">
+                    <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>New Annual Spend</div>
+                    <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem' }}>
                       {privacyMode ? '••••' : fmtBrl(event.spending_novo)}
                     </div>
                   </div>
 
                   <div>
-                    <div className="text-slate-400 mb-1">
-                      P(FIRE) @ 2040
-                    </div>
-                    <div className="text-slate-200 font-semibold text-sm">
+                    <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>P(FIRE) @ 2040</div>
+                    <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem' }}>
                       {privacyMode ? '••' : fmtPct(event.pfire_2040, 1)}
                     </div>
                   </div>
 
                   <div>
-                    <div className="text-slate-400 mb-1">
-                      Required Patrimonio
-                    </div>
-                    <div className="text-slate-200 font-semibold text-sm">
+                    <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>Required Patrimonio</div>
+                    <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem' }}>
                       {privacyMode ? '••••' : fmtBrl(event.patrimonio_necessario)}
                     </div>
                   </div>
                 </div>
               )}
-            </Card>
+            </div>
           );
         })}
       </div>
 
       {/* Summary */}
       {data.eventos.length > 0 && (
-        <Card className="bg-slate-900/30 mt-4">
-          <CardContent className="p-3 text-xs text-slate-400 leading-relaxed">
-            <strong className="text-slate-200">Impact Summary:</strong><br />
-            {data.eventos.filter(e => e.confirmado).length > 0 && (
-              <div className="mt-1">
-                {data.eventos
-                  .filter(e => e.confirmado)
-                  .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
-                  .join(' • ')}
-              </div>
-            )}
-            {data.eventos.filter(e => !e.confirmado).length > 0 && (
-              <div className="opacity-70 mt-1">
-                Planned: {data.eventos
-                  .filter(e => !e.confirmado)
-                  .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
-                  .join(' • ')}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px', padding: '12px', fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: '16px' }}>
+          <strong style={{ color: 'var(--text)' }}>Impact Summary:</strong><br />
+          {data.eventos.filter(e => e.confirmado).length > 0 && (
+            <div style={{ marginTop: '4px' }}>
+              {data.eventos
+                .filter(e => e.confirmado)
+                .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
+                .join(' • ')}
+            </div>
+          )}
+          {data.eventos.filter(e => !e.confirmado).length > 0 && (
+            <div style={{ opacity: 0.7, marginTop: '4px' }}>
+              Planned: {data.eventos
+                .filter(e => !e.confirmado)
+                .map(e => `${e.label}: ${e.delta_pp.toFixed(1)}pp`)
+                .join(' • ')}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

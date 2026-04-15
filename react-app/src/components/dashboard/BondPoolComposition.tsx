@@ -1,8 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { cn } from "@/lib/utils"
 import { useUiStore } from "@/store/uiStore"
 
 interface BondPoolData {
@@ -24,9 +21,9 @@ interface BondPoolCompositionProps {
 }
 
 const statusColors = {
-  early: "text-green-400",
-  on_track: "text-yellow-400",
-  behind: "text-red-400",
+  early: "var(--green)",
+  on_track: "var(--yellow)",
+  behind: "var(--red)",
 } as const
 
 const statusLabels = {
@@ -42,9 +39,8 @@ export function BondPoolComposition({
 }: BondPoolCompositionProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
-  // Defensive: validate data exists and has required numeric fields
   if (!data || typeof data !== 'object') {
-    return <div className="text-muted-foreground">Bond pool data unavailable</div>;
+    return <div style={{ color: 'var(--muted)' }}>Bond pool data unavailable</div>;
   }
 
   const valor = typeof data.valor_atual_brl === 'number' ? data.valor_atual_brl : 0;
@@ -52,147 +48,129 @@ export function BondPoolComposition({
   const metaAnos = typeof data.meta_anos === 'number' ? data.meta_anos : 1;
   const runway = typeof runwayAnosPosFire === 'number' ? runwayAnosPosFire : 0;
 
-  const progressPercent = (anosGastos / metaAnos) * 100
-  const isHealthy = anosGastos >= metaAnos * 0.7
+  const progressPercent = (anosGastos / metaAnos) * 100;
+  const isHealthy = anosGastos >= metaAnos * 0.7;
 
-  // Calculate composition percentages
-  const totalComposicao = Object.values(data.composicao).reduce(
-    (sum, val) => sum + (val || 0),
-    0
-  )
-  const comp2040Pct = totalComposicao
-    ? ((data.composicao.ipca2040 || 0) / totalComposicao) * 100
-    : 0
-  const comp2050Pct = totalComposicao
-    ? ((data.composicao.ipca2050 || 0) / totalComposicao) * 100
-    : 0
-  const comp2029Pct = totalComposicao
-    ? ((data.composicao.ipca2029 || 0) / totalComposicao) * 100
-    : 0
+  const totalComposicao = Object.values(data.composicao).reduce((sum, val) => sum + (val || 0), 0);
+  const comp2040Pct = totalComposicao ? ((data.composicao.ipca2040 || 0) / totalComposicao) * 100 : 0;
+  const comp2050Pct = totalComposicao ? ((data.composicao.ipca2050 || 0) / totalComposicao) * 100 : 0;
+  const comp2029Pct = totalComposicao ? ((data.composicao.ipca2029 || 0) / totalComposicao) * 100 : 0;
+
+  const cardStyle: React.CSSProperties = {
+    background: 'var(--card)',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
+    padding: '16px',
+    marginBottom: '16px',
+  };
+
+  const progressBar = (value: number, color = 'var(--accent)') => (
+    <div style={{ height: '8px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden' }}>
+      <div style={{ width: `${Math.min(value, 100)}%`, height: '100%', background: color, borderRadius: '4px', transition: 'width 0.3s ease' }} />
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-4">
+        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', marginBottom: '16px' }}>
           Bond Pool Status
         </h3>
 
         {/* Main Status Card */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            {/* Header: Status Badge + Valor */}
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <p className="text-xs text-muted-foreground mb-2">Current Pool</p>
-                <p className="font-mono text-2xl font-bold">
-                  {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}
-                </p>
-              </div>
-              <div className={cn("text-right", statusColors[data.status])}>
-                <p className="text-sm font-semibold">{statusLabels[data.status]}</p>
-                <p className="text-xs font-mono">
-                  {anosGastos.toFixed(1)}/{metaAnos.toFixed(0)} anos
-                </p>
-              </div>
-            </div>
-
-            {/* Progress Towards Meta */}
-            <div className="mb-6">
-              <div className="flex justify-between items-baseline mb-2">
-                <span className="text-xs text-muted-foreground">Progress to Target</span>
-                <span className="font-mono text-sm font-semibold">
-                  {progressPercent.toFixed(0)}%
-                </span>
-              </div>
-              <Progress
-                value={Math.min(progressPercent, 100)}
-                className="h-2"
-              />
-              <p className="text-xs text-muted-foreground mt-2">
-                Target: {metaAnos.toFixed(0)} years of expenses
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
+            <div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>Current Pool</p>
+              <p style={{ fontFamily: 'monospace', fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+                {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}
               </p>
             </div>
-
-            {/* Divider */}
-            <div className="border-t border-border my-4 opacity-30" />
-
-            {/* FIRE Runway */}
-            <div className="mb-6">
-              <p className="text-xs text-muted-foreground mb-2">Post-FIRE Runway</p>
-              <p className="font-mono text-lg font-bold">
-                {runway.toFixed(1)} years
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                of spending coverage available after FIRE date
+            <div style={{ textAlign: 'right', color: statusColors[data.status] }}>
+              <p style={{ fontSize: '0.85rem', fontWeight: 600, margin: '0 0 4px 0' }}>{statusLabels[data.status]}</p>
+              <p style={{ fontSize: '0.75rem', fontFamily: 'monospace', margin: 0 }}>
+                {anosGastos.toFixed(1)}/{metaAnos.toFixed(0)} anos
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Progress to Target</span>
+              <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>
+                {progressPercent.toFixed(0)}%
+              </span>
+            </div>
+            {progressBar(progressPercent)}
+            <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '8px', marginBottom: 0 }}>
+              Target: {metaAnos.toFixed(0)} years of expenses
+            </p>
+          </div>
+
+          <div style={{ borderTop: '1px solid var(--border)', marginBottom: '24px', paddingTop: '16px' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>Post-FIRE Runway</p>
+            <p style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 4px 0' }}>
+              {runway.toFixed(1)} years
+            </p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--muted)', margin: 0 }}>
+              of spending coverage available after FIRE date
+            </p>
+          </div>
+        </div>
 
         {/* Composition Breakdown */}
-        <Card>
-          <CardContent className="pt-6">
-            <h4 className="font-semibold text-sm mb-4">Composição por Vencimento</h4>
+        <div style={cardStyle}>
+          <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>Composição por Vencimento</h4>
 
-            <div className="space-y-3">
-              {/* IPCA+ 2040 */}
-              {data.composicao.ipca2040 !== undefined && data.composicao.ipca2040 > 0 && (
-                <div>
-                  <div className="flex justify-between items-baseline mb-1">
-                    <span className="text-xs text-muted-foreground">IPCA+ 2040</span>
-                    <span className="font-mono text-sm font-semibold">
-                      {comp2040Pct.toFixed(0)}%
-                    </span>
-                  </div>
-                  <Progress value={comp2040Pct} className="h-2" />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {privacyMode ? '••••' : `R$${(data.composicao.ipca2040 / 1000).toFixed(0)}k`}
-                  </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {data.composicao.ipca2040 !== undefined && data.composicao.ipca2040 > 0 && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>IPCA+ 2040</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>{comp2040Pct.toFixed(0)}%</span>
                 </div>
-              )}
+                {progressBar(comp2040Pct)}
+                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
+                  {privacyMode ? '••••' : `R$${(data.composicao.ipca2040 / 1000).toFixed(0)}k`}
+                </p>
+              </div>
+            )}
 
-              {/* IPCA+ 2050 */}
-              {data.composicao.ipca2050 !== undefined && data.composicao.ipca2050 > 0 && (
-                <div>
-                  <div className="flex justify-between items-baseline mb-1">
-                    <span className="text-xs text-muted-foreground">IPCA+ 2050</span>
-                    <span className="font-mono text-sm font-semibold">
-                      {comp2050Pct.toFixed(0)}%
-                    </span>
-                  </div>
-                  <Progress value={comp2050Pct} className="h-2" />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {privacyMode ? '••••' : `R$${(data.composicao.ipca2050 / 1000).toFixed(0)}k`}
-                  </p>
+            {data.composicao.ipca2050 !== undefined && data.composicao.ipca2050 > 0 && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>IPCA+ 2050</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>{comp2050Pct.toFixed(0)}%</span>
                 </div>
-              )}
+                {progressBar(comp2050Pct)}
+                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
+                  {privacyMode ? '••••' : `R$${(data.composicao.ipca2050 / 1000).toFixed(0)}k`}
+                </p>
+              </div>
+            )}
 
-              {/* IPCA+ 2029 */}
-              {data.composicao.ipca2029 !== undefined && data.composicao.ipca2029 > 0 && (
-                <div>
-                  <div className="flex justify-between items-baseline mb-1">
-                    <span className="text-xs text-muted-foreground">IPCA+ 2029</span>
-                    <span className="font-mono text-sm font-semibold">
-                      {comp2029Pct.toFixed(0)}%
-                    </span>
-                  </div>
-                  <Progress value={comp2029Pct} className="h-2" />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {privacyMode ? '••••' : `R$${(data.composicao.ipca2029 / 1000).toFixed(0)}k`}
-                  </p>
+            {data.composicao.ipca2029 !== undefined && data.composicao.ipca2029 > 0 && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>IPCA+ 2029</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>{comp2029Pct.toFixed(0)}%</span>
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                {progressBar(comp2029Pct)}
+                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
+                  {privacyMode ? '••••' : `R$${(data.composicao.ipca2029 / 1000).toFixed(0)}k`}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* Status Note */}
-        <p className="text-xs text-muted-foreground mt-4 leading-relaxed">
+        <p style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
           {isHealthy
-            ? "✓ Bond pool on track. Continue building towards 7-year target for FIRE flexibility."
-            : "⚠ Bond pool below healthy threshold. Prioritize building RF runway."}
+            ? "Bond pool on track. Continue building towards 7-year target for FIRE flexibility."
+            : "Bond pool below healthy threshold. Prioritize building RF runway."}
         </p>
       </div>
     </div>
-  )
+  );
 }
