@@ -62,8 +62,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
   // Total equity USD
   let totalEquityUsd = 0;
-  Object.values(data.posicoes).forEach(p => {
-    totalEquityUsd += p.qty * p.price;
+  Object.values(data.posicoes || {}).forEach(p => {
+    if (p && typeof p.qty === 'number' && typeof p.price === 'number') {
+      totalEquityUsd += p.qty * p.price;
+    }
   });
 
   // Total BRL = equity + RF + crypto
@@ -85,8 +87,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
   // Bucket values USD
   const bucketUsd: Record<string, number> = { SWRD: 0, AVGS: 0, AVEM: 0, JPGL: 0 };
-  Object.entries(data.posicoes).forEach(([k, p]) => {
-    bucketUsd[p.bucket] = (bucketUsd[p.bucket] || 0) + p.qty * p.price;
+  Object.entries(data.posicoes || {}).forEach(([k, p]) => {
+    if (p && p.bucket && typeof p.qty === 'number' && typeof p.price === 'number') {
+      bucketUsd[p.bucket] = (bucketUsd[p.bucket] || 0) + p.qty * p.price;
+    }
   });
 
   // Geo breakdown

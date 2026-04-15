@@ -58,8 +58,13 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
   // Data actions
   setData: (data: DashboardData) => {
-    const derived = computeDerivedValues(data);
-    set({ data, derived });
+    try {
+      const derived = computeDerivedValues(data);
+      set({ data, derived });
+    } catch (e) {
+      console.error('Error computing derived values:', e);
+      set({ data, derived: null });
+    }
   },
 
   updateField: (key: keyof DashboardData, value: any) => {

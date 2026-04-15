@@ -42,18 +42,18 @@ describe('Monte Carlo Simulation', () => {
       });
     });
 
-    it('grows with positive contributions', () => {
+    it('grows with positive contributions on average', () => {
       const params: MCParams = {
         ...defaultParams,
-        numSims: 10,
+        numSims: 100,
       };
       const trajectories = runMCTrajectories(params);
 
-      // Last value should be greater than initial (due to contributions + positive returns)
-      trajectories.forEach(traj => {
-        const endValue = traj[traj.length - 1];
-        expect(endValue).toBeGreaterThan(traj[0]);
-      });
+      // Average should be greater (accounting for volatility may cause some to decline)
+      const avgEndValue = trajectories.reduce((sum, traj) => sum + traj[traj.length - 1], 0) / trajectories.length;
+      const initialCapital = defaultParams.initialCapital;
+      const totalContributions = defaultParams.monthlyContribution * defaultParams.years * 12;
+      expect(avgEndValue).toBeGreaterThan(initialCapital + totalContributions * 0.8);
     });
   });
 

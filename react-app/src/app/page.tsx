@@ -25,13 +25,20 @@ export default function HomePage() {
     const basePath = '/wealth/dash';
     const dataUrl = `${basePath}/data.json`;
 
+    console.log('NOW page: fetching from', dataUrl);
     fetch(dataUrl)
       .then(r => {
+        console.log('NOW page: fetch response', r.status, r.ok);
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
       })
-      .then(data => setData(data))
-      .catch(e => console.error('Failed to load data from', dataUrl, ':', e));
+      .then(data => {
+        console.log('NOW page: data loaded, keys:', Object.keys(data).slice(0, 5));
+        setData(data);
+      })
+      .catch(e => {
+        console.error('NOW page: Failed to load data from', dataUrl, ':', e);
+      });
   }, [setData]);
 
   if (!derived) {
