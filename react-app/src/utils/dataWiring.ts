@@ -6,6 +6,42 @@
 
 import { DashboardData, DerivedValues } from '@/types/dashboard';
 
+/**
+ * Validate that data.json has all required schema fields
+ * @param data - Raw dashboard data
+ * @throws Error if critical fields are missing
+ */
+export function validateDataSchema(data: any): void {
+  if (!data || typeof data !== 'object') {
+    throw new Error('Data must be a non-null object');
+  }
+
+  const requiredFields = ['posicoes', 'rf', 'cambio', 'premissas', 'pfire_base'];
+  const missingFields = requiredFields.filter(field => !(field in data));
+
+  if (missingFields.length > 0) {
+    throw new Error(
+      `Invalid data.json schema: missing required fields [${missingFields.join(', ')}]`
+    );
+  }
+
+  // Validate critical nested structures
+  if (!data.posicoes || typeof data.posicoes !== 'object') {
+    throw new Error('data.posicoes must be an object');
+  }
+  if (!data.rf || typeof data.rf !== 'object') {
+    throw new Error('data.rf must be an object');
+  }
+  if (typeof data.cambio !== 'number') {
+    throw new Error('data.cambio must be a number');
+  }
+  if (!data.premissas || typeof data.premissas !== 'object') {
+    throw new Error('data.premissas must be an object');
+  }
+
+  console.log('✓ Data schema validation passed');
+}
+
 function _ymToDecimal(ym: string): number {
   const [y, m] = ym.split('-').map(Number);
   return y + (m - 1) / 12;

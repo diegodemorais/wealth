@@ -46,33 +46,33 @@ import { FireSimulator } from '@/components/dashboard/FireSimulator';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
-  const setData = useDashboardStore(s => s.setData);
+  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
   const derived = useDashboardStore(s => s.derived);
+  const isLoading = useDashboardStore(s => s.isLoadingData);
+  const dataError = useDashboardStore(s => s.dataLoadError);
 
   useEffect(() => {
-    // Load data dynamically from public path
-    // basePath is configured in next.config.ts and injected via env var
-    const dataUrl = withBasePath('/data.json');
+    // Use singleton pattern to load data once and cache it
+    loadDataOnce().catch(e => {
+      console.error('NOW page: Failed to load data:', e);
+    });
+  }, [loadDataOnce]);
 
-    console.log('NOW page: fetching from', dataUrl);
-    fetch(dataUrl)
-      .then(r => {
-        console.log('NOW page: fetch response', r.status, r.ok);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then(data => {
-        console.log('NOW page: data loaded, keys:', Object.keys(data).slice(0, 5));
-        setData(data);
-      })
-      .catch(e => {
-        console.error('NOW page: Failed to load data from', dataUrl, ':', e);
-      });
-  }, [setData]);
+  if (isLoading) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>⏳ Loading dashboard data...</div>;
+  }
+
+  if (dataError) {
+    return (
+      <div style={{ padding: '20px', color: '#ef4444' }}>
+        <strong>❌ Error loading dashboard:</strong> {dataError}
+      </div>
+    );
+  }
 
   if (!derived) {
-    return <div>Loading dashboard data...</div>;
+    return <div style={{ padding: '20px', color: '#f59e0b' }}>⚠️ Data loaded but derived values not computed</div>;
   }
 
   return (

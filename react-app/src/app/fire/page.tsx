@@ -10,24 +10,29 @@ import { EarliestFireCard } from '@/components/charts/EarliestFireCard';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 
 export default function FirePage() {
-  const setData = useDashboardStore(s => s.setData);
+  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
+  const isLoading = useDashboardStore(s => s.isLoadingData);
+  const dataError = useDashboardStore(s => s.dataLoadError);
 
   useEffect(() => {
-    if (!data) {
-      const dataUrl = withBasePath('/data.json');
-      fetch(dataUrl)
-        .then(r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.json();
-        })
-        .then(d => setData(d))
-        .catch(e => console.error('Failed to load data:', e));
-    }
-  }, [data, setData]);
+    loadDataOnce().catch(e => console.error('Failed to load data:', e));
+  }, [loadDataOnce]);
+
+  if (isLoading) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>⏳ Loading FIRE data...</div>;
+  }
+
+  if (dataError) {
+    return (
+      <div style={{ padding: '20px', color: '#ef4444' }}>
+        <strong>❌ Error loading FIRE:</strong> {dataError}
+      </div>
+    );
+  }
 
   if (!data) {
-    return <div>Loading FIRE data...</div>;
+    return <div style={{ padding: '20px', color: '#f59e0b' }}>⚠️ Data loaded but FIRE section not ready</div>;
   }
 
   return (

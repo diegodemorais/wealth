@@ -9,29 +9,23 @@ import { SuccessRateCard } from '@/components/simulators/SuccessRateCard';
 // import { DrawdownDistribution } from '@/components/simulators/DrawdownDistribution'; // Uses Chart.js - disabled
 
 export default function SimulatorsPage() {
-  const setData = useDashboardStore(s => s.setData);
+  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
+  const isLoading = useDashboardStore(s => s.isLoadingData);
+  const dataError = useDashboardStore(s => s.dataLoadError);
   const runMC = useDashboardStore(s => s.runMC);
 
+  // Load data once
   useEffect(() => {
-    if (!data) {
-      const dataUrl = withBasePath('/data.json');
-      fetch(dataUrl)
-        .then(r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.json();
-        })
-        .then(d => {
-          setData(d);
-          // Run initial simulation with default params
-          runMC();
-        })
-        .catch(e => console.error('Failed to load data:', e));
-    } else {
-      // Run initial simulation if not already done
+    loadDataOnce().catch(e => console.error('Failed to load data:', e));
+  }, [loadDataOnce]);
+
+  // Run MC simulation when data is ready
+  useEffect(() => {
+    if (data && !isLoading && !dataError) {
       runMC();
     }
-  }, [data, setData, runMC]);
+  }, [data, isLoading, dataError, runMC]);
 
   return (
     <div>

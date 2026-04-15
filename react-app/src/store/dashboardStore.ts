@@ -5,17 +5,25 @@
 
 import { create } from 'zustand';
 import { DashboardData, DerivedValues, MCParams, MCResult } from '@/types/dashboard';
-import { computeDerivedValues } from '@/utils/dataWiring';
+import { computeDerivedValues, validateDataSchema } from '@/utils/dataWiring';
 import { runMC } from '@/utils/montecarlo';
+import { withBasePath } from '@/utils/basePath';
+
+// Singleton promise tracking — prevents duplicate in-flight requests
+let loadDataPromise: Promise<DashboardData> | null = null;
+let abortController: AbortController | null = null;
 
 export interface DashboardState {
   // Data
   data: DashboardData | null;
   derived: DerivedValues | null;
+  isLoadingData: boolean;
+  dataLoadError: string | null;
 
   // Actions
   setData: (data: DashboardData) => void;
   updateField: (key: keyof DashboardData, value: any) => void;
+  loadDataOnce: () => Promise<DashboardData>;
 
   // Simulator state (Phase 4)
   stress: {
@@ -47,6 +55,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   // Initial state
   data: null,
   derived: null,
+  isLoadingData: false,
+  dataLoadError: null,
 
   stress: {
     returnShock: 0,
@@ -60,11 +70,78 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   setData: (data: DashboardData) => {
     try {
       const derived = computeDerivedValues(data);
-      set({ data, derived });
+      set({ data, derived, dataLoadError: null });
     } catch (e) {
       console.error('Error computing derived values:', e);
       set({ data, derived: null });
     }
+  },
+
+  // Singleton data loading
+  loadDataOnce: async () => {
+    const state = get();
+
+    // If data already loaded, return it
+    if (state.data) {
+      console.log('Dashboard: data already cached, returning from store');
+      return state.data;
+    }
+
+    // If request already in-flight, wait for it
+    if (loadDataPromise) {
+      console.log('Dashboard: request in-flight, waiting for existing promise');
+      return loadDataPromise;
+    }
+
+    // New request — set loading state
+    set({ isLoadingData: true, dataLoadError: null });
+
+    // Create new AbortController for this request
+    abortController = new AbortController();
+
+    // Fetch data once
+    loadDataPromise = (async () => {
+      try {
+        const dataUrl = withBasePath('/data.json');
+        console.log('Dashboard: fetching data from', dataUrl);
+
+        const response = await fetch(dataUrl, {
+          signal: abortController!.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} from ${dataUrl}`);
+        }
+
+        const data = await response.json();
+
+        // Validate schema before storing
+        validateDataSchema(data);
+
+        // Store data in Zustand
+        set({ data, isLoadingData: false, dataLoadError: null });
+        const derived = computeDerivedValues(data);
+        set({ derived });
+
+        console.log('Dashboard: data loaded successfully, cached in store');
+        return data;
+      } catch (error) {
+        // If aborted, don't set error state
+        if (error instanceof Error && error.name === 'AbortError') {
+          console.log('Dashboard: data load aborted');
+          loadDataPromise = null;
+          throw error;
+        }
+
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        console.error('Dashboard: failed to load data:', errorMsg);
+        set({ isLoadingData: false, dataLoadError: errorMsg });
+        loadDataPromise = null;
+        throw error;
+      }
+    })();
+
+    return loadDataPromise;
   },
 
   updateField: (key: keyof DashboardData, value: any) => {

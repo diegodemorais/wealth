@@ -12,24 +12,29 @@ import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 
 export default function WithdrawPage() {
-  const setData = useDashboardStore(s => s.setData);
+  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
+  const isLoading = useDashboardStore(s => s.isLoadingData);
+  const dataError = useDashboardStore(s => s.dataLoadError);
 
   useEffect(() => {
-    if (!data) {
-      const dataUrl = withBasePath('/data.json');
-      fetch(dataUrl)
-        .then(r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.json();
-        })
-        .then(d => setData(d))
-        .catch(e => console.error('Failed to load data:', e));
-    }
-  }, [data, setData]);
+    loadDataOnce().catch(e => console.error('Failed to load data:', e));
+  }, [loadDataOnce]);
+
+  if (isLoading) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>⏳ Loading withdrawal data...</div>;
+  }
+
+  if (dataError) {
+    return (
+      <div style={{ padding: '20px', color: '#ef4444' }}>
+        <strong>❌ Error loading withdrawal:</strong> {dataError}
+      </div>
+    );
+  }
 
   if (!data) {
-    return <div>Loading withdrawal data...</div>;
+    return <div style={{ padding: '20px', color: '#f59e0b' }}>⚠️ Data loaded but withdrawal section not ready</div>;
   }
 
   return (
