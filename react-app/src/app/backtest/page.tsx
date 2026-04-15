@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { withBasePath } from '@/utils/basePath';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { HistoricalReturnsTable } from '@/components/backtest/HistoricalReturnsTable';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
 
@@ -36,6 +37,8 @@ export default function BacktestPage() {
   return (
     <div>
       <h1>📊 Backtest</h1>
+
+      <HistoricalReturnsTable />
 
       <CollapsibleSection id="section-r7" title="Portfolio vs R7 Benchmark" defaultOpen={true}>
         <BacktestR7Chart data={data} />

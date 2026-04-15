@@ -1,21 +1,21 @@
 {
-  "_generated": "2026-04-14T23:01:02",
-  "_generated_brt": "2026-04-14T23:01:02-03:00",
-  "date": "2026-04-14",
+  "_generated": "2026-04-15T11:48:29",
+  "_generated_brt": "2026-04-15T11:48:29-03:00",
+  "date": "2026-04-15",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
-    "precos_yfinance": "2026-04-14",
+    "precos_yfinance": "2026-04-15",
     "historico_csv": "2026-04-28",
     "holdings_md": "2026-04-10",
-    "fire_mc": "2026-04-14",
-    "geral": "2026-04-14"
+    "fire_mc": "2026-04-15",
+    "geral": "2026-04-15"
   },
-  "cambio": 4.9837,
+  "cambio": 4.9932,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 48.285,
+      "price": 49.395,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -23,7 +23,7 @@
     "AVGS": {
       "qty": 233.43,
       "avg_cost": 24.93,
-      "price": 26.805,
+      "price": 26.99,
       "bucket": "AVGS",
       "status": "alvo",
       "ter": 0.25
@@ -31,7 +31,7 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 115.46,
+      "price": 115.28,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -39,7 +39,7 @@
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 107.15,
+      "price": 106.51,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -47,7 +47,7 @@
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 84.495,
+      "price": 85.3,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -55,7 +55,7 @@
     "EIMI": {
       "qty": 2020.29,
       "avg_cost": 31.33,
-      "price": 49.45,
+      "price": 50.84,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -63,7 +63,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 64.61,
+      "price": 64.37,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -71,7 +71,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 64.25,
+      "price": 63.77,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -79,7 +79,7 @@
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 65.91,
+      "price": 66.92,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3589111,
+    "patrimonio_atual": 3635524,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1157,7 +1157,7 @@
       231.31,
       239.2,
       222.65,
-      236.41
+      239.54
     ],
     "shadowA": [
       96.75,
@@ -1240,22 +1240,22 @@
       219.2,
       222.31,
       205.09,
-      218.12
+      222.46
     ],
     "metrics": {
       "target": {
-        "cagr": 13.59,
-        "sharpe": 0.56,
-        "sortino": 0.76,
+        "cagr": 13.82,
+        "sharpe": 0.57,
+        "sortino": 0.78,
         "maxdd": -27.23,
-        "vol": 16.9
+        "vol": 16.97
       },
       "shadowA": {
-        "cagr": 12.25,
-        "sharpe": 0.53,
-        "sortino": 0.8,
+        "cagr": 12.58,
+        "sharpe": 0.54,
+        "sortino": 0.83,
         "maxdd": -24.29,
-        "vol": 15.05
+        "vol": 15.19
       }
     },
     "nota_proxy": "⚠️ 2019-08–2026-04: 2 proxies UCITS ativos (AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos."
@@ -1522,7 +1522,7 @@
     "target": [
       97.68,
       101.29,
-      98.12,
+      98.11,
       95.51,
       99.7,
       101.62,
@@ -1775,7 +1775,7 @@
       689.73,
       701.37,
       660.44,
-      697.72
+      705.34
     ],
     "shadowA": [
       98.02,
@@ -1949,7 +1949,7 @@
       259.75,
       266.45,
       270.68,
-      280.34,
+      280.33,
       263.28,
       280.69,
       281.35,
@@ -2033,22 +2033,22 @@
       646.9,
       654.74,
       614.61,
-      650.45
+      658.01
     ],
     "metrics": {
       "target": {
-        "cagr": 9.53,
+        "cagr": 9.59,
         "sharpe": 0.35,
-        "sortino": 0.45,
+        "sortino": 0.46,
         "maxdd": -53.3,
-        "vol": 16.19
+        "vol": 16.2
       },
       "shadowA": {
-        "cagr": 9.17,
+        "cagr": 9.23,
         "sharpe": 0.34,
         "sortino": 0.45,
         "maxdd": -53.39,
-        "vol": 15.12
+        "vol": 15.14
       }
     },
     "note": "IVV ⚠️ proxy de SWRD.L (S&P 500 ≠ MSCI World — sem DM ex-US no Target); VBR ⚠️ proxy de AVGS.L (Vanguard SC Value US — sem Intl SC value); EEM ⚠️ proxy de AVEM.L (MSCI EM broad, sem SC/Value tilt); Shadow A = IVV 65% + EFA 25% + EEM 10% (aproxima MSCI ACWI)"
@@ -2288,16 +2288,16 @@
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 62.52,
-    "valor": 104783.52,
+    "preco": 62.67,
+    "valor": 105034.92,
     "preco_medio": 79.03,
-    "pnl_brl": -27670.76,
-    "pnl_pct": -20.89,
+    "pnl_brl": -27419.36,
+    "pnl_pct": -20.7,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.92,
+      "atual_pct": 2.89,
       "status": "verde"
     }
   },
@@ -2308,9 +2308,9 @@
       "taxa_atual": 7.07,
       "piso": 6.0,
       "gap_pp": 1.07,
-      "pct_carteira_atual": 3.5,
+      "pct_carteira_atual": 3.4,
       "alvo_pct": 15.0,
-      "gap_alvo_pp": 11.5
+      "gap_alvo_pp": 11.6
     },
     "ipca2040": {
       "instrumento": "TD IPCA+ 2040",
@@ -2341,10 +2341,10 @@
       "piso_compra": 6.5,
       "piso_venda": 6.0,
       "gap_pp": 0.3,
-      "pct_carteira_atual": 3.3,
+      "pct_carteira_atual": 3.2,
       "alvo_pct": 3.0,
-      "gap_alvo_pp": 0.3,
-      "proxima_acao": "DCA pausado: posicao 3.3% >= alvo 3.0%. Manter sem novos aportes"
+      "gap_alvo_pp": 0.2,
+      "proxima_acao": "DCA pausado: posicao 3.2% >= alvo 3.0%. Manter sem novos aportes"
     }
   },
   "semaforo_triggers": [
@@ -2366,39 +2366,39 @@
       "label": "Equity SWRD — Drift",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -4.0,
+      "valor": -3.6,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -2.0,
-      "posicao_r": 1274134,
+      "gap": -1.6,
+      "posicao_r": 1305153,
       "acao": "Rebalancear",
-      "detalhe": "drift: -4.00pp (atual 35.5% vs alvo 39.5%) · posição R$1274k"
+      "detalhe": "drift: -3.60pp (atual 35.9% vs alvo 39.5%) · posição R$1305k"
     },
     {
       "id": "hodl11_banda",
       "label": "Crypto HODL11 — Banda",
       "category": "crypto",
       "status": "verde",
-      "valor": -0.08,
+      "valor": -0.11,
       "unidade": "pp",
       "piso": 0.0,
-      "gap": 0.08,
-      "posicao_r": 104784.0,
+      "gap": 0.11,
+      "posicao_r": 105035.0,
       "acao": "No alvo",
-      "detalhe": "drift: -0.08pp (atual 2.9% vs alvo 3.0%) · posição R$105k"
+      "detalhe": "drift: -0.11pp (atual 2.9% vs alvo 3.0%) · posição R$105k"
     },
     {
       "id": "drift_ipca_max",
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.526276562636262,
+      "valor": -11.570623932065914,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -9.53,
+      "gap": -9.57,
       "posicao_r": 124676.0,
       "acao": "Aportar urgente",
-      "detalhe": "drift: -11.53pp vs alvo 15% · posição R$125k"
+      "detalhe": "drift: -11.57pp vs alvo 15% · posição R$125k"
     }
   ],
   "guardrails_retirada": [
@@ -2470,11 +2470,11 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 35.5,
+      "atual": 35.9,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 28.1,
+      "atual": 27.8,
       "alvo": 23.7
     },
     "AVEM": {
@@ -2482,7 +2482,7 @@
       "alvo": 15.8
     },
     "IPCA": {
-      "atual": 5.9,
+      "atual": 5.8,
       "alvo": 15.0
     },
     "HODL11": {
@@ -2496,7 +2496,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 115.46,
+      "price": 115.28,
       "ucits": "AVGS.L"
     },
     {
@@ -2504,7 +2504,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 107.15,
+      "price": 106.51,
       "ucits": "AVGS.L"
     },
     {
@@ -2512,7 +2512,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 84.495,
+      "price": 85.3,
       "ucits": "AVGS.L"
     },
     {
@@ -2520,7 +2520,7 @@
       "nome": "iShares EM IMI",
       "qty": 2020.29,
       "pm": 31.33,
-      "price": 49.45,
+      "price": 50.84,
       "ucits": "AVEM.L"
     },
     {
@@ -2528,7 +2528,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 64.61,
+      "price": 64.37,
       "ucits": "AVEM.L"
     },
     {
@@ -2536,7 +2536,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 64.25,
+      "price": 63.77,
       "ucits": "AVEM.L"
     },
     {
@@ -2544,7 +2544,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 65.91,
+      "price": 66.92,
       "ucits": "JPGL.L"
     }
   ],
@@ -2884,13 +2884,13 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 632312,
-    "retorno_usd": 241268,
-    "pct_aportes": 61.8,
-    "pct_retorno": 38.2,
+    "patrimonio_equity_usd": 640354,
+    "retorno_usd": 249310,
+    "pct_aportes": 61.1,
+    "pct_retorno": 38.9,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
-    "updated": "2026-04-14"
+    "updated": "2026-04-15"
   },
   "shadows": {
     "q1_2026": {
@@ -2913,8 +2913,8 @@
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 87.4,
-    "bitcoin_usd": 74677.51,
+    "exposicao_cambial_pct": 86.3,
+    "bitcoin_usd": 74034.03,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -2928,18 +2928,18 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 4.9837
+    "cambio": 4.9932
   },
   "mercado": {
-    "cambio_brl_usd": 4.9837,
-    "btc_usd": 74677.51,
-    "cambio_mtd_pct": -3.34,
-    "btc_mtd_pct": 3.9,
+    "cambio_brl_usd": 4.9932,
+    "btc_usd": 74034.03,
+    "cambio_mtd_pct": -3.16,
+    "btc_mtd_pct": 3.0,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
     "fonte": "yfinance BTC-USD + PTAX BCB",
-    "updated": "2026-04-14"
+    "updated": "2026-04-15"
   },
   "minilog": [
     {
@@ -3413,9 +3413,9 @@
     "ptax_atual": 5.156
   },
   "concentracao_brasil": {
-    "brasil_pct": 12.2,
+    "brasil_pct": 12.1,
     "composicao": {
-      "hodl11_brl": 104784,
+      "hodl11_brl": 105035,
       "rf_total_brl": 329063,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -3425,8 +3425,8 @@
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 437858,
-    "total_portfolio_brl": 3589111,
+    "total_brasil_brl": 438110,
+    "total_portfolio_brl": 3635524,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3436,29 +3436,29 @@
       "twr_nominal_brl_cagr_pct": 12.9,
       "ipca_cagr_periodo_pct": 5.9,
       "periodo_anos": 5.0,
-      "backtest_nominal_usd_pct": 13.59,
-      "benchmark_vwra_nominal_usd_pct": 12.25,
+      "backtest_nominal_usd_pct": 13.82,
+      "benchmark_vwra_nominal_usd_pct": 12.58,
       "nota": "Premissa = retorno real em BRL (pós-IPCA, pós-depreciação cambial 0.5%/ano). Realizado = TWR anualizado BRL deflacionado pelo IPCA do período (comparação correta). Backtest USD = nominal em USD (inclui inflação US ~2-3%/ano, referência apenas)."
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72617,
-      "delta_brl": 47617,
-      "delta_pct": 190.5,
+      "realizado_media_brl": 72679,
+      "delta_brl": 47679,
+      "delta_pct": 190.7,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1948843,
+      "total_ibkr_brl": 1952558,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4357002,
-      "cambio_conversao": 4.9837,
+      "total_aporte_brl": 4360717,
+      "cambio_conversao": 4.9932,
       "por_ano_brl": {
-        "2026": 94690,
-        "2025": 281442,
-        "2024": 371145,
-        "2023": 392254,
-        "2022": 480396,
-        "2021": 328916
+        "2026": 94871,
+        "2025": 281979,
+        "2024": 371852,
+        "2023": 393002,
+        "2022": 481312,
+        "2021": 329543
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
