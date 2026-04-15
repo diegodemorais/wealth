@@ -120,11 +120,10 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
           </div>
           <div className="h-2 bg-slate-700/15 rounded overflow-hidden">
             <div
+              className="h-full transition-all duration-500"
               style={{
-                height: '100%',
                 width: `${Math.min(100, pfireBase)}%`,
                 backgroundColor: getBadgeColor(pfireBase),
-                transition: 'width 0.5s',
               }}
             />
           </div>
