@@ -17,6 +17,7 @@ import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition'
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import { WellnessActionsBox } from '@/components/dashboard/WellnessActionsBox';
 import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable';
+import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -61,6 +62,12 @@ export default function HomePage() {
         yearsToFire={derived.fireMonthsAway / 12}
         pfire={derived.pfire}
         cambio={derived.CAMBIO}
+      />
+
+      {/* Time to FIRE Progress Bar */}
+      <TimeToFireProgressBar
+        fireProgress={derived.firePercentage}
+        yearsToFire={derived.fireMonthsAway / 12}
       />
 
       {/* Wellness Status */}
