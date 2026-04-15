@@ -120,50 +120,8 @@ TAB_MAPPING = {
 }
 
 # Known visual divergences (gap catalog)
-KNOWN_GAPS = {
-    "semaforos-missing": {
-        "severity": CRITICAL,
-        "tab": "01-now-tab.png",
-        "description": "Semáforos (traffic light indicators) not rendering",
-        "impact": "User cannot see P(FIRE) risk status",
-        "fix": "Check Semaforo.tsx component visibility condition",
-    },
-    "kpi-borders-missing": {
-        "severity": MEDIUM,
-        "tab": "01-now-tab.png",
-        "description": "KPI cards missing left border (blue, 4px)",
-        "impact": "Visual distinction lost, cards look plain",
-        "fix": "Add .kpi-card { border-left: 4px solid var(--accent) }",
-    },
-    "tab-active-indicator": {
-        "severity": MEDIUM,
-        "tab": "All",
-        "description": "Tab nav missing border-bottom for active state",
-        "impact": "Cannot visually identify current tab",
-        "fix": "Add .tab-btn.active { border-bottom: 2px solid var(--accent) }",
-    },
-    "portfolio-badge-colors": {
-        "severity": MEDIUM,
-        "tab": "02-portfolio-tab.png",
-        "description": "Portfolio table missing status badge colors (ok/warn/critical)",
-        "impact": "Less scannable, requires reading numbers",
-        "fix": "Add badge classes: .badge-ok, .badge-warn, .badge-critical",
-    },
-    "chart-resize-on-collapse": {
-        "severity": MEDIUM,
-        "tab": "All with charts",
-        "description": "ECharts not resizing after collapse/expand animation",
-        "impact": "Charts distort or clip after section expand",
-        "fix": "Dispatch resize event after collapse animation (300ms timeout)",
-    },
-    "row-alternating-colors": {
-        "severity": LOW,
-        "tab": "02-portfolio-tab.png",
-        "description": "Table rows missing alternating background colors (odd/even)",
-        "impact": "Harder to scan rows visually",
-        "fix": "Add .table-row:nth-child(odd) { bg-opacity-50 }",
-    },
-}
+# NOTE: Gaps are removed as they are fixed in the React implementation
+KNOWN_GAPS = {}
 
 
 def capture_screenshots():
