@@ -13,6 +13,7 @@ import { BacktestChart } from '@/components/charts/BacktestChart';
 import { ShadowChart } from '@/components/charts/ShadowChart';
 import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable';
 import { PremisesTable } from '@/components/performance/PremisesTable';
+import { NetWorthTable } from '@/components/performance/NetWorthTable';
 
 export default function PerformancePage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -45,6 +46,8 @@ export default function PerformancePage() {
       <h1>📈 Performance</h1>
 
       <PremisesTable />
+
+      <NetWorthTable />
 
       <CollapsibleSection id="section-history" title="Historical Performance" defaultOpen={true}>
         <TimelineChart data={data} />
