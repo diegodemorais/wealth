@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface WellnessAction {
   rank: number;
@@ -56,129 +57,94 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
   const displayedAcoes = topAcoes.slice(0, 5);
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Financial Wellness & Ações Prioritárias
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Financial Wellness & Ações Prioritárias
+        </CardTitle>
+      </CardHeader>
 
-      {/* Wellness Score Display */}
-      <div style={{ textAlign: 'center', marginBottom: '16px', padding: '12px', backgroundColor: 'rgba(6, 182, 212, 0.08)', borderRadius: '6px' }}>
-        <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '6px', textTransform: 'uppercase' }}>
-          Wellness Score
-        </div>
-        <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#06b6d4', marginBottom: '6px' }}>
-          {privacyMode ? '••' : Math.round(wellnessScore)}
-        </div>
-        <div style={{ fontSize: '0.8rem', color: '#cbd5e1', fontWeight: 500 }}>
-          {wellnessLabel}
+      <CardContent className="space-y-4">
+        {/* Wellness Score Display */}
+        <div className="text-center p-3 bg-cyan-500/10 rounded">
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+            Wellness Score
+          </div>
+          <div className="text-4xl font-black text-cyan-500 mb-1">
+            {privacyMode ? '••' : Math.round(wellnessScore)}
+          </div>
+          <div className="text-xs text-slate-200 font-medium mb-3">
+            {wellnessLabel}
+          </div>
+
+          {/* Wellness Bar */}
+          <div className="h-1 bg-slate-700/15 rounded overflow-hidden">
+            <div
+              className="h-full transition-all duration-500"
+              style={{
+                width: `${Math.min(100, wellnessScore)}%`,
+                backgroundColor: wellnessScore >= 80 ? '#22c55e' : wellnessScore >= 60 ? '#eab308' : '#ef4444',
+              }}
+            />
+          </div>
         </div>
 
-        {/* Wellness Bar */}
-        <div
-          style={{
-            marginTop: '10px',
-            height: '6px',
-            backgroundColor: 'rgba(71, 85, 105, 0.15)',
-            borderRadius: '3px',
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              height: '100%',
-              width: `${Math.min(100, wellnessScore)}%`,
-              backgroundColor: wellnessScore >= 80 ? '#22c55e' : wellnessScore >= 60 ? '#eab308' : '#ef4444',
-              transition: 'width 0.5s',
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div style={{ borderTop: '1px solid rgba(71, 85, 105, 0.15)', margin: '14px 0' }} />
+        {/* Divider */}
+        <div className="border-t border-slate-700/15" />
 
       {/* Actions Section */}
       <div>
         <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            cursor: 'pointer',
-            marginBottom: '12px',
-          }}
+          className="flex justify-between items-center cursor-pointer mb-3"
           onClick={() => setExpandActions(!expandActions)}
         >
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 600, margin: 0, color: '#cbd5e1' }}>
+          <h3 className="text-sm font-semibold text-slate-200">
             Top 5 Ações ({displayedAcoes.length})
           </h3>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+          <span className="text-xs text-slate-400">
             {expandActions ? '▼' : '▶'}
           </span>
         </div>
 
         {(expandActions || displayedAcoes.length <= 3) && displayedAcoes.length > 0 && (
-          <div style={{ marginTop: '12px' }}>
+          <div className="mt-3">
             {displayedAcoes.map((acao, idx) => (
               <div
                 key={idx}
+                className="flex gap-3 mb-3 p-3 rounded-sm"
                 style={{
                   borderLeft: `4px solid ${getPriorityColor(acao.priority)}`,
                   backgroundColor: getPriorityBg(acao.priority),
-                  padding: '10px 12px',
-                  marginBottom: '10px',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  gap: '12px',
                 }}
               >
                 {/* Rank badge */}
                 <div
+                  className="flex items-center justify-center rounded-full flex-shrink-0"
                   style={{
                     minWidth: '32px',
                     height: '32px',
                     backgroundColor: getPriorityColor(acao.priority),
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
                   }}
                 >
-                  <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'white' }}>
+                  <span className="text-xs font-black text-white">
                     {acao.rank}
                   </span>
                 </div>
 
                 {/* Content */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '4px' }}>
+                <div className="flex-1">
+                  <div className="text-xs font-semibold text-slate-200 mb-1">
                     {acao.metric}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '6px' }}>
+                  <div className="text-xs text-slate-400 mb-2">
                     {acao.action}
                   </div>
-                  <div
-                    style={{
-                      fontSize: '0.7rem',
-                      color: '#64748b',
-                      display: 'flex',
-                      gap: '12px',
-                    }}
-                  >
+                  <div className="flex gap-3 text-xs text-slate-500">
                     <span>
-                      Atual: <span style={{ fontWeight: 600, color: '#cbd5e1' }}>{acao.current_pts}pts</span>
+                      Atual: <span className="font-semibold text-slate-200">{acao.current_pts}pts</span>
                     </span>
                     <span>
-                      Potencial: <span style={{ fontWeight: 600, color: getPriorityColor(acao.priority) }}>{acao.potential_pts}pts</span>
+                      Potencial: <span className="font-semibold" style={{ color: getPriorityColor(acao.priority) }}>{acao.potential_pts}pts</span>
                     </span>
                   </div>
                 </div>
@@ -188,12 +154,13 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
         )}
 
         {displayedAcoes.length === 0 && (
-          <div style={{ fontSize: '0.75rem', color: '#64748b', padding: '8px', textAlign: 'center' }}>
+          <div className="text-xs text-slate-500 p-2 text-center">
             Nenhuma ação prioritária identificada
           </div>
         )}
       </div>
-    </div>
+    </CardContent>
+    </Card>
   );
 };
 
