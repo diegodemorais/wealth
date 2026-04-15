@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
+import { createBoundedLineChartOption } from '@/utils/chartSetup';
 
 export interface IncomeProjectionChartProps {
   data: DashboardData;
@@ -17,100 +18,22 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
   const option = useMemo(() => {
     const years = 30;
     const xAxisData = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
-
-    // Salary phase-out, dividend/bond growth
     const salaryIncomeData = Array.from({ length: years }, (_, i) => {
-      if (i < 15) return 120000 * Math.pow(1.025, i); // Growth phase
-      return 120000 * Math.pow(1.025, 15) * Math.pow(0.95, i - 15); // Retirement: 95% decline per year
+      if (i < 15) return 120000 * Math.pow(1.025, i);
+      return 120000 * Math.pow(1.025, 15) * Math.pow(0.95, i - 15);
     });
-
-    const portfolioIncomeData = Array.from({ length: years }, (_, i) => {
-      return (35000 + 18000 + 24000) * Math.pow(1.04, i); // 4% annual growth
-    });
-
+    const portfolioIncomeData = Array.from({ length: years }, (_, i) =>
+      (35000 + 18000 + 24000) * Math.pow(1.04, i)
+    );
     const totalIncomeData = salaryIncomeData.map((s, i) => s + portfolioIncomeData[i]);
-
-    // Upper bound (optimistic: +20%)
     const upperBoundData = totalIncomeData.map(x => x * 1.2);
-    // Lower bound (conservative: -20%)
     const lowerBoundData = totalIncomeData.map(x => x * 0.8);
 
-    return {
-      color: ['#10b981', '#3b82f6', '#ef4444'],
-      tooltip: {
-        trigger: 'axis',
-        backgroundColor: theme.tooltip.backgroundColor,
-        borderColor: theme.tooltip.borderColor,
-        textStyle: theme.tooltip.textStyle,
-        formatter: (params: any) => {
-          if (!Array.isArray(params)) return '';
-          let result = params[0].axisValueLabel + '<br/>';
-          params.forEach((p: any) => {
-            result += `${p.marker} ${p.seriesName}: R$ ${(p.value / 1e3).toFixed(0)}K<br/>`;
-          });
-          return result;
-        },
-      },
-      legend: {
-        display: !privacyMode,
-        textStyle: { color: theme.textStyle.color },
-        top: 10,
-      },
-      grid: {
-        left: 60,
-        right: 20,
-        top: 40,
-        bottom: 40,
-        containLabel: true,
-      },
-      xAxis: {
-        type: 'category',
-        data: xAxisData,
-        axisLine: { lineStyle: { color: '#374151' } },
-        axisLabel: {
-          color: privacyMode ? 'transparent' : '#9ca3af',
-          fontSize: 12,
-          interval: 4, // Show every 5 years
-        },
-      },
-      yAxis: {
-        type: 'value',
-        axisLabel: {
-          color: privacyMode ? 'transparent' : '#9ca3af',
-          formatter: (value: number) => `R$ ${(value / 1e3).toFixed(0)}K`,
-          fontSize: 12,
-        },
-        splitLine: { lineStyle: { color: '#2d3748' } },
-      },
-      series: [
-        {
-          name: 'Upper Projection (+20%)',
-          type: 'line',
-          data: upperBoundData,
-          smooth: true,
-          lineStyle: { width: 1, type: 'dashed' },
-          symbolSize: 0,
-        },
-        {
-          name: 'Total Income Projection',
-          type: 'line',
-          data: totalIncomeData,
-          smooth: true,
-          fill: true,
-          areaStyle: { opacity: 0.2 },
-          lineStyle: { width: 3 },
-          symbolSize: 0,
-        },
-        {
-          name: 'Lower Projection (-20%)',
-          type: 'line',
-          data: lowerBoundData,
-          smooth: true,
-          lineStyle: { width: 1, type: 'dashed' },
-          symbolSize: 0,
-        },
-      ],
-    };
+    return createBoundedLineChartOption({
+      data, privacyMode, theme, xAxisData, upperData: upperBoundData, targetData: totalIncomeData,
+      lowerData: lowerBoundData, upperLabel: 'Upper Projection (+20%)', targetLabel: 'Total Income Projection',
+      lowerLabel: 'Lower Projection (-20%)', yAxisFormatter: (v) => `R$ ${(v / 1e3).toFixed(0)}K`,
+    });
   }, [privacyMode, theme]);
 
   return (
