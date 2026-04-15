@@ -14,6 +14,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
+import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -250,6 +251,16 @@ export default function HomePage() {
           ultimoAporteData={derived.ultimoAporteData}
           acumuladoMes={derived.acumuladoMes}
           acumuladoAno={derived.acumuladoAno}
+        />
+      )}
+
+      {/* Tier-1: P(FIRE) Monte Carlo + Tornado */}
+      {derived && (
+        <PFireMonteCarloTornado
+          pfireBase={derived.pfireBase}
+          pfireFav={derived.pfireFav}
+          pfireStress={derived.pfireStress}
+          tornadoData={derived.tornadoData}
         />
       )}
 

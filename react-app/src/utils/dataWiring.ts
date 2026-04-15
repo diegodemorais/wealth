@@ -349,6 +349,12 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     acumuladoMes,
     acumuladoAno,
 
+    // P(FIRE) scenarios and tornado
+    pfireBase: (data.pfire_base?.base ?? 90.4),
+    pfireFav: (data.pfire_base?.fav ?? 94.1),
+    pfireStress: (data.pfire_base?.stress ?? 86.8),
+    tornadoData: data.tornado ?? [],
+
     // Allocation
     equityPercentage: totalEquityUsd * CAMBIO / totalBrl,
     rfPercentage: rfBrl / totalBrl,
