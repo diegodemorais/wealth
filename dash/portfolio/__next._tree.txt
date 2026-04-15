@@ -1,2 +1,2 @@
 :HL["/wealth/_next/static/chunks/0sglheun982jt.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"portfolio","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"Q0nbtw83oWq5J7s6jZD0U"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"portfolio","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"o_jFgqksvRqqXzqdzvM5X"}
