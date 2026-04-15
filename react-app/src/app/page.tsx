@@ -21,8 +21,9 @@ export default function HomePage() {
 
   useEffect(() => {
     // Load data dynamically from public path
-    // Use relative path so it works with any basePath configuration
-    const dataUrl = '/data.json';
+    // Use basePath + filename for GitHub Pages deployment
+    const basePath = '/wealth/dash';
+    const dataUrl = `${basePath}/data.json`;
 
     fetch(dataUrl)
       .then(r => {

@@ -17,7 +17,9 @@ export default function PortfolioPage() {
 
   useEffect(() => {
     if (!data) {
-      fetch('/data.json')
+      const basePath = '/wealth/dash';
+      const dataUrl = `${basePath}/data.json`;
+      fetch(dataUrl)
         .then(r => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
           return r.json();

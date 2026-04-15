@@ -14,8 +14,13 @@ export default function WithdrawPage() {
 
   useEffect(() => {
     if (!data) {
-      fetch('/wealth/dash/data.json')
-        .then(r => r.json())
+      const basePath = '/wealth/dash';
+      const dataUrl = `${basePath}/data.json`;
+      fetch(dataUrl)
+        .then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
         .then(d => setData(d))
         .catch(e => console.error('Failed to load data:', e));
     }
