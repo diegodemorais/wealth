@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface EtfPosition {
   qty: number;
@@ -75,15 +75,17 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
   const totalPLPct = totals.totalCost > 0 ? totalPL / totals.totalCost : 0;
 
   return (
-    <div className="space-y-4">
-      {/* Title */}
-      <h3 className="text-sm font-semibold text-slate-200">
-        ETF Positions — IBKR Holdings
-      </h3>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          ETF Positions — IBKR Holdings
+        </CardTitle>
+      </CardHeader>
 
-      {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-slate-700/25">
-        <table className="w-full border-collapse text-xs bg-slate-900/50">
+      <CardContent>
+        {/* Table */}
+        <div className="overflow-x-auto rounded-lg border border-slate-700/25">
+          <table className="w-full border-collapse text-xs bg-slate-900/50">
           <thead>
             <tr className="border-b-2 border-slate-700/30">
               <th className="px-3 py-2 text-left font-semibold text-slate-400 bg-slate-900/40 uppercase">
@@ -103,88 +105,37 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
             {positions.map((pos, idx) => {
               const pl = pos.currentValue - pos.totalCost;
               const plPct = pos.totalCost > 0 ? pl / pos.totalCost : 0;
+              const bgClass = idx % 2 === 0 ? '' : 'bg-slate-700/10';
               return (
-                <tr key={pos.etf} style={{
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                }}>
-                  <td style={{
-                    padding: '10px 12px',
-                    fontWeight: 500,
-                    color: '#cbd5e1',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                <tr key={pos.etf} className={`border-b border-slate-700/15 ${bgClass}`}>
+                  <td className="px-3 py-2 font-medium text-slate-200">
                     {pos.etf}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'right',
-                    color: '#cbd5e1',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                  <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
                     {privacyMode ? '••••' : pos.qty.toFixed(2)}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'right',
-                    color: '#cbd5e1',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                  <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
                     {privacyMode ? '••' : `R$ ${pos.avg_cost.toFixed(2)}`}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'right',
-                    color: '#cbd5e1',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                  <td className="px-2 py-2 text-right text-slate-200 tabular-nums">
                     {privacyMode ? '••' : `R$ ${pos.price.toFixed(2)}`}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'right',
-                    color: '#cbd5e1',
-                    fontWeight: 500,
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                  <td className="px-2 py-2 text-right font-medium text-slate-200 tabular-nums">
                     {privacyMode ? '••••' : fmtBrl(pos.currentValue)}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'right',
-                    color: pl >= 0 ? '#22c55e' : '#ef4444',
-                    fontWeight: 500,
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                  <td className="px-2 py-2 text-right font-medium tabular-nums" style={{ color: pl >= 0 ? '#22c55e' : '#ef4444' }}>
                     {privacyMode ? '••••' : `${pl >= 0 ? '+' : ''}${fmtBrl(pl)}`}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'right',
-                    color: plPct >= 0 ? '#22c55e' : '#ef4444',
-                    fontWeight: 600,
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
+                  <td className="px-2 py-2 text-right font-semibold tabular-nums" style={{ color: plPct >= 0 ? '#22c55e' : '#ef4444' }}>
                     {privacyMode ? '••' : `${plPct >= 0 ? '+' : ''}${(plPct * 100).toFixed(1)}%`}
                   </td>
-                  <td style={{
-                    padding: '8px 6px',
-                    textAlign: 'center',
-                    backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(30, 41, 59, 0.2)',
-                  }}>
-                    <div style={{
-                      display: 'inline-block',
-                      paddingLeft: '6px',
-                      paddingRight: '6px',
-                      paddingTop: '3px',
-                      paddingBottom: '3px',
+                  <td className="px-2 py-2 text-center">
+                    <span className="inline-block px-1.5 py-0.5 rounded text-xs font-semibold" style={{
                       backgroundColor: `${getStatusColor(pos.status)}15`,
-                      borderRadius: '3px',
-                      fontSize: '0.7rem',
-                      fontWeight: 600,
                       color: getStatusColor(pos.status),
                     }}>
                       {getStatusLabel(pos.status)}
-                    </div>
+                    </span>
                   </td>
                 </tr>
               );
@@ -240,41 +191,22 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
         </table>
       </div>
 
-      {/* Legend & TER Info */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-        gap: '12px',
-        marginTop: '12px',
-      }}>
-        <div style={{
-          padding: '10px 12px',
-          backgroundColor: 'rgba(30, 41, 59, 0.3)',
-          borderRadius: '6px',
-          fontSize: '0.75rem',
-        }}>
-          <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Alvo Status</div>
-          <div style={{ color: '#22c55e', fontWeight: 600 }}>Permanent holding</div>
+        {/* Legend & TER Info */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-3">
+          <div className="p-3 bg-slate-950/30 rounded text-xs">
+            <div className="text-slate-400 mb-1">Alvo Status</div>
+            <div className="text-green-500 font-semibold">Permanent holding</div>
+          </div>
+          <div className="p-3 bg-slate-950/30 rounded text-xs">
+            <div className="text-slate-400 mb-1">Transição Status</div>
+            <div className="text-yellow-500 font-semibold">Being rebalanced</div>
+          </div>
+          <div className="p-3 bg-slate-950/30 rounded text-xs">
+            <div className="text-slate-400 mb-1">Total P/L</div>
+            <div className="text-slate-200 font-semibold">Unrealized gain/loss</div>
+          </div>
         </div>
-        <div style={{
-          padding: '10px 12px',
-          backgroundColor: 'rgba(30, 41, 59, 0.3)',
-          borderRadius: '6px',
-          fontSize: '0.75rem',
-        }}>
-          <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Transição Status</div>
-          <div style={{ color: '#eab308', fontWeight: 600 }}>Being rebalanced</div>
-        </div>
-        <div style={{
-          padding: '10px 12px',
-          backgroundColor: 'rgba(30, 41, 59, 0.3)',
-          borderRadius: '6px',
-          fontSize: '0.75rem',
-        }}>
-          <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Total P/L</div>
-          <div style={{ color: '#cbd5e1', fontWeight: 600 }}>Unrealized gain/loss</div>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
