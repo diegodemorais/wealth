@@ -680,3 +680,94 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     ],
   };
 }
+
+/**
+ * Delta Bar Chart (Monthly deltas with +/- coloring)
+ */
+export function createDeltaBarChartOption(options: BaseChartOptions) {
+  const { privacyMode, theme } = options;
+
+  const xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
+  const deltaData = [0.8, -0.2, 1.2, 0.5, -0.1, 0.9, 1.1, 0.3, -0.4, 0.6, 0.8, 0.7];
+  const colors = deltaData.map(v => v >= 0 ? '#10b981' : '#ef4444');
+
+  return {
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const p = params[0];
+        return `${p.name}<br/>${p.marker} Delta: ${p.value.toFixed(2)}%`;
+      },
+      axisPointer: { type: 'shadow' as const },
+    },
+    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
+    grid: { left: 50, right: 20, top: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: xAxisData,
+      axisLine: { lineStyle: { color: '#374151' } },
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: '{value}%', fontSize: 12 },
+      splitLine: { lineStyle: { color: '#2d3748' } },
+    },
+    series: [
+      {
+        type: 'bar' as const,
+        data: deltaData.map((value, idx) => ({ value, itemStyle: { color: colors[idx] } })),
+        itemStyle: { borderRadius: [4, 4, 0, 0] },
+      },
+    ],
+  };
+}
+
+/**
+ * Drawdown Histogram (Horizontal bar)
+ */
+export function createDrawdownHistChartOption(options: BaseChartOptions) {
+  const { privacyMode, theme } = options;
+
+  const buckets = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '25-30%'];
+  const frequencies = [145, 89, 34, 18, 7, 2];
+
+  return {
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        const p = params[0];
+        return `${p.name}<br/>${p.marker} ${p.value} months`;
+      },
+      axisPointer: { type: 'shadow' as const },
+    },
+    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
+    grid: { left: 120, right: 20, top: 40, bottom: 40, containLabel: true },
+    xAxis: {
+      type: 'value' as const,
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+      splitLine: { lineStyle: { color: '#2d3748' } },
+    },
+    yAxis: {
+      type: 'category' as const,
+      data: buckets,
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+      axisLine: { lineStyle: { color: '#374151' } },
+    },
+    series: [
+      {
+        type: 'bar' as const,
+        data: frequencies,
+        itemStyle: { color: '#3b82f6', borderRadius: [0, 4, 4, 0] },
+      },
+    ],
+  };
+}
