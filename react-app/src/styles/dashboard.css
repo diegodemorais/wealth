@@ -454,7 +454,9 @@ td {
 .src {
   font-size: 0.6rem;
   color: var(--muted);
-  margin-top: 4px;
+  margin-top: 6px;
+  font-style: italic;
+  line-height: 1.5;
 }
 
 /* Period buttons */
