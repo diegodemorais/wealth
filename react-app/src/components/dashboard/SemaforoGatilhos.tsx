@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Gatilho {
   nome: string;
@@ -25,139 +24,106 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const { privacyMode } = useUiStore();
 
-  const statusColors: Record<string, { bg: string; dot: string; text: string }> = {
-    verde: {
-      bg: 'rgba(34, 197, 94, 0.07)',
-      dot: '#22c55e',
-      text: '#22c55e',
-    },
-    amarelo: {
-      bg: 'rgba(234, 179, 8, 0.07)',
-      dot: '#eab308',
-      text: '#eab308',
-    },
-    vermelho: {
-      bg: 'rgba(239, 68, 68, 0.07)',
-      dot: '#ef4444',
-      text: '#ef4444',
-    },
+  const statusDotColor: Record<string, string> = {
+    verde: 'var(--green)',
+    amarelo: 'var(--yellow)',
+    vermelho: 'var(--red)',
   };
 
   const typeBadges: Record<string, { bg: string; color: string; label: string }> = {
-    taxa: {
-      bg: 'rgba(6, 182, 212, 0.15)',
-      color: '#06b6d4',
-      label: 'taxa',
-    },
-    posicao: {
-      bg: 'rgba(168, 85, 247, 0.15)',
-      color: '#a855f7',
-      label: 'posição',
-    },
-    crypto: {
-      bg: 'rgba(234, 179, 8, 0.15)',
-      color: '#eab308',
-      label: 'crypto',
-    },
+    taxa: { bg: 'rgba(6, 182, 212, 0.15)', color: 'var(--cyan)', label: 'taxa' },
+    posicao: { bg: 'rgba(168, 85, 247, 0.15)', color: 'var(--purple)', label: 'posição' },
+    crypto: { bg: 'rgba(234, 179, 8, 0.15)', color: 'var(--yellow)', label: 'crypto' },
   };
 
-  const getSemaforoColor = (status: string) => {
-    const colors = {
-      verde: '#22c55e',
-      amarelo: '#eab308',
-      vermelho: '#ef4444',
-    };
-    return colors[status as keyof typeof colors] || '#94a3b8';
-  };
+  const getSemaforoColor = (status: string) =>
+    statusDotColor[status] ?? 'var(--muted)';
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4 section section-critical collapsible" data-in-tab="hoje">
-      <CardHeader
-        className="pb-3 cursor-pointer hover:bg-slate-800/20 transition-colors"
+    <section className="section section-critical" style={{ marginBottom: '14px' }}>
+      {/* Header — collapsible */}
+      <div
         onClick={() => setIsOpen(!isOpen)}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
       >
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-semibold text-slate-200">
-            Semáforos de Gatilhos
-          </CardTitle>
-          <span className="text-xs text-slate-400">
-            {isOpen ? '▼' : '▶'}
-          </span>
-        </div>
-      </CardHeader>
+        <h2 style={{ margin: 0 }}>Semáforos de Gatilhos ›</h2>
+        <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+          {isOpen ? '▼' : '▶'}
+        </span>
+      </div>
 
       {/* Summary when collapsed */}
       {!isOpen && (
-        <div className="px-4 py-2 text-xs text-slate-400 flex items-center gap-1.5">
-          <span
-            className="inline-block w-2 h-2 rounded-full"
-            style={{ backgroundColor: getSemaforoColor(statusIpca) }}
-          />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '0.7rem', color: 'var(--muted)' }}>
+          <span style={{
+            display: 'inline-block',
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: getSemaforoColor(statusIpca),
+            flexShrink: 0,
+          }} />
           {resumo}
         </div>
       )}
 
       {/* Expanded table */}
-      {isOpen && (
-        <CardContent>
-          <table className="w-full border-collapse text-xs">
+      {isOpen && gatilhos.length > 0 && (
+        <div style={{ marginTop: '12px', overflowX: 'auto' }}>
+          <table className="table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.7rem' }}>
             <thead>
-              <tr className="border-b-2 border-slate-700/25">
-                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-left font-semibold">
-                  Gatilho
-                </th>
-                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-center font-semibold">
-                  Status
-                </th>
-                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-right font-semibold">
-                  Valor
-                </th>
-                <th className="px-2 py-1.5 text-slate-400 text-xs uppercase text-left font-semibold">
-                  Ação
-                </th>
+              <tr style={{ borderBottom: '2px solid var(--border)' }}>
+                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'left' }}>Gatilho</th>
+                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'center' }}>Status</th>
+                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'right' }}>Valor</th>
+                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'left' }}>Ação</th>
               </tr>
             </thead>
             <tbody>
               {gatilhos.map((g, idx) => {
-                const statusColor = statusColors[g.status];
-                const typeBadge = typeBadges[g.tipo];
+                const typeBadge = typeBadges[g.tipo] ?? typeBadges.taxa;
 
                 return (
-                  <tr key={idx} className="border-b border-slate-700/15">
-                    <td className="px-2 py-1.5 text-xs">
-                      <div className="mb-1">
+                  <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '6px 8px' }}>
+                      <div>
                         {g.nome}
-                        <span
-                          className="text-xs px-1 rounded ml-1.5 inline-block"
-                          style={{
-                            backgroundColor: typeBadge.bg,
-                            color: typeBadge.color,
-                          }}
-                        >
+                        <span style={{
+                          fontSize: '0.6rem',
+                          padding: '1px 5px',
+                          borderRadius: '3px',
+                          marginLeft: '6px',
+                          background: typeBadge.bg,
+                          color: typeBadge.color,
+                        }}>
                           {typeBadge.label}
                         </span>
                       </div>
                       {g.contexto && (
-                        <div className="text-xs text-slate-400 mt-1 tabular-nums">
+                        <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginTop: '2px' }}>
                           {g.contexto}
                         </div>
                       )}
                     </td>
-                    <td className="px-2 py-1.5 text-center text-xs">
-                      <div className="flex items-center justify-center gap-1">
-                        <span
-                          className="inline-block w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: statusColor.dot }}
-                        />
-                        <span className="capitalize" style={{ color: statusColor.text }}>
+                    <td style={{ padding: '6px 8px', textAlign: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                        <span style={{
+                          display: 'inline-block',
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          background: getSemaforoColor(g.status),
+                          flexShrink: 0,
+                        }} />
+                        <span style={{ color: getSemaforoColor(g.status) }}>
                           {g.status}
                         </span>
                       </div>
                     </td>
-                    <td className="px-2 py-1.5 text-right text-xs tabular-nums">
+                    <td style={{ padding: '6px 8px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
                       {privacyMode ? '••••' : g.valorPrimario}
                     </td>
-                    <td className="px-2 py-1.5 text-xs">
+                    <td style={{ padding: '6px 8px', color: 'var(--muted)' }}>
                       {g.acao}
                     </td>
                   </tr>
@@ -165,9 +131,9 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
               })}
             </tbody>
           </table>
-        </CardContent>
+        </div>
       )}
-    </Card>
+    </section>
   );
 };
 

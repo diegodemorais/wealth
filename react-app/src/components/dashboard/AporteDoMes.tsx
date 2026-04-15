@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useDashboardStore } from '@/store/dashboardStore';
 
 interface AporteDoMesProps {
   aporteMensal: number;
@@ -17,131 +17,87 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
   acumuladoMes,
   acumuladoAno,
 }) => {
-  const [inputValue, setInputValue] = useState<string>('');
-  const [calculatedValue, setCalculatedValue] = useState<number | null>(null);
   const { privacyMode } = useUiStore();
+  const data = useDashboardStore(s => s.data);
 
-  const fmtBrl = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(val);
+  const fmtShort = (val: number) => {
+    if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(1)}M`;
+    if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
+    return `R$${Math.round(val)}`;
   };
 
-  const handleCalculate = () => {
-    const adjustment = parseFloat(inputValue);
-    if (!isNaN(adjustment)) {
-      const result = aporteMensal + adjustment;
-      setCalculatedValue(Math.max(0, result));
-    }
-  };
+  const fmtBrl = (val: number) =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+  // Savings rate: aporte / renda mensal líquida
+  const rendaMensal = data?.premissas?.renda_mensal_liquida ?? 0;
+  const savingsRate = rendaMensal > 0 ? (aporteMensal / rendaMensal) * 100 : null;
+
+  // Savings rate color
+  const srColor =
+    savingsRate != null && savingsRate >= 50 ? 'var(--green)' :
+    savingsRate != null && savingsRate >= 40 ? 'var(--yellow)' :
+    'var(--red)';
 
   return (
-    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold text-slate-200">
-          Aporte do Mês
-        </CardTitle>
-      </CardHeader>
+    <section className="section">
+      <h2>Aporte do Mês</h2>
 
-      <CardContent className="space-y-4">
-
-      {/* Main metrics grid */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        {/* Aporte Mensal */}
-        <div className="p-2.5 bg-green-500/10 rounded">
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-            Aporte Mensal
-          </div>
-          <div className="text-xl font-bold text-green-500">
-            {privacyMode ? '••••' : fmtBrl(aporteMensal).replace('R$', '')}
-          </div>
-          <div className="text-xs text-slate-400 mt-1">
-            {privacyMode ? 'R$••••' : fmtBrl(aporteMensal)}
-          </div>
+      {/* Big aporte value */}
+      <div style={{ textAlign: 'center', padding: '12px 0 8px' }}>
+        <div style={{ fontSize: '2.8rem', fontWeight: 800, color: 'var(--green)', lineHeight: 1 }}>
+          {privacyMode ? '••••' : fmtShort(aporteMensal)}
         </div>
-
-        {/* Último Aporte */}
-        <div className="p-2.5 bg-cyan-500/10 rounded">
-          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-            Último Aporte
-          </div>
-          <div className="text-lg font-bold text-cyan-500">
-            {privacyMode ? '••••' : fmtBrl(ultimoAporte).replace('R$', '').substring(0, 8)}
-          </div>
-          <div className="text-xs text-slate-400 mt-1">
-            {ultimoAporteData}
-          </div>
-        </div>
-      </div>
-
-      {/* Accumulated values */}
-      <div className="grid grid-cols-2 gap-2 mb-4 text-xs">
-        <div className="p-2 bg-slate-800/20 rounded">
-          <div className="text-slate-400 mb-1">Acumulado Mês</div>
-          <div className="font-semibold text-slate-200">
-            {privacyMode ? 'R$••••' : fmtBrl(acumuladoMes)}
-          </div>
-        </div>
-        <div className="p-2 bg-slate-800/20 rounded">
-          <div className="text-slate-400 mb-1">Acumulado Ano</div>
-          <div className="font-semibold text-slate-200">
-            {privacyMode ? 'R$••••' : fmtBrl(acumuladoAno)}
-          </div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="border-t border-slate-700/15 my-3" />
-
-      {/* Calculation form */}
-      <div className="mt-4">
-        <div className="text-xs text-slate-400 mb-2 font-medium">
-          Simular Aporte (+/-)
-        </div>
-        <div className="flex gap-2 mb-2">
-          <input
-            type="number"
-            value={inputValue}
-            onChange={handleInputChange}
-            placeholder="Valor em R$ (ex: +5000)"
-            className="flex-1 px-2.5 py-2 bg-slate-950 border border-slate-700/30 rounded text-slate-200 text-sm font-mono placeholder:text-slate-500"
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                handleCalculate();
-              }
-            }}
-          />
-          <button
-            onClick={handleCalculate}
-            className="px-3.5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm font-semibold cursor-pointer transition-colors duration-200"
-          >
-            Calcular
-          </button>
-        </div>
-
-        {/* Result display */}
-        {calculatedValue !== null && (
-          <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded mt-2">
-            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
-              Aporte Ajustado
-            </div>
-            <div className="text-lg font-bold text-blue-500">
-              {privacyMode ? '••••' : fmtBrl(calculatedValue)}
-            </div>
-            <div className="text-xs text-slate-500 mt-1">
-              Diferença: {privacyMode ? '••••' : fmtBrl(calculatedValue - aporteMensal)}
-            </div>
+        {savingsRate != null && (
+          <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginTop: '6px' }}>
+            {privacyMode ? '••••' : `${savingsRate.toFixed(1)}% savings rate`}
+            {rendaMensal > 0 && !privacyMode && ` · renda est. ${fmtShort(rendaMensal)}/mês`}
           </div>
         )}
       </div>
-      </CardContent>
-    </Card>
+
+      {/* Savings rate bar */}
+      {savingsRate != null && (
+        <div style={{ margin: '8px 0' }}>
+          <div style={{ height: '4px', background: 'var(--card2)', borderRadius: '2px', overflow: 'hidden' }}>
+            <div style={{
+              width: Math.min(100, savingsRate) + '%',
+              height: '100%',
+              background: srColor,
+              transition: 'width 0.5s ease',
+            }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+            <span>≥50% excelente</span>
+            <span>≥40% ok</span>
+            <span>≥35% atenção</span>
+          </div>
+        </div>
+      )}
+
+      {/* Accumulated values */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '12px' }}>
+        <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '8px', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>Acumulado Mês</div>
+          <div style={{ fontSize: '0.9rem', fontWeight: 700, marginTop: '2px' }}>
+            {privacyMode ? '••••' : fmtShort(acumuladoMes)}
+          </div>
+        </div>
+        <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '8px', textAlign: 'center' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>Acumulado Ano</div>
+          <div style={{ fontSize: '0.9rem', fontWeight: 700, marginTop: '2px' }}>
+            {privacyMode ? '••••' : fmtShort(acumuladoAno)}
+          </div>
+        </div>
+      </div>
+
+      {/* Last contribution */}
+      {ultimoAporte > 0 && (
+        <div style={{ marginTop: '10px', fontSize: '0.65rem', color: 'var(--muted)', textAlign: 'center' }}>
+          Último: {privacyMode ? '••••' : fmtBrl(ultimoAporte)} · {ultimoAporteData}
+        </div>
+      )}
+    </section>
   );
 };
 
