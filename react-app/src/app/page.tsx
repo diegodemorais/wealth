@@ -7,10 +7,9 @@ import { KpiHero } from '@/components/primitives/KpiHero';
 import { KpiCard } from '@/components/primitives/KpiCard';
 import { Semaforo } from '@/components/primitives/Semaforo';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
-// Chart imports temporarily disabled
-// import { TornadoChart } from '@/components/charts/TornadoChart';
-// import { FanChart } from '@/components/charts/FanChart';
-// import { SankeyChart } from '@/components/charts/SankeyChart';
+import { TornadoChart } from '@/components/charts/TornadoChart';
+import { FanChart } from '@/components/charts/FanChart';
+import { SankeyChart } from '@/components/charts/SankeyChart';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
@@ -565,21 +564,19 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
-      {/* Charts Section - TODO: Fix missing data references */}
-      {/* Temporarily disabled due to missing data fields in data.json
+      {/* Charts Section — ECharts Analysis & Projections */}
       {data && (
         <CollapsibleSection
           id="section-charts"
           title="Analysis & Projections"
-          defaultOpen={true}
+          defaultOpen={false}
           icon="📈"
         >
-          <TornadoChart data={data} />
-          <FanChart data={data} />
-          <SankeyChart data={data} />
+          {data.tornado && <TornadoChart data={data} />}
+          {data.timeline && <FanChart data={data} />}
+          {data.timeline_attribution && <SankeyChart data={data} />}
         </CollapsibleSection>
       )}
-      */}
     </div>
   );
 }
