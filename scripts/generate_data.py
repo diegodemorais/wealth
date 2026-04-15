@@ -1989,7 +1989,7 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
 
 
 # ─── 9a. SEMÁFOROS DE GATILHOS ────────────────────────────────────────────────
-def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float) -> list:
+def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float, drift: dict | None = None) -> list:
     """Gera lista de 4 gatilhos unificados para o dashboard.
 
     Monitora:
@@ -2034,9 +2034,10 @@ def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float) -> list:
         })
 
     # ─── Trigger 2: SWRD — Drift vs Target ──────────────────────────────────
-    # Drift é calculado em drift section, precisaríamos acessá-lo aqui
-    # Por enquanto, mock com exemplo conservador
-    drift_swrd_pp = 0.8  # placeholder — normalmente viria de get_drift()
+    swrd_drift_data = (drift or {}).get("SWRD", {})
+    swrd_atual_pct = swrd_drift_data.get("atual", 0)
+    swrd_alvo_pct  = swrd_drift_data.get("alvo", 0)
+    drift_swrd_pp  = round(swrd_atual_pct - swrd_alvo_pct, 2)
     if abs(drift_swrd_pp) > 2.0:
         status_drift = "vermelho"
         acao_drift = "Rebalancear"
@@ -2047,7 +2048,7 @@ def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float) -> list:
         status_drift = "verde"
         acao_drift = "No alvo"
 
-    swrd_valor = 0  # placeholder — viria do posicoes
+    swrd_valor_brl = round(swrd_atual_pct / 100 * total_brl) if total_brl else 0
     triggers.append({
         "id": "swrd_drift",
         "label": "Equity SWRD — Drift",
@@ -2057,21 +2058,25 @@ def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float) -> list:
         "unidade": "pp",
         "piso": -2.0,
         "gap": round(drift_swrd_pp - (-2.0), 2),
-        "posicao_r": round(swrd_valor, 0),
+        "posicao_r": round(swrd_valor_brl, 0),
         "acao": acao_drift,
-        "detalhe": f"drift: {drift_swrd_pp:.2f}pp vs target 0% · posição R${swrd_valor/1e3:.0f}k"
+        "detalhe": f"drift: {drift_swrd_pp:+.2f}pp (atual {swrd_atual_pct:.1f}% vs alvo {swrd_alvo_pct:.1f}%) · posição R${swrd_valor_brl/1e3:.0f}k"
     })
 
     # ─── Trigger 3: HODL11 — Banda de Operação ─────────────────────────────
-    hodl_banda = hodl11.get("banda_pp", 0) if hodl11 else 0
-    if hodl_banda > 20:
-        status_hodl = "vermelho"
+    hodl_banda_data = hodl11.get("banda", {}) if hodl11 else {}
+    hodl_atual_pct  = hodl_banda_data.get("atual_pct", 0)
+    hodl_alvo_pct   = hodl_banda_data.get("alvo_pct", HODL11_ALVO_PCT)
+    hodl_drift_pp   = round(hodl_atual_pct - hodl_alvo_pct, 2)
+    hodl_status_raw = hodl_banda_data.get("status", "verde")
+
+    # Use banda status directly (already computed with proper thresholds)
+    status_hodl = hodl_status_raw
+    if status_hodl == "vermelho":
         acao_hodl = "Rebalancear"
-    elif hodl_banda > 10:
-        status_hodl = "amarelo"
+    elif status_hodl == "amarelo":
         acao_hodl = "Monitorar"
     else:
-        status_hodl = "verde"
         acao_hodl = "No alvo"
 
     hodl_valor = hodl11.get("valor", 0) if hodl11 else 0
@@ -2080,13 +2085,13 @@ def get_semaforo_triggers(rf: dict, hodl11: dict, total_brl: float) -> list:
         "label": "Crypto HODL11 — Banda",
         "category": "crypto",
         "status": status_hodl,
-        "valor": hodl_banda,
+        "valor": hodl_drift_pp,
         "unidade": "pp",
         "piso": 0.0,
-        "gap": hodl_banda,
+        "gap": abs(hodl_drift_pp),
         "posicao_r": round(hodl_valor, 0),
         "acao": acao_hodl,
-        "detalhe": f"banda: {hodl_banda:.1f}pp vs target 0% · alvo {HODL11_ALVO_PCT}% · posição R${hodl_valor/1e3:.0f}k"
+        "detalhe": f"drift: {hodl_drift_pp:+.2f}pp (atual {hodl_atual_pct:.1f}% vs alvo {hodl_alvo_pct:.1f}%) · posição R${hodl_valor/1e3:.0f}k"
     })
 
     # ─── Trigger 4: Drift Máximo IPCA+ ──────────────────────────────────────
@@ -2595,7 +2600,7 @@ def main():
     dca_status = get_dca_status(rf, total_brl)
 
     # Semáforos de Gatilhos — Tier-1 Critical (dashboard NOW tab)
-    semaforo_triggers = get_semaforo_triggers(rf, hodl11, total_brl)
+    semaforo_triggers = get_semaforo_triggers(rf, hodl11, total_brl, drift=drift)
 
     # Guardrails de Retirada — Tier-1 Critical (dashboard RETIRO tab)
     guardrails_retirada = get_guardrails_retirada()
