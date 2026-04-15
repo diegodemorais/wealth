@@ -68,33 +68,26 @@ export function TaxAnalysisGrid() {
 
   if (taxData.length === 0) {
     return (
-      <div style={styles.container}>
-        <h3 style={styles.title}>Tax/IR Analysis</h3>
-        <div style={styles.empty}>
-          <p>No tax data available</p>
-        </div>
+      <div style={styles.empty}>
+        <p>Sem dados de IR disponíveis</p>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>🏛️ Tax/IR Analysis (Unrealized Gains)</h3>
-      <p style={styles.subtitle}>
-        Estimated income tax on unrealized gains by position (15% standard rate)
-      </p>
+    <div>
 
       <div style={styles.tableWrapper}>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Ticker</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Gain (USD)</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Avg PTAX</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Cost (BRL)</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Current (BRL)</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Gain (BRL)</TableHead>
-              <TableHead style={{ textAlign: 'right' }}>Est. Tax (BRL)</TableHead>
+              <TableHead style={{ textAlign: 'right' }}>Ganho USD</TableHead>
+              <TableHead style={{ textAlign: 'right' }}>PTAX Médio</TableHead>
+              <TableHead style={{ textAlign: 'right' }}>Custo BRL</TableHead>
+              <TableHead style={{ textAlign: 'right' }}>Valor Atual BRL</TableHead>
+              <TableHead style={{ textAlign: 'right' }}>Ganho BRL</TableHead>
+              <TableHead style={{ textAlign: 'right' }}>IR Estimado</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -163,13 +156,7 @@ export function TaxAnalysisGrid() {
         </div>
       </div>
 
-      <div style={styles.noteSection}>
-        <p style={styles.note}>
-          <strong>Note:</strong> Tax estimates assume 15% standard rate on realized gains (Imposto de Renda).
-          Actual tax depends on holding period, income bracket, and specific tax treaty provisions.
-          This is an unrealized gain tax deferral — no tax due until positions are sold.
-        </p>
-      </div>
+      <div className="src">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat. PTAX histórica por lote. Transitórios: diluir via aportes, não comprar mais. TLH: ⚠️ = perda ≥ 5%.</div>
     </div>
   );
 }

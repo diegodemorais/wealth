@@ -68,7 +68,7 @@ export function RFCryptoComposition() {
   if (!data) {
     return (
       <div style={styles.container}>
-        <h3 style={styles.title}>Fixed Income & Crypto Composition</h3>
+        <h2 style={styles.title}>Renda Fixa + Cripto</h2>
         <div style={styles.empty}>
           <p>Loading composition data...</p>
         </div>
@@ -78,7 +78,7 @@ export function RFCryptoComposition() {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.title}>💰 Fixed Income & Crypto Composition</h3>
+      <h2 style={styles.title}>Renda Fixa + Cripto</h2>
 
       {/* Fixed Income Table */}
       <div style={styles.section}>

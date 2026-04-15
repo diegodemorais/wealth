@@ -21,23 +21,14 @@ export function StackedAllocChart({ data }: StackedAllocChartProps) {
   );
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Historical Allocation (24 months)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
+    <div>
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>Por Classe de Ativo</div>
+        <ReactECharts ref={chartRef} option={option} style={{ height: 220 }} />
+      </div>
+      <div style={{ marginTop: 12 }}>
+        <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>Intra-Equity — Pesos Atuais vs Alvo</div>
+      </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '20px',
-  },
-  title: {
-    margin: '0 0 16px 0',
-    color: '#fff',
-  },
-};
