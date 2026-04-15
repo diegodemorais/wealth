@@ -51,6 +51,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-dashboard-components-alignment | Alinhamento visual/informacional com DashHTML — 32+ componentes | Dev | 🔴 Alta | ⏳ Doing (tarefas por componente) |
 | DEV-manifest | spec.json — Manifesto único do dashboard | Dev | 🔴 Alta | ✅ Done 2026-04-11 |
 | DEV-bi-review | Revisão BI externa + nova estrutura de abas | Dev | 🟡 Média | ✅ Done 2026-04-11 |
 | EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 🟡 Média | ✅ Done 2026-04-11 |
