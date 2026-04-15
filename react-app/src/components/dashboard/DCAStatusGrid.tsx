@@ -40,7 +40,11 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-4">
           DCA Status
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '16px',
+        }}>
           {validItems.map((item) => (
             <div
               key={item.id}
