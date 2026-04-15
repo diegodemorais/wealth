@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface SpendingCategory {
   categoria: string;
@@ -77,407 +78,211 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   const isWellBalanced = mustavePercent <= 60 && mustavePercent >= 50; // 50-60% is ideal
   const isFlexible = mustavePercent < 50; // < 50% must-have = very flexible
 
+  // Flexibility assessment colors
+  const flexColor = isWellBalanced
+    ? 'bg-green-500/10 border-green-500/25'
+    : isFlexible
+      ? 'bg-blue-500/10 border-blue-500/25'
+      : 'bg-amber-500/10 border-amber-500/25';
+  const flexTextColor = isWellBalanced ? 'text-green-500' : isFlexible ? 'text-blue-500' : 'text-amber-500';
+  const flexLabel = isWellBalanced ? '✅ Balanceado' : isFlexible ? '🟢 Muito Flexível' : '⚠️ Rígido';
+
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Spending Breakdown — Análise de Gastos por Categoria
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Spending Breakdown — Análise de Gastos por Categoria
+        </CardTitle>
+      </CardHeader>
 
-      {/* Total spending summary */}
-      <div
-        style={{
-          padding: '12px 14px',
-          backgroundColor: 'rgba(139, 92, 246, 0.1)',
-          border: '1px solid #8b5cf640',
-          borderRadius: '6px',
-          marginBottom: '14px',
-        }}
-      >
-        <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-          Despesa Anual Total (Baseline)
-        </div>
-        <div style={{ fontSize: '1.3rem', fontWeight: 700, color: '#8b5cf6', marginBottom: '4px' }}>
-          {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
-        </div>
-        <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>
-          {privacyMode ? '••' : (totalMonthly).toFixed(0)} /mês em média
-        </div>
-      </div>
-
-      {/* Stacked bar visualization */}
-      <div style={{ marginBottom: '16px' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '10px' }}>
-          Distribuição de Gastos
+      <CardContent className="space-y-4">
+        {/* Total spending summary */}
+        <div className="p-3 bg-violet-500/10 border border-violet-500/25 rounded">
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+            Despesa Anual Total (Baseline)
+          </div>
+          <div className="text-lg font-bold text-violet-400 mb-1">
+            {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
+          </div>
+          <div className="text-xs text-slate-400">
+            {privacyMode ? '••' : (totalMonthly).toFixed(0)} /mês em média
+          </div>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            height: '60px',
-            backgroundColor: 'rgba(71, 85, 105, 0.15)',
-            borderRadius: '6px',
-            overflow: 'hidden',
-            gap: 0,
-            marginBottom: '8px',
-          }}
-        >
+        {/* Stacked bar visualization */}
+        <div>
+          <div className="text-sm font-semibold text-slate-200 mb-3">
+            Distribuição de Gastos
+          </div>
+
+          <div className="flex h-16 bg-slate-700/15 rounded overflow-hidden gap-0 mb-2">
+            {/* Must-Have */}
+            <div
+              style={{ flex: mustavePercent, minWidth: '40px' }}
+              className="bg-red-500 opacity-80 flex items-center justify-center"
+              title={`Essencial: ${mustavePercent.toFixed(1)}%`}
+            >
+              {mustavePercent > 12 && (
+                <span className="text-xs text-white font-semibold">{mustavePercent.toFixed(0)}%</span>
+              )}
+            </div>
+
+            {/* Like-to-Have */}
+            <div
+              style={{ flex: likesPercent, minWidth: '40px' }}
+              className="bg-amber-500 opacity-80 flex items-center justify-center"
+              title={`Conforto: ${likesPercent.toFixed(1)}%`}
+            >
+              {likesPercent > 12 && (
+                <span className="text-xs text-white font-semibold">{likesPercent.toFixed(0)}%</span>
+              )}
+            </div>
+
+            {/* Imprevistos */}
+            <div
+              style={{ flex: imprevistosPercent, minWidth: '40px' }}
+              className="bg-violet-500 opacity-80 flex items-center justify-center"
+              title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
+            >
+              {imprevistosPercent > 12 && (
+                <span className="text-xs text-white font-semibold">{imprevistosPercent.toFixed(0)}%</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Category cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
           {/* Must-Have */}
-          <div
-            style={{
-              flex: mustavePercent,
-              backgroundColor: '#ef4444',
-              opacity: 0.8,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.7rem',
-              color: 'white',
-              fontWeight: 600,
-              minWidth: '40px',
-            }}
-            title={`Essencial: ${mustavePercent.toFixed(1)}%`}
-          >
-            {mustavePercent > 12 && `${mustavePercent.toFixed(0)}%`}
+          <div className="p-3 bg-red-500/10 border border-red-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Essencial
+            </div>
+            <div className="text-base font-bold text-red-500 mb-1">
+              {mustavePercent.toFixed(1)}%
+            </div>
+            <div className="text-xs text-slate-500">
+              {privacyMode ? '••' : fmtBrl(mustaveMonthly)}/mês
+            </div>
           </div>
 
           {/* Like-to-Have */}
-          <div
-            style={{
-              flex: likesPercent,
-              backgroundColor: '#f59e0b',
-              opacity: 0.8,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.7rem',
-              color: 'white',
-              fontWeight: 600,
-              minWidth: '40px',
-            }}
-            title={`Conforto: ${likesPercent.toFixed(1)}%`}
-          >
-            {likesPercent > 12 && `${likesPercent.toFixed(0)}%`}
+          <div className="p-3 bg-amber-500/10 border border-amber-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Conforto
+            </div>
+            <div className="text-base font-bold text-amber-500 mb-1">
+              {likesPercent.toFixed(1)}%
+            </div>
+            <div className="text-xs text-slate-500">
+              {privacyMode ? '••' : fmtBrl(likesMonthly)}/mês
+            </div>
           </div>
 
           {/* Imprevistos */}
-          <div
-            style={{
-              flex: imprevistosPercent,
-              backgroundColor: '#8b5cf6',
-              opacity: 0.8,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.7rem',
-              color: 'white',
-              fontWeight: 600,
-              minWidth: '40px',
-            }}
-            title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
-          >
-            {imprevistosPercent > 12 && `${imprevistosPercent.toFixed(0)}%`}
+          <div className="p-3 bg-violet-500/10 border border-violet-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Buffer
+            </div>
+            <div className="text-base font-bold text-violet-500 mb-1">
+              {imprevistosPercent.toFixed(1)}%
+            </div>
+            <div className="text-xs text-slate-500">
+              {privacyMode ? '••' : fmtBrl(imprevistosMonthly)}/mês
+            </div>
+          </div>
+
+          {/* Flexibility Assessment */}
+          <div className={`p-3 rounded border ${flexColor}`}>
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Flexibilidade
+            </div>
+            <div className={`text-base font-bold mb-1 ${flexTextColor}`}>
+              {flexLabel}
+            </div>
+            <div className="text-xs text-slate-500">
+              vs. 50-60% ideal
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Category cards */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '10px',
-          marginBottom: '14px',
-        }}
-      >
-        {/* Must-Have */}
+        {/* Expandable details */}
         <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid #ef444440',
-            borderRadius: '6px',
-          }}
+          className="flex justify-between items-center p-3 cursor-pointer border-t border-slate-700/15 mt-3"
+          onClick={() => setExpandDetails(!expandDetails)}
         >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Essencial
-          </div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ef4444', marginBottom: '2px' }}>
-            {mustavePercent.toFixed(1)}%
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            {privacyMode ? '••' : fmtBrl(mustaveMonthly)}/mês
-          </div>
+          <h3 className="text-sm font-semibold m-0 text-slate-200">
+            Detalhes Mensais
+          </h3>
+          <span className="text-xs text-slate-400">
+            {expandDetails ? '▼' : '▶'}
+          </span>
         </div>
 
-        {/* Like-to-Have */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            border: '1px solid #f59e0b40',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Conforto
-          </div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f59e0b', marginBottom: '2px' }}>
-            {likesPercent.toFixed(1)}%
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            {privacyMode ? '••' : fmtBrl(likesMonthly)}/mês
-          </div>
-        </div>
-
-        {/* Imprevistos */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid #8b5cf640',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Buffer
-          </div>
-          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#8b5cf6', marginBottom: '2px' }}>
-            {imprevistosPercent.toFixed(1)}%
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            {privacyMode ? '••' : fmtBrl(imprevistosMonthly)}/mês
-          </div>
-        </div>
-
-        {/* Flexibility Assessment */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: isWellBalanced
-              ? 'rgba(34, 197, 94, 0.1)'
-              : isFlexible
-                ? 'rgba(59, 130, 246, 0.1)'
-                : 'rgba(245, 158, 11, 0.1)',
-            border: isWellBalanced
-              ? '1px solid #22c55e40'
-              : isFlexible
-                ? '1px solid #3b82f640'
-                : '1px solid #f59e0b40',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Flexibilidade
-          </div>
-          <div
-            style={{
-              fontSize: '0.9rem',
-              fontWeight: 700,
-              color: isWellBalanced ? '#22c55e' : isFlexible ? '#3b82f6' : '#f59e0b',
-              marginBottom: '2px',
-            }}
-          >
-            {isWellBalanced ? '✅ Balanceado' : isFlexible ? '🟢 Muito Flexível' : '⚠️ Rígido'}
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            vs. 50-60% ideal
-          </div>
-        </div>
-      </div>
-
-      {/* Expandable details */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          cursor: 'pointer',
-          paddingTop: '14px',
-          borderTop: '1px solid rgba(71, 85, 105, 0.15)',
-        }}
-        onClick={() => setExpandDetails(!expandDetails)}
-      >
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, margin: 0, color: '#cbd5e1' }}>
-          Detalhes Mensais
-        </h3>
-        <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-          {expandDetails ? '▼' : '▶'}
-        </span>
-      </div>
-
-      {expandDetails && (
-        <div style={{ marginTop: '12px', overflowX: 'auto' }}>
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '0.8rem',
-            }}
-          >
-            <thead>
-              <tr>
-                <th
-                  style={{
-                    textAlign: 'left',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#94a3b8',
-                    fontWeight: 600,
-                  }}
-                >
-                  Categoria
-                </th>
-                <th
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                    fontWeight: 600,
-                  }}
-                >
-                  Mensal
-                </th>
-                <th
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                    fontWeight: 600,
-                  }}
-                >
-                  Anual
-                </th>
-                <th
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                    fontWeight: 600,
-                  }}
-                >
-                  % Total
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((cat, idx) => (
-                <tr key={idx}>
-                  <td
-                    style={{
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: cat.color,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {cat.categoria}
+        {expandDetails && (
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full border-collapse text-xs">
+              <thead>
+                <tr>
+                  <th className="text-left p-2 border-b border-slate-700/25 text-slate-400 font-semibold">
+                    Categoria
+                  </th>
+                  <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                    Mensal
+                  </th>
+                  <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                    Anual
+                  </th>
+                  <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                    % Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((cat, idx) => (
+                  <tr key={idx}>
+                    <td
+                      className="p-2 border-b border-slate-700/15 font-semibold"
+                      style={{ color: cat.color }}
+                    >
+                      {cat.categoria}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 text-slate-200">
+                      {privacyMode ? '••' : fmtBrl(cat.totalMensal)}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 text-slate-200">
+                      {privacyMode ? '••' : fmtBrl(cat.totalMensal * 12)}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold" style={{ color: cat.color }}>
+                      {((cat.totalMensal * 12 / totalAnual) * 100).toFixed(1)}%
+                    </td>
+                  </tr>
+                ))}
+                <tr className="bg-slate-700/10">
+                  <td className="p-2 border-b border-slate-700/25 text-slate-200 font-bold">
+                    Total
                   </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: '#cbd5e1',
-                    }}
-                  >
-                    {privacyMode ? '••' : fmtBrl(cat.totalMensal)}
+                  <td className="text-right p-2 border-b border-slate-700/25 text-slate-200">
+                    {privacyMode ? '••' : fmtBrl(totalMonthly)}
                   </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: '#cbd5e1',
-                    }}
-                  >
-                    {privacyMode ? '••' : fmtBrl(cat.totalMensal * 12)}
+                  <td className="text-right p-2 border-b border-slate-700/25 text-slate-200">
+                    {privacyMode ? '••' : fmtBrl(totalAnual)}
                   </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: cat.color,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {((cat.totalMensal * 12 / totalAnual) * 100).toFixed(1)}%
+                  <td className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-bold">
+                    100.0%
                   </td>
                 </tr>
-              ))}
-              <tr style={{ backgroundColor: 'rgba(71, 85, 105, 0.1)' }}>
-                <td
-                  style={{
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                    fontWeight: 700,
-                  }}
-                >
-                  Total
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                  }}
-                >
-                  {privacyMode ? '••' : fmtBrl(totalMonthly)}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                  }}
-                >
-                  {privacyMode ? '••' : fmtBrl(totalAnual)}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                    fontWeight: 700,
-                  }}
-                >
-                  100.0%
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-      {/* Footer note */}
-      <div
-        style={{
-          marginTop: '12px',
-          fontSize: '0.7rem',
-          color: '#64748b',
-          padding: '8px',
-          backgroundColor: 'rgba(71, 85, 105, 0.08)',
-          borderRadius: '4px',
-        }}
-      >
-        <strong>📌 Nota:</strong> Ideal é 50-60% essencial, 30-35% conforto, 5-10% imprevistos. Spending smile durante aposentadoria pode mudar essa proporção.
-      </div>
-    </div>
+        {/* Footer note */}
+        <div className="mt-3 p-2 text-xs text-slate-500 bg-slate-700/5 rounded">
+          <strong>📌 Nota:</strong> Ideal é 50-60% essencial, 30-35% conforto, 5-10% imprevistos. Spending smile durante aposentadoria pode mudar essa proporção.
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface RunwayYear {
   year: number;
@@ -73,338 +74,183 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
   const isWarning = futureCoverage >= 1.5 && futureCoverage < 2.5; // Warning zone
   const isCritical = futureCoverage < 1.5; // Critical
 
+  const statusColor = isSafe ? '#22c55e' : isWarning ? '#f59e0b' : '#ef4444';
+  const statusBg = isSafe ? 'bg-green-500/10' : isWarning ? 'bg-amber-500/10' : 'bg-red-500/10';
+  const statusBorder = isSafe ? 'border-green-500/25' : isWarning ? 'border-amber-500/25' : 'border-red-500/25';
+  const statusText = isSafe ? 'text-green-500' : isWarning ? 'text-amber-500' : 'text-red-500';
+  const statusLabel = isSafe ? '✅ Seguro' : isWarning ? '⚠️ Atenção' : '🚨 Crítico';
+  const statusDesc = isSafe
+    ? 'Bond pool cobre 2.5+ anos de gastos'
+    : isWarning
+      ? 'Bond pool cobre 1.5-2.5 anos de gastos'
+      : 'Bond pool cobre menos de 1.5 anos de gastos';
+
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Bond Pool Runway — Sustentabilidade Pos-FIRE
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Bond Pool Runway — Sustentabilidade Pos-FIRE
+        </CardTitle>
+      </CardHeader>
 
-      {/* Safety status */}
-      <div
-        style={{
-          padding: '12px 14px',
-          backgroundColor:
-            isSafe ? 'rgba(34, 197, 94, 0.1)' : isWarning ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-          border:
-            isSafe ? '1px solid #22c55e40' : isWarning ? '1px solid #f59e0b40' : '1px solid #ef444440',
-          borderRadius: '6px',
-          marginBottom: '14px',
-        }}
-      >
-        <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-          Status de Sustentabilidade
-        </div>
-        <div
-          style={{
-            fontSize: '1.1rem',
-            fontWeight: 700,
-            color: isSafe ? '#22c55e' : isWarning ? '#f59e0b' : '#ef4444',
-            marginBottom: '4px',
-          }}
-        >
-          {isSafe ? '✅ Seguro' : isWarning ? '⚠️ Atenção' : '🚨 Crítico'}
-        </div>
-        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-          {isSafe
-            ? 'Bond pool cobre 2.5+ anos de gastos'
-            : isWarning
-              ? 'Bond pool cobre 1.5-2.5 anos de gastos'
-              : 'Bond pool cobre menos de 1.5 anos de gastos'}
-        </div>
-      </div>
-
-      {/* Key metrics grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '12px',
-          marginBottom: '16px',
-        }}
-      >
-        {/* Current coverage */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(6, 182, 212, 0.1)',
-            border: '1px solid #06b6d440',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Cobertura Hoje
+      <CardContent className="space-y-4">
+        {/* Safety status */}
+        <div className={`p-3 rounded border ${statusBg} ${statusBorder}`}>
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+            Status de Sustentabilidade
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#06b6d4', marginBottom: '2px' }}>
-            {currentCoverage.toFixed(1)}x
+          <div className={`text-base font-bold mb-1 ${statusText}`}>
+            {statusLabel}
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            {(currentCoverage * 12).toFixed(0)} meses de gasto
+          <div className="text-xs text-slate-500">
+            {statusDesc}
           </div>
         </div>
 
-        {/* Future pool value */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid #8b5cf640',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Pool em +{projectedYears}a
+        {/* Key metrics grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Current coverage */}
+          <div className="p-3 bg-cyan-500/10 border border-cyan-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Cobertura Hoje
+            </div>
+            <div className="text-base font-bold text-cyan-400 mb-1">
+              {currentCoverage.toFixed(1)}x
+            </div>
+            <div className="text-xs text-slate-500">
+              {(currentCoverage * 12).toFixed(0)} meses de gasto
+            </div>
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#8b5cf6' }}>
-            {privacyMode ? 'R$••••' : fmtBrl(futurePoolValue)}
+
+          {/* Future pool value */}
+          <div className="p-3 bg-violet-500/10 border border-violet-500/25 rounded">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Pool em +{projectedYears}a
+            </div>
+            <div className="text-base font-bold text-violet-400">
+              {privacyMode ? 'R$••••' : fmtBrl(futurePoolValue)}
+            </div>
+            <div className="text-xs text-slate-500">
+              Valor projetado
+            </div>
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            Valor projetado
+
+          {/* Future coverage */}
+          <div className={`p-3 rounded border ${statusBg} ${statusBorder}`}>
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+              Cobertura em +{projectedYears}a
+            </div>
+            <div className={`text-base font-bold mb-1 ${statusText}`}>
+              {futureCoverage.toFixed(1)}x
+            </div>
+            <div className="text-xs text-slate-500">
+              {(futureCoverage * 12).toFixed(0)} meses de gasto
+            </div>
           </div>
         </div>
 
-        {/* Future coverage */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor:
-              isSafe ? 'rgba(34, 197, 94, 0.1)' : isWarning ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-            border:
-              isSafe ? '1px solid #22c55e40' : isWarning ? '1px solid #f59e0b40' : '1px solid #ef444440',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-            Cobertura em +{projectedYears}a
+        {/* Runway table */}
+        <div className="overflow-x-auto">
+          <div className="text-sm font-semibold text-slate-200 mb-3">
+            Projeção Anual
           </div>
-          <div
-            style={{
-              fontSize: '1.1rem',
-              fontWeight: 700,
-              color: isSafe ? '#22c55e' : isWarning ? '#f59e0b' : '#ef4444',
-              marginBottom: '2px',
-            }}
-          >
-            {futureCoverage.toFixed(1)}x
-          </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-            {(futureCoverage * 12).toFixed(0)} meses de gasto
-          </div>
-        </div>
-      </div>
 
-      {/* Runway table */}
-      <div style={{ marginBottom: '14px', overflowX: 'auto' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '10px' }}>
-          Projeção Anual
-        </div>
-
-        <table
-          style={{
-            width: '100%',
-            borderCollapse: 'collapse',
-            fontSize: '0.75rem',
-          }}
-        >
-          <thead>
-            <tr>
-              <th
-                style={{
-                  textAlign: 'left',
-                  padding: '8px',
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                  color: '#94a3b8',
-                  fontWeight: 600,
-                }}
-              >
-                Ano
-              </th>
-              <th
-                style={{
-                  textAlign: 'right',
-                  padding: '8px',
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                  color: '#cbd5e1',
-                  fontWeight: 600,
-                }}
-              >
-                Saldo Inicial
-              </th>
-              <th
-                style={{
-                  textAlign: 'right',
-                  padding: '8px',
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                  color: '#cbd5e1',
-                  fontWeight: 600,
-                }}
-              >
-                Retorno
-              </th>
-              <th
-                style={{
-                  textAlign: 'right',
-                  padding: '8px',
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                  color: '#cbd5e1',
-                  fontWeight: 600,
-                }}
-              >
-                Despesa
-              </th>
-              <th
-                style={{
-                  textAlign: 'right',
-                  padding: '8px',
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                  color: '#cbd5e1',
-                  fontWeight: 600,
-                }}
-              >
-                Saldo Final
-              </th>
-              <th
-                style={{
-                  textAlign: 'right',
-                  padding: '8px',
-                  borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                  color: '#cbd5e1',
-                  fontWeight: 600,
-                }}
-              >
-                Cobertura
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {runwayData.map((row, idx) => (
-              <tr key={idx}>
-                <td
-                  style={{
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    color: row.year === 0 ? '#cbd5e1' : '#94a3b8',
-                    fontWeight: row.year === 0 ? 600 : 400,
-                  }}
-                >
-                  {row.year === 0 ? 'Hoje' : row.year === yearsToFire ? 'FIRE' : `+${row.year}a`}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    color: '#cbd5e1',
-                  }}
-                >
-                  {privacyMode ? '••' : (row.startBalance / 1000000).toFixed(2) + 'M'}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    color: '#22c55e',
-                  }}
-                >
-                  {privacyMode ? '••' : `+${(row.investmentReturn / 1000000).toFixed(2)}M`}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    color: row.fireExpense > 0 ? '#ef4444' : '#94a3b8',
-                  }}
-                >
-                  {privacyMode ? '••' : `−${(row.fireExpense / 1000000).toFixed(2)}M`}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    color: row.endBalance > 0 ? '#cbd5e1' : '#ef4444',
-                    fontWeight: 600,
-                  }}
-                >
-                  {privacyMode ? '••' : (row.endBalance / 1000000).toFixed(2) + 'M'}
-                </td>
-                <td
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                    color:
-                      row.fireExpense > 0
-                        ? row.coverage >= 2.5
-                          ? '#22c55e'
-                          : row.coverage >= 1.5
-                            ? '#f59e0b'
-                            : '#ef4444'
-                        : '#94a3b8',
-                  }}
-                >
-                  {row.fireExpense > 0 ? row.coverage.toFixed(1) + 'x' : '—'}
-                </td>
+          <table className="w-full text-xs border-collapse">
+            <thead>
+              <tr>
+                <th className="text-left p-2 border-b border-slate-700/25 text-slate-400 font-semibold">
+                  Ano
+                </th>
+                <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                  Saldo Inicial
+                </th>
+                <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                  Retorno
+                </th>
+                <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                  Despesa
+                </th>
+                <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                  Saldo Final
+                </th>
+                <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                  Cobertura
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {runwayData.map((row, idx) => {
+                const coverageColor = row.fireExpense > 0
+                  ? row.coverage >= 2.5
+                    ? 'text-green-500'
+                    : row.coverage >= 1.5
+                      ? 'text-amber-500'
+                      : 'text-red-500'
+                  : 'text-slate-400';
 
-      {/* Summary */}
-      <div
-        style={{
-          padding: '12px 14px',
-          backgroundColor: 'rgba(71, 85, 105, 0.1)',
-          border: '1px solid rgba(71, 85, 105, 0.3)',
-          borderRadius: '6px',
-        }}
-      >
-        <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '6px', fontWeight: 600 }}>
-          Resumo de Sustentabilidade
+                return (
+                  <tr key={idx}>
+                    <td className={`p-2 border-b border-slate-700/15 ${row.year === 0 ? 'text-slate-200 font-semibold' : 'text-slate-400'}`}>
+                      {row.year === 0 ? 'Hoje' : row.year === yearsToFire ? 'FIRE' : `+${row.year}a`}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 text-slate-200">
+                      {privacyMode ? '••' : (row.startBalance / 1000000).toFixed(2) + 'M'}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 text-green-500">
+                      {privacyMode ? '••' : `+${(row.investmentReturn / 1000000).toFixed(2)}M`}
+                    </td>
+                    <td className={`text-right p-2 border-b border-slate-700/15 ${row.fireExpense > 0 ? 'text-red-500' : 'text-slate-400'}`}>
+                      {privacyMode ? '••' : `−${(row.fireExpense / 1000000).toFixed(2)}M`}
+                    </td>
+                    <td className={`text-right p-2 border-b border-slate-700/15 font-semibold ${row.endBalance > 0 ? 'text-slate-200' : 'text-red-500'}`}>
+                      {privacyMode ? '••' : (row.endBalance / 1000000).toFixed(2) + 'M'}
+                    </td>
+                    <td className={`text-right p-2 border-b border-slate-700/15 ${coverageColor}`}>
+                      {row.fireExpense > 0 ? row.coverage.toFixed(1) + 'x' : '—'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-        <div style={{ fontSize: '0.7rem', color: '#cbd5e1', lineHeight: '1.5' }}>
-          <strong>Gasto anual FIRE:</strong> {privacyMode ? 'R$••••' : fmtBrl(fireAnnualExpense)} <br />
-          <strong>Taxa de retorno assumida:</strong> {expectedReturn.toFixed(2)}%/ano <br />
-          <strong>Taxa sustentável (SWR):</strong> {swrPercent.toFixed(2)}% <br />
-          {runoutYear !== Infinity && runoutYear > projectedYears && (
-            <>
-              <strong style={{ color: '#f59e0b' }}>⚠️ Atenção:</strong> Com despesas de {fmtBrl(fireAnnualExpense)}/ano,
-              a cobertura esgota em ~{(runoutYear + 1) * 12} meses
-            </>
-          )}
-          {isSafe && (
-            <>
-              <strong style={{ color: '#22c55e' }}>✅ Seguro:</strong> Bond pool sustenta gastos por 2.5+ anos em média
-            </>
-          )}
-        </div>
-      </div>
 
-      {/* Footer note */}
-      <div
-        style={{
-          marginTop: '12px',
-          fontSize: '0.7rem',
-          color: '#64748b',
-          padding: '8px',
-          backgroundColor: 'rgba(71, 85, 105, 0.08)',
-          borderRadius: '4px',
-        }}
-      >
-        <strong>📌 Nota:</strong> Runway assume taxa de retorno {expectedReturn.toFixed(1)}% pós-FIRE. Cenário conservador (não inclui
-        aumento de despesas com inflação ou mudanças de taxa).
-      </div>
-    </div>
+        {/* Summary */}
+        <div className="p-3 bg-slate-700/10 border border-slate-700/30 rounded">
+          <div className="text-xs text-slate-400 mb-2 font-semibold">
+            Resumo de Sustentabilidade
+          </div>
+          <div className="text-xs text-slate-200 leading-relaxed space-y-1">
+            <div>
+              <strong>Gasto anual FIRE:</strong> {privacyMode ? 'R$••••' : fmtBrl(fireAnnualExpense)}
+            </div>
+            <div>
+              <strong>Taxa de retorno assumida:</strong> {expectedReturn.toFixed(2)}%/ano
+            </div>
+            <div>
+              <strong>Taxa sustentável (SWR):</strong> {swrPercent.toFixed(2)}%
+            </div>
+            {runoutYear !== Infinity && runoutYear > projectedYears && (
+              <div className="text-amber-400">
+                <strong>⚠️ Atenção:</strong> Com despesas de {fmtBrl(fireAnnualExpense)}/ano,
+                a cobertura esgota em ~{(runoutYear + 1) * 12} meses
+              </div>
+            )}
+            {isSafe && (
+              <div className="text-green-500">
+                <strong>✅ Seguro:</strong> Bond pool sustenta gastos por 2.5+ anos em média
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer note */}
+        <div className="mt-3 p-2 text-xs text-slate-500 bg-slate-700/5 rounded">
+          <strong>📌 Nota:</strong> Runway assume taxa de retorno {expectedReturn.toFixed(1)}% pós-FIRE. Cenário conservador (não inclui
+          aumento de despesas com inflação ou mudanças de taxa).
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
