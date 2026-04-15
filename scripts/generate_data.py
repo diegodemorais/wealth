@@ -3093,6 +3093,11 @@ def main():
     bond_pool_rwy_data  = _load_json_safe(BOND_POOL_RUNWAY_PATH, "bond_pool_runway")
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
+    # ─── Adicionar by_profile ao fire_section (Phase 0 bloqueante #2) ─────────
+    if fire_matrix_data and fire_matrix_data.get("by_profile"):
+        fire_section["by_profile"] = fire_matrix_data["by_profile"]
+        print(f"  -> by_profile: {len(fire_matrix_data['by_profile'])} perfis (MC scenarios 3x2x3)")
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),

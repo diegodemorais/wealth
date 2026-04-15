@@ -13,6 +13,7 @@ Venv: ~/claude/finance-tools/.venv/bin/python3
 
 import argparse
 from dataclasses import dataclass, field
+import os
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
@@ -41,6 +42,7 @@ PREMISSAS = {
     "idade_atual":         IDADE_ATUAL,
     "idade_cenario_base":  IDADE_CENARIO_BASE,
     "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
+    "idade_fire_alvo":     IDADE_CENARIO_BASE,  # default: FIRE aos 53
     "idade_safe_harbor":   IDADE_CENARIO_BASE,
     "anos_simulacao":      37,          # anos de desacumulação (53→90)
 
@@ -86,6 +88,33 @@ PREMISSAS = {
     # Gatilho FIRE
     "patrimonio_gatilho":  PATRIMONIO_GATILHO,
     "swr_gatilho":         SWR_GATILHO,
+}
+
+# ─── PERFIS FIRE (fonte: carteira.md + FR-spending-modelo-familia 2026-04-06) ──
+# Cada perfil tem spending anual diferente; MC roda para cada um em 2 idades-alvo.
+
+PERFIS_FIRE = {
+    "atual": {
+        "label": "Atual (Solteiro)",
+        "gasto_anual": 250_000,
+        "descricao": "Diego solo, custo de vida base",
+    },
+    "casado": {
+        "label": "Casado",
+        "gasto_anual": 270_000,
+        "descricao": "Diego + parceira, custos compartilhados, saúde 2p",
+    },
+    "filho": {
+        "label": "Casado + Filho",
+        "gasto_anual": 300_000,
+        "descricao": "Diego + parceira + criança(s), educação e saúde expandidas",
+    },
+}
+
+# Idades-alvo para P(FIRE): aspiracional (50) e base (53)
+FIRE_AGES = {
+    "p_fire_50": 50,
+    "p_fire_53": 53,
 }
 
 # ─── SPENDING SMILE (fonte: FR-spending-smile 2026-03-27) ─────────────────────
@@ -532,6 +561,61 @@ def rodar_tornado(premissas: dict, variacao: float = 0.10, n_sim: int = 5_000) -
     return resultados  # ordem preservada do dict variaveis (DEV-fire-sim-fixes)
 
 
+def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) -> list:
+    """
+    Roda MC para cada perfil (PERFIS_FIRE) em cada idade-alvo (FIRE_AGES).
+    Retorna lista de dicts com p_fire_50, p_fire_53 por perfil e cenário.
+
+    Output schema (por perfil):
+      {
+        "profile": "atual",
+        "label": "Atual (Solteiro)",
+        "gasto_anual": 250000,
+        "p_fire_50": 85.4,   # % base scenario
+        "p_fire_53": 90.4,   # % base scenario
+        "p_fire_50_fav": ..., "p_fire_50_stress": ...,
+        "p_fire_53_fav": ..., "p_fire_53_stress": ...,
+        "fire_age_50": "2037",  # calendar year
+        "fire_age_53": "2040",
+        "pat_mediano_50": ..., "pat_mediano_53": ...,
+      }
+    """
+    results = []
+    ano_nascimento = 2026 - premissas["idade_atual"]  # ~1987
+
+    for perfil_id, perfil in PERFIS_FIRE.items():
+        entry = {
+            "profile": perfil_id,
+            "label": perfil["label"],
+            "gasto_anual": perfil["gasto_anual"],
+        }
+
+        for age_key, age_target in FIRE_AGES.items():
+            # Override spending + idade_fire_alvo for this profile/age combo
+            p = dict(premissas)
+            p["custo_vida_base"] = perfil["gasto_anual"]
+            p["idade_fire_alvo"] = age_target
+            p["anos_simulacao"] = 90 - age_target  # simulate until age 90
+
+            fire_year = ano_nascimento + age_target
+            entry[f"fire_age_{age_target}"] = str(fire_year)
+
+            for cenario in ["base", "favoravel", "stress"]:
+                r = rodar_monte_carlo(p, n_sim=n_sim, cenario=cenario, seed=seed)
+                p_pct = round(r["p_sucesso"] * 100, 1)
+
+                if cenario == "base":
+                    entry[age_key] = p_pct
+                    entry[f"pat_mediano_{age_target}"] = round(r["pat_mediana_fire"], 0)
+                else:
+                    suffix = "fav" if cenario == "favoravel" else "stress"
+                    entry[f"{age_key}_{suffix}"] = p_pct
+
+        results.append(entry)
+
+    return results
+
+
 # ─── OUTPUT ───────────────────────────────────────────────────────────────────
 
 def imprimir_resultados(resultados: list, premissas: dict):
@@ -617,6 +701,8 @@ def main():
                         help="Override custo de vida base (R$/ano) para compare-strategies. Ex: --spending 300000")
     parser.add_argument("--retorno-equity", type=float, default=None,
                         help="Override retorno_equity_base (ex: 0.0395 para factor drought scenario)")
+    parser.add_argument("--by-profile", action="store_true",
+                        help="Rodar MC para 3 perfis (Atual/Casado/Filho) × 2 idades (50/53) e exportar fire_matrix.json")
     args = parser.parse_args()
 
     premissas = dict(PREMISSAS)
@@ -630,6 +716,56 @@ def main():
         premissas["custo_vida_base"] = args.spending
     if args.retorno_equity is not None:
         premissas["retorno_equity_base"] = args.retorno_equity
+
+    if args.by_profile:
+        import json as _json
+        from datetime import date as _date
+
+        print(f"\n  Rodando MC por perfil ({args.n_sim:,} sims × 3 perfis × 2 idades × 3 cenários = {args.n_sim * 18:,} runs)...")
+        by_profile = rodar_mc_by_profile(premissas, n_sim=args.n_sim, seed=42)
+
+        # Print results
+        print(f"\n{'Perfil':<22} {'P(50) Base':>10} {'P(53) Base':>10} {'P(50) Stress':>12} {'P(53) Stress':>12}")
+        print("-" * 70)
+        for p in by_profile:
+            status_50 = "+" if p["p_fire_50"] >= 90 else ("~" if p["p_fire_50"] >= 80 else "-")
+            status_53 = "+" if p["p_fire_53"] >= 90 else ("~" if p["p_fire_53"] >= 80 else "-")
+            print(f"  {status_50}{status_53} {p['label']:<20} {p['p_fire_50']:>9.1f}% {p['p_fire_53']:>9.1f}% "
+                  f"{p.get('p_fire_50_stress', 0):>11.1f}% {p.get('p_fire_53_stress', 0):>11.1f}%")
+        print()
+
+        # Merge into fire_matrix.json (preserve existing matrix data)
+        fire_matrix_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../dados/fire_matrix.json")
+        existing = {}
+        try:
+            with open(fire_matrix_path) as f:
+                existing = _json.load(f)
+        except Exception:
+            pass
+
+        # Update perfis metadata + add by_profile MC results
+        existing["perfis"] = {pid: {"label": pf["label"], "gasto_anual": pf["gasto_anual"],
+                                     "descricao": pf["descricao"]}
+                              for pid, pf in PERFIS_FIRE.items()}
+        existing["by_profile"] = by_profile
+        existing["_by_profile_generated"] = str(_date.today())
+        existing["_by_profile_n_sim"] = args.n_sim
+
+        with open(fire_matrix_path, "w") as f:
+            _json.dump(existing, f, indent=2, ensure_ascii=False)
+        print(f"  ✓ fire_matrix.json atualizado com by_profile ({len(by_profile)} perfis)")
+
+        # Also update dashboard_state.json for generate_data.py
+        fire_state = {}
+        try:
+            from config import load_dashboard_state
+            fire_state = load_dashboard_state().get("fire", {})
+        except Exception:
+            pass
+        fire_state["by_profile"] = by_profile
+        update_dashboard_state("fire", fire_state, generator="fire_montecarlo.py --by-profile")
+        print(f"  ✓ dashboard_state.json fire.by_profile atualizado\n")
+        return
 
     if args.compare_strategies:
         print(f"\n  Comparando {len(STRATEGIES)} withdrawal strategies ({args.n_sim:,} sims cada)...\n")

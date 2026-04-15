@@ -14,6 +14,9 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
+import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
+import { WellnessActionsBox } from '@/components/dashboard/WellnessActionsBox';
+import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -66,6 +69,41 @@ export default function HomePage() {
           description={`Wellness score: ${(derived.wellnessScore * 100).toFixed(0)}%`}
         />
       </section>
+
+      {/* Wellness Actions */}
+      {data && data.wellness_config && (
+        <CollapsibleSection
+          id="section-wellness-actions"
+          title="Wellness Actions"
+          defaultOpen={true}
+          icon="🎯"
+        >
+          <WellnessActionsBox
+            wellnessConfig={data.wellness_config}
+            pfire={data.pfire_base?.base}
+            driftMaxPp={(() => {
+              if (!data.drift) return undefined;
+              const driftVals = Object.values(data.drift) as Array<{ atual: number; alvo: number }>;
+              return Math.max(...driftVals.map(d =>
+                (typeof d?.atual === 'number' && typeof d?.alvo === 'number')
+                  ? Math.abs(d.atual - d.alvo)
+                  : 0
+              ));
+            })()}
+            savingsRate={(() => {
+              const aporte = data.premissas?.aporte_mensal;
+              const custo = data.premissas?.custo_vida_base;
+              if (typeof aporte !== 'number' || typeof custo !== 'number' || custo === 0) return undefined;
+              return aporte / (aporte + custo / 12);
+            })()}
+            ipcaGapPp={(() => {
+              if (!data.drift?.IPCA) return undefined;
+              return Math.abs((data.drift.IPCA.atual || 0) - (data.drift.IPCA.alvo || 0));
+            })()}
+            dcaActive={data.dca_status?.ipca2040?.ativo === true || data.dca_status?.ipca2050?.ativo === true}
+          />
+        </CollapsibleSection>
+      )}
 
       {/* Key Metrics Grid */}
       <CollapsibleSection id="section-metrics" title="Key Metrics" defaultOpen={true}>
@@ -192,6 +230,22 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
+      {/* Tier-1: HODL11 Crypto Band */}
+      {data && data.hodl11 && data.hodl11.banda && (
+        <CollapsibleSection
+          id="section-crypto-band"
+          title="HODL11 — Crypto Band"
+          defaultOpen={true}
+          icon="₿"
+        >
+          <CryptoBandChart
+            banda={data.hodl11.banda}
+            valor={typeof data.hodl11.valor === 'number' ? data.hodl11.valor : undefined}
+            pnl_pct={typeof data.hodl11.pnl_pct === 'number' ? data.hodl11.pnl_pct : undefined}
+          />
+        </CollapsibleSection>
+      )}
+
       {/* Tier-2: Bond Pool Composition */}
       {data && data.fire && (
         <CollapsibleSection
@@ -205,6 +259,18 @@ export default function HomePage() {
             runwayAnosPosFire={data.bond_pool_runway?.anos_cobertura_pos_fire || 0}
             poolTotal={data.fire.bond_pool_readiness?.valor_atual_brl || 0}
           />
+        </CollapsibleSection>
+      )}
+
+      {/* Tier-2: Factor Loadings */}
+      {data && data.factor_loadings && (
+        <CollapsibleSection
+          id="section-factor-loadings"
+          title="Factor Loadings"
+          defaultOpen={false}
+          icon="📐"
+        >
+          <FactorLoadingsTable data={data.factor_loadings} />
         </CollapsibleSection>
       )}
 

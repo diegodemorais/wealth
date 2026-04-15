@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { useUiStore } from "@/store/uiStore"
 
 interface DCAStatus {
   id: string
@@ -22,6 +23,7 @@ interface DCAStatusGridProps {
 }
 
 export function DCAStatusGrid({ items }: DCAStatusGridProps) {
+  const privacyMode = useUiStore(s => s.privacyMode);
   // Defensive: validate items array
   const validItems = Array.isArray(items) ? items.filter(item => item && typeof item === 'object') : [];
 
@@ -71,14 +73,14 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                         <div className="flex justify-between items-baseline">
                           <span className="text-muted-foreground">Taxa atual</span>
                           <span className="font-mono font-semibold">
-                            {taxa.toFixed(2)}%
+                            {privacyMode ? '••••' : `${taxa.toFixed(2)}%`}
                           </span>
                         </div>
 
                         {/* Piso Compra */}
                         <div className="flex justify-between items-baseline">
                           <span className="text-muted-foreground">Piso compra</span>
-                          <span className="font-mono">{piso_c.toFixed(1)}%</span>
+                          <span className="font-mono">{privacyMode ? '••••' : `${piso_c.toFixed(1)}%`}</span>
                         </div>
 
                         {/* Piso Venda (if exists) */}
@@ -86,7 +88,7 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                           <div className="flex justify-between items-baseline">
                             <span className="text-muted-foreground">Piso venda</span>
                             <span className="font-mono">
-                              {piso_v.toFixed(1)}%
+                              {privacyMode ? '••••' : `${piso_v.toFixed(1)}%`}
                             </span>
                           </div>
                         )}
@@ -100,10 +102,7 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                               gap > 0.5 ? "text-green-400" : "text-yellow-400"
                             )}
                           >
-                            {gap > 0
-                              ? "+"
-                              : ""}
-                            {gap.toFixed(2)}pp
+                            {privacyMode ? '••••' : `${gap > 0 ? "+" : ""}${gap.toFixed(2)}pp`}
                           </span>
                         </div>
 
@@ -115,8 +114,7 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                             <div className="flex justify-between items-baseline">
                               <span className="text-muted-foreground">% carteira</span>
                               <span className="font-mono">
-                                {pct_atual.toFixed(1)}% /{" "}
-                                {alvo.toFixed(0)}%
+                                {privacyMode ? '••••' : `${pct_atual.toFixed(1)}% / ${alvo.toFixed(0)}%`}
                               </span>
                             </div>
                           );

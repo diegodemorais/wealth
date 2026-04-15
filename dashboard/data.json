@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-14T22:55:06",
-  "_generated_brt": "2026-04-14T22:55:06-03:00",
+  "_generated": "2026-04-14T23:01:02",
+  "_generated_brt": "2026-04-14T23:01:02-03:00",
   "date": "2026-04-14",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -253,12 +253,59 @@
         "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
       ],
       "inputs": {
-        "pfire": 0.865,
+        "pfire": 0.904,
         "drift_max_pp": 8.0,
         "ipca_taxa_pct": 7.2
       }
     },
-    "swr_current": 1.32
+    "swr_current": 1.32,
+    "by_profile": [
+      {
+        "profile": "atual",
+        "label": "Atual (Solteiro)",
+        "gasto_anual": 250000,
+        "fire_age_50": "2037",
+        "p_fire_50": 82.7,
+        "pat_mediano_50": 9339651.0,
+        "p_fire_50_fav": 90.1,
+        "p_fire_50_stress": 78.1,
+        "fire_age_53": "2040",
+        "p_fire_53": 90.4,
+        "pat_mediano_53": 11527476.0,
+        "p_fire_53_fav": 94.1,
+        "p_fire_53_stress": 86.8
+      },
+      {
+        "profile": "casado",
+        "label": "Casado",
+        "gasto_anual": 270000,
+        "fire_age_50": "2037",
+        "p_fire_50": 81.0,
+        "pat_mediano_50": 9339651.0,
+        "p_fire_50_fav": 88.4,
+        "p_fire_50_stress": 75.4,
+        "fire_age_53": "2040",
+        "p_fire_53": 88.8,
+        "pat_mediano_53": 11527476.0,
+        "p_fire_53_fav": 93.7,
+        "p_fire_53_stress": 85.5
+      },
+      {
+        "profile": "filho",
+        "label": "Casado + Filho",
+        "gasto_anual": 300000,
+        "fire_age_50": "2037",
+        "p_fire_50": 77.2,
+        "pat_mediano_50": 9339651.0,
+        "p_fire_50_fav": 85.8,
+        "p_fire_50_stress": 71.3,
+        "fire_age_53": "2040",
+        "p_fire_53": 85.8,
+        "pat_mediano_53": 11527476.0,
+        "p_fire_53_fav": 92.2,
+        "p_fire_53_stress": 82.1
+      }
+    ]
   },
   "scenario_comparison": {
     "base": {
@@ -2867,7 +2914,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 87.4,
-    "bitcoin_usd": 74660.69,
+    "bitcoin_usd": 74677.51,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -2876,7 +2923,7 @@
         "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
       ],
       "inputs": {
-        "pfire": 0.865,
+        "pfire": 0.904,
         "drift_max_pp": 8.0,
         "ipca_taxa_pct": 7.2
       }
@@ -2885,9 +2932,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9837,
-    "btc_usd": 74660.69,
+    "btc_usd": 74677.51,
     "cambio_mtd_pct": -3.34,
-    "btc_mtd_pct": 3.87,
+    "btc_mtd_pct": 3.9,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -4904,49 +4951,49 @@
         "label": "Atual (Solteiro)",
         "gasto_anual": 250000,
         "fire_age_50": "2037",
-        "p_fire_50": 82.9,
-        "pat_mediano_50": 9179909.0,
-        "p_fire_50_fav": 89.4,
-        "p_fire_50_stress": 77.0,
+        "p_fire_50": 82.7,
+        "pat_mediano_50": 9339651.0,
+        "p_fire_50_fav": 90.1,
+        "p_fire_50_stress": 78.1,
         "fire_age_53": "2040",
-        "p_fire_53": 90.1,
-        "pat_mediano_53": 11315402.0,
-        "p_fire_53_fav": 93.8,
-        "p_fire_53_stress": 85.0
+        "p_fire_53": 90.4,
+        "pat_mediano_53": 11527476.0,
+        "p_fire_53_fav": 94.1,
+        "p_fire_53_stress": 86.8
       },
       {
         "profile": "casado",
         "label": "Casado",
         "gasto_anual": 270000,
         "fire_age_50": "2037",
-        "p_fire_50": 79.6,
-        "pat_mediano_50": 9179909.0,
-        "p_fire_50_fav": 88.2,
-        "p_fire_50_stress": 72.5,
+        "p_fire_50": 81.0,
+        "pat_mediano_50": 9339651.0,
+        "p_fire_50_fav": 88.4,
+        "p_fire_50_stress": 75.4,
         "fire_age_53": "2040",
-        "p_fire_53": 89.8,
-        "pat_mediano_53": 11315402.0,
-        "p_fire_53_fav": 93.1,
-        "p_fire_53_stress": 84.3
+        "p_fire_53": 88.8,
+        "pat_mediano_53": 11527476.0,
+        "p_fire_53_fav": 93.7,
+        "p_fire_53_stress": 85.5
       },
       {
         "profile": "filho",
         "label": "Casado + Filho",
         "gasto_anual": 300000,
         "fire_age_50": "2037",
-        "p_fire_50": 76.1,
-        "pat_mediano_50": 9179909.0,
-        "p_fire_50_fav": 87.0,
-        "p_fire_50_stress": 69.1,
+        "p_fire_50": 77.2,
+        "pat_mediano_50": 9339651.0,
+        "p_fire_50_fav": 85.8,
+        "p_fire_50_stress": 71.3,
         "fire_age_53": "2040",
-        "p_fire_53": 84.5,
-        "pat_mediano_53": 11315402.0,
+        "p_fire_53": 85.8,
+        "pat_mediano_53": 11527476.0,
         "p_fire_53_fav": 92.2,
-        "p_fire_53_stress": 80.8
+        "p_fire_53_stress": 82.1
       }
     ],
     "_by_profile_generated": "2026-04-14",
-    "_by_profile_n_sim": 1000
+    "_by_profile_n_sim": 10000
   },
   "fire_swr_percentis": {
     "_generated": "2026-04-13T08:41:44",

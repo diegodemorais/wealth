@@ -11,6 +11,7 @@ import { RollingSharpChart } from '@/components/charts/RollingSharpChart';
 import { InformationRatioChart } from '@/components/charts/InformationRatioChart';
 import { BacktestChart } from '@/components/charts/BacktestChart';
 import { ShadowChart } from '@/components/charts/ShadowChart';
+import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable';
 
 export default function PerformancePage() {
   const setData = useDashboardStore(s => s.setData);
@@ -50,6 +51,12 @@ export default function PerformancePage() {
         <RollingSharpChart data={data} />
         <InformationRatioChart data={data} />
       </CollapsibleSection>
+
+      {data.factor_loadings && (
+        <CollapsibleSection id="section-factor-quality" title="Factor Model Fit — R² Quality" defaultOpen={true}>
+          <FactorLoadingsTable data={data.factor_loadings} />
+        </CollapsibleSection>
+      )}
 
       <CollapsibleSection id="section-backtest" title="Backtest & Comparisons" defaultOpen={false}>
         <BacktestChart data={data} />

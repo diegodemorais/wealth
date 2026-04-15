@@ -8,6 +8,8 @@ import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
 import { IncomeChart } from '@/components/charts/IncomeChart';
 import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart';
 import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
+import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
+import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 
 export default function WithdrawPage() {
   const setData = useDashboardStore(s => s.setData);
@@ -52,6 +54,18 @@ export default function WithdrawPage() {
       <CollapsibleSection id="section-income-projection" title="Income Projection" defaultOpen={false}>
         <IncomeProjectionChart data={data} />
       </CollapsibleSection>
+
+      {data.fire?.bond_pool_readiness && (
+        <CollapsibleSection id="section-bond-pool-readiness" title="Bond Pool — Readiness" defaultOpen={true}>
+          <BondPoolReadiness data={data.fire.bond_pool_readiness} />
+        </CollapsibleSection>
+      )}
+
+      {data.fire?.bond_pool_runway && (
+        <CollapsibleSection id="section-bond-pool-runway" title="Bond Pool — Runway Projection" defaultOpen={true}>
+          <BondPoolRunwayChart data={data.fire.bond_pool_runway} />
+        </CollapsibleSection>
+      )}
     </div>
   );
 }

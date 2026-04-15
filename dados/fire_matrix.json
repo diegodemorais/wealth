@@ -8,11 +8,6 @@
       "gasto_anual": 250000,
       "descricao": "Diego solo, custo de vida base"
     },
-    "solteiro": {
-      "label": "Solteiro Minimalista",
-      "gasto_anual": 220000,
-      "descricao": "Despesas reduzidas, lifestyle mais austero"
-    },
     "casado": {
       "label": "Casado",
       "gasto_anual": 270000,
@@ -233,5 +228,54 @@
     "16000000_270000": 0.982,
     "16000000_300000": 0.9756,
     "16000000_350000": 0.9696
-  }
+  },
+  "by_profile": [
+    {
+      "profile": "atual",
+      "label": "Atual (Solteiro)",
+      "gasto_anual": 250000,
+      "fire_age_50": "2037",
+      "p_fire_50": 82.7,
+      "pat_mediano_50": 9339651.0,
+      "p_fire_50_fav": 90.1,
+      "p_fire_50_stress": 78.1,
+      "fire_age_53": "2040",
+      "p_fire_53": 90.4,
+      "pat_mediano_53": 11527476.0,
+      "p_fire_53_fav": 94.1,
+      "p_fire_53_stress": 86.8
+    },
+    {
+      "profile": "casado",
+      "label": "Casado",
+      "gasto_anual": 270000,
+      "fire_age_50": "2037",
+      "p_fire_50": 81.0,
+      "pat_mediano_50": 9339651.0,
+      "p_fire_50_fav": 88.4,
+      "p_fire_50_stress": 75.4,
+      "fire_age_53": "2040",
+      "p_fire_53": 88.8,
+      "pat_mediano_53": 11527476.0,
+      "p_fire_53_fav": 93.7,
+      "p_fire_53_stress": 85.5
+    },
+    {
+      "profile": "filho",
+      "label": "Casado + Filho",
+      "gasto_anual": 300000,
+      "fire_age_50": "2037",
+      "p_fire_50": 77.2,
+      "pat_mediano_50": 9339651.0,
+      "p_fire_50_fav": 85.8,
+      "p_fire_50_stress": 71.3,
+      "fire_age_53": "2040",
+      "p_fire_53": 85.8,
+      "pat_mediano_53": 11527476.0,
+      "p_fire_53_fav": 92.2,
+      "p_fire_53_stress": 82.1
+    }
+  ],
+  "_by_profile_generated": "2026-04-14",
+  "_by_profile_n_sim": 10000
 }

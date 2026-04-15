@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
+import { useUiStore } from "@/store/uiStore"
 
 interface BondPoolData {
   valor_atual_brl: number
@@ -39,6 +40,8 @@ export function BondPoolComposition({
   runwayAnosPosFire = 0,
   poolTotal = 0,
 }: BondPoolCompositionProps) {
+  const privacyMode = useUiStore(s => s.privacyMode);
+
   // Defensive: validate data exists and has required numeric fields
   if (!data || typeof data !== 'object') {
     return <div className="text-muted-foreground">Bond pool data unavailable</div>;
@@ -82,7 +85,7 @@ export function BondPoolComposition({
               <div>
                 <p className="text-xs text-muted-foreground mb-2">Current Pool</p>
                 <p className="font-mono text-2xl font-bold">
-                  R${(valor / 1000).toFixed(0)}k
+                  {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}
                 </p>
               </div>
               <div className={cn("text-right", statusColors[data.status])}>
@@ -143,7 +146,7 @@ export function BondPoolComposition({
                   </div>
                   <Progress value={comp2040Pct} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-1">
-                    R${(data.composicao.ipca2040 / 1000).toFixed(0)}k
+                    {privacyMode ? '••••' : `R$${(data.composicao.ipca2040 / 1000).toFixed(0)}k`}
                   </p>
                 </div>
               )}
@@ -159,7 +162,7 @@ export function BondPoolComposition({
                   </div>
                   <Progress value={comp2050Pct} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-1">
-                    R${(data.composicao.ipca2050 / 1000).toFixed(0)}k
+                    {privacyMode ? '••••' : `R$${(data.composicao.ipca2050 / 1000).toFixed(0)}k`}
                   </p>
                 </div>
               )}
@@ -175,7 +178,7 @@ export function BondPoolComposition({
                   </div>
                   <Progress value={comp2029Pct} className="h-2" />
                   <p className="text-xs text-muted-foreground mt-1">
-                    R${(data.composicao.ipca2029 / 1000).toFixed(0)}k
+                    {privacyMode ? '••••' : `R$${(data.composicao.ipca2029 / 1000).toFixed(0)}k`}
                   </p>
                 </div>
               )}
