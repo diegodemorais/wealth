@@ -52,7 +52,51 @@ export default function PerformancePage() {
 
   return (
     <div>
-      {/* 1. Premissas vs Realizado — 5 Anos (2021-2026) */}
+      {/* 1. Alpha Desde o Início vs SWRD — PRIMEIRA seção (sempre visível) */}
+      <section className="section" id="alphaSwrdSection">
+        <h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '20px', alignItems: 'flex-start' }}>
+          <div>
+            <DeltaBarChart data={data} />
+          </div>
+          {/* Painel lateral direito com métricas IPCA+ */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
+                IPCA+ Longo — Progressão vs Alvo 19%
+              </div>
+              <div style={{ fontSize: '.72rem', lineHeight: 1.8 }}>
+                <div>Sep: −8.5pp · DCA ativo · taxa −7.07%</div>
+              </div>
+            </div>
+            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
+                Alpha Líquido pós-haircut
+              </div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--muted)' }}>−0.16%/ano</div>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>McLean & Pontiff 2016 haircut 58%</div>
+            </div>
+            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
+                IPCA+ taxa vs piso
+              </div>
+              {data.rf?.ipca2040 && (
+                <div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
+                    {data.rf.ipca2040.taxa?.toFixed(2)}% e {data.rf.ipca2040.piso_compra?.toFixed(1) ?? '6.0'}%
+                  </div>
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                    Atual IPCA+: ativa · DCA ativo
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="src">McLean & Pontiff 2016: haircut 58%</div>
+      </section>
+
+      {/* 2. Premissas vs Realizado — 5 Anos (2021-2026) */}
       <section className="section" id="premissasVsRealizadoSection">
         <h2>Premissas vs Realizado — 5 Anos (2021-2026)</h2>
         <PremisesTable />
@@ -61,7 +105,7 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 2. Retornos Mensais — Heatmap (collapsible, open) */}
+      {/* 3. Retornos Mensais — Heatmap (collapsible, open) */}
       <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           <MonthlyReturnsHeatmap data={data.monthly_returns} />
@@ -71,7 +115,7 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 3. Patrimônio — Evolução Histórica (com period-btns) */}
+      {/* 4. Patrimônio — Evolução Histórica (com period-btns) */}
       <section className="section" id="timelineSection">
         <h2>Patrimônio — Evolução Histórica</h2>
         <div className="period-btns" id="timelinePeriodBtns">
@@ -91,7 +135,7 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 4. Performance Attribution — Decomposição do Patrimônio */}
+      {/* 5. Performance Attribution — Decomposição do Patrimônio */}
       <section className="section" id="attrSection">
         <h2>
           Performance Attribution — Decomposição do Patrimônio{' '}
@@ -124,7 +168,7 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 5. Rolling Sharpe — 12m (collapsible) */}
+      {/* 6. Rolling Sharpe — 12m (collapsible) */}
       <CollapsibleSection id="section-rolling-sharpe" title="Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)" defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
           <RollingSharpChart data={data} />
@@ -133,16 +177,6 @@ export default function PerformancePage() {
             <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;1</strong> = excelente{' '}
             <span style={{ color: 'rgba(234,179,8,.9)' }}>■</span> <strong>0–1</strong> = neutro{' '}
             <span style={{ color: 'rgba(239,68,68,.9)' }}>■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 6. Alpha Desde o Início vs SWRD (collapsible) */}
-      <CollapsibleSection id="section-alpha-swrd" title="Alpha Desde o Início vs SWRD (USD) — Performance Relativa" defaultOpen={false}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <DeltaBarChart data={data} />
-          <div className="src">
-            McLean &amp; Pontiff 2016: haircut 58%
           </div>
         </div>
       </CollapsibleSection>
@@ -207,6 +241,63 @@ export default function PerformancePage() {
             <strong>Como ler:</strong> IR = Active Return / Tracking Error (janela 36m).<br />
             <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;0</strong> = supera VWRA{' '}
             <span style={{ color: 'rgba(239,68,68,.9)' }}>■</span> <strong>&lt;0</strong> = underperformance
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 10. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible) */}
+      <CollapsibleSection id="section-factor-loadings" title="Factor Loadings — Regressão Fama-French SF + Momentum" defaultOpen={false}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {/* Mostrar tabs de ETF */}
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>
+            {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => (
+              <span key={etf} style={{
+                background: 'var(--card2)',
+                borderRadius: '4px',
+                padding: '3px 8px',
+                fontSize: '.65rem',
+                fontWeight: 600,
+                color: 'var(--accent)',
+              }}>
+                {etf}
+              </span>
+            ))}
+          </div>
+          {/* Legenda dos fatores */}
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.75rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Fator</th>
+                  {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => (
+                    <th key={etf} style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--accent)' }}>{etf}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {['Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'Mom'].map(factor => (
+                  <tr key={factor} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '6px 8px', fontWeight: 600 }}>{factor}</td>
+                    {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => {
+                      const loading = data.factor_loadings?.[etf]?.[factor] ?? data.backtest?.factor_loadings?.[etf]?.[factor];
+                      return (
+                        <td key={etf} style={{
+                          textAlign: 'right',
+                          padding: '6px 8px',
+                          color: loading != null ? (loading > 0.3 ? 'var(--green)' : loading < -0.1 ? 'var(--red)' : 'var(--text)') : 'var(--muted)',
+                        }}>
+                          {loading != null ? loading.toFixed(2) : '—'}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="src">
+            Regressão FF5+Mom · Barra sólida = significativa (90%+) · Barra espaçada = não significativa.<br />
+            ⓘ P&lt;0.05: mesmos FF5 EM aplica mol solo ETF (formação para Elo e 4.5C globais)
           </div>
         </div>
       </CollapsibleSection>

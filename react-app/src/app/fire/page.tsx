@@ -13,6 +13,7 @@ import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 export default function FirePage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
+  const derived = useDashboardStore(s => s.derived);
   const isLoading = useDashboardStore(s => s.isLoadingData);
   const dataError = useDashboardStore(s => s.dataLoadError);
 
@@ -103,6 +104,89 @@ export default function FirePage() {
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* 7. P(FIRE) — Cenários de Família (impact no custo de vida) */}
+      {derived && (
+        <section className="section" id="familyScenariosFireSection">
+          <h2>P(FIRE) — Cenários de Família <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(impacto no custo de vida)</span></h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { label: '👤 Solteiro / FIRE Day', pfire: derived.pfireBase, gastoAnual: 250000, gastoLabel: 'R$250k/ano', delta: null },
+              { label: '💍 Pós-casamento', pfire: derived.pfireBase ? derived.pfireBase - 1.6 : null, gastoAnual: 300000, gastoLabel: 'R$300k/ano', delta: '-1.6pp' },
+              { label: '👶 Casamento + filho', pfire: derived.pfireBase ? derived.pfireBase - 4.8 : null, gastoAnual: 360000, gastoLabel: 'R$360k/ano', delta: '-4.8pp' },
+            ].map((scenario, i) => (
+              <div key={i} style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ minWidth: '180px' }}>
+                  <div style={{ fontSize: '.8rem', fontWeight: 600 }}>{scenario.label}</div>
+                  <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{scenario.gastoLabel}</div>
+                  {scenario.delta && <div style={{ fontSize: '.65rem', color: 'var(--red)' }}>{scenario.delta}</div>}
+                </div>
+                <div style={{ flex: 1, background: 'var(--card)', borderRadius: '4px', height: '8px', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${scenario.pfire != null ? Math.min(100, scenario.pfire) : 0}%`,
+                    height: '100%',
+                    background: scenario.pfire != null && scenario.pfire >= 90 ? 'var(--green)' : 'var(--yellow)',
+                    borderRadius: '4px',
+                  }} />
+                </div>
+                <div style={{ minWidth: '80px', textAlign: 'right' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: scenario.pfire && scenario.pfire >= 90 ? 'var(--green)' : 'var(--yellow)' }}>
+                    {scenario.pfire != null ? `${scenario.pfire.toFixed(1)}%` : '—'}
+                  </div>
+                  <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>9m</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="src">Base: Monte Carlo 10k simulações · custo de vida base R$250k/ano · Sensibilidade ao custo de vida</div>
+        </section>
+      )}
+
+      {/* 8. FIRE Aspiracional */}
+      {derived && (
+        <section className="section" id="fireAspirationalSection">
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(59,130,246,.08), rgba(16,185,129,.08))',
+            border: '2px dashed var(--accent)',
+            borderRadius: '12px',
+            padding: '24px',
+            textAlign: 'center',
+          }}>
+            <div style={{ fontSize: '.7rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '12px' }}>
+              FIRE Aspiracional
+            </div>
+            <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>
+              {data.fire_matrix?.ano_aspiracional ?? 2036}
+            </div>
+            <div style={{ fontSize: '.9rem', color: 'var(--muted)', marginTop: '4px' }}>
+              idade {data.premissas?.idade_cenario_aspiracional ?? 49}
+            </div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)', marginTop: '12px' }}>
+              P = {derived.pfireBase != null ? `${(derived.pfireBase - 3.5).toFixed(1)}%` : '86.5%'}
+            </div>
+            <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }}>
+              {data.premissas?.idade_cenario_aspiracional ? (data.premissas.idade_cenario_aspiracional - data.premissas.idade_atual) : 10} anos a partir de hoje
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px', maxWidth: '300px', margin: '16px auto 0' }}>
+              <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px' }}>
+                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Cenário Aspiracional</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>
+                  {derived.pfireBase != null ? `${(derived.pfireBase - 3.5).toFixed(1)}%` : '86.5%'}
+                </div>
+              </div>
+              <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px' }}>
+                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Cenário Base</div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
+                  {derived.pfireBase != null ? `${derived.pfireBase.toFixed(1)}%` : '86.5%'}
+                </div>
+              </div>
+            </div>
+            <div className="src" style={{ marginTop: '12px' }}>
+              Threshold: P(FIRE) &gt; 86% · baseado em MC 10k simulações
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
