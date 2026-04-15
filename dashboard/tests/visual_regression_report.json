@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-15T16:43:58.055313",
+  "timestamp": "2026-04-15T20:15:25.916235",
   "baseline_valid": true,
   "total_gaps": 6,
   "critical_gaps": 1,
@@ -57,15 +57,15 @@
   ],
   "summary": {
     "react_screenshots": [
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/02-portfolio-tab.png",
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/05-withdraw-tab.png",
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/03-performance-tab.png",
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/07-backtest-tab.png",
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/06-simuladores-tab.png",
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/04-fire-tab.png",
-      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/01-now-tab.png"
+      "/home/user/wealth/react-app/audit-screenshots/07-backtest-tab.png",
+      "/home/user/wealth/react-app/audit-screenshots/02-portfolio-tab.png",
+      "/home/user/wealth/react-app/audit-screenshots/04-fire-tab.png",
+      "/home/user/wealth/react-app/audit-screenshots/06-simuladores-tab.png",
+      "/home/user/wealth/react-app/audit-screenshots/05-withdraw-tab.png",
+      "/home/user/wealth/react-app/audit-screenshots/01-now-tab.png",
+      "/home/user/wealth/react-app/audit-screenshots/03-performance-tab.png"
     ],
-    "baseline_reference": "/Users/diegodemorais/claude/code/wealth/analysis/screenshots/stable-v2.77",
+    "baseline_reference": "/home/user/wealth/analysis/screenshots/stable-v2.77",
     "mapping": {
       "01-now-tab.png": {
         "name": "NOW Tab",
