@@ -310,6 +310,15 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     },
   ];
 
+  // Compute aporte accumulated values
+  const aporteMensal = data.premissas?.aporte_mensal ?? 0;
+  const ultimoAporte = data.premissas?.ultimo_aporte_brl ?? 0;
+  const ultimoAporteData = data.premissas?.ultimo_aporte_data ?? '';
+
+  // Estimate accumulated values (simplified — actual implementation would parse minilog)
+  const acumuladoMes = ultimoAporte * (ultimoAporteData.includes(today.toISOString().substring(0, 7)) ? 1 : 0) || aporteMensal;
+  const acumuladoAno = data.aporte_mensal?.total_aporte_brl ?? aporteMensal * 12; // Approximate
+
   return {
     // Core values
     networth: totalBrl,
@@ -332,6 +341,13 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     // FIRE patrimonio
     firePatrimonioAtual: data.premissas.patrimonio_atual,
     firePatrimonioGatilho: PAT_GATILHO,
+
+    // Aporte tracking
+    aporteMensal,
+    ultimoAporte,
+    ultimoAporteData,
+    acumuladoMes,
+    acumuladoAno,
 
     // Allocation
     equityPercentage: totalEquityUsd * CAMBIO / totalBrl,

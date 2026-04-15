@@ -13,6 +13,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 // import { SankeyChart } from '@/components/charts/SankeyChart';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
+import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -239,6 +240,17 @@ export default function HomePage() {
             ]}
           />
         </CollapsibleSection>
+      )}
+
+      {/* Tier-1: Aporte do Mês */}
+      {derived && (
+        <AporteDoMes
+          aporteMensal={derived.aporteMensal}
+          ultimoAporte={derived.ultimoAporte}
+          ultimoAporteData={derived.ultimoAporteData}
+          acumuladoMes={derived.acumuladoMes}
+          acumuladoAno={derived.acumuladoAno}
+        />
       )}
 
       {/* Tier-1: HODL11 Crypto Band */}
