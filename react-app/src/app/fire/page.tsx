@@ -7,6 +7,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
 import { EarliestFireCard } from '@/components/charts/EarliestFireCard';
+import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 
 export default function FirePage() {
@@ -50,6 +51,8 @@ export default function FirePage() {
       <CollapsibleSection id="section-earliest" title="Earliest FIRE Scenario" defaultOpen={true}>
         <EarliestFireCard />
       </CollapsibleSection>
+
+      <FireScenariosTable />
 
       <CollapsibleSection id="section-milestones" title="Life Milestones" defaultOpen={false}>
         <EventosVidaChart data={data} />
