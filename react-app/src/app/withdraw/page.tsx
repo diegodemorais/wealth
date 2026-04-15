@@ -169,6 +169,74 @@ export default function WithdrawPage() {
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* 6. Projeção de Renda — Ciclo de Vida */}
+      <section className="section" id="incomeCycleSection">
+        <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
+        <IncomeChart data={data} />
+        <div className="src">
+          Todos os valores em R$ reais (constante 2026) · Pré-FIRE: renda ativa R$45k/mês · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) · INSS R$18k/ano a partir dos 65.
+        </div>
+      </section>
+
+      {/* 7. Spending — Essenciais vs Discricionários */}
+      {(data.spending ?? data.fire?.spending) && (
+        <section className="section" id="spendingBreakdownSection">
+          <h2>Spending — Essenciais vs Discricionários <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(período ago/2026–mar/2026)</span></h2>
+          {(() => {
+            const spending = data.spending ?? data.fire?.spending ?? {};
+            const essenciais = spending.essenciais_mes ?? spending.essenciais ?? 15074;
+            const discric = spending.discric_mes ?? spending.discricionarios ?? 4284;
+            const imprevistos = spending.imprevistos_mes ?? spending.imprevistos ?? 363;
+            const total = essenciais + discric + imprevistos;
+            const rendaAnual = spending.renda_anual ?? 250000;
+            const orcamentoAnual = spending.orcamento_anual ?? 13000;
+            const fmt = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+
+            return (
+              <div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '14px' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', borderLeft: '3px solid var(--red)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Essenciais</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--red)' }}>{fmt(essenciais)}</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(essenciais / total * 100) : 79}% do total</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>Valor principal: hipoteca (~R$1.317/mês e equity)</div>
+                  </div>
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', borderLeft: '3px solid var(--yellow)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Discricionários</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--yellow)' }}>{fmt(discric)}</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(discric / total * 100) : 21}% do total</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>Discricionários contínuos</div>
+                  </div>
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', borderLeft: '3px solid var(--muted)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Imprevistos</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(imprevistos)}</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(imprevistos / total * 100) : 2}% do total</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>buffer pontual</div>
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(total)}/mês</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Total financeiro</div>
+                  </div>
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(rendaAnual)}/ano</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Renda FII</div>
+                  </div>
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', textAlign: 'center', borderLeft: '3px solid var(--green)' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green)' }}>✓ {fmt(orcamentoAnual)}/ano</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Orçamento conservador</div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+          <div className="src">
+            Período: Ago/2026 a Mar/2026 (8 meses) · Ago/2026: cálculo via Notion/Financiera · Mar/2026 a Mar/2026 · Essenciais: linha principal de despesa (R$1.317/mês e equity e hipoteca)
+          </div>
+        </section>
+      )}
     </div>
   );
 }

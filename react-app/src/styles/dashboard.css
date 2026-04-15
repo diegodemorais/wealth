@@ -81,12 +81,15 @@ body {
 }
 
 .section h2 {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
+  color: var(--text);
   margin-bottom: 12px;
+  margin-top: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
 
 .section-critical {
@@ -234,29 +237,31 @@ footer {
 }
 
 /* Tables */
+.table,
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.78rem;
-  min-width: 100%;
-  max-width: 100%;
+  font-size: 0.82rem;
 }
 
+.table th,
 th {
   text-align: left;
-  padding: 6px 5px;
-  border-bottom: 2px solid var(--border);
-  font-weight: 600;
+  padding: 6px 8px;
   color: var(--muted);
-  font-size: 0.65rem;
-  text-transform: uppercase;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
 }
 
+.table td,
 td {
-  padding: 5px;
-  border-bottom: 1px solid rgba(71, 85, 105, 0.3);
-  overflow-wrap: break-word;
-  word-break: break-word;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table tr:last-child td,
+tr:last-child td {
+  border-bottom: none;
 }
 
 .section table,
@@ -462,33 +467,32 @@ td {
 /* Period buttons */
 .period-btns {
   display: flex;
-  gap: 4px;
-  margin-bottom: 10px;
+  gap: 6px;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .period-btns button {
   background: var(--card2);
   border: 1px solid var(--border);
   color: var(--muted);
-  padding: 3px 10px;
-  border-radius: 5px;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 0.7rem;
-  font-weight: 500;
   transition: all 0.15s;
 }
 
 .period-btns button:hover {
-  border-color: var(--accent);
+  background: var(--card);
   color: var(--text);
 }
 
 .period-btns button.active {
   background: var(--accent);
-  border-color: var(--accent);
   color: white;
-  font-weight: 700;
+  border-color: var(--accent);
 }
 
 /* Wellness */
