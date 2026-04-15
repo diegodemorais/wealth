@@ -129,10 +129,9 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
             <div className="h-3 bg-slate-700/15 rounded overflow-hidden relative">
               {/* Target line (dashed) */}
               <div
-                className="absolute top-0 w-px h-full bg-slate-600 opacity-50"
+                className="absolute top-0 w-px h-full bg-slate-600 opacity-50 z-[2]"
                 style={{
                   left: `${(ipca2040AlvoPercent / (ipca2040AlvoPercent + ipca2050AlvoPercent)) * 100}%`,
-                  zIndex: 2,
                 }}
               />
               {/* Progress bar */}
@@ -223,16 +222,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
         )}
 
       {/* Footer note */}
-      <div
-        style={{
-          marginTop: '12px',
-          fontSize: '0.7rem',
-          color: '#64748b',
-          padding: '8px',
-          backgroundColor: 'rgba(71, 85, 105, 0.08)',
-          borderRadius: '4px',
-        }}
-      >
+      <div className="mt-3 text-[0.7rem] text-slate-500 p-2 bg-slate-700/10 rounded-sm">
         <strong>📌 Nota:</strong> Progresso é a razão entre alocação atual e meta alvo. DCA ativo busca reduzir o deficit ao longo do tempo, respeitando gatilhos de taxa.
       </div>
       </CardContent>
