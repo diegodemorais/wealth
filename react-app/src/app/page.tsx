@@ -11,7 +11,8 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 // import { TornadoChart } from '@/components/charts/TornadoChart';
 // import { FanChart } from '@/components/charts/FanChart';
 // import { SankeyChart } from '@/components/charts/SankeyChart';
-import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
+import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
+import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -70,13 +71,16 @@ export default function HomePage() {
         yearsToFire={derived.fireMonthsAway / 12}
       />
 
-      {/* Wellness Status */}
+      {/* FIRE Progress & Wellness */}
       <section style={{ marginBottom: '30px' }}>
-        <h2>Wellness Status</h2>
-        <Semaforo
-          status={derived.wellnessStatus}
-          label={`Portfolio Health: ${derived.wellnessStatus.toUpperCase()}`}
-          description={`Wellness score: ${(derived.wellnessScore * 100).toFixed(0)}%`}
+        <FireProgressWellness
+          firePercentage={derived.firePercentage}
+          firePatrimonioAtual={derived.firePatrimonioAtual}
+          firePatrimonioGatilho={derived.firePatrimonioGatilho}
+          swrFireDay={derived.swrFireDay}
+          wellnessScore={derived.wellnessScore * 100}
+          wellnessLabel={derived.wellnessLabel}
+          wellnessMetrics={derived.wellnessMetrics}
         />
       </section>
 
@@ -180,15 +184,12 @@ export default function HomePage() {
       </CollapsibleSection>
 
       {/* Tier-1: Semáforos de Gatilhos */}
-      {data && data.semaforo_triggers && (
-        <CollapsibleSection
-          id="section-semaforo"
-          title="Semáforos de Gatilhos"
-          defaultOpen={true}
-          icon="🚦"
-        >
-          <SemaforoTriggers triggers={data.semaforo_triggers} />
-        </CollapsibleSection>
+      {derived && derived.gatilhos && (
+        <SemaforoGatilhos
+          gatilhos={derived.gatilhos}
+          resumo={derived.resumoGatilhos}
+          statusIpca={derived.statusIpca}
+        />
       )}
 
       {/* Tier-1: DCA Status Grid */}
