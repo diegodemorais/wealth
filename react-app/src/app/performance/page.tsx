@@ -106,8 +106,8 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 3. Retornos Mensais — Heatmap (collapsible, open) */}
-      <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={true}>
+      {/* 3. Retornos Mensais — Heatmap (collapsible, closed) */}
+      <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
           <MonthlyReturnsHeatmap data={data.monthly_returns} />
           <div className="src">
