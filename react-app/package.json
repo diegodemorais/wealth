@@ -1,11 +1,12 @@
 {
   "name": "react-app",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/increment-version.js && npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
-    "build:no-test": "node scripts/increment-version.js && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build": "npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build:no-test": "next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build:prod": "bash ../scripts/build-production.sh",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",

@@ -33,13 +33,12 @@ jobs:
           cd react-app
           npm ci
 
-      - name: Build Next.js
+      - name: Build & Version (prod)
         env:
           NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
           NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at || '' }}
         run: |
-          cd react-app
-          npm run build
+          npm run build:prod
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
