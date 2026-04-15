@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface IncomeProjectionChartProps {
@@ -11,6 +12,7 @@ export interface IncomeProjectionChartProps {
 
 export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const years = 30;
@@ -114,7 +116,7 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Income Projection (30 Years)</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

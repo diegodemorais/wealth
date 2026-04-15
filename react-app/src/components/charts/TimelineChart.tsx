@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface TimelineChartProps {
@@ -11,6 +12,7 @@ export interface TimelineChartProps {
 
 export function TimelineChart({ data }: TimelineChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const months = 60;
@@ -86,7 +88,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Historical Performance (60 months)</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

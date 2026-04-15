@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface IncomeChartProps {
@@ -11,6 +12,7 @@ export interface IncomeChartProps {
 
 export function IncomeChart({ data }: IncomeChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const categories = ['Salary', 'Dividends', 'Bond Coupons', 'Rental', 'Other'];
@@ -77,7 +79,7 @@ export function IncomeChart({ data }: IncomeChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Current Income Sources</h3>
-      <ReactECharts option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
     </div>
   );
 }

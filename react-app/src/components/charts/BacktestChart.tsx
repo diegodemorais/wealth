@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface BacktestChartProps {
@@ -11,6 +12,7 @@ export interface BacktestChartProps {
 
 export function BacktestChart({ data }: BacktestChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const months = 84;
@@ -92,7 +94,7 @@ export function BacktestChart({ data }: BacktestChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Backtest Equity Curve (7 years)</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

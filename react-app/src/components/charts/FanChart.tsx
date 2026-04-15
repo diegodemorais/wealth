@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 
 interface FanChartProps {
   data: DashboardData;
@@ -11,6 +12,7 @@ interface FanChartProps {
 
 export function FanChart({ data }: FanChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const timeline = data.timeline || { values: [], labels: [] };
@@ -116,7 +118,7 @@ export function FanChart({ data }: FanChartProps) {
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
-      <ReactECharts option={option} theme={theme} />
+      <ReactECharts ref={chartRef} option={option} theme={theme} />
     </div>
   );
 }

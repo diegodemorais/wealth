@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 
 interface DonutChartsProps {
   data: DashboardData;
@@ -11,6 +12,7 @@ interface DonutChartsProps {
 
 export function DonutCharts({ data }: DonutChartsProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const posicoes = data.posicoes || {};
@@ -86,7 +88,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
-      <ReactECharts option={option} theme={theme} />
+      <ReactECharts ref={chartRef} option={option} theme={theme} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 
 interface SankeyChartProps {
   data: DashboardData;
@@ -11,6 +12,7 @@ interface SankeyChartProps {
 
 export function SankeyChart({ data }: SankeyChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const timeline_attr = data.timeline_attribution || {};
@@ -71,7 +73,7 @@ export function SankeyChart({ data }: SankeyChartProps) {
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
-      <ReactECharts option={option} theme={theme} />
+      <ReactECharts ref={chartRef} option={option} theme={theme} />
     </div>
   );
 }

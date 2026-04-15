@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface InformationRatioChartProps {
@@ -11,6 +12,7 @@ export interface InformationRatioChartProps {
 
 export function InformationRatioChart({ data }: InformationRatioChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const months = 36;
@@ -78,7 +80,7 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Information Ratio (36 months)</h3>
-      <ReactECharts option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
     </div>
   );
 }

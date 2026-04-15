@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 
 interface TornadoChartProps {
   data: DashboardData;
@@ -11,6 +12,7 @@ interface TornadoChartProps {
 
 export function TornadoChart({ data }: TornadoChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const tornadoData = data.tornado || [];
@@ -86,7 +88,7 @@ export function TornadoChart({ data }: TornadoChartProps) {
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
-      <ReactECharts option={option} theme={theme} />
+      <ReactECharts ref={chartRef} option={option} theme={theme} />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface ShadowChartProps {
@@ -11,6 +12,7 @@ export interface ShadowChartProps {
 
 export function ShadowChart({ data }: ShadowChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const months = 60;
@@ -92,7 +94,7 @@ export function ShadowChart({ data }: ShadowChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Actual vs Shadow Portfolio Comparison</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

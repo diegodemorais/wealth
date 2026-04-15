@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useUiStore } from '@/store/uiStore';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface StackedAllocChartProps {
@@ -11,8 +11,8 @@ export interface StackedAllocChartProps {
 }
 
 export function StackedAllocChart({ data }: StackedAllocChartProps) {
-  
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     // Historical allocation over 24 months
@@ -119,7 +119,7 @@ export function StackedAllocChart({ data }: StackedAllocChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Historical Allocation (24 months)</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

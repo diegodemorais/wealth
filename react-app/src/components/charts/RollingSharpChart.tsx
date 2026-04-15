@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface RollingSharpChartProps {
@@ -11,6 +12,7 @@ export interface RollingSharpChartProps {
 
 export function RollingSharpChart({ data }: RollingSharpChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const months = 48;
@@ -78,7 +80,7 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Rolling Sharpe Ratio (12-month window)</h3>
-      <ReactECharts option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
     </div>
   );
 }

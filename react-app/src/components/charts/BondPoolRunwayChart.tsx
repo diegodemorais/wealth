@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 
 interface BondPoolRunwayData {
   // Deterministic format (actual data in data.json)
@@ -27,6 +28,7 @@ interface BondPoolRunwayChartProps {
 
 export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const hasDeterministic = Array.isArray(data?.anos_pre_fire) && data.anos_pre_fire.length > 0;
   const hasProbabilistic = Array.isArray(data?.dates) && data.dates.length > 0;
@@ -211,7 +213,7 @@ export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
-      <ReactECharts option={option} theme={theme} style={{ height: '100%' }} />
+      <ReactECharts ref={chartRef} option={option} theme={theme} style={{ height: '100%' }} />
     </div>
   );
 }

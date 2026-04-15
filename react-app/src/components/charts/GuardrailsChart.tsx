@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface GuardrailsChartProps {
@@ -11,6 +12,7 @@ export interface GuardrailsChartProps {
 
 export function GuardrailsChart({ data }: GuardrailsChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const years = 30;
@@ -112,7 +114,7 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Safe Spending Guardrails</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

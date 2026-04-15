@@ -39,7 +39,16 @@ export function CollapsibleSection({
           }
         });
         observer.observe(contentRef.current);
-        return () => observer.disconnect();
+
+        // Dispatch resize event after animation completes (300ms) for ECharts to recalculate
+        const resizeTimeout = setTimeout(() => {
+          window.dispatchEvent(new Event('resize'));
+        }, 300);
+
+        return () => {
+          clearTimeout(resizeTimeout);
+          observer.disconnect();
+        };
       }
     }
   }, [isCollapsed]);

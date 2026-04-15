@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface TrackingFireChartProps {
@@ -11,6 +12,7 @@ export interface TrackingFireChartProps {
 
 export function TrackingFireChart({ data }: TrackingFireChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const months = 180; // 15 years to FIRE
@@ -117,7 +119,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>FIRE Target Tracking (15-year projection)</h3>
-      <ReactECharts option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }

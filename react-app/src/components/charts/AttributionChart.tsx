@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 
 export interface AttributionChartProps {
@@ -11,6 +12,7 @@ export interface AttributionChartProps {
 
 export function AttributionChart({ data }: AttributionChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
   const option = useMemo(() => {
     const categories = ['Equity Selection', 'Allocation', 'Market Return', 'Currency', 'Costs'];
@@ -77,7 +79,7 @@ export function AttributionChart({ data }: AttributionChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Return Attribution Breakdown</h3>
-      <ReactECharts option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
     </div>
   );
 }
