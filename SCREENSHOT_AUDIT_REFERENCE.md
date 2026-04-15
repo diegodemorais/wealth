@@ -7,7 +7,7 @@
 
 ### Reference (HTML Stable v2.77)
 ```
-/Users/diegodemorais/claude/code/wealth/react-app/analysis/screenshots/stable-v2.77/
+/Users/diegodemorais/claude/code/wealth/analysis/screenshots/stable-v2.77/
 ├── 1.png
 ├── 2.png
 ├── ...
