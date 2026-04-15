@@ -3,14 +3,14 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 interface DonutChartsProps {
   data: DashboardData;
 }
 
 export function DonutCharts({ data }: DonutChartsProps) {
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     const posicoes = data.posicoes || {};
@@ -54,6 +54,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
       tooltip: {
         trigger: 'item',
         formatter: (params: any) => {
+          if (privacyMode) return '••••';
           const pct = ((params.value / totalBrl) * 100).toFixed(1);
           return `${params.name}<br/>R$ ${(params.value / 1e6).toFixed(1)}M (${pct}%)`;
         },
@@ -72,8 +73,8 @@ export function DonutCharts({ data }: DonutChartsProps) {
           data: assetData,
           itemStyle: { borderRadius: 6, borderColor: '#1f2937', borderWidth: 1 },
           label: {
-            formatter: '{b}\n{d}%',
-            color: '#d1d5db',
+            formatter: privacyMode ? () => '' : '{b}\n{d}%',
+            color: privacyMode ? 'transparent' : '#d1d5db',
           },
           emphasis: {
             label: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
@@ -81,7 +82,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
         },
       ],
     };
-  }, [data]);
+  }, [data, privacyMode, theme]);
 
   return (
     <div style={{ height: '400px', width: '100%' }}>

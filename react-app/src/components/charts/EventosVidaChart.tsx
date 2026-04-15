@@ -1,5 +1,6 @@
 'use client';
 
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface EventosVidaChartProps {
@@ -7,6 +8,8 @@ export interface EventosVidaChartProps {
 }
 
 export function EventosVidaChart({ data }: EventosVidaChartProps) {
+  const { privacyMode } = useEChartsPrivacy();
+
   const milestones = [
     { year: 2026, event: 'Current Age (35)', age: 35, icon: '👤' },
     { year: 2031, event: 'Target Savings Rate Hit', age: 40, icon: '📈' },
@@ -15,6 +18,15 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
     { year: 2051, event: 'Social Security Eligible', age: 60, icon: '🏛️' },
     { year: 2056, event: 'Full Retirement Age', age: 65, icon: '🏖️' },
   ];
+
+  if (privacyMode) {
+    return (
+      <div style={styles.container}>
+        <h3 style={styles.title}>Life Milestones & FIRE Timeline</h3>
+        <div style={styles.maskedContent}>••••</div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
@@ -41,6 +53,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
 const styles: Record<string, React.CSSProperties> = {
   container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '20px' },
   title: { margin: '0 0 16px 0', color: '#fff' },
+  maskedContent: { color: '#9ca3af', fontSize: '18px', padding: '24px', textAlign: 'center' },
   timeline: { position: 'relative', paddingLeft: '40px' },
   milestone: { marginBottom: '24px', position: 'relative' },
   dot: {

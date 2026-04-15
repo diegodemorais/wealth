@@ -3,14 +3,14 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 interface FanChartProps {
   data: DashboardData;
 }
 
 export function FanChart({ data }: FanChartProps) {
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     const timeline = data.timeline || { values: [], labels: [] };

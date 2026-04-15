@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useUiStore } from '@/store/uiStore';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface HeatmapChartProps {
@@ -9,7 +9,8 @@ export interface HeatmapChartProps {
 }
 
 export function HeatmapChart({ data }: HeatmapChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { privacyMode } = useEChartsPrivacy();
+
 
   const heatmapData = useMemo(() => {
     // Correlation matrix between assets

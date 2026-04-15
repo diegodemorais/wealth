@@ -2,8 +2,7 @@
 
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
-import { useUiStore } from '@/store/uiStore';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 interface BondPoolRunwayData {
   // Deterministic format (actual data in data.json)
@@ -27,8 +26,7 @@ interface BondPoolRunwayChartProps {
 }
 
 export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
-  const theme = useEChartsTheme();
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const hasDeterministic = Array.isArray(data?.anos_pre_fire) && data.anos_pre_fire.length > 0;
   const hasProbabilistic = Array.isArray(data?.dates) && data.dates.length > 0;

@@ -2,8 +2,7 @@
 
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useUiStore } from '@/store/uiStore';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface DrawdownHistChartProps {
@@ -11,8 +10,7 @@ export interface DrawdownHistChartProps {
 }
 
 export function DrawdownHistChart({ data }: DrawdownHistChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     const buckets = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '25-30%'];

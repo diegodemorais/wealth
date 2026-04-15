@@ -3,14 +3,14 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { DashboardData } from '@/types/dashboard';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 interface SankeyChartProps {
   data: DashboardData;
 }
 
 export function SankeyChart({ data }: SankeyChartProps) {
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     const timeline_attr = data.timeline_attribution || {};

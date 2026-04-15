@@ -2,8 +2,7 @@
 
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useUiStore } from '@/store/uiStore';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface GlidePathChartProps {
@@ -11,8 +10,7 @@ export interface GlidePathChartProps {
 }
 
 export function GlidePathChart({ data }: GlidePathChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     // Glide path: equity allocation decreases with age

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useUiStore } from '@/store/uiStore';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface StackedAllocChartProps {
@@ -11,8 +11,8 @@ export interface StackedAllocChartProps {
 }
 
 export function StackedAllocChart({ data }: StackedAllocChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
-  const theme = useEChartsTheme();
+  
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     // Historical allocation over 24 months
@@ -33,6 +33,7 @@ export function StackedAllocChart({ data }: StackedAllocChartProps) {
         textStyle: theme.tooltip.textStyle,
         formatter: (params: any) => {
           if (!Array.isArray(params)) return '';
+          if (privacyMode) return '••••';
           let result = params[0].axisValueLabel + '<br/>';
           params.forEach((p: any) => {
             result += `${p.marker} ${p.seriesName}: R$ ${p.value.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}<br/>`;

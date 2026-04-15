@@ -1,17 +1,17 @@
 'use client';
 
-import { useUiStore } from '@/store/uiStore';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 export interface EarliestFireCardProps {
   earliestFireDate?: Date;
   probability?: number;
 }
 
-export function EarliestFireCard({ 
+export function EarliestFireCard({
   earliestFireDate = new Date(2040, 0, 1),
-  probability = 0.85 
+  probability = 0.85
 }: EarliestFireCardProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { privacyMode } = useEChartsPrivacy();
 
   if (privacyMode) {
     return (

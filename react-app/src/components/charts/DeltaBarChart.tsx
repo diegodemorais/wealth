@@ -2,8 +2,7 @@
 
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useUiStore } from '@/store/uiStore';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface DeltaBarChartProps {
@@ -11,8 +10,7 @@ export interface DeltaBarChartProps {
 }
 
 export function DeltaBarChart({ data }: DeltaBarChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     const xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);

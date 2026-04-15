@@ -2,8 +2,7 @@
 
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useUiStore } from '@/store/uiStore';
-import { useEChartsTheme } from '@/hooks/useEChartsTheme';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 
 export interface InformationRatioChartProps {
@@ -11,8 +10,7 @@ export interface InformationRatioChartProps {
 }
 
 export function InformationRatioChart({ data }: InformationRatioChartProps) {
-  const privacyMode = useUiStore(s => s.privacyMode);
-  const theme = useEChartsTheme();
+  const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(() => {
     const months = 36;
