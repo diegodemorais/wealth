@@ -54,6 +54,13 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'react-app', 'audit-screenshots');
         const page = await browser.newPage();
         await page.setViewport({ width: 1440, height: 900 });
 
+        // Capture console messages for debugging
+        page.on('console', msg => {
+          if (msg.type() === 'error') {
+            console.error(`[${tab.label} console error] ${msg.text()}`);
+          }
+        });
+
         // Navegar para a URL e aguardar JavaScript carregar
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
 
