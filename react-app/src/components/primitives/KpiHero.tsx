@@ -54,10 +54,10 @@ export function KpiHero({
       {kpis.map((kpi, idx) => (
         <div
           key={idx}
-          className={`rounded-lg p-4 text-center border transition-colors ${
+          className={`rounded-lg p-4 text-center border transition-colors border-l-4 ${
             kpi.primary
-              ? 'bg-blue-950/25 border-blue-500 border-2'
-              : 'bg-card border-border/50'
+              ? 'bg-blue-950/25 border-blue-500 border-2 border-l-blue-500'
+              : 'bg-card border-border/50 border-l-blue-500'
           }`}
         >
           <div className="text-xs uppercase font-semibold text-muted-foreground mb-1 tracking-widest">

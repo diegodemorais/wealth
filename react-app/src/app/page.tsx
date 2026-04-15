@@ -187,7 +187,7 @@ export default function HomePage() {
       )}
 
       {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
-      {derived && derived.gatilhos && (
+      {derived && Array.isArray(derived.gatilhos) && derived.gatilhos.length > 0 && (
         <SemaforoGatilhos
           gatilhos={derived.gatilhos}
           resumo={derived.resumoGatilhos}
