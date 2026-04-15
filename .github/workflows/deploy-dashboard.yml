@@ -41,6 +41,21 @@ jobs:
           cd react-app
           npm run build
 
+      - name: Commit version increment (if build succeeded)
+        if: success()
+        run: |
+          cd react-app
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet package.json; then
+            echo "✅ No version change"
+          else
+            git add package.json src/config/version.ts
+            VERSION=$(jq -r .version package.json)
+            git commit -m "chore: bump version to $VERSION [CI skip]"
+            git push origin main
+          fi
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
