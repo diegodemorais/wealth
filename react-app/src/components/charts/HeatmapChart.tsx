@@ -11,9 +11,7 @@ export interface HeatmapChartProps {
 export function HeatmapChart({ data }: HeatmapChartProps) {
   const { privacyMode } = useEChartsPrivacy();
 
-
   const heatmapData = useMemo(() => {
-    // Correlation matrix between assets
     const assets = ['SWRD', 'AVGS', 'AVEM', 'IPCA+', 'Crypto'];
     const correlations = [
       [1.0, 0.75, 0.82, 0.15, 0.22],
@@ -22,12 +20,10 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
       [0.15, 0.12, 0.18, 1.0, -0.05],
       [0.22, 0.25, 0.28, -0.05, 1.0],
     ];
-
     return { assets, correlations };
   }, []);
 
   const getColor = (value: number) => {
-    // -1 → red, 0 → white, 1 → green
     if (value < 0) {
       const intensity = Math.abs(value);
       const green = Math.round(255 * (1 - intensity));
@@ -44,9 +40,7 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
       <div style={styles.container}>
         <h3 style={styles.title}>Asset Correlations (Heatmap)</h3>
         <div style={styles.masked}>
-          <p style={{ textAlign: 'center', color: '#9ca3af' }}>
-            Correlation matrix hidden in privacy mode
-          </p>
+          <p style={styles.maskedText}>Correlation matrix hidden in privacy mode</p>
         </div>
       </div>
     );
@@ -56,27 +50,19 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
     <div style={styles.container}>
       <h3 style={styles.title}>Asset Correlations (Heatmap)</h3>
       <div style={styles.heatmapWrapper}>
-        {/* Header row */}
         <div style={styles.headerRow}>
           <div style={styles.cornerCell} />
           {heatmapData.assets.map(asset => (
-            <div key={asset} style={styles.headerCell}>
-              {asset}
-            </div>
+            <div key={asset} style={styles.headerCell}>{asset}</div>
           ))}
         </div>
-
-        {/* Data rows */}
         {heatmapData.correlations.map((row, i) => (
           <div key={i} style={styles.dataRow}>
             <div style={styles.rowLabel}>{heatmapData.assets[i]}</div>
             {row.map((value, j) => (
               <div
                 key={`${i}-${j}`}
-                style={{
-                  ...styles.cell,
-                  backgroundColor: getColor(value),
-                }}
+                style={{ ...styles.cell, backgroundColor: getColor(value) }}
                 title={`${heatmapData.assets[i]} → ${heatmapData.assets[j]}: ${value.toFixed(2)}`}
               >
                 <span style={styles.cellValue}>{value.toFixed(2)}</span>
@@ -85,8 +71,6 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
           </div>
         ))}
       </div>
-
-      {/* Legend */}
       <div style={styles.legend}>
         <div style={styles.legendItem}>
           <div style={{ ...styles.legendBox, backgroundColor: '#ff6666' }} />
@@ -105,102 +89,23 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
   );
 }
 
+const CELL_SIZE = 80;
+const HEADER_HEIGHT = 40;
+
 const styles: Record<string, React.CSSProperties> = {
-  container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
-    borderRadius: '8px',
-    padding: '16px',
-    marginBottom: '20px',
-  },
-  title: {
-    margin: '0 0 16px 0',
-    color: '#fff',
-  },
-  heatmapWrapper: {
-    display: 'inline-block',
-    borderCollapse: 'collapse',
-    marginBottom: '16px',
-  },
-  headerRow: {
-    display: 'flex',
-  },
-  cornerCell: {
-    width: '80px',
-    height: '40px',
-    backgroundColor: '#111827',
-  },
-  headerCell: {
-    width: '80px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#d1d5db',
-    fontSize: '12px',
-    fontWeight: '600',
-    backgroundColor: '#111827',
-    borderRight: '1px solid #374151',
-    borderBottom: '1px solid #374151',
-  },
-  dataRow: {
-    display: 'flex',
-  },
-  rowLabel: {
-    width: '80px',
-    height: '80px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#d1d5db',
-    fontSize: '12px',
-    fontWeight: '600',
-    backgroundColor: '#111827',
-    borderRight: '1px solid #374151',
-    borderBottom: '1px solid #374151',
-  },
-  cell: {
-    width: '80px',
-    height: '80px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRight: '1px solid #374151',
-    borderBottom: '1px solid #374151',
-    cursor: 'pointer',
-    transition: 'opacity 0.2s',
-  },
-  cellValue: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: '13px',
-  },
-  masked: {
-    minHeight: '400px',
-    backgroundColor: '#111827',
-    borderRadius: '4px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  legend: {
-    display: 'flex',
-    gap: '20px',
-    marginTop: '12px',
-    padding: '12px',
-    backgroundColor: '#111827',
-    borderRadius: '4px',
-  },
-  legendItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontSize: '12px',
-    color: '#9ca3af',
-  },
-  legendBox: {
-    width: '16px',
-    height: '16px',
-    borderRadius: '2px',
-  },
+  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '20px' },
+  title: { margin: '0 0 16px 0', color: '#fff' },
+  heatmapWrapper: { display: 'inline-block', marginBottom: '16px' },
+  headerRow: { display: 'flex' },
+  cornerCell: { width: HEADER_HEIGHT, height: HEADER_HEIGHT, backgroundColor: '#111827' },
+  headerCell: { width: CELL_SIZE, height: HEADER_HEIGHT, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d1d5db', fontSize: '12px', fontWeight: '600', backgroundColor: '#111827', borderRight: '1px solid #374151', borderBottom: '1px solid #374151' },
+  dataRow: { display: 'flex' },
+  rowLabel: { width: HEADER_HEIGHT, height: CELL_SIZE, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d1d5db', fontSize: '12px', fontWeight: '600', backgroundColor: '#111827', borderRight: '1px solid #374151', borderBottom: '1px solid #374151' },
+  cell: { width: CELL_SIZE, height: CELL_SIZE, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid #374151', borderBottom: '1px solid #374151', cursor: 'pointer', transition: 'opacity 0.2s' },
+  cellValue: { color: '#000', fontWeight: '600', fontSize: '13px' },
+  masked: { minHeight: '400px', backgroundColor: '#111827', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' },
+  maskedText: { textAlign: 'center', color: '#9ca3af' },
+  legend: { display: 'flex', gap: '20px', marginTop: '12px', padding: '12px', backgroundColor: '#111827', borderRadius: '4px' },
+  legendItem: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#9ca3af' },
+  legendBox: { width: '16px', height: '16px', borderRadius: '2px' },
 };

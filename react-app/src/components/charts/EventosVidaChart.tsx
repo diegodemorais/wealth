@@ -50,35 +50,21 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
   );
 }
 
+const DOT_SIZE = 36;
+const DOT_OFFSET = 58;
+const CONNECTOR_OFFSET = 49;
+
 const styles: Record<string, React.CSSProperties> = {
   container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '20px' },
   title: { margin: '0 0 16px 0', color: '#fff' },
   maskedContent: { color: '#9ca3af', fontSize: '18px', padding: '24px', textAlign: 'center' },
   timeline: { position: 'relative', paddingLeft: '40px' },
   milestone: { marginBottom: '24px', position: 'relative' },
-  dot: {
-    position: 'absolute',
-    left: '-58px',
-    width: '36px',
-    height: '36px',
-    backgroundColor: '#374151',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '2px solid #1f2937',
-  },
+  dot: { position: 'absolute', left: -DOT_OFFSET, width: DOT_SIZE, height: DOT_SIZE, backgroundColor: '#374151', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #1f2937' },
   icon: { fontSize: '18px' },
   content: { paddingBottom: '12px' },
   year: { color: '#f59e0b', fontWeight: '700', fontSize: '14px' },
   event: { color: '#d1d5db', fontWeight: '600', fontSize: '15px', marginTop: '4px' },
   age: { color: '#9ca3af', fontSize: '12px', marginTop: '2px' },
-  connector: {
-    position: 'absolute',
-    left: '-49px',
-    top: '36px',
-    width: '2px',
-    height: 'calc(100% + 12px)',
-    backgroundColor: '#4b5563',
-  },
+  connector: { position: 'absolute', left: -CONNECTOR_OFFSET, top: DOT_SIZE, width: '2px', height: 'calc(100% + 12px)', backgroundColor: '#4b5563' },
 };

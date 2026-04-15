@@ -1058,3 +1058,107 @@ export function createDualLineChartOption(options: {
     ],
   };
 }
+
+/**
+ * Bond Pool Runway (Probabilistic format: P10/P50/P90)
+ */
+export function createBondPoolProbabilisticOption(options: {
+  theme: ChartTheme;
+  privacyMode: boolean;
+  dates: string[];
+  p10: number[];
+  p50: number[];
+  p90: number[];
+}) {
+  const { theme, privacyMode, dates, p10, p50, p90 } = options;
+
+  return {
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        let html = `<div style="padding:4px 8px;"><strong>${params[0].axisValue}</strong>`;
+        params.forEach((p: any) => {
+          if (p.value != null && !p.seriesName.startsWith('_')) {
+            html += `<div>${p.seriesName}: <strong>${p.value.toFixed(1)} anos</strong></div>`;
+          }
+        });
+        html += '</div>';
+        return html;
+      },
+    },
+    legend: { data: ['P90 (otimista)', 'P50 (mediana)', 'P10 (pessimista)'], textStyle: { color: '#d1d5db' }, bottom: 0 },
+    grid: { left: 50, right: 20, top: 40, bottom: 50 },
+    xAxis: { type: 'category' as const, data: dates, axisLabel: { color: '#9ca3af' } },
+    yAxis: {
+      type: 'value' as const,
+      name: 'Anos restantes',
+      nameTextStyle: { color: '#9ca3af' },
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: (v: number) => `${v.toFixed(0)}` },
+      splitLine: { lineStyle: { color: '#2d3748', width: 0.5 } },
+    },
+    series: [
+      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: '#10b981' }, itemStyle: { color: '#10b981' }, areaStyle: { color: 'rgba(16,185,129,0.08)' }, symbol: 'none', smooth: true },
+      { name: 'P50 (mediana)', type: 'line' as const, data: p50, lineStyle: { width: 2.5, color: '#f59e0b' }, itemStyle: { color: '#f59e0b' }, symbol: 'none', smooth: true },
+      { name: 'P10 (pessimista)', type: 'line' as const, data: p10, lineStyle: { width: 1.5, type: 'dashed' as const, color: '#ef4444' }, itemStyle: { color: '#ef4444' }, symbol: 'none', smooth: true },
+    ],
+  };
+}
+
+/**
+ * Bond Pool Runway (Deterministic format: pool buildup + post-FIRE coverage)
+ */
+export function createBondPoolDeterministicOption(options: {
+  theme: ChartTheme;
+  privacyMode: boolean;
+  years: number[];
+  poolTotal: number[];
+  pool2040: number[];
+  pool2050: number[];
+  alvo: number;
+}) {
+  const { theme, privacyMode, years, poolTotal, pool2040, pool2050, alvo } = options;
+
+  return {
+    tooltip: {
+      trigger: 'axis' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return '';
+        let html = `<div style="padding:4px 8px;"><strong>${params[0].axisValue}</strong>`;
+        params.forEach((p: any) => {
+          if (p.value != null && !p.seriesName.startsWith('_')) {
+            const val = p.value as number;
+            const formatted = privacyMode ? '••••' : `R$ ${(val / 1000).toFixed(0)}k`;
+            html += `<div style="display:flex;align-items:center;gap:4px;">`;
+            html += `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${p.color}"></span>`;
+            html += `${p.seriesName}: <strong>${formatted}</strong></div>`;
+          }
+        });
+        html += '</div>';
+        return html;
+      },
+    },
+    legend: { data: ['Pool Total', 'IPCA+ 2040', 'IPCA+ 2050', 'Meta 2040'], textStyle: { color: '#d1d5db' }, bottom: 0 },
+    grid: { left: 70, right: 20, top: 40, bottom: 50 },
+    xAxis: { type: 'category' as const, data: years.map(String), axisLabel: { color: '#9ca3af' } },
+    yAxis: {
+      type: 'value' as const,
+      name: 'R$ (BRL)',
+      nameTextStyle: { color: '#9ca3af' },
+      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
+      splitLine: { lineStyle: { color: '#2d3748', width: 0.5 } },
+    },
+    series: [
+      { name: 'IPCA+ 2050', type: 'bar' as const, stack: 'pool', data: pool2050, itemStyle: { color: '#8b5cf6', borderRadius: [0, 0, 0, 0] }, emphasis: { focus: 'series' } },
+      { name: 'IPCA+ 2040', type: 'bar' as const, stack: 'pool', data: pool2040, itemStyle: { color: '#3b82f6', borderRadius: [4, 4, 0, 0] }, emphasis: { focus: 'series' } },
+      { name: 'Pool Total', type: 'line' as const, data: poolTotal, lineStyle: { width: 2.5, color: '#f59e0b' }, itemStyle: { color: '#f59e0b' }, symbol: 'circle', symbolSize: 6, smooth: true, z: 10 },
+      { name: 'Meta 2040', type: 'line' as const, data: years.map(() => alvo), lineStyle: { width: 1.5, type: 'dashed' as const, color: '#ef4444' }, itemStyle: { color: '#ef4444' }, symbol: 'none' },
+    ],
+  };
+}
