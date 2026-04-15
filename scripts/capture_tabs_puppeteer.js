@@ -57,8 +57,8 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'react-app', 'audit-screenshots');
         // Navegar para a URL e aguardar JavaScript carregar
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
 
-        // Aguarde extra para animações (usando nova API)
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Aguarde extra para animações e renderização de charts (5 segundos para /simulators)
+        await new Promise(resolve => setTimeout(resolve, 5000));
 
         // Tire screenshot
         await page.screenshot({ path: outputFile, fullPage: false });
