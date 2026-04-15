@@ -29,6 +29,10 @@ import GlidePath from '@/components/dashboard/GlidePath';
 import AttributionAnalysis from '@/components/dashboard/AttributionAnalysis';
 import BondPoolRunway from '@/components/dashboard/BondPoolRunway';
 import BondMaturityLadder from '@/components/dashboard/BondMaturityLadder';
+import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
+import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
+import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
+import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -508,7 +512,68 @@ export default function HomePage() {
             periodLabel="1 ano"
           />
         )}
+
+        {/* 3.7: Drawdown History */}
+        {data && data.drawdown_history && (
+          <DrawdownHistoryChart
+            dates={data.drawdown_history.dates || []}
+            drawdownPct={data.drawdown_history.drawdown_pct || []}
+            maxDrawdown={data.drawdown_history.max_drawdown || 0}
+          />
+        )}
+
+        {/* 3.8: Rolling Metrics */}
+        {data && data.rolling_sharpe && (
+          <RollingMetricsChart
+            dates={data.rolling_sharpe.dates || []}
+            sharpeBRL={data.rolling_sharpe.values || []}
+            sharpeUSD={data.rolling_sharpe.values_usd || []}
+            sortino={data.rolling_sharpe.sortino || []}
+            volatilidade={data.rolling_sharpe.volatilidade || []}
+          />
+        )}
       </CollapsibleSection>
+
+      {/* Tier-4: Spending & Rebalancing */}
+      {data && data.spending_breakdown && (
+        <CollapsibleSection
+          id="section-spending"
+          title="Spending Breakdown"
+          defaultOpen={false}
+          icon="💰"
+        >
+          <SpendingBreakdown
+            musthave={(data.spending_breakdown.must_spend_mensal || 0) * 12}
+            likes={(data.spending_breakdown.like_spend_mensal || 0) * 12}
+            imprevistos={(data.spending_breakdown.imprevistos_mensal || 0) * 12}
+            totalAnual={((data.spending_breakdown.must_spend_mensal || 0) + (data.spending_breakdown.like_spend_mensal || 0) + (data.spending_breakdown.imprevistos_mensal || 0)) * 12}
+          />
+        </CollapsibleSection>
+      )}
+
+      {/* Tier-4: Rebalancing Status */}
+      {derived && data && data.pesosTarget && data.drift && (
+        <CollapsibleSection
+          id="section-rebalancing"
+          title="Rebalancing Status"
+          defaultOpen={false}
+          icon="🔄"
+        >
+          <RebalancingStatus
+            swrdTarget={data.pesosTarget[0] || 50}
+            swrdCurrent={derived.swrdCurrent || 50}
+            avgsTarget={data.pesosTarget[1] || 30}
+            avgsCurrent={derived.avgsCurrent || 30}
+            avemTarget={data.pesosTarget[2] || 20}
+            avemCurrent={derived.avemCurrent || 20}
+            ipcaTarget={data.pesosTarget[3] || 0}
+            ipcaCurrent={(derived?.ipcaPercentage || 0) * 100}
+            hodl11Target={data.pesosTarget[4] || 0}
+            hodl11Current={(derived?.hodl11Percentage || 0) * 100}
+            driftThresholdPp={3}
+          />
+        </CollapsibleSection>
+      )}
 
       {/* Charts Section - TODO: Fix missing data references */}
       {/* Temporarily disabled due to missing data fields in data.json
