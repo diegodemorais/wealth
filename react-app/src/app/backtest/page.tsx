@@ -5,6 +5,7 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { withBasePath } from '@/utils/basePath';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { HistoricalReturnsTable } from '@/components/backtest/HistoricalReturnsTable';
+import { BrasilMonitorCard } from '@/components/portfolio/BrasilMonitorCard';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
 
@@ -47,6 +48,8 @@ export default function BacktestPage() {
       <CollapsibleSection id="section-drawdown" title="Drawdown Analysis" defaultOpen={true}>
         <DrawdownHistChart data={data} />
       </CollapsibleSection>
+
+      <BrasilMonitorCard />
     </div>
   );
 }

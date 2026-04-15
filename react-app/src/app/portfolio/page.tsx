@@ -12,6 +12,7 @@ import { BucketAllocationChart } from '@/components/charts/BucketAllocationChart
 import { TerChart } from '@/components/charts/TerChart';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
+import { BrasilMonitorCard } from '@/components/portfolio/BrasilMonitorCard';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import { TaxAnalysisGrid } from '@/components/portfolio/TaxAnalysisGrid';
 
@@ -51,6 +52,8 @@ export default function PortfolioPage() {
       </CollapsibleSection>
 
       <HoldingsTable />
+
+      <BrasilMonitorCard />
 
       <RFCryptoComposition />
 
