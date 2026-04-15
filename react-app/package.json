@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build": "npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs && node scripts/increment-version.js",
     "build:no-test": "next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
-    "build:prod": "bash ../scripts/build-production.sh",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
