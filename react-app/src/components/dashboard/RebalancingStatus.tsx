@@ -158,7 +158,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
                 <div key={item.ticker}>
                   {/* Label and values */}
                   <div className="flex justify-between items-center mb-1 text-xs text-slate-400">
-                    <span style={{ color: item.color, fontWeight: 600 }}>
+                    <span className="font-semibold" style={{ color: item.color }}>
                       {item.ticker}
                     </span>
                     <span>
