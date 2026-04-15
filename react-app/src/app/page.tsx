@@ -28,6 +28,7 @@ import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import GlidePath from '@/components/dashboard/GlidePath';
 import AttributionAnalysis from '@/components/dashboard/AttributionAnalysis';
 import BondPoolRunway from '@/components/dashboard/BondPoolRunway';
+import BondMaturityLadder from '@/components/dashboard/BondMaturityLadder';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -402,6 +403,19 @@ export default function HomePage() {
             yearsToFire={Math.ceil((derived.fireMonthsAway || 0) / 12)}
             swrPercent={data?.pfire_base?.swr_percent || 3.5}
           />
+
+          {/* 4.2: Bond Maturity Ladder */}
+          {data && data.rf && (
+            <BondMaturityLadder
+              bonds1y={data.rf.ipca2040?.valor ? data.rf.ipca2040.valor * 0.1 : 0}
+              bonds2y={data.rf.ipca2040?.valor ? data.rf.ipca2040.valor * 0.15 : 0}
+              bonds3y={data.rf.ipca2040?.valor ? data.rf.ipca2040.valor * 0.20 : 0}
+              bonds5y={data.rf.ipca2040?.valor ? data.rf.ipca2040.valor * 0.25 : 0}
+              bonds10y={data.rf.ipca2050?.valor ? data.rf.ipca2050.valor * 0.20 : 0}
+              bondsOver10y={data.rf.ipca2050?.valor ? data.rf.ipca2050.valor * 0.10 : 0}
+              totalBonds={(data.rf.ipca2040?.valor || 0) + (data.rf.ipca2050?.valor || 0)}
+            />
+          )}
         </CollapsibleSection>
       )}
 
