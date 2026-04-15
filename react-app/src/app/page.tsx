@@ -167,6 +167,29 @@ export default function HomePage() {
         yearsToFire={derived.fireMonthsAway / 12}
       />
 
+      {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
+      {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '12px' }}>
+          {data.fire_matrix.by_profile.map((profile: any, i: number) => {
+            const labels = ['👤 Solteiro', '💍 Casado', '👶 C+Filho'];
+            const pfire50 = profile.p_fire_50 ?? null;
+            const year50 = profile.fire_age_50 ?? '2037';
+            return (
+              <div key={i} style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px', textAlign: 'center', borderTop: '2px solid var(--accent)' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
+                  {labels[i]}
+                </div>
+                <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>FIRE 50</div>
+                <div style={{ fontSize: '.85rem', fontWeight: 700, color: 'var(--green)' }}>
+                  P = {pfire50 != null ? `${pfire50.toFixed(1)}%` : '—'}
+                </div>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{year50}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
       {derived && derived.gatilhos && (
         <SemaforoGatilhos
@@ -198,6 +221,43 @@ export default function HomePage() {
         )}
       </div>
 
+      {/* 6a. Financial Wellness Score — full width */}
+      {derived?.wellnessScore != null && derived?.wellnessMetrics && (
+        <section className="section" style={{ marginBottom: '14px' }}>
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+            {/* Score grande */}
+            <div style={{ minWidth: '100px', textAlign: 'center' }}>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
+                Financial Wellness Score <span style={{ fontStyle: 'italic' }}>(indicador secundário)</span>
+              </div>
+              <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--green)', lineHeight: 1 }}>
+                {Math.round(derived.wellnessScore * 100)}
+              </div>
+              <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>/100 · Progressivo</div>
+            </div>
+            {/* Barras de métricas */}
+            <div style={{ flex: 1 }}>
+              {derived.wellnessMetrics.slice(0, 8).map((m: any, i: number) => (
+                <div key={i} style={{ marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', width: '160px', flexShrink: 0 }}>{m.label}</div>
+                  <div style={{ flex: 1, background: 'var(--card2)', borderRadius: '3px', height: '6px', position: 'relative' }}>
+                    <div style={{
+                      width: `${Math.min(100, Math.max(0, (m.value / m.max) * 100))}%`,
+                      height: '100%',
+                      borderRadius: '3px',
+                      background: (m.value / m.max) > 0.8 ? 'var(--green)' : (m.value / m.max) > 0.5 ? 'var(--yellow)' : 'var(--red)',
+                    }} />
+                  </div>
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', width: '50px', textAlign: 'right', flexShrink: 0 }}>
+                    {m.value != null ? `${m.value}%` : '—'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 7. SEÇÃO: P(FIRE) — Monte Carlo + Tornado */}
       {derived && (
         <PFireMonteCarloTornado
@@ -211,42 +271,100 @@ export default function HomePage() {
       {/* 8. SEÇÃO: Contexto Macro & DCA Status [COLLAPSIBLE, OPEN] */}
       <CollapsibleSection id="section-macro" title="Contexto Macro & DCA Status" defaultOpen={true} icon="📊">
         <div style={{ padding: '0 16px 16px' }}>
-          <div className="grid-2" style={{ marginBottom: '14px' }}>
-            {/* Brasil Concentração placeholder */}
-            <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '6px' }}>
-                Concentração Brasil
-              </div>
-              <div className="brasil-card">
-                <div className="brasil-header">
-                  <span className="brasil-pct">{derived.brasilPct ? `${derived.brasilPct.toFixed(1)}%` : '—'}</span>
-                  <span className="brasil-lbl">do total financeiro</span>
-                </div>
-              </div>
+          {/* 8a. Exposição Brasil — Tabela detalhada */}
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+              Exposição Brasil
             </div>
-            {/* Macro strip */}
-            <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '6px' }}>
-                Indicadores Macro
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
-                <div style={styles.macroKpi}>
-                  <div style={styles.macroVal}>{data?.premissas?.taxa_selic ? `${data.premissas.taxa_selic.toFixed(1)}%` : '—'}</div>
-                  <div style={styles.macroLbl}>Selic</div>
+            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', marginBottom: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <div>
+                  <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>Total Brasil</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green)' }}>
+                    {derived.concentrationBrazil != null ? `${(derived.concentrationBrazil * 100).toFixed(1)}%` : '—'}
+                  </div>
                 </div>
-                <div style={styles.macroKpi}>
-                  <div style={styles.macroVal}>{data?.premissas?.ipca_corrente ? `${data.premissas.ipca_corrente.toFixed(1)}%` : '—'}</div>
-                  <div style={styles.macroLbl}>IPCA YTD</div>
-                </div>
-                <div style={styles.macroKpi}>
-                  <div style={styles.macroVal}>{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
-                  <div style={styles.macroLbl}>USD/BRL</div>
+                <div style={{ fontSize: '.85rem', color: 'var(--muted)', textAlign: 'right' }}>
+                  <div>HODL11: R${((data?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k</div>
+                  <div>RF Total: R${((derived.rfBrl ?? 0) / 1000).toFixed(0)}k</div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="src" style={{ marginBottom: '14px' }}>
-            Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE
+
+          {/* 8b. DCA Status — 3 cards separados */}
+          {data?.dca_status && (
+            <div style={{ marginBottom: '14px' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+                DCA Status
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
+                {/* IPCA+ 2040 */}
+                {data.dca_status.ipca_longo && (
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px', borderLeft: '3px solid var(--accent)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginBottom: '4px' }}>IPCA+ 2040</div>
+                    <div style={{ fontSize: '.9rem', fontWeight: 700, marginBottom: '2px' }}>Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                      Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
+                    </div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                      Posição: R${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
+                    </div>
+                  </div>
+                )}
+                {/* IPCA+ 2060 (2050) */}
+                {data.dca_status.ipca_medio && (
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px', borderLeft: '3px solid var(--accent)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginBottom: '4px' }}>IPCA+ 2050</div>
+                    <div style={{ fontSize: '.9rem', fontWeight: 700, marginBottom: '2px' }}>Taxa: {data.dca_status.ipca_medio.taxa_atual?.toFixed(2)}%</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                      Piso: {data.dca_status.ipca_medio.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_medio.gap_alvo_pp?.toFixed(1)}pp
+                    </div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                      Posição: R${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca_medio.pct_carteira_atual?.toFixed(1)}%)
+                    </div>
+                  </div>
+                )}
+                {/* Renda+ 2065 */}
+                {data.rf?.renda2065?.distancia_gatilho && (
+                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px', borderLeft: '3px solid var(--accent)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginBottom: '4px' }}>Renda+ 2065</div>
+                    <div style={{ fontSize: '.9rem', fontWeight: 700, marginBottom: '2px' }}>Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                      Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
+                    </div>
+                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                      Posição: R${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Macro strip */}
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '6px' }}>
+              Indicadores Macro
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+              <div style={styles.macroKpi}>
+                <div style={styles.macroVal}>{data?.premissas?.taxa_selic ? `${data.premissas.taxa_selic.toFixed(1)}%` : '—'}</div>
+                <div style={styles.macroLbl}>Selic</div>
+              </div>
+              <div style={styles.macroKpi}>
+                <div style={styles.macroVal}>{data?.premissas?.ipca_corrente ? `${data.premissas.ipca_corrente.toFixed(1)}%` : '—'}</div>
+                <div style={styles.macroLbl}>IPCA YTD</div>
+              </div>
+              <div style={styles.macroKpi}>
+                <div style={styles.macroVal}>{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+                <div style={styles.macroLbl}>USD/BRL</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="src" style={{ marginBottom: '0px' }}>
+            Fonte: BCB / FRED · Nubank · IBKR · Premissa de depreciação BRL usada em projeções FIRE
           </div>
         </div>
       </CollapsibleSection>
