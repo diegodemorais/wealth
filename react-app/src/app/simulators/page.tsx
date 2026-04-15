@@ -14,8 +14,11 @@ export default function SimulatorsPage() {
 
   useEffect(() => {
     if (!data) {
-      fetch('/wealth/dash/data.json')
-        .then(r => r.json())
+      fetch('/data.json')
+        .then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
         .then(d => {
           setData(d);
           // Run initial simulation with default params

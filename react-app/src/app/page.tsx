@@ -21,13 +21,14 @@ export default function HomePage() {
 
   useEffect(() => {
     // Load data dynamically from public path
-    // Use window.location.origin to build the full URL to account for basePath
-    const dataUrl = typeof window !== 'undefined'
-      ? `${window.location.origin}/wealth/dash/data.json`
-      : '/wealth/dash/data.json';
+    // Use relative path so it works with any basePath configuration
+    const dataUrl = '/data.json';
 
     fetch(dataUrl)
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
       .then(data => setData(data))
       .catch(e => console.error('Failed to load data from', dataUrl, ':', e));
   }, [setData]);
