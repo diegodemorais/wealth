@@ -110,16 +110,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
             value={inputValue}
             onChange={handleInputChange}
             placeholder="Valor em R$ (ex: +5000)"
-            style={{
-              flex: 1,
-              padding: '8px 10px',
-              backgroundColor: '#0f172a',
-              border: '1px solid rgba(71, 85, 105, 0.3)',
-              borderRadius: '6px',
-              color: '#cbd5e1',
-              fontSize: '0.85rem',
-              fontFamily: 'monospace',
-            }}
+            className="flex-1 px-2.5 py-2 bg-slate-950 border border-slate-700/30 rounded text-slate-200 text-sm font-mono placeholder:text-slate-500"
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
                 handleCalculate();
@@ -128,23 +119,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
           />
           <button
             onClick={handleCalculate}
-            style={{
-              padding: '8px 14px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLButtonElement).style.backgroundColor = '#2563eb';
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLButtonElement).style.backgroundColor = '#3b82f6';
-            }}
+            className="px-3.5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm font-semibold cursor-pointer transition-colors duration-200"
           >
             Calcular
           </button>
