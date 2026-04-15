@@ -52,7 +52,19 @@ describe('Responsive Design — CSS Media Queries', () => {
     expect(tablet768).toBeTruthy();
 
     const startIdx = cssContent.indexOf('@media (max-width: 768px)');
-    const endIdx = cssContent.indexOf('}', startIdx) + 1;
+    // Find the matching closing brace of the media query block
+    let braceCount = 0;
+    let endIdx = startIdx;
+    for (let i = startIdx; i < cssContent.length; i++) {
+      if (cssContent[i] === '{') braceCount++;
+      if (cssContent[i] === '}') {
+        braceCount--;
+        if (braceCount === 0) {
+          endIdx = i + 1;
+          break;
+        }
+      }
+    }
     const tabletSection = cssContent.substring(startIdx, endIdx);
 
     // Tablet should have 2-column KPI grids

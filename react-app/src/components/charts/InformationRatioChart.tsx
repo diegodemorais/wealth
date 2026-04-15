@@ -31,7 +31,7 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Information Ratio (36 months)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
     </div>
   );
 }

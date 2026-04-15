@@ -9,6 +9,7 @@
     "@playwright/test": "^1.59.1"
   },
   "dependencies": {
-    "@radix-ui/react-progress": "^1.1.8"
+    "@radix-ui/react-progress": "^1.1.8",
+    "@tailwindcss/postcss": "^4.2.2"
   }
 }

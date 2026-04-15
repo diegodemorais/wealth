@@ -23,7 +23,7 @@ export function NetWorthProjectionChart({ data }: NetWorthProjectionChartProps) 
   return (
     <div className="bg-card border border-border rounded-md p-4 mb-5">
       <h3 className="text-sm font-semibold text-foreground mb-4">Net Worth Projection (30 years, Monte Carlo)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>
   );
 }

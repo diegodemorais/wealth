@@ -23,7 +23,7 @@ export function IncomeChart({ data }: IncomeChartProps) {
   return (
     <div className="bg-card border border-border rounded-md p-4 mb-5">
       <h3 className="text-sm font-semibold text-foreground mb-4">Current Income Sources</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
     </div>
   );
 }

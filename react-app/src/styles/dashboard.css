@@ -218,7 +218,7 @@ footer {
   cursor: pointer;
   font-size: 0.78rem;
   font-weight: 600;
-  transition: all 0.15s;
+  transition: all 0.2s ease-in-out;
   white-space: nowrap;
   text-decoration: none;
   display: inline-block;
@@ -227,12 +227,15 @@ footer {
 .tab-btn:hover {
   border-color: var(--accent);
   color: var(--text);
+  transition: all 0.2s ease-in-out;
 }
 
 .tab-btn.active {
   background: var(--accent);
   border-color: var(--accent);
   color: white;
+  border-bottom: 2px solid var(--accent);
+  transition: border-bottom 0.2s ease-in-out;
 }
 
 /* Global focus ring for keyboard navigation */
@@ -486,7 +489,7 @@ tr:last-child td {
 .progress-fill {
   height: 100%;
   border-radius: 4px;
-  transition: width 0.3s;
+  transition: width 0.3s ease-out;
 }
 
 .progress-target {
@@ -522,7 +525,7 @@ tr:last-child td {
   border-radius: 6px;
   width: 120px;
   font-size: 0.85rem;
-  transition: all 0.15s;
+  transition: all 0.2s ease-in-out;
 }
 
 .calc-form input:focus,
@@ -574,7 +577,7 @@ tr:last-child td {
   font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s ease-in-out;
 }
 
 .period-btns button:hover {
@@ -670,26 +673,36 @@ tr:last-child td {
 }
 
 .collapsible .collapse-body {
-  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .collapsible.open .collapse-body {
-  display: block;
+  max-height: 2000px;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .collapsible h2 {
   cursor: pointer;
   user-select: none;
+  transition: color 0.2s ease-in-out;
 }
 
 .collapsible h2::after {
   content: ' ▸';
   font-size: 1em;
   color: var(--muted);
+  display: inline-block;
+  transition: transform 0.3s ease-in-out;
 }
 
 .collapsible.open h2::after {
   content: ' ▾';
+  transform: rotate(0deg);
 }
 
 /* Preset buttons */
@@ -701,7 +714,7 @@ tr:last-child td {
   background: var(--card2);
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s ease-in-out;
   white-space: nowrap;
   line-height: 1.6;
 }
@@ -749,8 +762,21 @@ tr:last-child td {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+
+  .header {
+    padding: 16px 12px;
+  }
+
+  .header h1 {
+    font-size: 1.2rem;
+  }
+
   .kpi-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
 
   .grid-2,
@@ -764,6 +790,52 @@ tr:last-child td {
 
   .rf-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .section {
+    padding: 12px;
+  }
+
+  .section h2 {
+    font-size: 0.8rem;
+  }
+
+  .tab-nav-container {
+    padding: 0 10px;
+  }
+
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .kpi {
+    padding: 12px 14px;
+  }
+
+  .kpi-label {
+    font-size: 0.6rem;
+  }
+
+  .kpi-value {
+    font-size: 1.3rem;
+  }
+
+  table {
+    font-size: 0.75rem;
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  }
+
+  th,
+  td {
+    padding: 6px 8px;
+  }
+
+  .modal,
+  .popover {
+    max-width: 90vw;
   }
 }
 

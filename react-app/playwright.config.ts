@@ -24,7 +24,7 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
+  webServer: process.env.SKIP_WEB_SERVER ? undefined : {
     command: 'npm run build:no-test && npm run start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,

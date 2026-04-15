@@ -42,7 +42,7 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Portfolio vs R7 Benchmark (84 months)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>
   );
 }

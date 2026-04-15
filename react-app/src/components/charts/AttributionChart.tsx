@@ -23,7 +23,7 @@ export function AttributionChart({ data }: AttributionChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Return Attribution Breakdown</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
     </div>
   );
 }

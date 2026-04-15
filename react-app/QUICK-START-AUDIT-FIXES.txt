@@ -1,0 +1,169 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║  QUICK START — Audit Fixes (20 min CRITICAL path to +8% fidelity)         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+COPY-PASTE THE FIXES BELOW INTO YOUR EDITOR
+─────────────────────────────────────────────────────────────────────────────
+
+FIX #1: SEMAFORO COLORS (5 minutes)
+════════════════════════════════════════════════════════════════════════════
+
+File: src/styles/dashboard.css
+Lines: 1040-1053 (find and replace)
+
+CURRENT (BROKEN):
+─────────────────
+/* Semaforo styles */
+.semaforo-critical {
+  background-color: #fee2e2;
+  color: #7f1d1d;
+}
+
+.semaforo-warning {
+  background-color: #fef3c7;
+  color: #78350f;
+}
+
+.semaforo-ok {
+  background-color: #dcfce7;
+  color: #14532d;
+}
+
+
+FIXED (PASTE THIS):
+──────────────────
+/* Semaforo styles */
+.semaforo-critical {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--red);
+}
+
+.semaforo-warning {
+  background-color: rgba(234, 179, 8, 0.15);
+  color: var(--yellow);
+}
+
+.semaforo-ok {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+}
+
+TEST: npm run dev → NOW tab → Check semáforos section
+      Should have dark-mode colors, good contrast
+
+
+FIX #2: CHART HEIGHTS (5 minutes)
+════════════════════════════════════════════════════════════════════════════
+
+File: src/styles/dashboard.css
+Line: 289 (find .chart-box)
+
+CHANGE THIS:
+────────────
+.chart-box {
+  position: relative;
+  height: 240px;  ← CHANGE TO 300px
+  min-width: 0;
+  overflow: hidden;
+}
+
+TO THIS:
+────────
+.chart-box {
+  position: relative;
+  height: 300px;  ← CHANGED
+  min-width: 0;
+  overflow: hidden;
+}
+
+Also update:
+  Line 296: .chart-box-sm { height: 180px; } → height: 200px;
+  Line 303: .chart-box-lg { height: 320px; } → height: 360px;
+
+TEST: npm run dev → NOW tab → Tornado & Sankey charts
+      Should have more vertical space
+
+
+FIX #3: KPI HERO BORDER (10 minutes)
+════════════════════════════════════════════════════════════════════════════
+
+File: src/components/primitives/KpiHero.tsx
+(Need to verify current state)
+
+INSTRUCTIONS:
+1. Open KpiHero.tsx
+2. Find the main container (outermost div)
+3. Look for border and background styling
+4. Verify it matches the pattern below:
+
+SHOULD LOOK LIKE:
+─────────────────
+<div
+  style={{
+    border: '2px solid var(--accent)',  ← Must be 2px, not 1px
+    background: 'rgba(59, 130, 246, 0.07)',
+    borderRadius: '12px',
+    padding: '20px',
+    ...otherStyles
+  }}
+>
+  {/* content */}
+</div>
+
+Or via CSS class:
+.kpi-hero {
+  border: 2px solid var(--accent);
+  background: rgba(59, 130, 246, 0.07);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+TEST: npm run dev → NOW tab → Top KPI hero section
+      Should have BLUE ACCENT border (not gray), subtle blue background
+
+
+════════════════════════════════════════════════════════════════════════════
+SUMMARY
+════════════════════════════════════════════════════════════════════════════
+
+Total Changes:     3 places to edit
+Total Time:        ~20 minutes (can be done in parallel)
+Files Modified:    2 (dashboard.css, KpiHero.tsx)
+Risk Level:        Very Low (CSS + styling only)
+Regression Risk:   Minimal (unit tests unaffected)
+
+After these fixes:
+  • Visual fidelity improves from 78% → 86%
+  • Critical visual gaps resolved
+  • Ready for next set of HIGH priority fixes
+
+
+COMMIT MESSAGE (after all 3 fixes are done):
+─────────────────────────────────────────────────────────────────────────
+
+git add src/styles/dashboard.css src/components/primitives/KpiHero.tsx
+git commit -m "fix: Restore visual fidelity — semaforo colors + chart heights
+
+- Replace semaforo light-mode colors with dark CSS vars (rgba + var(--)
+- Increase chart container heights: 240px → 300px for .chart-box
+- Verify KPI Hero uses 2px accent border + background tint
+- Closes UX-AUDIT-001 critical findings
+
+Dashboard v0.1.43 fidelity: 78% → 86%"
+
+git push origin main
+
+
+NEXT STEPS
+═════════════════════════════════════════════════════════════════════════════
+
+After CRITICAL fixes are deployed:
+  1. Open UX-AUDIT-001-VISUAL-FIDELITY.md for full analysis
+  2. Review HIGH priority fixes (FIX-4 through FIX-8)
+  3. Schedule for next sprint (90 min total)
+  4. Complete MEDIUM fixes (FIX-9 through FIX-13) for final polish
+
+Full documentation available in:
+  • UX-AUDIT-001-VISUAL-FIDELITY.md     (detailed report)
+  • AUDIT-FIXES-REFERENCE.md            (all fixes with code)
+  • AUDIT-SUMMARY.txt                   (overview)

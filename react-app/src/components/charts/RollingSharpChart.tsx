@@ -31,7 +31,7 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
   return (
     <div className="bg-card border border-border rounded-lg p-4 mb-5">
       <h3 className="text-sm font-semibold text-text mb-4 mt-0">Rolling Sharpe Ratio (12-month window)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 300 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
     </div>
   );
 }

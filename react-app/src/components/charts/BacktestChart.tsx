@@ -23,7 +23,7 @@ export function BacktestChart({ data }: BacktestChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Backtest Equity Curve (7 years)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>
   );
 }
