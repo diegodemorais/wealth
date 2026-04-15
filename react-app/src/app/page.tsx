@@ -21,6 +21,7 @@ import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import GeographicExposureChart from '@/components/dashboard/GeographicExposureChart';
 import StackedAllocationBar from '@/components/dashboard/StackedAllocationBar';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
+import TrackingFireChart from '@/components/dashboard/TrackingFireChart';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -377,6 +378,24 @@ export default function HomePage() {
           <FactorLoadingsTable data={data.factor_loadings} />
         </CollapsibleSection>
       )}
+
+      {/* Tier-3: Performance & Attribution */}
+      <CollapsibleSection
+        id="section-performance"
+        title="Performance & Attribution"
+        defaultOpen={false}
+        icon="📈"
+      >
+        {/* 3.1: Tracking FIRE */}
+        {derived && (
+          <TrackingFireChart
+            realizadoBrl={derived.totalBrl || 0}
+            projetadoP50Brl={derived.totalBrl * 1.1 || 0}
+            fireGatilhoBrl={derived.firePatrimonioGatilho || 0}
+            patrimonioAtualBrl={derived.totalBrl || 0}
+          />
+        )}
+      </CollapsibleSection>
 
       {/* Charts Section - TODO: Fix missing data references */}
       {/* Temporarily disabled due to missing data fields in data.json
