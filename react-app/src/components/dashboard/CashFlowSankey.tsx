@@ -34,10 +34,10 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
   const cryptoPct = totalFlow > 0 ? cryptoFlow / totalFlow : 0;
 
   const colors = {
-    ipca: '#06b6d4',
-    equity: '#3b82f6',
-    rendaPlus: '#f59e0b',
-    crypto: '#8b5cf6',
+    ipca: 'var(--cyan)',
+    equity: 'var(--primary)',
+    rendaPlus: 'var(--warning)',
+    crypto: 'var(--purple)',
   };
 
   return (
@@ -48,11 +48,11 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {/* Input card (Aporte) */}
-        <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '2px solid #22c55e', borderRadius: '4px', textAlign: 'center' }}>
+        <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '2px solid var(--success)', borderRadius: '4px', textAlign: 'center' }}>
           <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Aporte Mensal
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#22c55e' }}>
+          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success)' }}>
             {privacyMode ? 'R$••••' : fmtBrl(aporteMensal)}
           </div>
         </div>

@@ -31,7 +31,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
 
   const diferenca = patrimonioAtualBrl - projetadoP50Brl;
   const diferencaPct = projetadoP50Brl > 0 ? (diferenca / projetadoP50Brl) * 100 : 0;
-  const statusColor = diferenca > 0 ? '#22c55e' : diferenca < -100000 ? '#ef4444' : '#eab308';
+  const statusColor = diferenca > 0 ? 'var(--success)' : diferenca < -100000 ? 'var(--destructive)' : 'var(--yellow)';
   const status = diferenca > 0 ? 'ahead' : diferenca < -100000 ? 'behind' : 'tracking';
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
           {
             label: 'Patrimônio (BRL)',
             data: [realizadoBrl, projetadoP50Brl, fireGatilhoBrl],
-            backgroundColor: ['#06b6d4', '#8b5cf6', '#f59e0b'],
+            backgroundColor: ['var(--cyan)', 'var(--purple)', 'var(--warning)'],
             borderColor: 'rgba(15, 23, 42, 1)',
             borderWidth: 1,
             borderRadius: 4,
@@ -133,21 +133,21 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
           {/* Status cards */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {/* Realizado */}
-            <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid #06b6d4', borderRadius: '4px' }}>
+            <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid var(--cyan)', borderRadius: '4px' }}>
               <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Patrimônio Realizado
               </div>
-              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#06b6d4' }}>
+              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--cyan)' }}>
                 {privacyMode ? 'R$••••' : fmtBrl(patrimonioAtualBrl)}
               </div>
             </div>
 
             {/* P50 Projetado */}
-            <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid #8b5cf6', borderRadius: '4px' }}>
+            <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid var(--purple)', borderRadius: '4px' }}>
               <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 P50 Projetado
               </div>
-              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#8b5cf6' }}>
+              <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--purple)' }}>
                 {privacyMode ? 'R$••••' : fmtBrl(projetadoP50Brl)}
               </div>
             </div>
@@ -193,7 +193,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
                 width: `${Math.min(100, (patrimonioAtualBrl / fireGatilhoBrl) * 100)}%`,
                 height: '100%',
                 transition: 'all 0.5s',
-                backgroundColor: (patrimonioAtualBrl / fireGatilhoBrl) >= 1 ? '#22c55e' : '#f59e0b',
+                backgroundColor: (patrimonioAtualBrl / fireGatilhoBrl) >= 1 ? 'var(--success)' : 'var(--warning)',
               }}
             />
           </div>

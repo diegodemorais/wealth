@@ -1,55 +1,60 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/*
- * Tailwind v4 theme tokens — maps shadcn/ui utilities to our dark design system.
- * bg-card → var(--color-card), text-muted-foreground → var(--color-muted-foreground), etc.
- */
-@theme {
-  /* Core backgrounds */
-  --color-background: #0f172a;
-  --color-foreground: #f1f5f9;
+/* CSS custom properties for shadcn/ui theming */
+@layer base {
+  :root {
+    color-scheme: dark;
 
-  /* Card / surface */
-  --color-card: #1e293b;
-  --color-card-foreground: #f1f5f9;
+    /* Core backgrounds */
+    --background: #0f172a;
+    --foreground: #f1f5f9;
 
-  /* Popover */
-  --color-popover: #1e293b;
-  --color-popover-foreground: #f1f5f9;
+    /* Card / surface */
+    --card: #1e293b;
+    --card-foreground: #f1f5f9;
 
-  /* Primary (accent blue) */
-  --color-primary: #3b82f6;
-  --color-primary-foreground: #f1f5f9;
+    /* Popover */
+    --popover: #1e293b;
+    --popover-foreground: #f1f5f9;
 
-  /* Secondary (card2) */
-  --color-secondary: #334155;
-  --color-secondary-foreground: #f1f5f9;
+    /* Primary (accent blue) */
+    --primary: #3b82f6;
+    --primary-foreground: #f1f5f9;
 
-  /* Muted */
-  --color-muted: #334155;
-  --color-muted-foreground: #94a3b8;
+    /* Secondary (card2) */
+    --secondary: #334155;
+    --secondary-foreground: #f1f5f9;
 
-  /* Accent */
-  --color-accent: #334155;
-  --color-accent-foreground: #f1f5f9;
+    /* Muted */
+    --muted: #334155;
+    --muted-foreground: #94a3b8;
 
-  /* Destructive */
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #f1f5f9;
+    /* Accent */
+    --accent: #334155;
+    --accent-foreground: #f1f5f9;
 
-  /* Borders / inputs */
-  --color-border: #475569;
-  --color-input: #334155;
-  --color-ring: #3b82f6;
+    /* Destructive */
+    --destructive: #ef4444;
+    --destructive-foreground: #f1f5f9;
 
-  /* Border radius */
-  --radius: 10px;
-  --radius-lg: 10px;
-  --radius-md: 8px;
-  --radius-sm: 6px;
-}
+    /* Borders / inputs */
+    --border: #475569;
+    --input: #334155;
+    --ring: #3b82f6;
 
-/* Dashboard always dark */
-:root {
-  color-scheme: dark;
+    /* Border radius */
+    --radius: 10px;
+
+    /* Additional chart colors */
+    --success: #22c55e;
+    --yellow: #eab308;
+    --warning: #f59e0b;
+    --green: #10b981;
+    --pink: #ec4899;
+    --purple: #a855f7;
+    --cyan: #06b6d4;
+    --muted-bg: #1f2937;
+  }
 }

@@ -141,13 +141,30 @@ footer {
   display: flex;
   gap: 6px;
   margin-bottom: 14px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   position: sticky;
   top: 0;
   z-index: 100;
   background: var(--bg);
   padding: 8px 0 6px;
   border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.tab-nav::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  background: linear-gradient(to right, transparent, var(--bg));
+  pointer-events: none;
+  z-index: 10;
 }
 
 .tab-nav-container {
@@ -183,6 +200,27 @@ footer {
   background: var(--accent);
   border-color: var(--accent);
   color: white;
+}
+
+/* Global focus ring for keyboard navigation */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Tab button focus override (stronger) */
+.tab-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* Period button focus override */
+.period-btns button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* KPI Card */
@@ -247,16 +285,24 @@ table {
 .table th,
 th {
   text-align: left;
-  padding: 6px 8px;
+  padding: 10px 12px;
   color: var(--muted);
   font-weight: 600;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--border);
+  background: rgba(51, 65, 85, 0.3);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .table td,
 td {
-  padding: 6px 8px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
+}
+
+.table tr:hover td {
+  background: rgba(59, 130, 246, 0.05);
 }
 
 .table tr:last-child td,
@@ -715,13 +761,26 @@ tr:last-child td {
 }
 
 @media (max-width: 480px) {
+  body {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+  }
+
+  h2 {
+    font-size: 0.9rem;
+  }
+
   .container {
     padding: 8px;
   }
 
   .section {
-    padding: 12px;
-    margin-bottom: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
   }
 
   .header {
@@ -756,6 +815,18 @@ tr:last-child td {
     gap: 12px;
   }
 
+  .kpi {
+    padding: 12px 14px;
+  }
+
+  .kpi-label {
+    font-size: 0.55rem;
+  }
+
+  .kpi-value {
+    font-size: 1.2rem;
+  }
+
   .chart-box {
     height: 200px;
   }
@@ -780,6 +851,19 @@ tr:last-child td {
     font-size: 1rem;
   }
 
+  table {
+    font-size: 0.7rem;
+  }
+
+  th,
+  td {
+    padding: 4px 2px;
+  }
+
+  .section h2 {
+    font-size: 0.75rem;
+  }
+
   .calc-form {
     flex-direction: column;
     gap: 6px;
@@ -792,31 +876,6 @@ tr:last-child td {
 
   .calc-form button {
     width: 100%;
-  }
-
-  table {
-    font-size: 0.7rem;
-  }
-
-  th,
-  td {
-    padding: 4px 3px;
-  }
-
-  .kpi {
-    padding: 12px 14px;
-  }
-
-  .kpi-label {
-    font-size: 0.6rem;
-  }
-
-  .kpi-value {
-    font-size: 1.3rem;
-  }
-
-  .section h2 {
-    font-size: 0.75rem;
   }
 
   .period-btns {

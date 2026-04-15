@@ -27,7 +27,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
 
     return createSimpleLineChartOption({
       data, privacyMode, theme, xAxisData,
-      seriesData: [{ name: 'Portfolio Value', data: values, color: '#3b82f6', areaStyle: true }],
+      seriesData: [{ name: 'Portfolio Value', data: values, color: 'var(--primary)', areaStyle: true }],
       yAxisFormatter: (v) => `R$ ${(v / 1e6).toFixed(1)}M`,
     });
   }, [privacyMode, theme]);
