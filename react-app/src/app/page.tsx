@@ -16,6 +16,11 @@ import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 import FinancialWellnessActions from '@/components/dashboard/FinancialWellnessActions';
+import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
+import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
+import GeographicExposureChart from '@/components/dashboard/GeographicExposureChart';
+import StackedAllocationBar from '@/components/dashboard/StackedAllocationBar';
+import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -288,6 +293,61 @@ export default function HomePage() {
             pnl_pct={typeof data.hodl11.pnl_pct === 'number' ? data.hodl11.pnl_pct : undefined}
           />
         </CollapsibleSection>
+      )}
+
+      {/* Tier-2: Brasil Concentration Card */}
+      {derived && (
+        <BrasilConcentrationCard
+          hodl11={derived.cryptoBrl || 0}
+          ipcaTotal={derived.ipcaTotalBrl || 0}
+          rendaPlus={data?.rf?.renda2065?.valor || 0}
+          cryptoLegado={derived.cryptoLegado || 0}
+          totalBrl={derived.totalBrl || 0}
+          concentrationBrazil={derived.concentrationBrazil || 0}
+        />
+      )}
+
+      {/* Tier-2: Cash Flow Sankey */}
+      {derived && (
+        <CashFlowSankey
+          aporteMensal={derived.aporteMensal}
+          ipcaFlow={derived.ipcaFlowMonthly}
+          equityFlow={derived.equityFlowMonthly}
+          rendaPlusFlow={derived.rendaPlusFlowMonthly}
+          cryptoFlow={derived.cryptoFlowMonthly}
+        />
+      )}
+
+      {/* Tier-2: Geographic Exposure Chart */}
+      {derived && (
+        <GeographicExposureChart
+          usa={derived.geoUS || 0}
+          europe={derived.geoDM || 0}
+          japan={0}
+          otherDm={0}
+          em={derived.geoEM || 0}
+          totalUsd={derived.totalEquityUsd || 0}
+        />
+      )}
+
+      {/* Tier-2: Stacked Allocation Bar */}
+      {derived && (
+        <StackedAllocationBar
+          equityBrl={derived.totalEquityUsd * derived.CAMBIO || 0}
+          ipcaBrl={derived.ipcaTotalBrl || 0}
+          rendaPlusBrl={data?.rf?.renda2065?.valor || 0}
+          cryptoBrl={derived.cryptoBrl || 0}
+          totalBrl={derived.totalBrl || 0}
+        />
+      )}
+
+      {/* Tier-2: ETF Region Composition */}
+      {data && data.etf_composition && (
+        <ETFRegionComposition
+          swrd={data.etf_composition.swrd}
+          avgs={data.etf_composition.avgs}
+          avem={data.etf_composition.avem}
+        />
       )}
 
       {/* Tier-2: Bond Pool Composition */}

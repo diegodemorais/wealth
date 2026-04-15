@@ -329,6 +329,17 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       .slice(0, 5);
   })();
 
+  // Compute cash flow distribution (aporte → destinations)
+  const aporteMensalVal = data.premissas?.aporte_mensal ?? 0;
+  const equityRatio = totalEquityUsd * CAMBIO / totalBrl; // Current equity allocation %
+  const rfRatio = rfBrl / totalBrl; // Current RF allocation %
+  const cryptoRatio = cryptoBrl / totalBrl; // Current crypto allocation %
+
+  const ipcaFlowMonthly = aporteMensalVal * (ipcaTotalBrl / (rfBrl || 1)); // Pro-rata IPCA allocation
+  const equityFlowMonthly = aporteMensalVal * equityRatio;
+  const rendaPlusFlowMonthly = aporteMensalVal * (((data.rf?.renda2065?.valor ?? 0) / (rfBrl || 1)) * rfRatio);
+  const cryptoFlowMonthly = aporteMensalVal * cryptoRatio;
+
   return {
     // Core values
     networth: totalBrl,
@@ -359,6 +370,12 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     ultimoAporteData,
     acumuladoMes,
     acumuladoAno,
+
+    // Cash flow distribution (annual flows by destination)
+    ipcaFlowMonthly,
+    equityFlowMonthly,
+    rendaPlusFlowMonthly,
+    cryptoFlowMonthly,
 
     // P(FIRE) scenarios and tornado
     pfireBase: (data.pfire_base?.base ?? 90.4),
