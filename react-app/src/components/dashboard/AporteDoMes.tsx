@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface AporteDoMesProps {
   aporteMensal: number;
@@ -41,88 +42,69 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
   };
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Aporte do Mês
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Aporte do Mês
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
 
       {/* Main metrics grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '14px',
-          marginBottom: '16px',
-        }}
-      >
+      <div className="grid grid-cols-2 gap-3 mb-4">
         {/* Aporte Mensal */}
-        <div style={{ padding: '10px', backgroundColor: 'rgba(34, 197, 94, 0.08)', borderRadius: '6px' }}>
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+        <div className="p-2.5 bg-green-500/10 rounded">
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
             Aporte Mensal
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#22c55e' }}>
+          <div className="text-xl font-bold text-green-500">
             {privacyMode ? '••••' : fmtBrl(aporteMensal).replace('R$', '')}
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: '2px' }}>
+          <div className="text-xs text-slate-400 mt-1">
             {privacyMode ? 'R$••••' : fmtBrl(aporteMensal)}
           </div>
         </div>
 
         {/* Último Aporte */}
-        <div style={{ padding: '10px', backgroundColor: 'rgba(6, 182, 212, 0.08)', borderRadius: '6px' }}>
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+        <div className="p-2.5 bg-cyan-500/10 rounded">
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
             Último Aporte
           </div>
-          <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#06b6d4' }}>
+          <div className="text-lg font-bold text-cyan-500">
             {privacyMode ? '••••' : fmtBrl(ultimoAporte).replace('R$', '').substring(0, 8)}
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: '2px' }}>
+          <div className="text-xs text-slate-400 mt-1">
             {ultimoAporteData}
           </div>
         </div>
       </div>
 
       {/* Accumulated values */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '8px',
-          marginBottom: '16px',
-          fontSize: '0.75rem',
-        }}
-      >
-        <div style={{ padding: '6px 8px', backgroundColor: 'rgba(71, 85, 105, 0.1)', borderRadius: '4px' }}>
-          <div style={{ color: '#94a3b8', marginBottom: '2px' }}>Acumulado Mês</div>
-          <div style={{ fontWeight: 600, color: '#cbd5e1' }}>
+      <div className="grid grid-cols-2 gap-2 mb-4 text-xs">
+        <div className="p-2 bg-slate-800/20 rounded">
+          <div className="text-slate-400 mb-1">Acumulado Mês</div>
+          <div className="font-semibold text-slate-200">
             {privacyMode ? 'R$••••' : fmtBrl(acumuladoMes)}
           </div>
         </div>
-        <div style={{ padding: '6px 8px', backgroundColor: 'rgba(71, 85, 105, 0.1)', borderRadius: '4px' }}>
-          <div style={{ color: '#94a3b8', marginBottom: '2px' }}>Acumulado Ano</div>
-          <div style={{ fontWeight: 600, color: '#cbd5e1' }}>
+        <div className="p-2 bg-slate-800/20 rounded">
+          <div className="text-slate-400 mb-1">Acumulado Ano</div>
+          <div className="font-semibold text-slate-200">
             {privacyMode ? 'R$••••' : fmtBrl(acumuladoAno)}
           </div>
         </div>
       </div>
 
       {/* Divider */}
-      <div style={{ borderTop: '1px solid rgba(71, 85, 105, 0.15)', margin: '14px 0' }} />
+      <div className="border-t border-slate-700/15 my-3" />
 
       {/* Calculation form */}
-      <div style={{ marginTop: '14px' }}>
-        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '8px', fontWeight: 500 }}>
+      <div className="mt-4">
+        <div className="text-xs text-slate-400 mb-2 font-medium">
           Simular Aporte (+/-)
         </div>
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+        <div className="flex gap-2 mb-2">
           <input
             type="number"
             value={inputValue}
@@ -170,28 +152,21 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
 
         {/* Result display */}
         {calculatedValue !== null && (
-          <div
-            style={{
-              padding: '10px 12px',
-              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-              border: '1px solid rgba(59, 130, 246, 0.3)',
-              borderRadius: '6px',
-              marginTop: '8px',
-            }}
-          >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+          <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded mt-2">
+            <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
               Aporte Ajustado
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#3b82f6' }}>
+            <div className="text-lg font-bold text-blue-500">
               {privacyMode ? '••••' : fmtBrl(calculatedValue)}
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '4px' }}>
+            <div className="text-xs text-slate-500 mt-1">
               Diferença: {privacyMode ? '••••' : fmtBrl(calculatedValue - aporteMensal)}
             </div>
           </div>
         )}
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
