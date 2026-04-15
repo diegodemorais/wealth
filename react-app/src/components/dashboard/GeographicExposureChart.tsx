@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface GeographicExposureChartProps {
   usa: number;
@@ -110,34 +111,22 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
   }));
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Exposição Geográfica — Equity
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Exposição Geográfica — Equity
+        </CardTitle>
+      </CardHeader>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '16px',
-          alignItems: 'start',
-        }}
-      >
-        {/* Chart */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <canvas ref={chartRef} style={{ maxWidth: '250px', maxHeight: '250px' }} />
-        </div>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 gap-4 items-start">
+          {/* Chart */}
+          <div className="flex justify-center">
+            <canvas ref={chartRef} style={{ maxWidth: '250px', maxHeight: '250px' }} />
+          </div>
 
-        {/* Breakdown table */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {/* Breakdown table */}
+          <div className="space-y-2">
           {calculations.map(region => (
             <div
               key={region.label}
@@ -171,22 +160,14 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
             </div>
           ))}
         </div>
-      </div>
+        </div>
 
-      {/* Summary */}
-      <div
-        style={{
-          marginTop: '14px',
-          fontSize: '0.7rem',
-          color: '#64748b',
-          padding: '8px',
-          backgroundColor: 'rgba(71, 85, 105, 0.08)',
-          borderRadius: '4px',
-        }}
-      >
-        <strong>Total Equity USD:</strong> {privacyMode ? 'USD ••••' : `USD ${(totalUsd / 1000).toFixed(1)}k`}
-      </div>
-    </div>
+        {/* Summary */}
+        <div className="text-xs text-slate-500 p-2 bg-slate-800/20 rounded mt-4">
+          <strong>Total Equity USD:</strong> {privacyMode ? 'USD ••••' : `USD ${(totalUsd / 1000).toFixed(1)}k`}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
