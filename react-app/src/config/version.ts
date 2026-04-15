@@ -1,3 +1,3 @@
 // Auto-generated on build
-export const DASHBOARD_VERSION = '0.1.135';
-export const BUILD_DATE = '2026-04-15T15:01:45.435Z';
+export const DASHBOARD_VERSION = '0.1.138';
+export const BUILD_DATE = '2026-04-15T16:12:07.493Z';

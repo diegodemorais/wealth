@@ -33,21 +33,19 @@ export function KpiHero({
     {
       label: 'Patrimônio Total',
       value: privacyMode ? '••••' : fmtBrl(networth),
-      subtitle: privacyMode ? '••••' : `USD ${fmtUsd(networthUsd).replace('$', '')}`,
+      subtitle: privacyMode ? '••••' : `${networthUsd ? fmtUsd(networthUsd).replace('$', 'USD ') : '—'} em USD`,
       primary: true,
     },
     {
       label: 'Anos até FIRE',
       value: privacyMode ? '••••' : yearsMonthsStr,
+      subtitle: privacyMode ? '••••' : undefined,
     },
     {
       label: 'Progresso FIRE',
       value: privacyMode ? '••••' : fmtPct(fireProgress, 1),
+      subtitle: privacyMode ? '••••' : undefined,
       color: '#facc15', // yellow
-    },
-    {
-      label: 'P(FIRE)',
-      value: privacyMode ? '••••' : fmtPct(pfire, 1),
     },
   ];
 
@@ -80,25 +78,25 @@ export function KpiHero({
 const styles: Record<string, React.CSSProperties> = {
   hero: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '10px',
     marginBottom: '16px',
   },
   kpiItem: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--border)',
     borderRadius: '12px',
     padding: '16px',
     textAlign: 'center',
   },
   kpiPrimary: {
-    border: '2px solid #3b82f6',
+    border: '2px solid var(--accent)',
     backgroundColor: 'rgba(59, 130, 246, 0.07)',
   },
   label: {
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontSize: '0.6rem',
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as const,
     fontWeight: '600',
     marginBottom: '4px',
     letterSpacing: '0.5px',
@@ -112,7 +110,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   subtitle: {
     fontSize: '0.65rem',
-    color: '#9ca3af',
+    color: 'var(--muted)',
     marginTop: '4px',
   },
 };

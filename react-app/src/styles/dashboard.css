@@ -8,20 +8,20 @@
    ───────────────────────────────────────────────────────────── */
 
 :root {
-  /* Core colors (HSL format for Tailwind compatibility) */
-  --bg: hsl(233 84% 11%);
-  --card: hsl(217 33% 17%);
-  --card2: hsl(217 16% 28%);
-  --text: hsl(210 40% 98%);
-  --muted: hsl(219 15% 67%);
-  --border: hsl(218 13% 34%);
-  --accent: hsl(217 100% 50%);
-  --green: hsl(142 72% 29%);
-  --red: hsl(0 93% 69%);
-  --yellow: hsl(49 96% 56%);
-  --purple: hsl(259 84% 67%);
-  --cyan: hsl(188 94% 40%);
-  --orange: hsl(25 97% 53%);
+  /* Core colors — matching DashHTML reference */
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card2: #334155;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --border: #475569;
+  --accent: #3b82f6;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+  --purple: #a855f7;
+  --cyan: #06b6d4;
+  --orange: #f97316;
 
   /* Utilities */
   --radius: 10px;
@@ -53,7 +53,7 @@ body {
 }
 
 .header {
-  background: linear-gradient(135deg, hsl(217 32% 23%), var(--bg));
+  background: linear-gradient(135deg, #1e3a5f, #0f172a);
   padding: 20px 24px;
   border-radius: 14px;
   margin-bottom: 16px;
@@ -133,44 +133,53 @@ footer {
    SECTION 3: Components
    ───────────────────────────────────────────────────────────── */
 
-/* Tab Navigation */
+/* Tab Navigation — matching DashHTML reference */
 .tab-nav {
-  background-color: hsl(217 16% 9%);
-  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
   position: sticky;
-  top: 59px;
-  z-index: 99;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  padding: 8px 0 6px;
+  border-bottom: 1px solid var(--border);
 }
 
 .tab-nav-container {
   display: flex;
-  gap: 0;
+  gap: 6px;
+  flex-wrap: wrap;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 .tab-btn {
-  padding: 12px 16px;
-  border: none;
-  background-color: transparent;
+  background: var(--card);
+  border: 1px solid var(--border);
   color: var(--muted);
+  padding: 7px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-  border-bottom: 2px solid transparent;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  white-space: nowrap;
   text-decoration: none;
   display: inline-block;
 }
 
-.tab-btn.active {
+.tab-btn:hover {
+  border-color: var(--accent);
   color: var(--text);
-  border-bottom-color: var(--accent);
 }
 
-.tab-btn:hover {
-  color: var(--text);
+.tab-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 /* KPI Card */
@@ -895,42 +904,100 @@ td {
   color: var(--muted);
 }
 
-/* DCA Status Grid patterns */
+/* DCA Status Grid patterns — matching DashHTML */
 .dca-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 10px;
 }
 
 .dca-card {
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  transition: opacity 0.2s ease;
-  padding: 16px;
-  position: relative;
+  background: var(--card2);
+  border-radius: 8px;
+  padding: 14px;
+  border-left: 3px solid var(--accent);
 }
 
 .dca-card.paused {
-  opacity: 0.6;
-  background: rgba(148, 163, 184, 0.1);
+  border-left-color: var(--muted);
+  opacity: 0.8;
+}
+
+.dca-card .dca-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dca-card .dca-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  padding: 2px 0;
+}
+
+.dca-card .dca-row .dca-val {
+  font-weight: 600;
 }
 
 .dca-card--border-cyan {
-  border-left: 4px solid var(--cyan);
+  border-left-color: var(--cyan);
 }
 
 .dca-card--border-violet {
-  border-left: 4px solid var(--purple);
+  border-left-color: var(--purple);
 }
 
 .dca-card--border-amber {
-  border-left: 4px solid var(--orange);
+  border-left-color: var(--orange);
 }
 
 .dca-card--border-default {
-  border-left: 4px solid var(--muted);
+  border-left-color: var(--muted);
+}
+
+/* Brasil Concentração card */
+.brasil-card {
+  background: var(--card2);
+  border-left: 3px solid var(--yellow);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 10px;
+}
+
+.brasil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.brasil-header .brasil-pct {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+.brasil-header .brasil-lbl {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.brasil-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.15);
+}
+
+.brasil-row:last-child {
+  border-bottom: none;
+}
+
+.brasil-row .br-val {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Semaforo styles */
