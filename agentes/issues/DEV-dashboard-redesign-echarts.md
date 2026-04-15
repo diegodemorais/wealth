@@ -260,6 +260,26 @@ DashHTML tem **7 abas** com estrutura clara:
 
 ---
 
+### ABA 8: AVALIAR (Componentes Diferentes)
+
+#### Mapeamento de Diferenças
+- [ ] **[Dev]** Auditar dashboard Next.js atual: listar TODOS componentes renderizados
+- [ ] **[Dev]** Comparar com DashHTML: identificar componentes sem paralelo/match
+- [ ] **[Dev]** Catalogar diferenças: nome, tipo (chart/card/table), razão (feature não existe no antigo?)
+- [ ] **[Dev]** Propor ação: manter (refinado vs antigo), ou remover (redundante)
+
+#### Componentes Candidatos à Remoção
+Exemplos (a confirmar):
+- `RollingMetricsChart` (nova métrica rolling?)
+- `DrawdownHistoryChart` (vs Drawdown Crises table no BACKTEST?)
+- `SpendingBreakdown` + `RebalancingStatus` (aparecem já em RETIRO?)
+
+#### Resultado
+- [ ] Tabela: Componente | Tipo | Paralelo DashHTML? | Ação Proposta
+- [ ] Aprovação Diego: manter ou remover cada diferença
+
+---
+
 ## Protocolo de Validação Geral
 
 Para cada aba:
@@ -293,6 +313,18 @@ Para cada aba:
 - ✅ Test suite passando (57X testes, alvo ≥95%)
 - ✅ Build válido: `npm run build` sem erros
 - ✅ Dashboard v0.2.0 com versão bump
+
+---
+
+## Protocolo de Interação com Agentes
+
+**Todos agentes nesta sessão: Haiku (modelo rápido, foco em execução)**
+
+- **Dev**: estuda DashHTML, captura visual, lista componentes, mapa CSS patterns
+- **Quant**: audita dados, ranges, fórmulas, validação vs DashHTML expectations
+- **Bookkeeper**: valida acurácia cálculos, reconciliação campos vs data.json
+
+Execução: **8 agents em paralelo** (um por aba + Avaliar), briefings simultâneos.
 
 ---
 
