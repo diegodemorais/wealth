@@ -66,7 +66,7 @@ export default function PerformancePage() {
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
                 IPCA+ Longo — Progressão vs Alvo 19%
               </div>
-              <div style={{ fontSize: '.72rem', lineHeight: 1.8 }}>
+              <div style={{ fontSize: '.72rem', lineHeight: 1.6 }}>
                 <div>Sep: −8.5pp · DCA ativo · taxa −7.07%</div>
               </div>
             </div>
