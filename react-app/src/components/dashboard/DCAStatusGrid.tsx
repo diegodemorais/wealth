@@ -1,6 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { useUiStore } from "@/store/uiStore"
@@ -27,6 +26,14 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
   // Defensive: validate items array
   const validItems = Array.isArray(items) ? items.filter(item => item && typeof item === 'object') : [];
 
+  // Get border-left color by instrument type
+  const getBorderColor = (id: string): string => {
+    if (id.includes('ipca2040') || id.includes('ipca_long')) return '#06b6d4'; // cyan
+    if (id.includes('ipca2050')) return '#8b5cf6'; // violet
+    if (id.includes('renda') || id.includes('2065')) return '#f59e0b'; // amber
+    return '#6b7280'; // gray (default)
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -35,14 +42,17 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {validItems.map((item) => (
-            <Card
+            <div
               key={item.id}
+              style={{
+                borderLeft: `4px solid ${getBorderColor(item.id)}`,
+              }}
               className={cn(
-                "transition-opacity",
+                "rounded-lg border border-border bg-card transition-opacity",
                 item.regime === "PAUSADO" && "opacity-60 bg-muted/30"
               )}
             >
-              <CardContent className="pt-4">
+              <div className="pt-4 px-4 pb-4">
                 {/* Helper: validate numeric fields */}
                 {(() => {
                   const taxa = typeof item.taxa_atual === 'number' ? item.taxa_atual : 0;
@@ -131,8 +141,8 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                     </>
                   );
                 })()}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>
