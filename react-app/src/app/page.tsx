@@ -39,6 +39,7 @@ import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable'
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { FamilyScenarioCards } from '@/components/dashboard/FamilyScenarioCards';
+import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -608,6 +609,16 @@ export default function HomePage() {
           <FireMatrixTable data={data.fire_matrix} />
         </CollapsibleSection>
       )}
+
+      {/* Monthly Returns Heatmap */}
+      <CollapsibleSection
+        id="section-monthly-heatmap"
+        title="Monthly Returns"
+        defaultOpen={false}
+        icon="📅"
+      >
+        <MonthlyReturnsHeatmap data={data?.retorno_mensal_heatmap} />
+      </CollapsibleSection>
     </div>
   );
 }
