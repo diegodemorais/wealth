@@ -39,7 +39,7 @@ jobs:
           NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at || '' }}
         run: |
           cd react-app
-          npm run build:no-test
+          npm run build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v6
