@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface FireSimulatorProps {
   patrimonioAtual?: number;
@@ -115,13 +115,13 @@ export function FireSimulator({
 
   return (
     <div className="mb-6">
-      {/* Title */}
-      <h3 className="text-sm font-semibold text-slate-200 mb-4">
-        FIRE Simulator — What-If Analysis
-      </h3>
-
       {/* Controls Section */}
       <Card className="bg-slate-900/30 border-slate-700/25 mb-4">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold text-slate-200">
+            FIRE Simulator — What-If Analysis
+          </CardTitle>
+        </CardHeader>
         <CardContent className="p-4">
         {/* Aporte Mensal */}
         <div className="mb-5">
@@ -274,11 +274,12 @@ export function FireSimulator({
 
       {/* Sensitivity Analysis */}
       <Card className="bg-slate-900/30 border-slate-700/25">
-        <CardContent className="p-4">
-          <h4 className="text-xs font-semibold text-slate-200 mb-3">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-xs font-semibold text-slate-200">
             Sensitivity Analysis (Impact on P(FIRE))
-          </h4>
-
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Contribution Sensitivity */}
           <div className="p-2.5 bg-slate-950/50 rounded text-xs">
