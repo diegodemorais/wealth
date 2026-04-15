@@ -48,7 +48,7 @@ export function Slider({
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    marginBottom: '20px',
+    marginBottom: '14px',
   },
   header: {
     display: 'flex',

@@ -103,7 +103,7 @@ export function FireSimulator({
   });
 
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div style={{ marginBottom: '14px' }}>
       {/* Controls Section */}
       <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
         <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
@@ -111,7 +111,7 @@ export function FireSimulator({
         </h2>
 
         {/* Aporte Mensal */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '14px' }}>
           <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Monthly Contribution: {privacyMode ? '••••' : fmtBrl(aporteMensal)}
           </label>
@@ -125,7 +125,7 @@ export function FireSimulator({
         </div>
 
         {/* Spending Anual */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '14px' }}>
           <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Annual Spending Target: {privacyMode ? '••••' : fmtBrl(custoVidaAnual)}
           </label>
@@ -139,7 +139,7 @@ export function FireSimulator({
         </div>
 
         {/* Retorno Equity */}
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '14px' }}>
           <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Expected Equity Return: {fmtPct(retornoEquity / 100, 1)}
           </label>

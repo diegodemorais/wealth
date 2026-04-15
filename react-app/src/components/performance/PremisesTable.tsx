@@ -144,7 +144,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid var(--border)',
     borderRadius: '8px',
     padding: '20px',
-    marginBottom: '20px',
+    marginBottom: '14px',
   },
   title: {
     margin: '0 0 8px 0',
@@ -159,7 +159,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tableWrapper: {
     overflowX: 'auto',
-    marginBottom: '20px',
+    marginBottom: '14px',
   },
   category: {
     fontSize: '12px',

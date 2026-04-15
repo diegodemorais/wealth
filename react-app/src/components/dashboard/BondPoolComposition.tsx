@@ -79,7 +79,7 @@ export function BondPoolComposition({
 
         {/* Main Status Card */}
         <div style={cardStyle}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '14px' }}>
             <div>
               <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>Current Pool</p>
               <p style={{ fontFamily: 'monospace', fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
@@ -94,7 +94,7 @@ export function BondPoolComposition({
             </div>
           </div>
 
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
               <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Progress to Target</span>
               <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>
@@ -107,7 +107,7 @@ export function BondPoolComposition({
             </p>
           </div>
 
-          <div style={{ borderTop: '1px solid var(--border)', marginBottom: '24px', paddingTop: '16px' }}>
+          <div style={{ borderTop: '1px solid var(--border)', marginBottom: '14px', paddingTop: '16px' }}>
             <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>Post-FIRE Runway</p>
             <p style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 4px 0' }}>
               {runway.toFixed(1)} years

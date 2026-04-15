@@ -185,7 +185,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid var(--border)',
     borderRadius: '8px',
     padding: '20px',
-    marginBottom: '20px',
+    marginBottom: '14px',
   },
   title: {
     margin: '0 0 20px 0',
@@ -194,7 +194,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--text)',
   },
   section: {
-    marginBottom: '24px',
+    marginBottom: '14px',
   },
   sectionTitle: {
     margin: '0 0 12px 0',

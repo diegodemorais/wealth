@@ -108,7 +108,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid #374151',
     borderRadius: '8px',
     padding: '20px',
-    marginBottom: '20px',
+    marginBottom: '14px',
   },
   title: {
     margin: '0 0 24px 0',
@@ -120,7 +120,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
     gap: '24px',
-    marginBottom: '24px',
+    marginBottom: '14px',
   },
   sliderGroup: {
     display: 'flex',

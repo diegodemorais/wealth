@@ -93,7 +93,7 @@ const CELL_SIZE = 80;
 const HEADER_HEIGHT = 40;
 
 const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '20px' },
+  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '14px' },
   title: { margin: '0 0 16px 0', color: '#fff' },
   heatmapWrapper: { display: 'inline-block', marginBottom: '16px' },
   headerRow: { display: 'flex' },

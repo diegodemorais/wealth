@@ -93,7 +93,7 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid var(--border)',
     borderRadius: '8px',
     padding: '16px',
-    marginBottom: '20px',
+    marginBottom: '14px',
   },
   title: {
     margin: '0 0 16px 0',
