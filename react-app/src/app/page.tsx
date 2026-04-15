@@ -15,7 +15,6 @@ import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
-import FinancialWellnessActions from '@/components/dashboard/FinancialWellnessActions';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import GeographicExposureChart from '@/components/dashboard/GeographicExposureChart';
@@ -279,15 +278,6 @@ export default function HomePage() {
           pfireFav={derived.pfireFav}
           pfireStress={derived.pfireStress}
           tornadoData={derived.tornadoData}
-        />
-      )}
-
-      {/* Tier-1: Financial Wellness & Actions */}
-      {derived && (
-        <FinancialWellnessActions
-          wellnessScore={derived.wellnessScore * 100}
-          wellnessLabel={derived.wellnessLabel}
-          topAcoes={derived.topAcoes}
         />
       )}
 
