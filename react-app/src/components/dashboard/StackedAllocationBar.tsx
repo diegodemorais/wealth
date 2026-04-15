@@ -1,5 +1,6 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface StackedAllocationBarProps {
   equityBrl: number;
@@ -39,47 +40,25 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
   ];
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Alocação Total do Portfólio
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Alocação Total do Portfólio
+        </CardTitle>
+      </CardHeader>
 
-      {/* Stacked bar chart */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '4px',
-          height: '48px',
-          borderRadius: '6px',
-          overflow: 'hidden',
-          backgroundColor: 'rgba(71, 85, 105, 0.1)',
-          marginBottom: '14px',
-        }}
-      >
+      <CardContent className="space-y-4">
+        {/* Stacked bar chart */}
+        <div className="flex gap-1 h-12 rounded-md overflow-hidden bg-slate-700/15 mb-4">
         {assets.map(asset => (
           asset.pct > 0 && (
             <div
               key={asset.label}
+              className="flex items-center justify-center text-xs font-semibold text-white transition-all duration-300"
               style={{
                 flex: asset.pct,
                 backgroundColor: asset.color,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                color: 'white',
                 minWidth: asset.pct > 0.05 ? 'auto' : '0px',
-                position: 'relative',
-                transition: 'all 0.3s',
               }}
               title={`${asset.label}: ${(asset.pct * 100).toFixed(1)}%`}
             >
@@ -89,77 +68,49 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
         ))}
       </div>
 
-      {/* Legend and breakdown */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '12px',
-        }}
-      >
-        {assets.map(asset => (
-          asset.value > 0 && (
-            <div
-              key={asset.label}
-              style={{
-                padding: '10px 12px',
-                backgroundColor: `${asset.color}10`,
-                border: `1px solid ${asset.color}40`,
-                borderRadius: '6px',
-              }}
-            >
+        {/* Legend and breakdown */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          {assets.map(asset => (
+            asset.value > 0 && (
               <div
+                key={asset.label}
+                className="p-3 rounded"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  marginBottom: '4px',
+                  backgroundColor: `${asset.color}10`,
+                  border: `1px solid ${asset.color}40`,
                 }}
               >
-                <div
-                  style={{
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '2px',
-                    backgroundColor: asset.color,
-                  }}
-                />
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1' }}>
-                  {asset.label}
-                </span>
+                <div className="flex items-center gap-2 mb-1">
+                  <div
+                    className="w-2 h-2 rounded-sm"
+                    style={{ backgroundColor: asset.color }}
+                  />
+                  <span className="text-xs font-semibold text-slate-200">
+                    {asset.label}
+                  </span>
+                </div>
+                <div className="text-sm font-bold mb-1" style={{ color: asset.color }}>
+                  {(asset.pct * 100).toFixed(1)}%
+                </div>
+                <div className="text-xs text-slate-600">
+                  {privacyMode ? 'R$••••' : fmtBrl(asset.value)}
+                </div>
               </div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: asset.color, marginBottom: '2px' }}>
-                {(asset.pct * 100).toFixed(1)}%
-              </div>
-              <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-                {privacyMode ? 'R$••••' : fmtBrl(asset.value)}
-              </div>
-            </div>
-          )
-        ))}
-      </div>
+            )
+          ))}
+        </div>
 
-      {/* Total */}
-      <div
-        style={{
-          marginTop: '14px',
-          padding: '10px 12px',
-          backgroundColor: 'rgba(71, 85, 105, 0.1)',
-          borderRadius: '6px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderLeft: '4px solid #cbd5e1',
-        }}
-      >
-        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1' }}>
-          Patrimônio Total
-        </span>
-        <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>
-          {privacyMode ? 'R$••••' : fmtBrl(totalBrl)}
-        </span>
-      </div>
-    </div>
+        {/* Total */}
+        <div className="mt-3 p-3 bg-slate-700/10 rounded flex justify-between items-center border-l-4 border-slate-200">
+          <span className="text-xs font-semibold text-slate-200">
+            Patrimônio Total
+          </span>
+          <span className="text-sm font-bold text-white">
+            {privacyMode ? 'R$••••' : fmtBrl(totalBrl)}
+          </span>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
