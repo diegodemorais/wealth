@@ -11,6 +11,7 @@ import { FanChart } from '@/components/charts/FanChart';
 import { SankeyChart } from '@/components/charts/SankeyChart';
 import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
+import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -177,6 +178,22 @@ export default function HomePage() {
                 proxima_acao: data.dca_status.renda_plus?.proxima_acao || '',
               },
             ]}
+          />
+        </CollapsibleSection>
+      )}
+
+      {/* Tier-2: Bond Pool Composition */}
+      {data && data.fire && (
+        <CollapsibleSection
+          id="section-bond-pool"
+          title="Bond Pool Composition"
+          defaultOpen={false}
+          icon="🏦"
+        >
+          <BondPoolComposition
+            data={data.fire.bond_pool_readiness}
+            runwayAnosPosFire={data.bond_pool_runway?.anos_cobertura_pos_fire || 0}
+            poolTotal={data.fire.bond_pool_readiness?.valor_atual_brl || 0}
           />
         </CollapsibleSection>
       )}

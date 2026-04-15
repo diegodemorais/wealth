@@ -68,25 +68,25 @@ describe('Display Validation Suite', () => {
       const equity_pct =
         derived.equityPercentage || 0;
       expect(equity_pct).toBeGreaterThan(0);
-      expect(equity_pct).toBeLessThanOrEqual(1);
+      expect(equity_pct).toBeLessThanOrEqual(1 + 1e-10); // Allow for floating-point rounding
     });
 
     it('rf percentage should be non-negative', () => {
       const rf_pct = derived.rfPercentage || 0;
       expect(rf_pct).toBeGreaterThanOrEqual(0);
-      expect(rf_pct).toBeLessThanOrEqual(1);
+      expect(rf_pct).toBeLessThanOrEqual(1 + 1e-10); // Allow for floating-point rounding
     });
 
     it('international percentage should be non-negative', () => {
       const intl_pct = derived.internationalPercentage || 0;
       expect(intl_pct).toBeGreaterThanOrEqual(0);
-      expect(intl_pct).toBeLessThanOrEqual(1);
+      expect(intl_pct).toBeLessThanOrEqual(1 + 1e-10); // Allow for floating-point rounding
     });
 
     it('brazil concentration should be between 0 and 1', () => {
       const br_conc = derived.concentrationBrazil || 0;
       expect(br_conc).toBeGreaterThanOrEqual(0);
-      expect(br_conc).toBeLessThanOrEqual(1);
+      expect(br_conc).toBeLessThanOrEqual(1 + 1e-10); // Allow for floating-point rounding
     });
   });
 
