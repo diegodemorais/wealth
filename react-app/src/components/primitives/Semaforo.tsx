@@ -23,20 +23,16 @@ export function Semaforo({ status, label, description }: SemaforoProps) {
   const colors = getColor(status);
 
   return (
-    <div style={{ ...styles.container, backgroundColor: colors.bg }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+    <div className={`semaforo-container semaforo-${status}`} style={{ backgroundColor: colors.bg }}>
+      <div className="semaforo-content">
         <div
-          style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            backgroundColor: colors.dot,
-          }}
+          className="semaforo-dot"
+          style={{ backgroundColor: colors.dot }}
         />
         <div>
-          <div style={{ ...styles.label, color: colors.text }}>{label}</div>
+          <div className="semaforo-label" style={{ color: colors.text }}>{label}</div>
           {description && (
-            <div style={{ ...styles.description, color: colors.text }}>
+            <div className="semaforo-description" style={{ color: colors.text }}>
               {description}
             </div>
           )}
@@ -45,20 +41,3 @@ export function Semaforo({ status, label, description }: SemaforoProps) {
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    borderRadius: '8px',
-    padding: '12px 16px',
-    marginBottom: '12px',
-  },
-  label: {
-    fontWeight: '600',
-    fontSize: '14px',
-    margin: 0,
-  },
-  description: {
-    fontSize: '12px',
-    margin: '4px 0 0 0',
-  },
-};

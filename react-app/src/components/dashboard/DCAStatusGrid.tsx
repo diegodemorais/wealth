@@ -26,12 +26,12 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
   // Defensive: validate items array
   const validItems = Array.isArray(items) ? items.filter(item => item && typeof item === 'object') : [];
 
-  // Get border-left color by instrument type
-  const getBorderColor = (id: string): string => {
-    if (id.includes('ipca2040') || id.includes('ipca_long')) return '#06b6d4'; // cyan
-    if (id.includes('ipca2050')) return '#8b5cf6'; // violet
-    if (id.includes('renda') || id.includes('2065')) return '#f59e0b'; // amber
-    return '#6b7280'; // gray (default)
+  // Get border class by instrument type
+  const getBorderClass = (id: string): string => {
+    if (id.includes('ipca2040') || id.includes('ipca_long')) return 'dca-card--border-cyan';
+    if (id.includes('ipca2050')) return 'dca-card--border-violet';
+    if (id.includes('renda') || id.includes('2065')) return 'dca-card--border-amber';
+    return 'dca-card--border-default';
   };
 
   return (
@@ -40,18 +40,14 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
         <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-4">
           DCA Status
         </h3>
-        <div className="grid gap-4" style={{
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-        }}>
+        <div className="dca-grid">
           {validItems.map((item) => (
             <div
               key={item.id}
-              style={{
-                borderLeft: `4px solid ${getBorderColor(item.id)}`,
-              }}
               className={cn(
-                "rounded-lg border border-border bg-card transition-opacity",
-                item.regime === "PAUSADO" && "opacity-60 bg-muted/30"
+                "dca-card",
+                getBorderClass(item.id),
+                item.regime === "PAUSADO" && "dca-card.paused"
               )}
             >
               <div className="pt-4 px-4 pb-4">
