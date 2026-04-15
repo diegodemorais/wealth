@@ -40,6 +40,7 @@ import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgress
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { FamilyScenarioCards } from '@/components/dashboard/FamilyScenarioCards';
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
+import { LifeEventsTable } from '@/components/dashboard/LifeEventsTable';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -218,6 +219,18 @@ export default function HomePage() {
             pfireFav={derived?.pfire || 90}
             pfireStress={derived?.pfireStress || 87}
           />
+        </CollapsibleSection>
+      )}
+
+      {/* Life Events — Impact Analysis */}
+      {data && data.lumpy_events && (
+        <CollapsibleSection
+          id="section-life-events"
+          title="Life Events"
+          defaultOpen={false}
+          icon="📅"
+        >
+          <LifeEventsTable data={data.lumpy_events} />
         </CollapsibleSection>
       )}
 
