@@ -38,7 +38,9 @@
     "../dashboard/types/**/*.ts",
     "../dashboard/dev/types/**/*.ts",
     "../dash/types/**/*.ts",
-    "../dash/dev/types/**/*.ts"
+    "../dash/dev/types/**/*.ts",
+    "out/types/**/*.ts",
+    "out/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

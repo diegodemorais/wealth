@@ -4,9 +4,9 @@ Dashboard Complete Test Suite — Orquestrador Master
 Executa todos os 5 níveis de validação antes de qualquer push
 
 Uso:
-    python3 scripts/run_all_dashboard_tests.py              # full suite
+    python3 scripts/run_all_dashboard_tests.py              # full suite (6 níveis)
     python3 scripts/run_all_dashboard_tests.py --quick      # só CRITICAL fails
-    python3 scripts/run_all_dashboard_tests.py --no-render  # skip Playwright (rápido)
+    python3 scripts/run_all_dashboard_tests.py --no-visual  # skip Visual Regression (rápido)
 
 Fluxo:
     1️⃣  Schema Validation (spec.json ↔ data.json)
@@ -14,6 +14,7 @@ Fluxo:
     3️⃣  Component Render Status (spec mapping — 66 componentes)
     4️⃣  Dashboard Test Suite (559 testes, todas as categorias)
     5️⃣  Playwright Local Validation (bootstrap, tabs, CSS, KPIs, errors)
+    6️⃣  Visual Regression Testing (React vs HTML stable-v2.77 — 7 screenshots)
 
 Resultado: DEPLOY APPROVED ou BLOQUEADO com detalhes do erro
 """
@@ -71,6 +72,7 @@ def main():
     parser.add_argument("--quick", action="store_true", help="Skip non-critical tests")
     parser.add_argument("--no-render", action="store_true", help="Skip Playwright (component render status)")
     parser.add_argument("--no-playwright", action="store_true", help="Skip final Playwright validation")
+    parser.add_argument("--no-visual", action="store_true", help="Skip Visual Regression Testing")
 
     args = parser.parse_args()
 
@@ -195,6 +197,28 @@ def main():
 
         # Kill server
         subprocess.run("pkill -f 'python3 -m http.server 8765'", shell=True)
+
+    # ─── 6️⃣  VISUAL REGRESSION TESTING (optional se --no-visual) ──────────────
+    if not args.no_visual:
+        success, stdout, stderr = run_command(
+            f"python3 {ROOT}/scripts/test_visual_regression.py --threshold 3",
+            "6️⃣  VISUAL REGRESSION TESTING (React vs HTML stable-v2.77)"
+        )
+        results["tests"]["visual_regression"] = {
+            "success": success,
+            "output": stdout,
+        }
+
+        # Parse visual regression results
+        if "visual_regression_report.json" in stdout:
+            report_file = ROOT / "dashboard" / "tests" / "visual_regression_report.json"
+            if report_file.exists():
+                try:
+                    report_data = json.loads(report_file.read_text())
+                    results["tests"]["visual_regression"]["critical_gaps"] = report_data.get("critical_gaps", 0)
+                    results["tests"]["visual_regression"]["medium_gaps"] = report_data.get("medium_gaps", 0)
+                except:
+                    pass
 
     # ─── SUMMARY ──────────────────────────────────────────────────────────────
     print(f"\n{CYAN}{BOLD}{'='*70}{RESET}")
