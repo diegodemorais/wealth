@@ -37,6 +37,7 @@ import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import { WellnessActionsBox } from '@/components/dashboard/WellnessActionsBox';
 import { FactorLoadingsTable } from '@/components/dashboard/FactorLoadingsTable';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
+import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -575,6 +576,18 @@ export default function HomePage() {
           {data.tornado && <TornadoChart data={data} />}
           {data.timeline && <FanChart data={data} />}
           {data.timeline_attribution && <SankeyChart data={data} />}
+        </CollapsibleSection>
+      )}
+
+      {/* FIRE Matrix — P(FIRE) by Patrimônio × Gasto */}
+      {data && data.fire_matrix && (
+        <CollapsibleSection
+          id="section-fire-matrix"
+          title="FIRE Matrix"
+          defaultOpen={false}
+          icon="🔥"
+        >
+          <FireMatrixTable data={data.fire_matrix} />
         </CollapsibleSection>
       )}
     </div>
