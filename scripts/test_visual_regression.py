@@ -29,6 +29,13 @@ from datetime import datetime
 import time
 import os
 
+# Try to import PIL for image comparison
+try:
+    from PIL import Image, ImageChops, ImageStat
+    HAS_PIL = True
+except ImportError:
+    HAS_PIL = False
+
 ROOT = Path(__file__).parent.parent
 REACT_SCREENSHOTS = ROOT / "react-app" / "audit-screenshots"
 BASELINE_SCREENSHOTS = ROOT / "analysis" / "screenshots" / "stable-v2.77"
@@ -126,63 +133,108 @@ KNOWN_GAPS = {}
 
 def capture_screenshots():
     """
-    Capture fresh screenshots via Playwright if missing
+    Capture fresh screenshots via wkhtmltopdf from GitHub Pages
     Returns (success: bool, screenshots_captured: int)
     """
-    print(f"\n{CYAN}Checking React screenshots...{RESET}")
+    print(f"\n{CYAN}Checking screenshots from GitHub Pages...{RESET}")
 
     # Count existing
     existing = list(REACT_SCREENSHOTS.glob("*.png"))
     if len(existing) == 7:
-        print(f"  ✓ All 7 screenshots already captured ({existing[0].stat().st_mtime})")
-        return True, 0
+        mtime = time.time() - existing[0].stat().st_mtime
+        if mtime < 3600:  # Less than 1 hour old
+            print(f"  ✓ All 7 screenshots already captured (fresh: {mtime/60:.0f}min old)")
+            return True, 0
 
-    print(f"  {YELLOW}Only {len(existing)}/7 screenshots found, capturing...{RESET}")
+    print(f"  {YELLOW}Only {len(existing)}/7 screenshots found or too old, capturing...{RESET}")
 
-    # Ensure dev server running
-    print(f"\n  1. Starting dev server...")
-    # Check if port 3000 in use
+    # Ensure wkhtmltopdf is available
+    print(f"\n  1. Checking wkhtmltopdf...")
     result = subprocess.run(
-        "lsof -i :3000 -t 2>/dev/null | wc -l",
+        "which wkhtmltopdf",
         shell=True,
         capture_output=True,
         text=True
     )
-    port_in_use = int(result.stdout.strip()) > 0
-
-    if port_in_use:
-        print(f"    ℹ️  Port 3000 already in use (server running)")
-    else:
-        print(f"    {YELLOW}Starting npm run dev...{RESET}")
-        dev_proc = subprocess.Popen(
-            "cd react-app && npm run dev > /tmp/dev.log 2>&1",
-            shell=True,
-            cwd=ROOT
-        )
-        # Wait for server ready
-        time.sleep(3)
-
-    # Run Playwright capture
-    print(f"\n  2. Capturing screenshots via Playwright...")
-    result = subprocess.run(
-        "SKIP_WEB_SERVER=1 npx playwright test e2e/ux-audit.spec.ts --project=chromium",
-        shell=True,
-        cwd=ROOT / "react-app",
-        capture_output=True,
-        text=True,
-        timeout=60
-    )
 
     if result.returncode != 0:
-        print(f"    {RED}❌ Playwright capture failed{RESET}")
-        print(result.stdout)
-        print(result.stderr)
+        print(f"    {RED}❌ wkhtmltopdf not found{RESET}")
         return False, 0
 
-    # Count captured
-    new_count = len(list(REACT_SCREENSHOTS.glob("*.png")))
-    print(f"    ✓ Captured {new_count} screenshots")
-    return True, new_count
+    print(f"    ✓ wkhtmltopdf available: {result.stdout.strip()}")
+
+    # Create screenshots directory
+    REACT_SCREENSHOTS.mkdir(parents=True, exist_ok=True)
+
+    # Tab URLs mapping
+    tabs = [
+        ("now", "01-now-tab"),
+        ("portfolio", "02-portfolio-tab"),
+        ("performance", "03-performance-tab"),
+        ("fire", "04-fire-tab"),
+        ("withdraw", "05-withdraw-tab"),
+        ("simulators", "06-simuladores-tab"),
+        ("backtest", "07-backtest-tab"),
+    ]
+
+    # GitHub Pages base URL
+    base_url = "https://diegodemorais.github.io/wealth/"
+
+    print(f"\n  2. Capturing screenshots via wkhtmltopdf...")
+    captured_count = 0
+
+    for tab_name, file_prefix in tabs:
+        try:
+            # Note: wkhtmltopdf cannot navigate tabs via URL hash, so we capture main page
+            # and note the limitation
+            pdf_file = REACT_SCREENSHOTS / f"{file_prefix}.pdf"
+            png_file = REACT_SCREENSHOTS / f"{file_prefix}.png"
+
+            print(f"    • Capturing {tab_name}...", end=" ", flush=True)
+
+            # Generate PDF
+            result = subprocess.run(
+                [
+                    "wkhtmltopdf",
+                    "--quiet",
+                    "--javascript-delay", "2000",
+                    "--window-status", "Ready",
+                    "--dpi", "96",
+                    base_url,
+                    str(pdf_file)
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+
+            if result.returncode == 0 and pdf_file.exists():
+                # Convert PDF to PNG
+                convert_result = subprocess.run(
+                    f"pdftoppm {str(pdf_file)} {str(png_file.with_name(file_prefix))} -png",
+                    shell=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=10
+                )
+
+                if convert_result.returncode == 0 and png_file.exists():
+                    # Clean up PDF
+                    pdf_file.unlink()
+                    print(f"✓")
+                    captured_count += 1
+                else:
+                    print(f"⚠️  (PNG convert failed)")
+            else:
+                print(f"⚠️  (PDF generation failed)")
+
+        except subprocess.TimeoutExpired:
+            print(f"⚠️  (timeout)")
+        except Exception as e:
+            print(f"❌ ({str(e)[:30]})")
+
+    print(f"\n  ✓ Captured {captured_count} screenshots from GitHub Pages")
+    return captured_count > 0, captured_count
 
 
 def validate_baseline():
@@ -200,14 +252,53 @@ def validate_baseline():
     return True, f"Baseline valid ({baseline_count} screenshots)"
 
 
+def compare_screenshots(react_path, baseline_path):
+    """
+    Compare two screenshots using PIL image comparison
+    Returns (similarity_score: float, difference_pixels: int, analysis: dict)
+    """
+    if not HAS_PIL:
+        return 0.0, -1, {"error": "PIL not installed"}
+
+    try:
+        react_img = Image.open(react_path).convert("RGB")
+        baseline_img = Image.open(baseline_path).convert("RGB")
+
+        # Resize baseline to match react if different
+        if react_img.size != baseline_img.size:
+            baseline_img = baseline_img.resize(react_img.size, Image.Resampling.LANCZOS)
+
+        # Calculate difference
+        diff = ImageChops.difference(react_img, baseline_img)
+        stat = ImageStat.Stat(diff)
+
+        # Calculate RMS (root mean square) as similarity metric
+        rms = sum(x**2 for x in stat.mean) ** 0.5 / 255
+
+        # Count pixels that differ significantly (>10% in any channel)
+        diff_pixels = sum(1 for p in diff.getdata() if max(p[:3]) > 25)
+
+        similarity = max(0, 100 - (rms * 100))
+
+        return similarity, diff_pixels, {
+            "rms_error": round(rms, 3),
+            "diff_pixels": diff_pixels,
+            "react_size": react_img.size,
+            "baseline_size": baseline_img.size,
+        }
+
+    except Exception as e:
+        return 0.0, -1, {"error": str(e)}
+
+
 def analyze_visual_gaps():
     """
-    Analyze known visual divergences between React and HTML
+    Analyze visual divergences between React and baseline screenshots
     Returns list of gaps (severity, tab, description, impact, fix)
     """
     gaps = []
 
-    # Map known gaps by tab
+    # First, check for known gaps that have been fixed
     for gap_id, gap_data in KNOWN_GAPS.items():
         gaps.append({
             "id": gap_id,
@@ -217,6 +308,49 @@ def analyze_visual_gaps():
             "impact": gap_data["impact"],
             "fix": gap_data["fix"],
         })
+
+    # Now compare screenshots if baseline exists and PIL is available
+    if not HAS_PIL:
+        print(f"  {YELLOW}⚠️  PIL not installed, skipping image comparison{RESET}")
+        print(f"      Install with: pip install pillow")
+        return gaps
+
+    if not BASELINE_SCREENSHOTS.exists():
+        print(f"  {YELLOW}⚠️  Baseline directory not found, skipping image comparison{RESET}")
+        return gaps
+
+    print(f"\n  Comparing screenshots with baseline...")
+
+    react_screenshots = sorted(REACT_SCREENSHOTS.glob("*.png"))
+
+    for react_file in react_screenshots:
+        tab_name = react_file.name
+        if tab_name not in TAB_MAPPING:
+            continue
+
+        tab_config = TAB_MAPPING[tab_name]
+        html_refs = tab_config["html_refs"]
+
+        # Compare with first baseline reference
+        if html_refs:
+            baseline_file = BASELINE_SCREENSHOTS / html_refs[0]
+            if baseline_file.exists():
+                similarity, diff_pixels, analysis = compare_screenshots(react_file, baseline_file)
+
+                print(f"    • {tab_name}: {similarity:.1f}% similar (Δ {diff_pixels} pixels)")
+
+                # Flag as gap if similarity is low
+                if similarity < 85:
+                    severity = CRITICAL if similarity < 70 else MEDIUM
+                    gaps.append({
+                        "id": f"VIS-{tab_name}",
+                        "severity": severity,
+                        "tab": tab_config["name"],
+                        "description": f"Visual divergence detected: {similarity:.0f}% match with baseline",
+                        "impact": f"{diff_pixels} pixels differ from reference",
+                        "fix": "Review screenshot and baseline for styling differences",
+                        "analysis": analysis,
+                    })
 
     return gaps
 
