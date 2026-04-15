@@ -206,7 +206,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
 
         {/* Chart */}
         <div>
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
+          <canvas ref={chartRef} className="max-h-[300px]" />
         </div>
 
         {/* Key metrics */}

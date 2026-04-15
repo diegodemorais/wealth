@@ -23,69 +23,29 @@ export function TimeToFireProgressBar({
   const progressPct = Math.min(Math.max(fireProgress, 0), 1) * 100;
 
   return (
-    <section style={styles.section}>
-      <h2 style={styles.title}>Time to FIRE</h2>
+    <section className="mb-8 p-4 rounded border bg-slate-900/40 border-slate-700/25">
+      <h2 className="m-0 mb-4 text-base font-semibold text-slate-200">Time to FIRE</h2>
 
       {/* Progress Bar Container */}
-      <div style={styles.barContainer}>
+      <div className="h-6 rounded overflow-hidden mb-2 bg-slate-700/20 shadow-lg" style={{ boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)' }}>
         <div
+          className="h-full transition-all duration-500"
           style={{
-            ...styles.progressBar,
             width: `${progressPct}%`,
+            background: 'linear-gradient(90deg, #3b82f6 0%, #a855f7 100%)',
           }}
         />
       </div>
 
       {/* Label below bar */}
-      <div style={styles.label}>
+      <div className="text-xs text-slate-500 mb-2 text-right">
         {privacyMode ? '••••' : yearsMonthsStr} restantes
       </div>
 
       {/* Secondary info: percentage */}
-      <div style={styles.progressText}>
+      <div className="text-sm font-medium text-blue-400 text-right">
         {privacyMode ? '••••' : fmtPct(fireProgress, 2)}
       </div>
     </section>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  section: {
-    marginBottom: '30px',
-    padding: '16px',
-    borderRadius: '8px',
-    backgroundColor: 'var(--surface, #1a1a1a)',
-    border: '1px solid var(--border, #333)',
-  },
-  title: {
-    margin: '0 0 16px 0',
-    fontSize: '16px',
-    fontWeight: '600',
-    color: 'var(--text, #fff)',
-  },
-  barContainer: {
-    height: '24px',
-    borderRadius: '6px',
-    backgroundColor: 'var(--muted-bg, #2a2a2a)',
-    overflow: 'hidden',
-    marginBottom: '8px',
-    boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)',
-  },
-  progressBar: {
-    height: '100%',
-    background: 'linear-gradient(90deg, var(--accent, #3b82f6) 0%, var(--purple, #a855f7) 100%)',
-    transition: 'width 0.5s ease-out',
-  },
-  label: {
-    fontSize: '0.75rem',
-    color: 'var(--muted, #999)',
-    marginBottom: '8px',
-    textAlign: 'right',
-  },
-  progressText: {
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    color: 'var(--accent, #3b82f6)',
-    textAlign: 'right',
-  },
-};

@@ -174,7 +174,7 @@ const GlidePath: React.FC<GlidePathProps> = ({
       <CardContent className="space-y-4">
         {/* Chart */}
         <div>
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
+          <canvas ref={chartRef} className="max-h-[300px]" />
         </div>
 
         {/* Current vs Target */}

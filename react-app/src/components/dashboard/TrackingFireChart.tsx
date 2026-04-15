@@ -131,7 +131,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
         <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Chart */}
         <div>
-          <canvas ref={chartRef} style={{ maxHeight: '200px' }} />
+          <canvas ref={chartRef} className="max-h-[200px]" />
         </div>
 
         {/* Status cards */}

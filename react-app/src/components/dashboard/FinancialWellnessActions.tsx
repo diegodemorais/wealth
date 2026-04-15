@@ -119,10 +119,8 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
               >
                 {/* Rank badge */}
                 <div
-                  className="flex items-center justify-center rounded-full flex-shrink-0"
+                  className="flex items-center justify-center rounded-full flex-shrink-0 w-8 h-8"
                   style={{
-                    minWidth: '32px',
-                    height: '32px',
                     backgroundColor: getPriorityColor(acao.priority),
                   }}
                 >
