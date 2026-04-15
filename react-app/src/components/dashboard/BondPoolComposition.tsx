@@ -39,8 +39,18 @@ export function BondPoolComposition({
   runwayAnosPosFire = 0,
   poolTotal = 0,
 }: BondPoolCompositionProps) {
-  const progressPercent = (data.anos_gastos / data.meta_anos) * 100
-  const isHealthy = data.anos_gastos >= data.meta_anos * 0.7
+  // Defensive: validate data exists and has required numeric fields
+  if (!data || typeof data !== 'object') {
+    return <div className="text-muted-foreground">Bond pool data unavailable</div>;
+  }
+
+  const valor = typeof data.valor_atual_brl === 'number' ? data.valor_atual_brl : 0;
+  const anosGastos = typeof data.anos_gastos === 'number' ? data.anos_gastos : 0;
+  const metaAnos = typeof data.meta_anos === 'number' ? data.meta_anos : 1;
+  const runway = typeof runwayAnosPosFire === 'number' ? runwayAnosPosFire : 0;
+
+  const progressPercent = (anosGastos / metaAnos) * 100
+  const isHealthy = anosGastos >= metaAnos * 0.7
 
   // Calculate composition percentages
   const totalComposicao = Object.values(data.composicao).reduce(
@@ -72,13 +82,13 @@ export function BondPoolComposition({
               <div>
                 <p className="text-xs text-muted-foreground mb-2">Current Pool</p>
                 <p className="font-mono text-2xl font-bold">
-                  R${(data.valor_atual_brl / 1000).toFixed(0)}k
+                  R${(valor / 1000).toFixed(0)}k
                 </p>
               </div>
               <div className={cn("text-right", statusColors[data.status])}>
                 <p className="text-sm font-semibold">{statusLabels[data.status]}</p>
                 <p className="text-xs font-mono">
-                  {data.anos_gastos.toFixed(1)}/{data.meta_anos.toFixed(0)} anos
+                  {anosGastos.toFixed(1)}/{metaAnos.toFixed(0)} anos
                 </p>
               </div>
             </div>
@@ -96,7 +106,7 @@ export function BondPoolComposition({
                 className="h-2"
               />
               <p className="text-xs text-muted-foreground mt-2">
-                Target: {data.meta_anos.toFixed(0)} years of expenses
+                Target: {metaAnos.toFixed(0)} years of expenses
               </p>
             </div>
 
@@ -107,7 +117,7 @@ export function BondPoolComposition({
             <div className="mb-6">
               <p className="text-xs text-muted-foreground mb-2">Post-FIRE Runway</p>
               <p className="font-mono text-lg font-bold">
-                {runwayAnosPosFire.toFixed(1)} years
+                {runway.toFixed(1)} years
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 of spending coverage available after FIRE date

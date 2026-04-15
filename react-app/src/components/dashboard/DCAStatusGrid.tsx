@@ -22,6 +22,9 @@ interface DCAStatusGridProps {
 }
 
 export function DCAStatusGrid({ items }: DCAStatusGridProps) {
+  // Defensive: validate items array
+  const validItems = Array.isArray(items) ? items.filter(item => item && typeof item === 'object') : [];
+
   return (
     <div className="space-y-6">
       <div>
@@ -29,7 +32,7 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
           DCA Status
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((item) => (
+          {validItems.map((item) => (
             <Card
               key={item.id}
               className={cn(
@@ -38,80 +41,98 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
               )}
             >
               <CardContent className="pt-4">
-                {/* Header: Nome + Status Badge */}
-                <div className="flex items-center justify-between gap-2 mb-4">
-                  <h4 className="font-semibold text-sm">{item.nome}</h4>
-                  <Badge
-                    variant={item.regime === "ATIVO" ? "default" : "outline"}
-                    className={cn(
-                      item.regime === "ATIVO"
-                        ? "bg-green-500/20 text-green-400 border-green-500/30"
-                        : "bg-muted text-muted-foreground"
-                    )}
-                  >
-                    {item.regime}
-                  </Badge>
-                </div>
+                {/* Helper: validate numeric fields */}
+                {(() => {
+                  const taxa = typeof item.taxa_atual === 'number' ? item.taxa_atual : 0;
+                  const piso_c = typeof item.piso_compra === 'number' ? item.piso_compra : 0;
+                  const piso_v = typeof item.piso_venda === 'number' ? item.piso_venda : undefined;
+                  const gap = typeof item.gap_pp === 'number' ? item.gap_pp : 0;
 
-                {/* Rows */}
-                <div className="space-y-2 text-xs">
-                  {/* Taxa Atual */}
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-muted-foreground">Taxa atual</span>
-                    <span className="font-mono font-semibold">
-                      {item.taxa_atual.toFixed(2)}%
-                    </span>
-                  </div>
+                  return (
+                    <>
+                      {/* Header: Nome + Status Badge */}
+                      <div className="flex items-center justify-between gap-2 mb-4">
+                        <h4 className="font-semibold text-sm">{item.nome}</h4>
+                        <Badge
+                          variant={item.regime === "ATIVO" ? "default" : "outline"}
+                          className={cn(
+                            item.regime === "ATIVO"
+                              ? "bg-green-500/20 text-green-400 border-green-500/30"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {item.regime}
+                        </Badge>
+                      </div>
 
-                  {/* Piso Compra */}
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-muted-foreground">Piso compra</span>
-                    <span className="font-mono">{item.piso_compra.toFixed(1)}%</span>
-                  </div>
+                      {/* Rows */}
+                      <div className="space-y-2 text-xs">
+                        {/* Taxa Atual */}
+                        <div className="flex justify-between items-baseline">
+                          <span className="text-muted-foreground">Taxa atual</span>
+                          <span className="font-mono font-semibold">
+                            {taxa.toFixed(2)}%
+                          </span>
+                        </div>
 
-                  {/* Piso Venda (if exists) */}
-                  {item.piso_venda !== undefined && (
-                    <div className="flex justify-between items-baseline">
-                      <span className="text-muted-foreground">Piso venda</span>
-                      <span className="font-mono">
-                        {item.piso_venda.toFixed(1)}%
-                      </span>
-                    </div>
-                  )}
+                        {/* Piso Compra */}
+                        <div className="flex justify-between items-baseline">
+                          <span className="text-muted-foreground">Piso compra</span>
+                          <span className="font-mono">{piso_c.toFixed(1)}%</span>
+                        </div>
 
-                  {/* Gap vs Piso */}
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-muted-foreground">Gap vs piso</span>
-                    <span
-                      className={cn(
-                        "font-mono font-semibold",
-                        item.gap_pp > 0.5 ? "text-green-400" : "text-yellow-400"
-                      )}
-                    >
-                      {item.gap_pp > 0
-                        ? "+"
-                        : ""}
-                      {item.gap_pp.toFixed(2)}pp
-                    </span>
-                  </div>
+                        {/* Piso Venda (if exists) */}
+                        {piso_v !== undefined && (
+                          <div className="flex justify-between items-baseline">
+                            <span className="text-muted-foreground">Piso venda</span>
+                            <span className="font-mono">
+                              {piso_v.toFixed(1)}%
+                            </span>
+                          </div>
+                        )}
 
-                  {/* Portfolio % */}
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-muted-foreground">% carteira</span>
-                    <span className="font-mono">
-                      {item.pct_carteira_atual.toFixed(1)}% /{" "}
-                      {item.alvo_pct.toFixed(0)}%
-                    </span>
-                  </div>
-                </div>
+                        {/* Gap vs Piso */}
+                        <div className="flex justify-between items-baseline">
+                          <span className="text-muted-foreground">Gap vs piso</span>
+                          <span
+                            className={cn(
+                              "font-mono font-semibold",
+                              gap > 0.5 ? "text-green-400" : "text-yellow-400"
+                            )}
+                          >
+                            {gap > 0
+                              ? "+"
+                              : ""}
+                            {gap.toFixed(2)}pp
+                          </span>
+                        </div>
 
-                {/* Divider */}
-                <div className="border-t border-border my-3 opacity-30" />
+                        {/* Portfolio % */}
+                        {(() => {
+                          const pct_atual = typeof item.pct_carteira_atual === 'number' ? item.pct_carteira_atual : 0;
+                          const alvo = typeof item.alvo_pct === 'number' ? item.alvo_pct : 0;
+                          return (
+                            <div className="flex justify-between items-baseline">
+                              <span className="text-muted-foreground">% carteira</span>
+                              <span className="font-mono">
+                                {pct_atual.toFixed(1)}% /{" "}
+                                {alvo.toFixed(0)}%
+                              </span>
+                            </div>
+                          );
+                        })()}
+                      </div>
 
-                {/* Próxima Ação */}
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {item.proxima_acao}
-                </p>
+                      {/* Divider */}
+                      <div className="border-t border-border my-3 opacity-30" />
+
+                      {/* Próxima Ação */}
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {item.proxima_acao}
+                      </p>
+                    </>
+                  );
+                })()}
               </CardContent>
             </Card>
           ))}

@@ -123,13 +123,21 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
                       <StatusDot status={trigger.status} size="sm" />
                     </TableCell>
                     <TableCell className="text-right font-mono text-sm">
-                      {trigger.valor.toFixed(2)}
-                      {trigger.unidade}
-                      {trigger.piso !== undefined && (
-                        <div className="text-xs text-muted-foreground">
-                          piso {trigger.piso.toFixed(1)}%
-                        </div>
-                      )}
+                      {(() => {
+                        const valor = typeof trigger.valor === 'number' ? trigger.valor : 0;
+                        const piso = typeof trigger.piso === 'number' ? trigger.piso : undefined;
+                        return (
+                          <>
+                            {valor.toFixed(2)}
+                            {trigger.unidade}
+                            {piso !== undefined && (
+                              <div className="text-xs text-muted-foreground">
+                                piso {piso.toFixed(1)}%
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell className="text-sm">{trigger.acao}</TableCell>
                   </TableRow>
