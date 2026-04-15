@@ -54,27 +54,27 @@ export function CollapsibleSection({
   }, [isCollapsed]);
 
   return (
-    <section style={styles.section}>
+    <section className="mb-5 rounded-lg overflow-hidden border border-slate-700/50">
       <button
-        style={styles.header}
+        className="w-full px-4 py-4 bg-slate-800/50 border-b border-slate-700/50 cursor-pointer flex justify-between items-center text-white text-sm font-semibold transition-colors hover:bg-slate-700/50"
         onClick={() => setCollapse(id, !isCollapsed)}
         aria-expanded={!isCollapsed}
         aria-controls={`content-${id}`}
         data-test={`section-header-${id}`}
       >
-        <span style={styles.headerContent}>
-          <span style={styles.icon}>
+        <span className="flex items-center gap-3 flex-1 text-left">
+          <span className="text-base min-w-6">
             {isCollapsed ? '▶️' : '▼'} {icon}
           </span>
-          <span style={styles.title}>{title}</span>
+          <span className="flex-1">{title}</span>
         </span>
       </button>
 
       <div
         id={`content-${id}`}
         ref={contentRef}
+        className="transition-all duration-300 ease-in-out"
         style={{
-          ...styles.content,
           maxHeight: height,
           overflow: isCollapsed ? 'hidden' : 'visible',
         }}
@@ -84,45 +84,3 @@ export function CollapsibleSection({
     </section>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  section: {
-    marginBottom: '20px',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    border: '1px solid #374151',
-  },
-  header: {
-    width: '100%',
-    padding: '16px',
-    backgroundColor: '#1f2937',
-    border: 'none',
-    borderBottom: '1px solid #374151',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    color: '#fff',
-    fontSize: '15px',
-    fontWeight: '600',
-    transition: 'background-color 0.2s',
-  },
-  headerContent: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    flex: 1,
-    textAlign: 'left',
-  },
-  icon: {
-    fontSize: '16px',
-    minWidth: '24px',
-  },
-  title: {
-    flex: 1,
-  },
-  content: {
-    transition: 'max-height 0.3s ease-in-out',
-    overflow: 'hidden',
-  },
-};

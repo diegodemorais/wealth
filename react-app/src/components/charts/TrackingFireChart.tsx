@@ -40,8 +40,8 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
   }, [privacyMode, theme]);
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>FIRE Target Tracking (15-year projection)</h3>
+    <div className="bg-card border border-border rounded-md p-4 mb-5">
+      <h3 className="text-sm font-semibold text-foreground mb-4">FIRE Target Tracking (15-year projection)</h3>
       <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );

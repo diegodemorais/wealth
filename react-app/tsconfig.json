@@ -41,6 +41,7 @@
     "../dash/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "../dash/dev/types/validator.ts"
   ]
 }

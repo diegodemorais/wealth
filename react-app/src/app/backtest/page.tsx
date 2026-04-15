@@ -6,6 +6,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { BacktestChart } from '@/components/charts/BacktestChart';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
+import { Button } from '@/components/ui/button';
 
 // ── Period button types ───────────────────────────────────────────────────────
 
@@ -90,16 +91,17 @@ function BacktestHistoricoSection() {
   return (
     <CollapsibleSection id="backtest-historico" title="Backtest Histórico — Target vs VWRA" defaultOpen={true}>
       {/* Period buttons */}
-      <div className="period-btns" style={{ marginBottom: '12px' }}>
+      <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
         {BACKTEST_PERIODS.map(p => (
-          <button
+          <Button
             key={p.key}
-            className={period === p.key ? 'active' : ''}
+            variant={period === p.key ? 'default' : 'outline'}
+            size="sm"
             title={p.title}
             onClick={() => setPeriod(p.key)}
           >
             {p.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -214,15 +216,16 @@ function ShadowPortfoliosSection() {
       </div>
 
       {/* Period buttons */}
-      <div className="period-btns" style={{ marginTop: '12px' }}>
+      <div className="period-btns" style={{ marginTop: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
         {SHADOW_PERIODS.map(p => (
-          <button
+          <Button
             key={p.key}
-            className={period === p.key ? 'active' : ''}
+            variant={period === p.key ? 'default' : 'outline'}
+            size="sm"
             onClick={() => setPeriod(p.key)}
           >
             {p.label}
-          </button>
+          </Button>
         ))}
       </div>
 

@@ -33,14 +33,9 @@ export function TimelineChart({ data }: TimelineChartProps) {
   }, [privacyMode, theme]);
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Historical Performance (60 months)</h3>
+    <div className="bg-card border border-border rounded-lg p-4 mb-5">
+      <h3 className="text-sm font-semibold text-text mb-4 mt-0">Historical Performance (60 months)</h3>
       <ReactECharts ref={chartRef} option={option} style={{ height: 400 }} />
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '20px' },
-  title: { margin: '0 0 16px 0', color: '#fff' },
-};

@@ -4,6 +4,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SimulationTrajectories } from '@/components/simulators/SimulationTrajectories';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectItem } from '@/components/ui/select';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -163,33 +166,36 @@ function FireSimuladorSection() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
           <span style={{ fontSize: '.6rem', color: 'var(--muted)', minWidth: '58px' }}>Condição:</span>
           {(['solteiro', 'casamento', 'filho'] as FireCond[]).map(c => (
-            <button
+            <Button
               key={c}
-              className={`preset-btn${!custom && fireCond === c ? ' active' : ''}`}
+              variant={!custom && fireCond === c ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setCondPreset(c)}
             >
               {COND_PRESETS[c].label}
-            </button>
+            </Button>
           ))}
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
           <span style={{ fontSize: '.6rem', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
           {(['stress', 'base', 'fav'] as FireMkt[]).map(m => (
-            <button
+            <Button
               key={m}
-              className={`preset-btn${!custom && fireMkt === m ? ' active' : ''}`}
+              variant={!custom && fireMkt === m ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setMktPreset(m)}
             >
               {MKT_PRESETS[m].label}
-            </button>
+            </Button>
           ))}
-          <button
-            className="preset-btn"
-            style={{ marginLeft: '8px', borderStyle: 'dashed' }}
+          <Button
+            variant="outline"
+            size="sm"
+            style={{ borderStyle: 'dashed', marginLeft: '8px' }}
             onClick={setFire50Preset}
           >
             🎯 Cenário Aspiracional
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -294,13 +300,14 @@ function WhatIfSection() {
       {/* Preset buttons */}
       <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
         {(Object.keys(WI_PRESETS) as WiPreset[]).map(k => (
-          <button
+          <Button
             key={k}
-            className={`preset-btn${wiPreset === k ? ' active' : ''}`}
+            variant={wiPreset === k ? 'default' : 'outline'}
+            size="sm"
             onClick={() => setWiPreset(k)}
           >
             {WI_PRESETS[k].label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -383,15 +390,17 @@ function StressTestSection() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ fontSize: '.8rem', color: 'var(--muted)' }}>Idade do shock:</label>
-            <select
-              value={ageOnset}
+            <Select
+              value={ageOnset.toString()}
               onChange={e => setAgeOnset(+e.target.value)}
-              style={{ background: 'var(--card)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: '6px', padding: '4px 8px', fontSize: '.8rem', cursor: 'pointer' }}
+              style={{ width: '200px', fontSize: '.8rem' }}
             >
               {STRESS_AGES.map(a => (
-                <option key={a.value} value={a.value}>{a.label}</option>
+                <SelectItem key={a.value} value={a.value.toString()}>
+                  {a.label}
+                </SelectItem>
               ))}
-            </select>
+            </Select>
           </div>
         </div>
       </div>
@@ -447,10 +456,14 @@ function CascadeSection() {
             <span>Aporte Mensal</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '.65rem', color: 'var(--muted)' }}>R$</span>
-              <input
-                type="number" min="1000" max="1000000" step="1000" value={aporte}
-                style={{ width: '90px', background: 'var(--card2)', border: '1px solid var(--border)', color: 'var(--text)', padding: '3px 6px', borderRadius: '5px', fontSize: '.8rem', fontWeight: 700, textAlign: 'right' }}
+              <Input
+                type="number"
+                min="1000"
+                max="1000000"
+                step="1000"
+                value={aporte}
                 onChange={e => setAporte(+e.target.value)}
+                style={{ width: '90px', fontSize: '.8rem', textAlign: 'right' }}
               />
             </span>
           </label>

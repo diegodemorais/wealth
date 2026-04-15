@@ -23,11 +23,11 @@ export function TimeToFireProgressBar({
   const progressPct = Math.min(Math.max(fireProgress, 0), 1) * 100;
 
   return (
-    <section className="mb-8 p-4 rounded border bg-slate-900/40 border-slate-700/25">
-      <h2 className="m-0 mb-4 text-base font-semibold text-slate-200">Time to FIRE</h2>
+    <section className="bg-slate-900/50 border border-slate-700/40 rounded-lg p-4 mb-3.5">
+      <h2 className="m-0 mb-3 text-base font-semibold text-slate-100">Time to FIRE</h2>
 
       {/* Progress Bar Container */}
-      <div className="h-6 rounded overflow-hidden mb-2 bg-slate-700/20 shadow-lg" style={{ boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)' }}>
+      <div className="h-6 rounded overflow-hidden mb-1 bg-slate-700/30 shadow-lg" style={{ boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)' }}>
         <div
           className="h-full transition-all duration-500"
           style={{
@@ -38,7 +38,7 @@ export function TimeToFireProgressBar({
       </div>
 
       {/* Label below bar */}
-      <div className="text-xs text-slate-500 mb-2 text-right">
+      <div className="text-xs text-slate-500 mb-1 text-right">
         {privacyMode ? '••••' : yearsMonthsStr} restantes
       </div>
 

@@ -13,10 +13,10 @@ interface FactorLoadingsTableProps {
   data: Record<string, ETFLoadings>
 }
 
-function r2Color(r2: number): { textColor: string; bg: string; border: string; label: string } {
-  if (r2 >= 0.95) return { textColor: '#4ade80', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)', label: 'Good' }
-  if (r2 >= 0.80) return { textColor: '#facc15', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.3)', label: 'Good' }
-  return { textColor: '#f87171', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)', label: 'Weak' }
+function r2Color(r2: number): { textColor: string; bg: string; border: string; label: string; className: string } {
+  if (r2 >= 0.95) return { textColor: 'rgb(74, 222, 128)', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)', label: 'Good', className: 'text-green-400 bg-green-900/10 border-green-600/25' }
+  if (r2 >= 0.80) return { textColor: 'rgb(250, 204, 21)', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.3)', label: 'Good', className: 'text-yellow-400 bg-yellow-900/10 border-yellow-600/25' }
+  return { textColor: 'rgb(248, 113, 113)', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)', label: 'Weak', className: 'text-red-400 bg-red-900/10 border-red-600/25' }
 }
 
 function r2Icon(r2: number): string {
@@ -52,34 +52,30 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
   }, [data])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="flex flex-col gap-4">
       {/* Quality Badges Row */}
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px' }}>
-        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', marginBottom: '16px', marginTop: 0 }}>
+      <div className="bg-card border border-border rounded-lg p-4">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-4 mt-0">
           Model Fit — R² Quality
         </h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        <div className="flex flex-wrap gap-2">
           {etfs.map(({ ticker, r2 }) => {
             const cfg = r2Color(r2)
             return (
               <div
                 key={ticker}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '8px',
-                  borderRadius: '6px', border: `1px solid ${cfg.border}`,
-                  padding: '6px 12px', background: cfg.bg,
-                }}
+                className={`flex items-center gap-2 rounded border p-1.5 ${cfg.className}`}
                 title={
                   r2 < 0.80
                     ? `Modelo FF5 explica mal este ETF (R²=${(r2 * 100).toFixed(1)}%)`
                     : `R²=${(r2 * 100).toFixed(1)}%`
                 }
               >
-                <span style={{ fontFamily: 'monospace', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)' }}>{ticker}</span>
-                <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: cfg.textColor }}>
+                <span className="font-mono text-sm font-semibold text-text">{ticker}</span>
+                <span className="font-mono text-xs" style={{ color: cfg.textColor }}>
                   R² {(r2 * 100).toFixed(1)}%{r2Icon(r2)}
                 </span>
-                <span style={{ fontSize: '0.75rem', color: cfg.textColor }}>{cfg.label}</span>
+                <span className="text-xs" style={{ color: cfg.textColor }}>{cfg.label}</span>
               </div>
             )
           })}
@@ -87,26 +83,26 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
       </div>
 
       {/* Factor Significance Table */}
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px' }}>
-        <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px', marginTop: 0 }}>Factor Significance</h4>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+      <div className="bg-card border border-border rounded-lg p-4">
+        <h4 className="text-sm font-semibold text-text mb-3 mt-0">Factor Significance</h4>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-xs">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '8px 12px 8px 0', color: 'var(--muted)', fontWeight: 500 }}>ETF</th>
+              <tr className="border-b border-border">
+                <th className="text-left p-2 text-muted font-medium">ETF</th>
                 {FACTOR_KEYS.map((f) => (
-                  <th key={f} style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: 500 }}>
+                  <th key={f} className="text-right p-2 text-muted font-medium">
                     {FACTOR_LABELS[f]}
                   </th>
                 ))}
-                <th style={{ textAlign: 'right', padding: '8px 0 8px 12px', color: 'var(--muted)', fontWeight: 500 }}>R²</th>
-                <th style={{ textAlign: 'right', padding: '8px 0 8px 12px', color: 'var(--muted)', fontWeight: 500 }}>N</th>
+                <th className="text-right p-2 text-muted font-medium">R²</th>
+                <th className="text-right p-2 text-muted font-medium">N</th>
               </tr>
             </thead>
             <tbody>
               {etfs.map(({ ticker, r2, n_months, t_stats, loadings }) => (
-                <tr key={ticker} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '8px 12px 8px 0', fontFamily: 'monospace', fontWeight: 600, color: 'var(--text)' }}>{ticker}</td>
+                <tr key={ticker} className="border-b border-border">
+                  <td className="p-2 font-mono font-semibold text-text">{ticker}</td>
                   {FACTOR_KEYS.map((f) => {
                     const coef = typeof loadings[f] === "number" ? loadings[f] : 0
                     const tStat = typeof t_stats[f] === "number" ? t_stats[f] : 0
@@ -114,22 +110,23 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
                     return (
                       <td
                         key={f}
-                        style={{ textAlign: 'right', padding: '8px', fontFamily: 'monospace', opacity: significant ? 1 : 0.4 }}
+                        className="text-right p-2 font-mono"
+                        style={{ opacity: significant ? 1 : 0.4 }}
                         title={`t-stat: ${tStat.toFixed(2)}`}
                       >
-                        <span style={{ color: coef > 0 ? '#4ade80' : coef < 0 ? '#f87171' : 'var(--muted)' }}>
+                        <span className={coef > 0 ? 'text-green-400' : coef < 0 ? 'text-red-400' : 'text-muted'}>
                           {coef >= 0 ? "+" : ""}
                           {coef.toFixed(2)}
                         </span>
                       </td>
                     )
                   })}
-                  <td style={{ textAlign: 'right', padding: '8px 0 8px 12px' }}>
-                    <span style={{ fontFamily: 'monospace', fontWeight: 600, color: r2Color(r2).textColor }}>
+                  <td className="text-right p-2">
+                    <span className="font-mono font-semibold" style={{ color: r2Color(r2).textColor }}>
                       {(r2 * 100).toFixed(1)}%
                     </span>
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px 0 8px 12px', fontFamily: 'monospace', color: 'var(--muted)' }}>
+                  <td className="text-right p-2 font-mono text-muted">
                     {n_months}
                   </td>
                 </tr>
@@ -137,7 +134,7 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
             </tbody>
           </table>
         </div>
-        <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '12px', marginBottom: 0 }}>
+        <p className="text-xs text-muted mt-3 mb-0">
           Fama-French 5 + Momentum. Coefficients with |t-stat| &lt; 2 shown at 40% opacity (not significant).
         </p>
       </div>

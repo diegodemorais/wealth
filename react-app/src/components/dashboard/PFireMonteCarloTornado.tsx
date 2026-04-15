@@ -52,23 +52,27 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   ];
 
   return (
-    <section className="section">
-      <h2>P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
+    <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
+      <h2 className="text-base font-semibold text-white mb-3 m-0">P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
 
       {/* Scenario cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginTop: '12px' }}>
+      <div className="grid grid-cols-3 gap-2.5 mt-3">
         {scenarioCards.map(({ label, value }) => (
-          <div key={label} style={{
-            background: getBadgeBg(value),
-            border: `1px solid ${getBadgeColor(value)}`,
-            borderRadius: '8px',
-            padding: '12px',
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: '0.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
+          <div
+            key={label}
+            className="rounded-lg p-3 text-center border"
+            style={{
+              background: getBadgeBg(value),
+              borderColor: getBadgeColor(value),
+            }}
+          >
+            <div className="text-xs uppercase font-semibold text-slate-400 mb-1 tracking-widest">
               {label}
             </div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: getBadgeColor(value), lineHeight: 1 }}>
+            <div
+              className="text-xl font-black leading-none"
+              style={{ color: getBadgeColor(value) }}
+            >
               {privacyMode ? '••' : value.toFixed(1)}%
             </div>
           </div>
@@ -76,71 +80,70 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
       </div>
 
       {/* P(FIRE) Base progress bar */}
-      <div style={{ marginTop: '14px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px' }}>
+      <div className="mt-3.5">
+        <div className="flex justify-between text-xs text-slate-400 mb-1">
           <span>Progresso Patrimonial</span>
           <span style={{ color: getBadgeColor(pfireBase), fontWeight: 700 }}>
             {privacyMode ? '••' : pfireBase.toFixed(1)}%
           </span>
         </div>
-        <div style={{ height: '6px', background: 'var(--card2)', borderRadius: '3px', overflow: 'hidden' }}>
-          <div style={{
-            width: `${Math.min(100, pfireBase)}%`,
-            height: '100%',
-            background: getBadgeColor(pfireBase),
-            transition: 'width 0.5s ease',
-          }} />
+        <div className="h-1.5 bg-slate-700/40 rounded-sm overflow-hidden">
+          <div
+            className="h-full rounded-sm transition-all duration-500"
+            style={{
+              width: `${Math.min(100, pfireBase)}%`,
+              background: getBadgeColor(pfireBase),
+            }}
+          />
         </div>
       </div>
 
       {/* Tornado section (collapsible) */}
-      <div style={{ marginTop: '14px', borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
-        <div
+      <div className="mt-3.5 border-t border-slate-700/50 pt-3">
+        <button
           onClick={() => setExpandTornado(!expandTornado)}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+          className="flex justify-between items-center w-full cursor-pointer text-white hover:text-slate-300 transition-colors"
         >
-          <span style={{ fontSize: '0.8rem', fontWeight: 600 }}>
+          <span className="text-sm font-semibold">
             Tornado — Sensitividade ±10% de P(FIRE)
           </span>
-          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <span className="text-xs text-slate-400">
             {expandTornado ? '▼' : '▶'}
           </span>
-        </div>
+        </button>
 
         {expandTornado && sortedTornado.length > 0 && (
-          <div style={{ marginTop: '12px' }}>
+          <div className="mt-3">
             {/* Legend */}
-            <div style={{ display: 'flex', gap: '16px', fontSize: '0.6rem', color: 'var(--muted)', marginBottom: '10px' }}>
+            <div className="flex gap-4 text-xs text-slate-400 mb-2.5">
               <span>
-                <span style={{ display: 'inline-block', width: '10px', height: '8px', background: 'var(--red)', borderRadius: '2px', marginRight: '4px' }} />
+                <span className="inline-block w-2.5 h-2 bg-red-500 rounded mr-1" />
                 -10%
               </span>
               <span>
-                <span style={{ display: 'inline-block', width: '10px', height: '8px', background: 'var(--green)', borderRadius: '2px', marginRight: '4px' }} />
+                <span className="inline-block w-2.5 h-2 bg-green-500 rounded mr-1" />
                 +10%
               </span>
             </div>
 
             {sortedTornado.map((item, idx) => (
-              <div key={idx} style={{ marginBottom: '10px' }}>
-                <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px' }}>
+              <div key={idx} className="mb-2.5">
+                <div className="text-xs text-slate-400 mb-1">
                   {item.label}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <div className="flex items-center gap-1">
                   {/* Negative side */}
-                  <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
-                    <div style={{
-                      height: '18px',
-                      width: `${(Math.abs(item.menos10) / maxDelta) * 100}%`,
-                      background: 'var(--red)',
-                      borderRadius: '3px 0 0 3px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end',
-                      paddingRight: '4px',
-                    }}>
+                  <div className="flex-1 flex justify-end">
+                    <div
+                      className="h-5 flex items-center justify-end px-1"
+                      style={{
+                        width: `${(Math.abs(item.menos10) / maxDelta) * 100}%`,
+                        background: 'var(--red)',
+                        borderRadius: '3px 0 0 3px',
+                      }}
+                    >
                       {Math.abs(item.menos10) > 1 && (
-                        <span style={{ fontSize: '0.6rem', color: '#fff', fontWeight: 700 }}>
+                        <span className="text-xs font-bold text-white">
                           {item.menos10.toFixed(1)}pp
                         </span>
                       )}
@@ -148,21 +151,22 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                   </div>
 
                   {/* Center */}
-                  <div style={{ width: '1px', height: '24px', background: 'var(--border)', flexShrink: 0 }} />
+                  <div
+                    className="w-px h-6 bg-slate-700/50 flex-shrink-0"
+                  />
 
                   {/* Positive side */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      height: '18px',
-                      width: `${(Math.abs(item.mais10) / maxDelta) * 100}%`,
-                      background: 'var(--green)',
-                      borderRadius: '0 3px 3px 0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      paddingLeft: '4px',
-                    }}>
+                  <div className="flex-1">
+                    <div
+                      className="h-5 flex items-center px-1"
+                      style={{
+                        width: `${(Math.abs(item.mais10) / maxDelta) * 100}%`,
+                        background: 'var(--green)',
+                        borderRadius: '0 3px 3px 0',
+                      }}
+                    >
                       {Math.abs(item.mais10) > 1 && (
-                        <span style={{ fontSize: '0.6rem', color: '#fff', fontWeight: 700 }}>
+                        <span className="text-xs font-bold text-white">
                           +{item.mais10.toFixed(1)}pp
                         </span>
                       )}
@@ -175,7 +179,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
         )}
 
         {expandTornado && sortedTornado.length === 0 && (
-          <div style={{ fontSize: '0.7rem', color: 'var(--muted)', padding: '8px 0', marginTop: '8px' }}>
+          <div className="text-xs text-slate-400 py-2 mt-2">
             Dados de sensitividade não disponíveis
           </div>
         )}

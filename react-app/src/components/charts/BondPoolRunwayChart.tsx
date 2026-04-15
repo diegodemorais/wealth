@@ -66,7 +66,7 @@ export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
   }, [data, privacyMode, theme, hasDeterministic, hasProbabilistic]);
 
   return (
-    <div className="bond-pool-chart-container">
+    <div className="bg-card border border-border rounded-md p-4 mb-5" style={{ height: 400 }}>
       <ReactECharts ref={chartRef} option={option} theme={theme} style={{ height: '100%' }} />
     </div>
   );

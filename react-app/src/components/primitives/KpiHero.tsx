@@ -50,67 +50,32 @@ export function KpiHero({
   ];
 
   return (
-    <div style={styles.hero}>
+    <div className="grid grid-cols-4 gap-2.5 mb-4">
       {kpis.map((kpi, idx) => (
         <div
           key={idx}
-          style={{
-            ...styles.kpiItem,
-            ...(kpi.primary ? styles.kpiPrimary : {}),
-          }}
+          className={`rounded-lg p-4 text-center border transition-colors ${
+            kpi.primary
+              ? 'bg-blue-950/20 border-blue-500/40 border-2'
+              : 'bg-card border-border/50'
+          }`}
         >
-          <div style={styles.label}>{kpi.label}</div>
-          <div style={{
-            ...styles.heroValue,
-            color: kpi.color || '#fff',
-          }}>
+          <div className="text-xs uppercase font-semibold text-muted-foreground mb-1 tracking-widest">
+            {kpi.label}
+          </div>
+          <div
+            className="text-2xl font-black mt-1 mb-1 leading-none"
+            style={{ color: kpi.color || '#fff' }}
+          >
             {kpi.value}
           </div>
           {kpi.subtitle && (
-            <div style={styles.subtitle}>{kpi.subtitle}</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {kpi.subtitle}
+            </div>
           )}
         </div>
       ))}
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  hero: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '10px',
-    marginBottom: '16px',
-  },
-  kpiItem: {
-    backgroundColor: 'var(--card)',
-    border: '1px solid var(--border)',
-    borderRadius: '12px',
-    padding: '16px',
-    textAlign: 'center',
-  },
-  kpiPrimary: {
-    border: '2px solid var(--accent)',
-    backgroundColor: 'rgba(59, 130, 246, 0.07)',
-  },
-  label: {
-    color: 'var(--muted)',
-    fontSize: '0.6rem',
-    textTransform: 'uppercase' as const,
-    fontWeight: '600',
-    marginBottom: '4px',
-    letterSpacing: '0.5px',
-  },
-  heroValue: {
-    fontSize: '2rem',
-    fontWeight: '800',
-    marginTop: '4px',
-    marginBottom: '4px',
-    lineHeight: '1',
-  },
-  subtitle: {
-    fontSize: '0.65rem',
-    color: 'var(--muted)',
-    marginTop: '4px',
-  },
-};

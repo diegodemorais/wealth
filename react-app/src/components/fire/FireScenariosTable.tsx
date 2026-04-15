@@ -64,24 +64,24 @@ export function FireScenariosTable() {
 
   if (scenarios.length === 0) {
     return (
-      <div style={styles.container}>
-        <h3 style={styles.title}>FIRE Scenarios Comparison</h3>
-        <div style={styles.empty}>
-          <p>No scenario data available</p>
+      <div className="bg-card border border-border rounded-md p-5">
+        <h3 className="text-sm font-semibold text-foreground mb-4">FIRE Scenarios Comparison</h3>
+        <div className="bg-secondary/20 border border-border rounded p-4">
+          <p className="text-muted-foreground">No scenario data available</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>🎯 FIRE Scenarios — Detailed Comparison</h3>
-      <p style={styles.subtitle}>
+    <div className="bg-card border border-border rounded-md p-5">
+      <h3 className="text-sm font-semibold text-foreground mb-2">🎯 FIRE Scenarios — Detailed Comparison</h3>
+      <p className="text-xs text-muted-foreground mb-4">
         Success probabilities and wealth projections for different retirement targets
       </p>
 
       {scenarios.map((scenario, idx) => (
-        <div key={idx} style={styles.scenarioBlock}>
+        <div key={idx} className="bg-secondary/20 border border-border rounded-md p-4 mb-4" style={styles.scenarioBlock}>
           <div style={styles.scenarioHeader}>
             <div>
               <h4 style={styles.scenarioName}>{scenario.name}</h4>
@@ -179,8 +179,8 @@ export function FireScenariosTable() {
         </div>
       ))}
 
-      <div style={styles.noteSection}>
-        <p style={styles.note}>
+      <div className="bg-secondary/10 border border-border rounded-md p-4 mt-4">
+        <p className="text-xs text-muted-foreground m-0">
           <strong>Notes:</strong> Success probabilities from 10,000 Monte Carlo simulations.
           Base Case = conservative return assumptions; Favorable = best-case market scenario;
           Stress Test = downturn scenario. SWR (Safe Withdrawal Rate) ensures portfolio

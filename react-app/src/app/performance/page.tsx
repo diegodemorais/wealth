@@ -10,6 +10,7 @@ import { RollingSharpChart } from '@/components/charts/RollingSharpChart';
 import { InformationRatioChart } from '@/components/charts/InformationRatioChart';
 import { PremisesTable } from '@/components/performance/PremisesTable';
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
+import { Button } from '@/components/ui/button';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -118,15 +119,16 @@ export default function PerformancePage() {
       {/* 4. Patrimônio — Evolução Histórica (com period-btns) */}
       <section className="section" id="timelineSection">
         <h2>Patrimônio — Evolução Histórica</h2>
-        <div className="period-btns" id="timelinePeriodBtns">
+        <div className="period-btns" id="timelinePeriodBtns" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
           {PERIODS.map(p => (
-            <button
+            <Button
               key={p.key}
-              className={timelinePeriod === p.key ? 'active' : ''}
+              variant={timelinePeriod === p.key ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setTimelinePeriod(p.key)}
             >
               {p.label}
-            </button>
+            </Button>
           ))}
         </div>
         <TimelineChart data={data} />

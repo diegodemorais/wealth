@@ -21,50 +21,31 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
 
   if (privacyMode) {
     return (
-      <div style={styles.container}>
-        <h3 style={styles.title}>Life Milestones & FIRE Timeline</h3>
-        <div style={styles.maskedContent}>••••</div>
+      <div className="bg-card border border-border rounded-md p-4 mb-5">
+        <h3 className="text-sm font-semibold text-foreground mb-4">Life Milestones & FIRE Timeline</h3>
+        <div className="text-muted-foreground text-lg py-6 text-center">••••</div>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Life Milestones & FIRE Timeline</h3>
-      <div style={styles.timeline}>
+    <div className="bg-card border border-border rounded-md p-4 mb-5">
+      <h3 className="text-sm font-semibold text-foreground mb-4">Life Milestones & FIRE Timeline</h3>
+      <div className="relative pl-10">
         {milestones.map((milestone, idx) => (
-          <div key={idx} style={styles.milestone}>
-            <div style={styles.dot}>
-              <span style={styles.icon}>{milestone.icon}</span>
+          <div key={idx} className="mb-6 relative">
+            <div className="absolute -left-14 w-9 h-9 bg-secondary rounded-full flex items-center justify-center border-2 border-card">
+              <span className="text-lg">{milestone.icon}</span>
             </div>
-            <div style={styles.content}>
-              <div style={styles.year}>{milestone.year}</div>
-              <div style={styles.event}>{milestone.event}</div>
-              <div style={styles.age}>Age {milestone.age}</div>
+            <div className="pb-3">
+              <div className="text-amber-500 font-bold text-sm">{milestone.year}</div>
+              <div className="text-gray-300 font-semibold text-sm mt-1">{milestone.event}</div>
+              <div className="text-muted-foreground text-xs mt-0.5">Age {milestone.age}</div>
             </div>
-            {idx < milestones.length - 1 && <div style={styles.connector} />}
+            {idx < milestones.length - 1 && <div className="absolute -left-11 top-9 w-0.5 h-8 bg-muted" />}
           </div>
         ))}
       </div>
     </div>
   );
 }
-
-const DOT_SIZE = 36;
-const DOT_OFFSET = 58;
-const CONNECTOR_OFFSET = 49;
-
-const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '8px', padding: '16px', marginBottom: '20px' },
-  title: { margin: '0 0 16px 0', color: '#fff' },
-  maskedContent: { color: '#9ca3af', fontSize: '18px', padding: '24px', textAlign: 'center' },
-  timeline: { position: 'relative', paddingLeft: '40px' },
-  milestone: { marginBottom: '24px', position: 'relative' },
-  dot: { position: 'absolute', left: -DOT_OFFSET, width: DOT_SIZE, height: DOT_SIZE, backgroundColor: '#374151', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #1f2937' },
-  icon: { fontSize: '18px' },
-  content: { paddingBottom: '12px' },
-  year: { color: '#f59e0b', fontWeight: '700', fontSize: '14px' },
-  event: { color: '#d1d5db', fontWeight: '600', fontSize: '15px', marginTop: '4px' },
-  age: { color: '#9ca3af', fontSize: '12px', marginTop: '2px' },
-  connector: { position: 'absolute', left: -CONNECTOR_OFFSET, top: DOT_SIZE, width: '2px', height: 'calc(100% + 12px)', backgroundColor: '#4b5563' },
-};

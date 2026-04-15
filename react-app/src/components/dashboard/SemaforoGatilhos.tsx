@@ -40,43 +40,47 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
     statusDotColor[status] ?? 'var(--muted)';
 
   return (
-    <section className="section section-critical" style={{ marginBottom: '14px' }}>
+    <section className="mb-3.5 rounded-lg overflow-hidden border border-red-900/50 bg-red-950/20">
       {/* Header — collapsible */}
-      <div
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
+        className="w-full flex justify-between items-center cursor-pointer px-4 py-3 text-white hover:bg-red-900/10 transition-colors"
       >
-        <h2 style={{ margin: 0 }}>Semáforos de Gatilhos ›</h2>
-        <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+        <h2 className="m-0 text-base font-semibold">Semáforos de Gatilhos ›</h2>
+        <span className="text-xs text-slate-400">
           {isOpen ? '▼' : '▶'}
         </span>
-      </div>
+      </button>
 
       {/* Summary when collapsed */}
       {!isOpen && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '0.7rem', color: 'var(--muted)' }}>
-          <span style={{
-            display: 'inline-block',
-            width: '8px',
-            height: '8px',
-            borderRadius: '50%',
-            background: getSemaforoColor(statusIpca),
-            flexShrink: 0,
-          }} />
+        <div className="flex items-center gap-1.5 mx-4 mb-3 text-xs text-slate-400">
+          <span
+            className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+            style={{ background: getSemaforoColor(statusIpca) }}
+          />
           {resumo}
         </div>
       )}
 
       {/* Expanded table */}
       {isOpen && gatilhos.length > 0 && (
-        <div style={{ marginTop: '12px', overflowX: 'auto' }}>
-          <table className="table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.7rem' }}>
+        <div className="overflow-x-auto px-4 pb-4 mt-3">
+          <table className="w-full border-collapse text-xs">
             <thead>
-              <tr style={{ borderBottom: '2px solid var(--border)' }}>
-                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'left' }}>Gatilho</th>
-                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'center' }}>Status</th>
-                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'right' }}>Valor</th>
-                <th style={{ padding: '6px 8px', color: 'var(--muted)', textTransform: 'uppercase', fontSize: '0.6rem', fontWeight: 600, textAlign: 'left' }}>Ação</th>
+              <tr className="border-b border-slate-700/50">
+                <th className="px-2 py-1.5 text-muted-foreground text-xs uppercase font-semibold text-left">
+                  Gatilho
+                </th>
+                <th className="px-2 py-1.5 text-muted-foreground text-xs uppercase font-semibold text-center">
+                  Status
+                </th>
+                <th className="px-2 py-1.5 text-muted-foreground text-xs uppercase font-semibold text-right">
+                  Valor
+                </th>
+                <th className="px-2 py-1.5 text-muted-foreground text-xs uppercase font-semibold text-left">
+                  Ação
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -84,46 +88,41 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
                 const typeBadge = typeBadges[g.tipo] ?? typeBadges.taxa;
 
                 return (
-                  <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '6px 8px' }}>
-                      <div>
+                  <tr key={idx} className="border-b border-slate-700/30">
+                    <td className="px-2 py-2">
+                      <div className="text-slate-100">
                         {g.nome}
-                        <span style={{
-                          fontSize: '0.6rem',
-                          padding: '1px 5px',
-                          borderRadius: '3px',
-                          marginLeft: '6px',
-                          background: typeBadge.bg,
-                          color: typeBadge.color,
-                        }}>
+                        <span
+                          className="inline-block text-xs px-1.5 py-0.5 rounded ml-1.5"
+                          style={{
+                            background: typeBadge.bg,
+                            color: typeBadge.color,
+                          }}
+                        >
                           {typeBadge.label}
                         </span>
                       </div>
                       {g.contexto && (
-                        <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginTop: '2px' }}>
+                        <div className="text-xs text-slate-400 mt-0.5">
                           {g.contexto}
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: '6px 8px', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
-                        <span style={{
-                          display: 'inline-block',
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
-                          background: getSemaforoColor(g.status),
-                          flexShrink: 0,
-                        }} />
+                    <td className="px-2 py-2 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <span
+                          className="inline-block w-2 h-2 rounded-full"
+                          style={{ background: getSemaforoColor(g.status) }}
+                        />
                         <span style={{ color: getSemaforoColor(g.status) }}>
                           {g.status}
                         </span>
                       </div>
                     </td>
-                    <td style={{ padding: '6px 8px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+                    <td className="px-2 py-2 text-right tabular-nums text-slate-100">
                       {privacyMode ? '••••' : g.valorPrimario}
                     </td>
-                    <td style={{ padding: '6px 8px', color: 'var(--muted)' }}>
+                    <td className="px-2 py-2 text-slate-400">
                       {g.acao}
                     </td>
                   </tr>

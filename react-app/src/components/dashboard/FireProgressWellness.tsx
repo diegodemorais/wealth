@@ -31,14 +31,17 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
     'var(--accent)';
 
   return (
-    <section className="section">
-      <h2>Progresso FIRE</h2>
+    <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
+      <h2 className="text-base font-semibold text-white mb-3 m-0">Progresso FIRE</h2>
 
-      <div style={{ textAlign: 'center', padding: '12px 0 8px' }}>
-        <div style={{ fontSize: '2.8rem', fontWeight: 800, color: progressBarColor, lineHeight: 1 }}>
+      <div className="text-center py-2 px-0">
+        <div
+          className="text-4xl font-black leading-none"
+          style={{ color: progressBarColor }}
+        >
           {privacyMode ? '••••' : (firePercentage * 100).toFixed(1) + '%'}
         </div>
-        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '6px' }}>
+        <div className="text-xs text-slate-400 mt-1.5">
           {privacyMode
             ? 'R$••••M / R$••••M'
             : `R$${(firePatrimonioAtual / 1e6).toFixed(2)}M / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M`}
@@ -46,23 +49,24 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
       </div>
 
       {/* Progress bar */}
-      <div style={{ height: '4px', background: 'var(--card2)', borderRadius: '2px', overflow: 'hidden', margin: '10px 0' }}>
-        <div style={{
-          width: Math.min(100, firePercentage * 100) + '%',
-          height: '100%',
-          background: progressBarColor,
-          transition: 'width 0.5s ease',
-        }} />
+      <div className="h-1 bg-slate-700/40 rounded-sm overflow-hidden my-2.5">
+        <div
+          className="h-full rounded-sm transition-all duration-500"
+          style={{
+            width: Math.min(100, firePercentage * 100) + '%',
+            background: progressBarColor,
+          }}
+        />
       </div>
 
       {/* SWR Info */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.7rem', marginTop: '8px' }}>
-        <span style={{ color: 'var(--muted)' }}>SWR no FIRE Day projetada:</span>
-        <span style={{ color: 'var(--cyan)', fontWeight: 700, fontSize: '0.85rem' }}>
+      <div className="flex justify-between items-center text-xs mt-2">
+        <span className="text-slate-400">SWR no FIRE Day projetada:</span>
+        <span className="text-cyan-400 font-bold text-sm">
           {privacyMode ? '••••' : (swrFireDay * 100).toFixed(2) + '%'}
         </span>
       </div>
-      <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginTop: '4px' }}>
+      <div className="text-xs text-slate-400 mt-1">
         {privacyMode
           ? 'R$••••k / R$••••M · Meta ≤ 3.0%'
           : `R$250k / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M · Meta ≤ 3.0%`}

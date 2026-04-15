@@ -61,38 +61,38 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
   const diversificationColor = diversificationEffect >= 0 ? 'var(--green)' : 'var(--red)';
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div className="bg-card border border-border rounded-lg p-4 mb-5">
+      <h2 className="text-sm font-semibold text-text mb-4 mt-0">
         Attribution — Contribuição ao Retorno ({periodLabel})
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div className="flex flex-col gap-4">
         {/* Portfolio return summary */}
-        <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div className="p-3 rounded border bg-green-900/10 border-green-600/25">
+          <div className="text-xs text-muted mb-1 uppercase font-semibold">
             Retorno Total da Carteira
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: totalReturnColor }}>
+          <div className="text-lg font-bold" style={{ color: totalReturnColor }}>
             {totalReturn >= 0 ? '+' : ''}{totalReturn.toFixed(2)}%
           </div>
         </div>
 
         {/* Contribution bars */}
         <div>
-          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+          <div className="text-sm font-semibold text-text mb-3">
             Contribuição ao Retorno
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className="flex flex-col gap-3">
             {contributions.map(item => {
               const barWidth = (Math.abs(item.contribution) / maxContributionWidth) * 100;
               return (
                 <div key={item.label}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+                  <div className="flex justify-between items-center mb-1 text-xs text-muted">
                     <span>{item.label}</span>
                     <span>{item.allocation.toFixed(1)}% × {item.return.toFixed(2)}% = {item.contribution.toFixed(2)}pp</span>
                   </div>
-                  <div style={{ height: '20px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div className="h-5 bg-secondary rounded overflow-hidden relative flex items-center">
                     <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'var(--border)', opacity: 0.5 }} />
                     <div
                       style={{
@@ -107,7 +107,7 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
                       }}
                     >
                       {Math.abs(item.contribution) > 0.1 && (
-                        <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'white' }}>
+                        <span className="text-xs font-semibold text-white">
                           {item.contribution.toFixed(2)}pp
                         </span>
                       )}
@@ -120,43 +120,39 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
         </div>
 
         {/* Key metrics cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', borderRadius: '4px', backgroundColor: `${topContributor.color}15`, border: `1px solid ${topContributor.color}40` }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div className="grid grid-cols-auto-fit gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
+          <div className="p-3 rounded border" style={{ backgroundColor: `${topContributor.color}20`, borderColor: `${topContributor.color}40` }}>
+            <div className="text-xs text-muted mb-1 uppercase font-semibold">
               Maior Contribuinte
             </div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '4px', color: topContributor.color }}>
+            <div className="text-sm font-bold mb-1" style={{ color: topContributor.color }}>
               {topContributor.label.split(' ')[0]}
             </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+            <div className="text-xs text-muted">
               +{topContributor.contribution.toFixed(2)}pp
             </div>
           </div>
 
-          <div style={{
-            padding: '12px', borderRadius: '4px',
-            background: diversificationEffect >= 0 ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
-            border: `1px solid ${diversificationEffect >= 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}`,
-          }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div className={`p-3 rounded border ${diversificationEffect >= 0 ? 'bg-green-900/10 border-green-600/25' : 'bg-red-900/10 border-red-600/25'}`}>
+            <div className="text-xs text-muted mb-1 uppercase font-semibold">
               Efeito Diversificação
             </div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '4px', color: diversificationColor }}>
+            <div className="text-sm font-bold mb-1" style={{ color: diversificationColor }}>
               {diversificationEffect >= 0 ? '+' : ''}{diversificationEffect.toFixed(2)}pp
             </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+            <div className="text-xs text-muted">
               Ganho da correlação
             </div>
           </div>
 
-          <div style={{ padding: '12px', borderRadius: '4px', background: 'var(--bg)', border: '1px solid var(--border)' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div className="p-3 rounded border bg-secondary/20 border-border">
+            <div className="text-xs text-muted mb-1 uppercase font-semibold">
               Menor Contribuinte
             </div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '4px', color: 'var(--text)' }}>
+            <div className="text-sm font-bold mb-1 text-text">
               {lowestContributor.label.split(' ')[0]}
             </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
+            <div className="text-xs text-muted">
               {lowestContributor.contribution.toFixed(2)}pp
             </div>
           </div>
@@ -164,50 +160,50 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
 
         {/* Expandable details */}
         <div
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', cursor: 'pointer', borderTop: '1px solid var(--border)' }}
+          className="flex justify-between items-center p-3 cursor-pointer border-t border-border"
           onClick={() => setExpandDetails(!expandDetails)}
         >
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 600, margin: 0, color: 'var(--text)' }}>
+          <h3 className="text-sm font-semibold m-0 text-text">
             Detalhes por Ativo
           </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <span className="text-xs text-muted">
             {expandDetails ? '▼' : '▶'}
           </span>
         </div>
 
         {expandDetails && (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-xs">
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Ativo</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Alocação</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Retorno</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Contribuição</th>
+                  <th className="text-left p-2 border-b border-border text-muted font-semibold">Ativo</th>
+                  <th className="text-right p-2 border-b border-border text-text font-semibold">Alocação</th>
+                  <th className="text-right p-2 border-b border-border text-text font-semibold">Retorno</th>
+                  <th className="text-right p-2 border-b border-border text-text font-semibold">Contribuição</th>
                 </tr>
               </thead>
               <tbody>
                 {contributions.map((item, idx) => (
                   <tr key={idx}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: item.color }}>
+                    <td className="p-2 border-b border-border font-semibold" style={{ color: item.color }}>
                       {item.label.split(' ')[0]}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
+                    <td className="text-right p-2 border-b border-border text-text">
                       {item.allocation.toFixed(1)}%
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: item.return >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                    <td className={`text-right p-2 border-b border-border ${item.return >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                       {item.return >= 0 ? '+' : ''}{item.return.toFixed(2)}%
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: item.contribution >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                    <td className={`text-right p-2 border-b border-border font-semibold ${item.contribution >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                       {item.contribution >= 0 ? '+' : ''}{item.contribution.toFixed(2)}pp
                     </td>
                   </tr>
                 ))}
-                <tr style={{ background: 'var(--bg)' }}>
-                  <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>Total</td>
-                  <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>100.0%</td>
-                  <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>—</td>
-                  <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 700, color: totalReturnColor }}>
+                <tr className="bg-secondary/20">
+                  <td className="p-2 border-b border-border text-text font-bold">Total</td>
+                  <td className="text-right p-2 border-b border-border text-text">100.0%</td>
+                  <td className="text-right p-2 border-b border-border text-text">—</td>
+                  <td className="text-right p-2 border-b border-border font-bold" style={{ color: totalReturnColor }}>
                     {totalReturn >= 0 ? '+' : ''}{totalReturn.toFixed(2)}%
                   </td>
                 </tr>
@@ -217,7 +213,7 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
         )}
 
         {/* Footer note */}
-        <div style={{ padding: '8px 12px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div className="p-3 text-xs text-muted bg-secondary/20 rounded">
           <strong>Nota:</strong> Attribution mostra quanto cada posição contribuiu para o retorno total. Efeito diversificação é positivo quando correlação entre ativos reduz volatilidade sem sacrificar retorno.
         </div>
       </div>
