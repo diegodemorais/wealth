@@ -24,6 +24,7 @@ import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import TrackingFireChart from '@/components/dashboard/TrackingFireChart';
 import ScenarioCompare from '@/components/dashboard/ScenarioCompare';
 import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
+import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -425,6 +426,21 @@ export default function HomePage() {
             fiveYear={data.backtest.performance.fiveYear || { targetReturn: 10.4, swrdReturn: 9.2 }}
             tenYear={data.backtest.performance.tenYear || { targetReturn: 9.8, swrdReturn: 8.6 }}
             alphaLiquidoPctYear={data.backtest.alpha_liquido_pct_year || 0.0016}
+          />
+        )}
+
+        {/* 3.4: IPCA+ Taxa & Progress */}
+        {data && data.rf && (
+          <IpcaTaxaProgress
+            taxaAtual={data.rf.ipca_taxa_atual || 6.5}
+            ipca2040Valor={data.rf.ipca2040?.valor || 0}
+            ipca2040AlvoPercent={data.dca_status?.ipca2040?.alvo_pct || 25}
+            ipca2040AtualPercent={(data.rf.ipca2040?.valor || 0) / (derived?.totalBrl || 1) * 100}
+            ipca2050Valor={data.rf.ipca2050?.valor || 0}
+            ipca2050AlvoPercent={data.dca_status?.ipca2050?.alvo_pct || 25}
+            ipca2050AtualPercent={(data.rf.ipca2050?.valor || 0) / (derived?.totalBrl || 1) * 100}
+            ipcaTotalBrl={derived?.ipcaTotalBrl || 0}
+            totalPortfolio={derived?.totalBrl || 0}
           />
         )}
       </CollapsibleSection>
