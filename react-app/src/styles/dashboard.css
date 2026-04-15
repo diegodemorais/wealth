@@ -287,21 +287,21 @@ tr:last-child td {
 /* Chart containers */
 .chart-box {
   position: relative;
-  height: 240px;
+  height: 300px;
   min-width: 0;
   overflow: hidden;
 }
 
 .chart-box-sm {
   position: relative;
-  height: 180px;
+  height: 200px;
   min-width: 0;
   overflow: hidden;
 }
 
 .chart-box-lg {
   position: relative;
-  height: 320px;
+  height: 360px;
   min-width: 0;
   overflow: hidden;
 }
@@ -1038,18 +1038,18 @@ tr:last-child td {
 }
 
 .semaforo-critical {
-  background-color: #fee2e2;
-  color: #7f1d1d;
+  background-color: rgba(239, 68, 68, 0.15);
+  color: var(--red);
 }
 
 .semaforo-warning {
-  background-color: #fef3c7;
-  color: #78350f;
+  background-color: rgba(234, 179, 8, 0.15);
+  color: var(--yellow);
 }
 
 .semaforo-ok {
-  background-color: #dcfce7;
-  color: #14532d;
+  background-color: rgba(34, 197, 94, 0.15);
+  color: var(--green);
 }
 
 /* Bond Pool chart container */

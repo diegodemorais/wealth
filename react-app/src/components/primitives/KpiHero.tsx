@@ -56,7 +56,7 @@ export function KpiHero({
           key={idx}
           className={`rounded-lg p-4 text-center border transition-colors ${
             kpi.primary
-              ? 'bg-blue-950/20 border-blue-500/40 border-2'
+              ? 'bg-blue-950/25 border-blue-500 border-2'
               : 'bg-card border-border/50'
           }`}
         >
