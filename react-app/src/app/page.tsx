@@ -25,6 +25,7 @@ import TrackingFireChart from '@/components/dashboard/TrackingFireChart';
 import ScenarioCompare from '@/components/dashboard/ScenarioCompare';
 import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
+import GlidePath from '@/components/dashboard/GlidePath';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
@@ -441,6 +442,18 @@ export default function HomePage() {
             ipca2050AtualPercent={(data.rf.ipca2050?.valor || 0) / (derived?.totalBrl || 1) * 100}
             ipcaTotalBrl={derived?.ipcaTotalBrl || 0}
             totalPortfolio={derived?.totalBrl || 0}
+          />
+        )}
+
+        {/* 3.5: Glide Path */}
+        {derived && (
+          <GlidePath
+            currentAge={39}
+            retirementAge={50}
+            currentEquityPercent={(derived.equityPercentage || 0) * 100}
+            currentRfPercent={(derived.rfPercentage || 0) * 100}
+            retirementEquityPercent={40}
+            retirementRfPercent={60}
           />
         )}
       </CollapsibleSection>
