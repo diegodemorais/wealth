@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ScenarioData {
   patrimonio50anos: number;
@@ -85,302 +86,185 @@ const ScenarioCompare: React.FC<ScenarioCompareProps> = ({
     },
   ];
 
+  // Color helpers
+  const baseScenarioColor = '#8b5cf6';
+  const aspirationalColor = '#22c55e';
+  const timeDeltaColor = deltaMeses < 0 ? 'bg-green-500/10 border-green-500/25' : 'bg-red-500/10 border-red-500/25';
+  const timeDeltaTextColor = deltaMeses < 0 ? 'text-green-500' : 'text-red-500';
+
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Comparativo de Cenários — Base vs Aspiracional
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Comparativo de Cenários — Base vs Aspiracional
+        </CardTitle>
+      </CardHeader>
 
-      {/* Scenario cards */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '12px',
-          marginBottom: '16px',
-        }}
-      >
-        {scenarios.map(scenario => (
-          <div
-            key={scenario.name}
-            style={{
-              padding: '12px',
-              backgroundColor: `${scenario.color}10`,
-              border: `1px solid ${scenario.color}40`,
-              borderRadius: '6px',
-            }}
-          >
-            <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '8px', textTransform: 'uppercase' }}>
-              Cenário {scenario.name}
-            </div>
+      <CardContent className="space-y-4">
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {/* Patrimonio */}
-              <div>
-                <div style={{ fontSize: '0.65rem', color: '#64748b', marginBottom: '2px' }}>
-                  Pat. aos 50a
-                </div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: scenario.color }}>
-                  {privacyMode ? 'R$••••' : fmtBrl(scenario.data.patrimonio50anos)}
-                </div>
-              </div>
-
-              {/* P(FIRE) */}
-              <div>
-                <div style={{ fontSize: '0.65rem', color: '#64748b', marginBottom: '2px' }}>
-                  P(FIRE)
-                </div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: scenario.color }}>
-                  {scenario.data.pfirePercentual.toFixed(1)}%
-                </div>
-              </div>
-
-              {/* Meses até FIRE */}
-              <div>
-                <div style={{ fontSize: '0.65rem', color: '#64748b', marginBottom: '2px' }}>
-                  Tempo até FIRE
-                </div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: scenario.color }}>
-                  {(scenario.data.mesesParaFire / 12).toFixed(1)} anos
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Differences highlight */}
-      <div style={{ marginBottom: '16px' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#cbd5e1', marginBottom: '10px' }}>
-          Principais Diferenças
-        </div>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '10px',
-          }}
-        >
-          {/* Delta Patrimonio */}
-          <div
-            style={{
-              padding: '10px 12px',
-              backgroundColor: 'rgba(34, 197, 94, 0.1)',
-              border: '1px solid #22c55e40',
-              borderRadius: '6px',
-            }}
-          >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-              Δ Patrimônio (aspiracional)
-            </div>
-            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#22c55e', marginBottom: '2px' }}>
-              {privacyMode ? 'R$••••' : `+${fmtBrl(deltaPatrimonio)}`}
-            </div>
-            <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-              +{deltaPatrimonioPct.toFixed(1)}%
-            </div>
-          </div>
-
-          {/* Delta P(FIRE) */}
-          <div
-            style={{
-              padding: '10px 12px',
-              backgroundColor: 'rgba(34, 197, 94, 0.1)',
-              border: '1px solid #22c55e40',
-              borderRadius: '6px',
-            }}
-          >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-              Δ P(FIRE)
-            </div>
-            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#22c55e', marginBottom: '2px' }}>
-              +{deltaPfire.toFixed(1)}pp
-            </div>
-            <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-              {aspirationalScenario.pfirePercentual.toFixed(1)}% vs {baseScenario.pfirePercentual.toFixed(1)}%
-            </div>
-          </div>
-
-          {/* Delta Tempo */}
-          <div
-            style={{
-              padding: '10px 12px',
-              backgroundColor: deltaMeses < 0 ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-              border: deltaMeses < 0 ? '1px solid #22c55e40' : '1px solid #ef444440',
-              borderRadius: '6px',
-            }}
-          >
-            <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
-              Δ Tempo até FIRE
-            </div>
+        {/* Scenario cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {scenarios.map(scenario => (
             <div
-              style={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
-                color: deltaMeses < 0 ? '#22c55e' : '#ef4444',
-                marginBottom: '2px',
-              }}
+              key={scenario.name}
+              className="p-3 rounded border"
+              style={{ backgroundColor: `${scenario.color}15`, borderColor: `${scenario.color}40` }}
             >
-              {deltaMeses < 0 ? '−' : '+'}{Math.abs(deltaMeses / 12).toFixed(1)} anos
+              <div className="text-xs text-slate-400 mb-2 uppercase font-semibold">
+                Cenário {scenario.name}
+              </div>
+
+              <div className="flex flex-col gap-2">
+                {/* Patrimonio */}
+                <div>
+                  <div className="text-xs text-slate-500 mb-1">
+                    Pat. aos 50a
+                  </div>
+                  <div className="text-sm font-bold" style={{ color: scenario.color }}>
+                    {privacyMode ? 'R$••••' : fmtBrl(scenario.data.patrimonio50anos)}
+                  </div>
+                </div>
+
+                {/* P(FIRE) */}
+                <div>
+                  <div className="text-xs text-slate-500 mb-1">
+                    P(FIRE)
+                  </div>
+                  <div className="text-sm font-bold" style={{ color: scenario.color }}>
+                    {scenario.data.pfirePercentual.toFixed(1)}%
+                  </div>
+                </div>
+
+                {/* Meses até FIRE */}
+                <div>
+                  <div className="text-xs text-slate-500 mb-1">
+                    Tempo até FIRE
+                  </div>
+                  <div className="text-sm font-bold" style={{ color: scenario.color }}>
+                    {(scenario.data.mesesParaFire / 12).toFixed(1)} anos
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
-              {deltaMeses < 0 ? 'Antecipa FIRE' : 'Adia FIRE'}
+          ))}
+        </div>
+
+        {/* Differences highlight */}
+        <div>
+          <div className="text-sm font-semibold text-slate-200 mb-3">
+            Principais Diferenças
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Delta Patrimonio */}
+            <div className="p-3 bg-green-500/10 border border-green-500/25 rounded">
+              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+                Δ Patrimônio (aspiracional)
+              </div>
+              <div className="text-base font-bold text-green-500 mb-1">
+                {privacyMode ? 'R$••••' : `+${fmtBrl(deltaPatrimonio)}`}
+              </div>
+              <div className="text-xs text-slate-500">
+                +{deltaPatrimonioPct.toFixed(1)}%
+              </div>
+            </div>
+
+            {/* Delta P(FIRE) */}
+            <div className="p-3 bg-green-500/10 border border-green-500/25 rounded">
+              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+                Δ P(FIRE)
+              </div>
+              <div className="text-base font-bold text-green-500 mb-1">
+                +{deltaPfire.toFixed(1)}pp
+              </div>
+              <div className="text-xs text-slate-500">
+                {aspirationalScenario.pfirePercentual.toFixed(1)}% vs {baseScenario.pfirePercentual.toFixed(1)}%
+              </div>
+            </div>
+
+            {/* Delta Tempo */}
+            <div className={`p-3 rounded border ${timeDeltaColor}`}>
+              <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
+                Δ Tempo até FIRE
+              </div>
+              <div className={`text-base font-bold mb-1 ${timeDeltaTextColor}`}>
+                {deltaMeses < 0 ? '−' : '+'}{Math.abs(deltaMeses / 12).toFixed(1)} anos
+              </div>
+              <div className="text-xs text-slate-500">
+                {deltaMeses < 0 ? 'Antecipa FIRE' : 'Adia FIRE'}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Expandable details table */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          cursor: 'pointer',
-          paddingTop: '14px',
-          borderTop: '1px solid rgba(71, 85, 105, 0.15)',
-        }}
-        onClick={() => setExpandDetails(!expandDetails)}
-      >
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, margin: 0, color: '#cbd5e1' }}>
-          Detalhes Completos
-        </h3>
-        <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-          {expandDetails ? '▼' : '▶'}
-        </span>
-      </div>
-
-      {expandDetails && (
-        <div style={{ marginTop: '12px', overflowX: 'auto' }}>
-          <table
-            style={{
-              width: '100%',
-              borderCollapse: 'collapse',
-              fontSize: '0.8rem',
-            }}
-          >
-            <thead>
-              <tr>
-                <th
-                  style={{
-                    textAlign: 'left',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#94a3b8',
-                    fontWeight: 600,
-                  }}
-                >
-                  Métrica
-                </th>
-                <th
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#8b5cf6',
-                    fontWeight: 700,
-                  }}
-                >
-                  Base
-                </th>
-                <th
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#22c55e',
-                    fontWeight: 700,
-                  }}
-                >
-                  Aspiracional
-                </th>
-                <th
-                  style={{
-                    textAlign: 'right',
-                    padding: '8px',
-                    borderBottom: '1px solid rgba(71, 85, 105, 0.25)',
-                    color: '#cbd5e1',
-                    fontWeight: 600,
-                  }}
-                >
-                  Diferença
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {metrics.map((metric, idx) => (
-                <tr key={idx}>
-                  <td
-                    style={{
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: '#cbd5e1',
-                    }}
-                  >
-                    {metric.label}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: '#8b5cf6',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {metric.unit === 'BRL'
-                      ? privacyMode
-                        ? 'R$••••'
-                        : (metric.baseVal / 1000000).toFixed(2) + 'M'
-                      : metric.baseVal.toFixed(1) + metric.unit}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: '#22c55e',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {metric.unit === 'BRL'
-                      ? privacyMode
-                        ? 'R$••••'
-                        : (metric.aspVal / 1000000).toFixed(2) + 'M'
-                      : metric.aspVal.toFixed(1) + metric.unit}
-                  </td>
-                  <td
-                    style={{
-                      textAlign: 'right',
-                      padding: '8px',
-                      borderBottom: '1px solid rgba(71, 85, 105, 0.15)',
-                      color: metric.deltaVal >= 0 ? '#22c55e' : '#ef4444',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {metric.deltaVal >= 0 ? '+' : ''}
-                    {metric.unit === 'BRL'
-                      ? privacyMode
-                        ? 'R$••••'
-                        : (metric.deltaVal / 1000000).toFixed(2) + 'M'
-                      : metric.deltaVal.toFixed(1) + metric.unit}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Expandable details table */}
+        <div
+          className="flex justify-between items-center p-3 cursor-pointer border-t border-slate-700/15 mt-3"
+          onClick={() => setExpandDetails(!expandDetails)}
+        >
+          <h3 className="text-sm font-semibold m-0 text-slate-200">
+            Detalhes Completos
+          </h3>
+          <span className="text-xs text-slate-400">
+            {expandDetails ? '▼' : '▶'}
+          </span>
         </div>
-      )}
-    </div>
+
+        {expandDetails && (
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full border-collapse text-xs">
+              <thead>
+                <tr>
+                  <th className="text-left p-2 border-b border-slate-700/25 text-slate-400 font-semibold">
+                    Métrica
+                  </th>
+                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold" style={{ color: baseScenarioColor }}>
+                    Base
+                  </th>
+                  <th className="text-right p-2 border-b border-slate-700/25 font-semibold" style={{ color: aspirationalColor }}>
+                    Aspiracional
+                  </th>
+                  <th className="text-right p-2 border-b border-slate-700/25 text-slate-200 font-semibold">
+                    Diferença
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {metrics.map((metric, idx) => (
+                  <tr key={idx}>
+                    <td className="p-2 border-b border-slate-700/15 text-slate-200">
+                      {metric.label}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold" style={{ color: baseScenarioColor }}>
+                      {metric.unit === 'BRL'
+                        ? privacyMode
+                          ? 'R$••••'
+                          : (metric.baseVal / 1000000).toFixed(2) + 'M'
+                        : metric.baseVal.toFixed(1) + metric.unit}
+                    </td>
+                    <td className="text-right p-2 border-b border-slate-700/15 font-semibold" style={{ color: aspirationalColor }}>
+                      {metric.unit === 'BRL'
+                        ? privacyMode
+                          ? 'R$••••'
+                          : (metric.aspVal / 1000000).toFixed(2) + 'M'
+                        : metric.aspVal.toFixed(1) + metric.unit}
+                    </td>
+                    <td className={`text-right p-2 border-b border-slate-700/15 font-semibold ${metric.deltaVal >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {metric.deltaVal >= 0 ? '+' : ''}
+                      {metric.unit === 'BRL'
+                        ? privacyMode
+                          ? 'R$••••'
+                          : (metric.deltaVal / 1000000).toFixed(2) + 'M'
+                        : metric.deltaVal.toFixed(1) + metric.unit}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
