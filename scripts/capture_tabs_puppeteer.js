@@ -67,8 +67,8 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'react-app', 'audit-screenshots');
         // Aguarde extra para animações e renderização de charts (5 segundos para /simulators)
         await new Promise(resolve => setTimeout(resolve, 5000));
 
-        // Tire screenshot
-        await page.screenshot({ path: outputFile, fullPage: false });
+        // Tire screenshot (fullPage: true para capturar página inteira, especialmente /simulators)
+        await page.screenshot({ path: outputFile, fullPage: true });
 
         const stats = fs.statSync(outputFile);
         const sizeKb = (stats.size / 1024).toFixed(0);
