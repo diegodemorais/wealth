@@ -20,6 +20,7 @@ dashboard/tests/last_run.json
 .netlify/
 
 # Node
+node_modules/
 scripts/node_modules/
 scripts/package-lock.json
 scripts/package.json
