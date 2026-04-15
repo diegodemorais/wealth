@@ -10,7 +10,9 @@ export function SuccessRateCard() {
 
   const successRate = useMemo(() => {
     if (!mcResults) return null;
-    return mcResults.successRate || 0;
+    const rate = mcResults.successRate || 0;
+    // Ensure it's a valid number
+    return typeof rate === 'number' && !isNaN(rate) ? rate : 0;
   }, [mcResults]);
 
   const getStatusColor = (rate: number) => {

@@ -19,7 +19,9 @@ export function Slider({
   unit = '',
   onChange,
 }: SliderProps) {
-  const formattedValue = unit ? `${value.toFixed(1)}${unit}` : value.toFixed(0);
+  // Defensive check: ensure value is a number
+  const numValue = typeof value === 'number' && !isNaN(value) ? value : 0;
+  const formattedValue = unit ? `${numValue.toFixed(1)}${unit}` : numValue.toFixed(0);
 
   return (
     <div style={styles.container}>
@@ -32,7 +34,7 @@ export function Slider({
         min={min}
         max={max}
         step={step}
-        value={value}
+        value={numValue}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         style={styles.input}
       />

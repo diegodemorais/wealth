@@ -9,6 +9,11 @@ export function SimulatorParams() {
   const setMcParams = useDashboardStore(s => s.setMcParams);
   const runMC = useDashboardStore(s => s.runMC);
 
+  // Defensive: ensure mcParams is initialized
+  if (!mcParams || typeof mcParams !== 'object') {
+    return <div style={styles.container}>Loading simulator parameters...</div>;
+  }
+
   const handleParamChange = (param: keyof typeof mcParams, value: number) => {
     const newParams = { ...mcParams, [param]: value };
     setMcParams(newParams);
@@ -86,10 +91,10 @@ export function SimulatorParams() {
         <div style={styles.summaryItem}>
           <span style={styles.summaryLabel}>Scenario:</span>
           <span style={styles.summaryValue}>
-            {mcParams.stressLevel > 0
+            {mcParams?.stressLevel > 0
               ? `Stress: ${mcParams.stressLevel}% | `
               : ''}
-            R${mcParams.monthlyContribution.toLocaleString('pt-BR')}/mo | {mcParams.returnMean.toFixed(1)}% ± {mcParams.returnStd.toFixed(0)}%
+            R${(mcParams?.monthlyContribution ?? 0).toLocaleString('pt-BR')}/mo | {(mcParams?.returnMean ?? 0).toFixed(1)}% ± {(mcParams?.returnStd ?? 0).toFixed(0)}%
           </span>
         </div>
       </div>
