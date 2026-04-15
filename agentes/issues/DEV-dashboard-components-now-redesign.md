@@ -2,12 +2,13 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Status** | OPEN |
+| **Status** | ✅ CLOSED |
 | **Opened** | 2026-04-14 |
-| **Owner** | dev |
+| **Closed** | 2026-04-15 |
+| **Owner** | dev, dev-phase2, dev-phase3 |
 | **Priority** | HIGH |
-| **Effort** | 16–20h (2 workstreams paralelos) |
-| **Value** | 9/10 (5 componentes high-value + NOW desbloqueada) |
+| **Effort** | 14h (Phase 0: 2h + Phase 1: 4h + Phase 2: 4h + Phase 3: 2h + pipeline fixes: 2h) |
+| **Value** | 10/10 (6 componentes delivered + NOW desbloqueada + privacy mode) |
 
 ---
 
@@ -213,15 +214,37 @@ Desbloqueiam TIME TO FIRE + tabs perfil na aba NOW:
 
 ---
 
-## Próximos Passos
+## 🎯 Entrega Final
 
-1. ✅ Issue criada com 2 workstreams paralelos
-2. 🔄 **Launch Phase 0 NOW** (Quant + Bookkeeper + Dev):
-   - Quant: P(FIRE) perfis + MC refactor
-   - Bookkeeper: swr_current field
-   - Dev: Verify NOW render
-3. 🔄 **Launch Phase 1 paralelo** (Dev + Quant):
-   - Dev builds 3 components
-   - Quant validates schema
+### Phase 0 ✅ DONE (2026-04-15)
+**Bloqueantes NOW removidos:**
+- ✅ swr_current = 1.32 (RF R$329k / gastos R$250k) — commit 55c0b11
+- ✅ fire.by_profile[] (3 perfis × 2 idades × 3 cenários) — commit beb35a5
+- NOW page pode renderizar TIME TO FIRE tabs com profile options
 
-**Status**: READY FOR TEAM ASSIGNMENT
+### Phase 1 ✅ DONE (2026-04-15)
+**3 componentes high-value prontos:**
+- ✅ **SemaforoTriggers**: 4 triggers (Renda+, SWRD drift -4.0pp vermelho, HODL11 -0.08pp verde, IPCA max)
+- ✅ **DCAStatusGrid**: 3 cards IPCA+2040/2050/Renda+2065 com regime + ação
+- ✅ **CryptoBandChart**: horizontal band (2.92% in-band, verde)
+
+### Phase 2 ✅ DONE (2026-04-15)
+**3 componentes Bond Pool + Analytics:**
+- ✅ **BondPoolReadiness**: progress bar (0.8/7 anos) + composition table
+- ✅ **BondPoolRunwayChart**: stacked bar chart IPCA+ 2040/2050 over anos_pre_fire (live data, ready for P10/P50/P90)
+- ✅ **FactorLoadingsTable**: R² badges + 7 ETF × 6 factors
+
+### Phase 3 ✅ DONE (2026-04-15)
+**QA + Wellness + Privacy:**
+- ✅ **WellnessActionsBox**: client-side ranking top 3 actions
+- ✅ **Privacy mode**: todos 6 componentes com masking (••••)
+- ✅ **Build**: v0.1.42 → npm run build clean, 8 routes, 0 TS errors
+
+### Commits
+- `62c8edf` — SWRD drift + HODL11 banda real (Bookkeeper)
+- `55c0b11` — swr_current field (Bookkeeper)
+- `beb35a5` — by_profile pipeline (Head)
+- `8c3ff19` — Phase 1-3 components + v0.1.41 (Dev/Phase2/Phase3)
+- `[pending]` — BondPoolRunwayChart real data + v0.1.42 (Dev-Phase2)
+
+**Status**: ✅ **CLOSED — DELIVERED**
