@@ -319,6 +319,16 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const acumuladoMes = ultimoAporte * (ultimoAporteData.includes(today.toISOString().substring(0, 7)) ? 1 : 0) || aporteMensal;
   const acumuladoAno = data.aporte_mensal?.total_aporte_brl ?? aporteMensal * 12; // Approximate
 
+  // Compute top wellness actions from wellness_config
+  const topAcoes = (() => {
+    if (!data.wellness_config || !Array.isArray(data.wellness_config.acoes)) {
+      return [];
+    }
+    return data.wellness_config.acoes
+      .sort((a: any, b: any) => (a.rank || 999) - (b.rank || 999))
+      .slice(0, 5);
+  })();
+
   return {
     // Core values
     networth: totalBrl,
@@ -336,6 +346,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     wellnessScore: Math.min(1, progPct / 100 * 1.2),
     wellnessLabel,
     wellnessMetrics,
+    topAcoes,
     wellnessStatus: progPct >= 80 ? 'excellent' : progPct >= 60 ? 'ok' : progPct >= 40 ? 'warning' : 'critical',
 
     // FIRE patrimonio
