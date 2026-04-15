@@ -22,9 +22,8 @@ export default function HomePage() {
 
   useEffect(() => {
     // Load data dynamically from public path
-    // Use basePath + filename for GitHub Pages deployment
-    const basePath = '/wealth/dash';
-    const dataUrl = `${basePath}/data.json`;
+    // Next.js basePath is configured in next.config.ts
+    const dataUrl = '/data.json';
 
     console.log('NOW page: fetching from', dataUrl);
     fetch(dataUrl)

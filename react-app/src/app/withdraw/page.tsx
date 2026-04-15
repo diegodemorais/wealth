@@ -14,8 +14,7 @@ export default function WithdrawPage() {
 
   useEffect(() => {
     if (!data) {
-      const basePath = '/wealth/dash';
-      const dataUrl = `${basePath}/data.json`;
+      const dataUrl = '/data.json';
       fetch(dataUrl)
         .then(r => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
