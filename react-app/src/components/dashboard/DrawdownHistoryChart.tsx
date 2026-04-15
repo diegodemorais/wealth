@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { useUiStore } from '@/store/uiStore';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface DrawdownHistoryChartProps {
   dates: string[];
@@ -121,117 +122,82 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
   }, [dates, drawdownPct]);
 
   return (
-    <div
-      style={{
-        padding: '16px 18px',
-        border: '1px solid rgba(71, 85, 105, 0.25)',
-        borderRadius: '8px',
-        marginBottom: '14px',
-        backgroundColor: 'rgba(30, 41, 59, 0.4)',
-      }}
-    >
-      <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: '0 0 14px', padding: 0 }}>
-        Drawdown History — Perdas Históricas
-      </h2>
+    <Card className="bg-slate-900/40 border-slate-700/25 mb-4">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-semibold text-slate-200">
+          Drawdown History — Perdas Históricas
+        </CardTitle>
+      </CardHeader>
 
-      {/* Chart */}
-      <div style={{ marginBottom: '16px' }}>
-        <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
-      </div>
+      <CardContent className="space-y-4">
+        {/* Chart */}
+        <div className="mb-4">
+          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
+        </div>
 
       {/* Key metrics */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '12px',
-        }}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
         {/* Max Drawdown */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid #ef444440',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+        <div className="p-3 bg-red-500/10 border border-red-500/25 rounded">
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
             Max Drawdown
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ef4444' }}>
+          <div className="text-lg font-bold text-red-500">
             {privacyMode ? '••' : maxDrawdown.toFixed(2)}%
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
+          <div className="text-xs text-slate-500">
             Worst case (histórico)
           </div>
         </div>
 
         {/* Current Drawdown */}
         <div
+          className="p-3 border rounded"
           style={{
-            padding: '10px 12px',
             backgroundColor: drawdownPct[drawdownPct.length - 1] > -10
               ? 'rgba(34, 197, 94, 0.1)'
               : 'rgba(245, 158, 11, 0.1)',
-            border: drawdownPct[drawdownPct.length - 1] > -10
-              ? '1px solid #22c55e40'
-              : '1px solid #f59e0b40',
-            borderRadius: '6px',
+            borderColor: drawdownPct[drawdownPct.length - 1] > -10
+              ? 'rgba(34, 197, 94, 0.25)'
+              : 'rgba(245, 158, 11, 0.25)',
           }}
         >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
             Drawdown Atual
           </div>
           <div
+            className="text-lg font-bold mb-1"
             style={{
-              fontSize: '1.1rem',
-              fontWeight: 700,
               color: drawdownPct[drawdownPct.length - 1] > -10 ? '#22c55e' : '#f59e0b',
             }}
           >
             {privacyMode ? '••' : (drawdownPct[drawdownPct.length - 1] || 0).toFixed(2)}%
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
+          <div className="text-xs text-slate-500">
             Posição presente
           </div>
         </div>
 
         {/* Recovery Assessment */}
-        <div
-          style={{
-            padding: '10px 12px',
-            backgroundColor: 'rgba(139, 92, 246, 0.1)',
-            border: '1px solid #8b5cf640',
-            borderRadius: '6px',
-          }}
-        >
-          <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase' }}>
+        <div className="p-3 bg-violet-500/10 border border-violet-500/25 rounded">
+          <div className="text-xs text-slate-400 mb-1 uppercase font-semibold">
             Status de Recuperação
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#8b5cf6', marginBottom: '2px' }}>
+          <div className="text-lg font-bold text-violet-500 mb-1">
             {drawdownPct[drawdownPct.length - 1] > -5 ? '✅ ATH' : '⚠️ Recuperando'}
           </div>
-          <div style={{ fontSize: '0.65rem', color: '#64748b' }}>
+          <div className="text-xs text-slate-500">
             vs. máximo histórico
           </div>
         </div>
       </div>
 
       {/* Footer note */}
-      <div
-        style={{
-          marginTop: '12px',
-          fontSize: '0.7rem',
-          color: '#64748b',
-          padding: '8px',
-          backgroundColor: 'rgba(71, 85, 105, 0.08)',
-          borderRadius: '4px',
-        }}
-      >
+      <div className="text-xs text-slate-500 p-2 bg-slate-800/20 rounded">
         <strong>📌 Nota:</strong> Drawdown = queda máxima do pico anterior até o vale. Valores negativos indicam perda. Monitorar durante correções de mercado para manter disciplina.
       </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
