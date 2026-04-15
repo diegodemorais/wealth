@@ -16,10 +16,10 @@ export function SuccessRateCard() {
   }, [mcResults]);
 
   const getStatusColor = (rate: number) => {
-    if (rate >= 90) return '#10b981'; // Green - excellent
-    if (rate >= 75) return '#3b82f6'; // Blue - good
-    if (rate >= 60) return '#f59e0b'; // Orange - moderate
-    return '#ef4444'; // Red - poor
+    if (rate >= 90) return 'var(--green)'; // Green - excellent
+    if (rate >= 75) return 'var(--accent)'; // Blue - good
+    if (rate >= 60) return 'var(--orange)'; // Orange - moderate
+    return 'var(--red)'; // Red - poor
   };
 
   const getStatusLabel = (rate: number) => {
@@ -89,8 +89,8 @@ export function SuccessRateCard() {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--border)',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '20px',
@@ -117,13 +117,13 @@ const styles: Record<string, React.CSSProperties> = {
   },
   label: {
     fontSize: '16px',
-    color: '#d1d5db',
+    color: 'var(--text)',
     fontWeight: '600',
   },
   bar: {
     width: '100%',
     height: '24px',
-    backgroundColor: '#111827',
+    backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     overflow: 'hidden',
     marginBottom: '12px',
@@ -135,25 +135,25 @@ const styles: Record<string, React.CSSProperties> = {
   description: {
     margin: '0',
     fontSize: '13px',
-    color: '#9ca3af',
+    color: 'var(--muted)',
     lineHeight: '1.5',
   },
   masked: {
     minHeight: '200px',
-    backgroundColor: '#111827',
+    backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#9ca3af',
+    color: 'var(--muted)',
   },
   empty: {
     minHeight: '200px',
-    backgroundColor: '#111827',
+    backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#9ca3af',
+    color: 'var(--muted)',
   },
 };

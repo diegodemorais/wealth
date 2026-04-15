@@ -27,7 +27,7 @@ export function DrawdownDistribution() {
         {
           label: 'Frequency (simulations)',
           data,
-          backgroundColor: '#ef4444',
+          backgroundColor: 'var(--red)',
           borderColor: '#dc2626',
           borderWidth: 1,
         },
@@ -90,23 +90,23 @@ export function DrawdownDistribution() {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--border)',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '20px',
   },
   title: {
     margin: '0 0 16px 0',
-    color: '#fff',
+    color: 'var(--text)',
   },
   empty: {
     minHeight: '300px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#9ca3af',
-    backgroundColor: '#111827',
+    color: 'var(--muted)',
+    backgroundColor: 'var(--bg)',
     borderRadius: '4px',
   },
 };

@@ -52,7 +52,7 @@ export function Footer() {
             }}
             data-test="staleness-banner"
           >
-            <small style={{ color: '#fff', fontWeight: '600' }}>
+            <small style={{ color: 'var(--text)', fontWeight: '600' }}>
               ⚠️ Data is {daysOld} days old — consider updating
             </small>
           </div>
@@ -69,8 +69,8 @@ export function Footer() {
 
 const styles: Record<string, React.CSSProperties> = {
   footer: {
-    backgroundColor: '#111827',
-    borderTop: '1px solid #374151',
+    backgroundColor: 'var(--bg)',
+    borderTop: '1px solid var(--border)',
     padding: '12px 0',
     marginTop: '40px',
   },
@@ -90,23 +90,23 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '4px',
   },
   label: {
-    color: '#6b7280',
+    color: 'var(--muted)',
     fontSize: '11px',
     textTransform: 'uppercase',
     fontWeight: '600',
   },
   value: {
-    color: '#d1d5db',
+    color: 'var(--text)',
     fontSize: '13px',
     fontWeight: '500',
   },
   subtext: {
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontSize: '11px',
   },
   staleness: {
     padding: '8px 12px',
-    backgroundColor: '#b45309',
+    backgroundColor: 'var(--orange)',
     borderRadius: '4px',
     flex: 1,
   },

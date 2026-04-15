@@ -58,7 +58,7 @@ export function Header() {
             title={privacyMode ? 'Show values' : 'Hide values'}
             style={{
               ...styles.button,
-              backgroundColor: privacyMode ? '#ef4444' : '#10b981',
+              backgroundColor: privacyMode ? 'var(--red)' : 'var(--green)',
             }}
             data-test="privacy-toggle"
             aria-label="Privacy mode"
@@ -73,10 +73,10 @@ export function Header() {
 
 const styles: Record<string, React.CSSProperties> = {
   header: {
-    backgroundColor: '#1f2937',
+    backgroundColor: 'var(--card)',
     color: '#fff',
     padding: '12px 0',
-    borderBottom: '1px solid #374151',
+    borderBottom: '1px solid var(--border)',
     position: 'sticky',
     top: 0,
     zIndex: 100,
@@ -101,10 +101,10 @@ const styles: Record<string, React.CSSProperties> = {
   },
   version: {
     fontSize: '11px',
-    color: '#9ca3af',
+    color: 'var(--muted)',
     fontFamily: 'monospace',
     paddingLeft: '8px',
-    borderLeft: '1px solid #4b5563',
+    borderLeft: '1px solid var(--border)',
     lineHeight: '1',
   },
   controls: {
@@ -114,7 +114,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   button: {
     padding: '8px 12px',
-    backgroundColor: '#4b5563',
+    backgroundColor: 'var(--border)',
     color: '#fff',
     border: 'none',
     borderRadius: '6px',

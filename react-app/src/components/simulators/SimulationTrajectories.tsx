@@ -30,7 +30,7 @@ export function SimulationTrajectories() {
         {
           label: 'P10 (Conservative)',
           data: p10.slice(0, years),
-          borderColor: '#ef4444',
+          borderColor: 'var(--red)',
           borderWidth: 1,
           borderDash: [5, 5],
           fill: false,
@@ -40,7 +40,7 @@ export function SimulationTrajectories() {
         {
           label: 'P50 (Median)',
           data: p50.slice(0, years),
-          borderColor: '#3b82f6',
+          borderColor: 'var(--accent)',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           borderWidth: 3,
           fill: true,
@@ -50,7 +50,7 @@ export function SimulationTrajectories() {
         {
           label: 'P90 (Optimistic)',
           data: p90.slice(0, years),
-          borderColor: '#10b981',
+          borderColor: 'var(--green)',
           borderWidth: 1,
           borderDash: [5, 5],
           fill: false,
@@ -120,23 +120,23 @@ export function SimulationTrajectories() {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#1f2937',
-    border: '1px solid #374151',
+    backgroundColor: 'var(--card)',
+    border: '1px solid var(--border)',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '20px',
   },
   title: {
     margin: '0 0 16px 0',
-    color: '#fff',
+    color: 'var(--text)',
   },
   empty: {
     minHeight: '300px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#9ca3af',
-    backgroundColor: '#111827',
+    color: 'var(--muted)',
+    backgroundColor: 'var(--bg)',
     borderRadius: '4px',
   },
 };
