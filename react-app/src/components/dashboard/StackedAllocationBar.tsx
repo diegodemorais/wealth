@@ -59,7 +59,7 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
                   justifyContent: 'center',
                   fontSize: 'var(--text-sm)',
                   fontWeight: 600,
-                  color: 'white',
+                  color: 'var(--text)',
                   minWidth: asset.pct > 0.05 ? 'auto' : '0px',
                   transition: 'all 0.3s',
                 }}

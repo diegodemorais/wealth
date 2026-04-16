@@ -77,7 +77,7 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
               }}
             >
               {item.pct > 0.08 && (
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'white' }}>
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)' }}>
                   {(item.pct * 100).toFixed(0)}%
                 </span>
               )}

@@ -112,7 +112,7 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
                       backgroundColor: getPriorityColor(acao.priority),
                     }}
                   >
-                    <span style={{ fontSize: 'var(--text-sm)', fontWeight: 900, color: 'white' }}>
+                    <span style={{ fontSize: 'var(--text-sm)', fontWeight: 900, color: 'var(--text)' }}>
                       {acao.rank}
                     </span>
                   </div>

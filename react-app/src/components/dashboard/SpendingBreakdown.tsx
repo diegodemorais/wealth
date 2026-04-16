@@ -114,7 +114,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               title={`Essencial: ${mustavePercent.toFixed(1)}%`}
             >
               {mustavePercent > 12 && (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600 }}>{mustavePercent.toFixed(0)}%</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{mustavePercent.toFixed(0)}%</span>
               )}
             </div>
 
@@ -124,7 +124,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               title={`Conforto: ${likesPercent.toFixed(1)}%`}
             >
               {likesPercent > 12 && (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600 }}>{likesPercent.toFixed(0)}%</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{likesPercent.toFixed(0)}%</span>
               )}
             </div>
 
@@ -134,7 +134,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
             >
               {imprevistosPercent > 12 && (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600 }}>{imprevistosPercent.toFixed(0)}%</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{imprevistosPercent.toFixed(0)}%</span>
               )}
             </div>
           </div>

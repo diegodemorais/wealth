@@ -123,7 +123,7 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
                 title={`${bucket.label}: ${bucket.percentage.toFixed(1)}%`}
               >
                 {bucket.percentage > 8 && (
-                  <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'white' }}>
+                  <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)' }}>
                     {bucket.percentage.toFixed(0)}%
                   </span>
                 )}

@@ -118,7 +118,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
                       style={{
                         position: 'absolute', height: '100%',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 'var(--text-sm)', fontWeight: 600, color: 'white',
+                        fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)',
                         backgroundColor: item.color, opacity: 0.8,
                         left: item.driftPp >= 0 ? '50%' : `calc(50% - ${barWidth}%)`,
                         width: `${barWidth}%`,

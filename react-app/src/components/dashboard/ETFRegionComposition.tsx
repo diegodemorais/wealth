@@ -81,7 +81,7 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
                     <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>{region.label}</div>
                     <div style={{ height: '20px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
                       <div style={{ height: '100%', width: `${value}%`, backgroundColor: region.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {value > 5 && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'white' }}>{value}%</span>}
+                        {value > 5 && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)' }}>{value}%</span>}
                       </div>
                     </div>
                   </div>
