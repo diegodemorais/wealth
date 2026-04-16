@@ -337,8 +337,7 @@ export default function PerformancePage() {
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const fl = (data as any)?.factor_loadings ?? {};
-            // Only show ETFs that have regression data
-            const etfsWithData = ['AVDV', 'AVUV', 'DGS', 'EIMI', 'SWRD', 'USCC', 'IWVL'].filter(e => fl[e] != null);
+            const fKeys = ['mkt_rf', 'smb', 'hml', 'rmw', 'cma', 'mom'];
             const factors = [
               { label: 'Mkt-RF', key: 'mkt_rf' },
               { label: 'SMB', key: 'smb' },
@@ -347,11 +346,29 @@ export default function PerformancePage() {
               { label: 'CMA', key: 'cma' },
               { label: 'Mom', key: 'mom' },
             ];
-            if (!etfsWithData.length) return <div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>Sem dados de factor loadings</div>;
+
+            // AVGS proxy: blend AVUV (US portion) + AVDV (intl portion) weighted by AVGS regional composition
+            // Methodology: AVGS UCITS has no FF5 history → use geographic weights from etf_composition
+            const avgsRegioes = (data as any)?.etf_composition?.etfs?.AVGS?.regioes ?? {};
+            const wUS = avgsRegioes['EUA'] ?? 0.15;   // ~15% US → AVUV proxy
+            const wIntl = 1 - wUS;                     // ~85% Intl → AVDV proxy
+            const avgsProxy: Record<string, number> = {};
+            for (const fKey of fKeys) {
+              const u = fl['AVUV']?.[fKey];
+              const d = fl['AVDV']?.[fKey];
+              if (u != null && d != null) avgsProxy[fKey] = wUS * u + wIntl * d;
+            }
+            const hasProxy = Object.keys(avgsProxy).length > 0;
+
+            // ETFs with real regression data
+            const etfsReal = ['AVDV', 'AVUV', 'DGS', 'EIMI', 'SWRD', 'USCC', 'IWVL'].filter(e => fl[e] != null);
+            const allCols = hasProxy ? [...etfsReal, 'AVGS*'] : etfsReal;
+
+            if (!etfsReal.length) return <div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>Sem dados de factor loadings</div>;
             return (
               <>
-                <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                  {etfsWithData.map(etf => (
+                <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {etfsReal.map(etf => (
                     <span key={etf} style={{
                       background: 'var(--card2)',
                       borderRadius: 'var(--radius-xs)',
@@ -363,25 +380,43 @@ export default function PerformancePage() {
                       {etf}
                     </span>
                   ))}
+                  {hasProxy && (
+                    <span style={{
+                      background: 'rgba(88,166,255,.12)',
+                      border: '1px dashed var(--accent)',
+                      borderRadius: 'var(--radius-xs)',
+                      padding: '3px 8px',
+                      fontSize: '.65rem',
+                      fontWeight: 600,
+                      color: 'var(--accent)',
+                    }}>
+                      AVGS* proxy
+                    </span>
+                  )}
                 </div>
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.75rem' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--border)' }}>
                         <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Fator</th>
-                        {etfsWithData.map(etf => (
+                        {etfsReal.map(etf => (
                           <th key={etf} style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--accent)' }}>{etf}</th>
                         ))}
+                        {hasProxy && (
+                          <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--accent)', opacity: 0.7, fontStyle: 'italic' }}>
+                            AVGS*
+                          </th>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
                       {factors.map(({ label, key: fKey }) => (
                         <tr key={label} style={{ borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '6px 8px', fontWeight: 600 }}>{label}</td>
-                          {etfsWithData.map(etf => {
+                          {etfsReal.map(etf => {
                             const val = fl[etf]?.[fKey];
                             const tstat = fl[etf]?.t_stats?.[fKey];
-                            const sig = tstat != null && Math.abs(tstat) >= 1.65; // 90% confidence
+                            const sig = tstat != null && Math.abs(tstat) >= 1.65;
                             return (
                               <td key={etf} style={{
                                 textAlign: 'right',
@@ -394,6 +429,17 @@ export default function PerformancePage() {
                               </td>
                             );
                           })}
+                          {hasProxy && (
+                            <td style={{
+                              textAlign: 'right',
+                              padding: '6px 8px',
+                              fontStyle: 'italic',
+                              opacity: 0.75,
+                              color: avgsProxy[fKey] != null ? (avgsProxy[fKey] > 0.3 ? 'var(--green)' : avgsProxy[fKey] < -0.1 ? 'var(--red)' : 'var(--text)') : 'var(--muted)',
+                            }}>
+                              {avgsProxy[fKey] != null ? avgsProxy[fKey].toFixed(2) : '—'}
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -403,7 +449,12 @@ export default function PerformancePage() {
             );
           })()}
           <div className="src">
-            Regressão FF5+Mom · Negrito = significativo (t ≥ 1.65, 90%+) · Desbotado = não significativo · AVGS excluído (histórico insuficiente)
+            Regressão FF5+Mom · Negrito = significativo (t ≥ 1.65, 90%+) · Desbotado = não significativo<br />
+            *AVGS proxy = {(() => {
+              const r = (data as any)?.etf_composition?.etfs?.AVGS?.regioes ?? {};
+              const wUS = r['EUA'] ?? 0.15;
+              return `${Math.round(wUS * 100)}% AVUV + ${Math.round((1 - wUS) * 100)}% AVDV`;
+            })()} (pesos pela composição geográfica do AVGS · AVUV=EUA, AVDV=Intl)
           </div>
         </div>
       </CollapsibleSection>
