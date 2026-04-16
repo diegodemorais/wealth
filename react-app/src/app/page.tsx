@@ -84,7 +84,11 @@ export default function HomePage() {
         <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">P(Cenário Aspiracional)</div>
           <div className="text-2xl font-black text-accent">{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">cenário base</div>
+          <div className="text-xs text-muted mt-1">
+            {derived.pfireAspirFav != null && derived.pfireAspirStress != null
+              ? `fav ${derived.pfireAspirFav.toFixed(1)}% · stress ${derived.pfireAspirStress.toFixed(1)}%`
+              : 'cenário aspiracional (49a)'}
+          </div>
         </div>
         {/* Drift Máximo */}
         <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
@@ -111,17 +115,25 @@ export default function HomePage() {
         <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Dólar</div>
           <div className="text-xl font-black text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
-          <div className="text-xs text-muted mt-1">BRL/USD · PTAX BCB</div>
+          <div className="text-xs text-muted mt-1">
+            {data?.mercado?.cambio_mtd_pct != null
+              ? `${data.mercado.cambio_mtd_pct > 0 ? '+' : ''}${data.mercado.cambio_mtd_pct.toFixed(1)}% MtD · PTAX BCB`
+              : 'BRL/USD · PTAX BCB'}
+          </div>
         </div>
         {/* Bitcoin */}
         <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Bitcoin</div>
           <div className="text-xl font-black text-text">
-            {data?.hodl11?.btc_usd
-              ? `$${Number(data.hodl11.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+            {data?.mercado?.btc_usd
+              ? `$${Number(data.mercado.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
               : '—'}
           </div>
-          <div className="text-xs text-muted mt-1">BTC/USD</div>
+          <div className="text-xs text-muted mt-1">
+            {data?.mercado?.btc_mtd_pct != null
+              ? `${data.mercado.btc_mtd_pct > 0 ? '+' : ''}${data.mercado.btc_mtd_pct.toFixed(1)}% MtD`
+              : 'BTC/USD'}
+          </div>
         </div>
         {/* IPCA+ 2040 */}
         <div className="bg-card border border-border/50 rounded p-3 text-center">
@@ -161,26 +173,27 @@ export default function HomePage() {
       <TimeToFireProgressBar
         fireProgress={derived.firePercentage}
         yearsToFire={derived.fireMonthsAway / 12}
+        patrimonioAtual={derived.firePatrimonioAtual}
+        patrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
       {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
       {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
         <div className="grid grid-cols-3 gap-2 mb-3.5">
           {data.fire_matrix.by_profile.map((profile: any, i: number) => {
-            const labels = ['👤 Solteiro', '💍 Casado', '👶 C+Filho'];
-            // Use fire_age_53 if available (actual scenario), else compute from fireMonthsAway
-            const idadeAtual = data?.premissas?.idade_atual ?? 39;
-            const idadeCenarioBase = data?.premissas?.idade_cenario_base;
-            const fireAge = idadeCenarioBase ?? (idadeAtual + Math.ceil(derived.fireMonthsAway / 12));
+            // Use profile.label from JSON if available, else fall back to hardcoded
+            const fallbackLabels = ['Solteiro', 'Casado', 'C+Filho'];
+            const displayLabel = profile.label ?? fallbackLabels[i] ?? `Perfil ${i + 1}`;
             // Show the base scenario (53) probability, fall back to fire_age_50
             const pfireBase53 = profile.p_fire_53 ?? null;
             const pfireBase50 = profile.p_fire_50 ?? null;
             const pfire = pfireBase53 ?? pfireBase50;
             const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
+            const fireAge = profile.profile === 'atual' ? 53 : 53;
             return (
               <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded p-2.5 text-center">
                 <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
-                  {labels[i]}
+                  {displayLabel}
                 </div>
                 <div className="text-sm font-bold text-accent">FIRE {fireAge}</div>
                 <div className="text-sm font-bold text-green mt-0.5">

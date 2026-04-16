@@ -6,11 +6,15 @@ import { fmtPct } from '@/utils/formatters';
 export interface TimeToFireProgressBarProps {
   fireProgress: number; // 0-1 (e.g., 0.2477 for 24.77%)
   yearsToFire: number; // decimal years (e.g., 14.0)
+  patrimonioAtual?: number;
+  patrimonioGatilho?: number;
 }
 
 export function TimeToFireProgressBar({
   fireProgress,
   yearsToFire,
+  patrimonioAtual,
+  patrimonioGatilho,
 }: TimeToFireProgressBarProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
@@ -68,6 +72,34 @@ export function TimeToFireProgressBar({
           {privacyMode ? '••••' : fmtPct(fireProgress, 2)}
         </div>
       </div>
+
+      {/* Patrimônio labels */}
+      {!privacyMode && patrimonioAtual != null && patrimonioGatilho != null && (
+        <div className="relative mt-1" style={{ height: '16px' }}>
+          {/* Label INÍCIO — fixo à esquerda */}
+          <span className="absolute left-0 text-xs text-slate-500">Início</span>
+
+          {/* Label ATUAL — posicionado no ponto de progresso */}
+          <span
+            className="absolute text-xs text-accent font-semibold whitespace-nowrap"
+            style={{
+              left: `${Math.min(progressPct, 90)}%`,
+              transform: 'translateX(-50%)',
+            }}
+          >
+            Atual {patrimonioAtual >= 1e6
+              ? `R$${(patrimonioAtual / 1e6).toFixed(2)}M`
+              : `R$${Math.round(patrimonioAtual / 1000)}k`}
+          </span>
+
+          {/* Label META — fixo à direita */}
+          <span className="absolute right-0 text-xs text-slate-500 whitespace-nowrap">
+            Meta {patrimonioGatilho >= 1e6
+              ? `R$${(patrimonioGatilho / 1e6).toFixed(1)}M`
+              : `R$${Math.round(patrimonioGatilho / 1000)}k`}
+          </span>
+        </div>
+      )}
     </section>
   );
 }
