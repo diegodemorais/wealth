@@ -10,6 +10,8 @@ import { CustoBaseTable } from '@/components/portfolio/CustoBaseTable';
 import { TaxAnalysisGrid } from '@/components/portfolio/TaxAnalysisGrid';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
+import { HeatmapChart } from '@/components/charts/HeatmapChart';
+import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 
 export default function PortfolioPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -216,6 +218,12 @@ export default function PortfolioPage() {
 
       {/* 8. Renda Fixa + Cripto */}
       <RFCryptoComposition />
+
+      {/* 9. Factor Loadings + Concentração */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+        {data && <HeatmapChart data={data} />}
+        {data && <ConcentrationChart data={data} />}
+      </div>
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
