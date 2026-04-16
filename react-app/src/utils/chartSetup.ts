@@ -615,56 +615,92 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
 }
 
 /**
- * Sankey Chart (Capital Flow)
+ * Sankey Chart — Fluxo de Caixa Anual (Estimado)
+ * Nós: Renda → Investimentos + Gastos → sub-categorias de gastos
+ * Dados: spending_summary + premissas.aporte_mensal
  */
 export function createSankeyChartOption(options: BaseChartOptions) {
-  const { data } = options;
+  const { data, privacyMode, theme } = options;
 
-  const timeline_attr = data.timeline_attribution || {};
-  const initialCapital = timeline_attr.patrimonio_inicial || 3000000;
-  const contributions = timeline_attr.aportes || 0;
-  const equityGains = timeline_attr.retorno_equity_usd || 0;
-  const fxGains = timeline_attr.retorno_cambio || 0;
-  const rfGains = timeline_attr.retorno_rf || 0;
+  // Spending data from spending_breakdown (public data.json field name)
+  const ss = (data as any)?.spending_breakdown ?? (data as any)?.spending_summary ?? {};
+  const gastoEssencial = ss.must_spend_anual ?? 180887;
+  const gastoDisc = ss.like_spend_anual ?? 51403;
+  const gastoImprevistos = ss.imprevistos_anual ?? 4357;
+  const gastoTotal = gastoEssencial + gastoDisc + gastoImprevistos;
+
+  // Income: renda_mensal_liquida × 12 (from premissas) as gross income estimate
+  const rendaMensal = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 45000;
+  const aporteMensal = (data as any)?.premissas?.aporte_mensal ?? 25000;
+  const investimentos = aporteMensal * 12;
+  const rendaAnual = rendaMensal * 12;
+  // Use rendaAnual as total income; investimentos is the saving portion
+  // The remaining goes to gastos (which include essenciais + disc + imprevistos + impostos + fees)
+  const renda = Math.max(rendaAnual, gastoTotal + investimentos);
+
+  // From gastos total, decompose into subcategories
+  // Impostos estimados dentro do custo de vida (já capturado em must_spend via Taxes & Fees da análise)
+  const impostos = Math.round(gastoTotal * 0.1); // ~10% impostos
+  const taxasFees = Math.round(gastoTotal * 0.02); // ~2% taxas
+  const gastoEssencialNet = Math.max(0, gastoEssencial - impostos - taxasFees);
+  const dependentes = 0; // sem dependentes atualmente
+
+  const fmtK = (v: number) => {
+    if (privacyMode) return '••••';
+    return `R$ ${(v / 1000).toFixed(0)}k`;
+  };
 
   return {
-    title: { text: 'Patrimônio: Origem dos Ganhos (60 meses)', left: 'center' },
     tooltip: {
+      trigger: 'item' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
       formatter: (params: any) => {
-        if (params.componentSubType === 'sankey') {
-          return `${params.source} → ${params.target}: <strong>R$ ${(params.value / 1e6).toFixed(1)}M</strong>`;
+        if (params.dataType === 'edge') {
+          return `${params.data.source} → ${params.data.target}<br/><strong>${fmtK(params.data.value)}/ano</strong>`;
         }
-        return '';
+        return `<strong>${params.name}</strong>`;
       },
     },
     series: [
       {
         type: 'sankey' as const,
+        layout: 'none' as const,
+        orient: 'horizontal' as const,
+        emphasis: { focus: 'adjacency' as const },
+        nodeWidth: 20,
+        nodePadding: 12,
+        label: {
+          color: CHART_COLORS.text,
+          fontSize: 12,
+        },
+        lineStyle: {
+          color: 'gradient' as const,
+          opacity: 0.4,
+          curveness: 0.5,
+        },
         data: [
-          { name: 'Capital Inicial', itemStyle: { color: CHART_COLORS.accent } },
-          { name: 'Aportes', itemStyle: { color: CHART_COLORS.cyan } },
-          { name: 'Ganho Equity USD', itemStyle: { color: CHART_COLORS.green } },
-          { name: 'Ganho FX', itemStyle: { color: CHART_COLORS.orange } },
-          { name: 'Ganho RF', itemStyle: { color: CHART_COLORS.purple } },
-          { name: 'Capital Final', itemStyle: { color: CHART_COLORS.pink } },
+          { name: 'Renda',         itemStyle: { color: CHART_COLORS.cyan } },
+          { name: 'Investimentos', itemStyle: { color: CHART_COLORS.green } },
+          { name: 'Gastos',        itemStyle: { color: CHART_COLORS.orange } },
+          { name: 'Essenciais',    itemStyle: { color: CHART_COLORS.accent } },
+          { name: 'Discricionários', itemStyle: { color: CHART_COLORS.purple } },
+          { name: 'Impostos',      itemStyle: { color: CHART_COLORS.red } },
+          { name: 'Taxas & Fees',  itemStyle: { color: CHART_COLORS.pink } },
+          ...(dependentes > 0 ? [{ name: 'Dependentes', itemStyle: { color: CHART_COLORS.yellow } }] : []),
         ],
         links: [
-          { source: 0, target: 5, value: initialCapital },
-          { source: 1, target: 5, value: contributions },
-          { source: 2, target: 5, value: equityGains },
-          { source: 3, target: 5, value: fxGains },
-          { source: 4, target: 5, value: rfGains },
+          { source: 'Renda', target: 'Investimentos', value: investimentos },
+          { source: 'Renda', target: 'Gastos', value: gastoTotal },
+          { source: 'Gastos', target: 'Essenciais', value: gastoEssencialNet },
+          { source: 'Gastos', target: 'Discricionários', value: gastoDisc },
+          { source: 'Gastos', target: 'Impostos', value: impostos },
+          { source: 'Gastos', target: 'Taxas & Fees', value: taxasFees },
+          ...(dependentes > 0 ? [{ source: 'Gastos', target: 'Dependentes', value: dependentes }] : []),
         ],
-        emphasis: { focus: 'adjacency' as const },
-        levels: [
-          { depth: 0, itemStyle: { color: CHART_COLORS.accent } },
-          { depth: 1, itemStyle: { color: CHART_COLORS.pink } },
-        ],
-        nodeWidth: 20,
-        nodePadding: 120,
       },
     ],
-    grid: { left: 0, right: 0, top: 60, bottom: 0 },
   };
 }
 

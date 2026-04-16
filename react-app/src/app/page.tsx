@@ -562,19 +562,11 @@ export default function HomePage() {
       </CollapsibleSection>
 
       {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
-      {derived && (
-        <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
-          <div style={{ padding: '0 16px 16px' }}>
-            <CashFlowSankey
-              aporteMensal={derived.aporteMensal}
-              ipcaFlow={derived.ipcaFlowMonthly}
-              equityFlow={derived.equityFlowMonthly}
-              rendaPlusFlow={derived.rendaPlusFlowMonthly}
-              cryptoFlow={derived.cryptoFlowMonthly}
-            />
-          </div>
-        </CollapsibleSection>
-      )}
+      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
+        <div style={{ padding: '0 16px 16px' }}>
+          <CashFlowSankey />
+        </div>
+      </CollapsibleSection>
     </div>
   );
 }

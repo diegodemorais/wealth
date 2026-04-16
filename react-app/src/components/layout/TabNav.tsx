@@ -11,7 +11,6 @@ const TABS = [
   { href: '/withdraw', label: '💸 Retirada', id: 'tab-withdraw' },
   { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
   { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
-  { href: '/avaliar', label: '🔍 AVALIAR', id: 'tab-avaliar' },
 ];
 
 export function TabNav() {

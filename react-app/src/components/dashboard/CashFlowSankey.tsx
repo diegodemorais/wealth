@@ -1,139 +1,49 @@
-import React, { useState } from 'react';
+'use client';
+
+import React from 'react';
+import { SankeyChart } from '@/components/charts/SankeyChart';
 import { useUiStore } from '@/store/uiStore';
+import { useDashboardStore } from '@/store/dashboardStore';
 
-interface CashFlowSankeyProps {
-  aporteMensal: number;
-  ipcaFlow: number;
-  equityFlow: number;
-  rendaPlusFlow: number;
-  cryptoFlow: number;
-}
-
-const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
-  aporteMensal,
-  ipcaFlow,
-  equityFlow,
-  rendaPlusFlow,
-  cryptoFlow,
-}) => {
+const CashFlowSankey: React.FC = () => {
   const { privacyMode } = useUiStore();
-  const [expandBreakdown, setExpandBreakdown] = useState(false);
+  const data = useDashboardStore(s => s.data);
 
-  const fmtBrl = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(val);
-  };
+  if (!data) return null;
 
-  const totalFlow = ipcaFlow + equityFlow + rendaPlusFlow + cryptoFlow;
-  const ipcaPct = totalFlow > 0 ? ipcaFlow / totalFlow : 0;
-  const equityPct = totalFlow > 0 ? equityFlow / totalFlow : 0;
-  const rendaPlusPct = totalFlow > 0 ? rendaPlusFlow / totalFlow : 0;
-  const cryptoPct = totalFlow > 0 ? cryptoFlow / totalFlow : 0;
+  // Derive display values for footer note
+  const ss = (data as any)?.spending_breakdown ?? (data as any)?.spending_summary ?? {};
+  const rendaMensal = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 45000;
+  const aporteMensal = (data as any)?.premissas?.aporte_mensal ?? 25000;
+  const gastoTotal = ss.total_anual ?? 236647;
+  const investimentos = aporteMensal * 12;
+  const renda = Math.max(rendaMensal * 12, gastoTotal + investimentos);
+  const savingsRate = renda > 0 ? Math.round((investimentos / renda) * 100) : 0;
 
-  const colors = {
-    ipca: 'var(--cyan)',
-    equity: 'var(--primary)',
-    rendaPlus: 'var(--warning)',
-    crypto: 'var(--purple)',
+  const fmtK = (v: number) => {
+    if (privacyMode) return 'R$••••';
+    return `R$ ${new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(v)}`;
   };
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
-        Fluxo de Caixa Anual — Aporte Distribuição
-      </h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* Input card (Aporte) */}
-        <div style={{ padding: 'var(--space-3)', background: 'rgba(34,197,94,0.1)', border: '2px solid var(--success)', borderRadius: '4px', textAlign: 'center' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
-            Aporte Mensal
-          </div>
-          <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--success)' }}>
-            {privacyMode ? 'R$••••' : fmtBrl(aporteMensal)}
-          </div>
-        </div>
-
-        {/* Flow visualization */}
-        <div style={{ display: 'flex', gap: '2px', height: '32px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden' }}>
-          {[
-            { pct: ipcaPct, color: colors.ipca },
-            { pct: equityPct, color: colors.equity },
-            { pct: rendaPlusPct, color: colors.rendaPlus },
-            { pct: cryptoPct, color: colors.crypto },
-          ].map((item, i) => (
-            <div
-              key={i}
-              style={{
-                flex: item.pct,
-                backgroundColor: item.color,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: item.pct > 0.08 ? 'auto' : '0px',
-              }}
-            >
-              {item.pct > 0.08 && (
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)' }}>
-                  {(item.pct * 100).toFixed(0)}%
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Expandable breakdown */}
-        <div
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', paddingTop: '16px', borderTop: '1px solid var(--border)' }}
-          onClick={() => setExpandBreakdown(!expandBreakdown)}
-        >
-          <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
-            Destinos
-          </h3>
-          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-            {expandBreakdown ? '▼' : '▶'}
-          </span>
-        </div>
-
-        {expandBreakdown && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-            {[
-              { label: 'IPCA+ Ladder', sub: 'Renda fixa de longo prazo', value: ipcaFlow, pct: ipcaPct, color: colors.ipca },
-              { label: 'Equity International', sub: 'SWRD / AVGS / AVEM', value: equityFlow, pct: equityPct, color: colors.equity },
-              { label: 'Renda+ 2065', sub: 'Título prefixado tático', value: rendaPlusFlow, pct: rendaPlusPct, color: colors.rendaPlus },
-              { label: 'Criptoativos', sub: 'Bitcoin via HODL11', value: cryptoFlow, pct: cryptoPct, color: colors.crypto },
-            ].map(item => (
-              <div
-                key={item.label}
-                style={{
-                  padding: 'var(--space-3)',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: `${item.color}14`,
-                  borderLeft: `4px solid ${item.color}`,
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>{item.label}</div>
-                  <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>{item.sub}</div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: item.color }}>
-                    {privacyMode ? 'R$••••' : fmtBrl(item.value)}
-                  </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
-                    {(item.pct * 100).toFixed(1)}%
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+    <div>
+      <SankeyChart data={data} />
+      <div style={{
+        marginTop: '8px',
+        padding: '8px 12px',
+        background: 'rgba(245, 158, 11, 0.08)',
+        border: '1px solid rgba(245, 158, 11, 0.2)',
+        borderRadius: '4px',
+        fontSize: '0.72rem',
+        color: 'var(--muted)',
+        lineHeight: 1.5,
+      }}>
+        ⚠ Valores estimados: renda = aporte mensal × 12 + gastos anuais auditados.
+        Impostos = ~18% estimado (IR + INSS). Taxas &amp; Fees = ~2% estimado.
+        {' '}Note: Savings Rate ≈ {savingsRate}%
+        {' | '}Renda: {fmtK(renda)}/ano
+        {' | '}Gastos: {fmtK(gastoTotal)}
+        {' | '}Investimentos: {fmtK(investimentos)}
       </div>
     </div>
   );
