@@ -14,6 +14,8 @@ interface PFireMonteCarloTornadoProps {
   pfireFav: number;
   pfireStress: number;
   tornadoData: TornadoData[];
+  firePatrimonioAtual?: number;
+  firePatrimonioGatilho?: number;
 }
 
 const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
@@ -21,8 +23,10 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   pfireFav,
   pfireStress,
   tornadoData = [],
+  firePatrimonioAtual,
+  firePatrimonioGatilho,
 }) => {
-  const [expandTornado, setExpandTornado] = useState(false);
+  const [expandTornado, setExpandTornado] = useState(true);
   const { privacyMode } = useUiStore();
 
   const getBadgeColor = (value: number) => {
@@ -83,15 +87,24 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
       <div className="mt-3.5">
         <div className="flex justify-between text-xs text-muted mb-1">
           <span>Progresso Patrimonial</span>
-          <span style={{ color: getBadgeColor(pfireBase), fontWeight: 700 }}>
-            {privacyMode ? '••' : pfireBase.toFixed(1)}%
-          </span>
+          <div className="flex items-center gap-2">
+            {firePatrimonioAtual != null && firePatrimonioGatilho != null && !privacyMode && (
+              <span className="text-muted">
+                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0, notation: 'compact' }).format(firePatrimonioAtual)}
+                {' / '}
+                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0, notation: 'compact' }).format(firePatrimonioGatilho)}
+              </span>
+            )}
+            <span style={{ color: getBadgeColor(pfireBase), fontWeight: 700 }}>
+              {privacyMode ? '••' : `${((firePatrimonioAtual != null && firePatrimonioGatilho != null) ? (firePatrimonioAtual / firePatrimonioGatilho * 100) : pfireBase).toFixed(1)}%`}
+            </span>
+          </div>
         </div>
         <div className="h-1.5 bg-slate-700/40 rounded-sm overflow-hidden">
           <div
             className="h-full rounded-sm transition-all duration-500"
             style={{
-              width: `${Math.min(100, pfireBase)}%`,
+              width: `${Math.min(100, firePatrimonioAtual != null && firePatrimonioGatilho != null ? (firePatrimonioAtual / firePatrimonioGatilho * 100) : pfireBase)}%`,
               background: getBadgeColor(pfireBase),
             }}
           />

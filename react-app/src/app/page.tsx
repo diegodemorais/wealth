@@ -168,18 +168,25 @@ export default function HomePage() {
         <div className="grid grid-cols-3 gap-2 mb-3.5">
           {data.fire_matrix.by_profile.map((profile: any, i: number) => {
             const labels = ['👤 Solteiro', '💍 Casado', '👶 C+Filho'];
-            const pfire50 = profile.p_fire_50 ?? null;
-            const year50 = profile.fire_age_50 ?? '2037';
+            // Use fire_age_53 if available (actual scenario), else compute from fireMonthsAway
+            const idadeAtual = data?.premissas?.idade_atual ?? 39;
+            const idadeCenarioBase = data?.premissas?.idade_cenario_base;
+            const fireAge = idadeCenarioBase ?? (idadeAtual + Math.ceil(derived.fireMonthsAway / 12));
+            // Show the base scenario (53) probability, fall back to fire_age_50
+            const pfireBase53 = profile.p_fire_53 ?? null;
+            const pfireBase50 = profile.p_fire_50 ?? null;
+            const pfire = pfireBase53 ?? pfireBase50;
+            const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
             return (
               <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded p-2.5 text-center">
                 <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
                   {labels[i]}
                 </div>
-                <div className="text-sm font-bold text-accent">FIRE 50</div>
+                <div className="text-sm font-bold text-accent">FIRE {fireAge}</div>
                 <div className="text-sm font-bold text-green mt-0.5">
-                  P = {pfire50 != null ? `${pfire50.toFixed(1)}%` : '—'}
+                  P = {pfire != null ? `${pfire.toFixed(1)}%` : '—'}
                 </div>
-                <div className="text-xs text-muted mt-1">{year50}</div>
+                <div className="text-xs text-muted mt-1">{fireYear}</div>
               </div>
             );
           })}
@@ -218,77 +225,200 @@ export default function HomePage() {
       </div>
 
       {/* 6a. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
-      {derived?.wellnessScore != null && derived?.wellnessMetrics && (
-        <CollapsibleSection id="section-wellness" title="Financial Wellness Score" defaultOpen={true} icon="🏆">
-          <div className="px-4 pb-4">
-            <div className="flex gap-5 items-start">
-              {/* Score grande */}
-              <div className="min-w-32 text-center">
-                <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
-                  Score <span className="italic text-xs">(indicador secundário)</span>
-                </div>
-                <div className="text-5xl font-black text-green leading-none">
-                  {Math.round(derived.wellnessScore * 100)}
-                </div>
-                <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
-              </div>
-              {/* Barras de métricas */}
-              <div className="flex-1">
-                {derived.wellnessMetrics.slice(0, 8).map((m: any, i: number) => (
-                  <div key={i} className="mb-1.5 flex items-center gap-2">
-                    <div className="text-xs text-muted w-40 flex-shrink-0">{m.label}</div>
-                    <div className="flex-1 bg-slate-700/40 rounded-sm h-1.5 relative overflow-hidden">
-                      <div
-                        className="h-full rounded-sm"
-                        style={{
-                          width: `${Math.min(100, Math.max(0, (m.value / m.max) * 100))}%`,
-                          background: (m.value / m.max) > 0.8 ? 'var(--green)' : (m.value / m.max) > 0.5 ? 'var(--yellow)' : 'var(--red)',
-                        }}
-                      />
-                    </div>
-                    <div className="text-xs text-muted w-12 text-right flex-shrink-0">
-                      {m.value != null ? `${m.value}%` : '—'}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+      {data?.wellness_config?.metrics && (
+        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={true} icon="🏆">
+          {(() => {
+            // Compute each metric's points using wellness_config thresholds
+            const wc = data.wellness_config;
+            const pfireBaseVal = derived.pfireBase; // 0-100
+            const aporteMensalVal = data.premissas?.aporte_mensal ?? 0;
+            const custoVidaBase = data.premissas?.custo_vida_base ?? 0;
+            const custoMensal = custoVidaBase / 12;
+            const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
+            const maxDriftVal = data?.drift
+              ? Math.max(0, ...Object.entries(data.drift as Record<string, any>)
+                  .filter(([k]) => k !== 'Custo')
+                  .map(([, d]) => Math.abs((d?.atual || 0) - (d?.alvo || 0))))
+              : 0;
+            const ipcaGapPp = data.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
+            const dcaAtivo = data.dca_status?.ipca_longo?.ativo ?? false;
+            const terAtual = data.drift?.['Custo']?.atual ?? (data.wellness_config?.metrics?.find((m: any) => m.id === 'ter')?.current_ter ?? 0.247);
+            const humanCapitalStatus = data.wellness_config?.metrics?.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
 
-            {/* Top Ações — 3 métricas com maior gap vs máximo */}
-            {(() => {
-              const metrics: any[] = derived.wellnessMetrics ?? [];
-              const actionItems = [...metrics]
-                .filter(m => m.max > 0)
-                .map(m => ({ ...m, gap: m.max - m.value, ratio: m.value / m.max }))
-                .sort((a, b) => b.gap - a.gap)
-                .slice(0, 3);
-              if (!actionItems.length) return null;
+            // Compute pfire pts
+            const pfirePts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (pfireBaseVal >= t.min) return t.pts;
+              }
+              return 0;
+            })();
+
+            // Compute savings_rate pts
+            const savingsRatePts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (savingsRate >= t.min_pct) return t.pts;
+              }
+              return 0;
+            })();
+
+            // Compute drift pts
+            const driftPts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (maxDriftVal <= t.max_pp) return t.pts;
+              }
+              return 0;
+            })();
+
+            // Compute ipca_gap pts
+            const ipcaGapPts = (() => {
+              if (ipcaGapPp == null) return 5; // neutral fallback
+              const thresholds = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (ipcaGapPp <= t.max_pp) {
+                  return t.pts ?? (dcaAtivo ? (t.pts_if_dca ?? t.pts ?? 5) : (t.pts ?? 3));
+                }
+              }
+              return dcaAtivo ? 5 : 3;
+            })();
+
+            // execution_fidelity — use 7pts (neutral) if data insufficient
+            const execPts = 7;
+
+            // emergency_fund — IPCA+ 2029 as liquid reserve
+            const emergencyPts = (() => {
+              const reservaBrl = data.rf?.ipca2029?.valor ?? 0;
+              const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
+              const thresholds = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (months >= t.min_months) return t.pts;
+              }
+              return 0;
+            })();
+
+            // ter pts — compare current_ter to benchmark_ter
+            const terPts = (() => {
+              const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
+              const benchmarkTer = terCfg?.benchmark_ter ?? 0.22;
+              const currentTer = terCfg?.current_ter ?? terAtual;
+              const delta = currentTer - benchmarkTer;
+              const thresholds = terCfg?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (delta <= t.max_delta_pp) return t.pts;
+              }
+              return 0;
+            })();
+
+            // human_capital pts
+            const humanPts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? [];
+              const match = thresholds.find((t: any) => t.status === humanCapitalStatus);
+              return match ? match.pts : 5;
+            })();
+
+            const allMetrics = [
+              { id: 'pfire', label: 'P(FIRE) base', pts: pfirePts, max: 35, detail: `${pfireBaseVal.toFixed(1)}%`, description: wc.metrics.find((m: any) => m.id === 'pfire')?.description ?? '' },
+              { id: 'savings_rate', label: 'Savings rate', pts: savingsRatePts, max: 15, detail: `${savingsRate.toFixed(1)}%`, description: wc.metrics.find((m: any) => m.id === 'savings_rate')?.description ?? '' },
+              { id: 'drift', label: 'Drift máximo', pts: driftPts, max: 15, detail: `${maxDriftVal.toFixed(1)}pp`, description: wc.metrics.find((m: any) => m.id === 'drift')?.description ?? '' },
+              { id: 'ipca_gap', label: 'IPCA+ gap vs alvo', pts: ipcaGapPts, max: 10, detail: ipcaGapPp != null ? `${ipcaGapPp.toFixed(1)}pp` : 'n/d', description: wc.metrics.find((m: any) => m.id === 'ipca_gap')?.description ?? '' },
+              { id: 'execution_fidelity', label: 'Exec. aportes', pts: execPts, max: 10, detail: 'dados insuf.', description: wc.metrics.find((m: any) => m.id === 'execution_fidelity')?.description ?? '' },
+              { id: 'emergency_fund', label: 'Fundo emergência', pts: emergencyPts, max: 5, detail: `${(data.rf?.ipca2029?.valor ?? 0) > 0 ? ((data.rf.ipca2029.valor / custoMensal)).toFixed(1) : '?'}m`, description: wc.metrics.find((m: any) => m.id === 'emergency_fund')?.description ?? '' },
+              { id: 'ter', label: 'TER vs VWRA', pts: terPts, max: 5, detail: (() => { const terCfg = wc.metrics.find((m: any) => m.id === 'ter'); const delta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22); return `${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(1)}bp`; })(), description: wc.metrics.find((m: any) => m.id === 'ter')?.description ?? '' },
+              { id: 'human_capital', label: 'Capital humano', pts: humanPts, max: 5, detail: humanCapitalStatus.replace('_', ' '), description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '' },
+            ].map(m => ({ ...m, isOk: m.pts / m.max >= 0.85 }));
+
+            const totalScore = allMetrics.reduce((sum, m) => sum + m.pts, 0);
+            const badMetrics = allMetrics.filter(m => !m.isOk);
+            const goodMetrics = allMetrics.filter(m => m.isOk);
+
+            const actionDescriptions: Record<string, string> = {
+              pfire: 'Aumentar aporte mensal ou aguardar crescimento patrimonial',
+              drift: 'Rebalancear bucket mais distante do alvo no próximo aporte',
+              ipca_gap: 'Continuar DCA em IPCA+ até atingir alvo de alocação',
+              savings_rate: 'Aumentar aporte ou reduzir custo de vida',
+              execution_fidelity: 'Manter consistência nos aportes mensais',
+              emergency_fund: 'Aumentar reserva líquida para 6+ meses de custo de vida',
+              ter: 'Migrar gradualmente para ETFs de menor custo',
+              human_capital: 'Contratar seguro de vida ao casar ou ter dependentes',
+            };
+
+            const topAcoes = [...allMetrics]
+              .filter(m => !m.isOk)
+              .sort((a, b) => (b.max - b.pts) - (a.max - a.pts))
+              .slice(0, 3);
+
+            const renderBar = (pts: number, max: number) => {
+              const ratio = pts / max;
+              const bg = ratio >= 0.85 ? 'var(--green)' : ratio >= 0.5 ? 'var(--yellow)' : 'var(--red)';
               return (
-                <div className="mt-4 pt-3 border-t border-border/30">
-                  <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">Top Ações</div>
-                  <div className="flex flex-col gap-1.5">
-                    {actionItems.map((m: any, i: number) => {
-                      const urgency = m.ratio < 0.5 ? 'var(--red)' : m.ratio < 0.8 ? 'var(--yellow)' : 'var(--green)';
-                      return (
-                        <div key={i} className="flex items-center gap-2.5 bg-slate-700/20 rounded px-3 py-2">
-                          <div
-                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                            style={{ background: urgency }}
-                          />
-                          <div className="text-xs flex-1">
-                            <span className="font-semibold text-text">{m.label}</span>
-                            <span className="text-muted ml-1.5">
-                              {m.value}% / {m.max}% — gap de {m.gap.toFixed(0)}pts
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                <div className="flex-1 bg-slate-700/40 rounded-sm h-1.5 relative overflow-hidden min-w-16">
+                  <div className="h-full rounded-sm" style={{ width: `${(pts / max) * 100}%`, background: bg }} />
                 </div>
               );
-            })()}
-          </div>
+            };
+
+            const renderMetricRow = (m: typeof allMetrics[0]) => (
+              <div key={m.id} className="flex items-center gap-2 mb-1.5">
+                <div className="text-xs w-4 flex-shrink-0">{m.isOk ? '✅' : '⚠️'}</div>
+                <div className="text-xs text-muted w-36 flex-shrink-0 truncate">{m.label}</div>
+                {renderBar(m.pts, m.max)}
+                <div className="text-xs text-muted w-14 flex-shrink-0 text-right">{m.detail}</div>
+                <div className="text-xs text-muted w-10 flex-shrink-0 text-right">{m.pts}/{m.max}</div>
+              </div>
+            );
+
+            return (
+              <div className="px-4 pb-4">
+                <div className="flex gap-5 items-start">
+                  {/* Score grande */}
+                  <div className="min-w-28 text-center flex-shrink-0">
+                    <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Score</div>
+                    <div className="text-5xl font-black text-green leading-none">{totalScore}</div>
+                    <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
+                  </div>
+                  {/* Métricas divididas em duas categorias */}
+                  <div className="flex-1 min-w-0">
+                    {badMetrics.length > 0 && (
+                      <div className="mb-3">
+                        <div className="text-xs font-semibold mb-1.5" style={{ color: 'var(--yellow)' }}>⚠ OPORTUNIDADE DE MELHORIA</div>
+                        {badMetrics.map(renderMetricRow)}
+                      </div>
+                    )}
+                    {goodMetrics.length > 0 && (
+                      <div>
+                        <div className="text-xs font-semibold text-green mb-1.5">✓ SEM AÇÃO NECESSÁRIA</div>
+                        {goodMetrics.map(renderMetricRow)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Top Ações */}
+                {topAcoes.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-border/30">
+                    <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">Top Ações para Subir o Score</div>
+                    <div className="flex flex-col gap-2">
+                      {topAcoes.map((m, i) => {
+                        const gap = m.max - m.pts;
+                        return (
+                          <div key={m.id} className="bg-slate-700/20 rounded px-3 py-2">
+                            <div className="flex items-baseline gap-1.5">
+                              <span className="text-xs text-muted">{i + 1}.</span>
+                              <span className="text-xs font-semibold text-text">{m.label}</span>
+                              <span className="text-xs" style={{ color: 'var(--accent)' }}>(+{gap}pts potencial)</span>
+                            </div>
+                            <div className="text-xs text-muted mt-0.5">{actionDescriptions[m.id] ?? m.description.slice(0, 80)}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </CollapsibleSection>
       )}
 
@@ -299,6 +429,8 @@ export default function HomePage() {
           pfireFav={derived.pfireFav}
           pfireStress={derived.pfireStress}
           tornadoData={derived.tornadoData}
+          firePatrimonioAtual={derived.firePatrimonioAtual}
+          firePatrimonioGatilho={derived.firePatrimonioGatilho}
         />
       )}
 
