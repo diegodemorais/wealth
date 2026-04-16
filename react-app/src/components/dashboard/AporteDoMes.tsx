@@ -41,15 +41,15 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
 
   return (
     <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
-      <h2 className="text-base font-semibold text-white mb-3 m-0">Aporte do Mês</h2>
+      <h2 className="text-base font-semibold text-text mb-3 m-0">Aporte do Mês</h2>
 
       {/* Big aporte value */}
       <div className="text-center py-2 px-0">
-        <div className="text-4xl font-black leading-none text-green-400">
+        <div className="text-4xl font-black leading-none text-green">
           {privacyMode ? '••••' : fmtShort(aporteMensal)}
         </div>
         {savingsRate != null && (
-          <div className="text-xs text-slate-400 mt-1.5">
+          <div className="text-xs text-muted mt-1.5">
             {privacyMode ? '••••' : `${savingsRate.toFixed(1)}% savings rate`}
             {rendaMensal > 0 && !privacyMode && ` · renda est. ${fmtShort(rendaMensal)}/mês`}
           </div>
@@ -68,7 +68,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
               }}
             />
           </div>
-          <div className="flex justify-between text-xs text-slate-400 mt-1">
+          <div className="flex justify-between text-xs text-muted mt-1">
             <span>≥50% excelente</span>
             <span>≥40% ok</span>
             <span>≥35% atenção</span>
@@ -79,14 +79,14 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
       {/* Accumulated values */}
       <div className="grid grid-cols-2 gap-2 mt-3">
         <div className="bg-slate-700/40 rounded-lg px-2 py-2 text-center">
-          <div className="text-xs uppercase font-semibold text-slate-400 tracking-widest">Acumulado Mês</div>
-          <div className="text-sm font-bold text-white mt-0.5">
+          <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Mês</div>
+          <div className="text-sm font-bold text-text mt-0.5">
             {privacyMode ? '••••' : fmtShort(acumuladoMes)}
           </div>
         </div>
         <div className="bg-slate-700/40 rounded-lg px-2 py-2 text-center">
-          <div className="text-xs uppercase font-semibold text-slate-400 tracking-widest">Acumulado Ano</div>
-          <div className="text-sm font-bold text-white mt-0.5">
+          <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Ano</div>
+          <div className="text-sm font-bold text-text mt-0.5">
             {privacyMode ? '••••' : fmtShort(acumuladoAno)}
           </div>
         </div>
@@ -94,7 +94,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
 
       {/* Last contribution */}
       {ultimoAporte > 0 && (
-        <div className="mt-2.5 text-xs text-slate-400 text-center">
+        <div className="mt-2.5 text-xs text-muted text-center">
           Último: {privacyMode ? '••••' : fmtBrl(ultimoAporte)} · {ultimoAporteData}
         </div>
       )}

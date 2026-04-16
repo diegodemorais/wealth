@@ -54,9 +54,9 @@ export function CollapsibleSection({
   }, [isCollapsed]);
 
   return (
-    <section className="mb-5 rounded-lg overflow-hidden border border-slate-700/50">
+    <section className="mb-5 rounded-lg overflow-hidden border border-border/50">
       <button
-        className="w-full px-4 py-4 bg-slate-800/50 border-b border-slate-700/50 cursor-pointer flex justify-between items-center text-white text-sm font-semibold transition-colors hover:bg-slate-700/50"
+        className="w-full px-4 py-4 bg-slate-800/50 border-b border-border/50 cursor-pointer flex justify-between items-center text-text text-sm font-semibold transition-colors hover:bg-slate-700/50"
         onClick={() => setCollapse(id, !isCollapsed)}
         aria-expanded={!isCollapsed}
         aria-controls={`content-${id}`}

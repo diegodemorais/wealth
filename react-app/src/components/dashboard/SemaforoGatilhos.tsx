@@ -44,17 +44,17 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
       {/* Header — collapsible */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center cursor-pointer px-4 py-3 text-white hover:bg-red-900/10 transition-colors"
+        className="w-full flex justify-between items-center cursor-pointer px-4 py-3 text-text hover:bg-red-900/10 transition-colors"
       >
         <h2 className="m-0 text-base font-semibold">Semáforos de Gatilhos ›</h2>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-muted">
           {isOpen ? '▼' : '▶'}
         </span>
       </button>
 
       {/* Summary when collapsed */}
       {!isOpen && (
-        <div className="flex items-center gap-1.5 mx-4 mb-3 text-xs text-slate-400">
+        <div className="flex items-center gap-1.5 mx-4 mb-3 text-xs text-muted">
           <span
             className="inline-block w-2 h-2 rounded-full flex-shrink-0"
             style={{ background: getSemaforoColor(statusIpca) }}
@@ -68,7 +68,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
         <div className="overflow-x-auto px-4 pb-4 mt-3">
           <table className="w-full border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-700/50">
+              <tr className="border-b border-border/50">
                 <th className="px-2 py-1.5 text-muted-foreground text-xs uppercase font-semibold text-left">
                   Gatilho
                 </th>
@@ -88,7 +88,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
                 const typeBadge = typeBadges[g.tipo] ?? typeBadges.taxa;
 
                 return (
-                  <tr key={idx} className="border-b border-slate-700/30">
+                  <tr key={idx} className="border-b border-border/30">
                     <td className="px-2 py-2">
                       <div className="text-slate-100">
                         {g.nome}
@@ -103,7 +103,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
                         </span>
                       </div>
                       {g.contexto && (
-                        <div className="text-xs text-slate-400 mt-0.5">
+                        <div className="text-xs text-muted mt-0.5">
                           {g.contexto}
                         </div>
                       )}
@@ -122,7 +122,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
                     <td className="px-2 py-2 text-right tabular-nums text-slate-100">
                       {privacyMode ? '••••' : g.valorPrimario}
                     </td>
-                    <td className="px-2 py-2 text-slate-400">
+                    <td className="px-2 py-2 text-muted">
                       {g.acao}
                     </td>
                   </tr>

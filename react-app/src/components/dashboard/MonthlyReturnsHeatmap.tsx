@@ -95,8 +95,8 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
       {/* Legend */}
       <div className="flex justify-between text-xs text-muted mt-3">
         <div>← Worst</div>
-        <div className="font-semibold text-green-400">Positive Returns</div>
-        <div className="font-semibold text-red-400">Negative Returns</div>
+        <div className="font-semibold text-green">Positive Returns</div>
+        <div className="font-semibold text-red">Negative Returns</div>
         <div>Best →</div>
       </div>
 

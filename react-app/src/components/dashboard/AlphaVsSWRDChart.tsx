@@ -169,7 +169,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
                 <div className="text-xs text-muted mb-1">
                   {a.period}
                 </div>
-                <div className={`text-base font-bold ${a.alpha > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <div className={`text-base font-bold ${a.alpha > 0 ? 'text-green' : 'text-red'}`}>
                   {a.alpha > 0 ? '+' : ''}{a.alpha.toFixed(2)}%
                 </div>
               </div>
@@ -188,7 +188,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
               <div className="text-xs text-muted mb-1 uppercase font-semibold">
                 Média Alpha
               </div>
-              <div className="text-lg font-bold text-green-400">
+              <div className="text-lg font-bold text-green">
                 {avgAlpha.toFixed(2)}%
               </div>
               <div className="text-xs text-muted">

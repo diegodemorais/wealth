@@ -53,7 +53,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
 
   return (
     <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
-      <h2 className="text-base font-semibold text-white mb-3 m-0">P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
+      <h2 className="text-base font-semibold text-text mb-3 m-0">P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
 
       {/* Scenario cards */}
       <div className="grid grid-cols-3 gap-2.5 mt-3">
@@ -66,7 +66,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
               borderColor: getBadgeColor(value),
             }}
           >
-            <div className="text-xs uppercase font-semibold text-slate-400 mb-1 tracking-widest">
+            <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
               {label}
             </div>
             <div
@@ -81,7 +81,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
 
       {/* P(FIRE) Base progress bar */}
       <div className="mt-3.5">
-        <div className="flex justify-between text-xs text-slate-400 mb-1">
+        <div className="flex justify-between text-xs text-muted mb-1">
           <span>Progresso Patrimonial</span>
           <span style={{ color: getBadgeColor(pfireBase), fontWeight: 700 }}>
             {privacyMode ? '••' : pfireBase.toFixed(1)}%
@@ -99,15 +99,15 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
       </div>
 
       {/* Tornado section (collapsible) */}
-      <div className="mt-3.5 border-t border-slate-700/50 pt-3">
+      <div className="mt-3.5 border-t border-border/50 pt-3">
         <button
           onClick={() => setExpandTornado(!expandTornado)}
-          className="flex justify-between items-center w-full cursor-pointer text-white hover:text-slate-300 transition-colors"
+          className="flex justify-between items-center w-full cursor-pointer text-text hover:text-slate-300 transition-colors"
         >
           <span className="text-sm font-semibold">
             Tornado — Sensitividade ±10% de P(FIRE)
           </span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-muted">
             {expandTornado ? '▼' : '▶'}
           </span>
         </button>
@@ -115,7 +115,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
         {expandTornado && sortedTornado.length > 0 && (
           <div className="mt-3">
             {/* Legend */}
-            <div className="flex gap-4 text-xs text-slate-400 mb-2.5">
+            <div className="flex gap-4 text-xs text-muted mb-2.5">
               <span>
                 <span className="inline-block w-2.5 h-2 bg-red-500 rounded mr-1" />
                 -10%
@@ -128,7 +128,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
 
             {sortedTornado.map((item, idx) => (
               <div key={idx} className="mb-2.5">
-                <div className="text-xs text-slate-400 mb-1">
+                <div className="text-xs text-muted mb-1">
                   {item.label}
                 </div>
                 <div className="flex items-center gap-1">
@@ -143,7 +143,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                       }}
                     >
                       {Math.abs(item.menos10) > 1 && (
-                        <span className="text-xs font-bold text-white">
+                        <span className="text-xs font-bold text-text">
                           {item.menos10.toFixed(1)}pp
                         </span>
                       )}
@@ -166,7 +166,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                       }}
                     >
                       {Math.abs(item.mais10) > 1 && (
-                        <span className="text-xs font-bold text-white">
+                        <span className="text-xs font-bold text-text">
                           +{item.mais10.toFixed(1)}pp
                         </span>
                       )}
@@ -179,7 +179,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
         )}
 
         {expandTornado && sortedTornado.length === 0 && (
-          <div className="text-xs text-slate-400 py-2 mt-2">
+          <div className="text-xs text-muted py-2 mt-2">
             Dados de sensitividade não disponíveis
           </div>
         )}

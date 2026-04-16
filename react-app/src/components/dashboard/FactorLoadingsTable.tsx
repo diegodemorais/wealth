@@ -14,9 +14,9 @@ interface FactorLoadingsTableProps {
 }
 
 function r2Color(r2: number): { textColor: string; bg: string; border: string; label: string; className: string } {
-  if (r2 >= 0.95) return { textColor: 'rgb(74, 222, 128)', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)', label: 'Good', className: 'text-green-400 bg-green-900/10 border-green-600/25' }
-  if (r2 >= 0.80) return { textColor: 'rgb(250, 204, 21)', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.3)', label: 'Good', className: 'text-yellow-400 bg-yellow-900/10 border-yellow-600/25' }
-  return { textColor: 'rgb(248, 113, 113)', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)', label: 'Weak', className: 'text-red-400 bg-red-900/10 border-red-600/25' }
+  if (r2 >= 0.95) return { textColor: 'rgb(74, 222, 128)', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)', label: 'Good', className: 'text-green bg-green-900/10 border-green-600/25' }
+  if (r2 >= 0.80) return { textColor: 'rgb(250, 204, 21)', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.3)', label: 'Good', className: 'text-yellow bg-yellow-900/10 border-yellow-600/25' }
+  return { textColor: 'rgb(248, 113, 113)', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)', label: 'Weak', className: 'text-red bg-red-900/10 border-red-600/25' }
 }
 
 function r2Icon(r2: number): string {
@@ -114,7 +114,7 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
                         style={{ opacity: significant ? 1 : 0.4 }}
                         title={`t-stat: ${tStat.toFixed(2)}`}
                       >
-                        <span className={coef > 0 ? 'text-green-400' : coef < 0 ? 'text-red-400' : 'text-muted'}>
+                        <span className={coef > 0 ? 'text-green' : coef < 0 ? 'text-red' : 'text-muted'}>
                           {coef >= 0 ? "+" : ""}
                           {coef.toFixed(2)}
                         </span>

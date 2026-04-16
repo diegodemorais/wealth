@@ -108,7 +108,7 @@ export function BondPoolReadiness({ data }: BondPoolReadinessProps) {
 
         <div className="relative mb-2">
           {progressBar(progressPct, 'var(--accent)', '20px')}
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-mono font-semibold text-white">
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-mono font-semibold text-text">
             {progressPct.toFixed(0)}%
           </span>
         </div>

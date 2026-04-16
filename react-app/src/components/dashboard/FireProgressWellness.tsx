@@ -32,7 +32,7 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
 
   return (
     <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
-      <h2 className="text-base font-semibold text-white mb-3 m-0">Progresso FIRE</h2>
+      <h2 className="text-base font-semibold text-text mb-3 m-0">Progresso FIRE</h2>
 
       <div className="text-center py-2 px-0">
         <div
@@ -41,7 +41,7 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
         >
           {privacyMode ? '••••' : (firePercentage * 100).toFixed(1) + '%'}
         </div>
-        <div className="text-xs text-slate-400 mt-1.5">
+        <div className="text-xs text-muted mt-1.5">
           {privacyMode
             ? 'R$••••M / R$••••M'
             : `R$${(firePatrimonioAtual / 1e6).toFixed(2)}M / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M`}
@@ -61,12 +61,12 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
 
       {/* SWR Info */}
       <div className="flex justify-between items-center text-xs mt-2">
-        <span className="text-slate-400">SWR no FIRE Day projetada:</span>
+        <span className="text-muted">SWR no FIRE Day projetada:</span>
         <span className="text-cyan-400 font-bold text-sm">
           {privacyMode ? '••••' : (swrFireDay * 100).toFixed(2) + '%'}
         </span>
       </div>
-      <div className="text-xs text-slate-400 mt-1">
+      <div className="text-xs text-muted mt-1">
         {privacyMode
           ? 'R$••••k / R$••••M · Meta ≤ 3.0%'
           : `R$250k / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M · Meta ≤ 3.0%`}

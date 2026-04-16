@@ -107,7 +107,7 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
                       }}
                     >
                       {Math.abs(item.contribution) > 0.1 && (
-                        <span className="text-xs font-semibold text-white">
+                        <span className="text-xs font-semibold text-text">
                           {item.contribution.toFixed(2)}pp
                         </span>
                       )}
@@ -191,10 +191,10 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
                     <td className="text-right p-2 border-b border-border text-text">
                       {item.allocation.toFixed(1)}%
                     </td>
-                    <td className={`text-right p-2 border-b border-border ${item.return >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    <td className={`text-right p-2 border-b border-border ${item.return >= 0 ? 'text-green' : 'text-red'}`}>
                       {item.return >= 0 ? '+' : ''}{item.return.toFixed(2)}%
                     </td>
-                    <td className={`text-right p-2 border-b border-border font-semibold ${item.contribution >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    <td className={`text-right p-2 border-b border-border font-semibold ${item.contribution >= 0 ? 'text-green' : 'text-red'}`}>
                       {item.contribution >= 0 ? '+' : ''}{item.contribution.toFixed(2)}pp
                     </td>
                   </tr>

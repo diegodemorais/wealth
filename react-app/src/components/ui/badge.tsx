@@ -20,7 +20,7 @@ const badgeVariants = cva(
         posicao:
           "border-transparent bg-purple-500/15 text-purple-400 font-semibold",
         crypto:
-          "border-transparent bg-yellow-500/15 text-yellow-400 font-semibold",
+          "border-transparent bg-yellow-500/15 text-yellow font-semibold",
       },
     },
     defaultVariants: {
