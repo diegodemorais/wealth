@@ -40,7 +40,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
     statusDotColor[status] ?? 'var(--muted)';
 
   return (
-    <section className="mb-3.5 rounded overflow-hidden border border-red-900/50 bg-red-950/20">
+    <section className="mb-3.5 rounded overflow-hidden" style={{ border: '1px solid rgba(234,179,8,0.3)', background: 'rgba(234,179,8,0.04)' }}>
       {/* Header — collapsible */}
       <button
         onClick={() => setIsOpen(!isOpen)}

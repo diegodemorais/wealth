@@ -83,14 +83,14 @@
     /* ─── Semantic Colors ─── */
     --green: #3ed381;
     --red: #f85149;
-    --yellow: 45 93% 47%;
-    --purple: 271 91% 65%;
-    --cyan: 189 94% 43%;
-    --orange: 25 95% 53%;
-    --pink: 330 80% 60%;
-    --success: 142 71% 45%;
-    --warning: 38 92% 50%;
-    --destructive: 0 84% 60%;
+    --yellow: hsl(45 93% 47%);
+    --purple: hsl(271 91% 65%);
+    --cyan: hsl(189 94% 43%);
+    --orange: hsl(25 95% 53%);
+    --pink: hsl(330 80% 60%);
+    --success: hsl(142 71% 45%);
+    --warning: hsl(38 92% 50%);
+    --destructive: hsl(0 84% 60%);
 
     /* ─── Border Radius — DashHTML reference (exact pixel values) ─── */
     --radius-xs: 4px;

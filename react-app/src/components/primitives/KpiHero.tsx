@@ -1,7 +1,21 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
-import { fmtBrl, fmtPct, fmtUsd } from '@/utils/formatters';
+import { fmtPct } from '@/utils/formatters';
+
+// Compact BRL formatter for hero display (e.g. R$3.59M)
+function fmtBrlCompact(val: number): string {
+  if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(2)}M`;
+  if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
+  return `R$${Math.round(val)}`;
+}
+
+// Compact USD formatter for hero display (e.g. $695k)
+function fmtUsdCompact(val: number): string {
+  if (val >= 1_000_000) return `$${(val / 1e6).toFixed(2)}M`;
+  if (val >= 1_000) return `$${Math.round(val / 1000)}k`;
+  return `$${Math.round(val)}`;
+}
 
 export interface KpiHeroProps {
   networth: number;
@@ -39,10 +53,14 @@ export function KpiHero({
   const monthsInt = Math.round((yearsToFire - yearsInt) * 12);
   const yearsMonthsStr = `${yearsInt}a ${monthsInt}m`;
 
-  // Format the BRL percentage of net worth
-  const brlPct = networthUsd && cambio && networth
-    ? Math.round(((networth - networthUsd * cambio) / networth) * 100)
+  // USD percentage of net worth (for subtitle "63% em USD")
+  const usdPct = networthUsd && cambio && networth
+    ? Math.round(((networthUsd * cambio) / networth) * 100)
     : null;
+
+  // Compact display values
+  const networthCompact = fmtBrlCompact(networth);
+  const networthUsdCompact = networthUsd ? fmtUsdCompact(networthUsd) : null;
 
   // Fire subtitle: "Base: 2040 (53 anos) · Aspir: 2038 (49a)"
   const fireSubtitle = (() => {
@@ -54,7 +72,7 @@ export function KpiHero({
 
   // Gatilho subtitle: "vs gatilho R$X.XM"
   const gatilhoSubtitle = firePatrimonioGatilho
-    ? `vs gatilho ${fmtBrl(firePatrimonioGatilho)}`
+    ? `vs gatilho ${fmtBrlCompact(firePatrimonioGatilho)}`
     : undefined;
 
   return (
@@ -63,10 +81,10 @@ export function KpiHero({
       <div className="kpi kpi-fire text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
         <div className="kpi-label">Patrimônio Total</div>
         <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
-          {privacyMode ? '••••' : fmtBrl(networth)}
+          {privacyMode ? '••••' : networthCompact}
         </div>
         <div className="kpi-sub">
-          {privacyMode ? '••••' : (brlPct != null ? `${brlPct}% em USD` : `${networthUsd ? fmtUsd(networthUsd) : '—'} em USD`)}
+          {privacyMode ? '••••' : (usdPct != null ? `${usdPct}% em USD` : `${networthUsdCompact ? networthUsdCompact : '—'} em USD`)}
         </div>
       </div>
 
