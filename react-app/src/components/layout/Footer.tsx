@@ -72,8 +72,9 @@ const styles: Record<string, React.CSSProperties> = {
   footer: {
     backgroundColor: 'var(--bg)',
     borderTop: '1px solid var(--border)',
-    padding: '12px 0',
+    padding: '24px 0',
     marginTop: '40px',
+    lineHeight: '1.6',
   },
   container: {
     display: 'flex',

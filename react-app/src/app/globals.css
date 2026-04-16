@@ -15,17 +15,17 @@
 
 @theme {
   /* ─── Core Colors — exposed as Tailwind utilities ─── */
-  --color-bg: hsl(222 47% 11%);
-  --color-card: hsl(217 33% 17%);
+  --color-bg: #0d1117;
+  --color-card: #161b22;
   --color-card2: hsl(215 25% 27%);
   --color-text: hsl(210 40% 96%);
   --color-muted: hsl(215 20% 65%);
-  --color-border: hsl(215 19% 35%);
-  --color-accent: hsl(217 91% 60%);
+  --color-border: #1c2128;
+  --color-accent: #58a6ff;
 
   /* ─── Semantic Colors ─── */
-  --color-green: hsl(142 71% 45%);
-  --color-red: hsl(0 84% 60%);
+  --color-green: #3ed381;
+  --color-red: #f85149;
   --color-yellow: hsl(45 93% 47%);
   --color-purple: hsl(271 91% 65%);
   --color-cyan: hsl(189 94% 43%);
@@ -33,18 +33,18 @@
   --color-pink: hsl(330 80% 60%);
 
   /* ─── shadcn/ui compat aliases ─── */
-  --color-background: hsl(222 47% 11%);
+  --color-background: #0d1117;
   --color-foreground: hsl(210 40% 96%);
-  --color-primary: hsl(217 91% 60%);
+  --color-primary: #58a6ff;
   --color-primary-foreground: hsl(210 40% 96%);
   --color-secondary: hsl(215 25% 27%);
   --color-secondary-foreground: hsl(210 40% 96%);
   --color-muted-foreground: hsl(215 20% 65%);
   --color-accent-foreground: hsl(210 40% 96%);
-  --color-destructive: hsl(0 84% 60%);
+  --color-destructive: #f85149;
   --color-input: hsl(215 25% 27%);
-  --color-ring: hsl(217 91% 60%);
-  --color-popover: hsl(217 33% 17%);
+  --color-ring: #58a6ff;
+  --color-popover: #161b22;
   --color-popover-foreground: hsl(210 40% 96%);
   --color-card-foreground: hsl(210 40% 96%);
 
@@ -71,18 +71,18 @@
        Reference: DashHTML v2.77 + Tailwind + shadcn/ui compatibility
        ════════════════════════════════════════════════════════════════════════════════ */
 
-    /* ─── Core Colors (HSL format for Tailwind + CSS compat) ─── */
-    --bg: 222 47% 11%;
-    --card: 217 33% 17%;
-    --card2: 215 25% 27%;
-    --text: 210 40% 96%;
-    --muted: 215 20% 65%;
-    --border: 215 19% 35%;
-    --accent: 217 91% 60%;
+    /* ─── Core Colors ─── */
+    --bg: #0d1117;
+    --card: #161b22;
+    --card2: hsl(215 25% 27%);
+    --text: hsl(210 40% 96%);
+    --muted: hsl(215 20% 65%);
+    --border: #1c2128;
+    --accent: #58a6ff;
 
-    /* ─── Semantic Colors (HSL) ─── */
-    --green: 142 71% 45%;
-    --red: 0 84% 60%;
+    /* ─── Semantic Colors ─── */
+    --green: #3ed381;
+    --red: #f85149;
     --yellow: 45 93% 47%;
     --purple: 271 91% 65%;
     --cyan: 189 94% 43%;
@@ -140,13 +140,13 @@
 
   /* ─── Apply colors to body and base elements ─── */
   html {
-    background: hsl(var(--bg));
-    color: hsl(var(--text));
+    background: var(--bg);
+    color: var(--text);
   }
 
   body {
-    background: hsl(var(--bg));
-    color: hsl(var(--text));
+    background: var(--bg);
+    color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.5;
     overflow-x: hidden;
@@ -156,5 +156,26 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  /* ─── Card utility class (A2) ─── */
+  .card {
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    padding: 20px;
+    background: var(--card);
+    border-radius: var(--radius-md);
+  }
+
+  /* ─── Section spacing (A6) ─── */
+  .section {
+    margin-bottom: 32px;
+  }
+
+  /* ─── KPI hero typography (A3) ─── */
+  .kpi-hero {
+    font-size: 2rem;
+    font-weight: 900;
+    min-font-size: 32px;
   }
 }

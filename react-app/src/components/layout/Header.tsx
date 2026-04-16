@@ -21,7 +21,7 @@ export function Header() {
       <div style={styles.container}>
         {/* Logo */}
         <div style={styles.logoSection}>
-          <h1 style={styles.logo}>💰 Wealth</h1>
+          <h1 style={styles.logo}>Dashboard Wealth DM</h1>
           <span
             style={styles.version}
             title={`Build: ${DASHBOARD_VERSION}`}
