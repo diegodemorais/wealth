@@ -72,10 +72,33 @@ export function createBaseOption(theme: ChartTheme, privacyMode: boolean) {
 export function createAttributionChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  // Use real breakdown_chart from data.json attribution, fall back to synthetic if absent
+  // Use real attribution data from data.json
   const breakdown = ((options.data as any)?.attribution?.breakdown_chart ?? []) as Array<{label: string, value_pct: number}>;
-  const categories = breakdown.length > 0 ? breakdown.map(d => d.label) : ['Equity Selection', 'Allocation', 'Market Return', 'Currency', 'Costs'];
-  const attributionData = breakdown.length > 0 ? breakdown.map(d => d.value_pct) : [2.5, 1.2, 4.8, -0.3, -0.6];
+  let categories: string[];
+  let attributionData: number[];
+
+  if (breakdown.length > 0) {
+    categories = breakdown.map(d => d.label);
+    attributionData = breakdown.map(d => d.value_pct);
+  } else {
+    // Build from real attribution fields (absolute BRL values)
+    const attr = (options.data as any)?.attribution ?? {};
+    const crescReal = attr.crescReal ?? 0;
+    if (crescReal > 0) {
+      const aportes = attr.aportes ?? 0;
+      const retornoUsd = attr.retornoUsd ?? 0;
+      const cambio = attr.cambio ?? 0;
+      const fx = attr.fx ?? 0;
+      const rf = attr.rf ?? 0;
+      const total = Math.abs(aportes) + Math.abs(retornoUsd) + Math.abs(cambio) + Math.abs(rf) + Math.abs(fx);
+      const pct = (v: number) => total > 0 ? parseFloat((v / total * 100).toFixed(1)) : 0;
+      categories = ['Aportes', 'Retorno Equity (USD)', 'Câmbio BRL/USD', 'Renda Fixa', 'FX (custo)'];
+      attributionData = [pct(aportes), pct(retornoUsd), pct(cambio), pct(rf), pct(fx)];
+    } else {
+      categories = ['Aportes', 'Retorno Equity', 'Câmbio', 'Renda Fixa', 'FX'];
+      attributionData = [0, 0, 0, 0, 0];
+    }
+  }
   const colors = attributionData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
 
   return {
@@ -844,8 +867,34 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
 export function createDrawdownHistChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  const buckets = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '25-30%'];
-  const frequencies = [145, 89, 34, 18, 7, 2];
+  // Use real drawdown_history data from data.json
+  const dh = (options.data as any)?.drawdown_history ?? {};
+  const rawDd: number[] = dh.drawdown_pct ?? [];
+
+  // Bucket drawdown values into ranges
+  const bucketDefs = [
+    { label: '0-5%', min: 0, max: 5 },
+    { label: '5-10%', min: 5, max: 10 },
+    { label: '10-15%', min: 10, max: 15 },
+    { label: '15-20%', min: 15, max: 20 },
+    { label: '20-25%', min: 20, max: 25 },
+    { label: '>25%', min: 25, max: Infinity },
+  ];
+
+  let buckets: string[];
+  let frequencies: number[];
+
+  if (rawDd.length > 0) {
+    const counts = bucketDefs.map(b => rawDd.filter(v => {
+      const abs = Math.abs(v);
+      return abs > b.min && abs <= b.max;
+    }).length);
+    buckets = bucketDefs.map(b => b.label);
+    frequencies = counts;
+  } else {
+    buckets = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '>25%'];
+    frequencies = [0, 0, 0, 0, 0, 0];
+  }
 
   return {
     tooltip: {
