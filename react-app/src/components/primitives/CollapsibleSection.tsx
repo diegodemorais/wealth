@@ -54,16 +54,32 @@ export function CollapsibleSection({
   }, [isCollapsed]);
 
   return (
-    <section className="section collapsible mb-3.5" style={{ ...(isCollapsed ? {} : { paddingBottom: 0 }) }}>
+    <section
+      className="collapsible mb-3.5"
+      style={{
+        background: 'var(--card)',
+        borderRadius: 'var(--radius-md)',
+        border: '1px solid var(--border)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        overflow: 'hidden',
+      }}
+    >
       <button
         className="w-full cursor-pointer flex justify-between items-center text-text transition-colors hover:opacity-80"
-        style={{ background: 'none', border: 'none', padding: 0, margin: 0, textAlign: 'left' }}
+        style={{
+          background: 'none',
+          border: 'none',
+          padding: '16px 16px',
+          paddingBottom: isCollapsed ? '16px' : '0',
+          margin: 0,
+          textAlign: 'left',
+        }}
         onClick={() => setCollapse(id, !isCollapsed)}
         aria-expanded={!isCollapsed}
         aria-controls={`content-${id}`}
         data-test={`section-header-${id}`}
       >
-        <h2 style={{ marginBottom: 0 }}>
+        <h2 style={{ marginBottom: 0, borderBottom: 'none', paddingBottom: 0 }}>
           {title} <span style={{ fontSize: '.8em', color: 'var(--muted)' }}>{isCollapsed ? '▸' : '▾'}</span>
         </h2>
       </button>
@@ -75,7 +91,6 @@ export function CollapsibleSection({
         style={{
           maxHeight: isCollapsed ? 0 : (typeof height === 'number' ? `${height + 40}px` : height),
           overflow: isCollapsed ? 'hidden' : 'visible',
-          marginTop: isCollapsed ? 0 : '12px',
         }}
       >
         {children}

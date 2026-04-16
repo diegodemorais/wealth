@@ -83,92 +83,100 @@ export default function HomePage() {
       />
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
-      <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Indicadores Primários</div>
-      <div className="grid grid-cols-3 gap-2.5 mb-3.5">
+      <div className="kpi-label mb-1.5" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>Indicadores Primários</div>
+      <div className="kpi-grid mb-3.5">
         {/* P(Cenário Aspiracional) */}
-        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">P(Cenário Aspiracional)</div>
-          <div className="text-2xl font-black text-accent">{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
+        <div className="kpi kpi-fire text-center">
+          <div className="kpi-label">P(Cenário Aspiracional)</div>
+          <div className="kpi-value" style={{ color: 'var(--accent)' }}>{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
+          <div className="kpi-sub">
             {derived.pfireAspirFav != null && derived.pfireAspirStress != null
               ? `fav ${derived.pfireAspirFav.toFixed(1)}% · stress ${derived.pfireAspirStress.toFixed(1)}%`
               : 'cenário aspiracional (49a)'}
           </div>
         </div>
         {/* Drift Máximo */}
-        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Drift Máximo</div>
-          <div className="text-2xl font-black text-text">{maxDrift.toFixed(2)}pp</div>
-          <div className="text-xs text-muted mt-1">vs alvo IPS</div>
+        <div className="kpi kpi-fire text-center">
+          <div className="kpi-label">Drift Máximo</div>
+          <div className="kpi-value">{maxDrift.toFixed(2)}pp</div>
+          <div className="kpi-sub">IPCA+ -9.5pp vs alvo</div>
         </div>
         {/* Aporte do Mês */}
-        <div className="bg-card border border-border/50 rounded p-4 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Aporte do Mês</div>
-          <div className="text-2xl font-black text-text">
+        <div className="kpi text-center">
+          <div className="kpi-label">Aporte do Mês</div>
+          <div className="kpi-value" style={{ color: 'var(--green)' }}>
             {derived.aporteMensal
-              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(derived.aporteMensal)
+              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0, notation: 'compact' }).format(derived.aporteMensal)
               : '—'}
           </div>
-          <div className="text-xs text-muted mt-1">{derived.ultimoAporteData || '—'}</div>
+          <div className="kpi-sub">{derived.ultimoAporteData || '—'}</div>
         </div>
       </div>
 
       {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
-      <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Contexto de Mercado</div>
-      <div className="grid grid-cols-4 gap-2.5 mb-3.5 opacity-85">
+      <div className="kpi-label mb-1.5" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>Contexto de Mercado</div>
+      <div className="rf-grid mb-3.5" style={{ opacity: 0.85 }}>
         {/* Dólar */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Dólar</div>
-          <div className="text-xl font-black text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
+        <div className="kpi text-center">
+          <div className="kpi-label">Dólar</div>
+          <div className="kpi-value" style={{ fontSize: '1.1rem' }}>{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+          <div className="kpi-sub">
             {data?.mercado?.cambio_mtd_pct != null
               ? `${data.mercado.cambio_mtd_pct > 0 ? '+' : ''}${data.mercado.cambio_mtd_pct.toFixed(1)}% MtD · PTAX BCB`
               : 'BRL/USD · PTAX BCB'}
           </div>
         </div>
         {/* Bitcoin */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Bitcoin</div>
-          <div className="text-xl font-black text-text">
+        <div className="kpi text-center">
+          <div className="kpi-label">Bitcoin</div>
+          <div className="kpi-value" style={{ fontSize: '1.1rem' }}>
             {data?.mercado?.btc_usd
               ? `$${Number(data.mercado.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
               : '—'}
           </div>
-          <div className="text-xs text-muted mt-1">
+          <div className="kpi-sub">
             {data?.mercado?.btc_mtd_pct != null
               ? `${data.mercado.btc_mtd_pct > 0 ? '+' : ''}${data.mercado.btc_mtd_pct.toFixed(1)}% MtD`
               : 'BTC/USD'}
           </div>
         </div>
         {/* IPCA+ 2040 */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
+        <div className="kpi text-center">
+          <div className="kpi-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
             IPCA+ 2040 — Taxa
             <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
               style={{
+                display: 'inline-block',
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                flexShrink: 0,
                 backgroundColor: getIpcaSemaforoColor(ipcaTaxa),
               }}
             />
           </div>
-          <div className="text-xl font-black text-text">{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
+          <div className="kpi-value" style={{ fontSize: '1.1rem' }}>{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</div>
+          <div className="kpi-sub">
             {data?.rf?.ipca2040?.descricao || 'Tesouro IPCA+ 2040'}
           </div>
         </div>
         {/* Renda+ 2065 */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
+        <div className="kpi text-center">
+          <div className="kpi-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
             Renda+ 2065 — Taxa
             <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
               style={{
+                display: 'inline-block',
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                flexShrink: 0,
                 backgroundColor: getRendaSemaforoColor(rendaTaxa),
               }}
             />
           </div>
-          <div className="text-xl font-black text-text">{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
+          <div className="kpi-value" style={{ fontSize: '1.1rem' }}>{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</div>
+          <div className="kpi-sub">
             {data?.rf?.renda2065?.descricao || 'Tesouro Renda+ 2065'}
           </div>
         </div>
@@ -184,7 +192,7 @@ export default function HomePage() {
 
       {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
       {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
-        <div className="grid grid-cols-3 gap-2 mb-3.5">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '14px' }}>
           {data.fire_matrix.by_profile.map((profile: any, i: number) => {
             // Use profile.label from JSON if available, else fall back to hardcoded
             const fallbackLabels = ['Solteiro', 'Casado', 'C+Filho'];
@@ -194,17 +202,17 @@ export default function HomePage() {
             const pfireBase50 = profile.p_fire_50 ?? null;
             const pfire = pfireBase53 ?? pfireBase50;
             const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
-            const fireAge = profile.profile === 'atual' ? 53 : 53;
+            const fireAge = 53;
             return (
-              <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded p-2.5 text-center">
-                <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
+              <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', borderTop: '2px solid rgba(88,166,255,0.3)' }}>
+                <div style={{ fontSize: '.6rem', textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>
                   {displayLabel}
                 </div>
-                <div className="text-sm font-bold text-accent">FIRE {fireAge}</div>
-                <div className="text-sm font-bold text-green mt-0.5">
+                <div style={{ fontSize: '.85rem', fontWeight: 700, color: 'var(--accent)' }}>FIRE {fireAge}</div>
+                <div style={{ fontSize: '.85rem', fontWeight: 700, color: 'var(--green)', marginTop: '2px' }}>
                   P = {pfire != null ? `${pfire.toFixed(1)}%` : '—'}
                 </div>
-                <div className="text-xs text-muted mt-1">{fireYear}</div>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>{fireYear}</div>
               </div>
             );
           })}
