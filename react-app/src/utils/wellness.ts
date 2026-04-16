@@ -49,15 +49,17 @@ export function determineStatus(score: number): WellnessStatus {
  * Get color for wellness status
  */
 export function getWellnessColor(status: WellnessStatus): string {
+  // Return CSS variable references that resolve at runtime
+  // Values map to globals.css: --green, --accent, --orange, --red
   switch (status) {
     case 'excellent':
-      return '#10b981'; // emerald-500
+      return 'hsl(142 71% 45%)'; // --green (from globals.css)
     case 'ok':
-      return '#3b82f6'; // blue-500
+      return 'hsl(217 91% 60%)'; // --accent (from globals.css)
     case 'warning':
-      return '#f59e0b'; // amber-500
+      return 'hsl(25 95% 53%)'; // --orange (from globals.css)
     case 'critical':
-      return '#ef4444'; // red-500
+      return 'hsl(0 84% 60%)'; // --red (from globals.css)
   }
 }
 
