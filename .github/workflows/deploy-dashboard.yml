@@ -45,22 +45,6 @@ jobs:
           cd react-app
           npm run build:no-test
 
-      - name: Commit version update
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          if git diff --quiet; then
-            echo "No version changes to commit"
-          else
-            git add react-app/package.json react-app/src/config/version.ts
-            git commit -m "chore: Increment dashboard version (auto-generated on build)" || true
-            git push origin main
-          fi
-
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -75,6 +59,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+      contents: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -82,7 +67,23 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
       - name: Deploy to Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Increment external version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/increment-version-external.js
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git add react-app/public/version.json
+          git commit -m "chore: Increment version (post-deploy)" || echo "No version changes"
+          git push origin main || echo "Push failed (possibly no changes)"
 
