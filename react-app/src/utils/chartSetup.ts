@@ -648,13 +648,43 @@ export function createSankeyChartOption(options: BaseChartOptions) {
  * Net Worth Projection Chart (Percentile Lines)
  */
 export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
-  const { privacyMode, theme } = options;
+  const { data, privacyMode, theme } = options;
 
+  // Use real Monte Carlo data from fire_swr_percentis
+  const fsp = (data as any)?.fire_swr_percentis ?? {};
+  const ft = (data as any)?.fire_trilha ?? {};
+  const currentNetworth = ft.realizado_brl?.[ft.realizado_brl.length - 1] ?? 3500000;
+  const p10Target = fsp.patrimonio_p10_2040 ?? (currentNetworth * Math.pow(1.05, 14));
+  const p50Target = fsp.patrimonio_p50_2040 ?? (currentNetworth * Math.pow(1.07, 14));
+  const p90Target = fsp.patrimonio_p90_2040 ?? (currentNetworth * Math.pow(1.09, 14));
+  const fireDate = ft.meta_fire_date ?? '2040-01';
+  const fireYear = parseInt(fireDate.split('-')[0], 10);
+  const currentYear = new Date().getFullYear();
+  const yearsToFire = Math.max(1, fireYear - currentYear);
+  const yearsPost = 30 - yearsToFire;
   const years = 30;
-  const xAxisData = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
-  const p10Data = Array.from({ length: years }, (_, i) => 1250000 * Math.pow(1.05, i) + 60000 * i);
-  const p50Data = Array.from({ length: years }, (_, i) => 1250000 * Math.pow(1.07, i) + 60000 * i);
-  const p90Data = Array.from({ length: years }, (_, i) => 1250000 * Math.pow(1.09, i) + 60000 * i);
+
+  // Build interpolated paths: exponential from today to MC targets
+  const xAxisData = Array.from({ length: years }, (_, i) => {
+    return `${currentYear + i + 1}`;
+  });
+
+  const buildPath = (target: number, ratePost: number) =>
+    Array.from({ length: years }, (_, i) => {
+      const yr = i + 1;
+      if (yr <= yearsToFire) {
+        // Interpolate exponentially to target
+        const t = yr / yearsToFire;
+        return currentNetworth * Math.pow(target / currentNetworth, t);
+      } else {
+        // Post-FIRE: grow at specified real rate from FIRE target
+        return target * Math.pow(1 + ratePost, yr - yearsToFire);
+      }
+    });
+
+  const p10Data = buildPath(p10Target, 0.03);
+  const p50Data = buildPath(p50Target, 0.045);
+  const p90Data = buildPath(p90Target, 0.06);
 
   return {
     color: [CHART_COLORS.red, CHART_COLORS.green, CHART_COLORS.accent],
