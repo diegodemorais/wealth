@@ -898,39 +898,17 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
 }
 
 /**
- * Drawdown Histogram (Horizontal bar)
+ * Drawdown Time-Series (vertical red bars pointing down)
  */
 export function createDrawdownHistChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  // Use real drawdown_history data from data.json
   const dh = (options.data as any)?.drawdown_history ?? {};
-  const rawDd: number[] = dh.drawdown_pct ?? [];
+  const dates: string[] = dh.dates ?? [];
+  const drawdownPct: number[] = dh.drawdown_pct ?? [];
 
-  // Bucket drawdown values into ranges
-  const bucketDefs = [
-    { label: '0-5%', min: 0, max: 5 },
-    { label: '5-10%', min: 5, max: 10 },
-    { label: '10-15%', min: 10, max: 15 },
-    { label: '15-20%', min: 15, max: 20 },
-    { label: '20-25%', min: 20, max: 25 },
-    { label: '>25%', min: 25, max: Infinity },
-  ];
-
-  let buckets: string[];
-  let frequencies: number[];
-
-  if (rawDd.length > 0) {
-    const counts = bucketDefs.map(b => rawDd.filter(v => {
-      const abs = Math.abs(v);
-      return abs > b.min && abs <= b.max;
-    }).length);
-    buckets = bucketDefs.map(b => b.label);
-    frequencies = counts;
-  } else {
-    buckets = ['0-5%', '5-10%', '10-15%', '15-20%', '20-25%', '>25%'];
-    frequencies = [0, 0, 0, 0, 0, 0];
-  }
+  const minVal = drawdownPct.length > 0 ? Math.min(...drawdownPct) : -15;
+  const yMin = Math.floor(minVal / 2) * 2 - 2; // round down to nearest 2%, add 2% margin
 
   return {
     tooltip: {
@@ -941,28 +919,40 @@ export function createDrawdownHistChartOption(options: BaseChartOptions) {
       formatter: (params: any) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const p = params[0];
-        return `${p.name}<br/>${p.marker} ${p.value} months`;
+        return `${p.name}<br/>${p.value.toFixed(2)}%`;
       },
       axisPointer: { type: 'shadow' as const },
     },
-    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
-    grid: { left: 120, right: 20, top: 40, bottom: 40, containLabel: true },
+    grid: { left: 60, right: 20, top: 20, bottom: 40 },
     xAxis: {
-      type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
-      splitLine: { lineStyle: { color: CHART_COLORS.card } },
+      type: 'category' as const,
+      data: dates,
+      axisLabel: {
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
+        fontSize: 11,
+        interval: Math.floor(dates.length / 8),
+      },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisTick: { show: false },
     },
     yAxis: {
-      type: 'category' as const,
-      data: buckets,
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
-      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      type: 'value' as const,
+      min: yMin,
+      max: 2,
+      axisLabel: {
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
+        formatter: (v: number) => `${v}%`,
+        fontSize: 11,
+      },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
+      axisLine: { show: false },
     },
     series: [
       {
         type: 'bar' as const,
-        data: frequencies,
-        itemStyle: { color: CHART_COLORS.accent, borderRadius: [0, 4, 4, 0] },
+        data: drawdownPct,
+        itemStyle: { color: '#f85149' },
+        barMaxWidth: 12,
       },
     ],
   };
