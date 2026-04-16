@@ -45,14 +45,14 @@
 }
 
 .section h2 {
-  font-size: 0.875rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.5px;
   color: var(--text);
   margin-bottom: 12px;
   margin-top: 0;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
   border-bottom: 2px solid var(--border);
 }
 
@@ -285,19 +285,19 @@ table {
 .table th,
 th {
   text-align: left;
-  padding: 10px 12px;
+  padding: 6px 5px;
   color: var(--muted);
   font-weight: 600;
   border-bottom: 2px solid var(--border);
   background: rgba(51, 65, 85, 0.3);
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   letter-spacing: 0.05em;
 }
 
 .table td,
 td {
-  padding: 8px 12px;
+  padding: 5px;
   border-bottom: 1px solid rgba(71, 85, 105, 0.3);
 }
 
@@ -527,7 +527,7 @@ tr:last-child td {
 /* Period buttons */
 .period-btns {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   margin-bottom: 10px;
 }
@@ -536,12 +536,12 @@ tr:last-child td {
   background: var(--card2);
   border: 1px solid var(--border);
   color: var(--muted);
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.72rem;
-  font-weight: 600;
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 
 .period-btns button:hover {
