@@ -24,8 +24,17 @@ const puppeteer = require('puppeteer');
     }
     
     if (ready) {
-      await page.screenshot({ path: '/tmp/dashboard-live.png', fullPage: true });
-      console.log('✅ Screenshot do servidor LIVE salvo');
+      // Wait for page to fully render with data
+      await page.waitForFunction(() => {
+        const warning = document.querySelector('.warning-state');
+        return !warning || warning.textContent.includes('não computado') === false;
+      }, { timeout: 3000 }).catch(() => {});
+
+      // Take full page screenshot
+      const fullHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+      await page.setViewport({ width: 1280, height: fullHeight });
+      await page.screenshot({ path: '/tmp/dashboard-live-full.png', fullPage: true });
+      console.log('✅ Full page screenshot do servidor LIVE salvo');
     }
   } catch (e) {
     console.log('Erro:', e.message);
