@@ -1236,3 +1236,182 @@ tr:last-child td {
 table tbody tr:nth-child(odd) {
   background-color: rgba(71, 85, 105, 0.1);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MISSING COMPONENTS FROM DASHHTML REFERENCE
+   Identified via design audit and ready for implementation
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Badge: Tax Accumulated
+   ───────────────────────────────────────────────────────────────────────── */
+.badge-acc {
+  display: inline-block;
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--green);
+  font-size: 0.55rem;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  margin-left: 4px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Macro KPI Strip
+   ───────────────────────────────────────────────────────────────────────── */
+.macro-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.macro-kpi {
+  background: var(--card2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.macro-kpi .mv {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.macro-kpi .ml {
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Timestamp/Staleness Badges
+   ───────────────────────────────────────────────────────────────────────── */
+.ts-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.ts-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  background: rgba(71, 85, 105, 0.25);
+  color: var(--muted);
+}
+
+.ts-badge.stale {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--red);
+}
+
+.ts-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ts-dot-ok {
+  background: var(--green);
+}
+
+.ts-dot-stale {
+  background: var(--red);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Factor Table (Bond/Fixed Income)
+   ───────────────────────────────────────────────────────────────────────── */
+.factor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.factor-table th {
+  padding: 5px 6px;
+  border-bottom: 2px solid var(--border);
+  color: var(--muted);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.factor-table th:first-child {
+  text-align: left;
+}
+
+.factor-table td {
+  padding: 5px 6px;
+  border-bottom: 1px solid rgba(71, 85, 105, 0.2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.factor-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Duration Block (Bond/Fixed Income Details)
+   ───────────────────────────────────────────────────────────────────────── */
+.duration-block {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(249, 115, 22, 0.06);
+  border-radius: 6px;
+  border-left: 2px solid var(--orange);
+  font-size: 0.72rem;
+}
+
+.duration-block .dur-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.duration-block .dur-label {
+  color: var(--muted);
+}
+
+.duration-block .dur-val {
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Earliest FIRE Card (Special Highlight)
+   ───────────────────────────────────────────────────────────────────────── */
+.earliest-fire-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(168, 85, 247, 0.1));
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 10px;
+  padding: 14px 18px;
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Stress Test Card
+   ───────────────────────────────────────────────────────────────────────── */
+.stress-card {
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.stress-card.pending {
+  background: rgba(71, 85, 105, 0.07);
+  border-color: rgba(71, 85, 105, 0.4);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════ */
