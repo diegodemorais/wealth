@@ -125,7 +125,19 @@ export default function PerformancePage() {
       {/* 3. Retornos Mensais — Heatmap (collapsible, open by default) */}
       <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
-          <MonthlyReturnsHeatmap data={data.monthly_returns} />
+          <MonthlyReturnsHeatmap data={(() => {
+            // Prefer pre-keyed monthly_returns; fall back to retornos_mensais arrays
+            if (data.monthly_returns && Object.keys(data.monthly_returns).length > 0) return data.monthly_returns;
+            const rm = (data as any).retornos_mensais;
+            if (rm?.dates && rm?.values) {
+              const result: Record<string, number> = {};
+              (rm.dates as string[]).forEach((d: string, i: number) => {
+                result[d] = (rm.values as number[])[i] / 100; // percent → decimal
+              });
+              return result;
+            }
+            return {};
+          })()} />
           <div className="src">
             Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.
           </div>

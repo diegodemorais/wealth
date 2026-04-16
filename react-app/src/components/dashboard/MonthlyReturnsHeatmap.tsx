@@ -17,15 +17,8 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
 
   const heatmapData = useMemo(() => {
     if (data && Object.keys(data).length > 0) return data;
-
-    const mockData: HeatmapData = {};
-    const now = new Date();
-    for (let i = 23; i >= 0; i--) {
-      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      mockData[yearMonth] = (Math.random() - 0.3) * 0.08;
-    }
-    return mockData;
+    // No mock data — return empty object and show empty state
+    return {};
   }, [data]);
 
   const entries = Object.entries(heatmapData).sort((a, b) => a[0].localeCompare(b[0]));
