@@ -39,12 +39,12 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
   ];
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Alocação Total do Portfólio
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Stacked bar chart */}
         <div style={{ display: 'flex', gap: '4px', height: '48px', borderRadius: '6px', overflow: 'hidden', background: 'rgba(71,85,105,0.15)', marginBottom: '16px' }}>
           {assets.map(asset => (
@@ -57,7 +57,7 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '0.75rem',
+                  fontSize: 'var(--text-sm)',
                   fontWeight: 600,
                   color: 'white',
                   minWidth: asset.pct > 0.05 ? 'auto' : '0px',
@@ -72,28 +72,28 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
         </div>
 
         {/* Legend and breakdown */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
           {assets.map(asset => (
             asset.value > 0 && (
               <div
                 key={asset.label}
                 style={{
-                  padding: '12px',
+                  padding: 'var(--space-3)',
                   borderRadius: '4px',
                   backgroundColor: `${asset.color}10`,
                   border: `1px solid ${asset.color}40`,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: '4px' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: asset.color }} />
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)' }}>
+                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}>
                     {asset.label}
                   </span>
                 </div>
                 <div style={{ fontSize: '0.875rem', fontWeight: 700, color: asset.color, marginBottom: '4px' }}>
                   {(asset.pct * 100).toFixed(1)}%
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                   {privacyMode ? 'R$••••' : fmtBrl(asset.value)}
                 </div>
               </div>
@@ -102,8 +102,8 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
         </div>
 
         {/* Total */}
-        <div style={{ marginTop: '12px', padding: '12px', background: 'rgba(71,85,105,0.1)', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '4px solid var(--text)' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)' }}>
+        <div style={{ marginTop: '12px', padding: 'var(--space-3)', background: 'rgba(71,85,105,0.1)', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '4px solid var(--text)' }}>
+          <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}>
             Patrimônio Total
           </span>
           <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)' }}>

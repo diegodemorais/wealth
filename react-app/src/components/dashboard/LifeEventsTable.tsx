@@ -29,20 +29,20 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
 
   if (!data || !data.eventos || data.eventos.length === 0) {
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px', padding: '24px', textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted)' }}>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px', padding: 'var(--space-7)', textAlign: 'center', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
         No life events scheduled
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
       <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', margin: 0 }}>
         Life Events — P(FIRE) Impact Analysis
       </h3>
 
       {/* Events List */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-3)' }}>
         {data.eventos.map(event => {
           const isExpanded = expandedId === event.id;
           const deltaColor = event.delta_pp > 0 ? 'var(--red)' : 'var(--green)';
@@ -54,16 +54,16 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
               <button
                 onClick={() => setExpandedId(isExpanded ? null : event.id)}
                 style={{
-                  width: '100%', padding: '12px', background: 'transparent', border: 'none', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+                  width: '100%', padding: 'var(--space-3)', background: 'transparent', border: 'none', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-3)',
                 }}
               >
                 {/* Content */}
                 <div style={{ flex: 1, textAlign: 'left' }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
+                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
                     {event.label}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                     <span>{event.confirmado ? '✓ Confirmado' : '○ Planejado'}</span>
                     <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: dotColor, display: 'inline-block' }} />
                     <span>Ano {event.ano_inicio}</span>
@@ -72,21 +72,21 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
 
                 {/* Delta Badge */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--muted)', textTransform: 'uppercase' }}>ΔP(FIRE)</div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: deltaColor }}>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase' }}>ΔP(FIRE)</div>
+                  <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: deltaColor }}>
                     {privacyMode ? '••' : `${event.delta_pp > 0 ? '' : '+'}${event.delta_pp.toFixed(1)}pp`}
                   </div>
                 </div>
 
                 {/* Expand Arrow */}
-                <div style={{ color: 'var(--muted)', fontSize: '0.75rem' }}>
+                <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>
                   {isExpanded ? '▼' : '▶'}
                 </div>
               </button>
 
               {/* Details — Expandable */}
               {isExpanded && (
-                <div style={{ borderTop: '1px solid var(--border)', padding: '12px', background: 'var(--bg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '12px', fontSize: '0.75rem' }}>
+                <div style={{ borderTop: '1px solid var(--border)', padding: 'var(--space-3)', background: 'var(--bg)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 'var(--space-3)', fontSize: 'var(--text-sm)' }}>
                   <div>
                     <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>New Annual Spend</div>
                     <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem' }}>
@@ -116,7 +116,7 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
 
       {/* Summary */}
       {data.eventos.length > 0 && (
-        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px', padding: '12px', fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.6, marginTop: '16px' }}>
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '4px', padding: 'var(--space-3)', fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.6, marginTop: '16px' }}>
           <strong style={{ color: 'var(--text)' }}>Impact Summary:</strong><br />
           {data.eventos.filter(e => e.confirmado).length > 0 && (
             <div style={{ marginTop: '4px' }}>

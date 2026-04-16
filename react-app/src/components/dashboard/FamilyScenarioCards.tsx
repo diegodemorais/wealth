@@ -63,13 +63,13 @@ export function FamilyScenarioCards({
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
       <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
         Family Scenarios — P(FIRE) Impact
       </h3>
 
       {/* Scenario Selector */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
         {Object.entries(perfis).map(([key, perfil]) => {
           const isSelected = key === selectedPerfil;
           return (
@@ -77,15 +77,15 @@ export function FamilyScenarioCards({
               key={key}
               onClick={() => setSelectedPerfil(key)}
               style={{
-                padding: '12px', borderRadius: '8px', cursor: 'pointer', textAlign: 'left',
+                padding: 'var(--space-3)', borderRadius: '8px', cursor: 'pointer', textAlign: 'left',
                 border: isSelected ? '2px solid var(--accent)' : '2px solid var(--border)',
                 background: isSelected ? 'rgba(59,130,246,0.1)' : 'var(--card)',
               }}
             >
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: '4px', color: isSelected ? 'var(--accent)' : 'var(--text)' }}>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, marginBottom: '4px', color: isSelected ? 'var(--accent)' : 'var(--text)' }}>
                 {perfil.label}
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', textAlign: 'left' }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', textAlign: 'left' }}>
                 {privacyMode ? '••••/ano' : fmtBrl(perfil.gasto_anual / 1000).replace('R$', '') + 'k/ano'}
               </div>
             </button>
@@ -95,24 +95,24 @@ export function FamilyScenarioCards({
 
       {/* Selected Scenario Details */}
       {currentPerfil && (
-        <div style={{ background: 'var(--card)', borderLeft: '4px solid var(--accent)', borderRadius: '0 4px 4px 0', padding: '12px' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
+        <div style={{ background: 'var(--card)', borderLeft: '4px solid var(--accent)', borderRadius: '0 4px 4px 0', padding: 'var(--space-3)' }}>
+          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
             {currentPerfil.label}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5 }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.5 }}>
             {currentPerfil.descricao}
           </div>
         </div>
       )}
 
       {/* P(FIRE) Scenarios Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
         {scenarios.map((sc, idx) => (
-          <div key={idx} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div key={idx} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-3)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
               {sc.label}
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px', color: getPfireColor(sc.value) }}>
+            <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, marginBottom: '8px', color: getPfireColor(sc.value) }}>
               {privacyMode ? '••' : fmtPct(sc.value / 100, 0)}
             </div>
             <div style={{ height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>

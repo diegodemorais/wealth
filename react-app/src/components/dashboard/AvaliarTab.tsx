@@ -91,14 +91,14 @@ export function AvaliarTab() {
     background: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '16px',
+    padding: 'var(--space-5)',
     marginBottom: '12px',
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-7)' }}>
       {/* Summary */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
         {[
           { label: 'Components Refactored', value: COMPONENT_AUDITS.length, color: 'var(--text)', sub: 'All HOJE tab components' },
           { label: 'Lines Removed', value: totalLinesRemoved, color: 'var(--green)', sub: 'Inline styles eliminated' },
@@ -106,10 +106,10 @@ export function AvaliarTab() {
           { label: 'Net Reduction', value: netReduction, color: 'var(--yellow)', sub: `(${((netReduction / totalLinesRemoved) * 100).toFixed(0)}% efficiency)` },
         ].map(item => (
           <div key={item.label} style={cardStyle}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               {item.label}
             </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: item.color }}>
+            <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: item.color }}>
               {item.value}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginTop: '8px' }}>
@@ -121,7 +121,7 @@ export function AvaliarTab() {
 
       {/* Detailed Audit */}
       <div>
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+        <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
           Component Audit — Refactoring Details
         </h3>
 
@@ -129,25 +129,25 @@ export function AvaliarTab() {
           <div key={comp.name} style={cardStyle}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)' }}>{comp.name}</div>
+                <div style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>{comp.name}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginTop: '2px' }}>
                   {comp.phase} — Complexity: <span style={{ color: complexityColor(comp.complexity) }}>{comp.complexity}</span>
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
-              <div style={{ padding: '8px', background: 'var(--bg)', borderRadius: '4px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', marginBottom: '12px' }}>
+              <div style={{ padding: 'var(--space-2)', background: 'var(--bg)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>Before</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text)' }}>{comp.oldStyle}</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{comp.oldStyle}</div>
               </div>
-              <div style={{ padding: '8px', background: 'var(--bg)', borderRadius: '4px' }}>
+              <div style={{ padding: 'var(--space-2)', background: 'var(--bg)', borderRadius: '4px' }}>
                 <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>After</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text)' }}>{comp.newStyle}</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{comp.newStyle}</div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', fontSize: '0.75rem', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', gap: 'var(--space-3)', fontSize: 'var(--text-sm)', marginBottom: '12px' }}>
               <div>
                 <span style={{ color: 'var(--muted)' }}>Removed: </span>
                 <span style={{ color: 'var(--green)', fontWeight: 600 }}>{comp.linesRemoved}</span>
@@ -166,7 +166,7 @@ export function AvaliarTab() {
             </div>
 
             <div style={{ padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--accent)', lineHeight: 1.5 }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--accent)', lineHeight: 1.5 }}>
                 {comp.consolidationNotes}
               </div>
             </div>
@@ -176,11 +176,11 @@ export function AvaliarTab() {
 
       {/* Consolidation Opportunities */}
       <div style={cardStyle}>
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+        <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
           Consolidation Opportunities
         </h3>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.75rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', fontSize: 'var(--text-sm)' }}>
           {[
             {
               title: 'Pattern: Color-Coded Status',
@@ -208,7 +208,7 @@ export function AvaliarTab() {
               note: 'Reusable for: Backtest tab (scenario sensitivity analysis)',
             },
           ].map(item => (
-            <div key={item.title} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '4px', border: '1px solid var(--border)' }}>
+            <div key={item.title} style={{ padding: 'var(--space-3)', background: 'var(--bg)', borderRadius: '4px', border: '1px solid var(--border)' }}>
               <div style={{ fontWeight: 600, color: 'var(--yellow)', marginBottom: '4px' }}>{item.title}</div>
               <div style={{ color: 'var(--muted)' }}>{item.body}</div>
               <div style={{ color: 'var(--accent)', marginTop: '4px' }}>{item.note}</div>
@@ -219,11 +219,11 @@ export function AvaliarTab() {
 
       {/* Next Steps */}
       <div style={{ ...cardStyle, background: 'var(--bg)', border: '1px solid var(--border)' }}>
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent)', marginBottom: '12px' }}>
+        <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--accent)', marginBottom: '12px' }}>
           Phase 2 → Phase 3 Roadmap
         </h3>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
           {[
             { label: 'Priority 1:', text: 'Portfolio tab (29 components, high reuse of HOJE patterns)' },
             { label: 'Priority 2:', text: 'Performance tab (extract chart patterns, consolidate with Phase 1 color logic)' },

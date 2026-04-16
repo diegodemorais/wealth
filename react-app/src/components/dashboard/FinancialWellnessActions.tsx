@@ -45,21 +45,21 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
   const displayedAcoes = topAcoes.slice(0, 5);
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Financial Wellness & Ações Prioritárias
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Wellness Score Display */}
-        <div style={{ textAlign: 'center', padding: '12px', background: 'rgba(6,182,212,0.1)', borderRadius: '4px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ textAlign: 'center', padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Wellness Score
           </div>
           <div style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--cyan)', marginBottom: '4px' }}>
             {privacyMode ? '••' : Math.round(wellnessScore)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500, marginBottom: '12px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500, marginBottom: '12px' }}>
             {wellnessLabel}
           </div>
 
@@ -88,18 +88,18 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
             <h3 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
               Top 5 Ações ({displayedAcoes.length})
             </h3>
-            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               {expandActions ? '▼' : '▶'}
             </span>
           </div>
 
           {(expandActions || displayedAcoes.length <= 3) && displayedAcoes.length > 0 && (
-            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
               {displayedAcoes.map((acao, idx) => (
                 <div
                   key={idx}
                   style={{
-                    display: 'flex', gap: '12px', padding: '12px', borderRadius: '4px',
+                    display: 'flex', gap: 'var(--space-3)', padding: 'var(--space-3)', borderRadius: '4px',
                     borderLeft: `4px solid ${getPriorityColor(acao.priority)}`,
                     backgroundColor: getPriorityBg(acao.priority),
                   }}
@@ -112,20 +112,20 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
                       backgroundColor: getPriorityColor(acao.priority),
                     }}
                   >
-                    <span style={{ fontSize: '0.75rem', fontWeight: 900, color: 'white' }}>
+                    <span style={{ fontSize: 'var(--text-sm)', fontWeight: 900, color: 'white' }}>
                       {acao.rank}
                     </span>
                   </div>
 
                   {/* Content */}
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '4px' }}>
                       {acao.metric}
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>
+                    <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '8px' }}>
                       {acao.action}
                     </div>
-                    <div style={{ display: 'flex', gap: '12px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+                    <div style={{ display: 'flex', gap: 'var(--space-3)', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                       <span>
                         Atual: <span style={{ fontWeight: 600, color: 'var(--text)' }}>{acao.current_pts}pts</span>
                       </span>
@@ -140,7 +140,7 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
           )}
 
           {displayedAcoes.length === 0 && (
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px', textAlign: 'center' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', padding: 'var(--space-2)', textAlign: 'center' }}>
               Nenhuma ação prioritária identificada
             </div>
           )}

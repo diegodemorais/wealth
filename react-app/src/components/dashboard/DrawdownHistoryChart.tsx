@@ -106,43 +106,43 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
   const currentBorder = currentDd > -10 ? 'rgba(34,197,94,0.25)' : 'rgba(245,158,11,0.25)';
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Drawdown History — Perdas Históricas
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         <div>
           <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Max Drawdown</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Max Drawdown</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--red)' }}>
               {privacyMode ? '••' : maxDrawdown.toFixed(2)}%
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Worst case (histórico)</div>
           </div>
 
-          <div style={{ padding: '12px', background: currentBg, border: `1px solid ${currentBorder}`, borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Drawdown Atual</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px', color: currentColor }}>
+          <div style={{ padding: 'var(--space-3)', background: currentBg, border: `1px solid ${currentBorder}`, borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Drawdown Atual</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: currentColor }}>
               {privacyMode ? '••' : currentDd.toFixed(2)}%
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Posição presente</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Recuperação</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Recuperação</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>
               {currentDd > -5 ? 'ATH' : 'Recuperando'}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>vs. máximo histórico</div>
           </div>
         </div>
 
-        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>Nota:</strong> Drawdown = queda máxima do pico anterior até o vale. Valores negativos indicam perda. Monitorar durante correções de mercado para manter disciplina.
         </div>
       </div>

@@ -41,18 +41,18 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
   };
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Fluxo de Caixa Anual — Aporte Distribuição
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Input card (Aporte) */}
-        <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '2px solid var(--success)', borderRadius: '4px', textAlign: 'center' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ padding: 'var(--space-3)', background: 'rgba(34,197,94,0.1)', border: '2px solid var(--success)', borderRadius: '4px', textAlign: 'center' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Aporte Mensal
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--success)' }}>
+          <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--success)' }}>
             {privacyMode ? 'R$••••' : fmtBrl(aporteMensal)}
           </div>
         </div>
@@ -77,7 +77,7 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
               }}
             >
               {item.pct > 0.08 && (
-                <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'white' }}>
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'white' }}>
                   {(item.pct * 100).toFixed(0)}%
                 </span>
               )}
@@ -90,16 +90,16 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', paddingTop: '16px', borderTop: '1px solid var(--border)' }}
           onClick={() => setExpandBreakdown(!expandBreakdown)}
         >
-          <h3 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
+          <h3 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
             Destinos
           </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {expandBreakdown ? '▼' : '▶'}
           </span>
         </div>
 
         {expandBreakdown && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {[
               { label: 'IPCA+ Ladder', sub: 'Renda fixa de longo prazo', value: ipcaFlow, pct: ipcaPct, color: colors.ipca },
               { label: 'Equity International', sub: 'SWRD / AVGS / AVEM', value: equityFlow, pct: equityPct, color: colors.equity },
@@ -109,7 +109,7 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
               <div
                 key={item.label}
                 style={{
-                  padding: '12px',
+                  padding: 'var(--space-3)',
                   borderRadius: '4px',
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -119,11 +119,11 @@ const CashFlowSankey: React.FC<CashFlowSankeyProps> = ({
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)' }}>{item.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{item.sub}</div>
+                  <div style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)' }}>{item.label}</div>
+                  <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>{item.sub}</div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 700, color: item.color }}>
+                  <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: item.color }}>
                     {privacyMode ? 'R$••••' : fmtBrl(item.value)}
                   </div>
                   <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>

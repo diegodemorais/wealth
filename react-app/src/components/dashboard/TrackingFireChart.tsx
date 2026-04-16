@@ -118,23 +118,23 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
   }, [realizadoBrl, projetadoP50Brl, fireGatilhoBrl]);
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Tracking FIRE — Realizado vs Projeção
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', marginBottom: '16px' }}>
           {/* Chart */}
           <div>
             <canvas ref={chartRef} style={{ maxHeight: '200px' }} />
           </div>
 
           {/* Status cards */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {/* Realizado */}
-            <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid var(--cyan)', borderRadius: '4px' }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid var(--cyan)', borderRadius: '4px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Patrimônio Realizado
               </div>
               <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--cyan)' }}>
@@ -143,8 +143,8 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
             </div>
 
             {/* P50 Projetado */}
-            <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid var(--purple)', borderRadius: '4px' }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid var(--purple)', borderRadius: '4px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 P50 Projetado
               </div>
               <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--purple)' }}>
@@ -155,19 +155,19 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
             {/* Diferença */}
             <div
               style={{
-                padding: '12px',
+                padding: 'var(--space-3)',
                 borderRadius: '4px',
                 backgroundColor: `${statusColor}15`,
                 border: `1px solid ${statusColor}`,
               }}
             >
-              <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
                 Diferença
               </div>
               <div style={{ fontSize: '1.125rem', fontWeight: 700, color: statusColor, marginBottom: '4px' }}>
                 {privacyMode ? '••' : `${diferencaPct.toFixed(1)}%`}
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                 {status === 'ahead' && '✅ À frente da projeção'}
                 {status === 'tracking' && '📊 Acompanhando projeção'}
                 {status === 'behind' && '⚠️ Atrás da projeção'}
@@ -178,11 +178,11 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
 
         {/* FIRE Gatilho progress */}
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Progresso para FIRE Gatilho
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             <span>Meta FIRE: {privacyMode ? 'R$••••' : fmtBrl(fireGatilhoBrl)}</span>
             <span>{privacyMode ? '••' : `${((patrimonioAtualBrl / fireGatilhoBrl) * 100).toFixed(1)}%`}</span>
           </div>

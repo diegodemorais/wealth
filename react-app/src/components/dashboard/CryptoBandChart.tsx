@@ -52,18 +52,18 @@ export function CryptoBandChart({
   const markerColor = isInBand ? 'var(--green)' : isUnderweight ? 'var(--red)' : 'var(--yellow)'
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px' }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
         <div>
-          <h4 style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text)', margin: '0 0 4px 0' }}>{label}</h4>
-          <p style={{ fontSize: '0.75rem', color: 'var(--muted)', margin: 0 }}>
+          <h4 style={{ fontWeight: 600, fontSize: 'var(--text-md)', color: 'var(--text)', margin: '0 0 4px 0' }}>{label}</h4>
+          <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', margin: 0 }}>
             Atual: {atual.toFixed(1)}% · Alvo {alvo.toFixed(0)}% · Banda{" "}
             {min.toFixed(1)}–{max.toFixed(1)}%
           </p>
         </div>
         <span style={{
-          fontSize: '0.75rem',
+          fontSize: 'var(--text-sm)',
           padding: '2px 8px',
           borderRadius: '4px',
           border: `1px solid ${badgeBorder}`,
@@ -116,7 +116,7 @@ export function CryptoBandChart({
       {(valor !== undefined || pnl_pct !== undefined) && (
         <>
           <div style={{ borderTop: '1px solid var(--border)', margin: '12px 0', opacity: 0.3 }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {valor !== undefined && (
               <span>Posição: {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}</span>
             )}

@@ -196,24 +196,24 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 8px 0',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '600',
     color: 'var(--text)',
   },
   subtitle: {
     margin: '0 0 20px 0',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
   },
   scenarioBlock: {
     border: '1px solid var(--border)',
     borderRadius: '6px',
-    padding: '16px',
+    padding: 'var(--space-5)',
     marginBottom: '16px',
     backgroundColor: 'var(--bg)',
   },
@@ -233,7 +233,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   scenarioDesc: {
     margin: '0',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
   },
   agebadge: {
@@ -252,31 +252,31 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '2px',
   },
   ageBadgeValue: {
-    fontSize: '18px',
+    fontSize: 'var(--text-xl)',
     fontWeight: '700',
     color: 'var(--accent)',
   },
   metricsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-    gap: '12px',
+    gap: 'var(--space-3)',
     marginBottom: '16px',
   },
   metricSection: {
-    padding: '12px',
+    padding: 'var(--space-3)',
     backgroundColor: 'var(--card)',
     borderRadius: '4px',
     border: '1px solid var(--border)',
   },
   metricTitle: {
     margin: '0 0 8px 0',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     fontWeight: '600',
     color: 'var(--muted)',
     textTransform: 'uppercase',
   },
   metricValue: {
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--accent)',
   },
@@ -288,7 +288,7 @@ const styles: Record<string, React.CSSProperties> = {
   metricRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
   },
   metricLabel: {
     color: 'var(--muted)',
@@ -299,7 +299,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderTop: '1px solid var(--border)',
   },
   rangeLabel: {
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     fontWeight: '500',
     color: 'var(--muted)',
     marginBottom: '8px',
@@ -307,11 +307,11 @@ const styles: Record<string, React.CSSProperties> = {
   rangeBar: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: 'var(--space-2)',
     padding: '8px 0',
   },
   rangeMin: {
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     minWidth: '80px',
     textAlign: 'right',
@@ -337,7 +337,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '2px',
   },
   rangeMax: {
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     minWidth: '80px',
     textAlign: 'left',
@@ -358,7 +358,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   note: {
     margin: '0',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     lineHeight: '1.5',
   },

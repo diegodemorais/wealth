@@ -58,12 +58,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   label: {
     color: 'var(--border)',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
   },
   value: {
     color: 'var(--accent)',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '700',
   },
   input: {
@@ -82,7 +82,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginTop: '8px',
   },
   minMax: {
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
   },
 };

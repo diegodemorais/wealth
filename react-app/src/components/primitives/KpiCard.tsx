@@ -79,9 +79,9 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid var(--card2)',
     borderLeft: '4px solid var(--green)',
     borderRadius: '8px',
-    padding: '16px',
+    padding: 'var(--space-5)',
     display: 'flex',
-    gap: '12px',
+    gap: 'var(--space-3)',
     alignItems: 'flex-start',
   },
   icon: {
@@ -92,11 +92,11 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
+    gap: 'var(--space-2)',
   },
   label: {
     color: 'var(--muted)',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     textTransform: 'uppercase',
     fontWeight: '600',
     margin: 0,
@@ -104,21 +104,21 @@ const styles: Record<string, React.CSSProperties> = {
   valueSection: {
     display: 'flex',
     alignItems: 'baseline',
-    gap: '8px',
+    gap: 'var(--space-2)',
   },
   value: {
-    color: '#fff',
+    color: 'var(--text)',
     fontSize: '24px',
     fontWeight: '600',
   },
   unit: {
     color: 'var(--muted)',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '400',
     marginLeft: '4px',
   },
   delta: {
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '500',
   },
 };

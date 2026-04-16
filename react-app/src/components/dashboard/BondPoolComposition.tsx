@@ -60,7 +60,7 @@ export function BondPoolComposition({
     background: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '16px',
+    padding: 'var(--space-5)',
     marginBottom: '16px',
   };
 
@@ -71,9 +71,9 @@ export function BondPoolComposition({
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
       <div>
-        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', marginBottom: '16px' }}>
           Bond Pool Status
         </h3>
 
@@ -81,14 +81,14 @@ export function BondPoolComposition({
         <div style={cardStyle}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '14px' }}>
             <div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>Current Pool</p>
-              <p style={{ fontFamily: 'monospace', fontSize: '1.5rem', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '8px' }}>Current Pool</p>
+              <p style={{ fontFamily: 'monospace', fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--text)', margin: 0 }}>
                 {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}
               </p>
             </div>
             <div style={{ textAlign: 'right', color: statusColors[data.status] }}>
-              <p style={{ fontSize: '0.85rem', fontWeight: 600, margin: '0 0 4px 0' }}>{statusLabels[data.status]}</p>
-              <p style={{ fontSize: '0.75rem', fontFamily: 'monospace', margin: 0 }}>
+              <p style={{ fontSize: 'var(--text-md)', fontWeight: 600, margin: '0 0 4px 0' }}>{statusLabels[data.status]}</p>
+              <p style={{ fontSize: 'var(--text-sm)', fontFamily: 'monospace', margin: 0 }}>
                 {anosGastos.toFixed(1)}/{metaAnos.toFixed(0)} anos
               </p>
             </div>
@@ -96,23 +96,23 @@ export function BondPoolComposition({
 
           <div style={{ marginBottom: '14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Progress to Target</span>
-              <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Progress to Target</span>
+              <span style={{ fontFamily: 'monospace', fontSize: 'var(--text-md)', fontWeight: 600 }}>
                 {progressPercent.toFixed(0)}%
               </span>
             </div>
             {progressBar(progressPercent)}
-            <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '8px', marginBottom: 0 }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '8px', marginBottom: 0 }}>
               Target: {metaAnos.toFixed(0)} years of expenses
             </p>
           </div>
 
           <div style={{ borderTop: '1px solid var(--border)', marginBottom: '14px', paddingTop: '16px' }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px' }}>Post-FIRE Runway</p>
-            <p style={{ fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', margin: '0 0 4px 0' }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '8px' }}>Post-FIRE Runway</p>
+            <p style={{ fontFamily: 'monospace', fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text)', margin: '0 0 4px 0' }}>
               {runway.toFixed(1)} years
             </p>
-            <p style={{ fontSize: '0.75rem', color: 'var(--muted)', margin: 0 }}>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', margin: 0 }}>
               of spending coverage available after FIRE date
             </p>
           </div>
@@ -120,17 +120,17 @@ export function BondPoolComposition({
 
         {/* Composition Breakdown */}
         <div style={cardStyle}>
-          <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>Composição por Vencimento</h4>
+          <h4 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>Composição por Vencimento</h4>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             {data.composicao.ipca2040 !== undefined && data.composicao.ipca2040 > 0 && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>IPCA+ 2040</span>
-                  <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>{comp2040Pct.toFixed(0)}%</span>
+                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>IPCA+ 2040</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: 'var(--text-md)', fontWeight: 600 }}>{comp2040Pct.toFixed(0)}%</span>
                 </div>
                 {progressBar(comp2040Pct)}
-                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
                   {privacyMode ? '••••' : `R$${(data.composicao.ipca2040 / 1000).toFixed(0)}k`}
                 </p>
               </div>
@@ -139,11 +139,11 @@ export function BondPoolComposition({
             {data.composicao.ipca2050 !== undefined && data.composicao.ipca2050 > 0 && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>IPCA+ 2050</span>
-                  <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>{comp2050Pct.toFixed(0)}%</span>
+                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>IPCA+ 2050</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: 'var(--text-md)', fontWeight: 600 }}>{comp2050Pct.toFixed(0)}%</span>
                 </div>
                 {progressBar(comp2050Pct)}
-                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
                   {privacyMode ? '••••' : `R$${(data.composicao.ipca2050 / 1000).toFixed(0)}k`}
                 </p>
               </div>
@@ -152,11 +152,11 @@ export function BondPoolComposition({
             {data.composicao.ipca2029 !== undefined && data.composicao.ipca2029 > 0 && (
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>IPCA+ 2029</span>
-                  <span style={{ fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 600 }}>{comp2029Pct.toFixed(0)}%</span>
+                  <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>IPCA+ 2029</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: 'var(--text-md)', fontWeight: 600 }}>{comp2029Pct.toFixed(0)}%</span>
                 </div>
                 {progressBar(comp2029Pct)}
-                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px', marginBottom: 0 }}>
                   {privacyMode ? '••••' : `R$${(data.composicao.ipca2029 / 1000).toFixed(0)}k`}
                 </p>
               </div>
@@ -165,7 +165,7 @@ export function BondPoolComposition({
         </div>
 
         {/* Status Note */}
-        <p style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
           {isHealthy
             ? "Bond pool on track. Continue building towards 7-year target for FIRE flexibility."
             : "Bond pool below healthy threshold. Prioritize building RF runway."}

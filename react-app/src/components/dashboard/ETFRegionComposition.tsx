@@ -37,14 +37,14 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
   ];
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         ETF Região Composição
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Tab buttons */}
-        <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
+        <div style={{ display: 'flex', gap: 'var(--space-2)', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
           {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
             <button
               key={key}
@@ -52,7 +52,7 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
               style={{
                 padding: '6px 12px',
                 borderRadius: '4px',
-                fontSize: '0.75rem',
+                fontSize: 'var(--text-sm)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 backgroundColor: selectedTab === key ? etfs[key].color + '20' : 'transparent',
@@ -68,24 +68,24 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
 
         {/* Current ETF composition */}
         <div>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
             {currentEtf.name}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {regions.map(region => {
               const value = currentEtf.data[region.key];
               return (
-                <div key={region.label} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div key={region.label} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                   <div style={{ flexShrink: 0, width: '120px' }}>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>{region.label}</div>
+                    <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>{region.label}</div>
                     <div style={{ height: '20px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
                       <div style={{ height: '100%', width: `${value}%`, backgroundColor: region.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {value > 5 && <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'white' }}>{value}%</span>}
+                        {value > 5 && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'white' }}>{value}%</span>}
                       </div>
                     </div>
                   </div>
-                  <div style={{ flexShrink: 0, width: '40px', textAlign: 'right', fontSize: '0.85rem', fontWeight: 700, color: region.color }}>
+                  <div style={{ flexShrink: 0, width: '40px', textAlign: 'right', fontSize: 'var(--text-md)', fontWeight: 700, color: region.color }}>
                     {value}%
                   </div>
                 </div>
@@ -96,17 +96,17 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
 
         {/* Comparison table */}
         <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
             Comparação — 3 ETFs
           </div>
 
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Região</th>
+                  <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Região</th>
                   {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
-                    <th key={key} style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 700, color: etfs[key].color }}>
+                    <th key={key} style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontWeight: 700, color: etfs[key].color }}>
                       {etfs[key].name.split(' ')[0]}
                     </th>
                   ))}
@@ -115,9 +115,9 @@ const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
               <tbody>
                 {regions.map(region => (
                   <tr key={region.label}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>{region.label}</td>
+                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>{region.label}</td>
                     {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
-                      <td key={`${key}-${region.label}`} style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: region.color }}>
+                      <td key={`${key}-${region.label}`} style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontWeight: 600, color: region.color }}>
                         {etfs[key].data[region.key]}%
                       </td>
                     ))}

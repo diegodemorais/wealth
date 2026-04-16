@@ -76,30 +76,30 @@ export function RFCryptoComposition() {
       <div style={styles.section}>
         <h4 style={styles.sectionTitle}>Fixed Income (RF)</h4>
         <div style={styles.tableWrapper}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Instrument</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Type</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Value (BRL)</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Quotes</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Rate</th>
+                <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Instrument</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Type</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Value (BRL)</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Quotes</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Rate</th>
               </tr>
             </thead>
             <tbody>
               {rfComposition.map((item) => (
                 <tr key={item.key} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '8px', ...styles.instrumentName }}>{item.name}</td>
-                  <td style={{ textAlign: 'right', padding: '8px', fontSize: '12px', color: 'var(--muted)' }}>
+                  <td style={{ padding: 'var(--space-2)', ...styles.instrumentName }}>{item.name}</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
                     {item.type}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(item.valor)}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', fontSize: '12px', color: 'var(--text)' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--text)' }}>
                     {privacyMode ? '••••' : item.cotas.toFixed(2)}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--accent)' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--accent)' }}>
                     {privacyMode ? '••••' : `${item.taxa.toFixed(2)}%`}
                   </td>
                 </tr>
@@ -117,30 +117,30 @@ export function RFCryptoComposition() {
       <div style={styles.section}>
         <h4 style={styles.sectionTitle}>Crypto (HODL)</h4>
         <div style={styles.tableWrapper}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Asset</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Qty</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Price</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Value (BRL)</th>
-                <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>P&amp;L</th>
+                <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Asset</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Qty</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Price</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Value (BRL)</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>P&amp;L</th>
               </tr>
             </thead>
             <tbody>
               {data.hodl11 && (
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '8px', ...styles.instrumentName }}>HODL11 (BTC Wrapper)</td>
-                  <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
+                  <td style={{ padding: 'var(--space-2)', ...styles.instrumentName }}>HODL11 (BTC Wrapper)</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
                     {privacyMode ? '••••' : data.hodl11.qty.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
                     {privacyMode ? '••••' : `R$ ${data.hodl11.preco.toFixed(2)}`}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(data.hodl11.valor)}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', color: data.hodl11.pnl_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: data.hodl11.pnl_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
                     {privacyMode ? '••••' : `${data.hodl11.pnl_pct.toFixed(2)}%`}
                   </td>
                 </tr>
@@ -184,12 +184,12 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 20px 0',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '600',
     color: 'var(--text)',
   },
@@ -198,7 +198,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sectionTitle: {
     margin: '0 0 12px 0',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--muted)',
   },
@@ -216,7 +216,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 12px',
     backgroundColor: 'var(--bg)',
     borderRadius: '4px',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--text)',
   },
@@ -255,7 +255,7 @@ const styles: Record<string, React.CSSProperties> = {
   percentages: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '12px',
+    gap: 'var(--space-3)',
   },
   percentItem: {
     display: 'flex',
@@ -263,7 +263,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 12px',
     backgroundColor: 'var(--bg)',
     borderRadius: '4px',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
   },
   percentValue: {
     fontWeight: '600',

@@ -81,28 +81,28 @@ export function PremisesTable() {
         Comparison of initial assumptions with realized outcomes
       </p>
       <div style={styles.tableWrapper}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Category</th>
-              <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Item</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Assumption</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Actual</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Delta</th>
+              <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Category</th>
+              <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Item</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Assumption</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Actual</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Delta</th>
             </tr>
           </thead>
           <tbody>
             {premises.map((row, idx) => (
               <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px', ...styles.category }}>{row.category}</td>
-                <td style={{ padding: '8px', color: 'var(--text)' }}>{row.item}</td>
-                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
+                <td style={{ padding: 'var(--space-2)', ...styles.category }}>{row.category}</td>
+                <td style={{ padding: 'var(--space-2)', color: 'var(--text)' }}>{row.item}</td>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
                   {formatValue(row.assumption)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                   {formatValue(row.actual)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: getDeltaColor(row.delta), fontWeight: '500' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: getDeltaColor(row.delta), fontWeight: '500' }}>
                   {formatValue(row.delta)}
                 </td>
               </tr>
@@ -143,18 +143,18 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 8px 0',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '600',
     color: 'var(--text)',
   },
   subtitle: {
     margin: '0 0 16px 0',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
   },
   tableWrapper: {
@@ -162,7 +162,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '14px',
   },
   category: {
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     fontWeight: '500',
     color: 'var(--muted)',
   },
@@ -182,32 +182,32 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sectionTitle: {
     margin: '0 0 12px 0',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--muted)',
   },
   annualGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-    gap: '12px',
+    gap: 'var(--space-3)',
   },
   annualItem: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '12px',
+    padding: 'var(--space-3)',
     backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     border: '1px solid var(--border)',
     textAlign: 'center',
   },
   yearLabel: {
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     fontWeight: '500',
     marginBottom: '4px',
   },
   yearValue: {
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--accent)',
   },

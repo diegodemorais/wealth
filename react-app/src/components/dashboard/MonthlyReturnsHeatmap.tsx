@@ -78,7 +78,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              fontSize: '0.75rem',
+              fontSize: 'var(--text-sm)',
               fontWeight: 600,
               backgroundColor: getColor(returnValue),
               color: getTextColor(returnValue),

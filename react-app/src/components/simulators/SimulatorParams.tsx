@@ -107,19 +107,19 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--card2)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 24px 0',
-    color: '#fff',
-    fontSize: '18px',
+    color: 'var(--text)',
+    fontSize: 'var(--text-xl)',
     fontWeight: '700',
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-    gap: '24px',
+    gap: 'var(--space-7)',
     marginBottom: '14px',
   },
   sliderGroup: {
@@ -128,7 +128,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   hint: {
     margin: '8px 0 0 0',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     fontStyle: 'italic',
   },
@@ -145,12 +145,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   summaryLabel: {
     color: 'var(--muted)',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
   },
   summaryValue: {
     color: 'var(--accent)',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '700',
     fontFamily: 'monospace',
   },

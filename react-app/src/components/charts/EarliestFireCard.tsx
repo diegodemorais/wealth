@@ -46,11 +46,11 @@ export function EarliestFireCard({
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  card: { backgroundColor: 'var(--card)', border: '2px solid var(--green)', borderRadius: '12px', padding: '24px', marginBottom: '14px', textAlign: 'center' },
-  title: { margin: '0 0 16px 0', color: '#fff', fontSize: '18px' },
-  date: { margin: '12px 0', color: 'var(--green)', fontSize: '28px', fontWeight: '700' },
-  subtitle: { margin: '8px 0', color: 'var(--muted)', fontSize: '14px' },
-  masked: { fontSize: '28px', color: 'var(--muted)' },
+  card: { backgroundColor: 'var(--card)', border: '2px solid var(--green)', borderRadius: '12px', padding: 'var(--space-7)', marginBottom: '14px', textAlign: 'center' },
+  title: { margin: '0 0 16px 0', color: 'var(--text)', fontSize: 'var(--text-xl)' },
+  date: { margin: '12px 0', color: 'var(--green)', fontSize: 'var(--text-4xl)', fontWeight: '700' },
+  subtitle: { margin: '8px 0', color: 'var(--muted)', fontSize: 'var(--text-sm)' },
+  masked: { fontSize: 'var(--text-4xl)', color: 'var(--muted)' },
   badge: { marginTop: '16px', padding: '8px 12px', backgroundColor: 'var(--green)', borderRadius: '6px', display: 'inline-block' },
-  badgeText: { color: '#000', fontWeight: '600', fontSize: '12px' },
+  badgeText: { color: 'var(--bg)', fontWeight: '600', fontSize: 'var(--text-xs)' },
 };

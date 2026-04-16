@@ -139,61 +139,61 @@ const GlidePath: React.FC<GlidePathProps> = ({
   }, [glidePathPoints]);
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Glide Path — Evolução de Alocação até FIRE
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Chart */}
         <div>
           <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
         </div>
 
         {/* Current vs Target */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
               Posição Atual (Idade {currentAge})
             </div>
             <div style={{ marginBottom: '8px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(59, 130, 246, 0.7)' }}>{currentEquityPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
+              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(59, 130, 246, 0.7)' }}>{currentEquityPercent.toFixed(1)}%</div>
             </div>
             <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>RF</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>{currentRfPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>RF</div>
+              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>{currentRfPercent.toFixed(1)}%</div>
             </div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
               Meta FIRE (Idade {retirementAge})
             </div>
             <div style={{ marginBottom: '8px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(59, 130, 246, 0.7)' }}>{retirementEquityPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
+              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(59, 130, 246, 0.7)' }}>{retirementEquityPercent.toFixed(1)}%</div>
             </div>
             <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>RF</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>{retirementRfPercent.toFixed(1)}%</div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>RF</div>
+              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>{retirementRfPercent.toFixed(1)}%</div>
             </div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
               Distância a Migrar
             </div>
             <div style={{ marginBottom: '8px' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: retirementEquityPercent < currentEquityPercent ? 'var(--red)' : 'var(--green)' }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>Equity</div>
+              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: retirementEquityPercent < currentEquityPercent ? 'var(--red)' : 'var(--green)' }}>
                 {retirementEquityPercent < currentEquityPercent ? '−' : '+'}
                 {Math.abs(retirementEquityPercent - currentEquityPercent).toFixed(1)}pp
               </div>
             </div>
             <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '4px' }}>Taxa Anual</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)' }}>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>Taxa Anual</div>
+              <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)' }}>
                 {yearsToRetirement > 0 ? (Math.abs(retirementEquityPercent - currentEquityPercent) / yearsToRetirement).toFixed(2) : '—'}pp/a
               </div>
             </div>
@@ -206,13 +206,13 @@ const GlidePath: React.FC<GlidePathProps> = ({
             Timeline (cada {Math.max(1, Math.floor(yearsToRetirement / 5))} anos)
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 'var(--space-3)' }}>
             {glidePathPoints
               .filter((p, idx) => idx === 0 || idx === glidePathPoints.length - 1 || idx % Math.max(1, Math.floor(yearsToRetirement / 5)) === 0)
               .map(p => (
                 <div
                   key={p.year}
-                  style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.75rem' }}
+                  style={{ padding: 'var(--space-3)', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: 'var(--text-sm)' }}
                 >
                   <div style={{ color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>
                     {p.label} (idade {p.age})
@@ -225,7 +225,7 @@ const GlidePath: React.FC<GlidePathProps> = ({
         </div>
 
         {/* Footer note */}
-        <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>📌 Nota:</strong> Glide path assume redução linear de equity até a idade de aposentadoria. Revisit anualmente ou em eventos de rebalanço.
         </div>
       </div>

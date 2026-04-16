@@ -70,38 +70,38 @@ export function TaxAnalysisGrid() {
     <div>
 
       <div style={styles.tableWrapper}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th style={{ textAlign: 'left', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Ticker</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Ganho USD</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>PTAX Médio</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Custo BRL</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Valor Atual BRL</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Ganho BRL</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>IR Estimado</th>
+              <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Ticker</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Ganho USD</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>PTAX Médio</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Custo BRL</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Valor Atual BRL</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Ganho BRL</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>IR Estimado</th>
             </tr>
           </thead>
           <tbody>
             {taxData.map((item) => (
               <tr key={item.ticker} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '8px', ...styles.ticker }}>{item.ticker}</td>
-                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
+                <td style={{ padding: 'var(--space-2)', ...styles.ticker }}>{item.ticker}</td>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
                   {formatUSD(item.ganho_usd)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', fontSize: '12px', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--text)' }}>
                   {formatRate(item.ptax_medio)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
                   {formatCurrency(item.custo_brl)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                   {formatCurrency(item.valor_brl)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: getGainColor(item.ganho_brl), fontWeight: '500' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: getGainColor(item.ganho_brl), fontWeight: '500' }}>
                   {formatCurrency(item.ganho_brl)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--orange)', fontWeight: '600' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--orange)', fontWeight: '600' }}>
                   {formatCurrency(item.ir_estimado)}
                 </td>
               </tr>
@@ -158,18 +158,18 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 8px 0',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '600',
     color: 'var(--text)',
   },
   subtitle: {
     margin: '0 0 16px 0',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
   },
   tableWrapper: {
@@ -188,31 +188,31 @@ const styles: Record<string, React.CSSProperties> = {
   },
   summaryTitle: {
     margin: '0 0 12px 0',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--muted)',
   },
   summaryGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-    gap: '12px',
+    gap: 'var(--space-3)',
   },
   summaryItem: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '12px',
+    padding: 'var(--space-3)',
     backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     border: '1px solid var(--border)',
   },
   summaryLabel: {
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     fontWeight: '500',
     marginBottom: '4px',
   },
   summaryValue: {
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--accent)',
   },
@@ -231,7 +231,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   note: {
     margin: '0',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     lineHeight: '1.5',
   },

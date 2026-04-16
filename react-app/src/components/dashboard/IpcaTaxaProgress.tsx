@@ -49,30 +49,30 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
   const totalColor = isOnTarget || ipcaTotalGap > 0 ? 'var(--green)' : 'var(--red)';
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         IPCA+ Taxa & Progresso
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Current Rate & Total Status */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Taxa IPCA+ Atual</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cyan)' }}>{taxaAtual.toFixed(2)}%</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Rendimento real anual</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Taxa IPCA+ Atual</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--cyan)' }}>{taxaAtual.toFixed(2)}%</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Rendimento real anual</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Total IPCA+</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cyan)' }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotalBrl)}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{ipcaTotalCurrentPercent.toFixed(1)}% da carteira</div>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Total IPCA+</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--cyan)' }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotalBrl)}</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>{ipcaTotalCurrentPercent.toFixed(1)}% da carteira</div>
           </div>
 
-          <div style={{ padding: '12px', borderRadius: '4px', background: totalBg, border: `1px solid ${totalBorder}` }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Meta Total IPCA+</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: totalColor }}>{ipcaTotalAlvoPercent.toFixed(1)}%</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{ipcaTotalGap > 0 ? '+' : ''}{ipcaTotalGap.toFixed(1)}pp faltando</div>
+          <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: totalBg, border: `1px solid ${totalBorder}` }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Meta Total IPCA+</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: totalColor }}>{ipcaTotalAlvoPercent.toFixed(1)}%</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>{ipcaTotalGap > 0 ? '+' : ''}{ipcaTotalGap.toFixed(1)}pp faltando</div>
           </div>
         </div>
 
@@ -84,7 +84,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
 
           {/* IPCA 2040 */}
           <div style={{ marginBottom: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               <span>IPCA+ 2040</span>
               <span>{privacyMode ? '••' : `${ipca2040AtualPercent.toFixed(1)}% / ${ipca2040AlvoPercent.toFixed(1)}%`}</span>
             </div>
@@ -107,7 +107,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
 
           {/* IPCA 2050 */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               <span>IPCA+ 2050</span>
               <span>{privacyMode ? '••' : `${ipca2050AtualPercent.toFixed(1)}% / ${ipca2050AlvoPercent.toFixed(1)}%`}</span>
             </div>
@@ -125,43 +125,43 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
 
         {/* Expandable details */}
         <div
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '12px' }}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '12px' }}
           onClick={() => setExpandDetails(!expandDetails)}
         >
           <h3 style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, color: 'var(--text)' }}>
             Detalhes da Alocação
           </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {expandDetails ? '▼' : '▶'}
           </span>
         </div>
 
         {expandDetails && (
           <div style={{ marginTop: '12px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-              <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
-                <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>IPCA+ 2040</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
+              <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>IPCA+ 2040</div>
                 <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--cyan)', marginBottom: '4px' }}>{privacyMode ? 'R$••••' : fmtBrl(ipca2040Valor)}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Alvo: {ipca2040AlvoPercent.toFixed(1)}%</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Alvo: {ipca2040AlvoPercent.toFixed(1)}%</div>
               </div>
 
-              <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-                <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>IPCA+ 2050</div>
+              <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>IPCA+ 2050</div>
                 <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>{privacyMode ? 'R$••••' : fmtBrl(ipca2050Valor)}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Alvo: {ipca2050AlvoPercent.toFixed(1)}%</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Alvo: {ipca2050AlvoPercent.toFixed(1)}%</div>
               </div>
 
-              <div style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
-                <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Deficit Total</div>
+              <div style={{ padding: 'var(--space-3)', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Deficit Total</div>
                 <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--yellow)', marginBottom: '4px' }}>{ipcaTotalGap > 0 ? '+' : ''}{ipcaTotalGap.toFixed(1)}pp</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Ainda para alocar</div>
+                <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Ainda para alocar</div>
               </div>
             </div>
           </div>
         )}
 
         {/* Footer note */}
-        <div style={{ marginTop: '12px', fontSize: '0.7rem', color: 'var(--muted)', padding: '8px', background: 'var(--bg)', borderRadius: '2px' }}>
+        <div style={{ marginTop: '12px', fontSize: '0.7rem', color: 'var(--muted)', padding: 'var(--space-2)', background: 'var(--bg)', borderRadius: '2px' }}>
           <strong>📌 Nota:</strong> Progresso é a razão entre alocação atual e meta alvo. DCA ativo busca reduzir o deficit ao longo do tempo, respeitando gatilhos de taxa.
         </div>
       </div>

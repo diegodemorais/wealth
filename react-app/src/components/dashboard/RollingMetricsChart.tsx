@@ -154,20 +154,20 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
   const currentVol = volatilidade[volatilidade.length - 1] || 0;
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Rolling Metrics — Sharpe, Sortino &amp; Volatilidade
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Metric Toggle */}
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
           {['sharpe', 'sortino', 'volatilidade'].map(metric => (
             <button
               key={metric}
               onClick={() => setActiveMetric(metric as any)}
               style={{
-                padding: '6px 12px', fontSize: '0.75rem', fontWeight: 500, borderRadius: '4px',
+                padding: '6px 12px', fontSize: 'var(--text-sm)', fontWeight: 500, borderRadius: '4px',
                 cursor: 'pointer', border: 'none',
                 background: activeMetric === metric ? 'var(--accent)' : 'rgba(71,85,105,0.2)',
                 color: activeMetric === metric ? 'white' : 'var(--text)',
@@ -184,34 +184,34 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
         </div>
 
         {/* Key metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sharpe (BRL)</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSharpe > 1 ? 'var(--green)' : currentSharpe > 0.5 ? 'var(--yellow)' : 'var(--red)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sharpe (BRL)</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: currentSharpe > 1 ? 'var(--green)' : currentSharpe > 0.5 ? 'var(--yellow)' : 'var(--red)' }}>
               {privacyMode ? '••' : currentSharpe.toFixed(2)}
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Retorno/risco</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Retorno/risco</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sortino Ratio</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: currentSortino > 1.5 ? 'var(--green)' : currentSortino > 0.75 ? 'var(--yellow)' : 'var(--red)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sortino Ratio</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: currentSortino > 1.5 ? 'var(--green)' : currentSortino > 0.75 ? 'var(--yellow)' : 'var(--red)' }}>
               {privacyMode ? '••' : currentSortino.toFixed(2)}
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Risco downside</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Risco downside</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Volatilidade</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Volatilidade</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>
               {privacyMode ? '••' : currentVol.toFixed(2)}%
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Desvio padrão</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Desvio padrão</div>
           </div>
         </div>
 
         {/* Footer note */}
-        <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>📌 Nota:</strong> Métricas calculadas em 12M rolling. Sharpe &gt; 1 indica bom retorno ajustado ao risco. Sortino penaliza apenas quedas. Volatilidade é desvio padrão mensal anualizado.
         </div>
       </div>

@@ -81,59 +81,59 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
       : 'Bond pool cobre menos de 1.5 anos de gastos';
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Bond Pool Runway — Sustentabilidade Pos-FIRE
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Safety status */}
-        <div style={{ padding: '12px', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Status de Sustentabilidade
           </div>
-          <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
+          <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
             {statusLabel}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {statusDesc}
           </div>
         </div>
 
         {/* Key metrics grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Cobertura Hoje
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--cyan)', marginBottom: '4px' }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--cyan)', marginBottom: '4px' }}>
               {currentCoverage.toFixed(1)}x
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               {(currentCoverage * 12).toFixed(0)} meses de gasto
             </div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Pool em +{projectedYears}a
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)' }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)' }}>
               {privacyMode ? 'R$••••' : fmtBrl(futurePoolValue)}
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               Valor projetado
             </div>
           </div>
 
-          <div style={{ padding: '12px', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Cobertura em +{projectedYears}a
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
               {futureCoverage.toFixed(1)}x
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               {(futureCoverage * 12).toFixed(0)} meses de gasto
             </div>
           </div>
@@ -145,15 +145,15 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
             Projeção Anual
           </div>
 
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr>
-                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Ano</th>
-                <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Saldo Inicial</th>
-                <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Retorno</th>
-                <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Despesa</th>
-                <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Saldo Final</th>
-                <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Cobertura</th>
+                <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Ano</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Saldo Inicial</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Retorno</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Despesa</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Saldo Final</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Cobertura</th>
               </tr>
             </thead>
             <tbody>
@@ -164,22 +164,22 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
 
                 return (
                   <tr key={idx}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: row.year === 0 ? 'var(--text)' : 'var(--muted)', fontWeight: row.year === 0 ? 600 : 400 }}>
+                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: row.year === 0 ? 'var(--text)' : 'var(--muted)', fontWeight: row.year === 0 ? 600 : 400 }}>
                       {row.year === 0 ? 'Hoje' : row.year === yearsToFire ? 'FIRE' : `+${row.year}a`}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                       {privacyMode ? '••' : (row.startBalance / 1000000).toFixed(2) + 'M'}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--green)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--green)' }}>
                       {privacyMode ? '••' : `+${(row.investmentReturn / 1000000).toFixed(2)}M`}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: row.fireExpense > 0 ? 'var(--red)' : 'var(--muted)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: row.fireExpense > 0 ? 'var(--red)' : 'var(--muted)' }}>
                       {privacyMode ? '••' : `−${(row.fireExpense / 1000000).toFixed(2)}M`}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontWeight: 600, color: row.endBalance > 0 ? 'var(--text)' : 'var(--red)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontWeight: 600, color: row.endBalance > 0 ? 'var(--text)' : 'var(--red)' }}>
                       {privacyMode ? '••' : (row.endBalance / 1000000).toFixed(2) + 'M'}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: coverageColor }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: coverageColor }}>
                       {row.fireExpense > 0 ? row.coverage.toFixed(1) + 'x' : '—'}
                     </td>
                   </tr>
@@ -190,11 +190,11 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
         </div>
 
         {/* Summary */}
-        <div style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '8px', fontWeight: 600 }}>
+        <div style={{ padding: 'var(--space-3)', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '8px', fontWeight: 600 }}>
             Resumo de Sustentabilidade
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text)', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', lineHeight: 1.6, display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <div><strong>Gasto anual FIRE:</strong> {privacyMode ? 'R$••••' : fmtBrl(fireAnnualExpense)}</div>
             <div><strong>Taxa de retorno assumida:</strong> {expectedReturn.toFixed(2)}%/ano</div>
             <div><strong>Taxa sustentável (SWR):</strong> {swrPercent.toFixed(2)}%</div>
@@ -213,7 +213,7 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
         </div>
 
         {/* Footer note */}
-        <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>📌 Nota:</strong> Runway assume taxa de retorno {expectedReturn.toFixed(1)}% pós-FIRE. Cenário conservador (não inclui aumento de despesas com inflação ou mudanças de taxa).
         </div>
       </div>

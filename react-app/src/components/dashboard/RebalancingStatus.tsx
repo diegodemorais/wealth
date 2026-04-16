@@ -59,19 +59,19 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
   const urgencyColor = itemsOutOfTolerance.length > 2 ? 'var(--red)' : itemsOutOfTolerance.length > 0 ? 'var(--yellow)' : 'var(--green)';
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Rebalancing Status — Desvios de Alocação
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Rebalancing signal */}
-        <div style={{ padding: '12px', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Rebalanceamento</div>
-          <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
+        <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Rebalanceamento</div>
+          <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
             {needsRebalance ? '⚠️ Rebalancear Agora' : '✅ Em Tolerância'}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             Max desvio: {maxDrift.toFixed(1)}pp (limite: {driftThresholdPp}pp)
             {lastRebalanceDate && (
               <><br />Último rebalanceamento: {new Date(lastRebalanceDate).toLocaleDateString('pt-BR')}</>
@@ -83,14 +83,14 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
         <div>
           <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>Desvios por Ativo</div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             {driftItems.map(item => {
               const barWidth = Math.min(Math.abs(item.driftPp) * 5, 100);
               const isOut = Math.abs(item.driftPp) > driftThresholdPp;
 
               return (
                 <div key={item.ticker}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: '0.75rem', color: 'var(--muted)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                     <span style={{ fontWeight: 600, color: item.color }}>{item.ticker}</span>
                     <span>{item.currentPercent.toFixed(1)}% (alvo: {item.targetPercent.toFixed(1)}%)</span>
                   </div>
@@ -118,7 +118,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
                       style={{
                         position: 'absolute', height: '100%',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '0.75rem', fontWeight: 600, color: 'white',
+                        fontSize: 'var(--text-sm)', fontWeight: 600, color: 'white',
                         backgroundColor: item.color, opacity: 0.8,
                         left: item.driftPp >= 0 ? '50%' : `calc(50% - ${barWidth}%)`,
                         width: `${barWidth}%`,
@@ -128,7 +128,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
                     </div>
                   </div>
 
-                  <div style={{ fontSize: '0.75rem', marginTop: '4px', color: isOut ? item.color : 'var(--muted)', fontWeight: isOut ? 600 : 400 }}>
+                  <div style={{ fontSize: 'var(--text-sm)', marginTop: '4px', color: isOut ? item.color : 'var(--muted)', fontWeight: isOut ? 600 : 400 }}>
                     {item.driftPp > 0 ? '↑ Acumulou' : '↓ Deficitário'}
                     {isOut && ' [FORA DE TOLERÂNCIA]'}
                   </div>
@@ -139,35 +139,35 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
         </div>
 
         {/* Key metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Desvio Máximo</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: statusColor }}>{maxDrift.toFixed(2)}pp</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>vs. tolerância de {driftThresholdPp}pp</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Desvio Máximo</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: statusColor }}>{maxDrift.toFixed(2)}pp</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>vs. tolerância de {driftThresholdPp}pp</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Fora de Tolerância</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>{itemsOutOfTolerance.length}</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>de {driftItems.length} ativos</div>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Fora de Tolerância</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>{itemsOutOfTolerance.length}</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>de {driftItems.length} ativos</div>
           </div>
 
-          <div style={{ padding: '12px', borderRadius: '4px', background: urgencyBg, border: `1px solid ${urgencyBorder}` }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Urgência</div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '4px', color: urgencyColor }}>
+          <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: urgencyBg, border: `1px solid ${urgencyBorder}` }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Urgência</div>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: urgencyColor }}>
               {itemsOutOfTolerance.length > 2 ? '🚨 CRÍTICA' : itemsOutOfTolerance.length > 0 ? '⚠️ ALTA' : '✅ BAIXA'}
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>Rebalancear hoje</div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Rebalancear hoje</div>
           </div>
         </div>
 
         {/* Recommendations */}
         {itemsOutOfTolerance.length > 0 && (
-          <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--yellow)', fontWeight: 600, marginBottom: '8px' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--yellow)', fontWeight: 600, marginBottom: '8px' }}>
               ⚠️ Ações Recomendadas:
             </div>
-            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '0.75rem', color: 'var(--text)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: 'var(--text-sm)', color: 'var(--text)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {itemsOutOfTolerance.map(item => (
                 <li key={item.ticker}>
                   {item.driftPp > 0 ? 'Vender' : 'Comprar'} {item.ticker} ({Math.abs(item.driftPp).toFixed(1)}pp acima do alvo)
@@ -178,7 +178,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
         )}
 
         {/* Footer note */}
-        <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>📌 Nota:</strong> Rebalanceamento recomendado quando qualquer ativo desviar &gt;{driftThresholdPp}pp do alvo. Realizar trimestralmente ou quando gatilho disparar. Tax-aware: considerar IR ao executar vendas.
         </div>
       </div>

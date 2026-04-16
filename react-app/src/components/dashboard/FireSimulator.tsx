@@ -99,20 +99,20 @@ export function FireSimulator({
         : 'var(--red)';
 
   const metricCard = (bg: string, border: string) => ({
-    background: bg, border: `1px solid ${border}`, borderRadius: '4px', padding: '16px',
+    background: bg, border: `1px solid ${border}`, borderRadius: '4px', padding: 'var(--space-5)',
   });
 
   return (
     <div style={{ marginBottom: '14px' }}>
       {/* Controls Section */}
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-        <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
           FIRE Simulator — What-If Analysis
         </h2>
 
         {/* Aporte Mensal */}
         <div style={{ marginBottom: '14px' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Monthly Contribution: {privacyMode ? '••••' : fmtBrl(aporteMensal)}
           </label>
           <input
@@ -121,12 +121,12 @@ export function FireSimulator({
             onChange={(e) => setAporteMensal(Number(e.target.value))}
             style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: R$ 5k — R$ 100k/month</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>Range: R$ 5k — R$ 100k/month</div>
         </div>
 
         {/* Spending Anual */}
         <div style={{ marginBottom: '14px' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Annual Spending Target: {privacyMode ? '••••' : fmtBrl(custoVidaAnual)}
           </label>
           <input
@@ -135,12 +135,12 @@ export function FireSimulator({
             onChange={(e) => setCustoVidaAnual(Number(e.target.value))}
             style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: R$ 100k — R$ 500k/year</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>Range: R$ 100k — R$ 500k/year</div>
         </div>
 
         {/* Retorno Equity */}
         <div style={{ marginBottom: '14px' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Expected Equity Return: {fmtPct(retornoEquity / 100, 1)}
           </label>
           <input
@@ -149,12 +149,12 @@ export function FireSimulator({
             onChange={(e) => setRetornoEquity(Number(e.target.value))}
             style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: 2% — 12% annual</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>Range: 2% — 12% annual</div>
         </div>
 
         {/* Idade Retiro */}
         <div>
-          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>
             Retirement Age: {idadeRetiro} ({idadeRetiro - idadeAtual} years from now)
           </label>
           <input
@@ -163,17 +163,17 @@ export function FireSimulator({
             onChange={(e) => setIdadeRetiro(Number(e.target.value))}
             style={{ width: '100%', cursor: 'pointer', accentColor: 'var(--accent)' }}
           />
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>Range: {idadeAtual} — 70 years old</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>Range: {idadeAtual} — 70 years old</div>
         </div>
       </div>
 
       {/* Results Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '16px' }}>
-        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: '16px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)', marginBottom: '16px' }}>
+        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: 'var(--space-5)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
             P(FIRE) @ Retirement
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '8px', color: pfireColor }}>
+          <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, marginBottom: '8px', color: pfireColor }}>
             {privacyMode ? '••' : fmtPct(results.pfireValue / 100, 0)}
           </div>
           <div style={{ height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
@@ -181,55 +181,55 @@ export function FireSimulator({
           </div>
         </div>
 
-        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: '16px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: 'var(--space-5)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
             Patrimonio @ Retirement
           </div>
           <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)' }}>
             {privacyMode ? '••••' : fmtBrl(results.patrimonioAoRetiro)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '6px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '6px' }}>
             Target: {privacyMode ? '••••' : fmtBrl(patrimonioGatilho)}
           </div>
         </div>
 
-        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: '16px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: 'var(--space-5)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
             Sustainable Monthly
           </div>
           <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text)' }}>
             {privacyMode ? '••••' : fmtBrl(results.sustainableSpending)}
           </div>
-          <div style={{ fontSize: '0.75rem', marginTop: '6px', fontWeight: 500, color: results.sustainableSpending >= results.monthlySpending ? 'var(--green)' : 'var(--red)' }}>
+          <div style={{ fontSize: 'var(--text-sm)', marginTop: '6px', fontWeight: 500, color: results.sustainableSpending >= results.monthlySpending ? 'var(--green)' : 'var(--red)' }}>
             Target: {privacyMode ? '••••' : fmtBrl(results.monthlySpending)}
           </div>
         </div>
 
-        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: '16px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ ...metricCard('var(--card)', 'var(--border)'), padding: 'var(--space-5)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
             Time to Gateway
           </div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>
+          <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--text)' }}>
             {results.yearsToGateway}y
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>
             {results.monthsToGateway} months
           </div>
         </div>
       </div>
 
       {/* Sensitivity Analysis */}
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px' }}>
-        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)' }}>
+        <h3 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
           Sensitivity Analysis (Impact on P(FIRE))
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
           {[
             { title: 'Contribution', key: 'aporte' as const, labels: ['-10%', 'Base', '+10%'] },
             { title: 'Spending', key: 'spending' as const, labels: ['-10%', 'Base', '+10%'] },
             { title: 'Market Return', key: 'retorno' as const, labels: ['-1%', 'Base', '+1%'] },
           ].map(({ title, key, labels }) => (
-            <div key={key} style={{ padding: '10px', background: 'var(--bg)', borderRadius: '4px', fontSize: '0.75rem' }}>
+            <div key={key} style={{ padding: '10px', background: 'var(--bg)', borderRadius: '4px', fontSize: 'var(--text-sm)' }}>
               <div style={{ color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>{title}</div>
               {[
                 { label: labels[0], val: results.sensitivities[key].minus10 },

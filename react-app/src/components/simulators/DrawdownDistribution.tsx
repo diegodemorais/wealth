@@ -93,7 +93,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '16px',
+    padding: 'var(--space-5)',
     marginBottom: '14px',
   },
   title: {

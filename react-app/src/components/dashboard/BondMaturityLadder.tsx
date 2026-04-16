@@ -69,19 +69,19 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
     .reduce((sum, b) => sum + b.percentage, 0);
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Bond Maturity Ladder — Estrutura de Vencimentos
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Ladder structure */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: 'var(--space-3)' }}>
           {buckets.map(bucket => (
             <div
               key={bucket.label}
               style={{
-                padding: '12px',
+                padding: 'var(--space-3)',
                 borderRadius: '4px',
                 textAlign: 'center',
                 backgroundColor: `${bucket.color}15`,
@@ -91,7 +91,7 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
               <div style={{ fontSize: '0.7rem', color: 'var(--muted)', marginBottom: '4px' }}>
                 {bucket.yearsRange}
               </div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '4px', color: bucket.color }}>
+              <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, marginBottom: '4px', color: bucket.color }}>
                 {bucket.percentage.toFixed(1)}%
               </div>
               <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
@@ -103,7 +103,7 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
 
         {/* Visualization */}
         <div>
-          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
+          <div style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
             Distribuição por Vencimento
           </div>
           <div style={{ display: 'flex', height: '48px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden', gap: '2px', padding: '2px' }}>
@@ -123,7 +123,7 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
                 title={`${bucket.label}: ${bucket.percentage.toFixed(1)}%`}
               >
                 {bucket.percentage > 8 && (
-                  <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'white' }}>
+                  <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'white' }}>
                     {bucket.percentage.toFixed(0)}%
                   </span>
                 )}
@@ -133,28 +133,28 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
         </div>
 
         {/* Key metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
-          <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Curto Prazo (0-2a)</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--red)' }}>{shortTermPct.toFixed(1)}%</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 'var(--space-3)' }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Curto Prazo (0-2a)</div>
+            <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--red)' }}>{shortTermPct.toFixed(1)}%</div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Próximos 2 anos</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Médio Prazo (2-5a)</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--yellow)' }}>{mediumTermPct.toFixed(1)}%</div>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Médio Prazo (2-5a)</div>
+            <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--yellow)' }}>{mediumTermPct.toFixed(1)}%</div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>2-5 anos</div>
           </div>
 
-          <div style={{ padding: '12px', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Longo Prazo (5+a)</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)' }}>{longTermPct.toFixed(1)}%</div>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Longo Prazo (5+a)</div>
+            <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, color: 'var(--accent)' }}>{longTermPct.toFixed(1)}%</div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>5+ anos</div>
           </div>
 
-          <div style={{ padding: '12px', background: healthBg, border: `1px solid ${healthBorder}`, borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Saúde da Escada</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '4px', color: healthColor }}>
+          <div style={{ padding: 'var(--space-3)', background: healthBg, border: `1px solid ${healthBorder}`, borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Saúde da Escada</div>
+            <div style={{ fontSize: 'var(--text-md)', fontWeight: 700, marginBottom: '4px', color: healthColor }}>
               {isWellLaddered ? 'Saudável' : isTooShort ? 'Curta' : isTooLong ? 'Longa' : 'Desbalanceada'}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Distribuição</div>
@@ -162,9 +162,9 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
         </div>
 
         {/* Recommendation */}
-        <div style={{ padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600, marginBottom: '8px' }}>Recomendação</div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5 }}>
+        <div style={{ padding: 'var(--space-3)', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600, marginBottom: '8px' }}>Recomendação</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.5 }}>
             {isWellLaddered && 'Escada bem distribuída — renova-se gradualmente. Mantenha a estratégia de rolar posições.'}
             {isTooShort && !isWellLaddered && 'Escada muito curta — excesso de vencimentos próximos. Considere adicionar posições de médio/longo prazo para reduzir risco de reinvestimento.'}
             {isTooLong && !isWellLaddered && 'Escada muito longa — pouca liquidez de curto prazo. Aumente alocação para títulos de 1-3 anos para melhorar cobertura de FIRE próximo.'}
@@ -172,7 +172,7 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
         </div>
 
         {/* Footer note */}
-        <div style={{ padding: '8px 12px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ padding: '8px 12px', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>Nota:</strong> Uma escada bem distribuída garante fluxo de caixa regular e reduz risco de reinvestimento. Rebalanceamento anual recomendado.
         </div>
       </div>

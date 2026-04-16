@@ -82,21 +82,21 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   const flexLabel = isWellBalanced ? '✅ Balanceado' : isFlexible ? '🟢 Muito Flexível' : '⚠️ Rígido';
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Spending Breakdown — Análise de Gastos por Categoria
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Total spending summary */}
-        <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Despesa Anual Total (Baseline)
           </div>
           <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>
             {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {privacyMode ? '••' : totalMonthly.toFixed(0)} /mês em média
           </div>
         </div>
@@ -114,7 +114,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               title={`Essencial: ${mustavePercent.toFixed(1)}%`}
             >
               {mustavePercent > 12 && (
-                <span style={{ fontSize: '0.75rem', color: 'white', fontWeight: 600 }}>{mustavePercent.toFixed(0)}%</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600 }}>{mustavePercent.toFixed(0)}%</span>
               )}
             </div>
 
@@ -124,7 +124,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               title={`Conforto: ${likesPercent.toFixed(1)}%`}
             >
               {likesPercent > 12 && (
-                <span style={{ fontSize: '0.75rem', color: 'white', fontWeight: 600 }}>{likesPercent.toFixed(0)}%</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600 }}>{likesPercent.toFixed(0)}%</span>
               )}
             </div>
 
@@ -134,62 +134,62 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
             >
               {imprevistosPercent > 12 && (
-                <span style={{ fontSize: '0.75rem', color: 'white', fontWeight: 600 }}>{imprevistosPercent.toFixed(0)}%</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600 }}>{imprevistosPercent.toFixed(0)}%</span>
               )}
             </div>
           </div>
         </div>
 
         {/* Category cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
           {/* Must-Have */}
-          <div style={{ padding: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Essencial
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>
               {mustavePercent.toFixed(1)}%
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               {privacyMode ? '••' : fmtBrl(mustaveMonthly)}/mês
             </div>
           </div>
 
           {/* Like-to-Have */}
-          <div style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Conforto
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--yellow)', marginBottom: '4px' }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--yellow)', marginBottom: '4px' }}>
               {likesPercent.toFixed(1)}%
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               {privacyMode ? '••' : fmtBrl(likesMonthly)}/mês
             </div>
           </div>
 
           {/* Imprevistos */}
-          <div style={{ padding: '12px', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Buffer
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--purple)', marginBottom: '4px' }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--purple)', marginBottom: '4px' }}>
               {imprevistosPercent.toFixed(1)}%
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               {privacyMode ? '••' : fmtBrl(imprevistosMonthly)}/mês
             </div>
           </div>
 
           {/* Flexibility Assessment */}
-          <div style={{ padding: '12px', borderRadius: '4px', background: flexBg, border: `1px solid ${flexBorder}` }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: flexBg, border: `1px solid ${flexBorder}` }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
               Flexibilidade
             </div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: flexColor, marginBottom: '4px' }}>
+            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: flexColor, marginBottom: '4px' }}>
               {flexLabel}
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               vs. 50-60% ideal
             </div>
           </div>
@@ -197,54 +197,54 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
 
         {/* Expandable details */}
         <div
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '12px' }}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '12px' }}
           onClick={() => setExpandDetails(!expandDetails)}
         >
           <h3 style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, color: 'var(--text)' }}>
             Detalhes Mensais
           </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {expandDetails ? '▼' : '▶'}
           </span>
         </div>
 
         {expandDetails && (
           <div style={{ marginTop: '12px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Categoria</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Mensal</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Anual</th>
-                  <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>% Total</th>
+                  <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Categoria</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Mensal</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Anual</th>
+                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>% Total</th>
                 </tr>
               </thead>
               <tbody>
                 {categories.map((cat, idx) => (
                   <tr key={idx}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
+                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
                       {cat.categoria}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                       {privacyMode ? '••' : fmtBrl(cat.totalMensal)}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                       {privacyMode ? '••' : fmtBrl(cat.totalMensal * 12)}
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
                       {((cat.totalMensal * 12 / totalAnual) * 100).toFixed(1)}%
                     </td>
                   </tr>
                 ))}
                 <tr style={{ backgroundColor: 'rgba(71,85,105,0.1)' }}>
-                  <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>Total</td>
-                  <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
+                  <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>Total</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                     {privacyMode ? '••' : fmtBrl(totalMonthly)}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
                     {privacyMode ? '••' : fmtBrl(totalAnual)}
                   </td>
-                  <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>100.0%</td>
+                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>100.0%</td>
                 </tr>
               </tbody>
             </table>
@@ -252,7 +252,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
         )}
 
         {/* Footer note */}
-        <div style={{ padding: '8px', fontSize: '0.75rem', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>📌 Nota:</strong> Ideal é 50-60% essencial, 30-35% conforto, 5-10% imprevistos. Spending smile durante aposentadoria pode mudar essa proporção.
         </div>
       </div>

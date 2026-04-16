@@ -200,24 +200,24 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 8px 0',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '600',
     color: 'var(--text)',
   },
   subtitle: {
     margin: '0 0 20px 0',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse' as const,
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
   },
   thead: {
     backgroundColor: 'var(--bg)',
@@ -232,7 +232,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '600',
     color: 'var(--muted)',
     textTransform: 'uppercase' as const,
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
   },
   thRight: {
     textAlign: 'right' as const,
@@ -267,7 +267,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   footnote: {
     margin: '0',
-    fontSize: '12px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     lineHeight: '1.5',
   },

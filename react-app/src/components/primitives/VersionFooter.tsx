@@ -32,14 +32,14 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '24px 16px',
     borderTop: '1px solid rgba(107, 114, 128, 0.2)',
     backgroundColor: 'rgba(17, 24, 39, 0.5)',
-    fontSize: '0.75rem',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
   },
   container: {
     maxWidth: '1200px',
     margin: '0 auto',
     display: 'flex',
-    gap: '24px',
+    gap: 'var(--space-7)',
     justifyContent: 'center',
   },
   text: {

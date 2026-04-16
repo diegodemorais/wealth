@@ -30,6 +30,6 @@ export function IncomeChart({ data }: IncomeChartProps) {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    color: '#fff',
+    color: 'var(--text)',
   },
 };

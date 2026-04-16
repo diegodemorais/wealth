@@ -134,7 +134,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
 
   if (actions.length === 0) {
     return (
-      <div style={{ padding: '24px', textAlign: 'center' }}>
+      <div style={{ padding: 'var(--space-7)', textAlign: 'center' }}>
         <p style={{ fontSize: '0.875rem', color: 'var(--green)', fontWeight: 600 }}>
           All wellness metrics at maximum.
         </p>
@@ -143,10 +143,10 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
       {/* Score summary */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', margin: 0 }}>
+        <h3 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--muted)', margin: 0 }}>
           Top actions to improve score
         </h3>
         <span style={{
@@ -156,7 +156,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
           background: 'rgba(245,158,11,0.1)',
           color: 'var(--yellow)',
           fontFamily: 'monospace',
-          fontSize: '0.75rem',
+          fontSize: 'var(--text-sm)',
           fontWeight: 600,
         }}>
           {privacyMode ? "••••" : `${totalScore}/${totalMax}`}
@@ -164,7 +164,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
       </div>
 
       {/* Actions list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
         {actions.map((action) => (
           <div
             key={action.rank}
@@ -172,10 +172,10 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
               border: '1px solid rgba(245,158,11,0.2)',
               background: 'rgba(245,158,11,0.05)',
               borderRadius: '8px',
-              padding: '16px',
+              padding: 'var(--space-5)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
               {/* Rank number */}
               <div style={{
                 flexShrink: 0,
@@ -195,15 +195,15 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
 
               {/* Content */}
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '8px', marginBottom: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 'var(--space-2)', marginBottom: '4px' }}>
                   <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)' }}>
                     {action.metric}
                   </span>
-                  <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--yellow)', flexShrink: 0 }}>
+                  <span style={{ fontSize: 'var(--text-sm)', fontFamily: 'monospace', color: 'var(--yellow)', flexShrink: 0 }}>
                     {privacyMode ? "••••" : `+${action.potential_pts}pts potential`}
                   </span>
                 </div>
-                <p style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
                   {action.action}
                 </p>
               </div>
@@ -213,7 +213,7 @@ export function WellnessActionsBox(props: WellnessActionsBoxProps) {
       </div>
 
       {/* Footer note */}
-      <p style={{ fontSize: '0.75rem', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
+      <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
         Score based on {wellnessConfig.metrics.length} metrics: discipline, protection, and execution.
       </p>
     </div>

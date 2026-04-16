@@ -41,21 +41,21 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 
   const rowStyle: React.CSSProperties = { marginBottom: '12px' };
   const labelStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' };
-  const subStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--muted)', paddingLeft: '12px', marginBottom: '8px' };
+  const subStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: 'var(--muted)', paddingLeft: '12px', marginBottom: '8px' };
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Brasil Concentration Risk
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         {/* Main concentration metric */}
-        <div style={{ padding: '12px', borderRadius: '4px', textAlign: 'center', backgroundColor: concentrationBg, border: `1px solid ${concentrationColor}` }}>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+        <div style={{ padding: 'var(--space-3)', borderRadius: '4px', textAlign: 'center', backgroundColor: concentrationBg, border: `1px solid ${concentrationColor}` }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
             Brasil Concentration
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '4px', color: concentrationColor }}>
+          <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 800, marginBottom: '4px', color: concentrationColor }}>
             {privacyMode ? '••' : `${fmtPct(concentrationBrazil)}%`}
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
@@ -69,14 +69,14 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 
         {/* Breakdown by asset class */}
         <div>
-          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', fontWeight: 600 }}>
             Composição
           </div>
 
           <div style={rowStyle}>
             <div style={labelStyle}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Renda Fixa (IPCA+ Ladder)</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotal)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Renda Fixa (IPCA+ Ladder)</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotal)}</span>
             </div>
             <div style={subStyle}>
               <span>IPCA+ 2029/2040/2050</span>
@@ -86,8 +86,8 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 
           <div style={rowStyle}>
             <div style={labelStyle}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Renda+ 2065</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(rendaPlus)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Renda+ 2065</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(rendaPlus)}</span>
             </div>
             <div style={subStyle}>
               <span>Título prefixado</span>
@@ -97,8 +97,8 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 
           <div style={rowStyle}>
             <div style={labelStyle}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Criptoativos (HODL11)</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(hodl11)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Criptoativos (HODL11)</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(hodl11)}</span>
             </div>
             <div style={subStyle}>
               <span>Bitcoin + Crypto Legado</span>
@@ -108,8 +108,8 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
 
           <div style={rowStyle}>
             <div style={labelStyle}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 500 }}>Crypto Legado</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(cryptoLegado)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Crypto Legado</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(cryptoLegado)}</span>
             </div>
             <div style={subStyle}>
               <span>Posições anteriores</span>
@@ -121,7 +121,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
         <div style={{ borderTop: '1px solid var(--border)' }} />
 
         {/* Risk note */}
-        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', padding: '8px 12px', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>Nota:</strong> Concentração acima de 65% em Brasil aumenta risco de taxa (Selic), câmbio e inflação. Meta: reduzir para 50-60% via alocação internacional.
         </div>
       </div>

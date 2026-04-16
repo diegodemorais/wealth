@@ -44,13 +44,13 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
     vermelhoCount > 0 ? "vermelho" : amareloCount > 0 ? "amarelo" : "verde"
 
   return (
-    <div style={{ borderLeft: '4px solid var(--yellow)', borderRadius: '8px', background: 'var(--card)', padding: '24px', marginBottom: '16px' }}>
+    <div style={{ borderLeft: '4px solid var(--yellow)', borderRadius: '8px', background: 'var(--card)', padding: 'var(--space-7)', marginBottom: '16px' }}>
       {/* Header — clickable trigger */}
       <div
-        style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: '8px', cursor: 'pointer', marginBottom: '12px' }}
+        style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2)', cursor: 'pointer', marginBottom: '12px' }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text)', margin: 0 }}>
             Semáforos de Gatilhos
           </h2>
@@ -65,9 +65,9 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
       </div>
 
       {/* Summary row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: isOpen ? '24px' : '0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: isOpen ? '24px' : '0' }}>
         <StatusDot status={summaryBadge} size="sm" />
-        <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
           {triggers.length} gatilhos monitorados · {vermelhoCount} vermelho · {amareloCount} amarelo · {verdeCount} verde
         </span>
       </div>
@@ -75,13 +75,13 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
       {/* Collapsible content */}
       {isOpen && (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr>
-                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Gatilho</th>
-                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600, width: '80px' }}>Status</th>
-                <th style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600, width: '128px' }}>Valor</th>
-                <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Ação</th>
+                <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Gatilho</th>
+                <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600, width: '80px' }}>Status</th>
+                <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600, width: '128px' }}>Valor</th>
+                <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Ação</th>
               </tr>
             </thead>
             <tbody>
@@ -92,16 +92,16 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
 
                 return (
                   <tr key={trigger.id} style={{ backgroundColor: rowBg[trigger.status] || 'transparent' }}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                           <span style={{ fontWeight: 500, fontSize: '0.875rem', color: 'var(--text)' }}>
                             {trigger.label}
                           </span>
                           <span style={{
                             padding: '2px 6px',
                             borderRadius: '4px',
-                            fontSize: '0.65rem',
+                            fontSize: 'var(--text-xs)',
                             fontWeight: 600,
                             color: catStyle.color,
                             background: catStyle.bg,
@@ -111,23 +111,23 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
                             {trigger.category}
                           </span>
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', fontFamily: 'monospace' }}>
+                        <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', fontFamily: 'monospace' }}>
                           {trigger.detalhe}
                         </div>
                       </div>
                     </td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)' }}>
                       <StatusDot status={trigger.status} size="sm" />
                     </td>
-                    <td style={{ textAlign: 'right', padding: '8px', borderBottom: '1px solid var(--border)', fontFamily: 'monospace', fontSize: '0.875rem', color: 'var(--text)' }}>
+                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontFamily: 'monospace', fontSize: '0.875rem', color: 'var(--text)' }}>
                       {valor.toFixed(2)}{trigger.unidade}
                       {piso !== undefined && (
-                        <div style={{ fontSize: '0.65rem', color: 'var(--muted)' }}>
+                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
                           piso {piso.toFixed(1)}%
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid var(--border)', fontSize: '0.875rem', color: 'var(--text)' }}>
+                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontSize: '0.875rem', color: 'var(--text)' }}>
                       {trigger.acao}
                     </td>
                   </tr>

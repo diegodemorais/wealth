@@ -92,22 +92,22 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '16px',
+    padding: 'var(--space-5)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 16px 0',
-    color: '#fff',
+    color: 'var(--text)',
   },
   content: {
     border: '2px solid',
     borderRadius: '6px',
-    padding: '20px',
+    padding: 'var(--space-6)',
   },
   main: {
     display: 'flex',
     alignItems: 'flex-end',
-    gap: '12px',
+    gap: 'var(--space-3)',
     marginBottom: '16px',
   },
   rate: {
@@ -116,7 +116,7 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: '1',
   },
   label: {
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     color: 'var(--text)',
     fontWeight: '600',
   },
@@ -134,7 +134,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   description: {
     margin: '0',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
     lineHeight: '1.5',
   },

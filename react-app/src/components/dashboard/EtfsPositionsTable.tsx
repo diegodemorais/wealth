@@ -47,7 +47,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
 
   if (positions.length === 0) {
     return (
-      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', textAlign: 'center', fontSize: '0.75rem', color: 'var(--muted)' }}>
+      <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', textAlign: 'center', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
         No ETF positions available
       </div>
     );
@@ -63,22 +63,22 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
   const totalPLPct = totals.totalCost > 0 ? totalPL / totals.totalCost : 0;
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         ETF Positions — IBKR Holdings
       </h2>
 
       <div style={{ overflowX: 'auto', borderRadius: '4px', border: '1px solid var(--border)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid var(--border)' }}>
-              <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: '0.65rem' }}>ETF</th>
+              <th style={{ padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: 'var(--text-xs)' }}>ETF</th>
               {['Qty', 'Avg Cost', 'Price', 'Total Value', 'P/L', 'P/L %'].map(label => (
-                <th key={label} style={{ padding: '8px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: '0.65rem' }}>
+                <th key={label} style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: 'var(--text-xs)' }}>
                   {label}
                 </th>
               ))}
-              <th style={{ padding: '8px', textAlign: 'center', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: '0.65rem' }}>Status</th>
+              <th style={{ padding: 'var(--space-2)', textAlign: 'center', fontWeight: 600, color: 'var(--muted)', background: 'var(--bg)', textTransform: 'uppercase', fontSize: 'var(--text-xs)' }}>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -88,27 +88,27 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
               return (
                 <tr key={pos.etf} style={{ borderBottom: '1px solid var(--border)', background: idx % 2 === 1 ? 'var(--bg)' : 'transparent' }}>
                   <td style={{ padding: '8px 12px', fontWeight: 500, color: 'var(--text)' }}>{pos.etf}</td>
-                  <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••••' : pos.qty.toFixed(2)}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••' : `R$ ${pos.avg_cost.toFixed(2)}`}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••' : `R$ ${pos.price.toFixed(2)}`}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, color: 'var(--text)', fontFamily: 'monospace' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 500, color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••••' : fmtBrl(pos.currentValue)}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 500, fontFamily: 'monospace', color: pl >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 500, fontFamily: 'monospace', color: pl >= 0 ? 'var(--green)' : 'var(--red)' }}>
                     {privacyMode ? '••••' : `${pl >= 0 ? '+' : ''}${fmtBrl(pl)}`}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace', color: plPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace', color: plPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
                     {privacyMode ? '••' : `${plPct >= 0 ? '+' : ''}${(plPct * 100).toFixed(1)}%`}
                   </td>
-                  <td style={{ padding: '8px', textAlign: 'center' }}>
+                  <td style={{ padding: 'var(--space-2)', textAlign: 'center' }}>
                     <span style={{
-                      display: 'inline-block', padding: '2px 6px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 600,
+                      display: 'inline-block', padding: '2px 6px', borderRadius: '4px', fontSize: 'var(--text-xs)', fontWeight: 600,
                       backgroundColor: `${getStatusColor(pos.status)}15`,
                       color: getStatusColor(pos.status),
                     }}>
@@ -121,33 +121,33 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
             {/* Totals Row */}
             <tr style={{ borderTop: '2px solid var(--border)', background: 'var(--bg)', fontWeight: 600 }}>
               <td style={{ padding: '8px 12px', color: 'var(--text)' }}>TOTAL</td>
-              <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+              <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                 {privacyMode ? '••••' : totals.quantity.toFixed(2)}
               </td>
-              <td colSpan={2} style={{ padding: '8px' }}></td>
-              <td style={{ padding: '8px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
+              <td colSpan={2} style={{ padding: 'var(--space-2)' }}></td>
+              <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                 {privacyMode ? '••••' : fmtBrl(totals.currentValue)}
               </td>
-              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPL >= 0 ? 'var(--green)' : 'var(--red)' }}>
+              <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontFamily: 'monospace', color: totalPL >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {privacyMode ? '••••' : `${totalPL >= 0 ? '+' : ''}${fmtBrl(totalPL)}`}
               </td>
-              <td style={{ padding: '8px', textAlign: 'right', fontFamily: 'monospace', color: totalPLPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
+              <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontFamily: 'monospace', color: totalPLPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {privacyMode ? '••' : `${totalPLPct >= 0 ? '+' : ''}${(totalPLPct * 100).toFixed(1)}%`}
               </td>
-              <td style={{ padding: '8px' }}></td>
+              <td style={{ padding: 'var(--space-2)' }}></td>
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Legend */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginTop: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)', marginTop: '12px' }}>
         {[
           { label: 'Alvo Status', value: 'Permanent holding', color: 'var(--green)' },
           { label: 'Transição Status', value: 'Being rebalanced', color: 'var(--yellow)' },
           { label: 'Total P/L', value: 'Unrealized gain/loss', color: 'var(--text)' },
         ].map(item => (
-          <div key={item.label} style={{ padding: '12px', background: 'var(--bg)', borderRadius: '4px', fontSize: '0.75rem' }}>
+          <div key={item.label} style={{ padding: 'var(--space-3)', background: 'var(--bg)', borderRadius: '4px', fontSize: 'var(--text-sm)' }}>
             <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>{item.label}</div>
             <div style={{ fontWeight: 600, color: item.color }}>{item.value}</div>
           </div>

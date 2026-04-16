@@ -74,7 +74,7 @@ export function Header() {
 const styles: Record<string, React.CSSProperties> = {
   header: {
     backgroundColor: 'var(--card)',
-    color: '#fff',
+    color: 'var(--text)',
     padding: '12px 0',
     borderBottom: '1px solid var(--border)',
     position: 'sticky',
@@ -92,7 +92,7 @@ const styles: Record<string, React.CSSProperties> = {
   logoSection: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: 'var(--space-2)',
   },
   logo: {
     margin: 0,
@@ -100,7 +100,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '600',
   },
   version: {
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     fontFamily: 'monospace',
     paddingLeft: '8px',
@@ -109,17 +109,17 @@ const styles: Record<string, React.CSSProperties> = {
   },
   controls: {
     display: 'flex',
-    gap: '10px',
+    gap: 'var(--space-2)',
     alignItems: 'center',
   },
   button: {
     padding: '8px 12px',
     backgroundColor: 'var(--border)',
-    color: '#fff',
+    color: 'var(--text)',
     border: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     transition: 'background-color 0.2s',
   },
 };

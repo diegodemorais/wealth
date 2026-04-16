@@ -99,33 +99,33 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
   }));
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: '16px', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
+      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
         Exposição Geográfica — Equity
       </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', alignItems: 'start' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-5)', alignItems: 'start' }}>
           {/* Chart */}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <canvas ref={chartRef} style={{ maxWidth: '250px', maxHeight: '250px' }} />
           </div>
 
           {/* Breakdown table */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {calculations.map(region => (
               <div
                 key={region.label}
                 style={{
-                  padding: '12px', borderRadius: '4px',
+                  padding: 'var(--space-3)', borderRadius: '4px',
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   backgroundColor: `${region.color}15`,
                   borderLeft: `3px solid ${region.color}`,
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text)' }}>{region.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}>{region.label}</div>
+                  <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                     {privacyMode ? 'USD ••••' : `USD ${(region.value / 1000).toFixed(1)}k`}
                   </div>
                 </div>
@@ -138,7 +138,7 @@ const GeographicExposureChart: React.FC<GeographicExposureChartProps> = ({
         </div>
 
         {/* Summary */}
-        <div style={{ fontSize: '0.75rem', color: 'var(--muted)', padding: '8px', background: 'var(--bg)', borderRadius: '4px' }}>
+        <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', padding: 'var(--space-2)', background: 'var(--bg)', borderRadius: '4px' }}>
           <strong>Total Equity USD:</strong> {privacyMode ? 'USD ••••' : `USD ${(totalUsd / 1000).toFixed(1)}k`}
         </div>
       </div>

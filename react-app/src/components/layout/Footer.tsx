@@ -81,7 +81,7 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: '1400px',
     margin: '0 auto',
     padding: '0 20px',
-    gap: '20px',
+    gap: 'var(--space-6)',
     flexWrap: 'wrap',
   },
   section: {
@@ -91,18 +91,18 @@ const styles: Record<string, React.CSSProperties> = {
   },
   label: {
     color: 'var(--muted)',
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     textTransform: 'uppercase',
     fontWeight: '600',
   },
   value: {
     color: 'var(--text)',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '500',
   },
   subtext: {
     color: 'var(--muted)',
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
   },
   staleness: {
     padding: '8px 12px',

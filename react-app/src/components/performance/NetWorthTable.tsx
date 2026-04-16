@@ -89,32 +89,32 @@ export function NetWorthTable() {
         Year-by-year portfolio growth analysis
       </p>
       <div style={styles.tableWrapper}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th style={{ textAlign: 'center', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Year</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Start (BRL)</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>End (BRL)</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Gain</th>
-              <th style={{ textAlign: 'right', padding: '8px', color: 'var(--muted)', fontWeight: '600', fontSize: '12px' }}>Return %</th>
+              <th style={{ textAlign: 'center', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Year</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Start (BRL)</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>End (BRL)</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Gain</th>
+              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Return %</th>
             </tr>
           </thead>
           <tbody>
             {yearlyData.map((year) => (
               <tr key={year.year} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ textAlign: 'center', padding: '8px', fontWeight: '600', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'center', padding: 'var(--space-2)', fontWeight: '600', color: 'var(--text)' }}>
                   {year.year}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
                   {formatCurrency(year.start)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', fontWeight: '500', color: 'var(--text)' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                   {formatCurrency(year.end)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: getReturnColor(year.gain), fontWeight: '500' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: getReturnColor(year.gain), fontWeight: '500' }}>
                   {formatCurrency(year.gain)}
                 </td>
-                <td style={{ textAlign: 'right', padding: '8px', color: getReturnColor(year.return_pct), fontWeight: '600' }}>
+                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: getReturnColor(year.return_pct), fontWeight: '600' }}>
                   {formatReturn(year.return_pct)}
                 </td>
               </tr>
@@ -157,18 +157,18 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--card)',
     border: '1px solid var(--border)',
     borderRadius: '8px',
-    padding: '20px',
+    padding: 'var(--space-6)',
     marginBottom: '14px',
   },
   title: {
     margin: '0 0 8px 0',
-    fontSize: '16px',
+    fontSize: 'var(--text-lg)',
     fontWeight: '600',
     color: 'var(--text)',
   },
   subtitle: {
     margin: '0 0 16px 0',
-    fontSize: '13px',
+    fontSize: 'var(--text-sm)',
     color: 'var(--muted)',
   },
   tableWrapper: {
@@ -191,31 +191,31 @@ const styles: Record<string, React.CSSProperties> = {
   },
   summaryTitle: {
     margin: '0 0 12px 0',
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--muted)',
   },
   summaryGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-    gap: '12px',
+    gap: 'var(--space-3)',
   },
   summaryItem: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '12px',
+    padding: 'var(--space-3)',
     backgroundColor: 'var(--bg)',
     borderRadius: '4px',
     border: '1px solid var(--border)',
   },
   summaryLabel: {
-    fontSize: '11px',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
     fontWeight: '500',
     marginBottom: '4px',
   },
   summaryValue: {
-    fontSize: '14px',
+    fontSize: 'var(--text-sm)',
     fontWeight: '600',
     color: 'var(--accent)',
   },
