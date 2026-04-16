@@ -496,9 +496,21 @@ export function createBacktestChartOption(options: BaseChartOptions) {
 export function createIncomeChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  const categories = ['Salary', 'Dividends', 'Bond Coupons', 'Rental', 'Other'];
-  const amountsData = [120000, 35000, 18000, 24000, 3000];
-  const colors = [CHART_COLORS.accent, CHART_COLORS.green, CHART_COLORS.orange, CHART_COLORS.purple, CHART_COLORS.pink];
+  // Use real spending breakdown data from data.json
+  const sb = (options.data as any)?.spending_breakdown ?? {};
+  const premissas = (options.data as any)?.premissas ?? {};
+
+  // Income sources: renda ativa (capital humano) + RF coupons + SWR portfolio
+  const rendaMensal: number = premissas.renda_mensal_liquida ?? premissas.renda_estimada ?? 45000;
+  const rendaAnual = rendaMensal * 12;
+  const mustSpend: number = (sb.must_spend_anual ?? sb.must_spend_mensal != null ? (sb.must_spend_mensal ?? 0) * 12 : null) ?? 0;
+  const likeSpend: number = (sb.like_spend_anual ?? sb.like_spend_mensal != null ? (sb.like_spend_mensal ?? 0) * 12 : null) ?? 0;
+  const inssAnual: number = premissas.inss_anual ?? 21996;
+
+  // Show income breakdown: renda ativa + INSS
+  const categories = ['Renda Ativa (CLT)', 'INSS (futuro)', 'Gastos Essenciais', 'Gastos Discricionários'];
+  const amountsData = [rendaAnual, inssAnual, mustSpend, likeSpend];
+  const colors = [CHART_COLORS.accent, CHART_COLORS.purple, CHART_COLORS.green, CHART_COLORS.orange];
 
   return {
     tooltip: {
@@ -547,19 +559,56 @@ export function createIncomeChartOption(options: BaseChartOptions) {
 export function createGlidePathChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  const ages = Array.from({ length: 46 }, (_, i) => 35 + i);
-  const retirementAge = 50;
+  // Use real glide path data from data.json
+  const glide = (options.data as any)?.glide ?? {};
+  const premissas = (options.data as any)?.premissas ?? {};
+  const idadeAtual: number = premissas.idade_atual ?? 39;
 
-  const equityAlloc = ages.map(age => {
-    if (age >= retirementAge) return 30;
-    const yearsToRetire = retirementAge - age;
-    return Math.max(30, 100 - yearsToRetire * 1.5);
-  });
+  const glideIdades: number[] = glide.idades ?? [];
+  const glideEquity: number[] = glide.equity ?? [];
+  const glideIpcaLongo: number[] = glide.ipca_longo ?? [];
+  const glideIpcaCurto: number[] = glide.ipca_curto ?? [];
+  const glideHodl: number[] = glide.hodl11 ?? [];
+  const glideRenda: number[] = glide.renda_plus ?? [];
 
-  const fixedIncomeAlloc = equityAlloc.map(eq => 100 - eq);
+  let ages: number[];
+  let equityAlloc: number[];
+  let fixedIncomeAlloc: number[];
+
+  if (glideIdades.length > 0) {
+    // Interpolate between defined waypoints
+    const minAge = glideIdades[0];
+    const maxAge = glideIdades[glideIdades.length - 1];
+    ages = Array.from({ length: maxAge - minAge + 1 }, (_, i) => minAge + i);
+
+    const interpolate = (arr: number[], age: number) => {
+      for (let i = 0; i < glideIdades.length - 1; i++) {
+        if (age >= glideIdades[i] && age <= glideIdades[i + 1]) {
+          const t = (age - glideIdades[i]) / (glideIdades[i + 1] - glideIdades[i]);
+          return arr[i] + t * (arr[i + 1] - arr[i]);
+        }
+      }
+      return arr[arr.length - 1];
+    };
+
+    equityAlloc = ages.map(a => interpolate(glideEquity, a));
+    const ipca = ages.map(a => interpolate(glideIpcaLongo, a) + interpolate(glideIpcaCurto, a));
+    const hodl = ages.map(a => interpolate(glideHodl, a));
+    const renda = ages.map(a => interpolate(glideRenda, a));
+    fixedIncomeAlloc = ages.map((_, i) => ipca[i] + hodl[i] + renda[i]);
+  } else {
+    // Fallback: use premissas
+    const retirementAge: number = premissas.idade_cenario_base ?? 53;
+    ages = Array.from({ length: Math.max(1, 90 - idadeAtual + 1) }, (_, i) => idadeAtual + i);
+    equityAlloc = ages.map(age => {
+      if (age >= retirementAge) return 79; // stay invested post-FIRE
+      return 79; // pre-FIRE high equity
+    });
+    fixedIncomeAlloc = equityAlloc.map(eq => 100 - eq);
+  }
 
   return {
-    color: [CHART_COLORS.accent, CHART_COLORS.orange],
+    color: [CHART_COLORS.accent, CHART_COLORS.orange, CHART_COLORS.purple, CHART_COLORS.yellow],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -567,7 +616,7 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
       textStyle: theme.tooltip.textStyle,
       formatter: (params: any) => {
         if (!Array.isArray(params)) return '';
-        let result = `Age ${params[0].axisValueLabel}<br/>`;
+        let result = `Idade ${params[0].axisValueLabel}<br/>`;
         params.forEach((p: any) => {
           result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(1)}%<br/>`;
         });
@@ -591,24 +640,24 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
     },
     series: [
       {
-        name: 'Target Equity %',
+        name: 'Equity %',
         type: 'line' as const,
         data: equityAlloc,
         smooth: true,
         fill: true,
         areaStyle: { opacity: 0.3 },
         lineStyle: { width: 3 },
-        symbolSize: 0,
+        symbolSize: 4,
       },
       {
-        name: 'Fixed Income %',
+        name: 'Renda Fixa %',
         type: 'line' as const,
         data: fixedIncomeAlloc,
         smooth: true,
         fill: true,
-        areaStyle: { opacity: 0.3 },
-        lineStyle: { width: 3 },
-        symbolSize: 0,
+        areaStyle: { opacity: 0.2 },
+        lineStyle: { width: 2 },
+        symbolSize: 4,
       },
     ],
   };

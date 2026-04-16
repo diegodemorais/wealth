@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
-import { IncomeChart } from '@/components/charts/IncomeChart';
+import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart';
 import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
@@ -208,7 +208,7 @@ export default function WithdrawPage() {
               </table>
             </div>
           ) : (
-            <IncomeChart data={data} />
+            <IncomeProjectionChart data={data} />
           )}
           <div className="src">
             Fases: Go-Go (50–65, alta mobilidade), Slow-Go (65–75, moderado), No-Go (75+, baixa mobilidade). Spending smile aplicado às projeções MC.
@@ -219,7 +219,7 @@ export default function WithdrawPage() {
       {/* 6. Projeção de Renda — Ciclo de Vida */}
       <section className="section" id="incomeCycleSection">
         <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
-        <IncomeChart data={data} />
+        <IncomeProjectionChart data={data} />
         <div className="src">
           Todos os valores em R$ reais (constante 2026) · Pré-FIRE: renda ativa R$45k/mês · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) · INSS R$18k/ano a partir dos 65.
         </div>

@@ -16,32 +16,53 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
   const chartRef = useChartResize();
 
   const option = useMemo(() => {
-    const months = 84;
-    const xAxisData = Array.from({ length: months }, (_, i) => `M${i + 1}`);
-    const portfolioData = Array.from({ length: months }, (_, i) => {
-      const monthlyReturn = 0.07 / 12;
-      const volatility = 0.12 / Math.sqrt(12);
-      const noise = (Math.random() - 0.5) * volatility * 2;
-      return 1000000 * Math.pow(1 + monthlyReturn + noise, i);
-    });
-    const r7BenchmarkData = Array.from({ length: months }, (_, i) => {
-      const monthlyReturn = 0.06 / 12;
-      const volatility = 0.14 / Math.sqrt(12);
-      const noise = (Math.random() - 0.5) * volatility * 2;
-      return 1000000 * Math.pow(1 + monthlyReturn + noise, i);
+    // Use real cumulative returns from backtest_r7
+    const br7 = (data as any)?.backtest_r7 ?? {};
+    const cr = br7.cumulative_returns ?? {};
+    const rawDates: string[] = cr.dates ?? [];
+    const targetValues: number[] = cr.target ?? [];
+    const benchValues: number[] = cr.bench ?? [];
+
+    if (rawDates.length === 0) {
+      return {
+        backgroundColor: 'transparent',
+        title: { text: 'Sem dados de backtest R7', textStyle: { color: '#94a3b8' } },
+      };
+    }
+
+    // Format dates: '1995-01-31' → 'jan/95'
+    const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    const xAxisData = rawDates.map((d: string) => {
+      const parts = d.split('-');
+      const y = parts[0];
+      const m = parseInt(parts[1], 10);
+      return MONTHS_PT[m - 1] + '/' + y.slice(2);
     });
 
+    // Values are cumulative return index (1.0 = start)
+    // Show as indexed to 100
+    const portfolioData = targetValues.map((v: number) => v * 100);
+    const benchData = benchValues.map((v: number) => v * 100);
+
+    const metricas = br7.metricas_globais ?? {};
+    const cagr = metricas.cagr_target_pct != null ? ` (CAGR: ${metricas.cagr_target_pct.toFixed(1)}%)` : '';
+
     return createDualLineChartOption({
-      data, privacyMode, theme, xAxisData, series1Data: portfolioData, series1Name: 'Current Portfolio',
-      series2Data: r7BenchmarkData, series2Name: 'R7 Benchmark (70/30)',
-      series1Color: CHART_COLORS.accent, series2Color: CHART_COLORS.yellow,
-      yAxisFormatter: (v) => `R$ ${(v / 1e6).toFixed(1)}M`,
+      data, privacyMode, theme,
+      xAxisData,
+      series1Data: portfolioData,
+      series1Name: `Target Portfolio${cagr}`,
+      series2Data: benchData,
+      series2Name: `R7 Benchmark (CAGR: ${metricas.cagr_bench_pct?.toFixed(1) ?? '?'}%)`,
+      series1Color: CHART_COLORS.accent,
+      series2Color: CHART_COLORS.yellow,
+      yAxisFormatter: (v) => `${v.toFixed(0)}`,
     });
-  }, [privacyMode, theme]);
+  }, [data, privacyMode, theme]);
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.title}>Portfolio vs R7 Benchmark (84 months)</h3>
+      <h3 style={styles.title}>Portfolio vs R7 Benchmark — Retorno Acumulado (desde 1995)</h3>
       <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>
   );
