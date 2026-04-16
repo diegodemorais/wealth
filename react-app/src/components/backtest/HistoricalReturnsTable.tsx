@@ -242,7 +242,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tbody: {},
   row: {
-    borderBottom: '1px solid var(--border)',
+    borderBottom: '1px solid rgba(71, 85, 105, 0.3)',
     height: '36px',
   },
   td: {
