@@ -53,11 +53,83 @@ export default function PortfolioPage() {
         <StackedAllocChart data={data} />
       </div>
 
+      {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
+      {data?.drift && (() => {
+        const eq = ['SWRD', 'AVGS', 'AVEM'];
+        const eqData = eq.map(k => ({ name: k, ...(data.drift as Record<string, any>)[k] })).filter(d => d.atual != null);
+        if (!eqData.length) return null;
+        const totalAtual = eqData.reduce((s, d) => s + d.atual, 0);
+        const totalAlvo = eqData.reduce((s, d) => s + d.alvo, 0);
+        return (
+          <div className="section">
+            <h2>Drift Intra-Equity — SWRD / AVGS / AVEM</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {eqData.map((etf) => {
+                const pctAtual = totalAtual > 0 ? (etf.atual / totalAtual) * 100 : 0;
+                const pctAlvo = totalAlvo > 0 ? (etf.alvo / totalAlvo) * 100 : 0;
+                const delta = pctAtual - pctAlvo;
+                const isAbove = delta > 0;
+                const deltaColor = isAbove ? 'var(--red)' : 'var(--green)';
+                const sign = delta >= 0 ? '+' : '';
+                return (
+                  <div key={etf.name}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
+                      <span style={{ fontWeight: 700, fontSize: '.88rem' }}>{etf.name}</span>
+                      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                        <span style={{ fontSize: '.75rem', color: 'var(--muted)' }}>
+                          atual <strong style={{ color: 'var(--text)' }}>{pctAtual.toFixed(1)}%</strong>
+                        </span>
+                        <span style={{ fontSize: '.75rem', color: 'var(--muted)' }}>
+                          alvo <strong style={{ color: 'var(--text)' }}>{pctAlvo.toFixed(1)}%</strong>
+                        </span>
+                        <span style={{ fontSize: '.82rem', fontWeight: 700, color: deltaColor }}>
+                          {sign}{delta.toFixed(1)}pp
+                        </span>
+                      </div>
+                    </div>
+                    {/* Bar track */}
+                    <div style={{ position: 'relative', height: 10, background: 'rgba(148,163,184,.15)', borderRadius: 5, overflow: 'visible' }}>
+                      {/* Actual fill */}
+                      <div style={{
+                        position: 'absolute', left: 0, top: 0, height: '100%',
+                        width: `${Math.min(100, pctAtual)}%`,
+                        background: isAbove ? 'var(--red)' : 'var(--accent)',
+                        borderRadius: 5,
+                        transition: 'width .4s',
+                      }} />
+                      {/* Target marker */}
+                      <div style={{
+                        position: 'absolute',
+                        left: `${Math.min(100, pctAlvo)}%`,
+                        top: -3, bottom: -3, width: 2,
+                        background: 'var(--muted)',
+                        transform: 'translateX(-50%)',
+                        borderRadius: 1,
+                      }} />
+                      {/* Target label */}
+                      <div style={{
+                        position: 'absolute',
+                        left: `${Math.min(100, pctAlvo)}%`,
+                        top: 14, fontSize: '.5rem', color: 'var(--muted)',
+                        transform: 'translateX(-50%)',
+                        whiteSpace: 'nowrap',
+                      }}>▲ {pctAlvo.toFixed(0)}%</div>
+                    </div>
+                    <div style={{ marginBottom: 8 }} />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="src">Drift = % intra-equity (sobre total equity). Alvo IPS: SWRD 50% / AVGS 30% / AVEM 20%.</div>
+          </div>
+        );
+      })()}
+
       {/* 3. Composição por Região — ETFs da Carteira (collapsible) */}
       <CollapsibleSection
         id="section-etf-region"
         title="Composição por Região — ETFs da Carteira"
-        defaultOpen={false}
+        defaultOpen={true}
         icon="🗺️"
       >
         <div style={{ padding: '16px' }}>
@@ -70,7 +142,7 @@ export default function PortfolioPage() {
       <CollapsibleSection
         id="section-etf-factor"
         title="Exposição Fatorial — ETFs da Carteira"
-        defaultOpen={false}
+        defaultOpen={true}
         icon="📊"
       >
         <div style={{ padding: '16px' }}>
@@ -134,7 +206,7 @@ export default function PortfolioPage() {
       <CollapsibleSection
         id="section-tax-ir"
         title="IR Diferido — Alvo & Transitório"
-        defaultOpen={false}
+        defaultOpen={true}
         icon="🏛️"
       >
         <div style={{ padding: '16px' }}>

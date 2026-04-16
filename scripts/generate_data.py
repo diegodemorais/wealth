@@ -723,17 +723,35 @@ def get_attribution():
                           f"inicio={data_inicio} | pat=R${pat_atual/1e6:.2f}M | "
                           f"aportes=R${total_aportes/1e6:.2f}M | retornoUsd=R${retorno_usd/1e6:.2f}M | "
                           f"rfCambio=R${cambio_rf/1e6:.2f}M | meses={len(_eq_usd)}")
+                    cresc = round(pat_atual)
+                    _breakdown_chart = []
+                    if cresc and cresc > 0:
+                        _breakdown_chart = [
+                            {"label": "Aportes",      "value_pct": round(round(total_aportes) / cresc * 100, 1)},
+                            {"label": "Retorno USD",  "value_pct": round(retorno_usd          / cresc * 100, 1)},
+                            {"label": "RF Doméstica", "value_pct": round(rf_gain              / cresc * 100, 1)},
+                            {"label": "Câmbio",       "value_pct": round(cambio_rf            / cresc * 100, 1)},
+                            {"label": "FX Custo",     "value_pct": round(fx_gain              / cresc * 100, 1)},
+                        ]
+                    # cagr_total aproximado (inclui aportes — não é TWR)
+                    _n_meses_dec = len(_eq_usd)
+                    if cresc > 0 and round(total_aportes) > 0 and _n_meses_dec > 0:
+                        _cagr_total = round((round(cresc) / round(total_aportes)) ** (12 / _n_meses_dec) - 1, 4) * 100
+                    else:
+                        _cagr_total = None
                     return {
-                        "aportes":     round(total_aportes),
-                        "retornoUsd":  retorno_usd,
-                        "cambio":      cambio_rf,
-                        "fx":          fx_gain,
-                        "rf":          rf_gain,
-                        "crescReal":   round(pat_atual),
-                        "_estimativa": False,
-                        "_fonte":      "retornos_mensais.json decomposicao (desde início)",
-                        "_inicio":     data_inicio or "",
-                        "por_bucket":  por_bucket,
+                        "aportes":         round(total_aportes),
+                        "retornoUsd":      retorno_usd,
+                        "cambio":          cambio_rf,
+                        "fx":              fx_gain,
+                        "rf":              rf_gain,
+                        "crescReal":       cresc,
+                        "cagr_total":      _cagr_total,
+                        "_estimativa":     False,
+                        "_fonte":          "retornos_mensais.json decomposicao (desde início)",
+                        "_inicio":         data_inicio or "",
+                        "por_bucket":      por_bucket,
+                        "breakdown_chart": _breakdown_chart,
                     }
             except Exception as _e:
                 print(f"  ⚠️ attribution decomposicao: {_e} — usando proxy")
@@ -747,16 +765,38 @@ def get_attribution():
               f"aportes=R${total_aportes/1e6:.2f}M | retornoUsd=R${retorno_usd/1e6:.2f}M | "
               f"rfCambio=R${cambio_rf/1e6:.2f}M")
 
+        _cresc_fb = round(pat_atual)
+        _breakdown_fb: list = []
+        if _cresc_fb and _cresc_fb > 0:
+            _breakdown_fb = [
+                {"label": "Aportes",      "value_pct": round(round(total_aportes) / _cresc_fb * 100, 1)},
+                {"label": "Retorno USD",  "value_pct": round(retorno_usd          / _cresc_fb * 100, 1)},
+                {"label": "RF+Câmbio",    "value_pct": round(cambio_rf            / _cresc_fb * 100, 1)},
+            ]
+        # cagr_total aproximado para fallback proxy
+        try:
+            import datetime as _dt
+            if data_inicio and _cresc_fb > 0 and round(total_aportes) > 0:
+                _yr, _mo = int(data_inicio[:4]), int(data_inicio[5:7])
+                _now = _dt.date.today()
+                _n_meses_fb = (_now.year - _yr) * 12 + (_now.month - _mo)
+                _cagr_total_fb = round((_cresc_fb / round(total_aportes)) ** (12 / max(_n_meses_fb, 1)) - 1, 4) * 100 if _n_meses_fb > 0 else None
+            else:
+                _cagr_total_fb = None
+        except Exception:
+            _cagr_total_fb = None
         return {
-            "aportes":     round(total_aportes),
-            "retornoUsd":  retorno_usd,
-            "cambio":      cambio_rf,
-            "fx":          None,
-            "rf":          None,
-            "crescReal":   round(pat_atual),
-            "_estimativa": True,
-            "_inicio":     data_inicio or "",
-            "por_bucket":  {},
+            "aportes":         round(total_aportes),
+            "retornoUsd":      retorno_usd,
+            "cambio":          cambio_rf,
+            "fx":              None,
+            "rf":              None,
+            "crescReal":       _cresc_fb,
+            "cagr_total":      _cagr_total_fb,
+            "_estimativa":     True,
+            "_inicio":         data_inicio or "",
+            "por_bucket":      {},
+            "breakdown_chart": _breakdown_fb,
         }
     except Exception as e:
         print(f"  ⚠️ attribution: {e}")
@@ -2788,6 +2828,70 @@ def main():
         "(AVUV/AVDV→AVGS, AVEM US-listed→AVEM.L). "
         "Resultados indicativos — conclusão definitiva requer histórico UCITS ≥3 anos."
     )
+
+    # ── metrics_by_period: recalcula métricas CAGR/Sharpe/Vol/MaxDD por período ──
+    def _compute_period_metrics_py(dates_list, target_series, shadow_series, start_ym):
+        """Filtra séries pelo período e recalcula métricas usando pure Python."""
+        idx = next((i for i, d in enumerate(dates_list) if d >= start_ym), None)
+        if idx is None or idx >= len(dates_list) - 1:
+            return None
+        t = [float(x) for x in target_series[idx:]]
+        s = [float(x) for x in shadow_series[idx:]]
+        n = len(t)
+        if n < 3:
+            return None
+
+        def _metrics(series):
+            rets = [(series[i] - series[i-1]) / series[i-1] for i in range(1, len(series))]
+            if not rets:
+                return None
+            cagr = ((series[-1] / series[0]) ** (12 / (n - 1)) - 1) * 100
+            mean_r = sum(rets) / len(rets)
+            variance = sum((r - mean_r) ** 2 for r in rets) / (len(rets) - 1) if len(rets) > 1 else 0
+            std = variance ** 0.5
+            vol = std * (12 ** 0.5) * 100
+            sharpe = (mean_r * 12) / (std * (12 ** 0.5)) if std > 0 else 0
+            # Max drawdown
+            peak = series[0]
+            maxdd = 0.0
+            for v in series:
+                if v > peak:
+                    peak = v
+                dd = (v - peak) / peak * 100
+                if dd < maxdd:
+                    maxdd = dd
+            return {
+                "cagr": round(cagr, 2),
+                "sharpe": round(sharpe, 2),
+                "vol": round(vol, 2),
+                "maxdd": round(maxdd, 2),
+            }
+
+        mt = _metrics(t)
+        ms = _metrics(s)
+        if mt is None or ms is None:
+            return None
+        return {"target": mt, "shadowA": ms}
+
+    _bt_target = backtest.get("target", [])
+    _bt_shadow = backtest.get("shadowA", [])
+
+    if _bt_dates and _bt_target and _bt_shadow:
+        _period_starts = {
+            "all":        _bt_dates[0] if _bt_dates else "2019-08",
+            "since2009":  "2009-01",
+            "since2013":  "2013-01",
+            "since2020":  "2020-01",
+            "5y":         "2021-01",
+            "3y":         "2023-01",
+        }
+        _mbp = {}
+        for _pk, _pv in _period_starts.items():
+            _res = _compute_period_metrics_py(_bt_dates, _bt_target, _bt_shadow, _pv)
+            if _res is not None:
+                _mbp[_pk] = _res
+        backtest["metrics_by_period"] = _mbp
+        print(f"  ✓ backtest.metrics_by_period: {list(_mbp.keys())}")
 
     # Shadows — ler do state e adicionar campos flat no nível raiz
     _shadows_raw = state.get("shadows", {})

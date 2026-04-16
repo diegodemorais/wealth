@@ -35,7 +35,18 @@ export default function WithdrawPage() {
     return <div className="warning-state">Dados carregados mas seção de retirada não disponível</div>;
   }
 
-  const swrPercentis = data.fire?.swr_percentis ?? data.swr_percentis;
+  const swrPercentisRaw = data.fire?.swr_percentis ?? data.swr_percentis ?? data.fire_swr_percentis;
+  // Normalize field names: fire_swr_percentis uses swr_p10/p50/p90 + patrimonio_p10_2040 etc.
+  const swrPercentis = swrPercentisRaw
+    ? {
+        p10: swrPercentisRaw.p10 ?? swrPercentisRaw.swr_p10,
+        p50: swrPercentisRaw.p50 ?? swrPercentisRaw.swr_p50,
+        p90: swrPercentisRaw.p90 ?? swrPercentisRaw.swr_p90,
+        p10_patrimonio: swrPercentisRaw.p10_patrimonio ?? swrPercentisRaw.patrimonio_p10_2040,
+        p50_patrimonio: swrPercentisRaw.p50_patrimonio ?? swrPercentisRaw.patrimonio_p50_2040,
+        p90_patrimonio: swrPercentisRaw.p90_patrimonio ?? swrPercentisRaw.patrimonio_p90_2040,
+      }
+    : undefined;
   const bondPoolReadiness = data.fire?.bond_pool_readiness ?? data.bond_pool_readiness;
   const bondPoolRunway = data.bond_pool_runway ?? data.fire?.bond_pool_runway;
   const incomeTable = data.fire?.income_phases ?? data.income_phases;
@@ -215,14 +226,14 @@ export default function WithdrawPage() {
       </section>
 
       {/* 7. Spending — Essenciais vs Discricionários */}
-      {(data.spending ?? data.fire?.spending) && (
+      {(data.spending ?? data.fire?.spending ?? data.spending_breakdown) && (
         <section className="section" id="spendingBreakdownSection">
           <h2>Spending — Essenciais vs Discricionários <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(período ago/2026–mar/2026)</span></h2>
           {(() => {
-            const spending = data.spending ?? data.fire?.spending ?? {};
-            const essenciais = spending.essenciais_mes ?? spending.essenciais ?? 15074;
-            const discric = spending.discric_mes ?? spending.discricionarios ?? 4284;
-            const imprevistos = spending.imprevistos_mes ?? spending.imprevistos ?? 363;
+            const spending = data.spending ?? data.fire?.spending ?? data.spending_breakdown ?? {};
+            const essenciais = spending.essenciais_mes ?? spending.must_spend_mensal ?? spending.essenciais ?? 15074;
+            const discric = spending.discric_mes ?? spending.like_spend_mensal ?? spending.discricionarios ?? 4284;
+            const imprevistos = spending.imprevistos_mes ?? spending.imprevistos_mensal ?? spending.imprevistos ?? 363;
             const total = essenciais + discric + imprevistos;
             const rendaAnual = spending.renda_anual ?? 250000;
             const orcamentoAnual = spending.orcamento_anual ?? 13000;

@@ -64,7 +64,7 @@ export function KpiHero({
             {kpi.label}
           </div>
           <div
-            className="text-2xl font-black mt-1 mb-1 leading-none"
+            className="text-4xl font-black mt-1 mb-1 leading-none"
             style={{ color: kpi.color || '#fff' }}
           >
             {kpi.value}

@@ -58,7 +58,7 @@ export default function FirePage() {
       </section>
 
       {/* 3. Glide Path — Alocação por Idade (collapsible) */}
-      <CollapsibleSection id="section-glide-path" title="Glide Path — Alocação por Idade" defaultOpen={false}>
+      <CollapsibleSection id="section-glide-path" title="Glide Path — Alocação por Idade" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           <GlidePathChart data={data} />
           <div className="src">

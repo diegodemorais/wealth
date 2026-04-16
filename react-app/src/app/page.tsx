@@ -217,42 +217,79 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* 6a. Financial Wellness Score — full width */}
+      {/* 6a. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
       {derived?.wellnessScore != null && derived?.wellnessMetrics && (
-        <section className="bg-card border border-border/50 rounded p-4 mb-3.5">
-          <div className="flex gap-5 items-start">
-            {/* Score grande */}
-            <div className="min-w-32 text-center">
-              <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
-                Financial Wellness Score <span className="italic text-xs">(indicador secundário)</span>
+        <CollapsibleSection id="section-wellness" title="Financial Wellness Score" defaultOpen={true} icon="🏆">
+          <div className="px-4 pb-4">
+            <div className="flex gap-5 items-start">
+              {/* Score grande */}
+              <div className="min-w-32 text-center">
+                <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
+                  Score <span className="italic text-xs">(indicador secundário)</span>
+                </div>
+                <div className="text-5xl font-black text-green leading-none">
+                  {Math.round(derived.wellnessScore * 100)}
+                </div>
+                <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
               </div>
-              <div className="text-5xl font-black text-green leading-none">
-                {Math.round(derived.wellnessScore * 100)}
-              </div>
-              <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
-            </div>
-            {/* Barras de métricas */}
-            <div className="flex-1">
-              {derived.wellnessMetrics.slice(0, 8).map((m: any, i: number) => (
-                <div key={i} className="mb-1.5 flex items-center gap-2">
-                  <div className="text-xs text-muted w-40 flex-shrink-0">{m.label}</div>
-                  <div className="flex-1 bg-slate-700/40 rounded-sm h-1.5 relative overflow-hidden">
-                    <div
-                      className="h-full rounded-sm"
-                      style={{
-                        width: `${Math.min(100, Math.max(0, (m.value / m.max) * 100))}%`,
-                        background: (m.value / m.max) > 0.8 ? 'var(--green)' : (m.value / m.max) > 0.5 ? 'var(--yellow)' : 'var(--red)',
-                      }}
-                    />
+              {/* Barras de métricas */}
+              <div className="flex-1">
+                {derived.wellnessMetrics.slice(0, 8).map((m: any, i: number) => (
+                  <div key={i} className="mb-1.5 flex items-center gap-2">
+                    <div className="text-xs text-muted w-40 flex-shrink-0">{m.label}</div>
+                    <div className="flex-1 bg-slate-700/40 rounded-sm h-1.5 relative overflow-hidden">
+                      <div
+                        className="h-full rounded-sm"
+                        style={{
+                          width: `${Math.min(100, Math.max(0, (m.value / m.max) * 100))}%`,
+                          background: (m.value / m.max) > 0.8 ? 'var(--green)' : (m.value / m.max) > 0.5 ? 'var(--yellow)' : 'var(--red)',
+                        }}
+                      />
+                    </div>
+                    <div className="text-xs text-muted w-12 text-right flex-shrink-0">
+                      {m.value != null ? `${m.value}%` : '—'}
+                    </div>
                   </div>
-                  <div className="text-xs text-muted w-12 text-right flex-shrink-0">
-                    {m.value != null ? `${m.value}%` : '—'}
+                ))}
+              </div>
+            </div>
+
+            {/* Top Ações — 3 métricas com maior gap vs máximo */}
+            {(() => {
+              const metrics: any[] = derived.wellnessMetrics ?? [];
+              const actionItems = [...metrics]
+                .filter(m => m.max > 0)
+                .map(m => ({ ...m, gap: m.max - m.value, ratio: m.value / m.max }))
+                .sort((a, b) => b.gap - a.gap)
+                .slice(0, 3);
+              if (!actionItems.length) return null;
+              return (
+                <div className="mt-4 pt-3 border-t border-border/30">
+                  <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">Top Ações</div>
+                  <div className="flex flex-col gap-1.5">
+                    {actionItems.map((m: any, i: number) => {
+                      const urgency = m.ratio < 0.5 ? 'var(--red)' : m.ratio < 0.8 ? 'var(--yellow)' : 'var(--green)';
+                      return (
+                        <div key={i} className="flex items-center gap-2.5 bg-slate-700/20 rounded px-3 py-2">
+                          <div
+                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                            style={{ background: urgency }}
+                          />
+                          <div className="text-xs flex-1">
+                            <span className="font-semibold text-text">{m.label}</span>
+                            <span className="text-muted ml-1.5">
+                              {m.value}% / {m.max}% — gap de {m.gap.toFixed(0)}pts
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })()}
           </div>
-        </section>
+        </CollapsibleSection>
       )}
 
       {/* 7. SEÇÃO: P(FIRE) — Monte Carlo + Tornado */}
