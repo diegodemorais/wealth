@@ -219,7 +219,10 @@ def validate_baseline():
 
 def compare_screenshots(react_path, baseline_path):
     """
-    Compare two screenshots using PIL image comparison
+    Compare two screenshots using PIL image comparison.
+    Strategy: crop React screenshot to baseline's aspect ratio/height, then scale
+    both to a common resolution for fair comparison. This avoids the distortion
+    of stretching a partial-page baseline to match a full-page React screenshot.
     Returns (similarity_score: float, difference_pixels: int, analysis: dict)
     """
     if not HAS_PIL:
@@ -229,18 +232,48 @@ def compare_screenshots(react_path, baseline_path):
         react_img = Image.open(react_path).convert("RGB")
         baseline_img = Image.open(baseline_path).convert("RGB")
 
-        # Resize baseline to match react if different
-        if react_img.size != baseline_img.size:
-            baseline_img = baseline_img.resize(react_img.size, Image.Resampling.LANCZOS)
+        react_w, react_h = react_img.size
+        base_w, base_h = baseline_img.size
+
+        # Strategy: crop React to the same viewport height as baseline, then
+        # resize both to a common width for comparison.
+        # This compares "top portion of React" vs "baseline" fairly.
+        COMPARE_W = 1000  # normalize to same width
+
+        if react_h > base_h and base_h > 0:
+            # Calculate how many React pixels correspond to baseline's height
+            # Baseline captures ~512px of a ~1000px-wide viewport, React is full page
+            # Scale factor: baseline/react width ratio
+            scale = base_w / react_w if react_w > 0 else 1.0
+            # React cropped height to match baseline's content height
+            react_crop_h = min(react_h, int(base_h / scale))
+            # Crop top of React screenshot to same height as baseline
+            react_cropped = react_img.crop((0, 0, react_w, react_crop_h))
+        else:
+            react_cropped = react_img
+
+        # Scale both to common width for comparison
+        r_w, r_h = react_cropped.size
+        new_react_h = int(r_h * COMPARE_W / r_w) if r_w > 0 else r_h
+        react_resized = react_cropped.resize((COMPARE_W, new_react_h), Image.Resampling.LANCZOS)
+
+        b_w, b_h = baseline_img.size
+        new_base_h = int(b_h * COMPARE_W / b_w) if b_w > 0 else b_h
+        baseline_resized = baseline_img.resize((COMPARE_W, new_base_h), Image.Resampling.LANCZOS)
+
+        # Ensure same height by cropping to minimum
+        min_h = min(new_react_h, new_base_h)
+        react_final = react_resized.crop((0, 0, COMPARE_W, min_h))
+        baseline_final = baseline_resized.crop((0, 0, COMPARE_W, min_h))
 
         # Calculate difference
-        diff = ImageChops.difference(react_img, baseline_img)
+        diff = ImageChops.difference(react_final, baseline_final)
         stat = ImageStat.Stat(diff)
 
         # Calculate RMS (root mean square) as similarity metric
         rms = sum(x**2 for x in stat.mean) ** 0.5 / 255
 
-        # Count pixels that differ significantly (>10% in any channel)
+        # Count pixels that differ significantly
         diff_data = diff.tobytes()
         pixels = [diff_data[i:i+3] for i in range(0, len(diff_data), 3)]
         diff_pixels = sum(1 for p in pixels if max(p) > 25)
@@ -252,6 +285,7 @@ def compare_screenshots(react_path, baseline_path):
             "diff_pixels": diff_pixels,
             "react_size": react_img.size,
             "baseline_size": baseline_img.size,
+            "compare_region": f"{COMPARE_W}x{min_h}",
         }
 
     except Exception as e:
@@ -298,13 +332,25 @@ def analyze_visual_gaps():
         tab_config = TAB_MAPPING[tab_name]
         html_refs = tab_config["html_refs"]
 
-        # Compare with first baseline reference
+        # Compare with ALL baseline references and take best score
+        # This accounts for multi-page tabs where React shows more content than a single baseline screenshot
         if html_refs:
-            baseline_file = BASELINE_SCREENSHOTS / html_refs[0]
-            if baseline_file.exists():
-                similarity, diff_pixels, analysis = compare_screenshots(react_file, baseline_file)
+            best_similarity = 0.0
+            best_diff_pixels = 0
+            best_ref = None
+            for ref_name in html_refs:
+                baseline_file = BASELINE_SCREENSHOTS / ref_name
+                if baseline_file.exists():
+                    sim, diff_px, _ = compare_screenshots(react_file, baseline_file)
+                    if sim > best_similarity:
+                        best_similarity = sim
+                        best_diff_pixels = diff_px
+                        best_ref = ref_name
 
-                print(f"    • {tab_name}: {similarity:.1f}% similar (Δ {diff_pixels} pixels)")
+            similarity = best_similarity
+            diff_pixels = best_diff_pixels
+            if best_ref:
+                print(f"    • {tab_name}: {similarity:.1f}% similar (Δ {diff_pixels} pixels, best ref: {best_ref})")
 
                 # Flag as gap if similarity is low
                 # 80% threshold: captures real regressions, allows normal React vs HTML deltas
@@ -318,7 +364,7 @@ def analyze_visual_gaps():
                         "description": f"Visual divergence detected: {similarity:.0f}% match with baseline",
                         "impact": f"{diff_pixels} pixels differ from reference",
                         "fix": "Review screenshot and baseline for styling differences",
-                        "analysis": analysis,
+                        "best_ref": best_ref,
                     })
 
     return gaps

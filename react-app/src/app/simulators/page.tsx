@@ -70,8 +70,19 @@ function FireSimuladorSection() {
   const pfire50 = data?.fire?.cenario_aspiracional?.probabilidade_sucesso ?? data?.fire?.probabilidade_sucesso ?? null;
   const pfire53 = data?.fire?.cenario_base?.probabilidade_sucesso ?? null;
 
+  // SWR bruta/líquida from MC data
+  const swrPercentis = data?.fire?.swr_percentis ?? data?.swr_percentis ?? data?.fire_swr_percentis;
+  const swrBruta = swrPercentis?.p50 ?? swrPercentis?.swr_p50;
+  const swrBrutaPct = swrBruta ? (swrBruta * 100).toFixed(2) : null;
+  // Líquida c/INSS: subtract INSS income from base spending to get net SWR
+  const inssAnual = data?.premissas?.inss_anual ?? 18000;
+  const custoVidaBase = data?.premissas?.custo_vida_base ?? 250000;
+  const custoLiquido = Math.max(0, custoVidaBase - inssAnual);
+
   const result = calcFireYear(aporte, retorno, custo, currentAge, patrimonio);
   const firePire = result ? Math.min(95, Math.max(20, 50 + (result.idade - 50) * -3)) : null;
+  // SWR líquida: custoLíquido / patrimônio no FIRE
+  const swrLiquidaSimple = result && result.pat > 0 ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
 
   const setCondPreset = (c: FireCond) => {
     setFireCond(c);
@@ -120,6 +131,11 @@ function FireSimuladorSection() {
           <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px' }} className="pv">
             {firePire !== null ? `P = ${firePire}%` : 'P = —%'}
           </div>
+          {(swrBrutaPct || swrLiquidaSimple) && (
+            <div style={{ fontSize: '.62rem', color: 'var(--green)', fontWeight: 600, marginTop: '4px' }} className="pv">
+              {swrBrutaPct ? `✓ SWR bruta ${swrBrutaPct}%` : ''}{swrLiquidaSimple ? ` · líquida c/INSS ${swrLiquidaSimple}%` : ''}
+            </div>
+          )}
           <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }} className="pv">
             {result ? (result.idade < 50 ? `${50 - result.idade} anos antes da meta` : result.idade === 50 ? 'na meta' : `${result.idade - 50} anos após meta`) : '—'}
           </div>
