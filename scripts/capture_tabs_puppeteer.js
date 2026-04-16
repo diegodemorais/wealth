@@ -52,7 +52,7 @@ const OUTPUT_DIR = path.join(__dirname, '..', 'react-app', 'audit-screenshots');
 
       try {
         const page = await browser.newPage();
-        await page.setViewport({ width: 2000, height: 1200 });
+        await page.setViewport({ width: 1440, height: 900 });
 
         // Capture console messages for debugging
         page.on('console', msg => {
