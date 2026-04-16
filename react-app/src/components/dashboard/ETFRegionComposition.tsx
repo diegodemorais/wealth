@@ -1,135 +1,162 @@
-import React, { useState } from 'react';
+'use client';
 
-interface ETFCompositionData {
-  usa: number;
-  europe: number;
-  japan: number;
-  otherDm: number;
-  em: number;
-}
+import React, { useState, useMemo } from 'react';
+import { useDashboardStore } from '@/store/dashboardStore';
 
-interface ETFRegionCompositionProps {
-  swrd?: ETFCompositionData;
-  avgs?: ETFCompositionData;
-  avem?: ETFCompositionData;
-}
+const COLORS = ['var(--accent)', 'var(--purple)', 'var(--red)', 'var(--yellow)', 'var(--green)', 'var(--orange)', '#a371f7'];
+const ETF_COLORS: Record<string, string> = {
+  SWRD: 'var(--accent)',
+  AVGS: 'var(--cyan, #56d364)',
+  AVEM: 'var(--green)',
+};
+const ETF_NAMES: Record<string, string> = {
+  SWRD: 'SWRD — MSCI World',
+  AVGS: 'AVGS — Global Small Cap Value',
+  AVEM: 'AVEM — Emerging Markets Value',
+};
 
-const ETFRegionComposition: React.FC<ETFRegionCompositionProps> = ({
-  swrd = { usa: 48, europe: 20, japan: 8, otherDm: 12, em: 12 },
-  avgs = { usa: 45, europe: 25, japan: 10, otherDm: 12, em: 8 },
-  avem = { usa: 30, europe: 15, japan: 8, otherDm: 12, em: 35 },
-}) => {
-  const [selectedTab, setSelectedTab] = useState<'swrd' | 'avgs' | 'avem'>('swrd');
+const ETFRegionComposition: React.FC = () => {
+  const data = useDashboardStore(s => s.data);
+  const [selectedTab, setSelectedTab] = useState<'SWRD' | 'AVGS' | 'AVEM'>('SWRD');
 
-  const etfs = {
-    swrd: { name: 'SWRD (Global Large Cap)', color: 'var(--accent)', data: swrd },
-    avgs: { name: 'AVGS (Global Quality)', color: 'var(--cyan)', data: avgs },
-    avem: { name: 'AVEM (Global EM Value)', color: 'var(--green)', data: avem },
-  };
+  const etfData = useMemo(() => {
+    const etfs = (data as any)?.etf_composition?.etfs ?? {};
+    const result: Record<string, { label: string; regioes: Array<{ name: string; pct: number }> }> = {};
+    for (const key of ['SWRD', 'AVGS', 'AVEM']) {
+      const etf = etfs[key] ?? {};
+      const regioes = etf.regioes ?? {};
+      result[key] = {
+        label: ETF_NAMES[key] ?? key,
+        regioes: Object.entries(regioes)
+          .map(([name, val]) => ({ name, pct: Math.round((val as number) * 100) }))
+          .sort((a, b) => b.pct - a.pct),
+      };
+    }
+    return result;
+  }, [data]);
 
-  const currentEtf = etfs[selectedTab];
-  const regions: Array<{ label: string; key: keyof ETFCompositionData; color: string }> = [
-    { label: 'USA', key: 'usa', color: 'var(--accent)' },
-    { label: 'Europe', key: 'europe', color: 'var(--purple)' },
-    { label: 'Japan', key: 'japan', color: 'var(--red)' },
-    { label: 'Other DM', key: 'otherDm', color: 'var(--yellow)' },
-    { label: 'EM', key: 'em', color: 'var(--green)' },
-  ];
+  const current = etfData[selectedTab];
+  // All unique region names across ETFs for comparison table
+  const allRegions = useMemo(() => {
+    const set = new Set<string>();
+    Object.values(etfData).forEach(e => e.regioes.forEach(r => set.add(r.name)));
+    return Array.from(set);
+  }, [etfData]);
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
-        ETF Região Composição
-      </h2>
+    <div style={styles.container}>
+      {/* Tab buttons */}
+      <div style={styles.tabs}>
+        {(['SWRD', 'AVGS', 'AVEM'] as const).map(key => (
+          <button
+            key={key}
+            onClick={() => setSelectedTab(key)}
+            style={{
+              ...styles.tab,
+              backgroundColor: selectedTab === key ? (ETF_COLORS[key] + '22') : 'transparent',
+              border: `1px solid ${selectedTab === key ? ETF_COLORS[key] : 'var(--border)'}`,
+              color: selectedTab === key ? ETF_COLORS[key] : 'var(--muted)',
+              fontWeight: selectedTab === key ? 700 : 500,
+            }}
+          >
+            {key}
+          </button>
+        ))}
+      </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* Tab buttons */}
-        <div style={{ display: 'flex', gap: 'var(--space-2)', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
-          {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
-            <button
-              key={key}
-              onClick={() => setSelectedTab(key)}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '4px',
-                fontSize: 'var(--text-sm)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                backgroundColor: selectedTab === key ? etfs[key].color + '20' : 'transparent',
-                border: selectedTab === key ? `1px solid ${etfs[key].color}` : '1px solid var(--border)',
-                color: selectedTab === key ? etfs[key].color : 'var(--muted)',
-                fontWeight: selectedTab === key ? 600 : 500,
-              }}
-            >
-              {etfs[key].name.split(' ')[0]}
-            </button>
-          ))}
+      {/* Current ETF bars */}
+      <div style={{ marginBottom: '16px' }}>
+        <div style={{ fontSize: '.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '10px' }}>
+          {current?.label}
         </div>
-
-        {/* Current ETF composition */}
-        <div>
-          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
-            {currentEtf.name}
+        {current?.regioes.length === 0 && (
+          <div style={{ color: 'var(--muted)', fontSize: '.75rem' }}>Sem dados de composição regional</div>
+        )}
+        {current?.regioes.map((r, i) => (
+          <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <div style={{ flexShrink: 0, width: '90px', fontSize: '.72rem', color: 'var(--muted)' }}>{r.name}</div>
+            <div style={{ flex: 1, height: '18px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                width: `${r.pct}%`,
+                backgroundColor: COLORS[i % COLORS.length],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                paddingRight: r.pct > 8 ? '4px' : 0,
+                transition: 'width 0.3s',
+              }}>
+                {r.pct > 8 && (
+                  <span style={{ fontSize: '10px', fontWeight: 600, color: '#fff' }}>{r.pct}%</span>
+                )}
+              </div>
+            </div>
+            <div style={{ flexShrink: 0, width: '32px', textAlign: 'right', fontSize: '.75rem', fontWeight: 700, color: COLORS[i % COLORS.length] }}>
+              {r.pct}%
+            </div>
           </div>
+        ))}
+      </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-            {regions.map(region => {
-              const value = currentEtf.data[region.key];
-              return (
-                <div key={region.label} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                  <div style={{ flexShrink: 0, width: '120px' }}>
-                    <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '4px' }}>{region.label}</div>
-                    <div style={{ height: '20px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-                      <div style={{ height: '100%', width: `${value}%`, backgroundColor: region.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {value > 5 && <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)' }}>{value}%</span>}
-                      </div>
-                    </div>
-                  </div>
-                  <div style={{ flexShrink: 0, width: '40px', textAlign: 'right', fontSize: 'var(--text-md)', fontWeight: 700, color: region.color }}>
-                    {value}%
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* Comparison table */}
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px' }}>
+        <div style={{ fontSize: '.72rem', fontWeight: 600, color: 'var(--muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+          Comparação
         </div>
-
-        {/* Comparison table */}
-        <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
-            Comparação — 3 ETFs
-          </div>
-
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Região</th>
-                  {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
-                    <th key={key} style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontWeight: 700, color: etfs[key].color }}>
-                      {etfs[key].name.split(' ')[0]}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {regions.map(region => (
-                  <tr key={region.label}>
-                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>{region.label}</td>
-                    {(Object.keys(etfs) as Array<'swrd' | 'avgs' | 'avem'>).map(key => (
-                      <td key={`${key}-${region.label}`} style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontWeight: 600, color: region.color }}>
-                        {etfs[key].data[region.key]}%
-                      </td>
-                    ))}
-                  </tr>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.75rem' }}>
+            <thead>
+              <tr>
+                <th style={{ textAlign: 'left', padding: '4px 6px', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Região</th>
+                {(['SWRD', 'AVGS', 'AVEM'] as const).map(key => (
+                  <th key={key} style={{ textAlign: 'right', padding: '4px 6px', borderBottom: '1px solid var(--border)', fontWeight: 700, color: ETF_COLORS[key] }}>
+                    {key}
+                  </th>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </tr>
+            </thead>
+            <tbody>
+              {allRegions.map(region => (
+                <tr key={region}>
+                  <td style={{ padding: '4px 6px', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>{region}</td>
+                  {(['SWRD', 'AVGS', 'AVEM'] as const).map(key => {
+                    const val = etfData[key]?.regioes.find(r => r.name === region)?.pct;
+                    return (
+                      <td key={key} style={{ textAlign: 'right', padding: '4px 6px', borderBottom: '1px solid var(--border)', color: val ? 'var(--text)' : 'var(--muted)' }}>
+                        {val != null ? `${val}%` : '—'}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   );
+};
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    background: 'var(--card)',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
+    padding: '16px',
+    marginBottom: '16px',
+  },
+  tabs: {
+    display: 'flex',
+    gap: '6px',
+    marginBottom: '14px',
+  },
+  tab: {
+    padding: '5px 14px',
+    borderRadius: '4px',
+    fontSize: '.75rem',
+    cursor: 'pointer',
+    transition: 'all 0.15s',
+  },
 };
 
 export default ETFRegionComposition;

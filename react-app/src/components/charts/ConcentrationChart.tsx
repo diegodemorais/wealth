@@ -22,17 +22,16 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
     const rfBrl = conc.composicao?.rf_total_brl ?? 0;
     const hodl11Brl = conc.composicao?.hodl11_brl ?? 0;
     const cryptoLegadoBrl = conc.composicao?.crypto_legado_brl ?? 0;
-    const rfOutro = rfBrl - hodl11Brl; // equity RJ = rf - hodl (workaround — we use the split provided)
 
     const segments = [
-      { name: 'Internacional (ETFs)', value: internacionalBrl, color: '#58a6ff' },
+      { name: 'Intl (ETFs)', value: internacionalBrl, color: '#58a6ff' },
       { name: 'RF Brasil', value: rfBrl, color: '#3ed381' },
       { name: 'HODL11 (BTC)', value: hodl11Brl, color: '#f0883e' },
-      { name: 'Crypto Legado', value: cryptoLegadoBrl, color: '#a371f7' },
-    ];
+      { name: 'Crypto', value: cryptoLegadoBrl, color: '#a371f7' },
+    ].filter(s => s.value > 0);
 
     const fmt = (v: number) =>
-      privacyMode ? '••••' : `R$ ${(v / 1e6).toFixed(2)}M`;
+      privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
 
     return {
       backgroundColor: 'transparent',
@@ -40,24 +39,26 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
         trigger: 'item',
         backgroundColor: '#161b22',
         borderColor: '#30363d',
-        textStyle: { color: '#e6edf3' },
+        textStyle: { color: '#e6edf3', fontSize: 11 },
         formatter: (p: any) =>
           privacyMode
             ? `${p.name}: ••••`
-            : `${p.name}<br/>${fmt(p.value)} (${p.percent?.toFixed(1)}%)`,
+            : `${p.name}: ${fmt(p.value)} (${p.percent?.toFixed(1)}%)`,
       },
       legend: {
-        orient: 'vertical',
-        right: 10,
-        top: 'center',
-        textStyle: { color: '#8b949e', fontSize: 11 },
+        orient: 'horizontal',
+        bottom: 0,
+        left: 'center',
+        textStyle: { color: '#8b949e', fontSize: 10 },
+        itemWidth: 10,
+        itemHeight: 10,
         formatter: (name: string) => name,
       },
       series: [
         {
           type: 'pie',
-          radius: ['40%', '70%'],
-          center: ['35%', '50%'],
+          radius: ['42%', '68%'],
+          center: ['50%', '44%'],
           data: segments.map(s => ({
             name: s.name,
             value: s.value,
@@ -65,13 +66,14 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           })),
           label: {
             show: true,
+            position: 'inside',
             formatter: (p: any) =>
-              privacyMode ? '••' : `${p.percent?.toFixed(0)}%`,
-            color: '#e6edf3',
-            fontSize: 12,
+              privacyMode ? '' : `${p.percent?.toFixed(0)}%`,
+            color: '#fff',
+            fontSize: 11,
             fontWeight: 600,
           },
-          emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } },
+          emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.4)' } },
         },
       ],
     };
@@ -88,20 +90,20 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
       <div style={styles.kpiRow}>
         <div style={styles.kpi}>
           <span style={styles.kpiLabel}>Brasil</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--yellow)' }}>
+          <span style={{ ...styles.kpiValue, color: '#f0883e' }}>
             {privacyMode ? '••%' : `${brasilPct.toFixed(1)}%`}
           </span>
         </div>
         <div style={styles.kpi}>
           <span style={styles.kpiLabel}>Internacional</span>
-          <span style={{ ...styles.kpiValue, color: 'var(--accent)' }}>
+          <span style={{ ...styles.kpiValue, color: '#58a6ff' }}>
             {privacyMode ? '••%' : `${internacionalPct.toFixed(1)}%`}
           </span>
         </div>
       </div>
-      <ReactECharts option={option} style={{ height: 220 }} />
+      <ReactECharts option={option} style={{ height: 200 }} />
       <div style={styles.footnote}>
-        Fonte: dados/ · HODL11 = wrapper B3 de BTC (risco operacional BR)
+        HODL11 = wrapper B3 de BTC
       </div>
     </div>
   );
@@ -114,19 +116,26 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '8px',
     padding: 'var(--space-5)',
     marginBottom: '14px',
+    minWidth: 0,
+    overflow: 'hidden',
   },
-  title: { margin: '0 0 12px 0', color: 'var(--text)' },
+  title: { margin: '0 0 10px 0', color: 'var(--text)', fontSize: '1rem' },
   kpiRow: {
     display: 'flex',
-    gap: '24px',
-    marginBottom: '12px',
+    gap: '20px',
+    marginBottom: '8px',
   },
   kpi: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '2px',
+    gap: '1px',
   },
-  kpiLabel: { fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase' as const, letterSpacing: '0.05em' },
-  kpiValue: { fontSize: '22px', fontWeight: 700, fontFamily: 'monospace' },
-  footnote: { fontSize: '11px', color: 'var(--muted)', marginTop: '8px' },
+  kpiLabel: {
+    fontSize: '10px',
+    color: 'var(--muted)',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.05em',
+  },
+  kpiValue: { fontSize: '20px', fontWeight: 700, fontFamily: 'monospace' },
+  footnote: { fontSize: '10px', color: 'var(--muted)', marginTop: '4px' },
 };

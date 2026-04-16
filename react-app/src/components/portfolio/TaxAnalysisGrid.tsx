@@ -26,6 +26,10 @@ export function TaxAnalysisGrid() {
 
   const formatCurrency = (value: number) => {
     if (privacyMode) return '••••';
+    const abs = Math.abs(value);
+    const sign = value < 0 ? '−' : '';
+    if (abs >= 1_000_000) return `${sign}R$${(abs / 1_000_000).toFixed(2)}M`;
+    if (abs >= 1_000) return `${sign}R$${Math.round(abs / 1_000)}k`;
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
@@ -44,7 +48,7 @@ export function TaxAnalysisGrid() {
 
   const formatRate = (value: number) => {
     if (privacyMode) return '••••';
-    return value.toFixed(4);
+    return value.toFixed(2);
   };
 
   const getGainColor = (value: number) => {

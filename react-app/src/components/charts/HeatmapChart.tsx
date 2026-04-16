@@ -93,6 +93,8 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '8px',
     padding: 'var(--space-5)',
     marginBottom: '14px',
+    minWidth: 0,
+    overflow: 'hidden',
   },
   title: { margin: '0 0 16px 0', color: 'var(--text)' },
   tableWrapper: { overflowX: 'auto' },

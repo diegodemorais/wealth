@@ -335,63 +335,75 @@ export default function PerformancePage() {
       {/* 10. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible) */}
       <CollapsibleSection id="section-factor-loadings" title="Factor Loadings — Regressão Fama-French SF + Momentum" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
-          {/* Mostrar tabs de ETF */}
-          <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>
-            {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => (
-              <span key={etf} style={{
-                background: 'var(--card2)',
-                borderRadius: 'var(--radius-xs)',
-                padding: '3px 8px',
-                fontSize: '.65rem',
-                fontWeight: 600,
-                color: 'var(--accent)',
-              }}>
-                {etf}
-              </span>
-            ))}
-          </div>
-          {/* Legenda dos fatores */}
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.75rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Fator</th>
-                  {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => (
-                    <th key={etf} style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--accent)' }}>{etf}</th>
+          {(() => {
+            const fl = (data as any)?.factor_loadings ?? {};
+            // Only show ETFs that have regression data
+            const etfsWithData = ['AVDV', 'AVUV', 'DGS', 'EIMI', 'SWRD', 'USCC', 'IWVL'].filter(e => fl[e] != null);
+            const factors = [
+              { label: 'Mkt-RF', key: 'mkt_rf' },
+              { label: 'SMB', key: 'smb' },
+              { label: 'HML', key: 'hml' },
+              { label: 'RMW', key: 'rmw' },
+              { label: 'CMA', key: 'cma' },
+              { label: 'Mom', key: 'mom' },
+            ];
+            if (!etfsWithData.length) return <div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>Sem dados de factor loadings</div>;
+            return (
+              <>
+                <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                  {etfsWithData.map(etf => (
+                    <span key={etf} style={{
+                      background: 'var(--card2)',
+                      borderRadius: 'var(--radius-xs)',
+                      padding: '3px 8px',
+                      fontSize: '.65rem',
+                      fontWeight: 600,
+                      color: 'var(--accent)',
+                    }}>
+                      {etf}
+                    </span>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { label: 'Mkt-RF', key: 'mkt_rf' },
-                  { label: 'SMB', key: 'smb' },
-                  { label: 'HML', key: 'hml' },
-                  { label: 'RMW', key: 'rmw' },
-                  { label: 'CMA', key: 'cma' },
-                  { label: 'Mom', key: 'mom' },
-                ].map(({ label: factor, key: fKey }) => (
-                  <tr key={factor} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '6px 8px', fontWeight: 600 }}>{factor}</td>
-                    {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => {
-                      const loading = (data as any).factor_loadings?.[etf]?.[fKey] ?? (data as any).factor_loadings?.[etf]?.[factor];
-                      return (
-                        <td key={etf} style={{
-                          textAlign: 'right',
-                          padding: '6px 8px',
-                          color: loading != null ? (loading > 0.3 ? 'var(--green)' : loading < -0.1 ? 'var(--red)' : 'var(--text)') : 'var(--muted)',
-                        }}>
-                          {loading != null ? loading.toFixed(2) : '—'}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </div>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.75rem' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                        <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Fator</th>
+                        {etfsWithData.map(etf => (
+                          <th key={etf} style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--accent)' }}>{etf}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {factors.map(({ label, key: fKey }) => (
+                        <tr key={label} style={{ borderBottom: '1px solid var(--border)' }}>
+                          <td style={{ padding: '6px 8px', fontWeight: 600 }}>{label}</td>
+                          {etfsWithData.map(etf => {
+                            const val = fl[etf]?.[fKey];
+                            const tstat = fl[etf]?.t_stats?.[fKey];
+                            const sig = tstat != null && Math.abs(tstat) >= 1.65; // 90% confidence
+                            return (
+                              <td key={etf} style={{
+                                textAlign: 'right',
+                                padding: '6px 8px',
+                                color: val != null ? (val > 0.3 ? 'var(--green)' : val < -0.1 ? 'var(--red)' : 'var(--text)') : 'var(--muted)',
+                                opacity: sig ? 1 : 0.55,
+                                fontWeight: sig ? 600 : 400,
+                              }}>
+                                {val != null ? val.toFixed(2) : '—'}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            );
+          })()}
           <div className="src">
-            Regressão FF5+Mom · Barra sólida = significativa (90%+) · Barra espaçada = não significativa.<br />
-            ⓘ P&lt;0.05: mesmos FF5 EM aplica mol solo ETF (formação para Elo e 4.5C globais)
+            Regressão FF5+Mom · Negrito = significativo (t ≥ 1.65, 90%+) · Desbotado = não significativo · AVGS excluído (histórico insuficiente)
           </div>
         </div>
       </CollapsibleSection>
