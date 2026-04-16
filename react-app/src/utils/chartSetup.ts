@@ -585,7 +585,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
           { name: 'Ganho Equity USD', itemStyle: { color: 'var(--green)' } },
           { name: 'Ganho FX', itemStyle: { color: 'var(--orange)' } },
           { name: 'Ganho RF', itemStyle: { color: 'var(--purple)' } },
-          { name: 'Capital Final', itemStyle: { color: '#ec4899' } },
+          { name: 'Capital Final', itemStyle: { color: 'var(--pink)' } },
         ],
         links: [
           { source: 0, target: 5, value: initialCapital },
@@ -597,7 +597,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
         emphasis: { focus: 'adjacency' as const },
         levels: [
           { depth: 0, itemStyle: { color: 'var(--accent)' } },
-          { depth: 1, itemStyle: { color: '#ec4899' } },
+          { depth: 1, itemStyle: { color: 'var(--pink)' } },
         ],
         nodeWidth: 20,
         nodePadding: 120,
@@ -1024,17 +1024,17 @@ export function createDualLineChartOption(options: {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--border))' } },
     },
     series: [
       {
@@ -1090,20 +1090,20 @@ export function createBondPoolProbabilisticOption(options: {
         return html;
       },
     },
-    legend: { data: ['P90 (otimista)', 'P50 (mediana)', 'P10 (pessimista)'], textStyle: { color: '#d1d5db' }, bottom: 0 },
+    legend: { data: ['P90 (otimista)', 'P50 (mediana)', 'P10 (pessimista)'], textStyle: { color: 'hsl(var(--muted))' }, bottom: 0 },
     grid: { left: 50, right: 20, top: 40, bottom: 50 },
-    xAxis: { type: 'category' as const, data: dates, axisLabel: { color: '#9ca3af' } },
+    xAxis: { type: 'category' as const, data: dates, axisLabel: { color: 'hsl(var(--muted))' } },
     yAxis: {
       type: 'value' as const,
       name: 'Anos restantes',
-      nameTextStyle: { color: '#9ca3af' },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: (v: number) => `${v.toFixed(0)}` },
-      splitLine: { lineStyle: { color: '#2d3748', width: 0.5 } },
+      nameTextStyle: { color: 'hsl(var(--muted))' },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: (v: number) => `${v.toFixed(0)}` },
+      splitLine: { lineStyle: { color: 'hsl(var(--border))', width: 0.5 } },
     },
     series: [
-      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: '#10b981' }, itemStyle: { color: '#10b981' }, areaStyle: { color: 'rgba(16,185,129,0.08)' }, symbol: 'none', smooth: true },
-      { name: 'P50 (mediana)', type: 'line' as const, data: p50, lineStyle: { width: 2.5, color: '#f59e0b' }, itemStyle: { color: '#f59e0b' }, symbol: 'none', smooth: true },
-      { name: 'P10 (pessimista)', type: 'line' as const, data: p10, lineStyle: { width: 1.5, type: 'dashed' as const, color: '#ef4444' }, itemStyle: { color: '#ef4444' }, symbol: 'none', smooth: true },
+      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--green)' }, itemStyle: { color: 'var(--green)' }, areaStyle: { color: 'rgba(var(--green-hsl-alt), 0.08)' }, symbol: 'none', smooth: true },
+      { name: 'P50 (mediana)', type: 'line' as const, data: p50, lineStyle: { width: 2.5, color: 'var(--orange)' }, itemStyle: { color: 'var(--orange)' }, symbol: 'none', smooth: true },
+      { name: 'P10 (pessimista)', type: 'line' as const, data: p10, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--red)' }, itemStyle: { color: 'var(--red)' }, symbol: 'none', smooth: true },
     ],
   };
 }
@@ -1144,21 +1144,21 @@ export function createBondPoolDeterministicOption(options: {
         return html;
       },
     },
-    legend: { data: ['Pool Total', 'IPCA+ 2040', 'IPCA+ 2050', 'Meta 2040'], textStyle: { color: '#d1d5db' }, bottom: 0 },
+    legend: { data: ['Pool Total', 'IPCA+ 2040', 'IPCA+ 2050', 'Meta 2040'], textStyle: { color: 'hsl(var(--muted))' }, bottom: 0 },
     grid: { left: 70, right: 20, top: 40, bottom: 50 },
-    xAxis: { type: 'category' as const, data: years.map(String), axisLabel: { color: '#9ca3af' } },
+    xAxis: { type: 'category' as const, data: years.map(String), axisLabel: { color: 'hsl(var(--muted))' } },
     yAxis: {
       type: 'value' as const,
       name: 'R$ (BRL)',
-      nameTextStyle: { color: '#9ca3af' },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
-      splitLine: { lineStyle: { color: '#2d3748', width: 0.5 } },
+      nameTextStyle: { color: 'hsl(var(--muted))' },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
+      splitLine: { lineStyle: { color: 'hsl(var(--border))', width: 0.5 } },
     },
     series: [
-      { name: 'IPCA+ 2050', type: 'bar' as const, stack: 'pool', data: pool2050, itemStyle: { color: '#8b5cf6', borderRadius: [0, 0, 0, 0] }, emphasis: { focus: 'series' } },
-      { name: 'IPCA+ 2040', type: 'bar' as const, stack: 'pool', data: pool2040, itemStyle: { color: '#3b82f6', borderRadius: [4, 4, 0, 0] }, emphasis: { focus: 'series' } },
-      { name: 'Pool Total', type: 'line' as const, data: poolTotal, lineStyle: { width: 2.5, color: '#f59e0b' }, itemStyle: { color: '#f59e0b' }, symbol: 'circle', symbolSize: 6, smooth: true, z: 10 },
-      { name: 'Meta 2040', type: 'line' as const, data: years.map(() => alvo), lineStyle: { width: 1.5, type: 'dashed' as const, color: '#ef4444' }, itemStyle: { color: '#ef4444' }, symbol: 'none' },
+      { name: 'IPCA+ 2050', type: 'bar' as const, stack: 'pool', data: pool2050, itemStyle: { color: 'var(--purple)', borderRadius: [0, 0, 0, 0] }, emphasis: { focus: 'series' } },
+      { name: 'IPCA+ 2040', type: 'bar' as const, stack: 'pool', data: pool2040, itemStyle: { color: 'var(--accent)', borderRadius: [4, 4, 0, 0] }, emphasis: { focus: 'series' } },
+      { name: 'Pool Total', type: 'line' as const, data: poolTotal, lineStyle: { width: 2.5, color: 'var(--orange)' }, itemStyle: { color: 'var(--orange)' }, symbol: 'circle', symbolSize: 6, smooth: true, z: 10 },
+      { name: 'Meta 2040', type: 'line' as const, data: years.map(() => alvo), lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--red)' }, itemStyle: { color: 'var(--red)' }, symbol: 'none' },
     ],
   };
 }
