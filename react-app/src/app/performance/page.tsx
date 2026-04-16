@@ -268,7 +268,7 @@ export default function PerformancePage() {
       </section>
 
       {/* 9. Information Ratio vs VWRA (collapsible) */}
-      <CollapsibleSection id="section-ir" title="Information Ratio vs VWRA — Desde o Início + Rolling 36m" defaultOpen={false}>
+      <CollapsibleSection id="section-ir" title="Information Ratio vs VWRA — Desde o Início + Rolling 36m" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           <InformationRatioChart data={data} />
           <div className="src" style={{ lineHeight: 1.6 }}>
@@ -280,7 +280,7 @@ export default function PerformancePage() {
       </CollapsibleSection>
 
       {/* 10. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible) */}
-      <CollapsibleSection id="section-factor-loadings" title="Factor Loadings — Regressão Fama-French SF + Momentum" defaultOpen={false}>
+      <CollapsibleSection id="section-factor-loadings" title="Factor Loadings — Regressão Fama-French SF + Momentum" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           {/* Mostrar tabs de ETF */}
           <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap' }}>

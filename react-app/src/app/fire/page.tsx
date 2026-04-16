@@ -82,7 +82,7 @@ export default function FirePage() {
 
       {/* 5. FIRE Matrix — P(Sucesso 30 anos) (collapsible) */}
       {data.fire_matrix && (
-        <CollapsibleSection id="section-fire-matrix" title="FIRE Matrix — P(Sucesso 30 anos)" defaultOpen={false}>
+        <CollapsibleSection id="section-fire-matrix" title="FIRE Matrix — P(Sucesso 30 anos)" defaultOpen={true}>
           <div style={{ padding: '0 16px 16px' }}>
             <FireMatrixTable data={data.fire_matrix} />
             <div className="src">
@@ -93,7 +93,7 @@ export default function FirePage() {
       )}
 
       {/* 6. Eventos de Vida — Impacto no Plano FIRE (collapsible, border yellow) */}
-      <CollapsibleSection id="section-eventos-vida" title="Eventos de Vida — Impacto no Plano FIRE" defaultOpen={false}>
+      <CollapsibleSection id="section-eventos-vida" title="Eventos de Vida — Impacto no Plano FIRE" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: 8 }}>
             (gatilhos de recalibração)
