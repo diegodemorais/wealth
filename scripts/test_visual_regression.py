@@ -57,6 +57,8 @@ MEDIUM = "🟡 MEDIUM"      # Visual divergence (styling, spacing, colors)
 LOW = "🟢 LOW"             # Minor inconsistency (padding, font-weight)
 
 # Tab mapping: React → HTML reference screenshots
+# Corrected mapping based on visual inspection of each baseline PNG:
+# 1-5: NOW tab | 6-7: Portfolio | 8-13: Performance | 14-16: FIRE | 17-19: Withdraw | 20-21: Simuladores | 22-25: Backtest
 TAB_MAPPING = {
     "01-now-tab.png": {
         "name": "NOW Tab",
@@ -81,45 +83,51 @@ TAB_MAPPING = {
     },
     "03-performance-tab.png": {
         "name": "PERFORMANCE Tab",
-        "html_refs": ["8.png", "9.png"],
+        "html_refs": ["8.png", "9.png", "10.png", "11.png", "12.png", "13.png"],
         "key_components": [
-            "Alpha vs IBRX chart (green box)",
-            "Premiações vs Realizados (table)",
+            "Alpha vs SWRD chart (bar chart)",
+            "Premissas vs Realizados (table)",
             "Retornos Mensais Heatmap (red/green grid)",
-            "Retornos Anuais (bar chart)",
+            "Patrimônio Evolução Histórica (area chart)",
+            "Performance Attribution (donut + KPI cards)",
+            "Rolling Sharpe + Factor Rolling charts",
         ]
     },
     "04-fire-tab.png": {
         "name": "FIRE Tab",
-        "html_refs": ["9.png", "10.png", "11.png", "12.png"],
+        "html_refs": ["14.png", "15.png", "16.png"],
         "key_components": [
             "FIRE Trajectory chart (time vs patrimony)",
             "FIRE Matrix (4 scenarios: Atual, Solteiro, Casado, +Filho)",
-            "Meta tracking (2038, R$1.2M, P(FIRE))",
-            "Collapse sections (bond rails, guardrails)",
+            "Life Events (casamento, filho)",
+            "P(FIRE) Família cenários",
         ]
     },
     "05-withdraw-tab.png": {
         "name": "WITHDRAW Tab",
-        "html_refs": ["13.png"],
+        "html_refs": ["17.png", "18.png", "19.png"],
         "key_components": [
-            "Bond Pool cascade (IPCA+ / Renda+ / Equity)",
-            "Guardrails bands visualization",
-            "Withdrawal rate calculations",
+            "Bond Pool Readiness + Runway chart",
+            "SWR Percentis P10/P50/P90",
+            "Guardrails de Retirada (table)",
+            "Spending Guardrails P(FIRE) × Custo de Vida",
+            "Renda na Aposentadoria (income phases table)",
+            "Projeção de Renda — Ciclo de Vida (chart)",
+            "Spending Essenciais vs Discricionários",
         ]
     },
     "06-simuladores-tab.png": {
         "name": "SIMULADORES Tab",
-        "html_refs": ["14.png", "15.png", "16.png", "17.png"],
+        "html_refs": ["20.png", "21.png"],
         "key_components": [
-            "Simulator forms (inputs, sliders)",
-            "Fire simulator results",
-            "Backtest input panel",
+            "Simulador FIRE — Aposentadoria Antecipada",
+            "What-If Scenarios — Cenário / Gasto",
+            "Calculadora de Aporte — Cascade",
         ]
     },
     "07-backtest-tab.png": {
         "name": "BACKTEST Tab",
-        "html_refs": ["18.png", "19.png", "20.png", "21.png", "22.png", "23.png", "24.png", "25.png"],
+        "html_refs": ["22.png", "23.png", "24.png", "25.png"],
         "key_components": [
             "Period selection (date range)",
             "Backtest results table",

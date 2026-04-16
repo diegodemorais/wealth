@@ -64,11 +64,27 @@ export default function PerformancePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
-                IPCA+ Longo — Progressão vs Alvo 19%
+                IPCA+ Longo — Progressão vs Alvo 15%
               </div>
-              <div style={{ fontSize: '.72rem', lineHeight: 1.6 }}>
-                <div>Sep: −8.5pp · DCA ativo · taxa −7.07%</div>
-              </div>
+              {(() => {
+                const ipca = data.rf?.ipca2040;
+                const alvoTotal = (data.patrimonio?.total_financeiro ?? 0) * 0.15;
+                const atual = ipca?.valor_brl ?? 0;
+                const gapPp = alvoTotal > 0 ? ((atual - alvoTotal) / (data.patrimonio?.total_financeiro ?? 1)) * 100 : null;
+                return (
+                  <div style={{ fontSize: '.72rem', lineHeight: 1.6 }}>
+                    {gapPp !== null && (
+                      <div style={{ color: gapPp >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>
+                        {gapPp >= 0 ? '+' : ''}{gapPp.toFixed(1)}pp {gapPp < 0 ? '· DCA ativo' : '· alvo atingido'}
+                        {ipca?.taxa ? ` · taxa ${ipca.taxa.toFixed(2)}%` : ''}
+                      </div>
+                    )}
+                    {!gapPp && ipca?.taxa && (
+                      <div>taxa {ipca.taxa.toFixed(2)}%</div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
             <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
@@ -84,7 +100,7 @@ export default function PerformancePage() {
               {data.rf?.ipca2040 && (
                 <div>
                   <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
-                    {data.rf.ipca2040.taxa?.toFixed(2)}% e {data.rf.ipca2040.piso_compra?.toFixed(1) ?? '6.0'}%
+                    {data.rf.ipca2040.taxa?.toFixed(2)}% ≥ {data.rf.ipca2040.piso_compra?.toFixed(1) ?? '6.0'}%
                   </div>
                   <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
                     Atual IPCA+: ativa · DCA ativo

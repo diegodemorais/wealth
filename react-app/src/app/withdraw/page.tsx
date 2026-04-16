@@ -134,7 +134,7 @@ export default function WithdrawPage() {
       )}
 
       {/* 4. Spending Guardrails — P(FIRE) × Custo de Vida (collapsible) */}
-      <CollapsibleSection id="section-spending-guardrails" title="Spending Guardrails — P(FIRE) × Custo de Vida" defaultOpen={false}>
+      <CollapsibleSection id="section-spending-guardrails" title="Spending Guardrails — P(FIRE) × Custo de Vida" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           {/* P(FIRE) Status bar */}
           {(() => {

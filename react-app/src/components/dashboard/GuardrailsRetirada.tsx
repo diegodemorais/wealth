@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 interface Guardrail {
   id: string
   guardrail: string
@@ -21,68 +19,50 @@ const priorityStyle = {
 } as const
 
 export function GuardrailsRetirada({ guardrails }: GuardrailsRetiradaProps) {
-  const [isOpen, setIsOpen] = useState(true)
-
   return (
-    <div className="bg-card border-l-4 border-l-primary border border-border rounded-r-md p-6">
-      <div
-        className="flex w-full items-center justify-between gap-2 cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-foreground m-0">Guardrails de Retirada</h2>
-          <span className="text-lg text-muted-foreground transition-transform inline-block" style={{ transform: isOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
-        </div>
-      </div>
-
-      <p className="mt-2 text-xs text-muted-foreground">
+    <div style={{ overflowX: 'auto' }}>
+      <p style={{ fontSize: '.75rem', color: 'var(--muted)', marginBottom: '8px', marginTop: 0 }}>
         Regras de decisão: ajuste spending baseado em P(FIRE) e volatilidade
       </p>
-
-      {isOpen && (
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left px-2 py-2 text-muted-foreground font-semibold">Guardrail</th>
-                <th className="text-left px-2 py-2 text-muted-foreground font-semibold">Condição</th>
-                <th className="text-left px-2 py-2 text-muted-foreground font-semibold">Ação</th>
-                <th className="text-right px-2 py-2 text-muted-foreground font-semibold w-24">Prioridade</th>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.8rem' }}>
+        <thead>
+          <tr style={{ borderBottom: '1px solid var(--border)' }}>
+            <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Guardrail</th>
+            <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Condição</th>
+            <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ação</th>
+            <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600, width: 90 }}>Prioridade</th>
+          </tr>
+        </thead>
+        <tbody>
+          {guardrails.map((guardrail) => {
+            const style = priorityStyle[guardrail.prioridade]
+            return (
+              <tr key={guardrail.id} style={{ borderBottom: '1px solid var(--border)', backgroundColor: style.rowBg }}>
+                <td style={{ padding: '6px 8px', fontWeight: 500 }}>{guardrail.guardrail}</td>
+                <td style={{ padding: '6px 8px', fontFamily: 'monospace' }}>{guardrail.condicao}</td>
+                <td style={{ padding: '6px 8px' }}>{guardrail.acao}</td>
+                <td style={{ padding: '6px 8px', textAlign: 'right' }}>
+                  <span
+                    style={{
+                      fontFamily: 'monospace',
+                      fontSize: '.7rem',
+                      fontWeight: 700,
+                      padding: '2px 6px',
+                      borderRadius: 3,
+                      display: 'inline-block',
+                      backgroundColor: style.bg,
+                      color: style.color,
+                      border: `1px solid ${style.border}`,
+                    }}
+                  >
+                    {guardrail.prioridade}
+                  </span>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {guardrails.map((guardrail) => {
-                const style = priorityStyle[guardrail.prioridade]
-                return (
-                  <tr key={guardrail.id} className="border-b border-border" style={{ backgroundColor: style.rowBg }}>
-                    <td className="px-2 py-2">
-                      <span className="font-medium text-sm text-foreground">{guardrail.guardrail}</span>
-                    </td>
-                    <td className="px-2 py-2 font-mono text-sm text-foreground">
-                      {guardrail.condicao}
-                    </td>
-                    <td className="px-2 py-2 text-sm text-foreground">
-                      {guardrail.acao}
-                    </td>
-                    <td className="px-2 py-2 text-right">
-                      <span
-                        className="font-mono text-xs font-semibold px-1.5 py-0.5 rounded border inline-block"
-                        style={{
-                          backgroundColor: style.bg,
-                          color: style.color,
-                          border: `1px solid ${style.border}`,
-                        }}
-                      >
-                        {guardrail.prioridade}
-                      </span>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+            )
+          })}
+        </tbody>
+      </table>
     </div>
   )
 }
