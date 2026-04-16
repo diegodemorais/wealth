@@ -1101,7 +1101,7 @@ export function createBondPoolProbabilisticOption(options: {
       splitLine: { lineStyle: { color: 'hsl(var(--border))', width: 0.5 } },
     },
     series: [
-      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--green)' }, itemStyle: { color: 'var(--green)' }, areaStyle: { color: 'rgba(var(--green-hsl-alt), 0.08)' }, symbol: 'none', smooth: true },
+      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--green)' }, itemStyle: { color: 'var(--green)' }, areaStyle: { color: 'hsla(var(--green), 0.08)' }, symbol: 'none', smooth: true },
       { name: 'P50 (mediana)', type: 'line' as const, data: p50, lineStyle: { width: 2.5, color: 'var(--orange)' }, itemStyle: { color: 'var(--orange)' }, symbol: 'none', smooth: true },
       { name: 'P10 (pessimista)', type: 'line' as const, data: p10, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--red)' }, itemStyle: { color: 'var(--red)' }, symbol: 'none', smooth: true },
     ],
