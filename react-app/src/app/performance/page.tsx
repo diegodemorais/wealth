@@ -159,7 +159,7 @@ export default function PerformancePage() {
             </Button>
           ))}
         </div>
-        <TimelineChart data={data} />
+        <TimelineChart data={data} period={timelinePeriod} />
         <div className="src">
           Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.
         </div>
@@ -258,17 +258,58 @@ export default function PerformancePage() {
                   </tr>
                 </thead>
                 <tbody id="feeBody">
-                  {data.fee_analysis?.portfolios?.map((row: { name: string; ter: number; custo_14a: string; alpha_14a: string; net_vs_vwra: string }, i: number) => (
-                    <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <td style={{ padding: '6px 8px' }}>{row.name}</td>
-                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.ter != null ? `${(row.ter * 100).toFixed(2)}%` : '—'}</td>
-                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.custo_14a ?? '—'}</td>
-                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.alpha_14a ?? '—'}</td>
-                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.net_vs_vwra ?? '—'}</td>
-                    </tr>
-                  )) ?? (
-                    <tr><td colSpan={5} style={{ textAlign: 'center', padding: 12, color: 'var(--muted)' }}>Sem dados de fee analysis</td></tr>
-                  )}
+                  {(() => {
+                    // Compute fee analysis inline — TER conocidos + pesos da carteira
+                    const pt = (data as any)?.pesosTarget ?? {};
+                    const wSwrd = pt.SWRD ?? 0.395;
+                    const wAvgs = pt.AVGS ?? 0.237;
+                    const wAvem = pt.AVEM ?? 0.158;
+                    const equityTotal = wSwrd + wAvgs + wAvem;
+                    // TER por ETF (bps → decimal)
+                    const terSwrd = 0.0012; // 0.12%
+                    const terAvgs = 0.0025; // 0.25%
+                    const terAvem = 0.0018; // 0.18%
+                    const terVwra = 0.0022; // 0.22% benchmark
+                    const terPortfolio = equityTotal > 0
+                      ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem) / equityTotal
+                      : 0.00171;
+                    // Custo 14 anos: patrimônio médio projetado × TER (simples)
+                    const pat = (data as any)?.fire_swr_percentis?.patrimonio_p50_2040 ?? 11500000;
+                    const patMedio = pat / 2; // patrimônio médio no período
+                    const fmtM = (v: number) => `R$ ${(v / 1e6).toFixed(2)}M`;
+                    const custoPortfolio14a = patMedio * terPortfolio * 14;
+                    const custoVwra14a = patMedio * terVwra * 14;
+                    const alpha14a = patMedio * 0.0016 * 14; // 0.16%/ano McLean & Pontiff
+                    const netPortfolio = alpha14a - custoPortfolio14a;
+                    const netVwra = alpha14a - custoVwra14a; // VWRA: sem alpha por ser market-cap
+                    const rows = [
+                      {
+                        name: 'Portfolio Target (SWRD/AVGS/AVEM)',
+                        ter: terPortfolio,
+                        custo_14a: fmtM(custoPortfolio14a),
+                        alpha_14a: `+${fmtM(alpha14a)}`,
+                        net_vs_vwra: `+${fmtM(netPortfolio - (-custoVwra14a))}`,
+                        highlight: true,
+                      },
+                      {
+                        name: 'VWRA (benchmark)',
+                        ter: terVwra,
+                        custo_14a: fmtM(custoVwra14a),
+                        alpha_14a: '—',
+                        net_vs_vwra: '0',
+                        highlight: false,
+                      },
+                    ];
+                    return rows.map((row, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid var(--border)', background: row.highlight ? 'rgba(88,166,255,.06)' : 'transparent' }}>
+                        <td style={{ padding: '6px 8px', fontWeight: row.highlight ? 700 : 400 }}>{row.name}</td>
+                        <td style={{ textAlign: 'right', padding: '6px 8px' }}>{(row.ter * 100).toFixed(3)}%</td>
+                        <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--red)' }}>−{row.custo_14a}</td>
+                        <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--green)' }}>{row.alpha_14a}</td>
+                        <td style={{ textAlign: 'right', padding: '6px 8px', color: row.highlight ? 'var(--green)' : 'var(--muted)' }}>{row.net_vs_vwra}</td>
+                      </tr>
+                    ));
+                  })()}
                 </tbody>
               </table>
             </div>
@@ -321,11 +362,18 @@ export default function PerformancePage() {
                 </tr>
               </thead>
               <tbody>
-                {['Mkt-RF', 'SMB', 'HML', 'RMW', 'CMA', 'Mom'].map(factor => (
+                {[
+                  { label: 'Mkt-RF', key: 'mkt_rf' },
+                  { label: 'SMB', key: 'smb' },
+                  { label: 'HML', key: 'hml' },
+                  { label: 'RMW', key: 'rmw' },
+                  { label: 'CMA', key: 'cma' },
+                  { label: 'Mom', key: 'mom' },
+                ].map(({ label: factor, key: fKey }) => (
                   <tr key={factor} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '6px 8px', fontWeight: 600 }}>{factor}</td>
                     {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => {
-                      const loading = data.factor_loadings?.[etf]?.[factor] ?? data.backtest?.factor_loadings?.[etf]?.[factor];
+                      const loading = (data as any).factor_loadings?.[etf]?.[fKey] ?? (data as any).factor_loadings?.[etf]?.[factor];
                       return (
                         <td key={etf} style={{
                           textAlign: 'right',

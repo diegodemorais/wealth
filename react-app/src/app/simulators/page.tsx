@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
-import { SimulationTrajectories } from '@/components/simulators/SimulationTrajectories';
+import { useMemo } from 'react';
+import ReactECharts from 'echarts-for-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
@@ -37,15 +38,23 @@ const COND_PRESETS: Record<FireCond, { custo: number; label: string }> = {
   filho:     { custo: 360000, label: '👶 Filho' },
 };
 
-function calcFireYear(aporte: number, retorno: number, custo: number, currentAge = 39, patrimonio = 3500000) {
-  // Deterministic simulation: find year when SWR <= 3.0% (pat >= custo/0.03)
-  const target = custo / 0.03;
+// Safe SWR for 40+ year retirement — use 3.5% (optimistic) or user-chosen percentile
+// Target: find earliest age where custo/pat <= swrTarget
+function calcFireYear(
+  aporte: number,
+  retorno: number,
+  custo: number,
+  currentAge = 39,
+  patrimonio = 3500000,
+  swrTarget = 0.035, // 3.5% default — INSS reduces effective SWR
+) {
+  // Earliest retirement: pat >= custo / swrTarget
+  const target = custo / swrTarget;
   let pat = patrimonio;
   for (let yr = 0; yr <= 30; yr++) {
     if (pat >= target) {
-      return { ano: 2026 + yr, idade: currentAge + yr, pat };
+      return { ano: 2026 + yr, idade: currentAge + yr, pat, swrAtFire: custo / pat };
     }
-    // Grow one year: add monthly contributions, apply return
     for (let m = 0; m < 12; m++) {
       pat = pat * (1 + retorno / 100 / 12) + aporte;
     }
@@ -79,8 +88,30 @@ function FireSimuladorSection() {
   const custoVidaBase = data?.premissas?.custo_vida_base ?? 250000;
   const custoLiquido = Math.max(0, custoVidaBase - inssAnual);
 
-  const result = calcFireYear(aporte, retorno, custo, currentAge, patrimonio);
-  const firePire = result ? Math.min(95, Math.max(20, 50 + (result.idade - 50) * -3)) : null;
+  // SWR target: 3.5% (INSS covers R$18k/ano → effective spending ~R$232k → real SWR ~3.25%)
+  const swrTarget = 0.035;
+  const result = calcFireYear(aporte, retorno, custo, currentAge, patrimonio, swrTarget);
+
+  // P(FIRE) from MC percentiles: interpolate based on SWR at fire date vs MC percentiles
+  // swr_p10=3.66% (worst 10%), swr_p50=2.17% (median), swr_p90=1.32% (best 10%)
+  const swrAtFire = result?.swrAtFire ?? null;
+  const swrP10 = (data?.fire_swr_percentis as any)?.swr_p10 ?? 0.0366;
+  const swrP50 = (data?.fire_swr_percentis as any)?.swr_p50 ?? 0.0217;
+  const swrP90 = (data?.fire_swr_percentis as any)?.swr_p90 ?? 0.0132;
+  const firePire: number | null = swrAtFire != null ? (() => {
+    // Higher SWR = less patrimônio = lower success probability
+    if (swrAtFire >= swrP10) return 10;
+    if (swrAtFire <= swrP90) return 90;
+    if (swrAtFire >= swrP50) {
+      // interpolate between P10 (10%) and P50 (50%)
+      const t = (swrP10 - swrAtFire) / (swrP10 - swrP50);
+      return Math.round(10 + t * 40);
+    }
+    // interpolate between P50 (50%) and P90 (90%)
+    const t = (swrP50 - swrAtFire) / (swrP50 - swrP90);
+    return Math.round(50 + t * 40);
+  })() : null;
+
   // SWR líquida: custoLíquido / patrimônio no FIRE
   const swrLiquidaSimple = result && result.pat > 0 ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
 
@@ -375,6 +406,146 @@ const STRESS_AGES = [
   { value: 50, label: '50 anos (FIRE aspiracional)' },
 ];
 
+// Inline MC stress chart — lognormal projection with shock applied at ageOnset
+function StressChart({ shock, ageOnset, patrimonio }: { shock: number; ageOnset: number; patrimonio: number }) {
+  const option = useMemo(() => {
+    const currentAge = 39;
+    const years = 30;
+    const ANNUAL_RETURN = 0.0485;
+    const ANNUAL_VOL = 0.18;
+    const N_SIMS = 300;
+    const shockYr = Math.max(0, ageOnset - currentAge);
+
+    // Generate trajectories
+    const sims: number[][] = [];
+    for (let s = 0; s < N_SIMS; s++) {
+      const traj: number[] = [patrimonio];
+      for (let yr = 1; yr <= years; yr++) {
+        const prev = traj[yr - 1];
+        // Box-Muller
+        const u1 = Math.random(), u2 = Math.random();
+        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        const ret = ANNUAL_RETURN + ANNUAL_VOL * z;
+        let next = prev * (1 + ret);
+        if (yr === shockYr) next = next * (1 + shock / 100);
+        traj.push(Math.max(0, next));
+      }
+      sims.push(traj);
+    }
+
+    // Compute percentiles per year
+    const pcts = Array.from({ length: years + 1 }, (_, yr) => {
+      const vals = sims.map(t => t[yr]).sort((a, b) => a - b);
+      const at = (p: number) => vals[Math.floor(p * (vals.length - 1))];
+      return { p10: at(0.1), p25: at(0.25), p50: at(0.5), p75: at(0.75), p90: at(0.9) };
+    });
+
+    const labels = Array.from({ length: years + 1 }, (_, i) => `${currentAge + i}a`);
+    const fmtM = (v: number) => `R$${(v / 1e6).toFixed(1)}M`;
+
+    return {
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#161b22',
+        borderColor: '#30363d',
+        textStyle: { color: '#e6edf3', fontSize: 11 },
+        formatter: (params: any[]) => {
+          const yr = params[0].dataIndex;
+          const p = pcts[yr];
+          return `${labels[yr]}<br/>P90: ${fmtM(p.p90)}<br/>P50: ${fmtM(p.p50)}<br/>P10: ${fmtM(p.p10)}`;
+        },
+      },
+      grid: { left: 55, right: 15, top: 20, bottom: 30, containLabel: false },
+      xAxis: {
+        type: 'category' as const,
+        data: labels,
+        axisLabel: { color: '#8b949e', fontSize: 10, interval: 4 },
+        axisLine: { lineStyle: { color: '#30363d' } },
+      },
+      yAxis: {
+        type: 'value' as const,
+        axisLabel: { color: '#8b949e', fontSize: 10, formatter: (v: number) => `R$${(v/1e6).toFixed(1)}M` },
+        splitLine: { lineStyle: { color: '#21262d' } },
+      },
+      series: [
+        // P10–P90 band
+        {
+          name: 'P90',
+          type: 'line' as const,
+          data: pcts.map(p => p.p90),
+          lineStyle: { color: '#58a6ff', width: 1, type: 'dashed' as const },
+          itemStyle: { color: '#58a6ff' },
+          symbolSize: 0,
+          areaStyle: { color: 'rgba(88,166,255,0.08)', origin: 'start' as const },
+        },
+        // P25–P75 band
+        {
+          name: 'P75',
+          type: 'line' as const,
+          data: pcts.map(p => p.p75),
+          lineStyle: { color: '#58a6ff', width: 1, opacity: 0.4 },
+          itemStyle: { color: '#58a6ff' },
+          symbolSize: 0,
+          areaStyle: { color: 'rgba(88,166,255,0.12)', origin: 'start' as const },
+        },
+        {
+          name: 'P50 (Mediana)',
+          type: 'line' as const,
+          data: pcts.map(p => p.p50),
+          lineStyle: { color: '#3ed381', width: 2.5 },
+          itemStyle: { color: '#3ed381' },
+          symbolSize: 0,
+        },
+        {
+          name: 'P25',
+          type: 'line' as const,
+          data: pcts.map(p => p.p25),
+          lineStyle: { color: '#f85149', width: 1, opacity: 0.4 },
+          itemStyle: { color: '#f85149' },
+          symbolSize: 0,
+          areaStyle: { color: 'rgba(248,81,73,0.08)', origin: 'start' as const },
+        },
+        {
+          name: 'P10',
+          type: 'line' as const,
+          data: pcts.map(p => p.p10),
+          lineStyle: { color: '#f85149', width: 1, type: 'dashed' as const },
+          itemStyle: { color: '#f85149' },
+          symbolSize: 0,
+        },
+        // Shock vertical marker
+        ...(shockYr > 0 && shockYr <= years ? [{
+          name: 'Shock',
+          type: 'line' as const,
+          data: Array.from({ length: years + 1 }, (_, i) => i === shockYr ? pcts[shockYr].p90 * 1.1 : null),
+          lineStyle: { color: '#f85149', width: 2, type: 'dashed' as const },
+          itemStyle: { color: '#f85149' },
+          symbolSize: 0,
+          markLine: {
+            silent: true,
+            data: [{ xAxis: shockYr }],
+            lineStyle: { color: '#f85149', type: 'dashed' as const, width: 1.5 },
+            label: { formatter: `Shock ${shock}%`, color: '#f85149', fontSize: 10 },
+          },
+        }] : []),
+      ],
+    };
+  }, [shock, ageOnset, patrimonio]);
+
+  return (
+    <div style={{ marginBottom: '14px' }}>
+      <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>
+        Projeção — Evolução Patrimonial após Shock · {300} trajetórias MC · valores nominais BRL
+      </div>
+      <ReactECharts option={option} style={{ height: 260 }} />
+      <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '3px' }}>
+        Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: 4.85%/ano · Vol: 18%/ano
+      </div>
+    </div>
+  );
+}
+
 function StressTestSection() {
   const data = useDashboardStore(s => s.data);
   const [shock, setShock] = useState(-40);
@@ -421,18 +592,8 @@ function StressTestSection() {
         </div>
       </div>
 
-      {/* Chart placeholder */}
-      <div style={{ marginBottom: '14px' }}>
-        <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>
-          Projeção — Evolução Patrimonial após Shock
-        </div>
-        <div style={{ height: '260px', background: 'var(--card2)', borderRadius: '8px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', fontSize: '.8rem' }}>
-          <SimulationTrajectories />
-        </div>
-        <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '3px' }}>
-          Bandas: P5–P95 (exterior) · P25–P75 (interior) · P50 mediana · 500 trajetórias MC · valores reais R$2026
-        </div>
-      </div>
+      {/* Chart — computed from shock/ageOnset sliders */}
+      <StressChart shock={shock} ageOnset={ageOnset} patrimonio={patrimonio} />
 
       <div className="src" style={{ marginTop: '10px' }}>
         ⚡ = pré-calculado · ✅ = simulado ao vivo
@@ -525,7 +686,7 @@ function CascadeSection() {
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: `3px solid ${ipcaAtivo ? 'var(--green)' : 'var(--muted)'}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
             <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
-              IPCA+ Longo
+              1 · IPCA+ Longo
             </div>
             <span style={{ fontSize: '.55rem', fontWeight: 600, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)', background: ipcaAtivo ? 'rgba(34,197,94,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
               {ipcaAtivo ? 'ATIVO' : 'PAUSADO'}
@@ -534,21 +695,20 @@ function CascadeSection() {
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)' }} className="pv">
             {fmtBRL(ipcaAlloc)}
           </div>
-          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
-            gap restante: <span className="pv">{ipcaGapBrl != null ? fmtBRL(ipcaGapBrl) : '—'}</span>
+          <div style={{ fontSize: '.65rem', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
+            → Tesouro IPCA+2040 via XP
           </div>
-          {ipcaGapPp != null && (
-            <div style={{ fontSize: '.55rem', color: 'var(--muted)', marginTop: '2px' }}>
-              {ipcaGapPp.toFixed(1)}pp da carteira
-            </div>
-          )}
+          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+            gap: <span className="pv">{ipcaGapBrl != null ? fmtBRL(ipcaGapBrl) : '—'}</span>
+            {ipcaGapPp != null && ` (${ipcaGapPp.toFixed(1)}pp)`}
+          </div>
         </div>
 
         {/* Nível 2: Renda+ */}
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: `3px solid ${rendaAtivo ? 'var(--accent)' : 'var(--muted)'}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
             <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
-              Renda+ 2065
+              2 · Renda+ 2065
             </div>
             <span style={{ fontSize: '.55rem', fontWeight: 600, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)', background: rendaAtivo ? 'rgba(59,130,246,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
               {rendaAtivo ? 'ATIVO' : 'PAUSADO'}
@@ -557,40 +717,39 @@ function CascadeSection() {
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)' }} className="pv">
             {fmtBRL(rendaAlloc)}
           </div>
-          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
-            gap restante: <span className="pv">{rendaGapBrl != null ? fmtBRL(rendaGapBrl) : '—'}</span>
+          <div style={{ fontSize: '.65rem', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
+            → Renda+ 2065 via Tesouro Direto
           </div>
-          {rendaGapPp != null && (
-            <div style={{ fontSize: '.55rem', color: 'var(--muted)', marginTop: '2px' }}>
-              {rendaGapPp > 0 ? `${rendaGapPp.toFixed(1)}pp da carteira` : 'acima do alvo'}
-            </div>
-          )}
+          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+            gap: <span className="pv">{rendaGapBrl != null ? fmtBRL(rendaGapBrl) : '—'}</span>
+            {rendaGapPp != null && (rendaGapPp > 0 ? ` (${rendaGapPp.toFixed(1)}pp)` : ' (acima do alvo)')}
+          </div>
         </div>
 
         {/* Nível 3: Equity (overflow) */}
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: '3px solid var(--orange)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
             <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
-              Equity (overflow)
+              3 · Equity (overflow)
             </div>
             <span style={{ fontSize: '.55rem', fontWeight: 600, color: 'var(--orange)', background: 'rgba(249,115,22,.12)', borderRadius: '3px', padding: '1px 4px' }}>
-              ALWAYS
+              SEMPRE
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)' }} className="pv">
             {fmtBRL(equityAlloc)}
           </div>
-          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
-            gap restante: <span className="pv">{totalBrl > 0 ? `${((equityAlloc / totalBrl) * 100).toFixed(2)}pp da carteira` : '—'}</span>
+          <div style={{ fontSize: '.65rem', color: 'var(--orange)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(249,115,22,.08)', borderRadius: '4px' }}>
+            → SWRD + AVGS + AVEM via IBKR
           </div>
-          <div style={{ fontSize: '.55rem', color: 'var(--muted)', marginTop: '2px' }}>
-            overflow após níveis 1 e 2
+          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+            pesos: 50% SWRD · 30% AVGS · 20% AVEM
           </div>
         </div>
       </div>
 
       <div className="src">
-        Cascade: IPCA+ taxa ≥ piso → DCA IPCA+ 2040. Overflow acima do gap preenche próximo nível. Pisos definidos na estratégia.
+        Cascade: nível 1 preenche até gap IPCA+ · nível 2 preenche até gap Renda+ · overflow sempre para equity IBKR.
       </div>
     </div>
   );

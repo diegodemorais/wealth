@@ -9,14 +9,44 @@ import { createDualLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 
 export interface TimelineChartProps {
   data: DashboardData;
+  period?: string;
 }
 
-export function TimelineChart({ data }: TimelineChartProps) {
+// Filter parallel arrays by period string relative to today
+function filterByPeriod(
+  dates: string[],
+  arrays: number[][],
+  period: string,
+): { dates: string[]; arrays: number[][] } {
+  if (!period || period === 'all' || dates.length === 0) return { dates, arrays };
+
+  const now = new Date();
+  let cutoff: Date;
+
+  if (period === 'ytd') {
+    cutoff = new Date(now.getFullYear(), 0, 1);
+  } else {
+    const months = period === '6m' ? 6 : period === '1y' ? 12 : period === '3y' ? 36 : period === '5y' ? 60 : 0;
+    if (!months) return { dates, arrays };
+    cutoff = new Date(now);
+    cutoff.setMonth(cutoff.getMonth() - months);
+  }
+
+  const cutoffYM = `${cutoff.getFullYear()}-${String(cutoff.getMonth() + 1).padStart(2, '0')}`;
+  const idx = dates.findIndex(d => d >= cutoffYM);
+  if (idx < 0) return { dates, arrays };
+
+  return {
+    dates: dates.slice(idx),
+    arrays: arrays.map(a => a.slice(idx)),
+  };
+}
+
+export function TimelineChart({ data, period = 'all' }: TimelineChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
   const option = useMemo(() => {
-    // Use real backtest equity curve data
     const bt = (data as any)?.backtest ?? {};
     const rawDates: string[] = bt.dates ?? [];
     const targetValues: number[] = bt.target ?? [];
@@ -29,9 +59,15 @@ export function TimelineChart({ data }: TimelineChartProps) {
       };
     }
 
-    // Format dates: '2019-08' → 'ago/19'
+    const { dates: filteredDates, arrays } = filterByPeriod(
+      rawDates,
+      [targetValues, shadowAValues],
+      period,
+    );
+    const [filtTarget, filtShadow] = arrays;
+
     const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-    const xAxisData = rawDates.map((ym: string) => {
+    const xAxisData = filteredDates.map((ym: string) => {
       const [y, m] = ym.split('-');
       return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
     });
@@ -39,13 +75,13 @@ export function TimelineChart({ data }: TimelineChartProps) {
     const metrics = bt.metrics ?? {};
     const cagr = metrics.cagr != null ? ` (CAGR: ${(metrics.cagr * 100).toFixed(1)}%)` : '';
 
-    if (shadowAValues.length > 0) {
+    if (filtShadow.length > 0) {
       return createDualLineChartOption({
         data, privacyMode, theme,
         xAxisData,
-        series1Data: targetValues,
+        series1Data: filtTarget,
         series1Name: `Target Portfolio${cagr}`,
-        series2Data: shadowAValues,
+        series2Data: filtShadow,
         series2Name: 'Shadow A (60/40)',
         series1Color: CHART_COLORS.accent,
         series2Color: CHART_COLORS.yellow,
@@ -85,7 +121,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
         {
           name: `Target Portfolio${cagr}`,
           type: 'line' as const,
-          data: targetValues,
+          data: filtTarget,
           smooth: true,
           itemStyle: { color: CHART_COLORS.accent },
           lineStyle: { width: 2.5, color: CHART_COLORS.accent },
@@ -94,7 +130,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
         },
       ],
     };
-  }, [data, privacyMode, theme]);
+  }, [data, privacyMode, theme, period]);
 
   return (
     <div className="bg-card border border-border rounded p-4 mb-5">

@@ -2,67 +2,67 @@
 
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { DASHBOARD_VERSION } from '@/config/version';
+import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
+
+// Shared formatter — same format as Header
+function formatBrt(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }) + ' BRT';
+  } catch {
+    return iso;
+  }
+}
 
 export function Footer() {
   const data = useDashboardStore(s => s.data);
 
-  const { generatedDate, daysOld, isStale } = useMemo(() => {
-    if (!data?.date) {
-      return { generatedDate: '—', daysOld: 0, isStale: false };
-    }
+  const buildLabel = formatBrt(BUILD_DATE);
 
-    const generated = new Date(data.date);
-    const now = new Date();
-    const diffMs = now.getTime() - generated.getTime();
-    const daysOld = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const isStale = daysOld > 7;
-
-    const formatted = generated.toLocaleDateString('pt-BR');
-    return { generatedDate: formatted, daysOld, isStale };
-  }, [data?.date]);
-
-  const nextCheckDate = useMemo(() => {
-    if (!data?.date) return '—';
-    const generated = new Date(data.date);
-    generated.setDate(generated.getDate() + 30);
-    return generated.toLocaleDateString('pt-BR');
-  }, [data?.date]);
+  const { dataDate, daysOld, isStale } = useMemo(() => {
+    const raw = (data as any)?._generated_brt ?? (data as any)?._generated ?? data?.date;
+    if (!raw) return { dataDate: '—', daysOld: 0, isStale: false };
+    const generated = new Date(raw);
+    const diffMs = Date.now() - generated.getTime();
+    const daysOld = Math.floor(diffMs / 86400000);
+    return {
+      dataDate: formatBrt(raw),
+      daysOld,
+      isStale: daysOld > 7,
+    };
+  }, [data]);
 
   return (
     <footer style={styles.footer}>
       <div style={styles.container}>
         <div style={styles.section}>
-          <small style={styles.label}>Generated</small>
-          <small style={styles.value}>{generatedDate}</small>
+          <small style={styles.label}>Build</small>
+          <small style={styles.value}>{buildLabel}</small>
+          <small style={styles.sub}>{DASHBOARD_VERSION}</small>
+        </div>
+
+        <div style={styles.section}>
+          <small style={styles.label}>Dados gerados</small>
+          <small style={styles.value}>{dataDate}</small>
           {daysOld > 0 && (
-            <small style={styles.subtext}>({daysOld}d ago)</small>
+            <small style={styles.sub}>{daysOld}d atrás</small>
           )}
         </div>
 
-        <div style={styles.section}>
-          <small style={styles.label}>Next Check</small>
-          <small style={styles.value}>{nextCheckDate}</small>
-        </div>
-
         {isStale && (
-          <div
-            style={{
-              ...styles.section,
-              ...styles.staleness,
-            }}
-            data-test="staleness-banner"
-          >
-            <small style={{ color: 'var(--text)', fontWeight: '600' }}>
-              ⚠️ Data is {daysOld} days old — consider updating
+          <div style={{ ...styles.section, ...styles.stale }} data-test="staleness-banner">
+            <small style={{ color: '#fff', fontWeight: 600 }}>
+              ⚠️ Dados com {daysOld} dias — considere atualizar
             </small>
           </div>
         )}
-
-        <div style={styles.section}>
-          <small style={styles.label}>Version</small>
-          <small style={styles.value}>{DASHBOARD_VERSION}</small>
-        </div>
       </div>
     </footer>
   );
@@ -88,28 +88,29 @@ const styles: Record<string, React.CSSProperties> = {
   },
   section: {
     display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
+    flexDirection: 'column' as const,
+    gap: '2px',
   },
   label: {
     color: 'var(--muted)',
     fontSize: 'var(--text-xs)',
-    textTransform: 'uppercase',
+    textTransform: 'uppercase' as const,
     fontWeight: '600',
+    letterSpacing: '0.05em',
   },
   value: {
     color: 'var(--text)',
     fontSize: 'var(--text-sm)',
     fontWeight: '500',
+    fontFamily: 'monospace',
   },
-  subtext: {
+  sub: {
     color: 'var(--muted)',
     fontSize: 'var(--text-xs)',
   },
-  staleness: {
+  stale: {
     padding: '8px 12px',
     backgroundColor: 'var(--orange)',
     borderRadius: '4px',
-    flex: 1,
   },
 };

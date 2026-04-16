@@ -1,39 +1,33 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
-import { useDashboardStore } from '@/store/dashboardStore';
-import { DASHBOARD_VERSION } from '@/config/version';
+import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
+
+// Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
+function formatBrt(iso: string): string {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    }) + ' BRT';
+  } catch {
+    return iso;
+  }
+}
 
 export function Header() {
   const privacyMode = useUiStore(s => s.privacyMode);
   const togglePrivacy = useUiStore(s => s.togglePrivacy);
-  const data = useDashboardStore(s => s.data);
 
-  const buildTimeBrt = (() => {
-    const raw = (data as any)?._generated_brt as string | undefined;
-    if (!raw) return null;
-    try {
-      const d = new Date(raw);
-      return d.toLocaleString('pt-BR', {
-        timeZone: 'America/Sao_Paulo',
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch {
-      return null;
-    }
-  })();
+  const buildLabel = formatBrt(BUILD_DATE);
 
   const handleReload = () => {
     window.location.reload();
-  };
-
-  const handleEruda = () => {
-    // Eruda is loaded via CDN (can be added to layout if needed)
-    console.log('Eruda console toggle');
   };
 
   return (
@@ -42,47 +36,22 @@ export function Header() {
         {/* Logo */}
         <div style={styles.logoSection}>
           <h1 style={styles.logo}>Dashboard Wealth DM</h1>
-          <span
-            style={styles.version}
-            title={`Build: ${DASHBOARD_VERSION}${buildTimeBrt ? ` · dados ${buildTimeBrt} BRT` : ''}`}
-          >
+          <span style={styles.version} title={`Build: ${DASHBOARD_VERSION} · ${buildLabel}`}>
             {DASHBOARD_VERSION}
-            {buildTimeBrt && (
-              <span style={styles.buildTime}> · {buildTimeBrt} BRT</span>
-            )}
+            <span style={styles.buildTime}> · {buildLabel}</span>
           </span>
         </div>
 
         {/* Controls */}
         <div style={styles.controls}>
-          {/* Reload Button */}
-          <button
-            onClick={handleReload}
-            title="Reload data"
-            style={styles.button}
-            aria-label="Reload"
-          >
+          <button onClick={handleReload} title="Reload data" style={styles.button} aria-label="Reload">
             🔄 Reload
           </button>
 
-          {/* Eruda Button */}
-          <button
-            onClick={handleEruda}
-            title="Open console"
-            style={styles.button}
-            aria-label="Console"
-          >
-            🛠️
-          </button>
-
-          {/* Privacy Toggle */}
           <button
             onClick={togglePrivacy}
             title={privacyMode ? 'Show values' : 'Hide values'}
-            style={{
-              ...styles.button,
-              backgroundColor: privacyMode ? 'var(--red)' : 'var(--green)',
-            }}
+            style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--green)' }}
             data-test="privacy-toggle"
             aria-label="Privacy mode"
           >
@@ -128,10 +97,9 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: 'monospace',
     paddingLeft: '8px',
     borderLeft: '1px solid var(--border)',
-    lineHeight: '1',
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
+    gap: '2px',
   },
   buildTime: {
     fontSize: '11px',
