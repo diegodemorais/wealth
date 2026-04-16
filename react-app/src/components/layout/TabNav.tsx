@@ -8,8 +8,8 @@ const TABS = [
   { href: '/portfolio', label: '🎯 Portfolio', id: 'tab-portfolio' },
   { href: '/performance', label: '📈 Performance', id: 'tab-performance' },
   { href: '/fire', label: '🔥 FIRE', id: 'tab-fire' },
-  { href: '/withdraw', label: '💸 Withdraw', id: 'tab-withdraw' },
-  { href: '/simulators', label: '🧪 Simulators', id: 'tab-simulators' },
+  { href: '/withdraw', label: '💸 Retirada', id: 'tab-withdraw' },
+  { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
   { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
   { href: '/avaliar', label: '🔍 AVALIAR', id: 'tab-avaliar' },
 ];

@@ -11,6 +11,11 @@ export interface KpiHeroProps {
   pfire: number; // 0-1, probability of FIRE
   cambio?: number;
   fireStatus?: 'on-track' | 'warning' | 'critical';
+  fireYearBase?: number;
+  fireAgeBase?: number;
+  fireYearAspir?: number;
+  fireAgeAspir?: number;
+  firePatrimonioGatilho?: number;
 }
 
 export function KpiHero({
@@ -21,6 +26,11 @@ export function KpiHero({
   pfire,
   cambio = 5.156,
   fireStatus = 'on-track',
+  fireYearBase,
+  fireAgeBase,
+  fireYearAspir,
+  fireAgeAspir,
+  firePatrimonioGatilho,
 }: KpiHeroProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
@@ -29,53 +39,62 @@ export function KpiHero({
   const monthsInt = Math.round((yearsToFire - yearsInt) * 12);
   const yearsMonthsStr = `${yearsInt}a ${monthsInt}m`;
 
-  const kpis = [
-    {
-      label: 'Patrimônio Total',
-      value: privacyMode ? '••••' : fmtBrl(networth),
-      subtitle: privacyMode ? '••••' : `${networthUsd ? fmtUsd(networthUsd).replace('$', 'USD ') : '—'} em USD`,
-      primary: true,
-    },
-    {
-      label: 'Anos até FIRE',
-      value: privacyMode ? '••••' : yearsMonthsStr,
-      subtitle: privacyMode ? '••••' : undefined,
-    },
-    {
-      label: 'Progresso FIRE',
-      value: privacyMode ? '••••' : fmtPct(fireProgress, 1),
-      subtitle: privacyMode ? '••••' : undefined,
-      color: 'rgba(234, 179, 8, 0.8)', // yellow
-    },
-  ];
+  // Format the BRL percentage of net worth
+  const brlPct = networthUsd && cambio && networth
+    ? Math.round(((networth - networthUsd * cambio) / networth) * 100)
+    : null;
+
+  // Fire subtitle: "Base: 2040 (53 anos) · Aspir: 2038 (49a)"
+  const fireSubtitle = (() => {
+    const parts: string[] = [];
+    if (fireYearBase && fireAgeBase) parts.push(`Base: ${fireYearBase} (${fireAgeBase} anos)`);
+    if (fireYearAspir && fireAgeAspir) parts.push(`Aspir: ${fireYearAspir} (${fireAgeAspir}a)`);
+    return parts.join(' · ') || undefined;
+  })();
+
+  // Gatilho subtitle: "vs gatilho R$X.XM"
+  const gatilhoSubtitle = firePatrimonioGatilho
+    ? `vs gatilho ${fmtBrl(firePatrimonioGatilho)}`
+    : undefined;
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-2.5 mb-4">
-      {kpis.map((kpi, idx) => (
-        <div
-          key={idx}
-          className={`rounded p-4 text-center border transition-colors border-l-4 ${
-            kpi.primary
-              ? 'bg-blue-950/25 border-accent border-2 border-l-blue-500'
-              : 'bg-card border-border/50 border-l-blue-500'
-          }`}
-        >
-          <div className="text-xs uppercase font-semibold text-muted-foreground mb-1 tracking-widest">
-            {kpi.label}
-          </div>
-          <div
-            className="text-4xl font-black mt-1 mb-1 leading-none"
-            style={{ color: kpi.color || '#fff' }}
-          >
-            {kpi.value}
-          </div>
-          {kpi.subtitle && (
-            <div className="text-xs text-muted-foreground mt-1">
-              {kpi.subtitle}
-            </div>
-          )}
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2.5 mb-4">
+      {/* Card 1: Patrimônio Total */}
+      <div className="kpi kpi-fire text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
+        <div className="kpi-label">Patrimônio Total</div>
+        <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
+          {privacyMode ? '••••' : fmtBrl(networth)}
         </div>
-      ))}
+        <div className="kpi-sub">
+          {privacyMode ? '••••' : (brlPct != null ? `${brlPct}% em USD` : `${networthUsd ? fmtUsd(networthUsd) : '—'} em USD`)}
+        </div>
+      </div>
+
+      {/* Card 2: Anos até FIRE */}
+      <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
+        <div className="kpi-label">Anos até FIRE</div>
+        <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
+          {privacyMode ? '••••' : yearsMonthsStr}
+        </div>
+        {fireSubtitle && (
+          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+            {privacyMode ? '••••' : fireSubtitle}
+          </div>
+        )}
+      </div>
+
+      {/* Card 3: Progresso FIRE */}
+      <div className="kpi text-center" style={{ borderTop: '3px solid var(--yellow)', borderRadius: 'var(--radius-md)' }}>
+        <div className="kpi-label">Progresso FIRE</div>
+        <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem', color: 'rgba(234,179,8,0.9)' }}>
+          {privacyMode ? '••••' : fmtPct(fireProgress, 1)}
+        </div>
+        {gatilhoSubtitle && (
+          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+            {privacyMode ? '••••' : gatilhoSubtitle}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

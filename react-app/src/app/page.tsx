@@ -75,6 +75,11 @@ export default function HomePage() {
         yearsToFire={derived.fireMonthsAway / 12}
         pfire={derived.pfire}
         cambio={derived.CAMBIO}
+        fireYearBase={data?.fire?.cenario_base?.ano_fire ?? data?.fire?.ano_fire_base}
+        fireAgeBase={data?.fire?.cenario_base?.idade_fire ?? data?.fire?.idade_fire_base}
+        fireYearAspir={data?.fire?.cenario_aspiracional?.ano_fire ?? data?.fire?.ano_fire_aspiracional}
+        fireAgeAspir={data?.fire?.cenario_aspiracional?.idade_fire ?? data?.fire?.idade_fire_aspiracional}
+        firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
