@@ -55,27 +55,27 @@ export function createAttributionChartOption(options: BaseChartOptions) {
 
   const categories = ['Equity Selection', 'Allocation', 'Market Return', 'Currency', 'Costs'];
   const attributionData = [2.5, 1.2, 4.8, -0.3, -0.6];
-  const colors = attributionData.map(v => v >= 0 ? '#10b981' : '#ef4444');
+  const colors = attributionData.map(v => v >= 0 ? 'var(--green)' : 'var(--red)');
 
   return {
     ...createBaseOption(theme, privacyMode),
     xAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: '{value}%',
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--border))' } },
     },
     yAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         fontSize: 12,
       },
-      axisLine: { lineStyle: { color: '#374151' } },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
     },
     series: [
       {
@@ -119,9 +119,9 @@ export function createDonutChartOption(options: BaseChartOptions) {
   const totalBrl = equityBrl + rfBrl + hodlBrl;
 
   const assetData = [
-    { value: equityBrl, name: 'Equity', color: '#3b82f6' },
-    { value: rfBrl, name: 'Renda Fixa', color: '#10b981' },
-    { value: hodlBrl, name: 'Bitcoin', color: '#f59e0b' },
+    { value: equityBrl, name: 'Equity', color: 'var(--accent)' },
+    { value: rfBrl, name: 'Renda Fixa', color: 'var(--green)' },
+    { value: hodlBrl, name: 'Bitcoin', color: 'var(--orange)' },
   ].filter((d) => d.value > 0);
 
   return {
@@ -136,7 +136,7 @@ export function createDonutChartOption(options: BaseChartOptions) {
     legend: {
       orient: 'vertical' as const,
       left: 'left',
-      textStyle: { color: '#d1d5db' },
+      textStyle: { color: 'hsl(var(--muted))' },
     },
     series: [
       {
@@ -145,10 +145,10 @@ export function createDonutChartOption(options: BaseChartOptions) {
         radius: ['30%', '70%'],
         center: ['50%', '50%'],
         data: assetData,
-        itemStyle: { borderRadius: 6, borderColor: '#1f2937', borderWidth: 1 },
+        itemStyle: { borderRadius: 6, borderColor: 'hsl(var(--card))', borderWidth: 1 },
         label: {
           formatter: privacyMode ? () => '' : '{b}\n{d}%',
-          color: privacyMode ? 'transparent' : '#d1d5db',
+          color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         },
       },
     ],
@@ -210,7 +210,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
     },
     legend: {
       data: ['Histórico', 'Pessimista (0%)', 'Base (3% a.a.)', 'Otimista (5% a.a.)'],
-      textStyle: { color: '#d1d5db' },
+      textStyle: { color: 'hsl(var(--muted))' },
     },
     grid: { left: 60, right: 40, top: 40, bottom: 40 },
     xAxis: {
@@ -227,7 +227,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Histórico',
         type: 'line' as const,
         data: [...values.slice(-24), ...baselineProj.slice(0, 48)],
-        itemStyle: { color: '#f59e0b' },
+        itemStyle: { color: 'var(--orange)' },
         lineStyle: { width: 2.5 },
         smooth: true,
       },
@@ -235,7 +235,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Pessimista (0%)',
         type: 'line' as const,
         data: Array(dates.slice(-24).length).fill(null).concat(pessimisticProj.slice(0, 48)),
-        itemStyle: { color: '#ef4444' },
+        itemStyle: { color: 'var(--red)' },
         lineStyle: { width: 1.5, type: 'dashed' as const },
         smooth: true,
       },
@@ -243,7 +243,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Base (3% a.a.)',
         type: 'line' as const,
         data: Array(dates.slice(-24).length).fill(null).concat(baselineProj.slice(0, 48)),
-        itemStyle: { color: '#10b981' },
+        itemStyle: { color: 'var(--green)' },
         lineStyle: { width: 1.5, type: 'dashed' as const },
         smooth: true,
       },
@@ -251,7 +251,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Otimista (5% a.a.)',
         type: 'line' as const,
         data: Array(dates.slice(-24).length).fill(null).concat(optimisticProj.slice(0, 48)),
-        itemStyle: { color: '#3b82f6' },
+        itemStyle: { color: 'var(--accent)' },
         lineStyle: { width: 1.5, type: 'dashed' as const },
         smooth: true,
       },
@@ -273,7 +273,7 @@ export function createStackedAreaChartOption(options: BaseChartOptions) {
   const cryptoData = Array.from({ length: months }, (_, i) => 120000 + i * 500);
 
   return {
-    color: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899'],
+    color: ['var(--accent)', 'var(--green)', 'var(--orange)', 'var(--pink)'],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -304,20 +304,20 @@ export function createStackedAreaChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         fontSize: 12,
       },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: [
       {
@@ -376,7 +376,7 @@ export function createBacktestChartOption(options: BaseChartOptions) {
   const benchmarkData = Array.from({ length: months }, (_, i) => 100 * Math.pow(1.0075, i));
 
   return {
-    color: ['#10b981', '#9ca3af'],
+    color: ['var(--green)', 'hsl(var(--muted))'],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -400,13 +400,13 @@ export function createBacktestChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12, interval: 11 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12, interval: 11 },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: [
       {
@@ -437,7 +437,7 @@ export function createIncomeChartOption(options: BaseChartOptions) {
 
   const categories = ['Salary', 'Dividends', 'Bond Coupons', 'Rental', 'Other'];
   const amountsData = [120000, 35000, 18000, 24000, 3000];
-  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+  const colors = ['var(--accent)', 'var(--green)', 'var(--orange)', 'var(--purple)', 'var(--pink)'];
 
   return {
     tooltip: {
@@ -457,17 +457,17 @@ export function createIncomeChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: (value: number) => `R$ ${(value / 1e3).toFixed(0)}K`,
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     yAxis: {
       type: 'category' as const,
       data: categories,
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
-      axisLine: { lineStyle: { color: '#374151' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
     },
     series: [
       {
@@ -498,7 +498,7 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
   const fixedIncomeAlloc = equityAlloc.map(eq => 100 - eq);
 
   return {
-    color: ['#3b82f6', '#f59e0b'],
+    color: ['var(--accent)', 'var(--orange)'],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -518,15 +518,15 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: ages.map(a => a.toString()),
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12, interval: 4 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12, interval: 4 },
     },
     yAxis: {
       type: 'value' as const,
       min: 0,
       max: 100,
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: '{value}%', fontSize: 12 },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: '{value}%', fontSize: 12 },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: [
       {
@@ -580,11 +580,11 @@ export function createSankeyChartOption(options: BaseChartOptions) {
       {
         type: 'sankey' as const,
         data: [
-          { name: 'Capital Inicial', itemStyle: { color: '#3b82f6' } },
-          { name: 'Aportes', itemStyle: { color: '#06b6d4' } },
-          { name: 'Ganho Equity USD', itemStyle: { color: '#10b981' } },
-          { name: 'Ganho FX', itemStyle: { color: '#f59e0b' } },
-          { name: 'Ganho RF', itemStyle: { color: '#8b5cf6' } },
+          { name: 'Capital Inicial', itemStyle: { color: 'var(--accent)' } },
+          { name: 'Aportes', itemStyle: { color: 'var(--cyan)' } },
+          { name: 'Ganho Equity USD', itemStyle: { color: 'var(--green)' } },
+          { name: 'Ganho FX', itemStyle: { color: 'var(--orange)' } },
+          { name: 'Ganho RF', itemStyle: { color: 'var(--purple)' } },
           { name: 'Capital Final', itemStyle: { color: '#ec4899' } },
         ],
         links: [
@@ -596,7 +596,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
         ],
         emphasis: { focus: 'adjacency' as const },
         levels: [
-          { depth: 0, itemStyle: { color: '#3b82f6' } },
+          { depth: 0, itemStyle: { color: 'var(--accent)' } },
           { depth: 1, itemStyle: { color: '#ec4899' } },
         ],
         nodeWidth: 20,
@@ -620,7 +620,7 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const p90Data = Array.from({ length: years }, (_, i) => 1250000 * Math.pow(1.09, i) + 60000 * i);
 
   return {
-    color: ['#ef4444', '#10b981', '#3b82f6'],
+    color: ['var(--red)', 'var(--green)', 'var(--accent)'],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -640,17 +640,17 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: [
       {
@@ -689,7 +689,7 @@ export function createDeltaBarChartOption(options: BaseChartOptions) {
 
   const xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
   const deltaData = [0.8, -0.2, 1.2, 0.5, -0.1, 0.9, 1.1, 0.3, -0.4, 0.6, 0.8, 0.7];
-  const colors = deltaData.map(v => v >= 0 ? '#10b981' : '#ef4444');
+  const colors = deltaData.map(v => v >= 0 ? 'var(--green)' : 'var(--red)');
 
   return {
     tooltip: {
@@ -709,13 +709,13 @@ export function createDeltaBarChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', formatter: '{value}%', fontSize: 12 },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: '{value}%', fontSize: 12 },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: [
       {
@@ -753,20 +753,20 @@ export function createDrawdownHistChartOption(options: BaseChartOptions) {
     grid: { left: 120, right: 20, top: 40, bottom: 40, containLabel: true },
     xAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     yAxis: {
       type: 'category' as const,
       data: buckets,
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
-      axisLine: { lineStyle: { color: '#374151' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
     },
     series: [
       {
         type: 'bar' as const,
         data: frequencies,
-        itemStyle: { color: '#3b82f6', borderRadius: [0, 4, 4, 0] },
+        itemStyle: { color: 'var(--accent)', borderRadius: [0, 4, 4, 0] },
       },
     ],
   };
@@ -807,17 +807,17 @@ export function createSimpleLineChartOption(options: {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: seriesData.map(s => ({
       name: s.name,
@@ -855,7 +855,7 @@ export function createBoundedLineChartOption(options: {
   } = options;
 
   return {
-    color: ['#10b981', '#3b82f6', '#ef4444'],
+    color: ['var(--green)', 'var(--accent)', 'var(--red)'],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -875,17 +875,17 @@ export function createBoundedLineChartOption(options: {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: '#374151' } },
-      axisLabel: { color: privacyMode ? 'transparent' : '#9ca3af', fontSize: 12, interval: 4 },
+      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12, interval: 4 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#9ca3af',
+        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
         formatter: yAxisFormatter || ((v: number) => `${v.toFixed(0)}`),
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: '#2d3748' } },
+      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
     },
     series: [
       {
@@ -949,7 +949,7 @@ export function createTornadoChartOption(options: {
     },
     legend: {
       data: [downsideLabel, upsideLabel],
-      textStyle: { color: '#d1d5db' },
+      textStyle: { color: 'hsl(var(--muted))' },
     },
     grid: { left: 120, right: 60, top: 40, bottom: 40 },
     xAxis: {
@@ -966,14 +966,14 @@ export function createTornadoChartOption(options: {
         type: 'bar' as const,
         stack: 'total',
         data: downside,
-        itemStyle: { color: '#ef4444', opacity: 0.8 },
+        itemStyle: { color: 'var(--red)', opacity: 0.8 },
       },
       {
         name: upsideLabel,
         type: 'bar' as const,
         stack: 'total',
         data: upside,
-        itemStyle: { color: '#10b981', opacity: 0.8 },
+        itemStyle: { color: 'var(--green)', opacity: 0.8 },
       },
     ],
   };
