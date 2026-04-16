@@ -61,7 +61,7 @@ const AttributionAnalysis: React.FC<AttributionAnalysisProps> = ({
   const diversificationColor = diversificationEffect >= 0 ? 'var(--green)' : 'var(--red)';
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 mb-5">
+    <div className="bg-card border border-border rounded p-4 mb-5">
       <h2 className="text-sm font-semibold text-text mb-4 mt-0">
         Attribution — Contribuição ao Retorno ({periodLabel})
       </h2>

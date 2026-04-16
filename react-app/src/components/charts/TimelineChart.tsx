@@ -33,7 +33,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
   }, [privacyMode, theme]);
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 mb-5">
+    <div className="bg-card border border-border rounded p-4 mb-5">
       <h3 className="text-sm font-semibold text-text mb-4 mt-0">Historical Performance (60 months)</h3>
       <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>

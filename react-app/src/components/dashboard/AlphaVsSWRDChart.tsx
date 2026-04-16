@@ -143,7 +143,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
   const avgAlpha = alphas.reduce((sum, a) => sum + a.alpha, 0) / alphas.length;
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4 mb-5">
+    <div className="bg-card border border-border rounded p-4 mb-5">
       <h2 className="text-sm font-semibold text-text mb-4 mt-0">
         Alpha vs SWRD — Performance Relativa
       </h2>

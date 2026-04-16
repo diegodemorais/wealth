@@ -23,7 +23,7 @@ export function TimeToFireProgressBar({
   const progressPct = Math.min(Math.max(fireProgress, 0), 1) * 100;
 
   return (
-    <section className="bg-bg/50 border border-border/40 rounded-lg p-4 mb-3.5">
+    <section className="bg-bg/50 border border-border/40 rounded p-4 mb-3.5">
       <h2 className="m-0 mb-3 text-base font-semibold text-slate-100">Time to FIRE</h2>
 
       {/* Progress Bar Container */}

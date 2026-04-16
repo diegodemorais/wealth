@@ -79,21 +79,21 @@ export default function HomePage() {
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
       <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Indicadores Primários</div>
-      <div className="grid grid-cols-3 gap-2.5 mb-2">
+      <div className="grid grid-cols-3 gap-2.5 mb-3.5">
         {/* P(Cenário Aspiracional) */}
-        <div className="bg-card border-2 border-accent/40 rounded-lg p-4 text-center">
+        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">P(Cenário Aspiracional)</div>
           <div className="text-2xl font-black text-accent">{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
           <div className="text-xs text-muted mt-1">cenário base</div>
         </div>
         {/* Drift Máximo */}
-        <div className="bg-card border-2 border-accent/40 rounded-lg p-4 text-center">
+        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Drift Máximo</div>
           <div className="text-2xl font-black text-text">{maxDrift.toFixed(2)}pp</div>
           <div className="text-xs text-muted mt-1">vs alvo IPS</div>
         </div>
         {/* Aporte do Mês */}
-        <div className="bg-card border border-border/50 rounded-lg p-4 text-center">
+        <div className="bg-card border border-border/50 rounded p-4 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Aporte do Mês</div>
           <div className="text-2xl font-black text-text">
             {derived.aporteMensal
@@ -106,15 +106,15 @@ export default function HomePage() {
 
       {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
       <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Contexto de Mercado</div>
-      <div className="grid grid-cols-4 gap-2.5 mb-3 opacity-85">
+      <div className="grid grid-cols-4 gap-2.5 mb-3.5 opacity-85">
         {/* Dólar */}
-        <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Dólar</div>
           <div className="text-xl font-black text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
           <div className="text-xs text-muted mt-1">BRL/USD · PTAX BCB</div>
         </div>
         {/* Bitcoin */}
-        <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Bitcoin</div>
           <div className="text-xl font-black text-text">
             {data?.hodl11?.btc_usd
@@ -124,7 +124,7 @@ export default function HomePage() {
           <div className="text-xs text-muted mt-1">BTC/USD</div>
         </div>
         {/* IPCA+ 2040 */}
-        <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
             IPCA+ 2040 — Taxa
             <span
@@ -140,7 +140,7 @@ export default function HomePage() {
           </div>
         </div>
         {/* Renda+ 2065 */}
-        <div className="bg-card border border-border/50 rounded-lg p-3 text-center">
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
             Renda+ 2065 — Taxa
             <span
@@ -165,13 +165,13 @@ export default function HomePage() {
 
       {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
       {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
-        <div className="grid grid-cols-3 gap-2 mb-3">
+        <div className="grid grid-cols-3 gap-2 mb-3.5">
           {data.fire_matrix.by_profile.map((profile: any, i: number) => {
             const labels = ['👤 Solteiro', '💍 Casado', '👶 C+Filho'];
             const pfire50 = profile.p_fire_50 ?? null;
             const year50 = profile.fire_age_50 ?? '2037';
             return (
-              <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded-lg p-2.5 text-center">
+              <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded p-2.5 text-center">
                 <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
                   {labels[i]}
                 </div>
@@ -219,7 +219,7 @@ export default function HomePage() {
 
       {/* 6a. Financial Wellness Score — full width */}
       {derived?.wellnessScore != null && derived?.wellnessMetrics && (
-        <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
+        <section className="bg-card border border-border/50 rounded p-4 mb-3.5">
           <div className="flex gap-5 items-start">
             {/* Score grande */}
             <div className="min-w-32 text-center">
@@ -273,7 +273,7 @@ export default function HomePage() {
             <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
               Exposição Brasil
             </div>
-            <div className="bg-slate-700/40 rounded-lg p-3 mb-2">
+            <div className="bg-slate-700/40 rounded p-3 mb-2">
               <div className="flex justify-between mb-2">
                 <div>
                   <div className="text-xs text-muted">Total Brasil</div>
@@ -298,7 +298,7 @@ export default function HomePage() {
               <div className="grid grid-cols-3 gap-2">
                 {/* IPCA+ 2040 */}
                 {data.dca_status.ipca_longo && (
-                  <div className="bg-slate-700/40 rounded-lg p-2.5 border-l-3 border-accent/40">
+                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
                     <div className="text-xs text-muted mb-1">IPCA+ 2040</div>
                     <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
                     <div className="text-xs text-muted">
@@ -311,7 +311,7 @@ export default function HomePage() {
                 )}
                 {/* IPCA+ 2060 (2050) */}
                 {data.dca_status.ipca_medio && (
-                  <div className="bg-slate-700/40 rounded-lg p-2.5 border-l-3 border-accent/40">
+                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
                     <div className="text-xs text-muted mb-1">IPCA+ 2050</div>
                     <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_medio.taxa_atual?.toFixed(2)}%</div>
                     <div className="text-xs text-muted">
@@ -324,7 +324,7 @@ export default function HomePage() {
                 )}
                 {/* Renda+ 2065 */}
                 {data.rf?.renda2065?.distancia_gatilho && (
-                  <div className="bg-slate-700/40 rounded-lg p-2.5 border-l-3 border-accent/40">
+                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
                     <div className="text-xs text-muted mb-1">Renda+ 2065</div>
                     <div className="text-sm font-bold mb-0.5">Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
                     <div className="text-xs text-muted">
@@ -345,15 +345,15 @@ export default function HomePage() {
               Indicadores Macro
             </div>
             <div className="grid grid-cols-3 gap-2">
-              <div className="bg-slate-700/40 rounded-lg p-2.5 text-center">
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
                 <div className="text-lg font-bold text-text">{data?.premissas?.taxa_selic ? `${data.premissas.taxa_selic.toFixed(1)}%` : '—'}</div>
                 <div className="text-xs text-muted mt-1">Selic</div>
               </div>
-              <div className="bg-slate-700/40 rounded-lg p-2.5 text-center">
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
                 <div className="text-lg font-bold text-text">{data?.premissas?.ipca_corrente ? `${data.premissas.ipca_corrente.toFixed(1)}%` : '—'}</div>
                 <div className="text-xs text-muted mt-1">IPCA YTD</div>
               </div>
-              <div className="bg-slate-700/40 rounded-lg p-2.5 text-center">
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
                 <div className="text-lg font-bold text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
                 <div className="text-xs text-muted mt-1">USD/BRL</div>
               </div>

@@ -54,7 +54,7 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
   return (
     <div className="flex flex-col gap-4">
       {/* Quality Badges Row */}
-      <div className="bg-card border border-border rounded-lg p-4">
+      <div className="bg-card border border-border rounded p-4">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-4 mt-0">
           Model Fit — R² Quality
         </h3>
@@ -83,7 +83,7 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
       </div>
 
       {/* Factor Significance Table */}
-      <div className="bg-card border border-border rounded-lg p-4">
+      <div className="bg-card border border-border rounded p-4">
         <h4 className="text-sm font-semibold text-text mb-3 mt-0">Factor Significance</h4>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-xs">
