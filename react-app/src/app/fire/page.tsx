@@ -115,18 +115,18 @@ export default function FirePage() {
               { label: '💍 Pós-casamento', pfire: derived.pfireBase ? derived.pfireBase - 1.6 : null, gastoAnual: 300000, gastoLabel: 'R$300k/ano', delta: '-1.6pp' },
               { label: '👶 Casamento + filho', pfire: derived.pfireBase ? derived.pfireBase - 4.8 : null, gastoAnual: 360000, gastoLabel: 'R$360k/ano', delta: '-4.8pp' },
             ].map((scenario, i) => (
-              <div key={i} style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ minWidth: '180px' }}>
                   <div style={{ fontSize: '.8rem', fontWeight: 600 }}>{scenario.label}</div>
                   <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{scenario.gastoLabel}</div>
                   {scenario.delta && <div style={{ fontSize: '.65rem', color: 'var(--red)' }}>{scenario.delta}</div>}
                 </div>
-                <div style={{ flex: 1, background: 'var(--card)', borderRadius: '4px', height: '8px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ flex: 1, background: 'var(--card)', borderRadius: 'var(--radius-xs)', height: '8px', position: 'relative', overflow: 'hidden' }}>
                   <div style={{
                     width: `${scenario.pfire != null ? Math.min(100, scenario.pfire) : 0}%`,
                     height: '100%',
                     background: scenario.pfire != null && scenario.pfire >= 90 ? 'var(--green)' : 'var(--yellow)',
-                    borderRadius: '4px',
+                    borderRadius: 'var(--radius-xs)',
                   }} />
                 </div>
                 <div style={{ minWidth: '80px', textAlign: 'right' }}>
@@ -148,7 +148,7 @@ export default function FirePage() {
           <div style={{
             background: 'linear-gradient(135deg, rgba(59,130,246,.08), rgba(16,185,129,.08))',
             border: '2px dashed var(--accent)',
-            borderRadius: '12px',
+            borderRadius: 'var(--radius-xl)',
             padding: '24px',
             textAlign: 'center',
           }}>
@@ -168,13 +168,13 @@ export default function FirePage() {
               {data.premissas?.idade_cenario_aspiracional ? (data.premissas.idade_cenario_aspiracional - data.premissas.idade_atual) : 10} anos a partir de hoje
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px', maxWidth: '300px', margin: '16px auto 0' }}>
-              <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px' }}>
+              <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
                 <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Cenário Aspiracional</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>
                   {derived.pfireBase != null ? `${(derived.pfireBase - 3.5).toFixed(1)}%` : '86.5%'}
                 </div>
               </div>
-              <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '10px' }}>
+              <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
                 <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Cenário Base</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
                   {derived.pfireBase != null ? `${derived.pfireBase.toFixed(1)}%` : '86.5%'}

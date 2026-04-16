@@ -196,19 +196,19 @@ export default function WithdrawPage() {
             return (
               <div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '14px' }}>
-                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', borderLeft: '3px solid var(--red)' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--red)' }}>
                     <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Essenciais</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--red)' }}>{fmt(essenciais)}</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(essenciais / total * 100) : 79}% do total</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>Valor principal: hipoteca (~R$1.317/mês e equity)</div>
                   </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', borderLeft: '3px solid var(--yellow)' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--yellow)' }}>
                     <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Discricionários</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--yellow)' }}>{fmt(discric)}</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(discric / total * 100) : 21}% do total</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>Discricionários contínuos</div>
                   </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '14px', borderLeft: '3px solid var(--muted)' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--muted)' }}>
                     <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Imprevistos</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(imprevistos)}</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(imprevistos / total * 100) : 2}% do total</div>
@@ -216,15 +216,15 @@ export default function WithdrawPage() {
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', textAlign: 'center' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(total)}/mês</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Total financeiro</div>
                   </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', textAlign: 'center' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(rendaAnual)}/ano</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Renda FII</div>
                   </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', textAlign: 'center', borderLeft: '3px solid var(--green)' }}>
+                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center', borderLeft: '3px solid var(--green)' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green)' }}>✓ {fmt(orcamentoAnual)}/ano</div>
                     <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Orçamento conservador</div>
                   </div>

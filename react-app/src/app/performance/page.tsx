@@ -62,7 +62,7 @@ export default function PerformancePage() {
           </div>
           {/* Painel lateral direito com métricas IPCA+ */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
+            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
                 IPCA+ Longo — Progressão vs Alvo 19%
               </div>
@@ -70,14 +70,14 @@ export default function PerformancePage() {
                 <div>Sep: −8.5pp · DCA ativo · taxa −7.07%</div>
               </div>
             </div>
-            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
+            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
                 Alpha Líquido pós-haircut
               </div>
               <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--muted)' }}>−0.16%/ano</div>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>McLean & Pontiff 2016 haircut 58%</div>
             </div>
-            <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
+            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
                 IPCA+ taxa vs piso
               </div>
@@ -255,7 +255,7 @@ export default function PerformancePage() {
             {['AVDV', 'AVUV', 'DGS', 'EIMI', 'AVGS', 'SWRD', 'USCC'].map(etf => (
               <span key={etf} style={{
                 background: 'var(--card2)',
-                borderRadius: '4px',
+                borderRadius: 'var(--radius-xs)',
                 padding: '3px 8px',
                 fontSize: '.65rem',
                 fontWeight: 600,
