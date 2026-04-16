@@ -9,14 +9,15 @@ import { createDeltaBarChartOption } from '@/utils/chartSetup';
 export interface DeltaBarChartProps {
   data: DashboardData;
   title?: string;
+  chartType?: 'alpha' | 'factor-rolling';
 }
 
-export function DeltaBarChart({ data, title = 'Monthly Delta vs Benchmark' }: DeltaBarChartProps) {
+export function DeltaBarChart({ data, title = 'Monthly Delta vs Benchmark', chartType }: DeltaBarChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(
-    () => createDeltaBarChartOption({ data, privacyMode, theme }),
-    [data, privacyMode, theme]
+    () => createDeltaBarChartOption({ data, privacyMode, theme, chartType }),
+    [data, privacyMode, theme, chartType]
   );
 
   return (

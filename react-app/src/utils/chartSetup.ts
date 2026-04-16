@@ -72,8 +72,10 @@ export function createBaseOption(theme: ChartTheme, privacyMode: boolean) {
 export function createAttributionChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  const categories = ['Equity Selection', 'Allocation', 'Market Return', 'Currency', 'Costs'];
-  const attributionData = [2.5, 1.2, 4.8, -0.3, -0.6];
+  // Use real breakdown_chart from data.json attribution, fall back to synthetic if absent
+  const breakdown = ((options.data as any)?.attribution?.breakdown_chart ?? []) as Array<{label: string, value_pct: number}>;
+  const categories = breakdown.length > 0 ? breakdown.map(d => d.label) : ['Equity Selection', 'Allocation', 'Market Return', 'Currency', 'Costs'];
+  const attributionData = breakdown.length > 0 ? breakdown.map(d => d.value_pct) : [2.5, 1.2, 4.8, -0.3, -0.6];
   const colors = attributionData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
 
   return {
@@ -389,10 +391,26 @@ export function createStackedAreaChartOption(options: BaseChartOptions) {
 export function createBacktestChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
 
-  const months = 84;
-  const xAxisData = Array.from({ length: months }, (_, i) => `M${i + 1}`);
-  const portfolioData = Array.from({ length: months }, (_, i) => 100 * Math.pow(1.0088, i));
-  const benchmarkData = Array.from({ length: months }, (_, i) => 100 * Math.pow(1.0075, i));
+  // Use real backtest data from data.json
+  const backtest = (options.data as any)?.backtest ?? {};
+  const dates: string[]  = backtest.dates    ?? [];
+  const target: number[] = backtest.target   ?? [];
+  const bench:  number[] = backtest.shadowA  ?? [];
+
+  const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const xAxisData: string[] = dates.length > 0
+    ? dates.map((ym: string) => {
+        const [y, m] = ym.split('-');
+        return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
+      })
+    : Array.from({ length: 84 }, (_, i) => `M${i + 1}`);
+
+  const portfolioData: number[] = target.length > 0
+    ? target
+    : Array.from({ length: 84 }, (_, i) => 100 * Math.pow(1.0088, i));
+  const benchmarkData: number[] = bench.length > 0
+    ? bench
+    : Array.from({ length: 84 }, (_, i) => 100 * Math.pow(1.0075, i));
 
   return {
     color: [CHART_COLORS.green, CHART_COLORS.muted],
@@ -702,12 +720,55 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
 
 /**
  * Delta Bar Chart (Monthly deltas with +/- coloring)
+ * chartType 'alpha'          → monthly alpha from backtest.target vs backtest.shadowA
+ * chartType 'factor-rolling' → factor_rolling.avgs_vs_swrd_12m
  */
-export function createDeltaBarChartOption(options: BaseChartOptions) {
+export function createDeltaBarChartOption(options: BaseChartOptions & { chartType?: 'alpha' | 'factor-rolling' }) {
   const { privacyMode, theme } = options;
 
-  const xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
-  const deltaData = [0.8, -0.2, 1.2, 0.5, -0.1, 0.9, 1.1, 0.3, -0.4, 0.6, 0.8, 0.7];
+  const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+  let xAxisData: string[];
+  let deltaData: number[];
+
+  if (options.chartType === 'factor-rolling') {
+    // AVGS vs SWRD rolling 12m from factor_rolling
+    const fr = (options.data as any)?.factor_rolling ?? {};
+    const frDates: string[]  = fr.dates  ?? [];
+    const frVals:  number[]  = fr.avgs_vs_swrd_12m ?? [];
+    if (frDates.length > 0) {
+      xAxisData = frDates.map((ym: string) => {
+        const [y, m] = ym.split('-');
+        return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
+      });
+      deltaData = frVals;
+    } else {
+      xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
+      deltaData = Array(12).fill(0);
+    }
+  } else {
+    // Monthly alpha from backtest: target return - shadowA return
+    const backtest = (options.data as any)?.backtest ?? {};
+    const btDates: string[]  = backtest.dates  ?? [];
+    const btTarget: number[] = backtest.target ?? [];
+    const btShadow: number[] = backtest.shadowA ?? [];
+
+    if (btDates.length > 1 && btTarget.length > 1 && btShadow.length > 1) {
+      xAxisData = btDates.slice(1).map((ym: string) => {
+        const [y, m] = ym.split('-');
+        return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
+      });
+      deltaData = btDates.slice(1).map((_: string, i: number) => {
+        const tRet = btTarget[i + 1] / btTarget[i] - 1;
+        const sRet = btShadow[i + 1] / btShadow[i] - 1;
+        return parseFloat(((tRet - sRet) * 100).toFixed(2));
+      });
+    } else {
+      xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
+      deltaData = Array(12).fill(0);
+    }
+  }
+
   const colors = deltaData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
 
   return {

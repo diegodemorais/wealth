@@ -144,22 +144,38 @@ export default function PerformancePage() {
           <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }} id="attrPeriodo"></span>
         </h2>
         <AttributionChart data={data} />
+        {/* Attribution KPI cards — valores monetários em R$ */}
+        {(() => {
+          const attr = data.attribution;
+          if (!attr) return null;
+          const fmtR = (v: number | null | undefined) => {
+            if (v == null) return '—';
+            const abs = Math.abs(v);
+            const sign = v < 0 ? '−' : '+';
+            if (abs >= 1e6) return `${sign}R$${(abs / 1e6).toFixed(2)}M`;
+            if (abs >= 1e3) return `${sign}R$${(abs / 1e3).toFixed(0)}k`;
+            return `${sign}R$${v.toLocaleString('pt-BR')}`;
+          };
+          const cards = [
+            { label: 'Aportes', value: attr.aportes, color: 'var(--accent)' },
+            { label: 'Retorno USD', value: attr.retornoUsd, color: 'var(--green)' },
+            { label: 'RF Doméstica', value: attr.rf, color: 'var(--yellow)' },
+            { label: 'Câmbio', value: attr.cambio, color: attr.cambio != null && attr.cambio >= 0 ? 'var(--green)' : 'var(--red)' },
+            { label: 'FX Custo', value: attr.fx, color: attr.fx != null && attr.fx >= 0 ? 'var(--green)' : 'var(--red)' },
+          ];
+          return (
+            <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 8 }}>
+              {cards.map(c => (
+                <div key={c.label} style={{ background: 'var(--card2)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 4 }}>{c.label}</div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
+                </div>
+              ))}
+            </div>
+          );
+        })()}
         <div style={{ marginTop: 8, fontSize: '.75rem', background: 'var(--card2)', borderRadius: 6, padding: 10 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 8, textAlign: 'center' }}>
-            <div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent)' }} id="attrAportes">—</div>
-              <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Aportes</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--green)' }} id="attrRetorno">—</div>
-              <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Retorno USD</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--yellow)' }} id="attrCambio">—</div>
-              <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>RF + Câmbio</div>
-            </div>
-          </div>
-          <div style={{ textAlign: 'center', fontSize: '.7rem', color: 'var(--muted)', marginTop: 8, padding: 6, background: 'rgba(255,255,255,.04)', borderRadius: 4 }}>
+          <div style={{ textAlign: 'center', fontSize: '.7rem', color: 'var(--muted)', padding: 6, background: 'rgba(255,255,255,.04)', borderRadius: 4 }}>
             CAGR inclui aportes mensais —{' '}
             <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style={{ cursor: 'help', color: 'var(--accent)' }}>ⓘ</span>
             {' '}não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real.
@@ -171,7 +187,7 @@ export default function PerformancePage() {
       </section>
 
       {/* 6. Rolling Sharpe — 12m (collapsible) */}
-      <CollapsibleSection id="section-rolling-sharpe" title="Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)" defaultOpen={false}>
+      <CollapsibleSection id="section-rolling-sharpe" title="Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           <RollingSharpChart data={data} />
           <div className="src" style={{ lineHeight: 1.6 }}>
@@ -187,7 +203,7 @@ export default function PerformancePage() {
       <CollapsibleSection id="section-factor-rolling" title="Rolling 12m — AVGS vs SWRD (retorno relativo)" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           {/* DeltaBarChart used as proxy — dedicated FactorRollingChart would be ideal */}
-          <DeltaBarChart data={data} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" />
+          <DeltaBarChart data={data} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />
           <div className="src">
             Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.
           </div>
@@ -196,7 +212,7 @@ export default function PerformancePage() {
 
       {/* 8. Fee Analysis — Custo de Complexidade (details/summary collapsible) */}
       <section className="section" id="feeAnalysisSection">
-        <details>
+        <details open>
           <summary style={{ cursor: 'pointer', fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)', padding: '4px 0', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{ fontSize: '.85em', color: 'var(--muted)' }}>▶</span>
             Fee Analysis — Custo de Complexidade (14 anos até FIRE)

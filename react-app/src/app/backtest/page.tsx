@@ -254,13 +254,13 @@ function BacktestLongoSection() {
 
   const metricCards = metrics ? [
     // cagr_target_pct is already in % (e.g. 9.79)
-    { label: 'CAGR', value: metrics.cagr_target_pct != null ? `${metrics.cagr_target_pct.toFixed(2)}%` : '—' },
-    { label: 'Alpha vs VWRA', value: metrics.alpha_pp != null ? `${metrics.alpha_pp >= 0 ? '+' : ''}${metrics.alpha_pp.toFixed(2)}pp` : '—' },
-    { label: 'Sharpe', value: metrics.sharpe_target != null ? metrics.sharpe_target.toFixed(2) : '—' },
+    { label: 'CAGR', value: metrics.cagr_target_pct != null ? `${metrics.cagr_target_pct.toFixed(2)}%` : '—', color: undefined as string | undefined },
+    { label: 'Alpha vs VWRA', value: metrics.alpha_pp != null ? `${metrics.alpha_pp >= 0 ? '+' : ''}${metrics.alpha_pp.toFixed(2)}pp` : '—', color: metrics.alpha_pp != null ? deltaColor(metrics.alpha_pp) : undefined },
+    { label: 'Sharpe', value: metrics.sharpe_target != null ? metrics.sharpe_target.toFixed(2) : '—', color: undefined as string | undefined },
     // max_dd_target_pct is already in % (e.g. -54.37)
-    { label: 'Max DD', value: metrics.max_dd_target_pct != null ? `${metrics.max_dd_target_pct.toFixed(1)}%` : '—' },
+    { label: 'Max DD', value: metrics.max_dd_target_pct != null ? `${metrics.max_dd_target_pct.toFixed(1)}%` : '—', color: undefined as string | undefined },
     // win_rates.120m_pct is already in % (e.g. 67.8)
-    { label: 'Win Rate 10a', value: winRatePct != null ? `${winRatePct.toFixed(1)}%` : '—' },
+    { label: 'Win Rate 10a', value: winRatePct != null ? `${winRatePct.toFixed(1)}%` : '—', color: undefined as string | undefined },
   ] : [];
 
   // CAGR by decade — real field: cagr_por_decada (list, not object)
@@ -279,7 +279,7 @@ function BacktestLongoSection() {
           {metricCards.map(m => (
             <div key={m.label} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>{m.label}</div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{m.value}</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: m.color ?? 'var(--text)' }}>{m.value}</div>
             </div>
           ))}
         </div>

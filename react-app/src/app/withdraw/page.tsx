@@ -63,55 +63,56 @@ export default function WithdrawPage() {
 
       {/* 2. SWR no FIRE Day — Percentis P10 / P50 / P90 */}
       {swrPercentis && (
-        <section className="section" id="swrPercentilesSection">
-          <h2>SWR no FIRE Day — Percentis P10 / P50 / P90</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginTop: 12 }}>
-            {/* P10 */}
-            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--red)' }}>
-                {swrPercentis.p10 != null ? `${(swrPercentis.p10 * 100).toFixed(2)}%` : '—'}
-              </div>
-              {swrPercentis.p10_patrimonio != null && (
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
-                  Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p10_patrimonio)}
+        <CollapsibleSection id="section-swr-percentiles" title="SWR no FIRE Day — Percentis P10 / P50 / P90" defaultOpen={true}>
+          <div style={{ padding: '0 16px 16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginTop: 12 }}>
+              {/* P10 */}
+              <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--red)' }}>
+                  {swrPercentis.p10 != null ? `${(swrPercentis.p10 * 100).toFixed(2)}%` : '—'}
                 </div>
-              )}
+                {swrPercentis.p10_patrimonio != null && (
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
+                    Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p10_patrimonio)}
+                  </div>
+                )}
+              </div>
+              {/* P50 */}
+              <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--yellow)' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--yellow)' }}>
+                  {swrPercentis.p50 != null ? `${(swrPercentis.p50 * 100).toFixed(2)}%` : '—'}
+                </div>
+                {swrPercentis.p50_patrimonio != null && (
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
+                    Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p50_patrimonio)}
+                  </div>
+                )}
+              </div>
+              {/* P90 */}
+              <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--green)' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
+                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)' }}>
+                  {swrPercentis.p90 != null ? `${(swrPercentis.p90 * 100).toFixed(2)}%` : '—'}
+                </div>
+                {swrPercentis.p90_patrimonio != null && (
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
+                    Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p90_patrimonio)}
+                  </div>
+                )}
+              </div>
             </div>
-            {/* P50 */}
-            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--yellow)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--yellow)' }}>
-                {swrPercentis.p50 != null ? `${(swrPercentis.p50 * 100).toFixed(2)}%` : '—'}
-              </div>
-              {swrPercentis.p50_patrimonio != null && (
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
-                  Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p50_patrimonio)}
-                </div>
-              )}
-            </div>
-            {/* P90 */}
-            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--green)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)' }}>
-                {swrPercentis.p90 != null ? `${(swrPercentis.p90 * 100).toFixed(2)}%` : '—'}
-              </div>
-              {swrPercentis.p90_patrimonio != null && (
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
-                  Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p90_patrimonio)}
-                </div>
-              )}
+            <div className="src">
+              P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).
             </div>
           </div>
-          <div className="src">
-            P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).
-          </div>
-        </section>
+        </CollapsibleSection>
       )}
 
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
       {data.guardrails_retirada && (
-        <CollapsibleSection id="section-guardrails-table" title="Guardrails de Retirada — FIRE Day" defaultOpen={false}>
+        <CollapsibleSection id="section-guardrails-table" title="Guardrails de Retirada — FIRE Day" defaultOpen={true}>
           <div style={{ padding: '0 16px 16px' }}>
             <GuardrailsRetirada guardrails={data.guardrails_retirada} />
             <div style={{ marginTop: 10, fontSize: '.75rem', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
@@ -124,6 +125,40 @@ export default function WithdrawPage() {
       {/* 4. Spending Guardrails — P(FIRE) × Custo de Vida (collapsible) */}
       <CollapsibleSection id="section-spending-guardrails" title="Spending Guardrails — P(FIRE) × Custo de Vida" defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
+          {/* P(FIRE) Status bar */}
+          {(() => {
+            const sg = data.spending_guardrails ?? (data as any).fire?.spending_guardrails;
+            if (!sg) return null;
+            const pfire = sg.pfire_atual ?? 0;
+            const zona = sg.zona ?? 'verde';
+            const zonaColor = zona === 'verde' ? 'var(--green)' : zona === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+            const statusLabel = zona === 'verde' ? 'No caminho certo' : zona === 'amarelo' ? 'Atenção' : 'Zona de risco';
+            return (
+              <div style={{ marginBottom: 16, background: 'var(--card2)', borderRadius: 8, padding: '12px 14px', border: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <span style={{ fontSize: '.72rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.4px' }}>
+                    P(FIRE) Atual
+                  </span>
+                  <span style={{ fontSize: '.75rem', fontWeight: 700, color: zonaColor }}>
+                    {pfire.toFixed(1)}% — {statusLabel}
+                  </span>
+                </div>
+                {/* Progress bar */}
+                <div style={{ position: 'relative', height: 10, background: 'rgba(148,163,184,.15)', borderRadius: 5, overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', borderRadius: 5, background: zonaColor, width: `${Math.min(100, pfire)}%`, transition: 'width .4s' }} />
+                </div>
+                {/* Threshold markers */}
+                <div style={{ position: 'relative', height: 16, marginTop: 2 }}>
+                  <div style={{ position: 'absolute', left: '70%', top: 0, fontSize: '.5rem', color: 'var(--red)', transform: 'translateX(-50%)' }}>70%↑</div>
+                  <div style={{ position: 'absolute', left: '80%', top: 0, fontSize: '.5rem', color: 'var(--yellow)', transform: 'translateX(-50%)' }}>80%↑</div>
+                  <div style={{ position: 'absolute', left: '95%', top: 0, fontSize: '.5rem', color: 'var(--green)', transform: 'translateX(-50%)' }}>95%</div>
+                </div>
+                {sg.nota && (
+                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>{sg.nota}</div>
+                )}
+              </div>
+            );
+          })()}
           <GuardrailsChart data={data} />
           <div className="src">
             Base: Monte Carlo 10k · Interpolação linear entre pontos simulados
@@ -132,7 +167,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 5. Renda na Aposentadoria — Fases Temporais (collapsible) */}
-      <CollapsibleSection id="section-income-phases" title="Renda na Aposentadoria — Fases Temporais" defaultOpen={false}>
+      <CollapsibleSection id="section-income-phases" title="Renda na Aposentadoria — Fases Temporais" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
             <div style={{ overflowX: 'auto', marginBottom: 12 }}>
