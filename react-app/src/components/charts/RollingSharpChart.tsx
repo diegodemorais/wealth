@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { createSimpleLineChartOption } from '@/utils/chartSetup';
+import { createSimpleLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 
 export interface RollingSharpChartProps {
   data: DashboardData;
@@ -24,7 +24,7 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
 
     return createSimpleLineChartOption({
       data, privacyMode, theme, xAxisData,
-      seriesData: [{ name: 'Rolling Sharpe Ratio (12m)', data: rollingSharpData, color: 'var(--yellow)' }],
+      seriesData: [{ name: 'Rolling Sharpe Ratio (12m)', data: rollingSharpData, color: CHART_COLORS.yellow }],
     });
   }, [privacyMode, theme]);
 

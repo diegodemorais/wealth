@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { DASHBOARD_VERSION } from '@/config/version';
 
 export function Footer() {
   const data = useDashboardStore(s => s.data);
@@ -60,7 +61,7 @@ export function Footer() {
 
         <div style={styles.section}>
           <small style={styles.label}>Version</small>
-          <small style={styles.value}>v1.0.0-F2</small>
+          <small style={styles.value}>{DASHBOARD_VERSION}</small>
         </div>
       </div>
     </footer>

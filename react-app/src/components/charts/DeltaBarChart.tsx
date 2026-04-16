@@ -8,9 +8,10 @@ import { createDeltaBarChartOption } from '@/utils/chartSetup';
 
 export interface DeltaBarChartProps {
   data: DashboardData;
+  title?: string;
 }
 
-export function DeltaBarChart({ data }: DeltaBarChartProps) {
+export function DeltaBarChart({ data, title = 'Monthly Delta vs Benchmark' }: DeltaBarChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(
@@ -20,7 +21,7 @@ export function DeltaBarChart({ data }: DeltaBarChartProps) {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.title}>Monthly Delta vs Benchmark</h3>
+      <h3 style={styles.title}>{title}</h3>
       <ReactECharts option={option} style={{ height: 300 }} />
     </div>
   );

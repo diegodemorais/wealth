@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { createDualLineChartOption } from '@/utils/chartSetup';
+import { createDualLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 
 export interface BacktestR7ChartProps {
   data: DashboardData;
@@ -34,7 +34,7 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
     return createDualLineChartOption({
       data, privacyMode, theme, xAxisData, series1Data: portfolioData, series1Name: 'Current Portfolio',
       series2Data: r7BenchmarkData, series2Name: 'R7 Benchmark (70/30)',
-      series1Color: 'var(--accent)', series2Color: 'var(--yellow)',
+      series1Color: CHART_COLORS.accent, series2Color: CHART_COLORS.yellow,
       yAxisFormatter: (v) => `R$ ${(v / 1e6).toFixed(1)}M`,
     });
   }, [privacyMode, theme]);

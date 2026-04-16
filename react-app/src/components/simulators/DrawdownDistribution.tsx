@@ -27,7 +27,7 @@ export function DrawdownDistribution() {
         {
           label: 'Frequency (simulations)',
           data,
-          backgroundColor: 'var(--red)',
+          backgroundColor: 'rgba(239, 68, 68, 0.75)',
           borderColor: 'rgba(239, 68, 68, 0.85)',
           borderWidth: 1,
         },

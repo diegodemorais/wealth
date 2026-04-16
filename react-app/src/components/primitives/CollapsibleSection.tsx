@@ -75,7 +75,7 @@ export function CollapsibleSection({
         ref={contentRef}
         className="transition-all duration-300 ease-in-out"
         style={{
-          maxHeight: height,
+          maxHeight: isCollapsed ? 0 : (typeof height === 'number' ? `${height + 40}px` : height),
           overflow: isCollapsed ? 'hidden' : 'visible',
         }}
       >

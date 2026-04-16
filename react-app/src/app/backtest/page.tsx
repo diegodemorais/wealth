@@ -55,30 +55,33 @@ function BacktestHistoricoSection() {
   // Metrics for selected period
   const metrics = backtest?.metrics_by_period?.[period] ?? backtest?.metrics ?? null;
   const targetMetrics = metrics?.target ?? metrics;
-  const benchMetrics = metrics?.bench ?? null;
+  // Benchmark is 'shadowA' (first shadow portfolio) in current data schema
+  const benchMetrics = metrics?.bench ?? metrics?.shadowA ?? null;
 
   // CAGR and TWR values
   const cagrPatrimonial: number | null = data?.attribution?.cagr_total ?? null;
   const twrUsd: number | null = targetMetrics?.cagr ?? targetMetrics?.twr_usd ?? null;
 
   // Build metrics table rows
+  // Data uses keys: cagr, sharpe, maxdd, vol (not max_drawdown, volatility)
   const metricRows: { label: string; target: string; vwra: string; delta: string; deltaVal: number | null }[] = [];
   if (targetMetrics) {
-    const pairs: { label: string; tKey: string; bKey?: string }[] = [
-      { label: 'CAGR',      tKey: 'cagr',          bKey: 'cagr' },
-      { label: 'Sharpe',    tKey: 'sharpe',         bKey: 'sharpe' },
-      { label: 'Volatility',tKey: 'volatility',     bKey: 'volatility' },
-      { label: 'Max DD',    tKey: 'max_drawdown',   bKey: 'max_drawdown' },
-      { label: 'Alpha',     tKey: 'alpha_pp',       bKey: undefined },
+    const pairs: { label: string; tKey: string; bKey?: string; fmt?: 'pct' | 'num' }[] = [
+      { label: 'CAGR',      tKey: 'cagr',               bKey: 'cagr',    fmt: 'pct' },
+      { label: 'Sharpe',    tKey: 'sharpe',              bKey: 'sharpe',  fmt: 'num' },
+      { label: 'Volatility',tKey: 'vol',                 bKey: 'vol',     fmt: 'pct' },
+      { label: 'Max DD',    tKey: 'maxdd',               bKey: 'maxdd',   fmt: 'pct' },
+      { label: 'Alpha',     tKey: 'alpha_pp',            bKey: undefined, fmt: 'pct' },
     ];
-    pairs.forEach(({ label, tKey, bKey }) => {
+    pairs.forEach(({ label, tKey, bKey, fmt }) => {
       const tVal = targetMetrics[tKey];
       const bVal = bKey ? benchMetrics?.[bKey] : null;
       const dVal = tVal != null && bVal != null ? tVal - bVal : null;
+      const fmtVal = (v: number) => fmt === 'num' ? v.toFixed(2) : fmtPct(v);
       metricRows.push({
         label,
-        target: tVal != null ? (tKey === 'sharpe' ? tVal.toFixed(2) : fmtPct(tVal)) : '—',
-        vwra:   bVal != null ? (tKey === 'sharpe' ? bVal.toFixed(2) : fmtPct(bVal)) : '—',
+        target: tVal != null ? fmtVal(tVal) : '—',
+        vwra:   bVal != null ? fmtVal(bVal) : '—',
         delta:  dVal != null ? fmtPct(dVal) : '—',
         deltaVal: dVal,
       });
@@ -240,24 +243,33 @@ function ShadowPortfoliosSection() {
 
 function BacktestLongoSection() {
   const data = useDashboardStore(s => s.data);
-  const r7 = data?.backtest_r7 ?? data?.backtest?.r7 ?? null;
+  // backtest_r7 is at top-level of data; all sub-keys are directly on backtest_r7 (no .r7 sub-key)
+  const r7 = data?.backtest_r7 ?? null;
 
-  // Metrics grid
-  const metrics = r7?.metrics ?? null;
+  // Metrics — real field: metricas_globais (not .metrics)
+  const metrics = r7?.metricas_globais ?? null;
+  // win_rates — real field: at top-level of backtest_r7 (not inside metrics)
+  const winRates = r7?.win_rates ?? null;
+  const winRatePct = winRates?.['120m_pct'] ?? winRates?.['240m_pct'] ?? null;
+
   const metricCards = metrics ? [
+    // cagr_target_pct is already in % (e.g. 9.79)
     { label: 'CAGR', value: metrics.cagr_target_pct != null ? `${metrics.cagr_target_pct.toFixed(2)}%` : '—' },
     { label: 'Alpha vs VWRA', value: metrics.alpha_pp != null ? `${metrics.alpha_pp >= 0 ? '+' : ''}${metrics.alpha_pp.toFixed(2)}pp` : '—' },
-    { label: 'Sharpe', value: metrics.sharpe != null ? metrics.sharpe.toFixed(2) : '—' },
-    { label: 'Max DD', value: metrics.max_drawdown != null ? fmtPct(metrics.max_drawdown) : '—' },
-    { label: 'Volatility', value: metrics.volatility != null ? fmtPct(metrics.volatility) : '—' },
-    { label: 'Win Rate', value: metrics.win_rate != null ? `${(metrics.win_rate * 100).toFixed(0)}%` : '—' },
+    { label: 'Sharpe', value: metrics.sharpe_target != null ? metrics.sharpe_target.toFixed(2) : '—' },
+    // max_dd_target_pct is already in % (e.g. -54.37)
+    { label: 'Max DD', value: metrics.max_dd_target_pct != null ? `${metrics.max_dd_target_pct.toFixed(1)}%` : '—' },
+    // win_rates.120m_pct is already in % (e.g. 67.8)
+    { label: 'Win Rate 10a', value: winRatePct != null ? `${winRatePct.toFixed(1)}%` : '—' },
   ] : [];
 
-  // CAGR by decade
-  const decades = r7?.cagr_decadas ?? r7?.decades ?? null;
+  // CAGR by decade — real field: cagr_por_decada (list, not object)
+  // Each entry: { Decada, Target, Benchmark, Delta, N_meses }
+  const decadesList: Array<{ Decada: string; Target: number; Benchmark: number; Delta: number }> =
+    r7?.cagr_por_decada ?? null;
 
-  // FF5 regression
-  const ff5 = r7?.ff5_regression ?? r7?.factor_regression ?? null;
+  // Factor regression — real field: factor_regression (not ff5_regression)
+  const ff5 = r7?.factor_regression ?? null;
 
   return (
     <CollapsibleSection id="backtest-r7" title="Backtest Longo — Regime 7 (1995–2026)" defaultOpen={true}>
@@ -273,36 +285,34 @@ function BacktestLongoSection() {
         </div>
       )}
 
-      {/* Win Rate */}
-      {r7?.win_rate_section && (
-        <div style={{ marginBottom: '14px', padding: '10px', background: 'var(--card2)', borderRadius: 'var(--radius-md)', fontSize: '.82rem' }}>
-          <div style={{ color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>Win Rate</div>
-          {r7.win_rate_section}
-        </div>
-      )}
-
       {/* Risk Grid: Factor Drought + Drawdown Recovery */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
           <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Factor Drought</div>
           <div style={{ fontSize: '.75rem', color: 'var(--text)' }}>
-            {r7?.factor_drought?.longest_drought_years != null
-              ? `Maior seca: ${r7.factor_drought.longest_drought_years}a`
+            {r7?.factor_drought?.max_meses != null
+              ? `Maior seca: ${(r7.factor_drought.max_meses / 12).toFixed(1)}a (${r7.factor_drought.max_meses}m)`
               : '—'}
           </div>
+          {r7?.factor_drought?.nota && (
+            <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>{r7.factor_drought.nota}</div>
+          )}
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
           <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Drawdown Recovery</div>
           <div style={{ fontSize: '.75rem', color: 'var(--text)' }}>
-            {r7?.drawdown_recovery?.avg_months != null
-              ? `Recuperação média: ${r7.drawdown_recovery.avg_months}m`
+            {r7?.drawdown_recovery?.max_meses != null
+              ? `Máx recuperação: ${r7.drawdown_recovery.max_meses}m`
               : '—'}
           </div>
+          {r7?.drawdown_recovery?.p90_meses != null && (
+            <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>P90: {r7.drawdown_recovery.p90_meses}m</div>
+          )}
         </div>
       </div>
 
-      {/* CAGR por Década */}
-      {decades && (
+      {/* CAGR por Década — list format: [{ Decada, Target, Benchmark, Delta, N_meses }] */}
+      {decadesList && decadesList.length > 0 && (
         <div style={{ marginTop: '14px', overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
             <thead>
@@ -314,13 +324,17 @@ function BacktestLongoSection() {
               </tr>
             </thead>
             <tbody>
-              {Object.entries(decades).map(([decade, vals]: [string, any]) => (
-                <tr key={decade} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '6px 8px' }}>{decade}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>{vals.target != null ? `${vals.target.toFixed(2)}%` : '—'}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right' }}>{vals.bench != null ? `${vals.bench.toFixed(2)}%` : '—'}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(vals.alpha ?? (vals.target - vals.bench)) }}>
-                    {vals.alpha != null ? fmtPct(vals.alpha) : (vals.target != null && vals.bench != null ? fmtPct(vals.target - vals.bench) : '—')}
+              {decadesList.map((row, idx) => (
+                <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '6px 8px' }}>{row.Decada ?? '—'}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>
+                    {row.Target != null ? `${(row.Target * 100).toFixed(2)}%` : '—'}
+                  </td>
+                  <td style={{ padding: '6px 8px', textAlign: 'right' }}>
+                    {row.Benchmark != null ? `${(row.Benchmark * 100).toFixed(2)}%` : '—'}
+                  </td>
+                  <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.Delta) }}>
+                    {row.Delta != null ? fmtPct(row.Delta * 100) : '—'}
                   </td>
                 </tr>
               ))}
@@ -339,14 +353,32 @@ function BacktestLongoSection() {
         </summary>
         {ff5 ? (
           <div style={{ marginTop: '8px', fontSize: '.78rem', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
-              {Object.entries(ff5).map(([k, v]: [string, any]) => (
-                <div key={k} style={{ textAlign: 'center', padding: '6px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
-                  <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{k}</div>
-                  <div style={{ fontWeight: 700 }}>{typeof v === 'number' ? v.toFixed(3) : String(v)}</div>
-                </div>
-              ))}
+            {/* Top-level scalars */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px', marginBottom: '8px' }}>
+              {Object.entries(ff5)
+                .filter(([, v]) => typeof v === 'number')
+                .map(([k, v]: [string, any]) => (
+                  <div key={k} style={{ textAlign: 'center', padding: '6px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{k}</div>
+                    <div style={{ fontWeight: 700 }}>{v.toFixed(3)}</div>
+                  </div>
+                ))
+              }
             </div>
+            {/* Betas sub-object */}
+            {ff5.betas && (
+              <div>
+                <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>Betas</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px' }}>
+                  {Object.entries(ff5.betas).map(([k, v]: [string, any]) => (
+                    <div key={k} style={{ textAlign: 'center', padding: '5px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
+                      <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{k}</div>
+                      <div style={{ fontWeight: 700 }}>{typeof v === 'number' ? v.toFixed(3) : String(v)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div style={{ marginTop: '8px', fontSize: '.75rem', color: 'var(--muted)' }}>Dados FF5 não disponíveis</div>

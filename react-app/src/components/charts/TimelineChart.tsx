@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { createSimpleLineChartOption } from '@/utils/chartSetup';
+import { createSimpleLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 
 export interface TimelineChartProps {
   data: DashboardData;
@@ -27,7 +27,7 @@ export function TimelineChart({ data }: TimelineChartProps) {
 
     return createSimpleLineChartOption({
       data, privacyMode, theme, xAxisData,
-      seriesData: [{ name: 'Portfolio Value', data: values, color: 'var(--primary)', areaStyle: true }],
+      seriesData: [{ name: 'Portfolio Value', data: values, color: CHART_COLORS.accent, areaStyle: true }],
       yAxisFormatter: (v) => `R$ ${(v / 1e6).toFixed(1)}M`,
     });
   }, [privacyMode, theme]);

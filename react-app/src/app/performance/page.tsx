@@ -106,8 +106,8 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 3. Retornos Mensais — Heatmap (collapsible, closed) */}
-      <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={false}>
+      {/* 3. Retornos Mensais — Heatmap (collapsible, open by default) */}
+      <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           <MonthlyReturnsHeatmap data={data.monthly_returns} />
           <div className="src">
@@ -187,7 +187,7 @@ export default function PerformancePage() {
       <CollapsibleSection id="section-factor-rolling" title="Rolling 12m — AVGS vs SWRD (retorno relativo)" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           {/* DeltaBarChart used as proxy — dedicated FactorRollingChart would be ideal */}
-          <DeltaBarChart data={data} />
+          <DeltaBarChart data={data} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" />
           <div className="src">
             Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.
           </div>

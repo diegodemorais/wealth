@@ -161,10 +161,8 @@ export default function PortfolioPage() {
             </thead>
             <tbody>
               {data.minilog.slice(0, 10).map((op: any, i: number) => {
-                // Parse valor string if needed (e.g., "R$ 46,498" → 46498)
-                const valorNum = typeof op.valor === 'string'
-                  ? parseFloat(op.valor.replace('R$ ', '').replace('.', '').replace(',', '.'))
-                  : (op.valor || 0);
+                // Render valor as raw string — values are mixed currency/format (BRL, USD, compound "N × $price")
+                const valorStr = typeof op.valor === 'string' ? op.valor : String(op.valor ?? '—');
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
                     <td style={{ padding: '6px 0', fontSize: '.75rem', color: 'var(--muted)' }}>{op.data}</td>
@@ -174,10 +172,10 @@ export default function PortfolioPage() {
                     <td style={{
                       padding: '6px 0',
                       textAlign: 'right',
-                      color: valorNum > 0 ? 'var(--green)' : 'var(--red)',
+                      color: 'var(--green)',
                       fontWeight: 700,
                     }}>
-                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(Math.abs(valorNum))}
+                      {valorStr}
                     </td>
                   </tr>
                 );

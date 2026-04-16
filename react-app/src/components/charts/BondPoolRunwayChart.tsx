@@ -37,8 +37,8 @@ export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
           subtext: 'Awaiting projection data from FIRE model',
           left: 'center',
           top: 'center',
-          textStyle: { color: 'var(--muted)', fontSize: 14 },
-          subtextStyle: { color: 'var(--muted)', fontSize: 12 },
+          textStyle: { color: '#94a3b8', fontSize: 14 },
+          subtextStyle: { color: '#94a3b8', fontSize: 12 },
         },
       };
     }

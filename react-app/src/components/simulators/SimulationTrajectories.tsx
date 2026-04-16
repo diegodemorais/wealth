@@ -30,8 +30,8 @@ export function SimulationTrajectories() {
         {
           label: 'P10 (Conservative)',
           data: p10.slice(0, years),
-          borderColor: 'var(--red)',
-          borderWidth: 1,
+          borderColor: '#ef4444',
+          borderWidth: 2,
           borderDash: [5, 5],
           fill: false,
           tension: 0.4,
@@ -40,8 +40,8 @@ export function SimulationTrajectories() {
         {
           label: 'P50 (Median)',
           data: p50.slice(0, years),
-          borderColor: 'var(--accent)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.15)',
           borderWidth: 3,
           fill: true,
           tension: 0.4,
@@ -50,8 +50,8 @@ export function SimulationTrajectories() {
         {
           label: 'P90 (Optimistic)',
           data: p90.slice(0, years),
-          borderColor: 'var(--green)',
-          borderWidth: 1,
+          borderColor: '#22c55e',
+          borderWidth: 2,
           borderDash: [5, 5],
           fill: false,
           tension: 0.4,

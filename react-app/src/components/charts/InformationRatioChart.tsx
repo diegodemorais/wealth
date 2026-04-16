@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { createSimpleLineChartOption } from '@/utils/chartSetup';
+import { createSimpleLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 
 export interface InformationRatioChartProps {
   data: DashboardData;
@@ -24,7 +24,7 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
 
     return createSimpleLineChartOption({
       data, privacyMode, theme, xAxisData,
-      seriesData: [{ name: 'Information Ratio', data: irData, color: 'var(--cyan)' }],
+      seriesData: [{ name: 'Information Ratio', data: irData, color: CHART_COLORS.cyan }],
     });
   }, [privacyMode, theme]);
 

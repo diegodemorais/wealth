@@ -1,9 +1,28 @@
 /**
  * Chart Setup Factory — Centraliza builders ECharts
  * Reduz duplicação em componentes chart (goal: <50 linhas cada)
+ *
+ * IMPORTANT: ECharts and Chart.js render on <canvas> and cannot resolve
+ * CSS custom properties (var(--x)). Always use explicit hex/rgb colors here.
  */
 
 import { DashboardData } from '@/types/dashboard';
+
+/** Resolved color palette — matches globals.css :root definitions */
+export const CHART_COLORS = {
+  accent:  '#3b82f6', // hsl(217 91% 60%)
+  green:   '#22c55e', // hsl(142 71% 45%)
+  red:     '#ef4444', // hsl(0 84% 60%)
+  orange:  '#f97316', // hsl(25 95% 53%)
+  yellow:  '#eab308', // hsl(45 93% 47%)
+  purple:  '#a855f7', // hsl(271 91% 65%)
+  cyan:    '#06b6d4', // hsl(189 94% 43%)
+  pink:    '#ec4899', // hsl(330 80% 60%)
+  muted:   '#94a3b8', // hsl(215 20% 65%)
+  border:  '#374151', // hsl(215 19% 35%) approx
+  card:    '#1e2a3b', // hsl(217 33% 17%) approx
+  text:    '#f1f5f9', // hsl(210 40% 96%)
+} as const;
 
 export interface ChartTheme {
   tooltip: {
@@ -55,27 +74,27 @@ export function createAttributionChartOption(options: BaseChartOptions) {
 
   const categories = ['Equity Selection', 'Allocation', 'Market Return', 'Currency', 'Costs'];
   const attributionData = [2.5, 1.2, 4.8, -0.3, -0.6];
-  const colors = attributionData.map(v => v >= 0 ? 'var(--green)' : 'var(--red)');
+  const colors = attributionData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
 
   return {
     ...createBaseOption(theme, privacyMode),
     xAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: '{value}%',
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.border } },
     },
     yAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         fontSize: 12,
       },
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
     },
     series: [
       {
@@ -119,9 +138,9 @@ export function createDonutChartOption(options: BaseChartOptions) {
   const totalBrl = equityBrl + rfBrl + hodlBrl;
 
   const assetData = [
-    { value: equityBrl, name: 'Equity', color: 'var(--accent)' },
-    { value: rfBrl, name: 'Renda Fixa', color: 'var(--green)' },
-    { value: hodlBrl, name: 'Bitcoin', color: 'var(--orange)' },
+    { value: equityBrl, name: 'Equity', color: CHART_COLORS.accent },
+    { value: rfBrl, name: 'Renda Fixa', color: CHART_COLORS.green },
+    { value: hodlBrl, name: 'Bitcoin', color: CHART_COLORS.orange },
   ].filter((d) => d.value > 0);
 
   return {
@@ -136,7 +155,7 @@ export function createDonutChartOption(options: BaseChartOptions) {
     legend: {
       orient: 'vertical' as const,
       left: 'left',
-      textStyle: { color: 'hsl(var(--muted))' },
+      textStyle: { color: CHART_COLORS.muted },
     },
     series: [
       {
@@ -145,10 +164,10 @@ export function createDonutChartOption(options: BaseChartOptions) {
         radius: ['30%', '70%'],
         center: ['50%', '50%'],
         data: assetData,
-        itemStyle: { borderRadius: 6, borderColor: 'hsl(var(--card))', borderWidth: 1 },
+        itemStyle: { borderRadius: 6, borderColor: CHART_COLORS.card, borderWidth: 1 },
         label: {
           formatter: privacyMode ? () => '' : '{b}\n{d}%',
-          color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+          color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         },
       },
     ],
@@ -210,7 +229,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
     },
     legend: {
       data: ['Histórico', 'Pessimista (0%)', 'Base (3% a.a.)', 'Otimista (5% a.a.)'],
-      textStyle: { color: 'hsl(var(--muted))' },
+      textStyle: { color: CHART_COLORS.muted },
     },
     grid: { left: 60, right: 40, top: 40, bottom: 40 },
     xAxis: {
@@ -227,7 +246,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Histórico',
         type: 'line' as const,
         data: [...values.slice(-24), ...baselineProj.slice(0, 48)],
-        itemStyle: { color: 'var(--orange)' },
+        itemStyle: { color: CHART_COLORS.orange },
         lineStyle: { width: 2.5 },
         smooth: true,
       },
@@ -235,7 +254,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Pessimista (0%)',
         type: 'line' as const,
         data: Array(dates.slice(-24).length).fill(null).concat(pessimisticProj.slice(0, 48)),
-        itemStyle: { color: 'var(--red)' },
+        itemStyle: { color: CHART_COLORS.red },
         lineStyle: { width: 1.5, type: 'dashed' as const },
         smooth: true,
       },
@@ -243,7 +262,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Base (3% a.a.)',
         type: 'line' as const,
         data: Array(dates.slice(-24).length).fill(null).concat(baselineProj.slice(0, 48)),
-        itemStyle: { color: 'var(--green)' },
+        itemStyle: { color: CHART_COLORS.green },
         lineStyle: { width: 1.5, type: 'dashed' as const },
         smooth: true,
       },
@@ -251,7 +270,7 @@ export function createTimelineChartOption(options: BaseChartOptions) {
         name: 'Otimista (5% a.a.)',
         type: 'line' as const,
         data: Array(dates.slice(-24).length).fill(null).concat(optimisticProj.slice(0, 48)),
-        itemStyle: { color: 'var(--accent)' },
+        itemStyle: { color: CHART_COLORS.accent },
         lineStyle: { width: 1.5, type: 'dashed' as const },
         smooth: true,
       },
@@ -273,7 +292,7 @@ export function createStackedAreaChartOption(options: BaseChartOptions) {
   const cryptoData = Array.from({ length: months }, (_, i) => 120000 + i * 500);
 
   return {
-    color: ['var(--accent)', 'var(--green)', 'var(--orange)', 'var(--pink)'],
+    color: [CHART_COLORS.accent, CHART_COLORS.green, CHART_COLORS.orange, CHART_COLORS.pink],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -304,20 +323,20 @@ export function createStackedAreaChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         fontSize: 12,
       },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
       {
@@ -376,7 +395,7 @@ export function createBacktestChartOption(options: BaseChartOptions) {
   const benchmarkData = Array.from({ length: months }, (_, i) => 100 * Math.pow(1.0075, i));
 
   return {
-    color: ['var(--green)', 'hsl(var(--muted))'],
+    color: [CHART_COLORS.green, CHART_COLORS.muted],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -400,13 +419,13 @@ export function createBacktestChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12, interval: 11 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12, interval: 11 },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
       {
@@ -437,7 +456,7 @@ export function createIncomeChartOption(options: BaseChartOptions) {
 
   const categories = ['Salary', 'Dividends', 'Bond Coupons', 'Rental', 'Other'];
   const amountsData = [120000, 35000, 18000, 24000, 3000];
-  const colors = ['var(--accent)', 'var(--green)', 'var(--orange)', 'var(--purple)', 'var(--pink)'];
+  const colors = [CHART_COLORS.accent, CHART_COLORS.green, CHART_COLORS.orange, CHART_COLORS.purple, CHART_COLORS.pink];
 
   return {
     tooltip: {
@@ -457,17 +476,17 @@ export function createIncomeChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: (value: number) => `R$ ${(value / 1e3).toFixed(0)}K`,
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     yAxis: {
       type: 'category' as const,
       data: categories,
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
     },
     series: [
       {
@@ -498,7 +517,7 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
   const fixedIncomeAlloc = equityAlloc.map(eq => 100 - eq);
 
   return {
-    color: ['var(--accent)', 'var(--orange)'],
+    color: [CHART_COLORS.accent, CHART_COLORS.orange],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -518,15 +537,15 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: ages.map(a => a.toString()),
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12, interval: 4 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12, interval: 4 },
     },
     yAxis: {
       type: 'value' as const,
       min: 0,
       max: 100,
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: '{value}%', fontSize: 12 },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}%', fontSize: 12 },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
       {
@@ -580,12 +599,12 @@ export function createSankeyChartOption(options: BaseChartOptions) {
       {
         type: 'sankey' as const,
         data: [
-          { name: 'Capital Inicial', itemStyle: { color: 'var(--accent)' } },
-          { name: 'Aportes', itemStyle: { color: 'var(--cyan)' } },
-          { name: 'Ganho Equity USD', itemStyle: { color: 'var(--green)' } },
-          { name: 'Ganho FX', itemStyle: { color: 'var(--orange)' } },
-          { name: 'Ganho RF', itemStyle: { color: 'var(--purple)' } },
-          { name: 'Capital Final', itemStyle: { color: 'var(--pink)' } },
+          { name: 'Capital Inicial', itemStyle: { color: CHART_COLORS.accent } },
+          { name: 'Aportes', itemStyle: { color: CHART_COLORS.cyan } },
+          { name: 'Ganho Equity USD', itemStyle: { color: CHART_COLORS.green } },
+          { name: 'Ganho FX', itemStyle: { color: CHART_COLORS.orange } },
+          { name: 'Ganho RF', itemStyle: { color: CHART_COLORS.purple } },
+          { name: 'Capital Final', itemStyle: { color: CHART_COLORS.pink } },
         ],
         links: [
           { source: 0, target: 5, value: initialCapital },
@@ -596,8 +615,8 @@ export function createSankeyChartOption(options: BaseChartOptions) {
         ],
         emphasis: { focus: 'adjacency' as const },
         levels: [
-          { depth: 0, itemStyle: { color: 'var(--accent)' } },
-          { depth: 1, itemStyle: { color: 'var(--pink)' } },
+          { depth: 0, itemStyle: { color: CHART_COLORS.accent } },
+          { depth: 1, itemStyle: { color: CHART_COLORS.pink } },
         ],
         nodeWidth: 20,
         nodePadding: 120,
@@ -620,7 +639,7 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const p90Data = Array.from({ length: years }, (_, i) => 1250000 * Math.pow(1.09, i) + 60000 * i);
 
   return {
-    color: ['var(--red)', 'var(--green)', 'var(--accent)'],
+    color: [CHART_COLORS.red, CHART_COLORS.green, CHART_COLORS.accent],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -640,17 +659,17 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
       {
@@ -689,7 +708,7 @@ export function createDeltaBarChartOption(options: BaseChartOptions) {
 
   const xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
   const deltaData = [0.8, -0.2, 1.2, 0.5, -0.1, 0.9, 1.1, 0.3, -0.4, 0.6, 0.8, 0.7];
-  const colors = deltaData.map(v => v >= 0 ? 'var(--green)' : 'var(--red)');
+  const colors = deltaData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
 
   return {
     tooltip: {
@@ -709,13 +728,13 @@ export function createDeltaBarChartOption(options: BaseChartOptions) {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: '{value}%', fontSize: 12 },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}%', fontSize: 12 },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
       {
@@ -753,20 +772,20 @@ export function createDrawdownHistChartOption(options: BaseChartOptions) {
     grid: { left: 120, right: 20, top: 40, bottom: 40, containLabel: true },
     xAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     yAxis: {
       type: 'category' as const,
       data: buckets,
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
     },
     series: [
       {
         type: 'bar' as const,
         data: frequencies,
-        itemStyle: { color: 'var(--accent)', borderRadius: [0, 4, 4, 0] },
+        itemStyle: { color: CHART_COLORS.accent, borderRadius: [0, 4, 4, 0] },
       },
     ],
   };
@@ -807,17 +826,17 @@ export function createSimpleLineChartOption(options: {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: seriesData.map(s => ({
       name: s.name,
@@ -855,7 +874,7 @@ export function createBoundedLineChartOption(options: {
   } = options;
 
   return {
-    color: ['var(--green)', 'var(--accent)', 'var(--red)'],
+    color: [CHART_COLORS.green, CHART_COLORS.accent, CHART_COLORS.red],
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -875,17 +894,17 @@ export function createBoundedLineChartOption(options: {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12, interval: 4 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12, interval: 4 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: yAxisFormatter || ((v: number) => `${v.toFixed(0)}`),
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--card))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
       {
@@ -949,7 +968,7 @@ export function createTornadoChartOption(options: {
     },
     legend: {
       data: [downsideLabel, upsideLabel],
-      textStyle: { color: 'hsl(var(--muted))' },
+      textStyle: { color: CHART_COLORS.muted },
     },
     grid: { left: 120, right: 60, top: 40, bottom: 40 },
     xAxis: {
@@ -966,14 +985,14 @@ export function createTornadoChartOption(options: {
         type: 'bar' as const,
         stack: 'total',
         data: downside,
-        itemStyle: { color: 'var(--red)', opacity: 0.8 },
+        itemStyle: { color: CHART_COLORS.red, opacity: 0.8 },
       },
       {
         name: upsideLabel,
         type: 'bar' as const,
         stack: 'total',
         data: upside,
-        itemStyle: { color: 'var(--green)', opacity: 0.8 },
+        itemStyle: { color: CHART_COLORS.green, opacity: 0.8 },
       },
     ],
   };
@@ -1024,17 +1043,17 @@ export function createDualLineChartOption(options: {
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
-      axisLine: { lineStyle: { color: 'hsl(var(--border))' } },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', fontSize: 12 },
+      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : 'hsl(var(--muted))',
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
         fontSize: 12,
       },
-      splitLine: { lineStyle: { color: 'hsl(var(--border))' } },
+      splitLine: { lineStyle: { color: CHART_COLORS.border } },
     },
     series: [
       {
@@ -1090,20 +1109,20 @@ export function createBondPoolProbabilisticOption(options: {
         return html;
       },
     },
-    legend: { data: ['P90 (otimista)', 'P50 (mediana)', 'P10 (pessimista)'], textStyle: { color: 'hsl(var(--muted))' }, bottom: 0 },
+    legend: { data: ['P90 (otimista)', 'P50 (mediana)', 'P10 (pessimista)'], textStyle: { color: CHART_COLORS.muted }, bottom: 0 },
     grid: { left: 50, right: 20, top: 40, bottom: 50 },
-    xAxis: { type: 'category' as const, data: dates, axisLabel: { color: 'hsl(var(--muted))' } },
+    xAxis: { type: 'category' as const, data: dates, axisLabel: { color: CHART_COLORS.muted } },
     yAxis: {
       type: 'value' as const,
       name: 'Anos restantes',
-      nameTextStyle: { color: 'hsl(var(--muted))' },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: (v: number) => `${v.toFixed(0)}` },
-      splitLine: { lineStyle: { color: 'hsl(var(--border))', width: 0.5 } },
+      nameTextStyle: { color: CHART_COLORS.muted },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: (v: number) => `${v.toFixed(0)}` },
+      splitLine: { lineStyle: { color: CHART_COLORS.border, width: 0.5 } },
     },
     series: [
-      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--green)' }, itemStyle: { color: 'var(--green)' }, areaStyle: { color: 'hsla(var(--green), 0.08)' }, symbol: 'none', smooth: true },
-      { name: 'P50 (mediana)', type: 'line' as const, data: p50, lineStyle: { width: 2.5, color: 'var(--orange)' }, itemStyle: { color: 'var(--orange)' }, symbol: 'none', smooth: true },
-      { name: 'P10 (pessimista)', type: 'line' as const, data: p10, lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--red)' }, itemStyle: { color: 'var(--red)' }, symbol: 'none', smooth: true },
+      { name: 'P90 (otimista)', type: 'line' as const, data: p90, lineStyle: { width: 1.5, type: 'dashed' as const, color: CHART_COLORS.green }, itemStyle: { color: CHART_COLORS.green }, areaStyle: { color: 'rgba(34,197,94,0.08)' }, symbol: 'none', smooth: true },
+      { name: 'P50 (mediana)', type: 'line' as const, data: p50, lineStyle: { width: 2.5, color: CHART_COLORS.orange }, itemStyle: { color: CHART_COLORS.orange }, symbol: 'none', smooth: true },
+      { name: 'P10 (pessimista)', type: 'line' as const, data: p10, lineStyle: { width: 1.5, type: 'dashed' as const, color: CHART_COLORS.red }, itemStyle: { color: CHART_COLORS.red }, symbol: 'none', smooth: true },
     ],
   };
 }
@@ -1144,21 +1163,21 @@ export function createBondPoolDeterministicOption(options: {
         return html;
       },
     },
-    legend: { data: ['Pool Total', 'IPCA+ 2040', 'IPCA+ 2050', 'Meta 2040'], textStyle: { color: 'hsl(var(--muted))' }, bottom: 0 },
+    legend: { data: ['Pool Total', 'IPCA+ 2040', 'IPCA+ 2050', 'Meta 2040'], textStyle: { color: CHART_COLORS.muted }, bottom: 0 },
     grid: { left: 70, right: 20, top: 40, bottom: 50 },
-    xAxis: { type: 'category' as const, data: years.map(String), axisLabel: { color: 'hsl(var(--muted))' } },
+    xAxis: { type: 'category' as const, data: years.map(String), axisLabel: { color: CHART_COLORS.muted } },
     yAxis: {
       type: 'value' as const,
       name: 'R$ (BRL)',
-      nameTextStyle: { color: 'hsl(var(--muted))' },
-      axisLabel: { color: privacyMode ? 'transparent' : 'hsl(var(--muted))', formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
-      splitLine: { lineStyle: { color: 'hsl(var(--border))', width: 0.5 } },
+      nameTextStyle: { color: CHART_COLORS.muted },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
+      splitLine: { lineStyle: { color: CHART_COLORS.border, width: 0.5 } },
     },
     series: [
-      { name: 'IPCA+ 2050', type: 'bar' as const, stack: 'pool', data: pool2050, itemStyle: { color: 'var(--purple)', borderRadius: [0, 0, 0, 0] }, emphasis: { focus: 'series' } },
-      { name: 'IPCA+ 2040', type: 'bar' as const, stack: 'pool', data: pool2040, itemStyle: { color: 'var(--accent)', borderRadius: [4, 4, 0, 0] }, emphasis: { focus: 'series' } },
-      { name: 'Pool Total', type: 'line' as const, data: poolTotal, lineStyle: { width: 2.5, color: 'var(--orange)' }, itemStyle: { color: 'var(--orange)' }, symbol: 'circle', symbolSize: 6, smooth: true, z: 10 },
-      { name: 'Meta 2040', type: 'line' as const, data: years.map(() => alvo), lineStyle: { width: 1.5, type: 'dashed' as const, color: 'var(--red)' }, itemStyle: { color: 'var(--red)' }, symbol: 'none' },
+      { name: 'IPCA+ 2050', type: 'bar' as const, stack: 'pool', data: pool2050, itemStyle: { color: CHART_COLORS.purple, borderRadius: [0, 0, 0, 0] }, emphasis: { focus: 'series' } },
+      { name: 'IPCA+ 2040', type: 'bar' as const, stack: 'pool', data: pool2040, itemStyle: { color: CHART_COLORS.accent, borderRadius: [4, 4, 0, 0] }, emphasis: { focus: 'series' } },
+      { name: 'Pool Total', type: 'line' as const, data: poolTotal, lineStyle: { width: 2.5, color: CHART_COLORS.orange }, itemStyle: { color: CHART_COLORS.orange }, symbol: 'circle', symbolSize: 6, smooth: true, z: 10 },
+      { name: 'Meta 2040', type: 'line' as const, data: years.map(() => alvo), lineStyle: { width: 1.5, type: 'dashed' as const, color: CHART_COLORS.red }, itemStyle: { color: CHART_COLORS.red }, symbol: 'none' },
     ],
   };
 }

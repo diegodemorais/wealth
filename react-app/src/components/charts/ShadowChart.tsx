@@ -5,7 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { createDualLineChartOption } from '@/utils/chartSetup';
+import { createDualLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
 
 export interface ShadowChartProps {
   data: DashboardData;
@@ -24,7 +24,7 @@ export function ShadowChart({ data }: ShadowChartProps) {
     return createDualLineChartOption({
       data, privacyMode, theme, xAxisData, series1Data: actualData, series1Name: 'Actual Portfolio',
       series2Data: shadowData, series2Name: 'Shadow Portfolio (60/40)',
-      series1Color: 'var(--accent)', series2Color: 'var(--red)', dashed: true,
+      series1Color: CHART_COLORS.accent, series2Color: CHART_COLORS.red, dashed: true,
     });
   }, [privacyMode, theme]);
 
