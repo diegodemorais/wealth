@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body style={{ margin: 0, backgroundColor: '#0f1117', color: '#fff' }}>
+      <body>
         <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
