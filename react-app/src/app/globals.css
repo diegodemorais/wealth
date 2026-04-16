@@ -1,3 +1,11 @@
+/* ⚠️  TAILWIND V4 — LEIA ANTES DE EDITAR ⚠️
+   Este projeto usa tailwindcss@4.x.
+   - NUNCA usar: @tailwind base / @tailwind components / @tailwind utilities  (sintaxe v3, ignorada)
+   - SEMPRE usar: @import "tailwindcss"  (sintaxe v4)
+   - tailwind.config.ts é COMPLETAMENTE IGNORADO no v4 — adicionar cores aqui no @theme abaixo
+   - Sintoma de erro: CSS gerado <30KB, dark theme não aplica, bg-card/text-green sem efeito
+   - Custo do bug: horas de debug (2026-04-16)
+*/
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════════

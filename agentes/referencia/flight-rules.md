@@ -59,6 +59,14 @@ Se um cenário abaixo ocorrer, executar a resposta **sem debate**. O debate já 
 | **Mesmo bloco CRITICAL falha 3 ciclos** | `ESCALATE_TO_DIEGO`. Não prosseguir até decisão explícita. | DEV-tester |
 | **Tester verde (0 CRITICAL, 0 HIGH)** | Autorizado para commit + push. | DEV-tester |
 
+## Dashboard / Tailwind v4 — Armadilhas conhecidas
+
+| Cenário | Resposta | Origem |
+|---------|----------|--------|
+| **CSS não aplica / dark theme quebrado / custom colors sem efeito** | Verificar se `globals.css` usa `@import "tailwindcss"` (v4) e não `@tailwind base/components/utilities` (v3). No v4, `tailwind.config.ts` é **ignorado** — custom colors DEVEM estar em `@theme {}` dentro do `globals.css`. | DEV-tailwind-v4-2026-04-16 |
+| **Adicionar nova cor ao tema** | Nunca adicionar só em `tailwind.config.ts`. Sempre em `@theme { --color-xxx: ... }` no `globals.css`. O config é inerte no v4. | DEV-tailwind-v4-2026-04-16 |
+| **CSS gerado parece pequeno (<30KB) para um dashboard complexo** | Sinal de que utilities customizadas não estão sendo geradas. Checar `@theme` no `globals.css`. | DEV-tailwind-v4-2026-04-16 |
+
 ## Dashboard / Chart.js 4 — Armadilhas conhecidas
 
 Cada linha abaixo custou horas de debug. Não redescobrir.
