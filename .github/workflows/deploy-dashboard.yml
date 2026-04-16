@@ -43,6 +43,19 @@ jobs:
           cd react-app
           npm run build:no-test
 
+      - name: Commit version update
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "noreply@github.com"
+          if git diff --quiet; then
+            echo "No version changes to commit"
+          else
+            git add react-app/package.json react-app/src/config/version.ts
+            git commit -m "chore: Increment dashboard version (auto-generated on build)" || true
+            git push origin main
+          fi
+
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
