@@ -54,11 +54,16 @@ export function KpiHero({
       {kpis.map((kpi, idx) => (
         <div
           key={idx}
-          className={`rounded-lg p-4 text-center border transition-colors border-l-4 ${
-            kpi.primary
-              ? 'bg-blue-950/25 border-accent border-2 border-l-blue-500'
-              : 'bg-card border-border/50 border-l-blue-500'
-          }`}
+          className="rounded-xl p-4 text-center border transition-colors"
+          style={kpi.primary ? {
+            borderColor: 'hsl(var(--accent))',
+            borderWidth: '2px',
+            background: 'rgba(59, 130, 246, 0.07)',
+          } : {
+            borderColor: 'hsl(var(--border))',
+            borderWidth: '1px',
+            background: 'hsl(var(--card))',
+          }}
         >
           <div className="text-xs uppercase font-semibold text-muted-foreground mb-1 tracking-widest">
             {kpi.label}
