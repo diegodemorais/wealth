@@ -284,14 +284,35 @@ export function createTimelineChartOption(options: BaseChartOptions) {
  * Stacked Area Chart
  */
 export function createStackedAreaChartOption(options: BaseChartOptions) {
-  const { privacyMode, theme } = options;
+  const { data, privacyMode, theme } = options;
 
-  const months = 24;
-  const xAxisData = Array.from({ length: months }, (_, i) => `M${i + 1}`);
-  const swrdData = Array.from({ length: months }, (_, i) => 1200000 + i * 5000);
-  const avgsData = Array.from({ length: months }, (_, i) => 600000 + i * 2500);
-  const ipcaData = Array.from({ length: months }, (_, i) => 450000 + i * 3000);
-  const cryptoData = Array.from({ length: months }, (_, i) => 120000 + i * 500);
+  // Use real timeline_attribution data from data.json
+  const ta = (data as any)?.timeline_attribution ?? {};
+  const rawDates: string[] = ta.dates ?? [];
+  const equityUsd: number[] = ta.equity_usd ?? [];
+  const rfBrl: number[] = ta.rf ?? [];
+  const cambioArr: number[] = ta.cambio ?? [];
+  const cambioVal = (data as any)?.cambio ?? 5.0;
+
+  const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+  if (rawDates.length === 0) {
+    // No data fallback — single month placeholder
+    const months = 1;
+    const xAxisData = ['—'];
+    return {
+      title: { text: 'Sem dados históricos', textStyle: { color: '#94a3b8', fontSize: 12 } },
+    };
+  }
+
+  const xAxisData = rawDates.map((ym: string) => {
+    const [y, m] = ym.split('-');
+    return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
+  });
+
+  // Convert equity USD → BRL using per-month cambio or fallback
+  const equityBrlData = equityUsd.map((v, i) => v * (cambioArr[i] ?? cambioVal));
+  const rfBrlData = rfBrl;
 
   return {
     color: [CHART_COLORS.accent, CHART_COLORS.green, CHART_COLORS.orange, CHART_COLORS.pink],
@@ -342,44 +363,24 @@ export function createStackedAreaChartOption(options: BaseChartOptions) {
     },
     series: [
       {
-        name: 'SWRD',
+        name: 'Equity (BRL)',
         type: 'line' as const,
-        data: swrdData,
+        data: equityBrlData,
         smooth: true,
-        fill: true,
-        areaStyle: { opacity: 0.2 },
+        areaStyle: { opacity: 0.25 },
         lineStyle: { width: 2 },
         symbolSize: 0,
+        itemStyle: { color: CHART_COLORS.accent },
       },
       {
-        name: 'AVGS',
+        name: 'Renda Fixa (BRL)',
         type: 'line' as const,
-        data: avgsData,
+        data: rfBrlData,
         smooth: true,
-        fill: true,
-        areaStyle: { opacity: 0.2 },
+        areaStyle: { opacity: 0.25 },
         lineStyle: { width: 2 },
         symbolSize: 0,
-      },
-      {
-        name: 'IPCA+',
-        type: 'line' as const,
-        data: ipcaData,
-        smooth: true,
-        fill: true,
-        areaStyle: { opacity: 0.2 },
-        lineStyle: { width: 2 },
-        symbolSize: 0,
-      },
-      {
-        name: 'Crypto',
-        type: 'line' as const,
-        data: cryptoData,
-        smooth: true,
-        fill: true,
-        areaStyle: { opacity: 0.2 },
-        lineStyle: { width: 2 },
-        symbolSize: 0,
+        itemStyle: { color: CHART_COLORS.green },
       },
     ],
   };
