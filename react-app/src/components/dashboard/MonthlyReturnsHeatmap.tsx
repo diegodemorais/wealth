@@ -65,7 +65,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
       </h3>
 
       {/* Heatmap Grid */}
-      <div className="grid gap-1 p-3 bg-card rounded-lg border border-border overflow-x-auto" style={{
+      <div className="grid gap-1 p-3 bg-card rounded border border-border overflow-x-auto" style={{
         gridTemplateColumns: `repeat(${Math.min(12, entries.length)}, minmax(32px, 1fr))`,
       }}>
         {entries.map(([month, returnValue]) => (

@@ -1,54 +1,10 @@
 /**
- * Dashboard CSS — Organized in 5 sections
- * Converted to HSL format for Tailwind integration
+ * Dashboard Component-Specific CSS
+ *
+ * NOTE: All CSS variables are defined in globals.css (SINGLE SOURCE OF TRUTH)
+ * This file contains component-specific styling that builds on those variables
+ * Reference: DashHTML v2.77 styling for layout, components, and semantic elements
  */
-
-/* ─────────────────────────────────────────────────────────────
-   SECTION 1: CSS Variables & Reset
-   ───────────────────────────────────────────────────────────── */
-
-:root {
-  /* Core colors — matching DashHTML reference (HSL format for Tailwind) */
-  /* Corrected HEX → HSL conversion */
-  --bg: 222 47% 11%;
-  --card: 217 33% 17%;
-  --card2: 215 25% 27%;
-  --text: 210 40% 96%;
-  --muted: 215 20% 65%;
-  --border: 215 19% 35%;
-  --accent: 217 91% 60%;
-  --green: 142 71% 45%;
-  --red: 0 84% 60%;
-  --yellow: 45 93% 47%;
-  --purple: 271 91% 65%;
-  --cyan: 189 94% 43%;
-  --orange: 25 95% 53%;
-
-  /* Utilities */
-  --radius: 10px;
-
-  /* Spacing scale — matching baseline HTML */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 14px;
-  --space-5: 16px;
-  --space-6: 20px;
-  --space-7: 24px;
-  --space-8: 32px;
-
-  /* Font sizes — matching baseline HTML */
-  --text-xs: 0.65rem;
-  --text-sm: 0.75rem;
-  --text-base: 0.8rem;
-  --text-md: 0.85rem;
-  --text-lg: 1rem;
-  --text-xl: 1.3rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.8rem;
-  --text-4xl: 2rem;
-  --text-5xl: 3rem;
-}
 
 * {
   box-sizing: border-box;

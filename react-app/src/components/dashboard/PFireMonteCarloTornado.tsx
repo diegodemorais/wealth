@@ -52,7 +52,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   ];
 
   return (
-    <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
+    <section className="bg-card border border-border/50 rounded p-4 mb-3.5">
       <h2 className="text-base font-semibold text-text mb-3 m-0">P(FIRE) — Monte Carlo + Tornado de Sensibilidade</h2>
 
       {/* Scenario cards */}
@@ -60,7 +60,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
         {scenarioCards.map(({ label, value }) => (
           <div
             key={label}
-            className="rounded-lg p-3 text-center border"
+            className="rounded p-3 text-center border"
             style={{
               background: getBadgeBg(value),
               borderColor: getBadgeColor(value),

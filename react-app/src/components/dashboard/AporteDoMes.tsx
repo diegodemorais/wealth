@@ -40,7 +40,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
     'var(--red)';
 
   return (
-    <section className="bg-card border border-border/50 rounded-lg p-4 mb-3.5">
+    <section className="bg-card border border-border/50 rounded p-4 mb-3.5">
       <h2 className="text-base font-semibold text-text mb-3 m-0">Aporte do Mês</h2>
 
       {/* Big aporte value */}
@@ -78,13 +78,13 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
 
       {/* Accumulated values */}
       <div className="grid grid-cols-2 gap-2 mt-3">
-        <div className="bg-slate-700/40 rounded-lg px-2 py-2 text-center">
+        <div className="bg-slate-700/40 rounded px-2 py-2 text-center">
           <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Mês</div>
           <div className="text-sm font-bold text-text mt-0.5">
             {privacyMode ? '••••' : fmtShort(acumuladoMes)}
           </div>
         </div>
-        <div className="bg-slate-700/40 rounded-lg px-2 py-2 text-center">
+        <div className="bg-slate-700/40 rounded px-2 py-2 text-center">
           <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Ano</div>
           <div className="text-sm font-bold text-text mt-0.5">
             {privacyMode ? '••••' : fmtShort(acumuladoAno)}

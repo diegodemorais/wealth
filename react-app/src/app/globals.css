@@ -2,59 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS custom properties for shadcn/ui theming */
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SINGLE SOURCE OF TRUTH FOR ALL CSS VARIABLES
+   Consolidates globals.css (Tailwind) + dashboard.css (DashHTML reference)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
 @layer base {
   :root {
     color-scheme: dark;
 
-    /* Core backgrounds */
-    --background: #0f172a;
-    --foreground: #f1f5f9;
+    /* ════════════════════════════════════════════════════════════════════════════════
+       SINGLE SOURCE OF TRUTH — All colors, sizes, spacing defined here
+       Reference: DashHTML v2.77 + Tailwind + shadcn/ui compatibility
+       ════════════════════════════════════════════════════════════════════════════════ */
 
-    /* Card / surface */
+    /* ─── Core Colors (Hex format) — Used by components with hex color props ─── */
+    --bg: #0f172a;
     --card: #1e293b;
-    --card-foreground: #f1f5f9;
-
-    /* Popover */
-    --popover: #1e293b;
-    --popover-foreground: #f1f5f9;
-
-    /* Primary (accent blue) */
-    --primary: #3b82f6;
-    --primary-foreground: #f1f5f9;
-
-    /* Secondary (card2) */
-    --secondary: #334155;
-    --secondary-foreground: #f1f5f9;
-
-    /* Muted */
-    --muted: #334155;
-    --muted-foreground: #94a3b8;
-
-    /* Accent */
-    --accent: #334155;
-    --accent-foreground: #f1f5f9;
-
-    /* Destructive */
-    --destructive: #ef4444;
-    --destructive-foreground: #f1f5f9;
-
-    /* Borders / inputs */
+    --card2: #334155;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
     --border: #475569;
-    --input: #334155;
-    --ring: #3b82f6;
+    --accent: #3b82f6;
 
-    /* Border radius */
-    --radius: 10px;
-
-    /* Additional chart colors */
-    --success: #22c55e;
+    /* ─── Semantic Colors (Hex) — Social/status indicators ─── */
+    --green: #22c55e;
+    --red: #ef4444;
     --yellow: #eab308;
-    --warning: #f59e0b;
-    --green: #10b981;
-    --pink: #ec4899;
     --purple: #a855f7;
     --cyan: #06b6d4;
-    --muted-bg: #1f2937;
+    --orange: #f97316;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --destructive: #ef4444;
+
+    /* ─── Border Radius — DashHTML reference (exact pixel values) ─── */
+    --radius-sm: 5px;
+    --radius-md: 8px;
+    --radius: 10px;
+    --radius-lg: 14px;
+
+    /* ─── Spacing Scale — DashHTML reference ─── */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 14px;
+    --space-5: 16px;
+    --space-6: 20px;
+    --space-7: 24px;
+    --space-8: 32px;
+
+    /* ─── Typography — DashHTML reference ─── */
+    --text-xs: 0.65rem;
+    --text-sm: 0.75rem;
+    --text-base: 0.8rem;
+    --text-md: 0.85rem;
+    --text-lg: 1rem;
+    --text-xl: 1.3rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.8rem;
+    --text-4xl: 2rem;
+    --text-5xl: 3rem;
+
+    /* ─── shadcn/ui Compatibility — Maps our vars to shadcn names ─── */
+    --background: var(--bg);
+    --foreground: var(--text);
+    --popover: var(--card);
+    --popover-foreground: var(--text);
+    --primary: var(--accent);
+    --primary-foreground: var(--text);
+    --secondary: var(--card2);
+    --secondary-foreground: var(--text);
+    --muted-foreground: var(--muted);
+    --accent-foreground: var(--text);
+    --input: var(--card2);
+    --ring: var(--accent);
+    --card-foreground: var(--text);
   }
 }
