@@ -112,44 +112,26 @@ Nao misturar no mesmo bullet. Diego aceita dados; questiona interpretacoes.
 
 Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/python3`
 
-## Dashboard
+## Dashboard (React)
 
 `dev` é o único agente autorizado. Quant valida toda mudança que envolva dados ou cálculos.
 
-- Zero hardcoded — fonte única são as estruturas internas (`agentes/`, `dados/`)
-- Todo componente tem versão privacy (valores sensíveis ocultos)
-- Pipeline: `generate_data.py` → `build_dashboard.py` → `dashboard/index.html`
-- Nunca editar `index.html` diretamente
-
-### QA — Test Protocol Completo
-
-**OBRIGATÓRIO antes de qualquer `git push` com mudanças no dashboard:**
-
-```bash
-./scripts/quick_dashboard_test.sh
+**Pipeline atual:**
+```
+Scripts Python (generate_data.py, reconstruct_*.py)
+        ↓
+    dados/ (JSON com dados calculados)
+        ↓
+    React App (react-app/ consome os dados)
+        ↓
+    dash/ (compilado via `npm run build`, deploy para GitHub Pages)
 ```
 
-Isso executa suite de 5 níveis:
-1. **Schema Validation** (spec.json ↔ data.json)
-2. **HTML Render Check** (elementos populados)
-3. **Component Render Status** (62/66 componentes esperados)
-4. **Dashboard Test Suite** (557/559 testes, todas categorias)
-5. **Playwright Validation** (bootstrap, tabs, CSS, KPIs, erros)
-
-Alternativas rápidas:
-
-| Situação | Comando |
-|----------|---------|
-| Ajuste pontual (label, cor) | `python scripts/validate_schema.py` |
-| Mudança estrutural | `./scripts/quick_dashboard_test.sh` |
-| Sem alteração de estrutura | `./scripts/quick_dashboard_test.sh --no-render` |
-| Componentes específicos | `node dashboard/tests/debug_render_status.js` |
-
-Resultado esperado: **DEPLOY APPROVED** ou lista de falhas.
-
-- CRITICAL/HIGH fail → volta ao `dev` para correção
-- Resultados em `dashboard/tests/full_test_run.json` e `dashboard/tests/last_run.json`
-- Ver guia completo: `scripts/DASHBOARD_TEST_PROTOCOL.md`
+**Regras:**
+- Zero hardcoded — fonte única são as estruturas internas (`agentes/`, `dados/`)
+- Todo componente tem versão privacy (valores sensíveis ocultos)
+- React compila automaticamente via GitHub Actions (`.github/workflows/deploy-dashboard.yml`)
+- Nunca editar `dash/index.html` ou `dash/*.html` diretamente (são gerados)
 
 ## Referências
 
@@ -164,4 +146,4 @@ Resultado esperado: **DEPLOY APPROVED** ou lista de falhas.
 
 ## Estrutura do Projeto
 
-`agentes/contexto/` (fonte de verdade) | `scripts/` (Python) | `dashboard/` (pipeline + deploy) | `dados/` (estado persistente) | `agentes/referencia/` (guias de processo)
+`agentes/contexto/` (fonte de verdade) | `scripts/` (Python geração de dados) | `react-app/` (dashboard React) | `dados/` (estado persistente) | `agentes/referencia/` (guias de processo)
