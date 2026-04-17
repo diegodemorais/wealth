@@ -59,7 +59,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
       {/* Savings rate bar */}
       {savingsRate != null && (
         <div className="my-2.5">
-          <div className="h-1 bg-slate-700/40 rounded-sm overflow-hidden">
+          <div className="h-2 bg-card2/40 rounded-sm overflow-hidden">
             <div
               className="h-full rounded-sm transition-all duration-500"
               style={{
@@ -78,13 +78,13 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
 
       {/* Accumulated values */}
       <div className="grid grid-cols-2 gap-2 mt-3">
-        <div className="bg-slate-700/40 rounded px-2 py-2 text-center">
+        <div className="bg-card2/40 rounded px-2 py-2 text-center">
           <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Mês</div>
           <div className="text-sm font-bold text-text mt-0.5">
             {privacyMode ? '••••' : fmtShort(acumuladoMes)}
           </div>
         </div>
-        <div className="bg-slate-700/40 rounded px-2 py-2 text-center">
+        <div className="bg-card2/40 rounded px-2 py-2 text-center">
           <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Ano</div>
           <div className="text-sm font-bold text-text mt-0.5">
             {privacyMode ? '••••' : fmtShort(acumuladoAno)}

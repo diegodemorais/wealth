@@ -3,6 +3,14 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct } from '@/utils/formatters';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table';
 
 interface FireMatrixData {
   perfis: Record<string, { label: string; gasto_anual: number; descricao: string }>;
@@ -90,54 +98,54 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-md border border-border">
-        <table className="w-full border-collapse text-xs bg-card">
-          <thead>
+      <div className="rounded-md border border-border">
+        <Table className="text-xs bg-card">
+          <TableHeader>
             {/* Super-header: "Retirada Anual" spanning gasto columns */}
-            <tr className="border-b border-border/40">
-              {hasIdades && <th className="px-2 py-1 bg-secondary/50" />}
-              <th className="px-3 py-1 bg-secondary/50" />
-              <th
+            <TableRow className="border-b border-border/40 hover:bg-transparent">
+              {hasIdades && <TableHead className="px-2 py-1 bg-secondary/50 h-auto" />}
+              <TableHead className="px-3 py-1 bg-secondary/50 h-auto" />
+              <TableHead
                 colSpan={gastos.length}
-                className="px-2 py-1 text-center text-xs font-semibold text-muted-foreground bg-secondary/50 uppercase tracking-wide"
+                className="px-2 py-1 text-center text-xs font-semibold text-muted-foreground bg-secondary/50 uppercase tracking-wide h-auto"
               >
                 Retirada Anual
-              </th>
-            </tr>
-            <tr className="border-b-2 border-border">
+              </TableHead>
+            </TableRow>
+            <TableRow className="border-b-2 border-border hover:bg-transparent">
               {hasIdades && (
-                <th className="px-2 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs">
+                <TableHead className="px-2 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto">
                   Idade
-                </th>
+                </TableHead>
               )}
-              <th className="px-3 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs">
+              <TableHead className="px-3 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto">
                 Patrimônio
-              </th>
+              </TableHead>
               {gastos.map(g => (
-                <th
+                <TableHead
                   key={g}
-                  className="px-2 py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs"
+                  className="px-2 py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto"
                 >
                   {privacyMode ? '••••' : fmtCompact(g)}
-                </th>
+                </TableHead>
               ))}
-            </tr>
-          </thead>
-          <tbody>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {patrimonios.map((pat, patIdx) => (
-              <tr key={pat} className="border-b border-border">
+              <TableRow key={pat} className="border-b border-border hover:bg-transparent">
                 {hasIdades && (
-                  <td className={`px-2 py-2 text-center font-semibold text-muted-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
+                  <TableCell className={`px-2 py-2 text-center font-semibold text-muted-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
                     {idades![patIdx] ?? '—'}
-                  </td>
+                  </TableCell>
                 )}
-                <td className={`px-3 py-2 font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
+                <TableCell className={`px-3 py-2 font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
                   {privacyMode ? '••••' : fmtCompact(pat)}
-                </td>
+                </TableCell>
                 {gastos.map(gasto => {
                   const pfire = getPfire(pat, gasto);
                   return (
-                    <td
+                    <TableCell
                       key={`${pat}_${gasto}`}
                       className="px-2 py-2 text-center font-semibold"
                       style={{
@@ -147,13 +155,13 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
                       title={`P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
                     >
                       {privacyMode ? '••' : fmtPct(pfire / 100, 0)}
-                    </td>
+                    </TableCell>
                   );
                 })}
-              </tr>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {/* Legend */}

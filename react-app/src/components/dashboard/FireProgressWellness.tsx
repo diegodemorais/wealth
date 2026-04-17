@@ -49,7 +49,7 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
       </div>
 
       {/* Progress bar */}
-      <div className="h-1 bg-slate-700/40 rounded-sm overflow-hidden my-2.5">
+      <div className="h-2 bg-card2/40 rounded-sm overflow-hidden my-2.5">
         <div
           className="h-full rounded-sm transition-all duration-500"
           style={{

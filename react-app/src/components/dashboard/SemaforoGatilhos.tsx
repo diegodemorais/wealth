@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { Badge } from '@/components/ui/badge';
 
 interface Gatilho {
   nome: string;
@@ -30,10 +31,10 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
     vermelho: 'var(--red)',
   };
 
-  const typeBadges: Record<string, { bg: string; color: string; label: string }> = {
-    taxa: { bg: 'rgba(6, 182, 212, 0.15)', color: 'var(--cyan)', label: 'taxa' },
-    posicao: { bg: 'rgba(168, 85, 247, 0.15)', color: 'var(--purple)', label: 'posição' },
-    crypto: { bg: 'rgba(234, 179, 8, 0.15)', color: 'var(--yellow)', label: 'crypto' },
+  const typeBadgeLabels: Record<string, string> = {
+    taxa: 'taxa',
+    posicao: 'posição',
+    crypto: 'crypto',
   };
 
   const getSemaforoColor = (status: string) =>
@@ -44,7 +45,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
       {/* Header — collapsible */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center cursor-pointer px-4 py-3 text-text hover:bg-red-900/10 transition-colors"
+        className="w-full flex justify-between items-center cursor-pointer px-4 py-3 text-text hover:bg-border/20 transition-colors"
       >
         <h2 className="m-0 text-base font-semibold">Semáforos de Gatilhos ›</h2>
         <span className="text-xs text-muted">
@@ -85,22 +86,16 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({
             </thead>
             <tbody>
               {gatilhos.map((g, idx) => {
-                const typeBadge = typeBadges[g.tipo] ?? typeBadges.taxa;
+                const badgeVariant = (g.tipo === 'taxa' || g.tipo === 'posicao' || g.tipo === 'crypto') ? g.tipo : 'taxa';
 
                 return (
                   <tr key={idx} className="border-b border-border/30">
                     <td className="px-2 py-2">
-                      <div className="text-slate-100">
+                      <div className="text-slate-100 flex items-center gap-1.5 flex-wrap">
                         {g.nome}
-                        <span
-                          className="inline-block text-xs px-1.5 py-0.5 rounded ml-1.5"
-                          style={{
-                            background: typeBadge.bg,
-                            color: typeBadge.color,
-                          }}
-                        >
-                          {typeBadge.label}
-                        </span>
+                        <Badge variant={badgeVariant}>
+                          {typeBadgeLabels[g.tipo] ?? g.tipo}
+                        </Badge>
                       </div>
                       {g.contexto && (
                         <div className="text-xs text-muted mt-0.5">

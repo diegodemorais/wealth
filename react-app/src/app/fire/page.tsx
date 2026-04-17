@@ -110,7 +110,7 @@ export default function FirePage() {
       <section className="section" id="netWorthProjectionSection">
         <h2>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
         <NetWorthProjectionChart data={data} />
-        <div style={{ marginTop: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: '.72rem' }}>
+        <div style={{ marginTop: 8, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
           ⚠️ Portfólio financeiro apenas. Imóvel (apreciação não modelada), INSS (taxa de desconto não aprovada) e capital humano: excluídos.{' '}
           Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS R$18k/ano real a partir de age 65.
         </div>
@@ -134,7 +134,7 @@ export default function FirePage() {
       {/* 6. Eventos de Vida — Impacto no Plano FIRE (collapsible, border yellow) */}
       <CollapsibleSection id="section-eventos-vida" title="Eventos de Vida — Impacto no Plano FIRE" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: 8 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
             (gatilhos de recalibração)
           </div>
           <EventosVidaChart data={data} />
@@ -147,7 +147,7 @@ export default function FirePage() {
       {/* 7. P(FIRE) — Cenários de Família (impact no custo de vida) */}
       {derived && (
         <section className="section" id="familyScenariosFireSection">
-          <h2>P(FIRE) — Cenários de Família <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(impacto no custo de vida)</span></h2>
+          <h2>P(FIRE) — Cenários de Família <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>(impacto no custo de vida)</span></h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {(() => {
               const profiles = (data as any)?.fire_matrix?.by_profile ?? [];
@@ -169,8 +169,8 @@ export default function FirePage() {
               <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ minWidth: '180px' }}>
                   <div style={{ fontSize: '.8rem', fontWeight: 600 }}>{scenario.label}</div>
-                  <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{scenario.gastoLabel}</div>
-                  {scenario.delta && <div style={{ fontSize: '.65rem', color: 'var(--red)' }}>{scenario.delta}</div>}
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{scenario.gastoLabel}</div>
+                  {scenario.delta && <div style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>{scenario.delta}</div>}
                 </div>
                 <div style={{ flex: 1, background: 'var(--card)', borderRadius: 'var(--radius-xs)', height: '8px', position: 'relative', overflow: 'hidden' }}>
                   <div style={{
@@ -184,7 +184,7 @@ export default function FirePage() {
                   <div style={{ fontSize: '1.1rem', fontWeight: 700, color: scenario.pfire && scenario.pfire >= 90 ? 'var(--green)' : 'var(--yellow)' }}>
                     {scenario.pfire != null ? `${scenario.pfire.toFixed(1)}%` : '—'}
                   </div>
-                  <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>9m</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>9m</div>
                 </div>
               </div>
             ))}
@@ -197,13 +197,13 @@ export default function FirePage() {
       {derived && (
         <section className="section" id="fireAspirationalSection">
           <div style={{
-            background: 'linear-gradient(135deg, rgba(59,130,246,.08), rgba(16,185,129,.08))',
+            background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), color-mix(in srgb, var(--green) 8%, transparent))',
             border: '2px dashed var(--accent)',
             borderRadius: 'var(--radius-xl)',
             padding: '24px',
             textAlign: 'center',
           }}>
-            <div style={{ fontSize: '.7rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '12px' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '12px' }}>
               FIRE Aspiracional
             </div>
             <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>
@@ -215,18 +215,18 @@ export default function FirePage() {
             <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)', marginTop: '12px' }}>
               P = {derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}
             </div>
-            <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }}>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>
               {data.premissas?.idade_cenario_aspiracional ? (data.premissas.idade_cenario_aspiracional - data.premissas.idade_atual) : 10} anos a partir de hoje
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px', maxWidth: '300px', margin: '16px auto 0' }}>
               <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Aspiracional</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Aspiracional</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>
                   {derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}
                 </div>
               </div>
               <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Base (conservador)</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Base (conservador)</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
                   {derived.pfireBase != null ? `${derived.pfireBase.toFixed(1)}%` : '—'}
                 </div>

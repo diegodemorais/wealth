@@ -36,10 +36,10 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   };
 
   const getBadgeBg = (value: number) => {
-    if (value >= 90) return 'rgba(34, 197, 94, 0.12)';
-    if (value >= 80) return 'rgba(234, 179, 8, 0.12)';
-    if (value >= 70) return 'rgba(249, 115, 22, 0.12)';
-    return 'rgba(239, 68, 68, 0.12)';
+    if (value >= 90) return 'color-mix(in srgb, var(--green) 12%, transparent)';
+    if (value >= 80) return 'color-mix(in srgb, var(--yellow) 12%, transparent)';
+    if (value >= 70) return 'color-mix(in srgb, var(--orange) 12%, transparent)';
+    return 'color-mix(in srgb, var(--red) 12%, transparent)';
   };
 
   const sortedTornado = [...tornadoData]
@@ -105,7 +105,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                 </span>
               </div>
             </div>
-            <div className="h-1.5 bg-slate-700/40 rounded-sm overflow-hidden">
+            <div className="h-1.5 bg-card2/40 rounded-sm overflow-hidden">
               <div
                 className="h-full rounded-sm transition-all duration-500"
                 style={{
@@ -158,7 +158,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                   </div>
 
                   {/* Center divider */}
-                  <div className="w-px h-6 bg-slate-700/50 flex-shrink-0" />
+                  <div className="w-px h-6 bg-card2/50 flex-shrink-0" />
 
                   {/* Positive side */}
                   <div className="flex-1">

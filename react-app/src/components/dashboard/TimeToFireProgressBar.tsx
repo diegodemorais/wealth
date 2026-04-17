@@ -53,7 +53,7 @@ export function TimeToFireProgressBar({
       </div>
 
       {/* Progress Bar */}
-      <div className="mt-5 h-5 rounded overflow-hidden bg-slate-700/30 shadow-lg" style={{ boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)' }}>
+      <div className="mt-5 h-5 rounded overflow-hidden bg-card2/30 shadow-lg" style={{ boxShadow: '0 2px 8px rgba(59, 130, 246, 0.1)' }}>
         <div
           className="h-full transition-all duration-500"
           style={{
@@ -65,7 +65,7 @@ export function TimeToFireProgressBar({
 
       {/* Progress label */}
       <div className="flex justify-between items-center mt-1.5">
-        <div className="text-xs text-slate-500">
+        <div className="text-xs text-muted">
           {privacyMode ? '••••' : `${progressPct.toFixed(1)}% do caminho`}
         </div>
         <div className="text-xs font-medium text-accent">
@@ -77,7 +77,7 @@ export function TimeToFireProgressBar({
       {!privacyMode && patrimonioAtual != null && patrimonioGatilho != null && (
         <div className="relative mt-1" style={{ height: '16px' }}>
           {/* Label INÍCIO — fixo à esquerda */}
-          <span className="absolute left-0 text-xs text-slate-500">Início</span>
+          <span className="absolute left-0 text-xs text-muted">Início</span>
 
           {/* Label ATUAL — posicionado no ponto de progresso */}
           <span
@@ -93,7 +93,7 @@ export function TimeToFireProgressBar({
           </span>
 
           {/* Label META — fixo à direita */}
-          <span className="absolute right-0 text-xs text-slate-500 whitespace-nowrap">
+          <span className="absolute right-0 text-xs text-muted whitespace-nowrap">
             Meta {patrimonioGatilho >= 1e6
               ? `R$${(patrimonioGatilho / 1e6).toFixed(1)}M`
               : `R$${Math.round(patrimonioGatilho / 1000)}k`}

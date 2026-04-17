@@ -178,4 +178,14 @@
     font-weight: 900;
     min-font-size: 32px;
   }
+
+  /* ─── State utility classes (QW-10) ─── */
+  .loading-state, .error-state, .warning-state {
+    padding: var(--space-8);
+    text-align: center;
+    color: var(--muted);
+    font-size: var(--text-base);
+  }
+  .error-state { color: var(--red); }
+  .warning-state { color: var(--yellow); }
 }

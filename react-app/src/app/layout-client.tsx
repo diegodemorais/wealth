@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 import { Header } from '@/components/layout/Header';
-import { TabNav } from '@/components/layout/TabNav';
 import { Footer } from '@/components/layout/Footer';
 import { VersionFooter } from '@/components/primitives/VersionFooter';
 import { usePrivacyMode } from '@/hooks/usePrivacyMode';
@@ -24,7 +23,6 @@ export function LayoutClient({ children }: { children: ReactNode }) {
   return (
     <>
       <Header />
-      <TabNav />
       <main
         style={{
           maxWidth: '1280px',

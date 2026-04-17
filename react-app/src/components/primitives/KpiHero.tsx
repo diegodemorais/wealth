@@ -102,7 +102,7 @@ export function KpiHero({
       </div>
 
       {/* Card 3: Progresso FIRE */}
-      <div className="kpi text-center" style={{ borderTop: '3px solid var(--yellow)', borderRadius: 'var(--radius-md)' }}>
+      <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--yellow)' }}>
         <div className="kpi-label">Progresso FIRE</div>
         <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem', color: 'rgba(234,179,8,0.9)' }}>
           {privacyMode ? '••••' : fmtPct(fireProgress, 1)}

@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useUiStore } from '@/store/uiStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 
@@ -20,7 +22,18 @@ function formatBrt(iso: string): string {
   }
 }
 
+const TABS = [
+  { href: '/', label: '🕐 Now', id: 'tab-now' },
+  { href: '/fire', label: '🔥 FIRE', id: 'tab-fire' },
+  { href: '/portfolio', label: '🎯 Portfolio', id: 'tab-portfolio' },
+  { href: '/performance', label: '📈 Perf', id: 'tab-performance' },
+  { href: '/withdraw', label: '💸 Retiro', id: 'tab-withdraw' },
+  { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
+  { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
+];
+
 export function Header() {
+  const pathname = usePathname();
   const privacyMode = useUiStore(s => s.privacyMode);
   const togglePrivacy = useUiStore(s => s.togglePrivacy);
 
@@ -31,9 +44,9 @@ export function Header() {
   };
 
   return (
-    <header className="header" style={styles.header}>
+    <header style={styles.header}>
       <div style={styles.container}>
-        {/* Logo */}
+        {/* Logo — hidden on mobile (< 640px) */}
         <div style={styles.logoSection}>
           <h1 style={styles.logo}>Dashboard Wealth DM</h1>
           <span style={styles.version} title={`Build: ${DASHBOARD_VERSION} · ${buildLabel}`}>
@@ -42,16 +55,36 @@ export function Header() {
           </span>
         </div>
 
+        {/* Tabs — horizontal scroll on mobile */}
+        <nav style={styles.tabs} aria-label="Navigation tabs">
+          {TABS.map(tab => {
+            const isActive = pathname === tab.href;
+            return (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                style={{
+                  ...styles.tab,
+                  ...(isActive ? styles.tabActive : {}),
+                }}
+                data-test={tab.id}
+              >
+                {tab.label}
+              </Link>
+            );
+          })}
+        </nav>
+
         {/* Controls */}
         <div style={styles.controls}>
           <button onClick={handleReload} title="Reload data" style={styles.button} aria-label="Reload">
-            🔄 Reload
+            🔄
           </button>
 
           <button
             onClick={togglePrivacy}
             title={privacyMode ? 'Show values' : 'Hide values'}
-            style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--green)' }}
+            style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--border)' }}
             data-test="privacy-toggle"
             aria-label="Privacy mode"
           >
@@ -67,8 +100,10 @@ const styles: Record<string, React.CSSProperties> = {
   header: {
     backgroundColor: 'var(--card)',
     color: 'var(--text)',
-    padding: '12px 0',
     borderBottom: '1px solid var(--border)',
+    position: 'sticky' as const,
+    top: 0,
+    zIndex: 100,
   },
   container: {
     display: 'flex',
@@ -77,16 +112,20 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: '1400px',
     margin: '0 auto',
     padding: '0 20px',
+    gap: '12px',
+    minHeight: '52px',
   },
   logoSection: {
     display: 'flex',
     alignItems: 'center',
     gap: 'var(--space-2)',
+    flexShrink: 0,
   },
   logo: {
     margin: 0,
-    fontSize: '24px',
+    fontSize: '16px',
     fontWeight: '600',
+    whiteSpace: 'nowrap' as const,
   },
   version: {
     fontSize: 'var(--text-xs)',
@@ -97,19 +136,47 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: '2px',
+    whiteSpace: 'nowrap' as const,
   },
   buildTime: {
     fontSize: '11px',
     color: 'var(--muted)',
     opacity: 0.7,
   },
+  tabs: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2px',
+    overflowX: 'auto' as const,
+    scrollbarWidth: 'none' as const,
+    flex: 1,
+    justifyContent: 'center',
+    padding: '8px 0',
+  },
+  tab: {
+    padding: '6px 10px',
+    borderRadius: '6px',
+    fontSize: 'var(--text-sm)',
+    fontWeight: '500',
+    color: 'var(--muted)',
+    textDecoration: 'none',
+    whiteSpace: 'nowrap' as const,
+    transition: 'background-color 0.15s, color 0.15s',
+    flexShrink: 0,
+  },
+  tabActive: {
+    backgroundColor: 'var(--accent)',
+    color: '#fff',
+    fontWeight: '700',
+  },
   controls: {
     display: 'flex',
-    gap: 'var(--space-2)',
+    gap: '6px',
     alignItems: 'center',
+    flexShrink: 0,
   },
   button: {
-    padding: '8px 12px',
+    padding: '6px 10px',
     backgroundColor: 'var(--border)',
     color: 'var(--text)',
     border: 'none',
