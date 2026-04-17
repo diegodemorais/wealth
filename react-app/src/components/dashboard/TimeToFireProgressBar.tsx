@@ -41,12 +41,12 @@ export function TimeToFireProgressBar({
       <div className="mb-1">
         <div
           className="font-black text-accent leading-none"
-          style={{ fontSize: '4rem', lineHeight: 1 }}
+          style={{ fontSize: '2rem', lineHeight: 1 }}
         >
           {privacyMode ? '••••' : yearsLabel}
         </div>
         {!privacyMode && (
-          <div className="text-2xl font-semibold text-muted mt-2">
+          <div className="text-sm font-medium text-muted mt-1">
             {subtitleStr}
           </div>
         )}

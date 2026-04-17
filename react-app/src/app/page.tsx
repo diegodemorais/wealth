@@ -82,37 +82,6 @@ export default function HomePage() {
         firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
-      {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
-      <div className="kpi-label mb-1.5" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>Indicadores Primários</div>
-      <div className="kpi-grid mb-3.5">
-        {/* P(Cenário Aspiracional) */}
-        <div className="kpi kpi-fire text-center">
-          <div className="kpi-label">P(Cenário Aspiracional)</div>
-          <div className="kpi-value" style={{ color: 'var(--accent)' }}>{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
-          <div className="kpi-sub">
-            {derived.pfireAspirFav != null && derived.pfireAspirStress != null
-              ? `fav ${derived.pfireAspirFav.toFixed(1)}% · stress ${derived.pfireAspirStress.toFixed(1)}%`
-              : 'cenário aspiracional (49a)'}
-          </div>
-        </div>
-        {/* Drift Máximo */}
-        <div className="kpi kpi-fire text-center">
-          <div className="kpi-label">Drift Máximo</div>
-          <div className="kpi-value">{maxDrift.toFixed(2)}pp</div>
-          <div className="kpi-sub">IPCA+ -9.5pp vs alvo</div>
-        </div>
-        {/* Aporte do Mês */}
-        <div className="kpi text-center">
-          <div className="kpi-label">Aporte do Mês</div>
-          <div className="kpi-value" style={{ color: 'var(--green)' }}>
-            {derived.acumuladoMes
-              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0, notation: 'compact' }).format(derived.acumuladoMes)
-              : '—'}
-          </div>
-          <div className="kpi-sub">{derived.ultimoAporteData || '—'}</div>
-        </div>
-      </div>
-
       {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
       <div className="kpi-label mb-1.5" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>Contexto de Mercado</div>
       <div className="rf-grid mb-3.5" style={{ opacity: 0.85 }}>
@@ -194,15 +163,16 @@ export default function HomePage() {
       {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '14px' }}>
           {data.fire_matrix.by_profile.map((profile: any, i: number) => {
-            // Use profile.label from JSON if available, else fall back to hardcoded
             const fallbackLabels = ['Solteiro', 'Casado', 'C+Filho'];
             const displayLabel = profile.label ?? fallbackLabels[i] ?? `Perfil ${i + 1}`;
-            // Show the base scenario (53) probability, fall back to fire_age_50
             const pfireBase53 = profile.p_fire_53 ?? null;
             const pfireBase50 = profile.p_fire_50 ?? null;
             const pfire = pfireBase53 ?? pfireBase50;
             const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
             const fireAge = 53;
+            const patMediano = profile.pat_mediano_53 ?? profile.pat_mediano_50 ?? null;
+            const gastoAnual = profile.gasto_anual ?? null;
+            const fmtM = (v: number) => v >= 1_000_000 ? `R$${(v/1_000_000).toFixed(1)}M` : `R$${Math.round(v/1000)}k`;
             return (
               <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', borderTop: '2px solid rgba(88,166,255,0.3)' }}>
                 <div style={{ fontSize: '.6rem', textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>
@@ -213,6 +183,20 @@ export default function HomePage() {
                   P = {pfire != null ? `${pfire.toFixed(1)}%` : '—'}
                 </div>
                 <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>{fireYear}</div>
+                <div style={{ borderTop: '1px solid var(--border)', marginTop: '8px', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem' }}>
+                    <span style={{ color: 'var(--muted)' }}>Patrimônio</span>
+                    <span style={{ fontWeight: 600 }}>{patMediano != null ? fmtM(patMediano) : '—'}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem' }}>
+                    <span style={{ color: 'var(--muted)' }}>Retirada/ano</span>
+                    <span style={{ fontWeight: 600 }}>{gastoAnual != null ? fmtM(gastoAnual) : '—'}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem' }}>
+                    <span style={{ color: 'var(--muted)' }}>Custo/ano</span>
+                    <span style={{ fontWeight: 600 }}>{gastoAnual != null ? fmtM(gastoAnual) : '—'}</span>
+                  </div>
+                </div>
               </div>
             );
           })}
