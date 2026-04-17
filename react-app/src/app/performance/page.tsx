@@ -55,63 +55,77 @@ export default function PerformancePage() {
     <div>
       {/* 1. Alpha Desde o Início vs SWRD — PRIMEIRA seção (sempre visível) */}
       <section className="section" id="alphaSwrdSection">
-        <h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa ▼</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-[1fr_260px] gap-5 items-start">
-          <div>
-            <DeltaBarChart data={data} height={220} />
-          </div>
-          {/* Painel lateral direito com métricas IPCA+ */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
-                IPCA+ Longa — Progressão vs Alvo 15%
-              </div>
-              {(() => {
-                const ipca = data.rf?.ipca2040;
-                const pct = (data as any)?.pisos?.ipca2040?.pct_do_total ?? null;
-                const alvo = 0.15;
-                const gap = pct != null ? ((pct - alvo) * 100).toFixed(1) : null;
-                return (
-                  <div style={{ fontSize: '.75rem', lineHeight: 1.6 }}>
-                    {gap !== null && (
-                      <div style={{ color: parseFloat(gap) >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>
-                        {parseFloat(gap) >= 0 ? '+' : ''}{gap}pp {parseFloat(gap) < 0 ? '· DCA ativo' : '· alvo atingido'}
-                      </div>
-                    )}
-                    {ipca?.taxa != null && (
-                      <div style={{ color: 'var(--muted)', fontSize: '.65rem' }}>
-                        Taxa IPCA+: {ipca.taxa.toFixed(2)}% ao ano
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-            </div>
-            <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
-                Alpha Líquido pós-haircut
-              </div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }}>−0.16%/ano</div>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '2px' }}>McLean &amp; Pontiff 2016, haircut 58%</div>
-            </div>
-            <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
-                IPCA+ taxa vs piso
-              </div>
-              {data.rf?.ipca2040 && (
-                <div>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: data.rf.ipca2040.taxa != null && data.rf.ipca2040.taxa >= (data.rf.ipca2040.piso_compra ?? 6.0) ? 'var(--green)' : 'var(--red)' }}>
-                    {data.rf.ipca2040.taxa?.toFixed(2)}% vs {data.rf.ipca2040.piso_compra?.toFixed(1) ?? '6.0'}%
-                  </div>
-                  <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '2px' }}>
-                    Ano IPCA+ alvo · Atual ativo · janela DCA ativa
-                  </div>
+        <h2>Alpha vs SWRD (USD) — Performance Relativa por Período</h2>
+        <DeltaBarChart data={data} height={200} />
+        {/* KPI cards below chart */}
+        {(() => {
+          const dca = (data as any)?.dca_status?.ipca2040 ?? {};
+          const taxaAtual: number | null = dca.taxa_atual ?? data.rf?.ipca2040?.taxa ?? null;
+          const piso: number = dca.piso ?? (data as any)?.pisos?.pisoTaxaIpcaLongo ?? 6.0;
+          const gapAlvo: number | null = dca.gap_alvo_pp ?? null;
+          const alvo: number = dca.alvo_pct ?? 12;
+          const pctAtual: number | null = dca.pct_carteira_atual ?? null;
+          const abovePiso = taxaAtual != null && taxaAtual >= piso;
+
+          return (
+            <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
+              {/* Card 1: DCA IPCA+ Status */}
+              <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                  IPCA+ 2040 — DCA
                 </div>
-              )}
+                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: abovePiso ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
+                  {taxaAtual != null ? `${taxaAtual.toFixed(2)}%` : '—'}
+                </div>
+                <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
+                  piso {piso.toFixed(1)}% · gap {gapAlvo != null ? `${gapAlvo.toFixed(1)}pp` : '—'} p/ alvo
+                </div>
+                <div style={{ marginTop: 6, fontSize: '.58rem', color: abovePiso ? 'var(--green)' : 'var(--muted)', fontWeight: 600 }}>
+                  {abovePiso ? '● DCA ATIVO' : '● abaixo do piso'}
+                </div>
+              </div>
+
+              {/* Card 2: Posição IPCA+ atual */}
+              <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                  Posição IPCA+ / Alvo
+                </div>
+                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1.1 }}>
+                  {pctAtual != null ? `${pctAtual.toFixed(1)}%` : '—'}
+                  <span style={{ fontSize: '.75rem', fontWeight: 400, color: 'var(--muted)' }}> / {alvo}%</span>
+                </div>
+                <div style={{ marginTop: 6, background: 'var(--card2)', borderRadius: 4, height: 6, overflow: 'hidden' }}>
+                  <div style={{
+                    height: '100%',
+                    width: `${pctAtual != null ? Math.min((pctAtual / alvo) * 100, 100) : 0}%`,
+                    background: 'var(--accent)',
+                    borderRadius: 4,
+                  }} />
+                </div>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: 4 }}>
+                  da carteira em RF longa
+                </div>
+              </div>
+
+              {/* Card 3: Alpha líquido pós-haircut */}
+              <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                  Alpha Líquido pós-haircut
+                </div>
+                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
+                  −0.16%/ano
+                </div>
+                <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
+                  McLean &amp; Pontiff 2016
+                </div>
+                <div style={{ fontSize: '.58rem', color: 'var(--muted)', marginTop: 2 }}>
+                  haircut 58% pós-publicação
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="src">Alpha vs VWRA (proxy SWRD) por período cumulativo · McLean &amp; Pontiff 2016: haircut 58%</div>
+          );
+        })()}
+        <div className="src" style={{ marginTop: 10 }}>Alpha vs VWRA (proxy SWRD) por período cumulativo · McLean &amp; Pontiff 2016: haircut 58%</div>
       </section>
 
       {/* 2. Premissas vs Realizado — 5 Anos (2021-2026) */}

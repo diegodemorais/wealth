@@ -26,12 +26,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       return { title: { text: 'Sem dados de trilha FIRE', textStyle: { color: '#94a3b8' } } };
     }
 
-    // Format dates: '2021-04' → 'abr/21'
-    const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-    const xDates = rawDates.map((ym: string) => {
-      const [y, m] = ym.split('-');
-      return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
-    });
+    // Keep raw 'YYYY-MM' for x-axis; display only year labels
 
     // Meta horizontal line
     const metaLine = rawDates.map(() => metaFireBrl);
@@ -45,7 +40,11 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
         textStyle: theme.tooltip.textStyle,
         formatter: (params: any) => {
           if (!Array.isArray(params)) return '';
-          let html = `<div style="padding:8px"><strong>${params[0]?.axisValueLabel}</strong><br/>`;
+          const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+          const rawYm: string = params[0]?.axisValue ?? '';
+          const [y, m] = rawYm.split('-');
+          const label = m ? MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2) : rawYm;
+          let html = `<div style="padding:8px"><strong>${label}</strong><br/>`;
           params.forEach((p: any) => {
             if (p.value != null) {
               const val = privacyMode ? '••••' : `R$${(p.value / 1e6).toFixed(2)}M`;
@@ -66,14 +65,15 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       grid: { left: 70, right: 20, top: 44, bottom: 30, containLabel: true },
       xAxis: {
         type: 'category' as const,
-        data: xDates,
+        data: rawDates,
         axisLine: { lineStyle: { color: '#1c2128' } },
         axisTick: { show: false },
         axisLabel: {
           color: privacyMode ? 'transparent' : '#94a3b8',
           fontSize: 10,
-          // Show only January labels (yearly ticks)
-          interval: (_idx: number, val: string) => val.startsWith('jan/'),
+          // Show only year labels (one per year — Jan, or first data point)
+          interval: (idx: number, val: string) => idx === 0 || val.endsWith('-01'),
+          formatter: (val: string) => val.slice(0, 4),
           hideOverlap: true,
         },
       },

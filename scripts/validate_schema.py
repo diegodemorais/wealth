@@ -22,7 +22,7 @@ from typing import Any, List, Tuple
 
 ROOT = Path(__file__).parent.parent
 SPEC_FILE = ROOT / "dashboard" / "spec.json"
-DATA_FILE = ROOT / "dashboard" / "data.json"
+DATA_FILE = ROOT / "react-app" / "public" / "data.json"  # React pipeline (source of truth)
 
 
 def _get_nested(data: dict, path: str) -> Any:
