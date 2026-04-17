@@ -16,10 +16,9 @@ import { runMCYearly } from '@/utils/montecarlo';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-// B2: single derivation for patrimônio total financeiro — shared by all sub-components
+/// Single derivation for patrimônio total financeiro — source: premissas.patrimonio_atual
 function derivePatrimonio(data: unknown): number | undefined {
-  const d = data as any;
-  return d?.patrimonio?.total_financeiro ?? d?.premissas?.patrimonio_atual;
+  return (data as any)?.premissas?.patrimonio_atual;
 }
 
 // B4: single fraction→percentage conversion — avoids scattered `* 100` throughout file

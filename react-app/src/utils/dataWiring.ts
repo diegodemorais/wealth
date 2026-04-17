@@ -322,8 +322,8 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     });
   }
 
-  // 2. IPCA+ 2050 (from dca_status.ipca_medio — was missing from gatilhos!)
-  const dcaIpcaMedio = data.dca_status?.ipca_medio;
+  // 2. IPCA+ 2050 (from dca_status.ipca2050)
+  const dcaIpcaMedio = data.dca_status?.ipca2050;
   if (dcaIpcaMedio) {
     const taxa = dcaIpcaMedio.taxa_atual ?? null;
     const piso = dcaIpcaMedio.piso ?? null;
@@ -413,7 +413,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const DRIFT_AMARELO_PP = 5;
   const driftItems: DriftItem[] = [];
 
-  for (const bucket of ['SWRD', 'AVGS', 'AVEM', 'RF', 'Crypto'] as const) {
+  for (const bucket of ['SWRD', 'AVGS', 'AVEM', 'IPCA', 'HODL11'] as const) {
     const d = data.drift?.[bucket];
     if (!d || d.alvo == null || d.atual == null) continue;
     const gap = d.alvo - d.atual;

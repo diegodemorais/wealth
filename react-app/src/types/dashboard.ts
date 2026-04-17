@@ -187,7 +187,7 @@ export interface DcaItem {
  * Consumers: Drift block (NOW tab), rebalancing hints, gatilhos.
  */
 export interface DriftItem {
-  id: string;                            // 'SWRD' | 'AVGS' | 'AVEM' | 'RF' | 'Crypto'
+  id: string;                            // 'SWRD' | 'AVGS' | 'AVEM' | 'IPCA' | 'HODL11'
   nome: string;
   atual: number;                         // Current allocation %
   alvo: number;                          // Target allocation %

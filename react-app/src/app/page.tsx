@@ -148,7 +148,7 @@ export default function HomePage() {
               <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
                 {ytd == null ? '—' : `${ytd >= 0 ? '+' : ''}${ytd.toFixed(1)}%`}
               </div>
-              <div className="kpi-sub">BRL · TWR {new Date().getFullYear()}</div>
+              <div className="kpi-sub">BRL · TWR {(data as any)?.premissas?.ano_atual ?? new Date().getFullYear()}</div>
             </div>
           );
         })()}

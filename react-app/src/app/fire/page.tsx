@@ -262,7 +262,8 @@ export default function FirePage() {
               const pgblKatia = (data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490_000;
               const patrimonioBase = (data as any)?.premissas?.patrimonio_atual ?? 0;
               const gastoLiquido = Math.max(0, gastoKatia - inssKatia);
-              const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / 0.03 : 0;
+              const swrKatia = (data as any)?.premissas?.swr_gatilho ?? 0.03;
+              const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / swrKatia : 0;
               const patrimonioTotal = patrimonioBase + pgblKatia;
               const cobertura = patrimonioNecessario > 0 ? (patrimonioTotal / patrimonioNecessario) * 100 : 100;
               const cor = cobertura >= 100 ? 'var(--green)' : cobertura >= 80 ? 'var(--yellow)' : 'var(--red)';

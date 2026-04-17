@@ -66,16 +66,16 @@ export default function WithdrawPage() {
 
   const activeScenarioCfg = withdrawCenarios[withdrawScenario as ScenarioKey] ?? withdrawCenarios.atual;
 
-  const swrPercentisRaw = data.fire?.swr_percentis ?? data.swr_percentis ?? data.fire_swr_percentis;
-  // Normalize field names: fire_swr_percentis uses swr_p10/p50/p90 + patrimonio_p10_2040 etc.
+  // Source: data.fire_swr_percentis (canonical path gerado pelo pipeline Python)
+  const swrPercentisRaw = (data as any).fire_swr_percentis;
   const swrPercentis = swrPercentisRaw
     ? {
-        p10: swrPercentisRaw.p10 ?? swrPercentisRaw.swr_p10,
-        p50: swrPercentisRaw.p50 ?? swrPercentisRaw.swr_p50,
-        p90: swrPercentisRaw.p90 ?? swrPercentisRaw.swr_p90,
-        p10_patrimonio: swrPercentisRaw.p10_patrimonio ?? swrPercentisRaw.patrimonio_p10_2040,
-        p50_patrimonio: swrPercentisRaw.p50_patrimonio ?? swrPercentisRaw.patrimonio_p50_2040,
-        p90_patrimonio: swrPercentisRaw.p90_patrimonio ?? swrPercentisRaw.patrimonio_p90_2040,
+        p10: swrPercentisRaw.swr_p10 as number | undefined,
+        p50: swrPercentisRaw.swr_p50 as number | undefined,
+        p90: swrPercentisRaw.swr_p90 as number | undefined,
+        p10_patrimonio: swrPercentisRaw.patrimonio_p10_2040 as number | undefined,
+        p50_patrimonio: swrPercentisRaw.patrimonio_p50_2040 as number | undefined,
+        p90_patrimonio: swrPercentisRaw.patrimonio_p90_2040 as number | undefined,
       }
     : undefined;
   const bondPoolReadiness = data.fire?.bond_pool_readiness ?? data.bond_pool_readiness;
