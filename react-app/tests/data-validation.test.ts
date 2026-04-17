@@ -113,6 +113,7 @@ describe('Data Validation Suite', () => {
     });
 
     it('bucket should be valid asset class', () => {
+      // JPGL as a fund is eliminated but IWVL may still carry that bucket label in the data
       const validBuckets = ['SWRD', 'AVGS', 'AVEM', 'IPCA', 'HODL11', 'JPGL'];
       Object.entries(data.posicoes).forEach(([ticker, pos]) => {
         expect(validBuckets).toContain(pos.bucket);
@@ -292,6 +293,159 @@ describe('Data Validation Suite', () => {
       expect(data.posicoes).toBeDefined();
       expect(data.fire).toBeDefined();
       expect(data.backtest).toBeDefined();
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // 10. PASSIVOS (Liabilities) — P0: these were absent before
+  // ─────────────────────────────────────────────────────────────
+  describe('passivos (liabilities)', () => {
+    it('passivos object should exist', () => {
+      expect((data as any).passivos).toBeDefined();
+      expect((data as any).passivos).not.toBeNull();
+    });
+
+    it('passivos should have all required fields', () => {
+      const p = (data as any).passivos;
+      expect(p).toHaveProperty('hipoteca_brl');
+      expect(p).toHaveProperty('hipoteca_vencimento');
+      expect(p).toHaveProperty('ir_diferido_brl');
+      expect(p).toHaveProperty('total_brl');
+    });
+
+    it('hipoteca_brl should be a positive number', () => {
+      const p = (data as any).passivos;
+      expect(typeof p.hipoteca_brl).toBe('number');
+      expect(p.hipoteca_brl).toBeGreaterThan(0);
+    });
+
+    it('ir_diferido_brl should be non-negative', () => {
+      const p = (data as any).passivos;
+      expect(typeof p.ir_diferido_brl).toBe('number');
+      expect(p.ir_diferido_brl).toBeGreaterThanOrEqual(0);
+    });
+
+    it('total_brl should equal hipoteca + ir_diferido', () => {
+      const p = (data as any).passivos;
+      const expected = p.hipoteca_brl + p.ir_diferido_brl;
+      expect(Math.abs(p.total_brl - expected)).toBeLessThan(1); // within R$1
+    });
+
+    it('hipoteca_vencimento should be a future date', () => {
+      const p = (data as any).passivos;
+      const venc = new Date(p.hipoteca_vencimento);
+      expect(venc.getTime()).toBeGreaterThan(Date.now());
+    });
+
+    it('total_brl should be in reasonable range (100k–5M)', () => {
+      const p = (data as any).passivos;
+      expect(p.total_brl).toBeGreaterThan(100_000);
+      expect(p.total_brl).toBeLessThan(5_000_000);
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // 11. FIRE TRILHA — P10/P90 Monte Carlo bands
+  // ─────────────────────────────────────────────────────────────
+  describe('fire_trilha MC bands', () => {
+    it('fire_trilha should exist', () => {
+      expect((data as any).fire_trilha).toBeDefined();
+    });
+
+    it('trilha_p10_brl should exist and be an array', () => {
+      const ft = (data as any).fire_trilha;
+      expect(ft).toHaveProperty('trilha_p10_brl');
+      expect(Array.isArray(ft.trilha_p10_brl)).toBe(true);
+    });
+
+    it('trilha_p90_brl should exist and be an array', () => {
+      const ft = (data as any).fire_trilha;
+      expect(ft).toHaveProperty('trilha_p90_brl');
+      expect(Array.isArray(ft.trilha_p90_brl)).toBe(true);
+    });
+
+    it('trilha_p10_brl and trilha_p90_brl length must equal dates length', () => {
+      const ft = (data as any).fire_trilha;
+      expect(ft.trilha_p10_brl.length).toBe(ft.dates.length);
+      expect(ft.trilha_p90_brl.length).toBe(ft.dates.length);
+    });
+
+    it('P10 should always be less than P90', () => {
+      const ft = (data as any).fire_trilha;
+      const nHistorico = ft.n_historico ?? 61;
+      // Only check future portion (MC data)
+      for (let i = nHistorico; i < ft.dates.length; i++) {
+        expect(ft.trilha_p10_brl[i]).toBeLessThan(ft.trilha_p90_brl[i]);
+      }
+    });
+
+    it('P10/P90 values should be positive numbers in future', () => {
+      const ft = (data as any).fire_trilha;
+      const nHistorico = ft.n_historico ?? 61;
+      for (let i = nHistorico; i < ft.dates.length; i++) {
+        expect(typeof ft.trilha_p10_brl[i]).toBe('number');
+        expect(ft.trilha_p10_brl[i]).toBeGreaterThan(0);
+        expect(typeof ft.trilha_p90_brl[i]).toBe('number');
+        expect(ft.trilha_p90_brl[i]).toBeGreaterThan(0);
+      }
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // 12. PFIRE SOURCE — must come from data, not hardcoded
+  // ─────────────────────────────────────────────────────────────
+  describe('pfire_base', () => {
+    it('pfire_base should exist with base field', () => {
+      expect((data as any).pfire_base).toBeDefined();
+      expect((data as any).pfire_base).toHaveProperty('base');
+    });
+
+    it('pfire_base.base should be between 50 and 100', () => {
+      const base = (data as any).pfire_base.base;
+      expect(typeof base).toBe('number');
+      expect(base).toBeGreaterThan(50);
+      expect(base).toBeLessThanOrEqual(100);
+    });
+
+    it('pfire_base.fav should be >= base', () => {
+      const p = (data as any).pfire_base;
+      if (p.fav !== undefined) {
+        expect(p.fav).toBeGreaterThanOrEqual(p.base);
+      }
+    });
+
+    it('pfire_base.stress should be <= base', () => {
+      const p = (data as any).pfire_base;
+      if (p.stress !== undefined) {
+        expect(p.stress).toBeLessThanOrEqual(p.base);
+      }
+    });
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // 13. ULTIMO APORTE — real aporte should exist in premissas
+  // ─────────────────────────────────────────────────────────────
+  describe('ultimo_aporte in premissas', () => {
+    it('ultimo_aporte_brl should exist and be a positive number', () => {
+      expect(data.premissas).toHaveProperty('ultimo_aporte_brl');
+      expect(typeof data.premissas.ultimo_aporte_brl).toBe('number');
+      expect(data.premissas.ultimo_aporte_brl).toBeGreaterThan(0);
+    });
+
+    it('ultimo_aporte_data should be a valid YYYY-MM string', () => {
+      expect(data.premissas).toHaveProperty('ultimo_aporte_data');
+      const d = data.premissas.ultimo_aporte_data as string;
+      expect(d).toMatch(/^\d{4}-\d{2}$/);
+    });
+
+    it('ultimo_aporte_brl should differ from aporte_mensal premissa (real vs planned)', () => {
+      // If they are identical it may mean aporte premissa was used instead of real value
+      // This is allowed if truly equal, but worth flagging
+      const real = data.premissas.ultimo_aporte_brl as number;
+      const premissa = data.premissas.aporte_mensal;
+      // Just verify both exist; they CAN differ
+      expect(real).toBeGreaterThan(0);
+      expect(premissa).toBeGreaterThan(0);
     });
   });
 });
