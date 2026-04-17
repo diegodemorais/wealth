@@ -45,18 +45,35 @@ export function Header() {
 
   return (
     <header style={styles.header}>
-      <div style={styles.container}>
-        {/* Logo — hidden on mobile (< 640px) */}
-        <div style={styles.logoSection}>
-          <h1 style={styles.logo}>Dashboard Wealth DM</h1>
-          <span style={styles.version} title={`Build: ${DASHBOARD_VERSION} · ${buildLabel}`}>
+      <div className="header-container">
+        {/* Logo */}
+        <div className="header-logo-section">
+          <h1 className="header-logo-title" style={styles.logo}>Dashboard Wealth DM</h1>
+          <span className="header-logo-version" style={styles.version} title={`Build: ${DASHBOARD_VERSION} · ${buildLabel}`}>
             {DASHBOARD_VERSION}
             <span style={styles.buildTime}> · {buildLabel}</span>
           </span>
         </div>
 
-        {/* Tabs — horizontal scroll on mobile */}
-        <nav style={styles.tabs} aria-label="Navigation tabs">
+        {/* Controls — always visible, next to logo on mobile */}
+        <div className="header-controls">
+          <button onClick={handleReload} title="Reload data" style={styles.button} aria-label="Reload">
+            🔄
+          </button>
+
+          <button
+            onClick={togglePrivacy}
+            title={privacyMode ? 'Show values' : 'Hide values'}
+            style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--border)' }}
+            data-test="privacy-toggle"
+            aria-label="Privacy mode"
+          >
+            {privacyMode ? '🔒' : '👁️'}
+          </button>
+        </div>
+
+        {/* Tabs — moves to full-width second row on mobile */}
+        <nav className="header-tabs" aria-label="Navigation tabs">
           {TABS.map(tab => {
             const isActive = pathname === tab.href;
             return (
@@ -74,23 +91,6 @@ export function Header() {
             );
           })}
         </nav>
-
-        {/* Controls */}
-        <div style={styles.controls}>
-          <button onClick={handleReload} title="Reload data" style={styles.button} aria-label="Reload">
-            🔄
-          </button>
-
-          <button
-            onClick={togglePrivacy}
-            title={privacyMode ? 'Show values' : 'Hide values'}
-            style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--border)' }}
-            data-test="privacy-toggle"
-            aria-label="Privacy mode"
-          >
-            {privacyMode ? '🔒' : '👁️'}
-          </button>
-        </div>
       </div>
     </header>
   );
@@ -104,22 +104,6 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'sticky' as const,
     top: 0,
     zIndex: 100,
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '0 20px',
-    gap: '12px',
-    minHeight: '52px',
-  },
-  logoSection: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 'var(--space-2)',
-    flexShrink: 0,
   },
   logo: {
     margin: 0,
@@ -143,16 +127,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--muted)',
     opacity: 0.7,
   },
-  tabs: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '2px',
-    overflowX: 'auto' as const,
-    scrollbarWidth: 'none' as const,
-    flex: 1,
-    justifyContent: 'center',
-    padding: '8px 0',
-  },
   tab: {
     padding: '6px 10px',
     borderRadius: '6px',
@@ -168,12 +142,6 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--accent)',
     color: '#fff',
     fontWeight: '700',
-  },
-  controls: {
-    display: 'flex',
-    gap: '6px',
-    alignItems: 'center',
-    flexShrink: 0,
   },
   button: {
     padding: '6px 10px',
