@@ -25,6 +25,8 @@ import { GlidePathChart } from '@/components/charts/GlidePathChart';
 import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
+import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
+import { useUiStore } from '@/store/uiStore';
 
 export default function FirePage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -32,6 +34,7 @@ export default function FirePage() {
   const derived = useDashboardStore(s => s.derived);
   const isLoading = useDashboardStore(s => s.isLoadingData);
   const dataError = useDashboardStore(s => s.dataLoadError);
+  const privacyMode = useUiStore(s => s.privacyMode);
 
   useEffect(() => {
     loadDataOnce().catch(e => console.error('Failed to load data:', e));
@@ -221,6 +224,75 @@ export default function FirePage() {
             <div className="src">
               Verde &gt;95%, Amarelo 88–95%, Vermelho &lt;88%. Eixo: Patrimônio no FIRE Day (linha) × Gasto Anual BRL (coluna). ★ = gasto típico do perfil · → = patrimônio-alvo do perfil.
             </div>
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 4b. Balanço Holístico — Patrimônio expandido (collapsed por default) */}
+      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire')} icon="🏛️">
+        <BalancoHolistico data={data as any} showCapitalHumanoBadge />
+      </CollapsibleSection>
+
+      {/* 4c. Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
+      {(data as any)?.premissas?.tem_conjuge === true && (
+        <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon="💑">
+          <div style={{ padding: '0 16px 16px' }}>
+            <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 12 }}>
+              Estimativa de sustentabilidade do plano caso {(data as any)?.premissas?.nome_conjuge ?? 'cônjuge'} sobreviva a Diego.
+              SWR conservador de 3% aplicado a patrimônio transferido.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="kpi" style={{ textAlign: 'center' }}>
+                <div className="kpi-label">Gasto Katia (solo)</div>
+                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                  {privacyMode ? '••••' : `R$${((data as any)?.premissas?.gasto_katia_solo ?? 160000) / 1000}k/ano`}
+                </div>
+              </div>
+              <div className="kpi" style={{ textAlign: 'center' }}>
+                <div className="kpi-label">INSS Katia</div>
+                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                  {privacyMode ? '••••' : `R$${((data as any)?.premissas?.inss_katia_anual ?? 93600) / 1000}k/ano`}
+                </div>
+              </div>
+              <div className="kpi" style={{ textAlign: 'center' }}>
+                <div className="kpi-label">PGBL Katia (FIRE Day)</div>
+                <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
+                  {privacyMode ? '••••' : `R$${((data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490000) / 1000}k`}
+                </div>
+              </div>
+            </div>
+            {(() => {
+              const gastoKatia = (data as any)?.premissas?.gasto_katia_solo ?? 160_000;
+              const inssKatia = (data as any)?.premissas?.inss_katia_anual ?? 93_600;
+              const pgblKatia = (data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490_000;
+              const patrimonioBase = (data as any)?.premissas?.patrimonio_atual ?? 0;
+              const gastoLiquido = Math.max(0, gastoKatia - inssKatia);
+              const patrimonioNecessario = gastoLiquido > 0 ? gastoLiquido / 0.03 : 0;
+              const patrimonioTotal = patrimonioBase + pgblKatia;
+              const cobertura = patrimonioNecessario > 0 ? (patrimonioTotal / patrimonioNecessario) * 100 : 100;
+              const cor = cobertura >= 100 ? 'var(--green)' : cobertura >= 80 ? 'var(--yellow)' : 'var(--red)';
+              return (
+                <div style={{ marginTop: 14, padding: '12px', background: 'var(--card2)', borderRadius: 'var(--radius-sm)', borderLeft: `3px solid ${cor}` }}>
+                  <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gasto líquido (− INSS)</div>
+                      <div style={{ fontWeight: 700 }}>{privacyMode ? '••••' : `R$${(gastoLiquido / 1000).toFixed(0)}k/ano`}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio necessário (3% SWR)</div>
+                      <div style={{ fontWeight: 700 }}>{privacyMode ? '••••' : `R$${(patrimonioNecessario / 1e6).toFixed(1)}M`}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cobertura estimada</div>
+                      <div style={{ fontWeight: 700, color: cor }}>{privacyMode ? '••••' : `${cobertura.toFixed(0)}%`}</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>
+                    SWR 3% (conservador solo). Patrimônio = portfólio atual + PGBL Katia. INSS Katia: R${(inssKatia/1000).toFixed(0)}k/ano deduzido do gasto.
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </CollapsibleSection>
       )}

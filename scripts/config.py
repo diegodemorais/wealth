@@ -113,6 +113,14 @@ IDADE_ATUAL = 39
 ANO_NASCIMENTO = 1987             # para calcular idade dinâmica
 BOND_TENT_META_ANOS = 7           # anos de gastos cobertos pelo bond pool no FIRE Day
 
+# Patrimônio holístico (fonte: carteira.md + F1 DEV-boldin-dashboard)
+TERRENO_BRL = 150_000             # R$ — terreno (não financeiro, ilíquido)
+TEM_CONJUGE = False               # Diego é solteiro por ora
+NOME_CONJUGE = "Katia"            # parceira — usar em F6 surviving spouse
+INSS_KATIA_ANUAL = 93_600         # R$/ano — R$7.800/mês × 12
+PGBL_KATIA_SALDO_FIRE = 490_000   # R$ — saldo estimado PGBL Katia na data FIRE
+GASTO_KATIA_SOLO = 160_000        # R$/ano — gasto Katia se Diego falecer
+
 # Legacy (mantém compatibilidade com code antigo)
 APORTE_MENSAL = APORTE_CENARIO_BASE  # fallback
 

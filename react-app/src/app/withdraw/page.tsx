@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
@@ -10,12 +11,14 @@ import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
+import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 
 export default function WithdrawPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
   const isLoading = useDashboardStore(s => s.isLoadingData);
   const dataError = useDashboardStore(s => s.dataLoadError);
+  const privacyMode = useUiStore(s => s.privacyMode);
 
   useEffect(() => {
     loadDataOnce().catch(e => console.error('Failed to load data:', e));
@@ -160,6 +163,13 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
+      {/* 3b. Surplus-Gap Chart — F2 DEV-boldin-dashboard */}
+      <CollapsibleSection id="section-surplus-gap" title={secTitle('withdraw', 'section-surplus-gap', 'Superávit / Déficit Anual — P10/P50/P90')} defaultOpen={secOpen('withdraw', 'section-surplus-gap')} icon="📊">
+        <div style={{ padding: '0 16px 16px' }}>
+          <SurplusGapChart data={data} />
+        </div>
+      </CollapsibleSection>
+
       {/* 4. Bond Pool Readiness — Proteção SoRR (moved here: contexto após SWR/guardrails) */}
       {bondPoolReadiness && (
         <section className="section" id="bondPoolSection">
@@ -284,6 +294,74 @@ export default function WithdrawPage() {
           </div>
         </CollapsibleSection>
       )}
+
+      {/* F7 — LTC Sensitivity Test (DEV-boldin-dashboard) */}
+      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity')} icon="🏥">
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const premissas = data?.premissas ?? {};
+            const custo_vida_base: number = premissas.custo_vida_base ?? 250_000;
+            const swr_target: number = premissas.swr_gatilho ?? 0.03;
+            const fire_data = (data as any)?.fire ?? {};
+            const pat_mediano = fire_data.pat_mediano_fire ?? fire_data.pat_p50_fire ?? premissas.patrimonio_atual ?? 3_500_000;
+            const fmtBrl = (v: number) => privacyMode ? '••••' : `R$${(v / 1000).toFixed(0)}k`;
+            const fmtPct = (v: number) => privacyMode ? '••' : `${(v * 100).toFixed(1)}%`;
+
+            const ltcCenarios = [
+              { label: 'Sem LTC', saude_extra: 0 },
+              { label: 'LTC moderado', saude_extra: 72_000, nota: '~R$6k/mês × 12 meses' },
+              { label: 'LTC intensivo', saude_extra: 216_000, nota: '~R$18k/mês × 12 meses (asilo)' },
+            ];
+
+            return (
+              <div>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 10 }}>
+                  Impacto de custos LTC (Long-Term Care) no SWR efetivo. Patrimônio mediano projetado no FIRE Day: {fmtBrl(pat_mediano)}.
+                </p>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                        <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Cenário LTC</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)' }}>Custo extra/ano</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)' }}>Custo total/ano</th>
+                        <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)' }}>SWR implícito</th>
+                        <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ltcCenarios.map((c, i) => {
+                        const custoTotal = custo_vida_base + c.saude_extra;
+                        const swrImplicito = pat_mediano > 0 ? custoTotal / pat_mediano : 0;
+                        const ok = swrImplicito <= swr_target;
+                        const warn = swrImplicito <= swr_target * 1.3;
+                        const statusColor = ok ? 'var(--green)' : warn ? 'var(--yellow)' : 'var(--red)';
+                        const statusLabel = ok ? '✓ Dentro do SWR target' : warn ? '⚠ Atenção' : '✗ Acima do SWR target';
+                        return (
+                          <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                            <td style={{ padding: '8px 8px' }}>
+                              <div style={{ fontWeight: 500 }}>{c.label}</div>
+                              {c.nota && <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{c.nota}</div>}
+                            </td>
+                            <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtBrl(c.saude_extra)}</td>
+                            <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtBrl(custoTotal)}</td>
+                            <td style={{ textAlign: 'right', padding: '8px 8px', fontWeight: 700, color: statusColor }}>{fmtPct(swrImplicito)}</td>
+                            <td style={{ padding: '8px 8px', color: statusColor, fontWeight: 500 }}>{statusLabel}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>
+                  SWR target: {fmtPct(swr_target)}. Patrimônio mediano estimado no FIRE Day: {fmtBrl(pat_mediano)}.
+                  LTC = custos de saúde intensiva nos anos finais (No-Go phase). Spending smile já inclui decaimento base de saúde.
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </CollapsibleSection>
     </div>
   );
 }

@@ -1,4 +1,6 @@
 {
+  "imovel_valor": 820000,
+  "_nota_imovel_valor": "Valor de mercado atual estimado (carteira.md 2026). Diferente de contrato.valor_imovel (570000 = avaliação Bradesco 2021).",
   "_meta": {
     "fonte": "Extrato Financeiro Bradesco — Contrato 1030320-6",
     "data_extrato": "31/01/2021",

@@ -1,9 +1,9 @@
 {
   "_doc": "Fonte de verdade do Wellness Score. Lido por generate_data.py e embutido em data.json. Dashboard lê de DATA.wellness_config.",
-  "version": "2.0",
-  "updated": "2026-04-08",
-  "rationale": "Score mede disciplina operacional + saúde financeira — não duplica P(FIRE). P(FIRE) é o KPI terminal standalone. Wellness captura o que o MC não captura: comportamento, proteção, execução.",
-  "total_max": 100,
+  "version": "2.1",
+  "updated": "2026-04-17",
+  "rationale": "Score mede disciplina operacional + saúde financeira — não duplica P(FIRE). P(FIRE) é o KPI terminal standalone. Wellness captura o que o MC não captura: comportamento, proteção, execução, alavancagem.",
+  "total_max": 110,
   "metrics": [
     {
       "id": "pfire",
@@ -122,6 +122,32 @@
       ],
       "colors": { "good": 5, "warn": 0 },
       "_note": "Atualizar status ao casar (2026-2027 estimado). Seguro adequado = cobertura 10x renda anual ou patrimônio suficiente para sustento família até FIRE."
+    },
+    {
+      "id": "debt_ratio",
+      "label": "Ratio dívida/patrimônio",
+      "max": 5,
+      "description": "Passivos totais (hipoteca + IR diferido) como % do patrimônio financeiro. Alto nível de dívida vs patrimônio aumenta risco de distress em drawdown.",
+      "_fonte": "data.passivos.total_brl / data.patrimonio.total_brl",
+      "thresholds": [
+        { "max_pct": 10,  "pts": 5 },
+        { "max_pct": 20,  "pts": 3 },
+        { "max_pct": 999, "pts": 0 }
+      ],
+      "colors": { "good": 5, "warn": 3 }
+    },
+    {
+      "id": "housing_ratio",
+      "label": "Hipoteca/Patrimônio",
+      "max": 5,
+      "description": "Saldo devedor hipoteca como % do patrimônio financeiro. Housing ratio alto = concentração de risco em ativo ilíquido financiado.",
+      "_fonte": "data.passivos.hipoteca_brl / data.patrimonio.total_brl",
+      "thresholds": [
+        { "max_pct": 10,  "pts": 5 },
+        { "max_pct": 15,  "pts": 3 },
+        { "max_pct": 999, "pts": 0 }
+      ],
+      "colors": { "good": 5, "warn": 3 }
     }
   ],
   "removed_metrics": [

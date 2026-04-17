@@ -45,6 +45,8 @@ from config import (
     BOND_TENT_META_ANOS,
     CAMBIO_FALLBACK, SELIC_META_SNAPSHOT, FED_FUNDS_SNAPSHOT, DEPRECIACAO_BRL_BASE,
     IPCA_CAGR_FALLBACK,
+    TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
+    INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
     update_dashboard_state,
 )
 
@@ -151,6 +153,55 @@ def get_passivos(tax_data=None):
         "ir_diferido_brl": round(ir_diferido_brl, 2),
         "total_brl": round(total_passivos, 2),
         "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)",
+    }
+
+
+def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict) -> dict:
+    """Retorna balanço holístico expandido (F1 DEV-boldin-dashboard).
+
+    Inclui ativos ilíquidos (imóvel equity, terreno, capital humano, INSS VP).
+    Fonte única: hipoteca_sac.json + config.py + dashboard_state.json.
+    """
+    # Imóvel: valor de mercado - saldo devedor
+    imovel_valor_mercado = 0.0
+    imovel_equity_brl = 0.0
+    saldo_devedor_brl = 0.0
+    if HIPOTECA_SAC_PATH.exists():
+        try:
+            hdata = json.loads(HIPOTECA_SAC_PATH.read_text())
+            imovel_valor_mercado = hdata.get("imovel_valor", hdata.get("contrato", {}).get("valor_imovel", 570_000))
+            saldo_devedor_brl = hdata.get("estado_atual", {}).get("saldo_devedor", 452_124)
+            imovel_equity_brl = max(0.0, imovel_valor_mercado - saldo_devedor_brl)
+        except Exception:
+            imovel_equity_brl = 367_875  # fallback: 820k - 452k
+
+    # Capital humano: VP de renda futura (renda mensal × 12 × anos_ate_fire × 0.65)
+    anos_ate_fire = max(0, IDADE_CENARIO_BASE - IDADE_ATUAL)
+    capital_humano_vp = RENDA_ESTIMADA * 12 * anos_ate_fire * 0.65
+
+    # INSS: VP já calculado em fire_montecarlo ou fallback carteira.md
+    inss_pv_brl = state.get("fire", {}).get("inss_pv_brl", 283_000)
+
+    # Totais
+    total_holistico = (
+        total_financeiro_brl
+        + imovel_equity_brl
+        + float(TERRENO_BRL)
+        + capital_humano_vp
+        + inss_pv_brl
+    )
+
+    return {
+        "financeiro_brl":       round(total_financeiro_brl, 2),
+        "imovel_equity_brl":    round(imovel_equity_brl, 2),
+        "imovel_valor_mercado": round(imovel_valor_mercado, 2),
+        "saldo_devedor_brl":    round(saldo_devedor_brl, 2),
+        "terreno_brl":          float(TERRENO_BRL),
+        "capital_humano_vp":    round(capital_humano_vp, 2),
+        "anos_ate_fire":        anos_ate_fire,
+        "inss_pv_brl":          round(inss_pv_brl, 2),
+        "total_brl":            round(total_holistico, 2),
+        "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)",
     }
 
 
@@ -2722,6 +2773,9 @@ def main():
     # Passivos — hipoteca + IR diferido
     passivos_data = get_passivos(tax_data)
 
+    # Patrimônio holístico (F1 DEV-boldin-dashboard)
+    patrimonio_holistico = compute_patrimonio_holistico(total_brl, state)
+
     # Premissas — garantir patrimônio atual
     premissas = {
         "patrimonio_atual":       total_brl,
@@ -2740,6 +2794,12 @@ def main():
         "renda_estimada":         RENDA_ESTIMADA,
         "renda_mensal_liquida":   RENDA_ESTIMADA,  # Usado pelo dashboard (monthly income display)
         "ano_atual":              datetime.now().year,
+        # Spouse / holistic (F6 + F1 DEV-boldin-dashboard)
+        "tem_conjuge":            TEM_CONJUGE,
+        "nome_conjuge":           NOME_CONJUGE,
+        "inss_katia_anual":       INSS_KATIA_ANUAL,
+        "pgbl_katia_saldo_fire":  PGBL_KATIA_SALDO_FIRE,
+        "gasto_katia_solo":       GASTO_KATIA_SOLO,
     }
 
     # Último aporte mensal (última linha do CSV historico_carteira.csv)
@@ -3324,6 +3384,7 @@ def main():
         "tlhGatilho":   TLH_GATILHO,
         "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
         "passivos":     passivos_data,  # Hipoteca + IR diferido
+        "patrimonio_holistico": patrimonio_holistico,  # F1 DEV-boldin-dashboard
 
         # Advocate datasets — concentração Brasil + premissas vs realizado
         "concentracao_brasil": concentracao_brasil,

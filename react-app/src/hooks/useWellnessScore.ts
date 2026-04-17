@@ -104,6 +104,46 @@ export function useWellnessScore(data: any, derived: any) {
     return match ? match.pts : 5;
   })();
 
+  // debt_ratio pts (D1 DEV-boldin-dashboard)
+  const debtRatioPts: number = (() => {
+    const passivos = data?.passivos;
+    const patrimonioTotal = data?.premissas?.patrimonio_atual ?? 0;
+    if (!passivos || patrimonioTotal <= 0) return 3; // neutral fallback
+    const debtRatioPct = (passivos.total_brl / patrimonioTotal) * 100;
+    const thresholds = wc.metrics.find((m: any) => m.id === 'debt_ratio')?.thresholds ?? [];
+    for (const t of thresholds) {
+      if (debtRatioPct <= t.max_pct) return t.pts;
+    }
+    return 0;
+  })();
+
+  // housing_ratio pts (D1 DEV-boldin-dashboard)
+  const housingRatioPts: number = (() => {
+    const passivos = data?.passivos;
+    const patrimonioTotal = data?.premissas?.patrimonio_atual ?? 0;
+    if (!passivos || patrimonioTotal <= 0) return 3; // neutral fallback
+    const housingRatioPct = (passivos.hipoteca_brl / patrimonioTotal) * 100;
+    const thresholds = wc.metrics.find((m: any) => m.id === 'housing_ratio')?.thresholds ?? [];
+    for (const t of thresholds) {
+      if (housingRatioPct <= t.max_pct) return t.pts;
+    }
+    return 0;
+  })();
+
+  const debtRatioPct = (() => {
+    const passivos = data?.passivos;
+    const patrimonioTotal = data?.premissas?.patrimonio_atual ?? 0;
+    if (!passivos || patrimonioTotal <= 0) return null;
+    return (passivos.total_brl / patrimonioTotal) * 100;
+  })();
+
+  const housingRatioPct = (() => {
+    const passivos = data?.passivos;
+    const patrimonioTotal = data?.premissas?.patrimonio_atual ?? 0;
+    if (!passivos || patrimonioTotal <= 0) return null;
+    return (passivos.hipoteca_brl / patrimonioTotal) * 100;
+  })();
+
   const allMetrics = [
     {
       id: 'pfire',
@@ -173,6 +213,22 @@ export function useWellnessScore(data: any, derived: any) {
       detail: humanCapitalStatus.replace('_', ' '),
       description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '',
     },
+    {
+      id: 'debt_ratio',
+      label: 'Ratio dívida/pat.',
+      pts: debtRatioPts,
+      max: 5,
+      detail: debtRatioPct != null ? `${debtRatioPct.toFixed(1)}%` : 'n/d',
+      description: wc.metrics.find((m: any) => m.id === 'debt_ratio')?.description ?? '',
+    },
+    {
+      id: 'housing_ratio',
+      label: 'Hipoteca/Pat.',
+      pts: housingRatioPts,
+      max: 5,
+      detail: housingRatioPct != null ? `${housingRatioPct.toFixed(1)}%` : 'n/d',
+      description: wc.metrics.find((m: any) => m.id === 'housing_ratio')?.description ?? '',
+    },
   ].map(m => ({ ...m, isOk: m.pts / m.max >= 0.85 }));
 
   const totalScore = allMetrics.reduce((sum, m) => sum + m.pts, 0);
@@ -188,6 +244,8 @@ export function useWellnessScore(data: any, derived: any) {
     emergency_fund: 'Aumentar reserva líquida para 6+ meses de custo de vida',
     ter: 'Migrar gradualmente para ETFs de menor custo',
     human_capital: 'Contratar seguro de vida ao casar ou ter dependentes',
+    debt_ratio: 'Amortizar passivos ou aumentar patrimônio financeiro',
+    housing_ratio: 'Reduzir saldo devedor hipotecário ou crescer patrimônio',
   };
 
   const topAcoes = [...allMetrics]

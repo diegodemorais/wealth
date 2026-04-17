@@ -57,7 +57,8 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'tornado',           title: 'Tornado de Sensibilidade (P(FIRE) ±10%)',        defaultOpen: false, collapsible: true  },
     { id: 'time-to-fire',      title: 'Time to FIRE',                                  defaultOpen: true,  collapsible: false },
     { id: 'macro',             title: 'Mercado & Macro',                                defaultOpen: true,  collapsible: false },
-    { id: 'wellness',          title: 'Financial Wellness Score (indicador secundário)', defaultOpen: false, collapsible: true  },
+    { id: 'wellness',             title: 'Financial Wellness Score (indicador secundário)', defaultOpen: false, collapsible: true  },
+    { id: 'balanco-holistico-now', title: 'Balanço Holístico',                             defaultOpen: false, collapsible: true  },
   ],
 
   // ── PORTFOLIO (/portfolio/page.tsx) ─────────────────────────────────────────
@@ -98,7 +99,9 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'familia',          title: 'P(FIRE) — Cenários de Família',                                  defaultOpen: true,  collapsible: false },
     { id: 'eventos-vida',     title: 'Eventos de Vida — Impacto no Plano FIRE',                        defaultOpen: false, collapsible: true  },
     { id: 'scenario-compare', title: 'Cenário Base vs Cenário Aspiracional — Comparação Detalhada',    defaultOpen: false, collapsible: true  },
-    { id: 'glide-path',       title: 'Glide Path — Alocação por Idade',                                defaultOpen: false, collapsible: true  },
+    { id: 'glide-path',             title: 'Glide Path — Alocação por Idade',                                defaultOpen: false, collapsible: true  },
+    { id: 'balanco-holistico-fire', title: 'Balanço Holístico',                                              defaultOpen: false, collapsible: true  },
+    { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                                defaultOpen: false, collapsible: true  },
   ],
 
   // ── WITHDRAW (/withdraw/page.tsx) ────────────────────────────────────────────
@@ -109,7 +112,9 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'bond-pool',          title: 'Bond Pool — Proteção Sequência de Retornos',       defaultOpen: true,  collapsible: false },
     { id: 'sankey',             title: 'Cashflow — Fluxo Mensal de Retirada',              defaultOpen: true,  collapsible: false },
     { id: 'fases',              title: 'Fases de Renda — Projeção por Fonte',              defaultOpen: true,  collapsible: false },
-    { id: 'spending-breakdown', title: 'Spending Breakdown — Detalhamento de Gastos',      defaultOpen: false, collapsible: true  },
+    { id: 'spending-breakdown',   title: 'Spending Breakdown — Detalhamento de Gastos',      defaultOpen: false, collapsible: true  },
+    { id: 'section-surplus-gap',  title: 'Superávit / Déficit Anual — P10/P50/P90',          defaultOpen: true,  collapsible: true  },
+    { id: 'section-ltc-sensitivity', title: 'LTC — Sensibilidade Cuidados de Longo Prazo',   defaultOpen: false, collapsible: true  },
   ],
 
   // ── BACKTEST (/backtest/page.tsx) ────────────────────────────────────────────

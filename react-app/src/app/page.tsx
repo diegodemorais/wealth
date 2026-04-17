@@ -10,6 +10,7 @@ import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { useWellnessScore } from '@/hooks/useWellnessScore';
+import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 
 export default function HomePage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -89,6 +90,11 @@ export default function HomePage() {
         fireAgeAspir={(data as any)?.earliest_fire?.idade}
         firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
+
+      {/* 1b. BALANÇO HOLÍSTICO — Patrimônio expandido (colapsado por default) */}
+      <CollapsibleSection id="balanco-holistico-now" title={secTitle('now', 'balanco-holistico-now', 'Balanço Holístico')} defaultOpen={secOpen('now', 'balanco-holistico-now')} icon="🏛️">
+        <BalancoHolistico data={data as any} showCapitalHumanoBadge />
+      </CollapsibleSection>
 
       {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Equity YTD (USD) · Portfolio YTD (BRL) · Passivos */}
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-2.5 mb-3.5">
@@ -502,7 +508,7 @@ export default function HomePage() {
                   <div className="min-w-28 text-center flex-shrink-0">
                     <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Score</div>
                     <div className="text-5xl font-black text-green leading-none">{totalScore}</div>
-                    <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
+                    <div className="text-xs text-muted mt-1">/110 · Progressivo</div>
                   </div>
                   <div className="flex-1 min-w-0">
                     {badMetrics.length > 0 && (
