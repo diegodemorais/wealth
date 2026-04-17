@@ -69,7 +69,7 @@ export function SurplusGapChart({ data }: SurplusGapChartProps) {
     const lastP90 = p90Map.get(lastYear) ?? 0;
 
     // Extrapolate beyond trilha with SWR drawdown model
-    const RETORNO_REAL = 0.0485; // from premissas
+    const RETORNO_REAL: number = premissas.retorno_equity_base ?? 0.0485;
 
     function getPatrimonio(map: Map<number, number>, last: number, year: number): number {
       if (map.has(year)) return map.get(year)!;

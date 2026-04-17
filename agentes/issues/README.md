@@ -20,6 +20,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|
 | PT-planejamento-patrimonial | Planejamento patrimonial pré-casamento | Patrimonial | 🟢 Baixa |
 | HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
+| HD-boldin-benchmark | Benchmark Boldin — Análise Comparativa Dashboard vs Mercado | Head | ✅ Done 2026-04-17 |
 
 ### Backlog
 > Issues prontas para execucao, aguardando vez
@@ -51,6 +52,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-boldin-dashboard | Boldin Dashboard Gaps — F1+F2+D1+F5+F6+F7 (balanço holístico, surplus-gap, wellness, cenários, spouse, LTC) | Dev | 🔴 Alta | ⏳ Doing |
 | DEV-dashboard-components-alignment | Alinhamento visual/informacional com DashHTML — 32+ componentes | Dev | 🔴 Alta | ⏳ Doing (tarefas por componente) |
 | DEV-manifest | spec.json — Manifesto único do dashboard | Dev | 🔴 Alta | ✅ Done 2026-04-11 |
 | DEV-bi-review | Revisão BI externa + nova estrutura de abas | Dev | 🟡 Média | ✅ Done 2026-04-11 |
