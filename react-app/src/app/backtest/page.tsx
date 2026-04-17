@@ -139,7 +139,8 @@ function BacktestHistoricoSection() {
         </div>
       )}
 
-      {/* Chart — filtered by selected period (r7 uses BacktestR7Chart, handled in page) */}
+      {/* Chart */}
+      {data && period === 'r7' && <BacktestR7Chart data={data} />}
       {data && period !== 'r7' && (
         <BacktestChart
           data={data}
