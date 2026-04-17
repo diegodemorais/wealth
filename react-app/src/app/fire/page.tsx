@@ -88,67 +88,57 @@ export default function FirePage() {
         </div>
       </section>
 
-      {/* 2. FIRE Aspiracional — horizonte imediato (moved from last: ancora o "quando posso chegar antes?") */}
-      {derived && (
+      {/* 2. FIRE Aspiracional — 3 cenários base (Solteiro / Casamento / Casado+Filho) */}
+      {(data as any)?.fire_matrix?.by_profile?.length > 0 && (
         <section className="section" id="fireAspirationalSection">
-          <div style={{
-            background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), color-mix(in srgb, var(--green) 8%, transparent))',
-            border: '2px dashed var(--accent)',
-            borderRadius: 'var(--radius-xl)',
-            padding: '24px',
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '12px' }}>
-              FIRE Aspiracional
-            </div>
-            <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>
-              {data.fire_matrix?.ano_aspiracional ?? 2036}
-            </div>
-            <div style={{ fontSize: '.9rem', color: 'var(--muted)', marginTop: '4px' }}>
-              idade {data.premissas?.idade_cenario_aspiracional ?? 49}
-            </div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)', marginTop: '12px' }}>
-              P = {derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginTop: '4px' }}>
-              {data.premissas?.idade_cenario_aspiracional ? (data.premissas.idade_cenario_aspiracional - data.premissas.idade_atual) : 10} anos a partir de hoje
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px', maxWidth: '300px', margin: '16px auto 0' }}>
-              <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Aspiracional</div>
-                <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>
-                  {derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}
+          <h2>FIRE Aspiracional <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— cenários base · idade 50</span></h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: '14px' }}>
+            {([
+              { profile: 'atual',  emoji: '👤', label: 'Solteiro',        preset: 'solteiro' },
+              { profile: 'casado', emoji: '💍', label: 'Casamento',       preset: 'casado'   },
+              { profile: 'filho',  emoji: '👶', label: 'Casado + Filho',  preset: 'filho'    },
+            ] as const).map(({ profile, emoji, label, preset }) => {
+              const p = (data as any)?.fire_matrix?.by_profile?.find((x: any) => x.profile === profile);
+              if (!p) return null;
+              const pfire = p.p_fire_50 as number;
+              const pfav   = p.p_fire_50_fav as number;
+              const pstress = p.p_fire_50_stress as number;
+              const pfireColor = pfire >= 90 ? 'var(--green)' : pfire >= 85 ? 'var(--yellow)' : 'var(--red)';
+              return (
+                <div key={profile} style={{
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 6%, transparent), color-mix(in srgb, var(--green) 5%, transparent))',
+                  border: '2px dashed var(--accent)',
+                  borderRadius: 'var(--radius-xl)',
+                  padding: '20px 16px',
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '5px',
+                }}>
+                  <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>{emoji}</div>
+                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>R${(p.gasto_anual / 1000).toFixed(0)}k/ano</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1, marginTop: '6px' }}>{p.fire_age_50}</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>idade 50</div>
+                  <div style={{ fontSize: '1.35rem', fontWeight: 700, color: pfireColor, marginTop: '2px' }}>P = {pfire.toFixed(1)}%</div>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '2px' }}>
+                    <span style={{ fontSize: '10px', color: 'var(--muted)' }}>fav <span style={{ color: 'var(--green)' }}>{pfav.toFixed(0)}%</span></span>
+                    <span style={{ fontSize: '10px', color: 'var(--muted)' }}>stress <span style={{ color: 'var(--red)' }}>{pstress.toFixed(0)}%</span></span>
+                  </div>
+                  <div style={{ marginTop: '10px' }}>
+                    <Link href={`/simulators?preset=${preset}`} style={{
+                      display: 'inline-block', padding: '7px 20px',
+                      background: 'var(--accent)', color: 'white',
+                      borderRadius: 'var(--radius-md)', fontWeight: 700,
+                      fontSize: '.8rem', textDecoration: 'none',
+                    }}>Simular</Link>
+                  </div>
                 </div>
-              </div>
-              <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Base (conservador)</div>
-                <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
-                  {derived.pfireBase != null ? `${derived.pfireBase.toFixed(1)}%` : '—'}
-                </div>
-              </div>
-            </div>
-            <div className="src" style={{ marginTop: '12px' }}>
-              Threshold: P(FIRE) &gt; 86% · baseado em MC 10k simulações
-            </div>
-            <div style={{ marginTop: '16px' }}>
-              <Link
-                href="/simulators?preset=aspiracional"
-                style={{
-                  display: 'inline-block',
-                  padding: '10px 24px',
-                  background: 'var(--accent)',
-                  color: 'white',
-                  borderRadius: 'var(--radius-md)',
-                  fontWeight: 700,
-                  fontSize: '.85rem',
-                  textDecoration: 'none',
-                  transition: 'opacity .2s',
-                }}
-              >
-                Simular Cenário Aspiracional →
-              </Link>
-            </div>
+              );
+            })}
           </div>
+          <div className="src">Base: MC 5k simulações · cenário base · portfólio financeiro</div>
         </section>
       )}
 

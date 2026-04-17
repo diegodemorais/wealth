@@ -203,32 +203,27 @@ export default function PortfolioPage() {
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
         <div className="section">
           <h2>Últimas Operações</h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.8rem', marginBottom: '8px' }}>
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: '.8rem', marginBottom: '8px' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--card2)' }}>
-                <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: 'var(--muted)' }}>Data</th>
-                <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: 'var(--muted)' }}>Tipo</th>
-                <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: 'var(--muted)' }}>Ativo</th>
-                <th style={{ textAlign: 'left', padding: '8px 0', fontWeight: 600, color: 'var(--muted)' }}>Corretora</th>
-                <th style={{ textAlign: 'right', padding: '8px 0', fontWeight: 600, color: 'var(--muted)' }}>Valor</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Data</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Tipo</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Ativo</th>
+                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }} className="hide-mobile">Corretora</th>
+                <th style={{ textAlign: 'right', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Valor</th>
               </tr>
             </thead>
             <tbody>
               {data.minilog.slice(0, 10).map((op: any, i: number) => {
-                // Render valor as raw string — values are mixed currency/format (BRL, USD, compound "N × $price")
                 const valorStr = typeof op.valor === 'string' ? op.valor : String(op.valor ?? '—');
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
-                    <td style={{ padding: '6px 0', fontSize: '.75rem', color: 'var(--muted)' }}>{op.data}</td>
-                    <td style={{ padding: '6px 0', fontSize: '.75rem' }}>{op.tipo}</td>
-                    <td style={{ padding: '6px 0', fontWeight: 600 }}>{op.ativo}</td>
-                    <td style={{ padding: '6px 0', fontSize: '.75rem', color: 'var(--muted)' }}>{op.corretora}</td>
-                    <td style={{
-                      padding: '6px 0',
-                      textAlign: 'right',
-                      color: 'var(--green)',
-                      fontWeight: 700,
-                    }}>
+                    <td style={{ padding: '6px 6px', fontSize: '.75rem', color: 'var(--muted)', whiteSpace: 'nowrap' }}>{op.data}</td>
+                    <td style={{ padding: '6px 6px', fontSize: '.75rem', whiteSpace: 'nowrap' }}>{op.tipo}</td>
+                    <td style={{ padding: '6px 6px', fontWeight: 600 }}>{op.ativo}</td>
+                    <td style={{ padding: '6px 6px', fontSize: '.75rem', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
+                    <td style={{ padding: '6px 6px', textAlign: 'right', color: 'var(--green)', fontWeight: 700, whiteSpace: 'nowrap' }}>
                       {valorStr}
                     </td>
                   </tr>
@@ -236,6 +231,7 @@ export default function PortfolioPage() {
               })}
             </tbody>
           </table>
+          </div>
           <div className="src">Fonte: IBKR · Nubank · Binance</div>
         </div>
       )}

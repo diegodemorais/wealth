@@ -18,6 +18,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
 
   const option = useMemo(() => {
     if (!conc) return {};
+    const brasilPct = conc.brasil_pct ?? 0;
     const internacionalBrl = conc.total_portfolio_brl - conc.total_brasil_brl;
     const rfBrl = conc.composicao?.rf_total_brl ?? 0;
     const hodl11Brl = conc.composicao?.hodl11_brl ?? 0;
@@ -41,9 +42,11 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
         borderColor: '#30363d',
         textStyle: { color: '#e6edf3', fontSize: 11 },
         formatter: (p: any) =>
-          privacyMode
-            ? `${p.name}: ••••`
-            : `${p.name}: ${fmt(p.value)} (${p.percent?.toFixed(1)}%)`,
+          `<div style="padding:6px 10px">
+            <strong style="color:${p.data.itemStyle?.color ?? '#fff'}">${p.name}</strong><br/>
+            ${privacyMode ? '••••' : fmt(p.value)}<br/>
+            <span style="font-size:13px;font-weight:700">${p.percent?.toFixed(1)}%</span>
+          </div>`,
       },
       legend: {
         orient: 'horizontal',
@@ -52,28 +55,53 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
         textStyle: { color: '#8b949e', fontSize: 10 },
         itemWidth: 10,
         itemHeight: 10,
-        formatter: (name: string) => name,
       },
+      graphic: [
+        {
+          type: 'text',
+          left: 'center',
+          top: '38%',
+          style: {
+            text: privacyMode ? '••%' : `${(100 - brasilPct).toFixed(0)}%`,
+            fontSize: 16,
+            fontWeight: 700,
+            fill: '#58a6ff',
+            textAlign: 'center',
+          },
+        },
+        {
+          type: 'text',
+          left: 'center',
+          top: `calc(38% + 20px)`,
+          style: {
+            text: 'Intl',
+            fontSize: 9,
+            fill: '#8b949e',
+            textAlign: 'center',
+          },
+        },
+      ],
       series: [
         {
           type: 'pie',
-          radius: ['42%', '68%'],
-          center: ['50%', '44%'],
+          radius: ['44%', '70%'],
+          center: ['50%', '42%'],
           data: segments.map(s => ({
             name: s.name,
             value: s.value,
-            itemStyle: { color: s.color },
+            itemStyle: { color: s.color, borderRadius: 4, borderColor: '#0d1117', borderWidth: 2 },
           })),
           label: {
             show: true,
             position: 'inside',
-            formatter: (p: any) =>
-              privacyMode ? '' : `${p.percent?.toFixed(0)}%`,
+            formatter: (p: any) => privacyMode ? '' : `${p.percent?.toFixed(0)}%`,
             color: '#fff',
             fontSize: 11,
-            fontWeight: 600,
+            fontWeight: 700,
           },
-          emphasis: { itemStyle: { shadowBlur: 8, shadowColor: 'rgba(0,0,0,0.4)' } },
+          emphasis: {
+            itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)', borderWidth: 0 },
+          },
         },
       ],
     };
@@ -101,7 +129,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           </span>
         </div>
       </div>
-      <ReactECharts option={option} style={{ height: 200 }} />
+      <ReactECharts option={option} style={{ height: 260 }} />
       <div style={styles.footnote}>
         HODL11 = wrapper B3 de BTC
       </div>

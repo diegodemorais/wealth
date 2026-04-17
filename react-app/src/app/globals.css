@@ -278,6 +278,11 @@
     flex-shrink: 0;
   }
 
+  /* Responsive table utility — hides secondary columns on mobile */
+  @media (max-width: 640px) {
+    .hide-mobile { display: none !important; }
+  }
+
   /* Mobile: 2-row layout — logo+controls on top, tabs full-width below */
   @media (max-width: 640px) {
     .header-container {
