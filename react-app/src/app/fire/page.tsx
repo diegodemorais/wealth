@@ -111,11 +111,23 @@ export default function FirePage() {
         <section className="section" id="familyScenariosFireSection">
           <h2>P(FIRE) — Cenários de Família <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(impacto no custo de vida)</span></h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {[
-              { label: '👤 Solteiro / FIRE Day', pfire: derived.pfireBase, gastoAnual: 250000, gastoLabel: 'R$250k/ano', delta: null },
-              { label: '💍 Pós-casamento', pfire: derived.pfireBase ? derived.pfireBase - 1.6 : null, gastoAnual: 300000, gastoLabel: 'R$300k/ano', delta: '-1.6pp' },
-              { label: '👶 Casamento + filho', pfire: derived.pfireBase ? derived.pfireBase - 4.8 : null, gastoAnual: 360000, gastoLabel: 'R$360k/ano', delta: '-4.8pp' },
-            ].map((scenario, i) => (
+            {(() => {
+              const profiles = (data as any)?.fire_matrix?.by_profile ?? [];
+              const casado = profiles.find((p: any) => p.profile === 'casado');
+              const filho = profiles.find((p: any) => p.profile === 'filho');
+              const pfireSolteiro = derived.pfireBase;
+              const pfireCasado = casado?.p_fire_53 ?? null;
+              const pfireFilho = filho?.p_fire_53 ?? null;
+              const gastoCasado = casado?.gasto_anual ?? 270000;
+              const gastoFilho = filho?.gasto_anual ?? 300000;
+              const deltaCasado = pfireSolteiro != null && pfireCasado != null ? (pfireCasado - pfireSolteiro).toFixed(1) : null;
+              const deltaFilho = pfireSolteiro != null && pfireFilho != null ? (pfireFilho - pfireSolteiro).toFixed(1) : null;
+              return [
+                { label: '👤 Solteiro / FIRE Day', pfire: pfireSolteiro, gastoAnual: 250000, gastoLabel: 'R$250k/ano', delta: null },
+                { label: '💍 Pós-casamento', pfire: pfireCasado, gastoAnual: gastoCasado, gastoLabel: `R$${(gastoCasado/1000).toFixed(0)}k/ano`, delta: deltaCasado ? `${parseFloat(deltaCasado) > 0 ? '+' : ''}${deltaCasado}pp` : null },
+                { label: '👶 Casamento + filho', pfire: pfireFilho, gastoAnual: gastoFilho, gastoLabel: `R$${(gastoFilho/1000).toFixed(0)}k/ano`, delta: deltaFilho ? `${parseFloat(deltaFilho) > 0 ? '+' : ''}${deltaFilho}pp` : null },
+              ];
+            })().map((scenario, i) => (
               <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ minWidth: '180px' }}>
                   <div style={{ fontSize: '.8rem', fontWeight: 600 }}>{scenario.label}</div>

@@ -75,10 +75,10 @@ export default function HomePage() {
         yearsToFire={derived.fireMonthsAway / 12}
         pfire={derived.pfire}
         cambio={derived.CAMBIO}
-        fireYearBase={data?.fire?.cenario_base?.ano_fire ?? data?.fire?.ano_fire_base}
-        fireAgeBase={data?.fire?.cenario_base?.idade_fire ?? data?.fire?.idade_fire_base}
-        fireYearAspir={data?.fire?.cenario_aspiracional?.ano_fire ?? data?.fire?.ano_fire_aspiracional}
-        fireAgeAspir={data?.fire?.cenario_aspiracional?.idade_fire ?? data?.fire?.idade_fire_aspiracional}
+        fireYearBase={(data as any)?.fire_matrix?.by_profile?.[0]?.fire_age_53 ? parseInt((data as any).fire_matrix.by_profile[0].fire_age_53) : undefined}
+        fireAgeBase={(data as any)?.premissas?.idade_cenario_base}
+        fireYearAspir={(data as any)?.earliest_fire?.ano}
+        fireAgeAspir={(data as any)?.earliest_fire?.idade}
         firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
