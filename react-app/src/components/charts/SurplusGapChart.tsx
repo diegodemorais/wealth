@@ -137,25 +137,25 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
         { name: 'P10 (stress)',    itemStyle: { color: '#fb923c' } },
       ],
       bottom: 0,
-      textStyle: { color: 'var(--text)' },
+      textStyle: { color: '#94a3b8' },
     },
     grid: { left: 60, right: 20, top: 20, bottom: 50 },
     xAxis: {
       type: 'category',
       data: years.map(String),
-      axisLabel: { color: 'var(--muted)', interval: 9 },
-      axisLine: { lineStyle: { color: 'var(--border)' } },
+      axisLabel: { color: '#94a3b8', interval: 9 },
+      axisLine: { lineStyle: { color: '#334155' } },
     },
     yAxis: {
       type: 'value',
       axisLabel: {
-        color: 'var(--muted)',
+        color: '#94a3b8',
         formatter: (v: number) => privacyMode ? '••' : `${v >= 0 ? '+' : ''}R$${(v / 1000).toFixed(0)}k`,
       },
-      splitLine: { lineStyle: { color: 'var(--border)', type: 'dashed' } },
+      splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
     },
     markLine: {
-      data: [{ yAxis: 0, lineStyle: { color: 'var(--muted)', type: 'solid', width: 1 } }],
+      data: [{ yAxis: 0, lineStyle: { color: '#475569', type: 'solid', width: 1 } }],
     },
     series: [
       {
