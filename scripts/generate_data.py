@@ -76,6 +76,7 @@ FIRE_APORTE_SENS_PATH   = ROOT / "dados" / "fire_aporte_sensitivity.json"
 FIRE_TRILHA_PATH        = ROOT / "dados" / "fire_trilha.json"
 DRAWDOWN_HIST_PATH      = ROOT / "dados" / "drawdown_history.json"
 DRAWDOWN_EVENTS_PATH    = ROOT / "dados" / "drawdown_events.json"
+HIPOTECA_SAC_PATH       = ROOT / "dados" / "hipoteca_sac.json"
 ETF_COMP_PATH           = ROOT / "dados" / "etf_composition.json"
 BOND_POOL_RUNWAY_PATH   = ROOT / "dados" / "bond_pool_runway.json"
 LUMPY_EVENTS_PATH       = ROOT / "dados" / "lumpy_events.json"
@@ -123,18 +124,19 @@ def read_holdings_taxas():
 def get_passivos(tax_data=None):
     """Retorna estrutura de passivos (hipoteca, IR diferido, etc).
 
-    Fonte: carteira.md — hipoteca SAC R$453.417 vence 15/02/2051
-    IR diferido capturado de tax_snapshot.json / compute_tax_diferido
-
-    Retorna dict com:
-    - hipoteca_brl
-    - hipoteca_vencimento
-    - ir_diferido_brl
-    - total_brl
+    Hipoteca: lida de hipoteca_sac.json → estado_atual.saldo_devedor (fonte viva).
+    IR diferido: lido de tax_snapshot.json.
     """
-    # Hipoteca SAC — fonte: carteira.md (linha 25)
-    hipoteca_brl = 453_417
+    # Hipoteca SAC — fonte viva: hipoteca_sac.json
+    hipoteca_brl = 0.0
     hipoteca_vencimento = "2051-02-15"
+    if HIPOTECA_SAC_PATH.exists():
+        try:
+            hdata = json.loads(HIPOTECA_SAC_PATH.read_text())
+            hipoteca_brl = hdata["estado_atual"]["saldo_devedor"]
+            hipoteca_vencimento = hdata.get("contrato", {}).get("data_fim_prevista", hipoteca_vencimento)
+        except Exception:
+            hipoteca_brl = 452_124  # fallback se arquivo corrompido
 
     # IR diferido — vem de tax_data se disponível
     ir_diferido_brl = 0.0
@@ -144,11 +146,11 @@ def get_passivos(tax_data=None):
     total_passivos = hipoteca_brl + ir_diferido_brl
 
     return {
-        "hipoteca_brl": hipoteca_brl,
+        "hipoteca_brl": round(hipoteca_brl, 2),
         "hipoteca_vencimento": hipoteca_vencimento,
         "ir_diferido_brl": round(ir_diferido_brl, 2),
         "total_brl": round(total_passivos, 2),
-        "_fonte": "carteira.md (hipoteca) + tax_snapshot.json (IR diferido)",
+        "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)",
     }
 
 
