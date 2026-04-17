@@ -108,8 +108,8 @@ function BacktestHistoricoSection() {
         ))}
       </div>
 
-      {/* Chart */}
-      {data && <BacktestChart data={data} />}
+      {/* Chart — filtered by selected period (r7 uses BacktestR7Chart, handled in page) */}
+      {data && period !== 'r7' && <BacktestChart data={data} period={period} />}
 
       {/* Metrics table */}
       {metricRows.length > 0 && (
@@ -175,51 +175,27 @@ function ShadowPortfoliosSection() {
   const data = useDashboardStore(s => s.data);
   const [period, setPeriod] = useState<ShadowPeriod>('since2009');
 
-  const shadows = data?.backtest?.shadows ?? data?.shadows ?? [];
+  // Q1 snapshot from data.shadows
+  const snap = (data as any)?.shadows ?? null;
+  const snapPeriodo = snap?.periodo ?? null;
+
+  // Metrics from backtest.metrics for summary table
+  const metrics = data?.backtest?.metrics ?? null;
+  const targetM = metrics?.target ?? null;
+  const shadowAM = metrics?.shadowA ?? null;
+
+  const kpiRows = targetM ? [
+    { label: 'CAGR',   target: targetM.cagr,   vwra: shadowAM?.cagr,   fmt: 'pct' as const },
+    { label: 'Sharpe', target: targetM.sharpe,  vwra: shadowAM?.sharpe, fmt: 'num' as const },
+    { label: 'Max DD', target: targetM.maxdd,   vwra: shadowAM?.maxdd,  fmt: 'pct' as const },
+    { label: 'Vol',    target: targetM.vol,     vwra: shadowAM?.vol,    fmt: 'pct' as const },
+  ] : [];
 
   return (
-    <CollapsibleSection id="backtest-shadows" title="Shadow Portfolios — Tracking" defaultOpen={true}>
-      {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem', tableLayout: 'fixed' }}>
-          <colgroup>
-            <col style={{ width: '22%' }} />
-            <col style={{ width: '32%' }} />
-            <col style={{ width: '8%' }} />
-            <col style={{ width: '26%' }} />
-            <col style={{ width: '12%' }} />
-          </colgroup>
-          <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Benchmark</th>
-              <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Composição</th>
-              <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>TER</th>
-              <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Delta vs Carteira</th>
-              <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shadows.length > 0 ? shadows.map((s: any, i: number) => (
-              <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: '6px 8px', fontWeight: 600 }}>{s.label ?? s.name ?? '—'}</td>
-                <td style={{ padding: '6px 8px', color: 'var(--muted)', fontSize: '.75rem' }}>{s.composicao ?? s.composition ?? '—'}</td>
-                <td style={{ padding: '6px 8px', textAlign: 'right' }}>{s.ter != null ? `${s.ter.toFixed(2)}%` : '—'}</td>
-                <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(s.delta) }}>{s.delta != null ? fmtPct(s.delta) : '—'}</td>
-                <td style={{ padding: '6px 8px', textAlign: 'right', fontSize: '.7rem' }}>{s.status ?? '—'}</td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan={5} style={{ padding: '12px 8px', textAlign: 'center', color: 'var(--muted)', fontSize: '.8rem' }}>
-                  Dados de shadow portfolios não disponíveis
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+    <CollapsibleSection id="backtest-shadows" title="Shadow Portfolios — Target vs VWRA" defaultOpen={true}>
 
       {/* Period buttons */}
-      <div className="period-btns" style={{ marginTop: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+      <div className="period-btns" style={{ marginBottom: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
         {SHADOW_PERIODS.map(p => (
           <Button
             key={p.key}
@@ -232,8 +208,69 @@ function ShadowPortfoliosSection() {
         ))}
       </div>
 
+      {/* Equity curve chart — Target vs VWRA filtered by period */}
+      {data && <BacktestChart data={data} period={period} height={260} />}
+
+      {/* Metrics table */}
+      {kpiRows.length > 0 && (
+        <div style={{ overflowX: 'auto', marginTop: '10px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
+                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
+                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
+                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Delta</th>
+              </tr>
+            </thead>
+            <tbody>
+              {kpiRows.map(row => {
+                const fv = (v: number | null | undefined) =>
+                  v == null ? '—' : row.fmt === 'num' ? v.toFixed(2) : fmtPct(v);
+                const delta = row.target != null && row.vwra != null ? row.target - row.vwra : null;
+                return (
+                  <tr key={row.label} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '5px 8px' }}>{row.label}</td>
+                    <td style={{ padding: '5px 8px', textAlign: 'right', fontWeight: 600 }}>{fv(row.target)}</td>
+                    <td style={{ padding: '5px 8px', textAlign: 'right' }}>{fv(row.vwra)}</td>
+                    <td style={{ padding: '5px 8px', textAlign: 'right', color: deltaColor(delta), fontWeight: 600 }}>
+                      {delta != null ? fmtPct(delta) : '—'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Q1 snapshot if available */}
+      {snap && snapPeriodo && (
+        <div style={{ marginTop: '10px', padding: '10px', background: 'var(--card2)', borderRadius: 6, fontSize: '.78rem' }}>
+          <div style={{ fontWeight: 600, color: 'var(--muted)', fontSize: '.65rem', textTransform: 'uppercase', marginBottom: '6px' }}>
+            Performance {snapPeriodo}
+          </div>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            {[
+              { label: 'Carteira', value: snap.atual },
+              { label: 'Target', value: snap.target },
+              { label: 'Shadow A (VWRA)', value: snap.q1_2026?.shadow_a ?? null },
+              { label: 'Shadow B', value: snap.q1_2026?.shadow_b ?? null },
+              { label: 'Δ vs VWRA', value: snap.delta_vwra },
+            ].filter(x => x.value != null).map(x => (
+              <div key={x.label} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{x.label}</div>
+                <div style={{ fontWeight: 700, color: (x.value ?? 0) >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                  {fmtPct(x.value)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="src">
-        Target: 50/30/20 UCITS proxies · Benchmark: VWRA.L (Vanguard FTSE All-World)
+        Target: SWRD 50% / AVGS 30% / AVEM 20% (UCITS proxies) · Benchmark: VWRA.L (Vanguard FTSE All-World) · Rebase = 100 no início do período
       </div>
     </CollapsibleSection>
   );

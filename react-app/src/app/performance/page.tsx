@@ -347,11 +347,12 @@ export default function PerformancePage() {
               { label: 'Mom', key: 'mom' },
             ];
 
-            // AVGS proxy: blend AVUV (US portion) + AVDV (intl portion) weighted by AVGS regional composition
-            // Methodology: AVGS UCITS has no FF5 history → use geographic weights from etf_composition
-            const avgsRegioes = (data as any)?.etf_composition?.etfs?.AVGS?.regioes ?? {};
-            const wUS = avgsRegioes['EUA'] ?? 0.15;   // ~15% US → AVUV proxy
-            const wIntl = 1 - wUS;                     // ~85% Intl → AVDV proxy
+            // AVGS proxy: blend AVUV (US) + AVDV (Intl) via pesos canônicos
+            // Fonte: agentes/referencia/proxies-canonicos.md — aprovado Diego 2026-03-31
+            // Tier A: mesma metodologia Avantis. Split 58/42 ≈ peso global AVGS (~55-60% US / 40-45% Intl)
+            // NÃO usar pesos geográficos do etf_composition (etf_composition.AVGS.regioes.EUA≈15% está errado para este fim)
+            const wUS = 0.58;   // AVUV — US Small Cap Value
+            const wIntl = 0.42; // AVDV — Intl Small Cap Value
             const avgsProxy: Record<string, number> = {};
             for (const fKey of fKeys) {
               const u = fl['AVUV']?.[fKey];
@@ -450,11 +451,7 @@ export default function PerformancePage() {
           })()}
           <div className="src">
             Regressão FF5+Mom · Negrito = significativo (t ≥ 1.65, 90%+) · Desbotado = não significativo<br />
-            *AVGS proxy = {(() => {
-              const r = (data as any)?.etf_composition?.etfs?.AVGS?.regioes ?? {};
-              const wUS = r['EUA'] ?? 0.15;
-              return `${Math.round(wUS * 100)}% AVUV + ${Math.round((1 - wUS) * 100)}% AVDV`;
-            })()} (pesos pela composição geográfica do AVGS · AVUV=EUA, AVDV=Intl)
+            *AVGS proxy = 58% AVUV + 42% AVDV (proxies canônicos Tier A — mesma metodologia Avantis · fonte: proxies-canonicos.md)
           </div>
         </div>
       </CollapsibleSection>

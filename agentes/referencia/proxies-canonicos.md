@@ -38,6 +38,12 @@
 **Descartados:** EFV (large/mid value EAFE — não SC), IWN (sem profitability tilt — captura "small junk").
 **Graduação prevista:** Set/2027 (36 meses de dado real).
 
+**Factor Loadings FF5 — proxy para AVGS.L:**
+Sem histórico suficiente para regressão direta. Proxy = 58% AVUV + 42% AVDV (mesmos pesos canônicos acima).
+Dashboard exibe coluna "AVGS*" itálica/dashed. Revisão quando AVGS atingir 5+ anos (~Set/2029).
+Atenção: etf_composition.json mostra EUA≈15% para AVGS — esse número reflete exposição geográfica do portfólio atual,
+NÃO deve ser usado como peso de proxy (o universo global SC tem ~55-60% US por capitalização).
+
 ---
 
 ## AVEM.L — Avantis Emerging Markets Equity UCITS (inception: 9 Dez 2024)

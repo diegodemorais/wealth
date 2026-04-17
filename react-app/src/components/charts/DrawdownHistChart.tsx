@@ -21,8 +21,7 @@ export function DrawdownHistChart({ data }: DrawdownHistChartProps) {
   const crises = (data as any)?.drawdown_history?.crises ?? [];
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Drawdown Histórico — Série Completa ▾</h3>
+    <div>
       <ReactECharts option={option} style={{ height: 250 }} />
       {crises.length > 0 && (
         <div style={styles.tableWrapper}>
