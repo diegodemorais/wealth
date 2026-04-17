@@ -526,7 +526,8 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       yearsToFire,
       shockYear: shockYr,
       shockFrac: shock / 100,
-      // no seed — stress chart intentionally shows stochastic spread
+      // Seed derived from inputs: same params → same chart across re-renders
+      seed: Math.round(patrimonio / 1000) ^ Math.round(annualReturn * 1e6) ^ Math.round(shock * 100) ^ ageOnset,
     });
 
     const labels = Array.from({ length: years + 1 }, (_, i) => `${currentAge + i}a`);
