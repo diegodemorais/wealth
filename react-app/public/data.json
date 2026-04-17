@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-17T13:58:15",
-  "_generated_brt": "2026-04-17T13:58:15-03:00",
+  "_generated": "2026-04-17T15:04:55",
+  "_generated_brt": "2026-04-17T15:04:55-03:00",
   "date": "2026-04-17",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,7 +10,7 @@
     "fire_mc": "2026-04-17",
     "geral": "2026-04-17"
   },
-  "cambio": 4.9844,
+  "cambio": 4.9866,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -31,7 +31,7 @@
     "AVUV": {
       "qty": 548.88,
       "avg_cost": 81.57,
-      "price": 118.5699,
+      "price": 117.765,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -39,7 +39,7 @@
     "AVDV": {
       "qty": 947.6,
       "avg_cost": 61.37,
-      "price": 108.2826,
+      "price": 108.01,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -63,7 +63,7 @@
     "AVES": {
       "qty": 926.55,
       "avg_cost": 45.47,
-      "price": 66.175,
+      "price": 65.97,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -71,7 +71,7 @@
     "DGS": {
       "qty": 188.21,
       "avg_cost": 50.11,
-      "price": 65.61,
+      "price": 65.405,
       "bucket": "AVEM",
       "status": "transitorio",
       "ter": null
@@ -109,7 +109,7 @@
     "stress": 86.8
   },
   "premissas": {
-    "patrimonio_atual": 3707080,
+    "patrimonio_atual": 3703454,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -1854,7 +1854,7 @@
       577.0,
       568.34,
       544.87,
-      537.58,
+      537.57,
       566.43,
       595.29,
       605.77,
@@ -2379,16 +2379,16 @@
   },
   "hodl11": {
     "qty": 1676,
-    "preco": 65.54,
-    "valor": 109845.04,
+    "preco": 65.28,
+    "valor": 109409.28,
     "preco_medio": 79.03,
-    "pnl_brl": -22609.24,
-    "pnl_pct": -17.07,
+    "pnl_brl": -23045.0,
+    "pnl_pct": -17.4,
     "banda": {
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.96,
+      "atual_pct": 2.95,
       "status": "verde"
     }
   },
@@ -2409,9 +2409,9 @@
       "taxa_atual": 7.07,
       "piso": 6.0,
       "gap_pp": 1.07,
-      "pct_carteira_atual": 3.0,
+      "pct_carteira_atual": 3.1,
       "alvo_pct": 12.0,
-      "gap_alvo_pp": 9.0,
+      "gap_alvo_pp": 8.9,
       "proxima_acao": "DCA ativo: aportar em TD 2040 (80% do bloco IPCA+) ate 12.0% da carteira"
     },
     "ipca2050": {
@@ -2457,39 +2457,39 @@
       "label": "Equity SWRD — Drift",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -3.7,
+      "valor": -3.6,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -1.7,
-      "posicao_r": 1327135,
+      "gap": -1.6,
+      "posicao_r": 1329540,
       "acao": "Rebalancear",
-      "detalhe": "drift: -3.70pp (atual 35.8% vs alvo 39.5%) · posição R$1327k"
+      "detalhe": "drift: -3.60pp (atual 35.9% vs alvo 39.5%) · posição R$1330k"
     },
     {
       "id": "hodl11_banda",
       "label": "Crypto HODL11 — Banda",
       "category": "crypto",
       "status": "verde",
-      "valor": -0.04,
+      "valor": -0.05,
       "unidade": "pp",
       "piso": 0.0,
-      "gap": 0.04,
-      "posicao_r": 109845.0,
+      "gap": 0.05,
+      "posicao_r": 109409.0,
       "acao": "No alvo",
-      "detalhe": "drift: -0.04pp (atual 3.0% vs alvo 3.0%) · posição R$110k"
+      "detalhe": "drift: -0.05pp (atual 3.0% vs alvo 3.0%) · posição R$109k"
     },
     {
       "id": "drift_ipca_max",
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.636819545302501,
+      "valor": -11.633526702370274,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -9.64,
+      "gap": -9.63,
       "posicao_r": 124676.0,
       "acao": "Aportar urgente",
-      "detalhe": "drift: -11.64pp vs alvo 15% · posição R$125k"
+      "detalhe": "drift: -11.63pp vs alvo 15% · posição R$125k"
     }
   ],
   "guardrails_retirada": [
@@ -2561,11 +2561,11 @@
   },
   "drift": {
     "SWRD": {
-      "atual": 35.8,
+      "atual": 35.9,
       "alvo": 39.5
     },
     "AVGS": {
-      "atual": 27.8,
+      "atual": 27.7,
       "alvo": 23.7
     },
     "AVEM": {
@@ -2587,7 +2587,7 @@
       "nome": "Avantis US SC Val",
       "qty": 548.88,
       "pm": 81.57,
-      "price": 118.5699,
+      "price": 117.765,
       "ucits": "AVGS.L"
     },
     {
@@ -2595,7 +2595,7 @@
       "nome": "Avantis Intl SC",
       "qty": 947.6,
       "pm": 61.37,
-      "price": 108.2826,
+      "price": 108.01,
       "ucits": "AVGS.L"
     },
     {
@@ -2619,7 +2619,7 @@
       "nome": "Avantis EM Value",
       "qty": 926.55,
       "pm": 45.47,
-      "price": 66.175,
+      "price": 65.97,
       "ucits": "AVEM.L"
     },
     {
@@ -2627,7 +2627,7 @@
       "nome": "WisdomTree EM SC",
       "qty": 188.21,
       "pm": 50.11,
-      "price": 65.61,
+      "price": 65.405,
       "ucits": "AVEM.L"
     },
     {
@@ -2998,10 +2998,10 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 654875,
-    "retorno_usd": 263832,
-    "pct_aportes": 59.7,
-    "pct_retorno": 40.3,
+    "patrimonio_equity_usd": 653947,
+    "retorno_usd": 262903,
+    "pct_aportes": 59.8,
+    "pct_retorno": 40.2,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-17"
@@ -3027,8 +3027,8 @@
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 84.6,
-    "bitcoin_usd": 77917.37,
+    "exposicao_cambial_pct": 84.7,
+    "bitcoin_usd": 77383.38,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -3042,13 +3042,13 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 4.9844
+    "cambio": 4.9866
   },
   "mercado": {
-    "cambio_brl_usd": 4.9844,
-    "btc_usd": 77917.37,
-    "cambio_mtd_pct": -3.33,
-    "btc_mtd_pct": 8.4,
+    "cambio_brl_usd": 4.9866,
+    "btc_usd": 77383.38,
+    "cambio_mtd_pct": -3.29,
+    "btc_mtd_pct": 7.66,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3584,7 +3584,7 @@
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3707080,
+    "financeiro_brl": 3703454,
     "imovel_equity_brl": 367875.3,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 452124.7,
@@ -3592,13 +3592,13 @@
     "capital_humano_vp": 4914000.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 9421955.3,
+    "total_brl": 9418329.3,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
     "brasil_pct": 11.9,
     "composicao": {
-      "hodl11_brl": 109845,
+      "hodl11_brl": 109409,
       "rf_total_brl": 329063,
       "rf_detalhe": {
         "ipca2029": 86555,
@@ -3608,8 +3608,8 @@
       },
       "crypto_legado_brl": 4012
     },
-    "total_brasil_brl": 442920,
-    "total_portfolio_brl": 3707080,
+    "total_brasil_brl": 442484,
+    "total_portfolio_brl": 3703454,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3625,23 +3625,23 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72621,
-      "delta_brl": 47621,
+      "realizado_media_brl": 72636,
+      "delta_brl": 47636,
       "delta_pct": 190.5,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1949117,
+      "total_ibkr_brl": 1949977,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4357276,
-      "cambio_conversao": 4.9844,
+      "total_aporte_brl": 4358136,
+      "cambio_conversao": 4.9866,
       "por_ano_brl": {
-        "2026": 94704,
-        "2025": 281482,
-        "2024": 371197,
-        "2023": 392309,
-        "2022": 480464,
-        "2021": 328962
+        "2026": 94745,
+        "2025": 281606,
+        "2024": 371361,
+        "2023": 392482,
+        "2022": 480676,
+        "2021": 329107
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
@@ -3656,10 +3656,10 @@
     "zona": "verde",
     "pfire_atual": 90.4,
     "spending_atual": 250000,
-    "upper_guardrail_spending": 250000,
+    "upper_guardrail_spending": 275000,
     "safe_target_spending": 225000,
     "lower_guardrail_spending": 200000,
-    "nota": "Spending atual R$250k/ano. Upper guardrail ~R$250k (P≈95%). Safe target ~R$225k (P≈80%). Lower ~R$200k (P≈70%)."
+    "nota": "P(FIRE@53) = 90.4% com spending atual R$250k/ano. Teto de expansão R$275k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. Safe target R$225k (−10%). Piso de emergência R$200k (−20%)."
   },
   "spending_breakdown": {
     "periodo": "2025-08 a 2026-03",
@@ -5218,7 +5218,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-17T13:58:07",
+    "_generated": "2026-04-17T15:04:46",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
@@ -7031,6 +7031,137 @@
     ],
     "n_sim": 5000,
     "nota": "Casamento e filho modelados como spending permanente override. Impacto de timing (2027 vs 2030) não capturado — conservador (pior caso)."
+  },
+  "bond_pool_runway_by_profile": {
+    "atual": {
+      "custo_vida_anual": 250000,
+      "inss_katia_anual": 0,
+      "anos_inss_katia_pos_fire": 9,
+      "anos_pos_fire": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "pool_disponivel": [
+        959873,
+        767466,
+        563514,
+        347325,
+        118164,
+        -124746,
+        -382231,
+        -655165,
+        -944475,
+        -1251143,
+        -1576212,
+        -1920784,
+        -2286031,
+        -2673193,
+        -3083585
+      ],
+      "pool_inicial": 1141390,
+      "runway_anos": 5.5,
+      "runway_label": "5.5 anos",
+      "_modelo": "r_real=6% | INSS Katia 0k/ano a partir de 2049"
+    },
+    "casado": {
+      "custo_vida_anual": 270000,
+      "inss_katia_anual": 93600,
+      "anos_inss_katia_pos_fire": 9,
+      "anos_pos_fire": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "pool_disponivel": [
+        939873,
+        726266,
+        499842,
+        259832,
+        5422,
+        -264252,
+        -550108,
+        -853114,
+        -1080701,
+        -1321943,
+        -1577660,
+        -1848719,
+        -2136042,
+        -2440605,
+        -2763441
+      ],
+      "pool_inicial": 1141390,
+      "runway_anos": 5.0,
+      "runway_label": "5.0 anos",
+      "_modelo": "r_real=6% | INSS Katia 94k/ano a partir de 2049"
+    },
+    "filho": {
+      "custo_vida_anual": 300000,
+      "inss_katia_anual": 93600,
+      "anos_inss_katia_pos_fire": 9,
+      "anos_pos_fire": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "pool_disponivel": [
+        909873,
+        664466,
+        404334,
+        128594,
+        -163691,
+        -473512,
+        -801923,
+        -1150038,
+        -1425440,
+        -1717367,
+        -2026809,
+        -2354817,
+        -2702506,
+        -3071057,
+        -3461720
+      ],
+      "pool_inicial": 1141390,
+      "runway_anos": 4.4,
+      "runway_label": "4.4 anos",
+      "_modelo": "r_real=6% | INSS Katia 94k/ano a partir de 2049"
+    }
   },
   "withdraw_cenarios": {
     "atual": {

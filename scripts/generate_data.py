@@ -1990,10 +1990,11 @@ def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrail
 
     # Derivar guardrails de spending a partir da lista GUARDRAILS
     # Cada guardrail: (dd_min, dd_max, corte_pct, desc)
-    # upper_guardrail: gasto máximo (sem corte = 0%)
-    # safe_target:     corte 10%
-    # lower_guardrail: corte 20%
-    upper_spending = spending_atual  # sem corte
+    # upper_guardrail: teto de expansão (+10%) — quando P(FIRE) é alto, pode gastar mais
+    # safe_target:     corte 10% — zona segura
+    # lower_guardrail: corte 20% — piso de emergência
+    EXPANSION_PCT = 0.10
+    upper_spending = round(spending_atual * (1 + EXPANSION_PCT))  # teto de expansão
     safe_spending  = spending_atual
     lower_spending = spending_atual
     for g in guardrails_raw:
@@ -2002,18 +2003,16 @@ def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrail
         else:
             corte = g.get('corte', 0)
         retirada = round(spending_atual * (1 - corte))
-        if corte == 0.0:
-            upper_spending = retirada
-        elif corte == 0.10:
+        if corte == 0.10:
             safe_spending = retirada
         elif corte == 0.20:
             lower_spending = retirada
 
     nota = (
-        f"Spending atual R${spending_atual/1000:.0f}k/ano. "
-        f"Upper guardrail ~R${upper_spending/1000:.0f}k (P≈95%). "
-        f"Safe target ~R${safe_spending/1000:.0f}k (P≈80%). "
-        f"Lower ~R${lower_spending/1000:.0f}k (P≈70%)."
+        f"P(FIRE@53) = {pfire_atual:.1f}% com spending atual R${spending_atual/1000:.0f}k/ano. "
+        f"Teto de expansão R${upper_spending/1000:.0f}k (+10%) — ativado quando P(FIRE) sustentado acima de 90%. "
+        f"Safe target R${safe_spending/1000:.0f}k (−10%). "
+        f"Piso de emergência R${lower_spending/1000:.0f}k (−20%)."
     )
     return {
         "zona":                       zona,
