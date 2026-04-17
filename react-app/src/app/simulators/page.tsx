@@ -125,12 +125,10 @@ function FireSimuladorSection() {
   const currentAge: number | undefined = premissas.idade_atual;
   const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissas.patrimonio_atual;
 
-  // P(sucesso) por cenário — reactive to current fireMkt selection
-  // pfire_aspiracional/pfire_base: { stress, base, fav } — percentuais diretos (ex: 86.5)
-  const pfireAsp = (data as any)?.pfire_aspiracional ?? null;
-  const pfireBase = (data as any)?.pfire_base ?? null;
-  const pfire50 = pfireAsp != null ? (pfireAsp[fireMkt] ?? null) : null;
-  const pfire53 = pfireBase != null ? (pfireBase[fireMkt] ?? null) : null;
+  // P(sucesso) — fixed base market reference (matches FIRE page values)
+  // pfire_aspiracional.base = 86.5%, pfire_base.base = 90.4%
+  const pfire50 = (data as any)?.pfire_aspiracional?.base ?? null;
+  const pfire53 = (data as any)?.pfire_base?.base ?? null;
 
   // SWR from data
   const swrPercentis = (data as any)?.fire_swr_percentis;
@@ -238,14 +236,14 @@ function FireSimuladorSection() {
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
                 {pfire50 !== null ? `${pfire50.toFixed(0)}%` : '—'}
               </div>
-              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>FIRE antecipado · {fireMkt}</div>
+              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>FIRE antecipado · MC base</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--accent)' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>P(sucesso) Base</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
                 {pfire53 !== null ? `${pfire53.toFixed(0)}%` : '—'}
               </div>
-              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>Plano conservador · {fireMkt}</div>
+              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>Plano conservador · MC base</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>Patrimônio projetado</div>

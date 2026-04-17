@@ -163,22 +163,22 @@ export default function FirePage() {
               idade {data.premissas?.idade_cenario_aspiracional ?? 49}
             </div>
             <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)', marginTop: '12px' }}>
-              P = {derived.pfireBase != null ? `${(derived.pfireBase - 3.5).toFixed(1)}%` : '86.5%'}
+              P = {derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}
             </div>
             <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }}>
               {data.premissas?.idade_cenario_aspiracional ? (data.premissas.idade_cenario_aspiracional - data.premissas.idade_atual) : 10} anos a partir de hoje
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '16px', maxWidth: '300px', margin: '16px auto 0' }}>
               <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Cenário Aspiracional</div>
+                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Aspiracional</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }}>
-                  {derived.pfireBase != null ? `${(derived.pfireBase - 3.5).toFixed(1)}%` : '86.5%'}
+                  {derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}
                 </div>
               </div>
               <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Cenário Base</div>
+                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Base (conservador)</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
-                  {derived.pfireBase != null ? `${derived.pfireBase.toFixed(1)}%` : '86.5%'}
+                  {derived.pfireBase != null ? `${derived.pfireBase.toFixed(1)}%` : '—'}
                 </div>
               </div>
             </div>

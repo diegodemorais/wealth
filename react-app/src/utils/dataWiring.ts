@@ -419,10 +419,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     pfireStress: (data.pfire_base?.stress ?? 86.8),
     tornadoData: data.tornado ?? [],
 
-    // P(FIRE) aspiracional scenarios
-    pfireAspiracional: (data as any).scenario_comparison?.aspiracional?.base ?? null,
-    pfireAspirFav: (data as any).scenario_comparison?.aspiracional?.fav ?? null,
-    pfireAspirStress: (data as any).scenario_comparison?.aspiracional?.stress ?? null,
+    // P(FIRE) aspiracional scenarios — source: pfire_aspiracional (not scenario_comparison which doesn't exist)
+    pfireAspiracional: (data as any).pfire_aspiracional?.base ?? null,
+    pfireAspirFav: (data as any).pfire_aspiracional?.fav ?? null,
+    pfireAspirStress: (data as any).pfire_aspiracional?.stress ?? null,
 
     // Allocation
     equityPercentage: totalEquityUsd * CAMBIO / totalBrl,
