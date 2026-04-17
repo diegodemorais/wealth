@@ -56,7 +56,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
   };
 
   const cellStyle: React.CSSProperties = {
-    fontSize: '0.62rem',
+    fontSize: 'var(--text-xs)',
     fontWeight: 600,
     textAlign: 'center',
     borderRadius: 3,
@@ -66,7 +66,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
 
   return (
     <div style={{ overflowX: 'auto' }}>
-      <table style={{ borderCollapse: 'separate', borderSpacing: 2, width: '100%', fontSize: '0.65rem' }}>
+      <table style={{ borderCollapse: 'separate', borderSpacing: 2, width: '100%', fontSize: 'var(--text-xs)' }}>
         <thead>
           <tr>
             <th style={{ textAlign: 'left', paddingRight: 8, color: 'var(--muted)', fontWeight: 600, width: 36 }}></th>

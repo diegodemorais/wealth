@@ -165,7 +165,7 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
       </div>
 
       {/* Legend */}
-      <div className="grid grid-cols-4 gap-3 text-xs">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         {[
           { label: '≥90%', color: 'var(--green)' },
           { label: '70-90%', color: 'var(--yellow)' },

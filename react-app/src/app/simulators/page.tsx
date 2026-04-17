@@ -255,14 +255,14 @@ function FireSimuladorSection() {
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
                 {pfire50 !== null ? `${pfire50.toFixed(0)}%` : '—'}
               </div>
-              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>FIRE antecipado · MC base</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>FIRE antecipado · MC base</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--accent)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P(sucesso) Base</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
                 {pfire53 !== null ? `${pfire53.toFixed(0)}%` : '—'}
               </div>
-              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>Plano conservador · MC base</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Plano conservador · MC base</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio projetado</div>
@@ -275,8 +275,8 @@ function FireSimuladorSection() {
           <div style={{ position: 'relative', height: '8px', background: 'var(--card)', borderRadius: '4px', overflow: 'visible', marginBottom: '18px' }}>
             <div style={{ position: 'absolute', left: 0, height: '100%', borderRadius: '4px', background: 'linear-gradient(90deg, var(--accent), var(--green))', width: `${timelinePct}%`, transition: 'width .4s' }} />
             <div style={{ position: 'absolute', top: '-4px', width: '16px', height: '16px', borderRadius: '50%', background: 'var(--green)', border: '2px solid white', transform: 'translateX(-50%)', left: `${timelinePct}%`, transition: 'left .4s', zIndex: 2 }} />
-            <div style={{ position: 'absolute', bottom: '-18px', left: 0, fontSize: '.55rem', color: 'var(--muted)' }}>Hoje</div>
-            <div style={{ position: 'absolute', bottom: '-18px', right: 0, fontSize: '.55rem', color: 'var(--muted)' }}>70 anos</div>
+            <div style={{ position: 'absolute', bottom: '-18px', left: 0, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Hoje</div>
+            <div style={{ position: 'absolute', bottom: '-18px', right: 0, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>70 anos</div>
             {result && (
               <div style={{ position: 'absolute', bottom: '-18px', left: `${timelinePct}%`, fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 700, transform: 'translateX(-50%)', whiteSpace: 'nowrap', transition: 'left .4s' }}>
                 {result.idade}a
@@ -326,7 +326,7 @@ function FireSimuladorSection() {
       </div>
 
       {/* Sliders */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px', marginBottom: '12px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-3">
         <div className="slider-row">
           <label>
             <span>Aporte Mensal</span>
@@ -462,7 +462,7 @@ function WhatIfSection() {
       </div>
 
       {/* Output 2-col */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>P(Sucesso 30 anos)</div>
           <div style={{ fontSize: '2rem', fontWeight: 800 }} className="pv">{psucesso != null ? `${(psucesso * 100).toFixed(0)}%` : '—'}</div>
@@ -554,7 +554,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
           return `${labels[yr]}<br/>P90: ${fmtM(p.p90)}<br/>P50: ${fmtM(p.p50)}<br/>P10: ${fmtM(p.p10)}`;
         },
       },
-      grid: { left: 55, right: 15, top: 20, bottom: 30, containLabel: false },
+      grid: { left: '12%', right: '4%', top: 20, bottom: 30, containLabel: true },
       xAxis: {
         type: 'category' as const,
         data: labels,
@@ -636,7 +636,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>
         Projeção — Evolução Patrimonial após Shock · {300} trajetórias MC · valores nominais BRL
       </div>
-      <ReactECharts option={option} style={{ height: 300 }} />
+      <ReactECharts option={option} style={{ height: 300 }} opts={{ renderer: 'canvas', devicePixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio : 1 }} />
       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '3px' }}>
         Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano · Negativos visíveis (sem floor)
       </div>
@@ -832,14 +832,14 @@ function CascadeSection() {
       </div>
 
       {/* Cascade result — always show all 3 levels */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '10px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2.5">
         {/* Nível 1: IPCA+ Longo */}
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: `3px solid ${ipcaAtivo ? 'var(--green)' : 'var(--muted)'}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
               1 · IPCA+ Longo
             </div>
-            <span style={{ fontSize: '.55rem', fontWeight: 600, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)', background: ipcaAtivo ? 'rgba(34,197,94,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)', background: ipcaAtivo ? 'rgba(34,197,94,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
               {ipcaAtivo ? 'ATIVO' : 'PAUSADO'}
             </span>
           </div>
@@ -861,7 +861,7 @@ function CascadeSection() {
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
               2 · Renda+ 2065
             </div>
-            <span style={{ fontSize: '.55rem', fontWeight: 600, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)', background: rendaAtivo ? 'rgba(59,130,246,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)', background: rendaAtivo ? 'rgba(59,130,246,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
               {rendaAtivo ? 'ATIVO' : 'PAUSADO'}
             </span>
           </div>
@@ -883,7 +883,7 @@ function CascadeSection() {
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
               3 · Equity (overflow)
             </div>
-            <span style={{ fontSize: '.55rem', fontWeight: 600, color: 'var(--orange)', background: 'rgba(249,115,22,.12)', borderRadius: '3px', padding: '1px 4px' }}>
+            <span style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--orange)', background: 'rgba(249,115,22,.12)', borderRadius: '3px', padding: '1px 4px' }}>
               SEMPRE
             </span>
           </div>

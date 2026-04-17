@@ -62,7 +62,7 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
       {/* SWR Info */}
       <div className="flex justify-between items-center text-xs mt-2">
         <span className="text-muted">SWR no FIRE Day projetada:</span>
-        <span className="text-cyan-400 font-bold text-sm">
+        <span className="text-cyan font-bold text-sm">
           {privacyMode ? '••••' : (swrFireDay * 100).toFixed(2) + '%'}
         </span>
       </div>
