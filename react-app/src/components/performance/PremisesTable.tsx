@@ -8,207 +8,147 @@ export function PremisesTable() {
   const privacyMode = useUiStore(s => s.privacyMode);
   const data = useDashboardStore(s => s.data);
 
-  const premises = useMemo(() => {
-    if (!data?.premissas_vs_realizado) return [];
-    const pvr = data.premissas_vs_realizado;
+  const pvr = data?.premissas_vs_realizado;
 
-    return [
-      {
-        category: 'Return (Equity)',
-        item: 'Annual Real Return (BRL)',
-        assumption: `${pvr.retorno_equity?.premissa_real_brl_pct?.toFixed(2) || '—'}%`,
-        actual: `${pvr.retorno_equity?.twr_real_brl_pct?.toFixed(2) || '—'}%`,
-        delta: pvr.retorno_equity?.twr_real_brl_pct && pvr.retorno_equity?.premissa_real_brl_pct
-          ? (pvr.retorno_equity.twr_real_brl_pct - pvr.retorno_equity.premissa_real_brl_pct).toFixed(2)
-          : '—',
-      },
-      {
-        category: 'Contributions',
-        item: 'Monthly Contribution (BRL)',
-        assumption: pvr.aporte_mensal?.premissa_brl
-          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(pvr.aporte_mensal.premissa_brl)
-          : '—',
-        actual: pvr.aporte_mensal?.realizado_media_brl
-          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(pvr.aporte_mensal.realizado_media_brl)
-          : '—',
-        delta: pvr.aporte_mensal?.delta_pct
-          ? `${(pvr.aporte_mensal.delta_pct).toFixed(1)}%`
-          : '—',
-      },
-      {
-        category: 'Contributions',
-        item: 'Total Contribution (All Period)',
-        assumption: '—',
-        actual: pvr.aporte_mensal?.total_aporte_brl
-          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(pvr.aporte_mensal.total_aporte_brl)
-          : '—',
-        delta: '—',
-      },
-    ];
-  }, [data?.premissas_vs_realizado]);
-
-  const formatValue = (value: string | number) => {
-    if (privacyMode && typeof value === 'string' && value.includes('R$')) {
-      return '••••';
-    }
-    return value;
+  const fmt = (n: number | null | undefined, suffix = '') => {
+    if (n == null) return '—';
+    if (privacyMode) return '••••';
+    return `${n.toFixed(2)}${suffix}`;
   };
 
-  const getDeltaColor = (delta: string) => {
-    if (delta === '—') return 'var(--text)';
-    const numDelta = parseFloat(delta);
-    if (isNaN(numDelta)) return 'var(--text)';
-    if (numDelta > 0) return 'var(--green)';
-    if (numDelta < 0) return 'var(--red)';
-    return 'var(--text)';
+  const fmtCurrency = (n: number | null | undefined) => {
+    if (n == null) return '—';
+    if (privacyMode) return '••••';
+    const abs = Math.abs(n);
+    if (abs >= 1_000_000) return `R$${(abs / 1_000_000).toFixed(2)}M`;
+    if (abs >= 1_000) return `R$${Math.round(abs / 1_000)}k`;
+    return `R$${n.toLocaleString('pt-BR')}`;
   };
 
-  if (!data?.premissas_vs_realizado) {
+  const aporteData = useMemo(() => {
+    if (!pvr?.aporte_mensal?.por_ano_brl) return [];
+    return Object.entries(pvr.aporte_mensal.por_ano_brl)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([year, total]) => ({
+        year,
+        total: total as number,
+        media: (total as number) / 12,
+      }));
+  }, [pvr?.aporte_mensal?.por_ano_brl]);
+
+  if (!pvr) {
     return (
-      <div style={styles.container}>
-        <h3 style={styles.title}>Premises vs Actual</h3>
-        <div style={styles.empty}>
-          <p>No comparison data available</p>
-        </div>
+      <div style={{ color: 'var(--muted)', fontSize: '.82rem', padding: '8px 0' }}>
+        Sem dados de premissas vs realizado
       </div>
     );
   }
 
+  const eq = pvr.retorno_equity;
+  const am = pvr.aporte_mensal;
+  const delta = eq?.twr_real_brl_pct != null && eq?.premissa_real_brl_pct != null
+    ? eq.twr_real_brl_pct - eq.premissa_real_brl_pct
+    : null;
+  const deltaColor = delta == null ? 'var(--text)' : delta >= 0 ? 'var(--green)' : 'var(--red)';
+
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>📊 Premises vs Actual Performance</h3>
-      <p style={styles.subtitle}>
-        Comparison of initial assumptions with realized outcomes
-      </p>
-      <div style={styles.tableWrapper}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Category</th>
-              <th style={{ textAlign: 'left', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Item</th>
-              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Assumption</th>
-              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Actual</th>
-              <th style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--muted)', fontWeight: '600', fontSize: 'var(--text-xs)' }}>Delta</th>
-            </tr>
-          </thead>
-          <tbody>
-            {premises.map((row, idx) => (
-              <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                <td style={{ padding: 'var(--space-2)', ...styles.category }}>{row.category}</td>
-                <td style={{ padding: 'var(--space-2)', color: 'var(--text)' }}>{row.item}</td>
-                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
-                  {formatValue(row.assumption)}
-                </td>
-                <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
-                  {formatValue(row.actual)}
-                </td>
-                <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: getDeltaColor(row.delta), fontWeight: '500' }}>
-                  {formatValue(row.delta)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div>
+      {/* 2-card row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px', marginBottom: '14px' }}>
+
+        {/* Card 1: Retorno Equity */}
+        <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', padding: '14px' }}>
+          <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '10px' }}>
+            Retorno Equity — TWR real BRL CAGR
+          </div>
+          <div style={{ display: 'flex', gap: '20px', marginBottom: '8px' }}>
+            <div>
+              <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '2px' }}>Premissa IPS</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--muted)' }}>
+                {fmt(eq?.premissa_real_brl_pct, '%')}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '2px' }}>Realizado</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green)' }}>
+                {fmt(eq?.twr_real_brl_pct, '%')}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '2px' }}>Delta</div>
+              <div style={{ fontSize: '1.2rem', fontWeight: 700, color: deltaColor }}>
+                {delta != null ? `${delta >= 0 ? '+' : ''}${delta.toFixed(2)}pp` : '—'}
+              </div>
+            </div>
+          </div>
+          <div style={{ fontSize: '.65rem', color: 'var(--muted)', lineHeight: 1.5 }}>
+            {eq?.periodo_anos != null && `Período: ${pvr.aporte_mensal?.periodo ?? ''} (${Math.round(eq.periodo_anos * 12)} meses / ${eq.periodo_anos.toFixed(0)} anos)`}
+          </div>
+          <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>
+            TWR reconstruído · Retornos pós-IPCA real BRL
+          </div>
+        </div>
+
+        {/* Card 2: Aporte Mensal */}
+        <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', padding: '14px' }}>
+          <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '10px' }}>
+            Aporte Mensal — Média {eq?.periodo_anos?.toFixed(0) ?? '5'} anos
+          </div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--green)', marginBottom: '8px' }}>
+            {fmtCurrency(am?.realizado_media_brl)}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '.72rem', color: 'var(--muted)' }}>
+            <div>
+              Realizado vs Premissa:{' '}
+              <strong style={{ color: 'var(--text)' }}>{fmtCurrency(am?.realizado_media_brl)}</strong>
+              {' '}vs{' '}
+              <strong style={{ color: 'var(--muted)' }}>{fmtCurrency(am?.premissa_brl)}</strong>
+            </div>
+            {am?.delta_pct != null && (
+              <div>
+                Execução:{' '}
+                <strong style={{ color: 'var(--green)' }}>
+                  {privacyMode ? '••••' : `${(am.realizado_media_brl / am.premissa_brl).toFixed(1)}×`}
+                </strong>
+                {' '}premissa
+              </div>
+            )}
+            {am?.total_aporte_brl != null && (
+              <div>
+                Total est: <strong style={{ color: 'var(--text)' }}>{fmtCurrency(am.total_aporte_brl)}</strong>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {data.premissas_vs_realizado.aporte_mensal?.por_ano_brl && (
-        <div style={styles.annualSection}>
-          <h4 style={styles.sectionTitle}>Annual Contribution Breakdown</h4>
-          <div style={styles.annualGrid}>
-            {Object.entries(data.premissas_vs_realizado.aporte_mensal.por_ano_brl)
-              .sort()
-              .reverse()
-              .map(([year, amount]) => (
-                <div key={year} style={styles.annualItem}>
-                  <span style={styles.yearLabel}>{year}</span>
-                  <span style={styles.yearValue}>
-                    {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                      notation: 'compact',
-                      maximumFractionDigits: 0,
-                    }).format(amount as number)}
-                  </span>
+      {/* Annual breakdown with monthly avg */}
+      {aporteData.length > 0 && (
+        <div>
+          <div style={{ fontSize: '.68rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: '8px' }}>
+            Aportes por Ano
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '8px' }}>
+            {aporteData.map(({ year, total, media }) => (
+              <div key={year} style={{
+                background: 'var(--bg)',
+                border: '1px solid var(--border)',
+                borderRadius: '6px',
+                padding: '10px 10px',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontSize: '.7rem', color: 'var(--muted)', fontWeight: 600, marginBottom: '4px' }}>{year}</div>
+                <div style={{ fontSize: '.9rem', fontWeight: 700, color: 'var(--accent)', marginBottom: '2px' }}>
+                  {fmtCurrency(total)}
                 </div>
-              ))}
+                <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+                  {fmtCurrency(media)}/mês
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    backgroundColor: 'var(--card)',
-    border: '1px solid var(--border)',
-    borderRadius: '8px',
-    padding: 'var(--space-6)',
-    marginBottom: '14px',
-  },
-  title: {
-    margin: '0 0 8px 0',
-    fontSize: 'var(--text-lg)',
-    fontWeight: '600',
-    color: 'var(--text)',
-  },
-  subtitle: {
-    margin: '0 0 16px 0',
-    fontSize: 'var(--text-sm)',
-    color: 'var(--muted)',
-  },
-  tableWrapper: {
-    overflowX: 'auto',
-    marginBottom: '14px',
-  },
-  category: {
-    fontSize: 'var(--text-xs)',
-    fontWeight: '500',
-    color: 'var(--muted)',
-  },
-  empty: {
-    minHeight: '100px',
-    backgroundColor: 'var(--bg)',
-    borderRadius: '4px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'var(--muted)',
-  },
-  annualSection: {
-    borderTop: '1px solid var(--border)',
-    paddingTop: '16px',
-    marginTop: '16px',
-  },
-  sectionTitle: {
-    margin: '0 0 12px 0',
-    fontSize: 'var(--text-sm)',
-    fontWeight: '600',
-    color: 'var(--muted)',
-  },
-  annualGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-    gap: 'var(--space-3)',
-  },
-  annualItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: 'var(--space-3)',
-    backgroundColor: 'var(--bg)',
-    borderRadius: '4px',
-    border: '1px solid var(--border)',
-    textAlign: 'center',
-  },
-  yearLabel: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--muted)',
-    fontWeight: '500',
-    marginBottom: '4px',
-  },
-  yearValue: {
-    fontSize: 'var(--text-sm)',
-    fontWeight: '600',
-    color: 'var(--accent)',
-  },
-};

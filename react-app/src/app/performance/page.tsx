@@ -55,62 +55,63 @@ export default function PerformancePage() {
     <div>
       {/* 1. Alpha Desde o Início vs SWRD — PRIMEIRA seção (sempre visível) */}
       <section className="section" id="alphaSwrdSection">
-        <h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '20px', alignItems: 'flex-start' }}>
+        <h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa ▼</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: '20px', alignItems: 'flex-start' }}>
           <div>
-            <DeltaBarChart data={data} />
+            <DeltaBarChart data={data} height={220} />
           </div>
           {/* Painel lateral direito com métricas IPCA+ */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
-                IPCA+ Longo — Progressão vs Alvo 15%
+                IPCA+ Longa — Progressão vs Alvo 15%
               </div>
               {(() => {
                 const ipca = data.rf?.ipca2040;
-                const alvoTotal = (data.patrimonio?.total_financeiro ?? 0) * 0.15;
-                const atual = ipca?.valor_brl ?? 0;
-                const gapPp = alvoTotal > 0 ? ((atual - alvoTotal) / (data.patrimonio?.total_financeiro ?? 1)) * 100 : null;
+                const pct = (data as any)?.pisos?.ipca2040?.pct_do_total ?? null;
+                const alvo = 0.15;
+                const gap = pct != null ? ((pct - alvo) * 100).toFixed(1) : null;
                 return (
-                  <div style={{ fontSize: '.72rem', lineHeight: 1.6 }}>
-                    {gapPp !== null && (
-                      <div style={{ color: gapPp >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>
-                        {gapPp >= 0 ? '+' : ''}{gapPp.toFixed(1)}pp {gapPp < 0 ? '· DCA ativo' : '· alvo atingido'}
-                        {ipca?.taxa ? ` · taxa ${ipca.taxa.toFixed(2)}%` : ''}
+                  <div style={{ fontSize: '.75rem', lineHeight: 1.6 }}>
+                    {gap !== null && (
+                      <div style={{ color: parseFloat(gap) >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: 600 }}>
+                        {parseFloat(gap) >= 0 ? '+' : ''}{gap}pp {parseFloat(gap) < 0 ? '· DCA ativo' : '· alvo atingido'}
                       </div>
                     )}
-                    {!gapPp && ipca?.taxa && (
-                      <div>taxa {ipca.taxa.toFixed(2)}%</div>
+                    {ipca?.taxa != null && (
+                      <div style={{ color: 'var(--muted)', fontSize: '.65rem' }}>
+                        Taxa IPCA+: {ipca.taxa.toFixed(2)}% ao ano
+                      </div>
                     )}
                   </div>
                 );
               })()}
             </div>
-            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
+            <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
                 Alpha Líquido pós-haircut
               </div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--muted)' }}>−0.16%/ano</div>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>McLean & Pontiff 2016 haircut 58%</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }}>−0.16%/ano</div>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '2px' }}>McLean &amp; Pontiff 2016, haircut 58%</div>
             </div>
-            <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
+            <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '6px', padding: '10px' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>
                 IPCA+ taxa vs piso
               </div>
               {data.rf?.ipca2040 && (
                 <div>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--green)' }}>
-                    {data.rf.ipca2040.taxa?.toFixed(2)}% ≥ {data.rf.ipca2040.piso_compra?.toFixed(1) ?? '6.0'}%
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: data.rf.ipca2040.taxa != null && data.rf.ipca2040.taxa >= (data.rf.ipca2040.piso_compra ?? 6.0) ? 'var(--green)' : 'var(--red)' }}>
+                    {data.rf.ipca2040.taxa?.toFixed(2)}% vs {data.rf.ipca2040.piso_compra?.toFixed(1) ?? '6.0'}%
                   </div>
-                  <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
-                    Atual IPCA+: ativa · DCA ativo
+                  <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '2px' }}>
+                    Ano IPCA+ alvo · Atual ativo · janela DCA ativa
                   </div>
                 </div>
               )}
             </div>
           </div>
         </div>
-        <div className="src">McLean & Pontiff 2016: haircut 58%</div>
+        <div className="src">Alpha vs VWRA (proxy SWRD) por período cumulativo · McLean &amp; Pontiff 2016: haircut 58%</div>
       </section>
 
       {/* 2. Premissas vs Realizado — 5 Anos (2021-2026) */}
@@ -169,7 +170,9 @@ export default function PerformancePage() {
       <section className="section" id="attrSection">
         <h2>
           Performance Attribution — Decomposição do Patrimônio{' '}
-          <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }} id="attrPeriodo"></span>
+          <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>
+            {data.attribution?._inicio ? `(desde ${data.attribution._inicio})` : ''}
+          </span>
         </h2>
         <AttributionChart data={data} />
         {/* Attribution KPI cards — valores monetários em R$ */}
@@ -179,38 +182,39 @@ export default function PerformancePage() {
           const fmtR = (v: number | null | undefined) => {
             if (v == null) return '—';
             const abs = Math.abs(v);
-            const sign = v < 0 ? '−' : '+';
-            if (abs >= 1e6) return `${sign}R$${(abs / 1e6).toFixed(2)}M`;
-            if (abs >= 1e3) return `${sign}R$${(abs / 1e3).toFixed(0)}k`;
-            return `${sign}R$${v.toLocaleString('pt-BR')}`;
+            const sign = v < 0 ? '−' : 'R$';
+            if (v < 0) return `−R$${abs >= 1e3 ? Math.round(abs / 1e3) + 'k' : abs.toLocaleString('pt-BR')}`;
+            if (abs >= 1e6) return `R$${(abs / 1e6).toFixed(2)}M`;
+            if (abs >= 1e3) return `R$${Math.round(abs / 1e3)}k`;
+            return `R$${v.toLocaleString('pt-BR')}`;
           };
+          const total = (attr.aportes ?? 0) + (attr.retornoUsd ?? 0) + (attr.rf ?? 0) + (attr.cambio ?? 0) + (attr.fx ?? 0);
+          const pct = (v: number) => total > 0 ? `${((v / total) * 100).toFixed(0)}%` : '';
           const cards = [
             { label: 'Aportes', value: attr.aportes, color: 'var(--accent)' },
             { label: 'Retorno USD', value: attr.retornoUsd, color: 'var(--green)' },
-            { label: 'RF Doméstica', value: attr.rf, color: 'var(--yellow)' },
-            { label: 'Câmbio', value: attr.cambio, color: attr.cambio != null && attr.cambio >= 0 ? 'var(--green)' : 'var(--red)' },
-            { label: 'FX Custo', value: attr.fx, color: attr.fx != null && attr.fx >= 0 ? 'var(--green)' : 'var(--red)' },
+            { label: 'M+ Câmbio', value: attr.cambio, color: attr.cambio != null && attr.cambio >= 0 ? 'var(--green)' : 'var(--red)' },
+            { label: 'Câmbio (FX)', value: attr.fx, color: attr.fx != null && attr.fx >= 0 ? 'var(--green)' : 'var(--red)' },
+            { label: 'RF Local', value: attr.rf, color: 'var(--yellow)' },
           ];
           return (
-            <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: 8 }}>
-              {cards.map(c => (
-                <div key={c.label} style={{ background: 'var(--card2)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
-                  <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 4 }}>{c.label}</div>
-                  <div style={{ fontSize: '1rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
-                </div>
-              ))}
-            </div>
+            <>
+              <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 8 }}>
+                {cards.map(c => (
+                  <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 8, fontSize: '.72rem', color: 'var(--muted)', textAlign: 'center' }}>
+                {pct(attr.aportes ?? 0)} aportes · {pct(attr.retornoUsd ?? 0)} retorno USD · {pct((attr.cambio ?? 0) + (attr.fx ?? 0))} câmbio · reste RF/custo
+              </div>
+            </>
           );
         })()}
-        <div style={{ marginTop: 8, fontSize: '.75rem', background: 'var(--card2)', borderRadius: 6, padding: 10 }}>
-          <div style={{ textAlign: 'center', fontSize: '.7rem', color: 'var(--muted)', padding: 6, background: 'rgba(255,255,255,.04)', borderRadius: 4 }}>
-            CAGR inclui aportes mensais —{' '}
-            <span title="CAGR inclui aportes mensais — não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real." style={{ cursor: 'help', color: 'var(--accent)' }}>ⓘ</span>
-            {' '}não é retorno puro dos ETFs. Use TWR USD/BRL para avaliar performance real.
-          </div>
-        </div>
         <div className="src">
-          Onde está o seu patrimônio hoje: aportes investidos + retorno em USD dos ETFs + RF doméstica e variação cambial. Use TWR para performance pura (sem efeito de aportes).
+          Decomposição do patrimônio acumulado: aportes + retorno USD por ETF + RF doméstica + variação cambial. Desde o início da carteira.
         </div>
       </section>
 

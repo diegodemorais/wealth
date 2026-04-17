@@ -21,14 +21,6 @@ export function AttributionChart({ data }: AttributionChartProps) {
   );
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>Return Attribution Breakdown</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
-    </div>
+    <ReactECharts ref={chartRef} option={option} style={{ height: 280, width: '100%' }} />
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: 'var(--card)', border: '1px solid var(--card2)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '14px' },
-  title: { margin: '0 0 16px 0', color: 'var(--text)' },
-};

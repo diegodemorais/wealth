@@ -67,69 +67,72 @@ export function createBaseOption(theme: ChartTheme, privacyMode: boolean) {
 }
 
 /**
- * Attribution Chart (Horizontal Bar)
+ * Attribution Chart (Donut) — decomposes portfolio wealth by source
  */
 export function createAttributionChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
+  const attr = (options.data as any)?.attribution ?? {};
+  const buckets = attr.por_bucket ?? {};
 
-  // Use real attribution data from data.json
-  const breakdown = ((options.data as any)?.attribution?.breakdown_chart ?? []) as Array<{label: string, value_pct: number}>;
-  let categories: string[];
-  let attributionData: number[];
+  // Build donut slices: Aportes + equity by bucket + RF + Câmbio
+  const slices = [
+    { name: 'Aportes',            value: attr.aportes   ?? 0, color: CHART_COLORS.accent },
+    { name: 'SWRD (Blend)',       value: buckets.SWRD   ?? 0, color: CHART_COLORS.green },
+    { name: 'Factor Small Value', value: buckets.AVGS   ?? 0, color: '#238636' },
+    { name: 'Emergentes',         value: buckets.AVEM   ?? 0, color: CHART_COLORS.pink },
+    { name: 'RF Local',           value: attr.rf        ?? 0, color: CHART_COLORS.yellow },
+    { name: 'Câmbio',             value: attr.cambio    ?? 0, color: CHART_COLORS.red },
+  ].filter(s => s.value > 0);
 
-  if (breakdown.length > 0) {
-    categories = breakdown.map(d => d.label);
-    attributionData = breakdown.map(d => d.value_pct);
-  } else {
-    // Build from real attribution fields (absolute BRL values)
-    const attr = (options.data as any)?.attribution ?? {};
-    const crescReal = attr.crescReal ?? 0;
-    if (crescReal > 0) {
-      const aportes = attr.aportes ?? 0;
-      const retornoUsd = attr.retornoUsd ?? 0;
-      const cambio = attr.cambio ?? 0;
-      const fx = attr.fx ?? 0;
-      const rf = attr.rf ?? 0;
-      const total = Math.abs(aportes) + Math.abs(retornoUsd) + Math.abs(cambio) + Math.abs(rf) + Math.abs(fx);
-      const pct = (v: number) => total > 0 ? parseFloat((v / total * 100).toFixed(1)) : 0;
-      categories = ['Aportes', 'Retorno Equity (USD)', 'Câmbio BRL/USD', 'Renda Fixa', 'FX (custo)'];
-      attributionData = [pct(aportes), pct(retornoUsd), pct(cambio), pct(rf), pct(fx)];
-    } else {
-      categories = ['Aportes', 'Retorno Equity', 'Câmbio', 'Renda Fixa', 'FX'];
-      attributionData = [0, 0, 0, 0, 0];
-    }
-  }
-  const colors = attributionData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
+  const total = slices.reduce((sum, s) => sum + s.value, 0);
+
+  const fmt = (v: number) => {
+    if (privacyMode) return '••••';
+    const abs = Math.abs(v);
+    if (abs >= 1_000_000) return `R$${(abs / 1_000_000).toFixed(2)}M`;
+    if (abs >= 1_000) return `R$${Math.round(abs / 1_000)}k`;
+    return `R$${v.toLocaleString('pt-BR')}`;
+  };
 
   return {
-    ...createBaseOption(theme, privacyMode),
-    xAxis: {
-      type: 'value' as const,
-      axisLabel: {
-        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
-        formatter: '{value}%',
-        fontSize: 12,
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item' as const,
+      backgroundColor: theme.tooltip.backgroundColor,
+      borderColor: theme.tooltip.borderColor,
+      textStyle: theme.tooltip.textStyle,
+      formatter: (p: any) => {
+        if (privacyMode) return `${p.name}: ••••`;
+        return `${p.marker} ${p.name}<br/>${fmt(p.value)} (${p.percent?.toFixed(1)}%)`;
       },
-      splitLine: { lineStyle: { color: CHART_COLORS.border } },
     },
-    yAxis: {
-      type: 'category' as const,
-      data: categories,
-      axisLabel: {
-        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
-        fontSize: 12,
-      },
-      axisLine: { lineStyle: { color: CHART_COLORS.border } },
+    legend: {
+      orient: 'vertical' as const,
+      right: 10,
+      top: 'center',
+      textStyle: { color: theme.textStyle.color, fontSize: 11 },
+      data: slices.map(s => s.name),
     },
     series: [
       {
-        name: 'Attribution (%)',
-        type: 'bar' as const,
-        data: attributionData.map((value, idx) => ({
-          value,
-          itemStyle: { color: colors[idx] },
+        name: 'Patrimônio',
+        type: 'pie' as const,
+        radius: ['45%', '70%'],
+        center: ['40%', '50%'],
+        data: slices.map(s => ({
+          name: s.name,
+          value: s.value,
+          itemStyle: { color: s.color },
+          label: {
+            show: s.value / total > 0.08,
+            color: '#fff',
+            fontSize: 11,
+            fontWeight: 600,
+            formatter: privacyMode ? '••••' : `{d}%`,
+          },
         })),
-        itemStyle: { borderRadius: [0, 4, 4, 0] },
+        emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } },
+        labelLine: { show: false },
       },
     ],
   };
@@ -886,25 +889,36 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
       deltaData = Array(12).fill(0);
     }
   } else {
-    // Monthly alpha from backtest: target return - shadowA return
+    // Period-based alpha: cumulative Target return minus VWRA for YTD, 1y, 3y, 5y, ITD
     const backtest = (options.data as any)?.backtest ?? {};
     const btDates: string[]  = backtest.dates  ?? [];
     const btTarget: number[] = backtest.target ?? [];
     const btShadow: number[] = backtest.shadowA ?? [];
 
     if (btDates.length > 1 && btTarget.length > 1 && btShadow.length > 1) {
-      xAxisData = btDates.slice(1).map((ym: string) => {
-        const [y, m] = ym.split('-');
-        return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
-      });
-      deltaData = btDates.slice(1).map((_: string, i: number) => {
-        const tRet = btTarget[i + 1] / btTarget[i] - 1;
-        const sRet = btShadow[i + 1] / btShadow[i] - 1;
-        return parseFloat(((tRet - sRet) * 100).toFixed(2));
-      });
+      const lastDate = btDates[btDates.length - 1];
+      const [lastY] = lastDate.split('-').map(Number);
+      const now = new Date();
+      const periodStarts: Array<{ label: string; startYm: string }> = [
+        { label: 'YTD', startYm: `${lastY}-01` },
+        { label: '1a', startYm: `${lastY - 1}-${btDates[btDates.length - 1].split('-')[1]}` },
+        { label: '3a', startYm: `${lastY - 3}-${btDates[btDates.length - 1].split('-')[1]}` },
+        { label: '5a', startYm: `${lastY - 5}-${btDates[btDates.length - 1].split('-')[1]}` },
+        { label: 'Desde Início', startYm: btDates[0] },
+      ];
+      const periodAlpha: Array<{ label: string; alpha: number }> = [];
+      for (const { label, startYm } of periodStarts) {
+        const idx = btDates.findIndex(d => d >= startYm);
+        if (idx < 0 || idx >= btDates.length - 1) continue;
+        const tRet = (btTarget[btDates.length - 1] / btTarget[idx] - 1) * 100;
+        const sRet = (btShadow[btDates.length - 1] / btShadow[idx] - 1) * 100;
+        periodAlpha.push({ label, alpha: parseFloat((tRet - sRet).toFixed(1)) });
+      }
+      xAxisData = periodAlpha.map(p => p.label);
+      deltaData = periodAlpha.map(p => p.alpha);
     } else {
-      xAxisData = Array.from({ length: 12 }, (_, i) => `M${i + 1}`);
-      deltaData = Array(12).fill(0);
+      xAxisData = ['YTD', '1a', '3a', '5a', 'Desde Início'];
+      deltaData = Array(5).fill(0);
     }
   }
 

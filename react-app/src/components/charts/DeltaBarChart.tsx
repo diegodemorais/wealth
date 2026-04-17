@@ -10,9 +10,10 @@ export interface DeltaBarChartProps {
   data: DashboardData;
   title?: string;
   chartType?: 'alpha' | 'factor-rolling';
+  height?: number;
 }
 
-export function DeltaBarChart({ data, title = 'Monthly Delta vs Benchmark', chartType }: DeltaBarChartProps) {
+export function DeltaBarChart({ data, chartType, height = 260 }: DeltaBarChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
 
   const option = useMemo(
@@ -21,14 +22,6 @@ export function DeltaBarChart({ data, title = 'Monthly Delta vs Benchmark', char
   );
 
   return (
-    <div style={styles.container}>
-      <h3 style={styles.title}>{title}</h3>
-      <ReactECharts option={option} style={{ height: 300 }} />
-    </div>
+    <ReactECharts option={option} style={{ height, width: '100%' }} />
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: { backgroundColor: 'var(--card)', border: '1px solid var(--card2)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '14px' },
-  title: { margin: '0 0 16px 0', color: 'var(--text)' },
-};

@@ -19,8 +19,8 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
     // Use real rolling_sharpe data
     const rs = (data as any)?.rolling_sharpe ?? {};
     const dates: string[] = rs.dates ?? [];
-    const sharpeValues: number[] = rs.values ?? [];
-    const sortinoValues: number[] = rs.sortino ?? [];
+    const sharpeValues: number[] = rs.values ?? [];       // BRL vs CDI
+    const sharpeUsdValues: number[] = rs.values_usd ?? []; // USD vs T-Bill
 
     if (dates.length === 0) {
       return {
@@ -59,7 +59,7 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
         },
       },
       legend: {
-        data: [`Sharpe ${window}m`, `Sortino ${window}m`],
+        data: [`Sharpe BRL vs CDI`, `Sharpe USD vs T-Bill`, `Threshold=1`, `Zero`],
         textStyle: { color: theme.textStyle.color },
         top: 5,
         right: 10,
@@ -85,28 +85,38 @@ export function RollingSharpChart({ data }: RollingSharpChartProps) {
       },
       series: [
         {
-          name: `Sharpe ${window}m`,
+          name: 'Sharpe BRL vs CDI',
           type: 'line' as const,
           data: sharpeValues,
           smooth: true,
-          itemStyle: { color: CHART_COLORS.yellow },
-          lineStyle: { width: 2.5, color: CHART_COLORS.yellow },
+          itemStyle: { color: CHART_COLORS.green },
+          lineStyle: { width: 2.5, color: CHART_COLORS.green },
           symbolSize: 0,
-          markLine: {
-            silent: true,
-            lineStyle: { color: '#555', type: 'dashed' as const, width: 1 },
-            data: [{ yAxis: 0 }],
-            label: { show: false },
-          },
         },
         {
-          name: `Sortino ${window}m`,
+          name: 'Sharpe USD vs T-Bill',
           type: 'line' as const,
-          data: sortinoValues,
+          data: sharpeUsdValues,
           smooth: true,
           itemStyle: { color: CHART_COLORS.accent },
           lineStyle: { width: 1.5, color: CHART_COLORS.accent, type: 'dashed' as const },
           symbolSize: 0,
+        },
+        {
+          name: 'Threshold=1',
+          type: 'line' as const,
+          data: dates.map(() => 1),
+          lineStyle: { color: 'rgba(34,197,94,.4)', type: 'dotted' as const, width: 1 },
+          symbolSize: 0,
+          itemStyle: { color: 'rgba(34,197,94,.4)' },
+        },
+        {
+          name: 'Zero',
+          type: 'line' as const,
+          data: dates.map(() => 0),
+          lineStyle: { color: '#555', type: 'dashed' as const, width: 1 },
+          symbolSize: 0,
+          itemStyle: { color: '#555' },
         },
       ],
     };
