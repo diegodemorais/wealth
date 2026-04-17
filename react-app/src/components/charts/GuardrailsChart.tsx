@@ -9,9 +9,11 @@ import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export interface GuardrailsChartProps {
   data: DashboardData;
+  /** Override gasto anual para mostrar linha do perfil ativo no lugar do spending_atual */
+  gastoOverride?: number;
 }
 
-export function GuardrailsChart({ data }: GuardrailsChartProps) {
+export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
@@ -20,7 +22,8 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
     const upperSpending: number = sg.upper_guardrail_spending ?? 300000;
     const safeTarget: number   = sg.safe_target_spending   ?? 250000;
     const lowerSpending: number = sg.lower_guardrail_spending ?? 200000;
-    const spendingAtual: number = sg.spending_atual ?? safeTarget;
+    // Use gastoOverride if provided (active family profile), else fallback to data
+    const spendingAtual: number = gastoOverride ?? sg.spending_atual ?? safeTarget;
 
     const fmt = (v: number) => privacyMode ? '••••' : `R$${Math.round(v / 1000)}k`;
 
@@ -146,7 +149,7 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
         },
       ],
     };
-  }, [data, privacyMode, theme]);
+  }, [data, gastoOverride, privacyMode, theme]);
 
   return (
     <EChart ref={chartRef} option={option} style={{ height: 320, width: '100%' }} />

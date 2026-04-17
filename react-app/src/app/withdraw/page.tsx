@@ -232,7 +232,10 @@ export default function WithdrawPage() {
               </div>
             );
           })()}
-          <GuardrailsChart data={data} />
+          <div style={{ marginBottom: 8 }}>
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+          </div>
+          <GuardrailsChart data={data} gastoOverride={activeScenarioCfg.custo_vida_base} />
           <div className="src">
             Base: Monte Carlo 10k · Interpolação linear entre pontos simulados
           </div>
@@ -257,8 +260,13 @@ export default function WithdrawPage() {
             <BondPoolReadiness data={bondPoolReadiness} custo_vida_base={activeScenarioCfg.custo_vida_base} />
             {bondPoolRunway && (
               <div style={{ marginTop: 14 }}>
-                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                  <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+                    Runway do Bond Pool pós-FIRE
+                  </div>
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', opacity: .7 }}>
+                    Trajetória calculada no cenário base (Python MC) · meta ajusta ao perfil
+                  </span>
                 </div>
                 <BondPoolRunwayChart data={bondPoolRunway} />
               </div>
