@@ -56,7 +56,7 @@ export default function PerformancePage() {
       {/* 1. Alpha Desde o Início vs SWRD — PRIMEIRA seção (sempre visível) */}
       <section className="section" id="alphaSwrdSection">
         <h2>Alpha Desde o Início vs SWRD (USD) — Performance Relativa ▼</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: '20px', alignItems: 'flex-start' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_260px] gap-5 items-start">
           <div>
             <DeltaBarChart data={data} height={220} />
           </div>

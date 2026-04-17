@@ -1045,17 +1045,18 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
       },
       axisPointer: { type: 'shadow' as const },
     },
-    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
-    grid: { left: 50, right: 20, top: 40, bottom: 40, containLabel: true },
+    grid: { left: 50, right: 20, top: 20, bottom: 30, containLabel: true },
     xAxis: {
       type: 'category' as const,
       data: xAxisData,
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      axisTick: { show: false },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 11 },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}%', fontSize: 12 },
+      min: 0,
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}pp', fontSize: 11 },
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
@@ -1063,6 +1064,14 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
         type: 'bar' as const,
         data: deltaData.map((value, idx) => ({ value, itemStyle: { color: colors[idx] } })),
         itemStyle: { borderRadius: [4, 4, 0, 0] },
+        label: {
+          show: true,
+          position: 'top' as const,
+          formatter: (p: any) => privacyMode ? '•' : `${p.value > 0 ? '+' : ''}${p.value.toFixed(1)}pp`,
+          color: CHART_COLORS.muted,
+          fontSize: 10,
+        },
+        barMaxWidth: 60,
       },
     ],
   };

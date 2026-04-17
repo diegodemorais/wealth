@@ -59,17 +59,22 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       legend: {
         data: ['Realizado', 'Projeção P50', 'Meta FIRE'],
         textStyle: { color: theme.textStyle.color },
-        top: 10,
+        top: 8,
+        itemWidth: 14,
+        itemHeight: 8,
       },
-      grid: { left: 70, right: 30, top: 50, bottom: 40, containLabel: true },
+      grid: { left: 70, right: 20, top: 44, bottom: 30, containLabel: true },
       xAxis: {
         type: 'category' as const,
         data: xDates,
         axisLine: { lineStyle: { color: '#1c2128' } },
+        axisTick: { show: false },
         axisLabel: {
           color: privacyMode ? 'transparent' : '#94a3b8',
-          fontSize: 11,
-          interval: Math.floor(xDates.length / 10),
+          fontSize: 10,
+          // Show only January labels (yearly ticks)
+          interval: (_idx: number, val: string) => val.startsWith('jan/'),
+          hideOverlap: true,
         },
       },
       yAxis: {
