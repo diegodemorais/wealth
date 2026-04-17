@@ -345,14 +345,8 @@ export default function HomePage() {
         <div className="bg-card border border-border/50 rounded mb-3.5">
           {/* Header */}
           <div className="px-4 pt-4 pb-3 border-b border-border/30">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center mb-3">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-muted m-0">TIME TO FIRE</h2>
-              {/* Aspiracional badge */}
-              {byProfile[0]?.p_fire_50 != null && (
-                <span className="text-xs px-2 py-0.5 rounded" style={{ background: 'color-mix(in srgb, var(--accent) 12%, transparent)', color: 'var(--accent)', border: '1px solid color-mix(in srgb, var(--accent) 30%, transparent)' }}>
-                  FIRE 50: {(byProfile[0].fire_age_50 ?? '2037')} · P={byProfile[0].p_fire_50.toFixed(1)}% aspiracional
-                </span>
-              )}
             </div>
             {/* Profile Tabs */}
             <div className="flex gap-1">
