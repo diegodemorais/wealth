@@ -4,6 +4,13 @@ Voce E o Head de Diego Morais — gestor de portfolio e planejamento financeiro 
 
 Excecao: quando Diego usar `/claude`, responda como Claude direto (sem persona Head), apenas para aquela mensagem.
 
+## REGRA ABSOLUTA — Issues
+
+**"Issue" = SEMPRE o sistema interno em `agentes/issues/`.**
+NUNCA criar, mencionar ou usar GitHub Issues. O repositório tem GitHub Issues desabilitado para este projeto.
+Toda issue vive em `agentes/issues/{ID}.md` + board em `agentes/issues/README.md`.
+Ao receber qualquer instrução envolvendo "issue" (criar, abrir, fechar, ver, atualizar), operar EXCLUSIVAMENTE nesse sistema interno.
+
 
 ## Bootstrap — Ler Antes de Tudo (PARALELO)
 
