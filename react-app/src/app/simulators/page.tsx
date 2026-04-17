@@ -26,27 +26,27 @@ function fmtPct(v: number) {
 type FireCond = 'solteiro' | 'casamento' | 'filho';
 type FireMkt = 'stress' | 'base' | 'fav';
 
-const MKT_PRESETS: Record<FireMkt, { retorno: number; label: string }> = {
-  stress:  { retorno: 3.85, label: '⚠️ Stress' },
-  base:    { retorno: 4.85, label: '✅ Base' },
-  fav:     { retorno: 5.85, label: '🚀 Favorável' },
+// Labels only — values are derived from data.fire_matrix.retornos_equity / perfis at runtime
+const MKT_LABELS: Record<FireMkt, string> = {
+  stress: '⚠️ Stress',
+  base:   '✅ Base',
+  fav:    '🚀 Favorável',
 };
 
-const COND_PRESETS: Record<FireCond, { custo: number; label: string }> = {
-  solteiro:  { custo: 250000, label: '👤 Solteiro' },
-  casamento: { custo: 300000, label: '💍 Casamento' },
-  filho:     { custo: 360000, label: '👶 Filho' },
+const COND_LABELS: Record<FireCond, string> = {
+  solteiro:  '👤 Solteiro',
+  casamento: '💍 Casamento',
+  filho:     '👶 Filho',
 };
 
-// Safe SWR for 40+ year retirement — use 3.5% (optimistic) or user-chosen percentile
 // Target: find earliest age where custo/pat <= swrTarget
 function calcFireYear(
   aporte: number,
   retorno: number,
   custo: number,
-  currentAge = 39,
-  patrimonio = 3500000,
-  swrTarget = 0.035, // 3.5% default — INSS reduces effective SWR
+  currentAge: number,
+  patrimonio: number,
+  swrTarget: number,
 ) {
   // Earliest retirement: pat >= custo / swrTarget
   const target = custo / swrTarget;
@@ -65,35 +65,54 @@ function calcFireYear(
 function FireSimuladorSection() {
   const data = useDashboardStore(s => s.data);
 
+  // Derive presets from data.fire_matrix at runtime (not hardcoded)
+  const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
+  const fmPerfis   = (data as any)?.fire_matrix?.perfis ?? {};
+  const premissas  = (data as any)?.premissas ?? {};
+
+  const MKT_PRESETS: Record<FireMkt, { retorno: number; label: string }> = {
+    stress: { retorno: +(((fmRetornos.stress ?? premissas.retorno_equity_base ?? 0.0435) * 100).toFixed(2)), label: MKT_LABELS.stress },
+    base:   { retorno: +(((fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) * 100).toFixed(2)), label: MKT_LABELS.base },
+    fav:    { retorno: +(((fmRetornos.fav    ?? premissas.retorno_equity_base ?? 0.0585) * 100).toFixed(2)), label: MKT_LABELS.fav },
+  };
+
+  const COND_PRESETS: Record<FireCond, { custo: number; label: string }> = {
+    solteiro:  { custo: fmPerfis.atual?.gasto_anual   ?? premissas.custo_vida_base, label: COND_LABELS.solteiro },
+    casamento: { custo: fmPerfis.casado?.gasto_anual  ?? premissas.custo_vida_base, label: COND_LABELS.casamento },
+    filho:     { custo: fmPerfis.filho?.gasto_anual   ?? premissas.custo_vida_base, label: COND_LABELS.filho },
+  };
+
   const [fireCond, setFireCond] = useState<FireCond>('solteiro');
   const [fireMkt, setFireMkt] = useState<FireMkt>('base');
-  const [aporte, setAporte] = useState(25000);
-  const [retorno, setRetorno] = useState(4.85);
-  const [custo, setCusto] = useState(250000);
+  // aporte/retorno/custo start undefined; set from data once loaded
+  const [aporte, setAporte] = useState<number | undefined>(undefined);
+  const [retorno, setRetorno] = useState<number | undefined>(undefined);
+  const [custo, setCusto] = useState<number | undefined>(undefined);
   const [custom, setCustom] = useState(false);
   const dataInitialized = useRef(false);
 
-  // Sync initial state from data.premissas once data loads (only if user hasn't interacted)
+  // Derive values from data once loaded (only if user hasn't interacted)
   useEffect(() => {
     if (data && !dataInitialized.current && !custom) {
       dataInitialized.current = true;
-      const p = data.premissas ?? {};
-      if ((p as any).aporte_mensal) setAporte((p as any).aporte_mensal);
-      if ((p as any).retorno_equity_base) setRetorno(+((p as any).retorno_equity_base * 100).toFixed(2));
-      if ((p as any).custo_vida_base) setCusto((p as any).custo_vida_base);
+      if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+      if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+      const custoInicial = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
+      if (custoInicial != null) setCusto(custoInicial);
     }
-  }, [data, custom]);
+  }, [data, custom]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-apply aspiracional preset when navigated from fire page with ?preset=aspiracional
   const presetApplied = useRef(false);
   useEffect(() => {
-    if (!presetApplied.current && typeof window !== 'undefined') {
+    if (data && !presetApplied.current && typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('preset') === 'aspiracional') {
         presetApplied.current = true;
-        setAporte((data?.premissas as any)?.aporte_mensal ?? 25000);
-        setRetorno(+((((data?.premissas as any)?.retorno_equity_base ?? 0.0485) * 100).toFixed(2)));
-        setCusto((data?.premissas as any)?.custo_vida_base ?? 250000);
+        if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+        if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+        const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
+        if (ci != null) setCusto(ci);
         setFireCond('solteiro');
         setFireMkt('base');
         setCustom(false);
@@ -102,65 +121,67 @@ function FireSimuladorSection() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  const currentAge: number = data?.fire?.idade_atual ?? 39;
-  const patrimonio: number = data?.patrimonio?.total_financeiro ?? data?.fire?.patrimonio_atual ?? 3500000;
+  const currentAge: number | undefined = premissas.idade_atual;
+  const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissas.patrimonio_atual;
 
   // fire50 aspiracional preset: use MC data if available
   const pfire50 = data?.fire?.cenario_aspiracional?.probabilidade_sucesso ?? data?.fire?.probabilidade_sucesso ?? null;
   const pfire53 = data?.fire?.cenario_base?.probabilidade_sucesso ?? null;
 
-  // SWR bruta/líquida from MC data
-  const swrPercentis = data?.fire?.swr_percentis ?? data?.swr_percentis ?? data?.fire_swr_percentis;
-  const swrBruta = swrPercentis?.p50 ?? swrPercentis?.swr_p50;
+  // SWR from data
+  const swrPercentis = (data as any)?.fire_swr_percentis;
+  const swrBruta = swrPercentis?.swr_p50;
   const swrBrutaPct = swrBruta ? (swrBruta * 100).toFixed(2) : null;
-  // Líquida c/INSS: subtract INSS income from base spending to get net SWR
-  const inssAnual = data?.premissas?.inss_anual ?? 18000;
-  const custoVidaBase = data?.premissas?.custo_vida_base ?? 250000;
-  const custoLiquido = Math.max(0, custoVidaBase - inssAnual);
+  const inssAnual: number | undefined = premissas.inss_anual;
+  const custoLiquido = (custo != null && inssAnual != null) ? Math.max(0, custo - inssAnual) : undefined;
 
-  // SWR target: 3.5% (INSS covers R$18k/ano → effective spending ~R$232k → real SWR ~3.25%)
-  const swrTarget = 0.035;
-  const result = calcFireYear(aporte, retorno, custo, currentAge, patrimonio, swrTarget);
+  // SWR target: from premissas.swr_gatilho (official source of truth — no hardcoded fallback)
+  const swrTarget: number | undefined = premissas.swr_gatilho;
 
-  // P(FIRE) from MC percentiles: interpolate based on SWR at fire date vs MC percentiles
-  // swr_p10=3.66% (worst 10%), swr_p50=2.17% (median), swr_p90=1.32% (best 10%)
+  // Only run calc when all inputs are available from data
+  const result = (aporte !== undefined && retorno !== undefined && custo !== undefined &&
+    currentAge !== undefined && patrimonio !== undefined && swrTarget !== undefined)
+    ? calcFireYear(aporte, retorno, custo, currentAge, patrimonio, swrTarget)
+    : null;
+
+  // P(FIRE) from MC percentiles — no fallback: show — if data not present
   const swrAtFire = result?.swrAtFire ?? null;
-  const swrP10 = (data?.fire_swr_percentis as any)?.swr_p10 ?? 0.0366;
-  const swrP50 = (data?.fire_swr_percentis as any)?.swr_p50 ?? 0.0217;
-  const swrP90 = (data?.fire_swr_percentis as any)?.swr_p90 ?? 0.0132;
-  const firePire: number | null = swrAtFire != null ? (() => {
-    // Higher SWR = less patrimônio = lower success probability
+  const swrP10: number | undefined = swrPercentis?.swr_p10;
+  const swrP50: number | undefined = swrPercentis?.swr_p50;
+  const swrP90: number | undefined = swrPercentis?.swr_p90;
+  const firePire: number | null = (swrAtFire != null && swrP10 != null && swrP50 != null && swrP90 != null) ? (() => {
     if (swrAtFire >= swrP10) return 10;
     if (swrAtFire <= swrP90) return 90;
     if (swrAtFire >= swrP50) {
-      // interpolate between P10 (10%) and P50 (50%)
       const t = (swrP10 - swrAtFire) / (swrP10 - swrP50);
       return Math.round(10 + t * 40);
     }
-    // interpolate between P50 (50%) and P90 (90%)
     const t = (swrP50 - swrAtFire) / (swrP50 - swrP90);
     return Math.round(50 + t * 40);
   })() : null;
 
-  // SWR líquida: custoLíquido / patrimônio no FIRE
-  const swrLiquidaSimple = result && result.pat > 0 ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
+  // SWR líquida
+  const swrLiquidaSimple = (result && result.pat > 0 && custoLiquido != null) ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
 
   const setCondPreset = (c: FireCond) => {
     setFireCond(c);
-    setCusto(COND_PRESETS[c].custo);
+    const v = COND_PRESETS[c].custo;
+    if (v != null) setCusto(v);
     setCustom(false);
   };
 
   const setMktPreset = (m: FireMkt) => {
     setFireMkt(m);
-    setRetorno(MKT_PRESETS[m].retorno);
+    const v = MKT_PRESETS[m].retorno;
+    if (v != null) setRetorno(v);
     setCustom(false);
   };
 
   const setFire50Preset = () => {
-    setAporte((data?.premissas as any)?.aporte_mensal ?? 25000);
-    setRetorno(+((((data?.premissas as any)?.retorno_equity_base ?? 0.0485) * 100).toFixed(2)));
-    setCusto((data?.premissas as any)?.custo_vida_base ?? 250000);
+    if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+    if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+    const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
+    if (ci != null) setCusto(ci);
     setFireCond('solteiro');
     setFireMkt('base');
     setCustom(false);
@@ -169,10 +190,12 @@ function FireSimuladorSection() {
   const onSliderChange = () => setCustom(true);
 
   // Timeline: age range hoje..70
-  const timelineMin = currentAge;
+  const timelineMin = currentAge ?? 0;
   const timelineMax = 70;
   const fireAge = result?.idade ?? timelineMax;
-  const timelinePct = Math.min(100, Math.max(0, ((fireAge - timelineMin) / (timelineMax - timelineMin)) * 100));
+  const timelinePct = timelineMin < timelineMax
+    ? Math.min(100, Math.max(0, ((fireAge - timelineMin) / (timelineMax - timelineMin)) * 100))
+    : 0;
 
   return (
     <div className="section section-critical" style={{ marginBottom: '16px' }}>
@@ -281,10 +304,10 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Aporte Mensal</span>
-            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">{fmtBRL(aporte)}</span>
+            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">{aporte != null ? fmtBRL(aporte) : '—'}</span>
           </label>
           <input
-            type="range" min="5000" max="100000" step="1000" value={aporte}
+            type="range" min="5000" max="100000" step="1000" value={aporte ?? 25000}
             onChange={e => { setAporte(+e.target.value); onSliderChange(); }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
@@ -294,10 +317,10 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Retorno Real Equity</span>
-            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{fmtPct(retorno)}</span>
+            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{retorno != null ? fmtPct(retorno) : '—'}</span>
           </label>
           <input
-            type="range" min="0" max="10" step="0.25" value={retorno}
+            type="range" min="0" max="10" step="0.25" value={retorno ?? 4.85}
             onChange={e => { setRetorno(+e.target.value); onSliderChange(); }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
@@ -307,10 +330,10 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Custo de Vida /ano</span>
-            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{fmtBRL(custo)}</span>
+            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{custo != null ? fmtBRL(custo) : '—'}</span>
           </label>
           <input
-            type="range" min="150000" max="500000" step="10000" value={custo}
+            type="range" min="150000" max="500000" step="10000" value={custo ?? 250000}
             onChange={e => { setCusto(+e.target.value); onSliderChange(); }}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
@@ -320,7 +343,7 @@ function FireSimuladorSection() {
       </div>
 
       <div className="src">
-        Simulação determinística (sem MC). Critério: SWR ≤ 3.0% (= R$250k/R$8.33M). Cenário Aspiracional e Cenário Base são outputs do MC 10k (fixos).
+        Simulação determinística (sem MC). Critério: SWR ≤ {swrTarget != null ? `${(swrTarget * 100).toFixed(1)}%` : '—'} (premissas.swr_gatilho). Retornos via fire_matrix.retornos_equity. Perfis via fire_matrix.perfis.
       </div>
     </div>
   );
@@ -330,47 +353,58 @@ function FireSimuladorSection() {
 
 type WiPreset = 'stress' | 'base' | 'fav';
 
-const WI_PRESETS: Record<WiPreset, { label: string; retorno: number; swr: number }> = {
-  stress: { label: '⚠️ Stress (4.35% · SWR 2.0%)',  retorno: 4.35, swr: 2.0 },
-  base:   { label: '✅ Base (4.85% · SWR 2.4%)',     retorno: 4.85, swr: 2.4 },
-  fav:    { label: '🚀 Favorável (5.85% · SWR 3.0%)', retorno: 5.85, swr: 3.0 },
-};
-
 function WhatIfSection() {
   const data = useDashboardStore(s => s.data);
   const [wiPreset, setWiPreset] = useState<WiPreset>('base');
-  const [custo, setCusto] = useState(250000);
+  const [custo, setCusto] = useState<number | undefined>(undefined);
+  const dataInitWI = useRef(false);
+
+  const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
+  const swrPerc = (data as any)?.fire_swr_percentis ?? {};
+  const premissasWI = (data as any)?.premissas ?? {};
+
+  // Derive presets from data — no hardcoded values
+  const WI_PRESETS: Record<WiPreset, { label: string; retorno: number | undefined; swr: number | undefined }> = {
+    stress: { label: '⚠️ Stress',   retorno: fmRetornos.stress != null ? +(fmRetornos.stress * 100).toFixed(2) : undefined, swr: swrPerc.swr_p10 != null ? +(swrPerc.swr_p10 * 100).toFixed(1) : undefined },
+    base:   { label: '✅ Base',     retorno: fmRetornos.base   != null ? +(fmRetornos.base   * 100).toFixed(2) : undefined, swr: swrPerc.swr_p50 != null ? +(swrPerc.swr_p50 * 100).toFixed(1) : undefined },
+    fav:    { label: '🚀 Favorável', retorno: fmRetornos.fav   != null ? +(fmRetornos.fav    * 100).toFixed(2) : undefined, swr: swrPerc.swr_p90 != null ? +(swrPerc.swr_p90 * 100).toFixed(1) : undefined },
+  };
+
+  useEffect(() => {
+    if (data && !dataInitWI.current) {
+      dataInitWI.current = true;
+      const ci = (data as any)?.fire_matrix?.perfis?.atual?.gasto_anual ?? premissasWI.custo_vida_base;
+      if (ci != null) setCusto(ci);
+    }
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const preset = WI_PRESETS[wiPreset];
-  const patrimonio = data?.patrimonio?.total_financeiro ?? data?.fire?.patrimonio_atual ?? 3500000;
-  const patNecessario = custo / (preset.swr / 100);
-  const pctLimite = (patrimonio / patNecessario) * 100;
+  const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissasWI.patrimonio_atual;
+  const patNecessario = (custo != null && preset.swr != null) ? custo / (preset.swr / 100) : undefined;
+  const pctLimite = (patrimonio != null && patNecessario != null) ? (patrimonio / patNecessario) * 100 : null;
 
-  // P(Sucesso) — interpolate from FIRE Matrix if available
-  const fireMatrix = data?.fire_matrix ?? data?.fire?.matrix;
+  // P(Sucesso) — from data only, no estimate
+  const fireMatrix = (data as any)?.fire_matrix;
   let psucesso: number | null = null;
-  if (fireMatrix) {
-    const key = `${preset.retorno.toFixed(2)}_${custo}`;
-    psucesso = fireMatrix[key] ?? null;
-  }
-  if (psucesso === null) {
-    // Estimate: higher retorno + lower custo = higher success
-    psucesso = Math.min(99, Math.max(10, 40 + preset.retorno * 8 - custo / 30000));
+  if (fireMatrix && preset.retorno != null && custo != null) {
+    const key = `${(preset.retorno / 100).toFixed(4)}_${custo}`;
+    psucesso = fireMatrix.cenarios?.base?.[`${premissasWI.patrimonio_atual}_${custo}`] ?? null;
   }
 
-  // ETA: months until patrimonio >= patNecessario at current savings
-  const monthly = data?.fire?.aporte_mensal ?? 25000;
-  const retornoMensal = preset.retorno / 100 / 12;
-  let pat = patrimonio;
-  let etaMonths = 0;
-  if (pat < patNecessario) {
+  // ETA
+  const monthly: number | undefined = premissasWI.aporte_mensal;
+  const retornoMensal = preset.retorno != null ? preset.retorno / 100 / 12 : undefined;
+  let etaYears: number | null = null;
+  if (patrimonio != null && patNecessario != null && monthly != null && retornoMensal != null && patrimonio < patNecessario) {
+    let pat = patrimonio;
+    let etaMonths = 0;
     for (let m = 0; m < 360; m++) {
       pat = pat * (1 + retornoMensal) + monthly;
       etaMonths = m + 1;
       if (pat >= patNecessario) break;
     }
+    etaYears = Math.round(etaMonths / 12);
   }
-  const etaYears = Math.round(etaMonths / 12);
 
   return (
     <CollapsibleSection id="sim-whatif" title="What-If Scenarios — Cenário / Gasto" defaultOpen={true}>
@@ -392,10 +426,10 @@ function WhatIfSection() {
       <div className="slider-row">
         <label>
           <span>Custo de Vida /ano</span>
-          <span className="pv">R$ {(custo / 1000).toFixed(0)}k/ano</span>
+          <span className="pv">{custo != null ? `R$ ${(custo / 1000).toFixed(0)}k/ano` : '—'}</span>
         </label>
         <input
-          type="range" min="150000" max="400000" step="10000" value={custo}
+          type="range" min="150000" max="400000" step="10000" value={custo ?? 250000}
           onChange={e => setCusto(+e.target.value)}
         />
       </div>
@@ -404,22 +438,22 @@ function WhatIfSection() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
           <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '4px' }}>P(Sucesso 30 anos)</div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }} className="pv">{psucesso.toFixed(0)}%</div>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }}>MC interpolado</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800 }} className="pv">{psucesso != null ? `${(psucesso * 100).toFixed(0)}%` : '—'}</div>
+          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }}>Via FIRE Matrix</div>
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
           <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '4px' }}>Patrimônio necessário</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800 }} className="pv">{fmtBRL(patNecessario)}</div>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }} className="pv">SWR {preset.swr.toFixed(1)}%</div>
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }} className="pv">{pctLimite.toFixed(1)}% do limite</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800 }} className="pv">{patNecessario != null ? fmtBRL(patNecessario) : '—'}</div>
+          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }} className="pv">SWR {preset.swr != null ? `${preset.swr.toFixed(2)}%` : '—'}</div>
+          <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }} className="pv">{pctLimite != null ? `${pctLimite.toFixed(1)}% do limite` : '—'}</div>
           <div style={{ fontSize: '.65rem', color: 'var(--yellow)', fontWeight: 600, marginTop: '2px' }} className="pv">
-            {patrimonio >= patNecessario ? 'FIRE atingido ✅' : `ETA: ~${etaYears} anos`}
+            {(patrimonio != null && patNecessario != null) ? (patrimonio >= patNecessario ? 'FIRE atingido ✅' : `ETA: ~${etaYears} anos`) : '—'}
           </div>
         </div>
       </div>
 
       <div className="src" style={{ marginTop: '6px' }}>
-        Interpolado da FIRE Matrix · MC 5.000 simulações · horizonte 30 anos
+        Retornos: fire_matrix.retornos_equity · SWR: fire_swr_percentis · Patrimônio: premissas.patrimonio_atual
       </div>
     </CollapsibleSection>
   );
@@ -437,12 +471,15 @@ const STRESS_AGES = [
 ];
 
 // Inline MC stress chart — lognormal projection with shock applied at ageOnset
-function StressChart({ shock, ageOnset, patrimonio }: { shock: number; ageOnset: number; patrimonio: number }) {
+function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, currentAge: startAge }: {
+  shock: number; ageOnset: number; patrimonio: number;
+  annualReturn: number; annualVol: number; currentAge: number;
+}) {
   const option = useMemo(() => {
-    const currentAge = 39;
+    const currentAge = startAge;
     const years = 30;
-    const ANNUAL_RETURN = 0.0485;
-    const ANNUAL_VOL = 0.18;
+    const ANNUAL_RETURN = annualReturn;
+    const ANNUAL_VOL = annualVol;
     const N_SIMS = 300;
     const shockYr = Math.max(0, ageOnset - currentAge);
 
@@ -561,7 +598,7 @@ function StressChart({ shock, ageOnset, patrimonio }: { shock: number; ageOnset:
         }] : []),
       ],
     };
-  }, [shock, ageOnset, patrimonio]);
+  }, [shock, ageOnset, patrimonio, annualReturn, annualVol, startAge]);
 
   return (
     <div style={{ marginBottom: '14px' }}>
@@ -570,7 +607,7 @@ function StressChart({ shock, ageOnset, patrimonio }: { shock: number; ageOnset:
       </div>
       <ReactECharts option={option} style={{ height: 260 }} />
       <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '3px' }}>
-        Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: 4.85%/ano · Vol: 18%/ano
+        Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano
       </div>
     </div>
   );
@@ -579,10 +616,22 @@ function StressChart({ shock, ageOnset, patrimonio }: { shock: number; ageOnset:
 function StressTestSection() {
   const data = useDashboardStore(s => s.data);
   const [shock, setShock] = useState(-40);
-  const [ageOnset, setAgeOnset] = useState(39);
+  const [ageOnset, setAgeOnset] = useState<number | undefined>(undefined);
+  const dataInitST = useRef(false);
 
-  const patrimonio = data?.patrimonio?.total_financeiro ?? data?.fire?.patrimonio_atual ?? 3500000;
-  const postShock = patrimonio * (1 + shock / 100);
+  const premissasST = (data as any)?.premissas ?? {};
+  const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissasST.patrimonio_atual;
+  const annualReturn: number = premissasST.retorno_equity_base ?? 0;
+  const annualVol: number = premissasST.volatilidade_equity ?? 0;
+  const startAge: number = premissasST.idade_atual ?? 0;
+
+  useEffect(() => {
+    if (data && !dataInitST.current) {
+      dataInitST.current = true;
+      if (premissasST.idade_atual != null) setAgeOnset(premissasST.idade_atual);
+    }
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+  const postShock = patrimonio != null ? patrimonio * (1 + shock / 100) : undefined;
 
   return (
     <CollapsibleSection id="sim-stress" title="Stress Test Monte Carlo — Bear Market Interativo" defaultOpen={true}>
@@ -603,12 +652,12 @@ function StressTestSection() {
         </div>
         <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ fontSize: '.8rem', color: 'var(--muted)' }}>
-            Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{fmtBRL(postShock)}</strong>
+            Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{postShock != null ? fmtBRL(postShock) : '—'}</strong>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ fontSize: '.8rem', color: 'var(--muted)' }}>Idade do shock:</label>
             <Select
-              value={ageOnset.toString()}
+              value={(ageOnset ?? startAge).toString()}
               onChange={e => setAgeOnset(+e.target.value)}
               style={{ width: '200px', fontSize: '.8rem' }}
             >
@@ -623,7 +672,16 @@ function StressTestSection() {
       </div>
 
       {/* Chart — computed from shock/ageOnset sliders */}
-      <StressChart shock={shock} ageOnset={ageOnset} patrimonio={patrimonio} />
+      {patrimonio != null && annualReturn > 0 && annualVol > 0 && startAge > 0 && (
+        <StressChart
+          shock={shock}
+          ageOnset={ageOnset ?? startAge}
+          patrimonio={patrimonio}
+          annualReturn={annualReturn}
+          annualVol={annualVol}
+          currentAge={startAge}
+        />
+      )}
 
       <div className="src" style={{ marginTop: '10px' }}>
         ⚡ = pré-calculado · ✅ = simulado ao vivo
@@ -636,21 +694,29 @@ function StressTestSection() {
 
 function CascadeSection() {
   const data = useDashboardStore(s => s.data);
-  const [aporte, setAporte] = useState(25000);
+  const [aporte, setAporte] = useState<number | undefined>(undefined);
+  const dataInitCasc = useRef(false);
+
+  useEffect(() => {
+    if (data && !dataInitCasc.current) {
+      dataInitCasc.current = true;
+      const ap = (data as any)?.premissas?.aporte_mensal;
+      if (ap != null) setAporte(ap);
+    }
+  }, [data]);
 
   const cambio: number = data?.cambio ?? 0;
 
-  // Derive total portfolio value (BRL) to compute BRL gaps from dca_status percentage gaps
-  const totalBrl: number =
-    data?.patrimonio?.total_financeiro ??
-    data?.fire?.patrimonio_atual ??
-    3500000;
+  // Derive total portfolio value (BRL) — from data only, no hardcoded fallback
+  const totalBrl: number | undefined =
+    (data?.patrimonio as any)?.total_financeiro ??
+    (data as any)?.premissas?.patrimonio_atual;
 
   // IPCA+ Longo gap (pp of portfolio → BRL)
   const ipcaGapPp: number | null = data?.cascade?.ipca_gap != null
     ? data.cascade.ipca_gap
     : (data?.dca_status?.ipca_longo?.gap_alvo_pp ?? null);
-  const ipcaGapBrl: number | null = ipcaGapPp != null && ipcaGapPp > 0
+  const ipcaGapBrl: number | null = ipcaGapPp != null && ipcaGapPp > 0 && totalBrl != null
     ? Math.round((ipcaGapPp / 100) * totalBrl)
     : 0;
 
@@ -658,12 +724,12 @@ function CascadeSection() {
   const rendaGapPp: number | null = data?.cascade?.renda_gap != null
     ? data.cascade.renda_gap
     : (data?.dca_status?.renda_plus?.gap_alvo_pp ?? null);
-  const rendaGapBrl: number | null = rendaGapPp != null && rendaGapPp > 0
+  const rendaGapBrl: number | null = rendaGapPp != null && rendaGapPp > 0 && totalBrl != null
     ? Math.round((rendaGapPp / 100) * totalBrl)
     : 0;
 
   // Cascade allocation: IPCA+ Longo → Renda+ → Equity (overflow)
-  let remaining = aporte;
+  let remaining = aporte ?? 0;
   const ipcaAlloc = ipcaGapBrl !== null ? Math.min(remaining, ipcaGapBrl) : 0;
   remaining -= ipcaAlloc;
   const rendaAlloc = rendaGapBrl !== null ? Math.min(remaining, rendaGapBrl) : 0;
@@ -695,7 +761,7 @@ function CascadeSection() {
             </span>
           </label>
           <input
-            type="range" min="1" max="1000" step="1" value={Math.round(aporte / 1000)}
+            type="range" min="1" max="1000" step="1" value={aporte != null ? Math.round(aporte / 1000) : 25}
             onChange={e => setAporte(+e.target.value * 1000)}
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>

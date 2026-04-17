@@ -31,8 +31,12 @@ function filterByPeriod(
     startYm = `${now.getFullYear() - 5}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   } else if (period === 'since2020') {
     startYm = '2020-01';
+  } else if (period === 'since2013') {
+    startYm = '2013-01';
+  } else if (period === 'since2009') {
+    startYm = '2009-01';
   }
-  // since2013, since2009, all, undefined → full range (backtest data starts 2019)
+  // 'all' and undefined → full range of provided dataset
 
   if (!startYm) return { dates, target, shadow };
 
@@ -144,9 +148,9 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
         },
       ],
     };
-  }, [data, period, privacyMode, theme]);
+  }, [data, period, privacyMode, theme, dataset]);
 
-  if (!(data as any)?.backtest?.dates?.length) return null;
+  if (!dataset && !(data as any)?.backtest?.dates?.length) return null;
 
   return (
     <ReactECharts ref={chartRef} option={option} style={{ height, width: '100%' }} />
