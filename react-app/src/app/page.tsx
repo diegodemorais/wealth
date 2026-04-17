@@ -29,7 +29,7 @@ export default function HomePage() {
     });
   }, [loadDataOnce]);
 
-  if (isLoading) {
+  if (isLoading || (!data && !dataError)) {
     return <div className="loading-state">⏳ Carregando dados...</div>;
   }
 
@@ -41,8 +41,8 @@ export default function HomePage() {
     );
   }
 
-  if (!derived) {
-    return <div className="warning-state">⚠️ Dados carregados mas valores derivados não computados</div>;
+  if (!data || !derived) {
+    return <div className="loading-state">⏳ Carregando...</div>;
   }
 
   // Get IPCA and Renda+ semaforo status from derived
