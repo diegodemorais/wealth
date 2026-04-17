@@ -413,7 +413,7 @@ function WhatIfSection() {
   }
 
   return (
-    <CollapsibleSection id="sim-whatif" title="What-If Scenarios — Cenário / Gasto" defaultOpen={true}>
+    <CollapsibleSection id="sim-whatif" title="What-If Scenarios — Cenário / Gasto" defaultOpen={false}>
       {/* Preset buttons */}
       <div style={{ marginBottom: '10px' }}>
         <div className="seg-group">
@@ -478,9 +478,10 @@ const STRESS_AGES = [
 ];
 
 // Inline MC stress chart — lognormal projection with shock applied at ageOnset
-function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, currentAge: startAge }: {
+function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, currentAge: startAge, aporteMensal, fireAge }: {
   shock: number; ageOnset: number; patrimonio: number;
   annualReturn: number; annualVol: number; currentAge: number;
+  aporteMensal: number; fireAge: number;
 }) {
   const option = useMemo(() => {
     const currentAge = startAge;
@@ -489,6 +490,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
     const ANNUAL_VOL = annualVol;
     const N_SIMS = 300;
     const shockYr = Math.max(0, ageOnset - currentAge);
+    const yearsToFire = Math.max(0, fireAge - currentAge);
 
     // Generate trajectories
     const sims: number[][] = [];
@@ -501,8 +503,10 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
         const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
         const ret = ANNUAL_RETURN + ANNUAL_VOL * z;
         let next = prev * (1 + ret);
+        // Add monthly contributions during accumulation phase (pre-FIRE)
+        if (yr <= yearsToFire) next += aporteMensal * 12;
         if (yr === shockYr) next = next * (1 + shock / 100);
-        traj.push(Math.max(0, next));
+        traj.push(next); // No floor — negative values show real ruin risk
       }
       sims.push(traj);
     }
@@ -605,7 +609,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
         }] : []),
       ],
     };
-  }, [shock, ageOnset, patrimonio, annualReturn, annualVol, startAge]);
+  }, [shock, ageOnset, patrimonio, annualReturn, annualVol, startAge, aporteMensal, fireAge]);
 
   return (
     <div style={{ marginBottom: '14px' }}>
@@ -614,7 +618,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       </div>
       <ReactECharts option={option} style={{ height: 260 }} />
       <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '3px' }}>
-        Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano
+        Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano · Negativos visíveis (sem floor)
       </div>
     </div>
   );
@@ -631,6 +635,8 @@ function StressTestSection() {
   const annualReturn: number = premissasST.retorno_equity_base ?? 0;
   const annualVol: number = premissasST.volatilidade_equity ?? 0;
   const startAge: number = premissasST.idade_atual ?? 0;
+  const aporteMensal: number = premissasST.aporte_mensal ?? 0;
+  const fireAge: number = premissasST.fire_age ?? (startAge + 14);
 
   useEffect(() => {
     if (data && !dataInitST.current) {
@@ -641,7 +647,7 @@ function StressTestSection() {
   const postShock = patrimonio != null ? patrimonio * (1 + shock / 100) : undefined;
 
   return (
-    <CollapsibleSection id="sim-stress" title="Stress Test Monte Carlo — Bear Market Interativo" defaultOpen={true}>
+    <CollapsibleSection id="sim-stress" title="Stress Test Monte Carlo — Bear Market Interativo" defaultOpen={false}>
       {/* Slider + Age selector */}
       <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '16px', border: '1px solid var(--border)', marginBottom: '14px' }}>
         <div className="slider-row">
@@ -687,6 +693,8 @@ function StressTestSection() {
           annualReturn={annualReturn}
           annualVol={annualVol}
           currentAge={startAge}
+          aporteMensal={aporteMensal}
+          fireAge={fireAge}
         />
       )}
 
@@ -890,23 +898,23 @@ export default function SimulatorsPage() {
 
   return (
     <div>
-      {/* 1. Simulador FIRE — section-critical */}
+      {/* 1. Cascade — decisão de aporte (ação imediata) */}
+      <CascadeSection />
+
+      <hr className="section-sep" />
+
+      {/* 2. Simulador FIRE — projeção central */}
       <FireSimuladorSection />
 
       <hr className="section-sep" />
 
-      {/* 2. What-If Scenarios */}
+      {/* 3. What-If Scenarios — collapsed (análise secundária) */}
       <WhatIfSection />
 
       <hr className="section-sep" />
 
-      {/* 3. Stress Test MC */}
+      {/* 4. Stress Test MC — collapsed (ferramenta avançada) */}
       <StressTestSection />
-
-      <hr className="section-sep" />
-
-      {/* 4. Calculadora Cascade */}
-      <CascadeSection />
     </div>
   );
 }

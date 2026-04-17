@@ -54,33 +54,7 @@ export default function WithdrawPage() {
 
   return (
     <div>
-      {/* 0. Sankey — Fluxo de Caixa Anual */}
-      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
-        <div style={{ padding: '0 16px 16px' }}>
-          <CashFlowSankey />
-        </div>
-      </CollapsibleSection>
-
-      {/* 1. Bond Pool Readiness — Proteção SoRR */}
-      {bondPoolReadiness && (
-        <section className="section" id="bondPoolSection">
-          <h2>Bond Pool Readiness — Proteção SoRR</h2>
-          <BondPoolReadiness data={bondPoolReadiness} />
-          {bondPoolRunway && (
-            <div style={{ marginTop: 14 }}>
-              <div style={{ fontSize: '.72rem', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)
-              </div>
-              <BondPoolRunwayChart data={bondPoolRunway} />
-            </div>
-          )}
-          <div className="src">
-            Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos de gastos.
-          </div>
-        </section>
-      )}
-
-      {/* 2. SWR no FIRE Day — Percentis P10 / P50 / P90 */}
+      {/* 1. SWR no FIRE Day — Percentis P10 / P50 / P90 (moved first: número central da aposentadoria) */}
       {swrPercentis && (
         <CollapsibleSection id="section-swr-percentiles" title="SWR no FIRE Day — Percentis P10 / P50 / P90" defaultOpen={true}>
           <div style={{ padding: '0 16px 16px' }}>
@@ -185,7 +159,33 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 5. Renda na Aposentadoria — Fases Temporais (collapsible) */}
+      {/* 4. Bond Pool Readiness — Proteção SoRR (moved here: contexto após SWR/guardrails) */}
+      {bondPoolReadiness && (
+        <section className="section" id="bondPoolSection">
+          <h2>Bond Pool Readiness — Proteção SoRR</h2>
+          <BondPoolReadiness data={bondPoolReadiness} />
+          {bondPoolRunway && (
+            <div style={{ marginTop: 14 }}>
+              <div style={{ fontSize: '.72rem', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)
+              </div>
+              <BondPoolRunwayChart data={bondPoolRunway} />
+            </div>
+          )}
+          <div className="src">
+            Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos de gastos.
+          </div>
+        </section>
+      )}
+
+      {/* 5. Sankey — Fluxo de Caixa Anual (moved here: overview após detalhes) */}
+      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
+        <div style={{ padding: '0 16px 16px' }}>
+          <CashFlowSankey />
+        </div>
+      </CollapsibleSection>
+
+      {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
       <CollapsibleSection id="section-income-phases" title="Renda na Aposentadoria — Fases Temporais" defaultOpen={true}>
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
@@ -224,10 +224,10 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 6. Spending — Essenciais vs Discricionários */}
+      {/* 7. Spending — Essenciais vs Discricionários (collapsed: detalhe secundário) */}
       {(data.spending ?? data.fire?.spending ?? data.spending_breakdown) && (
-        <section className="section" id="spendingBreakdownSection">
-          <h2>Spending — Essenciais vs Discricionários <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(período ago/2026–mar/2026)</span></h2>
+        <CollapsibleSection id="section-spending-breakdown" title="Spending — Essenciais vs Discricionários" defaultOpen={false}>
+          <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const spending = data.spending ?? data.fire?.spending ?? data.spending_breakdown ?? {};
             const essenciais = spending.essenciais_mes ?? spending.must_spend_mensal ?? spending.essenciais ?? 15074;
@@ -278,9 +278,10 @@ export default function WithdrawPage() {
             );
           })()}
           <div className="src">
-            Período: Ago/2026 a Mar/2026 (8 meses) · Ago/2026: cálculo via Notion/Financiera · Mar/2026 a Mar/2026 · Essenciais: linha principal de despesa (R$1.317/mês e equity e hipoteca)
+            Período: Ago/2026 a Mar/2026 (8 meses) · Essenciais: linha principal de despesa (R$1.317/mês e equity e hipoteca)
           </div>
-        </section>
+          </div>
+        </CollapsibleSection>
       )}
     </div>
   );

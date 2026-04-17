@@ -180,7 +180,89 @@ export default function HomePage() {
         })()}
       </div>
 
-      {/* 4. TIME TO FIRE — Redesign com tabs de perfil */}
+      {/* 3. SEMÁFOROS DE GATILHOS — moved earlier: ações imediatas do dia */}
+      {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
+        <SemaforoGatilhos items={derived.dcaItems} />
+      )}
+
+      {/* 4. APORTE DO MÊS — próxima ação concreta */}
+      {derived && (
+        <AporteDoMes
+          aporteMensal={derived.aporteMensal}
+          ultimoAporte={derived.ultimoAporte}
+          ultimoAporteData={derived.ultimoAporteData}
+          acumuladoMes={derived.acumuladoMes}
+          acumuladoAno={derived.acumuladoAno}
+        />
+      )}
+
+      {/* 5. DRIFT DA CARTEIRA — contexto de rebalanceamento */}
+      {derived && driftItems.length > 0 && (
+        <div className="mb-3.5">
+          <div className="kpi-label mb-2" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>
+            Drift da Carteira
+          </div>
+          <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
+            {driftItems.map(item => {
+              const statusColor =
+                item.status === 'verde' ? 'var(--green)' :
+                item.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+              const barPct = Math.min(100, item.atual > 0 ? (item.atual / Math.max(item.atual, item.alvo)) * 100 : 0);
+              const isUnder = item.gap > 0;
+              return (
+                <div key={item.id} className="bg-card2/40 rounded p-2.5">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-semibold">{item.nome}</span>
+                    <span className="text-xs" style={{ color: statusColor }}>
+                      {item.gap >= 0 ? '-' : '+'}{item.absGap.toFixed(1)}pp
+                    </span>
+                  </div>
+                  <div className="relative h-1.5 bg-card rounded-sm overflow-hidden mb-1.5">
+                    <div
+                      className="absolute left-0 top-0 h-full rounded-sm"
+                      style={{ width: `${barPct}%`, background: statusColor, opacity: 0.8 }}
+                    />
+                    <div
+                      className="absolute top-0 h-full w-0.5"
+                      style={{
+                        left: `${Math.min(100, (item.alvo / Math.max(item.atual, item.alvo)) * 100)}%`,
+                        background: 'var(--muted)',
+                        opacity: 0.6,
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-muted">
+                    <span>{item.atual.toFixed(1)}%</span>
+                    <span>→ {item.alvo.toFixed(0)}%</span>
+                  </div>
+                  {item.impactoBrl != null && item.impactoBrl > 5000 && (
+                    <div className="text-xs mt-1" style={{ color: isUnder ? 'var(--yellow)' : 'var(--muted)' }}>
+                      ~R${(item.impactoBrl / 1000).toFixed(0)}k para fechar gap
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* 5b. TORNADO DE SENSIBILIDADE [COLLAPSIBLE] */}
+      {derived && (
+        <CollapsibleSection id="section-pfire-tornado" title="Tornado de Sensibilidade (P(FIRE) ±10%)" defaultOpen={false} icon="🌪">
+          <div className="px-4 pb-4">
+            <PFireMonteCarloTornado
+              pfireBase={derived.pfireBase}
+              pfireFav={derived.pfireFav}
+              pfireStress={derived.pfireStress}
+              tornadoData={derived.tornadoData}
+              tornadoOnly
+            />
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 6. TIME TO FIRE — Redesign com tabs de perfil */}
       {byProfile.length > 0 && (
         <div className="bg-card border border-border/50 rounded mb-3.5">
           {/* Header */}
@@ -387,87 +469,7 @@ export default function HomePage() {
         );
       })()}
 
-      {/* 6. SEMÁFOROS DE GATILHOS */}
-      {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
-        <SemaforoGatilhos items={derived.dcaItems} />
-      )}
-
-      {/* 8. DRIFT DA CARTEIRA */}
-      {derived && driftItems.length > 0 && (
-        <div className="mb-3.5">
-          <div className="kpi-label mb-2" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>
-            Drift da Carteira
-          </div>
-          <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
-            {driftItems.map(item => {
-              const statusColor =
-                item.status === 'verde' ? 'var(--green)' :
-                item.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
-              const barPct = Math.min(100, item.atual > 0 ? (item.atual / Math.max(item.atual, item.alvo)) * 100 : 0);
-              const isUnder = item.gap > 0;
-              return (
-                <div key={item.id} className="bg-card2/40 rounded p-2.5">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-semibold">{item.nome}</span>
-                    <span className="text-xs" style={{ color: statusColor }}>
-                      {item.gap >= 0 ? '-' : '+'}{item.absGap.toFixed(1)}pp
-                    </span>
-                  </div>
-                  <div className="relative h-1.5 bg-card rounded-sm overflow-hidden mb-1.5">
-                    <div
-                      className="absolute left-0 top-0 h-full rounded-sm"
-                      style={{ width: `${barPct}%`, background: statusColor, opacity: 0.8 }}
-                    />
-                    <div
-                      className="absolute top-0 h-full w-0.5"
-                      style={{
-                        left: `${Math.min(100, (item.alvo / Math.max(item.atual, item.alvo)) * 100)}%`,
-                        background: 'var(--muted)',
-                        opacity: 0.6,
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-xs text-muted">
-                    <span>{item.atual.toFixed(1)}%</span>
-                    <span>→ {item.alvo.toFixed(0)}%</span>
-                  </div>
-                  {item.impactoBrl != null && item.impactoBrl > 5000 && (
-                    <div className="text-xs mt-1" style={{ color: isUnder ? 'var(--yellow)' : 'var(--muted)' }}>
-                      ~R${(item.impactoBrl / 1000).toFixed(0)}k para fechar gap
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* 8b. TORNADO DE SENSIBILIDADE [COLLAPSIBLE] */}
-      {derived && (
-        <CollapsibleSection id="section-pfire-tornado" title="Tornado de Sensibilidade (P(FIRE) ±10%)" defaultOpen={false} icon="🌪">
-          <div className="px-4 pb-4">
-            <PFireMonteCarloTornado
-              pfireBase={derived.pfireBase}
-              pfireFav={derived.pfireFav}
-              pfireStress={derived.pfireStress}
-              tornadoData={derived.tornadoData}
-              tornadoOnly
-            />
-          </div>
-        </CollapsibleSection>
-      )}
-
-      {/* 9. APORTE DO MÊS — detalhe */}
-      {derived && (
-        <AporteDoMes
-          aporteMensal={derived.aporteMensal}
-          ultimoAporte={derived.ultimoAporte}
-          ultimoAporteData={derived.ultimoAporteData}
-          acumuladoMes={derived.acumuladoMes}
-          acumuladoAno={derived.acumuladoAno}
-        />
-      )}
+      {/* (SEMÁFOROS, DRIFT, TORNADO, APORTE moved earlier — see below TIME TO FIRE) */}
 
       {/* 10. FINANCIAL WELLNESS SCORE [COLLAPSIBLE] */}
       {wellnessScore && (

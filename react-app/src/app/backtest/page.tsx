@@ -378,7 +378,7 @@ function BacktestLongoSection() {
   const ff5 = r7?.factor_regression ?? null;
 
   return (
-    <CollapsibleSection id="backtest-r7" title="Backtest Longo — Regime 7 (1995–2026)" defaultOpen={true}>
+    <CollapsibleSection id="backtest-r7" title="Backtest Longo — Regime 7 (1995–2026)" defaultOpen={false}>
       {/* Metrics grid */}
       {metricCards.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '14px' }}>
@@ -587,14 +587,14 @@ export default function BacktestPage() {
       {/* 1. Backtest Histórico — Target vs VWRA */}
       <BacktestHistoricoSection />
 
-      {/* 2. Shadow Portfolios — Tracking */}
+      {/* 2. Drawdown Histórico — Série Completa (moved up: contexto de risco após retorno) */}
+      <DrawdownHistoricoSection />
+
+      {/* 3. Shadow Portfolios — Tracking */}
       <ShadowPortfoliosSection />
 
-      {/* 3. Backtest Longo — Regime 7 */}
+      {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
       <BacktestLongoSection />
-
-      {/* 4. Drawdown Histórico — Série Completa */}
-      <DrawdownHistoricoSection />
     </div>
   );
 }

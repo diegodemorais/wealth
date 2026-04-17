@@ -42,14 +42,7 @@ export default function PortfolioPage() {
   return (
     <div>
 
-      {/* 1. Exposição Geográfica — Equities */}
-      <div className="section">
-        <h2>Exposição Geográfica — Equities</h2>
-        <DonutCharts data={data} />
-        <div className="src">Premissa: SWRD ≈ 67% US. AVUV/USSC = 100% US. AVDV = 100% DM ex-US. AVGS ~58% US. (Exclui Fixed Income.)</div>
-      </div>
-
-      {/* 2. Alocação — Por Classe de Ativo */}
+      {/* 1. Alocação — Por Classe de Ativo (moved first: visão geral antes do detalhe) */}
       <div className="section">
         <h2>Alocação — Por Classe de Ativo</h2>
         {(() => {
@@ -146,11 +139,18 @@ export default function PortfolioPage() {
         );
       })()}
 
-      {/* 3. Composição por Região — ETFs da Carteira (collapsible) */}
+      {/* 3. Exposição Geográfica — Equities (moved here: detalhe após visão geral) */}
+      <div className="section">
+        <h2>Exposição Geográfica — Equities</h2>
+        <DonutCharts data={data} />
+        <div className="src">Premissa: SWRD ≈ 67% US. AVUV/USSC = 100% US. AVDV = 100% DM ex-US. AVGS ~58% US. (Exclui Fixed Income.)</div>
+      </div>
+
+      {/* 4. Composição por Região — ETFs da Carteira (collapsible) */}
       <CollapsibleSection
         id="section-etf-region"
         title="Composição por Região — ETFs da Carteira"
-        defaultOpen={true}
+        defaultOpen={false}
         icon="🗺️"
       >
         <div style={{ padding: '16px' }}>
@@ -185,7 +185,7 @@ export default function PortfolioPage() {
       <CollapsibleSection
         id="section-tax-ir"
         title="IR Diferido — Alvo & Transitório"
-        defaultOpen={true}
+        defaultOpen={false}
         icon="🏛️"
       >
         <div style={{ padding: '16px' }}>
