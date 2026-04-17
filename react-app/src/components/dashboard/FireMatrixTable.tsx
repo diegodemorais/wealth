@@ -70,7 +70,7 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
           FIRE Matrix — P(FIRE) by Patrimônio × Gasto
         </h3>
         <div className="flex gap-2">
-          {(['base', 'fav', 'stress'] as const).map(s => {
+          {(['stress', 'base', 'fav'] as const).map(s => {
             const ret = retornos?.[s];
             return (
               <button
