@@ -189,12 +189,16 @@ export default function HomePage() {
                     <span style={{ fontWeight: 600 }}>{patMediano != null ? fmtM(patMediano) : '—'}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem' }}>
-                    <span style={{ color: 'var(--muted)' }}>Retirada/ano</span>
+                    <span style={{ color: 'var(--muted)' }}>Custo/ano</span>
                     <span style={{ fontWeight: 600 }}>{gastoAnual != null ? fmtM(gastoAnual) : '—'}</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem' }}>
-                    <span style={{ color: 'var(--muted)' }}>Custo/ano</span>
-                    <span style={{ fontWeight: 600 }}>{gastoAnual != null ? fmtM(gastoAnual) : '—'}</span>
+                    <span style={{ color: 'var(--muted)' }}>SWR</span>
+                    <span style={{ fontWeight: 600 }}>
+                      {gastoAnual != null && patMediano != null && patMediano > 0
+                        ? `${((gastoAnual / patMediano) * 100).toFixed(2)}%`
+                        : '—'}
+                    </span>
                   </div>
                 </div>
               </div>
