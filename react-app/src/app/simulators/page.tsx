@@ -701,6 +701,7 @@ function StressTestSection() {
 
 function CascadeSection() {
   const data = useDashboardStore(s => s.data);
+  const derived = useDashboardStore(s => s.derived);
   const [aporte, setAporte] = useState<number | undefined>(undefined);
   const dataInitCasc = useRef(false);
 
@@ -719,18 +720,16 @@ function CascadeSection() {
     (data?.patrimonio as any)?.total_financeiro ??
     (data as any)?.premissas?.patrimonio_atual;
 
-  // IPCA+ Longo gap (pp of portfolio → BRL)
-  const ipcaGapPp: number | null = data?.cascade?.ipca_gap != null
-    ? data.cascade.ipca_gap
-    : (data?.dca_status?.ipca_longo?.gap_alvo_pp ?? null);
+  // IPCA+ Longo gap — from unified derived.dcaItems (single source of truth)
+  const ipcaItem = derived?.dcaItems?.find(i => i.id === 'ipca2040') ?? null;
+  const ipcaGapPp: number | null = ipcaItem?.gapAlvoPp ?? null;
   const ipcaGapBrl: number | null = ipcaGapPp != null && ipcaGapPp > 0 && totalBrl != null
     ? Math.round((ipcaGapPp / 100) * totalBrl)
     : 0;
 
-  // Renda+ gap (pp of portfolio → BRL). Negative gap_alvo_pp means already over target → no gap
-  const rendaGapPp: number | null = data?.cascade?.renda_gap != null
-    ? data.cascade.renda_gap
-    : (data?.dca_status?.renda_plus?.gap_alvo_pp ?? null);
+  // Renda+ gap — from unified derived.dcaItems
+  const rendaItem = derived?.dcaItems?.find(i => i.id === 'renda2065') ?? null;
+  const rendaGapPp: number | null = rendaItem?.gapAlvoPp ?? null;
   const rendaGapBrl: number | null = rendaGapPp != null && rendaGapPp > 0 && totalBrl != null
     ? Math.round((rendaGapPp / 100) * totalBrl)
     : 0;
@@ -743,9 +742,9 @@ function CascadeSection() {
   remaining -= rendaAlloc;
   const equityAlloc = remaining;
 
-  // DCA active status from dca_status
-  const ipcaAtivo: boolean = data?.dca_status?.ipca_longo?.ativo ?? false;
-  const rendaAtivo: boolean = data?.dca_status?.renda_plus?.ativo ?? false;
+  // DCA active status from unified dcaItems
+  const ipcaAtivo: boolean = ipcaItem?.dcaAtivo ?? false;
+  const rendaAtivo: boolean = rendaItem?.dcaAtivo ?? false;
 
   return (
     <div className="section" style={{ marginTop: '16px' }}>

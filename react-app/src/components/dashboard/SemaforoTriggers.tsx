@@ -2,50 +2,51 @@
 
 import { useState } from "react"
 import { StatusDot } from "./StatusDot"
-
-interface Trigger {
-  id: string
-  label: string
-  category: "taxa" | "posicao" | "crypto"
-  status: "verde" | "amarelo" | "vermelho"
-  valor: number
-  unidade: string
-  piso?: number
-  gap: number
-  posicao_r: number
-  acao: string
-  detalhe: string
-}
+import { DcaItem } from "@/types/dashboard"
 
 interface SemaforoTriggersProps {
-  triggers: Trigger[]
+  items: DcaItem[]
 }
 
-const categoryColors: Record<string, { color: string; bg: string; border: string }> = {
-  taxa: { color: 'var(--cyan)', bg: 'rgba(6,182,212,0.1)', border: 'rgba(6,182,212,0.3)' },
-  posicao: { color: 'var(--purple)', bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.3)' },
-  crypto: { color: 'var(--yellow)', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)' },
+const CATEGORY_STYLE: Record<string, { color: string; bg: string; border: string }> = {
+  rf_ipca:  { color: 'var(--cyan)',   bg: 'rgba(6,182,212,0.1)',   border: 'rgba(6,182,212,0.3)' },
+  rf_renda: { color: 'var(--cyan)',   bg: 'rgba(6,182,212,0.1)',   border: 'rgba(6,182,212,0.3)' },
+  crypto:   { color: 'var(--yellow)', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)' },
 }
 
-const rowBg: Record<string, string> = {
+const ROW_BG: Record<string, string> = {
   vermelho: 'rgba(239,68,68,0.03)',
-  amarelo: 'rgba(234,179,8,0.03)',
-  verde: 'rgba(34,197,94,0.03)',
+  amarelo:  'rgba(234,179,8,0.03)',
+  verde:    'rgba(34,197,94,0.03)',
 }
 
-export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
+function buildDetalhe(item: DcaItem): string {
+  if (item.categoria === 'crypto') {
+    const b = item.bandaAtual != null
+      ? `atual ${item.bandaAtual.toFixed(1)}% · banda ${item.bandaMin?.toFixed(1)}–${item.bandaMax?.toFixed(1)}%`
+      : '';
+    return b;
+  }
+  const parts: string[] = [];
+  if (item.taxa != null) parts.push(`taxa ${item.taxa.toFixed(2)}%`);
+  const ref = item.pisoVenda ?? item.pisoCompra;
+  if (ref != null) parts.push(`piso ${ref.toFixed(1)}%`);
+  if (item.gapPiso != null) parts.push(`gap ${item.gapPiso >= 0 ? '+' : ''}${item.gapPiso.toFixed(2)}pp`);
+  if (item.posicaoBrl > 0) parts.push(`R$${(item.posicaoBrl / 1000).toFixed(0)}k`);
+  return parts.join(' · ');
+}
+
+export function SemaforoTriggers({ items }: SemaforoTriggersProps) {
   const [isOpen, setIsOpen] = useState(true)
 
-  const verdeCount = triggers.filter((t) => t.status === "verde").length
-  const amareloCount = triggers.filter((t) => t.status === "amarelo").length
-  const vermelhoCount = triggers.filter((t) => t.status === "vermelho").length
-
-  const summaryBadge =
-    vermelhoCount > 0 ? "vermelho" : amareloCount > 0 ? "amarelo" : "verde"
+  const verdeCount    = items.filter(i => i.status === 'verde').length
+  const amareloCount  = items.filter(i => i.status === 'amarelo').length
+  const vermelhoCount = items.filter(i => i.status === 'vermelho').length
+  const summaryBadge  = vermelhoCount > 0 ? 'vermelho' : amareloCount > 0 ? 'amarelo' : 'verde'
 
   return (
     <div style={{ borderLeft: '4px solid var(--yellow)', borderRadius: '8px', background: 'var(--card)', padding: 'var(--space-7)', marginBottom: '16px' }}>
-      {/* Header — clickable trigger */}
+      {/* Header */}
       <div
         style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', gap: 'var(--space-2)', cursor: 'pointer', marginBottom: '12px' }}
         onClick={() => setIsOpen(!isOpen)}
@@ -68,7 +69,7 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: isOpen ? '24px' : '0' }}>
         <StatusDot status={summaryBadge} size="sm" />
         <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-          {triggers.length} gatilhos monitorados · {vermelhoCount} vermelho · {amareloCount} amarelo · {verdeCount} verde
+          {items.length} gatilhos monitorados · {vermelhoCount} vermelho · {amareloCount} amarelo · {verdeCount} verde
         </span>
       </div>
 
@@ -85,18 +86,17 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
               </tr>
             </thead>
             <tbody>
-              {triggers.map((trigger) => {
-                const catStyle = categoryColors[trigger.category] || categoryColors.taxa
-                const valor = typeof trigger.valor === 'number' ? trigger.valor : 0
-                const piso = typeof trigger.piso === 'number' ? trigger.piso : undefined
+              {items.map(item => {
+                const catStyle = CATEGORY_STYLE[item.categoria] ?? CATEGORY_STYLE.rf_ipca
+                const detalhe  = buildDetalhe(item)
 
                 return (
-                  <tr key={trigger.id} style={{ backgroundColor: rowBg[trigger.status] || 'transparent' }}>
+                  <tr key={item.id} style={{ backgroundColor: ROW_BG[item.status] ?? 'transparent' }}>
                     <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
                           <span style={{ fontWeight: 500, fontSize: '0.875rem', color: 'var(--text)' }}>
-                            {trigger.label}
+                            {item.nome}
                           </span>
                           <span style={{
                             padding: '2px 6px',
@@ -108,27 +108,45 @@ export function SemaforoTriggers({ triggers }: SemaforoTriggersProps) {
                             border: `1px solid ${catStyle.border}`,
                             textTransform: 'uppercase',
                           }}>
-                            {trigger.category}
+                            {item.categoria === 'crypto' ? 'crypto' : 'taxa'}
                           </span>
+                          {item.dcaAtivo && (
+                            <span style={{
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 600,
+                              color: 'var(--green)',
+                              background: 'rgba(62,211,129,0.1)',
+                              border: '1px solid rgba(62,211,129,0.3)',
+                            }}>
+                              DCA
+                            </span>
+                          )}
                         </div>
-                        <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', fontFamily: 'monospace' }}>
-                          {trigger.detalhe}
-                        </div>
+                        {detalhe && (
+                          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', fontFamily: 'monospace' }}>
+                            {detalhe}
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)' }}>
-                      <StatusDot status={trigger.status} size="sm" />
+                      <StatusDot status={item.status} size="sm" />
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontFamily: 'monospace', fontSize: '0.875rem', color: 'var(--text)' }}>
-                      {valor.toFixed(2)}{trigger.unidade}
-                      {piso !== undefined && (
-                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                          piso {piso.toFixed(1)}%
-                        </div>
-                      )}
+                      {item.taxa != null ? `${item.taxa.toFixed(2)}%` : (item.bandaAtual != null ? `${item.bandaAtual.toFixed(1)}%` : '—')}
+                      {(() => {
+                        const ref = item.pisoVenda ?? item.pisoCompra;
+                        return ref != null ? (
+                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                            piso {ref.toFixed(1)}%
+                          </div>
+                        ) : null;
+                      })()}
                     </td>
                     <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontSize: '0.875rem', color: 'var(--text)' }}>
-                      {trigger.acao}
+                      {item.proxAcao}
                     </td>
                   </tr>
                 )

@@ -207,12 +207,8 @@ export default function HomePage() {
       )}
 
       {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
-      {derived && Array.isArray(derived.gatilhos) && derived.gatilhos.length > 0 && (
-        <SemaforoGatilhos
-          gatilhos={derived.gatilhos}
-          resumo={derived.resumoGatilhos}
-          statusIpca={derived.statusIpca}
-        />
+      {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
+        <SemaforoGatilhos items={derived.dcaItems} />
       )}
 
       {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
@@ -352,52 +348,39 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* 8b. DCA Status — 3 cards separados */}
-          {data?.dca_status && (
+          {/* 8b. DCA Status — loop via unified derived.dcaItems (RF only; crypto excluded) */}
+          {derived && derived.dcaItems.filter(i => i.categoria !== 'crypto').length > 0 && (
             <div className="mb-3.5">
               <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
                 DCA Status
               </div>
               <div className="grid grid-cols-3 gap-2">
-                {/* IPCA+ 2040 */}
-                {data.dca_status.ipca_longo && (
-                  <div className="bg-card2/40 rounded p-2.5 border-l-[3px] border-accent/40">
-                    <div className="text-xs text-muted mb-1">IPCA+ 2040</div>
-                    <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
-                    <div className="text-xs text-muted">
-                      Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
-                    </div>
-                    <div className="text-xs text-muted">
-                      Posição: R${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
-                    </div>
-                  </div>
-                )}
-                {/* IPCA+ 2060 (2050) */}
-                {data.dca_status.ipca_medio && (
-                  <div className="bg-card2/40 rounded p-2.5 border-l-[3px] border-accent/40">
-                    <div className="text-xs text-muted mb-1">IPCA+ 2050</div>
-                    <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_medio.taxa_atual?.toFixed(2)}%</div>
-                    <div className="text-xs text-muted">
-                      Piso: {data.dca_status.ipca_medio.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_medio.gap_alvo_pp?.toFixed(1)}pp
-                    </div>
-                    <div className="text-xs text-muted">
-                      Posição: R${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca_medio.pct_carteira_atual?.toFixed(1)}%)
-                    </div>
-                  </div>
-                )}
-                {/* Renda+ 2065 */}
-                {data.rf?.renda2065?.distancia_gatilho && (
-                  <div className="bg-card2/40 rounded p-2.5 border-l-[3px] border-accent/40">
-                    <div className="text-xs text-muted mb-1">Renda+ 2065</div>
-                    <div className="text-sm font-bold mb-0.5">Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
-                    <div className="text-xs text-muted">
-                      Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
-                    </div>
-                    <div className="text-xs text-muted">
-                      Posição: R${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k
-                    </div>
-                  </div>
-                )}
+                {derived.dcaItems
+                  .filter(i => i.categoria !== 'crypto')
+                  .map(item => {
+                    const ref = item.pisoVenda ?? item.pisoCompra;
+                    const gap = item.gapPiso;
+                    const borderColor =
+                      item.id === 'ipca2040' ? 'rgba(6,182,212,0.4)' :
+                      item.id === 'ipca2050' ? 'rgba(139,92,246,0.4)' :
+                      'rgba(245,158,11,0.4)';
+                    return (
+                      <div key={item.id} className="bg-card2/40 rounded p-2.5" style={{ borderLeft: `3px solid ${borderColor}` }}>
+                        <div className="text-xs text-muted mb-1">{item.nome}</div>
+                        {item.taxa != null && (
+                          <div className="text-sm font-bold mb-0.5">Taxa: {item.taxa.toFixed(2)}%</div>
+                        )}
+                        <div className="text-xs text-muted">
+                          {ref != null && `Piso: ${ref.toFixed(1)}%`}
+                          {gap != null && ` | Gap: ${gap >= 0 ? '+' : ''}${gap.toFixed(2)}pp`}
+                        </div>
+                        <div className="text-xs text-muted">
+                          Posição: R${(item.posicaoBrl / 1000).toFixed(0)}k
+                          {item.pctCarteira != null && ` (${item.pctCarteira.toFixed(1)}%)`}
+                        </div>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           )}

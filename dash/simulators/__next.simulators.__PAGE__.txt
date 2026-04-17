@@ -1,9 +1,9 @@
 1:"$Sreact.fragment"
-2:I[45505,["/wealth/_next/static/chunks/069z6bgt-l9t_.js","/wealth/_next/static/chunks/0i.qd6ryr.g1..js","/wealth/_next/static/chunks/0lw3.2ic72dy7.js"],"ClientPageRoot"]
-3:I[78983,["/wealth/_next/static/chunks/069z6bgt-l9t_.js","/wealth/_next/static/chunks/0i.qd6ryr.g1..js","/wealth/_next/static/chunks/0lw3.2ic72dy7.js","/wealth/_next/static/chunks/0g3cx~hzumcm0.js","/wealth/_next/static/chunks/0c2380k3.4kes.js"],"default"]
-6:I[68826,["/wealth/_next/static/chunks/069z6bgt-l9t_.js","/wealth/_next/static/chunks/0i.qd6ryr.g1..js","/wealth/_next/static/chunks/0lw3.2ic72dy7.js"],"OutletBoundary"]
+2:I[45505,["/wealth/_next/static/chunks/0zdbi~~asu.~l.js","/wealth/_next/static/chunks/145t.960dbjhs.js","/wealth/_next/static/chunks/0lw3.2ic72dy7.js"],"ClientPageRoot"]
+3:I[78983,["/wealth/_next/static/chunks/0zdbi~~asu.~l.js","/wealth/_next/static/chunks/145t.960dbjhs.js","/wealth/_next/static/chunks/0lw3.2ic72dy7.js","/wealth/_next/static/chunks/0i6~bss4kbahc.js","/wealth/_next/static/chunks/0tb3p_ga3ffsp.js"],"default"]
+6:I[68826,["/wealth/_next/static/chunks/0zdbi~~asu.~l.js","/wealth/_next/static/chunks/145t.960dbjhs.js","/wealth/_next/static/chunks/0lw3.2ic72dy7.js"],"OutletBoundary"]
 7:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/wealth/_next/static/chunks/0g3cx~hzumcm0.js","async":true}],["$","script","script-1",{"src":"/wealth/_next/static/chunks/0c2380k3.4kes.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"zZdmKKM3-kNy370mUmYCD"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/wealth/_next/static/chunks/0i6~bss4kbahc.js","async":true}],["$","script","script-1",{"src":"/wealth/_next/static/chunks/0tb3p_ga3ffsp.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"b56KboiyaruK-4AjSLrrC"}
 4:{}
 5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
 8:null
