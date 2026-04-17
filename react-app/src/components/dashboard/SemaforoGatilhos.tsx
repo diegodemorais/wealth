@@ -77,16 +77,23 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({ items }) => {
       {/* Summary when collapsed */}
       {!isOpen && (
         <div className="mx-4 mb-3 flex flex-col gap-1">
-          {items.map(item => {
+          {items.filter(i => i.proxAcao === 'comprar' || i.proxAcao === 'vender').map(item => {
             const color = STATUS_COLOR[item.status] ?? 'var(--muted)';
+            const acaoColor = item.proxAcao === 'comprar' ? 'var(--green)' : 'var(--red)';
             return (
               <div key={item.id} className="flex items-center gap-2 text-xs">
                 <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
                 <span className="text-text font-medium w-28 flex-shrink-0">{item.nome}</span>
-                <span className="text-muted">{item.proxAcao}</span>
+                <span className="font-semibold" style={{ color: acaoColor }}>{item.proxAcao}</span>
               </div>
             );
           })}
+          {items.filter(i => i.proxAcao === 'comprar' || i.proxAcao === 'vender').length === 0 && (
+            <div className="flex items-center gap-1.5 text-xs text-muted">
+              <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: STATUS_COLOR['verde'] }} />
+              {items.length} ativos — nenhuma ação pendente
+            </div>
+          )}
         </div>
       )}
 

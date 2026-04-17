@@ -318,7 +318,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       pctCarteira: dcaIpcaLongo.pct_carteira_atual ?? null,
       alvoPct: dcaIpcaLongo.alvo_pct ?? null,
       gapAlvoPp: dcaIpcaLongo.gap_alvo_pp ?? null,
-      proxAcao: dcaIpcaLongo.ativo ? 'DCA ativo' : 'DCA pausado',
+      proxAcao: dcaIpcaLongo.ativo ? 'comprar' : 'manter',
     });
   }
 
@@ -343,7 +343,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       pctCarteira: dcaIpcaMedio.pct_carteira_atual ?? null,
       alvoPct: dcaIpcaMedio.alvo_pct ?? null,
       gapAlvoPp: dcaIpcaMedio.gap_alvo_pp ?? null,
-      proxAcao: dcaIpcaMedio.ativo ? 'DCA ativo' : 'DCA pausado',
+      proxAcao: dcaIpcaMedio.ativo ? 'comprar' : 'manter',
     });
   }
 
@@ -373,7 +373,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       pctCarteira: dcaRenda?.pct_carteira_atual ?? null,
       alvoPct: dcaRenda?.alvo_pct ?? null,
       gapAlvoPp: dcaRenda?.gap_alvo_pp ?? null,
-      proxAcao: st === 'verde' ? 'Monitorar' : st === 'amarelo' ? 'Atenção — próximo do piso' : 'Avaliar venda',
+      proxAcao: st === 'vermelho' ? 'vender' : 'manter',
     });
   }
 
@@ -399,7 +399,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       alvoPct: hodlBanda.alvo_pct ?? null,
       gapAlvoPp: hodlBanda.atual_pct != null && hodlBanda.alvo_pct != null
         ? hodlBanda.atual_pct - hodlBanda.alvo_pct : null,
-      proxAcao: st === 'verde' ? 'Dentro da banda' : st === 'amarelo' ? 'Perto do limite' : 'Fora da banda',
+      proxAcao: st === 'vermelho' ? 'vender' : 'manter',
       bandaMin: hodlBanda.min_pct,
       bandaMax: hodlBanda.max_pct,
       bandaAtual: hodlBanda.atual_pct,
