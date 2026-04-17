@@ -27,7 +27,7 @@ const TABS = [
   { href: '/fire', label: 'FIRE', id: 'tab-fire' },
   { href: '/portfolio', label: 'PORTFOLIO', id: 'tab-portfolio' },
   { href: '/performance', label: 'PERFORMANCE', id: 'tab-performance' },
-  { href: '/withdraw', label: 'RETIRO', id: 'tab-withdraw' },
+  { href: '/withdraw', label: 'WITHDRAW', id: 'tab-withdraw' },
   { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
   { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
 ];
