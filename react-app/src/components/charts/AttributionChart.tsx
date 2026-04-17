@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { createAttributionChartOption } from '@/utils/chartSetup';
@@ -21,6 +21,6 @@ export function AttributionChart({ data }: AttributionChartProps) {
   );
 
   return (
-    <ReactECharts ref={chartRef} option={option} style={{ height: 320, width: '100%' }} />
+    <EChart ref={chartRef} option={option} style={{ height: 320, width: '100%' }} />
   );
 }

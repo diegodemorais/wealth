@@ -1,11 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 import { createDualLineChartOption, CHART_COLORS } from '@/utils/chartSetup';
+import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+import { ChartCard } from '@/components/primitives/ChartCard';
 
 export interface TimelineChartProps {
   data: DashboardData;
@@ -103,7 +105,7 @@ export function TimelineChart({ data, period = 'all' }: TimelineChartProps) {
         type: 'category' as const,
         data: xAxisData,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 11,
           interval: Math.floor(xAxisData.length / 8),
         },
@@ -111,11 +113,11 @@ export function TimelineChart({ data, period = 'all' }: TimelineChartProps) {
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           formatter: (v: number) => `${v.toFixed(0)}`,
           fontSize: 11,
         },
-        splitLine: { lineStyle: { color: '#161b22' } },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         {
@@ -123,19 +125,18 @@ export function TimelineChart({ data, period = 'all' }: TimelineChartProps) {
           type: 'line' as const,
           data: filtTarget,
           smooth: true,
-          itemStyle: { color: CHART_COLORS.accent },
-          lineStyle: { width: 2.5, color: CHART_COLORS.accent },
+          itemStyle: { color: EC.accent },
+          lineStyle: { width: 2.5, color: EC.accent },
           symbolSize: 0,
-          areaStyle: { opacity: 0.08, color: CHART_COLORS.accent },
+          areaStyle: { opacity: 0.08, color: EC.accent },
         },
       ],
     };
   }, [data, privacyMode, theme, period]);
 
   return (
-    <div className="bg-card border border-border rounded p-4 mb-5">
-      <h3 className="text-sm font-semibold text-text mb-4 mt-0">Historical Performance — Equity Curve (Indexada a 100)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
-    </div>
+    <ChartCard title="Historical Performance — Equity Curve (Indexada a 100)">
+      <EChart ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
+    </ChartCard>
   );
 }

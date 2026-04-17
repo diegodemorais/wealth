@@ -5,7 +5,8 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
 
@@ -545,9 +546,9 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       backgroundColor: 'transparent',
       tooltip: {
         trigger: 'axis',
-        backgroundColor: '#161b22',
-        borderColor: '#30363d',
-        textStyle: { color: '#e6edf3', fontSize: 11 },
+        backgroundColor: EC.card,
+        borderColor: EC.border2,
+        textStyle: { color: EC.text, fontSize: 11 },
         formatter: (params: any[]) => {
           const yr = params[0].dataIndex;
           const p = pcts[yr];
@@ -558,13 +559,13 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       xAxis: {
         type: 'category' as const,
         data: labels,
-        axisLabel: { color: '#8b949e', fontSize: 10, interval: 4, hideOverlap: true },
-        axisLine: { lineStyle: { color: '#30363d' } },
+        axisLabel: { color: EC.muted, fontSize: 10, interval: 4, hideOverlap: true },
+        axisLine: EC_AXIS_LINE,
       },
       yAxis: {
         type: 'value' as const,
-        axisLabel: { color: '#8b949e', fontSize: 10, formatter: (v: number) => `R$${(v/1e6).toFixed(1)}M` },
-        splitLine: { lineStyle: { color: '#21262d' } },
+        axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => `R$${(v/1e6).toFixed(1)}M` },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         // P10–P90 band
@@ -572,8 +573,8 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
           name: 'P90',
           type: 'line' as const,
           data: pcts.map(p => p.p90),
-          lineStyle: { color: '#58a6ff', width: 1, type: 'dashed' as const },
-          itemStyle: { color: '#58a6ff' },
+          lineStyle: { color: EC.accent, width: 1, type: 'dashed' as const },
+          itemStyle: { color: EC.accent },
           symbolSize: 0,
           areaStyle: { color: 'rgba(88,166,255,0.08)', origin: 'start' as const },
         },
@@ -582,8 +583,8 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
           name: 'P75',
           type: 'line' as const,
           data: pcts.map(p => p.p75),
-          lineStyle: { color: '#58a6ff', width: 1, opacity: 0.4 },
-          itemStyle: { color: '#58a6ff' },
+          lineStyle: { color: EC.accent, width: 1, opacity: 0.4 },
+          itemStyle: { color: EC.accent },
           symbolSize: 0,
           areaStyle: { color: 'rgba(88,166,255,0.12)', origin: 'start' as const },
         },
@@ -591,16 +592,16 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
           name: 'P50 (Mediana)',
           type: 'line' as const,
           data: pcts.map(p => p.p50),
-          lineStyle: { color: '#3ed381', width: 2.5 },
-          itemStyle: { color: '#3ed381' },
+          lineStyle: { color: EC.green, width: 2.5 },
+          itemStyle: { color: EC.green },
           symbolSize: 0,
         },
         {
           name: 'P25',
           type: 'line' as const,
           data: pcts.map(p => p.p25),
-          lineStyle: { color: '#f85149', width: 1, opacity: 0.4 },
-          itemStyle: { color: '#f85149' },
+          lineStyle: { color: EC.red, width: 1, opacity: 0.4 },
+          itemStyle: { color: EC.red },
           symbolSize: 0,
           areaStyle: { color: 'rgba(248,81,73,0.08)', origin: 'start' as const },
         },
@@ -608,8 +609,8 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
           name: 'P10',
           type: 'line' as const,
           data: pcts.map(p => p.p10),
-          lineStyle: { color: '#f85149', width: 1, type: 'dashed' as const },
-          itemStyle: { color: '#f85149' },
+          lineStyle: { color: EC.red, width: 1, type: 'dashed' as const },
+          itemStyle: { color: EC.red },
           symbolSize: 0,
         },
         // Shock vertical marker
@@ -617,14 +618,14 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
           name: 'Shock',
           type: 'line' as const,
           data: Array.from({ length: years + 1 }, (_, i) => i === shockYr ? pcts[shockYr].p90 * 1.1 : null),
-          lineStyle: { color: '#f85149', width: 2, type: 'dashed' as const },
-          itemStyle: { color: '#f85149' },
+          lineStyle: { color: EC.red, width: 2, type: 'dashed' as const },
+          itemStyle: { color: EC.red },
           symbolSize: 0,
           markLine: {
             silent: true,
             data: [{ xAxis: shockYr }],
-            lineStyle: { color: '#f85149', type: 'dashed' as const, width: 1.5 },
-            label: { formatter: `Shock ${shock}%`, color: '#f85149', fontSize: 10 },
+            lineStyle: { color: EC.red, type: 'dashed' as const, width: 1.5 },
+            label: { formatter: `Shock ${shock}%`, color: EC.red, fontSize: 10 },
           },
         }] : []),
       ],
@@ -636,7 +637,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>
         Projeção — Evolução Patrimonial após Shock · {300} trajetórias MC · valores nominais BRL
       </div>
-      <ReactECharts option={option} style={{ height: 300 }} opts={{ renderer: 'canvas', devicePixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio : 1 }} />
+      <EChart option={option} style={{ height: 300 }} />
       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '3px' }}>
         Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano · Negativos visíveis (sem floor)
       </div>

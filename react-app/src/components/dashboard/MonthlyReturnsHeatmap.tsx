@@ -65,7 +65,23 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
   };
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ position: 'relative' }}>
+      {/* Scroll fade — indicates horizontal scroll is available */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 32,
+          background: 'linear-gradient(to right, transparent, var(--card))',
+          pointerEvents: 'none',
+          zIndex: 1,
+          borderRadius: '0 4px 4px 0',
+        }}
+      />
+      <div style={{ overflowX: 'auto' }}>
       <table style={{ borderCollapse: 'separate', borderSpacing: 2, width: '100%', fontSize: 'var(--text-xs)' }}>
         <thead>
           <tr>
@@ -123,6 +139,7 @@ export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

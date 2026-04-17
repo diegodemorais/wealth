@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export interface TrackingFireChartProps {
   data: DashboardData;
@@ -77,10 +78,10 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       xAxis: {
         type: 'category' as const,
         data: rawDates,
-        axisLine: { lineStyle: { color: '#1c2128' } },
+        axisLine: EC_AXIS_LINE,
         axisTick: { show: false },
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 10,
           interval: (idx: number, val: string) => idx === 0 || val.endsWith('-01'),
           formatter: (val: string) => val.slice(0, 4),
@@ -90,11 +91,11 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           formatter: (v: number) => `R$${(v / 1e6).toFixed(1)}M`,
           fontSize: 11,
         },
-        splitLine: { lineStyle: { color: '#161b22' } },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         // ── Band fill (invisible helper series, stacked) ─────────────────
@@ -133,8 +134,8 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           type: 'line' as const,
           data: trilhaBrl,
           smooth: true,
-          itemStyle: { color: '#3ed381' },
-          lineStyle: { width: 2, color: '#3ed381', type: 'dashed' as const },
+          itemStyle: { color: EC.green },
+          lineStyle: { width: 2, color: EC.green, type: 'dashed' as const },
           symbolSize: 0,
         },
         {
@@ -151,10 +152,10 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           type: 'line' as const,
           data: realizadoBrl,
           smooth: true,
-          itemStyle: { color: '#58a6ff' },
-          lineStyle: { width: 2.5, color: '#58a6ff' },
+          itemStyle: { color: EC.accent },
+          lineStyle: { width: 2.5, color: EC.accent },
           symbolSize: 0,
-          areaStyle: { opacity: 0.06, color: '#58a6ff' },
+          areaStyle: { opacity: 0.06, color: EC.accent },
           z: 10,
         },
         {
@@ -162,7 +163,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           type: 'line' as const,
           data: metaLine,
           smooth: false,
-          itemStyle: { color: '#f59e0b' },
+          itemStyle: { color: '#f59e0b' },  // amber — not in EC palette, kept as literal
           lineStyle: { width: 1.5, color: '#f59e0b', type: 'dotted' as const },
           symbolSize: 0,
         },
@@ -171,6 +172,6 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
   }, [data, privacyMode, theme]);
 
   return (
-    <ReactECharts ref={chartRef} option={option} style={{ height: 380, width: '100%' }} />
+    <EChart ref={chartRef} option={option} style={{ height: 380, width: '100%' }} />
   );
 }

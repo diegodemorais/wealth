@@ -1,9 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
+import { EC, EC_TOOLTIP } from '@/utils/echarts-theme';
 
 export interface ConcentrationChartProps {
   data: DashboardData;
@@ -25,9 +26,9 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
     const cryptoLegadoBrl = conc.composicao?.crypto_legado_brl ?? 0;
 
     const segments = [
-      { name: 'Intl (ETFs)', value: internacionalBrl, color: '#58a6ff' },
-      { name: 'RF Brasil', value: rfBrl, color: '#3ed381' },
-      { name: 'HODL11 (BTC)', value: hodl11Brl, color: '#f0883e' },
+      { name: 'Intl (ETFs)', value: internacionalBrl, color: EC.accent },
+      { name: 'RF Brasil', value: rfBrl, color: EC.green },
+      { name: 'HODL11 (BTC)', value: hodl11Brl, color: EC.orange },
       { name: 'Crypto', value: cryptoLegadoBrl, color: '#a371f7' },
     ].filter(s => s.value > 0);
 
@@ -38,9 +39,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
       backgroundColor: 'transparent',
       tooltip: {
         trigger: 'item',
-        backgroundColor: '#161b22',
-        borderColor: '#30363d',
-        textStyle: { color: '#e6edf3', fontSize: 11 },
+        ...EC_TOOLTIP,
         formatter: (p: any) =>
           `<div style="padding:6px 10px">
             <strong style="color:${p.data.itemStyle?.color ?? '#fff'}">${p.name}</strong><br/>
@@ -52,7 +51,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
         orient: 'horizontal',
         bottom: 0,
         left: 'center',
-        textStyle: { color: '#8b949e', fontSize: 10 },
+        textStyle: { color: EC.muted, fontSize: 10 },
         itemWidth: 10,
         itemHeight: 10,
       },
@@ -65,7 +64,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
             text: privacyMode ? '••%' : `${(100 - brasilPct).toFixed(0)}%`,
             fontSize: 16,
             fontWeight: 700,
-            fill: '#58a6ff',
+            fill: EC.accent,
             textAlign: 'center',
           },
         },
@@ -89,7 +88,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           data: segments.map(s => ({
             name: s.name,
             value: s.value,
-            itemStyle: { color: s.color, borderRadius: 4, borderColor: '#0d1117', borderWidth: 2 },
+            itemStyle: { color: s.color, borderRadius: 4, borderColor: EC.bg, borderWidth: 2 },
           })),
           label: {
             show: true,
@@ -118,18 +117,18 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
       <div style={styles.kpiRow}>
         <div style={styles.kpi}>
           <span style={styles.kpiLabel}>Brasil</span>
-          <span style={{ ...styles.kpiValue, color: '#f0883e' }}>
+          <span style={{ ...styles.kpiValue, color: EC.orange }}>
             {privacyMode ? '••%' : `${brasilPct.toFixed(1)}%`}
           </span>
         </div>
         <div style={styles.kpi}>
           <span style={styles.kpiLabel}>Internacional</span>
-          <span style={{ ...styles.kpiValue, color: '#58a6ff' }}>
+          <span style={{ ...styles.kpiValue, color: EC.accent }}>
             {privacyMode ? '••%' : `${internacionalPct.toFixed(1)}%`}
           </span>
         </div>
       </div>
-      <ReactECharts option={option} style={{ height: 260 }} />
+      <EChart option={option} style={{ height: 260 }} />
       <div style={styles.footnote}>
         HODL11 = wrapper B3 de BTC
       </div>

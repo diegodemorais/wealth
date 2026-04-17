@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
@@ -63,7 +63,7 @@ export function BacktestR7Chart({ data }: BacktestR7ChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Portfolio vs R7 Benchmark — Retorno Acumulado (desde 1995)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
+      <EChart ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>
   );
 }

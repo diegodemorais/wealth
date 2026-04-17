@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export interface BacktestChartProps {
   data: DashboardData;
@@ -104,9 +105,9 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
       xAxis: {
         type: 'category',
         data: xAxisData,
-        axisLine: { lineStyle: { color: '#30363d' } },
+        axisLine: EC_AXIS_LINE,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#8b949e',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 10,
           interval,
         },
@@ -114,11 +115,11 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
       yAxis: {
         type: 'value',
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#8b949e',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 10,
           formatter: (v: number) => v.toFixed(0),
         },
-        splitLine: { lineStyle: { color: '#21262d' } },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         {
@@ -126,7 +127,7 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
           type: 'line',
           data: target,
           smooth: true,
-          lineStyle: { width: 2, color: '#58a6ff' },
+          lineStyle: { width: 2, color: EC.accent },
           areaStyle: {
             color: {
               type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
@@ -143,7 +144,7 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
           type: 'line',
           data: shadow,
           smooth: true,
-          lineStyle: { width: 1.5, color: '#8b949e', type: 'dashed' },
+          lineStyle: { width: 1.5, color: EC.muted, type: 'dashed' },
           symbolSize: 0,
         },
       ],
@@ -153,6 +154,6 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
   if (!dataset && !(data as any)?.backtest?.dates?.length) return null;
 
   return (
-    <ReactECharts ref={chartRef} option={option} style={{ height, width: '100%' }} />
+    <EChart ref={chartRef} option={option} style={{ height, width: '100%' }} />
   );
 }

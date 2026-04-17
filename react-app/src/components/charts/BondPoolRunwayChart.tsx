@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { createBondPoolProbabilisticOption, createBondPoolDeterministicOption } from '@/utils/chartSetup';
+import { ChartCard } from '@/components/primitives/ChartCard';
 
 interface BondPoolRunwayData {
   anos_pre_fire?: number[];
@@ -66,8 +67,8 @@ export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
   }, [data, privacyMode, theme, hasDeterministic, hasProbabilistic]);
 
   return (
-    <div className="bg-card border border-border rounded-md p-4 mb-5" style={{ height: 400 }}>
-      <ReactECharts ref={chartRef} option={option} theme={theme} style={{ height: '100%' }} />
-    </div>
+    <ChartCard style={{ height: 400 }}>
+      <EChart ref={chartRef} option={option} theme={theme} style={{ height: '100%' }} />
+    </ChartCard>
   );
 }

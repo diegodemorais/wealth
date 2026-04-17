@@ -2,6 +2,8 @@
 
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
+import { EC } from '@/utils/echarts-theme';
+import { ChartCard } from '@/components/primitives/ChartCard';
 
 export interface EventosVidaChartProps {
   data: DashboardData;
@@ -23,7 +25,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
   const anoInss = anoAtual + (idadeInss - idadeAtual);
 
   const fixedMilestones = [
-    { year: anoAtual, event: `Idade Atual (${idadeAtual} anos)`, age: idadeAtual, icon: '👤', color: '#58a6ff' },
+    { year: anoAtual, event: `Idade Atual (${idadeAtual} anos)`, age: idadeAtual, icon: '👤', color: EC.accent },
     { year: anoFire, event: `Meta FIRE (${idadeFire} anos)`, age: idadeFire, icon: '🔥', color: '#f59e0b' },
     { year: anoInss, event: `INSS (${idadeInss} anos)`, age: idadeInss, icon: '🏛️', color: '#a78bfa' },
   ];
@@ -40,7 +42,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
       event: ev.evento ?? 'Evento',
       age,
       icon: ev.evento?.includes('Casamento') ? '💍' : ev.evento?.includes('Filho') ? '👶' : '📅',
-      color: '#3ed381',
+      color: EC.green,
       impacto: ev.impacto,
       acoes: ev.acoes,
     };
@@ -51,16 +53,14 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
 
   if (privacyMode) {
     return (
-      <div className="bg-card border border-border rounded-md p-4 mb-5">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Eventos de Vida — Timeline FIRE</h3>
+      <ChartCard title="Eventos de Vida — Timeline FIRE">
         <div className="text-muted-foreground text-lg py-6 text-center">••••</div>
-      </div>
+      </ChartCard>
     );
   }
 
   return (
-    <div className="bg-card border border-border rounded-md p-4 mb-5">
-      <h3 className="text-sm font-semibold text-foreground mb-4">Eventos de Vida — Timeline FIRE</h3>
+    <ChartCard title="Eventos de Vida — Timeline FIRE">
       <div className="relative pl-10">
         {allMilestones.map((milestone, idx) => (
           <div key={idx} className="mb-6 relative">
@@ -93,6 +93,6 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
           </div>
         ))}
       </div>
-    </div>
+    </ChartCard>
   );
 }

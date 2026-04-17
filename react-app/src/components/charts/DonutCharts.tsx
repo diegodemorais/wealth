@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
+import { EC } from '@/utils/echarts-theme';
 
 interface DonutChartsProps {
   data: DashboardData;
@@ -26,9 +27,9 @@ export function DonutCharts({ data }: DonutChartsProps) {
     const equityBrl = totalUsd * cambio;
     const totalBrl = equityBrl + rfBrl + hodlBrl;
     const assetData = [
-      { value: equityBrl, name: 'Equity',      color: '#58a6ff' },
-      { value: rfBrl,     name: 'Renda Fixa',  color: '#3ed381' },
-      { value: hodlBrl,   name: 'Bitcoin',     color: '#f0883e' },
+      { value: equityBrl, name: 'Equity',      color: EC.accent },
+      { value: rfBrl,     name: 'Renda Fixa',  color: EC.green },
+      { value: hodlBrl,   name: 'Bitcoin',     color: EC.orange },
     ].filter(d => d.value > 0);
     return { assetData, totalBrl };
   }, [data]);
@@ -58,22 +59,22 @@ export function DonutCharts({ data }: DonutChartsProps) {
           data: assetData.map(s => ({
             name: s.name,
             value: s.value,
-            itemStyle: { color: s.color, borderRadius: 5, borderColor: '#0d1117', borderWidth: 3 },
+            itemStyle: { color: s.color, borderRadius: 5, borderColor: EC.bg, borderWidth: 3 },
           })),
           label: {
             show: true,
             position: 'outside' as const,
             formatter: (p: any) => privacyMode ? '' : `{name|${p.name}}\n{pct|${p.percent?.toFixed(1)}%}`,
             rich: {
-              name: { fontSize: 11, color: '#8b949e', lineHeight: 16 },
-              pct:  { fontSize: 13, fontWeight: 700, color: '#e6edf3', lineHeight: 18 },
+              name: { fontSize: 11, color: EC.muted, lineHeight: 16 },
+              pct:  { fontSize: 13, fontWeight: 700, color: EC.text, lineHeight: 18 },
             },
             distanceToLabelLine: 6,
           },
           labelLine: {
             length: 12,
             length2: 16,
-            lineStyle: { color: '#30363d' },
+            lineStyle: { color: EC.border2 },
           },
           emphasis: {
             itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,0.5)', borderWidth: 0 },
@@ -92,7 +93,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
             text: privacyMode ? '••••' : `R$${(totalBrl / 1e6).toFixed(1)}M`,
             fontSize: 14,
             fontWeight: 700,
-            fill: '#e6edf3',
+            fill: EC.text,
             textAlign: 'center',
           },
         },
@@ -103,7 +104,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
           style: {
             text: 'Total',
             fontSize: 10,
-            fill: '#8b949e',
+            fill: EC.muted,
             textAlign: 'center',
           },
         },
@@ -113,7 +114,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
 
   return (
     <div style={{ height: '280px', width: '100%' }}>
-      <ReactECharts ref={chartRef} option={option} style={{ height: '100%', width: '100%' }} />
+      <EChart ref={chartRef} option={option} style={{ height: '100%', width: '100%' }} />
     </div>
   );
 }

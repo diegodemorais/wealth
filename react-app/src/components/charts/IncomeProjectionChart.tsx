@@ -1,10 +1,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
+import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+import { ChartCard } from '@/components/primitives/ChartCard';
 
 export interface IncomeProjectionChartProps {
   data: DashboardData;
@@ -95,7 +97,7 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
           formatter: (v: number) => `R$${Math.round(v / 1000)}k`,
           fontSize: 11,
         },
-        splitLine: { lineStyle: { color: '#161b22' } },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         {
@@ -103,32 +105,29 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
           type: 'bar' as const,
           stack: 'total',
           data: capitalHumano,
-          itemStyle: { color: '#58a6ff' },
+          itemStyle: { color: EC.accent },
         },
         {
           name: 'Portfólio (SWR)',
           type: 'bar' as const,
           stack: 'total',
           data: rendaPortfolio,
-          itemStyle: { color: '#3ed381' },
+          itemStyle: { color: EC.green },
         },
         {
           name: 'INSS',
           type: 'bar' as const,
           stack: 'total',
           data: rendaInss,
-          itemStyle: { color: '#a78bfa' },
+          itemStyle: { color: EC.purple },
         },
       ],
     };
   }, [data, privacyMode, theme]);
 
   return (
-    <div className="bg-card border border-border rounded-md p-4 mb-5">
-      <h3 className="text-sm font-semibold text-foreground mb-4">
-        Projeção de Renda — Ciclo de Vida
-      </h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: '100%' }} />
-    </div>
+    <ChartCard title="Projeção de Renda — Ciclo de Vida">
+      <EChart ref={chartRef} option={option} style={{ height: 400, width: '100%' }} />
+    </ChartCard>
   );
 }

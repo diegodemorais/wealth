@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export interface GuardrailsChartProps {
   data: DashboardData;
@@ -65,10 +66,10 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
       xAxis: {
         type: 'category' as const,
         data: xLabels,
-        axisLine: { lineStyle: { color: '#1c2128' } },
+        axisLine: EC_AXIS_LINE,
         axisTick: { show: false },
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 10,
           interval: 1,
           hideOverlap: true,
@@ -77,11 +78,11 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           formatter: (v: number) => `R$${Math.round(v / 1000)}k`,
           fontSize: 11,
         },
-        splitLine: { lineStyle: { color: '#161b22' } },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         // ── Band fill: green corridor between Lower and Upper ────────────
@@ -111,8 +112,8 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
           type: 'line' as const,
           data: upper,
           smooth: true,
-          itemStyle: { color: '#f85149' },
-          lineStyle: { width: 1.5, color: '#f85149', type: 'dashed' as const },
+          itemStyle: { color: EC.red },
+          lineStyle: { width: 1.5, color: EC.red, type: 'dashed' as const },
           symbolSize: 0,
         },
         {
@@ -120,8 +121,8 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
           type: 'line' as const,
           data: safe,
           smooth: true,
-          itemStyle: { color: '#3ed381' },
-          lineStyle: { width: 2, color: '#3ed381' },
+          itemStyle: { color: EC.green },
+          lineStyle: { width: 2, color: EC.green },
           symbolSize: 0,
         },
         {
@@ -129,7 +130,7 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
           type: 'line' as const,
           data: lower,
           smooth: true,
-          itemStyle: { color: '#f59e0b' },
+          itemStyle: { color: '#f59e0b' },  // amber — not in EC palette, kept as literal
           lineStyle: { width: 1.5, color: '#f59e0b', type: 'dashed' as const },
           symbolSize: 0,
         },
@@ -138,8 +139,8 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
           type: 'line' as const,
           data: atual,
           smooth: true,
-          itemStyle: { color: '#58a6ff' },
-          lineStyle: { width: 2, color: '#58a6ff', type: 'dotted' as const },
+          itemStyle: { color: EC.accent },
+          lineStyle: { width: 2, color: EC.accent, type: 'dotted' as const },
           symbolSize: 0,
           z: 10,
         },
@@ -148,6 +149,6 @@ export function GuardrailsChart({ data }: GuardrailsChartProps) {
   }, [data, privacyMode, theme]);
 
   return (
-    <ReactECharts ref={chartRef} option={option} style={{ height: 320, width: '100%' }} />
+    <EChart ref={chartRef} option={option} style={{ height: 320, width: '100%' }} />
   );
 }

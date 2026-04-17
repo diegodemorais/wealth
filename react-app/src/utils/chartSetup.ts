@@ -4,24 +4,29 @@
  *
  * IMPORTANT: ECharts and Chart.js render on <canvas> and cannot resolve
  * CSS custom properties (var(--x)). Always use explicit hex/rgb colors here.
+ *
+ * MIGRATION: New code should import EC from '@/utils/echarts-theme' directly.
+ * CHART_COLORS is kept as a legacy alias pointing to the same values.
  */
 
 import { DashboardData } from '@/types/dashboard';
+import { EC } from '@/utils/echarts-theme';
+export { EC };
 
-/** Resolved color palette — matches globals.css :root definitions */
+/** @deprecated Use EC from '@/utils/echarts-theme' instead */
 export const CHART_COLORS = {
-  accent:  '#3b82f6', // hsl(217 91% 60%)
-  green:   '#22c55e', // hsl(142 71% 45%)
-  red:     '#ef4444', // hsl(0 84% 60%)
-  orange:  '#f97316', // hsl(25 95% 53%)
-  yellow:  '#eab308', // hsl(45 93% 47%)
-  purple:  '#a855f7', // hsl(271 91% 65%)
-  cyan:    '#06b6d4', // hsl(189 94% 43%)
-  pink:    '#ec4899', // hsl(330 80% 60%)
-  muted:   '#94a3b8', // hsl(215 20% 65%)
-  border:  '#374151', // hsl(215 19% 35%) approx
-  card:    '#1e2a3b', // hsl(217 33% 17%) approx
-  text:    '#f1f5f9', // hsl(210 40% 96%)
+  accent:  EC.accent,
+  green:   EC.green,
+  red:     EC.red,
+  orange:  EC.orange,
+  yellow:  EC.yellow,
+  purple:  EC.purple,
+  cyan:    EC.cyan,
+  pink:    EC.pink,
+  muted:   EC.muted,
+  border:  EC.border2,
+  card:    EC.card,
+  text:    EC.text,
 } as const;
 
 export interface ChartTheme {

@@ -1,11 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { CHART_COLORS } from '@/utils/chartSetup';
+import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export interface ShadowChartProps {
   data: DashboardData;
@@ -69,7 +69,7 @@ export function ShadowChart({ data }: ShadowChartProps) {
         type: 'category' as const,
         data: xAxisData,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 11,
           interval: Math.floor(xAxisData.length / 8),
         },
@@ -77,11 +77,11 @@ export function ShadowChart({ data }: ShadowChartProps) {
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           formatter: (v: number) => `${v.toFixed(0)}`,
           fontSize: 11,
         },
-        splitLine: { lineStyle: { color: '#161b22' } },
+        splitLine: EC_SPLIT_LINE,
       },
       series: [
         {
@@ -89,18 +89,18 @@ export function ShadowChart({ data }: ShadowChartProps) {
           type: 'line' as const,
           data: targetValues,
           smooth: true,
-          itemStyle: { color: CHART_COLORS.accent },
-          lineStyle: { width: 2.5, color: CHART_COLORS.accent },
+          itemStyle: { color: EC.accent },
+          lineStyle: { width: 2.5, color: EC.accent },
           symbolSize: 0,
-          areaStyle: { opacity: 0.05, color: CHART_COLORS.accent },
+          areaStyle: { opacity: 0.05, color: EC.accent },
         },
         ...(shadowAValues.length > 0 ? [{
           name: `Shadow A (VWRA proxy)${deltaVwra}`,
           type: 'line' as const,
           data: shadowAValues,
           smooth: true,
-          itemStyle: { color: CHART_COLORS.red },
-          lineStyle: { width: 1.5, color: CHART_COLORS.red, type: 'dashed' as const },
+          itemStyle: { color: EC.red },
+          lineStyle: { width: 1.5, color: EC.red, type: 'dashed' as const },
           symbolSize: 0,
         }] : []),
       ],
@@ -110,7 +110,7 @@ export function ShadowChart({ data }: ShadowChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Actual vs Shadow Portfolio — Equity Curve</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
+      <EChart ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </div>
   );
 }

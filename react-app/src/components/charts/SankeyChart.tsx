@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
@@ -22,7 +22,7 @@ export function SankeyChart({ data }: SankeyChartProps) {
 
   return (
     <div style={{ height: '400px', width: '100%' }}>
-      <ReactECharts ref={chartRef} option={option} theme={theme} />
+      <EChart ref={chartRef} option={option} theme={theme} />
     </div>
   );
 }

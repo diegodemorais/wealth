@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 import { createDeltaBarChartOption } from '@/utils/chartSetup';
@@ -22,6 +22,6 @@ export function DeltaBarChart({ data, chartType, height = 260 }: DeltaBarChartPr
   );
 
   return (
-    <ReactECharts option={option} style={{ height, width: '100%' }} />
+    <EChart option={option} style={{ height, width: '100%' }} />
   );
 }

@@ -1,11 +1,11 @@
 'use client';
 
 import { useMemo } from 'react';
-import ReactECharts from 'echarts-for-react';
+import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
-import { CHART_COLORS } from '@/utils/chartSetup';
+import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export interface InformationRatioChartProps {
   data: DashboardData;
@@ -52,7 +52,7 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
           if (!Array.isArray(params) || !params[0]) return '';
           const p = params[0];
           const val = p.value?.toFixed(2) ?? '-';
-          const color = p.value >= 0 ? '#3ed381' : '#f85149';
+          const color = p.value >= 0 ? EC.green : EC.red;
           return `<div style="padding:8px"><strong>${p.axisValueLabel}</strong><br/>
             ${p.marker} IR 36m: <strong style="color:${color}">${val}</strong></div>`;
         },
@@ -62,7 +62,7 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
         type: 'category' as const,
         data: xAxisData,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 11,
           interval: Math.floor(xAxisData.length / 8),
         },
@@ -70,11 +70,11 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
+          color: privacyMode ? 'transparent' : EC.muted,
           formatter: (v: number) => v.toFixed(1),
           fontSize: 11,
         },
-        splitLine: { lineStyle: { color: '#161b22' } },
+        splitLine: EC_SPLIT_LINE,
         // Zero reference line indicator
       },
       series: [
@@ -83,8 +83,8 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
           type: 'line' as const,
           data: values,
           smooth: true,
-          itemStyle: { color: CHART_COLORS.cyan },
-          lineStyle: { width: 2, color: CHART_COLORS.cyan },
+          itemStyle: { color: EC.cyan },
+          lineStyle: { width: 2, color: EC.cyan },
           symbolSize: 4,
           // Color above/below zero
           areaStyle: {
@@ -93,8 +93,8 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
               type: 'linear' as const,
               x: 0, y: 0, x2: 0, y2: 1,
               colorStops: [
-                { offset: 0, color: '#3ed381' },
-                { offset: 1, color: '#f85149' },
+                { offset: 0, color: EC.green },
+                { offset: 1, color: EC.red },
               ],
             },
           },
@@ -112,7 +112,7 @@ export function InformationRatioChart({ data }: InformationRatioChartProps) {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Information Ratio — Rolling 36m (vs VWRA.L)</h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
+      <EChart ref={chartRef} option={option} style={{ height: 300, width: "100%" }} />
     </div>
   );
 }

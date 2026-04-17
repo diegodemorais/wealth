@@ -85,52 +85,109 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             {driftItems.map(item => {
-              const barWidth = Math.min(Math.abs(item.driftPp) * 5, 100);
-              const isOut = Math.abs(item.driftPp) > driftThresholdPp;
+              const absDrift = Math.abs(item.driftPp);
+              const barWidth = Math.min(absDrift * 5, 100);
+              const isOut = absDrift > driftThresholdPp;
+
+              // Threshold zones: 0–3pp = verde, 3–5pp = amarelo, >5pp = vermelho
+              const zoneColor =
+                absDrift > 5 ? 'var(--red)' :
+                absDrift > 3 ? 'var(--yellow)' :
+                'var(--green)';
+
+              const zoneBg =
+                absDrift > 5 ? 'rgba(248,81,73,0.75)' :
+                absDrift > 3 ? 'rgba(202,138,4,0.75)' :
+                'rgba(62,211,129,0.75)';
 
               return (
                 <div key={item.ticker}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                     <span style={{ fontWeight: 600, color: item.color }}>{item.ticker}</span>
-                    <span>{item.currentPercent.toFixed(1)}% (alvo: {item.targetPercent.toFixed(1)}%)</span>
+                    <span style={{ color: isOut ? zoneColor : 'var(--muted)', fontWeight: isOut ? 600 : 400 }}>
+                      {item.currentPercent.toFixed(1)}% (alvo: {item.targetPercent.toFixed(1)}%)
+                      {' '}
+                      <span style={{ fontFamily: 'monospace' }}>
+                        {item.driftPp >= 0 ? '+' : ''}{item.driftPp.toFixed(1)}pp
+                      </span>
+                    </span>
                   </div>
 
                   <div
                     style={{
-                      height: '24px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden',
+                      height: '20px', background: 'var(--bg)', borderRadius: '4px', overflow: 'hidden',
                       position: 'relative', display: 'flex', alignItems: 'center',
-                      border: isOut ? `2px solid ${item.color}` : '1px solid rgba(71, 85, 105, 0.3)',
+                      border: `1px solid ${isOut ? zoneColor : 'rgba(71, 85, 105, 0.3)'}`,
                     }}
                   >
-                    {/* Center (target) line */}
-                    <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'var(--muted)', opacity: 0.5 }} />
-
-                    {/* Tolerance zone */}
+                    {/* Zone backgrounds: verde (0-3pp) | amarelo (3-5pp) | vermelho (>5pp) */}
+                    {/* Green zone: center ±3pp */}
                     <div style={{
                       position: 'absolute', top: 0, bottom: 0,
-                      background: 'rgba(34,197,94,0.05)', border: '1px dashed rgba(34,197,94,0.3)',
-                      left: `calc(50% - ${driftThresholdPp * 5}%)`,
-                      width: `${driftThresholdPp * 10}%`,
+                      background: 'rgba(62,211,129,0.07)',
+                      left: 'calc(50% - 15%)',
+                      width: '30%',
+                    }} />
+                    {/* Yellow zone: ±3–5pp — left side */}
+                    <div style={{
+                      position: 'absolute', top: 0, bottom: 0,
+                      background: 'rgba(202,138,4,0.07)',
+                      left: 'calc(50% - 25%)',
+                      width: '10%',
+                    }} />
+                    {/* Yellow zone: ±3–5pp — right side */}
+                    <div style={{
+                      position: 'absolute', top: 0, bottom: 0,
+                      background: 'rgba(202,138,4,0.07)',
+                      left: 'calc(50% + 15%)',
+                      width: '10%',
+                    }} />
+                    {/* Red zone: >5pp — left tail */}
+                    <div style={{
+                      position: 'absolute', top: 0, bottom: 0,
+                      background: 'rgba(248,81,73,0.07)',
+                      left: 0,
+                      width: 'calc(50% - 25%)',
+                    }} />
+                    {/* Red zone: >5pp — right tail */}
+                    <div style={{
+                      position: 'absolute', top: 0, bottom: 0,
+                      background: 'rgba(248,81,73,0.07)',
+                      left: 'calc(50% + 25%)',
+                      right: 0,
                     }} />
 
-                    {/* Drift bar */}
+                    {/* Center (target) line */}
+                    <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'var(--muted)', opacity: 0.4 }} />
+
+                    {/* Threshold markers at ±3pp and ±5pp */}
+                    <div style={{ position: 'absolute', left: 'calc(50% - 15%)', top: 0, bottom: 0, width: '1px', background: 'rgba(62,211,129,0.4)' }} />
+                    <div style={{ position: 'absolute', left: 'calc(50% + 15%)', top: 0, bottom: 0, width: '1px', background: 'rgba(62,211,129,0.4)' }} />
+                    <div style={{ position: 'absolute', left: 'calc(50% - 25%)', top: 0, bottom: 0, width: '1px', background: 'rgba(202,138,4,0.4)' }} />
+                    <div style={{ position: 'absolute', left: 'calc(50% + 25%)', top: 0, bottom: 0, width: '1px', background: 'rgba(202,138,4,0.4)' }} />
+
+                    {/* Drift bar — color reflects zone, not ticker */}
                     <div
                       style={{
                         position: 'absolute', height: '100%',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)',
-                        backgroundColor: item.color, opacity: 0.8,
+                        fontSize: 'var(--text-xs)', fontWeight: 700, color: '#fff',
+                        backgroundColor: zoneBg,
                         left: item.driftPp >= 0 ? '50%' : `calc(50% - ${barWidth}%)`,
                         width: `${barWidth}%`,
+                        minWidth: absDrift > 0.3 ? '2px' : 0,
                       }}
                     >
-                      {Math.abs(item.driftPp) > 0.5 && `${item.driftPp >= 0 ? '+' : ''}${item.driftPp.toFixed(1)}pp`}
+                      {absDrift > 1.5 && `${item.driftPp >= 0 ? '+' : ''}${item.driftPp.toFixed(1)}`}
                     </div>
                   </div>
 
-                  <div style={{ fontSize: 'var(--text-sm)', marginTop: '4px', color: isOut ? item.color : 'var(--muted)', fontWeight: isOut ? 600 : 400 }}>
-                    {item.driftPp > 0 ? '↑ Acumulou' : '↓ Deficitário'}
-                    {isOut && ' [FORA DE TOLERÂNCIA]'}
+                  {/* Zone label */}
+                  <div style={{ fontSize: 'var(--text-xs)', marginTop: '3px', color: zoneColor, fontWeight: isOut ? 600 : 400 }}>
+                    {absDrift > 5 ? '🔴 Crítico' : absDrift > 3 ? '🟡 Atenção' : '🟢 OK'}
+                    {' — '}
+                    {item.driftPp > 0 ? 'acumulou' : 'deficitário'}
+                    {isOut && ' · fora da tolerância'}
                   </div>
                 </div>
               );
