@@ -90,7 +90,7 @@ export default function HomePage() {
       />
 
       {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Retorno YTD */}
-      <div className="grid grid-cols-2 gap-2.5 mb-3.5" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">
         {/* P(FIRE|53) */}
         <div className="kpi text-center border-l-4" style={{ borderLeftColor: pfireColor }}>
           <div className="kpi-label">P(FIRE|53)</div>

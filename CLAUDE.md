@@ -134,6 +134,12 @@ Scripts Python (generate_data.py, reconstruct_*.py)
 - React compila automaticamente via GitHub Actions (`.github/workflows/deploy-dashboard.yml`)
 - Nunca editar `dash/index.html` ou `dash/*.html` diretamente (são gerados)
 
+**Layout mobile (obrigatório):**
+- Grids com 4+ colunas SEMPRE usar classes responsivas Tailwind: `grid-cols-2 sm:grid-cols-4`
+- NUNCA usar `style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}` — sobrescreve responsividade e quebra mobile
+- NUNCA usar `grid-cols-4` sem fallback mobile (`grid-cols-2` na mesma linha)
+- Teste automático em `src/__tests__/style-validation.test.ts` (grupo 2f) detecta ambas violações
+
 ## Referências
 
 | Tópico | Arquivo |

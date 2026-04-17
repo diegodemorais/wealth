@@ -293,3 +293,74 @@ describe('2e. Header/Nav Structure (static scan)', () => {
     expect(hasPrivacyToggle).toBe(true);
   });
 });
+
+// ── 2f. Layout Mobile Safety ───────────────────────────────────────────────────
+// Diretriz: grids com 4+ colunas DEVEM usar classes Tailwind responsivas.
+// Nunca usar inline gridTemplateColumns com repeat(N≥4) — sobrescreve
+// responsividade e quebra mobile. Padrão correto: grid-cols-2 sm:grid-cols-4.
+describe('2f. Layout Mobile Safety', () => {
+  const APP_DIR = resolve(SRC_DIR, 'app');
+
+  function collectTsx(dir: string, files: string[] = []): string[] {
+    for (const entry of readdirSync(dir)) {
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) collectTsx(full, files);
+      else if (entry.endsWith('.tsx')) files.push(full);
+    }
+    return files;
+  }
+
+  it('no inline gridTemplateColumns: repeat(N≥4) in page files (breaks mobile)', () => {
+    // Pattern: gridTemplateColumns: 'repeat(4...' or repeat(5 etc.
+    // These force fixed column count and override responsive Tailwind classes.
+    const BANNED = /gridTemplateColumns\s*:\s*['"`]repeat\s*\(\s*([4-9]|\d{2,})/;
+    const pages = collectTsx(APP_DIR);
+    const violations: string[] = [];
+
+    for (const file of pages) {
+      const content = readFileSync(file, 'utf-8');
+      const lines = content.split('\n');
+      lines.forEach((line, i) => {
+        if (BANNED.test(line)) {
+          violations.push(`${file.replace(SRC_DIR, 'src')}:${i + 1} — ${line.trim()}`);
+        }
+      });
+    }
+
+    if (violations.length > 0) {
+      throw new Error(
+        `Inline gridTemplateColumns com repeat(N≥4) quebra mobile.\n` +
+        `Use "grid-cols-2 sm:grid-cols-4" (Tailwind responsivo).\n\n` +
+        violations.join('\n')
+      );
+    }
+  });
+
+  it('no grid-cols-4 without a mobile fallback class (grid-cols-1 or grid-cols-2) in same element', () => {
+    // grid-cols-4 alone (not prefixed with sm:/md:/lg:) forces 4 cols on mobile.
+    // Must be paired with grid-cols-1 or grid-cols-2.
+    const pages = collectTsx(APP_DIR);
+    const violations: string[] = [];
+
+    for (const file of pages) {
+      const content = readFileSync(file, 'utf-8');
+      const lines = content.split('\n');
+      lines.forEach((line, i) => {
+        // Detect unprefixed grid-cols-4+ (not sm:grid-cols-4, md:grid-cols-4, etc.)
+        const hasUnprefixed = /(?<![a-z]:)grid-cols-[4-9](?!\d)/.test(line);
+        const hasMobileFallback = /grid-cols-[12](?!\d)/.test(line);
+        if (hasUnprefixed && !hasMobileFallback) {
+          violations.push(`${file.replace(SRC_DIR, 'src')}:${i + 1} — ${line.trim()}`);
+        }
+      });
+    }
+
+    if (violations.length > 0) {
+      throw new Error(
+        `grid-cols-4+ sem fallback mobile (grid-cols-1 ou grid-cols-2).\n` +
+        `Use: "grid-cols-2 sm:grid-cols-4"\n\n` +
+        violations.join('\n')
+      );
+    }
+  });
+});
