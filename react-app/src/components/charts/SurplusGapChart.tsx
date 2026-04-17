@@ -105,7 +105,7 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
     }
 
     return { years, surplusP10, surplusP50, surplusP90 };
-  }, [data]);
+  }, [data, premissasOverride]);
 
   const fmtK = (v: number) => {
     if (privacyMode) return '••••';

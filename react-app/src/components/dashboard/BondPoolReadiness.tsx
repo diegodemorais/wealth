@@ -31,6 +31,8 @@ interface BondPoolReadinessData {
 
 interface BondPoolReadinessProps {
   data: BondPoolReadinessData
+  /** Override gasto anual para recalcular anos de cobertura e meta em BRL */
+  custo_vida_base?: number
 }
 
 const statusConfig: Record<string, { color: string; bg: string; border: string; label: string }> = {
@@ -59,17 +61,19 @@ function normalizeComposicao(
   return entries
 }
 
-export function BondPoolReadiness({ data }: BondPoolReadinessProps) {
+export function BondPoolReadiness({ data, custo_vida_base }: BondPoolReadinessProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
   if (!data || typeof data !== "object") {
     return <div className="text-muted-foreground">Bond pool data unavailable</div>
   }
 
-  const anosGastos = typeof data.anos_gastos === "number" ? data.anos_gastos : 0
   const metaAnos = typeof data.meta_anos === "number" ? data.meta_anos : 7
   const valorAtual = typeof data.valor_atual_brl === "number" ? data.valor_atual_brl : 0
-  const metaBrl = typeof data.meta_brl === "number" ? data.meta_brl : metaAnos * 250000
+  // If scenario override provided, recompute anos_gastos and meta_brl from custo_vida_base
+  const gastoAnual = custo_vida_base ?? 250_000
+  const anosGastos = gastoAnual > 0 ? valorAtual / gastoAnual : (typeof data.anos_gastos === "number" ? data.anos_gastos : 0)
+  const metaBrl = metaAnos * gastoAnual
 
   const progressPct = metaAnos > 0 ? (anosGastos / metaAnos) * 100 : 0
   const statusKey = data.status || "early"

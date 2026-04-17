@@ -125,22 +125,26 @@ export default function FirePage() {
 
         return (
           <section className="section" id="fireAspirationalSection">
-            <h2>FIRE Aspiracional <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— earliest age · cenário SWR</span></h2>
+            <h2>FIRE Aspiracional <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— MC · cenário por perfil</span></h2>
             <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: '12px' }}>
-              {CARDS.map(({ profile, emoji, label, cond, mkt, retorno: r, isAspir }) => {
+              {CARDS.map(({ profile, emoji, label, cond, mkt, isAspir }) => {
                 const p = (data as any)?.fire_matrix?.by_profile?.find((x: any) => x.profile === profile);
                 if (!p) return null;
 
-                // Compute earliest FIRE year using SWR
-                const fireResult = calcFireYear(aporte, r, p.gasto_anual, currentAge, patrimonio, swrTarget);
-
-                // P(FIRE) — use aspiracional MC data for aspir card, otherwise use by_profile p_fire_50
+                // Use precomputed MC dates — consistent with P values (same MC run)
+                let fireAno: number | null, fireIdade: number | null;
                 let pfire: number, pfav: number, pstress: number;
                 if (isAspir) {
+                  const ef = (data as any)?.earliest_fire;
+                  fireAno = ef?.ano ?? null;
+                  fireIdade = ef?.idade ?? null;
                   pfire  = (data as any)?.pfire_aspiracional?.base  ?? p.p_fire_50;
                   pfav   = (data as any)?.pfire_aspiracional?.fav   ?? p.p_fire_50_fav;
                   pstress = (data as any)?.pfire_aspiracional?.stress ?? p.p_fire_50_stress;
                 } else {
+                  // fire_age_50 = year Diego turns 50; p_fire_50 = MC success at that year/gasto
+                  fireAno = p.fire_age_50 ? parseInt(p.fire_age_50, 10) : null;
+                  fireIdade = fireAno ? currentAge + (fireAno - (new Date().getFullYear())) : null;
                   pfire  = p.p_fire_50 as number;
                   pfav   = p.p_fire_50_fav as number;
                   pstress = p.p_fire_50_stress as number;
@@ -169,11 +173,11 @@ export default function FirePage() {
                     <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>{emoji}</div>
                     <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>R${(p.gasto_anual / 1000).toFixed(0)}k/ano{isAspir ? ' · mercado fav.' : ''}</div>
-                    {/* FIRE year — computed from SWR */}
-                    {fireResult ? (
+                    {/* FIRE year — from MC precomputed data (consistent with P value) */}
+                    {fireAno ? (
                       <>
-                        <div style={{ fontSize: '2rem', fontWeight: 800, color: accentColor, lineHeight: 1, marginTop: '6px' }}>{fireResult.ano}</div>
-                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>idade {fireResult.idade}</div>
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: accentColor, lineHeight: 1, marginTop: '6px' }}>{fireAno}</div>
+                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>idade {fireIdade}</div>
                       </>
                     ) : (
                       <>

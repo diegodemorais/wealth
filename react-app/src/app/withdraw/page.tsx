@@ -247,72 +247,37 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 4. Bond Pool Readiness — Proteção SoRR (moved here: contexto após SWR/guardrails) */}
+      {/* 4. Bond Pool Readiness — Proteção SoRR */}
       {bondPoolReadiness && (
-        <section className="section" id="bondPoolSection">
-          <h2>Bond Pool Readiness — Proteção SoRR</h2>
-          <BondPoolReadiness data={bondPoolReadiness} />
-          {bondPoolRunway && (
-            <div style={{ marginTop: 14 }}>
-              <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)
-              </div>
-              <BondPoolRunwayChart data={bondPoolRunway} />
+        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Pool Readiness — Proteção SoRR')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon="🏦">
+          <div style={{ padding: '0 16px 16px' }}>
+            <div style={{ marginBottom: 8 }}>
+              <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
             </div>
-          )}
-          <div className="src">
-            Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos de gastos.
+            <BondPoolReadiness data={bondPoolReadiness} custo_vida_base={activeScenarioCfg.custo_vida_base} />
+            {bondPoolRunway && (
+              <div style={{ marginTop: 14 }}>
+                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                  Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)
+                </div>
+                <BondPoolRunwayChart data={bondPoolRunway} />
+              </div>
+            )}
+            <div className="src">
+              Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos × gasto do perfil selecionado.
+            </div>
           </div>
-        </section>
+        </CollapsibleSection>
       )}
 
-      {/* 5. Sankey — Fluxo de Caixa Anual (moved here: overview após detalhes) */}
-      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Sankey — Fluxo de Caixa Anual (estimado)')} defaultOpen={secOpen('withdraw', 'sankey')} icon="💸">
+      {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
+      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey')} icon="💸">
         <div style={{ padding: '0 16px 16px' }}>
           <CashFlowSankey />
         </div>
       </CollapsibleSection>
 
-      {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
-      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases')}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {incomeTable && Array.isArray(incomeTable) ? (
-            <div style={{ overflowX: 'auto', marginBottom: 12 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Fase</th>
-                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Idade</th>
-                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Fonte de Renda</th>
-                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Gasto ex-saúde</th>
-                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Saúde</th>
-                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Observação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {incomeTable.map((row: { fase: string; idade: string; fonte: string; gasto_ex_saude: string; saude: string; obs: string }, i: number) => (
-                    <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <td style={{ padding: '6px 8px', fontWeight: 500 }}>{row.fase}</td>
-                      <td style={{ padding: '6px 8px' }}>{row.idade}</td>
-                      <td style={{ padding: '6px 8px' }}>{row.fonte}</td>
-                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.gasto_ex_saude}</td>
-                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.saude}</td>
-                      <td style={{ padding: '6px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{row.obs}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <IncomeProjectionChart data={data} />
-          )}
-          <div className="src">
-            Fases: Go-Go (50–65, alta mobilidade), Slow-Go (65–75, moderado), No-Go (75+, baixa mobilidade). Spending smile aplicado às projeções MC.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 7. Spending — Essenciais vs Discricionários (collapsed: detalhe secundário) */}
+      {/* 5b. Spending — Essenciais vs Discricionários (logo após o cashflow de hoje) */}
       {(data.spending ?? data.fire?.spending ?? data.spending_breakdown) && (
         <CollapsibleSection id="section-spending-breakdown" title={secTitle('withdraw', 'spending-breakdown', 'Spending — Essenciais vs Discricionários')} defaultOpen={secOpen('withdraw', 'spending-breakdown', false)}>
           <div style={{ padding: '0 16px 16px' }}>
@@ -371,6 +336,45 @@ export default function WithdrawPage() {
           </div>
         </CollapsibleSection>
       )}
+
+      {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
+      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases')}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {incomeTable && Array.isArray(incomeTable) ? (
+            <div style={{ overflowX: 'auto', marginBottom: 12 }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Fase</th>
+                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Idade</th>
+                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Fonte de Renda</th>
+                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Gasto ex-saúde</th>
+                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Saúde</th>
+                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Observação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {incomeTable.map((row: { fase: string; idade: string; fonte: string; gasto_ex_saude: string; saude: string; obs: string }, i: number) => (
+                    <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                      <td style={{ padding: '6px 8px', fontWeight: 500 }}>{row.fase}</td>
+                      <td style={{ padding: '6px 8px' }}>{row.idade}</td>
+                      <td style={{ padding: '6px 8px' }}>{row.fonte}</td>
+                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.gasto_ex_saude}</td>
+                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.saude}</td>
+                      <td style={{ padding: '6px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{row.obs}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <IncomeProjectionChart data={data} />
+          )}
+          <div className="src">
+            Fases: Go-Go (50–65, alta mobilidade), Slow-Go (65–75, moderado), No-Go (75+, baixa mobilidade). Spending smile aplicado às projeções MC.
+          </div>
+        </div>
+      </CollapsibleSection>
 
       {/* F7 — LTC Sensitivity Test (DEV-boldin-dashboard) */}
       <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity')} icon="🏥">
