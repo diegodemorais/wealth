@@ -40,6 +40,14 @@ export default function WithdrawPage() {
     return <div className="warning-state">Dados carregados mas seção de retirada não disponível</div>;
   }
 
+  // Derive scenario label from premissas config
+  const scenarioLabel: string = (() => {
+    const p = data.premissas ?? {};
+    if (p.tem_conjuge && p.tem_filho) return 'Casado + Filho';
+    if (p.tem_conjuge) return 'Casado';
+    return 'Solteiro';
+  })();
+
   const swrPercentisRaw = data.fire?.swr_percentis ?? data.swr_percentis ?? data.fire_swr_percentis;
   // Normalize field names: fire_swr_percentis uses swr_p10/p50/p90 + patrimonio_p10_2040 etc.
   const swrPercentis = swrPercentisRaw
@@ -58,6 +66,36 @@ export default function WithdrawPage() {
 
   return (
     <div>
+      {/* Cenário ativo — contexto para todas as simulações da aba */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '8px 14px',
+        marginBottom: 10,
+        background: 'var(--card2)',
+        borderRadius: 6,
+        border: '1px solid var(--border)',
+        fontSize: 'var(--text-xs)',
+        color: 'var(--muted)',
+      }}>
+        <span>Simulações calculadas para o perfil</span>
+        <span style={{
+          padding: '2px 8px',
+          borderRadius: 999,
+          background: 'rgba(99,179,237,.12)',
+          color: 'var(--accent)',
+          border: '1px solid var(--accent)',
+          fontWeight: 700,
+          letterSpacing: '.3px',
+        }}>
+          {scenarioLabel}
+        </span>
+        <span style={{ marginLeft: 'auto', opacity: .6 }}>
+          Perfil determinado por <code style={{ fontSize: '10px' }}>premissas.tem_conjuge / tem_filho</code>
+        </span>
+      </div>
+
       {/* 1. SWR no FIRE Day — Percentis P10 / P50 / P90 (moved first: número central da aposentadoria) */}
       {swrPercentis && (
         <CollapsibleSection id="section-swr-percentiles" title={secTitle('withdraw', 'swr', 'SWR no FIRE Day — Percentis P10 / P50 / P90')} defaultOpen={secOpen('withdraw', 'swr')}>

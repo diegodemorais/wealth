@@ -13,8 +13,7 @@ export function FireScenariosTable() {
     const sc = data.scenario_comparison;
     return [
       {
-        name: 'Base Case',
-        desc: 'Conservative target age',
+        name: 'Cenário Base',
         age: sc.base?.idade || 53,
         base: sc.base?.base || 0,
         fav: sc.base?.fav || 0,
@@ -26,8 +25,7 @@ export function FireScenariosTable() {
         swr: sc.base?.swr || 0,
       },
       {
-        name: 'Aspiracional',
-        desc: 'Early FIRE target',
+        name: 'Cenário Aspiracional',
         age: sc.aspiracional?.idade || 49,
         base: sc.aspiracional?.base || 0,
         fav: sc.aspiracional?.fav || 0,
@@ -41,19 +39,18 @@ export function FireScenariosTable() {
     ];
   }, [data?.scenario_comparison]);
 
-  const formatCurrency = (value: number) => {
+  const fmtBrl = (v: number) => {
     if (privacyMode) return '••••';
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
       minimumFractionDigits: 0,
-    }).format(value);
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }).format(v);
   };
 
-  const formatPercent = (value: number) => {
-    if (privacyMode) return '••••';
-    return `${value.toFixed(1)}%`;
-  };
+  const fmtPct = (v: number) => privacyMode ? '••••' : `${v.toFixed(1)}%`;
 
   const getSuccessColor = (value: number) => {
     if (value >= 90) return 'var(--green)';
@@ -65,301 +62,135 @@ export function FireScenariosTable() {
   if (scenarios.length === 0) {
     return (
       <div className="bg-card border border-border rounded-md p-5">
-        <h3 className="text-sm font-semibold text-foreground mb-4">FIRE Scenarios Comparison</h3>
-        <div className="bg-secondary/20 border border-border rounded p-4">
-          <p className="text-muted-foreground">No scenario data available</p>
-        </div>
+        <h3 className="text-sm font-semibold mb-4">Comparativo de Cenários FIRE</h3>
+        <p className="text-xs" style={{ color: 'var(--muted)' }}>Dados de cenário indisponíveis</p>
       </div>
     );
   }
 
   return (
     <div className="bg-card border border-border rounded-md p-5">
-      <h3 className="text-sm font-semibold text-foreground mb-2">🎯 FIRE Scenarios — Detailed Comparison</h3>
-      <p className="text-xs text-muted-foreground mb-4">
-        Success probabilities and wealth projections for different retirement targets
-      </p>
+      <h3 className="text-sm font-semibold mb-4">Comparativo de Cenários FIRE</h3>
 
       {scenarios.map((scenario, idx) => (
-        <div key={idx} className="bg-secondary/20 border border-border rounded-md p-4 mb-4" style={styles.scenarioBlock}>
-          <div style={styles.scenarioHeader}>
-            <div>
-              <h4 style={styles.scenarioName}>{scenario.name}</h4>
-              <p style={styles.scenarioDesc}>{scenario.desc}</p>
-            </div>
-            <div style={styles.ageBadge}>
-              <span style={styles.ageBadgeLabel}>Target Age</span>
-              <span style={styles.ageBadgeValue}>{scenario.age}</span>
-            </div>
-          </div>
-
-          <div style={styles.metricsGrid}>
-            {/* Success Probabilities */}
-            <div style={styles.metricSection}>
-              <h5 style={styles.metricTitle}>Success Probability</h5>
-              <div style={styles.metricList}>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>Base Case</span>
-                  <span style={{ ...styles.metricValue, color: getSuccessColor(scenario.base) }}>
-                    {formatPercent(scenario.base)}
-                  </span>
-                </div>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>Favorable</span>
-                  <span style={{ ...styles.metricValue, color: getSuccessColor(scenario.fav) }}>
-                    {formatPercent(scenario.fav)}
-                  </span>
-                </div>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>Stress Test</span>
-                  <span style={{ ...styles.metricValue, color: getSuccessColor(scenario.stress) }}>
-                    {formatPercent(scenario.stress)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Median Wealth */}
-            <div style={styles.metricSection}>
-              <h5 style={styles.metricTitle}>Median Net Worth</h5>
-              <div style={styles.metricValue}>{formatCurrency(scenario.pat_mediano)}</div>
-            </div>
-
-            {/* Wealth Distribution */}
-            <div style={styles.metricSection}>
-              <h5 style={styles.metricTitle}>Wealth Distribution (MC)</h5>
-              <div style={styles.metricList}>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>P10 (Pessimistic)</span>
-                  <span style={styles.metricValue}>{formatCurrency(scenario.pat_p10)}</span>
-                </div>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>P50 (Median)</span>
-                  <span style={styles.metricValue}>{formatCurrency(scenario.pat_mediano)}</span>
-                </div>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>P90 (Optimistic)</span>
-                  <span style={styles.metricValue}>{formatCurrency(scenario.pat_p90)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Spending & SWR */}
-            <div style={styles.metricSection}>
-              <h5 style={styles.metricTitle}>Annual Spending & SWR</h5>
-              <div style={styles.metricList}>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>Target Spending</span>
-                  <span style={styles.metricValue}>{formatCurrency(scenario.gasto)}</span>
-                </div>
-                <div style={styles.metricRow}>
-                  <span style={styles.metricLabel}>Safe Withdrawal Rate</span>
-                  <span style={{ ...styles.metricValue, color: 'var(--accent)' }}>
-                    {formatPercent(scenario.swr)}
-                  </span>
-                </div>
-              </div>
+        <div
+          key={idx}
+          style={{
+            border: '1px solid var(--border)',
+            borderRadius: 6,
+            padding: '14px 16px',
+            marginBottom: idx < scenarios.length - 1 ? 14 : 0,
+            background: 'var(--bg)',
+          }}
+        >
+          {/* Cabeçalho: nome + idade alvo */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 12,
+              paddingBottom: 10,
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
+            <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text)' }}>
+              {scenario.name}
+            </span>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '6px 10px',
+                background: 'var(--card)',
+                borderRadius: 4,
+                border: '1px solid var(--border)',
+              }}
+            >
+              <span style={{ fontSize: '10px', color: 'var(--muted)', fontWeight: 500, marginBottom: 1 }}>
+                Idade alvo
+              </span>
+              <span style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--accent)' }}>
+                {scenario.age}
+              </span>
             </div>
           </div>
 
-          {/* Range Indicator */}
-          <div style={styles.wealthRangeSection}>
-            <div style={styles.rangeLabel}>
-              Projected Wealth Range (P10 → P90)
+          {/* Probabilidade de Sucesso */}
+          <div style={{ marginBottom: 10 }}>
+            <div
+              style={{
+                fontSize: 'var(--text-xs)',
+                fontWeight: 600,
+                color: 'var(--muted)',
+                textTransform: 'uppercase',
+                letterSpacing: '.4px',
+                marginBottom: 6,
+              }}
+            >
+              Probabilidade de Sucesso
             </div>
-            <div style={styles.rangeBar}>
-              <div style={styles.rangeMin}>{privacyMode ? '••••' : formatCurrency(scenario.pat_p10)}</div>
-              <div style={styles.rangeVisualization}>
-                <div style={styles.rangeLine} />
-                <div style={styles.rangeMarker} />
-              </div>
-              <div style={styles.rangeMax}>{privacyMode ? '••••' : formatCurrency(scenario.pat_p90)}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {[
+                { label: 'Mercado base', value: scenario.base },
+                { label: 'Mercado favorável', value: scenario.fav },
+                { label: 'Stress test', value: scenario.stress },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)' }}
+                >
+                  <span style={{ color: 'var(--muted)' }}>{label}</span>
+                  <span style={{ fontWeight: 600, color: getSuccessColor(value) }}>{fmtPct(value)}</span>
+                </div>
+              ))}
             </div>
+          </div>
+
+          {/* Divisor */}
+          <div style={{ borderTop: '1px solid var(--border)', margin: '10px 0' }} />
+
+          {/* Métricas financeiras */}
+          {[
+            { label: 'Gasto anual', value: fmtBrl(scenario.gasto), color: undefined },
+            { label: 'Taxa de retirada (SWR)', value: fmtPct(scenario.swr), color: 'var(--accent)' },
+            { label: 'Patrimônio mediano', value: fmtBrl(scenario.pat_mediano), color: undefined },
+          ].map(({ label, value, color }) => (
+            <div
+              key={label}
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: 'var(--text-sm)',
+                marginBottom: 4,
+              }}
+            >
+              <span style={{ color: 'var(--muted)' }}>{label}</span>
+              <span style={{ fontWeight: 600, color: color ?? 'var(--text)' }}>{value}</span>
+            </div>
+          ))}
+
+          {/* Range P10–P90 */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: 'var(--text-sm)',
+              marginTop: 2,
+            }}
+          >
+            <span style={{ color: 'var(--muted)' }}>Range P10–P90</span>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              {fmtBrl(scenario.pat_p10)} — {fmtBrl(scenario.pat_p90)}
+            </span>
           </div>
         </div>
       ))}
 
-      <div className="bg-secondary/10 border border-border rounded-md p-4 mt-4">
-        <p className="text-xs text-muted-foreground m-0">
-          <strong>Notes:</strong> Success probabilities from 10,000 Monte Carlo simulations.
-          Base Case = conservative return assumptions; Favorable = best-case market scenario;
-          Stress Test = downturn scenario. SWR (Safe Withdrawal Rate) ensures portfolio
-          sustainability through 30-year retirement horizon.
-        </p>
+      <div style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+        10.000 simulações Monte Carlo. Guardrails aprovados 2026-04-07.
       </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    backgroundColor: 'var(--card)',
-    border: '1px solid var(--border)',
-    borderRadius: '8px',
-    padding: 'var(--space-6)',
-    marginBottom: '14px',
-  },
-  title: {
-    margin: '0 0 8px 0',
-    fontSize: 'var(--text-lg)',
-    fontWeight: '600',
-    color: 'var(--text)',
-  },
-  subtitle: {
-    margin: '0 0 20px 0',
-    fontSize: 'var(--text-sm)',
-    color: 'var(--muted)',
-  },
-  scenarioBlock: {
-    border: '1px solid var(--border)',
-    borderRadius: '6px',
-    padding: 'var(--space-5)',
-    marginBottom: '16px',
-    backgroundColor: 'var(--bg)',
-  },
-  scenarioHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: '16px',
-    paddingBottom: '12px',
-    borderBottom: '1px solid var(--border)',
-  },
-  scenarioName: {
-    margin: '0 0 4px 0',
-    fontSize: '15px',
-    fontWeight: '700',
-    color: 'var(--text)',
-  },
-  scenarioDesc: {
-    margin: '0',
-    fontSize: 'var(--text-xs)',
-    color: 'var(--muted)',
-  },
-  agebadge: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '8px 12px',
-    backgroundColor: 'var(--card)',
-    borderRadius: '4px',
-    border: '1px solid var(--border)',
-  },
-  ageBadgeLabel: {
-    fontSize: '10px',
-    color: 'var(--muted)',
-    fontWeight: '500',
-    marginBottom: '2px',
-  },
-  ageBadgeValue: {
-    fontSize: 'var(--text-xl)',
-    fontWeight: '700',
-    color: 'var(--accent)',
-  },
-  metricsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-    gap: 'var(--space-3)',
-    marginBottom: '16px',
-  },
-  metricSection: {
-    padding: 'var(--space-3)',
-    backgroundColor: 'var(--card)',
-    borderRadius: '4px',
-    border: '1px solid var(--border)',
-  },
-  metricTitle: {
-    margin: '0 0 8px 0',
-    fontSize: 'var(--text-xs)',
-    fontWeight: '600',
-    color: 'var(--muted)',
-    textTransform: 'uppercase',
-  },
-  metricValue: {
-    fontSize: 'var(--text-sm)',
-    fontWeight: '600',
-    color: 'var(--accent)',
-  },
-  metricList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px',
-  },
-  metricRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: 'var(--text-sm)',
-  },
-  metricLabel: {
-    color: 'var(--muted)',
-    fontWeight: '500',
-  },
-  wealthRangeSection: {
-    paddingTop: '12px',
-    borderTop: '1px solid var(--border)',
-  },
-  rangeLabel: {
-    fontSize: 'var(--text-xs)',
-    fontWeight: '500',
-    color: 'var(--muted)',
-    marginBottom: '8px',
-  },
-  rangeBar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 'var(--space-2)',
-    padding: '8px 0',
-  },
-  rangeMin: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--muted)',
-    minWidth: '80px',
-    textAlign: 'right',
-  },
-  rangeVisualization: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  rangeLine: {
-    position: 'absolute',
-    width: '100%',
-    height: '3px',
-    backgroundColor: 'var(--border)',
-    borderRadius: '2px',
-  },
-  rangeMarker: {
-    position: 'absolute',
-    width: '50%',
-    height: '8px',
-    backgroundColor: 'var(--accent)',
-    borderRadius: '2px',
-  },
-  rangeMax: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--muted)',
-    minWidth: '80px',
-    textAlign: 'left',
-  },
-  empty: {
-    minHeight: '100px',
-    backgroundColor: 'var(--card)',
-    borderRadius: '4px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: 'var(--muted)',
-  },
-  noteSection: {
-    borderTop: '1px solid var(--border)',
-    paddingTop: '12px',
-    marginTop: '16px',
-  },
-  note: {
-    margin: '0',
-    fontSize: 'var(--text-xs)',
-    color: 'var(--muted)',
-    lineHeight: '1.5',
-  },
-};
