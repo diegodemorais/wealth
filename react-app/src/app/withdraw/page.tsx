@@ -88,7 +88,25 @@ export default function WithdrawPage() {
     : undefined;
   const bondPoolReadiness = data.fire?.bond_pool_readiness ?? data.bond_pool_readiness;
   const bondPoolRunway = data.bond_pool_runway ?? data.fire?.bond_pool_runway;
+  const bondPoolRunwayByProfile = (data as any).bond_pool_runway_by_profile;
+  const activeRunway = bondPoolRunwayByProfile?.[withdrawScenario as ScenarioKey] ?? bondPoolRunwayByProfile?.atual;
   const incomeTable = data.fire?.income_phases ?? data.income_phases;
+
+  // SWR efetivo por perfil — recomputado no frontend (patrimônio MC é fixo, gasto muda)
+  const swrEfetivo = swrPercentis ? {
+    p10: swrPercentis.p10_patrimonio ? activeScenarioCfg.custo_vida_base / swrPercentis.p10_patrimonio : swrPercentis.p10,
+    p50: swrPercentis.p50_patrimonio ? activeScenarioCfg.custo_vida_base / swrPercentis.p50_patrimonio : swrPercentis.p50,
+    p90: swrPercentis.p90_patrimonio ? activeScenarioCfg.custo_vida_base / swrPercentis.p90_patrimonio : swrPercentis.p90,
+  } : undefined;
+
+  // P(FIRE) por perfil — de fire_matrix.by_profile (mesmo MC run, sem precisar reprocessar)
+  const byProfile = (data as any)?.fire_matrix?.by_profile ?? [];
+  const pfireByProfile: Record<ScenarioKey, number | null> = {
+    atual:  byProfile.find((p: any) => p.profile === 'atual')?.p_fire_53  ?? (data as any)?.spending_guardrails?.pfire_atual ?? null,
+    casado: byProfile.find((p: any) => p.profile === 'casado')?.p_fire_53 ?? null,
+    filho:  byProfile.find((p: any) => p.profile === 'filho')?.p_fire_53  ?? null,
+  };
+  const pfireAtual: number | null = pfireByProfile[withdrawScenario as ScenarioKey] ?? pfireByProfile.atual;
 
   return (
     <div>
@@ -139,7 +157,7 @@ export default function WithdrawPage() {
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
                 <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--red)' }}>
-                  {swrPercentis.p10 != null ? `${(swrPercentis.p10 * 100).toFixed(2)}%` : '—'}
+                  {swrEfetivo?.p10 != null ? `${(swrEfetivo.p10 * 100).toFixed(2)}%` : '—'}
                 </div>
                 {swrPercentis.p10_patrimonio != null && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
@@ -151,7 +169,7 @@ export default function WithdrawPage() {
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--yellow)' }}>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
                 <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--yellow)' }}>
-                  {swrPercentis.p50 != null ? `${(swrPercentis.p50 * 100).toFixed(2)}%` : '—'}
+                  {swrEfetivo?.p50 != null ? `${(swrEfetivo.p50 * 100).toFixed(2)}%` : '—'}
                 </div>
                 {swrPercentis.p50_patrimonio != null && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
@@ -163,7 +181,7 @@ export default function WithdrawPage() {
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--green)' }}>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
                 <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)' }}>
-                  {swrPercentis.p90 != null ? `${(swrPercentis.p90 * 100).toFixed(2)}%` : '—'}
+                  {swrEfetivo?.p90 != null ? `${(swrEfetivo.p90 * 100).toFixed(2)}%` : '—'}
                 </div>
                 {swrPercentis.p90_patrimonio != null && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
@@ -202,7 +220,7 @@ export default function WithdrawPage() {
           {(() => {
             const sg = data.spending_guardrails ?? (data as any).fire?.spending_guardrails;
             if (!sg) return null;
-            const pfire = sg.pfire_atual ?? 0;
+            const pfire = pfireAtual ?? sg.pfire_atual ?? 0;
             const zona = sg.zona ?? 'verde';
             const zonaColor = zona === 'verde' ? 'var(--green)' : zona === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
             const statusLabel = zona === 'verde' ? 'No caminho certo' : zona === 'amarelo' ? 'Atenção' : 'Zona de risco';
@@ -258,16 +276,74 @@ export default function WithdrawPage() {
               <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
             </div>
             <BondPoolReadiness data={bondPoolReadiness} custo_vida_base={activeScenarioCfg.custo_vida_base} />
-            {bondPoolRunway && (
+            {/* Runway por perfil — comparação e trajetória */}
+            {bondPoolRunwayByProfile && (
               <div style={{ marginTop: 14 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
-                  <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
-                    Runway do Bond Pool pós-FIRE
-                  </div>
-                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', opacity: .7 }}>
-                    Trajetória calculada no cenário base (Python MC) · meta ajusta ao perfil
-                  </span>
+                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 8 }}>
+                  Runway do Bond Pool pós-FIRE — por perfil
                 </div>
+                {/* Comparison strip */}
+                <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                  {(Object.entries(withdrawCenarios) as [ScenarioKey, typeof withdrawCenarios[ScenarioKey]][]).map(([key, cfg]) => {
+                    const runway = bondPoolRunwayByProfile[key]?.runway_anos;
+                    const isActive = key === withdrawScenario;
+                    return (
+                      <div key={key} style={{
+                        flex: '1 1 100px',
+                        background: isActive ? 'rgba(99,179,237,.12)' : 'var(--card2)',
+                        border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
+                        borderRadius: 8,
+                        padding: '10px 12px',
+                        textAlign: 'center',
+                      }}>
+                        <div style={{ fontSize: 'var(--text-xs)', color: isActive ? 'var(--accent)' : 'var(--muted)', fontWeight: 600, marginBottom: 4 }}>
+                          {cfg.label}
+                        </div>
+                        <div style={{ fontSize: '1.2rem', fontWeight: 700, color: runway != null && runway >= 7 ? 'var(--green)' : runway != null && runway >= 5 ? 'var(--yellow)' : 'var(--red)' }}>
+                          {runway != null ? (privacyMode ? '••' : `${runway.toFixed(1)}a`) : '—'}
+                        </div>
+                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
+                          {runway != null ? (runway >= 7 ? '✓ meta' : runway >= 5 ? '⚠ ok' : '✗ curto') : ''}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Active profile depletion chart */}
+                {activeRunway && (
+                  <div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
+                      Trajetória — <strong>{activeScenarioCfg.label}</strong> · pool inicial: {privacyMode ? '••••' : `R$${((activeRunway.pool_inicial ?? 0) / 1000).toFixed(0)}k`}
+                    </div>
+                    <div style={{ display: 'flex', gap: 0, alignItems: 'flex-end', height: 60, borderBottom: '1px solid var(--border)' }}>
+                      {(activeRunway.pool_disponivel as number[]).map((v: number, i: number) => {
+                        const maxVal = (activeRunway.pool_disponivel as number[])[0] || 1;
+                        const heightPct = Math.max(0, Math.min(100, (v / maxVal) * 100));
+                        const isZero = v <= 0;
+                        return (
+                          <div key={i} title={`Ano ${(activeRunway.anos_pos_fire as number[])[i]}: ${privacyMode ? '••••' : `R$${(v/1000).toFixed(0)}k`}`}
+                            style={{
+                              flex: 1,
+                              height: `${heightPct}%`,
+                              background: isZero ? 'var(--red)' : 'var(--accent)',
+                              opacity: isZero ? .4 : .75,
+                              borderRadius: '2px 2px 0 0',
+                              minHeight: isZero ? 3 : 2,
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
+                      <span>Ano 1</span>
+                      <span>Ano {(activeRunway.anos_pos_fire as number[]).length}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {!bondPoolRunwayByProfile && bondPoolRunway && (
+              <div style={{ marginTop: 14 }}>
                 <BondPoolRunwayChart data={bondPoolRunway} />
               </div>
             )}
