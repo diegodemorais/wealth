@@ -120,6 +120,38 @@ def read_holdings_taxas():
     return taxa_ipca2040, taxa_renda2065
 
 
+def get_passivos(tax_data=None):
+    """Retorna estrutura de passivos (hipoteca, IR diferido, etc).
+
+    Fonte: carteira.md — hipoteca SAC R$453.417 vence 15/02/2051
+    IR diferido capturado de tax_snapshot.json / compute_tax_diferido
+
+    Retorna dict com:
+    - hipoteca_brl
+    - hipoteca_vencimento
+    - ir_diferido_brl
+    - total_brl
+    """
+    # Hipoteca SAC — fonte: carteira.md (linha 25)
+    hipoteca_brl = 453_417
+    hipoteca_vencimento = "2051-02-15"
+
+    # IR diferido — vem de tax_data se disponível
+    ir_diferido_brl = 0.0
+    if tax_data and isinstance(tax_data, dict):
+        ir_diferido_brl = tax_data.get("ir_diferido_total_brl", 0.0)
+
+    total_passivos = hipoteca_brl + ir_diferido_brl
+
+    return {
+        "hipoteca_brl": hipoteca_brl,
+        "hipoteca_vencimento": hipoteca_vencimento,
+        "ir_diferido_brl": round(ir_diferido_brl, 2),
+        "total_brl": round(total_passivos, 2),
+        "_fonte": "carteira.md (hipoteca) + tax_snapshot.json (IR diferido)",
+    }
+
+
 def get_source_timestamps():
     """Extrai timestamps de última atualização de cada fonte de dados.
 
@@ -300,6 +332,24 @@ def get_premissas():
             "inss_anual":          18_000,
             "inss_inicio_ano":     12,
         }, [], 180_000, {}
+
+
+# ─── 1b. RECONSTRUIR FIRE DATA (fire_trilha com P10/P90) ──────────────────────
+def rebuild_fire_data():
+    """Roda reconstruct_fire_data.py para gerar fire_trilha.json com P10/P90 percentis."""
+    if args.skip_scripts:
+        print("  ⊘ reconstruct_fire_data.py (skip-scripts)")
+        return
+
+    print("  ▶ reconstruct_fire_data.py --only fire_trilha ...")
+    out, err = run([VENV_PY, "scripts/reconstruct_fire_data.py", "--only", "fire_trilha"], cwd=ROOT)
+    if err:
+        # Avisar mas não bloquear
+        print(f"  ⚠️ reconstruct_fire_data.py stderr: {err[:200]}")
+    # Output esperado: "✓ dados/fire_trilha.json"
+    if "fire_trilha" in out:
+        print(f"  ✓ fire_trilha.json atualizado com P10/P90")
+    return
 
 
 # ─── 2. P(FIRE) + TORNADO ────────────────────────────────────────────────────
@@ -2482,6 +2532,9 @@ def main():
     print("  ▶ lendo premissas ...")
     premissas_raw, guardrails_raw, gasto_piso, spending_smile = get_premissas()
 
+    # Reconstruir fire_trilha com P10/P90 percentis
+    rebuild_fire_data()
+
     # P(FIRE) + Tornado
     pfire_aspiracional, pfire_base, tornado = get_pfire_tornado()
 
@@ -2663,6 +2716,9 @@ def main():
 
     if tax_data is None:
         tax_data = compute_tax_diferido(posicoes, cambio)
+
+    # Passivos — hipoteca + IR diferido
+    passivos_data = get_passivos(tax_data)
 
     # Premissas — garantir patrimônio atual
     premissas = {
@@ -3265,6 +3321,7 @@ def main():
         "cryptoLegado": CRYPTO_LEGADO_BRL,
         "tlhGatilho":   TLH_GATILHO,
         "tax":          tax_data,     # IR diferido Lei 14.754/2023 (ETFs UCITS ACC)
+        "passivos":     passivos_data,  # Hipoteca + IR diferido
 
         # Advocate datasets — concentração Brasil + premissas vs realizado
         "concentracao_brasil": concentracao_brasil,

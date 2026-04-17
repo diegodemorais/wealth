@@ -35,12 +35,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import numpy as np
 from config import (
     APORTE_MENSAL, CUSTO_VIDA_BASE, PATRIMONIO_GATILHO,
-    IDADE_ATUAL, IDADE_FIRE_ALVO,
+    IDADE_ATUAL, IDADE_CENARIO_BASE,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
     ETF_COMPOSITION, MACRO_REGRAS,
 )
 from fire_montecarlo import (
     PREMISSAS, rodar_monte_carlo, projetar_acumulacao,
+    projetar_acumulacao_mensal,
     _retorno_equity_cenario,
 )
 
@@ -164,6 +165,31 @@ def gen_fire_trilha():
     all_realizado = [round(r["patrimonio"], 0) for r in rows] + [None] * len(future_dates)
     all_status = status_hist + ["future"] * len(future_dates)
 
+    # P10/P90 via Monte Carlo — integra com projeção P50 determinística
+    # Chamada: projetar_acumulacao_mensal() retorna (dates, p50, p10, p90)
+    try:
+        n_meses_total = len(all_dates)
+        mc_dates, mc_p50, mc_p10, mc_p90 = projetar_acumulacao_mensal(
+            PREMISSAS,
+            r_equity=_retorno_equity_cenario(PREMISSAS, "base"),
+            n_sim=5000,
+            n_meses=n_meses_total,
+            seed=42
+        )
+        # Alinhar com all_dates (pode haver pequeno offset de data inicial)
+        # Usar arrays MC se tiverem o mesmo tamanho; senão, use apenas trilha_brl
+        if len(mc_p10) == len(all_dates):
+            trilha_p10_brl = [round(v, 0) for v in mc_p10]
+            trilha_p90_brl = [round(v, 0) for v in mc_p90]
+        else:
+            print(f"  ⚠️  MC dates mismatch: {len(mc_p10)} vs {len(all_dates)} — omitindo P10/P90")
+            trilha_p10_brl = None
+            trilha_p90_brl = None
+    except Exception as e:
+        print(f"  ⚠️  Erro ao gerar P10/P90 via MC: {e}")
+        trilha_p10_brl = None
+        trilha_p90_brl = None
+
     data = {
         "_generated": NOW,
         "_source": "reconstruct_fire_data.py",
@@ -177,6 +203,13 @@ def gen_fire_trilha():
         "aporte_mensal_premissa": aporte_mensal,
         "n_historico": n_hist,
     }
+
+    # Adicionar P10/P90 se disponível
+    if trilha_p10_brl is not None:
+        data["trilha_p10_brl"] = trilha_p10_brl
+        data["trilha_p90_brl"] = trilha_p90_brl
+        data["trilha_percentis_source"] = "fire_montecarlo.py projetar_acumulacao_mensal (5k sims)"
+
     _save(DADOS / "fire_trilha.json", data)
 
 

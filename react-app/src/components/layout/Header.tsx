@@ -23,13 +23,13 @@ function formatBrt(iso: string): string {
 }
 
 const TABS = [
-  { href: '/', label: '🕐 Now', id: 'tab-now' },
-  { href: '/fire', label: '🔥 FIRE', id: 'tab-fire' },
-  { href: '/portfolio', label: '🎯 Portfolio', id: 'tab-portfolio' },
-  { href: '/performance', label: '📈 Perf', id: 'tab-performance' },
-  { href: '/withdraw', label: '💸 Retiro', id: 'tab-withdraw' },
-  { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
-  { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
+  { href: '/', label: 'NOW', id: 'tab-now' },
+  { href: '/fire', label: 'FIRE', id: 'tab-fire' },
+  { href: '/portfolio', label: 'PORTFOLIO', id: 'tab-portfolio' },
+  { href: '/performance', label: 'PERFORMANCE', id: 'tab-performance' },
+  { href: '/withdraw', label: 'RETIRO', id: 'tab-withdraw' },
+  { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
+  { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
 ];
 
 export function Header() {

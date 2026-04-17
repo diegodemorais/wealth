@@ -518,6 +518,57 @@ def projetar_acumulacao(premissas: dict, r_equity: float, cenario: str,
     return pat
 
 
+def projetar_acumulacao_mensal(premissas: dict, r_equity: float, n_sim: int = 5_000,
+                                n_meses: int = None, seed: int = 42) -> tuple:
+    """
+    Projeta patrimônio mês-a-mês via Monte Carlo (acumulação).
+    Retorna (dates, p50_brl, p10_brl, p90_brl) — arrays paralelos para FIRE dashboard.
+
+    n_meses: se None, calcula até idade_fire_alvo
+    """
+    if n_meses is None:
+        n_meses = (premissas["idade_fire_alvo"] - premissas["idade_atual"]) * 12
+
+    rng = np.random.default_rng(seed)
+    vol = premissas["volatilidade_equity"] * premissas["pct_equity"]
+    df = premissas["t_dist_df"]
+    pat = np.full(n_sim, float(premissas["patrimonio_atual"]))
+    aporte_mensal = premissas["aporte_mensal"]
+    retorno_mensal = (1 + r_equity) ** (1 / 12) - 1
+
+    # Arrays para armazenar percentis por mês
+    p50_monthly = []
+    p10_monthly = []
+    p90_monthly = []
+    dates = []
+
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
+
+    today = datetime.now()
+    cur_date = today.replace(day=1)  # primeiro do mês atual
+
+    for mês in range(n_meses):
+        # Shocks mensais
+        z = rng.standard_t(df, size=n_sim) / np.sqrt(df / (df - 2))
+        retorno_carteira = (
+            premissas["pct_equity"]    * (retorno_mensal + vol * z) +
+            premissas["pct_ipca_longo"] * (premissas["retorno_ipca_plus"] / 12) +
+            premissas["pct_cripto"]    * (retorno_mensal + 2 * vol * z)
+        )
+        pat = pat * (1 + retorno_carteira) + aporte_mensal
+
+        # Percentis
+        p50_monthly.append(float(np.percentile(pat, 50)))
+        p10_monthly.append(float(np.percentile(pat, 10)))
+        p90_monthly.append(float(np.percentile(pat, 90)))
+
+        dates.append(cur_date.strftime("%Y-%m"))
+        cur_date += relativedelta(months=1)
+
+    return dates, p50_monthly, p10_monthly, p90_monthly
+
+
 def rodar_tornado(premissas: dict, variacao: float = 0.10, n_sim: int = 5_000) -> list:
     """
     Tornado chart: impacto de ±variacao% em cada premissa sobre P(FIRE).
