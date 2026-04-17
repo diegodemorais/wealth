@@ -2,7 +2,7 @@
 name: DEV-calc-centralization
 description: Centralização de cálculos duplicados no dashboard React — 14 categorias auditadas por Quant+Dev
 type: issue
-status: doing
+status: done
 owner: Dev + Quant
 priority: 🔴 Alta
 opened: 2026-04-17
@@ -84,15 +84,18 @@ Auditoria completa (Quant + Dev) identificou **14 categorias de duplicação** e
 
 - [x] C1: `calcFireYear` → `src/utils/fire.ts`, atualizar `fire/page.tsx` e `simulators/page.tsx` ✓ (corrige erro 100x no retorno)
 - [x] C2: `pfireColor` → `src/utils/fire.ts`, atualizar 9 locais (fire/page, page, FireScenariosTable, PFireMonteCarloTornado, FireMatrixTable, FamilyScenarioCards, FireSimulator) ✓
-- [ ] C3: `StressChart` → usar `montecarlo.ts`; adicionar seed
+- [x] C3: `StressChart` → usa `runMCYearly()` de `montecarlo.ts`; Mulberry32 seed adicionado ✓
 - [x] A1: threshold semáforo único via `pfireColor` — ≥90/≥85 em todos os 9 locais ✓
 - [x] A2: hardcoded `2026`/`39` → `data.premissas.ano_atual` / `data.premissas.idade_atual` (simulators, EventosVidaChart, IncomeProjectionChart, TimeToFireProgressBar) ✓
-- [ ] A3: SWR fallback → guard explícito em `withdraw/page.tsx`
-- [ ] M1: Wellness → `useWellnessScore.ts` como única fonte
-- [ ] M2/M3: formatadores → usar `formatters.ts`, remover closures locais
-- [ ] M4: privacy → `PrivacyMask` ou helper único
-- [ ] B1: `usePageData` hook
-- [ ] B2/B3/B4/B5: cleanup técnico
+- [x] A3: SWR fallback → guard explícito em `withdraw/page.tsx` — retorna null se p10_patrimonio ausente ✓
+- [x] M1: Wellness → `useWellnessScore.ts` como única fonte — wellness.ts não usado por componentes ✓ (sem change needed)
+- [x] M2/M3: formatadores → `fmtBrlM` + `fmtPct` canonical em `formatters.ts`; local closures em `simulators/page.tsx` delegam para canonical ✓
+- [x] M4: privacy → `'••••'` para BRL/numérico, `'••%'` para percentuais — padronizado em ~30 componentes ✓
+- [x] B1: `usePageData` hook → criado `src/hooks/usePageData.ts`; todas as 6 páginas migradas ✓
+- [x] B2: `derivePatrimonio()` helper — 4 derivações inline consolidadas ✓
+- [x] B3: `new Date().getFullYear()` → `getAnoAtual(premissas)` / `getIdadeAtual(premissas)` em `src/utils/fire.ts` ✓ (parte de A2)
+- [x] B4: `fracToPct()` helper — 7 conversões `* 100` consolidadas em `simulators/page.tsx` ✓
+- [x] B5: `FireSimulator.tsx` default `patrimonioAtual` → `0` (era `3_589_111` hardcoded) ✓
 
 ---
 
