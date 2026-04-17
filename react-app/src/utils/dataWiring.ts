@@ -4,7 +4,7 @@
  * Pure function: no side effects, no DOM access
  */
 
-import { DashboardData, DerivedValues } from '@/types/dashboard';
+import { DashboardData, DerivedValues, DcaItem, DriftItem, MarketContext, StatusColor } from '@/types/dashboard';
 
 /**
  * Validate that data.json has all required schema fields
@@ -290,6 +290,165 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const statusIpca = gatilhos.length > 0 ? gatilhos[0].status : 'verde';
   const resumoGatilhos = `IPCA+ 2040: ${dcaIpca?.ativo ? 'DCA ativo' : 'DCA pausado'} · ${gatilhos.length} gatilhos monitorados`;
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // UNIFIED DCA ITEMS — single source of truth for all consumers
+  // (SemaforoGatilhos, SemaforoTriggers, DCAStatusGrid, Cascade calculator)
+  // ═══════════════════════════════════════════════════════════════════════
+  const dcaItems: DcaItem[] = [];
+
+  // 1. IPCA+ 2040 (from dca_status.ipca_longo)
+  const dcaIpcaLongo = data.dca_status?.ipca_longo;
+  if (dcaIpcaLongo) {
+    const taxa = dcaIpcaLongo.taxa_atual ?? null;
+    const piso = dcaIpcaLongo.piso ?? null;
+    const posicao = (data.rf?.ipca2040?.valor ?? 0) + (data.rf?.ipca2029?.valor ?? 0);
+    const st: StatusColor = taxa != null && piso != null && taxa >= piso ? 'verde' : 'amarelo';
+    dcaItems.push({
+      id: 'ipca2040',
+      nome: 'IPCA+ 2040',
+      categoria: 'rf_ipca',
+      taxa,
+      pisoCompra: piso,
+      pisoVenda: null,
+      gapPiso: taxa != null && piso != null ? taxa - piso : null,
+      status: st,
+      dcaAtivo: dcaIpcaLongo.ativo ?? false,
+      posicaoBrl: posicao,
+      pctCarteira: dcaIpcaLongo.pct_carteira_atual ?? null,
+      alvoPct: dcaIpcaLongo.alvo_pct ?? null,
+      gapAlvoPp: dcaIpcaLongo.gap_alvo_pp ?? null,
+      proxAcao: dcaIpcaLongo.ativo ? 'DCA ativo' : 'DCA pausado',
+    });
+  }
+
+  // 2. IPCA+ 2050 (from dca_status.ipca_medio — was missing from gatilhos!)
+  const dcaIpcaMedio = data.dca_status?.ipca_medio;
+  if (dcaIpcaMedio) {
+    const taxa = dcaIpcaMedio.taxa_atual ?? null;
+    const piso = dcaIpcaMedio.piso ?? null;
+    const posicao = data.rf?.ipca2050?.valor ?? 0;
+    const st: StatusColor = taxa != null && piso != null && taxa >= piso ? 'verde' : 'amarelo';
+    dcaItems.push({
+      id: 'ipca2050',
+      nome: 'IPCA+ 2050',
+      categoria: 'rf_ipca',
+      taxa,
+      pisoCompra: piso,
+      pisoVenda: null,
+      gapPiso: taxa != null && piso != null ? taxa - piso : null,
+      status: st,
+      dcaAtivo: dcaIpcaMedio.ativo ?? false,
+      posicaoBrl: posicao,
+      pctCarteira: dcaIpcaMedio.pct_carteira_atual ?? null,
+      alvoPct: dcaIpcaMedio.alvo_pct ?? null,
+      gapAlvoPp: dcaIpcaMedio.gap_alvo_pp ?? null,
+      proxAcao: dcaIpcaMedio.ativo ? 'DCA ativo' : 'DCA pausado',
+    });
+  }
+
+  // 3. Renda+ 2065 (from rf.renda2065.distancia_gatilho + dca_status.renda_plus)
+  const dgRenda = data.rf?.renda2065?.distancia_gatilho;
+  const dcaRenda = data.dca_status?.renda_plus;
+  if (dgRenda || dcaRenda) {
+    const taxa = dgRenda?.taxa_atual ?? dcaRenda?.taxa_atual ?? null;
+    const pisoVenda = dgRenda?.piso_venda ?? null;
+    const pisoCompra = dcaRenda?.piso ?? null;
+    const rawStatus = dgRenda?.status;
+    const st: StatusColor =
+      rawStatus === 'vermelho' ? 'vermelho' :
+      rawStatus === 'amarelo' ? 'amarelo' : 'verde';
+    const posicao = data.rf?.renda2065?.valor ?? 0;
+    dcaItems.push({
+      id: 'renda2065',
+      nome: 'Renda+ 2065',
+      categoria: 'rf_renda',
+      taxa,
+      pisoCompra,
+      pisoVenda,
+      gapPiso: taxa != null && pisoVenda != null ? taxa - pisoVenda : null,
+      status: st,
+      dcaAtivo: dcaRenda?.ativo ?? false,
+      posicaoBrl: posicao,
+      pctCarteira: dcaRenda?.pct_carteira_atual ?? null,
+      alvoPct: dcaRenda?.alvo_pct ?? null,
+      gapAlvoPp: dcaRenda?.gap_alvo_pp ?? null,
+      proxAcao: st === 'verde' ? 'Monitorar' : st === 'amarelo' ? 'Atenção — próximo do piso' : 'Avaliar venda',
+    });
+  }
+
+  // 4. HODL11 (crypto band)
+  const hodlBanda = data.hodl11?.banda;
+  if (hodlBanda) {
+    const rawStatus = hodlBanda.status;
+    const st: StatusColor =
+      rawStatus === 'vermelho' ? 'vermelho' :
+      rawStatus === 'amarelo' ? 'amarelo' : 'verde';
+    dcaItems.push({
+      id: 'hodl11',
+      nome: 'HODL11',
+      categoria: 'crypto',
+      taxa: null,
+      pisoCompra: null,
+      pisoVenda: null,
+      gapPiso: null,
+      status: st,
+      dcaAtivo: false,
+      posicaoBrl: data.hodl11?.valor ?? 0,
+      pctCarteira: hodlBanda.atual_pct ?? null,
+      alvoPct: hodlBanda.alvo_pct ?? null,
+      gapAlvoPp: hodlBanda.atual_pct != null && hodlBanda.alvo_pct != null
+        ? hodlBanda.atual_pct - hodlBanda.alvo_pct : null,
+      proxAcao: st === 'verde' ? 'Dentro da banda' : st === 'amarelo' ? 'Perto do limite' : 'Fora da banda',
+      bandaMin: hodlBanda.min_pct,
+      bandaMax: hodlBanda.max_pct,
+      bandaAtual: hodlBanda.atual_pct,
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // UNIFIED DRIFT ITEMS — single source of truth for allocation drift
+  // ═══════════════════════════════════════════════════════════════════════
+  const DRIFT_VERDE_PP = 3;
+  const DRIFT_AMARELO_PP = 5;
+  const driftItems: DriftItem[] = [];
+
+  for (const bucket of ['SWRD', 'AVGS', 'AVEM', 'RF', 'Crypto'] as const) {
+    const d = data.drift?.[bucket];
+    if (!d || d.alvo == null || d.atual == null) continue;
+    const gap = d.alvo - d.atual;
+    const absGap = Math.abs(gap);
+    const st: StatusColor =
+      absGap <= DRIFT_VERDE_PP ? 'verde' :
+      absGap <= DRIFT_AMARELO_PP ? 'amarelo' : 'vermelho';
+    driftItems.push({
+      id: bucket,
+      nome: bucket,
+      atual: d.atual,
+      alvo: d.alvo,
+      gap,
+      absGap,
+      status: st,
+      impactoBrl: totalBrl > 0 ? (absGap / 100) * totalBrl : null,
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // MARKET CONTEXT — snapshot of macro indicators
+  // ═══════════════════════════════════════════════════════════════════════
+  const macro = data.macro ?? {};
+  const marketContext: MarketContext = {
+    cambio: data.cambio,
+    cambioPctMtd: macro.cambio_pct_mtd ?? null,
+    btcUsd: data.hodl11?.preco_usd ?? null,
+    btcPctMtd: data.hodl11?.pct_mtd ?? null,
+    selic: macro.selic ?? null,
+    fedFunds: macro.fed_funds ?? null,
+    spreadSelicFf: macro.selic != null && macro.fed_funds != null
+      ? macro.selic - macro.fed_funds : null,
+    exposicaoCambialPct: totalBrl > 0
+      ? (totalEquityUsd * CAMBIO) / totalBrl * 100 : null,
+  };
+
   // Compute wellness label from score
   const wellnessScoreRaw = Math.min(1, progPct / 100 * 1.2);
   const wellnessLabel =
@@ -436,10 +595,15 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     costIndexBps: data.drift?.['Custo']?.atual ?? 0,
     trackingDifference: 0, // computed separately if needed
 
-    // Gatilhos
+    // Gatilhos (legacy — kept for backward compat during migration)
     gatilhos,
     statusIpca,
     resumoGatilhos,
+
+    // Unified sources of truth (v2)
+    dcaItems,
+    driftItems,
+    marketContext,
 
     // Enriched data for charts
     CAMBIO,

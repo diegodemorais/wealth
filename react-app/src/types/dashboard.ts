@@ -102,6 +102,10 @@ export interface DerivedValues {
   concentrationBrazil: number;
   costIndexBps: number;
   trackingDifference: number;
+  // Unified sources of truth (v2)
+  dcaItems: DcaItem[];
+  driftItems: DriftItem[];
+  marketContext: MarketContext;
   [key: string]: any;
 }
 
@@ -131,3 +135,59 @@ export interface MCResult {
 }
 
 export type Period = 'all' | '1y' | '3m' | '1m';
+
+export type StatusColor = 'verde' | 'amarelo' | 'vermelho';
+
+/**
+ * Unified DCA / monitoring item — single source of truth for RF and crypto positions.
+ * Consumers: SemaforoGatilhos, SemaforoTriggers, DCAStatusGrid, Cascade calculator.
+ */
+export interface DcaItem {
+  id: string;                             // 'ipca2040' | 'ipca2050' | 'renda2065' | 'hodl11'
+  nome: string;                           // Display label
+  categoria: 'rf_ipca' | 'rf_renda' | 'crypto';
+  taxa: number | null;                    // Current rate / price metric (%)
+  pisoCompra: number | null;             // Buy-floor rate (%)
+  pisoVenda: number | null;              // Sell-floor rate (%)
+  gapPiso: number | null;               // taxa - pisoCompra (pp); negative = below floor
+  status: StatusColor;
+  dcaAtivo: boolean;
+  posicaoBrl: number;                    // Current position in BRL
+  pctCarteira: number | null;           // % of total portfolio
+  alvoPct: number | null;               // Target allocation %
+  gapAlvoPp: number | null;            // pctCarteira - alvoPct (pp); negative = underweight
+  proxAcao: string;                      // Human-readable next action
+  // Crypto-specific (only populated when categoria === 'crypto')
+  bandaMin?: number;
+  bandaMax?: number;
+  bandaAtual?: number;
+}
+
+/**
+ * Unified drift item per allocation bucket.
+ * Consumers: Drift block (NOW tab), rebalancing hints, gatilhos.
+ */
+export interface DriftItem {
+  id: string;                            // 'SWRD' | 'AVGS' | 'AVEM' | 'RF' | 'Crypto'
+  nome: string;
+  atual: number;                         // Current allocation %
+  alvo: number;                          // Target allocation %
+  gap: number;                           // alvo - atual (pp); positive = underweight
+  absGap: number;
+  status: StatusColor;
+  impactoBrl: number | null;            // BRL amount needed to close gap
+}
+
+/**
+ * Snapshot of market context indicators.
+ */
+export interface MarketContext {
+  cambio: number;
+  cambioPctMtd: number | null;
+  btcUsd: number | null;
+  btcPctMtd: number | null;
+  selic: number | null;
+  fedFunds: number | null;
+  spreadSelicFf: number | null;
+  exposicaoCambialPct: number | null;
+}
