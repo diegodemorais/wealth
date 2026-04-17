@@ -9,8 +9,8 @@ const TABS = [
   { href: '/performance', label: '📈 Performance', id: 'tab-performance' },
   { href: '/fire', label: '🔥 FIRE', id: 'tab-fire' },
   { href: '/withdraw', label: '💸 Retirada', id: 'tab-withdraw' },
-  { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
   { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
+  { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
 ];
 
 export function TabNav() {
