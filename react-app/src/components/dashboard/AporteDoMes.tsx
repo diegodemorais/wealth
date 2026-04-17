@@ -43,71 +43,73 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
     savingsRate != null && savingsRate >= 40 ? 'var(--yellow)' :
     'var(--red)';
 
+  // Progress vs meta: how much of this month's target was met
+  const metaPct = aporteMensal > 0 ? Math.min(100, (acumuladoMes / aporteMensal) * 100) : null;
+
   return (
     <section className="bg-card border border-border/50 rounded p-4 mb-3.5">
+      {/* Header row */}
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-semibold text-text m-0">Aporte do Mês</h2>
-        {ultimoAporteData && (
-          <span className="text-xs text-muted font-mono">{ultimoAporteData}</span>
-        )}
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-muted m-0">Aporte do Mês</h2>
+        <div className="flex items-center gap-2">
+          {savingsRate != null && (
+            <span className="text-xs font-bold font-mono" style={{ color: srColor }}>
+              {privacyMode ? '••' : `${savingsRate.toFixed(0)}% SR`}
+            </span>
+          )}
+          {ultimoAporteData && (
+            <span className="text-xs text-muted font-mono">{ultimoAporteData}</span>
+          )}
+        </div>
       </div>
 
-      {/* Big aporte value */}
-      <div className="text-center py-2 px-0">
-        <div className="text-4xl font-black leading-none text-green">
-          {privacyMode ? '••••' : fmtShort(primaryValue)}
-        </div>
-        <div className="text-xs text-muted mt-1">
-          {isPremissa ? 'premissa mensal' : 'último aporte registrado'}
-        </div>
-        {savingsRate != null && (
-          <div className="text-xs mt-1" style={{ color: srColor }}>
-            {privacyMode ? '••••' : `${savingsRate.toFixed(1)}% savings rate`}
-            {rendaMensal > 0 && !privacyMode && (
-              <span className="text-muted"> · renda {fmtShort(rendaMensal)}/mês</span>
-            )}
+      {/* Compact grid: Último Aporte | Meta | Acumulado Mês | Acumulado Ano */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="bg-card2/40 rounded px-3 py-2.5">
+          <div className="text-xs text-muted mb-1">{isPremissa ? 'Meta mensal' : 'Último aporte'}</div>
+          <div className="text-base font-bold" style={{ color: 'var(--green)' }}>
+            {privacyMode ? '••••' : fmtShort(primaryValue)}
           </div>
-        )}
+          {!isPremissa && savingsRate != null && (
+            <div className="text-xs mt-0.5" style={{ color: srColor }}>
+              {privacyMode ? '••' : `${savingsRate.toFixed(0)}% da renda`}
+            </div>
+          )}
+        </div>
+        <div className="bg-card2/40 rounded px-3 py-2.5">
+          <div className="text-xs text-muted mb-1">Meta mensal</div>
+          <div className="text-base font-bold" style={{ color: 'var(--accent)' }}>
+            {privacyMode ? '••••' : fmtShort(aporteMensal)}
+          </div>
+          {metaPct != null && (
+            <div className="text-xs text-muted mt-0.5">{metaPct.toFixed(0)}% acumulado</div>
+          )}
+        </div>
+        <div className="bg-card2/40 rounded px-3 py-2.5">
+          <div className="text-xs text-muted mb-1">Acumulado mês</div>
+          <div className="text-base font-bold text-text">
+            {privacyMode ? '••••' : fmtShort(acumuladoMes)}
+          </div>
+        </div>
+        <div className="bg-card2/40 rounded px-3 py-2.5">
+          <div className="text-xs text-muted mb-1">Acumulado ano</div>
+          <div className="text-base font-bold text-text">
+            {privacyMode ? '••••' : fmtShort(acumuladoAno)}
+          </div>
+        </div>
       </div>
 
-      {/* Savings rate bar */}
+      {/* Savings rate bar — compact */}
       {savingsRate != null && (
-        <div className="my-2.5">
-          <div className="h-2 bg-card2/40 rounded-sm overflow-hidden">
+        <div className="mt-2.5">
+          <div className="h-1.5 bg-card2/40 rounded-sm overflow-hidden">
             <div
               className="h-full rounded-sm transition-all duration-500"
               style={{ width: Math.min(100, savingsRate) + '%', background: srColor }}
             />
           </div>
-          <div className="flex justify-between text-xs text-muted mt-1">
-            <span>≥50% excelente</span>
-            <span>≥40% ok</span>
-            <span>≥35% atenção</span>
-          </div>
         </div>
       )}
-
-      {/* Accumulated values + meta */}
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        <div className="bg-card2/40 rounded px-2 py-2 text-center">
-          <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Mês</div>
-          <div className="text-sm font-bold text-text mt-0.5">
-            {privacyMode ? '••••' : fmtShort(acumuladoMes)}
-          </div>
-        </div>
-        <div className="bg-card2/40 rounded px-2 py-2 text-center">
-          <div className="text-xs uppercase font-semibold text-muted tracking-widest">Acumulado Ano</div>
-          <div className="text-sm font-bold text-text mt-0.5">
-            {privacyMode ? '••••' : fmtShort(acumuladoAno)}
-          </div>
-        </div>
-        <div className="bg-card2/40 rounded px-2 py-2 text-center">
-          <div className="text-xs uppercase font-semibold text-muted tracking-widest">Meta Mensal</div>
-          <div className="text-sm font-bold mt-0.5" style={{ color: 'var(--accent)' }}>
-            {privacyMode ? '••••' : fmtShort(aporteMensal)}
-          </div>
-        </div>
-      </div>
     </section>
   );
 };

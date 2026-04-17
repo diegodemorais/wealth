@@ -301,9 +301,9 @@ export default function HomePage() {
           {/* Active profile content */}
           {activeProf && (
             <div className="px-4 py-4">
-              <div className="flex items-start gap-4">
-                {/* Left: primary metric */}
-                <div className="flex-shrink-0 text-center min-w-24">
+              <div className="flex items-center gap-4 flex-wrap">
+                {/* P(FIRE) — primary metric */}
+                <div className="flex-shrink-0 text-center" style={{ minWidth: 80 }}>
                   <div className="text-xs text-muted uppercase tracking-wide mb-1">FIRE 53</div>
                   <div
                     className="text-4xl font-black leading-none"
@@ -311,7 +311,7 @@ export default function HomePage() {
                   >
                     {activeProf.p_fire_53?.toFixed(1) ?? '—'}%
                   </div>
-                  <div className="text-xs text-muted mt-1">P(sucesso)</div>
+                  <div className="text-xs text-muted mt-0.5">P(sucesso)</div>
                   <div
                     className="text-xs font-semibold mt-1.5 px-2 py-0.5 rounded"
                     style={{
@@ -323,35 +323,38 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Middle: details */}
-                <div className="flex-1 min-w-0">
-                  <div className="text-lg font-bold text-text mb-0.5">
+                {/* Divider */}
+                <div className="flex-shrink-0 hidden sm:block" style={{ width: 1, height: 56, background: 'var(--border)' }} />
+
+                {/* FIRE Year */}
+                <div className="flex-shrink-0">
+                  <div className="text-2xl font-bold">
                     {activeProf.fire_age_53 ?? '2040'}
                     <span className="text-sm font-normal text-muted ml-2">
                       ({(parseInt(activeProf.fire_age_53 ?? '2040') - ((data as any)?.premissas?.ano_atual ?? 2026) + ((data as any)?.premissas?.idade_atual ?? 39))} anos)
                     </span>
                   </div>
-                  <div className="text-xs text-muted mb-3">
+                  <div className="text-xs text-muted mt-0.5">
                     {activeProf.label} · R${((activeProf.gasto_anual ?? 250000) / 1000).toFixed(0)}k/ano
                   </div>
-                  <div className="grid grid-cols-2 gap-x-4 text-xs">
-                    <div className="flex justify-between">
-                      <span className="text-muted">Stress</span>
-                      <span className="font-mono" style={{ color: 'var(--red)' }}>{activeProf.p_fire_53_stress?.toFixed(1) ?? '—'}%</span>
+                </div>
+
+                {/* Divider */}
+                <div className="flex-shrink-0 hidden sm:block" style={{ width: 1, height: 56, background: 'var(--border)' }} />
+
+                {/* KPI chips */}
+                <div className="flex gap-2 flex-wrap">
+                  {[
+                    { label: 'Stress',       value: `${activeProf.p_fire_53_stress?.toFixed(1) ?? '—'}%`, color: 'var(--red)' },
+                    { label: 'Favorável',    value: `${activeProf.p_fire_53_fav?.toFixed(1) ?? '—'}%`,   color: 'var(--green)' },
+                    { label: 'Pat. mediano', value: privacyMode ? '••••' : `R$${((activeProf.pat_mediano_53 ?? 0) / 1e6).toFixed(1)}M`, color: 'var(--text)' },
+                    { label: 'Gatilho',      value: privacyMode ? '••••' : `R$${(derived.firePatrimonioGatilho / 1e6).toFixed(1)}M`,   color: 'var(--muted)' },
+                  ].map(kpi => (
+                    <div key={kpi.label} style={{ background: 'var(--card2)', borderRadius: 6, padding: '6px 12px', minWidth: 72 }}>
+                      <div className="text-xs text-muted mb-0.5">{kpi.label}</div>
+                      <div className="text-sm font-mono font-bold" style={{ color: kpi.color }}>{kpi.value}</div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted">Favorável</span>
-                      <span className="font-mono" style={{ color: 'var(--green)' }}>{activeProf.p_fire_53_fav?.toFixed(1) ?? '—'}%</span>
-                    </div>
-                    <div className="flex justify-between mt-1">
-                      <span className="text-muted">Pat. mediano</span>
-                      <span className="font-mono">{privacyMode ? '••••' : `R$${((activeProf.pat_mediano_53 ?? 0) / 1e6).toFixed(1)}M`}</span>
-                    </div>
-                    <div className="flex justify-between mt-1">
-                      <span className="text-muted">Gatilho</span>
-                      <span className="font-mono">{privacyMode ? '••••' : `R$${(derived.firePatrimonioGatilho / 1e6).toFixed(1)}M`}</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
