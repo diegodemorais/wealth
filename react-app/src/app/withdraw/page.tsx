@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
 import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart';
 import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
@@ -56,7 +57,7 @@ export default function WithdrawPage() {
     <div>
       {/* 1. SWR no FIRE Day — Percentis P10 / P50 / P90 (moved first: número central da aposentadoria) */}
       {swrPercentis && (
-        <CollapsibleSection id="section-swr-percentiles" title="SWR no FIRE Day — Percentis P10 / P50 / P90" defaultOpen={true}>
+        <CollapsibleSection id="section-swr-percentiles" title={secTitle('withdraw', 'swr', 'SWR no FIRE Day — Percentis P10 / P50 / P90')} defaultOpen={secOpen('withdraw', 'swr')}>
           <div style={{ padding: '0 16px 16px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginTop: 12 }}>
               {/* P10 */}
@@ -105,7 +106,7 @@ export default function WithdrawPage() {
 
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
       {data.guardrails_retirada && (
-        <CollapsibleSection id="section-guardrails-table" title="Guardrails de Retirada — FIRE Day" defaultOpen={true}>
+        <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Guardrails de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
           <div style={{ padding: '0 16px 16px' }}>
             <GuardrailsRetirada guardrails={data.guardrails_retirada} />
             <div style={{ marginTop: 10, fontSize: '.75rem', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
@@ -116,7 +117,7 @@ export default function WithdrawPage() {
       )}
 
       {/* 4. Spending Guardrails — P(FIRE) × Custo de Vida (collapsible) */}
-      <CollapsibleSection id="section-spending-guardrails" title="Spending Guardrails — P(FIRE) × Custo de Vida" defaultOpen={true}>
+      <CollapsibleSection id="section-spending-guardrails" title={secTitle('withdraw', 'spending-guardrails', 'Spending Guardrails — P(FIRE) × Custo de Vida')} defaultOpen={secOpen('withdraw', 'spending-guardrails')}>
         <div style={{ padding: '0 16px 16px' }}>
           {/* P(FIRE) Status bar */}
           {(() => {
@@ -179,14 +180,14 @@ export default function WithdrawPage() {
       )}
 
       {/* 5. Sankey — Fluxo de Caixa Anual (moved here: overview após detalhes) */}
-      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
+      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Sankey — Fluxo de Caixa Anual (estimado)')} defaultOpen={secOpen('withdraw', 'sankey')} icon="💸">
         <div style={{ padding: '0 16px 16px' }}>
           <CashFlowSankey />
         </div>
       </CollapsibleSection>
 
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
-      <CollapsibleSection id="section-income-phases" title="Renda na Aposentadoria — Fases Temporais" defaultOpen={true}>
+      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases')}>
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
             <div style={{ overflowX: 'auto', marginBottom: 12 }}>
@@ -226,7 +227,7 @@ export default function WithdrawPage() {
 
       {/* 7. Spending — Essenciais vs Discricionários (collapsed: detalhe secundário) */}
       {(data.spending ?? data.fire?.spending ?? data.spending_breakdown) && (
-        <CollapsibleSection id="section-spending-breakdown" title="Spending — Essenciais vs Discricionários" defaultOpen={false}>
+        <CollapsibleSection id="section-spending-breakdown" title={secTitle('withdraw', 'spending-breakdown', 'Spending — Essenciais vs Discricionários')} defaultOpen={secOpen('withdraw', 'spending-breakdown', false)}>
           <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const spending = data.spending ?? data.fire?.spending ?? data.spending_breakdown ?? {};

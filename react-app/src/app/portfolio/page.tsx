@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { DonutCharts } from '@/components/charts/DonutCharts';
 import StackedAllocationBar from '@/components/dashboard/StackedAllocationBar';
 import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
@@ -149,8 +150,8 @@ export default function PortfolioPage() {
       {/* 4. Composição por Região — ETFs da Carteira (collapsible) */}
       <CollapsibleSection
         id="section-etf-region"
-        title="Composição por Região — ETFs da Carteira"
-        defaultOpen={false}
+        title={secTitle('portfolio', 'etf-region')}
+        defaultOpen={secOpen('portfolio', 'etf-region')}
         icon="🗺️"
       >
         <div style={{ padding: '16px' }}>
@@ -165,8 +166,8 @@ export default function PortfolioPage() {
       {/* 4b. Exposição Fatorial — ETFs da Carteira (collapsible) */}
       <CollapsibleSection
         id="section-etf-factor"
-        title="Exposição Fatorial — ETFs da Carteira"
-        defaultOpen={true}
+        title={secTitle('portfolio', 'etf-factor')}
+        defaultOpen={secOpen('portfolio', 'etf-factor')}
         icon="📊"
       >
         <div style={{ padding: '16px' }}>
@@ -179,13 +180,13 @@ export default function PortfolioPage() {
       <HoldingsTable />
 
       {/* 6. Base de Custo e Alocação — Equity por Bucket (collapsible) */}
-      <CustoBaseTable />
+      <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
 
       {/* 7. IR Diferido — Alvo & Transitório (collapsible) */}
       <CollapsibleSection
         id="section-tax-ir"
-        title="IR Diferido — Alvo & Transitório"
-        defaultOpen={false}
+        title={secTitle('portfolio', 'tax-ir')}
+        defaultOpen={secOpen('portfolio', 'tax-ir')}
         icon="🏛️"
       >
         <div style={{ padding: '16px' }}>

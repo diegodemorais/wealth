@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { Input } from '@/components/ui/input';
@@ -413,7 +414,7 @@ function WhatIfSection() {
   }
 
   return (
-    <CollapsibleSection id="sim-whatif" title="What-If Scenarios — Cenário / Gasto" defaultOpen={false}>
+    <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Cenário / Gasto')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
       {/* Preset buttons */}
       <div style={{ marginBottom: '10px' }}>
         <div className="seg-group">
@@ -647,7 +648,7 @@ function StressTestSection() {
   const postShock = patrimonio != null ? patrimonio * (1 + shock / 100) : undefined;
 
   return (
-    <CollapsibleSection id="sim-stress" title="Stress Test Monte Carlo — Bear Market Interativo" defaultOpen={false}>
+    <CollapsibleSection id="sim-stress" title={secTitle('simuladores', 'stress', 'Stress Test Monte Carlo — Bear Market Interativo')} defaultOpen={secOpen('simuladores', 'stress', false)}>
       {/* Slider + Age selector */}
       <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '16px', border: '1px solid var(--border)', marginBottom: '14px' }}>
         <div className="slider-row">

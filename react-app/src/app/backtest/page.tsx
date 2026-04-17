@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { BacktestChart } from '@/components/charts/BacktestChart';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
@@ -112,7 +113,7 @@ function BacktestHistoricoSection() {
   const notaProxy = backtest?.nota_proxy ?? null;
 
   return (
-    <CollapsibleSection id="backtest-historico" title="Backtest Histórico — Target vs VWRA" defaultOpen={true}>
+    <CollapsibleSection id="backtest-historico" title={secTitle('backtest', 'backtest-historico', 'Backtest Histórico — Target vs VWRA')} defaultOpen={secOpen('backtest', 'backtest-historico')}>
       {/* Period buttons */}
       <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
         {BACKTEST_PERIODS.map(p => {
@@ -244,7 +245,7 @@ function ShadowPortfoliosSection() {
   ] : [];
 
   return (
-    <CollapsibleSection id="backtest-shadows" title="Shadow Portfolios — Target vs VWRA" defaultOpen={true}>
+    <CollapsibleSection id="backtest-shadows" title={secTitle('backtest', 'shadow', 'Shadow Portfolios — Target vs VWRA')} defaultOpen={secOpen('backtest', 'shadow')}>
 
       {/* Period buttons */}
       <div className="period-btns" style={{ marginBottom: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -378,7 +379,7 @@ function BacktestLongoSection() {
   const ff5 = r7?.factor_regression ?? null;
 
   return (
-    <CollapsibleSection id="backtest-r7" title="Backtest Longo — Regime 7 (1995–2026)" defaultOpen={false}>
+    <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
       {/* Metrics grid */}
       {metricCards.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '14px' }}>
@@ -505,7 +506,7 @@ function DrawdownHistoricoSection() {
   const crises = data?.backtest?.crises ?? data?.drawdown_crises ?? [];
 
   return (
-    <CollapsibleSection id="backtest-drawdown" title="Drawdown Histórico — Série Completa" defaultOpen={false}>
+    <CollapsibleSection id="backtest-drawdown" title={secTitle('backtest', 'drawdown-historico', 'Drawdown Histórico — Série Completa')} defaultOpen={secOpen('backtest', 'drawdown-historico')}>
       {/* Chart */}
       {data && <DrawdownHistChart data={data} />}
 

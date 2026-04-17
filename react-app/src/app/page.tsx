@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
@@ -249,7 +250,7 @@ export default function HomePage() {
 
       {/* 5b. TORNADO DE SENSIBILIDADE [COLLAPSIBLE] */}
       {derived && (
-        <CollapsibleSection id="section-pfire-tornado" title="Tornado de Sensibilidade (P(FIRE) ±10%)" defaultOpen={false} icon="🌪">
+        <CollapsibleSection id="section-pfire-tornado" title={secTitle('now', 'tornado')} defaultOpen={secOpen('now', 'tornado')} icon="🌪">
           <div className="px-4 pb-4">
             <PFireMonteCarloTornado
               pfireBase={derived.pfireBase}
@@ -473,7 +474,7 @@ export default function HomePage() {
 
       {/* 10. FINANCIAL WELLNESS SCORE [COLLAPSIBLE] */}
       {wellnessScore && (
-        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={false} icon="🏆">
+        <CollapsibleSection id="section-wellness" title={secTitle('now', 'wellness')} defaultOpen={secOpen('now', 'wellness')} icon="🏆">
           {(() => {
             const { totalScore, allMetrics, badMetrics, goodMetrics, topAcoes, actionDescriptions } = wellnessScore;
 

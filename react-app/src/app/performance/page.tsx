@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { TimelineChart } from '@/components/charts/TimelineChart';
 import { AttributionChart } from '@/components/charts/AttributionChart';
 import { DeltaBarChart } from '@/components/charts/DeltaBarChart';
@@ -55,9 +56,81 @@ export default function PerformancePage() {
 
   return (
     <div>
-      {/* 1. Alpha vs VWRA — PRIMEIRA seção (sempre visível) */}
+      {/* 1. Patrimônio — Evolução Histórica (moved first: contexto geral antes de análise) */}
+      <section className="section" id="timelineSection">
+        <h2>{secTitle('performance', 'patrimonio', 'Patrimônio — Evolução Histórica')}</h2>
+        <div className="period-btns" id="timelinePeriodBtns" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
+          {PERIODS.map(p => (
+            <Button
+              key={p.key}
+              variant={timelinePeriod === p.key ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setTimelinePeriod(p.key)}
+            >
+              {p.label}
+            </Button>
+          ))}
+        </div>
+        <TimelineChart data={data} period={timelinePeriod} />
+        <div className="src">
+          Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.
+        </div>
+      </section>
+
+      {/* 2. Performance Attribution — Decomposição do Patrimônio (moved second: explica de onde veio o retorno) */}
+      <section className="section" id="attrSection">
+        <h2>
+          {secTitle('performance', 'attribution', 'Performance Attribution — Decomposição do Patrimônio')}{' '}
+          <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>
+            {data.attribution?._inicio ? `(desde ${data.attribution._inicio})` : ''}
+          </span>
+        </h2>
+        <AttributionChart data={data} />
+        {/* Attribution KPI cards — valores monetários em R$ */}
+        {(() => {
+          const attr = data.attribution;
+          if (!attr) return null;
+          const fmtR = (v: number | null | undefined) => {
+            if (v == null) return '—';
+            const abs = Math.abs(v);
+            if (v < 0) return `−R$${abs >= 1e3 ? Math.round(abs / 1e3) + 'k' : abs.toLocaleString('pt-BR')}`;
+            if (abs >= 1e6) return `R$${(abs / 1e6).toFixed(2)}M`;
+            if (abs >= 1e3) return `R$${Math.round(abs / 1e3)}k`;
+            return `R$${v.toLocaleString('pt-BR')}`;
+          };
+          const total = (attr.aportes ?? 0) + (attr.retornoUsd ?? 0) + (attr.rf ?? 0) + (attr.cambio ?? 0) + (attr.fx ?? 0);
+          const pct = (v: number) => total > 0 ? `${((v / total) * 100).toFixed(0)}%` : '';
+          const cards = [
+            { label: 'Aportes', value: attr.aportes, color: 'var(--accent)' },
+            { label: 'Retorno USD', value: attr.retornoUsd, color: 'var(--green)' },
+            { label: 'M+ Câmbio', value: attr.cambio, color: attr.cambio != null && attr.cambio >= 0 ? 'var(--green)' : 'var(--red)' },
+            { label: 'Câmbio (FX)', value: attr.fx, color: attr.fx != null && attr.fx >= 0 ? 'var(--green)' : 'var(--red)' },
+            { label: 'RF Local', value: attr.rf, color: 'var(--yellow)' },
+          ];
+          return (
+            <>
+              <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 8 }}>
+                {cards.map(c => (
+                  <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 8, fontSize: '.72rem', color: 'var(--muted)', textAlign: 'center' }}>
+                {pct(attr.aportes ?? 0)} aportes · {pct(attr.retornoUsd ?? 0)} retorno USD · {pct((attr.cambio ?? 0) + (attr.fx ?? 0))} câmbio · reste RF/custo
+              </div>
+            </>
+          );
+        })()}
+        <div className="src">
+          Decomposição do patrimônio acumulado: aportes + retorno USD por ETF + RF doméstica + variação cambial. Desde o início da carteira.
+        </div>
+      </section>
+
+      {/* 3. Alpha vs VWRA — análise de performance diferencial */}
       <section className="section" id="alphaSwrdSection">
-        <h2>Alpha vs VWRA (benchmark) — Carteira Target por Período</h2>
+        <h2>{secTitle('performance', 'alpha', 'Alpha vs VWRA (benchmark) — Carteira Target por Período')}</h2>
         <DeltaBarChart data={data} height={200} />
         {/* KPI cards alinhados ao contexto de alpha */}
         {(() => {
@@ -138,127 +211,18 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 2. Premissas vs Realizado — 5 Anos (2021-2026) */}
+      {/* 4. Premissas vs Realizado — 5 Anos (2021-2026) */}
       <section className="section" id="premissasVsRealizadoSection">
-        <h2>Premissas vs Realizado — 5 Anos (2021-2026)</h2>
+        <h2>{secTitle('performance', 'premissas', 'Premissas vs Realizado — 5 Anos (2021-2026)')}</h2>
         <PremisesTable />
         <div className="src">
           Fonte: TWR reconstruído (IBKR+RF) · Retornos: pós-IPCA real BRL · Drawdown: histórico carteira · Dados auditados
         </div>
       </section>
 
-      {/* 3. Retornos Mensais — Heatmap (collapsible, open by default) */}
-      <CollapsibleSection id="section-heatmap" title="Retornos Mensais — Heatmap" defaultOpen={true}>
+      {/* 5. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
+      <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={secOpen('performance', 'rolling-12m', false)}>
         <div style={{ padding: '0 16px 16px' }}>
-          <MonthlyReturnsHeatmap data={(() => {
-            // Prefer pre-keyed monthly_returns; fall back to retornos_mensais arrays
-            if (data.monthly_returns && Object.keys(data.monthly_returns).length > 0) return data.monthly_returns;
-            const rm = (data as any).retornos_mensais;
-            if (rm?.dates && rm?.values) {
-              const result: Record<string, number> = {};
-              (rm.dates as string[]).forEach((d: string, i: number) => {
-                result[d] = (rm.values as number[])[i] / 100; // percent → decimal
-              });
-              return result;
-            }
-            return {};
-          })()} />
-          <div className="src">
-            Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 4. Patrimônio — Evolução Histórica (com period-btns) */}
-      <section className="section" id="timelineSection">
-        <h2>Patrimônio — Evolução Histórica</h2>
-        <div className="period-btns" id="timelinePeriodBtns" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
-          {PERIODS.map(p => (
-            <Button
-              key={p.key}
-              variant={timelinePeriod === p.key ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTimelinePeriod(p.key)}
-            >
-              {p.label}
-            </Button>
-          ))}
-        </div>
-        <TimelineChart data={data} period={timelinePeriod} />
-        <div className="src">
-          Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.
-        </div>
-      </section>
-
-      {/* 5. Performance Attribution — Decomposição do Patrimônio */}
-      <section className="section" id="attrSection">
-        <h2>
-          Performance Attribution — Decomposição do Patrimônio{' '}
-          <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>
-            {data.attribution?._inicio ? `(desde ${data.attribution._inicio})` : ''}
-          </span>
-        </h2>
-        <AttributionChart data={data} />
-        {/* Attribution KPI cards — valores monetários em R$ */}
-        {(() => {
-          const attr = data.attribution;
-          if (!attr) return null;
-          const fmtR = (v: number | null | undefined) => {
-            if (v == null) return '—';
-            const abs = Math.abs(v);
-            const sign = v < 0 ? '−' : 'R$';
-            if (v < 0) return `−R$${abs >= 1e3 ? Math.round(abs / 1e3) + 'k' : abs.toLocaleString('pt-BR')}`;
-            if (abs >= 1e6) return `R$${(abs / 1e6).toFixed(2)}M`;
-            if (abs >= 1e3) return `R$${Math.round(abs / 1e3)}k`;
-            return `R$${v.toLocaleString('pt-BR')}`;
-          };
-          const total = (attr.aportes ?? 0) + (attr.retornoUsd ?? 0) + (attr.rf ?? 0) + (attr.cambio ?? 0) + (attr.fx ?? 0);
-          const pct = (v: number) => total > 0 ? `${((v / total) * 100).toFixed(0)}%` : '';
-          const cards = [
-            { label: 'Aportes', value: attr.aportes, color: 'var(--accent)' },
-            { label: 'Retorno USD', value: attr.retornoUsd, color: 'var(--green)' },
-            { label: 'M+ Câmbio', value: attr.cambio, color: attr.cambio != null && attr.cambio >= 0 ? 'var(--green)' : 'var(--red)' },
-            { label: 'Câmbio (FX)', value: attr.fx, color: attr.fx != null && attr.fx >= 0 ? 'var(--green)' : 'var(--red)' },
-            { label: 'RF Local', value: attr.rf, color: 'var(--yellow)' },
-          ];
-          return (
-            <>
-              <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 8 }}>
-                {cards.map(c => (
-                  <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
-                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ marginTop: 8, fontSize: '.72rem', color: 'var(--muted)', textAlign: 'center' }}>
-                {pct(attr.aportes ?? 0)} aportes · {pct(attr.retornoUsd ?? 0)} retorno USD · {pct((attr.cambio ?? 0) + (attr.fx ?? 0))} câmbio · reste RF/custo
-              </div>
-            </>
-          );
-        })()}
-        <div className="src">
-          Decomposição do patrimônio acumulado: aportes + retorno USD por ETF + RF doméstica + variação cambial. Desde o início da carteira.
-        </div>
-      </section>
-
-      {/* 6. Rolling Sharpe — 12m (collapsible) */}
-      <CollapsibleSection id="section-rolling-sharpe" title="Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)" defaultOpen={true}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <RollingSharpChart data={data} />
-          <div className="src" style={{ lineHeight: 1.6 }}>
-            <strong>Como ler:</strong> Sharpe mede retorno ajustado ao risco em janela de 12 meses.<br />
-            <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;1</strong> = excelente{' '}
-            <span style={{ color: 'rgba(234,179,8,.9)' }}>■</span> <strong>0–1</strong> = neutro{' '}
-            <span style={{ color: 'rgba(239,68,68,.9)' }}>■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 7. Rolling 12m — AVGS vs SWRD (collapsible, open) */}
-      <CollapsibleSection id="section-factor-rolling" title="Rolling 12m — AVGS vs SWRD (retorno relativo)" defaultOpen={true}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {/* DeltaBarChart used as proxy — dedicated FactorRollingChart would be ideal */}
           <DeltaBarChart data={data} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />
           <div className="src">
             Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.
@@ -266,90 +230,8 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 8. Fee Analysis — Custo de Complexidade (details/summary collapsible) */}
-      <section className="section" id="feeAnalysisSection">
-        <details open>
-          <summary style={{ cursor: 'pointer', fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)', padding: '4px 0', listStyle: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: '.85em', color: 'var(--muted)' }}>▶</span>
-            Fee Analysis — Custo de Complexidade (14 anos até FIRE)
-          </summary>
-          <div style={{ marginTop: 12 }}>
-            <div style={{ overflowX: 'auto' }}>
-              <table id="feeTable" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                    <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Portfolio</th>
-                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>TER</th>
-                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Custo 14a</th>
-                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Alpha 14a</th>
-                    <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Net vs VWRA</th>
-                  </tr>
-                </thead>
-                <tbody id="feeBody">
-                  {(() => {
-                    // Compute fee analysis inline — TER conocidos + pesos da carteira
-                    const pt = (data as any)?.pesosTarget ?? {};
-                    const wSwrd = pt.SWRD ?? 0.395;
-                    const wAvgs = pt.AVGS ?? 0.237;
-                    const wAvem = pt.AVEM ?? 0.158;
-                    const equityTotal = wSwrd + wAvgs + wAvem;
-                    // TER por ETF (bps → decimal)
-                    const terSwrd = 0.0012; // 0.12%
-                    const terAvgs = 0.0025; // 0.25%
-                    const terAvem = 0.0018; // 0.18%
-                    const terVwra = 0.0022; // 0.22% benchmark
-                    const terPortfolio = equityTotal > 0
-                      ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem) / equityTotal
-                      : 0.00171;
-                    // Custo 14 anos: patrimônio médio projetado × TER (simples)
-                    const pat = (data as any)?.fire_swr_percentis?.patrimonio_p50_2040 ?? 11500000;
-                    const patMedio = pat / 2; // patrimônio médio no período
-                    const fmtM = (v: number) => `R$ ${(v / 1e6).toFixed(2)}M`;
-                    const custoPortfolio14a = patMedio * terPortfolio * 14;
-                    const custoVwra14a = patMedio * terVwra * 14;
-                    const alpha14a = patMedio * 0.0016 * 14; // 0.16%/ano McLean & Pontiff
-                    const netPortfolio = alpha14a - custoPortfolio14a;
-                    const netVwra = alpha14a - custoVwra14a; // VWRA: sem alpha por ser market-cap
-                    const rows = [
-                      {
-                        name: 'Portfolio Target (SWRD/AVGS/AVEM)',
-                        ter: terPortfolio,
-                        custo_14a: fmtM(custoPortfolio14a),
-                        alpha_14a: `+${fmtM(alpha14a)}`,
-                        net_vs_vwra: `+${fmtM(netPortfolio - (-custoVwra14a))}`,
-                        highlight: true,
-                      },
-                      {
-                        name: 'VWRA (benchmark)',
-                        ter: terVwra,
-                        custo_14a: fmtM(custoVwra14a),
-                        alpha_14a: '—',
-                        net_vs_vwra: '0',
-                        highlight: false,
-                      },
-                    ];
-                    return rows.map((row, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid var(--border)', background: row.highlight ? 'rgba(88,166,255,.06)' : 'transparent' }}>
-                        <td style={{ padding: '6px 8px', fontWeight: row.highlight ? 700 : 400 }}>{row.name}</td>
-                        <td style={{ textAlign: 'right', padding: '6px 8px' }}>{(row.ter * 100).toFixed(3)}%</td>
-                        <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--red)' }}>−{row.custo_14a}</td>
-                        <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--green)' }}>{row.alpha_14a}</td>
-                        <td style={{ textAlign: 'right', padding: '6px 8px', color: row.highlight ? 'var(--green)' : 'var(--muted)' }}>{row.net_vs_vwra}</td>
-                      </tr>
-                    ));
-                  })()}
-                </tbody>
-              </table>
-            </div>
-            <div className="src">
-              TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA
-            </div>
-          </div>
-        </details>
-      </section>
-
-      {/* 9. Information Ratio vs VWRA (collapsible) */}
-      <CollapsibleSection id="section-ir" title="Information Ratio vs VWRA — Desde o Início + Rolling 36m" defaultOpen={true}>
+      {/* 6. Information Ratio vs VWRA (collapsible, collapsed) */}
+      <CollapsibleSection id="section-ir" title={secTitle('performance', 'ir', 'Information Ratio vs VWRA — Desde o Início + Rolling 36m')} defaultOpen={secOpen('performance', 'ir', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <InformationRatioChart data={data} />
           <div className="src" style={{ lineHeight: 1.6 }}>
@@ -360,8 +242,8 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 10. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible) */}
-      <CollapsibleSection id="section-factor-loadings" title="Factor Loadings — Regressão Fama-French SF + Momentum" defaultOpen={true}>
+      {/* 7. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible, collapsed) */}
+      <CollapsibleSection id="section-factor-loadings" title={secTitle('performance', 'factor-loadings', 'Factor Loadings — Regressão Fama-French SF + Momentum')} defaultOpen={secOpen('performance', 'factor-loadings', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const fl = (data as any)?.factor_loadings ?? {};
@@ -376,11 +258,8 @@ export default function PerformancePage() {
             ];
 
             // AVGS proxy: blend AVUV (US) + AVDV (Intl) via pesos canônicos
-            // Fonte: agentes/referencia/proxies-canonicos.md — aprovado Diego 2026-03-31
-            // Tier A: mesma metodologia Avantis. Split 58/42 ≈ peso global AVGS (~55-60% US / 40-45% Intl)
-            // NÃO usar pesos geográficos do etf_composition (etf_composition.AVGS.regioes.EUA≈15% está errado para este fim)
-            const wUS = 0.58;   // AVUV — US Small Cap Value
-            const wIntl = 0.42; // AVDV — Intl Small Cap Value
+            const wUS = 0.58;
+            const wIntl = 0.42;
             const avgsProxy: Record<string, number> = {};
             for (const fKey of fKeys) {
               const u = fl['AVUV']?.[fKey];
@@ -389,9 +268,7 @@ export default function PerformancePage() {
             }
             const hasProxy = Object.keys(avgsProxy).length > 0;
 
-            // ETFs with real regression data
             const etfsReal = ['AVDV', 'AVUV', 'DGS', 'EIMI', 'SWRD', 'USCC', 'IWVL'].filter(e => fl[e] != null);
-            const allCols = hasProxy ? [...etfsReal, 'AVGS*'] : etfsReal;
 
             if (!etfsReal.length) return <div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>Sem dados de factor loadings</div>;
             return (
@@ -480,6 +357,112 @@ export default function PerformancePage() {
           <div className="src">
             Regressão FF5+Mom · Negrito = significativo (t ≥ 1.65, 90%+) · Desbotado = não significativo<br />
             *AVGS proxy = 58% AVUV + 42% AVDV (proxies canônicos Tier A — mesma metodologia Avantis · fonte: proxies-canonicos.md)
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 8. Retornos Mensais — Heatmap (collapsible, collapsed) */}
+      <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          <MonthlyReturnsHeatmap data={(() => {
+            if (data.monthly_returns && Object.keys(data.monthly_returns).length > 0) return data.monthly_returns;
+            const rm = (data as any).retornos_mensais;
+            if (rm?.dates && rm?.values) {
+              const result: Record<string, number> = {};
+              (rm.dates as string[]).forEach((d: string, i: number) => {
+                result[d] = (rm.values as number[])[i] / 100;
+              });
+              return result;
+            }
+            return {};
+          })()} />
+          <div className="src">
+            Retornos mensais da carteira. Verde = positivo, vermelho = negativo. Acum. = retorno composto do ano.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 9. Rolling Sharpe — 12m (collapsible, collapsed) */}
+      <CollapsibleSection id="section-rolling-sharpe" title={secTitle('performance', 'rolling-sharpe', 'Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)')} defaultOpen={secOpen('performance', 'rolling-sharpe', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          <RollingSharpChart data={data} />
+          <div className="src" style={{ lineHeight: 1.6 }}>
+            <strong>Como ler:</strong> Sharpe mede retorno ajustado ao risco em janela de 12 meses.<br />
+            <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;1</strong> = excelente{' '}
+            <span style={{ color: 'rgba(234,179,8,.9)' }}>■</span> <strong>0–1</strong> = neutro{' '}
+            <span style={{ color: 'rgba(239,68,68,.9)' }}>■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 10. Fee Analysis — Custo de Complexidade (collapsible, collapsed) */}
+      <CollapsibleSection id="section-fee-analysis" title={secTitle('performance', 'fee-analysis', 'Fee Analysis — Custo de Complexidade (14 anos até FIRE)')} defaultOpen={secOpen('performance', 'fee-analysis', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table id="feeTable" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Portfolio</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>TER</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Custo 14a</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Alpha 14a</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Net vs VWRA</th>
+                </tr>
+              </thead>
+              <tbody id="feeBody">
+                {(() => {
+                  const pt = (data as any)?.pesosTarget ?? {};
+                  const wSwrd = pt.SWRD ?? 0.395;
+                  const wAvgs = pt.AVGS ?? 0.237;
+                  const wAvem = pt.AVEM ?? 0.158;
+                  const equityTotal = wSwrd + wAvgs + wAvem;
+                  const terSwrd = 0.0012;
+                  const terAvgs = 0.0025;
+                  const terAvem = 0.0018;
+                  const terVwra = 0.0022;
+                  const terPortfolio = equityTotal > 0
+                    ? (wSwrd * terSwrd + wAvgs * terAvgs + wAvem * terAvem) / equityTotal
+                    : 0.00171;
+                  const pat = (data as any)?.fire_swr_percentis?.patrimonio_p50_2040 ?? 11500000;
+                  const patMedio = pat / 2;
+                  const fmtM = (v: number) => `R$ ${(v / 1e6).toFixed(2)}M`;
+                  const custoPortfolio14a = patMedio * terPortfolio * 14;
+                  const custoVwra14a = patMedio * terVwra * 14;
+                  const alpha14a = patMedio * 0.0016 * 14;
+                  const netPortfolio = alpha14a - custoPortfolio14a;
+                  const rows = [
+                    {
+                      name: 'Portfolio Target (SWRD/AVGS/AVEM)',
+                      ter: terPortfolio,
+                      custo_14a: fmtM(custoPortfolio14a),
+                      alpha_14a: `+${fmtM(alpha14a)}`,
+                      net_vs_vwra: `+${fmtM(netPortfolio - (-custoVwra14a))}`,
+                      highlight: true,
+                    },
+                    {
+                      name: 'VWRA (benchmark)',
+                      ter: terVwra,
+                      custo_14a: fmtM(custoVwra14a),
+                      alpha_14a: '—',
+                      net_vs_vwra: '0',
+                      highlight: false,
+                    },
+                  ];
+                  return rows.map((row, i) => (
+                    <tr key={i} style={{ borderBottom: '1px solid var(--border)', background: row.highlight ? 'rgba(88,166,255,.06)' : 'transparent' }}>
+                      <td style={{ padding: '6px 8px', fontWeight: row.highlight ? 700 : 400 }}>{row.name}</td>
+                      <td style={{ textAlign: 'right', padding: '6px 8px' }}>{(row.ter * 100).toFixed(3)}%</td>
+                      <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--red)' }}>−{row.custo_14a}</td>
+                      <td style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--green)' }}>{row.alpha_14a}</td>
+                      <td style={{ textAlign: 'right', padding: '6px 8px', color: row.highlight ? 'var(--green)' : 'var(--muted)' }}>{row.net_vs_vwra}</td>
+                    </tr>
+                  ));
+                })()}
+              </tbody>
+            </table>
+          </div>
+          <div className="src">
+            TER × patrimônio médio projetado × 14 anos · Alpha: +0.16%/ano (McLean &amp; Pontiff 58% haircut) · Net = Alpha − custo extra vs VWRA
           </div>
         </div>
       </CollapsibleSection>

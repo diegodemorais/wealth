@@ -2,16 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-const TABS = [
-  { href: '/', label: '🕐 Now', id: 'tab-now' },
-  { href: '/portfolio', label: '🎯 Portfolio', id: 'tab-portfolio' },
-  { href: '/performance', label: '📈 Performance', id: 'tab-performance' },
-  { href: '/fire', label: '🔥 FIRE', id: 'tab-fire' },
-  { href: '/withdraw', label: '💸 Retirada', id: 'tab-withdraw' },
-  { href: '/backtest', label: '📊 Backtest', id: 'tab-backtest' },
-  { href: '/simulators', label: '🧪 Simuladores', id: 'tab-simulators' },
-];
+import { TABS } from '@/config/dashboard.config';
 
 export function TabNav() {
   const pathname = usePathname();

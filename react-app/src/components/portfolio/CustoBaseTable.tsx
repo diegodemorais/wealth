@@ -16,7 +16,7 @@ const BUCKET_COLORS: Record<string, string> = {
  * Base de Custo e Alocação — Equity por Bucket
  * Colunas: Bucket | Valor USD | Custo USD | Ganho % | Peso equity | Meta equity | Δ
  */
-export function CustoBaseTable() {
+export function CustoBaseTable({ defaultOpen = false }: { defaultOpen?: boolean }) {
   const privacyMode = useUiStore(s => s.privacyMode);
   const data = useDashboardStore(s => s.data);
 
@@ -60,7 +60,7 @@ export function CustoBaseTable() {
     <CollapsibleSection
       id="section-custo-base"
       title="Base de Custo e Alocação — Equity por Bucket"
-      defaultOpen={false}
+      defaultOpen={defaultOpen}
     >
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
