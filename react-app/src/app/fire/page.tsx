@@ -4,7 +4,6 @@ import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
-import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
 import { GlidePathChart } from '@/components/charts/GlidePathChart';
@@ -79,13 +78,6 @@ export default function FirePage() {
 
   return (
     <div>
-      {/* 0. Sankey — Fluxo de Caixa Anual (movido do NOW tab) */}
-      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
-        <div style={{ padding: '0 16px 16px' }}>
-          <CashFlowSankey />
-        </div>
-      </CollapsibleSection>
-
       {/* 1. Tracking FIRE — Realizado vs Projeção */}
       <section className="section" id="trackingFireSection">
         <h2>Tracking FIRE — Realizado vs Projeção</h2>

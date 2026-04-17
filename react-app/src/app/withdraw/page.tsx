@@ -8,6 +8,7 @@ import { IncomeProjectionChart } from '@/components/charts/IncomeProjectionChart
 import { GuardrailsRetirada } from '@/components/dashboard/GuardrailsRetirada';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
+import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 
 export default function WithdrawPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
@@ -53,6 +54,13 @@ export default function WithdrawPage() {
 
   return (
     <div>
+      {/* 0. Sankey — Fluxo de Caixa Anual */}
+      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
+        <div style={{ padding: '0 16px 16px' }}>
+          <CashFlowSankey />
+        </div>
+      </CollapsibleSection>
+
       {/* 1. Bond Pool Readiness — Proteção SoRR */}
       {bondPoolReadiness && (
         <section className="section" id="bondPoolSection">
