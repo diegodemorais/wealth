@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 
-const COLORS = ['var(--accent)', 'var(--purple)', 'var(--red)', 'var(--yellow)', 'var(--green)', 'var(--orange)', '#a371f7'];
+const COLORS = ['var(--accent)', 'var(--purple)', 'var(--green)', 'var(--yellow)'];
 const ETF_COLORS: Record<string, string> = {
   SWRD: 'var(--accent)',
   AVGS: '#56d364',
@@ -14,36 +14,42 @@ const ETF_NAMES: Record<string, string> = {
   AVGS: 'AVGS — Global Small Cap Value',
   AVEM: 'AVEM — Emerging Markets Value',
 };
+const FACTOR_LABELS: Record<string, string> = {
+  market: 'Market',
+  value: 'Value',
+  size: 'Size',
+  quality: 'Quality',
+};
 
 type Tab = 'SWRD' | 'AVGS' | 'AVEM' | 'todos';
 
-function BarRows({ regioes }: { regioes: Array<{ name: string; pct: number }> }) {
+function FactorBars({ fatores }: { fatores: Array<{ name: string; pct: number }> }) {
   return (
     <>
-      {regioes.length === 0 && (
+      {fatores.length === 0 && (
         <div style={{ color: 'var(--muted)', fontSize: '.75rem' }}>Sem dados</div>
       )}
-      {regioes.map((r, i) => (
-        <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
-          <div style={{ flexShrink: 0, width: '88px', fontSize: '.72rem', color: 'var(--muted)' }}>{r.name}</div>
+      {fatores.map((f, i) => (
+        <div key={f.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
+          <div style={{ flexShrink: 0, width: '64px', fontSize: '.72rem', color: 'var(--muted)' }}>{f.name}</div>
           <div style={{ flex: 1, height: '16px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
             <div style={{
               height: '100%',
-              width: `${r.pct}%`,
+              width: `${f.pct}%`,
               backgroundColor: COLORS[i % COLORS.length],
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
-              paddingRight: r.pct > 8 ? '4px' : 0,
+              paddingRight: f.pct > 8 ? '4px' : 0,
               transition: 'width 0.3s',
             }}>
-              {r.pct > 8 && (
-                <span style={{ fontSize: '10px', fontWeight: 600, color: '#fff' }}>{r.pct}%</span>
+              {f.pct > 8 && (
+                <span style={{ fontSize: '10px', fontWeight: 600, color: '#fff' }}>{f.pct}%</span>
               )}
             </div>
           </div>
           <div style={{ flexShrink: 0, width: '32px', textAlign: 'right', fontSize: '.75rem', fontWeight: 700, color: COLORS[i % COLORS.length] }}>
-            {r.pct}%
+            {f.pct}%
           </div>
         </div>
       ))}
@@ -51,21 +57,23 @@ function BarRows({ regioes }: { regioes: Array<{ name: string; pct: number }> })
   );
 }
 
-const ETFRegionComposition: React.FC = () => {
+const ETFFactorComposition: React.FC = () => {
   const data = useDashboardStore(s => s.data);
   const [selectedTab, setSelectedTab] = useState<Tab>('SWRD');
 
   const etfData = useMemo(() => {
     const etfs = (data as any)?.etf_composition?.etfs ?? {};
-    const result: Record<string, { label: string; regioes: Array<{ name: string; pct: number }> }> = {};
+    const result: Record<string, { label: string; fatores: Array<{ name: string; pct: number }> }> = {};
     for (const key of ['SWRD', 'AVGS', 'AVEM']) {
       const etf = etfs[key] ?? {};
-      const regioes = etf.regioes ?? {};
+      const fatores = etf.fatores ?? {};
       result[key] = {
         label: ETF_NAMES[key] ?? key,
-        regioes: Object.entries(regioes)
-          .map(([name, val]) => ({ name, pct: Math.round((val as number) * 100) }))
-          .sort((a, b) => b.pct - a.pct),
+        fatores: Object.entries(FACTOR_LABELS)
+          .map(([fKey, fLabel]) => ({
+            name: fLabel,
+            pct: Math.round(((fatores[fKey] as number) ?? 0) * 100),
+          })),
       };
     }
     return result;
@@ -111,7 +119,7 @@ const ETFRegionComposition: React.FC = () => {
               <div style={{ fontSize: '.73rem', fontWeight: 700, color: ETF_COLORS[key], marginBottom: '8px', borderBottom: `1px solid ${ETF_COLORS[key]}33`, paddingBottom: '4px' }}>
                 {etfData[key].label}
               </div>
-              <BarRows regioes={etfData[key].regioes} />
+              <FactorBars fatores={etfData[key].fatores} />
             </div>
           ))}
         </div>
@@ -120,7 +128,7 @@ const ETFRegionComposition: React.FC = () => {
           <div style={{ fontSize: '.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '10px' }}>
             {etfData[selectedTab]?.label}
           </div>
-          <BarRows regioes={etfData[selectedTab]?.regioes ?? []} />
+          <FactorBars fatores={etfData[selectedTab]?.fatores ?? []} />
         </div>
       )}
     </div>
@@ -149,4 +157,4 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-export default ETFRegionComposition;
+export default ETFFactorComposition;

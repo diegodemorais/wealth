@@ -10,6 +10,7 @@ import { CustoBaseTable } from '@/components/portfolio/CustoBaseTable';
 import { TaxAnalysisGrid } from '@/components/portfolio/TaxAnalysisGrid';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
+import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { HeatmapChart } from '@/components/charts/HeatmapChart';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 
@@ -148,55 +149,13 @@ export default function PortfolioPage() {
         icon="📊"
       >
         <div style={{ padding: '16px' }}>
-          <div style={{ color: 'var(--muted)', fontSize: '.82rem', marginBottom: 8 }}>
-            Fatores: Value, Size, Profitability, Investment
-          </div>
-          {data?.etf_composition?.etfs && (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.8rem', marginBottom: '8px' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--card2)' }}>
-                  <th style={{ textAlign: 'left', padding: '6px 0', fontWeight: 600, color: 'var(--muted)' }}>ETF</th>
-                  <th style={{ textAlign: 'center', padding: '6px 0', fontWeight: 600, color: 'var(--muted)' }}>Market</th>
-                  <th style={{ textAlign: 'center', padding: '6px 0', fontWeight: 600, color: 'var(--muted)' }}>Value</th>
-                  <th style={{ textAlign: 'center', padding: '6px 0', fontWeight: 600, color: 'var(--muted)' }}>Size</th>
-                  <th style={{ textAlign: 'center', padding: '6px 0', fontWeight: 600, color: 'var(--muted)' }}>Quality</th>
-                </tr>
-              </thead>
-              <tbody>
-                {['SWRD', 'AVGS', 'AVEM'].map((etf) => {
-                  const comp = data.etf_composition.etfs[etf];
-                  if (!comp || !comp.fatores) return null;
-                  const f = comp.fatores;
-                  const getColor = (val: number | null) => {
-                    if (val === null || val === 0) return 'var(--muted)';
-                    if (val > 0.5) return 'var(--green)';
-                    if (val > 0) return 'var(--yellow)';
-                    return 'var(--muted)';
-                  };
-                  return (
-                    <tr key={etf} style={{ borderBottom: '1px solid var(--card2)' }}>
-                      <td style={{ padding: '6px 0', fontWeight: 600 }}>{etf}</td>
-                      <td style={{ textAlign: 'center', padding: '6px 0', color: 'var(--green)' }}>
-                        {f.market != null ? `${(f.market * 100).toFixed(0)}%` : '—'}
-                      </td>
-                      <td style={{ textAlign: 'center', padding: '6px 0', color: getColor(f.value) }}>
-                        {f.value != null ? `${(f.value * 100).toFixed(0)}%` : '—'}
-                      </td>
-                      <td style={{ textAlign: 'center', padding: '6px 0', color: getColor(f.size) }}>
-                        {f.size != null ? `${(f.size * 100).toFixed(0)}%` : '—'}
-                      </td>
-                      <td style={{ textAlign: 'center', padding: '6px 0', color: getColor(f.quality) }}>
-                        {f.quality != null ? `${(f.quality * 100).toFixed(0)}%` : '—'}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-          <div className="src">Fonte: etf_composition.json · Fatores: Value, Size, Profitability, Investment</div>
+          <ETFFactorComposition />
+          <div className="src">Fonte: etf_composition.json · Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
         </div>
       </CollapsibleSection>
+
+      {/* 4b. Concentração Geográfica */}
+      {data && <ConcentrationChart data={data} />}
 
       {/* 5. Posições — ETFs Internacionais (IBKR) */}
       <HoldingsTable />
@@ -219,11 +178,8 @@ export default function PortfolioPage() {
       {/* 8. Renda Fixa + Cripto */}
       <RFCryptoComposition />
 
-      {/* 9. Factor Loadings + Concentração */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
-        {data && <HeatmapChart data={data} />}
-        {data && <ConcentrationChart data={data} />}
-      </div>
+      {/* 9. Heatmap */}
+      {data && <HeatmapChart data={data} />}
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
