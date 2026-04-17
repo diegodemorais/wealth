@@ -497,7 +497,7 @@ export default function HomePage() {
                 <div className="text-xs w-4 flex-shrink-0">{m.isOk ? '✅' : '⚠️'}</div>
                 <div className="text-xs text-muted w-36 flex-shrink-0 truncate">{m.label}</div>
                 {renderBar(m.pts, m.max)}
-                <div className="text-xs text-muted w-14 flex-shrink-0 text-right">{m.detail}</div>
+                <div className="text-xs text-muted w-20 flex-shrink-0 text-right truncate" title={m.detail}>{m.detail}</div>
                 <div className="text-xs text-muted w-10 flex-shrink-0 text-right">{m.pts}/{m.max}</div>
               </div>
             );

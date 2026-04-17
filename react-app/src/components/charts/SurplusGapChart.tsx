@@ -125,7 +125,15 @@ export function SurplusGapChart({ data }: SurplusGapChartProps) {
         ].join('<br/>');
       },
     },
-    legend: { data: ['P90 (favorável)', 'P50 (base)', 'P10 (stress)'], bottom: 0, textStyle: { color: 'var(--text)' } },
+    legend: {
+      data: [
+        { name: 'P90 (favorável)', itemStyle: { color: '#22c55e' } },
+        { name: 'P50 (base)',      itemStyle: { color: '#eab308' } },
+        { name: 'P10 (stress)',    itemStyle: { color: '#fb923c' } },
+      ],
+      bottom: 0,
+      textStyle: { color: 'var(--text)' },
+    },
     grid: { left: 60, right: 20, top: 20, bottom: 50 },
     xAxis: {
       type: 'category',
@@ -168,7 +176,7 @@ export function SurplusGapChart({ data }: SurplusGapChartProps) {
         type: 'bar',
         data: surplusP10.map(v => ({
           value: v,
-          itemStyle: { color: v >= 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.9)' },
+          itemStyle: { color: v >= 0 ? 'rgba(251,146,60,0.75)' : 'rgba(239,68,68,0.9)' },
         })),
         barMaxWidth: 8,
       },

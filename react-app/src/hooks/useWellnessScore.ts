@@ -210,7 +210,7 @@ export function useWellnessScore(data: any, derived: any) {
       label: 'Capital humano',
       pts: humanPts,
       max: 5,
-      detail: humanCapitalStatus.replace('_', ' '),
+      detail: humanCapitalStatus.replace(/_/g, ' '),
       description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '',
     },
     {
