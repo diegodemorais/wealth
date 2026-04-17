@@ -107,7 +107,9 @@ APORTE_CENARIO_ASPIRACIONAL = 30_000  # R$/mês — +R$5k para render + aportar
 P_SUCCESS_CENARIO_ASPIRACIONAL = 0.85  # 85% conservador — MC favorável 10 anos até 49
 
 # Config pessoal
-CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE
+CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE (perfil Solteiro)
+CUSTO_VIDA_BASE_CASADO = 270_000  # R$/ano — perfil Casado (Diego + Katia, saúde 2p)
+CUSTO_VIDA_BASE_FILHO  = 300_000  # R$/ano — perfil Casado + Filho (educação e saúde expandidas)
 RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para dashboard
 IDADE_ATUAL = 39
 ANO_NASCIMENTO = 1987             # para calcular idade dinâmica
@@ -118,6 +120,8 @@ TERRENO_BRL = 150_000             # R$ — terreno (não financeiro, ilíquido)
 TEM_CONJUGE = False               # Diego é solteiro por ora
 NOME_CONJUGE = "Katia"            # parceira — usar em F6 surviving spouse
 INSS_KATIA_ANUAL = 93_600         # R$/ano — R$7.800/mês × 12
+INSS_KATIA_INICIO_ANO = 2049      # ano calendário estimado — Katia ~age 60 (INSS antecipado). Derivação: nasc. ~1989, INSS mínimo 60 anos com carrência ≈ 2049
+RETORNO_RF_REAL_BOND_POOL = 0.06  # 6.0% real líquido HTM — alinhado com PREMISSAS["retorno_ipca_plus"] (fire_montecarlo)
 PGBL_KATIA_SALDO_FIRE = 490_000   # R$ — saldo estimado PGBL Katia na data FIRE
 GASTO_KATIA_SOLO = 160_000        # R$/ano — gasto Katia se Diego falecer
 

@@ -36,7 +36,7 @@ from config import (
     PESOS_TARGET, BUCKET_MAP, EQUITY_WEIGHTS,
     PISO_TAXA_IPCA_LONGO, PISO_TAXA_RENDA_PLUS, PISO_VENDA_RENDA_PLUS,
     RENDA_PLUS_ANO_VENC, RENDA_PLUS_TAXA_DEFAULT,
-    PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, APORTE_MENSAL, RENDA_ESTIMADA,
+    PATRIMONIO_GATILHO, SWR_GATILHO, CUSTO_VIDA_BASE, CUSTO_VIDA_BASE_CASADO, CUSTO_VIDA_BASE_FILHO, APORTE_MENSAL, RENDA_ESTIMADA,
     IDADE_ATUAL, IDADE_CENARIO_BASE, IDADE_CENARIO_ASPIRACIONAL, ANO_NASCIMENTO,
     EQUITY_PCT, IPCA_LONGO_PCT, IPCA_CURTO_PCT, CRIPTO_PCT, RENDA_PLUS_PCT,
     TICKERS_YF, GLIDE_PATH, IR_ALIQUOTA, ETF_TER,
@@ -47,6 +47,7 @@ from config import (
     IPCA_CAGR_FALLBACK,
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
     INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
+    INSS_KATIA_INICIO_ANO, RETORNO_RF_REAL_BOND_POOL,
     update_dashboard_state,
 )
 
@@ -1901,6 +1902,78 @@ def compute_earliest_fire(pfire_aspiracional: dict, pfire_base: dict, premissas_
 
 
 # ─── 8c. SPENDING GUARDRAILS ───────────────────────────────────────────────────
+def _compute_bond_pool_runway_by_profile(
+    bond_pool_rwy_data: dict | None,
+    perfis_cfg: dict,
+    fire_year: int | None = None,
+    anos_projecao: int = 15,
+    r_real: float | None = None,
+    inss_katia_inicio_ano: int = INSS_KATIA_INICIO_ANO,
+) -> dict | None:
+    """Calcula depleção pós-FIRE do bond pool por perfil familiar.
+
+    Modelo: pool(t) = pool(t-1) × (1+r_real) − saque(t)
+    Onde saque(t) = custo_vida_base − inss_katia_anual × I(ano_calendário >= inss_katia_inicio_ano)
+
+    r_real = 5% líquido (IPCA+ ~6.5% menos ~1.5% IPCA = ~5% retorno real conservador)
+    """
+    if not bond_pool_rwy_data:
+        return None
+
+    # Resolve defaults from config/premissas — sem hardcoded
+    if fire_year is None:
+        fire_year = ANO_NASCIMENTO + IDADE_CENARIO_BASE  # e.g. 1987+53=2040
+    if r_real is None:
+        r_real = RETORNO_RF_REAL_BOND_POOL
+
+    pool_total_list = bond_pool_rwy_data.get("pool_total_brl", [])
+    if not pool_total_list:
+        return None
+
+    pool_inicial = pool_total_list[-1]  # Pool no FIRE Day
+    anos_pos_fire = list(range(1, anos_projecao + 1))
+
+    result: dict = {}
+    for profile_key, cfg in perfis_cfg.items():
+        custo = cfg["custo_vida_base"]
+        inss_katia = cfg.get("inss_katia_anual", 0)
+        tem_conjuge = cfg.get("tem_conjuge", False)
+
+        pool = float(pool_inicial)
+        pool_series: list[float] = []
+        runway_anos: float | None = None
+
+        for ano_pos_fire in anos_pos_fire:
+            ano_calendario = fire_year + ano_pos_fire
+            inss_this_year = inss_katia if (tem_conjuge and ano_calendario >= inss_katia_inicio_ano) else 0
+            saque = custo - inss_this_year
+            pool_prev = pool
+            pool = pool * (1 + r_real) - saque
+            pool_series.append(round(pool))
+
+            # Interpolar o ponto exato onde o pool cruza zero
+            if pool < 0 and runway_anos is None:
+                fraction = pool_prev / (pool_prev - pool) if (pool_prev - pool) != 0 else 0
+                runway_anos = round(ano_pos_fire - 1 + fraction, 1)
+
+        if runway_anos is None:
+            runway_anos = float(anos_projecao)  # pool positivo por todo o horizonte
+
+        result[profile_key] = {
+            "custo_vida_anual": custo,
+            "inss_katia_anual": inss_katia,
+            "anos_inss_katia_pos_fire": inss_katia_inicio_ano - fire_year,
+            "anos_pos_fire": anos_pos_fire,
+            "pool_disponivel": pool_series,
+            "pool_inicial": round(pool_inicial),
+            "runway_anos": runway_anos,
+            "runway_label": f"{runway_anos:.1f} anos",
+            "_modelo": f"r_real={r_real*100:.0f}% | INSS Katia {inss_katia/1e3:.0f}k/ano a partir de {inss_katia_inicio_ano}",
+        }
+
+    return result
+
+
 def compute_spending_guardrails(pfire_base: dict, premissas_raw: dict, guardrails_raw: list, gasto_piso: int) -> dict | None:
     """Calcula spending_guardrails com zonas de P(FIRE) × custo de vida.
 
@@ -3408,6 +3481,16 @@ def main():
         "etf_composition":         etf_comp_data,
         "bond_pool_runway":        bond_pool_rwy_data,
         "lumpy_events":            lumpy_data,
+
+        # Bond pool runway por perfil familiar (pós-FIRE depletion com INSS Katia + retorno real)
+        "bond_pool_runway_by_profile": _compute_bond_pool_runway_by_profile(
+            bond_pool_rwy_data,
+            {
+                "atual":  {"custo_vida_base": (fire_matrix_data or {}).get("perfis", {}).get("atual",  {}).get("gasto_anual", CUSTO_VIDA_BASE),        "inss_katia_anual": 0,               "tem_conjuge": False},
+                "casado": {"custo_vida_base": (fire_matrix_data or {}).get("perfis", {}).get("casado", {}).get("gasto_anual", CUSTO_VIDA_BASE_CASADO), "inss_katia_anual": INSS_KATIA_ANUAL, "tem_conjuge": True},
+                "filho":  {"custo_vida_base": (fire_matrix_data or {}).get("perfis", {}).get("filho",  {}).get("gasto_anual", CUSTO_VIDA_BASE_FILHO),  "inss_katia_anual": INSS_KATIA_ANUAL, "tem_conjuge": True},
+            },
+        ),
 
         # Withdraw scenario configs (derived from fire_matrix.perfis + config constants)
         "withdraw_cenarios": {

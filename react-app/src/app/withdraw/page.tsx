@@ -342,9 +342,16 @@ export default function WithdrawPage() {
                 )}
               </div>
             )}
-            {!bondPoolRunwayByProfile && bondPoolRunway && (
+            {/* Acumulação pré-FIRE: barras = dados reais (fixos), meta muda por perfil */}
+            {bondPoolRunway && (
               <div style={{ marginTop: 14 }}>
-                <BondPoolRunwayChart data={bondPoolRunway} />
+                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                  Trajetória de Acumulação — pré-FIRE (2026→2040)
+                </div>
+                <BondPoolRunwayChart
+                  data={bondPoolRunway}
+                  alvoOverride={bondPoolReadiness ? activeScenarioCfg.custo_vida_base * (bondPoolReadiness.meta_anos ?? 7) : undefined}
+                />
               </div>
             )}
             <div className="src">

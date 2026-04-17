@@ -21,9 +21,11 @@ interface BondPoolRunwayData {
 
 interface BondPoolRunwayChartProps {
   data: BondPoolRunwayData;
+  /** Override meta (alvo) quando perfil familiar muda: meta_anos × custo_vida_base do perfil */
+  alvoOverride?: number;
 }
 
-export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
+export function BondPoolRunwayChart({ data, alvoOverride }: BondPoolRunwayChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
@@ -62,9 +64,9 @@ export function BondPoolRunwayChart({ data }: BondPoolRunwayChartProps) {
       poolTotal: data.pool_total_brl || [],
       pool2040: data.pool_td2040_brl || [],
       pool2050: data.pool_td2050_brl || [],
-      alvo: data.alvo_pool_brl_2040 || 0,
+      alvo: alvoOverride ?? data.alvo_pool_brl_2040 ?? 0,
     });
-  }, [data, privacyMode, theme, hasDeterministic, hasProbabilistic]);
+  }, [data, alvoOverride, privacyMode, theme, hasDeterministic, hasProbabilistic]);
 
   return (
     <ChartCard style={{ height: 400 }}>
