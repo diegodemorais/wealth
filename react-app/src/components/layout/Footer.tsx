@@ -43,12 +43,6 @@ export function Footer() {
     <footer style={styles.footer}>
       <div style={styles.container}>
         <div style={styles.section}>
-          <small style={styles.label}>Build</small>
-          <small style={styles.value}>{buildLabel}</small>
-          <small style={styles.sub}>{DASHBOARD_VERSION}</small>
-        </div>
-
-        <div style={styles.section}>
           <small style={styles.label}>Dados gerados</small>
           <small style={styles.value}>{dataDate}</small>
           {daysOld > 0 && (

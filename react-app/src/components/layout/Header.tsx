@@ -49,9 +49,8 @@ export function Header() {
         {/* Logo */}
         <div className="header-logo-section">
           <h1 className="header-logo-title" style={styles.logo}>Dashboard Wealth DM</h1>
-          <span className="header-logo-version" style={styles.version} title={`Build: ${DASHBOARD_VERSION} · ${buildLabel}`}>
+          <span style={styles.versionPill} title={`Build: ${buildLabel}`}>
             {DASHBOARD_VERSION}
-            <span style={styles.buildTime}> · {buildLabel}</span>
           </span>
         </div>
 
@@ -111,21 +110,16 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '600',
     whiteSpace: 'nowrap' as const,
   },
-  version: {
-    fontSize: 'var(--text-xs)',
-    color: 'var(--muted)',
+  versionPill: {
+    fontSize: '10px',
     fontFamily: 'monospace',
-    paddingLeft: '8px',
-    borderLeft: '1px solid var(--border)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '2px',
-    whiteSpace: 'nowrap' as const,
-  },
-  buildTime: {
-    fontSize: '11px',
     color: 'var(--muted)',
-    opacity: 0.7,
+    background: 'var(--card2)',
+    border: '1px solid var(--border)',
+    borderRadius: '4px',
+    padding: '1px 6px',
+    whiteSpace: 'nowrap' as const,
+    cursor: 'default',
   },
   tab: {
     padding: '6px 10px',
