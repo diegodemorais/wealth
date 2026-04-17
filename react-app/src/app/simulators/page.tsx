@@ -505,7 +505,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
 }) {
   const option = useMemo(() => {
     const currentAge = startAge;
-    const years = 30;
+    const years = 100 - currentAge; // always project to age 100
     const ANNUAL_RETURN = annualReturn;
     const ANNUAL_VOL = annualVol;
     const N_SIMS = 300;
@@ -558,7 +558,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       xAxis: {
         type: 'category' as const,
         data: labels,
-        axisLabel: { color: '#8b949e', fontSize: 10, interval: 4 },
+        axisLabel: { color: '#8b949e', fontSize: 10, interval: 4, hideOverlap: true },
         axisLine: { lineStyle: { color: '#30363d' } },
       },
       yAxis: {
@@ -636,7 +636,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
       <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>
         Projeção — Evolução Patrimonial após Shock · {300} trajetórias MC · valores nominais BRL
       </div>
-      <ReactECharts option={option} style={{ height: 260 }} />
+      <ReactECharts option={option} style={{ height: 300 }} />
       <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '3px' }}>
         Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano · Negativos visíveis (sem floor)
       </div>
