@@ -189,6 +189,52 @@
   .error-state { color: var(--red); }
   .warning-state { color: var(--yellow); }
 
+  /* ─── Segmented Control (MM-4) ─── */
+  .seg-group {
+    display: inline-flex;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .seg-btn {
+    padding: 5px 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    border-right: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    transition: background-color 0.15s, color 0.15s;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  .seg-btn:last-child {
+    border-right: none;
+  }
+
+  .seg-btn.active {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .seg-btn:hover:not(.active) {
+    background: var(--card2);
+    color: var(--text);
+  }
+
+  /* ─── Section separator (MM-5) ─── */
+  .section-sep {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+    opacity: 0.5;
+  }
+
   /* ─── Header responsive layout ─── */
   .header-container {
     display: flex;

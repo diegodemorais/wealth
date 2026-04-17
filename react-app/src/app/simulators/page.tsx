@@ -5,7 +5,6 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
 
@@ -268,40 +267,41 @@ function FireSimuladorSection() {
       </div>
 
       {/* Presets — 2 eixos */}
-      <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
+      <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
           <span style={{ fontSize: '.6rem', color: 'var(--muted)', minWidth: '58px' }}>Condição:</span>
-          {(['solteiro', 'casamento', 'filho'] as FireCond[]).map(c => (
-            <Button
-              key={c}
-              variant={!custom && fireCond === c ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setCondPreset(c)}
-            >
-              {COND_PRESETS[c].label}
-            </Button>
-          ))}
+          <div className="seg-group">
+            {(['solteiro', 'casamento', 'filho'] as FireCond[]).map(c => (
+              <button
+                key={c}
+                className={`seg-btn${!custom && fireCond === c ? ' active' : ''}`}
+                onClick={() => setCondPreset(c)}
+              >
+                {COND_PRESETS[c].label}
+              </button>
+            ))}
+          </div>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
           <span style={{ fontSize: '.6rem', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
-          {(['stress', 'base', 'fav'] as FireMkt[]).map(m => (
-            <Button
-              key={m}
-              variant={!custom && fireMkt === m ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setMktPreset(m)}
-            >
-              {MKT_PRESETS[m].label}
-            </Button>
-          ))}
-          <Button
-            variant="outline"
-            size="sm"
-            style={{ borderStyle: 'dashed', marginLeft: '8px' }}
+          <div className="seg-group">
+            {(['stress', 'base', 'fav'] as FireMkt[]).map(m => (
+              <button
+                key={m}
+                className={`seg-btn${!custom && fireMkt === m ? ' active' : ''}`}
+                onClick={() => setMktPreset(m)}
+              >
+                {MKT_PRESETS[m].label}
+              </button>
+            ))}
+          </div>
+          <button
+            className="seg-btn"
+            style={{ borderRadius: '6px', border: '1px dashed var(--border)', background: 'transparent' }}
             onClick={setFire50Preset}
           >
-            🎯 Cenário Aspiracional
-          </Button>
+            🎯 Aspiracional
+          </button>
         </div>
       </div>
 
@@ -415,17 +415,18 @@ function WhatIfSection() {
   return (
     <CollapsibleSection id="sim-whatif" title="What-If Scenarios — Cenário / Gasto" defaultOpen={true}>
       {/* Preset buttons */}
-      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
-        {(Object.keys(WI_PRESETS) as WiPreset[]).map(k => (
-          <Button
-            key={k}
-            variant={wiPreset === k ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setWiPreset(k)}
-          >
-            {WI_PRESETS[k].label}
-          </Button>
-        ))}
+      <div style={{ marginBottom: '10px' }}>
+        <div className="seg-group">
+          {(Object.keys(WI_PRESETS) as WiPreset[]).map(k => (
+            <button
+              key={k}
+              className={`seg-btn${wiPreset === k ? ' active' : ''}`}
+              onClick={() => setWiPreset(k)}
+            >
+              {WI_PRESETS[k].label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Slider custo de vida */}
@@ -893,11 +894,17 @@ export default function SimulatorsPage() {
       {/* 1. Simulador FIRE — section-critical */}
       <FireSimuladorSection />
 
+      <hr className="section-sep" />
+
       {/* 2. What-If Scenarios */}
       <WhatIfSection />
 
+      <hr className="section-sep" />
+
       {/* 3. Stress Test MC */}
       <StressTestSection />
+
+      <hr className="section-sep" />
 
       {/* 4. Calculadora Cascade */}
       <CascadeSection />
