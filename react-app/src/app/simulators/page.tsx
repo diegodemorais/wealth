@@ -704,6 +704,27 @@ function StressTestSection() {
         </div>
       </div>
 
+      {/* Premissas da simulação */}
+      {patrimonio != null && annualReturn > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
+          {[
+            { label: 'Patrimônio', value: fmtBRL(patrimonio) },
+            { label: 'Aporte mensal', value: aporteMensal > 0 ? `R$${(aporteMensal / 1000).toFixed(0)}k` : '—' },
+            { label: 'Custo de vida', value: premissasST.custo_vida_base != null ? `R$${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano` : '—' },
+            { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
+            { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
+            { label: 'Distribuição', value: 'Normal (Box-Muller)' },
+            { label: 'Trajetórias', value: '300 MC' },
+            { label: 'Horizonte', value: `até 100a (${100 - startAge} anos)` },
+          ].map(c => (
+            <div key={c.label} style={{ background: 'var(--card2)', border: '1px solid var(--border)', borderRadius: '6px', padding: '5px 10px', flexShrink: 0 }}>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.3px' }}>{c.label}</div>
+              <div style={{ fontSize: '.75rem', fontWeight: 600, fontFamily: 'monospace', color: 'var(--text)', marginTop: '1px' }}>{c.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Chart — computed from shock/ageOnset sliders */}
       {patrimonio != null && annualReturn > 0 && annualVol > 0 && startAge > 0 && (
         <StressChart
