@@ -100,6 +100,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           itemStyle: { color: '#3ed381' },
           lineStyle: { width: 2, color: '#3ed381', type: 'dashed' as const },
           symbolSize: 0,
+          areaStyle: { opacity: 0.07, color: '#3ed381' },
         },
         {
           name: 'Meta FIRE',
@@ -115,11 +116,6 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
   }, [data, privacyMode, theme]);
 
   return (
-    <div className="bg-card border border-border rounded-md p-4 mb-5">
-      <h3 className="text-sm font-semibold text-foreground mb-4">
-        Tracking FIRE — Realizado vs Projeção P50
-      </h3>
-      <ReactECharts ref={chartRef} option={option} style={{ height: 350, width: '100%' }} />
-    </div>
+    <ReactECharts ref={chartRef} option={option} style={{ height: 350, width: '100%' }} />
   );
 }

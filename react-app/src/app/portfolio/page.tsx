@@ -4,14 +4,13 @@ import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { DonutCharts } from '@/components/charts/DonutCharts';
-import { StackedAllocChart } from '@/components/charts/StackedAllocChart';
+import StackedAllocationBar from '@/components/dashboard/StackedAllocationBar';
 import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
 import { CustoBaseTable } from '@/components/portfolio/CustoBaseTable';
 import { TaxAnalysisGrid } from '@/components/portfolio/TaxAnalysisGrid';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
-import { HeatmapChart } from '@/components/charts/HeatmapChart';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 
 export default function PortfolioPage() {
@@ -50,10 +49,29 @@ export default function PortfolioPage() {
         <div className="src">Premissa: SWRD ≈ 67% US. AVUV/USSC = 100% US. AVDV = 100% DM ex-US. AVGS ~58% US. (Exclui Fixed Income.)</div>
       </div>
 
-      {/* 2. Alocação — Barras Empilhadas */}
+      {/* 2. Alocação — Por Classe de Ativo */}
       <div className="section">
-        <h2>Alocação — Barras Empilhadas</h2>
-        <StackedAllocChart data={data} />
+        <h2>Alocação — Por Classe de Ativo</h2>
+        {(() => {
+          const conc = (data as any)?.concentracao_brasil ?? {};
+          const comp = conc.composicao ?? {};
+          const totalBrl = conc.total_portfolio_brl ?? 0;
+          const rfDetalhe = comp.rf_detalhe ?? {};
+          const ipcaBrl = (rfDetalhe.ipca2029 ?? 0) + (rfDetalhe.ipca2040 ?? 0) + (rfDetalhe.ipca2050 ?? 0);
+          const rendaPlusBrl = rfDetalhe.renda2065 ?? 0;
+          const cryptoBrl = (comp.hodl11_brl ?? 0) + (comp.crypto_legado_brl ?? 0);
+          const rfTotal = comp.rf_total_brl ?? 0;
+          const equityBrl = Math.max(0, totalBrl - rfTotal - cryptoBrl);
+          return (
+            <StackedAllocationBar
+              equityBrl={equityBrl}
+              ipcaBrl={ipcaBrl}
+              rendaPlusBrl={rendaPlusBrl}
+              cryptoBrl={cryptoBrl}
+              totalBrl={totalBrl}
+            />
+          );
+        })()}
       </div>
 
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
@@ -178,8 +196,7 @@ export default function PortfolioPage() {
       {/* 8. Renda Fixa + Cripto */}
       <RFCryptoComposition />
 
-      {/* 9. Heatmap */}
-      {data && <HeatmapChart data={data} />}
+      {/* 9. Últimas Operações (removed HeatmapChart - duplicates ETFFactorComposition) */}
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (

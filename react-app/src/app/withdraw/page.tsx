@@ -216,16 +216,7 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 6. Projeção de Renda — Ciclo de Vida */}
-      <section className="section" id="incomeCycleSection">
-        <h2>Projeção de Renda — Ciclo de Vida (2026–2077)</h2>
-        <IncomeProjectionChart data={data} />
-        <div className="src">
-          Todos os valores em R$ reais (constante 2026) · Pré-FIRE: renda ativa R$45k/mês · Pós-FIRE: spending smile (Go-Go / Slow-Go / No-Go) · INSS R$18k/ano a partir dos 65.
-        </div>
-      </section>
-
-      {/* 7. Spending — Essenciais vs Discricionários */}
+      {/* 6. Spending — Essenciais vs Discricionários */}
       {(data.spending ?? data.fire?.spending ?? data.spending_breakdown) && (
         <section className="section" id="spendingBreakdownSection">
           <h2>Spending — Essenciais vs Discricionários <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>(período ago/2026–mar/2026)</span></h2>

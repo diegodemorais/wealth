@@ -52,6 +52,18 @@ function BacktestHistoricoSection() {
 
   const backtest = data?.backtest;
 
+  // Determine earliest available date in backtest data
+  const earliestDate: string | null = backtest?.dates?.[0] ?? null;
+  const periodMinDates: Record<string, string> = {
+    all: '2005-01', since2009: '2009-01', since2013: '2013-01',
+    since2020: '2020-01', '5y': '2021-01', '3y': '2023-01', r7: '1989-07',
+  };
+  const periodLimited = (key: string) => {
+    if (!earliestDate) return false;
+    const minNeeded = periodMinDates[key] ?? '2000-01';
+    return earliestDate > minNeeded;
+  };
+
   // Metrics for selected period
   const metrics = backtest?.metrics_by_period?.[period] ?? backtest?.metrics ?? null;
   const targetMetrics = metrics?.target ?? metrics;
@@ -95,18 +107,29 @@ function BacktestHistoricoSection() {
     <CollapsibleSection id="backtest-historico" title="Backtest Histórico — Target vs VWRA" defaultOpen={true}>
       {/* Period buttons */}
       <div className="period-btns" style={{ marginBottom: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-        {BACKTEST_PERIODS.map(p => (
-          <Button
-            key={p.key}
-            variant={period === p.key ? 'default' : 'outline'}
-            size="sm"
-            title={p.title}
-            onClick={() => setPeriod(p.key)}
-          >
-            {p.label}
-          </Button>
-        ))}
+        {BACKTEST_PERIODS.map(p => {
+          const limited = p.key !== 'r7' && periodLimited(p.key);
+          return (
+            <Button
+              key={p.key}
+              variant={period === p.key ? 'default' : 'outline'}
+              size="sm"
+              title={limited ? `${p.title} — dados disponíveis desde ${earliestDate}` : p.title}
+              onClick={() => setPeriod(p.key)}
+              style={limited && period !== p.key ? { opacity: 0.55 } : undefined}
+            >
+              {p.label}{limited ? ' *' : ''}
+            </Button>
+          );
+        })}
       </div>
+
+      {/* Note when period data is limited */}
+      {period !== 'r7' && periodLimited(period) && earliestDate && (
+        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: '.72rem', color: 'var(--muted)' }}>
+          * Dados disponíveis desde {earliestDate} — período completo não disponível neste backtest.
+        </div>
+      )}
 
       {/* Chart — filtered by selected period (r7 uses BacktestR7Chart, handled in page) */}
       {data && period !== 'r7' && <BacktestChart data={data} period={period} />}
@@ -174,6 +197,15 @@ function BacktestHistoricoSection() {
 function ShadowPortfoliosSection() {
   const data = useDashboardStore(s => s.data);
   const [period, setPeriod] = useState<ShadowPeriod>('since2009');
+  const earliestDate: string | null = data?.backtest?.dates?.[0] ?? null;
+  const shadowPeriodMinDates: Record<string, string> = {
+    since2009: '2009-01', since2013: '2013-01', since2020: '2020-01',
+    '5y': '2021-01', '3y': '2023-01', all: '2005-01',
+  };
+  const shadowPeriodLimited = (key: string) => {
+    if (!earliestDate) return false;
+    return earliestDate > (shadowPeriodMinDates[key] ?? '2000-01');
+  };
 
   // Q1 snapshot from data.shadows
   const snap = (data as any)?.shadows ?? null;
@@ -196,17 +228,27 @@ function ShadowPortfoliosSection() {
 
       {/* Period buttons */}
       <div className="period-btns" style={{ marginBottom: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-        {SHADOW_PERIODS.map(p => (
-          <Button
-            key={p.key}
-            variant={period === p.key ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setPeriod(p.key)}
-          >
-            {p.label}
-          </Button>
-        ))}
+        {SHADOW_PERIODS.map(p => {
+          const limited = shadowPeriodLimited(p.key);
+          return (
+            <Button
+              key={p.key}
+              variant={period === p.key ? 'default' : 'outline'}
+              size="sm"
+              title={limited ? `Dados disponíveis desde ${earliestDate}` : undefined}
+              style={limited && period !== p.key ? { opacity: 0.55 } : undefined}
+              onClick={() => setPeriod(p.key)}
+            >
+              {p.label}{limited ? ' *' : ''}
+            </Button>
+          );
+        })}
       </div>
+      {shadowPeriodLimited(period) && earliestDate && (
+        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: '.72rem', color: 'var(--muted)' }}>
+          * Dados disponíveis desde {earliestDate} — período completo não disponível.
+        </div>
+      )}
 
       {/* Equity curve chart — Target vs VWRA filtered by period */}
       {data && <BacktestChart data={data} period={period} height={260} />}

@@ -151,7 +151,6 @@ footer {
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  position: relative;
 }
 
 .tab-nav::after {

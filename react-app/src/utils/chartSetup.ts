@@ -575,43 +575,45 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
   const glideRenda: number[] = glide.renda_plus ?? [];
 
   let ages: number[];
-  let equityAlloc: number[];
-  let fixedIncomeAlloc: number[];
+  let seriesData: { name: string; color: string; data: number[] }[];
+
+  const interpolate = (arr: number[], age: number) => {
+    if (glideIdades.length === 0) return 0;
+    for (let i = 0; i < glideIdades.length - 1; i++) {
+      if (age >= glideIdades[i] && age <= glideIdades[i + 1]) {
+        const t = (age - glideIdades[i]) / (glideIdades[i + 1] - glideIdades[i]);
+        return arr[i] + t * (arr[i + 1] - arr[i]);
+      }
+    }
+    return arr[arr.length - 1] ?? 0;
+  };
 
   if (glideIdades.length > 0) {
-    // Interpolate between defined waypoints
     const minAge = glideIdades[0];
     const maxAge = glideIdades[glideIdades.length - 1];
     ages = Array.from({ length: maxAge - minAge + 1 }, (_, i) => minAge + i);
 
-    const interpolate = (arr: number[], age: number) => {
-      for (let i = 0; i < glideIdades.length - 1; i++) {
-        if (age >= glideIdades[i] && age <= glideIdades[i + 1]) {
-          const t = (age - glideIdades[i]) / (glideIdades[i + 1] - glideIdades[i]);
-          return arr[i] + t * (arr[i + 1] - arr[i]);
-        }
-      }
-      return arr[arr.length - 1];
-    };
-
-    equityAlloc = ages.map(a => interpolate(glideEquity, a));
-    const ipca = ages.map(a => interpolate(glideIpcaLongo, a) + interpolate(glideIpcaCurto, a));
-    const hodl = ages.map(a => interpolate(glideHodl, a));
-    const renda = ages.map(a => interpolate(glideRenda, a));
-    fixedIncomeAlloc = ages.map((_, i) => ipca[i] + hodl[i] + renda[i]);
+    seriesData = [
+      { name: 'Equity Total',    color: CHART_COLORS.accent,  data: ages.map(a => interpolate(glideEquity, a)) },
+      { name: 'IPCA+ Longo',     color: CHART_COLORS.green,   data: ages.map(a => interpolate(glideIpcaLongo, a)) },
+      { name: 'IPCA+ Curto',     color: CHART_COLORS.orange,  data: ages.map(a => interpolate(glideIpcaCurto, a)) },
+      { name: 'Crypto (HODL11)', color: CHART_COLORS.yellow,  data: ages.map(a => interpolate(glideHodl, a)) },
+      { name: 'Renda+ 2065',     color: CHART_COLORS.purple,  data: ages.map(a => interpolate(glideRenda, a)) },
+    ];
   } else {
-    // Fallback: use premissas
+    // Fallback: 2 series
     const retirementAge: number = premissas.idade_cenario_base ?? 53;
     ages = Array.from({ length: Math.max(1, 90 - idadeAtual + 1) }, (_, i) => idadeAtual + i);
-    equityAlloc = ages.map(age => {
-      if (age >= retirementAge) return 79; // stay invested post-FIRE
-      return 79; // pre-FIRE high equity
-    });
-    fixedIncomeAlloc = equityAlloc.map(eq => 100 - eq);
+    const equity = ages.map(() => 79);
+    const rf = ages.map(() => 21);
+    seriesData = [
+      { name: 'Equity Total', color: CHART_COLORS.accent, data: equity },
+      { name: 'Renda Fixa',   color: CHART_COLORS.green,  data: rf },
+    ];
   }
 
   return {
-    color: [CHART_COLORS.accent, CHART_COLORS.orange, CHART_COLORS.purple, CHART_COLORS.yellow],
+    color: seriesData.map(s => s.color),
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
@@ -621,48 +623,37 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
         if (!Array.isArray(params)) return '';
         let result = `Idade ${params[0].axisValueLabel}<br/>`;
         params.forEach((p: any) => {
-          result += `${p.marker} ${p.seriesName}: ${p.value.toFixed(1)}%<br/>`;
+          if (p.value != null) result += `${p.marker} ${p.seriesName}: ${Number(p.value).toFixed(1)}%<br/>`;
         });
         return result;
       },
     },
-    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
-    grid: { left: 60, right: 20, top: 40, bottom: 40, containLabel: true },
+    legend: { textStyle: { color: theme.textStyle.color }, top: 10 },
+    grid: { left: 50, right: 20, top: 45, bottom: 30, containLabel: true },
     xAxis: {
       type: 'category' as const,
       data: ages.map(a => a.toString()),
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12, interval: 4 },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 11, interval: 4 },
     },
     yAxis: {
       type: 'value' as const,
       min: 0,
       max: 100,
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}%', fontSize: 12 },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}%', fontSize: 11 },
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
-    series: [
-      {
-        name: 'Equity %',
-        type: 'line' as const,
-        data: equityAlloc,
-        smooth: true,
-        fill: true,
-        areaStyle: { opacity: 0.3 },
-        lineStyle: { width: 3 },
-        symbolSize: 4,
-      },
-      {
-        name: 'Renda Fixa %',
-        type: 'line' as const,
-        data: fixedIncomeAlloc,
-        smooth: true,
-        fill: true,
-        areaStyle: { opacity: 0.2 },
-        lineStyle: { width: 2 },
-        symbolSize: 4,
-      },
-    ],
+    series: seriesData.map(s => ({
+      name: s.name,
+      type: 'line' as const,
+      stack: 'total',
+      smooth: true,
+      data: s.data,
+      areaStyle: { color: s.color, opacity: 0.75 },
+      lineStyle: { width: 0.5, color: s.color },
+      itemStyle: { color: s.color },
+      symbolSize: 0,
+    })),
   };
 }
 
@@ -832,28 +823,58 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
+      // Transparent baseline for band (stacked below band)
       {
-        name: 'P10 (Pessimistic)',
+        name: 'P10_base',
         type: 'line' as const,
         data: p10Data,
         smooth: true,
-        lineStyle: { width: 2 },
+        stack: 'confidence',
+        lineStyle: { width: 0 },
+        symbolSize: 0,
+        areaStyle: { color: 'transparent', opacity: 0 },
+        tooltip: { show: false },
+        legend: { show: false },
+      },
+      // Band height = P90 - P10
+      {
+        name: 'Banda P10–P90',
+        type: 'line' as const,
+        data: p90Data.map((v, i) => v - p10Data[i]),
+        smooth: true,
+        stack: 'confidence',
+        lineStyle: { width: 0 },
+        symbolSize: 0,
+        areaStyle: { color: CHART_COLORS.green, opacity: 0.12 },
+        tooltip: { show: false },
+        legend: { show: false },
+      },
+      {
+        name: 'P10 (Pessimista)',
+        type: 'line' as const,
+        data: p10Data,
+        smooth: true,
+        lineStyle: { width: 1.5, color: CHART_COLORS.red, type: 'dashed' as const },
+        itemStyle: { color: CHART_COLORS.red },
         symbolSize: 0,
       },
       {
-        name: 'P50 (Median)',
+        name: 'P50 (Mediana)',
         type: 'line' as const,
         data: p50Data,
         smooth: true,
-        lineStyle: { width: 2 },
+        lineStyle: { width: 2.5, color: CHART_COLORS.green },
+        itemStyle: { color: CHART_COLORS.green },
         symbolSize: 0,
+        areaStyle: { color: CHART_COLORS.green, opacity: 0.05 },
       },
       {
-        name: 'P90 (Optimistic)',
+        name: 'P90 (Otimista)',
         type: 'line' as const,
         data: p90Data,
         smooth: true,
-        lineStyle: { width: 2 },
+        lineStyle: { width: 1.5, color: CHART_COLORS.accent, type: 'dashed' as const },
+        itemStyle: { color: CHART_COLORS.accent },
         symbolSize: 0,
       },
     ],

@@ -69,9 +69,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--text)',
     padding: '12px 0',
     borderBottom: '1px solid var(--border)',
-    position: 'sticky',
-    top: 0,
-    zIndex: 100,
   },
   container: {
     display: 'flex',

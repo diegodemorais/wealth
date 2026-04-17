@@ -29,7 +29,8 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
 
   const getPfire = (pat: number, gasto: number): number => {
     const key = `${pat}_${gasto}`;
-    return scenario[key] ?? 0;
+    // cenarios values are fractions 0-1 (e.g. 0.9736 = 97.36%)
+    return (scenario[key] ?? 0) * 100;
   };
 
   const getColor = (pfire: number): string => {

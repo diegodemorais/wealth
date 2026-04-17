@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
@@ -183,6 +184,24 @@ export default function FirePage() {
             </div>
             <div className="src" style={{ marginTop: '12px' }}>
               Threshold: P(FIRE) &gt; 86% · baseado em MC 10k simulações
+            </div>
+            <div style={{ marginTop: '16px' }}>
+              <Link
+                href="/simulators"
+                style={{
+                  display: 'inline-block',
+                  padding: '10px 24px',
+                  background: 'var(--accent)',
+                  color: 'white',
+                  borderRadius: 'var(--radius-md)',
+                  fontWeight: 700,
+                  fontSize: '.85rem',
+                  textDecoration: 'none',
+                  transition: 'opacity .2s',
+                }}
+              >
+                Simular Cenário Aspiracional →
+              </Link>
             </div>
           </div>
         </section>
