@@ -110,8 +110,11 @@ export default function HomePage() {
               ? `${pfireAtualStress.toFixed(1)}–${pfireAtualFav.toFixed(1)}% [stress–fav]`
               : 'Monte Carlo 10k sims'}
           </div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', opacity: .65, marginTop: 2 }}>
-            perfil: {pfirePerfilLabel}
+          <div style={{ marginTop: 4, display: 'flex', justifyContent: 'center' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 7px', borderRadius: 999, background: 'rgba(99,179,237,.10)', border: '1px solid rgba(99,179,237,.3)', fontSize: 10, color: 'var(--accent)', fontWeight: 600 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+              {pfirePerfilLabel}
+            </span>
           </div>
         </div>
         {/* Drift Máximo */}

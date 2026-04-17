@@ -854,7 +854,6 @@ function StressTestSection() {
           {[
             { label: 'Patrimônio', value: fmtBRL(patrimonio) },
             { label: 'Aporte mensal', value: aporteMensal > 0 ? `R$${(aporteMensal / 1000).toFixed(0)}k` : '—' },
-            { label: 'Custo de vida', value: premissasST.custo_vida_base != null ? `R$${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano · Solteiro` : '—' },
             { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
             { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
             { label: 'Distribuição', value: 'Normal (Box-Muller)' },
@@ -866,6 +865,13 @@ function StressTestSection() {
               <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, fontFamily: 'monospace', color: 'var(--text)', marginTop: '1px' }}>{c.value}</div>
             </div>
           ))}
+          {/* Perfil familiar badge */}
+          {premissasST.custo_vida_base != null && (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999, background: 'rgba(99,179,237,.10)', border: '1px solid rgba(99,179,237,.3)', fontSize: 11, color: 'var(--accent)', fontWeight: 600, flexShrink: 0, alignSelf: 'center' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+              Solteiro · R${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano
+            </div>
+          )}
         </div>
       )}
 
