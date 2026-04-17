@@ -9,7 +9,6 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
-import { useScenariosStore } from '@/store/scenariosStore';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -386,11 +385,6 @@ function WhatIfSection() {
   const [wiPreset, setWiPreset] = useState<WiPreset>('base');
   const [custo, setCusto] = useState<number | undefined>(undefined);
   const dataInitWI = useRef(false);
-  const { scenarios, saveScenario, deleteScenario, loadScenario } = useScenariosStore();
-  const [saveNameInput, setSaveNameInput] = useState('');
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [showSaveInput, setShowSaveInput] = useState(false);
-  const [compareIds, setCompareIds] = useState<string[]>([]);
 
   const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
   const swrPerc = (data as any)?.fire_swr_percentis ?? {};
@@ -439,30 +433,10 @@ function WhatIfSection() {
     etaYears = Math.round(etaMonths / 12);
   }
 
-  const handleSaveScenario = () => {
-    const result = saveScenario(saveNameInput, {
-      aporte_mensal: premissasWI.aporte_mensal ?? 25000,
-      retorno_equity: preset.retorno ?? 4.85,
-      custo_vida: custo ?? 250000,
-      taxa_ipca: premissasWI.ipca_anual != null ? premissasWI.ipca_anual * 100 : 4,
-    }, {
-      p_fire: psucesso != null ? psucesso * 100 : null,
-      fire_year: etaYears != null ? 2026 + etaYears : null,
-      pat_mediano: patNecessario ?? null,
-    });
-    if (result.ok) {
-      setSaveNameInput('');
-      setShowSaveInput(false);
-      setSaveError(null);
-    } else {
-      setSaveError(result.error ?? 'Erro ao salvar cenário');
-    }
-  };
-
   return (
     <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Cenário / Gasto')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
-      {/* Preset buttons + Salvar */}
-      <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+      {/* Preset buttons */}
+      <div style={{ marginBottom: '10px' }}>
         <div className="seg-group">
           {(Object.keys(WI_PRESETS) as WiPreset[]).map(k => (
             <button
@@ -474,40 +448,7 @@ function WhatIfSection() {
             </button>
           ))}
         </div>
-        <button
-          style={{ fontSize: 'var(--text-xs)', padding: '4px 10px', borderRadius: 6, background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
-          onClick={() => setShowSaveInput(v => !v)}
-        >
-          💾 Salvar cenário
-        </button>
       </div>
-
-      {/* Save name input */}
-      {showSaveInput && (
-        <div style={{ display: 'flex', gap: 6, marginBottom: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-          <input
-            type="text"
-            placeholder="Nome do cenário (ex: Com filho 2028)"
-            value={saveNameInput}
-            onChange={e => setSaveNameInput(e.target.value)}
-            style={{ flex: 1, minWidth: 180, fontSize: 'var(--text-sm)', padding: '4px 8px', borderRadius: 5, border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--text)' }}
-            onKeyDown={e => { if (e.key === 'Enter') handleSaveScenario(); }}
-          />
-          <button
-            style={{ fontSize: 'var(--text-xs)', padding: '4px 10px', borderRadius: 6, background: 'var(--green)', color: '#fff', border: 'none', cursor: 'pointer' }}
-            onClick={handleSaveScenario}
-          >
-            Confirmar
-          </button>
-          <button
-            style={{ fontSize: 'var(--text-xs)', padding: '4px 8px', borderRadius: 6, background: 'transparent', color: 'var(--muted)', border: '1px solid var(--border)', cursor: 'pointer' }}
-            onClick={() => { setShowSaveInput(false); setSaveError(null); }}
-          >
-            Cancelar
-          </button>
-          {saveError && <span style={{ color: 'var(--red)', fontSize: 'var(--text-xs)' }}>{saveError}</span>}
-        </div>
-      )}
 
       {/* Slider custo de vida */}
       <div className="slider-row">
@@ -539,92 +480,8 @@ function WhatIfSection() {
         </div>
       </div>
 
-      {/* Meus Cenários — saved scenarios list */}
-      {scenarios.length > 0 && (
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-            Meus Cenários ({scenarios.length}/10)
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {scenarios.map(sc => (
-              <div key={sc.id} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'var(--card2)', borderRadius: 6, padding: '8px 10px', flexWrap: 'wrap' }}>
-                <input
-                  type="checkbox"
-                  checked={compareIds.includes(sc.id)}
-                  onChange={e => {
-                    if (e.target.checked) setCompareIds(ids => ids.length < 2 ? [...ids, sc.id] : ids);
-                    else setCompareIds(ids => ids.filter(i => i !== sc.id));
-                  }}
-                  title="Selecionar para comparar (máx 2)"
-                />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sc.name}</div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                    {new Date(sc.createdAt).toLocaleDateString('pt-BR')}
-                    {sc.result?.p_fire != null && ` · P(FIRE): ${sc.result.p_fire.toFixed(0)}%`}
-                    {sc.inputs?.custo_vida != null && ` · Gasto: R$${(sc.inputs.custo_vida / 1000).toFixed(0)}k`}
-                  </div>
-                </div>
-                <button
-                  style={{ fontSize: 'var(--text-xs)', padding: '3px 8px', borderRadius: 5, background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap' }}
-                  onClick={() => {
-                    const loaded = loadScenario(sc.id);
-                    if (loaded) setCusto(loaded.inputs.custo_vida);
-                  }}
-                >
-                  Carregar
-                </button>
-                <button
-                  style={{ fontSize: 'var(--text-xs)', padding: '3px 8px', borderRadius: 5, background: 'transparent', color: 'var(--red)', border: '1px solid var(--red)', cursor: 'pointer' }}
-                  onClick={() => {
-                    deleteScenario(sc.id);
-                    setCompareIds(ids => ids.filter(i => i !== sc.id));
-                  }}
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Comparação side-by-side */}
-          {compareIds.length === 2 && (() => {
-            const [sc1, sc2] = compareIds.map(id => scenarios.find(s => s.id === id)!).filter(Boolean);
-            if (!sc1 || !sc2) return null;
-            const rows = [
-              { label: 'Custo de vida', v1: `R$${(sc1.inputs.custo_vida / 1000).toFixed(0)}k/ano`, v2: `R$${(sc2.inputs.custo_vida / 1000).toFixed(0)}k/ano` },
-              { label: 'Retorno equity', v1: `${(sc1.inputs.retorno_equity).toFixed(2)}%`, v2: `${(sc2.inputs.retorno_equity).toFixed(2)}%` },
-              { label: 'P(FIRE)', v1: sc1.result?.p_fire != null ? `${sc1.result.p_fire.toFixed(0)}%` : '—', v2: sc2.result?.p_fire != null ? `${sc2.result.p_fire.toFixed(0)}%` : '—' },
-            ];
-            return (
-              <div style={{ marginTop: 10, background: 'var(--card)', borderRadius: 8, padding: 12, border: '1px solid var(--border)' }}>
-                <div style={{ fontWeight: 700, fontSize: 'var(--text-sm)', marginBottom: 8 }}>Comparação: {sc1.name} vs {sc2.name}</div>
-                <table style={{ width: '100%', fontSize: 'var(--text-xs)', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr>
-                      <th style={{ textAlign: 'left', color: 'var(--muted)', paddingBottom: 4, paddingRight: 8 }}>Métrica</th>
-                      <th style={{ textAlign: 'right', color: 'var(--muted)', paddingBottom: 4, paddingRight: 8 }}>{sc1.name}</th>
-                      <th style={{ textAlign: 'right', color: 'var(--muted)', paddingBottom: 4 }}>{sc2.name}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.map(r => (
-                      <tr key={r.label} style={{ borderTop: '1px solid var(--border)' }}>
-                        <td style={{ padding: '4px 8px 4px 0', color: 'var(--muted)' }}>{r.label}</td>
-                        <td style={{ textAlign: 'right', padding: '4px 8px 4px 0', fontWeight: 600 }}>{r.v1}</td>
-                        <td style={{ textAlign: 'right', padding: '4px 0', fontWeight: 600 }}>{r.v2}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            );
-          })()}
-        </div>
-      )}
-
       <div className="src" style={{ marginTop: '6px' }}>
-        Retornos: fire_matrix.retornos_equity · SWR: fire_swr_percentis · Patrimônio: premissas.patrimonio_atual · Cenários salvos em localStorage
+        Retornos: fire_matrix.retornos_equity · SWR: fire_swr_percentis · Patrimônio: premissas.patrimonio_atual
       </div>
     </CollapsibleSection>
   );
@@ -633,12 +490,19 @@ function WhatIfSection() {
 // ── Stress Test MC ────────────────────────────────────────────────────────────
 
 const STRESS_AGES = [
+  // Pré-FIRE — acumulação
   { value: 39, label: '39 anos (hoje)' },
-  { value: 40, label: '40 anos' },
   { value: 42, label: '42 anos' },
   { value: 45, label: '45 anos' },
-  { value: 47, label: '47 anos' },
   { value: 50, label: '50 anos (FIRE aspiracional)' },
+  { value: 53, label: '53 anos (FIRE base)' },
+  // Pós-FIRE — desacumulação
+  { value: 54, label: '54 anos (ano 1 pós-FIRE — sequence risk)' },
+  { value: 58, label: '58 anos (bond pool esgotado, 100% equity)' },
+  { value: 65, label: '65 anos (INSS disponível)' },
+  { value: 70, label: '70 anos (início Slow-Go)' },
+  { value: 75, label: '75 anos (No-Go — spending smile mínimo)' },
+  { value: 80, label: '80 anos (longevidade crítica — 30a pós-FIRE)' },
 ];
 
 // Inline MC stress chart — lognormal projection with shock applied at ageOnset
@@ -652,7 +516,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
     const years = 100 - currentAge; // always project to age 100
     const ANNUAL_RETURN = annualReturn;
     const ANNUAL_VOL = annualVol;
-    const N_SIMS = 300;
+    const N_SIMS = 500;
     const shockYr = Math.max(0, ageOnset - currentAge);
     const yearsToFire = Math.max(0, fireAge - currentAge);
 
@@ -778,7 +642,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
   return (
     <div style={{ marginBottom: '14px' }}>
       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>
-        Projeção — Evolução Patrimonial após Shock · {300} trajetórias MC · valores nominais BRL
+        Projeção — Evolução Patrimonial após Shock · {500} trajetórias MC · valores nominais BRL
       </div>
       <EChart option={option} style={{ height: 300 }} />
       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '3px' }}>
@@ -857,7 +721,7 @@ function StressTestSection() {
             { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
             { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
             { label: 'Distribuição', value: 'Normal (Box-Muller)' },
-            { label: 'Trajetórias', value: '300 MC' },
+            { label: 'Trajetórias', value: '500 MC' },
             { label: 'Horizonte', value: `até 100a (${100 - startAge} anos)` },
           ].map(c => (
             <div key={c.label} style={{ background: 'var(--card2)', border: '1px solid var(--border)', borderRadius: '6px', padding: '5px 10px', flexShrink: 0 }}>
