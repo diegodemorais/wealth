@@ -7,8 +7,6 @@ import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
-import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
-import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { useWellnessScore } from '@/hooks/useWellnessScore';
 
@@ -150,65 +148,64 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 4. SEÇÃO: Time to FIRE — Big number + Progresso */}
-      <TimeToFireProgressBar
-        fireProgress={derived.firePercentage}
-        yearsToFire={derived.fireMonthsAway / 12}
-        patrimonioAtual={derived.firePatrimonioAtual}
-        patrimonioGatilho={derived.firePatrimonioGatilho}
-      />
-
-      {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
-      {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '14px' }}>
-          {data.fire_matrix.by_profile.map((profile: any, i: number) => {
-            const fallbackLabels = ['Solteiro', 'Casado', 'C+Filho'];
-            const displayLabel = profile.label ?? fallbackLabels[i] ?? `Perfil ${i + 1}`;
-            const pfireBase53 = profile.p_fire_53 ?? null;
-            const pfireBase50 = profile.p_fire_50 ?? null;
-            const pfire = pfireBase53 ?? pfireBase50;
-            const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
-            const fireAge = 53;
-            const patMediano = profile.pat_mediano_53 ?? profile.pat_mediano_50 ?? null;
-            const gastoAnual = profile.gasto_anual ?? null;
-            const fmtM = (v: number) => v >= 1_000_000 ? `R$${(v/1_000_000).toFixed(1)}M` : `R$${Math.round(v/1000)}k`;
-            return (
-              <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', borderTop: '2px solid rgba(88,166,255,0.3)' }}>
-                <div style={{ fontSize: 'var(--text-xs)', textTransform: 'uppercase', letterSpacing: '.5px', color: 'var(--muted)', marginBottom: '4px', fontWeight: 600 }}>
-                  {displayLabel}
-                </div>
-                <div style={{ fontSize: '.85rem', fontWeight: 700, color: 'var(--accent)' }}>FIRE {fireAge}</div>
-                <div style={{ fontSize: '.85rem', fontWeight: 700, color: 'var(--green)', marginTop: '2px' }}>
-                  P = {pfire != null ? `${pfire.toFixed(1)}%` : '—'}
-                </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>{fireYear}</div>
-                <div style={{ borderTop: '1px solid var(--border)', marginTop: '8px', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)' }}>
-                    <span style={{ color: 'var(--muted)' }}>Patrimônio</span>
-                    <span style={{ fontWeight: 600 }}>{patMediano != null ? fmtM(patMediano) : '—'}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)' }}>
-                    <span style={{ color: 'var(--muted)' }}>Custo/ano</span>
-                    <span style={{ fontWeight: 600 }}>{gastoAnual != null ? fmtM(gastoAnual) : '—'}</span>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)' }}>
-                    <span style={{ color: 'var(--muted)' }}>SWR</span>
-                    <span style={{ fontWeight: 600 }}>
-                      {gastoAnual != null && patMediano != null && patMediano > 0
-                        ? `${((gastoAnual / patMediano) * 100).toFixed(2)}%`
-                        : '—'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
       {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
       {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
         <SemaforoGatilhos items={derived.dcaItems} />
+      )}
+
+      {/* 5b. DRIFT DA CARTEIRA — atual vs alvo por bucket, sem cálculo de aporte */}
+      {derived && derived.driftItems.filter(i => i.id !== 'Custo').length > 0 && (
+        <div className="mb-3.5">
+          <div className="kpi-label mb-2" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>
+            Drift da Carteira
+          </div>
+          <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
+            {derived.driftItems
+              .filter(i => i.id !== 'Custo')
+              .map(item => {
+                const statusColor =
+                  item.status === 'verde' ? 'var(--green)' :
+                  item.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+                const barPct = Math.min(100, item.atual > 0 ? (item.atual / Math.max(item.atual, item.alvo)) * 100 : 0);
+                const isUnder = item.gap > 0; // gap = alvo - atual; positive = underweight
+                return (
+                  <div key={item.id} className="bg-card2/40 rounded p-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-semibold">{item.nome}</span>
+                      <span className="text-xs" style={{ color: statusColor }}>
+                        {item.gap >= 0 ? '-' : '+'}{item.absGap.toFixed(1)}pp
+                      </span>
+                    </div>
+                    {/* Progress bar: actual fill, target marker */}
+                    <div className="relative h-1.5 bg-card rounded-sm overflow-hidden mb-1.5">
+                      <div
+                        className="absolute left-0 top-0 h-full rounded-sm"
+                        style={{ width: `${barPct}%`, background: statusColor, opacity: 0.8 }}
+                      />
+                      {/* Target marker */}
+                      <div
+                        className="absolute top-0 h-full w-0.5"
+                        style={{
+                          left: `${Math.min(100, (item.alvo / Math.max(item.atual, item.alvo)) * 100)}%`,
+                          background: 'var(--muted)',
+                          opacity: 0.6,
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-xs text-muted">
+                      <span>{item.atual.toFixed(1)}%</span>
+                      <span>→ {item.alvo.toFixed(0)}%</span>
+                    </div>
+                    {item.impactoBrl != null && item.impactoBrl > 5000 && (
+                      <div className="text-xs mt-1" style={{ color: isUnder ? 'var(--yellow)' : 'var(--muted)' }}>
+                        ~R${(item.impactoBrl / 1000).toFixed(0)}k para fechar gap
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+          </div>
+        </div>
       )}
 
       {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
@@ -421,12 +418,6 @@ export default function HomePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
-      <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={true} icon="💸">
-        <div style={{ padding: '0 16px 16px' }}>
-          <CashFlowSankey />
-        </div>
-      </CollapsibleSection>
     </div>
   );
 }
