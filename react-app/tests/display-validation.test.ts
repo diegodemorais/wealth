@@ -236,7 +236,7 @@ describe('Display Validation Suite', () => {
   // ─────────────────────────────────────────────────────────────
   describe('pfire source validation', () => {
     it('pfire should come from pfire_base.base, not hardcoded', () => {
-      // dataWiring line 189: const pfire = (data.pfire_base?.base ?? 90.4) / 100
+      // dataWiring: pfire = data.pfire_base.base / 100, no hardcoded fallback (0 = pipeline broken)
       // If pfire_base.base is present, derived.pfire must equal it / 100
       const pfireFromData = (data as any).pfire_base?.base;
       if (pfireFromData !== undefined) {

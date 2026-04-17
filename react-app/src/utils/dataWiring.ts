@@ -186,7 +186,8 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const moInt = Math.round((yearsLeft - yrInt) * 12);
 
   // P(FIRE) — probability of success from pfire_base (base scenario)
-  const pfire = (data.pfire_base?.base ?? 90.4) / 100;
+  // No fallback: if pfire_base.base is absent, data pipeline is broken — fail visibly
+  const pfire = (data.pfire_base?.base ?? null) !== null ? (data.pfire_base.base / 100) : 0;
 
   // Build gatilhos array
   const gatilhos: any[] = [];
@@ -572,10 +573,10 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     rendaPlusFlowMonthly,
     cryptoFlowMonthly,
 
-    // P(FIRE) scenarios and tornado
-    pfireBase: (data.pfire_base?.base ?? 90.4),
-    pfireFav: (data.pfire_base?.fav ?? 94.1),
-    pfireStress: (data.pfire_base?.stress ?? 86.8),
+    // P(FIRE) scenarios and tornado — source of truth: data.pfire_base (no hardcoded fallback)
+    pfireBase: data.pfire_base?.base ?? 0,
+    pfireFav: data.pfire_base?.fav ?? 0,
+    pfireStress: data.pfire_base?.stress ?? 0,
     tornadoData: data.tornado ?? [],
 
     // P(FIRE) aspiracional scenarios — source: pfire_aspiracional (not scenario_comparison which doesn't exist)

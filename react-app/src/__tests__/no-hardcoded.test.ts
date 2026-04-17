@@ -60,11 +60,10 @@ describe('No Hardcoded Financial Values', () => {
   // Adding a new one here is deliberate documentation; removing one means it's fixed
   const BANNED_HARDCODED: Array<{ pattern: RegExp; description: string; allowedFiles?: string[] }> = [
     {
-      // Hardcoded pfire fallback of 90.4 in component layer (not dataWiring)
-      // dataWiring is the single source of truth; if it falls back here that's ok
+      // Hardcoded pfire fallback of 90.4 anywhere — no fallback allowed, 0 = pipeline broken
       pattern: /\?\?\s*90\.4/,
-      description: 'Hardcoded pfire fallback 90.4 — only allowed in dataWiring.ts',
-      allowedFiles: ['dataWiring.ts'],
+      description: 'Hardcoded pfire fallback 90.4 — must come from data.pfire_base.base',
+      allowedFiles: [], // banned everywhere
     },
   ];
 
