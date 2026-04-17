@@ -186,7 +186,7 @@ export default function HomePage() {
                 {privacyMode ? '••••' : `-R$${(total / 1000).toFixed(0)}k`}
               </div>
               <div className="kpi-sub">
-                {privacyMode ? '••' : items.map(i => `${i.label} ${(i.value / 1000).toFixed(0)}k`).join(' · ')}
+                {privacyMode ? '••••' : items.map(i => `${i.label} ${(i.value / 1000).toFixed(0)}k`).join(' · ')}
               </div>
             </div>
           );
@@ -459,7 +459,7 @@ export default function HomePage() {
                               {pct.toFixed(1)}%
                             </div>
                             <div className="text-xs text-muted mt-0.5">
-                              {privacyMode ? '••' : `R$${val / 1000}k`}
+                              {privacyMode ? '••••' : `R$${val / 1000}k`}
                               {isBase && <span style={{ color: 'var(--accent)' }}> ★</span>}
                             </div>
                           </div>

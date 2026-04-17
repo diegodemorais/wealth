@@ -165,7 +165,7 @@ export default function PerformancePage() {
                   Alpha desde início
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaItdPp != null && alphaItdPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
-                  {privacyMode ? '••' : fmt(alphaItdPp)}
+                  {privacyMode ? '••%' : fmt(alphaItdPp)}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   vs VWRA (market-cap global)
@@ -178,7 +178,7 @@ export default function PerformancePage() {
                   Alpha anualizado
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaAnualizadoPp != null && alphaAnualizadoPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
-                  {privacyMode ? '••' : fmt(alphaAnualizadoPp)}
+                  {privacyMode ? '••%' : fmt(alphaAnualizadoPp)}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   média / ano desde início

@@ -56,7 +56,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             Brasil Concentration
           </div>
           <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 800, marginBottom: '4px', color: concentrationColor }}>
-            {privacyMode ? '••' : `${fmtPct(concentrationBrazil)}%`}
+            {privacyMode ? '••%' : `${fmtPct(concentrationBrazil)}%`}
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
             {concentrationBrazil > 0.65
@@ -80,7 +80,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             </div>
             <div style={subStyle}>
               <span>IPCA+ 2029/2040/2050</span>
-              <span>{privacyMode ? '••' : `${fmtPct(ipcaTotal / totalBrl)}%`}</span>
+              <span>{privacyMode ? '••%' : `${fmtPct(ipcaTotal / totalBrl)}%`}</span>
             </div>
           </div>
 
@@ -91,7 +91,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             </div>
             <div style={subStyle}>
               <span>Título prefixado</span>
-              <span>{privacyMode ? '••' : `${fmtPct(rendaPlus / totalBrl)}%`}</span>
+              <span>{privacyMode ? '••%' : `${fmtPct(rendaPlus / totalBrl)}%`}</span>
             </div>
           </div>
 
@@ -102,7 +102,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             </div>
             <div style={subStyle}>
               <span>Bitcoin + Crypto Legado</span>
-              <span>{privacyMode ? '••' : `${fmtPct(hodl11 / totalBrl)}%`}</span>
+              <span>{privacyMode ? '••%' : `${fmtPct(hodl11 / totalBrl)}%`}</span>
             </div>
           </div>
 
@@ -113,7 +113,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             </div>
             <div style={subStyle}>
               <span>Posições anteriores</span>
-              <span>{privacyMode ? '••' : `${fmtPct(cryptoLegado / totalBrl)}%`}</span>
+              <span>{privacyMode ? '••%' : `${fmtPct(cryptoLegado / totalBrl)}%`}</span>
             </div>
           </div>
         </div>

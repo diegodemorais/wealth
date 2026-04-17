@@ -74,7 +74,7 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase' }}>ΔP(FIRE)</div>
                   <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: deltaColor }}>
-                    {privacyMode ? '••' : `${event.delta_pp > 0 ? '' : '+'}${event.delta_pp.toFixed(1)}pp`}
+                    {privacyMode ? '••%' : `${event.delta_pp > 0 ? '' : '+'}${event.delta_pp.toFixed(1)}pp`}
                   </div>
                 </div>
 
@@ -97,7 +97,7 @@ export function LifeEventsTable({ data }: LifeEventsTableProps) {
                   <div>
                     <div style={{ color: 'var(--muted)', marginBottom: '4px' }}>P(FIRE) @ 2040</div>
                     <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: '0.875rem' }}>
-                      {privacyMode ? '••' : fmtPct(event.pfire_2040, 1)}
+                      {privacyMode ? '••%' : fmtPct(event.pfire_2040, 1)}
                     </div>
                   </div>
 

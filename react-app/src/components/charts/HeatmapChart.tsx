@@ -63,7 +63,7 @@ export function HeatmapChart({ data }: HeatmapChartProps) {
                     title={`${etf} — ${FACTOR_LABELS[FACTORS[j]]}: ${val.toFixed(2)}`}
                   >
                     <span style={styles.cellValue}>
-                      {privacyMode ? '••' : val.toFixed(2)}
+                      {privacyMode ? '••••' : val.toFixed(2)}
                     </span>
                   </td>
                 ))}

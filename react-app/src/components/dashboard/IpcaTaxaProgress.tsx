@@ -86,7 +86,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
           <div style={{ marginBottom: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               <span>IPCA+ 2040</span>
-              <span>{privacyMode ? '••' : `${ipca2040AtualPercent.toFixed(1)}% / ${ipca2040AlvoPercent.toFixed(1)}%`}</span>
+              <span>{privacyMode ? '••%' : `${ipca2040AtualPercent.toFixed(1)}% / ${ipca2040AlvoPercent.toFixed(1)}%`}</span>
             </div>
             <div style={{ height: '12px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden', position: 'relative' }}>
               <div
@@ -109,7 +109,7 @@ const IpcaTaxaProgress: React.FC<IpcaTaxaProgressProps> = ({
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
               <span>IPCA+ 2050</span>
-              <span>{privacyMode ? '••' : `${ipca2050AtualPercent.toFixed(1)}% / ${ipca2050AlvoPercent.toFixed(1)}%`}</span>
+              <span>{privacyMode ? '••%' : `${ipca2050AtualPercent.toFixed(1)}% / ${ipca2050AlvoPercent.toFixed(1)}%`}</span>
             </div>
             <div style={{ height: '12px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
               <div

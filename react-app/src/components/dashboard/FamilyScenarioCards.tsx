@@ -109,7 +109,7 @@ export function FamilyScenarioCards({
               {sc.label}
             </div>
             <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, marginBottom: '8px', color: getPfireColor(sc.value) }}>
-              {privacyMode ? '••' : fmtPct(sc.value / 100, 0)}
+              {privacyMode ? '••%' : fmtPct(sc.value / 100, 0)}
             </div>
             <div style={{ height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
               <div

@@ -10,18 +10,21 @@ import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
 import { calcFireYear, getAnoAtual, getIdadeAtual } from '@/utils/fire';
+import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-function fmtBRL(v: number) {
-  if (v >= 1e6) return `R$ ${(v / 1e6).toFixed(2)}M`;
-  if (v >= 1e3) return `R$ ${(v / 1e3).toFixed(0)}k`;
-  return `R$ ${v.toLocaleString('pt-BR')}`;
-}
+// fmtBRL: local alias for compact BRL (M/k suffix) — delegates to canonical fmtBrlM
+function fmtBRL(v: number) { return fmtBrlM(v); }
 
+// fmtPct: local wrapper — v is already in % (e.g. 4.85), not fraction
 function fmtPct(v: number) {
   return `${v.toFixed(1)}%`;
 }
+
+// fmtPctFrac: wrapper for canonical fmtPct (expects fraction, 0.05 → "5,00%")
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _fmtPctFrac = fmtPctCanon; // re-export available if needed
 
 // ── Simulador FIRE — seção section-critical ───────────────────────────────────
 

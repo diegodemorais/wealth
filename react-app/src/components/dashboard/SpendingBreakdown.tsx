@@ -97,7 +97,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
             {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
           </div>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-            {privacyMode ? '••' : totalMonthly.toFixed(0)} /mês em média
+            {privacyMode ? '••••' : totalMonthly.toFixed(0)} /mês em média
           </div>
         </div>
 
@@ -151,7 +151,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               {mustavePercent.toFixed(1)}%
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? '••' : fmtBrl(mustaveMonthly)}/mês
+              {privacyMode ? '••••' : fmtBrl(mustaveMonthly)}/mês
             </div>
           </div>
 
@@ -164,7 +164,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               {likesPercent.toFixed(1)}%
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? '••' : fmtBrl(likesMonthly)}/mês
+              {privacyMode ? '••••' : fmtBrl(likesMonthly)}/mês
             </div>
           </div>
 
@@ -177,7 +177,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
               {imprevistosPercent.toFixed(1)}%
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? '••' : fmtBrl(imprevistosMonthly)}/mês
+              {privacyMode ? '••••' : fmtBrl(imprevistosMonthly)}/mês
             </div>
           </div>
 
@@ -226,10 +226,10 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
                       {cat.categoria}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                      {privacyMode ? '••' : fmtBrl(cat.totalMensal)}
+                      {privacyMode ? '••••' : fmtBrl(cat.totalMensal)}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                      {privacyMode ? '••' : fmtBrl(cat.totalMensal * 12)}
+                      {privacyMode ? '••••' : fmtBrl(cat.totalMensal * 12)}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
                       {((cat.totalMensal * 12 / totalAnual) * 100).toFixed(1)}%
@@ -239,10 +239,10 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
                 <tr style={{ backgroundColor: 'rgba(71,85,105,0.1)' }}>
                   <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>Total</td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                    {privacyMode ? '••' : fmtBrl(totalMonthly)}
+                    {privacyMode ? '••••' : fmtBrl(totalMonthly)}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                    {privacyMode ? '••' : fmtBrl(totalAnual)}
+                    {privacyMode ? '••••' : fmtBrl(totalAnual)}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>100.0%</td>
                 </tr>

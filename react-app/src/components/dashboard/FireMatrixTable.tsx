@@ -136,7 +136,7 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
                   </TableCell>
                 )}
                 <TableCell className={`py-2 text-center font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`} style={{ width: 56, padding: '6px 8px' }}>
-                  {privacyMode ? '••' : fmtCompact(pat)}
+                  {privacyMode ? '••••' : fmtCompact(pat)}
                 </TableCell>
                 {gastos.map(gasto => {
                   const pfire = getPfire(pat, gasto);
@@ -150,7 +150,7 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
                       }}
                       title={`P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
                     >
-                      {privacyMode ? '••' : fmtPct(pfire / 100, 0)}
+                      {privacyMode ? '••%' : fmtPct(pfire / 100, 0)}
                     </TableCell>
                   );
                 })}

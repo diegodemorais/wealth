@@ -92,10 +92,10 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
                     {privacyMode ? '••••' : pos.qty.toFixed(2)}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
-                    {privacyMode ? '••' : `R$ ${pos.avg_cost.toFixed(2)}`}
+                    {privacyMode ? '••••' : `R$ ${pos.avg_cost.toFixed(2)}`}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
-                    {privacyMode ? '••' : `R$ ${pos.price.toFixed(2)}`}
+                    {privacyMode ? '••••' : `R$ ${pos.price.toFixed(2)}`}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 500, color: 'var(--text)', fontFamily: 'monospace' }}>
                     {privacyMode ? '••••' : fmtBrl(pos.currentValue)}
@@ -104,7 +104,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
                     {privacyMode ? '••••' : `${pl >= 0 ? '+' : ''}${fmtBrl(pl)}`}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 600, fontFamily: 'monospace', color: plPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                    {privacyMode ? '••' : `${plPct >= 0 ? '+' : ''}${(plPct * 100).toFixed(1)}%`}
+                    {privacyMode ? '••%' : `${plPct >= 0 ? '+' : ''}${(plPct * 100).toFixed(1)}%`}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'center' }}>
                     <span style={{
@@ -132,7 +132,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
                 {privacyMode ? '••••' : `${totalPL >= 0 ? '+' : ''}${fmtBrl(totalPL)}`}
               </td>
               <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontFamily: 'monospace', color: totalPLPct >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                {privacyMode ? '••' : `${totalPLPct >= 0 ? '+' : ''}${(totalPLPct * 100).toFixed(1)}%`}
+                {privacyMode ? '••%' : `${totalPLPct >= 0 ? '+' : ''}${(totalPLPct * 100).toFixed(1)}%`}
               </td>
               <td style={{ padding: 'var(--space-2)' }}></td>
             </tr>

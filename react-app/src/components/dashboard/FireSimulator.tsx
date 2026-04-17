@@ -172,7 +172,7 @@ export function FireSimulator({
             P(FIRE) @ Retirement
           </div>
           <div style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, marginBottom: '8px', color: pfireColor }}>
-            {privacyMode ? '••' : fmtPct(results.pfireValue / 100, 0)}
+            {privacyMode ? '••%' : fmtPct(results.pfireValue / 100, 0)}
           </div>
           <div style={{ height: '4px', background: 'var(--bg)', borderRadius: '2px', overflow: 'hidden' }}>
             <div style={{ width: `${Math.min(100, results.pfireValue)}%`, height: '100%', backgroundColor: pfireColor, transition: 'width 0.3s' }} />

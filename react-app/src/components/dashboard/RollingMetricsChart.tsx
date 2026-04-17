@@ -188,7 +188,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
           <div style={{ padding: 'var(--space-3)', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sharpe (BRL)</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: currentSharpe > 1 ? 'var(--green)' : currentSharpe > 0.5 ? 'var(--yellow)' : 'var(--red)' }}>
-              {privacyMode ? '••' : currentSharpe.toFixed(2)}
+              {privacyMode ? '••••' : currentSharpe.toFixed(2)}
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Retorno/risco</div>
           </div>
@@ -196,7 +196,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
           <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sortino Ratio</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: currentSortino > 1.5 ? 'var(--green)' : currentSortino > 0.75 ? 'var(--yellow)' : 'var(--red)' }}>
-              {privacyMode ? '••' : currentSortino.toFixed(2)}
+              {privacyMode ? '••••' : currentSortino.toFixed(2)}
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Risco downside</div>
           </div>
@@ -204,7 +204,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
           <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Volatilidade</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>
-              {privacyMode ? '••' : currentVol.toFixed(2)}%
+              {privacyMode ? '••%' : `${currentVol.toFixed(2)}%`}
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Desvio padrão</div>
           </div>

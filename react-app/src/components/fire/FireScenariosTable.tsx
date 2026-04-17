@@ -43,7 +43,7 @@ export function FireScenariosTable() {
     }).format(v);
   };
 
-  const fmtPct = (v: number) => privacyMode ? '••' : `${v.toFixed(1)}%`;
+  const fmtPct = (v: number) => privacyMode ? '••%' : `${v.toFixed(1)}%`;
 
   if (!scenarios) {
     return (

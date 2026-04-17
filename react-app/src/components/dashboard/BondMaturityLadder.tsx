@@ -95,7 +95,7 @@ const BondMaturityLadder: React.FC<BondMaturityLadderProps> = ({
                 {bucket.percentage.toFixed(1)}%
               </div>
               <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
-                {privacyMode ? '••' : fmtBrl(bucket.value)}
+                {privacyMode ? '••••' : fmtBrl(bucket.value)}
               </div>
             </div>
           ))}

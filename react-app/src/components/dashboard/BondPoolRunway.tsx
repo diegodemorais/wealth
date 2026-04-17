@@ -168,16 +168,16 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
                       {row.year === 0 ? 'Hoje' : row.year === yearsToFire ? 'FIRE' : `+${row.year}a`}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                      {privacyMode ? '••' : (row.startBalance / 1000000).toFixed(2) + 'M'}
+                      {privacyMode ? '••••' : (row.startBalance / 1000000).toFixed(2) + 'M'}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--green)' }}>
-                      {privacyMode ? '••' : `+${(row.investmentReturn / 1000000).toFixed(2)}M`}
+                      {privacyMode ? '••••' : `+${(row.investmentReturn / 1000000).toFixed(2)}M`}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: row.fireExpense > 0 ? 'var(--red)' : 'var(--muted)' }}>
-                      {privacyMode ? '••' : `−${(row.fireExpense / 1000000).toFixed(2)}M`}
+                      {privacyMode ? '••••' : `−${(row.fireExpense / 1000000).toFixed(2)}M`}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', fontWeight: 600, color: row.endBalance > 0 ? 'var(--text)' : 'var(--red)' }}>
-                      {privacyMode ? '••' : (row.endBalance / 1000000).toFixed(2) + 'M'}
+                      {privacyMode ? '••••' : (row.endBalance / 1000000).toFixed(2) + 'M'}
                     </td>
                     <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: coverageColor }}>
                       {row.fireExpense > 0 ? row.coverage.toFixed(1) + 'x' : '—'}

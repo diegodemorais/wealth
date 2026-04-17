@@ -120,6 +120,18 @@ export function getStatusLabel(value: number): 'Crítico' | 'Aviso' | 'OK' | 'Ex
 }
 
 /**
+ * Format number as BRL with M/k suffix (compact Brazilian style)
+ * @example fmtBrlM(1500000) => "R$1.50M"
+ * @example fmtBrlM(25000) => "R$25k"
+ */
+export function fmtBrlM(value: number): string {
+  if (value === null || value === undefined) return '—';
+  if (Math.abs(value) >= 1e6) return `R$ ${(value / 1e6).toFixed(2)}M`;
+  if (Math.abs(value) >= 1e3) return `R$ ${(value / 1e3).toFixed(0)}k`;
+  return `R$ ${value.toLocaleString('pt-BR')}`;
+}
+
+/**
  * Abbreviate large numbers
  * @example fmtShort(1234567) => "1,2M"
  */

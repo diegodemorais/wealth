@@ -93,10 +93,12 @@ export default function WithdrawPage() {
   const incomeTable = data.fire?.income_phases ?? data.income_phases;
 
   // SWR efetivo por perfil — recomputado no frontend (patrimônio MC é fixo, gasto muda)
+  // Guard: se p10/p50/p90_patrimonio ausente, usar null — nunca fazer fallback para swrPercentis.p10/p50/p90
+  // (swrPercentis.p10 é uma taxa, não um patrimônio — denominador incorreto produziria resultado errado)
   const swrEfetivo = swrPercentis ? {
-    p10: swrPercentis.p10_patrimonio ? activeScenarioCfg.custo_vida_base / swrPercentis.p10_patrimonio : swrPercentis.p10,
-    p50: swrPercentis.p50_patrimonio ? activeScenarioCfg.custo_vida_base / swrPercentis.p50_patrimonio : swrPercentis.p50,
-    p90: swrPercentis.p90_patrimonio ? activeScenarioCfg.custo_vida_base / swrPercentis.p90_patrimonio : swrPercentis.p90,
+    p10: swrPercentis.p10_patrimonio != null ? activeScenarioCfg.custo_vida_base / swrPercentis.p10_patrimonio : null,
+    p50: swrPercentis.p50_patrimonio != null ? activeScenarioCfg.custo_vida_base / swrPercentis.p50_patrimonio : null,
+    p90: swrPercentis.p90_patrimonio != null ? activeScenarioCfg.custo_vida_base / swrPercentis.p90_patrimonio : null,
   } : undefined;
 
   // P(FIRE) por perfil — de fire_matrix.by_profile (mesmo MC run, sem precisar reprocessar)
@@ -300,7 +302,7 @@ export default function WithdrawPage() {
                           {cfg.label}
                         </div>
                         <div style={{ fontSize: '1.2rem', fontWeight: 700, color: runway != null && runway >= 7 ? 'var(--green)' : runway != null && runway >= 5 ? 'var(--yellow)' : 'var(--red)' }}>
-                          {runway != null ? (privacyMode ? '••' : `${runway.toFixed(1)}a`) : '—'}
+                          {runway != null ? (privacyMode ? '••••' : `${runway.toFixed(1)}a`) : '—'}
                         </div>
                         <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
                           {runway != null ? (runway >= 7 ? '✓ meta' : runway >= 5 ? '⚠ ok' : '✗ curto') : ''}
@@ -477,7 +479,7 @@ export default function WithdrawPage() {
             const fire_data = (data as any)?.fire ?? {};
             const pat_mediano = fire_data.pat_mediano_fire ?? fire_data.pat_p50_fire ?? premissas.patrimonio_atual ?? 3_500_000;
             const fmtBrl = (v: number) => privacyMode ? '••••' : `R$${(v / 1000).toFixed(0)}k`;
-            const fmtPct = (v: number) => privacyMode ? '••' : `${(v * 100).toFixed(1)}%`;
+            const fmtPct = (v: number) => privacyMode ? '••%' : `${(v * 100).toFixed(1)}%`;
 
             const ltcCenarios = [
               { label: 'Sem LTC', saude_extra: 0 },

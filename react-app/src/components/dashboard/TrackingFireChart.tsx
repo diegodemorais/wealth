@@ -165,7 +165,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
                 Diferença
               </div>
               <div style={{ fontSize: '1.125rem', fontWeight: 700, color: statusColor, marginBottom: '4px' }}>
-                {privacyMode ? '••' : `${diferencaPct.toFixed(1)}%`}
+                {privacyMode ? '••%' : `${diferencaPct.toFixed(1)}%`}
               </div>
               <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                 {status === 'ahead' && '✅ À frente da projeção'}
@@ -184,7 +184,7 @@ const TrackingFireChart: React.FC<TrackingFireChartProps> = ({
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             <span>Meta FIRE: {privacyMode ? 'R$••••' : fmtBrl(fireGatilhoBrl)}</span>
-            <span>{privacyMode ? '••' : `${((patrimonioAtualBrl / fireGatilhoBrl) * 100).toFixed(1)}%`}</span>
+            <span>{privacyMode ? '••%' : `${((patrimonioAtualBrl / fireGatilhoBrl) * 100).toFixed(1)}%`}</span>
           </div>
 
           <div style={{ height: '12px', background: 'rgba(71,85,105,0.15)', borderRadius: '6px', overflow: 'hidden' }}>

@@ -57,7 +57,7 @@ const FinancialWellnessActions: React.FC<FinancialWellnessActionsProps> = ({
             Wellness Score
           </div>
           <div style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--cyan)', marginBottom: '4px' }}>
-            {privacyMode ? '••' : Math.round(wellnessScore)}
+            {privacyMode ? '••••' : Math.round(wellnessScore)}
           </div>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500, marginBottom: '12px' }}>
             {wellnessLabel}
