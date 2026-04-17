@@ -125,7 +125,7 @@ export default function FirePage() {
 
         return (
           <section className="section" id="fireAspirationalSection">
-            <h2>FIRE Aspiracional <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— MC · cenário por perfil</span></h2>
+            <h2>Cenários FIRE <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— MC · cenário por perfil</span></h2>
             <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: '12px' }}>
               {CARDS.map(({ profile, emoji, label, cond, mkt, isAspir }) => {
                 const p = (data as any)?.fire_matrix?.by_profile?.find((x: any) => x.profile === profile);
@@ -142,12 +142,12 @@ export default function FirePage() {
                   pfav   = (data as any)?.pfire_aspiracional?.fav   ?? p.p_fire_50_fav;
                   pstress = (data as any)?.pfire_aspiracional?.stress ?? p.p_fire_50_stress;
                 } else {
-                  // fire_age_50 = year Diego turns 50; p_fire_50 = MC success at that year/gasto
-                  fireAno = p.fire_age_50 ? parseInt(p.fire_age_50, 10) : null;
+                  // Base scenario: FIRE at 53 (age_53 / p_fire_53)
+                  fireAno = p.fire_age_53 ? parseInt(p.fire_age_53, 10) : null;
                   fireIdade = fireAno ? currentAge + (fireAno - (new Date().getFullYear())) : null;
-                  pfire  = p.p_fire_50 as number;
-                  pfav   = p.p_fire_50_fav as number;
-                  pstress = p.p_fire_50_stress as number;
+                  pfire  = p.p_fire_53 as number;
+                  pfav   = p.p_fire_53_fav as number;
+                  pstress = p.p_fire_53_stress as number;
                 }
 
                 const pfireColor = pfire >= 90 ? 'var(--green)' : pfire >= 85 ? 'var(--yellow)' : 'var(--red)';
