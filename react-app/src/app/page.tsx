@@ -43,24 +43,12 @@ export default function HomePage() {
     return <div className="loading-state">⏳ Carregando...</div>;
   }
 
-  // Get IPCA and Renda+ semaforo status from derived
+  // Status dots for Contexto de Mercado — from dcaItems (single source of truth)
   const ipcaTaxa = data?.rf?.ipca2040?.taxa;
   const rendaTaxa = data?.rf?.renda2065?.taxa;
-
-  // Determine semaforo colors based on taxa levels
-  const getIpcaSemaforoColor = (taxa: number | undefined) => {
-    if (!taxa) return 'var(--muted)';
-    if (taxa >= 7.5) return 'var(--green)';
-    if (taxa >= 6.5) return 'var(--yellow)';
-    return 'var(--red)';
-  };
-
-  const getRendaSemaforoColor = (taxa: number | undefined) => {
-    if (!taxa) return 'var(--muted)';
-    if (taxa >= 7.5) return 'var(--green)';
-    if (taxa >= 6.5) return 'var(--yellow)';
-    return 'var(--red)';
-  };
+  const STATUS_DOT: Record<string, string> = { verde: 'var(--green)', amarelo: 'var(--yellow)', vermelho: 'var(--red)' };
+  const ipcaDotColor = STATUS_DOT[derived.dcaItems.find(i => i.id === 'ipca2040')?.status ?? ''] ?? 'var(--muted)';
+  const rendaDotColor = STATUS_DOT[derived.dcaItems.find(i => i.id === 'renda2065')?.status ?? ''] ?? 'var(--muted)';
 
   return (
     <div>
@@ -117,7 +105,7 @@ export default function HomePage() {
                 height: '6px',
                 borderRadius: '50%',
                 flexShrink: 0,
-                backgroundColor: getIpcaSemaforoColor(ipcaTaxa),
+                backgroundColor: ipcaDotColor,
               }}
             />
           </div>
@@ -137,7 +125,7 @@ export default function HomePage() {
                 height: '6px',
                 borderRadius: '50%',
                 flexShrink: 0,
-                backgroundColor: getRendaSemaforoColor(rendaTaxa),
+                backgroundColor: rendaDotColor,
               }}
             />
           </div>
@@ -344,43 +332,6 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-
-          {/* 8b. DCA Status — loop via unified derived.dcaItems (RF only; crypto excluded) */}
-          {derived && derived.dcaItems.filter(i => i.categoria !== 'crypto').length > 0 && (
-            <div className="mb-3.5">
-              <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
-                DCA Status
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {derived.dcaItems
-                  .filter(i => i.categoria !== 'crypto')
-                  .map(item => {
-                    const ref = item.pisoVenda ?? item.pisoCompra;
-                    const gap = item.gapPiso;
-                    const borderColor =
-                      item.id === 'ipca2040' ? 'rgba(6,182,212,0.4)' :
-                      item.id === 'ipca2050' ? 'rgba(139,92,246,0.4)' :
-                      'rgba(245,158,11,0.4)';
-                    return (
-                      <div key={item.id} className="bg-card2/40 rounded p-2.5" style={{ borderLeft: `3px solid ${borderColor}` }}>
-                        <div className="text-xs text-muted mb-1">{item.nome}</div>
-                        {item.taxa != null && (
-                          <div className="text-sm font-bold mb-0.5">Taxa: {item.taxa.toFixed(2)}%</div>
-                        )}
-                        <div className="text-xs text-muted">
-                          {ref != null && `Piso: ${ref.toFixed(1)}%`}
-                          {gap != null && ` | Gap: ${gap >= 0 ? '+' : ''}${gap.toFixed(2)}pp`}
-                        </div>
-                        <div className="text-xs text-muted">
-                          Posição: R${(item.posicaoBrl / 1000).toFixed(0)}k
-                          {item.pctCarteira != null && ` (${item.pctCarteira.toFixed(1)}%)`}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
 
           {/* Macro strip — Selic, Fed, Spread, Exposição cambial only (USD/BRL e BTC estão em Contexto de Mercado acima) */}
           <div className="mb-3.5">
