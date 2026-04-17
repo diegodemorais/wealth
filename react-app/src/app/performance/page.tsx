@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useDashboardStore } from '@/store/dashboardStore';
-import { useUiStore } from '@/store/uiStore';
+import { useState } from 'react';
+import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { TimelineChart } from '@/components/charts/TimelineChart';
@@ -27,16 +26,8 @@ const PERIODS = [
 type Period = (typeof PERIODS)[number]['key'];
 
 export default function PerformancePage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { data, isLoading, dataError, privacyMode } = usePageData();
   const [timelinePeriod, setTimelinePeriod] = useState<Period>('all');
-
-  useEffect(() => {
-    loadDataOnce().catch(e => console.error('Failed to load data:', e));
-  }, [loadDataOnce]);
 
   if (isLoading) {
     return <div className="loading-state">⏳ Carregando dados de performance...</div>;

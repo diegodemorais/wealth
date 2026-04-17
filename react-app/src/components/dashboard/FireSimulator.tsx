@@ -17,8 +17,8 @@ interface FireSimulatorProps {
 }
 
 export function FireSimulator({
-  patrimonioAtual = 3589111,
-  patrimonioGatilho = 8333333,
+  patrimonioAtual = 0,
+  patrimonioGatilho = 0,
   aporteMensalBase = 25000,
   custoVidaBase = 250000,
   retornoEquityBase = 0.0485,

@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { GuardrailsChart } from '@/components/charts/GuardrailsChart';
@@ -36,17 +35,10 @@ function ScenarioBadge({ label, gasto, privacyMode }: { label: string; gasto: nu
 }
 
 export default function WithdrawPage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { data, isLoading, dataError, privacyMode } = usePageData();
+  // Extra withdraw-specific state (not in usePageData)
   const withdrawScenario = useUiStore(s => s.withdrawScenario);
   const setWithdrawScenario = useUiStore(s => s.setWithdrawScenario);
-
-  useEffect(() => {
-    loadDataOnce().catch(e => console.error('Failed to load data:', e));
-  }, [loadDataOnce]);
 
   if (isLoading) {
     return <div className="loading-state">⏳ Carregando dados de retirada...</div>;

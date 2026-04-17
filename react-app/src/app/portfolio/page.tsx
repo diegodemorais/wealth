@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useDashboardStore } from '@/store/dashboardStore';
+import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { DonutCharts } from '@/components/charts/DonutCharts';
@@ -15,14 +14,7 @@ import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 
 export default function PortfolioPage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-
-  useEffect(() => {
-    loadDataOnce().catch(e => console.error('Failed to load data:', e));
-  }, [loadDataOnce]);
+  const { data, isLoading, dataError } = usePageData();
 
   if (isLoading) {
     return <div className="loading-state">Carregando dados da carteira...</div>;

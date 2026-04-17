@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { BacktestChart } from '@/components/charts/BacktestChart';
@@ -558,14 +559,7 @@ function DrawdownHistoricoSection() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function BacktestPage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-
-  useEffect(() => {
-    loadDataOnce().catch(e => console.error('Failed to load data:', e));
-  }, [loadDataOnce]);
+  const { data, isLoading, dataError } = usePageData();
 
   if (isLoading) {
     return <div className="loading-state">⏳ Carregando backtest...</div>;

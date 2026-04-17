@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useDashboardStore } from '@/store/dashboardStore';
-import { useUiStore } from '@/store/uiStore';
+import React, { useState } from 'react';
 import { pfireColor as pfireColorFn, pfireLabel } from '@/utils/fire';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { KpiHero } from '@/components/primitives/KpiHero';
@@ -12,23 +10,13 @@ import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornad
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { useWellnessScore } from '@/hooks/useWellnessScore';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
+import { usePageData } from '@/hooks/usePageData';
 
 export default function HomePage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const derived = useDashboardStore(s => s.derived);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { data, derived, isLoading, dataError, privacyMode } = usePageData();
 
   const wellnessScore = useWellnessScore(data, derived);
   const [activeProfile, setActiveProfile] = useState(0);
-
-  useEffect(() => {
-    loadDataOnce().catch(e => {
-      console.error('NOW page: Failed to load data:', e);
-    });
-  }, [loadDataOnce]);
 
   if (isLoading || (!data && !dataError)) {
     return <div className="loading-state">⏳ Carregando dados...</div>;

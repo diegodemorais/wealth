@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { useMemo } from 'react';
@@ -13,6 +14,18 @@ import { calcFireYear, getAnoAtual, getIdadeAtual } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+
+// B2: single derivation for patrimônio total financeiro — shared by all sub-components
+function derivePatrimonio(data: unknown): number | undefined {
+  const d = data as any;
+  return d?.patrimonio?.total_financeiro ?? d?.premissas?.patrimonio_atual;
+}
+
+// B4: single fraction→percentage conversion — avoids scattered `* 100` throughout file
+function fracToPct(v: number | undefined | null, dec = 2): number | undefined {
+  if (v == null) return undefined;
+  return +((v * 100).toFixed(dec));
+}
 
 // fmtBRL: local alias for compact BRL (M/k suffix) — delegates to canonical fmtBrlM
 function fmtBRL(v: number) { return fmtBrlM(v); }
@@ -55,9 +68,9 @@ function FireSimuladorSection() {
   const premissas  = (data as any)?.premissas ?? {};
 
   const MKT_PRESETS: Record<FireMkt, { retorno: number; label: string }> = {
-    stress: { retorno: +(((fmRetornos.stress ?? premissas.retorno_equity_base ?? 0.0435) * 100).toFixed(2)), label: MKT_LABELS.stress },
-    base:   { retorno: +(((fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) * 100).toFixed(2)), label: MKT_LABELS.base },
-    fav:    { retorno: +(((fmRetornos.fav    ?? premissas.retorno_equity_base ?? 0.0585) * 100).toFixed(2)), label: MKT_LABELS.fav },
+    stress: { retorno: fracToPct(fmRetornos.stress ?? premissas.retorno_equity_base ?? 0.0435) ?? 4.35, label: MKT_LABELS.stress },
+    base:   { retorno: fracToPct(fmRetornos.base   ?? premissas.retorno_equity_base ?? 0.0485) ?? 4.85, label: MKT_LABELS.base },
+    fav:    { retorno: fracToPct(fmRetornos.fav    ?? premissas.retorno_equity_base ?? 0.0585) ?? 5.85, label: MKT_LABELS.fav },
   };
 
   const COND_PRESETS: Record<FireCond, { custo: number; label: string }> = {
@@ -80,7 +93,7 @@ function FireSimuladorSection() {
     if (data && !dataInitialized.current && !custom) {
       dataInitialized.current = true;
       if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
-      if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+      if (premissas.retorno_equity_base != null) setRetorno(fracToPct(premissas.retorno_equity_base));
       const custoInicial = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
       if (custoInicial != null) setCusto(custoInicial);
     }
@@ -110,10 +123,10 @@ function FireSimuladorSection() {
         if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
         if (mkt && ['stress', 'base', 'fav'].includes(mkt)) {
           const retVal = fmRetornos[mkt] ?? premissas.retorno_equity_base;
-          if (retVal != null) setRetorno(+((retVal * 100).toFixed(2)));
+          if (retVal != null) setRetorno(fracToPct(retVal));
           setFireMkt(mkt);
         } else {
-          if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+          if (premissas.retorno_equity_base != null) setRetorno(fracToPct(premissas.retorno_equity_base));
           setFireMkt('base');
         }
         setFireCond(cond);
@@ -126,7 +139,7 @@ function FireSimuladorSection() {
   }, [data]);
 
   const currentAge: number | undefined = premissas.idade_atual;
-  const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissas.patrimonio_atual;
+  const patrimonio: number | undefined = derivePatrimonio(data);
 
   // P(sucesso) — fixed base market reference (matches FIRE page values)
   // pfire_aspiracional.base = 86.5%, pfire_base.base = 90.4%
@@ -186,7 +199,7 @@ function FireSimuladorSection() {
     if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
     // Aspiracional: mercado favorável + gasto mínimo (solteiro)
     const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
-    if (favRetorno != null) setRetorno(+((favRetorno * 100).toFixed(2)));
+    if (favRetorno != null) setRetorno(fracToPct(favRetorno));
     const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
     if (ci != null) setCusto(ci);
     setFireCond('solteiro');
@@ -375,9 +388,9 @@ function WhatIfSection() {
 
   // Derive presets from data — no hardcoded values
   const WI_PRESETS: Record<WiPreset, { label: string; retorno: number | undefined; swr: number | undefined }> = {
-    stress: { label: '⚠️ Stress',   retorno: fmRetornos.stress != null ? +(fmRetornos.stress * 100).toFixed(2) : undefined, swr: swrPerc.swr_p10 != null ? +(swrPerc.swr_p10 * 100).toFixed(1) : undefined },
-    base:   { label: '✅ Base',     retorno: fmRetornos.base   != null ? +(fmRetornos.base   * 100).toFixed(2) : undefined, swr: swrPerc.swr_p50 != null ? +(swrPerc.swr_p50 * 100).toFixed(1) : undefined },
-    fav:    { label: '🚀 Favorável', retorno: fmRetornos.fav   != null ? +(fmRetornos.fav    * 100).toFixed(2) : undefined, swr: swrPerc.swr_p90 != null ? +(swrPerc.swr_p90 * 100).toFixed(1) : undefined },
+    stress: { label: '⚠️ Stress',   retorno: fracToPct(fmRetornos.stress), swr: fracToPct(swrPerc.swr_p10, 1) },
+    base:   { label: '✅ Base',     retorno: fracToPct(fmRetornos.base),   swr: fracToPct(swrPerc.swr_p50, 1) },
+    fav:    { label: '🚀 Favorável', retorno: fracToPct(fmRetornos.fav),   swr: fracToPct(swrPerc.swr_p90, 1) },
   };
 
   useEffect(() => {
@@ -389,7 +402,7 @@ function WhatIfSection() {
   }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const preset = WI_PRESETS[wiPreset];
-  const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissasWI.patrimonio_atual;
+  const patrimonio: number | undefined = derivePatrimonio(data);
   const patNecessario = (custo != null && preset.swr != null) ? custo / (preset.swr / 100) : undefined;
   const pctLimite = (patrimonio != null && patNecessario != null) ? (patrimonio / patNecessario) * 100 : null;
 
@@ -642,7 +655,7 @@ function StressTestSection() {
   const dataInitST = useRef(false);
 
   const premissasST = (data as any)?.premissas ?? {};
-  const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissasST.patrimonio_atual;
+  const patrimonio: number | undefined = derivePatrimonio(data);
   const annualReturn: number = premissasST.retorno_equity_base ?? 0;
   const annualVol: number = premissasST.volatilidade_equity ?? 0;
   const startAge: number = premissasST.idade_atual ?? 0;
@@ -762,9 +775,7 @@ function CascadeSection() {
   const cambio: number = data?.cambio ?? 0;
 
   // Derive total portfolio value (BRL) — from data only, no hardcoded fallback
-  const totalBrl: number | undefined =
-    (data?.patrimonio as any)?.total_financeiro ??
-    (data as any)?.premissas?.patrimonio_atual;
+  const totalBrl: number | undefined = derivePatrimonio(data);
 
   // IPCA+ Longo gap — from unified derived.dcaItems (single source of truth)
   const ipcaItem = derived?.dcaItems?.find(i => i.id === 'ipca2040') ?? null;
@@ -906,15 +917,8 @@ function CascadeSection() {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function SimulatorsPage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
+  const { data, isLoading, dataError } = usePageData();
   const runMC = useDashboardStore(s => s.runMC);
-
-  useEffect(() => {
-    loadDataOnce().catch(e => console.error('Failed to load data:', e));
-  }, [loadDataOnce]);
 
   useEffect(() => {
     if (data && !isLoading && !dataError) {

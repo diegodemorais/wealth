@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 
-import { useDashboardStore } from '@/store/dashboardStore';
 import { pfireColor as pfireColorFn } from '@/utils/fire';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
@@ -14,19 +13,10 @@ import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
-import { useUiStore } from '@/store/uiStore';
+import { usePageData } from '@/hooks/usePageData';
 
 export default function FirePage() {
-  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
-  const data = useDashboardStore(s => s.data);
-  const derived = useDashboardStore(s => s.derived);
-  const isLoading = useDashboardStore(s => s.isLoadingData);
-  const dataError = useDashboardStore(s => s.dataLoadError);
-  const privacyMode = useUiStore(s => s.privacyMode);
-
-  useEffect(() => {
-    loadDataOnce().catch(e => console.error('Failed to load data:', e));
-  }, [loadDataOnce]);
+  const { data, derived, isLoading, dataError, privacyMode } = usePageData();
 
   // Must be before early returns — Rules of Hooks require unconditional hook calls
   // Compute approximate retirement age for each fire_matrix patrimônio row
