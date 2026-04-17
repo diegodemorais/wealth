@@ -40,25 +40,9 @@ export default function FirePage() {
     loadDataOnce().catch(e => console.error('Failed to load data:', e));
   }, [loadDataOnce]);
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando dados FIRE...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>Erro ao carregar FIRE:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <div className="warning-state">Dados carregados mas seção FIRE não disponível</div>;
-  }
-
+  // Must be before early returns — Rules of Hooks require unconditional hook calls
   // Compute approximate retirement age for each fire_matrix patrimônio row
   // Uses fire_trilha P50 projection; extrapolates beyond its end with recent monthly growth
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const fireMatrixIdades = useMemo(() => {
     const ft = (data as any)?.fire_trilha;
     const pats: number[] = (data as any)?.fire_matrix?.patrimonios ?? [];
@@ -93,6 +77,22 @@ export default function FirePage() {
       return null;
     });
   }, [data]);
+
+  if (isLoading) {
+    return <div className="loading-state">⏳ Carregando dados FIRE...</div>;
+  }
+
+  if (dataError) {
+    return (
+      <div className="error-state">
+        <strong>Erro ao carregar FIRE:</strong> {dataError}
+      </div>
+    );
+  }
+
+  if (!data) {
+    return <div className="warning-state">Dados carregados mas seção FIRE não disponível</div>;
+  }
 
   return (
     <div>
