@@ -123,40 +123,40 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. PASSIVOS — linha compacta (IR diferido + hipoteca + empréstimo quando disponível) */}
+      {/* 3. PASSIVOS — card com itens e total */}
       {(() => {
         const passivos = (data as any)?.passivos;
         const irDiferido = (data as any)?.tax?.ir_diferido_total_brl ?? null;
-        const items: { label: string; value: number }[] = passivos
+        const items: { label: string; value: number; note?: string }[] = passivos
           ? [
-              passivos.hipoteca_brl   ? { label: 'Hipoteca SAC',   value: passivos.hipoteca_brl }   : null,
+              passivos.hipoteca_brl   ? { label: 'Hipoteca SAC', value: passivos.hipoteca_brl, note: passivos.hipoteca_vencimento ? `vence ${passivos.hipoteca_vencimento.slice(0, 4)}` : undefined } : null,
               passivos.emprestimo_xp_brl ? { label: 'Empréstimo XP', value: passivos.emprestimo_xp_brl } : null,
-              passivos.ir_diferido_brl   ? { label: 'IR Diferido',   value: passivos.ir_diferido_brl }   : null,
-            ].filter(Boolean) as { label: string; value: number }[]
+              passivos.ir_diferido_brl   ? { label: 'IR Diferido', value: passivos.ir_diferido_brl, note: 'Lei 14.754' } : null,
+            ].filter(Boolean) as { label: string; value: number; note?: string }[]
           : irDiferido
-          ? [{ label: 'IR Diferido', value: irDiferido }]
+          ? [{ label: 'IR Diferido', value: irDiferido, note: 'Lei 14.754' }]
           : [];
         if (items.length === 0) return null;
         const total = passivos?.total_brl ?? items.reduce((s, i) => s + i.value, 0);
         return (
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs mb-3.5 px-1" style={{ opacity: 0.85 }}>
-            <span className="text-muted uppercase tracking-wide font-semibold text-xs">Passivos:</span>
-            {items.map((item, i) => (
-              <span key={i}>
-                <span className="text-muted">{item.label}:</span>{' '}
-                <span className="font-mono" style={{ color: 'var(--red)' }}>
-                  {privacyMode ? '••••' : `-R$${(item.value / 1000).toFixed(0)}k`}
-                </span>
+          <div className="bg-card border border-border/50 rounded mb-3.5" style={{ borderLeft: '3px solid var(--red)' }}>
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/30">
+              <span className="text-xs font-semibold uppercase tracking-wide text-muted">Passivos</span>
+              <span className="text-sm font-bold font-mono" style={{ color: 'var(--red)' }}>
+                {privacyMode ? '••••' : `-R$${(total / 1000).toFixed(0)}k`}
               </span>
-            ))}
-            {items.length > 1 && (
-              <span>
-                <span className="text-muted font-semibold">Total:</span>{' '}
-                <span className="font-mono font-semibold" style={{ color: 'var(--red)' }}>
-                  {privacyMode ? '••••' : `-R$${(total / 1000).toFixed(0)}k`}
-                </span>
-              </span>
-            )}
+            </div>
+            <div className="flex flex-wrap gap-x-6 gap-y-1 px-4 py-2.5">
+              {items.map((item, i) => (
+                <div key={i} className="flex items-baseline gap-1.5">
+                  <span className="text-xs text-muted">{item.label}</span>
+                  <span className="text-xs font-mono font-semibold" style={{ color: 'var(--red)' }}>
+                    {privacyMode ? '••••' : `-R$${(item.value / 1000).toFixed(0)}k`}
+                  </span>
+                  {item.note && <span className="text-xs text-muted opacity-60">{item.note}</span>}
+                </div>
+              ))}
+            </div>
           </div>
         );
       })()}

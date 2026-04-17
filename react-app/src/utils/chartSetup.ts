@@ -786,41 +786,56 @@ export function createSankeyChartOption(options: BaseChartOptions) {
 export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const { data, privacyMode, theme } = options;
 
-  // Use real Monte Carlo data from fire_swr_percentis
-  const fsp = (data as any)?.fire_swr_percentis ?? {};
   const ft = (data as any)?.fire_trilha ?? {};
-  const currentNetworth = ft.realizado_brl?.[ft.realizado_brl.length - 1] ?? 3500000;
-  const p10Target = fsp.patrimonio_p10_2040 ?? (currentNetworth * Math.pow(1.05, 14));
-  const p50Target = fsp.patrimonio_p50_2040 ?? (currentNetworth * Math.pow(1.07, 14));
-  const p90Target = fsp.patrimonio_p90_2040 ?? (currentNetworth * Math.pow(1.09, 14));
-  const fireDate = ft.meta_fire_date ?? '2040-01';
-  const fireYear = parseInt(fireDate.split('-')[0], 10);
-  const currentYear = new Date().getFullYear();
-  const yearsToFire = Math.max(1, fireYear - currentYear);
-  const yearsPost = 30 - yearsToFire;
-  const years = 30;
 
-  // Build interpolated paths: exponential from today to MC targets
-  const xAxisData = Array.from({ length: years }, (_, i) => {
-    return `${currentYear + i + 1}`;
+  // --- Raw monthly data from fire_trilha ---
+  const dates: string[]           = ft.dates          ?? [];
+  const realizadoBrl: (number|null)[] = ft.realizado_brl ?? [];
+  const trilhaBrl: (number|null)[] = ft.trilha_brl    ?? [];
+  const p10Brl: number[]          = ft.trilha_p10_brl ?? [];
+  const p90Brl: number[]          = ft.trilha_p90_brl ?? [];
+  const nHistorico: number        = ft.n_historico     ?? 0;
+  const fireDate: string          = ft.meta_fire_date  ?? '2040-01';
+  const fireYear: number          = parseInt(fireDate.split('-')[0], 10);
+
+  // --- Post-FIRE extension (15 years after FIRE date) ---
+  const postFireYears = 15;
+  const nFuture = dates.length - nHistorico;
+  const p10End = p10Brl.length >= nFuture ? p10Brl[nFuture - 1] : (p10Brl.at(-1) ?? 0);
+  const p50End = (trilhaBrl[dates.length - 1] ?? 0) as number;
+  const p90End = p90Brl.length >= nFuture ? p90Brl[nFuture - 1] : (p90Brl.at(-1) ?? 0);
+
+  const postFireDates = Array.from({ length: postFireYears }, (_, i) => `${fireYear + i + 1}`);
+  const p10Post = Array.from({ length: postFireYears }, (_, i) => p10End * Math.pow(1 + 0.03,   i + 1));
+  const p50Post = Array.from({ length: postFireYears }, (_, i) => p50End * Math.pow(1 + 0.0485, i + 1));
+  const p90Post = Array.from({ length: postFireYears }, (_, i) => p90End * Math.pow(1 + 0.06,   i + 1));
+
+  // --- Align MC bands: null for historical portion, MC values for future ---
+  // MC simulation covers n_future future months (index 0 = first future month).
+  const p10Aligned: (number|null)[] = [
+    ...Array(nHistorico).fill(null),
+    ...p10Brl.slice(0, nFuture),
+    ...p10Post,
+  ];
+  const p90Aligned: (number|null)[] = [
+    ...Array(nHistorico).fill(null),
+    ...p90Brl.slice(0, nFuture),
+    ...p90Post,
+  ];
+  const p50Full: (number|null)[] = [...trilhaBrl, ...p50Post];
+  const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYears).fill(null)];
+
+  // --- X-axis: monthly dates + post-FIRE years; show one label per year ---
+  const allDates = [...dates, ...postFireDates];
+  // Show label only when month === '01' or it's a year-only string (post-FIRE)
+  const xAxisLabels = allDates.map(d => {
+    if (d.length === 4) return d; // post-FIRE year string
+    const [yr, mo] = d.split('-');
+    return mo === '01' ? yr : '';
   });
 
-  const buildPath = (target: number, ratePost: number) =>
-    Array.from({ length: years }, (_, i) => {
-      const yr = i + 1;
-      if (yr <= yearsToFire) {
-        // Interpolate exponentially to target
-        const t = yr / yearsToFire;
-        return currentNetworth * Math.pow(target / currentNetworth, t);
-      } else {
-        // Post-FIRE: grow at specified real rate from FIRE target
-        return target * Math.pow(1 + ratePost, yr - yearsToFire);
-      }
-    });
-
-  const p10Data = buildPath(p10Target, 0.03);
-  const p50Data = buildPath(p50Target, 0.045);
-  const p90Data = buildPath(p90Target, 0.06);
+  // Mark FIRE date index for vertical line
+  const fireDateIndex = dates.indexOf(fireDate);
 
   return {
     color: [CHART_COLORS.red, CHART_COLORS.green, CHART_COLORS.accent],
@@ -831,84 +846,123 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       textStyle: theme.tooltip.textStyle,
       formatter: (params: any) => {
         if (!Array.isArray(params)) return '';
-        let result = `${params[0].axisValueLabel}<br/>`;
+        const label = allDates[params[0]?.dataIndex] ?? params[0]?.axisValueLabel ?? '';
+        let result = `<b>${label}</b><br/>`;
         params.forEach((p: any) => {
-          result += `${p.marker} ${p.seriesName}: R$ ${(p.value / 1e6).toFixed(1)}M<br/>`;
+          if (p.value == null || p.seriesName?.startsWith('_')) return;
+          const val = privacyMode ? '••••' : `R$ ${(p.value / 1e6).toFixed(2)}M`;
+          result += `${p.marker} ${p.seriesName}: ${val}<br/>`;
         });
         return result;
       },
     },
-    legend: { display: !privacyMode, textStyle: { color: theme.textStyle.color }, top: 10 },
+    legend: {
+      show: !privacyMode,
+      textStyle: { color: theme.textStyle.color },
+      top: 10,
+      data: ['Realizado', 'P50 (Mediana)', 'P10 (Pessimista)', 'P90 (Otimista)'],
+    },
     grid: { left: 60, right: 20, top: 40, bottom: 40, containLabel: true },
     xAxis: {
       type: 'category' as const,
-      data: xAxisData,
+      data: xAxisLabels,
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 11 },
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
         color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
-        fontSize: 12,
+        fontSize: 11,
       },
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
+    ...(fireDateIndex >= 0 ? {
+      markLine: undefined,
+    } : {}),
     series: [
-      // Transparent baseline for band (stacked below band)
+      // ── Transparent baseline for P10/P90 band (stacked) ──
       {
-        name: 'P10_base',
+        name: '_band_base',
         type: 'line' as const,
-        data: p10Data,
+        data: p10Aligned,
         smooth: true,
-        stack: 'confidence',
+        stack: 'mc_band',
         lineStyle: { width: 0 },
         symbolSize: 0,
         areaStyle: { color: 'transparent', opacity: 0 },
         tooltip: { show: false },
-        legend: { show: false },
+        legendHoverLink: false,
+        silent: true,
       },
-      // Band height = P90 - P10
+      // ── Band fill: height = P90 - P10 ──
       {
-        name: 'Banda P10–P90',
+        name: '_band_fill',
         type: 'line' as const,
-        data: p90Data.map((v, i) => v - p10Data[i]),
+        data: p90Aligned.map((v, i) =>
+          v != null && p10Aligned[i] != null ? v - (p10Aligned[i] as number) : null
+        ),
         smooth: true,
-        stack: 'confidence',
+        stack: 'mc_band',
         lineStyle: { width: 0 },
         symbolSize: 0,
-        areaStyle: { color: CHART_COLORS.green, opacity: 0.12 },
+        areaStyle: { color: CHART_COLORS.green, opacity: 0.1 },
         tooltip: { show: false },
-        legend: { show: false },
+        legendHoverLink: false,
+        silent: true,
       },
+      // ── Realizado (historical) ──
+      {
+        name: 'Realizado',
+        type: 'line' as const,
+        data: realizadoFull,
+        smooth: false,
+        lineStyle: { width: 2.5, color: CHART_COLORS.muted },
+        itemStyle: { color: CHART_COLORS.muted },
+        symbolSize: 0,
+        connectNulls: false,
+        ...(fireDateIndex >= 0 ? {
+          markLine: {
+            symbol: 'none',
+            lineStyle: { color: CHART_COLORS.accent, type: 'dashed', width: 1.5, opacity: 0.7 },
+            data: [{ xAxis: fireDateIndex, name: 'FIRE Date' }],
+            label: { show: true, position: 'insideEndTop', formatter: 'FIRE', color: CHART_COLORS.accent, fontSize: 11 },
+          },
+        } : {}),
+      },
+      // ── P10 (pessimista) — future only ──
       {
         name: 'P10 (Pessimista)',
         type: 'line' as const,
-        data: p10Data,
+        data: p10Aligned,
         smooth: true,
         lineStyle: { width: 1.5, color: CHART_COLORS.red, type: 'dashed' as const },
         itemStyle: { color: CHART_COLORS.red },
         symbolSize: 0,
+        connectNulls: false,
       },
+      // ── P50 (mediana) — full range ──
       {
         name: 'P50 (Mediana)',
         type: 'line' as const,
-        data: p50Data,
+        data: p50Full,
         smooth: true,
         lineStyle: { width: 2.5, color: CHART_COLORS.green },
         itemStyle: { color: CHART_COLORS.green },
         symbolSize: 0,
-        areaStyle: { color: CHART_COLORS.green, opacity: 0.05 },
       },
+      // ── P90 (otimista) — future only ──
       {
         name: 'P90 (Otimista)',
         type: 'line' as const,
-        data: p90Data,
+        data: p90Aligned,
         smooth: true,
         lineStyle: { width: 1.5, color: CHART_COLORS.accent, type: 'dashed' as const },
         itemStyle: { color: CHART_COLORS.accent },
         symbolSize: 0,
+        connectNulls: false,
       },
     ],
   };
