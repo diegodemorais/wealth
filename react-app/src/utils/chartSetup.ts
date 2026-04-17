@@ -1005,14 +1005,14 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
 
     if (btDates.length > 1 && btTarget.length > 1 && btShadow.length > 1) {
       const lastDate = btDates[btDates.length - 1];
-      const [lastY] = lastDate.split('-').map(Number);
-      const now = new Date();
+      const [lastY, lastM] = lastDate.split('-').map(Number);
+      // Order: historical → recent (Desde Início left, YTD right = most actionable)
       const periodStarts: Array<{ label: string; startYm: string }> = [
-        { label: 'YTD', startYm: `${lastY}-01` },
-        { label: '1a', startYm: `${lastY - 1}-${btDates[btDates.length - 1].split('-')[1]}` },
-        { label: '3a', startYm: `${lastY - 3}-${btDates[btDates.length - 1].split('-')[1]}` },
-        { label: '5a', startYm: `${lastY - 5}-${btDates[btDates.length - 1].split('-')[1]}` },
         { label: 'Desde Início', startYm: btDates[0] },
+        { label: '5a',  startYm: `${lastY - 5}-${String(lastM).padStart(2, '0')}` },
+        { label: '3a',  startYm: `${lastY - 3}-${String(lastM).padStart(2, '0')}` },
+        { label: '1a',  startYm: `${lastY - 1}-${String(lastM).padStart(2, '0')}` },
+        { label: 'YTD', startYm: `${lastY}-01` },
       ];
       const periodAlpha: Array<{ label: string; alpha: number }> = [];
       for (const { label, startYm } of periodStarts) {
@@ -1025,12 +1025,25 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
       xAxisData = periodAlpha.map(p => p.label);
       deltaData = periodAlpha.map(p => p.alpha);
     } else {
-      xAxisData = ['YTD', '1a', '3a', '5a', 'Desde Início'];
+      xAxisData = ['Desde Início', '5a', '3a', '1a', 'YTD'];
       deltaData = Array(5).fill(0);
     }
   }
 
-  const colors = deltaData.map(v => v >= 0 ? CHART_COLORS.green : CHART_COLORS.red);
+  // Recency gradient: historical = muted, recent = vivid
+  // Opacities left→right: 0.35, 0.5, 0.65, 0.85, 1.0
+  const opacities = [0.35, 0.5, 0.65, 0.85, 1.0];
+  const n = deltaData.length;
+  const colors = deltaData.map((v, i) => {
+    const opacity = opacities[Math.max(0, opacities.length - n + i)] ?? 1.0;
+    if (v >= 0) {
+      // Green gradient: rgb(62, 211, 129)
+      return `rgba(62, 211, 129, ${opacity})`;
+    } else {
+      // Red gradient: rgb(239, 68, 68)
+      return `rgba(239, 68, 68, ${opacity})`;
+    }
+  });
 
   return {
     tooltip: {
@@ -1041,7 +1054,8 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
       formatter: (params: any) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const p = params[0];
-        return `${p.name}<br/>${p.marker} Delta: ${p.value.toFixed(2)}%`;
+        const sign = p.value >= 0 ? '+' : '';
+        return `<strong>${p.name}</strong><br/>Alpha: <strong>${sign}${p.value.toFixed(2)}pp</strong> vs VWRA`;
       },
       axisPointer: { type: 'shadow' as const },
     },
@@ -1055,7 +1069,6 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
     },
     yAxis: {
       type: 'value' as const,
-      min: 0,
       axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}pp', fontSize: 11 },
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
@@ -1067,7 +1080,7 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
         label: {
           show: true,
           position: 'top' as const,
-          formatter: (p: any) => privacyMode ? '•' : `${p.value > 0 ? '+' : ''}${p.value.toFixed(1)}pp`,
+          formatter: (p: any) => privacyMode ? '•' : `${p.value >= 0 ? '+' : ''}${p.value.toFixed(1)}pp`,
           color: CHART_COLORS.muted,
           fontSize: 10,
         },
