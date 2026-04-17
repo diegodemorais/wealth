@@ -95,7 +95,7 @@ export function KpiHero({
           {privacyMode ? '••••' : yearsMonthsStr}
         </div>
         {fireSubtitle && (
-          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+          <div className="kpi-sub">
             {privacyMode ? '••••' : fireSubtitle}
           </div>
         )}
@@ -108,7 +108,7 @@ export function KpiHero({
           {privacyMode ? '••••' : fmtPct(fireProgress, 1)}
         </div>
         {gatilhoSubtitle && (
-          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+          <div className="kpi-sub">
             {privacyMode ? '••••' : gatilhoSubtitle}
           </div>
         )}

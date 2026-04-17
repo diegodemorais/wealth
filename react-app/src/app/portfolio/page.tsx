@@ -89,15 +89,15 @@ export default function PortfolioPage() {
                 return (
                   <div key={etf.name}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
-                      <span style={{ fontWeight: 700, fontSize: '.88rem' }}>{etf.name}</span>
+                      <span style={{ fontWeight: 700, fontSize: 'var(--text-md)' }}>{etf.name}</span>
                       <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                        <span style={{ fontSize: '.75rem', color: 'var(--muted)' }}>
+                        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                           atual <strong style={{ color: 'var(--text)' }}>{pctAtual.toFixed(1)}%</strong>
                         </span>
-                        <span style={{ fontSize: '.75rem', color: 'var(--muted)' }}>
+                        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
                           alvo <strong style={{ color: 'var(--text)' }}>{pctAlvo.toFixed(1)}%</strong>
                         </span>
-                        <span style={{ fontSize: '.82rem', fontWeight: 700, color: deltaColor }}>
+                        <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: deltaColor }}>
                           {sign}{delta.toFixed(1)}pp
                         </span>
                       </div>
@@ -125,7 +125,7 @@ export default function PortfolioPage() {
                       <div style={{
                         position: 'absolute',
                         left: `${Math.min(100, pctAlvo)}%`,
-                        top: 14, fontSize: '.5rem', color: 'var(--muted)',
+                        top: 14, fontSize: 'var(--text-xs)', color: 'var(--muted)',
                         transform: 'translateX(-50%)',
                         whiteSpace: 'nowrap',
                       }}>▲ {pctAlvo.toFixed(0)}%</div>
@@ -204,7 +204,7 @@ export default function PortfolioPage() {
         <div className="section">
           <h2>Últimas Operações</h2>
           <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: '.8rem', marginBottom: '8px' }}>
+          <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: 'var(--text-base)', marginBottom: '8px' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid var(--card2)' }}>
                 <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Data</th>
@@ -219,10 +219,10 @@ export default function PortfolioPage() {
                 const valorStr = typeof op.valor === 'string' ? op.valor : String(op.valor ?? '—');
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
-                    <td style={{ padding: '6px 6px', fontSize: '.75rem', color: 'var(--muted)', whiteSpace: 'nowrap' }}>{op.data}</td>
-                    <td style={{ padding: '6px 6px', fontSize: '.75rem', whiteSpace: 'nowrap' }}>{op.tipo}</td>
+                    <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)', whiteSpace: 'nowrap' }}>{op.data}</td>
+                    <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', whiteSpace: 'nowrap' }}>{op.tipo}</td>
                     <td style={{ padding: '6px 6px', fontWeight: 600 }}>{op.ativo}</td>
-                    <td style={{ padding: '6px 6px', fontSize: '.75rem', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
+                    <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
                     <td style={{ padding: '6px 6px', textAlign: 'right', color: 'var(--green)', fontWeight: 700, whiteSpace: 'nowrap' }}>
                       {valorStr}
                     </td>

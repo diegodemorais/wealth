@@ -76,12 +76,17 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({ items }) => {
 
       {/* Summary when collapsed */}
       {!isOpen && (
-        <div className="flex items-center gap-1.5 mx-4 mb-3 text-xs text-muted">
-          <span
-            className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-            style={{ background: STATUS_COLOR[worstStatus] ?? 'var(--muted)' }}
-          />
-          {resumo}
+        <div className="mx-4 mb-3 flex flex-col gap-1">
+          {items.map(item => {
+            const color = STATUS_COLOR[item.status] ?? 'var(--muted)';
+            return (
+              <div key={item.id} className="flex items-center gap-2 text-xs">
+                <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
+                <span className="text-text font-medium w-28 flex-shrink-0">{item.nome}</span>
+                <span className="text-muted">{item.proxAcao}</span>
+              </div>
+            );
+          })}
         </div>
       )}
 

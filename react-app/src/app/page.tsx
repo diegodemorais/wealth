@@ -98,7 +98,7 @@ export default function HomePage() {
           <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: pfireColor }}>
             {pfireAtual != null ? `${pfireAtual.toFixed(1)}%` : '—'}
           </div>
-          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+          <div className="kpi-sub">
             {pfireAtualStress != null && pfireAtualFav != null
               ? `${pfireAtualStress.toFixed(1)}–${pfireAtualFav.toFixed(1)}% [stress–fav]`
               : 'Monte Carlo 10k sims'}
@@ -110,7 +110,7 @@ export default function HomePage() {
           <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: driftMaxColor }}>
             {driftMax != null ? `${driftMax.absGap.toFixed(1)}pp` : '—'}
           </div>
-          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+          <div className="kpi-sub">
             {driftMax != null ? `${driftMax.nome} (${driftMax.gap > 0 ? 'underweight' : 'overweight'})` : '—'}
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function HomePage() {
           <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem' }}>
             {privacyMode ? '••••' : `R$${((derived.aporteMensal ?? 0) / 1000).toFixed(0)}k`}
           </div>
-          <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>mensal</div>
+          <div className="kpi-sub">mensal</div>
         </div>
         {/* Equity YTD USD — SWRD + AVGS weighted by target pesos */}
         {(() => {
@@ -134,7 +134,7 @@ export default function HomePage() {
               <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
                 {ytdUsd == null ? '—' : `${ytdUsd >= 0 ? '+' : ''}${ytdUsd.toFixed(1)}%`}
               </div>
-              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>USD · SWRD+AVGS ({covPct}%)</div>
+              <div className="kpi-sub">USD · SWRD+AVGS ({covPct}%)</div>
             </div>
           );
         })()}
@@ -148,7 +148,7 @@ export default function HomePage() {
               <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
                 {ytd == null ? '—' : `${ytd >= 0 ? '+' : ''}${ytd.toFixed(1)}%`}
               </div>
-              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>BRL · TWR {new Date().getFullYear()}</div>
+              <div className="kpi-sub">BRL · TWR {new Date().getFullYear()}</div>
             </div>
           );
         })()}
@@ -173,7 +173,7 @@ export default function HomePage() {
               <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: 'var(--red)' }}>
                 {privacyMode ? '••••' : `-R$${(total / 1000).toFixed(0)}k`}
               </div>
-              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+              <div className="kpi-sub">
                 {privacyMode ? '••' : items.map(i => `${i.label} ${(i.value / 1000).toFixed(0)}k`).join(' · ')}
               </div>
             </div>

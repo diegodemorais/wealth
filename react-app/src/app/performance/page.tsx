@@ -81,7 +81,7 @@ export default function PerformancePage() {
       <section className="section" id="attrSection">
         <h2>
           {secTitle('performance', 'attribution', 'Performance Attribution — Decomposição do Patrimônio')}{' '}
-          <span style={{ fontSize: '.7rem', fontWeight: 400, color: 'var(--muted)' }}>
+          <span style={{ fontSize: 'var(--text-xs)', fontWeight: 400, color: 'var(--muted)' }}>
             {data.attribution?._inicio ? `(desde ${data.attribution._inicio})` : ''}
           </span>
         </h2>
@@ -112,12 +112,12 @@ export default function PerformancePage() {
               <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 8 }}>
                 {cards.map(c => (
                   <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
-                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
                     <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 8, fontSize: '.72rem', color: 'var(--muted)', textAlign: 'center' }}>
+              <div style={{ marginTop: 8, fontSize: 'var(--text-xs)', color: 'var(--muted)', textAlign: 'center' }}>
                 {pct(attr.aportes ?? 0)} aportes · {pct(attr.retornoUsd ?? 0)} retorno USD · {pct((attr.cambio ?? 0) + (attr.fx ?? 0))} câmbio · reste RF/custo
               </div>
             </>
@@ -161,42 +161,42 @@ export default function PerformancePage() {
             <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
               {/* Card A: Alpha ITD */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
                   Alpha desde início
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaItdPp != null && alphaItdPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
                   {privacyMode ? '••' : fmt(alphaItdPp)}
                 </div>
-                <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   vs VWRA (market-cap global)
                 </div>
               </div>
 
               {/* Card B: Alpha anualizado */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
                   Alpha anualizado
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaAnualizadoPp != null && alphaAnualizadoPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
                   {privacyMode ? '••' : fmt(alphaAnualizadoPp)}
                 </div>
-                <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   média / ano desde início
                 </div>
               </div>
 
               {/* Card C: Alpha líquido esperado pós-haircut (académico) */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
                   Alpha líquido esperado
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
                   −0.16%/ano
                 </div>
-                <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   McLean &amp; Pontiff 2016
                 </div>
-                <div style={{ fontSize: '.58rem', color: 'var(--muted)', marginTop: 2, fontStyle: 'italic' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2, fontStyle: 'italic' }}>
                   haircut 58% pós-publicação
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function PerformancePage() {
 
             const etfsReal = ['AVDV', 'AVUV', 'DGS', 'EIMI', 'SWRD', 'USCC', 'IWVL'].filter(e => fl[e] != null);
 
-            if (!etfsReal.length) return <div style={{ color: 'var(--muted)', fontSize: '.82rem' }}>Sem dados de factor loadings</div>;
+            if (!etfsReal.length) return <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Sem dados de factor loadings</div>;
             return (
               <>
                 <div style={{ display: 'flex', gap: '6px', marginBottom: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -279,7 +279,7 @@ export default function PerformancePage() {
                       background: 'var(--card2)',
                       borderRadius: 'var(--radius-xs)',
                       padding: '3px 8px',
-                      fontSize: '.65rem',
+                      fontSize: 'var(--text-xs)',
                       fontWeight: 600,
                       color: 'var(--accent)',
                     }}>
@@ -292,7 +292,7 @@ export default function PerformancePage() {
                       border: '1px dashed var(--accent)',
                       borderRadius: 'var(--radius-xs)',
                       padding: '3px 8px',
-                      fontSize: '.65rem',
+                      fontSize: 'var(--text-xs)',
                       fontWeight: 600,
                       color: 'var(--accent)',
                     }}>
@@ -301,7 +301,7 @@ export default function PerformancePage() {
                   )}
                 </div>
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.75rem' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--border)' }}>
                         <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)' }}>Fator</th>
@@ -399,7 +399,7 @@ export default function PerformancePage() {
       <CollapsibleSection id="section-fee-analysis" title={secTitle('performance', 'fee-analysis', 'Fee Analysis — Custo de Complexidade (14 anos até FIRE)')} defaultOpen={secOpen('performance', 'fee-analysis', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ overflowX: 'auto' }}>
-            <table id="feeTable" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+            <table id="feeTable" style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Portfolio</th>

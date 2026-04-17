@@ -135,7 +135,7 @@ function BacktestHistoricoSection() {
 
       {/* Note when period data is limited */}
       {period !== 'r7' && periodLimited(period) && earliestDate && (
-        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: '.72rem', color: 'var(--muted)' }}>
+        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
           * Dados disponíveis desde {earliestDate} — período completo não disponível neste backtest.
         </div>
       )}
@@ -153,7 +153,7 @@ function BacktestHistoricoSection() {
       {/* Metrics table */}
       {metricRows.length > 0 && (
         <div style={{ overflowX: 'auto', marginTop: '12px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
@@ -179,20 +179,20 @@ function BacktestHistoricoSection() {
       {/* CAGR vs TWR cards */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '14px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '6px' }}>CAGR Patrimonial (incl. aportes)</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px' }}>CAGR Patrimonial (incl. aportes)</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }} className="pv">
             {cagrPatrimonial != null ? fmtPct(cagrPatrimonial) : '—'}
           </div>
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             Crescimento total do patrimônio. Inflado por aportes — NÃO é performance dos ETFs.
           </div>
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '6px' }}>TWR USD (retorno puro, ex-aportes)</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px' }}>TWR USD (retorno puro, ex-aportes)</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }}>
             {twrUsd != null ? fmtPct(twrUsd) : '—'}
           </div>
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             Time-Weighted Return do backtest. Performance real dos ETFs sem efeito de aportes.
           </div>
         </div>
@@ -200,7 +200,7 @@ function BacktestHistoricoSection() {
 
       {/* Proxy warning */}
       {notaProxy && (
-        <div style={{ marginTop: '8px', padding: '8px', background: 'rgba(234,179,8,.08)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--yellow)', fontSize: '.72rem' }}>
+        <div style={{ marginTop: '8px', padding: '8px', background: 'rgba(234,179,8,.08)', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)' }}>
           {notaProxy}
         </div>
       )}
@@ -266,7 +266,7 @@ function ShadowPortfoliosSection() {
         })}
       </div>
       {shadowPeriodLimited(period) && earliestDate && (
-        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: '.72rem', color: 'var(--muted)' }}>
+        <div style={{ marginBottom: 8, padding: '6px 10px', background: 'rgba(234,179,8,.08)', borderRadius: 5, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
           * Dados disponíveis desde {earliestDate} — período completo não disponível.
         </div>
       )}
@@ -284,7 +284,7 @@ function ShadowPortfoliosSection() {
       {/* Metrics table */}
       {kpiRows.length > 0 && (
         <div style={{ overflowX: 'auto', marginTop: '10px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Métrica</th>
@@ -316,8 +316,8 @@ function ShadowPortfoliosSection() {
 
       {/* Q1 snapshot if available */}
       {snap && snapPeriodo && (
-        <div style={{ marginTop: '10px', padding: '10px', background: 'var(--card2)', borderRadius: 6, fontSize: '.78rem' }}>
-          <div style={{ fontWeight: 600, color: 'var(--muted)', fontSize: '.65rem', textTransform: 'uppercase', marginBottom: '6px' }}>
+        <div style={{ marginTop: '10px', padding: '10px', background: 'var(--card2)', borderRadius: 6, fontSize: 'var(--text-sm)' }}>
+          <div style={{ fontWeight: 600, color: 'var(--muted)', fontSize: 'var(--text-xs)', textTransform: 'uppercase', marginBottom: '6px' }}>
             Performance {snapPeriodo}
           </div>
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
@@ -329,7 +329,7 @@ function ShadowPortfoliosSection() {
               { label: 'Δ vs VWRA', value: snap.delta_vwra },
             ].filter(x => x.value != null).map(x => (
               <div key={x.label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{x.label}</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{x.label}</div>
                 <div style={{ fontWeight: 700, color: (x.value ?? 0) >= 0 ? 'var(--green)' : 'var(--red)' }}>
                   {fmtPct(x.value)}
                 </div>
@@ -385,7 +385,7 @@ function BacktestLongoSection() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '14px' }}>
           {metricCards.map(m => (
             <div key={m.label} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>{m.label}</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>{m.label}</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700, color: m.color ?? 'var(--text)' }}>{m.value}</div>
             </div>
           ))}
@@ -395,25 +395,25 @@ function BacktestLongoSection() {
       {/* Risk Grid: Factor Drought + Drawdown Recovery */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Factor Drought</div>
-          <div style={{ fontSize: '.75rem', color: 'var(--text)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Factor Drought</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
             {r7?.factor_drought?.max_meses != null
               ? `Maior seca: ${(r7.factor_drought.max_meses / 12).toFixed(1)}a (${r7.factor_drought.max_meses}m)`
               : '—'}
           </div>
           {r7?.factor_drought?.nota && (
-            <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>{r7.factor_drought.nota}</div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>{r7.factor_drought.nota}</div>
           )}
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Drawdown Recovery</div>
-          <div style={{ fontSize: '.75rem', color: 'var(--text)' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Drawdown Recovery</div>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
             {r7?.drawdown_recovery?.max_meses != null
               ? `Máx recuperação: ${r7.drawdown_recovery.max_meses}m`
               : '—'}
           </div>
           {r7?.drawdown_recovery?.p90_meses != null && (
-            <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>P90: {r7.drawdown_recovery.p90_meses}m</div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>P90: {r7.drawdown_recovery.p90_meses}m</div>
           )}
         </div>
       </div>
@@ -421,7 +421,7 @@ function BacktestLongoSection() {
       {/* CAGR por Década — list format: [{ Decada, Target, Benchmark, Delta, N_meses }] */}
       {decadesList && decadesList.length > 0 && (
         <div style={{ marginTop: '14px', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Década</th>
@@ -455,18 +455,18 @@ function BacktestLongoSection() {
 
       {/* Factor Regression FF5 — collapsible */}
       <details style={{ marginTop: '10px' }}>
-        <summary style={{ cursor: 'pointer', fontSize: '.8rem', color: 'var(--muted)', padding: '4px 0' }}>
+        <summary style={{ cursor: 'pointer', fontSize: 'var(--text-base)', color: 'var(--muted)', padding: '4px 0' }}>
           ▸ Factor Regression FF5 (técnico)
         </summary>
         {ff5 ? (
-          <div style={{ marginTop: '8px', fontSize: '.78rem', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
+          <div style={{ marginTop: '8px', fontSize: 'var(--text-sm)', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
             {/* Top-level scalars */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px', marginBottom: '8px' }}>
               {Object.entries(ff5)
                 .filter(([, v]) => typeof v === 'number')
                 .map(([k, v]: [string, any]) => (
                   <div key={k} style={{ textAlign: 'center', padding: '6px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{k}</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>
                     <div style={{ fontWeight: 700 }}>{v.toFixed(3)}</div>
                   </div>
                 ))
@@ -475,11 +475,11 @@ function BacktestLongoSection() {
             {/* Betas sub-object */}
             {ff5.betas && (
               <div>
-                <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>Betas</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Betas</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px' }}>
                   {Object.entries(ff5.betas).map(([k, v]: [string, any]) => (
                     <div key={k} style={{ textAlign: 'center', padding: '5px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
-                      <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>{k}</div>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>
                       <div style={{ fontWeight: 700 }}>{typeof v === 'number' ? v.toFixed(3) : String(v)}</div>
                     </div>
                   ))}
@@ -488,7 +488,7 @@ function BacktestLongoSection() {
             )}
           </div>
         ) : (
-          <div style={{ marginTop: '8px', fontSize: '.75rem', color: 'var(--muted)' }}>Dados FF5 não disponíveis</div>
+          <div style={{ marginTop: '8px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Dados FF5 não disponíveis</div>
         )}
       </details>
 
@@ -513,7 +513,7 @@ function DrawdownHistoricoSection() {
       {/* Crises table */}
       {crises.length > 0 && (
         <div style={{ marginTop: '10px', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.78rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Crise</th>
@@ -541,7 +541,7 @@ function DrawdownHistoricoSection() {
       )}
 
       {/* Colored lines legend */}
-      <div style={{ marginTop: '10px', fontSize: '.6rem', color: 'var(--muted)', lineHeight: 1.6 }}>
+      <div style={{ marginTop: '10px', fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.6 }}>
         <span style={{ color: 'rgba(96,165,250,.7)' }}>┈┈</span> Tracejada azul = Sharpe em USD vs T-Bill (performance do equity isolado, sem câmbio).<br />
         <span style={{ color: 'rgba(255,255,255,.3)' }}>┈┈</span> Cinza = referência Sharpe=1.<br />
         <span style={{ color: 'rgba(239,68,68,.4)' }}>┈┈</span> Vermelha = zero (break-even vs CDI).<br />

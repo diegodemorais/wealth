@@ -122,6 +122,10 @@
     --text-4xl: 2rem;
     --text-5xl: 3rem;
 
+    /* ─── Desktop typography overrides (1024px+) ─── */
+    /* These are applied via the @media block below — listed here for reference */
+    /* --text-xs → 0.75rem, --text-sm → 0.8rem, --text-base → 0.875rem */
+
     /* ─── shadcn/ui Compatibility — Maps our vars to shadcn names ─── */
     --background: var(--bg);
     --foreground: var(--text);
@@ -200,7 +204,7 @@
 
   .seg-btn {
     padding: 5px 12px;
-    font-size: 0.7rem;
+    font-size: var(--text-xs);
     font-weight: 500;
     cursor: pointer;
     border: none;
@@ -324,6 +328,24 @@
     .header-tabs a {
       font-size: 11px !important;
       padding: 5px 7px !important;
+    }
+  }
+
+  /* ─── Desktop typography scale (1024px+) ───────────────────────────────────
+     User complaint: "no PC vários textos pequenos" — mobile-first scale too
+     small on wide displays. Bump all text variables up for legibility.
+     Mobile layout is untouched (no changes below 1024px).
+     ─────────────────────────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
+    :root {
+      --text-xs: 0.75rem;     /* was 0.65rem (10.4px) → now 12px */
+      --text-sm: 0.825rem;    /* was 0.75rem (12px)   → now 13.2px */
+      --text-base: 0.9rem;    /* was 0.8rem  (12.8px) → now 14.4px */
+      --text-md: 0.95rem;     /* was 0.85rem (13.6px) → now 15.2px */
+      --text-lg: 1.05rem;     /* was 1rem             → now 16.8px */
+      --text-xl: 1.35rem;
+      --text-2xl: 1.6rem;
+      --text-3xl: 1.9rem;
     }
   }
 }
