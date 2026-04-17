@@ -102,12 +102,16 @@ function FireSimuladorSection() {
     }
   }, [data, custom]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-apply aspiracional preset when navigated from fire page with ?preset=aspiracional
+  // Auto-apply preset when navigated from fire page
   const presetApplied = useRef(false);
   useEffect(() => {
     if (data && !presetApplied.current && typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('preset') === 'aspiracional') {
+      const preset = params.get('preset');
+      const cond = params.get('cond') as FireCond | null;
+      const mkt = params.get('mkt') as FireMkt | null;
+
+      if (preset === 'aspiracional') {
         presetApplied.current = true;
         if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
         const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
@@ -116,6 +120,21 @@ function FireSimuladorSection() {
         if (ci != null) setCusto(ci);
         setFireCond('solteiro');
         setFireMkt('fav');
+        setCustom(false);
+      } else if (cond && ['solteiro', 'casamento', 'filho'].includes(cond)) {
+        presetApplied.current = true;
+        if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
+        if (mkt && ['stress', 'base', 'fav'].includes(mkt)) {
+          const retVal = fmRetornos[mkt] ?? premissas.retorno_equity_base;
+          if (retVal != null) setRetorno(+((retVal * 100).toFixed(2)));
+          setFireMkt(mkt);
+        } else {
+          if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+          setFireMkt('base');
+        }
+        setFireCond(cond);
+        const v = COND_PRESETS[cond]?.custo;
+        if (v != null) setCusto(v);
         setCustom(false);
       }
     }

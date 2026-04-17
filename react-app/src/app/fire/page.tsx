@@ -2,6 +2,20 @@
 
 import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
+
+// Same SWR-based calc as simulators/page.tsx — earliest year where pat >= custo/swrTarget
+function calcFireYear(
+  aporte: number, retorno: number, custo: number,
+  currentAge: number, patrimonio: number, swrTarget: number,
+): { ano: number; idade: number } | null {
+  const target = custo / swrTarget;
+  let pat = patrimonio;
+  for (let yr = 0; yr <= 30; yr++) {
+    if (pat >= target) return { ano: 2026 + yr, idade: currentAge + yr };
+    for (let m = 0; m < 12; m++) pat = pat * (1 + retorno / 12) + aporte;
+  }
+  return null;
+}
 import { useDashboardStore } from '@/store/dashboardStore';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
@@ -88,59 +102,103 @@ export default function FirePage() {
         </div>
       </section>
 
-      {/* 2. FIRE Aspiracional — 3 cenários base (Solteiro / Casamento / Casado+Filho) */}
-      {(data as any)?.fire_matrix?.by_profile?.length > 0 && (
-        <section className="section" id="fireAspirationalSection">
-          <h2>FIRE Aspiracional <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— cenários base · idade 50</span></h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: '14px' }}>
-            {([
-              { profile: 'atual',  emoji: '👤', label: 'Solteiro',        preset: 'solteiro' },
-              { profile: 'casado', emoji: '💍', label: 'Casamento',       preset: 'casado'   },
-              { profile: 'filho',  emoji: '👶', label: 'Casado + Filho',  preset: 'filho'    },
-            ] as const).map(({ profile, emoji, label, preset }) => {
-              const p = (data as any)?.fire_matrix?.by_profile?.find((x: any) => x.profile === profile);
-              if (!p) return null;
-              const pfire = p.p_fire_50 as number;
-              const pfav   = p.p_fire_50_fav as number;
-              const pstress = p.p_fire_50_stress as number;
-              const pfireColor = pfire >= 90 ? 'var(--green)' : pfire >= 85 ? 'var(--yellow)' : 'var(--red)';
-              return (
-                <div key={profile} style={{
-                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 6%, transparent), color-mix(in srgb, var(--green) 5%, transparent))',
-                  border: '2px dashed var(--accent)',
-                  borderRadius: 'var(--radius-xl)',
-                  padding: '20px 16px',
-                  textAlign: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '5px',
-                }}>
-                  <div style={{ fontSize: '1.5rem', lineHeight: 1 }}>{emoji}</div>
-                  <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>R${(p.gasto_anual / 1000).toFixed(0)}k/ano</div>
-                  <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1, marginTop: '6px' }}>{p.fire_age_50}</div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>idade 50</div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 700, color: pfireColor, marginTop: '2px' }}>P = {pfire.toFixed(1)}%</div>
-                  <div style={{ display: 'flex', gap: '10px', marginTop: '2px' }}>
-                    <span style={{ fontSize: '10px', color: 'var(--muted)' }}>fav <span style={{ color: 'var(--green)' }}>{pfav.toFixed(0)}%</span></span>
-                    <span style={{ fontSize: '10px', color: 'var(--muted)' }}>stress <span style={{ color: 'var(--red)' }}>{pstress.toFixed(0)}%</span></span>
+      {/* 2. FIRE Aspiracional — 3 cenários base + Aspiracional */}
+      {(data as any)?.fire_matrix?.by_profile?.length > 0 && (() => {
+        const prem = (data as any)?.premissas ?? {};
+        const aporte     = prem.aporte_mensal ?? 0;
+        const retorno    = prem.retorno_equity_base ?? 0.0485;
+        const swrTarget  = prem.swr_gatilho ?? 0.03;
+        const currentAge = prem.idade_atual ?? 39;
+        const patrimonio = prem.patrimonio_atual ?? 0;
+        const favRetorno = (data as any)?.fire_matrix?.retornos_equity?.fav ?? retorno;
+
+        type CardDef = { profile: string; emoji: string; label: string; cond: string; mkt: string; retorno: number; isAspir?: boolean };
+        const CARDS: CardDef[] = [
+          { profile: 'atual',  emoji: '👤', label: 'Solteiro',       cond: 'solteiro',  mkt: 'base', retorno },
+          { profile: 'casado', emoji: '💍', label: 'Casamento',      cond: 'casamento', mkt: 'base', retorno },
+          { profile: 'filho',  emoji: '👶', label: 'Casado + Filho', cond: 'filho',     mkt: 'base', retorno },
+          { profile: 'atual',  emoji: '⚡', label: 'Aspiracional',   cond: 'solteiro',  mkt: 'fav',  retorno: favRetorno, isAspir: true },
+        ];
+
+        return (
+          <section className="section" id="fireAspirationalSection">
+            <h2>FIRE Aspiracional <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>— earliest age · cenário SWR</span></h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: '12px' }}>
+              {CARDS.map(({ profile, emoji, label, cond, mkt, retorno: r, isAspir }) => {
+                const p = (data as any)?.fire_matrix?.by_profile?.find((x: any) => x.profile === profile);
+                if (!p) return null;
+
+                // Compute earliest FIRE year using SWR
+                const fireResult = calcFireYear(aporte, r, p.gasto_anual, currentAge, patrimonio, swrTarget);
+
+                // P(FIRE) — use aspiracional MC data for aspir card, otherwise use by_profile p_fire_50
+                let pfire: number, pfav: number, pstress: number;
+                if (isAspir) {
+                  pfire  = (data as any)?.pfire_aspiracional?.base  ?? p.p_fire_50;
+                  pfav   = (data as any)?.pfire_aspiracional?.fav   ?? p.p_fire_50_fav;
+                  pstress = (data as any)?.pfire_aspiracional?.stress ?? p.p_fire_50_stress;
+                } else {
+                  pfire  = p.p_fire_50 as number;
+                  pfav   = p.p_fire_50_fav as number;
+                  pstress = p.p_fire_50_stress as number;
+                }
+
+                const pfireColor = pfire >= 90 ? 'var(--green)' : pfire >= 85 ? 'var(--yellow)' : 'var(--red)';
+                const accentColor = isAspir ? 'var(--yellow)' : 'var(--accent)';
+                const href = isAspir
+                  ? '/simulators?preset=aspiracional'
+                  : `/simulators?cond=${cond}&mkt=${mkt}`;
+
+                return (
+                  <div key={label} style={{
+                    background: isAspir
+                      ? 'linear-gradient(135deg, color-mix(in srgb, var(--yellow) 8%, transparent), color-mix(in srgb, var(--accent) 5%, transparent))'
+                      : 'linear-gradient(135deg, color-mix(in srgb, var(--accent) 6%, transparent), color-mix(in srgb, var(--green) 5%, transparent))',
+                    border: `2px dashed ${accentColor}`,
+                    borderRadius: 'var(--radius-xl)',
+                    padding: '18px 14px',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}>
+                    <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>{emoji}</div>
+                    <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>R${(p.gasto_anual / 1000).toFixed(0)}k/ano{isAspir ? ' · mercado fav.' : ''}</div>
+                    {/* FIRE year — computed from SWR */}
+                    {fireResult ? (
+                      <>
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: accentColor, lineHeight: 1, marginTop: '6px' }}>{fireResult.ano}</div>
+                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>idade {fireResult.idade}</div>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--muted)', lineHeight: 1, marginTop: '6px' }}>—</div>
+                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>não atingido</div>
+                      </>
+                    )}
+                    <div style={{ fontSize: '1.25rem', fontWeight: 700, color: pfireColor, marginTop: '2px' }}>P = {pfire.toFixed(1)}%</div>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '2px' }}>
+                      <span style={{ fontSize: '10px', color: 'var(--muted)' }}>fav <span style={{ color: 'var(--green)' }}>{pfav.toFixed(0)}%</span></span>
+                      <span style={{ fontSize: '10px', color: 'var(--muted)' }}>stress <span style={{ color: 'var(--red)' }}>{pstress.toFixed(0)}%</span></span>
+                    </div>
+                    <div style={{ marginTop: '10px' }}>
+                      <Link href={href} style={{
+                        display: 'inline-block', padding: '6px 18px',
+                        background: accentColor, color: isAspir ? '#000' : 'white',
+                        borderRadius: 'var(--radius-md)', fontWeight: 700,
+                        fontSize: '.78rem', textDecoration: 'none',
+                      }}>Simular</Link>
+                    </div>
                   </div>
-                  <div style={{ marginTop: '10px' }}>
-                    <Link href={`/simulators?preset=${preset}`} style={{
-                      display: 'inline-block', padding: '7px 20px',
-                      background: 'var(--accent)', color: 'white',
-                      borderRadius: 'var(--radius-md)', fontWeight: 700,
-                      fontSize: '.8rem', textDecoration: 'none',
-                    }}>Simular</Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="src">Base: MC 5k simulações · cenário base · portfólio financeiro</div>
-        </section>
-      )}
+                );
+              })}
+            </div>
+            <div className="src">Base: MC simulações · SWR gatilho {((prem.swr_gatilho ?? 0.03) * 100).toFixed(0)}% · mercado base (exceto aspiracional)</div>
+          </section>
+        );
+      })()}
 
       {/* 3. Projeção de Patrimônio — P10 / P50 / P90 (moved up: trajetória após horizonte) */}
       <section className="section" id="netWorthProjectionSection">

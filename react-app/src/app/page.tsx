@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { secOpen, secTitle } from '@/config/dashboard.config';
@@ -186,7 +186,71 @@ export default function HomePage() {
         <SemaforoGatilhos items={derived.dcaItems} />
       )}
 
-      {/* 4. APORTE DO MÊS — próxima ação concreta */}
+      {/* 4. MERCADO & MACRO — mini cards */}
+      {(() => {
+        const macro = (data as any)?.macro ?? {};
+        const mercado = (data as any)?.mercado ?? {};
+        const btcUsd = mercado.btc_usd ?? macro.bitcoin_usd;
+        const dot = (color: string) => (
+          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: color, marginLeft: 3, verticalAlign: 'middle', flexShrink: 0 }} />
+        );
+
+        const chips: { label: React.ReactNode; value: string; sub?: string; dotColor?: string }[] = [
+          {
+            label: 'USD/BRL',
+            value: derived.CAMBIO ? `R$${derived.CAMBIO.toFixed(2)}` : '—',
+            sub: mercado.cambio_mtd_pct != null ? `${mercado.cambio_mtd_pct > 0 ? '+' : ''}${mercado.cambio_mtd_pct.toFixed(1)}% MtD` : undefined,
+          },
+          {
+            label: 'BTC/USD',
+            value: btcUsd ? `$${Number(btcUsd).toLocaleString('en-US', { maximumFractionDigits: 0 })}` : '—',
+            sub: mercado.btc_mtd_pct != null ? `${mercado.btc_mtd_pct > 0 ? '+' : ''}${mercado.btc_mtd_pct.toFixed(1)}% MtD` : undefined,
+          },
+          {
+            label: <span className="flex items-center gap-0.5">IPCA+ 2040{dot(ipcaDotColor)}</span>,
+            value: ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—',
+            sub: 'IPCA+',
+          },
+          {
+            label: <span className="flex items-center gap-0.5">Renda+ 2065{dot(rendaDotColor)}</span>,
+            value: rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—',
+            sub: 'IPCA+',
+          },
+          {
+            label: 'Selic Meta',
+            value: macro.selic_meta != null ? `${(macro.selic_meta as number).toFixed(2)}%` : '—',
+          },
+          {
+            label: 'Fed Funds',
+            value: macro.fed_funds != null ? `${(macro.fed_funds as number).toFixed(2)}%` : '—',
+          },
+          {
+            label: 'Spread Selic-FF',
+            value: macro.spread_selic_ff != null ? `${(macro.spread_selic_ff as number).toFixed(2)}pp` : '—',
+          },
+          {
+            label: 'Exp. Cambial',
+            value: macro.exposicao_cambial_pct != null ? `${(macro.exposicao_cambial_pct as number).toFixed(1)}%` : '—',
+          },
+        ];
+
+        return (
+          <div className="mb-3.5">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted mb-2">Mercado & Macro</div>
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
+              {chips.map((c, i) => (
+                <div key={i} className="bg-card border border-border/40 rounded px-2.5 py-2">
+                  <div className="text-xs text-muted mb-1 leading-tight">{c.label}</div>
+                  <div className="text-sm font-bold font-mono leading-none">{c.value}</div>
+                  {c.sub && <div className="text-xs text-muted mt-0.5 leading-tight">{c.sub}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* 5. APORTE DO MÊS — próxima ação concreta */}
       {derived && (
         <AporteDoMes
           aporteMensal={derived.aporteMensal}
@@ -404,76 +468,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* 5. MERCADO & MACRO — card fixo (substitui inline mercado + Contexto Macro collapsible) */}
-      {(() => {
-        const macro = (data as any)?.macro ?? {};
-        const mercado = (data as any)?.mercado ?? {};
-        const btcUsd = mercado.btc_usd ?? macro.bitcoin_usd;
-        const dot = (color: string) => (
-          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: color, marginLeft: 4, verticalAlign: 'middle' }} />
-        );
-        return (
-          <div className="bg-card border border-border/50 rounded mb-3.5">
-            <div className="px-4 pt-3 pb-1 border-b border-border/20">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted">Mercado & Macro</span>
-            </div>
-            {/* Row 1: Preços */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 px-4 pt-2.5 pb-1 gap-y-2">
-              <div>
-                <div className="text-xs text-muted">USD/BRL</div>
-                <div className="text-sm font-bold font-mono mt-0.5">
-                  {derived.CAMBIO ? `R$${derived.CAMBIO.toFixed(2)}` : '—'}
-                </div>
-                {mercado.cambio_mtd_pct != null && (
-                  <div className="text-xs text-muted">{mercado.cambio_mtd_pct > 0 ? '+' : ''}{mercado.cambio_mtd_pct.toFixed(1)}% MtD</div>
-                )}
-              </div>
-              <div>
-                <div className="text-xs text-muted">BTC/USD</div>
-                <div className="text-sm font-bold font-mono mt-0.5">
-                  {btcUsd ? `$${Number(btcUsd).toLocaleString('en-US', { maximumFractionDigits: 0 })}` : '—'}
-                </div>
-                {mercado.btc_mtd_pct != null && (
-                  <div className="text-xs text-muted">{mercado.btc_mtd_pct > 0 ? '+' : ''}{mercado.btc_mtd_pct.toFixed(1)}% MtD</div>
-                )}
-              </div>
-              <div>
-                <div className="text-xs text-muted flex items-center">IPCA+ 2040{dot(ipcaDotColor)}</div>
-                <div className="text-sm font-bold font-mono mt-0.5">{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted">IPCA+</div>
-              </div>
-              <div>
-                <div className="text-xs text-muted flex items-center">Renda+ 2065{dot(rendaDotColor)}</div>
-                <div className="text-sm font-bold font-mono mt-0.5">{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted">IPCA+</div>
-              </div>
-            </div>
-            {/* Divider */}
-            <div className="border-t border-border/20 mx-4" />
-            {/* Row 2: Juros */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 px-4 pt-2 pb-3 gap-y-2">
-              <div>
-                <div className="text-xs text-muted">Selic Meta</div>
-                <div className="text-sm font-bold font-mono mt-0.5">{macro.selic_meta != null ? `${(macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
-              </div>
-              <div>
-                <div className="text-xs text-muted">Fed Funds</div>
-                <div className="text-sm font-bold font-mono mt-0.5">{macro.fed_funds != null ? `${(macro.fed_funds as number).toFixed(2)}%` : '—'}</div>
-              </div>
-              <div>
-                <div className="text-xs text-muted">Spread Selic-FF</div>
-                <div className="text-sm font-bold font-mono mt-0.5">{macro.spread_selic_ff != null ? `${(macro.spread_selic_ff as number).toFixed(2)}pp` : '—'}</div>
-              </div>
-              <div>
-                <div className="text-xs text-muted">Exp. Cambial</div>
-                <div className="text-sm font-bold font-mono mt-0.5">{macro.exposicao_cambial_pct != null ? `${(macro.exposicao_cambial_pct as number).toFixed(1)}%` : '—'}</div>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* (SEMÁFOROS, DRIFT, TORNADO, APORTE moved earlier — see below TIME TO FIRE) */}
+      {/* (MERCADO & MACRO moved earlier — see section 4 above) */}
 
       {/* 10. FINANCIAL WELLNESS SCORE [COLLAPSIBLE] */}
       {wellnessScore && (
