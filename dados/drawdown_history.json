@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-13T08:41:44",
+  "_generated": "2026-04-17T06:02:45",
   "_source": "reconstruct_fire_data.py → historico_carteira.csv",
   "dates": [
     "2021-04",
@@ -125,7 +125,7 @@
     -2.5,
     -0.37,
     -3.74,
-    -0.76
+    0.0
   ],
   "max_drawdown": -13.45,
   "crises": [

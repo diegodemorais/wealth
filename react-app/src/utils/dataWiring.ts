@@ -536,7 +536,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const rendaPlusFlowMonthly = aporteMensalVal * (((data.rf?.renda2065?.valor ?? 0) / (rfBrl || 1)) * rfRatio);
   const cryptoFlowMonthly = aporteMensalVal * cryptoRatio;
 
-  // YTD return: compound monthly TWR for current calendar year
+  // YTD return: compound monthly TWR for current calendar year (portfolio BRL)
   const retornoYtd = (() => {
     const dates: string[] = (data as any).retornos_mensais?.dates ?? [];
     const values: number[] = (data as any).retornos_mensais?.values ?? [];
@@ -550,6 +550,21 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
       }
     }
     return hasData ? (compound - 1) * 100 : null; // null if no data for current year
+  })();
+
+  // YTD equity return in USD: weighted average of SWRD + AVGS from factor_signal
+  // Covers pesosTarget.SWRD + pesosTarget.AVGS of the portfolio (AVEM not in factor_signal)
+  const retornoYtdEquityUsd = (() => {
+    const fs = (data as any).factor_signal;
+    const pesosT = (data as any).pesosTarget ?? {};
+    const wSwrd = pesosT.SWRD ?? 0;
+    const wAvgs = pesosT.AVGS ?? 0;
+    const totalW = wSwrd + wAvgs;
+    if (!fs || totalW === 0) return null;
+    const swrdYtd = fs.swrd_ytd_pct;
+    const avgsYtd = fs.avgs_ytd_pct;
+    if (swrdYtd == null || avgsYtd == null) return null;
+    return (wSwrd * swrdYtd + wAvgs * avgsYtd) / totalW;
   })();
 
   return {
@@ -578,6 +593,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
 
     // Aporte tracking
     retornoYtd,
+    retornoYtdEquityUsd,
     aporteMensal,
     ultimoAporte,
     ultimoAporteData,

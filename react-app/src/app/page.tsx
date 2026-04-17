@@ -89,8 +89,8 @@ export default function HomePage() {
         firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
-      {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Retorno YTD */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">
+      {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Equity YTD (USD) · Portfolio YTD (BRL) */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-3.5">
         {/* P(FIRE|53) */}
         <div className="kpi text-center border-l-4" style={{ borderLeftColor: pfireColor }}>
           <div className="kpi-label">P(FIRE|53)</div>
@@ -121,17 +121,33 @@ export default function HomePage() {
           </div>
           <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>mensal</div>
         </div>
-        {/* Retorno YTD */}
+        {/* Equity YTD USD — SWRD + AVGS weighted by target pesos */}
+        {(() => {
+          const ytdUsd = derived.retornoYtdEquityUsd as number | null;
+          const ytdColor = ytdUsd == null ? 'var(--muted)' : ytdUsd >= 0 ? 'var(--green)' : 'var(--red)';
+          const pesosT = (data as any)?.pesosTarget ?? {};
+          const covPct = Math.round(((pesosT.SWRD ?? 0) + (pesosT.AVGS ?? 0)) * 100);
+          return (
+            <div className="kpi text-center border-l-4" style={{ borderLeftColor: ytdColor }}>
+              <div className="kpi-label">Equity YTD</div>
+              <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
+                {ytdUsd == null ? '—' : `${ytdUsd >= 0 ? '+' : ''}${ytdUsd.toFixed(1)}%`}
+              </div>
+              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>USD · SWRD+AVGS ({covPct}%)</div>
+            </div>
+          );
+        })()}
+        {/* Portfólio YTD BRL — full portfolio TWR in BRL */}
         {(() => {
           const ytd = derived.retornoYtd as number | null;
           const ytdColor = ytd == null ? 'var(--muted)' : ytd >= 0 ? 'var(--green)' : 'var(--red)';
           return (
             <div className="kpi text-center border-l-4" style={{ borderLeftColor: ytdColor }}>
-              <div className="kpi-label">Retorno YTD</div>
+              <div className="kpi-label">Portfólio YTD</div>
               <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
                 {ytd == null ? '—' : `${ytd >= 0 ? '+' : ''}${ytd.toFixed(1)}%`}
               </div>
-              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>carteira {new Date().getFullYear()}</div>
+              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>BRL · TWR {new Date().getFullYear()}</div>
             </div>
           );
         })()}
@@ -267,34 +283,44 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Sensitivity mini-table */}
+              {/* Sensitivity mini-table — scaled to active profile */}
               {sensitivity?.aportes_brl && sensitivity?.pfire_2040 && (
                 <div className="mt-4 pt-3 border-t border-border/30">
-                  <div className="text-xs text-muted uppercase tracking-wide mb-2">Sensibilidade ao Aporte Mensal (FIRE 53)</div>
+                  <div className="text-xs text-muted uppercase tracking-wide mb-2">
+                    Sensibilidade ao Aporte Mensal (FIRE 53 · {activeProf?.label ?? 'Atual'})
+                  </div>
                   <div className="flex gap-1.5 flex-wrap">
-                    {sensitivity.aportes_brl.map((val: number, i: number) => {
-                      const pct = sensitivity.pfire_2040[i] * 100;
-                      const isBase = val === sensitivity.aporte_base;
-                      const color = pct >= 88 ? 'var(--green)' : pct >= 80 ? 'var(--yellow)' : 'var(--red)';
-                      return (
-                        <div
-                          key={val}
-                          className="text-center px-2 py-1.5 rounded flex-shrink-0"
-                          style={{
-                            background: isBase ? 'color-mix(in srgb, var(--accent) 15%, transparent)' : 'var(--card2)',
-                            border: isBase ? '1px solid color-mix(in srgb, var(--accent) 40%, transparent)' : '1px solid transparent',
-                          }}
-                        >
-                          <div className="text-xs font-mono" style={{ color }}>
-                            {pct.toFixed(1)}%
+                    {(() => {
+                      // Delta between active profile and base profile (Atual) at the base aporte
+                      const basePfire = (byProfile[0]?.p_fire_53 ?? 0) / 100;
+                      const activePfire = (activeProf?.p_fire_53 ?? byProfile[0]?.p_fire_53 ?? 0) / 100;
+                      const delta = activePfire - basePfire;
+                      return sensitivity.aportes_brl.map((val: number, i: number) => {
+                        const rawPfire = sensitivity.pfire_2040[i];
+                        const adjustedPfire = Math.max(0, Math.min(1, rawPfire + delta));
+                        const pct = adjustedPfire * 100;
+                        const isBase = val === sensitivity.aporte_base;
+                        const color = pct >= 88 ? 'var(--green)' : pct >= 80 ? 'var(--yellow)' : 'var(--red)';
+                        return (
+                          <div
+                            key={val}
+                            className="text-center px-2 py-1.5 rounded flex-shrink-0"
+                            style={{
+                              background: isBase ? 'color-mix(in srgb, var(--accent) 15%, transparent)' : 'var(--card2)',
+                              border: isBase ? '1px solid color-mix(in srgb, var(--accent) 40%, transparent)' : '1px solid transparent',
+                            }}
+                          >
+                            <div className="text-xs font-mono" style={{ color }}>
+                              {pct.toFixed(1)}%
+                            </div>
+                            <div className="text-xs text-muted mt-0.5">
+                              {privacyMode ? '••' : `R$${val / 1000}k`}
+                              {isBase && <span style={{ color: 'var(--accent)' }}> ★</span>}
+                            </div>
                           </div>
-                          <div className="text-xs text-muted mt-0.5">
-                            {privacyMode ? '••' : `R$${val / 1000}k`}
-                            {isBase && <span style={{ color: 'var(--accent)' }}> ★</span>}
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
               )}

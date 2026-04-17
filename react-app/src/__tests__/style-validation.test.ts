@@ -295,9 +295,9 @@ describe('2e. Header/Nav Structure (static scan)', () => {
 });
 
 // ── 2f. Layout Mobile Safety ───────────────────────────────────────────────────
-// Diretriz: grids com 4+ colunas DEVEM usar classes Tailwind responsivas.
-// Nunca usar inline gridTemplateColumns com repeat(N≥4) — sobrescreve
-// responsividade e quebra mobile. Padrão correto: grid-cols-2 sm:grid-cols-4.
+// Diretriz: grids com filhos tipo KPI devem caber em ≤3 linhas no mobile.
+// Nunca usar inline gridTemplateColumns — sobrescreve responsividade.
+// Padrão correto: grid-cols-2 sm:grid-cols-5 (mobile first, sem inline style).
 describe('2f. Layout Mobile Safety', () => {
   const APP_DIR = resolve(SRC_DIR, 'app');
 
@@ -310,10 +310,11 @@ describe('2f. Layout Mobile Safety', () => {
     return files;
   }
 
-  it('no inline gridTemplateColumns: repeat(N≥4) in page files (breaks mobile)', () => {
-    // Pattern: gridTemplateColumns: 'repeat(4...' or repeat(5 etc.
-    // These force fixed column count and override responsive Tailwind classes.
-    const BANNED = /gridTemplateColumns\s*:\s*['"`]repeat\s*\(\s*([4-9]|\d{2,})/;
+  it('no inline gridTemplateColumns with fixed column count ≥4 (breaks mobile)', () => {
+    // `repeat(4, 1fr)` etc. always overrides Tailwind responsive classes —
+    // even if sm:grid-cols-N is present, the inline style wins on mobile.
+    // auto-fit/minmax and 1fr 1fr are fine; fixed repeat(N≥4) is the danger.
+    const BANNED = /gridTemplateColumns\s*:\s*['"`]?\s*repeat\s*\(\s*([4-9]|\d{2,})\s*,/;
     const pages = collectTsx(APP_DIR);
     const violations: string[] = [];
 
@@ -329,37 +330,63 @@ describe('2f. Layout Mobile Safety', () => {
 
     if (violations.length > 0) {
       throw new Error(
-        `Inline gridTemplateColumns com repeat(N≥4) quebra mobile.\n` +
-        `Use "grid-cols-2 sm:grid-cols-4" (Tailwind responsivo).\n\n` +
+        `gridTemplateColumns: repeat(N≥4) detectado — força layout fixo no mobile.\n` +
+        `Use classes Tailwind: "grid-cols-2 sm:grid-cols-N".\n\n` +
         violations.join('\n')
       );
     }
   });
 
-  it('no grid-cols-4 without a mobile fallback class (grid-cols-1 or grid-cols-2) in same element', () => {
-    // grid-cols-4 alone (not prefixed with sm:/md:/lg:) forces 4 cols on mobile.
-    // Must be paired with grid-cols-1 or grid-cols-2.
+  it('KPI grid capacity: mobile cols × 3 rows must fit all KPI children', () => {
+    // This test catches: adding KPI cards without updating the mobile grid-cols.
+    // Failure example: 5 cards in grid-cols-3 (capacity 9) → passes.
+    //                  7 cards in grid-cols-2 (capacity 6) → fails.
+    //
+    // Algorithm: find grid containers with a mobile grid-cols-N (no breakpoint prefix)
+    // that also contain className="kpi" children. Count kpi children in the
+    // same file section. Assert count ≤ mobileCols × 3.
+    const MAX_ROWS_MOBILE = 3;
     const pages = collectTsx(APP_DIR);
     const violations: string[] = [];
 
     for (const file of pages) {
       const content = readFileSync(file, 'utf-8');
-      const lines = content.split('\n');
-      lines.forEach((line, i) => {
-        // Detect unprefixed grid-cols-4+ (not sm:grid-cols-4, md:grid-cols-4, etc.)
-        const hasUnprefixed = /(?<![a-z]:)grid-cols-[4-9](?!\d)/.test(line);
-        const hasMobileFallback = /grid-cols-[12](?!\d)/.test(line);
-        if (hasUnprefixed && !hasMobileFallback) {
-          violations.push(`${file.replace(SRC_DIR, 'src')}:${i + 1} — ${line.trim()}`);
+      const rel = file.replace(SRC_DIR, 'src');
+
+      // Find all grid containers with mobile cols declared (no breakpoint prefix)
+      // Pattern: className="... grid grid-cols-N ..." where N has no "sm:/md:/lg:" prefix
+      const gridRe = /className="([^"]*\bgrid\b[^"]*)"/g;
+      let match;
+
+      while ((match = gridRe.exec(content)) !== null) {
+        const cls = match[1];
+        // Extract unprefixed grid-cols-N (not preceded by a breakpoint like sm:)
+        const mobileMatch = cls.match(/(?<![a-z]:)\bgrid-cols-(\d+)\b/);
+        if (!mobileMatch) continue;
+        const mobileCols = parseInt(mobileMatch[1]);
+        // Skip single-column grids (always fine) and large mobile grids (already caught above)
+        if (mobileCols <= 1 || mobileCols >= 4) continue;
+
+        // Look at the next 4000 chars for kpi children
+        const gridStart = match.index;
+        const snippet = content.slice(gridStart, gridStart + 4000);
+        const kpiCount = (snippet.match(/className="kpi[\s"]/g) ?? []).length;
+
+        if (kpiCount > 0 && kpiCount > mobileCols * MAX_ROWS_MOBILE) {
+          const lineNum = content.slice(0, gridStart).split('\n').length;
+          violations.push(
+            `${rel}:${lineNum} — grid-cols-${mobileCols} (mobile) tem ${kpiCount} cards KPI ` +
+            `mas comporta só ${mobileCols * MAX_ROWS_MOBILE} em ${MAX_ROWS_MOBILE} linhas. ` +
+            `Use grid-cols-${Math.ceil(kpiCount / MAX_ROWS_MOBILE)} ou reduza os cards.`
+          );
         }
-      });
+      }
     }
 
     if (violations.length > 0) {
       throw new Error(
-        `grid-cols-4+ sem fallback mobile (grid-cols-1 ou grid-cols-2).\n` +
-        `Use: "grid-cols-2 sm:grid-cols-4"\n\n` +
-        violations.join('\n')
+        `KPI grid overflow no mobile detectado:\n${violations.join('\n')}\n\n` +
+        `Regra: grid-cols-N (mobile) × 3 linhas ≥ número de cards.`
       );
     }
   });

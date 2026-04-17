@@ -307,6 +307,18 @@
       padding: 6px 0 8px;
       border-top: 1px solid var(--border);
       margin-top: 4px;
+      /* Wrap tabs into 2 lines on mobile instead of scrolling */
+      flex-wrap: wrap;
+      overflow-x: unset;
+      gap: 4px 2px;
+    }
+  }
+
+  /* Very small screens: slightly smaller tab font */
+  @media (max-width: 380px) {
+    .header-tabs a {
+      font-size: 11px !important;
+      padding: 5px 7px !important;
     }
   }
 }

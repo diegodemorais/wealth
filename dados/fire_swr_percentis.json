@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-13T08:41:44",
+  "_generated": "2026-04-17T06:02:45",
   "_source": "reconstruct_fire_data.py → dashboard_state.json fire section",
   "custo_vida_base": 250000,
   "patrimonio_p10_2040": 6834909.0,
@@ -11,5 +11,5 @@
   "swr_p10_pct": 3.66,
   "swr_p50_pct": 2.17,
   "swr_p90_pct": 1.32,
-  "mc_date": "2026-04-13"
+  "mc_date": "2026-04-17"
 }
