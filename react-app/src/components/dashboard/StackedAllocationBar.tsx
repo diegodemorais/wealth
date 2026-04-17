@@ -108,10 +108,10 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
               boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
             }}
           >
-            <div style={{ fontWeight: 700, color: hoveredAsset.color, fontSize: '.8rem', marginBottom: '2px' }}>
+            <div style={{ fontWeight: 700, color: hoveredAsset.color, fontSize: 'var(--text-base)', marginBottom: '2px' }}>
               {hoveredAsset.label}
             </div>
-            <div style={{ color: '#e6edf3', fontSize: '.75rem' }}>
+            <div style={{ color: '#e6edf3', fontSize: 'var(--text-sm)' }}>
               {(hoveredAsset.pct * 100).toFixed(1)}%
               {!privacyMode && ` · ${fmtBrl(hoveredAsset.value)}`}
             </div>

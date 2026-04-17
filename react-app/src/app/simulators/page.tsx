@@ -227,8 +227,8 @@ function FireSimuladorSection() {
       {/* Resultado principal */}
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '20px', alignItems: 'center', marginBottom: '18px', background: 'var(--card2)', borderRadius: '10px', padding: '16px' }}>
         <div style={{ textAlign: 'center', minWidth: '140px' }}>
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>Com esses parâmetros</div>
-          <div style={{ fontSize: '.7rem', fontWeight: 600, color: 'var(--muted)', marginBottom: '2px' }}>você pode aposentar em</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>Com esses parâmetros</div>
+          <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--muted)', marginBottom: '2px' }}>você pode aposentar em</div>
           <div style={{ fontSize: '3rem', fontWeight: 800, lineHeight: 1 }} className="pv">
             {result ? result.ano : '—'}
           </div>
@@ -239,11 +239,11 @@ function FireSimuladorSection() {
             {firePire !== null ? `P = ${firePire}%` : 'P = —%'}
           </div>
           {(swrBrutaPct || swrLiquidaSimple) && (
-            <div style={{ fontSize: '.62rem', color: 'var(--green)', fontWeight: 600, marginTop: '4px' }} className="pv">
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, marginTop: '4px' }} className="pv">
               {swrBrutaPct ? `✓ SWR bruta ${swrBrutaPct}%` : ''}{swrLiquidaSimple ? ` · líquida c/INSS ${swrLiquidaSimple}%` : ''}
             </div>
           )}
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }} className="pv">
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }} className="pv">
             {result ? (result.idade < 50 ? `${50 - result.idade} anos antes da meta` : result.idade === 50 ? 'na meta' : `${result.idade - 50} anos após meta`) : '—'}
           </div>
         </div>
@@ -251,21 +251,21 @@ function FireSimuladorSection() {
           {/* 3 cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', marginBottom: '10px' }}>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>P(sucesso) Aspiracional</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P(sucesso) Aspiracional</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
                 {pfire50 !== null ? `${pfire50.toFixed(0)}%` : '—'}
               </div>
               <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>FIRE antecipado · MC base</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--accent)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>P(sucesso) Base</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P(sucesso) Base</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
                 {pfire53 !== null ? `${pfire53.toFixed(0)}%` : '—'}
               </div>
               <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>Plano conservador · MC base</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>Patrimônio projetado</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio projetado</div>
               <div style={{ fontSize: '1rem', fontWeight: 700 }} className="pv">
                 {result ? fmtBRL(result.pat) : '—'}
               </div>
@@ -278,7 +278,7 @@ function FireSimuladorSection() {
             <div style={{ position: 'absolute', bottom: '-18px', left: 0, fontSize: '.55rem', color: 'var(--muted)' }}>Hoje</div>
             <div style={{ position: 'absolute', bottom: '-18px', right: 0, fontSize: '.55rem', color: 'var(--muted)' }}>70 anos</div>
             {result && (
-              <div style={{ position: 'absolute', bottom: '-18px', left: `${timelinePct}%`, fontSize: '.6rem', color: 'var(--green)', fontWeight: 700, transform: 'translateX(-50%)', whiteSpace: 'nowrap', transition: 'left .4s' }}>
+              <div style={{ position: 'absolute', bottom: '-18px', left: `${timelinePct}%`, fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 700, transform: 'translateX(-50%)', whiteSpace: 'nowrap', transition: 'left .4s' }}>
                 {result.idade}a
               </div>
             )}
@@ -289,7 +289,7 @@ function FireSimuladorSection() {
       {/* Presets — 2 eixos */}
       <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-          <span style={{ fontSize: '.6rem', color: 'var(--muted)', minWidth: '58px' }}>Condição:</span>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Condição:</span>
           <div className="seg-group">
             {(['solteiro', 'casamento', 'filho'] as FireCond[]).map(c => (
               <button
@@ -303,7 +303,7 @@ function FireSimuladorSection() {
           </div>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-          <span style={{ fontSize: '.6rem', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '58px' }}>Mercado:</span>
           <div className="seg-group">
             {(['stress', 'base', 'fav'] as FireMkt[]).map(m => (
               <button
@@ -336,7 +336,7 @@ function FireSimuladorSection() {
             type="range" min="5000" max="100000" step="1000" value={aporte ?? 25000}
             onChange={e => { setAporte(+e.target.value); onSliderChange(); }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             <span>R$5k</span><span>R$100k</span>
           </div>
         </div>
@@ -349,7 +349,7 @@ function FireSimuladorSection() {
             type="range" min="0" max="10" step="0.25" value={retorno ?? 4.85}
             onChange={e => { setRetorno(+e.target.value); onSliderChange(); }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             <span>0%</span><span>10%</span>
           </div>
         </div>
@@ -362,7 +362,7 @@ function FireSimuladorSection() {
             type="range" min="150000" max="500000" step="10000" value={custo ?? 250000}
             onChange={e => { setCusto(+e.target.value); onSliderChange(); }}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             <span>R$150k</span><span>R$500k</span>
           </div>
         </div>
@@ -464,16 +464,16 @@ function WhatIfSection() {
       {/* Output 2-col */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '4px' }}>P(Sucesso 30 anos)</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>P(Sucesso 30 anos)</div>
           <div style={{ fontSize: '2rem', fontWeight: 800 }} className="pv">{psucesso != null ? `${(psucesso * 100).toFixed(0)}%` : '—'}</div>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }}>Via FIRE Matrix</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>Via FIRE Matrix</div>
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginBottom: '4px' }}>Patrimônio necessário</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Patrimônio necessário</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800 }} className="pv">{patNecessario != null ? fmtBRL(patNecessario) : '—'}</div>
-          <div style={{ fontSize: '.7rem', color: 'var(--muted)', marginTop: '4px' }} className="pv">SWR {preset.swr != null ? `${preset.swr.toFixed(2)}%` : '—'}</div>
-          <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }} className="pv">{pctLimite != null ? `${pctLimite.toFixed(1)}% do limite` : '—'}</div>
-          <div style={{ fontSize: '.65rem', color: 'var(--yellow)', fontWeight: 600, marginTop: '2px' }} className="pv">
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }} className="pv">SWR {preset.swr != null ? `${preset.swr.toFixed(2)}%` : '—'}</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }} className="pv">{pctLimite != null ? `${pctLimite.toFixed(1)}% do limite` : '—'}</div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--yellow)', fontWeight: 600, marginTop: '2px' }} className="pv">
             {(patrimonio != null && patNecessario != null) ? (patrimonio >= patNecessario ? 'FIRE atingido ✅' : `ETA: ~${etaYears} anos`) : '—'}
           </div>
         </div>
@@ -633,11 +633,11 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
 
   return (
     <div style={{ marginBottom: '14px' }}>
-      <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginBottom: '4px' }}>
+      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>
         Projeção — Evolução Patrimonial após Shock · {300} trajetórias MC · valores nominais BRL
       </div>
       <ReactECharts option={option} style={{ height: 300 }} />
-      <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '3px' }}>
+      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '3px' }}>
         Verde = P50 mediana · Azul = P75–P90 · Vermelho = P10–P25 · Retorno: {(annualReturn * 100).toFixed(2)}%/ano · Vol: {(annualVol * 100).toFixed(0)}%/ano · Negativos visíveis (sem floor)
       </div>
     </div>
@@ -672,27 +672,27 @@ function StressTestSection() {
       <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '16px', border: '1px solid var(--border)', marginBottom: '14px' }}>
         <div className="slider-row">
           <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '.8rem', color: 'var(--muted)' }}>Shock:</span>
+            <span style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>Shock:</span>
             <span className="pv" style={{ color: 'var(--red)', fontWeight: 700, fontSize: '1rem' }}>{shock}%</span>
           </label>
           <input
             type="range" min="-70" max="0" step="1" value={shock}
             onChange={e => setShock(+e.target.value)}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)', marginTop: '2px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
             <span>−70%</span><span>0%</span>
           </div>
         </div>
         <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-          <div style={{ fontSize: '.8rem', color: 'var(--muted)' }}>
+          <div style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>
             Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{postShock != null ? fmtBRL(postShock) : '—'}</strong>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <label style={{ fontSize: '.8rem', color: 'var(--muted)' }}>Idade do shock:</label>
+            <label style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>Idade do shock:</label>
             <Select
               value={(ageOnset ?? startAge).toString()}
               onChange={e => setAgeOnset(+e.target.value)}
-              style={{ width: '200px', fontSize: '.8rem' }}
+              style={{ width: '200px', fontSize: 'var(--text-base)' }}
             >
               {STRESS_AGES.map(a => (
                 <SelectItem key={a.value} value={a.value.toString()}>
@@ -718,8 +718,8 @@ function StressTestSection() {
             { label: 'Horizonte', value: `até 100a (${100 - startAge} anos)` },
           ].map(c => (
             <div key={c.label} style={{ background: 'var(--card2)', border: '1px solid var(--border)', borderRadius: '6px', padding: '5px 10px', flexShrink: 0 }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.3px' }}>{c.label}</div>
-              <div style={{ fontSize: '.75rem', fontWeight: 600, fontFamily: 'monospace', color: 'var(--text)', marginTop: '1px' }}>{c.value}</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.3px' }}>{c.label}</div>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, fontFamily: 'monospace', color: 'var(--text)', marginTop: '1px' }}>{c.value}</div>
             </div>
           ))}
         </div>
@@ -803,7 +803,7 @@ function CascadeSection() {
           <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>Aporte Mensal</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ fontSize: '.65rem', color: 'var(--muted)' }}>R$</span>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>R$</span>
               <Input
                 type="number"
                 min="1000"
@@ -811,7 +811,7 @@ function CascadeSection() {
                 step="1000"
                 value={aporte}
                 onChange={e => setAporte(+e.target.value)}
-                style={{ width: '90px', fontSize: '.8rem', textAlign: 'right' }}
+                style={{ width: '90px', fontSize: 'var(--text-base)', textAlign: 'right' }}
               />
             </span>
           </label>
@@ -819,14 +819,14 @@ function CascadeSection() {
             type="range" min="1" max="1000" step="1" value={aporte != null ? Math.round(aporte / 1000) : 25}
             onChange={e => setAporte(+e.target.value * 1000)}
           />
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.6rem', color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             <span>R$ 1k</span><span>R$ 1M</span>
           </div>
         </div>
         {cambio > 0 && (
-          <div style={{ fontSize: '.75rem', color: 'var(--muted)', whiteSpace: 'nowrap' }}>
+          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', whiteSpace: 'nowrap' }}>
             Câmbio: <span style={{ fontWeight: 600, color: 'var(--text)' }}>{cambio.toFixed(2)}</span>{' '}
-            <span style={{ fontSize: '.6rem' }}>(PTAX BCB)</span>
+            <span style={{ fontSize: 'var(--text-xs)' }}>(PTAX BCB)</span>
           </div>
         )}
       </div>
@@ -836,7 +836,7 @@ function CascadeSection() {
         {/* Nível 1: IPCA+ Longo */}
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: `3px solid ${ipcaAtivo ? 'var(--green)' : 'var(--muted)'}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
               1 · IPCA+ Longo
             </div>
             <span style={{ fontSize: '.55rem', fontWeight: 600, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)', background: ipcaAtivo ? 'rgba(34,197,94,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
@@ -846,10 +846,10 @@ function CascadeSection() {
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)' }} className="pv">
             {fmtBRL(ipcaAlloc)}
           </div>
-          <div style={{ fontSize: '.65rem', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
             → Tesouro IPCA+2040 via XP
           </div>
-          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
             gap: <span className="pv">{ipcaGapBrl != null ? fmtBRL(ipcaGapBrl) : '—'}</span>
             {ipcaGapPp != null && ` (${ipcaGapPp.toFixed(1)}pp)`}
           </div>
@@ -858,7 +858,7 @@ function CascadeSection() {
         {/* Nível 2: Renda+ */}
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: `3px solid ${rendaAtivo ? 'var(--accent)' : 'var(--muted)'}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
               2 · Renda+ 2065
             </div>
             <span style={{ fontSize: '.55rem', fontWeight: 600, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)', background: rendaAtivo ? 'rgba(59,130,246,.12)' : 'rgba(148,163,184,.1)', borderRadius: '3px', padding: '1px 4px' }}>
@@ -868,10 +868,10 @@ function CascadeSection() {
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)' }} className="pv">
             {fmtBRL(rendaAlloc)}
           </div>
-          <div style={{ fontSize: '.65rem', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
             → Renda+ 2065 via Tesouro Direto
           </div>
-          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
             gap: <span className="pv">{rendaGapBrl != null ? fmtBRL(rendaGapBrl) : '—'}</span>
             {rendaGapPp != null && (rendaGapPp > 0 ? ` (${rendaGapPp.toFixed(1)}pp)` : ' (acima do alvo)')}
           </div>
@@ -880,7 +880,7 @@ function CascadeSection() {
         {/* Nível 3: Equity (overflow) */}
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px', border: '1px solid var(--border)', borderTop: '3px solid var(--orange)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-            <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
               3 · Equity (overflow)
             </div>
             <span style={{ fontSize: '.55rem', fontWeight: 600, color: 'var(--orange)', background: 'rgba(249,115,22,.12)', borderRadius: '3px', padding: '1px 4px' }}>
@@ -890,10 +890,10 @@ function CascadeSection() {
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)' }} className="pv">
             {fmtBRL(equityAlloc)}
           </div>
-          <div style={{ fontSize: '.65rem', color: 'var(--orange)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(249,115,22,.08)', borderRadius: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--orange)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(249,115,22,.08)', borderRadius: '4px' }}>
             → SWRD + AVGS + AVEM via IBKR
           </div>
-          <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: '4px' }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
             pesos: 50% SWRD · 30% AVGS · 20% AVEM
           </div>
         </div>

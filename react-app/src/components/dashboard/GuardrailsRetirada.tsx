@@ -21,10 +21,10 @@ const priorityStyle = {
 export function GuardrailsRetirada({ guardrails }: GuardrailsRetiradaProps) {
   return (
     <div style={{ overflowX: 'auto' }}>
-      <p style={{ fontSize: '.75rem', color: 'var(--muted)', marginBottom: '8px', marginTop: 0 }}>
+      <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: '8px', marginTop: 0 }}>
         Regras de decisão: ajuste spending baseado em P(FIRE) e volatilidade
       </p>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.8rem' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-base)' }}>
         <thead>
           <tr style={{ borderBottom: '1px solid var(--border)' }}>
             <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Guardrail</th>
@@ -45,7 +45,7 @@ export function GuardrailsRetirada({ guardrails }: GuardrailsRetiradaProps) {
                   <span
                     style={{
                       fontFamily: 'monospace',
-                      fontSize: '.7rem',
+                      fontSize: 'var(--text-xs)',
                       fontWeight: 700,
                       padding: '2px 6px',
                       borderRadius: 3,

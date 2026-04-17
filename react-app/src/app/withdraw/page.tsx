@@ -62,36 +62,36 @@ export default function WithdrawPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginTop: 12 }}>
               {/* P10 */}
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
                 <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--red)' }}>
                   {swrPercentis.p10 != null ? `${(swrPercentis.p10 * 100).toFixed(2)}%` : '—'}
                 </div>
                 {swrPercentis.p10_patrimonio != null && (
-                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                     Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p10_patrimonio)}
                   </div>
                 )}
               </div>
               {/* P50 */}
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--yellow)' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
                 <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--yellow)' }}>
                   {swrPercentis.p50 != null ? `${(swrPercentis.p50 * 100).toFixed(2)}%` : '—'}
                 </div>
                 {swrPercentis.p50_patrimonio != null && (
-                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                     Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p50_patrimonio)}
                   </div>
                 )}
               </div>
               {/* P90 */}
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--green)' }}>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
                 <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)' }}>
                   {swrPercentis.p90 != null ? `${(swrPercentis.p90 * 100).toFixed(2)}%` : '—'}
                 </div>
                 {swrPercentis.p90_patrimonio != null && (
-                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                     Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p90_patrimonio)}
                   </div>
                 )}
@@ -109,7 +109,7 @@ export default function WithdrawPage() {
         <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Guardrails de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
           <div style={{ padding: '0 16px 16px' }}>
             <GuardrailsRetirada guardrails={data.guardrails_retirada} />
-            <div style={{ marginTop: 10, fontSize: '.75rem', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
+            <div style={{ marginTop: 10, fontSize: 'var(--text-sm)', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
               <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto R$350k)
             </div>
           </div>
@@ -130,10 +130,10 @@ export default function WithdrawPage() {
             return (
               <div style={{ marginBottom: 16, background: 'var(--card2)', borderRadius: 8, padding: '12px 14px', border: '1px solid var(--border)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                  <span style={{ fontSize: '.72rem', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.4px' }}>
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.4px' }}>
                     P(FIRE) Atual
                   </span>
-                  <span style={{ fontSize: '.75rem', fontWeight: 700, color: zonaColor }}>
+                  <span style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: zonaColor }}>
                     {pfire.toFixed(1)}% — {statusLabel}
                   </span>
                 </div>
@@ -143,12 +143,12 @@ export default function WithdrawPage() {
                 </div>
                 {/* Threshold markers */}
                 <div style={{ position: 'relative', height: 16, marginTop: 2 }}>
-                  <div style={{ position: 'absolute', left: '70%', top: 0, fontSize: '.5rem', color: 'var(--red)', transform: 'translateX(-50%)' }}>70%↑</div>
-                  <div style={{ position: 'absolute', left: '80%', top: 0, fontSize: '.5rem', color: 'var(--yellow)', transform: 'translateX(-50%)' }}>80%↑</div>
-                  <div style={{ position: 'absolute', left: '95%', top: 0, fontSize: '.5rem', color: 'var(--green)', transform: 'translateX(-50%)' }}>95%</div>
+                  <div style={{ position: 'absolute', left: '70%', top: 0, fontSize: 'var(--text-xs)', color: 'var(--red)', transform: 'translateX(-50%)' }}>70%↑</div>
+                  <div style={{ position: 'absolute', left: '80%', top: 0, fontSize: 'var(--text-xs)', color: 'var(--yellow)', transform: 'translateX(-50%)' }}>80%↑</div>
+                  <div style={{ position: 'absolute', left: '95%', top: 0, fontSize: 'var(--text-xs)', color: 'var(--green)', transform: 'translateX(-50%)' }}>95%</div>
                 </div>
                 {sg.nota && (
-                  <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: 4 }}>{sg.nota}</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>{sg.nota}</div>
                 )}
               </div>
             );
@@ -167,7 +167,7 @@ export default function WithdrawPage() {
           <BondPoolReadiness data={bondPoolReadiness} />
           {bondPoolRunway && (
             <div style={{ marginTop: 14 }}>
-              <div style={{ fontSize: '.72rem', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+              <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
                 Runway do Bond Pool pós-FIRE (sem DCA futuro adicional)
               </div>
               <BondPoolRunwayChart data={bondPoolRunway} />
@@ -191,7 +191,7 @@ export default function WithdrawPage() {
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
             <div style={{ overflowX: 'auto', marginBottom: 12 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Fase</th>
@@ -210,7 +210,7 @@ export default function WithdrawPage() {
                       <td style={{ padding: '6px 8px' }}>{row.fonte}</td>
                       <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.gasto_ex_saude}</td>
                       <td style={{ textAlign: 'right', padding: '6px 8px' }}>{row.saude}</td>
-                      <td style={{ padding: '6px 8px', fontSize: '.72rem', color: 'var(--muted)' }}>{row.obs}</td>
+                      <td style={{ padding: '6px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{row.obs}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -243,36 +243,36 @@ export default function WithdrawPage() {
               <div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '14px' }}>
                   <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--red)' }}>
-                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Essenciais</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Essenciais</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--red)' }}>{fmt(essenciais)}</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(essenciais / total * 100) : 79}% do total</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>Valor principal: hipoteca (~R$1.317/mês e equity)</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(essenciais / total * 100) : 79}% do total</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>Valor principal: hipoteca (~R$1.317/mês e equity)</div>
                   </div>
                   <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--yellow)' }}>
-                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Discricionários</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Discricionários</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--yellow)' }}>{fmt(discric)}</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(discric / total * 100) : 21}% do total</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>Discricionários contínuos</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(discric / total * 100) : 21}% do total</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>Discricionários contínuos</div>
                   </div>
                   <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--muted)' }}>
-                    <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Imprevistos</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Imprevistos</div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(imprevistos)}</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(imprevistos / total * 100) : 2}% do total</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)', marginTop: '2px' }}>buffer pontual</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(imprevistos / total * 100) : 2}% do total</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>buffer pontual</div>
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                   <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(total)}/mês</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Total financeiro</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Total financeiro</div>
                   </div>
                   <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(rendaAnual)}/ano</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Renda FII</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Renda FII</div>
                   </div>
                   <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center', borderLeft: '3px solid var(--green)' }}>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green)' }}>✓ {fmt(orcamentoAnual)}/ano</div>
-                    <div style={{ fontSize: '.65rem', color: 'var(--muted)' }}>Orçamento conservador</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Orçamento conservador</div>
                   </div>
                 </div>
               </div>

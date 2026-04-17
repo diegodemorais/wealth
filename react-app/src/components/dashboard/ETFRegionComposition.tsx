@@ -21,11 +21,11 @@ function BarRows({ regioes }: { regioes: Array<{ name: string; pct: number }> })
   return (
     <>
       {regioes.length === 0 && (
-        <div style={{ color: 'var(--muted)', fontSize: '.75rem' }}>Sem dados</div>
+        <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Sem dados</div>
       )}
       {regioes.map((r, i) => (
         <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
-          <div style={{ flexShrink: 0, width: '88px', fontSize: '.72rem', color: 'var(--muted)' }}>{r.name}</div>
+          <div style={{ flexShrink: 0, width: '88px', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{r.name}</div>
           <div style={{ flex: 1, height: '16px', background: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
             <div style={{
               height: '100%',
@@ -42,7 +42,7 @@ function BarRows({ regioes }: { regioes: Array<{ name: string; pct: number }> })
               )}
             </div>
           </div>
-          <div style={{ flexShrink: 0, width: '32px', textAlign: 'right', fontSize: '.75rem', fontWeight: 700, color: COLORS[i % COLORS.length] }}>
+          <div style={{ flexShrink: 0, width: '32px', textAlign: 'right', fontSize: 'var(--text-sm)', fontWeight: 700, color: COLORS[i % COLORS.length] }}>
             {r.pct}%
           </div>
         </div>
@@ -117,7 +117,7 @@ const ETFRegionComposition: React.FC = () => {
         </div>
       ) : (
         <div>
-          <div style={{ fontSize: '.75rem', fontWeight: 600, color: 'var(--text)', marginBottom: '10px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', marginBottom: '10px' }}>
             {etfData[selectedTab]?.label}
           </div>
           <BarRows regioes={etfData[selectedTab]?.regioes ?? []} />
@@ -143,7 +143,7 @@ const styles: Record<string, React.CSSProperties> = {
   tab: {
     padding: '5px 14px',
     borderRadius: '4px',
-    fontSize: '.75rem',
+    fontSize: 'var(--text-sm)',
     cursor: 'pointer',
     transition: 'all 0.15s',
   },

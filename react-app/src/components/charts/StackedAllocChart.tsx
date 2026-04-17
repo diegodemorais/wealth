@@ -23,11 +23,11 @@ export function StackedAllocChart({ data }: StackedAllocChartProps) {
   return (
     <div>
       <div style={{ marginBottom: 8 }}>
-        <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>Por Classe de Ativo</div>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>Por Classe de Ativo</div>
         <ReactECharts ref={chartRef} option={option} style={{ height: 220, width: "100%" }} />
       </div>
       <div style={{ marginTop: 12 }}>
-        <div style={{ fontSize: '.65rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>Intra-Equity — Pesos Atuais vs Alvo</div>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 4 }}>Intra-Equity — Pesos Atuais vs Alvo</div>
       </div>
     </div>
   );

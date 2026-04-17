@@ -63,7 +63,7 @@ export function CustoBaseTable({ defaultOpen = false }: { defaultOpen?: boolean 
       defaultOpen={defaultOpen}
     >
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Bucket</th>

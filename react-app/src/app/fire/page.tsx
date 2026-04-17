@@ -188,7 +188,7 @@ export default function FirePage() {
                         display: 'inline-block', padding: '6px 18px',
                         background: accentColor, color: isAspir ? '#000' : 'white',
                         borderRadius: 'var(--radius-md)', fontWeight: 700,
-                        fontSize: '.78rem', textDecoration: 'none',
+                        fontSize: 'var(--text-sm)', textDecoration: 'none',
                       }}>Simular</Link>
                     </div>
                   </div>
@@ -249,7 +249,7 @@ export default function FirePage() {
             })().map((scenario, i) => (
               <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ minWidth: '180px' }}>
-                  <div style={{ fontSize: '.8rem', fontWeight: 600 }}>{scenario.label}</div>
+                  <div style={{ fontSize: 'var(--text-base)', fontWeight: 600 }}>{scenario.label}</div>
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{scenario.gastoLabel}</div>
                   {scenario.delta && <div style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>{scenario.delta}</div>}
                 </div>

@@ -57,13 +57,13 @@ export function HoldingsTable() {
     const diffDays = Math.round((Date.now() - new Date(ibkrDate + 'T00:00:00').getTime()) / 86400000);
     if (diffDays > 3) {
       return (
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 9999, fontSize: '.6rem', fontWeight: 700, background: 'rgba(234,179,8,.2)', color: 'var(--yellow)', border: '1px solid rgba(234,179,8,.3)' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 9999, fontSize: 'var(--text-xs)', fontWeight: 700, background: 'rgba(234,179,8,.2)', color: 'var(--yellow)', border: '1px solid rgba(234,179,8,.3)' }}>
           ⚠ dados de {diffDays} dias atrás
         </span>
       );
     }
     return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 9999, fontSize: '.6rem', fontWeight: 600, background: 'rgba(34,197,94,.12)', color: 'var(--green)' }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 9999, fontSize: 'var(--text-xs)', fontWeight: 600, background: 'rgba(34,197,94,.12)', color: 'var(--green)' }}>
         {ibkrDate}
       </span>
     );
@@ -77,7 +77,7 @@ export function HoldingsTable() {
       </div>
 
       <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-        <table style={{ width: '100%', minWidth: 520, borderCollapse: 'collapse', fontSize: '.82rem' }}>
+        <table style={{ width: '100%', minWidth: 520, borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid var(--border)' }}>
               <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Ativo</th>
@@ -94,11 +94,11 @@ export function HoldingsTable() {
             {positions.map(p => (
               <tr key={p.ticker} style={{ borderBottom: '1px solid var(--border)' }}>
                 <td style={{ padding: '7px 8px', fontWeight: 700 }}>{p.ticker}</td>
-                <td style={{ padding: '7px 8px', color: bucketColors[p.bucket] ?? 'var(--muted)', fontSize: '.7rem' }}>{p.bucket}</td>
+                <td style={{ padding: '7px 8px', color: bucketColors[p.bucket] ?? 'var(--muted)', fontSize: 'var(--text-xs)' }}>{p.bucket}</td>
                 <td style={{ padding: '7px 8px' }}>
                   {p.status === 'alvo'
-                    ? <span style={{ display: 'inline-block', padding: '1px 6px', borderRadius: 4, background: 'rgba(34,197,94,.15)', color: 'var(--green)', fontSize: '.7rem', fontWeight: 600 }}>alvo</span>
-                    : <span style={{ display: 'inline-block', padding: '1px 6px', borderRadius: 4, background: 'rgba(234,179,8,.15)', color: 'var(--yellow)', fontSize: '.7rem', fontWeight: 600 }}>transit.</span>
+                    ? <span style={{ display: 'inline-block', padding: '1px 6px', borderRadius: 4, background: 'rgba(34,197,94,.15)', color: 'var(--green)', fontSize: 'var(--text-xs)', fontWeight: 600 }}>alvo</span>
+                    : <span style={{ display: 'inline-block', padding: '1px 6px', borderRadius: 4, background: 'rgba(234,179,8,.15)', color: 'var(--yellow)', fontSize: 'var(--text-xs)', fontWeight: 600 }}>transit.</span>
                   }
                 </td>
                 <td style={{ textAlign: 'right', padding: '7px 8px' }} className="hide-mobile">{fmtPm(p.pm)}</td>
@@ -112,7 +112,7 @@ export function HoldingsTable() {
         </table>
       </div>
 
-      <div style={{ marginTop: 10, fontSize: '.75rem', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+      <div style={{ marginTop: 10, fontSize: 'var(--text-sm)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
         <span>Total USD: <strong className="pv">{fmtUsd(totals.usd)}</strong></span>
         <span>Total BRL: <strong className="pv">{fmtBrl(totals.brl)}</strong></span>
       </div>
