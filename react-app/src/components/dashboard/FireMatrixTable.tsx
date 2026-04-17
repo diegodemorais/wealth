@@ -1,21 +1,34 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { fmtPct } from '@/utils/formatters';
 
 interface FireMatrixData {
   perfis: Record<string, { label: string; gasto_anual: number; descricao: string }>;
   patrimonios: number[];
   gastos: number[];
   cenarios: Record<string, Record<string, number>>;
+  retornos_equity?: { base: number; fav: number; stress: number };
 }
 
 interface FireMatrixTableProps {
   data: FireMatrixData;
+  idades?: (number | null)[];
 }
 
-export function FireMatrixTable({ data }: FireMatrixTableProps) {
+function fmtCompact(v: number): string {
+  if (v >= 1_000_000) return `${Math.round(v / 1_000_000)}M`;
+  return `${Math.round(v / 1_000)}k`;
+}
+
+const SCENARIO_LABELS: Record<string, string> = {
+  base: 'Base',
+  fav: 'Otimista',
+  stress: 'Stress',
+};
+
+export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
   const [selectedScenario, setSelectedScenario] = useState<'base' | 'fav' | 'stress'>('base');
 
@@ -26,10 +39,10 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
   const patrimonios = data.patrimonios;
   const gastos = data.gastos;
   const scenario = data.cenarios[selectedScenario] || {};
+  const retornos = data.retornos_equity;
 
   const getPfire = (pat: number, gasto: number): number => {
     const key = `${pat}_${gasto}`;
-    // cenarios values are fractions 0-1 (e.g. 0.9736 = 97.36%)
     return (scenario[key] ?? 0) * 100;
   };
 
@@ -47,27 +60,32 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
     return 'var(--red)';
   };
 
+  const hasIdades = idades && idades.length === patrimonios.length;
+
   return (
     <div className="flex flex-col gap-4">
       {/* Title & Scenario Selector */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap gap-2">
         <h3 className="text-sm font-semibold text-foreground m-0">
           FIRE Matrix — P(FIRE) by Patrimônio × Gasto
         </h3>
         <div className="flex gap-2">
-          {(['base', 'fav', 'stress'] as const).map(s => (
-            <button
-              key={s}
-              onClick={() => setSelectedScenario(s)}
-              className={`px-3 py-1 text-xs font-semibold rounded border transition-colors ${
-                selectedScenario === s
-                  ? 'border-primary bg-primary/20 text-primary'
-                  : 'border-border bg-transparent text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {s.charAt(0).toUpperCase() + s.slice(1)}
-            </button>
-          ))}
+          {(['base', 'fav', 'stress'] as const).map(s => {
+            const ret = retornos?.[s];
+            return (
+              <button
+                key={s}
+                onClick={() => setSelectedScenario(s)}
+                className={`px-3 py-1 text-xs font-semibold rounded border transition-colors ${
+                  selectedScenario === s
+                    ? 'border-primary bg-primary/20 text-primary'
+                    : 'border-border bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {SCENARIO_LABELS[s]}{ret != null ? ` ${(ret * 100).toFixed(1)}%` : ''}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -75,7 +93,23 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
       <div className="overflow-x-auto rounded-md border border-border">
         <table className="w-full border-collapse text-xs bg-card">
           <thead>
+            {/* Super-header: "Retirada Anual" spanning gasto columns */}
+            <tr className="border-b border-border/40">
+              {hasIdades && <th className="px-2 py-1 bg-secondary/50" />}
+              <th className="px-3 py-1 bg-secondary/50" />
+              <th
+                colSpan={gastos.length}
+                className="px-2 py-1 text-center text-xs font-semibold text-muted-foreground bg-secondary/50 uppercase tracking-wide"
+              >
+                Retirada Anual
+              </th>
+            </tr>
             <tr className="border-b-2 border-border">
+              {hasIdades && (
+                <th className="px-2 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs">
+                  Idade
+                </th>
+              )}
               <th className="px-3 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs">
                 Patrimônio
               </th>
@@ -84,7 +118,7 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
                   key={g}
                   className="px-2 py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs"
                 >
-                  {privacyMode ? '••••' : fmtBrl(g / 1000).replace('R$', '')}k
+                  {privacyMode ? '••••' : fmtCompact(g)}
                 </th>
               ))}
             </tr>
@@ -92,8 +126,13 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
           <tbody>
             {patrimonios.map((pat, patIdx) => (
               <tr key={pat} className="border-b border-border">
+                {hasIdades && (
+                  <td className={`px-2 py-2 text-center font-semibold text-muted-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
+                    {idades![patIdx] ?? '—'}
+                  </td>
+                )}
                 <td className={`px-3 py-2 font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
-                  {privacyMode ? '••••' : fmtBrl(pat)}
+                  {privacyMode ? '••••' : fmtCompact(pat)}
                 </td>
                 {gastos.map(gasto => {
                   const pfire = getPfire(pat, gasto);
@@ -105,7 +144,7 @@ export function FireMatrixTable({ data }: FireMatrixTableProps) {
                         backgroundColor: getColor(pfire),
                         color: getTextColor(pfire),
                       }}
-                      title={`P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtBrl(pat)} e gasto ${fmtBrl(gasto)}`}
+                      title={`P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
                     >
                       {privacyMode ? '••' : fmtPct(pfire / 100, 0)}
                     </td>

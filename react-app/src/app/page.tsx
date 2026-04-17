@@ -105,8 +105,8 @@ export default function HomePage() {
         <div className="kpi text-center">
           <div className="kpi-label">Aporte do Mês</div>
           <div className="kpi-value" style={{ color: 'var(--green)' }}>
-            {derived.aporteMensal
-              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0, notation: 'compact' }).format(derived.aporteMensal)
+            {derived.acumuladoMes
+              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0, notation: 'compact' }).format(derived.acumuladoMes)
               : '—'}
           </div>
           <div className="kpi-sub">{derived.ultimoAporteData || '—'}</div>

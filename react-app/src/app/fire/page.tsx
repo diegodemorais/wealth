@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
@@ -37,6 +37,44 @@ export default function FirePage() {
   if (!data) {
     return <div className="warning-state">Dados carregados mas seção FIRE não disponível</div>;
   }
+
+  // Compute approximate retirement age for each fire_matrix patrimônio row
+  // Uses fire_trilha P50 projection; extrapolates beyond its end with recent monthly growth
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const fireMatrixIdades = useMemo(() => {
+    const ft = (data as any)?.fire_trilha;
+    const pats: number[] = (data as any)?.fire_matrix?.patrimonios ?? [];
+    if (!ft?.dates || !ft?.trilha_brl || !pats.length) return undefined;
+    const idadeAtual: number = (data as any)?.premissas?.idade_atual ?? 39;
+    const anoAtual: number = (data as any)?.premissas?.ano_atual ?? 2026;
+    const dates: string[] = ft.dates;
+    const values: (number | null)[] = ft.trilha_brl;
+    const nonNull = dates.map((dt: string, i: number) => ({ dt, v: values[i] })).filter(x => x.v != null) as { dt: string; v: number }[];
+    if (!nonNull.length) return undefined;
+    // Monthly growth rate from last 12 available months for extrapolation
+    const last = nonNull[nonNull.length - 1];
+    const prev12 = nonNull[Math.max(0, nonNull.length - 12)];
+    const monthlyGrowth = nonNull.length >= 12 ? (last.v / prev12.v) ** (1 / 11) - 1 : 0.006;
+    const toIdade = (year: number, month: number) => idadeAtual + (year - anoAtual) + (month - 4) / 12;
+    return pats.map((pat: number) => {
+      for (const { dt, v } of nonNull) {
+        if (v >= pat) {
+          return Math.round(toIdade(parseInt(dt.slice(0, 4)), parseInt(dt.slice(5, 7))));
+        }
+      }
+      // Extrapolate beyond trajectory end
+      let v = last.v;
+      let year = parseInt(last.dt.slice(0, 4));
+      let month = parseInt(last.dt.slice(5, 7));
+      for (let i = 0; i < 120; i++) {
+        v *= (1 + monthlyGrowth);
+        month++;
+        if (month > 12) { month = 1; year++; }
+        if (v >= pat) return Math.round(toIdade(year, month));
+      }
+      return null;
+    });
+  }, [data]);
 
   return (
     <div>
@@ -85,7 +123,7 @@ export default function FirePage() {
       {data.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title="FIRE Matrix — P(Sucesso 30 anos)" defaultOpen={true}>
           <div style={{ padding: '0 16px 16px' }}>
-            <FireMatrixTable data={data.fire_matrix} />
+            <FireMatrixTable data={data.fire_matrix} idades={fireMatrixIdades} />
             <div className="src">
               Verde &gt;95%, Amarelo 88–95%, Vermelho &lt;88%. Eixo: Patrimônio no FIRE Day (linha) × Gasto Anual BRL (coluna). ★ = gasto típico do perfil · → = patrimônio-alvo do perfil.
             </div>
