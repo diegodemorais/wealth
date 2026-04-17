@@ -4,10 +4,40 @@
  * Pure function: stateless, deterministic with seed
  */
 
-import { MCParams, MCResult } from '@/types/dashboard';
+import { MCParams, MCResult, MCYearlyParams } from '@/types/dashboard';
+
+// ── Seeded PRNG (Mulberry32) ──────────────────────────────────────────────────
 
 /**
- * Run Monte Carlo simulation
+ * Mulberry32 PRNG — fast, good quality, seedable.
+ * Returns a function that produces uniform [0, 1) values.
+ */
+function mulberry32(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    s += 0x6d2b79f5;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Box-Muller transform using provided rand function.
+ * Returns a standard normal variate.
+ */
+function boxMullerWithRand(rand: () => number): number {
+  let u1 = 0;
+  let u2 = 0;
+  while (u1 === 0) u1 = rand();
+  while (u2 === 0) u2 = rand();
+  return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+}
+
+// ── Month-based MC (canonical — used by dashboardStore) ──────────────────────
+
+/**
+ * Run Monte Carlo simulation (month-based, single phase)
  * @param params - Simulation parameters
  * @returns MC results with trajectories and statistics
  */
@@ -36,7 +66,7 @@ export function runMC(params: MCParams): MCResult {
 }
 
 /**
- * Generate MC trajectories
+ * Generate MC trajectories (month-based)
  * @param params - Simulation parameters
  * @returns 2D array: numSims × (years * 12)
  */
@@ -45,6 +75,8 @@ export function runMCTrajectories(params: MCParams): number[][] {
   const monthlyReturn = params.returnMean / 12;
   const monthlyStd = params.returnStd / Math.sqrt(12);
 
+  const rand = params.seed != null ? mulberry32(params.seed) : Math.random;
+
   const trajectories: number[][] = [];
 
   for (let sim = 0; sim < params.numSims; sim++) {
@@ -52,7 +84,7 @@ export function runMCTrajectories(params: MCParams): number[][] {
 
     for (let month = 1; month < months; month++) {
       const prevValue = traj[month - 1];
-      const randomReturn = boxMullerRandom() * monthlyStd + monthlyReturn;
+      const randomReturn = boxMullerWithRand(rand) * monthlyStd + monthlyReturn;
       const newValue = prevValue * (1 + randomReturn) + params.monthlyContribution;
       traj.push(Math.max(0, newValue));
     }
@@ -63,31 +95,57 @@ export function runMCTrajectories(params: MCParams): number[][] {
   return trajectories;
 }
 
-/**
- * Box-Muller transform for normal distribution
- */
-let z0: number | null = null;
-let z1: number | null = null;
+// ── Year-based MC (StressChart — acumulação/desacumulação with shock) ─────────
 
-function boxMullerRandom(): number {
-  if (z1 !== null) {
-    const result = z1;
-    z1 = null;
-    return result;
+/**
+ * Year-based percentile result per year index
+ */
+export interface MCYearlyResult {
+  /** trajectories[sim][year] */
+  trajectories: number[][];
+  /** pcts[year].p10 / p25 / p50 / p75 / p90 */
+  pcts: Array<{ p10: number; p25: number; p50: number; p75: number; p90: number }>;
+}
+
+/**
+ * Run year-based MC with accumulation phase, spending phase, and one-time shock.
+ * Used by StressChart in simulators/page.tsx.
+ */
+export function runMCYearly(params: MCYearlyParams): MCYearlyResult {
+  const {
+    initialCapital, annualReturn, annualVol,
+    numSims, years, annualContribution, yearsToFire,
+    shockYear, shockFrac, seed,
+  } = params;
+
+  const rand = seed != null ? mulberry32(seed) : Math.random;
+  const sims: number[][] = [];
+
+  for (let s = 0; s < numSims; s++) {
+    const traj: number[] = [initialCapital];
+    for (let yr = 1; yr <= years; yr++) {
+      const prev = traj[yr - 1];
+      // Box-Muller normal variate
+      const z = boxMullerWithRand(rand);
+      const ret = annualReturn + annualVol * z;
+      let next = prev * (1 + ret);
+      // Add annual contribution during accumulation phase (pre-FIRE)
+      if (yr <= yearsToFire) next += annualContribution;
+      // Apply one-time shock at shockYear
+      if (yr === shockYear) next = next * (1 + shockFrac);
+      // No floor — negative values show real ruin risk
+      traj.push(next);
+    }
+    sims.push(traj);
   }
 
-  let u1 = 0;
-  let u2 = 0;
+  const pcts = Array.from({ length: years + 1 }, (_, yr) => {
+    const vals = sims.map(t => t[yr]).sort((a, b) => a - b);
+    const at = (p: number) => vals[Math.floor(p * (vals.length - 1))];
+    return { p10: at(0.1), p25: at(0.25), p50: at(0.5), p75: at(0.75), p90: at(0.9) };
+  });
 
-  // Ensure u1 is not 0
-  while (u1 === 0) u1 = Math.random();
-  while (u2 === 0) u2 = Math.random();
-
-  const mag = Math.sqrt(-2.0 * Math.log(u1));
-  z0 = mag * Math.cos(2.0 * Math.PI * u2);
-  z1 = mag * Math.sin(2.0 * Math.PI * u2);
-
-  return z0;
+  return { trajectories: sims, pcts };
 }
 
 /**

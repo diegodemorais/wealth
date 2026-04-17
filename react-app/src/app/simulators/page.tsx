@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
 import { calcFireYear, getAnoAtual, getIdadeAtual } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
+import { runMCYearly } from '@/utils/montecarlo';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -510,36 +511,22 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
   const option = useMemo(() => {
     const currentAge = startAge;
     const years = 100 - currentAge; // always project to age 100
-    const ANNUAL_RETURN = annualReturn;
-    const ANNUAL_VOL = annualVol;
-    const N_SIMS = 500;
+
     const shockYr = Math.max(0, ageOnset - currentAge);
     const yearsToFire = Math.max(0, fireAge - currentAge);
 
-    // Generate trajectories
-    const sims: number[][] = [];
-    for (let s = 0; s < N_SIMS; s++) {
-      const traj: number[] = [patrimonio];
-      for (let yr = 1; yr <= years; yr++) {
-        const prev = traj[yr - 1];
-        // Box-Muller
-        const u1 = Math.random(), u2 = Math.random();
-        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-        const ret = ANNUAL_RETURN + ANNUAL_VOL * z;
-        let next = prev * (1 + ret);
-        // Add monthly contributions during accumulation phase (pre-FIRE)
-        if (yr <= yearsToFire) next += aporteMensal * 12;
-        if (yr === shockYr) next = next * (1 + shock / 100);
-        traj.push(next); // No floor — negative values show real ruin risk
-      }
-      sims.push(traj);
-    }
-
-    // Compute percentiles per year
-    const pcts = Array.from({ length: years + 1 }, (_, yr) => {
-      const vals = sims.map(t => t[yr]).sort((a, b) => a - b);
-      const at = (p: number) => vals[Math.floor(p * (vals.length - 1))];
-      return { p10: at(0.1), p25: at(0.25), p50: at(0.5), p75: at(0.75), p90: at(0.9) };
+    // C3: use canonical runMCYearly from montecarlo.ts (year-based, shock support)
+    const { pcts } = runMCYearly({
+      initialCapital: patrimonio,
+      annualReturn,
+      annualVol,
+      numSims: 500,
+      years,
+      annualContribution: aporteMensal * 12,
+      yearsToFire,
+      shockYear: shockYr,
+      shockFrac: shock / 100,
+      // no seed — stress chart intentionally shows stochastic spread
     });
 
     const labels = Array.from({ length: years + 1 }, (_, i) => `${currentAge + i}a`);

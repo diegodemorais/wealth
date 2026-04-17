@@ -117,6 +117,25 @@ export interface MCParams {
   stressLevel: number; // 0-100, percentage shock to returns
   years: number;
   numSims: number;
+  seed?: number; // optional: makes MC deterministic
+}
+
+/** Parameters for year-based MC (StressChart — acumulação/desacumulação with shock) */
+export interface MCYearlyParams {
+  initialCapital: number;
+  annualReturn: number;
+  annualVol: number;
+  numSims: number;
+  years: number;
+  /** Annual contribution during accumulation phase (pre-fireYear) */
+  annualContribution: number;
+  /** Year index (0-based) at which accumulation stops and spending begins */
+  yearsToFire: number;
+  /** Year index (0-based) at which the one-time shock is applied */
+  shockYear: number;
+  /** Shock magnitude as fraction (e.g. -0.4 for -40%) */
+  shockFrac: number;
+  seed?: number;
 }
 
 export interface MCResult {
