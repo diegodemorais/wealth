@@ -854,7 +854,7 @@ function StressTestSection() {
           {[
             { label: 'Patrimônio', value: fmtBRL(patrimonio) },
             { label: 'Aporte mensal', value: aporteMensal > 0 ? `R$${(aporteMensal / 1000).toFixed(0)}k` : '—' },
-            { label: 'Custo de vida', value: premissasST.custo_vida_base != null ? `R$${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano` : '—' },
+            { label: 'Custo de vida', value: premissasST.custo_vida_base != null ? `R$${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano · Solteiro` : '—' },
             { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
             { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
             { label: 'Distribuição', value: 'Normal (Box-Muller)' },

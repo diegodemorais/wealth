@@ -50,10 +50,11 @@ export default function HomePage() {
   const activeProf = byProfile[activeProfile] ?? byProfile[0];
   const sensitivity = (data as any)?.fire_aporte_sensitivity;
 
-  // KPI strip: P(FIRE|53) from current profile (Atual)
-  const pfireAtual = byProfile[0]?.p_fire_53 ?? null;
-  const pfireAtualStress = byProfile[0]?.p_fire_53_stress ?? null;
-  const pfireAtualFav = byProfile[0]?.p_fire_53_fav ?? null;
+  // KPI strip: P(FIRE|53) — segue o perfil ativo no TIME TO FIRE abaixo
+  const pfireAtual = activeProf?.p_fire_53 ?? null;
+  const pfireAtualStress = activeProf?.p_fire_53_stress ?? null;
+  const pfireAtualFav = activeProf?.p_fire_53_fav ?? null;
+  const pfirePerfilLabel: string = activeProf?.label ?? 'Solteiro';
   const pfireColor = pfireAtual != null
     ? pfireAtual >= 88 ? 'var(--green)' : pfireAtual >= 80 ? 'var(--yellow)' : 'var(--red)'
     : 'var(--muted)';
@@ -108,6 +109,9 @@ export default function HomePage() {
             {pfireAtualStress != null && pfireAtualFav != null
               ? `${pfireAtualStress.toFixed(1)}–${pfireAtualFav.toFixed(1)}% [stress–fav]`
               : 'Monte Carlo 10k sims'}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', opacity: .65, marginTop: 2 }}>
+            perfil: {pfirePerfilLabel}
           </div>
         </div>
         {/* Drift Máximo */}
