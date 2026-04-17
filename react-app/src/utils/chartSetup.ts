@@ -71,70 +71,97 @@ export function createBaseOption(theme: ChartTheme, privacyMode: boolean) {
  */
 export function createAttributionChartOption(options: BaseChartOptions) {
   const { privacyMode, theme } = options;
-  const attr = (options.data as any)?.attribution ?? {};
-  const buckets = attr.por_bucket ?? {};
+  const ta = (options.data as any)?.timeline_attribution ?? {};
 
-  // Build donut slices: Aportes + equity by bucket + RF + Câmbio
-  const slices = [
-    { name: 'Aportes',            value: attr.aportes   ?? 0, color: CHART_COLORS.accent },
-    { name: 'SWRD (Blend)',       value: buckets.SWRD   ?? 0, color: CHART_COLORS.green },
-    { name: 'Factor Small Value', value: buckets.AVGS   ?? 0, color: '#238636' },
-    { name: 'Emergentes',         value: buckets.AVEM   ?? 0, color: CHART_COLORS.pink },
-    { name: 'RF Local',           value: attr.rf        ?? 0, color: CHART_COLORS.yellow },
-    { name: 'Câmbio',             value: attr.cambio    ?? 0, color: CHART_COLORS.red },
-  ].filter(s => s.value > 0);
+  const dates: string[] = ta.dates ?? [];
+  const aportes: number[] = ta.aportes ?? [];
+  const equityUsd: number[] = ta.equity_usd ?? [];
+  const cambio: number[] = ta.cambio ?? [];
+  const rf: number[] = ta.rf ?? [];
 
-  const total = slices.reduce((sum, s) => sum + s.value, 0);
+  const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const xData = dates.map((ym: string) => {
+    const [y, m] = ym.split('-');
+    return MONTHS_PT[parseInt(m, 10) - 1] + '/' + y.slice(2);
+  });
 
-  const fmt = (v: number) => {
+  const fmtAxis = (v: number) => {
+    const abs = Math.abs(v);
+    if (abs >= 1e6) return `R$${(v / 1e6).toFixed(1)}M`;
+    if (abs >= 1e3) return `R$${Math.round(v / 1e3)}k`;
+    return `R$${v}`;
+  };
+  const fmtTip = (v: number) => {
     if (privacyMode) return '••••';
     const abs = Math.abs(v);
-    if (abs >= 1_000_000) return `R$${(abs / 1_000_000).toFixed(2)}M`;
-    if (abs >= 1_000) return `R$${Math.round(abs / 1_000)}k`;
-    return `R$${v.toLocaleString('pt-BR')}`;
+    const sign = v < 0 ? '−R$' : 'R$';
+    if (abs >= 1e6) return `${sign}${(abs / 1e6).toFixed(2)}M`;
+    if (abs >= 1e3) return `${sign}${Math.round(abs / 1e3)}k`;
+    return `${sign}${abs}`;
   };
+
+  const interval = Math.max(1, Math.floor(dates.length / 8));
+
+  const series = [
+    { name: 'Aportes',     data: aportes,   color: CHART_COLORS.accent  },
+    { name: 'Equity USD',  data: equityUsd, color: CHART_COLORS.green   },
+    { name: 'RF Local',    data: rf,        color: CHART_COLORS.yellow  },
+    { name: 'Câmbio/FX',  data: cambio,    color: CHART_COLORS.red     },
+  ];
 
   return {
     backgroundColor: 'transparent',
     tooltip: {
-      trigger: 'item' as const,
+      trigger: 'axis' as const,
       backgroundColor: theme.tooltip.backgroundColor,
       borderColor: theme.tooltip.borderColor,
       textStyle: theme.tooltip.textStyle,
-      formatter: (p: any) => {
-        if (privacyMode) return `${p.name}: ••••`;
-        return `${p.marker} ${p.name}<br/>${fmt(p.value)} (${p.percent?.toFixed(1)}%)`;
+      formatter: (params: any[]) => {
+        if (!Array.isArray(params)) return '';
+        let r = `${params[0].axisValueLabel}<br/>`;
+        params.forEach((p: any) => {
+          r += `${p.marker} ${p.seriesName}: ${fmtTip(p.value ?? 0)}<br/>`;
+        });
+        return r;
       },
     },
     legend: {
-      orient: 'vertical' as const,
-      right: 10,
-      top: 'center',
+      top: 0,
       textStyle: { color: theme.textStyle.color, fontSize: 11 },
-      data: slices.map(s => s.name),
+      itemWidth: 12,
+      itemHeight: 10,
     },
-    series: [
-      {
-        name: 'Patrimônio',
-        type: 'pie' as const,
-        radius: ['45%', '70%'],
-        center: ['40%', '50%'],
-        data: slices.map(s => ({
-          name: s.name,
-          value: s.value,
-          itemStyle: { color: s.color },
-          label: {
-            show: s.value / total > 0.08,
-            color: '#fff',
-            fontSize: 11,
-            fontWeight: 600,
-            formatter: privacyMode ? '••••' : `{d}%`,
-          },
-        })),
-        emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } },
-        labelLine: { show: false },
+    grid: { left: 60, right: 16, top: 28, bottom: 24, containLabel: true },
+    xAxis: {
+      type: 'category' as const,
+      data: xData,
+      axisLine: { lineStyle: { color: '#30363d' } },
+      axisLabel: {
+        color: privacyMode ? 'transparent' : '#8b949e',
+        fontSize: 10,
+        interval,
       },
-    ],
+    },
+    yAxis: {
+      type: 'value' as const,
+      axisLabel: {
+        color: privacyMode ? 'transparent' : '#8b949e',
+        fontSize: 10,
+        formatter: privacyMode ? () => '••••' : fmtAxis,
+      },
+      splitLine: { lineStyle: { color: '#21262d' } },
+    },
+    series: series.map(s => ({
+      name: s.name,
+      type: 'line' as const,
+      stack: 'total',
+      smooth: true,
+      symbolSize: 0,
+      lineStyle: { width: 0 },
+      areaStyle: { color: s.color, opacity: 0.85 },
+      itemStyle: { color: s.color },
+      data: s.data,
+    })),
   };
 }
 

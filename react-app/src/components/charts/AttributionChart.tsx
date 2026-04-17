@@ -21,6 +21,6 @@ export function AttributionChart({ data }: AttributionChartProps) {
   );
 
   return (
-    <ReactECharts ref={chartRef} option={option} style={{ height: 280, width: '100%' }} />
+    <ReactECharts ref={chartRef} option={option} style={{ height: 320, width: '100%' }} />
   );
 }

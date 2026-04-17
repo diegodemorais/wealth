@@ -110,11 +110,12 @@ function FireSimuladorSection() {
       if (params.get('preset') === 'aspiracional') {
         presetApplied.current = true;
         if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
-        if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+        const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
+        if (favRetorno != null) setRetorno(+((favRetorno * 100).toFixed(2)));
         const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
         if (ci != null) setCusto(ci);
         setFireCond('solteiro');
-        setFireMkt('base');
+        setFireMkt('fav');
         setCustom(false);
       }
     }
@@ -124,9 +125,12 @@ function FireSimuladorSection() {
   const currentAge: number | undefined = premissas.idade_atual;
   const patrimonio: number | undefined = (data?.patrimonio as any)?.total_financeiro ?? premissas.patrimonio_atual;
 
-  // fire50 aspiracional preset: use MC data if available
-  const pfire50 = data?.fire?.cenario_aspiracional?.probabilidade_sucesso ?? data?.fire?.probabilidade_sucesso ?? null;
-  const pfire53 = data?.fire?.cenario_base?.probabilidade_sucesso ?? null;
+  // P(sucesso) por cenário — reactive to current fireMkt selection
+  // pfire_aspiracional/pfire_base: { stress, base, fav } — percentuais diretos (ex: 86.5)
+  const pfireAsp = (data as any)?.pfire_aspiracional ?? null;
+  const pfireBase = (data as any)?.pfire_base ?? null;
+  const pfire50 = pfireAsp != null ? (pfireAsp[fireMkt] ?? null) : null;
+  const pfire53 = pfireBase != null ? (pfireBase[fireMkt] ?? null) : null;
 
   // SWR from data
   const swrPercentis = (data as any)?.fire_swr_percentis;
@@ -179,11 +183,13 @@ function FireSimuladorSection() {
 
   const setFire50Preset = () => {
     if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
-    if (premissas.retorno_equity_base != null) setRetorno(+((premissas.retorno_equity_base * 100).toFixed(2)));
+    // Aspiracional: mercado favorável + gasto mínimo (solteiro)
+    const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
+    if (favRetorno != null) setRetorno(+((favRetorno * 100).toFixed(2)));
     const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
     if (ci != null) setCusto(ci);
     setFireCond('solteiro');
-    setFireMkt('base');
+    setFireMkt('fav');
     setCustom(false);
   };
 
@@ -228,16 +234,18 @@ function FireSimuladorSection() {
           {/* 3 cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', marginBottom: '10px' }}>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>Cenário Aspiracional</div>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>P(sucesso) Aspiracional</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
-                {pfire50 !== null ? `${(pfire50 * 100).toFixed(0)}%` : '—'}
+                {pfire50 !== null ? `${pfire50.toFixed(0)}%` : '—'}
               </div>
+              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>FIRE antecipado · {fireMkt}</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--accent)' }}>
-              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>Cenário Base (plano)</div>
+              <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>P(sucesso) Base</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
-                {pfire53 !== null ? `${(pfire53 * 100).toFixed(0)}%` : (data?.fire?.probabilidade_sucesso ? `${(data.fire.probabilidade_sucesso * 100).toFixed(0)}%` : '—')}
+                {pfire53 !== null ? `${pfire53.toFixed(0)}%` : '—'}
               </div>
+              <div style={{ fontSize: '.55rem', color: 'var(--muted)' }}>Plano conservador · {fireMkt}</div>
             </div>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: '.6rem', color: 'var(--muted)' }}>Patrimônio projetado</div>
