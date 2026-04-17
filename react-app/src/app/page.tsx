@@ -89,8 +89,8 @@ export default function HomePage() {
         firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
-      {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Equity YTD (USD) · Portfolio YTD (BRL) */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-3.5">
+      {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Equity YTD (USD) · Portfolio YTD (BRL) · Passivos */}
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-2.5 mb-3.5">
         {/* P(FIRE|53) */}
         <div className="kpi text-center border-l-4" style={{ borderLeftColor: pfireColor }}>
           <div className="kpi-label">P(FIRE|53)</div>
@@ -151,45 +151,34 @@ export default function HomePage() {
             </div>
           );
         })()}
-      </div>
-
-      {/* 3. PASSIVOS — card com itens e total */}
-      {(() => {
-        const passivos = (data as any)?.passivos;
-        const irDiferido = (data as any)?.tax?.ir_diferido_total_brl ?? null;
-        const items: { label: string; value: number; note?: string }[] = passivos
-          ? [
-              passivos.hipoteca_brl   ? { label: 'Hipoteca SAC', value: passivos.hipoteca_brl, note: passivos.hipoteca_vencimento ? `vence ${passivos.hipoteca_vencimento.slice(0, 4)}` : undefined } : null,
-              passivos.emprestimo_xp_brl ? { label: 'Empréstimo XP', value: passivos.emprestimo_xp_brl } : null,
-              passivos.ir_diferido_brl   ? { label: 'IR Diferido', value: passivos.ir_diferido_brl, note: 'Lei 14.754' } : null,
-            ].filter(Boolean) as { label: string; value: number; note?: string }[]
-          : irDiferido
-          ? [{ label: 'IR Diferido', value: irDiferido, note: 'Lei 14.754' }]
-          : [];
-        if (items.length === 0) return null;
-        const total = passivos?.total_brl ?? items.reduce((s, i) => s + i.value, 0);
-        return (
-          <div className="bg-card border border-border/50 rounded mb-3.5" style={{ borderLeft: '3px solid var(--red)' }}>
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/30">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted">Passivos</span>
-              <span className="text-sm font-bold font-mono" style={{ color: 'var(--red)' }}>
+        {/* Passivos — compact 6th KPI card */}
+        {(() => {
+          const passivos = (data as any)?.passivos;
+          const irDiferido = (data as any)?.tax?.ir_diferido_total_brl ?? null;
+          const items: { label: string; value: number }[] = passivos
+            ? [
+                passivos.hipoteca_brl      ? { label: 'Hipoteca', value: passivos.hipoteca_brl } : null,
+                passivos.emprestimo_xp_brl ? { label: 'XP', value: passivos.emprestimo_xp_brl } : null,
+                passivos.ir_diferido_brl   ? { label: 'IR Dif.', value: passivos.ir_diferido_brl } : null,
+              ].filter(Boolean) as { label: string; value: number }[]
+            : irDiferido
+            ? [{ label: 'IR Dif.', value: irDiferido }]
+            : [];
+          if (items.length === 0) return null;
+          const total = passivos?.total_brl ?? items.reduce((s, i) => s + i.value, 0);
+          return (
+            <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--red)' }}>
+              <div className="kpi-label">Passivos</div>
+              <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: 'var(--red)' }}>
                 {privacyMode ? '••••' : `-R$${(total / 1000).toFixed(0)}k`}
-              </span>
+              </div>
+              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>
+                {privacyMode ? '••' : items.map(i => `${i.label} ${(i.value / 1000).toFixed(0)}k`).join(' · ')}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-1 px-4 py-2.5">
-              {items.map((item, i) => (
-                <div key={i} className="flex items-baseline gap-1.5">
-                  <span className="text-xs text-muted">{item.label}</span>
-                  <span className="text-xs font-mono font-semibold" style={{ color: 'var(--red)' }}>
-                    {privacyMode ? '••••' : `-R$${(item.value / 1000).toFixed(0)}k`}
-                  </span>
-                  {item.note && <span className="text-xs text-muted opacity-60">{item.note}</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
+      </div>
 
       {/* 4. TIME TO FIRE — Redesign com tabs de perfil */}
       {byProfile.length > 0 && (
@@ -329,52 +318,76 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* 5. P(FIRE) — Monte Carlo + Tornado [COLLAPSIBLE] */}
-      {derived && (
-        <CollapsibleSection id="section-pfire-tornado" title="P(FIRE) — Monte Carlo & Sensibilidade" defaultOpen={false} icon="📊">
-          <div className="px-4 pb-4">
-            <PFireMonteCarloTornado
-              pfireBase={derived.pfireBase}
-              pfireFav={derived.pfireFav}
-              pfireStress={derived.pfireStress}
-              tornadoData={derived.tornadoData}
-              firePatrimonioAtual={derived.firePatrimonioAtual}
-              firePatrimonioGatilho={derived.firePatrimonioGatilho}
-            />
+      {/* 5. MERCADO & MACRO — card fixo (substitui inline mercado + Contexto Macro collapsible) */}
+      {(() => {
+        const macro = (data as any)?.macro ?? {};
+        const mercado = (data as any)?.mercado ?? {};
+        const btcUsd = mercado.btc_usd ?? macro.bitcoin_usd;
+        const dot = (color: string) => (
+          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: color, marginLeft: 4, verticalAlign: 'middle' }} />
+        );
+        return (
+          <div className="bg-card border border-border/50 rounded mb-3.5">
+            <div className="px-4 pt-3 pb-1 border-b border-border/20">
+              <span className="text-xs font-semibold uppercase tracking-wide text-muted">Mercado & Macro</span>
+            </div>
+            {/* Row 1: Preços */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 px-4 pt-2.5 pb-1 gap-y-2">
+              <div>
+                <div className="text-xs text-muted">USD/BRL</div>
+                <div className="text-sm font-bold font-mono mt-0.5">
+                  {derived.CAMBIO ? `R$${derived.CAMBIO.toFixed(2)}` : '—'}
+                </div>
+                {mercado.cambio_mtd_pct != null && (
+                  <div className="text-xs text-muted">{mercado.cambio_mtd_pct > 0 ? '+' : ''}{mercado.cambio_mtd_pct.toFixed(1)}% MtD</div>
+                )}
+              </div>
+              <div>
+                <div className="text-xs text-muted">BTC/USD</div>
+                <div className="text-sm font-bold font-mono mt-0.5">
+                  {btcUsd ? `$${Number(btcUsd).toLocaleString('en-US', { maximumFractionDigits: 0 })}` : '—'}
+                </div>
+                {mercado.btc_mtd_pct != null && (
+                  <div className="text-xs text-muted">{mercado.btc_mtd_pct > 0 ? '+' : ''}{mercado.btc_mtd_pct.toFixed(1)}% MtD</div>
+                )}
+              </div>
+              <div>
+                <div className="text-xs text-muted flex items-center">IPCA+ 2040{dot(ipcaDotColor)}</div>
+                <div className="text-sm font-bold font-mono mt-0.5">{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</div>
+                <div className="text-xs text-muted">IPCA+</div>
+              </div>
+              <div>
+                <div className="text-xs text-muted flex items-center">Renda+ 2065{dot(rendaDotColor)}</div>
+                <div className="text-sm font-bold font-mono mt-0.5">{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</div>
+                <div className="text-xs text-muted">IPCA+</div>
+              </div>
+            </div>
+            {/* Divider */}
+            <div className="border-t border-border/20 mx-4" />
+            {/* Row 2: Juros */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 px-4 pt-2 pb-3 gap-y-2">
+              <div>
+                <div className="text-xs text-muted">Selic Meta</div>
+                <div className="text-sm font-bold font-mono mt-0.5">{macro.selic_meta != null ? `${(macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
+              </div>
+              <div>
+                <div className="text-xs text-muted">Fed Funds</div>
+                <div className="text-sm font-bold font-mono mt-0.5">{macro.fed_funds != null ? `${(macro.fed_funds as number).toFixed(2)}%` : '—'}</div>
+              </div>
+              <div>
+                <div className="text-xs text-muted">Spread Selic-FF</div>
+                <div className="text-sm font-bold font-mono mt-0.5">{macro.spread_selic_ff != null ? `${(macro.spread_selic_ff as number).toFixed(2)}pp` : '—'}</div>
+              </div>
+              <div>
+                <div className="text-xs text-muted">Exp. Cambial</div>
+                <div className="text-sm font-bold font-mono mt-0.5">{macro.exposicao_cambial_pct != null ? `${(macro.exposicao_cambial_pct as number).toFixed(1)}%` : '—'}</div>
+              </div>
+            </div>
           </div>
-        </CollapsibleSection>
-      )}
+        );
+      })()}
 
-      {/* 6. CONTEXTO DE MERCADO — linha compacta */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs mb-3.5 px-1" style={{ opacity: 0.85 }}>
-        <span className="text-muted uppercase tracking-wide font-semibold text-xs">Mercado:</span>
-        <span>
-          💵 <span className="font-mono">{derived.CAMBIO ? `R$${derived.CAMBIO.toFixed(2)}` : '—'}</span>
-          {(data as any)?.mercado?.cambio_mtd_pct != null && (
-            <span className="text-muted ml-1">({(data as any).mercado.cambio_mtd_pct > 0 ? '+' : ''}{(data as any).mercado.cambio_mtd_pct.toFixed(1)}% MtD)</span>
-          )}
-        </span>
-        <span>
-          ₿ <span className="font-mono">
-            {(data as any)?.mercado?.btc_usd
-              ? `$${Number((data as any).mercado.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
-              : '—'}
-          </span>
-          {(data as any)?.mercado?.btc_mtd_pct != null && (
-            <span className="text-muted ml-1">({(data as any).mercado.btc_mtd_pct > 0 ? '+' : ''}{(data as any).mercado.btc_mtd_pct.toFixed(1)}% MtD)</span>
-          )}
-        </span>
-        <span className="flex items-center gap-1">
-          IPCA+ <span className="font-mono">{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</span>
-          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: ipcaDotColor }} />
-        </span>
-        <span className="flex items-center gap-1">
-          Renda+ <span className="font-mono">{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</span>
-          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: rendaDotColor }} />
-        </span>
-      </div>
-
-      {/* 7. SEMÁFOROS DE GATILHOS */}
+      {/* 6. SEMÁFOROS DE GATILHOS */}
       {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
         <SemaforoGatilhos items={derived.dcaItems} />
       )}
@@ -428,6 +441,21 @@ export default function HomePage() {
             })}
           </div>
         </div>
+      )}
+
+      {/* 8b. TORNADO DE SENSIBILIDADE [COLLAPSIBLE] */}
+      {derived && (
+        <CollapsibleSection id="section-pfire-tornado" title="Tornado de Sensibilidade (P(FIRE) ±10%)" defaultOpen={false} icon="🌪">
+          <div className="px-4 pb-4">
+            <PFireMonteCarloTornado
+              pfireBase={derived.pfireBase}
+              pfireFav={derived.pfireFav}
+              pfireStress={derived.pfireStress}
+              tornadoData={derived.tornadoData}
+              tornadoOnly
+            />
+          </div>
+        </CollapsibleSection>
       )}
 
       {/* 9. APORTE DO MÊS — detalhe */}
@@ -515,54 +543,6 @@ export default function HomePage() {
           })()}
         </CollapsibleSection>
       )}
-
-      {/* 11. CONTEXTO MACRO [COLLAPSIBLE] */}
-      <CollapsibleSection id="section-macro" title="Contexto Macro" defaultOpen={false} icon="📈">
-        <div className="px-4 pb-4">
-          <div className="mb-3.5">
-            <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">Exposição Brasil</div>
-            <div className="bg-card2/40 rounded p-3 mb-2">
-              <div className="flex justify-between">
-                <div>
-                  <div className="text-xs text-muted">Total Brasil</div>
-                  <div className="text-lg font-bold text-green mt-0.5">
-                    {derived.concentrationBrazil != null ? `${(derived.concentrationBrazil * 100).toFixed(1)}%` : '—'}
-                  </div>
-                </div>
-                <div className="text-sm text-muted text-right">
-                  <div>HODL11: R${(((data as any)?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k</div>
-                  <div>RF Total: R${((derived.rfBrl ?? 0) / 1000).toFixed(0)}k</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mb-3.5">
-            <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Indicadores</div>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-card2/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{(data as any)?.macro?.selic_meta != null ? `${((data as any).macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Selic Meta</div>
-              </div>
-              <div className="bg-card2/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{(data as any)?.macro?.fed_funds != null ? `${((data as any).macro.fed_funds as number).toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Fed Funds</div>
-              </div>
-              <div className="bg-card2/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{(data as any)?.macro?.spread_selic_ff != null ? `${((data as any).macro.spread_selic_ff as number).toFixed(2)}pp` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Spread Selic-FF</div>
-              </div>
-              <div className="bg-card2/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{(data as any)?.macro?.exposicao_cambial_pct != null ? `${((data as any).macro.exposicao_cambial_pct as number).toFixed(1)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Exp. Cambial</div>
-              </div>
-            </div>
-            {(data as any)?._generated_brt && (
-              <div className="text-xs text-muted mt-1.5">Atualizado: {(data as any)._generated_brt as string}</div>
-            )}
-          </div>
-          <div className="text-xs text-muted">Fonte: BCB / FRED · Nubank · IBKR</div>
-        </div>
-      </CollapsibleSection>
 
     </div>
   );
