@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TimelineChart } from '@/components/charts/TimelineChart';
 import { AttributionChart } from '@/components/charts/AttributionChart';
@@ -29,6 +30,7 @@ export default function PerformancePage() {
   const data = useDashboardStore(s => s.data);
   const isLoading = useDashboardStore(s => s.isLoadingData);
   const dataError = useDashboardStore(s => s.dataLoadError);
+  const privacyMode = useUiStore(s => s.privacyMode);
   const [timelinePeriod, setTimelinePeriod] = useState<Period>('all');
 
   useEffect(() => {
@@ -53,79 +55,87 @@ export default function PerformancePage() {
 
   return (
     <div>
-      {/* 1. Alpha Desde o Início vs SWRD — PRIMEIRA seção (sempre visível) */}
+      {/* 1. Alpha vs VWRA — PRIMEIRA seção (sempre visível) */}
       <section className="section" id="alphaSwrdSection">
-        <h2>Alpha vs SWRD (USD) — Performance Relativa por Período</h2>
+        <h2>Alpha vs VWRA (benchmark) — Carteira Target por Período</h2>
         <DeltaBarChart data={data} height={200} />
-        {/* KPI cards below chart */}
+        {/* KPI cards alinhados ao contexto de alpha */}
         {(() => {
-          const dca = (data as any)?.dca_status?.ipca2040 ?? {};
-          const taxaAtual: number | null = dca.taxa_atual ?? data.rf?.ipca2040?.taxa ?? null;
-          const piso: number = dca.piso ?? (data as any)?.pisos?.pisoTaxaIpcaLongo ?? 6.0;
-          const gapAlvo: number | null = dca.gap_alvo_pp ?? null;
-          const alvo: number = dca.alvo_pct ?? 12;
-          const pctAtual: number | null = dca.pct_carteira_atual ?? null;
-          const abovePiso = taxaAtual != null && taxaAtual >= piso;
+          const backtest = (data as any)?.backtest ?? {};
+          const btDates: string[] = backtest.dates ?? [];
+          const btTarget: number[] = backtest.target ?? [];
+          const btShadow: number[] = backtest.shadowA ?? [];
+
+          // Alpha ITD em pp
+          let alphaItdPp: number | null = null;
+          let alphaAnualizadoPp: number | null = null;
+          if (btDates.length > 1 && btTarget.length > 1 && btShadow.length > 1) {
+            const tRet = (btTarget[btTarget.length - 1] / btTarget[0] - 1) * 100;
+            const sRet = (btShadow[btShadow.length - 1] / btShadow[0] - 1) * 100;
+            alphaItdPp = parseFloat((tRet - sRet).toFixed(1));
+            // Anualizado: alpha / anos
+            const [y0, m0] = btDates[0].split('-').map(Number);
+            const [y1, m1] = btDates[btDates.length - 1].split('-').map(Number);
+            const anos = ((y1 - y0) * 12 + (m1 - m0)) / 12;
+            if (anos > 0) alphaAnualizadoPp = parseFloat((alphaItdPp / anos).toFixed(1));
+          }
+
+          const fmt = (v: number | null) => v != null
+            ? `${v >= 0 ? '+' : ''}${v.toFixed(1)}pp`
+            : '—';
 
           return (
             <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
-              {/* Card 1: DCA IPCA+ Status */}
+              {/* Card A: Alpha ITD */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
                 <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  IPCA+ 2040 — DCA
+                  Alpha desde início
                 </div>
-                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: abovePiso ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
-                  {taxaAtual != null ? `${taxaAtual.toFixed(2)}%` : '—'}
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaItdPp != null && alphaItdPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
+                  {privacyMode ? '••' : fmt(alphaItdPp)}
                 </div>
                 <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
-                  piso {piso.toFixed(1)}% · gap {gapAlvo != null ? `${gapAlvo.toFixed(1)}pp` : '—'} p/ alvo
-                </div>
-                <div style={{ marginTop: 6, fontSize: '.58rem', color: abovePiso ? 'var(--green)' : 'var(--muted)', fontWeight: 600 }}>
-                  {abovePiso ? '● DCA ATIVO' : '● abaixo do piso'}
+                  vs VWRA (market-cap global)
                 </div>
               </div>
 
-              {/* Card 2: Posição IPCA+ atual */}
+              {/* Card B: Alpha anualizado */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
                 <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  Posição IPCA+ / Alvo
+                  Alpha anualizado
                 </div>
-                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1.1 }}>
-                  {pctAtual != null ? `${pctAtual.toFixed(1)}%` : '—'}
-                  <span style={{ fontSize: '.75rem', fontWeight: 400, color: 'var(--muted)' }}> / {alvo}%</span>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaAnualizadoPp != null && alphaAnualizadoPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
+                  {privacyMode ? '••' : fmt(alphaAnualizadoPp)}
                 </div>
-                <div style={{ marginTop: 6, background: 'var(--card2)', borderRadius: 4, height: 6, overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${pctAtual != null ? Math.min((pctAtual / alvo) * 100, 100) : 0}%`,
-                    background: 'var(--accent)',
-                    borderRadius: 4,
-                  }} />
-                </div>
-                <div style={{ fontSize: '.6rem', color: 'var(--muted)', marginTop: 4 }}>
-                  da carteira em RF longa
+                <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
+                  média / ano desde início
                 </div>
               </div>
 
-              {/* Card 3: Alpha líquido pós-haircut */}
+              {/* Card C: Alpha líquido esperado pós-haircut (académico) */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
                 <div style={{ fontSize: '.6rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  Alpha Líquido pós-haircut
+                  Alpha líquido esperado
                 </div>
-                <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
                   −0.16%/ano
                 </div>
                 <div style={{ fontSize: '.62rem', color: 'var(--muted)', marginTop: 4 }}>
                   McLean &amp; Pontiff 2016
                 </div>
-                <div style={{ fontSize: '.58rem', color: 'var(--muted)', marginTop: 2 }}>
+                <div style={{ fontSize: '.58rem', color: 'var(--muted)', marginTop: 2, fontStyle: 'italic' }}>
                   haircut 58% pós-publicação
                 </div>
               </div>
             </div>
           );
         })()}
-        <div className="src" style={{ marginTop: 10 }}>Alpha vs VWRA (proxy SWRD) por período cumulativo · McLean &amp; Pontiff 2016: haircut 58%</div>
+        <div className="src" style={{ marginTop: 10 }}>
+          Alpha = retorno cumulativo Target − VWRA (backtest.shadowA) por período ·
+          Base rate persistência de factor premium: ~60–70% em 10a (AQR 2020) ·
+          Gatilho revisão: AVGS &lt; SWRD por &gt;5pp em 24m consecutivos ·
+          Alpha líquido esperado: McLean &amp; Pontiff 2016, haircut 58%
+        </div>
       </section>
 
       {/* 2. Premissas vs Realizado — 5 Anos (2021-2026) */}
