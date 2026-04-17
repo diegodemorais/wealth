@@ -536,6 +536,22 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
   const rendaPlusFlowMonthly = aporteMensalVal * (((data.rf?.renda2065?.valor ?? 0) / (rfBrl || 1)) * rfRatio);
   const cryptoFlowMonthly = aporteMensalVal * cryptoRatio;
 
+  // YTD return: compound monthly TWR for current calendar year
+  const retornoYtd = (() => {
+    const dates: string[] = (data as any).retornos_mensais?.dates ?? [];
+    const values: number[] = (data as any).retornos_mensais?.values ?? [];
+    const currentYear = today.getFullYear().toString();
+    let compound = 1;
+    let hasData = false;
+    for (let i = 0; i < dates.length; i++) {
+      if (dates[i]?.startsWith(currentYear)) {
+        compound *= 1 + (values[i] ?? 0) / 100;
+        hasData = true;
+      }
+    }
+    return hasData ? (compound - 1) * 100 : null; // null if no data for current year
+  })();
+
   return {
     // Core values
     networth: totalBrl,
@@ -561,6 +577,7 @@ export function computeDerivedValues(data: DashboardData): DerivedValues {
     firePatrimonioGatilho: PAT_GATILHO,
 
     // Aporte tracking
+    retornoYtd,
     aporteMensal,
     ultimoAporte,
     ultimoAporteData,

@@ -89,8 +89,8 @@ export default function HomePage() {
         firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
-      {/* 2. KPI TRIPTYCH — P(FIRE|53) · Drift Máximo · Aporte Meta */}
-      <div className="grid grid-cols-3 gap-2.5 mb-3.5">
+      {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Retorno YTD */}
+      <div className="grid grid-cols-2 gap-2.5 mb-3.5" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
         {/* P(FIRE|53) */}
         <div className="kpi text-center border-l-4" style={{ borderLeftColor: pfireColor }}>
           <div className="kpi-label">P(FIRE|53)</div>
@@ -121,6 +121,20 @@ export default function HomePage() {
           </div>
           <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>mensal</div>
         </div>
+        {/* Retorno YTD */}
+        {(() => {
+          const ytd = derived.retornoYtd as number | null;
+          const ytdColor = ytd == null ? 'var(--muted)' : ytd >= 0 ? 'var(--green)' : 'var(--red)';
+          return (
+            <div className="kpi text-center border-l-4" style={{ borderLeftColor: ytdColor }}>
+              <div className="kpi-label">Retorno YTD</div>
+              <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
+                {ytd == null ? '—' : `${ytd >= 0 ? '+' : ''}${ytd.toFixed(1)}%`}
+              </div>
+              <div className="kpi-sub" style={{ fontSize: '0.6rem' }}>carteira {new Date().getFullYear()}</div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* 3. PASSIVOS — card com itens e total */}
