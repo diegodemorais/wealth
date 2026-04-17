@@ -2,113 +2,127 @@
 
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { fmtPct } from '@/utils/formatters';
 
 interface HeatmapData {
-  [key: string]: number;
+  [key: string]: number; // "YYYY-MM": decimal (0.023 = 2.3%)
 }
 
 interface MonthlyReturnsHeatmapProps {
   data?: HeatmapData;
 }
 
+const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
 export function MonthlyReturnsHeatmap({ data }: MonthlyReturnsHeatmapProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
-  const heatmapData = useMemo(() => {
-    if (data && Object.keys(data).length > 0) return data;
-    // No mock data — return empty object and show empty state
-    return {};
+  // Build year → month[1..12] → return map
+  const { years, byYear } = useMemo(() => {
+    if (!data || Object.keys(data).length === 0) return { years: [], byYear: {} };
+
+    const byYear: Record<string, Record<number, number>> = {};
+    for (const [key, val] of Object.entries(data)) {
+      const [y, m] = key.split('-');
+      if (!byYear[y]) byYear[y] = {};
+      byYear[y][parseInt(m, 10)] = val;
+    }
+    const years = Object.keys(byYear).sort();
+    return { years, byYear };
   }, [data]);
 
-  const entries = Object.entries(heatmapData).sort((a, b) => a[0].localeCompare(b[0]));
-
-  const getColor = (returnValue: number): string => {
-    const abs = Math.abs(returnValue);
-    const intensity = Math.min(abs / 0.1, 1);
-
-    if (returnValue > 0) {
-      const g = Math.round(34 + (221 - 34) * intensity);
-      return `rgb(34, ${g}, 94)`;
-    } else {
-      const r = Math.round(239 - (239 - 127) * intensity);
-      const g = Math.round(68 - (68 - 29) * intensity);
-      const b = Math.round(68 - (68 - 39) * intensity);
-      return `rgb(${r}, ${g}, ${b})`;
-    }
-  };
-
-  const getTextColor = (returnValue: number): string => {
-    if (Math.abs(returnValue) < 0.02) return 'var(--muted)';
-    return '#fff';
-  };
-
-  if (entries.length === 0) {
+  if (years.length === 0) {
     return (
-      <div className="bg-card border border-border rounded p-6 text-center text-xs text-muted">
-        Monthly returns heatmap — data will be available soon
+      <div className="text-center text-xs text-muted py-6">
+        Dados de retornos mensais não disponíveis
       </div>
     );
   }
 
+  const getColor = (v: number): string => {
+    const abs = Math.abs(v);
+    const intensity = Math.min(abs / 0.08, 1); // saturates at ±8%
+    if (v > 0) {
+      const g = Math.round(100 + (211 - 100) * intensity);
+      return `rgba(34, ${g}, 100, ${0.25 + 0.65 * intensity})`;
+    } else {
+      const r = Math.round(180 + (248 - 180) * intensity);
+      return `rgba(${r}, 60, 60, ${0.25 + 0.65 * intensity})`;
+    }
+  };
+
+  // Annual compound return
+  const annualReturn = (yearData: Record<number, number>): number => {
+    return Object.values(yearData).reduce((acc, r) => acc * (1 + r), 1) - 1;
+  };
+
+  const cellStyle: React.CSSProperties = {
+    fontSize: '0.62rem',
+    fontWeight: 600,
+    textAlign: 'center',
+    borderRadius: 3,
+    padding: '3px 1px',
+    minWidth: 0,
+  };
+
   return (
-    <div className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-text m-0">
-        Monthly Returns — 24-Month Heatmap
-      </h3>
-
-      {/* Heatmap Grid */}
-      <div className="grid gap-1 p-3 bg-card rounded border border-border overflow-x-auto" style={{
-        gridTemplateColumns: `repeat(${Math.min(12, entries.length)}, minmax(32px, 1fr))`,
-      }}>
-        {entries.map(([month, returnValue]) => (
-          <div
-            key={month}
-            style={{
-              aspectRatio: '1',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              fontSize: 'var(--text-sm)',
-              fontWeight: 600,
-              backgroundColor: getColor(returnValue),
-              color: getTextColor(returnValue),
-            }}
-            title={`${month}: ${privacyMode ? '••••' : fmtPct(returnValue, 2)}`}
-          >
-            {!privacyMode && returnValue !== 0 && (
-              <span>{returnValue > 0 ? '+' : ''}{(returnValue * 100).toFixed(0)}%</span>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Legend */}
-      <div className="flex justify-between text-xs text-muted mt-3">
-        <div>← Worst</div>
-        <div className="font-semibold text-green">Positive Returns</div>
-        <div className="font-semibold text-red">Negative Returns</div>
-        <div>Best →</div>
-      </div>
-
-      {/* Summary Stats */}
-      {entries.length > 0 && (
-        <div className="grid grid-cols-auto-fit gap-3 mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))' }}>
-          {[
-            { label: 'Positive Months', value: `${entries.filter(([, v]) => v > 0).length}/${entries.length}` },
-            { label: 'Avg Return', value: privacyMode ? '••••' : fmtPct(entries.reduce((sum, [, v]) => sum + v, 0) / entries.length, 2) },
-            { label: 'Best Month', value: privacyMode ? '••••' : fmtPct(Math.max(...entries.map(([, v]) => v)), 2) },
-            { label: 'Worst Month', value: privacyMode ? '••••' : fmtPct(Math.min(...entries.map(([, v]) => v)), 2) },
-          ].map((stat, idx) => (
-            <div key={idx} className="bg-card border border-border rounded p-2">
-              <div className="text-xs text-muted mb-1">{stat.label}</div>
-              <div className="text-text font-semibold text-sm">{stat.value}</div>
-            </div>
-          ))}
-        </div>
-      )}
+    <div style={{ overflowX: 'auto' }}>
+      <table style={{ borderCollapse: 'separate', borderSpacing: 2, width: '100%', fontSize: '0.65rem' }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: 'left', paddingRight: 8, color: 'var(--muted)', fontWeight: 600, width: 36 }}></th>
+            {MONTHS_PT.map(m => (
+              <th key={m} style={{ color: 'var(--muted)', fontWeight: 600, textAlign: 'center', paddingBottom: 4, minWidth: 32 }}>
+                {m}
+              </th>
+            ))}
+            <th style={{ color: 'var(--muted)', fontWeight: 600, textAlign: 'center', paddingLeft: 6, minWidth: 40 }}>
+              acum.
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {years.map(year => {
+            const yearData = byYear[year];
+            const annual = annualReturn(yearData);
+            return (
+              <tr key={year}>
+                <td style={{ color: 'var(--muted)', fontWeight: 700, paddingRight: 8, whiteSpace: 'nowrap', fontSize: '0.68rem' }}>
+                  {year}
+                </td>
+                {MONTHS_PT.map((_, i) => {
+                  const month = i + 1;
+                  const val = yearData[month];
+                  if (val == null) {
+                    return <td key={month}><div style={{ ...cellStyle, background: 'var(--card2)', opacity: 0.3, color: 'transparent' }}>·</div></td>;
+                  }
+                  const pct = val * 100;
+                  return (
+                    <td key={month} title={`${year}-${String(month).padStart(2,'0')}: ${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`}>
+                      <div style={{ ...cellStyle, background: getColor(val), color: Math.abs(val) < 0.005 ? 'var(--muted)' : '#fff' }}>
+                        {privacyMode ? '·' : `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}`}
+                      </div>
+                    </td>
+                  );
+                })}
+                <td>
+                  <div style={{
+                    ...cellStyle,
+                    background: getColor(annual),
+                    color: '#fff',
+                    fontWeight: 700,
+                    paddingLeft: 4,
+                    paddingRight: 4,
+                    marginLeft: 4,
+                    border: '1px solid rgba(255,255,255,0.1)',
+                  }}>
+                    {privacyMode ? '·' : `${annual >= 0 ? '+' : ''}${(annual * 100).toFixed(1)}%`}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
