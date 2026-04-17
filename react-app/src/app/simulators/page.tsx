@@ -71,6 +71,18 @@ function FireSimuladorSection() {
   const [retorno, setRetorno] = useState(4.85);
   const [custo, setCusto] = useState(250000);
   const [custom, setCustom] = useState(false);
+  const dataInitialized = useRef(false);
+
+  // Sync initial state from data.premissas once data loads (only if user hasn't interacted)
+  useEffect(() => {
+    if (data && !dataInitialized.current && !custom) {
+      dataInitialized.current = true;
+      const p = data.premissas ?? {};
+      if ((p as any).aporte_mensal) setAporte((p as any).aporte_mensal);
+      if ((p as any).retorno_equity_base) setRetorno(+((p as any).retorno_equity_base * 100).toFixed(2));
+      if ((p as any).custo_vida_base) setCusto((p as any).custo_vida_base);
+    }
+  }, [data, custom]);
 
   // Auto-apply aspiracional preset when navigated from fire page with ?preset=aspiracional
   const presetApplied = useRef(false);
@@ -79,15 +91,16 @@ function FireSimuladorSection() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('preset') === 'aspiracional') {
         presetApplied.current = true;
-        setAporte(25000);
-        setRetorno(4.85);
-        setCusto(250000);
+        setAporte((data?.premissas as any)?.aporte_mensal ?? 25000);
+        setRetorno(+((((data?.premissas as any)?.retorno_equity_base ?? 0.0485) * 100).toFixed(2)));
+        setCusto((data?.premissas as any)?.custo_vida_base ?? 250000);
         setFireCond('solteiro');
         setFireMkt('base');
         setCustom(false);
       }
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   const currentAge: number = data?.fire?.idade_atual ?? 39;
   const patrimonio: number = data?.patrimonio?.total_financeiro ?? data?.fire?.patrimonio_atual ?? 3500000;
@@ -145,9 +158,9 @@ function FireSimuladorSection() {
   };
 
   const setFire50Preset = () => {
-    setAporte(25000);
-    setRetorno(4.85);
-    setCusto(250000);
+    setAporte((data?.premissas as any)?.aporte_mensal ?? 25000);
+    setRetorno(+((((data?.premissas as any)?.retorno_equity_base ?? 0.0485) * 100).toFixed(2)));
+    setCusto((data?.premissas as any)?.custo_vida_base ?? 250000);
     setFireCond('solteiro');
     setFireMkt('base');
     setCustom(false);
