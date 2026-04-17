@@ -187,7 +187,7 @@ export default function FirePage() {
             </div>
             <div style={{ marginTop: '16px' }}>
               <Link
-                href="/simulators"
+                href="/simulators?preset=aspiracional"
                 style={{
                   display: 'inline-block',
                   padding: '10px 24px',

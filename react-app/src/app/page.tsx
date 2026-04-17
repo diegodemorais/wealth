@@ -541,18 +541,35 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.premissas?.taxa_selic ? `${data.premissas.taxa_selic.toFixed(1)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Selic</div>
+                <div className="text-lg font-bold text-text">{data?.macro?.selic_meta != null ? `${(data.macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Selic Meta</div>
               </div>
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.premissas?.ipca_corrente ? `${data.premissas.ipca_corrente.toFixed(1)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">IPCA YTD</div>
+                <div className="text-lg font-bold text-text">{data?.macro?.fed_funds != null ? `${(data.macro.fed_funds as number).toFixed(2)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Fed Funds</div>
               </div>
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+                <div className="text-lg font-bold text-text">{data?.macro?.cambio != null ? `R$ ${(data.macro.cambio as number).toFixed(2)}` : (derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—')}</div>
                 <div className="text-xs text-muted mt-1">USD/BRL</div>
               </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.macro?.spread_selic_ff != null ? `${(data.macro.spread_selic_ff as number).toFixed(2)}pp` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Spread Selic-FF</div>
+              </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.macro?.exposicao_cambial_pct != null ? `${(data.macro.exposicao_cambial_pct as number).toFixed(1)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Exp. Cambial</div>
+              </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.macro?.bitcoin_usd != null ? `$ ${Math.round(data.macro.bitcoin_usd as number).toLocaleString('en')}` : '—'}</div>
+                <div className="text-xs text-muted mt-1">BTC/USD</div>
+              </div>
             </div>
+            {data?._generated_brt && (
+              <div className="text-xs text-slate-500 mt-1.5">
+                Atualizado: {data._generated_brt as string}
+              </div>
+            )}
           </div>
 
           <div className="text-xs text-slate-500 mb-0">

@@ -10,6 +10,8 @@ export interface BacktestChartProps {
   data: DashboardData;
   period?: string; // '3y' | '5y' | 'since2020' | 'since2013' | 'since2009' | 'all'
   height?: number;
+  /** Optional dataset override — when provided, used instead of data.backtest */
+  dataset?: { dates: string[]; target: number[]; shadowA?: number[] };
 }
 
 const MONTHS_PT = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
@@ -51,12 +53,12 @@ function filterByPeriod(
   };
 }
 
-export function BacktestChart({ data, period, height = 300 }: BacktestChartProps) {
+export function BacktestChart({ data, period, height = 300, dataset }: BacktestChartProps) {
   const { privacyMode, theme } = useEChartsPrivacy();
   const chartRef = useChartResize();
 
   const option = useMemo(() => {
-    const backtest = (data as any)?.backtest ?? {};
+    const backtest = dataset ?? (data as any)?.backtest ?? {};
     const allDates: string[] = backtest.dates ?? [];
     const allTarget: number[] = backtest.target ?? [];
     const allShadow: number[] = backtest.shadowA ?? [];

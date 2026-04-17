@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { useMemo } from 'react';
@@ -71,6 +71,23 @@ function FireSimuladorSection() {
   const [retorno, setRetorno] = useState(4.85);
   const [custo, setCusto] = useState(250000);
   const [custom, setCustom] = useState(false);
+
+  // Auto-apply aspiracional preset when navigated from fire page with ?preset=aspiracional
+  const presetApplied = useRef(false);
+  useEffect(() => {
+    if (!presetApplied.current && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('preset') === 'aspiracional') {
+        presetApplied.current = true;
+        setAporte(25000);
+        setRetorno(4.85);
+        setCusto(250000);
+        setFireCond('solteiro');
+        setFireMkt('base');
+        setCustom(false);
+      }
+    }
+  }, []);
 
   const currentAge: number = data?.fire?.idade_atual ?? 39;
   const patrimonio: number = data?.patrimonio?.total_financeiro ?? data?.fire?.patrimonio_atual ?? 3500000;

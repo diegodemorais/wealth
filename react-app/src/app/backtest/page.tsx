@@ -51,17 +51,25 @@ function BacktestHistoricoSection() {
   const [period, setPeriod] = useState<BacktestPeriod>('since2009');
 
   const backtest = data?.backtest;
+  // backtestR5 covers 2005-01 → present (21 years) — used for long periods
+  const backtestR5 = (data as any)?.backtestR5 ?? null;
+
+  // For long periods, use backtestR5 if available; otherwise fall back to backtest
+  const LONG_PERIODS = new Set(['all', 'since2009', 'since2013']);
+  const activeDataset = LONG_PERIODS.has(period) && backtestR5 ? backtestR5 : backtest;
 
   // Determine earliest available date in backtest data
-  const earliestDate: string | null = backtest?.dates?.[0] ?? null;
+  const earliestDate: string | null = activeDataset?.dates?.[0] ?? null;
   const periodMinDates: Record<string, string> = {
     all: '2005-01', since2009: '2009-01', since2013: '2013-01',
     since2020: '2020-01', '5y': '2021-01', '3y': '2023-01', r7: '1989-07',
   };
   const periodLimited = (key: string) => {
-    if (!earliestDate) return false;
+    const ds = LONG_PERIODS.has(key) && backtestR5 ? backtestR5 : backtest;
+    const earliest = ds?.dates?.[0] ?? null;
+    if (!earliest) return false;
     const minNeeded = periodMinDates[key] ?? '2000-01';
-    return earliestDate > minNeeded;
+    return earliest > minNeeded;
   };
 
   // Metrics for selected period
@@ -132,7 +140,13 @@ function BacktestHistoricoSection() {
       )}
 
       {/* Chart — filtered by selected period (r7 uses BacktestR7Chart, handled in page) */}
-      {data && period !== 'r7' && <BacktestChart data={data} period={period} />}
+      {data && period !== 'r7' && (
+        <BacktestChart
+          data={data}
+          period={period}
+          dataset={LONG_PERIODS.has(period) && backtestR5 ? backtestR5 : undefined}
+        />
+      )}
 
       {/* Metrics table */}
       {metricRows.length > 0 && (
@@ -197,14 +211,19 @@ function BacktestHistoricoSection() {
 function ShadowPortfoliosSection() {
   const data = useDashboardStore(s => s.data);
   const [period, setPeriod] = useState<ShadowPeriod>('since2009');
-  const earliestDate: string | null = data?.backtest?.dates?.[0] ?? null;
+  const backtestR5 = (data as any)?.backtestR5 ?? null;
+  const SHADOW_LONG = new Set(['all', 'since2009', 'since2013']);
+  const shadowActiveDataset = SHADOW_LONG.has(period) && backtestR5 ? backtestR5 : data?.backtest;
+  const earliestDate: string | null = shadowActiveDataset?.dates?.[0] ?? null;
   const shadowPeriodMinDates: Record<string, string> = {
     since2009: '2009-01', since2013: '2013-01', since2020: '2020-01',
     '5y': '2021-01', '3y': '2023-01', all: '2005-01',
   };
   const shadowPeriodLimited = (key: string) => {
-    if (!earliestDate) return false;
-    return earliestDate > (shadowPeriodMinDates[key] ?? '2000-01');
+    const ds = SHADOW_LONG.has(key) && backtestR5 ? backtestR5 : data?.backtest;
+    const earliest = ds?.dates?.[0] ?? null;
+    if (!earliest) return false;
+    return earliest > (shadowPeriodMinDates[key] ?? '2000-01');
   };
 
   // Q1 snapshot from data.shadows
@@ -251,7 +270,14 @@ function ShadowPortfoliosSection() {
       )}
 
       {/* Equity curve chart — Target vs VWRA filtered by period */}
-      {data && <BacktestChart data={data} period={period} height={260} />}
+      {data && (
+        <BacktestChart
+          data={data}
+          period={period}
+          height={260}
+          dataset={SHADOW_LONG.has(period) && backtestR5 ? backtestR5 : undefined}
+        />
+      )}
 
       {/* Metrics table */}
       {kpiRows.length > 0 && (

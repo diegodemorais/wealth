@@ -713,10 +713,16 @@ export function createSankeyChartOption(options: BaseChartOptions) {
         orient: 'horizontal' as const,
         emphasis: { focus: 'adjacency' as const },
         nodeWidth: 20,
-        nodePadding: 12,
+        nodePadding: 24,
         label: {
           color: CHART_COLORS.text,
           fontSize: 12,
+        },
+        edgeLabel: {
+          show: !privacyMode,
+          fontSize: 10,
+          color: CHART_COLORS.muted,
+          formatter: (params: any) => fmtK(params.data.value),
         },
         lineStyle: {
           color: 'gradient' as const,

@@ -159,7 +159,10 @@ export default function PortfolioPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 4. Exposição Fatorial — ETFs da Carteira (collapsible) */}
+      {/* 4. Concentração Geográfica */}
+      {data && <ConcentrationChart data={data} />}
+
+      {/* 4b. Exposição Fatorial — ETFs da Carteira (collapsible) */}
       <CollapsibleSection
         id="section-etf-factor"
         title="Exposição Fatorial — ETFs da Carteira"
@@ -171,9 +174,6 @@ export default function PortfolioPage() {
           <div className="src">Fonte: etf_composition.json · Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
         </div>
       </CollapsibleSection>
-
-      {/* 4b. Concentração Geográfica */}
-      {data && <ConcentrationChart data={data} />}
 
       {/* 5. Posições — ETFs Internacionais (IBKR) */}
       <HoldingsTable />
