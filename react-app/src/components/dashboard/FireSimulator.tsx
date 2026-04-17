@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { pfireColor as pfireColorFn } from '@/utils/fire';
 
 interface FireSimulatorProps {
   patrimonioAtual?: number;
@@ -93,10 +94,7 @@ export function FireSimulator({
     };
   }, [aporteMensal, custoVidaAnual, retornoEquity, idadeRetiro, patrimonioAtual, patrimonioGatilho]);
 
-  const pfireColor = results.pfireValue >= 90 ? 'var(--green)'
-    : results.pfireValue >= 70 ? 'var(--yellow)'
-      : results.pfireValue >= 50 ? 'var(--yellow)'
-        : 'var(--red)';
+  const pfireColor = pfireColorFn(results.pfireValue);
 
   const metricCard = (bg: string, border: string) => ({
     background: bg, border: `1px solid ${border}`, borderRadius: '4px', padding: 'var(--space-5)',
@@ -238,7 +236,7 @@ export function FireSimulator({
               ].map(({ label, val }) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
                   <span style={{ color: 'var(--muted)' }}>{label}</span>
-                  <span style={{ fontWeight: 600, color: val >= 90 ? 'var(--green)' : 'var(--yellow)' }}>
+                  <span style={{ fontWeight: 600, color: pfireColorFn(val) }}>
                     {fmtPct(val / 100, 0)}
                   </span>
                 </div>

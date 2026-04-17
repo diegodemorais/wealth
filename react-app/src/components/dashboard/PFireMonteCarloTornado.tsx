@@ -1,5 +1,6 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { pfireColor } from '@/utils/fire';
 
 interface TornadoData {
   label: string;
@@ -31,18 +32,11 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
 }) => {
   const { privacyMode } = useUiStore();
 
-  const getBadgeColor = (value: number) => {
-    if (value >= 90) return 'var(--green)';
-    if (value >= 80) return 'var(--yellow)';
-    if (value >= 70) return 'var(--orange)';
-    return 'var(--red)';
-  };
+  const getBadgeColor = pfireColor;
 
   const getBadgeBg = (value: number) => {
-    if (value >= 90) return 'color-mix(in srgb, var(--green) 12%, transparent)';
-    if (value >= 80) return 'color-mix(in srgb, var(--yellow) 12%, transparent)';
-    if (value >= 70) return 'color-mix(in srgb, var(--orange) 12%, transparent)';
-    return 'color-mix(in srgb, var(--red) 12%, transparent)';
+    const color = pfireColor(value);
+    return `color-mix(in srgb, ${color} 12%, transparent)`;
   };
 
   const sortedTornado = [...tornadoData]

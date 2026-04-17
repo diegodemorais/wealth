@@ -27,7 +27,7 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
     const swr: number = (data as any)?.fire?.swr_gatilho ?? premissas.swr_gatilho ?? 0.03;
     const patrimonioGatilho: number = premissas.patrimonio_gatilho ?? 8333333;
 
-    const anoAtual = new Date().getFullYear();
+    const anoAtual: number = premissas.ano_atual ?? new Date().getFullYear();
     const yearsToFire = idadeFire - idadeAtual;
     const totalYears = 40;
 

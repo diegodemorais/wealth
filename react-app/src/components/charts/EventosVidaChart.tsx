@@ -16,7 +16,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
   const eventosVida: any[] = (data as any)?.eventos_vida ?? [];
   const premissas = (data as any)?.premissas ?? {};
   const idadeAtual: number = premissas.idade_atual ?? 39;
-  const anoAtual = new Date().getFullYear();
+  const anoAtual: number = premissas.ano_atual ?? new Date().getFullYear();
 
   // Build milestones: fixed FIRE milestones + real life events
   const idadeFire: number = premissas.idade_cenario_base ?? 53;

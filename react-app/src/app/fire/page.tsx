@@ -3,20 +3,8 @@
 import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
 
-// Same SWR-based calc as simulators/page.tsx — earliest year where pat >= custo/swrTarget
-function calcFireYear(
-  aporte: number, retorno: number, custo: number,
-  currentAge: number, patrimonio: number, swrTarget: number,
-): { ano: number; idade: number } | null {
-  const target = custo / swrTarget;
-  let pat = patrimonio;
-  for (let yr = 0; yr <= 30; yr++) {
-    if (pat >= target) return { ano: 2026 + yr, idade: currentAge + yr };
-    for (let m = 0; m < 12; m++) pat = pat * (1 + retorno / 12) + aporte;
-  }
-  return null;
-}
 import { useDashboardStore } from '@/store/dashboardStore';
+import { pfireColor as pfireColorFn } from '@/utils/fire';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
@@ -150,7 +138,7 @@ export default function FirePage() {
                   pstress = p.p_at_threshold_stress as number;
                 }
 
-                const pfireColor = pfire >= 90 ? 'var(--green)' : pfire >= 85 ? 'var(--yellow)' : 'var(--red)';
+                const pfireColor = pfireColorFn(pfire);
                 const accentColor = isAspir ? 'var(--yellow)' : 'var(--accent)';
                 const href = isAspir
                   ? '/simulators?preset=aspiracional'
@@ -346,12 +334,12 @@ export default function FirePage() {
                   <div style={{
                     width: `${scenario.pfire != null ? Math.min(100, scenario.pfire) : 0}%`,
                     height: '100%',
-                    background: scenario.pfire != null && scenario.pfire >= 90 ? 'var(--green)' : 'var(--yellow)',
+                    background: pfireColorFn(scenario.pfire),
                     borderRadius: 'var(--radius-xs)',
                   }} />
                 </div>
                 <div style={{ minWidth: '80px', textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: scenario.pfire && scenario.pfire >= 90 ? 'var(--green)' : 'var(--yellow)' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: pfireColorFn(scenario.pfire) }}>
                     {scenario.pfire != null ? `${scenario.pfire.toFixed(1)}%` : '—'}
                   </div>
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>9m</div>

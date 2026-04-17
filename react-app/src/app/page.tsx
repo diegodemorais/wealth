@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { pfireColor as pfireColorFn, pfireLabel } from '@/utils/fire';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
@@ -55,9 +56,7 @@ export default function HomePage() {
   const pfireAtualStress = activeProf?.p_fire_53_stress ?? null;
   const pfireAtualFav = activeProf?.p_fire_53_fav ?? null;
   const pfirePerfilLabel: string = activeProf?.label ?? 'Solteiro';
-  const pfireColor = pfireAtual != null
-    ? pfireAtual >= 88 ? 'var(--green)' : pfireAtual >= 80 ? 'var(--yellow)' : 'var(--red)'
-    : 'var(--muted)';
+  const pfireColor = pfireColorFn(pfireAtual);
 
   // KPI strip: Drift máximo
   const driftItems = derived.driftItems.filter(i => i.id !== 'Custo');
@@ -378,7 +377,7 @@ export default function HomePage() {
                   <div className="text-xs text-muted uppercase tracking-wide mb-1">FIRE 53</div>
                   <div
                     className="text-4xl font-black leading-none"
-                    style={{ color: activeProf.p_fire_53 >= 88 ? 'var(--green)' : activeProf.p_fire_53 >= 80 ? 'var(--yellow)' : 'var(--red)' }}
+                    style={{ color: pfireColorFn(activeProf.p_fire_53) }}
                   >
                     {activeProf.p_fire_53?.toFixed(1) ?? '—'}%
                   </div>
@@ -386,11 +385,11 @@ export default function HomePage() {
                   <div
                     className="text-xs font-semibold mt-1.5 px-2 py-0.5 rounded"
                     style={{
-                      background: activeProf.p_fire_53 >= 88 ? 'rgba(34,197,94,0.12)' : 'rgba(234,179,8,0.12)',
-                      color: activeProf.p_fire_53 >= 88 ? 'var(--green)' : 'var(--yellow)',
+                      background: activeProf.p_fire_53 >= 90 ? 'rgba(34,197,94,0.12)' : 'rgba(234,179,8,0.12)',
+                      color: pfireColorFn(activeProf.p_fire_53),
                     }}
                   >
-                    {activeProf.p_fire_53 >= 88 ? '✓ ON TRACK' : '⚠ ATENÇÃO'}
+                    {activeProf.p_fire_53 >= 90 ? '✓ ON TRACK' : '⚠ ATENÇÃO'}
                   </div>
                 </div>
 
@@ -446,7 +445,7 @@ export default function HomePage() {
                         const adjustedPfire = Math.max(0, Math.min(1, rawPfire + delta));
                         const pct = adjustedPfire * 100;
                         const isBase = val === sensitivity.aporte_base;
-                        const color = pct >= 88 ? 'var(--green)' : pct >= 80 ? 'var(--yellow)' : 'var(--red)';
+                        const color = pfireColorFn(pct);
                         return (
                           <div
                             key={val}

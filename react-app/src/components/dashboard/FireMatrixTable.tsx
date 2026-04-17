@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct } from '@/utils/formatters';
+import { pfireColor } from '@/utils/fire';
 import {
   Table,
   TableHeader,
@@ -61,12 +62,7 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
     return 'rgba(239, 68, 68, 0.15)';
   };
 
-  const getTextColor = (pfire: number): string => {
-    if (pfire >= 90) return 'var(--green)';
-    if (pfire >= 70) return 'var(--yellow)';
-    if (pfire >= 50) return 'var(--yellow)';
-    return 'var(--red)';
-  };
+  const getTextColor = pfireColor;
 
   const hasIdades = idades && idades.length === patrimonios.length;
 

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { pfireColor } from '@/utils/fire';
 
 interface ScenarioProfile {
   label: string;
@@ -49,12 +50,7 @@ export function FamilyScenarioCards({
 
   const pfireValues = getPfireForPerfil(selectedPerfil);
 
-  const getPfireColor = (pfire: number): string => {
-    if (pfire >= 90) return 'var(--green)';
-    if (pfire >= 70) return 'var(--yellow)';
-    if (pfire >= 50) return 'var(--yellow)';
-    return 'var(--red)';
-  };
+  const getPfireColor = pfireColor;
 
   const scenarios = [
     { label: 'Base', value: pfireValues.base, color: 'var(--accent)' },

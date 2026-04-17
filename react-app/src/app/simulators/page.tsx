@@ -9,6 +9,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
+import { calcFireYear, getAnoAtual, getIdadeAtual } from '@/utils/fire';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -40,28 +41,7 @@ const COND_LABELS: Record<FireCond, string> = {
   filho:     '👶 Filho',
 };
 
-// Target: find earliest age where custo/pat <= swrTarget
-function calcFireYear(
-  aporte: number,
-  retorno: number,
-  custo: number,
-  currentAge: number,
-  patrimonio: number,
-  swrTarget: number,
-) {
-  // Earliest retirement: pat >= custo / swrTarget
-  const target = custo / swrTarget;
-  let pat = patrimonio;
-  for (let yr = 0; yr <= 30; yr++) {
-    if (pat >= target) {
-      return { ano: 2026 + yr, idade: currentAge + yr, pat, swrAtFire: custo / pat };
-    }
-    for (let m = 0; m < 12; m++) {
-      pat = pat * (1 + retorno / 100 / 12) + aporte;
-    }
-  }
-  return null;
-}
+// calcFireYear is imported from @/utils/fire (canonical, retorno always as fraction)
 
 function FireSimuladorSection() {
   const data = useDashboardStore(s => s.data);
@@ -163,7 +143,7 @@ function FireSimuladorSection() {
   // Only run calc when all inputs are available from data
   const result = (aporte !== undefined && retorno !== undefined && custo !== undefined &&
     currentAge !== undefined && patrimonio !== undefined && swrTarget !== undefined)
-    ? calcFireYear(aporte, retorno, custo, currentAge, patrimonio, swrTarget)
+    ? calcFireYear(aporte, retorno / 100, custo, currentAge, getAnoAtual(premissas), patrimonio, swrTarget)
     : null;
 
   // P(FIRE) from MC percentiles — no fallback: show — if data not present

@@ -8,6 +8,8 @@ export interface TimeToFireProgressBarProps {
   yearsToFire: number; // decimal years (e.g., 14.0)
   patrimonioAtual?: number;
   patrimonioGatilho?: number;
+  idadeAtual?: number; // from data.premissas.idade_atual — do NOT hardcode
+  anoAtual?: number;   // from data.premissas.ano_atual — do NOT hardcode
 }
 
 export function TimeToFireProgressBar({
@@ -15,6 +17,8 @@ export function TimeToFireProgressBar({
   yearsToFire,
   patrimonioAtual,
   patrimonioGatilho,
+  idadeAtual,
+  anoAtual,
 }: TimeToFireProgressBarProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
@@ -24,9 +28,9 @@ export function TimeToFireProgressBar({
   const yearsLabel = `${yearsInt} ${yearsInt === 1 ? 'ano' : 'anos'} ${monthsInt} ${monthsInt === 1 ? 'mês' : 'meses'}`;
 
   // Target year: current year + ceil(years to fire)
-  const currentYear = new Date().getFullYear();
+  const currentYear = anoAtual ?? new Date().getFullYear();
   const targetYear = currentYear + Math.ceil(yearsToFire);
-  const targetAge = 39 + Math.ceil(yearsToFire); // Diego: 39 anos em 2026
+  const targetAge = (idadeAtual ?? 39) + Math.ceil(yearsToFire);
   const subtitleStr = `· ${targetYear} (${targetAge} anos)`;
 
   // Clamp to 0-100

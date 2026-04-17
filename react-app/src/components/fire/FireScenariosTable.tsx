@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { pfireColor } from '@/utils/fire';
 
 export function FireScenariosTable() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -43,13 +44,6 @@ export function FireScenariosTable() {
   };
 
   const fmtPct = (v: number) => privacyMode ? '••' : `${v.toFixed(1)}%`;
-
-  const pfireColor = (v: number) => {
-    if (v >= 90) return 'var(--green)';
-    if (v >= 75) return 'var(--accent)';
-    if (v >= 60) return 'var(--orange)';
-    return 'var(--red)';
-  };
 
   if (!scenarios) {
     return (
