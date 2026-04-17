@@ -55,7 +55,11 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
     const custo_vida_base: number = premissasOverride?.custo_vida_base ?? premissas.custo_vida_base ?? 250_000;
     const swr_rate: number = premissas.swr_gatilho ?? 0.03;
     const inss_anual: number = premissas.inss_anual ?? 18_000;
-    const inss_inicio_ano: number = premissas.inss_inicio_ano ?? 2052; // idade 65 ≈ 2026+26
+    // inss_inicio_ano pode ser anos-pós-FIRE (ex: 12) ou ano calendário (ex: 2052).
+    // Se < 100 → relativo: converter para ano calendário (fireYear + offset).
+    const fireYear = 2039; // aproximado: Diego FIRE aos 53 ≈ 2039
+    const inssInicioRaw: number = premissas.inss_inicio_ano ?? 12;
+    const inss_inicio_ano: number = inssInicioRaw < 100 ? fireYear + inssInicioRaw : inssInicioRaw;
     const inss_katia_anual: number = premissasOverride?.inss_katia_anual ?? premissas.inss_katia_anual ?? 0;
     // INSS Katia starts at ~age 60 for Katia (estimate: 2049)
     const inss_katia_inicio = 2049;
@@ -88,7 +92,6 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
     const surplusP50: number[] = [];
     const surplusP90: number[] = [];
 
-    const fireYear = 2039; // approximate
     for (const yr of years) {
       const spending = custo_vida_base * spendingSmile(yr, fireYear);
       const inss = yr >= inss_inicio_ano ? inss_anual : 0;
