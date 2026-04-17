@@ -3408,6 +3408,28 @@ def main():
         "etf_composition":         etf_comp_data,
         "bond_pool_runway":        bond_pool_rwy_data,
         "lumpy_events":            lumpy_data,
+
+        # Withdraw scenario configs (derived from fire_matrix.perfis + config constants)
+        "withdraw_cenarios": {
+            "atual": {
+                "label": "Solteiro",
+                "custo_vida_base": (fire_matrix_data or {}).get("perfis", {}).get("atual", {}).get("gasto_anual", CUSTO_VIDA_BASE),
+                "tem_conjuge": False,
+                "inss_katia_anual": 0,
+            },
+            "casado": {
+                "label": "Casado",
+                "custo_vida_base": (fire_matrix_data or {}).get("perfis", {}).get("casado", {}).get("gasto_anual", 270_000),
+                "tem_conjuge": True,
+                "inss_katia_anual": INSS_KATIA_ANUAL,
+            },
+            "filho": {
+                "label": "Casado + Filho",
+                "custo_vida_base": (fire_matrix_data or {}).get("perfis", {}).get("filho", {}).get("gasto_anual", 300_000),
+                "tem_conjuge": True,
+                "inss_katia_anual": INSS_KATIA_ANUAL,
+            },
+        },
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)

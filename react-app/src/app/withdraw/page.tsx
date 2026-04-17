@@ -13,12 +13,36 @@ import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 
+/** Tag inline usada nos gráficos que refletem o cenário ativo */
+function ScenarioBadge({ label, gasto, privacyMode }: { label: string; gasto: number; privacyMode: boolean }) {
+  return (
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 8,
+      padding: '3px 8px',
+      borderRadius: 999,
+      background: 'rgba(99,179,237,.10)',
+      border: '1px solid rgba(99,179,237,.3)',
+      fontSize: '11px',
+      color: 'var(--accent)',
+      fontWeight: 600,
+    }}>
+      <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
+      {label} · {privacyMode ? '••••' : `R$${(gasto / 1000).toFixed(0)}k/ano`}
+    </div>
+  );
+}
+
 export default function WithdrawPage() {
   const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
   const data = useDashboardStore(s => s.data);
   const isLoading = useDashboardStore(s => s.isLoadingData);
   const dataError = useDashboardStore(s => s.dataLoadError);
   const privacyMode = useUiStore(s => s.privacyMode);
+  const withdrawScenario = useUiStore(s => s.withdrawScenario);
+  const setWithdrawScenario = useUiStore(s => s.setWithdrawScenario);
 
   useEffect(() => {
     loadDataOnce().catch(e => console.error('Failed to load data:', e));
@@ -40,13 +64,15 @@ export default function WithdrawPage() {
     return <div className="warning-state">Dados carregados mas seção de retirada não disponível</div>;
   }
 
-  // Derive scenario label from premissas config
-  const scenarioLabel: string = (() => {
-    const p = data.premissas ?? {};
-    if (p.tem_conjuge && p.tem_filho) return 'Casado + Filho';
-    if (p.tem_conjuge) return 'Casado';
-    return 'Solteiro';
-  })();
+  // Scenario configs from data.json (or safe fallback)
+  type ScenarioKey = 'atual' | 'casado' | 'filho';
+  const withdrawCenarios: Record<ScenarioKey, { label: string; custo_vida_base: number; tem_conjuge: boolean; inss_katia_anual: number }> = data.withdraw_cenarios ?? {
+    atual:  { label: 'Solteiro',         custo_vida_base: 250_000, tem_conjuge: false, inss_katia_anual: 0 },
+    casado: { label: 'Casado',           custo_vida_base: 270_000, tem_conjuge: true,  inss_katia_anual: 93_600 },
+    filho:  { label: 'Casado + Filho',   custo_vida_base: 300_000, tem_conjuge: true,  inss_katia_anual: 93_600 },
+  };
+
+  const activeScenarioCfg = withdrawCenarios[withdrawScenario as ScenarioKey] ?? withdrawCenarios.atual;
 
   const swrPercentisRaw = data.fire?.swr_percentis ?? data.swr_percentis ?? data.fire_swr_percentis;
   // Normalize field names: fire_swr_percentis uses swr_p10/p50/p90 + patrimonio_p10_2040 etc.
@@ -66,33 +92,41 @@ export default function WithdrawPage() {
 
   return (
     <div>
-      {/* Cenário ativo — contexto para todas as simulações da aba */}
+      {/* Seletor de cenário familiar — afeta SurplusGapChart, SWR e LTC */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         gap: 8,
-        padding: '8px 14px',
-        marginBottom: 10,
+        padding: '10px 14px',
+        marginBottom: 12,
         background: 'var(--card2)',
         borderRadius: 6,
         border: '1px solid var(--border)',
-        fontSize: 'var(--text-xs)',
-        color: 'var(--muted)',
+        flexWrap: 'wrap',
       }}>
-        <span>Simulações calculadas para o perfil</span>
-        <span style={{
-          padding: '2px 8px',
-          borderRadius: 999,
-          background: 'rgba(99,179,237,.12)',
-          color: 'var(--accent)',
-          border: '1px solid var(--accent)',
-          fontWeight: 700,
-          letterSpacing: '.3px',
-        }}>
-          {scenarioLabel}
-        </span>
-        <span style={{ marginLeft: 'auto', opacity: .6 }}>
-          Perfil determinado por <code style={{ fontSize: '10px' }}>premissas.tem_conjuge / tem_filho</code>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginRight: 4 }}>Perfil familiar:</span>
+        {(Object.entries(withdrawCenarios) as [ScenarioKey, typeof withdrawCenarios[ScenarioKey]][]).map(([key, cfg]) => (
+          <button
+            key={key}
+            onClick={() => setWithdrawScenario(key)}
+            style={{
+              padding: '4px 12px',
+              borderRadius: 999,
+              fontSize: 'var(--text-xs)',
+              fontWeight: 600,
+              border: '1px solid',
+              cursor: 'pointer',
+              transition: 'all .15s',
+              borderColor: withdrawScenario === key ? 'var(--accent)' : 'var(--border)',
+              background: withdrawScenario === key ? 'rgba(99,179,237,.15)' : 'transparent',
+              color: withdrawScenario === key ? 'var(--accent)' : 'var(--muted)',
+            }}
+          >
+            {cfg.label}
+          </button>
+        ))}
+        <span style={{ marginLeft: 'auto', fontSize: 'var(--text-xs)', color: 'var(--muted)', opacity: .7 }}>
+          Gasto base: {privacyMode ? '••••' : `R$${(activeScenarioCfg.custo_vida_base / 1000).toFixed(0)}k/ano`}
         </span>
       </div>
 
@@ -138,8 +172,12 @@ export default function WithdrawPage() {
                 )}
               </div>
             </div>
+            <div style={{ marginTop: 8 }}>
+              <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+            </div>
             <div className="src">
               P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).
+              Patrimônio MC não muda por perfil; SWR efetiva = gasto/{`{`}perfil{`}`} ÷ patrimônio.
             </div>
           </div>
         </CollapsibleSection>
@@ -204,7 +242,8 @@ export default function WithdrawPage() {
       {/* 3b. Surplus-Gap Chart — F2 DEV-boldin-dashboard */}
       <CollapsibleSection id="section-surplus-gap" title={secTitle('withdraw', 'section-surplus-gap', 'Superávit / Déficit Anual — P10/P50/P90')} defaultOpen={secOpen('withdraw', 'section-surplus-gap')} icon="📊">
         <div style={{ padding: '0 16px 16px' }}>
-          <SurplusGapChart data={data} />
+          <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+          <SurplusGapChart data={data} premissasOverride={activeScenarioCfg} />
         </div>
       </CollapsibleSection>
 
@@ -338,7 +377,7 @@ export default function WithdrawPage() {
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const premissas = data?.premissas ?? {};
-            const custo_vida_base: number = premissas.custo_vida_base ?? 250_000;
+            const custo_vida_base: number = activeScenarioCfg.custo_vida_base;
             const swr_target: number = premissas.swr_gatilho ?? 0.03;
             const fire_data = (data as any)?.fire ?? {};
             const pat_mediano = fire_data.pat_mediano_fire ?? fire_data.pat_p50_fire ?? premissas.patrimonio_atual ?? 3_500_000;
@@ -353,6 +392,9 @@ export default function WithdrawPage() {
 
             return (
               <div>
+                <div style={{ marginBottom: 8 }}>
+                  <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+                </div>
                 <p style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 10 }}>
                   Impacto de custos LTC (Long-Term Care) no SWR efetivo. Patrimônio mediano projetado no FIRE Day: {fmtBrl(pat_mediano)}.
                 </p>

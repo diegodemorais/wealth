@@ -103,8 +103,8 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
           <TableHeader>
             {/* Super-header: "Retirada Anual" spanning gasto columns */}
             <TableRow className="border-b border-border/40 hover:bg-transparent">
-              {hasIdades && <TableHead className="px-2 py-1 bg-secondary/50 h-auto" />}
-              <TableHead className="px-3 py-1 bg-secondary/50 h-auto" />
+              {hasIdades && <TableHead className="bg-secondary/50 h-auto" style={{ width: 48, padding: '4px 8px' }} />}
+              <TableHead className="bg-secondary/50 h-auto" style={{ width: 56, padding: '4px 8px' }} />
               <TableHead
                 colSpan={gastos.length}
                 className="px-2 py-1 text-center text-xs font-semibold text-muted-foreground bg-secondary/50 uppercase tracking-wide h-auto"
@@ -114,12 +114,12 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
             </TableRow>
             <TableRow className="border-b-2 border-border hover:bg-transparent">
               {hasIdades && (
-                <TableHead className="px-2 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto">
+                <TableHead className="py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto" style={{ width: 48, padding: '6px 8px' }}>
                   Idade
                 </TableHead>
               )}
-              <TableHead className="px-3 py-2 text-left font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto">
-                Patrimônio
+              <TableHead className="py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto" style={{ width: 56, padding: '6px 8px' }}>
+                Pat.
               </TableHead>
               {gastos.map(g => (
                 <TableHead
@@ -135,12 +135,12 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
             {patrimonios.map((pat, patIdx) => (
               <TableRow key={pat} className="border-b border-border hover:bg-transparent">
                 {hasIdades && (
-                  <TableCell className={`px-2 py-2 text-center font-semibold text-muted-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
+                  <TableCell className={`py-2 text-center font-semibold text-muted-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`} style={{ width: 48, padding: '6px 8px' }}>
                     {idades![patIdx] ?? '—'}
                   </TableCell>
                 )}
-                <TableCell className={`px-3 py-2 font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`}>
-                  {privacyMode ? '••••' : fmtCompact(pat)}
+                <TableCell className={`py-2 text-center font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`} style={{ width: 56, padding: '6px 8px' }}>
+                  {privacyMode ? '••' : fmtCompact(pat)}
                 </TableCell>
                 {gastos.map(gasto => {
                   const pfire = getPfire(pat, gasto);

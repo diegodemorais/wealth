@@ -24,6 +24,10 @@ export interface UIState {
   // Period filter
   activePeriod: 'all' | '1y' | '3m' | '1m';
   setActivePeriod: (period: 'all' | '1y' | '3m' | '1m') => void;
+
+  // Withdraw scenario selector
+  withdrawScenario: 'atual' | 'casado' | 'filho';
+  setWithdrawScenario: (s: 'atual' | 'casado' | 'filho') => void;
 }
 
 export const useUiStore = create<UIState>()(
@@ -68,6 +72,12 @@ export const useUiStore = create<UIState>()(
       setActivePeriod: (period: 'all' | '1y' | '3m' | '1m') => {
         set({ activePeriod: period });
       },
+
+      // Withdraw scenario
+      withdrawScenario: 'atual',
+      setWithdrawScenario: (s: 'atual' | 'casado' | 'filho') => {
+        set({ withdrawScenario: s });
+      },
     }),
     {
       name: 'dashboard-ui-store',
@@ -76,6 +86,7 @@ export const useUiStore = create<UIState>()(
         collapseState: state.collapseState,
         activeSimulator: state.activeSimulator,
         activePeriod: state.activePeriod,
+        withdrawScenario: state.withdrawScenario,
       }),
     }
   )

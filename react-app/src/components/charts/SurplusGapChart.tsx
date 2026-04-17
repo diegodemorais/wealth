@@ -15,6 +15,11 @@ import type { EChartsOption } from 'echarts-for-react';
 
 interface SurplusGapChartProps {
   data: any;
+  premissasOverride?: {
+    custo_vida_base?: number;
+    tem_conjuge?: boolean;
+    inss_katia_anual?: number;
+  };
 }
 
 function buildYears(start: number, end: number) {
@@ -41,20 +46,20 @@ function spendingSmile(year: number, fireYear: number): number {
   return 0.80;                 // No-Go (75+, SAUDE_DECAY 0.5 → spending cai)
 }
 
-export function SurplusGapChart({ data }: SurplusGapChartProps) {
+export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 
   const { years, surplusP10, surplusP50, surplusP90 } = useMemo(() => {
     const trilha = data?.fire_trilha;
     const premissas = data?.premissas ?? {};
-    const custo_vida_base: number = premissas.custo_vida_base ?? 250_000;
+    const custo_vida_base: number = premissasOverride?.custo_vida_base ?? premissas.custo_vida_base ?? 250_000;
     const swr_rate: number = premissas.swr_gatilho ?? 0.03;
     const inss_anual: number = premissas.inss_anual ?? 18_000;
     const inss_inicio_ano: number = premissas.inss_inicio_ano ?? 2052; // idade 65 ≈ 2026+26
-    const inss_katia_anual: number = premissas.inss_katia_anual ?? 0;
+    const inss_katia_anual: number = premissasOverride?.inss_katia_anual ?? premissas.inss_katia_anual ?? 0;
     // INSS Katia starts at ~age 60 for Katia (estimate: 2049)
     const inss_katia_inicio = 2049;
-    const tem_conjuge: boolean = premissas.tem_conjuge ?? false;
+    const tem_conjuge: boolean = premissasOverride?.tem_conjuge ?? premissas.tem_conjuge ?? false;
 
     const years = buildYears(2026, 2080);
 
