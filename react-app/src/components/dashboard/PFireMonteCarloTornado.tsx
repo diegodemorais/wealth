@@ -68,11 +68,6 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
     }
     return (
       <div>
-        {/* Legend */}
-        <div className="flex gap-4 text-xs text-muted mb-3">
-          <span><span className="inline-block w-2.5 h-2 rounded mr-1" style={{ background: 'var(--red)' }} />−10%</span>
-          <span><span className="inline-block w-2.5 h-2 rounded mr-1" style={{ background: 'var(--green)' }} />+10%</span>
-        </div>
         {sortedTornado.map((item, idx) => (
           <div key={idx} className="mb-2.5">
             <div className="text-xs text-muted mb-1">{item.label}</div>
@@ -160,18 +155,6 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
             <div className="text-sm font-semibold text-text mb-2">
               Tornado — Sensitividade ±10% de P(FIRE)
             </div>
-            {/* Legend */}
-            <div className="flex gap-4 text-xs text-muted mb-2">
-              <span>
-                <span className="inline-block w-2.5 h-2 rounded mr-1" style={{ background: 'var(--red)' }} />
-                -10%
-              </span>
-              <span>
-                <span className="inline-block w-2.5 h-2 rounded mr-1" style={{ background: 'var(--green)' }} />
-                +10%
-              </span>
-            </div>
-
             {sortedTornado.map((item, idx) => (
               <div key={idx} className="mb-2.5">
                 <div className="text-xs text-muted mb-1">{item.label}</div>
