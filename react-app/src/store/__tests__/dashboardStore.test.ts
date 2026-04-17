@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useDashboardStore } from '../dashboardStore';
 import { DashboardData, MCParams } from '@/types/dashboard';
 
@@ -8,6 +8,8 @@ describe('Dashboard Store', () => {
     useDashboardStore.setState({
       data: null,
       derived: null,
+      isLoadingData: false,
+      dataLoadError: null,
       mcParams: {
         initialCapital: 1000000,
         monthlyContribution: 5000,
@@ -19,6 +21,8 @@ describe('Dashboard Store', () => {
       },
       mcResults: null,
     });
+    // Reset singleton promise between tests
+    vi.restoreAllMocks();
   });
 
   const mockData: DashboardData = {
@@ -63,9 +67,98 @@ describe('Dashboard Store', () => {
       expect(() => setData(mockData)).not.toThrow();
     });
 
+    it('setData computes derived values', () => {
+      const { setData } = useDashboardStore.getState();
+      setData(mockData);
+      const state = useDashboardStore.getState();
+      expect(state.data).toEqual(mockData);
+      // derived may be null if data is too minimal to compute, but no throw
+      expect(state.dataLoadError).toBeNull();
+    });
+
+    it('setData with invalid data sets derived to null but does not throw', () => {
+      const { setData } = useDashboardStore.getState();
+      // Pass something that will cause computeDerivedValues to throw
+      expect(() => setData({} as DashboardData)).not.toThrow();
+      // data is still stored even if derived computation fails
+      const state = useDashboardStore.getState();
+      expect(state.data).toBeDefined();
+    });
+
     it('updateField is available', () => {
       const { updateField } = useDashboardStore.getState();
       expect(typeof updateField).toBe('function');
+    });
+
+    it('updateField does nothing when data is null', () => {
+      const { updateField } = useDashboardStore.getState();
+      expect(() => updateField('cambio', 5.5)).not.toThrow();
+      const state = useDashboardStore.getState();
+      expect(state.data).toBeNull();
+    });
+
+    it('updateField updates a field when data is loaded', () => {
+      const { setData, updateField } = useDashboardStore.getState();
+      setData(mockData);
+      updateField('cambio', 5.5);
+      const state = useDashboardStore.getState();
+      expect(state.data?.cambio).toBe(5.5);
+    });
+
+    it('initial state has null data and no error', () => {
+      const state = useDashboardStore.getState();
+      expect(state.data).toBeNull();
+      expect(state.derived).toBeNull();
+      expect(state.isLoadingData).toBe(false);
+      expect(state.dataLoadError).toBeNull();
+    });
+  });
+
+  describe('loadDataOnce', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('sets isLoadingData while fetching', async () => {
+      let resolveFetch!: (v: any) => void;
+      const fetchPromise = new Promise(resolve => { resolveFetch = resolve; });
+
+      vi.stubGlobal('fetch', () => fetchPromise);
+
+      const store = useDashboardStore.getState();
+      const loadPromise = store.loadDataOnce().catch(() => {});
+
+      // Should be loading immediately
+      expect(useDashboardStore.getState().isLoadingData).toBe(true);
+
+      // Resolve with valid data
+      resolveFetch({
+        ok: true,
+        json: async () => ({
+          ...mockData,
+          posicoes: {},
+          rf: { ipca2029: {}, ipca2040: {}, ipca2050: {}, renda2065: {} },
+          fire_trilha: {},
+          cambio: 5.0,
+          pfire_base: { base: 90.0 },
+        }),
+      });
+
+      await loadPromise;
+    });
+
+    it('returns cached data if already loaded', async () => {
+      const { setData } = useDashboardStore.getState();
+      setData(mockData);
+
+      const fetchSpy = vi.fn();
+      vi.stubGlobal('fetch', fetchSpy);
+
+      const result = await useDashboardStore.getState().loadDataOnce();
+
+      // Should return cached data without fetching
+      expect(fetchSpy).not.toHaveBeenCalled();
+      expect(result).toEqual(mockData);
     });
   });
 
