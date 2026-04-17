@@ -142,12 +142,12 @@ export default function FirePage() {
                   pfav   = (data as any)?.pfire_aspiracional?.fav   ?? p.p_fire_50_fav;
                   pstress = (data as any)?.pfire_aspiracional?.stress ?? p.p_fire_50_stress;
                 } else {
-                  // Base scenario: FIRE at 53 (age_53 / p_fire_53)
-                  fireAno = p.fire_age_53 ? parseInt(p.fire_age_53, 10) : null;
-                  fireIdade = fireAno ? currentAge + (fireAno - (new Date().getFullYear())) : null;
-                  pfire  = p.p_fire_53 as number;
-                  pfav   = p.p_fire_53_fav as number;
-                  pstress = p.p_fire_53_stress as number;
+                  // Threshold scenario: earliest age where P(base) >= 85% with SWR=3% fixed
+                  fireAno = p.fire_year_threshold ? parseInt(p.fire_year_threshold, 10) : null;
+                  fireIdade = p.fire_age_threshold ?? null;
+                  pfire  = p.p_at_threshold as number;
+                  pfav   = p.p_at_threshold_fav as number;
+                  pstress = p.p_at_threshold_stress as number;
                 }
 
                 const pfireColor = pfire >= 90 ? 'var(--green)' : pfire >= 85 ? 'var(--yellow)' : 'var(--red)';
@@ -172,7 +172,14 @@ export default function FirePage() {
                   }}>
                     <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>{emoji}</div>
                     <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>R${(p.gasto_anual / 1000).toFixed(0)}k/ano{isAspir ? ' · mercado fav.' : ''}</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                      R${(p.gasto_anual / 1000).toFixed(0)}k/ano{isAspir ? ' · mercado fav.' : ''}
+                      {!isAspir && p.swr_at_fire != null && (
+                        <span style={{ marginLeft: 6, color: 'var(--accent)', fontWeight: 600 }}>
+                          · SWR {(p.swr_at_fire * 100).toFixed(1)}%
+                        </span>
+                      )}
+                    </div>
                     {/* FIRE year — from MC precomputed data (consistent with P value) */}
                     {fireAno ? (
                       <>
@@ -202,7 +209,7 @@ export default function FirePage() {
                 );
               })}
             </div>
-            <div className="src">Base: MC simulações · SWR gatilho {((prem.swr_gatilho ?? 0.03) * 100).toFixed(0)}% · mercado base (exceto aspiracional)</div>
+            <div className="src">Base: MC simulações · SWR {((prem.swr_gatilho ?? 0.03) * 100).toFixed(0)}% fixo · primeira idade onde P ≥ 85% (exceto aspiracional)</div>
           </section>
         );
       })()}

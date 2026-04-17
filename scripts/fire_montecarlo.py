@@ -13,6 +13,7 @@ Venv: ~/claude/finance-tools/.venv/bin/python3
 
 import argparse
 from dataclasses import dataclass, field
+import json as _json
 import os
 import numpy as np
 import warnings
@@ -30,11 +31,42 @@ from config import (
     update_dashboard_state,
 )
 
+_SCRIPTS_DIR = _Path(__file__).parent
+_DADOS_DIR   = _SCRIPTS_DIR.parent / "dados"
+
+def _load_patrimonio_atual() -> float:
+    """Lê patrimônio financeiro total de dashboard_state.json ou portfolio_summary.json.
+    Fallback para valor hardcoded se nenhum arquivo acessível."""
+    # 1. dashboard_state — atualizado por generate_data.py
+    try:
+        with open(_DADOS_DIR / "dashboard_state.json") as f:
+            ds = _json.load(f)
+        val = ds.get("patrimonio", {}).get("total_brl")
+        if val and val > 0:
+            return float(val)
+    except Exception:
+        pass
+    # 2. portfolio_summary — atualizado por ibkr_analysis.py
+    try:
+        with open(_DADOS_DIR / "portfolio_summary.json") as f:
+            ps = _json.load(f)
+        val = ps.get("patrimonio", {}).get("fim_brl")
+        if val and val > 0:
+            return float(val)
+    except Exception:
+        pass
+    # 3. fallback hardcoded (desatualizado — atualizar ao rodar sessão)
+    return 3_372_673.0
+
 # ─── PREMISSAS (fonte: carteira.md + HD-006 final 2026-03-22) ─────────────────
 
+# Limiar de P(FIRE) para calcular fire_age_threshold por perfil
+FIRE_P_THRESHOLD = 85.0   # primeira idade onde P(base) ≥ 85%
+FIRE_AGES_SCAN   = list(range(49, 61))  # scan de idades para threshold
+
 PREMISSAS = {
-    # Patrimônio e aportes
-    "patrimonio_atual":    3_372_673,   # R$ — atualizar a cada sessão
+    # Patrimônio e aportes — lido de dashboard_state.json, nunca hardcoded
+    "patrimonio_atual":    _load_patrimonio_atual(),
     "aporte_mensal":       APORTE_MENSAL,
     "custo_vida_base":     CUSTO_VIDA_BASE,
 
@@ -614,8 +646,8 @@ def rodar_tornado(premissas: dict, variacao: float = 0.10, n_sim: int = 5_000) -
 
 def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) -> list:
     """
-    Roda MC para cada perfil (PERFIS_FIRE) em cada idade-alvo (FIRE_AGES).
-    Retorna lista de dicts com p_fire_50, p_fire_53 por perfil e cenário.
+    Roda MC para cada perfil (PERFIS_FIRE) em cada idade-alvo (FIRE_AGES) +
+    scan de idades para determinar fire_age_threshold (primeira onde P ≥ FIRE_P_THRESHOLD).
 
     Output schema (por perfil):
       {
@@ -629,6 +661,12 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
         "fire_age_50": "2037",  # calendar year
         "fire_age_53": "2040",
         "pat_mediano_50": ..., "pat_mediano_53": ...,
+        # NOVO:
+        "fire_age_threshold": 51,        # primeira idade onde P(base) >= 85%
+        "fire_year_threshold": "2038",   # ano calendário correspondente
+        "p_at_threshold": 87.2,          # P(base) nessa idade
+        "swr_at_fire": 0.0225,           # gasto_anual / pat_mediano_at_threshold
+        "pat_mediano_threshold": 11100000,
       }
     """
     results = []
@@ -641,12 +679,12 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             "gasto_anual": perfil["gasto_anual"],
         }
 
+        # ── Scan idades-alvo fixas (50, 53) — backwards compat ──────────────
         for age_key, age_target in FIRE_AGES.items():
-            # Override spending + idade_fire_alvo for this profile/age combo
             p = dict(premissas)
             p["custo_vida_base"] = perfil["gasto_anual"]
             p["idade_fire_alvo"] = age_target
-            p["anos_simulacao"] = 90 - age_target  # simulate until age 90
+            p["anos_simulacao"] = 90 - age_target
 
             fire_year = ano_nascimento + age_target
             entry[f"fire_age_{age_target}"] = str(fire_year)
@@ -661,6 +699,53 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
                 else:
                     suffix = "fav" if cenario == "favoravel" else "stress"
                     entry[f"{age_key}_{suffix}"] = p_pct
+
+        # ── Scan para fire_age_threshold — SWR=3% fixo, idade varia ─────────
+        # Encontra primeira idade onde P(base) >= FIRE_P_THRESHOLD
+        threshold_found = False
+        for age_target in FIRE_AGES_SCAN:
+            p = dict(premissas)
+            p["custo_vida_base"] = perfil["gasto_anual"]
+            p["idade_fire_alvo"] = age_target
+            p["anos_simulacao"] = 90 - age_target
+
+            r = rodar_monte_carlo(p, n_sim=n_sim, cenario="base", seed=seed)
+            p_pct = round(r["p_sucesso"] * 100, 1)
+            pat_med = round(r["pat_mediana_fire"], 0)
+
+            if p_pct >= FIRE_P_THRESHOLD and not threshold_found:
+                swr = perfil["gasto_anual"] / pat_med if pat_med > 0 else None
+                # Compute fav + stress at this threshold age
+                r_fav    = rodar_monte_carlo(dict(premissas, custo_vida_base=perfil["gasto_anual"], idade_fire_alvo=age_target, anos_simulacao=90-age_target), n_sim=n_sim, cenario="favoravel", seed=seed)
+                r_stress = rodar_monte_carlo(dict(premissas, custo_vida_base=perfil["gasto_anual"], idade_fire_alvo=age_target, anos_simulacao=90-age_target), n_sim=n_sim, cenario="stress",    seed=seed)
+                entry["fire_age_threshold"]      = age_target
+                entry["fire_year_threshold"]     = str(ano_nascimento + age_target)
+                entry["p_at_threshold"]          = p_pct
+                entry["p_at_threshold_fav"]      = round(r_fav["p_sucesso"]    * 100, 1)
+                entry["p_at_threshold_stress"]   = round(r_stress["p_sucesso"] * 100, 1)
+                entry["swr_at_fire"]             = round(swr, 4) if swr else None
+                entry["pat_mediano_threshold"]   = pat_med
+                threshold_found = True
+                break  # scan can stop here
+
+        if not threshold_found:
+            # Nunca alcançou o threshold no range — usar última idade do scan
+            last_age = FIRE_AGES_SCAN[-1]
+            p = dict(premissas)
+            p["custo_vida_base"] = perfil["gasto_anual"]
+            p["idade_fire_alvo"] = last_age
+            p["anos_simulacao"] = 90 - last_age
+            r = rodar_monte_carlo(p, n_sim=n_sim, cenario="base", seed=seed)
+            p_pct = round(r["p_sucesso"] * 100, 1)
+            pat_med = round(r["pat_mediana_fire"], 0)
+            swr = perfil["gasto_anual"] / pat_med if pat_med > 0 else None
+            entry["fire_age_threshold"]      = last_age
+            entry["fire_year_threshold"]     = str(ano_nascimento + last_age)
+            entry["p_at_threshold"]          = p_pct
+            entry["p_at_threshold_fav"]      = None
+            entry["p_at_threshold_stress"]   = None
+            entry["swr_at_fire"]             = round(swr, 4) if swr else None
+            entry["pat_mediano_threshold"]   = pat_med
 
         results.append(entry)
 
