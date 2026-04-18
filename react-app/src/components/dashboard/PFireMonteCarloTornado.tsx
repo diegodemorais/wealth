@@ -1,6 +1,5 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { pfireColor } from '@/utils/fire';
 
 interface TornadoData {
   label: string;
@@ -17,8 +16,6 @@ interface PFireMonteCarloTornadoProps {
   tornadoData: TornadoData[];
   firePatrimonioAtual?: number;
   firePatrimonioGatilho?: number;
-  /** When true, renders only the tornado chart (no scenario cards / progress bar) */
-  tornadoOnly?: boolean;
 }
 
 const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
@@ -28,15 +25,21 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   tornadoData = [],
   firePatrimonioAtual,
   firePatrimonioGatilho,
-  tornadoOnly = false,
 }) => {
   const { privacyMode } = useUiStore();
 
-  const getBadgeColor = pfireColor;
+  const getBadgeColor = (value: number) => {
+    if (value >= 90) return 'var(--green)';
+    if (value >= 80) return 'var(--yellow)';
+    if (value >= 70) return 'var(--orange)';
+    return 'var(--red)';
+  };
 
   const getBadgeBg = (value: number) => {
-    const color = pfireColor(value);
-    return `color-mix(in srgb, ${color} 12%, transparent)`;
+    if (value >= 90) return 'rgba(34, 197, 94, 0.12)';
+    if (value >= 80) return 'rgba(234, 179, 8, 0.12)';
+    if (value >= 70) return 'rgba(249, 115, 22, 0.12)';
+    return 'rgba(239, 68, 68, 0.12)';
   };
 
   const sortedTornado = [...tornadoData]
@@ -54,35 +57,6 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
   const patrimonioProgressPct = firePatrimonioAtual != null && firePatrimonioGatilho != null
     ? (firePatrimonioAtual / firePatrimonioGatilho * 100)
     : pfireBase;
-
-  // Tornado-only mode: render just the chart without the outer card wrapper or scenario cards
-  if (tornadoOnly) {
-    if (sortedTornado.length === 0) {
-      return <div className="text-xs text-muted py-2">Dados de sensitividade não disponíveis</div>;
-    }
-    return (
-      <div>
-        {sortedTornado.map((item, idx) => (
-          <div key={idx} className="mb-2.5">
-            <div className="text-xs text-muted mb-1">{item.label}</div>
-            <div className="flex items-center gap-1">
-              <div className="flex-1 flex justify-end">
-                <div className="h-5 flex items-center justify-end px-1" style={{ width: `${(Math.abs(item.menos10) / maxDelta) * 100}%`, background: 'var(--red)', borderRadius: '3px 0 0 3px' }}>
-                  {Math.abs(item.menos10) > 1 && <span className="text-xs font-bold text-white">{item.menos10.toFixed(1)}pp</span>}
-                </div>
-              </div>
-              <div className="w-px h-6 bg-card2/50 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="h-5 flex items-center px-1" style={{ width: `${(Math.abs(item.mais10) / maxDelta) * 100}%`, background: 'var(--green)', borderRadius: '0 3px 3px 0' }}>
-                  {Math.abs(item.mais10) > 1 && <span className="text-xs font-bold text-white">+{item.mais10.toFixed(1)}pp</span>}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   return (
     <section className="bg-card border border-border/50 rounded p-4 mb-3.5">
@@ -108,7 +82,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                   className="text-xl font-black leading-none"
                   style={{ color: getBadgeColor(value) }}
                 >
-                  {privacyMode ? '••%' : `${value.toFixed(1)}%`}
+                  {privacyMode ? '••' : value.toFixed(1)}%
                 </div>
               </div>
             ))}
@@ -127,11 +101,11 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                   </span>
                 )}
                 <span style={{ color: getBadgeColor(pfireBase), fontWeight: 700 }}>
-                  {privacyMode ? '••%' : `${patrimonioProgressPct.toFixed(1)}%`}
+                  {privacyMode ? '••' : `${patrimonioProgressPct.toFixed(1)}%`}
                 </span>
               </div>
             </div>
-            <div className="h-1.5 bg-card2/40 rounded-sm overflow-hidden">
+            <div className="h-1.5 bg-slate-700/40 rounded-sm overflow-hidden">
               <div
                 className="h-full rounded-sm transition-all duration-500"
                 style={{
@@ -149,6 +123,18 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
             <div className="text-sm font-semibold text-text mb-2">
               Tornado — Sensitividade ±10% de P(FIRE)
             </div>
+            {/* Legend */}
+            <div className="flex gap-4 text-xs text-muted mb-2">
+              <span>
+                <span className="inline-block w-2.5 h-2 rounded mr-1" style={{ background: 'var(--red)' }} />
+                -10%
+              </span>
+              <span>
+                <span className="inline-block w-2.5 h-2 rounded mr-1" style={{ background: 'var(--green)' }} />
+                +10%
+              </span>
+            </div>
+
             {sortedTornado.map((item, idx) => (
               <div key={idx} className="mb-2.5">
                 <div className="text-xs text-muted mb-1">{item.label}</div>
@@ -172,7 +158,7 @@ const PFireMonteCarloTornado: React.FC<PFireMonteCarloTornadoProps> = ({
                   </div>
 
                   {/* Center divider */}
-                  <div className="w-px h-6 bg-card2/50 flex-shrink-0" />
+                  <div className="w-px h-6 bg-slate-700/50 flex-shrink-0" />
 
                   {/* Positive side */}
                   <div className="flex-1">

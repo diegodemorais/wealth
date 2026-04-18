@@ -38,6 +38,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ~~DEV-privacy-sim-audit~~ | ~~Auditoria privacidade: simulador FIRE + todos os componentes~~ | Dev | ✅ Done 2026-04-13 |
 | ~~DEV-hero-kpi-review~~ | ~~Revisão completa KPIs hero strip + aba Now~~ | Dev + Head | ✅ Done 2026-04-13 |
 | 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
+| — | TX-tlh-engine-lote | Tax — TLH Engine por lote (P&L individual, gatilho em drawdown) | Tax | 🟡 Média |
+| — | TX-diferimento-fiscal | Tax — Calculadora de diferimento fiscal por ETF (custo real da venda) | Tax | 🟡 Média |
 | 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
 | 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
 | 4 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |

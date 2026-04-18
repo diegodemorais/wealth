@@ -97,5 +97,24 @@
     "AVGS": "ACC \u2014 diferimento fiscal"
   },
   "ptax_source": "BCB PTAX ask",
-  "ptax_atual": 5.156
+  "ptax_atual": 5.156,
+  "estate_tax": {
+    "us_situs_total_usd": 222.039,
+    "threshold_usd": 60000,
+    "excedente_usd": 162.039,
+    "imposto_estimado_usd": 64800.0,
+    "imposto_estimado_brl": 340000,
+    "aliquota": 0.40,
+    "ativos_us_situs": {
+      "AVDV": 94.622,
+      "AVES": 55.433,
+      "AVUV": 60.626,
+      "DGS": 11.330,
+      "Cash_USD_IBKR": 0.028
+    },
+    "estrategia_diluicao": "Novos aportes em ETFs UCITS (SWRD, AVGS, AVEM). US-listed (AVUV, AVDV, EIMI, DGS) são transitórios — diluir via aportes. Vender em drawdown (TLH) ou no usufruto (FIRE 50+).",
+    "consideracoes": "Isenção NRA reduz exposição de $222.039 para $162.039 tributável. Estate tax real: ~$64.8k USD (~R$340k). Pendente: avaliar seguro de vida para herdeiros.",
+    "fonte": "agentes/memoria/05-wealth.md (dados auditados 2026-03-31)",
+    "ultima_atualizacao": "2026-04-17"
+  }
 }

@@ -1,24 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
-import { pfireColor as pfireColorFn, pfireLabel } from '@/utils/fire';
-import { secOpen, secTitle } from '@/config/dashboard.config';
+import { useEffect } from 'react';
+import { useDashboardStore } from '@/store/dashboardStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
+import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
+import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
+import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
-import { useWellnessScore } from '@/hooks/useWellnessScore';
-import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
-import { usePageData } from '@/hooks/usePageData';
+import { secOpen } from '@/config/dashboard.config';
 
 export default function HomePage() {
-  const { data, derived, isLoading, dataError, privacyMode } = usePageData();
+  // Portfolio dashboard - main entry point
+  const loadDataOnce = useDashboardStore(s => s.loadDataOnce);
+  const data = useDashboardStore(s => s.data);
+  const derived = useDashboardStore(s => s.derived);
+  const isLoading = useDashboardStore(s => s.isLoadingData);
+  const dataError = useDashboardStore(s => s.dataLoadError);
 
-  const wellnessScore = useWellnessScore(data, derived);
-  const [activeProfile, setActiveProfile] = useState(0);
+  useEffect(() => {
+    loadDataOnce().catch(e => {
+      console.error('NOW page: Failed to load data:', e);
+    });
+  }, [loadDataOnce]);
 
-  if (isLoading || (!data && !dataError)) {
+  if (isLoading) {
     return <div className="loading-state">⏳ Carregando dados...</div>;
   }
 
@@ -30,41 +38,40 @@ export default function HomePage() {
     );
   }
 
-  if (!data || !derived) {
-    return <div className="loading-state">⏳ Carregando...</div>;
+  if (!derived) {
+    return <div className="warning-state">⚠️ Dados carregados mas valores derivados não computados</div>;
   }
 
-  // --- Derived values for new sections ---
-  const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
-  const activeProf = byProfile[activeProfile] ?? byProfile[0];
-  const sensitivity = (data as any)?.fire_aporte_sensitivity;
+  // Current year — from premissas to avoid hardcoding
+  const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
 
-  // KPI strip: P(FIRE|53) — segue o perfil ativo no TIME TO FIRE abaixo
-  const pfireAtual = activeProf?.p_fire_53 ?? null;
-  const pfireAtualStress = activeProf?.p_fire_53_stress ?? null;
-  const pfireAtualFav = activeProf?.p_fire_53_fav ?? null;
-  const pfirePerfilLabel: string = activeProf?.label ?? 'Solteiro';
-  const pfireColor = pfireColorFn(pfireAtual);
+  // Compute max drift
+  const maxDrift = data?.drift
+    ? Math.max(0, ...Object.values(data.drift as Record<string, any>).map(d => Math.abs((d?.atual || 0) - (d?.alvo || 0))))
+    : 0;
 
-  // KPI strip: Drift máximo
-  const driftItems = derived.driftItems.filter(i => i.id !== 'Custo');
-  const driftMax = driftItems.length > 0
-    ? driftItems.reduce((a, b) => b.absGap > a.absGap ? b : a, driftItems[0])
-    : null;
-  const driftMaxColor = driftMax
-    ? driftMax.status === 'verde' ? 'var(--green)' : driftMax.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)'
-    : 'var(--muted)';
+  // Get IPCA and Renda+ semaforo status from derived
+  const ipcaTaxa = data?.rf?.ipca2040?.taxa;
+  const rendaTaxa = data?.rf?.renda2065?.taxa;
 
-  // Contexto de Mercado compact
-  const ipcaTaxa = (data as any)?.rf?.ipca2040?.taxa;
-  const rendaTaxa = (data as any)?.rf?.renda2065?.taxa;
-  const STATUS_DOT: Record<string, string> = { verde: 'var(--green)', amarelo: 'var(--yellow)', vermelho: 'var(--red)' };
-  const ipcaDotColor = STATUS_DOT[derived.dcaItems.find(i => i.id === 'ipca2040')?.status ?? ''] ?? 'var(--muted)';
-  const rendaDotColor = STATUS_DOT[derived.dcaItems.find(i => i.id === 'renda2065')?.status ?? ''] ?? 'var(--muted)';
+  // Determine semaforo colors based on taxa levels
+  const getIpcaSemaforoColor = (taxa: number | undefined) => {
+    if (!taxa) return 'var(--muted)';
+    if (taxa >= 7.5) return 'var(--green)';
+    if (taxa >= 6.5) return 'var(--yellow)';
+    return 'var(--red)';
+  };
+
+  const getRendaSemaforoColor = (taxa: number | undefined) => {
+    if (!taxa) return 'var(--muted)';
+    if (taxa >= 7.5) return 'var(--green)';
+    if (taxa >= 6.5) return 'var(--yellow)';
+    return 'var(--red)';
+  };
 
   return (
     <div>
-      {/* 1. HERO STRIP */}
+      {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
         networth={derived.networth}
         networthUsd={derived.networthUsd}
@@ -72,481 +79,296 @@ export default function HomePage() {
         yearsToFire={derived.fireMonthsAway / 12}
         pfire={derived.pfire}
         cambio={derived.CAMBIO}
-        fireYearBase={(data as any)?.fire_matrix?.by_profile?.[0]?.fire_age_53 ? parseInt((data as any).fire_matrix.by_profile[0].fire_age_53) : undefined}
-        fireAgeBase={(data as any)?.premissas?.idade_cenario_base}
-        fireYearAspir={(data as any)?.earliest_fire?.ano}
-        fireAgeAspir={(data as any)?.earliest_fire?.idade}
-        firePatrimonioGatilho={derived.firePatrimonioGatilho}
       />
 
-      {/* 1b. BALANÇO HOLÍSTICO — Patrimônio expandido (colapsado por default) */}
-      <CollapsibleSection id="balanco-holistico-now" title={secTitle('now', 'balanco-holistico-now', 'Balanço Holístico')} defaultOpen={secOpen('now', 'balanco-holistico-now')} icon="🏛️">
-        <BalancoHolistico data={data as any} showCapitalHumanoBadge />
-      </CollapsibleSection>
-
-      {/* 2. KPI STRIP — P(FIRE|53) · Drift Máximo · Aporte Meta · Equity YTD (USD) · Portfolio YTD (BRL) · Passivos */}
-      <div className="grid grid-cols-2 sm:grid-cols-6 gap-2.5 mb-3.5">
-        {/* P(FIRE|53) */}
-        <div className="kpi text-center border-l-4" style={{ borderLeftColor: pfireColor }}>
-          <div className="kpi-label">P(FIRE|53)</div>
-          <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: pfireColor }}>
-            {pfireAtual != null ? `${pfireAtual.toFixed(1)}%` : '—'}
-          </div>
-          <div className="kpi-sub">
-            {pfireAtualStress != null && pfireAtualFav != null
-              ? `${pfireAtualStress.toFixed(1)}–${pfireAtualFav.toFixed(1)}% [stress–fav]`
-              : 'Monte Carlo 10k sims'}
-          </div>
-          <div style={{ marginTop: 4, display: 'flex', justifyContent: 'center' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 7px', borderRadius: 999, background: 'rgba(99,179,237,.10)', border: '1px solid rgba(99,179,237,.3)', fontSize: 10, color: 'var(--accent)', fontWeight: 600 }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-              {pfirePerfilLabel}
-            </span>
+      {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
+      <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Indicadores Primários</div>
+      <div className="grid grid-cols-3 gap-2.5 mb-3.5">
+        {/* P(Cenário Aspiracional) */}
+        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">P(Cenário Aspiracional)</div>
+          <div className="text-2xl font-black text-accent">{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
+          <div className="text-xs text-muted mt-1">
+            {derived.pfireAspirFav != null && derived.pfireAspirStress != null
+              ? `fav ${derived.pfireAspirFav.toFixed(1)}% · stress ${derived.pfireAspirStress.toFixed(1)}%`
+              : 'cenário aspiracional (49a)'}
           </div>
         </div>
         {/* Drift Máximo */}
-        <div className="kpi text-center border-l-4" style={{ borderLeftColor: driftMaxColor }}>
-          <div className="kpi-label">Drift Máximo</div>
-          <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: driftMaxColor }}>
-            {driftMax != null ? `${driftMax.absGap.toFixed(1)}pp` : '—'}
-          </div>
-          <div className="kpi-sub">
-            {driftMax != null ? `${driftMax.nome} (${driftMax.gap > 0 ? 'underweight' : 'overweight'})` : '—'}
-          </div>
+        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Drift Máximo</div>
+          <div className="text-2xl font-black text-text">{maxDrift.toFixed(2)}pp</div>
+          <div className="text-xs text-muted mt-1">vs alvo IPS</div>
         </div>
-        {/* Aporte Meta */}
-        <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
-          <div className="kpi-label">Aporte Meta</div>
-          <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem' }}>
-            {privacyMode ? '••••' : `R$${((derived.aporteMensal ?? 0) / 1000).toFixed(0)}k`}
+        {/* Aporte do Mês */}
+        <div className="bg-card border border-border/50 rounded p-4 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Aporte do Mês</div>
+          <div className="text-2xl font-black text-text">
+            {derived.aporteMensal
+              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(derived.aporteMensal)
+              : '—'}
           </div>
-          <div className="kpi-sub">mensal</div>
+          <div className="text-xs text-muted mt-1">{derived.ultimoAporteData || '—'}</div>
         </div>
-        {/* Equity YTD USD — SWRD + AVGS weighted by target pesos */}
-        {(() => {
-          const ytdUsd = derived.retornoYtdEquityUsd as number | null;
-          const ytdColor = ytdUsd == null ? 'var(--muted)' : ytdUsd >= 0 ? 'var(--green)' : 'var(--red)';
-          const pesosT = (data as any)?.pesosTarget ?? {};
-          const covPct = Math.round(((pesosT.SWRD ?? 0) + (pesosT.AVGS ?? 0)) * 100);
-          return (
-            <div className="kpi text-center border-l-4" style={{ borderLeftColor: ytdColor }}>
-              <div className="kpi-label">Equity YTD</div>
-              <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
-                {ytdUsd == null ? '—' : `${ytdUsd >= 0 ? '+' : ''}${ytdUsd.toFixed(1)}%`}
-              </div>
-              <div className="kpi-sub">USD · SWRD+AVGS ({covPct}%)</div>
-            </div>
-          );
-        })()}
-        {/* Portfólio YTD BRL — full portfolio TWR in BRL */}
-        {(() => {
-          const ytd = derived.retornoYtd as number | null;
-          const ytdColor = ytd == null ? 'var(--muted)' : ytd >= 0 ? 'var(--green)' : 'var(--red)';
-          return (
-            <div className="kpi text-center border-l-4" style={{ borderLeftColor: ytdColor }}>
-              <div className="kpi-label">Portfólio YTD</div>
-              <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: ytdColor }}>
-                {ytd == null ? '—' : `${ytd >= 0 ? '+' : ''}${ytd.toFixed(1)}%`}
-              </div>
-              <div className="kpi-sub">BRL · TWR {(data as any)?.premissas?.ano_atual ?? new Date().getFullYear()}</div>
-            </div>
-          );
-        })()}
-        {/* Passivos — compact 6th KPI card */}
-        {(() => {
-          const passivos = (data as any)?.passivos;
-          const irDiferido = (data as any)?.tax?.ir_diferido_total_brl ?? null;
-          const items: { label: string; value: number }[] = passivos
-            ? [
-                passivos.hipoteca_brl      ? { label: 'Hipoteca', value: passivos.hipoteca_brl } : null,
-                passivos.emprestimo_xp_brl ? { label: 'XP', value: passivos.emprestimo_xp_brl } : null,
-                passivos.ir_diferido_brl   ? { label: 'IR Dif.', value: passivos.ir_diferido_brl } : null,
-              ].filter(Boolean) as { label: string; value: number }[]
-            : irDiferido
-            ? [{ label: 'IR Dif.', value: irDiferido }]
-            : [];
-          if (items.length === 0) return null;
-          const total = passivos?.total_brl ?? items.reduce((s, i) => s + i.value, 0);
-          return (
-            <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--red)' }}>
-              <div className="kpi-label">Passivos</div>
-              <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '1.8rem', color: 'var(--red)' }}>
-                {privacyMode ? '••••' : `-R$${(total / 1000).toFixed(0)}k`}
-              </div>
-              <div className="kpi-sub">
-                {privacyMode ? '••••' : items.map(i => `${i.label} ${(i.value / 1000).toFixed(0)}k`).join(' · ')}
-              </div>
-            </div>
-          );
-        })()}
       </div>
 
-      {/* 3. SEMÁFOROS DE GATILHOS — moved earlier: ações imediatas do dia */}
-      {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
-        <SemaforoGatilhos items={derived.dcaItems} />
+      {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
+      <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Contexto de Mercado</div>
+      <div className="grid grid-cols-4 gap-2.5 mb-3.5 opacity-85">
+        {/* Dólar */}
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Dólar</div>
+          <div className="text-xl font-black text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+          <div className="text-xs text-muted mt-1">
+            {data?.mercado?.cambio_mtd_pct != null
+              ? `${data.mercado.cambio_mtd_pct > 0 ? '+' : ''}${data.mercado.cambio_mtd_pct.toFixed(1)}% MtD · PTAX BCB`
+              : 'BRL/USD · PTAX BCB'}
+          </div>
+        </div>
+        {/* Bitcoin */}
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Bitcoin</div>
+          <div className="text-xl font-black text-text">
+            {data?.mercado?.btc_usd
+              ? `$${Number(data.mercado.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
+              : '—'}
+          </div>
+          <div className="text-xs text-muted mt-1">
+            {data?.mercado?.btc_mtd_pct != null
+              ? `${data.mercado.btc_mtd_pct > 0 ? '+' : ''}${data.mercado.btc_mtd_pct.toFixed(1)}% MtD`
+              : 'BTC/USD'}
+          </div>
+        </div>
+        {/* IPCA+ 2040 */}
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
+            IPCA+ 2040 — Taxa
+            <span
+              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+              style={{
+                backgroundColor: getIpcaSemaforoColor(ipcaTaxa),
+              }}
+            />
+          </div>
+          <div className="text-xl font-black text-text">{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</div>
+          <div className="text-xs text-muted mt-1">
+            {data?.rf?.ipca2040?.descricao || 'Tesouro IPCA+ 2040'}
+          </div>
+        </div>
+        {/* Renda+ 2065 */}
+        <div className="bg-card border border-border/50 rounded p-3 text-center">
+          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
+            Renda+ 2065 — Taxa
+            <span
+              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+              style={{
+                backgroundColor: getRendaSemaforoColor(rendaTaxa),
+              }}
+            />
+          </div>
+          <div className="text-xl font-black text-text">{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</div>
+          <div className="text-xs text-muted mt-1">
+            {data?.rf?.renda2065?.descricao || 'Tesouro Renda+ 2065'}
+          </div>
+        </div>
+      </div>
+
+      {/* 4. SEÇÃO: Time to FIRE — Big number + Progresso */}
+      <TimeToFireProgressBar
+        fireProgress={derived.firePercentage}
+        yearsToFire={derived.fireMonthsAway / 12}
+        patrimonioAtual={derived.firePatrimonioAtual}
+        patrimonioGatilho={derived.firePatrimonioGatilho}
+      />
+
+      {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
+      {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
+        <div className="grid grid-cols-3 gap-2 mb-3.5">
+          {data.fire_matrix.by_profile.map((profile: any, i: number) => {
+            // Use profile.label from JSON if available, else fall back to hardcoded
+            const fallbackLabels = ['Solteiro', 'Casado', 'C+Filho'];
+            const displayLabel = profile.label ?? fallbackLabels[i] ?? `Perfil ${i + 1}`;
+            // Show the base scenario (53) probability, fall back to fire_age_50
+            const pfireBase53 = profile.p_fire_53 ?? null;
+            const pfireBase50 = profile.p_fire_50 ?? null;
+            const pfire = pfireBase53 ?? pfireBase50;
+            const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
+            const fireAge = profile.profile === 'atual' ? 53 : 53;
+            return (
+              <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded p-2.5 text-center">
+                <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
+                  {displayLabel}
+                </div>
+                <div className="text-sm font-bold text-accent">FIRE {fireAge}</div>
+                <div className="text-sm font-bold text-green mt-0.5">
+                  P = {pfire != null ? `${pfire.toFixed(1)}%` : '—'}
+                </div>
+                <div className="text-xs text-muted mt-1">{fireYear}</div>
+              </div>
+            );
+          })}
+        </div>
       )}
 
-      {/* 4. MERCADO & MACRO — mini cards */}
-      {(() => {
-        const macro = (data as any)?.macro ?? {};
-        const mercado = (data as any)?.mercado ?? {};
-        const btcUsd = mercado.btc_usd ?? macro.bitcoin_usd;
-        const dot = (color: string) => (
-          <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: color, marginLeft: 3, verticalAlign: 'middle', flexShrink: 0 }} />
-        );
-
-        const chips: { label: React.ReactNode; value: string; sub?: string; dotColor?: string }[] = [
-          {
-            label: 'USD/BRL',
-            value: derived.CAMBIO ? `R$${derived.CAMBIO.toFixed(2)}` : '—',
-            sub: mercado.cambio_mtd_pct != null ? `${mercado.cambio_mtd_pct > 0 ? '+' : ''}${mercado.cambio_mtd_pct.toFixed(1)}% MtD` : undefined,
-          },
-          {
-            label: 'BTC/USD',
-            value: btcUsd ? `$${Number(btcUsd).toLocaleString('en-US', { maximumFractionDigits: 0 })}` : '—',
-            sub: mercado.btc_mtd_pct != null ? `${mercado.btc_mtd_pct > 0 ? '+' : ''}${mercado.btc_mtd_pct.toFixed(1)}% MtD` : undefined,
-          },
-          {
-            label: <span className="flex items-center gap-0.5">IPCA+ 2040{dot(ipcaDotColor)}</span>,
-            value: ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—',
-            sub: 'IPCA+',
-          },
-          {
-            label: <span className="flex items-center gap-0.5">Renda+ 2065{dot(rendaDotColor)}</span>,
-            value: rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—',
-            sub: 'IPCA+',
-          },
-          {
-            label: 'Selic Meta',
-            value: macro.selic_meta != null ? `${(macro.selic_meta as number).toFixed(2)}%` : '—',
-          },
-          {
-            label: 'Fed Funds',
-            value: macro.fed_funds != null ? `${(macro.fed_funds as number).toFixed(2)}%` : '—',
-          },
-          {
-            label: 'Spread Selic-FF',
-            value: macro.spread_selic_ff != null ? `${(macro.spread_selic_ff as number).toFixed(2)}pp` : '—',
-          },
-          {
-            label: 'Exp. Cambial',
-            value: macro.exposicao_cambial_pct != null ? `${(macro.exposicao_cambial_pct as number).toFixed(1)}%` : '—',
-          },
-        ];
-
-        return (
-          <div className="mb-3.5">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted mb-2">Mercado & Macro</div>
-            <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
-              {chips.map((c, i) => (
-                <div key={i} className="bg-card border border-border/40 rounded px-2.5 py-2">
-                  <div className="text-xs text-muted mb-1 leading-tight">{c.label}</div>
-                  <div className="text-sm font-bold font-mono leading-none">{c.value}</div>
-                  {c.sub && <div className="text-xs text-muted mt-0.5 leading-tight">{c.sub}</div>}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* 5. APORTE DO MÊS — próxima ação concreta */}
-      {derived && (
-        <AporteDoMes
-          aporteMensal={derived.aporteMensal}
-          ultimoAporte={derived.ultimoAporte}
-          ultimoAporteData={derived.ultimoAporteData}
-          acumuladoMes={derived.acumuladoMes}
-          acumuladoAno={derived.acumuladoAno}
+      {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
+      {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
+        <SemaforoGatilhos
+          items={derived.dcaItems}
         />
       )}
 
-      {/* 5b. PRÓXIMAS AÇÕES — derivadas dos dados existentes */}
-      {derived && (() => {
-        const acoes: { text: string; level: 'ok' | 'warn' | 'urgent' }[] = [];
+      {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
+      <div className="grid grid-cols-2 gap-3.5 mb-3.5">
+        <FireProgressWellness
+          firePercentage={derived.firePercentage}
+          firePatrimonioAtual={derived.firePatrimonioAtual}
+          firePatrimonioGatilho={derived.firePatrimonioGatilho}
+          swrFireDay={derived.swrFireDay}
+          wellnessScore={derived.wellnessScore * 100}
+          wellnessLabel={derived.wellnessLabel}
+          wellnessMetrics={derived.wellnessMetrics}
+        />
+        {derived && (
+          <AporteDoMes
+            aporteMensal={derived.aporteMensal}
+            ultimoAporte={derived.ultimoAporte}
+            ultimoAporteData={derived.ultimoAporteData}
+            acumuladoMes={derived.acumuladoMes}
+            acumuladoAno={derived.acumuladoAno}
+          />
+        )}
+      </div>
 
-        // 1. DCA ativo
-        derived.dcaItems.filter((i: any) => i.dcaAtivo).forEach((i: any) => {
-          acoes.push({ text: `Aportar ${i.nome} (DCA ativo)`, level: 'warn' });
-        });
-
-        // 2. Drift fora da banda
-        derived.driftItems.filter((i: any) => i.id !== 'Custo' && i.absGap > 5).forEach((i: any) => {
-          const dir = i.gap > 0 ? 'underweight' : 'overweight';
-          acoes.push({ text: `Rebalancear ${i.id}: ${dir} ${i.absGap.toFixed(1)}pp`, level: i.absGap > 8 ? 'urgent' : 'warn' });
-        });
-
-        const isEmpty = acoes.length === 0;
-        if (isEmpty) acoes.push({ text: '✓ Carteira dentro das bandas — sem ação necessária', level: 'ok' });
-
-        const levelColor = (l: 'ok' | 'warn' | 'urgent') =>
-          l === 'ok' ? 'var(--green)' : l === 'urgent' ? 'var(--red)' : 'var(--yellow)';
-
-        return (
-          <div className="mb-3.5">
-            <div className="text-xs font-semibold uppercase tracking-wide text-muted mb-2">Próximas Ações</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {acoes.map((a, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '8px 12px',
-                  background: `color-mix(in srgb, ${levelColor(a.level)} 6%, var(--card2))`,
-                  border: `1px solid color-mix(in srgb, ${levelColor(a.level)} 20%, transparent)`,
-                  borderRadius: 'var(--radius-sm)',
-                  borderLeft: `3px solid ${levelColor(a.level)}`,
-                }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: levelColor(a.level), flexShrink: 0 }} />
-                  <span style={{ fontSize: 'var(--text-sm)', color: a.level === 'ok' ? 'var(--muted)' : 'var(--text)', fontWeight: a.level === 'ok' ? 400 : 600 }}>
-                    {a.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* 5. DRIFT DA CARTEIRA — contexto de rebalanceamento */}
-      {derived && driftItems.length > 0 && (() => {
-        // Threshold constants (mirror dataWiring.ts)
-        const DRIFT_VERDE_PP = 3;
-        const DRIFT_AMARELO_PP = 5;
-        return (
-          <div className="mb-3.5">
-            <div className="kpi-label mb-2" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>
-              Drift da Carteira
-            </div>
-            <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
-              {driftItems.map(item => {
-                const statusColor =
-                  item.status === 'verde' ? 'var(--green)' :
-                  item.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
-                // Scale: 0 = alvo, bar shows deviation from target
-                // Use max possible range = 10pp for axis scaling
-                const AXIS_MAX_PP = 10;
-                const actualDeviation = Math.abs(item.alvo - item.atual); // same as absGap
-                const barWidthPct = Math.min(100, (actualDeviation / AXIS_MAX_PP) * 100);
-                const verdePct = (DRIFT_VERDE_PP / AXIS_MAX_PP) * 100;
-                const amareloPct = (DRIFT_AMARELO_PP / AXIS_MAX_PP) * 100;
-                const isUnder = item.gap > 0;
-                return (
-                  <div key={item.id} className="bg-card2/40 rounded p-2.5">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-semibold">{item.nome}</span>
-                      <span className="text-xs" style={{ color: statusColor }}>
-                        {item.gap >= 0 ? '-' : '+'}{item.absGap.toFixed(1)}pp
-                      </span>
-                    </div>
-                    {/* Deviation bar with threshold markers */}
-                    <div className="relative mb-1" style={{ height: 10, background: 'rgba(148,163,184,.12)', borderRadius: 4, overflow: 'visible' }}>
-                      {/* Actual deviation fill */}
-                      <div
-                        className="absolute left-0 top-0 h-full"
-                        style={{ width: `${barWidthPct}%`, background: statusColor, opacity: 0.85, borderRadius: 4, transition: 'width .4s' }}
-                      />
-                      {/* Threshold line: 3pp (verde→amarelo) */}
-                      <div
-                        className="absolute top-0 h-full"
-                        style={{ left: `${verdePct}%`, width: 1.5, background: 'var(--green)', opacity: 0.7 }}
-                      />
-                      {/* Threshold line: 5pp (amarelo→vermelho) */}
-                      <div
-                        className="absolute top-0 h-full"
-                        style={{ left: `${amareloPct}%`, width: 1.5, background: 'var(--yellow)', opacity: 0.7 }}
-                      />
-                    </div>
-                    {/* Threshold labels row */}
-                    <div className="relative mb-1" style={{ height: 12 }}>
-                      <div className="absolute text-xs" style={{ left: `${verdePct}%`, transform: 'translateX(-50%)', color: 'var(--green)', fontSize: 9, opacity: 0.8 }}>|3</div>
-                      <div className="absolute text-xs" style={{ left: `${amareloPct}%`, transform: 'translateX(-50%)', color: 'var(--yellow)', fontSize: 9, opacity: 0.8 }}>|5</div>
-                    </div>
-                    <div className="flex justify-between text-xs text-muted">
-                      <span>{item.atual.toFixed(1)}%</span>
-                      <span>→ {item.alvo.toFixed(0)}%</span>
-                    </div>
-                    {item.impactoBrl != null && item.impactoBrl > 5000 && (
-                      <div className="text-xs mt-1" style={{ color: isUnder ? 'var(--yellow)' : 'var(--muted)' }}>
-                        ~R${(item.impactoBrl / 1000).toFixed(0)}k para fechar gap
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            {/* Legend */}
-            <div className="flex gap-3 mt-2 flex-wrap" style={{ fontSize: 10, color: 'var(--muted)' }}>
-              <span style={{ color: 'var(--green)' }}>● verde ≤3pp</span>
-              <span style={{ color: 'var(--yellow)' }}>● amarelo 3–5pp</span>
-              <span style={{ color: 'var(--red)' }}>● vermelho &gt;5pp</span>
-              <span>· rebalanceamento via aporte</span>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* 5b. TORNADO DE SENSIBILIDADE [COLLAPSIBLE] */}
-      {derived && (
-        <CollapsibleSection id="section-pfire-tornado" title={secTitle('now', 'tornado')} defaultOpen={secOpen('now', 'tornado')} icon="🌪">
-          <div className="px-4 pb-4">
-            <PFireMonteCarloTornado
-              pfireBase={derived.pfireBase}
-              pfireFav={derived.pfireFav}
-              pfireStress={derived.pfireStress}
-              tornadoData={derived.tornadoData}
-              tornadoOnly
-            />
-          </div>
-        </CollapsibleSection>
-      )}
-
-      {/* 6. TIME TO FIRE — Redesign com tabs de perfil */}
-      {byProfile.length > 0 && (
-        <div className="bg-card border border-border/50 rounded mb-3.5">
-          {/* Header */}
-          <div className="px-4 pt-4 pb-3 border-b border-border/30">
-            <div className="flex items-center mb-3">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted m-0">TIME TO FIRE</h2>
-            </div>
-            {/* Profile Tabs */}
-            <div className="flex gap-1">
-              {byProfile.map((prof: any, i: number) => (
-                <button
-                  key={prof.profile}
-                  onClick={() => setActiveProfile(i)}
-                  className="text-xs px-3 py-1.5 rounded transition-colors"
-                  style={{
-                    background: activeProfile === i ? 'var(--accent)' : 'var(--card2)',
-                    color: activeProfile === i ? 'white' : 'var(--muted)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontWeight: activeProfile === i ? 700 : 400,
-                  }}
-                >
-                  {prof.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active profile content */}
-          {activeProf && (
-            <div className="px-4 py-4">
-              <div className="flex items-center gap-4 flex-wrap">
-                {/* P(FIRE) — primary metric */}
-                <div className="flex-shrink-0 text-center" style={{ minWidth: 80 }}>
-                  <div className="text-xs text-muted uppercase tracking-wide mb-1">FIRE 53</div>
-                  <div
-                    className="text-4xl font-black leading-none"
-                    style={{ color: pfireColorFn(activeProf.p_fire_53) }}
-                  >
-                    {activeProf.p_fire_53?.toFixed(1) ?? '—'}%
-                  </div>
-                  <div className="text-xs text-muted mt-0.5">P(sucesso)</div>
-                  <div
-                    className="text-xs font-semibold mt-1.5 px-2 py-0.5 rounded"
-                    style={{
-                      background: activeProf.p_fire_53 >= 90 ? 'rgba(34,197,94,0.12)' : 'rgba(234,179,8,0.12)',
-                      color: pfireColorFn(activeProf.p_fire_53),
-                    }}
-                  >
-                    {activeProf.p_fire_53 >= 90 ? '✓ ON TRACK' : '⚠ ATENÇÃO'}
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div className="flex-shrink-0 hidden sm:block" style={{ width: 1, height: 56, background: 'var(--border)' }} />
-
-                {/* FIRE Year */}
-                <div className="flex-shrink-0">
-                  <div className="text-2xl font-bold">
-                    {activeProf.fire_age_53 ?? '2040'}
-                    <span className="text-sm font-normal text-muted ml-2">
-                      ({(parseInt(activeProf.fire_age_53 ?? '2040') - ((data as any)?.premissas?.ano_atual ?? 2026) + ((data as any)?.premissas?.idade_atual ?? 39))} anos)
-                    </span>
-                  </div>
-                  <div className="text-xs text-muted mt-0.5">
-                    {activeProf.label} · R${((activeProf.gasto_anual ?? 250000) / 1000).toFixed(0)}k/ano
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div className="flex-shrink-0 hidden sm:block" style={{ width: 1, height: 56, background: 'var(--border)' }} />
-
-                {/* KPI chips */}
-                <div className="flex gap-2 flex-wrap">
-                  {[
-                    { label: 'Stress',       value: `${activeProf.p_fire_53_stress?.toFixed(1) ?? '—'}%`, color: 'var(--red)' },
-                    { label: 'Favorável',    value: `${activeProf.p_fire_53_fav?.toFixed(1) ?? '—'}%`,   color: 'var(--green)' },
-                    { label: 'Pat. mediano', value: privacyMode ? '••••' : `R$${((activeProf.pat_mediano_53 ?? 0) / 1e6).toFixed(1)}M`, color: 'var(--text)' },
-                    { label: 'Gatilho',      value: privacyMode ? '••••' : `R$${(derived.firePatrimonioGatilho / 1e6).toFixed(1)}M`,   color: 'var(--muted)' },
-                  ].map(kpi => (
-                    <div key={kpi.label} style={{ background: 'var(--card2)', borderRadius: 6, padding: '6px 12px', minWidth: 72 }}>
-                      <div className="text-xs text-muted mb-0.5">{kpi.label}</div>
-                      <div className="text-sm font-mono font-bold" style={{ color: kpi.color }}>{kpi.value}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sensitivity mini-table — scaled to active profile */}
-              {sensitivity?.aportes_brl && sensitivity?.pfire_2040 && (
-                <div className="mt-4 pt-3 border-t border-border/30">
-                  <div className="text-xs text-muted uppercase tracking-wide mb-2">
-                    Sensibilidade ao Aporte Mensal (FIRE 53 · {activeProf?.label ?? 'Atual'})
-                  </div>
-                  <div className="flex gap-1.5 flex-wrap">
-                    {(() => {
-                      // Delta between active profile and base profile (Atual) at the base aporte
-                      const basePfire = (byProfile[0]?.p_fire_53 ?? 0) / 100;
-                      const activePfire = (activeProf?.p_fire_53 ?? byProfile[0]?.p_fire_53 ?? 0) / 100;
-                      const delta = activePfire - basePfire;
-                      return sensitivity.aportes_brl.map((val: number, i: number) => {
-                        const rawPfire = sensitivity.pfire_2040[i];
-                        const adjustedPfire = Math.max(0, Math.min(1, rawPfire + delta));
-                        const pct = adjustedPfire * 100;
-                        const isBase = val === sensitivity.aporte_base;
-                        const color = pfireColorFn(pct);
-                        return (
-                          <div
-                            key={val}
-                            className="text-center px-2 py-1.5 rounded flex-shrink-0"
-                            style={{
-                              background: isBase ? 'color-mix(in srgb, var(--accent) 15%, transparent)' : 'var(--card2)',
-                              border: isBase ? '1px solid color-mix(in srgb, var(--accent) 40%, transparent)' : '1px solid transparent',
-                            }}
-                          >
-                            <div className="text-xs font-mono" style={{ color }}>
-                              {pct.toFixed(1)}%
-                            </div>
-                            <div className="text-xs text-muted mt-0.5">
-                              {privacyMode ? '••••' : `R$${val / 1000}k`}
-                              {isBase && <span style={{ color: 'var(--accent)' }}> ★</span>}
-                            </div>
-                          </div>
-                        );
-                      });
-                    })()}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* (MERCADO & MACRO moved earlier — see section 4 above) */}
-
-      {/* 10. FINANCIAL WELLNESS SCORE [COLLAPSIBLE] */}
-      {wellnessScore && (
-        <CollapsibleSection id="section-wellness" title={secTitle('now', 'wellness')} defaultOpen={secOpen('now', 'wellness')} icon="🏆">
+      {/* 6a. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
+      {data?.wellness_config?.metrics && (
+        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={secOpen('now', 'wellness')} icon="🏆">
           {(() => {
-            const { totalScore, allMetrics, badMetrics, goodMetrics, topAcoes, actionDescriptions } = wellnessScore;
+            // Compute each metric's points using wellness_config thresholds
+            const wc = data.wellness_config;
+            const pfireBaseVal = derived.pfireBase; // 0-100
+            const aporteMensalVal = data.premissas?.aporte_mensal ?? 0;
+            const custoVidaBase = data.premissas?.custo_vida_base ?? 0;
+            const custoMensal = custoVidaBase / 12;
+            const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
+            const maxDriftVal = data?.drift
+              ? Math.max(0, ...Object.entries(data.drift as Record<string, any>)
+                  .filter(([k]) => k !== 'Custo')
+                  .map(([, d]) => Math.abs((d?.atual || 0) - (d?.alvo || 0))))
+              : 0;
+            const ipcaGapPp = data.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
+            const dcaAtivo = data.dca_status?.ipca_longo?.ativo ?? false;
+            const terAtual = data.drift?.['Custo']?.atual ?? (data.wellness_config?.metrics?.find((m: any) => m.id === 'ter')?.current_ter ?? 0.247);
+            const humanCapitalStatus = data.wellness_config?.metrics?.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
+
+            // Compute pfire pts
+            const pfirePts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (pfireBaseVal >= t.min) return t.pts;
+              }
+              return 0;
+            })();
+
+            // Compute savings_rate pts
+            const savingsRatePts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (savingsRate >= t.min_pct) return t.pts;
+              }
+              return 0;
+            })();
+
+            // Compute drift pts
+            const driftPts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (maxDriftVal <= t.max_pp) return t.pts;
+              }
+              return 0;
+            })();
+
+            // Compute ipca_gap pts
+            const ipcaGapPts = (() => {
+              if (ipcaGapPp == null) return 5; // neutral fallback
+              const thresholds = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (ipcaGapPp <= t.max_pp) {
+                  return t.pts ?? (dcaAtivo ? (t.pts_if_dca ?? t.pts ?? 5) : (t.pts ?? 3));
+                }
+              }
+              return dcaAtivo ? 5 : 3;
+            })();
+
+            // execution_fidelity — use 7pts (neutral) if data insufficient
+            const execPts = 7;
+
+            // emergency_fund — IPCA+ 2029 as liquid reserve
+            const emergencyPts = (() => {
+              const reservaBrl = data.rf?.ipca2029?.valor ?? 0;
+              const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
+              const thresholds = wc.metrics.find((m: any) => m.id === 'emergency_fund')?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (months >= t.min_months) return t.pts;
+              }
+              return 0;
+            })();
+
+            // ter pts — compare current_ter to benchmark_ter
+            const terPts = (() => {
+              const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
+              const benchmarkTer = terCfg?.benchmark_ter ?? 0.22;
+              const currentTer = terCfg?.current_ter ?? terAtual;
+              const delta = currentTer - benchmarkTer;
+              const thresholds = terCfg?.thresholds ?? [];
+              for (const t of thresholds) {
+                if (delta <= t.max_delta_pp) return t.pts;
+              }
+              return 0;
+            })();
+
+            // human_capital pts
+            const humanPts = (() => {
+              const thresholds = wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? [];
+              const match = thresholds.find((t: any) => t.status === humanCapitalStatus);
+              return match ? match.pts : 5;
+            })();
+
+            const allMetrics = [
+              { id: 'pfire', label: 'P(FIRE) base', pts: pfirePts, max: 35, detail: `${pfireBaseVal.toFixed(1)}%`, description: wc.metrics.find((m: any) => m.id === 'pfire')?.description ?? '' },
+              { id: 'savings_rate', label: 'Savings rate', pts: savingsRatePts, max: 15, detail: `${savingsRate.toFixed(1)}%`, description: wc.metrics.find((m: any) => m.id === 'savings_rate')?.description ?? '' },
+              { id: 'drift', label: 'Drift máximo', pts: driftPts, max: 15, detail: `${maxDriftVal.toFixed(1)}pp`, description: wc.metrics.find((m: any) => m.id === 'drift')?.description ?? '' },
+              { id: 'ipca_gap', label: 'IPCA+ gap vs alvo', pts: ipcaGapPts, max: 10, detail: ipcaGapPp != null ? `${ipcaGapPp.toFixed(1)}pp` : 'n/d', description: wc.metrics.find((m: any) => m.id === 'ipca_gap')?.description ?? '' },
+              { id: 'execution_fidelity', label: 'Exec. aportes', pts: execPts, max: 10, detail: 'dados insuf.', description: wc.metrics.find((m: any) => m.id === 'execution_fidelity')?.description ?? '' },
+              { id: 'emergency_fund', label: 'Fundo emergência', pts: emergencyPts, max: 5, detail: `${(data.rf?.ipca2029?.valor ?? 0) > 0 ? ((data.rf.ipca2029.valor / custoMensal)).toFixed(1) : '?'}m`, description: wc.metrics.find((m: any) => m.id === 'emergency_fund')?.description ?? '' },
+              { id: 'ter', label: 'TER vs VWRA', pts: terPts, max: 5, detail: (() => { const terCfg = wc.metrics.find((m: any) => m.id === 'ter'); const delta = (terCfg?.current_ter ?? terAtual) - (terCfg?.benchmark_ter ?? 0.22); return `${delta >= 0 ? '+' : ''}${(delta * 100).toFixed(1)}bp`; })(), description: wc.metrics.find((m: any) => m.id === 'ter')?.description ?? '' },
+              { id: 'human_capital', label: 'Capital humano', pts: humanPts, max: 5, detail: humanCapitalStatus.replace('_', ' '), description: wc.metrics.find((m: any) => m.id === 'human_capital')?.description ?? '' },
+            ].map(m => ({ ...m, isOk: m.pts / m.max >= 0.85 }));
+
+            const totalScore = allMetrics.reduce((sum, m) => sum + m.pts, 0);
+            const badMetrics = allMetrics.filter(m => !m.isOk);
+            const goodMetrics = allMetrics.filter(m => m.isOk);
+
+            const actionDescriptions: Record<string, string> = {
+              pfire: 'Aumentar aporte mensal ou aguardar crescimento patrimonial',
+              drift: 'Rebalancear bucket mais distante do alvo no próximo aporte',
+              ipca_gap: 'Continuar DCA em IPCA+ até atingir alvo de alocação',
+              savings_rate: 'Aumentar aporte ou reduzir custo de vida',
+              execution_fidelity: 'Manter consistência nos aportes mensais',
+              emergency_fund: 'Aumentar reserva líquida para 6+ meses de custo de vida',
+              ter: 'Migrar gradualmente para ETFs de menor custo',
+              human_capital: 'Contratar seguro de vida ao casar ou ter dependentes',
+            };
+
+            const topAcoes = [...allMetrics]
+              .filter(m => !m.isOk)
+              .sort((a, b) => (b.max - b.pts) - (a.max - a.pts))
+              .slice(0, 3);
 
             const renderBar = (pts: number, max: number) => {
               const ratio = pts / max;
               const bg = ratio >= 0.85 ? 'var(--green)' : ratio >= 0.5 ? 'var(--yellow)' : 'var(--red)';
               return (
-                <div className="flex-1 bg-card2/40 rounded-sm h-1.5 relative overflow-hidden min-w-16">
+                <div className="flex-1 bg-slate-700/40 rounded-sm h-1.5 relative overflow-hidden min-w-16">
                   <div className="h-full rounded-sm" style={{ width: `${(pts / max) * 100}%`, background: bg }} />
                 </div>
               );
@@ -557,7 +379,7 @@ export default function HomePage() {
                 <div className="text-xs w-4 flex-shrink-0">{m.isOk ? '✅' : '⚠️'}</div>
                 <div className="text-xs text-muted w-36 flex-shrink-0 truncate">{m.label}</div>
                 {renderBar(m.pts, m.max)}
-                <div className="text-xs text-muted w-20 flex-shrink-0 text-right truncate" title={m.detail}>{m.detail}</div>
+                <div className="text-xs text-muted w-14 flex-shrink-0 text-right">{m.detail}</div>
                 <div className="text-xs text-muted w-10 flex-shrink-0 text-right">{m.pts}/{m.max}</div>
               </div>
             );
@@ -565,11 +387,13 @@ export default function HomePage() {
             return (
               <div className="px-4 pb-4">
                 <div className="flex gap-5 items-start">
+                  {/* Score grande */}
                   <div className="min-w-28 text-center flex-shrink-0">
                     <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Score</div>
                     <div className="text-5xl font-black text-green leading-none">{totalScore}</div>
-                    <div className="text-xs text-muted mt-1">/110 · Progressivo</div>
+                    <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
                   </div>
+                  {/* Métricas divididas em duas categorias */}
                   <div className="flex-1 min-w-0">
                     {badMetrics.length > 0 && (
                       <div className="mb-3">
@@ -585,6 +409,8 @@ export default function HomePage() {
                     )}
                   </div>
                 </div>
+
+                {/* Top Ações */}
                 {topAcoes.length > 0 && (
                   <div className="mt-4 pt-3 border-t border-border/30">
                     <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">Top Ações para Subir o Score</div>
@@ -592,7 +418,7 @@ export default function HomePage() {
                       {topAcoes.map((m, i) => {
                         const gap = m.max - m.pts;
                         return (
-                          <div key={m.id} className="bg-card2/20 rounded px-3 py-2">
+                          <div key={m.id} className="bg-slate-700/20 rounded px-3 py-2">
                             <div className="flex items-baseline gap-1.5">
                               <span className="text-xs text-muted">{i + 1}.</span>
                               <span className="text-xs font-semibold text-text">{m.label}</span>
@@ -611,6 +437,127 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
+      {/* 7. SEÇÃO: P(FIRE) — Monte Carlo + Tornado */}
+      {derived && (
+        <PFireMonteCarloTornado
+          pfireBase={derived.pfireBase}
+          pfireFav={derived.pfireFav}
+          pfireStress={derived.pfireStress}
+          tornadoData={derived.tornadoData}
+          firePatrimonioAtual={derived.firePatrimonioAtual}
+          firePatrimonioGatilho={derived.firePatrimonioGatilho}
+        />
+      )}
+
+      {/* 8. SEÇÃO: Contexto Macro & DCA Status [COLLAPSIBLE, OPEN] */}
+      <CollapsibleSection id="section-macro" title="Contexto Macro & DCA Status" defaultOpen={secOpen('now', 'macro')} icon="📊">
+        <div className="px-4 pb-4">
+          {/* 8a. Exposição Brasil — Tabela detalhada */}
+          <div className="mb-3.5">
+            <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
+              Exposição Brasil
+            </div>
+            <div className="bg-slate-700/40 rounded p-3 mb-2">
+              <div className="flex justify-between mb-2">
+                <div>
+                  <div className="text-xs text-muted">Total Brasil</div>
+                  <div className="text-lg font-bold text-green mt-0.5">
+                    {derived.concentrationBrazil != null ? `${(derived.concentrationBrazil * 100).toFixed(1)}%` : '—'}
+                  </div>
+                </div>
+                <div className="text-sm text-muted text-right">
+                  <div>HODL11: R${((data?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k</div>
+                  <div>RF Total: R${((derived.rfBrl ?? 0) / 1000).toFixed(0)}k</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 8b. DCA Status — 3 cards separados */}
+          {data?.dca_status && (
+            <div className="mb-3.5">
+              <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
+                DCA Status
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {/* IPCA+ 2040 */}
+                {data.dca_status.ipca_longo && (
+                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
+                    <div className="text-xs text-muted mb-1">IPCA+ 2040</div>
+                    <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
+                    <div className="text-xs text-muted">
+                      Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
+                    </div>
+                    <div className="text-xs text-muted">
+                      Posição: R${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
+                    </div>
+                  </div>
+                )}
+                {/* IPCA+ 2060 (2050) */}
+                {data.dca_status.ipca2050 && (
+                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
+                    <div className="text-xs text-muted mb-1">IPCA+ 2050</div>
+                    <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca2050.taxa_atual?.toFixed(2)}%</div>
+                    <div className="text-xs text-muted">
+                      Piso: {data.dca_status.ipca2050.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca2050.gap_alvo_pp?.toFixed(1)}pp
+                    </div>
+                    <div className="text-xs text-muted">
+                      Posição: R${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca2050.pct_carteira_atual?.toFixed(1)}%)
+                    </div>
+                  </div>
+                )}
+                {/* Renda+ 2065 */}
+                {data.rf?.renda2065?.distancia_gatilho && (
+                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
+                    <div className="text-xs text-muted mb-1">Renda+ 2065</div>
+                    <div className="text-sm font-bold mb-0.5">Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
+                    <div className="text-xs text-muted">
+                      Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
+                    </div>
+                    <div className="text-xs text-muted">
+                      Posição: R${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Macro strip */}
+          <div className="mb-3.5">
+            <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
+              Indicadores Macro
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.premissas?.taxa_selic ? `${data.premissas.taxa_selic.toFixed(1)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Selic</div>
+              </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.premissas?.ipca_corrente ? `${data.premissas.ipca_corrente.toFixed(1)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">IPCA YTD {anoAtual}</div>
+              </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+                <div className="text-xs text-muted mt-1">USD/BRL</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs text-slate-500 mb-0">
+            Fonte: BCB / FRED · Nubank · IBKR · Premissa de depreciação BRL usada em projeções FIRE
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
+      {derived && (
+        <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={secOpen('now', 'sankey')} icon="💸">
+          <div style={{ padding: '0 16px 16px' }}>
+            <CashFlowSankey />
+          </div>
+        </CollapsibleSection>
+      )}
     </div>
   );
 }
