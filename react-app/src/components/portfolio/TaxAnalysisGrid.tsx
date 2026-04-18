@@ -156,7 +156,7 @@ export function TaxAnalysisGrid() {
         </div>
       </div>
 
-      <div className="src">Regime: ACC UCITS — diferimento fiscal (Lei 14.754/2023). IR 15% flat. PTAX histórica por lote. Transitórios: diluir via aportes, não comprar mais. TLH: ⚠️ = perda ≥ 5%.</div>
+      <div className="src">Regime PF direta (IBKR): IR 15% somente na venda — diferimento total. Come-cotas não se aplica. Ganhos não realizados: sem tributação anual. IR diferido total é estimativa caso venda hoje. PTAX histórica por lote. TLH: ⚠️ = perda ≥ 5%.</div>
     </div>
   );
 }

@@ -267,6 +267,40 @@ export default function PerformancePage() {
 
             const etfsReal = ['AVDV', 'AVUV', 'DGS', 'EIMI', 'SWRD', 'USCC', 'IWVL'].filter(e => fl[e] != null);
 
+            // Portfolio weighted row: use posicoes to compute USD value weights
+            const posicoes = (data as any)?.posicoes ?? {};
+            // Map target ETFs to their loadings source:
+            //   AVGS → avgsProxy (58% AVUV + 42% AVDV), AVEM → EIMI proxy, others direct
+            const etfToLoadingKey: Record<string, string | 'avgsProxy'> = {
+              SWRD: 'SWRD', AVGS: 'avgsProxy', AVEM: 'EIMI',
+              AVUV: 'AVUV', AVDV: 'AVDV', EIMI: 'EIMI', DGS: 'DGS', USSC: 'USCC', IWVL: 'IWVL',
+            };
+            let totalUsd = 0;
+            const etfWeights: Array<{ etf: string; usd: number; loadingKey: string | 'avgsProxy' }> = [];
+            for (const [etf, lk] of Object.entries(etfToLoadingKey)) {
+              const pos = posicoes[etf];
+              if (!pos?.qty || !pos?.price) continue;
+              const hasLoading = lk === 'avgsProxy' ? hasProxy : fl[lk] != null;
+              if (!hasLoading) continue;
+              const usd = pos.qty * pos.price;
+              totalUsd += usd;
+              etfWeights.push({ etf, usd, loadingKey: lk });
+            }
+            const portfolioLoading: Record<string, number> = {};
+            if (totalUsd > 0 && etfWeights.length > 0) {
+              for (const fKey of fKeys) {
+                let weighted = 0;
+                let covered = 0;
+                for (const { usd, loadingKey } of etfWeights) {
+                  const w = usd / totalUsd;
+                  const val = loadingKey === 'avgsProxy' ? avgsProxy[fKey] : fl[loadingKey]?.[fKey];
+                  if (val != null) { weighted += w * val; covered += w; }
+                }
+                if (covered > 0.5) portfolioLoading[fKey] = weighted / covered;
+              }
+            }
+            const hasPortfolioRow = Object.keys(portfolioLoading).length > 0;
+
             if (!etfsReal.length) return <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Sem dados de factor loadings</div>;
             return (
               <>
@@ -310,6 +344,11 @@ export default function PerformancePage() {
                             AVGS*
                           </th>
                         )}
+                        {hasPortfolioRow && (
+                          <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--accent)', fontWeight: 700 }}>
+                            Portfolio
+                          </th>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -343,9 +382,28 @@ export default function PerformancePage() {
                               {avgsProxy[fKey] != null ? avgsProxy[fKey].toFixed(2) : '—'}
                             </td>
                           )}
+                          {hasPortfolioRow && (
+                            <td style={{
+                              textAlign: 'right',
+                              padding: '6px 8px',
+                              fontWeight: 700,
+                              color: portfolioLoading[fKey] != null ? (portfolioLoading[fKey] > 0.3 ? 'var(--green)' : portfolioLoading[fKey] < -0.1 ? 'var(--red)' : 'var(--accent)') : 'var(--muted)',
+                            }}>
+                              {portfolioLoading[fKey] != null ? portfolioLoading[fKey].toFixed(2) : '—'}
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
+                    {hasPortfolioRow && (
+                      <tfoot>
+                        <tr style={{ borderTop: '2px solid var(--border)' }}>
+                          <td colSpan={etfsReal.length + (hasProxy ? 1 : 0) + 2} style={{ padding: '6px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+                            Portfolio = média ponderada pelo valor atual (USD) de cada posição
+                          </td>
+                        </tr>
+                      </tfoot>
+                    )}
                   </table>
                 </div>
               </>
@@ -353,7 +411,8 @@ export default function PerformancePage() {
           })()}
           <div className="src">
             Regressão FF5+Mom · Negrito = significativo (t ≥ 1.65, 90%+) · Desbotado = não significativo<br />
-            *AVGS proxy = 58% AVUV + 42% AVDV (proxies canônicos Tier A — mesma metodologia Avantis · fonte: proxies-canonicos.md)
+            *AVGS proxy = 58% AVUV + 42% AVDV (proxies canônicos Tier A — mesma metodologia Avantis · fonte: proxies-canonicos.md)<br />
+            Loadings calculados sobre proxies (AVUV/AVDV para AVGS, EIMI para AVEM) — ETFs alvo têm histórico &lt; 24 meses. Atualizar quando AVGS/AVEM completarem 24 meses de dados.
           </div>
         </div>
       </CollapsibleSection>

@@ -137,6 +137,9 @@ export function FactorLoadingsTable({ data }: FactorLoadingsTableProps) {
         <p className="text-xs text-muted mt-3 mb-0">
           Fama-French 5 + Momentum. Coefficients with |t-stat| &lt; 2 shown at 40% opacity (not significant).
         </p>
+        <p className="text-xs text-muted mt-1 mb-0" style={{ fontStyle: 'italic' }}>
+          Loadings calculados sobre proxies (AVUV/AVDV para AVGS, EIMI para AVEM) — ETFs alvo têm histórico &lt; 24 meses. Atualizar quando AVGS/AVEM completarem 24 meses de dados.
+        </p>
       </div>
     </div>
   )
