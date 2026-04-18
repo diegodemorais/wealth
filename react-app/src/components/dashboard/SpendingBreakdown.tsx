@@ -29,11 +29,9 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   const [expandDetails, setExpandDetails] = useState(false);
 
   const fmtBrl = (val: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(val);
+    if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(1)}M`;
+    if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
+    return `R$${Math.round(val)}`;
   };
 
   const mustaveMonthly = musthave / 12;
@@ -97,7 +95,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
             {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
           </div>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-            {privacyMode ? '••••' : totalMonthly.toFixed(0)} /mês em média
+            {privacyMode ? '••••' : fmtBrl(totalMonthly)} /mês em média
           </div>
         </div>
 
