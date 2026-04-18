@@ -12,6 +12,7 @@ import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgress
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SectionLabel } from '@/components/primitives/SectionLabel';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
+import { MetricCard } from '@/components/primitives/MetricCard';
 import { secOpen } from '@/config/dashboard.config';
 
 export default function HomePage() {
@@ -83,92 +84,91 @@ export default function HomePage() {
       <SectionLabel>Indicadores Primários</SectionLabel>
       <div className="grid grid-cols-3 gap-2.5 mb-3.5">
         {/* P(Cenário Aspiracional) */}
-        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">P(Cenário Aspiracional)</div>
-          <div className="text-2xl font-black text-accent">{d.pfireAspiracional != null ? `${d.pfireAspiracional.toFixed(1)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
-            {d.pfireAspirFav != null && d.pfireAspirStress != null
+        <MetricCard
+          accent
+          label="P(Cenário Aspiracional)"
+          value={d.pfireAspiracional != null ? `${d.pfireAspiracional.toFixed(1)}%` : '—'}
+          sub={
+            d.pfireAspirFav != null && d.pfireAspirStress != null
               ? `fav ${d.pfireAspirFav.toFixed(1)}% · stress ${d.pfireAspirStress.toFixed(1)}%`
-              : 'cenário aspiracional (49a)'}
-          </div>
-        </div>
+              : 'cenário aspiracional (49a)'
+          }
+        />
         {/* Drift Máximo */}
-        <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Drift Máximo</div>
-          <div className="text-2xl font-black text-text">{maxDrift.toFixed(2)}pp</div>
-          <div className="text-xs text-muted mt-1">vs alvo IPS</div>
-        </div>
+        <MetricCard
+          accent
+          label="Drift Máximo"
+          value={`${maxDrift.toFixed(2)}pp`}
+          valueColor="text-text"
+          sub="vs alvo IPS"
+        />
         {/* Aporte do Mês */}
-        <div className="bg-card border border-border/50 rounded p-4 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Aporte do Mês</div>
-          <div className="text-2xl font-black text-text">
-            {d.aporteMensal
-              ? `R$${Math.round(d.aporteMensal / 1000)}k`
-              : '—'}
-          </div>
-          <div className="text-xs text-muted mt-1">meta mensal</div>
-        </div>
+        <MetricCard
+          label="Aporte do Mês"
+          value={d.aporteMensal ? `R$${Math.round(d.aporteMensal / 1000)}k` : '—'}
+          sub="meta mensal"
+        />
       </div>
 
       {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
       <SectionLabel>Contexto de Mercado</SectionLabel>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5 opacity-85">
         {/* Dólar */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Dólar</div>
-          <div className="text-xl font-black text-text">{d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
-            {data?.mercado?.cambio_mtd_pct != null
+        <MetricCard
+          size="sm"
+          label="Dólar"
+          value={d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}
+          sub={
+            data?.mercado?.cambio_mtd_pct != null
               ? `${data.mercado.cambio_mtd_pct > 0 ? '+' : ''}${data.mercado.cambio_mtd_pct.toFixed(1)}% MtD · PTAX BCB`
-              : 'BRL/USD · PTAX BCB'}
-          </div>
-        </div>
+              : 'BRL/USD · PTAX BCB'
+          }
+        />
         {/* Bitcoin */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Bitcoin</div>
-          <div className="text-xl font-black text-text">
-            {data?.mercado?.btc_usd
+        <MetricCard
+          size="sm"
+          label="Bitcoin"
+          value={
+            data?.mercado?.btc_usd
               ? `$${Number(data.mercado.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
-              : '—'}
-          </div>
-          <div className="text-xs text-muted mt-1">
-            {data?.mercado?.btc_mtd_pct != null
+              : '—'
+          }
+          sub={
+            data?.mercado?.btc_mtd_pct != null
               ? `${data.mercado.btc_mtd_pct > 0 ? '+' : ''}${data.mercado.btc_mtd_pct.toFixed(1)}% MtD`
-              : 'BTC/USD'}
-          </div>
-        </div>
+              : 'BTC/USD'
+          }
+        />
         {/* IPCA+ 2040 */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
-            IPCA+ 2040 — Taxa
-            <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-              style={{
-                backgroundColor: getIpcaSemaforoColor(ipcaTaxa),
-              }}
-            />
-          </div>
-          <div className="text-xl font-black text-text">{ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
-            {data?.rf?.ipca2040?.descricao || 'Tesouro IPCA+ 2040'}
-          </div>
-        </div>
+        <MetricCard
+          size="sm"
+          label={
+            <>
+              IPCA+ 2040 — Taxa
+              <span
+                className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: getIpcaSemaforoColor(ipcaTaxa) }}
+              />
+            </>
+          }
+          value={ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}
+          sub={data?.rf?.ipca2040?.descricao || 'Tesouro IPCA+ 2040'}
+        />
         {/* Renda+ 2065 */}
-        <div className="bg-card border border-border/50 rounded p-3 text-center">
-          <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest flex items-center justify-center gap-1">
-            Renda+ 2065 — Taxa
-            <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-              style={{
-                backgroundColor: getRendaSemaforoColor(rendaTaxa),
-              }}
-            />
-          </div>
-          <div className="text-xl font-black text-text">{rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}</div>
-          <div className="text-xs text-muted mt-1">
-            {data?.rf?.renda2065?.descricao || 'Tesouro Renda+ 2065'}
-          </div>
-        </div>
+        <MetricCard
+          size="sm"
+          label={
+            <>
+              Renda+ 2065 — Taxa
+              <span
+                className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: getRendaSemaforoColor(rendaTaxa) }}
+              />
+            </>
+          }
+          value={rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}
+          sub={data?.rf?.renda2065?.descricao || 'Tesouro Renda+ 2065'}
+        />
       </div>
 
       {/* 4. SEÇÃO: Time to FIRE — Big number + Progresso */}
