@@ -2,6 +2,7 @@ import React from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
+import { fmtBrlCompact } from '@/utils/formatters';
 
 interface AporteDoMesProps {
   aporteMensal: number;
@@ -31,11 +32,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
     ? ((data?.premissas as any)?.ultimo_aporte_brl ?? (ultimoAporte > 0 ? ultimoAporte : null))
     : null;
 
-  const fmtShort = (val: number) => {
-    if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(1)}M`;
-    if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
-    return `R$${Math.round(val)}`;
-  };
+  const fmtShort = fmtBrlCompact;
 
   const fmtBrl = (val: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtBrlCompact } from '@/utils/formatters';
 
 interface SpendingCategory {
   categoria: string;
@@ -28,11 +29,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   const { privacyMode } = useUiStore();
   const [expandDetails, setExpandDetails] = useState(false);
 
-  const fmtBrl = (val: number) => {
-    if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(1)}M`;
-    if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
-    return `R$${Math.round(val)}`;
-  };
+  const fmtBrl = fmtBrlCompact;
 
   const mustaveMonthly = musthave / 12;
   const likesMonthly = likes / 12;

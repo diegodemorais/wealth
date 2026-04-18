@@ -13,6 +13,8 @@ import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
+import { FIRE_RULES } from '@/config/business-rules';
+import { InfoCard } from '@/components/primitives/InfoCard';
 
 export default function WithdrawPage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();
@@ -126,7 +128,7 @@ export default function WithdrawPage() {
         const swrFireP50 = swrPercentis?.p50 != null ? swrPercentis.p50 : null;
         const swrFireP10 = swrPercentis?.p10 != null ? swrPercentis.p10 : null;
         const swrFireP90 = swrPercentis?.p90 != null ? swrPercentis.p90 : null;
-        const swrTarget = (prem as any).swr_gatilho ?? 0.03;
+        const swrTarget = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
         // Semáforo para SWR FIRE
         const swrFireColor = swrFireP50 == null ? 'var(--muted)'
           : swrFireP50 <= swrTarget ? 'var(--green)'
@@ -139,18 +141,13 @@ export default function WithdrawPage() {
         return (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, marginBottom: 16 }}>
             {/* Card: SWR Atual */}
-            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: '4px solid var(--muted)' }}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
-                SWR Atual
-              </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--muted)', lineHeight: 1, marginBottom: 6 }}>
-                {swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
-              </div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.5 }}>
-                Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em>
-                <br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.
-              </div>
-            </div>
+            <InfoCard
+              label="SWR Atual"
+              value={swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
+              description={<>Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em><br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.</>}
+              accentColor="var(--muted)"
+              size="lg"
+            />
             {/* Card: SWR Projetado FIRE Day */}
             <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: `4px solid ${swrFireColor}` }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
@@ -512,7 +509,7 @@ export default function WithdrawPage() {
           {(() => {
             const premissas = data?.premissas ?? {};
             const custo_vida_base: number = activeScenarioCfg.custo_vida_base;
-            const swr_target: number = premissas.swr_gatilho ?? 0.03;
+            const swr_target: number = premissas.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
             const fire_data = (data as any)?.fire ?? {};
             const pat_mediano = fire_data.pat_mediano_fire ?? fire_data.pat_p50_fire ?? premissas.patrimonio_atual ?? 3_500_000;
             const fmtBrl = (v: number) => privacyMode ? '••••' : `R$${(v / 1000).toFixed(0)}k`;

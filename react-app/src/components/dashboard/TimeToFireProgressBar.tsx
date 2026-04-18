@@ -2,6 +2,7 @@
 
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct } from '@/utils/formatters';
+import { decimalYearsToYearsMonths } from '@/utils/time';
 
 export interface TimeToFireProgressBarProps {
   fireProgress: number; // 0-1 (e.g., 0.2477 for 24.77%)
@@ -19,9 +20,7 @@ export function TimeToFireProgressBar({
   const privacyMode = useUiStore(s => s.privacyMode);
 
   // Format years and months
-  const yearsInt = Math.floor(yearsToFire);
-  const monthsInt = Math.round((yearsToFire - yearsInt) * 12);
-  const yearsLabel = `${yearsInt} ${yearsInt === 1 ? 'ano' : 'anos'} ${monthsInt} ${monthsInt === 1 ? 'mês' : 'meses'}`;
+  const yearsLabel = decimalYearsToYearsMonths(yearsToFire).long;
 
   // Target year: current year + ceil(years to fire)
   const currentYear = new Date().getFullYear();

@@ -1,14 +1,8 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
-import { fmtPct } from '@/utils/formatters';
-
-// Compact BRL formatter for hero display (e.g. R$3.59M)
-function fmtBrlCompact(val: number): string {
-  if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(2)}M`;
-  if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
-  return `R$${Math.round(val)}`;
-}
+import { fmtPct, fmtBrlCompact } from '@/utils/formatters';
+import { decimalYearsToYearsMonths } from '@/utils/time';
 
 // Compact USD formatter for hero display (e.g. $695k)
 function fmtUsdCompact(val: number): string {
@@ -49,9 +43,7 @@ export function KpiHero({
   const privacyMode = useUiStore(s => s.privacyMode);
 
   // Format years and months for "14a 0m" format
-  const yearsInt = Math.floor(yearsToFire);
-  const monthsInt = Math.round((yearsToFire - yearsInt) * 12);
-  const yearsMonthsStr = `${yearsInt}a ${monthsInt}m`;
+  const yearsMonthsStr = decimalYearsToYearsMonths(yearsToFire).short;
 
   // USD percentage of net worth (for subtitle "63% em USD")
   const usdPct = networthUsd && cambio && networth
@@ -59,7 +51,7 @@ export function KpiHero({
     : null;
 
   // Compact display values
-  const networthCompact = fmtBrlCompact(networth);
+  const networthCompact = fmtBrlCompact(networth, 2);
   const networthUsdCompact = networthUsd ? fmtUsdCompact(networthUsd) : null;
 
   // Fire subtitle: "Base: 2040 (53 anos) · Aspir: 2038 (49a)"
@@ -72,7 +64,7 @@ export function KpiHero({
 
   // Gatilho subtitle: "vs gatilho R$X.XM"
   const gatilhoSubtitle = firePatrimonioGatilho
-    ? `vs gatilho ${fmtBrlCompact(firePatrimonioGatilho)}`
+    ? `vs gatilho ${fmtBrlCompact(firePatrimonioGatilho, 2)}`
     : undefined;
 
   return (

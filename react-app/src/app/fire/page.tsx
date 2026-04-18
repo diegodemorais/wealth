@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 
 import { pfireColor as pfireColorFn } from '@/utils/fire';
+import { FIRE_RULES } from '@/config/business-rules';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
@@ -160,7 +161,7 @@ export default function FirePage() {
         const prem = (data as any)?.premissas ?? {};
         const aporte     = prem.aporte_mensal ?? 0;
         const retorno    = prem.retorno_equity_base ?? 0.0485;
-        const swrTarget  = prem.swr_gatilho ?? 0.03;
+        const swrTarget  = prem.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
         const currentAge = prem.idade_atual ?? 39;
         const patrimonio = prem.patrimonio_atual ?? 0;
         const favRetorno = (data as any)?.fire_matrix?.retornos_equity?.fav ?? retorno;

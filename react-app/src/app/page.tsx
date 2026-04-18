@@ -14,6 +14,7 @@ import { SectionLabel } from '@/components/primitives/SectionLabel';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { MetricCard } from '@/components/primitives/MetricCard';
 import { secOpen } from '@/config/dashboard.config';
+import { maxDriftPp } from '@/utils/drift';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -45,9 +46,7 @@ export default function HomePage() {
   const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
 
   // Compute max drift
-  const maxDrift = data?.drift
-    ? Math.max(0, ...Object.values(data.drift as Record<string, any>).map(d => Math.abs((d?.atual || 0) - (d?.alvo || 0))))
-    : 0;
+  const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
 
   // Get IPCA and Renda+ semaforo status from derived
   const ipcaTaxa = data?.rf?.ipca2040?.taxa;
@@ -248,11 +247,7 @@ export default function HomePage() {
             const custoVidaBase = data.premissas?.custo_vida_base ?? 0;
             const custoMensal = custoVidaBase / 12;
             const savingsRate = aporteMensalVal > 0 ? (aporteMensalVal / (aporteMensalVal + custoMensal)) * 100 : 0;
-            const maxDriftVal = data?.drift
-              ? Math.max(0, ...Object.entries(data.drift as Record<string, any>)
-                  .filter(([k]) => k !== 'Custo')
-                  .map(([, dEntry]) => Math.abs((dEntry?.atual || 0) - (dEntry?.alvo || 0))))
-              : 0;
+            const maxDriftVal = maxDriftPp(data?.drift as Record<string, any> ?? {}, ['Custo']);
             const ipcaGapPp = data.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
             const dcaAtivo = data.dca_status?.ipca_longo?.ativo ?? false;
             const terAtual = data.drift?.['Custo']?.atual ?? (data.wellness_config?.metrics?.find((m: any) => m.id === 'ter')?.current_ter ?? 0.247);

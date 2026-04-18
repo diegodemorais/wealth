@@ -13,6 +13,7 @@ import { PremisesTable } from '@/components/performance/PremisesTable';
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
 import { Button } from '@/components/ui/button';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
+import { InfoCard } from '@/components/primitives/InfoCard';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -147,30 +148,22 @@ export default function PerformancePage() {
           return (
             <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
               {/* Card A: Alpha ITD */}
-              <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  Alpha desde início
-                </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaItdPp != null && alphaItdPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
-                  {privacyMode ? '••%' : fmt(alphaItdPp)}
-                </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                  vs VWRA (market-cap global) · acumulado
-                </div>
-              </div>
+              <InfoCard
+                label="Alpha desde início"
+                value={privacyMode ? '••%' : fmt(alphaItdPp)}
+                description="vs VWRA (market-cap global) · acumulado"
+                accentColor={alphaItdPp != null && alphaItdPp >= 0 ? 'var(--green)' : 'var(--red)'}
+                bg="var(--bg)"
+              />
 
               {/* Card B: Alpha anualizado */}
-              <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  Alpha anualizado
-                </div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: alphaAnualizadoPp != null && alphaAnualizadoPp >= 0 ? 'var(--green)' : 'var(--red)', lineHeight: 1.1 }}>
-                  {privacyMode ? '••%' : fmt(alphaAnualizadoPp)}
-                </div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                  média / ano desde início
-                </div>
-              </div>
+              <InfoCard
+                label="Alpha anualizado"
+                value={privacyMode ? '••%' : fmt(alphaAnualizadoPp)}
+                description="média / ano desde início"
+                accentColor={alphaAnualizadoPp != null && alphaAnualizadoPp >= 0 ? 'var(--green)' : 'var(--red)'}
+                bg="var(--bg)"
+              />
 
               {/* Card C: Alpha líquido esperado pós-haircut (académico) */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>

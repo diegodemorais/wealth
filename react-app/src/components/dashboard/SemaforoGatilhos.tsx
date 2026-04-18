@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { DcaItem } from '@/types/dashboard';
+import { getStatusStyle } from '@/utils/statusStyles';
 
 interface SemaforoGatilhosProps {
   items: DcaItem[];
 }
-
-const STATUS_COLOR: Record<string, string> = {
-  verde: 'var(--green)',
-  amarelo: 'var(--yellow)',
-  vermelho: 'var(--red)',
-};
 
 const CATEGORIA_LABEL: Record<string, string> = {
   rf_ipca: 'taxa',
@@ -78,7 +73,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({ items }) => {
       {!isOpen && (
         <div className="mx-4 mb-3 flex flex-col gap-1">
           {items.filter(i => i.proxAcao === 'comprar' || i.proxAcao === 'vender').map(item => {
-            const color = STATUS_COLOR[item.status] ?? 'var(--muted)';
+            const color = getStatusStyle(item.status).color;
             const acaoColor = item.proxAcao === 'comprar' ? 'var(--green)' : 'var(--red)';
             return (
               <div key={item.id} className="flex items-center gap-2 text-xs">
@@ -90,7 +85,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({ items }) => {
           })}
           {items.filter(i => i.proxAcao === 'comprar' || i.proxAcao === 'vender').length === 0 && (
             <div className="flex items-center gap-1.5 text-xs text-muted">
-              <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: STATUS_COLOR['verde'] }} />
+              <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ background: getStatusStyle('verde').color }} />
               {items.length} ativos — nenhuma ação pendente
             </div>
           )}
@@ -111,7 +106,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({ items }) => {
             </thead>
             <tbody>
               {items.map(item => {
-                const color = STATUS_COLOR[item.status] ?? 'var(--muted)';
+                const color = getStatusStyle(item.status).color;
                 const catLabel = CATEGORIA_LABEL[item.categoria] ?? item.categoria;
                 const contexto = formatContexto(item);
 

@@ -131,6 +131,13 @@ export function fmtBrlM(value: number): string {
   return `R$ ${value.toLocaleString('pt-BR')}`;
 }
 
+/** Formato compacto BRL: R$3.5M, R$25k, R$500 */
+export function fmtBrlCompact(value: number, mFraction = 1): string {
+  if (value >= 1e6) return `R$${(value / 1e6).toFixed(mFraction)}M`;
+  if (value >= 1e3) return `R$${Math.round(value / 1000)}k`;
+  return `R$${Math.round(value)}`;
+}
+
 /**
  * Abbreviate large numbers
  * @example fmtShort(1234567) => "1,2M"
