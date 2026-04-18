@@ -159,35 +159,13 @@ function FireSimuladorSection() {
   // SWR target: from premissas.swr_gatilho (official source of truth — no hardcoded fallback)
   const swrTarget: number | undefined = premissas.swr_gatilho;
 
-  // Only run calc when all inputs are available from data
-  const result = (aporte !== undefined && retorno !== undefined && custo !== undefined &&
-    currentAge !== undefined && patrimonio !== undefined && swrTarget !== undefined)
-    ? calcFireYear(aporte, retorno / 100, custo, currentAge, getAnoAtual(premissas), patrimonio, swrTarget)
-    : null;
-
-  // P(FIRE) from MC percentiles — no fallback: show — if data not present
-  const swrAtFire = result?.swrAtFire ?? null;
-  const swrP10: number | undefined = swrPercentis?.swr_p10;
-  const swrP50: number | undefined = swrPercentis?.swr_p50;
-  const swrP90: number | undefined = swrPercentis?.swr_p90;
-  const firePire: number | null = (swrAtFire != null && swrP10 != null && swrP50 != null && swrP90 != null) ? (() => {
-    if (swrAtFire >= swrP10) return 10;
-    if (swrAtFire <= swrP90) return 90;
-    if (swrAtFire >= swrP50) {
-      const t = (swrP10 - swrAtFire) / (swrP10 - swrP50);
-      return Math.round(10 + t * 40);
-    }
-    const t = (swrP50 - swrAtFire) / (swrP50 - swrP90);
-    return Math.round(50 + t * 40);
-  })() : null;
-
-  // SWR líquida
-  const swrLiquidaSimple = (result && result.pat > 0 && custoLiquido != null) ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
+  // SWR líquida — computed after result is determined (below)
 
   const setCondPreset = (c: FireCond) => {
     setFireCond(c);
     const v = COND_PRESETS[c].custo;
     if (v != null) setCusto(v);
+    if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
     setCustom(false);
   };
 
@@ -195,12 +173,12 @@ function FireSimuladorSection() {
     setFireMkt(m);
     const v = MKT_PRESETS[m].retorno;
     if (v != null) setRetorno(v);
+    if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
     setCustom(false);
   };
 
   const setFire50Preset = () => {
     if (premissas.aporte_mensal != null) setAporte(premissas.aporte_mensal);
-    // Aspiracional: mercado favorável + gasto mínimo (solteiro)
     const favRetorno = fmRetornos.fav ?? premissas.retorno_equity_base;
     if (favRetorno != null) setRetorno(fracToPct(favRetorno));
     const ci = fmPerfis.atual?.gasto_anual ?? premissas.custo_vida_base;
@@ -211,6 +189,68 @@ function FireSimuladorSection() {
   };
 
   const onSliderChange = () => setCustom(true);
+
+  // ── Result: precomputed MC (preset mode) or deterministic (custom/slider mode) ──
+  // Precomputed MC data — consistent with FIRE page
+  const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
+  const profileKey: Record<FireCond, string> = { solteiro: 'atual', casamento: 'casado', filho: 'filho' };
+  const earliestFire = (data as any)?.earliest_fire ?? null;
+  const isAspirPreset = !custom && fireCond === 'solteiro' && fireMkt === 'fav';
+
+  type FireResult = { ano: number; idade: number; pat: number; swrAtFire: number };
+  let result: FireResult | null = null;
+  let firePire: number | null = null;
+
+  if (!custom) {
+    if (isAspirPreset) {
+      // Aspiracional: use earliest_fire from MC
+      if (earliestFire) {
+        result = { ano: earliestFire.ano, idade: earliestFire.idade, pat: 0, swrAtFire: 0 };
+        firePire = (data as any)?.pfire_aspiracional?.base ?? earliestFire.pfire ?? null;
+      }
+    } else {
+      // Condição/Mercado preset: use by_profile precomputed threshold
+      const p = byProfile.find((x: any) => x.profile === profileKey[fireCond]);
+      if (p?.fire_year_threshold) {
+        result = {
+          ano: parseInt(p.fire_year_threshold, 10),
+          idade: p.fire_age_threshold,
+          pat: p.pat_mediano_threshold ?? 0,
+          swrAtFire: p.swr_at_fire ?? 0,
+        };
+        firePire = fireMkt === 'fav'    ? (p.p_at_threshold_fav ?? p.p_at_threshold)
+                 : fireMkt === 'stress' ? (p.p_at_threshold_stress ?? p.p_at_threshold)
+                 : p.p_at_threshold;
+      }
+    }
+  } else {
+    // Custom mode: deterministic calculator from slider values
+    if (aporte !== undefined && retorno !== undefined && custo !== undefined &&
+        currentAge !== undefined && patrimonio !== undefined && swrTarget !== undefined) {
+      result = calcFireYear(aporte, retorno / 100, custo, currentAge, getAnoAtual(premissas), patrimonio, swrTarget);
+    }
+    // P(FIRE) interpolated from SWR percentiles
+    const swrAtFire = result?.swrAtFire ?? null;
+    const swrP10 = swrPercentis?.swr_p10;
+    const swrP50 = swrPercentis?.swr_p50;
+    const swrP90 = swrPercentis?.swr_p90;
+    firePire = (swrAtFire != null && swrP10 != null && swrP50 != null && swrP90 != null) ? (() => {
+      if (swrAtFire >= swrP10) return 10;
+      if (swrAtFire <= swrP90) return 90;
+      if (swrAtFire >= swrP50) {
+        const t = (swrP10 - swrAtFire) / (swrP10 - swrP50);
+        return Math.round(10 + t * 40);
+      }
+      const t = (swrP50 - swrAtFire) / (swrP50 - swrP90);
+      return Math.round(50 + t * 40);
+    })() : null;
+  }
+
+  // SWR líquida (only meaningful in custom mode when pat is known)
+  const swrLiquidaSimple = (result && result.pat > 0 && custoLiquido != null) ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
+
+  // Preset mode indicator (for UI label)
+  const isPresetMode = !custom;
 
   // Timeline: age range hoje..70
   const timelineMin = currentAge ?? 0;
@@ -306,7 +346,7 @@ function FireSimuladorSection() {
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio projetado</div>
               <div style={{ fontSize: '1rem', fontWeight: 700 }} className="pv">
-                {result ? (privacyMode ? '••••' : fmtBRL(result.pat)) : '—'}
+                {result && result.pat > 0 ? (privacyMode ? '••••' : fmtBRL(result.pat)) : '—'}
               </div>
             </div>
           </div>
@@ -410,7 +450,9 @@ function FireSimuladorSection() {
       </div>
 
       <div className="src">
-        Simulação determinística (sem MC). Critério: SWR ≤ {swrTarget != null ? `${(swrTarget * 100).toFixed(1)}%` : '—'} (premissas.swr_gatilho). Retornos via fire_matrix.retornos_equity. Perfis via fire_matrix.perfis.
+        {isPresetMode
+          ? 'Modo preset: dados MC pré-calculados (consistente com FIRE page). Mova um slider para modo interativo.'
+          : `Modo interativo: simulação determinística · SWR ≤ ${swrTarget != null ? `${(swrTarget * 100).toFixed(1)}%` : '—'} · sem variância de mercado`}
       </div>
     </div>
   );
