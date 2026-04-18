@@ -1,26 +1,28 @@
 'use client';
 
-import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
+import { useMemo } from 'react';
+import { DASHBOARD_VERSION } from '@/config/version';
+import { useDashboardStore } from '@/store/dashboardStore';
 
 export function VersionFooter() {
-  const buildDateObj = new Date(BUILD_DATE);
-  const formattedDate = buildDateObj.toLocaleDateString('pt-BR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const data = useDashboardStore(s => s.data);
+
+  const { daysOld, isStale } = useMemo(() => {
+    const raw = (data as any)?._generated_brt ?? (data as any)?._generated ?? data?.date;
+    if (!raw) return { daysOld: 0, isStale: false };
+    const daysOld = Math.floor((Date.now() - new Date(raw).getTime()) / 86400000);
+    return { daysOld, isStale: daysOld > 7 };
+  }, [data]);
 
   return (
     <footer style={styles.footer}>
       <div style={styles.container}>
-        <p style={styles.text}>
-          Dashboard: <strong>v{DASHBOARD_VERSION}</strong>
-        </p>
-        <p style={styles.text}>
-          Built: <time>{formattedDate}</time>
-        </p>
+        <span>v{DASHBOARD_VERSION}</span>
+        {isStale && (
+          <span style={styles.stale} data-test="staleness-banner">
+            ⚠️ Dados com {daysOld} dias — considere atualizar
+          </span>
+        )}
       </div>
     </footer>
   );
@@ -28,21 +30,20 @@ export function VersionFooter() {
 
 const styles: Record<string, React.CSSProperties> = {
   footer: {
-    marginTop: '60px',
-    padding: '24px 16px',
+    padding: '12px 16px',
     borderTop: '1px solid var(--border)',
-    backgroundColor: 'var(--card)',
-    fontSize: 'var(--text-sm)',
+    fontSize: 'var(--text-xs)',
     color: 'var(--muted)',
   },
   container: {
-    maxWidth: '1200px',
+    maxWidth: '1280px',
     margin: '0 auto',
     display: 'flex',
-    gap: 'var(--space-7)',
-    justifyContent: 'center',
+    gap: '16px',
+    alignItems: 'center',
   },
-  text: {
-    margin: 0,
+  stale: {
+    color: 'var(--orange)',
+    fontWeight: 600,
   },
 };
