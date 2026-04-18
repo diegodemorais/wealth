@@ -462,129 +462,484 @@ function FireSimuladorSection() {
 
 type WiPreset = 'stress' | 'base' | 'fav';
 
+interface LifeEvent {
+  id: string;
+  nome: string;
+  ano: number;
+  custo: number;
+}
+
 function WhatIfSection() {
   const data = useDashboardStore(s => s.data);
   const { privacyMode } = useUiStore();
   const [wiPreset, setWiPreset] = useState<WiPreset>('base');
-  const [custo, setCusto] = useState<number | undefined>(undefined);
-  const dataInitWI = useRef(false);
+  const [custoBInit, setCustoBInit] = useState<boolean>(false);
+  const [custoB, setCustoB] = useState<number>(250000);
+  const [aporteB, setAporteB] = useState<number>(25000);
+  const [eventsExpanded, setEventsExpanded] = useState(false);
+  const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>(() => {
+    try { return JSON.parse(typeof window !== 'undefined' ? (localStorage.getItem('wealth-life-events') ?? '[]') : '[]'); }
+    catch { return []; }
+  });
+  const [newEvtNome, setNewEvtNome] = useState('');
+  const [newEvtAno, setNewEvtAno] = useState<number>(new Date().getFullYear() + 5);
+  const [newEvtCusto, setNewEvtCusto] = useState<number>(50000);
+  const [evtError, setEvtError] = useState<string>('');
 
   const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
   const swrPerc = (data as any)?.fire_swr_percentis ?? {};
   const premissasWI = (data as any)?.premissas ?? {};
+  const fmPerfisWI = (data as any)?.fire_matrix?.perfis ?? {};
 
   // Derive presets from data — no hardcoded values
-  const WI_PRESETS: Record<WiPreset, { label: string; retorno: number | undefined; swr: number | undefined }> = {
-    stress: { label: '⚠️ Stress',   retorno: fracToPct(fmRetornos.stress), swr: fracToPct(swrPerc.swr_p10, 1) },
-    base:   { label: '✅ Base',     retorno: fracToPct(fmRetornos.base),   swr: fracToPct(swrPerc.swr_p50, 1) },
-    fav:    { label: '🚀 Favorável', retorno: fracToPct(fmRetornos.fav),   swr: fracToPct(swrPerc.swr_p90, 1) },
+  const WI_PRESETS: Record<WiPreset, { label: string; retorno: number | undefined; swrFrac: number | undefined }> = {
+    stress: { label: '⚠️ Stress',    retorno: fmRetornos.stress, swrFrac: swrPerc.swr_p10 },
+    base:   { label: '✅ Base',      retorno: fmRetornos.base,   swrFrac: swrPerc.swr_p50 },
+    fav:    { label: '🚀 Favorável', retorno: fmRetornos.fav,    swrFrac: swrPerc.swr_p90 },
   };
 
+  // Baseline (Cenário A) — locked values from data
+  const custoA: number = fmPerfisWI?.atual?.gasto_anual ?? premissasWI?.custo_vida_base ?? 250000;
+  const aporteA: number = premissasWI?.aporte_mensal ?? 25000;
+
+  // Init Cenário B from data once
   useEffect(() => {
-    if (data && !dataInitWI.current) {
-      dataInitWI.current = true;
-      const ci = (data as any)?.fire_matrix?.perfis?.atual?.gasto_anual ?? premissasWI.custo_vida_base;
-      if (ci != null) setCusto(ci);
+    if (data && !custoBInit) {
+      setCustoBInit(true);
+      setCustoB(fmPerfisWI?.atual?.gasto_anual ?? premissasWI?.custo_vida_base ?? 250000);
+      if (premissasWI?.aporte_mensal != null) setAporteB(premissasWI.aporte_mensal);
     }
   }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Persist life events
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('wealth-life-events', JSON.stringify(lifeEvents));
+    }
+  }, [lifeEvents]);
+
   const preset = WI_PRESETS[wiPreset];
   const patrimonio: number | undefined = derivePatrimonio(data);
-  const patNecessario = (custo != null && preset.swr != null) ? custo / (preset.swr / 100) : undefined;
-  const pctLimite = (patrimonio != null && patNecessario != null) ? (patrimonio / patNecessario) * 100 : null;
+  const swrTarget: number | undefined = premissasWI?.swr_gatilho;
+  const currentAge: number = premissasWI?.idade_atual ?? 39;
+  const anoAtual: number = getAnoAtual(premissasWI);
 
-  // P(Sucesso) — lookup in cenarios matrix using nearest available patrimônio key
-  const fireMatrix = (data as any)?.fire_matrix;
-  let psucesso: number | null = null;
-  if (fireMatrix && custo != null) {
-    const scenarioMap: Record<WiPreset, string> = { stress: 'stress', base: 'base', fav: 'fav' };
-    const cenario = fireMatrix.cenarios?.[scenarioMap[wiPreset]] ?? {};
-    // Extract available patrimônio values from keys (format: "PATRIMÔNIO_CUSTO")
+  // ── Local calcWithEvents (inline, not exported) ──────────────────────────────
+  function calcWithEvents(
+    aporte: number,
+    retornoFrac: number,
+    custo: number,
+    age: number,
+    ano: number,
+    pat0: number,
+    swr: number,
+    events: LifeEvent[]
+  ): { ano: number; idade: number; pat: number; swrAtFire: number } | null {
+    const target = custo / swr;
+    let pat = pat0;
+    for (let yr = 0; yr <= 35; yr++) {
+      for (const evt of events) {
+        if (evt.ano === ano + yr) pat = Math.max(0, pat - evt.custo);
+      }
+      if (pat >= target) {
+        return { ano: ano + yr, idade: age + yr, pat, swrAtFire: custo / pat };
+      }
+      for (let m = 0; m < 12; m++) {
+        pat = pat * (1 + retornoFrac / 12) + aporte;
+      }
+    }
+    return null;
+  }
+
+  // ── P(sucesso) lookup helper (snap to nearest grid key) ──────────────────────
+  function lookupPsucesso(custo: number, preset: WiPreset): { p: number | null; snapDiff: number } {
+    const fireMatrix = (data as any)?.fire_matrix;
+    if (!fireMatrix || custo == null) return { p: null, snapDiff: 0 };
+    const cenario = fireMatrix.cenarios?.[preset] ?? {};
     const availablePats = [...new Set(
       Object.keys(cenario).map(k => parseInt(k.split('_')[0], 10))
-    )].sort((a, b) => a - b);
-    // Snap patNecessario (or current patrimônio) to nearest available
-    const lookupPat = patNecessario ?? premissasWI.patrimonio_atual;
+    )].sort((a, b) => a - b) as number[];
+    if (availablePats.length === 0) return { p: null, snapDiff: 0 };
+    const lookupPat = patrimonio ?? premissasWI?.patrimonio_atual ?? availablePats[0];
     const nearestPat = availablePats.reduce((prev, curr) =>
-      Math.abs(curr - lookupPat) < Math.abs(prev - lookupPat) ? curr : prev,
-      availablePats[0]
-    );
-    // Snap custo to nearest available custo key for this patrimônio
+      Math.abs(curr - lookupPat) < Math.abs(prev - lookupPat) ? curr : prev, availablePats[0]);
     const availableCustos = Object.keys(cenario)
       .filter(k => k.startsWith(`${nearestPat}_`))
       .map(k => parseInt(k.split('_')[1], 10))
       .sort((a, b) => a - b);
+    if (availableCustos.length === 0) return { p: null, snapDiff: 0 };
     const nearestCusto = availableCustos.reduce((prev, curr) =>
-      Math.abs(curr - custo) < Math.abs(prev - custo) ? curr : prev,
-      availableCustos[0]
-    );
-    psucesso = cenario[`${nearestPat}_${nearestCusto}`] ?? null;
+      Math.abs(curr - custo) < Math.abs(prev - custo) ? curr : prev, availableCustos[0]);
+    const snapDiff = Math.abs(nearestCusto - custo);
+    const p = cenario[`${nearestPat}_${nearestCusto}`] ?? null;
+    return { p: p != null ? p * 100 : null, snapDiff };
   }
 
-  // ETA
-  const monthly: number | undefined = premissasWI.aporte_mensal;
-  const retornoMensal = preset.retorno != null ? preset.retorno / 100 / 12 : undefined;
-  let etaYears: number | null = null;
-  if (patrimonio != null && patNecessario != null && monthly != null && retornoMensal != null && patrimonio < patNecessario) {
-    let pat = patrimonio;
-    let etaMonths = 0;
-    for (let m = 0; m < 360; m++) {
-      pat = pat * (1 + retornoMensal) + monthly;
-      etaMonths = m + 1;
-      if (pat >= patNecessario) break;
-    }
-    etaYears = Math.round(etaMonths / 12);
+  // ── Cenário A (baseline, no events) ──────────────────────────────────────────
+  const resultA = useMemo(() => {
+    if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
+    return calcWithEvents(aporteA, preset.retorno, custoA, currentAge, anoAtual, patrimonio, swrTarget, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patrimonio, swrTarget, preset.retorno, aporteA, custoA, currentAge, anoAtual]);
+
+  const { p: psucessoA, snapDiff: snapDiffA } = useMemo(
+    () => lookupPsucesso(custoA, wiPreset),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [custoA, wiPreset, data]
+  );
+
+  // ── Cenário B (editável + life events) ───────────────────────────────────────
+  const resultB = useMemo(() => {
+    if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
+    return calcWithEvents(aporteB, preset.retorno, custoB, currentAge, anoAtual, patrimonio, swrTarget, lifeEvents);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patrimonio, swrTarget, preset.retorno, aporteB, custoB, currentAge, anoAtual, lifeEvents]);
+
+  const { p: psucessoB, snapDiff: snapDiffB } = useMemo(
+    () => lookupPsucesso(custoB, wiPreset),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [custoB, wiPreset, data]
+  );
+
+  // ── Delta ─────────────────────────────────────────────────────────────────────
+  const deltaAnos = (resultA && resultB) ? (resultB.idade - resultA.idade) : null;
+  const deltaP = (psucessoA != null && psucessoB != null) ? (psucessoB - psucessoA) : null;
+
+  // ── Life event total ──────────────────────────────────────────────────────────
+  const totalEventos = lifeEvents.reduce((s, e) => s + e.custo, 0);
+
+  // ── Nearest perfil detection for "Explorar no Simulador" link ────────────────
+  const PERFIL_MAP: Array<{ key: string; cond: string; custo: number }> = [
+    { key: 'atual',  cond: 'solteiro',  custo: fmPerfisWI?.atual?.gasto_anual ?? 0 },
+    { key: 'casado', cond: 'casamento', custo: fmPerfisWI?.casado?.gasto_anual ?? 0 },
+    { key: 'filho',  cond: 'filho',     custo: fmPerfisWI?.filho?.gasto_anual ?? 0 },
+  ];
+  const nearestPerfil = PERFIL_MAP.find(p => p.custo > 0 && Math.abs(p.custo - custoB) <= 15000);
+
+  // ── Add event handler ─────────────────────────────────────────────────────────
+  function handleAddEvent() {
+    if (!newEvtNome.trim()) { setEvtError('Nome é obrigatório'); return; }
+    if (newEvtAno < 2025 || newEvtAno > 2070) { setEvtError('Ano deve ser entre 2025 e 2070'); return; }
+    if (newEvtCusto <= 0) { setEvtError('Custo deve ser maior que 0'); return; }
+    setEvtError('');
+    setLifeEvents(prev => [...prev, { id: `${Date.now()}`, nome: newEvtNome.trim(), ano: newEvtAno, custo: newEvtCusto }]);
+    setNewEvtNome('');
   }
 
   return (
-    <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Cenário / Gasto')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
-      {/* Preset buttons */}
-      <div style={{ marginBottom: '10px' }}>
+    <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Impacto de Decisões de Vida')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
+
+      {/* ── Presets ── */}
+      <div style={{ marginBottom: '12px' }}>
         <div className="seg-group">
           {(Object.keys(WI_PRESETS) as WiPreset[]).map(k => (
-            <button
-              key={k}
-              className={`seg-btn${wiPreset === k ? ' active' : ''}`}
-              onClick={() => setWiPreset(k)}
-            >
+            <button key={k} className={`seg-btn${wiPreset === k ? ' active' : ''}`} onClick={() => setWiPreset(k)}>
               {WI_PRESETS[k].label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Slider custo de vida */}
-      <div className="slider-row">
-        <label>
-          <span>Custo de Vida /ano</span>
-          <span className="pv">{custo != null ? (privacyMode ? '••••' : `R$ ${(custo / 1000).toFixed(0)}k/ano`) : '—'}</span>
-        </label>
-        <input
-          type="range" min="150000" max="400000" step="10000" value={custo ?? 250000}
-          onChange={e => setCusto(+e.target.value)}
-        />
-      </div>
-
-      {/* Output 2-col */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-2.5">
-        <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>P(Sucesso 30 anos)</div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }} className="pv">{psucesso != null ? `${(psucesso * 100).toFixed(0)}%` : '—'}</div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>Via FIRE Matrix</div>
+      {/* ── Sliders Cenário B ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        <div className="slider-row">
+          <label>
+            <span>✏️ Custo Cenário B /ano</span>
+            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">
+              {privacyMode ? '••••' : `R$${(custoB / 1000).toFixed(0)}k/ano`}
+            </span>
+          </label>
+          <input
+            type="range" min="150000" max="500000" step="10000" value={custoB}
+            onChange={e => setCustoB(+e.target.value)}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+            <span>R$150k</span><span>R$500k</span>
+          </div>
         </div>
-        <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Patrimônio necessário</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800 }} className="pv">{patNecessario != null ? (privacyMode ? '••••' : fmtBRL(patNecessario)) : '—'}</div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }} className="pv">SWR {preset.swr != null ? `${preset.swr.toFixed(2)}%` : '—'}</div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }} className="pv">{pctLimite != null ? `${pctLimite.toFixed(1)}% do limite` : '—'}</div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--yellow)', fontWeight: 600, marginTop: '2px' }} className="pv">
-            {(patrimonio != null && patNecessario != null) ? (patrimonio >= patNecessario ? 'FIRE atingido ✅' : `ETA: ~${etaYears} anos`) : '—'}
+        <div className="slider-row">
+          <label>
+            <span>✏️ Aporte Cenário B /mês</span>
+            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">
+              {privacyMode ? '••••' : `R$${(aporteB / 1000).toFixed(0)}k/mês`}
+            </span>
+          </label>
+          <input
+            type="range" min="5000" max="60000" step="1000" value={aporteB}
+            onChange={e => setAporteB(+e.target.value)}
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+            <span>R$5k</span><span>R$60k</span>
           </div>
         </div>
       </div>
 
-      <div className="src" style={{ marginTop: '6px' }}>
-        Retornos: fire_matrix.retornos_equity · SWR: fire_swr_percentis · Patrimônio: premissas.patrimonio_atual
+      {/* ── Comparador A/B ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        {/* Card A — Plano Atual */}
+        {(() => {
+          const pColor = pfireColorFn(psucessoA);
+          return (
+            <div style={{
+              background: 'var(--card2)', borderRadius: '10px', padding: '14px',
+              border: `1px solid color-mix(in srgb, ${pColor} 25%, var(--border))`,
+              borderTop: `3px solid ${pColor}`,
+            }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
+                📌 Plano Atual
+              </div>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline', flexWrap: 'wrap', marginBottom: '6px' }}>
+                <div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: 800, lineHeight: 1 }} className="pv">
+                    {resultA ? resultA.ano : '> 35a'}
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--muted)' }} className="pv">
+                    {resultA ? `${resultA.idade} anos` : '—'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
+                    {psucessoA != null ? `P ${psucessoA.toFixed(0)}%` : 'P —%'}
+                  </div>
+                  {snapDiffA > 20000 && (
+                    <div style={{ fontSize: '10px', color: 'var(--yellow)' }}>
+                      ⚠ ±R${(snapDiffA / 1000).toFixed(0)}k snap
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
+                Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoA)}/ano</span>
+                {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteA)}/mês</span>
+              </div>
+              {resultA && resultA.pat > 0 && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                  Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultA.pat)}</span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* Card B — What-If */}
+        {(() => {
+          const pColor = pfireColorFn(psucessoB);
+          return (
+            <div style={{
+              background: 'var(--card2)', borderRadius: '10px', padding: '14px',
+              border: `1px solid color-mix(in srgb, ${pColor} 25%, var(--border))`,
+              borderTop: `3px solid ${pColor}`,
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
+                  ✏️ What-If
+                </div>
+                {lifeEvents.length > 0 && (
+                  <span style={{
+                    fontSize: '10px', fontWeight: 600, color: 'var(--yellow)',
+                    background: 'rgba(234,179,8,.12)', border: '1px solid rgba(234,179,8,.3)',
+                    borderRadius: '4px', padding: '1px 5px',
+                  }}>
+                    {lifeEvents.length} evento{lifeEvents.length > 1 ? 's' : ''} (−{privacyMode ? '••••' : fmtBRL(totalEventos)})
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline', flexWrap: 'wrap', marginBottom: '6px' }}>
+                <div>
+                  <div style={{ fontSize: '2.2rem', fontWeight: 800, lineHeight: 1 }} className="pv">
+                    {resultB ? resultB.ano : '> 35a'}
+                  </div>
+                  <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--muted)' }} className="pv">
+                    {resultB ? `${resultB.idade} anos` : '—'}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
+                    {psucessoB != null ? `P ${psucessoB.toFixed(0)}%` : 'P —%'}
+                  </div>
+                  {snapDiffB > 20000 && (
+                    <div style={{ fontSize: '10px', color: 'var(--yellow)' }}>
+                      ⚠ ±R${(snapDiffB / 1000).toFixed(0)}k snap
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
+                Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoB)}/ano</span>
+                {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteB)}/mês</span>
+              </div>
+              {resultB && resultB.pat > 0 && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                  Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultB.pat)}</span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* ── Card Delta ── */}
+      {(deltaAnos !== null || deltaP !== null) && (
+        <div style={{
+          background: 'var(--card2)', borderRadius: '10px', padding: '14px',
+          border: '1px solid var(--border)',
+          textAlign: 'center', marginBottom: '12px',
+        }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
+            Δ Impacto — B vs A
+          </div>
+          <div style={{
+            fontSize: '1.3rem', fontWeight: 800,
+            color: deltaAnos != null
+              ? (deltaAnos > 0 ? 'var(--red)' : deltaAnos < 0 ? 'var(--green)' : 'var(--muted)')
+              : 'var(--muted)',
+          }}>
+            {deltaAnos != null
+              ? `${deltaAnos > 0 ? '+' : ''}${deltaAnos} ano${Math.abs(deltaAnos) !== 1 ? 's' : ''}`
+              : '—'
+            }
+            {deltaP != null && (
+              <span style={{ marginLeft: '8px', color: deltaP >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp de P
+              </span>
+            )}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
+            {deltaAnos != null
+              ? deltaAnos > 0
+                ? `What-If atrasa FIRE em ${deltaAnos} anos`
+                : deltaAnos < 0
+                  ? `What-If adianta FIRE em ${Math.abs(deltaAnos)} anos`
+                  : 'Mesmo ano de FIRE'
+              : ''}
+          </div>
+          {nearestPerfil && (
+            <button
+              onClick={() => { window.location.href = `/simulators?cond=${nearestPerfil.cond}&mkt=${wiPreset}`; }}
+              style={{
+                marginTop: '10px',
+                padding: '5px 14px',
+                borderRadius: '6px',
+                border: '1px solid var(--accent)',
+                background: 'rgba(88,166,255,.08)',
+                color: 'var(--accent)',
+                fontSize: 'var(--text-xs)',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Explorar no Simulador →
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── Life Events (colapsável) ── */}
+      <div style={{ background: 'var(--card2)', borderRadius: '10px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '10px' }}>
+        <button
+          onClick={() => setEventsExpanded(v => !v)}
+          style={{
+            width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '10px 14px', background: 'transparent', border: 'none',
+            fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)', cursor: 'pointer',
+          }}
+        >
+          <span>🗓 Eventos de Vida</span>
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+            {lifeEvents.length > 0
+              ? `${lifeEvents.length} evento${lifeEvents.length > 1 ? 's' : ''} · ${privacyMode ? '••••' : `−R$${(totalEventos / 1000).toFixed(0)}k`}`
+              : 'Nenhum'}
+            {' '}{eventsExpanded ? '▲' : '▼'}
+          </span>
+        </button>
+
+        {eventsExpanded && (
+          <div style={{ padding: '0 14px 14px' }}>
+            {/* Form */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              <div>
+                <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>Nome</label>
+                <Input
+                  type="text"
+                  placeholder="Ex: Trocar carro"
+                  value={newEvtNome}
+                  onChange={e => setNewEvtNome(e.target.value)}
+                  style={{ width: '100%', fontSize: 'var(--text-sm)' }}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>Ano</label>
+                  <Input
+                    type="number"
+                    min="2025" max="2070" step="1"
+                    value={newEvtAno}
+                    onChange={e => setNewEvtAno(+e.target.value)}
+                    style={{ width: '100%', fontSize: 'var(--text-sm)' }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>Custo (R$)</label>
+                  <Input
+                    type="number"
+                    min="1" step="1000"
+                    value={newEvtCusto}
+                    onChange={e => setNewEvtCusto(+e.target.value)}
+                    style={{ width: '100%', fontSize: 'var(--text-sm)' }}
+                  />
+                </div>
+              </div>
+            </div>
+            {evtError && (
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--red)', marginBottom: '6px' }}>{evtError}</div>
+            )}
+            <button
+              onClick={handleAddEvent}
+              style={{
+                padding: '5px 14px', borderRadius: '6px',
+                border: '1px solid var(--accent)', background: 'rgba(88,166,255,.08)',
+                color: 'var(--accent)', fontSize: 'var(--text-xs)', fontWeight: 600, cursor: 'pointer',
+                marginBottom: lifeEvents.length > 0 ? '10px' : '0',
+              }}
+            >
+              + Adicionar Evento
+            </button>
+
+            {/* Lista de eventos */}
+            {lifeEvents.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {lifeEvents.map(evt => (
+                  <div key={evt.id} style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '5px 10px', background: 'var(--card)', borderRadius: '6px',
+                    border: '1px solid var(--border)', fontSize: 'var(--text-xs)',
+                  }}>
+                    <span style={{ color: 'var(--text)', fontWeight: 500 }}>{evt.nome}</span>
+                    <span style={{ color: 'var(--muted)' }}>{evt.ano}</span>
+                    <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
+                      {privacyMode ? '••••' : `−R$${(evt.custo / 1000).toFixed(0)}k`}
+                    </span>
+                    <button
+                      onClick={() => setLifeEvents(prev => prev.filter(e => e.id !== evt.id))}
+                      style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer', fontSize: '0.9rem', padding: '0 2px' }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px', textAlign: 'right' }}>
+                  Total: <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
+                    {privacyMode ? '••••' : `−R$${(totalEventos / 1000).toFixed(0)}k`}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="src">
+        Retornos: fire_matrix.retornos_equity · SWR: fire_swr_percentis · Patrimônio: premissas.patrimonio_atual · Eventos: localStorage
       </div>
     </CollapsibleSection>
   );
