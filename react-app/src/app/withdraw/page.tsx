@@ -15,6 +15,259 @@ import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { FIRE_RULES } from '@/config/business-rules';
 import { InfoCard } from '@/components/primitives/InfoCard';
+import { EChart } from '@/components/primitives/EChart';
+
+// ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
+interface FloorUpsideWithdrawProps {
+  gastoPiso: number;
+  custoVida: number;
+  swrGatilho: number;
+  patrimonio: number;
+  bondRunwayAnos: number | null;
+  privacyMode: boolean;
+}
+
+function FloorUpsideWithdraw({
+  gastoPiso,
+  custoVida,
+  swrGatilho,
+  patrimonio,
+  bondRunwayAnos,
+  privacyMode,
+}: FloorUpsideWithdrawProps) {
+  const gapEquity = Math.max(0, custoVida - gastoPiso);
+  const patNecessarioGap = swrGatilho > 0 ? gapEquity / swrGatilho : null;
+  const coberturaAtual =
+    gapEquity === 0
+      ? 100
+      : patNecessarioGap != null && patNecessarioGap > 0 && patrimonio > 0
+        ? Math.min(100, (patrimonio / patNecessarioGap) * 100)
+        : null;
+
+  const floorPct = custoVida > 0 ? (gastoPiso / custoVida) * 100 : 0;
+  const gapCobertoPct =
+    coberturaAtual != null
+      ? Math.min(100 - floorPct, (coberturaAtual / 100) * (100 - floorPct))
+      : 0;
+  const gapDescobertoPct = Math.max(0, 100 - floorPct - gapCobertoPct);
+
+  const option = {
+    backgroundColor: 'transparent',
+    grid: { left: 0, right: 0, top: 8, bottom: 8 },
+    xAxis: { type: 'value', max: 100, show: false },
+    yAxis: { type: 'category', data: [''], show: false },
+    series: [
+      {
+        name: 'Floor garantido',
+        type: 'bar',
+        stack: 'total',
+        data: [floorPct],
+        itemStyle: { color: '#3b82f6' },
+        barMaxWidth: 40,
+      },
+      {
+        name: 'Gap coberto (equity)',
+        type: 'bar',
+        stack: 'total',
+        data: [gapCobertoPct],
+        itemStyle: { color: '#22c55e' },
+        barMaxWidth: 40,
+      },
+      {
+        name: 'Gap descoberto',
+        type: 'bar',
+        stack: 'total',
+        data: [gapDescobertoPct],
+        itemStyle: { color: '#ef4444' },
+        barMaxWidth: 40,
+      },
+    ],
+    tooltip: {
+      trigger: 'item',
+      formatter: (p: any) => `${p.seriesName}: ${(p.value as number).toFixed(1)}%`,
+    },
+  };
+
+  return (
+    <div
+      style={{
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
+        borderRadius: '10px',
+        padding: '16px',
+        marginBottom: '16px',
+      }}
+    >
+      <h3
+        style={{
+          fontSize: 'var(--text-sm)',
+          fontWeight: 700,
+          marginBottom: '12px',
+          marginTop: 0,
+          color: 'var(--text)',
+        }}
+      >
+        🏦 Cobertura por Camadas — Floor vs Upside
+      </h3>
+
+      <EChart option={option} style={{ height: 56 }} />
+
+      {/* Legenda */}
+      <div
+        style={{
+          display: 'flex',
+          gap: '12px',
+          flexWrap: 'wrap',
+          marginBottom: '12px',
+        }}
+      >
+        {[
+          { color: '#3b82f6', label: 'Floor garantido' },
+          { color: '#22c55e', label: 'Gap coberto (equity)' },
+          { color: '#ef4444', label: 'Gap descoberto' },
+        ].map(l => (
+          <div
+            key={l.label}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--muted)',
+            }}
+          >
+            <span
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                background: l.color,
+                flexShrink: 0,
+              }}
+            />
+            {l.label}
+          </div>
+        ))}
+      </div>
+
+      {/* 3 cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div
+          style={{
+            background: 'var(--card2)',
+            borderRadius: '8px',
+            padding: '10px',
+            border: '1px solid rgba(59,130,246,.3)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--muted)',
+              marginBottom: '2px',
+            }}
+          >
+            Floor garantido
+          </div>
+          <div
+            style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3b82f6' }}
+            className="pv"
+          >
+            {privacyMode ? '••••' : `R$${(gastoPiso / 1000).toFixed(0)}k/ano`}
+          </div>
+          <div style={{ fontSize: '10px', color: 'var(--muted)' }}>RF + INSS</div>
+        </div>
+        <div
+          style={{
+            background: 'var(--card2)',
+            borderRadius: '8px',
+            padding: '10px',
+            border: '1px solid rgba(239,68,68,.3)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--muted)',
+              marginBottom: '2px',
+            }}
+          >
+            Gap (equity)
+          </div>
+          <div
+            style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ef4444' }}
+            className="pv"
+          >
+            {privacyMode ? '••••' : `R$${(gapEquity / 1000).toFixed(0)}k/ano`}
+          </div>
+          <div style={{ fontSize: '10px', color: 'var(--muted)' }} className="pv">
+            {patNecessarioGap != null
+              ? privacyMode
+                ? '••••'
+                : `Pat. necessário: R$${(patNecessarioGap / 1e6).toFixed(1)}M`
+              : '—'}
+          </div>
+        </div>
+        <div
+          style={{
+            background: 'var(--card2)',
+            borderRadius: '8px',
+            padding: '10px',
+            border: `1px solid ${coberturaAtual != null && coberturaAtual >= 100 ? 'rgba(34,197,94,.3)' : 'rgba(239,68,68,.3)'}`,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 'var(--text-xs)',
+              color: 'var(--muted)',
+              marginBottom: '2px',
+            }}
+          >
+            Cobertura atual
+          </div>
+          <div
+            style={{
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              color:
+                coberturaAtual != null && coberturaAtual >= 100
+                  ? '#22c55e'
+                  : '#ef4444',
+            }}
+          >
+            {coberturaAtual != null ? `${coberturaAtual.toFixed(0)}%` : '—'}
+          </div>
+          <div style={{ fontSize: '10px', color: 'var(--muted)' }}>
+            do gap equity coberto
+          </div>
+        </div>
+      </div>
+
+      {/* Bond pool badge */}
+      {bondRunwayAnos != null && bondRunwayAnos >= 5 && (
+        <div
+          style={{
+            marginTop: '10px',
+            padding: '6px 10px',
+            background: 'rgba(59,130,246,.08)',
+            border: '1px solid rgba(59,130,246,.2)',
+            borderRadius: '6px',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--accent)',
+          }}
+        >
+          🛡 Bond pool cobre os primeiros{' '}
+          <strong>{bondRunwayAnos} anos</strong> do gap sem vender equity —
+          buffer SoRR ativo
+        </div>
+      )}
+
+      <div className="src" style={{ marginTop: '8px' }}>
+        Floor: gasto_piso (RF garantido) · Gap: custo_vida − floor · Cobertura: patrimônio / (gap / SWR)
+      </div>
+    </div>
+  );
+}
 
 export default function WithdrawPage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();
@@ -181,6 +434,30 @@ export default function WithdrawPage() {
               )}
             </div>
           </div>
+        );
+      })()}
+
+      {/* Floor vs Upside — Cobertura por Camadas */}
+      {(() => {
+        const prem = safeData.premissas ?? {};
+        const gastoPiso: number = (safeData as any).gasto_piso ?? 0;
+        const custoVida: number = activeScenarioCfg.custo_vida_base;
+        const swrGatilho: number = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
+        const patrimonio: number = (prem as any).patrimonio_atual ?? 0;
+        const bpr = (safeData as any).bond_pool_runway ?? null;
+        const bondRunwayAnos: number | null =
+          bpr != null && Array.isArray(bpr.anos_cobertura_pos_fire)
+            ? (bpr.anos_cobertura_pos_fire as number[]).length
+            : null;
+        return (
+          <FloorUpsideWithdraw
+            gastoPiso={gastoPiso}
+            custoVida={custoVida}
+            swrGatilho={swrGatilho}
+            patrimonio={patrimonio}
+            bondRunwayAnos={bondRunwayAnos}
+            privacyMode={privacyMode}
+          />
         );
       })()}
 
