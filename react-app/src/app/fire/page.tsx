@@ -73,7 +73,7 @@ export default function FirePage() {
   }
 
   // ── Hero banner values ──────────────────────────────────────────────────────
-  const pfireHero: number | null = derived?.pfire ?? null;
+  const pfireHero: number | null = derived?.pfireBase ?? null; // pfireBase is 0-100 scale
   const pfireHeroColor = pfireColorFn(pfireHero);
   const prem = (data as any)?.premissas ?? {};
   const fireYearHero: number | null = (() => {

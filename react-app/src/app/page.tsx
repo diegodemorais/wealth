@@ -105,10 +105,10 @@ export default function HomePage() {
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Aporte do Mês</div>
           <div className="text-2xl font-black text-text">
             {derived.aporteMensal
-              ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(derived.aporteMensal)
+              ? `R$${Math.round(derived.aporteMensal / 1000)}k`
               : '—'}
           </div>
-          <div className="text-xs text-muted mt-1">{derived.ultimoAporteData || '—'}</div>
+          <div className="text-xs text-muted mt-1">meta mensal</div>
         </div>
       </div>
 
