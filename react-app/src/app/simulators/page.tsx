@@ -875,6 +875,16 @@ function WhatIfSection() {
                   Pat. mediano FIRE: <span className="pv">{privacyMode ? '••••' : fmtBRL(byProfileA.pat_mediano_threshold)}</span>
                 </div>
               )}
+              {byProfileA?.swr_at_fire != null && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                  SWR bruta: <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{(byProfileA.swr_at_fire * 100).toFixed(2)}%</span>
+                  {byProfileA?.pat_mediano_threshold > 0 && (
+                    <span> · SWR líquida: <span style={{ color: 'var(--green)', fontWeight: 600 }} className="pv">
+                      {privacyMode ? '••••' : `${(Math.max(0, custoA - inssAnualDiego - inssAnualKatia) / byProfileA.pat_mediano_threshold * 100).toFixed(2)}%`}
+                    </span></span>
+                  )}
+                </div>
+              )}
               <div style={{ fontSize: '10px', color: 'var(--green)', marginTop: '6px', fontStyle: 'italic' }}>
                 MC precomputed — consistente com FIRE page
               </div>
@@ -933,6 +943,16 @@ function WhatIfSection() {
               {resultB && resultB.pat > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
                   Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultB.pat)}</span>
+                </div>
+              )}
+              {resultB && resultB.pat > 0 && resultB.swrAtFire != null && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
+                  SWR bruta: <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{(resultB.swrAtFire * 100).toFixed(2)}%</span>
+                  {inssOffset > 0 && (
+                    <span> · SWR líquida: <span style={{ color: 'var(--green)', fontWeight: 600 }} className="pv">
+                      {privacyMode ? '••••' : `${(custoLiquidoB / resultB.pat * 100).toFixed(2)}%`}
+                    </span></span>
+                  )}
                 </div>
               )}
               <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px', fontStyle: 'italic' }}>
