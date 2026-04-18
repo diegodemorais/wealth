@@ -11,6 +11,7 @@ import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 
 /** Tag inline usada nos gráficos que refletem o cenário ativo */
 function ScenarioBadge({ label, gasto, privacyMode }: { label: string; gasto: number; privacyMode: boolean }) {
@@ -40,25 +41,20 @@ export default function WithdrawPage() {
   const withdrawScenario = useUiStore(s => s.withdrawScenario);
   const setWithdrawScenario = useUiStore(s => s.setWithdrawScenario);
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando dados de retirada...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>Erro ao carregar dados de retirada:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <div className="warning-state">Dados carregados mas seção de retirada não disponível</div>;
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data,
+    loadingText: 'Carregando dados de retirada...',
+    errorPrefix: 'Erro ao carregar dados de retirada:',
+    warningText: 'Dados carregados mas seção de retirada não disponível',
+  });
+  if (stateEl) return stateEl;
 
   // Scenario configs from data.json (or safe fallback)
   type ScenarioKey = 'atual' | 'casado' | 'filho';
-  const withdrawCenarios: Record<ScenarioKey, { label: string; custo_vida_base: number; tem_conjuge: boolean; inss_katia_anual: number }> = data.withdraw_cenarios ?? {
+  const safeData = data!;
+  const withdrawCenarios: Record<ScenarioKey, { label: string; custo_vida_base: number; tem_conjuge: boolean; inss_katia_anual: number }> = safeData.withdraw_cenarios ?? {
     atual:  { label: 'Solteiro',         custo_vida_base: 250_000, tem_conjuge: false, inss_katia_anual: 0 },
     casado: { label: 'Casado',           custo_vida_base: 270_000, tem_conjuge: true,  inss_katia_anual: 93_600 },
     filho:  { label: 'Casado + Filho',   custo_vida_base: 300_000, tem_conjuge: true,  inss_katia_anual: 93_600 },
@@ -67,7 +63,7 @@ export default function WithdrawPage() {
   const activeScenarioCfg = withdrawCenarios[withdrawScenario as ScenarioKey] ?? withdrawCenarios.atual;
 
   // Source: data.fire_swr_percentis (canonical path gerado pelo pipeline Python)
-  const swrPercentisRaw = (data as any).fire_swr_percentis;
+  const swrPercentisRaw = (safeData as any).fire_swr_percentis;
   const swrPercentis = swrPercentisRaw
     ? {
         p10: swrPercentisRaw.swr_p10 as number | undefined,
@@ -78,11 +74,11 @@ export default function WithdrawPage() {
         p90_patrimonio: swrPercentisRaw.patrimonio_p90_2040 as number | undefined,
       }
     : undefined;
-  const bondPoolReadiness = data.fire?.bond_pool_readiness ?? data.bond_pool_readiness;
-  const bondPoolRunway = data.bond_pool_runway ?? data.fire?.bond_pool_runway;
-  const bondPoolRunwayByProfile = (data as any).bond_pool_runway_by_profile;
+  const bondPoolReadiness = safeData.fire?.bond_pool_readiness ?? safeData.bond_pool_readiness;
+  const bondPoolRunway = safeData.bond_pool_runway ?? safeData.fire?.bond_pool_runway;
+  const bondPoolRunwayByProfile = (safeData as any).bond_pool_runway_by_profile;
   const activeRunway = bondPoolRunwayByProfile?.[withdrawScenario as ScenarioKey] ?? bondPoolRunwayByProfile?.atual;
-  const incomeTable = data.fire?.income_phases ?? data.income_phases;
+  const incomeTable = safeData.fire?.income_phases ?? safeData.income_phases;
 
   // SWR efetivo por perfil — recomputado no frontend (patrimônio MC é fixo, gasto muda)
   // Guard: se p10/p50/p90_patrimonio ausente, usar null — nunca fazer fallback para swrPercentis.p10/p50/p90
@@ -144,7 +140,7 @@ export default function WithdrawPage() {
 
       {/* 0. SWR Dual Cards — Atual vs FIRE Day */}
       {(() => {
-        const prem = data.premissas ?? {};
+        const prem = safeData.premissas ?? {};
         const patrimonioAtual: number = (prem as any).patrimonio_atual ?? 0;
         const custoVidaBase: number = activeScenarioCfg.custo_vida_base;
         const swrAtual = patrimonioAtual > 0 ? custoVidaBase / patrimonioAtual : null;
@@ -266,10 +262,10 @@ export default function WithdrawPage() {
       )}
 
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
-      {data.guardrails_retirada && (
+      {safeData.guardrails_retirada && (
         <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Guardrails de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
           <div style={{ padding: '0 16px 16px' }}>
-            <GuardrailsRetirada guardrails={data.guardrails_retirada} />
+            <GuardrailsRetirada guardrails={safeData.guardrails_retirada} />
             <div style={{ marginTop: 10, fontSize: 'var(--text-sm)', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
               <strong>Upside:</strong> se portfolio sobe 25%+ acima do pico real → aumentar retirada 10% permanente (teto R$350k)
             </div>
@@ -282,7 +278,7 @@ export default function WithdrawPage() {
         <div style={{ padding: '0 16px 16px' }}>
           {/* P(FIRE) Status bar */}
           {(() => {
-            const sg = data.spending_guardrails ?? (data as any).fire?.spending_guardrails;
+            const sg = safeData.spending_guardrails ?? (safeData as any).fire?.spending_guardrails;
             if (!sg) return null;
             const pfire = pfireAtual ?? sg.pfire_atual ?? 0;
             const zona = sg.zona ?? 'verde';
@@ -317,7 +313,7 @@ export default function WithdrawPage() {
           <div style={{ marginBottom: 8 }}>
             <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
           </div>
-          <GuardrailsChart data={data} gastoOverride={activeScenarioCfg.custo_vida_base} />
+          <GuardrailsChart data={safeData} gastoOverride={activeScenarioCfg.custo_vida_base} />
           <div className="src">
             Base: Monte Carlo 10k · Interpolação linear entre pontos simulados
           </div>
@@ -433,11 +429,11 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 5b. Spending — Essenciais vs Discricionários (logo após o cashflow de hoje) */}
-      {(data.spending ?? data.fire?.spending ?? data.spending_breakdown) && (
+      {(safeData.spending ?? safeData.fire?.spending ?? safeData.spending_breakdown) && (
         <CollapsibleSection id="section-spending-breakdown" title={secTitle('withdraw', 'spending-breakdown', 'Spending — Essenciais vs Discricionários')} defaultOpen={secOpen('withdraw', 'spending-breakdown', false)}>
           <div style={{ padding: '0 16px 16px' }}>
           {(() => {
-            const spending = data.spending ?? data.fire?.spending ?? data.spending_breakdown ?? {};
+            const spending = safeData.spending ?? safeData.fire?.spending ?? safeData.spending_breakdown ?? {};
             const essenciais = spending.essenciais_mes ?? spending.must_spend_mensal ?? spending.essenciais ?? 15074;
             const discric = spending.discric_mes ?? spending.like_spend_mensal ?? spending.discricionarios ?? 4284;
             const imprevistos = spending.imprevistos_mes ?? spending.imprevistos_mensal ?? spending.imprevistos ?? 363;
@@ -523,7 +519,7 @@ export default function WithdrawPage() {
               </table>
             </div>
           ) : (
-            <IncomeProjectionChart data={data} />
+            <IncomeProjectionChart data={safeData} />
           )}
           <div className="src">
             Fases: Go-Go (50–65, alta mobilidade), Slow-Go (65–75, moderado), No-Go (75+, baixa mobilidade). Spending smile aplicado às projeções MC.

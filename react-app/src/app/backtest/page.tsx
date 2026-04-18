@@ -9,6 +9,7 @@ import { BacktestChart } from '@/components/charts/BacktestChart';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
 import { Button } from '@/components/ui/button';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 
 // ── Period button types ───────────────────────────────────────────────────────
 
@@ -613,21 +614,15 @@ function DrawdownHistoricoSection() {
 export default function BacktestPage() {
   const { data, isLoading, dataError } = usePageData();
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando backtest...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>❌ Erro ao carregar backtest:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <div className="warning-state">⚠️ Dados carregados mas seção backtest não disponível</div>;
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data,
+    loadingText: 'Carregando backtest...',
+    errorPrefix: '❌ Erro ao carregar backtest:',
+    warningText: '⚠️ Dados carregados mas seção backtest não disponível',
+  });
+  if (stateEl) return stateEl;
 
   return (
     <div>

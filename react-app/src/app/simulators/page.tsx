@@ -13,6 +13,7 @@ import { Select, SelectItem } from '@/components/ui/select';
 import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 import { runMCYearly } from '@/utils/montecarlo';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -974,17 +975,15 @@ export default function SimulatorsPage() {
     }
   }, [data, isLoading, dataError, runMC]);
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando simuladores...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>❌ Erro ao carregar dados:</strong> {dataError}
-      </div>
-    );
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data: isLoading || dataError ? null : true, // only block on loading/error, not data absence
+    loadingText: 'Carregando simuladores...',
+    errorPrefix: '❌ Erro ao carregar dados:',
+    warningText: 'Dados não disponíveis',
+  });
+  if (stateEl) return stateEl;
 
   return (
     <div>

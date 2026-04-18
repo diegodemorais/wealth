@@ -14,6 +14,7 @@ import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { usePageData } from '@/hooks/usePageData';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 
 export default function FirePage() {
   const { data, derived, isLoading, dataError, privacyMode } = usePageData();
@@ -56,21 +57,17 @@ export default function FirePage() {
     });
   }, [data]);
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando dados FIRE...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>Erro ao carregar FIRE:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <div className="warning-state">Dados carregados mas seção FIRE não disponível</div>;
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data,
+    loadingText: 'Carregando dados FIRE...',
+    errorPrefix: 'Erro ao carregar FIRE:',
+    warningText: 'Dados carregados mas seção FIRE não disponível',
+  });
+  if (stateEl) return stateEl;
+  // TypeScript narrowing: stateEl being null guarantees data is non-null (pageStateElement returns JSX when data is null)
+  const safeData = data!;
 
   // ── Hero banner values ──────────────────────────────────────────────────────
   const pfireHero: number | null = derived?.pfireBase ?? null; // pfireBase is 0-100 scale
@@ -152,7 +149,7 @@ export default function FirePage() {
       {/* 1. Tracking FIRE — Realizado vs Projeção */}
       <section className="section" id="trackingFireSection">
         <h2>Tracking FIRE — Realizado vs Projeção</h2>
-        <TrackingFireChart data={data} />
+        <TrackingFireChart data={safeData} />
         <div className="src">
           Patrimônio realizado vs projeção FIRE · Meta FIRE
         </div>
@@ -276,7 +273,7 @@ export default function FirePage() {
             Solteiro · R$250k/ano
           </div>
         </div>
-        <NetWorthProjectionChart data={data} />
+        <NetWorthProjectionChart data={safeData} />
         <div style={{ marginTop: 4, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
           ⚠️ Portfólio financeiro apenas. Aportes futuros de R$25k/mês já estão modelados trajetória a trajetória (proxy de capital humano). O modelo não captura risco de interrupção de renda — doença, invalidez ou queda de receita PJ.{' '}
           Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: r=4.85% real com spending smile (Go-Go/Slow-Go/No-Go) em R$ reais (constante 2026). INSS R$18k/ano real a partir de age 65.
@@ -287,14 +284,14 @@ export default function FirePage() {
       </section>
 
       {/* 4. FIRE Matrix — P(Sucesso 30 anos) */}
-      {data.fire_matrix && (
+      {safeData.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
           <div style={{ padding: '0 16px 16px' }}>
             <FireMatrixTable
-              data={data.fire_matrix}
+              data={safeData.fire_matrix}
               idades={fireMatrixIdades}
-              currentPatrimonio={(data as any)?.premissas?.patrimonio_atual}
-              currentSpending={(data as any)?.premissas?.custo_vida ?? (data as any)?.premissas?.custo_vida_base}
+              currentPatrimonio={(safeData as any)?.premissas?.patrimonio_atual}
+              currentSpending={(safeData as any)?.premissas?.custo_vida ?? (safeData as any)?.premissas?.custo_vida_base}
             />
             <div className="src">
               Verde &gt;95%, Amarelo 88–95%, Vermelho &lt;88%. Eixo: Patrimônio no FIRE Day (linha) × Gasto Anual BRL (coluna). ★ = gasto típico do perfil · → = patrimônio-alvo do perfil.
@@ -431,7 +428,7 @@ export default function FirePage() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
             (gatilhos de recalibração)
           </div>
-          <EventosVidaChart data={data} />
+          <EventosVidaChart data={safeData} />
           <div className="src">
             Ao ativar qualquer evento: recalibrar custo de vida, FIRE date, seguro de vida e estrutura patrimonial imediatamente. Impacto de eventos permanentes no custo de vida.
           </div>
@@ -451,7 +448,7 @@ export default function FirePage() {
       {/* 8. Glide Path — collapsed (mecanismo de execução) */}
       <CollapsibleSection id="section-glide-path" title={secTitle('fire', 'glide-path')} defaultOpen={secOpen('fire', 'glide-path')}>
         <div style={{ padding: '0 16px 16px' }}>
-          <GlidePathChart data={data} />
+          <GlidePathChart data={safeData} />
           <div className="src">
             Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.
           </div>

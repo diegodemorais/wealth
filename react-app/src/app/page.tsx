@@ -10,6 +10,8 @@ import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornad
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { SectionLabel } from '@/components/primitives/SectionLabel';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { secOpen } from '@/config/dashboard.config';
 
 export default function HomePage() {
@@ -26,21 +28,17 @@ export default function HomePage() {
     });
   }, [loadDataOnce]);
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando dados...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>❌ Erro ao carregar dashboard:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!derived) {
-    return <div className="warning-state">⚠️ Dados carregados mas valores derivados não computados</div>;
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data: derived,
+    loadingText: 'Carregando dados...',
+    errorPrefix: '❌ Erro ao carregar dashboard:',
+    warningText: 'Dados carregados mas valores derivados não computados',
+  });
+  if (stateEl) return stateEl;
+  // pageStateElement guarantees derived is non-null past this point
+  const d = derived!;
 
   // Current year — from premissas to avoid hardcoding
   const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
@@ -73,24 +71,24 @@ export default function HomePage() {
     <div>
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
-        networth={derived.networth}
-        networthUsd={derived.networthUsd}
-        fireProgress={derived.firePercentage}
-        yearsToFire={derived.fireMonthsAway / 12}
-        pfire={derived.pfire}
-        cambio={derived.CAMBIO}
+        networth={d.networth}
+        networthUsd={d.networthUsd}
+        fireProgress={d.firePercentage}
+        yearsToFire={d.fireMonthsAway / 12}
+        pfire={d.pfire}
+        cambio={d.CAMBIO}
       />
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
-      <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Indicadores Primários</div>
+      <SectionLabel>Indicadores Primários</SectionLabel>
       <div className="grid grid-cols-3 gap-2.5 mb-3.5">
         {/* P(Cenário Aspiracional) */}
         <div className="bg-card border-2 border-accent/40 rounded p-4 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">P(Cenário Aspiracional)</div>
-          <div className="text-2xl font-black text-accent">{derived.pfireAspiracional != null ? `${derived.pfireAspiracional.toFixed(1)}%` : '—'}</div>
+          <div className="text-2xl font-black text-accent">{d.pfireAspiracional != null ? `${d.pfireAspiracional.toFixed(1)}%` : '—'}</div>
           <div className="text-xs text-muted mt-1">
-            {derived.pfireAspirFav != null && derived.pfireAspirStress != null
-              ? `fav ${derived.pfireAspirFav.toFixed(1)}% · stress ${derived.pfireAspirStress.toFixed(1)}%`
+            {d.pfireAspirFav != null && d.pfireAspirStress != null
+              ? `fav ${d.pfireAspirFav.toFixed(1)}% · stress ${d.pfireAspirStress.toFixed(1)}%`
               : 'cenário aspiracional (49a)'}
           </div>
         </div>
@@ -104,8 +102,8 @@ export default function HomePage() {
         <div className="bg-card border border-border/50 rounded p-4 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Aporte do Mês</div>
           <div className="text-2xl font-black text-text">
-            {derived.aporteMensal
-              ? `R$${Math.round(derived.aporteMensal / 1000)}k`
+            {d.aporteMensal
+              ? `R$${Math.round(d.aporteMensal / 1000)}k`
               : '—'}
           </div>
           <div className="text-xs text-muted mt-1">meta mensal</div>
@@ -113,12 +111,12 @@ export default function HomePage() {
       </div>
 
       {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
-      <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Contexto de Mercado</div>
-      <div className="grid grid-cols-4 gap-2.5 mb-3.5 opacity-85">
+      <SectionLabel>Contexto de Mercado</SectionLabel>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5 opacity-85">
         {/* Dólar */}
         <div className="bg-card border border-border/50 rounded p-3 text-center">
           <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">Dólar</div>
-          <div className="text-xl font-black text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+          <div className="text-xl font-black text-text">{d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}</div>
           <div className="text-xs text-muted mt-1">
             {data?.mercado?.cambio_mtd_pct != null
               ? `${data.mercado.cambio_mtd_pct > 0 ? '+' : ''}${data.mercado.cambio_mtd_pct.toFixed(1)}% MtD · PTAX BCB`
@@ -175,10 +173,10 @@ export default function HomePage() {
 
       {/* 4. SEÇÃO: Time to FIRE — Big number + Progresso */}
       <TimeToFireProgressBar
-        fireProgress={derived.firePercentage}
-        yearsToFire={derived.fireMonthsAway / 12}
-        patrimonioAtual={derived.firePatrimonioAtual}
-        patrimonioGatilho={derived.firePatrimonioGatilho}
+        fireProgress={d.firePercentage}
+        yearsToFire={d.fireMonthsAway / 12}
+        patrimonioAtual={d.firePatrimonioAtual}
+        patrimonioGatilho={d.firePatrimonioGatilho}
       />
 
       {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
@@ -211,30 +209,30 @@ export default function HomePage() {
       )}
 
       {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
-      {derived && Array.isArray(derived.dcaItems) && derived.dcaItems.length > 0 && (
+      {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
         <SemaforoGatilhos
-          items={derived.dcaItems}
+          items={d.dcaItems}
         />
       )}
 
       {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
       <div className="grid grid-cols-2 gap-3.5 mb-3.5">
         <FireProgressWellness
-          firePercentage={derived.firePercentage}
-          firePatrimonioAtual={derived.firePatrimonioAtual}
-          firePatrimonioGatilho={derived.firePatrimonioGatilho}
-          swrFireDay={derived.swrFireDay}
-          wellnessScore={derived.wellnessScore * 100}
-          wellnessLabel={derived.wellnessLabel}
-          wellnessMetrics={derived.wellnessMetrics}
+          firePercentage={d.firePercentage}
+          firePatrimonioAtual={d.firePatrimonioAtual}
+          firePatrimonioGatilho={d.firePatrimonioGatilho}
+          swrFireDay={d.swrFireDay}
+          wellnessScore={d.wellnessScore * 100}
+          wellnessLabel={d.wellnessLabel}
+          wellnessMetrics={d.wellnessMetrics}
         />
-        {derived && (
+        {d && (
           <AporteDoMes
-            aporteMensal={derived.aporteMensal}
-            ultimoAporte={derived.ultimoAporte}
-            ultimoAporteData={derived.ultimoAporteData}
-            acumuladoMes={derived.acumuladoMes}
-            acumuladoAno={derived.acumuladoAno}
+            aporteMensal={d.aporteMensal}
+            ultimoAporte={d.ultimoAporte}
+            ultimoAporteData={d.ultimoAporteData}
+            acumuladoMes={d.acumuladoMes}
+            acumuladoAno={d.acumuladoAno}
           />
         )}
       </div>
@@ -245,7 +243,7 @@ export default function HomePage() {
           {(() => {
             // Compute each metric's points using wellness_config thresholds
             const wc = data.wellness_config;
-            const pfireBaseVal = derived.pfireBase; // 0-100
+            const pfireBaseVal = d.pfireBase; // 0-100
             const aporteMensalVal = data.premissas?.aporte_mensal ?? 0;
             const custoVidaBase = data.premissas?.custo_vida_base ?? 0;
             const custoMensal = custoVidaBase / 12;
@@ -253,7 +251,7 @@ export default function HomePage() {
             const maxDriftVal = data?.drift
               ? Math.max(0, ...Object.entries(data.drift as Record<string, any>)
                   .filter(([k]) => k !== 'Custo')
-                  .map(([, d]) => Math.abs((d?.atual || 0) - (d?.alvo || 0))))
+                  .map(([, dEntry]) => Math.abs((dEntry?.atual || 0) - (dEntry?.alvo || 0))))
               : 0;
             const ipcaGapPp = data.dca_status?.ipca_longo?.gap_alvo_pp ?? null;
             const dcaAtivo = data.dca_status?.ipca_longo?.ativo ?? false;
@@ -438,14 +436,14 @@ export default function HomePage() {
       )}
 
       {/* 7. SEÇÃO: P(FIRE) — Monte Carlo + Tornado */}
-      {derived && (
+      {d && (
         <PFireMonteCarloTornado
-          pfireBase={derived.pfireBase}
-          pfireFav={derived.pfireFav}
-          pfireStress={derived.pfireStress}
-          tornadoData={derived.tornadoData}
-          firePatrimonioAtual={derived.firePatrimonioAtual}
-          firePatrimonioGatilho={derived.firePatrimonioGatilho}
+          pfireBase={d.pfireBase}
+          pfireFav={d.pfireFav}
+          pfireStress={d.pfireStress}
+          tornadoData={d.tornadoData}
+          firePatrimonioAtual={d.firePatrimonioAtual}
+          firePatrimonioGatilho={d.firePatrimonioGatilho}
         />
       )}
 
@@ -462,12 +460,12 @@ export default function HomePage() {
                 <div>
                   <div className="text-xs text-muted">Total Brasil</div>
                   <div className="text-lg font-bold text-green mt-0.5">
-                    {derived.concentrationBrazil != null ? `${(derived.concentrationBrazil * 100).toFixed(1)}%` : '—'}
+                    {d.concentrationBrazil != null ? `${(d.concentrationBrazil * 100).toFixed(1)}%` : '—'}
                   </div>
                 </div>
                 <div className="text-sm text-muted text-right">
                   <div>HODL11: R${((data?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k</div>
-                  <div>RF Total: R${((derived.rfBrl ?? 0) / 1000).toFixed(0)}k</div>
+                  <div>RF Total: R${((d.rfBrl ?? 0) / 1000).toFixed(0)}k</div>
                 </div>
               </div>
             </div>
@@ -538,7 +536,7 @@ export default function HomePage() {
                 <div className="text-xs text-muted mt-1">IPCA YTD {anoAtual}</div>
               </div>
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{derived.CAMBIO ? `R$ ${derived.CAMBIO.toFixed(2)}` : '—'}</div>
+                <div className="text-lg font-bold text-text">{d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}</div>
                 <div className="text-xs text-muted mt-1">USD/BRL</div>
               </div>
             </div>
@@ -551,7 +549,7 @@ export default function HomePage() {
       </CollapsibleSection>
 
       {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
-      {derived && (
+      {d && (
         <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={secOpen('now', 'sankey')} icon="💸">
           <div style={{ padding: '0 16px 16px' }}>
             <CashFlowSankey />

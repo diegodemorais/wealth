@@ -12,6 +12,7 @@ import { InformationRatioChart } from '@/components/charts/InformationRatioChart
 import { PremisesTable } from '@/components/performance/PremisesTable';
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
 import { Button } from '@/components/ui/button';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -29,21 +30,16 @@ export default function PerformancePage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();
   const [timelinePeriod, setTimelinePeriod] = useState<Period>('all');
 
-  if (isLoading) {
-    return <div className="loading-state">⏳ Carregando dados de performance...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>Erro ao carregar performance:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <div className="warning-state">Dados carregados mas seção de performance não disponível</div>;
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data,
+    loadingText: 'Carregando dados de performance...',
+    errorPrefix: 'Erro ao carregar performance:',
+    warningText: 'Dados carregados mas seção de performance não disponível',
+  });
+  if (stateEl) return stateEl;
+  const safeData = data!;
 
   return (
     <div>
@@ -62,7 +58,7 @@ export default function PerformancePage() {
             </Button>
           ))}
         </div>
-        <TimelineChart data={data} period={timelinePeriod} />
+        <TimelineChart data={safeData} period={timelinePeriod} />
         <div className="src">
           Aportes cumulativos + Rentabilidade equity USD + Câmbio e RF. Decomposição via TWR.
         </div>
@@ -73,13 +69,13 @@ export default function PerformancePage() {
         <h2>
           {secTitle('performance', 'attribution', 'Performance Attribution — Decomposição do Patrimônio')}{' '}
           <span style={{ fontSize: 'var(--text-xs)', fontWeight: 400, color: 'var(--muted)' }}>
-            {data.attribution?._inicio ? `(desde ${data.attribution._inicio})` : ''}
+            {safeData.attribution?._inicio ? `(desde ${safeData.attribution._inicio})` : ''}
           </span>
         </h2>
-        <AttributionChart data={data} />
+        <AttributionChart data={safeData} />
         {/* Attribution KPI cards — valores monetários em R$ */}
         {(() => {
-          const attr = data.attribution;
+          const attr = safeData.attribution;
           if (!attr) return null;
           const fmtR = (v: number | null | undefined) => {
             if (v == null) return '—';
@@ -122,7 +118,7 @@ export default function PerformancePage() {
       {/* 3. Alpha vs VWRA — análise de performance diferencial */}
       <section className="section" id="alphaSwrdSection">
         <h2>{secTitle('performance', 'alpha', 'Alpha vs VWRA (benchmark) — Carteira Target por Período')}</h2>
-        <DeltaBarChart data={data} height={200} />
+        <DeltaBarChart data={safeData} height={200} />
         {/* KPI cards alinhados ao contexto de alpha */}
         {(() => {
           const backtest = (data as any)?.backtest ?? {};
@@ -220,7 +216,7 @@ export default function PerformancePage() {
       {/* 5. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
       <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={secOpen('performance', 'rolling-12m', false)}>
         <div style={{ padding: '0 16px 16px' }}>
-          <DeltaBarChart data={data} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />
+          <DeltaBarChart data={safeData} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />
           <div className="src">
             Linha vermelha = threshold −5pp (gatilho de revisão da tese fatorial). Janela: 12 meses.
           </div>
@@ -230,7 +226,7 @@ export default function PerformancePage() {
       {/* 6. Information Ratio vs VWRA (collapsible, collapsed) */}
       <CollapsibleSection id="section-ir" title={secTitle('performance', 'ir', 'Information Ratio vs VWRA — Desde o Início + Rolling 36m')} defaultOpen={secOpen('performance', 'ir', false)}>
         <div style={{ padding: '0 16px 16px' }}>
-          <InformationRatioChart data={data} />
+          <InformationRatioChart data={safeData} />
           <div className="src" style={{ lineHeight: 1.6 }}>
             <strong>Como ler:</strong> IR = Active Return / Tracking Error (janela 36m).<br />
             <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;0</strong> = supera VWRA{' '}
@@ -421,8 +417,8 @@ export default function PerformancePage() {
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <MonthlyReturnsHeatmap data={(() => {
-            if (data.monthly_returns && Object.keys(data.monthly_returns).length > 0) return data.monthly_returns;
-            const rm = (data as any).retornos_mensais;
+            if (safeData.monthly_returns && Object.keys(safeData.monthly_returns).length > 0) return safeData.monthly_returns;
+            const rm = (safeData as any).retornos_mensais;
             if (rm?.dates && rm?.values) {
               const result: Record<string, number> = {};
               (rm.dates as string[]).forEach((d: string, i: number) => {
@@ -441,7 +437,7 @@ export default function PerformancePage() {
       {/* 9. Rolling Sharpe — 12m (collapsible, collapsed) */}
       <CollapsibleSection id="section-rolling-sharpe" title={secTitle('performance', 'rolling-sharpe', 'Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)')} defaultOpen={secOpen('performance', 'rolling-sharpe', false)}>
         <div style={{ padding: '0 16px 16px' }}>
-          <RollingSharpChart data={data} />
+          <RollingSharpChart data={safeData} />
           <div className="src" style={{ lineHeight: 1.6 }}>
             <strong>Como ler:</strong> Sharpe mede retorno ajustado ao risco em janela de 12 meses.<br />
             <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;1</strong> = excelente{' '}

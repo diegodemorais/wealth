@@ -1,6 +1,7 @@
 'use client';
 
 import { usePageData } from '@/hooks/usePageData';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { DonutCharts } from '@/components/charts/DonutCharts';
@@ -16,21 +17,15 @@ import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
 
-  if (isLoading) {
-    return <div className="loading-state">Carregando dados da carteira...</div>;
-  }
-
-  if (dataError) {
-    return (
-      <div className="error-state">
-        <strong>Erro ao carregar carteira:</strong> {dataError}
-      </div>
-    );
-  }
-
-  if (!data) {
-    return <div className="warning-state">Dados carregados mas carteira não disponível</div>;
-  }
+  const stateEl = pageStateElement({
+    isLoading,
+    dataError,
+    data,
+    loadingText: 'Carregando dados da carteira...',
+    errorPrefix: 'Erro ao carregar carteira:',
+    warningText: 'Dados carregados mas carteira não disponível',
+  });
+  if (stateEl) return stateEl;
 
   return (
     <div>

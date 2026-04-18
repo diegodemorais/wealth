@@ -266,8 +266,8 @@ describe('Props contract — page.tsx', () => {
     const pagePath = path.join(__dirname, '../app/page.tsx');
     const pageSource = fs.readFileSync(pagePath, 'utf-8');
 
-    // The prop value must come from derived.dcaItems
-    expect(pageSource).toMatch(/derived\.dcaItems/);
+    // The prop value must come from derived.dcaItems or its non-null alias d.dcaItems
+    expect(pageSource).toMatch(/(?:derived|d)\.dcaItems/);
   });
 
   it('SemaforoGatilhos component interface uses items: DcaItem[]', () => {
