@@ -501,7 +501,6 @@ function WhatIfSection() {
   const premissasWI = (data as any)?.premissas ?? {};
   const fmPerfisWI = (data as any)?.fire_matrix?.perfis ?? {};
   const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
-  const tornadoRaw: any[] = (data as any)?.tornado ?? [];
   const lumpyEventos: any[] = (data as any)?.lumpy_events?.eventos ?? [];
   const gastoPiso: number = (data as any)?.gasto_piso ?? premissasWI?.custo_vida_base ?? 180000;
 
@@ -692,59 +691,6 @@ function WhatIfSection() {
       ? Math.min(100, (patrimonio / patrimonioNecessarioGap) * 100)
       : null;
 
-  // ── Tornado chart data ────────────────────────────────────────────────────────
-  const tornadoSorted = useMemo(() => {
-    if (!tornadoRaw.length) return [];
-    return [...tornadoRaw].sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
-  }, [tornadoRaw]);
-
-  const tornadoOption = useMemo(() => {
-    if (!tornadoSorted.length) return null;
-    return {
-      backgroundColor: 'transparent',
-      tooltip: {
-        trigger: 'axis' as const,
-        backgroundColor: EC.card,
-        borderColor: EC.border2,
-        textStyle: { color: EC.text, fontSize: 11 },
-        formatter: (params: any[]) => {
-          const name = tornadoSorted[params[0]?.dataIndex]?.label ?? '';
-          const p = params.find((x: any) => x.seriesName === '+10%');
-          const m = params.find((x: any) => x.seriesName === '-10%');
-          return `${name}<br/>+10%: ${p?.value?.toFixed(1) ?? '—'}pp<br/>-10%: ${m?.value?.toFixed(1) ?? '—'}pp`;
-        },
-      },
-      grid: { left: '35%', right: '5%', top: 10, bottom: 20, containLabel: false },
-      xAxis: {
-        type: 'value' as const,
-        axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => `${v}pp` },
-        splitLine: EC_SPLIT_LINE,
-        axisLine: EC_AXIS_LINE,
-      },
-      yAxis: {
-        type: 'category' as const,
-        data: tornadoSorted.map(t => t.label),
-        axisLabel: { color: EC.text, fontSize: 10 },
-        axisLine: EC_AXIS_LINE,
-      },
-      series: [
-        {
-          name: '+10%',
-          type: 'bar' as const,
-          data: tornadoSorted.map(t => t.mais10),
-          itemStyle: { color: EC.red },
-          barMaxWidth: 20,
-        },
-        {
-          name: '-10%',
-          type: 'bar' as const,
-          data: tornadoSorted.map(t => t.menos10),
-          itemStyle: { color: EC.green },
-          barMaxWidth: 20,
-        },
-      ],
-    };
-  }, [tornadoSorted]);
 
   return (
     <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Impacto de Decisões de Vida')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
@@ -1100,26 +1046,6 @@ function WhatIfSection() {
         </div>
       </div>
 
-      {/* ── Sensitivity Tornado ── */}
-      {tornadoSorted.length > 0 && (
-        <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '14px', border: '1px solid var(--border)', marginBottom: '12px' }}>
-          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, marginBottom: '4px' }}>
-            📊 Qual variável mais afeta seu FIRE?
-          </div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px' }}>
-            Sensibilidade: impacto em pp de P(FIRE) com variação ±10% em cada variável
-          </div>
-          {tornadoOption && (
-            <EChart
-              option={tornadoOption}
-              style={{ height: Math.max(180, tornadoSorted.length * 28 + 40) }}
-            />
-          )}
-          <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px' }}>
-            Vermelho = +10% piora FIRE · Verde = −10% melhora FIRE · Fonte: precomputed Python
-          </div>
-        </div>
-      )}
 
       {/* ── Life Events (colapsável) ── */}
       <div style={{ background: 'var(--card2)', borderRadius: '10px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '10px' }}>
