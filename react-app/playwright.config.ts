@@ -22,11 +22,43 @@ export default defineConfig({
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
+    {
+      // Local render validation — serves the compiled dash/ folder.
+      // Catches hydration mismatches, JS console errors, and blank pages
+      // before they reach production (github.io).
+      name: 'local',
+      testMatch: '**/local-render.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:3001',
+      },
+    },
   ],
 
-  webServer: process.env.SKIP_WEB_SERVER ? undefined : {
-    command: 'npm run build:no-test && npm run start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer array: index 0 = Next.js dev server (chromium/firefox projects)
+  //                   index 1 = static serve of dash/ (local project)
+  webServer: process.env.SKIP_WEB_SERVER
+    ? undefined
+    : process.env.LOCAL_RENDER_ONLY
+      ? {
+          // serve with --single enables SPA routing (serves index.html for unknown paths)
+          command: 'npx serve ../dash -p 3001 --single --no-clipboard',
+          url: 'http://localhost:3001',
+          reuseExistingServer: true,
+          timeout: 30_000,
+        }
+      : [
+          {
+            command: 'npm run build:no-test && npm run start',
+            url: 'http://localhost:3000',
+            reuseExistingServer: !process.env.CI,
+          },
+          {
+            // serve with --single enables SPA routing (serves index.html for unknown paths)
+            command: 'npx serve ../dash -p 3001 --single --no-clipboard',
+            url: 'http://localhost:3001',
+            reuseExistingServer: true,
+            timeout: 30_000,
+          },
+        ],
 });
