@@ -1,11 +1,12 @@
 {
   "name": "react-app",
-  "version": "0.1.309",
+  "version": "0.1.313",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/increment-version.js && npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
-    "build:no-test": "node scripts/increment-version.js && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "sync-data": "node -e \"const fs=require('fs'),path=require('path');const src=path.resolve('../dashboard/data.json');if(fs.existsSync(src)){fs.copyFileSync(src,'public/data.json');console.log('✅ data.json synced from dashboard/');}else{console.warn('⚠️  dashboard/data.json not found — using existing public/data.json');}\"",
+    "build": "npm run sync-data && node scripts/increment-version.js && npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
+    "build:no-test": "npm run sync-data && node scripts/increment-version.js && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest",
