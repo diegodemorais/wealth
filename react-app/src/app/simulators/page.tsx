@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { usePageData } from '@/hooks/usePageData';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
@@ -462,34 +463,47 @@ function FireSimuladorSection() {
 
 type WiPreset = 'stress' | 'base' | 'fav';
 
+// Profile selector for Cenário A (matches fire_matrix.by_profile keys)
+type WiProfileA = 'solteiro' | 'casado' | 'filho';
+
 interface LifeEvent {
   id: string;
   nome: string;
   ano: number;
   custo: number;
+  tipo: 'one-shot' | 'recorrente';
 }
 
 function WhatIfSection() {
   const data = useDashboardStore(s => s.data);
   const { privacyMode } = useUiStore();
+  const router = useRouter();
   const [wiPreset, setWiPreset] = useState<WiPreset>('base');
+  const [profileA, setProfileA] = useState<WiProfileA>('solteiro');
   const [custoBInit, setCustoBInit] = useState<boolean>(false);
   const [custoB, setCustoB] = useState<number>(250000);
   const [aporteB, setAporteB] = useState<number>(25000);
+  const [inssToggle, setInssToggle] = useState({ diego: false, katia: false });
+  const [horizon, setHorizon] = useState<number>(90);
   const [eventsExpanded, setEventsExpanded] = useState(false);
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>(() => {
-    try { return JSON.parse(typeof window !== 'undefined' ? (localStorage.getItem('wealth-life-events') ?? '[]') : '[]'); }
+    try { return JSON.parse(typeof window !== 'undefined' ? (localStorage.getItem('wealth-life-events-v2') ?? '[]') : '[]'); }
     catch { return []; }
   });
   const [newEvtNome, setNewEvtNome] = useState('');
   const [newEvtAno, setNewEvtAno] = useState<number>(new Date().getFullYear() + 5);
   const [newEvtCusto, setNewEvtCusto] = useState<number>(50000);
+  const [newEvtTipo, setNewEvtTipo] = useState<'one-shot' | 'recorrente'>('one-shot');
   const [evtError, setEvtError] = useState<string>('');
 
   const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
   const swrPerc = (data as any)?.fire_swr_percentis ?? {};
   const premissasWI = (data as any)?.premissas ?? {};
   const fmPerfisWI = (data as any)?.fire_matrix?.perfis ?? {};
+  const byProfile: any[] = (data as any)?.fire_matrix?.by_profile ?? [];
+  const tornadoRaw: any[] = (data as any)?.tornado ?? [];
+  const lumpyEventos: any[] = (data as any)?.lumpy_events?.eventos ?? [];
+  const gastoPiso: number = (data as any)?.gasto_piso ?? premissasWI?.custo_vida_base ?? 180000;
 
   // Derive presets from data — no hardcoded values
   const WI_PRESETS: Record<WiPreset, { label: string; retorno: number | undefined; swrFrac: number | undefined }> = {
@@ -498,11 +512,39 @@ function WhatIfSection() {
     fav:    { label: '🚀 Favorável', retorno: fmRetornos.fav,    swrFrac: swrPerc.swr_p90 },
   };
 
-  // Baseline (Cenário A) — locked values from data
-  const custoA: number = fmPerfisWI?.atual?.gasto_anual ?? premissasWI?.custo_vida_base ?? 250000;
+  const PROFILE_A_MAP: Record<WiProfileA, { label: string; byProfileKey: string; perfilKey: string }> = {
+    solteiro: { label: '👤 Solteiro', byProfileKey: 'atual',  perfilKey: 'atual'  },
+    casado:   { label: '💍 Casado',   byProfileKey: 'casado', perfilKey: 'casado' },
+    filho:    { label: '👶 Filho+Escola', byProfileKey: 'filho', perfilKey: 'filho' },
+  };
+
+  // Cenário A values come from by_profile (MC precomputed) — consistent with FIRE simulator
+  const byProfileA = byProfile.find((x: any) => x.profile === PROFILE_A_MAP[profileA].byProfileKey);
+  const custoA: number = fmPerfisWI?.[PROFILE_A_MAP[profileA].perfilKey]?.gasto_anual
+    ?? premissasWI?.custo_vida_base ?? 250000;
   const aporteA: number = premissasWI?.aporte_mensal ?? 25000;
 
-  // Init Cenário B from data once
+  // Cenário A results from MC precomputed data
+  const anoFireA = byProfileA?.fire_year_threshold ? parseInt(byProfileA.fire_year_threshold, 10) : null;
+  const idadeFireA = byProfileA?.fire_age_threshold ?? null;
+  const psucessoA: number | null = wiPreset === 'fav'
+    ? (byProfileA?.p_at_threshold_fav ?? byProfileA?.p_at_threshold ?? null)
+    : wiPreset === 'stress'
+    ? (byProfileA?.p_at_threshold_stress ?? byProfileA?.p_at_threshold ?? null)
+    : (byProfileA?.p_at_threshold ?? null);
+
+  const patrimonio: number | undefined = derivePatrimonio(data);
+  const swrTarget: number | undefined = premissasWI?.swr_gatilho;
+  const currentAge: number = premissasWI?.idade_atual ?? 39;
+  const anoAtual: number = getAnoAtual(premissasWI);
+  const inssAnualDiego: number = premissasWI?.inss_anual ?? 0;
+  const inssAnualKatia: number = premissasWI?.inss_katia_anual ?? 0;
+
+  // INSS reduces custo líquido for Cenário B calc
+  const inssOffset = (inssToggle.diego ? inssAnualDiego : 0) + (inssToggle.katia ? inssAnualKatia : 0);
+  const custoLiquidoB = Math.max(0, custoB - inssOffset);
+
+  // Init Cenário B from data + profileA once
   useEffect(() => {
     if (data && !custoBInit) {
       setCustoBInit(true);
@@ -511,18 +553,26 @@ function WhatIfSection() {
     }
   }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Persist life events
+  // When profileA changes, sync Cenário B starting values
+  const prevProfileARef = useRef<WiProfileA | null>(null);
+  useEffect(() => {
+    if (prevProfileARef.current !== null && prevProfileARef.current !== profileA) {
+      const custo = fmPerfisWI?.[PROFILE_A_MAP[profileA].perfilKey]?.gasto_anual
+        ?? premissasWI?.custo_vida_base ?? 250000;
+      setCustoB(custo);
+      if (premissasWI?.aporte_mensal != null) setAporteB(premissasWI.aporte_mensal);
+    }
+    prevProfileARef.current = profileA;
+  }, [profileA]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persist life events (v2 key for new schema)
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('wealth-life-events', JSON.stringify(lifeEvents));
+      localStorage.setItem('wealth-life-events-v2', JSON.stringify(lifeEvents));
     }
   }, [lifeEvents]);
 
   const preset = WI_PRESETS[wiPreset];
-  const patrimonio: number | undefined = derivePatrimonio(data);
-  const swrTarget: number | undefined = premissasWI?.swr_gatilho;
-  const currentAge: number = premissasWI?.idade_atual ?? 39;
-  const anoAtual: number = getAnoAtual(premissasWI);
 
   // ── Local calcWithEvents (inline, not exported) ──────────────────────────────
   function calcWithEvents(
@@ -538,11 +588,20 @@ function WhatIfSection() {
     const target = custo / swr;
     let pat = pat0;
     for (let yr = 0; yr <= 35; yr++) {
+      // one-shot events: subtract at specific year
       for (const evt of events) {
-        if (evt.ano === ano + yr) pat = Math.max(0, pat - evt.custo);
+        if (evt.tipo === 'one-shot' && evt.ano === ano + yr) {
+          pat = Math.max(0, pat - evt.custo);
+        }
       }
-      if (pat >= target) {
-        return { ano: ano + yr, idade: age + yr, pat, swrAtFire: custo / pat };
+      // recorrente: accumulate delta_custo for years at or after start
+      const recorrenteDelta = events
+        .filter(e => e.tipo === 'recorrente' && e.ano <= ano + yr)
+        .reduce((sum, e) => sum + e.custo, 0);
+      const custoEfetivo = custo + recorrenteDelta;
+      const targetEfetivo = custoEfetivo / swr;
+      if (pat >= targetEfetivo) {
+        return { ano: ano + yr, idade: age + yr, pat, swrAtFire: custoEfetivo / pat };
       }
       for (let m = 0; m < 12; m++) {
         pat = pat * (1 + retornoFrac / 12) + aporte;
@@ -552,10 +611,10 @@ function WhatIfSection() {
   }
 
   // ── P(sucesso) lookup helper (snap to nearest grid key) ──────────────────────
-  function lookupPsucesso(custo: number, preset: WiPreset): { p: number | null; snapDiff: number } {
+  function lookupPsucesso(custo: number, presetKey: WiPreset): { p: number | null; snapDiff: number } {
     const fireMatrix = (data as any)?.fire_matrix;
     if (!fireMatrix || custo == null) return { p: null, snapDiff: 0 };
-    const cenario = fireMatrix.cenarios?.[preset] ?? {};
+    const cenario = fireMatrix.cenarios?.[presetKey] ?? {};
     const availablePats = [...new Set(
       Object.keys(cenario).map(k => parseInt(k.split('_')[0], 10))
     )].sort((a, b) => a - b) as number[];
@@ -575,42 +634,27 @@ function WhatIfSection() {
     return { p: p != null ? p * 100 : null, snapDiff };
   }
 
-  // ── Cenário A (baseline, no events) ──────────────────────────────────────────
-  const resultA = useMemo(() => {
-    if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
-    return calcWithEvents(aporteA, preset.retorno, custoA, currentAge, anoAtual, patrimonio, swrTarget, []);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patrimonio, swrTarget, preset.retorno, aporteA, custoA, currentAge, anoAtual]);
-
-  const { p: psucessoA, snapDiff: snapDiffA } = useMemo(
-    () => lookupPsucesso(custoA, wiPreset),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [custoA, wiPreset, data]
-  );
-
   // ── Cenário B (editável + life events) ───────────────────────────────────────
   const resultB = useMemo(() => {
     if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
-    return calcWithEvents(aporteB, preset.retorno, custoB, currentAge, anoAtual, patrimonio, swrTarget, lifeEvents);
+    return calcWithEvents(aporteB, preset.retorno, custoLiquidoB, currentAge, anoAtual, patrimonio, swrTarget, lifeEvents);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [patrimonio, swrTarget, preset.retorno, aporteB, custoB, currentAge, anoAtual, lifeEvents]);
+  }, [patrimonio, swrTarget, preset.retorno, aporteB, custoLiquidoB, currentAge, anoAtual, lifeEvents]);
 
   const { p: psucessoB, snapDiff: snapDiffB } = useMemo(
-    () => lookupPsucesso(custoB, wiPreset),
+    () => lookupPsucesso(custoLiquidoB, wiPreset),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [custoB, wiPreset, data]
+    [custoLiquidoB, wiPreset, data]
   );
 
   // ── Delta ─────────────────────────────────────────────────────────────────────
-  const deltaAnos = (resultA && resultB) ? (resultB.idade - resultA.idade) : null;
-  // Delta P só é confiável se A e B caíram em células diferentes da grade
-  // Detectar snap igual: se custoA e custoB distam < step da grade (~R$30k), podem cair na mesma célula
-  const sameGridCell = Math.abs(custoA - custoB) < 25000 && Math.abs(aporteA - aporteB) < 5000;
+  const deltaAnos = (idadeFireA != null && resultB) ? (resultB.idade - idadeFireA) : null;
+  const sameGridCell = Math.abs(custoA - custoLiquidoB) < 25000 && Math.abs(aporteA - aporteB) < 5000;
   const deltaP = (psucessoA != null && psucessoB != null && !sameGridCell) ? (psucessoB - psucessoA) : null;
   const deltaPUncalculable = psucessoA != null && psucessoB != null && sameGridCell;
 
-  // ── Life event total ──────────────────────────────────────────────────────────
-  const totalEventos = lifeEvents.reduce((s, e) => s + e.custo, 0);
+  // ── Life event totals ──────────────────────────────────────────────────────────
+  const totalOneShotEventos = lifeEvents.filter(e => e.tipo === 'one-shot').reduce((s, e) => s + e.custo, 0);
 
   // ── Nearest perfil detection for "Explorar no Simulador" link ────────────────
   const PERFIL_MAP: Array<{ key: string; cond: string; custo: number }> = [
@@ -626,15 +670,88 @@ function WhatIfSection() {
     if (newEvtAno < 2025 || newEvtAno > 2070) { setEvtError('Ano deve ser entre 2025 e 2070'); return; }
     if (newEvtCusto <= 0) { setEvtError('Custo deve ser maior que 0'); return; }
     setEvtError('');
-    setLifeEvents(prev => [...prev, { id: `${Date.now()}`, nome: newEvtNome.trim(), ano: newEvtAno, custo: newEvtCusto }]);
+    setLifeEvents(prev => [...prev, {
+      id: `${Date.now()}`,
+      nome: newEvtNome.trim(),
+      ano: newEvtAno,
+      custo: newEvtCusto,
+      tipo: newEvtTipo,
+    }]);
     setNewEvtNome('');
   }
+
+  // ── Floor vs Upside calculations ──────────────────────────────────────────────
+  const floorInss = (inssToggle.diego ? inssAnualDiego : 0) + (inssToggle.katia ? inssAnualKatia : 0);
+  const floorTotal = floorInss + gastoPiso; // INSS + minimum RF floor
+  const gapEquity = Math.max(0, custoB - floorTotal);
+  const patrimonioNecessarioGap = swrTarget && swrTarget > 0 ? gapEquity / swrTarget : null;
+  // Quando gap=0 (floor cobre tudo), cobertura é 100% — não "—"
+  const coberturaAtual = gapEquity === 0
+    ? 100
+    : (patrimonioNecessarioGap && patrimonioNecessarioGap > 0 && patrimonio != null)
+      ? Math.min(100, (patrimonio / patrimonioNecessarioGap) * 100)
+      : null;
+
+  // ── Tornado chart data ────────────────────────────────────────────────────────
+  const tornadoSorted = useMemo(() => {
+    if (!tornadoRaw.length) return [];
+    return [...tornadoRaw].sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
+  }, [tornadoRaw]);
+
+  const tornadoOption = useMemo(() => {
+    if (!tornadoSorted.length) return null;
+    return {
+      backgroundColor: 'transparent',
+      tooltip: {
+        trigger: 'axis' as const,
+        backgroundColor: EC.card,
+        borderColor: EC.border2,
+        textStyle: { color: EC.text, fontSize: 11 },
+        formatter: (params: any[]) => {
+          const name = tornadoSorted[params[0]?.dataIndex]?.label ?? '';
+          const p = params.find((x: any) => x.seriesName === '+10%');
+          const m = params.find((x: any) => x.seriesName === '-10%');
+          return `${name}<br/>+10%: ${p?.value?.toFixed(1) ?? '—'}pp<br/>-10%: ${m?.value?.toFixed(1) ?? '—'}pp`;
+        },
+      },
+      grid: { left: '35%', right: '5%', top: 10, bottom: 20, containLabel: false },
+      xAxis: {
+        type: 'value' as const,
+        axisLabel: { color: EC.muted, fontSize: 10, formatter: (v: number) => `${v}pp` },
+        splitLine: EC_SPLIT_LINE,
+        axisLine: EC_AXIS_LINE,
+      },
+      yAxis: {
+        type: 'category' as const,
+        data: tornadoSorted.map(t => t.label),
+        axisLabel: { color: EC.text, fontSize: 10 },
+        axisLine: EC_AXIS_LINE,
+      },
+      series: [
+        {
+          name: '+10%',
+          type: 'bar' as const,
+          data: tornadoSorted.map(t => t.mais10),
+          itemStyle: { color: EC.red },
+          barMaxWidth: 20,
+        },
+        {
+          name: '-10%',
+          type: 'bar' as const,
+          data: tornadoSorted.map(t => t.menos10),
+          itemStyle: { color: EC.green },
+          barMaxWidth: 20,
+        },
+      ],
+    };
+  }, [tornadoSorted]);
 
   return (
     <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Impacto de Decisões de Vida')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
 
-      {/* ── Presets ── */}
-      <div style={{ marginBottom: '12px' }}>
+      {/* ── Presets de mercado ── */}
+      <div style={{ marginBottom: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '60px' }}>Mercado:</span>
         <div className="seg-group">
           {(Object.keys(WI_PRESETS) as WiPreset[]).map(k => (
             <button key={k} className={`seg-btn${wiPreset === k ? ' active' : ''}`} onClick={() => setWiPreset(k)}>
@@ -644,8 +761,24 @@ function WhatIfSection() {
         </div>
       </div>
 
+      {/* ── Perfil Cenário A ── */}
+      <div style={{ marginBottom: '14px', display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', minWidth: '60px' }}>Perfil A:</span>
+        <div className="seg-group">
+          {(Object.keys(PROFILE_A_MAP) as WiProfileA[]).map(k => (
+            <button
+              key={k}
+              className={`seg-btn${profileA === k ? ' active' : ''}`}
+              onClick={() => setProfileA(k)}
+            >
+              {PROFILE_A_MAP[k].label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* ── Sliders Cenário B ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
         <div className="slider-row">
           <label>
             <span>✏️ Custo Cenário B /ano</span>
@@ -678,9 +811,35 @@ function WhatIfSection() {
         </div>
       </div>
 
+      {/* ── INSS Toggles ── */}
+      <div style={{ marginBottom: '14px', display: 'flex', flexWrap: 'wrap', gap: '12px', padding: '10px 14px', background: 'var(--card2)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', alignSelf: 'center', marginRight: '4px' }}>INSS (reduz custo líquido B):</span>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={inssToggle.diego}
+            onChange={e => setInssToggle(v => ({ ...v, diego: e.target.checked }))}
+          />
+          <span>Diego — <span className="pv">{privacyMode ? '••••' : `R$${(inssAnualDiego / 1000).toFixed(0)}k/ano`}</span></span>
+        </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={inssToggle.katia}
+            onChange={e => setInssToggle(v => ({ ...v, katia: e.target.checked }))}
+          />
+          <span>Katia — <span className="pv">{privacyMode ? '••••' : `R$${(inssAnualKatia / 1000).toFixed(0)}k/ano`}</span></span>
+        </label>
+        {inssOffset > 0 && (
+          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, alignSelf: 'center' }} className="pv">
+            {privacyMode ? '••••' : `→ Custo líquido B: R$${(custoLiquidoB / 1000).toFixed(0)}k/ano`}
+          </span>
+        )}
+      </div>
+
       {/* ── Comparador A/B ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-        {/* Card A — Plano Atual */}
+        {/* Card A — MC precomputed by_profile */}
         {(() => {
           const pColor = pfireColorFn(psucessoA);
           return (
@@ -690,45 +849,40 @@ function WhatIfSection() {
               borderTop: `3px solid ${pColor}`,
             }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
-                📌 Plano Atual
+                📌 Plano A — {PROFILE_A_MAP[profileA].label}
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline', flexWrap: 'wrap', marginBottom: '6px' }}>
                 <div>
                   <div style={{ fontSize: '2.2rem', fontWeight: 800, lineHeight: 1 }} className="pv">
-                    {resultA ? resultA.ano : '> 35a'}
+                    {anoFireA ?? '—'}
                   </div>
                   <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--muted)' }} className="pv">
-                    {resultA ? `${resultA.idade} anos` : '—'}
+                    {idadeFireA != null ? `${idadeFireA} anos` : '—'}
                   </div>
                 </div>
                 <div>
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
                     {psucessoA != null ? `P ${psucessoA.toFixed(0)}%` : 'P —%'}
                   </div>
-                  {snapDiffA > 20000 && (
-                    <div style={{ fontSize: '10px', color: 'var(--yellow)' }}>
-                      ⚠ ±R${(snapDiffA / 1000).toFixed(0)}k snap
-                    </div>
-                  )}
                 </div>
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
                 Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoA)}/ano</span>
                 {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteA)}/mês</span>
               </div>
-              {resultA && resultA.pat > 0 && (
+              {byProfileA?.pat_mediano_threshold > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
-                  Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultA.pat)}</span>
+                  Pat. mediano FIRE: <span className="pv">{privacyMode ? '••••' : fmtBRL(byProfileA.pat_mediano_threshold)}</span>
                 </div>
               )}
-              <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '6px', fontStyle: 'italic' }}>
-                Ano: modelo determinístico · P: MC precomputed
+              <div style={{ fontSize: '10px', color: 'var(--green)', marginTop: '6px', fontStyle: 'italic' }}>
+                MC precomputed — consistente com FIRE page
               </div>
             </div>
           );
         })()}
 
-        {/* Card B — What-If */}
+        {/* Card B — What-If determinístico */}
         {(() => {
           const pColor = pfireColorFn(psucessoB);
           return (
@@ -739,15 +893,15 @@ function WhatIfSection() {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px' }}>
-                  ✏️ What-If
+                  ✏️ Cenário B — What-If
                 </div>
-                {lifeEvents.length > 0 && (
+                {lifeEvents.filter(e => e.tipo === 'one-shot').length > 0 && (
                   <span style={{
                     fontSize: '10px', fontWeight: 600, color: 'var(--yellow)',
                     background: 'rgba(234,179,8,.12)', border: '1px solid rgba(234,179,8,.3)',
                     borderRadius: '4px', padding: '1px 5px',
                   }}>
-                    {lifeEvents.length} evento{lifeEvents.length > 1 ? 's' : ''} (−{privacyMode ? '••••' : fmtBRL(totalEventos)})
+                    {lifeEvents.filter(e => e.tipo === 'one-shot').length} evento{lifeEvents.filter(e => e.tipo === 'one-shot').length > 1 ? 's' : ''} (−{privacyMode ? '••••' : fmtBRL(totalOneShotEventos)})
                   </span>
                 )}
               </div>
@@ -773,6 +927,7 @@ function WhatIfSection() {
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
                 Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoB)}/ano</span>
+                {inssOffset > 0 && <span style={{ color: 'var(--green)' }}> (líquido: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoLiquidoB)}</span>)</span>}
                 {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteB)}/mês</span>
               </div>
               {resultB && resultB.pat > 0 && (
@@ -780,8 +935,11 @@ function WhatIfSection() {
                   Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultB.pat)}</span>
                 </div>
               )}
-              <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '6px', fontStyle: 'italic' }}>
-                Ano: modelo determinístico · P: MC precomputed
+              <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px', fontStyle: 'italic' }}>
+                Ano: determinístico · P: MC precomputed · Horizonte: {horizon}a
+              </div>
+              <div style={{ fontSize: '10px', color: 'var(--muted)', fontStyle: 'italic' }}>
+                (P calculado para 30 anos de desacumulação — horizonte visual apenas)
               </div>
             </div>
           );
@@ -822,15 +980,15 @@ function WhatIfSection() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
             {deltaAnos != null
               ? deltaAnos > 0
-                ? `What-If atrasa FIRE em ${deltaAnos} anos`
+                ? `Cenário B atrasa FIRE em ${deltaAnos} anos vs perfil ${PROFILE_A_MAP[profileA].label}`
                 : deltaAnos < 0
-                  ? `What-If adianta FIRE em ${Math.abs(deltaAnos)} anos`
-                  : 'Mesmo ano de FIRE'
+                  ? `Cenário B adianta FIRE em ${Math.abs(deltaAnos)} anos vs perfil ${PROFILE_A_MAP[profileA].label}`
+                  : `Mesmo ano de FIRE que perfil ${PROFILE_A_MAP[profileA].label}`
               : ''}
           </div>
           {nearestPerfil && (
             <button
-              onClick={() => { window.location.href = `/simulators?cond=${nearestPerfil.cond}&mkt=${wiPreset}`; }}
+              onClick={() => router.push(`/simulators?cond=${nearestPerfil.cond}&mkt=${wiPreset}`)}
               style={{
                 marginTop: '10px',
                 padding: '5px 14px',
@@ -849,6 +1007,100 @@ function WhatIfSection() {
         </div>
       )}
 
+      {/* ── Floor vs Upside — Boldin style ── */}
+      <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '14px', border: '1px solid var(--border)', marginBottom: '12px' }}>
+        <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, marginBottom: '10px' }}>
+          🏦 Cobertura por Camadas — Floor vs Upside
+        </div>
+        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '10px' }}>
+          Separação: renda garantida (floor) vs dependente de equity (gap). Equity cobre apenas o gap.
+        </div>
+
+        {/* Stacked bar — floor | gap */}
+        {(() => {
+          const total = custoB > 0 ? custoB : 1;
+          const floorPct = Math.min(100, (floorTotal / total) * 100);
+          const gapPct = Math.max(0, 100 - floorPct);
+          const coveredPct = coberturaAtual ?? 0;
+          return (
+            <div style={{ marginBottom: '12px' }}>
+              <div style={{ position: 'relative', height: '24px', borderRadius: '6px', overflow: 'hidden', background: 'var(--card)', display: 'flex' }}>
+                <div
+                  style={{ width: `${floorPct}%`, background: 'var(--accent)', transition: 'width .3s' }}
+                  title={`Floor garantido: R$${(floorTotal / 1000).toFixed(0)}k`}
+                />
+                <div
+                  style={{ width: `${gapPct * (coveredPct / 100)}%`, background: 'var(--green)', transition: 'width .3s' }}
+                  title={`Gap coberto: ${coveredPct.toFixed(0)}%`}
+                />
+                <div
+                  style={{ flex: 1, background: 'rgba(248,81,73,.25)' }}
+                  title="Gap descoberto"
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '5px', flexWrap: 'wrap', fontSize: '10px' }}>
+                <span style={{ color: 'var(--accent)' }}>■ Floor garantido</span>
+                <span style={{ color: 'var(--green)' }}>■ Gap coberto por patrimônio</span>
+                <span style={{ color: 'var(--red)' }}>■ Gap descoberto</span>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* 3 cards below bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Floor garantido</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }} className="pv">
+              {privacyMode ? '••••' : `R$${(floorTotal / 1000).toFixed(0)}k/ano`}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--muted)' }}>
+              INSS + piso RF
+              {floorInss > 0 && <span style={{ color: 'var(--green)' }}> (INSS ativo)</span>}
+            </div>
+          </div>
+          <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gap (equity)</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: gapEquity > 0 ? 'var(--red)' : 'var(--green)' }} className="pv">
+              {privacyMode ? '••••' : `R$${(gapEquity / 1000).toFixed(0)}k/ano`}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--muted)' }}>
+              {patrimonioNecessarioGap != null
+                ? <span className="pv">{privacyMode ? '••••' : `Pat. necessário: R$${(patrimonioNecessarioGap / 1000).toFixed(0)}k`}</span>
+                : '—'}
+            </div>
+          </div>
+          <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cobertura atual</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700, color: coberturaAtual != null && coberturaAtual >= 80 ? 'var(--green)' : coberturaAtual != null && coberturaAtual >= 50 ? 'var(--yellow)' : 'var(--red)' }} className="pv">
+              {coberturaAtual != null ? `${coberturaAtual.toFixed(0)}%` : '—'}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--muted)' }}>do gap por equity</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Sensitivity Tornado ── */}
+      {tornadoSorted.length > 0 && (
+        <div style={{ background: 'var(--card2)', borderRadius: '10px', padding: '14px', border: '1px solid var(--border)', marginBottom: '12px' }}>
+          <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, marginBottom: '4px' }}>
+            📊 Qual variável mais afeta seu FIRE?
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '8px' }}>
+            Sensibilidade: impacto em pp de P(FIRE) com variação ±10% em cada variável
+          </div>
+          {tornadoOption && (
+            <EChart
+              option={tornadoOption}
+              style={{ height: Math.max(180, tornadoSorted.length * 28 + 40) }}
+            />
+          )}
+          <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px' }}>
+            Vermelho = +10% piora FIRE · Verde = −10% melhora FIRE · Fonte: precomputed Python
+          </div>
+        </div>
+      )}
+
       {/* ── Life Events (colapsável) ── */}
       <div style={{ background: 'var(--card2)', borderRadius: '10px', border: '1px solid var(--border)', overflow: 'hidden', marginBottom: '10px' }}>
         <button
@@ -862,7 +1114,7 @@ function WhatIfSection() {
           <span>🗓 Eventos de Vida</span>
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             {lifeEvents.length > 0
-              ? `${lifeEvents.length} evento${lifeEvents.length > 1 ? 's' : ''} · ${privacyMode ? '••••' : `−R$${(totalEventos / 1000).toFixed(0)}k`}`
+              ? `${lifeEvents.length} evento${lifeEvents.length > 1 ? 's' : ''} · ${privacyMode ? '••••' : `−R$${(totalOneShotEventos / 1000).toFixed(0)}k one-shot`}`
               : 'Nenhum'}
             {' '}{eventsExpanded ? '▲' : '▼'}
           </span>
@@ -870,8 +1122,29 @@ function WhatIfSection() {
 
         {eventsExpanded && (
           <div style={{ padding: '0 14px 14px' }}>
-            {/* Form */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+            {/* Eventos de referência (lumpy_events — read-only) */}
+            {lumpyEventos.length > 0 && (
+              <div style={{ marginBottom: '14px', padding: '10px', background: 'var(--card)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginBottom: '6px' }}>
+                  📋 Eventos de referência (calculados pelo modelo):
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                  {lumpyEventos.map((evt: any) => (
+                    <div key={evt.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--muted)', flexWrap: 'wrap', gap: '4px' }}>
+                      <span style={{ fontWeight: 500, color: 'var(--text)' }}>{evt.label}</span>
+                      <span>({evt.ano_inicio})</span>
+                      <span style={{ color: evt.delta_pp < 0 ? 'var(--red)' : 'var(--green)', fontWeight: 600 }}>
+                        {evt.delta_pp > 0 ? '+' : ''}{evt.delta_pp?.toFixed(1)}pp de P
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Form — adicionar evento customizado */}
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginBottom: '6px' }}>Adicionar evento customizado:</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
               <div>
                 <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>Nome</label>
                 <Input
@@ -894,7 +1167,9 @@ function WhatIfSection() {
                   />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>Custo (R$)</label>
+                  <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>
+                    {newEvtTipo === 'recorrente' ? 'Delta anual (R$)' : 'Custo (R$)'}
+                  </label>
                   <Input
                     type="number"
                     min="1" step="1000"
@@ -904,6 +1179,18 @@ function WhatIfSection() {
                   />
                 </div>
               </div>
+            </div>
+            {/* Tipo selector */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Tipo:</span>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
+                <input type="radio" name="evt-tipo" value="one-shot" checked={newEvtTipo === 'one-shot'} onChange={() => setNewEvtTipo('one-shot')} />
+                One-shot (custo único)
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
+                <input type="radio" name="evt-tipo" value="recorrente" checked={newEvtTipo === 'recorrente'} onChange={() => setNewEvtTipo('recorrente')} />
+                Recorrente (delta custo anual)
+              </label>
             </div>
             {evtError && (
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--red)', marginBottom: '6px' }}>{evtError}</div>
@@ -920,9 +1207,9 @@ function WhatIfSection() {
               + Adicionar Evento
             </button>
 
-            {/* Lista de eventos */}
+            {/* Lista de eventos customizados */}
             {lifeEvents.length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '8px' }}>
                 {lifeEvents.map(evt => (
                   <div key={evt.id} style={{
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -931,8 +1218,11 @@ function WhatIfSection() {
                   }}>
                     <span style={{ color: 'var(--text)', fontWeight: 500 }}>{evt.nome}</span>
                     <span style={{ color: 'var(--muted)' }}>{evt.ano}</span>
+                    <span style={{ fontSize: '10px', color: evt.tipo === 'recorrente' ? 'var(--yellow)' : 'var(--muted)', fontStyle: 'italic' }}>
+                      {evt.tipo === 'recorrente' ? '∞ rec.' : '1x'}
+                    </span>
                     <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
-                      {privacyMode ? '••••' : `−R$${(evt.custo / 1000).toFixed(0)}k`}
+                      {privacyMode ? '••••' : `${evt.tipo === 'recorrente' ? '+' : '−'}R$${(evt.custo / 1000).toFixed(0)}k${evt.tipo === 'recorrente' ? '/ano' : ''}`}
                     </span>
                     <button
                       onClick={() => setLifeEvents(prev => prev.filter(e => e.id !== evt.id))}
@@ -942,19 +1232,46 @@ function WhatIfSection() {
                     </button>
                   </div>
                 ))}
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px', textAlign: 'right' }}>
-                  Total: <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
-                    {privacyMode ? '••••' : `−R$${(totalEventos / 1000).toFixed(0)}k`}
-                  </span>
-                </div>
+                {totalOneShotEventos > 0 && (
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px', textAlign: 'right' }}>
+                    One-shot total: <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
+                      {privacyMode ? '••••' : `−R$${(totalOneShotEventos / 1000).toFixed(0)}k`}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </div>
         )}
       </div>
 
+      {/* ── Horizonte de Desacumulação ── */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
+        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Horizonte desacumulação:</span>
+        {[85, 90, 95, 100].map(h => (
+          <button
+            key={h}
+            className={`seg-btn${horizon === h ? ' active' : ''}`}
+            onClick={() => setHorizon(h)}
+          >
+            {h} anos
+          </button>
+        ))}
+        {(() => {
+          const anoFire = resultB?.ano ?? anoFireA;
+          const idadeFire = resultB?.idade ?? idadeFireA;
+          if (!anoFire || !idadeFire) return null;
+          const anoFim = anoFire + (horizon - idadeFire);
+          return (
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+              → até {anoFim} ({horizon - idadeFire} anos de desacumulação)
+            </span>
+          );
+        })()}
+      </div>
+
       <div className="src">
-        Ano FIRE: simulação determinística (sem variância de mercado) · P(sucesso): Monte Carlo precomputed · modelos distintos — comparar com cautela · Life events: localStorage
+        Cenário A: MC precomputed — consistente com FIRE page · Cenário B: simulação determinística (sem variância) · P: MC precomputed (grade) · Horizonte: visual, P calculado para 30 anos · Life events: localStorage
       </div>
     </CollapsibleSection>
   );
