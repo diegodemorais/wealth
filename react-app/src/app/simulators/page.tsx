@@ -603,7 +603,11 @@ function WhatIfSection() {
 
   // ── Delta ─────────────────────────────────────────────────────────────────────
   const deltaAnos = (resultA && resultB) ? (resultB.idade - resultA.idade) : null;
-  const deltaP = (psucessoA != null && psucessoB != null) ? (psucessoB - psucessoA) : null;
+  // Delta P só é confiável se A e B caíram em células diferentes da grade
+  // Detectar snap igual: se custoA e custoB distam < step da grade (~R$30k), podem cair na mesma célula
+  const sameGridCell = Math.abs(custoA - custoB) < 25000 && Math.abs(aporteA - aporteB) < 5000;
+  const deltaP = (psucessoA != null && psucessoB != null && !sameGridCell) ? (psucessoB - psucessoA) : null;
+  const deltaPUncalculable = psucessoA != null && psucessoB != null && sameGridCell;
 
   // ── Life event total ──────────────────────────────────────────────────────────
   const totalEventos = lifeEvents.reduce((s, e) => s + e.custo, 0);
@@ -717,6 +721,9 @@ function WhatIfSection() {
                   Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultA.pat)}</span>
                 </div>
               )}
+              <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '6px', fontStyle: 'italic' }}>
+                Ano: modelo determinístico · P: MC precomputed
+              </div>
             </div>
           );
         })()}
@@ -773,6 +780,9 @@ function WhatIfSection() {
                   Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultB.pat)}</span>
                 </div>
               )}
+              <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '6px', fontStyle: 'italic' }}>
+                Ano: modelo determinístico · P: MC precomputed
+              </div>
             </div>
           );
         })()}
@@ -801,6 +811,11 @@ function WhatIfSection() {
             {deltaP != null && (
               <span style={{ marginLeft: '8px', color: deltaP >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp de P
+              </span>
+            )}
+            {deltaPUncalculable && (
+              <span style={{ marginLeft: '8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+                Δ P: grade insuficiente
               </span>
             )}
           </div>
@@ -872,7 +887,7 @@ function WhatIfSection() {
                   <label style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', display: 'block', marginBottom: '2px' }}>Ano</label>
                   <Input
                     type="number"
-                    min="2025" max="2070" step="1"
+                    min={anoAtual + 1} max="2070" step="1"
                     value={newEvtAno}
                     onChange={e => setNewEvtAno(+e.target.value)}
                     style={{ width: '100%', fontSize: 'var(--text-sm)' }}
@@ -939,7 +954,7 @@ function WhatIfSection() {
       </div>
 
       <div className="src">
-        Retornos: fire_matrix.retornos_equity · SWR: fire_swr_percentis · Patrimônio: premissas.patrimonio_atual · Eventos: localStorage
+        Ano FIRE: simulação determinística (sem variância de mercado) · P(sucesso): Monte Carlo precomputed · modelos distintos — comparar com cautela · Life events: localStorage
       </div>
     </CollapsibleSection>
   );
