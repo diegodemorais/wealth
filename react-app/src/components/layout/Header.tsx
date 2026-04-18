@@ -66,6 +66,7 @@ export function Header() {
             style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--border)' }}
             data-test="privacy-toggle"
             aria-label="Privacy mode"
+            suppressHydrationWarning
           >
             {privacyMode ? '🔒' : '👁️'}
           </button>
