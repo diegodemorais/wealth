@@ -433,6 +433,7 @@ export default function WithdrawPage() {
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>—</div>
               )}
             </div>
+          <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
           </div>
         );
       })()}
@@ -450,14 +451,17 @@ export default function WithdrawPage() {
             ? (bpr.anos_cobertura_pos_fire as number[]).length
             : null;
         return (
-          <FloorUpsideWithdraw
-            gastoPiso={gastoPiso}
-            custoVida={custoVida}
-            swrGatilho={swrGatilho}
-            patrimonio={patrimonio}
-            bondRunwayAnos={bondRunwayAnos}
-            privacyMode={privacyMode}
-          />
+          <>
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+            <FloorUpsideWithdraw
+              gastoPiso={gastoPiso}
+              custoVida={custoVida}
+              swrGatilho={swrGatilho}
+              patrimonio={patrimonio}
+              bondRunwayAnos={bondRunwayAnos}
+              privacyMode={privacyMode}
+            />
+          </>
         );
       })()}
 
