@@ -609,30 +609,6 @@ function WhatIfSection() {
     return null;
   }
 
-  // ── P(sucesso) lookup helper (snap to nearest grid key) ──────────────────────
-  function lookupPsucesso(custo: number, presetKey: WiPreset): { p: number | null; snapDiff: number } {
-    const fireMatrix = (data as any)?.fire_matrix;
-    if (!fireMatrix || custo == null) return { p: null, snapDiff: 0 };
-    const cenario = fireMatrix.cenarios?.[presetKey] ?? {};
-    const availablePats = [...new Set(
-      Object.keys(cenario).map(k => parseInt(k.split('_')[0], 10))
-    )].sort((a, b) => a - b) as number[];
-    if (availablePats.length === 0) return { p: null, snapDiff: 0 };
-    const lookupPat = patrimonio ?? premissasWI?.patrimonio_atual ?? availablePats[0];
-    const nearestPat = availablePats.reduce((prev, curr) =>
-      Math.abs(curr - lookupPat) < Math.abs(prev - lookupPat) ? curr : prev, availablePats[0]);
-    const availableCustos = Object.keys(cenario)
-      .filter(k => k.startsWith(`${nearestPat}_`))
-      .map(k => parseInt(k.split('_')[1], 10))
-      .sort((a, b) => a - b);
-    if (availableCustos.length === 0) return { p: null, snapDiff: 0 };
-    const nearestCusto = availableCustos.reduce((prev, curr) =>
-      Math.abs(curr - custo) < Math.abs(prev - custo) ? curr : prev, availableCustos[0]);
-    const snapDiff = Math.abs(nearestCusto - custo);
-    const p = cenario[`${nearestPat}_${nearestCusto}`] ?? null;
-    return { p: p != null ? p * 100 : null, snapDiff };
-  }
-
   // ── Cenário B (editável + life events) ───────────────────────────────────────
   const resultB = useMemo(() => {
     if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
@@ -640,17 +616,42 @@ function WhatIfSection() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patrimonio, swrTarget, preset.retorno, aporteB, custoLiquidoB, currentAge, anoAtual, lifeEvents]);
 
-  const { p: psucessoB, snapDiff: snapDiffB } = useMemo(
-    () => lookupPsucesso(custoLiquidoB, wiPreset),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [custoLiquidoB, wiPreset, data]
-  );
+  // ── P(sucesso) Cenário B — MC desacumulação com horizonte configurável ────────
+  const psucessoB: number | null = useMemo(() => {
+    if (!resultB || resultB.pat <= 0) return null;
+    const yearsDecum = horizon - resultB.idade;
+    if (yearsDecum <= 0) return null;
+    const retFrac = (preset.retorno ?? 5) / 100;
+    const vol: number = premissasWI?.volatilidade_equity ?? 0.12;
+    const withdrawal = custoLiquidoB;
+    const numSims = 400;
+    // Seeded LCG — reproducível dado os mesmos parâmetros
+    const seedBase = (Math.round(resultB.pat / 10000) * 31 + yearsDecum * 17 + Math.round(withdrawal / 1000) * 7) >>> 0;
+    let s = seedBase || 1;
+    const rand = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
+    const randn = () => {
+      let u = 0, v = 0;
+      while (u === 0) u = rand();
+      while (v === 0) v = rand();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    };
+    let successes = 0;
+    for (let sim = 0; sim < numSims; sim++) {
+      let pat = resultB.pat;
+      let alive = true;
+      for (let yr = 0; yr < yearsDecum; yr++) {
+        pat = pat * (1 + retFrac + vol * randn()) - withdrawal;
+        if (pat <= 0) { alive = false; break; }
+      }
+      if (alive) successes++;
+    }
+    return (successes / numSims) * 100;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultB, horizon, custoLiquidoB, preset.retorno, premissasWI?.volatilidade_equity]);
 
   // ── Delta ─────────────────────────────────────────────────────────────────────
   const deltaAnos = (idadeFireA != null && resultB) ? (resultB.idade - idadeFireA) : null;
-  const sameGridCell = Math.abs(custoA - custoLiquidoB) < 25000 && Math.abs(aporteA - aporteB) < 5000;
-  const deltaP = (psucessoA != null && psucessoB != null && !sameGridCell) ? (psucessoB - psucessoA) : null;
-  const deltaPUncalculable = psucessoA != null && psucessoB != null && sameGridCell;
+  const deltaP = (psucessoA != null && psucessoB != null) ? (psucessoB - psucessoA) : null;
 
   // ── Life event totals ──────────────────────────────────────────────────────────
   const totalOneShotEventos = lifeEvents.filter(e => e.tipo === 'one-shot').reduce((s, e) => s + e.custo, 0);
@@ -874,11 +875,6 @@ function WhatIfSection() {
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
                     {psucessoB != null ? `P ${psucessoB.toFixed(0)}%` : 'P —%'}
                   </div>
-                  {snapDiffB > 20000 && (
-                    <div style={{ fontSize: '10px', color: 'var(--yellow)' }}>
-                      ⚠ ±R${(snapDiffB / 1000).toFixed(0)}k snap
-                    </div>
-                  )}
                 </div>
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
@@ -902,10 +898,7 @@ function WhatIfSection() {
                 </div>
               )}
               <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px', fontStyle: 'italic' }}>
-                Ano: determinístico · P: MC precomputed · Horizonte: {horizon}a
-              </div>
-              <div style={{ fontSize: '10px', color: 'var(--muted)', fontStyle: 'italic' }}>
-                (P calculado para 30 anos de desacumulação — horizonte visual apenas)
+                Ano: determinístico · P: MC 400 sims · Desacumulação: {horizon - (resultB?.idade ?? 50)}a (até {horizon}a)
               </div>
             </div>
           );
@@ -935,11 +928,6 @@ function WhatIfSection() {
             {deltaP != null && (
               <span style={{ marginLeft: '8px', color: deltaP >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp de P
-              </span>
-            )}
-            {deltaPUncalculable && (
-              <span style={{ marginLeft: '8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
-                Δ P: grade insuficiente
               </span>
             )}
           </div>
@@ -1217,7 +1205,7 @@ function WhatIfSection() {
       </div>
 
       <div className="src">
-        Cenário A: MC precomputed — consistente com FIRE page · Cenário B: simulação determinística (sem variância) · P: MC precomputed (grade) · Horizonte: visual, P calculado para 30 anos · Life events: localStorage
+        Cenário A: MC precomputed — consistente com FIRE page · Cenário B: acumulação determinística + desacumulação MC 400 sims (horizonte configurável) · Life events: localStorage
       </div>
     </CollapsibleSection>
   );
