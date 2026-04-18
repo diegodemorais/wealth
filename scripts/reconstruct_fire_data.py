@@ -165,24 +165,24 @@ def gen_fire_trilha():
     all_realizado = [round(r["patrimonio"], 0) for r in rows] + [None] * len(future_dates)
     all_status = status_hist + ["future"] * len(future_dates)
 
-    # P10/P90 via Monte Carlo — integra com projeção P50 determinística
-    # Chamada: projetar_acumulacao_mensal() retorna (dates, p50, p10, p90)
+    # P10/P90 via Monte Carlo — ancorado no patrimônio atual, projetado só para o futuro
+    # Bug anterior: rodava n_meses_total (hist+fut) a partir de hoje, causando desalinhamento
+    # Fix: roda apenas n_meses_futuro, preenche histórico com None
     try:
-        n_meses_total = len(all_dates)
+        n_meses_futuro = len(future_dates)
         mc_dates, mc_p50, mc_p10, mc_p90 = projetar_acumulacao_mensal(
             PREMISSAS,
             r_equity=_retorno_equity_cenario(PREMISSAS, "base"),
             n_sim=5000,
-            n_meses=n_meses_total,
+            n_meses=n_meses_futuro,
             seed=42
         )
-        # Alinhar com all_dates (pode haver pequeno offset de data inicial)
-        # Usar arrays MC se tiverem o mesmo tamanho; senão, use apenas trilha_brl
-        if len(mc_p10) == len(all_dates):
-            trilha_p10_brl = [round(v, 0) for v in mc_p10]
-            trilha_p90_brl = [round(v, 0) for v in mc_p90]
+        if len(mc_p10) == n_meses_futuro:
+            # Histórico = None (gráfico oculta), futuro = valores MC ancorados no patrimônio atual
+            trilha_p10_brl = [None] * n_hist + [round(v, 0) for v in mc_p10]
+            trilha_p90_brl = [None] * n_hist + [round(v, 0) for v in mc_p90]
         else:
-            print(f"  ⚠️  MC dates mismatch: {len(mc_p10)} vs {len(all_dates)} — omitindo P10/P90")
+            print(f"  ⚠️  MC dates mismatch: {len(mc_p10)} vs {n_meses_futuro} — omitindo P10/P90")
             trilha_p10_brl = None
             trilha_p90_brl = None
     except Exception as e:
