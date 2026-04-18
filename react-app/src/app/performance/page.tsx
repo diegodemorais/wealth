@@ -101,7 +101,7 @@ export default function PerformancePage() {
                 {cards.map(c => (
                   <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{fmtR(c.value)}</div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{privacyMode ? '••••' : fmtR(c.value)}</div>
                   </div>
                 ))}
               </div>
@@ -470,7 +470,7 @@ export default function PerformancePage() {
                     : 0.00171;
                   const pat = (data as any)?.fire_swr_percentis?.patrimonio_p50_2040 ?? 11500000;
                   const patMedio = pat / 2;
-                  const fmtM = (v: number) => `R$ ${(v / 1e6).toFixed(2)}M`;
+                  const fmtM = (v: number) => privacyMode ? '••••' : `R$ ${(v / 1e6).toFixed(2)}M`;
                   const custoPortfolio14a = patMedio * terPortfolio * 14;
                   const custoVwra14a = patMedio * terVwra * 14;
                   const alpha14a = patMedio * 0.0016 * 14;

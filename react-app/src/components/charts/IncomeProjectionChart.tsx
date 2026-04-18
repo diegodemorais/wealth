@@ -94,7 +94,7 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
         type: 'value' as const,
         axisLabel: {
           color: privacyMode ? 'transparent' : '#94a3b8',
-          formatter: (v: number) => `R$${Math.round(v / 1000)}k`,
+          formatter: (v: number) => privacyMode ? '••' : `R$${Math.round(v / 1000)}k`,
           fontSize: 11,
         },
         splitLine: EC_SPLIT_LINE,

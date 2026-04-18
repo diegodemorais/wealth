@@ -14,6 +14,7 @@ import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn } 
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 import { runMCYearly } from '@/utils/montecarlo';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
+import { useUiStore } from '@/store/uiStore';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -62,6 +63,7 @@ const COND_LABELS: Record<FireCond, string> = {
 
 function FireSimuladorSection() {
   const data = useDashboardStore(s => s.data);
+  const { privacyMode } = useUiStore();
 
   // Derive presets from data.fire_matrix at runtime (not hardcoded)
   const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
@@ -304,7 +306,7 @@ function FireSimuladorSection() {
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio projetado</div>
               <div style={{ fontSize: '1rem', fontWeight: 700 }} className="pv">
-                {result ? fmtBRL(result.pat) : '—'}
+                {result ? (privacyMode ? '••••' : fmtBRL(result.pat)) : '—'}
               </div>
             </div>
           </div>
@@ -369,7 +371,7 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Aporte Mensal</span>
-            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">{aporte != null ? fmtBRL(aporte) : '—'}</span>
+            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">{aporte != null ? (privacyMode ? '••••' : fmtBRL(aporte)) : '—'}</span>
           </label>
           <input
             type="range" min="5000" max="100000" step="1000" value={aporte ?? 25000}
@@ -395,7 +397,7 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Custo de Vida /ano</span>
-            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{custo != null ? fmtBRL(custo) : '—'}</span>
+            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{custo != null ? (privacyMode ? '••••' : fmtBRL(custo)) : '—'}</span>
           </label>
           <input
             type="range" min="150000" max="500000" step="10000" value={custo ?? 250000}
@@ -420,6 +422,7 @@ type WiPreset = 'stress' | 'base' | 'fav';
 
 function WhatIfSection() {
   const data = useDashboardStore(s => s.data);
+  const { privacyMode } = useUiStore();
   const [wiPreset, setWiPreset] = useState<WiPreset>('base');
   const [custo, setCusto] = useState<number | undefined>(undefined);
   const dataInitWI = useRef(false);
@@ -512,7 +515,7 @@ function WhatIfSection() {
       <div className="slider-row">
         <label>
           <span>Custo de Vida /ano</span>
-          <span className="pv">{custo != null ? `R$ ${(custo / 1000).toFixed(0)}k/ano` : '—'}</span>
+          <span className="pv">{custo != null ? (privacyMode ? '••••' : `R$ ${(custo / 1000).toFixed(0)}k/ano`) : '—'}</span>
         </label>
         <input
           type="range" min="150000" max="400000" step="10000" value={custo ?? 250000}
@@ -529,7 +532,7 @@ function WhatIfSection() {
         </div>
         <div style={{ background: 'var(--card2)', borderRadius: '8px', padding: '12px' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Patrimônio necessário</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 800 }} className="pv">{patNecessario != null ? fmtBRL(patNecessario) : '—'}</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800 }} className="pv">{patNecessario != null ? (privacyMode ? '••••' : fmtBRL(patNecessario)) : '—'}</div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }} className="pv">SWR {preset.swr != null ? `${preset.swr.toFixed(2)}%` : '—'}</div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }} className="pv">{pctLimite != null ? `${pctLimite.toFixed(1)}% do limite` : '—'}</div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--yellow)', fontWeight: 600, marginTop: '2px' }} className="pv">
@@ -699,6 +702,7 @@ function StressChart({ shock, ageOnset, patrimonio, annualReturn, annualVol, cur
 
 function StressTestSection() {
   const data = useDashboardStore(s => s.data);
+  const { privacyMode } = useUiStore();
   const [shock, setShock] = useState(-40);
   const [ageOnset, setAgeOnset] = useState<number | undefined>(undefined);
   const dataInitST = useRef(false);
@@ -738,7 +742,7 @@ function StressTestSection() {
         </div>
         <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>
-            Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{postShock != null ? fmtBRL(postShock) : '—'}</strong>
+            Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{postShock != null ? (privacyMode ? '••••' : fmtBRL(postShock)) : '—'}</strong>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>Idade do shock:</label>
@@ -761,8 +765,8 @@ function StressTestSection() {
       {patrimonio != null && annualReturn > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
           {[
-            { label: 'Patrimônio', value: fmtBRL(patrimonio) },
-            { label: 'Aporte mensal', value: aporteMensal > 0 ? `R$${(aporteMensal / 1000).toFixed(0)}k` : '—' },
+            { label: 'Patrimônio', value: privacyMode ? '••••' : fmtBRL(patrimonio) },
+            { label: 'Aporte mensal', value: aporteMensal > 0 ? (privacyMode ? '••••' : `R$${(aporteMensal / 1000).toFixed(0)}k`) : '—' },
             { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
             { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
             { label: 'Distribuição', value: 'Normal (Box-Muller)' },
@@ -778,7 +782,7 @@ function StressTestSection() {
           {premissasST.custo_vida_base != null && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999, background: 'rgba(99,179,237,.10)', border: '1px solid rgba(99,179,237,.3)', fontSize: 11, color: 'var(--accent)', fontWeight: 600, flexShrink: 0, alignSelf: 'center' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-              Solteiro · R${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano
+              Solteiro · {privacyMode ? '••••' : `R$${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano`}
             </div>
           )}
         </div>
@@ -810,6 +814,7 @@ function StressTestSection() {
 function CascadeSection() {
   const data = useDashboardStore(s => s.data);
   const derived = useDashboardStore(s => s.derived);
+  const { privacyMode } = useUiStore();
   const [aporte, setAporte] = useState<number | undefined>(undefined);
   const dataInitCasc = useRef(false);
 
@@ -901,13 +906,13 @@ function CascadeSection() {
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)' }} className="pv">
-            {fmtBRL(ipcaAlloc)}
+            {privacyMode ? '••••' : fmtBRL(ipcaAlloc)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
             → Tesouro IPCA+2040 via XP
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
-            gap: <span className="pv">{ipcaGapBrl != null ? fmtBRL(ipcaGapBrl) : '—'}</span>
+            gap: <span className="pv">{ipcaGapBrl != null ? (privacyMode ? '••••' : fmtBRL(ipcaGapBrl)) : '—'}</span>
             {ipcaGapPp != null && ` (${ipcaGapPp.toFixed(1)}pp)`}
           </div>
         </div>
@@ -923,13 +928,13 @@ function CascadeSection() {
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)' }} className="pv">
-            {fmtBRL(rendaAlloc)}
+            {privacyMode ? '••••' : fmtBRL(rendaAlloc)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
             → Renda+ 2065 via Tesouro Direto
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
-            gap: <span className="pv">{rendaGapBrl != null ? fmtBRL(rendaGapBrl) : '—'}</span>
+            gap: <span className="pv">{rendaGapBrl != null ? (privacyMode ? '••••' : fmtBRL(rendaGapBrl)) : '—'}</span>
             {rendaGapPp != null && (rendaGapPp > 0 ? ` (${rendaGapPp.toFixed(1)}pp)` : ' (acima do alvo)')}
           </div>
         </div>
@@ -945,7 +950,7 @@ function CascadeSection() {
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)' }} className="pv">
-            {fmtBRL(equityAlloc)}
+            {privacyMode ? '••••' : fmtBRL(equityAlloc)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--orange)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(249,115,22,.08)', borderRadius: '4px' }}>
             → SWRD + AVGS + AVEM via IBKR

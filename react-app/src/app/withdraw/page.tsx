@@ -197,7 +197,7 @@ export default function WithdrawPage() {
                 </div>
                 {swrPercentis.p10_patrimonio != null && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                    Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p10_patrimonio)}
+                    Pat: {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p10_patrimonio)}
                   </div>
                 )}
               </div>
@@ -209,7 +209,7 @@ export default function WithdrawPage() {
                 </div>
                 {swrPercentis.p50_patrimonio != null && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                    Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p50_patrimonio)}
+                    Pat: {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p50_patrimonio)}
                   </div>
                 )}
               </div>
@@ -221,7 +221,7 @@ export default function WithdrawPage() {
                 </div>
                 {swrPercentis.p90_patrimonio != null && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                    Pat: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p90_patrimonio)}
+                    Pat: {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p90_patrimonio)}
                   </div>
                 )}
               </div>
@@ -416,7 +416,7 @@ export default function WithdrawPage() {
             const total = essenciais + discric + imprevistos;
             const rendaAnual = spending.renda_anual ?? 250000;
             const orcamentoAnual = spending.orcamento_anual ?? 13000;
-            const fmt = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+            const fmt = (v: number) => privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
 
             return (
               <div>

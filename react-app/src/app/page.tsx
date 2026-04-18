@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { useUiStore } from '@/store/uiStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
@@ -23,6 +24,7 @@ export default function HomePage() {
   const derived = useDashboardStore(s => s.derived);
   const isLoading = useDashboardStore(s => s.isLoadingData);
   const dataError = useDashboardStore(s => s.dataLoadError);
+  const { privacyMode } = useUiStore();
 
   useEffect(() => {
     loadDataOnce().catch(e => {
@@ -104,7 +106,7 @@ export default function HomePage() {
         {/* Aporte do Mês */}
         <MetricCard
           label="Aporte do Mês"
-          value={d.aporteMensal ? `R$${Math.round(d.aporteMensal / 1000)}k` : '—'}
+          value={d.aporteMensal ? (privacyMode ? '••••' : `R$${Math.round(d.aporteMensal / 1000)}k`) : '—'}
           sub="meta mensal"
         />
       </div>
@@ -459,8 +461,8 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="text-sm text-muted text-right">
-                  <div>HODL11: R${((data?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k</div>
-                  <div>RF Total: R${((d.rfBrl ?? 0) / 1000).toFixed(0)}k</div>
+                  <div>HODL11: {privacyMode ? '••••' : `R$${((data?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k`}</div>
+                  <div>RF Total: {privacyMode ? '••••' : `R$${((d.rfBrl ?? 0) / 1000).toFixed(0)}k`}</div>
                 </div>
               </div>
             </div>
@@ -482,7 +484,7 @@ export default function HomePage() {
                       Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
                     </div>
                     <div className="text-xs text-muted">
-                      Posição: R${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
+                      {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
                     </div>
                   </div>
                 )}
@@ -495,7 +497,7 @@ export default function HomePage() {
                       Piso: {data.dca_status.ipca2050.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca2050.gap_alvo_pp?.toFixed(1)}pp
                     </div>
                     <div className="text-xs text-muted">
-                      Posição: R${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k ({data.dca_status.ipca2050.pct_carteira_atual?.toFixed(1)}%)
+                      {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca2050.pct_carteira_atual?.toFixed(1)}%)
                     </div>
                   </div>
                 )}
@@ -508,7 +510,7 @@ export default function HomePage() {
                       Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
                     </div>
                     <div className="text-xs text-muted">
-                      Posição: R${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k
+                      {privacyMode ? '••••' : `Posição: R$${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k`}
                     </div>
                   </div>
                 )}

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { StatusDot } from "./StatusDot"
 import { DcaItem } from "@/types/dashboard"
+import { useUiStore } from "@/store/uiStore"
 
 interface SemaforoTriggersProps {
   items: DcaItem[]
@@ -20,7 +21,7 @@ const ROW_BG: Record<string, string> = {
   verde:    'rgba(34,197,94,0.03)',
 }
 
-function buildDetalhe(item: DcaItem): string {
+function buildDetalhe(item: DcaItem, privacyMode: boolean): string {
   if (item.categoria === 'crypto') {
     const b = item.bandaAtual != null
       ? `atual ${item.bandaAtual.toFixed(1)}% · banda ${item.bandaMin?.toFixed(1)}–${item.bandaMax?.toFixed(1)}%`
@@ -32,12 +33,13 @@ function buildDetalhe(item: DcaItem): string {
   const ref = item.pisoVenda ?? item.pisoCompra;
   if (ref != null) parts.push(`piso ${ref.toFixed(1)}%`);
   if (item.gapPiso != null) parts.push(`gap ${item.gapPiso >= 0 ? '+' : ''}${item.gapPiso.toFixed(2)}pp`);
-  if (item.posicaoBrl > 0) parts.push(`R$${(item.posicaoBrl / 1000).toFixed(0)}k`);
+  if (item.posicaoBrl > 0) parts.push(privacyMode ? '••••' : `R$${(item.posicaoBrl / 1000).toFixed(0)}k`);
   return parts.join(' · ');
 }
 
 export function SemaforoTriggers({ items }: SemaforoTriggersProps) {
   const [isOpen, setIsOpen] = useState(true)
+  const { privacyMode } = useUiStore()
 
   const verdeCount    = items.filter(i => i.status === 'verde').length
   const amareloCount  = items.filter(i => i.status === 'amarelo').length
@@ -88,7 +90,7 @@ export function SemaforoTriggers({ items }: SemaforoTriggersProps) {
             <tbody>
               {items.map(item => {
                 const catStyle = CATEGORY_STYLE[item.categoria] ?? CATEGORY_STYLE.rf_ipca
-                const detalhe  = buildDetalhe(item)
+                const detalhe  = buildDetalhe(item, privacyMode)
 
                 return (
                   <tr key={item.id} style={{ backgroundColor: ROW_BG[item.status] ?? 'transparent' }}>

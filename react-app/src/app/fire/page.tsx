@@ -141,7 +141,7 @@ export default function FirePage() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Patrimônio Alvo</div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
             {patrimonioAlvoHero != null
-              ? `R$${(patrimonioAlvoHero / 1e6).toFixed(1)}M`
+              ? (privacyMode ? '••••' : `R$${(patrimonioAlvoHero / 1e6).toFixed(1)}M`)
               : '—'}
           </div>
         </div>
@@ -224,7 +224,7 @@ export default function FirePage() {
                     <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>{emoji}</div>
                     <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                      R${(p.gasto_anual / 1000).toFixed(0)}k/ano{isAspir ? ' · mercado fav.' : ''}
+                      {privacyMode ? '••••' : `R$${(p.gasto_anual / 1000).toFixed(0)}k/ano`}{isAspir ? ' · mercado fav.' : ''}
                       {!isAspir && p.swr_at_fire != null && (
                         <span style={{ marginLeft: 6, color: 'var(--accent)', fontWeight: 600 }}>
                           · SWR {(p.swr_at_fire * 100).toFixed(1)}%
@@ -388,9 +388,9 @@ export default function FirePage() {
               const deltaCasado = pfireSolteiro != null && pfireCasado != null ? (pfireCasado - pfireSolteiro).toFixed(1) : null;
               const deltaFilho = pfireSolteiro != null && pfireFilho != null ? (pfireFilho - pfireSolteiro).toFixed(1) : null;
               return [
-                { label: '👤 Solteiro / FIRE Day', pfire: pfireSolteiro, gastoAnual: 250000, gastoLabel: 'R$250k/ano', delta: null },
-                { label: '💍 Pós-casamento', pfire: pfireCasado, gastoAnual: gastoCasado, gastoLabel: `R$${(gastoCasado/1000).toFixed(0)}k/ano`, delta: deltaCasado ? `${parseFloat(deltaCasado) > 0 ? '+' : ''}${deltaCasado}pp` : null },
-                { label: '👶 Casamento + filho', pfire: pfireFilho, gastoAnual: gastoFilho, gastoLabel: `R$${(gastoFilho/1000).toFixed(0)}k/ano`, delta: deltaFilho ? `${parseFloat(deltaFilho) > 0 ? '+' : ''}${deltaFilho}pp` : null },
+                { label: '👤 Solteiro / FIRE Day', pfire: pfireSolteiro, gastoAnual: 250000, gastoLabel: privacyMode ? '••••/ano' : 'R$250k/ano', delta: null },
+                { label: '💍 Pós-casamento', pfire: pfireCasado, gastoAnual: gastoCasado, gastoLabel: privacyMode ? '••••/ano' : `R$${(gastoCasado/1000).toFixed(0)}k/ano`, delta: deltaCasado ? `${parseFloat(deltaCasado) > 0 ? '+' : ''}${deltaCasado}pp` : null },
+                { label: '👶 Casamento + filho', pfire: pfireFilho, gastoAnual: gastoFilho, gastoLabel: privacyMode ? '••••/ano' : `R$${(gastoFilho/1000).toFixed(0)}k/ano`, delta: deltaFilho ? `${parseFloat(deltaFilho) > 0 ? '+' : ''}${deltaFilho}pp` : null },
               ];
             })().map((scenario, i) => (
               <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>

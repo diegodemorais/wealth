@@ -2,6 +2,7 @@
 
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
+import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { DonutCharts } from '@/components/charts/DonutCharts';
@@ -16,6 +17,7 @@ import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
+  const { privacyMode } = useUiStore();
 
   const stateEl = pageStateElement({
     isLoading,
@@ -241,7 +243,7 @@ export default function PortfolioPage() {
                     <td style={{ padding: '6px 6px', fontWeight: 600 }}>{op.ativo}</td>
                     <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
                     <td style={{ padding: '6px 6px', textAlign: 'right', color: 'var(--green)', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                      {valorStr}
+                      {privacyMode ? '••••' : valorStr}
                     </td>
                   </tr>
                 );

@@ -28,7 +28,7 @@ function formatValor(item: DcaItem): string {
   return '—';
 }
 
-function formatContexto(item: DcaItem): string | undefined {
+function formatContexto(item: DcaItem, privacyMode: boolean): string | undefined {
   const parts: string[] = [];
   if (item.taxa != null) parts.push(`taxa: ${item.taxa.toFixed(2)}%`);
   const ref = item.pisoVenda ?? item.pisoCompra;
@@ -37,7 +37,7 @@ function formatContexto(item: DcaItem): string | undefined {
     parts.push(`gap: ${item.gapPiso >= 0 ? '+' : ''}${item.gapPiso.toFixed(2)}pp`);
   }
   if (item.posicaoBrl > 0) {
-    parts.push(`pos: R$${(item.posicaoBrl / 1000).toFixed(0)}k`);
+    parts.push(privacyMode ? 'pos: ••••' : `pos: R$${(item.posicaoBrl / 1000).toFixed(0)}k`);
   }
   if (item.pctCarteira != null && item.alvoPct != null) {
     parts.push(`${item.pctCarteira.toFixed(1)}% vs alvo ${item.alvoPct.toFixed(0)}%`);
@@ -108,7 +108,7 @@ const SemaforoGatilhos: React.FC<SemaforoGatilhosProps> = ({ items }) => {
               {items.map(item => {
                 const color = getStatusStyle(item.status).color;
                 const catLabel = CATEGORIA_LABEL[item.categoria] ?? item.categoria;
-                const contexto = formatContexto(item);
+                const contexto = formatContexto(item, privacyMode);
 
                 return (
                   <tr key={item.id} className="border-b border-border/30">

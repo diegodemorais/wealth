@@ -1,6 +1,7 @@
 'use client';
 
 import { PrivacyMask } from '@/components/primitives/PrivacyMask';
+import { useUiStore } from '@/store/uiStore';
 
 interface PatrimonioHolistico {
   financeiro_brl: number;
@@ -41,6 +42,7 @@ interface AssetCard {
 
 export function BalancoHolistico({ data, showCapitalHumanoBadge = false }: BalancoHolisticoProps) {
   const h = data?.patrimonio_holistico;
+  const { privacyMode } = useUiStore();
   if (!h) return null;
 
   const totalBrl = h.total_brl;
@@ -53,7 +55,7 @@ export function BalancoHolistico({ data, showCapitalHumanoBadge = false }: Balan
     {
       label: 'Imóvel (equity)',
       value: h.imovel_equity_brl,
-      sublabel: `Mercado ${fmt(h.imovel_valor_mercado)} − dívida ${fmt(h.saldo_devedor_brl)}`,
+      sublabel: privacyMode ? '••••' : `Mercado ${fmt(h.imovel_valor_mercado)} − dívida ${fmt(h.saldo_devedor_brl)}`,
     },
     {
       label: 'Terreno',
