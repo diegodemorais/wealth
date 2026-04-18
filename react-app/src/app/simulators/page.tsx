@@ -621,7 +621,7 @@ function WhatIfSection() {
     if (!resultB || resultB.pat <= 0) return null;
     const yearsDecum = horizon - resultB.idade;
     if (yearsDecum <= 0) return null;
-    const retFrac = (preset.retorno ?? 5) / 100;
+    const retFrac = preset.retorno ?? 0.0485; // already a fraction (0.0485), NOT percentage
     const vol: number = premissasWI?.volatilidade_equity ?? 0.12;
     const withdrawal = custoLiquidoB;
     const numSims = 400;
