@@ -20,6 +20,16 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
   const { privacyMode } = useUiStore();
   const data = useDashboardStore(s => s.data);
 
+  // Status badge: check if ultimo_aporte_data is the current month
+  const anoAtual = (data?.premissas as any)?.ano_atual ?? new Date().getFullYear();
+  const mesAtual = new Date().getMonth() + 1;
+  const mesAtualStr = `${anoAtual}-${String(mesAtual).padStart(2, '0')}`;
+  const ultimoAporteMes = ultimoAporteData || (data?.premissas as any)?.ultimo_aporte_data || null;
+  const executadoMesCorrente = ultimoAporteMes === mesAtualStr;
+  const valorRealizado = executadoMesCorrente
+    ? ((data?.premissas as any)?.ultimo_aporte_brl ?? (ultimoAporte > 0 ? ultimoAporte : null))
+    : null;
+
   const fmtShort = (val: number) => {
     if (val >= 1_000_000) return `R$${(val / 1e6).toFixed(1)}M`;
     if (val >= 1_000) return `R$${Math.round(val / 1000)}k`;
@@ -55,6 +65,20 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
           {savingsRate != null && (
             <span className="text-xs font-bold font-mono" style={{ color: srColor }}>
               {privacyMode ? '••%' : `${savingsRate.toFixed(0)}% SR`}
+            </span>
+          )}
+          {/* Status badge */}
+          {ultimoAporteMes == null ? (
+            <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: 'rgba(148,163,184,0.12)', color: 'var(--muted)' }}>
+              — Sem dados
+            </span>
+          ) : executadoMesCorrente ? (
+            <span className="text-xs font-mono font-semibold px-1.5 py-0.5 rounded" style={{ background: 'rgba(34,197,94,0.12)', color: 'var(--green)' }}>
+              ✓ Executado{valorRealizado != null ? ` · ${privacyMode ? '••••' : fmtShort(valorRealizado)}` : ''}
+            </span>
+          ) : (
+            <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: 'rgba(234,179,8,0.12)', color: 'var(--yellow)' }}>
+              ⏳ Pendente · meta {privacyMode ? '••••' : fmtShort(aporteMensal)}/mês
             </span>
           )}
           {ultimoAporteData && (

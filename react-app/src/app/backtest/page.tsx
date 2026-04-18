@@ -84,6 +84,20 @@ function BacktestHistoricoSection() {
   const cagrPatrimonial: number | null = data?.attribution?.cagr_total ?? null;
   const twrUsd: number | null = targetMetrics?.cagr ?? targetMetrics?.twr_usd ?? null;
 
+  // TER médio ponderado — wellness_config.metrics[id='ter'].current_ter (in %, e.g. 0.247 = 0.247%)
+  const terMedioPct: number | null = (() => {
+    const wc = (data as any)?.wellness_config;
+    if (!wc) return null;
+    // wellness_config.metrics is an array
+    if (Array.isArray(wc.metrics)) {
+      const terMetric = wc.metrics.find((m: any) => m.id === 'ter');
+      if (terMetric?.current_ter != null) return terMetric.current_ter as number;
+    }
+    // fallback: premissas
+    const pm = (data as any)?.premissas?.ter_medio_ponderado;
+    return pm != null ? pm : null;
+  })();
+
   // Build metrics table rows
   // Data uses keys: cagr, sharpe, maxdd, vol (not max_drawdown, volatility)
   const metricRows: { label: string; target: string; vwra: string; delta: string; deltaVal: number | null }[] = [];
@@ -151,6 +165,24 @@ function BacktestHistoricoSection() {
         />
       )}
 
+      {/* TER disclaimer */}
+      {terMedioPct != null && (
+        <div style={{
+          padding: '8px 12px',
+          background: 'rgba(234, 179, 8, 0.08)',
+          border: '1px solid rgba(234, 179, 8, 0.25)',
+          borderRadius: 6,
+          fontSize: 'var(--text-xs)',
+          color: 'var(--muted)',
+          marginTop: 12,
+          marginBottom: 4,
+        }}>
+          ⓘ Retornos exibidos são <strong>brutos</strong>. TER médio ponderado da carteira: <strong>{terMedioPct.toFixed(2)}%/ano</strong>.{' '}
+          Retorno líquido estimado: CAGR − {terMedioPct.toFixed(2)}pp.{' '}
+          Tracking difference e custos operacionais não incluídos.
+        </div>
+      )}
+
       {/* Metrics table */}
       {metricRows.length > 0 && (
         <div style={{ overflowX: 'auto', marginTop: '12px' }}>
@@ -172,8 +204,24 @@ function BacktestHistoricoSection() {
                   <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.deltaVal), fontWeight: 600 }}>{row.delta}</td>
                 </tr>
               ))}
+              {/* CAGR líquido (net of TER) */}
+              {terMedioPct != null && targetMetrics?.cagr != null && (
+                <tr style={{ borderBottom: '1px solid var(--border)', opacity: 0.8 }}>
+                  <td style={{ padding: '6px 8px', color: 'var(--muted)', fontStyle: 'italic' }}>CAGR líquido*</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600, color: 'var(--muted)' }}>
+                    {fmtPct((targetMetrics.cagr as number) - terMedioPct)}
+                  </td>
+                  <td style={{ padding: '6px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'right', color: 'var(--muted)' }}>—</td>
+                </tr>
+              )}
             </tbody>
           </table>
+          {terMedioPct != null && targetMetrics?.cagr != null && (
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4, fontStyle: 'italic' }}>
+              * Estimado: CAGR bruto − TER ({terMedioPct.toFixed(2)}%). Tracking difference excluído.
+            </div>
+          )}
         </div>
       )}
 
