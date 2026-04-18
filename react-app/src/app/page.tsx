@@ -307,55 +307,82 @@ export default function HomePage() {
       })()}
 
       {/* 5. DRIFT DA CARTEIRA — contexto de rebalanceamento */}
-      {derived && driftItems.length > 0 && (
-        <div className="mb-3.5">
-          <div className="kpi-label mb-2" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>
-            Drift da Carteira
-          </div>
-          <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
-            {driftItems.map(item => {
-              const statusColor =
-                item.status === 'verde' ? 'var(--green)' :
-                item.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
-              const barPct = Math.min(100, item.atual > 0 ? (item.atual / Math.max(item.atual, item.alvo)) * 100 : 0);
-              const isUnder = item.gap > 0;
-              return (
-                <div key={item.id} className="bg-card2/40 rounded p-2.5">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-semibold">{item.nome}</span>
-                    <span className="text-xs" style={{ color: statusColor }}>
-                      {item.gap >= 0 ? '-' : '+'}{item.absGap.toFixed(1)}pp
-                    </span>
-                  </div>
-                  <div className="relative h-1.5 bg-card rounded-sm overflow-hidden mb-1.5">
-                    <div
-                      className="absolute left-0 top-0 h-full rounded-sm"
-                      style={{ width: `${barPct}%`, background: statusColor, opacity: 0.8 }}
-                    />
-                    <div
-                      className="absolute top-0 h-full w-0.5"
-                      style={{
-                        left: `${Math.min(100, (item.alvo / Math.max(item.atual, item.alvo)) * 100)}%`,
-                        background: 'var(--muted)',
-                        opacity: 0.6,
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between text-xs text-muted">
-                    <span>{item.atual.toFixed(1)}%</span>
-                    <span>→ {item.alvo.toFixed(0)}%</span>
-                  </div>
-                  {item.impactoBrl != null && item.impactoBrl > 5000 && (
-                    <div className="text-xs mt-1" style={{ color: isUnder ? 'var(--yellow)' : 'var(--muted)' }}>
-                      ~R${(item.impactoBrl / 1000).toFixed(0)}k para fechar gap
+      {derived && driftItems.length > 0 && (() => {
+        // Threshold constants (mirror dataWiring.ts)
+        const DRIFT_VERDE_PP = 3;
+        const DRIFT_AMARELO_PP = 5;
+        return (
+          <div className="mb-3.5">
+            <div className="kpi-label mb-2" style={{ textTransform: 'uppercase', letterSpacing: '.5px', fontWeight: 600 }}>
+              Drift da Carteira
+            </div>
+            <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
+              {driftItems.map(item => {
+                const statusColor =
+                  item.status === 'verde' ? 'var(--green)' :
+                  item.status === 'amarelo' ? 'var(--yellow)' : 'var(--red)';
+                // Scale: 0 = alvo, bar shows deviation from target
+                // Use max possible range = 10pp for axis scaling
+                const AXIS_MAX_PP = 10;
+                const actualDeviation = Math.abs(item.alvo - item.atual); // same as absGap
+                const barWidthPct = Math.min(100, (actualDeviation / AXIS_MAX_PP) * 100);
+                const verdePct = (DRIFT_VERDE_PP / AXIS_MAX_PP) * 100;
+                const amareloPct = (DRIFT_AMARELO_PP / AXIS_MAX_PP) * 100;
+                const isUnder = item.gap > 0;
+                return (
+                  <div key={item.id} className="bg-card2/40 rounded p-2.5">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-semibold">{item.nome}</span>
+                      <span className="text-xs" style={{ color: statusColor }}>
+                        {item.gap >= 0 ? '-' : '+'}{item.absGap.toFixed(1)}pp
+                      </span>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                    {/* Deviation bar with threshold markers */}
+                    <div className="relative mb-1" style={{ height: 10, background: 'rgba(148,163,184,.12)', borderRadius: 4, overflow: 'visible' }}>
+                      {/* Actual deviation fill */}
+                      <div
+                        className="absolute left-0 top-0 h-full"
+                        style={{ width: `${barWidthPct}%`, background: statusColor, opacity: 0.85, borderRadius: 4, transition: 'width .4s' }}
+                      />
+                      {/* Threshold line: 3pp (verde→amarelo) */}
+                      <div
+                        className="absolute top-0 h-full"
+                        style={{ left: `${verdePct}%`, width: 1.5, background: 'var(--green)', opacity: 0.7 }}
+                      />
+                      {/* Threshold line: 5pp (amarelo→vermelho) */}
+                      <div
+                        className="absolute top-0 h-full"
+                        style={{ left: `${amareloPct}%`, width: 1.5, background: 'var(--yellow)', opacity: 0.7 }}
+                      />
+                    </div>
+                    {/* Threshold labels row */}
+                    <div className="relative mb-1" style={{ height: 12 }}>
+                      <div className="absolute text-xs" style={{ left: `${verdePct}%`, transform: 'translateX(-50%)', color: 'var(--green)', fontSize: 9, opacity: 0.8 }}>|3</div>
+                      <div className="absolute text-xs" style={{ left: `${amareloPct}%`, transform: 'translateX(-50%)', color: 'var(--yellow)', fontSize: 9, opacity: 0.8 }}>|5</div>
+                    </div>
+                    <div className="flex justify-between text-xs text-muted">
+                      <span>{item.atual.toFixed(1)}%</span>
+                      <span>→ {item.alvo.toFixed(0)}%</span>
+                    </div>
+                    {item.impactoBrl != null && item.impactoBrl > 5000 && (
+                      <div className="text-xs mt-1" style={{ color: isUnder ? 'var(--yellow)' : 'var(--muted)' }}>
+                        ~R${(item.impactoBrl / 1000).toFixed(0)}k para fechar gap
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {/* Legend */}
+            <div className="flex gap-3 mt-2 flex-wrap" style={{ fontSize: 10, color: 'var(--muted)' }}>
+              <span style={{ color: 'var(--green)' }}>● verde ≤3pp</span>
+              <span style={{ color: 'var(--yellow)' }}>● amarelo 3–5pp</span>
+              <span style={{ color: 'var(--red)' }}>● vermelho &gt;5pp</span>
+              <span>· rebalanceamento via aporte</span>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* 5b. TORNADO DE SENSIBILIDADE [COLLAPSIBLE] */}
       {derived && (

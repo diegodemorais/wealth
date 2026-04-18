@@ -413,7 +413,10 @@ export default function FirePage() {
                   <div style={{ fontSize: '1.1rem', fontWeight: 700, color: pfireColorFn(scenario.pfire) }}>
                     {scenario.pfire != null ? `${scenario.pfire.toFixed(1)}%` : '—'}
                   </div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>9m</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P(FIRE)</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
+                    {privacyMode ? '••••' : `R$${(scenario.gastoAnual / 1000).toFixed(0)}k/ano`}
+                  </div>
                 </div>
               </div>
             ))}

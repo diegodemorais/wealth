@@ -62,6 +62,9 @@ export default function PortfolioPage() {
 
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
       {data?.drift && (() => {
+        // Threshold constants (mirror dataWiring.ts)
+        const DRIFT_VERDE_PP = 3;
+        const DRIFT_AMARELO_PP = 5;
         const eq = ['SWRD', 'AVGS', 'AVEM'];
         const eqData = eq.map(k => ({ name: k, ...(data.drift as Record<string, any>)[k] })).filter(d => d.atual != null);
         if (!eqData.length) return null;
@@ -70,14 +73,25 @@ export default function PortfolioPage() {
         return (
           <div className="section">
             <h2>Drift Intra-Equity — SWRD / AVGS / AVEM</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {eqData.map((etf) => {
                 const pctAtual = totalAtual > 0 ? (etf.atual / totalAtual) * 100 : 0;
                 const pctAlvo = totalAlvo > 0 ? (etf.alvo / totalAlvo) * 100 : 0;
                 const delta = pctAtual - pctAlvo;
+                const absGap = Math.abs(delta);
                 const isAbove = delta > 0;
-                const deltaColor = isAbove ? 'var(--red)' : 'var(--green)';
+                const deltaColor = absGap <= DRIFT_VERDE_PP ? 'var(--green)'
+                  : absGap <= DRIFT_AMARELO_PP ? 'var(--yellow)' : 'var(--red)';
                 const sign = delta >= 0 ? '+' : '';
+                // Threshold band markers on bar: bar goes 0→100% (allocation axis)
+                // threshold lines placed at alvo ± N pp relative to 0-100 scale
+                const barMax = Math.max(pctAtual, pctAlvo) + 6; // add headroom
+                const verdeLine1Pct = Math.max(0, Math.min(100, ((pctAlvo - DRIFT_VERDE_PP) / barMax) * 100));
+                const verdeLine2Pct = Math.max(0, Math.min(100, ((pctAlvo + DRIFT_VERDE_PP) / barMax) * 100));
+                const amarLine1Pct = Math.max(0, Math.min(100, ((pctAlvo - DRIFT_AMARELO_PP) / barMax) * 100));
+                const amarLine2Pct = Math.max(0, Math.min(100, ((pctAlvo + DRIFT_AMARELO_PP) / barMax) * 100));
+                const alvoLinePct = Math.max(0, Math.min(100, (pctAlvo / barMax) * 100));
+                const actualLinePct = Math.max(0, Math.min(100, (pctAtual / barMax) * 100));
                 return (
                   <div key={etf.name}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 5 }}>
@@ -94,21 +108,36 @@ export default function PortfolioPage() {
                         </span>
                       </div>
                     </div>
-                    {/* Bar track */}
-                    <div style={{ position: 'relative', height: 10, background: 'rgba(148,163,184,.15)', borderRadius: 5, overflow: 'visible' }}>
+                    {/* Bar track with threshold band markers */}
+                    <div style={{ position: 'relative', height: 12, background: 'rgba(148,163,184,.15)', borderRadius: 5, overflow: 'visible' }}>
+                      {/* Verde band background (alvo ± 3pp) */}
+                      <div style={{
+                        position: 'absolute', top: 0, height: '100%',
+                        left: `${verdeLine1Pct}%`,
+                        width: `${Math.max(0, verdeLine2Pct - verdeLine1Pct)}%`,
+                        background: 'rgba(34,197,94,.10)',
+                        borderRadius: 2,
+                      }} />
                       {/* Actual fill */}
                       <div style={{
                         position: 'absolute', left: 0, top: 0, height: '100%',
-                        width: `${Math.min(100, pctAtual)}%`,
-                        background: isAbove ? 'var(--red)' : 'var(--accent)',
+                        width: `${actualLinePct}%`,
+                        background: deltaColor,
                         borderRadius: 5,
+                        opacity: 0.8,
                         transition: 'width .4s',
                       }} />
+                      {/* Threshold lines: ±3pp (verde) */}
+                      <div style={{ position: 'absolute', left: `${verdeLine1Pct}%`, top: -2, bottom: -2, width: 1.5, background: 'var(--green)', opacity: 0.6 }} />
+                      <div style={{ position: 'absolute', left: `${verdeLine2Pct}%`, top: -2, bottom: -2, width: 1.5, background: 'var(--green)', opacity: 0.6 }} />
+                      {/* Threshold lines: ±5pp (amarelo) */}
+                      <div style={{ position: 'absolute', left: `${amarLine1Pct}%`, top: -2, bottom: -2, width: 1.5, background: 'var(--yellow)', opacity: 0.6 }} />
+                      <div style={{ position: 'absolute', left: `${amarLine2Pct}%`, top: -2, bottom: -2, width: 1.5, background: 'var(--yellow)', opacity: 0.6 }} />
                       {/* Target marker */}
                       <div style={{
                         position: 'absolute',
-                        left: `${Math.min(100, pctAlvo)}%`,
-                        top: -3, bottom: -3, width: 2,
+                        left: `${alvoLinePct}%`,
+                        top: -4, bottom: -4, width: 2,
                         background: 'var(--muted)',
                         transform: 'translateX(-50%)',
                         borderRadius: 1,
@@ -116,16 +145,23 @@ export default function PortfolioPage() {
                       {/* Target label */}
                       <div style={{
                         position: 'absolute',
-                        left: `${Math.min(100, pctAlvo)}%`,
-                        top: 14, fontSize: 'var(--text-xs)', color: 'var(--muted)',
+                        left: `${alvoLinePct}%`,
+                        top: 16, fontSize: 'var(--text-xs)', color: 'var(--muted)',
                         transform: 'translateX(-50%)',
                         whiteSpace: 'nowrap',
                       }}>▲ {pctAlvo.toFixed(0)}%</div>
                     </div>
-                    <div style={{ marginBottom: 8 }} />
+                    <div style={{ marginBottom: 14 }} />
                   </div>
                 );
               })}
+            </div>
+            {/* Legend */}
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
+              <span style={{ color: 'var(--green)' }}>● verde ≤3pp</span>
+              <span style={{ color: 'var(--yellow)' }}>● amarelo 3–5pp</span>
+              <span style={{ color: 'var(--red)' }}>● vermelho &gt;5pp</span>
+              <span>· rebalanceamento via aporte</span>
             </div>
             <div className="src">Drift = % intra-equity (sobre total equity). Alvo IPS: SWRD 50% / AVGS 30% / AVEM 20%.</div>
           </div>

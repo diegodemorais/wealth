@@ -142,6 +142,76 @@ export default function WithdrawPage() {
         </span>
       </div>
 
+      {/* 0. SWR Dual Cards — Atual vs FIRE Day */}
+      {(() => {
+        const prem = data.premissas ?? {};
+        const patrimonioAtual: number = (prem as any).patrimonio_atual ?? 0;
+        const custoVidaBase: number = activeScenarioCfg.custo_vida_base;
+        const swrAtual = patrimonioAtual > 0 ? custoVidaBase / patrimonioAtual : null;
+        const swrFireP50 = swrPercentis?.p50 != null ? swrPercentis.p50 : null;
+        const swrFireP10 = swrPercentis?.p10 != null ? swrPercentis.p10 : null;
+        const swrFireP90 = swrPercentis?.p90 != null ? swrPercentis.p90 : null;
+        const swrTarget = (prem as any).swr_gatilho ?? 0.03;
+        // Semáforo para SWR FIRE
+        const swrFireColor = swrFireP50 == null ? 'var(--muted)'
+          : swrFireP50 <= swrTarget ? 'var(--green)'
+          : swrFireP50 <= swrTarget * 1.33 ? 'var(--yellow)'
+          : 'var(--red)';
+        const swrFireStatus = swrFireP50 == null ? null
+          : swrFireP50 <= swrTarget ? '✓ dentro do target'
+          : swrFireP50 <= swrTarget * 1.33 ? '⚠ atenção'
+          : '✗ acima do target';
+        return (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, marginBottom: 16 }}>
+            {/* Card: SWR Atual */}
+            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: '4px solid var(--muted)' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
+                SWR Atual
+              </div>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--muted)', lineHeight: 1, marginBottom: 6 }}>
+                {swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.5 }}>
+                Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em>
+                <br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.
+              </div>
+            </div>
+            {/* Card: SWR Projetado FIRE Day */}
+            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: `4px solid ${swrFireColor}` }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
+                SWR Projetado — FIRE {(data as any)?.premissas?.ano_cenario_base ?? '2040'}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                <div style={{ fontSize: '2rem', fontWeight: 800, color: swrFireColor, lineHeight: 1 }}>
+                  {swrFireP50 != null ? (privacyMode ? '••%' : `${(swrFireP50 * 100).toFixed(2)}%`) : '—'}
+                </div>
+                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P50</span>
+              </div>
+              <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
+                {swrFireP10 != null && (
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>
+                    P10: {privacyMode ? '••%' : `${(swrFireP10 * 100).toFixed(2)}%`}
+                  </span>
+                )}
+                {swrFireP90 != null && (
+                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
+                    P90: {privacyMode ? '••%' : `${(swrFireP90 * 100).toFixed(2)}%`}
+                  </span>
+                )}
+              </div>
+              {swrFireStatus && (
+                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: swrFireColor }}>
+                  {swrFireStatus} · alvo ≤{(swrTarget * 100).toFixed(0)}%
+                </div>
+              )}
+              {!swrPercentis && (
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>—</div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* 1. SWR no FIRE Day — Percentis P10 / P50 / P90 (moved first: número central da aposentadoria) */}
       {swrPercentis && (
         <CollapsibleSection id="section-swr-percentiles" title={secTitle('withdraw', 'swr', 'SWR no FIRE Day — Percentis P10 / P50 / P90')} defaultOpen={secOpen('withdraw', 'swr')}>
