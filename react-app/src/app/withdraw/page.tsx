@@ -12,28 +12,7 @@ import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
-
-/** Tag inline usada nos gráficos que refletem o cenário ativo */
-function ScenarioBadge({ label, gasto, privacyMode }: { label: string; gasto: number; privacyMode: boolean }) {
-  return (
-    <div style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 6,
-      marginBottom: 8,
-      padding: '3px 8px',
-      borderRadius: 999,
-      background: 'rgba(99,179,237,.10)',
-      border: '1px solid rgba(99,179,237,.3)',
-      fontSize: '11px',
-      color: 'var(--accent)',
-      fontWeight: 600,
-    }}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-      {label} · {privacyMode ? '••••' : `R$${(gasto / 1000).toFixed(0)}k/ano`}
-    </div>
-  );
-}
+import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 
 export default function WithdrawPage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();

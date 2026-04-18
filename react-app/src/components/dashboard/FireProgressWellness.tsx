@@ -1,5 +1,6 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
 
 interface FireProgressWellnessProps {
   firePercentage: number;
@@ -49,15 +50,12 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
       </div>
 
       {/* Progress bar */}
-      <div className="h-2 bg-card2/40 rounded-sm overflow-hidden my-2.5">
-        <div
-          className="h-full rounded-sm transition-all duration-500"
-          style={{
-            width: Math.min(100, firePercentage * 100) + '%',
-            background: progressBarColor,
-          }}
-        />
-      </div>
+      <SimpleProgressBar
+        value={firePercentage * 100}
+        color={progressBarColor}
+        height="h-2"
+        className="my-2.5"
+      />
 
       {/* SWR Info */}
       <div className="flex justify-between items-center text-xs mt-2">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
 
 interface AporteDoMesProps {
   aporteMensal: number;
@@ -126,12 +127,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
       {/* Savings rate bar — compact */}
       {savingsRate != null && (
         <div className="mt-2.5">
-          <div className="h-1.5 bg-card2/40 rounded-sm overflow-hidden">
-            <div
-              className="h-full rounded-sm transition-all duration-500"
-              style={{ width: Math.min(100, savingsRate) + '%', background: srColor }}
-            />
-          </div>
+          <SimpleProgressBar value={savingsRate} color={srColor} />
         </div>
       )}
     </section>

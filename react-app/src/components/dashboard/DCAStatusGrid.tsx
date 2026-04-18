@@ -2,6 +2,7 @@
 
 import { useUiStore } from "@/store/uiStore"
 import { DcaItem } from "@/types/dashboard"
+import { StatusBadge } from "@/components/primitives/StatusBadge"
 
 interface DCAStatusGridProps {
   items: DcaItem[]
@@ -43,17 +44,7 @@ export function DCAStatusGrid({ items }: DCAStatusGridProps) {
                   {/* Header: Nome + Status Badge */}
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <h4 className="font-semibold text-sm">{item.nome}</h4>
-                    <span style={{
-                      fontSize: '0.7rem',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      border: isAtivo ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--border)',
-                      background: isAtivo ? 'rgba(34,197,94,0.2)' : 'var(--bg)',
-                      color: isAtivo ? 'var(--green)' : 'var(--muted)',
-                      fontWeight: 600,
-                    }}>
-                      {isAtivo ? 'ATIVO' : 'PAUSADO'}
-                    </span>
+                    <StatusBadge status={isAtivo ? 'ativo' : 'pausado'} label={isAtivo ? 'ATIVO' : 'PAUSADO'} />
                   </div>
 
                   {/* Rows */}
