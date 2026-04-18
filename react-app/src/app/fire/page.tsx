@@ -72,8 +72,83 @@ export default function FirePage() {
     return <div className="warning-state">Dados carregados mas seção FIRE não disponível</div>;
   }
 
+  // ── Hero banner values ──────────────────────────────────────────────────────
+  const pfireHero: number | null = derived?.pfire ?? null;
+  const pfireHeroColor = pfireColorFn(pfireHero);
+  const prem = (data as any)?.premissas ?? {};
+  const fireYearHero: number | null = (() => {
+    const p0 = (data as any)?.fire_matrix?.by_profile?.[0];
+    const y = p0?.fire_age_53 ?? prem.ano_cenario_base;
+    return y ? parseInt(String(y), 10) : null;
+  })();
+  const anoAtualHero: number = prem.ano_atual ?? new Date().getFullYear();
+  const anosRestantesHero: number | null = fireYearHero != null ? fireYearHero - anoAtualHero : (
+    derived?.fireMonthsAway != null ? Math.round(derived.fireMonthsAway / 12) : null
+  );
+  const patrimonioAlvoHero: number | null = (() => {
+    const t = prem.patrimonio_fire_target;
+    if (t != null) return t;
+    const custo = prem.custo_vida ?? prem.custo_vida_base;
+    const swr = prem.swr_gatilho;
+    return custo != null && swr != null ? custo / swr : null;
+  })();
+
   return (
     <div>
+      {/* 0. P(FIRE) Hero Banner */}
+      <div style={{
+        background: `linear-gradient(135deg, color-mix(in srgb, ${pfireHeroColor} 8%, transparent), color-mix(in srgb, var(--accent) 4%, transparent))`,
+        border: `1px solid color-mix(in srgb, ${pfireHeroColor} 30%, transparent)`,
+        borderRadius: 'var(--radius-xl)',
+        padding: '20px 24px',
+        marginBottom: '16px',
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '16px',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      }}>
+        {/* P(FIRE) */}
+        <div style={{ textAlign: 'center', minWidth: 100 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>P(FIRE 2040)</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 900, color: pfireHeroColor, lineHeight: 1 }}>
+            {pfireHero != null ? `${pfireHero.toFixed(1)}%` : '—'}
+          </div>
+          <div style={{ fontSize: 'var(--text-xs)', color: pfireHeroColor, fontWeight: 600, marginTop: 4 }}>
+            {pfireHero != null ? (pfireHero >= 90 ? '✓ ON TRACK' : pfireHero >= 85 ? '⚠ ADEQUADO' : '✗ ATENÇÃO') : ''}
+          </div>
+        </div>
+        {/* Separator */}
+        <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
+        {/* Data FIRE */}
+        <div style={{ textAlign: 'center', minWidth: 80 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Data FIRE</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>
+            {fireYearHero ?? '—'}
+          </div>
+        </div>
+        {/* Separator */}
+        <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
+        {/* Anos restantes */}
+        <div style={{ textAlign: 'center', minWidth: 90 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Anos Restantes</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
+            {anosRestantesHero != null ? `${anosRestantesHero}a` : '—'}
+          </div>
+        </div>
+        {/* Separator */}
+        <div style={{ width: 1, height: 56, background: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
+        {/* Patrimônio alvo */}
+        <div style={{ textAlign: 'center', minWidth: 100 }}>
+          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Patrimônio Alvo</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
+            {patrimonioAlvoHero != null
+              ? `R$${(patrimonioAlvoHero / 1e6).toFixed(1)}M`
+              : '—'}
+          </div>
+        </div>
+      </div>
+
       {/* 1. Tracking FIRE — Realizado vs Projeção */}
       <section className="section" id="trackingFireSection">
         <h2>Tracking FIRE — Realizado vs Projeção</h2>
@@ -215,7 +290,12 @@ export default function FirePage() {
       {data.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
           <div style={{ padding: '0 16px 16px' }}>
-            <FireMatrixTable data={data.fire_matrix} idades={fireMatrixIdades} />
+            <FireMatrixTable
+              data={data.fire_matrix}
+              idades={fireMatrixIdades}
+              currentPatrimonio={(data as any)?.premissas?.patrimonio_atual}
+              currentSpending={(data as any)?.premissas?.custo_vida ?? (data as any)?.premissas?.custo_vida_base}
+            />
             <div className="src">
               Verde &gt;95%, Amarelo 88–95%, Vermelho &lt;88%. Eixo: Patrimônio no FIRE Day (linha) × Gasto Anual BRL (coluna). ★ = gasto típico do perfil · → = patrimônio-alvo do perfil.
             </div>

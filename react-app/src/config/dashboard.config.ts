@@ -66,7 +66,7 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'alocacao',      title: 'Alocação — Por Classe de Ativo',                  defaultOpen: true,  collapsible: false },
     { id: 'drift-equity',  title: 'Drift Intra-Equity — SWRD / AVGS / AVEM',         defaultOpen: true,  collapsible: false },
     { id: 'geo-exposure',  title: 'Exposição Geográfica — Equities',                 defaultOpen: true,  collapsible: false },
-    { id: 'etf-region',    title: 'Composição por Região — ETFs da Carteira',        defaultOpen: false, collapsible: true  },
+    { id: 'etf-region',    title: 'Composição por Região — ETFs da Carteira',        defaultOpen: true,  collapsible: true  },
     { id: 'concentracao',  title: 'Concentração Geográfica',                         defaultOpen: true,  collapsible: false },
     { id: 'etf-factor',    title: 'Exposição Fatorial — ETFs da Carteira',           defaultOpen: true,  collapsible: true  },
     { id: 'holdings',      title: 'Posições — ETFs Internacionais (IBKR)',           defaultOpen: true,  collapsible: false },
@@ -99,7 +99,7 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'familia',          title: 'P(FIRE) — Cenários de Família',                                  defaultOpen: true,  collapsible: false },
     { id: 'eventos-vida',     title: 'Eventos de Vida — Impacto no Plano FIRE',                        defaultOpen: false, collapsible: true  },
     { id: 'scenario-compare', title: 'Cenário Base vs Cenário Aspiracional — Comparação Detalhada',    defaultOpen: false, collapsible: true  },
-    { id: 'glide-path',             title: 'Glide Path — Alocação por Idade',                                defaultOpen: false, collapsible: true  },
+    { id: 'glide-path',             title: 'Glide Path — Alocação por Idade',                                defaultOpen: true,  collapsible: true  },
     { id: 'balanco-holistico-fire', title: 'Balanço Holístico',                                              defaultOpen: false, collapsible: true  },
     { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                                defaultOpen: false, collapsible: true  },
   ],
@@ -112,7 +112,7 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'bond-pool',          title: 'Bond Pool — Proteção Sequência de Retornos',       defaultOpen: true,  collapsible: false },
     { id: 'sankey',             title: 'Cashflow — Fluxo Mensal de Retirada',              defaultOpen: true,  collapsible: false },
     { id: 'fases',              title: 'Fases de Renda — Projeção por Fonte',              defaultOpen: true,  collapsible: false },
-    { id: 'spending-breakdown',   title: 'Spending Breakdown — Detalhamento de Gastos',      defaultOpen: false, collapsible: true  },
+    { id: 'spending-breakdown',   title: 'Spending Breakdown — Detalhamento de Gastos',      defaultOpen: true,  collapsible: true  },
     { id: 'section-surplus-gap',  title: 'Superávit / Déficit Anual — P10/P50/P90',          defaultOpen: true,  collapsible: true  },
     { id: 'section-ltc-sensitivity', title: 'LTC — Sensibilidade Cuidados de Longo Prazo',   defaultOpen: false, collapsible: true  },
   ],
@@ -122,15 +122,15 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'backtest-historico',  title: 'Backtest Histórico — Target vs Benchmarks',    defaultOpen: true,  collapsible: false },
     { id: 'drawdown-historico',  title: 'Drawdown Histórico — Máximo por Período',      defaultOpen: true,  collapsible: false },
     { id: 'shadow',              title: 'Shadow Portfolio — Comparação vs Target',       defaultOpen: true,  collapsible: false },
-    { id: 'longo-prazo',         title: 'Backtest Longo Prazo — Dados Acadêmicos',      defaultOpen: false, collapsible: true  },
+    { id: 'longo-prazo',         title: 'Backtest Longo Prazo — Dados Acadêmicos',      defaultOpen: true,  collapsible: true  },
   ],
 
   // ── SIMULADORES (/simulators/page.tsx) ──────────────────────────────────────
   simuladores: [
     { id: 'cascade',   title: 'Cascata de Aportes — DCA Mensal',                defaultOpen: true,  collapsible: false },
     { id: 'fire-sim',  title: 'Simulador FIRE — Cenários de Aposentadoria',     defaultOpen: true,  collapsible: false },
-    { id: 'what-if',   title: 'What-If — Sensibilidade de Variáveis',           defaultOpen: false, collapsible: true  },
-    { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)', defaultOpen: false, collapsible: true  },
+    { id: 'what-if',   title: 'What-If — Sensibilidade de Variáveis',           defaultOpen: true,  collapsible: true  },
+    { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)', defaultOpen: true,  collapsible: true  },
   ],
 
 };

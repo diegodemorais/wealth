@@ -261,6 +261,51 @@ export default function HomePage() {
         />
       )}
 
+      {/* 5b. PRÓXIMAS AÇÕES — derivadas dos dados existentes */}
+      {derived && (() => {
+        const acoes: { text: string; level: 'ok' | 'warn' | 'urgent' }[] = [];
+
+        // 1. DCA ativo
+        derived.dcaItems.filter((i: any) => i.dcaAtivo).forEach((i: any) => {
+          acoes.push({ text: `Aportar ${i.nome} (DCA ativo)`, level: 'warn' });
+        });
+
+        // 2. Drift fora da banda
+        derived.driftItems.filter((i: any) => i.id !== 'Custo' && i.absGap > 5).forEach((i: any) => {
+          const dir = i.gap > 0 ? 'underweight' : 'overweight';
+          acoes.push({ text: `Rebalancear ${i.id}: ${dir} ${i.absGap.toFixed(1)}pp`, level: i.absGap > 8 ? 'urgent' : 'warn' });
+        });
+
+        const isEmpty = acoes.length === 0;
+        if (isEmpty) acoes.push({ text: '✓ Carteira dentro das bandas — sem ação necessária', level: 'ok' });
+
+        const levelColor = (l: 'ok' | 'warn' | 'urgent') =>
+          l === 'ok' ? 'var(--green)' : l === 'urgent' ? 'var(--red)' : 'var(--yellow)';
+
+        return (
+          <div className="mb-3.5">
+            <div className="text-xs font-semibold uppercase tracking-wide text-muted mb-2">Próximas Ações</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {acoes.map((a, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '8px 12px',
+                  background: `color-mix(in srgb, ${levelColor(a.level)} 6%, var(--card2))`,
+                  border: `1px solid color-mix(in srgb, ${levelColor(a.level)} 20%, transparent)`,
+                  borderRadius: 'var(--radius-sm)',
+                  borderLeft: `3px solid ${levelColor(a.level)}`,
+                }}>
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: levelColor(a.level), flexShrink: 0 }} />
+                  <span style={{ fontSize: 'var(--text-sm)', color: a.level === 'ok' ? 'var(--muted)' : 'var(--text)', fontWeight: a.level === 'ok' ? 400 : 600 }}>
+                    {a.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* 5. DRIFT DA CARTEIRA — contexto de rebalanceamento */}
       {derived && driftItems.length > 0 && (
         <div className="mb-3.5">

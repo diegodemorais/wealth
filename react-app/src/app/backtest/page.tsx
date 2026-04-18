@@ -247,6 +247,10 @@ function ShadowPortfoliosSection() {
 
   return (
     <CollapsibleSection id="backtest-shadows" title={secTitle('backtest', 'shadow', 'Shadow Portfolios — Target vs VWRA')} defaultOpen={secOpen('backtest', 'shadow')}>
+      {/* Shadow label */}
+      <div style={{ padding: '4px 16px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
+        Shadow = 100% SWRD (benchmark simples sem tilt fatorial)
+      </div>
 
       {/* Period buttons */}
       <div className="period-btns" style={{ marginBottom: '10px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>

@@ -24,6 +24,10 @@ interface FireMatrixData {
 interface FireMatrixTableProps {
   data: FireMatrixData;
   idades?: (number | null)[];
+  /** Patrimônio atual em R$ — usado para highlight da linha mais próxima */
+  currentPatrimonio?: number;
+  /** Custo de vida atual em R$/ano — usado para highlight da coluna mais próxima */
+  currentSpending?: number;
 }
 
 function fmtCompact(v: number): string {
@@ -37,7 +41,7 @@ const SCENARIO_LABELS: Record<string, string> = {
   stress: 'Stress',
 };
 
-export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
+export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpending }: FireMatrixTableProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
   const [selectedScenario, setSelectedScenario] = useState<'base' | 'fav' | 'stress'>('base');
 
@@ -65,6 +69,18 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
   const getTextColor = pfireColor;
 
   const hasIdades = idades && idades.length === patrimonios.length;
+
+  // Find closest row (patrimônio) and column (gasto) to current situation
+  const currentPatIdx: number | null = currentPatrimonio != null && patrimonios.length > 0
+    ? patrimonios.reduce((bestIdx, pat, idx) =>
+        Math.abs(pat - currentPatrimonio) < Math.abs(patrimonios[bestIdx] - currentPatrimonio) ? idx : bestIdx
+      , 0)
+    : null;
+  const currentGastoIdx: number | null = currentSpending != null && gastos.length > 0
+    ? gastos.reduce((bestIdx, g, idx) =>
+        Math.abs(g - currentSpending) < Math.abs(gastos[bestIdx] - currentSpending) ? idx : bestIdx
+      , 0)
+    : null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -138,8 +154,9 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
                 <TableCell className={`py-2 text-center font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`} style={{ width: 56, padding: '6px 8px' }}>
                   {privacyMode ? '••••' : fmtCompact(pat)}
                 </TableCell>
-                {gastos.map(gasto => {
+                {gastos.map((gasto, gastoIdx) => {
                   const pfire = getPfire(pat, gasto);
+                  const isCurrentCell = currentPatIdx === patIdx && currentGastoIdx === gastoIdx;
                   return (
                     <TableCell
                       key={`${pat}_${gasto}`}
@@ -147,10 +164,20 @@ export function FireMatrixTable({ data, idades }: FireMatrixTableProps) {
                       style={{
                         backgroundColor: getColor(pfire),
                         color: getTextColor(pfire),
+                        outline: isCurrentCell ? '2px solid var(--accent)' : undefined,
+                        outlineOffset: isCurrentCell ? '-2px' : undefined,
+                        position: isCurrentCell ? 'relative' : undefined,
                       }}
-                      title={`P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
+                      title={isCurrentCell
+                        ? `← você aqui · P(FIRE) = ${pfire.toFixed(1)}% · patrimônio ${fmtCompact(pat)} · gasto ${fmtCompact(gasto)}`
+                        : `P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
                     >
                       {privacyMode ? '••%' : fmtPct(pfire / 100, 0)}
+                      {isCurrentCell && (
+                        <span style={{ position: 'absolute', top: -8, right: 1, fontSize: 8, color: 'var(--accent)', fontWeight: 700, whiteSpace: 'nowrap', pointerEvents: 'none' }}>
+                          ★
+                        </span>
+                      )}
                     </TableCell>
                   );
                 })}

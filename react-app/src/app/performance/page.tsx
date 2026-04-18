@@ -159,7 +159,7 @@ export default function PerformancePage() {
                   {privacyMode ? '••%' : fmt(alphaItdPp)}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                  vs VWRA (market-cap global)
+                  vs VWRA (market-cap global) · acumulado
                 </div>
               </div>
 
@@ -178,8 +178,14 @@ export default function PerformancePage() {
 
               {/* Card C: Alpha líquido esperado pós-haircut (académico) */}
               <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', textAlign: 'center' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
                   Alpha líquido esperado
+                  <span
+                    title="Alpha líquido negativo no curto prazo é esperado — factor premiums emergem em horizontes >10 anos (McLean & Pontiff 2016, post-publication decay ~58%). O objetivo é capturar prêmios fatoriais, não superar o benchmark todo ano."
+                    style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 14, height: 14, borderRadius: '50%', background: 'rgba(148,163,184,.2)', color: 'var(--muted)', fontSize: 10, cursor: 'help', flexShrink: 0, fontStyle: 'normal' }}
+                  >
+                    ⓘ
+                  </span>
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
                   −0.16%/ano

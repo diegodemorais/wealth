@@ -10,7 +10,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
-import { calcFireYear, getAnoAtual, getIdadeAtual } from '@/utils/fire';
+import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 import { runMCYearly } from '@/utils/montecarlo';
 
@@ -222,7 +222,23 @@ function FireSimuladorSection() {
       <h2>Simulador FIRE — Aposentadoria Antecipada</h2>
 
       {/* Resultado principal */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '20px', alignItems: 'center', marginBottom: '18px', background: 'var(--card2)', borderRadius: '10px', padding: '16px' }}>
+      {(() => {
+        const pfireSemaforo = firePire;
+        const pfireCardColor = pfireColorFn(pfireSemaforo);
+        const semaforo = pfireSemaforo == null ? null
+          : pfireSemaforo < 70  ? { label: '⚠ Risco Alto', color: 'var(--red)' }
+          : pfireSemaforo < 85  ? { label: '⚠ Atenção',   color: 'var(--yellow)' }
+          : { label: '✓ Seguro', color: 'var(--green)' };
+        return (
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '20px', alignItems: 'center',
+        marginBottom: '18px',
+        background: pfireCardColor !== 'var(--muted)'
+          ? `color-mix(in srgb, ${pfireCardColor} 8%, var(--card2))`
+          : 'var(--card2)',
+        borderRadius: '10px', padding: '16px',
+        border: semaforo ? `1px solid color-mix(in srgb, ${pfireCardColor} 25%, transparent)` : undefined,
+      }}>
         <div style={{ textAlign: 'center', minWidth: '140px' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '4px' }}>Com esses parâmetros</div>
           <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--muted)', marginBottom: '2px' }}>você pode aposentar em</div>
@@ -232,9 +248,32 @@ function FireSimuladorSection() {
           <div style={{ fontSize: '1.2rem', fontWeight: 700, margin: '2px 0' }} className="pv">
             {result ? `${result.idade} anos` : '—'}
           </div>
-          <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px' }} className="pv">
+          <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px', color: pfireCardColor }} className="pv">
             {firePire !== null ? `P = ${firePire}%` : 'P = —%'}
           </div>
+          {/* Semáforo badge */}
+          {semaforo && (
+            <div style={{ marginTop: '6px' }}>
+              <span style={{
+                display: 'inline-block',
+                padding: '2px 10px',
+                borderRadius: 999,
+                fontSize: 'var(--text-xs)',
+                fontWeight: 700,
+                color: semaforo.color,
+                background: `color-mix(in srgb, ${semaforo.color} 12%, transparent)`,
+                border: `1px solid color-mix(in srgb, ${semaforo.color} 30%, transparent)`,
+              }}>
+                {semaforo.label}
+              </span>
+            </div>
+          )}
+          {/* Hint when P < 85% */}
+          {pfireSemaforo != null && pfireSemaforo < 85 && (
+            <div style={{ marginTop: '6px', fontSize: '10px', color: 'var(--muted)', fontStyle: 'italic', lineHeight: 1.4 }}>
+              Para P=90%, ajuste aporte ou spending
+            </div>
+          )}
           {(swrBrutaPct || swrLiquidaSimple) && (
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, marginTop: '4px' }} className="pv">
               {swrBrutaPct ? `✓ SWR bruta ${swrBrutaPct}%` : ''}{swrLiquidaSimple ? ` · líquida c/INSS ${swrLiquidaSimple}%` : ''}
@@ -282,6 +321,8 @@ function FireSimuladorSection() {
           </div>
         </div>
       </div>
+        );
+      })()}
 
       {/* Presets — 2 eixos */}
       <div style={{ marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>

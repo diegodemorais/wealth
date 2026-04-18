@@ -132,13 +132,7 @@ export default function PortfolioPage() {
         );
       })()}
 
-      {/* 3. Exposição Geográfica — Equities (moved here: detalhe após visão geral) */}
-      <div className="section">
-        <h2>Exposição Geográfica — Equities</h2>
-        <DonutCharts data={data} />
-        <div className="src">Premissa: SWRD ≈ 67% US. AVUV/USSC = 100% US. AVDV = 100% DM ex-US. AVGS ~58% US. (Exclui Fixed Income.)</div>
-      </div>
-
+      {/* 3. Exposição Geográfica — via ETFRegionComposition (mais detalhado; DonutCharts removido por redundância) */}
       {/* 4. Composição por Região — ETFs da Carteira (collapsible) */}
       <CollapsibleSection
         id="section-etf-region"
