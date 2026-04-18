@@ -447,12 +447,32 @@ function WhatIfSection() {
   const patNecessario = (custo != null && preset.swr != null) ? custo / (preset.swr / 100) : undefined;
   const pctLimite = (patrimonio != null && patNecessario != null) ? (patrimonio / patNecessario) * 100 : null;
 
-  // P(Sucesso) — from data only, no estimate
+  // P(Sucesso) — lookup in cenarios matrix using nearest available patrimônio key
   const fireMatrix = (data as any)?.fire_matrix;
   let psucesso: number | null = null;
-  if (fireMatrix && preset.retorno != null && custo != null) {
-    const key = `${(preset.retorno / 100).toFixed(4)}_${custo}`;
-    psucesso = fireMatrix.cenarios?.base?.[`${premissasWI.patrimonio_atual}_${custo}`] ?? null;
+  if (fireMatrix && custo != null) {
+    const scenarioMap: Record<WiPreset, string> = { stress: 'stress', base: 'base', fav: 'fav' };
+    const cenario = fireMatrix.cenarios?.[scenarioMap[wiPreset]] ?? {};
+    // Extract available patrimônio values from keys (format: "PATRIMÔNIO_CUSTO")
+    const availablePats = [...new Set(
+      Object.keys(cenario).map(k => parseInt(k.split('_')[0], 10))
+    )].sort((a, b) => a - b);
+    // Snap patNecessario (or current patrimônio) to nearest available
+    const lookupPat = patNecessario ?? premissasWI.patrimonio_atual;
+    const nearestPat = availablePats.reduce((prev, curr) =>
+      Math.abs(curr - lookupPat) < Math.abs(prev - lookupPat) ? curr : prev,
+      availablePats[0]
+    );
+    // Snap custo to nearest available custo key for this patrimônio
+    const availableCustos = Object.keys(cenario)
+      .filter(k => k.startsWith(`${nearestPat}_`))
+      .map(k => parseInt(k.split('_')[1], 10))
+      .sort((a, b) => a - b);
+    const nearestCusto = availableCustos.reduce((prev, curr) =>
+      Math.abs(curr - custo) < Math.abs(prev - custo) ? curr : prev,
+      availableCustos[0]
+    );
+    psucesso = cenario[`${nearestPat}_${nearestCusto}`] ?? null;
   }
 
   // ETA
