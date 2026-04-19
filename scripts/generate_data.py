@@ -423,10 +423,12 @@ def get_pfire_tornado():
                 "menos10":  t.get("menos10", 0),
                 "delta":    t.get("delta", abs(t.get("mais10", 0)) + abs(t.get("menos10", 0))),
             })
+        # pfire_aspiracional = P(FIRE@49) — Cenário Aspiracional (FIRE 2035, 49 anos)
+        # pfire_base = P(FIRE@53) — Cenário Base (FIRE 2040, 53 anos)
         return (
-            {"base": fire.get("pfire50_base", fire.get("pfire_base")),
-             "fav":  fire.get("pfire50_fav",  fire.get("pfire_fav")),
-             "stress": fire.get("pfire50_stress", fire.get("pfire_stress"))},
+            {"base": fire.get("pfire49_base", fire.get("pfire50_base", fire.get("pfire_base"))),
+             "fav":  fire.get("pfire49_fav",  fire.get("pfire50_fav",  fire.get("pfire_fav"))),
+             "stress": fire.get("pfire49_stress", fire.get("pfire50_stress", fire.get("pfire_stress")))},
             {"base": fire.get("pfire53_base", fire.get("pfire_base")),
              "fav":  fire.get("pfire53_fav",  fire.get("pfire_fav")),
              "stress": fire.get("pfire53_stress", fire.get("pfire_stress"))},
