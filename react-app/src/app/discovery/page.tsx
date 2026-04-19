@@ -47,12 +47,15 @@ function fmtPct(val: number | undefined | null): string {
 
 // ─── Card wrapper ────────────────────────────────────────────────────────────
 
-function Card({ title, badge, children }: { title: string; badge?: React.ReactNode; children: React.ReactNode }) {
+function Card({ title, badge, verdict, children }: { title: string; badge?: React.ReactNode; verdict?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
         <h3 style={{ margin: 0, fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{title}</h3>
-        {badge}
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          {badge}
+          {verdict}
+        </div>
       </div>
       {children}
     </div>
@@ -68,16 +71,41 @@ function SectionHeader({ title, sub }: { title: string; sub?: string }) {
   );
 }
 
-// Wrapper for each orphan — shows label + file path
-function OrphanWrapper({ name, file, children }: { name: string; file: string; children: React.ReactNode }) {
+// Verdict badge helper
+function VerdictBadge({ integrate, tab }: { integrate: boolean; tab?: string }) {
+  if (integrate) {
+    return (
+      <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#16a34a', color: '#fff', fontWeight: 700, whiteSpace: 'nowrap' }}>
+        🟢 {tab ?? 'Integrar'}
+      </span>
+    );
+  }
   return (
-    <div style={{ border: '1px solid #ea580c44', borderRadius: 8, overflow: 'hidden' }}>
-      <div style={{ background: '#ea580c18', borderBottom: '1px solid #ea580c33', padding: '6px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', fontFamily: 'monospace' }}>{name}</span>
-        <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#ea580c', color: '#fff' }}>Órfão</span>
+    <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 700 }}>
+      🔴 Não integrar
+    </span>
+  );
+}
+
+// Wrapper for each orphan — shows label + file path + Head verdict
+function OrphanWrapper({ name, file, integrate, tab, children }: {
+  name: string; file: string; integrate: boolean; tab?: string; children: React.ReactNode
+}) {
+  const borderColor = integrate ? '#16a34a44' : '#dc262644';
+  const headerBg = integrate ? '#16a34a18' : '#dc262618';
+  const headerBorder = integrate ? '#16a34a33' : '#dc262633';
+  const footerBorder = integrate ? '#16a34a22' : '#dc262622';
+  return (
+    <div style={{ border: `1px solid ${borderColor}`, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ background: headerBg, borderBottom: `1px solid ${headerBorder}`, padding: '6px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text)', fontFamily: 'monospace', flexShrink: 0 }}>{name}</span>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+          <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#ea580c', color: '#fff' }}>Órfão</span>
+          <VerdictBadge integrate={integrate} tab={tab} />
+        </div>
       </div>
       <div style={{ padding: 16 }}>{children}</div>
-      <div style={{ borderTop: '1px solid #ea580c22', padding: '4px 12px' }}>
+      <div style={{ borderTop: `1px solid ${footerBorder}`, padding: '4px 12px' }}>
         <code style={{ fontSize: 10, color: 'var(--muted)' }}>{file}</code>
       </div>
     </div>
@@ -101,7 +129,7 @@ function RealYieldGauge({ data }: { data: any }) {
   ];
 
   return (
-    <Card title="Real Yield Gauge" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'var(--accent,#2563eb)', color: '#fff' }}>RF · Novo</span>}>
+    <Card title="Real Yield Gauge" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'var(--accent,#2563eb)', color: '#fff' }}>RF · Novo</span>} verdict={<VerdictBadge integrate tab="Portfolio" />}>
       <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
         IPCA 12M: {ipca12m}% · Selic Real: {selicReal.toFixed(2)}%
       </div>
@@ -141,7 +169,7 @@ function TaxDeferralClock({ data }: { data: any }) {
   const liqPct = patrimonioTotal > 0 ? ((patrimonioTotal - irDiferido) / patrimonioTotal) * 100 : 0;
 
   return (
-    <Card title="Tax Deferral Clock" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#ea580c', color: '#fff' }}>Tax · Novo</span>}>
+    <Card title="Tax Deferral Clock" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#ea580c', color: '#fff' }}>Tax · Novo</span>} verdict={<VerdictBadge integrate tab="Portfolio" />}>
       <div style={{ textAlign: 'center', padding: '8px 0' }}>
         <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--accent)' }} className="pv">
           {privacyMode ? '••••' : fmtBRL(irDiferido, false)}
@@ -197,7 +225,7 @@ function SequenceOfReturnsHeatmap({ data }: { data: any }) {
   }
 
   return (
-    <Card title="Sequence of Returns Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>FIRE · Novo</span>}>
+    <Card title="Sequence of Returns Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>FIRE · Novo</span>} verdict={<VerdictBadge integrate tab="FIRE" />}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 360 }}>
           <thead>
@@ -246,7 +274,7 @@ function CarryDifferentialMonitor({ data }: { data: any }) {
   const spreadColor = spread >= 8 ? '#16a34a' : spread >= 5 ? '#ca8a04' : '#dc2626';
 
   return (
-    <Card title="Carry Differential Monitor" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Macro · Novo</span>}>
+    <Card title="Carry Differential Monitor" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Macro · Novo</span>} verdict={<VerdictBadge integrate={false} />}>
       <div className="grid grid-cols-2 gap-3">
         <div style={{ background: 'var(--card2)', borderRadius: 6, padding: 12, textAlign: 'center' }}>
           <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Spread Selic–FF</div>
@@ -290,7 +318,7 @@ function BRLPurchasingPowerTimeline({ data }: { data: any }) {
   }
 
   return (
-    <Card title="BRL Purchasing Power Timeline" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#0891b2', color: '#fff' }}>FX · Novo</span>}>
+    <Card title="BRL Purchasing Power Timeline" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#0891b2', color: '#fff' }}>FX · Novo</span>} verdict={<VerdictBadge integrate tab="FIRE" />}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 300 }}>
           <thead>
@@ -327,7 +355,7 @@ function DrawdownRecoveryTable({ data }: { data: any }) {
   const events = dd.events ?? [];
 
   return (
-    <Card title="Drawdown Recovery Table" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff' }}>Risco · Novo</span>}>
+    <Card title="Drawdown Recovery Table" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff' }}>Risco · Novo</span>} verdict={<VerdictBadge integrate tab="Backtest" />}>
       {events.length === 0 ? (
         <div style={{ fontSize: 12, color: 'var(--muted)' }}>Sem eventos registrados</div>
       ) : (
@@ -373,7 +401,7 @@ function PatrimonioLiquidoIR({ data }: { data: any }) {
   const irPct = patBruto > 0 ? (irDiferido / patBruto) * 100 : 0;
 
   return (
-    <Card title="Patrimônio Líquido de IR" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Advocate · Novo</span>}>
+    <Card title="Patrimônio Líquido de IR" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Advocate · Novo</span>} verdict={<VerdictBadge integrate tab="Now" />}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ fontSize: 12, color: 'var(--muted)' }}>Patrimônio bruto</span>
@@ -423,7 +451,7 @@ function FactorExposureHeatmap({ data }: { data: any }) {
   }
 
   return (
-    <Card title="Factor Exposure Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#16a34a', color: '#fff' }}>Factor · Novo</span>}>
+    <Card title="Factor Exposure Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#16a34a', color: '#fff' }}>Factor · Novo</span>} verdict={<VerdictBadge integrate={false} />}>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ fontSize: 10, borderCollapse: 'collapse', width: '100%', minWidth: 320 }}>
           <thead>
@@ -471,7 +499,7 @@ function BondLadderTimeline({ data }: { data: any }) {
   const maxVal = Math.max(...bonds.map(b => b.d?.valor ?? 0));
 
   return (
-    <Card title="Bond Ladder Timeline" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#16a34a', color: '#fff' }}>RF · Novo</span>}>
+    <Card title="Bond Ladder Timeline" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#16a34a', color: '#fff' }}>RF · Novo</span>} verdict={<VerdictBadge integrate tab="Retirada" />}>
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 100, paddingBottom: 4 }}>
         {bonds.map(({ key, label, year, d, vitalicio }) => {
           const val = d?.valor ?? 0;
@@ -737,7 +765,7 @@ export default function DiscoveryPage() {
         {/* Renda Fixa */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>Renda Fixa</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginBottom: 24 }}>
-          <OrphanWrapper name="BondMaturityLadder" file="src/components/dashboard/BondMaturityLadder.tsx">
+          <OrphanWrapper name="BondMaturityLadder" file="src/components/dashboard/BondMaturityLadder.tsx" integrate tab="Retirada">
             <BondMaturityLadder
               bonds1y={0}
               bonds2y={0}
@@ -752,7 +780,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="BondPoolComposition" file="src/components/dashboard/BondPoolComposition.tsx">
+          <OrphanWrapper name="BondPoolComposition" file="src/components/dashboard/BondPoolComposition.tsx" integrate tab="Retirada">
             <BondPoolComposition
               data={{
                 valor_atual_brl: fireBondPool.valor_atual_brl ?? 0,
@@ -766,7 +794,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="BondPoolRunway" file="src/components/dashboard/BondPoolRunway.tsx">
+          <OrphanWrapper name="BondPoolRunway" file="src/components/dashboard/BondPoolRunway.tsx" integrate tab="Retirada">
             <BondPoolRunway
               poolCurrentValue={fireBondPool.valor_atual_brl ?? 0}
               fireAnnualExpense={premissas.custo_vida_base ?? 250000}
@@ -777,7 +805,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="IpcaTaxaProgress" file="src/components/dashboard/IpcaTaxaProgress.tsx">
+          <OrphanWrapper name="IpcaTaxaProgress" file="src/components/dashboard/IpcaTaxaProgress.tsx" integrate tab="Now">
             <IpcaTaxaProgress
               taxaAtual={rf.ipca2040?.taxa ?? 7.07}
               ipca2040Valor={rf.ipca2040?.valor ?? 0}
@@ -795,15 +823,15 @@ export default function DiscoveryPage() {
         {/* Equity & Factor */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>Equity & Factor</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginBottom: 24 }}>
-          <OrphanWrapper name="EtfsPositionsTable" file="src/components/dashboard/EtfsPositionsTable.tsx">
+          <OrphanWrapper name="EtfsPositionsTable" file="src/components/dashboard/EtfsPositionsTable.tsx" integrate tab="Portfolio">
             <EtfsPositionsTable data={posicoes} />
           </OrphanWrapper>
 
-          <OrphanWrapper name="FactorLoadingsTable" file="src/components/dashboard/FactorLoadingsTable.tsx">
+          <OrphanWrapper name="FactorLoadingsTable" file="src/components/dashboard/FactorLoadingsTable.tsx" integrate={false}>
             <FactorLoadingsTable data={data?.factor_loadings ?? {}} />
           </OrphanWrapper>
 
-          <OrphanWrapper name="GeographicExposureChart" file="src/components/dashboard/GeographicExposureChart.tsx">
+          <OrphanWrapper name="GeographicExposureChart" file="src/components/dashboard/GeographicExposureChart.tsx" integrate={false}>
             <GeographicExposureChart
               usa={geoUsa * 100}
               europe={geoEurope * 100}
@@ -814,7 +842,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="AlphaVsSWRDChart" file="src/components/dashboard/AlphaVsSWRDChart.tsx">
+          <OrphanWrapper name="AlphaVsSWRDChart" file="src/components/dashboard/AlphaVsSWRDChart.tsx" integrate tab="Performance">
             <AlphaVsSWRDChart
               oneYear={{
                 targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? 14.89,
@@ -836,7 +864,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="AttributionAnalysis" file="src/components/dashboard/AttributionAnalysis.tsx">
+          <OrphanWrapper name="AttributionAnalysis" file="src/components/dashboard/AttributionAnalysis.tsx" integrate={false}>
             <AttributionAnalysis
               swrdAllocation={drift.SWRD?.atual ?? 36.3}
               swrdReturn={attrSwrdPct}
@@ -851,7 +879,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="RollingMetricsChart" file="src/components/dashboard/RollingMetricsChart.tsx">
+          <OrphanWrapper name="RollingMetricsChart" file="src/components/dashboard/RollingMetricsChart.tsx" integrate tab="Performance">
             <RollingMetricsChart
               dates={rollingSharpe.dates ?? []}
               sharpeBRL={rollingSharpe.values ?? []}
@@ -865,7 +893,7 @@ export default function DiscoveryPage() {
         {/* Portfolio & Risco */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>Portfolio & Risco</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginBottom: 24 }}>
-          <OrphanWrapper name="DrawdownHistoryChart" file="src/components/dashboard/DrawdownHistoryChart.tsx">
+          <OrphanWrapper name="DrawdownHistoryChart" file="src/components/dashboard/DrawdownHistoryChart.tsx" integrate tab="Backtest">
             <DrawdownHistoryChart
               dates={data?.drawdown_history?.dates ?? []}
               drawdownPct={data?.drawdown_history?.drawdown_pct ?? []}
@@ -873,7 +901,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="RebalancingStatus" file="src/components/dashboard/RebalancingStatus.tsx">
+          <OrphanWrapper name="RebalancingStatus" file="src/components/dashboard/RebalancingStatus.tsx" integrate tab="Now">
             <RebalancingStatus
               swrdTarget={(pesosTarget.SWRD ?? 0.395) * 100}
               swrdCurrent={drift.SWRD?.atual ?? 36.3}
@@ -889,7 +917,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="BrasilConcentrationCard" file="src/components/dashboard/BrasilConcentrationCard.tsx">
+          <OrphanWrapper name="BrasilConcentrationCard" file="src/components/dashboard/BrasilConcentrationCard.tsx" integrate tab="Portfolio">
             <BrasilConcentrationCard
               hodl11={concentracao.composicao?.hodl11_brl ?? 0}
               ipcaTotal={concentracao.composicao?.rf_total_brl ?? 0}
@@ -900,7 +928,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="CryptoBandChart" file="src/components/dashboard/CryptoBandChart.tsx">
+          <OrphanWrapper name="CryptoBandChart" file="src/components/dashboard/CryptoBandChart.tsx" integrate tab="Portfolio">
             <CryptoBandChart
               banda={data?.hodl11?.banda ?? { min_pct: 1.5, alvo_pct: 3.0, max_pct: 5.0, atual_pct: 2.81, status: 'verde' }}
               label="HODL11 — BTC Wrapper — B3"
@@ -913,11 +941,11 @@ export default function DiscoveryPage() {
         {/* DCA & Gatilhos */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>DCA & Gatilhos</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginBottom: 24 }}>
-          <OrphanWrapper name="DCAStatusGrid" file="src/components/dashboard/DCAStatusGrid.tsx">
+          <OrphanWrapper name="DCAStatusGrid" file="src/components/dashboard/DCAStatusGrid.tsx" integrate tab="Now">
             <DCAStatusGrid items={dcaItems} />
           </OrphanWrapper>
 
-          <OrphanWrapper name="SemaforoTriggers" file="src/components/dashboard/SemaforoTriggers.tsx">
+          <OrphanWrapper name="SemaforoTriggers" file="src/components/dashboard/SemaforoTriggers.tsx" integrate tab="Now">
             <SemaforoTriggers items={dcaItems} />
           </OrphanWrapper>
         </div>
@@ -925,7 +953,7 @@ export default function DiscoveryPage() {
         {/* FIRE & Planejamento */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>FIRE & Planejamento</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginBottom: 24 }}>
-          <OrphanWrapper name="TrackingFireChart" file="src/components/dashboard/TrackingFireChart.tsx">
+          <OrphanWrapper name="TrackingFireChart" file="src/components/dashboard/TrackingFireChart.tsx" integrate tab="FIRE">
             <TrackingFireChart
               realizadoBrl={premissas.patrimonio_atual ?? 0}
               projetadoP50Brl={data?.fire?.pat_mediano_fire ?? 0}
@@ -934,7 +962,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="ScenarioCompare" file="src/components/dashboard/ScenarioCompare.tsx">
+          <OrphanWrapper name="ScenarioCompare" file="src/components/dashboard/ScenarioCompare.tsx" integrate tab="FIRE">
             <ScenarioCompare
               baseScenario={{
                 patrimonio50anos: scenarioCmp.base?.pat_mediano ?? 0,
@@ -952,7 +980,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="GlidePath" file="src/components/dashboard/GlidePath.tsx">
+          <OrphanWrapper name="GlidePath" file="src/components/dashboard/GlidePath.tsx" integrate tab="FIRE">
             <GlidePath
               currentAge={premissas.idade_atual ?? 39}
               retirementAge={premissas.idade_aposentadoria ?? 53}
@@ -963,7 +991,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="FamilyScenarioCards" file="src/components/dashboard/FamilyScenarioCards.tsx">
+          <OrphanWrapper name="FamilyScenarioCards" file="src/components/dashboard/FamilyScenarioCards.tsx" integrate tab="FIRE">
             <FamilyScenarioCards
               data={{ perfis: familyPerfis, cenarios: familyCenarios }}
               pfireBase={(data?.pfire_base as any)?.base ?? 90.8}
@@ -972,7 +1000,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="FireSimulator" file="src/components/dashboard/FireSimulator.tsx">
+          <OrphanWrapper name="FireSimulator" file="src/components/dashboard/FireSimulator.tsx" integrate tab="Simuladores">
             <FireSimulator
               patrimonioAtual={premissas.patrimonio_atual ?? 0}
               patrimonioGatilho={premissas.patrimonio_gatilho ?? 8330000}
@@ -985,7 +1013,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="LifeEventsTable" file="src/components/dashboard/LifeEventsTable.tsx">
+          <OrphanWrapper name="LifeEventsTable" file="src/components/dashboard/LifeEventsTable.tsx" integrate tab="FIRE">
             <LifeEventsTable data={lifeEventsCompatible} />
           </OrphanWrapper>
         </div>
@@ -993,7 +1021,7 @@ export default function DiscoveryPage() {
         {/* Spending & Wellness */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>Spending & Wellness</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginBottom: 24 }}>
-          <OrphanWrapper name="SpendingBreakdown" file="src/components/dashboard/SpendingBreakdown.tsx">
+          <OrphanWrapper name="SpendingBreakdown" file="src/components/dashboard/SpendingBreakdown.tsx" integrate tab="Retirada">
             <SpendingBreakdown
               musthave={spendingBD.must_spend_anual ?? 180887}
               likes={spendingBD.like_spend_anual ?? 51403}
@@ -1002,7 +1030,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="FinancialWellnessActions" file="src/components/dashboard/FinancialWellnessActions.tsx">
+          <OrphanWrapper name="FinancialWellnessActions" file="src/components/dashboard/FinancialWellnessActions.tsx" integrate={false}>
             <FinancialWellnessActions
               wellnessScore={wellnessScore}
               wellnessLabel={wellnessScore >= 80 ? 'Excellent' : wellnessScore >= 65 ? 'Good' : 'Fair'}
@@ -1014,7 +1042,7 @@ export default function DiscoveryPage() {
         {/* Primitivos */}
         <h3 style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '16px 0 8px' }}>Primitivos</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <OrphanWrapper name="StatusDot" file="src/components/dashboard/StatusDot.tsx">
+          <OrphanWrapper name="StatusDot" file="src/components/dashboard/StatusDot.tsx" integrate={false}>
             <div style={{ display: 'flex', gap: 16, alignItems: 'center', padding: '8px 0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
                 <StatusDot status="verde" /> Verde
