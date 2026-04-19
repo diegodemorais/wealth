@@ -55,7 +55,7 @@ function fmtPct(val: number | undefined | null): string {
 
 // ─── Card wrapper ────────────────────────────────────────────────────────────
 
-function Card({ title, badge, verdict, children }: { title: string; badge?: React.ReactNode; verdict?: React.ReactNode; children: React.ReactNode }) {
+function Card({ title, badge, verdict, votes, children }: { title: string; badge?: React.ReactNode; verdict?: React.ReactNode; votes?: AgentVote[]; children: React.ReactNode }) {
   return (
     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 16 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
@@ -65,6 +65,7 @@ function Card({ title, badge, verdict, children }: { title: string; badge?: Reac
           {verdict}
         </div>
       </div>
+      {votes && votes.length > 0 && <AgentVoteRow votes={votes} />}
       {children}
     </div>
   );
@@ -95,9 +96,32 @@ function VerdictBadge({ integrate, tab }: { integrate: boolean; tab?: string }) 
   );
 }
 
+// Agent vote tags — shows per-agent votes as compact colored badges
+type AgentVote = { agent: string; verdict: 'sim' | 'nao' | 'condicional'; conviction?: number };
+
+function AgentVoteRow({ votes }: { votes: AgentVote[] }) {
+  const colors: Record<AgentVote['verdict'], { bg: string; label: string }> = {
+    sim:        { bg: '#16a34a', label: '✓' },
+    nao:        { bg: '#dc2626', label: '✗' },
+    condicional:{ bg: '#ca8a04', label: '⚠' },
+  };
+  return (
+    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 6, marginBottom: 2 }}>
+      {votes.map(v => {
+        const c = colors[v.verdict];
+        return (
+          <span key={v.agent} style={{ fontSize: 9, padding: '1px 5px', borderRadius: 3, background: c.bg + '22', color: c.bg, border: `1px solid ${c.bg}55`, fontWeight: 600, whiteSpace: 'nowrap' }}>
+            {v.agent} {c.label}{v.conviction ? ` ${v.conviction}/5` : ''}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 // Wrapper for each orphan — shows label + file path + Head verdict
-function OrphanWrapper({ name, file, integrate, tab, children }: {
-  name: string; file: string; integrate: boolean; tab?: string; children: React.ReactNode
+function OrphanWrapper({ name, file, integrate, tab, votes, children }: {
+  name: string; file: string; integrate: boolean; tab?: string; votes?: AgentVote[]; children: React.ReactNode
 }) {
   const borderColor = integrate ? '#16a34a44' : '#dc262644';
   const headerBg = integrate ? '#16a34a18' : '#dc262618';
@@ -112,6 +136,11 @@ function OrphanWrapper({ name, file, integrate, tab, children }: {
           <VerdictBadge integrate={integrate} tab={tab} />
         </div>
       </div>
+      {votes && votes.length > 0 && (
+        <div style={{ padding: '4px 12px 0', borderBottom: `1px solid ${footerBorder}` }}>
+          <AgentVoteRow votes={votes} />
+        </div>
+      )}
       <div style={{ padding: 16 }}>{children}</div>
       <div style={{ borderTop: `1px solid ${footerBorder}`, padding: '4px 12px' }}>
         <code style={{ fontSize: 10, color: 'var(--muted)' }}>{file}</code>
@@ -153,7 +182,7 @@ function TaxDeferralClockDisc({ data }: { data: any }) {
 function SequenceOfReturnsHeatmapDisc({ data }: { data: any }) {
   const ft = data?.fire_trilha ?? {};
   return (
-    <Card title="Sequence of Returns Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>FIRE · Novo</span>} verdict={<VerdictBadge integrate tab="FIRE" />}>
+    <Card title="Sequence of Returns Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>FIRE · Novo</span>} verdict={<VerdictBadge integrate={false} />} votes={[{agent:'FIRE',verdict:'sim'},{agent:'Risco',verdict:'sim'},{agent:'Advocate',verdict:'nao',conviction:5}]}>
       <SequenceOfReturnsHeatmap
         dates={ft.dates ?? []}
         trilhaBrl={ft.trilha_brl ?? []}
@@ -172,7 +201,7 @@ function CarryDifferentialMonitor({ data }: { data: any }) {
   const spreadColor = spread >= 8 ? '#16a34a' : spread >= 5 ? '#ca8a04' : '#dc2626';
 
   return (
-    <Card title="Carry Differential Monitor" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Macro · Novo</span>} verdict={<VerdictBadge integrate={false} />}>
+    <Card title="Carry Differential Monitor" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Macro · Novo</span>} verdict={<VerdictBadge integrate tab="Now" />} votes={[{agent:'FX',verdict:'sim',conviction:4},{agent:'Advocate',verdict:'sim',conviction:4},{agent:'Macro',verdict:'nao'}]}>
       <div className="grid grid-cols-2 gap-3">
         <div style={{ background: 'var(--card2)', borderRadius: 6, padding: 12, textAlign: 'center' }}>
           <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Spread Selic–FF</div>
@@ -219,7 +248,7 @@ function PatrimonioLiquidoIRDisc({ data }: { data: any }) {
   const irDiferido = data?.tax?.ir_diferido_total_brl ?? 0;
   const patrimonioFinanceiro = data?.patrimonio_holistico?.financeiro_brl ?? data?.premissas?.patrimonio_atual ?? 0;
   return (
-    <Card title="Patrimônio Líquido de IR" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Advocate · Novo</span>} verdict={<VerdictBadge integrate tab="Now" />}>
+    <Card title="Patrimônio Líquido de IR" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Tax · Novo</span>} verdict={<VerdictBadge integrate={false} />} votes={[{agent:'RF',verdict:'condicional'},{agent:'Tax',verdict:'condicional'},{agent:'Advocate',verdict:'nao',conviction:4}]}>
       <PatrimonioLiquidoIR irDiferido={irDiferido} patrimonioFinanceiro={patrimonioFinanceiro} />
     </Card>
   );
@@ -683,7 +712,7 @@ export default function DiscoveryPage() {
             />
           </OrphanWrapper>
 
-          <OrphanWrapper name="RebalancingStatus" file="src/components/dashboard/RebalancingStatus.tsx" integrate tab="Now">
+          <OrphanWrapper name="RebalancingStatus" file="src/components/dashboard/RebalancingStatus.tsx" integrate={false} votes={[{agent:'Factor',verdict:'sim'},{agent:'Risco',verdict:'sim'},{agent:'Advocate',verdict:'nao',conviction:4}]}>
             <RebalancingStatus
               swrdTarget={(pesosTarget.SWRD ?? 0.395) * 100}
               swrdCurrent={drift.SWRD?.atual ?? 36.3}
