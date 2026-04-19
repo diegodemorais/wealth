@@ -3390,9 +3390,13 @@ def main():
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
     # ─── Adicionar by_profile ao fire_section (Phase 0 bloqueante #2) ─────────
-    if fire_matrix_data and fire_matrix_data.get("by_profile"):
-        fire_section["by_profile"] = fire_matrix_data["by_profile"]
-        print(f"  -> by_profile: {len(fire_matrix_data['by_profile'])} perfis (MC scenarios 3x2x3)")
+    # Fonte primária: fire_matrix.json (gerado por fire_montecarlo.py --by_profile)
+    # Fallback: dashboard_state.json.fire.by_profile (caso fire_matrix seja regenerado sem by_profile)
+    _by_profile = (fire_matrix_data or {}).get("by_profile") or state.get("fire", {}).get("by_profile")
+    if _by_profile:
+        fire_section["by_profile"] = _by_profile
+        src = "fire_matrix.json" if (fire_matrix_data or {}).get("by_profile") else "dashboard_state.json (fallback)"
+        print(f"  -> by_profile: {len(_by_profile)} perfis (MC scenarios 3x2x3) [{src}]")
 
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {

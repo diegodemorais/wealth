@@ -530,6 +530,14 @@ def gen_fire_matrix(n_sim: int = 3_000):
         resultado_cenarios[cenario_nome] = matrix
         print(f"      cenário {cenario_nome} (r={retorno_equity:.2%}) ✓")
 
+    # Preservar seções geradas por outros scripts (by_profile, perfis, etc.)
+    existing_fm = {}
+    try:
+        with open(DADOS / "fire_matrix.json") as f:
+            existing_fm = json.load(f)
+    except Exception:
+        pass
+
     data = {
         "_generated": NOW,
         "_source": "reconstruct_fire_data.py → fire_montecarlo.simular_trajetoria",
@@ -544,6 +552,10 @@ def gen_fire_matrix(n_sim: int = 3_000):
         "swrs": [0.020, 0.022, 0.024, 0.026, 0.028, 0.030],
         "matrix": resultado_cenarios["base"],  # fallback: base
     }
+    # Preservar campos externos (by_profile, perfis — gerados por fire_montecarlo.py --by_profile)
+    for _key in ("by_profile", "perfis", "_by_profile_generated", "_by_profile_n_sim"):
+        if _key in existing_fm:
+            data[_key] = existing_fm[_key]
     _save(DADOS / "fire_matrix.json", data)
 
 
