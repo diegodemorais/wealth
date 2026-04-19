@@ -93,6 +93,10 @@ CRYPTO_LEGADO_BRL = 3_944
 
 # ─── FIRE CENÁRIOS (fonte: carteira.md + FR-swr-revisao-2026-04-13) ──────────
 
+HORIZONTE_VIDA = 90               # anos — horizonte máximo de vida (premissa universal, padrão FIRE)
+                                  # Todos os cálculos de P(sucesso) e projeções usam este prazo.
+                                  # Mudar aqui muda tudo: montecarlo, reconstruct, fire.ts, simuladores.
+
 PATRIMONIO_GATILHO = 8_333_333    # = 250k/3.0% — gatilho formal (revisado 2026-04-13)
 SWR_GATILHO = 0.030               # 3.0% — safe withdrawal rate
 

@@ -506,7 +506,7 @@ export default function FirePage() {
         </div>
       </section>
 
-      {/* 4. FIRE Matrix — P(Sucesso 30 anos) */}
+      {/* 4. FIRE Matrix — P(Sucesso até 90a) */}
       {safeData.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
           <div style={{ padding: '0 16px 16px' }}>

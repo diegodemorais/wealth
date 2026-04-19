@@ -96,7 +96,7 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'tracking',         title: 'Tracking FIRE — Realizado vs Projeção',                          defaultOpen: true,  collapsible: false },
     { id: 'aspiracional',     title: 'FIRE Aspiracional',                                               defaultOpen: true,  collapsible: false },
     { id: 'projecao',         title: 'Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)', defaultOpen: true,  collapsible: false },
-    { id: 'fire-matrix',      title: 'FIRE Matrix — P(Sucesso 30 anos)',                                defaultOpen: true,  collapsible: true  },
+    { id: 'fire-matrix',      title: 'FIRE Matrix — P(Sucesso até 90a)',                                defaultOpen: true,  collapsible: true  },
     { id: 'familia',          title: 'P(FIRE) — Cenários de Família',                                  defaultOpen: true,  collapsible: false },
     { id: 'eventos-vida',     title: 'Eventos de Vida — Impacto no Plano FIRE',                        defaultOpen: false, collapsible: true  },
     { id: 'scenario-compare', title: 'Cenário Base vs Cenário Aspiracional — Comparação Detalhada',    defaultOpen: false, collapsible: true  },

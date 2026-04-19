@@ -22,7 +22,7 @@ export function NetWorthProjectionChart({ data }: NetWorthProjectionChartProps) 
   );
 
   return (
-    <ChartCard title="Net Worth Projection (30 years, Monte Carlo)">
+    <ChartCard title="Net Worth Projection (until 90a, Monte Carlo)">
       <EChart ref={chartRef} option={option} style={{ height: 400, width: "100%" }} />
     </ChartCard>
   );

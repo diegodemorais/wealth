@@ -28,6 +28,7 @@ from config import (
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
     IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO,
     APORTE_CENARIO_BASE, APORTE_CENARIO_ASPIRACIONAL,
+    HORIZONTE_VIDA,
     update_dashboard_state,
 )
 
@@ -71,12 +72,13 @@ PREMISSAS = {
     "custo_vida_base":     CUSTO_VIDA_BASE,
 
     # Horizonte — Cenário Base (padrão)
+    "horizonte_vida":      HORIZONTE_VIDA,          # PREMISSA UNIVERSAL — todos os cálculos usam este prazo
     "idade_atual":         IDADE_ATUAL,
     "idade_cenario_base":  IDADE_CENARIO_BASE,
     "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
     "idade_fire_alvo":     IDADE_CENARIO_BASE,  # default: FIRE aos 53
     "idade_safe_harbor":   IDADE_CENARIO_BASE,
-    "anos_simulacao":      37,          # anos de desacumulação (53→90)
+    "anos_simulacao":      HORIZONTE_VIDA - IDADE_CENARIO_BASE,  # desacumulação até HORIZONTE_VIDA (53→90 = 37a)
 
     # Retornos reais anuais em BRL — cenário BASE (fonte: carteira.md premissas HD-006)
     "retorno_equity_base": 0.0485,      # 4.85% real BRL ponderado base (SWRD 50%/AVGS 30%/AVEM 20%, aprovado FI-premissas-retorno 2026-04-01)
@@ -684,7 +686,7 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             p = dict(premissas)
             p["custo_vida_base"] = perfil["gasto_anual"]
             p["idade_fire_alvo"] = age_target
-            p["anos_simulacao"] = 90 - age_target
+            p["anos_simulacao"] = HORIZONTE_VIDA - age_target
 
             fire_year = ano_nascimento + age_target
             entry[f"fire_age_{age_target}"] = str(fire_year)
@@ -707,7 +709,7 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             p = dict(premissas)
             p["custo_vida_base"] = perfil["gasto_anual"]
             p["idade_fire_alvo"] = age_target
-            p["anos_simulacao"] = 90 - age_target
+            p["anos_simulacao"] = HORIZONTE_VIDA - age_target
 
             r = rodar_monte_carlo(p, n_sim=n_sim, cenario="base", seed=seed)
             p_pct = round(r["p_sucesso"] * 100, 1)
@@ -716,8 +718,8 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             if p_pct >= FIRE_P_THRESHOLD and not threshold_found:
                 swr = perfil["gasto_anual"] / pat_med if pat_med > 0 else None
                 # Compute fav + stress at this threshold age
-                r_fav    = rodar_monte_carlo(dict(premissas, custo_vida_base=perfil["gasto_anual"], idade_fire_alvo=age_target, anos_simulacao=90-age_target), n_sim=n_sim, cenario="favoravel", seed=seed)
-                r_stress = rodar_monte_carlo(dict(premissas, custo_vida_base=perfil["gasto_anual"], idade_fire_alvo=age_target, anos_simulacao=90-age_target), n_sim=n_sim, cenario="stress",    seed=seed)
+                r_fav    = rodar_monte_carlo(dict(premissas, custo_vida_base=perfil["gasto_anual"], idade_fire_alvo=age_target, anos_simulacao=HORIZONTE_VIDA-age_target), n_sim=n_sim, cenario="favoravel", seed=seed)
+                r_stress = rodar_monte_carlo(dict(premissas, custo_vida_base=perfil["gasto_anual"], idade_fire_alvo=age_target, anos_simulacao=HORIZONTE_VIDA-age_target), n_sim=n_sim, cenario="stress",    seed=seed)
                 entry["fire_age_threshold"]      = age_target
                 entry["fire_year_threshold"]     = str(ano_nascimento + age_target)
                 entry["p_at_threshold"]          = p_pct

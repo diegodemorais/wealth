@@ -11,7 +11,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
-import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn } from '@/utils/fire';
+import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn, HORIZONTE_VIDA } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 import { runMCYearly } from '@/utils/montecarlo';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -484,7 +484,7 @@ function WhatIfSection() {
   const [custoB, setCustoB] = useState<number>(250000);
   const [aporteB, setAporteB] = useState<number>(25000);
   const [inssToggle, setInssToggle] = useState({ diego: false, katia: false });
-  const [horizon, setHorizon] = useState<number>(90);
+  const [horizon, setHorizon] = useState<number>(HORIZONTE_VIDA);
   const [eventsExpanded, setEventsExpanded] = useState(false);
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>(() => {
     try { return JSON.parse(typeof window !== 'undefined' ? (localStorage.getItem('wealth-life-events-v2') ?? '[]') : '[]'); }

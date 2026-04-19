@@ -37,7 +37,7 @@ from config import (
     APORTE_MENSAL, CUSTO_VIDA_BASE, PATRIMONIO_GATILHO,
     IDADE_ATUAL, IDADE_CENARIO_BASE,
     IPCA_LONGO_PCT, IPCA_CURTO_PCT, EQUITY_PCT, CRIPTO_PCT,
-    ETF_COMPOSITION, MACRO_REGRAS,
+    ETF_COMPOSITION, MACRO_REGRAS, HORIZONTE_VIDA,
 )
 from fire_montecarlo import (
     PREMISSAS, rodar_monte_carlo, projetar_acumulacao,
@@ -486,7 +486,9 @@ def gen_fire_matrix(n_sim: int = 3_000):
     patrimonios = [7_000_000, 9_000_000, 11_000_000, 12_000_000,
                    13_000_000, 14_000_000, 16_000_000]
     gastos = [180_000, 220_000, 250_000, 270_000, 300_000, 350_000]
-    n_anos_desacum = 30
+    # Horizonte universal: HORIZONTE_VIDA - IDADE_CENARIO_BASE (90 - 53 = 37a)
+    # A matriz não tem eixo de idade; usar FIRE base como referência conservadora
+    n_anos_desacum = HORIZONTE_VIDA - IDADE_CENARIO_BASE
 
     cenarios = {
         "base":   _PREM["retorno_equity_base"],

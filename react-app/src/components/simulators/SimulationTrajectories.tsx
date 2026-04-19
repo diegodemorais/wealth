@@ -17,12 +17,13 @@ export function SimulationTrajectories() {
       };
     }
 
-    const years = 30;
-    const labels = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
-
     const p10 = mcResults.percentiles.p10 || [];
     const p50 = mcResults.percentiles.p50 || [];
     const p90 = mcResults.percentiles.p90 || [];
+
+    // Usar comprimento real dos dados do MC (horizonte até 90a)
+    const years = Math.max(p10.length, p50.length, p90.length) || 37;
+    const labels = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
 
     return {
       labels,
@@ -112,7 +113,7 @@ export function SimulationTrajectories() {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.title}>Monte Carlo Trajectories (30 Years)</h3>
+      <h3 style={styles.title}>Monte Carlo Trajectories (até 90a)</h3>
       <Line data={chartData} options={options} />
     </div>
   );

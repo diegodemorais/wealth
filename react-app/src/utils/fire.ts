@@ -35,6 +35,9 @@ export function pfireLabel(p: number | null | undefined): string {
 
 // ── Projeção de Acumulação (SWR-based) ───────────────────────────────────────
 
+// Horizonte máximo de vida — premissa universal (espelha config.py HORIZONTE_VIDA = 90)
+export const HORIZONTE_VIDA = 90;
+
 /**
  * Encontra o primeiro ano em que o patrimônio acumulado ≥ custo / swrTarget.
  *
@@ -49,7 +52,8 @@ export function pfireLabel(p: number | null | undefined): string {
  * @param anoAtual      Ano calendário atual (de data.premissas.ano_atual)
  * @param patrimonio    Patrimônio financeiro atual em R$
  * @param swrTarget     SWR alvo como FRAÇÃO (ex: 0.03 para 3%)
- * @returns             { ano, idade, pat, swrAtFire } ou null se não atingido em 30 anos
+ * @param horizonAge    Horizonte máximo de vida em anos (default: HORIZONTE_VIDA = 90)
+ * @returns             { ano, idade, pat, swrAtFire } ou null se não atingido até horizonAge
  */
 export function calcFireYear(
   aporte: number,
@@ -59,10 +63,12 @@ export function calcFireYear(
   anoAtual: number,
   patrimonio: number,
   swrTarget: number,
+  horizonAge = HORIZONTE_VIDA,
 ): { ano: number; idade: number; pat: number; swrAtFire: number } | null {
   const target = custo / swrTarget;
   let pat = patrimonio;
-  for (let yr = 0; yr <= 30; yr++) {
+  const maxYears = horizonAge - currentAge;
+  for (let yr = 0; yr <= maxYears; yr++) {
     if (pat >= target) {
       return { ano: anoAtual + yr, idade: currentAge + yr, pat, swrAtFire: custo / pat };
     }
