@@ -653,6 +653,17 @@ function WhatIfSection() {
   const deltaAnos = (idadeFireA != null && resultB) ? (resultB.idade - idadeFireA) : null;
   const deltaP = (psucessoA != null && psucessoB != null) ? (psucessoB - psucessoA) : null;
 
+  // ── Metodologia: A vs B são diferentes por design ─────────────────────────
+  // A: MC completo — acumulação ESTOCÁSTICA (10k trajetórias, retornos variáveis 2026..FIRE)
+  //    fire_age_threshold = primeira idade onde P(base) ≥ 85%
+  // B: Acumulação DETERMINÍSTICA (retorno fixo preset.retorno) → cruza SWR trigger mais cedo
+  //    P calculado inline (400 sims) apenas na desacumulação, sem risco de acumulação
+  // Resultado: com inputs idênticos, B sempre fica mais otimista que A (data menor, P menor)
+  // A diferença NÃO é bug — é o custo de ignorar risco de mercado durante acumulação
+  const inputsIdenticos = byProfileA != null
+    && Math.abs((byProfileA.gasto_anual ?? 0) - custoLiquidoB) < 1000
+    && Math.abs((premissasWI?.aporte_mensal ?? 0) - aporteB) < 500;
+
   // ── Life event totals ──────────────────────────────────────────────────────────
   const totalOneShotEventos = lifeEvents.filter(e => e.tipo === 'one-shot').reduce((s, e) => s + e.custo, 0);
 
@@ -898,7 +909,10 @@ function WhatIfSection() {
                 </div>
               )}
               <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px', fontStyle: 'italic' }}>
-                Ano: determinístico · P: MC 400 sims · Desacumulação: {horizon - (resultB?.idade ?? 50)}a (até {horizon}a)
+                Ano: acumulação determinística (retorno fixo {((preset.retorno ?? 0.0485) * 100).toFixed(2)}%) · P: MC 400 sims desacumulação · {horizon - (resultB?.idade ?? 50)}a até {horizon}a
+              </div>
+              <div style={{ fontSize: '10px', color: 'var(--yellow)', marginTop: '2px', fontStyle: 'italic' }}>
+                ⚠ Sem risco de mercado na acumulação — P tende a ser otimista vs MC completo
               </div>
             </div>
           );
@@ -940,6 +954,11 @@ function WhatIfSection() {
                   : `Mesmo ano de FIRE que perfil ${PROFILE_A_MAP[profileA].label}`
               : ''}
           </div>
+          {inputsIdenticos && deltaAnos != null && deltaAnos !== 0 && (
+            <div style={{ fontSize: '10px', color: 'var(--yellow)', marginTop: '6px', fontStyle: 'italic', textAlign: 'left', lineHeight: 1.4 }}>
+              ⓘ Inputs idênticos mas resultados diferentes: A usa MC completo (acumulação estocástica — mercado pode underperformar nos próximos anos). B usa retorno fixo na acumulação. A diferença de {Math.abs(deltaAnos)}a /{Math.abs(deltaP ?? 0).toFixed(0)}pp é o custo do risco de sequência de retornos — não é inconsistência.
+            </div>
+          )}
           {nearestPerfil && (
             <button
               onClick={() => router.push(`/simulators?cond=${nearestPerfil.cond}&mkt=${wiPreset}`)}
