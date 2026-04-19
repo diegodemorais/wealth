@@ -14,6 +14,11 @@ import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition'
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
+import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
+import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
+import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
+import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
+import TaxDeferralClock from '@/components/dashboard/TaxDeferralClock';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -215,6 +220,105 @@ export default function PortfolioPage() {
 
       {/* 8. Renda Fixa + Cripto */}
       <RFCryptoComposition />
+
+      {/* 8b. ETF Positions Table — posições detalhadas */}
+      {data?.posicoes && (
+        <CollapsibleSection
+          id="section-etf-positions"
+          title={secTitle('portfolio', 'etf-positions', 'Posições ETF — Tabela Detalhada')}
+          defaultOpen={secOpen('portfolio', 'etf-positions', false)}
+          icon="📋"
+        >
+          <div style={{ padding: '16px' }}>
+            <EtfsPositionsTable data={data.posicoes} />
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 8c. Brasil Concentration Card */}
+      {data?.concentracao_brasil && (
+        <CollapsibleSection
+          id="section-brasil-conc"
+          title={secTitle('portfolio', 'brasil-conc', 'Concentração Brasil — Detalhe')}
+          defaultOpen={secOpen('portfolio', 'brasil-conc', false)}
+          icon="🇧🇷"
+        >
+          <div style={{ padding: '16px' }}>
+            {(() => {
+              const c = (data as any).concentracao_brasil ?? {};
+              const comp = c.composicao ?? {};
+              const rfDetalhe = comp.rf_detalhe ?? {};
+              return (
+                <BrasilConcentrationCard
+                  hodl11={comp.hodl11_brl ?? 0}
+                  ipcaTotal={(rfDetalhe.ipca2029 ?? 0) + (rfDetalhe.ipca2040 ?? 0) + (rfDetalhe.ipca2050 ?? 0)}
+                  rendaPlus={rfDetalhe.renda2065 ?? 0}
+                  cryptoLegado={comp.crypto_legado_brl ?? 0}
+                  totalBrl={c.total_brasil_brl ?? 0}
+                  concentrationBrazil={c.brasil_pct ?? 0}
+                />
+              );
+            })()}
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 8d. Crypto Band Chart */}
+      {data?.hodl11?.banda && (
+        <CollapsibleSection
+          id="section-crypto-band"
+          title={secTitle('portfolio', 'crypto-band', 'HODL11 — Banda Criptográfica')}
+          defaultOpen={secOpen('portfolio', 'crypto-band', false)}
+          icon="₿"
+        >
+          <div style={{ padding: '16px' }}>
+            <CryptoBandChart
+              banda={(data as any).hodl11.banda}
+              label="HODL11 — BTC Wrapper — B3"
+              valor={(data as any).hodl11?.valor}
+              pnl_pct={(data as any).hodl11?.pnl_pct}
+            />
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 8e. Real Yield Gauge — rendimento real líquido de IR das NTN-Bs */}
+      {data?.rf && (
+        <CollapsibleSection
+          id="section-real-yield"
+          title={secTitle('portfolio', 'real-yield', 'Real Yield Gauge — NTN-Bs Líquido de IR')}
+          defaultOpen={secOpen('portfolio', 'real-yield', false)}
+          icon="📊"
+        >
+          <div style={{ padding: '16px' }}>
+            <RealYieldGauge
+              ipca2029={(data as any).rf.ipca2029}
+              ipca2040={(data as any).rf.ipca2040}
+              ipca2050={(data as any).rf.ipca2050}
+              renda2065={(data as any).rf.renda2065}
+              ipca12m={(data as any).macro?.ipca_12m ?? 4.14}
+              selicMeta={(data as any).macro?.selic_meta ?? 14.75}
+            />
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 8f. Tax Deferral Clock */}
+      {(data as any)?.tax?.ir_diferido_total_brl != null && (
+        <CollapsibleSection
+          id="section-tax-deferral"
+          title={secTitle('portfolio', 'tax-deferral', 'Tax Deferral Clock — IR Diferido Total')}
+          defaultOpen={secOpen('portfolio', 'tax-deferral', false)}
+          icon="⏱️"
+        >
+          <div style={{ padding: '16px' }}>
+            <TaxDeferralClock
+              irDiferidoTotal={(data as any).tax.ir_diferido_total_brl}
+              patrimonioTotal={(data as any).patrimonio_holistico?.financeiro_brl ?? (data as any).premissas?.patrimonio_atual ?? 0}
+            />
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* 9. Últimas Operações (removed HeatmapChart - duplicates ETFFactorComposition) */}
 

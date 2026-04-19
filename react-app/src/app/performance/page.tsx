@@ -14,6 +14,8 @@ import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeat
 import { Button } from '@/components/ui/button';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { InfoCard } from '@/components/primitives/InfoCard';
+import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
+import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -437,6 +439,58 @@ export default function PerformancePage() {
             <span style={{ color: 'rgba(234,179,8,.9)' }}>■</span> <strong>0–1</strong> = neutro{' '}
             <span style={{ color: 'rgba(239,68,68,.9)' }}>■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)
           </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 9b. Alpha vs SWRD Chart — por período */}
+      <CollapsibleSection id="section-alpha-chart" title={secTitle('performance', 'alpha-chart', 'Alpha vs SWRD — Gráfico por Período')} defaultOpen={secOpen('performance', 'alpha-chart', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const backtest = (data as any)?.backtest ?? {};
+            return (
+              <AlphaVsSWRDChart
+                oneYear={{
+                  targetReturn: backtest.metrics_by_period?.since2020?.target?.cagr ?? backtest.metrics_by_period?.['5y']?.target?.cagr ?? 14.89,
+                  swrdReturn: backtest.metrics_by_period?.since2020?.shadowA?.cagr ?? backtest.metrics_by_period?.['5y']?.shadowA?.cagr ?? 13.7,
+                }}
+                threeYear={{
+                  targetReturn: backtest.metrics_by_period?.since2013?.target?.cagr ?? 14.89,
+                  swrdReturn: backtest.metrics_by_period?.since2013?.shadowA?.cagr ?? 13.7,
+                }}
+                fiveYear={{
+                  targetReturn: backtest.metrics_by_period?.since2009?.target?.cagr ?? 14.89,
+                  swrdReturn: backtest.metrics_by_period?.since2009?.shadowA?.cagr ?? 13.7,
+                }}
+                tenYear={{
+                  targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
+                  swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
+                }}
+                alphaLiquidoPctYear={0.16}
+              />
+            );
+          })()}
+          <div className="src">
+            since2020 ≈ 6a · since2013 ≈ 13a · since2009 ≈ 17a · all ≈ 21a. Alpha líquido: McLean &amp; Pontiff 2016, haircut 58%.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 9c. Rolling Metrics Chart */}
+      <CollapsibleSection id="section-rolling-metrics" title={secTitle('performance', 'rolling-metrics', 'Rolling Metrics — Sharpe / Sortino / Volatilidade')} defaultOpen={secOpen('performance', 'rolling-metrics', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const rollingSharpe = (data as any)?.rolling_sharpe ?? {};
+            return (
+              <RollingMetricsChart
+                dates={rollingSharpe.dates ?? []}
+                sharpeBRL={rollingSharpe.values ?? []}
+                sharpeUSD={rollingSharpe.values_usd ?? []}
+                sortino={rollingSharpe.sortino ?? []}
+                volatilidade={rollingSharpe.volatilidade ?? []}
+              />
+            );
+          })()}
+          <div className="src">Rolling 12m. Sharpe BRL vs CDI, USD vs T-Bill. Sortino e volatilidade anualizada.</div>
         </div>
       </CollapsibleSection>
 

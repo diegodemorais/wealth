@@ -16,6 +16,10 @@ import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { FIRE_RULES } from '@/config/business-rules';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import { EChart } from '@/components/primitives/EChart';
+import BondMaturityLadder from '@/components/dashboard/BondMaturityLadder';
+import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
+import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
+import BondLadderTimeline from '@/components/dashboard/BondLadderTimeline';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
@@ -846,6 +850,116 @@ export default function WithdrawPage() {
               </div>
             );
           })()}
+        </div>
+      </CollapsibleSection>
+
+      {/* Bond Maturity Ladder — vencimentos da RF */}
+      <CollapsibleSection id="section-bond-maturity" title={secTitle('withdraw', 'bond-maturity', 'Bond Maturity Ladder — Vencimentos da Renda Fixa')} defaultOpen={secOpen('withdraw', 'bond-maturity', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const rf = (data as any)?.rf ?? {};
+            const ipca2029 = rf.ipca2029?.valor_brl ?? 0;
+            const ipca2040 = rf.ipca2040?.valor_brl ?? 0;
+            const ipca2050 = rf.ipca2050?.valor_brl ?? 0;
+            const renda2065 = rf.renda2065?.valor_brl ?? 0;
+            const total = ipca2029 + ipca2040 + ipca2050 + renda2065;
+            return (
+              <BondMaturityLadder
+                bonds1y={0}
+                bonds2y={0}
+                bonds3y={ipca2029}
+                bonds5y={0}
+                bonds10y={ipca2040}
+                bondsOver10y={ipca2050 + renda2065}
+                totalBonds={total}
+              />
+            );
+          })()}
+          <div className="src">
+            Vencimentos: IPCA+2029, IPCA+2040, IPCA+2050, Renda+2065. Valores em BRL (posição atual).
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* Bond Pool Composition — estrutura do pool */}
+      <CollapsibleSection id="section-bond-pool-composition" title={secTitle('withdraw', 'bond-pool-composition', 'Bond Pool — Composição Detalhada')} defaultOpen={secOpen('withdraw', 'bond-pool-composition', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const rf = (data as any)?.rf ?? {};
+            const bpr = (data as any)?.bond_pool_readiness ?? {};
+            const ipca2040Val = rf.ipca2040?.valor_brl ?? 0;
+            const ipca2050Val = rf.ipca2050?.valor_brl ?? 0;
+            const ipca2029Val = rf.ipca2029?.valor_brl ?? 0;
+            const poolTotal = ipca2040Val + ipca2050Val + ipca2029Val;
+            const custoVida = activeScenarioCfg.custo_vida_base;
+            const anosGastos = custoVida > 0 ? poolTotal / custoVida : 0;
+            const metaAnos = bpr.meta_anos ?? 5;
+            return (
+              <BondPoolComposition
+                data={{
+                  valor_atual_brl: poolTotal,
+                  anos_gastos: anosGastos,
+                  meta_anos: metaAnos,
+                  status: anosGastos >= metaAnos ? 'on_track' : anosGastos >= metaAnos * 0.7 ? 'early' : 'behind',
+                  composicao: {
+                    ipca2029: ipca2029Val,
+                    ipca2040: ipca2040Val,
+                    ipca2050: ipca2050Val,
+                  },
+                }}
+                poolTotal={poolTotal}
+              />
+            );
+          })()}
+          <div className="src">
+            Bond pool: NTN-Bs (IPCA+) para proteção de sequência de retornos nos primeiros anos pós-FIRE.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* Spending Breakdown — componente dedicado */}
+      <CollapsibleSection id="section-spending-breakdown-v2" title={secTitle('withdraw', 'spending-breakdown-v2', 'Spending Breakdown — Detalhamento por Categoria')} defaultOpen={secOpen('withdraw', 'spending-breakdown-v2', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const spending = (data as any)?.spending ?? {};
+            const base = spending.base ?? activeScenarioCfg.custo_vida_base ?? 250000;
+            const essenciais = spending.essenciais ?? base * 0.72;
+            const discric = spending.discricionarios ?? spending.discric ?? base * 0.25;
+            const imprevistos = spending.imprevistos ?? base * 0.03;
+            return (
+              <SpendingBreakdown
+                musthave={essenciais}
+                likes={discric}
+                imprevistos={imprevistos}
+                totalAnual={base}
+              />
+            );
+          })()}
+          <div className="src">
+            Distribuição dos gastos anuais por categoria. Valores anuais.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* Bond Ladder Timeline — horizonte de vencimentos */}
+      <CollapsibleSection id="section-bond-ladder-timeline" title={secTitle('withdraw', 'bond-ladder-timeline', 'Bond Ladder Timeline — Horizonte de Vencimentos')} defaultOpen={secOpen('withdraw', 'bond-ladder-timeline', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const rf = (data as any)?.rf ?? {};
+            const custoVidaMensal = activeScenarioCfg.custo_vida_base / 12;
+            return (
+              <BondLadderTimeline
+                ipca2029={{ valor: rf.ipca2029?.valor_brl, taxa: rf.ipca2029?.taxa }}
+                ipca2040={{ valor: rf.ipca2040?.valor_brl, taxa: rf.ipca2040?.taxa }}
+                ipca2050={{ valor: rf.ipca2050?.valor_brl, taxa: rf.ipca2050?.taxa }}
+                renda2065={{ valor: rf.renda2065?.valor_brl, taxa: rf.renda2065?.taxa }}
+                custoVidaMensal={custoVidaMensal}
+              />
+            );
+          })()}
+          <div className="src">
+            Cronograma de vencimentos dos títulos NTN-B e Renda+. Altura = valor relativo. Meses de custo de vida cobertos por título.
+          </div>
         </div>
       </CollapsibleSection>
     </div>

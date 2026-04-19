@@ -10,6 +10,8 @@ import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
 import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
 import { Button } from '@/components/ui/button';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
+import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
+import DrawdownRecoveryTable from '@/components/dashboard/DrawdownRecoveryTable';
 
 // ── Period button types ───────────────────────────────────────────────────────
 
@@ -637,6 +639,38 @@ export default function BacktestPage() {
 
       {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
       <BacktestLongoSection />
+
+      {/* 5. Drawdown History Chart (ECharts dashboard version) */}
+      <CollapsibleSection id="section-drawdown-history" title={secTitle('backtest', 'drawdown-history', 'Drawdown History — ECharts (Dashboard)')} defaultOpen={secOpen('backtest', 'drawdown-history', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const dh = (data as any)?.drawdown_history ?? {};
+            return (
+              <DrawdownHistoryChart
+                dates={dh.dates ?? []}
+                drawdownPct={dh.drawdown_pct ?? []}
+                maxDrawdown={dh.max_drawdown ?? 0}
+              />
+            );
+          })()}
+          <div className="src">
+            Drawdown histórico da carteira. Máximo drawdown: pico-a-vale máximo observado.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 6. Drawdown Recovery Table — eventos com detalhe */}
+      <CollapsibleSection id="section-drawdown-recovery" title={secTitle('backtest', 'drawdown-recovery', 'Drawdown Recovery Table — Eventos Históricos')} defaultOpen={secOpen('backtest', 'drawdown-recovery', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const events = (data as any)?.drawdown_events?.events ?? (data as any)?.drawdown_history?.crises ?? [];
+            return <DrawdownRecoveryTable events={events} />;
+          })()}
+          <div className="src">
+            Eventos de drawdown reais (2021–2026). Profundidade, duração e recuperação.
+          </div>
+        </div>
+      </CollapsibleSection>
     </div>
   );
 }

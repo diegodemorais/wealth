@@ -14,6 +14,8 @@ import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
+import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
+import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
@@ -696,6 +698,47 @@ export default function FirePage() {
           <GlidePathChart data={safeData} />
           <div className="src">
             Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 9. Sequence of Returns Heatmap — collapsed */}
+      <CollapsibleSection id="section-sequence-returns" title={secTitle('fire', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')} defaultOpen={secOpen('fire', 'sequence-returns', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const fireTrilha = (data as any)?.fire_trilha ?? {};
+            const spending = (data as any)?.premissas?.custo_vida_base ?? 250000;
+            return (
+              <SequenceOfReturnsHeatmap
+                dates={fireTrilha.dates ?? []}
+                trilhaBrl={fireTrilha.trilha_brl ?? []}
+                spending={spending}
+              />
+            );
+          })()}
+          <div className="src">
+            Heatmap de risco de sequência de retornos. SWR implícito a cada data — verde = sustentável, vermelho = risco.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 10. BRL Purchasing Power / FX Sensitivity — collapsed */}
+      <CollapsibleSection id="section-brl-fx" title={secTitle('fire', 'brl-fx', 'Sensibilidade Cambial — Equity USD em BRL')} defaultOpen={secOpen('fire', 'brl-fx', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const cambio = (data as any)?.macro?.cambio ?? 5.15;
+            const equityPctUsd = ((data as any)?.macro?.exposicao_cambial_pct ?? 87.9) / 100;
+            const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? 3570565;
+            return (
+              <BRLPurchasingPowerTimeline
+                cambio={cambio}
+                equityPctUsd={equityPctUsd}
+                patrimonioAtual={patrimonioAtual}
+              />
+            );
+          })()}
+          <div className="src">
+            Projeção do valor da equity em BRL sob diferentes cenários cambiais. Retorno USD nominal: 7% a.a.
           </div>
         </div>
       </CollapsibleSection>

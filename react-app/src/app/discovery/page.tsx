@@ -2,8 +2,16 @@
 
 import { useEffect, useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
+
+// ─── Extracted Section A component imports ───────────────────────────────────
+import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
+import TaxDeferralClock from '@/components/dashboard/TaxDeferralClock';
+import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
+import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
+import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
+import DrawdownRecoveryTable from '@/components/dashboard/DrawdownRecoveryTable';
+import BondLadderTimeline from '@/components/dashboard/BondLadderTimeline';
 
 // ─── Orphan component imports ────────────────────────────────────────────────
 import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
@@ -112,155 +120,45 @@ function OrphanWrapper({ name, file, integrate, tab, children }: {
   );
 }
 
-// ─── Section A: New Component Mockups ────────────────────────────────────────
+// ─── Section A: Discovery wrappers (components extracted to src/components/dashboard/) ─────────
 
-function RealYieldGauge({ data }: { data: any }) {
-  const { privacyMode } = useUiStore();
+function RealYieldGaugeDisc({ data }: { data: any }) {
   const rf = data?.rf ?? {};
   const ipca12m = data?.macro?.ipca_12m ?? 4.14;
-  const selic = data?.macro?.selic_meta ?? 14.75;
-  const selicReal = selic - ipca12m;
-
-  const bonds = [
-    { key: 'ipca2029', label: 'IPCA+2029', d: rf.ipca2029 },
-    { key: 'ipca2040', label: 'IPCA+2040', d: rf.ipca2040 },
-    { key: 'ipca2050', label: 'IPCA+2050', d: rf.ipca2050 },
-    { key: 'renda2065', label: 'Renda+2065', d: rf.renda2065 },
-  ];
-
+  const selicMeta = data?.macro?.selic_meta ?? 14.75;
   return (
     <Card title="Real Yield Gauge" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'var(--accent,#2563eb)', color: '#fff' }}>RF · Novo</span>} verdict={<VerdictBadge integrate tab="Portfolio" />}>
-      <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
-        IPCA 12M: {ipca12m}% · Selic Real: {selicReal.toFixed(2)}%
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {bonds.map(({ key, label, d }) => {
-          if (!d) return null;
-          const yieldReal = (d.taxa ?? 0) - ipca12m;
-          const yieldRealLiq = yieldReal * 0.85;
-          const color = yieldRealLiq > 6 ? '#16a34a' : yieldRealLiq >= 5 ? '#ca8a04' : '#dc2626';
-          const barPct = Math.min(100, Math.max(0, (yieldRealLiq / 8) * 100));
-          return (
-            <div key={key}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-                <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text)' }}>{label}</span>
-                <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-                  Nominal {fmtPct(d.taxa)} · Real Liq {fmtPct(yieldRealLiq)}
-                </span>
-              </div>
-              <div style={{ height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden' }}>
-                <div style={{ width: `${barPct}%`, height: '100%', background: color, borderRadius: 3 }} />
-              </div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
-                {fmtBRL(d.valor, privacyMode)} · Carry vs Selic real: {(yieldRealLiq - selicReal).toFixed(2)}pp
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <RealYieldGauge
+        ipca2029={rf.ipca2029}
+        ipca2040={rf.ipca2040}
+        ipca2050={rf.ipca2050}
+        renda2065={rf.renda2065}
+        ipca12m={ipca12m}
+        selicMeta={selicMeta}
+      />
     </Card>
   );
 }
 
-function TaxDeferralClock({ data }: { data: any }) {
-  const { privacyMode } = useUiStore();
+function TaxDeferralClockDisc({ data }: { data: any }) {
   const irDiferido = data?.tax?.ir_diferido_total_brl ?? 0;
   const patrimonioTotal = data?.patrimonio_holistico?.financeiro_brl ?? data?.premissas?.patrimonio_atual ?? 0;
-  const liqPct = patrimonioTotal > 0 ? ((patrimonioTotal - irDiferido) / patrimonioTotal) * 100 : 0;
-
   return (
     <Card title="Tax Deferral Clock" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#ea580c', color: '#fff' }}>Tax · Novo</span>} verdict={<VerdictBadge integrate tab="Portfolio" />}>
-      <div style={{ textAlign: 'center', padding: '8px 0' }}>
-        <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--accent)' }} className="pv">
-          {privacyMode ? '••••' : fmtBRL(irDiferido, false)}
-        </div>
-        <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>IR diferido total</div>
-        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6, fontStyle: 'italic' }}>
-          Cada dia sem vender = empréstimo gratuito do governo
-        </div>
-      </div>
-      <div style={{ marginTop: 12 }}>
-        <div style={{ display: 'flex', height: 18, borderRadius: 4, overflow: 'hidden' }}>
-          <div style={{ width: `${liqPct}%`, background: 'var(--accent,#2563eb)' }} />
-          <div style={{ flex: 1, background: '#dc2626' }} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 10, color: 'var(--muted)' }}>
-          <span>Líquido {liqPct.toFixed(1)}%</span>
-          <span>IR latente {(100 - liqPct).toFixed(1)}%</span>
-        </div>
-      </div>
+      <TaxDeferralClock irDiferidoTotal={irDiferido} patrimonioTotal={patrimonioTotal} />
     </Card>
   );
 }
 
-function SequenceOfReturnsHeatmap({ data }: { data: any }) {
+function SequenceOfReturnsHeatmapDisc({ data }: { data: any }) {
   const ft = data?.fire_trilha ?? {};
-  const dates: string[] = ft.dates ?? [];
-  const trilha: number[] = ft.trilha_brl ?? [];
-  const spending = data?.premissas?.custo_vida_base ?? 250000;
-
-  const years = [2035, 2036, 2037, 2038, 2039, 2040];
-  const returns = [-0.30, -0.20, -0.10, 0, 0.10, 0.20];
-  const returnLabels = ['-30%', '-20%', '-10%', '0%', '+10%', '+20%'];
-
-  function getPatForYear(yr: number): number {
-    const idx = dates.indexOf(`${yr}-12`);
-    if (idx >= 0) return trilha[idx] ?? 0;
-    const altIdx = dates.indexOf(`${yr}-01`);
-    return altIdx >= 0 ? trilha[altIdx] ?? 0 : 0;
-  }
-
-  function pFireFromSWR(swr: number): number {
-    if (swr <= 0.025) return 100;
-    if (swr <= 0.030) return 85 + (0.030 - swr) / 0.005 * 15;
-    if (swr <= 0.035) return 70 + (0.035 - swr) / 0.005 * 15;
-    if (swr <= 0.040) return 55 + (0.040 - swr) / 0.005 * 15;
-    return Math.max(30, 55 - (swr - 0.040) / 0.005 * 15);
-  }
-
-  function cellColor(p: number) {
-    if (p >= 85) return '#16a34a';
-    if (p >= 75) return '#ca8a04';
-    return '#dc2626';
-  }
-
   return (
     <Card title="Sequence of Returns Heatmap" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>FIRE · Novo</span>} verdict={<VerdictBadge integrate tab="FIRE" />}>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 360 }}>
-          <thead>
-            <tr>
-              <th style={{ padding: '4px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 500 }}>Ano FIRE</th>
-              {returnLabels.map(r => (
-                <th key={r} style={{ padding: '4px 6px', color: 'var(--muted)', fontWeight: 500 }}>{r}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {years.map(yr => {
-              const basePat = getPatForYear(yr);
-              return (
-                <tr key={yr}>
-                  <td style={{ padding: '4px 6px', fontWeight: 600, color: 'var(--text)' }}>{yr}</td>
-                  {returns.map((r, ri) => {
-                    const adjPat = basePat * (1 + r);
-                    const swr = adjPat > 0 ? spending / adjPat : 0.1;
-                    const p = pFireFromSWR(swr);
-                    return (
-                      <td key={ri} style={{ padding: '4px 6px', textAlign: 'center', background: cellColor(p), color: '#fff', borderRadius: 3 }}>
-                        {p.toFixed(0)}%
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8 }}>
-        Modelo simplificado · aba FIRE usa MC completo
-      </div>
+      <SequenceOfReturnsHeatmap
+        dates={ft.dates ?? []}
+        trilhaBrl={ft.trilha_brl ?? []}
+        spending={data?.premissas?.custo_vida_base ?? 250000}
+      />
     </Card>
   );
 }
@@ -297,132 +195,32 @@ function CarryDifferentialMonitor({ data }: { data: any }) {
   );
 }
 
-function BRLPurchasingPowerTimeline({ data }: { data: any }) {
-  const { privacyMode } = useUiStore();
+function BRLPurchasingPowerTimelineDisc({ data }: { data: any }) {
   const cambio = data?.macro?.cambio ?? data?.cambio ?? 5.15;
   const equityPctUsd = (data?.macro?.exposicao_cambial_pct ?? 87.9) / 100;
   const patTotal = data?.premissas?.patrimonio_atual ?? 3570565;
-  const patUsd = (patTotal / cambio) * equityPctUsd;
-  const retornoUsd = data?.premissas?.retorno_equity_base ?? 0.0485;
-
-  const scenarios = [
-    { label: 'BRL aprecia', depBRL: -0.03, color: '#16a34a' },
-    { label: 'Base', depBRL: 0.005, color: '#2563eb' },
-    { label: 'BRL deprecia', depBRL: 0.04, color: '#dc2626' },
-  ];
-  const checkYears = [2030, 2035, 2040];
-
-  function patBRLat(yr: number, dep: number): number {
-    const t = yr - 2026;
-    return patUsd * Math.pow(1 + retornoUsd, t) * cambio * Math.pow(1 + dep, t);
-  }
-
   return (
-    <Card title="BRL Purchasing Power Timeline" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#0891b2', color: '#fff' }}>FX · Novo</span>} verdict={<VerdictBadge integrate tab="FIRE" />}>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 300 }}>
-          <thead>
-            <tr>
-              <th style={{ padding: '4px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 500 }}>Cenário</th>
-              {checkYears.map(yr => (
-                <th key={yr} style={{ padding: '4px 6px', color: 'var(--muted)', fontWeight: 500 }}>{yr}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {scenarios.map(sc => (
-              <tr key={sc.label}>
-                <td style={{ padding: '4px 6px', fontWeight: 500, color: sc.color }}>{sc.label}</td>
-                {checkYears.map(yr => (
-                  <td key={yr} style={{ padding: '4px 6px', fontWeight: 600, color: 'var(--text)' }} className="pv">
-                    {privacyMode ? '••••' : fmtBRL(patBRLat(yr, sc.depBRL), false)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8 }}>
-        Equity {(equityPctUsd * 100).toFixed(0)}% USD · Câmbio atual R${cambio.toFixed(3)}
-      </div>
+    <Card title="Equity USD em BRL — Sensibilidade Cambial" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#0891b2', color: '#fff' }}>FX · Novo</span>} verdict={<VerdictBadge integrate tab="FIRE" />}>
+      <BRLPurchasingPowerTimeline cambio={cambio} equityPctUsd={equityPctUsd} patrimonioAtual={patTotal} />
     </Card>
   );
 }
 
-function DrawdownRecoveryTable({ data }: { data: any }) {
-  const dd = data?.drawdown_history ?? {};
-  const events = dd.events ?? [];
-
+function DrawdownRecoveryTableDisc({ data }: { data: any }) {
+  const events = data?.drawdown_history?.events ?? [];
   return (
     <Card title="Drawdown Recovery Table" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff' }}>Risco · Novo</span>} verdict={<VerdictBadge integrate tab="Backtest" />}>
-      {events.length === 0 ? (
-        <div style={{ fontSize: 12, color: 'var(--muted)' }}>Sem eventos registrados</div>
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 360 }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Evento', 'Queda', 'Meses↓', 'Meses rec.', 'Total', 'Status'].map(h => (
-                  <th key={h} style={{ padding: '4px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 500 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((ev: any, i: number) => (
-                <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '4px 6px', fontWeight: 500, color: 'var(--text)' }}>{ev.name ?? '—'}</td>
-                  <td style={{ padding: '4px 6px', fontWeight: 700, color: (ev.depth_pct ?? 0) <= -20 ? '#dc2626' : '#ca8a04' }}>
-                    {ev.depth_pct != null ? `${ev.depth_pct.toFixed(1)}%` : '—'}
-                  </td>
-                  <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{ev.duration_months ?? '—'}</td>
-                  <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{ev.recovery_months ?? '—'}</td>
-                  <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{ev.total_months ?? '—'}</td>
-                  <td style={{ padding: '4px 6px' }}>
-                    <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: ev.recovered ? '#16a34a' : '#ca8a04', color: '#fff' }}>
-                      {ev.recovered ? 'Recuperado' : 'Em curso'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <DrawdownRecoveryTable events={events} />
     </Card>
   );
 }
 
-function PatrimonioLiquidoIR({ data }: { data: any }) {
-  const { privacyMode } = useUiStore();
+function PatrimonioLiquidoIRDisc({ data }: { data: any }) {
   const irDiferido = data?.tax?.ir_diferido_total_brl ?? 0;
-  const patBruto = data?.patrimonio_holistico?.financeiro_brl ?? data?.premissas?.patrimonio_atual ?? 0;
-  const patLiq = patBruto - irDiferido;
-  const irPct = patBruto > 0 ? (irDiferido / patBruto) * 100 : 0;
-
+  const patrimonioFinanceiro = data?.patrimonio_holistico?.financeiro_brl ?? data?.premissas?.patrimonio_atual ?? 0;
   return (
     <Card title="Patrimônio Líquido de IR" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Advocate · Novo</span>} verdict={<VerdictBadge integrate tab="Now" />}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>Patrimônio bruto</span>
-          <span style={{ fontSize: 12, fontWeight: 600 }} className="pv">{fmtBRL(patBruto, privacyMode)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 12, color: '#dc2626' }}>IR diferido</span>
-          <span style={{ fontSize: 12, fontWeight: 600, color: '#dc2626' }} className="pv">- {fmtBRL(irDiferido, privacyMode)}</span>
-        </div>
-        <div style={{ borderTop: '1px solid var(--border)', paddingTop: 6, display: 'flex', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: 12, fontWeight: 700 }}>Patrimônio líquido</span>
-          <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)' }} className="pv">{fmtBRL(patLiq, privacyMode)}</span>
-        </div>
-      </div>
-      <div style={{ marginTop: 10, height: 20, borderRadius: 4, overflow: 'hidden', display: 'flex' }}>
-        <div style={{ flex: patLiq, background: 'var(--accent,#2563eb)' }} />
-        <div style={{ flex: irDiferido, background: '#dc2626' }} />
-      </div>
-      <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 6 }}>
-        IR representa {irPct.toFixed(1)}% do bruto · P(FIRE) calculado sobre bruto (erro de framing)
-      </div>
+      <PatrimonioLiquidoIR irDiferido={irDiferido} patrimonioFinanceiro={patrimonioFinanceiro} />
     </Card>
   );
 }
@@ -484,44 +282,18 @@ function FactorExposureHeatmap({ data }: { data: any }) {
   );
 }
 
-function BondLadderTimeline({ data }: { data: any }) {
-  const { privacyMode } = useUiStore();
+function BondLadderTimelineDisc({ data }: { data: any }) {
   const rf = data?.rf ?? {};
   const custoVidaMensal = (data?.premissas?.custo_vida_base ?? 250000) / 12;
-
-  const bonds = [
-    { key: 'ipca2029', label: 'IPCA+2029', year: 2029, d: rf.ipca2029 },
-    { key: 'ipca2040', label: 'IPCA+2040', year: 2040, d: rf.ipca2040 },
-    { key: 'ipca2050', label: 'IPCA+2050', year: 2050, d: rf.ipca2050 },
-    { key: 'renda2065', label: 'Renda+2065', year: 2065, d: rf.renda2065, vitalicio: true },
-  ].filter(b => b.d);
-
-  const maxVal = Math.max(...bonds.map(b => b.d?.valor ?? 0));
-
   return (
     <Card title="Bond Ladder Timeline" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#16a34a', color: '#fff' }}>RF · Novo</span>} verdict={<VerdictBadge integrate tab="Retirada" />}>
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 100, paddingBottom: 4 }}>
-        {bonds.map(({ key, label, year, d, vitalicio }) => {
-          const val = d?.valor ?? 0;
-          const meses = custoVidaMensal > 0 ? val / custoVidaMensal : 0;
-          const heightPct = maxVal > 0 ? (val / maxVal) * 100 : 0;
-          return (
-            <div key={key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-              <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 3 }}>{meses.toFixed(1)}m</div>
-              <div style={{ width: '100%', height: `${heightPct}%`, background: vitalicio ? '#7c3aed' : '#2563eb', borderRadius: '3px 3px 0 0', minHeight: 8 }} />
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ display: 'flex', gap: 12 }}>
-        {bonds.map(({ key, label, year, d }) => (
-          <div key={key} style={{ flex: 1, textAlign: 'center' }}>
-            <div style={{ fontSize: 10, color: 'var(--muted)' }}>{label}</div>
-            <div style={{ fontSize: 10, fontWeight: 600 }} className="pv">{fmtBRL(d?.valor, privacyMode)}</div>
-            <div style={{ fontSize: 10, color: 'var(--muted)' }}>{year}</div>
-          </div>
-        ))}
-      </div>
+      <BondLadderTimeline
+        ipca2029={rf.ipca2029}
+        ipca2040={rf.ipca2040}
+        ipca2050={rf.ipca2050}
+        renda2065={rf.renda2065}
+        custoVidaMensal={custoVidaMensal}
+      />
     </Card>
   );
 }
@@ -578,7 +350,7 @@ function buildDcaItems(data: any): any[] {
       nome: 'Renda+ 2065',
       categoria: 'rf_renda',
       taxa: renda.taxa_atual ?? null,
-      pisoCompra: renda.piso ?? null,
+      pisoCompra: renda.piso_compra ?? null,
       pisoVenda: null,
       gapPiso: renda.gap_pp ?? null,
       status: renda.ativo ? 'verde' : 'amarelo',
@@ -743,15 +515,15 @@ export default function DiscoveryPage() {
           sub="Mockups com dados reais. Aprovados entram nas abas permanentes; rejeitados são arquivados."
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <RealYieldGauge data={data} />
-          <TaxDeferralClock data={data} />
-          <SequenceOfReturnsHeatmap data={data} />
+          <RealYieldGaugeDisc data={data} />
+          <TaxDeferralClockDisc data={data} />
+          <SequenceOfReturnsHeatmapDisc data={data} />
           <CarryDifferentialMonitor data={data} />
-          <BRLPurchasingPowerTimeline data={data} />
-          <DrawdownRecoveryTable data={data} />
-          <PatrimonioLiquidoIR data={data} />
+          <BRLPurchasingPowerTimelineDisc data={data} />
+          <DrawdownRecoveryTableDisc data={data} />
+          <PatrimonioLiquidoIRDisc data={data} />
           <FactorExposureHeatmap data={data} />
-          <BondLadderTimeline data={data} />
+          <BondLadderTimelineDisc data={data} />
         </div>
       </div>
 
@@ -789,7 +561,11 @@ export default function DiscoveryPage() {
                 status: fireBondPool.status ?? 'early',
                 composicao: fireBondPool.composicao ?? {},
               }}
-              runwayAnosPosFire={data?.bond_pool_runway?.anos_cobertura_pos_fire ?? 0}
+              runwayAnosPosFire={
+                Array.isArray(data?.bond_pool_runway?.anos_cobertura_pos_fire)
+                  ? (data.bond_pool_runway.anos_cobertura_pos_fire[4] ?? 5)  // P50 (índice 4 de 10)
+                  : (data?.bond_pool_runway?.anos_cobertura_pos_fire ?? 0)
+              }
               poolTotal={fireBondPool.valor_atual_brl ?? 0}
             />
           </OrphanWrapper>
@@ -798,9 +574,9 @@ export default function DiscoveryPage() {
             <BondPoolRunway
               poolCurrentValue={fireBondPool.valor_atual_brl ?? 0}
               fireAnnualExpense={premissas.custo_vida_base ?? 250000}
-              expectedReturn={data?.bond_pool_runway?.taxas?.ipca2040 ?? 0.0707}
+              expectedReturn={(data?.bond_pool_runway?.taxas?.td2040_real_pct ?? 7.1) / 100}
               projectedYears={5}
-              yearsToFire={premissas.anos_para_fire ?? 14}
+              yearsToFire={(data?.premissas?.idade_cenario_base ?? 53) - (premissas.idade_atual ?? 39)}
               swrPercent={data?.fire?.swr_current ?? 3.0}
             />
           </OrphanWrapper>
@@ -813,7 +589,9 @@ export default function DiscoveryPage() {
               ipca2040AtualPercent={drift.IPCA?.atual ?? 3.5}
               ipca2050Valor={rf.ipca2050?.valor ?? 0}
               ipca2050AlvoPercent={3}
-              ipca2050AtualPercent={rf.ipca2050 ? drift.IPCA?.atual ? drift.IPCA.atual * 0.3 : 0.3 : 0}
+              ipca2050AtualPercent={premissas.patrimonio_atual && rf.ipca2050?.valor
+  ? (rf.ipca2050.valor / premissas.patrimonio_atual) * 100
+  : 0}
               ipcaTotalBrl={(rf.ipca2040?.valor ?? 0) + (rf.ipca2050?.valor ?? 0) + (rf.ipca2029?.valor ?? 0)}
               totalPortfolio={premissas.patrimonio_atual ?? 0}
             />
@@ -845,20 +623,24 @@ export default function DiscoveryPage() {
           <OrphanWrapper name="AlphaVsSWRDChart" file="src/components/dashboard/AlphaVsSWRDChart.tsx" integrate tab="Performance">
             <AlphaVsSWRDChart
               oneYear={{
-                targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? 14.89,
-                swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? 13.7,
+                // "since2020" ≈ 6 anos (período mais curto disponível)
+                targetReturn: backtest.metrics_by_period?.since2020?.target?.cagr ?? backtest.metrics_by_period?.['5y']?.target?.cagr ?? 14.89,
+                swrdReturn: backtest.metrics_by_period?.since2020?.shadowA?.cagr ?? backtest.metrics_by_period?.['5y']?.shadowA?.cagr ?? 13.7,
               }}
               threeYear={{
+                // "since2013" ≈ 13 anos
                 targetReturn: backtest.metrics_by_period?.since2013?.target?.cagr ?? 14.89,
                 swrdReturn: backtest.metrics_by_period?.since2013?.shadowA?.cagr ?? 13.7,
               }}
               fiveYear={{
+                // "since2009" ≈ 17 anos
                 targetReturn: backtest.metrics_by_period?.since2009?.target?.cagr ?? 14.89,
                 swrdReturn: backtest.metrics_by_period?.since2009?.shadowA?.cagr ?? 13.7,
               }}
               tenYear={{
-                targetReturn: backtest.metrics?.target?.cagr ?? 14.14,
-                swrdReturn: backtest.metrics?.shadowA?.cagr ?? 12.96,
+                // "all" ≈ 21 anos (período mais longo)
+                targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
+                swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
               }}
               alphaLiquidoPctYear={0.16}
             />
@@ -987,7 +769,7 @@ export default function DiscoveryPage() {
               currentEquityPercent={glide.equity?.[0] ?? 79}
               currentRfPercent={(glide.ipca_longo?.[0] ?? 15) + (glide.renda_plus?.[0] ?? 0)}
               retirementEquityPercent={glide.equity?.[2] ?? 79}
-              retirementRfPercent={(glide.ipca_curto?.[3] ?? 3) + (glide.renda_plus?.[3] ?? 6)}
+              retirementRfPercent={(glide.ipca_curto?.[2] ?? 3) + (glide.renda_plus?.[2] ?? 0)}
             />
           </OrphanWrapper>
 

@@ -14,8 +14,13 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SectionLabel } from '@/components/primitives/SectionLabel';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { MetricCard } from '@/components/primitives/MetricCard';
-import { secOpen } from '@/config/dashboard.config';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
+import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
+import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
+import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
+import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
+import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -550,6 +555,106 @@ export default function HomePage() {
         <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={secOpen('now', 'sankey')} icon="💸">
           <div style={{ padding: '0 16px 16px' }}>
             <CashFlowSankey />
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 10. Patrimônio Líquido de IR — collapsed */}
+      <CollapsibleSection id="section-patrimonio-liquido-ir" title={secTitle('now', 'patrimonio-liquido-ir', 'Patrimônio Líquido de IR')} defaultOpen={secOpen('now', 'patrimonio-liquido-ir', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          <PatrimonioLiquidoIR
+            irDiferido={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
+            patrimonioFinanceiro={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
+          />
+          <div className="src">
+            IR diferido = imposto latente sobre ganho de capital não realizado (equity internacional).
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 11. IPCA Taxa Progress — collapsed */}
+      <CollapsibleSection id="section-ipca-progress" title={secTitle('now', 'ipca-progress', 'IPCA+ Taxa — Progresso de Alocação RF')} defaultOpen={secOpen('now', 'ipca-progress', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const rf = (data as any)?.rf ?? {};
+            const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 0;
+            return (
+              <IpcaTaxaProgress
+                taxaAtual={rf.ipca2040?.taxa ?? 0}
+                ipca2040Valor={rf.ipca2040?.valor_brl ?? 0}
+                ipca2040AlvoPercent={8}
+                ipca2040AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2040?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
+                ipca2050Valor={rf.ipca2050?.valor_brl ?? 0}
+                ipca2050AlvoPercent={7}
+                ipca2050AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2050?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
+                ipcaTotalBrl={(rf.ipca2040?.valor_brl ?? 0) + (rf.ipca2050?.valor_brl ?? 0)}
+                totalPortfolio={patrimonioAtual}
+              />
+            );
+          })()}
+          <div className="src">
+            Progresso de alocação em NTN-Bs (IPCA+). Meta: 15% do portfólio em bond pool.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 12. Rebalancing Status — collapsed */}
+      <CollapsibleSection id="section-rebalancing-status" title={secTitle('now', 'rebalancing-status', 'Rebalancing Status — Drift por Classe')} defaultOpen={secOpen('now', 'rebalancing-status', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const drift = (data as any)?.drift ?? {};
+            const posicoes = (data as any)?.posicoes ?? {};
+            const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 1;
+            const pesosTarget = (data as any)?.pesosTarget ?? {};
+            const toCurrentPct = (ticker: string) => {
+              const pos = posicoes[ticker];
+              if (!pos?.qty || !pos?.price) return 0;
+              const cambio = d.CAMBIO ?? 5.15;
+              return ((pos.qty * pos.price * cambio) / patrimonioAtual) * 100;
+            };
+            return (
+              <RebalancingStatus
+                swrdTarget={(pesosTarget.SWRD ?? 0.50) * 100}
+                swrdCurrent={toCurrentPct('SWRD')}
+                avgsTarget={(pesosTarget.AVGS ?? 0.30) * 100}
+                avgsCurrent={toCurrentPct('AVGS')}
+                avemTarget={(pesosTarget.AVEM ?? 0.20) * 100}
+                avemCurrent={toCurrentPct('AVEM')}
+                ipcaTarget={15}
+                ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
+                hodl11Target={3}
+                hodl11Current={patrimonioAtual > 0 ? ((data as any)?.hodl11?.valor_brl ?? 0) / patrimonioAtual * 100 : 0}
+                lastRebalanceDate={(data as any)?.premissas?.ultima_revisao}
+                driftThresholdPp={5}
+              />
+            );
+          })()}
+          <div className="src">
+            Drift vs target por classe de ativo. Threshold: ±5pp.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      {/* 13. DCA Status Grid — collapsed */}
+      {d.dcaItems?.length > 0 && (
+        <CollapsibleSection id="section-dca-grid" title={secTitle('now', 'dca-grid', 'DCA Status Grid — Renda Fixa & Crypto')} defaultOpen={secOpen('now', 'dca-grid', false)}>
+          <div style={{ padding: '0 16px 16px' }}>
+            <DCAStatusGrid items={d.dcaItems} />
+            <div className="src">
+              Status de DCA por instrumento. Verde = comprar, amarelo = aguardar, vermelho = não comprar.
+            </div>
+          </div>
+        </CollapsibleSection>
+      )}
+
+      {/* 14. Semáforo Triggers — collapsed */}
+      {d.dcaItems?.length > 0 && (
+        <CollapsibleSection id="section-semaforo-triggers" title={secTitle('now', 'semaforo-triggers', 'Semáforo de Gatilhos — Detalhe')} defaultOpen={secOpen('now', 'semaforo-triggers', false)}>
+          <div style={{ padding: '0 16px 16px' }}>
+            <SemaforoTriggers items={d.dcaItems} />
+            <div className="src">
+              Gatilhos de compra/venda por instrumento. Baseado em taxas IPCA+ e banda criptográfica.
+            </div>
           </div>
         </CollapsibleSection>
       )}

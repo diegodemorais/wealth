@@ -61,6 +61,11 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'sankey',            title: 'Sankey — Fluxo de Caixa Anual (estimado)',        defaultOpen: true,  collapsible: true  },
     { id: 'wellness',             title: 'Financial Wellness Score (indicador secundário)', defaultOpen: false, collapsible: true  },
     { id: 'balanco-holistico-now', title: 'Balanço Holístico',                             defaultOpen: false, collapsible: true  },
+    { id: 'patrimonio-liquido-ir', title: 'Patrimônio Líquido de IR',                      defaultOpen: false, collapsible: true  },
+    { id: 'ipca-progress',        title: 'IPCA+ Taxa — Progresso de Alocação RF',          defaultOpen: false, collapsible: true  },
+    { id: 'rebalancing-status',   title: 'Rebalancing Status — Drift por Classe',          defaultOpen: false, collapsible: true  },
+    { id: 'dca-grid',             title: 'DCA Status Grid — Renda Fixa & Crypto',          defaultOpen: false, collapsible: true  },
+    { id: 'semaforo-triggers',    title: 'Semáforo de Gatilhos — Detalhe',                 defaultOpen: false, collapsible: true  },
   ],
 
   // ── PORTFOLIO (/portfolio/page.tsx) ─────────────────────────────────────────
@@ -75,6 +80,11 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'custo-base',    title: 'Base de Custo e Alocação — Equity por Bucket',   defaultOpen: false, collapsible: true  },
     { id: 'tax-ir',        title: 'IR Diferido — Alvo & Transitório',                defaultOpen: false, collapsible: true  },
     { id: 'rf-crypto',     title: 'Renda Fixa + Cripto',                             defaultOpen: true,  collapsible: false },
+    { id: 'etf-positions', title: 'Posições ETF — Tabela Detalhada',                 defaultOpen: false, collapsible: true  },
+    { id: 'brasil-conc',   title: 'Concentração Brasil — Detalhe',                   defaultOpen: false, collapsible: true  },
+    { id: 'crypto-band',   title: 'HODL11 — Banda Criptográfica',                   defaultOpen: false, collapsible: true  },
+    { id: 'real-yield',    title: 'Real Yield Gauge — NTN-Bs Líquido de IR',         defaultOpen: false, collapsible: true  },
+    { id: 'tax-deferral',  title: 'Tax Deferral Clock — IR Diferido Total',          defaultOpen: false, collapsible: true  },
     { id: 'operacoes',     title: 'Últimas Operações',                               defaultOpen: true,  collapsible: false },
   ],
 
@@ -89,6 +99,8 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'factor-loadings', title: 'Factor Loadings — Regressão Fama-French SF + Momentum',         defaultOpen: false, collapsible: true  },
     { id: 'heatmap',         title: 'Retornos Mensais — Heatmap',                                    defaultOpen: false, collapsible: true  },
     { id: 'rolling-sharpe',  title: 'Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)',             defaultOpen: false, collapsible: true  },
+    { id: 'alpha-chart',     title: 'Alpha vs SWRD — Gráfico por Período',                           defaultOpen: false, collapsible: true  },
+    { id: 'rolling-metrics', title: 'Rolling Metrics — Sharpe / Sortino / Volatilidade',             defaultOpen: false, collapsible: true  },
     { id: 'fee-analysis',    title: 'Fee Analysis — Custo de Complexidade (14 anos até FIRE)',        defaultOpen: false, collapsible: true  },
   ],
 
@@ -104,6 +116,8 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'glide-path',             title: 'Glide Path — Alocação por Idade',                                defaultOpen: true,  collapsible: true  },
     { id: 'balanco-holistico-fire', title: 'Balanço Holístico',                                              defaultOpen: false, collapsible: true  },
     { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                                defaultOpen: false, collapsible: true  },
+    { id: 'sequence-returns',       title: 'Sequence of Returns — Heatmap de Risco',                         defaultOpen: false, collapsible: true  },
+    { id: 'brl-fx',                 title: 'Sensibilidade Cambial — Equity USD em BRL',                      defaultOpen: false, collapsible: true  },
   ],
 
   // ── WITHDRAW (/withdraw/page.tsx) ────────────────────────────────────────────
@@ -116,7 +130,11 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'fases',              title: 'Fases de Renda — Projeção por Fonte',              defaultOpen: true,  collapsible: false },
     { id: 'spending-breakdown',   title: 'Spending Breakdown — Detalhamento de Gastos',      defaultOpen: true,  collapsible: true  },
     { id: 'section-surplus-gap',  title: 'Superávit / Déficit Anual — P10/P50/P90',          defaultOpen: true,  collapsible: true  },
-    { id: 'section-ltc-sensitivity', title: 'LTC — Sensibilidade Cuidados de Longo Prazo',   defaultOpen: false, collapsible: true  },
+    { id: 'section-ltc-sensitivity',   title: 'LTC — Sensibilidade Cuidados de Longo Prazo',           defaultOpen: false, collapsible: true  },
+    { id: 'bond-maturity',             title: 'Bond Maturity Ladder — Vencimentos da Renda Fixa',       defaultOpen: false, collapsible: true  },
+    { id: 'bond-pool-composition',     title: 'Bond Pool — Composição Detalhada',                       defaultOpen: false, collapsible: true  },
+    { id: 'spending-breakdown-v2',     title: 'Spending Breakdown — Detalhamento por Categoria',        defaultOpen: false, collapsible: true  },
+    { id: 'bond-ladder-timeline',      title: 'Bond Ladder Timeline — Horizonte de Vencimentos',       defaultOpen: false, collapsible: true  },
   ],
 
   // ── BACKTEST (/backtest/page.tsx) ────────────────────────────────────────────
@@ -125,6 +143,8 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'drawdown-historico',  title: 'Drawdown Histórico — Máximo por Período',      defaultOpen: true,  collapsible: false },
     { id: 'shadow',              title: 'Shadow Portfolio — Comparação vs Target',       defaultOpen: true,  collapsible: false },
     { id: 'longo-prazo',         title: 'Backtest Longo Prazo — Dados Acadêmicos',      defaultOpen: true,  collapsible: true  },
+    { id: 'drawdown-history',    title: 'Drawdown History — ECharts (Dashboard)',        defaultOpen: false, collapsible: true  },
+    { id: 'drawdown-recovery',   title: 'Drawdown Recovery Table — Eventos Históricos', defaultOpen: false, collapsible: true  },
   ],
 
   // ── SIMULADORES (/simulators/page.tsx) ──────────────────────────────────────
