@@ -451,7 +451,7 @@ def gen_fire_aporte_sensitivity(n_sim: int = 5_000):
     """R3 — Tabela aporte → P(FIRE 2040) via MC real."""
     from config import MACRO_REGRAS as _  # noqa: verificar import
     aportes = [15_000, 20_000, 25_000, 30_000, 33_000, 35_000, 40_000]
-    anos_acum = IDADE_FIRE_ALVO - IDADE_ATUAL  # 14 anos para FIRE 2040
+    anos_acum = IDADE_CENARIO_BASE - IDADE_ATUAL  # 14 anos para FIRE 2040 (53 - 39)
 
     print(f"    R3: rodando MC para {len(aportes)} aportes ({n_sim} sims cada)...")
     pfire_list = []

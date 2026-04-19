@@ -586,7 +586,7 @@ function WhatIfSection() {
   ): { ano: number; idade: number; pat: number; swrAtFire: number } | null {
     const target = custo / swr;
     let pat = pat0;
-    for (let yr = 0; yr <= 35; yr++) {
+    for (let yr = 0; yr <= HORIZONTE_VIDA - age; yr++) {
       // one-shot events: subtract at specific year
       for (const evt of events) {
         if (evt.tipo === 'one-shot' && evt.ano === ano + yr) {

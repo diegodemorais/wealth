@@ -736,7 +736,7 @@ def rodar_mc_by_profile(premissas: dict, n_sim: int = 10_000, seed: int = 42) ->
             p = dict(premissas)
             p["custo_vida_base"] = perfil["gasto_anual"]
             p["idade_fire_alvo"] = last_age
-            p["anos_simulacao"] = 90 - last_age
+            p["anos_simulacao"] = HORIZONTE_VIDA - last_age
             r = rodar_monte_carlo(p, n_sim=n_sim, cenario="base", seed=seed)
             p_pct = round(r["p_sucesso"] * 100, 1)
             pat_med = round(r["pat_mediana_fire"], 0)
