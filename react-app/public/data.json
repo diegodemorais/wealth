@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-19T06:27:03",
-  "_generated_brt": "2026-04-19T06:27:03-03:00",
+  "_generated": "2026-04-19T06:33:24",
+  "_generated_brt": "2026-04-19T06:33:24-03:00",
   "date": "2026-04-19",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -5151,6 +5151,7 @@
       "16000000_300000": 0.9654,
       "16000000_350000": 0.9472
     },
+    "_by_profile_generated": "",
     "by_profile": [
       {
         "profile": "atual",
@@ -5218,8 +5219,7 @@
         "swr_at_fire": 0.026,
         "pat_mediano_threshold": 11525984.0
       }
-    ],
-    "_by_profile_generated": ""
+    ]
   },
   "fire_swr_percentis": {
     "_generated": "2026-04-17T06:02:45",

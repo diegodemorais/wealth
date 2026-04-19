@@ -3390,24 +3390,29 @@ def main():
     bond_pool_rwy_data  = _load_json_safe(BOND_POOL_RUNWAY_PATH, "bond_pool_runway")
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
-    # ─── Adicionar by_profile ao fire_section (Phase 0 bloqueante #2) ─────────
+    # ─── Adicionar by_profile ao fire_section e fire_matrix_data ────────────
+    # React lê de data.fire_matrix.by_profile → precisa estar em AMBOS os nós.
     # Prioridade: 1) fire_by_profile.json (dedicado, imutável pelo pipeline)
     #             2) fire_matrix.json (se já contém)
     #             3) dashboard_state.json.fire.by_profile (fallback legado)
     _by_profile_dedicated = _load_json_safe(FIRE_BY_PROFILE_PATH, "fire_by_profile")
-    _by_profile = (
-        _by_profile_dedicated
-        or (fire_matrix_data or {}).get("by_profile")
-        or state.get("fire", {}).get("by_profile")
-    )
+    # Use explicit None-check so an empty list doesn't silently skip to next source
+    if _by_profile_dedicated is not None and len(_by_profile_dedicated) > 0:
+        _by_profile = _by_profile_dedicated
+        src = "fire_by_profile.json (dedicated)"
+    elif (fire_matrix_data or {}).get("by_profile"):
+        _by_profile = fire_matrix_data["by_profile"]
+        src = "fire_matrix.json"
+    else:
+        _by_profile = state.get("fire", {}).get("by_profile")
+        src = "dashboard_state.json (fallback)"
+
     if _by_profile:
+        # Inject into BOTH nodes so React (reads fire_matrix.by_profile) always finds it
         fire_section["by_profile"] = _by_profile
-        if _by_profile_dedicated:
-            src = "fire_by_profile.json (dedicated)"
-        elif (fire_matrix_data or {}).get("by_profile"):
-            src = "fire_matrix.json"
-        else:
-            src = "dashboard_state.json (fallback)"
+        if fire_matrix_data is None:
+            fire_matrix_data = {}
+        fire_matrix_data["by_profile"] = _by_profile
         print(f"  -> by_profile: {len(_by_profile)} perfis (MC scenarios 3x2x3) [{src}]")
     else:
         print("  ⚠️  by_profile MISSING — Cenário A will show '—'. Run fire_montecarlo.py --by_profile")
