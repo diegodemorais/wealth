@@ -517,20 +517,13 @@ function WhatIfSection() {
     filho:    { label: '👶 Filho+Escola', byProfileKey: 'filho', perfilKey: 'filho' },
   };
 
-  // Cenário A values come from by_profile (MC precomputed) — consistent with FIRE simulator
+  // Cenário A — mesma metodologia que B: acumulação determinística + MC inline desacumulação
+  // Inputs fixos do perfil selecionado; sem life events (é a referência, não o what-if)
   const byProfileA = byProfile.find((x: any) => x.profile === PROFILE_A_MAP[profileA].byProfileKey);
   const custoA: number = fmPerfisWI?.[PROFILE_A_MAP[profileA].perfilKey]?.gasto_anual
+    ?? byProfileA?.gasto_anual
     ?? premissasWI?.custo_vida_base ?? 250000;
   const aporteA: number = premissasWI?.aporte_mensal ?? 25000;
-
-  // Cenário A results from MC precomputed data
-  const anoFireA = byProfileA?.fire_year_threshold ? parseInt(byProfileA.fire_year_threshold, 10) : null;
-  const idadeFireA = byProfileA?.fire_age_threshold ?? null;
-  const psucessoA: number | null = wiPreset === 'fav'
-    ? (byProfileA?.p_at_threshold_fav ?? byProfileA?.p_at_threshold ?? null)
-    : wiPreset === 'stress'
-    ? (byProfileA?.p_at_threshold_stress ?? byProfileA?.p_at_threshold ?? null)
-    : (byProfileA?.p_at_threshold ?? null);
 
   const patrimonio: number | undefined = derivePatrimonio(data);
   const swrTarget: number | undefined = premissasWI?.swr_gatilho;
@@ -573,6 +566,33 @@ function WhatIfSection() {
 
   const preset = WI_PRESETS[wiPreset];
 
+  // ── MC desacumulação inline — compartilhado por A e B ───────────────────────
+  // Recebe patrimônio no FIRE, custo anual, retorno (fração), vol, horizonte
+  // Retorna P(sucesso) em %; seed determinístico (mesmo params = mesmo resultado)
+  function runMCDecum(pat0: number, withdrawal: number, retFrac: number, vol: number, yearsDecum: number): number {
+    const seedBase = (Math.round(pat0 / 10000) * 31 + yearsDecum * 17 + Math.round(withdrawal / 1000) * 7) >>> 0;
+    let s = seedBase || 1;
+    const rand = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
+    const randn = () => {
+      let u = 0, v = 0;
+      while (u === 0) u = rand();
+      while (v === 0) v = rand();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    };
+    let successes = 0;
+    const numSims = 400;
+    for (let sim = 0; sim < numSims; sim++) {
+      let pat = pat0;
+      let alive = true;
+      for (let yr = 0; yr < yearsDecum; yr++) {
+        pat = pat * (1 + retFrac + vol * randn()) - withdrawal;
+        if (pat <= 0) { alive = false; break; }
+      }
+      if (alive) successes++;
+    }
+    return (successes / numSims) * 100;
+  }
+
   // ── Local calcWithEvents (inline, not exported) ──────────────────────────────
   function calcWithEvents(
     aporte: number,
@@ -609,6 +629,21 @@ function WhatIfSection() {
     return null;
   }
 
+  // ── Cenário A (perfil fixo, sem life events) — mesma engine que B ────────────
+  const resultA = useMemo(() => {
+    if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
+    return calcWithEvents(aporteA, preset.retorno, custoA, currentAge, anoAtual, patrimonio, swrTarget, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [patrimonio, swrTarget, preset.retorno, aporteA, custoA, currentAge, anoAtual]);
+
+  const psucessoA: number | null = useMemo(() => {
+    if (!resultA || resultA.pat <= 0) return null;
+    const yearsDecum = horizon - resultA.idade;
+    if (yearsDecum <= 0) return null;
+    return runMCDecum(resultA.pat, custoA, preset.retorno ?? 0.0485, premissasWI?.volatilidade_equity ?? 0.12, yearsDecum);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resultA, horizon, custoA, preset.retorno, premissasWI?.volatilidade_equity]);
+
   // ── Cenário B (editável + life events) ───────────────────────────────────────
   const resultB = useMemo(() => {
     if (patrimonio == null || swrTarget == null || !preset.retorno) return null;
@@ -616,53 +651,20 @@ function WhatIfSection() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patrimonio, swrTarget, preset.retorno, aporteB, custoLiquidoB, currentAge, anoAtual, lifeEvents]);
 
-  // ── P(sucesso) Cenário B — MC desacumulação com horizonte configurável ────────
   const psucessoB: number | null = useMemo(() => {
     if (!resultB || resultB.pat <= 0) return null;
     const yearsDecum = horizon - resultB.idade;
     if (yearsDecum <= 0) return null;
-    const retFrac = preset.retorno ?? 0.0485; // already a fraction (0.0485), NOT percentage
-    const vol: number = premissasWI?.volatilidade_equity ?? 0.12;
-    const withdrawal = custoLiquidoB;
-    const numSims = 400;
-    // Seeded LCG — reproducível dado os mesmos parâmetros
-    const seedBase = (Math.round(resultB.pat / 10000) * 31 + yearsDecum * 17 + Math.round(withdrawal / 1000) * 7) >>> 0;
-    let s = seedBase || 1;
-    const rand = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
-    const randn = () => {
-      let u = 0, v = 0;
-      while (u === 0) u = rand();
-      while (v === 0) v = rand();
-      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-    };
-    let successes = 0;
-    for (let sim = 0; sim < numSims; sim++) {
-      let pat = resultB.pat;
-      let alive = true;
-      for (let yr = 0; yr < yearsDecum; yr++) {
-        pat = pat * (1 + retFrac + vol * randn()) - withdrawal;
-        if (pat <= 0) { alive = false; break; }
-      }
-      if (alive) successes++;
-    }
-    return (successes / numSims) * 100;
+    return runMCDecum(resultB.pat, custoLiquidoB, preset.retorno ?? 0.0485, premissasWI?.volatilidade_equity ?? 0.12, yearsDecum);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultB, horizon, custoLiquidoB, preset.retorno, premissasWI?.volatilidade_equity]);
 
   // ── Delta ─────────────────────────────────────────────────────────────────────
-  const deltaAnos = (idadeFireA != null && resultB) ? (resultB.idade - idadeFireA) : null;
+  // Ambos A e B usam a mesma metodologia: acumulação determinística + MC inline desacumulação
+  // A = perfil fixo (custo+aporte do perfil selecionado, sem life events)
+  // B = what-if editável (sliders livres + life events)
+  const deltaAnos = (resultA && resultB) ? (resultB.idade - resultA.idade) : null;
   const deltaP = (psucessoA != null && psucessoB != null) ? (psucessoB - psucessoA) : null;
-
-  // ── Metodologia: A vs B são diferentes por design ─────────────────────────
-  // A: MC completo — acumulação ESTOCÁSTICA (10k trajetórias, retornos variáveis 2026..FIRE)
-  //    fire_age_threshold = primeira idade onde P(base) ≥ 85%
-  // B: Acumulação DETERMINÍSTICA (retorno fixo preset.retorno) → cruza SWR trigger mais cedo
-  //    P calculado inline (400 sims) apenas na desacumulação, sem risco de acumulação
-  // Resultado: com inputs idênticos, B sempre fica mais otimista que A (data menor, P menor)
-  // A diferença NÃO é bug — é o custo de ignorar risco de mercado durante acumulação
-  const inputsIdenticos = byProfileA != null
-    && Math.abs((byProfileA.gasto_anual ?? 0) - custoLiquidoB) < 1000
-    && Math.abs((premissasWI?.aporte_mensal ?? 0) - aporteB) < 500;
 
   // ── Life event totals ──────────────────────────────────────────────────────────
   const totalOneShotEventos = lifeEvents.filter(e => e.tipo === 'one-shot').reduce((s, e) => s + e.custo, 0);
@@ -795,9 +797,14 @@ function WhatIfSection() {
         )}
       </div>
 
+      {/* ── Nota de metodologia ── */}
+      <div style={{ fontSize: '10px', color: 'var(--muted)', fontStyle: 'italic', marginBottom: '8px', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px solid var(--border)' }}>
+        ⓘ A e B usam a mesma metodologia: acumulação determinística (retorno fixo {((preset.retorno ?? 0.0485) * 100).toFixed(2)}%) + MC desacumulação ({horizon}a). Aba FIRE usa MC completo com acumulação estocástica → P tende a ser mais conservador.
+      </div>
+
       {/* ── Comparador A/B ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-        {/* Card A — MC precomputed by_profile */}
+        {/* Card A — perfil fixo, mesma engine que B */}
         {(() => {
           const pColor = pfireColorFn(psucessoA);
           return (
@@ -812,10 +819,10 @@ function WhatIfSection() {
               <div style={{ display: 'flex', gap: '12px', alignItems: 'baseline', flexWrap: 'wrap', marginBottom: '6px' }}>
                 <div>
                   <div style={{ fontSize: '2.2rem', fontWeight: 800, lineHeight: 1 }} className="pv">
-                    {anoFireA ?? '—'}
+                    {resultA ? resultA.ano : '—'}
                   </div>
                   <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--muted)' }} className="pv">
-                    {idadeFireA != null ? `${idadeFireA} anos` : '—'}
+                    {resultA ? `${resultA.idade} anos` : '—'}
                   </div>
                 </div>
                 <div>
@@ -828,23 +835,18 @@ function WhatIfSection() {
                 Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoA)}/ano</span>
                 {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteA)}/mês</span>
               </div>
-              {byProfileA?.pat_mediano_threshold > 0 && (
+              {resultA && resultA.pat > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
-                  Pat. mediano FIRE: <span className="pv">{privacyMode ? '••••' : fmtBRL(byProfileA.pat_mediano_threshold)}</span>
+                  Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultA.pat)}</span>
                 </div>
               )}
-              {byProfileA?.swr_at_fire != null && (
+              {resultA && resultA.swrAtFire != null && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
-                  SWR bruta: <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{(byProfileA.swr_at_fire * 100).toFixed(2)}%</span>
-                  {byProfileA?.pat_mediano_threshold > 0 && (
-                    <span> · SWR líquida: <span style={{ color: 'var(--green)', fontWeight: 600 }} className="pv">
-                      {privacyMode ? '••••' : `${(Math.max(0, custoA - inssAnualDiego - inssAnualKatia) / byProfileA.pat_mediano_threshold * 100).toFixed(2)}%`}
-                    </span></span>
-                  )}
+                  SWR bruta: <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{(resultA.swrAtFire * 100).toFixed(2)}%</span>
                 </div>
               )}
-              <div style={{ fontSize: '10px', color: 'var(--green)', marginTop: '6px', fontStyle: 'italic' }}>
-                MC precomputed — consistente com FIRE page
+              <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '6px', fontStyle: 'italic' }}>
+                Perfil fixo · sem eventos · {horizon - (resultA?.idade ?? 50)}a desacumulação (até {horizon}a)
               </div>
             </div>
           );
@@ -909,10 +911,7 @@ function WhatIfSection() {
                 </div>
               )}
               <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '4px', fontStyle: 'italic' }}>
-                Ano: acumulação determinística (retorno fixo {((preset.retorno ?? 0.0485) * 100).toFixed(2)}%) · P: MC 400 sims desacumulação · {horizon - (resultB?.idade ?? 50)}a até {horizon}a
-              </div>
-              <div style={{ fontSize: '10px', color: 'var(--yellow)', marginTop: '2px', fontStyle: 'italic' }}>
-                ⚠ Sem risco de mercado na acumulação — P tende a ser otimista vs MC completo
+                Editável via sliders · {lifeEvents.length > 0 ? `${lifeEvents.length} evento(s) · ` : ''}desacumulação {horizon - (resultB?.idade ?? 50)}a (até {horizon}a)
               </div>
             </div>
           );
@@ -954,11 +953,6 @@ function WhatIfSection() {
                   : `Mesmo ano de FIRE que perfil ${PROFILE_A_MAP[profileA].label}`
               : ''}
           </div>
-          {inputsIdenticos && deltaAnos != null && deltaAnos !== 0 && (
-            <div style={{ fontSize: '10px', color: 'var(--yellow)', marginTop: '6px', fontStyle: 'italic', textAlign: 'left', lineHeight: 1.4 }}>
-              ⓘ Inputs idênticos mas resultados diferentes: A usa MC completo (acumulação estocástica — mercado pode underperformar nos próximos anos). B usa retorno fixo na acumulação. A diferença de {Math.abs(deltaAnos)}a /{Math.abs(deltaP ?? 0).toFixed(0)}pp é o custo do risco de sequência de retornos — não é inconsistência.
-            </div>
-          )}
           {nearestPerfil && (
             <button
               onClick={() => router.push(`/simulators?cond=${nearestPerfil.cond}&mkt=${wiPreset}`)}
@@ -1211,8 +1205,8 @@ function WhatIfSection() {
           </button>
         ))}
         {(() => {
-          const anoFire = resultB?.ano ?? anoFireA;
-          const idadeFire = resultB?.idade ?? idadeFireA;
+          const anoFire = resultB?.ano ?? resultA?.ano;
+          const idadeFire = resultB?.idade ?? resultA?.idade;
           if (!anoFire || !idadeFire) return null;
           const anoFim = anoFire + (horizon - idadeFire);
           return (
