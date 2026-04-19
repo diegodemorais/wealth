@@ -893,6 +893,12 @@ def main():
             _json.dump(existing, f, indent=2, ensure_ascii=False)
         print(f"  ✓ fire_matrix.json atualizado com by_profile ({len(by_profile)} perfis)")
 
+        # Write to dedicated fire_by_profile.json (never overwritten by regular pipeline)
+        by_profile_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../dados/fire_by_profile.json")
+        with open(by_profile_path, "w") as f:
+            _json.dump(by_profile, f, indent=2, ensure_ascii=False)
+        print(f"  ✓ fire_by_profile.json atualizado (fonte primária imutável pelo pipeline)")
+
         # Also update dashboard_state.json for generate_data.py
         fire_state = {}
         try:

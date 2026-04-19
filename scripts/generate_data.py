@@ -83,6 +83,7 @@ HIPOTECA_SAC_PATH       = ROOT / "dados" / "hipoteca_sac.json"
 ETF_COMP_PATH           = ROOT / "dados" / "etf_composition.json"
 BOND_POOL_RUNWAY_PATH   = ROOT / "dados" / "bond_pool_runway.json"
 LUMPY_EVENTS_PATH       = ROOT / "dados" / "lumpy_events.json"
+FIRE_BY_PROFILE_PATH    = ROOT / "dados" / "fire_by_profile.json"   # MC 10k sims — never overwritten by pipeline
 
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 parser = argparse.ArgumentParser()
@@ -3390,13 +3391,26 @@ def main():
     lumpy_data          = _load_json_safe(LUMPY_EVENTS_PATH,     "lumpy_events")
 
     # ─── Adicionar by_profile ao fire_section (Phase 0 bloqueante #2) ─────────
-    # Fonte primária: fire_matrix.json (gerado por fire_montecarlo.py --by_profile)
-    # Fallback: dashboard_state.json.fire.by_profile (caso fire_matrix seja regenerado sem by_profile)
-    _by_profile = (fire_matrix_data or {}).get("by_profile") or state.get("fire", {}).get("by_profile")
+    # Prioridade: 1) fire_by_profile.json (dedicado, imutável pelo pipeline)
+    #             2) fire_matrix.json (se já contém)
+    #             3) dashboard_state.json.fire.by_profile (fallback legado)
+    _by_profile_dedicated = _load_json_safe(FIRE_BY_PROFILE_PATH, "fire_by_profile")
+    _by_profile = (
+        _by_profile_dedicated
+        or (fire_matrix_data or {}).get("by_profile")
+        or state.get("fire", {}).get("by_profile")
+    )
     if _by_profile:
         fire_section["by_profile"] = _by_profile
-        src = "fire_matrix.json" if (fire_matrix_data or {}).get("by_profile") else "dashboard_state.json (fallback)"
+        if _by_profile_dedicated:
+            src = "fire_by_profile.json (dedicated)"
+        elif (fire_matrix_data or {}).get("by_profile"):
+            src = "fire_matrix.json"
+        else:
+            src = "dashboard_state.json (fallback)"
         print(f"  -> by_profile: {len(_by_profile)} perfis (MC scenarios 3x2x3) [{src}]")
+    else:
+        print("  ⚠️  by_profile MISSING — Cenário A will show '—'. Run fire_montecarlo.py --by_profile")
 
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
