@@ -486,10 +486,11 @@ function WhatIfSection() {
   const [inssToggle, setInssToggle] = useState({ diego: false, katia: false });
   const [horizon, setHorizon] = useState<number>(HORIZONTE_VIDA);
   const [eventsExpanded, setEventsExpanded] = useState(false);
-  const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>(() => {
-    try { return JSON.parse(typeof window !== 'undefined' ? (localStorage.getItem('wealth-life-events-v2') ?? '[]') : '[]'); }
-    catch { return []; }
-  });
+  const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
+  useEffect(() => {
+    try { setLifeEvents(JSON.parse(window.localStorage.getItem('wealth-life-events-v2') ?? '[]')); }
+    catch { /* ignore */ }
+  }, []);
   const [newEvtNome, setNewEvtNome] = useState('');
   const [newEvtAno, setNewEvtAno] = useState<number>(new Date().getFullYear() + 5);
   const [newEvtCusto, setNewEvtCusto] = useState<number>(50000);
@@ -799,7 +800,7 @@ function WhatIfSection() {
 
       {/* ── Nota de metodologia ── */}
       <div style={{ fontSize: '10px', color: 'var(--muted)', fontStyle: 'italic', marginBottom: '8px', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px solid var(--border)' }}>
-        ⓘ A e B usam a mesma metodologia: acumulação determinística (retorno fixo {((preset.retorno ?? 0.0485) * 100).toFixed(2)}%) + MC desacumulação ({horizon}a). Aba FIRE usa MC completo com acumulação estocástica → P tende a ser mais conservador.
+        ⓘ A e B: mesma engine — acumulação determinística ({((preset.retorno ?? 0.0485) * 100).toFixed(2)}% fixo) + MC desacumulação 400 sims. <strong style={{ color: 'var(--text)' }}>O que importa é o Δ entre eles</strong>, não o P absoluto. Aba FIRE usa MC completo (acumulação estocástica + bond pool + spending smile) → P tende a ser mais conservador.
       </div>
 
       {/* ── Comparador A/B ── */}
@@ -827,7 +828,7 @@ function WhatIfSection() {
                 </div>
                 <div>
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
-                    {psucessoA != null ? `P ${psucessoA.toFixed(0)}%` : 'P —%'}
+                    {psucessoA != null ? `P(desac.) ${psucessoA.toFixed(0)}%` : 'P —%'}
                   </div>
                 </div>
               </div>
@@ -886,7 +887,7 @@ function WhatIfSection() {
                 </div>
                 <div>
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
-                    {psucessoB != null ? `P ${psucessoB.toFixed(0)}%` : 'P —%'}
+                    {psucessoB != null ? `P(desac.) ${psucessoB.toFixed(0)}%` : 'P —%'}
                   </div>
                 </div>
               </div>
@@ -922,14 +923,14 @@ function WhatIfSection() {
       {(deltaAnos !== null || deltaP !== null) && (
         <div style={{
           background: 'var(--card2)', borderRadius: '10px', padding: '14px',
-          border: '1px solid var(--border)',
+          border: `2px solid ${deltaAnos != null ? (deltaAnos > 0 ? 'var(--red)' : deltaAnos < 0 ? 'var(--green)' : 'var(--border)') : 'var(--border)'}`,
           textAlign: 'center', marginBottom: '12px',
         }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>
             Δ Impacto — B vs A
           </div>
           <div style={{
-            fontSize: '1.3rem', fontWeight: 800,
+            fontSize: '1.6rem', fontWeight: 800,
             color: deltaAnos != null
               ? (deltaAnos > 0 ? 'var(--red)' : deltaAnos < 0 ? 'var(--green)' : 'var(--muted)')
               : 'var(--muted)',
@@ -939,8 +940,8 @@ function WhatIfSection() {
               : '—'
             }
             {deltaP != null && (
-              <span style={{ marginLeft: '8px', color: deltaP >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp de P
+              <span style={{ marginLeft: '10px', fontSize: '1.1rem', color: deltaP >= 0 ? 'var(--green)' : 'var(--red)' }}>
+                {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp P(desac.)
               </span>
             )}
           </div>
@@ -1218,7 +1219,7 @@ function WhatIfSection() {
       </div>
 
       <div className="src">
-        Cenário A: MC precomputed — consistente com FIRE page · Cenário B: acumulação determinística + desacumulação MC 400 sims (horizonte configurável) · Life events: localStorage
+        Cenário A: perfil fixo sem eventos · Cenário B: acumulação determinística + desacumulação MC 400 sims · Life events: persistência local
       </div>
     </CollapsibleSection>
   );
