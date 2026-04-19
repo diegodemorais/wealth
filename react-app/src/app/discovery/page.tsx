@@ -101,9 +101,9 @@ type AgentVote = { agent: string; verdict: 'sim' | 'nao' | 'condicional'; convic
 
 function AgentVoteRow({ votes }: { votes: AgentVote[] }) {
   const colors: Record<AgentVote['verdict'], { bg: string; label: string }> = {
-    sim:        { bg: '#16a34a', label: '✓' },
-    nao:        { bg: '#dc2626', label: '✗' },
-    condicional:{ bg: '#ca8a04', label: '⚠' },
+    sim:        { bg: '#16a34a', label: 'integrar' },
+    nao:        { bg: '#dc2626', label: 'remover' },
+    condicional:{ bg: '#ca8a04', label: 'condicional' },
   };
   return (
     <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginTop: 6, marginBottom: 2 }}>
@@ -111,7 +111,7 @@ function AgentVoteRow({ votes }: { votes: AgentVote[] }) {
         const c = colors[v.verdict];
         return (
           <span key={v.agent} style={{ fontSize: 9, padding: '1px 5px', borderRadius: 3, background: c.bg + '22', color: c.bg, border: `1px solid ${c.bg}55`, fontWeight: 600, whiteSpace: 'nowrap' }}>
-            {v.agent} {c.label}{v.conviction ? ` ${v.conviction}/5` : ''}
+            {v.agent}: {c.label}{v.conviction ? ` ${v.conviction}/5` : ''}
           </span>
         );
       })}
