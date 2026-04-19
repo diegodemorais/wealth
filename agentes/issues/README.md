@@ -54,6 +54,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-discovery-tab | Aba Discovery — novos componentes sugeridos por todos os agentes + componentes órfãos | Dev | 🟡 Média | ⏳ Doing |
 | DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias (calcFireYear, P(FIRE), MC, semáforo, fmtBrl, wellness...) | Dev+Quant | 🔴 Alta | ⏳ Doing |
 | DEV-boldin-dashboard | Boldin Dashboard Gaps — F1+F2+D1+F5+F6+F7 (balanço holístico, surplus-gap, wellness, cenários, spouse, LTC) | Dev | 🔴 Alta | ⏳ Doing |
 | DEV-dashboard-components-alignment | Alinhamento visual/informacional com DashHTML — 32+ componentes | Dev | 🔴 Alta | ⏳ Doing (tarefas por componente) |

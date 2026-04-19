@@ -22,6 +22,7 @@ const pages = [
   { path: 'withdraw.html', name: 'Withdraw' },
   { path: 'simulators.html', name: 'Simulators' },
   { path: 'backtest.html', name: 'Backtest' },
+  { path: 'discovery.html', name: 'Discovery' },
 ];
 
 let allValid = true;

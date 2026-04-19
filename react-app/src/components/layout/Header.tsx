@@ -30,6 +30,7 @@ const TABS = [
   { href: '/withdraw', label: 'WITHDRAW', id: 'tab-withdraw' },
   { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
   { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
+  { href: '/discovery', label: 'DISCOVERY', id: 'tab-discovery' },
 ];
 
 export function Header() {
