@@ -800,7 +800,7 @@ function WhatIfSection() {
 
       {/* ── Nota de metodologia ── */}
       <div style={{ fontSize: '10px', color: 'var(--muted)', fontStyle: 'italic', marginBottom: '8px', padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px solid var(--border)' }}>
-        ⓘ A e B: mesma engine — acumulação determinística ({((preset.retorno ?? 0.0485) * 100).toFixed(2)}% fixo) + MC desacumulação 400 sims. <strong style={{ color: 'var(--text)' }}>O que importa é o Δ entre eles</strong>, não o P absoluto. Aba FIRE usa MC completo (acumulação estocástica + bond pool + spending smile) → P tende a ser mais conservador.
+        ⓘ A e B: mesma engine — acumulação determinística ({((preset.retorno ?? 0.0485) * 100).toFixed(2)}% fixo) + MC desacumulação 400 sims. <strong style={{ color: 'var(--text)' }}>O que importa é o Δ entre eles</strong>. Aba FIRE usa MC completo (acumulação estocástica + bond pool + spending smile) → P tende a diferir. Card A mostra também P do MC completo para referência.
       </div>
 
       {/* ── Comparador A/B ── */}
@@ -828,8 +828,13 @@ function WhatIfSection() {
                 </div>
                 <div>
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
-                    {psucessoA != null ? `P(desac.) ${psucessoA.toFixed(0)}%` : 'P —%'}
+                    {psucessoA != null ? `P(FIRE) ${psucessoA.toFixed(0)}%` : 'P —%'}
                   </div>
+                  {byProfileA?.p_at_threshold != null && (
+                    <div style={{ fontSize: '10px', color: 'var(--muted)', marginTop: '2px' }}>
+                      MC completo: {(byProfileA.p_at_threshold * 100).toFixed(0)}%
+                    </div>
+                  )}
                 </div>
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
@@ -887,7 +892,7 @@ function WhatIfSection() {
                 </div>
                 <div>
                   <div style={{ fontSize: '1.4rem', fontWeight: 700, color: pColor }} className="pv">
-                    {psucessoB != null ? `P(desac.) ${psucessoB.toFixed(0)}%` : 'P —%'}
+                    {psucessoB != null ? `P(FIRE) ${psucessoB.toFixed(0)}%` : 'P —%'}
                   </div>
                 </div>
               </div>
@@ -941,7 +946,7 @@ function WhatIfSection() {
             }
             {deltaP != null && (
               <span style={{ marginLeft: '10px', fontSize: '1.1rem', color: deltaP >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp P(desac.)
+                {deltaP >= 0 ? '+' : ''}{deltaP.toFixed(0)}pp P(FIRE)
               </span>
             )}
           </div>

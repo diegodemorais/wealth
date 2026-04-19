@@ -2064,6 +2064,20 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
         cached_macro = state.get("macro", {})
         selic_meta = cached_macro.get("selic_meta")
 
+    # -- IPCA 12M (acumulado 12 meses, BCB SGS 13522) ----------------
+    ipca_12m = None
+    try:
+        from fx_utils import get_ipca_12m
+        val = get_ipca_12m()
+        if not math.isnan(val):
+            ipca_12m = round(val, 2)
+    except (Exception, SystemExit):
+        pass
+
+    if ipca_12m is None:
+        # Fallback: cached no state
+        ipca_12m = state.get("macro", {}).get("ipca_12m")
+
     if selic_meta is None:
         # Fallback 2: valor do snapshot de memoria (agentes/memoria/08-macro.md -- Abril/2026)
         # TODO: atualizar quando COPOM alterar Selic
@@ -2196,6 +2210,7 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
 
     return {
         "selic_meta":               selic_meta,           # % a.a. -- taxa Selic meta vigente
+        "ipca_12m":                 ipca_12m,             # % a.a. -- IPCA acumulado 12 meses (BCB SGS 13522)
         "fed_funds":                fed_funds,             # % a.a. -- Fed Funds rate (FRED FEDFUNDS)
         "spread_selic_ff":          spread_selic_ff,       # pp    -- diferencial Selic - Fed Funds
         "depreciacao_brl_premissa": DEPRECIACAO_BRL_BASE,

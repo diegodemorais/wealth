@@ -525,12 +525,12 @@ export default function HomePage() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.premissas?.taxa_selic ? `${data.premissas.taxa_selic.toFixed(1)}%` : '—'}</div>
+                <div className="text-lg font-bold text-text">{data?.macro?.selic_meta != null ? `${(data.macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
                 <div className="text-xs text-muted mt-1">Selic</div>
               </div>
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.premissas?.ipca_corrente ? `${data.premissas.ipca_corrente.toFixed(1)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">IPCA YTD {anoAtual}</div>
+                <div className="text-lg font-bold text-text">{data?.macro?.ipca_12m != null ? `${(data.macro.ipca_12m as number).toFixed(1)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">IPCA 12M</div>
               </div>
               <div className="bg-slate-700/40 rounded p-2.5 text-center">
                 <div className="text-lg font-bold text-text">{d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}</div>
