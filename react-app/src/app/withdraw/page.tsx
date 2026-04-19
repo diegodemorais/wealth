@@ -373,97 +373,91 @@ export default function WithdrawPage() {
       </div>
 
       {/* 0. SWR Dual Cards — Atual vs FIRE Day */}
-      {(() => {
-        const prem = safeData.premissas ?? {};
-        const patrimonioAtual: number = (prem as any).patrimonio_atual ?? 0;
-        const custoVidaBase: number = activeScenarioCfg.custo_vida_base;
-        const swrAtual = patrimonioAtual > 0 ? custoVidaBase / patrimonioAtual : null;
-        const swrFireP50 = swrPercentis?.p50 != null ? swrPercentis.p50 : null;
-        const swrFireP10 = swrPercentis?.p10 != null ? swrPercentis.p10 : null;
-        const swrFireP90 = swrPercentis?.p90 != null ? swrPercentis.p90 : null;
-        const swrTarget = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
-        // Semáforo para SWR FIRE
-        const swrFireColor = swrFireP50 == null ? 'var(--muted)'
-          : swrFireP50 <= swrTarget ? 'var(--green)'
-          : swrFireP50 <= swrTarget * 1.33 ? 'var(--yellow)'
-          : 'var(--red)';
-        const swrFireStatus = swrFireP50 == null ? null
-          : swrFireP50 <= swrTarget ? '✓ dentro do target'
-          : swrFireP50 <= swrTarget * 1.33 ? '⚠ atenção'
-          : '✗ acima do target';
-        return (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, marginBottom: 16 }}>
-            {/* Card: SWR Atual */}
-            <InfoCard
-              label="SWR Atual"
-              value={swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
-              description={<>Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em><br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.</>}
-              accentColor="var(--muted)"
-              size="lg"
-            />
-            {/* Card: SWR Projetado FIRE Day */}
-            <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: `4px solid ${swrFireColor}` }}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
-                SWR Projetado — FIRE {(data as any)?.premissas?.ano_cenario_base ?? '2040'}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-                <div style={{ fontSize: '2rem', fontWeight: 800, color: swrFireColor, lineHeight: 1 }}>
-                  {swrFireP50 != null ? (privacyMode ? '••%' : `${(swrFireP50 * 100).toFixed(2)}%`) : '—'}
+      <CollapsibleSection id="section-swr-dual" title={secTitle('withdraw', 'swr-dual', 'SWR Atual vs Projetado FIRE Day')} defaultOpen={secOpen('withdraw', 'swr-dual', true)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const prem = safeData.premissas ?? {};
+            const patrimonioAtual: number = (prem as any).patrimonio_atual ?? 0;
+            const custoVidaBase: number = activeScenarioCfg.custo_vida_base;
+            const swrAtual = patrimonioAtual > 0 ? custoVidaBase / patrimonioAtual : null;
+            // swrEfetivo já ajusta por perfil: custo do perfil ÷ patrimônio MC
+            const swrFireP50 = swrEfetivo?.p50 ?? null;
+            const swrFireP10 = swrEfetivo?.p10 ?? null;
+            const swrFireP90 = swrEfetivo?.p90 ?? null;
+            const swrTarget = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
+            const swrFireColor = swrFireP50 == null ? 'var(--muted)'
+              : swrFireP50 <= swrTarget ? 'var(--green)'
+              : swrFireP50 <= swrTarget * 1.33 ? 'var(--yellow)'
+              : 'var(--red)';
+            const swrFireStatus = swrFireP50 == null ? null
+              : swrFireP50 <= swrTarget ? '✓ dentro do target'
+              : swrFireP50 <= swrTarget * 1.33 ? '⚠ atenção'
+              : '✗ acima do target';
+            return (
+              <>
+                <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, marginTop: 8 }}>
+                  <InfoCard
+                    label="SWR Atual"
+                    value={swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
+                    description={<>Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em><br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.</>}
+                    accentColor="var(--muted)"
+                    size="lg"
+                  />
+                  <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: `4px solid ${swrFireColor}` }}>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
+                      SWR Projetado — FIRE {(data as any)?.premissas?.ano_cenario_base ?? '2040'}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                      <div style={{ fontSize: '2rem', fontWeight: 800, color: swrFireColor, lineHeight: 1 }}>
+                        {swrFireP50 != null ? (privacyMode ? '••%' : `${(swrFireP50 * 100).toFixed(2)}%`) : '—'}
+                      </div>
+                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P50</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
+                      {swrFireP10 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>P10: {privacyMode ? '••%' : `${(swrFireP10 * 100).toFixed(2)}%`}</span>}
+                      {swrFireP90 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)' }}>P90: {privacyMode ? '••%' : `${(swrFireP90 * 100).toFixed(2)}%`}</span>}
+                    </div>
+                    {swrFireStatus && <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: swrFireColor }}>{swrFireStatus} · alvo ≤{(swrTarget * 100).toFixed(0)}%</div>}
+                    {!swrPercentis && <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>—</div>}
+                  </div>
                 </div>
-                <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P50</span>
-              </div>
-              <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
-                {swrFireP10 != null && (
-                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>
-                    P10: {privacyMode ? '••%' : `${(swrFireP10 * 100).toFixed(2)}%`}
-                  </span>
-                )}
-                {swrFireP90 != null && (
-                  <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)' }}>
-                    P90: {privacyMode ? '••%' : `${(swrFireP90 * 100).toFixed(2)}%`}
-                  </span>
-                )}
-              </div>
-              {swrFireStatus && (
-                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: swrFireColor }}>
-                  {swrFireStatus} · alvo ≤{(swrTarget * 100).toFixed(0)}%
-                </div>
-              )}
-              {!swrPercentis && (
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>—</div>
-              )}
-            </div>
-          <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-          </div>
-        );
-      })()}
+              </>
+            );
+          })()}
+        </div>
+      </CollapsibleSection>
 
       {/* Floor vs Upside — Cobertura por Camadas */}
-      {(() => {
-        const prem = safeData.premissas ?? {};
-        const gastoPiso: number = (safeData as any).gasto_piso ?? 0;
-        const custoVida: number = activeScenarioCfg.custo_vida_base;
-        const swrGatilho: number = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
-        const patrimonio: number = (prem as any).patrimonio_atual ?? 0;
-        const bpr = (safeData as any).bond_pool_runway ?? null;
-        const bondRunwayAnos: number | null =
-          bpr != null && Array.isArray(bpr.anos_cobertura_pos_fire)
-            ? (bpr.anos_cobertura_pos_fire as number[]).length
-            : null;
-        return (
-          <>
-            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-            <FloorUpsideWithdraw
-              gastoPiso={gastoPiso}
-              custoVida={custoVida}
-              swrGatilho={swrGatilho}
-              patrimonio={patrimonio}
-              bondRunwayAnos={bondRunwayAnos}
-              privacyMode={privacyMode}
-            />
-          </>
-        );
-      })()}
+      <CollapsibleSection id="section-floor-upside" title={secTitle('withdraw', 'floor-upside', 'Cobertura por Camadas — Floor vs Upside')} defaultOpen={secOpen('withdraw', 'floor-upside', true)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const prem = safeData.premissas ?? {};
+            const gastoPiso: number = (safeData as any).gasto_piso ?? 0;
+            const custoVida: number = activeScenarioCfg.custo_vida_base;
+            const swrGatilho: number = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
+            const patrimonio: number = (prem as any).patrimonio_atual ?? 0;
+            const bpr = (safeData as any).bond_pool_runway ?? null;
+            const bondRunwayAnos: number | null =
+              bpr != null && Array.isArray(bpr.anos_cobertura_pos_fire)
+                ? (bpr.anos_cobertura_pos_fire as number[]).length
+                : null;
+            return (
+              <>
+                <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+                <FloorUpsideWithdraw
+                  gastoPiso={gastoPiso}
+                  custoVida={custoVida}
+                  swrGatilho={swrGatilho}
+                  patrimonio={patrimonio}
+                  bondRunwayAnos={bondRunwayAnos}
+                  privacyMode={privacyMode}
+                />
+              </>
+            );
+          })()}
+        </div>
+      </CollapsibleSection>
 
       {/* 1. SWR no FIRE Day — Percentis P10 / P50 / P90 (moved first: número central da aposentadoria) */}
       {swrPercentis && (
