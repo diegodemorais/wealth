@@ -472,6 +472,7 @@ interface LifeEvent {
   ano: number;
   custo: number;
   tipo: 'one-shot' | 'recorrente';
+  categoria: 'despesa' | 'receita';
 }
 
 function WhatIfSection() {
@@ -495,6 +496,7 @@ function WhatIfSection() {
   const [newEvtAno, setNewEvtAno] = useState<number>(new Date().getFullYear() + 5);
   const [newEvtCusto, setNewEvtCusto] = useState<number>(50000);
   const [newEvtTipo, setNewEvtTipo] = useState<'one-shot' | 'recorrente'>('one-shot');
+  const [newEvtCategoria, setNewEvtCategoria] = useState<'despesa' | 'receita'>('despesa');
   const [evtError, setEvtError] = useState<string>('');
 
   const fmRetornos = (data as any)?.fire_matrix?.retornos_equity ?? {};
@@ -608,16 +610,17 @@ function WhatIfSection() {
     const target = custo / swr;
     let pat = pat0;
     for (let yr = 0; yr <= HORIZONTE_VIDA - age; yr++) {
-      // one-shot events: subtract at specific year
+      // one-shot events: subtract (despesa) or add (receita) at specific year
       for (const evt of events) {
         if (evt.tipo === 'one-shot' && evt.ano === ano + yr) {
-          pat = Math.max(0, pat - evt.custo);
+          const sign = (evt.categoria ?? 'despesa') === 'receita' ? -1 : 1;
+          pat = Math.max(0, pat - sign * evt.custo);
         }
       }
-      // recorrente: accumulate delta_custo for years at or after start
+      // recorrente: despesa adds to spending, receita reduces it
       const recorrenteDelta = events
         .filter(e => e.tipo === 'recorrente' && e.ano <= ano + yr)
-        .reduce((sum, e) => sum + e.custo, 0);
+        .reduce((sum, e) => sum + ((e.categoria ?? 'despesa') === 'receita' ? -e.custo : e.custo), 0);
       const custoEfetivo = custo + recorrenteDelta;
       const targetEfetivo = custoEfetivo / swr;
       if (pat >= targetEfetivo) {
@@ -682,7 +685,7 @@ function WhatIfSection() {
   function handleAddEvent() {
     if (!newEvtNome.trim()) { setEvtError('Nome é obrigatório'); return; }
     if (newEvtAno < 2025 || newEvtAno > 2070) { setEvtError('Ano deve ser entre 2025 e 2070'); return; }
-    if (newEvtCusto <= 0) { setEvtError('Custo deve ser maior que 0'); return; }
+    if (newEvtCusto <= 0) { setEvtError('Valor deve ser maior que 0'); return; }
     setEvtError('');
     setLifeEvents(prev => [...prev, {
       id: `${Date.now()}`,
@@ -690,6 +693,7 @@ function WhatIfSection() {
       ano: newEvtAno,
       custo: newEvtCusto,
       tipo: newEvtTipo,
+      categoria: newEvtCategoria,
     }]);
     setNewEvtNome('');
   }
@@ -1133,16 +1137,28 @@ function WhatIfSection() {
                 </div>
               </div>
             </div>
+            {/* Categoria selector */}
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '6px', alignItems: 'center' }}>
+              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Categoria:</span>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
+                <input type="radio" name="evt-categoria" value="despesa" checked={newEvtCategoria === 'despesa'} onChange={() => setNewEvtCategoria('despesa')} />
+                <span style={{ color: '#dc2626' }}>Despesa</span>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
+                <input type="radio" name="evt-categoria" value="receita" checked={newEvtCategoria === 'receita'} onChange={() => setNewEvtCategoria('receita')} />
+                <span style={{ color: '#16a34a' }}>Receita</span>
+              </label>
+            </div>
             {/* Tipo selector */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
               <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Tipo:</span>
               <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
                 <input type="radio" name="evt-tipo" value="one-shot" checked={newEvtTipo === 'one-shot'} onChange={() => setNewEvtTipo('one-shot')} />
-                One-shot (custo único)
+                {newEvtCategoria === 'receita' ? 'One-shot (entrada única)' : 'One-shot (custo único)'}
               </label>
               <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
                 <input type="radio" name="evt-tipo" value="recorrente" checked={newEvtTipo === 'recorrente'} onChange={() => setNewEvtTipo('recorrente')} />
-                Recorrente (delta custo anual)
+                {newEvtCategoria === 'receita' ? 'Recorrente (renda anual)' : 'Recorrente (delta custo anual)'}
               </label>
             </div>
             {evtError && (
@@ -1174,8 +1190,8 @@ function WhatIfSection() {
                     <span style={{ fontSize: '10px', color: evt.tipo === 'recorrente' ? 'var(--yellow)' : 'var(--muted)', fontStyle: 'italic' }}>
                       {evt.tipo === 'recorrente' ? '∞ rec.' : '1x'}
                     </span>
-                    <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
-                      {privacyMode ? '••••' : `${evt.tipo === 'recorrente' ? '+' : '−'}R$${(evt.custo / 1000).toFixed(0)}k${evt.tipo === 'recorrente' ? '/ano' : ''}`}
+                    <span className="pv" style={{ color: (evt.categoria ?? 'despesa') === 'receita' ? '#16a34a' : 'var(--red)', fontWeight: 600 }}>
+                      {privacyMode ? '••••' : `${(evt.categoria ?? 'despesa') === 'receita' ? '+' : '−'}R$${(evt.custo / 1000).toFixed(0)}k${evt.tipo === 'recorrente' ? '/ano' : ''}`}
                     </span>
                     <button
                       onClick={() => setLifeEvents(prev => prev.filter(e => e.id !== evt.id))}
