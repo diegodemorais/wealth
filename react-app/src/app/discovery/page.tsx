@@ -5,6 +5,9 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 
 // ─── Extracted Section A component imports ───────────────────────────────────
+import TLHMonitor from '@/components/dashboard/TLHMonitor';
+import SoRRBondTentTrigger from '@/components/dashboard/SoRRBondTentTrigger';
+import CAPEAportePriority from '@/components/dashboard/CAPEAportePriority';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import TaxDeferralClock from '@/components/dashboard/TaxDeferralClock';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
@@ -150,6 +153,76 @@ function OrphanWrapper({ name, file, integrate, tab, votes, children }: {
 }
 
 // ─── Section A: Discovery wrappers (components extracted to src/components/dashboard/) ─────────
+
+function TLHMonitorDisc({ data }: { data: any }) {
+  const lotes = data?.tlh ?? [];
+  const gatilho = data?.tlhGatilho ?? 0.05;
+  const cambio = data?.cambio ?? 5.15;
+  return (
+    <Card
+      title="TLH Monitor — Tax-Loss Harvesting Sistemático"
+      badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 600 }}>Science · Novo</span>}
+      verdict={<VerdictBadge integrate tab="Portfolio" />}
+      votes={[
+        { agent: 'Tax', verdict: 'sim', conviction: 5 },
+        { agent: 'Advocate', verdict: 'sim', conviction: 4 },
+        { agent: 'Science', verdict: 'sim', conviction: 5 },
+      ]}
+    >
+      <TLHMonitor lotes={lotes} gatilho={gatilho} cambio={cambio} />
+    </Card>
+  );
+}
+
+function SoRRBondTentTriggerDisc({ data }: { data: any }) {
+  const premissas = data?.premissas ?? {};
+  const drift = data?.drift ?? {};
+  // RF% = IPCA drift atual (única entrada RF no drift map)
+  const rfPctAtual = drift.IPCA?.atual ?? 5.9;
+  return (
+    <Card
+      title="SoRR Bond Tent Trigger"
+      badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 600 }}>Science · Novo</span>}
+      verdict={<VerdictBadge integrate tab="FIRE" />}
+      votes={[
+        { agent: 'FIRE', verdict: 'sim', conviction: 5 },
+        { agent: 'RF', verdict: 'sim', conviction: 4 },
+        { agent: 'Science', verdict: 'sim', conviction: 5 },
+      ]}
+    >
+      <SoRRBondTentTrigger
+        idadeAtual={premissas.idade_atual ?? 39}
+        idadeFire={premissas.idade_cenario_base ?? 53}
+        rfPctAtual={rfPctAtual}
+        patrimonioAtual={premissas.patrimonio_atual ?? 0}
+      />
+    </Card>
+  );
+}
+
+function CAPEAportePriorityDisc({ data }: { data: any }) {
+  const drift = data?.drift ?? {};
+  // Expected returns Research Affiliates (CAPE-based, atualização mensal)
+  const etfs = [
+    { ticker: 'SWRD', atual: drift.SWRD?.atual ?? 36.3, alvo: drift.SWRD?.alvo ?? 39.5, expectedReturn: 3.4 },
+    { ticker: 'AVGS', atual: drift.AVGS?.atual ?? 28.1, alvo: drift.AVGS?.alvo ?? 23.7, expectedReturn: 9.5 },
+    { ticker: 'AVEM', atual: drift.AVEM?.atual ?? 23.2, alvo: drift.AVEM?.alvo ?? 15.8, expectedReturn: 9.0 },
+  ];
+  return (
+    <Card
+      title="CAPE-Based Aporte Priority"
+      badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 600 }}>Science · Novo</span>}
+      verdict={<VerdictBadge integrate tab="Now" />}
+      votes={[
+        { agent: 'Factor', verdict: 'sim', conviction: 4 },
+        { agent: 'FIRE', verdict: 'sim', conviction: 4 },
+        { agent: 'Science', verdict: 'sim', conviction: 5 },
+      ]}
+    >
+      <CAPEAportePriority etfs={etfs} />
+    </Card>
+  );
+}
 
 function RealYieldGaugeDisc({ data }: { data: any }) {
   const rf = data?.rf ?? {};
@@ -544,6 +617,9 @@ export default function DiscoveryPage() {
           sub="Mockups com dados reais. Aprovados entram nas abas permanentes; rejeitados são arquivados."
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <TLHMonitorDisc data={data} />
+          <SoRRBondTentTriggerDisc data={data} />
+          <CAPEAportePriorityDisc data={data} />
           <RealYieldGaugeDisc data={data} />
           <TaxDeferralClockDisc data={data} />
           <SequenceOfReturnsHeatmapDisc data={data} />
