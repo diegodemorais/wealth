@@ -1,18 +1,53 @@
 'use client';
 
+import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { ExpectedReturnWaterfall } from '@/components/dashboard/ExpectedReturnWaterfall';
+import { BtcFIREProjectionCard } from '@/components/dashboard/BtcFIREProjectionCard';
+import { usePageData } from '@/hooks/usePageData';
+import { pageStateElement } from '@/components/primitives/PageStateGuard';
+
 export default function DiscoveryPage() {
+  const { data, isLoading, dataError } = usePageData();
+
+  const guard = pageStateElement({ isLoading, dataError, data });
+  if (guard) return guard;
+
+  const hodl11 = (data as any)?.hodl11 ?? {};
+  const fireProjection = hodl11?.fire_projection;
+
   return (
     <div>
       <div style={{ marginBottom: 20, paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
         <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>Discovery</h1>
         <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--muted)' }}>
-          Componentes anteriores integrados às abas permanentes:
+          Componentes em avaliação antes de integrar às abas permanentes. Anteriores integrados:
           IR Shield → Portfolio · Bond Strategy → Withdraw · Próximo Aporte → Now · Carry Differential → Now
         </p>
       </div>
-      <div style={{ fontSize: 12, color: 'var(--muted)', padding: '20px 0', textAlign: 'center' }}>
-        Nenhum componente em avaliação no momento.
-      </div>
+
+      {/* Componente 1: Expected Return Waterfall */}
+      <CollapsibleSection
+        id="discovery-factor-waterfall"
+        title="Expected Return Waterfall — Decomposição Fatorial FF6"
+        defaultOpen={true}
+      >
+        <ExpectedReturnWaterfall />
+      </CollapsibleSection>
+
+      {/* Componente 2: BTC FIRE Projection */}
+      {fireProjection && (
+        <CollapsibleSection
+          id="discovery-btc-fire-projection"
+          title="HODL11 — Projeção FIRE Day (3 Cenários BTC)"
+          defaultOpen={true}
+        >
+          <BtcFIREProjectionCard
+            hodl11BrlAtual={fireProjection.hodl11_brl_atual}
+            btcAtualUsd={fireProjection.btc_atual_usd}
+            cenarios={fireProjection.cenarios}
+          />
+        </CollapsibleSection>
+      )}
     </div>
   );
 }

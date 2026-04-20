@@ -48,6 +48,7 @@ from config import (
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
     INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
     INSS_KATIA_INICIO_ANO, RETORNO_RF_REAL_BOND_POOL,
+    BTC_CENARIOS_USD,
     update_dashboard_state,
 )
 
@@ -1830,6 +1831,101 @@ def compute_premissas_vs_realizado(
     return result if any(v is not None for v in result.values()) else None
 
 
+# ─── HODL11 FIRE Projection ───────────────────────────────────────────────────
+def _compute_hodl11_fire_projection(hodl11_brl, btc_atual_usd, btc_cenarios_usd):
+    """Projeta valor do HODL11 no FIRE Day em 3 cenários de BTC.
+
+    Args:
+        hodl11_brl: valor total da posição HODL11 em BRL
+        btc_atual_usd: preço atual do BTC em USD (de macro.bitcoin_usd ou mercado.btc_usd)
+        btc_cenarios_usd: dict com cenários bear/base/bull em USD
+    """
+    if hodl11_brl <= 0 or btc_atual_usd <= 0:
+        return None
+
+    result = {}
+    for cenario, btc_target_usd in btc_cenarios_usd.items():
+        upside_factor = btc_target_usd / max(btc_atual_usd, 1)
+        valor_fire_brl = hodl11_brl * upside_factor
+        result[cenario] = {
+            "btc_target_usd": btc_target_usd,
+            "upside_factor": round(upside_factor, 2),
+            "valor_fire_brl": round(valor_fire_brl),
+        }
+
+    return {
+        "btc_atual_usd": round(btc_atual_usd, 2),
+        "hodl11_brl_atual": round(hodl11_brl),
+        "cenarios": result,
+    }
+
+
+# ─── Human Capital Crossover ──────────────────────────────────────────────────
+def _compute_human_capital_crossover(fire_trilha, premissas):
+    """Calcula VP do capital humano por ano e detecta crossover com patrimônio P50."""
+    TAXA_DESCONTO = 0.045   # 4.5% real a.a.
+    CRESC_RENDA = 0.02      # 2% real a.a.
+    renda_anual = premissas.get("renda_estimada", 540000)
+    if isinstance(renda_anual, (int, float)) and renda_anual < 10000:
+        # Likely monthly — convert to annual
+        renda_anual = renda_anual * 12
+    idade_atual = premissas.get("idade_atual", 39)
+    ano_atual = premissas.get("ano_atual", 2026)
+    idade_fire = premissas.get("idade_cenario_base", 53)
+
+    datas = (fire_trilha or {}).get("dates", [])
+    valores = (fire_trilha or {}).get("trilha_brl", [])
+    by_date = {d: v for d, v in zip(datas, valores) if v is not None}
+
+    pontos = []
+    crossover_entry = None
+
+    for offset in range(idade_fire - idade_atual + 1):
+        ano = ano_atual + offset
+        idade = idade_atual + offset
+        n = max(0, idade_fire - idade)
+
+        r, g = TAXA_DESCONTO, CRESC_RENDA
+        if n == 0:
+            vp_hc = 0.0
+        elif abs(r - g) < 1e-9:
+            vp_hc = renda_anual * n
+        else:
+            vp_hc = renda_anual * (1 - ((1 + g) / (1 + r)) ** n) / (r - g)
+
+        pat = None
+        for mes in ["12", "11", "10"]:
+            pat = by_date.get(f"{ano}-{mes}")
+            if pat is not None:
+                break
+        if pat is None:
+            pat = 0.0
+
+        crossed = pat >= vp_hc
+        entry = {
+            "ano": ano,
+            "idade": idade,
+            "vp_capital_humano": round(vp_hc),
+            "pat_financeiro": round(pat),
+            "crossover": crossed,
+            "delta": round(pat - vp_hc),
+        }
+        pontos.append(entry)
+        if crossed and crossover_entry is None:
+            crossover_entry = entry
+
+    return {
+        "taxa_desconto_real": TAXA_DESCONTO,
+        "crescimento_renda": CRESC_RENDA,
+        "renda_estimada_anual": renda_anual,
+        "crossover_ano": crossover_entry["ano"] if crossover_entry else None,
+        "crossover_idade": crossover_entry["idade"] if crossover_entry else None,
+        "fire_day_ano": ano_atual + (idade_fire - idade_atual),
+        "fire_day_idade": idade_fire,
+        "pontos": pontos,
+    }
+
+
 # ─── 8. DRIFT ─────────────────────────────────────────────────────────────────
 def compute_drift(posicoes, rf, hodl11_brl, cambio):
     # Total
@@ -3205,6 +3301,12 @@ def main():
     # Inject cambio into macro for template convenience
     macro["cambio"] = cambio
 
+    # HODL11 FIRE projection (3 cenários BTC/USD) — precisa de macro.bitcoin_usd
+    _btc_usd_live = macro.get("bitcoin_usd") or (state.get("mercado", {}).get("btc_usd"))
+    hodl11["fire_projection"] = _compute_hodl11_fire_projection(
+        hodl11_brl, _btc_usd_live or 0, BTC_CENARIOS_USD
+    )
+
     # Rolling Sharpe 12m — preferir JSON core
     _selic = macro.get("selic_meta") or 0
     if ROLLING_CORE.exists():
@@ -3552,6 +3654,9 @@ def main():
                 "inss_katia_anual": INSS_KATIA_ANUAL,
             },
         },
+
+        # Human Capital Crossover — VP capital humano vs patrimônio financeiro
+        "human_capital": _compute_human_capital_crossover(fire_trilha_data, premissas),
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)

@@ -79,6 +79,13 @@ HODL11_PISO_PCT = 1.5
 HODL11_ALVO_PCT = 3.0
 HODL11_TETO_PCT = 5.0
 
+# BTC cenários para projeção FIRE Day (USD)
+BTC_CENARIOS_USD = {
+    "bear": 80_000,
+    "base": 250_000,
+    "bull": 500_000,
+}
+
 # Factor underperformance (fonte: carteira.md — gatilho revisão AVGS)
 FACTOR_UNDERPERF_THRESHOLD = -5  # pp — AVGS vs SWRD rolling 12m
 

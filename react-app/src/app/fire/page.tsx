@@ -14,6 +14,7 @@ import { FireScenariosTable } from '@/components/fire/FireScenariosTable';
 import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
+import { HumanCapitalCrossover } from '@/components/dashboard/HumanCapitalCrossover';
 import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
 import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
 import { usePageData } from '@/hooks/usePageData';
@@ -529,6 +530,29 @@ export default function FirePage() {
       <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire')} icon="🏛️">
         <BalancoHolistico data={data as any} showCapitalHumanoBadge />
       </CollapsibleSection>
+
+      {/* 4b-bis. Capital Humano vs. Financeiro — Crossover */}
+      {(() => {
+        const hc = (data as any)?.human_capital;
+        if (!hc || !hc.pontos?.length) return null;
+        return (
+          <CollapsibleSection
+            id="section-capital-humano"
+            title={secTitle('fire', 'section-capital-humano', 'Capital Humano vs. Financeiro')}
+            defaultOpen={secOpen('fire', 'section-capital-humano', true)}
+          >
+            <HumanCapitalCrossover
+              pontos={hc.pontos}
+              crossoverAno={hc.crossover_ano}
+              crossoverIdade={hc.crossover_idade}
+              fireDayAno={hc.fire_day_ano}
+              fireDayIdade={hc.fire_day_idade}
+              taxaDesconto={hc.taxa_desconto_real}
+              rendaAnual={hc.renda_estimada_anual}
+            />
+          </CollapsibleSection>
+        );
+      })()}
 
       {/* 4c-pre. Floor vs Upside — inserido após Balanço Holístico, antes de Cônjuge Sobrevivente */}
       {(() => {

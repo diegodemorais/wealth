@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-20T07:00:56",
-  "_generated_brt": "2026-04-20T07:00:56-03:00",
+  "_generated": "2026-04-20T07:03:19",
+  "_generated_brt": "2026-04-20T07:03:19-03:00",
   "date": "2026-04-20",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -79,7 +79,7 @@
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 67.71,
+      "price": 67.67,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -109,7 +109,7 @@
     "stress": 87.6
   },
   "premissas": {
-    "patrimonio_atual": 3681077,
+    "patrimonio_atual": 3681070,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -249,7 +249,7 @@
     },
     "pat_mediano_fire": 11527476.0,
     "pat_mediano_fire50": 10156721.0,
-    "mc_date": "2026-04-19",
+    "mc_date": "2026-04-20",
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -1808,7 +1808,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -1817,7 +1817,7 @@
       253.74,
       283.54,
       296.13,
-      304.69,
+      304.68,
       321.64,
       339.22,
       328.39,
@@ -2413,23 +2413,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd_proxy": 13.03,
+      "btc_atual_usd": 75224.99,
       "hodl11_brl_atual": 109007,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
-          "upside_factor": 6138.25,
-          "valor_fire_brl": 669112832
+          "upside_factor": 1.06,
+          "valor_fire_brl": 115926
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 19182.04,
-          "valor_fire_brl": 2090977600
+          "upside_factor": 3.32,
+          "valor_fire_brl": 362270
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 38364.08,
-          "valor_fire_brl": 4181955200
+          "upside_factor": 6.65,
+          "valor_fire_brl": 724540
         }
       }
     }
@@ -2503,7 +2503,7 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -1.7,
-      "posicao_r": 1317826,
+      "posicao_r": 1317823,
       "acao": "Rebalancear",
       "detalhe": "drift: -3.70pp (atual 35.8% vs alvo 39.5%) · posição R$1318k"
     },
@@ -2525,7 +2525,7 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.6130621554507,
+      "valor": -11.613055714778582,
       "unidade": "pp",
       "piso": -2.0,
       "gap": -9.61,
@@ -2677,7 +2677,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 67.71,
+      "price": 67.67,
       "ucits": "JPGL.L"
     }
   ],
@@ -3040,8 +3040,8 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 649045,
-    "retorno_usd": 258002,
+    "patrimonio_equity_usd": 649044,
+    "retorno_usd": 258000,
     "pct_aportes": 60.2,
     "pct_retorno": 39.8,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
@@ -3071,7 +3071,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 85.2,
-    "bitcoin_usd": 75105.26,
+    "bitcoin_usd": 75224.99,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -3089,9 +3089,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9904,
-    "btc_usd": 75105.26,
+    "btc_usd": 75224.99,
     "cambio_mtd_pct": -3.21,
-    "btc_mtd_pct": 4.49,
+    "btc_mtd_pct": 4.66,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3646,7 +3646,7 @@
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3681077,
+    "financeiro_brl": 3681070,
     "imovel_equity_brl": 367875.3,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 452124.7,
@@ -3654,7 +3654,7 @@
     "capital_humano_vp": 4914000.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 9395952.3,
+    "total_brl": 9395945.3,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
@@ -3671,7 +3671,7 @@
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 442082,
-    "total_portfolio_brl": 3681077,
+    "total_portfolio_brl": 3681070,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -5283,7 +5283,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-20T07:00:47",
+    "_generated": "2026-04-20T07:03:11",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
