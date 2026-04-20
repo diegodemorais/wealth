@@ -255,7 +255,7 @@ export default function PortfolioPage() {
                   rendaPlus={rfDetalhe.renda2065 ?? 0}
                   cryptoLegado={comp.crypto_legado_brl ?? 0}
                   totalBrl={c.total_brasil_brl ?? 0}
-                  concentrationBrazil={c.brasil_pct ?? 0}
+                  concentrationBrazil={(c.brasil_pct ?? 0) / 100}
                 />
               );
             })()}

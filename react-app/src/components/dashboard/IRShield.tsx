@@ -103,7 +103,7 @@ export default function IRShield({ irDiferidoTotal, patrimonioTotal, lotes, gati
       </div>
 
       {/* Bicolor bar */}
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ marginBottom: 12 }}>
         <div style={{ display: 'flex', height: 16, borderRadius: 4, overflow: 'hidden' }}>
           <div style={{ width: `${liquidoPct}%`, background: 'var(--accent)' }} />
           <div style={{ flex: 1, background: '#dc2626' }} />
@@ -114,19 +114,10 @@ export default function IRShield({ irDiferidoTotal, patrimonioTotal, lotes, gati
         </div>
       </div>
 
-      {/* ZONA 3 — Seletividade de Lotes */}
-      <div style={{ borderTop: '1px solid var(--border)', paddingTop: 14 }}>
-        <div style={{
-          background: '#2563eb18', border: '1px solid #2563eb44',
-          borderRadius: 6, padding: '7px 10px', marginBottom: 12, fontSize: 10, color: '#2563eb',
-        }}>
-          <strong>Seletividade de Lotes:</strong> quando a venda for inevitável (Safety valve drift &gt;10pp
-          ou fase de usufruto pós-FIRE), use os lotes em perda primeiro para minimizar IR (15%).
-          Estratégia dominante: diferimento total — não vender.
-        </div>
-
-        {/* Summary panels */}
-        <div className="grid grid-cols-2 gap-3" style={{ marginBottom: 12 }}>
+      {/* Monitor TLH — cards de oportunidade */}
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 9, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Monitor TLH</div>
+        <div className="grid grid-cols-2 gap-3">
           <div style={{ background: 'var(--card2)', borderRadius: 6, padding: 10, textAlign: 'center' }}>
             <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 4 }}>Perda Elegível (BRL)</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: hasPerda ? '#dc2626' : 'var(--muted)' }}>
@@ -145,6 +136,18 @@ export default function IRShield({ irDiferidoTotal, patrimonioTotal, lotes, gati
               Perda BRL × 15% · requer ganho a compensar
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ZONA 3 — Seletividade de Lotes */}
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: 14 }}>
+        <div style={{
+          background: '#2563eb18', border: '1px solid #2563eb44',
+          borderRadius: 6, padding: '7px 10px', marginBottom: 12, fontSize: 10, color: '#2563eb',
+        }}>
+          <strong>Seletividade de Lotes:</strong> quando a venda for inevitável (Safety valve drift &gt;10pp
+          ou fase de usufruto pós-FIRE), use os lotes em perda primeiro para minimizar IR (15%).
+          Estratégia dominante: diferimento total — não vender.
         </div>
 
         {/* Tabela de lotes */}
