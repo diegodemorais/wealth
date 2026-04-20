@@ -22,6 +22,7 @@ import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
+import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -243,6 +244,13 @@ export default function HomePage() {
             etfs={aporteEtfs}
             dcaItems={d.dcaItems}
           />
+        </div>
+      )}
+
+      {/* 5b. Semáforo de Gatilhos — collapsed por default, mostra proxAcao por ativo */}
+      {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
+        <div style={{ marginBottom: 14 }}>
+          <SemaforoGatilhos items={d.dcaItems} />
         </div>
       )}
 
