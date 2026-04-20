@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
-import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
+import AporteDecisionPanel from '@/components/dashboard/AporteDecisionPanel';
+import CarryDifferential from '@/components/dashboard/CarryDifferential';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
@@ -51,6 +52,20 @@ export default function HomePage() {
 
   // Current year — from premissas to avoid hardcoding
   const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
+
+  // Aporte ETFs for AporteDecisionPanel
+  const aporteEtfs = [
+    { ticker: 'SWRD', atual: (data?.drift as any)?.SWRD?.atual ?? 0, alvo: (data?.drift as any)?.SWRD?.alvo ?? 39.5, expectedReturn: 3.7 },
+    { ticker: 'AVGS', atual: (data?.drift as any)?.AVGS?.atual ?? 0, alvo: (data?.drift as any)?.AVGS?.alvo ?? 23.7, expectedReturn: 5.0 },
+    { ticker: 'AVEM', atual: (data?.drift as any)?.AVEM?.atual ?? 0, alvo: (data?.drift as any)?.AVEM?.alvo ?? 15.8, expectedReturn: 5.0 },
+  ];
+
+  // Carry Differential data
+  const carryData = {
+    selic: (data as any)?.macro?.selic_meta ?? 14.75,
+    fedFunds: (data as any)?.macro?.fed_funds ?? 3.64,
+    cambio: (data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? null,
+  };
 
   // Compute max drift
   const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
@@ -177,6 +192,13 @@ export default function HomePage() {
         />
       </div>
 
+      {/* 3b. SEÇÃO: Carry Differential — colapsada */}
+      <CollapsibleSection id="section-carry-differential" title="Carry Differential — Selic vs Fed Funds" defaultOpen={secOpen('now', 'carry-differential', false)} icon="💱">
+        <div style={{ padding: '0 16px 16px' }}>
+          <CarryDifferential {...carryData} />
+        </div>
+      </CollapsibleSection>
+
       {/* 4. SEÇÃO: Time to FIRE — Big number + Progresso */}
       <TimeToFireProgressBar
         fireProgress={d.firePercentage}
@@ -214,11 +236,14 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* 5. SEÇÃO: Semáforos de Gatilhos [COLLAPSIBLE, CRITICAL] */}
+      {/* 5. SEÇÃO: Próximo Aporte — Equity & Gatilhos RF */}
       {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
-        <SemaforoGatilhos
-          items={d.dcaItems}
-        />
+        <div style={{ marginBottom: 14 }}>
+          <AporteDecisionPanel
+            etfs={aporteEtfs}
+            dcaItems={d.dcaItems}
+          />
+        </div>
       )}
 
       {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}

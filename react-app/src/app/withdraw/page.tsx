@@ -17,7 +17,7 @@ import { FIRE_RULES } from '@/config/business-rules';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import { EChart } from '@/components/primitives/EChart';
 import BondMaturityLadder from '@/components/dashboard/BondMaturityLadder';
-import { BondPoolComposition } from '@/components/dashboard/BondPoolComposition';
+import BondStrategyPanel from '@/components/dashboard/BondStrategyPanel';
 import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
 import BondLadderTimeline from '@/components/dashboard/BondLadderTimeline';
 
@@ -583,95 +583,24 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 4. Bond Pool Readiness — Proteção SoRR */}
+      {/* 4. Bond Strategy — SoRR + Pool Readiness */}
       {bondPoolReadiness && (
-        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Pool Readiness — Proteção SoRR')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon="🏦">
+        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon="🏦">
           <div style={{ padding: '0 16px 16px' }}>
-            <div style={{ marginBottom: 8 }}>
-              <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-            </div>
-            <BondPoolReadiness data={bondPoolReadiness} custo_vida_base={activeScenarioCfg.custo_vida_base} />
-            {/* Runway por perfil — comparação e trajetória */}
-            {bondPoolRunwayByProfile && (
-              <div style={{ marginTop: 14 }}>
-                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 8 }}>
-                  Runway do Bond Pool pós-FIRE — por perfil
-                </div>
-                {/* Comparison strip */}
-                <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-                  {(Object.entries(withdrawCenarios) as [ScenarioKey, typeof withdrawCenarios[ScenarioKey]][]).map(([key, cfg]) => {
-                    const runway = bondPoolRunwayByProfile[key]?.runway_anos;
-                    const isActive = key === withdrawScenario;
-                    return (
-                      <div key={key} style={{
-                        flex: '1 1 100px',
-                        background: isActive ? 'rgba(99,179,237,.12)' : 'var(--card2)',
-                        border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
-                        borderRadius: 8,
-                        padding: '10px 12px',
-                        textAlign: 'center',
-                      }}>
-                        <div style={{ fontSize: 'var(--text-xs)', color: isActive ? 'var(--accent)' : 'var(--muted)', fontWeight: 600, marginBottom: 4 }}>
-                          {cfg.label}
-                        </div>
-                        <div style={{ fontSize: '1.2rem', fontWeight: 700, color: runway != null && runway >= 7 ? 'var(--green)' : runway != null && runway >= 5 ? 'var(--yellow)' : 'var(--red)' }}>
-                          {runway != null ? (privacyMode ? '••••' : `${runway.toFixed(1)}a`) : '—'}
-                        </div>
-                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-                          {runway != null ? (runway >= 7 ? '✓ meta' : runway >= 5 ? '⚠ ok' : '✗ curto') : ''}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                {/* Active profile depletion chart */}
-                {activeRunway && (
-                  <div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
-                      Trajetória — <strong>{activeScenarioCfg.label}</strong> · pool inicial: {privacyMode ? '••••' : `R$${((activeRunway.pool_inicial ?? 0) / 1000).toFixed(0)}k`}
-                    </div>
-                    <div style={{ display: 'flex', gap: 0, alignItems: 'flex-end', height: 60, borderBottom: '1px solid var(--border)' }}>
-                      {(activeRunway.pool_disponivel as number[]).map((v: number, i: number) => {
-                        const maxVal = (activeRunway.pool_disponivel as number[])[0] || 1;
-                        const heightPct = Math.max(0, Math.min(100, (v / maxVal) * 100));
-                        const isZero = v <= 0;
-                        return (
-                          <div key={i} title={`Ano ${(activeRunway.anos_pos_fire as number[])[i]}: ${privacyMode ? '••••' : `R$${(v/1000).toFixed(0)}k`}`}
-                            style={{
-                              flex: 1,
-                              height: `${heightPct}%`,
-                              background: isZero ? 'var(--red)' : 'var(--accent)',
-                              opacity: isZero ? .4 : .75,
-                              borderRadius: '2px 2px 0 0',
-                              minHeight: isZero ? 3 : 2,
-                            }}
-                          />
-                        );
-                      })}
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-                      <span>Ano 1</span>
-                      <span>Ano {(activeRunway.anos_pos_fire as number[]).length}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            {/* Acumulação pré-FIRE: barras = dados reais (fixos), meta muda por perfil */}
-            {bondPoolRunway && (
-              <div style={{ marginTop: 14 }}>
-                <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>
-                  Trajetória de Acumulação — pré-FIRE (2026→2040)
-                </div>
-                <BondPoolRunwayChart
-                  data={bondPoolRunway}
-                  alvoOverride={bondPoolReadiness ? activeScenarioCfg.custo_vida_base * (bondPoolReadiness.meta_anos ?? 7) : undefined}
-                />
-              </div>
-            )}
-            <div className="src">
-              Bond pool = ativos RF que provêm liquidez nos primeiros anos FIRE sem vender equity em drawdown. Meta: 7 anos × gasto do perfil selecionado.
-            </div>
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+            <BondStrategyPanel
+              idadeAtual={(safeData.premissas as any)?.idade_atual ?? 39}
+              idadeFire={(safeData.premissas as any)?.idade_cenario_base ?? 53}
+              rfPctAtual={(safeData.drift as any)?.IPCA?.atual ?? 5.9}
+              bondPoolReadiness={bondPoolReadiness}
+              bondPoolRunway={bondPoolRunway}
+              bondPoolRunwayByProfile={bondPoolRunwayByProfile}
+              withdrawScenario={withdrawScenario}
+              withdrawCenarios={withdrawCenarios}
+              custo_vida_base={activeScenarioCfg.custo_vida_base}
+              rf={(safeData as any).rf ?? {}}
+              privacyMode={privacyMode}
+            />
           </div>
         </CollapsibleSection>
       )}
@@ -881,41 +810,7 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* Bond Pool Composition — estrutura do pool */}
-      <CollapsibleSection id="section-bond-pool-composition" title={secTitle('withdraw', 'bond-pool-composition', 'Bond Pool — Composição Detalhada')} defaultOpen={secOpen('withdraw', 'bond-pool-composition', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const rf = (data as any)?.rf ?? {};
-            const bpr = (data as any)?.bond_pool_readiness ?? {};
-            const ipca2040Val = rf.ipca2040?.valor_brl ?? 0;
-            const ipca2050Val = rf.ipca2050?.valor_brl ?? 0;
-            const ipca2029Val = rf.ipca2029?.valor_brl ?? 0;
-            const poolTotal = ipca2040Val + ipca2050Val + ipca2029Val;
-            const custoVida = activeScenarioCfg.custo_vida_base;
-            const anosGastos = custoVida > 0 ? poolTotal / custoVida : 0;
-            const metaAnos = bpr.meta_anos ?? 5;
-            return (
-              <BondPoolComposition
-                data={{
-                  valor_atual_brl: poolTotal,
-                  anos_gastos: anosGastos,
-                  meta_anos: metaAnos,
-                  status: anosGastos >= metaAnos ? 'on_track' : anosGastos >= metaAnos * 0.7 ? 'early' : 'behind',
-                  composicao: {
-                    ipca2029: ipca2029Val,
-                    ipca2040: ipca2040Val,
-                    ipca2050: ipca2050Val,
-                  },
-                }}
-                poolTotal={poolTotal}
-              />
-            );
-          })()}
-          <div className="src">
-            Bond pool: NTN-Bs (IPCA+) para proteção de sequência de retornos nos primeiros anos pós-FIRE.
-          </div>
-        </div>
-      </CollapsibleSection>
+      {/* Bond Pool Composition — moved to BondStrategyPanel (Bloco C) */}
 
       {/* Spending Breakdown — componente dedicado */}
       <CollapsibleSection id="section-spending-breakdown-v2" title={secTitle('withdraw', 'spending-breakdown-v2', 'Spending Breakdown — Detalhamento por Categoria')} defaultOpen={secOpen('withdraw', 'spending-breakdown-v2', false)}>

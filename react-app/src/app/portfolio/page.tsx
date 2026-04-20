@@ -18,7 +18,7 @@ import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
-import TaxDeferralClock from '@/components/dashboard/TaxDeferralClock';
+import IRShield from '@/components/dashboard/IRShield';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -303,22 +303,23 @@ export default function PortfolioPage() {
         </CollapsibleSection>
       )}
 
-      {/* 8f. Tax Deferral Clock */}
-      {(data as any)?.tax?.ir_diferido_total_brl != null && (
-        <CollapsibleSection
-          id="section-tax-deferral"
-          title={secTitle('portfolio', 'tax-deferral', 'Tax Deferral Clock — IR Diferido Total')}
-          defaultOpen={secOpen('portfolio', 'tax-deferral', false)}
-          icon="⏱️"
-        >
-          <div style={{ padding: '16px' }}>
-            <TaxDeferralClock
-              irDiferidoTotal={(data as any).tax.ir_diferido_total_brl}
-              patrimonioTotal={(data as any).patrimonio_holistico?.financeiro_brl ?? (data as any).premissas?.patrimonio_atual ?? 0}
-            />
-          </div>
-        </CollapsibleSection>
-      )}
+      {/* 8f. IR Shield */}
+      <CollapsibleSection
+        id="section-ir-shield"
+        title={secTitle('portfolio', 'ir-shield', 'IR Shield — Diferimento & Seletividade de Lotes')}
+        defaultOpen={secOpen('portfolio', 'ir-shield', false)}
+        icon="🛡️"
+      >
+        <div style={{ padding: '16px' }}>
+          <IRShield
+            irDiferidoTotal={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
+            patrimonioTotal={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
+            lotes={(data as any)?.tlh ?? []}
+            gatilho={(data as any)?.tlhGatilho ?? 0.05}
+            cambio={(data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? 5.15}
+          />
+        </div>
+      </CollapsibleSection>
 
       {/* 9. Últimas Operações (removed HeatmapChart - duplicates ETFFactorComposition) */}
 

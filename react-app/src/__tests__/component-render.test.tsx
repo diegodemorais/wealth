@@ -251,15 +251,15 @@ describe('CashFlowSankey', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 describe('Props contract — page.tsx', () => {
-  it('page.tsx passes items= (not gatilhos=) to SemaforoGatilhos', () => {
+  it('page.tsx passes dcaItems= to AporteDecisionPanel (SemaforoGatilhos migrado)', () => {
     const pagePath = path.join(__dirname, '../app/page.tsx');
     const pageSource = fs.readFileSync(pagePath, 'utf-8');
 
-    // Must use the correct prop name
-    expect(pageSource).toMatch(/SemaforoGatilhos[\s\S]{0,200}items=/);
+    // AporteDecisionPanel replaced SemaforoGatilhos — must use dcaItems prop
+    expect(pageSource).toMatch(/AporteDecisionPanel[\s\S]{0,200}dcaItems=/);
 
-    // Must NOT use the wrong prop name
-    expect(pageSource).not.toMatch(/SemaforoGatilhos[\s\S]{0,200}gatilhos=/);
+    // Must NOT use wrong prop name
+    expect(pageSource).not.toMatch(/AporteDecisionPanel[\s\S]{0,200}gatilhos=/);
   });
 
   it('page.tsx uses derived.dcaItems (not derived.gatilhos or derived.items)', () => {
