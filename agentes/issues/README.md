@@ -29,6 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |---|-----|--------|------|------------|
 | — | HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟡 Média |
 | — | TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Baixa |
+| — | FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟡 Média |
 | ~~FR-bond-tent-fire-date~~ | ~~Bond Tent — Robustez para FIRE Date Incerta~~ | FIRE | ✅ Done 2026-04-11 |
 | ~~FR-fire-date-elicitation~~ | ~~Elicitação data de FIRE — intenções, cenários e odds~~ | FIRE | ✅ Done 2026-04-11 |
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
