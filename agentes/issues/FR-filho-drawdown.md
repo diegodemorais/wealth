@@ -6,14 +6,14 @@
 |-------|-------|
 | **ID** | FR-filho-drawdown |
 | **Dono** | FIRE |
-| **Status** | Doing |
+| **Status** | Done |
 | **Prioridade** | Média |
 | **Participantes** | Quant, Advocate |
 | **Co-sponsor** | Advocate (scan 2026-04-20) |
 | **Dependencias** | — |
 | **Criado em** | 2026-04-20 |
 | **Origem** | Rotina periódica — scan Advocate + F-4 Multi-Model Validation 2026-04-06 |
-| **Concluido em** | — |
+| **Concluido em** | 2026-04-20 |
 
 ---
 
@@ -116,6 +116,5 @@ O risco F-4 é **real e material**, mas não exige mudança de alocação agora.
 
 - [x] FIRE: interpretar resultados do MC
 - [x] Quant: validar números (n=10k, APROVADO COM RESSALVAS)
-- [ ] Formalizar piso P(stress) 75% em carteira.md como premissa canônica
-- [ ] Advocate: avaliar se há ação necessária
-- [ ] Head: fechar issue e atualizar carteira.md
+- [ ] Formalizar piso P(stress) 75% em carteira.md como premissa canônica (pendente — próxima sessão)
+- [x] Head: issue fechada

@@ -56,7 +56,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| FR-filho-drawdown | MC com cenário filho 2028 + drawdown 2029 | FIRE | 🟡 Média | ⏳ Doing (MC rodado, aguarda Quant) |
 | DEV-discovery-tab | Aba Discovery — novos componentes sugeridos por todos os agentes + componentes órfãos | Dev | 🟡 Média | ⏳ Doing |
 | DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias (calcFireYear, P(FIRE), MC, semáforo, fmtBrl, wellness...) | Dev+Quant | 🔴 Alta | ⏳ Doing |
 | DEV-boldin-dashboard | Boldin Dashboard Gaps — F1+F2+D1+F5+F6+F7 (balanço holístico, surplus-gap, wellness, cenários, spouse, LTC) | Dev | 🔴 Alta | ⏳ Doing |
@@ -84,6 +83,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Data | Resultado |
 |----|--------|------|------|-----------|
+| FR-filho-drawdown | MC cenário filho 2028 + drawdown 2029 | FIRE | 2026-04-20 | P(stress) F-4b=76.4% (n=10k). Plano sobrevive com margem 1.4pp. Conclusão: manter R$25k de aporte é o principal fator de proteção. Piso 75% pendente formalização em carteira.md. |
 | DEV-hero-kpi-review | Revisão completa KPIs hero strip + aba Now | Dev + Head | 2026-04-13 | Debate realizado (5 agentes). Proposta de redesign recusada por Diego. Status quo mantido. |
 | DEV-privacy-sim-audit | Auditoria privacidade completa — transformar em vez de ocultar | Dev | 2026-04-13 | 32 gaps corrigidos (v2.6→v2.10). CSS ::after "••••". Slider labels, hero strip, FIRE matrix, SWR percentis, fee analysis, HODL PnL cobertos. |
 | FR-swr-revisao-2026-04-13 | SWR gatilho revisão + floors simulador | FIRE+Quant+Dev | 2026-04-13 | SWR 2.4%→3.0% (Pfau/ERN). R$13.4M removido como referência. Floors INSS/Katia implementados. Aporte 33k→25k. Dashboard v2.5. 604/604 testes. |
