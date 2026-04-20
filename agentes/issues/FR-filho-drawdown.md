@@ -98,7 +98,17 @@ O cenário F-4a (filho mas aporte mantido) é sobrevivível: P(stress) 82.9% > 7
 
 ## Conclusao
 
-> A ser preenchida após validação Quant.
+### Validação Quant — 2026-04-20
+
+**APROVADO COM RESSALVAS**
+
+1. Os 3 deltas são matematicamente consistentes. FV analítico da redução de R$84k/ano × 14 anos a 4.85% = R$1.627M — bate com a queda de patrimônio mediano R$11.53M → R$9.99M (R$1.54M).
+2. **Ressalva R1:** n=5k gera margem amostral ±0.7-1pp. P(stress)=75.1% no F-4b está dentro da margem do piso de 75% — "exatamente no limite" é estatisticamente impreciso. Requer revalidação com n=10k para qualquer decisão baseada nesse número.
+3. **Ressalva R2 (governança):** O piso de 75% não está formalizado em carteira.md — está disperso em 5+ issues e memória. Quant recomenda formalizar como premissa canônica.
+
+### Veredicto Final
+
+O risco F-4 é **real e material**, mas não exige mudança de alocação agora. A conclusão operacional se sustenta: manter R$25k de aporte após o filho é o principal fator de proteção. Abaixo de R$20k, o plano fica vulnerável no stress. O piso de 75% deve ser formalizado em carteira.md.
 
 ---
 
