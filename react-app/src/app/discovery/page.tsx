@@ -1,7 +1,6 @@
 'use client';
 
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
-import { ExpectedReturnWaterfall } from '@/components/dashboard/ExpectedReturnWaterfall';
 import { BtcFIREProjectionCard } from '@/components/dashboard/BtcFIREProjectionCard';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -21,20 +20,12 @@ export default function DiscoveryPage() {
         <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: 'var(--text)' }}>Discovery</h1>
         <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--muted)' }}>
           Componentes em avaliação antes de integrar às abas permanentes. Anteriores integrados:
-          IR Shield → Portfolio · Bond Strategy → Withdraw · Próximo Aporte → Now · Carry Differential → Now
+          IR Shield → Portfolio · Bond Strategy → Withdraw · Próximo Aporte → Now · Carry Differential → Now ·
+          Expected Return Waterfall → Performance · BTC Indicators → Backtest
         </p>
       </div>
 
-      {/* Componente 1: Expected Return Waterfall */}
-      <CollapsibleSection
-        id="discovery-factor-waterfall"
-        title="Expected Return Waterfall — Decomposição Fatorial FF6"
-        defaultOpen={true}
-      >
-        <ExpectedReturnWaterfall />
-      </CollapsibleSection>
-
-      {/* Componente 2: BTC FIRE Projection */}
+      {/* HODL11 FIRE Projection */}
       {fireProjection && (
         <CollapsibleSection
           id="discovery-btc-fire-projection"
@@ -49,6 +40,11 @@ export default function DiscoveryPage() {
         </CollapsibleSection>
       )}
 
+      {!fireProjection && (
+        <div style={{ padding: '24px 16px', textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
+          Sem componentes em avaliação no momento.
+        </div>
+      )}
     </div>
   );
 }

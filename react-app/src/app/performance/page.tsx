@@ -10,6 +10,7 @@ import { DeltaBarChart } from '@/components/charts/DeltaBarChart';
 import { RollingSharpChart } from '@/components/charts/RollingSharpChart';
 import { InformationRatioChart } from '@/components/charts/InformationRatioChart';
 import { PremisesTable } from '@/components/performance/PremisesTable';
+import { ExpectedReturnWaterfall } from '@/components/dashboard/ExpectedReturnWaterfall';
 import { MonthlyReturnsHeatmap } from '@/components/dashboard/MonthlyReturnsHeatmap';
 import { Button } from '@/components/ui/button';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
@@ -208,7 +209,12 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 5. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
+      {/* 5. Expected Return Waterfall — Decomposição Fatorial FF6 */}
+      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={secOpen('performance', 'factor-waterfall', true)}>
+        <ExpectedReturnWaterfall />
+      </CollapsibleSection>
+
+      {/* 6. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
       <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={secOpen('performance', 'rolling-12m', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <DeltaBarChart data={safeData} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />

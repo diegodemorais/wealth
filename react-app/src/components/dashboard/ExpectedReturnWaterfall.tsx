@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface FactorStep {
@@ -153,25 +153,29 @@ function ETFCard({ ticker, weight, breakdown, maxGross }: ETFCardProps) {
   );
 }
 
+type ActiveView = 'todos' | 'SWRD' | 'AVGS' | 'AVEM';
+const TICKERS = ['SWRD', 'AVGS', 'AVEM'] as const;
+
 export function ExpectedReturnWaterfall() {
   const { etf_breakdown, portfolio_weighted, portfolio_weights, haircut_pct } = FACTOR_DATA;
+  const [activeView, setActiveView] = useState<ActiveView>('todos');
 
-  // Max gross across all steps for bar normalization
   const allGross = Object.values(etf_breakdown).flatMap((b) =>
     b.steps.map((s) => s.premium_gross_pct)
   );
   const maxGross = Math.max(...allGross, 0.1);
-
   const haircutDisplay = `${(haircut_pct * 100).toFixed(0)}%`;
   const pctImprovement = portfolio_weighted.total_gross_pct > 0
     ? ((portfolio_weighted.total_net_pct / portfolio_weighted.total_gross_pct) * 100).toFixed(0)
     : '0';
 
+  const visibleTickers = activeView === 'todos' ? TICKERS : [activeView as typeof TICKERS[number]];
+
   return (
     <div style={{ padding: '0 16px 16px' }}>
       {/* Header */}
-      <div style={{ marginBottom: 12 }}>
-        <h3 style={{ margin: '0 0 4px', fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>
+      <div style={{ marginBottom: 10 }}>
+        <h3 style={{ margin: '0 0 3px', fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>
           Expected Return Waterfall — Decomposição Fatorial
         </h3>
         <p style={{ margin: 0, fontSize: 11, color: 'var(--muted)' }}>
@@ -179,9 +183,45 @@ export function ExpectedReturnWaterfall() {
         </p>
       </div>
 
-      {/* 3 ETF cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" style={{ marginBottom: 12 }}>
-        {(['SWRD', 'AVGS', 'AVEM']).map((ticker) => (
+      {/* Ticker toggle */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 12, flexWrap: 'wrap' }}>
+        {(['todos', ...TICKERS] as ActiveView[]).map((view) => {
+          const isActive = activeView === view;
+          const label = view === 'todos' ? 'Todos' : view;
+          const weight = view !== 'todos' ? portfolio_weights[view] : null;
+          return (
+            <button
+              key={view}
+              onClick={() => setActiveView(view)}
+              style={{
+                padding: '4px 12px',
+                borderRadius: 6,
+                border: '1px solid',
+                borderColor: isActive ? 'rgba(59,130,246,0.5)' : 'var(--border)',
+                background: isActive ? 'rgba(59,130,246,0.12)' : 'transparent',
+                color: isActive ? '#3b82f6' : '#64748b',
+                fontSize: 12,
+                fontWeight: isActive ? 600 : 400,
+                cursor: 'pointer',
+              }}
+            >
+              {label}
+              {weight != null && (
+                <span style={{ marginLeft: 4, fontSize: 10, opacity: 0.7 }}>
+                  {(weight * 100).toFixed(0)}%
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ETF cards */}
+      <div
+        className={activeView === 'todos' ? 'grid grid-cols-1 sm:grid-cols-3 gap-3' : ''}
+        style={{ marginBottom: 12 }}
+      >
+        {visibleTickers.map((ticker) => (
           <ETFCard
             key={ticker}
             ticker={ticker}
@@ -192,43 +232,45 @@ export function ExpectedReturnWaterfall() {
         ))}
       </div>
 
-      {/* Portfolio ponderado — destaque */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(34,197,94,0.10) 100%)',
-        border: '1px solid rgba(59,130,246,0.25)',
-        borderRadius: 8,
-        padding: '12px 16px',
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        gap: 16,
-        marginBottom: 10,
-      }}>
-        <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text)', flex: '1 1 120px' }}>
-          Portfolio Ponderado (50/30/20)
+      {/* Portfolio ponderado — destaque (só no "Todos") */}
+      {activeView === 'todos' && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(34,197,94,0.10) 100%)',
+          border: '1px solid rgba(59,130,246,0.25)',
+          borderRadius: 8,
+          padding: '12px 16px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: 16,
+          marginBottom: 10,
+        }}>
+          <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text)', flex: '1 1 120px' }}>
+            Portfolio Ponderado (50/30/20)
+          </div>
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Gross E[R]</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
+                {portfolio_weighted.total_gross_pct.toFixed(2)}%
+              </div>
+            </div>
+            <div style={{ fontSize: 20, color: 'var(--muted)', alignSelf: 'center' }}>→</div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Net E[R]</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: '#22c55e' }}>
+                {portfolio_weighted.total_net_pct.toFixed(2)}%
+              </div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Retained</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: '#f59e0b' }}>
+                {pctImprovement}%
+              </div>
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Gross E[R]</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>
-              {portfolio_weighted.total_gross_pct.toFixed(2)}%
-            </div>
-          </div>
-          <div style={{ fontSize: 20, color: 'var(--muted)', alignSelf: 'center' }}>→</div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Net E[R]</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#22c55e' }}>
-              {portfolio_weighted.total_net_pct.toFixed(2)}%
-            </div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Retained</div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: '#f59e0b' }}>
-              {pctImprovement}%
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Legenda visual */}
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 8 }}>
@@ -242,7 +284,6 @@ export function ExpectedReturnWaterfall() {
         </div>
       </div>
 
-      {/* Nota */}
       <p style={{ margin: 0, fontSize: 10, color: 'var(--muted)', fontStyle: 'italic' }}>
         Haircut {haircutDisplay} pós-publicação (McLean &amp; Pontiff 2016). Alpha líquido real: ~0.16%/ano.
         Loadings estimados: AVGS proxy FF5 via w_EUA×AVUV + (1−w)×AVDV.
