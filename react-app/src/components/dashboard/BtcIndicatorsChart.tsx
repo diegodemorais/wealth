@@ -130,7 +130,6 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
   const maValues = series.map(s => s.ma200w_usd);
   const growthRates = series.map(s => s.growth_rate_pct);
 
-  // Color each price point by growth_rate_pct
   const priceColorData = prices.map((p, i) => ({
     value: p,
     itemStyle: { color: growthColor(growthRates[i]) },
@@ -138,44 +137,46 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
 
   const option = {
     backgroundColor: 'transparent',
-    grid: { left: 52, right: 12, top: 28, bottom: 32 },
+    grid: { left: 58, right: 16, top: 36, bottom: 40 },
     xAxis: {
       type: 'category',
       data: dates,
       axisLabel: {
-        color: 'var(--muted, #94a3b8)',
+        color: '#64748b',
         fontSize: 10,
-        interval: Math.floor(dates.length / 8),
+        interval: Math.floor(dates.length / 6),
+        rotate: 30,
         formatter: (val: string) => {
-          const d = new Date(val);
-          return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getFullYear()).slice(-2)}`;
+          const parts = val.split('-');
+          return parts.length >= 2 ? `${parts[1]}/${parts[0].slice(2)}` : val;
         },
       },
-      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
+      axisLine: { lineStyle: { color: '#1e293b' } },
+      axisTick: { show: false },
       splitLine: { show: false },
     },
     yAxis: {
       type: 'value',
-      axisLabel: privacyMode
-        ? { show: false }
-        : {
-            color: 'var(--muted, #94a3b8)',
-            fontSize: 10,
-            formatter: (v: number) => {
-              if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(1)}M`;
-              if (v >= 1_000) return `$${(v / 1_000).toFixed(0)}k`;
-              return `$${v}`;
-            },
-          },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } },
+      axisLabel: {
+        show: !privacyMode,
+        color: '#64748b',
+        fontSize: 10,
+        formatter: (v: number) => {
+          if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(1)}M`;
+          if (v >= 1_000) return `$${(v / 1_000).toFixed(0)}k`;
+          return `$${v}`;
+        },
+      },
+      splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
     },
     tooltip: {
       trigger: 'axis',
       backgroundColor: 'rgba(15,23,42,0.95)',
-      borderColor: 'rgba(255,255,255,0.1)',
+      borderColor: '#334155',
+      borderWidth: 1,
       textStyle: { color: '#f1f5f9', fontSize: 11 },
       formatter: (params: unknown) => {
-        const arr = params as Array<{ dataIndex: number; seriesName: string }>;
+        const arr = params as Array<{ dataIndex: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
         const s = series[idx];
@@ -184,24 +185,19 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
         const maStr = privacyMode ? '$••••' : `$${s.ma200w_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
         const pctDiff = ((s.price_usd / s.ma200w_usd - 1) * 100).toFixed(1);
         const sign = parseFloat(pctDiff) >= 0 ? '+' : '';
-        return `
-          <div style="font-size:11px;line-height:1.5">
-            <div style="margin-bottom:4px;font-weight:600;color:#94a3b8">${s.date}</div>
-            <div>Preço BTC: <b>${priceStr}</b></div>
-            <div>200WMA: <b>${maStr}</b></div>
-            <div>vs MA: <b style="color:${parseFloat(pctDiff) >= 0 ? '#f59e0b' : '#22c55e'}">${sign}${pctDiff}%</b></div>
-            <div>Crescimento MA (52w): <b style="color:${growthColor(s.growth_rate_pct)}">${s.growth_rate_pct.toFixed(1)}%</b></div>
-          </div>
-        `;
+        return `<div style="font-size:11px;line-height:1.6;min-width:170px">
+          <div style="color:#64748b;margin-bottom:4px">${s.date}</div>
+          <div>Preço: <b style="color:#e2e8f0">${priceStr}</b></div>
+          <div>200WMA: <b style="color:#3b82f6">${maStr}</b></div>
+          <div>vs MA: <b style="color:${parseFloat(pctDiff) >= 0 ? '#f59e0b' : '#22c55e'}">${sign}${pctDiff}%</b></div>
+        </div>`;
       },
     },
     legend: {
-      top: 4,
-      right: 0,
-      textStyle: { color: 'var(--muted, #94a3b8)', fontSize: 10 },
+      top: 4, right: 0,
+      textStyle: { color: '#64748b', fontSize: 11 },
       icon: 'roundRect',
-      itemWidth: 12,
-      itemHeight: 4,
+      itemWidth: 14, itemHeight: 4,
     },
     series: [
       {
@@ -213,7 +209,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
         lineStyle: { width: 1.5, color: '#f59e0b' },
       },
       {
-        name: '200WMA',
+        name: '200-Week MA',
         type: 'line',
         data: maValues,
         smooth: true,
@@ -248,20 +244,22 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
 
   const option = {
     backgroundColor: 'transparent',
-    grid: { left: 44, right: 12, top: 28, bottom: 32 },
+    grid: { left: 44, right: 12, top: 28, bottom: 40 },
     xAxis: {
       type: 'category',
       data: dates,
       axisLabel: {
-        color: 'var(--muted, #94a3b8)',
+        color: '#64748b',
         fontSize: 10,
-        interval: Math.floor(dates.length / 8),
+        interval: Math.floor(dates.length / 6),
+        rotate: 30,
         formatter: (val: string) => {
-          const d = new Date(val);
-          return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getFullYear()).slice(-2)}`;
+          const parts = val.split('-');
+          return parts.length >= 2 ? `${parts[1]}/${parts[0].slice(2)}` : val;
         },
       },
-      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
+      axisLine: { lineStyle: { color: '#1e293b' } },
+      axisTick: { show: false },
       splitLine: { show: false },
     },
     yAxis: {
@@ -269,16 +267,16 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
       min: yMin,
       max: yMax,
       axisLabel: {
-        color: 'var(--muted, #94a3b8)',
+        color: '#64748b',
         fontSize: 10,
         formatter: (v: number) => v.toFixed(1),
       },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } },
+      splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
     },
     tooltip: {
       trigger: 'axis',
       backgroundColor: 'rgba(15,23,42,0.95)',
-      borderColor: 'rgba(255,255,255,0.1)',
+      borderColor: '#334155',
       textStyle: { color: '#f1f5f9', fontSize: 11 },
       formatter: (params: unknown) => {
         const arr = params as Array<{ dataIndex: number }>;
@@ -363,7 +361,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
     legend: {
       top: 4,
       right: 0,
-      textStyle: { color: 'var(--muted, #94a3b8)', fontSize: 10 },
+      textStyle: { color: '#64748b', fontSize: 10 },
       icon: 'roundRect',
       itemWidth: 12,
       itemHeight: 4,
