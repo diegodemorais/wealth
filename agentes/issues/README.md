@@ -27,6 +27,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | # | ID | Titulo | Dono | Prioridade |
 |---|-----|--------|------|------------|
+| — | HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟡 Média |
+| — | TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Baixa |
 | ~~FR-bond-tent-fire-date~~ | ~~Bond Tent — Robustez para FIRE Date Incerta~~ | FIRE | ✅ Done 2026-04-11 |
 | ~~FR-fire-date-elicitation~~ | ~~Elicitação data de FIRE — intenções, cenários e odds~~ | FIRE | ✅ Done 2026-04-11 |
 | ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
@@ -54,6 +56,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| FR-filho-drawdown | MC com cenário filho 2028 + drawdown 2029 | FIRE | 🟡 Média | ⏳ Doing (MC rodado, aguarda Quant) |
 | DEV-discovery-tab | Aba Discovery — novos componentes sugeridos por todos os agentes + componentes órfãos | Dev | 🟡 Média | ⏳ Doing |
 | DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias (calcFireYear, P(FIRE), MC, semáforo, fmtBrl, wellness...) | Dev+Quant | 🔴 Alta | ⏳ Doing |
 | DEV-boldin-dashboard | Boldin Dashboard Gaps — F1+F2+D1+F5+F6+F7 (balanço holístico, surplus-gap, wellness, cenários, spouse, LTC) | Dev | 🔴 Alta | ⏳ Doing |
