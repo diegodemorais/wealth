@@ -88,7 +88,7 @@ Pat. mediana no FIRE Day: R$9.99M base / R$9.56M stress (queda de R$1.5-1.5M vs 
 
 ### Leitura crítica
 
-O cenário F-4b (filho + aporte cai para R$18k + stress de mercado) produz P(stress) = **75.1%** — exatamente no limite do critério de segurança de 75%. Qualquer combinação ligeiramente pior (aporte R$15k, spending R$310k) rompe o piso.
+O cenário F-4b (filho + aporte cai para R$18k + stress de mercado) produz P(stress) = **76.4%** (n=10k) — acima do piso de 75%, margem de 1.4pp. O resultado inicial de 75.1% (n=5k) era ruído amostral. Conclusão mantida: o plano sobrevive, mas com pouca folga.
 
 O cenário F-4a (filho mas aporte mantido) é sobrevivível: P(stress) 82.9% > 75%. O risco não é o filho per se — é a compressão do aporte combinada com drawdown.
 
@@ -103,7 +103,7 @@ O cenário F-4a (filho mas aporte mantido) é sobrevivível: P(stress) 82.9% > 7
 **APROVADO COM RESSALVAS**
 
 1. Os 3 deltas são matematicamente consistentes. FV analítico da redução de R$84k/ano × 14 anos a 4.85% = R$1.627M — bate com a queda de patrimônio mediano R$11.53M → R$9.99M (R$1.54M).
-2. **Ressalva R1:** n=5k gera margem amostral ±0.7-1pp. P(stress)=75.1% no F-4b está dentro da margem do piso de 75% — "exatamente no limite" é estatisticamente impreciso. Requer revalidação com n=10k para qualquer decisão baseada nesse número.
+2. **R1 — Revalidado com n=10k (2026-04-20):** P(stress) F-4b = **76.4%**. Margem amostral confirmada — resultado de 5k (75.1%) era ruído. Piso de 75% respeitado com margem de 1.4pp.
 3. **Ressalva R2 (governança):** O piso de 75% não está formalizado em carteira.md — está disperso em 5+ issues e memória. Quant recomenda formalizar como premissa canônica.
 
 ### Veredicto Final
@@ -114,7 +114,8 @@ O risco F-4 é **real e material**, mas não exige mudança de alocação agora.
 
 ## Proximos Passos
 
-- [ ] FIRE: interpretar resultados do MC
-- [ ] Quant: validar números
+- [x] FIRE: interpretar resultados do MC
+- [x] Quant: validar números (n=10k, APROVADO COM RESSALVAS)
+- [ ] Formalizar piso P(stress) 75% em carteira.md como premissa canônica
 - [ ] Advocate: avaliar se há ação necessária
-- [ ] Head: registrar conclusão e atualizar P(FIRE) oficial se necessário
+- [ ] Head: fechar issue e atualizar carteira.md
