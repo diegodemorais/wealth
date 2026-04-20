@@ -206,7 +206,7 @@ export default function PortfolioPage() {
       {/* 6. Base de Custo e Alocação — Equity por Bucket (collapsible) */}
       <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
 
-      {/* 7. IR Diferido — Alvo & Transitório (collapsible) */}
+      {/* 7. IR Diferido — Alvo & Transitório + IR Shield (collapsible) */}
       <CollapsibleSection
         id="section-tax-ir"
         title={secTitle('portfolio', 'tax-ir')}
@@ -215,6 +215,15 @@ export default function PortfolioPage() {
       >
         <div style={{ padding: '16px' }}>
           <TaxAnalysisGrid />
+          <div style={{ marginTop: 20, borderTop: '1px solid var(--border)', paddingTop: 16 }}>
+            <IRShield
+              irDiferidoTotal={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
+              patrimonioTotal={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
+              lotes={(data as any)?.tlh ?? []}
+              gatilho={(data as any)?.tlhGatilho ?? 0.05}
+              cambio={(data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? 5.15}
+            />
+          </div>
         </div>
       </CollapsibleSection>
 
@@ -303,23 +312,6 @@ export default function PortfolioPage() {
         </CollapsibleSection>
       )}
 
-      {/* 8f. IR Shield */}
-      <CollapsibleSection
-        id="section-ir-shield"
-        title={secTitle('portfolio', 'ir-shield', 'IR Shield — Diferimento & Seletividade de Lotes')}
-        defaultOpen={secOpen('portfolio', 'ir-shield', false)}
-        icon="🛡️"
-      >
-        <div style={{ padding: '16px' }}>
-          <IRShield
-            irDiferidoTotal={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
-            patrimonioTotal={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
-            lotes={(data as any)?.tlh ?? []}
-            gatilho={(data as any)?.tlhGatilho ?? 0.05}
-            cambio={(data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? 5.15}
-          />
-        </div>
-      </CollapsibleSection>
 
       {/* 9. Últimas Operações (removed HeatmapChart - duplicates ETFFactorComposition) */}
 

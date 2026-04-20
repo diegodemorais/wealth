@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-04-16T20:15:24.906601",
+  "baseline_valid": true,
+  "total_gaps": 2,
+  "critical_gaps": 0,
+  "medium_gaps": 2,
+  "low_gaps": 0,
+  "gaps": [
+    {
+      "id": "VIS-01-now-tab.png",
+      "severity": "\ud83d\udfe1 MEDIUM",
+      "tab": "NOW Tab",
+      "description": "Visual divergence detected: 78% match with baseline",
+      "impact": "456482 pixels differ from reference",
+      "fix": "Review screenshot and baseline for styling differences",
+      "best_ref": "1.png"
+    },
+    {
+      "id": "VIS-06-simuladores-tab.png",
+      "severity": "\ud83d\udfe1 MEDIUM",
+      "tab": "SIMULADORES Tab",
+      "description": "Visual divergence detected: 80% match with baseline",
+      "impact": "333797 pixels differ from reference",
+      "fix": "Review screenshot and baseline for styling differences",
+      "best_ref": "20.png"
+    }
+  ],
+  "summary": {
+    "react_screenshots": [
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/02-portfolio-tab.png",
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/05-withdraw-tab.png",
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/03-performance-tab.png",
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/07-backtest-tab.png",
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/06-simuladores-tab.png",
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/04-fire-tab.png",
+      "/Users/diegodemorais/claude/code/wealth/react-app/audit-screenshots/01-now-tab.png"
+    ],
+    "baseline_reference": "/Users/diegodemorais/claude/code/wealth/analysis/screenshots/stable-v2.77",
+    "mapping": {
+      "01-now-tab.png": {
+        "name": "NOW Tab",
+        "html_refs": [
+          "1.png",
+          "2.png",
+          "3.png",
+          "4.png",
+          "5.png"
+        ],
+        "key_components": [
+          "Hero KPI Cards (R$3.59M, 13a9m, 43.1%)",
+          "Sem\u00e1foros (Traffic Light Status)",
+          "Indicadores Principais",
+          "Time to FIRE chart",
+          "Patrim\u00f4nio allocation"
+        ]
+      },
+      "02-portfolio-tab.png": {
+        "name": "PORTFOLIO Tab",
+        "html_refs": [
+          "6.png",
+          "7.png"
+        ],
+        "key_components": [
+          "Aloca\u00e7\u00e3o gr\u00e1fica (Donut/Pie)",
+          "ETFs Grid (SWRD, AVGS, AVEM)",
+          "Posi\u00e7\u00f5es IERE (tabela internacional)",
+          "Base de Curto e Aloca\u00e7\u00e3o (bond pool)"
+        ]
+      },
+      "03-performance-tab.png": {
+        "name": "PERFORMANCE Tab",
+        "html_refs": [
+          "8.png",
+          "9.png",
+          "10.png",
+          "11.png",
+          "12.png",
+          "13.png"
+        ],
+        "key_components": [
+          "Alpha vs SWRD chart (bar chart)",
+          "Premissas vs Realizados (table)",
+          "Retornos Mensais Heatmap (red/green grid)",
+          "Patrim\u00f4nio Evolu\u00e7\u00e3o Hist\u00f3rica (area chart)",
+          "Performance Attribution (donut + KPI cards)",
+          "Rolling Sharpe + Factor Rolling charts"
+        ]
+      },
+      "04-fire-tab.png": {
+        "name": "FIRE Tab",
+        "html_refs": [
+          "14.png",
+          "15.png",
+          "16.png"
+        ],
+        "key_components": [
+          "FIRE Trajectory chart (time vs patrimony)",
+          "FIRE Matrix (4 scenarios: Atual, Solteiro, Casado, +Filho)",
+          "Life Events (casamento, filho)",
+          "P(FIRE) Fam\u00edlia cen\u00e1rios"
+        ]
+      },
+      "05-withdraw-tab.png": {
+        "name": "WITHDRAW Tab",
+        "html_refs": [
+          "17.png",
+          "18.png",
+          "19.png"
+        ],
+        "key_components": [
+          "Bond Pool Readiness + Runway chart",
+          "SWR Percentis P10/P50/P90",
+          "Guardrails de Retirada (table)",
+          "Spending Guardrails P(FIRE) \u00d7 Custo de Vida",
+          "Renda na Aposentadoria (income phases table)",
+          "Proje\u00e7\u00e3o de Renda \u2014 Ciclo de Vida (chart)",
+          "Spending Essenciais vs Discricion\u00e1rios"
+        ]
+      },
+      "06-simuladores-tab.png": {
+        "name": "SIMULADORES Tab",
+        "html_refs": [
+          "20.png",
+          "21.png"
+        ],
+        "key_components": [
+          "Simulador FIRE \u2014 Aposentadoria Antecipada",
+          "What-If Scenarios \u2014 Cen\u00e1rio / Gasto",
+          "Calculadora de Aporte \u2014 Cascade"
+        ]
+      },
+      "07-backtest-tab.png": {
+        "name": "BACKTEST Tab",
+        "html_refs": [
+          "22.png",
+          "23.png",
+          "24.png",
+          "25.png"
+        ],
+        "key_components": [
+          "Period selection (date range)",
+          "Backtest results table",
+          "Performance metrics"
+        ]
+      }
+    }
+  }
+}
