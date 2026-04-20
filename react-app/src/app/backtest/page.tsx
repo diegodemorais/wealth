@@ -734,11 +734,11 @@ export default function BacktestPage() {
               )}
               {/* HODL11 Actionable Block */}
               {(() => {
-                const totalBrl = (data as any)?.patrimonio?.total_brl ?? 0;
-                const hodl11Brl = (data as any)?.rf?.hodl11?.valor_brl ?? 0;
-                const avgCost = (data as any)?.rf?.hodl11?.avg_cost ?? null;
-                const precoBrl = (data as any)?.rf?.hodl11?.preco_brl ?? null;
-                const allocPct = totalBrl > 0 ? (hodl11Brl / totalBrl) * 100 : 0;
+                const hodl11 = (data as any)?.hodl11 ?? {};
+                const hodl11Brl = hodl11?.valor ?? 0;
+                const avgCost = hodl11?.preco_medio ?? null;
+                const precoBrl = hodl11?.preco ?? null;
+                const allocPct = hodl11?.banda?.atual_pct ?? 0;
                 const BANDS = { buy: 1.5, target: 3.0, sell: 5.0 };
                 const BAR_MAX = 6.5;
                 const pos = (v: number) => `${(Math.min(v, BAR_MAX) / BAR_MAX * 100).toFixed(2)}%`;
@@ -778,12 +778,10 @@ export default function BacktestPage() {
                       <span style={{ padding: '2px 10px', borderRadius: 5, fontSize: 11, fontWeight: 700, background: signal.bg, border: `1px solid ${signal.border}`, color: signal.color }}>
                         {signal.label}
                       </span>
-                      {avgCost && precoBrl && (
-                        <span style={{ fontSize: 11, color: (precoBrl >= avgCost) ? '#22c55e' : '#ef4444', marginLeft: 'auto' }}>
-                          P&L: {((precoBrl / avgCost - 1) * 100).toFixed(1)}%
-                          <span style={{ fontSize: 10, color: '#64748b', marginLeft: 4 }}>
-                            (avg R${avgCost.toFixed(0)})
-                          </span>
+                      {hodl11?.pnl_pct != null && (
+                        <span style={{ fontSize: 11, color: hodl11.pnl_pct >= 0 ? '#22c55e' : '#ef4444', marginLeft: 'auto' }}>
+                          P&L: {hodl11.pnl_pct >= 0 ? '+' : ''}{hodl11.pnl_pct.toFixed(1)}%
+                          {avgCost && <span style={{ fontSize: 10, color: '#64748b', marginLeft: 4 }}>(avg R${avgCost.toFixed(0)})</span>}
                         </span>
                       )}
                     </div>
