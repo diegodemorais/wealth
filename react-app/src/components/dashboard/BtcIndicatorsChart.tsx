@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
 
@@ -383,6 +383,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
 
 export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartProps) {
   const { privacyMode } = useUiStore();
+  const [activeTab, setActiveTab] = useState<'200wma' | 'mvrv'>('200wma');
 
   const zStyle = zoneStyle(ma200w.zone);
   const sStyle = signalStyle(mvrvZscore.signal);
@@ -395,7 +396,7 @@ export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartPro
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
       {/* Compact status strip */}
       <div style={{
@@ -433,54 +434,69 @@ export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartPro
         </span>
       </div>
 
-      {/* Chart 1: 200WMA */}
-      <div>
-        <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          200-Week Moving Average Heatmap
-        </div>
-        <Chart200WMA data={ma200w} privacyMode={privacyMode} />
-        <div style={{ display: 'flex', gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
-          {[
-            { cor: '#3b82f6', label: '0–20% acima · acumular' },
-            { cor: '#f59e0b', label: '20–80% acima · hold' },
-            { cor: '#ef4444', label: '>80% acima · euforia' },
-          ].map(item => (
-            <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
-              <span style={{ width: 20, height: 2, background: item.cor, display: 'inline-block', borderRadius: 1 }} />
-              {item.label}
-            </span>
-          ))}
-        </div>
+      {/* Tab toggle */}
+      <div style={{ display: 'flex', gap: 4 }}>
+        {(['200wma', 'mvrv'] as const).map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: '5px 14px',
+              borderRadius: 6,
+              border: '1px solid',
+              borderColor: activeTab === tab ? 'rgba(59,130,246,0.5)' : 'var(--border)',
+              background: activeTab === tab ? 'rgba(59,130,246,0.12)' : 'transparent',
+              color: activeTab === tab ? '#3b82f6' : '#64748b',
+              fontSize: 12,
+              fontWeight: activeTab === tab ? 600 : 400,
+              cursor: 'pointer',
+            }}
+          >
+            {tab === '200wma' ? '200-Week MA Heatmap' : 'MVRV Z-Score'}
+          </button>
+        ))}
       </div>
 
-      {/* Divider */}
-      <div style={{ height: 1, background: 'var(--border)', opacity: 0.5 }} />
-
-      {/* Chart 2: MVRV Z-Score */}
-      <div>
-        <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-          MVRV Z-Score
-        </div>
-        <ChartMVRV data={mvrvZscore} privacyMode={privacyMode} />
-        <div style={{ display: 'flex', gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
-          {[
-            { cor: 'rgba(34,197,94,0.5)', label: `< ${mvrzThreshold(mvrvZscore, 'neutral')} · acumular` },
-            { cor: 'rgba(148,163,184,0.3)', label: 'neutro' },
-            { cor: 'rgba(245,158,11,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'caution')} · sobreaquecido` },
-            { cor: 'rgba(239,68,68,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'overheated')} · topo` },
-          ].map(item => (
-            <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
-              <span style={{ width: 10, height: 10, background: item.cor, display: 'inline-block', borderRadius: 2 }} />
-              {item.label}
-            </span>
-          ))}
-        </div>
-        {mvrvZscore.note && (
-          <p style={{ fontSize: 9, color: 'var(--muted)', marginTop: 4, opacity: 0.6, lineHeight: 1.4 }}>
-            {mvrvZscore.note}
-          </p>
-        )}
-      </div>
+      {/* Chart */}
+      {activeTab === '200wma' ? (
+        <>
+          <Chart200WMA data={ma200w} privacyMode={privacyMode} />
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {[
+              { cor: '#3b82f6', label: '0–20% acima · acumular' },
+              { cor: '#f59e0b', label: '20–80% acima · hold' },
+              { cor: '#ef4444', label: '>80% acima · euforia' },
+            ].map(item => (
+              <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
+                <span style={{ width: 20, height: 2, background: item.cor, display: 'inline-block', borderRadius: 1 }} />
+                {item.label}
+              </span>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <ChartMVRV data={mvrvZscore} privacyMode={privacyMode} />
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {[
+              { cor: 'rgba(34,197,94,0.5)', label: `< ${mvrzThreshold(mvrvZscore, 'neutral')} · acumular` },
+              { cor: 'rgba(148,163,184,0.3)', label: 'neutro' },
+              { cor: 'rgba(245,158,11,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'caution')} · sobreaquecido` },
+              { cor: 'rgba(239,68,68,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'overheated')} · topo` },
+            ].map(item => (
+              <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
+                <span style={{ width: 10, height: 10, background: item.cor, display: 'inline-block', borderRadius: 2 }} />
+                {item.label}
+              </span>
+            ))}
+          </div>
+          {mvrvZscore.note && (
+            <p style={{ fontSize: 9, color: '#64748b', marginTop: 0, opacity: 0.7, lineHeight: 1.4 }}>
+              {mvrvZscore.note}
+            </p>
+          )}
+        </>
+      )}
     </div>
   );
 }

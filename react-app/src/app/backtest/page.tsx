@@ -732,6 +732,41 @@ export default function BacktestPage() {
                   Avisos: {btcData.errors.join(' | ')}
                 </div>
               )}
+              {/* 3 cenários FIRE compactos */}
+              {(() => {
+                const fp = (data as any)?.hodl11?.fire_projection;
+                if (!fp) return null;
+                const CONFIGS = {
+                  bear: { label: 'Bear', color: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.25)' },
+                  base: { label: 'Base', color: '#3b82f6', bg: 'rgba(59,130,246,0.10)', border: 'rgba(59,130,246,0.30)' },
+                  bull: { label: 'Bull', color: '#22c55e', bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.25)' },
+                } as const;
+                const fmtUsdK = (v: number) => v >= 1_000_000 ? `$${(v/1_000_000).toFixed(1)}M` : v >= 1_000 ? `$${(v/1_000).toFixed(0)}k` : `$${v}`;
+                const fmtBrlM = (v: number) => v >= 1_000_000 ? `R$${(v/1_000_000).toFixed(2)}M` : v >= 1_000 ? `R$${(v/1_000).toFixed(0)}k` : `R$${v}`;
+                return (
+                  <div className="grid grid-cols-3 gap-2" style={{ marginBottom: 14 }}>
+                    {(['bear', 'base', 'bull'] as const).map(key => {
+                      const cfg = CONFIGS[key];
+                      const c = fp.cenarios[key];
+                      if (!c) return null;
+                      return (
+                        <div key={key} style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, borderRadius: 7, padding: '8px 10px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: cfg.color }}>{cfg.label}</span>
+                            <span style={{ fontSize: 10, color: '#64748b' }}>{fmtUsdK(c.btc_target_usd)}</span>
+                          </div>
+                          <div style={{ fontSize: 18, fontWeight: 700, color: cfg.color, lineHeight: 1 }}>{c.upside_factor.toFixed(1)}×</div>
+                          <div style={{ fontSize: 9, color: '#64748b', marginTop: 2 }}>upside</div>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', marginTop: 6 }}>
+                            {fmtBrlM(c.valor_fire_brl)}
+                          </div>
+                          <div style={{ fontSize: 9, color: '#64748b' }}>FIRE Day 2040</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
               <BtcIndicatorsChart ma200w={btcData.ma200w} mvrvZscore={btcData.mvrv_zscore} />
               <div className="src" style={{ marginTop: 10 }}>
                 Dados gerados em: {new Date(btcData.generated_at).toLocaleString('pt-BR')}
