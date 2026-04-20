@@ -93,18 +93,9 @@ function AgentVoteRow({ votes }: { votes: AgentVote[] }) {
 function TLHMonitorDisc({ data }: { data: any }) {
   const lotes = data?.tlh ?? [];
   const gatilho = data?.tlhGatilho ?? 0.05;
-  const cambio = data?.cambio ?? 5.15;
+  const cambio = data?.mercado?.cambio_brl_usd ?? data?.patrimonio?.cambio ?? 5.15;
   return (
-    <Card
-      title="TLH Monitor — Tax-Loss Harvesting Sistemático"
-      badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 600 }}>Science · Novo</span>}
-      verdict={<VerdictBadge integrate tab="Portfolio" />}
-      votes={[
-        { agent: 'Tax', verdict: 'sim', conviction: 5 },
-        { agent: 'Advocate', verdict: 'sim', conviction: 4 },
-        { agent: 'Science', verdict: 'sim', conviction: 5 },
-      ]}
-    >
+    <Card title="Seletividade de Lotes — IR Otimizado na Venda">
       <TLHMonitor lotes={lotes} gatilho={gatilho} cambio={cambio} />
     </Card>
   );
@@ -115,16 +106,7 @@ function SoRRBondTentTriggerDisc({ data }: { data: any }) {
   const drift = data?.drift ?? {};
   const rfPctAtual = drift.IPCA?.atual ?? 5.9;
   return (
-    <Card
-      title="SoRR Bond Tent Trigger"
-      badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 600 }}>Science · Novo</span>}
-      verdict={<VerdictBadge integrate tab="FIRE" />}
-      votes={[
-        { agent: 'FIRE', verdict: 'sim', conviction: 5 },
-        { agent: 'RF', verdict: 'sim', conviction: 4 },
-        { agent: 'Science', verdict: 'sim', conviction: 5 },
-      ]}
-    >
+    <Card title="Bond Tent — Estrutura e Próximo Gatilho">
       <SoRRBondTentTrigger
         idadeAtual={premissas.idade_atual ?? 39}
         idadeFire={premissas.idade_cenario_base ?? 53}
@@ -137,23 +119,15 @@ function SoRRBondTentTriggerDisc({ data }: { data: any }) {
 
 function CAPEAportePriorityDisc({ data }: { data: any }) {
   const drift = data?.drift ?? {};
-  // Expected returns Research Affiliates (CAPE-based, atualização mensal)
+  // E[R] = premissas aprovadas 2026-04-01 (mediana 5 fontes, haircut 58%)
+  // Alvo = % no portfolio total (SWRD 39.5% = 50% intra-equity × 79% equity block)
   const etfs = [
-    { ticker: 'SWRD', atual: drift.SWRD?.atual ?? 36.3, alvo: drift.SWRD?.alvo ?? 39.5, expectedReturn: 3.4 },
-    { ticker: 'AVGS', atual: drift.AVGS?.atual ?? 28.1, alvo: drift.AVGS?.alvo ?? 23.7, expectedReturn: 9.5 },
-    { ticker: 'AVEM', atual: drift.AVEM?.atual ?? 23.2, alvo: drift.AVEM?.alvo ?? 15.8, expectedReturn: 9.0 },
+    { ticker: 'SWRD', atual: drift.SWRD?.atual ?? 36.3, alvo: drift.SWRD?.alvo ?? 39.5, expectedReturn: 3.7 },
+    { ticker: 'AVGS', atual: drift.AVGS?.atual ?? 28.1, alvo: drift.AVGS?.alvo ?? 23.7, expectedReturn: 5.0 },
+    { ticker: 'AVEM', atual: drift.AVEM?.atual ?? 23.2, alvo: drift.AVEM?.alvo ?? 15.8, expectedReturn: 5.0 },
   ];
   return (
-    <Card
-      title="CAPE-Based Aporte Priority"
-      badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#dc2626', color: '#fff', fontWeight: 600 }}>Science · Novo</span>}
-      verdict={<VerdictBadge integrate tab="Now" />}
-      votes={[
-        { agent: 'Factor', verdict: 'sim', conviction: 4 },
-        { agent: 'FIRE', verdict: 'sim', conviction: 4 },
-        { agent: 'Science', verdict: 'sim', conviction: 5 },
-      ]}
-    >
+    <Card title="Prioridade de Aporte — Equity">
       <CAPEAportePriority etfs={etfs} />
     </Card>
   );
@@ -161,19 +135,22 @@ function CAPEAportePriorityDisc({ data }: { data: any }) {
 
 function CarryDifferentialMonitor({ data }: { data: any }) {
   const macro = data?.macro ?? {};
-  const spread = macro.spread_selic_ff ?? (macro.selic_meta - (macro.fed_funds ?? 3.64));
-  const cambio = macro.cambio ?? data?.cambio;
   const selic = macro.selic_meta ?? 14.75;
   const ff = macro.fed_funds ?? 3.64;
-  const spreadColor = spread >= 8 ? '#16a34a' : spread >= 5 ? '#ca8a04' : '#dc2626';
+  const spread = macro.spread_selic_ff ?? (selic - ff);
+  // câmbio: macro.cambio não existe → usar mercado.cambio_brl_usd ou patrimonio.cambio
+  const cambio = macro.cambio ?? data?.mercado?.cambio_brl_usd ?? data?.patrimonio?.cambio;
+  // exposição cambial: ~89% do portfolio em USD/EUR via ETFs UCITS
+  const exposicaoCambial = macro.exposicao_cambial_pct ?? 89;
+  const spreadColor = spread >= 10 ? '#16a34a' : spread >= 6 ? '#ca8a04' : '#dc2626';
 
   return (
-    <Card title="Carry Differential Monitor" badge={<span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>Macro · Novo</span>} verdict={<VerdictBadge integrate tab="Now" />} votes={[{agent:'FX',verdict:'sim',conviction:4},{agent:'Advocate',verdict:'sim',conviction:4},{agent:'Macro',verdict:'nao'}]}>
-      <div className="grid grid-cols-2 gap-3">
+    <Card title="Carry Differential — Selic vs Fed Funds">
+      <div className="grid grid-cols-2 gap-3" style={{ marginBottom: 10 }}>
         <div style={{ background: 'var(--card2)', borderRadius: 6, padding: 12, textAlign: 'center' }}>
           <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Spread Selic–FF</div>
           <div style={{ fontSize: 24, fontWeight: 700, color: spreadColor }}>
-            {spread != null ? `${spread.toFixed(2)}pp` : '—'}
+            {`${spread.toFixed(2)}pp`}
           </div>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 6 }}>Selic {selic}% · FF {ff}%</div>
         </div>
@@ -183,9 +160,13 @@ function CarryDifferentialMonitor({ data }: { data: any }) {
             {cambio != null ? `R$${cambio.toFixed(3)}` : '—'}
           </div>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 6 }}>
-            Exp. cambial {macro.exposicao_cambial_pct ?? '—'}%
+            Exp. cambial ~{exposicaoCambial}% (equity UCITS)
           </div>
         </div>
+      </div>
+      <div style={{ fontSize: 9, color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 6 }}>
+        Spread alto ({'>'}10pp) favorece carry mas BRL apreciado reduz retorno em BRL do equity internacional.
+        Próx. COPOM: 28-29/abr · Próx. FOMC: mai/2026.
       </div>
     </Card>
   );

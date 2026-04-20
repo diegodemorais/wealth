@@ -3,207 +3,167 @@
 export interface SoRRBondTentTriggerProps {
   idadeAtual: number;
   idadeFire: number;
-  rfPctAtual: number;    // % do portfolio em RF
+  rfPctAtual: number;    // % IPCA+ longo atual no portfolio
   patrimonioAtual: number;
 }
-
-type BondTentStatus = 'SAFE' | 'MONITOR' | 'ACTION';
-
-interface Phase {
-  label: string;
-  rfMin: number;
-  rfMax: number;
-  status: BondTentStatus;
-  descricao: string;
-}
-
-function getPhase(anosAte: number): Phase {
-  if (anosAte > 10) return {
-    label: '>10 anos',
-    rfMin: 20, rfMax: 25,
-    status: 'SAFE',
-    descricao: 'Acumulação — manter equity-heavy',
-  };
-  if (anosAte > 5) return {
-    label: '5–10 anos',
-    rfMin: 30, rfMax: 35,
-    status: 'MONITOR',
-    descricao: 'Aproximando — monitorar rotação para RF',
-  };
-  if (anosAte > 2) return {
-    label: '3–5 anos (SoRR window)',
-    rfMin: 40, rfMax: 50,
-    status: 'ACTION',
-    descricao: 'Comprar IPCA+ curto — proteger sequence of returns',
-  };
-  return {
-    label: '≤2 anos',
-    rfMin: 50, rfMax: 60,
-    status: 'ACTION',
-    descricao: 'Bond tent máximo — reduzir equity antes do FIRE',
-  };
-}
-
-const statusConfig: Record<BondTentStatus, { color: string; bg: string; border: string }> = {
-  SAFE:    { color: '#16a34a', bg: '#16a34a18', border: '#16a34a44' },
-  MONITOR: { color: '#ca8a04', bg: '#ca8a0418', border: '#ca8a0444' },
-  ACTION:  { color: '#dc2626', bg: '#dc262618', border: '#dc262644' },
-};
-
-const TIMELINE_START = 2026;
-const TIMELINE_END = 2041;
-
-// Marcos relevantes
-const MARKERS = [
-  { ano: 2031, label: 'MONITOR', color: '#ca8a04' },
-  { ano: 2036, label: 'ACTION', color: '#dc2626' },
-  { ano: 2040, label: 'FIRE', color: '#7c3aed' },
-];
 
 export default function SoRRBondTentTrigger({
   idadeAtual,
   idadeFire,
   rfPctAtual,
-  patrimonioAtual: _patrimonioAtual,
 }: SoRRBondTentTriggerProps) {
   const anoAtual = 2026;
-  const anosAte = idadeFire - idadeAtual;
-  const anoFire = anoAtual + anosAte;
-  const phase = getPhase(anosAte);
-  const sc = statusConfig[phase.status];
+  const anosAteFire = idadeFire - idadeAtual;        // 14
+  const anoFire = anoAtual + anosAteFire;             // 2040
+  const idadeCompraIPCAcurto = 50;
+  const anoCompraIPCAcurto = anoAtual + (idadeCompraIPCAcurto - idadeAtual); // 2037
+  const anosAteCompra = anoCompraIPCAcurto - anoAtual;  // 11
 
-  // Timeline progress bar (0–100%)
-  const totalSpan = TIMELINE_END - TIMELINE_START;
-  const currentProgress = Math.min(100, Math.max(0, ((anoAtual - TIMELINE_START) / totalSpan) * 100));
+  const TIMELINE_START = 2026;
+  const TIMELINE_END = 2042;
+  const span = TIMELINE_END - TIMELINE_START;
+  const toLeft = (ano: number) => Math.min(98, Math.max(2, ((ano - TIMELINE_START) / span) * 100));
 
-  // RF gauge
-  const rfTarget = (phase.rfMin + phase.rfMax) / 2;
-  const rfGap = rfPctAtual - rfTarget;
-  const rfBarActual = Math.min(100, (rfPctAtual / 60) * 100);
-  const rfBarTarget = Math.min(100, (rfTarget / 60) * 100);
-  const rfStatusColor = Math.abs(rfGap) < 3 ? '#16a34a' : Math.abs(rfGap) < 8 ? '#ca8a04' : '#dc2626';
+  // Estrutura real do bond tent (HD-006 · 2026-03-22)
+  const bondTent = [
+    {
+      id: 'ipca_longo',
+      label: 'IPCA+ Longo (TD2040)',
+      detalhe: 'Hold to maturity · vence FIRE Day',
+      nota: 'R$~2.3M líquido no vencimento 2040',
+      pctAtual: rfPctAtual,
+      pctAlvo: 15,
+      status: 'ATIVO' as const,
+    },
+    {
+      id: 'ipca_curto',
+      label: 'IPCA+ Curto (~2036/37)',
+      detalhe: 'SoRR buffer · ainda não comprado',
+      nota: `Comprar em ${anoCompraIPCAcurto} (idade ${idadeCompraIPCAcurto}) · duration ~2 anos`,
+      pctAtual: 0,
+      pctAlvo: 3,
+      status: 'AGUARDANDO' as const,
+    },
+    {
+      id: 'renda',
+      label: 'Renda+ 2065',
+      detalhe: 'Posição tática · monitorar taxa',
+      nota: 'Vender se taxa ≤ 6.0% (gatilho definido)',
+      pctAtual: 3.0,
+      pctAlvo: null,
+      status: 'TÁTICO' as const,
+    },
+  ];
+
+  const statusConfig = {
+    ATIVO:      { color: '#16a34a', bg: '#16a34a18', border: '#16a34a33' },
+    AGUARDANDO: { color: '#ca8a04', bg: '#ca8a0418', border: '#ca8a0433' },
+    TÁTICO:     { color: '#2563eb', bg: '#2563eb18', border: '#2563eb33' },
+  };
 
   return (
     <div>
-      {/* Estado atual */}
+      {/* Status header */}
       <div style={{
-        background: sc.bg,
-        border: `1px solid ${sc.border}`,
-        borderRadius: 6, padding: '8px 12px',
-        marginBottom: 12,
+        background: '#16a34a18', border: '1px solid #16a34a44',
+        borderRadius: 6, padding: '8px 12px', marginBottom: 12,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8,
       }}>
         <div>
-          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Fase atual</div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: sc.color }}>{phase.status}</div>
-          <div style={{ fontSize: 10, color: sc.color, marginTop: 1 }}>{phase.label}</div>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 1 }}>Fase SoRR</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#16a34a' }}>SAFE</div>
+          <div style={{ fontSize: 10, color: '#16a34a' }}>{anosAteFire} anos até o FIRE — nenhuma ação necessária agora</div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>Anos até FIRE</div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>{anosAte}</div>
-          <div style={{ fontSize: 10, color: 'var(--muted)' }}>FIRE em {anoFire} · Idade {idadeFire}</div>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 1 }}>FIRE Day</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>{anoFire}</div>
+          <div style={{ fontSize: 10, color: 'var(--muted)' }}>Idade {idadeFire}</div>
         </div>
       </div>
 
-      {/* Timeline horizontal */}
-      <div style={{ marginBottom: 14 }}>
-        <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 4 }}>Timeline até FIRE</div>
-        <div style={{ position: 'relative', height: 24 }}>
-          {/* Trilha base */}
-          <div style={{
-            position: 'absolute', top: 10, left: 0, right: 0, height: 4,
-            background: 'var(--border)', borderRadius: 2,
-          }} />
-          {/* Progresso até hoje */}
-          <div style={{
-            position: 'absolute', top: 10, left: 0, height: 4,
-            width: `${currentProgress}%`,
-            background: '#7c3aed', borderRadius: 2,
-          }} />
-          {/* Indicador posição atual */}
-          <div style={{
-            position: 'absolute', top: 5, left: `${currentProgress}%`,
-            transform: 'translateX(-50%)',
-            width: 14, height: 14, borderRadius: '50%',
-            background: '#7c3aed', border: '2px solid #fff',
-          }} title={`Hoje (${anoAtual})`} />
-          {/* Marcadores */}
-          {MARKERS.map(m => {
-            const pct = ((m.ano - TIMELINE_START) / totalSpan) * 100;
-            return (
-              <div key={m.ano} style={{
-                position: 'absolute', top: 0, left: `${pct}%`,
-                transform: 'translateX(-50%)',
-                display: 'flex', flexDirection: 'column', alignItems: 'center',
-              }}>
-                <div style={{ fontSize: 8, color: m.color, fontWeight: 700, whiteSpace: 'nowrap', marginBottom: 2 }}>
-                  {m.label}
-                </div>
-                <div style={{ width: 2, height: 12, background: m.color, opacity: 0.7 }} />
-              </div>
-            );
-          })}
+      {/* Bond tent structure */}
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          Estrutura do Bond Tent (HD-006)
         </div>
-        {/* Rótulos início/fim */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-          <span style={{ fontSize: 9, color: 'var(--muted)' }}>{TIMELINE_START}</span>
-          <span style={{ fontSize: 9, color: '#7c3aed', fontWeight: 600 }}>{anoFire} FIRE</span>
+        {bondTent.map(bt => {
+          const sc = statusConfig[bt.status];
+          return (
+            <div key={bt.id} style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '7px 0', borderBottom: '1px solid var(--border)',
+            }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text)' }}>{bt.label}</div>
+                <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 1 }}>{bt.nota}</div>
+              </div>
+              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
+                  {bt.pctAtual.toFixed(1)}%
+                  {bt.pctAlvo != null && (
+                    <span style={{ fontSize: 9, color: 'var(--muted)', fontWeight: 400 }}> / {bt.pctAlvo}%</span>
+                  )}
+                </div>
+              </div>
+              <span style={{
+                fontSize: 9, padding: '2px 6px', borderRadius: 3, flexShrink: 0,
+                background: sc.bg, color: sc.color, border: `1px solid ${sc.border}`,
+                fontWeight: 700, whiteSpace: 'nowrap', minWidth: 70, textAlign: 'center',
+              }}>
+                {bt.status}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Próximo gatilho */}
+      <div style={{
+        background: '#ca8a0418', border: '1px solid #ca8a0444',
+        borderRadius: 6, padding: '8px 10px', marginBottom: 12,
+      }}>
+        <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 3 }}>Próximo Gatilho</div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: '#ca8a04' }}>
+          {anoCompraIPCAcurto} · Comprar IPCA+ Curto 3%
+        </div>
+        <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>
+          Em {anosAteCompra} anos · Idade {idadeCompraIPCAcurto} · Duration ~2a · Protege anos 1–3 do FIRE de SoRR
+        </div>
+      </div>
+
+      {/* Timeline */}
+      <div style={{ marginBottom: 8 }}>
+        <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 8 }}>Timeline</div>
+        <div style={{ position: 'relative', height: 28 }}>
+          <div style={{ position: 'absolute', top: 12, left: 0, right: 0, height: 3, background: 'var(--border)', borderRadius: 2 }} />
+          {/* Hoje */}
+          <div style={{ position: 'absolute', top: 7, left: `${toLeft(anoAtual)}%`, transform: 'translateX(-50%)' }}>
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#7c3aed', border: '2px solid #fff' }} />
+          </div>
+          {/* Marcadores */}
+          {[
+            { ano: anoCompraIPCAcurto, label: `${anoCompraIPCAcurto} · IPCA+ curto`, color: '#ca8a04' },
+            { ano: anoFire, label: `${anoFire} FIRE`, color: '#7c3aed' },
+          ].map(m => (
+            <div key={m.ano} style={{
+              position: 'absolute', top: 0, left: `${toLeft(m.ano)}%`,
+              transform: 'translateX(-50%)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+            }}>
+              <div style={{ fontSize: 8, color: m.color, fontWeight: 700, whiteSpace: 'nowrap', marginBottom: 3 }}>{m.label}</div>
+              <div style={{ width: 2, height: 10, background: m.color, opacity: 0.8 }} />
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
+          <span style={{ fontSize: 9, color: '#7c3aed', fontWeight: 600 }}>Hoje ({anoAtual})</span>
           <span style={{ fontSize: 9, color: 'var(--muted)' }}>{TIMELINE_END}</span>
         </div>
       </div>
 
-      {/* Gauge duplo: RF atual vs target */}
-      <div style={{ marginBottom: 10 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text)' }}>RF Atual vs Target</span>
-          <span style={{ fontSize: 10, color: rfStatusColor, fontWeight: 600 }}>
-            Gap: {rfGap >= 0 ? '+' : ''}{rfGap.toFixed(1)}pp
-          </span>
-        </div>
-        {/* Barra RF atual */}
-        <div style={{ marginBottom: 5 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>
-            <span>Atual</span>
-            <span style={{ fontWeight: 600, color: rfStatusColor }}>{rfPctAtual.toFixed(1)}%</span>
-          </div>
-          <div style={{ height: 8, background: 'var(--border)', borderRadius: 4, overflow: 'hidden' }}>
-            <div style={{ width: `${rfBarActual}%`, height: '100%', background: rfStatusColor, borderRadius: 4, transition: 'width 0.3s' }} />
-          </div>
-        </div>
-        {/* Barra RF target */}
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>
-            <span>Target fase ({phase.label})</span>
-            <span style={{ fontWeight: 600, color: 'var(--text)' }}>{phase.rfMin}–{phase.rfMax}%</span>
-          </div>
-          <div style={{ height: 8, background: 'var(--border)', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>
-            {/* Range target */}
-            <div style={{
-              position: 'absolute', top: 0, height: '100%',
-              left: `${(phase.rfMin / 60) * 100}%`,
-              width: `${((phase.rfMax - phase.rfMin) / 60) * 100}%`,
-              background: '#7c3aed44', borderRadius: 2,
-            }} />
-            {/* Centro target */}
-            <div style={{ width: `${rfBarTarget}%`, height: '100%', background: '#7c3aed', borderRadius: 4, opacity: 0.6, transition: 'width 0.3s' }} />
-          </div>
-        </div>
-      </div>
-
-      {/* Ação recomendada */}
-      {phase.status !== 'SAFE' && (
-        <div style={{
-          background: sc.bg, border: `1px solid ${sc.border}`,
-          borderRadius: 4, padding: '6px 10px',
-          fontSize: 10, color: sc.color, fontWeight: 600,
-        }}>
-          ⚡ {phase.descricao}
-        </div>
-      )}
-
-      <div style={{ fontSize: 9, color: 'var(--muted)', marginTop: 8, borderTop: '1px solid var(--border)', paddingTop: 6 }}>
-        Bond Tent = sobrepeso em RF nos anos pré-FIRE para proteger sequence of returns risk.
-        Ref: Kitces (2017), ERN (2019 SWR series).
+      <div style={{ fontSize: 9, color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 6 }}>
+        Bond tent via vencimento do TD2040 no FIRE Day — não via glidepath de RF%.
+        Equity mantém ~79% até o FIRE Day; sobe a 94% pós-60 (consumo do bond pool).
       </div>
     </div>
   );
