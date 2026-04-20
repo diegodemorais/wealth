@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
 
@@ -383,7 +383,6 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
 
 export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartProps) {
   const { privacyMode } = useUiStore();
-  const [activeTab, setActiveTab] = useState<'200wma' | 'mvrv'>('200wma');
 
   const zStyle = zoneStyle(ma200w.zone);
   const sStyle = signalStyle(mvrvZscore.signal);
@@ -396,130 +395,92 @@ export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartPro
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-      {/* Status strip */}
+      {/* Compact status strip */}
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        gap: 16,
-        padding: '10px 14px',
+        gap: 12,
+        padding: '8px 12px',
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid var(--border)',
-        borderRadius: 8,
+        borderRadius: 7,
+        fontSize: 11,
       }}>
         <InlineBadge
           label="200WMA"
-          value={`${ma200w.pct_above_ma >= 0 ? '+' : ''}${ma200w.pct_above_ma.toFixed(1)}% (${zoneLabels[ma200w.zone] ?? ma200w.zone})`}
+          value={`${ma200w.pct_above_ma >= 0 ? '+' : ''}${ma200w.pct_above_ma.toFixed(1)}% · ${zoneLabels[ma200w.zone] ?? ma200w.zone}`}
           colorStyle={zStyle}
         />
+        <span style={{ color: 'var(--border)', userSelect: 'none' }}>|</span>
         <InlineBadge
           label="MVRV Z"
-          value={`${mvrvZscore.current_value.toFixed(3)} — ${mvrvZscore.zone}`}
+          value={`${mvrvZscore.current_value.toFixed(2)} · ${mvrvZscore.zone}`}
           colorStyle={sStyle}
         />
         {ma200w.last_touch_below && (
-          <span style={{ fontSize: 10, color: 'var(--muted)' }}>
-            Último toque abaixo da MA: {ma200w.last_touch_below}
-          </span>
+          <>
+            <span style={{ color: 'var(--border)', userSelect: 'none' }}>|</span>
+            <span style={{ fontSize: 10, color: 'var(--muted)' }}>
+              Último toque abaixo: {ma200w.last_touch_below}
+            </span>
+          </>
         )}
         <span style={{ fontSize: 10, color: 'var(--muted)', marginLeft: 'auto' }}>
-          BTC/USD spot · HODL11 é proxy via ETF B3
+          BTC/USD spot · HODL11 proxy B3
         </span>
       </div>
 
-      {/* Tab toggle */}
-      <div style={{ display: 'flex', gap: 4 }}>
-        {(['200wma', 'mvrv'] as const).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '5px 14px',
-              borderRadius: 6,
-              border: '1px solid',
-              borderColor: activeTab === tab ? 'rgba(59,130,246,0.5)' : 'var(--border)',
-              background: activeTab === tab ? 'rgba(59,130,246,0.12)' : 'transparent',
-              color: activeTab === tab ? '#3b82f6' : 'var(--muted)',
-              fontSize: 12,
-              fontWeight: activeTab === tab ? 600 : 400,
-              cursor: 'pointer',
-            }}
-          >
-            {tab === '200wma' ? '200-Week MA Heatmap' : 'MVRV Z-Score'}
-          </button>
-        ))}
+      {/* Chart 1: 200WMA */}
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          200-Week Moving Average Heatmap
+        </div>
+        <Chart200WMA data={ma200w} privacyMode={privacyMode} />
+        <div style={{ display: 'flex', gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
+          {[
+            { cor: '#3b82f6', label: '0–20% acima · acumular' },
+            { cor: '#f59e0b', label: '20–80% acima · hold' },
+            { cor: '#ef4444', label: '>80% acima · euforia' },
+          ].map(item => (
+            <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
+              <span style={{ width: 20, height: 2, background: item.cor, display: 'inline-block', borderRadius: 1 }} />
+              {item.label}
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* Chart */}
-      {activeTab === '200wma' ? (
-        <Chart200WMA data={ma200w} privacyMode={privacyMode} />
-      ) : (
-        <ChartMVRV data={mvrvZscore} privacyMode={privacyMode} />
-      )}
+      {/* Divider */}
+      <div style={{ height: 1, background: 'var(--border)', opacity: 0.5 }} />
 
-      {/* Zone reference table */}
-      {activeTab === '200wma' ? (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10, color: 'var(--muted)' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Zona 200WMA', 'Condição', 'Cor da linha', 'Sinal'].map(h => (
-                  <th key={h} style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text)' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { zona: 'Deep value', cond: 'Preço < 200WMA', cor: '🔵 Azul', sinal: 'Não reduzir' },
-                { zona: 'Near MA', cond: '0–20% acima', cor: '🔵 Azul', sinal: 'Hold' },
-                { zona: 'Bull market', cond: '20–80% acima', cor: '🟠 Laranja', sinal: 'Hold — monitorar' },
-                { zona: 'Euforia', cond: '>80% acima', cor: '🔴 Vermelho', sinal: 'Monitorar MVRV' },
-              ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '4px 8px', fontWeight: 600 }}>{row.zona}</td>
-                  <td style={{ padding: '4px 8px' }}>{row.cond}</td>
-                  <td style={{ padding: '4px 8px' }}>{row.cor}</td>
-                  <td style={{ padding: '4px 8px' }}>{row.sinal}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Chart 2: MVRV Z-Score */}
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          MVRV Z-Score
         </div>
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 10, color: 'var(--muted)' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Zona MVRV Z', 'Threshold', 'Interpretação'].map(h => (
-                  <th key={h} style={{ padding: '4px 8px', textAlign: 'left', fontWeight: 600, color: 'var(--text)' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { zona: 'Capitulação', thr: `< ${mvrvZscore.thresholds.accumulation}`, interp: 'Não reduzir — extremo medo' },
-                { zona: 'Acumulação', thr: `${mvrzThreshold(mvrvZscore, 'accumulation')}–${mvrzThreshold(mvrvZscore, 'neutral')}`, interp: 'Zona de compra histórica' },
-                { zona: 'Neutro', thr: `${mvrzThreshold(mvrvZscore, 'neutral')}–${mvrzThreshold(mvrvZscore, 'caution')}`, interp: 'Hold — sem ação' },
-                { zona: 'Sobreaquecido', thr: `${mvrzThreshold(mvrvZscore, 'caution')}–${mvrzThreshold(mvrvZscore, 'overheated')}`, interp: 'Não adicionar' },
-                { zona: 'Topo', thr: `> ${mvrzThreshold(mvrvZscore, 'overheated')}`, interp: 'Considerar trim' },
-              ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '4px 8px', fontWeight: 600 }}>{row.zona}</td>
-                  <td style={{ padding: '4px 8px', fontFamily: 'monospace' }}>{row.thr}</td>
-                  <td style={{ padding: '4px 8px' }}>{row.interp}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {mvrvZscore.note && (
-            <p style={{ fontSize: 9, color: 'var(--muted)', marginTop: 6, opacity: 0.7, lineHeight: 1.4 }}>
-              Nota: {mvrvZscore.note}
-            </p>
-          )}
+        <ChartMVRV data={mvrvZscore} privacyMode={privacyMode} />
+        <div style={{ display: 'flex', gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
+          {[
+            { cor: 'rgba(34,197,94,0.5)', label: `< ${mvrzThreshold(mvrvZscore, 'neutral')} · acumular` },
+            { cor: 'rgba(148,163,184,0.3)', label: 'neutro' },
+            { cor: 'rgba(245,158,11,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'caution')} · sobreaquecido` },
+            { cor: 'rgba(239,68,68,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'overheated')} · topo` },
+          ].map(item => (
+            <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
+              <span style={{ width: 10, height: 10, background: item.cor, display: 'inline-block', borderRadius: 2 }} />
+              {item.label}
+            </span>
+          ))}
         </div>
-      )}
+        {mvrvZscore.note && (
+          <p style={{ fontSize: 9, color: 'var(--muted)', marginTop: 4, opacity: 0.6, lineHeight: 1.4 }}>
+            {mvrvZscore.note}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
