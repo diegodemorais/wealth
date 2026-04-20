@@ -5,11 +5,9 @@ import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
-import { DonutCharts } from '@/components/charts/DonutCharts';
 import StackedAllocationBar from '@/components/dashboard/StackedAllocationBar';
 import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
 import { CustoBaseTable } from '@/components/portfolio/CustoBaseTable';
-import { TaxAnalysisGrid } from '@/components/portfolio/TaxAnalysisGrid';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
 import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
@@ -18,7 +16,7 @@ import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
-import IRShield from '@/components/dashboard/IRShield';
+import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -214,16 +212,29 @@ export default function PortfolioPage() {
         icon="🏛️"
       >
         <div style={{ padding: '16px' }}>
-          <TaxAnalysisGrid />
-          <div style={{ marginTop: 20, borderTop: '1px solid var(--border)', paddingTop: 16 }}>
-            <IRShield
-              irDiferidoTotal={(data as any)?.tax?.ir_diferido_total_brl ?? 0}
-              patrimonioTotal={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
-              lotes={(data as any)?.tlh ?? []}
-              gatilho={(data as any)?.tlhGatilho ?? 0.05}
-              cambio={(data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? 5.15}
-            />
-          </div>
+          {(() => {
+            const taxData = (data as any)?.tax ?? {};
+            const irPorEtfRaw = taxData?.ir_por_etf ?? {};
+            const irPorEtf = Object.entries(irPorEtfRaw)
+              .map(([ticker, etf]: [string, any]) => ({
+                ticker,
+                custo_total_brl: etf.custo_total_brl ?? 0,
+                valor_atual_brl: etf.valor_atual_brl ?? 0,
+                ganho_brl: etf.ganho_brl ?? 0,
+                ir_estimado: etf.ir_estimado ?? 0,
+              }))
+              .sort((a, b) => b.ir_estimado - a.ir_estimado);
+            return (
+              <IRDeferralSection
+                irDiferidoTotal={taxData?.ir_diferido_total_brl ?? 0}
+                patrimonioTotal={(data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual ?? 0}
+                irPorEtf={irPorEtf}
+                lotes={(data as any)?.tlh ?? []}
+                gatilho={(data as any)?.tlhGatilho ?? 0.05}
+                cambio={(data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? 5.15}
+              />
+            );
+          })()}
         </div>
       </CollapsibleSection>
 
