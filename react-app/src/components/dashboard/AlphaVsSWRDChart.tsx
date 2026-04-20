@@ -1,14 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React from 'react';
+import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
-
-interface PerformancePeriod {
-  period: string;
-  targetReturn: number;
-  swrdReturn: number;
-}
 
 interface AlphaVsSWRDChartProps {
   oneYear: { targetReturn: number; swrdReturn: number };
@@ -19,212 +13,140 @@ interface AlphaVsSWRDChartProps {
 }
 
 const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
-  oneYear,
-  threeYear,
-  fiveYear,
-  tenYear,
-  alphaLiquidoPctYear,
+  oneYear, threeYear, fiveYear, tenYear, alphaLiquidoPctYear,
 }) => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart | null>(null);
   const { privacyMode } = useUiStore();
 
-  const periods: PerformancePeriod[] = [
-    { period: '1 ano', targetReturn: oneYear.targetReturn, swrdReturn: oneYear.swrdReturn },
-    { period: '3 anos', targetReturn: threeYear.targetReturn, swrdReturn: threeYear.swrdReturn },
-    { period: '5 anos', targetReturn: fiveYear.targetReturn, swrdReturn: fiveYear.swrdReturn },
-    { period: '10 anos', targetReturn: tenYear.targetReturn, swrdReturn: tenYear.swrdReturn },
-  ];
+  const periods = ['1 ano', '3 anos', '5 anos', '10 anos'];
+  const targetData = [oneYear.targetReturn, threeYear.targetReturn, fiveYear.targetReturn, tenYear.targetReturn];
+  const swrdData = [oneYear.swrdReturn, threeYear.swrdReturn, fiveYear.swrdReturn, tenYear.swrdReturn];
+  const alphaData = targetData.map((t, i) => t - swrdData[i]);
 
-  useEffect(() => {
-    if (!chartRef.current) return;
+  const avgAlpha = alphaData.reduce((s, a) => s + a, 0) / alphaData.length;
 
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
-
-    const ctx = chartRef.current.getContext('2d');
-    if (!ctx) return;
-
-    chartInstance.current = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: periods.map(p => p.period),
-        datasets: [
-          {
-            label: 'Target (Total Alocação)',
-            data: periods.map(p => p.targetReturn),
-            borderColor: 'var(--success)',
-            backgroundColor: 'rgba(34, 197, 94, 0.05)',
-            borderWidth: 2.5,
-            fill: true,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: 'var(--success)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-          },
-          {
-            label: 'SWRD (Global Large Cap)',
-            data: periods.map(p => p.swrdReturn),
-            borderColor: 'var(--primary)',
-            backgroundColor: 'rgba(59, 130, 246, 0.05)',
-            borderWidth: 2.5,
-            fill: true,
-            tension: 0.4,
-            pointRadius: 4,
-            pointBackgroundColor: 'var(--primary)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-          },
-        ],
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      backgroundColor: 'rgba(15,23,42,0.95)',
+      borderColor: '#334155',
+      borderWidth: 1,
+      textStyle: { color: '#94a3b8', fontSize: 12 },
+      formatter: (params: any[]) => {
+        const period = params[0].axisValue;
+        const lines = params.map((p: any) => {
+          const sign = p.value >= 0 ? '+' : '';
+          return `<div style="display:flex;justify-content:space-between;gap:16px">
+            <span>${p.marker}${p.seriesName}</span>
+            <span style="font-weight:600;color:#e2e8f0">${sign}${p.value.toFixed(2)}%</span>
+          </div>`;
+        }).join('');
+        return `<div style="font-size:11px;min-width:180px"><div style="color:#64748b;margin-bottom:6px">${period}</div>${lines}</div>`;
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
-        plugins: {
-          legend: {
-            position: 'top' as const,
-            labels: {
-              color: 'var(--muted)',
-              font: { size: 12 },
-              padding: 12,
-              usePointStyle: true,
-            },
-          },
-          tooltip: {
-            backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: 'var(--muted)',
-            bodyColor: 'var(--muted)',
-            borderColor: 'rgba(71, 85, 105, 0.5)',
-            borderWidth: 1,
-            padding: 8,
-            callbacks: {
-              label: function (context) {
-                return `${context.dataset.label}: ${(context.parsed.y).toFixed(2)}%`;
-              },
-            },
-          },
-        },
-        scales: {
-          y: {
-            grid: { color: 'rgba(71, 85, 105, 0.1)' },
-            ticks: {
-              color: 'var(--muted)',
-              callback: function (value) {
-                return (value as number).toFixed(0) + '%';
-              },
-            },
-          },
-          x: {
-            grid: { display: false },
-            ticks: { color: 'var(--muted)' },
-          },
+    },
+    legend: {
+      top: 0,
+      itemWidth: 12,
+      itemHeight: 12,
+      textStyle: { color: '#64748b', fontSize: 11 },
+    },
+    grid: { left: 48, right: 16, top: 40, bottom: 32 },
+    xAxis: {
+      type: 'category',
+      data: periods,
+      axisLine: { lineStyle: { color: '#1e293b' } },
+      axisTick: { show: false },
+      axisLabel: { color: '#64748b', fontSize: 11 },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#64748b', fontSize: 11,
+        formatter: (v: number) => v.toFixed(0) + '%',
+      },
+      splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
+    },
+    series: [
+      {
+        name: 'Target (SWRD+AVGS+AVEM)',
+        type: 'bar',
+        barGap: '8%',
+        barMaxWidth: 32,
+        data: targetData,
+        itemStyle: { color: '#22c55e', borderRadius: [3, 3, 0, 0] },
+        label: {
+          show: true, position: 'top', fontSize: 10, color: '#22c55e',
+          formatter: (p: any) => (p.value >= 0 ? '+' : '') + p.value.toFixed(1) + '%',
         },
       },
-    });
-
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, []);
-
-  const alphas = periods.map(p => ({
-    period: p.period,
-    alpha: p.targetReturn - p.swrdReturn,
-  }));
-
-  const avgAlpha = alphas.reduce((sum, a) => sum + a.alpha, 0) / alphas.length;
+      {
+        name: 'SWRD (benchmark)',
+        type: 'bar',
+        barMaxWidth: 32,
+        data: swrdData,
+        itemStyle: { color: '#3b82f6', borderRadius: [3, 3, 0, 0] },
+        label: {
+          show: true, position: 'top', fontSize: 10, color: '#3b82f6',
+          formatter: (p: any) => (p.value >= 0 ? '+' : '') + p.value.toFixed(1) + '%',
+        },
+      },
+      {
+        name: 'Alpha',
+        type: 'line',
+        symbol: 'circle',
+        symbolSize: 8,
+        lineStyle: { color: '#f59e0b', width: 2, type: 'dashed' },
+        itemStyle: { color: '#f59e0b', borderColor: '#fff', borderWidth: 2 },
+        data: alphaData,
+        label: {
+          show: true, position: 'top', fontSize: 10, color: '#f59e0b',
+          formatter: (p: any) => (p.value >= 0 ? '+' : '') + p.value.toFixed(2) + '%',
+        },
+      },
+    ],
+  };
 
   return (
-    <div className="bg-card border border-border rounded p-4 mb-5">
-      <h2 className="text-sm font-semibold text-text mb-4 mt-0">
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
         Alpha vs SWRD — Performance Relativa
-      </h2>
+      </div>
+      <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12 }}>
+        Barras agrupadas por horizonte · linha amarela = alpha (Target − SWRD)
+      </div>
 
-      <div className="flex flex-col gap-4">
-        {/* Chart */}
-        <div>
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
-        </div>
+      <EChart option={option} style={{ height: 260 }} />
 
-        {/* Alpha breakdown */}
-        <div>
-          <div className="text-sm font-semibold text-text mb-3">
-            Alpha por Período (Target − SWRD)
-          </div>
-
-          <div className="grid grid-cols-auto-fit gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))' }}>
-            {alphas.map(a => (
-              <div
-                key={a.period}
-                className={`p-3 rounded border ${a.alpha > 0 ? 'bg-green-900/10 border-green-600/25' : 'bg-red-900/10 border-red-600/25'}`}
-              >
-                <div className="text-xs text-muted mb-1">
-                  {a.period}
-                </div>
-                <div className={`text-base font-bold ${a.alpha > 0 ? 'text-green' : 'text-red'}`}>
-                  {a.alpha > 0 ? '+' : ''}{a.alpha.toFixed(2)}%
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Summary */}
-        <div className="pt-4 border-t border-border">
-          <div className="text-sm font-semibold text-text mb-3">
-            Sumário de Alpha
-          </div>
-
-          <div className="grid grid-cols-auto-fit gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
-            <div className="p-3 rounded border bg-green-900/10 border-green-600/25">
-              <div className="text-xs text-muted mb-1 uppercase font-semibold">
-                Média Alpha
-              </div>
-              <div className="text-lg font-bold text-green">
-                {avgAlpha.toFixed(2)}%
-              </div>
-              <div className="text-xs text-muted">
-                Períodos: 1y, 3y, 5y, 10y
-              </div>
-            </div>
-
-            <div className="p-3 rounded border bg-violet-900/10 border-violet-600/25">
-              <div className="text-xs text-muted mb-1 uppercase font-semibold">
-                Alpha Líquido (Haircut 58%)
-              </div>
-              <div className="text-lg font-bold text-violet-300">
-                {(alphaLiquidoPctYear * 100).toFixed(2)}bps
-              </div>
-              <div className="text-xs text-muted">
-                Retorno real anual após custos
-              </div>
-            </div>
-
-            <div className="p-3 rounded border bg-secondary/20 border-border">
-              <div className="text-xs text-muted mb-1 uppercase font-semibold">
-                Fonte
-              </div>
-              <div className="text-xs text-text leading-relaxed">
-                Target: SWRD+AVGS+AVEM<br />
-                SWRD: Global Large Cap<br />
-                Haircut: McLean &amp; Pontiff 2016
-              </div>
+      {/* Alpha cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" style={{ marginTop: 12 }}>
+        {alphaData.map((a, i) => (
+          <div key={periods[i]} style={{
+            padding: '8px 10px', borderRadius: 6,
+            background: a > 0 ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)',
+            border: `1px solid ${a > 0 ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}`,
+          }}>
+            <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 3 }}>{periods[i]}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: a > 0 ? '#22c55e' : '#ef4444' }}>
+              {a >= 0 ? '+' : ''}{a.toFixed(2)}%
             </div>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Note */}
-        <div className="p-3 text-xs text-muted bg-secondary/20 rounded">
-          <strong>Nota:</strong> Alpha positivo indica que a alocação Target supera o benchmark SWRD, graças à diversificação
-          fatorial (AVGS value/quality, AVEM emerging value).
+      {/* Summary strip */}
+      <div className="grid grid-cols-2 gap-2" style={{ marginTop: 8 }}>
+        <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>MÉDIA ALPHA</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#f59e0b' }}>
+            {avgAlpha >= 0 ? '+' : ''}{avgAlpha.toFixed(2)}%
+          </div>
+        </div>
+        <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.25)' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>ALPHA LÍQUIDO (haircut 58%)</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#a78bfa' }}>
+            {privacyMode ? '••••' : `${(alphaLiquidoPctYear * 100).toFixed(0)}bps/ano`}
+          </div>
         </div>
       </div>
     </div>

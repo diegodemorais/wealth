@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import React from 'react';
+import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
 
 interface RollingMetricsChartProps {
@@ -12,208 +12,181 @@ interface RollingMetricsChartProps {
   volatilidade: number[];
 }
 
+type Metric = 'sharpe' | 'sortino' | 'volatilidade';
+
 const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
-  dates,
-  sharpeBRL,
-  sharpeUSD,
-  sortino,
-  volatilidade,
+  dates, sharpeBRL, sharpeUSD, sortino, volatilidade,
 }) => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart | null>(null);
   const { privacyMode } = useUiStore();
-  const [activeMetric, setActiveMetric] = React.useState<'sharpe' | 'sortino' | 'volatilidade'>('sharpe');
+  const [activeMetric, setActiveMetric] = React.useState<Metric>('sharpe');
 
-  useEffect(() => {
-    if (!chartRef.current) return;
+  // Thin dates to at most 36 points for legibility
+  const MAX_POINTS = 36;
+  const rawDates = dates.slice(-120);
+  const step = Math.max(1, Math.floor(rawDates.length / MAX_POINTS));
+  const thinIdx = rawDates.map((_, i) => i).filter(i => i % step === 0 || i === rawDates.length - 1);
+  const thinDates = thinIdx.map(i => rawDates[i]);
 
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
+  const thin = (arr: number[]) => {
+    const sliced = arr.slice(-120);
+    return thinIdx.map(i => sliced[i] ?? null);
+  };
 
-    const ctx = chartRef.current.getContext('2d');
-    if (!ctx) return;
+  const metricConfig: Record<Metric, {
+    series: Array<{ name: string; data: (number | null)[]; color: string }>;
+    yMin: number; yMax: number; suffix: string;
+  }> = {
+    sharpe: {
+      series: [
+        { name: 'Sharpe BRL', data: thin(sharpeBRL), color: '#3b82f6' },
+        { name: 'Sharpe USD', data: thin(sharpeUSD), color: '#06b6d4' },
+      ],
+      yMin: -1, yMax: 3, suffix: '',
+    },
+    sortino: {
+      series: [{ name: 'Sortino', data: thin(sortino), color: '#3b82f6' }],
+      yMin: 0, yMax: 5, suffix: '',
+    },
+    volatilidade: {
+      series: [{ name: 'Volatilidade', data: thin(volatilidade), color: '#f59e0b' }],
+      yMin: 5, yMax: 25, suffix: '%',
+    },
+  };
 
-    const displayDates = dates.slice(-120);
-    let dataset1: number[] = [];
-    let dataset2: number[] = [];
-    let label1 = '';
-    let label2 = '';
-    let yMin = 0;
-    let yMax = 3;
+  const cfg = metricConfig[activeMetric];
 
-    if (activeMetric === 'sharpe') {
-      dataset1 = sharpeBRL.slice(-120);
-      dataset2 = sharpeUSD.slice(-120);
-      label1 = 'Sharpe BRL';
-      label2 = 'Sharpe USD';
-      yMin = -1;
-      yMax = 3;
-    } else if (activeMetric === 'sortino') {
-      dataset1 = sortino.slice(-120);
-      dataset2 = [];
-      label1 = 'Sortino Ratio';
-      yMin = 0;
-      yMax = 5;
-    } else {
-      dataset1 = volatilidade.slice(-120);
-      dataset2 = [];
-      label1 = 'Volatilidade (%)';
-      yMin = 5;
-      yMax = 25;
-    }
-
-    const datasets = [
-      {
-        label: label1,
-        data: dataset1,
-        borderColor: 'var(--accent)',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.3,
-        pointRadius: 2,
-        pointBackgroundColor: 'var(--accent)',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 1,
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(15,23,42,0.95)',
+      borderColor: '#334155',
+      borderWidth: 1,
+      textStyle: { color: '#94a3b8', fontSize: 12 },
+      formatter: (params: any[]) => {
+        const date = params[0].axisValue;
+        const lines = params.map((p: any) => {
+          const val = p.value == null ? '—' : p.value.toFixed(2) + cfg.suffix;
+          return `<div style="display:flex;justify-content:space-between;gap:16px">
+            <span>${p.marker}${p.seriesName}</span>
+            <span style="font-weight:600;color:#e2e8f0">${val}</span>
+          </div>`;
+        }).join('');
+        return `<div style="font-size:11px;min-width:180px"><div style="color:#64748b;margin-bottom:6px">${date}</div>${lines}</div>`;
       },
-    ];
-
-    if (dataset2.length > 0) {
-      datasets.push({
-        label: label2,
-        data: dataset2,
-        borderColor: 'var(--cyan)',
-        backgroundColor: 'rgba(6, 182, 212, 0.05)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.3,
-        pointRadius: 2,
-        pointBackgroundColor: 'var(--cyan)',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 1,
-      });
-    }
-
-    chartInstance.current = new Chart(ctx, {
+    },
+    legend: {
+      top: 0,
+      itemWidth: 12, itemHeight: 2,
+      textStyle: { color: '#64748b', fontSize: 11 },
+    },
+    grid: { left: 48, right: 16, top: 36, bottom: 28 },
+    xAxis: {
+      type: 'category',
+      data: thinDates,
+      boundaryGap: false,
+      axisLine: { lineStyle: { color: '#1e293b' } },
+      axisTick: { show: false },
+      axisLabel: {
+        color: '#64748b', fontSize: 10,
+        rotate: 30,
+        formatter: (v: string) => {
+          // YYYY-MM → MM/YY
+          const parts = v.split('-');
+          if (parts.length >= 2) return `${parts[1]}/${parts[0].slice(2)}`;
+          return v;
+        },
+      },
+    },
+    yAxis: {
+      type: 'value',
+      min: cfg.yMin, max: cfg.yMax,
+      axisLabel: {
+        color: '#64748b', fontSize: 11,
+        formatter: (v: number) => v.toFixed(1) + cfg.suffix,
+      },
+      splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
+    },
+    series: cfg.series.map((s, idx) => ({
+      name: s.name,
       type: 'line',
-      data: { labels: displayDates, datasets: datasets as any },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            position: 'top' as const,
-            labels: { color: 'var(--muted)', font: { size: 12 }, padding: 12 },
-          },
-          tooltip: {
-            backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: 'var(--muted)',
-            bodyColor: 'var(--muted)',
-            borderColor: 'rgba(71, 85, 105, 0.5)',
-            borderWidth: 1,
-            padding: 8,
-            callbacks: {
-              label: function (context) {
-                const suffix = activeMetric === 'volatilidade' ? '%' : '';
-                return `${context.dataset.label}: ${(context.parsed.y).toFixed(2)}${suffix}`;
-              },
-            },
-          },
-        },
-        scales: {
-          y: {
-            min: yMin, max: yMax,
-            grid: { color: 'rgba(71, 85, 105, 0.1)' },
-            ticks: {
-              color: 'var(--muted)',
-              callback: function (value) {
-                if (activeMetric === 'volatilidade') return (value as number).toFixed(0) + '%';
-                return (value as number).toFixed(2);
-              },
-            },
-          },
-          x: {
-            grid: { display: false },
-            ticks: { color: 'var(--muted)', maxRotation: 45, minRotation: 0 },
-          },
-        },
-      },
-    });
+      data: s.data,
+      smooth: true,
+      symbol: 'none',
+      lineStyle: { color: s.color, width: 2 },
+      areaStyle: { color: s.color, opacity: idx === 0 ? 0.08 : 0.04 },
+      markLine: activeMetric === 'sharpe' ? {
+        silent: true,
+        lineStyle: { color: '#334155', type: 'dashed', width: 1 },
+        label: { fontSize: 9, color: '#64748b' },
+        data: [{ yAxis: 1, name: 'Sharpe > 1' }],
+      } : undefined,
+    })),
+  };
 
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, [activeMetric, dates, sharpeBRL, sharpeUSD, sortino, volatilidade]);
+  const currentSharpe = sharpeBRL[sharpeBRL.length - 1] ?? 0;
+  const currentSortino = sortino[sortino.length - 1] ?? 0;
+  const currentVol = volatilidade[volatilidade.length - 1] ?? 0;
 
-  const currentSharpe = sharpeBRL[sharpeBRL.length - 1] || 0;
-  const currentSortino = sortino[sortino.length - 1] || 0;
-  const currentVol = volatilidade[volatilidade.length - 1] || 0;
+  const tabs: { key: Metric; label: string }[] = [
+    { key: 'sharpe', label: 'Sharpe' },
+    { key: 'sortino', label: 'Sortino' },
+    { key: 'volatilidade', label: 'Volatilidade' },
+  ];
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
-        Rolling Metrics — Sharpe, Sortino &amp; Volatilidade
-      </h2>
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+        Rolling Metrics — 12M
+      </div>
+      <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 12 }}>
+        Sharpe · Sortino · Volatilidade anualizada
+      </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* Metric Toggle */}
-        <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-          {['sharpe', 'sortino', 'volatilidade'].map(metric => (
-            <button
-              key={metric}
-              onClick={() => setActiveMetric(metric as any)}
-              style={{
-                padding: '6px 12px', fontSize: 'var(--text-sm)', fontWeight: 500, borderRadius: '4px',
-                cursor: 'pointer', border: 'none',
-                background: activeMetric === metric ? 'var(--accent)' : 'rgba(71,85,105,0.2)',
-                color: activeMetric === metric ? 'white' : 'var(--text)',
-              }}
-            >
-              {metric === 'sharpe' ? 'Sharpe' : metric === 'sortino' ? 'Sortino' : 'Volatilidade'}
-            </button>
-          ))}
-        </div>
-
-        {/* Chart */}
-        <div>
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
-        </div>
-
-        {/* Key metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
-          <div style={{ padding: 'var(--space-3)', background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sharpe (BRL)</div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: currentSharpe > 1 ? 'var(--green)' : currentSharpe > 0.5 ? 'var(--yellow)' : 'var(--red)' }}>
-              {privacyMode ? '••••' : currentSharpe.toFixed(2)}
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Retorno/risco</div>
-          </div>
-
-          <div style={{ padding: 'var(--space-3)', background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Sortino Ratio</div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: currentSortino > 1.5 ? 'var(--green)' : currentSortino > 0.75 ? 'var(--yellow)' : 'var(--red)' }}>
-              {privacyMode ? '••••' : currentSortino.toFixed(2)}
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Risco downside</div>
-          </div>
-
-          <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Volatilidade</div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'rgba(249, 115, 22, 0.8)' }}>
-              {privacyMode ? '••%' : `${currentVol.toFixed(2)}%`}
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Desvio padrão</div>
+      {/* KPI strip */}
+      <div className="grid grid-cols-3 gap-2" style={{ marginBottom: 12 }}>
+        <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.25)' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>SHARPE BRL</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: currentSharpe > 1 ? '#22c55e' : currentSharpe > 0.5 ? '#f59e0b' : '#ef4444' }}>
+            {privacyMode ? '••••' : currentSharpe.toFixed(2)}
           </div>
         </div>
-
-        {/* Footer note */}
-        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
-          <strong>📌 Nota:</strong> Métricas calculadas em 12M rolling. Sharpe &gt; 1 indica bom retorno ajustado ao risco. Sortino penaliza apenas quedas. Volatilidade é desvio padrão mensal anualizado.
+        <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.25)' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>SORTINO</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: currentSortino > 1.5 ? '#22c55e' : currentSortino > 0.75 ? '#f59e0b' : '#ef4444' }}>
+            {privacyMode ? '••••' : currentSortino.toFixed(2)}
+          </div>
         </div>
+        <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>VOLATILIDADE</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#f59e0b' }}>
+            {privacyMode ? '••%' : `${currentVol.toFixed(1)}%`}
+          </div>
+        </div>
+      </div>
+
+      {/* Tab toggle */}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+        {tabs.map(t => (
+          <button
+            key={t.key}
+            onClick={() => setActiveMetric(t.key)}
+            style={{
+              padding: '4px 12px', fontSize: 11, fontWeight: 500, borderRadius: 4,
+              cursor: 'pointer', border: 'none',
+              background: activeMetric === t.key ? '#3b82f6' : 'rgba(71,85,105,0.2)',
+              color: activeMetric === t.key ? '#fff' : 'var(--muted)',
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <EChart option={option} style={{ height: 220 }} />
+
+      <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8 }}>
+        Janela 12M rolling · {thinDates.length} pontos exibidos (de {rawDates.length}) · Sharpe &gt; 1 = bom
       </div>
     </div>
   );
