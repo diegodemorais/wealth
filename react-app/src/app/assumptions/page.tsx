@@ -388,8 +388,9 @@ export default function AssumptionsPage() {
 
   // ── Withdrawal Guardrails rows ──
   const withdrawalRows: Row[] = guardrails.map((g: any) => ({
-    label: g.banda ?? g.min_dd ?? '?',
-    value: g.regra ?? g.acao ?? '—',
+    label: g.desc ?? `DD ${Math.round((g.ddMin ?? 0) * 100)}–${Math.round((g.ddMax ?? 1) * 100)}%`,
+    value: g.retirada != null ? mask(g.retirada, privacyMode) + '/ano' : (g.regra ?? g.acao ?? '—'),
+    muted: (g.ddMin ?? 0) > 0,
   }));
 
   // ── Spending Smile rows ──
