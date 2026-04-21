@@ -822,13 +822,17 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const p50Full: (number|null)[] = [...trilhaBrl, ...p50Post];
   const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYears).fill(null)];
 
-  // --- X-axis: monthly dates + post-FIRE years; show one label per year ---
+  // --- X-axis: monthly dates + post-FIRE years; show label every 3 years for legibility ---
   const allDates = [...dates, ...postFireDates];
-  // Show label only when month === '01' or it's a year-only string (post-FIRE)
   const xAxisLabels = allDates.map(d => {
-    if (d.length === 4) return d; // post-FIRE year string
+    if (d.length === 4) {
+      // Post-FIRE annual — show every 5 years
+      const yr = parseInt(d, 10);
+      return yr % 5 === 0 ? d : '';
+    }
     const [yr, mo] = d.split('-');
-    return mo === '01' ? yr : '';
+    // Monthly — show only January of years divisible by 3
+    return mo === '01' && parseInt(yr, 10) % 3 === 0 ? yr : '';
   });
 
   // Mark FIRE date index for vertical line

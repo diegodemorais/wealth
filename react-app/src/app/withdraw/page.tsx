@@ -613,65 +613,6 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 5b. Spending — Essenciais vs Discricionários (logo após o cashflow de hoje) */}
-      {(safeData.spending ?? safeData.fire?.spending ?? safeData.spending_breakdown) && (
-        <CollapsibleSection id="section-spending-breakdown" title={secTitle('withdraw', 'spending-breakdown', 'Spending — Essenciais vs Discricionários')} defaultOpen={secOpen('withdraw', 'spending-breakdown', false)}>
-          <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const spending = safeData.spending ?? safeData.fire?.spending ?? safeData.spending_breakdown ?? {};
-            const essenciais = spending.essenciais_mes ?? spending.must_spend_mensal ?? spending.essenciais ?? 15074;
-            const discric = spending.discric_mes ?? spending.like_spend_mensal ?? spending.discricionarios ?? 4284;
-            const imprevistos = spending.imprevistos_mes ?? spending.imprevistos_mensal ?? spending.imprevistos ?? 363;
-            const total = essenciais + discric + imprevistos;
-            const rendaAnual = spending.renda_anual ?? 250000;
-            const orcamentoAnual = spending.orcamento_anual ?? 13000;
-            const fmt = (v: number) => privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
-
-            return (
-              <div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '14px' }}>
-                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--red)' }}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Essenciais</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--red)' }}>{fmt(essenciais)}</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(essenciais / total * 100) : 79}% do total</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>Valor principal: hipoteca (~R$1.317/mês e equity)</div>
-                  </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--yellow)' }}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Discricionários</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--yellow)' }}>{fmt(discric)}</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(discric / total * 100) : 21}% do total</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>Discricionários contínuos</div>
-                  </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', borderLeft: '3px solid var(--muted)' }}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: '6px' }}>Imprevistos</div>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(imprevistos)}</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>mês · {total > 0 ? Math.round(imprevistos / total * 100) : 2}% do total</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>buffer pontual</div>
-                  </div>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(total)}/mês</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Total financeiro</div>
-                  </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700 }}>{fmt(rendaAnual)}/ano</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Renda FII</div>
-                  </div>
-                  <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', textAlign: 'center', borderLeft: '3px solid var(--green)' }}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--green)' }}>✓ {fmt(orcamentoAnual)}/ano</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Orçamento conservador</div>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-          <div className="src">
-            Período: Ago/2026 a Mar/2026 (8 meses) · Essenciais: linha principal de despesa (R$1.317/mês e equity e hipoteca)
-          </div>
-          </div>
-        </CollapsibleSection>
-      )}
 
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
       <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases')}>
@@ -788,10 +729,11 @@ export default function WithdrawPage() {
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const rf = (data as any)?.rf ?? {};
-            const ipca2029 = rf.ipca2029?.valor_brl ?? 0;
-            const ipca2040 = rf.ipca2040?.valor_brl ?? 0;
-            const ipca2050 = rf.ipca2050?.valor_brl ?? 0;
-            const renda2065 = rf.renda2065?.valor_brl ?? 0;
+            const v = (pos: any) => pos?.valor ?? pos?.valor_brl ?? 0;
+            const ipca2029 = v(rf.ipca2029);
+            const ipca2040 = v(rf.ipca2040);
+            const ipca2050 = v(rf.ipca2050);
+            const renda2065 = v(rf.renda2065);
             const total = ipca2029 + ipca2040 + ipca2050 + renda2065;
             return (
               <BondMaturityLadder
@@ -842,13 +784,14 @@ export default function WithdrawPage() {
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const rf = (data as any)?.rf ?? {};
+            const v = (pos: any) => pos?.valor ?? pos?.valor_brl;
             const custoVidaMensal = activeScenarioCfg.custo_vida_base / 12;
             return (
               <BondLadderTimeline
-                ipca2029={{ valor: rf.ipca2029?.valor_brl, taxa: rf.ipca2029?.taxa }}
-                ipca2040={{ valor: rf.ipca2040?.valor_brl, taxa: rf.ipca2040?.taxa }}
-                ipca2050={{ valor: rf.ipca2050?.valor_brl, taxa: rf.ipca2050?.taxa }}
-                renda2065={{ valor: rf.renda2065?.valor_brl, taxa: rf.renda2065?.taxa }}
+                ipca2029={{ valor: v(rf.ipca2029), taxa: rf.ipca2029?.taxa }}
+                ipca2040={{ valor: v(rf.ipca2040), taxa: rf.ipca2040?.taxa }}
+                ipca2050={{ valor: v(rf.ipca2050), taxa: rf.ipca2050?.taxa }}
+                renda2065={{ valor: v(rf.renda2065), taxa: rf.renda2065?.taxa }}
                 custoVidaMensal={custoVidaMensal}
               />
             );
