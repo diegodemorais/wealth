@@ -494,12 +494,9 @@ export default function FirePage() {
 
       {/* 3. Projeção de Patrimônio — P10 / P50 / P90 (moved up: trajetória após horizonte) */}
       <section className="section" id="netWorthProjectionSection">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
           <h2 style={{ margin: 0 }}>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999, background: 'rgba(99,179,237,.10)', border: '1px solid rgba(99,179,237,.3)', fontSize: 11, color: 'var(--accent)', fontWeight: 600, flexShrink: 0 }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-            Solteiro · R$250k/ano
-          </div>
+          <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
         </div>
         <NetWorthProjectionChart data={safeData} />
         <div style={{ marginTop: 4, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
@@ -573,15 +570,20 @@ export default function FirePage() {
         const swrGatilho: number = prem.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
         const patrimonio: number = prem.patrimonio_atual ?? 0;
         return (
-          <FloorUpsideFire
-            gastoPiso={gastoPiso}
-            custoVida={custoVida}
-            inssD={inssD}
-            inssK={inssK}
-            swrGatilho={swrGatilho}
-            patrimonio={patrimonio}
-            privacyMode={privacyMode}
-          />
+          <>
+            <div style={{ marginBottom: 8 }}>
+              <ScenarioBadge label="Solteiro" gasto={custoVida} privacyMode={privacyMode} />
+            </div>
+            <FloorUpsideFire
+              gastoPiso={gastoPiso}
+              custoVida={custoVida}
+              inssD={inssD}
+              inssK={inssK}
+              swrGatilho={swrGatilho}
+              patrimonio={patrimonio}
+              privacyMode={privacyMode}
+            />
+          </>
         );
       })()}
 
@@ -745,6 +747,9 @@ export default function FirePage() {
       {/* 9. Sequence of Returns Heatmap — collapsed */}
       <CollapsibleSection id="section-sequence-returns" title={secTitle('fire', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')} defaultOpen={secOpen('fire', 'sequence-returns', false)}>
         <div style={{ padding: '0 16px 16px' }}>
+          <div style={{ marginBottom: 8 }}>
+            <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
+          </div>
           {(() => {
             const fireTrilha = (data as any)?.fire_trilha ?? {};
             const spending = (data as any)?.premissas?.custo_vida_base ?? 250000;

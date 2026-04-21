@@ -758,6 +758,9 @@ export default function WithdrawPage() {
       {/* Spending Breakdown — componente dedicado */}
       <CollapsibleSection id="section-spending-breakdown-v2" title={secTitle('withdraw', 'spending-breakdown-v2', 'Spending Breakdown — Detalhamento por Categoria')} defaultOpen={secOpen('withdraw', 'spending-breakdown-v2', false)}>
         <div style={{ padding: '0 16px 16px' }}>
+          <div style={{ marginBottom: 8 }}>
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+          </div>
           {(() => {
             const spending = (data as any)?.spending ?? {};
             const base = spending.base ?? activeScenarioCfg.custo_vida_base ?? 250000;
@@ -782,6 +785,9 @@ export default function WithdrawPage() {
       {/* Bond Ladder Timeline — horizonte de vencimentos */}
       <CollapsibleSection id="section-bond-ladder-timeline" title={secTitle('withdraw', 'bond-ladder-timeline', 'Bond Ladder Timeline — Horizonte de Vencimentos')} defaultOpen={secOpen('withdraw', 'bond-ladder-timeline', false)}>
         <div style={{ padding: '0 16px 16px' }}>
+          <div style={{ marginBottom: 8 }}>
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+          </div>
           {(() => {
             const rf = (data as any)?.rf ?? {};
             const v = (pos: any) => pos?.valor ?? pos?.valor_brl;
