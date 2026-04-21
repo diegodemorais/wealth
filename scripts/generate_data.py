@@ -3000,6 +3000,8 @@ def main():
         # Campos adicionados para aba Premissas (DEV-premissas-tab)
         "horizonte_vida":         premissas_raw.get("horizonte_vida", 90),
         "taxa_ipca_plus_longa":   premissas_raw.get("renda_plus_taxa_default", 7.08),
+        "saude_base":             premissas_raw.get("saude_base", 18_000),
+        "aporte_mensal_aspiracional": premissas_raw.get("aporte_cenario_aspiracional", 30_000),
         # Retornos esperados por ETF (USD real, base — fonte: carteira.md §150-153)
         "retornos_por_etf": {
             "SWRD": {"retorno_usd_real": RETORNO_SWRD_USD_REAL, "fonte": "Mediana 5 fontes: AQR/Vanguard/JPM/RA/Schwab"},

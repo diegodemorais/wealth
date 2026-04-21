@@ -114,7 +114,7 @@ function StatusStrip({ p, fire, pfire, priv }: {
       label: 'FIRE Status',
       value: status,
       sub: status === 'MONITORAR'
-        ? 'Ação: revisar aporte ou spending'
+        ? `Bond Pool: ${(fire.bond_pool_readiness?.anos_gastos ?? 0).toFixed(1)} de ${fire.bond_pool_readiness?.meta_anos ?? 7} anos`
         : (fire.plano_status?.gatilho_ativo ?? ''),
       color: statusColor,
     },
@@ -131,7 +131,7 @@ function StatusStrip({ p, fire, pfire, priv }: {
       color: pfireColor(pfireBase),
     },
     {
-      label: 'SWR Atual',
+      label: 'Spending Rate',
       value: `${swrCurrent.toFixed(2)}%`,
       sub: `Gatilho: ${fmtPct(p.swr_gatilho ?? 0.03)} · Meta: spending/patrimônio`,
       color: 'var(--text)',
@@ -174,9 +174,12 @@ function FamilyScenarios({ profiles, priv }: { profiles: any[]; priv: boolean })
             borderRadius: 8,
             padding: '14px 16px',
           }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {prof.label}
             </div>
+            {(prof.label?.toLowerCase().includes('filho') || prof.label?.toLowerCase().includes('kids')) && (
+              <div style={{ fontSize: 10, color: 'var(--yellow)', marginBottom: 6 }}>→ mais provável 2028+</div>
+            )}
             <div style={{ fontSize: 13, marginBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Gasto:</span>{' '}
               <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>
@@ -252,7 +255,7 @@ export default function AssumptionsPage() {
   const fireTargetsRows: Row[] = [
     { label: 'Patrimônio Gatilho (SWR 3%)', value: mask(p.patrimonio_gatilho ?? 0, privacyMode) },
     { label: 'Progresso Acumulação', value: privacyMode ? '••••' : p.patrimonio_gatilho ? `${((p.patrimonio_atual / p.patrimonio_gatilho) * 100).toFixed(1)}%` : '—' },
-    { label: 'FIRE Aspiracional — 2035, idade 48', value: `P ${(pfireA.base ?? 0).toFixed(1)}%`, accent: (pfireA.base ?? 0) >= 90 },
+    { label: `FIRE Aspiracional — 2035, idade 48 (requer +${fmtBrl((p.aporte_mensal_aspiracional ?? 0) - (p.aporte_mensal ?? 0))}/mês)`, value: `P ${(pfireA.base ?? 0).toFixed(1)}%`, accent: (pfireA.base ?? 0) >= 90 },
     { label: 'FIRE Base — 2040, idade 53', value: `P ${(pfire.base ?? 0).toFixed(1)}%`, accent: (pfire.base ?? 0) >= 90 },
     { label: 'Pat. Mediano @48 (P50)', value: mask(sc.aspiracional?.pat_mediano ?? fire.pat_mediano_fire50 ?? 0, privacyMode) },
     { label: 'Pat. Mediano @53 (P50)', value: mask(sc.base?.pat_mediano ?? fire.pat_mediano_fire ?? 0, privacyMode) },
@@ -337,7 +340,7 @@ export default function AssumptionsPage() {
   // ── Spending Guardrails rows ──
   const spendingGuardrailRows: Row[] = sg.upper_guardrail_spending != null ? [
     { label: 'Zona Atual', value: sg.zona ?? '—', accent: sg.zona === 'verde', warn: sg.zona === 'amarelo' },
-    { label: 'Upper Guardrail', value: mask(sg.upper_guardrail_spending ?? 0, privacyMode) + '/ano' },
+    { label: 'Upper Guardrail (aspiracional)', value: mask(sg.upper_guardrail_spending ?? 0, privacyMode) + '/ano', muted: true },
     { label: 'Safe Target', value: mask(sg.safe_target_spending ?? 0, privacyMode) + '/ano' },
     { label: 'Lower Guardrail', value: mask(sg.lower_guardrail_spending ?? 0, privacyMode) + '/ano' },
   ] : [];
@@ -357,12 +360,13 @@ export default function AssumptionsPage() {
       value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2050.valor)} @ ${rf.ipca2050.taxa?.toFixed(2)}%`,
     }] : []),
     ...(rf.renda2065?.valor != null ? [{
-      label: `Renda+ 2065 (${rf.renda2065.tipo ?? ''})`,
+      label: `Renda+ 2065 — TÁTICO (${rf.renda2065.tipo ?? ''})`,
       value: privacyMode ? '••••' : `${fmtBrl(rf.renda2065.valor)} @ ${rf.renda2065.taxa?.toFixed(2)}%`,
+      accent: true,
     }] : []),
     ...(rf.renda2065?.distancia_gatilho?.gap_pp != null ? [{
       label: 'Renda+ distância gatilho',
-      value: `${rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp`,
+      value: `${rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(1)}% atual | piso ${rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | +${rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp`,
       accent: (rf.renda2065.distancia_gatilho.status ?? '') === 'verde',
       warn: (rf.renda2065.distancia_gatilho.status ?? '') === 'amarelo',
       muted: true,
@@ -398,6 +402,7 @@ export default function AssumptionsPage() {
     ...(sm.go_go ? [{ label: `Go-Go (até ${sm.go_go.fim ?? '?'})`, value: mask(sm.go_go.gasto ?? 0, privacyMode) + '/ano' }] : []),
     ...(sm.slow_go ? [{ label: `Slow-Go (${sm.slow_go.inicio ?? '?'}–${sm.slow_go.fim ?? '?'})`, value: mask(sm.slow_go.gasto ?? 0, privacyMode) + '/ano', muted: true }] : []),
     ...(sm.no_go ? [{ label: `No-Go (${sm.no_go.inicio ?? '?'}+)`, value: mask(sm.no_go.gasto ?? 0, privacyMode) + '/ano', muted: true }] : []),
+    ...(p.saude_base ? [{ label: '+ Saúde (ex-smile, fixo)', value: mask(p.saude_base, privacyMode) + '/ano', muted: true }] : []),
   ];
 
   // ── Last aporte ──
@@ -461,7 +466,7 @@ export default function AssumptionsPage() {
           )}
         </Block>
 
-        <Block title="Strategic Allocation — Target" note="Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
+        <Block title="Strategic Allocation — Target" note="Pesos TARGET (não atuais) · Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
           <Table rows={allocationRows} />
         </Block>
 
@@ -483,7 +488,7 @@ export default function AssumptionsPage() {
         <Block title="Holistic Balance">
           <Table rows={holisticRows} />
           <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-            ¹ Imóvel equity = valor de mercado − saldo devedor hipoteca. Capital Humano = VP renda futura não inclui imóvel.
+            Patrimônio Financeiro = valor de mercado dos investimentos (sem imóvel ou capital humano). ¹ Imóvel equity = valor de mercado − saldo devedor hipoteca. Capital Humano = VP renda futura.
           </p>
         </Block>
 
@@ -491,7 +496,7 @@ export default function AssumptionsPage() {
           <Block title="Bond Pool Readiness">
             <Table rows={bondPoolRows} />
             <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-              Meta: {bondPool.meta_anos ?? 7} anos de gastos em RF. Status early = pool em construção.
+              Meta: {bondPool.meta_anos ?? 7} anos de gastos em RF. Construção gradual via DCA até ~2039. Gap esperado nesta fase.
             </p>
           </Block>
         )}
@@ -500,7 +505,7 @@ export default function AssumptionsPage() {
           <Block title="Spending Guardrails">
             <Table rows={spendingGuardrailRows} />
             <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-              Kitces guardrails: ajuste automático por drawdown de portfolio.
+              Safe Target = spending alvo. Upper Guardrail = teto aspiracional (rebaixado se portfolio em drawdown). Lower = piso de segurança.
             </p>
           </Block>
         )}
@@ -518,7 +523,7 @@ export default function AssumptionsPage() {
           <Block title="Tax & Fiscal">
             <Table rows={taxRows} />
             <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-              Estratégia estate tax: novos aportes em ETFs UCITS (fora US-situs).
+              Estratégia estate tax: novos aportes em ETFs UCITS (fora US-situs). IR diferido cresce com depreciação BRL mesmo sem venda (ganho cambial fantasma).
             </p>
           </Block>
         )}

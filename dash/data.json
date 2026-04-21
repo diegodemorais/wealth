@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-21T18:04:53",
-  "_generated_brt": "2026-04-21T18:04:53-03:00",
+  "_generated": "2026-04-21T18:33:21",
+  "_generated_brt": "2026-04-21T18:33:21-03:00",
   "date": "2026-04-21",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -135,6 +135,8 @@
     "gasto_katia_solo": 160000,
     "horizonte_vida": 90,
     "taxa_ipca_plus_longa": 7.08,
+    "saude_base": 18000,
+    "aporte_mensal_aspiracional": 30000,
     "retornos_por_etf": {
       "SWRD": {
         "retorno_usd_real": 0.037,
@@ -2091,7 +2093,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -2432,23 +2434,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 75733.89,
+      "btc_atual_usd": 75590.67,
       "hodl11_brl_atual": 107080,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.06,
-          "valor_fire_brl": 113111
+          "valor_fire_brl": 113326
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.3,
-          "valor_fire_brl": 353473
+          "upside_factor": 3.31,
+          "valor_fire_brl": 354143
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.6,
-          "valor_fire_brl": 706947
+          "upside_factor": 6.61,
+          "valor_fire_brl": 708286
         }
       }
     }
@@ -3090,7 +3092,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.0,
-    "bitcoin_usd": 75733.89,
+    "bitcoin_usd": 75590.67,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -3108,9 +3110,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.9761,
-    "btc_usd": 75733.89,
+    "btc_usd": 75590.67,
     "cambio_mtd_pct": -3.49,
-    "btc_mtd_pct": 5.37,
+    "btc_mtd_pct": 5.17,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -5360,7 +5362,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-21T18:04:43",
+    "_generated": "2026-04-21T18:33:12",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",
