@@ -20,6 +20,18 @@ import { EC } from '@/utils/echarts-theme';
 import BondStrategyPanel from '@/components/dashboard/BondStrategyPanel';
 import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
 
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
+
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
   gastoPiso: number;
@@ -337,6 +349,7 @@ export default function WithdrawPage() {
 
   return (
     <div>
+      <SectionDivider label="Estratégia de Retirada" />
       {/* Seletor de cenário familiar — afeta SurplusGapChart, SWR e LTC */}
       <div style={{
         display: 'flex',
@@ -515,6 +528,7 @@ export default function WithdrawPage() {
         </CollapsibleSection>
       )}
 
+      <SectionDivider label="Guardrails" />
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
       {safeData.guardrails_retirada && (
         <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Guardrails de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
@@ -582,6 +596,7 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Bond Strategy" />
       {/* 4. Bond Strategy — SoRR + Pool Readiness */}
       {bondPoolReadiness && (
         <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon="🏦">
@@ -612,6 +627,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
 
+      <SectionDivider label="Renda na Aposentadoria" />
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
       <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases')}>
         <div style={{ padding: '0 16px 16px' }}>

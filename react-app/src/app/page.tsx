@@ -21,8 +21,19 @@ import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
 import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
 import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
-import { SemaforoTriggers } from '@/components/dashboard/SemaforoTriggers';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
+
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -93,6 +104,7 @@ export default function HomePage() {
 
   return (
     <div>
+      <SectionDivider label="Indicadores" />
       {/* 1. HERO STRIP — Patrimônio Total | Anos até FIRE | Progresso FIRE */}
       <KpiHero
         networth={d.networth}
@@ -238,6 +250,7 @@ export default function HomePage() {
         </div>
       )}
 
+      <SectionDivider label="Próximo Aporte" />
       {/* 5. SEÇÃO: Próximo Aporte — Equity & Gatilhos RF */}
       {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
         <div style={{ marginBottom: 14 }}>
@@ -255,6 +268,7 @@ export default function HomePage() {
         </div>
       )}
 
+      <SectionDivider label="Progresso FIRE" />
       {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
       <div className="grid grid-cols-2 gap-3.5 mb-3.5">
         <FireProgressWellness
@@ -471,6 +485,7 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
+      <SectionDivider label="Análise Monte Carlo" />
       {/* 7. SEÇÃO: P(FIRE) — Monte Carlo + Tornado */}
       {d && (
         <PFireMonteCarloTornado
@@ -586,6 +601,7 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
+      <SectionDivider label="Fluxo de Caixa" />
       {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
       {d && (
         <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={secOpen('now', 'sankey')} icon="💸">
@@ -595,6 +611,7 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
+      <SectionDivider label="Análise Avançada" />
       {/* 10. Patrimônio Líquido de IR — collapsed */}
       <CollapsibleSection id="section-patrimonio-liquido-ir" title={secTitle('now', 'patrimonio-liquido-ir', 'Patrimônio Líquido de IR')} defaultOpen={secOpen('now', 'patrimonio-liquido-ir', false)}>
         <div style={{ padding: '0 16px 16px' }}>

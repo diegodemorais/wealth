@@ -18,6 +18,18 @@ import { InfoCard } from '@/components/primitives/InfoCard';
 import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
 
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
+
 // Period buttons for timeline
 const PERIODS = [
   { key: '6m', label: '6m' },
@@ -47,6 +59,7 @@ export default function PerformancePage() {
 
   return (
     <div>
+      <SectionDivider label="Visão Geral" />
       {/* 1. Patrimônio — Evolução Histórica (moved first: contexto geral antes de análise) */}
       <section className="section" id="timelineSection">
         <h2>{secTitle('performance', 'patrimonio', 'Patrimônio — Evolução Histórica')}</h2>
@@ -119,6 +132,7 @@ export default function PerformancePage() {
         </div>
       </section>
 
+      <SectionDivider label="Alpha & Benchmark" />
       {/* 3. Alpha vs VWRA — análise de performance diferencial */}
       <section className="section" id="alphaSwrdSection">
         <h2>{secTitle('performance', 'alpha', 'Alpha vs VWRA (benchmark) — Carteira Target por Período')}</h2>
@@ -237,6 +251,7 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Fatores" />
       {/* 7. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible, collapsed) */}
       <CollapsibleSection id="section-factor-loadings" title={secTitle('performance', 'factor-loadings', 'Factor Loadings — Regressão Fama-French SF + Momentum')} defaultOpen={secOpen('performance', 'factor-loadings', false)}>
         <div style={{ padding: '0 16px 16px' }}>
@@ -415,6 +430,7 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Análise Técnica" />
       {/* 8. Retornos Mensais — Heatmap (collapsible, collapsed) */}
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
         <div style={{ padding: '0 16px 16px' }}>

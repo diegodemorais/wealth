@@ -18,6 +18,18 @@ import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 /// Single derivation for patrimônio total financeiro — source: premissas.patrimonio_atual
@@ -1695,11 +1707,13 @@ export default function SimulatorsPage() {
 
   return (
     <div>
+      <SectionDivider label="Decisão de Aporte" />
       {/* 1. Cascade — decisão de aporte (ação imediata) */}
       <CascadeSection />
 
       <hr className="section-sep" />
 
+      <SectionDivider label="Simulação FIRE" />
       {/* 2. Simulador FIRE — projeção central */}
       <FireSimuladorSection />
 
@@ -1710,6 +1724,7 @@ export default function SimulatorsPage() {
 
       <hr className="section-sep" />
 
+      <SectionDivider label="Análise Avançada" />
       {/* 4. Stress Test MC — collapsed (ferramenta avançada) */}
       <StressTestSection />
     </div>

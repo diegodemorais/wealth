@@ -19,6 +19,18 @@ import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
 import { MetricCard } from '@/components/primitives/MetricCard';
 
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
+
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
   const { privacyMode } = useUiStore();
@@ -46,7 +58,7 @@ export default function PortfolioPage() {
 
   return (
     <div>
-
+      <SectionDivider label="Visão Geral" />
       {/* 0. Hero Strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
         <MetricCard
@@ -97,6 +109,7 @@ export default function PortfolioPage() {
         })()}
       </div>
 
+      <SectionDivider label="Equity Internacional" />
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
       {data?.drift && (() => {
         // Threshold constants (mirror dataWiring.ts)
@@ -240,6 +253,7 @@ export default function PortfolioPage() {
       {/* 6. Base de Custo e Alocação — Equity por Bucket (collapsible) */}
       <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
 
+      <SectionDivider label="Análise Avançada" />
       {/* 7. IR Diferido — Alvo & Transitório + IR Shield (collapsible) */}
       <CollapsibleSection
         id="section-tax-ir"
@@ -274,6 +288,7 @@ export default function PortfolioPage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Renda Fixa & Crypto" />
       {/* 8. Renda Fixa + Cripto */}
       <RFCryptoComposition />
 

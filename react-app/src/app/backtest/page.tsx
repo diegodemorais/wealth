@@ -14,6 +14,18 @@ import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
 import DrawdownRecoveryTable from '@/components/dashboard/DrawdownRecoveryTable';
 import { BtcIndicatorsChart } from '@/components/dashboard/BtcIndicatorsChart';
 
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
+
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
 interface BtcIndicatorsData {
@@ -674,15 +686,18 @@ export default function BacktestPage() {
 
   return (
     <div>
+      <SectionDivider label="Backtest Target" />
       {/* 1. Backtest Histórico — Target vs VWRA */}
       <BacktestHistoricoSection />
 
+      <SectionDivider label="Drawdown & Risco" />
       {/* 2. Drawdown Histórico — Série Completa (moved up: contexto de risco após retorno) */}
       <DrawdownHistoricoSection />
 
       {/* 3. Shadow Portfolios — Tracking */}
       <ShadowPortfoliosSection />
 
+      <SectionDivider label="Análise Histórica Longa" />
       {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
       <BacktestLongoSection />
 
@@ -718,6 +733,7 @@ export default function BacktestPage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Bitcoin" />
       {/* 7. Bitcoin On-Chain Indicators */}
       <CollapsibleSection id="section-btc-indicators" title={secTitle('backtest', 'btc-indicators', 'Bitcoin — 200WMA Heatmap & MVRV Z-Score')} defaultOpen={secOpen('backtest', 'btc-indicators', false)}>
         <div style={{ padding: '0 16px 16px' }}>

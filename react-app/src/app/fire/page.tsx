@@ -23,6 +23,18 @@ import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
 
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+    </div>
+  );
+}
+
 // ── FloorUpsideFire — Cobertura por Fase (FIRE Day vs pós-INSS) ─────────────
 interface FloorUpsideFireProps {
   gastoPiso: number;
@@ -320,6 +332,7 @@ export default function FirePage() {
 
   return (
     <div>
+      <SectionDivider label="Probabilidade FIRE" />
       {/* 0. P(FIRE) Hero Banner */}
       <div style={{
         background: `linear-gradient(135deg, color-mix(in srgb, ${pfireHeroColor} 8%, transparent), color-mix(in srgb, var(--accent) 4%, transparent))`,
@@ -492,6 +505,7 @@ export default function FirePage() {
         );
       })()}
 
+      <SectionDivider label="Trajetória & Projeção" />
       {/* 3. Projeção de Patrimônio — P10 / P50 / P90 (moved up: trajetória após horizonte) */}
       <section className="section" id="netWorthProjectionSection">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
@@ -532,6 +546,7 @@ export default function FirePage() {
         </CollapsibleSection>
       )}
 
+      <SectionDivider label="Balanço Holístico" />
       {/* 4b. Balanço Holístico — Patrimônio expandido (collapsed por default) */}
       <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire')} icon="🏛️">
         <BalancoHolistico data={data as any} showCapitalHumanoBadge />
@@ -587,6 +602,7 @@ export default function FirePage() {
         );
       })()}
 
+      <SectionDivider label="Cenários & Risco" />
       {/* 4c. Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
       {(data as any)?.premissas?.tem_conjuge === true && (
         <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon="💑">
@@ -652,6 +668,7 @@ export default function FirePage() {
         </CollapsibleSection>
       )}
 
+      <SectionDivider label="Eventos de Vida" />
       {/* 6. Eventos de Vida — collapsed (detalhe de sensibilidade) */}
       <CollapsibleSection id="section-eventos-vida" title={secTitle('fire', 'eventos-vida')} defaultOpen={secOpen('fire', 'eventos-vida')}>
         <div style={{ padding: '0 16px 16px' }}>
