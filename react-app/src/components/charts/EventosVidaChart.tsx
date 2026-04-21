@@ -26,7 +26,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
 
   const fixedMilestones = [
     { year: anoAtual, event: `Idade Atual (${idadeAtual} anos)`, age: idadeAtual, icon: '👤', color: EC.accent },
-    { year: anoFire, event: `Meta FIRE (${idadeFire} anos)`, age: idadeFire, icon: '🔥', color: '#f59e0b' },
+    { year: anoFire, event: `Meta FIRE (${idadeFire} anos)`, age: idadeFire, icon: '🔥', color: EC.yellow },
     { year: anoInss, event: `INSS (${idadeInss} anos)`, age: idadeInss, icon: '🏛️', color: '#a78bfa' },
   ];
 
@@ -75,7 +75,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
               <div className="text-gray-300 font-semibold text-sm mt-1">{milestone.event}</div>
               <div className="text-muted-foreground text-xs mt-0.5">Idade {milestone.age}</div>
               {(milestone as any).impacto && (
-                <div className="text-xs mt-1" style={{ color: '#f59e0b' }}>
+                <div className="text-xs mt-1" style={{ color: EC.yellow }}>
                   Impacto: {(milestone as any).impacto}
                 </div>
               )}

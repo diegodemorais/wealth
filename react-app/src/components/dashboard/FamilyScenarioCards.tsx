@@ -13,21 +13,49 @@ interface ScenarioProfile {
 
 interface FamilyScenarioData {
   perfis: Record<string, ScenarioProfile>;
-  cenarios: Record<string, Record<string, number>>;
+  cenarios: {
+    base: Record<string, number>;
+    fav: Record<string, number>;
+    stress: Record<string, number>;
+  };
+  patrimonios?: number[];
+  gastos?: number[];
 }
 
 interface FamilyScenarioCardsProps {
   data: FamilyScenarioData;
-  pfireBase?: number;
-  pfireFav?: number;
-  pfireStress?: number;
+  patrimonioAtual?: number;
+}
+
+/** Returns nearest value from a sorted array */
+function nearest(arr: number[], val: number): number {
+  if (!arr.length) return val;
+  return arr.reduce((prev, curr) =>
+    Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev
+  );
+}
+
+/** Looks up P(FIRE) from the cenarios matrix for a given patrimônio + gasto */
+function lookupPfire(
+  cenarios: FamilyScenarioData['cenarios'],
+  patrimonios: number[],
+  gastos: number[],
+  patrimonioAtual: number,
+  gastoAnual: number
+): { base: number; fav: number; stress: number } {
+  const pat = nearest(patrimonios, patrimonioAtual);
+  const gasto = nearest(gastos, gastoAnual);
+  const key = `${pat}_${gasto}`;
+  return {
+    base:   Math.round((cenarios.base?.[key]   ?? 0) * 100),
+    fav:    Math.round((cenarios.fav?.[key]    ?? 0) * 100),
+    stress: Math.round((cenarios.stress?.[key] ?? 0) * 100),
+  };
 }
 
 export function FamilyScenarioCards({
   data,
-  pfireBase = 0,
-  pfireFav = 0,
-  pfireStress = 0,
+  patrimonioAtual = 0,
 }: FamilyScenarioCardsProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
   const [selectedPerfil, setSelectedPerfil] = useState<string>('atual');
@@ -39,13 +67,23 @@ export function FamilyScenarioCards({
   const perfis = data.perfis;
   const currentPerfil = perfis[selectedPerfil];
 
+  // Default spending per family profile (matches carteira.md spending smile)
+  const PERFIL_GASTO_DEFAULT: Record<string, number> = {
+    atual:  250_000,
+    casado: 270_000,
+    filho:  300_000,
+  };
+
+  const patrimonios = data.patrimonios ?? [];
+  const gastos = data.gastos ?? [];
+
   const getPfireForPerfil = (perfil: string): { base: number; fav: number; stress: number } => {
-    const mapping: Record<string, { base: number; fav: number; stress: number }> = {
-      atual: { base: pfireBase || 90, fav: pfireFav || 94, stress: pfireStress || 87 },
-      casado: { base: 85, fav: 89, stress: 81 },
-      filho: { base: 78, fav: 83, stress: 74 },
-    };
-    return mapping[perfil] || mapping.atual;
+    const gastoAnual = perfis[perfil]?.gasto_anual ?? PERFIL_GASTO_DEFAULT[perfil] ?? 250_000;
+    if (patrimonios.length && gastos.length && data.cenarios) {
+      return lookupPfire(data.cenarios, patrimonios, gastos, patrimonioAtual, gastoAnual);
+    }
+    // Fallback: return zeros (data not loaded) — never hardcode P(FIRE) values
+    return { base: 0, fav: 0, stress: 0 };
   };
 
   const pfireValues = getPfireForPerfil(selectedPerfil);

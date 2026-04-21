@@ -1,5 +1,10 @@
 'use client';
 
+// NOTE: orphan component — not rendered in any page.
+// Prop defaults below are UX fallbacks only. When this component is wired
+// into a page, always pass real values from useDashboardStore / data props.
+// Do NOT update numeric defaults here — change carteira.md instead.
+
 import React, { useState, useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
@@ -8,23 +13,23 @@ import { pfireColor as pfireColorFn } from '@/utils/fire';
 interface FireSimulatorProps {
   patrimonioAtual?: number;
   patrimonioGatilho?: number;
-  aporteMensalBase?: number;
-  custoVidaBase?: number;
-  retornoEquityBase?: number;
-  idadeAtual?: number;
-  idadeAposentadoria?: number;
-  swrGatilho?: number;
+  aporteMensalBase?: number;   // fallback only — pass from store/data
+  custoVidaBase?: number;      // fallback only — pass from store/data
+  retornoEquityBase?: number;  // fallback only — pass from store/data
+  idadeAtual?: number;         // fallback only — pass from store/data
+  idadeAposentadoria?: number; // fallback only — pass from store/data
+  swrGatilho?: number;         // fallback only — pass from store/data
 }
 
 export function FireSimulator({
   patrimonioAtual = 0,
   patrimonioGatilho = 0,
-  aporteMensalBase = 25000,
-  custoVidaBase = 250000,
-  retornoEquityBase = 0.0485,
-  idadeAtual = 39,
-  idadeAposentadoria = 53,
-  swrGatilho = 0.03,
+  aporteMensalBase = 25000,    // R$25k/mês — carteira.md aporte_mensal
+  custoVidaBase = 250000,      // R$250k/ano — spending smile go-go
+  retornoEquityBase = 0.0485,  // 4.85% real — carteira.md retorno_equity_real
+  idadeAtual = 39,             // carteira.md idade_atual
+  idadeAposentadoria = 53,     // carteira.md idade_cenario_base
+  swrGatilho = 0.03,           // 3.0% — carteira.md swr_gatilho
 }: FireSimulatorProps) {
   const privacyMode = useUiStore(s => s.privacyMode);
 

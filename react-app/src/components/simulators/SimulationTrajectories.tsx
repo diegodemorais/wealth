@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { EC } from '@/utils/echarts-theme';
 
 export function SimulationTrajectories() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -41,8 +42,8 @@ export function SimulationTrajectories() {
         {
           label: 'P50 (Median)',
           data: p50.slice(0, years),
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.15)',
+          borderColor: EC.accent,
+          backgroundColor: 'rgba(88, 166, 255, 0.15)',
           borderWidth: 3,
           fill: true,
           tension: 0.4,

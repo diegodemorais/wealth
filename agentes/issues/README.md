@@ -57,6 +57,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-code-quality-audit | Code Quality Audit — Hardcoded, Privacy, Hex Colors, Python Tests | Dev | 🟡 Média | ✅ Done 2026-04-21 |
 | DEV-discovery-tab | Aba Discovery — novos componentes sugeridos por todos os agentes + componentes órfãos | Dev | 🟡 Média | ⏳ Doing |
 | DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias (calcFireYear, P(FIRE), MC, semáforo, fmtBrl, wellness...) | Dev+Quant | 🔴 Alta | ⏳ Doing |
 | DEV-boldin-dashboard | Boldin Dashboard Gaps — F1+F2+D1+F5+F6+F7 (balanço holístico, surplus-gap, wellness, cenários, spouse, LTC) | Dev | 🔴 Alta | ⏳ Doing |

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
+import { EC } from '@/utils/echarts-theme';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -60,8 +61,8 @@ function fmtUsd(val: number | null | undefined, privacyMode: boolean): string {
 
 // Color for 200WMA growth_rate_pct
 function growthColor(rate: number): string {
-  if (rate < 10) return '#3b82f6';   // azul — cool
-  if (rate < 30) return '#f59e0b';   // laranja — warning
+  if (rate < 10) return EC.accent;   // azul — cool
+  if (rate < 30) return EC.yellow;   // laranja — warning
   return '#ef4444';                   // vermelho — euphoria
 }
 
@@ -70,7 +71,7 @@ function zoneStyle(zone: string): { color: string; bg: string; border: string } 
   switch (zone) {
     case 'below':  return { color: '#22c55e', bg: 'rgba(34,197,94,0.15)', border: 'rgba(34,197,94,0.3)' };
     case 'near':   return { color: '#22c55e', bg: 'rgba(34,197,94,0.10)', border: 'rgba(34,197,94,0.25)' };
-    case 'above':  return { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.3)' };
+    case 'above':  return { color: EC.yellow, bg: 'rgba(217,119,6,0.12)', border: 'rgba(217,119,6,0.3)' };
     case 'euphoria': return { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)' };
     default: return { color: 'var(--muted)', bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)' };
   }
@@ -81,7 +82,7 @@ function signalStyle(signal: string): { color: string; bg: string; border: strin
   switch (signal) {
     case 'accumulate': return { color: '#22c55e', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)' };
     case 'neutral':    return { color: '#94a3b8', bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)' };
-    case 'caution':    return { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.3)' };
+    case 'caution':    return { color: EC.yellow, bg: 'rgba(217,119,6,0.12)', border: 'rgba(217,119,6,0.3)' };
     case 'trim':       return { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.3)' };
     default: return { color: 'var(--muted)', bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)' };
   }
@@ -142,7 +143,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
       type: 'category',
       data: dates,
       axisLabel: {
-        color: '#64748b',
+        color: EC.muted,
         fontSize: 10,
         interval: Math.floor(dates.length / 6),
         rotate: 30,
@@ -159,7 +160,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
       type: 'value',
       axisLabel: {
         show: !privacyMode,
-        color: '#64748b',
+        color: EC.muted,
         fontSize: 10,
         formatter: (v: number) => {
           if (v >= 1_000_000) return `$${(v / 1_000_000).toFixed(1)}M`;
@@ -186,16 +187,16 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
         const pctDiff = ((s.price_usd / s.ma200w_usd - 1) * 100).toFixed(1);
         const sign = parseFloat(pctDiff) >= 0 ? '+' : '';
         return `<div style="font-size:11px;line-height:1.6;min-width:170px">
-          <div style="color:#64748b;margin-bottom:4px">${s.date}</div>
+          <div style="color:${EC.muted};margin-bottom:4px">${s.date}</div>
           <div>Preço: <b style="color:#e2e8f0">${priceStr}</b></div>
-          <div>200WMA: <b style="color:#3b82f6">${maStr}</b></div>
-          <div>vs MA: <b style="color:${parseFloat(pctDiff) >= 0 ? '#f59e0b' : '#22c55e'}">${sign}${pctDiff}%</b></div>
+          <div>200WMA: <b style="color:${EC.accent}">${maStr}</b></div>
+          <div>vs MA: <b style="color:${parseFloat(pctDiff) >= 0 ? EC.yellow : '#22c55e'}">${sign}${pctDiff}%</b></div>
         </div>`;
       },
     },
     legend: {
       top: 4, right: 0,
-      textStyle: { color: '#64748b', fontSize: 11 },
+      textStyle: { color: EC.muted, fontSize: 11 },
       icon: 'roundRect',
       itemWidth: 14, itemHeight: 4,
     },
@@ -206,7 +207,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
         data: priceColorData,
         smooth: true,
         symbol: 'none',
-        lineStyle: { width: 1.5, color: '#f59e0b' },
+        lineStyle: { width: 1.5, color: EC.yellow },
       },
       {
         name: '200-Week MA',
@@ -214,7 +215,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
         data: maValues,
         smooth: true,
         symbol: 'none',
-        lineStyle: { color: '#3b82f6', width: 2.5 },
+        lineStyle: { color: EC.accent, width: 2.5 },
       },
     ],
   };
@@ -249,7 +250,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
       type: 'category',
       data: dates,
       axisLabel: {
-        color: '#64748b',
+        color: EC.muted,
         fontSize: 10,
         interval: Math.floor(dates.length / 6),
         rotate: 30,
@@ -267,7 +268,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
       min: yMin,
       max: yMax,
       axisLabel: {
-        color: '#64748b',
+        color: EC.muted,
         fontSize: 10,
         formatter: (v: number) => v.toFixed(1),
       },
@@ -313,7 +314,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
         data: zscores,
         smooth: true,
         symbol: 'none',
-        lineStyle: { color: '#3b82f6', width: 2 },
+        lineStyle: { color: EC.accent, width: 2 },
         markArea: {
           silent: true,
           data: [
@@ -322,7 +323,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
               { yAxis: yMax },
             ],
             [
-              { yAxis: thr.caution, itemStyle: { color: 'rgba(245,158,11,0.06)' } },
+              { yAxis: thr.caution, itemStyle: { color: 'rgba(217,119,6,0.06)' } },
               { yAxis: thr.overheated },
             ],
             [
@@ -361,7 +362,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
     legend: {
       top: 4,
       right: 0,
-      textStyle: { color: '#64748b', fontSize: 10 },
+      textStyle: { color: EC.muted, fontSize: 10 },
       icon: 'roundRect',
       itemWidth: 12,
       itemHeight: 4,
@@ -446,7 +447,7 @@ export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartPro
               border: '1px solid',
               borderColor: activeTab === tab ? 'rgba(59,130,246,0.5)' : 'var(--border)',
               background: activeTab === tab ? 'rgba(59,130,246,0.12)' : 'transparent',
-              color: activeTab === tab ? '#3b82f6' : '#64748b',
+              color: activeTab === tab ? EC.accent : EC.muted,
               fontSize: 12,
               fontWeight: activeTab === tab ? 600 : 400,
               cursor: 'pointer',
@@ -463,11 +464,11 @@ export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartPro
           <Chart200WMA data={ma200w} privacyMode={privacyMode} />
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {[
-              { cor: '#3b82f6', label: '0–20% acima · acumular' },
-              { cor: '#f59e0b', label: '20–80% acima · hold' },
+              { cor: EC.accent, label: '0–20% acima · acumular' },
+              { cor: EC.yellow, label: '20–80% acima · hold' },
               { cor: '#ef4444', label: '>80% acima · euforia' },
             ].map(item => (
-              <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
+              <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: EC.muted }}>
                 <span style={{ width: 20, height: 2, background: item.cor, display: 'inline-block', borderRadius: 1 }} />
                 {item.label}
               </span>
@@ -481,17 +482,17 @@ export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartPro
             {[
               { cor: 'rgba(34,197,94,0.5)', label: `< ${mvrzThreshold(mvrvZscore, 'neutral')} · acumular` },
               { cor: 'rgba(148,163,184,0.3)', label: 'neutro' },
-              { cor: 'rgba(245,158,11,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'caution')} · sobreaquecido` },
+              { cor: 'rgba(217,119,6,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'caution')} · sobreaquecido` },
               { cor: 'rgba(239,68,68,0.5)', label: `> ${mvrzThreshold(mvrvZscore, 'overheated')} · topo` },
             ].map(item => (
-              <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: '#64748b' }}>
+              <span key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: EC.muted }}>
                 <span style={{ width: 10, height: 10, background: item.cor, display: 'inline-block', borderRadius: 2 }} />
                 {item.label}
               </span>
             ))}
           </div>
           {mvrvZscore.note && (
-            <p style={{ fontSize: 9, color: '#64748b', marginTop: 0, opacity: 0.7, lineHeight: 1.4 }}>
+            <p style={{ fontSize: 9, color: EC.muted, marginTop: 0, opacity: 0.7, lineHeight: 1.4 }}>
               {mvrvZscore.note}
             </p>
           )}

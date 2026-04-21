@@ -16,6 +16,7 @@ import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { FIRE_RULES } from '@/config/business-rules';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import { EChart } from '@/components/primitives/EChart';
+import { EC } from '@/utils/echarts-theme';
 import BondMaturityLadder from '@/components/dashboard/BondMaturityLadder';
 import BondStrategyPanel from '@/components/dashboard/BondStrategyPanel';
 import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
@@ -66,7 +67,7 @@ function FloorUpsideWithdraw({
         type: 'bar',
         stack: 'total',
         data: [floorPct],
-        itemStyle: { color: '#3b82f6' },
+        itemStyle: { color: EC.accent },
         barMaxWidth: 40,
       },
       {
@@ -126,7 +127,7 @@ function FloorUpsideWithdraw({
         }}
       >
         {[
-          { color: '#3b82f6', label: 'Floor garantido' },
+          { color: EC.accent, label: 'Floor garantido' },
           { color: '#22c55e', label: 'Gap coberto (equity)' },
           { color: '#ef4444', label: 'Gap descoberto' },
         ].map(l => (
@@ -174,7 +175,7 @@ function FloorUpsideWithdraw({
             Floor garantido
           </div>
           <div
-            style={{ fontSize: '1.1rem', fontWeight: 700, color: '#3b82f6' }}
+            style={{ fontSize: '1.1rem', fontWeight: 700, color: EC.accent }}
             className="pv"
           >
             {privacyMode ? '••••' : `R$${(gastoPiso / 1000).toFixed(0)}k/ano`}

@@ -163,8 +163,8 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           type: 'line' as const,
           data: metaLine,
           smooth: false,
-          itemStyle: { color: '#f59e0b' },  // amber — not in EC palette, kept as literal
-          lineStyle: { width: 1.5, color: '#f59e0b', type: 'dotted' as const },
+          itemStyle: { color: EC.yellow },
+          lineStyle: { width: 1.5, color: EC.yellow, type: 'dotted' as const },
           symbolSize: 0,
         },
       ],

@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
+import { EC } from '@/utils/echarts-theme';
 
 import { pfireColor as pfireColorFn } from '@/utils/fire';
 import { FIRE_RULES } from '@/config/business-rules';
@@ -81,7 +82,7 @@ function FloorUpsideFire({
     xAxis: { type: 'value', max: 100, show: false },
     yAxis: { type: 'category', data: [''], show: false },
     series: [
-      { type: 'bar', stack: 'total', data: [floorBar], itemStyle: { color: '#3b82f6' }, barMaxWidth: 32 },
+      { type: 'bar', stack: 'total', data: [floorBar], itemStyle: { color: EC.accent }, barMaxWidth: 32 },
       { type: 'bar', stack: 'total', data: [cobBar], itemStyle: { color: '#22c55e' }, barMaxWidth: 32 },
       { type: 'bar', stack: 'total', data: [descBar], itemStyle: { color: '#ef4444' }, barMaxWidth: 32 },
     ],
@@ -133,7 +134,7 @@ function FloorUpsideFire({
               }}
             >
               <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Floor RF</div>
-              <div style={{ fontWeight: 700, color: '#3b82f6' }} className="pv">
+              <div style={{ fontWeight: 700, color: EC.accent }} className="pv">
                 {privacyMode ? '••••' : `R$${(floorFireDay / 1000).toFixed(0)}k`}
               </div>
             </div>
@@ -194,7 +195,7 @@ function FloorUpsideFire({
               }}
             >
               <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Floor c/INSS</div>
-              <div style={{ fontWeight: 700, color: '#3b82f6' }} className="pv">
+              <div style={{ fontWeight: 700, color: EC.accent }} className="pv">
                 {privacyMode
                   ? '••••'
                   : `R$${(Math.min(floorPosInss, custoVida) / 1000).toFixed(0)}k`}

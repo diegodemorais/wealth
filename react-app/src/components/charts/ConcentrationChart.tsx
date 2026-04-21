@@ -75,7 +75,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           style: {
             text: 'Intl',
             fontSize: 9,
-            fill: '#8b949e',
+            fill: EC.muted,
             textAlign: 'center',
           },
         },

@@ -134,8 +134,8 @@ export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
           type: 'line' as const,
           data: lower,
           smooth: true,
-          itemStyle: { color: '#f59e0b' },  // amber — not in EC palette, kept as literal
-          lineStyle: { width: 1.5, color: '#f59e0b', type: 'dashed' as const },
+          itemStyle: { color: EC.yellow },
+          lineStyle: { width: 1.5, color: EC.yellow, type: 'dashed' as const },
           symbolSize: 0,
         },
         {
