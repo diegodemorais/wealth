@@ -681,17 +681,6 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
-      {/* 14. Semáforo Triggers — collapsed */}
-      {d.dcaItems?.length > 0 && (
-        <CollapsibleSection id="section-semaforo-triggers" title={secTitle('now', 'semaforo-triggers', 'Semáforo de Gatilhos — Detalhe')} defaultOpen={secOpen('now', 'semaforo-triggers', false)}>
-          <div style={{ padding: '0 16px 16px' }}>
-            <SemaforoTriggers items={d.dcaItems} />
-            <div className="src">
-              Gatilhos de compra/venda por instrumento. Baseado em taxas IPCA+ e banda criptográfica.
-            </div>
-          </div>
-        </CollapsibleSection>
-      )}
     </div>
   );
 }
