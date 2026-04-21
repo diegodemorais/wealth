@@ -2,12 +2,14 @@
 
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { useUiStore } from '@/store/uiStore';
 import { Slider } from '@/components/primitives/Slider';
 
 export function SimulatorParams() {
   const mcParams = useDashboardStore(s => s.mcParams);
   const setMcParams = useDashboardStore(s => s.setMcParams);
   const runMC = useDashboardStore(s => s.runMC);
+  const privacyMode = useUiStore(s => s.privacyMode);
 
   // Defensive: ensure mcParams is initialized
   if (!mcParams || typeof mcParams !== 'object') {
@@ -94,7 +96,7 @@ export function SimulatorParams() {
             {mcParams?.stressLevel > 0
               ? `Stress: ${mcParams.stressLevel}% | `
               : ''}
-            R${(mcParams?.monthlyContribution ?? 0).toLocaleString('pt-BR')}/mo | {(mcParams?.returnMean ?? 0).toFixed(1)}% ± {(mcParams?.returnStd ?? 0).toFixed(0)}%
+            {privacyMode ? '••••' : `R$${(mcParams?.monthlyContribution ?? 0).toLocaleString('pt-BR')}`}/mo | {(mcParams?.returnMean ?? 0).toFixed(1)}% ± {(mcParams?.returnStd ?? 0).toFixed(0)}%
           </span>
         </div>
       </div>

@@ -321,3 +321,5 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | guardrails_piso_pct | 0.28 | §Guardrails aprovados 2026-03-20 — corte 28% (dd > 35%) |
 | gasto_piso | 180000 | §Guardrails aprovados 2026-03-20 — piso absoluto R$/ano |
 | saude_base | 18000 | HD-multimodel-premissas 2026-04-06 — plano PJ coletivo, FIRE day 53 |
+| ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
+| ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |

@@ -2764,6 +2764,14 @@ def sync_nubank_resumo():
 def main():
     print("📊 generate_data.py — iniciando")
 
+    # Garantir que carteira_params.json está atualizado a partir de carteira.md
+    try:
+        from parse_carteira import parse as _parse_carteira
+        _parse_carteira()
+        print("  ✓ carteira_params.json atualizado")
+    except Exception as _e:
+        print(f"  ⚠️ parse_carteira falhou ({_e}) — usando cache existente")
+
     # Sincronizar operacoes_td.json → resumo_td.json (SEMPRE, antes de tudo)
     sync_nubank_resumo()
 

@@ -34,7 +34,10 @@ STATE_PATH = ROOT / "dados" / "dashboard_state.json"
 
 # ETFs UCITS ACC — diferimento fiscal (Lei 14.754/2023, art. 2-3)
 _ETFS_ACC = {"SWRD", "AVGS", "AVEM", "AVUV", "AVDV", "USSC", "EIMI", "AVES", "DGS", "IWVL"}
-IR_ALIQUOTA = 0.15
+
+import sys as _sys
+_sys.path.insert(0, str(ROOT / "scripts"))
+from config import IR_ALIQUOTA
 
 
 def _load_state() -> dict:

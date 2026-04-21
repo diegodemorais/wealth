@@ -136,6 +136,9 @@ describe('2c. Component Structure (static scan)', () => {
 
       const content = readFileSync(filePath, 'utf-8');
 
+      // Skip files with explicit privacy-ok exception comment
+      if (content.includes('// privacy-ok')) continue;
+
       const hasMoneyFormat =
         content.includes('fmtBrl') ||
         content.includes('fmtShort') ||
@@ -153,15 +156,14 @@ describe('2c. Component Structure (static scan)', () => {
       }
     }
 
+    expect(violators).toHaveLength(0);
     if (violators.length > 0) {
-      // Warn — some formatter utilities are shared with privacy-aware parents
-      console.warn(
-        `[WARN] Components with money formatting but no privacy handling:\n${violators.map(f => '  ' + f).join('\n')}`
+      // Utility hint: if a formatter is shared with a privacy-aware parent, add
+      // `// privacy-ok: handled by parent` comment to suppress this check.
+      throw new Error(
+        `Components with money formatting but no privacy handling:\n${violators.map(f => '  ' + f).join('\n')}`
       );
     }
-
-    // Not a hard fail — just document
-    expect(true).toBe(true);
   });
 
   it('all ECharts components must have privacy handling', () => {

@@ -39,9 +39,8 @@ TICKERS = {
     "USD_BRL": "USDBRL=X",   # ETFs UCITS na LSE são cotados em USD
 }
 
-# IPCA+ taxa bruta referência (atualizar se mudar)
-IPCA_PLUS_TAXA_ANUAL = 0.0716
-IPCA_PLUS_CUSTODIA = 0.0020
+# IPCA+ taxa bruta referência — lida de config.py (fonte: carteira.md)
+from config import IPCA_PLUS_TAXA_ANUAL, IPCA_PLUS_CUSTODIA
 
 # ─── TRANSITÓRIOS (TLH MONITOR) ───────────────────────────────────────────────
 # Ativos transitorios: nao comprar mais, diluir via aportes, vender na desacumulacao.

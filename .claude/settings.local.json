@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "Skill(update-config)",
       "Read(//Users/diegodemorais/claude/code/investimentos/**)",
@@ -17,13 +16,21 @@
       "mcp__discourse__discourse_list_user_posts",
       "mcp__discourse__discourse_list_users",
       "mcp__discourse__discourse_run_query",
-      "mcp__openspace__search_skills"
+      "mcp__openspace__search_skills",
+      "Bash(python3 -c ':*)",
+      "Bash(python3 scripts/parse_carteira.py)",
+      "Bash(python3 scripts/generate_data.py)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)"
     ],
     "deny": [
       "mcp__openspace__execute_task",
       "mcp__openspace__fix_skill",
       "mcp__openspace__upload_skill"
-    ]
+    ],
+    "defaultMode": "bypassPermissions"
   },
   "model": "sonnet",
   "hooks": {

@@ -163,6 +163,10 @@ GUARDRAILS_PISO_PCT   = _P.get("guardrails_piso_pct",   0.28)
 GASTO_PISO            = _P.get("gasto_piso",             180_000)
 SAUDE_BASE            = _P.get("saude_base",              18_000)
 
+# Renda Fixa — Tesouro IPCA+ (snapshot — atualizar em carteira.md quando taxa mudar)
+IPCA_PLUS_TAXA_ANUAL = _P.get("ipca_plus_taxa_anual", 0.0716)
+IPCA_PLUS_CUSTODIA   = _P.get("ipca_plus_custodia",   0.0020)
+
 # Legacy (mantém compatibilidade)
 APORTE_MENSAL = APORTE_CENARIO_BASE
 

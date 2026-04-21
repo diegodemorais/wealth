@@ -1,5 +1,7 @@
 'use client';
 
+// privacy-ok: toLocaleString here formats dates only (timestamps), not BRL monetary values
+
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';

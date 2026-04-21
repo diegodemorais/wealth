@@ -107,6 +107,9 @@ describe('Privacy Mode Completeness', () => {
 
       const content = readFileSync(filePath, 'utf-8');
 
+      // Skip files with explicit privacy-ok exception comment
+      if (content.includes('// privacy-ok')) continue;
+
       const hasMoneyFormat =
         content.includes('fmtBrl') ||
         content.includes('fmtShort') ||
@@ -123,14 +126,11 @@ describe('Privacy Mode Completeness', () => {
       }
     }
 
+    expect(violators).toHaveLength(0);
     if (violators.length > 0) {
-      // Warn but don't fail — some formatters may be in utility files shared with privacy-aware parents
-      console.warn(
-        `[WARN] Components with money formatting but no privacy handling:\n${violators.map(f => '  ' + f).join('\n')}`
+      throw new Error(
+        `Components with money formatting but no privacy handling:\n${violators.map(f => '  ' + f).join('\n')}`
       );
     }
-
-    // This test always passes — it's a warning scan
-    expect(true).toBe(true);
   });
 });
