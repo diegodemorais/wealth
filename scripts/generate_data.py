@@ -48,6 +48,7 @@ from config import (
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
     INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
     INSS_KATIA_INICIO_ANO, RETORNO_RF_REAL_BOND_POOL,
+    RETORNO_SWRD_USD_REAL, RETORNO_AVGS_USD_REAL, RETORNO_AVEM_USD_REAL,
     update_dashboard_state,
 )
 
@@ -2999,6 +3000,12 @@ def main():
         # Campos adicionados para aba Premissas (DEV-premissas-tab)
         "horizonte_vida":         premissas_raw.get("horizonte_vida", 90),
         "taxa_ipca_plus_longa":   premissas_raw.get("renda_plus_taxa_default", 7.08),
+        # Retornos esperados por ETF (USD real, base — fonte: carteira.md §150-153)
+        "retornos_por_etf": {
+            "SWRD": {"retorno_usd_real": RETORNO_SWRD_USD_REAL, "fonte": "Mediana 5 fontes: AQR/Vanguard/JPM/RA/Schwab"},
+            "AVGS": {"retorno_usd_real": RETORNO_AVGS_USD_REAL, "fonte": "Mediana multi-fonte + haircut 58% (McLean & Pontiff 2016)"},
+            "AVEM": {"retorno_usd_real": RETORNO_AVEM_USD_REAL, "fonte": "Média 4 fontes: AQR/JPM/GMO/RA arredondado conserv."},
+        },
     }
 
     # Último aporte mensal (última linha do CSV historico_carteira.csv)
@@ -3092,6 +3099,10 @@ def main():
         "pisoTaxaRendaPlus":  PISO_TAXA_RENDA_PLUS,   # piso de compra DCA
         "pisoVendaRendaPlus": PISO_VENDA_RENDA_PLUS,  # gatilho de venda
         "ir_aliquota":        IR_ALIQUOTA,              # 0.15 = 15%
+        # HODL11 banda operacional (fonte: carteira_params.json)
+        "hodl11PisoPct":      HODL11_PISO_PCT,          # 1.5%
+        "hodl11AlvoPct":      HODL11_ALVO_PCT,          # 3.0%
+        "hodl11TetoPct":      HODL11_TETO_PCT,          # 5.0%
     }
 
     # Pesos alvo

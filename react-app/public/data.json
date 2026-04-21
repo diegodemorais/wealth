@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-21T17:18:53",
-  "_generated_brt": "2026-04-21T17:18:53-03:00",
+  "_generated": "2026-04-21T18:04:53",
+  "_generated_brt": "2026-04-21T18:04:53-03:00",
   "date": "2026-04-21",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -10,7 +10,7 @@
     "fire_mc": "2026-04-21",
     "geral": "2026-04-21"
   },
-  "cambio": 4.982,
+  "cambio": 4.9761,
   "posicoes": {
     "SWRD": {
       "qty": 5291.64,
@@ -96,7 +96,10 @@
     "pisoTaxaIpcaLongo": 6.0,
     "pisoTaxaRendaPlus": 6.5,
     "pisoVendaRendaPlus": 6.0,
-    "ir_aliquota": 0.15
+    "ir_aliquota": 0.15,
+    "hodl11PisoPct": 1.5,
+    "hodl11AlvoPct": 3.0,
+    "hodl11TetoPct": 5.0
   },
   "pfire_aspiracional": {
     "base": 86.6,
@@ -109,7 +112,7 @@
     "stress": 87.4
   },
   "premissas": {
-    "patrimonio_atual": 3651358,
+    "patrimonio_atual": 3647555,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -132,6 +135,20 @@
     "gasto_katia_solo": 160000,
     "horizonte_vida": 90,
     "taxa_ipca_plus_longa": 7.08,
+    "retornos_por_etf": {
+      "SWRD": {
+        "retorno_usd_real": 0.037,
+        "fonte": "Mediana 5 fontes: AQR/Vanguard/JPM/RA/Schwab"
+      },
+      "AVGS": {
+        "retorno_usd_real": 0.05,
+        "fonte": "Mediana multi-fonte + haircut 58% (McLean & Pontiff 2016)"
+      },
+      "AVEM": {
+        "retorno_usd_real": 0.05,
+        "fonte": "Média 4 fontes: AQR/JPM/GMO/RA arredondado conserv."
+      }
+    },
     "ultimo_aporte_brl": 78194,
     "ultimo_aporte_data": "2026-04"
   },
@@ -1810,7 +1827,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2063,7 +2080,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -2074,7 +2091,7 @@
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -2411,27 +2428,27 @@
       "min_pct": 1.5,
       "alvo_pct": 3.0,
       "max_pct": 5.0,
-      "atual_pct": 2.93,
+      "atual_pct": 2.94,
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 75571.65,
+      "btc_atual_usd": 75733.89,
       "hodl11_brl_atual": 107080,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.06,
-          "valor_fire_brl": 113354
+          "valor_fire_brl": 113111
         },
         "base": {
           "btc_target_usd": 250000,
-          "upside_factor": 3.31,
-          "valor_fire_brl": 354232
+          "upside_factor": 3.3,
+          "valor_fire_brl": 353473
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.62,
-          "valor_fire_brl": 708464
+          "upside_factor": 6.6,
+          "valor_fire_brl": 706947
         }
       }
     }
@@ -2505,35 +2522,35 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -1.5,
-      "posicao_r": 1314489,
+      "posicao_r": 1313120,
       "acao": "Rebalancear",
-      "detalhe": "drift: -3.50pp (atual 36.0% vs alvo 39.5%) · posição R$1314k"
+      "detalhe": "drift: -3.50pp (atual 36.0% vs alvo 39.5%) · posição R$1313k"
     },
     {
       "id": "hodl11_banda",
       "label": "Crypto HODL11 — Banda",
       "category": "crypto",
       "status": "verde",
-      "valor": -0.07,
+      "valor": -0.06,
       "unidade": "pp",
       "piso": 0.0,
-      "gap": 0.07,
+      "gap": 0.06,
       "posicao_r": 107080.0,
       "acao": "No alvo",
-      "detalhe": "drift: -0.07pp (atual 2.9% vs alvo 3.0%) · posição R$107k"
+      "detalhe": "drift: -0.06pp (atual 2.9% vs alvo 3.0%) · posição R$107k"
     },
     {
       "id": "drift_ipca_max",
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.585495314346058,
+      "valor": -11.581935296383467,
       "unidade": "pp",
       "piso": -2.0,
-      "gap": -9.59,
+      "gap": -9.58,
       "posicao_r": 124676.0,
       "acao": "Aportar urgente",
-      "detalhe": "drift: -11.59pp vs alvo 15% · posição R$125k"
+      "detalhe": "drift: -11.58pp vs alvo 15% · posição R$125k"
     }
   ],
   "guardrails_retirada": [
@@ -3072,8 +3089,8 @@
     "fed_funds": 3.64,
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
-    "exposicao_cambial_pct": 85.9,
-    "bitcoin_usd": 75571.65,
+    "exposicao_cambial_pct": 86.0,
+    "bitcoin_usd": 75733.89,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -3087,13 +3104,13 @@
         "ipca_taxa_pct": 7.2
       }
     },
-    "cambio": 4.982
+    "cambio": 4.9761
   },
   "mercado": {
-    "cambio_brl_usd": 4.982,
-    "btc_usd": 75571.65,
-    "cambio_mtd_pct": -3.37,
-    "btc_mtd_pct": 5.14,
+    "cambio_brl_usd": 4.9761,
+    "btc_usd": 75733.89,
+    "cambio_mtd_pct": -3.49,
+    "btc_mtd_pct": 5.37,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3648,7 +3665,7 @@
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3651358,
+    "financeiro_brl": 3647555,
     "imovel_equity_brl": 367875.3,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 452124.7,
@@ -3656,7 +3673,7 @@
     "capital_humano_vp": 4914000.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 9366233.3,
+    "total_brl": 9362430.3,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
@@ -3673,7 +3690,7 @@
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 440154,
-    "total_portfolio_brl": 3651358,
+    "total_portfolio_brl": 3647555,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -3689,23 +3706,23 @@
     },
     "aporte_mensal": {
       "premissa_brl": 25000,
-      "realizado_media_brl": 72606,
-      "delta_brl": 47606,
-      "delta_pct": 190.4,
+      "realizado_media_brl": 72567,
+      "delta_brl": 47567,
+      "delta_pct": 190.3,
       "periodo": "2021-04-13 a 2026-04-28",
       "meses_span": 60,
       "total_ibkr_usd": 391043,
-      "total_ibkr_brl": 1948178,
+      "total_ibkr_brl": 1945871,
       "total_rf_brl": 2408159,
-      "total_aporte_brl": 4356337,
-      "cambio_conversao": 4.982,
+      "total_aporte_brl": 4354030,
+      "cambio_conversao": 4.9761,
       "por_ano_brl": {
-        "2026": 94658,
-        "2025": 281346,
-        "2024": 371018,
-        "2023": 392120,
-        "2022": 480233,
-        "2021": 328803
+        "2026": 94546,
+        "2025": 281013,
+        "2024": 370579,
+        "2023": 391656,
+        "2022": 479664,
+        "2021": 328414
       },
       "nota": "Inclui depósitos IBKR (USD → BRL) + aportes RF (BRL direto). Conversão USD→BRL pelo câmbio atual (aproximação; câmbio variou ao longo do período). Período: primeiro aporte até último aporte (IBKR ou RF)."
     }
@@ -5343,7 +5360,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-21T17:18:42",
+    "_generated": "2026-04-21T18:04:43",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",

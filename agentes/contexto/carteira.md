@@ -293,6 +293,9 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | retorno_rf_real_bond_pool | 0.06 | 6.0% real líquido HTM (alinhado PREMISSAS MC) |
 | retorno_equity_base | 0.0485 | 4.85% real BRL — FI-premissas-retorno 2026-04-01 |
 | retorno_ipca_plus | 0.0600 | 6.0% real líquido HTM 14 anos — HD-006 |
+| retorno_swrd_usd_real | 0.037 | 3.7% USD real — mediana 5 fontes (AQR/Vanguard/JPM/RA/Schwab) |
+| retorno_avgs_usd_real | 0.050 | 5.0% USD real — mediana multi-fonte + haircut 58% (FI-premissas-retorno) |
+| retorno_avem_usd_real | 0.050 | 5.0% USD real — média 4 fontes (AQR/JPM/GMO/RA) arredondado conserv. |
 | volatilidade_equity | 0.168 | 16.8% — FR-equity-equivalent |
 | dep_brl_base | 0.005 | 0.5%/ano — premissa plano FIRE |
 | dep_brl_favoravel | 0.015 | 1.5%/ano — cenário favorável |

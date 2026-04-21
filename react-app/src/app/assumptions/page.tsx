@@ -32,6 +32,7 @@ interface Row {
   value: string;
   muted?: boolean;
   accent?: boolean;
+  warn?: boolean;
 }
 
 function Table({ rows }: { rows: Row[] }) {
@@ -44,7 +45,7 @@ function Table({ rows }: { rows: Row[] }) {
             <td style={{
               padding: '7px 4px',
               fontWeight: 600,
-              color: row.accent ? 'var(--green)' : 'var(--text)',
+              color: row.accent ? 'var(--green)' : row.warn ? 'var(--yellow)' : 'var(--text)',
               textAlign: 'right',
               fontFamily: 'monospace',
             }}>
@@ -57,7 +58,7 @@ function Table({ rows }: { rows: Row[] }) {
   );
 }
 
-function Block({ title, children }: { title: string; children: React.ReactNode }) {
+function Block({ title, children, note }: { title: string; children: React.ReactNode; note?: string }) {
   return (
     <div style={{
       background: 'var(--card)',
@@ -78,6 +79,11 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
         </h2>
       )}
       {children}
+      {note && (
+        <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+          {note}
+        </p>
+      )}
     </div>
   );
 }
@@ -94,7 +100,11 @@ function StatusStrip({ p, fire, pfire, priv }: {
     ? ((p.patrimonio_atual / p.patrimonio_gatilho) * 100).toFixed(1)
     : '—';
 
-  const swrCurrent = fire.swr_current ?? 0;
+  // SWR atual: computed inline (gasto_anual / patrimônio_atual)
+  const swrCurrent = p.patrimonio_atual > 0
+    ? (p.custo_vida_base / p.patrimonio_atual) * 100
+    : 0;
+
   const pfireBase = pfire.base ?? 0;
   const status = fire.plano_status?.status ?? '—';
   const statusColor = status === 'OK' ? 'var(--green)' : status === 'MONITORAR' ? 'var(--yellow)' : 'var(--red)';
@@ -103,7 +113,9 @@ function StatusStrip({ p, fire, pfire, priv }: {
     {
       label: 'FIRE Status',
       value: status,
-      sub: fire.plano_status?.gatilho_ativo ?? '',
+      sub: status === 'MONITORAR'
+        ? 'Ação: revisar aporte ou spending'
+        : (fire.plano_status?.gatilho_ativo ?? ''),
       color: statusColor,
     },
     {
@@ -121,7 +133,7 @@ function StatusStrip({ p, fire, pfire, priv }: {
     {
       label: 'SWR Atual',
       value: `${swrCurrent.toFixed(2)}%`,
-      sub: `Gatilho: ${fmtPct(p.swr_gatilho ?? 0.03)}`,
+      sub: `Gatilho: ${fmtPct(p.swr_gatilho ?? 0.03)} · Meta: spending/patrimônio`,
       color: 'var(--text)',
     },
   ];
@@ -211,6 +223,8 @@ export default function AssumptionsPage() {
   const p = d?.premissas ?? {};
   const macro = d?.macro ?? {};
   const fire = d?.fire ?? {};
+  const rf = d?.rf ?? {};
+  const tax = d?.tax ?? {};
   const ph = d?.patrimonio_holistico ?? {};
   const pt = d?.pesosTarget ?? {};
   const pisos = d?.pisos ?? {};
@@ -220,6 +234,8 @@ export default function AssumptionsPage() {
   const guardrails = d?.guardrails ?? [];
   const sm = d?.spendingSmile ?? {};
   const sc = d?.scenario_comparison ?? {};
+  const sg = d?.spending_guardrails ?? {};
+  const bondPool = fire?.bond_pool_readiness ?? {};
   const generated = d?._generated ?? '';
 
   const generatedLabel = generated ? (() => {
@@ -232,14 +248,14 @@ export default function AssumptionsPage() {
     } catch { return generated; }
   })() : '—';
 
-  // ── FIRE Targets rows ──
+  // ── FIRE Targets rows — aspiracional first (anchor alto) ──
   const fireTargetsRows: Row[] = [
     { label: 'Patrimônio Gatilho (SWR 3%)', value: mask(p.patrimonio_gatilho ?? 0, privacyMode) },
     { label: 'Progresso Acumulação', value: privacyMode ? '••••' : p.patrimonio_gatilho ? `${((p.patrimonio_atual / p.patrimonio_gatilho) * 100).toFixed(1)}%` : '—' },
-    { label: 'FIRE Base — 2040, idade 53', value: `P ${(pfire.base ?? 0).toFixed(1)}%`, accent: (pfire.base ?? 0) >= 85 },
-    { label: 'FIRE Aspiracional — 2036, idade 49', value: `P ${(pfireA.base ?? 0).toFixed(1)}%`, accent: (pfireA.base ?? 0) >= 85 },
+    { label: 'FIRE Aspiracional — 2035, idade 48', value: `P ${(pfireA.base ?? 0).toFixed(1)}%`, accent: (pfireA.base ?? 0) >= 90 },
+    { label: 'FIRE Base — 2040, idade 53', value: `P ${(pfire.base ?? 0).toFixed(1)}%`, accent: (pfire.base ?? 0) >= 90 },
+    { label: 'Pat. Mediano @48 (P50)', value: mask(sc.aspiracional?.pat_mediano ?? fire.pat_mediano_fire50 ?? 0, privacyMode) },
     { label: 'Pat. Mediano @53 (P50)', value: mask(sc.base?.pat_mediano ?? fire.pat_mediano_fire ?? 0, privacyMode) },
-    { label: 'Pat. Mediano @49 (P50)', value: mask(sc.aspiracional?.pat_mediano ?? fire.pat_mediano_fire50 ?? 0, privacyMode) },
   ];
 
   // ── Personal rows ──
@@ -263,12 +279,13 @@ export default function AssumptionsPage() {
   const modelRows: Row[] = [
     { label: 'Retorno Real Esperado (Equity)', value: fmtPct(p.retorno_equity_base ?? 0) + '/ano' },
     { label: 'Volatilidade (Equity)', value: fmtPct(p.volatilidade_equity ?? 0) + '/ano' },
-    { label: 'Safe Withdrawal Rate (SWR)', value: fmtPct(p.swr_gatilho ?? 0) },
-    { label: 'IPCA Assumido', value: fmtPct(p.ipca_anual ?? 0) + '/ano' },
+    { label: 'SWR (Gatilho FIRE)', value: fmtPct(p.swr_gatilho ?? 0) },
+    { label: 'IPCA Premissa (MC)', value: fmtPct(p.ipca_anual ?? 0) + '/ano' },
+    ...(macro.ipca_12m != null ? [{ label: 'IPCA 12m Realizado', value: fmtPctRaw(macro.ipca_12m) + '/ano', muted: true }] : []),
+    { label: 'Depreciação BRL (base)', value: `${((macro.depreciacao_brl_premissa ?? 0.5)).toFixed(1)}%/ano`, muted: true },
     { label: 'Taxa IPCA+ Longa (Renda+ 2065)', value: fmtPctRaw(p.taxa_ipca_plus_longa ?? 0) + '/ano' },
     { label: 'Horizonte de Vida', value: `${p.horizonte_vida ?? 90} anos` },
     ...(macro.selic_meta != null ? [{ label: 'Selic Meta (BCB)', value: fmtPct(macro.selic_meta / 100) + '/ano', muted: true }] : []),
-    ...(macro.ipca_12m != null ? [{ label: 'IPCA 12m Realizado', value: fmtPctRaw(macro.ipca_12m) + '/ano', muted: true }] : []),
     ...(d?.cambio != null ? [{ label: 'Câmbio BRL/USD', value: privacyMode ? '••••' : `R$${Number(d.cambio).toFixed(4)}`, muted: true }] : []),
   ];
 
@@ -279,6 +296,8 @@ export default function AssumptionsPage() {
     { label: 'AVEM (EM Value)', value: `${((pt.AVEM ?? 0) * 100).toFixed(1)}%` },
     { label: 'IPCA+ (Renda Fixa BR)', value: `${((pt.IPCA ?? 0) * 100).toFixed(1)}%` },
     { label: 'HODL11 (Bitcoin)', value: `${((pt.HODL11 ?? 0) * 100).toFixed(1)}%` },
+    { label: 'Exposição Cambial', value: `${(macro.exposicao_cambial_pct ?? 0).toFixed(1)}%`, muted: true },
+    { label: 'Hedge Cambial', value: 'Nenhum (intencional)', muted: true },
   ];
 
   // ── Rate Floors rows ──
@@ -287,21 +306,88 @@ export default function AssumptionsPage() {
     { label: 'DCA Renda+ ativo se taxa ≥', value: `${pisos.pisoTaxaRendaPlus ?? '—'}%` },
     { label: 'Vender Renda+ se taxa <', value: `${pisos.pisoVendaRendaPlus ?? '—'}%` },
     { label: 'IR (alíquota ETF exterior)', value: fmtPct(pisos.ir_aliquota ?? 0) },
+    ...(pisos.hodl11PisoPct != null ? [
+      { label: 'HODL11 Piso', value: `${pisos.hodl11PisoPct}%`, muted: true },
+      { label: 'HODL11 Alvo', value: `${pisos.hodl11AlvoPct}%`, muted: true },
+      { label: 'HODL11 Teto', value: `${pisos.hodl11TetoPct}%`, muted: true },
+    ] : []),
   ];
 
   // ── Holistic Balance rows ──
   const holisticRows: Row[] = [
     { label: 'Patrimônio Financeiro', value: mask(ph.financeiro_brl ?? 0, privacyMode) },
-    { label: 'Imóvel — Equity', value: mask(ph.imovel_equity_brl ?? 0, privacyMode), muted: true },
+    { label: 'Imóvel — Equity líquido¹', value: mask(ph.imovel_equity_brl ?? 0, privacyMode), muted: true },
     { label: 'Terreno', value: mask(ph.terreno_brl ?? 0, privacyMode), muted: true },
-    { label: 'Capital Humano (VP)', value: mask(ph.capital_humano_vp ?? 0, privacyMode) },
+    { label: 'Capital Humano (VP renda futura)', value: mask(ph.capital_humano_vp ?? 0, privacyMode) },
     { label: 'INSS Diego (VP)', value: mask(ph.inss_pv_brl ?? 0, privacyMode), muted: true },
-    { label: 'Saldo Devedor (Hipoteca)', value: privacyMode ? '••••' : `–${fmtBrl(ph.saldo_devedor_brl ?? 0)}`, muted: true },
-    { label: 'Total Holístico', value: mask(ph.total_brl ?? 0, privacyMode), accent: true },
+    { label: 'Total Holístico', value: mask(ph.total_brl ?? 0, privacyMode) },
   ];
 
-  // ── Guardrails rows ──
-  const guardrailRows: Row[] = guardrails.map((g: any) => ({
+  // ── Bond Pool Readiness rows ──
+  const bondPoolRows: Row[] = bondPool.valor_atual_brl != null ? [
+    { label: 'Valor Atual', value: mask(bondPool.valor_atual_brl ?? 0, privacyMode) },
+    { label: 'Cobertura', value: `${(bondPool.anos_gastos ?? 0).toFixed(1)} anos` },
+    { label: 'Meta', value: `${bondPool.meta_anos ?? 7} anos` },
+    { label: 'Status', value: bondPool.status ?? '—', warn: bondPool.status === 'early' },
+    { label: 'IPCA+ 2029 (reserva)', value: mask(bondPool.composicao?.ipca2029 ?? 0, privacyMode), muted: true },
+    { label: 'IPCA+ 2040 (estrutural)', value: mask(bondPool.composicao?.ipca2040 ?? 0, privacyMode), muted: true },
+    { label: 'IPCA+ 2050 (estrutural)', value: mask(bondPool.composicao?.ipca2050 ?? 0, privacyMode), muted: true },
+  ] : [];
+
+  // ── Spending Guardrails rows ──
+  const spendingGuardrailRows: Row[] = sg.upper_guardrail_spending != null ? [
+    { label: 'Zona Atual', value: sg.zona ?? '—', accent: sg.zona === 'verde', warn: sg.zona === 'amarelo' },
+    { label: 'Upper Guardrail', value: mask(sg.upper_guardrail_spending ?? 0, privacyMode) + '/ano' },
+    { label: 'Safe Target', value: mask(sg.safe_target_spending ?? 0, privacyMode) + '/ano' },
+    { label: 'Lower Guardrail', value: mask(sg.lower_guardrail_spending ?? 0, privacyMode) + '/ano' },
+  ] : [];
+
+  // ── RF Positions rows ──
+  const rfRows: Row[] = [
+    ...(rf.ipca2029?.valor != null ? [{
+      label: `IPCA+ 2029 (${rf.ipca2029.tipo ?? ''})`,
+      value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2029.valor)} @ ${rf.ipca2029.taxa?.toFixed(2)}%`,
+    }] : []),
+    ...(rf.ipca2040?.valor != null ? [{
+      label: `IPCA+ 2040 (${rf.ipca2040.tipo ?? ''})`,
+      value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2040.valor)} @ ${rf.ipca2040.taxa?.toFixed(2)}%`,
+    }] : []),
+    ...(rf.ipca2050?.valor != null ? [{
+      label: `IPCA+ 2050 (${rf.ipca2050.tipo ?? ''})`,
+      value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2050.valor)} @ ${rf.ipca2050.taxa?.toFixed(2)}%`,
+    }] : []),
+    ...(rf.renda2065?.valor != null ? [{
+      label: `Renda+ 2065 (${rf.renda2065.tipo ?? ''})`,
+      value: privacyMode ? '••••' : `${fmtBrl(rf.renda2065.valor)} @ ${rf.renda2065.taxa?.toFixed(2)}%`,
+    }] : []),
+    ...(rf.renda2065?.distancia_gatilho?.gap_pp != null ? [{
+      label: 'Renda+ distância gatilho',
+      value: `${rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp`,
+      accent: (rf.renda2065.distancia_gatilho.status ?? '') === 'verde',
+      warn: (rf.renda2065.distancia_gatilho.status ?? '') === 'amarelo',
+      muted: true,
+    }] : []),
+    ...(rf.renda2065?.duration?.modificada_anos != null ? [{
+      label: 'Renda+ duration modificada',
+      value: `${rf.renda2065.duration.modificada_anos?.toFixed(1)} anos`,
+      muted: true,
+    }] : []),
+  ];
+
+  // ── Tax & Fiscal rows ──
+  const taxRows: Row[] = [
+    { label: 'IR Diferido (ETF exterior)', value: mask(tax.ir_diferido_total_brl ?? 0, privacyMode), warn: true },
+    { label: 'Regime Fiscal', value: 'ACC UCITS — Lei 14.754/2023', muted: true },
+    { label: 'Alíquota (alienação)', value: '15% flat sobre ganho nominal BRL', muted: true },
+    ...(tax.estate_tax?.us_situs_total_usd != null ? [
+      { label: 'Estate Tax — US-situs', value: privacyMode ? '••••' : `$${(tax.estate_tax.us_situs_total_usd / 1000).toFixed(0)}k (lim. $60k)`, warn: true },
+      { label: 'Imposto Estimado', value: mask(tax.estate_tax.imposto_estimado_brl ?? 0, privacyMode), warn: true },
+    ] : []),
+    ...(tax.ptax_atual != null ? [{ label: 'PTAX Atual', value: `R$${tax.ptax_atual?.toFixed(4)}`, muted: true }] : []),
+  ];
+
+  // ── Withdrawal Guardrails rows ──
+  const withdrawalRows: Row[] = guardrails.map((g: any) => ({
     label: g.banda ?? g.min_dd ?? '?',
     value: g.regra ?? g.acao ?? '—',
   }));
@@ -345,7 +431,7 @@ export default function AssumptionsPage() {
         </div>
       )}
 
-      {/* Row 1: FIRE Targets + Personal + Katia */}
+      {/* Row 1: FIRE Targets + Personal Diego + Personal Katia */}
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
         <Block title="FIRE Targets">
           <Table rows={fireTargetsRows} />
@@ -355,15 +441,12 @@ export default function AssumptionsPage() {
           <Table rows={personalRows} />
         </Block>
 
-        <Block title="Personal — Katia">
+        <Block title="Personal — Katia" note="PGBL projeção: R$490k (2040) → R$728–948k (2049)">
           <Table rows={katiaRows} />
-          <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-            PGBL projeção: R$490k (2040) → R$728–948k (2049)
-          </p>
         </Block>
       </div>
 
-      {/* Row 2: Model Assumptions + Allocation + Pisos + Smile */}
+      {/* Row 2: Model Assumptions + Strategic Allocation + Rate Floors + Smile */}
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
         <Block title="Model Assumptions">
           <Table rows={modelRows} />
@@ -377,11 +460,8 @@ export default function AssumptionsPage() {
           )}
         </Block>
 
-        <Block title="Strategic Allocation — Target">
+        <Block title="Strategic Allocation — Target" note="Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
           <Table rows={allocationRows} />
-          <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-            Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa
-          </p>
         </Block>
 
         <Block title="Rate Floors & Spending Smile">
@@ -397,15 +477,54 @@ export default function AssumptionsPage() {
         </Block>
       </div>
 
-      {/* Row 3: Holistic Balance + Guardrails */}
-      <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 12, marginBottom: 12 }}>
+      {/* Row 3: Holistic Balance + Bond Pool + Spending Guardrails */}
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
         <Block title="Holistic Balance">
           <Table rows={holisticRows} />
+          <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+            ¹ Imóvel equity = valor de mercado − saldo devedor hipoteca. Capital Humano = VP renda futura não inclui imóvel.
+          </p>
         </Block>
 
+        {bondPoolRows.length > 0 && (
+          <Block title="Bond Pool Readiness">
+            <Table rows={bondPoolRows} />
+            <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+              Meta: {bondPool.meta_anos ?? 7} anos de gastos em RF. Status early = pool em construção.
+            </p>
+          </Block>
+        )}
+
+        {spendingGuardrailRows.length > 0 && (
+          <Block title="Spending Guardrails">
+            <Table rows={spendingGuardrailRows} />
+            <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+              Kitces guardrails: ajuste automático por drawdown de portfolio.
+            </p>
+          </Block>
+        )}
+      </div>
+
+      {/* Row 4: RF Positions + Tax & Fiscal + Withdrawal Guardrails */}
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
+        {rfRows.length > 0 && (
+          <Block title="RF Positions">
+            <Table rows={rfRows} />
+          </Block>
+        )}
+
+        {taxRows.length > 0 && (
+          <Block title="Tax & Fiscal">
+            <Table rows={taxRows} />
+            <p style={{ margin: '10px 0 0', padding: '8px', background: 'var(--card2, var(--border))', borderRadius: 6, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+              Estratégia estate tax: novos aportes em ETFs UCITS (fora US-situs).
+            </p>
+          </Block>
+        )}
+
         <Block title="Withdrawal Guardrails">
-          {guardrailRows.length > 0 ? (
-            <Table rows={guardrailRows} />
+          {withdrawalRows.length > 0 ? (
+            <Table rows={withdrawalRows} />
           ) : (
             <p style={{ fontSize: 13, color: 'var(--muted)' }}>—</p>
           )}
