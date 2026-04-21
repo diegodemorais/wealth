@@ -10,6 +10,64 @@
   "imprevistos_anual": 4357,
   "total_anual": 236647,
   "modelo_fire_anual": 250000,
-  "updated_at": "2026-04-09",
+  "monthly_breakdown": [
+    {
+      "mes": "2025-08",
+      "essenciais": 13819,
+      "opcionais": 2859,
+      "imprevistos": 0,
+      "total": 16678
+    },
+    {
+      "mes": "2025-09",
+      "essenciais": 13671,
+      "opcionais": 5161,
+      "imprevistos": 150,
+      "total": 18982
+    },
+    {
+      "mes": "2025-10",
+      "essenciais": 13023,
+      "opcionais": 4857,
+      "imprevistos": 489,
+      "total": 18369
+    },
+    {
+      "mes": "2025-11",
+      "essenciais": 14594,
+      "opcionais": 6332,
+      "imprevistos": 1297,
+      "total": 22223
+    },
+    {
+      "mes": "2025-12",
+      "essenciais": 12564,
+      "opcionais": 6275,
+      "imprevistos": 152,
+      "total": 18990
+    },
+    {
+      "mes": "2026-01",
+      "essenciais": 19553,
+      "opcionais": 3519,
+      "imprevistos": 745,
+      "total": 23817
+    },
+    {
+      "mes": "2026-02",
+      "essenciais": 15369,
+      "opcionais": 1287,
+      "imprevistos": 0,
+      "total": 16655
+    },
+    {
+      "mes": "2026-03",
+      "essenciais": 17998,
+      "opcionais": 3980,
+      "imprevistos": 72,
+      "total": 22050
+    }
+  ],
+  "updated_at": "2026-04-21",
   "fonte": "All-Accounts_03abril26.csv"
 }
