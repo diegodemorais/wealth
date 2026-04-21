@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-04-19",
+    "generated": "2026-04-20",
     "last_update_section": "fire",
     "last_update_generator": "fire_montecarlo.py",
     "version": 1
@@ -124,13 +124,13 @@
     }
   },
   "fire": {
-    "pfire_base": 90.8,
-    "pfire_fav": 94.7,
-    "pfire_stress": 87.6,
-    "pat_mediano_fire": 11702268.0,
-    "pat_p10_fire": 6922724.0,
-    "pat_p90_fire": 19222595.0,
-    "mc_date": "2026-04-19",
+    "pfire_base": 81.2,
+    "pfire_fav": 89.0,
+    "pfire_stress": 76.4,
+    "pat_mediano_fire": 10127531.0,
+    "pat_p10_fire": 5822628.0,
+    "pat_p90_fire": 16980339.0,
+    "mc_date": "2026-04-20",
     "pfire50_base": 88.6,
     "pfire50_fav": 93.0,
     "pfire50_stress": 84.8,
@@ -183,12 +183,12 @@
     "pat_mediano_fire49": 9460180.0,
     "pat_p10_fire49": 6117595.0,
     "pat_p90_fire49": 14332903.0,
-    "pfire_base_base": 90.8,
-    "pfire_base_fav": 94.7,
-    "pfire_base_stress": 87.6,
-    "pat_mediano_base": 11702268.0,
-    "pat_p10_base": 6922724.0,
-    "pat_p90_base": 19222595.0,
+    "pfire_base_base": 81.2,
+    "pfire_base_fav": 89.0,
+    "pfire_base_stress": 76.4,
+    "pat_mediano_base": 10127531.0,
+    "pat_p10_base": 5822628.0,
+    "pat_p90_base": 16980339.0,
     "by_profile": [
       {
         "profile": "atual",
