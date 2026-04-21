@@ -239,6 +239,12 @@ export default function AssumptionsPage() {
   const sc = d?.scenario_comparison ?? {};
   const sg = d?.spending_guardrails ?? {};
   const bondPool = fire?.bond_pool_readiness ?? {};
+  const bpr = d?.bond_pool_runway ?? {};
+  const pvr = d?.premissas_vs_realizado ?? {};
+  const guardrailsRetirada = d?.guardrails_retirada ?? [];
+  const le = d?.lumpy_events ?? {};
+  const sb = d?.spending_breakdown ?? {};
+  const dca = d?.dca_status ?? {};
   const generated = d?._generated ?? '';
 
   const generatedLabel = generated ? (() => {
@@ -259,6 +265,8 @@ export default function AssumptionsPage() {
     { label: 'FIRE Base — 2040, idade 53', value: `P ${(pfire.base ?? 0).toFixed(1)}%`, accent: (pfire.base ?? 0) >= 90 },
     { label: 'Pat. Mediano @48 (P50)', value: mask(sc.aspiracional?.pat_mediano ?? fire.pat_mediano_fire50 ?? 0, privacyMode) },
     { label: 'Pat. Mediano @53 (P50)', value: mask(sc.base?.pat_mediano ?? fire.pat_mediano_fire ?? 0, privacyMode) },
+    { label: 'Gasto Piso (SWR 4.5%)', value: mask(d.gasto_piso ?? 0, privacyMode) + '/ano', muted: true },
+    { label: `FIRE Possível @${d.earliest_fire?.idade ?? 49} (${d.earliest_fire?.ano ?? 2036})`, value: `P ${(d.earliest_fire?.pfire ?? 0).toFixed(1)}%`, accent: (d.earliest_fire?.pfire ?? 0) >= 85 },
   ];
 
   // ── Personal rows ──
@@ -268,6 +276,7 @@ export default function AssumptionsPage() {
     { label: 'Aporte Mensal', value: mask(p.aporte_mensal ?? 0, privacyMode) + '/mês' },
     { label: 'Renda Estimada', value: mask(p.renda_estimada ?? 0, privacyMode) + '/mês' },
     { label: 'Spending Target', value: mask(p.custo_vida_base ?? 0, privacyMode) + '/ano' },
+    { label: 'Renda Mensal Líquida', value: mask(p.renda_mensal_liquida ?? 0, privacyMode) + '/mês' },
     { label: 'INSS Diego', value: mask(p.inss_anual ?? 0, privacyMode) + '/ano', muted: true },
   ];
 
@@ -290,6 +299,8 @@ export default function AssumptionsPage() {
     { label: 'Horizonte de Vida', value: `${p.horizonte_vida ?? 90} anos` },
     ...(macro.selic_meta != null ? [{ label: 'Selic Meta (BCB)', value: fmtPct(macro.selic_meta / 100) + '/ano', muted: true }] : []),
     ...(d?.cambio != null ? [{ label: 'Câmbio BRL/USD', value: privacyMode ? '••••' : `R$${Number(d.cambio).toFixed(4)}`, muted: true }] : []),
+    ...(macro.fed_funds != null ? [{ label: 'Fed Funds', value: fmtPctRaw(macro.fed_funds) + '/ano', muted: true }] : []),
+    ...(macro.spread_selic_ff != null ? [{ label: 'Spread Selic–FF', value: `${macro.spread_selic_ff.toFixed(1)}pp`, muted: true }] : []),
   ];
 
   // ── Strategic Allocation rows ──
@@ -301,6 +312,7 @@ export default function AssumptionsPage() {
     { label: 'HODL11 (Bitcoin)', value: `${((pt.HODL11 ?? 0) * 100).toFixed(1)}%` },
     { label: 'Exposição Cambial', value: `${(macro.exposicao_cambial_pct ?? 0).toFixed(1)}%`, muted: true },
     { label: 'Hedge Cambial', value: 'Nenhum (intencional)', muted: true },
+    { label: 'Concentração Brasil', value: `${(d.concentracao_brasil?.brasil_pct ?? 0).toFixed(1)}%`, muted: true },
   ];
 
   // ── Rate Floors rows ──
@@ -314,6 +326,7 @@ export default function AssumptionsPage() {
       { label: 'HODL11 Alvo', value: `${pisos.hodl11AlvoPct}%`, muted: true },
       { label: 'HODL11 Teto', value: `${pisos.hodl11TetoPct}%`, muted: true },
     ] : []),
+    { label: 'TLH Gatilho', value: `${((d.tlhGatilho ?? 0) * 100).toFixed(0)}%`, muted: true },
   ];
 
   // ── Holistic Balance rows ──
@@ -335,6 +348,14 @@ export default function AssumptionsPage() {
     { label: 'IPCA+ 2029 (reserva)', value: mask(bondPool.composicao?.ipca2029 ?? 0, privacyMode), muted: true },
     { label: 'IPCA+ 2040 (estrutural)', value: mask(bondPool.composicao?.ipca2040 ?? 0, privacyMode), muted: true },
     { label: 'IPCA+ 2050 (estrutural)', value: mask(bondPool.composicao?.ipca2050 ?? 0, privacyMode), muted: true },
+    ...(bpr.alvo_pool_brl_2040 != null ? [{ label: 'Alvo Pool (15%)', value: mask(bpr.alvo_pool_brl_2040, privacyMode), muted: true }] : []),
+    ...(bpr.taxas?.td2040_real_pct != null ? [{ label: 'Taxa 2040 real', value: `${bpr.taxas.td2040_real_pct}%`, muted: true }] : []),
+    ...(bpr.taxas?.td2050_real_pct != null ? [{ label: 'Taxa 2050 real', value: `${bpr.taxas.td2050_real_pct}%`, muted: true }] : []),
+    ...(bpr.pool_disponivel_pos_fire != null ? (() => {
+      const firstNeg = bpr.pool_disponivel_pos_fire.findIndex((v: number) => v < 0);
+      const anos = firstNeg === -1 ? bpr.pool_disponivel_pos_fire.length : firstNeg;
+      return [{ label: 'Cobertura pós-FIRE', value: `${anos} anos`, warn: anos < 5 }];
+    })() : []),
   ] : [];
 
   // ── Spending Guardrails rows ──
@@ -456,6 +477,18 @@ export default function AssumptionsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
         <Block title="Model Assumptions">
           <Table rows={modelRows} />
+          {p.retornos_por_etf && (
+            <>
+              <h3 style={{ margin: '12px 0 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Retornos por ETF (USD real/ano)
+              </h3>
+              <Table rows={[
+                { label: 'SWRD', value: `${((p.retornos_por_etf.SWRD?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                { label: 'AVGS', value: `${((p.retornos_por_etf.AVGS?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                { label: 'AVEM', value: `${((p.retornos_por_etf.AVEM?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+              ]} />
+            </>
+          )}
           {ultimoAporteRows.length > 0 && (
             <>
               <h3 style={{ margin: '12px 0 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -534,7 +567,110 @@ export default function AssumptionsPage() {
           ) : (
             <p style={{ fontSize: 13, color: 'var(--muted)' }}>—</p>
           )}
+          {guardrailsRetirada.length > 0 && (
+            <>
+              <h3 style={{ margin: '12px 0 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                P(FIRE) Guardrails
+              </h3>
+              <Table rows={guardrailsRetirada.map((g: any) => ({
+                label: g.condicao ?? g.guardrail,
+                value: g.acao ?? '—',
+                accent: g.prioridade === 'EXPANSIVO',
+                warn: g.prioridade === 'DEFESA',
+                muted: g.prioridade === 'MANTÉM',
+              }))} />
+            </>
+          )}
         </Block>
+      </div>
+
+      {/* Row 5: Passivos + Premissas vs Realizado + DCA Status */}
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 12, marginBottom: 12 }}>
+        <Block title="Passivos" note="Fonte: hipoteca_sac.json + tax_snapshot.json">
+          <Table rows={[
+            { label: 'Hipoteca (saldo devedor)', value: mask(d.passivos?.hipoteca_brl ?? 0, privacyMode), warn: true },
+            { label: 'Vencimento hipoteca', value: d.passivos?.hipoteca_vencimento ?? '—', muted: true },
+            { label: 'IR Diferido (ETFs)', value: mask(d.passivos?.ir_diferido_brl ?? 0, privacyMode), warn: true },
+            { label: 'Total Passivos', value: mask(d.passivos?.total_brl ?? 0, privacyMode), warn: true },
+          ]} />
+        </Block>
+
+        <Block title="Premissas vs Realizado" note="Comparação premissa do modelo vs realizado histórico">
+          <Table rows={[
+            { label: 'Retorno Equity — premissa', value: `${pvr.retorno_equity?.premissa_real_brl_pct ?? 0}% real BRL/ano`, muted: true },
+            { label: 'Retorno Equity — realizado', value: `${pvr.retorno_equity?.twr_real_brl_pct ?? 0}% real BRL/ano`, accent: (pvr.retorno_equity?.twr_real_brl_pct ?? 0) > (pvr.retorno_equity?.premissa_real_brl_pct ?? 0) },
+            { label: 'Backtest nominal USD', value: `${pvr.retorno_equity?.backtest_nominal_usd_pct ?? 0}%/ano`, muted: true },
+            { label: 'vs VWRA benchmark', value: `${pvr.retorno_equity?.benchmark_vwra_nominal_usd_pct ?? 0}%/ano`, muted: true },
+            { label: 'Período', value: `${pvr.retorno_equity?.periodo_anos ?? 5} anos`, muted: true },
+            { label: 'Aporte — premissa', value: mask(pvr.aporte_mensal?.premissa_brl ?? 0, privacyMode) + '/mês', muted: true },
+            { label: 'Aporte — média realizado', value: mask(pvr.aporte_mensal?.realizado_media_brl ?? 0, privacyMode) + '/mês', accent: true },
+            { label: 'Delta aporte', value: `+${(pvr.aporte_mensal?.delta_pct ?? 0).toFixed(0)}%`, accent: true },
+          ]} />
+          {pvr.aporte_mensal?.por_ano_brl && (
+            <>
+              <h3 style={{ margin: '12px 0 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Aportes por Ano
+              </h3>
+              <Table rows={Object.entries(pvr.aporte_mensal.por_ano_brl).sort(([a], [b]) => Number(b) - Number(a)).map(([ano, val]) => ({
+                label: ano,
+                value: mask(val as number, privacyMode),
+                muted: true,
+              }))} />
+            </>
+          )}
+        </Block>
+
+        <Block title="DCA Status">
+          <Table rows={[
+            { label: 'IPCA+ Longo', value: dca.ipca_longo?.ativo ? `ATIVO · ${dca.ipca_longo.taxa_atual?.toFixed(2)}% (piso ${dca.ipca_longo.piso}%)` : 'Pausado', accent: dca.ipca_longo?.ativo },
+            { label: '  → atual / alvo', value: `${dca.ipca_longo?.pct_carteira_atual?.toFixed(1)}% → ${dca.ipca_longo?.alvo_pct}% (gap ${dca.ipca_longo?.gap_alvo_pp?.toFixed(1)}pp)`, muted: true },
+            { label: 'IPCA+ 2040', value: dca.ipca2040?.ativo ? 'ATIVO' : 'Pausado', accent: dca.ipca2040?.ativo },
+            { label: '  → atual / alvo', value: `${dca.ipca2040?.pct_carteira_atual?.toFixed(1)}% → ${dca.ipca2040?.alvo_pct}% (gap ${dca.ipca2040?.gap_alvo_pp?.toFixed(1)}pp)`, muted: true },
+            { label: 'IPCA+ 2050', value: dca.ipca2050?.ativo ? 'ATIVO' : 'Pausado', accent: dca.ipca2050?.ativo },
+            { label: '  → atual / alvo', value: `${dca.ipca2050?.pct_carteira_atual?.toFixed(1)}% → ${dca.ipca2050?.alvo_pct}% (gap ${dca.ipca2050?.gap_alvo_pp?.toFixed(1)}pp)`, muted: true },
+            { label: 'Renda+ 2065', value: dca.renda_plus?.ativo ? 'ATIVO' : 'PAUSADO', warn: !dca.renda_plus?.ativo },
+            { label: '  → atual / alvo', value: `${dca.renda_plus?.pct_carteira_atual?.toFixed(1)}% ≥ ${dca.renda_plus?.alvo_pct}%`, muted: true },
+          ]} />
+        </Block>
+      </div>
+
+      {/* Row 6: Eventos de Vida + Spending Breakdown */}
+      <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 12, marginBottom: 12 }}>
+        {le.eventos?.length > 0 && (
+          <Block title="Eventos de Vida — Impacto FIRE" note={`Base sem eventos: spending R$${((le.base?.spending_brl ?? 0) / 1000).toFixed(0)}k/ano, P(FIRE) ${((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%`}>
+            <Table rows={le.eventos.map((ev: any) => [
+              {
+                label: ev.label + (ev.confirmado ? ' ✓' : ' (planej.)'),
+                value: `P ${(ev.pfire_2040 * 100).toFixed(1)}% (${ev.delta_pp > 0 ? '+' : ''}${ev.delta_pp}pp)`,
+                warn: Math.abs(ev.delta_pp) > 3,
+                accent: ev.confirmado && ev.delta_pp > 0,
+              },
+              {
+                label: '  → spending',
+                value: mask(ev.spending_novo, privacyMode) + '/ano',
+                muted: true,
+              },
+              {
+                label: '  → pat. necessário',
+                value: mask(ev.patrimonio_necessario, privacyMode),
+                muted: true,
+              },
+            ]).flat()} />
+          </Block>
+        )}
+
+        {sb.total_anual != null && (
+          <Block title="Spending Breakdown" note={`Período: ${sb.periodo ?? '—'} (${sb.meses ?? 0} meses)`}>
+            <Table rows={[
+              { label: 'Must (essenciais)', value: mask(sb.must_spend_mensal ?? 0, privacyMode) + '/mês · ' + mask(sb.must_spend_anual ?? 0, privacyMode) + '/ano' },
+              { label: 'Like (opcionais)', value: mask(sb.like_spend_mensal ?? 0, privacyMode) + '/mês · ' + mask(sb.like_spend_anual ?? 0, privacyMode) + '/ano', muted: true },
+              { label: 'Imprevistos', value: mask(sb.imprevistos_mensal ?? 0, privacyMode) + '/mês', muted: true },
+              { label: 'Total Realizado', value: mask(sb.total_anual ?? 0, privacyMode) + '/ano', accent: true },
+              { label: 'Modelo FIRE', value: mask(sb.modelo_fire_anual ?? 0, privacyMode) + '/ano', muted: true },
+              { label: 'Buffer vs Modelo', value: mask((sb.modelo_fire_anual ?? 0) - (sb.total_anual ?? 0), privacyMode), accent: (sb.modelo_fire_anual ?? 0) > (sb.total_anual ?? 0) },
+            ]} />
+          </Block>
+        )}
       </div>
 
       {/* Footer */}
