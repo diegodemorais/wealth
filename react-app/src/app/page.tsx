@@ -55,10 +55,11 @@ export default function HomePage() {
   const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
 
   // Aporte ETFs for AporteDecisionPanel
+  const retornos = (data as any)?.premissas?.retornos_por_etf ?? {};
   const aporteEtfs = [
-    { ticker: 'SWRD', atual: (data?.drift as any)?.SWRD?.atual ?? 0, alvo: (data?.drift as any)?.SWRD?.alvo ?? 39.5, expectedReturn: 3.7 },
-    { ticker: 'AVGS', atual: (data?.drift as any)?.AVGS?.atual ?? 0, alvo: (data?.drift as any)?.AVGS?.alvo ?? 23.7, expectedReturn: 5.0 },
-    { ticker: 'AVEM', atual: (data?.drift as any)?.AVEM?.atual ?? 0, alvo: (data?.drift as any)?.AVEM?.alvo ?? 15.8, expectedReturn: 5.0 },
+    { ticker: 'SWRD', atual: (data?.drift as any)?.SWRD?.atual ?? 0, alvo: (data?.drift as any)?.SWRD?.alvo ?? 39.5, expectedReturn: retornos.SWRD ?? 3.7 },
+    { ticker: 'AVGS', atual: (data?.drift as any)?.AVGS?.atual ?? 0, alvo: (data?.drift as any)?.AVGS?.alvo ?? 23.7, expectedReturn: retornos.AVGS ?? 5.0 },
+    { ticker: 'AVEM', atual: (data?.drift as any)?.AVEM?.atual ?? 0, alvo: (data?.drift as any)?.AVEM?.alvo ?? 15.8, expectedReturn: retornos.AVEM ?? 5.0 },
   ];
 
   // Carry Differential data
@@ -104,7 +105,7 @@ export default function HomePage() {
 
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
       <SectionLabel>Indicadores Primários</SectionLabel>
-      <div className="grid grid-cols-3 gap-2.5 mb-3.5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3.5">
         {/* P(Cenário Aspiracional) */}
         <MetricCard
           accent
@@ -482,16 +483,37 @@ export default function HomePage() {
         />
       )}
 
-      {/* 8. SEÇÃO: Contexto Macro & DCA Status [COLLAPSIBLE, OPEN] */}
-      <CollapsibleSection id="section-macro" title="Contexto Macro & DCA Status" defaultOpen={secOpen('now', 'macro')} icon="📊">
+      {/* 8. SEÇÃO: Contexto Macro [COLLAPSIBLE, OPEN] */}
+      <CollapsibleSection id="section-macro" title="Contexto Macro" defaultOpen={secOpen('now', 'macro')} icon="📊">
         <div className="px-4 pb-4">
-          {/* 8a. Exposição Brasil — Tabela detalhada */}
+          {/* Macro strip */}
+          <div className="mb-3.5">
+            <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
+              Indicadores Macro
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.macro?.selic_meta != null ? `${(data.macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Selic</div>
+              </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.macro?.ipca_12m != null ? `${(data.macro.ipca_12m as number).toFixed(1)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">IPCA 12M</div>
+              </div>
+              <div className="bg-slate-700/40 rounded p-2.5 text-center">
+                <div className="text-lg font-bold text-text">{data?.macro?.fed_funds != null ? `${(data.macro.fed_funds as number).toFixed(2)}%` : '—'}</div>
+                <div className="text-xs text-muted mt-1">Fed Funds</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Exposição Brasil */}
           <div className="mb-3.5">
             <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
               Exposição Brasil
             </div>
-            <div className="bg-slate-700/40 rounded p-3 mb-2">
-              <div className="flex justify-between mb-2">
+            <div className="bg-slate-700/40 rounded p-3">
+              <div className="flex justify-between">
                 <div>
                   <div className="text-xs text-muted">Total Brasil</div>
                   <div className="text-lg font-bold text-green mt-0.5">
@@ -506,82 +528,63 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* 8b. DCA Status — 3 cards separados */}
-          {data?.dca_status && (
-            <div className="mb-3.5">
-              <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
-                DCA Status
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {/* IPCA+ 2040 */}
-                {data.dca_status.ipca_longo && (
-                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
-                    <div className="text-xs text-muted mb-1">IPCA+ 2040</div>
-                    <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
-                    <div className="text-xs text-muted">
-                      Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
-                    </div>
-                    <div className="text-xs text-muted">
-                      {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
-                    </div>
-                  </div>
-                )}
-                {/* IPCA+ 2060 (2050) */}
-                {data.dca_status.ipca2050 && (
-                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
-                    <div className="text-xs text-muted mb-1">IPCA+ 2050</div>
-                    <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca2050.taxa_atual?.toFixed(2)}%</div>
-                    <div className="text-xs text-muted">
-                      Piso: {data.dca_status.ipca2050.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca2050.gap_alvo_pp?.toFixed(1)}pp
-                    </div>
-                    <div className="text-xs text-muted">
-                      {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca2050.pct_carteira_atual?.toFixed(1)}%)
-                    </div>
-                  </div>
-                )}
-                {/* Renda+ 2065 */}
-                {data.rf?.renda2065?.distancia_gatilho && (
-                  <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
-                    <div className="text-xs text-muted mb-1">Renda+ 2065</div>
-                    <div className="text-sm font-bold mb-0.5">Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
-                    <div className="text-xs text-muted">
-                      Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
-                    </div>
-                    <div className="text-xs text-muted">
-                      {privacyMode ? '••••' : `Posição: R$${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k`}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Macro strip */}
-          <div className="mb-3.5">
-            <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
-              Indicadores Macro
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.macro?.selic_meta != null ? `${(data.macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Selic</div>
-              </div>
-              <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.macro?.ipca_12m != null ? `${(data.macro.ipca_12m as number).toFixed(1)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">IPCA 12M</div>
-              </div>
-              <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}</div>
-                <div className="text-xs text-muted mt-1">USD/BRL</div>
-              </div>
-            </div>
-          </div>
-
           <div className="text-xs text-slate-500 mb-0">
-            Fonte: BCB / FRED · Nubank · IBKR · Premissa de depreciação BRL usada em projeções FIRE
+            Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* 8b. SEÇÃO: DCA Status [COLLAPSIBLE, OPEN] */}
+      {data?.dca_status && (
+        <CollapsibleSection id="section-dca-status" title="DCA Status" defaultOpen={secOpen('now', 'dca-status')} icon="🎯">
+          <div className="px-4 pb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {/* IPCA+ 2040 */}
+              {data.dca_status.ipca_longo && (
+                <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
+                  <div className="text-xs text-muted mb-1">IPCA+ 2040</div>
+                  <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
+                  <div className="text-xs text-muted">
+                    Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
+                  </div>
+                  <div className="text-xs text-muted">
+                    {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
+                  </div>
+                </div>
+              )}
+              {/* IPCA+ 2050 */}
+              {data.dca_status.ipca2050 && (
+                <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
+                  <div className="text-xs text-muted mb-1">IPCA+ 2050</div>
+                  <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca2050.taxa_atual?.toFixed(2)}%</div>
+                  <div className="text-xs text-muted">
+                    Piso: {data.dca_status.ipca2050.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca2050.gap_alvo_pp?.toFixed(1)}pp
+                  </div>
+                  <div className="text-xs text-muted">
+                    {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca2050.pct_carteira_atual?.toFixed(1)}%)
+                  </div>
+                </div>
+              )}
+              {/* Renda+ 2065 */}
+              {data.rf?.renda2065?.distancia_gatilho && (
+                <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
+                  <div className="text-xs text-muted mb-1">Renda+ 2065</div>
+                  <div className="text-sm font-bold mb-0.5">Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
+                  <div className="text-xs text-muted">
+                    Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
+                  </div>
+                  <div className="text-xs text-muted">
+                    {privacyMode ? '••••' : `Posição: R$${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k`}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="text-xs text-slate-500 mt-3">
+              Fonte: Nubank · IBKR · DCA automático por gap vs alvo de alocação
+            </div>
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
       {d && (

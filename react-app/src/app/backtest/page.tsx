@@ -60,14 +60,18 @@ function useBtcIndicators() {
 type BacktestPeriod = 'r7' | 'all' | 'since2009' | 'since2013' | 'since2020' | '5y' | '3y';
 type ShadowPeriod = 'since2009' | 'since2013' | 'since2020' | '5y' | '3y' | 'all';
 
+// Dynamic "até" label — uses current month/year to avoid hardcoded dates
+const _hoje = new Date();
+const _ateLabel = _hoje.toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).replace(' de ', '/');
+
 const BACKTEST_PERIODS: { key: BacktestPeriod; label: string; title: string }[] = [
-  { key: 'r7',        label: 'Acadêmico (37a)',  title: 'jul/1989–atual (37 anos) · proxies acadêmicos Ken French + MSCI' },
-  { key: 'all',       label: 'Completo (21a)',   title: 'jan/2005–abr/2026 (21 anos)' },
-  { key: 'since2009', label: 'Pós-GFC (17a)',    title: 'jan/2009–abr/2026 (17 anos) · desde o fundo da crise de 2008' },
-  { key: 'since2013', label: 'Pós-Euro (13a)',   title: 'jan/2013–abr/2026 (13 anos) · pós-crise da dívida europeia' },
-  { key: 'since2020', label: 'Pós-COVID (6a)',   title: 'jan/2020–abr/2026 (6 anos) · desde o fundo de março 2020' },
-  { key: '5y',        label: '5 anos',           title: 'jan/2021–abr/2026 (5 anos)' },
-  { key: '3y',        label: '3 anos',           title: 'jan/2023–abr/2026 (3 anos)' },
+  { key: 'r7',        label: 'Acadêmico (37a)',  title: `jul/1989–${_ateLabel} (37 anos) · proxies acadêmicos Ken French + MSCI` },
+  { key: 'all',       label: 'Completo (21a)',   title: `jan/2005–${_ateLabel} (21 anos)` },
+  { key: 'since2009', label: 'Pós-GFC (17a)',    title: `jan/2009–${_ateLabel} (17 anos) · desde o fundo da crise de 2008` },
+  { key: 'since2013', label: 'Pós-Euro (13a)',   title: `jan/2013–${_ateLabel} (13 anos) · pós-crise da dívida europeia` },
+  { key: 'since2020', label: 'Pós-COVID (6a)',   title: `jan/2020–${_ateLabel} (6 anos) · desde o fundo de março 2020` },
+  { key: '5y',        label: '5 anos',           title: `jan/2021–${_ateLabel} (5 anos)` },
+  { key: '3y',        label: '3 anos',           title: `jan/2023–${_ateLabel} (3 anos)` },
 ];
 
 const SHADOW_PERIODS: { key: ShadowPeriod; label: string }[] = [
@@ -271,7 +275,7 @@ function BacktestHistoricoSection() {
       )}
 
       {/* CAGR vs TWR cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '14px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '14px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '12px', border: '1px solid var(--border)' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px' }}>CAGR Patrimonial (incl. aportes)</div>
           <div style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '6px' }} className="pv">
@@ -480,7 +484,7 @@ function BacktestLongoSection() {
     <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
       {/* Metrics grid */}
       {metricCards.length > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: '14px' }}>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2" style={{ marginBottom: '14px' }}>
           {metricCards.map(m => (
             <div key={m.label} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>{m.label}</div>
@@ -491,7 +495,7 @@ function BacktestLongoSection() {
       )}
 
       {/* Risk Grid: Factor Drought + Drawdown Recovery */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: '10px' }}>
         <div style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px', border: '1px solid var(--border)' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '6px', fontWeight: 600 }}>Factor Drought</div>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--text)' }}>
@@ -552,10 +556,7 @@ function BacktestLongoSection() {
       {data && <BacktestR7Chart data={data} />}
 
       {/* Factor Regression FF5 — collapsible */}
-      <details style={{ marginTop: '10px' }}>
-        <summary style={{ cursor: 'pointer', fontSize: 'var(--text-base)', color: 'var(--muted)', padding: '4px 0' }}>
-          ▸ Factor Regression FF5 (técnico)
-        </summary>
+      <CollapsibleSection id="backtest-ff5" title="Factor Regression FF5 (técnico)" defaultOpen={secOpen('backtest', 'ff5', false)} icon="📊">
         {ff5 ? (
           <div style={{ marginTop: '8px', fontSize: 'var(--text-sm)', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
             {/* Top-level scalars */}
@@ -588,7 +589,7 @@ function BacktestLongoSection() {
         ) : (
           <div style={{ marginTop: '8px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Dados FF5 não disponíveis</div>
         )}
-      </details>
+      </CollapsibleSection>
 
       <div className="src">
         Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.

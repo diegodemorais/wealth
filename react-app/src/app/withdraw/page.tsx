@@ -399,7 +399,7 @@ export default function WithdrawPage() {
             return (
               <>
                 <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, marginTop: 8 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: 8 }}>
                   <InfoCard
                     label="SWR Atual"
                     value={swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
@@ -466,7 +466,7 @@ export default function WithdrawPage() {
       {swrPercentis && (
         <CollapsibleSection id="section-swr-percentiles" title={secTitle('withdraw', 'swr', 'SWR no FIRE Day — Percentis P10 / P50 / P90')} defaultOpen={secOpen('withdraw', 'swr')}>
           <div style={{ padding: '0 16px 16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginTop: 12 }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" style={{ marginTop: 12 }}>
               {/* P10 */}
               <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
@@ -590,7 +590,7 @@ export default function WithdrawPage() {
             <BondStrategyPanel
               idadeAtual={(safeData.premissas as any)?.idade_atual ?? 39}
               idadeFire={(safeData.premissas as any)?.idade_cenario_base ?? 53}
-              rfPctAtual={(safeData.drift as any)?.IPCA?.atual ?? 5.9}
+              rfPctAtual={(safeData.drift as any)?.IPCA?.atual ?? undefined}
               bondPoolReadiness={bondPoolReadiness}
               bondPoolRunway={bondPoolRunway}
               bondPoolRunwayByProfile={bondPoolRunwayByProfile}

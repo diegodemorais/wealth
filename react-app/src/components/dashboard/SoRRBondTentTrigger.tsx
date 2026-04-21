@@ -3,7 +3,7 @@
 export interface SoRRBondTentTriggerProps {
   idadeAtual: number;
   idadeFire: number;
-  rfPctAtual: number;    // % IPCA+ longo atual no portfolio
+  rfPctAtual: number | undefined;    // % IPCA+ longo atual no portfolio
   patrimonioAtual: number;
 }
 
@@ -99,7 +99,7 @@ export default function SoRRBondTentTrigger({
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>
-                  {bt.pctAtual.toFixed(1)}%
+                  {bt.pctAtual != null ? bt.pctAtual.toFixed(1) + '%' : '—'}
                   {bt.pctAlvo != null && (
                     <span style={{ fontSize: 9, color: 'var(--muted)', fontWeight: 400 }}> / {bt.pctAlvo}%</span>
                   )}

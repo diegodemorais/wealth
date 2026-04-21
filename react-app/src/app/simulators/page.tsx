@@ -16,6 +16,7 @@ import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
 import { runMCYearly } from '@/utils/montecarlo';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
+import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -274,8 +275,7 @@ function FireSimuladorSection() {
           : pfireSemaforo < 85  ? { label: '⚠ Atenção',   color: 'var(--yellow)' }
           : { label: '✓ Seguro', color: 'var(--green)' };
         return (
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '20px', alignItems: 'center',
+      <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 items-center" style={{
         marginBottom: '18px',
         background: pfireCardColor !== 'var(--muted)'
           ? `color-mix(in srgb, ${pfireCardColor} 8%, var(--card2))`
@@ -329,7 +329,7 @@ function FireSimuladorSection() {
         </div>
         <div>
           {/* 3 cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px', marginBottom: '10px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2" style={{ marginBottom: '10px' }}>
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P(sucesso) Aspiracional</div>
               <div style={{ fontSize: '1.1rem', fontWeight: 700 }} className="pv">
@@ -713,6 +713,11 @@ function WhatIfSection() {
 
   return (
     <CollapsibleSection id="sim-whatif" title={secTitle('simuladores', 'what-if', 'What-If Scenarios — Impacto de Decisões de Vida')} defaultOpen={secOpen('simuladores', 'what-if', false)}>
+
+      {/* Scenario badge — shows active profile A + custo B */}
+      <div style={{ paddingLeft: 16, paddingTop: 8 }}>
+        <ScenarioBadge label={PROFILE_A_MAP[profileA].label} gasto={custoB} privacyMode={privacyMode} />
+      </div>
 
       {/* ── Presets de mercado ── */}
       <div style={{ marginBottom: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>

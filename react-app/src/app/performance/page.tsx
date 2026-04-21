@@ -100,7 +100,7 @@ export default function PerformancePage() {
           ];
           return (
             <>
-              <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: 8 }}>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" style={{ marginTop: 12 }}>
                 {cards.map(c => (
                   <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
@@ -149,7 +149,7 @@ export default function PerformancePage() {
             : '—';
 
           return (
-            <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 10 }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2" style={{ marginTop: 16 }}>
               {/* Card A: Alpha ITD */}
               <InfoCard
                 label="Alpha desde início"
@@ -180,7 +180,8 @@ export default function PerformancePage() {
                   </span>
                 </div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--red)', lineHeight: 1.1 }}>
-                  −0.16%/ano
+                  {/* TODO: vir de data.json quando premissas.haircut_alpha_liquido existir */}
+                  {(data as any)?.premissas?.haircut_alpha_liquido ?? '−0.16%/ano'}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
                   McLean &amp; Pontiff 2016

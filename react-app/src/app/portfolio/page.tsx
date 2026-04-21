@@ -71,9 +71,8 @@ export default function PortfolioPage() {
         const totalAtual = eqData.reduce((s, d) => s + d.atual, 0);
         const totalAlvo = eqData.reduce((s, d) => s + d.alvo, 0);
         return (
-          <div className="section">
-            <h2>Drift Intra-Equity — SWRD / AVGS / AVEM</h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <CollapsibleSection id="section-drift-intra-equity" title="Drift Intra-Equity — SWRD / AVGS / AVEM" defaultOpen={secOpen('portfolio', 'drift-intra-equity', true)}>
+            <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 20 }}>
               {eqData.map((etf) => {
                 const pctAtual = totalAtual > 0 ? (etf.atual / totalAtual) * 100 : 0;
                 const pctAlvo = totalAlvo > 0 ? (etf.alvo / totalAlvo) * 100 : 0;
@@ -164,7 +163,7 @@ export default function PortfolioPage() {
               <span>· rebalanceamento via aporte</span>
             </div>
             <div className="src">Drift = % intra-equity (sobre total equity). Alvo IPS: SWRD 50% / AVGS 30% / AVEM 20%.</div>
-          </div>
+          </CollapsibleSection>
         );
       })()}
 
@@ -316,15 +315,13 @@ export default function PortfolioPage() {
               ipca2040={(data as any).rf.ipca2040}
               ipca2050={(data as any).rf.ipca2050}
               renda2065={(data as any).rf.renda2065}
-              ipca12m={(data as any).macro?.ipca_12m ?? 4.14}
-              selicMeta={(data as any).macro?.selic_meta ?? 14.75}
+              ipca12m={(data as any).macro?.ipca_12m ?? undefined}
+              selicMeta={(data as any).macro?.selic_meta ?? undefined}
             />
           </div>
         </CollapsibleSection>
       )}
 
-
-      {/* 9. Últimas Operações (removed HeatmapChart - duplicates ETFFactorComposition) */}
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
