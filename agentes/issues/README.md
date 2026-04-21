@@ -57,6 +57,8 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps Críticos (bond pool gauge, trajetória P10/P90, IR latente) | Dev | 🔴 Alta | ⏳ Backlog |
+| XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta | ⏳ Backlog |
 | DEV-code-quality-audit | Code Quality Audit — Hardcoded, Privacy, Hex Colors, Python Tests | Dev | 🟡 Média | ✅ Done 2026-04-21 |
 | DEV-discovery-tab | Aba Discovery — novos componentes sugeridos por todos os agentes + componentes órfãos | Dev | 🟡 Média | ⏳ Doing |
 | DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias (calcFireYear, P(FIRE), MC, semáforo, fmtBrl, wellness...) | Dev+Quant | 🔴 Alta | ⏳ Doing |
