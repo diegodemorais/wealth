@@ -1,39 +1,55 @@
 """
-config.py — Fonte de verdade para constantes compartilhadas entre scripts.
+config.py — Constantes compartilhadas entre scripts.
 
-Decisões estratégicas vivem em agentes/contexto/carteira.md (humano lê).
-Este arquivo é a versão máquina. Quando carteira.md mudar, atualizar aqui.
+Fonte única de verdade: agentes/contexto/carteira.md (seção "Parâmetros para Scripts")
+→ parse_carteira.py gera dados/carteira_params.json
+→ este arquivo lê de lá via _load_params()
 
-Regra: se um valor é usado por 2+ scripts, fica aqui.
-Se é usado por 1 script só (parâmetro de modelo), fica no script.
+Regra: decisões financeiras vivem em carteira.md.
+       Código estrutural (BUCKET_MAP, TICKERS_YF, etc.) fica aqui.
+       Ao mudar qualquer valor em carteira.md, rodar: python scripts/parse_carteira.py
 """
 
-# ─── ALOCAÇÃO ESTRATÉGICA (fonte: carteira.md + FI-equity-redistribuicao 2026-04-01) ───
+import json as _json
+import pathlib as _pathlib
 
-EQUITY_PCT = 0.79           # 79% equity total
-IPCA_LONGO_PCT = 0.15       # 15% IPCA+ longo (TD 2040 80% + TD 2050 20%)
-IPCA_CURTO_PCT = 0.03       # 3% IPCA+ curto (comprar perto dos 50)
-CRIPTO_PCT = 0.03           # 3% HODL11 + spot legado
-RENDA_PLUS_PCT = 0.03       # ≤3% Renda+ 2065 (tático)
+# ─── LOADER (fonte: dados/carteira_params.json gerado de carteira.md) ────────
 
-# Pesos DENTRO do bloco equity (somam 1.0)
+def _load_params() -> dict:
+    """Lê dados/carteira_params.json. Retorna {} se não existir (usa fallback abaixo)."""
+    p = _pathlib.Path(__file__).parent.parent / "dados" / "carteira_params.json"
+    if p.exists():
+        return _json.loads(p.read_text(encoding="utf-8"))
+    return {}
+
+_P = _load_params()
+
+
+# ─── ALOCAÇÃO ESTRATÉGICA ────────────────────────────────────────────────────
+
+EQUITY_PCT       = _P.get("equity_pct",       0.79)
+IPCA_LONGO_PCT   = _P.get("ipca_longo_pct",   0.15)
+IPCA_CURTO_PCT   = _P.get("ipca_curto_pct",   0.03)
+CRIPTO_PCT       = _P.get("cripto_pct",       0.03)
+RENDA_PLUS_PCT   = _P.get("renda_plus_pct",   0.03)
+
 EQUITY_WEIGHTS = {
-    "SWRD": 0.50,
-    "AVGS": 0.30,
-    "AVEM": 0.20,
+    "SWRD": _P.get("equity_weight_swrd", 0.50),
+    "AVGS": _P.get("equity_weight_avgs", 0.30),
+    "AVEM": _P.get("equity_weight_avem", 0.20),
 }
 
-# Pesos no portfolio TOTAL (equity_weight × EQUITY_PCT)
+# Pesos no portfolio TOTAL (derivados)
 PESOS_TARGET = {
-    "SWRD":   EQUITY_PCT * EQUITY_WEIGHTS["SWRD"],   # 0.395
-    "AVGS":   EQUITY_PCT * EQUITY_WEIGHTS["AVGS"],    # 0.237
-    "AVEM":   EQUITY_PCT * EQUITY_WEIGHTS["AVEM"],    # 0.158
-    "IPCA":   IPCA_LONGO_PCT,                          # 0.15
-    "HODL11": CRIPTO_PCT,                              # 0.03
+    "SWRD":   EQUITY_PCT * EQUITY_WEIGHTS["SWRD"],
+    "AVGS":   EQUITY_PCT * EQUITY_WEIGHTS["AVGS"],
+    "AVEM":   EQUITY_PCT * EQUITY_WEIGHTS["AVEM"],
+    "IPCA":   IPCA_LONGO_PCT,
+    "HODL11": CRIPTO_PCT,
 }
 
 
-# ─── BUCKET MAP (fonte: ibkr_sync.py + checkin_mensal.py — canonical) ────────
+# ─── BUCKET MAP (estrutural — muda só com entrada de novo ETF) ───────────────
 
 BUCKET_MAP = {
     # SWRD bucket
@@ -52,7 +68,7 @@ for _tk, _bk in BUCKET_MAP.items():
     BUCKET_TICKERS.setdefault(_bk, []).append(_tk)
 
 
-# ─── TICKERS YAHOO FINANCE ──────────────────────────────────────────────────
+# ─── TICKERS YAHOO FINANCE (estrutural) ─────────────────────────────────────
 
 TICKERS_YF = {
     "SWRD": "SWRD.L", "AVGS": "AVGS.L", "AVEM": "AVEM.L",
@@ -66,31 +82,20 @@ TICKERS_YF = {
 }
 
 
-# ─── PISOS E GATILHOS OPERACIONAIS (fonte: carteira.md + gatilhos.md) ────────
+# ─── PISOS E GATILHOS OPERACIONAIS ───────────────────────────────────────────
 
-PISO_TAXA_IPCA_LONGO = 6.0    # % a.a. — abaixo disso não prioriza DCA IPCA+
-PISO_TAXA_RENDA_PLUS = 6.5    # % a.a. — abaixo disso não aporta DCA Renda+ (piso compra)
-PISO_VENDA_RENDA_PLUS = 6.0   # % a.a. — abaixo disso VENDER toda posição Renda+ 2065 (gatilho saída)
-RENDA_PLUS_ANO_VENC = 2065    # vencimento nominal do título
-RENDA_PLUS_TAXA_DEFAULT = 7.08  # % a.a. — fallback se taxa não encontrada (carteira.md 2026-04-01)
+PISO_TAXA_IPCA_LONGO    = _P.get("piso_taxa_ipca_longo",    6.0)
+PISO_TAXA_RENDA_PLUS    = _P.get("piso_taxa_renda_plus",    6.5)
+PISO_VENDA_RENDA_PLUS   = _P.get("piso_venda_renda_plus",   6.0)
+RENDA_PLUS_ANO_VENC     = _P.get("renda_plus_ano_venc",     2065)
+RENDA_PLUS_TAXA_DEFAULT = _P.get("renda_plus_taxa_default", 7.08)
 
-# HODL11 bandas (fonte: carteira.md — "Alvo 3%, piso 1,5%, teto 5%")
-HODL11_PISO_PCT = 1.5
-HODL11_ALVO_PCT = 3.0
-HODL11_TETO_PCT = 5.0
+HODL11_PISO_PCT = _P.get("hodl11_piso_pct", 1.5)
+HODL11_ALVO_PCT = _P.get("hodl11_alvo_pct", 3.0)
+HODL11_TETO_PCT = _P.get("hodl11_teto_pct", 5.0)
 
-# BTC cenários para projeção FIRE Day (USD)
-BTC_CENARIOS_USD = {
-    "bear": 80_000,
-    "base": 250_000,
-    "bull": 500_000,
-}
-
-# Factor underperformance (fonte: carteira.md — gatilho revisão AVGS)
-FACTOR_UNDERPERF_THRESHOLD = -5  # pp — AVGS vs SWRD rolling 12m
-
-# TLH
-TLH_GATILHO = 0.05              # 5% — perda mínima para acionar TLH
+FACTOR_UNDERPERF_THRESHOLD = _P.get("factor_underperf_threshold_pp", -5)
+TLH_GATILHO               = _P.get("tlh_gatilho",                    0.05)
 
 # Crypto legado (BTC+ETH+BNB+ADA+dust — Binance spot+earn)
 # Fonte primária: dashboard_state.json "crypto_legado_brl" (atualizado por broker_analysis.py --broker binance)
@@ -98,105 +103,107 @@ TLH_GATILHO = 0.05              # 5% — perda mínima para acionar TLH
 CRYPTO_LEGADO_BRL = 3_944
 
 
-# ─── FIRE CENÁRIOS (fonte: carteira.md + FR-swr-revisao-2026-04-13) ──────────
+# ─── FIRE CENÁRIOS ───────────────────────────────────────────────────────────
 
-HORIZONTE_VIDA = 90               # anos — horizonte máximo de vida (premissa universal, padrão FIRE)
-                                  # Todos os cálculos de P(sucesso) e projeções usam este prazo.
-                                  # Mudar aqui muda tudo: montecarlo, reconstruct, fire.ts, simuladores.
+HORIZONTE_VIDA              = _P.get("horizonte_vida",              90)
+PATRIMONIO_GATILHO          = _P.get("patrimonio_gatilho",          8_333_333)
+SWR_GATILHO                 = _P.get("swr_gatilho",                 0.030)
 
-PATRIMONIO_GATILHO = 8_333_333    # = 250k/3.0% — gatilho formal (revisado 2026-04-13)
-SWR_GATILHO = 0.030               # 3.0% — safe withdrawal rate
+IDADE_CENARIO_BASE          = _P.get("idade_cenario_base",          53)
+APORTE_CENARIO_BASE         = _P.get("aporte_cenario_base",         25_000)
 
-# Cenário Base (FIRE 2040)
-IDADE_CENARIO_BASE = 53           # FIRE aos 53 anos
-APORTE_CENARIO_BASE = 25_000      # R$/mês — padrão
-P_SUCCESS_CENARIO_BASE = 0.904    # 90.4% — MC base 14 anos até 53
+IDADE_CENARIO_ASPIRACIONAL  = _P.get("idade_cenario_aspiracional",  49)
+APORTE_CENARIO_ASPIRACIONAL = _P.get("aporte_cenario_aspiracional", 30_000)
 
-# Cenário Aspiracional (FIRE 2035)
-IDADE_CENARIO_ASPIRACIONAL = 49   # FIRE aos 49 anos
-APORTE_CENARIO_ASPIRACIONAL = 30_000  # R$/mês — +R$5k para render + aportar
-P_SUCCESS_CENARIO_ASPIRACIONAL = 0.85  # 85% conservador — MC favorável 10 anos até 49
+CUSTO_VIDA_BASE        = _P.get("custo_vida_base",   250_000)
+CUSTO_VIDA_BASE_CASADO = _P.get("custo_vida_casado", 270_000)
+CUSTO_VIDA_BASE_FILHO  = _P.get("custo_vida_filho",  300_000)
 
-# Config pessoal
-CUSTO_VIDA_BASE = 250_000         # R$/ano — baseline FIRE (perfil Solteiro)
-CUSTO_VIDA_BASE_CASADO = 270_000  # R$/ano — perfil Casado (Diego + Katia, saúde 2p)
-CUSTO_VIDA_BASE_FILHO  = 300_000  # R$/ano — perfil Casado + Filho (educação e saúde expandidas)
-RENDA_ESTIMADA = 45_000           # R$/mês (×12 = R$540k/ano) — renda estimada para dashboard
-IDADE_ATUAL = 39
-ANO_NASCIMENTO = 1987             # para calcular idade dinâmica
-BOND_TENT_META_ANOS = 7           # anos de gastos cobertos pelo bond pool no FIRE Day
+RENDA_ESTIMADA      = _P.get("renda_estimada",      45_000)
+IDADE_ATUAL         = _P.get("idade_atual",         39)
+ANO_NASCIMENTO      = _P.get("ano_nascimento",      1987)
+BOND_TENT_META_ANOS = _P.get("bond_tent_anos",      7)
 
-# Patrimônio holístico (fonte: carteira.md + F1 DEV-boldin-dashboard)
-TERRENO_BRL = 150_000             # R$ — terreno (não financeiro, ilíquido)
-TEM_CONJUGE = False               # Diego é solteiro por ora
-NOME_CONJUGE = "Katia"            # parceira — usar em F6 surviving spouse
-INSS_KATIA_ANUAL = 93_600         # R$/ano — R$7.800/mês × 12
-INSS_KATIA_INICIO_ANO = 2049      # ano calendário estimado — Katia ~age 60 (INSS antecipado). Derivação: nasc. ~1989, INSS mínimo 60 anos com carrência ≈ 2049
-RETORNO_RF_REAL_BOND_POOL = 0.06  # 6.0% real líquido HTM — alinhado com PREMISSAS["retorno_ipca_plus"] (fire_montecarlo)
-PGBL_KATIA_SALDO_FIRE = 490_000   # R$ — saldo estimado PGBL Katia na data FIRE
-GASTO_KATIA_SOLO = 160_000        # R$/ano — gasto Katia se Diego falecer
+# Patrimônio holístico
+TERRENO_BRL              = _P.get("terreno_brl",              150_000)
+TEM_CONJUGE              = _P.get("tem_conjuge",              False)
+NOME_CONJUGE             = _P.get("nome_conjuge",             "Katia")
+INSS_KATIA_ANUAL         = _P.get("inss_katia_anual",         93_600)
+INSS_KATIA_INICIO_ANO    = _P.get("inss_katia_inicio_ano",    2049)
+RETORNO_RF_REAL_BOND_POOL= _P.get("retorno_rf_real_bond_pool",0.06)
+PGBL_KATIA_SALDO_FIRE    = _P.get("pgbl_katia_saldo_fire",    490_000)
+GASTO_KATIA_SOLO         = _P.get("gasto_katia_solo",         160_000)
 
-# Legacy (mantém compatibilidade com code antigo)
-APORTE_MENSAL = APORTE_CENARIO_BASE  # fallback
+# Premissas MC (exportadas para fire_montecarlo.py importar)
+RETORNO_EQUITY_BASE  = _P.get("retorno_equity_base",  0.0485)
+RETORNO_IPCA_PLUS    = _P.get("retorno_ipca_plus",    0.0600)
+VOLATILIDADE_EQUITY  = _P.get("volatilidade_equity",  0.168)
+DEP_BRL_BASE         = _P.get("dep_brl_base",         0.005)
+DEP_BRL_FAVORAVEL    = _P.get("dep_brl_favoravel",    0.015)
+DEP_BRL_STRESS       = _P.get("dep_brl_stress",       0.000)
+ADJ_FAVORAVEL        = _P.get("adj_favoravel",        +0.010)
+ADJ_STRESS           = _P.get("adj_stress",           -0.005)
+IPCA_ANUAL           = _P.get("ipca_anual",           0.04)
+INSS_ANUAL           = _P.get("inss_anual",           18_000)
+INSS_INICIO_ANO_POS_FIRE = _P.get("inss_inicio_ano_pos_fire", 12)
+FIRE_P_THRESHOLD     = _P.get("p_threshold",          85.0)
 
-# Fallbacks macro (snapshot — atualizar quando taxas mudarem significativamente)
-CAMBIO_FALLBACK = 5.07            # USD/BRL — fallback offline (atualizar via /macro-bcb). Ref: PTAX 09/04/2026
-# IPCA acumulado CAGR estimado para o período Abr/2021–Mar/2026 (5 anos).
-# Calculado a partir das variações mensais BCB série 433: produto composto anualizado.
-# Fonte: BCB API série 433 — usado como fallback quando a API está indisponível.
-# Atualizar sempre que o período de cálculo do PvR mudar.
-IPCA_CAGR_FALLBACK = 6.14         # % a.a. — IPCA CAGR Abr/2021–Mar/2026 (estimativa)
-SELIC_META_SNAPSHOT = 14.75       # % a.a. — Abr/2026
-FED_FUNDS_SNAPSHOT = 3.64         # % — Mar/2026
-DEPRECIACAO_BRL_BASE = 0.5        # % a.a. — premissa do plano FIRE (carteira.md)
+# Legacy (mantém compatibilidade)
+APORTE_MENSAL = APORTE_CENARIO_BASE
 
-# ─── GLIDE PATH (fonte: carteira.md — tabela alocação por idade) ─────────────
-# Atualizar quando carteira.md mudar a tabela de glide path
+
+# ─── FALLBACKS MACRO (snapshot — atualizar quando taxas mudarem) ─────────────
+
+CAMBIO_FALLBACK      = _P.get("cambio_fallback",      5.07)
+IPCA_CAGR_FALLBACK   = _P.get("ipca_cagr_fallback",   6.14)
+SELIC_META_SNAPSHOT  = _P.get("selic_meta_snapshot",  14.75)
+FED_FUNDS_SNAPSHOT   = _P.get("fed_funds_snapshot",   3.64)
+DEPRECIACAO_BRL_BASE = _P.get("depreciacao_brl_base", 0.5)
+
+
+# ─── GLIDE PATH (tabela de alocação por idade — estrutural) ─────────────────
+# Valores espelham "Tabela de Alocacao por Idade" em carteira.md.
+# Atualizar carteira.md E aqui quando a tabela mudar.
+
 GLIDE_PATH = {
-    # Fonte: carteira.md "Tabela de Alocacao por Idade"
-    # Renda+: tático (≤3% nas idades 39/40 para soma=100%; 0% nos demais — sem espaço)
-    # Nota: valores normalizados para soma=100% por idade (exigido por stacked chart max:100)
     "idades":     [39, 40, 50, 60, 70],
     "equity":     [79, 79, 79, 94, 94],
     "ipca_longo": [15, 15, 15,  0,  0],
     "ipca_curto": [ 0,  0,  3,  3,  3],
     "hodl11":     [ 3,  3,  3,  3,  3],
-    "renda_plus": [ 3,  3,  0,  0,  0],  # normalizado: soma=100% por idade
+    "renda_plus": [ 3,  3,  0,  0,  0],
 }
 
 
-# ─── TER POR ETF (Total Expense Ratio) ──────────────────────────────────────
-# Fontes: factsheet oficial de cada ETF (Invesco, Avantis, Hashdex)
-# 0% para títulos do Tesouro Direto (TD) — sem taxa de administração
+# ─── TER POR ETF (dado factual dos factsheets) ───────────────────────────────
+
 ETF_TER = {
-    "SWRD":    0.12,   # Invesco MSCI World UCITS ETF (Acc)
-    "AVGS":    0.25,   # Avantis Global Small Cap Value UCITS ETF
-    "AVEM":    0.25,   # Avantis Emerging Markets UCITS ETF
-    "JPGL":    0.38,   # JPMorgan Global Equity Premium Income UCITS (legado, target 0%)
-    "HODL11":  0.70,   # Hashdex Nasdaq Crypto Index (B3) — TER ~0.70%
-    "RENDA":   0.00,   # Renda+ 2065 (Tesouro Direto) — sem TER
-    "IPCA":    0.00,   # Tesouro IPCA+ (Tesouro Direto) — sem TER
+    "SWRD":    0.12,
+    "AVGS":    0.25,
+    "AVEM":    0.25,
+    "JPGL":    0.38,
+    "HODL11":  0.70,
+    "RENDA":   0.00,
+    "IPCA":    0.00,
 }
 
 
-# ─── TRIBUTAÇÃO (fonte: carteira.md — Lei 14.754/2023) ───────────────────────
+# ─── TRIBUTAÇÃO (Lei 14.754/2023) ────────────────────────────────────────────
 
-IR_ALIQUOTA = 0.15                # 15% flat sobre ganho de capital ETFs exterior
+IR_ALIQUOTA = 0.15
 
 
-# ─── SHADOW PORTFOLIOS (fonte: shadow-portfolio.md) ─────────────────────────
+# ─── SHADOW PORTFOLIOS ───────────────────────────────────────────────────────
 
 PESOS_SHADOW_C = {
-    "VWRA": EQUITY_PCT,        # 0.79
-    "IPCA": IPCA_LONGO_PCT,    # 0.15
-    "BTC":  CRIPTO_PCT,        # 0.03
-    "RENDA": RENDA_PLUS_PCT,   # 0.03
+    "VWRA":  EQUITY_PCT,
+    "IPCA":  IPCA_LONGO_PCT,
+    "BTC":   CRIPTO_PCT,
+    "RENDA": RENDA_PLUS_PCT,
 }
 
 
-# ─── ETF COMPOSITION (fonte: factsheets FTSE/justETF — dados target, aproximados) ───
-# Regiões: participação aproximada no índice. Fatores: exposição relativa (0=none, 1=full).
-# Atualizar quando factsheets forem revisados (anual).
+# ─── ETF COMPOSITION (dado factual dos factsheets — atualizar anual) ─────────
 
 ETF_COMPOSITION = {
     "SWRD": {
@@ -223,50 +230,34 @@ ETF_COMPOSITION = {
 }
 
 
-# ─── MACRO REGRAS — engine de status do plano (fonte: IPS + carteira.md) ─────
-# Regras mecânicas: zero interpretação subjetiva. Inputs lidos de outros JSONs.
-# Ordem de prioridade: REVISAR > MONITORAR > PERMANECE (pior estado vence).
+# ─── MACRO REGRAS (engine de status do plano) ────────────────────────────────
 
 MACRO_REGRAS = {
-    # Thresholds P(FIRE)
-    "pfire_permanece_min": 0.85,   # P(FIRE) > 85% → PERMANECE (se demais OK)
-    "pfire_monitorar_min": 0.80,   # 80–85% → MONITORAR
-    # Abaixo de 80% → REVISAR
-
-    # Thresholds drift máximo (pp = percentage points)
-    "drift_permanece_max": 5.0,    # drift < 5pp → PERMANECE
-    "drift_monitorar_max": 10.0,   # 5–10pp → MONITORAR
-    # Acima de 10pp → REVISAR
-
-    # Thresholds taxa IPCA+ (% a.a.)
-    "ipca_taxa_monitorar_min": 5.5,  # taxa entre 5.5–6.0% → MONITORAR
-    "ipca_taxa_revisar_max": 5.5,    # taxa < 5.5% → REVISAR
-    # taxa >= 6.0% = normal (acima do piso)
-
-    # Status labels
+    "pfire_permanece_min": _P.get("pfire_permanece_min", 0.85),
+    "pfire_monitorar_min": _P.get("pfire_monitorar_min", 0.80),
+    "drift_permanece_max": _P.get("drift_permanece_max", 5.0),
+    "drift_monitorar_max": _P.get("drift_monitorar_max", 10.0),
+    "ipca_taxa_monitorar_min": _P.get("ipca_taxa_monitorar_min", 5.5),
+    "ipca_taxa_revisar_max":   _P.get("ipca_taxa_revisar_max",   5.5),
+    # Labels (constantes de código — não são decisões financeiras)
     "status_permanece": "PLANO_PERMANECE",
     "status_monitorar": "MONITORAR",
-    "status_revisar": "REVISAR",
+    "status_revisar":   "REVISAR",
 }
 
 
-# ─── REGIME 7 — Série Longa 1989-2026 (proxies acadêmicos) ─────────────────
-# Todos os parâmetros do backtest de longo prazo. Pesos do Target: usar EQUITY_WEIGHTS acima.
-# Fontes de dados: yfinance (ETFs/indices) + pandas_datareader (Ken French Library)
+# ─── REGIME 7 — Série Longa 1989-2026 (metodologia do backtest) ──────────────
 
 REGIME7_CONFIG = {
     "label": "Regime 7 — Série Longa 1989-2026 (proxies acadêmicos)",
 
-    # Janelas de dados
-    "start_full": "1994-12-01",       # todos os proxies disponíveis (DFSVX+DISVX+DFEMX)
-    "start_extended": "1989-07-01",   # AVEM via French EM (sem leg Intl de AVGS)
-    "benchmark_dm_start": "1972-01-01",  # MSCI World NR (DM only, sem EM)
+    "start_full": "1994-12-01",
+    "start_extended": "1989-07-01",
+    "benchmark_dm_start": "1972-01-01",
 
-    # Sub-períodos para teste de Chow (proxy vs ETF real)
-    "proxy_period_end": "2019-08-31",    # antes dos ETFs AVGS/AVEM reais
-    "etf_real_period_start": "2019-09-01",  # Set/2019: AVEM US-listed como proxy Tier A
+    "proxy_period_end": "2019-08-31",
+    "etf_real_period_start": "2019-09-01",
 
-    # Proxies — cadeia de stitching por bucket (return splice, cronológico: mais antigo primeiro)
     "proxies": {
         "SWRD": [
             {
@@ -330,35 +321,27 @@ REGIME7_CONFIG = {
         ],
     },
 
-    # Pesos do benchmark VWRA sintético pré-2008 (DM vs EM)
-    # Aproximação: 90% DM / 10% EM no início (1989), interpolando para 88/12 em 2008
     "benchmark_dm_weight_start": 0.90,
     "benchmark_dm_weight_end": 0.88,
     "benchmark_em_weight_start": 0.10,
     "benchmark_em_weight_end": 0.12,
 
-    # Fator de correlação French EM vs DFEMX (para flagging de qualidade)
     "french_em_corr_dfemx": 0.9657,
 
-    # French datasets (pandas_datareader)
     "french_datasets": {
         "us_5f": "F-F_Research_Data_5_Factors_2x3",
         "em_5f": "Emerging_5_Factors",
         "global_ex_us": "Global_ex_US_3_Factors",
-        "rf": "F-F_Research_Data_Factors",          # coluna RF para taxa livre de risco
+        "rf": "F-F_Research_Data_Factors",
     },
 
-    # Rebalanceamento padrão e sensitivity
-    "rebalance_freq_padrao": "A",   # anual (dezembro)
-    "rebalance_freq_sensitivity": "ME",  # mensal
+    "rebalance_freq_padrao": "A",
+    "rebalance_freq_sensitivity": "ME",
 
-    # Win rate: janelas rolantes (em meses)
-    "win_rate_windows": [120, 240],  # 10 anos, 20 anos
+    "win_rate_windows": [120, 240],
 
-    # Factor drought: janela de underperformance contínua
-    "factor_drought_window": 36,    # meses
+    "factor_drought_window": 36,
 
-    # Décadas para CAGR por período
     "decadas": [
         {"label": "1994-1999", "start": "1994-12-01", "end": "1999-12-31"},
         {"label": "2000-2009", "start": "2000-01-01", "end": "2009-12-31"},
@@ -368,7 +351,7 @@ REGIME7_CONFIG = {
 }
 
 
-# ─── DASHBOARD STATE (JSON compartilhado entre scripts e HTML) ───────────────
+# ─── DASHBOARD STATE (I/O compartilhado entre scripts) ───────────────────────
 
 import json
 import os
@@ -387,12 +370,7 @@ def load_dashboard_state() -> dict:
 
 
 def update_dashboard_state(section: str, data: dict, generator: str = "unknown") -> None:
-    """Atualiza uma seção do dashboard_state.json sem sobrescrever as outras.
-    
-    Uso:
-        update_dashboard_state("posicoes", {"SWRD": {...}, ...}, generator="ibkr_sync.py")
-        update_dashboard_state("fire", {"pfire_base": 90.4, ...}, generator="fire_montecarlo.py")
-    """
+    """Atualiza uma seção do dashboard_state.json sem sobrescrever as outras."""
     state = load_dashboard_state()
     state[section] = data
     state["_meta"] = {

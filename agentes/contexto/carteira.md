@@ -238,3 +238,75 @@ Notas: MC 10k simulações, seed=42. Pat mediana no FIRE Day: R$11.53M (base) / 
 - **AVGS 30%: tail risk e tracking error regret aceitos explicitamente** (XX-lacunas-estrategicas 2026-04-01 + HD-multimodel-validation 2026-04-06). Em cenário 2008-style: AVGS cai ~-60% USD (~-42% BRL com FX). Portfolio total: -40 a -45% BRL. Custo marginal vs 100% SWRD: ~3-4pp de drawdown adicional. Atenuantes: câmbio, aportes R$25k/mês, horizonte 11 anos, guardrails. Factor premium +1.1%/ano compensa o risco. **Tracking error regret aceito**: AVGS pode underperformar SWRD por 8-10 anos sem disparo de guardrail — esse risco é aceito explicitamente. Revisão: se horizonte encurtar para <5 anos pré-FIRE, reduzir AVGS para 15-20% via aportes. **Gatilho de revisão SCV**: se AVGS underperformar SWRD por >5pp acumulado em 24 meses → reabrir debate sobre peso de SCV.
 - **Sem alavancagem.** Carry trade / margin na IB descartado — risco incompativel com fase de acumulacao FIRE (decisao mar/2026, apos desmonte de R$533k em set/2025)
 - **Todo veredicto numerico passa por Checklist Pre-Veredicto antes de ser apresentado.** Checklist completo em `agentes/perfis/00-head.md`. Causa raiz: 6+9 erros das sessoes 2026-03-20, todos por omissao de premissas ao calcular. Regras adicionais HD-006: (A) fonte obrigatoria para cada numero, (B) formula explicita antes do resultado, (C) reconciliacao trimestral entre documentos, (D) comparacao all-in obrigatoria (WHT, IOF, FX spread, ganho fantasma cambial), (E) reflexao registrada — 4 erros em sequencia corrigidos por Diego
+
+---
+
+## Parâmetros para Scripts
+
+Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dados/carteira_params.json`. **Nunca editar o JSON diretamente.** Ao mudar qualquer valor aqui, rodar `python scripts/parse_carteira.py`.
+
+| Chave | Valor | Fonte / Decisão |
+|-------|-------|-----------------|
+| equity_pct | 0.79 | FI-equity-redistribuicao 2026-04-01 |
+| ipca_longo_pct | 0.15 | carteira.md §Alocação |
+| ipca_curto_pct | 0.03 | carteira.md §Alocação |
+| cripto_pct | 0.03 | carteira.md §Alocação |
+| renda_plus_pct | 0.03 | carteira.md §Alocação tático |
+| equity_weight_swrd | 0.50 | FI-equity-redistribuicao 2026-04-01 |
+| equity_weight_avgs | 0.30 | FI-equity-redistribuicao 2026-04-01 |
+| equity_weight_avem | 0.20 | FI-equity-redistribuicao 2026-04-01 |
+| horizonte_vida | 90 | premissa universal FIRE |
+| swr_gatilho | 0.030 | FR-swr-revisao 2026-04-13 |
+| patrimonio_gatilho | 8333333 | 250k/3.0% (FR-swr-revisao 2026-04-13) |
+| idade_cenario_base | 53 | carteira.md §FIRE cenário base |
+| idade_cenario_aspiracional | 49 | carteira.md §FIRE cenário aspiracional |
+| aporte_cenario_base | 25000 | carteira.md §FIRE |
+| aporte_cenario_aspiracional | 30000 | carteira.md §FIRE aspiracional |
+| custo_vida_base | 250000 | FR-spending-modelo-familia 2026-04-06 |
+| custo_vida_casado | 270000 | FR-spending-modelo-familia 2026-04-06 |
+| custo_vida_filho | 300000 | FR-spending-modelo-familia 2026-04-06 |
+| bond_tent_anos | 7 | carteira.md §Bond Pool |
+| p_threshold | 85.0 | carteira.md §FIRE guardrails |
+| hodl11_piso_pct | 1.5 | carteira.md §Crypto — banda piso |
+| hodl11_alvo_pct | 3.0 | carteira.md §Crypto — banda alvo |
+| hodl11_teto_pct | 5.0 | carteira.md §Crypto — banda teto |
+| factor_underperf_threshold_pp | -5 | carteira.md §Gatilhos — revisão AVGS 24m |
+| tlh_gatilho | 0.05 | carteira.md §Gatilhos TLH |
+| piso_taxa_ipca_longo | 6.0 | HD-006 final — breakeven all-in |
+| piso_taxa_renda_plus | 6.5 | carteira.md §Renda+ tático |
+| piso_venda_renda_plus | 6.0 | carteira.md §Renda+ gatilho saída |
+| renda_plus_ano_venc | 2065 | Tesouro Renda+ 2065 |
+| renda_plus_taxa_default | 7.08 | snapshot carteira.md 2026-04-01 |
+| idade_atual | 39 | Diego (nasc. 1987) |
+| ano_nascimento | 1987 | Diego |
+| renda_estimada | 45000 | estimativa mensal (×12 = R$540k/ano) |
+| inss_anual | 18000 | HD-mc-audit 2026-04-06 — R$18k/ano real conservador |
+| inss_inicio_ano_pos_fire | 12 | ano 12 pós-FIRE = age 65 |
+| terreno_brl | 150000 | avaliação terreno (ativo ilíquido) |
+| tem_conjuge | false | Diego solteiro por ora |
+| nome_conjuge | Katia | parceira — usar em surviving spouse |
+| inss_katia_anual | 93600 | R$7.800/mês × 12 |
+| inss_katia_inicio_ano | 2049 | Katia ~age 60, INSS antecipado |
+| pgbl_katia_saldo_fire | 490000 | estimativa PGBL Katia no FIRE Day |
+| gasto_katia_solo | 160000 | R$/ano se Diego falecer |
+| retorno_rf_real_bond_pool | 0.06 | 6.0% real líquido HTM (alinhado PREMISSAS MC) |
+| retorno_equity_base | 0.0485 | 4.85% real BRL — FI-premissas-retorno 2026-04-01 |
+| retorno_ipca_plus | 0.0600 | 6.0% real líquido HTM 14 anos — HD-006 |
+| volatilidade_equity | 0.168 | 16.8% — FR-equity-equivalent |
+| dep_brl_base | 0.005 | 0.5%/ano — premissa plano FIRE |
+| dep_brl_favoravel | 0.015 | 1.5%/ano — cenário favorável |
+| dep_brl_stress | 0.000 | 0.0%/ano — cenário stress |
+| adj_favoravel | 0.010 | +1.0pp ajuste retorno equity cenário favorável |
+| adj_stress | -0.005 | -0.5pp ajuste retorno equity cenário stress |
+| ipca_anual | 0.04 | 4%/ano estimado |
+| cambio_fallback | 5.07 | PTAX BCB 09/04/2026 — fallback offline |
+| ipca_cagr_fallback | 6.14 | IPCA CAGR Abr/2021–Mar/2026 (BCB série 433) |
+| selic_meta_snapshot | 14.75 | Selic meta Abr/2026 |
+| fed_funds_snapshot | 3.64 | Fed Funds Mar/2026 |
+| depreciacao_brl_base | 0.5 | % a.a. premissa plano FIRE |
+| pfire_permanece_min | 0.85 | P(FIRE) > 85% → PLANO_PERMANECE |
+| pfire_monitorar_min | 0.80 | P(FIRE) 80–85% → MONITORAR |
+| drift_permanece_max | 5.0 | drift < 5pp → PERMANECE |
+| drift_monitorar_max | 10.0 | drift 5–10pp → MONITORAR |
+| ipca_taxa_monitorar_min | 5.5 | taxa IPCA+ 5.5–6.0% → MONITORAR |
+| ipca_taxa_revisar_max | 5.5 | taxa IPCA+ < 5.5% → REVISAR |

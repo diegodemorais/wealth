@@ -48,9 +48,11 @@ from config import (
     TERRENO_BRL, TEM_CONJUGE, NOME_CONJUGE,
     INSS_KATIA_ANUAL, PGBL_KATIA_SALDO_FIRE, GASTO_KATIA_SOLO,
     INSS_KATIA_INICIO_ANO, RETORNO_RF_REAL_BOND_POOL,
-    BTC_CENARIOS_USD,
     update_dashboard_state,
 )
+
+# Cenários BTC para projeção de display do HODL11 no FIRE Day (não drive estratégia)
+BTC_CENARIOS_USD = {"bear": 80_000, "base": 250_000, "bull": 500_000}
 
 VENV_PY = str(Path.home() / "claude/finance-tools/.venv/bin/python3")
 STATE_PATH = ROOT / "dados" / "dashboard_state.json"

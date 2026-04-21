@@ -29,6 +29,11 @@ from config import (
     IR_ALIQUOTA, PATRIMONIO_GATILHO, SWR_GATILHO,
     APORTE_CENARIO_BASE, APORTE_CENARIO_ASPIRACIONAL,
     HORIZONTE_VIDA,
+    RETORNO_EQUITY_BASE, RETORNO_IPCA_PLUS, VOLATILIDADE_EQUITY,
+    DEP_BRL_BASE, DEP_BRL_FAVORAVEL, DEP_BRL_STRESS,
+    ADJ_FAVORAVEL, ADJ_STRESS, IPCA_ANUAL,
+    INSS_ANUAL, INSS_INICIO_ANO_POS_FIRE,
+    BOND_TENT_META_ANOS, FIRE_P_THRESHOLD,
     update_dashboard_state,
 )
 
@@ -59,11 +64,11 @@ def _load_patrimonio_atual() -> float:
     # 3. fallback hardcoded (desatualizado — atualizar ao rodar sessão)
     return 3_372_673.0
 
-# ─── PREMISSAS (fonte: carteira.md + HD-006 final 2026-03-22) ─────────────────
+# ─── PREMISSAS (fonte: carteira.md via parse_carteira.py → config.py) ────────
 
 # Limiar de P(FIRE) para calcular fire_age_threshold por perfil
-FIRE_P_THRESHOLD = 85.0   # primeira idade onde P(base) ≥ 85%
-FIRE_AGES_SCAN   = list(range(49, 61))  # scan de idades para threshold
+# FIRE_P_THRESHOLD importado de config.py (lê de carteira_params.json)
+FIRE_AGES_SCAN = list(range(49, 61))  # range metodológico do scan
 
 PREMISSAS = {
     # Patrimônio e aportes — lido de dashboard_state.json, nunca hardcoded
@@ -72,28 +77,28 @@ PREMISSAS = {
     "custo_vida_base":     CUSTO_VIDA_BASE,
 
     # Horizonte — Cenário Base (padrão)
-    "horizonte_vida":      HORIZONTE_VIDA,          # PREMISSA UNIVERSAL — todos os cálculos usam este prazo
+    "horizonte_vida":      HORIZONTE_VIDA,
     "idade_atual":         IDADE_ATUAL,
     "idade_cenario_base":  IDADE_CENARIO_BASE,
     "idade_cenario_aspiracional": IDADE_CENARIO_ASPIRACIONAL,
-    "idade_fire_alvo":     IDADE_CENARIO_BASE,  # default: FIRE aos 53
+    "idade_fire_alvo":     IDADE_CENARIO_BASE,
     "idade_safe_harbor":   IDADE_CENARIO_BASE,
-    "anos_simulacao":      HORIZONTE_VIDA - IDADE_CENARIO_BASE,  # desacumulação até HORIZONTE_VIDA (53→90 = 37a)
+    "anos_simulacao":      HORIZONTE_VIDA - IDADE_CENARIO_BASE,
 
-    # Retornos reais anuais em BRL — cenário BASE (fonte: carteira.md premissas HD-006)
-    "retorno_equity_base": 0.0485,      # 4.85% real BRL ponderado base (SWRD 50%/AVGS 30%/AVEM 20%, aprovado FI-premissas-retorno 2026-04-01)
-    "retorno_ipca_plus":   0.0600,      # 6.0% real líquido HTM 14 anos
-    "volatilidade_equity": 0.168,       # 16.8% — equity equivalent FR-equity-equivalent
-    "t_dist_df":           5,           # fat tails (t-student df=5)
+    # Retornos reais anuais em BRL (fonte: carteira.md → config.py)
+    "retorno_equity_base": RETORNO_EQUITY_BASE,
+    "retorno_ipca_plus":   RETORNO_IPCA_PLUS,
+    "volatilidade_equity": VOLATILIDADE_EQUITY,
+    "t_dist_df":           5,           # parâmetro estatístico do modelo (t-student df=5)
 
-    # Depreciação BRL (cenários)
-    "dep_brl_base":        0.005,       # 0.5%/ano
-    "dep_brl_favoravel":   0.015,       # 1.5%/ano
-    "dep_brl_stress":      0.000,       # 0.0%/ano
+    # Depreciação BRL por cenário (fonte: carteira.md → config.py)
+    "dep_brl_base":        DEP_BRL_BASE,
+    "dep_brl_favoravel":   DEP_BRL_FAVORAVEL,
+    "dep_brl_stress":      DEP_BRL_STRESS,
 
-    # Ajuste de retorno por cenário (aplicado sobre equity)
-    "adj_favoravel":       +0.010,      # +1.0pp
-    "adj_stress":          -0.005,      # -0.5pp
+    # Ajuste de retorno por cenário (fonte: carteira.md → config.py)
+    "adj_favoravel":       ADJ_FAVORAVEL,
+    "adj_stress":          ADJ_STRESS,
 
     # Bond tent
     "pct_ipca_longo":      IPCA_LONGO_PCT,
@@ -101,25 +106,23 @@ PREMISSAS = {
     "pct_equity":          EQUITY_PCT,
     "pct_cripto":          CRIPTO_PCT,
 
-    # IPCA estimado (para converter nominais)
-    "ipca_anual":          0.04,        # 4%/ano
+    # IPCA estimado (fonte: carteira.md → config.py)
+    "ipca_anual":          IPCA_ANUAL,
 
     # IR na desacumulação (FR-ir-desacumulacao)
-    "aplicar_ir_desacumulacao": True,   # default True — modelagem correta
-    "anos_bond_pool":           7,      # anos pós-FIRE cobertos pelo bond pool (sem IR equity)
+    "aplicar_ir_desacumulacao": True,
+    "anos_bond_pool":           BOND_TENT_META_ANOS,
     "aliquota_ir_equity":       IR_ALIQUOTA,
 
-    # INSS (HD-mc-audit 2026-04-06)
-    "inss_anual":               18_000, # R$18k/ano REAL — conservador. NIT 119.60772.92-3 (Contabilizei): benefício nominal R$46-55k → R$18k real pós-IR pós-IPCA. Atualizar quando benefício for confirmado pelo INSS aos 65.
-    "inss_inicio_ano":          12,     # ano 12 pós-FIRE = age 65
+    # INSS (fonte: carteira.md → config.py)
+    "inss_anual":               INSS_ANUAL,
+    "inss_inicio_ano":          INSS_INICIO_ANO_POS_FIRE,
 
-    # Volatilidade por fase (HD-mc-audit 2026-04-06)
-    # Anos 0-6 (bond pool ativo): vol reduzida pela participação real do portfólio
+    # Volatilidade por fase — derivada em runtime (não hardcoded)
     # vol_bond_pool = pct_equity × vol_equity = 0.79 × 0.168 = 13.3%
-    # Anos 7+: vol cheia (portfólio ~97% equity após bond pool consumido)
-    "vol_bond_pool":            0.133,  # 79% × 16.8% — vol portfólio durante bond pool
+    "vol_bond_pool":            EQUITY_PCT * VOLATILIDADE_EQUITY,
 
-    # Gatilho FIRE
+    # Gatilho FIRE (fonte: carteira.md → config.py)
     "patrimonio_gatilho":  PATRIMONIO_GATILHO,
     "swr_gatilho":         SWR_GATILHO,
 }

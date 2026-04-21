@@ -120,6 +120,15 @@ Nao misturar no mesmo bullet. Diego aceita dados; questiona interpretacoes.
 
 Ver `agentes/referencia/scripts.md`. Venv: `~/claude/finance-tools/.venv/bin/python3`
 
+**Fonte única de premissas:**
+`agentes/contexto/carteira.md` → `scripts/parse_carteira.py` → `dados/carteira_params.json` → `scripts/config.py`
+
+Ao alterar qualquer premissa financeira em carteira.md:
+1. Atualizar o texto narrativo normalmente
+2. Atualizar o valor na tabela `## Parâmetros para Scripts` no final de carteira.md
+3. Rodar `python scripts/parse_carteira.py` para regenerar `dados/carteira_params.json`
+4. **Nunca editar `config.py` para mudar parâmetros financeiros — só para código estrutural**
+
 ## Dashboard (React)
 
 `dev` é o único agente autorizado. Quant valida toda mudança que envolva dados ou cálculos.
