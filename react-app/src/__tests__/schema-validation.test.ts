@@ -185,9 +185,25 @@ describe('Schema Validation — Spec-Driven Contract', () => {
         'idade_atual',
         'idade_cenario_base',
         'aporte_mensal',
+        'swr_gatilho',
+        'retorno_equity_base',
+        'ipca_anual',
+        'horizonte_vida',
+        'taxa_ipca_plus_longa',
       ];
       const missing = required.filter(k => !(k in (data.premissas ?? {})));
       expect(missing).toEqual([]);
+    });
+
+    it('premissas — sanity checks on numeric ranges', () => {
+      const p = data.premissas ?? {};
+      expect(p.swr_gatilho).toBeGreaterThanOrEqual(0.01);
+      expect(p.swr_gatilho).toBeLessThanOrEqual(0.10);
+      expect(p.retorno_equity_base).toBeGreaterThan(-0.20);
+      expect(p.retorno_equity_base).toBeLessThan(0.30);
+      expect(p.ipca_anual).toBeGreaterThan(0);
+      expect(p.ipca_anual).toBeLessThan(0.30);
+      expect(p.idade_cenario_aspiracional).toBeLessThanOrEqual(p.idade_cenario_base);
     });
 
     it('posicoes is a non-empty object', () => {

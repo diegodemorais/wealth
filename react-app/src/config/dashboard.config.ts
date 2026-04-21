@@ -31,6 +31,7 @@ export const TABS: TabDef[] = [
   { id: 'tab-backtest',    href: '/backtest',    label: '📊 Backtest' },
   { id: 'tab-simulators',  href: '/simulators',  label: '🧪 Simuladores' },
   { id: 'tab-discovery',   href: '/discovery',   label: '🔭 Discovery' },
+  { id: 'tab-premissas',  href: '/premissas',  label: '⚙️ Premissas' },
 ];
 
 // ─── Section definitions ──────────────────────────────────────────────────────
@@ -153,6 +154,12 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'fire-sim',  title: 'Simulador FIRE — Cenários de Aposentadoria',     defaultOpen: true,  collapsible: false },
     { id: 'what-if',   title: 'What-If — Sensibilidade de Variáveis',           defaultOpen: true,  collapsible: true  },
     { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)', defaultOpen: true,  collapsible: true  },
+  ],
+
+  // ── PREMISSAS (/premissas/page.tsx) ─────────────────────────────────────────
+  premissas: [
+    { id: 'premissas-pessoais', title: 'Premissas Pessoais',    defaultOpen: true, collapsible: false },
+    { id: 'premissas-modelo',   title: 'Premissas do Modelo',   defaultOpen: true, collapsible: false },
   ],
 
   // ── DISCOVERY (/discovery/page.tsx) ─────────────────────────────────────────

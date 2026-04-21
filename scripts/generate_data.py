@@ -2996,6 +2996,9 @@ def main():
         "inss_katia_anual":       INSS_KATIA_ANUAL,
         "pgbl_katia_saldo_fire":  PGBL_KATIA_SALDO_FIRE,
         "gasto_katia_solo":       GASTO_KATIA_SOLO,
+        # Campos adicionados para aba Premissas (DEV-premissas-tab)
+        "horizonte_vida":         premissas_raw.get("horizonte_vida", 90),
+        "taxa_ipca_plus_longa":   premissas_raw.get("renda_plus_taxa_default", 7.08),
     }
 
     # Último aporte mensal (última linha do CSV historico_carteira.csv)

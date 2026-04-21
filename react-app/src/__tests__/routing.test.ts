@@ -89,6 +89,7 @@ describe('Routing & Data Loading', () => {
       'withdraw/page.tsx',
       'simulators/page.tsx',
       'backtest/page.tsx',
+      'premissas/page.tsx',
     ];
 
     pageFiles.forEach(pageFile => {
@@ -96,8 +97,8 @@ describe('Routing & Data Loading', () => {
       if (fs.existsSync(filePath)) {
         const content = fs.readFileSync(filePath, 'utf-8');
 
-        // Should use withBasePath utility when constructing data URL
-        expect(content).toMatch(/withBasePath.*data\.json|import.*withBasePath/i);
+        // Should use withBasePath utility (directly or via usePageData hook)
+        expect(content).toMatch(/withBasePath.*data\.json|import.*withBasePath|usePageData/i);
 
         // Should NOT have hardcoded /dash/ path
         expect(content).not.toMatch(/['"`]\/dash\/data\.json['"`]/);
