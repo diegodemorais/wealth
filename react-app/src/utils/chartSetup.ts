@@ -805,28 +805,20 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
 
   // --- Post-FIRE extension (15 years after FIRE date) ---
   const postFireYears = 15;
-  const nFuture = dates.length - nHistorico;
-  const p10End = p10Brl.length >= nFuture ? p10Brl[nFuture - 1] : (p10Brl.at(-1) ?? 0);
+  // p10Brl / p90Brl already contain n_historico leading nulls — use .at(-1) directly
+  const p10End = p10Brl.at(-1) ?? 0;
   const p50End = (trilhaBrl[dates.length - 1] ?? 0) as number;
-  const p90End = p90Brl.length >= nFuture ? p90Brl[nFuture - 1] : (p90Brl.at(-1) ?? 0);
+  const p90End = p90Brl.at(-1) ?? 0;
 
   const postFireDates = Array.from({ length: postFireYears }, (_, i) => `${fireYear + i + 1}`);
-  const p10Post = Array.from({ length: postFireYears }, (_, i) => p10End * Math.pow(1 + 0.03,   i + 1));
+  const p10Post = Array.from({ length: postFireYears }, (_, i) => (p10End as number) * Math.pow(1 + 0.03,   i + 1));
   const p50Post = Array.from({ length: postFireYears }, (_, i) => p50End * Math.pow(1 + 0.0485, i + 1));
-  const p90Post = Array.from({ length: postFireYears }, (_, i) => p90End * Math.pow(1 + 0.06,   i + 1));
+  const p90Post = Array.from({ length: postFireYears }, (_, i) => (p90End as number) * Math.pow(1 + 0.06,   i + 1));
 
-  // --- Align MC bands: null for historical portion, MC values for future ---
-  // MC simulation covers n_future future months (index 0 = first future month).
-  const p10Aligned: (number|null)[] = [
-    ...Array(nHistorico).fill(null),
-    ...p10Brl.slice(0, nFuture),
-    ...p10Post,
-  ];
-  const p90Aligned: (number|null)[] = [
-    ...Array(nHistorico).fill(null),
-    ...p90Brl.slice(0, nFuture),
-    ...p90Post,
-  ];
+  // --- Align MC bands: p10Brl/p90Brl already have leading nulls for historical portion ---
+  // Do NOT prepend additional nulls — they are already aligned with dates[].
+  const p10Aligned: (number|null)[] = [...p10Brl, ...p10Post];
+  const p90Aligned: (number|null)[] = [...p90Brl, ...p90Post];
   const p50Full: (number|null)[] = [...trilhaBrl, ...p50Post];
   const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYears).fill(null)];
 
@@ -872,7 +864,13 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       type: 'category' as const,
       data: xAxisLabels,
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 11 },
+      axisLabel: {
+        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
+        fontSize: 11,
+        hideOverlap: true,
+        showMinLabel: true,
+        showMaxLabel: true,
+      },
       boundaryGap: false,
     },
     yAxis: {

@@ -499,7 +499,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="text-sm text-muted text-right">
-                  <div>HODL11: {privacyMode ? '••••' : `R$${((data?.hodl11?.valor_brl ?? 0) / 1000).toFixed(0)}k`}</div>
+                  <div>HODL11: {privacyMode ? '••••' : `R$${((data?.hodl11?.valor ?? 0) / 1000).toFixed(0)}k`}</div>
                   <div>RF Total: {privacyMode ? '••••' : `R$${((d.rfBrl ?? 0) / 1000).toFixed(0)}k`}</div>
                 </div>
               </div>
@@ -656,7 +656,7 @@ export default function HomePage() {
                 ipcaTarget={15}
                 ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 hodl11Target={3}
-                hodl11Current={patrimonioAtual > 0 ? ((data as any)?.hodl11?.valor_brl ?? 0) / patrimonioAtual * 100 : 0}
+                hodl11Current={patrimonioAtual > 0 ? ((data as any)?.hodl11?.valor ?? 0) / patrimonioAtual * 100 : 0}
                 lastRebalanceDate={(data as any)?.premissas?.ultima_revisao}
                 driftThresholdPp={5}
               />

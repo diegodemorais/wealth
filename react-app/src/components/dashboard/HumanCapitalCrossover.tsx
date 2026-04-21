@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { EChart } from '@/components/primitives/EChart';
+import { EC } from '@/utils/echarts-theme';
 
 interface Ponto {
   ano: number;
@@ -88,8 +89,8 @@ export function HumanCapitalCrossover({
     xAxis: {
       type: 'category',
       data: anos,
-      axisLabel: { color: 'var(--muted, #94a3b8)', fontSize: 10 },
-      axisLine: { lineStyle: { color: 'rgba(255,255,255,0.1)' } },
+      axisLabel: { color: EC.muted, fontSize: 10 },
+      axisLine: { lineStyle: { color: EC.border2 } },
       splitLine: { show: false },
     },
     yAxis: {
@@ -97,11 +98,11 @@ export function HumanCapitalCrossover({
       axisLabel: privacyMode
         ? { show: false }
         : {
-          color: 'var(--muted, #94a3b8)',
+          color: EC.muted,
           fontSize: 10,
           formatter: (v: number) => `R$${(v / 1_000_000).toFixed(1)}M`,
         },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+      splitLine: { lineStyle: { color: EC.border3 } },
     },
     tooltip: {
       trigger: 'axis',
@@ -149,7 +150,7 @@ export function HumanCapitalCrossover({
     legend: {
       top: 2,
       right: 0,
-      textStyle: { color: 'var(--muted, #94a3b8)', fontSize: 10 },
+      textStyle: { color: EC.muted, fontSize: 10 },
       icon: 'roundRect',
       itemWidth: 12,
       itemHeight: 6,

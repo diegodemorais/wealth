@@ -8,6 +8,7 @@ import { pfireColor as pfireColorFn } from '@/utils/fire';
 import { FIRE_RULES } from '@/config/business-rules';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
 import { GlidePathChart } from '@/components/charts/GlidePathChart';
@@ -514,6 +515,13 @@ export default function FirePage() {
       {safeData.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
           <div style={{ padding: '0 16px 16px' }}>
+            {(() => {
+              const profiles = (safeData as any)?.fire_matrix?.by_profile ?? [];
+              const atual = profiles.find((p: any) => p.profile === 'atual');
+              const label = 'Solteiro';
+              const gasto = atual?.gasto_anual ?? (safeData as any)?.premissas?.custo_vida_base ?? 250000;
+              return <ScenarioBadge label={label} gasto={gasto} privacyMode={privacyMode} />;
+            })()}
             <FireMatrixTable
               data={safeData.fire_matrix}
               idades={fireMatrixIdades}

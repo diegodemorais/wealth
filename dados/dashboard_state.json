@@ -8,6 +8,7 @@
   "macro": {
     "selic_meta": 14.75,
     "fed_funds": 3.64,
+    "ipca_12m": 4.14,
     "_note": "Seed inicial. Atualizado automaticamente por generate_data.py quando BCB/FRED online."
   },
   "mercado": {
