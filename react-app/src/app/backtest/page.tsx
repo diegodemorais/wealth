@@ -522,34 +522,36 @@ function BacktestLongoSection() {
 
       {/* CAGR por Década — list format: [{ Decada, Target, Benchmark, Delta, N_meses }] */}
       {decadesList && decadesList.length > 0 && (
-        <div style={{ marginTop: '14px', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Década</th>
-                <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
-                <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
-                <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Alpha</th>
-              </tr>
-            </thead>
-            <tbody>
-              {decadesList.map((row, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '6px 8px' }}>{row.Decada ?? '—'}</td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>
-                    {row.Target != null ? `${(row.Target * 100).toFixed(2)}%` : '—'}
-                  </td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right' }}>
-                    {row.Benchmark != null ? `${(row.Benchmark * 100).toFixed(2)}%` : '—'}
-                  </td>
-                  <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.Delta) }}>
-                    {row.Delta != null ? fmtPct(row.Delta * 100) : '—'}
-                  </td>
+        <CollapsibleSection id="backtest-cagr-decada" title="CAGR por Década" defaultOpen={secOpen('backtest', 'cagr-decada', true)}>
+          <div style={{ padding: '0 16px 16px', overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th style={{ textAlign: 'left', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Década</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Target</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>VWRA</th>
+                  <th style={{ textAlign: 'right', padding: '6px 8px', color: 'var(--muted)', fontWeight: 600 }}>Alpha</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {decadesList.map((row, idx) => (
+                  <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '6px 8px' }}>{row.Decada ?? '—'}</td>
+                    <td style={{ padding: '6px 8px', textAlign: 'right', fontWeight: 600 }}>
+                      {row.Target != null ? `${(row.Target * 100).toFixed(2)}%` : '—'}
+                    </td>
+                    <td style={{ padding: '6px 8px', textAlign: 'right' }}>
+                      {row.Benchmark != null ? `${(row.Benchmark * 100).toFixed(2)}%` : '—'}
+                    </td>
+                    <td style={{ padding: '6px 8px', textAlign: 'right', color: deltaColor(row.Delta) }}>
+                      {row.Delta != null ? fmtPct(row.Delta * 100) : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CollapsibleSection>
       )}
 
       {/* Chart */}

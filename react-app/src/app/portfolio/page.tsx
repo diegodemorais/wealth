@@ -17,6 +17,7 @@ import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationC
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
+import { MetricCard } from '@/components/primitives/MetricCard';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -32,8 +33,44 @@ export default function PortfolioPage() {
   });
   if (stateEl) return stateEl;
 
+  const portfolioTotal = (data as any)?.patrimonio_holistico?.total_financeiro_brl;
+  const piorDrift = (data as any)?.drift_summary?.maior_desvio_pct;
+  const irDiferido = (data as any)?.tax?.ir_diferido_total_brl;
+  const concBrasil = (data as any)?.portfolio_summary?.concentracao_brasil_pct;
+
+  const fmtBRL = (val: number | undefined | null) => {
+    if (val == null) return '—';
+    if (privacyMode) return '••••';
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+  };
+
   return (
     <div>
+
+      {/* 0. Hero Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+        <MetricCard
+          label="Patrimônio Financeiro"
+          value={fmtBRL(portfolioTotal)}
+          size="sm"
+        />
+        <MetricCard
+          label="Drift Máximo"
+          value={piorDrift != null ? piorDrift.toFixed(1) + 'pp' : '—'}
+          size="sm"
+          valueColor={piorDrift != null && piorDrift > 5 ? 'text-red' : piorDrift != null && piorDrift > 3 ? 'text-yellow' : 'text-green'}
+        />
+        <MetricCard
+          label="IR Diferido"
+          value={fmtBRL(irDiferido)}
+          size="sm"
+        />
+        <MetricCard
+          label="Concentração Brasil"
+          value={concBrasil != null ? concBrasil.toFixed(1) + '%' : '—'}
+          size="sm"
+        />
+      </div>
 
       {/* 1. Alocação — Por Classe de Ativo (moved first: visão geral antes do detalhe) */}
       <div className="section">
@@ -325,39 +362,40 @@ export default function PortfolioPage() {
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
-        <div className="section">
-          <h2>Últimas Operações</h2>
-          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-          <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: 'var(--text-base)', marginBottom: '8px' }}>
-            <thead>
-              <tr style={{ borderBottom: '2px solid var(--card2)' }}>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Data</th>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Tipo</th>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Ativo</th>
-                <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }} className="hide-mobile">Corretora</th>
-                <th style={{ textAlign: 'right', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.minilog.slice(0, 10).map((op: any, i: number) => {
-                const valorStr = typeof op.valor === 'string' ? op.valor : String(op.valor ?? '—');
-                return (
-                  <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
-                    <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)', whiteSpace: 'nowrap' }}>{op.data}</td>
-                    <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', whiteSpace: 'nowrap' }}>{op.tipo}</td>
-                    <td style={{ padding: '6px 6px', fontWeight: 600 }}>{op.ativo}</td>
-                    <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
-                    <td style={{ padding: '6px 6px', textAlign: 'right', color: 'var(--green)', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                      {privacyMode ? '••••' : valorStr}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <CollapsibleSection id="section-ultimas-operacoes" title="Últimas Operações" defaultOpen={secOpen('portfolio', 'ultimas-operacoes', true)}>
+          <div style={{ padding: '0 16px 16px' }}>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: 'var(--text-base)', marginBottom: '8px' }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid var(--card2)' }}>
+                  <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Data</th>
+                  <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Tipo</th>
+                  <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)' }}>Ativo</th>
+                  <th style={{ textAlign: 'left', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }} className="hide-mobile">Corretora</th>
+                  <th style={{ textAlign: 'right', padding: '8px 6px', fontWeight: 600, color: 'var(--muted)', whiteSpace: 'nowrap' }}>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.minilog.slice(0, 10).map((op: any, i: number) => {
+                  const valorStr = typeof op.valor === 'string' ? op.valor : String(op.valor ?? '—');
+                  return (
+                    <tr key={i} style={{ borderBottom: '1px solid var(--card2)' }}>
+                      <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)', whiteSpace: 'nowrap' }}>{op.data}</td>
+                      <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', whiteSpace: 'nowrap' }}>{op.tipo}</td>
+                      <td style={{ padding: '6px 6px', fontWeight: 600 }}>{op.ativo}</td>
+                      <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
+                      <td style={{ padding: '6px 6px', textAlign: 'right', color: 'var(--green)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                        {privacyMode ? '••••' : valorStr}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            </div>
+            <div className="src">Fonte: IBKR · Nubank · Binance</div>
           </div>
-          <div className="src">Fonte: IBKR · Nubank · Binance</div>
-        </div>
+        </CollapsibleSection>
       )}
 
     </div>

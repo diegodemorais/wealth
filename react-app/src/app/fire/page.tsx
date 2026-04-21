@@ -652,58 +652,6 @@ export default function FirePage() {
         </CollapsibleSection>
       )}
 
-      {/* 5. P(FIRE) — Cenários de Família (moved up: sensibilidade ao custo de vida) */}
-      {derived && (
-        <section className="section" id="familyScenariosFireSection">
-          <h2>P(FIRE) — Cenários de Família <span style={{ fontSize: 'var(--text-sm)', fontWeight: 400, color: 'var(--muted)' }}>(impacto no custo de vida)</span></h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {(() => {
-              const profiles = (data as any)?.fire_matrix?.by_profile ?? [];
-              const casado = profiles.find((p: any) => p.profile === 'casado');
-              const filho = profiles.find((p: any) => p.profile === 'filho');
-              const pfireSolteiro = derived.pfireBase;
-              const pfireCasado = casado?.p_fire_53 ?? null;
-              const pfireFilho = filho?.p_fire_53 ?? null;
-              const gastoCasado = casado?.gasto_anual ?? 270000;
-              const gastoFilho = filho?.gasto_anual ?? 300000;
-              const deltaCasado = pfireSolteiro != null && pfireCasado != null ? (pfireCasado - pfireSolteiro).toFixed(1) : null;
-              const deltaFilho = pfireSolteiro != null && pfireFilho != null ? (pfireFilho - pfireSolteiro).toFixed(1) : null;
-              return [
-                { label: '👤 Solteiro / FIRE Day', pfire: pfireSolteiro, gastoAnual: 250000, gastoLabel: privacyMode ? '••••/ano' : 'R$250k/ano', delta: null },
-                { label: '💍 Pós-casamento', pfire: pfireCasado, gastoAnual: gastoCasado, gastoLabel: privacyMode ? '••••/ano' : `R$${(gastoCasado/1000).toFixed(0)}k/ano`, delta: deltaCasado ? `${parseFloat(deltaCasado) > 0 ? '+' : ''}${deltaCasado}pp` : null },
-                { label: '👶 Casamento + filho', pfire: pfireFilho, gastoAnual: gastoFilho, gastoLabel: privacyMode ? '••••/ano' : `R$${(gastoFilho/1000).toFixed(0)}k/ano`, delta: deltaFilho ? `${parseFloat(deltaFilho) > 0 ? '+' : ''}${deltaFilho}pp` : null },
-              ];
-            })().map((scenario, i) => (
-              <div key={i} style={{ background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '14px', display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ minWidth: '180px' }}>
-                  <div style={{ fontSize: 'var(--text-base)', fontWeight: 600 }}>{scenario.label}</div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{scenario.gastoLabel}</div>
-                  {scenario.delta && <div style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>{scenario.delta}</div>}
-                </div>
-                <div style={{ flex: 1, background: 'var(--card)', borderRadius: 'var(--radius-xs)', height: '8px', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${scenario.pfire != null ? Math.min(100, scenario.pfire) : 0}%`,
-                    height: '100%',
-                    background: pfireColorFn(scenario.pfire),
-                    borderRadius: 'var(--radius-xs)',
-                  }} />
-                </div>
-                <div style={{ minWidth: '80px', textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: pfireColorFn(scenario.pfire) }}>
-                    {scenario.pfire != null ? `${scenario.pfire.toFixed(1)}%` : '—'}
-                  </div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P(FIRE)</div>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-                    {privacyMode ? '••••' : `R$${(scenario.gastoAnual / 1000).toFixed(0)}k/ano`}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="src">Base: Monte Carlo 10k simulações · custo de vida base R$250k/ano · Sensibilidade ao custo de vida</div>
-        </section>
-      )}
-
       {/* 6. Eventos de Vida — collapsed (detalhe de sensibilidade) */}
       <CollapsibleSection id="section-eventos-vida" title={secTitle('fire', 'eventos-vida')} defaultOpen={secOpen('fire', 'eventos-vida')}>
         <div style={{ padding: '0 16px 16px' }}>
