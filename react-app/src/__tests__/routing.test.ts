@@ -89,7 +89,7 @@ describe('Routing & Data Loading', () => {
       'withdraw/page.tsx',
       'simulators/page.tsx',
       'backtest/page.tsx',
-      'premissas/page.tsx',
+      'assumptions/page.tsx',
     ];
 
     pageFiles.forEach(pageFile => {

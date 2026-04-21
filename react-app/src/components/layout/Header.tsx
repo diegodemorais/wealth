@@ -30,7 +30,7 @@ const TABS = [
   { href: '/withdraw', label: 'WITHDRAW', id: 'tab-withdraw' },
   { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
   { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
-  { href: '/premissas', label: 'PREMISSAS', id: 'tab-premissas' },
+  { href: '/assumptions', label: 'ASSUMPTIONS', id: 'tab-assumptions' },
 ];
 
 export function Header() {

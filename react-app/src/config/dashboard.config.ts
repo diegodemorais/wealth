@@ -31,7 +31,7 @@ export const TABS: TabDef[] = [
   { id: 'tab-backtest',    href: '/backtest',    label: '📊 Backtest' },
   { id: 'tab-simulators',  href: '/simulators',  label: '🧪 Simuladores' },
   { id: 'tab-discovery',   href: '/discovery',   label: '🔭 Discovery' },
-  { id: 'tab-premissas',  href: '/premissas',  label: '⚙️ Premissas' },
+  { id: 'tab-assumptions',  href: '/assumptions',  label: '⚙️ Assumptions' },
 ];
 
 // ─── Section definitions ──────────────────────────────────────────────────────
@@ -156,10 +156,16 @@ export const SECTIONS: Record<string, SectionDef[]> = {
     { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)', defaultOpen: true,  collapsible: true  },
   ],
 
-  // ── PREMISSAS (/premissas/page.tsx) ─────────────────────────────────────────
-  premissas: [
-    { id: 'premissas-pessoais', title: 'Premissas Pessoais',    defaultOpen: true, collapsible: false },
-    { id: 'premissas-modelo',   title: 'Premissas do Modelo',   defaultOpen: true, collapsible: false },
+  // ── ASSUMPTIONS (/assumptions/page.tsx) ────────────────────────────────────
+  assumptions: [
+    { id: 'status-strip',        title: 'FIRE Status Strip',              defaultOpen: true,  collapsible: false },
+    { id: 'personal-context',    title: 'Personal Context',               defaultOpen: true,  collapsible: false },
+    { id: 'fire-targets',        title: 'FIRE Targets & Triggers',        defaultOpen: true,  collapsible: false },
+    { id: 'allocation',          title: 'Strategic Allocation',           defaultOpen: true,  collapsible: false },
+    { id: 'model-assumptions',   title: 'Model Assumptions',              defaultOpen: true,  collapsible: false },
+    { id: 'operation-rules',     title: 'Operation Rules',                defaultOpen: false, collapsible: true  },
+    { id: 'family-scenarios',    title: 'Family Scenarios',               defaultOpen: true,  collapsible: false },
+    { id: 'holistic-balance',    title: 'Holistic Balance',               defaultOpen: false, collapsible: true  },
   ],
 
   // ── DISCOVERY (/discovery/page.tsx) ─────────────────────────────────────────

@@ -239,7 +239,7 @@ describe('2d. Tailwind v4 Compliance', () => {
 
 // ── 2e. Header/Nav Structure ───────────────────────────────────────────────────
 describe('2e. Header/Nav Structure (static scan)', () => {
-  const REQUIRED_TABS = ['NOW', 'FIRE', 'PORTFOLIO', 'PERFORMANCE', 'WITHDRAW', 'SIMULADORES', 'BACKTEST', 'PREMISSAS'];
+  const REQUIRED_TABS = ['NOW', 'FIRE', 'PORTFOLIO', 'PERFORMANCE', 'WITHDRAW', 'SIMULADORES', 'BACKTEST', 'ASSUMPTIONS'];
 
   it('Header.tsx must contain all 8 required tabs', () => {
     const content = readFileSync(HEADER_TSX, 'utf-8');
