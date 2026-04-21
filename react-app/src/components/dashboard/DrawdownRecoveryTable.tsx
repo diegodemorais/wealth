@@ -1,12 +1,14 @@
 'use client';
 
+// Supports two formats: normalized (name/depth_pct) and crises (nome/drawdown_max/inicio/fim)
 interface DrawdownEvent {
-  name?: string;
-  depth_pct?: number;
+  name?: string; nome?: string;
+  depth_pct?: number; drawdown_max?: number;
   duration_months?: number;
   recovery_months?: number;
   total_months?: number;
   recovered?: boolean;
+  inicio?: string; fim?: string;
 }
 
 export interface DrawdownRecoveryTableProps {
@@ -24,28 +26,35 @@ export default function DrawdownRecoveryTable({ events }: DrawdownRecoveryTableP
           <table style={{ fontSize: 11, borderCollapse: 'collapse', width: '100%', minWidth: 360 }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Evento', 'Queda', 'Meses↓', 'Meses rec.', 'Total', 'Status'].map(h => (
+                {['Evento', 'Queda', 'Início', 'Fim', 'Status'].map(h => (
                   <th key={h} style={{ padding: '4px 6px', textAlign: 'left', color: 'var(--muted)', fontWeight: 500 }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {events.map((ev, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '4px 6px', fontWeight: 500, color: 'var(--text)' }}>{ev.name ?? '—'}</td>
-                  <td style={{ padding: '4px 6px', fontWeight: 700, color: (ev.depth_pct ?? 0) <= -20 ? '#dc2626' : '#ca8a04' }}>
-                    {ev.depth_pct != null ? `${ev.depth_pct.toFixed(1)}%` : '—'}
-                  </td>
-                  <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{ev.duration_months ?? '—'}</td>
-                  <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{ev.recovery_months ?? '—'}</td>
-                  <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{ev.total_months ?? '—'}</td>
-                  <td style={{ padding: '4px 6px' }}>
-                    <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: ev.recovered ? '#16a34a' : '#ca8a04', color: '#fff' }}>
-                      {ev.recovered ? 'Recuperado' : 'Em curso'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {events.map((ev, i) => {
+                const name = ev.name ?? ev.nome ?? '—';
+                const depth = ev.depth_pct ?? ev.drawdown_max;
+                const inicio = ev.inicio ?? '—';
+                const fim = ev.fim ?? '—';
+                const emAberto = depth === 0 || depth == null;
+                const isRecovered = ev.recovered !== undefined ? ev.recovered : (!emAberto && fim !== '—');
+                return (
+                  <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '4px 6px', fontWeight: 500, color: 'var(--text)' }}>{name}</td>
+                    <td style={{ padding: '4px 6px', fontWeight: 700, color: depth != null && depth <= -10 ? '#dc2626' : '#ca8a04' }}>
+                      {emAberto ? 'em aberto' : depth != null ? `${depth.toFixed(1)}%` : '—'}
+                    </td>
+                    <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{inicio}</td>
+                    <td style={{ padding: '4px 6px', color: 'var(--muted)' }}>{fim}</td>
+                    <td style={{ padding: '4px 6px' }}>
+                      <span style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: isRecovered ? '#16a34a' : '#ca8a04', color: '#fff' }}>
+                        {isRecovered ? 'Recuperado' : 'Em curso'}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

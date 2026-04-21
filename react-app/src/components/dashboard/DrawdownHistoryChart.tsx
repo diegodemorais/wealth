@@ -31,6 +31,8 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
 
     const displayDates = dates.slice(-60);
     const displayData = drawdownPct.slice(-60);
+    const minVal = displayData.length > 0 ? Math.min(...displayData) : -15;
+    const yAxisMin = Math.floor(minVal / 2) * 2 - 2; // round to nearest 2%, add margin
 
     chartInstance.current = new Chart(ctx, {
       type: 'line',
@@ -77,8 +79,8 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
         },
         scales: {
           y: {
-            min: -100,
-            max: 0,
+            min: yAxisMin,
+            max: 2,
             grid: { color: 'rgba(71, 85, 105, 0.1)' },
             ticks: {
               color: 'var(--muted)',

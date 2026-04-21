@@ -1145,10 +1145,12 @@ export function createDrawdownHistChartOption(options: BaseChartOptions) {
     },
     series: [
       {
-        type: 'bar' as const,
+        type: 'line' as const,
         data: drawdownPct,
-        itemStyle: { color: '#f85149' },
-        barMaxWidth: 12,
+        smooth: true,
+        symbol: 'none',
+        lineStyle: { color: '#f85149', width: 1.5 },
+        areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(248,81,73,0.4)' }, { offset: 1, color: 'rgba(248,81,73,0.02)' }] } },
       },
     ],
   };
