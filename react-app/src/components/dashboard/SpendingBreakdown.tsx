@@ -1,256 +1,174 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useUiStore } from '@/store/uiStore';
-import { fmtBrlCompact } from '@/utils/formatters';
 
-interface SpendingCategory {
-  categoria: string;
-  mustSpendMensal: number;
-  likeSpendMensal: number;
-  imprevistossMensal: number;
-  totalMensal: number;
-  color: string;
+export interface MonthlyBreakdownEntry {
+  mes: string;            // "2025-08"
+  essenciais: number;
+  opcionais: number;
+  imprevistos: number;
+  total: number;
 }
 
 interface SpendingBreakdownProps {
-  musthave: number;
-  likes: number;
-  imprevistos: number;
+  musthave: number;        // anual
+  likes: number;           // anual
+  imprevistos: number;     // anual
   totalAnual: number;
+  monthlyBreakdown?: MonthlyBreakdownEntry[];
 }
+
+const fmtK = (v: number) => `R$${(v / 1000).toFixed(0)}k`;
+const fmtMes = (m: string) => {
+  const [y, mo] = m.split('-');
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return `${months[parseInt(mo, 10) - 1]}/${y.slice(2)}`;
+};
 
 const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   musthave,
   likes,
   imprevistos,
   totalAnual,
+  monthlyBreakdown,
 }) => {
   const { privacyMode } = useUiStore();
-  const [expandDetails, setExpandDetails] = useState(false);
 
-  const fmtBrl = fmtBrlCompact;
+  const totalMensal = totalAnual / 12;
+  const mustPct = totalAnual > 0 ? (musthave / totalAnual) * 100 : 0;
+  const likesPct = totalAnual > 0 ? (likes / totalAnual) * 100 : 0;
+  const impPct = totalAnual > 0 ? (imprevistos / totalAnual) * 100 : 0;
 
-  const mustaveMonthly = musthave / 12;
-  const likesMonthly = likes / 12;
-  const imprevistosMonthly = imprevistos / 12;
-  const totalMonthly = totalAnual / 12;
+  const flexLabel = mustPct <= 60 ? (mustPct < 50 ? '🟢 Muito flexível' : '✅ Balanceado') : '⚠️ Rígido';
+  const flexColor = mustPct <= 60 ? (mustPct < 50 ? 'var(--accent)' : 'var(--green)') : 'var(--yellow)';
 
-  const categories: SpendingCategory[] = [
-    {
-      categoria: 'Must-Have (Essencial)',
-      mustSpendMensal: mustaveMonthly,
-      likeSpendMensal: 0,
-      imprevistossMensal: 0,
-      totalMensal: mustaveMonthly,
-      color: 'var(--red)',
-    },
-    {
-      categoria: 'Like-to-Have (Conforto)',
-      mustSpendMensal: 0,
-      likeSpendMensal: likesMonthly,
-      imprevistossMensal: 0,
-      totalMensal: likesMonthly,
-      color: 'var(--yellow)',
-    },
-    {
-      categoria: 'Imprevistos (Buffer)',
-      mustSpendMensal: 0,
-      likeSpendMensal: 0,
-      imprevistossMensal: imprevistosMonthly,
-      totalMensal: imprevistosMonthly,
-      color: 'var(--purple)',
-    },
-  ];
-
-  const mustavePercent = (musthave / totalAnual) * 100;
-  const likesPercent = (likes / totalAnual) * 100;
-  const imprevistosPercent = (imprevistos / totalAnual) * 100;
-
-  const isHighMustHave = mustavePercent > 70;
-  const isWellBalanced = mustavePercent <= 60 && mustavePercent >= 50;
-  const isFlexible = mustavePercent < 50;
-
-  const flexColor = isWellBalanced ? 'var(--green)' : isFlexible ? 'var(--accent)' : 'var(--yellow)';
-  const flexBg = isWellBalanced ? 'rgba(34,197,94,0.1)' : isFlexible ? 'rgba(59,130,246,0.1)' : 'rgba(245,158,11,0.1)';
-  const flexBorder = isWellBalanced ? 'rgba(34,197,94,0.25)' : isFlexible ? 'rgba(59,130,246,0.25)' : 'rgba(245,158,11,0.25)';
-  const flexLabel = isWellBalanced ? '✅ Balanceado' : isFlexible ? '🟢 Muito Flexível' : '⚠️ Rígido';
+  // Monthly chart — se disponível
+  const hasMonthly = monthlyBreakdown && monthlyBreakdown.length > 0;
+  const maxTotal = hasMonthly ? Math.max(...monthlyBreakdown!.map(m => m.total), 1) : 1;
 
   return (
-    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: '8px', padding: 'var(--space-5)', marginBottom: '16px' }}>
-      <h2 style={{ fontSize: 'var(--text-md)', fontWeight: 600, color: 'var(--text)', marginBottom: '16px', marginTop: 0 }}>
-        Spending Breakdown — Análise de Gastos por Categoria
-      </h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* Total spending summary */}
-        <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
-            Despesa Anual Total (Baseline)
+    <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 16, marginBottom: 16 }}>
+      {/* ── Summary cards ── */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" style={{ marginBottom: 14 }}>
+        <div style={{ background: 'rgba(239,68,68,.08)', border: '1px solid rgba(239,68,68,.2)', borderRadius: 6, padding: '10px 12px' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Essencial</div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }} className="pv">
+            {privacyMode ? '••••' : fmtK(musthave / 12)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
           </div>
-          <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'rgba(168, 85, 247, 0.7)', marginBottom: '4px' }}>
-            {privacyMode ? 'R$••••' : fmtBrl(totalAnual)}
-          </div>
-          <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-            {privacyMode ? '••••' : fmtBrl(totalMonthly)} /mês em média
-          </div>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{mustPct.toFixed(0)}% do total</div>
         </div>
+        <div style={{ background: 'rgba(245,158,11,.08)', border: '1px solid rgba(245,158,11,.2)', borderRadius: 6, padding: '10px 12px' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Conforto</div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--yellow)' }} className="pv">
+            {privacyMode ? '••••' : fmtK(likes / 12)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+          </div>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{likesPct.toFixed(0)}% do total</div>
+        </div>
+        <div style={{ background: 'rgba(139,92,246,.08)', border: '1px solid rgba(139,92,246,.2)', borderRadius: 6, padding: '10px 12px' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Imprevistos</div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--purple)' }} className="pv">
+            {privacyMode ? '••••' : fmtK(imprevistos / 12)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+          </div>
+          <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{impPct.toFixed(0)}% do total</div>
+        </div>
+        <div style={{ background: 'var(--card2)', border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px' }}>
+          <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Total médio</div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }} className="pv">
+            {privacyMode ? '••••' : fmtK(totalMensal)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+          </div>
+          <div style={{ fontSize: 10, color: flexColor, fontWeight: 600, marginTop: 2 }}>{flexLabel}</div>
+        </div>
+      </div>
 
-        {/* Stacked bar visualization */}
+      {/* ── Distribuição empilhada ── */}
+      <div style={{ display: 'flex', height: 20, borderRadius: 4, overflow: 'hidden', gap: 2, marginBottom: 6 }}>
+        <div style={{ flex: mustPct, background: 'var(--red)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {mustPct > 15 && <span style={{ fontSize: 10, color: '#fff', fontWeight: 600 }}>{mustPct.toFixed(0)}%</span>}
+        </div>
+        <div style={{ flex: likesPct, background: 'var(--yellow)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {likesPct > 10 && <span style={{ fontSize: 10, color: '#000', fontWeight: 600 }}>{likesPct.toFixed(0)}%</span>}
+        </div>
+        <div style={{ flex: impPct, background: 'var(--purple)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {impPct > 5 && <span style={{ fontSize: 10, color: '#fff', fontWeight: 600 }}>{impPct.toFixed(0)}%</span>}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+        {[
+          { label: 'Essencial', color: 'var(--red)' },
+          { label: 'Conforto', color: 'var(--yellow)' },
+          { label: 'Imprevistos', color: 'var(--purple)' },
+        ].map(l => (
+          <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: 'var(--muted)' }}>
+            <span style={{ width: 8, height: 8, borderRadius: 2, background: l.color, flexShrink: 0 }} />
+            {l.label}
+          </div>
+        ))}
+      </div>
+
+      {/* ── Histórico mensal (últimos 12 meses) ── */}
+      {hasMonthly ? (
         <div>
-          <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', marginBottom: '12px' }}>
-            Distribuição de Gastos
+          <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 8 }}>
+            Histórico — últimos {monthlyBreakdown!.length} meses
           </div>
-
-          <div style={{ display: 'flex', height: '64px', background: 'rgba(71,85,105,0.15)', borderRadius: '4px', overflow: 'hidden', gap: 0, marginBottom: '8px' }}>
-            {/* Must-Have */}
-            <div
-              style={{ flex: mustavePercent, backgroundColor: 'var(--red)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: mustavePercent > 12 ? 'auto' : '0px' }}
-              title={`Essencial: ${mustavePercent.toFixed(1)}%`}
-            >
-              {mustavePercent > 12 && (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{mustavePercent.toFixed(0)}%</span>
-              )}
-            </div>
-
-            {/* Like-to-Have */}
-            <div
-              style={{ flex: likesPercent, backgroundColor: 'var(--yellow)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: likesPercent > 12 ? 'auto' : '0px' }}
-              title={`Conforto: ${likesPercent.toFixed(1)}%`}
-            >
-              {likesPercent > 12 && (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{likesPercent.toFixed(0)}%</span>
-              )}
-            </div>
-
-            {/* Imprevistos */}
-            <div
-              style={{ flex: imprevistosPercent, backgroundColor: 'var(--purple)', opacity: 0.8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: imprevistosPercent > 12 ? 'auto' : '0px' }}
-              title={`Buffer: ${imprevistosPercent.toFixed(1)}%`}
-            >
-              {imprevistosPercent > 12 && (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{imprevistosPercent.toFixed(0)}%</span>
-              )}
-            </div>
+          {/* Stacked bar chart */}
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 80, marginBottom: 4 }}>
+            {monthlyBreakdown!.map(m => {
+              const totalH = Math.max(m.total, 1);
+              const heightPct = (totalH / maxTotal) * 100;
+              const essPct = (m.essenciais / totalH) * 100;
+              const optPct = (m.opcionais / totalH) * 100;
+              return (
+                <div
+                  key={m.mes}
+                  style={{ flex: 1, height: `${heightPct}%`, display: 'flex', flexDirection: 'column-reverse', borderRadius: '2px 2px 0 0', overflow: 'hidden', cursor: 'default' }}
+                  title={`${fmtMes(m.mes)}: ${privacyMode ? '••••' : fmtK(m.total)}/mês\nEss: ${fmtK(m.essenciais)} · Opt: ${fmtK(m.opcionais)} · Imp: ${fmtK(m.imprevistos)}`}
+                >
+                  <div style={{ flex: essPct, background: 'var(--red)', opacity: .85 }} />
+                  <div style={{ flex: optPct, background: 'var(--yellow)', opacity: .85 }} />
+                  <div style={{ flex: Math.max(0, 100 - essPct - optPct), background: 'var(--purple)', opacity: .85 }} />
+                </div>
+              );
+            })}
           </div>
-        </div>
-
-        {/* Category cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)' }}>
-          {/* Must-Have */}
-          <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
-              Essencial
-            </div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--red)', marginBottom: '4px' }}>
-              {mustavePercent.toFixed(1)}%
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? '••••' : fmtBrl(mustaveMonthly)}/mês
-            </div>
+          {/* X-axis labels */}
+          <div style={{ display: 'flex', gap: 4 }}>
+            {monthlyBreakdown!.map(m => (
+              <div key={m.mes} style={{ flex: 1, textAlign: 'center', fontSize: 9, color: 'var(--muted)' }}>
+                {fmtMes(m.mes)}
+              </div>
+            ))}
           </div>
-
-          {/* Like-to-Have */}
-          <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
-              Conforto
-            </div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--yellow)', marginBottom: '4px' }}>
-              {likesPercent.toFixed(1)}%
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? '••••' : fmtBrl(likesMonthly)}/mês
-            </div>
-          </div>
-
-          {/* Imprevistos */}
-          <div style={{ padding: 'var(--space-3)', background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)', borderRadius: '4px' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
-              Buffer
-            </div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--purple)', marginBottom: '4px' }}>
-              {imprevistosPercent.toFixed(1)}%
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? '••••' : fmtBrl(imprevistosMonthly)}/mês
-            </div>
-          </div>
-
-          {/* Flexibility Assessment */}
-          <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: flexBg, border: `1px solid ${flexBorder}` }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
-              Flexibilidade
-            </div>
-            <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: flexColor, marginBottom: '4px' }}>
-              {flexLabel}
-            </div>
-            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              vs. 50-60% ideal
-            </div>
-          </div>
-        </div>
-
-        {/* Expandable details */}
-        <div
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-3)', cursor: 'pointer', borderTop: '1px solid var(--border)', marginTop: '12px' }}
-          onClick={() => setExpandDetails(!expandDetails)}
-        >
-          <h3 style={{ fontSize: '0.875rem', fontWeight: 600, margin: 0, color: 'var(--text)' }}>
-            Detalhes Mensais
-          </h3>
-          <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-            {expandDetails ? '▼' : '▶'}
-          </span>
-        </div>
-
-        {expandDetails && (
-          <div style={{ marginTop: '12px', overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+          {/* Table */}
+          <div style={{ overflowX: 'auto', marginTop: 12 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
               <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--muted)', fontWeight: 600 }}>Categoria</th>
-                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Mensal</th>
-                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>Anual</th>
-                  <th style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 600 }}>% Total</th>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['Mês', 'Essencial', 'Conforto', 'Imprevistos', 'Total'].map(h => (
+                    <th key={h} style={{ padding: '4px 6px', textAlign: h === 'Mês' ? 'left' : 'right', color: 'var(--muted)', fontWeight: 500 }}>{h}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {categories.map((cat, idx) => (
-                  <tr key={idx}>
-                    <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
-                      {cat.categoria}
-                    </td>
-                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                      {privacyMode ? '••••' : fmtBrl(cat.totalMensal)}
-                    </td>
-                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                      {privacyMode ? '••••' : fmtBrl(cat.totalMensal * 12)}
-                    </td>
-                    <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: cat.color, fontWeight: 600 }}>
-                      {((cat.totalMensal * 12 / totalAnual) * 100).toFixed(1)}%
-                    </td>
+                {monthlyBreakdown!.map(m => (
+                  <tr key={m.mes} style={{ borderBottom: '1px solid rgba(148,163,184,.1)' }}>
+                    <td style={{ padding: '4px 6px', fontWeight: 500 }}>{fmtMes(m.mes)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--red)' }} className="pv">{privacyMode ? '••••' : fmtK(m.essenciais)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--yellow)' }} className="pv">{privacyMode ? '••••' : fmtK(m.opcionais)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--purple)' }} className="pv">{privacyMode ? '••••' : fmtK(m.imprevistos)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 600 }} className="pv">{privacyMode ? '••••' : fmtK(m.total)}</td>
                   </tr>
                 ))}
-                <tr style={{ backgroundColor: 'rgba(71,85,105,0.1)' }}>
-                  <td style={{ padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>Total</td>
-                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                    {privacyMode ? '••••' : fmtBrl(totalMonthly)}
-                  </td>
-                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)' }}>
-                    {privacyMode ? '••••' : fmtBrl(totalAnual)}
-                  </td>
-                  <td style={{ textAlign: 'right', padding: 'var(--space-2)', borderBottom: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700 }}>100.0%</td>
-                </tr>
               </tbody>
             </table>
           </div>
-        )}
-
-        {/* Footer note */}
-        <div style={{ padding: 'var(--space-2)', fontSize: 'var(--text-sm)', color: 'var(--muted)', background: 'var(--bg)', borderRadius: '4px' }}>
-          <strong>📌 Nota:</strong> Ideal é 50-60% essencial, 30-35% conforto, 5-10% imprevistos. Spending smile durante aposentadoria pode mudar essa proporção.
         </div>
-      </div>
+      ) : (
+        <div style={{ fontSize: 11, color: 'var(--muted)', padding: '8px 0' }}>
+          Histórico mensal disponível após rodar <code>python scripts/spending_analysis.py --json-output</code>
+        </div>
+      )}
     </div>
   );
 };

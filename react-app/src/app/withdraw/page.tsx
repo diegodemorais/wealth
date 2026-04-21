@@ -17,10 +17,8 @@ import { FIRE_RULES } from '@/config/business-rules';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
-import BondMaturityLadder from '@/components/dashboard/BondMaturityLadder';
 import BondStrategyPanel from '@/components/dashboard/BondStrategyPanel';
 import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
-import BondLadderTimeline from '@/components/dashboard/BondLadderTimeline';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
@@ -724,31 +722,140 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* Bond Maturity Ladder — vencimentos da RF */}
-      <CollapsibleSection id="section-bond-maturity" title={secTitle('withdraw', 'bond-maturity', 'Bond Maturity Ladder — Vencimentos da Renda Fixa')} defaultOpen={secOpen('withdraw', 'bond-maturity', false)}>
+      {/* Bond Ladder — seção unificada: cronograma + estrutura por prazo */}
+      <CollapsibleSection id="section-bond-ladder" title={secTitle('withdraw', 'bond-ladder', 'Bond Ladder — Cronograma & Estrutura de Vencimentos')} defaultOpen={secOpen('withdraw', 'bond-ladder', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const rf = (data as any)?.rf ?? {};
             const v = (pos: any) => pos?.valor ?? pos?.valor_brl ?? 0;
-            const ipca2029 = v(rf.ipca2029);
-            const ipca2040 = v(rf.ipca2040);
-            const ipca2050 = v(rf.ipca2050);
-            const renda2065 = v(rf.renda2065);
-            const total = ipca2029 + ipca2040 + ipca2050 + renda2065;
+            const i29 = v(rf.ipca2029);
+            const i40 = v(rf.ipca2040);
+            const i50 = v(rf.ipca2050);
+            const r65 = v(rf.renda2065);
+            const total = i29 + i40 + i50 + r65;
+            const custoMensal = activeScenarioCfg.custo_vida_base / 12;
+            const fmtK = (n: number) => privacyMode ? '••••' : `R$${(n / 1000).toFixed(0)}k`;
+            const fmtMeses = (n: number) => custoMensal > 0 ? `${(n / custoMensal).toFixed(1)}m` : '—';
+            const pct = (n: number) => total > 0 ? (n / total) * 100 : 0;
+
+            const bonds = [
+              { key: 'ipca2029', label: 'IPCA+2029', year: 2029, val: i29, pool: 'sorr' as const },
+              { key: 'ipca2040', label: 'IPCA+2040', year: 2040, val: i40, pool: 'sorr' as const },
+              { key: 'ipca2050', label: 'IPCA+2050', year: 2050, val: i50, pool: 'hold' as const },
+              { key: 'renda2065', label: 'Renda+2065', year: 2065, val: r65, pool: 'hold' as const },
+            ];
+            const maxVal = Math.max(...bonds.map(b => b.val), 1);
+
+            const spendingPool = i29 + i40;
+            const holdPool = i50 + r65;
+
+            // Maturity buckets (anos a partir de hoje, 2026)
+            const buckets = [
+              { label: '≤ 3a', range: 'IPCA+2029', val: i29, color: '#2563eb' },
+              { label: '5–15a', range: 'IPCA+2040', val: i40, color: '#0ea5e9' },
+              { label: '20–30a', range: 'IPCA+2050', val: i50, color: '#7c3aed' },
+              { label: '35+ a', range: 'Renda+2065', val: r65, color: '#9333ea' },
+            ];
+
             return (
-              <BondMaturityLadder
-                bonds1y={0}
-                bonds2y={0}
-                bonds3y={ipca2029}
-                bonds5y={0}
-                bonds10y={ipca2040}
-                bondsOver10y={ipca2050 + renda2065}
-                totalBonds={total}
-              />
+              <>
+                <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+
+                {/* ── 1. Timeline de vencimentos ── */}
+                <div style={{ marginTop: 12, marginBottom: 16 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 10 }}>
+                    Cronograma de Vencimentos
+                  </div>
+                  {/* Pool legend */}
+                  <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--muted)' }}>
+                      <span style={{ width: 8, height: 8, borderRadius: 2, background: '#2563eb', flexShrink: 0 }} />
+                      🛡 SoRR Buffer
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--muted)' }}>
+                      <span style={{ width: 8, height: 8, borderRadius: 2, background: '#7c3aed', flexShrink: 0 }} />
+                      📦 Hold-to-maturity
+                    </div>
+                  </div>
+                  {/* Bars */}
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 10, height: 90 }}>
+                    {bonds.map(b => {
+                      const heightPct = maxVal > 0 ? Math.max((b.val / maxVal) * 100, b.val > 0 ? 8 : 0) : 0;
+                      const col = b.pool === 'sorr' ? '#2563eb' : '#7c3aed';
+                      return (
+                        <div key={b.key} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                          <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>{fmtMeses(b.val)}</div>
+                          <div style={{ width: '100%', height: `${heightPct}%`, background: col, borderRadius: '4px 4px 0 0', minHeight: b.val > 0 ? 8 : 0 }} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {/* Labels */}
+                  <div style={{ display: 'flex', gap: 10, marginTop: 6 }}>
+                    {bonds.map(b => (
+                      <div key={b.key} style={{ flex: 1, textAlign: 'center' }}>
+                        <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text)' }}>{b.label}</div>
+                        <div style={{ fontSize: 10, color: 'var(--muted)' }}>{b.year}</div>
+                        <div style={{ fontSize: 10, fontWeight: 600, marginTop: 1 }} className="pv">{fmtK(b.val)}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ── 2. Pool distinction ── */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginBottom: 16 }}>
+                  <div style={{ background: 'rgba(37,99,235,.06)', border: '1px solid rgba(37,99,235,.25)', borderRadius: 8, padding: '12px 14px' }}>
+                    <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 600, marginBottom: 6 }}>🛡 SoRR Buffer — pool ativo</div>
+                    <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 4 }}>IPCA+2029 + IPCA+2040</div>
+                    <div style={{ fontWeight: 700, fontSize: '1.1rem' }} className="pv">{fmtK(spendingPool)}</div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>
+                      {fmtMeses(spendingPool)} de custo de vida cobertos · vence antes do FIRE Day
+                    </div>
+                  </div>
+                  <div style={{ background: 'rgba(124,58,237,.06)', border: '1px solid rgba(124,58,237,.25)', borderRadius: 8, padding: '12px 14px' }}>
+                    <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 600, marginBottom: 6 }}>📦 Hold-to-maturity — estrutural</div>
+                    <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 4 }}>IPCA+2050 + Renda+2065</div>
+                    <div style={{ fontWeight: 700, fontSize: '1.1rem' }} className="pv">{fmtK(holdPool)}</div>
+                    <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>
+                      Atravessa todo o horizonte de aposentadoria · não gastar antes do vencimento
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── 3. Distribuição por prazo (stacked bar) ── */}
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 8 }}>
+                    Distribuição por Prazo
+                  </div>
+                  {total > 0 && (
+                    <div style={{ display: 'flex', height: 28, borderRadius: 4, overflow: 'hidden', gap: 2 }}>
+                      {buckets.filter(b => b.val > 0).map(b => (
+                        <div
+                          key={b.range}
+                          style={{ flex: pct(b.val), background: b.color, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 20 }}
+                          title={`${b.range}: ${pct(b.val).toFixed(1)}%`}
+                        >
+                          {pct(b.val) > 10 && (
+                            <span style={{ fontSize: 10, fontWeight: 600, color: '#fff' }}>{pct(b.val).toFixed(0)}%</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
+                    {buckets.filter(b => b.val > 0).map(b => (
+                      <div key={b.range} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: 'var(--muted)' }}>
+                        <span style={{ width: 8, height: 8, borderRadius: 2, background: b.color, flexShrink: 0 }} />
+                        {b.label} ({pct(b.val).toFixed(0)}%)
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
             );
           })()}
-          <div className="src">
-            Vencimentos: IPCA+2029, IPCA+2040, IPCA+2050, Renda+2065. Valores em BRL (posição atual).
+          <div className="src" style={{ marginTop: 12 }}>
+            SoRR Buffer: spend-down antes de vender equity em drawdown. Hold-to-maturity: não resgatar antes do vencimento — marcação a mercado pode mostrar ganho/perda mas não é relevante para estratégia. Valores BRL posição atual.
           </div>
         </div>
       </CollapsibleSection>
@@ -762,48 +869,25 @@ export default function WithdrawPage() {
             <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
           </div>
           {(() => {
-            const spending = (data as any)?.spending ?? {};
-            const base = spending.base ?? activeScenarioCfg.custo_vida_base ?? 250000;
-            const essenciais = spending.essenciais ?? base * 0.72;
-            const discric = spending.discricionarios ?? spending.discric ?? base * 0.25;
-            const imprevistos = spending.imprevistos ?? base * 0.03;
+            // Fonte: spending_summary.json → data.spending_breakdown (via generate_data.py)
+            const sb = (data as any)?.spending_breakdown ?? {};
+            const musthave = sb.must_spend_anual ?? 0;
+            const likes    = sb.like_spend_anual ?? 0;
+            const imprevistos = sb.imprevistos_anual ?? 0;
+            const totalAnual  = sb.total_anual ?? ((musthave + likes + imprevistos) || activeScenarioCfg.custo_vida_base);
+            const monthly = sb.monthly_breakdown ?? undefined;
             return (
               <SpendingBreakdown
-                musthave={essenciais}
-                likes={discric}
+                musthave={musthave}
+                likes={likes}
                 imprevistos={imprevistos}
-                totalAnual={base}
+                totalAnual={totalAnual}
+                monthlyBreakdown={monthly}
               />
             );
           })()}
           <div className="src">
-            Distribuição dos gastos anuais por categoria. Valores anuais.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* Bond Ladder Timeline — horizonte de vencimentos */}
-      <CollapsibleSection id="section-bond-ladder-timeline" title={secTitle('withdraw', 'bond-ladder-timeline', 'Bond Ladder Timeline — Horizonte de Vencimentos')} defaultOpen={secOpen('withdraw', 'bond-ladder-timeline', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <div style={{ marginBottom: 8 }}>
-            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-          </div>
-          {(() => {
-            const rf = (data as any)?.rf ?? {};
-            const v = (pos: any) => pos?.valor ?? pos?.valor_brl;
-            const custoVidaMensal = activeScenarioCfg.custo_vida_base / 12;
-            return (
-              <BondLadderTimeline
-                ipca2029={{ valor: v(rf.ipca2029), taxa: rf.ipca2029?.taxa }}
-                ipca2040={{ valor: v(rf.ipca2040), taxa: rf.ipca2040?.taxa }}
-                ipca2050={{ valor: v(rf.ipca2050), taxa: rf.ipca2050?.taxa }}
-                renda2065={{ valor: v(rf.renda2065), taxa: rf.renda2065?.taxa }}
-                custoVidaMensal={custoVidaMensal}
-              />
-            );
-          })()}
-          <div className="src">
-            Cronograma de vencimentos dos títulos NTN-B e Renda+. Altura = valor relativo. Meses de custo de vida cobertos por título.
+            Fonte: CSV All-Accounts → spending_analysis.py → spending_summary.json. Executar script para atualizar.
           </div>
         </div>
       </CollapsibleSection>

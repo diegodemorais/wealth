@@ -337,6 +337,19 @@ def export_json(data, csv_path, output_path=None):
     avg_tot = sum(mg[m]['TOTAL']       for m in months) / n
 
     # Valores são negativos no CSV (saídas); armazenar como positivos
+    # Breakdown mensal — últimos 12 meses ordenados cronologicamente
+    recent_months = sorted(mg.keys())[-12:]
+    monthly_breakdown = [
+        {
+            "mes": m,
+            "essenciais": round(abs(mg[m].get('Essenciais', 0))),
+            "opcionais":  round(abs(mg[m].get('Opcionais', 0))),
+            "imprevistos": round(abs(mg[m].get('Imprevistos', 0))),
+            "total":      round(abs(mg[m].get('TOTAL', 0))),
+        }
+        for m in recent_months
+    ]
+
     summary = {
         "periodo": f"{months[0]} a {months[-1]}",
         "meses": n,
@@ -349,6 +362,7 @@ def export_json(data, csv_path, output_path=None):
         "imprevistos_anual": round(abs(avg_imp) * 12),
         "total_anual": round(abs(avg_tot) * 12),
         "modelo_fire_anual": BASELINE['model_fire'],
+        "monthly_breakdown": monthly_breakdown,
         "updated_at": datetime.now().strftime("%Y-%m-%d"),
         "fonte": os.path.basename(csv_path),
     }

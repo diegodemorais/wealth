@@ -1130,7 +1130,12 @@ export function createDrawdownHistChartOption(options: BaseChartOptions) {
       axisLabel: {
         color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         fontSize: 11,
-        interval: Math.floor(dates.length / 8),
+        interval: 0,
+        // Mostrar apenas o ano, somente em janeiro de cada ano
+        formatter: (val: string) => {
+          const [, mo] = val.split('-');
+          return mo === '01' ? val.slice(0, 4) : '';
+        },
       },
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
       axisTick: { show: false },
