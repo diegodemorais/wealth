@@ -635,24 +635,25 @@ export default function HomePage() {
       <CollapsibleSection id="section-rebalancing-status" title={secTitle('now', 'rebalancing-status', 'Rebalancing Status — Drift por Classe')} defaultOpen={secOpen('now', 'rebalancing-status', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
-            const drift = (data as any)?.drift ?? {};
             const posicoes = (data as any)?.posicoes ?? {};
             const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 1;
             const pesosTarget = (data as any)?.pesosTarget ?? {};
-            const toCurrentPct = (ticker: string) => {
-              const pos = posicoes[ticker];
-              if (!pos?.qty || !pos?.price) return 0;
-              const cambio = d.CAMBIO ?? 5.15;
-              return ((pos.qty * pos.price * cambio) / patrimonioAtual) * 100;
+            const cambio = d.CAMBIO ?? 5.15;
+            // Aggregate all tickers within a bucket (transitórios incluídos)
+            const bucketPct = (bucketName: string) => {
+              const total = Object.values(posicoes as Record<string, any>)
+                .filter((pos: any) => pos?.bucket === bucketName && pos?.qty && pos?.price)
+                .reduce((sum: number, pos: any) => sum + pos.qty * pos.price * cambio, 0);
+              return patrimonioAtual > 0 ? (total / patrimonioAtual) * 100 : 0;
             };
             return (
               <RebalancingStatus
                 swrdTarget={(pesosTarget.SWRD ?? 0.50) * 100}
-                swrdCurrent={toCurrentPct('SWRD')}
+                swrdCurrent={bucketPct('SWRD')}
                 avgsTarget={(pesosTarget.AVGS ?? 0.30) * 100}
-                avgsCurrent={toCurrentPct('AVGS')}
+                avgsCurrent={bucketPct('AVGS')}
                 avemTarget={(pesosTarget.AVEM ?? 0.20) * 100}
-                avemCurrent={toCurrentPct('AVEM')}
+                avemCurrent={bucketPct('AVEM')}
                 ipcaTarget={15}
                 ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor ?? (data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor ?? (data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 hodl11Target={3}
