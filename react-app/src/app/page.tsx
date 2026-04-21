@@ -614,13 +614,13 @@ export default function HomePage() {
             return (
               <IpcaTaxaProgress
                 taxaAtual={rf.ipca2040?.taxa ?? 0}
-                ipca2040Valor={rf.ipca2040?.valor_brl ?? 0}
+                ipca2040Valor={rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0}
                 ipca2040AlvoPercent={8}
-                ipca2040AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2040?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
-                ipca2050Valor={rf.ipca2050?.valor_brl ?? 0}
+                ipca2040AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
+                ipca2050Valor={rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0}
                 ipca2050AlvoPercent={7}
-                ipca2050AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2050?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
-                ipcaTotalBrl={(rf.ipca2040?.valor_brl ?? 0) + (rf.ipca2050?.valor_brl ?? 0)}
+                ipca2050AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
+                ipcaTotalBrl={(rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0) + (rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0)}
                 totalPortfolio={patrimonioAtual}
               />
             );
@@ -654,7 +654,7 @@ export default function HomePage() {
                 avemTarget={(pesosTarget.AVEM ?? 0.20) * 100}
                 avemCurrent={toCurrentPct('AVEM')}
                 ipcaTarget={15}
-                ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
+                ipcaCurrent={patrimonioAtual > 0 ? (((data as any)?.rf?.ipca2040?.valor ?? (data as any)?.rf?.ipca2040?.valor_brl ?? 0) + ((data as any)?.rf?.ipca2050?.valor ?? (data as any)?.rf?.ipca2050?.valor_brl ?? 0)) / patrimonioAtual * 100 : 0}
                 hodl11Target={3}
                 hodl11Current={patrimonioAtual > 0 ? ((data as any)?.hodl11?.valor ?? 0) / patrimonioAtual * 100 : 0}
                 lastRebalanceDate={(data as any)?.premissas?.ultima_revisao}
