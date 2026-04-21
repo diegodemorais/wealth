@@ -66,11 +66,16 @@ export default function HomePage() {
   const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
 
   // Aporte ETFs for AporteDecisionPanel
+  // retornos_por_etf schema: { SWRD: { retorno_usd_real: 0.037, fonte: '...' }, ... } (decimal, não %)
   const retornos = (data as any)?.premissas?.retornos_por_etf ?? {};
+  const erPct = (ticker: string, fallback: number): number => {
+    const raw = retornos[ticker]?.retorno_usd_real;
+    return typeof raw === 'number' ? raw * 100 : fallback;
+  };
   const aporteEtfs = [
-    { ticker: 'SWRD', atual: (data?.drift as any)?.SWRD?.atual ?? 0, alvo: (data?.drift as any)?.SWRD?.alvo ?? 39.5, expectedReturn: retornos.SWRD ?? 3.7 },
-    { ticker: 'AVGS', atual: (data?.drift as any)?.AVGS?.atual ?? 0, alvo: (data?.drift as any)?.AVGS?.alvo ?? 23.7, expectedReturn: retornos.AVGS ?? 5.0 },
-    { ticker: 'AVEM', atual: (data?.drift as any)?.AVEM?.atual ?? 0, alvo: (data?.drift as any)?.AVEM?.alvo ?? 15.8, expectedReturn: retornos.AVEM ?? 5.0 },
+    { ticker: 'SWRD', atual: (data?.drift as any)?.SWRD?.atual ?? 0, alvo: (data?.drift as any)?.SWRD?.alvo ?? 39.5, expectedReturn: erPct('SWRD', 3.7) },
+    { ticker: 'AVGS', atual: (data?.drift as any)?.AVGS?.atual ?? 0, alvo: (data?.drift as any)?.AVGS?.alvo ?? 23.7, expectedReturn: erPct('AVGS', 5.0) },
+    { ticker: 'AVEM', atual: (data?.drift as any)?.AVEM?.atual ?? 0, alvo: (data?.drift as any)?.AVEM?.alvo ?? 15.8, expectedReturn: erPct('AVEM', 5.0) },
   ];
 
   // Carry Differential data
