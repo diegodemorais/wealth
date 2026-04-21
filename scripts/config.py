@@ -148,6 +148,21 @@ INSS_ANUAL           = _P.get("inss_anual",           18_000)
 INSS_INICIO_ANO_POS_FIRE = _P.get("inss_inicio_ano_pos_fire", 12)
 FIRE_P_THRESHOLD     = _P.get("p_threshold",          85.0)
 
+# Spending Smile (fonte: FR-spending-smile 2026-03-27)
+SPENDING_SMILE_GO_GO   = _P.get("spending_smile_go_go",   242_000)
+SPENDING_SMILE_SLOW_GO = _P.get("spending_smile_slow_go", 200_000)
+SPENDING_SMILE_NO_GO   = _P.get("spending_smile_no_go",   187_000)
+
+# Guardrails (fonte: §Guardrails aprovados 2026-03-20)
+GUARDRAILS_BANDA1_MIN = _P.get("guardrails_banda1_min", 0.15)
+GUARDRAILS_BANDA2_MIN = _P.get("guardrails_banda2_min", 0.25)
+GUARDRAILS_BANDA3_MIN = _P.get("guardrails_banda3_min", 0.35)
+GUARDRAILS_CORTE1_PCT = _P.get("guardrails_corte1_pct", 0.10)
+GUARDRAILS_CORTE2_PCT = _P.get("guardrails_corte2_pct", 0.20)
+GUARDRAILS_PISO_PCT   = _P.get("guardrails_piso_pct",   0.28)
+GASTO_PISO            = _P.get("gasto_piso",             180_000)
+SAUDE_BASE            = _P.get("saude_base",              18_000)
+
 # Legacy (mantém compatibilidade)
 APORTE_MENSAL = APORTE_CENARIO_BASE
 

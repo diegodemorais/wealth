@@ -61,5 +61,16 @@
   "drift_permanece_max": 5.0,
   "drift_monitorar_max": 10.0,
   "ipca_taxa_monitorar_min": 5.5,
-  "ipca_taxa_revisar_max": 5.5
+  "ipca_taxa_revisar_max": 5.5,
+  "spending_smile_go_go": 242000,
+  "spending_smile_slow_go": 200000,
+  "spending_smile_no_go": 187000,
+  "guardrails_banda1_min": 0.15,
+  "guardrails_banda2_min": 0.25,
+  "guardrails_banda3_min": 0.35,
+  "guardrails_corte1_pct": 0.1,
+  "guardrails_corte2_pct": 0.2,
+  "guardrails_piso_pct": 0.28,
+  "gasto_piso": 180000,
+  "saude_base": 18000
 }

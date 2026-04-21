@@ -34,6 +34,10 @@ from config import (
     ADJ_FAVORAVEL, ADJ_STRESS, IPCA_ANUAL,
     INSS_ANUAL, INSS_INICIO_ANO_POS_FIRE,
     BOND_TENT_META_ANOS, FIRE_P_THRESHOLD,
+    SPENDING_SMILE_GO_GO, SPENDING_SMILE_SLOW_GO, SPENDING_SMILE_NO_GO,
+    GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN,
+    GUARDRAILS_CORTE1_PCT, GUARDRAILS_CORTE2_PCT, GUARDRAILS_PISO_PCT,
+    GASTO_PISO, SAUDE_BASE,
     update_dashboard_state,
 )
 
@@ -160,13 +164,13 @@ SPENDING_SMILE = {
     # Fase: gasto LIFESTYLE EX-SAÚDE (saúde é somada separadamente via gasto_spending_smile)
     # Fonte: FR-spending-smile (2026-03-27) — corrigido HD-mc-audit (2026-04-06)
     # Valores originais (R$280k/225k/285k) embutiam saúde R$37.9k (modelo antigo) — double-count
-    # Corretos: lifestyle-only conforme tabela de breakdown da issue
-    "go_go":   {"gasto": 242_000, "inicio": 0,  "fim": 15},   # anos 0–14 pós-FIRE
-    "slow_go": {"gasto": 200_000, "inicio": 15, "fim": 30},   # anos 15–29
-    "no_go":   {"gasto": 187_000, "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
+    # Corretos: lifestyle-only conforme tabela de breakdown da issue. Lidos de carteira.md.
+    "go_go":   {"gasto": SPENDING_SMILE_GO_GO,   "inicio": 0,  "fim": 15},   # anos 0–14 pós-FIRE
+    "slow_go": {"gasto": SPENDING_SMILE_SLOW_GO, "inicio": 15, "fim": 30},   # anos 15–29
+    "no_go":   {"gasto": SPENDING_SMILE_NO_GO,   "inicio": 30, "fim": 99},   # anos 30+ (saúde domina)
 }
 
-SAUDE_BASE         = 18_000   # R$/ano no FIRE 53 — plano empresarial coletivo PJ (revisado 2026-04-06, HD-multimodel-premissas Bloco A)
+# SAUDE_BASE importado de config (fonte: carteira.md, HD-multimodel-premissas 2026-04-06)
 SAUDE_INFLATOR     = 0.027    # 2.7%/ano real — VCMH IESS média 18 anos (revisado 2026-04-02)
 SAUDE_INFLATOR_CAP = 0.060    # 6.0% cap conservador
 SAUDE_DECAY        = 0.50     # 50% após No-Go (mobilidade cai; cuidado institucional já no no_go base)
@@ -176,12 +180,13 @@ IDADE_FIRE_SAUDE   = 53       # idade no FIRE Day (faixa ANS 49-53 = 3.0×)
 
 GUARDRAILS = [
     # (drawdown_min, drawdown_max, corte_pct, descricao)
-    (0.00, 0.15, 0.00, "Normal — sem corte"),
-    (0.15, 0.25, 0.10, "Corte 10% → R$225k"),
-    (0.25, 0.35, 0.20, "Corte 20% → R$200k"),
-    (0.35, 1.00, 0.28, "Piso — R$180k"),
+    # Fonte: carteira.md §Guardrails aprovados 2026-03-20 (lidos via config.py)
+    (0.00,                GUARDRAILS_BANDA1_MIN, 0.00,                "Normal — sem corte"),
+    (GUARDRAILS_BANDA1_MIN, GUARDRAILS_BANDA2_MIN, GUARDRAILS_CORTE1_PCT, f"Corte {GUARDRAILS_CORTE1_PCT*100:.0f}%"),
+    (GUARDRAILS_BANDA2_MIN, GUARDRAILS_BANDA3_MIN, GUARDRAILS_CORTE2_PCT, f"Corte {GUARDRAILS_CORTE2_PCT*100:.0f}%"),
+    (GUARDRAILS_BANDA3_MIN, 1.00,               GUARDRAILS_PISO_PCT,  "Piso"),
 ]
-GASTO_PISO = 180_000
+# GASTO_PISO importado de config (fonte: carteira.md §Guardrails aprovados 2026-03-20)
 
 # ─── WITHDRAWAL STRATEGIES (fonte: FR-withdrawal-engine 2026-04-07) ──────────
 # Cada strategy é uma função que recebe (gasto_smile, pat, pat_pico, ano, ctx)

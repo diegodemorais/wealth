@@ -310,3 +310,14 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | drift_monitorar_max | 10.0 | drift 5–10pp → MONITORAR |
 | ipca_taxa_monitorar_min | 5.5 | taxa IPCA+ 5.5–6.0% → MONITORAR |
 | ipca_taxa_revisar_max | 5.5 | taxa IPCA+ < 5.5% → REVISAR |
+| spending_smile_go_go | 242000 | FR-spending-smile 2026-03-27 (lifestyle ex-saúde, anos 0–14 pós-FIRE) |
+| spending_smile_slow_go | 200000 | FR-spending-smile 2026-03-27 (lifestyle ex-saúde, anos 15–29 pós-FIRE) |
+| spending_smile_no_go | 187000 | FR-spending-smile 2026-03-27 (lifestyle ex-saúde, anos 30+ pós-FIRE) |
+| guardrails_banda1_min | 0.15 | §Guardrails aprovados 2026-03-20 — limiar banda 1 |
+| guardrails_banda2_min | 0.25 | §Guardrails aprovados 2026-03-20 — limiar banda 2 |
+| guardrails_banda3_min | 0.35 | §Guardrails aprovados 2026-03-20 — limiar piso |
+| guardrails_corte1_pct | 0.10 | §Guardrails aprovados 2026-03-20 — corte 10% (banda 15–25%) |
+| guardrails_corte2_pct | 0.20 | §Guardrails aprovados 2026-03-20 — corte 20% (banda 25–35%) |
+| guardrails_piso_pct | 0.28 | §Guardrails aprovados 2026-03-20 — corte 28% (dd > 35%) |
+| gasto_piso | 180000 | §Guardrails aprovados 2026-03-20 — piso absoluto R$/ano |
+| saude_base | 18000 | HD-multimodel-premissas 2026-04-06 — plano PJ coletivo, FIRE day 53 |
