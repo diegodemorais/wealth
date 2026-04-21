@@ -110,7 +110,7 @@ export function createAttributionChartOption(options: BaseChartOptions) {
   const series = [
     { name: 'Aportes',     data: aportes,   color: CHART_COLORS.accent  },
     { name: 'Equity USD',  data: equityUsd, color: CHART_COLORS.green   },
-    { name: 'RF Local',    data: rf,        color: CHART_COLORS.yellow  },
+    { name: 'Retorno RF Brasil', data: rf,    color: CHART_COLORS.yellow  },
     { name: 'Câmbio/FX',  data: cambio,    color: CHART_COLORS.red     },
   ];
 

@@ -110,8 +110,8 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
       </div>
 
       {/* Table */}
-      <div className="rounded-md border border-border">
-        <Table className="text-xs bg-card">
+      <div className="rounded-md border border-border overflow-x-auto">
+        <Table className="text-xs bg-card" style={{ minWidth: '420px' }}>
           <TableHeader>
             {/* Super-header: "Retirada Anual" spanning gasto columns */}
             <TableRow className="border-b border-border/40 hover:bg-transparent">
@@ -121,22 +121,23 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
                 colSpan={gastos.length}
                 className="px-2 py-1 text-center text-xs font-semibold text-muted-foreground bg-secondary/50 uppercase tracking-wide h-auto"
               >
-                Retirada Anual
+                Retirada Anual <span style={{ textTransform: 'none', fontWeight: 400, opacity: 0.7 }}>(P% sucesso até 90a)</span>
               </TableHead>
             </TableRow>
             <TableRow className="border-b-2 border-border hover:bg-transparent">
               {hasIdades && (
-                <TableHead className="py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto" style={{ width: 48, padding: '6px 8px' }}>
+                <TableHead className="py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto" style={{ width: 48, minWidth: 48, padding: '6px 8px' }}>
                   Idade
                 </TableHead>
               )}
-              <TableHead className="py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto" style={{ width: 56, padding: '6px 8px' }}>
+              <TableHead className="py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto" style={{ width: 56, minWidth: 48, padding: '6px 8px' }}>
                 Pat.
               </TableHead>
               {gastos.map(g => (
                 <TableHead
                   key={g}
                   className="px-2 py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto"
+                  style={{ minWidth: 44 }}
                 >
                   {privacyMode ? '••••' : fmtCompact(g)}
                 </TableHead>

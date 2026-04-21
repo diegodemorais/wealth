@@ -718,6 +718,13 @@ export default function FirePage() {
       {/* 7. Cenário Base vs Aspiracional — collapsed (referência técnica) */}
       <CollapsibleSection id="section-scenario-compare" title={secTitle('fire', 'scenario-compare')} defaultOpen={secOpen('fire', 'scenario-compare')}>
         <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const profiles = (safeData as any)?.fire_matrix?.by_profile ?? [];
+            const atual = profiles.find((p: any) => p.profile === 'atual');
+            const label = 'Solteiro';
+            const gasto = atual?.gasto_anual ?? (safeData as any)?.premissas?.custo_vida_base ?? 250000;
+            return <ScenarioBadge label={label} gasto={gasto} privacyMode={privacyMode} />;
+          })()}
           <FireScenariosTable />
           <div className="src">
             Base: Monte Carlo 10k simulações

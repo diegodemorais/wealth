@@ -96,7 +96,7 @@ export default function PerformancePage() {
             { label: 'Retorno USD', value: attr.retornoUsd, color: 'var(--green)' },
             { label: 'M+ Câmbio', value: attr.cambio, color: attr.cambio != null && attr.cambio >= 0 ? 'var(--green)' : 'var(--red)' },
             { label: 'Câmbio (FX)', value: attr.fx, color: attr.fx != null && attr.fx >= 0 ? 'var(--green)' : 'var(--red)' },
-            { label: 'RF Local', value: attr.rf, color: 'var(--yellow)' },
+            { label: 'Retorno RF Brasil', value: attr.rf, color: 'var(--yellow)' },
           ];
           return (
             <>

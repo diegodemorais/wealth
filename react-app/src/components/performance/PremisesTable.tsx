@@ -27,13 +27,20 @@ export function PremisesTable() {
 
   const aporteData = useMemo(() => {
     if (!pvr?.aporte_mensal?.por_ano_brl) return [];
+    const currentYear = new Date().getFullYear().toString();
+    const currentMonth = new Date().getMonth() + 1; // 1-12
     return Object.entries(pvr.aporte_mensal.por_ano_brl)
       .sort(([a], [b]) => b.localeCompare(a))
-      .map(([year, total]) => ({
-        year,
-        total: total as number,
-        media: (total as number) / 12,
-      }));
+      .map(([year, total]) => {
+        const divisor = year === currentYear ? currentMonth : 12;
+        return {
+          year,
+          total: total as number,
+          media: (total as number) / divisor,
+          isCurrentYear: year === currentYear,
+          mesesYtd: year === currentYear ? currentMonth : 12,
+        };
+      });
   }, [pvr?.aporte_mensal?.por_ano_brl]);
 
   if (!pvr) {
@@ -129,20 +136,22 @@ export function PremisesTable() {
             Aportes por Ano
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '8px' }}>
-            {aporteData.map(({ year, total, media }) => (
+            {aporteData.map(({ year, total, media, isCurrentYear, mesesYtd }) => (
               <div key={year} style={{
                 background: 'var(--bg)',
-                border: '1px solid var(--border)',
+                border: `1px solid ${isCurrentYear ? 'rgba(99,179,237,.4)' : 'var(--border)'}`,
                 borderRadius: '6px',
                 padding: '10px 10px',
                 textAlign: 'center',
               }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, marginBottom: '4px' }}>{year}</div>
+                <div style={{ fontSize: 'var(--text-xs)', color: isCurrentYear ? 'var(--accent)' : 'var(--muted)', fontWeight: 600, marginBottom: '4px' }}>
+                  {year}{isCurrentYear ? ' YTD' : ''}
+                </div>
                 <div style={{ fontSize: '.9rem', fontWeight: 700, color: 'var(--accent)', marginBottom: '2px' }}>
                   {fmtCurrency(total)}
                 </div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                  {fmtCurrency(media)}/mês
+                  {fmtCurrency(media)}/mês{isCurrentYear ? ` (${mesesYtd}m)` : ''}
                 </div>
               </div>
             ))}
