@@ -231,6 +231,7 @@ Notas: MC 10k simulações, seed=42. Pat mediana no FIRE Day: R$11.53M (base) / 
 ## Regras Universais
 
 - Rebalancear SEMPRE via aportes, nunca por venda de ativo com lucro. Por venda, apenas se nao tiver lucro ou se fugir da estrategia da carteira.
+- **Regra de prioridade de aportes (2026-04-21):** aporte em UMA classe por vez — não splittar. Prioridade: maior gap primeiro. Exceção: janela de oportunidade clara (ex: IPCA+ com taxa atrativa) pode sobrepor o maior gap. Decisao de Diego.
 - ETFs exterior = 15% flat sobre qualquer ganho sem isencao (Lei 14.754/2023) - isso pode mudar, sempre verificar
 - UCITS obrigatorio para novos aportes — evitar US-listed por estate tax
 - Nao sugerir: FIIs, bonds internacionais, fundos ativos brasileiros
