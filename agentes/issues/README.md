@@ -57,6 +57,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
+| DEV-premissas-tab | Aba Premissas — Transparência do Plano FIRE (read-only, 2 blocos, ~55 testes) | Dev | 🟢 Baixa | ⏳ Backlog |
 | DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps Críticos (bond pool gauge, trajetória P10/P90, IR latente) | Dev | 🔴 Alta | ⏳ Backlog |
 | XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta | ⏳ Backlog |
 | DEV-code-quality-audit | Code Quality Audit — Hardcoded, Privacy, Hex Colors, Python Tests | Dev | 🟡 Média | ✅ Done 2026-04-21 |

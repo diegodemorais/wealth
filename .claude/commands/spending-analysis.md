@@ -1,25 +1,48 @@
 ---
 name: spending-analysis
-description: Analyzes Diego's personal spending CSV (All-Accounts export) and produces a focused financial report compared to the FIRE model baseline. Use this skill whenever Diego mentions uploading or checking a spending CSV, asks "como foram meus gastos", types "/spending-analysis", asks about specific expense categories (hipoteca, opcionais, saúde, alimentação), or wants to know if spending is on track for FIRE. Trigger even if Diego doesn't mention the CSV explicitly — if the context is about personal expenses, this skill applies.
+description: Analyzes Diego's personal spending CSV (export "All-Accounts" do Actual Budget) and produces a focused financial report compared to the FIRE model baseline. Use this skill whenever Diego mentions uploading or checking a spending CSV, asks "como foram meus gastos", types "/spending-analysis", asks about specific expense categories (hipoteca, opcionais, saúde, alimentação), or wants to know if spending is on track for FIRE. Trigger even if Diego doesn't mention the CSV explicitly — if the context is about personal expenses, this skill applies.
 ---
 
 # Spending Analysis — Análise de Gastos Pessoais
 
 Você é o Head conduzindo a análise mensal de gastos de Diego. O objetivo não é um relatório completo — é um **veredicto claro** mais o contexto mínimo para Diego agir ou não agir.
 
-## Passo 1 — Rodar o script
+## Passo 1 — Rodar o pipeline completo
 
+Execute sempre os três passos em sequência. Nunca pular nenhum.
+
+**1a. Análise + export JSON:**
 ```bash
-python3 /Users/diegodemorais/claude/code/wealth/scripts/spending_analysis.py
+cd /Users/diegodemorais/claude/code/wealth
+python3 scripts/spending_analysis.py --json-output
 ```
 
 O script detecta automaticamente o CSV mais recente em `analysis/`. Para CSV específico:
-
 ```bash
-python3 /Users/diegodemorais/claude/code/wealth/scripts/spending_analysis.py analysis/All-Accounts_XXXXX.csv
+python3 scripts/spending_analysis.py analysis/raw/All-Accounts_XXXXX.csv --json-output
 ```
 
 Leia o output completo antes de escrever qualquer coisa ao Diego.
+
+**1b. Regenerar data.json:**
+```bash
+~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py
+```
+
+**1c. Sincronizar public/ e build:**
+```bash
+cp dashboard/data.json react-app/public/data.json
+cp react-app/public/data.json dash/data.json
+cd react-app && npm run build 2>&1 | tail -20
+```
+
+**1d. Commit + push:**
+```bash
+cd /Users/diegodemorais/claude/code/wealth
+git add dados/spending_summary.json dashboard/data.json react-app/public/data.json dash/data.json dash/index.html react-app/src/config/version.ts dash/version.json
+git commit -m "data: spending analysis update — $(date +%Y-%m-%d)"
+git push origin main
+```
 
 ## Passo 2 — Apresentar em 5 blocos
 
@@ -87,5 +110,5 @@ Se confirmar:
 - **Issue pendente:** `FR-spending-modelo-familia` — MC com R$300k antes do casamento (~Q3/2026)
 - **Neusa Aparecida:** seguro ~R$500/mês (picos = ajuste anual ou parcela extra — normal)
 - **Soraia:** faxineira R$600/mês (Housing & Utilities — fixo)
-- **Gasto C Credito (Bradesco):** cartão Bradesco separado, não é double-count dos gastos Nubank
+- **Gasto C Credito (Bradesco):** cartão Bradesco separado, não é double-count dos demais gastos
 - **Split hipoteca:** "Real Estate" = amortização principal (~R$1.484/mês) + "Mortgage Cost" = juros (~R$2.637/mês) — ambos são cash out real
