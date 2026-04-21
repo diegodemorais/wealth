@@ -1,7 +1,7 @@
 # ETF Candidatos — Radar de Monitoramento
 
 > Criado em: 2026-04-02
-> Última atualização: 2026-04-02
+> Última atualização: 2026-04-20
 > Dono: Factor (02) — revisão mensal no scan RR/Bogleheads
 > Propósito: ETFs fora da carteira com potencial de inclusão futura
 >
@@ -123,23 +123,23 @@
 | **Índice** | MSCI World (sintético — swap) |
 | **Distribuição** | Acc |
 | **Domicílio** | Irlanda |
-| **TER** | 0.20% (confirmado) |
+| **TER** | 0.12% (confirmado abr/2026 — StockAnalysis + justetf. Era 0.20% no lançamento; cortado posterior) |
 | **Data de lançamento** | Março 2024 |
-| **AUM** | USD 1.15B |
-| **Disponível IBKR** | A confirmar (não está na LSE) |
-| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan)
+| **AUM** | USD 1.32B (abr/2026 — StockAnalysis/SIX) |
+| **Disponível IBKR** | A confirmar (listado SIX, Euronext AMS, Xetra — não LSE) |
+| **Última atualização dos dados** | 2026-04-20 (etf-update scan — StockAnalysis/justETF) |
 | **Semelhante a** | SWRD (mesmo índice) |
 | **Tese** | ETFs sintéticos (swap) reinvestem dividendos sem WHT no nível do swap. Para MSCI World: vantagem ~8-12bps/ano vs físico (menor que os 15-25bps do S&P 500 puro — componente EUA já isento de WHT via Irlanda; ganho concentrado em ex-US ~35% do índice). Se confirmar TD < SWRD com margem ≥ 0.08%, seria troca de qualidade no bloco MCW. |
 | **Diferença crítica vs SWRD** | Counterparty risk do swap (mitigado por colateral ISDA 100% marcado a mercado diariamente — risco residual baixo mas não zero para horizonte 14 anos). SWRD físico = sem esse risco. |
 | **Motivo de monitorar** | Estrutura swap entrega vantagem estrutural vs físico em MSCI World. Potencial substituição de SWRD após 12 meses de TD histórico. |
-| **Gatilho para considerar** | TD rolling 12m ACSW < TD SWRD com margem ≥ 0.08% **E** AUM > $1B **E** spread bid-ask < 3bps |
+| **Gatilho para considerar** | TD rolling 12m IWDS < TD SWRD com margem ≥ 0.08% **E** AUM > $1B (já atingido: $1.32B) **E** spread bid-ask < 3bps. Nota: TER agora igual (ambos 0.12%) — toda vantagem vem do TD. |
 | **Como descobrimos** | RR scan 2026-03-26, thread 31781 (UCITS MCW) |
 | **Como monitorar** | justETF para TD histórico · Thread 31781 RR para glimz/afstand commentary |
 | **Frequência** | Revisão em mar/2027 (12 meses pós-lançamento) |
 | **Quem monitora** | Factor (02) |
 | **Classificação** | Sintético (swap) — MCW sem tilt |
 | **Fatores** | — (sem exposição fatorial; vantagem vem da estrutura, não de factor premium) |
-| **Vantagem estrutural** | +8-12bps/ano vs SWRD físico (estimado para MSCI World; +25bps no S&P 500 puro) |
+| **Vantagem estrutural** | TER agora igual ao SWRD (0.12%). Vantagem = apenas WHT savings via swap: +8-12bps/ano vs SWRD físico. Sem custo extra de TER. Avaliação favorável reforçada. |
 | **Tracking Diff.** | Esperado negativo vs benchmark (melhor que o índice) — confirmar após 12 meses |
 | **Sharpe Ratio 3y** | ~igual ao SWRD (mesmo índice) — diferença vem do TD |
 | **Volatilidade 3y** | ~igual ao SWRD |
@@ -160,9 +160,9 @@
 | **Domicílio** | Irlanda |
 | **TER** | 0.22% |
 | **Data de lançamento** | 25 setembro 2024 |
-| **AUM** | ~€398M (2025) |
+| **AUM** | ~€425M (abr/2026 — justETF) |
 | **Disponível IBKR** | A confirmar (ticker LSE = AVGC) |
-| **Última atualização dos dados** | 2026-04-02 (verificação direta justETF + avantisinvestors.com) |
+| **Última atualização dos dados** | 2026-04-20 (etf-update scan — justETF) |
 | **Semelhante a** | SWRD (MCW DM) + AVGS (tilt) — mas desenvolvidos only, sem EM |
 | **⚠️ Atenção** | **NÃO inclui mercados emergentes.** Benchmark = MSCI World IMI (large + mid + small cap desenvolvidos). Para ter EM com Avantis, ainda necessário manter AVEM separado. |
 | **Tese** | ETF all-cap desenvolvidos com tilt value+profitability Avantis em um único ticker. Potencial alternativa ao bloco SWRD+AVGS para a parcela de DM: cobre large+mid+small com tilt deliberado. TER 0.22% mais baixo que AVGS (0.39%). Factor loadings esperados: HML moderado (~0.15-0.20), RMW moderado — entre SWRD (0) e AVGS (~0.35). |
@@ -305,7 +305,7 @@
 | **Data de lançamento** | Novembro 2025 |
 | **AUM** | USD 1.04B (fev/2026 — zero → $1B em 4 meses, captação institucional excepcional) |
 | **Disponível IBKR** | A confirmar |
-| **Última atualização dos dados** | 2026-04-02 (ETF candidatos scan — justETF/MarketScreener) |
+| **Última atualização dos dados** | 2026-04-20 (etf-update scan — confirmado via WebSearch/justETF) |
 | **Semelhante a** | AVGS + AVEM (all-cap global, DM + EM) |
 | **Tese** | DFA é o criador da abordagem fatorial moderna — Fama, French, Harvey estão no advisory board. Eduardo Repetto foi co-CEO da DFA antes de fundar a Avantis. DDGC é o primeiro ETF UCITS da DFA com filosofia "Global Core Equity": cobertura ampla com tilt suave em value, profitability e small. "Core" = menos concentrado que AVGS (pure small-cap value) — mais diversificado mas com menor expected alpha. $1B em 4 meses sinaliza demanda institucional real. |
 | **Diferença crítica vs AVGS+AVEM** | AVGS = pure small-cap value (HML + RMW agressivo). DDGC = "core" = tilt mais suave, cobertura mais ampla incluindo large caps. Expected alpha de DDGC < AVGS, mas tracking error também menor. Para Diego que já tem SWRD (MCW puro), DDGC ficaria num espaço intermediário entre SWRD e AVGS. |
@@ -372,9 +372,9 @@
 | **Domicílio** | Irlanda |
 | **TER** | 0.44% |
 | **Data de lançamento** | Novembro 2025 |
-| **AUM** | USD 148M (mar/2026) |
+| **AUM** | USD 148M (mar/2026 — confirmado abr/2026) |
 | **Disponível IBKR** | Sim |
-| **Última atualização dos dados** | 2026-04-02 (Bogleheads scan + justETF) |
+| **Última atualização dos dados** | 2026-04-20 (etf-update scan — justETF/Cbonds) |
 | **Semelhante a** | AVGS (small-cap value DM puro) |
 | **Tese** | Camada pura small/mid-cap value de mercados desenvolvidos da Dimensional. Universo: MSCI World SMID Value. Filosofia DFA com tilt mais agressivo que DDGC (Core). Posicionamento na família DFA: Core Market (DDUM) < Core Equity (DDGC) < Targeted Value (DDGT) — este é o mais inclinado. Complementa DDGC já monitorado. AUM $148M em 5 meses mostra demanda. |
 | **Diferença crítica vs AVGS** | AVGS = small-cap value global (DM + EM). DDGT = small/mid-cap value DM apenas. TER 0.44% vs AVGS 0.39% — AVGS mais barato. Factor loadings DFA Targeted Value historicamente fortes, mas sem regressão UCITS ainda. |
@@ -511,7 +511,7 @@
 | **Data de lançamento** | Julho 2024 |
 | **AUM** | ~USD 962M (mar/2026) |
 | **Disponível IBKR** | Sim |
-| **Última atualização dos dados** | 2026-04-02 (Oportunidades scan + iShares + justETF) |
+| **Última atualização dos dados** | 2026-04-20 (etf-update scan) |
 | **Semelhante a** | AVEM (EM com tilt) |
 | **Tese** | Active quant EM da BlackRock com multi-factor screen (value + quality + momentum). TER 0.30% vs AVEM 0.36% — mais barato. AUM ~$1B em <2 anos = demanda real. Potencial melhoria sobre AVEM se tilt fatorial for comparável. |
 | **Diferença crítica vs AVEM** | AVEM = gestão ativa Avantis (value + profitability, tilt deliberado). EMEE = quant BlackRock (value + quality + momentum, "enhanced indexing"). Historicamente, ETFs "enhanced active" da BlackRock têm tracking error baixo (~1-2% vs MSCI EM) — sinaliza tilt raso. Se confirmado, alpha esperado < AVEM. |

@@ -93,13 +93,15 @@ JPGL na carteira = **sempre** JPMorgan Global Equity Multi-Factor UCITS ETF (Acc
 
 **AVGS e AVEM são fundos ATIVOS (Avantis), não ETFs indexados passivos.** Tracking difference não se aplica — a métrica relevante é excess return vs benchmark.
 
-| ETF | ISIN Correto | Tipo | TER | AUM |
-|-----|-------------|------|-----|-----|
-| SWRD | IE00BFY0GT14 | Passivo (MSCI World) | 0.12% | ~€5B+ |
-| AVGS | **IE0003R87OG3** | **Ativo** (Avantis Global Small Cap Value) | 0.39% | ~€300M |
-| AVEM | **IE000K975W13** | **Ativo** (Avantis EM) | 0.39% | ~US$155M (baixo — monitorar) |
+| ETF | ISIN Correto | Tipo | TER | AUM | Última atualização |
+|-----|-------------|------|-----|-----|-------------------|
+| SWRD | IE00BFY0GT14 | Passivo (MSCI World) | 0.12% | ~€14.8B | 2026-04-20 |
+| AVGS | **IE0003R87OG3** | **Ativo** (Avantis Global Small Cap Value) | 0.39% | ~€747M | 2026-04-20 |
+| AVEM | **IE000K975W13** | **Ativo** (Avantis EM) | **0.35%** (cortado — era 0.39%) | ~€130M (baixo — monitorar) | 2026-04-20 |
 
-**Atenção AVEM**: AUM US$155M está abaixo do threshold de conforto €300M. Monitorar crescimento. Se AUM < €100M por 2 trimestres: abrir issue sobre substituto (FLXE ou similar).
+**Atenção AVEM**: AUM ~€130M ainda abaixo do threshold de conforto €300M. Em crescimento (era €155M USD / ~€130M EUR). Monitorar. Se AUM < €100M por 2 trimestres: abrir issue sobre substituto.
+
+**Nota TER AVEM (2026-04-20):** TER cortado de 0.39% para 0.35% — confirmado via justETF e múltiplas fontes. Atualizar onde referenciado.
 
 ### Ken French Data — Evidências Empíricas (atualizado 2026-04-01)
 

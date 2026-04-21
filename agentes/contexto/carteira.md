@@ -157,7 +157,7 @@ Retorno real esperado em USD: mediana multi-fonte (AQR, Vanguard VCMM, JPMorgan 
 #### Equity (novos aportes)
 | Custo | Valor | Nota |
 |-------|-------|------|
-| TER | 0.12-0.39% | Variavel por ETF |
+| TER | 0.12-0.35% | Variavel por ETF (AVEM cortou 0.39%→0.35% abr/2026) |
 | Tracking diff | ~0.10% | |
 | WHT dividendos | ~0.22% | 15% sobre ~1.5% yield (peso US) |
 | FX saida (envio BRL p/ comprar ETF) | 1.35% | IOF 1.1% + Okegen 0.25% |
