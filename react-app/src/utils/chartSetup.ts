@@ -874,9 +874,10 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
 
   // Post-FIRE: calculatePostFireTrajectory returns [startValue, year1, year2, ...]
   // Index 0 (startValue) duplicates the last pre-FIRE data point, so we slice it off.
-  // Dates start at fireYear because fireYear itself is the first post-FIRE year in labels.
-  const postFireYearsLabel = postFireYears - 1;  // 36 years of NEW data (year 1..36)
-  const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + i}`);
+  // Dates start at fireYear+1 to avoid duplicating the historical '2040-01'
+  // Array will be: ["2041", "2042", ..., "2075"] (35 years of actual post-FIRE data)
+  const postFireYearsLabel = postFireYears - 1;  // 36 years of trajectory data, slice removes 1 duplicate
+  const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + 1 + i}`);
   const p10PostFull = calculatePostFireTrajectory(p10End as number, 0.03);   // P10: 3% real return
   const p50PostFull = calculatePostFireTrajectory(p50End, 0.0485);           // P50: 4.85% real return
   const p90PostFull = calculatePostFireTrajectory(p90End as number, 0.06);   // P90: 6% real return
@@ -897,16 +898,20 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const allDates = [...dates, ...postFireDates];
   const xAxisLabels = allDates.map(d => {
     if (d.length === 4) {
-      // Post-FIRE annual — show fireYear first, then every 5 years
+      // Post-FIRE annual (2041+) — show every 5 years divisible: 2045, 2050, 2055, ...
       const yr = parseInt(d, 10);
-      if (yr === fireYear || (yr > fireYear && yr % 5 === 0)) {
+      if (yr > fireYear && yr % 5 === 0) {
         return d;
       }
       return '';
     }
     const [yr, mo] = d.split('-');
-    // Monthly — show only January of years divisible by 3 (pre-FIRE)
-    return mo === '01' && parseInt(yr, 10) % 3 === 0 ? yr : '';
+    // Monthly — show only January of years divisible by 3 (pre-FIRE), or final FIRE month (2040-01)
+    if (mo === '01') {
+      const year = parseInt(yr, 10);
+      return year % 3 === 0 || year === fireYear ? yr : '';
+    }
+    return '';
   });
 
   // Mark FIRE date index for vertical line
