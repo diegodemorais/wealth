@@ -794,140 +794,131 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const ft = (data as any)?.fire_trilha ?? {};
 
   // --- Raw monthly data from fire_trilha ---
-  const dates: string[]           = ft.dates          ?? [];
-  const realizadoBrl: (number|null)[] = ft.realizado_brl ?? [];
-  const trilhaBrl: (number|null)[] = ft.trilha_brl    ?? [];
-  const p10Brl: number[]          = ft.trilha_p10_brl ?? [];
-  const p90Brl: number[]          = ft.trilha_p90_brl ?? [];
-  const nHistorico: number        = ft.n_historico     ?? 0;
-  const fireDate: string          = ft.meta_fire_date  ?? '2040-01';
-  const fireYear: number          = parseInt(fireDate.split('-')[0], 10);
+  const rawDates: string[]              = ft.dates          ?? [];
+  const rawRealizadoBrl: (number|null)[] = ft.realizado_brl ?? [];
+  const rawTrilhaBrl: (number|null)[]   = ft.trilha_brl    ?? [];
+  const rawP10Brl: (number|null)[]      = ft.trilha_p10_brl ?? [];
+  const rawP90Brl: (number|null)[]      = ft.trilha_p90_brl ?? [];
+  const nHistorico: number              = ft.n_historico     ?? 0;
+  const fireDate: string                = ft.meta_fire_date  ?? '2040-01';
+  const fireYear: number                = parseInt(fireDate.split('-')[0], 10);
+
+  // --- Downsample pre-FIRE monthly data to annual (January only + last available month per year) ---
+  // This ensures proportional x-axis space for pre-FIRE (~19 pts) vs post-FIRE (~36 pts)
+  const annualIndices: number[] = [];
+  let lastYear = '';
+  for (let i = 0; i < rawDates.length; i++) {
+    const d = rawDates[i];
+    const [yr, mo] = d.split('-');
+    // Always include first and last points of the series
+    if (i === 0 || i === rawDates.length - 1) {
+      annualIndices.push(i);
+      lastYear = yr;
+      continue;
+    }
+    // Include January of each year (annual snapshot)
+    if (mo === '01' && yr !== lastYear) {
+      annualIndices.push(i);
+      lastYear = yr;
+    }
+  }
+  // Deduplicate (first/last might coincide with a January)
+  const uniqueIndices = [...new Set(annualIndices)].sort((a, b) => a - b);
+
+  const dates        = uniqueIndices.map(i => rawDates[i]);
+  const realizadoBrl = uniqueIndices.map(i => rawRealizadoBrl[i] ?? null);
+  const trilhaBrl    = uniqueIndices.map(i => rawTrilhaBrl[i] ?? null);
+  const p10Brl       = uniqueIndices.map(i => rawP10Brl[i] ?? null);
+  const p90Brl       = uniqueIndices.map(i => rawP90Brl[i] ?? null);
+  // nHistorico for annual: count how many downsampled points are historical
+  const nHistAnnual  = uniqueIndices.filter(i => i < nHistorico).length;
 
   // --- Post-FIRE extension with withdrawal model (spending smile) ---
   const postFireYears = 37;  // Age 53 to 90
-  const p10End = p10Brl.at(-1) ?? 0;
-  const p50End = (trilhaBrl[dates.length - 1] ?? 0) as number;
-  const p90End = p90Brl.at(-1) ?? 0;
+  const p10End = rawP10Brl.at(-1) ?? 0;
+  const p50End = (rawTrilhaBrl[rawDates.length - 1] ?? 0) as number;
+  const p90End = rawP90Brl.at(-1) ?? 0;
 
   // Spending smile: Read from data, fallback to conservative defaults
-  // Source: data.spendingSmile from Python data generation (config.py)
   const smileData = (data as any)?.spendingSmile ?? {
     go_go: { gasto: 242_000 },
     slow_go: { gasto: 200_000 },
     no_go: { gasto: 187_000 },
   };
 
-  // Healthcare costs: Sourced from fire_montecarlo.py assumptions
-  // VCMH (Valor de Custeio da Assistência Médico-Hospitalar) grows 2.7%/year (fonte: IESS 18-year historical)
-  // Decays 50% after No-Go phase (80 years) due to reduced mobility, institutional care already in baseline
-  // ANS age-bracket multipliers: 49-53 = 3.0x, 54-59 = 3.5x, 60+ = 4.0x+ (RN 63/2003)
-  // For chart simplification, use linear interpolation as proxy for ANS brackets
+  // Healthcare costs: VCMH grows 2.7%/year real, ANS age-bracket multipliers
   const saudeBase = (data as any)?.saude_base ?? 18_000;
-  const SAUDE_INFLATOR = 0.027;    // 2.7% real growth/year
-  const SAUDE_DECAY_THRESHOLD = 30; // At age 80 (year 27-30 post-FIRE), decay starts
-  const SAUDE_DECAY = 0.50;        // 50% reduction after No-Go
+  const SAUDE_INFLATOR = 0.027;
+  const SAUDE_DECAY_THRESHOLD = 30;
+  const SAUDE_DECAY = 0.50;
 
-  // Approximate ANS age-bracket multiplier (IBNR 63/2003 faixas etárias)
-  // Age 49-53 (start): ~3.0x; Age 60+: ~4.0x. Use linear approximation.
   const ansMultiplier = (yearPostFire: number): number => {
-    // Fire at age 53, so year 0 = age 53, year 7 = age 60
-    const fireAge = 53;
-    const currentAge = fireAge + yearPostFire;
-
-    if (currentAge < 54) return 3.0;      // 49-53
-    if (currentAge < 60) return 3.0 + (currentAge - 54) * (0.5 / 6); // 54-59: linear ramp 3.0→3.5
-    return 4.0;                           // 60+
+    const currentAge = 53 + yearPostFire;
+    if (currentAge < 54) return 3.0;
+    if (currentAge < 60) return 3.0 + (currentAge - 54) * (0.5 / 6);
+    return 4.0;
   };
 
   const getSpendingByYear = (yearPostFire: number): number => {
-    // Base spending from smile
     let gastoBase = smileData.no_go?.gasto ?? 187_000;
-    if (yearPostFire < 15) gastoBase = smileData.go_go?.gasto ?? 242_000;      // Go-Go: 0-14
-    else if (yearPostFire < 30) gastoBase = smileData.slow_go?.gasto ?? 200_000; // Slow-Go: 15-29
+    if (yearPostFire < 15) gastoBase = smileData.go_go?.gasto ?? 242_000;
+    else if (yearPostFire < 30) gastoBase = smileData.slow_go?.gasto ?? 200_000;
 
-    // Healthcare: VCMH grows 2.7%/year + ANS age-bracket multiplier
     let saudeVcmh = saudeBase * Math.pow(1 + SAUDE_INFLATOR, yearPostFire);
     let saude = saudeVcmh * ansMultiplier(yearPostFire);
-
-    // Decay 50% after No-Go (year 30+, age 80+): mobility ↓, institutional care already in baseline
-    if (yearPostFire >= SAUDE_DECAY_THRESHOLD) {
-      saude *= SAUDE_DECAY;
-    }
+    if (yearPostFire >= SAUDE_DECAY_THRESHOLD) saude *= SAUDE_DECAY;
 
     return gastoBase + saude;
   };
 
-  // Calculate post-FIRE trajectories with withdrawal
-  // Formula: value_next = value_current * (1 + real_return) - spending_real
-  // Return rate is REAL (4.85%), spending is in R$ reais (constant 2026) — no additional inflation adjustment needed
+  // Calculate post-FIRE trajectories with withdrawal (real returns, real spending)
   const calculatePostFireTrajectory = (startValue: number, returnRate: number): number[] => {
     const trajectory = [startValue];
     let value = startValue;
     for (let i = 1; i < postFireYears; i++) {
       const spending = getSpendingByYear(i);
-      // Apply real return, then withdraw. Both values are in real terms (constant 2026 R$)
       value = value * (1 + returnRate) - spending;
-      trajectory.push(Math.max(value, 0));  // Floor at zero (portfolio depletion)
+      trajectory.push(Math.max(value, 0));
     }
     return trajectory;
   };
 
-  // Post-FIRE: calculatePostFireTrajectory returns [startValue, year1, year2, ...]
-  // Index 0 (startValue) duplicates the last pre-FIRE data point, so we slice it off.
-  // Dates start at fireYear+1 to avoid duplicating the historical '2040-01'
-  // Array will be: ["2041", "2042", ..., "2075"] (35 years of actual post-FIRE data)
-  const postFireYearsLabel = postFireYears - 1;  // 36 years of trajectory data, slice removes 1 duplicate
+  // Post-FIRE trajectories: slice off index 0 (duplicate of last pre-FIRE value)
+  const postFireYearsLabel = postFireYears - 1;  // 36 years of post-FIRE data
   const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + 1 + i}`);
-  const p10PostFull = calculatePostFireTrajectory(p10End as number, 0.03);   // P10: 3% real return
-  const p50PostFull = calculatePostFireTrajectory(p50End, 0.0485);           // P50: 4.85% real return
-  const p90PostFull = calculatePostFireTrajectory(p90End as number, 0.06);   // P90: 6% real return
+  // Post-FIRE return rates: blended portfolio (glide path ~50% equity + 40% bonds + 10% crypto)
+  // Not pure equity — using realistic blended returns post-retirement
+  const p10PostFull = calculatePostFireTrajectory(p10End as number, 0.025);  // P10: 2.5% real (stress blended)
+  const p50PostFull = calculatePostFireTrajectory(p50End, 0.035);            // P50: 3.5% real (blended base)
+  const p90PostFull = calculatePostFireTrajectory(p90End as number, 0.045);  // P90: 4.5% real (blended favorable)
 
-  // Skip index 0 (duplicate of last pre-FIRE value)
   const p10Post = p10PostFull.slice(1);
   const p50Post = p50PostFull.slice(1);
   const p90Post = p90PostFull.slice(1);
 
-  // --- Align MC bands: p10Brl/p90Brl already have leading nulls for historical portion ---
-  // Do NOT prepend additional nulls — they are already aligned with dates[].
-  const p10Aligned: (number|null)[] = [...p10Brl, ...p10Post];
-  const p90Aligned: (number|null)[] = [...p90Brl, ...p90Post];
-  const p50Full: (number|null)[] = [...trilhaBrl, ...p50Post];
+  // --- Assemble final arrays: annual pre-FIRE + annual post-FIRE ---
+  const p10Aligned: (number|null)[]    = [...p10Brl, ...p10Post];
+  const p90Aligned: (number|null)[]    = [...p90Brl, ...p90Post];
+  const p50Full: (number|null)[]       = [...trilhaBrl, ...p50Post];
   const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYearsLabel).fill(null)];
 
-  // --- X-axis: monthly dates + post-FIRE years; show label every 5 years for legibility ---
   const allDates = [...dates, ...postFireDates];
 
-  // DEBUG: Log data alignment for troubleshooting
-  if (typeof window !== 'undefined') {
-    console.log('[NetWorthProjection] Data alignment check:', {
-      dates_count: dates.length,
-      postFireDates_count: postFireDates.length,
-      allDates_count: allDates.length,
-      p50Full_count: p50Full.length,
-      p10Aligned_count: p10Aligned.length,
-      p90Aligned_count: p90Aligned.length,
-      fireYear,
-      p50_last_value: p50Full[p50Full.length - 1],
-      p50_value_at_225: p50Full[225],
-      p50_value_at_226: p50Full[226],
-    });
-  }
-
+  // X-axis labels: show year labels at strategic intervals
   const xAxisLabels = allDates.map(d => {
     if (d.length === 4) {
-      // Post-FIRE annual (2041+) — show every 5 years divisible: 2045, 2050, 2055, ...
+      // Post-FIRE annual dates: show every 5 years
       const yr = parseInt(d, 10);
-      if (yr > fireYear && yr % 5 === 0) {
-        return d;
-      }
-      return '';
+      return yr % 5 === 0 ? d : '';
     }
     const [yr, mo] = d.split('-');
-    // Monthly — show only January of years divisible by 3 (pre-FIRE), or final FIRE month (2040-01)
+    const year = parseInt(yr, 10);
+    // Pre-FIRE: show January of years divisible by 3, or fire year
     if (mo === '01') {
-      const year = parseInt(yr, 10);
       return year % 3 === 0 || year === fireYear ? yr : '';
     }
+    // First point (e.g., 2021-04) — show the year
+    if (d === dates[0]) return yr;
     return '';
   });
 
@@ -967,7 +958,8 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       axisLabel: {
         color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         fontSize: 11,
-        hideOverlap: false,  // Allow overlapping if needed — showMinLabel/showMaxLabel should handle visibility
+        interval: 0,  // Show ALL labels — most are '' so only our chosen years render
+        hideOverlap: true,  // Let ECharts hide if they still overlap after interval:0
         showMinLabel: true,
         showMaxLabel: true,
       },
