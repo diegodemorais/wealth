@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-21T21:48:49",
-  "_generated_brt": "2026-04-21T21:48:49-03:00",
+  "_generated": "2026-04-21T21:56:47",
+  "_generated_brt": "2026-04-21T21:56:47-03:00",
   "date": "2026-04-21",
   "timestamps": {
     "posicoes_ibkr": "2026-04-07",
@@ -2082,7 +2082,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -2093,7 +2093,7 @@
       307.38,
       303.32,
       279.62,
-      243.31,
+      243.3,
       268.68,
       281.54,
       289.34,
@@ -2434,23 +2434,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 76334.94,
+      "btc_atual_usd": 76302.27,
       "hodl11_brl_atual": 107080,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.05,
-          "valor_fire_brl": 112221
+          "valor_fire_brl": 112269
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.28,
-          "valor_fire_brl": 350690
+          "valor_fire_brl": 350840
         },
         "bull": {
           "btc_target_usd": 500000,
           "upside_factor": 6.55,
-          "valor_fire_brl": 701380
+          "valor_fire_brl": 701681
         }
       }
     }
@@ -3092,7 +3092,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 85.7,
-    "bitcoin_usd": 76334.94,
+    "bitcoin_usd": 76302.27,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -3110,9 +3110,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.982,
-    "btc_usd": 76334.94,
+    "btc_usd": 76302.27,
     "cambio_mtd_pct": -3.37,
-    "btc_mtd_pct": 6.2,
+    "btc_mtd_pct": 6.16,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -3672,10 +3672,10 @@
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 452124.7,
     "terreno_brl": 150000.0,
-    "capital_humano_vp": 4914000.0,
+    "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 9375362.3,
+    "total_brl": 7590384.3,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
@@ -5362,7 +5362,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-21T21:48:41",
+    "_generated": "2026-04-21T21:56:40",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",

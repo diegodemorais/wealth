@@ -162,11 +162,16 @@ def get_passivos(tax_data=None):
     }
 
 
-def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict) -> dict:
+def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict, vp_capital_humano: float = None) -> dict:
     """Retorna balanço holístico expandido (F1 DEV-boldin-dashboard).
 
     Inclui ativos ilíquidos (imóvel equity, terreno, capital humano, INSS VP).
     Fonte única: hipoteca_sac.json + config.py + dashboard_state.json.
+
+    Args:
+        total_financeiro_brl: patrimônio financeiro atual
+        state: estado persistente
+        vp_capital_humano: VP de capital humano (do cálculo Boldin-style). Se None, usa fallback.
     """
     # Imóvel: valor de mercado - saldo devedor
     imovel_valor_mercado = 0.0
@@ -181,9 +186,15 @@ def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict) -> di
         except Exception:
             imovel_equity_brl = 367_875  # fallback: 820k - 452k
 
-    # Capital humano: VP de renda futura (renda mensal × 12 × anos_ate_fire × 0.65)
-    anos_ate_fire = max(0, IDADE_CENARIO_BASE - IDADE_ATUAL)
-    capital_humano_vp = RENDA_ESTIMADA * 12 * anos_ate_fire * 0.65
+    # Capital humano: usar valor correto do cálculo Boldin-style se disponível
+    if vp_capital_humano is None or vp_capital_humano <= 0:
+        # Fallback: fórmula antiga (menos precisa)
+        anos_ate_fire = max(0, IDADE_CENARIO_BASE - IDADE_ATUAL)
+        vp_capital_humano = RENDA_ESTIMADA * 12 * anos_ate_fire * 0.65
+    else:
+        anos_ate_fire = max(0, IDADE_CENARIO_BASE - IDADE_ATUAL)
+
+    vp_capital_humano = float(vp_capital_humano or 0)
 
     # INSS: VP já calculado em fire_montecarlo ou fallback carteira.md
     inss_pv_brl = state.get("fire", {}).get("inss_pv_brl", 283_000)
@@ -193,7 +204,7 @@ def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict) -> di
         total_financeiro_brl
         + imovel_equity_brl
         + float(TERRENO_BRL)
-        + capital_humano_vp
+        + vp_capital_humano
         + inss_pv_brl
     )
 
@@ -203,7 +214,7 @@ def compute_patrimonio_holistico(total_financeiro_brl: float, state: dict) -> di
         "imovel_valor_mercado": round(imovel_valor_mercado, 2),
         "saldo_devedor_brl":    round(saldo_devedor_brl, 2),
         "terreno_brl":          float(TERRENO_BRL),
-        "capital_humano_vp":    round(capital_humano_vp, 2),
+        "capital_humano_vp":    round(vp_capital_humano, 2),
         "anos_ate_fire":        anos_ate_fire,
         "inss_pv_brl":          round(inss_pv_brl, 2),
         "total_brl":            round(total_holistico, 2),
@@ -3023,7 +3034,7 @@ def main():
     passivos_data = get_passivos(tax_data)
 
     # Patrimônio holístico (F1 DEV-boldin-dashboard)
-    patrimonio_holistico = compute_patrimonio_holistico(total_brl, state)
+    # Calculado abaixo após fire_trilha_data estar disponível (junto com human_capital_data)
 
     # Premissas — garantir patrimônio atual
     premissas = {
@@ -3576,6 +3587,15 @@ def main():
     fire_swr_pct_data   = _load_json_safe(FIRE_SWR_PCT_PATH,     "fire_swr_percentis")
     fire_aporte_data    = _load_json_safe(FIRE_APORTE_SENS_PATH, "fire_aporte_sensitivity")
     fire_trilha_data    = _load_json_safe(FIRE_TRILHA_PATH,      "fire_trilha")
+
+    # Human Capital Crossover (necessita fire_trilha_data e premissas_raw)
+    # Calcula VP do capital humano usando metodologia Boldin-style para uso no Balanço Holístico
+    human_capital_data = _compute_human_capital_crossover(fire_trilha_data, premissas_raw)
+    vp_capital_humano_correto = human_capital_data.get("pontos", [{}])[0].get("vp_capital_humano", None)
+
+    # Agora que fire_trilha_data está definido, calcular patrimônio holístico com valor correto de HC
+    patrimonio_holistico = compute_patrimonio_holistico(total_brl, state, vp_capital_humano_correto)
+
     drawdown_hist_data  = _load_json_safe(DRAWDOWN_HIST_PATH,    "drawdown_history")
     drawdown_evts_data  = _load_json_safe(DRAWDOWN_EVENTS_PATH,  "drawdown_events")
     # Merge eventos na estrutura drawdown_history (alimenta drawdownCrisesTable no N1)
@@ -3734,7 +3754,8 @@ def main():
         },
 
         # Human Capital Crossover — VP capital humano vs patrimônio financeiro
-        "human_capital": _compute_human_capital_crossover(fire_trilha_data, premissas),
+        # (já calculado acima para uso no patrimônio holístico)
+        "human_capital": human_capital_data,
     }
 
     OUT_PATH.parent.mkdir(exist_ok=True)

@@ -316,6 +316,9 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | ipca_taxa_revisar_max | 5.5 | taxa IPCA+ < 5.5% → REVISAR |
 | spending_smile_go_go | 242000 | FR-spending-smile 2026-03-27 (lifestyle ex-saúde, anos 0–14 pós-FIRE) |
 | spending_smile_slow_go | 200000 | FR-spending-smile 2026-03-27 (lifestyle ex-saúde, anos 15–29 pós-FIRE) |
+| taxa_desconto_capital_humano | 0.06 | 6.0% real a.a. (IPCA+, não equity premium) — metodologia Bodie/Merton |
+| crescimento_renda_capital_humano | 0.02 | 2.0% real a.a. inflação esperada |
+| metodo_capital_humano | boldin-mês-mês | VP de aportes mensais (renda - custo_vida), descapitalizados a 6% real, até FIRE Day |
 | spending_smile_no_go | 187000 | FR-spending-smile 2026-03-27 (lifestyle ex-saúde, anos 30+ pós-FIRE) |
 | guardrails_banda1_min | 0.15 | §Guardrails aprovados 2026-03-20 — limiar banda 1 |
 | guardrails_banda2_min | 0.25 | §Guardrails aprovados 2026-03-20 — limiar banda 2 |
