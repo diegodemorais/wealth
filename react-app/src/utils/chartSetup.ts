@@ -874,9 +874,9 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
 
   // Post-FIRE: calculatePostFireTrajectory returns [startValue, year1, year2, ...]
   // Index 0 (startValue) duplicates the last pre-FIRE data point, so we slice it off.
-  // Dates start at fireYear+1 because fireYear itself is already the last pre-FIRE date.
+  // Dates start at fireYear because fireYear itself is the first post-FIRE year in labels.
   const postFireYearsLabel = postFireYears - 1;  // 36 years of NEW data (year 1..36)
-  const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + i + 1}`);
+  const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + i}`);
   const p10PostFull = calculatePostFireTrajectory(p10End as number, 0.03);   // P10: 3% real return
   const p50PostFull = calculatePostFireTrajectory(p50End, 0.0485);           // P50: 4.85% real return
   const p90PostFull = calculatePostFireTrajectory(p90End as number, 0.06);   // P90: 6% real return
