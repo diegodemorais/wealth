@@ -67,18 +67,42 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
 
     const years = buildYears(2026, 2080);
 
-    const p10Map = trilha ? collapseToYearMap(trilha.dates ?? [], trilha.trilha_p10_brl ?? []) : new Map<number, number>();
-    const p50Map = trilha ? collapseToYearMap(trilha.dates ?? [], trilha.trilha_brl ?? []) : new Map<number, number>();
-    const p90Map = trilha ? collapseToYearMap(trilha.dates ?? [], trilha.trilha_p90_brl ?? []) : new Map<number, number>();
+    // ── DOWNSAMPLING: 226 monthly → ~20 annual pre-FIRE ──
+    // Ensures proportional representation of post-FIRE period
+    const downsampledDates: string[] = [];
+    const downsampledP10: number[] = [];
+    const downsampledP50: number[] = [];
+    const downsampledP90: number[] = [];
+
+    let currentYear: string | null = null;
+    const rawDates = trilha?.dates ?? [];
+    const rawP10 = trilha?.trilha_p10_brl ?? [];
+    const rawP50 = trilha?.trilha_brl ?? [];
+    const rawP90 = trilha?.trilha_p90_brl ?? [];
+
+    for (let i = 0; i < rawDates.length; i++) {
+      const year = rawDates[i].slice(0, 4);
+      if (year !== currentYear) {
+        downsampledDates.push(rawDates[i]);
+        downsampledP10.push(rawP10[i]);
+        downsampledP50.push(rawP50[i]);
+        downsampledP90.push(rawP90[i]);
+        currentYear = year;
+      }
+    }
+
+    const p10Map = downsampledDates.length > 0 ? collapseToYearMap(downsampledDates, downsampledP10) : new Map<number, number>();
+    const p50Map = downsampledDates.length > 0 ? collapseToYearMap(downsampledDates, downsampledP50) : new Map<number, number>();
+    const p90Map = downsampledDates.length > 0 ? collapseToYearMap(downsampledDates, downsampledP90) : new Map<number, number>();
 
     // Get last known value for extrapolation after trilha ends
-    const lastYear = trilha?.dates?.length ? parseInt(trilha.dates[trilha.dates.length - 1].slice(0, 4), 10) : 2040;
+    const lastYear = downsampledDates.length ? parseInt(downsampledDates[downsampledDates.length - 1].slice(0, 4), 10) : 2040;
     const lastP10 = p10Map.get(lastYear) ?? 0;
     const lastP50 = p50Map.get(lastYear) ?? 0;
     const lastP90 = p90Map.get(lastYear) ?? 0;
 
-    // Extrapolate beyond trilha with SWR drawdown model
-    const RETORNO_REAL: number = premissas.retorno_equity_base ?? 0.0485;
+    // Extrapolate beyond trilha with SWR drawdown model (blended post-FIRE returns)
+    const RETORNO_REAL: number = 0.035;  // Blended portfolio: 2.5-4.5% (post-FIRE glide path, not pure equity)
 
     function getPatrimonio(map: Map<number, number>, last: number, year: number): number {
       if (map.has(year)) return map.get(year)!;

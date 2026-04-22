@@ -29,9 +29,36 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       return { title: { text: 'Sem dados de trilha FIRE', textStyle: { color: '#94a3b8' } } };
     }
 
+    // ── DOWNSAMPLING: 226 monthly → ~20 annual pre-FIRE + keep post-FIRE annual ──
+    // This ensures proportional x-axis space (prevent 226 vs 36 squeeze)
+    const downsampledDates: string[] = [];
+    const downsampledRealizado: (number | null)[] = [];
+    const downsampledP10: number[] = [];
+    const downsampledP50: number[] = [];
+    const downsampledP90: number[] = [];
+
+    let currentYear: string | null = null;
+    for (let i = 0; i < rawDates.length; i++) {
+      const year = rawDates[i].slice(0, 4);
+      if (year !== currentYear) {
+        downsampledDates.push(rawDates[i]);
+        downsampledRealizado.push(realizadoBrl[i]);
+        downsampledP10.push(trilhaP10[i]);
+        downsampledP50.push(trilhaBrl[i]);
+        downsampledP90.push(trilhaP90[i]);
+        currentYear = year;
+      }
+    }
+
     // P10/P90 only for future dates (nulls in historical range)
-    const p10Data = trilhaP10.map((v, i) => (i >= nHistorico ? v : null));
-    const p90Data = trilhaP90.map((v, i) => (i >= nHistorico ? v : null));
+    const p10Data = downsampledP10.map((v, i) => {
+      const origIdx = rawDates.findIndex(d => d.startsWith(downsampledDates[i].slice(0, 4)));
+      return origIdx >= nHistorico ? v : null;
+    });
+    const p90Data = downsampledP90.map((v, i) => {
+      const origIdx = rawDates.findIndex(d => d.startsWith(downsampledDates[i].slice(0, 4)));
+      return origIdx >= nHistorico ? v : null;
+    });
 
     // Band fill series: floor = P10, gap = P90-P10 (stacked)
     const bandGap = p10Data.map((p10, i) => {
@@ -39,7 +66,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       return p10 != null && p90 != null ? p90 - p10 : null;
     });
 
-    const metaLine = rawDates.map(() => metaFireBrl);
+    const metaLine = downsampledDates.map(() => metaFireBrl);
     const fmt = (v: number) => privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
 
     return {
@@ -77,15 +104,15 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
       grid: { left: 70, right: 20, top: 44, bottom: 30, containLabel: true },
       xAxis: {
         type: 'category' as const,
-        data: rawDates,
+        data: downsampledDates,
         axisLine: EC_AXIS_LINE,
         axisTick: { show: false },
         axisLabel: {
           color: privacyMode ? 'transparent' : EC.muted,
           fontSize: 10,
-          interval: (idx: number, val: string) => idx === 0 || val.endsWith('-01'),
+          interval: 0,
           formatter: (val: string) => val.slice(0, 4),
-          hideOverlap: true,
+          hideOverlap: false,
         },
       },
       yAxis: {
@@ -132,7 +159,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
         {
           name: 'P50',
           type: 'line' as const,
-          data: trilhaBrl,
+          data: downsampledP50,
           smooth: true,
           itemStyle: { color: EC.green },
           lineStyle: { width: 2, color: EC.green, type: 'dashed' as const },
@@ -150,7 +177,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
         {
           name: 'Realizado',
           type: 'line' as const,
-          data: realizadoBrl,
+          data: downsampledRealizado,
           smooth: true,
           itemStyle: { color: EC.accent },
           lineStyle: { width: 2.5, color: EC.accent },
