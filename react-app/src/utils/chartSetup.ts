@@ -803,17 +803,39 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const fireDate: string          = ft.meta_fire_date  ?? '2040-01';
   const fireYear: number          = parseInt(fireDate.split('-')[0], 10);
 
-  // --- Post-FIRE extension (15 years after FIRE date) ---
-  const postFireYears = 15;
-  // p10Brl / p90Brl already contain n_historico leading nulls — use .at(-1) directly
+  // --- Post-FIRE extension with withdrawal model (spending smile) ---
+  const postFireYears = 37;  // Age 53 to 90
   const p10End = p10Brl.at(-1) ?? 0;
   const p50End = (trilhaBrl[dates.length - 1] ?? 0) as number;
   const p90End = p90Brl.at(-1) ?? 0;
 
+  // Spending smile: Go-Go (0-15y: R$280k), Slow-Go (15-30y: R$225k), No-Go (30+: R$285k)
+  // Plus health costs, guardrails applied in actual MC — here use baseline
+  const getSpendingByYear = (yearPostFire: number): number => {
+    if (yearPostFire < 15) return 280_000;      // Go-Go
+    if (yearPostFire < 30) return 225_000;      // Slow-Go
+    return 285_000;                             // No-Go
+  };
+
+  // Calculate post-FIRE trajectories with withdrawal
+  // Formula: value_next = value_current * (1 + return_rate) - spending - inflation_adjustment
+  const ipca = 0.04;  // Average inflation assumption
+  const calculatePostFireTrajectory = (startValue: number, returnRate: number): number[] => {
+    const trajectory = [startValue];
+    let value = startValue;
+    for (let i = 1; i < postFireYears; i++) {
+      const spending = getSpendingByYear(i);
+      // Apply return, then withdraw and adjust remaining for inflation
+      value = value * (1 + returnRate) - (spending * (1 + ipca) ** i);
+      trajectory.push(Math.max(value, 0));  // Floor at zero (portfolio depletion)
+    }
+    return trajectory;
+  };
+
   const postFireDates = Array.from({ length: postFireYears }, (_, i) => `${fireYear + i + 1}`);
-  const p10Post = Array.from({ length: postFireYears }, (_, i) => (p10End as number) * Math.pow(1 + 0.03,   i + 1));
-  const p50Post = Array.from({ length: postFireYears }, (_, i) => p50End * Math.pow(1 + 0.0485, i + 1));
-  const p90Post = Array.from({ length: postFireYears }, (_, i) => (p90End as number) * Math.pow(1 + 0.06,   i + 1));
+  const p10Post = calculatePostFireTrajectory(p10End as number, 0.03);   // P10: 3% real return
+  const p50Post = calculatePostFireTrajectory(p50End, 0.0485);           // P50: 4.85% real return
+  const p90Post = calculatePostFireTrajectory(p90End as number, 0.06);   // P90: 6% real return
 
   // --- Align MC bands: p10Brl/p90Brl already have leading nulls for historical portion ---
   // Do NOT prepend additional nulls — they are already aligned with dates[].
@@ -822,16 +844,17 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const p50Full: (number|null)[] = [...trilhaBrl, ...p50Post];
   const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYears).fill(null)];
 
-  // --- X-axis: monthly dates + post-FIRE years; show label every 3 years for legibility ---
+  // --- X-axis: monthly dates + post-FIRE years; show label every 2-3 years for legibility ---
   const allDates = [...dates, ...postFireDates];
   const xAxisLabels = allDates.map(d => {
     if (d.length === 4) {
-      // Post-FIRE annual — show every 5 years
+      // Post-FIRE annual — show every 2 years (step through with better coverage)
       const yr = parseInt(d, 10);
-      return yr % 5 === 0 ? d : '';
+      const stepSince2041 = (yr - 2041) % 2;
+      return stepSince2041 === 0 && yr >= 2041 ? d : '';
     }
     const [yr, mo] = d.split('-');
-    // Monthly — show only January of years divisible by 3
+    // Monthly — show only January of years divisible by 3 (pre-FIRE)
     return mo === '01' && parseInt(yr, 10) % 3 === 0 ? yr : '';
   });
 
