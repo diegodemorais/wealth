@@ -136,6 +136,7 @@ export default function HomePage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3.5">
         <MetricCard
           accent
+          accentLeftBorder
           label="P(Cenário Aspiracional)"
           value={d.pfireAspiracional != null ? `${d.pfireAspiracional.toFixed(1)}%` : '—'}
           sub={
@@ -146,6 +147,7 @@ export default function HomePage() {
         />
         <MetricCard
           accent
+          accentLeftBorder
           label="Drift Máximo"
           value={`${maxDrift.toFixed(2)}pp`}
           valueColor="text-text"
