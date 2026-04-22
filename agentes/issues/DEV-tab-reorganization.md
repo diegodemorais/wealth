@@ -3,7 +3,8 @@
 | ID | DEV-tab-reorganization |
 | Título | Reorganização completa das abas — agrupamento, rename, reorder |
 | Dono | Dev |
-| Status | 🔴 Doing |
+| Status | ✅ Done |
+| Concluída | 2026-04-22 |
 | Prioridade | 🔴 Alta |
 | Criada | 2026-04-22 |
 
