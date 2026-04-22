@@ -22,16 +22,28 @@ export function SimulationTrajectories() {
     const p50 = mcResults.percentiles.p50 || [];
     const p90 = mcResults.percentiles.p90 || [];
 
-    // Usar comprimento real dos dados do MC (horizonte até 90a)
-    const years = Math.max(p10.length, p50.length, p90.length) || 37;
-    const labels = Array.from({ length: years }, (_, i) => `Y${i + 1}`);
+    // ── Generate calendar years: FIRE at 2039 (age 53), show through age 90 (2076) ──
+    const fireYear = 2039;
+    const currentYear = 2026;
+    const yearsToDisplay = Math.max(p10.length, p50.length, p90.length, 37);
+    const yearsArray = Array.from({ length: yearsToDisplay }, (_, i) => fireYear + i);
+
+    // ── Downsampling: show every 5th year (aligns with other projection charts) ──
+    // This keeps ~16 labels visible (2039-2076)
+    const labelIndices = new Set<number>();
+    for (let i = 0; i < yearsArray.length; i++) {
+      if (i % 5 === 0) labelIndices.add(i);
+    }
+    if (yearsArray.length > 0) labelIndices.add(yearsArray.length - 1);  // Always show last year
+
+    const labels = yearsArray.map((yr, idx) => (labelIndices.has(idx) ? yr.toString() : ''));
 
     return {
       labels,
       datasets: [
         {
           label: 'P10 (Conservative)',
-          data: p10.slice(0, years),
+          data: p10.slice(0, yearsToDisplay),
           borderColor: '#ef4444',
           borderWidth: 2,
           borderDash: [5, 5],
@@ -41,7 +53,7 @@ export function SimulationTrajectories() {
         },
         {
           label: 'P50 (Median)',
-          data: p50.slice(0, years),
+          data: p50.slice(0, yearsToDisplay),
           borderColor: EC.accent,
           backgroundColor: 'rgba(88, 166, 255, 0.15)',
           borderWidth: 3,
@@ -51,7 +63,7 @@ export function SimulationTrajectories() {
         },
         {
           label: 'P90 (Optimistic)',
-          data: p90.slice(0, years),
+          data: p90.slice(0, yearsToDisplay),
           borderColor: '#22c55e',
           borderWidth: 2,
           borderDash: [5, 5],
