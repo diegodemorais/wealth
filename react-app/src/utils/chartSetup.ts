@@ -967,7 +967,7 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       axisLabel: {
         color: privacyMode ? 'transparent' : CHART_COLORS.muted,
         fontSize: 11,
-        hideOverlap: true,
+        hideOverlap: false,  // Allow overlapping if needed — showMinLabel/showMaxLabel should handle visibility
         showMinLabel: true,
         showMaxLabel: true,
       },
