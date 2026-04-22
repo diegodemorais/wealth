@@ -1,117 +1,97 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+import { EChart } from '@/components/primitives/EChart';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { useUiStore } from '@/store/uiStore';
-import { EC } from '@/utils/echarts-theme';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export function SimulationTrajectories() {
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { privacyMode } = useEChartsPrivacy();
+  const chartRef = useChartResize();
   const mcResults = useDashboardStore(s => s.mcResults);
 
-  const chartData = useMemo(() => {
-    if (!mcResults || !mcResults.percentiles) {
-      return {
-        labels: [],
-        datasets: [],
-      };
-    }
+  const option = useMemo(() => {
+    if (!mcResults || !mcResults.percentiles) return {};
 
     const p10 = mcResults.percentiles.p10 || [];
     const p50 = mcResults.percentiles.p50 || [];
     const p90 = mcResults.percentiles.p90 || [];
 
-    // ── Generate calendar years: FIRE at 2039 (age 53), show through age 90 (2076) ──
     const fireYear = 2039;
-    const currentYear = 2026;
     const yearsToDisplay = Math.max(p10.length, p50.length, p90.length, 37);
-    const yearsArray = Array.from({ length: yearsToDisplay }, (_, i) => fireYear + i);
+    const xLabels = Array.from({ length: yearsToDisplay }, (_, i) => (fireYear + i).toString());
 
-    // ── Downsampling: show every 5th year (aligns with other projection charts) ──
-    // This keeps ~16 labels visible (2039-2076)
-    const labelIndices = new Set<number>();
-    for (let i = 0; i < yearsArray.length; i++) {
-      if (i % 5 === 0) labelIndices.add(i);
-    }
-    if (yearsArray.length > 0) labelIndices.add(yearsArray.length - 1);  // Always show last year
-
-    const labels = yearsArray.map((yr, idx) => (labelIndices.has(idx) ? yr.toString() : ''));
+    const fmt = (v: number) => privacyMode ? '••••' : `R$ ${(v / 1e6).toFixed(1)}M`;
 
     return {
-      labels,
-      datasets: [
+      tooltip: {
+        trigger: 'axis' as const,
+        backgroundColor: EC.card,
+        borderColor: EC.border2,
+        textStyle: { color: EC.text, fontSize: 12 },
+        formatter: privacyMode ? () => '••••' : undefined,
+      },
+      legend: {
+        show: !privacyMode,
+        top: 0,
+        textStyle: { color: EC.muted, fontSize: 11 },
+        data: ['P10 (Conservative)', 'P50 (Median)', 'P90 (Optimistic)'],
+      },
+      grid: { left: 60, right: 16, top: 36, bottom: 28 },
+      xAxis: {
+        type: 'category' as const,
+        data: xLabels,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : EC.muted,
+          fontSize: 10,
+          interval: 4,
+        },
+        axisLine: EC_AXIS_LINE,
+        axisTick: { show: false },
+      },
+      yAxis: {
+        type: 'value' as const,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : EC.muted,
+          fontSize: 10,
+          formatter: (v: number) => fmt(v),
+        },
+        splitLine: EC_SPLIT_LINE,
+      },
+      series: [
         {
-          label: 'P10 (Conservative)',
+          name: 'P10 (Conservative)',
+          type: 'line' as const,
           data: p10.slice(0, yearsToDisplay),
-          borderColor: '#ef4444',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          lineStyle: { color: EC.red, width: 2, type: 'dashed' as const },
+          itemStyle: { color: EC.red },
+          symbol: 'none',
+          smooth: true,
         },
         {
-          label: 'P50 (Median)',
+          name: 'P50 (Median)',
+          type: 'line' as const,
           data: p50.slice(0, yearsToDisplay),
-          borderColor: EC.accent,
-          backgroundColor: 'rgba(88, 166, 255, 0.15)',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 0,
+          lineStyle: { color: EC.accent, width: 3 },
+          itemStyle: { color: EC.accent },
+          areaStyle: { color: 'rgba(88, 166, 255, 0.15)' },
+          symbol: 'none',
+          smooth: true,
         },
         {
-          label: 'P90 (Optimistic)',
+          name: 'P90 (Optimistic)',
+          type: 'line' as const,
           data: p90.slice(0, yearsToDisplay),
-          borderColor: '#22c55e',
-          borderWidth: 2,
-          borderDash: [5, 5],
-          fill: false,
-          tension: 0.4,
-          pointRadius: 0,
+          lineStyle: { color: EC.green, width: 2, type: 'dashed' as const },
+          itemStyle: { color: EC.green },
+          symbol: 'none',
+          smooth: true,
         },
       ],
     };
-  }, [mcResults]);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed.y;
-              return `${context.dataset.label}: R$ ${value.toLocaleString('pt-BR', {
-                maximumFractionDigits: 0,
-              })}`;
-            },
-          },
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: !privacyMode,
-            callback: (value: any) =>
-              `R$ ${(value / 1e6).toFixed(1)}M`,
-          },
-        },
-        x: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [mcResults, privacyMode]);
 
   if (!mcResults) {
     return (
@@ -127,7 +107,7 @@ export function SimulationTrajectories() {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Monte Carlo Trajectories (até 90a)</h3>
-      <Line data={chartData} options={options} />
+      <EChart ref={chartRef} option={option} style={{ height: 350, width: '100%' }} />
     </div>
   );
 }

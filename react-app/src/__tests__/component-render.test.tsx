@@ -98,14 +98,7 @@ vi.mock('echarts-for-react', () => ({
   default: () => React.createElement('div', { 'data-testid': 'echarts-mock' }, 'ECharts mock'),
 }));
 
-// Mock Chart.js components (canvas not available in jsdom)
-vi.mock('react-chartjs-2', () => ({
-  Bar: () => React.createElement('canvas', { 'data-testid': 'chartjs-bar' }),
-  Line: () => React.createElement('canvas', { 'data-testid': 'chartjs-line' }),
-  Doughnut: () => React.createElement('canvas', { 'data-testid': 'chartjs-doughnut' }),
-}));
-
-// Mock the Sankey chart (uses canvas + Chart.js extension)
+// Mock the Sankey chart (uses canvas)
 vi.mock('@/components/charts/SankeyChart', () => ({
   SankeyChart: () => React.createElement('div', { 'data-testid': 'sankey-mock' }, 'Sankey mock'),
 }));

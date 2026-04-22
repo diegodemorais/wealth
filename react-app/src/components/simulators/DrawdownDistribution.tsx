@@ -1,73 +1,67 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { EChart } from '@/components/primitives/EChart';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
 import { useDashboardStore } from '@/store/dashboardStore';
-import { useUiStore } from '@/store/uiStore';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 export function DrawdownDistribution() {
-  const privacyMode = useUiStore(s => s.privacyMode);
+  const { privacyMode } = useEChartsPrivacy();
+  const chartRef = useChartResize();
   const mcResults = useDashboardStore(s => s.mcResults);
 
-  const chartData = useMemo(() => {
-    if (!mcResults || !mcResults.drawdownDistribution) {
-      return {
-        labels: [],
-        datasets: [],
-      };
-    }
+  const option = useMemo(() => {
+    if (!mcResults || !mcResults.drawdownDistribution) return {};
 
     const distribution = mcResults.drawdownDistribution;
     const labels = Object.keys(distribution).sort();
     const data = labels.map(label => distribution[label] || 0);
 
     return {
-      labels,
-      datasets: [
+      tooltip: {
+        trigger: 'axis' as const,
+        backgroundColor: EC.card,
+        borderColor: EC.border2,
+        textStyle: { color: EC.text, fontSize: 12 },
+        formatter: privacyMode ? () => '••••' : undefined,
+      },
+      legend: { show: false },
+      grid: { left: 48, right: 16, top: 16, bottom: 28 },
+      xAxis: {
+        type: 'category' as const,
+        data: labels,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : EC.muted,
+          fontSize: 10,
+        },
+        axisLine: EC_AXIS_LINE,
+        axisTick: { show: false },
+      },
+      yAxis: {
+        type: 'value' as const,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : EC.muted,
+          fontSize: 10,
+        },
+        splitLine: EC_SPLIT_LINE,
+      },
+      series: [
         {
-          label: 'Frequency (simulations)',
+          name: 'Frequency',
+          type: 'bar' as const,
           data,
-          backgroundColor: 'rgba(239, 68, 68, 0.75)',
-          borderColor: 'rgba(239, 68, 68, 0.85)',
-          borderWidth: 1,
+          itemStyle: {
+            color: 'rgba(239, 68, 68, 0.75)',
+            borderColor: 'rgba(239, 68, 68, 0.85)',
+            borderWidth: 1,
+          },
+          barMaxWidth: 40,
         },
       ],
     };
-  }, [mcResults]);
-
-  const options = useMemo(
-    () => ({
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: {
-          display: !privacyMode,
-        },
-        tooltip: {
-          enabled: !privacyMode,
-          callbacks: {
-            label: (context: any) => {
-              const value = context.parsed.y;
-              return `${value} simulations`;
-            },
-          },
-        },
-      },
-      scales: {
-        y: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-        x: {
-          ticks: {
-            display: !privacyMode,
-          },
-        },
-      },
-    }),
-    [privacyMode]
-  );
+  }, [mcResults, privacyMode]);
 
   if (!mcResults) {
     return (
@@ -83,7 +77,7 @@ export function DrawdownDistribution() {
   return (
     <div style={styles.container}>
       <h3 style={styles.title}>Maximum Drawdown Distribution Across Scenarios</h3>
-      <Bar data={chartData} options={options} />
+      <EChart ref={chartRef} option={option} style={{ height: 300, width: '100%' }} />
     </div>
   );
 }

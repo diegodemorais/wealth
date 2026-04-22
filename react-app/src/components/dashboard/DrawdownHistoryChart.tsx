@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
-import { useUiStore } from '@/store/uiStore';
+import React, { useMemo } from 'react';
+import { EChart } from '@/components/primitives/EChart';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { useChartResize } from '@/hooks/useChartResize';
+import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 
 interface DrawdownHistoryChartProps {
   dates: string[];
@@ -15,92 +17,69 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
   drawdownPct,
   maxDrawdown,
 }) => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart | null>(null);
-  const { privacyMode } = useUiStore();
+  const { privacyMode } = useEChartsPrivacy();
+  const chartRef = useChartResize();
 
-  useEffect(() => {
-    if (!chartRef.current) return;
-
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
-
-    const ctx = chartRef.current.getContext('2d');
-    if (!ctx) return;
-
+  const option = useMemo(() => {
     const displayDates = dates.slice(-60);
     const displayData = drawdownPct.slice(-60);
     const minVal = displayData.length > 0 ? Math.min(...displayData) : -15;
-    const yAxisMin = Math.floor(minVal / 2) * 2 - 2; // round to nearest 2%, add margin
+    const yAxisMin = Math.floor(minVal / 2) * 2 - 2;
 
-    chartInstance.current = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: displayDates,
-        datasets: [
-          {
-            label: 'Drawdown %',
-            data: displayData,
-            borderColor: 'var(--red)',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.3,
-            pointRadius: 2,
-            pointBackgroundColor: 'var(--red)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            position: 'top' as const,
-            labels: { color: 'var(--muted)', font: { size: 12 }, padding: 12 },
-          },
-          tooltip: {
-            backgroundColor: 'rgba(30, 41, 59, 0.9)',
-            titleColor: 'var(--muted)',
-            bodyColor: 'var(--muted)',
-            borderColor: 'rgba(71, 85, 105, 0.5)',
-            borderWidth: 1,
-            padding: 8,
-            callbacks: {
-              label: function (context) {
-                return `Drawdown: ${(context.parsed.y).toFixed(2)}%`;
-              },
-            },
-          },
-        },
-        scales: {
-          y: {
-            min: yAxisMin,
-            max: 2,
-            grid: { color: 'rgba(71, 85, 105, 0.1)' },
-            ticks: {
-              color: 'var(--muted)',
-              callback: function (value) { return (value as number).toFixed(0) + '%'; },
-            },
-          },
-          x: {
-            grid: { display: false },
-            ticks: { color: 'var(--muted)', maxRotation: 45, minRotation: 0 },
-          },
+    return {
+      tooltip: {
+        trigger: 'axis' as const,
+        backgroundColor: EC.card,
+        borderColor: EC.border2,
+        textStyle: { color: EC.text, fontSize: 12 },
+        formatter: privacyMode ? () => '••••' : (params: any) => {
+          const p = Array.isArray(params) ? params[0] : params;
+          return `${p.name}<br/>Drawdown: ${(p.value as number).toFixed(2)}%`;
         },
       },
-    });
-
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
+      legend: {
+        show: !privacyMode,
+        top: 0,
+        textStyle: { color: EC.muted, fontSize: 12 },
+      },
+      grid: { left: 48, right: 16, top: 32, bottom: 40 },
+      xAxis: {
+        type: 'category' as const,
+        data: displayDates,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : EC.muted,
+          fontSize: 10,
+          rotate: 45,
+        },
+        axisLine: EC_AXIS_LINE,
+        axisTick: { show: false },
+      },
+      yAxis: {
+        type: 'value' as const,
+        min: yAxisMin,
+        max: 2,
+        axisLabel: {
+          color: privacyMode ? 'transparent' : EC.muted,
+          fontSize: 10,
+          formatter: (v: number) => `${v.toFixed(0)}%`,
+        },
+        splitLine: EC_SPLIT_LINE,
+      },
+      series: [
+        {
+          name: 'Drawdown %',
+          type: 'line' as const,
+          data: displayData,
+          lineStyle: { color: EC.red, width: 2 },
+          itemStyle: { color: EC.red },
+          areaStyle: { color: 'rgba(239, 68, 68, 0.1)' },
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 4,
+        },
+      ],
     };
-  }, [dates, drawdownPct]);
+  }, [dates, drawdownPct, privacyMode]);
 
   const currentDd = drawdownPct[drawdownPct.length - 1] || 0;
   const currentColor = currentDd > -10 ? 'var(--green)' : 'var(--yellow)';
@@ -115,7 +94,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
         <div>
-          <canvas ref={chartRef} style={{ maxHeight: '300px' }} />
+          <EChart ref={chartRef} option={option} style={{ height: 300, width: '100%' }} />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 'var(--space-3)' }}>
