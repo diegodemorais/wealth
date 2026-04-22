@@ -20,6 +20,7 @@ import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
 import MacroUnificado from '@/components/dashboard/MacroUnificado';
 import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -41,7 +42,7 @@ export default function HomePage() {
     dataError,
     data: derived,
     loadingText: 'Carregando dados...',
-    errorPrefix: '❌ Erro ao carregar dashboard:',
+    errorPrefix: 'Erro ao carregar dashboard:',
     warningText: 'Dados carregados mas valores derivados não computados',
   });
   if (stateEl) return stateEl;
@@ -236,7 +237,7 @@ export default function HomePage() {
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
       {data?.wellness_config?.metrics && (
-        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={secOpen('now', 'wellness')} icon="🏆">
+        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={secOpen('now', 'wellness')} icon={<Trophy size={18} />}>
           {(() => {
             const wc = data.wellness_config;
             const pfireBaseVal = d.pfireBase;
@@ -358,7 +359,7 @@ export default function HomePage() {
 
             const renderMetricRow = (m: typeof allMetrics[0]) => (
               <div key={m.id} className="flex items-center gap-2 mb-1.5">
-                <div className="text-xs w-4 flex-shrink-0">{m.isOk ? '✅' : '⚠️'}</div>
+                <div className="text-xs w-4 flex-shrink-0">{m.isOk ? <CheckCircle size={14} className="text-green" /> : <AlertCircle size={14} className="text-yellow" />}</div>
                 <div className="text-xs text-muted w-36 flex-shrink-0 truncate">{m.label}</div>
                 {renderBar(m.pts, m.max)}
                 <div className="text-xs text-muted w-14 flex-shrink-0 text-right">{m.detail}</div>
@@ -377,13 +378,13 @@ export default function HomePage() {
                   <div className="flex-1 min-w-0">
                     {badMetrics.length > 0 && (
                       <div className="mb-3">
-                        <div className="text-xs font-semibold mb-1.5" style={{ color: 'var(--yellow)' }}>⚠ OPORTUNIDADE DE MELHORIA</div>
+                        <div className="text-xs font-semibold mb-1.5" style={{ color: 'var(--yellow)' }}><AlertTriangle size={13} className="inline mr-1" /> OPORTUNIDADE DE MELHORIA</div>
                         {badMetrics.map(renderMetricRow)}
                       </div>
                     )}
                     {goodMetrics.length > 0 && (
                       <div>
-                        <div className="text-xs font-semibold text-green mb-1.5">✓ SEM AÇÃO NECESSÁRIA</div>
+                        <div className="text-xs font-semibold text-green mb-1.5"><CheckCircle size={13} className="inline mr-1" /> SEM AÇÃO NECESSÁRIA</div>
                         {goodMetrics.map(renderMetricRow)}
                       </div>
                     )}
@@ -422,7 +423,7 @@ export default function HomePage() {
         id="section-rf-status"
         title="RF Status — IPCA+ & Renda+ por Instrumento"
         defaultOpen={secOpen('now', 'rf-status', true)}
-        icon="🎯"
+        icon={<Target size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
           <RFStatusPanel rows={rfRows} />

@@ -21,6 +21,7 @@ import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
 import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
 import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { BarChart3, Building2, Thermometer, ArrowRightLeft, Hospital, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
@@ -496,7 +497,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 3b. Surplus-Gap Chart — F2 DEV-boldin-dashboard */}
-      <CollapsibleSection id="section-surplus-gap" title={secTitle('withdraw', 'section-surplus-gap', 'Superávit / Déficit Anual — P10/P50/P90')} defaultOpen={secOpen('withdraw', 'section-surplus-gap')} icon="📊">
+      <CollapsibleSection id="section-surplus-gap" title={secTitle('withdraw', 'section-surplus-gap', 'Superávit / Déficit Anual — P10/P50/P90')} defaultOpen={secOpen('withdraw', 'section-surplus-gap')} icon={<BarChart3 size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
           <SurplusGapChart data={data} premissasOverride={activeScenarioCfg} />
@@ -506,7 +507,7 @@ export default function WithdrawPage() {
       <SectionDivider label="Bond Strategy" />
       {/* 4. Bond Strategy — SoRR + Pool Readiness */}
       {bondPoolReadiness && (
-        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon="🏦">
+        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon={<Building2 size={18} />}>
           <div style={{ padding: '0 16px 16px' }}>
             <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
             <BondStrategyPanel
@@ -531,7 +532,7 @@ export default function WithdrawPage() {
         id="section-sequence-returns"
         title={secTitle('withdraw', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')}
         defaultOpen={secOpen('withdraw', 'sequence-returns', false)}
-        icon="🌡️"
+        icon={<Thermometer size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
           <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
@@ -553,7 +554,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
-      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey')} icon="💸">
+      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey')} icon={<ArrowRightLeft size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           <CashFlowSankey />
         </div>
@@ -601,7 +602,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* F7 — LTC Sensitivity Test (DEV-boldin-dashboard) */}
-      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity')} icon="🏥">
+      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity')} icon={<Hospital size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const premissas = data?.premissas ?? {};
@@ -644,7 +645,7 @@ export default function WithdrawPage() {
                         const ok = swrImplicito <= swr_target;
                         const warn = swrImplicito <= swr_target * 1.3;
                         const statusColor = ok ? 'var(--green)' : warn ? 'var(--yellow)' : 'var(--red)';
-                        const statusLabel = ok ? '✓ Dentro do SWR target' : warn ? '⚠ Atenção' : '✗ Acima do SWR target';
+                        const statusLabel = ok ? <><CheckCircle size={14} className="inline mr-1" />Dentro do SWR target</> : warn ? <><AlertCircle size={14} className="inline mr-1" />Atenção</> : <><XCircle size={14} className="inline mr-1" />Acima do SWR target</>;
                         return (
                           <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
                             <td style={{ padding: '8px 8px' }}>

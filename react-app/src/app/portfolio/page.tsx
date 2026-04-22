@@ -19,6 +19,7 @@ import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
 import HODL11PositionPanel from '@/components/dashboard/HODL11PositionPanel';
 import { MetricCard } from '@/components/primitives/MetricCard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { Globe, ClipboardList, Landmark, MapPin, BarChart3, Bitcoin } from 'lucide-react';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -223,7 +224,7 @@ export default function PortfolioPage() {
         id="section-etf-region"
         title={secTitle('portfolio', 'etf-region')}
         defaultOpen={secOpen('portfolio', 'etf-region')}
-        icon="🗺️"
+        icon={<Globe size={18} />}
       >
         <div style={{ padding: '16px' }}>
           <ETFRegionComposition />
@@ -239,7 +240,7 @@ export default function PortfolioPage() {
           id="section-etf-positions"
           title="Ver detalhe por lote IBKR"
           defaultOpen={secOpen('portfolio', 'etf-positions', false)}
-          icon="📋"
+          icon={<ClipboardList size={18} />}
         >
           <div style={{ padding: '16px' }}>
             <EtfsPositionsTable data={data.posicoes} />
@@ -256,7 +257,7 @@ export default function PortfolioPage() {
         id="section-tax-ir"
         title={secTitle('portfolio', 'tax-ir')}
         defaultOpen={secOpen('portfolio', 'tax-ir')}
-        icon="🏛️"
+        icon={<Landmark size={18} />}
       >
         <div style={{ padding: '16px' }}>
           {(() => {
@@ -295,7 +296,7 @@ export default function PortfolioPage() {
           id="section-brasil-concentration"
           title={secTitle('portfolio', 'brasil-concentration', 'Concentração Brasil — Exposição Soberana & RF')}
           defaultOpen={secOpen('portfolio', 'brasil-concentration', true)}
-          icon="🇧🇷"
+          icon={<MapPin size={18} />}
         >
           <div style={{ padding: '16px' }}>
             <ConcentrationChart data={data} />
@@ -326,7 +327,7 @@ export default function PortfolioPage() {
           id="section-real-yield"
           title={secTitle('portfolio', 'real-yield', 'Real Yield Gauge — NTN-Bs Líquido de IR')}
           defaultOpen={secOpen('portfolio', 'real-yield', true)}
-          icon="📊"
+          icon={<BarChart3 size={18} />}
         >
           <div style={{ padding: '16px' }}>
             <RealYieldGauge
@@ -353,7 +354,7 @@ export default function PortfolioPage() {
           id="section-crypto-band"
           title={secTitle('portfolio', 'crypto-band', 'HODL11 — Banda Criptográfica')}
           defaultOpen={secOpen('portfolio', 'crypto-band', true)}
-          icon="₿"
+          icon={<Bitcoin size={18} />}
         >
           <div style={{ padding: '16px' }}>
             <CryptoBandChart

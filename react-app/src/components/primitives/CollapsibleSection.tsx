@@ -14,7 +14,7 @@ export interface CollapsibleSectionProps {
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
-  icon?: string;
+  icon?: ReactNode;
   className?: string;
 }
 
@@ -70,7 +70,7 @@ export function CollapsibleSection({
           }}
         >
           <h2 style={{ marginBottom: 0, borderBottom: 'none', paddingBottom: 0 }}>
-            {icon && <span className="mr-2">{icon}</span>}{title}{' '}
+            {icon && <span className="mr-2 inline-flex align-middle">{icon}</span>}{title}{' '}
             <span style={{ fontSize: '.8em', color: 'var(--muted)' }}>
               {isCollapsed ? '▸' : '▾'}
             </span>

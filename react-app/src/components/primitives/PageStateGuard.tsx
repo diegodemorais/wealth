@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import { Loader, AlertCircle, AlertTriangle } from 'lucide-react';
 
 export interface PageStateGuardProps {
   isLoading: boolean;
@@ -42,17 +43,17 @@ export function pageStateElement({
   warningText = 'Dados carregados mas não disponíveis',
 }: Omit<PageStateGuardProps, 'children'>): React.JSX.Element | null {
   if (isLoading) {
-    return <div className="loading-state">⏳ {loadingText}</div>;
+    return <div className="loading-state"><Loader size={14} className="inline mr-1 animate-spin" /> {loadingText}</div>;
   }
   if (dataError) {
     return (
       <div className="error-state">
-        <strong>{errorPrefix}</strong> {dataError}
+        <AlertCircle size={14} className="inline mr-1" /><strong>{errorPrefix}</strong> {dataError}
       </div>
     );
   }
   if (!data) {
-    return <div className="warning-state">⚠️ {warningText}</div>;
+    return <div className="warning-state"><AlertTriangle size={14} className="inline mr-1" /> {warningText}</div>;
   }
   return null;
 }

@@ -51,15 +51,15 @@ type FireMkt = 'stress' | 'base' | 'fav';
 
 // Labels only — values are derived from data.fire_matrix.retornos_equity / perfis at runtime
 const MKT_LABELS: Record<FireMkt, string> = {
-  stress: '⚠️ Stress',
-  base:   '✅ Base',
-  fav:    '🚀 Favorável',
+  stress: 'Stress',
+  base:   'Base',
+  fav:    'Favorável',
 };
 
 const COND_LABELS: Record<FireCond, string> = {
-  solteiro:  '👤 Solteiro',
-  casamento: '💍 Casamento',
-  filho:     '👶 Filho',
+  solteiro:  'Solteiro',
+  casamento: 'Casamento',
+  filho:     'Filho',
 };
 
 // calcFireYear is imported from @/utils/fire (canonical, retorno always as fraction)
@@ -1696,7 +1696,7 @@ export default function SimulatorsPage() {
     dataError,
     data: isLoading || dataError ? null : true, // only block on loading/error, not data absence
     loadingText: 'Carregando simuladores...',
-    errorPrefix: '❌ Erro ao carregar dados:',
+    errorPrefix: 'Erro ao carregar dados:',
     warningText: 'Dados não disponíveis',
   });
   if (stateEl) return stateEl;

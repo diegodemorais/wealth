@@ -5,6 +5,7 @@
 import { useMemo } from 'react';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 import { useDashboardStore } from '@/store/dashboardStore';
+import { AlertTriangle } from 'lucide-react';
 
 function fmtBrt(iso: string): string {
   try {
@@ -46,7 +47,7 @@ export function VersionFooter() {
         </div>
         {isStale && (
           <span style={styles.stale} data-test="staleness-banner">
-            ⚠️ Dados com {daysOld} dias — considere atualizar
+            <AlertTriangle size={13} className="inline mr-1" /> Dados com {daysOld} dias — considere atualizar
           </span>
         )}
       </div>

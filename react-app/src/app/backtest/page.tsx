@@ -13,6 +13,7 @@ import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
 import DrawdownRecoveryTable from '@/components/dashboard/DrawdownRecoveryTable';
 import { BtcIndicatorsChart } from '@/components/dashboard/BtcIndicatorsChart';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { TrendingDown } from 'lucide-react';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -574,8 +575,8 @@ export default function BacktestPage() {
     dataError,
     data,
     loadingText: 'Carregando backtest...',
-    errorPrefix: '❌ Erro ao carregar backtest:',
-    warningText: '⚠️ Dados carregados mas seção backtest não disponível',
+    errorPrefix: 'Erro ao carregar backtest:',
+    warningText: 'Dados carregados mas seção backtest não disponível',
   });
   if (stateEl) return stateEl;
 
@@ -591,7 +592,7 @@ export default function BacktestPage() {
         id="section-drawdown-analysis"
         title={secTitle('backtest', 'drawdown-analysis', 'Drawdown Analysis — Histórico, Crises & Recovery')}
         defaultOpen={secOpen('backtest', 'drawdown-analysis', true)}
-        icon="📉"
+        icon={<TrendingDown size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {

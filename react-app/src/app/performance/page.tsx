@@ -18,6 +18,7 @@ import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
 import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { BarChart3 } from 'lucide-react';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -297,7 +298,7 @@ export default function PerformancePage() {
         id="section-etf-factor"
         title={secTitle('performance', 'etf-factor', 'Exposição Fatorial — ETFs da Carteira')}
         defaultOpen={secOpen('performance', 'etf-factor', true)}
-        icon="📊"
+        icon={<BarChart3 size={18} />}
       >
         <div style={{ padding: '16px' }}>
           <ETFFactorComposition />
@@ -488,7 +489,7 @@ export default function PerformancePage() {
         id="section-ff5-regression"
         title={secTitle('performance', 'ff5-regression', 'Factor Regression FF5 (técnico)')}
         defaultOpen={secOpen('performance', 'ff5-regression', false)}
-        icon="📊"
+        icon={<BarChart3 size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {

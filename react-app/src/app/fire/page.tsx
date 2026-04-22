@@ -21,6 +21,7 @@ import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { Landmark, Building2, Heart, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 // ── FloorUpsideFire — Cobertura por Fase (FIRE Day vs pós-INSS) ─────────────
 interface FloorUpsideFireProps {
@@ -340,7 +341,7 @@ export default function FirePage() {
             {pfireHero != null ? `${pfireHero.toFixed(1)}%` : '—'}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: pfireHeroColor, fontWeight: 600, marginTop: 4 }}>
-            {pfireHero != null ? (pfireHero >= 90 ? '✓ ON TRACK' : pfireHero >= 85 ? '⚠ ADEQUADO' : '✗ ATENÇÃO') : ''}
+            {pfireHero != null ? (pfireHero >= 90 ? <><CheckCircle size={14} className="inline mr-1" />ON TRACK</> : pfireHero >= 85 ? <><AlertCircle size={14} className="inline mr-1" />ADEQUADO</> : <><XCircle size={14} className="inline mr-1" />ATENÇÃO</>) : ''}
           </div>
         </div>
         {/* Separator */}
@@ -548,7 +549,7 @@ export default function FirePage() {
 
       <SectionDivider label="Balanço Holístico" />
       {/* 4b. Balanço Holístico — Patrimônio expandido (collapsed por default) */}
-      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire')} icon="🏛️">
+      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire')} icon={<Landmark size={18} />}>
         <BalancoHolistico data={data as any} showCapitalHumanoBadge />
       </CollapsibleSection>
 
@@ -580,7 +581,7 @@ export default function FirePage() {
         id="section-floor-upside-fire"
         title={secTitle('fire', 'floor-upside-fire', 'Floor vs Upside — Cobertura por Fase')}
         defaultOpen={secOpen('fire', 'floor-upside-fire', true)}
-        icon="🏦"
+        icon={<Building2 size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
@@ -615,7 +616,7 @@ export default function FirePage() {
       {(data as any)?.premissas?.tem_conjuge === true && (
         <>
           <SectionDivider label="Cenários & Risco" />
-          <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon="💑">
+          <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon={<Heart size={18} />}>
           <div style={{ padding: '0 16px 16px' }}>
             <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 12 }}>
               Estimativa de sustentabilidade do plano caso {(data as any)?.premissas?.nome_conjuge ?? 'cônjuge'} sobreviva a Diego.
