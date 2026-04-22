@@ -149,31 +149,40 @@ Scripts Python (generate_data.py, reconstruct_*.py)
 - Secrets via GitHub Secrets + `.env.local` (git-ignored). CI precisa de ambos
 - Nunca editar `dash/*.html` diretamente (são gerados pelo build)
 
-### Code style (dashboard)
+### Princípio arquitetural: flat by default, abstract by pain
 
-**Tamanho e estrutura:**
+Cada arquivo, camada e abstração deve resolver um problema REAL e atual — não hipotético.
+Menos arquivos = menos contexto de IA = menos erro = mais velocidade por feature.
+Código simples é mais fácil de refatorar (por humano e IA) do que abstração preventiva.
+
+- **Inline primeiro, extrair no segundo uso.** Não criar factory/helper/util "pra quando precisar"
+- **Vertical slice:** feature inteira visível em 1-3 arquivos. Se tocar >5 arquivos, questionar
+- **Abstrair por dor, não por princípio.** Pergunta-teste: "isso resolveu um bug real ou evitou duplicação real?"
+
+### Code style
+
+**Tamanho:**
 - Funções: 4-20 linhas. Dividir se maior
 - Arquivos: máximo 500 linhas. Dividir por responsabilidade
-- Uma responsabilidade por módulo (SRP). chartSetup.ts com 1600 linhas foi erro — não repetir
 - Early returns sobre ifs aninhados. Máximo 2 níveis de indentação
 
 **Nomes e tipos:**
 - Nomes específicos. Evitar `data`, `handler`, `Manager` genéricos
-- `any` proibido em código novo. Existente migra gradualmente. Usar tipos de `@/types/dashboard`
-- Props interfaces explícitas para todo componente exportado
+- `any` proibido em código novo. Existente migra gradualmente
+- Interface explícita só em componentes compartilhados (>1 consumidor). Componente usado por 1 página = tipos inline
 
-**Duplicação e dead code:**
+**Dead code:**
 - NUNCA criar componente sem wiring na página. Componente órfão = dead code
-- Antes de criar novo chart/componente, verificar se equivalente já existe nas abas ativas
-- Ao deletar componente, verificar se factory functions em `chartSetup.ts` ficaram órfãs
-- Ao refatorar: `grep -rl "ComponentName" src/` para confirmar 0 refs antes de deletar
+- Antes de criar: verificar se equivalente já existe nas abas ativas
+- Ao deletar: `grep -rl "Nome" src/` para confirmar 0 refs antes de remover
+- Ao remover dependência npm: `grep -rl "pacote" src/` para limpar imports residuais
 
 **Charts (100% ECharts):**
 - Única lib: ECharts via `echarts-for-react`. Chart.js foi removido — não reintroduzir
-- Wrapper obrigatório: `<EChart>` de `@/components/primitives/EChart.tsx`
-- Cores: importar `EC` de `@/utils/echarts-theme` — nunca hex inline
-- Privacy: todo tooltip/label deve respeitar `privacyMode` (usar `useEChartsPrivacy()`)
-- Factory functions centralizadas em `utils/chartSetup.ts` quando reusáveis (>1 consumidor)
+- Wrapper: `<EChart>` de `@/components/primitives/EChart.tsx`
+- Cores: `EC` de `@/utils/echarts-theme` — nunca hex inline
+- Privacy: todo tooltip/label respeita `privacyMode` (`useEChartsPrivacy()`)
+- Chart options: inline no componente. Extrair para `chartSetup.ts` só a partir do 2º consumidor real
 
 **Estilos:**
 - CSS vars para cores/spacing (`var(--card)`, `var(--accent)`). Não hex direto em JSX
@@ -181,22 +190,20 @@ Scripts Python (generate_data.py, reconstruct_*.py)
 - Tailwind v4: custom colors em `@theme` no `globals.css`. `tailwind.config.ts` é ignorado
 
 **Testes:**
-- Comando único: `npm run test` (Vitest)
-- Build validation: `npm run build` valida todas 8 páginas
-- Playwright pre-push: `./scripts/quick_dashboard_test.sh`
-- Bug fix → regression test. Feature nova → component render test
+- Build validation: `npm run build` valida todas páginas
+- `npm run test` (Vitest) para unit/component tests
+- Bug fix → regression test
 
 ### Comentários
 
-- Escrever POR QUÊ, não O QUÊ. Skip `// increment counter`
-- Manter comentários existentes ao refatorar — carregam contexto e proveniência
+- POR QUÊ, não O QUÊ. Skip `// increment counter`
+- Manter comentários existentes ao refatorar — carregam contexto
 - Referenciar issue ID quando linha existe por causa de bug específico
 
-### Limpeza e higiene
+### Higiene
 
-- Arquivos debug/test temporários vão em `/tmp` ou `.gitignore` — nunca no root do repo
-- Docs de auditoria/investigação são efêmeros — não commitar como arquivos permanentes
-- Ao remover dependência npm, verificar se imports residuais existem: `grep -rl "pacote" src/`
+- Arquivos temporários vão em `/tmp` ou `.gitignore` — nunca no root do repo
+- Docs de auditoria/investigação são efêmeros — não commitar
 - git-filter-repo é nuclear — destrói histórico. Preferir `.gitignore` + secrets rotation
 
 ## Referências
