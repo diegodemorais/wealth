@@ -398,7 +398,7 @@ function FireSimuladorSection() {
             {(['stress', 'base', 'fav'] as FireMkt[]).map(m => (
               <button
                 key={m}
-                className={`seg-btn${!custom && fireMkt === m ? ' active' : ''}`}
+                className={`seg-btn${isPresetMode && fireMkt === m ? ' active' : ''}`}
                 onClick={() => setMktPreset(m)}
               >
                 {MKT_PRESETS[m].label}
