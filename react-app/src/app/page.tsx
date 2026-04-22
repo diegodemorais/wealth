@@ -17,7 +17,6 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
-import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
 import MacroUnificado from '@/components/dashboard/MacroUnificado';
 import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
@@ -195,13 +194,6 @@ export default function HomePage() {
             etfs={aporteEtfs}
             dcaItems={d.dcaItems}
           />
-        </div>
-      )}
-
-      {/* 5b. Semáforo de Gatilhos — collapsed por default */}
-      {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          <SemaforoGatilhos items={d.dcaItems} />
         </div>
       )}
 
