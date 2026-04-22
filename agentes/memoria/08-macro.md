@@ -22,50 +22,53 @@
 
 ---
 
-## Snapshot Abril/2026
+## Snapshot Abril/2026 (revalidado 22/04/2026)
 
-> **Data do snapshot:** 2026-04-03
-> **Auditoria desta sessao:** 2026-04-03 (APIs BCB serie 432, 13522, 1 + Investidor10 + FRED FEDFUNDS + FRED DFII10 + FRED DGS10 + FRED VIXCLS)
-> **Resultado da auditoria:** todos os dados confirmados — nenhuma divergencia encontrada vs snapshot /macro-bcb do mesmo dia
+> **Data do snapshot original:** 2026-04-03
+> **Revalidacao:** 2026-04-22 (WebSearch: BCB Focus, IBGE, Investidor10, Trading Economics, CNBC, Tax Foundation)
+> **Resultado:** dados atualizados — delta relevante em Renda+ 2065 (-26 bps), BRL/USD (-3,7%), Focus IPCA 2026 (+49 bps acima do teto da meta), VIX (-5 pts)
 
-### Delta vs Snapshot Marco/2026 (2026-03-20)
+### Delta vs Snapshot 03/Abr/2026 → 22/Abr/2026
 
-| Indicador | Marco/2026 | Abril/2026 | Variacao | Impacto |
-|-----------|-----------|-----------|---------|---------|
-| Selic Meta | 14,75% | **14,75%** | 0 bps | Sem mudanca (COPOM 19/mar cortou 0,25pp para 14,75%) |
-| IPCA 12m | 3,81% (fev) | **3,81% (fev)** | — | Dado de marco/2026 pendente (divulgacao 10/abr/2026) |
-| BRL/USD PTAX | ~5,20 | **5,1655** | -0,3% | BRL levemente mais forte |
-| IPCA+ 2040 | ~7,20% | **7,23%** | +3 bps | Estavel — dentro do regime |
-| IPCA+ 2050 | — | **7,00%** | — | Novo registro no snapshot |
-| Renda+ 2065 | 6,87% (mar/18) | **6,98%** | +11 bps | Alta desde 18/mar. Ainda longe do gatilho 6,5% (venda) |
-| Fed Funds | 4,33% (abr/25) | **3,64% (mar/26)** | -69 bps | Ciclo de cortes Fed em andamento |
-| TIPS 10y real | 1,84% (abr/25) | **2,02%** | +18 bps | Real yield EUA subiu — spread BR/EUA comprimiu levemente |
-| US 10y Treasury | 4,17% (abr/25) | **4,33%** | +16 bps | Treasuries longos mais altos a despeito do ciclo de corte |
-| VIX | 21,77 (abr/25) | **24,54** | +2,77 | Elevado vs abr/25 — Liberation Day gerou volatilidade |
+| Indicador | 03/abr/2026 | 22/abr/2026 | Variacao | Impacto |
+|-----------|------------|------------|---------|---------|
+| Selic Meta | 14,75% | **14,75%** | 0 bps | COPOM 28-29/abr — consenso 55% corte 0,25pp |
+| IPCA 12m | 3,81% (fev) | **4,14% (mar)** | +33 bps | Cruzou teto da meta 4,5% — desancoragem confirmada |
+| IPCA mensal marco | — | **0,88%** | — | Divulgado IBGE 10/abr |
+| Focus IPCA 2026 | 4,31% | **4,80%** | +49 bps | 6a semana consecutiva — 30 bps acima do teto |
+| Focus Selic terminal 2026 | 12,50% | **13,00%** | +50 bps | Mercado revisou ciclo de cortes para cima |
+| BRL/USD | 5,1655 | **~4,97** | -3,7% (BRL forte) | Carry 1.112 bps sustenta apreciacao |
+| IPCA+ 2040 | 7,23% | **7,25%** | +2 bps | Estavel — DCA ativo |
+| IPCA+ 2050 | 7,00% | **~6,85%** | -15 bps | Queda moderada — ainda verde |
+| Renda+ 2065 | 6,98% | **~6,72%** | -26 bps | ALERTA — margem vs gatilho venda caiu de 98 para ~72 bps |
+| Fed Funds | 3,64% | **3,50-3,75%** | Sem mudanca | FOMC pausando — CPI EUA 3,3% em marco |
+| US 10y Treasury | 4,33% | **~4,30%** | -3 bps | Estavel |
+| VIX | 24,54 | **~19,50** | -5,04 | Normalizou — mercados absorveram tarifas abr/26 |
 
-### Leituras de Gatilhos (2026-04-03)
+### Leituras de Gatilhos (2026-04-22)
 
 | Gatilho | Condicao | Status Atual | Acao |
 |---------|----------|-------------|------|
-| DCA IPCA+ longo ativo | Taxa >= 6,0% | **7,23%** — VERDE (margem 123 bps) | DCA ativo em TD 2040 (80%) + TD 2050 (20%) |
+| DCA IPCA+ longo ativo | Taxa >= 6,0% | **7,25%** — VERDE (margem 125 bps) | DCA ativo em TD 2040 (80%) + TD 2050 (20%) |
 | Pausar DCA IPCA+ | Taxa < 6,0% | Nao atingido | — |
-| Renda+ 2065 compra DCA | Taxa >= 6,5% | **6,98%** — ACIMA de 6,5% — VERDE | DCA ativo ate 5% do portfolio |
-| Renda+ 2065 venda total | Taxa <= 6,0% | Nao atingido (98 bps de distancia) | — |
+| Renda+ 2065 compra DCA | Taxa >= 6,5% | **~6,72%** — VERDE mas monitorar | DCA ativo ate 5% — posicao ~3% |
+| Renda+ 2065 pausa compra | Taxa < 6,5% | Nao atingido (margem ~22 bps) | MONITORAR SEMANALMENTE |
+| Renda+ 2065 venda total | Taxa <= 6,0% | Nao atingido (margem ~72 bps) | — |
 | Panico Renda+ (segurar) | Taxa >= 9,0% | Nao atingido | — |
 
-### Implicacoes para a Carteira (2026-04-03)
+### Implicacoes para a Carteira (2026-04-22)
 
-1. **IPCA+ longo**: taxa a 7,23% — 123 bps acima do piso operacional. DCA ativo. Spread BR/EUA (IPCA+ vs TIPS): 7,23% - 2,02% = **521 bps** — excepcional, reflete risk premium soberano elevado.
+1. **IPCA+ longo**: taxa a 7,25% — 125 bps acima do piso operacional. DCA ativo sem alteracao. Spread BR/EUA (IPCA+ vs TIPS): 7,25% - ~2,0% = **~525 bps** — ainda excepcional.
 
-2. **Renda+ 2065**: a 6,98%, esta acima do gatilho de compra (6,5%). DCA ativo ate 5% do portfolio. Posicao atual ~3% — margem para aportes. Gatilho de venda (6,0%) a 98 bps de distancia — sem urgencia.
+2. **Renda+ 2065**: caiu de 6,98% para ~6,72% em 19 dias (-26 bps). Margem vs gatilho de venda (6,0%) caiu de 98 para ~72 bps. Margem vs gatilho de pausa de compra (6,5%) esta em ~22 bps. **Probabilidade de atingir 6,0% em 12-18m revisada de ~40-45% para ~50-55%**. Monitorar semanalmente.
 
-3. **Ciclo de cortes**: proxima reuniao Copom 28-29/abr/2026. Focus projeta Selic terminal 12,50% em 2026. Com IPCA 12m ainda a 3,81% e Focus IPCA 2026 em 4,31%, o BC tem espaco para cortes, mas desancoragem de expectativas e o risco central. Lag historico Selic -> compressao de taxas longas: 3-6 meses — IPCA+ pode comprimir nos proximos meses.
+3. **Ciclo de cortes — revisao**: Focus elevou Selic terminal 2026 de 12,50% para 13,00% (+50 bps). IPCA marco a 4,14% (acima do teto 4,5% pela primeira vez desde 2024). Focus IPCA 2026 a 4,80% — 6a semana consecutiva de alta. COPOM 28-29/abr: 55% probabilidade de corte 0,25pp, 40% manutencao. Ritmo de cortes sera mais lento que precificado ha 3 semanas.
 
-4. **BRL/USD**: 5,1655, apreciado vs abr/2025 (5,6874). Selic a 14,75% sustenta carry. Ciclo de cortes pressiona BRL progressivamente — monitorar. Premissa base 0,5% depreciacao real/ano permanece conservadora vs historico.
+4. **BRL/USD**: ~4,97. BRL apreciou 14% vs USD em 12 meses. Carry de 1.112 bps (Selic 14,75% - Fed 3,625%) sustenta. Ciclo de cortes mais lento = BRL sustentado por mais tempo. Premissa 0,5% dep. real/ano permanece.
 
-5. **VIX a 24,54**: acima da zona de conforto (<20). Liberation Day (tarifas EUA) gerou volatilidade. Impacto direto: spreads de credito ainda comportados (HY 3,16%), mas risco de segunda onda permanece.
+5. **VIX**: recuou de 24,54 para ~19,50. Mercados normalizaram apos Liberation Day aniversario (02/abr). Tarifas EUA: 11% media efetiva (maior desde 1943). Novos tariffs: farmaceuticos 100% (jul-set/2026).
 
-6. **IPCA marco/2026**: divulgacao em 10/abr/2026. Focus projeta 4,31% para 2026. Se leitura de marco superar 4,5%, emitir alerta para agente RF e Risco (risco de desancoragem acima do teto da meta 4,5%).
+6. **Risco fiscal**: IFI projeta deficit primario R$ 90,6 bilhoes em 2026. Divida/PIB projetada 83,8% em 2026 (UBS). Ano eleitoral = pressao crescente. Impacto: mantem premio de risco alto nas taxas longas — favoravel para novas compras de IPCA+.
 
 ---
 

@@ -1,7 +1,5 @@
 {
-  "env": {
-    "NETLIFY_TOKEN": "nfp_8GeFGEha9j8LL9eVWzWTazYzbcB8GQwb8e67"
-  },
+  "env": {},
   "hooks": {
     "PreToolUse": [
       {

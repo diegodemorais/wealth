@@ -18,6 +18,7 @@ dashboard/tests/last_run.json
 .env
 .netlify_token
 .netlify/
+# Netlify migrado para GitHub Pages — linhas mantidas por segurança
 
 # Node
 node_modules/

@@ -480,7 +480,7 @@ GitHub Pages é estático, então:
 
 Se precisar de APIs dinâmicas:
 - [ ] Usar Vercel Deploy
-- [ ] Usar Netlify
+- [ ] ~~Netlify~~ (migrado para GitHub Pages)
 - [ ] Usar servidor próprio
 
 ---
