@@ -3,7 +3,8 @@
 | ID | DEV-claudemd-compliance |
 | Título | Conformidade CLAUDE.md — 6 violações no dashboard |
 | Dono | Dev |
-| Status | 🔴 Doing |
+| Status | ✅ Done |
+| Concluída | 2026-04-22 |
 | Prioridade | 🟡 Média |
 | Criada | 2026-04-22 |
 
@@ -22,7 +23,13 @@ Auditoria de conformidade do dashboard contra as diretrizes do CLAUDE.md encontr
 | 5 | gridTemplateColumns inline | 10 violações | Migrar para Tailwind grid-cols-* |
 | 6 | Privacy faltando em charts | 5 charts | Adicionar useEChartsPrivacy() |
 
-## Escopo desta execução
+## Resultado
 
-Resolver #3 (dead code), #5 (gridTemplateColumns), #6 (privacy). São cirúrgicos e de alto impacto.
-#1, #2, #4 são migrações graduais — registrar como backlog.
+| # | Violação | Resultado |
+|---|----------|-----------|
+| 1 | Arquivos >500 linhas (9) | Backlog — migração gradual |
+| 2 | `any` em código (294) | Backlog — proibido em código novo |
+| 3 | Dead code | ✅ Verificado: 0 órfãos (audit tinha falsos positivos) |
+| 4 | Hex inline (216) | Backlog — migração gradual |
+| 5 | gridTemplateColumns (10) | ✅ Corrigido: 0 violações restantes |
+| 6 | Privacy faltando (4 charts) | ✅ Corrigido: useEChartsPrivacy() adicionado |
