@@ -118,6 +118,10 @@
 ### Erros conhecidos (retro 2026-03-19):
 - Nao emitiu alerta proativo pos-corte Selic — regra corrigida
 
+### Retro 2026-04-22 (nota: 2.0/10 — pior performance)
+- **Mal:** Snapshot abril pendente 3 retros consecutivas. Escalado como obrigatório na retro 04/03 e não executado.
+- **Ação OBRIGATÓRIA:** Executar snapshot na próxima sessão. Qualquer atraso = revisão do perfil.
+
 ---
 
 ## Proatividade Obrigatoria

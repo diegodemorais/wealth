@@ -115,6 +115,11 @@
 - Propôs 2032 por taxa sem considerar lifecycle — corrigido por Diego
 - Nao consultou FIRE em decisao de vencimento — regra criada
 
+### Retro 2026-04-22 (nota: 4.5/10)
+- **Bem:** Nenhuma falha — mas nenhuma contribuição.
+- **Mal:** IPCA+ >7% por 3 semanas sem report. DCA ativo sem confirmação.
+- **Ação:** Report mensal de status RF mesmo sem gatilho.
+
 ---
 
 ## Autonomia Critica

@@ -177,6 +177,11 @@ Responsavel pelo **fluxo operacional de caixa** na aposentadoria:
 - VCMH 7% aceito sem questionar — Diego teve que puxar a sensibilidade com dado real (mae 74 anos, R$1.2k/mes). Mesmo padrao de cherry-pick ERN da retro anterior: premissa que parece "conservadora" vira escudo contra escrutinio
 - Guardrails nos scripts (pisos por idade R$220k, R$180k) nao alinhados com carteira.md aprovada — model risk silencioso
 
+### Retro 2026-04-22 (nota: 8.0/10 — melhor agente analítico)
+- **Bem:** SWR revisado com 3 fontes (ERN/Pfau/Blanchett). Filho-drawdown proativo. IR desacumulação modelado.
+- **Mal:** Double-count saúde no MC não detectado — pego na auditoria.
+- **Cross-feedback recebido:** Advocate: "double-count/IR cancelaram por coincidência" → ACEITA monitorar.
+
 ### Regras Operacionais (implementadas 2026-03-27)
 
 **Regra: Sensibilidade obrigatoria em premissas novas**

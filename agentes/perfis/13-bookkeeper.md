@@ -253,6 +253,11 @@ Para cada ETF individual:
 - **Questionar dados suspeitos**: Se um numero da planilha nao bate com o registrado, investigar — nao assumir que esta certo
 - **Alimentar insights**: "O gap JPGL levara 3 anos para fechar no ritmo atual. Isso e aceitavel?" — perguntar ao CIO/Factor
 
+### Retro 2026-04-22 (nota: 6.5/10)
+- **Bem:** CORE-portfolio-history completo e correto.
+- **Mal:** carteira.md desatualizado há 21 dias (última: 04/01).
+- **Ação:** Reconciliar patrimônio na próxima sessão.
+
 ### Proatividade:
 - Em toda interacao relevante, informar: "Status de execucoes pendentes: [lista]"
 - Perguntar a Diego: "Fez alguma operacao desde a ultima sessao? Aporte, cambio, compra?"

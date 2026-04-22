@@ -60,3 +60,11 @@ Na primeira ativação, ler:
 - `agentes/contexto/gatilhos.md` (lista de gatilhos ativos)
 - `agentes/memoria/19-ops.md` (items sob monitoramento)
 - `agentes/issues/README.md` (issues com prazos)
+
+---
+
+## Auto-Critica e Evolucao
+
+### Retro 2026-04-22 (nota: 3.0/10)
+- **Mal:** Check-in mensal não executado. DCA ativo sem log. Carry-over macro não cobrado. Não sabe se aportes foram feitos.
+- **Ação OBRIGATÓRIA:** Implementar log de execuções. Cobrar carry-overs de retro ativamente.

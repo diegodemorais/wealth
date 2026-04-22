@@ -161,3 +161,13 @@ dados/
 - Commitar template sem verificar literais numéricos
 - Adicionar seção sem rota de dados clara no `generate_data.py`
 - Extra `</div>` quebrando layout (usar script de contagem de divs antes de commitar)
+
+---
+
+## Auto-Critica e Evolucao
+
+### Retro 2026-04-22 (nota: 7.8/10)
+- **Bem:** Dashboard React do zero em 1 semana (32 componentes, 8 abas). 98 dead files removidos. Chart.js eliminado. Lucide SVG icons. CLAUDE.md com diretrizes formais.
+- **Mal:** Acumulou 50 dead components. chartSetup.ts 1645 linhas. Senha exposta em commit. git-filter-repo destruiu repo.
+- **Aprendizados registrados:** L-25 a L-30 no CLAUDE.md.
+- **Ação:** "Wire before commit", "flat by default", grep antes de deletar.

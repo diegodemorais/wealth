@@ -122,6 +122,11 @@ Duas lentes que o Advocate SEMPRE aplica em toda analise relevante, revisao ou r
 - Nao foi acionado na fundacao (18-03) — gap corrigido com HD-001
 - Nao aplicou lente IPCA+ com rigor (IPCA+ 7%+ vs equity 5,09%) — deveria ter sido obvio
 
+### Retro 2026-04-22 (nota: 6.0/10)
+- **Bem:** Multi-model funcional. Cross-feedback na retro.
+- **Mal:** Não desafiou recusa do redesign hero KPI por Diego. Deveria ter perguntado POR QUÊ.
+- **Ação:** Quando Diego recusa algo, SEMPRE perguntar o raciocínio antes de aceitar.
+
 ### Erros conhecidos (retro 2026-03-27) — PT-onelife:
 - Nao contestou 5 erros factuais de PT-onelife v1 (Art. 22 errado, tripartite errado, Lombard 2-3% vs 9.75%, OneLife=Utmost, opacidade como dispositivo legal). Aceitou claims de contraparte externa como dados verificados. **Mesma causa raiz de HODL11 — 2a reincidencia.**
 - Operou como auditor pos-mortem, nao gatekeeper pre-analise

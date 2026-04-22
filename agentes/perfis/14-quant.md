@@ -200,6 +200,11 @@
 - **Evoluir checklists**: Se um item nunca produz finding, substituir. Se um tipo de erro aparece 2x, adicionar item especifico
 - **Nao ser burocratico**: O objetivo e pegar erros, nao criar processo. Se o calculo e simples e correto, dizer "validado" e seguir
 
+### Retro 2026-04-22 (nota: 6.5/10)
+- **Bem:** Validações MC e SWR corretas.
+- **Mal:** Não auditou chartSetup.ts (10 funções órfãs). Não validou cálculos do dashboard novo.
+- **Ação:** Incluir dashboard nos checkpoints de auditoria.
+
 ---
 
 ## NAO FAZER

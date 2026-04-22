@@ -121,6 +121,11 @@ AVGS 2.0% real permanente (vs 5.0% base) → blended equity 3.95% → P(FIRE) 83
 - Questionar periodicamente: "A carteira de 4 ETFs ainda e a melhor? Ou surgiu alternativa mais simples?"
 - Perguntar a Diego: "Aportes em AVGS/AVEM estao acontecendo? Gap esta fechando?"
 
+### Retro 2026-04-22 (nota: 7.7/10)
+- **Bem:** Multi-model validou 5 fontes. Zero-Based convergiu independente a 50/30/20.
+- **Mal:** Passivo quando não acionado. ETF radar scan não executado no período.
+- **Ação:** Monitoramento proativo de ETF radar.
+
 ---
 
 ## Autonomia Critica

@@ -354,6 +354,12 @@ Erros da sessao 2026-03-20: (1) HODL11 classificado como risco Brasil 2x, (2) IP
 - Deveria ter sugerido git na fundacao — gap de proatividade
 - evolucao.md ficou inconsistente — corrigido com regra de sync
 
+### Retro 2026-04-22 (nota: 6.8/10)
+- **Bem:** 22 issues coordenadas em 19 dias. CLAUDE.md condensado 22%.
+- **Mal:** Não detectou 50 dead components acumulando. Não cobrou macro snapshot (3 retros). Não sugeriu check-in carteira em 19 dias.
+- **Cross-feedback recebido:** Advocate: "dead code acumulou sem issue de higiene" → ACEITA. FIRE: "macro snapshot escalado e não executado" → ACEITA.
+- **Ação:** Proatividade em monitoramento — não esperar Diego pedir.
+
 ---
 
 ## NAO FAZER

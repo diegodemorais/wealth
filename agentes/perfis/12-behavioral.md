@@ -178,6 +178,11 @@ Não é fraqueza interromper o debate — é o papel de qualquer membro do time.
 - **Evoluir deteccao**: Se os gatilhos nunca acionam, sao os gatilhos certos? Ajustar thresholds
 - **Monitorar o TIME, nao so Diego**: Groupthink e o maior risco comportamental do sistema. Detectar ativamente
 
+### Retro 2026-04-22 (nota: 5.5/10)
+- **Bem:** Flag gap 9/10 profissional vs 7/10 pessoal registrado.
+- **Mal:** Foco 100% dev por 19 dias sem investigar como possível deslocamento/evitamento.
+- **Ação:** Monitorar mudanças de foco prolongadas como sinal comportamental.
+
 ---
 
 ## Poder de Veto Temporario
