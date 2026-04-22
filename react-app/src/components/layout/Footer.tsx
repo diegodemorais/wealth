@@ -3,6 +3,7 @@
 // privacy-ok: toLocaleString here formats dates only (timestamps), not BRL monetary values
 
 import { useMemo } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 
@@ -55,7 +56,7 @@ export function Footer() {
         {isStale && (
           <div style={{ ...styles.section, ...styles.stale }} data-test="staleness-banner">
             <small style={{ color: '#fff', fontWeight: 600 }}>
-              ⚠️ Dados com {daysOld} dias — considere atualizar
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={13} />Dados com {daysOld} dias — considere atualizar</span>
             </small>
           </div>
         )}

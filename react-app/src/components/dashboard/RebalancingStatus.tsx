@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
 
 interface DriftItem {
@@ -69,7 +70,9 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
         <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: statusBg, border: `1px solid ${statusBorder}` }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Status de Rebalanceamento</div>
           <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: statusColor }}>
-            {needsRebalance ? '⚠️ Rebalancear Agora' : '✅ Em Tolerância'}
+            {needsRebalance
+              ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} />Rebalancear Agora</span>
+              : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} />Em Tolerância</span>}
           </div>
           <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             Max desvio: {maxDrift.toFixed(1)}pp (limite: {driftThresholdPp}pp)
@@ -184,7 +187,11 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
 
                   {/* Zone label */}
                   <div style={{ fontSize: 'var(--text-xs)', marginTop: '3px', color: zoneColor, fontWeight: isOut ? 600 : 400 }}>
-                    {absDrift > 5 ? '🔴 Crítico' : absDrift > 3 ? '🟡 Atenção' : '🟢 OK'}
+                    {absDrift > 5
+                      ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--red)', flexShrink: 0 }} />Crítico</span>
+                      : absDrift > 3
+                        ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--yellow)', flexShrink: 0 }} />Atenção</span>
+                        : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--green)', flexShrink: 0 }} />OK</span>}
                     {' — '}
                     {item.driftPp > 0 ? 'acumulou' : 'deficitário'}
                     {isOut && ' · fora da tolerância'}
@@ -212,7 +219,11 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
           <div style={{ padding: 'var(--space-3)', borderRadius: '4px', background: urgencyBg, border: `1px solid ${urgencyBorder}` }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Urgência</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: urgencyColor }}>
-              {itemsOutOfTolerance.length > 2 ? '🚨 CRÍTICA' : itemsOutOfTolerance.length > 0 ? '⚠️ ALTA' : '✅ BAIXA'}
+              {itemsOutOfTolerance.length > 2
+                ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertCircle size={14} />CRÍTICA</span>
+                : itemsOutOfTolerance.length > 0
+                  ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} />ALTA</span>
+                  : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} />BAIXA</span>}
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Rebalancear hoje</div>
           </div>
@@ -222,7 +233,7 @@ const RebalancingStatus: React.FC<RebalancingStatusProps> = ({
         {itemsOutOfTolerance.length > 0 && (
           <div style={{ padding: 'var(--space-3)', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--yellow)', fontWeight: 600, marginBottom: '8px' }}>
-              ⚠️ Ações Recomendadas:
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={13} />Ações Recomendadas:</span>
             </div>
             <ul style={{ margin: 0, paddingLeft: '20px', fontSize: 'var(--text-sm)', color: 'var(--text)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {itemsOutOfTolerance.map(item => (

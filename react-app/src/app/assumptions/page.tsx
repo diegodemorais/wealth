@@ -5,6 +5,7 @@ import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { pfireColor } from '@/utils/fire';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { CheckCircle } from 'lucide-react';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -29,7 +30,7 @@ function mask(v: number, priv: boolean): string {
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 interface Row {
-  label: string;
+  label: React.ReactNode;
   value: string;
   muted?: boolean;
   accent?: boolean;
@@ -773,7 +774,7 @@ export default function AssumptionsPage() {
             <Block title="Eventos de Vida — Impacto FIRE" note={`Base sem eventos: spending R$${((le.base?.spending_brl ?? 0) / 1000).toFixed(0)}k/ano, P(FIRE) ${((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%`}>
               <Table rows={le.eventos.map((ev: any) => [
                 {
-                  label: ev.label + (ev.confirmado ? ' ✓' : ' (planej.)'),
+                  label: ev.confirmado ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>{ev.label} <CheckCircle size={13} style={{ color: 'var(--green)' }} /></span> : `${ev.label} (planej.)`,
                   value: `P ${(ev.pfire_2040 * 100).toFixed(1)}% (${ev.delta_pp > 0 ? '+' : ''}${ev.delta_pp}pp)`,
                   warn: Math.abs(ev.delta_pp) > 3,
                   accent: ev.confirmado && ev.delta_pp > 0,

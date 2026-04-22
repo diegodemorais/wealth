@@ -76,7 +76,7 @@ export default function PortfolioPage() {
         />
         {showEstateAlert && (
           <MetricCard
-            label="⚠ US-Situs >$60k"
+            label="US-Situs >$60k"
             value={privacyMode ? '••••' : `$${(usSitusUsd / 1000).toFixed(0)}k`}
             valueColor="text-red"
             size="sm"

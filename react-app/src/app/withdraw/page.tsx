@@ -13,6 +13,7 @@ import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
+import { Shield } from 'lucide-react';
 import { FIRE_RULES } from '@/config/business-rules';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
@@ -262,7 +263,7 @@ function FloorUpsideWithdraw({
             color: 'var(--accent)',
           }}
         >
-          🛡 Bond pool cobre os primeiros{' '}
+          <Shield size={13} style={{ display: 'inline', verticalAlign: '-2px' }} /> Bond pool cobre os primeiros{' '}
           <strong>{bondRunwayAnos} anos</strong> do gap sem vender equity —
           buffer SoRR ativo
         </div>
@@ -720,7 +721,7 @@ export default function WithdrawPage() {
                   <div style={{ display: 'flex', gap: 16, marginBottom: 8 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--muted)' }}>
                       <span style={{ width: 8, height: 8, borderRadius: 2, background: '#2563eb', flexShrink: 0 }} />
-                      🛡 SoRR Buffer
+                      <Shield size={13} style={{ display: 'inline', verticalAlign: '-2px' }} /> SoRR Buffer
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--muted)' }}>
                       <span style={{ width: 8, height: 8, borderRadius: 2, background: '#7c3aed', flexShrink: 0 }} />
@@ -755,7 +756,7 @@ export default function WithdrawPage() {
                 {/* ── 2. Pool distinction ── */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginBottom: 16 }}>
                   <div style={{ background: 'rgba(37,99,235,.06)', border: '1px solid rgba(37,99,235,.25)', borderRadius: 8, padding: '12px 14px' }}>
-                    <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 600, marginBottom: 6 }}>🛡 SoRR Buffer — pool ativo</div>
+                    <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 600, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 4 }}><Shield size={13} /> SoRR Buffer — pool ativo</div>
                     <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)', marginBottom: 4 }}>IPCA+2029 + IPCA+2040</div>
                     <div style={{ fontWeight: 700, fontSize: '1.1rem' }} className="pv">{fmtK(spendingPool)}</div>
                     <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>

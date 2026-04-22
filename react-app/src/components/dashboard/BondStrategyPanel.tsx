@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
+import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 
 export interface BondStrategyPanelProps {
   // Pré-FIRE (SoRR)
@@ -248,7 +249,7 @@ export default function BondStrategyPanel({
                       {runway != null ? (privacyMode ? '••••' : `${runway.toFixed(1)}a`) : '—'}
                     </div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
-                      {runway != null ? (runway >= 7 ? '✓ meta' : runway >= 5 ? '⚠ ok' : '✗ curto') : ''}
+                      {runway != null ? (runway >= 7 ? <><CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> meta</> : runway >= 5 ? <><AlertCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> ok</> : <><XCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> curto</>) : ''}
                     </div>
                   </div>
                 );

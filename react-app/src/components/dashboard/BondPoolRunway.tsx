@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
 
 interface RunwayYear {
@@ -73,7 +74,11 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
   const statusColor = isSafe ? 'var(--green)' : isWarning ? 'var(--yellow)' : 'var(--red)';
   const statusBg = isSafe ? 'rgba(34,197,94,0.1)' : isWarning ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)';
   const statusBorder = isSafe ? 'rgba(34,197,94,0.25)' : isWarning ? 'rgba(245,158,11,0.25)' : 'rgba(239,68,68,0.25)';
-  const statusLabel = isSafe ? '✅ Seguro' : isWarning ? '⚠️ Atenção' : '🚨 Crítico';
+  const statusLabel = isSafe
+    ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} />Seguro</span>
+    : isWarning
+      ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} />Atenção</span>
+      : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><AlertCircle size={14} />Crítico</span>;
   const statusDesc = isSafe
     ? 'Bond pool cobre 2.5+ anos de gastos'
     : isWarning
@@ -200,13 +205,13 @@ const BondPoolRunway: React.FC<BondPoolRunwayProps> = ({
             <div><strong>Taxa sustentável (SWR):</strong> {swrPercent.toFixed(2)}%</div>
             {runoutYear !== Infinity && runoutYear > projectedYears && (
               <div style={{ color: 'var(--yellow)' }}>
-                <strong>⚠️ Atenção:</strong> Com despesas de {fmtBrl(fireAnnualExpense)}/ano,
+                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={13} />Atenção:</strong> Com despesas de {fmtBrl(fireAnnualExpense)}/ano,
                 a cobertura esgota em ~{(runoutYear + 1) * 12} meses
               </div>
             )}
             {isSafe && (
               <div style={{ color: 'var(--green)' }}>
-                <strong>✅ Seguro:</strong> Bond pool sustenta gastos por 2.5+ anos em média
+                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><CheckCircle size={13} />Seguro:</strong> Bond pool sustenta gastos por 2.5+ anos em média
               </div>
             )}
           </div>

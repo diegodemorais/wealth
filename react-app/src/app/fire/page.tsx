@@ -9,6 +9,7 @@ import { FIRE_RULES } from '@/config/business-rules';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
+import { AlertTriangle } from 'lucide-react';
 import { TrackingFireChart } from '@/components/charts/TrackingFireChart';
 import { NetWorthProjectionChart } from '@/components/charts/NetWorthProjectionChart';
 import { GlidePathChart } from '@/components/charts/GlidePathChart';
@@ -515,7 +516,7 @@ export default function FirePage() {
         </div>
         <NetWorthProjectionChart data={safeData} />
         <div style={{ marginTop: 4, padding: '6px 10px', background: 'color-mix(in srgb, var(--yellow) 8%, transparent)', borderRadius: 6, borderLeft: '3px solid var(--yellow)', fontSize: 'var(--text-sm)' }}>
-          ⚠️ Portfólio financeiro apenas. Aportes futuros de R$25k/mês já estão modelados trajetória a trajetória (proxy de capital humano). O modelo não captura risco de interrupção de renda — doença, invalidez ou queda de receita PJ.{' '}
+          <AlertTriangle size={14} style={{ display: 'inline', verticalAlign: '-2px', flexShrink: 0 }} /> Portfólio financeiro apenas. Aportes futuros de R$25k/mês já estão modelados trajetória a trajetória (proxy de capital humano). O modelo não captura risco de interrupção de renda — doença, invalidez ou queda de receita PJ.{' '}
           Pré-FIRE: interpolação exponencial entre hoje e endpoints MC. Pós-FIRE: retorno blended (P10=2.5%, P50=3.5%, P90=4.5% real) com spending smile (Go-Go/Slow-Go/No-Go) + saúde VCMH em R$ reais (constante 2026).
         </div>
         <div className="src">

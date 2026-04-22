@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
+import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 
 interface SWRDashboardProps {
   // Acumulação
@@ -50,9 +51,9 @@ export default function SWRDashboard({
     : swrP50 <= swrTarget * 1.33 ? 'var(--yellow)'
     : 'var(--red)';
   const swrFireStatus = swrP50 == null ? null
-    : swrP50 <= swrTarget ? '✓ dentro do target'
-    : swrP50 <= swrTarget * 1.33 ? '⚠ atenção'
-    : '✗ acima do target';
+    : swrP50 <= swrTarget ? <><CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> dentro do target</>
+    : swrP50 <= swrTarget * 1.33 ? <><AlertTriangle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> atenção</>
+    : <><XCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> acima do target</>;
 
   const fmtBrl = (v: number) => privacyMode
     ? '••••'

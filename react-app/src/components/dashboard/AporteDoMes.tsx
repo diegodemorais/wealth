@@ -3,6 +3,7 @@ import { useUiStore } from '@/store/uiStore';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
 import { fmtBrlCompact } from '@/utils/formatters';
+import { CheckCircle } from 'lucide-react';
 
 interface AporteDoMesProps {
   aporteMensal: number;
@@ -72,7 +73,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
             </span>
           ) : executadoMesCorrente ? (
             <span className="text-xs font-mono font-semibold px-1.5 py-0.5 rounded" style={{ background: 'rgba(34,197,94,0.12)', color: 'var(--green)' }}>
-              ✓ Executado{valorRealizado != null ? ` · ${privacyMode ? '••••' : fmtShort(valorRealizado)}` : ''}
+              <CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> Executado{valorRealizado != null ? ` · ${privacyMode ? '••••' : fmtShort(valorRealizado)}` : ''}
             </span>
           ) : (
             <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: 'rgba(234,179,8,0.12)', color: 'var(--yellow)' }}>

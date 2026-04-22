@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectItem } from '@/components/ui/select';
 import { calcFireYear, getAnoAtual, getIdadeAtual, pfireColor as pfireColorFn, HORIZONTE_VIDA } from '@/utils/fire';
 import { fmtBrlM, fmtPct as fmtPctCanon } from '@/utils/formatters';
+import { CheckCircle, AlertTriangle } from 'lucide-react';
 import { runMCYearly } from '@/utils/montecarlo';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
@@ -279,9 +280,9 @@ function FireSimuladorSection() {
         const pfireSemaforo = firePire;
         const pfireCardColor = pfireColorFn(pfireSemaforo);
         const semaforo = pfireSemaforo == null ? null
-          : pfireSemaforo < 70  ? { label: '⚠ Risco Alto', color: 'var(--red)' }
-          : pfireSemaforo < 85  ? { label: '⚠ Atenção',   color: 'var(--yellow)' }
-          : { label: '✓ Seguro', color: 'var(--green)' };
+          : pfireSemaforo < 70  ? { label: <><AlertTriangle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> Risco Alto</>, color: 'var(--red)' }
+          : pfireSemaforo < 85  ? { label: <><AlertTriangle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> Atenção</>,   color: 'var(--yellow)' }
+          : { label: <><CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> Seguro</>, color: 'var(--green)' };
         return (
       <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 items-center" style={{
         marginBottom: '18px',
@@ -328,7 +329,7 @@ function FireSimuladorSection() {
           )}
           {(swrBrutaPct || swrLiquidaSimple) && (
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, marginTop: '4px' }} className="pv">
-              {swrBrutaPct ? `✓ SWR bruta ${swrBrutaPct}%` : ''}{swrLiquidaSimple ? ` · líquida c/INSS ${swrLiquidaSimple}%` : ''}
+              {swrBrutaPct ? <><CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> SWR bruta {swrBrutaPct}%</> : ''}{swrLiquidaSimple ? ` · líquida c/INSS ${swrLiquidaSimple}%` : ''}
             </div>
           )}
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }} className="pv">
@@ -517,15 +518,15 @@ function WhatIfSection() {
 
   // Derive presets from data — no hardcoded values
   const WI_PRESETS: Record<WiPreset, { label: string; retorno: number | undefined; swrFrac: number | undefined }> = {
-    stress: { label: '⚠️ Stress',    retorno: fmRetornos.stress, swrFrac: swrPerc.swr_p10 },
-    base:   { label: '✅ Base',      retorno: fmRetornos.base,   swrFrac: swrPerc.swr_p50 },
-    fav:    { label: '🚀 Favorável', retorno: fmRetornos.fav,    swrFrac: swrPerc.swr_p90 },
+    stress: { label: 'Stress',    retorno: fmRetornos.stress, swrFrac: swrPerc.swr_p10 },
+    base:   { label: 'Base',      retorno: fmRetornos.base,   swrFrac: swrPerc.swr_p50 },
+    fav:    { label: 'Favorável', retorno: fmRetornos.fav,    swrFrac: swrPerc.swr_p90 },
   };
 
   const PROFILE_A_MAP: Record<WiProfileA, { label: string; byProfileKey: string; perfilKey: string }> = {
-    solteiro: { label: '👤 Solteiro', byProfileKey: 'atual',  perfilKey: 'atual'  },
-    casado:   { label: '💍 Casado',   byProfileKey: 'casado', perfilKey: 'casado' },
-    filho:    { label: '👶 Filho+Escola', byProfileKey: 'filho', perfilKey: 'filho' },
+    solteiro: { label: 'Solteiro', byProfileKey: 'atual',  perfilKey: 'atual'  },
+    casado:   { label: 'Casado',   byProfileKey: 'casado', perfilKey: 'casado' },
+    filho:    { label: 'Filho+Escola', byProfileKey: 'filho', perfilKey: 'filho' },
   };
 
   // Cenário A — mesma metodologia que B: acumulação determinística + MC inline desacumulação

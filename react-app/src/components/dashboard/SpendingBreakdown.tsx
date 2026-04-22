@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { CheckCircle, AlertTriangle } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
 
 export interface MonthlyBreakdownEntry {
@@ -40,7 +41,11 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
   const likesPct = totalAnual > 0 ? (likes / totalAnual) * 100 : 0;
   const impPct = totalAnual > 0 ? (imprevistos / totalAnual) * 100 : 0;
 
-  const flexLabel = mustPct <= 60 ? (mustPct < 50 ? '🟢 Muito flexível' : '✅ Balanceado') : '⚠️ Rígido';
+  const flexLabel = mustPct <= 60
+    ? (mustPct < 50
+      ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: 'var(--accent)', flexShrink: 0 }} />Muito flexível</span>
+      : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><CheckCircle size={13} />Balanceado</span>)
+    : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={13} />Rígido</span>;
   const flexColor = mustPct <= 60 ? (mustPct < 50 ? 'var(--accent)' : 'var(--green)') : 'var(--yellow)';
 
   // Monthly chart — se disponível
