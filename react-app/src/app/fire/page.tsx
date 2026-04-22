@@ -611,10 +611,11 @@ export default function FirePage() {
         </div>
       </CollapsibleSection>
 
-      <SectionDivider label="Cenários & Risco" />
       {/* 4c. Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
       {(data as any)?.premissas?.tem_conjuge === true && (
-        <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon="💑">
+        <>
+          <SectionDivider label="Cenários & Risco" />
+          <CollapsibleSection id="section-surviving-spouse" title={secTitle('fire', 'section-surviving-spouse', 'Cenário: Cônjuge Sobrevivente')} defaultOpen={secOpen('fire', 'section-surviving-spouse')} icon="💑">
           <div style={{ padding: '0 16px 16px' }}>
             <p style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: 12 }}>
               Estimativa de sustentabilidade do plano caso {(data as any)?.premissas?.nome_conjuge ?? 'cônjuge'} sobreviva a Diego.
@@ -675,6 +676,7 @@ export default function FirePage() {
             })()}
           </div>
         </CollapsibleSection>
+        </>
       )}
 
       <SectionDivider label="Eventos de Vida" />
