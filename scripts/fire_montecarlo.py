@@ -689,13 +689,16 @@ def projetar_acumulacao(premissas: dict, r_equity: float, cenario: str,
     df = premissas["t_dist_df"]
     pat = np.full(n_sim, float(premissas["patrimonio_atual"]))
     aporte_anual = premissas["aporte_mensal"] * 12
+    anos_bond_pool = premissas.get("anos_bond_pool", 7)
 
-    for _ in range(n_anos):
+    for ano in range(n_anos):
         z = rng.standard_t(df, size=n_sim) / np.sqrt(df / (df - 2))
+        # Usar vol_bond_pool nos primeiros anos da bond pool, depois vol_equity
+        vol_efetivo = premissas["vol_bond_pool"] if (premissas.get("vol_bond_pool") is not None and ano < anos_bond_pool) else premissas["volatilidade_equity"]
         retorno_carteira = (
-            premissas["pct_equity"]    * (r_equity + premissas["volatilidade_equity"] * z) +
+            premissas["pct_equity"]    * (r_equity + vol_efetivo * z) +
             premissas["pct_ipca_longo"] * premissas["retorno_ipca_plus"] +
-            premissas["pct_cripto"]    * (r_equity + 2 * premissas["volatilidade_equity"] * z)  # proxy cripto: 2x vol
+            premissas["pct_cripto"]    * (r_equity + 2 * vol_efetivo * z)  # proxy cripto: 2x vol
         )
         pat = pat * (1 + retorno_carteira) + aporte_anual
 
@@ -715,6 +718,8 @@ def projetar_acumulacao_mensal(premissas: dict, r_equity: float, n_sim: int = 5_
 
     rng = np.random.default_rng(seed)
     vol = premissas["volatilidade_equity"] * premissas["pct_equity"]
+    vol_mensal = vol / np.sqrt(12)  # Converter volatilidade anual para mensal
+    vol_bond_pool_mensal = premissas["vol_bond_pool"] / np.sqrt(12)  # vol_bond_pool também mensal
     df = premissas["t_dist_df"]
     pat = np.full(n_sim, float(premissas["patrimonio_atual"]))
     aporte_mensal = premissas["aporte_mensal"]
@@ -735,10 +740,12 @@ def projetar_acumulacao_mensal(premissas: dict, r_equity: float, n_sim: int = 5_
     for mês in range(n_meses):
         # Shocks mensais
         z = rng.standard_t(df, size=n_sim) / np.sqrt(df / (df - 2))
+        # Usar vol_bond_pool nos primeiros 84 meses (7 anos bond pool), depois vol_equity (mensais)
+        vol_efetivo = vol_bond_pool_mensal if mês < 84 else vol_mensal
         retorno_carteira = (
-            premissas["pct_equity"]    * (retorno_mensal + vol * z) +
+            premissas["pct_equity"]    * (retorno_mensal + vol_efetivo * z) +
             premissas["pct_ipca_longo"] * (premissas["retorno_ipca_plus"] / 12) +
-            premissas["pct_cripto"]    * (retorno_mensal + 2 * vol * z)
+            premissas["pct_cripto"]    * (retorno_mensal + 2 * vol_efetivo * z)
         )
         pat = pat * (1 + retorno_carteira) + aporte_mensal
 
