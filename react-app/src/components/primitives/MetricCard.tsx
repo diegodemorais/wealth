@@ -20,6 +20,11 @@ export interface MetricCardProps {
    */
   accent?: boolean;
   /**
+   * When true: adds left border 4px solid var(--accent) for visual accent.
+   * Used in primary KPI grids to highlight critical metrics.
+   */
+  accentLeftBorder?: boolean;
+  /**
    * Optional Tailwind color class applied to the value element.
    * Overrides the accent coloring when provided (e.g. 'text-green', 'text-red').
    */
@@ -47,6 +52,7 @@ export function MetricCard({
   sub,
   size = 'md',
   accent = false,
+  accentLeftBorder = false,
   valueColor,
   className,
 }: MetricCardProps) {
@@ -58,8 +64,14 @@ export function MetricCard({
     accent
       ? 'border-2 border-accent/40'
       : 'border border-border/50',
+    accentLeftBorder && 'border-l-4',
     className,
   );
+
+  // Apply left border color when accentLeftBorder is true
+  const style = accentLeftBorder
+    ? { borderLeftColor: 'var(--accent)' }
+    : undefined;
 
   const valueCls = cn(
     'font-black',

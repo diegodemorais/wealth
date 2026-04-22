@@ -3,7 +3,7 @@
  * Validates that all charts and components properly mask sensitive data
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 describe('Privacy Mode', () => {
   describe('DOM Class Application', () => {
