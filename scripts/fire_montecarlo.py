@@ -384,6 +384,62 @@ def retorno_equity_net_ir(retorno_real: float, ipca: float, aliquota: float) -> 
     return (1 + r_depois_ir) / (1 + ipca) - 1
 
 
+def simular_trajetoria_com_trajeto(patrimonio_inicial: float, n_anos: int, retorno_equity: float,
+                                     volatilidade: float, df: int, rng: np.random.Generator,
+                                     escala_custo_vida: float = 1.0,
+                                     aplicar_ir: bool = False, anos_bond_pool: int = 7,
+                                     ipca_anual: float = 0.04, aliquota_ir: float = 0.15,
+                                     inss_anual: float = 0.0, inss_inicio_ano: int = 12,
+                                     vol_bond_pool: float = None,
+                                     strategy: str = "guardrails") -> tuple:
+    """
+    Simula trajetória de desacumulação e retorna TRAJETÓRIA COMPLETA.
+    Retorna (sobreviveu: bool, patrimônio_final: float, trajetoria: list[float])
+    trajetoria[i] = patrimônio no ano i (começando em ano 0)
+    """
+    pat = patrimonio_inicial
+    pat_pico = patrimonio_inicial
+    strategy_fn = STRATEGY_FNS[strategy]
+    trajeto = [patrimonio_inicial]  # Começar com valor inicial
+
+    ctx = WithdrawalCtx(
+        swr_inicial=PREMISSAS["custo_vida_base"] / patrimonio_inicial if patrimonio_inicial > 0 else SWR_FALLBACK,
+        anos_total=n_anos,
+        ipca_anual=ipca_anual,
+    )
+
+    t_scale = np.sqrt(df / (df - 2))
+    for ano in range(n_anos):
+        vol_ano = vol_bond_pool if (vol_bond_pool is not None and ano < anos_bond_pool) else volatilidade
+
+        z = rng.standard_t(df) / t_scale
+        retorno_anual = retorno_equity + vol_ano * z
+
+        if aplicar_ir and ano >= anos_bond_pool:
+            retorno_anual = retorno_equity_net_ir(retorno_anual, ipca_anual, aliquota_ir)
+
+        ctx.retorno_ano = retorno_anual
+
+        pat = pat * (1 + retorno_anual)
+        pat_pico = max(pat_pico, pat)
+
+        gasto_base = gasto_spending_smile(ano, 0, escala_custo_vida)
+        gasto = strategy_fn(gasto_base, pat, pat_pico, ano, ctx)
+
+        if inss_anual > 0 and ano >= inss_inicio_ano:
+            gasto = max(0, gasto - inss_anual)
+
+        pat -= gasto
+        trajeto.append(max(pat, 0))  # Guardar patrimônio após gasto
+
+        if pat <= 0:
+            # Preencher resto da trajetória com zeros
+            trajeto.extend([0.0] * (n_anos - len(trajeto) + 1))
+            return False, 0.0, trajeto
+
+    return True, pat, trajeto
+
+
 def simular_trajetoria(patrimonio_inicial: float, n_anos: int, retorno_equity: float,
                         volatilidade: float, df: int, rng: np.random.Generator,
                         escala_custo_vida: float = 1.0,
@@ -533,6 +589,92 @@ def rodar_monte_carlo(premissas: dict, n_sim: int = 10_000,
         "pat_p90_fire": float(np.percentile(pat_fire_trajetorias, 90)),
         "pat_p10_final": float(np.percentile(pats_finais[pats_finais > 0], 10)) if (pats_finais > 0).any() else 0,
         "pat_p90_final": float(np.percentile(pats_finais[pats_finais > 0], 90)) if (pats_finais > 0).any() else 0,
+        "retorno_equity_usado": r_equity,
+    }
+
+
+def rodar_monte_carlo_com_trajetorias(premissas: dict, n_sim: int = 10_000,
+                                      cenario: str = "base", seed: int = 42,
+                                      strategy: str = "guardrails",
+                                      pat_fire_precomputed: np.ndarray = None) -> dict:
+    """
+    Roda Monte Carlo e retorna trajetórias COMPLETAS (ano a ano).
+    Usado pelo gráfico NetWorthProjection.
+
+    Retorna:
+    {
+      "trilha_p10": [val_ano0, val_ano1, ...],  # P10 por ano
+      "trilha_p50": [val_ano0, val_ano1, ...],  # P50 (mediana) por ano
+      "trilha_p90": [val_ano0, val_ano1, ...],  # P90 por ano
+      "datas": [2024, 2025, ...],
+      "cenario": "base",
+      "p_sucesso": 0.866
+    }
+    """
+    rng = np.random.default_rng(seed)
+    r_equity = _retorno_equity_cenario(premissas, cenario)
+
+    # Acumulação
+    anos_acum = premissas["idade_fire_alvo"] - premissas["idade_atual"]
+    if pat_fire_precomputed is not None:
+        pat_fire_trajetorias = pat_fire_precomputed
+        rng.standard_t(premissas["t_dist_df"], size=n_sim * anos_acum)
+    else:
+        pat_fire_trajetorias = projetar_acumulacao(premissas, r_equity, cenario, n_sim, rng, anos_acum)
+
+    # Parâmetros desacumulação
+    escala_cv = premissas.get("custo_vida_base", 250_000) / 250_000
+    aplicar_ir = premissas.get("aplicar_ir_desacumulacao", False)
+    anos_bond_pool = premissas.get("anos_bond_pool", 7)
+    ipca_anual = premissas.get("ipca_anual", 0.04)
+    aliquota_ir = premissas.get("aliquota_ir_equity", 0.15)
+    inss_anual = premissas.get("inss_anual", 0.0)
+    inss_inicio_ano = premissas.get("inss_inicio_ano", 12)
+    vol_bond_pool = premissas.get("vol_bond_pool", None)
+
+    # Guardar trajetórias completas
+    trajetorias = []
+    sucessos = 0
+    n_anos = premissas["anos_simulacao"]
+
+    for i in range(n_sim):
+        pat_ini = float(pat_fire_trajetorias[i])
+        sobreviveu, pat_final, trajeto = simular_trajetoria_com_trajeto(
+            pat_ini, n_anos, r_equity,
+            premissas["volatilidade_equity"], premissas["t_dist_df"], rng,
+            escala_custo_vida=escala_cv,
+            aplicar_ir=aplicar_ir, anos_bond_pool=anos_bond_pool,
+            ipca_anual=ipca_anual, aliquota_ir=aliquota_ir,
+            inss_anual=inss_anual, inss_inicio_ano=inss_inicio_ano,
+            vol_bond_pool=vol_bond_pool,
+            strategy=strategy
+        )
+        if sobreviveu:
+            sucessos += 1
+        # trajeto é a sequência de patrimônios: [pat_ano0, pat_ano1, ..., pat_anoN]
+        trajetorias.append(trajeto)
+
+    # Converter para array (n_sim x n_anos)
+    trajetorias = np.array(trajetorias)
+    p_sucesso = sucessos / n_sim
+
+    # Calcular percentis por ano
+    trilha_p10 = np.percentile(trajetorias, 10, axis=0).tolist()
+    trilha_p50 = np.percentile(trajetorias, 50, axis=0).tolist()
+    trilha_p90 = np.percentile(trajetorias, 90, axis=0).tolist()
+
+    # Gerar datas (anos do FIRE até final)
+    idade_fire = premissas["idade_fire_alvo"]
+    ano_fire = int(premissas.get("ano_atual", 2024)) + anos_acum
+    datas = [str(ano_fire + i) for i in range(n_anos)]
+
+    return {
+        "trilha_p10": trilha_p10,
+        "trilha_p50": trilha_p50,
+        "trilha_p90": trilha_p90,
+        "datas": datas,
+        "cenario": cenario,
+        "p_sucesso": float(p_sucesso),
         "retorno_equity_usado": r_equity,
     }
 

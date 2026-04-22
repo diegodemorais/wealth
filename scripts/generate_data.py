@@ -3632,6 +3632,36 @@ def main():
     else:
         print("  ⚠️  by_profile MISSING — Cenário A will show '—'. Run fire_montecarlo.py --by_profile")
 
+    # ─── Gerar trajetórias Monte Carlo (para gráfico NetWorthProjection) ──────
+    print("  ▶ Gerando trajetórias Monte Carlo (Net Worth Projection) ...")
+    trilhas_data = {}
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("fire_mc", ROOT / "scripts" / "fire_montecarlo.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+
+        # Use PREMISSAS completo do módulo (que já contém todas as constantes)
+        mc_premissas = getattr(mod, 'PREMISSAS', {})
+        if not mc_premissas:
+            raise ValueError("PREMISSAS não encontrado em fire_montecarlo.py")
+
+        # Rodar MC com trajetórias (base scenario)
+        trilhas = mod.rodar_monte_carlo_com_trajetorias(
+            mc_premissas, n_sim=10_000, cenario="base", seed=42, strategy="guardrails"
+        )
+        trilhas_data = {
+            "trilha_p10": trilhas.get("trilha_p10", []),
+            "trilha_p50": trilhas.get("trilha_p50", []),
+            "trilha_p90": trilhas.get("trilha_p90", []),
+            "datas": trilhas.get("datas", []),
+            "p_sucesso": trilhas.get("p_sucesso", 0),
+        }
+        print(f"  ✓ Trajetórias Monte Carlo: {len(trilhas_data['trilha_p50'])} anos, P(FIRE)={trilhas_data['p_sucesso']:.1%}")
+    except Exception as e:
+        print(f"  ⚠️ Trajetórias MC failed: {e}")
+        trilhas_data = {}
+
     # ─── Construir objeto DATA completo ──────────────────────────────────────
     data = {
         "_generated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -3655,6 +3685,10 @@ def main():
         "tornado":    tornado,
         "fire":       fire_section,
         "scenario_comparison": scenario_comparison,
+        "trilha_p10": trilhas_data.get("trilha_p10", []),
+        "trilha_p50": trilhas_data.get("trilha_p50", []),
+        "trilha_p90": trilhas_data.get("trilha_p90", []),
+        "trilha_datas": trilhas_data.get("datas", []),
 
         "timeline":   timeline,
         "retornos_mensais": retornos_mensais,
