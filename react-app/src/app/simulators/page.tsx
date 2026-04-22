@@ -200,11 +200,21 @@ function FireSimuladorSection() {
   const earliestFire = (data as any)?.earliest_fire ?? null;
   const isAspirPreset = !custom && fireCond === 'solteiro' && fireMkt === 'fav';
 
+  // Detect if custom mode value matches a preset — use preset mode in that case
+  const preset = MKT_PRESETS[fireMkt];
+  const retornoMatchesPreset = custom && retorno !== undefined && preset.retorno !== undefined
+    ? Math.abs(retorno - preset.retorno) < 0.01 // within rounding tolerance
+    : false;
+
+  // Preset mode indicator (for UI label)
+  const isPresetMode = !custom || retornoMatchesPreset;
+
   type FireResult = { ano: number; idade: number; pat: number; swrAtFire: number };
   let result: FireResult | null = null;
   let firePire: number | null = null;
 
-  if (!custom) {
+  if (isPresetMode) {
+    // Preset mode: use pré-computed data
     if (isAspirPreset) {
       // Aspiracional: use earliest_fire from MC
       if (earliestFire) {
@@ -251,9 +261,6 @@ function FireSimuladorSection() {
 
   // SWR líquida (only meaningful in custom mode when pat is known)
   const swrLiquidaSimple = (result && result.pat > 0 && custoLiquido != null) ? ((custoLiquido / result.pat) * 100).toFixed(2) : null;
-
-  // Preset mode indicator (for UI label)
-  const isPresetMode = !custom;
 
   // Timeline: age range hoje..70
   const timelineMin = currentAge ?? 0;
@@ -454,7 +461,7 @@ function FireSimuladorSection() {
       <div className="src">
         {isPresetMode
           ? 'Modo preset: dados MC pré-calculados (consistente com FIRE page). Mova um slider para modo interativo.'
-          : `Modo interativo: simulação determinística · SWR ≤ ${swrTarget != null ? `${(swrTarget * 100).toFixed(1)}%` : '—'} · sem variância de mercado`}
+          : `Modo interativo: simulação determinística · SWR ≤ ${swrTarget != null ? `${(swrTarget * 100).toFixed(1)}%` : '—'} · retorno ${retorno != null ? `${retorno.toFixed(2)}%` : '—'} diferente do preset`}
       </div>
     </div>
   );
