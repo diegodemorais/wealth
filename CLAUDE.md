@@ -133,28 +133,71 @@ Ao alterar qualquer premissa financeira em carteira.md:
 
 `dev` é o único agente autorizado. Quant valida toda mudança que envolva dados ou cálculos.
 
-**Pipeline atual:**
+**Pipeline:**
 ```
 Scripts Python (generate_data.py, reconstruct_*.py)
-        ↓
-    dados/ (JSON com dados calculados)
-        ↓
-    React App (react-app/ consome os dados)
-        ↓
-    dash/ (compilado via `npm run build`, deploy para GitHub Pages)
+    ↓  dados/ (JSON calculados)
+    ↓  React App (react-app/) → dash/ (compilado)
+    ↓  GitHub Actions deploy → GitHub Pages
 ```
 
-**Regras:**
-- Zero hardcoded — fonte única são as estruturas internas (`agentes/`, `dados/`)
-- Todo componente tem versão privacy (valores sensíveis ocultos)
-- React compila automaticamente via GitHub Actions (`.github/workflows/deploy-dashboard.yml`)
-- Nunca editar `dash/index.html` ou `dash/*.html` diretamente (são gerados)
+### Regras fundamentais
 
-**Layout mobile (obrigatório):**
-- Grids com 4+ colunas SEMPRE usar classes responsivas Tailwind: `grid-cols-2 sm:grid-cols-4`
-- NUNCA usar `style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}` — sobrescreve responsividade e quebra mobile
-- NUNCA usar `grid-cols-4` sem fallback mobile (`grid-cols-2` na mesma linha)
-- Teste automático em `src/__tests__/style-validation.test.ts` (grupo 2f) detecta ambas violações
+- Zero hardcoded — fonte única são `agentes/`, `dados/`
+- Todo componente tem versão privacy (valores sensíveis → `••••`)
+- GitHub Actions compila e deploya (`.github/workflows/deploy-dashboard.yml`)
+- Secrets via GitHub Secrets + `.env.local` (git-ignored). CI precisa de ambos
+- Nunca editar `dash/*.html` diretamente (são gerados pelo build)
+
+### Code style (dashboard)
+
+**Tamanho e estrutura:**
+- Funções: 4-20 linhas. Dividir se maior
+- Arquivos: máximo 500 linhas. Dividir por responsabilidade
+- Uma responsabilidade por módulo (SRP). chartSetup.ts com 1600 linhas foi erro — não repetir
+- Early returns sobre ifs aninhados. Máximo 2 níveis de indentação
+
+**Nomes e tipos:**
+- Nomes específicos. Evitar `data`, `handler`, `Manager` genéricos
+- `any` proibido em código novo. Existente migra gradualmente. Usar tipos de `@/types/dashboard`
+- Props interfaces explícitas para todo componente exportado
+
+**Duplicação e dead code:**
+- NUNCA criar componente sem wiring na página. Componente órfão = dead code
+- Antes de criar novo chart/componente, verificar se equivalente já existe nas abas ativas
+- Ao deletar componente, verificar se factory functions em `chartSetup.ts` ficaram órfãs
+- Ao refatorar: `grep -rl "ComponentName" src/` para confirmar 0 refs antes de deletar
+
+**Charts (100% ECharts):**
+- Única lib: ECharts via `echarts-for-react`. Chart.js foi removido — não reintroduzir
+- Wrapper obrigatório: `<EChart>` de `@/components/primitives/EChart.tsx`
+- Cores: importar `EC` de `@/utils/echarts-theme` — nunca hex inline
+- Privacy: todo tooltip/label deve respeitar `privacyMode` (usar `useEChartsPrivacy()`)
+- Factory functions centralizadas em `utils/chartSetup.ts` quando reusáveis (>1 consumidor)
+
+**Estilos:**
+- CSS vars para cores/spacing (`var(--card)`, `var(--accent)`). Não hex direto em JSX
+- Grids responsivos: SEMPRE `grid-cols-2 sm:grid-cols-4` (Tailwind). NUNCA inline `gridTemplateColumns`
+- Tailwind v4: custom colors em `@theme` no `globals.css`. `tailwind.config.ts` é ignorado
+
+**Testes:**
+- Comando único: `npm run test` (Vitest)
+- Build validation: `npm run build` valida todas 8 páginas
+- Playwright pre-push: `./scripts/quick_dashboard_test.sh`
+- Bug fix → regression test. Feature nova → component render test
+
+### Comentários
+
+- Escrever POR QUÊ, não O QUÊ. Skip `// increment counter`
+- Manter comentários existentes ao refatorar — carregam contexto e proveniência
+- Referenciar issue ID quando linha existe por causa de bug específico
+
+### Limpeza e higiene
+
+- Arquivos debug/test temporários vão em `/tmp` ou `.gitignore` — nunca no root do repo
+- Docs de auditoria/investigação são efêmeros — não commitar como arquivos permanentes
+- Ao remover dependência npm, verificar se imports residuais existem: `grep -rl "pacote" src/`
+- git-filter-repo é nuclear — destrói histórico. Preferir `.gitignore` + secrets rotation
 
 ## Referências
 
@@ -165,7 +208,7 @@ Scripts Python (generate_data.py, reconstruct_*.py)
 | Retros | `agentes/referencia/retro-dinamica.md` |
 | Flight Rules | `agentes/referencia/flight-rules.md` |
 | Believability Tracker | `agentes/memoria/believability.md` |
-| Chart.js 4 patterns (dev) | `agentes/referencia/dev-chartjs-patterns.md` |
+| ECharts patterns (dev) | `react-app/src/utils/echarts-theme.ts` + `chartSetup.ts` |
 
 ## Estrutura do Projeto
 
