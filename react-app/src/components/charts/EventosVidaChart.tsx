@@ -62,8 +62,13 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
   return (
     <ChartCard title="Eventos de Vida — Timeline FIRE">
       <div className="relative pl-10">
-        {allMilestones.map((milestone, idx) => (
-          <div key={idx} className="mb-6 relative">
+        {allMilestones.map((milestone, idx) => {
+          const isCasamento = milestone.event?.toLowerCase().includes('casamento');
+          const tooltipText = isCasamento
+            ? 'Revisar: regime de bens (comunhão/separação), ITCMD, seguro de vida, PGBL cônjuge'
+            : undefined;
+          return (
+          <div key={idx} className="mb-6 relative" title={tooltipText}>
             <div
               className="absolute -left-14 w-9 h-9 rounded-full flex items-center justify-center border-2 border-card"
               style={{ background: (milestone as any).color + '33', borderColor: (milestone as any).color + '66' }}
@@ -72,7 +77,18 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
             </div>
             <div className="pb-3">
               <div className="font-bold text-sm" style={{ color: (milestone as any).color }}>{milestone.year}</div>
-              <div className="text-gray-300 font-semibold text-sm mt-1">{milestone.event}</div>
+              <div className="text-gray-300 font-semibold text-sm mt-1">
+                {milestone.event}
+                {isCasamento && (
+                  <span
+                    title={tooltipText}
+                    className="ml-1.5 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[9px] cursor-help"
+                    style={{ background: 'rgba(148,163,184,.2)', color: 'var(--muted)' }}
+                  >
+                    ⓘ
+                  </span>
+                )}
+              </div>
               <div className="text-muted-foreground text-xs mt-0.5">Idade {milestone.age}</div>
               {(milestone as any).impacto && (
                 <div className="text-xs mt-1" style={{ color: EC.yellow }}>
@@ -91,7 +107,8 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
               <div className="absolute -left-11 top-9 w-0.5 h-8 bg-muted" />
             )}
           </div>
-        ))}
+          );
+        })}
       </div>
     </ChartCard>
   );

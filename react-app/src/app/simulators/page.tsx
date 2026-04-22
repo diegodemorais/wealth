@@ -17,18 +17,7 @@ import { runMCYearly } from '@/utils/montecarlo';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -1707,25 +1696,28 @@ export default function SimulatorsPage() {
 
   return (
     <div>
-      <SectionDivider label="Decisão de Aporte" />
-      {/* 1. Cascade — decisão de aporte (ação imediata) */}
-      <CascadeSection />
-
-      <hr className="section-sep" />
-
       <SectionDivider label="Simulação FIRE" />
-      {/* 2. Simulador FIRE — projeção central */}
+      <div style={{ marginBottom: 8, padding: '8px 12px', background: 'rgba(88,166,255,.06)', border: '1px solid rgba(88,166,255,.2)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+        <strong style={{ color: 'var(--accent)' }}>What-if interativo</strong> com premissas editáveis. Para cenários pré-computados, ver aba <strong>FIRE</strong>.
+      </div>
+      {/* 1. Simulador FIRE — projeção central com premissas editáveis */}
       <FireSimuladorSection />
 
       <hr className="section-sep" />
 
-      {/* 3. What-If Scenarios — collapsed (análise secundária) */}
+      {/* 2. What-If Scenarios — análise de sensibilidade */}
       <WhatIfSection />
 
       <hr className="section-sep" />
 
+      <SectionDivider label="Decisão de Aporte" />
+      {/* 3. Cascade — decisão operacional de aporte */}
+      <CascadeSection />
+
+      <hr className="section-sep" />
+
       <SectionDivider label="Análise Avançada" />
-      {/* 4. Stress Test MC — collapsed (ferramenta avançada) */}
+      {/* 4. Stress Test MC — ferramenta avançada */}
       <StressTestSection />
     </div>
   );

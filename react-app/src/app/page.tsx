@@ -5,11 +5,9 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { KpiHero } from '@/components/primitives/KpiHero';
 import AporteDecisionPanel from '@/components/dashboard/AporteDecisionPanel';
-import CarryDifferential from '@/components/dashboard/CarryDifferential';
 import FireProgressWellness from '@/components/dashboard/FireProgressWellness';
 import AporteDoMes from '@/components/dashboard/AporteDoMes';
 import PFireMonteCarloTornado from '@/components/dashboard/PFireMonteCarloTornado';
-import CashFlowSankey from '@/components/dashboard/CashFlowSankey';
 import { TimeToFireProgressBar } from '@/components/dashboard/TimeToFireProgressBar';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SectionLabel } from '@/components/primitives/SectionLabel';
@@ -18,22 +16,11 @@ import { MetricCard } from '@/components/primitives/MetricCard';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
-import IpcaTaxaProgress from '@/components/dashboard/IpcaTaxaProgress';
 import RebalancingStatus from '@/components/dashboard/RebalancingStatus';
-import { DCAStatusGrid } from '@/components/dashboard/DCAStatusGrid';
 import SemaforoGatilhos from '@/components/dashboard/SemaforoGatilhos';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import MacroUnificado from '@/components/dashboard/MacroUnificado';
+import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point
@@ -62,9 +49,6 @@ export default function HomePage() {
   // pageStateElement guarantees derived is non-null past this point
   const d = derived!;
 
-  // Current year — from premissas to avoid hardcoding
-  const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
-
   // Aporte ETFs for AporteDecisionPanel
   // retornos_por_etf schema: { SWRD: { retorno_usd_real: 0.037, fonte: '...' }, ... } (decimal, não %)
   const retornos = (data as any)?.premissas?.retornos_por_etf ?? {};
@@ -78,34 +62,62 @@ export default function HomePage() {
     { ticker: 'AVEM', atual: (data?.drift as any)?.AVEM?.atual ?? 0, alvo: (data?.drift as any)?.AVEM?.alvo ?? 15.8, expectedReturn: erPct('AVEM', 5.0) },
   ];
 
-  // Carry Differential data
-  const carryData = {
-    selic: (data as any)?.macro?.selic_meta ?? 14.75,
-    fedFunds: (data as any)?.macro?.fed_funds ?? 3.64,
-    cambio: (data as any)?.mercado?.cambio_brl_usd ?? (data as any)?.patrimonio?.cambio ?? null,
-  };
+  // Current year — from premissas to avoid hardcoding (used by child components via ano_atual)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const anoAtual = (data as any)?.premissas?.ano_atual ?? new Date().getFullYear();
 
   // Compute max drift
   const maxDrift = maxDriftPp(data?.drift as Record<string, any> ?? {});
 
-  // Get IPCA and Renda+ semaforo status from derived
-  const ipcaTaxa = data?.rf?.ipca2040?.taxa;
-  const rendaTaxa = data?.rf?.renda2065?.taxa;
+  // Get IPCA and Renda+ semaforo taxa from rf
+  const ipcaTaxa = data?.rf?.ipca2040?.taxa ?? null;
+  const rendaTaxa = data?.rf?.renda2065?.taxa ?? null;
 
-  // Determine semaforo colors based on taxa levels
-  const getIpcaSemaforoColor = (taxa: number | undefined) => {
-    if (!taxa) return 'var(--muted)';
-    if (taxa >= 7.5) return 'var(--green)';
-    if (taxa >= 6.5) return 'var(--yellow)';
-    return 'var(--red)';
-  };
-
-  const getRendaSemaforoColor = (taxa: number | undefined) => {
-    if (!taxa) return 'var(--muted)';
-    if (taxa >= 7.5) return 'var(--green)';
-    if (taxa >= 6.5) return 'var(--yellow)';
-    return 'var(--red)';
-  };
+  // Build RF Status rows (consolidated from IpcaTaxaProgress + DCA Status)
+  const rfRows = (() => {
+    const rf = (data as any)?.rf ?? {};
+    const dcaStatus = (data as any)?.dca_status ?? {};
+    const patAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 0;
+    const pct = (v: number) => patAtual > 0 ? (v / patAtual) * 100 : 0;
+    const ipca2040V = rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0;
+    const ipca2050V = rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0;
+    const renda2065V = rf.renda2065?.valor ?? rf.renda2065?.valor_brl ?? 0;
+    return [
+      {
+        id: 'ipca2040',
+        label: 'IPCA+ 2040',
+        taxaAtual: rf.ipca2040?.taxa,
+        piso: dcaStatus.ipca_longo?.piso,
+        gap: dcaStatus.ipca_longo?.gap_alvo_pp,
+        pctAtual: pct(ipca2040V),
+        pctAlvo: 8,
+        valor: ipca2040V,
+        dcaAtivo: dcaStatus.ipca_longo?.ativo ?? dcaStatus.ipca2040?.ativo,
+      },
+      {
+        id: 'ipca2050',
+        label: 'IPCA+ 2050',
+        taxaAtual: rf.ipca2050?.taxa,
+        piso: dcaStatus.ipca2050?.piso,
+        gap: dcaStatus.ipca2050?.gap_alvo_pp,
+        pctAtual: pct(ipca2050V),
+        pctAlvo: 7,
+        valor: ipca2050V,
+        dcaAtivo: dcaStatus.ipca2050?.ativo,
+      },
+      {
+        id: 'renda2065',
+        label: 'Renda+ 2065',
+        taxaAtual: rf.renda2065?.distancia_gatilho?.taxa_atual ?? rf.renda2065?.taxa,
+        piso: rf.renda2065?.distancia_gatilho?.piso_venda,
+        gap: rf.renda2065?.distancia_gatilho?.gap_pp,
+        pctAtual: pct(renda2065V),
+        pctAlvo: 0,
+        valor: renda2065V,
+        dcaAtivo: dcaStatus.renda_plus?.ativo,
+      },
+    ];
+  })();
 
   return (
     <div>
@@ -123,7 +135,6 @@ export default function HomePage() {
       {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
       <SectionLabel>Indicadores Primários</SectionLabel>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3.5">
-        {/* P(Cenário Aspiracional) */}
         <MetricCard
           accent
           label="P(Cenário Aspiracional)"
@@ -134,7 +145,6 @@ export default function HomePage() {
               : 'cenário aspiracional (49a)'
           }
         />
-        {/* Drift Máximo */}
         <MetricCard
           accent
           label="Drift Máximo"
@@ -142,7 +152,6 @@ export default function HomePage() {
           valueColor="text-text"
           sub="vs alvo IPS"
         />
-        {/* Aporte do Mês */}
         <MetricCard
           label="Aporte do Mês"
           value={d.aporteMensal ? (privacyMode ? '••••' : `R$${Math.round(d.aporteMensal / 1000)}k`) : '—'}
@@ -150,110 +159,33 @@ export default function HomePage() {
         />
       </div>
 
-      {/* 3. KPI GRID: Contexto de Mercado — Dólar, Bitcoin, IPCA+ 2040, Renda+ 2065 */}
-      <SectionLabel>Contexto de Mercado</SectionLabel>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5 opacity-85">
-        {/* Dólar */}
-        <MetricCard
-          size="sm"
-          label="Dólar"
-          value={d.CAMBIO ? `R$ ${d.CAMBIO.toFixed(2)}` : '—'}
-          sub={
-            data?.mercado?.cambio_mtd_pct != null
-              ? `${data.mercado.cambio_mtd_pct > 0 ? '+' : ''}${data.mercado.cambio_mtd_pct.toFixed(1)}% MtD · PTAX BCB`
-              : 'BRL/USD · PTAX BCB'
-          }
-        />
-        {/* Bitcoin */}
-        <MetricCard
-          size="sm"
-          label="Bitcoin"
-          value={
-            data?.mercado?.btc_usd
-              ? `$${Number(data.mercado.btc_usd).toLocaleString('en-US', { maximumFractionDigits: 0 })}`
-              : '—'
-          }
-          sub={
-            data?.mercado?.btc_mtd_pct != null
-              ? `${data.mercado.btc_mtd_pct > 0 ? '+' : ''}${data.mercado.btc_mtd_pct.toFixed(1)}% MtD`
-              : 'BTC/USD'
-          }
-        />
-        {/* IPCA+ 2040 */}
-        <MetricCard
-          size="sm"
-          label={
-            <>
-              IPCA+ 2040 — Taxa
-              <span
-                className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-                style={{ backgroundColor: getIpcaSemaforoColor(ipcaTaxa) }}
-              />
-            </>
-          }
-          value={ipcaTaxa ? `${ipcaTaxa.toFixed(2)}%` : '—'}
-          sub={data?.rf?.ipca2040?.descricao || 'Tesouro IPCA+ 2040'}
-        />
-        {/* Renda+ 2065 */}
-        <MetricCard
-          size="sm"
-          label={
-            <>
-              Renda+ 2065 — Taxa
-              <span
-                className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-                style={{ backgroundColor: getRendaSemaforoColor(rendaTaxa) }}
-              />
-            </>
-          }
-          value={rendaTaxa ? `${rendaTaxa.toFixed(2)}%` : '—'}
-          sub={data?.rf?.renda2065?.descricao || 'Tesouro Renda+ 2065'}
-        />
-      </div>
+      {/* 3. MACRO UNIFICADO — consolida Contexto de Mercado + Carry + Contexto Macro */}
+      <SectionDivider label="Macro & Mercado" />
+      <MacroUnificado
+        selic={(data as any)?.macro?.selic_meta ?? null}
+        ipca12m={(data as any)?.macro?.ipca_12m ?? null}
+        fedFunds={(data as any)?.macro?.fed_funds ?? null}
+        cambio={d.CAMBIO}
+        cambioMtdPct={data?.mercado?.cambio_mtd_pct ?? null}
+        ipcaTaxa={ipcaTaxa}
+        ipcaDescricao={data?.rf?.ipca2040?.descricao}
+        rendaTaxa={rendaTaxa}
+        rendaDescricao={data?.rf?.renda2065?.descricao}
+        concentrationBrazil={d.concentrationBrazil ?? null}
+        hodl11Brl={(data as any)?.hodl11?.valor ?? 0}
+        rfBrl={d.rfBrl ?? 0}
+        exposicaoCambialPct={(data as any)?.macro?.exposicao_cambial_pct ?? 87.9}
+        patrimonioAtual={(data as any)?.premissas?.patrimonio_atual ?? d.networth}
+        equityPctUsd={((data as any)?.macro?.exposicao_cambial_pct ?? 87.9) / 100}
+      />
 
-      {/* 3b. SEÇÃO: Carry Differential — colapsada */}
-      <CollapsibleSection id="section-carry-differential" title="Carry Differential — Selic vs Fed Funds" defaultOpen={secOpen('now', 'carry-differential', false)} icon="💱">
-        <div style={{ padding: '0 16px 16px' }}>
-          <CarryDifferential {...carryData} />
-        </div>
-      </CollapsibleSection>
-
-      {/* 4. SEÇÃO: Time to FIRE — Big number + Progresso */}
+      {/* 4. SEÇÃO: Time to FIRE */}
       <TimeToFireProgressBar
         fireProgress={d.firePercentage}
         yearsToFire={d.fireMonthsAway / 12}
         patrimonioAtual={d.firePatrimonioAtual}
         patrimonioGatilho={d.firePatrimonioGatilho}
       />
-
-      {/* 4a. Family Scenarios row abaixo do Time to FIRE */}
-      {data?.fire_matrix?.by_profile && Array.isArray(data.fire_matrix.by_profile) && (
-        <div className="grid grid-cols-3 gap-2 mb-3.5">
-          {data.fire_matrix.by_profile.map((profile: any, i: number) => {
-            // Use profile.label from JSON if available, else fall back to hardcoded
-            const fallbackLabels = ['Solteiro', 'Casado', 'C+Filho'];
-            const displayLabel = profile.label ?? fallbackLabels[i] ?? `Perfil ${i + 1}`;
-            // Show the base scenario (53) probability, fall back to fire_age_50
-            const pfireBase53 = profile.p_fire_53 ?? null;
-            const pfireBase50 = profile.p_fire_50 ?? null;
-            const pfire = pfireBase53 ?? pfireBase50;
-            const fireYear = profile.fire_age_53 ?? profile.fire_age_50 ?? '2040';
-            const fireAge = profile.profile === 'atual' ? 53 : 53;
-            return (
-              <div key={i} className="bg-slate-700/30 border-t-2 border-accent/40 rounded p-2.5 text-center">
-                <div className="text-xs uppercase font-semibold text-muted mb-1 tracking-widest">
-                  {displayLabel}
-                </div>
-                <div className="text-sm font-bold text-accent">FIRE {fireAge}</div>
-                <div className="text-sm font-bold text-green mt-0.5">
-                  P = {pfire != null ? `${pfire.toFixed(1)}%` : '—'}
-                </div>
-                <div className="text-xs text-muted mt-1">{fireYear}</div>
-              </div>
-            );
-          })}
-        </div>
-      )}
 
       <SectionDivider label="Próximo Aporte" />
       {/* 5. SEÇÃO: Próximo Aporte — Equity & Gatilhos RF */}
@@ -266,7 +198,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* 5b. Semáforo de Gatilhos — collapsed por default, mostra proxAcao por ativo */}
+      {/* 5b. Semáforo de Gatilhos — collapsed por default */}
       {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
         <div style={{ marginBottom: 14 }}>
           <SemaforoGatilhos items={d.dcaItems} />
@@ -274,7 +206,19 @@ export default function HomePage() {
       )}
 
       <SectionDivider label="Progresso FIRE" />
-      {/* 6. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
+      {/* 6. PFireMonteCarloTornado — reordenado para ANTES de FireProgressWellness */}
+      {d && (
+        <PFireMonteCarloTornado
+          pfireBase={d.pfireBase}
+          pfireFav={d.pfireFav}
+          pfireStress={d.pfireStress}
+          tornadoData={d.tornadoData}
+          firePatrimonioAtual={d.firePatrimonioAtual}
+          firePatrimonioGatilho={d.firePatrimonioGatilho}
+        />
+      )}
+
+      {/* 6b. GRID 2-COL: Progresso FIRE + Aporte do Mês */}
       <div className="grid grid-cols-2 gap-3.5 mb-3.5">
         <FireProgressWellness
           firePercentage={d.firePercentage}
@@ -296,13 +240,12 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* 6a. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
+      {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
       {data?.wellness_config?.metrics && (
         <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={secOpen('now', 'wellness')} icon="🏆">
           {(() => {
-            // Compute each metric's points using wellness_config thresholds
             const wc = data.wellness_config;
-            const pfireBaseVal = d.pfireBase; // 0-100
+            const pfireBaseVal = d.pfireBase;
             const aporteMensalVal = data.premissas?.aporte_mensal ?? 0;
             const custoVidaBase = data.premissas?.custo_vida_base ?? 0;
             const custoMensal = custoVidaBase / 12;
@@ -313,7 +256,6 @@ export default function HomePage() {
             const terAtual = data.drift?.['Custo']?.atual ?? (data.wellness_config?.metrics?.find((m: any) => m.id === 'ter')?.current_ter ?? 0.247);
             const humanCapitalStatus = data.wellness_config?.metrics?.find((m: any) => m.id === 'human_capital')?.status ?? 'solteiro_sem_dependentes';
 
-            // Compute pfire pts
             const pfirePts = (() => {
               const thresholds = wc.metrics.find((m: any) => m.id === 'pfire')?.thresholds ?? [];
               for (const t of thresholds) {
@@ -322,7 +264,6 @@ export default function HomePage() {
               return 0;
             })();
 
-            // Compute savings_rate pts
             const savingsRatePts = (() => {
               const thresholds = wc.metrics.find((m: any) => m.id === 'savings_rate')?.thresholds ?? [];
               for (const t of thresholds) {
@@ -331,7 +272,6 @@ export default function HomePage() {
               return 0;
             })();
 
-            // Compute drift pts
             const driftPts = (() => {
               const thresholds = wc.metrics.find((m: any) => m.id === 'drift')?.thresholds ?? [];
               for (const t of thresholds) {
@@ -340,9 +280,8 @@ export default function HomePage() {
               return 0;
             })();
 
-            // Compute ipca_gap pts
             const ipcaGapPts = (() => {
-              if (ipcaGapPp == null) return 5; // neutral fallback
+              if (ipcaGapPp == null) return 5;
               const thresholds = wc.metrics.find((m: any) => m.id === 'ipca_gap')?.thresholds ?? [];
               for (const t of thresholds) {
                 if (ipcaGapPp <= t.max_pp) {
@@ -352,10 +291,8 @@ export default function HomePage() {
               return dcaAtivo ? 5 : 3;
             })();
 
-            // execution_fidelity — use 7pts (neutral) if data insufficient
             const execPts = 7;
 
-            // emergency_fund — IPCA+ 2029 as liquid reserve
             const emergencyPts = (() => {
               const reservaBrl = data.rf?.ipca2029?.valor ?? 0;
               const months = custoMensal > 0 ? reservaBrl / custoMensal : 0;
@@ -366,7 +303,6 @@ export default function HomePage() {
               return 0;
             })();
 
-            // ter pts — compare current_ter to benchmark_ter
             const terPts = (() => {
               const terCfg = wc.metrics.find((m: any) => m.id === 'ter');
               const benchmarkTer = terCfg?.benchmark_ter ?? 0.22;
@@ -379,7 +315,6 @@ export default function HomePage() {
               return 0;
             })();
 
-            // human_capital pts
             const humanPts = (() => {
               const thresholds = wc.metrics.find((m: any) => m.id === 'human_capital')?.thresholds ?? [];
               const match = thresholds.find((t: any) => t.status === humanCapitalStatus);
@@ -440,13 +375,11 @@ export default function HomePage() {
             return (
               <div className="px-4 pb-4">
                 <div className="flex gap-5 items-start">
-                  {/* Score grande */}
                   <div className="min-w-28 text-center flex-shrink-0">
                     <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">Score</div>
                     <div className="text-5xl font-black text-green leading-none">{totalScore}</div>
                     <div className="text-xs text-muted mt-1">/100 · Progressivo</div>
                   </div>
-                  {/* Métricas divididas em duas categorias */}
                   <div className="flex-1 min-w-0">
                     {badMetrics.length > 0 && (
                       <div className="mb-3">
@@ -463,7 +396,6 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Top Ações */}
                 {topAcoes.length > 0 && (
                   <div className="mt-4 pt-3 border-t border-border/30">
                     <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">Top Ações para Subir o Score</div>
@@ -490,134 +422,20 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
-      <SectionDivider label="Análise Monte Carlo" />
-      {/* 7. SEÇÃO: P(FIRE) — Monte Carlo + Tornado */}
-      {d && (
-        <PFireMonteCarloTornado
-          pfireBase={d.pfireBase}
-          pfireFav={d.pfireFav}
-          pfireStress={d.pfireStress}
-          tornadoData={d.tornadoData}
-          firePatrimonioAtual={d.firePatrimonioAtual}
-          firePatrimonioGatilho={d.firePatrimonioGatilho}
-        />
-      )}
-
-      {/* 8. SEÇÃO: Contexto Macro [COLLAPSIBLE, OPEN] */}
-      <CollapsibleSection id="section-macro" title="Contexto Macro" defaultOpen={secOpen('now', 'macro')} icon="📊">
-        <div className="px-4 pb-4">
-          {/* Macro strip */}
-          <div className="mb-3.5">
-            <div className="text-xs uppercase font-semibold text-muted mb-1.5 tracking-widest">
-              Indicadores Macro
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.macro?.selic_meta != null ? `${(data.macro.selic_meta as number).toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Selic</div>
-              </div>
-              <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.macro?.ipca_12m != null ? `${(data.macro.ipca_12m as number).toFixed(1)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">IPCA 12M</div>
-              </div>
-              <div className="bg-slate-700/40 rounded p-2.5 text-center">
-                <div className="text-lg font-bold text-text">{data?.macro?.fed_funds != null ? `${(data.macro.fed_funds as number).toFixed(2)}%` : '—'}</div>
-                <div className="text-xs text-muted mt-1">Fed Funds</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Exposição Brasil */}
-          <div className="mb-3.5">
-            <div className="text-xs uppercase font-semibold text-muted mb-2 tracking-widest">
-              Exposição Brasil
-            </div>
-            <div className="bg-slate-700/40 rounded p-3">
-              <div className="flex justify-between">
-                <div>
-                  <div className="text-xs text-muted">Total Brasil</div>
-                  <div className="text-lg font-bold text-green mt-0.5">
-                    {d.concentrationBrazil != null ? `${(d.concentrationBrazil * 100).toFixed(1)}%` : '—'}
-                  </div>
-                </div>
-                <div className="text-sm text-muted text-right">
-                  <div>HODL11: {privacyMode ? '••••' : `R$${((data?.hodl11?.valor ?? 0) / 1000).toFixed(0)}k`}</div>
-                  <div>RF Total: {privacyMode ? '••••' : `R$${((d.rfBrl ?? 0) / 1000).toFixed(0)}k`}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-xs text-slate-500 mb-0">
-            Fonte: BCB / FRED · Premissa de depreciação BRL usada em projeções FIRE
-          </div>
+      <SectionDivider label="Análise Avançada" />
+      {/* RF STATUS PANEL — merge de IpcaTaxaProgress + DCA Status + DCAStatusGrid */}
+      <CollapsibleSection
+        id="section-rf-status"
+        title="RF Status — IPCA+ & Renda+ por Instrumento"
+        defaultOpen={secOpen('now', 'rf-status', true)}
+        icon="🎯"
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <RFStatusPanel rows={rfRows} />
         </div>
       </CollapsibleSection>
 
-      {/* 8b. SEÇÃO: DCA Status [COLLAPSIBLE, OPEN] */}
-      {data?.dca_status && (
-        <CollapsibleSection id="section-dca-status" title="DCA Status" defaultOpen={secOpen('now', 'dca-status')} icon="🎯">
-          <div className="px-4 pb-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {/* IPCA+ 2040 */}
-              {data.dca_status.ipca_longo && (
-                <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
-                  <div className="text-xs text-muted mb-1">IPCA+ 2040</div>
-                  <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca_longo.taxa_atual?.toFixed(2)}%</div>
-                  <div className="text-xs text-muted">
-                    Piso: {data.dca_status.ipca_longo.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca_longo.gap_alvo_pp?.toFixed(1)}pp
-                  </div>
-                  <div className="text-xs text-muted">
-                    {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2040?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca_longo.pct_carteira_atual?.toFixed(1)}%)
-                  </div>
-                </div>
-              )}
-              {/* IPCA+ 2050 */}
-              {data.dca_status.ipca2050 && (
-                <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
-                  <div className="text-xs text-muted mb-1">IPCA+ 2050</div>
-                  <div className="text-sm font-bold mb-0.5">Taxa: {data.dca_status.ipca2050.taxa_atual?.toFixed(2)}%</div>
-                  <div className="text-xs text-muted">
-                    Piso: {data.dca_status.ipca2050.piso?.toFixed(1)}% | Gap: {data.dca_status.ipca2050.gap_alvo_pp?.toFixed(1)}pp
-                  </div>
-                  <div className="text-xs text-muted">
-                    {privacyMode ? '••••' : `Posição: R$${((data.rf?.ipca2050?.valor ?? 0) / 1000).toFixed(0)}k`} ({data.dca_status.ipca2050.pct_carteira_atual?.toFixed(1)}%)
-                  </div>
-                </div>
-              )}
-              {/* Renda+ 2065 */}
-              {data.rf?.renda2065?.distancia_gatilho && (
-                <div className="bg-slate-700/40 rounded p-2.5 border-l-3 border-accent/40">
-                  <div className="text-xs text-muted mb-1">Renda+ 2065</div>
-                  <div className="text-sm font-bold mb-0.5">Taxa: {data.rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(2)}%</div>
-                  <div className="text-xs text-muted">
-                    Piso venda: {data.rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% | Gap: {data.rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp
-                  </div>
-                  <div className="text-xs text-muted">
-                    {privacyMode ? '••••' : `Posição: R$${((data.rf?.renda2065?.valor ?? 0) / 1000).toFixed(0)}k`}
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="text-xs text-slate-500 mt-3">
-              Fonte: Nubank · IBKR · DCA automático por gap vs alvo de alocação
-            </div>
-          </div>
-        </CollapsibleSection>
-      )}
-
-      <SectionDivider label="Fluxo de Caixa" />
-      {/* 9. SEÇÃO: Sankey — Fluxo de Caixa [COLLAPSIBLE, OPEN] */}
-      {d && (
-        <CollapsibleSection id="section-sankey" title="Sankey — Fluxo de Caixa Anual (estimado)" defaultOpen={secOpen('now', 'sankey')} icon="💸">
-          <div style={{ padding: '0 16px 16px' }}>
-            <CashFlowSankey />
-          </div>
-        </CollapsibleSection>
-      )}
-
-      <SectionDivider label="Análise Avançada" />
-      {/* 10. Patrimônio Líquido de IR — collapsed */}
+      {/* Patrimônio Líquido de IR — collapsed */}
       <CollapsibleSection id="section-patrimonio-liquido-ir" title={secTitle('now', 'patrimonio-liquido-ir', 'Patrimônio Líquido de IR')} defaultOpen={secOpen('now', 'patrimonio-liquido-ir', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           <PatrimonioLiquidoIR
@@ -630,33 +448,7 @@ export default function HomePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 11. IPCA Taxa Progress — collapsed */}
-      <CollapsibleSection id="section-ipca-progress" title={secTitle('now', 'ipca-progress', 'IPCA+ Taxa — Progresso de Alocação RF')} defaultOpen={secOpen('now', 'ipca-progress', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const rf = (data as any)?.rf ?? {};
-            const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 0;
-            return (
-              <IpcaTaxaProgress
-                taxaAtual={rf.ipca2040?.taxa ?? 0}
-                ipca2040Valor={rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0}
-                ipca2040AlvoPercent={8}
-                ipca2040AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
-                ipca2050Valor={rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0}
-                ipca2050AlvoPercent={7}
-                ipca2050AtualPercent={patrimonioAtual > 0 ? ((rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0) / patrimonioAtual) * 100 : 0}
-                ipcaTotalBrl={(rf.ipca2040?.valor ?? rf.ipca2040?.valor_brl ?? 0) + (rf.ipca2050?.valor ?? rf.ipca2050?.valor_brl ?? 0)}
-                totalPortfolio={patrimonioAtual}
-              />
-            );
-          })()}
-          <div className="src">
-            Progresso de alocação em NTN-Bs (IPCA+). Meta: 15% do portfólio em bond pool.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 12. Rebalancing Status — collapsed */}
+      {/* Rebalancing Status — collapsed */}
       <CollapsibleSection id="section-rebalancing-status" title={secTitle('now', 'rebalancing-status', 'Rebalancing Status — Drift por Classe')} defaultOpen={secOpen('now', 'rebalancing-status', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
@@ -664,7 +456,6 @@ export default function HomePage() {
             const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? d.networth ?? 1;
             const pesosTarget = (data as any)?.pesosTarget ?? {};
             const cambio = d.CAMBIO ?? 5.15;
-            // Aggregate all tickers within a bucket (transitórios incluídos)
             const bucketPct = (bucketName: string) => {
               const total = Object.values(posicoes as Record<string, any>)
                 .filter((pos: any) => pos?.bucket === bucketName && pos?.qty && pos?.price)
@@ -693,18 +484,6 @@ export default function HomePage() {
           </div>
         </div>
       </CollapsibleSection>
-
-      {/* 13. DCA Status Grid — collapsed */}
-      {d.dcaItems?.length > 0 && (
-        <CollapsibleSection id="section-dca-grid" title={secTitle('now', 'dca-grid', 'DCA Status Grid — Renda Fixa & Crypto')} defaultOpen={secOpen('now', 'dca-grid', false)}>
-          <div style={{ padding: '0 16px 16px' }}>
-            <DCAStatusGrid items={d.dcaItems} />
-            <div className="src">
-              Status de DCA por instrumento. Verde = comprar, amarelo = aguardar, vermelho = não comprar.
-            </div>
-          </div>
-        </CollapsibleSection>
-      )}
 
     </div>
   );

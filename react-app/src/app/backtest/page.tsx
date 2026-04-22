@@ -7,24 +7,12 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { BacktestChart } from '@/components/charts/BacktestChart';
 import { BacktestR7Chart } from '@/components/charts/BacktestR7Chart';
-import { DrawdownHistChart } from '@/components/charts/DrawdownHistChart';
 import { Button } from '@/components/ui/button';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
 import DrawdownRecoveryTable from '@/components/dashboard/DrawdownRecoveryTable';
 import { BtcIndicatorsChart } from '@/components/dashboard/BtcIndicatorsChart';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
@@ -489,9 +477,6 @@ function BacktestLongoSection() {
   const decadesList: Array<{ Decada: string; Target: number; Benchmark: number; Delta: number }> =
     r7?.cagr_por_decada ?? null;
 
-  // Factor regression — real field: factor_regression (not ff5_regression)
-  const ff5 = r7?.factor_regression ?? null;
-
   return (
     <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
       {/* Metrics grid */}
@@ -569,100 +554,10 @@ function BacktestLongoSection() {
       {/* Chart */}
       {data && <BacktestR7Chart data={data} />}
 
-      {/* Factor Regression FF5 — collapsible */}
-      <CollapsibleSection id="backtest-ff5" title="Factor Regression FF5 (técnico)" defaultOpen={secOpen('backtest', 'ff5', false)} icon="📊">
-        {ff5 ? (
-          <div style={{ marginTop: '8px', fontSize: 'var(--text-sm)', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
-            {/* Top-level scalars */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px', marginBottom: '8px' }}>
-              {Object.entries(ff5)
-                .filter(([, v]) => typeof v === 'number')
-                .map(([k, v]: [string, any]) => (
-                  <div key={k} style={{ textAlign: 'center', padding: '6px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>
-                    <div style={{ fontWeight: 700 }}>{v.toFixed(3)}</div>
-                  </div>
-                ))
-              }
-            </div>
-            {/* Betas sub-object */}
-            {ff5.betas && (
-              <div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Betas</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px' }}>
-                  {Object.entries(ff5.betas).map(([k, v]: [string, any]) => (
-                    <div key={k} style={{ textAlign: 'center', padding: '5px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>
-                      <div style={{ fontWeight: 700 }}>{typeof v === 'number' ? v.toFixed(3) : String(v)}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div style={{ marginTop: '8px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Dados FF5 não disponíveis</div>
-        )}
-      </CollapsibleSection>
+      {/* Factor Regression FF5 — movido para PERFORMANCE (seção Fatores) */}
 
       <div className="src">
         Dados: MSCI World NR USD (yfinance ^990100-USD-STRD) + DFA DFSVX/DISVX/DFEMX + Ken French EM. Rebalanceamento anual (dezembro). RF variável Ken French.
-      </div>
-    </CollapsibleSection>
-  );
-}
-
-// ── Drawdown Histórico section ────────────────────────────────────────────────
-
-function DrawdownHistoricoSection() {
-  const data = useDashboardStore(s => s.data);
-  const crises = data?.backtest?.crises ?? data?.drawdown_crises ?? [];
-
-  return (
-    <CollapsibleSection id="backtest-drawdown" title={secTitle('backtest', 'drawdown-historico', 'Drawdown Histórico — Série Completa')} defaultOpen={secOpen('backtest', 'drawdown-historico')}>
-      {/* Chart */}
-      {data && <DrawdownHistChart data={data} />}
-
-      {/* Crises table */}
-      {crises.length > 0 && (
-        <div style={{ marginTop: '10px', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Crise</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Período</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Drawdown</th>
-                <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Recuperação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {crises.map((c: any, i: number) => (
-                <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '5px 8px' }}>{c.label ?? c.nome ?? '—'}</td>
-                  <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{c.periodo ?? c.period ?? '—'}</td>
-                  <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--red)', fontWeight: 600 }}>
-                    {c.drawdown != null ? fmtPct(c.drawdown) : '—'}
-                  </td>
-                  <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>
-                    {c.recovery_months != null ? `${c.recovery_months}m` : '—'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Colored lines legend */}
-      <div style={{ marginTop: '10px', fontSize: 'var(--text-xs)', color: 'var(--muted)', lineHeight: 1.6 }}>
-        <span style={{ color: 'rgba(96,165,250,.7)' }}>┈┈</span> Tracejada azul = Sharpe em USD vs T-Bill (performance do equity isolado, sem câmbio).<br />
-        <span style={{ color: 'rgba(255,255,255,.3)' }}>┈┈</span> Cinza = referência Sharpe=1.<br />
-        <span style={{ color: 'rgba(239,68,68,.4)' }}>┈┈</span> Vermelha = zero (break-even vs CDI).<br />
-        Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado √12.
-      </div>
-
-      <div className="src">
-        Método: TWR (time-weighted, sem efeito de aportes), σ populacional, anualizado √12.
       </div>
     </CollapsibleSection>
   );
@@ -691,18 +586,13 @@ export default function BacktestPage() {
       <BacktestHistoricoSection />
 
       <SectionDivider label="Drawdown & Risco" />
-      {/* 2. Drawdown Histórico — Série Completa (moved up: contexto de risco após retorno) */}
-      <DrawdownHistoricoSection />
-
-      {/* 3. Shadow Portfolios — Tracking */}
-      <ShadowPortfoliosSection />
-
-      <SectionDivider label="Análise Histórica Longa" />
-      {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
-      <BacktestLongoSection />
-
-      {/* 5. Drawdown History Chart (ECharts dashboard version) */}
-      <CollapsibleSection id="section-drawdown-history" title={secTitle('backtest', 'drawdown-history', 'Drawdown History — ECharts (Dashboard)')} defaultOpen={secOpen('backtest', 'drawdown-history', false)}>
+      {/* 2. DrawdownAnalysis — MERGE: ECharts moderno + crises + recovery */}
+      <CollapsibleSection
+        id="section-drawdown-analysis"
+        title={secTitle('backtest', 'drawdown-analysis', 'Drawdown Analysis — Histórico, Crises & Recovery')}
+        defaultOpen={secOpen('backtest', 'drawdown-analysis', true)}
+        icon="📉"
+      >
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const dh = (data as any)?.drawdown_history ?? {};
@@ -717,25 +607,80 @@ export default function BacktestPage() {
           <div className="src">
             Drawdown histórico da carteira. Máximo drawdown: pico-a-vale máximo observado.
           </div>
-        </div>
-      </CollapsibleSection>
 
-      {/* 6. Drawdown Recovery Table — eventos com detalhe */}
-      <CollapsibleSection id="section-drawdown-recovery" title={secTitle('backtest', 'drawdown-recovery', 'Drawdown Recovery Table — Eventos Históricos')} defaultOpen={secOpen('backtest', 'drawdown-recovery', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const events = (data as any)?.drawdown_events?.events ?? (data as any)?.drawdown_history?.crises ?? [];
-            return <DrawdownRecoveryTable events={events} />;
-          })()}
-          <div className="src">
-            Eventos de drawdown reais (2021–2026). Profundidade, duração e recuperação.
+          {/* Sub-seção: Crises históricas (tabela, colapsada) */}
+          <div style={{ marginTop: 12 }}>
+            <CollapsibleSection
+              id="section-drawdown-crises"
+              title="Crises Históricas — tabela detalhada"
+              defaultOpen={secOpen('backtest', 'drawdown-crises', false)}
+            >
+              <div style={{ padding: '0 16px 16px' }}>
+                {(() => {
+                  const crises = (data as any)?.backtest?.crises ?? (data as any)?.drawdown_crises ?? [];
+                  if (!crises.length) return <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)' }}>Sem crises registradas.</div>;
+                  return (
+                    <div style={{ overflowX: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)' }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                            <th style={{ textAlign: 'left', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Crise</th>
+                            <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Período</th>
+                            <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Drawdown</th>
+                            <th style={{ textAlign: 'right', padding: '5px 8px', color: 'var(--muted)', fontWeight: 600 }}>Recuperação</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {crises.map((c: any, i: number) => (
+                            <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+                              <td style={{ padding: '5px 8px' }}>{c.label ?? c.nome ?? '—'}</td>
+                              <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>{c.periodo ?? c.period ?? '—'}</td>
+                              <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--red)', fontWeight: 600 }}>
+                                {c.drawdown != null ? fmtPct(c.drawdown) : '—'}
+                              </td>
+                              <td style={{ padding: '5px 8px', textAlign: 'right', color: 'var(--muted)' }}>
+                                {c.recovery_months != null ? `${c.recovery_months}m` : '—'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })()}
+              </div>
+            </CollapsibleSection>
+
+            {/* Sub-seção: Recovery Table — eventos 2021-2026 */}
+            <CollapsibleSection
+              id="section-drawdown-recovery"
+              title="Recovery Table — eventos 2021–2026"
+              defaultOpen={secOpen('backtest', 'drawdown-recovery', false)}
+            >
+              <div style={{ padding: '0 16px 16px' }}>
+                {(() => {
+                  const events = (data as any)?.drawdown_events?.events ?? (data as any)?.drawdown_history?.crises ?? [];
+                  return <DrawdownRecoveryTable events={events} />;
+                })()}
+                <div className="src">
+                  Eventos de drawdown reais (2021–2026). Profundidade, duração e recuperação.
+                </div>
+              </div>
+            </CollapsibleSection>
           </div>
         </div>
       </CollapsibleSection>
 
+      {/* 3. Shadow Portfolios — Tracking */}
+      <ShadowPortfoliosSection />
+
+      <SectionDivider label="Análise Histórica Longa" />
+      {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
+      <BacktestLongoSection />
+
       <SectionDivider label="Bitcoin" />
-      {/* 7. Bitcoin On-Chain Indicators */}
-      <CollapsibleSection id="section-btc-indicators" title={secTitle('backtest', 'btc-indicators', 'Bitcoin — 200WMA Heatmap & MVRV Z-Score')} defaultOpen={secOpen('backtest', 'btc-indicators', false)}>
+      {/* 7. Bitcoin On-Chain Indicators (renomeado) */}
+      <CollapsibleSection id="section-btc-indicators" title={secTitle('backtest', 'btc-indicators', 'Bitcoin On-Chain — Indicadores Históricos')} defaultOpen={secOpen('backtest', 'btc-indicators', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {btcError ? (
             <div style={{ padding: 14, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 7, fontSize: 12, color: '#ef4444' }}>
@@ -751,102 +696,7 @@ export default function BacktestPage() {
                   Avisos: {btcData.errors.join(' | ')}
                 </div>
               )}
-              {/* HODL11 Actionable Block */}
-              {(() => {
-                const hodl11 = (data as any)?.hodl11 ?? {};
-                const hodl11Brl = hodl11?.valor ?? 0;
-                const avgCost = hodl11?.preco_medio ?? null;
-                const precoBrl = hodl11?.preco ?? null;
-                const allocPct = hodl11?.banda?.atual_pct ?? 0;
-                const BANDS = { buy: 1.5, target: 3.0, sell: 5.0 };
-                const BAR_MAX = 6.5;
-                const pos = (v: number) => `${(Math.min(v, BAR_MAX) / BAR_MAX * 100).toFixed(2)}%`;
-                const buyWidth = pos(BANDS.buy);
-                const neutralWidth = `calc(${pos(BANDS.sell)} - ${pos(BANDS.buy)})`;
-                const currentPos = pos(allocPct);
-
-                // Combined on-chain signal
-                const zone200 = btcData?.ma200w?.zone ?? null;
-                const mvrvSig = btcData?.mvrv_zscore?.signal ?? null;
-                const mvrvZ = btcData?.mvrv_zscore?.current_value ?? null;
-                let signal = { label: 'Aguardando dados', color: '#64748b', bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)' };
-                if (zone200 && mvrvSig) {
-                  if ((zone200 === 'below' || zone200 === 'near') && mvrvSig === 'accumulate')
-                    signal = { label: 'Zona de Compra Forte', color: '#22c55e', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)' };
-                  else if ((zone200 === 'below' || zone200 === 'near') && mvrvSig === 'neutral')
-                    signal = { label: 'Zona de Compra', color: '#86efac', bg: 'rgba(134,239,172,0.10)', border: 'rgba(134,239,172,0.3)' };
-                  else if (zone200 === 'above' && mvrvSig === 'accumulate')
-                    signal = { label: 'Possível Compra', color: '#86efac', bg: 'rgba(134,239,172,0.08)', border: 'rgba(134,239,172,0.25)' };
-                  else if (zone200 === 'above' && mvrvSig === 'neutral')
-                    signal = { label: 'Hold — Neutro', color: '#94a3b8', bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)' };
-                  else if (zone200 === 'above' && mvrvSig === 'caution')
-                    signal = { label: 'Cautela — Não Adicionar', color: '#f59e0b', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.3)' };
-                  else if (zone200 === 'euphoria' || mvrvSig === 'trim')
-                    signal = { label: 'Zona de Venda', color: '#ef4444', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.3)' };
-                }
-
-                const fmtBrl = (v: number) => v >= 1_000_000 ? `R$${(v/1_000_000).toFixed(2)}M` : `R$${(v/1_000).toFixed(0)}k`;
-
-                return (
-                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', marginBottom: 14 }}>
-                    {/* Top row: signal + P&L */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        HODL11 Position
-                      </div>
-                      <span style={{ padding: '2px 10px', borderRadius: 5, fontSize: 11, fontWeight: 700, background: signal.bg, border: `1px solid ${signal.border}`, color: signal.color }}>
-                        {signal.label}
-                      </span>
-                      {hodl11?.pnl_pct != null && (
-                        <span style={{ fontSize: 11, color: hodl11.pnl_pct >= 0 ? '#22c55e' : '#ef4444', marginLeft: 'auto' }}>
-                          P&L: {hodl11.pnl_pct >= 0 ? '+' : ''}{hodl11.pnl_pct.toFixed(1)}%
-                          {avgCost && <span style={{ fontSize: 10, color: '#64748b', marginLeft: 4 }}>(avg R${avgCost.toFixed(0)})</span>}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Allocation bar */}
-                    <div style={{ marginBottom: 6 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#64748b', marginBottom: 4 }}>
-                        <span>Alocação HODL11</span>
-                        <span style={{ fontWeight: 600, color: 'var(--text)' }}>{allocPct.toFixed(2)}% · {fmtBrl(hodl11Brl)}</span>
-                      </div>
-                      <div style={{ position: 'relative', height: 12, borderRadius: 6, background: '#0f172a', overflow: 'hidden' }}>
-                        {/* Buy zone 0–1.5% */}
-                        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: buyWidth, background: 'rgba(34,197,94,0.22)' }} />
-                        {/* Neutral zone 1.5–5% */}
-                        <div style={{ position: 'absolute', left: buyWidth, top: 0, bottom: 0, width: neutralWidth, background: 'rgba(148,163,184,0.07)' }} />
-                        {/* Sell zone 5%+ */}
-                        <div style={{ position: 'absolute', left: pos(BANDS.sell), top: 0, bottom: 0, right: 0, background: 'rgba(239,68,68,0.18)' }} />
-                        {/* Target line */}
-                        <div style={{ position: 'absolute', top: 0, bottom: 0, left: pos(BANDS.target), width: 2, background: '#3b82f6', transform: 'translateX(-50%)' }} />
-                        {/* Current dot */}
-                        <div style={{ position: 'absolute', top: '50%', left: currentPos, width: 14, height: 14, background: '#fff', borderRadius: '50%', border: '2px solid #3b82f6', transform: 'translate(-50%, -50%)', zIndex: 3 }} />
-                      </div>
-                      {/* Scale labels */}
-                      <div style={{ position: 'relative', height: 18, marginTop: 2 }}>
-                        <span style={{ position: 'absolute', left: buyWidth, transform: 'translateX(-50%)', fontSize: 9, color: '#22c55e', textAlign: 'center', lineHeight: 1.2 }}>1.5%<br/>compra</span>
-                        <span style={{ position: 'absolute', left: pos(BANDS.target), transform: 'translateX(-50%)', fontSize: 9, color: '#3b82f6', textAlign: 'center', lineHeight: 1.2 }}>3%<br/>meta</span>
-                        <span style={{ position: 'absolute', left: pos(BANDS.sell), transform: 'translateX(-50%)', fontSize: 9, color: '#ef4444', textAlign: 'center', lineHeight: 1.2 }}>5%<br/>venda</span>
-                      </div>
-                    </div>
-
-                    {/* Trigger checklist */}
-                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                      {[
-                        { label: 'Compra (aloc < 1.5%)', active: allocPct < BANDS.buy },
-                        { label: 'Venda (aloc > 5%)', active: allocPct > BANDS.sell },
-                        { label: 'MVRV Z < 0 (capitulação)', active: mvrvZ != null && mvrvZ < 0 },
-                      ].map(({ label, active }) => (
-                        <span key={label} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: active ? '#22c55e' : '#64748b' }}>
-                          <span style={{ fontSize: 12, lineHeight: 1 }}>{active ? '●' : '○'}</span>
-                          {label}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })()}
+              {/* HODL11 Position Block — MOVIDO para PORTFOLIO page (seção Bitcoin & Crypto) */}
               <BtcIndicatorsChart ma200w={btcData.ma200w} mvrvZscore={btcData.mvrv_zscore} />
               <div className="src" style={{ marginTop: 10 }}>
                 Dados gerados em: {new Date(btcData.generated_at).toLocaleString('pt-BR')}

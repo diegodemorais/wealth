@@ -7,7 +7,6 @@ import { secOpen, secTitle } from '@/config/dashboard.config';
 import { TimelineChart } from '@/components/charts/TimelineChart';
 import { AttributionChart } from '@/components/charts/AttributionChart';
 import { DeltaBarChart } from '@/components/charts/DeltaBarChart';
-import { RollingSharpChart } from '@/components/charts/RollingSharpChart';
 import { InformationRatioChart } from '@/components/charts/InformationRatioChart';
 import { PremisesTable } from '@/components/performance/PremisesTable';
 import { ExpectedReturnWaterfall } from '@/components/dashboard/ExpectedReturnWaterfall';
@@ -17,18 +16,8 @@ import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 // Period buttons for timeline
 const PERIODS = [
@@ -45,6 +34,7 @@ type Period = (typeof PERIODS)[number]['key'];
 export default function PerformancePage() {
   const { data, isLoading, dataError, privacyMode } = usePageData();
   const [timelinePeriod, setTimelinePeriod] = useState<Period>('all');
+  const [alphaTab, setAlphaTab] = useState<'vwra' | 'swrd'>('vwra');
 
   const stateEl = pageStateElement({
     isLoading,
@@ -133,10 +123,60 @@ export default function PerformancePage() {
       </section>
 
       <SectionDivider label="Alpha & Benchmark" />
-      {/* 3. Alpha vs VWRA — análise de performance diferencial */}
+      {/* 3. Alpha vs Benchmark — tabs vs VWRA / vs SWRD */}
       <section className="section" id="alphaSwrdSection">
-        <h2>{secTitle('performance', 'alpha', 'Alpha vs VWRA (benchmark) — Carteira Target por Período')}</h2>
-        <DeltaBarChart data={safeData} height={200} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+          <h2>{secTitle('performance', 'alpha', 'Alpha vs Benchmark — Carteira Target por Período')}</h2>
+          <div style={{ display: 'flex', gap: 4, borderBottom: '1px solid var(--border)' }}>
+            {[
+              { id: 'vwra' as const, label: 'vs VWRA' },
+              { id: 'swrd' as const, label: 'vs SWRD' },
+            ].map(t => (
+              <button
+                key={t.id}
+                onClick={() => setAlphaTab(t.id)}
+                style={{
+                  padding: '4px 12px',
+                  fontSize: 'var(--text-xs)',
+                  fontWeight: 600,
+                  border: 'none',
+                  background: 'transparent',
+                  borderBottom: alphaTab === t.id ? '2px solid var(--accent)' : '2px solid transparent',
+                  color: alphaTab === t.id ? 'var(--accent)' : 'var(--muted)',
+                  cursor: 'pointer',
+                  marginBottom: -1,
+                }}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        {alphaTab === 'vwra' && <DeltaBarChart data={safeData} height={200} />}
+        {alphaTab === 'swrd' && (() => {
+          const backtest = (data as any)?.backtest ?? {};
+          return (
+            <AlphaVsSWRDChart
+              oneYear={{
+                targetReturn: backtest.metrics_by_period?.since2020?.target?.cagr ?? backtest.metrics_by_period?.['5y']?.target?.cagr ?? 14.89,
+                swrdReturn: backtest.metrics_by_period?.since2020?.shadowA?.cagr ?? backtest.metrics_by_period?.['5y']?.shadowA?.cagr ?? 13.7,
+              }}
+              threeYear={{
+                targetReturn: backtest.metrics_by_period?.since2013?.target?.cagr ?? 14.89,
+                swrdReturn: backtest.metrics_by_period?.since2013?.shadowA?.cagr ?? 13.7,
+              }}
+              fiveYear={{
+                targetReturn: backtest.metrics_by_period?.since2009?.target?.cagr ?? 14.89,
+                swrdReturn: backtest.metrics_by_period?.since2009?.shadowA?.cagr ?? 13.7,
+              }}
+              tenYear={{
+                targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
+                swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
+              }}
+              alphaLiquidoPctYear={0.16}
+            />
+          );
+        })()}
         {/* KPI cards alinhados ao contexto de alpha */}
         {(() => {
           const backtest = (data as any)?.backtest ?? {};
@@ -224,11 +264,6 @@ export default function PerformancePage() {
         </div>
       </section>
 
-      {/* 5. Expected Return Waterfall — Decomposição Fatorial FF6 */}
-      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={secOpen('performance', 'factor-waterfall', true)}>
-        <ExpectedReturnWaterfall />
-      </CollapsibleSection>
-
       {/* 6. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
       <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={secOpen('performance', 'rolling-12m', false)}>
         <div style={{ padding: '0 16px 16px' }}>
@@ -252,6 +287,24 @@ export default function PerformancePage() {
       </CollapsibleSection>
 
       <SectionDivider label="Fatores" />
+      {/* Expected Return Waterfall — movido para primeiro em Fatores */}
+      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={secOpen('performance', 'factor-waterfall', true)}>
+        <ExpectedReturnWaterfall />
+      </CollapsibleSection>
+
+      {/* ETF Factor Composition — recebido de PORTFOLIO */}
+      <CollapsibleSection
+        id="section-etf-factor"
+        title={secTitle('performance', 'etf-factor', 'Exposição Fatorial — ETFs da Carteira')}
+        defaultOpen={secOpen('performance', 'etf-factor', true)}
+        icon="📊"
+      >
+        <div style={{ padding: '16px' }}>
+          <ETFFactorComposition />
+          <div className="src">Fonte: etf_composition.json · Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
+        </div>
+      </CollapsibleSection>
+
       {/* 7. Factor Loadings — Regressão Fama-French SF + Momentum (collapsible, collapsed) */}
       <CollapsibleSection id="section-factor-loadings" title={secTitle('performance', 'factor-loadings', 'Factor Loadings — Regressão Fama-French SF + Momentum')} defaultOpen={secOpen('performance', 'factor-loadings', false)}>
         <div style={{ padding: '0 16px 16px' }}>
@@ -430,6 +483,56 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
+      {/* Factor Regression FF5 — movido de BACKTEST */}
+      <CollapsibleSection
+        id="section-ff5-regression"
+        title={secTitle('performance', 'ff5-regression', 'Factor Regression FF5 (técnico)')}
+        defaultOpen={secOpen('performance', 'ff5-regression', false)}
+        icon="📊"
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const r7 = (data as any)?.backtest_r7 ?? null;
+            const ff5 = r7?.factor_regression ?? null;
+            if (!ff5) {
+              return <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>Dados FF5 não disponíveis</div>;
+            }
+            return (
+              <div style={{ fontSize: 'var(--text-sm)', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
+                {/* Top-level scalars */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px', marginBottom: '8px' }}>
+                  {Object.entries(ff5)
+                    .filter(([, v]) => typeof v === 'number')
+                    .map(([k, v]: [string, any]) => (
+                      <div key={k} style={{ textAlign: 'center', padding: '6px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
+                        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>
+                        <div style={{ fontWeight: 700 }}>{v.toFixed(3)}</div>
+                      </div>
+                    ))}
+                </div>
+                {/* Betas sub-object */}
+                {ff5.betas && (
+                  <div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Betas</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px' }}>
+                      {Object.entries(ff5.betas).map(([k, v]: [string, any]) => (
+                        <div key={k} style={{ textAlign: 'center', padding: '5px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
+                          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>
+                          <div style={{ fontWeight: 700 }}>{typeof v === 'number' ? v.toFixed(3) : String(v)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+          <div className="src">
+            Regime 7 · 37 anos (1989–2026) · Regressão Fama-French 5 fatores. Dados: backtest_r7.factor_regression.
+          </div>
+        </div>
+      </CollapsibleSection>
+
       <SectionDivider label="Análise Técnica" />
       {/* 8. Retornos Mensais — Heatmap (collapsible, collapsed) */}
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
@@ -452,53 +555,7 @@ export default function PerformancePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 9. Rolling Sharpe — 12m (collapsible, collapsed) */}
-      <CollapsibleSection id="section-rolling-sharpe" title={secTitle('performance', 'rolling-sharpe', 'Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)')} defaultOpen={secOpen('performance', 'rolling-sharpe', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <RollingSharpChart data={safeData} />
-          <div className="src" style={{ lineHeight: 1.6 }}>
-            <strong>Como ler:</strong> Sharpe mede retorno ajustado ao risco em janela de 12 meses.<br />
-            <span style={{ color: 'rgba(34,197,94,.9)' }}>■</span> <strong>&gt;1</strong> = excelente{' '}
-            <span style={{ color: 'rgba(234,179,8,.9)' }}>■</span> <strong>0–1</strong> = neutro{' '}
-            <span style={{ color: 'rgba(239,68,68,.9)' }}>■</span> <strong>&lt;0</strong> = negativo (CDI venceu a carteira no período)
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 9b. Alpha vs SWRD Chart — por período */}
-      <CollapsibleSection id="section-alpha-chart" title={secTitle('performance', 'alpha-chart', 'Alpha vs SWRD — Gráfico por Período')} defaultOpen={secOpen('performance', 'alpha-chart', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const backtest = (data as any)?.backtest ?? {};
-            return (
-              <AlphaVsSWRDChart
-                oneYear={{
-                  targetReturn: backtest.metrics_by_period?.since2020?.target?.cagr ?? backtest.metrics_by_period?.['5y']?.target?.cagr ?? 14.89,
-                  swrdReturn: backtest.metrics_by_period?.since2020?.shadowA?.cagr ?? backtest.metrics_by_period?.['5y']?.shadowA?.cagr ?? 13.7,
-                }}
-                threeYear={{
-                  targetReturn: backtest.metrics_by_period?.since2013?.target?.cagr ?? 14.89,
-                  swrdReturn: backtest.metrics_by_period?.since2013?.shadowA?.cagr ?? 13.7,
-                }}
-                fiveYear={{
-                  targetReturn: backtest.metrics_by_period?.since2009?.target?.cagr ?? 14.89,
-                  swrdReturn: backtest.metrics_by_period?.since2009?.shadowA?.cagr ?? 13.7,
-                }}
-                tenYear={{
-                  targetReturn: backtest.metrics_by_period?.all?.target?.cagr ?? backtest.metrics?.target?.cagr ?? 14.14,
-                  swrdReturn: backtest.metrics_by_period?.all?.shadowA?.cagr ?? backtest.metrics?.shadowA?.cagr ?? 12.96,
-                }}
-                alphaLiquidoPctYear={0.16}
-              />
-            );
-          })()}
-          <div className="src">
-            since2020 ≈ 6a · since2013 ≈ 13a · since2009 ≈ 17a · all ≈ 21a. Alpha líquido: McLean &amp; Pontiff 2016, haircut 58%.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 9c. Rolling Metrics Chart */}
+      {/* 9. Rolling Metrics Chart — superset (substitui RollingSharp) */}
       <CollapsibleSection id="section-rolling-metrics" title={secTitle('performance', 'rolling-metrics', 'Rolling Metrics — Sharpe / Sortino / Volatilidade')} defaultOpen={secOpen('performance', 'rolling-metrics', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {

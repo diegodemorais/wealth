@@ -17,23 +17,10 @@ import { FireMatrixTable } from '@/components/dashboard/FireMatrixTable';
 import { EventosVidaChart } from '@/components/charts/EventosVidaChart';
 import { BalancoHolistico } from '@/components/holistic/BalancoHolistico';
 import { HumanCapitalCrossover } from '@/components/dashboard/HumanCapitalCrossover';
-import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
-import BRLPurchasingPowerTimeline from '@/components/dashboard/BRLPurchasingPowerTimeline';
 import { usePageData } from '@/hooks/usePageData';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 // ── FloorUpsideFire — Cobertura por Fase (FIRE Day vs pós-INSS) ─────────────
 interface FloorUpsideFireProps {
@@ -501,6 +488,19 @@ export default function FirePage() {
               })}
             </div>
             <div className="src">Base: MC simulações · SWR {((prem.swr_gatilho ?? 0.03) * 100).toFixed(0)}% fixo · primeira idade onde P ≥ 85% (exceto aspiracional)</div>
+            {/* Sub-seção: tabela detalhada — merge de FireScenariosTable aqui */}
+            <div style={{ marginTop: 12 }}>
+              <CollapsibleSection
+                id="section-scenario-compare"
+                title="Tabela detalhada — Base vs Aspiracional"
+                defaultOpen={secOpen('fire', 'scenario-compare', false)}
+              >
+                <div style={{ padding: '0 16px 16px' }}>
+                  <FireScenariosTable />
+                  <div className="src">Base: Monte Carlo 10k simulações</div>
+                </div>
+              </CollapsibleSection>
+            </div>
           </section>
         );
       })()}
@@ -575,32 +575,41 @@ export default function FirePage() {
         );
       })()}
 
-      {/* 4c-pre. Floor vs Upside — inserido após Balanço Holístico, antes de Cônjuge Sobrevivente */}
-      {(() => {
-        const prem = (data as any)?.premissas ?? {};
-        const gastoPiso: number = (data as any)?.gasto_piso ?? 0;
-        const custoVida: number = prem.custo_vida_base ?? 250000;
-        const inssD: number = prem.inss_anual ?? 0;
-        const inssK: number = prem.tem_conjuge ? (prem.inss_katia_anual ?? 0) : 0;
-        const swrGatilho: number = prem.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
-        const patrimonio: number = prem.patrimonio_atual ?? 0;
-        return (
-          <>
-            <div style={{ marginBottom: 8 }}>
-              <ScenarioBadge label="Solteiro" gasto={custoVida} privacyMode={privacyMode} />
-            </div>
-            <FloorUpsideFire
-              gastoPiso={gastoPiso}
-              custoVida={custoVida}
-              inssD={inssD}
-              inssK={inssK}
-              swrGatilho={swrGatilho}
-              patrimonio={patrimonio}
-              privacyMode={privacyMode}
-            />
-          </>
-        );
-      })()}
+      {/* 4c-pre. Floor vs Upside — envolvido em CollapsibleSection */}
+      <CollapsibleSection
+        id="section-floor-upside-fire"
+        title={secTitle('fire', 'floor-upside-fire', 'Floor vs Upside — Cobertura por Fase')}
+        defaultOpen={secOpen('fire', 'floor-upside-fire', true)}
+        icon="🏦"
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const prem = (data as any)?.premissas ?? {};
+            const gastoPiso: number = (data as any)?.gasto_piso ?? 0;
+            const custoVida: number = prem.custo_vida_base ?? 250000;
+            const inssD: number = prem.inss_anual ?? 0;
+            const inssK: number = prem.tem_conjuge ? (prem.inss_katia_anual ?? 0) : 0;
+            const swrGatilho: number = prem.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
+            const patrimonio: number = prem.patrimonio_atual ?? 0;
+            return (
+              <>
+                <div style={{ marginBottom: 8 }}>
+                  <ScenarioBadge label="Solteiro" gasto={custoVida} privacyMode={privacyMode} />
+                </div>
+                <FloorUpsideFire
+                  gastoPiso={gastoPiso}
+                  custoVida={custoVida}
+                  inssD={inssD}
+                  inssK={inssK}
+                  swrGatilho={swrGatilho}
+                  patrimonio={patrimonio}
+                  privacyMode={privacyMode}
+                />
+              </>
+            );
+          })()}
+        </div>
+      </CollapsibleSection>
 
       <SectionDivider label="Cenários & Risco" />
       {/* 4c. Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
@@ -682,73 +691,12 @@ export default function FirePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 7. Cenário Base vs Aspiracional — collapsed (referência técnica) */}
-      <CollapsibleSection id="section-scenario-compare" title={secTitle('fire', 'scenario-compare')} defaultOpen={secOpen('fire', 'scenario-compare')}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const profiles = (safeData as any)?.fire_matrix?.by_profile ?? [];
-            const atual = profiles.find((p: any) => p.profile === 'atual');
-            const label = 'Solteiro';
-            const gasto = atual?.gasto_anual ?? (safeData as any)?.premissas?.custo_vida_base ?? 250000;
-            return <ScenarioBadge label={label} gasto={gasto} privacyMode={privacyMode} />;
-          })()}
-          <FireScenariosTable />
-          <div className="src">
-            Base: Monte Carlo 10k simulações
-          </div>
-        </div>
-      </CollapsibleSection>
-
       {/* 8. Glide Path — collapsed (mecanismo de execução) */}
       <CollapsibleSection id="section-glide-path" title={secTitle('fire', 'glide-path')} defaultOpen={secOpen('fire', 'glide-path')}>
         <div style={{ padding: '0 16px 16px' }}>
           <GlidePathChart data={safeData} />
           <div className="src">
             Crypto: 3% pré e pós-FIRE. Alocações somam 100% por idade.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 9. Sequence of Returns Heatmap — collapsed */}
-      <CollapsibleSection id="section-sequence-returns" title={secTitle('fire', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')} defaultOpen={secOpen('fire', 'sequence-returns', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <div style={{ marginBottom: 8 }}>
-            <ScenarioBadge label="Solteiro" gasto={prem.custo_vida_base ?? 250000} privacyMode={privacyMode} />
-          </div>
-          {(() => {
-            const fireTrilha = (data as any)?.fire_trilha ?? {};
-            const spending = (data as any)?.premissas?.custo_vida_base ?? 250000;
-            return (
-              <SequenceOfReturnsHeatmap
-                dates={fireTrilha.dates ?? []}
-                trilhaBrl={fireTrilha.trilha_brl ?? []}
-                spending={spending}
-              />
-            );
-          })()}
-          <div className="src">
-            Heatmap de risco de sequência de retornos. SWR implícito a cada data — verde = sustentável, vermelho = risco.
-          </div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 10. BRL Purchasing Power / FX Sensitivity — collapsed */}
-      <CollapsibleSection id="section-brl-fx" title={secTitle('fire', 'brl-fx', 'Sensibilidade Cambial — Equity USD em BRL')} defaultOpen={secOpen('fire', 'brl-fx', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const cambio = (data as any)?.macro?.cambio ?? 5.15;
-            const equityPctUsd = ((data as any)?.macro?.exposicao_cambial_pct ?? 87.9) / 100;
-            const patrimonioAtual = (data as any)?.premissas?.patrimonio_atual ?? 3570565;
-            return (
-              <BRLPurchasingPowerTimeline
-                cambio={cambio}
-                equityPctUsd={equityPctUsd}
-                patrimonioAtual={patrimonioAtual}
-              />
-            );
-          })()}
-          <div className="src">
-            Projeção do valor da equity em BRL sob diferentes cenários cambiais. Retorno USD nominal: 7% a.a.
           </div>
         </div>
       </CollapsibleSection>

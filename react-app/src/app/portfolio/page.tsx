@@ -10,26 +10,15 @@ import { HoldingsTable } from '@/components/portfolio/HoldingsTable';
 import { CustoBaseTable } from '@/components/portfolio/CustoBaseTable';
 import { RFCryptoComposition } from '@/components/portfolio/RFCryptoComposition';
 import ETFRegionComposition from '@/components/dashboard/ETFRegionComposition';
-import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { ConcentrationChart } from '@/components/charts/ConcentrationChart';
 import { EtfsPositionsTable } from '@/components/dashboard/EtfsPositionsTable';
 import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationCard';
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
+import HODL11PositionPanel from '@/components/dashboard/HODL11PositionPanel';
 import { MetricCard } from '@/components/primitives/MetricCard';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();
@@ -49,6 +38,8 @@ export default function PortfolioPage() {
   const piorDrift = (data as any)?.drift_summary?.maior_desvio_pct;
   const irDiferido = (data as any)?.tax?.ir_diferido_total_brl;
   const concBrasil = (data as any)?.portfolio_summary?.concentracao_brasil_pct;
+  const usSitusUsd = (data as any)?.tax?.estate_tax?.us_situs_total_usd;
+  const showEstateAlert = usSitusUsd != null && usSitusUsd > 60000;
 
   const fmtBRL = (val: number | undefined | null) => {
     if (val == null) return '—';
@@ -60,7 +51,7 @@ export default function PortfolioPage() {
     <div>
       <SectionDivider label="Visão Geral" />
       {/* 0. Hero Strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+      <div className={`grid grid-cols-2 ${showEstateAlert ? 'sm:grid-cols-5' : 'sm:grid-cols-4'} gap-2 mb-4`}>
         <MetricCard
           label="Patrimônio Financeiro"
           value={fmtBRL(portfolioTotal)}
@@ -82,6 +73,15 @@ export default function PortfolioPage() {
           value={concBrasil != null ? concBrasil.toFixed(1) + '%' : '—'}
           size="sm"
         />
+        {showEstateAlert && (
+          <MetricCard
+            label="⚠ US-Situs >$60k"
+            value={privacyMode ? '••••' : `$${(usSitusUsd / 1000).toFixed(0)}k`}
+            valueColor="text-red"
+            size="sm"
+            sub="Estate tax risk"
+          />
+        )}
       </div>
 
       {/* 1. Alocação — Por Classe de Ativo (moved first: visão geral antes do detalhe) */}
@@ -231,24 +231,21 @@ export default function PortfolioPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 4. Concentração Geográfica */}
-      {data && <ConcentrationChart data={data} />}
-
-      {/* 4b. Exposição Fatorial — ETFs da Carteira (collapsible) */}
-      <CollapsibleSection
-        id="section-etf-factor"
-        title={secTitle('portfolio', 'etf-factor')}
-        defaultOpen={secOpen('portfolio', 'etf-factor')}
-        icon="📊"
-      >
-        <div style={{ padding: '16px' }}>
-          <ETFFactorComposition />
-          <div className="src">Fonte: etf_composition.json · Fatores: Market, Value, Size, Quality (escala 0–100%)</div>
-        </div>
-      </CollapsibleSection>
-
-      {/* 5. Posições — ETFs Internacionais (IBKR) */}
+      {/* 5. Posições — ETFs Internacionais (IBKR) — com EtfsPositionsTable como sub-seção */}
       <HoldingsTable />
+
+      {data?.posicoes && (
+        <CollapsibleSection
+          id="section-etf-positions"
+          title="Ver detalhe por lote IBKR"
+          defaultOpen={secOpen('portfolio', 'etf-positions', false)}
+          icon="📋"
+        >
+          <div style={{ padding: '16px' }}>
+            <EtfsPositionsTable data={data.posicoes} />
+          </div>
+        </CollapsibleSection>
+      )}
 
       {/* 6. Base de Custo e Alocação — Equity por Bucket (collapsible) */}
       <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
@@ -288,77 +285,47 @@ export default function PortfolioPage() {
         </div>
       </CollapsibleSection>
 
-      <SectionDivider label="Renda Fixa & Crypto" />
-      {/* 8. Renda Fixa + Cripto */}
+      <SectionDivider label="Renda Fixa" />
+      {/* 8. Renda Fixa */}
       <RFCryptoComposition />
 
-      {/* 8b. ETF Positions Table — posições detalhadas */}
-      {data?.posicoes && (
+      {/* 8a. Concentração Brasil — MERGE de ConcentrationChart + BrasilConcentrationCard */}
+      {data && (
         <CollapsibleSection
-          id="section-etf-positions"
-          title={secTitle('portfolio', 'etf-positions', 'Posições ETF — Tabela Detalhada')}
-          defaultOpen={secOpen('portfolio', 'etf-positions', false)}
-          icon="📋"
-        >
-          <div style={{ padding: '16px' }}>
-            <EtfsPositionsTable data={data.posicoes} />
-          </div>
-        </CollapsibleSection>
-      )}
-
-      {/* 8c. Brasil Concentration Card */}
-      {data?.concentracao_brasil && (
-        <CollapsibleSection
-          id="section-brasil-conc"
-          title={secTitle('portfolio', 'brasil-conc', 'Concentração Brasil — Detalhe')}
-          defaultOpen={secOpen('portfolio', 'brasil-conc', false)}
+          id="section-brasil-concentration"
+          title={secTitle('portfolio', 'brasil-concentration', 'Concentração Brasil — Exposição Soberana & RF')}
+          defaultOpen={secOpen('portfolio', 'brasil-concentration', true)}
           icon="🇧🇷"
         >
           <div style={{ padding: '16px' }}>
-            {(() => {
+            <ConcentrationChart data={data} />
+            {data?.concentracao_brasil && (() => {
               const c = (data as any).concentracao_brasil ?? {};
               const comp = c.composicao ?? {};
               const rfDetalhe = comp.rf_detalhe ?? {};
               return (
-                <BrasilConcentrationCard
-                  hodl11={comp.hodl11_brl ?? 0}
-                  ipcaTotal={(rfDetalhe.ipca2029 ?? 0) + (rfDetalhe.ipca2040 ?? 0) + (rfDetalhe.ipca2050 ?? 0)}
-                  rendaPlus={rfDetalhe.renda2065 ?? 0}
-                  cryptoLegado={comp.crypto_legado_brl ?? 0}
-                  totalBrl={c.total_brasil_brl ?? 0}
-                  concentrationBrazil={(c.brasil_pct ?? 0) / 100}
-                />
+                <div style={{ marginTop: 12 }}>
+                  <BrasilConcentrationCard
+                    hodl11={comp.hodl11_brl ?? 0}
+                    ipcaTotal={(rfDetalhe.ipca2029 ?? 0) + (rfDetalhe.ipca2040 ?? 0) + (rfDetalhe.ipca2050 ?? 0)}
+                    rendaPlus={rfDetalhe.renda2065 ?? 0}
+                    cryptoLegado={comp.crypto_legado_brl ?? 0}
+                    totalBrl={c.total_brasil_brl ?? 0}
+                    concentrationBrazil={(c.brasil_pct ?? 0) / 100}
+                  />
+                </div>
               );
             })()}
           </div>
         </CollapsibleSection>
       )}
 
-      {/* 8d. Crypto Band Chart */}
-      {data?.hodl11?.banda && (
-        <CollapsibleSection
-          id="section-crypto-band"
-          title={secTitle('portfolio', 'crypto-band', 'HODL11 — Banda Criptográfica')}
-          defaultOpen={secOpen('portfolio', 'crypto-band', false)}
-          icon="₿"
-        >
-          <div style={{ padding: '16px' }}>
-            <CryptoBandChart
-              banda={(data as any).hodl11.banda}
-              label="HODL11 — BTC Wrapper — B3"
-              valor={(data as any).hodl11?.valor}
-              pnl_pct={(data as any).hodl11?.pnl_pct}
-            />
-          </div>
-        </CollapsibleSection>
-      )}
-
-      {/* 8e. Real Yield Gauge — rendimento real líquido de IR das NTN-Bs */}
+      {/* 8e. Real Yield Gauge — rendimento real líquido de IR das NTN-Bs (defaultOpen=true) */}
       {data?.rf && (
         <CollapsibleSection
           id="section-real-yield"
           title={secTitle('portfolio', 'real-yield', 'Real Yield Gauge — NTN-Bs Líquido de IR')}
-          defaultOpen={secOpen('portfolio', 'real-yield', false)}
+          defaultOpen={secOpen('portfolio', 'real-yield', true)}
           icon="📊"
         >
           <div style={{ padding: '16px' }}>
@@ -369,6 +336,31 @@ export default function PortfolioPage() {
               renda2065={(data as any).rf.renda2065}
               ipca12m={(data as any).macro?.ipca_12m ?? undefined}
               selicMeta={(data as any).macro?.selic_meta ?? undefined}
+            />
+          </div>
+        </CollapsibleSection>
+      )}
+
+      <SectionDivider label="Bitcoin & Crypto" />
+      {/* 9a. HODL11 Position Panel — recebido de BACKTEST */}
+      {data?.hodl11 && (
+        <HODL11PositionPanel hodl11={(data as any).hodl11} />
+      )}
+
+      {/* 9b. Crypto Band Chart */}
+      {data?.hodl11?.banda && (
+        <CollapsibleSection
+          id="section-crypto-band"
+          title={secTitle('portfolio', 'crypto-band', 'HODL11 — Banda Criptográfica')}
+          defaultOpen={secOpen('portfolio', 'crypto-band', true)}
+          icon="₿"
+        >
+          <div style={{ padding: '16px' }}>
+            <CryptoBandChart
+              banda={(data as any).hodl11.banda}
+              label="HODL11 — BTC Wrapper — B3"
+              valor={(data as any).hodl11?.valor}
+              pnl_pct={(data as any).hodl11?.pnl_pct}
             />
           </div>
         </CollapsibleSection>

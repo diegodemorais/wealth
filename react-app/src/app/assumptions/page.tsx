@@ -4,6 +4,7 @@ import { usePageData } from '@/hooks/usePageData';
 import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { pfireColor } from '@/utils/fire';
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -256,20 +257,6 @@ function FamilyScenarios({ profiles, priv }: { profiles: any[]; priv: boolean })
   );
 }
 
-// ─── Section Divider ──────────────────────────────────────────────────────────
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AssumptionsPage() {
@@ -357,6 +344,7 @@ export default function AssumptionsPage() {
     { label: 'IPCA Premissa (MC)', value: fmtPct(p.ipca_anual ?? 0) + '/ano' },
     { label: 'Taxa IPCA+ Longa (Renda+)', value: fmtPctRaw(p.taxa_ipca_plus_longa ?? 0) + '/ano' },
     { label: 'Horizonte de Vida', value: `${p.horizonte_vida ?? 90} anos` },
+    { label: 'Long-Term Care (70+)', value: 'R$100k/ano', warn: true },
     { label: 'Contexto Macro', value: '', separator: true } as Row,
     ...(macro.ipca_12m != null ? [{ label: 'IPCA 12m Realizado', value: fmtPctRaw(macro.ipca_12m) + '/ano', muted: true }] : []),
     { label: 'Depreciação BRL (base)', value: `${((macro.depreciacao_brl_premissa ?? 0.5)).toFixed(1)}%/ano`, muted: true },

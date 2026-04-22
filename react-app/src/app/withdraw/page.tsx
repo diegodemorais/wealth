@@ -14,23 +14,13 @@ import { SurplusGapChart } from '@/components/charts/SurplusGapChart';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { FIRE_RULES } from '@/config/business-rules';
-import { InfoCard } from '@/components/primitives/InfoCard';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
 import BondStrategyPanel from '@/components/dashboard/BondStrategyPanel';
 import SpendingBreakdown from '@/components/dashboard/SpendingBreakdown';
-
-function SectionDivider({ label }: { label: string }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 8px' }}>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0 }}>
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
-    </div>
-  );
-}
+import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHeatmap';
+import SWRDashboard from '@/components/dashboard/SWRDashboard';
+import { SectionDivider } from '@/components/primitives/SectionDivider';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {
@@ -388,57 +378,27 @@ export default function WithdrawPage() {
         </span>
       </div>
 
-      {/* 0. SWR Dual Cards — Atual vs FIRE Day */}
-      <CollapsibleSection id="section-swr-dual" title={secTitle('withdraw', 'swr-dual', 'SWR Atual vs Projetado FIRE Day')} defaultOpen={secOpen('withdraw', 'swr-dual', true)}>
+      {/* 0. SWR Dashboard — tabs: Acumulação vs FIRE Day (P10/P50/P90) */}
+      <CollapsibleSection id="section-swr-dashboard" title={secTitle('withdraw', 'swr-dashboard', 'SWR Dashboard — Acumulação & FIRE Day')} defaultOpen={secOpen('withdraw', 'swr-dashboard', true)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const prem = safeData.premissas ?? {};
             const patrimonioAtual: number = (prem as any).patrimonio_atual ?? 0;
-            const custoVidaBase: number = activeScenarioCfg.custo_vida_base;
-            const swrAtual = patrimonioAtual > 0 ? custoVidaBase / patrimonioAtual : null;
-            // swrEfetivo já ajusta por perfil: custo do perfil ÷ patrimônio MC
-            const swrFireP50 = swrEfetivo?.p50 ?? null;
-            const swrFireP10 = swrEfetivo?.p10 ?? null;
-            const swrFireP90 = swrEfetivo?.p90 ?? null;
             const swrTarget = (prem as any).swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
-            const swrFireColor = swrFireP50 == null ? 'var(--muted)'
-              : swrFireP50 <= swrTarget ? 'var(--green)'
-              : swrFireP50 <= swrTarget * 1.33 ? 'var(--yellow)'
-              : 'var(--red)';
-            const swrFireStatus = swrFireP50 == null ? null
-              : swrFireP50 <= swrTarget ? '✓ dentro do target'
-              : swrFireP50 <= swrTarget * 1.33 ? '⚠ atenção'
-              : '✗ acima do target';
             return (
-              <>
-                <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: 8 }}>
-                  <InfoCard
-                    label="SWR Atual"
-                    value={swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
-                    description={<>Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em><br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.</>}
-                    accentColor="var(--muted)"
-                    size="lg"
-                  />
-                  <div style={{ background: 'var(--card2)', borderRadius: 8, padding: '16px 18px', border: '1px solid var(--border)', borderLeft: `4px solid ${swrFireColor}` }}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6, fontWeight: 600 }}>
-                      SWR Projetado — FIRE {(data as any)?.premissas?.ano_cenario_base ?? '2040'}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-                      <div style={{ fontSize: '2rem', fontWeight: 800, color: swrFireColor, lineHeight: 1 }}>
-                        {swrFireP50 != null ? (privacyMode ? '••%' : `${(swrFireP50 * 100).toFixed(2)}%`) : '—'}
-                      </div>
-                      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P50</span>
-                    </div>
-                    <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
-                      {swrFireP10 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>P10: {privacyMode ? '••%' : `${(swrFireP10 * 100).toFixed(2)}%`}</span>}
-                      {swrFireP90 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)' }}>P90: {privacyMode ? '••%' : `${(swrFireP90 * 100).toFixed(2)}%`}</span>}
-                    </div>
-                    {swrFireStatus && <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: swrFireColor }}>{swrFireStatus} · alvo ≤{(swrTarget * 100).toFixed(0)}%</div>}
-                    {!swrPercentis && <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>—</div>}
-                  </div>
-                </div>
-              </>
+              <SWRDashboard
+                patrimonioAtual={patrimonioAtual}
+                custoVidaBase={activeScenarioCfg.custo_vida_base}
+                swrTarget={swrTarget}
+                swrP10={swrEfetivo?.p10 ?? null}
+                swrP50={swrEfetivo?.p50 ?? null}
+                swrP90={swrEfetivo?.p90 ?? null}
+                patrimonioP10={swrPercentis?.p10_patrimonio ?? null}
+                patrimonioP50={swrPercentis?.p50_patrimonio ?? null}
+                patrimonioP90={swrPercentis?.p90_patrimonio ?? null}
+                scenarioLabel={activeScenarioCfg.label}
+                anoCenarioBase={(data as any)?.premissas?.ano_cenario_base ?? '2040'}
+              />
             );
           })()}
         </div>
@@ -475,63 +435,10 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      {/* 1. SWR no FIRE Day — Percentis P10 / P50 / P90 (moved first: número central da aposentadoria) */}
-      {swrPercentis && (
-        <CollapsibleSection id="section-swr-percentiles" title={secTitle('withdraw', 'swr', 'SWR no FIRE Day — Percentis P10 / P50 / P90')} defaultOpen={secOpen('withdraw', 'swr')}>
-          <div style={{ padding: '0 16px 16px' }}>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" style={{ marginTop: 12 }}>
-              {/* P10 */}
-              <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--red)' }}>
-                  {swrEfetivo?.p10 != null ? `${(swrEfetivo.p10 * 100).toFixed(2)}%` : '—'}
-                </div>
-                {swrPercentis.p10_patrimonio != null && (
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                    Pat: {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p10_patrimonio)}
-                  </div>
-                )}
-              </div>
-              {/* P50 */}
-              <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--yellow)' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--yellow)' }}>
-                  {swrEfetivo?.p50 != null ? `${(swrEfetivo.p50 * 100).toFixed(2)}%` : '—'}
-                </div>
-                {swrPercentis.p50_patrimonio != null && (
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                    Pat: {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p50_patrimonio)}
-                  </div>
-                )}
-              </div>
-              {/* P90 */}
-              <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--green)' }}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)' }}>
-                  {swrEfetivo?.p90 != null ? `${(swrEfetivo.p90 * 100).toFixed(2)}%` : '—'}
-                </div>
-                {swrPercentis.p90_patrimonio != null && (
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
-                    Pat: {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(swrPercentis.p90_patrimonio)}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div style={{ marginTop: 8 }}>
-              <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-            </div>
-            <div className="src">
-              P10 = cenário pessimista (menor patrimônio → SWR mais alta); P90 = cenário otimista (maior patrimônio → SWR baixa).
-              Patrimônio MC não muda por perfil; SWR efetiva = gasto/{`{`}perfil{`}`} ÷ patrimônio.
-            </div>
-          </div>
-        </CollapsibleSection>
-      )}
-
       <SectionDivider label="Guardrails" />
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
       {safeData.guardrails_retirada && (
-        <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Guardrails de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
+        <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Regras de Ajuste de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
           <div style={{ padding: '0 16px 16px' }}>
             <GuardrailsRetirada guardrails={safeData.guardrails_retirada} />
             <div style={{ marginTop: 10, fontSize: 'var(--text-sm)', background: 'rgba(34,197,94,.07)', borderRadius: 6, padding: 8, borderLeft: '3px solid var(--green)' }}>
@@ -618,6 +525,32 @@ export default function WithdrawPage() {
           </div>
         </CollapsibleSection>
       )}
+
+      {/* 5a. Sequence of Returns Heatmap — movido de FIRE */}
+      <CollapsibleSection
+        id="section-sequence-returns"
+        title={secTitle('withdraw', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')}
+        defaultOpen={secOpen('withdraw', 'sequence-returns', false)}
+        icon="🌡️"
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+          {(() => {
+            const fireTrilha = (data as any)?.fire_trilha ?? {};
+            const spending = activeScenarioCfg.custo_vida_base;
+            return (
+              <SequenceOfReturnsHeatmap
+                dates={fireTrilha.dates ?? []}
+                trilhaBrl={fireTrilha.trilha_brl ?? []}
+                spending={spending}
+              />
+            );
+          })()}
+          <div className="src">
+            Heatmap de risco de sequência de retornos. SWR implícito a cada data — verde = sustentável, vermelho = risco.
+          </div>
+        </div>
+      </CollapsibleSection>
 
       {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
       <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey')} icon="💸">
