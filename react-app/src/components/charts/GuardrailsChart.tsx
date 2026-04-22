@@ -31,10 +31,35 @@ export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
     const yearsFromData = (data as any)?.fire_matrix?.n_anos_desacumulacao ?? ((data as any)?.premissas?.horizonte_vida ? (data as any).premissas.horizonte_vida - ((data as any).premissas.idade_cenario_base ?? 53) : 37);
     const years = Math.max(yearsFromData, 37);
     const xLabels = Array.from({ length: years }, (_, i) => `Ano ${i + 1}`);
-    const upper  = xLabels.map((_, i) => upperSpending  * Math.pow(1.03, i));
-    const safe   = xLabels.map((_, i) => safeTarget      * Math.pow(1.03, i));
-    const lower  = xLabels.map((_, i) => lowerSpending   * Math.pow(1.03, i));
-    const atual  = xLabels.map((_, i) => spendingAtual   * Math.pow(1.03, i));
+
+    // Healthcare model (same as Net Worth Projection): VCMH 2.7%/year + ANS age-bracket multiplier
+    const saudeBase = (data as any)?.saude_base ?? 18_000;
+    const SAUDE_INFLATOR = 0.027;
+    const SAUDE_DECAY_THRESHOLD = 30;
+    const SAUDE_DECAY = 0.50;
+
+    const ansMultiplier = (yearPostFire: number): number => {
+      const fireAge = 53;
+      const currentAge = fireAge + yearPostFire;
+      if (currentAge < 54) return 3.0;
+      if (currentAge < 60) return 3.0 + (currentAge - 54) * (0.5 / 6);
+      return 4.0;
+    };
+
+    const getHealthcareCost = (yearPostFire: number): number => {
+      let saudeVcmh = saudeBase * Math.pow(1 + SAUDE_INFLATOR, yearPostFire);
+      let saude = saudeVcmh * ansMultiplier(yearPostFire);
+      if (yearPostFire >= SAUDE_DECAY_THRESHOLD) {
+        saude *= SAUDE_DECAY;
+      }
+      return saude;
+    };
+
+    // Guardrail lines include healthcare on top of base spending
+    const upper  = xLabels.map((_, i) => upperSpending  + getHealthcareCost(i));
+    const safe   = xLabels.map((_, i) => safeTarget      + getHealthcareCost(i));
+    const lower  = xLabels.map((_, i) => lowerSpending   + getHealthcareCost(i));
+    const atual  = xLabels.map((_, i) => spendingAtual   + getHealthcareCost(i));
 
     // Zone gap for band fill: upper - lower
     const zoneGap = lower.map((lo, i) => upper[i] - lo);

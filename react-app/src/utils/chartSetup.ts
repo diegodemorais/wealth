@@ -872,26 +872,37 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     return trajectory;
   };
 
-  const postFireDates = Array.from({ length: postFireYears }, (_, i) => `${fireYear + i + 1}`);
-  const p10Post = calculatePostFireTrajectory(p10End as number, 0.03);   // P10: 3% real return
-  const p50Post = calculatePostFireTrajectory(p50End, 0.0485);           // P50: 4.85% real return
-  const p90Post = calculatePostFireTrajectory(p90End as number, 0.06);   // P90: 6% real return
+  // Post-FIRE: calculatePostFireTrajectory returns [startValue, year1, year2, ...]
+  // Index 0 (startValue) duplicates the last pre-FIRE data point, so we slice it off.
+  // Dates start at fireYear+1 because fireYear itself is already the last pre-FIRE date.
+  const postFireYearsLabel = postFireYears - 1;  // 36 years of NEW data (year 1..36)
+  const postFireDates = Array.from({ length: postFireYearsLabel }, (_, i) => `${fireYear + i + 1}`);
+  const p10PostFull = calculatePostFireTrajectory(p10End as number, 0.03);   // P10: 3% real return
+  const p50PostFull = calculatePostFireTrajectory(p50End, 0.0485);           // P50: 4.85% real return
+  const p90PostFull = calculatePostFireTrajectory(p90End as number, 0.06);   // P90: 6% real return
+
+  // Skip index 0 (duplicate of last pre-FIRE value)
+  const p10Post = p10PostFull.slice(1);
+  const p50Post = p50PostFull.slice(1);
+  const p90Post = p90PostFull.slice(1);
 
   // --- Align MC bands: p10Brl/p90Brl already have leading nulls for historical portion ---
   // Do NOT prepend additional nulls — they are already aligned with dates[].
   const p10Aligned: (number|null)[] = [...p10Brl, ...p10Post];
   const p90Aligned: (number|null)[] = [...p90Brl, ...p90Post];
   const p50Full: (number|null)[] = [...trilhaBrl, ...p50Post];
-  const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYears).fill(null)];
+  const realizadoFull: (number|null)[] = [...realizadoBrl, ...Array(postFireYearsLabel).fill(null)];
 
-  // --- X-axis: monthly dates + post-FIRE years; show label every 2-3 years for legibility ---
+  // --- X-axis: monthly dates + post-FIRE years; show label every 5 years for legibility ---
   const allDates = [...dates, ...postFireDates];
   const xAxisLabels = allDates.map(d => {
     if (d.length === 4) {
-      // Post-FIRE annual — show every 2 years starting from fireYear (correct offset)
+      // Post-FIRE annual — show fireYear first, then every 5 years
       const yr = parseInt(d, 10);
-      const stepSinceFireYear = (yr - fireYear) % 2;
-      return stepSinceFireYear === 0 && yr >= fireYear ? d : '';
+      if (yr === fireYear || (yr > fireYear && yr % 5 === 0)) {
+        return d;
+      }
+      return '';
     }
     const [yr, mo] = d.split('-');
     // Monthly — show only January of years divisible by 3 (pre-FIRE)
