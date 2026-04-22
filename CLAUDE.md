@@ -84,7 +84,8 @@ Pipeline: Scripts Python → `dados/` (JSON) → React (`react-app/`) → `dash/
 
 **Tamanho:**
 - Funções: 4-20 linhas. Dividir se maior
-- Arquivos: máximo 500 linhas. Dividir por responsabilidade
+- Utils/hooks/stores: max 500 linhas (lógica reutilizável deve ser enxuta)
+- Pages (vertical slices): sem limite rígido. 1 arquivo de 800 linhas > 5 de 160
 - Early returns sobre ifs aninhados. Máximo 2 níveis de indentação
 
 **Nomes e tipos:**
