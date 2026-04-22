@@ -20,79 +20,56 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|
 | PT-planejamento-patrimonial | Planejamento patrimonial pré-casamento | Patrimonial | 🟢 Baixa |
 | HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
-| HD-boldin-benchmark | Benchmark Boldin — Análise Comparativa Dashboard vs Mercado | Head | ✅ Done 2026-04-17 |
 
 ### Backlog
-> Issues prontas para execucao, aguardando vez
+> Issues prontas para execução, aguardando vez
 
-| # | ID | Titulo | Dono | Prioridade |
-|---|-----|--------|------|------------|
-| — | HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟡 Média |
-| — | TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Baixa |
-| — | FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟡 Média |
-| ~~FR-bond-tent-fire-date~~ | ~~Bond Tent — Robustez para FIRE Date Incerta~~ | FIRE | ✅ Done 2026-04-11 |
-| ~~FR-fire-date-elicitation~~ | ~~Elicitação data de FIRE — intenções, cenários e odds~~ | FIRE | ✅ Done 2026-04-11 |
-| ~~HD-swrd-114-cotas~~ | ~~Investigar 114 cotas de SWRD faltantes no ibkr_lotes.json~~ | Bookkeeper | ✅ Done |
-| ~~HD-gws-auth~~ | ~~Autenticar gws CLI para acesso Google Workspace~~ | Head | ❌ Cancelada — gws requer pagamento |
-| 2 | ~~HD-tearsheet-longrun~~ | ~~Tearsheet QuantStats — drawdown table + histórico longo~~ | Head | ✅ Done |
-| ~~HD-backtest-longrun~~ | ~~Pipeline backtest 50+ anos via Ken French / MSCI~~ | Head | ✅ Done |
-| ~~DEV-tester~~ | ~~Agente Tester — Suite de testes funcionais para todos os 64 blocos~~ | Dev | ✅ Done 2026-04-12 |
-| ~~DEV-fire-tab-split~~ | ~~Split da aba FIRE em 2 tabs coerentes~~ | Dev | ✅ Done 2026-04-12 |
-| ~~DEV-privacy-sim-audit~~ | ~~Auditoria privacidade: simulador FIRE + todos os componentes~~ | Dev | ✅ Done 2026-04-13 |
-| ~~DEV-hero-kpi-review~~ | ~~Revisão completa KPIs hero strip + aba Now~~ | Dev + Head | ✅ Done 2026-04-13 |
-| 4 | TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
-| — | TX-tlh-engine-lote | Tax — TLH Engine por lote (P&L individual, gatilho em drawdown) | Tax | 🟡 Média |
-| — | TX-diferimento-fiscal | Tax — Calculadora de diferimento fiscal por ETF (custo real da venda) | Tax | 🟡 Média |
-| 2 | ~~HD-quantstats~~ | ~~Portfolio analytics visual com QuantStats~~ | Head | ✅ Done |
-| 3 | ~~HD-ibkr-import~~ | ~~Tracking automático de posições via IBKR Flex Query~~ | Bookkeeper | ✅ Done |
-| 4 | ~~FR-withdrawal-engine~~ | ~~Motor parametrizável de withdrawal strategies~~ | FIRE | ✅ Done |
-| 5 | ~~HD-mcp-bcb~~ | ~~MCP Server BCB — dados macro Brasil estruturados~~ | Head | ✅ Done |
-| 6 | ~~HD-mcp-financial-datasets~~ | ~~MCP Financial Datasets — ETF holdings~~ | Head | ✅ Done |
-| 7 | ~~FI-portfolio-optimization~~ | ~~Validação formal de alocação via otimização~~ | Factor | ✅ Done |
-| 8 | ~~FR-rebalance-desacumulacao~~ | ~~Regras de rebalanceamento pós-FIRE~~ | FIRE | ✅ Done |
-| 9 | ~~TX-tlh-automation~~ | ~~Tax-loss harvesting automático~~ | Tax | ✅ Done |
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta |
+| DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps Críticos (bond pool gauge, P10/P90, IR latente) | Dev | 🔴 Alta |
+| HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟡 Média |
+| TX-tlh-engine-lote | TLH Engine por lote (P&L individual, gatilho em drawdown) | Tax | 🟡 Média |
+| TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF (custo real da venda) | Tax | 🟡 Média |
+| FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟡 Média |
+| DEV-premissas-tab | Aba Premissas — Transparência do Plano FIRE (read-only) | Dev | 🟢 Baixa |
+| TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
+| TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Baixa |
 
 ### Doing
 > Issues em andamento
 
 | ID | Titulo | Dono | Prioridade | Status |
 |----|--------|------|------------|--------|
-| DEV-premissas-tab | Aba Premissas — Transparência do Plano FIRE (read-only, 2 blocos, ~55 testes) | Dev | 🟢 Baixa | ⏳ Backlog |
-| DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps Críticos (bond pool gauge, trajetória P10/P90, IR latente) | Dev | 🔴 Alta | ⏳ Backlog |
-| XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta | ⏳ Backlog |
-| DEV-code-quality-audit | Code Quality Audit — Hardcoded, Privacy, Hex Colors, Python Tests | Dev | 🟡 Média | ✅ Done 2026-04-21 |
-| DEV-discovery-tab | Aba Discovery — novos componentes sugeridos por todos os agentes + componentes órfãos | Dev | 🟡 Média | ⏳ Doing |
-| DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias (calcFireYear, P(FIRE), MC, semáforo, fmtBrl, wellness...) | Dev+Quant | 🔴 Alta | ⏳ Doing |
-| DEV-boldin-dashboard | Boldin Dashboard Gaps — F1+F2+D1+F5+F6+F7 (balanço holístico, surplus-gap, wellness, cenários, spouse, LTC) | Dev | 🔴 Alta | ⏳ Doing |
-| DEV-dashboard-components-alignment | Alinhamento visual/informacional com DashHTML — 32+ componentes | Dev | 🔴 Alta | ⏳ Doing (tarefas por componente) |
-| DEV-manifest | spec.json — Manifesto único do dashboard | Dev | 🔴 Alta | ✅ Done 2026-04-11 |
-| DEV-bi-review | Revisão BI externa + nova estrutura de abas | Dev | 🟡 Média | ✅ Done 2026-04-11 |
-| EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 🟡 Média | ✅ Done 2026-04-11 |
-| DEV-fire-matrix-v2 | FIRE Matrix v2 — 3 cenários + eixos Patrimônio×Gasto + visual | Head | 🟡 Média | ✅ Done 2026-04-11 |
-| DEV-dashboard-audit | Auditoria completa 60 blocos — map→Quant→fix→confirm | Head | 🔴 Alta | ✅ Done 2026-04-11 |
-| DEV-factor-tstats | t-stats + R² warning no Factor Loadings chart | Dev+Quant | 🟡 Média | ✅ Done 2026-04-11 |
-| DEV-fire-sim-fixes | Simulação FIRE: ordem barras + bug custo de vida não antecipa | Dev+FIRE | 🔴 Crítica | ✅ Done 2026-04-10 |
-| HD-perplexity-review | Review externo Perplexity — 9 features implementadas | Head | 🟡 Média | ✅ Done 2026-04-10 |
-| DEV-pvr-broken | Premissas vs Realizado não renderiza (recorrente) | Dev | 🔴 Crítica | ✅ Done 2026-04-10 |
-| DEV-perf-audit-fixes | 6 correções aba Performance (TER, attribution, CDI, shadows) | Dev+Quant | 🔴 Alta | ✅ Done 2026-04-10 |
-| CORE-portfolio-history | Camada Core de Histórico de Portfolio | Bookkeeper | 🔴 Crítica | ✅ Done 2026-04-10 |
-| HD-dashboard-pipeline | Refatoração do pipeline e arquitetura do dashboard | Dev | 🟡 Média | ✅ Done 2026-04-10 |
-| HD-dashboard-v2 | Redesign e correções — revisão completa 12 agentes | Dev | 🔴 Crítica | Done (v1.43→v1.71, P0/P1/P2/P3 completos) |
-| OPS-xp-import | Pipeline de Importação XP (RF + HODL11) | Bookkeeper | 🟡 Média | Done (broker_analysis.py + dados/xp/) |
-| HD-research-planejamento | Pesquisa Boldin + referências de financial planning/WM | Head | 🔴 Crítica | Done |
+| DEV-boldin-dashboard | Boldin Dashboard Gaps — balanço holístico, surplus-gap, wellness, cenários, spouse, LTC | Dev | 🔴 Alta | Em progresso |
+| DEV-dashboard-components-alignment | Alinhamento visual/informacional com DashHTML — 32+ componentes | Dev | 🔴 Alta | Em progresso |
+| DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias | Dev+Quant | 🔴 Alta | Em progresso |
 
-> HD-dashboard-ux concluída em 2026-04-08 (ver Done abaixo)
+### Done (últimas 20)
+> Issues concluídas
 
-### Done
-> Issues concluidas
-
-| ID | Titulo | Dono | Data | Resultado |
-|----|--------|------|------|-----------|
-| FR-filho-drawdown | MC cenário filho 2028 + drawdown 2029 | FIRE | 2026-04-20 | P(stress) F-4b=76.4% (n=10k). Plano sobrevive com margem 1.4pp. Conclusão: manter R$25k de aporte é o principal fator de proteção. Piso 75% pendente formalização em carteira.md. |
-| DEV-hero-kpi-review | Revisão completa KPIs hero strip + aba Now | Dev + Head | 2026-04-13 | Debate realizado (5 agentes). Proposta de redesign recusada por Diego. Status quo mantido. |
-| DEV-privacy-sim-audit | Auditoria privacidade completa — transformar em vez de ocultar | Dev | 2026-04-13 | 32 gaps corrigidos (v2.6→v2.10). CSS ::after "••••". Slider labels, hero strip, FIRE matrix, SWR percentis, fee analysis, HODL PnL cobertos. |
-| FR-swr-revisao-2026-04-13 | SWR gatilho revisão + floors simulador | FIRE+Quant+Dev | 2026-04-13 | SWR 2.4%→3.0% (Pfau/ERN). R$13.4M removido como referência. Floors INSS/Katia implementados. Aporte 33k→25k. Dashboard v2.5. 604/604 testes. |
-| HD-behavioral | Behavioral checklist enriquecido | Advocate | 2026-04-13 | Fechada (concluída em 2026-03-26 sem status update). 9 itens no checklist do Advocate. Item #9 echo chamber LLM único genuinamente novo. |
+| ID | Dono | Data | Resultado |
+|----|------|------|-----------|
+| DEV-claudemd-compliance | Dev | 2026-04-22 | 3/6 violações corrigidas (grid, privacy, dead code). 3 backlog. |
+| FR-filho-drawdown | FIRE | 2026-04-20 | P(stress) 76.4%. Plano sobrevive. Aporte R$25k = fator principal. |
+| HD-boldin-benchmark | Head | 2026-04-17 | Análise comparativa Dashboard vs Boldin concluída. |
+| DEV-dashboard-redesign | Dev | 2026-04-15 | Dashboard React completo. 32 componentes, 8 abas. v0.1→v1.0. |
+| DEV-hero-kpi-review | Dev+Head | 2026-04-13 | Redesign recusado por Diego. Status quo mantido. |
+| DEV-privacy-sim-audit | Dev | 2026-04-13 | 32 gaps corrigidos. Privacy mode completo. |
+| FR-swr-revisao-2026-04-13 | FIRE+Quant | 2026-04-13 | SWR 2.4%→3.0%. Floors INSS/Katia implementados. |
+| HD-backtest-longrun | Head | 2026-04-11 | Regime 7 (1989-2026). CAGR +9.79%. WR 20a: 100%. |
+| DEV-manifest | Dev | 2026-04-11 | spec.json — manifesto único do dashboard. |
+| DEV-dashboard-audit | Head | 2026-04-11 | Auditoria completa 60 blocos. |
+| DEV-fire-sim-fixes | Dev+FIRE | 2026-04-10 | Ordem barras + bug custo de vida corrigidos. |
+| HD-perplexity-review | Head | 2026-04-10 | 9 features implementadas. |
+| CORE-portfolio-history | Bookkeeper | 2026-04-10 | TWR 5 anos: 12.69%. Pipeline ibkr→dados funcional. |
+| DEV-perf-audit-fixes | Dev+Quant | 2026-04-10 | 6 correções Performance (TER, attribution, CDI, shadows). |
+| DEV-code-quality-audit | Dev | 2026-04-21 | Compliance audit executado e corrigido. |
+| DEV-discovery-tab | Dev | 2026-04-22 | Criada, populada com 25 componentes, esvaziada — dead code removido. |
+| HD-multimodel-validation | Head | 2026-04-06 | 50/30/20 corroborado. 7 findings. Alpha 0.16%/ano. |
+| HD-mc-audit | Head | 2026-04-06 | Double-count saúde corrigido. P(FIRE) 87.2%. |
+| FI-etf-deep-review | Factor | 2026-04-03 | Unanimidade zero mudanças. Zero-Based confirma. |
+| HD-gastos-pessoais-2026 | Head | 2026-04-03 | Baseline R$218k/ano. Buffer R$32k. |
 | EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 2026-04-11 | PAXG 12% compliance crítico (IR revogado). Equity 53% subestimado. Renda+ aumentar 18–20%. FIRE number ausente. PDF entregue. |
 | TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 2026-04-11 | Nenhuma ação agora. Gatilho = casamento. → PT-planejamento-patrimonial. |
 | HD-backtest-longrun | Pipeline backtest 50+ anos — Regime 7 | Head | 2026-04-11 | Regime 7 (1989–2026, 374m). CAGR +9.79% vs +7.80% (+1.99pp). WR 20a: 100%. Drought 74m. Recovery 43m < bond pool 84m. v1.135. |
