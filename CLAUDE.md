@@ -102,7 +102,7 @@ Pipeline: Scripts Python → `dados/` (JSON) → React (`react-app/`) → `dash/
 **Charts (100% ECharts):**
 - Única lib: ECharts via `echarts-for-react`. Chart.js foi removido — não reintroduzir
 - Wrapper: `<EChart>` de `@/components/primitives/EChart.tsx`
-- Cores: `EC` de `@/utils/echarts-theme` — nunca hex inline
+- Cores: `EC.*` de `@/utils/echarts-theme` — hex literal APENAS dentro de echarts-theme.ts. Todo o resto importa EC
 - Privacy: todo tooltip/label respeita `privacyMode` (`useEChartsPrivacy()`)
 - Chart options: inline no componente. Extrair para `chartSetup.ts` só a partir do 2º consumidor real
 

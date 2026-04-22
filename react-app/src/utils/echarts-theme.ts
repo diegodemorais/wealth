@@ -21,6 +21,21 @@ export const EC = {
   cyan:    '#06b6d4',   // var(--cyan)    hsl(189 94% 43%)
   pink:    '#ec4899',   // var(--pink)    hsl(330 80% 60%)
 
+  // ── Conditional (green/red for positive/negative) ──────────────────────
+  positive: '#22c55e',  // tailwind green-500 — used for gains, coverage, OK
+  negative: '#ef4444',  // tailwind red-500 — used for losses, gaps, warnings
+  warning:  '#f59e0b',  // tailwind amber-500 — caution states
+
+  // ── Bond pool / ladder palette ─────────────────────────────────────────
+  blue600:  '#2563eb',  // IPCA+2029 (short), SoRR pool
+  sky500:   '#0ea5e9',  // IPCA+2040 (medium)
+  violet700:'#7c3aed',  // IPCA+2050 (long), structural pool
+  violet600:'#9333ea',  // Renda+2065 (very long)
+
+  // ── Misc chart colors ──────────────────────────────────────────────────
+  emerald:  '#16a34a',  // income/receita
+  crimson:  '#dc2626',  // expense/despesa
+
   // ── Surface colors ───────────────────────────────────────────────────────
   bg:      '#0d1117',   // var(--bg)
   card:    '#161b22',   // var(--card)    — tooltip background
