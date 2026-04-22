@@ -4,8 +4,8 @@ import { usePageData } from '@/hooks/usePageData';
 import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { pfireColor } from '@/utils/fire';
-import { SectionDivider } from '@/components/primitives/SectionDivider';
-import { CheckCircle } from 'lucide-react';
+import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
@@ -129,6 +129,41 @@ function StatusPill({ label, color }: { label: string; color: string }) {
     }}>
       {label}
     </span>
+  );
+}
+
+// A decision/action card with status indicator
+function DecisionCard({ title, status, statusColor, detail, icon, muted }: {
+  title: string;
+  status: string;
+  statusColor: string;
+  detail?: string;
+  icon: React.ReactNode;
+  muted?: boolean;
+}) {
+  return (
+    <div style={{
+      background: 'var(--card)',
+      border: '1px solid var(--border)',
+      borderLeft: `3px solid ${statusColor}`,
+      borderRadius: 7,
+      padding: '10px 14px',
+      opacity: muted ? 0.6 : 1,
+      display: 'flex',
+      gap: 10,
+      alignItems: 'flex-start',
+    }}>
+      <div style={{ color: statusColor, flexShrink: 0, marginTop: 1 }}>{icon}</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', lineHeight: 1.3 }}>{title}</span>
+          <StatusPill label={status} color={statusColor} />
+        </div>
+        {detail && (
+          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3, lineHeight: 1.4 }}>{detail}</div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -285,10 +320,8 @@ export default function AssumptionsPage() {
   const sg = d?.spending_guardrails ?? {};
   const bondPool = fire?.bond_pool_readiness ?? {};
   const bpr = d?.bond_pool_runway ?? {};
-  const pvr = d?.premissas_vs_realizado ?? {};
   const guardrailsRetirada = d?.guardrails_retirada ?? [];
   const le = d?.lumpy_events ?? {};
-  const sb = d?.spending_breakdown ?? {};
   const dca = d?.dca_status ?? {};
   const generated = d?._generated ?? '';
 
@@ -316,25 +349,6 @@ export default function AssumptionsPage() {
     { label: 'Pat. Mediano @48 (P50)', value: mask(sc.aspiracional?.pat_mediano ?? fire.pat_mediano_fire50 ?? 0, privacyMode) },
     { label: 'Pat. Mediano @53 (P50)', value: mask(sc.base?.pat_mediano ?? fire.pat_mediano_fire ?? 0, privacyMode) },
     { label: 'Gasto Piso (SWR 4.5%)', value: mask(d.gasto_piso ?? 0, privacyMode) + '/ano', muted: true },
-  ];
-
-  // ── Personal rows ──
-  const personalRows: Row[] = [
-    { label: 'Idade Atual', value: `${p.idade_atual ?? '—'} anos` },
-    { label: 'Patrimônio Atual', value: mask(p.patrimonio_atual ?? 0, privacyMode) },
-    { label: 'Fluxo Mensal', value: '', separator: true } as Row,
-    { label: 'Renda Estimada', value: mask(p.renda_estimada ?? 0, privacyMode) + '/mês' },
-    { label: 'Renda Líquida', value: mask(p.renda_mensal_liquida ?? 0, privacyMode) + '/mês' },
-    { label: 'Aporte Mensal', value: mask(p.aporte_mensal ?? 0, privacyMode) + '/mês', accent: true },
-    { label: 'Spending Target', value: mask(p.custo_vida_base ?? 0, privacyMode) + '/ano' },
-    { label: 'INSS Diego', value: mask(p.inss_anual ?? 0, privacyMode) + '/ano', muted: true },
-  ];
-
-  // ── Katia rows ──
-  const katiaRows: Row[] = [
-    { label: 'INSS Katia', value: mask(p.inss_katia_anual ?? 0, privacyMode) + '/ano' },
-    { label: 'PGBL (FIRE Day 2040)', value: mask(p.pgbl_katia_saldo_fire ?? 0, privacyMode) },
-    { label: 'Gasto Solo', value: mask(p.gasto_katia_solo ?? 0, privacyMode) + '/ano', muted: true },
   ];
 
   // ── Model Assumptions rows — split into fundamental vs contextual ──
@@ -435,41 +449,6 @@ export default function AssumptionsPage() {
     { label: 'Lower Guardrail', value: mask(sg.lower_guardrail_spending ?? 0, privacyMode) + '/ano' },
   ] : [];
 
-  // ── RF Positions rows — grouped by instrument ──
-  const rfRows: Row[] = [
-    { label: 'IPCA+ Estrutural', value: '', separator: true } as Row,
-    ...(rf.ipca2029?.valor != null ? [{
-      label: 'IPCA+ 2029',
-      value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2029.valor)} @ ${rf.ipca2029.taxa?.toFixed(2)}%`,
-    }] : []),
-    ...(rf.ipca2040?.valor != null ? [{
-      label: 'IPCA+ 2040',
-      value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2040.valor)} @ ${rf.ipca2040.taxa?.toFixed(2)}%`,
-    }] : []),
-    ...(rf.ipca2050?.valor != null ? [{
-      label: 'IPCA+ 2050',
-      value: privacyMode ? '••••' : `${fmtBrl(rf.ipca2050.valor)} @ ${rf.ipca2050.taxa?.toFixed(2)}%`,
-    }] : []),
-    { label: 'Renda+ 2065 — Tático', value: '', separator: true } as Row,
-    ...(rf.renda2065?.valor != null ? [{
-      label: 'Posição',
-      value: privacyMode ? '••••' : `${fmtBrl(rf.renda2065.valor)} @ ${rf.renda2065.taxa?.toFixed(2)}%`,
-      accent: true,
-    }] : []),
-    ...(rf.renda2065?.distancia_gatilho?.gap_pp != null ? [{
-      label: 'Taxa atual / piso / gap',
-      value: `${rf.renda2065.distancia_gatilho.taxa_atual?.toFixed(1)}% · ${rf.renda2065.distancia_gatilho.piso_venda?.toFixed(1)}% · +${rf.renda2065.distancia_gatilho.gap_pp?.toFixed(2)}pp`,
-      accent: (rf.renda2065.distancia_gatilho.status ?? '') === 'verde',
-      warn: (rf.renda2065.distancia_gatilho.status ?? '') === 'amarelo',
-      muted: true,
-    }] : []),
-    ...(rf.renda2065?.duration?.modificada_anos != null ? [{
-      label: 'Duration modificada',
-      value: `${rf.renda2065.duration.modificada_anos?.toFixed(1)} anos`,
-      muted: true,
-    }] : []),
-  ];
-
   // ── Tax & Fiscal rows ──
   const taxRows: Row[] = [
     { label: 'IR Diferido (ETF exterior)', value: mask(tax.ir_diferido_total_brl ?? 0, privacyMode), warn: true },
@@ -489,12 +468,6 @@ export default function AssumptionsPage() {
     value: g.retirada != null ? mask(g.retirada, privacyMode) + '/ano' : (g.regra ?? g.acao ?? '—'),
     muted: (g.ddMin ?? 0) > 0,
   }));
-
-  // ── Last aporte ──
-  const ultimoAporteRows: Row[] = [
-    ...(p.ultimo_aporte_data ? [{ label: 'Data', value: p.ultimo_aporte_data }] : []),
-    ...(p.ultimo_aporte_brl ? [{ label: 'Valor', value: mask(p.ultimo_aporte_brl, privacyMode) }] : []),
-  ];
 
   // ── DCA Status ── (inline badges for quick scanning)
   const dcaItems = [
@@ -536,15 +509,71 @@ export default function AssumptionsPage() {
     },
   ];
 
-  // ── Decisões Pendentes (extraídas do pipeline) ──
-  const pendingDecisions: Row[] = [
-    { label: 'IPCA+ longo até 15%', value: dca.ipca_longo?.ativo ? 'DCA ATIVO' : 'PAUSADO', accent: dca.ipca_longo?.ativo },
-    { label: 'Renda+ 2065 até 5%', value: dca.renda_plus?.ativo ? 'DCA ATIVO' : 'PAUSADO', accent: dca.renda_plus?.ativo },
-    { label: 'IPCA+ curto 3% (SoRR buffer)', value: 'Comprar perto dos 50', muted: true },
-    { label: 'Reserva → Selic no vencimento 2029', value: 'Aguardando 2029', muted: true },
-    { label: 'Renda+ vender se taxa < 6.0%', value: `taxa atual: ${rf.renda2065?.taxa?.toFixed(1) ?? '—'}%`, accent: (rf.renda2065?.taxa ?? 7) >= 6.5 },
-    { label: 'RF pós-2040 (TD 2050 >= 3%?)', value: 'Verificar em 2040', muted: true },
-    { label: 'Seguro de vida', value: 'Pendente casamento', warn: true },
+  // ── Build decision cards data ──
+  const decisionCards: {
+    title: string;
+    status: string;
+    statusColor: string;
+    detail?: string;
+    icon: React.ReactNode;
+    muted?: boolean;
+  }[] = [
+    {
+      title: 'IPCA+ longo até 15%',
+      status: dca.ipca_longo?.ativo ? 'DCA ATIVO' : 'PAUSADO',
+      statusColor: dca.ipca_longo?.ativo ? 'var(--green)' : 'var(--yellow)',
+      detail: dca.ipca_longo?.ativo
+        ? `taxa ${dca.ipca_longo?.taxa_atual?.toFixed(2) ?? '—'}% · gap ${dca.ipca_longo?.gap_alvo_pp?.toFixed(1) ?? '—'}pp`
+        : undefined,
+      icon: dca.ipca_longo?.ativo ? <CheckCircle size={16} /> : <Clock size={16} />,
+    },
+    {
+      title: 'Renda+ 2065 até 5%',
+      status: dca.renda_plus?.ativo ? 'DCA ATIVO' : 'PAUSADO',
+      statusColor: dca.renda_plus?.ativo ? 'var(--green)' : 'var(--yellow)',
+      detail: dca.renda_plus?.ativo
+        ? `posição ${dca.renda_plus?.pct_carteira_atual?.toFixed(1) ?? '—'}% → alvo ${dca.renda_plus?.alvo_pct ?? '—'}%`
+        : undefined,
+      icon: dca.renda_plus?.ativo ? <CheckCircle size={16} /> : <Clock size={16} />,
+    },
+    {
+      title: 'Renda+ vender se taxa < 6.0%',
+      status: (rf.renda2065?.taxa ?? 7) >= 6.5 ? 'SEGURO' : (rf.renda2065?.taxa ?? 7) >= 6.0 ? 'ATENÇÃO' : 'VENDER',
+      statusColor: (rf.renda2065?.taxa ?? 7) >= 6.5 ? 'var(--green)' : (rf.renda2065?.taxa ?? 7) >= 6.0 ? 'var(--yellow)' : 'var(--red)',
+      detail: `taxa atual: ${rf.renda2065?.taxa?.toFixed(2) ?? '—'}%`,
+      icon: <Shield size={16} />,
+    },
+    {
+      title: 'Seguro de vida',
+      status: 'PENDENTE',
+      statusColor: 'var(--yellow)',
+      detail: 'Pendente casamento',
+      icon: <AlertTriangle size={16} />,
+    },
+    {
+      title: 'IPCA+ curto 3% (SoRR buffer)',
+      status: 'FUTURO',
+      statusColor: 'var(--muted)',
+      detail: 'Comprar perto dos 50',
+      icon: <Clock size={16} />,
+      muted: true,
+    },
+    {
+      title: 'Reserva IPCA+ 2029 no vencimento',
+      status: 'FUTURO',
+      statusColor: 'var(--muted)',
+      detail: 'Aguardando 2029 — converter para Selic',
+      icon: <Clock size={16} />,
+      muted: true,
+    },
+    {
+      title: 'RF pós-2040 (TD 2050 >= 3%?)',
+      status: 'FUTURO',
+      statusColor: 'var(--muted)',
+      detail: 'Verificar em 2040',
+      icon: <Clock size={16} />,
+      muted: true,
+    },
   ];
 
   return (
@@ -552,236 +581,248 @@ export default function AssumptionsPage() {
       {/* Header */}
       <div style={{ marginBottom: 14, paddingBottom: 12, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
         <h1 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--text)' }}>Checklist do Plano</h1>
-        <span style={{ fontSize: 11, color: 'var(--muted)' }}>Tudo que combinamos — read-only</span>
+        <span style={{ fontSize: 11, color: 'var(--muted)' }}>Visão geral e ações pendentes</span>
         <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--muted)', fontFamily: 'monospace' }}>
           {generatedLabel}
         </span>
       </div>
 
-      {/* ════════════════════════════════════════════════════════════════════════ */}
-      {/* MEGA-BLOCO 1: ONDE ESTOU                                               */}
-      {/* ════════════════════════════════════════════════════════════════════════ */}
-
-      <SectionDivider label="Onde Estou" />
-
-      {/* Status Strip (4 KPIs) */}
+      {/* ── Status Strip (4 KPIs) — always visible ── */}
       <div style={{ marginBottom: 14 }}>
         <StatusStrip p={p} fire={fire} pfire={pfire} priv={privacyMode} />
       </div>
 
-      {/* DCA Status */}
-      {dcaItems.some(i => i.pctAtual != null) && (
-        <div style={{ marginBottom: 14 }}>
-          <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 8 }}>
-            {dcaItems.map((item, idx) => {
-              const color = item.active ? 'var(--green)' : 'var(--yellow)';
-              return (
-                <div key={idx} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: `2px solid ${color}`, borderRadius: 7, padding: '10px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)' }}>{item.label}</span>
-                    <StatusPill label={item.active ? 'ATIVO' : 'PAUSADO'} color={color} />
-                  </div>
-                  {item.taxa != null && (
-                    <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-                      taxa <span style={{ color: 'var(--text)', fontWeight: 600 }}>{item.taxa.toFixed(2)}%</span>
-                      {item.piso != null && <span> · piso {item.piso}%</span>}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* SECTION 1: DECISÕES & AÇÕES (most actionable — top of page)            */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <CollapsibleSection
+        id="assumptions-decisions"
+        title="Decisões & Ações"
+        defaultOpen={true}
+        icon={<AlertTriangle size={16} />}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          {/* Decision Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 8, marginBottom: 14 }}>
+            {decisionCards.map((card, idx) => (
+              <DecisionCard key={idx} {...card} />
+            ))}
+          </div>
+
+          {/* Life Events — part of decisions, not buried at bottom */}
+          {le.eventos?.length > 0 && (
+            <div style={{ marginTop: 4 }}>
+              <h3 style={{ margin: '0 0 8px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                Eventos de Vida — Impacto FIRE
+              </h3>
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8 }}>
+                Base sem eventos: spending {mask(le.base?.spending_brl ?? 0, privacyMode)}/ano, P(FIRE) {((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 8 }}>
+                {le.eventos.map((ev: any, idx: number) => {
+                  const isNeg = ev.delta_pp < 0;
+                  const statusColor = ev.confirmado ? 'var(--green)' : isNeg ? 'var(--yellow)' : 'var(--muted)';
+                  return (
+                    <div key={idx} style={{
+                      background: 'var(--card)',
+                      border: '1px solid var(--border)',
+                      borderLeft: `3px solid ${statusColor}`,
+                      borderRadius: 7,
+                      padding: '8px 12px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                      <div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          {ev.label}
+                          {ev.confirmado && <CheckCircle size={12} style={{ color: 'var(--green)' }} />}
+                          {!ev.confirmado && <span style={{ fontSize: 10, color: 'var(--muted)' }}>(planej.)</span>}
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
+                          spending {mask(ev.spending_novo, privacyMode)}/ano
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, fontFamily: 'monospace', color: isNeg ? 'var(--yellow)' : 'var(--green)' }}>
+                          {ev.delta_pp > 0 ? '+' : ''}{ev.delta_pp}pp
+                        </div>
+                        <div style={{ fontSize: 10, color: 'var(--muted)' }}>
+                          P {(ev.pfire_2040 * 100).toFixed(1)}%
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  {item.pctAtual != null && (
-                    <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-                      {item.pctAtual.toFixed(1)}% → {item.alvo}%
-                      {item.gap != null && <span style={{ color: 'var(--accent)' }}> (gap {item.gap.toFixed(1)}pp)</span>}
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      </CollapsibleSection>
+
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* SECTION 2: ONDE ESTOU                                                   */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <CollapsibleSection
+        id="assumptions-onde-estou"
+        title="Onde Estou"
+        defaultOpen={true}
+        icon={<ArrowRight size={16} />}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          {/* DCA Status badges */}
+          {dcaItems.some(i => i.pctAtual != null) && (
+            <div style={{ marginBottom: 14 }}>
+              <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 8 }}>
+                {dcaItems.map((item, idx) => {
+                  const color = item.active ? 'var(--green)' : 'var(--yellow)';
+                  return (
+                    <div key={idx} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderTop: `2px solid ${color}`, borderRadius: 7, padding: '10px 12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text)' }}>{item.label}</span>
+                        <StatusPill label={item.active ? 'ATIVO' : 'PAUSADO'} color={color} />
+                      </div>
+                      {item.taxa != null && (
+                        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                          taxa <span style={{ color: 'var(--text)', fontWeight: 600 }}>{item.taxa.toFixed(2)}%</span>
+                          {item.piso != null && <span> · piso {item.piso}%</span>}
+                        </div>
+                      )}
+                      {item.pctAtual != null && (
+                        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                          {item.pctAtual.toFixed(1)}% → {item.alvo}%
+                          {item.gap != null && <span style={{ color: 'var(--accent)' }}> (gap {item.gap.toFixed(1)}pp)</span>}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* FIRE Targets */}
+          <div style={{ marginBottom: 14 }}>
+            <Block title="FIRE Targets">
+              <Table rows={fireTargetsRows} />
+            </Block>
+          </div>
+
+          {/* Family Scenarios */}
+          {profiles.length > 0 && (
+            <FamilyScenarios profiles={profiles} priv={privacyMode} />
+          )}
+        </div>
+      </CollapsibleSection>
+
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* SECTION 3: O QUE COMBINAMOS — collapsed by default (reference)         */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <CollapsibleSection
+        id="assumptions-alocacao-regras"
+        title="Alocação & Regras"
+        defaultOpen={false}
+        icon={<Shield size={16} />}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
+            <Block title="Alocação Estratégica" note="Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
+              <Table rows={allocationRows} />
+            </Block>
+
+            <Block title="Pisos & Regras RF">
+              <Table rows={pisosRows} />
+              {smileRows.length > 0 && (
+                <>
+                  <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    Spending Smile
+                  </h3>
+                  <Table rows={smileRows} />
+                </>
+              )}
+            </Block>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {spendingGuardrailRows.length > 0 && (
+                <Block title="Spending Guardrails" note="Upper = teto aspiracional · Safe = alvo · Lower = piso.">
+                  <Table rows={spendingGuardrailRows} />
+                </Block>
+              )}
+
+              <Block title="Guardrails de Retirada">
+                {withdrawalRows.length > 0 ? (
+                  <Table rows={withdrawalRows} />
+                ) : (
+                  <p style={{ fontSize: 13, color: 'var(--muted)' }}>—</p>
+                )}
+                {guardrailsRetirada.length > 0 && (
+                  <>
+                    <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      P(FIRE) Guardrails
+                    </h3>
+                    <Table rows={guardrailsRetirada.map((g: any) => ({
+                      label: g.condicao ?? g.guardrail,
+                      value: g.acao ?? '—',
+                      accent: g.prioridade === 'EXPANSIVO',
+                      warn: g.prioridade === 'DEFESA',
+                      muted: g.prioridade === 'MANTÉM',
+                    }))} />
+                  </>
+                )}
+              </Block>
+            </div>
+          </div>
+
+          {taxRows.length > 0 && (
+            <Block title="Fiscal" note="UCITS (fora US-situs). IR diferido cresce com depreciação BRL.">
+              <Table rows={taxRows} />
+            </Block>
+          )}
+        </div>
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        id="assumptions-modelo-referencia"
+        title="Modelo & Referência"
+        defaultOpen={false}
+        icon={<Clock size={16} />}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10 }}>
+            <Block title="Premissas do Modelo">
+              <Table rows={modelFundamentalRows} />
+              {p.retornos_por_etf && (
+                <>
+                  <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    Retornos por ETF (USD real/ano)
+                  </h3>
+                  <Table rows={[
+                    { label: 'SWRD', value: `${((p.retornos_por_etf.SWRD?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                    { label: 'AVGS', value: `${((p.retornos_por_etf.AVGS?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                    { label: 'AVEM', value: `${((p.retornos_por_etf.AVEM?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                  ]} />
+                </>
+              )}
+            </Block>
+
+            <Block title="Balanço Holístico">
+              <Table rows={holisticRows} />
+              <p style={{ margin: '8px 0 0', padding: '7px 9px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 5, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
+                ¹ Imóvel equity = mercado − hipoteca. Capital Humano = VP renda futura.
+              </p>
+            </Block>
+
+            {bondPoolRows.length > 0 && (
+              <Block title="Bond Pool" note={`Meta: ${bondPool.meta_anos ?? 7} anos de gastos em RF. DCA até ~2039.`}>
+                <Table rows={bondPoolRows} />
+              </Block>
+            )}
           </div>
         </div>
-      )}
-
-      {/* Family Scenarios + Personal Diego + Katia */}
-      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Personal — Diego">
-          <Table rows={personalRows} />
-        </Block>
-        <Block title="Personal — Katia" note="PGBL projeção: R$490k (2040) → R$728–948k (2049)">
-          <Table rows={katiaRows} />
-        </Block>
-        <Block title="Passivos">
-          <Table rows={[
-            { label: 'Hipoteca (saldo devedor)', value: mask(d.passivos?.hipoteca_brl ?? 0, privacyMode), warn: true },
-            { label: 'Vencimento hipoteca', value: d.passivos?.hipoteca_vencimento ?? '—', muted: true },
-            { label: 'IR Diferido (ETFs)', value: mask(d.passivos?.ir_diferido_brl ?? 0, privacyMode), warn: true },
-            { label: 'Total Passivos', value: mask(d.passivos?.total_brl ?? 0, privacyMode), warn: true },
-          ]} />
-        </Block>
-      </div>
-
-      {profiles.length > 0 && (
-        <div style={{ marginBottom: 14 }}>
-          <FamilyScenarios profiles={profiles} priv={privacyMode} />
-        </div>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════════════ */}
-      {/* MEGA-BLOCO 2: O QUE COMBINAMOS                                         */}
-      {/* ════════════════════════════════════════════════════════════════════════ */}
-
-      <SectionDivider label="O Que Combinamos" />
-
-      {/* FIRE Targets + Allocation + Rate Floors */}
-      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="FIRE Targets">
-          <Table rows={fireTargetsRows} />
-        </Block>
-
-        <Block title="Alocação Estratégica" note="Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
-          <Table rows={allocationRows} />
-        </Block>
-
-        <Block title="Pisos & Regras RF">
-          <Table rows={pisosRows} />
-          {smileRows.length > 0 && (
-            <>
-              <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Spending Smile
-              </h3>
-              <Table rows={smileRows} />
-            </>
-          )}
-        </Block>
-      </div>
-
-      {/* Holistic Balance + Bond Pool + Spending Guardrails */}
-      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Balanço Holístico">
-          <Table rows={holisticRows} />
-          <p style={{ margin: '8px 0 0', padding: '7px 9px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 5, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-            ¹ Imóvel equity = mercado − hipoteca. Capital Humano = VP renda futura.
-          </p>
-        </Block>
-
-        {bondPoolRows.length > 0 && (
-          <Block title="Bond Pool" note={`Meta: ${bondPool.meta_anos ?? 7} anos de gastos em RF. DCA até ~2039.`}>
-            <Table rows={bondPoolRows} />
-          </Block>
-        )}
-
-        {spendingGuardrailRows.length > 0 && (
-          <Block title="Spending Guardrails" note="Upper = teto aspiracional · Safe = alvo · Lower = piso.">
-            <Table rows={spendingGuardrailRows} />
-          </Block>
-        )}
-      </div>
-
-      {/* RF + Tax + Withdrawal */}
-      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        {rfRows.length > 1 && (
-          <Block title="Posições RF">
-            <Table rows={rfRows} />
-          </Block>
-        )}
-
-        {taxRows.length > 0 && (
-          <Block title="Fiscal" note="UCITS (fora US-situs). IR diferido cresce com depreciação BRL.">
-            <Table rows={taxRows} />
-          </Block>
-        )}
-
-        <Block title="Guardrails de Retirada">
-          {withdrawalRows.length > 0 ? (
-            <Table rows={withdrawalRows} />
-          ) : (
-            <p style={{ fontSize: 13, color: 'var(--muted)' }}>—</p>
-          )}
-          {guardrailsRetirada.length > 0 && (
-            <>
-              <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                P(FIRE) Guardrails
-              </h3>
-              <Table rows={guardrailsRetirada.map((g: any) => ({
-                label: g.condicao ?? g.guardrail,
-                value: g.acao ?? '—',
-                accent: g.prioridade === 'EXPANSIVO',
-                warn: g.prioridade === 'DEFESA',
-                muted: g.prioridade === 'MANTÉM',
-              }))} />
-            </>
-          )}
-        </Block>
-      </div>
-
-      {/* Model Assumptions (collapsed-feeling — less prominent) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Premissas do Modelo">
-          <Table rows={modelFundamentalRows} />
-          {p.retornos_por_etf && (
-            <>
-              <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Retornos por ETF (USD real/ano)
-              </h3>
-              <Table rows={[
-                { label: 'SWRD', value: `${((p.retornos_por_etf.SWRD?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
-                { label: 'AVGS', value: `${((p.retornos_por_etf.AVGS?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
-                { label: 'AVEM', value: `${((p.retornos_por_etf.AVEM?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
-              ]} />
-            </>
-          )}
-        </Block>
-
-        <Block title="Premissas vs Realizado" note="Modelo vs histórico real">
-          <Table rows={[
-            { label: 'Retorno — premissa', value: `${pvr.retorno_equity?.premissa_real_brl_pct ?? 0}% real BRL/ano`, muted: true },
-            { label: 'Retorno — realizado', value: `${pvr.retorno_equity?.twr_real_brl_pct ?? 0}% real BRL/ano`, accent: (pvr.retorno_equity?.twr_real_brl_pct ?? 0) > (pvr.retorno_equity?.premissa_real_brl_pct ?? 0) },
-            { label: 'Período', value: `${pvr.retorno_equity?.periodo_anos ?? 5} anos`, muted: true },
-            { label: 'Aporte — premissa', value: mask(pvr.aporte_mensal?.premissa_brl ?? 0, privacyMode) + '/mês', muted: true },
-            { label: 'Aporte — realizado', value: mask(pvr.aporte_mensal?.realizado_media_brl ?? 0, privacyMode) + '/mês', accent: true },
-          ]} />
-        </Block>
-
-        {sb.total_anual != null && (
-          <Block title="Spending Real" note={`Período: ${sb.periodo ?? '—'} (${sb.meses ?? 0} meses)`}>
-            <Table rows={[
-              { label: 'Must (essenciais)', value: mask(sb.must_spend_anual ?? 0, privacyMode) + '/ano' },
-              { label: 'Like (opcionais)', value: mask(sb.like_spend_anual ?? 0, privacyMode) + '/ano', muted: true },
-              { label: 'Total Realizado', value: mask(sb.total_anual ?? 0, privacyMode) + '/ano', accent: true },
-              { label: 'Modelo FIRE', value: mask(sb.modelo_fire_anual ?? 0, privacyMode) + '/ano', muted: true },
-              { label: 'Buffer', value: mask((sb.modelo_fire_anual ?? 0) - (sb.total_anual ?? 0), privacyMode), accent: (sb.modelo_fire_anual ?? 0) > (sb.total_anual ?? 0) },
-            ]} />
-          </Block>
-        )}
-      </div>
-
-      {/* ════════════════════════════════════════════════════════════════════════ */}
-      {/* MEGA-BLOCO 3: O QUE FALTA DECIDIR                                      */}
-      {/* ════════════════════════════════════════════════════════════════════════ */}
-
-      <SectionDivider label="O Que Falta Decidir" />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Decisões Pendentes">
-          <Table rows={pendingDecisions} />
-        </Block>
-
-        {le.eventos?.length > 0 && (
-          <Block title="Eventos de Vida — Impacto FIRE" note={`Base sem eventos: spending R$${((le.base?.spending_brl ?? 0) / 1000).toFixed(0)}k/ano, P(FIRE) ${((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%`}>
-            <Table rows={le.eventos.map((ev: any) => [
-              {
-                label: ev.confirmado ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>{ev.label} <CheckCircle size={13} style={{ color: 'var(--green)' }} /></span> : `${ev.label} (planej.)`,
-                value: `P ${(ev.pfire_2040 * 100).toFixed(1)}% (${ev.delta_pp > 0 ? '+' : ''}${ev.delta_pp}pp)`,
-                warn: Math.abs(ev.delta_pp) > 3,
-                accent: ev.confirmado && ev.delta_pp > 0,
-              },
-              {
-                label: '  → spending',
-                value: mask(ev.spending_novo, privacyMode) + '/ano',
-                muted: true,
-              },
-            ]).flat()} />
-          </Block>
-        )}
-      </div>
+      </CollapsibleSection>
 
       {/* Footer */}
       <p style={{ marginTop: 10, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
