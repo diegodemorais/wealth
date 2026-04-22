@@ -111,7 +111,10 @@ export const useAuthStore = create<AuthState>()(
           return false;
         }
 
-        // Token is still valid
+        // Token is still valid — restore authenticated state
+        if (!state.isAuthenticated) {
+          set({ isAuthenticated: true });
+        }
         return true;
       },
 
