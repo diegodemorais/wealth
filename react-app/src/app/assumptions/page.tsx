@@ -536,26 +536,42 @@ export default function AssumptionsPage() {
     },
   ];
 
+  // ── Decisões Pendentes (extraídas do pipeline) ──
+  const pendingDecisions: Row[] = [
+    { label: 'IPCA+ longo até 15%', value: dca.ipca_longo?.ativo ? 'DCA ATIVO' : 'PAUSADO', accent: dca.ipca_longo?.ativo },
+    { label: 'Renda+ 2065 até 5%', value: dca.renda_plus?.ativo ? 'DCA ATIVO' : 'PAUSADO', accent: dca.renda_plus?.ativo },
+    { label: 'IPCA+ curto 3% (SoRR buffer)', value: 'Comprar perto dos 50', muted: true },
+    { label: 'Reserva → Selic no vencimento 2029', value: 'Aguardando 2029', muted: true },
+    { label: 'Renda+ vender se taxa < 6.0%', value: `taxa atual: ${rf.renda2065?.taxa?.toFixed(1) ?? '—'}%`, accent: (rf.renda2065?.taxa ?? 7) >= 6.5 },
+    { label: 'RF pós-2040 (TD 2050 >= 3%?)', value: 'Verificar em 2040', muted: true },
+    { label: 'Seguro de vida', value: 'Pendente casamento', warn: true },
+  ];
+
   return (
     <div>
       {/* Header */}
       <div style={{ marginBottom: 14, paddingBottom: 12, borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
-        <h1 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--text)' }}>Assumptions</h1>
-        <span style={{ fontSize: 11, color: 'var(--muted)' }}>Fonte de verdade do plano FIRE · read-only</span>
+        <h1 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: 'var(--text)' }}>Checklist do Plano</h1>
+        <span style={{ fontSize: 11, color: 'var(--muted)' }}>Tudo que combinamos — read-only</span>
         <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--muted)', fontFamily: 'monospace' }}>
           {generatedLabel}
         </span>
       </div>
 
-      {/* ── BLOCO 1: Status Strip (4 KPIs críticos) ── */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* MEGA-BLOCO 1: ONDE ESTOU                                               */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <SectionDivider label="Onde Estou" />
+
+      {/* Status Strip (4 KPIs) */}
       <div style={{ marginBottom: 14 }}>
         <StatusStrip p={p} fire={fire} pfire={pfire} priv={privacyMode} />
       </div>
 
-      {/* ── BLOCO 2: DCA Status — quick scan com badges ── */}
+      {/* DCA Status */}
       {dcaItems.some(i => i.pctAtual != null) && (
         <div style={{ marginBottom: 14 }}>
-          <SectionDivider label="DCA Status" />
           <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 8 }}>
             {dcaItems.map((item, idx) => {
               const color = item.active ? 'var(--green)' : 'var(--yellow)';
@@ -584,62 +600,47 @@ export default function AssumptionsPage() {
         </div>
       )}
 
-      {/* ── BLOCO 3: Family Scenarios ── */}
+      {/* Family Scenarios + Personal Diego + Katia */}
+      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
+        <Block title="Personal — Diego">
+          <Table rows={personalRows} />
+        </Block>
+        <Block title="Personal — Katia" note="PGBL projeção: R$490k (2040) → R$728–948k (2049)">
+          <Table rows={katiaRows} />
+        </Block>
+        <Block title="Passivos">
+          <Table rows={[
+            { label: 'Hipoteca (saldo devedor)', value: mask(d.passivos?.hipoteca_brl ?? 0, privacyMode), warn: true },
+            { label: 'Vencimento hipoteca', value: d.passivos?.hipoteca_vencimento ?? '—', muted: true },
+            { label: 'IR Diferido (ETFs)', value: mask(d.passivos?.ir_diferido_brl ?? 0, privacyMode), warn: true },
+            { label: 'Total Passivos', value: mask(d.passivos?.total_brl ?? 0, privacyMode), warn: true },
+          ]} />
+        </Block>
+      </div>
+
       {profiles.length > 0 && (
         <div style={{ marginBottom: 14 }}>
-          <SectionDivider label="Cenários Familiares" />
           <FamilyScenarios profiles={profiles} priv={privacyMode} />
         </div>
       )}
 
-      {/* ── BLOCO 4: FIRE Targets + Personal Diego + Personal Katia ── */}
-      <SectionDivider label="Plano FIRE" />
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* MEGA-BLOCO 2: O QUE COMBINAMOS                                         */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <SectionDivider label="O Que Combinamos" />
+
+      {/* FIRE Targets + Allocation + Rate Floors */}
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
         <Block title="FIRE Targets">
           <Table rows={fireTargetsRows} />
         </Block>
 
-        <Block title="Personal — Diego">
-          <Table rows={personalRows} />
-        </Block>
-
-        <Block title="Personal — Katia" note="PGBL projeção: R$490k (2040) → R$728–948k (2049)">
-          <Table rows={katiaRows} />
-          {ultimoAporteRows.length > 0 && (
-            <>
-              <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Último Aporte
-              </h3>
-              <Table rows={ultimoAporteRows} />
-            </>
-          )}
-        </Block>
-      </div>
-
-      {/* ── BLOCO 5: Model + Allocation + Rate Floors ── */}
-      <SectionDivider label="Modelo & Alocação" />
-      <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Model Assumptions">
-          <Table rows={modelFundamentalRows} />
-          {p.retornos_por_etf && (
-            <>
-              <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Retornos por ETF (USD real/ano)
-              </h3>
-              <Table rows={[
-                { label: 'SWRD', value: `${((p.retornos_por_etf.SWRD?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
-                { label: 'AVGS', value: `${((p.retornos_por_etf.AVGS?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
-                { label: 'AVEM', value: `${((p.retornos_por_etf.AVEM?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
-              ]} />
-            </>
-          )}
-        </Block>
-
-        <Block title="Strategic Allocation — Target" note="Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
+        <Block title="Alocação Estratégica" note="Regra: 1 classe/vez · maior gap primeiro · exceção: janela de taxa">
           <Table rows={allocationRows} />
         </Block>
 
-        <Block title="Rate Floors & Regras RF">
+        <Block title="Pisos & Regras RF">
           <Table rows={pisosRows} />
           {smileRows.length > 0 && (
             <>
@@ -652,45 +653,43 @@ export default function AssumptionsPage() {
         </Block>
       </div>
 
-      {/* ── BLOCO 6: Holistic Balance + Bond Pool + Spending Guardrails ── */}
-      <SectionDivider label="Balanço & Proteção" />
+      {/* Holistic Balance + Bond Pool + Spending Guardrails */}
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Holistic Balance">
+        <Block title="Balanço Holístico">
           <Table rows={holisticRows} />
           <p style={{ margin: '8px 0 0', padding: '7px 9px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', borderRadius: 5, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-            ¹ Imóvel equity = valor de mercado − saldo devedor hipoteca. Capital Humano = VP renda futura.
+            ¹ Imóvel equity = mercado − hipoteca. Capital Humano = VP renda futura.
           </p>
         </Block>
 
         {bondPoolRows.length > 0 && (
-          <Block title="Bond Pool Readiness" note={`Meta: ${bondPool.meta_anos ?? 7} anos de gastos em RF. Construção gradual via DCA até ~2039.`}>
+          <Block title="Bond Pool" note={`Meta: ${bondPool.meta_anos ?? 7} anos de gastos em RF. DCA até ~2039.`}>
             <Table rows={bondPoolRows} />
           </Block>
         )}
 
         {spendingGuardrailRows.length > 0 && (
-          <Block title="Spending Guardrails" note="Upper = teto aspiracional · Safe = alvo · Lower = piso de segurança.">
+          <Block title="Spending Guardrails" note="Upper = teto aspiracional · Safe = alvo · Lower = piso.">
             <Table rows={spendingGuardrailRows} />
           </Block>
         )}
       </div>
 
-      {/* ── BLOCO 7: RF Positions + Tax + Withdrawal Guardrails ── */}
-      <SectionDivider label="RF, Fiscal & Retirada" />
+      {/* RF + Tax + Withdrawal */}
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
         {rfRows.length > 1 && (
-          <Block title="RF Positions">
+          <Block title="Posições RF">
             <Table rows={rfRows} />
           </Block>
         )}
 
         {taxRows.length > 0 && (
-          <Block title="Tax & Fiscal" note="Novos aportes em UCITS (fora US-situs). IR diferido cresce com depreciação BRL.">
+          <Block title="Fiscal" note="UCITS (fora US-situs). IR diferido cresce com depreciação BRL.">
             <Table rows={taxRows} />
           </Block>
         )}
 
-        <Block title="Withdrawal Guardrails">
+        <Block title="Guardrails de Retirada">
           {withdrawalRows.length > 0 ? (
             <Table rows={withdrawalRows} />
           ) : (
@@ -713,92 +712,80 @@ export default function AssumptionsPage() {
         </Block>
       </div>
 
-      {/* ── BLOCO 8: Passivos + Premissas vs Realizado + DCA Detail ── */}
-      <SectionDivider label="Histórico & Passivos" />
+      {/* Model Assumptions (collapsed-feeling — less prominent) */}
       <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 10, marginBottom: 10 }}>
-        <Block title="Passivos" note="Fonte: hipoteca_sac.json + tax_snapshot.json">
-          <Table rows={[
-            { label: 'Hipoteca (saldo devedor)', value: mask(d.passivos?.hipoteca_brl ?? 0, privacyMode), warn: true },
-            { label: 'Vencimento hipoteca', value: d.passivos?.hipoteca_vencimento ?? '—', muted: true },
-            { label: 'IR Diferido (ETFs)', value: mask(d.passivos?.ir_diferido_brl ?? 0, privacyMode), warn: true },
-            { label: 'Total Passivos', value: mask(d.passivos?.total_brl ?? 0, privacyMode), warn: true },
-          ]} />
-        </Block>
-
-        <Block title="Premissas vs Realizado" note="Comparação premissa do modelo vs realizado histórico">
-          <Table rows={[
-            { label: 'Retorno Equity — premissa', value: `${pvr.retorno_equity?.premissa_real_brl_pct ?? 0}% real BRL/ano`, muted: true },
-            { label: 'Retorno Equity — realizado', value: `${pvr.retorno_equity?.twr_real_brl_pct ?? 0}% real BRL/ano`, accent: (pvr.retorno_equity?.twr_real_brl_pct ?? 0) > (pvr.retorno_equity?.premissa_real_brl_pct ?? 0) },
-            { label: 'Backtest nominal USD', value: `${pvr.retorno_equity?.backtest_nominal_usd_pct ?? 0}%/ano`, muted: true },
-            { label: 'vs VWRA benchmark', value: `${pvr.retorno_equity?.benchmark_vwra_nominal_usd_pct ?? 0}%/ano`, muted: true },
-            { label: 'Período', value: `${pvr.retorno_equity?.periodo_anos ?? 5} anos`, muted: true },
-            { label: 'Aportes', value: '', separator: true } as Row,
-            { label: 'Premissa mensal', value: mask(pvr.aporte_mensal?.premissa_brl ?? 0, privacyMode) + '/mês', muted: true },
-            { label: 'Média realizado', value: mask(pvr.aporte_mensal?.realizado_media_brl ?? 0, privacyMode) + '/mês', accent: true },
-            { label: 'Delta', value: `+${(pvr.aporte_mensal?.delta_pct ?? 0).toFixed(0)}%`, accent: true },
-          ]} />
-          {pvr.aporte_mensal?.por_ano_brl && (
+        <Block title="Premissas do Modelo">
+          <Table rows={modelFundamentalRows} />
+          {p.retornos_por_etf && (
             <>
               <h3 style={{ margin: '10px 0 5px', fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Aportes por Ano
+                Retornos por ETF (USD real/ano)
               </h3>
-              <Table rows={Object.entries(pvr.aporte_mensal.por_ano_brl).sort(([a], [b]) => Number(b) - Number(a)).map(([ano, val]) => ({
-                label: ano,
-                value: mask(val as number, privacyMode),
-                muted: true,
-              }))} />
+              <Table rows={[
+                { label: 'SWRD', value: `${((p.retornos_por_etf.SWRD?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                { label: 'AVGS', value: `${((p.retornos_por_etf.AVGS?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+                { label: 'AVEM', value: `${((p.retornos_por_etf.AVEM?.retorno_usd_real ?? 0) * 100).toFixed(1)}%`, muted: true },
+              ]} />
             </>
           )}
         </Block>
 
-        {/* Spending Breakdown */}
+        <Block title="Premissas vs Realizado" note="Modelo vs histórico real">
+          <Table rows={[
+            { label: 'Retorno — premissa', value: `${pvr.retorno_equity?.premissa_real_brl_pct ?? 0}% real BRL/ano`, muted: true },
+            { label: 'Retorno — realizado', value: `${pvr.retorno_equity?.twr_real_brl_pct ?? 0}% real BRL/ano`, accent: (pvr.retorno_equity?.twr_real_brl_pct ?? 0) > (pvr.retorno_equity?.premissa_real_brl_pct ?? 0) },
+            { label: 'Período', value: `${pvr.retorno_equity?.periodo_anos ?? 5} anos`, muted: true },
+            { label: 'Aporte — premissa', value: mask(pvr.aporte_mensal?.premissa_brl ?? 0, privacyMode) + '/mês', muted: true },
+            { label: 'Aporte — realizado', value: mask(pvr.aporte_mensal?.realizado_media_brl ?? 0, privacyMode) + '/mês', accent: true },
+          ]} />
+        </Block>
+
         {sb.total_anual != null && (
-          <Block title="Spending Breakdown" note={`Período: ${sb.periodo ?? '—'} (${sb.meses ?? 0} meses)`}>
+          <Block title="Spending Real" note={`Período: ${sb.periodo ?? '—'} (${sb.meses ?? 0} meses)`}>
             <Table rows={[
               { label: 'Must (essenciais)', value: mask(sb.must_spend_anual ?? 0, privacyMode) + '/ano' },
               { label: 'Like (opcionais)', value: mask(sb.like_spend_anual ?? 0, privacyMode) + '/ano', muted: true },
-              { label: 'Imprevistos', value: mask(sb.imprevistos_mensal ?? 0, privacyMode) + '/mês', muted: true },
               { label: 'Total Realizado', value: mask(sb.total_anual ?? 0, privacyMode) + '/ano', accent: true },
               { label: 'Modelo FIRE', value: mask(sb.modelo_fire_anual ?? 0, privacyMode) + '/ano', muted: true },
-              { label: 'Buffer vs Modelo', value: mask((sb.modelo_fire_anual ?? 0) - (sb.total_anual ?? 0), privacyMode), accent: (sb.modelo_fire_anual ?? 0) > (sb.total_anual ?? 0) },
+              { label: 'Buffer', value: mask((sb.modelo_fire_anual ?? 0) - (sb.total_anual ?? 0), privacyMode), accent: (sb.modelo_fire_anual ?? 0) > (sb.total_anual ?? 0) },
             ]} />
           </Block>
         )}
       </div>
 
-      {/* ── BLOCO 9: Eventos de Vida ── */}
-      {le.eventos?.length > 0 && (
-        <>
-          <SectionDivider label="Eventos de Vida" />
-          <div style={{ marginBottom: 10 }}>
-            <Block title="Eventos de Vida — Impacto FIRE" note={`Base sem eventos: spending R$${((le.base?.spending_brl ?? 0) / 1000).toFixed(0)}k/ano, P(FIRE) ${((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%`}>
-              <Table rows={le.eventos.map((ev: any) => [
-                {
-                  label: ev.confirmado ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>{ev.label} <CheckCircle size={13} style={{ color: 'var(--green)' }} /></span> : `${ev.label} (planej.)`,
-                  value: `P ${(ev.pfire_2040 * 100).toFixed(1)}% (${ev.delta_pp > 0 ? '+' : ''}${ev.delta_pp}pp)`,
-                  warn: Math.abs(ev.delta_pp) > 3,
-                  accent: ev.confirmado && ev.delta_pp > 0,
-                },
-                {
-                  label: '  → spending',
-                  value: mask(ev.spending_novo, privacyMode) + '/ano',
-                  muted: true,
-                },
-                {
-                  label: '  → pat. necessário',
-                  value: mask(ev.patrimonio_necessario, privacyMode),
-                  muted: true,
-                },
-              ]).flat()} />
-            </Block>
-          </div>
-        </>
-      )}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+      {/* MEGA-BLOCO 3: O QUE FALTA DECIDIR                                      */}
+      {/* ════════════════════════════════════════════════════════════════════════ */}
+
+      <SectionDivider label="O Que Falta Decidir" />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 10, marginBottom: 10 }}>
+        <Block title="Decisões Pendentes">
+          <Table rows={pendingDecisions} />
+        </Block>
+
+        {le.eventos?.length > 0 && (
+          <Block title="Eventos de Vida — Impacto FIRE" note={`Base sem eventos: spending R$${((le.base?.spending_brl ?? 0) / 1000).toFixed(0)}k/ano, P(FIRE) ${((le.base?.pfire_2040 ?? 0) * 100).toFixed(1)}%`}>
+            <Table rows={le.eventos.map((ev: any) => [
+              {
+                label: ev.confirmado ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>{ev.label} <CheckCircle size={13} style={{ color: 'var(--green)' }} /></span> : `${ev.label} (planej.)`,
+                value: `P ${(ev.pfire_2040 * 100).toFixed(1)}% (${ev.delta_pp > 0 ? '+' : ''}${ev.delta_pp}pp)`,
+                warn: Math.abs(ev.delta_pp) > 3,
+                accent: ev.confirmado && ev.delta_pp > 0,
+              },
+              {
+                label: '  → spending',
+                value: mask(ev.spending_novo, privacyMode) + '/ano',
+                muted: true,
+              },
+            ]).flat()} />
+          </Block>
+        )}
+      </div>
 
       {/* Footer */}
       <p style={{ marginTop: 10, fontSize: 11, color: 'var(--muted)', lineHeight: 1.5 }}>
-        Fonte: <code>carteira_params.json</code> via pipeline Python.
-        Para alterar: edite <code>agentes/contexto/carteira.md</code> → <code>parse_carteira.py</code> → <code>generate_data.py</code>.
+        Fonte: <code>carteira_params.json</code> · Para alterar: <code>carteira.md</code> → <code>parse_carteira.py</code> → <code>generate_data.py</code>
       </p>
     </div>
   );

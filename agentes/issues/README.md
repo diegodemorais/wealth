@@ -14,12 +14,15 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ## Board
 
 ### Discovery
-> Temas no radar mas sem urgência para execução agora
+> Temas no radar — monitoramento passivo ou aguardando evento externo
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| PT-planejamento-patrimonial | Planejamento patrimonial pré-casamento | Patrimonial | 🟢 Baixa |
-| HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Baixa |
+| PT-planejamento-patrimonial | Planejamento patrimonial pré-casamento | Patrimonial | 🟢 Espera evento (casamento) |
+| HD-plataforma-wm | Explorar plataforma de wealth management como produto | Head | 🟢 Revisitar 2027 |
+| HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟢 Monitoramento — escalar se IPCA+ >30% portfolio |
+| TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Scan trimestral |
+| TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Scan trimestral |
 
 ### Backlog
 > Issues prontas para execução, aguardando vez
@@ -27,48 +30,41 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
 | XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta |
-| DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps Críticos (bond pool gauge, P10/P90, IR latente) | Dev | 🔴 Alta |
-| HD-gatilho-soberano | Quantificar gatilho "risco soberano extremo" para IPCA+ | Head | 🟡 Média |
-| TX-tlh-engine-lote | TLH Engine por lote (P&L individual, gatilho em drawdown) | Tax | 🟡 Média |
-| TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF (custo real da venda) | Tax | 🟡 Média |
-| FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟡 Média |
-| DEV-premissas-tab | Aba Premissas — Transparência do Plano FIRE (read-only) | Dev | 🟢 Baixa |
-| TX-reforma-tributaria | Monitor reforma tributária (PL 2.337+) | Tax | 🟢 Baixa |
-| TX-lei14754-juridico | Monitor evolução jurídica Lei 14.754/2023 | Tax | 🟢 Baixa |
+| DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps visuais (bond pool gauge, gatilho line, IR latente) | Dev | 🟡 Média |
+| DEV-assumptions-redesign | Redesenhar aba Assumptions — 3 blocos (Onde estou / O que combinamos / O que falta decidir) | Dev | 🟡 Média |
+| TX-tlh-engine-lote | TLH Engine por lote — ativa em drawdown >15% | Tax | 🟡 Contingente |
+| TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF | Tax | 🟢 Baixa (2035+) |
+| FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟢 Baixa (2027+) |
 
 ### Doing
 > Issues em andamento
 
-| ID | Titulo | Dono | Prioridade | Status |
-|----|--------|------|------------|--------|
-| DEV-boldin-dashboard | Boldin Dashboard Gaps — balanço holístico, surplus-gap, wellness, cenários, spouse, LTC | Dev | 🔴 Alta | Em progresso |
-| DEV-dashboard-components-alignment | Alinhamento visual/informacional com DashHTML — 32+ componentes | Dev | 🔴 Alta | Em progresso |
-| DEV-calc-centralization | Centralização de cálculos duplicados — 14 categorias | Dev+Quant | 🔴 Alta | Em progresso |
+_(nenhuma no momento)_
 
 ### Done (últimas 20)
 > Issues concluídas
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
-| DEV-claudemd-compliance | Dev | 2026-04-22 | 3/6 violações corrigidas (grid, privacy, dead code). 3 backlog. |
+| DEV-claudemd-compliance | Dev | 2026-04-22 | 3/6 violações corrigidas. CLAUDE.md com diretrizes formais. |
+| DEV-boldin-dashboard | Dev | 2026-04-22 | 6/6 items completos (holístico, surplus-gap, wellness, cenários, spouse, LTC). |
+| DEV-dashboard-components-alignment | Dev | 2026-04-22 | Dashboard React rebuilt. 32 componentes, 8 abas, 100% ECharts. |
+| DEV-calc-centralization | Dev+Quant | 2026-04-22 | 14 categorias centralizadas. fire.ts, montecarlo.ts, formatters.ts. |
+| DEV-discovery-tab | Dev | 2026-04-22 | Criada, populada, esvaziada — 98 dead components removidos. |
 | FR-filho-drawdown | FIRE | 2026-04-20 | P(stress) 76.4%. Plano sobrevive. Aporte R$25k = fator principal. |
 | HD-boldin-benchmark | Head | 2026-04-17 | Análise comparativa Dashboard vs Boldin concluída. |
-| DEV-dashboard-redesign | Dev | 2026-04-15 | Dashboard React completo. 32 componentes, 8 abas. v0.1→v1.0. |
+| DEV-dashboard-redesign | Dev | 2026-04-15 | Dashboard React do zero. v0.1→v1.0. |
 | DEV-hero-kpi-review | Dev+Head | 2026-04-13 | Redesign recusado por Diego. Status quo mantido. |
 | DEV-privacy-sim-audit | Dev | 2026-04-13 | 32 gaps corrigidos. Privacy mode completo. |
 | FR-swr-revisao-2026-04-13 | FIRE+Quant | 2026-04-13 | SWR 2.4%→3.0%. Floors INSS/Katia implementados. |
 | HD-backtest-longrun | Head | 2026-04-11 | Regime 7 (1989-2026). CAGR +9.79%. WR 20a: 100%. |
 | DEV-manifest | Dev | 2026-04-11 | spec.json — manifesto único do dashboard. |
 | DEV-dashboard-audit | Head | 2026-04-11 | Auditoria completa 60 blocos. |
-| DEV-fire-sim-fixes | Dev+FIRE | 2026-04-10 | Ordem barras + bug custo de vida corrigidos. |
 | HD-perplexity-review | Head | 2026-04-10 | 9 features implementadas. |
-| CORE-portfolio-history | Bookkeeper | 2026-04-10 | TWR 5 anos: 12.69%. Pipeline ibkr→dados funcional. |
-| DEV-perf-audit-fixes | Dev+Quant | 2026-04-10 | 6 correções Performance (TER, attribution, CDI, shadows). |
+| CORE-portfolio-history | Bookkeeper | 2026-04-10 | TWR 5 anos: 12.69%. Pipeline funcional. |
 | DEV-code-quality-audit | Dev | 2026-04-21 | Compliance audit executado e corrigido. |
-| DEV-discovery-tab | Dev | 2026-04-22 | Criada, populada com 25 componentes, esvaziada — dead code removido. |
 | HD-multimodel-validation | Head | 2026-04-06 | 50/30/20 corroborado. 7 findings. Alpha 0.16%/ano. |
 | HD-mc-audit | Head | 2026-04-06 | Double-count saúde corrigido. P(FIRE) 87.2%. |
-| FI-etf-deep-review | Factor | 2026-04-03 | Unanimidade zero mudanças. Zero-Based confirma. |
 | HD-gastos-pessoais-2026 | Head | 2026-04-03 | Baseline R$218k/ano. Buffer R$32k. |
 | EXT-sincra-tiago | Diagnóstico carteira Tiago Modesto (Sincra/BTG) | Head | 2026-04-11 | PAXG 12% compliance crítico (IR revogado). Equity 53% subestimado. Renda+ aumentar 18–20%. FIRE number ausente. PDF entregue. |
 | TX-seguro-vida | Seguro de vida — avaliação e contratação | Tax | 2026-04-11 | Nenhuma ação agora. Gatilho = casamento. → PT-planejamento-patrimonial. |
