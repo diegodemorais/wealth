@@ -29,7 +29,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta |
 | DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps visuais (bond pool gauge, gatilho line, IR latente) | Dev | 🟡 Média |
 | TX-tlh-engine-lote | TLH Engine por lote — ativa em drawdown >15% | Tax | 🟡 Contingente |
 | TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF | Tax | 🟢 Baixa (2035+) |
@@ -45,6 +44,7 @@ _(nenhuma no momento)_
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| XX-mc-stress-cenarios | FIRE+Quant | 2026-04-22 | 3 cenários rodados. IPCA 5%: impacto zero. BRL -3.5%: P(FIRE) 52% mas cenário implausível (P<3%). Stress atual mantido. |
 | DEV-assumptions-redesign | Dev | 2026-04-22 | Checklist redesenhada: 4 CollapsibleSections (Decisões & Ações, Onde Estou, Alocação & Regras, Modelo & Referência). Progressive disclosure. |
 | DEV-schema-sync | Dev | 2026-04-22 | config.ts + spec.json sincronizados. Header importa TABS do config. secOpen()/secTitle() em todas as 8 pages. |
 | DEV-tab-reorganization | Dev | 2026-04-22 | 8 abas reestruturadas com SectionDividers e CollapsibleSections. |
