@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUiStore } from '@/store/uiStore';
+import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
 
 // Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
@@ -37,11 +38,16 @@ export function Header() {
   const pathname = usePathname();
   const privacyMode = useUiStore(s => s.privacyMode);
   const togglePrivacy = useUiStore(s => s.togglePrivacy);
+  const logout = useAuthStore(s => s.logout);
 
   const buildLabel = formatBrt(BUILD_DATE);
 
   const handleReload = () => {
     window.location.reload();
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -70,6 +76,16 @@ export function Header() {
             suppressHydrationWarning
           >
             {privacyMode ? '🔒' : '👁️'}
+          </button>
+
+          <button
+            onClick={handleLogout}
+            title="Logout"
+            style={styles.button}
+            aria-label="Logout"
+            data-test="logout-button"
+          >
+            🚪
           </button>
         </div>
 

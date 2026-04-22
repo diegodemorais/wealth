@@ -1,6 +1,6 @@
 {
   "name": "react-app",
-  "version": "1.0.98",
+  "version": "1.0.109",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,6 +24,7 @@
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-slot": "^1.2.4",
+    "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.7",
     "chartjs-chart-sankey": "^0.14.0",
     "class-variance-authority": "^0.7.1",
@@ -44,6 +45,7 @@
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

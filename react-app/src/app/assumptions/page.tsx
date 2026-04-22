@@ -476,7 +476,7 @@ export default function AssumptionsPage() {
     { label: 'Alíquota (alienação)', value: '15% flat sobre ganho nominal BRL', muted: true },
     ...(tax.estate_tax?.us_situs_total_usd != null ? [
       { label: 'Estate Tax (US-situs)', value: '', separator: true } as Row,
-      { label: 'Exposição US-situs', value: privacyMode ? '••••' : `$${(tax.estate_tax.us_situs_total_usd / 1000).toFixed(0)}k (lim. $60k)`, warn: true },
+      { label: 'Exposição US-situs', value: privacyMode ? '••••' : `$${tax.estate_tax.us_situs_total_usd.toFixed(0)}k (lim. $60k)`, warn: true },
       { label: 'Imposto Estimado', value: mask(tax.estate_tax.imposto_estimado_brl ?? 0, privacyMode), warn: true },
     ] : []),
     ...(tax.ptax_atual != null ? [{ label: 'PTAX Atual', value: `R$${tax.ptax_atual?.toFixed(4)}`, muted: true }] : []),

@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { VersionFooter } from '@/components/primitives/VersionFooter';
 import { usePrivacyMode } from '@/hooks/usePrivacyMode';
 import { useChartSetup } from '@/hooks/useChartSetup';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
 export function LayoutClient({ children }: { children: ReactNode }) {
   // Chart.js removed - using ECharts instead
@@ -20,9 +21,9 @@ export function LayoutClient({ children }: { children: ReactNode }) {
   // API calls to BCB from browser cause CORS/406 errors and break rendering
 
   return (
-    <>
+    <AuthGuard>
       <Header />
-      <main
+      <div
         style={{
           maxWidth: '1280px',
           margin: '0 auto',
@@ -31,8 +32,8 @@ export function LayoutClient({ children }: { children: ReactNode }) {
         }}
       >
         {children}
-      </main>
+      </div>
       <VersionFooter />
-    </>
+    </AuthGuard>
   );
 }
