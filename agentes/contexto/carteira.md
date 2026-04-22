@@ -1,8 +1,8 @@
 # Carteira Diego Morais — Contexto Compartilhado
 
-> Atualizado em: 2026-04-01
+> Atualizado em: 2026-04-22
 > Este arquivo e a fonte de verdade para todos os agentes.
-> Cambio de referencia: R$ 5,16 (PTAX BCB 2026-04-01)
+> Cambio de referencia: R$ 5,156 (PTAX BCB 2026-04-22, dashboard_state.json)
 
 ---
 
@@ -13,7 +13,7 @@
 - **Localidade**: Sao Paulo, Pinheiros
 - **Meta FIRE**: **Cenário Base — 2040 (53 anos).** SWR ≤ 3.0%, aporte R$25k/mês → P(FIRE Base): **90,4% base / 94,1% favorável / 86,8% stress** (MC 10k, spending smile ex-saúde + guardrails + bond tent + IR 15% nominal + INSS R$18k/ano@65 + vol bond pool 13.3% + SAUDE_BASE R$18k). **Cenário Aspiracional — 2035 (49 anos).** SWR ≤ 3.0%, aporte R$30k/mês → P(FIRE Aspiracional): **85% base** (MC validado, retornos + aportes elevados). Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).** Gatilho adicional: **patrimônio ≥ R$10M → avaliar cenário aspiracional como viável** (materializa ~2036–2038).
 - **Distribuição subjetiva FIRE date** (elicitação estruturada FR-fire-date-elicitation, 2026-04-11): P(<47)=10% risco saúde/invalidez involuntário — não planejável, SWR ~3.5-4.5%; P(47–50)=30% viável com guardrails se patrimônio ≥ R$9M; P(50–53)=30% alinhado com modelo base; P(53–57)=10% atraso por casamento/filho; P(>57)=20% "não quis parar" ou vida mudou muito. **Gatilhos de vida**: casar → atrasa; filho → atrasa; negócio bom → acelera; burnout → FIRE involuntário (monitorar SWR anualmente a partir de 2030); patrimônio R$10M → debate antecipação; sócio/projeto → atrasa. **Flag Behavioral**: gap 9/10 profissional vs 7/10 pessoal já presente em 2026 — não se resolve automaticamente no FIRE. Intervenção recomendada: mover 7→8 pessoal nos próximos 12 meses independente do target financeiro.
-- **Patrimonio**: R$ 3.372.673 (excl. operacao estruturada COE/emprestimo)
+- **Patrimonio**: R$ 3.472.335 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
 - **Renda estimada**: R$ 45k/mês (para cálculo savings rate no dashboard — SR = aporte R$25k / renda R$45k = 55.6%)
 - **Custo de vida**: R$ 250k/ano
@@ -32,16 +32,16 @@
 
 ---
 
-## Carteira FIRE Variavel (89,1% do patrimonio)
+## Carteira FIRE Variavel (90,4% do patrimonio)
 
 ### Bloco Equity Fixo
 
 | ETF | Alocacao Alvo | Atual | Composicao Real (USD) | Status |
 |-----|--------------|-------|----------------------|--------|
-| SWRD | **50%** | ~37,6% (~R$ 1.267k) | SWRD ~$241k | Underweight — **prioridade nos aportes equity** |
-| AVGS (US + INT) | **30%** | ~28,5% (~R$ 961k) | AVUV + AVDV + USSC + AVGS ~$183k | Próximo do target. Aportar só em AVGS UCITS |
-| AVEM | **20%** | ~24,4% (~R$ 824k) | EIMI + AVES + DGS ~$157k | Overweight via transitórios. Aportar só em AVEM UCITS quando subrepresentado |
-| JPGL | **0%** | ~0,4% (~R$ 12k) | IWVL + JPGL ~$2.1k | **Não adicionar. Target eliminado (FI-jpgl-zerobased, 2026-04-01). IWVL = transitório legado — diluir via aportes.** |
+| SWRD | **50%** | 41,2% (R$ 1.293k) | SWRD ~$251k | Underweight — **prioridade nos aportes equity** |
+| AVGS (US + INT) | **30%** | 32,6% (R$ 1.061k) | AVUV + AVDV + USSC + AVGS ~$199k | Próximo do target. Aportar só em AVGS UCITS |
+| AVEM | **20%** | 26,4% (R$ 859k) | EIMI + AVES + DGS ~$160k | Overweight via transitórios. Aportar só em AVEM UCITS quando subrepresentado |
+| JPGL | **0%** | 0,3% (R$ 11k) | IWVL ~$2.1k | **Não adicionar. Target eliminado (FI-jpgl-zerobased, 2026-04-01). IWVL = transitório legado — diluir via aportes.** |
 
 **Nova alocação aprovada (FI-equity-redistribuicao, 2026-04-01): SWRD 50% / AVGS 30% / AVEM 20%. Unanimidade 7/7 agentes (13.5x ponderado). Via aportes — sem vendas.**
 Design 50/50 neutro/fatorial preservado.
@@ -57,12 +57,12 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 
 | Bloco | % Atual | Alvo | Valor | Instrumento | Regra |
 |-------|---------|------|-------|-------------|-------|
-| Reserva | 2,5% | — | R$ 87.862 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
-| IPCA+ existente | 0,4% | — | R$ 13.308 | Tesouro IPCA+ 2040 | Posicao legada. Sera incorporada ao bloco IPCA+ longo |
-| IPCA+ longo | **~0,8%** | **15%** | ~R$ 66.533 (combinado: R$13.308 + R$20.035 + R$46.498 + R$11.660 após liq. 13/04) | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para JPGL. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
+| Reserva | 2,5% | — | R$ 86.554,71 | Tesouro IPCA+ 2029 | Emergencia. Migrar pra Selic no vencimento (2029) |
+| IPCA+ existente | — | — | — | — | Incorporado ao bloco IPCA+ longo (posicao 2040) |
+| IPCA+ longo | **6,1%** | **15%** | R$ 124.675,79 (2040: R$113.015 + 2050: R$11.660 após liq. 13/04) | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para equity. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |
-| Renda+ 2065 | 3,0% | <=5% | ~R$ 99.673 | Renda+ 2065 | Duration 43,6. Taxa atual: 7,08% (2026-04-01). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
-| Cripto | 3,1% | **3%** | ~R$ 103.400 | HODL11 + spot legado | BTC $67.822 (30/Mar). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
+| Renda+ 2065 | 3,4% | <=5% | R$ 117.832,62 | Renda+ 2065 | Duration 43,6. Taxa atual: 6,93% (2026-04-22). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
+| Cripto | 2,9% | **3%** | R$ 100.208 | HODL11 + spot legado | BTC $71.877 (22/Apr). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
 ---
 
@@ -277,7 +277,7 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | piso_taxa_renda_plus | 6.5 | carteira.md §Renda+ tático |
 | piso_venda_renda_plus | 6.0 | carteira.md §Renda+ gatilho saída |
 | renda_plus_ano_venc | 2065 | Tesouro Renda+ 2065 |
-| renda_plus_taxa_default | 7.08 | snapshot carteira.md 2026-04-01 |
+| renda_plus_taxa_default | 6.93 | snapshot carteira.md 2026-04-22 |
 | idade_atual | 39 | Diego (nasc. 1987) |
 | ano_nascimento | 1987 | Diego |
 | renda_estimada | 45000 | estimativa mensal (×12 = R$540k/ano) |
@@ -303,7 +303,7 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | adj_favoravel | 0.010 | +1.0pp ajuste retorno equity cenário favorável |
 | adj_stress | -0.005 | -0.5pp ajuste retorno equity cenário stress |
 | ipca_anual | 0.04 | 4%/ano estimado |
-| cambio_fallback | 5.07 | PTAX BCB 09/04/2026 — fallback offline |
+| cambio_fallback | 5.156 | PTAX BCB 22/04/2026 — fallback offline |
 | ipca_cagr_fallback | 6.14 | IPCA CAGR Abr/2021–Mar/2026 (BCB série 433) |
 | selic_meta_snapshot | 14.75 | Selic meta Abr/2026 |
 | fed_funds_snapshot | 3.64 | Fed Funds Mar/2026 |

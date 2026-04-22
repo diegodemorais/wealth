@@ -30,39 +30,39 @@ Esta regra foi violada 3x (2026-03-22, 2026-03-27, 2026-04-01). Ler antes de qua
 
 | Campo | Valor | Data | Fonte |
 |-------|-------|------|-------|
-| Patrimonio total | ~R$ 3.372.673 | 2026-03-30 | Calc: equity BRL + nao-equity estimados |
-| Equity total | USD $585.371 | 2026-03-30 | Google Sheets (aba Utils, soma posicoes) |
-| Cambio referencia | R$ 5,25 | 2026-03-30 | WebSearch USD/BRL |
-| Performance desde 23/Mar | -3,4% (R$ -119.611) | 2026-03-30 | Queda equity USD + depreciacao BRL |
+| Patrimonio total | R$ 3.472.335 | 2026-04-22 | dashboard_state.json (reconstruct_history.py) |
+| Equity total | USD $608.472 | 2026-04-22 | dashboard_state.json (calc: patrimonio equity_brl / cambio) |
+| Cambio referencia | R$ 5,156 | 2026-04-22 | dashboard_state.json (yfinance PTAX BCB) |
+| Performance desde 01/04 | +2,96% (R$ +99.662) | 2026-04-22 | Crescimento: equity USD + DCA IPCA+ 2/2 tranches |
 
-### Posicoes detalhadas (USD, 2026-03-30)
+### Posicoes detalhadas (USD, 2026-04-22)
 
-> Breakdown por ETF nao extraido individualmente neste check-in. Total equity $585,371 = -1,7% vs $595,517 de 23/Mar.
+> Extraido de dashboard_state.json. Total equity $608,472 = +3,95% vs $585,371 de 30/Mar.
 
 | Bucket | ETF | USD | % Equity | Nota |
 |--------|-----|-----|----------|------|
-| SWRD (50%) | LON:SWRD | ~$241.000 | ~41,2% | proporcional vs 23/Mar |
-| AVGS (30%) | USSC + AVUV + AVDV + AVGS | ~$183.000 | ~31,3% | proporcional |
-| AVEM (20%) | LON:EIMI + AVES + DGS | ~$157.000 | ~26,8% | proporcional |
-| **Total** | | **$585.371** | **100%** | verificar planilha no proximo check-in |
+| SWRD (50%) | LON:SWRD | $251.093 | 41,2% | Underweight vs alvo 50% |
+| AVGS (30%) | AVGS UCITS + AVUV + AVDV + USSC | $198.699 | 32,6% | Ligeiro overweight via UCITS + transitorios |
+| AVEM (20%) | EIMI + AVES + DGS | $160.491 | 26,4% | Overweight via transitorios |
+| JPGL (0%) | IWVL | $2.130 | 0,3% | Legado — diluir via aportes |
+| **Total** | | **$608.472** | **100%** | Drift SWRD: -8.8pp. Drift AVEM: +6.4pp. Drift AVGS: +2.6pp |
 
-### Blocos nao-equity
+### Blocos nao-equity (2026-04-22)
 
 | Bloco | Valor BRL | % Total | Nota |
 |-------|-----------|---------|------|
-| FIRE fixo (IPCA+ 2040) | ~R$ 13.308 | 0,4% | posicao pequena, sem variacao significativa |
-| Reserva (IPCA+ 2029) | ~R$ 87.862 | 2,6% | posicao estavel |
-| Risco Juros (Renda+ 2065) | ~R$ 99.673 | 3,0% | MtM -11% em marco — taxa subiu |
-| Risco Crypto (HODL11 + spot) | ~R$ 103.400 | 3,1% | BTC $67.822 em 30/Mar |
+| Reserva (IPCA+ 2029) | R$ 86.554,71 | 2,5% | Estavel. Migrara p/ Selic em 2029 |
+| IPCA+ longo (2040 + 2050) | R$ 124.675,79 | 3,6% | Apos T2 DCA (liquidacao 13/04). Alvo 15%. Gap 11,4pp |
+| Renda+ 2065 (tatico) | R$ 117.832,62 | 3,4% | Taxa 6,93% (vs 7,08% em 01/04). Dentro alvo <=5% |
+| Cripto (HODL11) | R$ 100.208,00 | 2,9% | BTC $71.877 em 22/Apr. Alvo 3%. Piso 1,5%. |
 
-### Reconciliacao anterior (23/Mar 2026)
+### Reconciliacoes anteriores
 
-| Campo | Valor |
-|-------|-------|
-| Patrimonio total | R$ 3.492.284,00 |
-| Equity total | USD $595.450,47 |
-| Cambio | R$ 5,24 |
-| Performance Q1 2026 | +1,73% em BRL |
+| Data | Patrimonio | Equity USD | Cambio | Performance |
+|------|-----------|-----------|--------|-------------|
+| 23/Mar | R$ 3.492.284,00 | USD $595.450 | R$ 5,24 | Q1: +1,73% BRL |
+| 30/Mar | R$ 3.372.673 | USD $585.371 | R$ 5,25 | -3,4% (drawdown Marc) |
+| 22/Apr | R$ 3.472.335 | USD $608.472 | R$ 5,156 | +2,96% desde 01/04 |
 
 ### Ativos com saldo zero (nao-posicao)
 WRDUSW-USD, F50A.DE, AVEM UCITS, LON:EMVL, ZPRX.DE, LON:IWQU, LON:IWMO
