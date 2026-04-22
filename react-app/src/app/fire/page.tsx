@@ -375,6 +375,63 @@ export default function FirePage() {
         </div>
       </div>
 
+      {/* G1: Bond Pool Readiness + G3: IR Latente — compact status strip */}
+      {(() => {
+        const bp = (data as any)?.bond_pool_runway ?? {};
+        const poolTotal = bp.pool_total_brl ?? [];
+        const poolFireDay = Array.isArray(poolTotal) && poolTotal.length > 0 ? poolTotal[poolTotal.length - 1] : 0;
+        const custoVida = prem.custo_vida_base ?? 250000;
+        const metaAnos = prem.bond_tent_meta_anos ?? 7;
+        const anosCobertosFireDay = custoVida > 0 ? poolFireDay / custoVida : 0;
+        const readinessPct = metaAnos > 0 ? Math.min(anosCobertosFireDay / metaAnos, 1) : 0;
+
+        // Current bond pool (RF total today)
+        const rf = (data as any)?.rf ?? {};
+        const rfTotal = (rf.ipca2029?.valor ?? 0) + (rf.ipca2040?.valor ?? 0) + (rf.ipca2050?.valor ?? 0) + (rf.renda2065?.valor ?? 0);
+        const anosHoje = custoVida > 0 ? rfTotal / custoVida : 0;
+
+        // IR latente
+        const irDiferido = (data as any)?.tax?.ir_diferido_total_brl ?? 0;
+        const patrimonioAtual = prem.patrimonio_atual ?? 0;
+        const patrimonioLiquido = patrimonioAtual - irDiferido;
+
+        const fmtBrl = (v: number) => privacyMode ? '••••' : `R$${(v / 1e3).toFixed(0)}k`;
+        const fmtM = (v: number) => privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
+
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5" style={{ marginBottom: 12 }}>
+            {/* Bond Pool Readiness */}
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '12px 16px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>Bond Pool — Proteção SoRR</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: '1.3rem', fontWeight: 800, color: readinessPct >= 0.8 ? 'var(--green)' : readinessPct >= 0.5 ? 'var(--yellow)' : 'var(--red)' }}>
+                  {anosHoje.toFixed(1)}a
+                </span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>hoje / {metaAnos}a meta</span>
+              </div>
+              {/* Progress bar */}
+              <div style={{ height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden', marginBottom: 4 }}>
+                <div style={{ height: '100%', width: `${Math.min(readinessPct * 100, 100)}%`, background: readinessPct >= 0.8 ? 'var(--green)' : readinessPct >= 0.5 ? 'var(--yellow)' : 'var(--red)', borderRadius: 3, transition: 'width 0.3s' }} />
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                Projeção FIRE Day: {anosCobertosFireDay.toFixed(1)}a ({(readinessPct * 100).toFixed(0)}%) · RF hoje: {fmtBrl(rfTotal)}
+              </div>
+            </div>
+
+            {/* IR Latente */}
+            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '12px 16px' }}>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.5px', marginBottom: 6 }}>Patrimônio Líquido de IR</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
+                <span style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text)' }}>{fmtM(patrimonioLiquido)}</span>
+              </div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+                Bruto {fmtM(patrimonioAtual)} − IR latente {fmtBrl(irDiferido)} (transitórios)
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── Group 1: Readiness ─────────────────────────────────────────────────── */}
       <SectionDivider label="Readiness" />
 

@@ -82,6 +82,16 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
     const metaLine = downsampledDates.map(() => metaFireBrl);
     const fmt = (v: number) => privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
 
+    // Find P50 × Meta crossover point
+    let crossoverIdx: number | null = null;
+    for (let i = 1; i < downsampledP50.length; i++) {
+      if (downsampledP50[i] >= metaFireBrl && downsampledP50[i - 1] < metaFireBrl) {
+        crossoverIdx = i;
+        break;
+      }
+    }
+    const crossoverYear = crossoverIdx != null ? downsampledDates[crossoverIdx]?.slice(0, 4) : null;
+
     return {
       backgroundColor: 'transparent',
       tooltip: {
@@ -206,6 +216,25 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
           itemStyle: { color: EC.yellow },
           lineStyle: { width: 1.5, color: EC.yellow, type: 'dotted' as const },
           symbolSize: 0,
+          markPoint: crossoverIdx != null ? {
+            symbol: 'circle',
+            symbolSize: 10,
+            data: [{
+              coord: [downsampledDates[crossoverIdx!], metaFireBrl],
+              itemStyle: { color: EC.yellow, borderColor: '#fff', borderWidth: 2 },
+              label: {
+                show: !privacyMode,
+                formatter: `P50 cruza meta\nem ${crossoverYear}`,
+                position: 'top',
+                fontSize: 10,
+                fontWeight: 'bold' as const,
+                color: EC.yellow,
+                backgroundColor: 'rgba(0,0,0,0.7)',
+                padding: [4, 8],
+                borderRadius: 4,
+              },
+            }],
+          } : undefined,
         },
       ],
     };

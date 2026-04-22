@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | DEV-fire-dashboard-gaps |
 | **Dono** | Dev |
-| **Status** | Backlog |
+| **Status** | ✅ Done |
+| **Concluído em** | 2026-04-22 |
 | **Prioridade** | Alta |
 | **Participantes** | FIRE, RF, Tax, Quant |
 | **Co-sponsor** | Head (síntese análise 8 agentes 2026-04-21) |
