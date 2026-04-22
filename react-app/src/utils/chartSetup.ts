@@ -817,10 +817,44 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     no_go: { gasto: 187_000 },
   };
 
+  // Healthcare costs: Sourced from fire_montecarlo.py assumptions
+  // VCMH (Valor de Custeio da Assistência Médico-Hospitalar) grows 2.7%/year (fonte: IESS 18-year historical)
+  // Decays 50% after No-Go phase (80 years) due to reduced mobility, institutional care already in baseline
+  // ANS age-bracket multipliers: 49-53 = 3.0x, 54-59 = 3.5x, 60+ = 4.0x+ (RN 63/2003)
+  // For chart simplification, use linear interpolation as proxy for ANS brackets
+  const saudeBase = (data as any)?.saude_base ?? 18_000;
+  const SAUDE_INFLATOR = 0.027;    // 2.7% real growth/year
+  const SAUDE_DECAY_THRESHOLD = 30; // At age 80 (year 27-30 post-FIRE), decay starts
+  const SAUDE_DECAY = 0.50;        // 50% reduction after No-Go
+
+  // Approximate ANS age-bracket multiplier (IBNR 63/2003 faixas etárias)
+  // Age 49-53 (start): ~3.0x; Age 60+: ~4.0x. Use linear approximation.
+  const ansMultiplier = (yearPostFire: number): number => {
+    // Fire at age 53, so year 0 = age 53, year 7 = age 60
+    const fireAge = 53;
+    const currentAge = fireAge + yearPostFire;
+
+    if (currentAge < 54) return 3.0;      // 49-53
+    if (currentAge < 60) return 3.0 + (currentAge - 54) * (0.5 / 6); // 54-59: linear ramp 3.0→3.5
+    return 4.0;                           // 60+
+  };
+
   const getSpendingByYear = (yearPostFire: number): number => {
-    if (yearPostFire < 15) return smileData.go_go?.gasto ?? 242_000;      // Go-Go
-    if (yearPostFire < 30) return smileData.slow_go?.gasto ?? 200_000;    // Slow-Go
-    return smileData.no_go?.gasto ?? 187_000;                             // No-Go
+    // Base spending from smile
+    let gastoBase = smileData.no_go?.gasto ?? 187_000;
+    if (yearPostFire < 15) gastoBase = smileData.go_go?.gasto ?? 242_000;      // Go-Go: 0-14
+    else if (yearPostFire < 30) gastoBase = smileData.slow_go?.gasto ?? 200_000; // Slow-Go: 15-29
+
+    // Healthcare: VCMH grows 2.7%/year + ANS age-bracket multiplier
+    let saudeVcmh = saudeBase * Math.pow(1 + SAUDE_INFLATOR, yearPostFire);
+    let saude = saudeVcmh * ansMultiplier(yearPostFire);
+
+    // Decay 50% after No-Go (year 30+, age 80+): mobility ↓, institutional care already in baseline
+    if (yearPostFire >= SAUDE_DECAY_THRESHOLD) {
+      saude *= SAUDE_DECAY;
+    }
+
+    return gastoBase + saude;
   };
 
   // Calculate post-FIRE trajectories with withdrawal
