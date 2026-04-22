@@ -809,24 +809,30 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const p50End = (trilhaBrl[dates.length - 1] ?? 0) as number;
   const p90End = p90Brl.at(-1) ?? 0;
 
-  // Spending smile: Go-Go (0-15y: R$280k), Slow-Go (15-30y: R$225k), No-Go (30+: R$285k)
-  // Plus health costs, guardrails applied in actual MC — here use baseline
+  // Spending smile: Read from data, fallback to conservative defaults
+  // Source: data.spendingSmile from Python data generation (config.py)
+  const smileData = (data as any)?.spendingSmile ?? {
+    go_go: { gasto: 242_000 },
+    slow_go: { gasto: 200_000 },
+    no_go: { gasto: 187_000 },
+  };
+
   const getSpendingByYear = (yearPostFire: number): number => {
-    if (yearPostFire < 15) return 280_000;      // Go-Go
-    if (yearPostFire < 30) return 225_000;      // Slow-Go
-    return 285_000;                             // No-Go
+    if (yearPostFire < 15) return smileData.go_go?.gasto ?? 242_000;      // Go-Go
+    if (yearPostFire < 30) return smileData.slow_go?.gasto ?? 200_000;    // Slow-Go
+    return smileData.no_go?.gasto ?? 187_000;                             // No-Go
   };
 
   // Calculate post-FIRE trajectories with withdrawal
-  // Formula: value_next = value_current * (1 + return_rate) - spending - inflation_adjustment
-  const ipca = 0.04;  // Average inflation assumption
+  // Formula: value_next = value_current * (1 + real_return) - spending_real
+  // Return rate is REAL (4.85%), spending is in R$ reais (constant 2026) — no additional inflation adjustment needed
   const calculatePostFireTrajectory = (startValue: number, returnRate: number): number[] => {
     const trajectory = [startValue];
     let value = startValue;
     for (let i = 1; i < postFireYears; i++) {
       const spending = getSpendingByYear(i);
-      // Apply return, then withdraw and adjust remaining for inflation
-      value = value * (1 + returnRate) - (spending * (1 + ipca) ** i);
+      // Apply real return, then withdraw. Both values are in real terms (constant 2026 R$)
+      value = value * (1 + returnRate) - spending;
       trajectory.push(Math.max(value, 0));  // Floor at zero (portfolio depletion)
     }
     return trajectory;
@@ -848,10 +854,10 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
   const allDates = [...dates, ...postFireDates];
   const xAxisLabels = allDates.map(d => {
     if (d.length === 4) {
-      // Post-FIRE annual — show every 2 years (step through with better coverage)
+      // Post-FIRE annual — show every 2 years starting from fireYear (correct offset)
       const yr = parseInt(d, 10);
-      const stepSince2041 = (yr - 2041) % 2;
-      return stepSince2041 === 0 && yr >= 2041 ? d : '';
+      const stepSinceFireYear = (yr - fireYear) % 2;
+      return stepSinceFireYear === 0 && yr >= fireYear ? d : '';
     }
     const [yr, mo] = d.split('-');
     // Monthly — show only January of years divisible by 3 (pre-FIRE)
