@@ -46,6 +46,8 @@ _(nenhuma no momento)_
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-schema-sync | Dev | 2026-04-22 | config.ts + spec.json sincronizados. Header importa TABS do config. secOpen()/secTitle() em todas as 8 pages. |
+| DEV-tab-reorganization | Dev | 2026-04-22 | 8 abas reestruturadas com SectionDividers e CollapsibleSections. |
 | DEV-claudemd-compliance | Dev | 2026-04-22 | 3/6 violações corrigidas. CLAUDE.md com diretrizes formais. |
 | DEV-boldin-dashboard | Dev | 2026-04-22 | 6/6 items completos (holístico, surplus-gap, wellness, cenários, spouse, LTC). |
 | DEV-dashboard-components-alignment | Dev | 2026-04-22 | Dashboard React rebuilt. 32 componentes, 8 abas, 100% ECharts. |

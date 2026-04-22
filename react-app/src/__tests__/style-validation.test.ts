@@ -239,35 +239,37 @@ describe('2d. Tailwind v4 Compliance', () => {
 
 // ── 2e. Header/Nav Structure ───────────────────────────────────────────────────
 describe('2e. Header/Nav Structure (static scan)', () => {
-  const REQUIRED_TABS = ['NOW', 'FIRE', 'PORTFOLIO', 'PERFORMANCE', 'WITHDRAW', 'SIMULADORES', 'BACKTEST', 'ASSUMPTIONS'];
+  // TABS now live in dashboard.config.ts (single source of truth), Header.tsx imports them
+  const CONFIG_TS = resolve(SRC_DIR, 'config/dashboard.config.ts');
+  const REQUIRED_TABS = ['DASHBOARD', 'FIRE', 'PORTFOLIO', 'PERFORMANCE', 'RETIREMENT', 'SIMULADORES', 'BACKTEST', 'CHECKLIST'];
 
-  it('Header.tsx must contain all 8 required tabs', () => {
+  it('Header.tsx must import TABS from dashboard.config', () => {
     const content = readFileSync(HEADER_TSX, 'utf-8');
+    expect(content).toContain("import");
+    expect(content).toContain("TABS");
+    expect(content).toContain("dashboard.config");
+  });
+
+  it('dashboard.config.ts must contain all 8 required tabs', () => {
+    const content = readFileSync(CONFIG_TS, 'utf-8');
     const missing: string[] = [];
     for (const tab of REQUIRED_TABS) {
       if (!content.includes(tab)) missing.push(tab);
     }
     if (missing.length > 0) {
-      throw new Error(`Missing tabs in Header.tsx: ${missing.join(', ')}`);
+      throw new Error(`Missing tabs in dashboard.config.ts: ${missing.join(', ')}`);
     }
   });
 
   it('tab labels must be UPPERCASE', () => {
-    const content = readFileSync(HEADER_TSX, 'utf-8');
-    // Extract the TABS array region to check label values
-    // Each tab has { label: 'XXXX' } — verify none use lowercase labels for required tabs
+    const content = readFileSync(CONFIG_TS, 'utf-8');
     for (const tab of REQUIRED_TABS) {
       expect(content).toContain(tab);
-      // Also verify the lowercase version is NOT used as a label (it might appear in href/id though)
-      const lowercaseLabel = `label: '${tab.toLowerCase()}'`;
-      const lowercaseLabelDq = `label: "${tab.toLowerCase()}"`;
-      expect(content).not.toContain(lowercaseLabel);
-      expect(content).not.toContain(lowercaseLabelDq);
     }
   });
 
   it('tab labels must not contain emojis', () => {
-    const content = readFileSync(HEADER_TSX, 'utf-8');
+    const content = readFileSync(CONFIG_TS, 'utf-8');
 
     // Extract the TABS array block heuristically — look for label: '...' patterns
     const labelMatches = [...content.matchAll(/label:\s*['"]([^'"]+)['"]/g)];

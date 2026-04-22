@@ -1,41 +1,54 @@
 {
   "version": "1.0",
-  "generated": "2026-04-11",
+  "generated": "2026-04-22",
   "tabs": [
     {
       "id": "now",
-      "label": "Now",
-      "job": "O que preciso saber agora?"
+      "label": "DASHBOARD",
+      "job": "O que preciso saber agora?",
+      "groups": ["Indicadores", "Ação Imediata", "Monitoramento"]
     },
     {
       "id": "portfolio",
-      "label": "Portfolio",
-      "job": "Como está minha carteira?"
+      "label": "PORTFOLIO",
+      "job": "Como está minha carteira?",
+      "groups": ["Visão Geral", "Alocação & Drift", "Holdings", "Tax & Atividade", "Renda Fixa & Cripto"]
     },
     {
       "id": "performance",
-      "label": "Performance",
-      "job": "Estou performando bem?"
-    },
-    {
-      "id": "backtest",
-      "label": "Backtest",
-      "job": "Análise histórica contrafactual e validação de estratégia"
+      "label": "PERFORMANCE",
+      "job": "Estou performando bem?",
+      "groups": ["Visão Geral", "Alpha & Benchmark", "Histórico", "Fatores", "Análise Técnica"]
     },
     {
       "id": "fire",
       "label": "FIRE",
-      "job": "Quando posso me aposentar?"
+      "job": "Quando posso me aposentar?",
+      "groups": ["Readiness", "Projeções", "Contexto", "Cenários & Risco", "Eventos de Vida"]
     },
     {
-      "id": "retiro",
-      "label": "Retirada",
-      "description": "Mecânicas da aposentadoria: bond pool, guardrails, renda, spending, projeções de ciclo de vida"
+      "id": "withdraw",
+      "label": "RETIREMENT",
+      "job": "Mecânicas da aposentadoria: bond pool, guardrails, renda, spending",
+      "groups": ["Posso me aposentar?", "Quanto gastar?", "Proteção"]
+    },
+    {
+      "id": "backtest",
+      "label": "BACKTEST",
+      "job": "Análise histórica contrafactual e validação de estratégia",
+      "groups": ["Backtest Principal", "Drawdown & Risco", "Deep Dive", "Bitcoin"]
     },
     {
       "id": "simuladores",
-      "label": "Simuladores",
-      "job": "What-if, stress test, sensibilidade — explorar cenários alternativos"
+      "label": "SIMULADORES",
+      "job": "What-if, stress test, sensibilidade — explorar cenários alternativos",
+      "groups": ["Simulador FIRE", "What-If Cenários", "Decisão de Aporte", "Análise Avançada"]
+    },
+    {
+      "id": "assumptions",
+      "label": "CHECKLIST",
+      "job": "Visão geral do plano e ações pendentes",
+      "groups": ["Decisões & Ações", "Onde Estou", "Alocação & Regras", "Modelo & Referência"]
     }
   ],
   "blocks": [
@@ -745,7 +758,7 @@
     },
     {
       "id": "guardrails-retirada",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Guardrails de Retirada",
       "type": "table",
       "purpose": "Mostra níveis de corte de gasto por faixa de drawdown para definir o spending floor e ceiling operacional na decumulação",
@@ -758,7 +771,7 @@
     },
     {
       "id": "swr-percentis",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "SWR no FIRE Day — Percentis",
       "type": "kpi",
       "purpose": "Mostra SWR implícita nos percentis P10/P50/P90 de patrimônio no FIRE day para quantificar risco de depleção nos diferentes cenários",
@@ -772,7 +785,7 @@
     },
     {
       "id": "spending-breakdown",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Spending — Essenciais vs Discricionários",
       "type": "card",
       "purpose": "Mostra decomposição do gasto entre must-spend e like-spend para identificar a parcela compressível em cenários adversos",
@@ -783,7 +796,7 @@
     },
     {
       "id": "income-fases",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Renda na Aposentadoria — Fases",
       "type": "table",
       "purpose": "Mostra estrutura de renda por fase (Go-Go/Slow-Go/No-Go) com spending smile para visualizar como o fluxo de caixa evolui na decumulação",
@@ -815,7 +828,7 @@
     },
     {
       "id": "bond-pool-readiness",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Bond Pool — Readiness Detail",
       "type": "gauge",
       "purpose": "Mostra composição e cobertura do bond pool (anos de gastos) vs meta de 7 anos, stats 2x2, tabela de composição e strategy cards para confirmar proteção contra sequence of returns risk",
@@ -835,7 +848,7 @@
     },
     {
       "id": "bond-pool-runway",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Bond Pool — Projeção até FIRE Day",
       "type": "chart-area",
       "purpose": "Mostra evolução projetada do bond pool até 2040 (stacked bar IPCA+ 2040/2050 + total line + meta), e opcionalmente P10/P50/P90 spending scenarios pós-FIRE",
@@ -924,7 +937,7 @@
     },
     {
       "id": "income-lifecycle",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Projeção de Renda — Ciclo de Vida",
       "type": "chart-line",
       "purpose": "Mostra projeção de renda e gasto de 2026 a 2077 com spending smile para confirmar sustentabilidade do plano ao longo de todo o ciclo de vida",
@@ -940,7 +953,7 @@
     },
     {
       "id": "sankey-cashflow",
-      "tab": "retiro",
+      "tab": "withdraw",
       "label": "Sankey — Fluxo de Caixa Anual",
       "type": "chart-area",
       "purpose": "Mostra fluxo estimado entre renda, impostos, hipoteca, aportes e custo de vida para visualizar como a renda corrente se distribui",

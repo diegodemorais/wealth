@@ -5,6 +5,7 @@ import { useUiStore } from '@/store/uiStore';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { pfireColor } from '@/utils/fire';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
@@ -598,8 +599,8 @@ export default function AssumptionsPage() {
 
       <CollapsibleSection
         id="assumptions-decisions"
-        title="Decisões & Ações"
-        defaultOpen={true}
+        title={secTitle('assumptions', 'assumptions-decisions', 'Decisões & Ações')}
+        defaultOpen={secOpen('assumptions', 'assumptions-decisions', true)}
         icon={<AlertTriangle size={16} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
@@ -667,8 +668,8 @@ export default function AssumptionsPage() {
 
       <CollapsibleSection
         id="assumptions-onde-estou"
-        title="Onde Estou"
-        defaultOpen={true}
+        title={secTitle('assumptions', 'assumptions-onde-estou', 'Onde Estou')}
+        defaultOpen={secOpen('assumptions', 'assumptions-onde-estou', true)}
         icon={<ArrowRight size={16} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
@@ -723,8 +724,8 @@ export default function AssumptionsPage() {
 
       <CollapsibleSection
         id="assumptions-alocacao-regras"
-        title="Alocação & Regras"
-        defaultOpen={false}
+        title={secTitle('assumptions', 'assumptions-alocacao-regras', 'Alocação & Regras')}
+        defaultOpen={secOpen('assumptions', 'assumptions-alocacao-regras', false)}
         icon={<Shield size={16} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
@@ -786,8 +787,8 @@ export default function AssumptionsPage() {
 
       <CollapsibleSection
         id="assumptions-modelo-referencia"
-        title="Modelo & Referência"
-        defaultOpen={false}
+        title={secTitle('assumptions', 'assumptions-modelo-referencia', 'Modelo & Referência')}
+        defaultOpen={secOpen('assumptions', 'assumptions-modelo-referencia', false)}
         icon={<Clock size={16} />}
       >
         <div style={{ padding: '0 16px 16px' }}>

@@ -541,7 +541,7 @@ export default function WithdrawPage() {
 
       {/* 4. Bond Strategy — SoRR + Pool Readiness */}
       {bondPoolReadiness && (
-        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={false} icon={<Building2 size={18} />}>
+        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool', false)} icon={<Building2 size={18} />}>
           <div style={{ padding: '0 16px 16px' }}>
             <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
             <BondStrategyPanel
@@ -564,8 +564,8 @@ export default function WithdrawPage() {
       {/* 5a. Sequence of Returns Heatmap — movido de FIRE */}
       <CollapsibleSection
         id="section-sequence-returns"
-        title={secTitle('withdraw', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')}
-        defaultOpen={false}
+        title={secTitle('withdraw', 'sorr-heatmap', 'Sequence of Returns — Heatmap de Risco')}
+        defaultOpen={secOpen('withdraw', 'sorr-heatmap', false)}
         icon={<Thermometer size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
@@ -588,7 +588,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
-      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={false} icon={<ArrowRightLeft size={18} />}>
+      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey', false)} icon={<ArrowRightLeft size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           <CashFlowSankey />
         </div>
@@ -596,7 +596,7 @@ export default function WithdrawPage() {
 
 
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
-      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={false}>
+      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
             <div style={{ overflowX: 'auto', marginBottom: 12 }}>
@@ -635,7 +635,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* F7 — LTC Sensitivity Test (DEV-boldin-dashboard) */}
-      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={false} icon={<Hospital size={18} />}>
+      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity', false)} icon={<Hospital size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const premissas = data?.premissas ?? {};
@@ -706,7 +706,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* Bond Ladder — seção unificada: cronograma + estrutura por prazo */}
-      <CollapsibleSection id="section-bond-ladder" title={secTitle('withdraw', 'bond-ladder', 'Bond Ladder — Cronograma & Estrutura de Vencimentos')} defaultOpen={false}>
+      <CollapsibleSection id="section-bond-ladder" title={secTitle('withdraw', 'bond-ladder', 'Bond Ladder — Cronograma & Estrutura de Vencimentos')} defaultOpen={secOpen('withdraw', 'bond-ladder', false)}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const rf = (data as any)?.rf ?? {};

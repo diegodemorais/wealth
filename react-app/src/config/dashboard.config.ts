@@ -2,16 +2,15 @@
  * dashboard.config.ts — Single source of truth for dashboard layout
  *
  * Defines:
- *   - TABS: tab order, routes, labels (consumed by TabNav)
- *   - SECTIONS: section order, titles, open/collapsed state per tab (consumed by each page)
+ *   - TABS: tab order, routes, labels (consumed by Header + TabNav)
+ *   - SECTIONS: per-tab sections with group, title, open/collapsed state
  *
  * To reorder tabs: edit TABS array order.
  * To reorder sections: edit SECTIONS[tab] array order — then match JSX order in the page.
  * To toggle open/collapsed: edit defaultOpen in SECTIONS[tab][n].
  * To rename a title: edit title in SECTIONS[tab][n].
  *
- * Page files DO NOT hardcode defaultOpen or titles for collapsible sections —
- * they read from secOpen() and secTitle() helpers below.
+ * Page files read from secOpen() and secTitle() helpers — do NOT hardcode.
  */
 
 // ─── Tab definitions ─────────────────────────────────────────────────────────
@@ -23,15 +22,14 @@ export interface TabDef {
 }
 
 export const TABS: TabDef[] = [
-  { id: 'tab-now',         href: '/',            label: '🕐 Now' },
-  { id: 'tab-portfolio',   href: '/portfolio',   label: '🎯 Portfolio' },
-  { id: 'tab-performance', href: '/performance', label: '📈 Performance' },
-  { id: 'tab-fire',        href: '/fire',        label: '🔥 FIRE' },
-  { id: 'tab-withdraw',    href: '/withdraw',    label: '💸 Retirada' },
-  { id: 'tab-backtest',    href: '/backtest',    label: '📊 Backtest' },
-  { id: 'tab-simulators',  href: '/simulators',  label: '🧪 Simuladores' },
-  { id: 'tab-discovery',   href: '/discovery',   label: '🔭 Discovery' },
-  { id: 'tab-assumptions',  href: '/assumptions',  label: '⚙️ Assumptions' },
+  { id: 'tab-now',         href: '/',            label: 'DASHBOARD' },
+  { id: 'tab-portfolio',   href: '/portfolio',   label: 'PORTFOLIO' },
+  { id: 'tab-performance', href: '/performance', label: 'PERFORMANCE' },
+  { id: 'tab-fire',        href: '/fire',        label: 'FIRE' },
+  { id: 'tab-withdraw',    href: '/withdraw',    label: 'RETIREMENT' },
+  { id: 'tab-backtest',    href: '/backtest',     label: 'BACKTEST' },
+  { id: 'tab-simulators',  href: '/simulators',  label: 'SIMULADORES' },
+  { id: 'tab-assumptions', href: '/assumptions',  label: 'CHECKLIST' },
 ];
 
 // ─── Section definitions ──────────────────────────────────────────────────────
@@ -45,135 +43,158 @@ export interface SectionDef {
   defaultOpen: boolean;
   /** Whether this section is wrapped in a CollapsibleSection */
   collapsible: boolean;
+  /** SectionDivider group this section belongs to (matches SectionDivider label) */
+  group?: string;
 }
 
 export const SECTIONS: Record<string, SectionDef[]> = {
 
-  // ── NOW (/page.tsx) ─────────────────────────────────────────────────────────
+  // ── DASHBOARD (/) ──────────────────────────────────────────────────────────
   now: [
-    { id: 'hero',              title: 'FIRE Hero — Status do Plano',                    defaultOpen: true,  collapsible: false },
-    { id: 'kpi-strip',         title: 'KPI Strip — P(FIRE) · Drift · Aporte · YTD',    defaultOpen: true,  collapsible: false },
-    { id: 'semaforos',         title: 'Semáforos de Gatilho',                           defaultOpen: true,  collapsible: false },
-    { id: 'aporte',            title: 'Aporte do Mês',                                  defaultOpen: true,  collapsible: false },
-    { id: 'drift',             title: 'Drift da Carteira',                              defaultOpen: true,  collapsible: false },
-    { id: 'tornado',           title: 'Tornado de Sensibilidade (P(FIRE) ±10%)',        defaultOpen: false, collapsible: true  },
-    { id: 'time-to-fire',      title: 'Time to FIRE',                                  defaultOpen: true,  collapsible: false },
-    { id: 'macro',             title: 'Contexto Macro & DCA Status',                   defaultOpen: true,  collapsible: true  },
-    { id: 'sankey',            title: 'Sankey — Fluxo de Caixa Anual (estimado)',        defaultOpen: true,  collapsible: true  },
-    { id: 'wellness',             title: 'Financial Wellness Score (indicador secundário)', defaultOpen: false, collapsible: true  },
-    { id: 'balanco-holistico-now', title: 'Balanço Holístico',                             defaultOpen: false, collapsible: true  },
-    { id: 'patrimonio-liquido-ir', title: 'Patrimônio Líquido de IR',                      defaultOpen: false, collapsible: true  },
-    { id: 'ipca-progress',        title: 'IPCA+ Taxa — Progresso de Alocação RF',          defaultOpen: false, collapsible: true  },
-    { id: 'rebalancing-status',   title: 'Rebalancing Status — Drift por Classe',          defaultOpen: false, collapsible: true  },
-    { id: 'dca-grid',             title: 'DCA Status Grid — Renda Fixa & Crypto',          defaultOpen: false, collapsible: true  },
-    { id: 'semaforo-triggers',    title: 'Semáforo de Gatilhos — Detalhe',                 defaultOpen: false, collapsible: true  },
+    // Group: Indicadores
+    { id: 'hero',              title: 'FIRE Hero — Status do Plano',                    defaultOpen: true,  collapsible: false, group: 'Indicadores' },
+    { id: 'kpi-strip',         title: 'Indicadores Primários',                          defaultOpen: true,  collapsible: false, group: 'Indicadores' },
+    // Group: Ação Imediata
+    { id: 'macro',             title: 'Contexto Macro & DCA Status',                    defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
+    { id: 'time-to-fire',      title: 'Time to FIRE',                                   defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
+    { id: 'aporte-decision',   title: 'Próximo Aporte — Equity & Gatilhos RF',          defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
+    { id: 'tornado',           title: 'Tornado de Sensibilidade (P(FIRE) ±10%)',         defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
+    { id: 'fire-progress',     title: 'Progresso FIRE + Aporte do Mês',                 defaultOpen: true,  collapsible: false, group: 'Ação Imediata' },
+    // Group: Monitoramento
+    { id: 'wellness',              title: 'Financial Wellness Score (indicador secundário)', defaultOpen: false, collapsible: true, group: 'Monitoramento' },
+    { id: 'rf-status',             title: 'RF Status — IPCA+ & Renda+ por Instrumento',     defaultOpen: false, collapsible: true, group: 'Monitoramento' },
+    { id: 'patrimonio-liquido-ir', title: 'Patrimônio Líquido de IR',                       defaultOpen: false, collapsible: true, group: 'Monitoramento' },
+    { id: 'rebalancing-status',    title: 'Rebalancing Status — Drift por Classe',          defaultOpen: false, collapsible: true, group: 'Monitoramento' },
   ],
 
-  // ── PORTFOLIO (/portfolio/page.tsx) ─────────────────────────────────────────
+  // ── PORTFOLIO (/portfolio) ─────────────────────────────────────────────────
   portfolio: [
-    { id: 'alocacao',      title: 'Alocação — Por Classe de Ativo',                  defaultOpen: true,  collapsible: false },
-    { id: 'drift-equity',  title: 'Drift Intra-Equity — SWRD / AVGS / AVEM',         defaultOpen: true,  collapsible: false },
-    { id: 'geo-exposure',  title: 'Exposição Geográfica — Equities',                 defaultOpen: true,  collapsible: false },
-    { id: 'etf-region',    title: 'Composição por Região — ETFs da Carteira',        defaultOpen: true,  collapsible: true  },
-    { id: 'concentracao',  title: 'Concentração Geográfica',                         defaultOpen: true,  collapsible: false },
-    { id: 'etf-factor',    title: 'Exposição Fatorial — ETFs da Carteira',           defaultOpen: true,  collapsible: true  },
-    { id: 'holdings',      title: 'Posições — ETFs Internacionais (IBKR)',           defaultOpen: true,  collapsible: false },
-    { id: 'custo-base',    title: 'Base de Custo e Alocação — Equity por Bucket',   defaultOpen: false, collapsible: true  },
-    { id: 'tax-ir',        title: 'IR Diferido — Alvo & Transitório',                defaultOpen: false, collapsible: true  },
-    { id: 'rf-crypto',     title: 'Renda Fixa + Cripto',                             defaultOpen: true,  collapsible: false },
-    { id: 'etf-positions', title: 'Posições ETF — Tabela Detalhada',                 defaultOpen: false, collapsible: true  },
-    { id: 'brasil-conc',   title: 'Concentração Brasil — Detalhe',                   defaultOpen: false, collapsible: true  },
-    { id: 'crypto-band',   title: 'HODL11 — Banda Criptográfica',                   defaultOpen: false, collapsible: true  },
-    { id: 'real-yield',    title: 'Real Yield Gauge — NTN-Bs Líquido de IR',         defaultOpen: false, collapsible: true  },
-    { id: 'tax-deferral',  title: 'Tax Deferral Clock — IR Diferido Total',          defaultOpen: false, collapsible: true  },
-    { id: 'operacoes',     title: 'Últimas Operações',                               defaultOpen: true,  collapsible: false },
+    // Group: Visão Geral
+    { id: 'alocacao',      title: 'Alocação — Por Classe de Ativo',           defaultOpen: true,  collapsible: false, group: 'Visão Geral' },
+    { id: 'concentracao',  title: 'Concentração Geográfica',                  defaultOpen: true,  collapsible: false, group: 'Visão Geral' },
+    // Group: Alocação & Drift
+    { id: 'drift-intra-equity', title: 'Drift Intra-Equity — SWRD / AVGS / AVEM', defaultOpen: true, collapsible: true, group: 'Alocação & Drift' },
+    { id: 'etf-region',    title: 'Composição por Região — ETFs da Carteira', defaultOpen: true,  collapsible: true,  group: 'Alocação & Drift' },
+    { id: 'etf-factor',    title: 'Exposição Fatorial — ETFs da Carteira',    defaultOpen: true,  collapsible: true,  group: 'Alocação & Drift' },
+    // Group: Holdings
+    { id: 'holdings',      title: 'Posições — ETFs Internacionais (IBKR)',    defaultOpen: true,  collapsible: false, group: 'Holdings' },
+    { id: 'etf-positions', title: 'Posições ETF — Tabela Detalhada',          defaultOpen: false, collapsible: true,  group: 'Holdings' },
+    { id: 'custo-base',    title: 'Base de Custo — Equity por Bucket',        defaultOpen: false, collapsible: true,  group: 'Holdings' },
+    // Group: Tax & Atividade
+    { id: 'tax-ir',        title: 'IR Diferido — Alvo & Transitório',         defaultOpen: false, collapsible: true,  group: 'Tax & Atividade' },
+    { id: 'tax-deferral',  title: 'Tax Deferral Clock — IR Diferido Total',   defaultOpen: false, collapsible: true,  group: 'Tax & Atividade' },
+    { id: 'operacoes',     title: 'Últimas Operações',                        defaultOpen: false, collapsible: true,  group: 'Tax & Atividade' },
+    // Group: Renda Fixa & Cripto
+    { id: 'rf-crypto',     title: 'Renda Fixa + Cripto',                      defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
+    { id: 'real-yield',    title: 'Real Yield Gauge — NTN-Bs Líquido de IR',  defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
+    { id: 'crypto-band',   title: 'HODL11 — Banda Criptográfica',             defaultOpen: false, collapsible: true,  group: 'Renda Fixa & Cripto' },
   ],
 
-  // ── PERFORMANCE (/performance/page.tsx) ─────────────────────────────────────
+  // ── PERFORMANCE (/performance) ─────────────────────────────────────────────
   performance: [
-    { id: 'patrimonio',      title: 'Patrimônio — Evolução Histórica',                                defaultOpen: true,  collapsible: false },
-    { id: 'attribution',     title: 'Performance Attribution — Decomposição do Patrimônio',           defaultOpen: true,  collapsible: false },
-    { id: 'alpha',           title: 'Alpha vs VWRA (benchmark) — Carteira Target por Período',        defaultOpen: true,  collapsible: false },
-    { id: 'premissas',       title: 'Premissas vs Realizado — 5 Anos (2021-2026)',                    defaultOpen: true,  collapsible: false },
-    { id: 'rolling-12m',     title: 'Rolling 12m — AVGS vs SWRD (retorno relativo)',                  defaultOpen: false, collapsible: true  },
-    { id: 'ir',              title: 'Information Ratio vs VWRA — Desde o Início + Rolling 36m',       defaultOpen: false, collapsible: true  },
-    { id: 'factor-loadings', title: 'Factor Loadings — Regressão Fama-French SF + Momentum',         defaultOpen: false, collapsible: true  },
-    { id: 'heatmap',         title: 'Retornos Mensais — Heatmap',                                    defaultOpen: false, collapsible: true  },
-    { id: 'rolling-sharpe',  title: 'Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)',             defaultOpen: false, collapsible: true  },
-    { id: 'alpha-chart',     title: 'Alpha vs SWRD — Gráfico por Período',                           defaultOpen: false, collapsible: true  },
-    { id: 'rolling-metrics', title: 'Rolling Metrics — Sharpe / Sortino / Volatilidade',             defaultOpen: false, collapsible: true  },
-    { id: 'fee-analysis',    title: 'Fee Analysis — Custo de Complexidade (14 anos até FIRE)',        defaultOpen: false, collapsible: true  },
+    // Group: Visão Geral
+    { id: 'patrimonio',      title: 'Patrimônio — Evolução Histórica',                          defaultOpen: true,  collapsible: false, group: 'Visão Geral' },
+    { id: 'attribution',     title: 'Performance Attribution — Decomposição do Patrimônio',     defaultOpen: true,  collapsible: false, group: 'Visão Geral' },
+    { id: 'premissas',       title: 'Premissas vs Realizado — 5 Anos (2021-2026)',              defaultOpen: true,  collapsible: false, group: 'Visão Geral' },
+    // Group: Alpha & Benchmark
+    { id: 'alpha',           title: 'Alpha vs VWRA (benchmark) — Carteira Target por Período',  defaultOpen: true,  collapsible: false, group: 'Alpha & Benchmark' },
+    { id: 'alpha-chart',     title: 'Alpha vs SWRD — Gráfico por Período',                     defaultOpen: false, collapsible: true,  group: 'Alpha & Benchmark' },
+    // Group: Histórico
+    { id: 'rolling-12m',     title: 'Rolling 12m — AVGS vs SWRD (retorno relativo)',            defaultOpen: false, collapsible: true,  group: 'Histórico' },
+    { id: 'ir',              title: 'Information Ratio vs VWRA — Desde o Início + Rolling 36m', defaultOpen: false, collapsible: true,  group: 'Histórico' },
+    // Group: Fatores
+    { id: 'factor-waterfall',  title: 'Expected Return Waterfall — Decomposição Fatorial FF6',  defaultOpen: false, collapsible: true,  group: 'Fatores' },
+    { id: 'factor-regression', title: 'Factor Regression — Carregamentos e R²',                 defaultOpen: false, collapsible: true,  group: 'Fatores' },
+    { id: 'factor-loadings',   title: 'Factor Loadings — Regressão Fama-French SF + Momentum',  defaultOpen: false, collapsible: true,  group: 'Fatores' },
+    { id: 'ff5-regression',    title: 'FF5 Regression — Tabela Completa',                       defaultOpen: false, collapsible: true,  group: 'Fatores' },
+    // Group: Análise Técnica
+    { id: 'heatmap',         title: 'Retornos Mensais — Heatmap',                               defaultOpen: false, collapsible: true,  group: 'Análise Técnica' },
+    { id: 'rolling-metrics', title: 'Rolling Metrics — Sharpe / Sortino / Volatilidade',        defaultOpen: false, collapsible: true,  group: 'Análise Técnica' },
+    { id: 'rolling-sharpe',  title: 'Rolling Sharpe — 12m (BRL vs CDI + USD vs T-Bill)',        defaultOpen: false, collapsible: true,  group: 'Análise Técnica' },
+    { id: 'fee-analysis',    title: 'Fee Analysis — Custo de Complexidade (14 anos até FIRE)',   defaultOpen: false, collapsible: true,  group: 'Análise Técnica' },
   ],
 
-  // ── FIRE (/fire/page.tsx) ────────────────────────────────────────────────────
+  // ── FIRE (/fire) ───────────────────────────────────────────────────────────
   fire: [
-    { id: 'tracking',         title: 'Tracking FIRE — Realizado vs Projeção',                          defaultOpen: true,  collapsible: false },
-    { id: 'aspiracional',     title: 'FIRE Aspiracional',                                               defaultOpen: true,  collapsible: false },
-    { id: 'projecao',         title: 'Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)', defaultOpen: true,  collapsible: false },
-    { id: 'fire-matrix',      title: 'FIRE Matrix — P(Sucesso até 90a)',                                defaultOpen: true,  collapsible: true  },
-    { id: 'familia',          title: 'P(FIRE) — Cenários de Família',                                  defaultOpen: true,  collapsible: false },
-    { id: 'eventos-vida',     title: 'Eventos de Vida — Impacto no Plano FIRE',                        defaultOpen: false, collapsible: true  },
-    { id: 'scenario-compare', title: 'Cenário Base vs Cenário Aspiracional — Comparação Detalhada',    defaultOpen: false, collapsible: true  },
-    { id: 'glide-path',             title: 'Glide Path — Alocação por Idade',                                defaultOpen: true,  collapsible: true  },
-    { id: 'balanco-holistico-fire', title: 'Balanço Holístico',                                              defaultOpen: false, collapsible: true  },
-    { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                                defaultOpen: false, collapsible: true  },
-    { id: 'sequence-returns',       title: 'Sequence of Returns — Heatmap de Risco',                         defaultOpen: false, collapsible: true  },
-    { id: 'brl-fx',                 title: 'Sensibilidade Cambial — Equity USD em BRL',                      defaultOpen: false, collapsible: true  },
+    // Group: Readiness
+    { id: 'floor-upside-fire',  title: 'Cobertura por Camadas — Floor vs Upside',                  defaultOpen: true,  collapsible: true,  group: 'Readiness' },
+    { id: 'tracking',           title: 'Tracking FIRE — Realizado vs Projeção',                     defaultOpen: true,  collapsible: false, group: 'Readiness' },
+    { id: 'aspiracional',       title: 'FIRE Aspiracional',                                          defaultOpen: true,  collapsible: false, group: 'Readiness' },
+    { id: 'familia',            title: 'P(FIRE) — Cenários de Família',                             defaultOpen: true,  collapsible: false, group: 'Readiness' },
+    { id: 'scenario-compare',   title: 'Cenário Base vs Cenário Aspiracional — Comparação Detalhada', defaultOpen: false, collapsible: true, group: 'Readiness' },
+    // Group: Projeções
+    { id: 'projecao',         title: 'Projeção de Patrimônio — P10 / P50 / P90',                    defaultOpen: true,  collapsible: false, group: 'Projeções' },
+    { id: 'fire-matrix',      title: 'FIRE Matrix — P(Sucesso até 90a)',                            defaultOpen: true,  collapsible: true,  group: 'Projeções' },
+    // Group: Contexto
+    { id: 'balanco-holistico-fire', title: 'Balanço Holístico',                                     defaultOpen: false, collapsible: true,  group: 'Contexto' },
+    { id: 'capital-humano',         title: 'Capital Humano',                                         defaultOpen: false, collapsible: true,  group: 'Contexto' },
+    // Group: Cenários & Risco
+    { id: 'section-surviving-spouse', title: 'Cenário: Cônjuge Sobrevivente',                       defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
+    { id: 'sequence-returns',         title: 'Sequence of Returns — Heatmap de Risco',              defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
+    { id: 'brl-fx',                   title: 'Sensibilidade Cambial — Equity USD em BRL',           defaultOpen: false, collapsible: true,  group: 'Cenários & Risco' },
+    // Group: Eventos de Vida
+    { id: 'eventos-vida',     title: 'Eventos de Vida — Impacto no Plano FIRE',                     defaultOpen: false, collapsible: true,  group: 'Eventos de Vida' },
+    { id: 'glide-path',       title: 'Glide Path — Alocação por Idade',                             defaultOpen: true,  collapsible: true,  group: 'Eventos de Vida' },
   ],
 
-  // ── WITHDRAW (/withdraw/page.tsx) ────────────────────────────────────────────
+  // ── RETIREMENT (/withdraw) ─────────────────────────────────────────────────
   withdraw: [
-    { id: 'swr',                title: 'SWR no FIRE Day — Percentis P10 / P50 / P90',      defaultOpen: true,  collapsible: true  },
-    { id: 'guardrails',         title: 'Guardrails de Saque — Gasto vs Limite por Ano',    defaultOpen: true,  collapsible: false },
-    { id: 'spending-guardrails',title: 'Spending Guardrails — Ajuste Dinâmico de Gasto',  defaultOpen: true,  collapsible: false },
-    { id: 'bond-pool',          title: 'Bond Pool — Proteção Sequência de Retornos',       defaultOpen: true,  collapsible: false },
-    { id: 'sankey',             title: 'Cashflow — Fluxo Mensal de Retirada',              defaultOpen: true,  collapsible: false },
-    { id: 'fases',              title: 'Fases de Renda — Projeção por Fonte',              defaultOpen: true,  collapsible: false },
-    { id: 'spending-breakdown',   title: 'Spending Breakdown — Detalhamento de Gastos',      defaultOpen: true,  collapsible: true  },
-    { id: 'section-surplus-gap',  title: 'Superávit / Déficit Anual — P10/P50/P90',          defaultOpen: true,  collapsible: true  },
-    { id: 'section-ltc-sensitivity',   title: 'LTC — Sensibilidade Cuidados de Longo Prazo',           defaultOpen: false, collapsible: true  },
-    { id: 'bond-maturity',             title: 'Bond Maturity Ladder — Vencimentos da Renda Fixa',       defaultOpen: false, collapsible: true  },
-    { id: 'bond-pool-composition',     title: 'Bond Pool — Composição Detalhada',                       defaultOpen: false, collapsible: true  },
-    { id: 'spending-breakdown-v2',     title: 'Spending Breakdown — Detalhamento por Categoria',        defaultOpen: false, collapsible: true  },
-    { id: 'bond-ladder-timeline',      title: 'Bond Ladder Timeline — Horizonte de Vencimentos',       defaultOpen: false, collapsible: true  },
+    // Group: Posso me aposentar?
+    { id: 'swr-dashboard',       title: 'SWR Dashboard — Acumulação & FIRE Day',                    defaultOpen: true,  collapsible: true,  group: 'Posso me aposentar?' },
+    { id: 'floor-upside',        title: 'Cobertura por Camadas — Floor vs Upside',                  defaultOpen: true,  collapsible: true,  group: 'Posso me aposentar?' },
+    { id: 'guardrails',          title: 'Regras de Ajuste de Retirada — FIRE Day',                  defaultOpen: true,  collapsible: true,  group: 'Posso me aposentar?' },
+    // Group: Quanto gastar?
+    { id: 'spending-guardrails', title: 'Spending Guardrails — P(FIRE) × Custo de Vida',            defaultOpen: true,  collapsible: true,  group: 'Quanto gastar?' },
+    { id: 'section-surplus-gap', title: 'Superávit / Déficit Anual — P10/P50/P90',                  defaultOpen: true,  collapsible: true,  group: 'Quanto gastar?' },
+    { id: 'spending-breakdown-v2', title: 'Spending Breakdown — Detalhamento por Categoria',        defaultOpen: false, collapsible: true,  group: 'Quanto gastar?' },
+    // Group: Proteção
+    { id: 'bond-pool',             title: 'Bond Strategy — SoRR + Pool Readiness',                  defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'sorr-heatmap',          title: 'Sequence of Returns — Heatmap de Risco',                 defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'sankey',                title: 'Fluxo de Caixa Atual — Receitas vs Gastos',              defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'fases',                 title: 'Renda na Aposentadoria — Fases Temporais',               defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'section-ltc-sensitivity', title: 'LTC — Sensibilidade Cuidados de Longo Prazo',         defaultOpen: false, collapsible: true,  group: 'Proteção' },
+    { id: 'bond-ladder',            title: 'Bond Ladder — Cronograma & Estrutura de Vencimentos',  defaultOpen: false, collapsible: true,  group: 'Proteção' },
   ],
 
-  // ── BACKTEST (/backtest/page.tsx) ────────────────────────────────────────────
+  // ── BACKTEST (/backtest) ───────────────────────────────────────────────────
   backtest: [
-    { id: 'backtest-historico',  title: 'Backtest Histórico — Target vs Benchmarks',    defaultOpen: true,  collapsible: false },
-    { id: 'drawdown-historico',  title: 'Drawdown Histórico — Máximo por Período',      defaultOpen: true,  collapsible: false },
-    { id: 'shadow',              title: 'Shadow Portfolio — Comparação vs Target',       defaultOpen: true,  collapsible: false },
-    { id: 'longo-prazo',         title: 'Backtest Longo Prazo — Dados Acadêmicos',      defaultOpen: true,  collapsible: true  },
-    { id: 'drawdown-history',    title: 'Drawdown History — ECharts (Dashboard)',        defaultOpen: false, collapsible: true  },
-    { id: 'drawdown-recovery',   title: 'Drawdown Recovery Table — Eventos Históricos', defaultOpen: false, collapsible: true  },
+    // Group: Backtest Principal
+    { id: 'backtest-historico',  title: 'Backtest Histórico — Target vs VWRA',              defaultOpen: true,  collapsible: true,  group: 'Backtest Principal' },
+    // Group: Drawdown & Risco
+    { id: 'drawdown-analysis',   title: 'Drawdown Analysis — Histórico, Crises & Recovery', defaultOpen: true,  collapsible: true,  group: 'Drawdown & Risco' },
+    { id: 'drawdown-crises',     title: 'Crises Históricas — tabela detalhada',              defaultOpen: false, collapsible: true,  group: 'Drawdown & Risco' },
+    { id: 'drawdown-recovery',   title: 'Recovery Table — eventos 2021–2026',                defaultOpen: false, collapsible: true,  group: 'Drawdown & Risco' },
+    // Group: Deep Dive
+    { id: 'shadow',              title: 'Shadow Portfolios — Target vs VWRA',                defaultOpen: false, collapsible: true,  group: 'Deep Dive' },
+    { id: 'longo-prazo',         title: 'Backtest Longo — Regime 7 (1995–2026)',             defaultOpen: false, collapsible: true,  group: 'Deep Dive' },
+    { id: 'cagr-decada',         title: 'CAGR por Década',                                   defaultOpen: true,  collapsible: true,  group: 'Deep Dive' },
+    // Group: Bitcoin
+    { id: 'btc-indicators',     title: 'Bitcoin On-Chain — Indicadores Históricos',          defaultOpen: false, collapsible: true,  group: 'Bitcoin' },
   ],
 
-  // ── SIMULADORES (/simulators/page.tsx) ──────────────────────────────────────
+  // ── SIMULADORES (/simulators) ──────────────────────────────────────────────
   simuladores: [
-    { id: 'cascade',   title: 'Cascata de Aportes — DCA Mensal',                defaultOpen: true,  collapsible: false },
-    { id: 'fire-sim',  title: 'Simulador FIRE — Cenários de Aposentadoria',     defaultOpen: true,  collapsible: false },
-    { id: 'what-if',   title: 'What-If — Sensibilidade de Variáveis',           defaultOpen: true,  collapsible: true  },
-    { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)', defaultOpen: true,  collapsible: true  },
+    // Group: Simulador FIRE
+    { id: 'fire-sim',  title: 'Simulador FIRE — Cenários de Aposentadoria',      defaultOpen: true,  collapsible: false, group: 'Simulador FIRE' },
+    // Group: What-If Cenários
+    { id: 'what-if',   title: 'What-If — Sensibilidade de Variáveis',            defaultOpen: true,  collapsible: true,  group: 'What-If Cenários' },
+    // Group: Decisão de Aporte
+    { id: 'cascade',   title: 'Cascata de Aportes — DCA Mensal',                 defaultOpen: true,  collapsible: false, group: 'Decisão de Aporte' },
+    // Group: Análise Avançada
+    { id: 'stress',    title: 'Stress Test — Monte Carlo (trajectórias reais)',   defaultOpen: true,  collapsible: true,  group: 'Análise Avançada' },
   ],
 
-  // ── ASSUMPTIONS (/assumptions/page.tsx) ────────────────────────────────────
+  // ── CHECKLIST (/assumptions) ───────────────────────────────────────────────
   assumptions: [
-    { id: 'status-strip',        title: 'FIRE Status Strip',              defaultOpen: true,  collapsible: false },
-    { id: 'personal-context',    title: 'Personal Context',               defaultOpen: true,  collapsible: false },
-    { id: 'fire-targets',        title: 'FIRE Targets & Triggers',        defaultOpen: true,  collapsible: false },
-    { id: 'allocation',          title: 'Strategic Allocation',           defaultOpen: true,  collapsible: false },
-    { id: 'model-assumptions',   title: 'Model Assumptions',              defaultOpen: true,  collapsible: false },
-    { id: 'operation-rules',     title: 'Operation Rules',                defaultOpen: false, collapsible: true  },
-    { id: 'family-scenarios',    title: 'Family Scenarios',               defaultOpen: true,  collapsible: false },
-    { id: 'holistic-balance',    title: 'Holistic Balance',               defaultOpen: false, collapsible: true  },
+    // Group: Decisões & Ações
+    { id: 'assumptions-decisions',         title: 'Decisões & Ações',       defaultOpen: true,  collapsible: true, group: 'Decisões & Ações' },
+    // Group: Onde Estou
+    { id: 'assumptions-onde-estou',        title: 'Onde Estou',             defaultOpen: true,  collapsible: true, group: 'Onde Estou' },
+    // Group: Alocação & Regras
+    { id: 'assumptions-alocacao-regras',   title: 'Alocação & Regras',     defaultOpen: false, collapsible: true, group: 'Alocação & Regras' },
+    // Group: Modelo & Referência
+    { id: 'assumptions-modelo-referencia', title: 'Modelo & Referência',   defaultOpen: false, collapsible: true, group: 'Modelo & Referência' },
   ],
-
-  // ── DISCOVERY (/discovery/page.tsx) ─────────────────────────────────────────
-  discovery: [
-    { id: 'discovery-new',    title: 'Novos Componentes Sugeridos',   defaultOpen: true,  collapsible: false },
-    { id: 'discovery-orphans', title: 'Componentes Inativos (Órfãos)', defaultOpen: true,  collapsible: false },
-  ],
-
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -194,4 +215,18 @@ export function secOpen(tab: string, id: string, fallback = true): boolean {
 /** Get the canonical title for a section */
 export function secTitle(tab: string, id: string, fallback = ''): string {
   return getSec(tab, id)?.title ?? fallback;
+}
+
+/** Get all groups for a tab (unique, in order of first appearance) */
+export function tabGroups(tab: string): string[] {
+  const sections = SECTIONS[tab] ?? [];
+  const seen = new Set<string>();
+  const groups: string[] = [];
+  for (const s of sections) {
+    if (s.group && !seen.has(s.group)) {
+      seen.add(s.group);
+      groups.push(s.group);
+    }
+  }
+  return groups;
 }

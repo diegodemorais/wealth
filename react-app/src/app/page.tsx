@@ -238,7 +238,7 @@ export default function HomePage() {
 
       {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (
-        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={false} icon={<Trophy size={18} />}>
+        <CollapsibleSection id="section-wellness" title={secTitle('now', 'wellness', 'Financial Wellness Score (indicador secundário)')} defaultOpen={secOpen('now', 'wellness', false)} icon={<Trophy size={18} />}>
           {(() => {
             const wc = data.wellness_config;
             const pfireBaseVal = d.pfireBase;
@@ -421,8 +421,8 @@ export default function HomePage() {
       {/* RF STATUS PANEL — merge de IpcaTaxaProgress + DCA Status + DCAStatusGrid */}
       <CollapsibleSection
         id="section-rf-status"
-        title="RF Status — IPCA+ & Renda+ por Instrumento"
-        defaultOpen={false}
+        title={secTitle('now', 'rf-status', 'RF Status — IPCA+ & Renda+ por Instrumento')}
+        defaultOpen={secOpen('now', 'rf-status', false)}
         icon={<Target size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>

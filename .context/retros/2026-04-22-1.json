@@ -1,0 +1,41 @@
+{
+  "date": "2026-04-22",
+  "window": "7d",
+  "metrics": {
+    "commits": 406,
+    "contributors": 1,
+    "prs_merged": 0,
+    "insertions": 924911,
+    "deletions": 1256819,
+    "net_loc": -331908,
+    "test_loc": 0,
+    "test_ratio": 0.01,
+    "active_days": 8,
+    "sessions": 12,
+    "deep_sessions": 8,
+    "avg_session_minutes": 180,
+    "loc_per_session_hour": 0,
+    "feat_pct": 0.20,
+    "fix_pct": 0.23,
+    "peak_hour": 6,
+    "ai_assisted_commits": 333
+  },
+  "authors": {
+    "Diego de Morais": {
+      "commits": 406,
+      "insertions": 924911,
+      "deletions": 1256819,
+      "test_ratio": 0.01,
+      "top_area": "react-app/src/"
+    }
+  },
+  "version_range": ["1.0.43", "1.0.130"],
+  "streak_days": 22,
+  "tweetable": "Week of Apr 15: 406 commits, 8 active days, 82% AI-assisted, massive cleanup (-331k net LOC) | Streak: 22d",
+  "test_health": {
+    "total_test_files": 32,
+    "tests_added_this_period": 5,
+    "regression_test_commits": 0,
+    "test_files_changed": 5
+  }
+}

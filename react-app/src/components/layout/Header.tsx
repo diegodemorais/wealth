@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useUiStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
+import { TABS } from '@/config/dashboard.config';
 import { RefreshCw, Eye, EyeOff, LogOut } from 'lucide-react';
 
 // Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
@@ -23,17 +24,6 @@ function formatBrt(iso: string): string {
     return iso;
   }
 }
-
-const TABS = [
-  { href: '/fire', label: 'FIRE', id: 'tab-fire' },
-  { href: '/withdraw', label: 'RETIREMENT', id: 'tab-withdraw' },
-  { href: '/', label: 'DASHBOARD', id: 'tab-now' },
-  { href: '/portfolio', label: 'PORTFOLIO', id: 'tab-portfolio' },
-  { href: '/performance', label: 'PERFORMANCE', id: 'tab-performance' },
-  { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
-  { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
-  { href: '/assumptions', label: 'CHECKLIST', id: 'tab-assumptions' },
-];
 
 export function Header() {
   const pathname = usePathname();

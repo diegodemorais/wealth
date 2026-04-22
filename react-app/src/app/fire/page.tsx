@@ -592,7 +592,7 @@ export default function FirePage() {
       <SectionDivider label="Contexto" />
 
       {/* Balanço Holístico — Patrimônio expandido */}
-      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={false} icon={<Landmark size={18} />}>
+      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire', false)} icon={<Landmark size={18} />}>
         <BalancoHolistico data={data as any} showCapitalHumanoBadge />
       </CollapsibleSection>
 
@@ -603,8 +603,8 @@ export default function FirePage() {
         return (
           <CollapsibleSection
             id="section-capital-humano"
-            title={secTitle('fire', 'section-capital-humano', 'Capital Humano vs. Financeiro')}
-            defaultOpen={false}
+            title={secTitle('fire', 'capital-humano', 'Capital Humano vs. Financeiro')}
+            defaultOpen={secOpen('fire', 'capital-humano', false)}
           >
             <HumanCapitalCrossover
               pontos={hc.pontos}

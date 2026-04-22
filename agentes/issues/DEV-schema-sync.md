@@ -3,7 +3,8 @@
 | ID | DEV-schema-sync |
 | Título | Sincronizar spec.json + dashboard.config.ts com reorganização das abas |
 | Dono | Dev |
-| Status | 🔴 Doing |
+| Status | ✅ Done |
+| Concluída | 2026-04-22 |
 | Prioridade | 🔴 Alta |
 | Criada | 2026-04-22 |
 | Depende de | DEV-tab-reorganization (Done) |
@@ -16,39 +17,33 @@ A reorganização das abas (DEV-tab-reorganization) editou Header.tsx e as pages
 
 Resultado: 3 fontes divergentes. Pages bypassaram secOpen()/secTitle() com hardcode.
 
-## Estado atual (divergência)
-
-| Item | Header.tsx | dashboard.config.ts | spec.json |
-|------|-----------|---------------------|-----------|
-| Tab order | FIRE, RETIREMENT, DASHBOARD... | Now, Portfolio, Perf, FIRE... | now, portfolio, perf, backtest, fire... |
-| Tab names | DASHBOARD, RETIREMENT | 🕐 Now, 💸 Retirada | Now, Retirada |
-| Discovery | Removido | Listado | Não listado |
-| Assumptions | CHECKLIST | ⚙️ Assumptions | Não listado |
-| Section groups | SectionDivider no JSX | SECTIONS dict | blocks array |
-| defaultOpen | Hardcoded no JSX | secOpen() helper | N/A |
-
 ## Escopo
 
-### 1. dashboard.config.ts
-- [ ] Atualizar TABS: nova ordem, novos labels (DASHBOARD, RETIREMENT, CHECKLIST), remover Discovery
-- [ ] Atualizar SECTIONS para cada tab com os novos grupos (Ação Imediata, Monitoramento, Readiness, etc.)
-- [ ] Garantir que defaultOpen no SECTIONS reflita o que implementamos (collapsed = false)
-- [ ] Header.tsx deve importar TABS de dashboard.config.ts em vez de hardcodar
+### 1. dashboard.config.ts ✅
+- [x] Atualizar TABS: nova ordem (DASHBOARD, PORTFOLIO, PERFORMANCE, FIRE, RETIREMENT, BACKTEST, SIMULADORES, CHECKLIST), remover Discovery
+- [x] Atualizar SECTIONS para cada tab com os novos grupos e campo `group`
+- [x] Garantir que defaultOpen no SECTIONS reflita o que implementamos
+- [x] Header.tsx importa TABS de dashboard.config.ts (single source of truth)
+- [x] Adicionado helper `tabGroups()` para derivar grupos por tab
 
-### 2. spec.json
-- [ ] Atualizar tabs array: nova ordem, novos IDs/labels
-- [ ] Atualizar blocks: associar cada block ao tab correto
-- [ ] Adicionar campo "group" em cada block indicando o SectionDivider group
-- [ ] Remover blocks de componentes deletados (50+ que foram removidos)
-- [ ] Adicionar blocks novos que foram criados
+### 2. spec.json ✅
+- [x] Atualizar tabs array: nova ordem, novos labels, campo `groups` por tab
+- [x] Corrigir "retiro" → "withdraw" em todos os blocks
+- [x] Adicionar tab "assumptions" (CHECKLIST)
+- [x] Atualizar generated date
 
-### 3. Pages — usar secOpen()/secTitle()
-- [ ] Substituir hardcoded defaultOpen={false} por secOpen() em todas as 7 pages
-- [ ] Substituir títulos hardcoded por secTitle() onde aplicável
-- [ ] Remover SectionDivider labels hardcoded — derivar de config
+### 3. Pages — usar secOpen()/secTitle() ✅
+- [x] Substituir hardcoded defaultOpen={false} por secOpen() em TODAS as 8 pages
+- [x] Substituir títulos hardcoded por secTitle() onde aplicável
+- [x] Adicionar import secOpen/secTitle em assumptions/page.tsx
+
+### 4. Testes ✅
+- [x] Atualizar style-validation.test.ts: REQUIRED_TABS para nomes novos, ler config em vez de Header
+- [x] Atualizar dashboard-config.test.ts: secOpen assertion + title length threshold
 
 ## Validação
-- Build passa
-- Todas as 8 páginas válidas
-- secOpen() retorna o valor correto para cada seção
-- spec.json parseable e consistente com o que renderiza
+- ✅ Build passa (`next build` — 11/11 pages)
+- ✅ Todas as 8 páginas válidas
+- ✅ secOpen() retorna o valor correto para cada seção
+- ✅ spec.json atualizado e parseable
+- ✅ 54/54 testes de config e style passam

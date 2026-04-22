@@ -257,7 +257,7 @@ export default function PortfolioPage() {
       <CollapsibleSection
         id="section-tax-ir"
         title={secTitle('portfolio', 'tax-ir')}
-        defaultOpen={false}
+        defaultOpen={secOpen('portfolio', 'tax-ir', false)}
         icon={<Landmark size={18} />}
       >
         <div style={{ padding: '16px' }}>
@@ -296,7 +296,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-brasil-concentration"
           title={secTitle('portfolio', 'brasil-concentration', 'Concentração Brasil — Exposição Soberana & RF')}
-          defaultOpen={false}
+          defaultOpen={secOpen('portfolio', 'brasil-concentration', false)}
           icon={<MapPin size={18} />}
         >
           <div style={{ padding: '16px' }}>
@@ -327,7 +327,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-real-yield"
           title={secTitle('portfolio', 'real-yield', 'Real Yield Gauge — NTN-Bs Líquido de IR')}
-          defaultOpen={false}
+          defaultOpen={secOpen('portfolio', 'real-yield', false)}
           icon={<BarChart3 size={18} />}
         >
           <div style={{ padding: '16px' }}>
@@ -353,7 +353,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-crypto-band"
           title={secTitle('portfolio', 'crypto-band', 'HODL11 — Banda Criptográfica')}
-          defaultOpen={false}
+          defaultOpen={secOpen('portfolio', 'crypto-band', false)}
           icon={<Bitcoin size={18} />}
         >
           <div style={{ padding: '16px' }}>
@@ -370,7 +370,7 @@ export default function PortfolioPage() {
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
-        <CollapsibleSection id="section-ultimas-operacoes" title="Últimas Operações" defaultOpen={false}>
+        <CollapsibleSection id="section-ultimas-operacoes" title={secTitle('portfolio', 'operacoes', 'Últimas Operações')} defaultOpen={secOpen('portfolio', 'operacoes', false)}>
           <div style={{ padding: '0 16px 16px' }}>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
             <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: 'var(--text-base)', marginBottom: '8px' }}>
