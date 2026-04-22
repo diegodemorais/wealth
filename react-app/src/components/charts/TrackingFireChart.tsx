@@ -37,27 +37,40 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
     const downsampledP50: number[] = [];
     const downsampledP90: number[] = [];
 
+    // Find which year contains the transition from historical to projected
+    const transitionYear = nHistorico < rawDates.length ? rawDates[nHistorico].slice(0, 4) : null;
+
     let currentYear: string | null = null;
     for (let i = 0; i < rawDates.length; i++) {
       const year = rawDates[i].slice(0, 4);
       if (year !== currentYear) {
         downsampledDates.push(rawDates[i]);
         downsampledRealizado.push(realizadoBrl[i]);
-        downsampledP10.push(trilhaP10[i]);
-        downsampledP50.push(trilhaBrl[i]);
-        downsampledP90.push(trilhaP90[i]);
+        // For transition year, use projected values (at nHistorico) instead of model's historical
+        if (year === transitionYear && i < nHistorico) {
+          downsampledP10.push(trilhaP10[nHistorico]);
+          downsampledP50.push(trilhaBrl[nHistorico]);
+          downsampledP90.push(trilhaP90[nHistorico]);
+        } else {
+          downsampledP10.push(trilhaP10[i]);
+          downsampledP50.push(trilhaBrl[i]);
+          downsampledP90.push(trilhaP90[i]);
+        }
         currentYear = year;
       }
     }
 
     // P10/P90 only for future dates (nulls in historical range)
+    // Transition year (contains both historical and projected) gets the projection value
     const p10Data = downsampledP10.map((v, i) => {
-      const origIdx = rawDates.findIndex(d => d.startsWith(downsampledDates[i].slice(0, 4)));
-      return origIdx >= nHistorico ? v : null;
+      const year = downsampledDates[i].slice(0, 4);
+      const lastIdxOfYear = rawDates.reduce((acc, d, j) => d.startsWith(year) ? j : acc, -1);
+      return lastIdxOfYear >= nHistorico ? v : null;
     });
     const p90Data = downsampledP90.map((v, i) => {
-      const origIdx = rawDates.findIndex(d => d.startsWith(downsampledDates[i].slice(0, 4)));
-      return origIdx >= nHistorico ? v : null;
+      const year = downsampledDates[i].slice(0, 4);
+      const lastIdxOfYear = rawDates.reduce((acc, d, j) => d.startsWith(year) ? j : acc, -1);
+      return lastIdxOfYear >= nHistorico ? v : null;
     });
 
     // Band fill series: floor = P10, gap = P90-P10 (stacked)

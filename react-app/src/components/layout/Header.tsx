@@ -32,6 +32,7 @@ const TABS = [
   { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
   { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
   { href: '/assumptions', label: 'ASSUMPTIONS', id: 'tab-assumptions' },
+  { href: '/discovery', label: 'DISCOVERY', id: 'tab-discovery' },
 ];
 
 export function Header() {
