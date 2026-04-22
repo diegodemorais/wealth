@@ -896,6 +896,23 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
 
   // --- X-axis: monthly dates + post-FIRE years; show label every 5 years for legibility ---
   const allDates = [...dates, ...postFireDates];
+
+  // DEBUG: Log data alignment for troubleshooting
+  if (typeof window !== 'undefined') {
+    console.log('[NetWorthProjection] Data alignment check:', {
+      dates_count: dates.length,
+      postFireDates_count: postFireDates.length,
+      allDates_count: allDates.length,
+      p50Full_count: p50Full.length,
+      p10Aligned_count: p10Aligned.length,
+      p90Aligned_count: p90Aligned.length,
+      fireYear,
+      p50_last_value: p50Full[p50Full.length - 1],
+      p50_value_at_225: p50Full[225],
+      p50_value_at_226: p50Full[226],
+    });
+  }
+
   const xAxisLabels = allDates.map(d => {
     if (d.length === 4) {
       // Post-FIRE annual (2041+) — show every 5 years divisible: 2045, 2050, 2055, ...
