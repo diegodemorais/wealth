@@ -161,8 +161,8 @@ export default function HomePage() {
         />
       </div>
 
-      {/* 3. MACRO UNIFICADO — consolida Contexto de Mercado + Carry + Contexto Macro */}
-      <SectionDivider label="Macro & Mercado" />
+      {/* ── GROUP 1: Ação Imediata ── */}
+      <SectionDivider label="Ação Imediata" />
       <MacroUnificado
         selic={(data as any)?.macro?.selic_meta ?? null}
         ipca12m={(data as any)?.macro?.ipca_12m ?? null}
@@ -189,7 +189,6 @@ export default function HomePage() {
         patrimonioGatilho={d.firePatrimonioGatilho}
       />
 
-      <SectionDivider label="Próximo Aporte" />
       {/* 5. SEÇÃO: Próximo Aporte — Equity & Gatilhos RF */}
       {d && Array.isArray(d.dcaItems) && d.dcaItems.length > 0 && (
         <div style={{ marginBottom: 14 }}>
@@ -200,7 +199,6 @@ export default function HomePage() {
         </div>
       )}
 
-      <SectionDivider label="Progresso FIRE" />
       {/* 6. PFireMonteCarloTornado — reordenado para ANTES de FireProgressWellness */}
       {d && (
         <PFireMonteCarloTornado
@@ -235,9 +233,12 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, OPEN] */}
+      {/* ── GROUP 2: Monitoramento ── */}
+      <SectionDivider label="Monitoramento" />
+
+      {/* 6c. Financial Wellness Score — full width [COLLAPSIBLE, CLOSED] */}
       {data?.wellness_config?.metrics && (
-        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={secOpen('now', 'wellness')} icon={<Trophy size={18} />}>
+        <CollapsibleSection id="section-wellness" title="Financial Wellness Score (indicador secundário)" defaultOpen={false} icon={<Trophy size={18} />}>
           {(() => {
             const wc = data.wellness_config;
             const pfireBaseVal = d.pfireBase;
@@ -417,12 +418,11 @@ export default function HomePage() {
         </CollapsibleSection>
       )}
 
-      <SectionDivider label="Análise Avançada" />
       {/* RF STATUS PANEL — merge de IpcaTaxaProgress + DCA Status + DCAStatusGrid */}
       <CollapsibleSection
         id="section-rf-status"
         title="RF Status — IPCA+ & Renda+ por Instrumento"
-        defaultOpen={secOpen('now', 'rf-status', true)}
+        defaultOpen={false}
         icon={<Target size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>

@@ -344,7 +344,7 @@ function ShadowPortfoliosSection() {
   ] : [];
 
   return (
-    <CollapsibleSection id="backtest-shadows" title={secTitle('backtest', 'shadow', 'Shadow Portfolios — Target vs VWRA')} defaultOpen={secOpen('backtest', 'shadow')}>
+    <CollapsibleSection id="backtest-shadows" title={secTitle('backtest', 'shadow', 'Shadow Portfolios — Target vs VWRA')} defaultOpen={false}>
       {/* Shadow label */}
       <div style={{ padding: '4px 16px 8px', fontSize: 'var(--text-xs)', color: 'var(--muted)', fontStyle: 'italic' }}>
         Shadow = 100% SWRD (benchmark simples sem tilt fatorial)
@@ -479,7 +479,7 @@ function BacktestLongoSection() {
     r7?.cagr_por_decada ?? null;
 
   return (
-    <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={secOpen('backtest', 'longo-prazo', false)}>
+    <CollapsibleSection id="backtest-r7" title={secTitle('backtest', 'longo-prazo', 'Backtest Longo — Regime 7 (1995–2026)')} defaultOpen={false}>
       {/* Metrics grid */}
       {metricCards.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2" style={{ marginBottom: '14px' }}>
@@ -582,7 +582,7 @@ export default function BacktestPage() {
 
   return (
     <div>
-      <SectionDivider label="Backtest Target" />
+      <SectionDivider label="Backtest Principal" />
       {/* 1. Backtest Histórico — Target vs VWRA */}
       <BacktestHistoricoSection />
 
@@ -672,10 +672,10 @@ export default function BacktestPage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Deep Dive" />
       {/* 3. Shadow Portfolios — Tracking */}
       <ShadowPortfoliosSection />
 
-      <SectionDivider label="Análise Histórica Longa" />
       {/* 4. Backtest Longo — Regime 7 (collapsed: análise histórica longa) */}
       <BacktestLongoSection />
 

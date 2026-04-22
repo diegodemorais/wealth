@@ -25,13 +25,13 @@ function formatBrt(iso: string): string {
 }
 
 const TABS = [
-  { href: '/', label: 'NOW', id: 'tab-now' },
   { href: '/fire', label: 'FIRE', id: 'tab-fire' },
+  { href: '/withdraw', label: 'RETIREMENT', id: 'tab-withdraw' },
+  { href: '/', label: 'DASHBOARD', id: 'tab-now' },
   { href: '/portfolio', label: 'PORTFOLIO', id: 'tab-portfolio' },
   { href: '/performance', label: 'PERFORMANCE', id: 'tab-performance' },
-  { href: '/withdraw', label: 'WITHDRAW', id: 'tab-withdraw' },
-  { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
   { href: '/simulators', label: 'SIMULADORES', id: 'tab-simulators' },
+  { href: '/backtest', label: 'BACKTEST', id: 'tab-backtest' },
   { href: '/assumptions', label: 'CHECKLIST', id: 'tab-assumptions' },
 ];
 

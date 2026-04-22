@@ -341,7 +341,6 @@ export default function WithdrawPage() {
 
   return (
     <div>
-      <SectionDivider label="Estratégia de Retirada" />
       {/* Seletor de cenário familiar — afeta SurplusGapChart, SWR e LTC */}
       <div style={{
         display: 'flex',
@@ -379,6 +378,8 @@ export default function WithdrawPage() {
           Gasto base: {privacyMode ? '••••' : `R$${(activeScenarioCfg.custo_vida_base / 1000).toFixed(0)}k/ano`}
         </span>
       </div>
+
+      <SectionDivider label="Posso me aposentar?" />
 
       {/* 0. SWR Dashboard — tabs: Acumulação vs FIRE Day (P10/P50/P90) */}
       <CollapsibleSection id="section-swr-dashboard" title={secTitle('withdraw', 'swr-dashboard', 'SWR Dashboard — Acumulação & FIRE Day')} defaultOpen={secOpen('withdraw', 'swr-dashboard', true)}>
@@ -437,7 +438,6 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      <SectionDivider label="Guardrails" />
       {/* 3. Guardrails de Retirada — FIRE Day (collapsible) */}
       {safeData.guardrails_retirada && (
         <CollapsibleSection id="section-guardrails-table" title={secTitle('withdraw', 'guardrails', 'Regras de Ajuste de Retirada — FIRE Day')} defaultOpen={secOpen('withdraw', 'guardrails')}>
@@ -449,6 +449,8 @@ export default function WithdrawPage() {
           </div>
         </CollapsibleSection>
       )}
+
+      <SectionDivider label="Quanto gastar?" />
 
       {/* 4. Spending Guardrails — P(FIRE) × Custo de Vida (collapsible) */}
       <CollapsibleSection id="section-spending-guardrails" title={secTitle('withdraw', 'spending-guardrails', 'Spending Guardrails — P(FIRE) × Custo de Vida')} defaultOpen={secOpen('withdraw', 'spending-guardrails')}>
@@ -505,10 +507,41 @@ export default function WithdrawPage() {
         </div>
       </CollapsibleSection>
 
-      <SectionDivider label="Bond Strategy" />
+      {/* Spending Breakdown — componente dedicado */}
+      <CollapsibleSection id="section-spending-breakdown-v2" title={secTitle('withdraw', 'spending-breakdown-v2', 'Spending Breakdown — Detalhamento por Categoria')} defaultOpen={secOpen('withdraw', 'spending-breakdown-v2', false)}>
+        <div style={{ padding: '0 16px 16px' }}>
+          <div style={{ marginBottom: 8 }}>
+            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
+          </div>
+          {(() => {
+            // Fonte: spending_summary.json → data.spending_breakdown (via generate_data.py)
+            const sb = (data as any)?.spending_breakdown ?? {};
+            const musthave = sb.must_spend_anual ?? 0;
+            const likes    = sb.like_spend_anual ?? 0;
+            const imprevistos = sb.imprevistos_anual ?? 0;
+            const totalAnual  = sb.total_anual ?? ((musthave + likes + imprevistos) || activeScenarioCfg.custo_vida_base);
+            const monthly = sb.monthly_breakdown ?? undefined;
+            return (
+              <SpendingBreakdown
+                musthave={musthave}
+                likes={likes}
+                imprevistos={imprevistos}
+                totalAnual={totalAnual}
+                monthlyBreakdown={monthly}
+              />
+            );
+          })()}
+          <div className="src">
+            Fonte: CSV All-Accounts → spending_analysis.py → spending_summary.json. Executar script para atualizar.
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      <SectionDivider label="Proteção" />
+
       {/* 4. Bond Strategy — SoRR + Pool Readiness */}
       {bondPoolReadiness && (
-        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={secOpen('withdraw', 'bond-pool')} icon={<Building2 size={18} />}>
+        <CollapsibleSection id="bondPoolSection" title={secTitle('withdraw', 'bond-pool', 'Bond Strategy — SoRR + Pool Readiness')} defaultOpen={false} icon={<Building2 size={18} />}>
           <div style={{ padding: '0 16px 16px' }}>
             <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
             <BondStrategyPanel
@@ -532,7 +565,7 @@ export default function WithdrawPage() {
       <CollapsibleSection
         id="section-sequence-returns"
         title={secTitle('withdraw', 'sequence-returns', 'Sequence of Returns — Heatmap de Risco')}
-        defaultOpen={secOpen('withdraw', 'sequence-returns', false)}
+        defaultOpen={false}
         icon={<Thermometer size={18} />}
       >
         <div style={{ padding: '0 16px 16px' }}>
@@ -555,16 +588,15 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* 5. Fluxo de Caixa Atual — Receitas vs Gastos Hoje */}
-      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={secOpen('withdraw', 'sankey')} icon={<ArrowRightLeft size={18} />}>
+      <CollapsibleSection id="section-sankey" title={secTitle('withdraw', 'sankey', 'Fluxo de Caixa Atual — Receitas vs Gastos (hoje)')} defaultOpen={false} icon={<ArrowRightLeft size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           <CashFlowSankey />
         </div>
       </CollapsibleSection>
 
 
-      <SectionDivider label="Renda na Aposentadoria" />
       {/* 6. Renda na Aposentadoria — Fases Temporais (collapsible) */}
-      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={secOpen('withdraw', 'fases')}>
+      <CollapsibleSection id="section-income-phases" title={secTitle('withdraw', 'fases', 'Renda na Aposentadoria — Fases Temporais')} defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
           {incomeTable && Array.isArray(incomeTable) ? (
             <div style={{ overflowX: 'auto', marginBottom: 12 }}>
@@ -603,7 +635,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* F7 — LTC Sensitivity Test (DEV-boldin-dashboard) */}
-      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={secOpen('withdraw', 'section-ltc-sensitivity')} icon={<Hospital size={18} />}>
+      <CollapsibleSection id="section-ltc-sensitivity" title={secTitle('withdraw', 'section-ltc-sensitivity', 'LTC — Sensibilidade Cuidados de Longo Prazo')} defaultOpen={false} icon={<Hospital size={18} />}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const premissas = data?.premissas ?? {};
@@ -674,7 +706,7 @@ export default function WithdrawPage() {
       </CollapsibleSection>
 
       {/* Bond Ladder — seção unificada: cronograma + estrutura por prazo */}
-      <CollapsibleSection id="section-bond-ladder" title={secTitle('withdraw', 'bond-ladder', 'Bond Ladder — Cronograma & Estrutura de Vencimentos')} defaultOpen={secOpen('withdraw', 'bond-ladder', false)}>
+      <CollapsibleSection id="section-bond-ladder" title={secTitle('withdraw', 'bond-ladder', 'Bond Ladder — Cronograma & Estrutura de Vencimentos')} defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
           {(() => {
             const rf = (data as any)?.rf ?? {};
@@ -813,35 +845,6 @@ export default function WithdrawPage() {
 
       {/* Bond Pool Composition — moved to BondStrategyPanel (Bloco C) */}
 
-      {/* Spending Breakdown — componente dedicado */}
-      <CollapsibleSection id="section-spending-breakdown-v2" title={secTitle('withdraw', 'spending-breakdown-v2', 'Spending Breakdown — Detalhamento por Categoria')} defaultOpen={secOpen('withdraw', 'spending-breakdown-v2', false)}>
-        <div style={{ padding: '0 16px 16px' }}>
-          <div style={{ marginBottom: 8 }}>
-            <ScenarioBadge label={activeScenarioCfg.label} gasto={activeScenarioCfg.custo_vida_base} privacyMode={privacyMode} />
-          </div>
-          {(() => {
-            // Fonte: spending_summary.json → data.spending_breakdown (via generate_data.py)
-            const sb = (data as any)?.spending_breakdown ?? {};
-            const musthave = sb.must_spend_anual ?? 0;
-            const likes    = sb.like_spend_anual ?? 0;
-            const imprevistos = sb.imprevistos_anual ?? 0;
-            const totalAnual  = sb.total_anual ?? ((musthave + likes + imprevistos) || activeScenarioCfg.custo_vida_base);
-            const monthly = sb.monthly_breakdown ?? undefined;
-            return (
-              <SpendingBreakdown
-                musthave={musthave}
-                likes={likes}
-                imprevistos={imprevistos}
-                totalAnual={totalAnual}
-                monthlyBreakdown={monthly}
-              />
-            );
-          })()}
-          <div className="src">
-            Fonte: CSV All-Accounts → spending_analysis.py → spending_summary.json. Executar script para atualizar.
-          </div>
-        </div>
-      </CollapsibleSection>
     </div>
   );
 }

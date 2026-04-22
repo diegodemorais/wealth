@@ -321,7 +321,6 @@ export default function FirePage() {
 
   return (
     <div>
-      <SectionDivider label="Probabilidade FIRE" />
       {/* 0. P(FIRE) Hero Banner */}
       <div style={{
         background: `linear-gradient(135deg, color-mix(in srgb, ${pfireHeroColor} 8%, transparent), color-mix(in srgb, var(--accent) 4%, transparent))`,
@@ -376,7 +375,46 @@ export default function FirePage() {
         </div>
       </div>
 
-      {/* 1. Tracking FIRE — Realizado vs Projeção */}
+      {/* ── Group 1: Readiness ─────────────────────────────────────────────────── */}
+      <SectionDivider label="Readiness" />
+
+      {/* Floor vs Upside — Cobertura por Fase */}
+      <CollapsibleSection
+        id="section-floor-upside-fire"
+        title={secTitle('fire', 'floor-upside-fire', 'Floor vs Upside — Cobertura por Fase')}
+        defaultOpen={secOpen('fire', 'floor-upside-fire', true)}
+        icon={<Building2 size={18} />}
+      >
+        <div style={{ padding: '0 16px 16px' }}>
+          {(() => {
+            const prem = (data as any)?.premissas ?? {};
+            const gastoPiso: number = (data as any)?.gasto_piso ?? 0;
+            const custoVida: number = prem.custo_vida_base ?? 250000;
+            const inssD: number = prem.inss_anual ?? 0;
+            const inssK: number = prem.tem_conjuge ? (prem.inss_katia_anual ?? 0) : 0;
+            const swrGatilho: number = prem.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
+            const patrimonio: number = prem.patrimonio_atual ?? 0;
+            return (
+              <>
+                <div style={{ marginBottom: 8 }}>
+                  <ScenarioBadge label="Solteiro" gasto={custoVida} privacyMode={privacyMode} />
+                </div>
+                <FloorUpsideFire
+                  gastoPiso={gastoPiso}
+                  custoVida={custoVida}
+                  inssD={inssD}
+                  inssK={inssK}
+                  swrGatilho={swrGatilho}
+                  patrimonio={patrimonio}
+                  privacyMode={privacyMode}
+                />
+              </>
+            );
+          })()}
+        </div>
+      </CollapsibleSection>
+
+      {/* Tracking FIRE — Realizado vs Projeção */}
       <section className="section" id="trackingFireSection">
         <h2>Tracking FIRE — Realizado vs Projeção</h2>
         <TrackingFireChart data={safeData} />
@@ -385,7 +423,7 @@ export default function FirePage() {
         </div>
       </section>
 
-      {/* 2. FIRE Aspiracional — 3 cenários base + Aspiracional */}
+      {/* Cenários FIRE — 3 cenários base + Aspiracional */}
       {(data as any)?.fire_matrix?.by_profile?.length > 0 && (() => {
         const prem = (data as any)?.premissas ?? {};
         const aporte     = prem.aporte_mensal ?? 0;
@@ -507,8 +545,10 @@ export default function FirePage() {
         );
       })()}
 
-      <SectionDivider label="Trajetória & Projeção" />
-      {/* 3. Projeção de Patrimônio — P10 / P50 / P90 (moved up: trajetória após horizonte) */}
+      {/* ── Group 2: Projeções ─────────────────────────────────────────────────── */}
+      <SectionDivider label="Projeções" />
+
+      {/* Projeção de Patrimônio — P10 / P50 / P90 */}
       <section className="section" id="netWorthProjectionSection">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, flexWrap: 'wrap', gap: 8 }}>
           <h2 style={{ margin: 0 }}>Projeção de Patrimônio — P10 / P50 / P90 (portfólio financeiro)</h2>
@@ -524,7 +564,7 @@ export default function FirePage() {
         </div>
       </section>
 
-      {/* 4. FIRE Matrix — P(Sucesso até 90a) */}
+      {/* FIRE Matrix — P(Sucesso até 90a) */}
       {safeData.fire_matrix && (
         <CollapsibleSection id="section-fire-matrix" title={secTitle('fire', 'fire-matrix')} defaultOpen={secOpen('fire', 'fire-matrix')}>
           <div style={{ padding: '0 16px 16px' }}>
@@ -548,13 +588,15 @@ export default function FirePage() {
         </CollapsibleSection>
       )}
 
-      <SectionDivider label="Balanço Holístico" />
-      {/* 4b. Balanço Holístico — Patrimônio expandido (collapsed por default) */}
-      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={secOpen('fire', 'balanco-holistico-fire')} icon={<Landmark size={18} />}>
+      {/* ── Group 3: Contexto ──────────────────────────────────────────────────── */}
+      <SectionDivider label="Contexto" />
+
+      {/* Balanço Holístico — Patrimônio expandido */}
+      <CollapsibleSection id="balanco-holistico-fire" title={secTitle('fire', 'balanco-holistico-fire', 'Balanço Holístico')} defaultOpen={false} icon={<Landmark size={18} />}>
         <BalancoHolistico data={data as any} showCapitalHumanoBadge />
       </CollapsibleSection>
 
-      {/* 4b-bis. Capital Humano vs. Financeiro — Crossover */}
+      {/* Capital Humano vs. Financeiro — Crossover */}
       {(() => {
         const hc = (data as any)?.human_capital;
         if (!hc || !hc.pontos?.length) return null;
@@ -562,7 +604,7 @@ export default function FirePage() {
           <CollapsibleSection
             id="section-capital-humano"
             title={secTitle('fire', 'section-capital-humano', 'Capital Humano vs. Financeiro')}
-            defaultOpen={secOpen('fire', 'section-capital-humano', true)}
+            defaultOpen={false}
           >
             <HumanCapitalCrossover
               pontos={hc.pontos}
@@ -577,43 +619,7 @@ export default function FirePage() {
         );
       })()}
 
-      {/* 4c-pre. Floor vs Upside — envolvido em CollapsibleSection */}
-      <CollapsibleSection
-        id="section-floor-upside-fire"
-        title={secTitle('fire', 'floor-upside-fire', 'Floor vs Upside — Cobertura por Fase')}
-        defaultOpen={secOpen('fire', 'floor-upside-fire', true)}
-        icon={<Building2 size={18} />}
-      >
-        <div style={{ padding: '0 16px 16px' }}>
-          {(() => {
-            const prem = (data as any)?.premissas ?? {};
-            const gastoPiso: number = (data as any)?.gasto_piso ?? 0;
-            const custoVida: number = prem.custo_vida_base ?? 250000;
-            const inssD: number = prem.inss_anual ?? 0;
-            const inssK: number = prem.tem_conjuge ? (prem.inss_katia_anual ?? 0) : 0;
-            const swrGatilho: number = prem.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
-            const patrimonio: number = prem.patrimonio_atual ?? 0;
-            return (
-              <>
-                <div style={{ marginBottom: 8 }}>
-                  <ScenarioBadge label="Solteiro" gasto={custoVida} privacyMode={privacyMode} />
-                </div>
-                <FloorUpsideFire
-                  gastoPiso={gastoPiso}
-                  custoVida={custoVida}
-                  inssD={inssD}
-                  inssK={inssK}
-                  swrGatilho={swrGatilho}
-                  patrimonio={patrimonio}
-                  privacyMode={privacyMode}
-                />
-              </>
-            );
-          })()}
-        </div>
-      </CollapsibleSection>
-
-      {/* 4c. Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
+      {/* Surviving Spouse / F6 — só exibir se tem_conjuge === true */}
       {(data as any)?.premissas?.tem_conjuge === true && (
         <>
           <SectionDivider label="Cenários & Risco" />
@@ -682,7 +688,7 @@ export default function FirePage() {
       )}
 
       <SectionDivider label="Eventos de Vida" />
-      {/* 6. Eventos de Vida — collapsed (detalhe de sensibilidade) */}
+      {/* Eventos de Vida — collapsed (detalhe de sensibilidade) */}
       <CollapsibleSection id="section-eventos-vida" title={secTitle('fire', 'eventos-vida')} defaultOpen={secOpen('fire', 'eventos-vida')}>
         <div style={{ padding: '0 16px 16px' }}>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 8 }}>
@@ -695,7 +701,7 @@ export default function FirePage() {
         </div>
       </CollapsibleSection>
 
-      {/* 8. Glide Path — collapsed (mecanismo de execução) */}
+      {/* Glide Path — collapsed (mecanismo de execução) */}
       <CollapsibleSection id="section-glide-path" title={secTitle('fire', 'glide-path')} defaultOpen={secOpen('fire', 'glide-path')}>
         <div style={{ padding: '0 16px 16px' }}>
           <GlidePathChart data={safeData} />

@@ -1704,14 +1704,14 @@ export default function SimulatorsPage() {
 
   return (
     <div>
-      <SectionDivider label="Simulação FIRE" />
+      <SectionDivider label="Simulador FIRE" />
       <div style={{ marginBottom: 8, padding: '8px 12px', background: 'rgba(88,166,255,.06)', border: '1px solid rgba(88,166,255,.2)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
         <strong style={{ color: 'var(--accent)' }}>What-if interativo</strong> com premissas editáveis. Para cenários pré-computados, ver aba <strong>FIRE</strong>.
       </div>
       {/* 1. Simulador FIRE — projeção central com premissas editáveis */}
       <FireSimuladorSection />
 
-      <hr className="section-sep" />
+      <SectionDivider label="What-If Cenários" />
 
       {/* 2. What-If Scenarios — análise de sensibilidade */}
       <WhatIfSection />

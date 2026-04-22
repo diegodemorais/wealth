@@ -256,6 +256,7 @@ export default function PerformancePage() {
         </div>
       </section>
 
+      <SectionDivider label="Histórico" />
       {/* 4. Premissas vs Realizado — 5 Anos (2021-2026) */}
       <section className="section" id="premissasVsRealizadoSection">
         <h2>{secTitle('performance', 'premissas', 'Premissas vs Realizado — 5 Anos (2021-2026)')}</h2>
@@ -266,7 +267,7 @@ export default function PerformancePage() {
       </section>
 
       {/* 6. Rolling 12m — AVGS vs SWRD (collapsible, collapsed) */}
-      <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={secOpen('performance', 'rolling-12m', false)}>
+      <CollapsibleSection id="section-factor-rolling" title={secTitle('performance', 'rolling-12m', 'Rolling 12m — AVGS vs SWRD (retorno relativo)')} defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
           <DeltaBarChart data={safeData} title="AVGS vs SWRD — Retorno Relativo (Rolling 12m)" chartType="factor-rolling" />
           <div className="src">
@@ -276,7 +277,7 @@ export default function PerformancePage() {
       </CollapsibleSection>
 
       {/* 6. Information Ratio vs VWRA (collapsible, collapsed) */}
-      <CollapsibleSection id="section-ir" title={secTitle('performance', 'ir', 'Information Ratio vs VWRA — Desde o Início + Rolling 36m')} defaultOpen={secOpen('performance', 'ir', false)}>
+      <CollapsibleSection id="section-ir" title={secTitle('performance', 'ir', 'Information Ratio vs VWRA — Desde o Início + Rolling 36m')} defaultOpen={false}>
         <div style={{ padding: '0 16px 16px' }}>
           <InformationRatioChart data={safeData} />
           <div className="src" style={{ lineHeight: 1.6 }}>
@@ -289,7 +290,7 @@ export default function PerformancePage() {
 
       <SectionDivider label="Fatores" />
       {/* Expected Return Waterfall — movido para primeiro em Fatores */}
-      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={secOpen('performance', 'factor-waterfall', true)}>
+      <CollapsibleSection id="section-expected-return-waterfall" title={secTitle('performance', 'factor-waterfall', 'Expected Return Waterfall — Decomposição Fatorial FF6')} defaultOpen={false}>
         <ExpectedReturnWaterfall />
       </CollapsibleSection>
 
@@ -297,7 +298,7 @@ export default function PerformancePage() {
       <CollapsibleSection
         id="section-etf-factor"
         title={secTitle('performance', 'etf-factor', 'Exposição Fatorial — ETFs da Carteira')}
-        defaultOpen={secOpen('performance', 'etf-factor', true)}
+        defaultOpen={false}
         icon={<BarChart3 size={18} />}
       >
         <div style={{ padding: '16px' }}>
@@ -535,6 +536,7 @@ export default function PerformancePage() {
       </CollapsibleSection>
 
       <SectionDivider label="Análise Técnica" />
+      {/* NOTE: Rolling Metrics, Fee Analysis, Heatmap all defaultOpen=false (collapsed) */}
       {/* 8. Retornos Mensais — Heatmap (collapsible, collapsed) */}
       <CollapsibleSection id="section-heatmap" title={secTitle('performance', 'heatmap', 'Retornos Mensais — Heatmap')} defaultOpen={secOpen('performance', 'heatmap', false)}>
         <div style={{ padding: '0 16px 16px' }}>

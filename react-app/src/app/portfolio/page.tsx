@@ -110,7 +110,7 @@ export default function PortfolioPage() {
         })()}
       </div>
 
-      <SectionDivider label="Equity Internacional" />
+      <SectionDivider label="Alocação & Drift" />
       {/* 2b. Drift Intra-Equity — SWRD / AVGS / AVEM */}
       {data?.drift && (() => {
         // Threshold constants (mirror dataWiring.ts)
@@ -232,6 +232,7 @@ export default function PortfolioPage() {
         </div>
       </CollapsibleSection>
 
+      <SectionDivider label="Holdings" />
       {/* 5. Posições — ETFs Internacionais (IBKR) — com EtfsPositionsTable como sub-seção */}
       <HoldingsTable />
 
@@ -251,12 +252,12 @@ export default function PortfolioPage() {
       {/* 6. Base de Custo e Alocação — Equity por Bucket (collapsible) */}
       <CustoBaseTable defaultOpen={secOpen('portfolio', 'custo-base')} />
 
-      <SectionDivider label="Análise Avançada" />
+      <SectionDivider label="Tax & Atividade" />
       {/* 7. IR Diferido — Alvo & Transitório + IR Shield (collapsible) */}
       <CollapsibleSection
         id="section-tax-ir"
         title={secTitle('portfolio', 'tax-ir')}
-        defaultOpen={secOpen('portfolio', 'tax-ir')}
+        defaultOpen={false}
         icon={<Landmark size={18} />}
       >
         <div style={{ padding: '16px' }}>
@@ -286,7 +287,7 @@ export default function PortfolioPage() {
         </div>
       </CollapsibleSection>
 
-      <SectionDivider label="Renda Fixa" />
+      <SectionDivider label="Renda Fixa & Cripto" />
       {/* 8. Renda Fixa */}
       <RFCryptoComposition />
 
@@ -295,7 +296,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-brasil-concentration"
           title={secTitle('portfolio', 'brasil-concentration', 'Concentração Brasil — Exposição Soberana & RF')}
-          defaultOpen={secOpen('portfolio', 'brasil-concentration', true)}
+          defaultOpen={false}
           icon={<MapPin size={18} />}
         >
           <div style={{ padding: '16px' }}>
@@ -326,7 +327,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-real-yield"
           title={secTitle('portfolio', 'real-yield', 'Real Yield Gauge — NTN-Bs Líquido de IR')}
-          defaultOpen={secOpen('portfolio', 'real-yield', true)}
+          defaultOpen={false}
           icon={<BarChart3 size={18} />}
         >
           <div style={{ padding: '16px' }}>
@@ -342,7 +343,6 @@ export default function PortfolioPage() {
         </CollapsibleSection>
       )}
 
-      <SectionDivider label="Bitcoin & Crypto" />
       {/* 9a. HODL11 Position Panel — recebido de BACKTEST */}
       {data?.hodl11 && (
         <HODL11PositionPanel hodl11={(data as any).hodl11} />
@@ -353,7 +353,7 @@ export default function PortfolioPage() {
         <CollapsibleSection
           id="section-crypto-band"
           title={secTitle('portfolio', 'crypto-band', 'HODL11 — Banda Criptográfica')}
-          defaultOpen={secOpen('portfolio', 'crypto-band', true)}
+          defaultOpen={false}
           icon={<Bitcoin size={18} />}
         >
           <div style={{ padding: '16px' }}>
@@ -370,7 +370,7 @@ export default function PortfolioPage() {
 
       {/* 9. Últimas Operações */}
       {data?.minilog && Array.isArray(data.minilog) && data.minilog.length > 0 && (
-        <CollapsibleSection id="section-ultimas-operacoes" title="Últimas Operações" defaultOpen={secOpen('portfolio', 'ultimas-operacoes', true)}>
+        <CollapsibleSection id="section-ultimas-operacoes" title="Últimas Operações" defaultOpen={false}>
           <div style={{ padding: '0 16px 16px' }}>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
             <table style={{ width: '100%', minWidth: 440, borderCollapse: 'collapse', fontSize: 'var(--text-base)', marginBottom: '8px' }}>
