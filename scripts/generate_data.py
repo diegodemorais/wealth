@@ -1865,17 +1865,39 @@ def _compute_hodl11_fire_projection(hodl11_brl, btc_atual_usd, btc_cenarios_usd)
 
 # ─── Human Capital Crossover ──────────────────────────────────────────────────
 def _compute_human_capital_crossover(fire_trilha, premissas):
-    """Calcula VP do capital humano por ano e detecta crossover com patrimônio P50."""
-    TAXA_DESCONTO = 0.045   # 4.5% real a.a.
-    CRESC_RENDA = 0.02      # 2% real a.a.
-    renda_anual = premissas.get("renda_estimada", 540000)
-    if isinstance(renda_anual, (int, float)) and renda_anual < 10000:
-        # Likely monthly — convert to annual
-        renda_anual = renda_anual * 12
+    """
+    Calcula VP do capital humano MÊS A MÊS (Boldin-style) com juros compostos.
+
+    Metodologia:
+    - Aporte mensal = renda_estimada (mensal) - custo_vida_base/12
+    - Cada mês cresce com inflação anual (2% real)
+    - Taxa desconto: 6% real a.a. (IPCA+, não equity)
+    - VP acumulado ponto a ponto até FIRE Day
+    """
+    TAXA_DESCONTO_ANUAL = 0.06      # 6% real a.a. (IPCA+, custo de oportunidade)
+    INFLACAO_ANUAL = 0.02            # 2% real a.a.
+
+    # Taxa mensal (composição)
+    taxa_mensal = (1 + TAXA_DESCONTO_ANUAL) ** (1/12) - 1  # ≈ 0.4868%
+    inflacao_mensal = (1 + INFLACAO_ANUAL) ** (1/12) - 1   # ≈ 0.1654%
+
+    # Parâmetros
+    renda_mensal = premissas.get("renda_estimada", 45000)
+    # Se < 10k, assume mensal já; se >= 10k, assume mensal
+    if isinstance(renda_mensal, (int, float)) and renda_mensal < 10000:
+        renda_mensal = renda_mensal  # já é mensal
+
+    custo_vida_anual = premissas.get("custo_vida_base", 250000)
+    custo_vida_mensal = custo_vida_anual / 12
+
+    # Aporte mensal = diferença (ambas indexadas a inflação)
+    aporte_mensal = renda_mensal - custo_vida_mensal
+
     idade_atual = premissas.get("idade_atual", 39)
     ano_atual = premissas.get("ano_atual", 2026)
     idade_fire = premissas.get("idade_cenario_base", 53)
 
+    # Patrimônio por data (para comparação)
     datas = (fire_trilha or {}).get("dates", [])
     valores = (fire_trilha or {}).get("trilha_brl", [])
     by_date = {d: v for d, v in zip(datas, valores) if v is not None}
@@ -1883,44 +1905,55 @@ def _compute_human_capital_crossover(fire_trilha, premissas):
     pontos = []
     crossover_entry = None
 
-    for offset in range(idade_fire - idade_atual + 1):
-        ano = ano_atual + offset
-        idade = idade_atual + offset
-        n = max(0, idade_fire - idade)
+    # Pre-calcular todos os aportes futuros (mês a mês)
+    aportes_futuros = []
+    for mes_global in range(1, 169):  # 14 anos * 12
+        aporte_t = aporte_mensal * ((1 + inflacao_mensal) ** (mes_global - 1))
+        vp_aporte_t = aporte_t / ((1 + taxa_mensal) ** mes_global)
+        aportes_futuros.append(vp_aporte_t)
 
-        r, g = TAXA_DESCONTO, CRESC_RENDA
-        if n == 0:
-            vp_hc = 0.0
-        elif abs(r - g) < 1e-9:
-            vp_hc = renda_anual * n
-        else:
-            vp_hc = renda_anual * (1 - ((1 + g) / (1 + r)) ** n) / (r - g)
+    # Para cada ano, calcular VP dos aportes RESTANTES (não acumulados)
+    for offset_anos in range(idade_fire - idade_atual + 1):
+        ano = ano_atual + offset_anos
+        idade = idade_atual + offset_anos
 
+        # Quantos meses já passaram desde 2026?
+        meses_passados = offset_anos * 12
+
+        # VP dos aportes restantes (de agora em diante, neste ano, até 2040)
+        vp_restante = sum(aportes_futuros[meses_passados:])
+
+        # Patrimônio neste ano
         pat = None
-        for mes in ["12", "11", "10"]:
-            pat = by_date.get(f"{ano}-{mes}")
+        for mes_str in ["12", "11", "10"]:
+            pat = by_date.get(f"{ano}-{mes_str}")
             if pat is not None:
                 break
         if pat is None:
             pat = 0.0
 
-        crossed = pat >= vp_hc
+        crossed = pat >= vp_restante
         entry = {
             "ano": ano,
             "idade": idade,
-            "vp_capital_humano": round(vp_hc),
+            "vp_capital_humano": round(vp_restante),
             "pat_financeiro": round(pat),
             "crossover": crossed,
-            "delta": round(pat - vp_hc),
+            "delta": round(pat - vp_restante),
         }
         pontos.append(entry)
         if crossed and crossover_entry is None:
             crossover_entry = entry
 
+    renda_anual = renda_mensal * 12
+
     return {
-        "taxa_desconto_real": TAXA_DESCONTO,
-        "crescimento_renda": CRESC_RENDA,
+        "taxa_desconto_real": TAXA_DESCONTO_ANUAL,
+        "crescimento_renda": INFLACAO_ANUAL,
         "renda_estimada_anual": renda_anual,
+        "aporte_mensal": round(aporte_mensal),
+        "aporte_anual": round(aporte_mensal * 12),
+        "custo_vida_mensal": round(custo_vida_mensal),
         "crossover_ano": crossover_entry["ano"] if crossover_entry else None,
         "crossover_idade": crossover_entry["idade"] if crossover_entry else None,
         "fire_day_ano": ano_atual + (idade_fire - idade_atual),
