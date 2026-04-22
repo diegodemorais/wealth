@@ -132,7 +132,7 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
       </div>
 
       {/* Legend cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 'var(--space-3)' }}>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {assets.map(asset => (
           <div
             key={asset.label}

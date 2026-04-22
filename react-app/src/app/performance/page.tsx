@@ -500,7 +500,7 @@ export default function PerformancePage() {
             return (
               <div style={{ fontSize: 'var(--text-sm)', background: 'var(--card2)', borderRadius: 'var(--radius-md)', padding: '10px' }}>
                 {/* Top-level scalars */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px', marginBottom: '8px' }}>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-2">
                   {Object.entries(ff5)
                     .filter(([, v]) => typeof v === 'number')
                     .map(([k, v]: [string, any]) => (
@@ -514,7 +514,7 @@ export default function PerformancePage() {
                 {ff5.betas && (
                   <div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px' }}>Betas</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '6px' }}>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-1.5">
                       {Object.entries(ff5.betas).map(([k, v]: [string, any]) => (
                         <div key={k} style={{ textAlign: 'center', padding: '5px', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}>
                           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>{k}</div>

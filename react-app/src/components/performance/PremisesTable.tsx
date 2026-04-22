@@ -61,7 +61,7 @@ export function PremisesTable() {
   return (
     <div>
       {/* 2-card row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px', marginBottom: '14px' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
 
         {/* Card 1: Retorno Equity */}
         <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', padding: '14px' }}>
@@ -135,7 +135,7 @@ export function PremisesTable() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: '8px' }}>
             Aportes por Ano
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '8px' }}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
             {aporteData.map(({ year, total, media, isCurrentYear, mesesYtd }) => (
               <div key={year} style={{
                 background: 'var(--bg)',

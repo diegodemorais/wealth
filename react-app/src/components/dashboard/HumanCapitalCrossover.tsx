@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { useUiStore } from '@/store/uiStore';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
 
@@ -44,7 +44,7 @@ export function HumanCapitalCrossover({
   taxaDesconto,
   rendaAnual,
 }: HumanCapitalCrossoverProps) {
-  const { privacyMode } = useUiStore();
+  const { privacyMode } = useEChartsPrivacy();
   const [tableOpen, setTableOpen] = useState(false);
 
   const anoAtual = pontos[0]?.ano ?? new Date().getFullYear();
@@ -119,20 +119,17 @@ export function HumanCapitalCrossover({
       backgroundColor: 'rgba(15,23,42,0.95)',
       borderColor: 'rgba(255,255,255,0.1)',
       textStyle: { color: '#f1f5f9', fontSize: 11 },
-      formatter: (params: unknown) => {
+      formatter: privacyMode ? () => '••••' : (params: unknown) => {
         const arr = params as Array<{ dataIndex: number; seriesName: string; value: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
         const p = pontosValidos[idx];
         if (!p) return '';
-        const capHum = privacyMode ? '••••' : fmtBrlMillions(p.vp_capital_humano);
-        const pat = privacyMode ? '••••' : fmtBrlMillions(p.pat_financeiro);
-        const delta = privacyMode ? '••••' : `${p.delta >= 0 ? '+' : ''}${fmtBrlMillions(p.delta)}`;
         return `<div style="font-size:11px">
           <div style="margin-bottom:4px;font-weight:600">${p.ano} · ${p.idade} anos</div>
-          <div>Capital Humano: ${capHum}</div>
-          <div>Financeiro: ${pat}</div>
-          <div>Delta: ${delta}</div>
+          <div>Capital Humano: ${fmtBrlMillions(p.vp_capital_humano)}</div>
+          <div>Financeiro: ${fmtBrlMillions(p.pat_financeiro)}</div>
+          <div>Delta: ${p.delta >= 0 ? '+' : ''}${fmtBrlMillions(p.delta)}</div>
         </div>`;
       },
     },
@@ -158,6 +155,7 @@ export function HumanCapitalCrossover({
       },
     ],
     legend: {
+      show: !privacyMode,
       top: 2,
       right: 0,
       textStyle: { color: EC.muted, fontSize: 10 },

@@ -141,7 +141,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
       </div>
 
       {/* Legend */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'var(--space-3)', marginTop: '12px' }}>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mt-3">
         {[
           { label: 'Alvo Status', value: 'Permanent holding', color: 'var(--green)' },
           { label: 'Transição Status', value: 'Being rebalanced', color: 'var(--yellow)' },

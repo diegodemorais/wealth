@@ -97,7 +97,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
           <EChart ref={chartRef} option={option} style={{ height: 300, width: '100%' }} />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 'var(--space-3)' }}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Max Drawdown</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--red)' }}>

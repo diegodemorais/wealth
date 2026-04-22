@@ -160,7 +160,7 @@ export function RFCryptoComposition() {
           <span style={styles.totalLabel}>RF + Crypto Total</span>
           <span style={styles.totalValue}>{formatCurrency(totalDerivatives)}</span>
         </div>
-        <div style={styles.percentages}>
+        <div className="grid grid-cols-2 gap-3" style={styles.percentages}>
           <div style={styles.percentItem}>
             <span>Fixed Income</span>
             <span style={styles.percentValue}>
@@ -253,9 +253,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: 'var(--green)',
   },
   percentages: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 'var(--space-3)',
   },
   percentItem: {
     display: 'flex',

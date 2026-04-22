@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { EChart } from '@/components/primitives/EChart';
-import { useUiStore } from '@/store/uiStore';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EC } from '@/utils/echarts-theme';
 
 // ---------------------------------------------------------------------------
@@ -176,14 +176,14 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
       borderColor: '#334155',
       borderWidth: 1,
       textStyle: { color: '#f1f5f9', fontSize: 11 },
-      formatter: (params: unknown) => {
+      formatter: privacyMode ? () => '••••' : (params: unknown) => {
         const arr = params as Array<{ dataIndex: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
         const s = series[idx];
         if (!s) return '';
-        const priceStr = privacyMode ? '$••••' : `$${s.price_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-        const maStr = privacyMode ? '$••••' : `$${s.ma200w_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+        const priceStr = `$${s.price_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+        const maStr = `$${s.ma200w_usd.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
         const pctDiff = ((s.price_usd / s.ma200w_usd - 1) * 100).toFixed(1);
         const sign = parseFloat(pctDiff) >= 0 ? '+' : '';
         return `<div style="font-size:11px;line-height:1.6;min-width:170px">
@@ -195,6 +195,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
       },
     },
     legend: {
+      show: !privacyMode,
       top: 4, right: 0,
       textStyle: { color: EC.muted, fontSize: 11 },
       icon: 'roundRect',
@@ -279,7 +280,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
       backgroundColor: 'rgba(15,23,42,0.95)',
       borderColor: '#334155',
       textStyle: { color: '#f1f5f9', fontSize: 11 },
-      formatter: (params: unknown) => {
+      formatter: privacyMode ? () => '••••' : (params: unknown) => {
         const arr = params as Array<{ dataIndex: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
@@ -291,10 +292,10 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
         else if (s.zscore < thr.caution) zone = 'Neutro';
         else if (s.zscore < thr.overheated) zone = 'Sobreaquecido';
         else zone = 'Topo';
-        const mcStr = (s.market_cap_usd && !privacyMode)
+        const mcStr = s.market_cap_usd
           ? `<div>Market Cap: ${fmtUsd(s.market_cap_usd, false)}</div>`
           : '';
-        const rcStr = (s.realized_cap_usd && !privacyMode)
+        const rcStr = s.realized_cap_usd
           ? `<div>Realized Cap: ${fmtUsd(s.realized_cap_usd, false)}</div>`
           : '';
         return `
@@ -360,6 +361,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
       },
     ],
     legend: {
+      show: !privacyMode,
       top: 4,
       right: 0,
       textStyle: { color: EC.muted, fontSize: 10 },
@@ -383,7 +385,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
 // ---------------------------------------------------------------------------
 
 export function BtcIndicatorsChart({ ma200w, mvrvZscore }: BtcIndicatorsChartProps) {
-  const { privacyMode } = useUiStore();
+  const { privacyMode } = useEChartsPrivacy();
   const [activeTab, setActiveTab] = useState<'200wma' | 'mvrv'>('200wma');
 
   const zStyle = zoneStyle(ma200w.zone);

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
-import { useUiStore } from '@/store/uiStore';
+import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 
 interface RollingMetricsChartProps {
   dates: string[];
@@ -17,7 +17,7 @@ type Metric = 'sharpe' | 'sortino' | 'volatilidade';
 const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
   dates, sharpeBRL, sharpeUSD, sortino, volatilidade,
 }) => {
-  const { privacyMode } = useUiStore();
+  const { privacyMode } = useEChartsPrivacy();
   const [activeMetric, setActiveMetric] = React.useState<Metric>('sharpe');
 
   // Thin dates to at most 36 points for legibility
@@ -63,7 +63,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       borderColor: '#334155',
       borderWidth: 1,
       textStyle: { color: '#94a3b8', fontSize: 12 },
-      formatter: (params: any[]) => {
+      formatter: privacyMode ? () => '••••' : (params: any[]) => {
         const date = params[0].axisValue;
         const lines = params.map((p: any) => {
           const val = p.value == null ? '—' : p.value.toFixed(2) + cfg.suffix;
@@ -76,6 +76,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       },
     },
     legend: {
+      show: !privacyMode,
       top: 0,
       itemWidth: 12, itemHeight: 2,
       textStyle: { color: '#64748b', fontSize: 11 },
@@ -102,7 +103,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       type: 'value',
       min: cfg.yMin, max: cfg.yMax,
       axisLabel: {
-        color: '#64748b', fontSize: 11,
+        color: privacyMode ? 'transparent' : '#64748b', fontSize: 11,
         formatter: (v: number) => v.toFixed(1) + cfg.suffix,
       },
       splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
