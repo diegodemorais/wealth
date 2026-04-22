@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
@@ -49,6 +49,16 @@ export function HumanCapitalCrossover({
 
   const anoAtual = pontos[0]?.ano ?? new Date().getFullYear();
 
+  // Filter out zero-valued points after FIRE Day (don't render retirement phase)
+  const pontosValidos = useMemo(() => {
+    return pontos.filter((p) => {
+      // Keep all points up to and including crossover year (if exists)
+      if (crossoverAno && p.ano <= crossoverAno) return true;
+      // After crossover, only keep if values are still non-zero (pre-retirement)
+      return p.vp_capital_humano > 0 || p.pat_financeiro > 0;
+    });
+  }, [pontos, crossoverAno]);
+
   // KPI colors
   const crossoverColor = (() => {
     if (!crossoverAno) return 'var(--muted)';
@@ -62,10 +72,10 @@ export function HumanCapitalCrossover({
   const vpHoje = pontos[0]?.vp_capital_humano ?? 0;
   const patHoje = pontos[0]?.pat_financeiro ?? 0;
 
-  // ECharts option
-  const anos = pontos.map((p) => p.ano);
-  const hcValues = pontos.map((p) => p.vp_capital_humano);
-  const patValues = pontos.map((p) => p.pat_financeiro);
+  // ECharts option — use filtered points
+  const anos = pontosValidos.map((p) => p.ano);
+  const hcValues = pontosValidos.map((p) => p.vp_capital_humano);
+  const patValues = pontosValidos.map((p) => p.pat_financeiro);
 
   const markLines: object[] = [];
   if (crossoverAno) {
@@ -113,7 +123,7 @@ export function HumanCapitalCrossover({
         const arr = params as Array<{ dataIndex: number; seriesName: string; value: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
-        const p = pontos[idx];
+        const p = pontosValidos[idx];
         if (!p) return '';
         const capHum = privacyMode ? '••••' : fmtBrlMillions(p.vp_capital_humano);
         const pat = privacyMode ? '••••' : fmtBrlMillions(p.pat_financeiro);
@@ -157,11 +167,11 @@ export function HumanCapitalCrossover({
     },
   };
 
-  // Anchor rows for mini-table
-  const anchors = pontos.filter((p) =>
+  // Anchor rows for mini-table (use validated points)
+  const anchors = pontosValidos.filter((p) =>
     p.ano === anoAtual ||
-    p.ano === crossoverAno ||
-    p.ano === fireDayAno
+    (crossoverAno && p.ano === crossoverAno) ||
+    (p.ano === fireDayAno && p.vp_capital_humano > 0) // Only show FIRE Day if still has value
   );
 
   // Dynamic text
