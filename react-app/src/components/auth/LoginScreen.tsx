@@ -2,6 +2,17 @@
 
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
+
+function fmtBrt(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
+      day: '2-digit', month: '2-digit', year: '2-digit',
+      hour: '2-digit', minute: '2-digit',
+    }) + ' BRT';
+  } catch { return iso; }
+}
 
 export function LoginScreen() {
   const [password, setPassword] = useState('');
@@ -75,10 +86,10 @@ export function LoginScreen() {
             </button>
           </form>
 
-          {/* Footer Info */}
+          {/* Version Info */}
           <div className="mt-6 pt-6 border-t border-slate-700">
-            <div className="text-xs text-muted text-center">
-              Dashboard protegido por senha. Token válido por 7 dias.
+            <div className="text-xs text-muted text-center" style={{ fontFamily: 'monospace' }}>
+              v{DASHBOARD_VERSION} · {fmtBrt(BUILD_DATE)}
             </div>
           </div>
         </div>
