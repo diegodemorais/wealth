@@ -31,7 +31,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 |----|--------|------|------------|
 | XX-mc-stress-cenarios | Stress Scenarios MC — IPCA 5% + Câmbio BRL -3.5%/ano | FIRE+Quant | 🔴 Alta |
 | DEV-fire-dashboard-gaps | Dashboard FIRE — 3 Gaps visuais (bond pool gauge, gatilho line, IR latente) | Dev | 🟡 Média |
-| DEV-assumptions-redesign | Redesenhar aba Assumptions — 3 blocos (Onde estou / O que combinamos / O que falta decidir) | Dev | 🟡 Média |
 | TX-tlh-engine-lote | TLH Engine por lote — ativa em drawdown >15% | Tax | 🟡 Contingente |
 | TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF | Tax | 🟢 Baixa (2035+) |
 | FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟢 Baixa (2027+) |
@@ -46,6 +45,7 @@ _(nenhuma no momento)_
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-assumptions-redesign | Dev | 2026-04-22 | Checklist redesenhada: 4 CollapsibleSections (Decisões & Ações, Onde Estou, Alocação & Regras, Modelo & Referência). Progressive disclosure. |
 | DEV-schema-sync | Dev | 2026-04-22 | config.ts + spec.json sincronizados. Header importa TABS do config. secOpen()/secTitle() em todas as 8 pages. |
 | DEV-tab-reorganization | Dev | 2026-04-22 | 8 abas reestruturadas com SectionDividers e CollapsibleSections. |
 | DEV-claudemd-compliance | Dev | 2026-04-22 | 3/6 violações corrigidas. CLAUDE.md com diretrizes formais. |
