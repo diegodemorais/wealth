@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useUiStore } from '@/store/uiStore';
 import { useAuthStore } from '@/store/authStore';
 import { DASHBOARD_VERSION, BUILD_DATE } from '@/config/version';
+import { RefreshCw, Eye, EyeOff, LogOut } from 'lucide-react';
 
 // Format ISO UTC timestamp → "DD/MM/AA HH:mm BRT"
 function formatBrt(iso: string): string {
@@ -63,29 +64,29 @@ export function Header() {
 
         {/* Controls — always visible, next to logo on mobile */}
         <div className="header-controls">
-          <button onClick={handleReload} title="Reload data" style={styles.button} aria-label="Reload">
-            🔄
+          <button onClick={handleReload} title="Reload data" style={styles.iconButton} aria-label="Reload">
+            <RefreshCw size={15} />
           </button>
 
           <button
             onClick={togglePrivacy}
             title={privacyMode ? 'Show values' : 'Hide values'}
-            style={{ ...styles.button, backgroundColor: privacyMode ? 'var(--red)' : 'var(--border)' }}
+            style={{ ...styles.iconButton, backgroundColor: privacyMode ? 'var(--red)' : 'var(--border)' }}
             data-test="privacy-toggle"
             aria-label="Privacy mode"
             suppressHydrationWarning
           >
-            {privacyMode ? '🔒' : '👁️'}
+            {privacyMode ? <EyeOff size={15} /> : <Eye size={15} />}
           </button>
 
           <button
             onClick={handleLogout}
             title="Logout"
-            style={styles.button}
+            style={styles.iconButton}
             aria-label="Logout"
             data-test="logout-button"
           >
-            🚪
+            <LogOut size={15} />
           </button>
         </div>
 
@@ -155,14 +156,16 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
     fontWeight: '700',
   },
-  button: {
-    padding: '6px 10px',
+  iconButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '7px',
     backgroundColor: 'var(--border)',
     color: 'var(--text)',
     border: 'none',
     borderRadius: '6px',
     cursor: 'pointer',
-    fontSize: 'var(--text-sm)',
     transition: 'background-color 0.2s',
   },
 };
