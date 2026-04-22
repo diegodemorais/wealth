@@ -41,6 +41,7 @@ jobs:
         env:
           NEXT_PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
           NEXT_PUBLIC_BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at || '' }}
+          NEXT_PUBLIC_AUTH_HASH: ${{ secrets.NEXT_PUBLIC_AUTH_HASH }}
         run: |
           cd react-app
           npm run build:no-test
