@@ -38,13 +38,14 @@ _(nenhuma no momento)_
 |----|--------|------|------------|
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| DEV-drawdown-extended | Drawdown chart 21+ anos com VWRA/proxies + seletores | Dev | 🟡 Média |
+_(nenhuma no momento)_
 
 ### Done (últimas 20)
 > Issues concluídas
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| DEV-drawdown-extended | Dev | 2026-04-23 | Drawdown 4 períodos (7a/21a/31a) com seletores. Target vs VWRA. Max DD -53% (GFC). Quant validou fórmula + resultados. |
 | FR-healthcare-recalibracao | FIRE | 2026-04-23 | SAUDE_BASE R$18k→R$24k, VCMH 2.7%→5.0%. P(FIRE) 91.0%→86.4% base. Pesquisa web SP + 4 modelos externos. Custos reais: plano R$1.3-2k/mês, VCMH real 7-10%. |
 | HD-multi-llm-validation | Head | 2026-04-22 | 4 modelos externos contestaram 5 decisões. 4/5 validadas. Healthcare unanimemente subestimado → FR-healthcare-recalibracao. |
 | HD-ai-investing-research | Head | 2026-04-22 | 2 rodadas, 9 agentes, 30+ fontes. Factor premiums robustos a IA. 5 ferramentas instaladas. 5 protocolos anti-sycophancy (D8-D12). |

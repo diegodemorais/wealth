@@ -3,7 +3,8 @@
 | ID | DEV-drawdown-extended |
 | Título | Drawdown chart estendido — 21+ anos com VWRA/proxies e seletores de período |
 | Dono | Dev |
-| Status | 🔴 Doing |
+| Status | ✅ Done |
+| Concluída | 2026-04-23 |
 | Prioridade | 🟡 Média |
 | Criada | 2026-04-23 |
 | Participantes | Dev (lead), Quant (validação) |
