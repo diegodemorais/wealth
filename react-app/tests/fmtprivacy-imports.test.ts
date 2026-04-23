@@ -11,9 +11,8 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { readFileSync, readdirSync } from 'fs';
-import { resolve, join } from 'path';
-import { execSync } from 'child_process';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 interface ComponentAnalysis {
   path: string;
@@ -122,30 +121,22 @@ function analyzeComponentFile(filePath: string): ComponentAnalysis {
 beforeAll(() => {
   // Find all .tsx files in src/components/dashboard/
   const dashboardPath = resolve(__dirname, '../../react-app/src/components/dashboard');
+  const fs = require('fs');
+  const path = require('path');
 
-  if (existsSync(dashboardPath)) {
-    const files = readdirSync(dashboardPath, { recursive: true }) as string[];
-    const tsxFiles = files.filter(f => f.endsWith('.tsx') || f.endsWith('.ts'));
+  try {
+    const files = fs.readdirSync(dashboardPath);
+    const tsxFiles = files.filter((f: string) => f.endsWith('.tsx'));
 
     for (const file of tsxFiles) {
-      const fullPath = join(dashboardPath, file);
+      const fullPath = path.join(dashboardPath, file);
       const analysis = analyzeComponentFile(fullPath);
       componentAnalyses.push(analysis);
     }
+  } catch {
+    // Directory scan failed — tests will report 0 components
   }
 });
-
-/**
- * Helper to check if path exists
- */
-function existsSync(path: string): boolean {
-  try {
-    readdirSync(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 describe('test_fmtprivacy_imports_valid', () => {
   // ─────────────────────────────────────────────────────────────

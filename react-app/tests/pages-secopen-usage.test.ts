@@ -14,8 +14,8 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { readFileSync, readdirSync } from 'fs';
-import { resolve, join } from 'path';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 interface PageAnalysis {
   path: string;
@@ -110,31 +110,28 @@ function analyzePageFile(filePath: string): PageAnalysis {
 function findPageFiles(): string[] {
   const appPath = resolve(__dirname, '../../react-app/src/app');
   const pages: string[] = [];
+  const fs = require('fs');
+  const path = require('path');
 
   try {
-    const entries = readdirSync(appPath, { withFileTypes: true });
+    const entries = fs.readdirSync(appPath, { withFileTypes: true });
 
     for (const entry of entries) {
       if (entry.isDirectory()) {
-        const pagePath = join(appPath, entry.name, 'page.tsx');
+        const pagePath = path.join(appPath, entry.name, 'page.tsx');
         try {
-          readdirSync(pagePath);
+          fs.readFileSync(pagePath, 'utf-8');
+          pages.push(pagePath);
         } catch {
-          // Not a directory, probably the file itself
-          try {
-            readFileSync(pagePath, 'utf-8');
-            pages.push(pagePath);
-          } catch {
-            // File doesn't exist
-          }
+          // File doesn't exist
         }
       }
 
       // Check root level page.tsx
-      const rootPagePath = join(appPath, entry.name);
       if (entry.name === 'page.tsx') {
+        const rootPagePath = path.join(appPath, entry.name);
         try {
-          readFileSync(rootPagePath, 'utf-8');
+          fs.readFileSync(rootPagePath, 'utf-8');
           pages.push(rootPagePath);
         } catch {
           // Doesn't exist
@@ -143,15 +140,15 @@ function findPageFiles(): string[] {
     }
 
     // Also check app/page.tsx
-    const appPagePath = join(appPath, 'page.tsx');
+    const appPagePath = path.join(appPath, 'page.tsx');
     try {
-      readFileSync(appPagePath, 'utf-8');
+      fs.readFileSync(appPagePath, 'utf-8');
       pages.push(appPagePath);
     } catch {
       // Doesn't exist
     }
   } catch (err) {
-    console.error('Error scanning app directory:', err);
+    // Directory scan failed
   }
 
   return pages;

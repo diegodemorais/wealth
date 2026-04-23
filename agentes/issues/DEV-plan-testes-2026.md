@@ -3,7 +3,7 @@
 | **ID** | DEV-plan-testes-2026 |
 | **Título** | Plano de Testes Executável — 10 testes críticos em 4 fases |
 | **Dono** | Dev |
-| **Status** | 🟢 Phase 2 completa (7/10 testes) ✅ |
+| **Status** | 🟡 Phase 3 completa (10/10 testes) ✅ |
 | **Prioridade** | 🔴 Alta |
 | **Criado em** | 2026-04-23 |
 | **Tipo** | Implementação |
@@ -38,9 +38,9 @@ Implementar 10 testes críticos em 4 fases:
 - [x] `test_config_export_completeness` (1.5h) — novo campo em config chega em data.json ✅
 
 ### Fase 3: Components & Charts (Semana 3, 8h)
-- [ ] `test_chart_hidden_tab_render` (2h) — gráficos em display:none (offsetWidth=0)
-- [ ] `test_fmtprivacy_imports_valid` (1h) — 44 componentes com import correto
-- [ ] `test_pages_use_secopen` (1.5h) — pages não bypassam secOpen()
+- [x] `test_chart_hidden_tab_render` (2h) — gráficos em display:none (offsetWidth=0) ✅
+- [x] `test_fmtprivacy_imports_valid` (1h) — 44 componentes com import correto ✅
+- [x] `test_pages_use_secopen` (1.5h) — pages não bypassam secOpen() ✅
 
 ### Fase 4: Cleanup & CI (Semana 4, 6h)
 - [ ] Remover TypeScript "known-error" filters (2h)
