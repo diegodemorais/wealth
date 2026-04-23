@@ -29,6 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+| FR-healthcare-recalibracao | Recalibrar SAUDE_BASE R$18k→R$35k + VCMH 4% + ANS brackets | FIRE | 🔴 Alta |
 
 ### Doing
 > Issues em andamento
