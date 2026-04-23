@@ -92,8 +92,44 @@ git commit --no-verify
 
 No `@ts-expect-error` or `@ts-ignore` pragmas allowed unless documented with issue link. Type errors must be fixed, not suppressed.
 
+## Deployment Workflow
+
+### Auto-Deploy (Minor Versions)
+
+Every implementation that passes tests automatically:
+1. Increments **minor version** (e.g., 1.0.0 → 1.1.0)
+2. Commits version bump
+3. Deploys to GitHub Pages
+
+**Trigger:** Push to main branch
+**Blocker:** If tests fail, no deploy
+
+### Manual Major Release (User Triggered)
+
+Only you can create major versions:
+1. Go to GitHub → Actions → "Manual Major Release"
+2. Click "Run workflow"
+3. Runs full validation (all 194 tests + build + Lighthouse)
+4. Bumps **major version** (e.g., 1.0.0 → 2.0.0)
+5. Creates GitHub release tag
+6. Deploys to GitHub Pages
+
+**Trigger:** Manual (workflow_dispatch)
+**Blocker:** Full validation must pass
+
+### Local Build Requirements
+
+Before pushing to main:
+```bash
+npm run test:pre-commit  # Must pass (158 tests)
+npm run build            # Must succeed (React + TypeScript validation)
+```
+
+If either fails → commit blocked by pre-commit hook → no deployment.
+
 ## References
 
 - **Test Plan:** `agentes/issues/DEV-plan-testes-2026.md`
 - **Audit Report:** `agentes/referencia/plano-testes-auditoria-real.md`
 - **Full Spec:** `agentes/referencia/plano-testes-executavel.md`
+- **Testing Guide:** `TESTING.md`
