@@ -109,7 +109,7 @@ export default function PerformancePage() {
                 {cards.map(c => (
                   <div key={c.label} style={{ background: 'var(--bg)', borderRadius: 6, padding: '10px 12px', textAlign: 'center', border: '1px solid var(--border)' }}>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: 2 }}>{c.label}</div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{privacyMode ? '••••' : fmtR(c.value)}</div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 700, color: c.color }}>{fmtPrivacy(c.value, privacyMode)}</div>
                   </div>
                 ))}
               </div>

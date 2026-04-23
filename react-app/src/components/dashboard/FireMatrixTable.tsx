@@ -140,7 +140,7 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
                   className="px-2 py-2 text-center font-semibold text-muted-foreground bg-secondary/50 uppercase text-xs h-auto"
                   style={{ minWidth: 44 }}
                 >
-                  {privacyMode ? '••••' : fmtCompact(g)}
+                  {fmtPrivacy(g, privacyMode)}
                 </TableHead>
               ))}
             </TableRow>
@@ -154,7 +154,7 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
                   </TableCell>
                 )}
                 <TableCell className={`py-2 text-center font-semibold text-foreground ${patIdx % 2 === 0 ? 'bg-transparent' : 'bg-secondary/20'}`} style={{ width: 56, padding: '6px 8px' }}>
-                  {privacyMode ? '••••' : fmtCompact(pat)}
+                  {fmtPrivacy(pat, privacyMode)}
                 </TableCell>
                 {gastos.map((gasto, gastoIdx) => {
                   const pfire = getPfire(pat, gasto);

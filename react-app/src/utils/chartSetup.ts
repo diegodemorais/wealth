@@ -11,6 +11,7 @@
 
 import { DashboardData } from '@/types/dashboard';
 import { EC } from '@/utils/echarts-theme';
+import { fmtPrivacy, pvMoney } from '@/utils/privacyTransform';
 export { EC };
 
 /** @deprecated Use EC from '@/utils/echarts-theme' instead */
@@ -71,7 +72,7 @@ export function createAttributionChartOption(options: BaseChartOptions) {
     return `R$${v}`;
   };
   const fmtTip = (v: number) => {
-    if (privacyMode) return '••••';
+    if (privacyMode) return fmtPrivacy(v, true);
     const abs = Math.abs(v);
     const sign = v < 0 ? '−R$' : 'R$';
     if (abs >= 1e6) return `${sign}${(abs / 1e6).toFixed(2)}M`;
@@ -116,7 +117,7 @@ export function createAttributionChartOption(options: BaseChartOptions) {
       data: xData,
       axisLine: { lineStyle: { color: '#30363d' } },
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#8b949e',
+        color: '#8b949e',
         fontSize: 10,
         interval,
       },
@@ -124,9 +125,9 @@ export function createAttributionChartOption(options: BaseChartOptions) {
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : '#8b949e',
+        color: '#8b949e',
         fontSize: 10,
-        formatter: privacyMode ? () => '••••' : fmtAxis,
+        formatter: privacyMode ? (v: number) => fmtPrivacy(v, true) : fmtAxis,
       },
       splitLine: { lineStyle: { color: '#21262d' } },
     },
@@ -222,13 +223,13 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
       type: 'category' as const,
       data: ages.map(a => a.toString()),
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 11, interval: 4 },
+      axisLabel: { color: CHART_COLORS.muted, fontSize: 11, interval: 4 },
     },
     yAxis: {
       type: 'value' as const,
       min: 0,
       max: 100,
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}%', fontSize: 11 },
+      axisLabel: { color: CHART_COLORS.muted, formatter: '{value}%', fontSize: 11 },
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: seriesData.map(s => ({
@@ -273,7 +274,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
   const dependentes = 0;
 
   const fmtK = (v: number) => {
-    if (privacyMode) return '••••';
+    if (privacyMode) return fmtPrivacy(v, true);
     if (v >= 1000) return `R$ ${(v / 1000).toFixed(1)}k`;
     return `R$ ${v.toFixed(0)}`;
   };
@@ -491,7 +492,7 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
         let result = `<b>${label}</b><br/>`;
         params.forEach((p: any) => {
           if (p.value == null || p.seriesName?.startsWith('_')) return;
-          const val = privacyMode ? '••••' : `R$ ${(p.value / 1e6).toFixed(2)}M`;
+          const val = fmtPrivacy(p.value, privacyMode);
           result += `${p.marker} ${p.seriesName}: ${val}<br/>`;
         });
         return result;
@@ -509,7 +510,7 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
       data: xAxisLabels,
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
       axisLabel: {
-        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
+        color: CHART_COLORS.muted,
         fontSize: 11,
         interval: 0,  // Show ALL labels — most are '' so only our chosen years render
         hideOverlap: true,  // Let ECharts hide if they still overlap after interval:0
@@ -521,7 +522,7 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
+        color: CHART_COLORS.muted,
         formatter: (value: number) => `R$ ${(value / 1e6).toFixed(1)}M`,
         fontSize: 11,
       },
@@ -713,11 +714,11 @@ export function createDeltaBarChartOption(options: BaseChartOptions & { chartTyp
       data: xAxisData,
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
       axisTick: { show: false },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 11 },
+      axisLabel: { color: CHART_COLORS.muted, fontSize: 11 },
     },
     yAxis: {
       type: 'value' as const,
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: '{value}pp', fontSize: 11 },
+      axisLabel: { color: CHART_COLORS.muted, formatter: '{value}pp', fontSize: 11 },
       splitLine: { lineStyle: { color: CHART_COLORS.card } },
     },
     series: [
@@ -784,12 +785,12 @@ export function createDualLineChartOption(options: {
       type: 'category' as const,
       data: xAxisData,
       axisLine: { lineStyle: { color: CHART_COLORS.border } },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, fontSize: 12 },
+      axisLabel: { color: CHART_COLORS.muted, fontSize: 12 },
     },
     yAxis: {
       type: 'value' as const,
       axisLabel: {
-        color: privacyMode ? 'transparent' : CHART_COLORS.muted,
+        color: CHART_COLORS.muted,
         formatter: yAxisFormatter || ((v: number) => v.toFixed(2)),
         fontSize: 12,
       },
@@ -856,7 +857,7 @@ export function createBondPoolProbabilisticOption(options: {
       type: 'value' as const,
       name: 'Anos restantes',
       nameTextStyle: { color: CHART_COLORS.muted },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: (v: number) => `${v.toFixed(0)}` },
+      axisLabel: { color: CHART_COLORS.muted, formatter: (v: number) => `${v.toFixed(0)}` },
       splitLine: { lineStyle: { color: CHART_COLORS.border, width: 0.5 } },
     },
     series: [
@@ -893,7 +894,7 @@ export function createBondPoolDeterministicOption(options: {
         params.forEach((p: any) => {
           if (p.value != null && !p.seriesName.startsWith('_')) {
             const val = p.value as number;
-            const formatted = privacyMode ? '••••' : `R$ ${(val / 1000).toFixed(0)}k`;
+            const formatted = fmtPrivacy(val, privacyMode);
             html += `<div style="display:flex;align-items:center;gap:4px;">`;
             html += `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${p.color}"></span>`;
             html += `${p.seriesName}: <strong>${formatted}</strong></div>`;
@@ -910,7 +911,7 @@ export function createBondPoolDeterministicOption(options: {
       type: 'value' as const,
       name: 'R$ (BRL)',
       nameTextStyle: { color: CHART_COLORS.muted },
-      axisLabel: { color: privacyMode ? 'transparent' : CHART_COLORS.muted, formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
+      axisLabel: { color: CHART_COLORS.muted, formatter: (v: number) => `${(v / 1000).toFixed(0)}k` },
       splitLine: { lineStyle: { color: CHART_COLORS.border, width: 0.5 } },
     },
     series: [

@@ -161,7 +161,7 @@ export function BondPoolReadiness({ data, custo_vida_base }: BondPoolReadinessPr
                   <span className="text-xs text-muted-foreground">{item.ativo}</span>
                   <div className="flex items-baseline gap-3">
                     <span className="font-mono text-xs text-foreground">
-                      {privacyMode ? '••••' : fmtBrl(item.valor)}
+                      {fmtPrivacy(item.valor, privacyMode)}
                     </span>
                     <span className="font-mono text-xs font-semibold text-muted-foreground">
                       {item.pct_meta.toFixed(1)}%

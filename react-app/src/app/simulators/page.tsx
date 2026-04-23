@@ -357,7 +357,7 @@ function FireSimuladorSection() {
             <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio projetado</div>
               <div style={{ fontSize: '1rem', fontWeight: 700 }} className="pv">
-                {result && result.pat > 0 ? (privacyMode ? '••••' : fmtBRL(result.pat)) : '—'}
+                {result && result.pat > 0 ? (fmtPrivacy(result.pat, privacyMode)) : '—'}
               </div>
             </div>
           </div>
@@ -422,7 +422,7 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Aporte Mensal</span>
-            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">{aporte != null ? (privacyMode ? '••••' : fmtBRL(aporte)) : '—'}</span>
+            <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">{aporte != null ? (fmtPrivacy(aporte, privacyMode)) : '—'}</span>
           </label>
           <input
             type="range" min="5000" max="100000" step="1000" value={aporte ?? 25000}
@@ -448,7 +448,7 @@ function FireSimuladorSection() {
         <div className="slider-row">
           <label>
             <span>Custo de Vida /ano</span>
-            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{custo != null ? (privacyMode ? '••••' : fmtBRL(custo)) : '—'}</span>
+            <span style={{ fontWeight: 700, color: 'var(--muted)' }} className="pv">{custo != null ? (fmtPrivacy(custo, privacyMode)) : '—'}</span>
           </label>
           <input
             type="range" min="150000" max="500000" step="10000" value={custo ?? 250000}
@@ -857,12 +857,12 @@ function WhatIfSection() {
                 </div>
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
-                Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoA)}/ano</span>
-                {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteA)}/mês</span>
+                Custo: <span className="pv">{fmtPrivacy(custoA, privacyMode)}/ano</span>
+                {' · '}Aporte: <span className="pv">{fmtPrivacy(aporteA, privacyMode)}/mês</span>
               </div>
               {resultA && resultA.pat > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
-                  Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultA.pat)}</span>
+                  Pat. projetado: <span className="pv">{fmtPrivacy(resultA.pat, privacyMode)}</span>
                 </div>
               )}
               {resultA && resultA.swrAtFire != null && (
@@ -896,7 +896,7 @@ function WhatIfSection() {
                     background: 'rgba(234,179,8,.12)', border: '1px solid rgba(234,179,8,.3)',
                     borderRadius: '4px', padding: '1px 5px',
                   }}>
-                    {lifeEvents.filter(e => e.tipo === 'one-shot').length} evento{lifeEvents.filter(e => e.tipo === 'one-shot').length > 1 ? 's' : ''} (−{privacyMode ? '••••' : fmtBRL(totalOneShotEventos)})
+                    {lifeEvents.filter(e => e.tipo === 'one-shot').length} evento{lifeEvents.filter(e => e.tipo === 'one-shot').length > 1 ? 's' : ''} (−{fmtPrivacy(totalOneShotEventos, privacyMode)})
                   </span>
                 )}
               </div>
@@ -916,13 +916,13 @@ function WhatIfSection() {
                 </div>
               </div>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
-                Custo: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoB)}/ano</span>
-                {inssOffset > 0 && <span style={{ color: 'var(--green)' }}> (líquido: <span className="pv">{privacyMode ? '••••' : fmtBRL(custoLiquidoB)}</span>)</span>}
-                {' · '}Aporte: <span className="pv">{privacyMode ? '••••' : fmtBRL(aporteB)}/mês</span>
+                Custo: <span className="pv">{fmtPrivacy(custoB, privacyMode)}/ano</span>
+                {inssOffset > 0 && <span style={{ color: 'var(--green)' }}> (líquido: <span className="pv">{fmtPrivacy(custoLiquidoB, privacyMode)}</span>)</span>}
+                {' · '}Aporte: <span className="pv">{fmtPrivacy(aporteB, privacyMode)}/mês</span>
               </div>
               {resultB && resultB.pat > 0 && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '2px' }}>
-                  Pat. projetado: <span className="pv">{privacyMode ? '••••' : fmtBRL(resultB.pat)}</span>
+                  Pat. projetado: <span className="pv">{fmtPrivacy(resultB.pat, privacyMode)}</span>
                 </div>
               )}
               {resultB && resultB.pat > 0 && resultB.swrAtFire != null && (
@@ -1455,7 +1455,7 @@ function StressTestSection() {
         </div>
         <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>
-            Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{postShock != null ? (privacyMode ? '••••' : fmtBRL(postShock)) : '—'}</strong>
+            Patrimônio pós-shock: <strong className="pv" style={{ color: 'var(--red)' }}>{postShock != null ? (fmtPrivacy(postShock, privacyMode)) : '—'}</strong>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <label style={{ fontSize: 'var(--text-base)', color: 'var(--muted)' }}>Idade do shock:</label>
@@ -1478,7 +1478,7 @@ function StressTestSection() {
       {patrimonio != null && annualReturn > 0 && (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
           {[
-            { label: 'Patrimônio', value: privacyMode ? '••••' : fmtBRL(patrimonio) },
+            { label: 'Patrimônio', value: fmtPrivacy(patrimonio, privacyMode) },
             { label: 'Aporte mensal', value: aporteMensal > 0 ? (privacyMode ? '••••' : `R$${(aporteMensal / 1000).toFixed(0)}k`) : '—' },
             { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
             { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
@@ -1619,13 +1619,13 @@ function CascadeSection() {
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: ipcaAtivo ? 'var(--green)' : 'var(--muted)' }} className="pv">
-            {privacyMode ? '••••' : fmtBRL(ipcaAlloc)}
+            {fmtPrivacy(ipcaAlloc, privacyMode)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
             → Tesouro IPCA+2040 via XP
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
-            gap: <span className="pv">{ipcaGapBrl != null ? (privacyMode ? '••••' : fmtBRL(ipcaGapBrl)) : '—'}</span>
+            gap: <span className="pv">{ipcaGapBrl != null ? (fmtPrivacy(ipcaGapBrl, privacyMode)) : '—'}</span>
             {ipcaGapPp != null && ` (${ipcaGapPp.toFixed(1)}pp)`}
           </div>
         </div>
@@ -1641,13 +1641,13 @@ function CascadeSection() {
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: rendaAtivo ? 'var(--accent)' : 'var(--muted)' }} className="pv">
-            {privacyMode ? '••••' : fmtBRL(rendaAlloc)}
+            {fmtPrivacy(rendaAlloc, privacyMode)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--accent)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(88,166,255,.08)', borderRadius: '4px' }}>
             → Renda+ 2065 via Tesouro Direto
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px' }}>
-            gap: <span className="pv">{rendaGapBrl != null ? (privacyMode ? '••••' : fmtBRL(rendaGapBrl)) : '—'}</span>
+            gap: <span className="pv">{rendaGapBrl != null ? (fmtPrivacy(rendaGapBrl, privacyMode)) : '—'}</span>
             {rendaGapPp != null && (rendaGapPp > 0 ? ` (${rendaGapPp.toFixed(1)}pp)` : ' (acima do alvo)')}
           </div>
         </div>
@@ -1663,7 +1663,7 @@ function CascadeSection() {
             </span>
           </div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)' }} className="pv">
-            {privacyMode ? '••••' : fmtBRL(equityAlloc)}
+            {fmtPrivacy(equityAlloc, privacyMode)}
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--orange)', fontWeight: 600, marginTop: '6px', padding: '4px 6px', background: 'rgba(249,115,22,.08)', borderRadius: '4px' }}>
             → SWRD + AVGS + AVEM via IBKR

@@ -43,7 +43,7 @@ export function TimeToFireProgressBar({
           className="font-black text-accent leading-none"
           style={{ fontSize: '2.5rem', lineHeight: 1 }}
         >
-          {privacyMode ? '••••' : yearsLabel}
+          {yearsLabel}
         </div>
         {!privacyMode && (
           <div className="text-2xl font-semibold text-muted mt-2">
@@ -69,7 +69,7 @@ export function TimeToFireProgressBar({
           {privacyMode ? '••••' : `${progressPct.toFixed(1)}% do caminho`}
         </div>
         <div className="text-xs font-medium text-accent">
-          {privacyMode ? '••••' : fmtPct(fireProgress, 2)}
+          {fmtPct(fireProgress, 2)}
         </div>
       </div>
 

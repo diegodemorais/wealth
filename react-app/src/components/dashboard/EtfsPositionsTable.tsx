@@ -99,7 +99,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
                     {privacyMode ? '••••' : `R$ ${pos.price.toFixed(2)}`}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 500, color: 'var(--text)', fontFamily: 'monospace' }}>
-                    {privacyMode ? '••••' : fmtBrl(pos.currentValue)}
+                    {fmtPrivacy(pos.currentValue, privacyMode)}
                   </td>
                   <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontWeight: 500, fontFamily: 'monospace', color: pl >= 0 ? 'var(--green)' : 'var(--red)' }}>
                     {privacyMode ? '••••' : `${pl >= 0 ? '+' : ''}${fmtBrl(pl)}`}
@@ -127,7 +127,7 @@ export function EtfsPositionsTable({ data }: EtfsPositionsTableProps) {
               </td>
               <td colSpan={2} style={{ padding: 'var(--space-2)' }}></td>
               <td style={{ padding: 'var(--space-2)', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
-                {privacyMode ? '••••' : fmtBrl(totals.currentValue)}
+                {fmtPrivacy(totals.currentValue, privacyMode)}
               </td>
               <td style={{ padding: 'var(--space-2)', textAlign: 'right', fontFamily: 'monospace', color: totalPL >= 0 ? 'var(--green)' : 'var(--red)' }}>
                 {privacyMode ? '••••' : `${totalPL >= 0 ? '+' : ''}${fmtBrl(totalPL)}`}

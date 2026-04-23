@@ -74,11 +74,11 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
             </span>
           ) : executadoMesCorrente ? (
             <span className="text-xs font-mono font-semibold px-1.5 py-0.5 rounded" style={{ background: 'rgba(34,197,94,0.12)', color: 'var(--green)' }}>
-              <CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> Executado{valorRealizado != null ? ` · ${privacyMode ? '••••' : fmtShort(valorRealizado)}` : ''}
+              <CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> Executado{valorRealizado != null ? ` · ${fmtPrivacy(valorRealizado, privacyMode)}` : ''}
             </span>
           ) : (
             <span className="text-xs font-mono px-1.5 py-0.5 rounded" style={{ background: 'rgba(234,179,8,0.12)', color: 'var(--yellow)' }}>
-              ⏳ Pendente · meta {privacyMode ? '••••' : fmtShort(aporteMensal)}/mês
+              ⏳ Pendente · meta {fmtPrivacy(aporteMensal, privacyMode)}/mês
             </span>
           )}
           {ultimoAporteData && (
@@ -92,7 +92,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
         <div className="bg-card2/40 rounded px-3 py-2.5">
           <div className="text-xs text-muted mb-1">{isPremissa ? 'Meta mensal' : 'Último aporte'}</div>
           <div className="text-base font-bold" style={{ color: 'var(--green)' }}>
-            {privacyMode ? '••••' : fmtShort(primaryValue)}
+            {fmtPrivacy(primaryValue, privacyMode)}
           </div>
           {!isPremissa && savingsRate != null && (
             <div className="text-xs mt-0.5" style={{ color: srColor }}>
@@ -103,7 +103,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
         <div className="bg-card2/40 rounded px-3 py-2.5">
           <div className="text-xs text-muted mb-1">Meta mensal</div>
           <div className="text-base font-bold" style={{ color: 'var(--accent)' }}>
-            {privacyMode ? '••••' : fmtShort(aporteMensal)}
+            {fmtPrivacy(aporteMensal, privacyMode)}
           </div>
           {metaPct != null && (
             <div className="text-xs text-muted mt-0.5">{metaPct.toFixed(0)}% acumulado</div>
@@ -112,13 +112,13 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
         <div className="bg-card2/40 rounded px-3 py-2.5">
           <div className="text-xs text-muted mb-1">Acumulado mês</div>
           <div className="text-base font-bold text-text">
-            {privacyMode ? '••••' : fmtShort(acumuladoMes)}
+            {fmtPrivacy(acumuladoMes, privacyMode)}
           </div>
         </div>
         <div className="bg-card2/40 rounded px-3 py-2.5">
           <div className="text-xs text-muted mb-1">Acumulado ano</div>
           <div className="text-base font-bold text-text">
-            {privacyMode ? '••••' : fmtShort(acumuladoAno)}
+            {fmtPrivacy(acumuladoAno, privacyMode)}
           </div>
         </div>
       </div>

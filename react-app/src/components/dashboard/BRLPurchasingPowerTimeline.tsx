@@ -64,7 +64,7 @@ export default function BRLPurchasingPowerTimeline({
                 <td style={{ padding: '4px 6px', fontWeight: 500, color: sc.color }}>{sc.label}</td>
                 {checkYears.map(yr => (
                   <td key={yr} style={{ padding: '4px 6px', fontWeight: 600, color: 'var(--text)' }} className="pv">
-                    {privacyMode ? '••••' : fmtBRL(equityBRLat(yr, sc.depBRL), false)}
+                    {fmtPrivacy(equityBRLat(yr, sc.depBRL), privacyMode)}
                   </td>
                 ))}
               </tr>

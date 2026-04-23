@@ -60,28 +60,28 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
         <div style={{ background: 'rgba(239,68,68,.08)', border: '1px solid rgba(239,68,68,.2)', borderRadius: 6, padding: '10px 12px' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Essencial</div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)' }} className="pv">
-            {privacyMode ? '••••' : fmtK(musthave / 12)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+            {fmtPrivacy(musthave / 12, privacyMode)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
           </div>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{mustPct.toFixed(0)}% do total</div>
         </div>
         <div style={{ background: 'rgba(245,158,11,.08)', border: '1px solid rgba(245,158,11,.2)', borderRadius: 6, padding: '10px 12px' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Conforto</div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--yellow)' }} className="pv">
-            {privacyMode ? '••••' : fmtK(likes / 12)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+            {fmtPrivacy(likes / 12, privacyMode)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
           </div>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{likesPct.toFixed(0)}% do total</div>
         </div>
         <div style={{ background: 'rgba(139,92,246,.08)', border: '1px solid rgba(139,92,246,.2)', borderRadius: 6, padding: '10px 12px' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Imprevistos</div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--purple)' }} className="pv">
-            {privacyMode ? '••••' : fmtK(imprevistos / 12)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+            {fmtPrivacy(imprevistos / 12, privacyMode)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
           </div>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{impPct.toFixed(0)}% do total</div>
         </div>
         <div style={{ background: 'var(--card2)', border: '1px solid var(--border)', borderRadius: 6, padding: '10px 12px' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', textTransform: 'uppercase', fontWeight: 600, marginBottom: 4 }}>Total médio</div>
           <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }} className="pv">
-            {privacyMode ? '••••' : fmtK(totalMensal)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
+            {fmtPrivacy(totalMensal, privacyMode)}<span style={{ fontSize: 10, fontWeight: 400 }}>/mês</span>
           </div>
           <div style={{ fontSize: 10, color: flexColor, fontWeight: 600, marginTop: 2 }}>{flexLabel}</div>
         </div>
@@ -129,7 +129,7 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
                 <div
                   key={m.mes}
                   style={{ flex: 1, height: `${heightPct}%`, display: 'flex', flexDirection: 'column-reverse', borderRadius: '2px 2px 0 0', overflow: 'hidden', cursor: 'default' }}
-                  title={`${fmtMes(m.mes)}: ${privacyMode ? '••••' : fmtK(m.total)}/mês\nEss: ${fmtK(m.essenciais)} · Opt: ${fmtK(m.opcionais)} · Imp: ${fmtK(m.imprevistos)}`}
+                  title={`${fmtMes(m.mes)}: ${fmtPrivacy(m.total, privacyMode)}/mês\nEss: ${fmtK(m.essenciais)} · Opt: ${fmtK(m.opcionais)} · Imp: ${fmtK(m.imprevistos)}`}
                 >
                   <div style={{ flex: essPct, background: 'var(--red)', opacity: .85 }} />
                   <div style={{ flex: optPct, background: 'var(--yellow)', opacity: .85 }} />
@@ -160,10 +160,10 @@ const SpendingBreakdown: React.FC<SpendingBreakdownProps> = ({
                 {monthlyBreakdown!.map(m => (
                   <tr key={m.mes} style={{ borderBottom: '1px solid rgba(148,163,184,.1)' }}>
                     <td style={{ padding: '4px 6px', fontWeight: 500 }}>{fmtMes(m.mes)}</td>
-                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--red)' }} className="pv">{privacyMode ? '••••' : fmtK(m.essenciais)}</td>
-                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--yellow)' }} className="pv">{privacyMode ? '••••' : fmtK(m.opcionais)}</td>
-                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--purple)' }} className="pv">{privacyMode ? '••••' : fmtK(m.imprevistos)}</td>
-                    <td style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 600 }} className="pv">{privacyMode ? '••••' : fmtK(m.total)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--red)' }} className="pv">{fmtPrivacy(m.essenciais, privacyMode)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--yellow)' }} className="pv">{fmtPrivacy(m.opcionais, privacyMode)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', color: 'var(--purple)' }} className="pv">{fmtPrivacy(m.imprevistos, privacyMode)}</td>
+                    <td style={{ padding: '4px 6px', textAlign: 'right', fontWeight: 600 }} className="pv">{fmtPrivacy(m.total, privacyMode)}</td>
                   </tr>
                 ))}
               </tbody>
