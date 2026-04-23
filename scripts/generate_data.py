@@ -2291,6 +2291,19 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
         except Exception as e:
             print(f"  ⚠️ bitcoin yfinance: {e}")
 
+    # -- CDS Brazil 5Y via investiny ---------------------------------
+    cds_brazil_5y = None
+    try:
+        from investiny import historical_data as inv_hist
+        today = date.today()
+        from_dt = (today - timedelta(days=30)).strftime("%m/%d/%Y")
+        to_dt = today.strftime("%m/%d/%Y")
+        cds_data = inv_hist(investing_id="1116031", from_date=from_dt, to_date=to_dt)
+        if cds_data and "close" in cds_data and cds_data["close"]:
+            cds_brazil_5y = round(cds_data["close"][-1], 1)
+    except Exception as e:
+        print(f"  ⚠️ CDS Brazil 5Y: {e}")
+
     # -- Plano Status (fallback quando não há snapshot) -----
     plano_status = None
     try:
@@ -2359,6 +2372,7 @@ def get_macro_data(state: dict, total_brl_override: float = None) -> dict:
         "spread_selic_ff":          spread_selic_ff,       # pp    -- diferencial Selic - Fed Funds
         "depreciacao_brl_premissa": DEPRECIACAO_BRL_BASE,
         "exposicao_cambial_pct":    exposicao_cambial_pct, # %     -- parcela do patrimonio em USD
+        "cds_brazil_5y_bps":        cds_brazil_5y,         # bps   -- CDS 5Y Brasil via investiny (gatilho: 400bps)
         "bitcoin_usd":              bitcoin_usd,           # USD   -- preço BTC-USD (yfinance)
         "plano_status":             plano_status,          # dict  -- status do plano (fallback quando sem snapshot)
         # cambio será injetado pelo main() após compute

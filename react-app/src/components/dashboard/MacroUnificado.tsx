@@ -27,6 +27,9 @@ interface MacroUnificadoProps {
   // Para BRL timeline (sub-seção)
   patrimonioAtual?: number | null;
   equityPctUsd?: number | null;
+
+  // Risco soberano
+  cdsBrazil5y?: number | null;
 }
 
 function semaforoColor(taxa: number | null) {
@@ -52,6 +55,7 @@ export default function MacroUnificado({
   exposicaoCambialPct = 87.9,
   patrimonioAtual,
   equityPctUsd,
+  cdsBrazil5y,
 }: MacroUnificadoProps) {
   const { privacyMode } = useUiStore();
   const spread = selic != null && fedFunds != null ? selic - fedFunds : null;
@@ -60,6 +64,7 @@ export default function MacroUnificado({
     : spread >= 10 ? 'var(--green)'
     : spread >= 6 ? 'var(--yellow)'
     : 'var(--red)';
+  const cdsColor = cdsBrazil5y == null ? 'var(--muted)' : cdsBrazil5y >= 400 ? 'var(--red)' : cdsBrazil5y >= 250 ? 'var(--yellow)' : 'var(--green)';
 
   return (
     <div style={{ marginBottom: 14 }}>
@@ -67,7 +72,7 @@ export default function MacroUnificado({
       <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
         Taxas BR / EUA
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 mb-3.5">
         <div className="bg-slate-700/40 rounded p-2.5 text-center">
           <div className="text-lg font-bold text-text">{selic != null ? `${selic.toFixed(2)}%` : '—'}</div>
           <div className="text-xs text-muted mt-1">Selic</div>
@@ -98,6 +103,12 @@ export default function MacroUnificado({
               </span>
             )}
           </div>
+        </div>
+        <div className="bg-slate-700/40 rounded p-2.5 text-center" style={{ borderLeft: `3px solid ${cdsColor}` }}>
+          <div className="text-lg font-bold" style={{ color: cdsColor }}>
+            {cdsBrazil5y != null ? `${cdsBrazil5y.toFixed(0)}` : '—'}
+          </div>
+          <div className="text-xs text-muted mt-1">CDS 5Y (bps)</div>
         </div>
       </div>
 

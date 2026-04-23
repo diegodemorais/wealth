@@ -179,6 +179,7 @@ export default function HomePage() {
         exposicaoCambialPct={(data as any)?.macro?.exposicao_cambial_pct ?? 87.9}
         patrimonioAtual={(data as any)?.premissas?.patrimonio_atual ?? d.networth}
         equityPctUsd={((data as any)?.macro?.exposicao_cambial_pct ?? 87.9) / 100}
+        cdsBrazil5y={(data as any)?.macro?.cds_brazil_5y_bps ?? null}
       />
 
       {/* 4. SEÇÃO: Time to FIRE */}
