@@ -29,7 +29,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| TX-us-listed-decision | US-listed: vender agora (IR R$57k) vs segurar (estate tax $177k) | Tax | 🟡 Média |
 | FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟢 Baixa (2027+) |
 
 ### Doing
@@ -43,6 +42,7 @@ _(nenhuma no momento)_
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
 | OPS-ibkr-flex-trades | Ops | 2026-04-22 | Query 1461568 já tinha Operações. Período expandido para 365d. 56 trades retornados via API. |
+| TX-us-listed-decision | Tax | 2026-04-22 | Já decidido mar/2026: não vender agora, diluir via UCITS, vender na desacumulação. Seguro de vida pendente avaliação. |
 | TX-diferimento-fiscal | Tax | 2026-04-22 | Endereçada pelo TLH engine: IR por lote com PTAX histórica, LotesTable no dashboard, IRDeferralSection. Calculadora interativa adiada para desacumulação. |
 | TX-tlh-engine-lote | Tax+Dev | 2026-04-22 | 213 lotes FIFO extraídos do IBKR. ibkr_lotes.py criado. LotesTable no dashboard (Portfolio → Tax). TLH eligibility por lote. |
 | DEV-fire-dashboard-gaps | Dev | 2026-04-22 | 3 gaps visuais: bond pool gauge (0.8→4.6a projeção), P50×Meta marcador (2034), IR latente R$133k visível. |

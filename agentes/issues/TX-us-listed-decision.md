@@ -3,7 +3,8 @@
 | ID | TX-us-listed-decision |
 | Título | US-listed: vender agora (IR ~R$57k) vs segurar (estate tax ~$177k) |
 | Dono | Tax |
-| Status | 🟡 Backlog |
+| Status | ✅ Done (já decidido) |
+| Concluída | 2026-04-22 |
 | Prioridade | 🟡 Média |
 | Criada | 2026-04-22 |
 | Participantes | Tax (lead), Head, Quant, Advocate |
