@@ -29,7 +29,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| OPS-ibkr-flex-trades | Configurar Flex Query de Trades na IBKR | Ops | 🟡 Média |
 | TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF | Tax | 🟢 Baixa (2035+) |
 | FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟢 Baixa (2027+) |
 
@@ -43,6 +42,7 @@ _(nenhuma no momento)_
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| OPS-ibkr-flex-trades | Ops | 2026-04-22 | Query 1461568 já tinha Operações. Período expandido para 365d. 56 trades retornados via API. |
 | TX-tlh-engine-lote | Tax+Dev | 2026-04-22 | 213 lotes FIFO extraídos do IBKR. ibkr_lotes.py criado. LotesTable no dashboard (Portfolio → Tax). TLH eligibility por lote. |
 | DEV-fire-dashboard-gaps | Dev | 2026-04-22 | 3 gaps visuais: bond pool gauge (0.8→4.6a projeção), P50×Meta marcador (2034), IR latente R$133k visível. |
 | XX-mc-stress-cenarios | FIRE+Quant | 2026-04-22 | 3 cenários rodados. IPCA 5%: impacto zero. BRL -3.5%: P(FIRE) 52% mas cenário implausível (P<3%). Stress atual mantido. |
