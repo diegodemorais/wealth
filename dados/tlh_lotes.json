@@ -1,9 +1,9 @@
 {
-  "_generated": "2026-04-22T23:57:13Z",
+  "_generated": "2026-04-23T00:16:30Z",
   "_source": "U5947683.TRANSACTIONS.20210408.20260331.csv",
-  "_period": "2021-04-08 → 2026-03-13",
+  "_period": "2021-04-16 → 2026-03-13",
   "summary": {
-    "total_lotes": 213,
+    "total_lotes": 221,
     "total_symbols": 9,
     "by_symbol": {
       "AVDV": {
@@ -92,14 +92,14 @@
       },
       "SWRD": {
         "symbol": "SWRD",
-        "n_lotes": 60,
+        "n_lotes": 68,
         "qty_total": 5291.6415,
-        "cost_usd_total": 174101.36,
-        "pm_usd": 32.9012,
+        "cost_usd_total": 177098.46,
+        "pm_usd": 33.4676,
         "status": "alvo",
         "domicilio": "UCITS",
         "bucket": "SWRD",
-        "oldest_lot": "2021-04-08",
+        "oldest_lot": "2021-04-16",
         "newest_lot": "2026-03-09"
       },
       "USSC": {
@@ -119,22 +119,11 @@
   "lots": [
     {
       "symbol": "SWRD",
-      "date": "2021-04-08",
-      "qty": 61.0,
-      "price_usd": 28.78,
-      "commission_usd": 5.0,
-      "cost_usd": 1760.58,
-      "bucket": "SWRD",
-      "status": "alvo",
-      "domicilio": "UCITS"
-    },
-    {
-      "symbol": "SWRD",
       "date": "2021-04-16",
-      "qty": 610.0,
+      "qty": 420.7821,
       "price_usd": 29.385,
       "commission_usd": 8.9624,
-      "cost_usd": 17933.81,
+      "cost_usd": 12364.68,
       "bucket": "SWRD",
       "status": "alvo",
       "domicilio": "UCITS"
@@ -751,6 +740,105 @@
       "price_usd": 43.54,
       "commission_usd": 0.0202,
       "cost_usd": 40.0,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2025-12-22",
+      "qty": 44.0,
+      "price_usd": 40.57,
+      "commission_usd": 4.3152,
+      "cost_usd": 1789.4,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2025-12-22",
+      "qty": 1.0,
+      "price_usd": 40.67,
+      "commission_usd": 0.1006,
+      "cost_usd": 40.77,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2025-12-22",
+      "qty": 0.3503,
+      "price_usd": 40.67,
+      "commission_usd": 0.0,
+      "cost_usd": 14.25,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2026-01-14",
+      "qty": 44.0,
+      "price_usd": 41.2,
+      "commission_usd": 1.7,
+      "cost_usd": 1814.5,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2026-01-14",
+      "qty": 70.0,
+      "price_usd": 41.1947,
+      "commission_usd": 0.6482,
+      "cost_usd": 2884.28,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2026-01-14",
+      "qty": 0.8148,
+      "price_usd": 41.2,
+      "commission_usd": 0.0168,
+      "cost_usd": 33.59,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2026-01-30",
+      "qty": 0.0528,
+      "price_usd": 41.62,
+      "commission_usd": 1.7,
+      "cost_usd": 3.9,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2026-01-30",
+      "qty": 89.0,
+      "price_usd": 41.62,
+      "commission_usd": 0.2332,
+      "cost_usd": 3704.41,
+      "bucket": "SWRD",
+      "status": "alvo",
+      "domicilio": "UCITS"
+    },
+    {
+      "symbol": "SWRD",
+      "date": "2026-01-30",
+      "qty": 1.0,
+      "price_usd": 41.62,
+      "commission_usd": 0.1008,
+      "cost_usd": 41.72,
       "bucket": "SWRD",
       "status": "alvo",
       "domicilio": "UCITS"

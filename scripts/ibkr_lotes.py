@@ -3,7 +3,8 @@
 ibkr_lotes.py — Constrói lotes individuais FIFO a partir do extrato IBKR
 
 Uso:
-    python3 scripts/ibkr_lotes.py                           # CSV default
+    python3 scripts/ibkr_lotes.py                           # CSV only
+    python3 scripts/ibkr_lotes.py --flex                    # CSV + Flex Query API (merge)
     python3 scripts/ibkr_lotes.py analysis/raw/extrato.csv  # CSV específico
 
 Output:
@@ -12,9 +13,12 @@ Output:
 Venv: ~/claude/finance-tools/.venv/bin/python3
 """
 
+import argparse
 import csv
 import json
+import os
 import sys
+import xml.etree.ElementTree as ET
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -34,6 +38,106 @@ TRANSITORIO = {"EIMI", "AVES", "AVUV", "AVDV", "DGS", "USSC"}
 LEGADO = {"IWVL", "JPGL"}
 UCITS = {"SWRD", "AVGS", "AVEM", "EIMI", "AVDV", "IWVL"}
 US_LISTED = {"AVUV", "AVES", "DGS", "USSC"}
+
+
+SYMBOL_MAP = {
+    "WRDUSWUSD": "SWRD",  # IBKR sometimes uses alternate ticker
+}
+
+
+def fetch_flex_trades() -> list[dict]:
+    """Fetch trades from IBKR Flex Query API. Returns trade records in same format as CSV parser."""
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent.parent / ".env")
+
+    token = os.getenv("IBKR_TOKEN")
+    query_id = os.getenv("IBKR_QUERY_POSITIONS")
+    if not token or not query_id:
+        print("  ⚠️  IBKR_TOKEN ou IBKR_QUERY_POSITIONS não configurado — skip Flex Query")
+        return []
+
+    try:
+        from ibflex import client
+        print("  Conectando ao IBKR Flex Web Service...")
+        client.REQUEST_URL = "https://ndcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.SendRequest"
+        client.STMT_URL = "https://ndcdyn.interactivebrokers.com/Universal/servlet/FlexStatementService.GetStatement"
+        raw = client.download(token=token, query_id=query_id)
+    except Exception as e:
+        print(f"  ⚠️  Flex Query falhou: {e}")
+        return []
+
+    root = ET.fromstring(raw)
+    trades = []
+    for t in root.iter("Trade"):
+        if t.get("levelOfDetail") != "EXECUTION":
+            continue
+        sym = t.get("symbol", "")
+        sym = SYMBOL_MAP.get(sym, sym)
+        buy_sell = t.get("buySell", "")
+        qty_raw = float(t.get("quantity", "0") or "0")
+        # Flex uses positive for buy, negative for sell — normalize to match CSV convention
+        qty = qty_raw if buy_sell == "BUY" else -abs(qty_raw)
+        date_raw = t.get("tradeDate", "")
+        # Convert YYYYMMDD → YYYY-MM-DD
+        date_str = f"{date_raw[:4]}-{date_raw[4:6]}-{date_raw[6:8]}" if len(date_raw) == 8 else date_raw
+
+        trades.append({
+            "Date": date_str,
+            "Symbol": sym,
+            "Transaction Type": "Buy" if buy_sell == "BUY" else "Sell",
+            "Quantity": str(qty),
+            "Price": t.get("tradePrice", "0"),
+            "Commission": t.get("ibCommission", "0"),
+            "_source": "flex",
+        })
+
+    period = ""
+    for stmt in root.iter("FlexStatement"):
+        period = f'{stmt.get("fromDate", "")} → {stmt.get("toDate", "")}'
+
+    print(f"  Flex Query: {len(trades)} trades ({period})")
+    return trades
+
+
+def merge_trades(csv_trades: list[dict], flex_trades: list[dict]) -> list[dict]:
+    """Merge CSV + Flex trades, deduplicating by (date, symbol, qty, price)."""
+    # Build fingerprints from CSV trades
+    csv_keys = set()
+    for t in csv_trades:
+        tx_type = t.get("Transaction Type", "").strip()
+        if tx_type not in ("Buy", "Sell"):
+            continue
+        sym = t.get("Symbol", "").strip()
+        date = t.get("Date", "").strip()
+        try:
+            qty = round(float(t.get("Quantity", "0")), 4)
+            price = round(float(t.get("Price", "0")), 2)
+        except (ValueError, TypeError):
+            continue
+        csv_keys.add((date, sym, qty, price))
+
+    # Add only Flex trades not in CSV
+    new_count = 0
+    for t in flex_trades:
+        sym = t.get("Symbol", "").strip()
+        date = t.get("Date", "").strip()
+        try:
+            qty = round(float(t.get("Quantity", "0")), 4)
+            price = round(float(t.get("Price", "0")), 2)
+        except (ValueError, TypeError):
+            continue
+        key = (date, sym, qty, price)
+        if key not in csv_keys:
+            csv_trades.append(t)
+            csv_keys.add(key)
+            new_count += 1
+
+    if new_count > 0:
+        print(f"  Merge: {new_count} trades novos da Flex Query")
+    else:
+        print(f"  Merge: nenhum trade novo (CSV já completo)")
+
+    return csv_trades
 
 
 def parse_ibkr_csv(csv_path: Path) -> list[dict]:
@@ -190,7 +294,12 @@ def summary(lots: list[dict]) -> dict:
 
 
 def main():
-    csv_path = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_CSV
+    parser = argparse.ArgumentParser(description="IBKR Lot Builder (FIFO)")
+    parser.add_argument("csv", nargs="?", default=str(DEFAULT_CSV), help="CSV path")
+    parser.add_argument("--flex", action="store_true", help="Complement CSV with Flex Query API trades")
+    args = parser.parse_args()
+
+    csv_path = Path(args.csv)
     if not csv_path.exists():
         print(f"❌ CSV não encontrado: {csv_path}")
         sys.exit(1)
@@ -198,6 +307,12 @@ def main():
     print(f"📄 Parsing: {csv_path.name}")
     trades = parse_ibkr_csv(csv_path)
     print(f"   {len(trades)} linhas de transação")
+
+    # Merge com Flex Query se --flex
+    if args.flex:
+        flex_trades = fetch_flex_trades()
+        if flex_trades:
+            trades = merge_trades(trades, flex_trades)
 
     buy_sell = [t for t in trades if t.get("Transaction Type", "").strip() in ("Buy", "Sell")]
     print(f"   {len(buy_sell)} trades (Buy/Sell)")
