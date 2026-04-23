@@ -83,13 +83,15 @@ def macro_br() -> dict:
 
 
 def macro_us() -> dict:
-    """Dados macro US via fredapi."""
+    """Dados macro US via fredapi + CDS Brasil via investiny."""
+    result = {}
+
+    # FRED data
     try:
         from fredapi import Fred
-        import os
         api_key = os.getenv("FRED_API_KEY")
         if not api_key:
-            return {"error": "FRED_API_KEY não configurada no .env. Obter em https://fred.stlouisfed.org/docs/api/api_key.html"}
+            return {"error": "FRED_API_KEY não configurada no .env"}
 
         fred = Fred(api_key=api_key)
         series = {
@@ -99,9 +101,7 @@ def macro_us() -> dict:
             "treasury_30y": "DGS30",
             "tips_10y_real": "DFII10",
             "vix": "VIXCLS",
-            "cds_brazil_5y": "BRAZILCDSB",
         }
-        result = {}
         for name, sid in series.items():
             try:
                 s = fred.get_series(sid, observation_start=(date.today() - timedelta(days=10)).isoformat())
@@ -109,12 +109,30 @@ def macro_us() -> dict:
                 result[name] = round(float(val), 4) if val is not None else None
             except Exception:
                 result[name] = None
-
-        result["date"] = date.today().isoformat()
-        result["_source"] = "fredapi (FRED API)"
-        return result
     except ImportError:
-        return {"error": "fredapi não instalado. pip install fredapi"}
+        result["error_fred"] = "fredapi não instalado"
+
+    # CDS Brazil 5Y via investiny (Investing.com)
+    try:
+        from investiny import historical_data
+        today = date.today()
+        from_dt = (today - timedelta(days=30)).strftime("%m/%d/%Y")
+        to_dt = today.strftime("%m/%d/%Y")
+        data = historical_data(investing_id="1116031", from_date=from_dt, to_date=to_dt)
+        if data and "close" in data and data["close"]:
+            result["cds_brazil_5y_bps"] = round(data["close"][-1], 1)
+            result["cds_brazil_5y_date"] = data["date"][-1] if "date" in data else None
+            result["cds_brazil_5y_gatilho"] = 400  # threshold from gatilhos.md
+            result["cds_brazil_5y_status"] = "OK" if data["close"][-1] < 400 else "ALERTA"
+        else:
+            result["cds_brazil_5y_bps"] = None
+    except Exception as e:
+        result["cds_brazil_5y_bps"] = None
+        result["cds_brazil_5y_error"] = str(e)[:60]
+
+    result["date"] = date.today().isoformat()
+    result["_source"] = "fredapi (FRED) + investiny (CDS Brazil)"
+    return result
 
 
 def tesouro() -> dict:
