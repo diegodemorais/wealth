@@ -2,6 +2,7 @@
 
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct, fmtBrlCompact } from '@/utils/formatters';
+import { fmtPrivacy, fmtPrivacyUsd } from '@/utils/privacyTransform';
 import { decimalYearsToYearsMonths } from '@/utils/time';
 
 // Compact USD formatter for hero display (e.g. $695k)
@@ -73,10 +74,10 @@ export function KpiHero({
       <div className="kpi kpi-fire text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
         <div className="kpi-label">Patrimônio Total</div>
         <div className="kpi-value text-4xl font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
-          {privacyMode ? '••••' : networthCompact}
+          {privacyMode ? fmtPrivacy(networth, true) : networthCompact}
         </div>
         <div className="kpi-sub">
-          {privacyMode ? '••••' : (usdPct != null ? `${usdPct}% em USD` : `${networthUsdCompact ? networthUsdCompact : '—'} em USD`)}
+          {usdPct != null ? `${usdPct}% em USD` : (privacyMode ? fmtPrivacyUsd(networthUsd, true) : `${networthUsdCompact ? networthUsdCompact : '—'} em USD`)}
         </div>
       </div>
 
@@ -84,11 +85,11 @@ export function KpiHero({
       <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--accent)' }}>
         <div className="kpi-label">Anos até FIRE</div>
         <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem' }}>
-          {privacyMode ? '••••' : yearsMonthsStr}
+          {yearsMonthsStr}
         </div>
         {fireSubtitle && (
           <div className="kpi-sub">
-            {privacyMode ? '••••' : fireSubtitle}
+            {fireSubtitle}
           </div>
         )}
       </div>
@@ -97,11 +98,11 @@ export function KpiHero({
       <div className="kpi text-center border-l-4" style={{ borderLeftColor: 'var(--yellow)' }}>
         <div className="kpi-label">Progresso FIRE</div>
         <div className="kpi-value font-black mt-1 mb-0.5" style={{ fontSize: '2rem', color: 'rgba(234,179,8,0.9)' }}>
-          {privacyMode ? '••••' : fmtPct(fireProgress, 1)}
+          {fmtPct(fireProgress, 1)}
         </div>
         {gatilhoSubtitle && (
           <div className="kpi-sub">
-            {privacyMode ? '••••' : gatilhoSubtitle}
+            {privacyMode && firePatrimonioGatilho ? `vs gatilho ${fmtPrivacy(firePatrimonioGatilho, true)}` : gatilhoSubtitle}
           </div>
         )}
       </div>
