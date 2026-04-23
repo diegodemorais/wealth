@@ -320,7 +320,9 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                     {cagrReal != null ? `${cagrReal.toFixed(1)}%` : '--'}
                   </td>
                   <td style={tdC} />
-                  <td style={{ ...tdR, color: 'var(--muted)' }}>—</td>
+                  <td style={{ ...tdR, fontWeight: 700, color: alphaAnual != null ? returnColor(alphaAnual) : 'var(--muted)' }}>
+                    {alphaAnual != null ? `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}%` : '—'}
+                  </td>
                   <td style={{ ...tdR, fontWeight: 700, color: 'var(--muted)' }}>
                     {ipcaCagr != null ? `${ipcaCagr.toFixed(1)}%` : '--'}
                   </td>
