@@ -20,9 +20,13 @@ Venv: ~/claude/finance-tools/.venv/bin/python3
 
 import argparse
 import json
+import os
 import sys
 from datetime import date, timedelta
 from pathlib import Path
+
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -89,7 +93,7 @@ def macro_us() -> dict:
 
         fred = Fred(api_key=api_key)
         series = {
-            "fed_funds": "FEDFUNDS",
+            "fed_funds": "DFF",
             "treasury_2y": "DGS2",
             "treasury_10y": "DGS10",
             "treasury_30y": "DGS30",
