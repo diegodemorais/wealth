@@ -24,6 +24,7 @@ interface AnnualReturn {
   twr_usd: number;
   ipca: number;
   cdi: number;
+  alpha_vs_vwra?: number;
 }
 
 interface PerformanceSummaryProps {
@@ -234,6 +235,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                   <th style={thR}>Real BRL</th>
                   <th style={thC} aria-label="comparação nominal vs real" />
                   <th style={thR}>USD</th>
+                  <th style={thR}>Alpha</th>
                   <th style={thR}>IPCA</th>
                   <th style={thR}>CDI</th>
                 </tr>
@@ -285,6 +287,9 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                       </td>
                       <td style={{ ...tdR, color: returnColor(row.twr_usd) }}>
                         {fmtPct(row.twr_usd)}
+                      </td>
+                      <td style={{ ...tdR, color: row.alpha_vs_vwra != null ? returnColor(row.alpha_vs_vwra) : 'var(--muted)' }}>
+                        {row.alpha_vs_vwra != null ? `${row.alpha_vs_vwra >= 0 ? '+' : ''}${row.alpha_vs_vwra.toFixed(1)}pp` : '—'}
                       </td>
                       <td style={{ ...tdR, color: 'var(--muted)' }}>{row.ipca.toFixed(1)}%</td>
                       <td style={{ ...tdR, color: 'var(--muted)' }}>{row.cdi.toFixed(1)}%</td>

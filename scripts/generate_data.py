@@ -2926,6 +2926,46 @@ def main():
         # Timeline ainda vem do CSV (patrimônio absoluto para o gráfico)
         timeline, _ = get_timeline_retornos()
         print(f"  ✓ Retornos core: {len(retornos_mensais['dates'])} meses (TWR), {len(retornos_mensais['annual_returns'])} anos")
+
+        # Enriquecer annual_returns com alpha do backtest (vs VWRA)
+        if backtest_data and backtest_data.get("backtest"):
+            bt = backtest_data["backtest"]
+            bt_dates = bt.get("dates", [])
+            bt_target = bt.get("target", [])
+            bt_shadow = bt.get("shadowA", [])
+
+            if bt_dates and bt_target and bt_shadow and len(bt_dates) == len(bt_target) == len(bt_shadow):
+                print(f"    ▶ enriquecendo annual_returns com alpha do backtest ({len(bt_dates)} períodos) ...")
+                # Agrupar retornos mensais por ano (dados normalizados a 100 base)
+                alpha_by_year = {}
+                for i, date_str in enumerate(bt_dates):
+                    year = date_str[:4]
+                    if year not in alpha_by_year:
+                        alpha_by_year[year] = {"target": [], "shadow": []}
+                    # Retorno mensal: (final - inicial) / inicial
+                    if i > 0:
+                        r_target = (bt_target[i] / bt_target[i-1] - 1) * 100 if bt_target[i-1] > 0 else 0
+                        r_shadow = (bt_shadow[i] / bt_shadow[i-1] - 1) * 100 if bt_shadow[i-1] > 0 else 0
+                        alpha_by_year[year]["target"].append(r_target)
+                        alpha_by_year[year]["shadow"].append(r_shadow)
+
+                # Calcular alpha anual (TWR composto) para cada ano
+                for row in retornos_mensais.get("annual_returns", []):
+                    year_str = str(row["year"])
+                    if year_str in alpha_by_year:
+                        year_data = alpha_by_year[year_str]
+                        # TWR anual = compor retornos mensais
+                        if year_data["target"] and year_data["shadow"]:
+                            twr_target = 1.0
+                            twr_shadow = 1.0
+                            for r_t, r_s in zip(year_data["target"], year_data["shadow"]):
+                                twr_target *= (1 + r_t / 100)
+                                twr_shadow *= (1 + r_s / 100)
+                            twr_target_pct = (twr_target - 1) * 100
+                            twr_shadow_pct = (twr_shadow - 1) * 100
+                            # Alpha em pp
+                            alpha_pp = twr_target_pct - twr_shadow_pct
+                            row["alpha_vs_vwra"] = round(alpha_pp, 2)
     else:
         print("  ▶ lendo CSV (fallback — rode reconstruct_history.py para gerar core) ...")
         timeline, retornos_mensais = get_timeline_retornos()
