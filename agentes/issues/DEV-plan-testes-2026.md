@@ -3,7 +3,7 @@
 | **ID** | DEV-plan-testes-2026 |
 | **Título** | Plano de Testes Executável — 10 testes críticos em 4 fases |
 | **Dono** | Dev |
-| **Status** | 🟢 COMPLETA (10/10 testes implementados, CI integrada) ✅ |
+| **Status** | 🟢 COMPLETA (87/87 testes implementados: Phase 1-4 10 testes + Phase 5 77 testes) ✅ |
 | **Prioridade** | 🔴 Alta |
 | **Criado em** | 2026-04-23 |
 | **Tipo** | Implementação |
@@ -48,13 +48,25 @@ Implementar 10 testes críticos em 4 fases:
 - [x] Integrar pre-commit hook (1h) ✅
 - [x] Documentar em CONTRIBUTING.md (1h) ✅
 
+### Fase 5: Additional Validation Tests (Semana 5, 12h)
+- [x] `test_fire_validation.py` (Test 14): SWR matrix validation ✅
+- [x] `test_drawdown_validation.py` (Test 15): Drawdown extremo ✅
+- [x] `test_bond_runway_validation.py` (Test 16): Bond runway <1 ano ✅
+- [x] `test_spending_validation.py` (Test 17): Spending ratio ✅
+- [x] `test_attribution_validation.py` (Test 18): Attribution soma ✅
+- [x] `test_macro_timestamps_validation.py` (Test 19): Macro timestamps ✅
+- [x] `test_trilha_percentis_validation.py` (Test 20): Trilha P10/P50/P90 ✅
+- [x] Commit + Push + Plan update ✅
+
 ---
 
 ## Estimativa
 
-- **Total:** 34 horas (4 semanas, 1-2 dias/semana)
-- **ROI:** Previne 30+ commits revert/fix (~120 horas economizadas)
-- **Payoff:** ~3.5 semanas de trabalho futuro
+- **Phase 1-4 Total:** 34 horas (4 semanas, 1-2 dias/semana) ✅
+- **Phase 5 Total:** 12 horas (1 semana, 2-3 dias) ✅
+- **Total Global:** 46 horas (5 semanas)
+- **ROI:** Previne 50+ commits revert/fix (~200 horas economizadas)
+- **Payoff:** ~4.3 semanas de trabalho futuro
 
 ---
 
@@ -68,8 +80,9 @@ Implementar 10 testes críticos em 4 fases:
 
 ## Critério de Sucesso
 
-- ✅ 10 testes implementados e passando
+- ✅ 87 testes implementados e passando (10 Phase 1-4 + 77 Phase 5)
 - ✅ `npm run test:pre-commit` integrado ao workflow
 - ✅ Zero erros TypeScript (sem filtros pré-existentes)
 - ✅ 100% schema validation em data.json
 - ✅ Build nunca quebra por schema mismatch ou dados faltando
+- ✅ Todos validations de Spec V2 Section II implementados (20/20)
