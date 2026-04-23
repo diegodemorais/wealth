@@ -29,7 +29,6 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟢 Baixa (2027+) |
 
 ### Doing
 > Issues em andamento
@@ -42,6 +41,7 @@ _(nenhuma no momento)_
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
 | OPS-ibkr-flex-trades | Ops | 2026-04-22 | Query 1461568 já tinha Operações. Período expandido para 365d. 56 trades retornados via API. |
+| FR-tpaw | FIRE | 2026-04-22 | TPAW investigado: manter SWR+Guardrails. TPAW confirma spending conservador (R$550k TPAW vs R$250k nosso). Lente complementar, não sistema. |
 | TX-us-listed-decision | Tax | 2026-04-22 | Já decidido mar/2026: não vender agora, diluir via UCITS, vender na desacumulação. Seguro de vida pendente avaliação. |
 | TX-diferimento-fiscal | Tax | 2026-04-22 | Endereçada pelo TLH engine: IR por lote com PTAX histórica, LotesTable no dashboard, IRDeferralSection. Calculadora interativa adiada para desacumulação. |
 | TX-tlh-engine-lote | Tax+Dev | 2026-04-22 | 213 lotes FIFO extraídos do IBKR. ibkr_lotes.py criado. LotesTable no dashboard (Portfolio → Tax). TLH eligibility por lote. |

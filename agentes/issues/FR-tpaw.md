@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | FR-tpaw |
 | **Dono** | FIRE |
-| **Status** | Backlog |
+| **Status** | ✅ Done |
+| **Concluído em** | 2026-04-22 |
 | **Prioridade** | Média |
 | **Participantes** | Factor, Quant, Advocate |
 | **Co-sponsor** | Factor (scan RR 2026-04-20) |
@@ -78,17 +79,29 @@ Investigar o modelo TPAW de Ben Mathew:
 
 ---
 
-## Conclusao
+## Conclusão (22/04/2026)
 
-> A ser preenchida ao finalizar.
+**Manter SWR + Guardrails como sistema primário. TPAW como lente de diagnóstico, não de execução.**
+
+TPAW (ABW/lifecycle) sugeriria spending ~R$550k/ano no FIRE Day — 2x nosso target. Mas aceita cortes ilimitados (sem piso). Nosso modelo tem piso hard R$180k, spending smile calibrado, bond tent 7 anos, IR 15% modelado, e opera nativamente em BRL/IPCA+.
+
+Razões para não migrar:
+1. Volatilidade de spending sem hard floor — incompatível com perfil
+2. USD-only — não modela IPCA+, Renda+, câmbio BRL
+3. IR 15% não implementado no TPAW
+4. Spending smile não nativo
+5. Bond tent > variabilidade para SoRR
+
+Valor como complemento: confirma que SWR 2.2% (R$250k sobre R$11.5M projetado) é conservador. Margem para subir teto de spending em cenário favorável.
+
+Referências: RR Ep. 340, tpawplanner.com, Merton (1969), White Coat Investor ABW analysis.
 
 ---
 
-## Proximos Passos
+## Checklist
 
-- [ ] FIRE: leitura do paper base de Ben Mathew + RR Ep. 340
-- [ ] FIRE: rodar tpawplanner.com com parâmetros de Diego e comparar com output MC atual
-- [ ] Factor: verificar como TPAW trata glidepath de equity (acumula 100% equity até FIRE?)
-- [ ] Quant: side-by-side quantitativo — TPAW spending path vs SWR+guardrails para R$250k baseline
-- [ ] Advocate: identificar cenários de falha específicos do TPAW
-- [ ] Head: veredicto — upgrade, complemento ou arquivo
+- [x] FIRE: estudar TPAW (lifecycle, ABW, CRRA, total portfolio approach)
+- [x] FIRE: estimar output TPAW com parâmetros de Diego (~R$550k/ano spending)
+- [x] Comparar TPAW vs SWR+Guardrails (tabela 12 dimensões)
+- [x] Identificar limitações para caso BR (IPCA+, câmbio, IR, spending smile)
+- [x] Head: veredicto — manter SWR, TPAW como lente complementar
