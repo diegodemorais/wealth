@@ -119,11 +119,11 @@ export function CryptoBandChart({
           <div style={{ borderTop: '1px solid var(--border)', margin: '12px 0', opacity: 0.3 }} />
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
             {valor !== undefined && (
-              <span>Posição: {privacyMode ? '••••' : `R$${(valor / 1000).toFixed(0)}k`}</span>
+              <span>Posição: {fmtPrivacy(valor / 1000, privacyMode)}</span>
             )}
             {pnl_pct !== undefined && (
               <span style={{ fontFamily: 'monospace', color: pnl_pct >= 0 ? 'var(--green)' : 'var(--red)' }}>
-                P&amp;L: {privacyMode ? '••••' : `${pnl_pct >= 0 ? "+" : ""}${pnl_pct.toFixed(1)}%`}
+                P&amp;L: {`${pnl_pct >= 0 ? "+" : ""}${pnl_pct.toFixed(1)}%`}
               </span>
             )}
           </div>

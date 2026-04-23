@@ -65,7 +65,7 @@ export default function HODL11PositionPanel({ hodl11 }: HODL11PositionPanelProps
       signal = { label: 'Zona de Venda', color: '#ef4444', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.3)' };
   }
 
-  const fmtBrl = (v: number) => privacyMode ? '••••' : (v >= 1_000_000 ? `R$${(v / 1_000_000).toFixed(2)}M` : `R$${(v / 1_000).toFixed(0)}k`);
+  const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode);
 
   return (
     <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px', marginBottom: 14 }}>

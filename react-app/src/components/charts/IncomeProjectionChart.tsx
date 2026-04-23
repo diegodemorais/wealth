@@ -68,7 +68,7 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
           let html = `<div style="padding:8px"><strong>${params[0]?.axisValueLabel}</strong><br/>`;
           params.forEach((p: any) => {
             if (p.value != null && p.value > 0) {
-              const val = privacyMode ? '••••' : `R$${Math.round(p.value / 1000)}k/ano`;
+              const val = `${fmtPrivacy(p.value, privacyMode)}/ano`;
               html += `${p.marker} ${p.seriesName}: <strong>${val}</strong><br/>`;
             }
           });
@@ -94,8 +94,8 @@ export function IncomeProjectionChart({ data }: IncomeProjectionChartProps) {
       yAxis: {
         type: 'value' as const,
         axisLabel: {
-          color: privacyMode ? 'transparent' : '#94a3b8',
-          formatter: (v: number) => privacyMode ? '••' : `R$${Math.round(v / 1000)}k`,
+          color: '#94a3b8',
+          formatter: (v: number) => fmtPrivacy(v, privacyMode),
           fontSize: 11,
         },
         splitLine: EC_SPLIT_LINE,

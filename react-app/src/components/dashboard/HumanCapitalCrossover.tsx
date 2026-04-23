@@ -26,10 +26,7 @@ interface HumanCapitalCrossoverProps {
 }
 
 function fmtBrl(val: number, privacyMode: boolean): string {
-  if (privacyMode) return '••••';
-  if (Math.abs(val) >= 1_000_000) return `R$${(val / 1_000_000).toFixed(2)}M`;
-  if (Math.abs(val) >= 1_000) return `R$${(val / 1_000).toFixed(0)}k`;
-  return `R$${val.toFixed(0)}`;
+  return fmtPrivacy(val, privacyMode);
 }
 
 function fmtBrlMillions(val: number): string {
@@ -120,7 +117,7 @@ export function HumanCapitalCrossover({
       backgroundColor: 'rgba(15,23,42,0.95)',
       borderColor: 'rgba(255,255,255,0.1)',
       textStyle: { color: '#f1f5f9', fontSize: 11 },
-      formatter: privacyMode ? () => '••••' : (params: unknown) => {
+      formatter: (params: unknown) => {
         const arr = params as Array<{ dataIndex: number; seriesName: string; value: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
@@ -264,7 +261,7 @@ export function HumanCapitalCrossover({
                     <td style={{ paddingTop: 4, paddingRight: 12, color: '#3b82f6' }}>{fmtBrl(p.vp_capital_humano, privacyMode)}</td>
                     <td style={{ paddingTop: 4, paddingRight: 12, color: '#22c55e' }}>{fmtBrl(p.pat_financeiro, privacyMode)}</td>
                     <td style={{ paddingTop: 4, color: p.delta >= 0 ? '#22c55e' : '#ef4444' }}>
-                      {privacyMode ? '••••' : `${p.delta >= 0 ? '+' : ''}${fmtBrlMillions(p.delta)}`}
+                      {`${p.delta >= 0 ? '+' : ''}${fmtBrl(Math.abs(p.delta), privacyMode)}`}
                     </td>
                   </tr>
                 ))}

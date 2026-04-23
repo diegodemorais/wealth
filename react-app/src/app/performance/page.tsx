@@ -209,7 +209,7 @@ export default function PerformancePage() {
               {/* Card A: Alpha ITD */}
               <InfoCard
                 label="Alpha desde início"
-                value={privacyMode ? '••%' : fmt(alphaItdPp)}
+                value={fmt(alphaItdPp)}
                 description="vs VWRA (market-cap global) · acumulado"
                 accentColor={alphaItdPp != null && alphaItdPp >= 0 ? 'var(--green)' : 'var(--red)'}
                 bg="var(--bg)"
@@ -218,7 +218,7 @@ export default function PerformancePage() {
               {/* Card B: Alpha anualizado */}
               <InfoCard
                 label="Alpha anualizado"
-                value={privacyMode ? '••%' : fmt(alphaAnualizadoPp)}
+                value={fmt(alphaAnualizadoPp)}
                 description="média / ano desde início"
                 accentColor={alphaAnualizadoPp != null && alphaAnualizadoPp >= 0 ? 'var(--green)' : 'var(--red)'}
                 bg="var(--bg)"
@@ -608,7 +608,7 @@ export default function PerformancePage() {
                     : 0.00171;
                   const pat = (data as any)?.fire_swr_percentis?.patrimonio_p50_2040 ?? 11500000;
                   const patMedio = pat / 2;
-                  const fmtM = (v: number) => privacyMode ? '••••' : `R$ ${(v / 1e6).toFixed(2)}M`;
+                  const fmtM = (v: number) => fmtPrivacy(v, privacyMode);
                   const custoPortfolio14a = patMedio * terPortfolio * 14;
                   const custoVwra14a = patMedio * terVwra * 14;
                   const alpha14a = patMedio * 0.0016 * 14;

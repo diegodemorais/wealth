@@ -50,9 +50,9 @@ export function CustoBaseTable({ defaultOpen = false }: { defaultOpen?: boolean 
     });
   }, [data]);
 
-  const fmtUsd = (v: number) => (privacyMode ? '••••' : `$${(v / 1000).toFixed(0)}k`);
+  const fmtUsd = (v: number) => (fmtPrivacy(v / 1000, privacyMode, { prefix: '$' }));
   const fmtPct = (v: number, sign = false) =>
-    privacyMode ? '••%' : `${sign && v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+    `${sign && v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
 
   const deltaColor = (d: number) =>
     Math.abs(d) <= 2 ? 'var(--green)' : Math.abs(d) <= 5 ? 'var(--yellow)' : 'var(--red)';

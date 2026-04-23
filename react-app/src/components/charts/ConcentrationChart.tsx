@@ -34,7 +34,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
     ].filter(s => s.value > 0);
 
     const fmt = (v: number) =>
-      privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
+      fmtPrivacy(v / 1e6, privacyMode);
 
     return {
       backgroundColor: 'transparent',
@@ -44,7 +44,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
         formatter: (p: any) =>
           `<div style="padding:6px 10px">
             <strong style="color:${p.data.itemStyle?.color ?? '#fff'}">${p.name}</strong><br/>
-            ${privacyMode ? '••••' : fmt(p.value)}<br/>
+            ${fmtPrivacy(p.value, privacyMode)}<br/>
             <span style="font-size:13px;font-weight:700">${p.percent?.toFixed(1)}%</span>
           </div>`,
       },
@@ -62,7 +62,7 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
           left: 'center',
           top: '38%',
           style: {
-            text: privacyMode ? '••%' : `${(100 - brasilPct).toFixed(0)}%`,
+            text: `${(100 - brasilPct).toFixed(0)}%`,
             fontSize: 16,
             fontWeight: 700,
             fill: EC.accent,
@@ -119,13 +119,13 @@ export function ConcentrationChart({ data }: ConcentrationChartProps) {
         <div style={styles.kpi}>
           <span style={styles.kpiLabel}>Brasil</span>
           <span style={{ ...styles.kpiValue, color: EC.orange }}>
-            {privacyMode ? '••%' : `${brasilPct.toFixed(1)}%`}
+            {`${brasilPct.toFixed(1)}%`}
           </span>
         </div>
         <div style={styles.kpi}>
           <span style={styles.kpiLabel}>Internacional</span>
           <span style={{ ...styles.kpiValue, color: EC.accent }}>
-            {privacyMode ? '••%' : `${internacionalPct.toFixed(1)}%`}
+            {`${internacionalPct.toFixed(1)}%`}
           </span>
         </div>
       </div>

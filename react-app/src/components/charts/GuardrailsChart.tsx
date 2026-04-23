@@ -26,7 +26,7 @@ export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
     // Use gastoOverride if provided (active family profile), else fallback to data
     const spendingAtual: number = gastoOverride ?? sg.spending_atual ?? safeTarget;
 
-    const fmt = (v: number) => privacyMode ? '••••' : `R$${Math.round(v / 1000)}k`;
+    const fmt = (v: number) => fmtPrivacy(v, privacyMode);
 
     // Projeção até horizonte_vida (90a) — usa n_anos_desacumulacao do JSON ou fallback 37a (90-53)
     const yearsFromData = (data as any)?.fire_matrix?.n_anos_desacumulacao ?? ((data as any)?.premissas?.horizonte_vida ? (data as any).premissas.horizonte_vida - ((data as any).premissas.idade_cenario_base ?? 53) : 37);

@@ -32,7 +32,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
         backgroundColor: EC.card,
         borderColor: EC.border2,
         textStyle: { color: EC.text, fontSize: 12 },
-        formatter: privacyMode ? () => '••••' : (params: any) => {
+        formatter: (params: any) => {
           const p = Array.isArray(params) ? params[0] : params;
           return `${p.name}<br/>Drawdown: ${(p.value as number).toFixed(2)}%`;
         },
@@ -101,7 +101,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
           <div style={{ padding: 'var(--space-3)', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Max Drawdown</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, color: 'var(--red)' }}>
-              {privacyMode ? '••%' : `${maxDrawdown.toFixed(2)}%`}
+              {`${maxDrawdown.toFixed(2)}%`}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Worst case (histórico)</div>
           </div>
@@ -109,7 +109,7 @@ const DrawdownHistoryChart: React.FC<DrawdownHistoryChartProps> = ({
           <div style={{ padding: 'var(--space-3)', background: currentBg, border: `1px solid ${currentBorder}`, borderRadius: '4px' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>Drawdown Atual</div>
             <div style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: '4px', color: currentColor }}>
-              {privacyMode ? '••%' : `${currentDd.toFixed(2)}%`}
+              {`${currentDd.toFixed(2)}%`}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>Posição presente</div>
           </div>

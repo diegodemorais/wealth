@@ -13,17 +13,12 @@ export function PremisesTable() {
 
   const fmt = (n: number | null | undefined, suffix = '') => {
     if (n == null) return '—';
-    if (privacyMode) return '••••';
     return `${n.toFixed(2)}${suffix}`;
   };
 
   const fmtCurrency = (n: number | null | undefined) => {
     if (n == null) return '—';
-    if (privacyMode) return '••••';
-    const abs = Math.abs(n);
-    if (abs >= 1_000_000) return `R$${(abs / 1_000_000).toFixed(2)}M`;
-    if (abs >= 1_000) return `R$${Math.round(abs / 1_000)}k`;
-    return `R$${n.toLocaleString('pt-BR')}`;
+    return fmtPrivacy(n, privacyMode);
   };
 
   const aporteData = useMemo(() => {
@@ -116,7 +111,7 @@ export function PremisesTable() {
               <div>
                 Execução:{' '}
                 <strong style={{ color: 'var(--green)' }}>
-                  {privacyMode ? '••••' : `${(am.realizado_media_brl / am.premissa_brl).toFixed(1)}×`}
+                  {`${(am.realizado_media_brl / am.premissa_brl).toFixed(1)}×`}
                 </strong>
                 {' '}premissa
               </div>

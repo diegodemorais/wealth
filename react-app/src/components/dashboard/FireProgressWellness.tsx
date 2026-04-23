@@ -41,12 +41,10 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
           className="text-4xl font-black leading-none"
           style={{ color: progressBarColor }}
         >
-          {privacyMode ? '••••' : (firePercentage * 100).toFixed(1) + '%'}
+          {(firePercentage * 100).toFixed(1) + '%'}
         </div>
         <div className="text-xs text-muted mt-1.5">
-          {privacyMode
-            ? 'R$••••M / R$••••M'
-            : `R$${(firePatrimonioAtual / 1e6).toFixed(2)}M / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M`}
+          {`${fmtPrivacy(firePatrimonioAtual, privacyMode)} / ${fmtPrivacy(firePatrimonioGatilho, privacyMode)}`}
         </div>
       </div>
 
@@ -62,13 +60,11 @@ const FireProgressWellness: React.FC<FireProgressWellnessProps> = ({
       <div className="flex justify-between items-center text-xs mt-2">
         <span className="text-muted">SWR no FIRE Day projetada:</span>
         <span className="text-cyan font-bold text-sm">
-          {privacyMode ? '••••' : (swrFireDay * 100).toFixed(2) + '%'}
+          {(swrFireDay * 100).toFixed(2) + '%'}
         </span>
       </div>
       <div className="text-xs text-muted mt-1">
-        {privacyMode
-          ? 'R$••••k / R$••••M · Meta ≤ 3.0%'
-          : `R$250k / R$${(firePatrimonioGatilho / 1e6).toFixed(1)}M · Meta ≤ 3.0%`}
+        {`${fmtPrivacy(250_000, privacyMode)} / ${fmtPrivacy(firePatrimonioGatilho, privacyMode)} · Meta ≤ 3.0%`}
       </div>
     </section>
   );

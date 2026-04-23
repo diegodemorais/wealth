@@ -51,13 +51,7 @@ export function EventosVidaChart({ data }: EventosVidaChartProps) {
   // Merge and sort all milestones by year
   const allMilestones = [...fixedMilestones, ...lifeEventMilestones].sort((a, b) => a.year - b.year);
 
-  if (privacyMode) {
-    return (
-      <ChartCard title="Eventos de Vida — Timeline FIRE">
-        <div className="text-muted-foreground text-lg py-6 text-center">••••</div>
-      </ChartCard>
-    );
-  }
+  // Privacy mode v2: values are transformed, not hidden — chart renders normally
 
   return (
     <ChartCard title="Eventos de Vida — Timeline FIRE">

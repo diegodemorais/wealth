@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import { InfoCard } from '@/components/primitives/InfoCard';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
@@ -55,9 +56,7 @@ export default function SWRDashboard({
     : swrP50 <= swrTarget * 1.33 ? <><AlertTriangle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> atenção</>
     : <><XCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> acima do target</>;
 
-  const fmtBrl = (v: number) => privacyMode
-    ? '••••'
-    : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 }).format(v);
+  const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode);
 
   return (
     <div>
@@ -93,7 +92,7 @@ export default function SWRDashboard({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <InfoCard
             label="SWR Atual"
-            value={swrAtual != null ? (privacyMode ? '••%' : `${(swrAtual * 100).toFixed(2)}%`) : '—'}
+            value={swrAtual != null ? (`${(swrAtual * 100).toFixed(2)}%`) : '—'}
             description={<>Patrimônio hoje / custo de vida · <em>Em fase de acumulação — este SWR não é sustentável no FIRE.</em><br />Meta: ≤{(swrTarget * 100).toFixed(0)}% no FIRE day.</>}
             accentColor="var(--muted)"
             size="lg"
@@ -104,13 +103,13 @@ export default function SWRDashboard({
             </div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
               <div style={{ fontSize: '2rem', fontWeight: 800, color: swrFireColor, lineHeight: 1 }}>
-                {swrP50 != null ? (privacyMode ? '••%' : `${(swrP50 * 100).toFixed(2)}%`) : '—'}
+                {swrP50 != null ? (`${(swrP50 * 100).toFixed(2)}%`) : '—'}
               </div>
               <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>P50</span>
             </div>
             <div style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
-              {swrP10 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>P10: {privacyMode ? '••%' : `${(swrP10 * 100).toFixed(2)}%`}</span>}
-              {swrP90 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)' }}>P90: {privacyMode ? '••%' : `${(swrP90 * 100).toFixed(2)}%`}</span>}
+              {swrP10 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--red)' }}>P10: {`${(swrP10 * 100).toFixed(2)}%`}</span>}
+              {swrP90 != null && <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)' }}>P90: {`${(swrP90 * 100).toFixed(2)}%`}</span>}
             </div>
             {swrFireStatus && <div style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: swrFireColor }}>{swrFireStatus} · alvo ≤{(swrTarget * 100).toFixed(0)}%</div>}
           </div>
@@ -124,7 +123,7 @@ export default function SWRDashboard({
             <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--red)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P10 — Pessimista</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--red)' }}>
-                {swrP10 != null ? (privacyMode ? '••%' : `${(swrP10 * 100).toFixed(2)}%`) : '—'}
+                {swrP10 != null ? (`${(swrP10 * 100).toFixed(2)}%`) : '—'}
               </div>
               {patrimonioP10 != null && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
@@ -136,7 +135,7 @@ export default function SWRDashboard({
             <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--yellow)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P50 — Mediano</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--yellow)' }}>
-                {swrP50 != null ? (privacyMode ? '••%' : `${(swrP50 * 100).toFixed(2)}%`) : '—'}
+                {swrP50 != null ? (`${(swrP50 * 100).toFixed(2)}%`) : '—'}
               </div>
               {patrimonioP50 != null && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>
@@ -148,7 +147,7 @@ export default function SWRDashboard({
             <div style={{ background: 'var(--card2)', borderRadius: 8, padding: 14, borderLeft: '3px solid var(--green)' }}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>P90 — Otimista</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--green)' }}>
-                {swrP90 != null ? (privacyMode ? '••%' : `${(swrP90 * 100).toFixed(2)}%`) : '—'}
+                {swrP90 != null ? (`${(swrP90 * 100).toFixed(2)}%`) : '—'}
               </div>
               {patrimonioP90 != null && (
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 4 }}>

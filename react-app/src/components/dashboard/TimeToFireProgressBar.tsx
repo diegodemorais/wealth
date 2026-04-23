@@ -66,7 +66,7 @@ export function TimeToFireProgressBar({
       {/* Progress label */}
       <div className="flex justify-between items-center mt-1.5">
         <div className="text-xs text-slate-500">
-          {privacyMode ? '••••' : `${progressPct.toFixed(1)}% do caminho`}
+          {`${progressPct.toFixed(1)}% do caminho`}
         </div>
         <div className="text-xs font-medium text-accent">
           {fmtPct(fireProgress, 2)}

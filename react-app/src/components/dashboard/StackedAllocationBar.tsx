@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface StackedAllocationBarProps {
   equityBrl: number;
@@ -165,7 +166,7 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
               {(asset.pct * 100).toFixed(1)}%
             </div>
             <div style={{ fontSize: 'var(--text-sm)', color: 'var(--muted)' }}>
-              {privacyMode ? 'R$••••' : fmtBrl(asset.value)}
+              {fmtPrivacy(asset.value, privacyMode)}
             </div>
           </div>
         ))}
@@ -175,7 +176,7 @@ const StackedAllocationBar: React.FC<StackedAllocationBarProps> = ({
       <div style={{ marginTop: '14px', padding: 'var(--space-3) var(--space-4)', background: 'rgba(71,85,105,0.08)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '3px solid var(--border)' }}>
         <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text)' }}>Patrimônio Total</span>
         <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text)' }}>
-          {privacyMode ? 'R$••••' : fmtBrl(totalBrl)}
+          {fmtPrivacy(totalBrl, privacyMode)}
         </span>
       </div>
     </div>

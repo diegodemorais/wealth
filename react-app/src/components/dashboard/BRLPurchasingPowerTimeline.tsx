@@ -13,7 +13,7 @@ export interface BRLPurchasingPowerTimelineProps {
 }
 
 function fmtBRL(val: number | undefined | null, pm: boolean): string {
-  if (pm) return '••••';
+  if (pm) return fmtPrivacy(val ?? 0, true);
   if (val == null) return '—';
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
 }

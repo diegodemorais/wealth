@@ -150,8 +150,8 @@ export default function MacroUnificado({
             <div className="text-xs text-muted mt-0.5">Exp. cambial ~{exposicaoCambialPct.toFixed(0)}%</div>
           </div>
           <div className="text-sm text-muted text-right">
-            <div>HODL11: {privacyMode ? '••••' : `R$${(((hodl11Brl ?? 0)) / 1000).toFixed(0)}k`}</div>
-            <div>RF Total: {privacyMode ? '••••' : `R$${(((rfBrl ?? 0)) / 1000).toFixed(0)}k`}</div>
+            <div>HODL11: {fmtPrivacy(((hodl11Brl ?? 0)) / 1000, privacyMode)}</div>
+            <div>RF Total: {fmtPrivacy(((rfBrl ?? 0)) / 1000, privacyMode)}</div>
           </div>
         </div>
       </div>

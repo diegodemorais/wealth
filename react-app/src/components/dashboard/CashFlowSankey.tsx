@@ -3,6 +3,7 @@
 import React from 'react';
 import { SankeyChart } from '@/components/charts/SankeyChart';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import { useDashboardStore } from '@/store/dashboardStore';
 
 const CashFlowSankey: React.FC = () => {
@@ -20,10 +21,7 @@ const CashFlowSankey: React.FC = () => {
   const renda = Math.max(rendaMensal * 12, gastoTotal + investimentos);
   const savingsRate = renda > 0 ? Math.round((investimentos / renda) * 100) : 0;
 
-  const fmtK = (v: number) => {
-    if (privacyMode) return 'R$••••';
-    return `R$ ${new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(v)}`;
-  };
+  const fmtK = (v: number) => fmtPrivacy(v, privacyMode, { compact: false });
 
   return (
     <div>

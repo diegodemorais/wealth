@@ -50,7 +50,6 @@ export interface BtcIndicatorsChartProps {
 // ---------------------------------------------------------------------------
 
 function fmtUsd(val: number | null | undefined, privacyMode: boolean): string {
-  if (privacyMode) return '$••••';
   if (val == null) return '—';
   if (val >= 1_000_000_000_000) return `$${(val / 1_000_000_000_000).toFixed(2)}T`;
   if (val >= 1_000_000_000) return `$${(val / 1_000_000_000).toFixed(1)}B`;
@@ -176,7 +175,7 @@ function Chart200WMA({ data, privacyMode }: { data: Ma200wData; privacyMode: boo
       borderColor: '#334155',
       borderWidth: 1,
       textStyle: { color: '#f1f5f9', fontSize: 11 },
-      formatter: privacyMode ? () => '••••' : (params: unknown) => {
+      formatter: (params: unknown) => {
         const arr = params as Array<{ dataIndex: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;
@@ -280,7 +279,7 @@ function ChartMVRV({ data, privacyMode }: { data: MvrvZscoreData; privacyMode: b
       backgroundColor: 'rgba(15,23,42,0.95)',
       borderColor: '#334155',
       textStyle: { color: '#f1f5f9', fontSize: 11 },
-      formatter: privacyMode ? () => '••••' : (params: unknown) => {
+      formatter: (params: unknown) => {
         const arr = params as Array<{ dataIndex: number }>;
         if (!arr || !arr[0]) return '';
         const idx = arr[0].dataIndex;

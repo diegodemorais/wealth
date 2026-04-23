@@ -174,7 +174,7 @@ export function FireMatrixTable({ data, idades, currentPatrimonio, currentSpendi
                         ? `← você aqui · P(FIRE) = ${pfire.toFixed(1)}% · patrimônio ${fmtCompact(pat)} · gasto ${fmtCompact(gasto)}`
                         : `P(FIRE) = ${pfire.toFixed(1)}% com patrimônio ${fmtCompact(pat)} e gasto ${fmtCompact(gasto)}`}
                     >
-                      {privacyMode ? '••%' : fmtPct(pfire / 100, 0)}
+                      {fmtPct(pfire / 100, 0)}
                       {isCurrentCell && (
                         <span style={{ position: 'absolute', top: -8, right: 1, fontSize: 8, color: 'var(--accent)', fontWeight: 700, whiteSpace: 'nowrap', pointerEvents: 'none' }}>
                           ★

@@ -181,7 +181,7 @@ function FloorUpsideWithdraw({
             style={{ fontSize: '1.1rem', fontWeight: 700, color: EC.accent }}
             className="pv"
           >
-            {privacyMode ? '••••' : `R$${(gastoPiso / 1000).toFixed(0)}k/ano`}
+            {fmtPrivacy(gastoPiso, privacyMode) + '/ano'}
           </div>
           <div style={{ fontSize: '10px', color: 'var(--muted)' }}>RF + INSS</div>
         </div>
@@ -206,13 +206,11 @@ function FloorUpsideWithdraw({
             style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ef4444' }}
             className="pv"
           >
-            {privacyMode ? '••••' : `R$${(gapEquity / 1000).toFixed(0)}k/ano`}
+            {fmtPrivacy(gapEquity, privacyMode) + '/ano'}
           </div>
           <div style={{ fontSize: '10px', color: 'var(--muted)' }} className="pv">
             {patNecessarioGap != null
-              ? privacyMode
-                ? '••••'
-                : `Pat. necessário: R$${(patNecessarioGap / 1e6).toFixed(1)}M`
+              ? `Pat. necessário: ${fmtPrivacy(patNecessarioGap, privacyMode)}`
               : '—'}
           </div>
         </div>
@@ -376,7 +374,7 @@ export default function WithdrawPage() {
           </button>
         ))}
         <span style={{ marginLeft: 'auto', fontSize: 'var(--text-xs)', color: 'var(--muted)', opacity: .7 }}>
-          Gasto base: {privacyMode ? '••••' : `R$${(activeScenarioCfg.custo_vida_base / 1000).toFixed(0)}k/ano`}
+          Gasto base: {fmtPrivacy(activeScenarioCfg.custo_vida_base, privacyMode) + '/ano'}
         </span>
       </div>
 
@@ -644,8 +642,8 @@ export default function WithdrawPage() {
             const swr_target: number = premissas.swr_gatilho ?? FIRE_RULES.SWR_DEFAULT;
             const fire_data = (data as any)?.fire ?? {};
             const pat_mediano = fire_data.pat_mediano_fire ?? fire_data.pat_p50_fire ?? premissas.patrimonio_atual ?? 3_500_000;
-            const fmtBrl = (v: number) => privacyMode ? '••••' : `R$${(v / 1000).toFixed(0)}k`;
-            const fmtPct = (v: number) => privacyMode ? '••%' : `${(v * 100).toFixed(1)}%`;
+            const fmtBrl = (v: number) => fmtPrivacy(v / 1000, privacyMode);
+            const fmtPct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
             const ltcCenarios = [
               { label: 'Sem LTC', saude_extra: 0 },
@@ -718,7 +716,7 @@ export default function WithdrawPage() {
             const r65 = v(rf.renda2065);
             const total = i29 + i40 + i50 + r65;
             const custoMensal = activeScenarioCfg.custo_vida_base / 12;
-            const fmtK = (n: number) => privacyMode ? '••••' : `R$${(n / 1000).toFixed(0)}k`;
+            const fmtK = (n: number) => fmtPrivacy(n / 1000, privacyMode);
             const fmtMeses = (n: number) => custoMensal > 0 ? `${(n / custoMensal).toFixed(1)}m` : '—';
             const pct = (n: number) => total > 0 ? (n / total) * 100 : 0;
 

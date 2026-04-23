@@ -36,7 +36,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
   }, [data]);
 
   const option = useMemo(() => {
-    const fmt = (v: number) => privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
+    const fmt = (v: number) => fmtPrivacy(v / 1e6, privacyMode);
 
     return {
       backgroundColor: 'transparent',
@@ -91,7 +91,7 @@ export function DonutCharts({ data }: DonutChartsProps) {
           left: 'center',
           top: 'center',
           style: {
-            text: privacyMode ? '••••' : `R$${(totalBrl / 1e6).toFixed(1)}M`,
+            text: fmtPrivacy(totalBrl / 1e6, privacyMode),
             fontSize: 14,
             fontWeight: 700,
             fill: EC.text,

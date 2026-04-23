@@ -138,7 +138,7 @@ function FloorUpsideFire({
             >
               <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Floor RF</div>
               <div style={{ fontWeight: 700, color: EC.accent }} className="pv">
-                {privacyMode ? '••••' : `R$${(floorFireDay / 1000).toFixed(0)}k`}
+                {fmtPrivacy(floorFireDay / 1000, privacyMode)}
               </div>
             </div>
             <div
@@ -151,7 +151,7 @@ function FloorUpsideFire({
             >
               <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Gap equity</div>
               <div style={{ fontWeight: 700, color: '#ef4444' }} className="pv">
-                {privacyMode ? '••••' : `R$${(gapFireDay / 1000).toFixed(0)}k`}
+                {fmtPrivacy(gapFireDay / 1000, privacyMode)}
               </div>
             </div>
             <div
@@ -199,9 +199,7 @@ function FloorUpsideFire({
             >
               <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Floor c/INSS</div>
               <div style={{ fontWeight: 700, color: EC.accent }} className="pv">
-                {privacyMode
-                  ? '••••'
-                  : `R$${(Math.min(floorPosInss, custoVida) / 1000).toFixed(0)}k`}
+                {fmtPrivacy(Math.min(floorPosInss, custoVida), privacyMode)}
               </div>
             </div>
             <div
@@ -214,7 +212,7 @@ function FloorUpsideFire({
             >
               <div style={{ fontSize: '10px', color: 'var(--muted)' }}>Gap equity</div>
               <div style={{ fontWeight: 700, color: '#ef4444' }} className="pv">
-                {privacyMode ? '••••' : `R$${(gapPosInss / 1000).toFixed(0)}k`}
+                {fmtPrivacy(gapPosInss / 1000, privacyMode)}
               </div>
             </div>
             <div
@@ -370,7 +368,7 @@ export default function FirePage() {
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.6px', marginBottom: 4 }}>Patrimônio Alvo</div>
           <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
             {patrimonioAlvoHero != null
-              ? (privacyMode ? '••••' : `R$${(patrimonioAlvoHero / 1e6).toFixed(1)}M`)
+              ? (fmtPrivacy(patrimonioAlvoHero / 1e6, privacyMode))
               : '—'}
           </div>
         </div>
@@ -396,8 +394,8 @@ export default function FirePage() {
         const patrimonioAtual = prem.patrimonio_atual ?? 0;
         const patrimonioLiquido = patrimonioAtual - irDiferido;
 
-        const fmtBrl = (v: number) => privacyMode ? '••••' : `R$${(v / 1e3).toFixed(0)}k`;
-        const fmtM = (v: number) => privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
+        const fmtBrl = (v: number) => fmtPrivacy(v / 1e3, privacyMode);
+        const fmtM = (v: number) => fmtPrivacy(v / 1e6, privacyMode);
 
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5" style={{ marginBottom: 12 }}>
@@ -549,7 +547,7 @@ export default function FirePage() {
                     <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>{emoji}</div>
                     <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.5px' }}>{label}</div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-                      {privacyMode ? '••••' : `R$${(p.gasto_anual / 1000).toFixed(0)}k/ano`}{isAspir ? ' · mercado fav.' : ''}
+                      {fmtPrivacy(Math.round(p.gasto_anual / 1000) * 1000, privacyMode) + '/ano'}{isAspir ? ' · mercado fav.' : ''}
                       {!isAspir && p.swr_at_fire != null && (
                         <span style={{ marginLeft: 6, color: 'var(--accent)', fontWeight: 600 }}>
                           · SWR {(p.swr_at_fire * 100).toFixed(1)}%
@@ -691,19 +689,19 @@ export default function FirePage() {
               <div className="kpi" style={{ textAlign: 'center' }}>
                 <div className="kpi-label">Gasto Katia (solo)</div>
                 <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                  {privacyMode ? '••••' : `R$${((data as any)?.premissas?.gasto_katia_solo ?? 160000) / 1000}k/ano`}
+                  {fmtPrivacy(((data as any)?.premissas?.gasto_katia_solo ?? 160000) / 1000 * 1000, privacyMode) + '/ano'}
                 </div>
               </div>
               <div className="kpi" style={{ textAlign: 'center' }}>
                 <div className="kpi-label">INSS Katia</div>
                 <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                  {privacyMode ? '••••' : `R$${((data as any)?.premissas?.inss_katia_anual ?? 93600) / 1000}k/ano`}
+                  {fmtPrivacy(((data as any)?.premissas?.inss_katia_anual ?? 93600) / 1000 * 1000, privacyMode) + '/ano'}
                 </div>
               </div>
               <div className="kpi" style={{ textAlign: 'center' }}>
                 <div className="kpi-label">PGBL Katia (FIRE Day)</div>
                 <div className="kpi-value" style={{ fontSize: '1.2rem', fontWeight: 700 }}>
-                  {privacyMode ? '••••' : `R$${((data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490000) / 1000}k`}
+                  {fmtPrivacy(((data as any)?.premissas?.pgbl_katia_saldo_fire ?? 490000) / 1000 * 1000, privacyMode)}
                 </div>
               </div>
             </div>
@@ -723,15 +721,15 @@ export default function FirePage() {
                   <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
                     <div>
                       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gasto líquido (− INSS)</div>
-                      <div style={{ fontWeight: 700 }}>{privacyMode ? '••••' : `R$${(gastoLiquido / 1000).toFixed(0)}k/ano`}</div>
+                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(Math.round(gastoLiquido / 1000) * 1000, privacyMode) + '/ano'}</div>
                     </div>
                     <div>
                       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Patrimônio necessário (3% SWR)</div>
-                      <div style={{ fontWeight: 700 }}>{privacyMode ? '••••' : `R$${(patrimonioNecessario / 1e6).toFixed(1)}M`}</div>
+                      <div style={{ fontWeight: 700 }}>{fmtPrivacy(patrimonioNecessario / 1e6, privacyMode)}</div>
                     </div>
                     <div>
                       <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Cobertura estimada</div>
-                      <div style={{ fontWeight: 700, color: cor }}>{privacyMode ? '••••' : `${cobertura.toFixed(0)}%`}</div>
+                      <div style={{ fontWeight: 700, color: cor }}>{`${cobertura.toFixed(0)}%`}</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 8 }}>

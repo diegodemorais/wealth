@@ -80,9 +80,8 @@ export function LotesTable({ lots, summary, prices, cambio }: Props) {
     });
   };
 
-  const pv = (v: string) => privacyMode ? '••••' : v;
-  const fmtBrl = (v: number) => pv(`R$${v.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`);
-  const fmtBrlK = (v: number) => pv(`R$${(v / 1e3).toFixed(0)}k`);
+  const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode, { compact: false });
+  const fmtBrlK = (v: number) => fmtPrivacy(v, privacyMode);
   const fmtQty = (v: number) => v.toFixed(v >= 10 ? 0 : 2);
 
   const hasBrl = lots.some(l => l.cost_brl != null);
@@ -167,7 +166,7 @@ export function LotesTable({ lots, summary, prices, cambio }: Props) {
                     ) : (
                       <>
                         <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtQty(s.qty_total)}</td>
-                        <td style={{ textAlign: 'right', padding: '8px 8px' }}>{pv(`$${s.cost_usd_total.toLocaleString()}`)}</td>
+                        <td style={{ textAlign: 'right', padding: '8px 8px' }}>{fmtPrivacy(s.cost_usd_total, privacyMode, { prefix: '$', compact: false })}</td>
                         <td style={{ textAlign: 'right', padding: '8px 8px' }}>—</td>
                       </>
                     )}
@@ -198,7 +197,7 @@ export function LotesTable({ lots, summary, prices, cambio }: Props) {
                         </>
                       ) : (
                         <>
-                          <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)' }}>{pv(`$${lot.cost_usd}`)}</td>
+                          <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)' }}>{fmtPrivacy(lot.cost_usd, privacyMode, { prefix: '$', compact: false })}</td>
                           <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)' }}>—</td>
                           <td style={{ textAlign: 'right', padding: '4px 8px', fontSize: 'var(--text-xs)' }}>—</td>
                         </>

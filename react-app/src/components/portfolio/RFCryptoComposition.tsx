@@ -45,14 +45,7 @@ export function RFCryptoComposition() {
       });
   }, [data?.rf]);
 
-  const formatCurrency = (value: number) => {
-    if (privacyMode) return '••••';
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
+  const formatCurrency = (value: number) => fmtPrivacy(value, privacyMode);
 
   const totalRFValue = rfComposition.reduce((sum, item) => sum + item.valor, 0);
   const hodlValue = data?.hodl11?.valor || 0;
@@ -98,10 +91,10 @@ export function RFCryptoComposition() {
                     {formatCurrency(item.valor)}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontSize: 'var(--text-xs)', color: 'var(--text)' }}>
-                    {privacyMode ? '••••' : item.cotas.toFixed(2)}
+                    {fmtPrivacy(item.cotas, privacyMode, { prefix: '', decimals: 2, compact: false })}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--accent)' }}>
-                    {privacyMode ? '••••' : `${item.taxa.toFixed(2)}%`}
+                    {`${item.taxa.toFixed(2)}%`}
                   </td>
                 </tr>
               ))}
@@ -133,16 +126,16 @@ export function RFCryptoComposition() {
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   <td style={{ padding: 'var(--space-2)', ...styles.instrumentName }}>HODL11 (BTC Wrapper)</td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
-                    {privacyMode ? '••••' : data.hodl11.qty.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
+                    {fmtPrivacy(data.hodl11.qty, privacyMode, { prefix: '', decimals: 0, compact: false })}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: 'var(--text)' }}>
-                    {privacyMode ? '••••' : `R$ ${data.hodl11.preco.toFixed(2)}`}
+                    {`R$ ${data.hodl11.preco.toFixed(2)}`}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', fontWeight: '500', color: 'var(--text)' }}>
                     {formatCurrency(data.hodl11.valor)}
                   </td>
                   <td style={{ textAlign: 'right', padding: 'var(--space-2)', color: data.hodl11.pnl_pct >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '500' }}>
-                    {privacyMode ? '••••' : `${data.hodl11.pnl_pct.toFixed(2)}%`}
+                    {`${data.hodl11.pnl_pct.toFixed(2)}%`}
                   </td>
                 </tr>
               )}
@@ -165,13 +158,13 @@ export function RFCryptoComposition() {
           <div style={styles.percentItem}>
             <span>Fixed Income</span>
             <span style={styles.percentValue}>
-              {privacyMode ? '••••' : `${((totalRFValue / totalDerivatives) * 100).toFixed(1)}%`}
+              {`${((totalRFValue / totalDerivatives) * 100).toFixed(1)}%`}
             </span>
           </div>
           <div style={styles.percentItem}>
             <span>Crypto</span>
             <span style={styles.percentValue}>
-              {privacyMode ? '••••' : `${((hodlValue / totalDerivatives) * 100).toFixed(1)}%`}
+              {`${((hodlValue / totalDerivatives) * 100).toFixed(1)}%`}
             </span>
           </div>
         </div>

@@ -33,18 +33,14 @@ export interface IRDeferralSectionProps {
 }
 
 function fmtBRL(val: number, pm: boolean): string {
-  if (pm) return '••••';
   const abs = Math.abs(val);
   const sign = val < 0 ? '−' : '';
-  if (abs >= 1_000_000) return `${sign}R$${(abs / 1_000_000).toFixed(2)}M`;
-  if (abs >= 1_000) return `${sign}R$${Math.round(abs / 1_000)}k`;
-  return (sign ? '-' : '') + new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(abs);
+  return sign + fmtPrivacy(abs, pm);
 }
 
 function fmtUSD(val: number, pm: boolean): string {
-  if (pm) return '••••';
   const sign = val >= 0 ? '+' : '';
-  return sign + new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
+  return sign + fmtPrivacy(Math.abs(val), pm, { prefix: '$', compact: true });
 }
 
 type LoteStatus = 'PERDA' | 'MONITOR' | 'GANHO';
@@ -127,7 +123,7 @@ export default function IRDeferralSection({
         <div style={{ background: 'var(--card2)', borderRadius: 6, padding: 12, textAlign: 'center' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 4 }}>IR Latente</div>
           <div style={{ fontSize: 20, fontWeight: 700, color: '#dc2626' }}>
-            {privacyMode ? '••••' : `${irLatentePct.toFixed(1)}%`}
+            {`${irLatentePct.toFixed(1)}%`}
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface BrasilConcentrationCardProps {
   hodl11: number;
@@ -56,7 +57,7 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
             Brasil Concentration
           </div>
           <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 800, marginBottom: '4px', color: concentrationColor }}>
-            {privacyMode ? '••%' : `${fmtPct(concentrationBrazil)}%`}
+            {`${fmtPct(concentrationBrazil)}%`}
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>
             {concentrationBrazil > 0.65
@@ -76,44 +77,44 @@ const BrasilConcentrationCard: React.FC<BrasilConcentrationCardProps> = ({
           <div style={rowStyle}>
             <div style={labelStyle}>
               <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Renda Fixa (IPCA+ Ladder)</span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(ipcaTotal)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(ipcaTotal, privacyMode)}</span>
             </div>
             <div style={subStyle}>
               <span>IPCA+ 2029/2040/2050</span>
-              <span>{privacyMode ? '••%' : `${fmtPct(ipcaTotal / totalBrl)}%`}</span>
+              <span>{`${fmtPct(ipcaTotal / totalBrl)}%`}</span>
             </div>
           </div>
 
           <div style={rowStyle}>
             <div style={labelStyle}>
               <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Renda+ 2065</span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(rendaPlus)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(rendaPlus, privacyMode)}</span>
             </div>
             <div style={subStyle}>
               <span>Título prefixado</span>
-              <span>{privacyMode ? '••%' : `${fmtPct(rendaPlus / totalBrl)}%`}</span>
+              <span>{`${fmtPct(rendaPlus / totalBrl)}%`}</span>
             </div>
           </div>
 
           <div style={rowStyle}>
             <div style={labelStyle}>
               <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Criptoativos (HODL11)</span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(hodl11)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(hodl11, privacyMode)}</span>
             </div>
             <div style={subStyle}>
               <span>Bitcoin + Crypto Legado</span>
-              <span>{privacyMode ? '••%' : `${fmtPct(hodl11 / totalBrl)}%`}</span>
+              <span>{`${fmtPct(hodl11 / totalBrl)}%`}</span>
             </div>
           </div>
 
           <div style={rowStyle}>
             <div style={labelStyle}>
               <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 500 }}>Crypto Legado</span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{privacyMode ? 'R$••••' : fmtBrl(cryptoLegado)}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text)', fontWeight: 600 }}>{fmtPrivacy(cryptoLegado, privacyMode)}</span>
             </div>
             <div style={subStyle}>
               <span>Posições anteriores</span>
-              <span>{privacyMode ? '••%' : `${fmtPct(cryptoLegado / totalBrl)}%`}</span>
+              <span>{`${fmtPct(cryptoLegado / totalBrl)}%`}</span>
             </div>
           </div>
         </div>

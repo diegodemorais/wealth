@@ -763,7 +763,7 @@ function WhatIfSection() {
           <label>
             <span>✏️ Custo Cenário B /ano</span>
             <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">
-              {privacyMode ? '••••' : `R$${(custoB / 1000).toFixed(0)}k/ano`}
+              {fmtPrivacy(custoB / 1000, privacyMode) + '/ano'}
             </span>
           </label>
           <input
@@ -778,7 +778,7 @@ function WhatIfSection() {
           <label>
             <span>✏️ Aporte Cenário B /mês</span>
             <span style={{ fontWeight: 700, color: 'var(--accent)' }} className="pv">
-              {privacyMode ? '••••' : `R$${(aporteB / 1000).toFixed(0)}k/mês`}
+              {fmtPrivacy(aporteB / 1000, privacyMode) + '/mês'}
             </span>
           </label>
           <input
@@ -800,7 +800,7 @@ function WhatIfSection() {
             checked={inssToggle.diego}
             onChange={e => setInssToggle(v => ({ ...v, diego: e.target.checked }))}
           />
-          <span>Diego — <span className="pv">{privacyMode ? '••••' : `R$${(inssAnualDiego / 1000).toFixed(0)}k/ano`}</span></span>
+          <span>Diego — <span className="pv">{fmtPrivacy(inssAnualDiego / 1000, privacyMode) + '/ano'}</span></span>
         </label>
         <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 'var(--text-xs)', cursor: 'pointer' }}>
           <input
@@ -808,11 +808,11 @@ function WhatIfSection() {
             checked={inssToggle.katia}
             onChange={e => setInssToggle(v => ({ ...v, katia: e.target.checked }))}
           />
-          <span>Katia — <span className="pv">{privacyMode ? '••••' : `R$${(inssAnualKatia / 1000).toFixed(0)}k/ano`}</span></span>
+          <span>Katia — <span className="pv">{fmtPrivacy(inssAnualKatia / 1000, privacyMode) + '/ano'}</span></span>
         </label>
         {inssOffset > 0 && (
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, alignSelf: 'center' }} className="pv">
-            {privacyMode ? '••••' : `→ Custo líquido B: R$${(custoLiquidoB / 1000).toFixed(0)}k/ano`}
+            {`→ Custo líquido B: ${fmtPrivacy(custoLiquidoB, privacyMode)}/ano`}
           </span>
         )}
       </div>
@@ -930,7 +930,7 @@ function WhatIfSection() {
                   SWR bruta: <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{(resultB.swrAtFire * 100).toFixed(2)}%</span>
                   {inssOffset > 0 && (
                     <span> · SWR líquida: <span style={{ color: 'var(--green)', fontWeight: 600 }} className="pv">
-                      {privacyMode ? '••••' : `${(custoLiquidoB / resultB.pat * 100).toFixed(2)}%`}
+                      {`${(custoLiquidoB / resultB.pat * 100).toFixed(2)}%`}
                     </span></span>
                   )}
                 </div>
@@ -1044,7 +1044,7 @@ function WhatIfSection() {
           <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Floor garantido</div>
             <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--accent)' }} className="pv">
-              {privacyMode ? '••••' : `R$${(floorTotal / 1000).toFixed(0)}k/ano`}
+              {fmtPrivacy(floorTotal / 1000, privacyMode) + '/ano'}
             </div>
             <div style={{ fontSize: '10px', color: 'var(--muted)' }}>
               INSS + piso RF
@@ -1054,11 +1054,11 @@ function WhatIfSection() {
           <div style={{ background: 'var(--card)', borderRadius: '8px', padding: '8px', textAlign: 'center', border: '1px solid var(--border)' }}>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>Gap (equity)</div>
             <div style={{ fontSize: '1rem', fontWeight: 700, color: gapEquity > 0 ? 'var(--red)' : 'var(--green)' }} className="pv">
-              {privacyMode ? '••••' : `R$${(gapEquity / 1000).toFixed(0)}k/ano`}
+              {fmtPrivacy(gapEquity / 1000, privacyMode) + '/ano'}
             </div>
             <div style={{ fontSize: '10px', color: 'var(--muted)' }}>
               {patrimonioNecessarioGap != null
-                ? <span className="pv">{privacyMode ? '••••' : `Pat. necessário: R$${(patrimonioNecessarioGap / 1000).toFixed(0)}k`}</span>
+                ? <span className="pv">{`Pat. necessário: ${fmtPrivacy(patrimonioNecessarioGap, privacyMode)}`}</span>
                 : '—'}
             </div>
           </div>
@@ -1086,7 +1086,7 @@ function WhatIfSection() {
           <span>🗓 Eventos de Vida</span>
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
             {lifeEvents.length > 0
-              ? `${lifeEvents.length} evento${lifeEvents.length > 1 ? 's' : ''} · ${privacyMode ? '••••' : `−R$${(totalOneShotEventos / 1000).toFixed(0)}k one-shot`}`
+              ? `${lifeEvents.length} evento${lifeEvents.length > 1 ? 's' : ''} · ${fmtPrivacy(totalOneShotEventos, privacyMode) + ' one-shot'}`
               : 'Nenhum'}
             {' '}{eventsExpanded ? '▲' : '▼'}
           </span>
@@ -1206,7 +1206,7 @@ function WhatIfSection() {
                       {evt.tipo === 'recorrente' ? '∞ rec.' : '1x'}
                     </span>
                     <span className="pv" style={{ color: (evt.categoria ?? 'despesa') === 'receita' ? '#16a34a' : 'var(--red)', fontWeight: 600 }}>
-                      {privacyMode ? '••••' : `${(evt.categoria ?? 'despesa') === 'receita' ? '+' : '−'}R$${(evt.custo / 1000).toFixed(0)}k${evt.tipo === 'recorrente' ? '/ano' : ''}`}
+                      {`${(evt.categoria ?? 'despesa') === 'receita' ? '+' : '−'}${fmtPrivacy(evt.custo, privacyMode)}${evt.tipo === 'recorrente' ? '/ano' : ''}`}
                     </span>
                     <button
                       onClick={() => setLifeEvents(prev => prev.filter(e => e.id !== evt.id))}
@@ -1219,7 +1219,7 @@ function WhatIfSection() {
                 {totalOneShotEventos > 0 && (
                   <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: '4px', textAlign: 'right' }}>
                     One-shot total: <span className="pv" style={{ color: 'var(--red)', fontWeight: 600 }}>
-                      {privacyMode ? '••••' : `−R$${(totalOneShotEventos / 1000).toFixed(0)}k`}
+                      {fmtPrivacy(totalOneShotEventos, privacyMode)}
                     </span>
                   </div>
                 )}
@@ -1479,7 +1479,7 @@ function StressTestSection() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
           {[
             { label: 'Patrimônio', value: fmtPrivacy(patrimonio, privacyMode) },
-            { label: 'Aporte mensal', value: aporteMensal > 0 ? (privacyMode ? '••••' : `R$${(aporteMensal / 1000).toFixed(0)}k`) : '—' },
+            { label: 'Aporte mensal', value: aporteMensal > 0 ? (fmtPrivacy(aporteMensal / 1000, privacyMode)) : '—' },
             { label: 'Retorno (real)', value: `${(annualReturn * 100).toFixed(2)}%/ano` },
             { label: 'Volatilidade', value: `${(annualVol * 100).toFixed(0)}%/ano` },
             { label: 'Distribuição', value: 'Normal (Box-Muller)' },
@@ -1495,7 +1495,7 @@ function StressTestSection() {
           {premissasST.custo_vida_base != null && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 8px', borderRadius: 999, background: 'rgba(99,179,237,.10)', border: '1px solid rgba(99,179,237,.3)', fontSize: 11, color: 'var(--accent)', fontWeight: 600, flexShrink: 0, alignSelf: 'center' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)', flexShrink: 0 }} />
-              Solteiro · {privacyMode ? '••••' : `R$${(premissasST.custo_vida_base / 1000).toFixed(0)}k/ano`}
+              Solteiro · {fmtPrivacy(premissasST.custo_vida_base / 1000, privacyMode) + '/ano'}
             </div>
           )}
         </div>

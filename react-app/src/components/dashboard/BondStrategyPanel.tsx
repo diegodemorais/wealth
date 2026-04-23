@@ -247,7 +247,7 @@ export default function BondStrategyPanel({
                       {cfg.label}
                     </div>
                     <div style={{ fontSize: '1.2rem', fontWeight: 700, color: runway != null && runway >= 7 ? 'var(--green)' : runway != null && runway >= 5 ? 'var(--yellow)' : 'var(--red)' }}>
-                      {runway != null ? (privacyMode ? '••••' : `${runway.toFixed(1)}a`) : '—'}
+                      {runway != null ? `${runway.toFixed(1)}a` : '—'}
                     </div>
                     <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 2 }}>
                       {runway != null ? (runway >= 7 ? <><CheckCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> meta</> : runway >= 5 ? <><AlertCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> ok</> : <><XCircle size={12} style={{ display: 'inline', verticalAlign: '-1px' }} /> curto</>) : ''}
@@ -261,7 +261,7 @@ export default function BondStrategyPanel({
             {activeRunway && Array.isArray(activeRunway.pool_disponivel) && (
               <div>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginBottom: 6 }}>
-                  Trajetória — <strong>{withdrawCenarios[withdrawScenario]?.label}</strong> · pool inicial: {privacyMode ? '••••' : `R$${((activeRunway.pool_inicial ?? 0) / 1000).toFixed(0)}k`}
+                  Trajetória — <strong>{withdrawCenarios[withdrawScenario]?.label}</strong> · pool inicial: {fmtPrivacy((activeRunway.pool_inicial ?? 0) / 1000, privacyMode)}
                 </div>
                 <div style={{ display: 'flex', gap: 0, alignItems: 'flex-end', height: 60, borderBottom: '1px solid var(--border)' }}>
                   {(activeRunway.pool_disponivel as number[]).map((v: number, i: number) => {
@@ -270,7 +270,7 @@ export default function BondStrategyPanel({
                     const isZero = v <= 0;
                     return (
                       <div key={i}
-                        title={`Ano ${(activeRunway.anos_pos_fire as number[])[i]}: ${privacyMode ? '••••' : `R$${(v / 1000).toFixed(0)}k`}`}
+                        title={`Ano ${(activeRunway.anos_pos_fire as number[])[i]}: ${fmtPrivacy(v / 1000, privacyMode)}`}
                         style={{
                           flex: 1,
                           height: `${heightPct}%`,
@@ -319,7 +319,7 @@ export default function BondStrategyPanel({
                   <span style={{ fontSize: 11, color: 'var(--muted)' }}>{item.ativo}</span>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
                     <span style={{ fontSize: 11, fontFamily: 'monospace', color: 'var(--text)' }}>
-                      {privacyMode ? '••••' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(item.valor)}
+                      {fmtPrivacy(item.valor, privacyMode)}
                     </span>
                     <span style={{ fontSize: 11, fontFamily: 'monospace', fontWeight: 600, color: 'var(--muted)' }}>
                       {item.pct_meta.toFixed(1)}%

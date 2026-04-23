@@ -64,7 +64,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
         <div className="flex items-center gap-2">
           {savingsRate != null && (
             <span className="text-xs font-bold font-mono" style={{ color: srColor }}>
-              {privacyMode ? '••%' : `${savingsRate.toFixed(0)}% SR`}
+              {`${savingsRate.toFixed(0)}% SR`}
             </span>
           )}
           {/* Status badge */}
@@ -96,7 +96,7 @@ const AporteDoMes: React.FC<AporteDoMesProps> = ({
           </div>
           {!isPremissa && savingsRate != null && (
             <div className="text-xs mt-0.5" style={{ color: srColor }}>
-              {privacyMode ? '••%' : `${savingsRate.toFixed(0)}% da renda`}
+              {`${savingsRate.toFixed(0)}% da renda`}
             </div>
           )}
         </div>

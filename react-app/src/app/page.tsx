@@ -157,7 +157,7 @@ export default function HomePage() {
         />
         <MetricCard
           label="Aporte do Mês"
-          value={d.aporteMensal ? (privacyMode ? '••••' : `R$${Math.round(d.aporteMensal / 1000)}k`) : '—'}
+          value={d.aporteMensal ? fmtPrivacy(d.aporteMensal, privacyMode) : '—'}
           sub="meta mensal"
         />
       </div>

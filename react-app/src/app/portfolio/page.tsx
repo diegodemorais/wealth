@@ -57,7 +57,7 @@ export default function PortfolioPage() {
 
   const fmtBRL = (val: number | undefined | null) => {
     if (val == null) return '—';
-    if (privacyMode) return '••••';
+    if (privacyMode) return fmtPrivacy(val ?? 0, true);
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
   };
 
@@ -90,7 +90,7 @@ export default function PortfolioPage() {
         {showEstateAlert && (
           <MetricCard
             label="US-Situs >$60k"
-            value={privacyMode ? '••••' : `$${(usSitusUsd / 1000).toFixed(0)}k`}
+            value={fmtPrivacy(usSitusUsd / 1000, privacyMode, { prefix: '$' })}
             valueColor="text-red"
             size="sm"
             sub="Estate tax risk"
@@ -439,7 +439,7 @@ export default function PortfolioPage() {
                       <td style={{ padding: '6px 6px', fontWeight: 600 }}>{op.ativo}</td>
                       <td style={{ padding: '6px 6px', fontSize: 'var(--text-sm)', color: 'var(--muted)' }} className="hide-mobile">{op.corretora}</td>
                       <td style={{ padding: '6px 6px', textAlign: 'right', color: 'var(--green)', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                        {privacyMode ? '••••' : valorStr}
+                        {privacyMode ? fmtPrivacy(parseFloat(String(op.valor ?? 0).replace(/[^\d.-]/g, '')) || 0, true) : valorStr}
                       </td>
                     </tr>
                   );

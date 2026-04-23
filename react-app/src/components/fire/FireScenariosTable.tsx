@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import { pfireColor } from '@/utils/fire';
 
 export function FireScenariosTable() {
@@ -32,18 +33,9 @@ export function FireScenariosTable() {
     };
   }, [data?.scenario_comparison]);
 
-  const fmtBrl = (v: number) => {
-    if (privacyMode) return '••••';
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 0,
-      notation: 'compact',
-      maximumFractionDigits: 1,
-    }).format(v);
-  };
+  const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode);
 
-  const fmtPct = (v: number) => privacyMode ? '••%' : `${v.toFixed(1)}%`;
+  const fmtPct = (v: number) => `${v.toFixed(1)}%`;
 
   if (!scenarios) {
     return (

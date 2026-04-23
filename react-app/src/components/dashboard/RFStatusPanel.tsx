@@ -88,7 +88,7 @@ export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
                 <div className="flex justify-between text-xs">
                   <span className="text-muted">% carteira</span>
                   <span className="font-mono">
-                    {privacyMode ? '••%' : `${r.pctAtual.toFixed(1)}% / ${r.pctAlvo.toFixed(0)}%`}
+                    {`${r.pctAtual.toFixed(1)}% / ${r.pctAlvo.toFixed(0)}%`}
                   </span>
                 </div>
               )}
@@ -96,7 +96,7 @@ export default function RFStatusPanel({ rows }: RFStatusPanelProps) {
                 <div className="flex justify-between text-xs mt-1 pt-1 border-t border-border/30">
                   <span className="text-muted">Posição</span>
                   <span className="font-mono font-semibold">
-                    {privacyMode ? '••••' : `R$${(r.valor / 1000).toFixed(0)}k`}
+                    {fmtPrivacy(r.valor / 1000, privacyMode)}
                   </span>
                 </div>
               )}

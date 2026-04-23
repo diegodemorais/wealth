@@ -1,6 +1,7 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface PatrimonioLiquidoIRProps {
   irDiferido: number;
@@ -8,9 +9,8 @@ export interface PatrimonioLiquidoIRProps {
 }
 
 function fmtBRL(val: number | undefined | null, pm: boolean): string {
-  if (pm) return '••••';
   if (val == null) return '—';
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(val);
+  return fmtPrivacy(val, pm);
 }
 
 export default function PatrimonioLiquidoIR({

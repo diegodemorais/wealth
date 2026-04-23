@@ -26,7 +26,7 @@ function fmtPctRaw(v: number): string {
 }
 
 function mask(v: number, priv: boolean): string {
-  return priv ? '••••' : fmtBrl(v);
+  return fmtPrivacy(v, priv);
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -218,8 +218,8 @@ function StatusStrip({ p, fire, pfire, priv }: {
       />
       <StripKpi
         label="Patrimônio / Gatilho"
-        value={priv ? '••••' : `${pct}%`}
-        sub={priv ? '••••' : `${fmtBrl(p.patrimonio_atual)} de ${fmtBrl(p.patrimonio_gatilho)}`}
+        value={`${pct}%`}
+        sub={`${fmtPrivacy(p.patrimonio_atual, priv)} de ${fmtPrivacy(p.patrimonio_gatilho, priv)}`}
       />
       <StripKpi
         label="P(FIRE) @53 — Base"
@@ -265,7 +265,7 @@ function FamilyScenarios({ profiles, priv }: { profiles: any[]; priv: boolean })
             <div style={{ fontSize: 12, marginBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Gasto:</span>{' '}
               <span style={{ fontWeight: 600, fontFamily: 'monospace' }}>
-                {priv ? '••••' : `${fmtBrl(prof.gasto_anual)}/ano`}
+                {`${fmtPrivacy(prof.gasto_anual, priv)}/ano`}
               </span>
             </div>
             <div className="grid grid-cols-3" style={{ gap: 6 }}>
@@ -341,7 +341,7 @@ export default function AssumptionsPage() {
   // Split into 2 groups: critical targets + secondary metrics
   const fireTargetsRows: Row[] = [
     { label: 'Patrimônio Gatilho (SWR 3%)', value: mask(p.patrimonio_gatilho ?? 0, privacyMode) },
-    { label: 'Progresso', value: privacyMode ? '••••' : p.patrimonio_gatilho ? `${((p.patrimonio_atual / p.patrimonio_gatilho) * 100).toFixed(1)}%` : '—', accent: true },
+    { label: 'Progresso', value: p.patrimonio_gatilho ? `${((p.patrimonio_atual / p.patrimonio_gatilho) * 100).toFixed(1)}%` : '—', accent: true },
     { label: 'Cenários', value: '', separator: true } as Row,
     { label: 'FIRE Base — 2040, idade 53', value: `P ${(pfire.base ?? 0).toFixed(1)}%`, accent: (pfire.base ?? 0) >= 90 },
     { label: `FIRE Aspiracional — 2035, idade 48`, value: `P ${(pfireA.base ?? 0).toFixed(1)}%`, accent: (pfireA.base ?? 0) >= 90 },
@@ -366,7 +366,7 @@ export default function AssumptionsPage() {
     ...(macro.ipca_12m != null ? [{ label: 'IPCA 12m Realizado', value: fmtPctRaw(macro.ipca_12m) + '/ano', muted: true }] : []),
     { label: 'Depreciação BRL (base)', value: `${((macro.depreciacao_brl_premissa ?? 0.5)).toFixed(1)}%/ano`, muted: true },
     ...(macro.selic_meta != null ? [{ label: 'Selic Meta (BCB)', value: fmtPct(macro.selic_meta / 100) + '/ano', muted: true }] : []),
-    ...(d?.cambio != null ? [{ label: 'Câmbio BRL/USD', value: privacyMode ? '••••' : `R$${Number(d.cambio).toFixed(4)}`, muted: true }] : []),
+    ...(d?.cambio != null ? [{ label: 'Câmbio BRL/USD', value: `R$${Number(d.cambio).toFixed(4)}`, muted: true }] : []),
     ...(macro.fed_funds != null ? [{ label: 'Fed Funds', value: fmtPctRaw(macro.fed_funds) + '/ano', muted: true }] : []),
     ...(macro.spread_selic_ff != null ? [{ label: 'Spread Selic–FF', value: `${macro.spread_selic_ff.toFixed(1)}pp`, muted: true }] : []),
   ];
@@ -458,7 +458,7 @@ export default function AssumptionsPage() {
     { label: 'Alíquota (alienação)', value: '15% flat sobre ganho nominal BRL', muted: true },
     ...(tax.estate_tax?.us_situs_total_usd != null ? [
       { label: 'Estate Tax (US-situs)', value: '', separator: true } as Row,
-      { label: 'Exposição US-situs', value: privacyMode ? '••••' : `$${tax.estate_tax.us_situs_total_usd.toFixed(0)}k (lim. $60k)`, warn: true },
+      { label: 'Exposição US-situs', value: fmtPrivacy(tax.estate_tax.us_situs_total_usd * 1000, privacyMode, { prefix: '$', compact: true }) + ' (lim. $60k)', warn: true },
       { label: 'Imposto Estimado', value: mask(tax.estate_tax.imposto_estimado_brl ?? 0, privacyMode), warn: true },
     ] : []),
     ...(tax.ptax_atual != null ? [{ label: 'PTAX Atual', value: `R$${tax.ptax_atual?.toFixed(4)}`, muted: true }] : []),

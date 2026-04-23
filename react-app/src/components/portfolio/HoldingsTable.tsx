@@ -41,10 +41,10 @@ export function HoldingsTable() {
     return { positions, totals };
   }, [data]);
 
-  const fmtUsd = (v: number) => (privacyMode ? '••••' : `$${(v / 1000).toFixed(1)}k`);
-  const fmtBrl = (v: number) => (privacyMode ? '••••' : `R$${(v / 1000).toFixed(0)}k`);
-  const fmtPct = (v: number) => (privacyMode ? '••%' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`);
-  const fmtPm  = (v: number) => (privacyMode ? '••••' : `$${v.toFixed(2)}`);
+  const fmtUsd = (v: number) => (fmtPrivacy(v / 1000, privacyMode, { prefix: '$' }));
+  const fmtBrl = (v: number) => (fmtPrivacy(v / 1000, privacyMode));
+  const fmtPct = (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+  const fmtPm  = (v: number) => `$${v.toFixed(2)}`;
 
   const bucketColors: Record<string, string> = {
     SWRD: 'var(--accent)',

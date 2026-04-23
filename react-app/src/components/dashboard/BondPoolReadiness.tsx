@@ -127,13 +127,13 @@ export function BondPoolReadiness({ data, custo_vida_base }: BondPoolReadinessPr
         <div className="bg-card border border-border rounded-md p-4">
           <p className="text-xs text-muted-foreground mb-1 mt-0">Valor Atual</p>
           <p className="font-mono text-lg font-bold text-foreground m-0">
-            {privacyMode ? '••••' : `R$${(valorAtual / 1000).toFixed(0)}k`}
+            {fmtPrivacy(valorAtual / 1000, privacyMode)}
           </p>
         </div>
         <div className="bg-card border border-border rounded-md p-4">
           <p className="text-xs text-muted-foreground mb-1 mt-0">Meta</p>
           <p className="font-mono text-lg font-bold text-foreground m-0">
-            {privacyMode ? '••••' : `R$${(metaBrl / 1000).toFixed(0)}k`}
+            {fmtPrivacy(metaBrl / 1000, privacyMode)}
           </p>
         </div>
         <div className="bg-card border border-border rounded-md p-4">

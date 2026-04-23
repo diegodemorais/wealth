@@ -34,7 +34,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
       borderColor: '#334155',
       borderWidth: 1,
       textStyle: { color: '#94a3b8', fontSize: 12 },
-      formatter: privacyMode ? () => '••••' : (params: any[]) => {
+      formatter: (params: any[]) => {
         const period = params[0].axisValue;
         const lines = params.map((p: any) => {
           const sign = p.value >= 0 ? '+' : '';
@@ -130,7 +130,7 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
           }}>
             <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 3 }}>{periods[i]}</div>
             <div style={{ fontSize: 15, fontWeight: 700, color: a > 0 ? '#22c55e' : '#ef4444' }}>
-              {privacyMode ? '••••' : `${a >= 0 ? '+' : ''}${a.toFixed(2)}%`}
+              {`${a >= 0 ? '+' : ''}${a.toFixed(2)}%`}
             </div>
           </div>
         ))}
@@ -141,13 +141,13 @@ const AlphaVsSWRDChart: React.FC<AlphaVsSWRDChartProps> = ({
         <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>MÉDIA ALPHA</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: '#f59e0b' }}>
-            {privacyMode ? '••••' : `${avgAlpha >= 0 ? '+' : ''}${avgAlpha.toFixed(2)}%`}
+            {`${avgAlpha >= 0 ? '+' : ''}${avgAlpha.toFixed(2)}%`}
           </div>
         </div>
         <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.25)' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>ALPHA LÍQUIDO (haircut 58%)</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: '#a78bfa' }}>
-            {privacyMode ? '••••' : `${(alphaLiquidoPctYear * 100).toFixed(0)}bps/ano`}
+            {`${(alphaLiquidoPctYear * 100).toFixed(0)}bps/ano`}
           </div>
         </div>
       </div>

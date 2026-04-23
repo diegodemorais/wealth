@@ -64,7 +64,7 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
       borderColor: '#334155',
       borderWidth: 1,
       textStyle: { color: '#94a3b8', fontSize: 12 },
-      formatter: privacyMode ? () => '••••' : (params: any[]) => {
+      formatter: (params: any[]) => {
         const date = params[0].axisValue;
         const lines = params.map((p: any) => {
           const val = p.value == null ? '—' : p.value.toFixed(2) + cfg.suffix;
@@ -150,19 +150,19 @@ const RollingMetricsChart: React.FC<RollingMetricsChartProps> = ({
         <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.25)' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>SHARPE BRL</div>
           <div style={{ fontSize: 16, fontWeight: 700, color: currentSharpe > 1 ? '#22c55e' : currentSharpe > 0.5 ? '#f59e0b' : '#ef4444' }}>
-            {privacyMode ? '••••' : currentSharpe.toFixed(2)}
+            {currentSharpe.toFixed(2)}
           </div>
         </div>
         <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.25)' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>SORTINO</div>
           <div style={{ fontSize: 16, fontWeight: 700, color: currentSortino > 1.5 ? '#22c55e' : currentSortino > 0.75 ? '#f59e0b' : '#ef4444' }}>
-            {privacyMode ? '••••' : currentSortino.toFixed(2)}
+            {currentSortino.toFixed(2)}
           </div>
         </div>
         <div style={{ padding: '8px 10px', borderRadius: 6, background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}>
           <div style={{ fontSize: 10, color: 'var(--muted)', marginBottom: 2 }}>VOLATILIDADE</div>
           <div style={{ fontSize: 16, fontWeight: 700, color: '#f59e0b' }}>
-            {privacyMode ? '••%' : `${currentVol.toFixed(1)}%`}
+            {`${currentVol.toFixed(1)}%`}
           </div>
         </div>
       </div>

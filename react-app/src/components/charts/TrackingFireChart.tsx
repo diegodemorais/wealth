@@ -81,7 +81,7 @@ export function TrackingFireChart({ data }: TrackingFireChartProps) {
     });
 
     const metaLine = downsampledDates.map(() => metaFireBrl);
-    const fmt = (v: number) => privacyMode ? '••••' : `R$${(v / 1e6).toFixed(2)}M`;
+    const fmt = (v: number) => fmtPrivacy(v / 1e6, privacyMode);
 
     // Find P50 × Meta crossover point
     let crossoverIdx: number | null = null;

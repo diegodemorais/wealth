@@ -52,7 +52,7 @@ function formatContexto(item: DcaItem, privacyMode: boolean): string | undefined
     parts.push(`gap: ${item.gapPiso >= 0 ? '+' : ''}${item.gapPiso.toFixed(2)}pp`);
   }
   if (item.posicaoBrl > 0) {
-    parts.push(privacyMode ? 'pos: ••••' : `pos: R$${(item.posicaoBrl / 1000).toFixed(0)}k`);
+    parts.push(`pos: ${fmtPrivacy(item.posicaoBrl, privacyMode)}`);
   }
   if (item.pctCarteira != null && item.alvoPct != null) {
     parts.push(`${item.pctCarteira.toFixed(1)}% vs alvo ${item.alvoPct.toFixed(0)}%`);
@@ -130,10 +130,10 @@ export default function AporteDecisionPanel({ etfs, dcaItems }: AporteDecisionPa
                     <div style={{ fontWeight: 600, color: 'var(--text)', fontSize: 11 }}>{e.ticker}</div>
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', color: 'var(--muted)', fontSize: 9 }}>
-                    {privacyMode ? '••••' : `${e.atual.toFixed(1)}% → ${e.alvo.toFixed(1)}%`}
+                    {`${e.atual.toFixed(1)}% → ${e.alvo.toFixed(1)}%`}
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', fontWeight: 600, color: gapColor(e.gap) }}>
-                    {privacyMode ? '••••' : `${e.gap >= 0 ? '+' : ''}${e.gap.toFixed(1)}pp`}
+                    {`${e.gap >= 0 ? '+' : ''}${e.gap.toFixed(1)}pp`}
                   </td>
                   <td style={{ padding: '5px 6px', textAlign: 'right', color: 'var(--text)', fontFamily: 'monospace' }}>
                     {e.expectedReturn.toFixed(1)}%
@@ -192,7 +192,7 @@ export default function AporteDecisionPanel({ etfs, dcaItems }: AporteDecisionPa
                   </span>
                 )}
                 <span style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--muted)' }}>
-                  {privacyMode ? '••••' : formatValor(item)}
+                  {formatValor(item)}
                 </span>
                 {item.proxAcao && (
                   <span style={{ fontSize: 10, fontWeight: 700, color: acaoColor, whiteSpace: 'nowrap' }}>

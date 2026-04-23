@@ -136,9 +136,8 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
   }, [data, premissasOverride]);
 
   const fmtK = (v: number) => {
-    if (privacyMode) return '••••';
     const sign = v >= 0 ? '+' : '';
-    return `${sign}R$${(v / 1000).toFixed(0)}k`;
+    return `${sign}${fmtPrivacy(Math.abs(v), privacyMode)}`;
   };
 
   const option: EChartsOption = {
@@ -147,7 +146,7 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
       trigger: 'axis',
       formatter: (params: any) => {
         const yr = params[0]?.name ?? '';
-        if (privacyMode) return `${yr}: ••••`;
+        // fmtK already handles privacy transform
         return [
           `<b>Ano ${yr}</b>`,
           ...params.map((p: any) => {
@@ -178,7 +177,7 @@ export function SurplusGapChart({ data, premissasOverride }: SurplusGapChartProp
       type: 'value',
       axisLabel: {
         color: '#94a3b8',
-        formatter: (v: number) => privacyMode ? '••••' : `${v >= 0 ? '+' : ''}R$${(v / 1000).toFixed(0)}k`,
+        formatter: (v: number) => `${v >= 0 ? '+' : ''}${fmtPrivacy(Math.abs(v), privacyMode)}`,
       },
       splitLine: { lineStyle: { color: '#1e293b', type: 'dashed' } },
     },

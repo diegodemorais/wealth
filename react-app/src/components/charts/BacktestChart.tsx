@@ -89,7 +89,7 @@ export function BacktestChart({ data, period, height = 300, dataset }: BacktestC
           if (!Array.isArray(params)) return '';
           let r = `${params[0].axisValueLabel}<br/>`;
           params.forEach((p: any) => {
-            const v = privacyMode ? '••••' : p.value?.toFixed(1);
+            const v = p.value?.toFixed(1);
             r += `${p.marker} ${p.seriesName}: ${v}<br/>`;
           });
           return r;
