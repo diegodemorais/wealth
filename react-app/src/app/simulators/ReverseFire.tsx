@@ -271,6 +271,26 @@ export function ReverseFire() {
           itemStyle: {
             color: EC.accent,
           },
+          markPoint: {
+            data: [
+              {
+                name: 'FIRE Day',
+                xAxis: chartData.length - 1,
+                yAxis: pv(chartData[chartData.length - 1].patrimonio_acumulado),
+                symbol: 'circle',
+                symbolSize: 10,
+                itemStyle: { color: EC.green },
+                label: {
+                  formatter: () => `FIRE aos ${Math.floor(chartData[chartData.length - 1].idade)} anos`,
+                  position: 'top',
+                  distance: 8,
+                  fontSize: 11,
+                  color: EC.green,
+                  fontWeight: 'bold',
+                },
+              },
+            ],
+          },
         },
         {
           name: 'Patrimônio Alvo (FIRE)',
@@ -504,59 +524,81 @@ export function ReverseFire() {
       {/* Output: Números */}
       {calculo && !horizonteImpossivel && (
         <>
-          <div
-            style={{
-              background: 'var(--card)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              padding: '20px',
-              marginBottom: '24px',
-            }}
-          >
-            <h3 style={{ marginBottom: '16px', color: 'var(--text)', fontSize: 'var(--text-lg)', fontWeight: '600' }}>
-              Números
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-              <div>
-                <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                  Patrimônio Necessário Hoje
+          {aporte > 0 ? (
+            <div
+              style={{
+                background: 'var(--card)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                padding: '20px',
+                marginBottom: '24px',
+              }}
+            >
+              <h3 style={{ marginBottom: '16px', color: 'var(--text)', fontSize: 'var(--text-lg)', fontWeight: '600' }}>
+                Números
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                <div>
+                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
+                    Patrimônio Necessário Hoje
+                  </div>
+                  <div style={{ color: 'var(--accent)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
+                    {fmtBRL(calculo.patrimonio_alvo)}
+                  </div>
                 </div>
-                <div style={{ color: 'var(--accent)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
-                  {fmtBRL(calculo.patrimonio_alvo)}
+                <div>
+                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
+                    Patrimônio Atual Estimado
+                  </div>
+                  <div style={{ color: 'var(--text)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
+                    {fmtBRL(patrimonio_num)}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                  Patrimônio Atual Estimado
+                <div>
+                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
+                    Gap
+                  </div>
+                  <div
+                    style={{
+                      color: gap >= 0 ? EC.positive : EC.negative,
+                      fontSize: 'var(--text-xl)',
+                      fontWeight: '700',
+                    }}
+                  >
+                    {fmtBRL(gap)}
+                  </div>
                 </div>
-                <div style={{ color: 'var(--text)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
-                  {fmtBRL(patrimonio_num)}
-                </div>
-              </div>
-              <div>
-                <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                  Gap
-                </div>
-                <div
-                  style={{
-                    color: gap >= 0 ? EC.positive : EC.negative,
-                    fontSize: 'var(--text-xl)',
-                    fontWeight: '700',
-                  }}
-                >
-                  {fmtBRL(gap)}
-                </div>
-              </div>
-              <div>
-                <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
-                  Aporte Mensal Necessário
-                </div>
-                <div style={{ color: 'var(--green)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
-                  {fmtBRL(aporte)}/mês
+                <div>
+                  <div style={{ color: 'var(--muted)', fontSize: 'var(--text-sm)', marginBottom: '4px' }}>
+                    Aporte Mensal Necessário
+                  </div>
+                  <div style={{ color: 'var(--green)', fontSize: 'var(--text-xl)', fontWeight: '700' }}>
+                    {fmtBRL(aporte)}/mês
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div
+              style={{
+                background: 'rgba(62, 211, 129, 0.1)',
+                border: '1px solid rgba(62, 211, 129, 0.3)',
+                borderRadius: '8px',
+                padding: '20px',
+                marginBottom: '24px',
+              }}
+            >
+              <div style={{ color: EC.green, fontSize: 'var(--text-lg)', fontWeight: '700', marginBottom: '8px' }}>
+                Seu patrimônio já atingiu a meta FIRE
+              </div>
+              <div style={{ color: 'rgba(62, 211, 129, 0.8)', fontSize: 'var(--text-sm)', lineHeight: '1.5' }}>
+                <p>Seu patrimônio atual ({fmtBRL(patrimonio_num)}) já supera o alvo necessário ({fmtBRL(calculo.patrimonio_alvo)}) para viver com {swr.toFixed(1)}% de SWR.</p>
+                <p style={{ marginTop: '8px' }}>
+                  Nenhum aporte adicional é necessário. Você pode considerar aumentar seus gastos ou optar por aposentadoria antecipada.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* EChart */}
           {chartData.length > 0 && (
