@@ -53,7 +53,15 @@ Separar **dado** (fato verificável) de **interpretação** (inferência contest
 
 ## Padrões
 
-- **Dados em tempo real:** WebSearch para taxa IPCA+, Selic, cotação HODL11, câmbio BRL/USD
+- **Dados em tempo real:** CLI primeiro, WebSearch só como fallback:
+  - `market_data.py --macro-br` → PTAX, Selic, IPCA, Focus (python-bcb)
+  - `market_data.py --tesouro` → Taxas IPCA+/Renda+ ANBIMA (pyield)
+  - `market_data.py --etfs` → Preços SWRD/AVGS/AVEM/HODL11 (yfinance)
+  - `market_data.py --macro-us` → Fed Funds, Treasury, VIX, CDS (fredapi)
+  - `market_data.py --factors` → FF5 mensal (getfactormodels)
+  - `ibkr_lotes.py --flex` → Posições IBKR + lotes FIFO + IR por lote
+  - `fx_utils.py` → PTAX canônica (NUNCA reimplementar)
+  - WebSearch SOMENTE quando CLI não cobre (notícias, papers, forum)
 - **Fontes:** papers peer-reviewed, NBER/SSRN, Vanguard, AQR, DFA, Morningstar — não blogs ou influencers
 - **Idioma:** português ou inglês conforme contexto; termos de mercado e papers em inglês
 
