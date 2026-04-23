@@ -13,6 +13,7 @@
  */
 
 import React from 'react';
+import { KpiCard } from '@/components/primitives/KpiCard';
 
 interface AnnualReturn {
   year: number;
@@ -47,106 +48,6 @@ function returnColor(v: number | null | undefined): string {
   if (v > 0) return 'var(--green)';
   if (v < 0) return 'var(--red)';
   return 'var(--text)';
-}
-
-// ────────────────────────────────────────────────────────────────
-// KPI card — bespoke, mais expressivo que InfoCard genérico
-// ────────────────────────────────────────────────────────────────
-interface KpiCardProps {
-  label: string;
-  value: string;
-  accent: string;             // cor do valor + barra lateral
-  delta?: { text: string; positive?: boolean };
-  progress?: number;          // 0..1 barra inferior
-  sub?: string;               // descrição abaixo
-}
-
-function KpiCard({ label, value, accent, delta, progress, sub }: KpiCardProps) {
-  return (
-    <div
-      style={{
-        background: 'var(--card)',
-        border: '1px solid var(--border)',
-        borderLeft: `3px solid ${accent}`,
-        borderRadius: 'var(--radius-md)',
-        padding: '14px 16px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 6,
-        minHeight: 118,
-      }}
-    >
-      <div
-        style={{
-          fontSize: 'var(--text-xs)',
-          color: 'var(--muted)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.06em',
-          fontWeight: 600,
-        }}
-      >
-        {label}
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-        <div
-          style={{
-            fontSize: '1.75rem',
-            fontWeight: 800,
-            color: accent,
-            lineHeight: 1.05,
-            fontVariantNumeric: 'tabular-nums',
-          }}
-        >
-          {value}
-        </div>
-        {delta && (
-          <span
-            style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              padding: '2px 7px',
-              borderRadius: 'var(--radius-sm)',
-              background: `color-mix(in srgb, ${delta.positive ? 'var(--green)' : 'var(--red)'} 14%, transparent)`,
-              color: delta.positive ? 'var(--green)' : 'var(--red)',
-              letterSpacing: '0.02em',
-              fontVariantNumeric: 'tabular-nums',
-            }}
-          >
-            {delta.text}
-          </span>
-        )}
-      </div>
-
-      {progress != null && (
-        <div
-          aria-hidden
-          style={{
-            height: 4,
-            background: 'color-mix(in srgb, var(--border) 60%, transparent)',
-            borderRadius: 2,
-            overflow: 'hidden',
-            marginTop: 2,
-          }}
-        >
-          <div
-            style={{
-              width: `${Math.max(0, Math.min(1, progress)) * 100}%`,
-              height: '100%',
-              background: accent,
-              transition: 'width 0.3s ease',
-            }}
-          />
-        </div>
-      )}
-
-      {sub && (
-        <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)', marginTop: 'auto' }}>
-          {sub}
-        </div>
-      )}
-    </div>
-  );
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -234,6 +135,19 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
 
   return (
     <div>
+      {/* Caption de metodologia — sinaliza TWR de forma fluida, sem poluir cada card */}
+      <div
+        style={{
+          fontSize: 'var(--text-xs)',
+          color: 'var(--muted)',
+          marginBottom: 10,
+          letterSpacing: '0.02em',
+        }}
+      >
+        <span style={{ color: 'var(--text)', fontWeight: 600 }}>TWR</span>{' '}
+        <span>· time-weighted return · Modified Dietz · neutraliza aportes e resgates</span>
+      </div>
+
       {/* ─── KPI strip ───────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" style={{ marginBottom: 18 }}>
         <KpiCard
@@ -300,7 +214,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
               Retornos Anuais
             </div>
             <div style={{ fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-              TWR · Modified Dietz · Real = Nominal ÷ IPCA
+              Real = Nominal ÷ IPCA
             </div>
           </div>
 

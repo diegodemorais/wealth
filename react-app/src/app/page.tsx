@@ -13,6 +13,7 @@ import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { SectionLabel } from '@/components/primitives/SectionLabel';
 import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { MetricCard } from '@/components/primitives/MetricCard';
+import { KpiCard } from '@/components/primitives/KpiCard';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { maxDriftPp } from '@/utils/drift';
 import PatrimonioLiquidoIR from '@/components/dashboard/PatrimonioLiquidoIR';
@@ -155,22 +156,27 @@ export default function HomePage() {
           valueColor="text-text"
           sub="vs alvo IPS"
         />
-        {/* TWR CAGR Real BRL — semaphore: green >= 4.5%, yellow 3-4.5%, red < 3% */}
+        {/* TWR CAGR Real BRL — igual ao card do /performance: chip de delta + progress + sub com metodologia */}
         {(() => {
           const twrReal: number | null = (data as any)?.retornos_mensais?.twr_real_brl_pct ?? null;
           const premissa: number = (data as any)?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? 4.5;
-          const color = twrReal == null ? 'text-muted'
-            : twrReal >= 4.5 ? 'text-green'
-            : twrReal >= 3 ? 'text-yellow'
-            : 'text-red';
+          const periodoAnos: number | null = (data as any)?.retornos_mensais?.periodo_anos ?? null;
+          const accent = twrReal == null ? 'var(--muted)'
+            : twrReal >= 4.5 ? 'var(--green)'
+            : twrReal >= 3 ? 'var(--yellow)'
+            : 'var(--red)';
+          const delta = twrReal != null ? twrReal - premissa : null;
           return (
-            <MetricCard
-              accent
-              accentLeftBorder
+            <KpiCard
               label="Retorno Real (CAGR)"
               value={twrReal != null ? `${twrReal.toFixed(1)}%` : '—'}
-              valueColor={color}
-              sub={`vs premissa ${premissa.toFixed(1)}% · desde abr/2021`}
+              accent={accent}
+              delta={delta != null ? {
+                text: `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}pp vs ${premissa.toFixed(1)}%`,
+                positive: delta >= 0,
+              } : undefined}
+              progress={twrReal != null ? twrReal / (premissa * 1.5) : undefined}
+              sub={`TWR · desde abr/2021${periodoAnos != null ? ` · ${periodoAnos.toFixed(1)} anos` : ''}`}
             />
           );
         })()}
