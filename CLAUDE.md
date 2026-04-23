@@ -45,8 +45,12 @@ Reutilize agente ativo via SendMessage antes de spawnar novo. Múltiplos em para
 ## Protocolos de Decisão e Segurança
 
 Full-Path usa protocolos formais: `agentes/referencia/protocolos-decisao.md`
-Inclui: D1-D7, Bayesian Priors, Steelman, Inversion, Go/No-Go, Andon Cord.
+Inclui: D1-D12, Bayesian Priors, Steelman, Inversion, Go/No-Go, Andon Cord, Anti-Sycophancy.
 Head lê esse arquivo ao iniciar Full-Path.
+
+Anti-sycophancy (D8-D12): Disagreement Floor, Numerical Dual-Path, Pre-Mortem Express, Sycophancy Canaries, Calibration Audit.
+Decisão >5% portfolio → obrigatório `multi_llm_query.py` (modelo externo como outside voice).
+Frases banidas: "Great question", "You're absolutely right", "Building on your insight", "I agree with Diego" sem dados.
 
 ## Veredictos
 Separar **dado** (fato verificável) de **interpretação** (inferência contestável). Nunca no mesmo bullet.

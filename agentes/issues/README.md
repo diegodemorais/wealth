@@ -35,6 +35,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
+| HD-multi-llm-validation | Validação multi-model das 5 decisões estruturais | Head | 🔴 Alta |
 | HD-ai-investing-research | IA × Investimento — filosofia, ferramentas, riscos | Head | 🟡 Média |
 
 ### Done (últimas 20)
