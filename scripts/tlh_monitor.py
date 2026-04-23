@@ -80,20 +80,9 @@ DEFAULT_THRESHOLD = -0.05  # -5%
 THRESHOLD_MATERIAL_BRL = 5_000.0
 
 
-# ── PTAX ───────────────────────────────────────────────────────────────────────
+# ── PTAX (delegado a fx_utils) ────────────────────────────────────────────────
 
-def get_ptax() -> float:
-    """Busca PTAX BRL/USD atual via python-bcb. Fallback: 5.20."""
-    try:
-        import datetime as dt
-        from bcb import currency
-        end = dt.date.today()
-        start = end - dt.timedelta(days=10)
-        ptax = currency.get("USD", start=start, end=end)
-        return float(ptax.iloc[-1].item())
-    except Exception:
-        print("⚠️  PTAX via python-bcb falhou — usando fallback 5.20", file=sys.stderr)
-        return 5.20
+from fx_utils import get_ptax
 
 
 # ── Preços ─────────────────────────────────────────────────────────────────────

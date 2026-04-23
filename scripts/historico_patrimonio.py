@@ -332,7 +332,7 @@ def get_price(ticker, date_str):
 
 
 def get_ptax(date_str):
-    """Get PTAX rate for date_str"""
+    """Get PTAX rate for date_str. Uses hardcoded quarterly cache first, then BCB API fallback."""
     if date_str in PTAX:
         return PTAX[date_str]
     target = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -340,7 +340,12 @@ def get_ptax(date_str):
         d = datetime.strptime(d_str, "%Y-%m-%d").date()
         if abs((d - target).days) <= 3:
             return rate
-    return None
+    # Fallback: fetch from BCB API via fx_utils
+    try:
+        from fx_utils import get_ptax as _fx_ptax
+        return _fx_ptax(target)
+    except Exception:
+        return None
 
 
 # ============================================================

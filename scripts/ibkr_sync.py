@@ -45,7 +45,11 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 # ── Configuração ──────────────────────────────────────────────────────────────
 
-CAMBIO_REF = 5.20        # fallback; idealmente buscar do BCB
+try:
+    from fx_utils import get_ptax
+    CAMBIO_REF = get_ptax()
+except Exception:
+    CAMBIO_REF = 5.20
 
 # Mapa símbolo IBKR → nome canônico (para exibição)
 SYMBOL_MAP = {k: k for k in BUCKET_MAP}
