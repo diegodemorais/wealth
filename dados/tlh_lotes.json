@@ -1,16 +1,26 @@
 {
-  "_generated": "2026-04-23T00:16:30Z",
-  "_source": "U5947683.TRANSACTIONS.20210408.20260331.csv",
+  "_generated": "2026-04-22T21:23:35Z",
+  "_source": "U5947683.TRANSACTIONS.20210408.20260331.csv + Flex Query",
   "_period": "2021-04-16 → 2026-03-13",
+  "_ptax_atual": 4.9653,
   "summary": {
     "total_lotes": 221,
     "total_symbols": 9,
+    "ir_brl_total": 140055.84,
+    "tlh_count": 6,
+    "tlh_benefit_brl": 2.74,
     "by_symbol": {
       "AVDV": {
         "symbol": "AVDV",
         "n_lotes": 41,
         "qty_total": 947.5983,
         "cost_usd_total": 58164.56,
+        "cost_brl_total": 302835.58,
+        "value_brl_total": 492954.32,
+        "pnl_brl_total": 190118.74,
+        "ir_brl_total": 28517.8,
+        "tlh_count": 0,
+        "tlh_benefit_brl": 0.0,
         "pm_usd": 61.381,
         "status": "transitorio",
         "domicilio": "UCITS",
@@ -23,6 +33,12 @@
         "n_lotes": 30,
         "qty_total": 926.5462,
         "cost_usd_total": 42131.16,
+        "cost_brl_total": 232018.67,
+        "value_brl_total": 296231.35,
+        "pnl_brl_total": 64212.68,
+        "ir_brl_total": 9631.91,
+        "tlh_count": 1,
+        "tlh_benefit_brl": 0.01,
         "pm_usd": 45.4712,
         "status": "transitorio",
         "domicilio": "US-listed",
@@ -35,6 +51,12 @@
         "n_lotes": 2,
         "qty_total": 233.4292,
         "cost_usd_total": 5822.91,
+        "cost_brl_total": 30594.14,
+        "value_brl_total": 31728.89,
+        "pnl_brl_total": 1134.75,
+        "ir_brl_total": 170.21,
+        "tlh_count": 0,
+        "tlh_benefit_brl": 0.0,
         "pm_usd": 24.9451,
         "status": "alvo",
         "domicilio": "UCITS",
@@ -47,6 +69,12 @@
         "n_lotes": 30,
         "qty_total": 548.8792,
         "cost_usd_total": 44775.21,
+        "cost_brl_total": 237373.4,
+        "value_brl_total": 320991.72,
+        "pnl_brl_total": 83618.32,
+        "ir_brl_total": 12543.32,
+        "tlh_count": 2,
+        "tlh_benefit_brl": 0.57,
         "pm_usd": 81.5757,
         "status": "transitorio",
         "domicilio": "US-listed",
@@ -59,6 +87,12 @@
         "n_lotes": 9,
         "qty_total": 188.2107,
         "cost_usd_total": 9434.36,
+        "cost_brl_total": 50213.8,
+        "value_brl_total": 59650.58,
+        "pnl_brl_total": 9436.78,
+        "ir_brl_total": 1415.51,
+        "tlh_count": 0,
+        "tlh_benefit_brl": 0.0,
         "pm_usd": 50.1266,
         "status": "transitorio",
         "domicilio": "US-listed",
@@ -71,6 +105,12 @@
         "n_lotes": 30,
         "qty_total": 2020.2934,
         "cost_usd_total": 63343.15,
+        "cost_brl_total": 341011.01,
+        "value_brl_total": 515612.02,
+        "pnl_brl_total": 174601.01,
+        "ir_brl_total": 26190.15,
+        "tlh_count": 0,
+        "tlh_benefit_brl": 0.0,
         "pm_usd": 31.3534,
         "status": "transitorio",
         "domicilio": "UCITS",
@@ -83,6 +123,12 @@
         "n_lotes": 2,
         "qty_total": 34.0,
         "cost_usd_total": 1275.68,
+        "cost_brl_total": 6662.69,
+        "value_brl_total": 11405.49,
+        "pnl_brl_total": 4742.8,
+        "ir_brl_total": 711.42,
+        "tlh_count": 0,
+        "tlh_benefit_brl": 0.0,
         "pm_usd": 37.52,
         "status": "legado",
         "domicilio": "UCITS",
@@ -95,6 +141,12 @@
         "n_lotes": 68,
         "qty_total": 5291.6415,
         "cost_usd_total": 177098.46,
+        "cost_brl_total": 936575.86,
+        "value_brl_total": 1309394.11,
+        "pnl_brl_total": 372818.25,
+        "ir_brl_total": 55924.89,
+        "tlh_count": 3,
+        "tlh_benefit_brl": 2.16,
         "pm_usd": 33.4676,
         "status": "alvo",
         "domicilio": "UCITS",
@@ -107,6 +159,12 @@
         "n_lotes": 9,
         "qty_total": 373.2498,
         "cost_usd_total": 22420.47,
+        "cost_brl_total": 129465.04,
+        "value_brl_total": 162469.3,
+        "pnl_brl_total": 33004.26,
+        "ir_brl_total": 4950.63,
+        "tlh_count": 0,
+        "tlh_benefit_brl": 0.0,
         "pm_usd": 60.0683,
         "status": "transitorio",
         "domicilio": "US-listed",
@@ -126,7 +184,16 @@
       "cost_usd": 12364.68,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6328,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 69698.26,
+      "value_brl": 104120.73,
+      "pnl_brl": 34422.47,
+      "ir_brl": 5163.37,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -137,7 +204,16 @@
       "cost_usd": 35.23,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2393,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 184.58,
+      "value_brl": 247.45,
+      "pnl_brl": 62.87,
+      "ir_brl": 9.43,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -148,7 +224,16 @@
       "cost_usd": 5631.31,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7782,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 26907.54,
+      "value_brl": 45282.57,
+      "pnl_brl": 18375.03,
+      "ir_brl": 2756.25,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -159,7 +244,16 @@
       "cost_usd": 6850.13,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.6664,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 31965.45,
+      "value_brl": 56170.18,
+      "pnl_brl": 24204.73,
+      "ir_brl": 3630.71,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -170,7 +264,16 @@
       "cost_usd": 7143.57,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9592,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 35426.4,
+      "value_brl": 64335.89,
+      "pnl_brl": 28909.49,
+      "ir_brl": 4336.42,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -181,7 +284,16 @@
       "cost_usd": 4747.63,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8106,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 22838.93,
+      "value_brl": 43550.45,
+      "pnl_brl": 20711.52,
+      "ir_brl": 3106.73,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -192,7 +304,16 @@
       "cost_usd": 510.25,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2031,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 2654.87,
+      "value_brl": 4701.47,
+      "pnl_brl": 2046.6,
+      "ir_brl": 306.99,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -203,7 +324,16 @@
       "cost_usd": 57.2,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2144,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 298.28,
+      "value_brl": 494.89,
+      "pnl_brl": 196.61,
+      "ir_brl": 29.49,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -214,7 +344,16 @@
       "cost_usd": 5069.61,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0767,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 25736.9,
+      "value_brl": 44045.34,
+      "pnl_brl": 18308.44,
+      "ir_brl": 2746.27,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -225,7 +364,16 @@
       "cost_usd": 2699.23,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0683,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 13680.53,
+      "value_brl": 23259.9,
+      "pnl_brl": 9579.37,
+      "ir_brl": 1436.91,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -236,7 +384,16 @@
       "cost_usd": 4500.01,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0128,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 22557.66,
+      "value_brl": 38601.53,
+      "pnl_brl": 16043.87,
+      "ir_brl": 2406.58,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -247,7 +404,16 @@
       "cost_usd": 4820.71,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9696,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 23956.98,
+      "value_brl": 40828.54,
+      "pnl_brl": 16871.56,
+      "ir_brl": 2530.73,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -258,7 +424,16 @@
       "cost_usd": 4074.14,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8832,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 19894.84,
+      "value_brl": 33652.62,
+      "pnl_brl": 13757.78,
+      "ir_brl": 2063.67,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -269,7 +444,16 @@
       "cost_usd": 2274.31,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9724,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 11308.77,
+      "value_brl": 18805.88,
+      "pnl_brl": 7497.11,
+      "ir_brl": 1124.57,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -280,7 +464,16 @@
       "cost_usd": 21.16,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9724,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 105.21,
+      "value_brl": 170.47,
+      "pnl_brl": 65.26,
+      "ir_brl": 9.79,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -291,7 +484,16 @@
       "cost_usd": 30.49,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9705,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 151.54,
+      "value_brl": 230.27,
+      "pnl_brl": 78.73,
+      "ir_brl": 11.81,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -302,7 +504,16 @@
       "cost_usd": 3000.43,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9705,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 14913.61,
+      "value_brl": 24002.24,
+      "pnl_brl": 9088.63,
+      "ir_brl": 1363.29,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -313,7 +524,16 @@
       "cost_usd": 19.95,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8689,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 97.12,
+      "value_brl": 159.38,
+      "pnl_brl": 62.26,
+      "ir_brl": 9.34,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -324,7 +544,16 @@
       "cost_usd": 2014.95,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8689,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 9810.61,
+      "value_brl": 16083.97,
+      "pnl_brl": 6273.36,
+      "ir_brl": 941.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -335,7 +564,16 @@
       "cost_usd": 179.05,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.11,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 914.95,
+      "value_brl": 1484.67,
+      "pnl_brl": 569.72,
+      "ir_brl": 85.46,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -346,7 +584,16 @@
       "cost_usd": 9.85,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.11,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 50.33,
+      "value_brl": 82.55,
+      "pnl_brl": 32.22,
+      "ir_brl": 4.83,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -357,7 +604,16 @@
       "cost_usd": 2879.45,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.1918,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 14949.53,
+      "value_brl": 24249.68,
+      "pnl_brl": 9300.15,
+      "ir_brl": 1395.02,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -368,7 +624,16 @@
       "cost_usd": 4.46,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.1918,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 23.15,
+      "value_brl": 23.24,
+      "pnl_brl": 0.09,
+      "ir_brl": 0.01,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -379,7 +644,16 @@
       "cost_usd": 4037.69,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8999,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 19784.27,
+      "value_brl": 33157.73,
+      "pnl_brl": 13373.46,
+      "ir_brl": 2006.02,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -390,7 +664,16 @@
       "cost_usd": 29.6,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8999,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 145.05,
+      "value_brl": 243.12,
+      "pnl_brl": 98.07,
+      "ir_brl": 14.71,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -401,7 +684,16 @@
       "cost_usd": 2029.51,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8806,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 9905.2,
+      "value_brl": 16083.97,
+      "pnl_brl": 6178.77,
+      "ir_brl": 926.82,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -412,7 +704,16 @@
       "cost_usd": 2.4,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8806,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 11.71,
+      "value_brl": 5.54,
+      "pnl_brl": -6.17,
+      "ir_brl": 0.0,
+      "tlh_eligible": true,
+      "tlh_benefit_brl": 0.93
     },
     {
       "symbol": "SWRD",
@@ -423,7 +724,16 @@
       "cost_usd": 11.44,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8949,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 55.99,
+      "value_brl": 89.9,
+      "pnl_brl": 33.91,
+      "ir_brl": 5.09,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -434,7 +744,16 @@
       "cost_usd": 3024.48,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8949,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 14804.51,
+      "value_brl": 23754.79,
+      "pnl_brl": 8950.28,
+      "ir_brl": 1342.54,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -445,7 +764,16 @@
       "cost_usd": 4.98,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9723,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 24.77,
+      "value_brl": 23.88,
+      "pnl_brl": -0.89,
+      "ir_brl": 0.0,
+      "tlh_eligible": true,
+      "tlh_benefit_brl": 0.13
     },
     {
       "symbol": "SWRD",
@@ -456,7 +784,16 @@
       "cost_usd": 34.22,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9723,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 170.16,
+      "value_brl": 247.45,
+      "pnl_brl": 77.29,
+      "ir_brl": 11.59,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -467,7 +804,16 @@
       "cost_usd": 6124.31,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9723,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 30451.91,
+      "value_brl": 44540.23,
+      "pnl_brl": 14088.32,
+      "ir_brl": 2113.25,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -478,7 +824,16 @@
       "cost_usd": 2485.91,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9761,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 12370.12,
+      "value_brl": 17816.09,
+      "pnl_brl": 5445.97,
+      "ir_brl": 816.9,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -489,7 +844,16 @@
       "cost_usd": 27.0,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9761,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 134.35,
+      "value_brl": 193.65,
+      "pnl_brl": 59.3,
+      "ir_brl": 8.89,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -500,7 +864,16 @@
       "cost_usd": 25.65,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9475,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 126.89,
+      "value_brl": 168.68,
+      "pnl_brl": 41.79,
+      "ir_brl": 6.27,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -511,7 +884,16 @@
       "cost_usd": 2986.26,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9475,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 14774.54,
+      "value_brl": 21032.89,
+      "pnl_brl": 6258.35,
+      "ir_brl": 938.75,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -522,7 +904,16 @@
       "cost_usd": 1201.94,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9813,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 5987.21,
+      "value_brl": 8413.15,
+      "pnl_brl": 2425.94,
+      "ir_brl": 363.89,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -533,7 +924,16 @@
       "cost_usd": 1164.82,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9813,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 5802.29,
+      "value_brl": 8165.71,
+      "pnl_brl": 2363.42,
+      "ir_brl": 354.51,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -544,7 +944,16 @@
       "cost_usd": 30.23,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9813,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 150.6,
+      "value_brl": 211.96,
+      "pnl_brl": 61.36,
+      "ir_brl": 9.2,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -555,7 +964,16 @@
       "cost_usd": 27.66,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.1626,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 142.79,
+      "value_brl": 186.08,
+      "pnl_brl": 43.29,
+      "ir_brl": 6.49,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -566,7 +984,16 @@
       "cost_usd": 8702.17,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.1626,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 44925.84,
+      "value_brl": 62356.32,
+      "pnl_brl": 17430.48,
+      "ir_brl": 2614.57,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -577,7 +1004,16 @@
       "cost_usd": 3714.13,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2802,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 19611.36,
+      "value_brl": 24992.02,
+      "pnl_brl": 5380.66,
+      "ir_brl": 807.1,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -588,7 +1024,16 @@
       "cost_usd": 36.98,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2802,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 195.27,
+      "value_brl": 247.45,
+      "pnl_brl": 52.18,
+      "ir_brl": 7.83,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -599,7 +1044,16 @@
       "cost_usd": 26.0,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2802,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 137.3,
+      "value_brl": 174.97,
+      "pnl_brl": 37.67,
+      "ir_brl": 5.65,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -610,7 +1064,16 @@
       "cost_usd": 2108.41,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.4563,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 11504.12,
+      "value_brl": 13609.51,
+      "pnl_brl": 2105.39,
+      "ir_brl": 315.81,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -621,7 +1084,16 @@
       "cost_usd": 31.7,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.4563,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 172.98,
+      "value_brl": 200.43,
+      "pnl_brl": 27.45,
+      "ir_brl": 4.12,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -632,7 +1104,16 @@
       "cost_usd": 5193.94,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6528,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 29360.3,
+      "value_brl": 36127.08,
+      "pnl_brl": 6766.78,
+      "ir_brl": 1015.02,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -643,7 +1124,16 @@
       "cost_usd": 23.98,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6528,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 135.55,
+      "value_brl": 166.8,
+      "pnl_brl": 31.25,
+      "ir_brl": 4.69,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -654,7 +1144,16 @@
       "cost_usd": 40.8,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.485,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 223.78,
+      "value_brl": 247.45,
+      "pnl_brl": 23.67,
+      "ir_brl": 3.55,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -665,7 +1164,16 @@
       "cost_usd": 23.05,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.485,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 126.41,
+      "value_brl": 146.66,
+      "pnl_brl": 20.25,
+      "ir_brl": 3.04,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -676,7 +1184,16 @@
       "cost_usd": 2683.14,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.485,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 14717.05,
+      "value_brl": 17073.76,
+      "pnl_brl": 2356.71,
+      "ir_brl": 353.51,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -687,7 +1204,16 @@
       "cost_usd": 28.21,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.8131,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 163.98,
+      "value_brl": 170.27,
+      "pnl_brl": 6.29,
+      "ir_brl": 0.94,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -698,7 +1224,16 @@
       "cost_usd": 4776.21,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.8131,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 27764.61,
+      "value_brl": 30683.27,
+      "pnl_brl": 2918.66,
+      "ir_brl": 437.8,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -709,7 +1244,16 @@
       "cost_usd": 25281.3,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 153217.29,
+      "value_brl": 184594.51,
+      "pnl_brl": 31377.22,
+      "ir_brl": 4706.58,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -720,7 +1264,16 @@
       "cost_usd": 31.5,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 190.91,
+      "value_brl": 229.95,
+      "pnl_brl": 39.04,
+      "ir_brl": 5.86,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -731,7 +1284,16 @@
       "cost_usd": 4922.78,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5709,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 27424.32,
+      "value_brl": 27961.37,
+      "pnl_brl": 537.05,
+      "ir_brl": 80.56,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -742,7 +1304,16 @@
       "cost_usd": 40.0,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5709,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 222.83,
+      "value_brl": 227.2,
+      "pnl_brl": 4.37,
+      "ir_brl": 0.66,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -753,7 +1324,16 @@
       "cost_usd": 1789.4,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5389,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 9911.28,
+      "value_brl": 10887.61,
+      "pnl_brl": 976.33,
+      "ir_brl": 146.45,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -764,7 +1344,16 @@
       "cost_usd": 40.77,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5389,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 225.82,
+      "value_brl": 247.45,
+      "pnl_brl": 21.63,
+      "ir_brl": 3.24,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -775,7 +1364,16 @@
       "cost_usd": 14.25,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5389,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 78.91,
+      "value_brl": 86.68,
+      "pnl_brl": 7.77,
+      "ir_brl": 1.17,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -786,7 +1384,16 @@
       "cost_usd": 1814.5,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3795,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 9761.1,
+      "value_brl": 10887.61,
+      "pnl_brl": 1126.51,
+      "ir_brl": 168.98,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -797,7 +1404,16 @@
       "cost_usd": 2884.28,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3795,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 15515.97,
+      "value_brl": 17321.2,
+      "pnl_brl": 1805.23,
+      "ir_brl": 270.78,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -808,7 +1424,16 @@
       "cost_usd": 33.59,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3795,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 180.68,
+      "value_brl": 201.62,
+      "pnl_brl": 20.94,
+      "ir_brl": 3.14,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -819,7 +1444,16 @@
       "cost_usd": 3.9,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2301,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 20.38,
+      "value_brl": 13.07,
+      "pnl_brl": -7.31,
+      "ir_brl": 0.0,
+      "tlh_eligible": true,
+      "tlh_benefit_brl": 1.1
     },
     {
       "symbol": "SWRD",
@@ -830,7 +1464,16 @@
       "cost_usd": 3704.41,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2301,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 19374.45,
+      "value_brl": 22022.67,
+      "pnl_brl": 2648.22,
+      "ir_brl": 397.23,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -841,7 +1484,16 @@
       "cost_usd": 41.72,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2301,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 218.2,
+      "value_brl": 247.45,
+      "pnl_brl": 29.25,
+      "ir_brl": 4.39,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -852,7 +1504,16 @@
       "cost_usd": 16917.08,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2139,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 88203.97,
+      "value_brl": 89327.91,
+      "pnl_brl": 1123.94,
+      "ir_brl": 168.59,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "SWRD",
@@ -863,7 +1524,16 @@
       "cost_usd": 4.37,
       "bucket": "SWRD",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2139,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 49.835,
+      "cost_brl": 22.8,
+      "value_brl": 23.09,
+      "pnl_brl": 0.29,
+      "ir_brl": 0.04,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -874,7 +1544,16 @@
       "cost_usd": 3674.72,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7782,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 17569.01,
+      "value_brl": 28584.24,
+      "pnl_brl": 11015.23,
+      "ir_brl": 1652.28,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -885,7 +1564,16 @@
       "cost_usd": 4587.99,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9592,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 22752.76,
+      "value_brl": 39048.11,
+      "pnl_brl": 16295.35,
+      "ir_brl": 2444.3,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -896,7 +1584,16 @@
       "cost_usd": 2490.7,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0497,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 12577.29,
+      "value_brl": 21693.4,
+      "pnl_brl": 9116.11,
+      "ir_brl": 1367.42,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -907,7 +1604,16 @@
       "cost_usd": 797.12,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0683,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 4040.04,
+      "value_brl": 6890.84,
+      "pnl_brl": 2850.8,
+      "ir_brl": 427.62,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -918,7 +1624,16 @@
       "cost_usd": 620.02,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0683,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 3142.43,
+      "value_brl": 5359.54,
+      "pnl_brl": 2217.11,
+      "ir_brl": 332.57,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -929,7 +1644,16 @@
       "cost_usd": 1714.06,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0683,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 8687.39,
+      "value_brl": 14802.55,
+      "pnl_brl": 6115.16,
+      "ir_brl": 917.27,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -940,7 +1664,16 @@
       "cost_usd": 1773.08,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9097,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 8705.31,
+      "value_brl": 15057.77,
+      "pnl_brl": 6352.46,
+      "ir_brl": 952.87,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -951,7 +1684,16 @@
       "cost_usd": 876.08,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.999,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 4379.52,
+      "value_brl": 7656.49,
+      "pnl_brl": 3276.97,
+      "ir_brl": 491.55,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -962,7 +1704,16 @@
       "cost_usd": 907.1,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.999,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 4534.61,
+      "value_brl": 7911.71,
+      "pnl_brl": 3377.1,
+      "ir_brl": 506.56,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -973,7 +1724,16 @@
       "cost_usd": 526.91,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8619,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 2561.78,
+      "value_brl": 4338.68,
+      "pnl_brl": 1776.9,
+      "ir_brl": 266.54,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -984,7 +1744,16 @@
       "cost_usd": 278.99,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8619,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 1356.42,
+      "value_brl": 2296.95,
+      "pnl_brl": 940.53,
+      "ir_brl": 141.08,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -995,7 +1764,16 @@
       "cost_usd": 187.85,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8619,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 913.29,
+      "value_brl": 1531.3,
+      "pnl_brl": 618.01,
+      "ir_brl": 92.7,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1006,7 +1784,16 @@
       "cost_usd": 10.06,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8901,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 49.22,
+      "value_brl": 82.87,
+      "pnl_brl": 33.65,
+      "ir_brl": 5.05,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1017,7 +1804,16 @@
       "cost_usd": 4742.6,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8901,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 23191.8,
+      "value_brl": 39048.11,
+      "pnl_brl": 15856.31,
+      "ir_brl": 2378.45,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1028,7 +1824,16 @@
       "cost_usd": 1821.95,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9723,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 9059.26,
+      "value_brl": 14802.55,
+      "pnl_brl": 5743.29,
+      "ir_brl": 861.49,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1039,7 +1844,16 @@
       "cost_usd": 19.96,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9723,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 99.24,
+      "value_brl": 162.32,
+      "pnl_brl": 63.08,
+      "ir_brl": 9.46,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1050,7 +1864,16 @@
       "cost_usd": 3441.75,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9761,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 17126.52,
+      "value_brl": 27563.37,
+      "pnl_brl": 10436.85,
+      "ir_brl": 1565.53,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1061,7 +1884,16 @@
       "cost_usd": 30.21,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9761,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 150.34,
+      "value_brl": 241.97,
+      "pnl_brl": 91.63,
+      "ir_brl": 13.74,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1072,7 +1904,16 @@
       "cost_usd": 1244.13,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.052,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 6285.33,
+      "value_brl": 9698.22,
+      "pnl_brl": 3412.89,
+      "ir_brl": 511.93,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1083,7 +1924,16 @@
       "cost_usd": 0.01,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.052,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 0.05,
+      "value_brl": 0.08,
+      "pnl_brl": 0.03,
+      "ir_brl": 0.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1094,7 +1944,16 @@
       "cost_usd": 30.93,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.052,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 156.25,
+      "value_brl": 241.54,
+      "pnl_brl": 85.29,
+      "ir_brl": 12.79,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1105,7 +1964,16 @@
       "cost_usd": 1176.92,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.052,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 5945.8,
+      "value_brl": 9187.79,
+      "pnl_brl": 3241.99,
+      "ir_brl": 486.3,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1116,7 +1984,16 @@
       "cost_usd": 6591.35,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.061,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 33358.82,
+      "value_brl": 50277.63,
+      "pnl_brl": 16918.81,
+      "ir_brl": 2537.82,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1127,7 +2004,16 @@
       "cost_usd": 14.33,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.061,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 72.51,
+      "value_brl": 109.28,
+      "pnl_brl": 36.77,
+      "ir_brl": 5.52,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1138,7 +2024,16 @@
       "cost_usd": 3857.66,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6254,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 21700.89,
+      "value_brl": 29094.67,
+      "pnl_brl": 7393.78,
+      "ir_brl": 1109.07,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1149,7 +2044,16 @@
       "cost_usd": 14.53,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6254,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 81.72,
+      "value_brl": 109.56,
+      "pnl_brl": 27.84,
+      "ir_brl": 4.18,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1160,7 +2064,16 @@
       "cost_usd": 1693.4,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.893,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 9979.24,
+      "value_brl": 12760.82,
+      "pnl_brl": 2781.58,
+      "ir_brl": 417.24,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1171,7 +2084,16 @@
       "cost_usd": 8.5,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.893,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 50.07,
+      "value_brl": 64.08,
+      "pnl_brl": 14.01,
+      "ir_brl": 2.1,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1182,7 +2104,16 @@
       "cost_usd": 20200.06,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 122422.44,
+      "value_brl": 166911.54,
+      "pnl_brl": 44489.1,
+      "ir_brl": 6673.36,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "EIMI",
@@ -1193,7 +2124,16 @@
       "cost_usd": 10.17,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 51.4,
+      "cost_brl": 61.66,
+      "value_brl": 84.04,
+      "pnl_brl": 22.38,
+      "ir_brl": 3.36,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1204,7 +2144,16 @@
       "cost_usd": 2699.87,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.1626,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 13943.18,
+      "value_brl": 19389.64,
+      "pnl_brl": 5446.46,
+      "ir_brl": 816.97,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1215,7 +2164,16 @@
       "cost_usd": 4614.75,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.7241,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 26415.31,
+      "value_brl": 30905.09,
+      "pnl_brl": 4489.78,
+      "ir_brl": 673.47,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1226,7 +2184,16 @@
       "cost_usd": 37.86,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.7241,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 216.7,
+      "value_brl": 253.12,
+      "pnl_brl": 36.42,
+      "ir_brl": 5.46,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1237,7 +2204,16 @@
       "cost_usd": 10041.62,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 60857.21,
+      "value_brl": 80962.64,
+      "pnl_brl": 20105.43,
+      "ir_brl": 3015.81,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1248,7 +2224,16 @@
       "cost_usd": 54.19,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 328.45,
+      "value_brl": 435.28,
+      "pnl_brl": 106.83,
+      "ir_brl": 16.02,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1259,7 +2244,16 @@
       "cost_usd": 9.48,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 57.45,
+      "value_brl": 76.44,
+      "pnl_brl": 18.99,
+      "ir_brl": 2.85,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1270,7 +2264,16 @@
       "cost_usd": 72.82,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5709,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 405.7,
+      "value_brl": 435.28,
+      "pnl_brl": 29.58,
+      "ir_brl": 4.44,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1281,7 +2284,16 @@
       "cost_usd": 67.21,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5709,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 374.41,
+      "value_brl": 412.56,
+      "pnl_brl": 38.15,
+      "ir_brl": 5.72,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "USSC",
@@ -1292,7 +2304,16 @@
       "cost_usd": 4822.67,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5709,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 87.665,
+      "cost_brl": 26866.63,
+      "value_brl": 29599.25,
+      "pnl_brl": 2732.62,
+      "ir_brl": 409.89,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "IWVL",
@@ -1303,7 +2324,16 @@
       "cost_usd": 1045.2,
       "bucket": "JPGL",
       "status": "legado",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2217,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 67.56,
+      "cost_brl": 5457.72,
+      "value_brl": 9392.76,
+      "pnl_brl": 3935.04,
+      "ir_brl": 590.26,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "IWVL",
@@ -1314,7 +2344,16 @@
       "cost_usd": 230.48,
       "bucket": "JPGL",
       "status": "legado",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2281,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 67.56,
+      "cost_brl": 1204.97,
+      "value_brl": 2012.73,
+      "pnl_brl": 807.76,
+      "ir_brl": 121.16,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1325,7 +2364,16 @@
       "cost_usd": 913.36,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6351,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 5148.17,
+      "value_brl": 7283.0,
+      "pnl_brl": 2134.83,
+      "ir_brl": 320.22,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1336,7 +2384,16 @@
       "cost_usd": 28.27,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.6351,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 159.33,
+      "value_brl": 223.22,
+      "pnl_brl": 63.89,
+      "ir_brl": 9.58,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1347,7 +2404,16 @@
       "cost_usd": 2519.1,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5213,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 13908.68,
+      "value_brl": 20288.36,
+      "pnl_brl": 6379.68,
+      "ir_brl": 956.95,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1358,7 +2424,16 @@
       "cost_usd": 23.38,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.5213,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 129.08,
+      "value_brl": 188.32,
+      "pnl_brl": 59.24,
+      "ir_brl": 8.89,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1369,7 +2444,16 @@
       "cost_usd": 886.53,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.4401,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 4822.78,
+      "value_brl": 7283.0,
+      "pnl_brl": 2460.22,
+      "ir_brl": 369.03,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1380,7 +2464,16 @@
       "cost_usd": 17.16,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.4401,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 93.38,
+      "value_brl": 139.47,
+      "pnl_brl": 46.09,
+      "ir_brl": 6.91,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1391,7 +2484,16 @@
       "cost_usd": 6325.67,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7782,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 30225.32,
+      "value_brl": 52021.45,
+      "pnl_brl": 21796.13,
+      "ir_brl": 3269.42,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1402,7 +2504,16 @@
       "cost_usd": 1834.59,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7782,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 8766.03,
+      "value_brl": 15086.22,
+      "pnl_brl": 6320.19,
+      "ir_brl": 948.03,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1413,7 +2524,16 @@
       "cost_usd": 6519.1,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.6664,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 30420.71,
+      "value_brl": 54622.52,
+      "pnl_brl": 24201.81,
+      "ir_brl": 3630.27,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1424,7 +2544,16 @@
       "cost_usd": 20.27,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.6664,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 94.61,
+      "value_brl": 168.19,
+      "pnl_brl": 73.58,
+      "ir_brl": 11.04,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1435,7 +2564,16 @@
       "cost_usd": 10.77,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9592,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 53.39,
+      "value_brl": 95.3,
+      "pnl_brl": 41.91,
+      "ir_brl": 6.29,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1446,7 +2584,16 @@
       "cost_usd": 3665.5,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9592,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 18177.92,
+      "value_brl": 32773.51,
+      "pnl_brl": 14595.59,
+      "ir_brl": 2189.34,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1457,7 +2604,16 @@
       "cost_usd": 15.77,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8106,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 75.85,
+      "value_brl": 139.57,
+      "pnl_brl": 63.72,
+      "ir_brl": 9.56,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1468,7 +2624,16 @@
       "cost_usd": 2880.49,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8106,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 13856.89,
+      "value_brl": 25490.51,
+      "pnl_brl": 11633.62,
+      "ir_brl": 1745.04,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1479,7 +2644,16 @@
       "cost_usd": 0.02,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8106,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 0.1,
+      "value_brl": 0.1,
+      "pnl_brl": 0.0,
+      "ir_brl": 0.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1490,7 +2664,16 @@
       "cost_usd": 11.57,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3608,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 62.03,
+      "value_brl": 110.75,
+      "pnl_brl": 48.72,
+      "ir_brl": 7.31,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1501,7 +2684,16 @@
       "cost_usd": 1829.73,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3608,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 9808.81,
+      "value_brl": 17687.29,
+      "pnl_brl": 7878.48,
+      "ir_brl": 1181.77,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1512,7 +2704,16 @@
       "cost_usd": 1378.09,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.1224,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 7059.14,
+      "value_brl": 13005.36,
+      "pnl_brl": 5946.22,
+      "ir_brl": 891.93,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1523,7 +2724,16 @@
       "cost_usd": 1.26,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.1224,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 6.44,
+      "value_brl": 11.76,
+      "pnl_brl": 5.32,
+      "ir_brl": 0.8,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1534,7 +2744,16 @@
       "cost_usd": 26.46,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3916,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 142.65,
+      "value_brl": 291.74,
+      "pnl_brl": 149.09,
+      "ir_brl": 22.36,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1545,7 +2764,16 @@
       "cost_usd": 141.88,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.3916,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 764.99,
+      "value_brl": 1560.64,
+      "pnl_brl": 795.65,
+      "ir_brl": 119.35,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1556,7 +2784,16 @@
       "cost_usd": 7.57,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0447,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 38.2,
+      "value_brl": 66.95,
+      "pnl_brl": 28.75,
+      "ir_brl": 4.31,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1567,7 +2804,16 @@
       "cost_usd": 2912.79,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0447,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 14694.13,
+      "value_brl": 26010.72,
+      "pnl_brl": 11316.59,
+      "ir_brl": 1697.49,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1578,7 +2824,16 @@
       "cost_usd": 39.02,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0128,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 195.59,
+      "value_brl": 344.85,
+      "pnl_brl": 149.26,
+      "ir_brl": 22.39,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1589,7 +2844,16 @@
       "cost_usd": 3179.5,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.0128,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 15938.21,
+      "value_brl": 28091.58,
+      "pnl_brl": 12153.37,
+      "ir_brl": 1823.01,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1600,7 +2864,16 @@
       "cost_usd": 1962.89,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9547,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 9725.51,
+      "value_brl": 17167.08,
+      "pnl_brl": 7441.57,
+      "ir_brl": 1116.24,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1611,7 +2884,16 @@
       "cost_usd": 833.05,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9547,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 4127.52,
+      "value_brl": 7283.0,
+      "pnl_brl": 3155.48,
+      "ir_brl": 473.32,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1622,7 +2904,16 @@
       "cost_usd": 0.02,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9696,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 0.09,
+      "value_brl": 0.16,
+      "pnl_brl": 0.07,
+      "ir_brl": 0.01,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1633,7 +2924,16 @@
       "cost_usd": 54.77,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9696,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 272.17,
+      "value_brl": 479.64,
+      "pnl_brl": 207.47,
+      "ir_brl": 31.12,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1644,7 +2944,16 @@
       "cost_usd": 57.66,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9474,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 285.25,
+      "value_brl": 519.54,
+      "pnl_brl": 234.29,
+      "ir_brl": 35.14,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1655,7 +2964,16 @@
       "cost_usd": 2122.7,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.9474,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 10501.83,
+      "value_brl": 19247.94,
+      "pnl_brl": 8746.11,
+      "ir_brl": 1311.92,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1666,7 +2984,16 @@
       "cost_usd": 7.24,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8832,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 35.33,
+      "value_brl": 64.14,
+      "pnl_brl": 28.81,
+      "ir_brl": 4.32,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1677,7 +3004,16 @@
       "cost_usd": 1994.11,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.8832,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 9737.64,
+      "value_brl": 17687.29,
+      "pnl_brl": 7949.65,
+      "ir_brl": 1192.45,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1688,7 +3024,16 @@
       "cost_usd": 788.81,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7799,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 3770.44,
+      "value_brl": 7283.0,
+      "pnl_brl": 3512.56,
+      "ir_brl": 526.88,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1699,7 +3044,16 @@
       "cost_usd": 54.51,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7799,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 260.54,
+      "value_brl": 503.57,
+      "pnl_brl": 243.03,
+      "ir_brl": 36.45,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1710,7 +3064,16 @@
       "cost_usd": 0.01,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 4.7799,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 0.05,
+      "value_brl": 0.1,
+      "pnl_brl": 0.05,
+      "ir_brl": 0.01,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1721,7 +3084,16 @@
       "cost_usd": 10047.0,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 60889.86,
+      "value_brl": 83754.53,
+      "pnl_brl": 22864.67,
+      "ir_brl": 3429.7,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1732,7 +3104,16 @@
       "cost_usd": 53.6,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 324.85,
+      "value_brl": 446.19,
+      "pnl_brl": 121.34,
+      "ir_brl": 18.2,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1743,7 +3124,16 @@
       "cost_usd": 4977.97,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.652,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 28135.47,
+      "value_brl": 35374.58,
+      "pnl_brl": 7239.11,
+      "ir_brl": 1085.87,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1754,7 +3144,16 @@
       "cost_usd": 0.01,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.652,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 0.08,
+      "value_brl": 0.1,
+      "pnl_brl": 0.02,
+      "ir_brl": 0.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVDV",
@@ -1765,7 +3164,16 @@
       "cost_usd": 22.38,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.652,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 104.77,
+      "cost_brl": 126.52,
+      "value_brl": 159.08,
+      "pnl_brl": 32.56,
+      "ir_brl": 4.88,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1776,7 +3184,16 @@
       "cost_usd": 2381.55,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.451,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 12981.81,
+      "value_brl": 17544.39,
+      "pnl_brl": 4562.58,
+      "ir_brl": 684.39,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1787,7 +3204,16 @@
       "cost_usd": 0.01,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5213,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 0.04,
+      "value_brl": 0.06,
+      "pnl_brl": 0.02,
+      "ir_brl": 0.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1798,7 +3224,16 @@
       "cost_usd": 43.03,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5213,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 237.6,
+      "value_brl": 312.93,
+      "pnl_brl": 75.33,
+      "ir_brl": 11.3,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1809,7 +3244,16 @@
       "cost_usd": 4344.4,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5213,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 23986.72,
+      "value_brl": 31579.9,
+      "pnl_brl": 7593.18,
+      "ir_brl": 1138.98,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1820,7 +3264,16 @@
       "cost_usd": 1367.97,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5213,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 7552.97,
+      "value_brl": 9941.82,
+      "pnl_brl": 2388.85,
+      "ir_brl": 358.33,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1831,7 +3284,16 @@
       "cost_usd": 3536.55,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.6664,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 16502.96,
+      "value_brl": 25731.77,
+      "pnl_brl": 9228.81,
+      "ir_brl": 1384.32,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1842,7 +3304,16 @@
       "cost_usd": 24.11,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.6664,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 112.51,
+      "value_brl": 175.44,
+      "pnl_brl": 62.93,
+      "ir_brl": 9.44,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1853,7 +3324,16 @@
       "cost_usd": 1959.72,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9592,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 9718.62,
+      "value_brl": 15205.14,
+      "pnl_brl": 5486.52,
+      "ir_brl": 822.98,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1864,7 +3344,16 @@
       "cost_usd": 3103.24,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.0447,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 15654.91,
+      "value_brl": 25146.96,
+      "pnl_brl": 9492.05,
+      "ir_brl": 1423.81,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1875,7 +3364,16 @@
       "cost_usd": 1416.32,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9547,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 7017.45,
+      "value_brl": 11696.26,
+      "pnl_brl": 4678.81,
+      "ir_brl": 701.82,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1886,7 +3384,16 @@
       "cost_usd": 66.2,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9696,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 328.99,
+      "value_brl": 547.56,
+      "pnl_brl": 218.57,
+      "ir_brl": 32.79,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1897,7 +3404,16 @@
       "cost_usd": 0.15,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9696,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 0.74,
+      "value_brl": 1.23,
+      "pnl_brl": 0.49,
+      "ir_brl": 0.07,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1908,7 +3424,16 @@
       "cost_usd": 2.77,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8735,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 13.48,
+      "value_brl": 20.53,
+      "pnl_brl": 7.05,
+      "ir_brl": 1.06,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1919,7 +3444,16 @@
       "cost_usd": 3277.62,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8735,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 15973.5,
+      "value_brl": 24562.15,
+      "pnl_brl": 8588.65,
+      "ir_brl": 1288.3,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1930,7 +3464,16 @@
       "cost_usd": 802.32,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8058,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 3855.78,
+      "value_brl": 5848.13,
+      "pnl_brl": 1992.35,
+      "ir_brl": 298.85,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1941,7 +3484,16 @@
       "cost_usd": 962.84,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8058,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 4627.23,
+      "value_brl": 7017.76,
+      "pnl_brl": 2390.53,
+      "ir_brl": 358.58,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1952,7 +3504,16 @@
       "cost_usd": 1204.07,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8058,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 5786.53,
+      "value_brl": 8772.2,
+      "pnl_brl": 2985.67,
+      "ir_brl": 447.85,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1963,7 +3524,16 @@
       "cost_usd": 27.99,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.7457,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 132.84,
+      "value_brl": 200.12,
+      "pnl_brl": 67.28,
+      "ir_brl": 10.09,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1974,7 +3544,16 @@
       "cost_usd": 2045.32,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.7457,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 9706.45,
+      "value_brl": 14620.33,
+      "pnl_brl": 4913.88,
+      "ir_brl": 737.08,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1985,7 +3564,16 @@
       "cost_usd": 4118.21,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.497,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 22637.78,
+      "value_brl": 26901.4,
+      "pnl_brl": 4263.62,
+      "ir_brl": 639.54,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -1996,7 +3584,16 @@
       "cost_usd": 1993.41,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4911,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 10946.01,
+      "value_brl": 12865.89,
+      "pnl_brl": 1919.88,
+      "ir_brl": 287.98,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2007,7 +3604,16 @@
       "cost_usd": 95.44,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4521,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 520.35,
+      "value_brl": 584.81,
+      "pnl_brl": 64.46,
+      "ir_brl": 9.67,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2018,7 +3624,16 @@
       "cost_usd": 0.02,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4521,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 0.1,
+      "value_brl": 0.12,
+      "pnl_brl": 0.02,
+      "ir_brl": 0.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2029,7 +3644,16 @@
       "cost_usd": 91.89,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4521,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 500.97,
+      "value_brl": 565.16,
+      "pnl_brl": 64.19,
+      "ir_brl": 9.63,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2040,7 +3664,16 @@
       "cost_usd": 1541.09,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0741,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 9360.76,
+      "value_brl": 9357.01,
+      "pnl_brl": -3.75,
+      "ir_brl": 0.0,
+      "tlh_eligible": true,
+      "tlh_benefit_brl": 0.56
     },
     {
       "symbol": "AVUV",
@@ -2051,7 +3684,16 @@
       "cost_usd": 51.26,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0741,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 311.36,
+      "value_brl": 311.3,
+      "pnl_brl": -0.06,
+      "ir_brl": 0.0,
+      "tlh_eligible": true,
+      "tlh_benefit_brl": 0.01
     },
     {
       "symbol": "AVUV",
@@ -2062,7 +3704,16 @@
       "cost_usd": 4742.46,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.8268,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 27633.39,
+      "value_brl": 32164.72,
+      "pnl_brl": 4531.33,
+      "ir_brl": 679.7,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2073,7 +3724,16 @@
       "cost_usd": 57.89,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.8268,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 337.34,
+      "value_brl": 392.64,
+      "pnl_brl": 55.3,
+      "ir_brl": 8.29,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2084,7 +3744,16 @@
       "cost_usd": 5471.11,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.6067,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 30674.85,
+      "value_brl": 38597.66,
+      "pnl_brl": 7922.81,
+      "ir_brl": 1188.42,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVUV",
@@ -2095,7 +3764,16 @@
       "cost_usd": 46.26,
       "bucket": "AVGS",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.6067,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 117.78,
+      "cost_brl": 259.36,
+      "value_brl": 326.33,
+      "pnl_brl": 66.97,
+      "ir_brl": 10.05,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2106,7 +3784,16 @@
       "cost_usd": 1374.22,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4957,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 7552.29,
+      "value_brl": 8240.31,
+      "pnl_brl": 688.02,
+      "ir_brl": 103.2,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2117,7 +3804,16 @@
       "cost_usd": 1432.4,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4772,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 7845.53,
+      "value_brl": 8557.25,
+      "pnl_brl": 711.72,
+      "ir_brl": 106.76,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2128,7 +3824,16 @@
       "cost_usd": 2115.68,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.691,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 12040.32,
+      "value_brl": 12677.4,
+      "pnl_brl": 637.08,
+      "ir_brl": 95.56,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2139,7 +3844,16 @@
       "cost_usd": 15.6,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.7326,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 73.85,
+      "value_brl": 94.99,
+      "pnl_brl": 21.14,
+      "ir_brl": 3.17,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2150,7 +3864,16 @@
       "cost_usd": 2113.75,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.7326,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 10003.55,
+      "value_brl": 12994.34,
+      "pnl_brl": 2990.79,
+      "ir_brl": 448.62,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2161,7 +3884,16 @@
       "cost_usd": 19.84,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.2268,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 103.68,
+      "value_brl": 139.93,
+      "pnl_brl": 36.25,
+      "ir_brl": 5.44,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2172,7 +3904,16 @@
       "cost_usd": 539.51,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.2268,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 2819.92,
+      "value_brl": 3803.22,
+      "pnl_brl": 983.3,
+      "ir_brl": 147.49,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2183,7 +3924,16 @@
       "cost_usd": 20.85,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.3608,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 111.75,
+      "value_brl": 148.8,
+      "pnl_brl": 37.05,
+      "ir_brl": 5.56,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "DGS",
@@ -2194,7 +3944,16 @@
       "cost_usd": 1802.51,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.3608,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 63.83,
+      "cost_brl": 9662.91,
+      "value_brl": 12994.34,
+      "pnl_brl": 3331.43,
+      "ir_brl": 499.71,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2205,7 +3964,16 @@
       "cost_usd": 1304.18,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4957,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 7167.4,
+      "value_brl": 8312.61,
+      "pnl_brl": 1145.21,
+      "ir_brl": 171.78,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2216,7 +3984,16 @@
       "cost_usd": 12.84,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4772,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 70.31,
+      "value_brl": 81.02,
+      "pnl_brl": 10.71,
+      "ir_brl": 1.61,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2227,7 +4004,16 @@
       "cost_usd": 1317.59,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4772,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 7216.72,
+      "value_brl": 8312.61,
+      "pnl_brl": 1095.89,
+      "ir_brl": 164.38,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2238,7 +4024,16 @@
       "cost_usd": 2257.69,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.691,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 12848.54,
+      "value_brl": 14387.21,
+      "pnl_brl": 1538.67,
+      "ir_brl": 230.8,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2249,7 +4044,16 @@
       "cost_usd": 17.8,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.691,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 101.28,
+      "value_brl": 113.44,
+      "pnl_brl": 12.16,
+      "ir_brl": 1.82,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2260,7 +4064,16 @@
       "cost_usd": 3767.59,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.7782,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 18002.3,
+      "value_brl": 24618.11,
+      "pnl_brl": 6615.81,
+      "ir_brl": 992.37,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2271,7 +4084,16 @@
       "cost_usd": 32.77,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.7782,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 156.6,
+      "value_brl": 214.15,
+      "pnl_brl": 57.55,
+      "ir_brl": 8.63,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2282,7 +4104,16 @@
       "cost_usd": 2565.08,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9592,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 12720.73,
+      "value_brl": 18223.79,
+      "pnl_brl": 5503.06,
+      "ir_brl": 825.46,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2293,7 +4124,16 @@
       "cost_usd": 3912.94,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.0447,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 19739.63,
+      "value_brl": 29413.84,
+      "pnl_brl": 9674.21,
+      "ir_brl": 1451.13,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2304,7 +4144,16 @@
       "cost_usd": 1174.59,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9547,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 5819.72,
+      "value_brl": 8632.32,
+      "pnl_brl": 2812.6,
+      "ir_brl": 421.89,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2315,7 +4164,16 @@
       "cost_usd": 1087.26,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9547,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 5387.02,
+      "value_brl": 7992.89,
+      "pnl_brl": 2605.87,
+      "ir_brl": 390.88,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2326,7 +4184,16 @@
       "cost_usd": 18.52,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.9547,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 91.75,
+      "value_brl": 136.07,
+      "pnl_brl": 44.32,
+      "ir_brl": 6.65,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2337,7 +4204,16 @@
       "cost_usd": 2250.86,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8222,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 10854.1,
+      "value_brl": 15985.78,
+      "pnl_brl": 5131.68,
+      "ir_brl": 769.75,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2348,7 +4224,16 @@
       "cost_usd": 4.49,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8222,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 21.67,
+      "value_brl": 31.91,
+      "pnl_brl": 10.24,
+      "ir_brl": 1.54,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2359,7 +4244,16 @@
       "cost_usd": 0.0,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 4.8222,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 0.02,
+      "value_brl": 0.03,
+      "pnl_brl": 0.01,
+      "ir_brl": 0.0,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2370,7 +4264,16 @@
       "cost_usd": 874.79,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5229,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 4831.4,
+      "value_brl": 5754.88,
+      "pnl_brl": 923.48,
+      "ir_brl": 138.52,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2381,7 +4284,16 @@
       "cost_usd": 25.56,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.5229,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 141.15,
+      "value_brl": 168.2,
+      "pnl_brl": 27.05,
+      "ir_brl": 4.06,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2392,7 +4304,16 @@
       "cost_usd": 4195.33,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4563,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 22890.96,
+      "value_brl": 26856.12,
+      "pnl_brl": 3965.16,
+      "ir_brl": 594.77,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2403,7 +4324,16 @@
       "cost_usd": 20.0,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.4563,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 109.13,
+      "value_brl": 127.89,
+      "pnl_brl": 18.76,
+      "ir_brl": 2.81,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2414,7 +4344,16 @@
       "cost_usd": 0.04,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0377,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 0.23,
+      "value_brl": 0.19,
+      "pnl_brl": -0.04,
+      "ir_brl": 0.0,
+      "tlh_eligible": true,
+      "tlh_benefit_brl": 0.01
     },
     {
       "symbol": "AVES",
@@ -2425,7 +4364,16 @@
       "cost_usd": 4045.41,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0377,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 24424.98,
+      "value_brl": 28454.69,
+      "pnl_brl": 4029.71,
+      "ir_brl": 604.46,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2436,7 +4384,16 @@
       "cost_usd": 44.92,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0377,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 271.2,
+      "value_brl": 315.97,
+      "pnl_brl": 44.77,
+      "ir_brl": 6.72,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2447,7 +4404,16 @@
       "cost_usd": 2743.77,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.7856,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 15874.35,
+      "value_brl": 18863.22,
+      "pnl_brl": 2988.87,
+      "ir_brl": 448.33,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2458,7 +4424,16 @@
       "cost_usd": 93.01,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.7856,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 538.1,
+      "value_brl": 639.43,
+      "pnl_brl": 101.33,
+      "ir_brl": 15.2,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2469,7 +4444,16 @@
       "cost_usd": 232.42,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.7856,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 1344.67,
+      "value_brl": 1598.58,
+      "pnl_brl": 253.91,
+      "ir_brl": 38.09,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2480,7 +4464,16 @@
       "cost_usd": 31.1,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 5.7856,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 179.93,
+      "value_brl": 213.83,
+      "pnl_brl": 33.9,
+      "ir_brl": 5.08,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2491,7 +4484,16 @@
       "cost_usd": 6.77,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 41.01,
+      "value_brl": 50.8,
+      "pnl_brl": 9.79,
+      "ir_brl": 1.47,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2502,7 +4504,16 @@
       "cost_usd": 42.35,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 256.68,
+      "value_brl": 319.72,
+      "pnl_brl": 63.04,
+      "ir_brl": 9.46,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2513,7 +4524,16 @@
       "cost_usd": 5847.76,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 35440.37,
+      "value_brl": 44440.48,
+      "pnl_brl": 9000.11,
+      "ir_brl": 1350.02,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVES",
@@ -2524,7 +4544,16 @@
       "cost_usd": 4203.73,
       "bucket": "AVEM",
       "status": "transitorio",
-      "domicilio": "US-listed"
+      "domicilio": "US-listed",
+      "ptax_compra": 6.0605,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 64.39,
+      "cost_brl": 25476.72,
+      "value_brl": 31971.57,
+      "pnl_brl": 6494.85,
+      "ir_brl": 974.23,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVGS",
@@ -2535,7 +4564,16 @@
       "cost_usd": 5812.2,
       "bucket": "AVGS",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2541,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 27.375,
+      "cost_brl": 30537.88,
+      "value_brl": 31670.55,
+      "pnl_brl": 1132.67,
+      "ir_brl": 169.9,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     },
     {
       "symbol": "AVGS",
@@ -2546,7 +4584,16 @@
       "cost_usd": 10.71,
       "bucket": "AVGS",
       "status": "alvo",
-      "domicilio": "UCITS"
+      "domicilio": "UCITS",
+      "ptax_compra": 5.2541,
+      "ptax_atual": 4.9653,
+      "price_atual_usd": 27.375,
+      "cost_brl": 56.26,
+      "value_brl": 58.34,
+      "pnl_brl": 2.08,
+      "ir_brl": 0.31,
+      "tlh_eligible": false,
+      "tlh_benefit_brl": 0
     }
   ]
 }

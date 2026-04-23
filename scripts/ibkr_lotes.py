@@ -253,9 +253,96 @@ def enrich_lots(lots: list[dict], ptax_cache: dict | None = None) -> list[dict]:
     return lots
 
 
+def enrich_ir_brl(lots: list[dict], current_prices: dict[str, float] | None = None,
+                   ptax_atual: float | None = None) -> list[dict]:
+    """Enrich lots with PTAX on purchase date, BRL cost, BRL value, P&L BRL, IR estimate.
+
+    Fetches PTAX for all unique purchase dates via BCB API (batched).
+    current_prices: {symbol: price_usd} — if None, fetches from ibkr_sync or yfinance.
+    """
+    from fx_utils import get_ptax_series, get_ptax
+
+    # Current PTAX
+    if ptax_atual is None:
+        ptax_atual = get_ptax()
+    print(f"  PTAX atual: R$ {ptax_atual:.4f}")
+
+    # Current prices from Flex Query if not provided
+    if current_prices is None:
+        current_prices = {}
+        try:
+            from ibkr_sync import fetch_raw, extract_positions
+            from dotenv import load_dotenv
+            load_dotenv(Path(__file__).parent.parent / ".env")
+            token = os.getenv("IBKR_TOKEN")
+            qid = os.getenv("IBKR_QUERY_POSITIONS")
+            if token and qid:
+                raw = fetch_raw(token, qid)
+                for p in extract_positions(raw):
+                    current_prices[p["symbol"]] = p["price_usd"]
+                print(f"  Preços atuais via Flex Query: {len(current_prices)} ETFs")
+        except Exception as e:
+            print(f"  ⚠️  Flex Query para preços falhou: {e}")
+
+    # Collect unique purchase dates
+    unique_dates = sorted(set(l["date"] for l in lots if l.get("date")))
+    print(f"  Buscando PTAX para {len(unique_dates)} datas únicas no BCB...")
+
+    # Fetch PTAX series covering all dates (min date - 7 days to max date)
+    if unique_dates:
+        from datetime import datetime as dt, timedelta
+        min_date = (dt.strptime(unique_dates[0], "%Y-%m-%d") - timedelta(days=7)).strftime("%Y-%m-%d")
+        max_date = unique_dates[-1]
+        try:
+            ptax_series = get_ptax_series(min_date, max_date)
+            # Build lookup: for each date, find closest PTAX <= that date
+            ptax_lookup: dict[str, float] = {}
+            for d in unique_dates:
+                target = dt.strptime(d, "%Y-%m-%d").date()
+                # Filter series up to target date
+                valid = ptax_series[ptax_series.index.date <= target]
+                if not valid.empty:
+                    ptax_lookup[d] = float(valid.iloc[-1])
+                else:
+                    ptax_lookup[d] = ptax_atual  # fallback
+            print(f"  PTAX obtida para {len(ptax_lookup)} datas (range: R${min(ptax_lookup.values()):.2f}–R${max(ptax_lookup.values()):.2f})")
+        except Exception as e:
+            print(f"  ⚠️  BCB API falhou: {e} — usando PTAX atual como fallback")
+            ptax_lookup = {d: ptax_atual for d in unique_dates}
+    else:
+        ptax_lookup = {}
+
+    # Enrich each lot
+    aliquota_ir = 0.15
+    for lot in lots:
+        sym = lot["symbol"]
+        ptax_compra = ptax_lookup.get(lot["date"], ptax_atual)
+        price_atual = current_prices.get(sym, 0)
+
+        lot["ptax_compra"] = round(ptax_compra, 4)
+        lot["ptax_atual"] = round(ptax_atual, 4)
+        lot["price_atual_usd"] = round(price_atual, 4)
+
+        # Cost in BRL = qty × price_compra × PTAX_compra + commission × PTAX_compra
+        lot["cost_brl"] = round(lot["qty"] * lot["price_usd"] * ptax_compra + lot["commission_usd"] * ptax_compra, 2)
+        # Current value in BRL = qty × price_atual × PTAX_atual
+        lot["value_brl"] = round(lot["qty"] * price_atual * ptax_atual, 2)
+        # P&L nominal BRL
+        lot["pnl_brl"] = round(lot["value_brl"] - lot["cost_brl"], 2)
+        # IR estimate (15% on positive nominal BRL gain only)
+        lot["ir_brl"] = round(max(0, lot["pnl_brl"]) * aliquota_ir, 2)
+        # TLH eligible
+        lot["tlh_eligible"] = lot["pnl_brl"] < 0
+        lot["tlh_benefit_brl"] = round(abs(lot["pnl_brl"]) * aliquota_ir, 2) if lot["tlh_eligible"] else 0
+
+    return lots
+
+
 def summary(lots: list[dict]) -> dict:
     """Generate summary stats from lots."""
     by_symbol: dict[str, dict] = {}
+    has_brl = any("cost_brl" in l for l in lots)
+
     for lot in lots:
         sym = lot["symbol"]
         if sym not in by_symbol:
@@ -264,6 +351,12 @@ def summary(lots: list[dict]) -> dict:
                 "n_lotes": 0,
                 "qty_total": 0.0,
                 "cost_usd_total": 0.0,
+                "cost_brl_total": 0.0,
+                "value_brl_total": 0.0,
+                "pnl_brl_total": 0.0,
+                "ir_brl_total": 0.0,
+                "tlh_count": 0,
+                "tlh_benefit_brl": 0.0,
                 "pm_usd": 0.0,
                 "status": lot["status"],
                 "domicilio": lot["domicilio"],
@@ -275,6 +368,14 @@ def summary(lots: list[dict]) -> dict:
         entry["n_lotes"] += 1
         entry["qty_total"] += lot["qty"]
         entry["cost_usd_total"] += lot["cost_usd"]
+        if has_brl:
+            entry["cost_brl_total"] += lot.get("cost_brl", 0)
+            entry["value_brl_total"] += lot.get("value_brl", 0)
+            entry["pnl_brl_total"] += lot.get("pnl_brl", 0)
+            entry["ir_brl_total"] += lot.get("ir_brl", 0)
+            if lot.get("tlh_eligible"):
+                entry["tlh_count"] += 1
+                entry["tlh_benefit_brl"] += lot.get("tlh_benefit_brl", 0)
         if lot["date"] < entry["oldest_lot"]:
             entry["oldest_lot"] = lot["date"]
         if lot["date"] > entry["newest_lot"]:
@@ -285,12 +386,21 @@ def summary(lots: list[dict]) -> dict:
         entry["qty_total"] = round(entry["qty_total"], 4)
         entry["cost_usd_total"] = round(entry["cost_usd_total"], 2)
         entry["pm_usd"] = round(entry["pm_usd"], 4)
+        entry["cost_brl_total"] = round(entry["cost_brl_total"], 2)
+        entry["value_brl_total"] = round(entry["value_brl_total"], 2)
+        entry["pnl_brl_total"] = round(entry["pnl_brl_total"], 2)
+        entry["ir_brl_total"] = round(entry["ir_brl_total"], 2)
+        entry["tlh_benefit_brl"] = round(entry["tlh_benefit_brl"], 2)
 
-    return {
+    totals = {
         "total_lotes": len(lots),
         "total_symbols": len(by_symbol),
+        "ir_brl_total": round(sum(e["ir_brl_total"] for e in by_symbol.values()), 2),
+        "tlh_count": sum(e["tlh_count"] for e in by_symbol.values()),
+        "tlh_benefit_brl": round(sum(e["tlh_benefit_brl"] for e in by_symbol.values()), 2),
         "by_symbol": dict(sorted(by_symbol.items())),
     }
+    return totals
 
 
 def main():
@@ -321,14 +431,31 @@ def main():
     lots = enrich_lots(lots)
     print(f"   {len(lots)} lotes abertos (FIFO)")
 
-    summ = summary(lots)
-    print(f"\n{'─'*60}")
-    print(f"{'Símbolo':<8} {'Lotes':>5} {'Qty':>10} {'Custo USD':>12} {'PM USD':>10} {'Status':<12} {'Domicílio'}")
-    print(f"{'─'*60}")
-    for sym, s in summ["by_symbol"].items():
-        print(f"{sym:<8} {s['n_lotes']:>5} {s['qty_total']:>10.2f} ${s['cost_usd_total']:>10,.0f} ${s['pm_usd']:>8.2f} {s['status']:<12} {s['domicilio']}")
+    # Enrich with PTAX + IR BRL
+    print(f"\n📊 Calculando IR por lote (PTAX BCB + preços atuais)...")
+    lots = enrich_ir_brl(lots)
 
-    # Round lot quantities for output
+    summ = summary(lots)
+    has_brl = any("cost_brl" in l for l in lots)
+
+    print(f"\n{'─'*80}")
+    if has_brl:
+        print(f"{'Símbolo':<8} {'Lotes':>5} {'Custo BRL':>12} {'Valor BRL':>12} {'P&L BRL':>12} {'IR 15%':>10} {'TLH':>5}")
+        print(f"{'─'*80}")
+        for sym, s in summ["by_symbol"].items():
+            pnl_color = ""
+            print(f"{sym:<8} {s['n_lotes']:>5} R${s['cost_brl_total']:>9,.0f} R${s['value_brl_total']:>9,.0f} R${s['pnl_brl_total']:>9,.0f} R${s['ir_brl_total']:>7,.0f} {s['tlh_count'] or '—':>5}")
+        print(f"{'─'*80}")
+        print(f"{'TOTAL':<8} {summ['total_lotes']:>5} {'':>12} {'':>12} {'':>12} R${summ['ir_brl_total']:>7,.0f} {summ['tlh_count'] or '—':>5}")
+        if summ["tlh_count"] > 0:
+            print(f"\n  TLH: {summ['tlh_count']} lotes elegíveis, benefício fiscal R${summ['tlh_benefit_brl']:,.0f}")
+    else:
+        print(f"{'Símbolo':<8} {'Lotes':>5} {'Qty':>10} {'Custo USD':>12} {'PM USD':>10} {'Status':<12}")
+        print(f"{'─'*80}")
+        for sym, s in summ["by_symbol"].items():
+            print(f"{sym:<8} {s['n_lotes']:>5} {s['qty_total']:>10.2f} ${s['cost_usd_total']:>10,.0f} ${s['pm_usd']:>8.2f} {s['status']:<12}")
+
+    # Round for output
     for lot in lots:
         lot["qty"] = round(lot["qty"], 4)
         lot["cost_usd"] = round(lot["cost_usd"], 2)
@@ -336,9 +463,10 @@ def main():
         lot["commission_usd"] = round(lot["commission_usd"], 4)
 
     output = {
-        "_generated": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "_source": csv_path.name,
+        "_generated": datetime.now(datetime.now().astimezone().tzinfo).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "_source": csv_path.name + (" + Flex Query" if args.flex else ""),
         "_period": f"{lots[0]['date']} → {lots[-1]['date']}" if lots else "",
+        "_ptax_atual": lots[0].get("ptax_atual") if lots else None,
         "summary": summ,
         "lots": lots,
     }
@@ -346,7 +474,7 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
-    print(f"\n✅ {OUTPUT_FILE} ({len(lots)} lotes)")
+    print(f"\n✅ {OUTPUT_FILE} ({len(lots)} lotes, IR total R${summ['ir_brl_total']:,.0f})")
 
 
 if __name__ == "__main__":
