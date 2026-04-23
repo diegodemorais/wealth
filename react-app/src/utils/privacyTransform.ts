@@ -17,12 +17,10 @@
  * reverter a transformação.
  */
 
-// Fator gerado deterministicamente a partir de um seed fixo.
-// Não usar constante óbvia (como 10, 100, 0.1).
-// O fator transforma mas mantém ordem de grandeza plausível.
-const _S = 0x5F3759DF; // Quake fast inverse sqrt constant (arbitrary seed)
-const _F = ((_S >>> 16) ^ (_S & 0xFFFF)) / 0xFFFF; // 0..1 deterministic
-const FACTOR = 0.3 + _F * 0.7; // range ~0.3 to ~1.0 — never reveals 1:1 or obvious ratio
+// Fator fixo entre 5% e 10% do valor real.
+// Muda a ordem de grandeza (R$3.5M → R$245k), impossível inferir sem saber a escala.
+// Proporções preservadas — gráficos mantêm forma.
+const FACTOR = 0.07;
 
 /**
  * Transform a monetary value for privacy display.
