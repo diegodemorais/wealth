@@ -3,7 +3,7 @@
 | **ID** | DEV-plan-testes-2026 |
 | **Título** | Plano de Testes Executável — 10 testes críticos em 4 fases |
 | **Dono** | Dev |
-| **Status** | 🟠 Phase 1 completa (3/10 testes) |
+| **Status** | 🟡 Phase 2 completa (7/10 testes) |
 | **Prioridade** | 🔴 Alta |
 | **Criado em** | 2026-04-23 |
 | **Tipo** | Implementação |
@@ -32,10 +32,10 @@ Implementar 10 testes críticos em 4 fases:
 - [x] `test_privacy_magnitude_preserved` (1h) — valores <0.01, neg, >1M preservam magnitude
 
 ### Fase 2: Data Pipeline (Semana 2, 8h)
-- [ ] `test_modified_dietz_temporal` (2h) — P3: peso temporal aplicado
-- [ ] `test_yfinance_end_of_month` (1h) — P1: yfinance fim-de-mês
-- [ ] `test_rf_mtm_vs_cost` (2h) — P4: RF MtM via PYield
-- [ ] `test_config_export_completeness` (1.5h) — novo campo em config chega em data.json
+- [x] `test_modified_dietz_temporal` (2h) — P3: peso temporal aplicado ✅
+- [x] `test_yfinance_end_of_month` (1h) — P1: yfinance fim-de-mês ✅
+- [x] `test_rf_mtm_vs_cost` (2h) — P4: RF MtM via PYield ✅
+- [x] `test_config_export_completeness` (1.5h) — novo campo em config chega em data.json ✅
 
 ### Fase 3: Components & Charts (Semana 3, 8h)
 - [ ] `test_chart_hidden_tab_render` (2h) — gráficos em display:none (offsetWidth=0)
