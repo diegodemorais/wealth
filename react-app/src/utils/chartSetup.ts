@@ -402,9 +402,9 @@ export function createNetWorthProjectionChartOption(options: BaseChartOptions) {
     no_go: { gasto: 187_000 },
   };
 
-  // Healthcare costs: VCMH grows 2.7%/year real, ANS age-bracket multipliers
-  const saudeBase = (data as any)?.saude_base ?? 18_000;
-  const SAUDE_INFLATOR = 0.027;
+  // Healthcare costs: VCMH grows 5.0%/year real, ANS age-bracket multipliers (FR-healthcare-recalibracao 2026-04-23)
+  const saudeBase = (data as any)?.saude_base ?? 24_000;
+  const SAUDE_INFLATOR = 0.050;
   const SAUDE_DECAY_THRESHOLD = 30;
   const SAUDE_DECAY = 0.50;
 

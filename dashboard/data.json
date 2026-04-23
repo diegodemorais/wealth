@@ -1,6 +1,6 @@
 {
-  "_generated": "2026-04-23T05:39:12",
-  "_generated_brt": "2026-04-23T05:39:12-03:00",
+  "_generated": "2026-04-23T05:46:32",
+  "_generated_brt": "2026-04-23T05:46:32-03:00",
   "date": "2026-04-23",
   "timestamps": {
     "posicoes_ibkr": "2026-04-22",
@@ -15,7 +15,7 @@
     "SWRD": {
       "qty": 5291.64,
       "avg_cost": 32.88,
-      "price": 49.795,
+      "price": 49.82,
       "bucket": "SWRD",
       "status": "alvo",
       "ter": 0.12
@@ -47,7 +47,7 @@
     "USSC": {
       "qty": 373.25,
       "avg_cost": 60.04,
-      "price": 87.14,
+      "price": 87.11,
       "bucket": "AVGS",
       "status": "transitorio",
       "ter": null
@@ -79,7 +79,7 @@
     "IWVL": {
       "qty": 34.0,
       "avg_cost": 37.23,
-      "price": 67.54,
+      "price": 67.65,
       "bucket": "JPGL",
       "status": "transitorio",
       "ter": null
@@ -112,7 +112,7 @@
     "stress": 82.5
   },
   "premissas": {
-    "patrimonio_atual": 3641025,
+    "patrimonio_atual": 3641643,
     "patrimonio_gatilho": 8333333,
     "aporte_mensal": 25000,
     "custo_vida_base": 250000,
@@ -279,7 +279,7 @@
         "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
       ],
       "inputs": {
-        "pfire": 0.882,
+        "pfire": 0.864,
         "drift_max_pp": 8.0,
         "ipca_taxa_pct": 7.2
       }
@@ -1988,7 +1988,7 @@
       311.82,
       313.23,
       303.16,
-      310.75,
+      310.76,
       318.34,
       326.44,
       338.99,
@@ -2241,7 +2241,7 @@
       259.75,
       266.45,
       270.68,
-      280.33,
+      280.34,
       263.28,
       280.69,
       281.35,
@@ -2252,7 +2252,7 @@
       307.38,
       303.32,
       279.62,
-      243.3,
+      243.31,
       268.68,
       281.54,
       289.34,
@@ -2593,23 +2593,23 @@
       "status": "verde"
     },
     "fire_projection": {
-      "btc_atual_usd": 77865.85,
+      "btc_atual_usd": 77777.46,
       "hodl11_brl_atual": 110750,
       "cenarios": {
         "bear": {
           "btc_target_usd": 80000,
           "upside_factor": 1.03,
-          "valor_fire_brl": 113786
+          "valor_fire_brl": 113915
         },
         "base": {
           "btc_target_usd": 250000,
           "upside_factor": 3.21,
-          "valor_fire_brl": 355580
+          "valor_fire_brl": 355984
         },
         "bull": {
           "btc_target_usd": 500000,
-          "upside_factor": 6.42,
-          "valor_fire_brl": 711160
+          "upside_factor": 6.43,
+          "valor_fire_brl": 711968
         }
       }
     }
@@ -2683,9 +2683,9 @@
       "unidade": "pp",
       "piso": -2.0,
       "gap": -1.7,
-      "posicao_r": 1303487,
+      "posicao_r": 1303708,
       "acao": "Rebalancear",
-      "detalhe": "drift: -3.70pp (atual 35.8% vs alvo 39.5%) · posição R$1303k"
+      "detalhe": "drift: -3.70pp (atual 35.8% vs alvo 39.5%) · posição R$1304k"
     },
     {
       "id": "hodl11_banda",
@@ -2705,7 +2705,7 @@
       "label": "Drift Máximo IPCA",
       "category": "posicao",
       "status": "vermelho",
-      "valor": -11.575805164754431,
+      "valor": -11.576386263013699,
       "unidade": "pp",
       "piso": -2.0,
       "gap": -9.58,
@@ -2825,7 +2825,7 @@
       "nome": "SPDR World SC",
       "qty": 373.25,
       "pm": 60.04,
-      "price": 87.14,
+      "price": 87.11,
       "ucits": "AVGS.L"
     },
     {
@@ -2857,7 +2857,7 @@
       "nome": "iShares World Val",
       "qty": 34.0,
       "pm": 37.23,
-      "price": 67.54,
+      "price": 67.65,
       "ucits": "JPGL.L"
     }
   ],
@@ -7816,10 +7816,10 @@
   },
   "equity_attribution": {
     "total_aportado_usd": 391043,
-    "patrimonio_equity_usd": 645769,
-    "retorno_usd": 254725,
-    "pct_aportes": 60.6,
-    "pct_retorno": 39.4,
+    "patrimonio_equity_usd": 645893,
+    "retorno_usd": 254850,
+    "pct_aportes": 60.5,
+    "pct_retorno": 39.5,
     "nota": "Equity IBKR only — exclui RF, HODL11, Nubank",
     "fonte": "dados/ibkr/aportes.json (total_usd) + posicoes × precos IBKR",
     "updated": "2026-04-23"
@@ -7847,7 +7847,7 @@
     "spread_selic_ff": 11.11,
     "depreciacao_brl_premissa": 0.5,
     "exposicao_cambial_pct": 86.2,
-    "bitcoin_usd": 77865.85,
+    "bitcoin_usd": 77777.46,
     "plano_status": {
       "status": "MONITORAR",
       "gatilho_ativo": "Drift 8.0pp entre 5–10pp — MONITORAR",
@@ -7856,7 +7856,7 @@
         "DCA IPCA+ ativo — 7.20% ≥ 6.0%"
       ],
       "inputs": {
-        "pfire": 0.882,
+        "pfire": 0.864,
         "drift_max_pp": 8.0,
         "ipca_taxa_pct": 7.2
       }
@@ -7865,9 +7865,9 @@
   },
   "mercado": {
     "cambio_brl_usd": 4.951,
-    "btc_usd": 77865.85,
+    "btc_usd": 77777.46,
     "cambio_mtd_pct": -3.98,
-    "btc_mtd_pct": 8.33,
+    "btc_mtd_pct": 8.21,
     "ipca2040_mtd_pp": -0.13,
     "renda2065_mtd_pp": -0.13,
     "ref_mes": "2026-04",
@@ -8422,7 +8422,7 @@
     "_fonte": "hipoteca_sac.json (estado_atual.saldo_devedor) + tax_snapshot.json (IR diferido)"
   },
   "patrimonio_holistico": {
-    "financeiro_brl": 3641025,
+    "financeiro_brl": 3641643,
     "imovel_equity_brl": 367875.3,
     "imovel_valor_mercado": 820000,
     "saldo_devedor_brl": 452124.7,
@@ -8430,7 +8430,7 @@
     "capital_humano_vp": 3129022.0,
     "anos_ate_fire": 14,
     "inss_pv_brl": 283000,
-    "total_brl": 7570922.3,
+    "total_brl": 7571540.3,
     "_fonte": "hipoteca_sac.json + config.py (TERRENO_BRL, RENDA_ESTIMADA) + fire_montecarlo (inss_pv_brl)"
   },
   "concentracao_brasil": {
@@ -8447,7 +8447,7 @@
       "crypto_legado_brl": 4012
     },
     "total_brasil_brl": 443825,
-    "total_portfolio_brl": 3641025,
+    "total_portfolio_brl": 3641643,
     "nota": "HODL11 = wrapper B3 de BTC (risco operacional BR, não fiscal). RF = risco soberano BR direto. Crypto legado = spot BRL (estimativa)."
   },
   "premissas_vs_realizado": {
@@ -10117,7 +10117,7 @@
     "n_sim": 5000
   },
   "fire_trilha": {
-    "_generated": "2026-04-23T05:39:03",
+    "_generated": "2026-04-23T05:46:23",
     "_source": "reconstruct_fire_data.py",
     "dates": [
       "2021-04",

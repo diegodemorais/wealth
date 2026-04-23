@@ -32,9 +32,9 @@ export function GuardrailsChart({ data, gastoOverride }: GuardrailsChartProps) {
     const years = Math.max(yearsFromData, 37);
     const xLabels = Array.from({ length: years }, (_, i) => `Ano ${i + 1}`);
 
-    // Healthcare model (same as Net Worth Projection): VCMH 2.7%/year + ANS age-bracket multiplier
-    const saudeBase = (data as any)?.saude_base ?? 18_000;
-    const SAUDE_INFLATOR = 0.027;
+    // Healthcare model: VCMH 5.0%/year real + ANS age-bracket multiplier (FR-healthcare-recalibracao 2026-04-23)
+    const saudeBase = (data as any)?.saude_base ?? 24_000;
+    const SAUDE_INFLATOR = 0.050;
     const SAUDE_DECAY_THRESHOLD = 30;
     const SAUDE_DECAY = 0.50;
 

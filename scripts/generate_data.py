@@ -380,8 +380,8 @@ def get_premissas():
         g = mod.GUARDRAILS
         piso = mod.GASTO_PISO
         smile = mod.SPENDING_SMILE
-        p.setdefault("saude_base",     getattr(mod, "SAUDE_BASE",         18_000))
-        p.setdefault("saude_inflator", getattr(mod, "SAUDE_INFLATOR",     0.027))
+        p.setdefault("saude_base",     getattr(mod, "SAUDE_BASE",         24_000))
+        p.setdefault("saude_inflator", getattr(mod, "SAUDE_INFLATOR",     0.050))
         p.setdefault("saude_decay",    getattr(mod, "SAUDE_DECAY",        0.50))
         return p, g, piso, smile
     except Exception as e:
@@ -3063,7 +3063,7 @@ def main():
         # Campos adicionados para aba Premissas (DEV-premissas-tab)
         "horizonte_vida":         premissas_raw.get("horizonte_vida", 90),
         "taxa_ipca_plus_longa":   premissas_raw.get("renda_plus_taxa_default", 7.08),
-        "saude_base":             premissas_raw.get("saude_base", 18_000),
+        "saude_base":             premissas_raw.get("saude_base", 24_000),
         "aporte_mensal_aspiracional": premissas_raw.get("aporte_cenario_aspiracional", 30_000),
         # Retornos esperados por ETF (USD real, base — fonte: carteira.md §150-153)
         "retornos_por_etf": {
@@ -3697,7 +3697,7 @@ def main():
         "gasto_piso": gasto_piso,
         "spendingSmile": spending,
         "spendingSensibilidade": spending_sens,
-        "saude_base": premissas_raw.get("saude_base", 18_000),
+        "saude_base": premissas_raw.get("saude_base", 24_000),
         "tornado":    tornado,
         "fire":       fire_section,
         "scenario_comparison": scenario_comparison,
