@@ -36,10 +36,21 @@ export default function PortfolioPage() {
   });
   if (stateEl) return stateEl;
 
-  const portfolioTotal = (data as any)?.patrimonio_holistico?.total_financeiro_brl;
-  const piorDrift = (data as any)?.drift_summary?.maior_desvio_pct;
+  const portfolioTotal = (data as any)?.patrimonio_holistico?.financeiro_brl ?? (data as any)?.premissas?.patrimonio_atual;
+  const piorDrift = (() => {
+    const drift = (data as any)?.drift;
+    if (!drift) return null;
+    let maxGap = 0;
+    for (const [, v] of Object.entries(drift as Record<string, any>)) {
+      if (v?.atual != null && v?.alvo != null) {
+        const gap = Math.abs(v.atual - v.alvo);
+        if (gap > maxGap) maxGap = gap;
+      }
+    }
+    return maxGap > 0 ? maxGap : null;
+  })();
   const irDiferido = (data as any)?.tax?.ir_diferido_total_brl;
-  const concBrasil = (data as any)?.portfolio_summary?.concentracao_brasil_pct;
+  const concBrasil = (data as any)?.concentracao_brasil?.brasil_pct;
   const usSitusUsd = (data as any)?.tax?.estate_tax?.us_situs_total_usd;
   const showEstateAlert = usSitusUsd != null && usSitusUsd > 60000;
 
