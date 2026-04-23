@@ -33,7 +33,9 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 ### Doing
 > Issues em andamento
 
-_(nenhuma no momento)_
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| HD-ai-investing-research | IA × Investimento — filosofia, ferramentas, riscos | Head | 🟡 Média |
 
 ### Done (últimas 20)
 > Issues concluídas
