@@ -3,7 +3,8 @@
 | ID | HD-multi-llm-validation |
 | Título | Validação multi-model das 5 decisões estruturais (anti-sycophancy D8) |
 | Dono | Head |
-| Status | 🔴 Doing |
+| Status | ✅ Done |
+| Concluída | 2026-04-22 |
 | Prioridade | 🔴 Alta |
 | Criada | 2026-04-22 |
 | Participantes | Head, Advocate, Quant, modelos externos (GPT/Gemini/DeepSeek) |

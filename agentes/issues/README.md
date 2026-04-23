@@ -29,21 +29,23 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| FR-healthcare-recalibracao | Recalibrar SAUDE_BASE R$18k→R$35k + VCMH 4% + ANS brackets | FIRE | 🔴 Alta |
+_(nenhuma no momento)_
 
 ### Doing
 > Issues em andamento
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| HD-multi-llm-validation | Validação multi-model das 5 decisões estruturais | Head | 🔴 Alta |
-| HD-ai-investing-research | IA × Investimento — filosofia, ferramentas, riscos | Head | 🟡 Média |
+_(nenhuma no momento)_
 
 ### Done (últimas 20)
 > Issues concluídas
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| FR-healthcare-recalibracao | FIRE | 2026-04-23 | SAUDE_BASE R$18k→R$28k, VCMH 2.7%→3.5%. P(FIRE) 91.0%→88.2% base. 4 modelos externos unanimidade. ANS brackets já modelados. |
+| HD-multi-llm-validation | Head | 2026-04-22 | 4 modelos externos contestaram 5 decisões. 4/5 validadas. Healthcare unanimemente subestimado → FR-healthcare-recalibracao. |
+| HD-ai-investing-research | Head | 2026-04-22 | 2 rodadas, 9 agentes, 30+ fontes. Factor premiums robustos a IA. 5 ferramentas instaladas. 5 protocolos anti-sycophancy (D8-D12). |
 | OPS-ibkr-flex-trades | Ops | 2026-04-22 | Query 1461568 já tinha Operações. Período expandido para 365d. 56 trades retornados via API. |
 | FR-tpaw | FIRE | 2026-04-22 | TPAW investigado: manter SWR+Guardrails. TPAW confirma spending conservador (R$550k TPAW vs R$250k nosso). Lente complementar, não sistema. |
 | TX-us-listed-decision | Tax | 2026-04-22 | Já decidido mar/2026: não vender agora, diluir via UCITS, vender na desacumulação. Seguro de vida pendente avaliação. |

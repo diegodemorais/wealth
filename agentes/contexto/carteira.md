@@ -11,7 +11,7 @@
 - **Nome**: Diego Morais
 - **Idade**: 39 anos (nascimento 19/02/1987)
 - **Localidade**: Sao Paulo, Pinheiros
-- **Meta FIRE**: **Cenário Base — 2040 (53 anos).** SWR ≤ 3.0%, aporte R$25k/mês → P(FIRE Base): **90,4% base / 94,1% favorável / 86,8% stress** (MC 10k, spending smile ex-saúde + guardrails + bond tent + IR 15% nominal + INSS R$18k/ano@65 + vol bond pool 13.3% + SAUDE_BASE R$18k). **Cenário Aspiracional — 2035 (49 anos).** SWR ≤ 3.0%, aporte R$30k/mês → P(FIRE Aspiracional): **85% base** (MC validado, retornos + aportes elevados). Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).** Gatilho adicional: **patrimônio ≥ R$10M → avaliar cenário aspiracional como viável** (materializa ~2036–2038).
+- **Meta FIRE**: **Cenário Base — 2040 (53 anos).** SWR ≤ 3.0%, aporte R$25k/mês → P(FIRE Base): **88,2% base / 93,1% favorável / 84,0% stress** (MC 10k, spending smile ex-saúde + guardrails + bond tent + IR 15% nominal + INSS R$18k/ano@65 + vol bond pool 13.3% + SAUDE_BASE R$28k + VCMH 3.5%). **Cenário Aspiracional — 2035 (49 anos).** SWR ≤ 3.0%, aporte R$30k/mês → P(FIRE Aspiracional): **85% base** (MC validado, retornos + aportes elevados). Revisão anual a partir de 2034 (48 anos). **Não trabalhar além de 2040 independente de P(FIRE).** Gatilho adicional: **patrimônio ≥ R$10M → avaliar cenário aspiracional como viável** (materializa ~2036–2038).
 - **Distribuição subjetiva FIRE date** (elicitação estruturada FR-fire-date-elicitation, 2026-04-11): P(<47)=10% risco saúde/invalidez involuntário — não planejável, SWR ~3.5-4.5%; P(47–50)=30% viável com guardrails se patrimônio ≥ R$9M; P(50–53)=30% alinhado com modelo base; P(53–57)=10% atraso por casamento/filho; P(>57)=20% "não quis parar" ou vida mudou muito. **Gatilhos de vida**: casar → atrasa; filho → atrasa; negócio bom → acelera; burnout → FIRE involuntário (monitorar SWR anualmente a partir de 2030); patrimônio R$10M → debate antecipação; sócio/projeto → atrasa. **Flag Behavioral**: gap 9/10 profissional vs 7/10 pessoal já presente em 2026 — não se resolve automaticamente no FIRE. Intervenção recomendada: mover 7→8 pessoal nos próximos 12 meses independente do target financeiro.
 - **Patrimonio**: R$ 3.472.335 (excl. operacao estruturada COE/emprestimo)
 - **Aporte mensal**: R$ 25k
@@ -327,6 +327,6 @@ Tabela machine-readable extraída por `scripts/parse_carteira.py` → gera `dado
 | guardrails_corte2_pct | 0.20 | §Guardrails aprovados 2026-03-20 — corte 20% (banda 25–35%) |
 | guardrails_piso_pct | 0.28 | §Guardrails aprovados 2026-03-20 — corte 28% (dd > 35%) |
 | gasto_piso | 180000 | §Guardrails aprovados 2026-03-20 — piso absoluto R$/ano |
-| saude_base | 18000 | HD-multimodel-premissas 2026-04-06 — plano PJ coletivo, FIRE day 53 |
+| saude_base | 28000 | FR-healthcare-recalibracao 2026-04-23 — coletivo por adesão, transição PJ→individual, FIRE day 53 |
 | ipca_plus_taxa_anual | 0.0716 | snapshot taxa bruta Tesouro IPCA+ (atualizar quando taxa mudar) |
 | ipca_plus_custodia | 0.0020 | custódia B3 0.20%/ano sobre Tesouro Direto |

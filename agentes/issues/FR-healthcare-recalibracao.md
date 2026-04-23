@@ -3,7 +3,8 @@
 | ID | FR-healthcare-recalibracao |
 | Título | Recalibrar SAUDE_BASE — R$18k→R$30-36k + VCMH 4% + ANS age brackets |
 | Dono | FIRE |
-| Status | 🟡 Backlog |
+| Status | ✅ Done |
+| Concluída | 2026-04-23 |
 | Prioridade | 🔴 Alta |
 | Criada | 2026-04-22 |
 | Participantes | FIRE (lead), Quant, Tax, Advocate, Dev |

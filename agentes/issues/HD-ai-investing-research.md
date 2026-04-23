@@ -3,7 +3,8 @@
 | ID | HD-ai-investing-research |
 | Título | IA × Investimento — Pesquisa ampla: filosofia, ferramentas, riscos |
 | Dono | Head |
-| Status | 🟡 Doing |
+| Status | ✅ Done |
+| Concluída | 2026-04-22 |
 | Prioridade | 🟡 Média |
 | Criada | 2026-04-22 |
 | Participantes | Head, Factor, FIRE, Advocate, Dev |

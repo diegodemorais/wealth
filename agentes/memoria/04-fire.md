@@ -93,9 +93,9 @@
 
 **Premissas anteriores (FR-spending-smile 2026-03-27):** R$37,9k base (R$18k × 1,07^11) + 7%/ano. INCORRETO: usava plano individual + confundia VCMH com projector.
 
-**Premissas atuais (aprovadas 2026-04-06, HD-multimodel-premissas Bloco A):**
-- `SAUDE_BASE = 18.000` — Bradesco coletivo PJ, ajuste conservador (+R$2k vs cotação direta; 3/3 modelos externos apontaram subestimativa leve)
-- `SAUDE_INFLATOR = 0.027` — VCMH IESS real, 18 anos
+**Premissas atuais (recalibradas 2026-04-23, FR-healthcare-recalibracao):**
+- `SAUDE_BASE = 28.000` — coletivo por adesão, transição PJ→individual (4 modelos externos unanimidade: R$18k subestimado)
+- `SAUDE_INFLATOR = 0.035` — VCMH IESS revisado 3.5%/ano real (entre média 18a 2.7% e trend recente 6-11%)
 - ANS faixa etária: multiplicadores discretos sobre base FIRE Day (faixa 3,0×)
   - age 54: × 1,33 | age 59: × 1,67 | age 64: × 2,00
 - `SAUDE_DECAY = 0,50` após no-go (cuidado institucional já no no_go base)
