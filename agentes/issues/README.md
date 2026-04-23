@@ -38,7 +38,9 @@ _(nenhuma no momento)_
 |----|--------|------|------------|
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-_(nenhuma no momento)_
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| DEV-twr-pipeline-fixes | Fix TWR: RF MtM, preços fim-de-mês, Modified Dietz | Dev | 🔴 Alta |
 
 ### Done (últimas 20)
 > Issues concluídas
