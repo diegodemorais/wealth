@@ -125,9 +125,9 @@
     }
   },
   "fire": {
-    "pfire_base": 88.2,
-    "pfire_fav": 93.1,
-    "pfire_stress": 84.0,
+    "pfire_base": 86.4,
+    "pfire_fav": 92.5,
+    "pfire_stress": 82.5,
     "pat_mediano_fire": 11873544.0,
     "pat_p10_fire": 7245053.0,
     "pat_p90_fire": 18705767.0,
@@ -147,23 +147,23 @@
     "tornado": [
       {
         "variavel": "Volatilidade equity (+/-10%)",
-        "mais10": -3.2,
-        "menos10": 4.2
+        "mais10": -3.4,
+        "menos10": 4.3
       },
       {
         "variavel": "Custo de vida (+/-10%)",
-        "mais10": -3.0,
-        "menos10": 3.0
+        "mais10": -2.7,
+        "menos10": 3.7
       },
       {
         "variavel": "Retorno equity (+/-10%)",
-        "mais10": 4.2,
-        "menos10": -4.4
+        "mais10": 4.3,
+        "menos10": -4.2
       },
       {
         "variavel": "Aporte mensal (+/-10%)",
         "mais10": 2.4,
-        "menos10": -0.4
+        "menos10": -1.7
       }
     ],
     "pfire47_base": 81.0,
@@ -184,9 +184,9 @@
     "pat_mediano_fire49": 9460180.0,
     "pat_p10_fire49": 6117595.0,
     "pat_p90_fire49": 14332903.0,
-    "pfire_base_base": 88.2,
-    "pfire_base_fav": 93.1,
-    "pfire_base_stress": 84.0,
+    "pfire_base_base": 86.4,
+    "pfire_base_fav": 92.5,
+    "pfire_base_stress": 82.5,
     "pat_mediano_base": 11873544.0,
     "pat_p10_base": 7245053.0,
     "pat_p90_base": 18705767.0,

@@ -80,9 +80,18 @@ LTC 75+: R$72k-R$216k/ano adicional (cenário no MC)
 - P(FIRE) provavelmente cai 3-8pp
 - Pode exigir: aporte maior, FIRE date +1-2 anos, ou custo vida ex-saúde menor
 
+## Resultado Final (23/04/2026)
+
+**SAUDE_BASE: R$18k → R$24k** (plano intermediário coletivo adesão SP, R$2k/mês com buffer)
+**VCMH: 2.7% → 5.0%** (mid-point entre média 18a e trend recente 7-10%)
+**P(FIRE): 91.0% → 86.4% base** (delta -4.6pp)
+
+Todos os arquivos atualizados: carteira.md, config.py, fire_montecarlo.py, memórias, data.json, dashboard.
+
 ## Fontes
-- HD-multi-llm-validation: 3 modelos externos, 2 rodadas
-- IESS (Instituto de Estudos de Saúde Suplementar): VCMH histórico
-- ANS (Agência Nacional de Saúde Suplementar): tabela de reajuste por faixa etária
-- IBGE POF: gastos com saúde por faixa de renda
-- Blanchett (2013): spending smile international reference
+- HD-multi-llm-validation: 4 modelos externos, 2 rodadas
+- Pesquisa web SP 23/04: Bradesco, SulAmérica, Amil, Hapvida — preços reais por faixa
+- IESS: VCMH histórico (15.1% nominal 2023, 27.7% pico pós-pandemia)
+- ANS: RN 63/2003 (teto 6x, faixa 59+ congela)
+- Gazeta do Povo: reajustes coletivos 15-25%/ano
+- InvestNews / Serena Nobre: custos home care e ILPI SP

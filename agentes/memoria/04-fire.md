@@ -94,8 +94,8 @@
 **Premissas anteriores (FR-spending-smile 2026-03-27):** R$37,9k base (R$18k × 1,07^11) + 7%/ano. INCORRETO: usava plano individual + confundia VCMH com projector.
 
 **Premissas atuais (recalibradas 2026-04-23, FR-healthcare-recalibracao):**
-- `SAUDE_BASE = 28.000` — coletivo por adesão, transição PJ→individual (4 modelos externos unanimidade: R$18k subestimado)
-- `SAUDE_INFLATOR = 0.035` — VCMH IESS revisado 3.5%/ano real (entre média 18a 2.7% e trend recente 6-11%)
+- `SAUDE_BASE = 24.000` — coletivo por adesão intermediário SP (Bradesco/SulAmérica apto R$1.3-1.7k/mês, R$2k com buffer). Pesquisa web 23/04: planos individuais puros extintos desde ~2003, veículo é coletivo por adesão via associação
+- `SAUDE_INFLATOR = 0.050` — VCMH IESS real 5.0%/ano (média 18a=2.7%, recente 5a=7-10%, 5% = horizonte 40 anos). VCMH nominal 12-15% vs IPCA 4.5% = 7.5-10.5% real. 5% é conservador para planejamento
 - ANS faixa etária: multiplicadores discretos sobre base FIRE Day (faixa 3,0×)
   - age 54: × 1,33 | age 59: × 1,67 | age 64: × 2,00
 - `SAUDE_DECAY = 0,50` após no-go (cuidado institucional já no no_go base)

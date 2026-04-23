@@ -171,7 +171,7 @@ SPENDING_SMILE = {
 }
 
 # SAUDE_BASE importado de config (fonte: carteira.md, HD-multimodel-premissas 2026-04-06)
-SAUDE_INFLATOR     = 0.035    # 3.5%/ano real — VCMH IESS revisado (FR-healthcare-recalibracao 2026-04-23)
+SAUDE_INFLATOR     = 0.050    # 5.0%/ano real — VCMH IESS: média 18a=2.7%, recente=7-10%, 5% = mid-term (FR-healthcare-recalibracao 2026-04-23)
 SAUDE_INFLATOR_CAP = 0.060    # 6.0% cap conservador
 SAUDE_DECAY        = 0.50     # 50% após No-Go (mobilidade cai; cuidado institucional já no no_go base)
 IDADE_FIRE_SAUDE   = 53       # idade no FIRE Day (faixa ANS 49-53 = 3.0×)
