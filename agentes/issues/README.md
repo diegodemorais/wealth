@@ -36,7 +36,9 @@ _(nenhuma no momento)_
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-_(nenhuma no momento)_
+| ID | Titulo | Dono | Prioridade |
+|----|--------|------|------------|
+| DEV-drawdown-extended | Drawdown chart 21+ anos com VWRA/proxies + seletores | Dev | 🟡 Média |
 
 ### Done (últimas 20)
 > Issues concluídas

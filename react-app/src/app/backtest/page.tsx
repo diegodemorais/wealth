@@ -13,6 +13,7 @@ import DrawdownHistoryChart from '@/components/dashboard/DrawdownHistoryChart';
 import DrawdownRecoveryTable from '@/components/dashboard/DrawdownRecoveryTable';
 import { BtcIndicatorsChart } from '@/components/dashboard/BtcIndicatorsChart';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { DrawdownExtendedChart } from '@/components/charts/DrawdownExtendedChart';
 import { TrendingDown } from 'lucide-react';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
@@ -671,6 +672,23 @@ export default function BacktestPage() {
           </div>
         </div>
       </CollapsibleSection>
+
+      {/* Extended Drawdown — multi-period with VWRA benchmark */}
+      {(() => {
+        const ext = (data as any)?.drawdown_extended;
+        if (!ext?.periods) return null;
+        return (
+          <CollapsibleSection
+            id="section-drawdown-extended"
+            title="Drawdown Histórico — Multi-Período (Target vs VWRA)"
+            defaultOpen={true}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <DrawdownExtendedChart periods={ext.periods} summary={ext.summary ?? {}} />
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
 
       <SectionDivider label="Deep Dive" />
       {/* 3. Shadow Portfolios — Tracking */}

@@ -83,6 +83,7 @@ FIRE_APORTE_SENS_PATH   = ROOT / "dados" / "fire_aporte_sensitivity.json"
 FIRE_TRILHA_PATH        = ROOT / "dados" / "fire_trilha.json"
 DRAWDOWN_HIST_PATH      = ROOT / "dados" / "drawdown_history.json"
 DRAWDOWN_EVENTS_PATH    = ROOT / "dados" / "drawdown_events.json"
+DRAWDOWN_EXTENDED_PATH  = ROOT / "dados" / "drawdown_extended.json"
 HIPOTECA_SAC_PATH       = ROOT / "dados" / "hipoteca_sac.json"
 ETF_COMP_PATH           = ROOT / "dados" / "etf_composition.json"
 BOND_POOL_RUNWAY_PATH   = ROOT / "dados" / "bond_pool_runway.json"
@@ -3768,6 +3769,7 @@ def main():
         "fire_aporte_sensitivity": fire_aporte_data,
         "fire_trilha":             fire_trilha_data,
         "drawdown_history":        drawdown_hist_data,
+        "drawdown_extended":       _load_json_safe(DRAWDOWN_EXTENDED_PATH, "drawdown_extended"),
         "etf_composition":         etf_comp_data,
         "bond_pool_runway":        bond_pool_rwy_data,
         "lumpy_events":            lumpy_data,
