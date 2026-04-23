@@ -253,32 +253,29 @@ export function createGlidePathChartOption(options: BaseChartOptions) {
 export function createSankeyChartOption(options: BaseChartOptions) {
   const { data, privacyMode, theme } = options;
 
-  // Spending data from spending_breakdown (public data.json field name)
+  // Spending data from spending_breakdown — converted to MONTHLY averages
   const ss = (data as any)?.spending_breakdown ?? (data as any)?.spending_summary ?? {};
-  const gastoEssencial = ss.must_spend_anual ?? 180887;
-  const gastoDisc = ss.like_spend_anual ?? 51403;
-  const gastoImprevistos = ss.imprevistos_anual ?? 4357;
+  const gastoEssencial = Math.round((ss.must_spend_anual ?? 180887) / 12);
+  const gastoDisc = Math.round((ss.like_spend_anual ?? 51403) / 12);
+  const gastoImprevistos = Math.round((ss.imprevistos_anual ?? 4357) / 12);
   const gastoTotal = gastoEssencial + gastoDisc + gastoImprevistos;
 
-  // Income: renda_mensal_liquida × 12 (from premissas) as gross income estimate
+  // Income monthly
   const rendaMensal = (data as any)?.premissas?.renda_mensal_liquida ?? (data as any)?.premissas?.renda_estimada ?? 45000;
   const aporteMensal = (data as any)?.premissas?.aporte_mensal ?? 25000;
-  const investimentos = aporteMensal * 12;
-  const rendaAnual = rendaMensal * 12;
-  // Use rendaAnual as total income; investimentos is the saving portion
-  // The remaining goes to gastos (which include essenciais + disc + imprevistos + impostos + fees)
-  const renda = Math.max(rendaAnual, gastoTotal + investimentos);
+  const investimentos = aporteMensal;
+  const renda = Math.max(rendaMensal, gastoTotal + investimentos);
 
-  // From gastos total, decompose into subcategories
-  // Impostos estimados dentro do custo de vida (já capturado em must_spend via Taxes & Fees da análise)
-  const impostos = Math.round(gastoTotal * 0.1); // ~10% impostos
-  const taxasFees = Math.round(gastoTotal * 0.02); // ~2% taxas
+  // Subcategories (monthly)
+  const impostos = Math.round(gastoTotal * 0.1);
+  const taxasFees = Math.round(gastoTotal * 0.02);
   const gastoEssencialNet = Math.max(0, gastoEssencial - impostos - taxasFees);
-  const dependentes = 0; // sem dependentes atualmente
+  const dependentes = 0;
 
   const fmtK = (v: number) => {
     if (privacyMode) return '••••';
-    return `R$ ${(v / 1000).toFixed(0)}k`;
+    if (v >= 1000) return `R$ ${(v / 1000).toFixed(1)}k`;
+    return `R$ ${v.toFixed(0)}`;
   };
 
   return {
@@ -289,7 +286,7 @@ export function createSankeyChartOption(options: BaseChartOptions) {
       textStyle: theme.tooltip.textStyle,
       formatter: (params: any) => {
         if (params.dataType === 'edge') {
-          return `${params.data.source} → ${params.data.target}<br/><strong>${fmtK(params.data.value)}/ano</strong>`;
+          return `${params.data.source} → ${params.data.target}<br/><strong>${fmtK(params.data.value)}/mês</strong>`;
         }
         return `<strong>${params.name}</strong>`;
       },
