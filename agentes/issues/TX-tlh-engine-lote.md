@@ -36,13 +36,15 @@ Lógica central:
 
 ## Escopo
 
-- [ ] Buscar preço atual por ETF via yfinance
-- [ ] Buscar PTAX histórica por data de compra (python-bcb ou cache existente)
-- [ ] Calcular P&L BRL por lote individual
-- [ ] Identificar e listar lotes com P&L < 0 (elegíveis para TLH)
-- [ ] Calcular benefício fiscal total disponível (soma de perdas elegíveis × 15%)
-- [ ] Integrar output no `/tax-calc` ou criar novo comando `/tlh-scan`
-- [ ] Documentar gatilho de ativação no Ops (drawdown > 15% portfólio OU ETF > 20%)
+- [x] Buscar preço atual por ETF via Flex Query IBKR
+- [x] Buscar PTAX histórica por data de compra (python-bcb via fx_utils, 80 datas únicas)
+- [x] Calcular P&L BRL por lote individual (custo BRL = qty × price × PTAX_compra)
+- [x] Identificar e listar lotes com P&L < 0 (elegíveis para TLH)
+- [x] Calcular benefício fiscal total disponível (soma de perdas elegíveis × 15%)
+- [x] LotesTable no dashboard (Portfolio → Tax & Atividade) com IR por lote e por ETF
+- [x] ibkr_lotes.py --flex para merge CSV + Flex Query API
+- [x] Centralizar PTAX em fx_utils.py (3 reimplementações eliminadas)
+- [x] Incluir ibkr_lotes.py --flex no /scan
 
 ---
 
