@@ -61,7 +61,7 @@ Todos com lucro. Nao vender para evitar imposto (15%). Diluir via aportes nos ET
 | IPCA+ existente | — | — | — | — | Incorporado ao bloco IPCA+ longo (posicao 2040) |
 | IPCA+ longo | **6,1%** | **15%** | R$ 124.675,79 (2040: R$113.015 + 2050: R$11.660 após liq. 13/04) | TD 2040 (80%) + TD 2050 (20%) | **Hold to maturity SEMPRE.** DCA ate 15% da carteira enquanto taxa >= 6,0%. Compra direta no Tesouro. Piso operacional: IPCA+ >= 6,0% (margem 50 bps sobre breakeven all-in ~5,5%). 5,0-6,0%: pausar DCA, aportes para equity. Gatilho de venda: NENHUM (exceto risco soberano extremo). Posicao estrutural — nao vender por MtM |
 | IPCA+ curto | 0% | **3%** | — | TD curto ~2 anos | SoRR buffer. **Comprar perto dos 50**, nao agora. Substitui Selic no plano original (melhor protecao inflacionaria, MtM baixo com ~2 anos duration) |
-| Renda+ 2065 | 3,4% | <=5% | R$ 117.832,62 | Renda+ 2065 | Duration 43,6. Taxa atual: 6,93% (2026-04-22). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
+| Renda+ 2065 | 3,4% | <=5% | R$ 117.832,62 | Renda+ 2065 | Duration 43,6. Taxa atual: 6,93% (2026-04-22). Compra: DCA ate 5% se taxa >= 6,5%. Venda: tudo se taxa <= 6,0% (aguardar 720 dias se holding < 2 anos). Panico (9%+): manter. **Gatilho soberano: CDS 5Y Brasil > 400bps sustentado por 6 meses → avaliar venda IPCA+/Renda+ (pré-crise 2015 = ~350bps).** Ver cenarios: agentes/contexto/renda-plus-2065-cenarios.md |
 | Cripto | 2,9% | **3%** | R$ 100.208 | HODL11 + spot legado | BTC $71.877 (22/Apr). Alvo 3%, piso 1,5%, teto 5%. Spot = legado, nao mexer |
 
 ---
