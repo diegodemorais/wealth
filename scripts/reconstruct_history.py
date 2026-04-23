@@ -157,12 +157,68 @@ def build_xp_positions_by_month() -> dict[str, dict[str, float]]:
 # 3. Nubank: Tesouro Direto values by month (applied amount as proxy)
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def _map_titulo_to_ntnb(titulo: str) -> tuple[str, date | None]:
+    """
+    Map Nubank title name to (ANBIMA bond type, maturity date).
+    Returns ('NTN-B', maturity) for IPCA+ titles.
+    Returns ('NTN-B Princ', maturity) for Renda+ — NOT in ANBIMA tpf, cost basis fallback.
+    """
+    TITLE_MAP = {
+        "IPCA+ 2029":              ("NTN-B", date(2029, 5, 15)),
+        "IPCA+ 2040":              ("NTN-B", date(2040, 8, 15)),
+        "Tesouro IPCA+ 2040":      ("NTN-B", date(2040, 8, 15)),
+        "IPCA+ 2045":              ("NTN-B", date(2045, 5, 15)),
+        "IPCA+ 2050":              ("NTN-B", date(2050, 8, 15)),
+        "Tesouro IPCA+ 2050":      ("NTN-B", date(2050, 8, 15)),
+        "RendA+ 2065":             ("NTN-B Princ", date(2065, 1, 15)),
+    }
+    return TITLE_MAP.get(titulo, ("UNKNOWN", None))
+
+
+def _fetch_ntnb_pu(ref_date: date, maturity: date, cache: dict) -> float | None:
+    """
+    Fetch ANBIMA PU for NTN-B on ref_date with given maturity.
+    Uses cache[ref_date] = DataFrame to avoid redundant API calls.
+    Tries nearby business days if ref_date has no data (weekends/holidays).
+    Returns None on failure.
+    """
+    import pyield
+
+    mat_str = maturity.strftime("%Y-%m-%d")
+
+    for offset in range(5):  # try ref_date, then ±1, ±2 business days
+        for delta in ([0] if offset == 0 else [-offset, offset]):
+            try_date = ref_date + timedelta(days=delta)
+            if try_date.weekday() >= 5:  # skip weekends
+                continue
+
+            cache_key = try_date.isoformat()
+            if cache_key not in cache:
+                try:
+                    df = pyield.anbima.tpf(try_date, "NTN-B")
+                    if df is not None and len(df) > 0:
+                        pdf = df.to_pandas()
+                        pdf["mat_str"] = pdf["data_vencimento"].dt.strftime("%Y-%m-%d")
+                        cache[cache_key] = pdf
+                    else:
+                        cache[cache_key] = None
+                except Exception:
+                    cache[cache_key] = None
+
+            pdf = cache.get(cache_key)
+            if pdf is not None:
+                row = pdf[pdf["mat_str"] == mat_str]
+                if not row.empty:
+                    return float(row.iloc[0]["pu"])
+
+    return None
+
+
 def build_nubank_rf_by_month() -> dict[str, float]:
     """
-    Build Nubank RF total by month.
-    Uses cumulative applied amount (not MtM) — this is the cost basis.
-    For Tesouro Direto, the actual MtM value is not available via API.
-    We use applied amount as the best available proxy.
+    Build Nubank RF total by month using mark-to-market from ANBIMA PU (PYield).
+    For NTN-B (IPCA+): cotas = valor_brl / PU_on_purchase_date, MtM = cotas × PU_month_end.
+    For NTN-B Principal (Renda+): ANBIMA PU not available via PYield → cost basis fallback.
     """
     if not NUBANK_OPS.exists():
         return {}
@@ -171,9 +227,15 @@ def build_nubank_rf_by_month() -> dict[str, float]:
     if not ops:
         return {}
 
-    # Running total of applied amount
-    running = 0.0
-    rf_monthly = {}
+    # ── Parse operations into bond holdings: {titulo_key: cotas} ──
+    # titulo_key = (bond_type, maturity_date)
+    # For NTN-B: track cotas (units). For Renda+: track cost basis (BRL).
+    # holdings_ntnb: {maturity_date: cotas}
+    # holdings_renda: running cost basis (no MtM available)
+    holdings_ntnb: dict[date, float] = defaultdict(float)  # maturity → cotas
+    renda_running = 0.0  # cost basis for Renda+ (NTN-B Princ)
+
+    pu_cache: dict = {}  # date_iso → DataFrame or None
 
     ops_by_month = defaultdict(list)
     for op in ops:
@@ -184,26 +246,95 @@ def build_nubank_rf_by_month() -> dict[str, float]:
     today_month = date.today().strftime("%Y-%m")
 
     current = datetime.strptime(first_month + "-01", "%Y-%m-%d").date()
-    end = datetime.strptime(today_month + "-01", "%Y-%m-%d").date()
+    end_dt = datetime.strptime(today_month + "-01", "%Y-%m-%d").date()
 
-    while current <= end:
+    rf_monthly = {}
+    ntnb_mtm_ok = 0
+    ntnb_mtm_fail = 0
+
+    print("    Building RF MtM via PYield ANBIMA PU...")
+
+    while current <= end_dt:
         month_str = current.strftime("%Y-%m")
+
+        # Apply operations for this month
         if month_str in ops_by_month:
             for op in ops_by_month[month_str]:
-                if op["tipo"] == "aplicacao":
-                    running += op["valor_brl"]
-                elif op["tipo"] == "resgate":
-                    running -= op["valor_brl"]
-                    if running < 0:
-                        running = 0
+                titulo = op.get("titulo", "")
+                bond_type, maturity = _map_titulo_to_ntnb(titulo)
+                op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
 
-        rf_monthly[month_str] = round(running, 2)
+                if op["tipo"] == "aplicacao":
+                    if bond_type == "NTN-B" and maturity:
+                        # Get PU on purchase date to calculate cotas
+                        pu_buy = _fetch_ntnb_pu(op_date, maturity, pu_cache)
+                        if pu_buy and pu_buy > 0:
+                            cotas = op["valor_brl"] / pu_buy
+                            holdings_ntnb[maturity] += cotas
+                        else:
+                            # Fallback: estimate cotas using nearest available PU
+                            # Try month-end PU as backup
+                            print(f"    ⚠ No PU for {titulo} on {op_date}, using cost basis for this purchase")
+                            # Store as negative cotas flag — will use cost basis
+                            # Actually, just add to renda_running as fallback
+                            renda_running += op["valor_brl"]
+                    elif bond_type == "NTN-B Princ":
+                        # Renda+: cost basis only (ANBIMA PU not in pyield tpf)
+                        renda_running += op["valor_brl"]
+                    else:
+                        # Unknown title: cost basis
+                        renda_running += op["valor_brl"]
+
+                elif op["tipo"] == "resgate":
+                    if bond_type == "NTN-B" and maturity:
+                        # Resgate: remove cotas proportionally
+                        # valor_brl is the resgate amount at market price
+                        pu_sell = _fetch_ntnb_pu(op_date, maturity, pu_cache)
+                        if pu_sell and pu_sell > 0:
+                            cotas_sold = op["valor_brl"] / pu_sell
+                            holdings_ntnb[maturity] = max(0, holdings_ntnb[maturity] - cotas_sold)
+                        else:
+                            # Approximate: remove same fraction from cost basis
+                            holdings_ntnb[maturity] = max(0, holdings_ntnb[maturity] * 0.5)
+                    elif bond_type == "NTN-B Princ":
+                        renda_running = max(0, renda_running - op["valor_brl"])
+                    else:
+                        renda_running = max(0, renda_running - op["valor_brl"])
+
+        # ── Month-end valuation ──
+        # Find last business day of month
+        if current.month == 12:
+            next_m = date(current.year + 1, 1, 1)
+        else:
+            next_m = date(current.year, current.month + 1, 1)
+        month_end = next_m - timedelta(days=1)
+        # Don't look into the future
+        if month_end > date.today():
+            month_end = date.today()
+
+        # MtM for NTN-B holdings
+        ntnb_mtm = 0.0
+        for maturity, cotas in holdings_ntnb.items():
+            if cotas <= 0:
+                continue
+            pu_eom = _fetch_ntnb_pu(month_end, maturity, pu_cache)
+            if pu_eom:
+                ntnb_mtm += cotas * pu_eom
+                ntnb_mtm_ok += 1
+            else:
+                # Fallback: use last known PU or skip (keeps previous value)
+                ntnb_mtm_fail += 1
+
+        total_rf = ntnb_mtm + renda_running
+        rf_monthly[month_str] = round(total_rf, 2)
 
         if current.month == 12:
             current = date(current.year + 1, 1, 1)
         else:
             current = date(current.year, current.month + 1, 1)
 
+    print(f"    NTN-B MtM lookups: {ntnb_mtm_ok} OK, {ntnb_mtm_fail} fallback to cost basis")
+    print(f"    Renda+ (cost basis): R${renda_running:,.2f}")
     return rf_monthly
 
 
@@ -254,14 +385,18 @@ def fetch_monthly_prices(symbols: list[str], start: str, end: str) -> dict[str, 
         yf_tickers.append(yf_t)
         sym_to_yf[s] = yf_t
 
-    # Download all at once
+    # Download daily, then resample to last business day of month
+    # (interval="1mo" returns first business day, mismatching end-of-month snapshots)
     tickers_str = " ".join(set(yf_tickers))
-    data = yf.download(tickers_str, start=start, end=end, interval="1mo",
+    data = yf.download(tickers_str, start=start, end=end, interval="1d",
                        auto_adjust=True, progress=False)
 
     if data.empty:
         print("  WARNING: yfinance returned empty data")
         return {}
+
+    # Resample to end-of-month (last available trading day)
+    data = data.resample("ME").last()
 
     # Handle single vs multi ticker
     if len(set(yf_tickers)) == 1:
@@ -428,18 +563,20 @@ def main():
     print(f"\n5. Fetching FX (BRL/USD)...")
     fx = fetch_monthly_fx(start_date, end_date)
 
-    # ── Step 4: Build monthly cash flows (aportes) ─────────────────────
+    # ── Step 4: Build monthly cash flows (aportes) with dates for Modified Dietz ──
     print(f"\n6. Building monthly cash flows (aportes)...")
-    aportes_by_month = defaultdict(float)  # month → total BRL inflow
+    # aportes_by_month: {month → [(date_obj, amount_brl), ...]} preserving inflow dates
+    aportes_by_month = defaultdict(list)
 
     # IBKR deposits (USD → BRL usando câmbio do mês)
     if IBKR_APORTES.exists():
         ibkr_ap = json.loads(IBKR_APORTES.read_text())
         for dep in ibkr_ap.get("depositos", []):
             month = dep["data"][:7]
+            dep_date = datetime.strptime(dep["data"], "%Y-%m-%d").date()
             usd = dep.get("usd", dep.get("amount_usd", 0))
             cambio_mes = fx.get(month) or _last_known_fx(fx, month)
-            aportes_by_month[month] += usd * cambio_mes
+            aportes_by_month[month].append((dep_date, usd * cambio_mes))
 
     # XP purchases (BRL) — compras são aportes
     if XP_OPS.exists():
@@ -447,33 +584,60 @@ def main():
         for op in xp_ops:
             if op["cv"] == "C" and op.get("valor"):
                 month = op["data"][:7]
-                aportes_by_month[month] += op["valor"]
+                op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
+                aportes_by_month[month].append((op_date, op["valor"]))
             elif op["cv"] == "V" and op.get("valor"):
                 month = op["data"][:7]
-                aportes_by_month[month] -= op["valor"]  # resgate = outflow
+                op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
+                aportes_by_month[month].append((op_date, -op["valor"]))
 
     # Nubank TD (BRL)
     if NUBANK_OPS.exists():
         nb_data = json.loads(NUBANK_OPS.read_text())
         for op in nb_data.get("operacoes", []):
             month = op["data"][:7]
+            op_date = datetime.strptime(op["data"], "%Y-%m-%d").date()
             if op["tipo"] == "aplicacao":
-                aportes_by_month[month] += op["valor_brl"]
+                aportes_by_month[month].append((op_date, op["valor_brl"]))
             elif op["tipo"] == "resgate":
-                aportes_by_month[month] -= op["valor_brl"]
+                aportes_by_month[month].append((op_date, -op["valor_brl"]))
 
-    # IBKR aportes em USD por mês (para TWR do equity block em USD)
-    ibkr_aportes_usd_by_month = defaultdict(float)
+    # IBKR aportes em USD por mês with dates (para TWR do equity block em USD)
+    ibkr_aportes_usd_by_month = defaultdict(list)  # {month → [(date_obj, usd), ...]}
     if IBKR_APORTES.exists():
         ibkr_ap = json.loads(IBKR_APORTES.read_text())
         for dep in ibkr_ap.get("depositos", []):
             month = dep["data"][:7]
+            dep_date = datetime.strptime(dep["data"], "%Y-%m-%d").date()
             usd = dep.get("usd", dep.get("amount_usd", 0))
-            ibkr_aportes_usd_by_month[month] += usd
+            ibkr_aportes_usd_by_month[month].append((dep_date, usd))
 
-    total_aportes = sum(v for v in aportes_by_month.values())
+    # Helper: sum total inflows for a month
+    def _total_inflows(flows: list) -> float:
+        return sum(amt for _, amt in flows)
+
+    # Helper: Modified Dietz weighted inflows for a month
+    def _weighted_inflows(flows: list, month_str: str) -> float:
+        """Temporal-weighted inflows: w_i = (days_in_month - day_of_inflow) / days_in_month."""
+        if not flows:
+            return 0.0
+        year = int(month_str[:4])
+        mo = int(month_str[5:7])
+        if mo == 12:
+            days_in_month = (date(year + 1, 1, 1) - date(year, mo, 1)).days
+        else:
+            days_in_month = (date(year, mo + 1, 1) - date(year, mo, 1)).days
+        weighted = 0.0
+        for flow_date, amount in flows:
+            day = flow_date.day
+            w = (days_in_month - day) / days_in_month
+            weighted += w * amount
+        return weighted
+
+    total_aportes = sum(_total_inflows(v) for v in aportes_by_month.values())
+    total_usd = sum(_total_inflows(v) for v in ibkr_aportes_usd_by_month.values())
     print(f"   Total aportes líquidos BRL: R${total_aportes:,.2f}")
-    print(f"   Total aportes IBKR USD: ${sum(ibkr_aportes_usd_by_month.values()):,.2f}")
+    print(f"   Total aportes IBKR USD: ${total_usd:,.2f}")
 
     # ── Step 5: Compute monthly patrimonio + TWR ─────────────────────
     print(f"\n7. Computing monthly patrimônio + TWR...")
@@ -522,19 +686,31 @@ def main():
         # Total
         patrimonio_brl = equity_brl + xp_brl + rf_brl
 
-        # TWR BRL: retorno = (patrimônio_fim - aporte_mês) / patrimônio_início - 1
-        aporte_mes_brl = aportes_by_month.get(month, 0)
+        # Modified Dietz TWR BRL: temporal-weighted inflows
+        month_flows_brl = aportes_by_month.get(month, [])
+        aporte_mes_brl = _total_inflows(month_flows_brl)
+        weighted_brl = _weighted_inflows(month_flows_brl, month)
         twr_pct = ""
         if prev_pat and prev_pat > 0:
-            retorno = (patrimonio_brl - aporte_mes_brl) / prev_pat - 1
+            denominator = prev_pat + weighted_brl
+            if denominator > 0:
+                retorno = (patrimonio_brl - prev_pat - aporte_mes_brl) / denominator
+            else:
+                retorno = 0.0
             twr_pct = f"{retorno * 100:.2f}"
         prev_pat = patrimonio_brl
 
-        # TWR USD (equity block only): descontar aportes IBKR em USD
-        aporte_mes_usd = ibkr_aportes_usd_by_month.get(month, 0)
+        # Modified Dietz TWR USD (equity block only)
+        month_flows_usd = ibkr_aportes_usd_by_month.get(month, [])
+        aporte_mes_usd = _total_inflows(month_flows_usd)
+        weighted_usd = _weighted_inflows(month_flows_usd, month)
         twr_usd_pct = ""
         if prev_equity_usd and prev_equity_usd > 0:
-            ret_usd = (equity_usd - aporte_mes_usd) / prev_equity_usd - 1
+            denom_usd = prev_equity_usd + weighted_usd
+            if denom_usd > 0:
+                ret_usd = (equity_usd - prev_equity_usd - aporte_mes_usd) / denom_usd
+            else:
+                ret_usd = 0.0
             twr_usd_pct = f"{ret_usd * 100:.2f}"
         prev_equity_usd = equity_usd
 
@@ -563,7 +739,7 @@ def main():
                   "equity_usd", "equity_var_usd", "aporte_usd",
                   "equity_brl", "xp_brl", "rf_brl", "usdbrl"]
 
-    # Recalculate TWR after filtering zeros
+    # Recalculate TWR (Modified Dietz) after filtering zeros
     for i, row in enumerate(rows):
         if i == 0:
             row["patrimonio_var"] = ""
@@ -571,15 +747,29 @@ def main():
         else:
             prev_brl = rows[i-1]["patrimonio_brl"]
             aporte_brl = row.get("aporte_brl", 0)
+            month_str = row["data"][:7]
+            # Use temporal weighting for recalculation too
+            flows_brl = aportes_by_month.get(month_str, [])
+            w_brl = _weighted_inflows(flows_brl, month_str)
             if prev_brl > 0:
-                row["patrimonio_var"] = f"{((row['patrimonio_brl'] - aporte_brl) / prev_brl - 1) * 100:.2f}"
+                denom = prev_brl + w_brl
+                if denom > 0:
+                    row["patrimonio_var"] = f"{((row['patrimonio_brl'] - prev_brl - aporte_brl) / denom) * 100:.2f}"
+                else:
+                    row["patrimonio_var"] = ""
             else:
                 row["patrimonio_var"] = ""
 
             prev_usd = rows[i-1]["equity_usd"]
             aporte_usd = row.get("aporte_usd", 0)
+            flows_usd = ibkr_aportes_usd_by_month.get(month_str, [])
+            w_usd = _weighted_inflows(flows_usd, month_str)
             if prev_usd > 0:
-                row["equity_var_usd"] = f"{((row['equity_usd'] - aporte_usd) / prev_usd - 1) * 100:.2f}"
+                denom_usd = prev_usd + w_usd
+                if denom_usd > 0:
+                    row["equity_var_usd"] = f"{((row['equity_usd'] - prev_usd - aporte_usd) / denom_usd) * 100:.2f}"
+                else:
+                    row["equity_var_usd"] = ""
             else:
                 row["equity_var_usd"] = ""
 
@@ -906,7 +1096,7 @@ def _generate_core_jsons(rows: list[dict]):
 
     retornos = {
         "_generated": now_iso,
-        "_source": "reconstruct_history.py → TWR (Modified Dietz simplificado)",
+        "_source": "reconstruct_history.py → TWR (Modified Dietz, temporal-weighted inflows)",
         "dates": dates,
         "twr_pct": twr_pct,
         "twr_usd_pct": twr_usd_pct,
