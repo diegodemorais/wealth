@@ -122,7 +122,65 @@ Pesquisa ampla sobre o impacto de IA/LLM na filosofia de investimento, metodolog
 
 Rodada 1 cobriu amplitude. Diego quer **Rodada 2 focada em ferramentas e riscos**, aprofundando os achados acima antes de decidir o que implementar.
 
-- [ ] Rodada 2: deep dive em cada ferramenta (instalar, testar, avaliar fit)
-- [ ] Rodada 2: deep dive em cada risco (quantificar impacto, definir mitigações mecânicas)
+- [x] Rodada 2: deep dive em ferramentas (CLI > MCP)
+- [x] Rodada 2: deep dive em riscos (22 novos mapeados)
+- [x] Rodada 2: deep dive em anti-sycophancy (5 ações concretas)
 - [ ] Debate com agentes sobre achados
 - [ ] Decidir o que implementar vs arquivar
+
+---
+
+## Rodada 2 — Resultados (22/04/2026)
+
+### Ferramentas — Repriorizado CLI > MCP
+
+CLI é mais eficiente que MCP: menos tokens, mais rápido, mais debugável, composável com pipes. MCP só se justifica pra fontes stateful/OAuth.
+
+#### CLIs e libs Python (prioridade)
+
+| # | Ferramenta | O que faz | Esforço | Já temos? |
+|---|-----------|-----------|---------|-----------|
+| 1 | **PYield** ([crdcj/PYield](https://github.com/crdcj/PYield)) | Pricing NTN-B, curva IPCA+, VNA, leilões ANBIMA | 1h | Não |
+| 2 | **python-bcb** | PTAX, Selic, IPCA, Focus | — | ✅ Já usamos (fx_utils.py) |
+| 3 | **getfactormodels** ([x512/getfactormodels](https://github.com/x512/getfactormodels)) | FF3/FF5/FF6 + AQR BAB/QMJ automático | 30min | Não |
+| 4 | **fredapi** | 800k+ séries FRED via CLI | 30min | Não |
+| 5 | **ib_async** ([ib-api-reloaded/ib_async](https://github.com/ib-api-reloaded/ib_async)) | IBKR async (successor ib_insync) | 2h | Não (usamos ibflex) |
+| 6 | **DeepTeam** ([confident-ai/deepteam](https://github.com/confident-ai/deepteam)) | Red teaming LLMs, template financeiro | 2h | Não |
+
+#### MCPs (só se CLI não resolver)
+
+| # | MCP | Justificativa MCP (stateful/OAuth) | Esforço |
+|---|-----|-------------------------------------|---------|
+| 1 | BCB BR MCP ([SidneyBissoli](https://github.com/SidneyBissoli/bcb-br-mcp)) | 18k séries — mais amplo que python-bcb | 30min |
+| 2 | Tesouro Direto MCP ([AtilioA](https://github.com/AtilioA/tesouro-direto-mcp)) | Taxas em tempo real + smart cache | 20min |
+| 3 | FRED MCP ([stefanoamorelli](https://github.com/stefanoamorelli/fred-mcp-server)) | Alternativa ao fredapi CLI | 30min |
+| 4 | QuantConnect MCP | Backtesting via Claude (stateful) | 2h |
+
+### Anti-Sycophancy — 5 Ações Concretas (~2.5h total)
+
+| # | Ação | O que é | Esforço | Prioridade |
+|---|------|---------|---------|------------|
+| D8 | **Disagreement Floor** | Mínimo 1 posição contrária em Full-Path. Se unanimidade → Advocate gera "5 formas que o consenso pode estar errado" | 30min | ALTA |
+| D9 | **Numerical Dual-Path** | Todo número quantitativo validado por 2 caminhos independentes. Divergência >5% → STOP | 45min | ALTA |
+| D10 | **Pre-Mortem Express** | Antes de decisão >2%: Advocate responde "É 12 meses depois. Deu errado. O que aconteceu?" em 5 bullets | 20min | ALTA |
+| D11 | **Sycophancy Canaries** | Frases banidas ("Great question", "You're right"). Flip de posição após pushback de Diego requer evidência nova explícita | 15min | ALTA |
+| D12 | **Calibration Audit** | Mensal: score de acerto dos Bayesian Priors. Track flip rate (alto = sycophancy signal) | 1h setup + 15min/mês | MÉDIA |
+
+Referências: ICLR 2025 (causal sycophancy separation), BlackRock AlphaAgents, Bychkov Three-Agent (Sharpe 1.13→0.047 após ajuste honesto), MIT personalization bias.
+
+### Riscos Novos — Top 10 (de 22 mapeados)
+
+| # | Risco | Prob | Impacto | Mitigação |
+|---|-------|------|---------|-----------|
+| 1 | **Echo chamber 15 agentes mesmo modelo** | Alta | Alto | Advocate + Diego + diversificar LLM periodicamente |
+| 2 | **Agent monoculture — mesmos blind spots** | Alta | Alto | Outside View + validação externa >5% portfolio |
+| 3 | **AI false precision (gap confiança 43%)** | Alta | Alto | Intervals > point estimates. IC 90% obrigatório |
+| 4 | **MCP server vulnerabilities (OWASP top 10)** | Alta | Alto | Audit MCP, permissões mínimas, zero credentials financeiras |
+| 5 | **Tax filing errors (modelos acertam <1/3)** | Alta | Médio-Alto | AI = rascunho, Contabilizei = validador. Nunca submeter DIRPF via AI |
+| 6 | **Git secrets sprawl (+81% AI leaks)** | Alta | Alto | git-secrets pré-commit, rotacionar keys |
+| 7 | **Anthropic data retention (até 5 anos)** | Alta | Médio | Verificar opt-out training. Não colar extratos bancários |
+| 8 | **Automation bias — parar de verificar** | Alta | Alto | Protocolo de contraposição. Diego como contra-parte real |
+| 9 | **Factor crowding por AI quants** | Média-Alta | Médio | Haircut 58% já aplicado. Monitorar value spread |
+| 10 | **AI capex bubble → transmissão rates EM** | Média | Médio | IPCA+ HTM imune. Renda+ tem gatilho saída ≤6.0% |
+
+Fontes: SEC 2026 Exam Priorities, OWASP MCP Top 10, GitGuardian 2026, CFA Institute attention bias, PLOS One investment bias, Meng & Chen 99.5M holdings convergence, Bank of England AI herding simulations.
