@@ -20,6 +20,7 @@ import { useUiStore } from '@/store/uiStore';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { fmtPrivacy } from '@/utils/privacyTransform';
+import { ReverseFire } from './ReverseFire';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -1705,6 +1706,13 @@ export default function SimulatorsPage() {
 
   return (
     <div>
+      <SectionDivider label="Reverse FIRE Calculator" />
+      <div style={{ marginBottom: 8, padding: '8px 12px', background: 'rgba(88,166,255,.06)', border: '1px solid rgba(88,166,255,.2)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
+        <strong style={{ color: 'var(--accent)' }}>Aporte mínimo</strong> mensal necessário para atingir FIRE em uma idade alvo. Simulador 100% client-side.
+      </div>
+      {/* 0. Reverse FIRE Calculator */}
+      <ReverseFire />
+
       <SectionDivider label="Simulador FIRE" />
       <div style={{ marginBottom: 8, padding: '8px 12px', background: 'rgba(88,166,255,.06)', border: '1px solid rgba(88,166,255,.2)', borderRadius: 6, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
         <strong style={{ color: 'var(--accent)' }}>What-if interativo</strong> com premissas editáveis. Para cenários pré-computados, ver aba <strong>FIRE</strong>.
