@@ -3,7 +3,7 @@
 | **ID** | DEV-plan-testes-2026 |
 | **Título** | Plano de Testes Executável — 10 testes críticos em 4 fases |
 | **Dono** | Dev |
-| **Status** | 🟡 Backlog |
+| **Status** | 🟠 Phase 1 completa (3/10 testes) |
 | **Prioridade** | 🔴 Alta |
 | **Criado em** | 2026-04-23 |
 | **Tipo** | Implementação |
@@ -27,9 +27,9 @@ Erros estão passando pela cobertura existente (privacy factor muda magnitude, a
 Implementar 10 testes críticos em 4 fases:
 
 ### Fase 1: Foundation (Semana 1, 12h)
-- [ ] `test_spec_config_sync` (2h) — spec.json ↔ config.ts ↔ pages sincronizado
-- [ ] `test_annual_returns_schema_complete` (1h) — todos anos têm alpha_vs_vwra
-- [ ] `test_privacy_magnitude_preserved` (1h) — valores <0.01, neg, >1M preservam magnitude
+- [x] `test_spec_config_sync` (2h) — spec.json ↔ config.ts ↔ pages sincronizado
+- [x] `test_annual_returns_schema_complete` (1h) — todos anos têm alpha_vs_vwra
+- [x] `test_privacy_magnitude_preserved` (1h) — valores <0.01, neg, >1M preservam magnitude
 
 ### Fase 2: Data Pipeline (Semana 2, 8h)
 - [ ] `test_modified_dietz_temporal` (2h) — P3: peso temporal aplicado
