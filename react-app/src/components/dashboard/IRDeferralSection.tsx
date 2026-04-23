@@ -1,6 +1,7 @@
 'use client';
 
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface IRDeferralLote {
   ticker: string;

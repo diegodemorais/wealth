@@ -3,6 +3,7 @@
 import React from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface AlphaVsSWRDChartProps {
   oneYear: { targetReturn: number; swrdReturn: number };

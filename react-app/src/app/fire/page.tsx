@@ -23,6 +23,7 @@ import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { EChart } from '@/components/primitives/EChart';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Landmark, Building2, Heart, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── FloorUpsideFire — Cobertura por Fase (FIRE Day vs pós-INSS) ─────────────
 interface FloorUpsideFireProps {

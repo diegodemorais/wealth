@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export function RFCryptoComposition() {
   const privacyMode = useUiStore(s => s.privacyMode);

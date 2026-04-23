@@ -19,6 +19,7 @@ import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
 import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { BarChart3 } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // Period buttons for timeline
 const PERIODS = [

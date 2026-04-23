@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 

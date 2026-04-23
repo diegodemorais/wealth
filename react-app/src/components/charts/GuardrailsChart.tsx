@@ -6,6 +6,7 @@ import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 import { EC, EC_AXIS_LINE, EC_SPLIT_LINE } from '@/utils/echarts-theme';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface GuardrailsChartProps {
   data: DashboardData;

@@ -3,6 +3,7 @@
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct } from '@/utils/formatters';
 import { decimalYearsToYearsMonths } from '@/utils/time';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface TimeToFireProgressBarProps {
   fireProgress: number; // 0-1 (e.g., 0.2477 for 24.77%)

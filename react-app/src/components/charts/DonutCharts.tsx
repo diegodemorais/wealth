@@ -6,6 +6,7 @@ import { DashboardData } from '@/types/dashboard';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { useChartResize } from '@/hooks/useChartResize';
 import { EC } from '@/utils/echarts-theme';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface DonutChartsProps {
   data: DashboardData;

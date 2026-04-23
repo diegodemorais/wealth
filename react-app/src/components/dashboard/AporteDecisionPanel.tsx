@@ -3,6 +3,7 @@
 import { useUiStore } from '@/store/uiStore';
 import { DcaItem } from '@/types/dashboard';
 import { getStatusStyle } from '@/utils/statusStyles';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface AporteEtf {
   ticker: string;

@@ -5,6 +5,7 @@ import { EChart } from '@/components/primitives/EChart';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { DashboardData } from '@/types/dashboard';
 import { EC, EC_TOOLTIP } from '@/utils/echarts-theme';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface ConcentrationChartProps {
   data: DashboardData;

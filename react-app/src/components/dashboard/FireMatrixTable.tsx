@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPct } from '@/utils/formatters';
 import { pfireColor } from '@/utils/fire';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 import {
   Table,
   TableHeader,

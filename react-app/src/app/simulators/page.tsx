@@ -19,6 +19,7 @@ import { pageStateElement } from '@/components/primitives/PageStateGuard';
 import { useUiStore } from '@/store/uiStore';
 import { ScenarioBadge } from '@/components/primitives/ScenarioBadge';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 

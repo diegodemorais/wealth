@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { BondPoolReadiness } from '@/components/dashboard/BondPoolReadiness';
 import { BondPoolRunwayChart } from '@/components/charts/BondPoolRunwayChart';
 import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface BondStrategyPanelProps {
   // Pré-FIRE (SoRR)

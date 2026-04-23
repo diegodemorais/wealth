@@ -1,6 +1,7 @@
 import React from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface FireProgressWellnessProps {
   firePercentage: number;

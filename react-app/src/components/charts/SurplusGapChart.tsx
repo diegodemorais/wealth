@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import { EChart } from '@/components/primitives/EChart';
 import { useUiStore } from '@/store/uiStore';
 import type { EChartsOption } from 'echarts-for-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface SurplusGapChartProps {
   data: any;

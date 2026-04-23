@@ -23,6 +23,7 @@ import SequenceOfReturnsHeatmap from '@/components/dashboard/SequenceOfReturnsHe
 import SWRDashboard from '@/components/dashboard/SWRDashboard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { BarChart3, Building2, Thermometer, ArrowRightLeft, Hospital, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ── FloorUpsideWithdraw — Cobertura por Camadas ─────────────────────────────
 interface FloorUpsideWithdrawProps {

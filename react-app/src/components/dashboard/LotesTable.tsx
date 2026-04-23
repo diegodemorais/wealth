@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface Lot {
   symbol: string;

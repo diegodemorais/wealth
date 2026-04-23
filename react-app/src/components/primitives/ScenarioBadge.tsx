@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface ScenarioBadgeProps {
   label: string;

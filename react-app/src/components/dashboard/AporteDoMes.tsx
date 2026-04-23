@@ -4,6 +4,7 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { SimpleProgressBar } from '@/components/primitives/SimpleProgressBar';
 import { fmtBrlCompact } from '@/utils/formatters';
 import { CheckCircle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface AporteDoMesProps {
   aporteMensal: number;

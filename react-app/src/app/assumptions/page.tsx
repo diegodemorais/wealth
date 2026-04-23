@@ -7,6 +7,7 @@ import { pfireColor } from '@/utils/fire';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import { secOpen, secTitle } from '@/config/dashboard.config';
 import { CheckCircle, AlertTriangle, Clock, Shield, ArrowRight } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 // ─── Formatters ───────────────────────────────────────────────────────────────
 

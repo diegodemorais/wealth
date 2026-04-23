@@ -21,6 +21,7 @@ import HODL11PositionPanel from '@/components/dashboard/HODL11PositionPanel';
 import { MetricCard } from '@/components/primitives/MetricCard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Globe, ClipboardList, Landmark, MapPin, BarChart3, Bitcoin } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export default function PortfolioPage() {
   const { data, isLoading, dataError } = usePageData();

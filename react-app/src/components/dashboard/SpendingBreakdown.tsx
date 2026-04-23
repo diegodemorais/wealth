@@ -3,6 +3,7 @@
 import React from 'react';
 import { CheckCircle, AlertTriangle } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface MonthlyBreakdownEntry {
   mes: string;            // "2025-08"

@@ -2,6 +2,7 @@
 
 import { PrivacyMask } from '@/components/primitives/PrivacyMask';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface PatrimonioHolistico {
   financeiro_brl: number;

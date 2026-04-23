@@ -3,6 +3,7 @@
 import React from 'react';
 import { CheckCircle, AlertTriangle, AlertCircle } from 'lucide-react';
 import { useUiStore } from '@/store/uiStore';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface RunwayYear {
   year: number;

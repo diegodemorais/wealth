@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useEChartsPrivacy } from '@/hooks/useEChartsPrivacy';
 import { EChart } from '@/components/primitives/EChart';
 import { EC } from '@/utils/echarts-theme';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface Ponto {
   ano: number;

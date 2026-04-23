@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 const EQUITY_BUCKETS = ['SWRD', 'AVGS', 'AVEM'];
 const BUCKET_COLORS: Record<string, string> = {

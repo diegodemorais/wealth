@@ -21,6 +21,7 @@ import MacroUnificado from '@/components/dashboard/MacroUnificado';
 import RFStatusPanel from '@/components/dashboard/RFStatusPanel';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
 import { Trophy, Target, CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export default function HomePage() {
   // Portfolio dashboard - main entry point

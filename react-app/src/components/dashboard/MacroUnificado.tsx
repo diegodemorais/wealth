@@ -3,6 +3,7 @@
 import { useUiStore } from '@/store/uiStore';
 import { CollapsibleSection } from '@/components/primitives/CollapsibleSection';
 import BRLPurchasingPowerTimeline from './BRLPurchasingPowerTimeline';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface MacroUnificadoProps {
   // Taxas

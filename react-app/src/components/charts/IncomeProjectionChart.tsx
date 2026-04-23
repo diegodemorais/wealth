@@ -7,6 +7,7 @@ import { useChartResize } from '@/hooks/useChartResize';
 import { DashboardData } from '@/types/dashboard';
 import { EC, EC_SPLIT_LINE } from '@/utils/echarts-theme';
 import { ChartCard } from '@/components/primitives/ChartCard';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 export interface IncomeProjectionChartProps {
   data: DashboardData;

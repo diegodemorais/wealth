@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { useUiStore } from '@/store/uiStore';
 import { fmtBrl, fmtPct } from '@/utils/formatters';
+import { fmtPrivacy } from '@/utils/privacyTransform';
 
 interface EtfPosition {
   qty: number;
