@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Browser automation for dashboard responsive testing",
   "scripts": {
-    "test:responsive": "node scripts/test_responsive.js"
+    "test:responsive": "node scripts/test_responsive.js",
+    "validate-data": "python3 scripts/validate_data.py",
+    "test:pre-commit": "python3 -m pytest scripts/tests/ -q && npm run validate-data"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

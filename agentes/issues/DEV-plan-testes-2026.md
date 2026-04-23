@@ -3,7 +3,7 @@
 | **ID** | DEV-plan-testes-2026 |
 | **Título** | Plano de Testes Executável — 10 testes críticos em 4 fases |
 | **Dono** | Dev |
-| **Status** | 🟡 Phase 3 completa (10/10 testes) ✅ |
+| **Status** | 🟢 COMPLETA (10/10 testes implementados, CI integrada) ✅ |
 | **Prioridade** | 🔴 Alta |
 | **Criado em** | 2026-04-23 |
 | **Tipo** | Implementação |
@@ -43,10 +43,10 @@ Implementar 10 testes críticos em 4 fases:
 - [x] `test_pages_use_secopen` (1.5h) — pages não bypassam secOpen() ✅
 
 ### Fase 4: Cleanup & CI (Semana 4, 6h)
-- [ ] Remover TypeScript "known-error" filters (2h)
-- [ ] Criar `npm run validate-data` script (2h)
-- [ ] Integrar pre-commit hook (1h)
-- [ ] Documentar em CONTRIBUTING.md (1h)
+- [x] Remover TypeScript "known-error" filters (2h) ✅
+- [x] Criar `npm run validate-data` script (2h) ✅
+- [x] Integrar pre-commit hook (1h) ✅
+- [x] Documentar em CONTRIBUTING.md (1h) ✅
 
 ---
 
