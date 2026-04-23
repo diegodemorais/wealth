@@ -29,17 +29,15 @@ Leia o output completo antes de escrever qualquer coisa ao Diego.
 ~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py
 ```
 
-**1c. Sincronizar public/ e build:**
+**1c. Build dashboard:**
 ```bash
-cp dashboard/data.json react-app/public/data.json
-cp react-app/public/data.json dash/data.json
 cd react-app && npm run build 2>&1 | tail -20
 ```
 
 **1d. Commit + push:**
 ```bash
 cd /Users/diegodemorais/claude/code/wealth
-git add dados/spending_summary.json dashboard/data.json react-app/public/data.json dash/data.json dash/index.html react-app/src/config/version.ts dash/version.json
+git add dados/spending_summary.json react-app/public/data.json dash/data.json dash/index.html react-app/src/config/version.ts dash/version.json
 git commit -m "data: spending analysis update — $(date +%Y-%m-%d)"
 git push origin main
 ```

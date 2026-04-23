@@ -133,9 +133,9 @@ export default function HomePage() {
         cambio={d.CAMBIO}
       />
 
-      {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Aporte Mês */}
+      {/* 2. KPI GRID: Indicadores Primários — P(Aspiracional), Drift Máx, Retorno Real, Aporte Mês */}
       <SectionLabel>Indicadores Primários</SectionLabel>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3.5">
         <MetricCard
           accent
           accentLeftBorder
@@ -155,6 +155,25 @@ export default function HomePage() {
           valueColor="text-text"
           sub="vs alvo IPS"
         />
+        {/* TWR CAGR Real BRL — semaphore: green >= 4.5%, yellow 3-4.5%, red < 3% */}
+        {(() => {
+          const twrReal: number | null = (data as any)?.retornos_mensais?.twr_real_brl_pct ?? null;
+          const premissa: number = (data as any)?.premissas_vs_realizado?.retorno_equity?.premissa_real_brl_pct ?? 4.5;
+          const color = twrReal == null ? 'text-muted'
+            : twrReal >= 4.5 ? 'text-green'
+            : twrReal >= 3 ? 'text-yellow'
+            : 'text-red';
+          return (
+            <MetricCard
+              accent
+              accentLeftBorder
+              label="Retorno Real (CAGR)"
+              value={twrReal != null ? `${twrReal.toFixed(1)}%` : '—'}
+              valueColor={color}
+              sub={`vs premissa ${premissa.toFixed(1)}% · desde abr/2021`}
+            />
+          );
+        })()}
         <MetricCard
           label="Aporte do Mês"
           value={d.aporteMensal ? fmtPrivacy(d.aporteMensal, privacyMode) : '—'}

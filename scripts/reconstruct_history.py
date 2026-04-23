@@ -1094,6 +1094,114 @@ def _generate_core_jsons(rows: list[dict]):
         )
         print(f"  -> TWR nominal BRL CAGR: {twr_nominal_brl_cagr:.2f}% | IPCA CAGR: {ipca_cagr_periodo_pct:.2f}% | TWR real BRL: {twr_real_brl_pct:.2f}%")
 
+    # ── Tabela de retornos anuais ─────────────────────────────────────
+    # Agrupa retornos mensais por ano e calcula TWR anual (composto)
+    from collections import OrderedDict as _OD
+    annual_returns: dict[str, dict] = _OD()
+    for d, r, r_usd in zip(dates, twr_pct, twr_usd_pct):
+        yr = d[:4]
+        if yr not in annual_returns:
+            annual_returns[yr] = {"twr_brl": [], "twr_usd": [], "ipca": []}
+        annual_returns[yr]["twr_brl"].append(r)
+        if r_usd is not None:
+            annual_returns[yr]["twr_usd"].append(r_usd)
+
+    # Buscar IPCA mensal por ano (já temos _ipca_raw se BCB deu certo)
+    ipca_mensal_by_ym: dict[str, float] = {}
+    if dates:
+        try:
+            _d0_ipca = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
+            _d1_ipca = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d1_last_ipca = (_d1_ipca.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+            _bcb_url_ipca = (
+                f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados"
+                f"?formato=json&dataInicial={_d0_ipca.strftime('%d/%m/%Y')}&dataFinal={_d1_last_ipca.strftime('%d/%m/%Y')}"
+            )
+            with _url_req.urlopen(_bcb_url_ipca, timeout=10) as _r_ipca:
+                _ipca_monthly_raw = _json.loads(_r_ipca.read().decode())
+            for _row_ipca in _ipca_monthly_raw:
+                try:
+                    _dt_ipca = datetime.strptime(_row_ipca["data"].strip(), "%d/%m/%Y")
+                    ipca_mensal_by_ym[_dt_ipca.strftime("%Y-%m")] = float(_row_ipca["valor"])
+                except (KeyError, ValueError):
+                    pass
+        except Exception:
+            pass
+
+    # CDI mensal por ano (rf_cdi_series já populado abaixo, mas aqui pode não existir ainda)
+    # Vamos buscar CDI inline
+    cdi_mensal_by_ym: dict[str, float] = {}
+    if dates:
+        try:
+            _d0_cdi2 = datetime.strptime(dates[0] + "-01", "%Y-%m-%d")
+            _d1_cdi2 = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            _d1_last_cdi2 = (_d1_cdi2.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+            _bcb_cdi_url2 = (
+                f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.4391/dados"
+                f"?formato=json&dataInicial={_d0_cdi2.strftime('%d/%m/%Y')}&dataFinal={_d1_last_cdi2.strftime('%d/%m/%Y')}"
+            )
+            with _url_req.urlopen(_bcb_cdi_url2, timeout=10) as _r_cdi2:
+                _cdi_raw2 = _json.loads(_r_cdi2.read().decode())
+            for _row_cdi2 in _cdi_raw2:
+                try:
+                    _dt_cdi2 = datetime.strptime(_row_cdi2["data"].strip(), "%d/%m/%Y")
+                    cdi_mensal_by_ym[_dt_cdi2.strftime("%Y-%m")] = float(_row_cdi2["valor"])
+                except (KeyError, ValueError):
+                    pass
+        except Exception:
+            pass
+
+    annual_table = []
+    for yr, data_yr in annual_returns.items():
+        # TWR BRL composto
+        acum_brl_yr = 1.0
+        for r in data_yr["twr_brl"]:
+            acum_brl_yr *= (1 + r / 100)
+        twr_brl_yr = round((acum_brl_yr - 1) * 100, 2)
+
+        # TWR USD composto
+        acum_usd_yr = 1.0
+        for r in data_yr["twr_usd"]:
+            acum_usd_yr *= (1 + r / 100)
+        twr_usd_yr = round((acum_usd_yr - 1) * 100, 2) if data_yr["twr_usd"] else None
+
+        # IPCA anual composto
+        ipca_yr = 1.0
+        ipca_count = 0
+        for m in range(1, 13):
+            ym = f"{yr}-{m:02d}"
+            if ym in ipca_mensal_by_ym:
+                ipca_yr *= (1 + ipca_mensal_by_ym[ym] / 100)
+                ipca_count += 1
+        ipca_yr_pct = round((ipca_yr - 1) * 100, 2) if ipca_count > 0 else None
+
+        # CDI anual composto
+        cdi_yr = 1.0
+        cdi_count = 0
+        for m in range(1, 13):
+            ym = f"{yr}-{m:02d}"
+            if ym in cdi_mensal_by_ym:
+                cdi_yr *= (1 + cdi_mensal_by_ym[ym] / 100)
+                cdi_count += 1
+        cdi_yr_pct = round((cdi_yr - 1) * 100, 2) if cdi_count > 0 else None
+
+        # TWR real = (1 + nominal) / (1 + ipca) - 1
+        twr_real_yr = round(((1 + twr_brl_yr / 100) / (1 + (ipca_yr_pct or 0) / 100) - 1) * 100, 2) if ipca_yr_pct else None
+
+        n_months = len(data_yr["twr_brl"])
+        annual_table.append({
+            "year": int(yr),
+            "months": n_months,
+            "ytd": n_months < 12,
+            "twr_nominal_brl": twr_brl_yr,
+            "twr_real_brl": twr_real_yr,
+            "twr_usd": twr_usd_yr,
+            "ipca": ipca_yr_pct,
+            "cdi": cdi_yr_pct,
+        })
+
+    print(f"  -> Tabela anual: {len(annual_table)} anos ({annual_table[0]['year']}–{annual_table[-1]['year']})")
+
     retornos = {
         "_generated": now_iso,
         "_source": "reconstruct_history.py → TWR (Modified Dietz, temporal-weighted inflows)",
@@ -1108,8 +1216,10 @@ def _generate_core_jsons(rows: list[dict]):
             "rf_xp": comp_other,
         },
         "twr_real_brl_pct":      twr_real_brl_pct,
+        "twr_nominal_brl_cagr":  twr_nominal_brl_cagr,
         "ipca_cagr_periodo_pct": ipca_cagr_periodo_pct,
         "periodo_anos":          periodo_anos,
+        "annual_returns":        annual_table,
     }
 
     retornos_path = ROOT / "dados" / "retornos_mensais.json"

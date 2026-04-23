@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-23T09:16:38",
+  "_generated": "2026-04-23T09:18:02",
   "_source": "reconstruct_history.py",
   "window": 12,
   "rf_brl_atual": {
@@ -386,9 +386,9 @@
     "benchmark": "VWRA.L",
     "base": "USD",
     "itd": {
-      "ir": 0.0839,
-      "tracking_error_pct": 15.1069,
-      "active_return_anual_pct": 1.2681,
+      "ir": 0.0833,
+      "tracking_error_pct": 15.1072,
+      "active_return_anual_pct": 1.2583,
       "n_meses": 60
     },
     "rolling_36m": {
@@ -444,7 +444,7 @@
         0.1498,
         0.1941,
         0.2394,
-        0.2525
+        0.2516
       ],
       "nota": "N=25 pontos — baixa robustez estatística"
     }

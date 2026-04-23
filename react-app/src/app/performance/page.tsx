@@ -18,6 +18,7 @@ import AlphaVsSWRDChart from '@/components/dashboard/AlphaVsSWRDChart';
 import RollingMetricsChart from '@/components/dashboard/RollingMetricsChart';
 import ETFFactorComposition from '@/components/dashboard/ETFFactorComposition';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
+import PerformanceSummary from '@/components/dashboard/PerformanceSummary';
 import { BarChart3 } from 'lucide-react';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 
@@ -51,6 +52,12 @@ export default function PerformancePage() {
 
   return (
     <div>
+      {/* 0. Performance Summary — KPIs + Annual Returns Table */}
+      <SectionDivider label="Resumo de Performance" />
+      <section className="section" id="performanceSummarySection">
+        <PerformanceSummary data={safeData} />
+      </section>
+
       <SectionDivider label="Visão Geral" />
       {/* 1. Patrimônio — Evolução Histórica (moved first: contexto geral antes de análise) */}
       <section className="section" id="timelineSection">

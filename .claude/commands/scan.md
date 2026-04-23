@@ -66,7 +66,6 @@ Após bookkeeper atualizar carteira.md:
 ~/claude/finance-tools/.venv/bin/python3 scripts/ibkr_lotes.py --flex   # lotes FIFO + PTAX + IR por lote
 ~/claude/finance-tools/.venv/bin/python3 scripts/parse_carteira.py
 ~/claude/finance-tools/.venv/bin/python3 scripts/generate_data.py
-cp dashboard/data.json react-app/public/data.json
 cd react-app && npx next build
 ```
 

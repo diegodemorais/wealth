@@ -29,7 +29,7 @@ Para cada número encontrado: confirmar que vem de `DATA.*` ou é constante mate
 **NUNCA editar `dashboard/index.html` diretamente.** O arquivo é gerado pelo pipeline:
 
 ```
-scripts/generate_data.py   →  dashboard/data.json
+scripts/generate_data.py   →  react-app/public/data.json  (dashboard/data.json is a symlink)
                                          ↓
 scripts/build_dashboard.py →  dashboard/index.html
                                          ↓
@@ -113,7 +113,7 @@ Extrair dos outputs:
 | `"HODL11 cotação hoje"` + `"USD BRL câmbio hoje"` | HODL11 + câmbio |
 | `"USD BRL historical weekly 2026"` | PTAX últimas semanas |
 
-Se WebSearch falhar para algum preço, ler `dashboard/data.json` atual e extrair o valor anterior.
+Se WebSearch falhar para algum preço, ler `react-app/public/data.json` atual e extrair o valor anterior.
 
 ### 3. Computar
 

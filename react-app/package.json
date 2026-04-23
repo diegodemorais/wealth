@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "sync-data": "node -e \"const fs=require('fs'),path=require('path');const src=path.resolve('../dashboard/data.json');if(fs.existsSync(src)){fs.copyFileSync(src,'public/data.json');console.log('✅ data.json synced from dashboard/');}else{console.warn('⚠️  dashboard/data.json not found — using existing public/data.json');}\"",
+    "sync-data": "echo '✅ data.json: single source of truth in public/ (dashboard/data.json is a symlink)'",
     "build": "npm run sync-data && node scripts/increment-version.js && npm run test:ci && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
     "build:no-test": "npm run sync-data && node scripts/increment-version.js && next build && node scripts/post-build.js && node scripts/validate-pages.mjs",
     "start": "next start",

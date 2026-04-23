@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-generate_data.py — Agrega todos os dados da carteira em dashboard/data.json.
+generate_data.py — Agrega todos os dados da carteira em react-app/public/data.json.
 
 Uso:
     python3 scripts/generate_data.py [--skip-scripts] [--skip-prices]
@@ -10,7 +10,7 @@ Flags:
     --skip-prices   Não busca preços yfinance (usa dashboard_state.json)
 
 Output:
-    dashboard/data.json  (input para build_dashboard.py)
+    react-app/public/data.json  (single source of truth, dashboard/data.json is a symlink)
 
 Pipeline:
     1. Lê config.py  (constantes canônicas)
@@ -22,7 +22,7 @@ Pipeline:
     5c. Factor loadings FF5+MOM por ETF              → Ken French + OLS regression
     6. Lê historico_carteira.csv                     → timeline + retornos_mensais + rolling_sharpe
     7. Lê holdings.md                                → taxas RF
-    8. Escreve dashboard/data.json
+    8. Escreve react-app/public/data.json (symlinked from dashboard/data.json)
 """
 
 import sys, json, subprocess, csv, math, argparse, re
@@ -74,7 +74,7 @@ MACRO_SNAPSHOT      = ROOT / "dados" / "macro_snapshot.json"
 TAX_SNAPSHOT        = ROOT / "dados" / "tax_snapshot.json"
 SPENDING_SUMMARY    = ROOT / "dados" / "spending_summary.json"
 HEAD_RELAY          = ROOT / "dados" / "head_relay.json"
-OUT_PATH        = ROOT / "dashboard" / "data.json"
+OUT_PATH        = ROOT / "react-app" / "public" / "data.json"
 
 BACKTEST_R7_PATH        = ROOT / "dados" / "backtest_r7.json"
 FIRE_MATRIX_PATH        = ROOT / "dados" / "fire_matrix.json"
@@ -2914,9 +2914,18 @@ def main():
         print("  ▶ lendo retornos de dados/retornos_mensais.json (core) ...")
         _rc = json.loads(RETORNOS_CORE.read_text())
         retornos_mensais = {"dates": _rc["dates"], "values": _rc["twr_pct"]}
+        # Propagate annual returns + TWR summary for dashboard
+        retornos_mensais["annual_returns"] = _rc.get("annual_returns", [])
+        retornos_mensais["twr_real_brl_pct"] = _rc.get("twr_real_brl_pct")
+        retornos_mensais["twr_nominal_brl_cagr"] = _rc.get("twr_nominal_brl_cagr")
+        retornos_mensais["ipca_cagr_periodo_pct"] = _rc.get("ipca_cagr_periodo_pct")
+        retornos_mensais["periodo_anos"] = _rc.get("periodo_anos")
+        retornos_mensais["acumulado_pct"] = _rc.get("acumulado_pct", [])
+        retornos_mensais["acumulado_usd_pct"] = _rc.get("acumulado_usd_pct", [])
+        retornos_mensais["twr_usd_pct"] = _rc.get("twr_usd_pct", [])
         # Timeline ainda vem do CSV (patrimônio absoluto para o gráfico)
         timeline, _ = get_timeline_retornos()
-        print(f"  ✓ Retornos core: {len(retornos_mensais['dates'])} meses (TWR)")
+        print(f"  ✓ Retornos core: {len(retornos_mensais['dates'])} meses (TWR), {len(retornos_mensais['annual_returns'])} anos")
     else:
         print("  ▶ lendo CSV (fallback — rode reconstruct_history.py para gerar core) ...")
         timeline, retornos_mensais = get_timeline_retornos()

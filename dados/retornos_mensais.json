@@ -1,5 +1,5 @@
 {
-  "_generated": "2026-04-23T09:16:38",
+  "_generated": "2026-04-23T09:18:02",
   "_source": "reconstruct_history.py → TWR (Modified Dietz, temporal-weighted inflows)",
   "dates": [
     "2021-05",
@@ -500,6 +500,69 @@
     ]
   },
   "twr_real_brl_pct": 6.95,
+  "twr_nominal_brl_cagr": 13.26,
   "ipca_cagr_periodo_pct": 5.9,
-  "periodo_anos": 5.0
+  "periodo_anos": 5.0,
+  "annual_returns": [
+    {
+      "year": 2021,
+      "months": 8,
+      "ytd": true,
+      "twr_nominal_brl": 7.32,
+      "twr_real_brl": -0.18,
+      "twr_usd": 3.13,
+      "ipca": 7.51,
+      "cdi": 3.72
+    },
+    {
+      "year": 2022,
+      "months": 12,
+      "ytd": false,
+      "twr_nominal_brl": -5.07,
+      "twr_real_brl": -10.26,
+      "twr_usd": -18.58,
+      "ipca": 5.78,
+      "cdi": 12.38
+    },
+    {
+      "year": 2023,
+      "months": 12,
+      "ytd": false,
+      "twr_nominal_brl": 8.68,
+      "twr_real_brl": 3.88,
+      "twr_usd": 18.27,
+      "ipca": 4.62,
+      "cdi": 13.03
+    },
+    {
+      "year": 2024,
+      "months": 12,
+      "ytd": false,
+      "twr_nominal_brl": 40.25,
+      "twr_real_brl": 33.79,
+      "twr_usd": 12.76,
+      "ipca": 4.83,
+      "cdi": 10.89
+    },
+    {
+      "year": 2025,
+      "months": 12,
+      "ytd": false,
+      "twr_nominal_brl": 19.73,
+      "twr_real_brl": 14.84,
+      "twr_usd": 35.17,
+      "ipca": 4.26,
+      "cdi": 14.33
+    },
+    {
+      "year": 2026,
+      "months": 4,
+      "ytd": true,
+      "twr_nominal_brl": 0.22,
+      "twr_real_brl": -1.67,
+      "twr_usd": 10.13,
+      "ipca": 1.92,
+      "cdi": 4.19
+    }
+  ]
 }
