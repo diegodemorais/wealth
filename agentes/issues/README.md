@@ -29,7 +29,7 @@ Conversas podem gerar Issues. O Head deve sugerir proativamente.
 
 | ID | Titulo | Dono | Prioridade |
 |----|--------|------|------------|
-| TX-tlh-engine-lote | TLH Engine por lote — ativa em drawdown >15% | Tax | 🟡 Contingente |
+| OPS-ibkr-flex-trades | Configurar Flex Query de Trades na IBKR | Ops | 🟡 Média |
 | TX-diferimento-fiscal | Calculadora de diferimento fiscal por ETF | Tax | 🟢 Baixa (2035+) |
 | FR-tpaw | Investigar TPAW como metodologia de desacumulação | FIRE | 🟢 Baixa (2027+) |
 
@@ -43,6 +43,7 @@ _(nenhuma no momento)_
 
 | ID | Dono | Data | Resultado |
 |----|------|------|-----------|
+| TX-tlh-engine-lote | Tax+Dev | 2026-04-22 | 213 lotes FIFO extraídos do IBKR. ibkr_lotes.py criado. LotesTable no dashboard (Portfolio → Tax). TLH eligibility por lote. |
 | DEV-fire-dashboard-gaps | Dev | 2026-04-22 | 3 gaps visuais: bond pool gauge (0.8→4.6a projeção), P50×Meta marcador (2034), IR latente R$133k visível. |
 | XX-mc-stress-cenarios | FIRE+Quant | 2026-04-22 | 3 cenários rodados. IPCA 5%: impacto zero. BRL -3.5%: P(FIRE) 52% mas cenário implausível (P<3%). Stress atual mantido. |
 | DEV-assumptions-redesign | Dev | 2026-04-22 | Checklist redesenhada: 4 CollapsibleSections (Decisões & Ações, Onde Estou, Alocação & Regras, Modelo & Referência). Progressive disclosure. |

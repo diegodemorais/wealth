@@ -16,6 +16,7 @@ import BrasilConcentrationCard from '@/components/dashboard/BrasilConcentrationC
 import { CryptoBandChart } from '@/components/dashboard/CryptoBandChart';
 import RealYieldGauge from '@/components/dashboard/RealYieldGauge';
 import IRDeferralSection from '@/components/dashboard/IRDeferralSection';
+import { LotesTable } from '@/components/dashboard/LotesTable';
 import HODL11PositionPanel from '@/components/dashboard/HODL11PositionPanel';
 import { MetricCard } from '@/components/primitives/MetricCard';
 import { SectionDivider } from '@/components/primitives/SectionDivider';
@@ -286,6 +287,39 @@ export default function PortfolioPage() {
           })()}
         </div>
       </CollapsibleSection>
+
+      {/* Lotes IBKR — FIFO individuais com P&L e TLH eligibility */}
+      {(() => {
+        const tlhLotes = (data as any)?.tlh_lotes;
+        if (!tlhLotes?.lots?.length) return null;
+        const posicoes = (data as any)?.posicoes ?? {};
+        const priceMap: Record<string, number> = {};
+        for (const [tk, p] of Object.entries(posicoes as Record<string, any>)) {
+          if (p?.price) priceMap[tk] = p.price;
+        }
+        // Also check tlh array for prices
+        const tlhArr = (data as any)?.tlh ?? [];
+        for (const t of tlhArr) {
+          if (t.ticker && t.price) priceMap[t.ticker] = t.price;
+        }
+        const cambio = (data as any)?.mercado?.cambio_brl_usd ?? 5.0;
+        return (
+          <CollapsibleSection
+            id="section-lotes-ibkr"
+            title="Lotes IBKR — FIFO Individual (213 lotes)"
+            defaultOpen={false}
+          >
+            <div style={{ padding: '0 16px 16px' }}>
+              <LotesTable
+                lots={tlhLotes.lots}
+                summary={tlhLotes.summary}
+                prices={priceMap}
+                cambio={cambio}
+              />
+            </div>
+          </CollapsibleSection>
+        );
+      })()}
 
       <SectionDivider label="Renda Fixa & Cripto" />
       {/* 8. Renda Fixa */}

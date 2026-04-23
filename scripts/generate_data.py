@@ -3310,6 +3310,22 @@ def main():
             # Fallback: usar pfire_base genérico (pode ser qualquer rodada)
             pfire_base = {"base": s.get("pfire_base"), "fav": s.get("pfire_fav"), "stress": s.get("pfire_stress")}
 
+    # ─── TLH Lotes individuais (FIFO) ──────────────────────────────────────────
+    def _load_tlh_lotes():
+        """Load individual lots from dados/tlh_lotes.json if available."""
+        lotes_path = Path(__file__).parent.parent / "dados" / "tlh_lotes.json"
+        if not lotes_path.exists():
+            return None
+        try:
+            raw = json.loads(lotes_path.read_text(encoding="utf-8"))
+            return {
+                "summary": raw.get("summary", {}),
+                "lots": raw.get("lots", []),
+                "_generated": raw.get("_generated", ""),
+            }
+        except Exception:
+            return None
+
     # ─── Mini-log: últimas operações IBKR + XP ───────────────────────────────
     def _build_minilog():
         """Retorna as 10 últimas operações: IBKR (compras + depósitos) + XP (compras/vendas) + Nubank (Tesouro Direto) + Binance (airdrops/resgates)"""
@@ -3710,6 +3726,7 @@ def main():
         "glide":      glide,
         "drift":      drift,
         "tlh":        tlh,
+        "tlh_lotes":  _load_tlh_lotes(),
         "attribution":      attr,
         "timeline_attribution": timeline_attribution,
         "equity_attribution": equity_attribution,

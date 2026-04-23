@@ -6,7 +6,8 @@
 |-------|-------|
 | **ID** | TX-tlh-engine-lote |
 | **Dono** | Tax |
-| **Status** | Backlog |
+| **Status** | ✅ Done |
+| **Concluído em** | 2026-04-22 |
 | **Prioridade** | Média |
 | **Participantes** | Tax (lead), Bookkeeper, Dev |
 | **Co-sponsor** | Head |
