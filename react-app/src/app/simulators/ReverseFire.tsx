@@ -258,7 +258,7 @@ export function ReverseFire() {
       series: [
         {
           name: 'Patrimônio',
-          type: 'area',
+          type: 'line',
           data: chartData.map(d => pv(d.patrimonio_acumulado)),
           smooth: false,
           areaStyle: {

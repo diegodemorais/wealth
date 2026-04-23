@@ -22,6 +22,8 @@ interface AnnualReturn {
   twr_nominal_brl: number;
   twr_real_brl: number;
   twr_usd: number;
+  vwra_usd?: number | null;
+  alpha_pp?: number | null;
   ipca: number;
   cdi: number;
   alpha_vs_vwra?: number;
@@ -235,6 +237,7 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                   <th style={thR}>Real BRL</th>
                   <th style={thC} aria-label="comparação nominal vs real" />
                   <th style={thR}>USD</th>
+                  <th style={thR}>VWRA</th>
                   <th style={thR}>Alpha</th>
                   <th style={thR}>IPCA</th>
                   <th style={thR}>CDI</th>
@@ -288,8 +291,11 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                       <td style={{ ...tdR, color: returnColor(row.twr_usd) }}>
                         {fmtPct(row.twr_usd)}
                       </td>
-                      <td style={{ ...tdR, color: row.alpha_vs_vwra != null ? returnColor(row.alpha_vs_vwra) : 'var(--muted)' }}>
-                        {row.alpha_vs_vwra != null ? `${row.alpha_vs_vwra >= 0 ? '+' : ''}${row.alpha_vs_vwra.toFixed(1)}pp` : '—'}
+                      <td style={{ ...tdR, color: 'var(--muted)' }}>
+                        {row.vwra_usd != null ? fmtPct(row.vwra_usd) : '--'}
+                      </td>
+                      <td style={{ ...tdR, color: returnColor(row.alpha_pp), fontWeight: 700 }}>
+                        {row.alpha_pp != null ? `${row.alpha_pp >= 0 ? '+' : ''}${row.alpha_pp.toFixed(1)}pp` : '--'}
                       </td>
                       <td style={{ ...tdR, color: 'var(--muted)' }}>{row.ipca.toFixed(1)}%</td>
                       <td style={{ ...tdR, color: 'var(--muted)' }}>{row.cdi.toFixed(1)}%</td>
@@ -320,8 +326,18 @@ export default function PerformanceSummary({ data }: PerformanceSummaryProps) {
                     {cagrReal != null ? `${cagrReal.toFixed(1)}%` : '--'}
                   </td>
                   <td style={tdC} />
-                  <td style={{ ...tdR, fontWeight: 700, color: alphaAnual != null ? returnColor(alphaAnual) : 'var(--muted)' }}>
-                    {alphaAnual != null ? `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(2)}%` : '—'}
+                  <td style={{ ...tdR, color: 'var(--muted)' }}>—</td>
+                  <td style={{ ...tdR, color: 'var(--muted)' }}>—</td>
+                  <td
+                    style={{
+                      ...tdR,
+                      fontWeight: 800,
+                      color: alphaAnual != null
+                        ? (alphaAnual >= 0 ? 'var(--green)' : 'var(--red)')
+                        : 'var(--muted)',
+                    }}
+                  >
+                    {alphaAnual != null ? `${alphaAnual >= 0 ? '+' : ''}${alphaAnual.toFixed(1)}pp` : '--'}
                   </td>
                   <td style={{ ...tdR, fontWeight: 700, color: 'var(--muted)' }}>
                     {ipcaCagr != null ? `${ipcaCagr.toFixed(1)}%` : '--'}

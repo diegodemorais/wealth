@@ -1151,6 +1151,41 @@ def _generate_core_jsons(rows: list[dict]):
         except Exception:
             pass
 
+    # VWRA.L mensal por ano — benchmark para alpha
+    # Base: USD (VWRA é USD-denominated, mesma base que twr_usd_pct)
+    # Alpha = twr_usd - vwra_usd (pp). YTD anos: compound dos meses disponíveis, não anualizado.
+    vwra_mensal_by_ym: dict[str, float] = {}
+    if dates:
+        try:
+            import warnings as _warnings
+            import yfinance as _yf
+            import pandas as _pd
+            _d0_vwra = datetime.strptime(dates[0] + "-01", "%Y-%m-%d") - timedelta(days=5)
+            _d1_vwra = datetime.strptime(dates[-1] + "-01", "%Y-%m-%d")
+            if _d1_vwra.month == 12:
+                _d1_vwra_fetch = datetime(_d1_vwra.year + 1, 1, 1)
+            else:
+                _d1_vwra_fetch = datetime(_d1_vwra.year, _d1_vwra.month + 1, 1)
+            with _warnings.catch_warnings():
+                _warnings.simplefilter("ignore")
+                _hist_vwra = _yf.Ticker("VWRA.L").history(
+                    start=_d0_vwra.strftime("%Y-%m-%d"),
+                    end=_d1_vwra_fetch.strftime("%Y-%m-%d"),
+                    interval="1d",
+                    auto_adjust=True,
+                )
+            if _hist_vwra is not None and not _hist_vwra.empty:
+                if _hist_vwra.index.tz is not None:
+                    _hist_vwra.index = _hist_vwra.index.tz_localize(None)
+                _close_vwra = _hist_vwra["Close"].resample("ME").last()
+                _vwra_rets = _close_vwra.pct_change() * 100
+                for _ts, _val in _vwra_rets.items():
+                    if _pd.isna(_val):
+                        continue
+                    vwra_mensal_by_ym[_ts.strftime("%Y-%m")] = float(_val)
+        except Exception as _e:
+            print(f"  ⚠ VWRA anual: {_e} — alpha omitido")
+
     annual_table = []
     for yr, data_yr in annual_returns.items():
         # TWR BRL composto
@@ -1188,6 +1223,22 @@ def _generate_core_jsons(rows: list[dict]):
         # TWR real = (1 + nominal) / (1 + ipca) - 1
         twr_real_yr = round(((1 + twr_brl_yr / 100) / (1 + (ipca_yr_pct or 0) / 100) - 1) * 100, 2) if ipca_yr_pct else None
 
+        # VWRA anual composto (USD) — benchmark. Compond apenas meses presentes no portfolio USD.
+        vwra_yr = 1.0
+        vwra_count = 0
+        for m in range(1, 13):
+            ym = f"{yr}-{m:02d}"
+            if ym in vwra_mensal_by_ym:
+                vwra_yr *= (1 + vwra_mensal_by_ym[ym] / 100)
+                vwra_count += 1
+        vwra_yr_pct = round((vwra_yr - 1) * 100, 2) if vwra_count > 0 else None
+
+        # Alpha USD em pp (simple diff, não anualizado para YTD)
+        if twr_usd_yr is not None and vwra_yr_pct is not None:
+            alpha_pp = round(twr_usd_yr - vwra_yr_pct, 2)
+        else:
+            alpha_pp = None
+
         n_months = len(data_yr["twr_brl"])
         annual_table.append({
             "year": int(yr),
@@ -1196,6 +1247,8 @@ def _generate_core_jsons(rows: list[dict]):
             "twr_nominal_brl": twr_brl_yr,
             "twr_real_brl": twr_real_yr,
             "twr_usd": twr_usd_yr,
+            "vwra_usd": vwra_yr_pct,
+            "alpha_pp": alpha_pp,
             "ipca": ipca_yr_pct,
             "cdi": cdi_yr_pct,
         })
