@@ -2,6 +2,14 @@
  * Monte Carlo Simulation
  * Port from dashboard/js/05-fire-projections.mjs
  * Pure function: stateless, deterministic with seed
+ *
+ * CANONICAL MODEL (DEV-mc-canonico):
+ *   - Lognormal GBM with Ito correction
+ *   - sigma_log_anual = sqrt(log(1 + sigma² / (1+r)²))
+ *   - sigma_m = sigma_log_anual / sqrt(12)
+ *   - mu_m = log(1+r)/12 - 0.5 * sigma_m²   ← Ito correction
+ *   - r_t = exp(mu_m + sigma_m * z) - 1
+ *   - floor: P = max(P, 0)
  */
 
 import { MCParams, MCResult, MCYearlyParams } from '@/types/dashboard';
@@ -24,7 +32,7 @@ function mulberry32(seed: number): () => number {
 
 /**
  * Box-Muller transform using provided rand function.
- * Returns a standard normal variate.
+ * Returns a standard normal variate. No clamp — for N≥1000.
  */
 function boxMullerWithRand(rand: () => number): number {
   let u1 = 0;
@@ -32,6 +40,109 @@ function boxMullerWithRand(rand: () => number): number {
   while (u1 === 0) u1 = rand();
   while (u2 === 0) u2 = rand();
   return Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+}
+
+// ── Canonical MC Parameters and Result ───────────────────────────────────────
+
+export interface CanonicalMCParams {
+  P0: number;
+  r_anual: number;
+  sigma_anual: number;       // default: 0.168 (carteira.md → volatilidade_equity)
+  aporte_mensal: number;
+  meses: number;
+  N: number;                 // min: 1000 interativo / 10000 canônico
+  metaFire?: number;         // para calcular P(FIRE)
+  seed?: number;             // default: 42
+}
+
+export interface CanonicalMCResult {
+  /** Sorted final wealth distribution */
+  endWealthDist: number[];
+  p10: number;
+  p50: number;
+  p90: number;
+  /** P(FIRE): fraction of sims where endWealth >= metaFire. 0 if metaFire not provided. */
+  pFire: number;
+  /** Percentile series over time: pcts[month].p10/.p50/.p90 */
+  pcts: Array<{ p10: number; p50: number; p90: number }>;
+}
+
+// ── Canonical MC Implementation ───────────────────────────────────────────────
+
+/**
+ * Compute lognormal monthly parameters with Ito correction.
+ * This is the canonical formula for ALL Monte Carlo simulations in the dashboard.
+ *
+ * DEV-mc-canonico: Ito correction is critical — omitting it biases P(FIRE) by ~9pp.
+ */
+function lognormalMonthlyParams(r_anual: number, sigma_anual: number): {
+  mu_m: number;
+  sigma_m: number;
+} {
+  // Lognormal exact: converts arithmetic sigma to log-space sigma
+  const sigma_log_anual = Math.sqrt(Math.log(1 + sigma_anual ** 2 / (1 + r_anual) ** 2));
+  const sigma_m = sigma_log_anual / Math.sqrt(12);
+  // Ito correction: log(1+r)/12 - 0.5*sigma_m² (mandatory — see issue)
+  const mu_m = Math.log(1 + r_anual) / 12 - 0.5 * sigma_m * sigma_m;
+  return { mu_m, sigma_m };
+}
+
+/**
+ * runCanonicalMC — the single authoritative Monte Carlo implementation.
+ *
+ * All simulators in the dashboard must call this function (or runMCTrajectories
+ * which delegates to it) instead of implementing their own MC loop.
+ *
+ * Model: Lognormal GBM with Ito correction, floor at zero.
+ * Params: see CanonicalMCParams interface.
+ */
+export function runCanonicalMC(params: CanonicalMCParams): CanonicalMCResult {
+  const {
+    P0, r_anual, aporte_mensal, meses, N,
+    metaFire,
+    seed = 42,
+    sigma_anual = 0.168,
+  } = params;
+
+  const { mu_m, sigma_m } = lognormalMonthlyParams(r_anual, sigma_anual);
+  const rand = mulberry32(seed);
+
+  // Accumulate final wealth and track percentile series
+  const finalWealth: number[] = new Array(N);
+  // Track pcts over time by collecting each month's values
+  const monthSamples: number[][] = Array.from({ length: meses }, () => new Array(N));
+
+  for (let sim = 0; sim < N; sim++) {
+    let P = P0;
+    for (let t = 0; t < meses; t++) {
+      const z = boxMullerWithRand(rand);
+      const r_t = Math.exp(mu_m + sigma_m * z) - 1;
+      P = P * (1 + r_t) + aporte_mensal;
+      P = Math.max(P, 0);  // floor: ruin = ruin, absorb at zero
+      monthSamples[t][sim] = P;
+    }
+    finalWealth[sim] = P;
+  }
+
+  const sorted = finalWealth.slice().sort((a, b) => a - b);
+  const p10 = sorted[Math.floor(N * 0.1)];
+  const p50 = sorted[Math.floor(N * 0.5)];
+  const p90 = sorted[Math.floor(N * 0.9)];
+  const pFire = metaFire != null
+    ? finalWealth.filter(w => w >= metaFire).length / N
+    : 0;
+
+  // Percentile time series
+  const pcts = monthSamples.map(vals => {
+    const s = vals.slice().sort((a, b) => a - b);
+    return {
+      p10: s[Math.floor(N * 0.1)],
+      p50: s[Math.floor(N * 0.5)],
+      p90: s[Math.floor(N * 0.9)],
+    };
+  });
+
+  return { endWealthDist: sorted, p10, p50, p90, pFire, pcts };
 }
 
 // ── Month-based MC (canonical — used by dashboardStore) ──────────────────────
@@ -50,7 +161,8 @@ export function runMC(params: MCParams): MCResult {
   const p50 = sorted[Math.floor(sorted.length * 0.5)];
   const p90 = sorted[Math.floor(sorted.length * 0.9)];
 
-  const successRate = endWealthDist.filter(w => w > params.initialCapital).length / endWealthDist.length;
+  // Corrected successRate: endWealth > 0 (ruin detection) or metaFire if available
+  const successRate = endWealthDist.filter(w => w > 0).length / endWealthDist.length;
 
   // Compute percentiles correctly: iterate over months, not trajectories
   const months = params.years * 12;
@@ -78,14 +190,17 @@ export function runMC(params: MCParams): MCResult {
 }
 
 /**
- * Generate MC trajectories (month-based)
+ * Generate MC trajectories (month-based).
+ * Uses canonical lognormal GBM with Ito correction (DEV-mc-canonico).
  * @param params - Simulation parameters
  * @returns 2D array: numSims × (years * 12)
  */
 export function runMCTrajectories(params: MCParams): number[][] {
   const months = params.years * 12;
-  const monthlyReturn = params.returnMean / 12;
-  const monthlyStd = params.returnStd / Math.sqrt(12);
+
+  // Use canonical lognormal monthly params with Ito correction
+  // returnStd is treated as annual sigma for the lognormal conversion
+  const { mu_m, sigma_m } = lognormalMonthlyParams(params.returnMean, params.returnStd);
 
   const rand = params.seed != null ? mulberry32(params.seed) : Math.random;
 
@@ -96,8 +211,10 @@ export function runMCTrajectories(params: MCParams): number[][] {
 
     for (let month = 1; month < months; month++) {
       const prevValue = traj[month - 1];
-      const randomReturn = boxMullerWithRand(rand) * monthlyStd + monthlyReturn;
-      const newValue = prevValue * (1 + randomReturn) + params.monthlyContribution;
+      const z = boxMullerWithRand(rand);
+      // Lognormal return with Ito correction (canonical formula)
+      const r_t = Math.exp(mu_m + sigma_m * z) - 1;
+      const newValue = prevValue * (1 + r_t) + params.monthlyContribution;
       traj.push(Math.max(0, newValue));
     }
 
@@ -133,19 +250,23 @@ export function runMCYearly(params: MCYearlyParams): MCYearlyResult {
   const rand = seed != null ? mulberry32(seed) : Math.random;
   const sims: number[][] = [];
 
+  // Canonical lognormal annual params with Ito correction
+  const sigma_log_anual = Math.sqrt(Math.log(1 + annualVol ** 2 / (1 + annualReturn) ** 2));
+  const mu_anual = Math.log(1 + annualReturn) - 0.5 * sigma_log_anual * sigma_log_anual;  // Ito correction
+
   for (let s = 0; s < numSims; s++) {
     const traj: number[] = [initialCapital];
     for (let yr = 1; yr <= years; yr++) {
       const prev = traj[yr - 1];
-      // Box-Muller normal variate
+      // Lognormal annual return with Ito correction (canonical formula)
       const z = boxMullerWithRand(rand);
-      const ret = annualReturn + annualVol * z;
+      const ret = Math.exp(mu_anual + sigma_log_anual * z) - 1;
       let next = prev * (1 + ret);
       // Add annual contribution during accumulation phase (pre-FIRE)
       if (yr <= yearsToFire) next += annualContribution;
       // Apply one-time shock at shockYear
       if (yr === shockYear) next = next * (1 + shockFrac);
-      // No floor — negative values show real ruin risk
+      // No floor — negative values show real ruin risk (stress chart intent)
       traj.push(next);
     }
     sims.push(traj);

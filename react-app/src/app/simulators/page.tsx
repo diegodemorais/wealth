@@ -583,9 +583,16 @@ function WhatIfSection() {
   // ── MC desacumulação inline — compartilhado por A e B ───────────────────────
   // Recebe patrimônio no FIRE, custo anual, retorno (fração), vol, horizonte
   // Retorna P(sucesso) em %; seed determinístico (mesmo params = mesmo resultado)
-  function runMCDecum(pat0: number, withdrawal: number, retFrac: number, vol: number, yearsDecum: number): number {
+  // DEV-mc-canonico: lognormal GBM anual com Ito correction; N=1000; sigma fallback=0.168
+  function runMCDecum(pat0: number, withdrawal: number, retFrac: number, sigmaAnual: number, yearsDecum: number): number {
+    const sigma = sigmaAnual ?? 0.168;
+    // Lognormal annual params with Ito correction
+    const sigma_log = Math.sqrt(Math.log(1 + sigma ** 2 / (1 + retFrac) ** 2));
+    const mu_anual = Math.log(1 + retFrac) - 0.5 * sigma_log * sigma_log;
+
     const seedBase = (Math.round(pat0 / 10000) * 31 + yearsDecum * 17 + Math.round(withdrawal / 1000) * 7) >>> 0;
     let s = seedBase || 1;
+    // LCG rand for deterministic seed (no external dep in inline function)
     const rand = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; };
     const randn = () => {
       let u = 0, v = 0;
@@ -594,12 +601,15 @@ function WhatIfSection() {
       return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
     };
     let successes = 0;
-    const numSims = 400;
+    const numSims = 1000;  // N=400→1000 (DEV-mc-canonico: IC ±6pp → ±3pp)
     for (let sim = 0; sim < numSims; sim++) {
       let pat = pat0;
       let alive = true;
       for (let yr = 0; yr < yearsDecum; yr++) {
-        pat = pat * (1 + retFrac + vol * randn()) - withdrawal;
+        const z = randn();
+        // Lognormal annual return with Ito correction
+        const ret = Math.exp(mu_anual + sigma_log * z) - 1;
+        pat = pat * (1 + ret) - withdrawal;
         if (pat <= 0) { alive = false; break; }
       }
       if (alive) successes++;
@@ -620,6 +630,8 @@ function WhatIfSection() {
   ): { ano: number; idade: number; pat: number; swrAtFire: number } | null {
     const target = custo / swr;
     let pat = pat0;
+    // Correct monthly rate: geometric compounding (not linear r/12)
+    const r_m = Math.pow(1 + retornoFrac, 1 / 12) - 1;
     for (let yr = 0; yr <= HORIZONTE_VIDA - age; yr++) {
       // one-shot events: subtract (despesa) or add (receita) at specific year
       for (const evt of events) {
@@ -638,7 +650,7 @@ function WhatIfSection() {
         return { ano: ano + yr, idade: age + yr, pat, swrAtFire: custoEfetivo / pat };
       }
       for (let m = 0; m < 12; m++) {
-        pat = pat * (1 + retornoFrac / 12) + aporte;
+        pat = pat * (1 + r_m) + aporte;
       }
     }
     return null;
@@ -655,7 +667,7 @@ function WhatIfSection() {
     if (!resultA || resultA.pat <= 0) return null;
     const yearsDecum = horizon - resultA.idade;
     if (yearsDecum <= 0) return null;
-    return runMCDecum(resultA.pat, custoA, preset.retorno ?? 0.0485, premissasWI?.volatilidade_equity ?? 0.12, yearsDecum);
+    return runMCDecum(resultA.pat, custoA, preset.retorno ?? 0.0485, premissasWI?.volatilidade_equity ?? 0.168, yearsDecum);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultA, horizon, custoA, preset.retorno, premissasWI?.volatilidade_equity]);
 
@@ -670,7 +682,7 @@ function WhatIfSection() {
     if (!resultB || resultB.pat <= 0) return null;
     const yearsDecum = horizon - resultB.idade;
     if (yearsDecum <= 0) return null;
-    return runMCDecum(resultB.pat, custoLiquidoB, preset.retorno ?? 0.0485, premissasWI?.volatilidade_equity ?? 0.12, yearsDecum);
+    return runMCDecum(resultB.pat, custoLiquidoB, preset.retorno ?? 0.0485, premissasWI?.volatilidade_equity ?? 0.168, yearsDecum);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resultB, horizon, custoLiquidoB, preset.retorno, premissasWI?.volatilidade_equity]);
 

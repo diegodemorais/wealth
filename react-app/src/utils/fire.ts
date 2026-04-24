@@ -68,12 +68,14 @@ export function calcFireYear(
   const target = custo / swrTarget;
   let pat = patrimonio;
   const maxYears = horizonAge - currentAge;
+  // Correct monthly rate: geometric compounding, not linear division
+  const r_m = Math.pow(1 + retornoFrac, 1 / 12) - 1;
   for (let yr = 0; yr <= maxYears; yr++) {
     if (pat >= target) {
       return { ano: anoAtual + yr, idade: currentAge + yr, pat, swrAtFire: custo / pat };
     }
     for (let m = 0; m < 12; m++) {
-      pat = pat * (1 + retornoFrac / 12) + aporte;
+      pat = pat * (1 + r_m) + aporte;
     }
   }
   return null;
