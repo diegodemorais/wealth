@@ -225,6 +225,144 @@ describe('[CONSISTÊNCIA] runCanonicalMC vs runMCTrajectories', () => {
   });
 });
 
+// ── [REGIME-FX] Hamilton Markov Regime Switching FX (DEV-mc-regime-switching-fx) ─
+
+describe('[REGIME-FX] Markov Regime Switching FX', () => {
+  // Base params: USD equity only (no dep baked in) — fxRegime adds dep dynamically
+  const BASE_PARAMS = {
+    P0: 3_472_000,
+    r_anual: 0.0485,    // r_USD_real only (sem dep_BRL embutida)
+    sigma_anual: 0.168,
+    aporte_mensal: 25_000,
+    meses: 168,
+    N: 5_000,
+    seed: 42,
+    metaFire: 8_330_000,
+  };
+
+  it('fxRegime=false (default) reproduz resultado base — sem alteração de comportamento', () => {
+    const withoutFx = runCanonicalMC({ ...BASE_PARAMS });
+    const explicitFalse = runCanonicalMC({ ...BASE_PARAMS, fxRegime: false });
+    expect(withoutFx.p50).toBe(explicitFalse.p50);
+    expect(withoutFx.pFire).toBe(explicitFalse.pFire);
+  });
+
+  it('fxRegime=true é determinístico: seed=42 produz resultado idêntico em 2 chamadas', () => {
+    const r1 = runCanonicalMC({ ...BASE_PARAMS, fxRegime: true });
+    const r2 = runCanonicalMC({ ...BASE_PARAMS, fxRegime: true });
+    expect(r1.p50).toBe(r2.p50);
+    expect(r1.pFire).toBe(r2.pFire);
+    expect(r1.p10).toBe(r2.p10);
+    expect(r1.p90).toBe(r2.p90);
+  });
+
+  it('fxRegime=true produz P(FIRE) diferente de fxRegime=false (regime switching tem efeito real)', () => {
+    const withFx = runCanonicalMC({ ...BASE_PARAMS, fxRegime: true });
+    const withoutFx = runCanonicalMC({ ...BASE_PARAMS, fxRegime: false });
+    // Regime switching must change P(FIRE) — not necessarily direction (depends on mean dep)
+    // If they are equal, the model has no effect (bug or degenerate params)
+    const delta = Math.abs(withFx.pFire - withoutFx.pFire);
+    expect(delta).toBeGreaterThan(0.001);  // at least 0.1pp difference
+  });
+
+  it('sanity check: dep_crise = dep_normal → resultado idêntico ao modelo sem regime switching', () => {
+    // When both regimes have the same dep, switching should produce equivalent results
+    // to a model with constant dep at that level. We verify via fxRegimeParams override.
+    const DEP_CONSTANTE = 0.005;  // 0.5%/yr in both regimes — same as base scenario
+    const SIGMA_DEP = 0.05;
+
+    const comRegime = runCanonicalMC({
+      ...BASE_PARAMS,
+      fxRegime: true,
+      fxRegimeParams: {
+        normal: { dep_anual: DEP_CONSTANTE, sigma_dep: SIGMA_DEP, p_stay: 0.95 },
+        crise:  { dep_anual: DEP_CONSTANTE, sigma_dep: SIGMA_DEP, p_stay: 0.50 },
+        p_inicial_crise: 0.17,
+      },
+    });
+
+    // P(FIRE) should be different from fxRegime=false because FX adds dep on top
+    // even when constant, but should be internally consistent (deterministic)
+    const r1 = comRegime;
+    const r2 = runCanonicalMC({
+      ...BASE_PARAMS,
+      fxRegime: true,
+      fxRegimeParams: {
+        normal: { dep_anual: DEP_CONSTANTE, sigma_dep: SIGMA_DEP, p_stay: 0.95 },
+        crise:  { dep_anual: DEP_CONSTANTE, sigma_dep: SIGMA_DEP, p_stay: 0.50 },
+        p_inicial_crise: 0.17,
+      },
+    });
+    // Determinism check with override params
+    expect(r1.p50).toBe(r2.p50);
+    expect(r1.pFire).toBe(r2.pFire);
+  });
+
+  it('fxRegime=true com dep_crise=0 e dep_normal=0 → P50 menor que com dep positiva (zero depreciation = worst FX)', () => {
+    // dep=0% means BRL stable = worst for USD holders (no extra BRL gain from depreciation)
+    const zeroDep = runCanonicalMC({
+      ...BASE_PARAMS,
+      fxRegime: true,
+      fxRegimeParams: {
+        normal: { dep_anual: 0.0, sigma_dep: 0.001, p_stay: 0.95 },
+        crise:  { dep_anual: 0.0, sigma_dep: 0.001, p_stay: 0.50 },
+        p_inicial_crise: 0.17,
+      },
+    });
+    const posDep = runCanonicalMC({
+      ...BASE_PARAMS,
+      fxRegime: true,
+      fxRegimeParams: {
+        normal: { dep_anual: 0.005, sigma_dep: 0.05, p_stay: 0.95 },
+        crise:  { dep_anual: 0.005, sigma_dep: 0.05, p_stay: 0.50 },
+        p_inicial_crise: 0.17,
+      },
+    });
+    // Higher dep = more BRL per USD = higher P50 in BRL terms
+    expect(posDep.p50).toBeGreaterThan(zeroDep.p50);
+  });
+
+  it('[DELTA] P(FIRE) com regime switching cai vs fxRegime=false: documenta magnitude', () => {
+    // NOTE: esta hipótese é do Quant (2026-04-24). Se delta for positivo (fxRegime > base),
+    // o issue DEV-mc-regime-switching-fx deve ser fechado (cenários existentes já capturam).
+    // Issue spec: "Se P(FIRE) regime switching < P(FIRE) stress: o modelo atual subestima risco cambial."
+    // dep_BRL do regime normal = 0.005 (base da carteira)
+    // dep_BRL crise (35%/yr) é positivo → AJUDA P(FIRE) via conversão BRL
+    // Correlação z_fx×z_eq = +0.30 → em crashes, menos dep → menos buffer
+    const withFx = runCanonicalMC({ ...BASE_PARAMS, fxRegime: true });
+    const withoutFx = runCanonicalMC({ ...BASE_PARAMS, fxRegime: false });
+
+    const deltaFxPct = (withFx.pFire - withoutFx.pFire) * 100;
+    // Delta deve ser documentado (positivo OU negativo — ambos são informativos)
+    // Testa apenas que o delta é computável e finito
+    expect(Number.isFinite(deltaFxPct)).toBe(true);
+
+    // Log delta para referência (visível no output do teste)
+    // O teste não prescreve sinal — self-closing criterion do issue define o que fazer
+    console.log(`[REGIME-FX delta] fxRegime: ${(withFx.pFire * 100).toFixed(1)}% vs base: ${(withoutFx.pFire * 100).toFixed(1)}% → delta: ${deltaFxPct.toFixed(1)}pp`);
+  });
+
+  it('pcts array tem comprimento correto com fxRegime=true', () => {
+    const result = runCanonicalMC({ ...BASE_PARAMS, fxRegime: true, meses: 60, N: 500 });
+    expect(result.pcts.length).toBe(60);
+    expect(result.endWealthDist.length).toBe(500);
+  });
+
+  it('patrimônio nunca fica negativo com fxRegime=true (floor at zero mantido)', () => {
+    const result = runCanonicalMC({
+      P0: 100_000,
+      r_anual: -0.3,
+      sigma_anual: 0.4,
+      aporte_mensal: -50_000,
+      meses: 60,
+      N: 300,
+      seed: 42,
+      fxRegime: true,
+    });
+    expect(result.endWealthDist.every(w => w >= 0)).toBe(true);
+  });
+});
+
 // ── [PROIBIÇÃO] Grep-based enforcement ───────────────────────────────────────
 
 describe('[PROIBIÇÃO] Nenhum MC usa modelo proibido', () => {

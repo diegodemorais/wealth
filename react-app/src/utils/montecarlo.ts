@@ -53,6 +53,22 @@ export interface CanonicalMCParams {
   N: number;                 // min: 1000 interativo / 10000 canônico
   metaFire?: number;         // para calcular P(FIRE)
   seed?: number;             // default: 42
+  /**
+   * Ativa Markov Regime Switching FX (DEV-mc-regime-switching-fx).
+   * Quando true, r_anual deve ser o retorno em USD puro (sem dep_BRL embutida).
+   * A dep_BRL mensal é amostrada dinamicamente do regime corrente (normal/crise).
+   * Retorno BRL: (1 + r_USD) × (1 + dep_BRL_mensal) - 1
+   */
+  fxRegime?: boolean;
+  /**
+   * Override dos parâmetros do regime FX — para testes de sanidade.
+   * Se omitido, usa os parâmetros calibrados históricos (BCB PTAX 1994–2026).
+   */
+  fxRegimeParams?: {
+    normal: { dep_anual: number; sigma_dep: number; p_stay: number };
+    crise:  { dep_anual: number; sigma_dep: number; p_stay: number };
+    p_inicial_crise: number;
+  };
 }
 
 export interface CanonicalMCResult {
@@ -66,6 +82,35 @@ export interface CanonicalMCResult {
   /** Percentile series over time: pcts[month].p10/.p50/.p90 */
   pcts: Array<{ p10: number; p50: number; p90: number }>;
 }
+
+// ── FX Regime Switching Constants (DEV-mc-regime-switching-fx) ───────────────
+// Calibrated from BCB PTAX serie 3696 (1994–2026), excluding pre-Real structural breaks.
+// Hamilton (1989) 2-regime Markov model.
+
+const FX_REGIMES_DEFAULT = {
+  normal: {
+    dep_anual: 0.005,   // 0.5%/yr real BRL depreciation in calm regime
+    sigma_dep: 0.05,    // 5%/yr volatility in normal regime
+    p_stay: 0.95,       // P(stay normal | normal) per year
+  },
+  crise: {
+    dep_anual: 0.35,    // 35%/yr real BRL depreciation in crisis regime (hist. avg of 5 episodes)
+    sigma_dep: 0.15,    // 15%/yr volatility in crisis regime
+    p_stay: 0.50,       // P(stay crise | crise) per quarter → duration ≈ 6 months
+  },
+  p_inicial_crise: 0.17,  // historical crisis frequency (1994–2026)
+};
+
+// Monthly transition probabilities (derived from annual/quarterly calibration)
+// P(normal → crise per month) = 1 - (1 - 1/6)^(1/12) ≈ 0.0139
+const FX_P_ENTRA_CRISE_MENSAL = 1 - Math.pow(1 - 1 / 6, 1 / 12);
+// P(crise → normal per month) = 1 - 0.50^(1/3) ≈ 0.206 (crisis lasts ~6m = 3 quarters)
+const FX_P_SAIDA_CRISE_MENSAL = 1 - Math.pow(0.50, 1 / 3);
+
+// Correlation between equity shock (z_eq) and FX shock (z_fx)
+// Positive: when equity is negative, z_fx is slightly negative → less depreciation buffer in crashes
+// Historical estimate: 0.25–0.35 (BCB/S&P correlation in crisis episodes)
+const FX_RHO = 0.30;
 
 // ── Canonical MC Implementation ───────────────────────────────────────────────
 
@@ -102,10 +147,17 @@ export function runCanonicalMC(params: CanonicalMCParams): CanonicalMCResult {
     metaFire,
     seed = 42,
     sigma_anual = 0.168,
+    fxRegime = false,
+    fxRegimeParams,
   } = params;
 
   const { mu_m, sigma_m } = lognormalMonthlyParams(r_anual, sigma_anual);
   const rand = mulberry32(seed);
+
+  // Resolve FX regime config (override for testing or default calibrated params)
+  const fxCfg = fxRegimeParams ?? FX_REGIMES_DEFAULT;
+  const pEntrada = FX_P_ENTRA_CRISE_MENSAL;
+  const pSaida = FX_P_SAIDA_CRISE_MENSAL;
 
   // Accumulate final wealth and track percentile series
   const finalWealth: number[] = new Array(N);
@@ -114,9 +166,40 @@ export function runCanonicalMC(params: CanonicalMCParams): CanonicalMCResult {
 
   for (let sim = 0; sim < N; sim++) {
     let P = P0;
+
+    // Each simulation draws its own initial FX regime (deterministic via shared PRNG)
+    let fxInCrisis = fxRegime && (rand() < fxCfg.p_inicial_crise);
+
     for (let t = 0; t < meses; t++) {
-      const z = boxMullerWithRand(rand);
-      const r_t = Math.exp(mu_m + sigma_m * z) - 1;
+      const z_eq = boxMullerWithRand(rand);  // equity GBM shock
+      const r_USD = Math.exp(mu_m + sigma_m * z_eq) - 1;
+
+      let r_t: number;
+
+      if (fxRegime) {
+        // Correlated FX shock: z_fx = rho*z_eq + sqrt(1-rho²)*z_ind
+        // Positive rho: in equity crashes (z_eq < 0), z_fx < 0 → less BRL depreciation buffer
+        const z_ind = boxMullerWithRand(rand);
+        const z_fx = FX_RHO * z_eq + Math.sqrt(1 - FX_RHO * FX_RHO) * z_ind;
+
+        const regime = fxInCrisis ? fxCfg.crise : fxCfg.normal;
+        // Lognormal dep_BRL: exp(mean/12 + sigma/sqrt(12) * z)
+        const dep_BRL = Math.exp(regime.dep_anual / 12 + regime.sigma_dep / Math.sqrt(12) * z_fx) - 1;
+
+        // BRL real return: compound USD equity return with BRL depreciation
+        r_t = (1 + r_USD) * (1 + dep_BRL) - 1;
+
+        // Markov transition for next month
+        const u = rand();
+        if (fxInCrisis) {
+          if (u < pSaida) fxInCrisis = false;
+        } else {
+          if (u < pEntrada) fxInCrisis = true;
+        }
+      } else {
+        r_t = r_USD;
+      }
+
       P = P * (1 + r_t) + aporte_mensal;
       P = Math.max(P, 0);  // floor: ruin = ruin, absorb at zero
       monthSamples[t][sim] = P;

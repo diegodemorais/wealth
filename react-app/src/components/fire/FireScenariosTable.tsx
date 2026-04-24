@@ -5,6 +5,7 @@ import { useDashboardStore } from '@/store/dashboardStore';
 import { useUiStore } from '@/store/uiStore';
 import { fmtPrivacy } from '@/utils/privacyTransform';
 import { pfireColor } from '@/utils/fire';
+import { runCanonicalMC } from '@/utils/montecarlo';
 
 export function FireScenariosTable() {
   const privacyMode = useUiStore(s => s.privacyMode);
@@ -33,6 +34,30 @@ export function FireScenariosTable() {
     };
   }, [data?.scenario_comparison]);
 
+  // P(FIRE) com Câmbio Dinâmico (DEV-mc-regime-switching-fx)
+  // r_anual = retorno_equity_base (USD puro, sem dep_BRL embutida)
+  // fxRegime=true adiciona dep_BRL dinâmica via Markov switching
+  const pfireCambioBase = useMemo(() => {
+    if (!data?.premissas) return null;
+    const prem = data.premissas as any;
+    const carteira = (data as any).carteira_params;
+    const P0 = prem.patrimonio_atual ?? 0;
+    const metaFireVal = carteira?.patrimonio_gatilho ?? prem.meta_fire ?? 8_333_333;
+    const idadeAtual = carteira?.idade_atual ?? prem.idade_atual ?? 39;
+    const idadeFire = carteira?.idade_cenario_base ?? prem.idade_cenario_base ?? 53;
+    const aporte = carteira?.aporte_cenario_base ?? prem.aporte_mensal ?? 25_000;
+    const r_USD = carteira?.retorno_equity_base ?? 0.0485;
+    const sigma = carteira?.volatilidade_equity ?? 0.168;
+    const meses = (idadeFire - idadeAtual) * 12;
+    if (P0 <= 0 || meses <= 0) return null;
+    const result = runCanonicalMC({
+      P0, r_anual: r_USD, sigma_anual: sigma,
+      aporte_mensal: aporte, meses, N: 2_000, seed: 42,
+      metaFire: metaFireVal, fxRegime: true,
+    });
+    return result.pFire * 100;
+  }, [data?.premissas]);  // eslint-disable-line react-hooks/exhaustive-deps
+
   const fmtBrl = (v: number) => fmtPrivacy(v, privacyMode);
 
   const fmtPct = (v: number) => `${v.toFixed(1)}%`;
@@ -53,6 +78,15 @@ export function FireScenariosTable() {
       label: 'P(FIRE) — mercado base',
       base: <span style={{ fontWeight: 700, color: pfireColor(base.pfire) }}>{fmtPct(base.pfire)}</span>,
       asp: <span style={{ fontWeight: 700, color: pfireColor(aspiracional.pfire) }}>{fmtPct(aspiracional.pfire)}</span>,
+    },
+    {
+      // DEV-mc-regime-switching-fx: dep_BRL via Markov Switching (Hamilton 1989)
+      // r_USD sem dep embutida + crises cambiais episódicas (17% freq, 35%/yr em crise)
+      label: '↳ Câmbio Dinâmico ★',
+      base: pfireCambioBase != null
+        ? <span style={{ fontWeight: 700, color: pfireColor(pfireCambioBase) }}>{fmtPct(pfireCambioBase)}</span>
+        : <span style={{ color: 'var(--muted)' }}>—</span>,
+      asp: <span style={{ color: 'var(--muted)', fontSize: 'var(--text-xs)' }}>base apenas</span>,
     },
     {
       label: 'Patrimônio mediano',
@@ -125,7 +159,8 @@ export function FireScenariosTable() {
       </div>
 
       <div style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--muted)' }}>
-        10.000 simulações Monte Carlo · Guardrails aprovados 2026-04-07
+        10.000 simulações Monte Carlo · Guardrails aprovados 2026-04-07<br />
+        ★ Câmbio Dinâmico: Hamilton (1989) Markov Switching — 2 regimes (normal 0,5%/a · crise 35%/a, freq. ~17%). N=2.000
       </div>
     </div>
   );
