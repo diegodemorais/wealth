@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-04-23",
+    "generated": "2026-04-24",
     "last_update_section": "fire",
     "last_update_generator": "fire_montecarlo.py",
     "version": 1
@@ -131,7 +131,7 @@
     "pat_mediano_fire": 11873544.0,
     "pat_p10_fire": 7245053.0,
     "pat_p90_fire": 18705767.0,
-    "mc_date": "2026-04-23",
+    "mc_date": "2026-04-24",
     "pfire50_base": 88.6,
     "pfire50_fav": 93.0,
     "pfire50_stress": 84.8,

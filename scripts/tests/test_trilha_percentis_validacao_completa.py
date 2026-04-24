@@ -43,7 +43,6 @@ class TestTrilhaPercentilesCompletivalidacao:
         with open(data_json) as f:
             return json.load(f)
 
-    @pytest.mark.xfail(reason="SWR field detection pending data.json regeneration", strict=False)
     def test_swr_percentis_range_1_to_5_percent(self):
         """Teste que SWR percentis estao em [1%, 5%] (range realista)."""
         data = self._load_data_json()
@@ -55,7 +54,7 @@ class TestTrilhaPercentilesCompletivalidacao:
         swr_values = []
         if isinstance(swr_perc, dict):
             for label, val in swr_perc.items():
-                if isinstance(val, (int, float)) and ("swr" in label.lower() or "p" in label.lower()):
+                if isinstance(val, (int, float)) and "swr" in label.lower():
                     swr_values.append((label, val))
 
         assert len(swr_values) > 0, "No SWR values found"
