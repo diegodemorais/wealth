@@ -42,7 +42,9 @@ jobs:
         working-directory: react-app
 
       - name: Run pre-commit tests (Python)
-        run: python3 -m pytest scripts/tests/ -q
+        run: |
+          pip install pytest -q
+          python3 -m pytest scripts/tests/ -q
         continue-on-error: false
 
       - name: Validate data.json
